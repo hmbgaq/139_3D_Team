@@ -405,6 +405,8 @@ FodyWeavers.xsd
 *.cso
 *.exp
 *.lib
+*.rc
+*.ico
 
 
 *.pdb
