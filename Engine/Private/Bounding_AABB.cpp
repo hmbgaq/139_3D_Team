@@ -52,6 +52,9 @@ _bool CBounding_AABB::Collision(CCollider * pTargetCollider, _bool* pisCollision
 	return *pisCollision;
 }
 
+
+#ifdef _DEBUG
+
 HRESULT CBounding_AABB::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _vector vColor)
 {
 	if (nullptr == pBatch ||
@@ -64,7 +67,7 @@ HRESULT CBounding_AABB::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _vec
 	return S_OK;
 }
 
-
+#endif
 
 
 CBounding_AABB * CBounding_AABB::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, BOUNDING_DESC* pBoundingDesc)

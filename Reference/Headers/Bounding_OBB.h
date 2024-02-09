@@ -24,8 +24,9 @@ public:
 public:
 	HRESULT Initialize(BOUNDING_DESC* pBoundingDesc);
 	virtual void Update(_fmatrix TransformMatrix);
+#ifdef _DEBUG
 	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch, _vector vColor) override;
-	
+#endif
 public:
 	virtual _bool Collision(class CCollider* pTargetCollider, _bool* pisCollision) override;
 

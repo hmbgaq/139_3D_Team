@@ -46,6 +46,7 @@ _bool CBounding_Sphere::Collision(CCollider * pTargetCollider, _bool * pisCollis
 	return *pisCollision;
 }
 
+#ifdef _DEBUG
 
 HRESULT CBounding_Sphere::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _vector vColor)
 {
@@ -58,6 +59,8 @@ HRESULT CBounding_Sphere::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _v
 
 	return S_OK;
 }
+
+#endif
 
 CBounding_Sphere * CBounding_Sphere::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, BOUNDING_DESC* pBoundingDesc)
 {

@@ -22,7 +22,9 @@ public:
 
 public:
 	HRESULT Initialize(BOUNDING_DESC* pBoundingDesc);
+#ifdef _DEBUG
 	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch, _vector vColor) override;
+#endif
 	virtual void Update(_fmatrix TransformMatrix);
 
 public:

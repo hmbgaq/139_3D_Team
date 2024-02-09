@@ -26,13 +26,13 @@ private:
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 	CGameInstance*			m_pGameInstance = { nullptr };
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 private:
 	_tchar					m_szFPS[MAX_PATH] = TEXT("");
 	_float					m_fTimeAcc = { 0.f };
 	_uint					m_iNumRender = { 0 };
 
-#endif
+//#endif
 
 private:
 	HRESULT Open_Level(LEVEL eStartLevelID);
