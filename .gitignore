@@ -40,7 +40,6 @@ Resources/
 
 *.cso
 *.exp
-*.lib
 *.rc
 *.ico
 
