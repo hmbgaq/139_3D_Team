@@ -19,7 +19,9 @@ private:
 public:
 	HRESULT Initialize();
 	HRESULT Add_RenderGroup(RENDERGROUP eGroupID, class CGameObject* pGameObject);
+
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
+
 	HRESULT Draw_RenderGroup();
 
 private:
@@ -31,7 +33,7 @@ private:
 #ifdef _DEBUG
 	list<class CComponent*>					m_DebugComponent;
 #endif
-	
+
 private:
 	class CShader*							m_pShader = { nullptr };
 	class CVIBuffer_Rect*					m_pVIBuffer = { nullptr };
@@ -55,7 +57,7 @@ private:
 #ifdef _DEBUG
 private:
 	HRESULT Render_Debug();
-#endif	
+#endif
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

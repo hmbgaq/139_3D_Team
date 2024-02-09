@@ -52,12 +52,12 @@ HRESULT CTexture::Initialize_Prototype(const wstring & strTextureFilePath, _uint
 		}
 		else if (!lstrcmp(szExt, TEXT(".tga")))
 		{
-			
+
 		}
 		else
 		{
 			hr = CreateWICTextureFromFile(m_pDevice, szFullPath, nullptr, &pSRV);
-		}		
+		}
 
 		if (FAILED(hr))
 			return E_FAIL;
@@ -75,12 +75,12 @@ HRESULT CTexture::Initialize(void * pArg)
 
 HRESULT CTexture::Bind_ShaderResource(CShader * pShader, const _char * pConstantName, _uint iTextureIndex)
 {
-	return pShader->Bind_SRV(pConstantName, m_SRVs[iTextureIndex]);	
+	return pShader->Bind_SRV(pConstantName, m_SRVs[iTextureIndex]);
 }
 
 HRESULT CTexture::Bind_ShaderResources(CShader * pShader, const _char * pConstantName)
-{	
-	return pShader->Bind_SRVs(pConstantName, &m_SRVs.front(), m_iNumTextures);	
+{
+	return pShader->Bind_SRVs(pConstantName, &m_SRVs.front(), m_iNumTextures);
 }
 
 CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strTextureFilePath, _uint iNumTextures)

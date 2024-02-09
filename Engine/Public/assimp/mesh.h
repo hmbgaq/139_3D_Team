@@ -265,7 +265,7 @@ struct aiBone {
     unsigned int mNumWeights;
 
     //! The influence weights of this bone, by vertex index.
-    C_STRUCT aiVertexWeight* mWeights;	
+    C_STRUCT aiVertexWeight* mWeights;
 
     /** Matrix that transforms from bone space to mesh space in bind pose.
      *

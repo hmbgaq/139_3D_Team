@@ -12,7 +12,7 @@ HRESULT CBounding_AABB::Initialize(BOUNDING_DESC * pBoundingDesc)
 {
 	BOUNDING_AABB_DESC* pDesc = (BOUNDING_AABB_DESC*)pBoundingDesc;
 
-	m_pOriginalAABB = new BoundingBox(pDesc->vCenter, pDesc->vExtents);	
+	m_pOriginalAABB = new BoundingBox(pDesc->vCenter, pDesc->vExtents);
 	m_pAABB = new BoundingBox(*m_pOriginalAABB);
 
 	return S_OK;
@@ -28,7 +28,7 @@ void CBounding_AABB::Update(_fmatrix TransformMatrix)
 
 	m_pOriginalAABB->Transform(*m_pAABB, Matrix);
 
-	
+
 }
 
 _bool CBounding_AABB::Collision(CCollider * pTargetCollider, _bool* pisCollision)

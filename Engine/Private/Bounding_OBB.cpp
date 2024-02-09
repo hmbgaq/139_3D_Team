@@ -26,6 +26,7 @@ void CBounding_OBB::Update(_fmatrix TransformMatrix)
 	m_pOriginalOBB->Transform(*m_pOBB, TransformMatrix);
 }
 
+#ifdef _DEBUG
 HRESULT CBounding_OBB::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _vector vColor)
 {
 	if (nullptr == pBatch ||
@@ -37,6 +38,7 @@ HRESULT CBounding_OBB::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _vect
 
 	return S_OK;
 }
+#endif
 
 _bool CBounding_OBB::Collision(CCollider * pTargetCollider, _bool * pisCollision)
 {

@@ -27,10 +27,10 @@ HRESULT CRenderer::Initialize()
 	_uint				iNumViewport = { 1 };
 
 	m_pContext->RSGetViewports(&iNumViewport, &Viewport);
-	
+
 	/* Target_Diffuse */
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Diffuse"), Viewport.Width, Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f))))
-		return E_FAIL;	
+		return E_FAIL;
 
 	/* Target_Normal */
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Normal"), Viewport.Width, Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
@@ -141,7 +141,7 @@ HRESULT CRenderer::Initialize()
 
 HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eGroupID, CGameObject * pGameObject)
 {
-	if (nullptr == pGameObject || 
+	if (nullptr == pGameObject ||
 		eGroupID >= RENDER_END)
 		return E_FAIL;
 
@@ -156,12 +156,17 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eGroupID, CGameObject * pGameObje
 
 HRESULT CRenderer::Add_DebugRender(CComponent * pDebugCom)
 {
-	m_DebugComponent.push_back(pDebugCom);
+	#ifdef _DEBUG
+		m_DebugComponent.push_back(pDebugCom);
 
-	Safe_AddRef(pDebugCom);
+		Safe_AddRef(pDebugCom);
+	#endif
+
+
 
 	return S_OK;
 }
+
 
 HRESULT CRenderer::Draw_RenderGroup()
 {
@@ -182,9 +187,11 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_UI()))
 		return E_FAIL;
 
+#ifdef _DEBUG
 	if (FAILED(Render_Debug()))
 		return E_FAIL;
-	
+#endif
+
 	return S_OK;
 }
 
@@ -233,7 +240,7 @@ HRESULT CRenderer::Render_Shadow()
 
 	if (FAILED(m_pGameInstance->End_MRT()))
 		return E_FAIL;
-	
+
 	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
 	ViewPortDesc.TopLeftX = 0;
 	ViewPortDesc.TopLeftY = 0;
@@ -287,8 +294,8 @@ HRESULT CRenderer::Render_NonBlend()
 }
 HRESULT CRenderer::Render_Blend()
 {
-	m_RenderObjects[RENDER_BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool 
-	{	
+	m_RenderObjects[RENDER_BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
+	{
 		return ((CAlphaObject*)pSour)->Get_CamDistance() > ((CAlphaObject*)pDest)->Get_CamDistance();
 	});
 
@@ -402,7 +409,7 @@ HRESULT CRenderer::Render_Deferred()
 HRESULT CRenderer::Render_Debug()
 {
 	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
-	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);	
+	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
 
 	for (auto& pDebugCom : m_DebugComponent)
 	{
@@ -436,16 +443,19 @@ void CRenderer::Free()
 {
 	for (auto& ObjectList : m_RenderObjects)
 	{
-		for (auto& pGameObject : ObjectList)		
+		for (auto& pGameObject : ObjectList)
 			Safe_Release(pGameObject);
 		ObjectList.clear();
 	}
 
-	for (auto pDebugCom : m_DebugComponent)	
+#ifdef _DEBUG
+
+	for (auto pDebugCom : m_DebugComponent)
 		Safe_Release(pDebugCom);
 	m_DebugComponent.clear();
+#endif
 
-	
+
 
 	Safe_Release(m_pShader);
 	Safe_Release(m_pVIBuffer);

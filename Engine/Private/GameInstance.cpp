@@ -21,7 +21,7 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, HINSTANCE hInstance, 
 	/* 그래픽 디바이스를 초기화 하자.*/
 	m_pGraphic_Device = CGraphic_Device::Create(GraphicDesc, ppDevice, ppContext);
 	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;	
+		return E_FAIL;
 
 	m_pInput_Device = CInput_Device::Create(hInstance, GraphicDesc.hWnd);
 	if (nullptr == m_pInput_Device)
@@ -73,17 +73,17 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, HINSTANCE hInstance, 
 
 void CGameInstance::Tick_Engine(_float fTimeDelta)
 {
-	if (nullptr == m_pLevel_Manager || 
-		nullptr == m_pObject_Manager || 
-		nullptr == m_pPipeLine || 
-		nullptr == m_pInput_Device || 
+	if (nullptr == m_pLevel_Manager ||
+		nullptr == m_pObject_Manager ||
+		nullptr == m_pPipeLine ||
+		nullptr == m_pInput_Device ||
 		nullptr == m_pFrustum)
 		return;
 
 	m_pInput_Device->Update_InputDev();
 
 	m_pObject_Manager->Priority_Tick(fTimeDelta);
-	
+
 	m_pObject_Manager->Tick(fTimeDelta);
 
 	m_pPipeLine->Tick();
@@ -97,7 +97,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 void CGameInstance::Clear(_uint iLevelIndex)
 {
-	if (nullptr == m_pObject_Manager || 
+	if (nullptr == m_pObject_Manager ||
 		nullptr == m_pComponent_Manager)
 		return;
 
@@ -110,7 +110,7 @@ void CGameInstance::Clear(_uint iLevelIndex)
 
 HRESULT CGameInstance::Render_Engine()
 {
-	if (nullptr == m_pLevel_Manager || 
+	if (nullptr == m_pLevel_Manager ||
 		nullptr == m_pRenderer)
 		return E_FAIL;
 
@@ -166,7 +166,7 @@ ID3D11DepthStencilView * CGameInstance::Get_DSV() const
 _byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
 {
 	if (nullptr == m_pInput_Device)
-		return 0;	
+		return 0;
 	return m_pInput_Device->Get_DIKeyState(byKeyID);
 }
 
@@ -231,7 +231,7 @@ CGameObject * CGameInstance::Clone_Prototype(const wstring & strPrototypeTag, vo
 	if (nullptr == m_pObject_Manager)
 		return nullptr;
 
-	return m_pObject_Manager->Clone_Prototype(strPrototypeTag, pArg);	
+	return m_pObject_Manager->Clone_Prototype(strPrototypeTag, pArg);
 }
 
 CComponent * CGameInstance::Get_Component(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strComponentTag, _uint iIndex, const wstring& strPartTag)
@@ -247,7 +247,7 @@ HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring & strProto
 	if (nullptr == m_pComponent_Manager)
 		return E_FAIL;
 
-	return m_pComponent_Manager->Add_Prototype(iLevelIndex, strPrototypeTag, pPrototype);	
+	return m_pComponent_Manager->Add_Prototype(iLevelIndex, strPrototypeTag, pPrototype);
 }
 
 CComponent * CGameInstance::Clone_Component(_uint iLevelIndex, const wstring & strPrototypeTag, void * pArg)
@@ -332,7 +332,7 @@ _float4 CGameInstance::Get_CamPosition()
 
 HRESULT CGameInstance::Add_Font(const wstring & strFontTag, const wstring & strFontFilePath)
 {
-	return m_pFont_Manager->Add_Font(strFontTag, strFontFilePath);	
+	return m_pFont_Manager->Add_Font(strFontTag, strFontFilePath);
 }
 
 HRESULT CGameInstance::Render_Font(const wstring & strFontTag, const wstring & strText, const _float2 & vPosition, _fvector vColor, _float fScale, _float2 vOrigin, _float fRotation)
@@ -342,7 +342,7 @@ HRESULT CGameInstance::Render_Font(const wstring & strFontTag, const wstring & s
 
 HRESULT CGameInstance::Add_RenderTarget(const wstring & strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4 & vClearColor)
 {
-	return m_pTarget_Manager->Add_RenderTarget(strTargetTag, iSizeX, iSizeY, ePixelFormat, vClearColor);	
+	return m_pTarget_Manager->Add_RenderTarget(strTargetTag, iSizeX, iSizeY, ePixelFormat, vClearColor);
 }
 
 HRESULT CGameInstance::Add_MRT(const wstring & strMRTTag, const wstring & strTargetTag)
@@ -362,13 +362,13 @@ HRESULT CGameInstance::End_MRT()
 
 HRESULT CGameInstance::Bind_RenderTarget_ShaderResource(const wstring & strTargetTag, CShader * pShader, const _char * pConstantName)
 {
-	return m_pTarget_Manager->Bind_ShaderResource(strTargetTag, pShader, pConstantName);	
+	return m_pTarget_Manager->Bind_ShaderResource(strTargetTag, pShader, pConstantName);
 }
 
 #ifdef _DEBUG
 HRESULT CGameInstance::Ready_RenderTarget_Debug(const wstring & strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {
-	return m_pTarget_Manager->Ready_Debug(strTargetTag, fX, fY, fSizeX, fSizeY);	
+	return m_pTarget_Manager->Ready_Debug(strTargetTag, fX, fY, fSizeX, fSizeY);
 }
 HRESULT CGameInstance::Render_Debug_RTVs(const wstring & strMRTTag, CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 {
@@ -381,9 +381,9 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC & LightDesc)
 {
 	return m_pLight_Manager->Add_Light(LightDesc);
 }
-	
+
 HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
-{	
+{
 	return m_pLight_Manager->Render(pShader, pVIBuffer);
 }
 

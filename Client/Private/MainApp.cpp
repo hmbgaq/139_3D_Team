@@ -6,7 +6,7 @@
 
 
 
-CMainApp::CMainApp()	
+CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
 	Safe_AddRef(m_pGameInstance);
@@ -14,12 +14,12 @@ CMainApp::CMainApp()
 
 	//D3D11_SAMPLER_DESC
 
-	
+
 }
 
 HRESULT CMainApp::Initialize()
-{	
-	
+{
+
 
 	GRAPHIC_DESC		GraphicDesc = {};
 
@@ -31,15 +31,15 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(m_pGameInstance->Initialize_Engine(LEVEL_END, g_hInst, GraphicDesc, &m_pDevice, &m_pContext)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Gara()))
-		return E_FAIL;
+	//if (FAILED(Ready_Gara()))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Prototype_Component_ForStaticLevel()))
 		return E_FAIL;
 
 	if (FAILED(Open_Level(LEVEL_LOGO)))
 		return E_FAIL;
-	
+
 	return S_OK;
 }
 
@@ -59,7 +59,7 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 
-	/* 그려야할 모델들을 그리낟.*/	
+	/* 그려야할 모델들을 그리낟.*/
 	m_pGameInstance->Render_Engine();
 
 	++m_iNumRender;
@@ -88,7 +88,7 @@ HRESULT CMainApp::Open_Level(LEVEL eStartLevelID)
 	if (nullptr == pLevel)
 		return E_FAIL;
 
-	return m_pGameInstance->Open_Level(LEVEL_LOADING, pLevel);	
+	return m_pGameInstance->Open_Level(LEVEL_LOADING, pLevel);
 }
 
 HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
@@ -122,7 +122,7 @@ HRESULT CMainApp::Ready_Gara()
 	//m_pDevice->CreateRasterizerState(RasterizerDesc, &pRSState);
 
 	/*m_pContext->RSSetState();
-	m_pContext->OMSetDepthStencilState();	
+	m_pContext->OMSetDepthStencilState();
 	m_pContext->OMSetBlendState();*/
 
 
@@ -190,7 +190,7 @@ HRESULT CMainApp::Ready_Gara()
 	memcpy(MappedSubResource.pData, pPixels, sizeof(_uint) * TextureDesc.Width * TextureDesc.Height);
 
 	m_pContext->Unmap(pTexture2D, 0);
-	
+
 
 	/* 다시 파일로 저장하기위해서. */
 	if (FAILED(SaveDDSTextureToFile(m_pContext, pTexture2D, TEXT("../Bin/Resources/Textures/Terrain/MyMask.dds"))))

@@ -94,6 +94,7 @@ void CCell::Update(_fmatrix WorldMatrix)
 
 }
 
+#ifdef _DEBUG
 HRESULT CCell::Render(class CShader* pShader)
 {
 	m_pVIBuffer->Bind_VIBuffers();
@@ -102,6 +103,7 @@ HRESULT CCell::Render(class CShader* pShader)
 
 	return S_OK;
 }
+#endif
 
 CCell * CCell::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _float3 * pPoints, _uint iIndex)
 {

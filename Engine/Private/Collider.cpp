@@ -14,11 +14,15 @@ CCollider::CCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CCollider::CCollider(const CCollider & rhs)
 	: CComponent(rhs)
 	, m_eType(rhs.m_eType)
+#ifdef _DEBUG
 	, m_pBatch(rhs.m_pBatch)
 	, m_pEffect(rhs.m_pEffect)
 	, m_pInputLayout(rhs.m_pInputLayout)
+#endif // _DEBUG
 {
-	Safe_AddRef(m_pInputLayout);
+	#ifdef _DEBUG
+		Safe_AddRef(m_pInputLayout);
+	#endif
 }
 
 HRESULT CCollider::Initialize_Prototype(TYPE eType)
@@ -84,7 +88,7 @@ HRESULT CCollider::Render()
 
 	m_pBatch->Begin();
 
-	m_pEffect->SetWorld(XMMatrixIdentity());	
+	m_pEffect->SetWorld(XMMatrixIdentity());
 	m_pEffect->SetView(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
 	m_pEffect->SetProjection(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
 
@@ -92,14 +96,14 @@ HRESULT CCollider::Render()
 
 	m_pEffect->Apply(m_pContext);
 
-	m_pBounding->Render(m_pBatch, m_isCollision == true ? XMVectorSet(1.f, 0.f, 0.f, 1.f) : XMVectorSet(0.f, 1.f, 0.f, 1.f));	
+	m_pBounding->Render(m_pBatch, m_isCollision == true ? XMVectorSet(1.f, 0.f, 0.f, 1.f) : XMVectorSet(0.f, 1.f, 0.f, 1.f));
 
 	m_pBatch->End();
 
 	return S_OK;
 }
 
-#endif 
+#endif
 
 CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eType)
 {
@@ -139,7 +143,7 @@ void CCollider::Free()
 		Safe_Delete(m_pBatch);
 		Safe_Delete(m_pEffect);
 	}
-	
+
 	Safe_Release(m_pInputLayout);
 
 #endif

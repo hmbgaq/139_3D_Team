@@ -12,17 +12,19 @@ public:
 		_float3		vExtents;
 	}BOUNDING_AABB_DESC;
 private:
-	CBounding_AABB(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);	
+	CBounding_AABB(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CBounding_AABB() = default;
-	
+
 public:
 	const BoundingBox* Get_Bounding() {
 		return m_pAABB;
 	}
-	
+
 public:
 	HRESULT Initialize(BOUNDING_DESC* pBoundingDesc);
+#ifdef _DEBUG
 	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch, _vector vColor) override;
+#endif
 	virtual void Update(_fmatrix TransformMatrix);
 
 public:
