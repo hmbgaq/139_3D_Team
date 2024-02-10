@@ -7,7 +7,7 @@ BEGIN(Engine)
 class CBounding_AABB final : public CBounding
 {
 public:
-	typedef struct : public BOUNDING_DESC
+	typedef struct tagAABB: public BOUNDING_DESC
 	{
 		_float3		vExtents;
 	}BOUNDING_AABB_DESC;

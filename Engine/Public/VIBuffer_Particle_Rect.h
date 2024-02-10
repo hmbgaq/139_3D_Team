@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Particle_Rect final : public CVIBuffer_Instancing
 {
 public:
-	typedef struct : public CVIBuffer_Instancing::INSTANCING_DESC
+	typedef struct tagParticleRect: public CVIBuffer_Instancing::INSTANCING_DESC
 	{
 		
 	}PARTICLE_RECT_DESC;

@@ -153,7 +153,7 @@ HRESULT CMainApp::Ready_Gara()
 	{
 		for (size_t j = 0; j < TextureDesc.Width; j++)
 		{
-			_uint		iIndex = i * TextureDesc.Width + j;
+			_uint		iIndex = (_uint)(i * TextureDesc.Width + j);
 
 			pPixels[iIndex] = D3DCOLOR_ARGB(255, 0, 0, 0);
 		}
@@ -173,7 +173,7 @@ HRESULT CMainApp::Ready_Gara()
 	{
 		for (size_t j = 0; j < TextureDesc.Width; j++)
 		{
-			_uint		iIndex = i * TextureDesc.Width + j;
+			_uint		iIndex = (_uint)i * TextureDesc.Width + (_uint)j;
 
 			if(j < TextureDesc.Width * 0.5f)
 				pPixels[iIndex] = D3DCOLOR_ARGB(255, 0, 0, 0);

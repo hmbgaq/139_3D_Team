@@ -1,13 +1,12 @@
 #pragma once
 
-#pragma warning(disable : 4251)
+/* Warning Disable */
+#pragma warning(disable : 4251) /* dll template export warning */
+#pragma warning	(disable : 4819)  /* 한글 주석 경고 */
+#pragma warning (disable : 26812) /* enumclass warning */
+//#pragma warning (disable : 26495) /* initialize warning */
 
-namespace Engine
-{
-	enum MOUSEKEYSTATE { DIM_LB, DIM_RB, DIM_MB, DIM_END };
-	enum MOUSEMOVESTATE { DIMS_X, DIMS_Y, DIMS_Z, DIMS_END };
-}
-
+/* DX */
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <DirectXCollision.h>
@@ -33,29 +32,32 @@ namespace Engine
 
 using namespace DirectX;
 
+/* Basic*/
 #include <unordered_map>
 #include <algorithm>
 #include <vector>
 #include <list>
 #include <map>
+#include <set>
+#include <queue>
+#include <queue>
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <ctime>
+#include <random>
 using namespace std;
 
-namespace Engine
-{
-	static const wchar_t*	g_pTransformTag = TEXT("Com_Transform");
-}
 
 #include "Engine_Macro.h"
 #include "Engine_Struct.h"
 #include "Engine_Function.h"
-
+#include "Engine_Enum.h"
 #include "Engine_Typedef.h"
 using namespace Engine;
 
 
-
-
-
+/* Leak */
 #ifdef _DEBUG
 
 #define _CRTDBG_MAP_ALLOC
@@ -71,6 +73,14 @@ using namespace Engine;
 
 #endif // _DEBUG
 
+/* No DebugBreak */
+#ifdef _DEBUG
+#define DEBUG_ASSERT assert(false)
+#endif
+
+#ifndef _DEBUG
+#define DEBUG_ASSERT void(0);
+#endif // _DEBUG
 
 
 

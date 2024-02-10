@@ -1,8 +1,6 @@
 #include "stdafx.h"
-#include "..\Public\BackGround.h"
-
+#include "BackGround.h"
 #include "GameInstance.h"
-
 
 CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)

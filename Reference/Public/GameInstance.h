@@ -88,13 +88,13 @@ public: /* For.Target_Manager */
 #endif
 
 public: /* For.Light_Manager */
-	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
+	HRESULT Add_Light(const LIGHT_DESC& LightDesc, _int & outLightIndex);
 	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 
 public: /* For.Frustum */
-	void Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix);
-	_bool isIn_WorldPlanes(_fvector vPoint, _float fRadius = 0.f);
-	_bool isIn_LocalPlanes(_fvector vPoint, _float fRadius);
+	void	Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix);
+	_bool	isIn_WorldPlanes(_fvector vPoint, _float fRadius = 0.f);
+	_bool	isIn_LocalPlanes(_fvector vPoint, _float fRadius);
 
 
 private:
@@ -111,7 +111,6 @@ private:
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 	class CFrustum*					m_pFrustum = { nullptr };
 	
-
 public:
 	void Release_Manager();
 	static void Release_Engine();

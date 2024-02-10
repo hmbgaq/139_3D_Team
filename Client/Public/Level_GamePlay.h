@@ -27,6 +27,8 @@ private:
 	HRESULT Ready_Layer_Monster(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_Building(const wstring& strLayerTag, void* pArg);
 	
+private:
+	_int			TempLightNumber = 0;
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

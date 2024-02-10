@@ -2,25 +2,49 @@
 #define Engine_Macro_h__
 
 
-#define D3DCOLOR_ARGB(a,r,g,b) \
-    ((D3DCOLOR)((((a)&0xff)<<24)|(((b)&0xff)<<16)|(((g)&0xff)<<8)|((r)&0xff)))
+/* Color */
+#define D3DCOLOR_ARGB(a,r,g,b)    ((D3DCOLOR)((((a)&0xff)<<24)|(((b)&0xff)<<16)|(((g)&0xff)<<8)|((r)&0xff)))
 
+#define DEBUG_RGBA_RED					_float4(1.f, 0.f, 0.f, 1.f)
+#define DEBUG_RGBA_DARK_RED				_float4(0.5f, 0.0f, 0.0f, 1.0f)
+#define DEBUG_RGBA_ORANGE				_float4(1.f, 0.5f, 0.f, 1.f)
+#define DEBUG_RGBA_LIGHT_ORANGE			_float4(1.0f, 0.7f, 0.4f, 1.0f) 
+#define DEBUG_RGBA_PASTEL_ORANGE		_float4(1.0f, 0.8f, 0.6f, 1.0f) 
+#define DEBUG_RGBA_DARK_ORANGE			_float4(0.8f, 0.4f, 0.0f, 1.0f)
+#define DEBUG_RGBA_YELLOW				_float4(1.f, 1.f, 0.f, 1.f)
+#define DEBUG_RGBA_LIGHT_YELLOW			_float4(1.0f, 1.0f, 0.5f, 1.0f) 
+#define DEBUG_RGBA_PASTEL_YELLOW		_float4(1.0f, 1.0f, 0.7f, 1.0f) 
+#define DEBUG_RGBA_GREEN				_float4(0.f, 1.f, 0.f, 1.f)
+#define DEBUG_RGBA_BLUE					_float4(0.f, 0.f, 1.f, 1.f)
+#define DEBUG_RGBA_CYAN					_float4(0.f, 1.f, 1.f, 1.f)
+#define DEBUG_RGBA_PURPLE				_float4(0.5f, 0.0f, 0.5f, 1.0f)
+#define DEBUG_RGBA_MAGENTA				_float4(1.f, 0.f, 1.f, 1.f)
+#define DEBUG_RGBA_WHITE				_float4(1.f, 1.f, 1.f, 1.f)
+#define DEBUG_RGBA_BLACK				_float4(0.f, 0.f, 0.f, 1.f)
+#define DEBUG_RGBA_GRAY					_float4(0.5f, 0.5f, 0.5f, 1.f)
+#define DEBUG_RGBA_BLUEGRAY				_float4(0.2f, 0.4f, 0.6f, 1.f)
+#define DEBUG_RGBA_BLUEGREEN			_float4(0.1f, 0.5f, 0.4f, 1.f)
+#define DEBUG_RGBA_TURQUOISE			_float4(0.1f, 0.6f, 0.6f, 1.f)
+#define DEBUG_RGBA_TEAL					_float4(0.0f, 0.4f, 0.4f, 1.f)
 
-#ifndef			MSG_BOX
-#define			MSG_BOX(_message)		MessageBox(nullptr, TEXT(_message), L"System Message", MB_OK)
+/* MsgBox*/
+#ifndef	MSG_BOX
+#define	MSG_BOX(_message)		MessageBox(nullptr, TEXT(_message), L"System Message", MB_OK)
 #endif
 
-#define			BEGIN(NAMESPACE)		namespace NAMESPACE {
-#define			END						}
+/* Namespace*/
+#define	BEGIN(NAMESPACE)		namespace NAMESPACE {
+#define	END						}
+#define	USING(NAMESPACE)		using namespace NAMESPACE;
 
-#define			USING(NAMESPACE)	using namespace NAMESPACE;
-
+/* Build Option*/
 #ifdef	ENGINE_EXPORTS
 #define ENGINE_DLL		_declspec(dllexport)
 #else
 #define ENGINE_DLL		_declspec(dllimport)
 #endif
 
+/*  Debug Check */
 #define NULL_CHECK( _ptr)	\
 	{if( _ptr == 0){__asm { int 3 };return;}}
 
@@ -46,8 +70,7 @@
 #define FAILED_CHECK_RETURN_MSG( _hr, _return, _message)	if( ((HRESULT)(_hr)) < 0 )	\
 	{ MessageBoxW(nullptr, _message, L"System Message",MB_OK); __asm { int 3 };return _return;}
 
-
-
+/* Singleton */
 #define NO_COPY(CLASSNAME)								\
 		private:										\
 		CLASSNAME(const CLASSNAME&);					\

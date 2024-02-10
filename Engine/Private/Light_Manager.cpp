@@ -10,7 +10,7 @@ HRESULT CLight_Manager::Initialize()
 	return S_OK;
 }
 
-HRESULT CLight_Manager::Add_Light(const LIGHT_DESC & LightDesc)
+HRESULT CLight_Manager::Add_Light(const LIGHT_DESC & LightDesc, _int& outLightIndex)
 {
 	CLight*		pLight = CLight::Create(LightDesc);
 	if (nullptr == pLight)
@@ -18,9 +18,45 @@ HRESULT CLight_Manager::Add_Light(const LIGHT_DESC & LightDesc)
 
 	m_Lights.push_back(pLight);
 
+	outLightIndex = pLight->Get_LightIndex();
+
 	return S_OK;
 }
 
+_bool CLight_Manager::Remove_Light(const _uint& iIndex)
+{
+	for (auto iter = m_Lights.begin(); iter != m_Lights.end();)
+	{
+		if (iIndex == (*iter)->Get_LightDesc().Get_LightIndex())
+		{
+			m_Lights.erase(iter);
+			return true;
+		}
+		else
+		{
+			++iter;
+		}
+	}
+
+	return false;
+}
+
+CLight* CLight_Manager::Find_Light(const _int iIndex)
+{
+	for (auto iter = m_Lights.begin(); iter != m_Lights.end();)
+	{
+		if (iIndex == (*iter)->Get_LightDesc().Get_LightIndex())
+		{
+			return *iter;
+		}
+		else
+		{
+			++iter;
+		}
+	}
+
+	return nullptr;
+}
 HRESULT CLight_Manager::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 {
 	for (auto& pLight : m_Lights)

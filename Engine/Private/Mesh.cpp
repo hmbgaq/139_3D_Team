@@ -192,25 +192,25 @@ HRESULT CMesh::Ready_Vertices_Anim(const aiMesh * pAIMesh, const vector<class CB
 			/* pAIBone->mWeights[j].mVertexId : 이 뼈가 영향을 주는 j번째 정점의 인덱스 */
 			if(0.0f == pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.x)
 			{
-				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndices.x = i;
+				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndices.x = (uint32_t)i;
 				pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.x = pAIBone->mWeights[j].mWeight;
 			}
 
 			else if (0.0f == pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.y)
 			{
-				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndices.y = i;
+				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndices.y = (uint32_t)i;
 				pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.y = pAIBone->mWeights[j].mWeight;
 			}
 
 			else if (0.0f == pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.z)
 			{
-				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndices.z = i;
+				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndices.z = (uint32_t)i;
 				pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.z = pAIBone->mWeights[j].mWeight;
 			}
 
 			else if (0.0f == pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.w)
 			{
-				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndices.w = i;
+				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndices.w = (uint32_t)i;
 				pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.w = pAIBone->mWeights[j].mWeight;
 			}
 		}		

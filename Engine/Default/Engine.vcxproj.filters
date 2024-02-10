@@ -333,6 +333,9 @@
     <ClInclude Include="..\public\QuadTree.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Terrain\QuadTree</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Engine_Enum.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">

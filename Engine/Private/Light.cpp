@@ -1,11 +1,11 @@
-#include "..\Public\Light.h"
-
+#include "Light.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
 
+_uint CLight::g_iLightIndex = 0;
+
 CLight::CLight()
 {
-
 }
 
 HRESULT CLight::Initialize(const LIGHT_DESC & LightDesc)
@@ -17,6 +17,9 @@ HRESULT CLight::Initialize(const LIGHT_DESC & LightDesc)
 
 HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 {
+	if (!m_LightDesc.bEnable)
+		return E_FAIL;
+
 	_uint		iPassIndex = { 0 };
 
 	if (LIGHT_DESC::TYPE_DIRECTIONAL == m_LightDesc.eType)
@@ -25,13 +28,16 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 
 		iPassIndex = 1;
 	}
-	else
+	else if (LIGHT_DESC::TYPE_POINT == m_LightDesc.eType)
 	{
 		pShader->Bind_RawValue("g_vLightPos", &m_LightDesc.vPosition, sizeof(_float4));
 		pShader->Bind_RawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float));
 
 		iPassIndex = 2;
 	}	
+	else if (LIGHT_DESC::TYPE_SPOTLIGHT == m_LightDesc.eType)
+	{
+	}
 
 	if (FAILED(pShader->Bind_RawValue("g_vLightDiffuse", &m_LightDesc.vDiffuse, sizeof(_float4))))
 		return E_FAIL;
@@ -60,9 +66,7 @@ CLight * CLight::Create(const LIGHT_DESC & LightDesc)
 	return pInstance;
 }
 
-
 void CLight::Free()
 {
 	__super::Free();
-
 }

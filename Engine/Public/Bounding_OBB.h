@@ -7,7 +7,7 @@ BEGIN(Engine)
 class CBounding_OBB final : public CBounding
 {
 public:
-	typedef struct : public BOUNDING_DESC
+	typedef struct tabOBB : public BOUNDING_DESC
 	{
 		_float3		vExtents;
 		_float3		vRotation;

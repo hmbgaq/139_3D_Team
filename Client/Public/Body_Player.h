@@ -15,7 +15,7 @@ BEGIN(Client)
 class CBody_Player final : public CGameObject
 {
 public:
-	typedef struct
+	typedef struct tagBodyDesc
 	{
 		class CTransform*		m_pParentTransform = { nullptr };
 	}BODY_DESC;

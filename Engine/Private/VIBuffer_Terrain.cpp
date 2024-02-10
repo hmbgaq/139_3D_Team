@@ -56,7 +56,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 	{
 		for (size_t j = 0; j < m_iNumVerticesX; j++)
 		{
-			_uint		iIndex = i * m_iNumVerticesX + j;		
+			_uint		iIndex = _uint(i * m_iNumVerticesX + j);
 
 	/*		11111111 10010011 10010011 10010011
 
@@ -64,9 +64,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 
 			00000000 00000000 00000000 10010011*/		
 
-			pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3(j, (pPixel[iIndex] & 0x000000ff) / 5.f, i);
+			pVertices[iIndex].vPosition = _float3((_float)j, _float(pPixel[iIndex] & 0x000000ff) / 5.f, (_float)i);
 			pVertices[iIndex].vNormal = _float3(0.0f, 0.0f, 0.f);
-			pVertices[iIndex].vTexcoord = _float2(j / (m_iNumVerticesX - 1.0f), i / (m_iNumVerticesZ - 1.0f));			
+			pVertices[iIndex].vTexcoord = _float2((_float)j / (m_iNumVerticesX - 1.0f), (_float)i / (m_iNumVerticesZ - 1.0f));
 		}
 	}
 
@@ -86,7 +86,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 	{
 		for (size_t j = 0; j < m_iNumVerticesX - 1; j++)
 		{
-			_uint		iIndex = i * m_iNumVerticesX + j;
+			_uint		iIndex = _uint(i * m_iNumVerticesX + j);
 
 			_uint		iIndices[4] = {
 				iIndex + m_iNumVerticesX,

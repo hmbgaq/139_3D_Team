@@ -15,7 +15,7 @@ BEGIN(Client)
 class CWeapon_Player final : public CGameObject
 {
 public:
-	typedef struct
+	typedef struct tagWeaponDesc
 	{
 		class CBone*			m_pSocketBone = { nullptr };
 		class CTransform*		m_pParentTransform = { nullptr };

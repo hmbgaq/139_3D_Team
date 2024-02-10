@@ -12,7 +12,7 @@ BEGIN(Client)
 class CLandObject abstract : public CGameObject
 {
 public:
-	typedef struct : public CGameObject::GAMEOBJECT_DESC
+	typedef struct tagLandObjectDesc: public CGameObject::GAMEOBJECT_DESC
 	{
 		CVIBuffer_Terrain*		pTerrainBuffer;
 		CTransform*				pTerrainTransform;

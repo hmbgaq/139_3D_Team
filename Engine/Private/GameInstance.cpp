@@ -377,13 +377,19 @@ HRESULT CGameInstance::Render_Debug_RTVs(const wstring & strMRTTag, CShader * pS
 
 #endif
 
-HRESULT CGameInstance::Add_Light(const LIGHT_DESC & LightDesc)
+HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc, _int& outLightIndex)
 {
-	return m_pLight_Manager->Add_Light(LightDesc);
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+	return m_pLight_Manager->Add_Light(LightDesc, outLightIndex);
 }
 
 HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 {
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
 	return m_pLight_Manager->Render(pShader, pVIBuffer);
 }
 
