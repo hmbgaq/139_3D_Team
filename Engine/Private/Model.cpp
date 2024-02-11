@@ -134,6 +134,65 @@ HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantNa
 	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Bind_ShaderResource(pShader, pConstantName);	
 }
 
+void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
+{
+	m_eAnimState = _eAnimState;
+
+	//if (_iAnimationIndex != m_iCurrentAnimIndex)
+	{
+		Reset_Animation(_iAnimationIndex);
+
+		if (_bIsTransition)
+		{
+			Set_Animation_Transition(_iAnimationIndex, _fTransitionDuration, iTargetKeyFrameIndex);
+		}
+		else
+		{
+			m_iCurrentAnimIndex = _iAnimationIndex;
+		}
+	}
+}
+
+void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
+{
+	if (_iAnimationIndex == m_iCurrentAnimIndex)
+	{
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(iTargetKeyFrameIndex);
+	}
+
+	CAnimation* currentAnimation = m_Animations[m_iCurrentAnimIndex];
+	CAnimation* targetAnimation = m_Animations[_iAnimationIndex];
+
+	targetAnimation->Reset_Animation(m_Bones);		// юс╫ц
+
+	targetAnimation->Set_Transition(currentAnimation, _fTransitionDuration, iTargetKeyFrameIndex);
+
+	m_iCurrentAnimIndex = _iAnimationIndex;
+}
+
+void CModel::Reset_Animation(_int iAnimIndex)
+{
+	if (iAnimIndex == -1)
+		m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones);
+	else
+		m_Animations[iAnimIndex]->Reset_Animation(m_Bones);
+}
+
+_float CModel::Get_TickPerSecond()
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_TickPerSecond();
+}
+
+_bool CModel::Is_Transition()
+{
+	return m_Animations[m_iCurrentAnimIndex]->Is_Transition();
+}
+
+_bool CModel::Is_Inputable_Front(_uint _iIndexFront)
+{
+	return m_Animations[m_iCurrentAnimIndex]->Is_Inputable_Front(_iIndexFront);
+}
+
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 {
 	m_iNumMeshes = m_pAIScene->mNumMeshes;

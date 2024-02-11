@@ -24,9 +24,9 @@ public:
 
 	class CBone* Get_BonePtr(const _char* pBoneName) const;
 
-	void Set_Animation(_uint iAnimIndex) {
-		m_iCurrentAnimIndex = iAnimIndex;
-	}
+	//void Set_Animation(_uint iAnimIndex) {
+	//	m_iCurrentAnimIndex = iAnimIndex;
+	//}
 
 	_bool Is_AnimEnd() { return m_bIsAnimEnd; };
 
