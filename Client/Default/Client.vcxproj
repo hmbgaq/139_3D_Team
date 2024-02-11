@@ -171,20 +171,20 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Reference\Imgui\imconfig.h" />
+    <ClInclude Include="..\..\Reference\Imgui\imgui.h" />
+    <ClInclude Include="..\..\Reference\Imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="..\..\Reference\Imgui\imgui_impl_win32.h" />
+    <ClInclude Include="..\..\Reference\Imgui\imgui_internal.h" />
+    <ClInclude Include="..\..\Reference\Imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\..\Reference\Imgui\imstb_textedit.h" />
+    <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Effect_Explosion.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
-    <ClInclude Include="..\Public\Imgui\imconfig.h" />
-    <ClInclude Include="..\Public\Imgui\imgui.h" />
-    <ClInclude Include="..\Public\Imgui\imgui_impl_dx11.h" />
-    <ClInclude Include="..\Public\Imgui\imgui_impl_win32.h" />
-    <ClInclude Include="..\Public\Imgui\imgui_internal.h" />
-    <ClInclude Include="..\Public\Imgui\imstb_rectpack.h" />
-    <ClInclude Include="..\Public\Imgui\imstb_textedit.h" />
-    <ClInclude Include="..\Public\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\Public\Imgui_Manager.h" />
     <ClInclude Include="..\public\LandObject.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
@@ -205,6 +205,13 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Reference\Imgui\imgui.cpp" />
+    <ClCompile Include="..\..\Reference\Imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\Reference\Imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\Reference\Imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\..\Reference\Imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\..\Reference\Imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\Reference\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
@@ -224,13 +231,6 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Weapon_Player.cpp" />
-    <ClCompile Include="..\Public\Imgui\imgui.cpp" />
-    <ClCompile Include="..\Public\Imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\Public\Imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\Public\Imgui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="..\Public\Imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="..\Public\Imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\Public\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

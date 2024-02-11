@@ -8,8 +8,9 @@ CImgui_Manager::CImgui_Manager()
 
 #pragma region 이니셜라이즈
 
-HRESULT CImgui_Manager::Intialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
+
 	//m_pDevice = pDevice;
 	//m_pContext = pContext;
 

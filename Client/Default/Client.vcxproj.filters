@@ -162,28 +162,28 @@
     <ClInclude Include="..\Public\Imgui_Manager.h">
       <Filter>01.Levels\02.Tool\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Imgui\imstb_rectpack.h">
+    <ClInclude Include="..\..\Reference\Imgui\imgui.h">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Imgui\imstb_textedit.h">
+    <ClInclude Include="..\..\Reference\Imgui\imgui_impl_dx11.h">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Imgui\imstb_truetype.h">
+    <ClInclude Include="..\..\Reference\Imgui\imgui_impl_win32.h">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Imgui\imconfig.h">
+    <ClInclude Include="..\..\Reference\Imgui\imgui_internal.h">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Imgui\imgui.h">
+    <ClInclude Include="..\..\Reference\Imgui\imstb_rectpack.h">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Imgui\imgui_impl_dx11.h">
+    <ClInclude Include="..\..\Reference\Imgui\imstb_textedit.h">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Imgui\imgui_impl_win32.h">
+    <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Imgui\imgui_internal.h">
+    <ClInclude Include="..\..\Reference\Imgui\imconfig.h">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClInclude>
   </ItemGroup>
@@ -251,25 +251,25 @@
     <ClCompile Include="..\Private\Imgui_Manager.cpp">
       <Filter>01.Levels\02.Tool\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Public\Imgui\imgui_widgets.cpp">
+    <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClCompile>
-    <ClCompile Include="..\Public\Imgui\imgui.cpp">
+    <ClCompile Include="..\..\Reference\Imgui\imgui_demo.cpp">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClCompile>
-    <ClCompile Include="..\Public\Imgui\imgui_demo.cpp">
+    <ClCompile Include="..\..\Reference\Imgui\imgui_draw.cpp">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClCompile>
-    <ClCompile Include="..\Public\Imgui\imgui_draw.cpp">
+    <ClCompile Include="..\..\Reference\Imgui\imgui_impl_dx11.cpp">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClCompile>
-    <ClCompile Include="..\Public\Imgui\imgui_impl_dx11.cpp">
+    <ClCompile Include="..\..\Reference\Imgui\imgui_impl_win32.cpp">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClCompile>
-    <ClCompile Include="..\Public\Imgui\imgui_impl_win32.cpp">
+    <ClCompile Include="..\..\Reference\Imgui\imgui_tables.cpp">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClCompile>
-    <ClCompile Include="..\Public\Imgui\imgui_tables.cpp">
+    <ClCompile Include="..\..\Reference\Imgui\imgui_widgets.cpp">
       <Filter>01.Levels\02.Tool\Default</Filter>
     </ClCompile>
   </ItemGroup>

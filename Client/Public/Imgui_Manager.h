@@ -28,7 +28,7 @@ private:
 	virtual ~CImgui_Manager() = default;
 
 public:
-	HRESULT			Intialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	HRESULT			Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void			 ImGuizmo_Initialize();
 	void			 ImGuiFileDialog_Initialize();
 
