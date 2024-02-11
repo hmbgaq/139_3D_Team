@@ -223,6 +223,18 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\public\Light_Manager.h" />
     <ClInclude Include="..\public\Mesh.h" />
     <ClInclude Include="..\public\Model.h" />
+    <ClInclude Include="..\Public\MyAIAnimation.h" />
+    <ClInclude Include="..\Public\MyAIBone.h" />
+    <ClInclude Include="..\Public\MyAIFace.h" />
+    <ClInclude Include="..\Public\MyAIMaterial.h" />
+    <ClInclude Include="..\Public\MyAIMesh.h" />
+    <ClInclude Include="..\Public\MyAINode.h" />
+    <ClInclude Include="..\Public\MyAINodeAnimation.h" />
+    <ClInclude Include="..\Public\MyAIQuatKey.h" />
+    <ClInclude Include="..\Public\MyAIScene.h" />
+    <ClInclude Include="..\Public\MyAIVectorKey.h" />
+    <ClInclude Include="..\Public\MyAIVertexWeight.h" />
+    <ClInclude Include="..\Public\MyAssimp.h" />
     <ClInclude Include="..\public\Navigation.h" />
     <ClInclude Include="..\public\Object_Manager.h" />
     <ClInclude Include="..\public\PipeLine.h" />
@@ -261,6 +273,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\private\Component_Manager.cpp" />
     <ClCompile Include="..\private\CustomFont.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
+    <ClCompile Include="..\Private\Engine_Struct.cpp" />
     <ClCompile Include="..\private\Font_Manager.cpp" />
     <ClCompile Include="..\private\Frustum.cpp" />
     <ClCompile Include="..\private\GameInstance.cpp" />
@@ -294,7 +307,6 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\private\VIBuffer_Particle_Rect.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
-    <ClCompile Include="..\Public\Engine_Struct.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl" />

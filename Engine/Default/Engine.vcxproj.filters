@@ -169,6 +169,9 @@
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Terrain\QuadTree">
       <UniqueIdentifier>{feca8019-a668-4c39-b4af-854f54ec2624}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.MyAssimp">
+      <UniqueIdentifier>{5f3e9d16-d2b3-4fa1-ae9a-e82cffb661ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -336,6 +339,42 @@
     <ClInclude Include="..\Public\Engine_Enum.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MyAssimp.h">
+      <Filter>97.MyAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIVertexWeight.h">
+      <Filter>97.MyAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIAnimation.h">
+      <Filter>97.MyAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIBone.h">
+      <Filter>97.MyAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIFace.h">
+      <Filter>97.MyAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIMaterial.h">
+      <Filter>97.MyAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIMesh.h">
+      <Filter>97.MyAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAINode.h">
+      <Filter>97.MyAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAINodeAnimation.h">
+      <Filter>97.MyAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIQuatKey.h">
+      <Filter>97.MyAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIScene.h">
+      <Filter>97.MyAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIVectorKey.h">
+      <Filter>97.MyAssimp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -385,9 +424,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Component_Manager.cpp">
       <Filter>01.Utility\03.Components\00.Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Public\Engine_Struct.cpp">
-      <Filter>99.Defines</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Transform.cpp">
       <Filter>01.Utility\03.Components\03.Transform</Filter>
@@ -487,6 +523,9 @@
     </ClCompile>
     <ClCompile Include="..\private\QuadTree.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Terrain\QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Engine_Struct.cpp">
+      <Filter>99.Defines</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

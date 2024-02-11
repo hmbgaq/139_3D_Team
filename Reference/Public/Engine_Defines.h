@@ -1,4 +1,5 @@
-#pragma once
+
+ #pragma once
 
 /* Warning Disable */
 #pragma warning(disable : 4251) /* dll template export warning */
