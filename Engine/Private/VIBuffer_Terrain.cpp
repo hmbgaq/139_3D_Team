@@ -30,7 +30,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 
 	BITMAPINFOHEADER		ih;
 	ReadFile(hFile, &ih, sizeof ih, &dwByte, nullptr);
-	
+
 	_ulong*		pPixel = new _ulong[ih.biWidth * ih.biHeight];
 	ReadFile(hFile, pPixel, sizeof(_ulong) * ih.biWidth * ih.biHeight, &dwByte, nullptr);
 
@@ -62,9 +62,10 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 
 		&	00000000 00000000 00000000 11111111
 
-			00000000 00000000 00000000 10010011*/		
+			00000000 00000000 00000000 10010011*/
 
-			pVertices[iIndex].vPosition = _float3((_float)j, _float(pPixel[iIndex] & 0x000000ff) / 5.f, (_float)i);
+
+			pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3((_float)j, _float(pPixel[iIndex] & 0x000000ff) / 5.f, (_float)i);
 			pVertices[iIndex].vNormal = _float3(0.0f, 0.0f, 0.f);
 			pVertices[iIndex].vTexcoord = _float2((_float)j / (m_iNumVerticesX - 1.0f), (_float)i / (m_iNumVerticesZ - 1.0f));
 		}
@@ -91,7 +92,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 			_uint		iIndices[4] = {
 				iIndex + m_iNumVerticesX,
 				iIndex + m_iNumVerticesX + 1,
-				iIndex + 1, 
+				iIndex + 1,
 				iIndex
 			};
 
@@ -131,7 +132,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 			vNormal = XMLoadFloat3(&pVertices[iIndices[3]].vNormal) + vNormal;
  			XMStoreFloat3(&pVertices[iIndices[3]].vNormal, XMVector3Normalize(vNormal));
 		}
-	}	
+	}
 
 #pragma endregion
 	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
@@ -204,11 +205,11 @@ _float CVIBuffer_Terrain::Compute_Height(_fvector vLocalPos)
 	/* a, b, c, d */
 	/* x, y, z */
 
-	/* ax + by + cz + d = 0 */	
+	/* ax + by + cz + d = 0 */
 	/* 오른쪽 위 삼각형에 있다. */
 	if (fWidth >= fDepth)
 	{
-		vPlane = XMPlaneFromPoints(XMLoadFloat3(&m_pVerticesPos[iIndices[0]]), 
+		vPlane = XMPlaneFromPoints(XMLoadFloat3(&m_pVerticesPos[iIndices[0]]),
 			XMLoadFloat3(&m_pVerticesPos[iIndices[1]]),
 			XMLoadFloat3(&m_pVerticesPos[iIndices[2]]));
 	}
@@ -225,7 +226,7 @@ _float CVIBuffer_Terrain::Compute_Height(_fvector vLocalPos)
 
 	/* y = (-ax - cz - d) / b; */
 
-	return (-vPlane.m128_f32[0] * vLocalPos.m128_f32[0] - vPlane.m128_f32[2] * vLocalPos.m128_f32[2] - vPlane.m128_f32[3]) / vPlane.m128_f32[1];	
+	return (-vPlane.m128_f32[0] * vLocalPos.m128_f32[0] - vPlane.m128_f32[2] * vLocalPos.m128_f32[2] - vPlane.m128_f32[3]) / vPlane.m128_f32[1];
 }
 
 void CVIBuffer_Terrain::Culling(_fmatrix WorldMatrix)
@@ -236,7 +237,7 @@ void CVIBuffer_Terrain::Culling(_fmatrix WorldMatrix)
 
 	m_pContext->Map(m_pIB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedSubResource);
 
-	_uint		iNumIndices = 0;	
+	_uint		iNumIndices = 0;
 
 	m_pQuadTree->Culling(m_pVerticesPos, (_uint*)MappedSubResource.pData, &iNumIndices);
 
@@ -254,7 +255,7 @@ void CVIBuffer_Terrain::Culling(_fmatrix WorldMatrix)
 			};
 
 			_bool		isIn[4] = {
-				m_pGameInstance->isIn_LocalPlanes(XMLoadFloat3(&m_pVerticesPos[iIndices[0]]), 0.f), 
+				m_pGameInstance->isIn_LocalPlanes(XMLoadFloat3(&m_pVerticesPos[iIndices[0]]), 0.f),
 				m_pGameInstance->isIn_LocalPlanes(XMLoadFloat3(&m_pVerticesPos[iIndices[1]]), 0.f),
 				m_pGameInstance->isIn_LocalPlanes(XMLoadFloat3(&m_pVerticesPos[iIndices[2]]), 0.f),
 				m_pGameInstance->isIn_LocalPlanes(XMLoadFloat3(&m_pVerticesPos[iIndices[3]]), 0.f),
@@ -266,7 +267,7 @@ void CVIBuffer_Terrain::Culling(_fmatrix WorldMatrix)
 			{
 				((_uint*)MappedSubResource.pData)[iNumIndices++] = iIndices[0];
 				((_uint*)MappedSubResource.pData)[iNumIndices++] = iIndices[1];
-				((_uint*)MappedSubResource.pData)[iNumIndices++] = iIndices[2];				
+				((_uint*)MappedSubResource.pData)[iNumIndices++] = iIndices[2];
 			}
 
 			if (true == isIn[0] ||
