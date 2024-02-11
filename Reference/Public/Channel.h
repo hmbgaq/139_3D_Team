@@ -15,7 +15,7 @@ private:
 	virtual ~CChannel() = default;
 
 public:
-	HRESULT Initialize(const aiNodeAnim* pChannel, const CModel::BONES& Bones);
+	HRESULT Initialize(CMyAINodeAnimation pChannel, const CModel::BONES& Bones);
 	void Invalidate_TransformationMatrix(_float fCurrentTrackPosition, const CModel::BONES& Bones, _uint* pCurrentKeyFrameIndex);
 	void Invalidate_TransformationMatrix_Normal(_float fCurrentTrackPosition, const CModel::BONES& Bones, _uint* pCurrentKeyFrameIndex);
 	void Invalidate_TransformationMatrix_Reverse(_float fCurrentTrackPosition, const CModel::BONES& Bones, _uint* pCurrentKeyFrameIndex);
@@ -52,7 +52,7 @@ private:
 	_uint				m_iBoneIndex = { 0 };
 
 public:
-	static CChannel* Create(const aiNodeAnim* pChannel, const CModel::BONES& Bones);
+	static CChannel* Create(CMyAINodeAnimation pChannel, const CModel::BONES& Bones);
 	virtual void Free() override;
 };
 

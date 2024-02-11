@@ -5,31 +5,31 @@ CChannel::CChannel()
 {
 }
 
-HRESULT CChannel::Initialize(const aiNodeAnim * pChannel, const CModel::BONES& Bones)
+HRESULT CChannel::Initialize(CMyAINodeAnimation pChannel, const CModel::BONES& Bones)
 {
-	strcpy_s(m_szName, pChannel->mNodeName.data);
+	strcpy_s(m_szName, pChannel.Get_Name().c_str());
 
 	_uint		iBoneIndex = { 0 };
 
 	auto	iter = find_if(Bones.begin(), Bones.end(), [&](CBone* pBone)
-	{
-		if (false == strcmp(m_szName, pBone->Get_Name()))
 		{
-			return true;
-		}
+			if (false == strcmp(m_szName, pBone->Get_Name()))
+			{
+				return true;
+			}
 
-		++iBoneIndex;
+			++iBoneIndex;
 
-		return false;
-	});
+			return false;
+		});
 
 	if (iter == Bones.end())
 		return E_FAIL;
 
 	m_iBoneIndex = iBoneIndex;
 
-	m_iNumKeyFrames = max(pChannel->mNumScalingKeys, pChannel->mNumRotationKeys);
-	m_iNumKeyFrames = max(pChannel->mNumPositionKeys, m_iNumKeyFrames);
+	m_iNumKeyFrames = max(pChannel.Get_NumScalingKeys(), pChannel.Get_NumRotationKeys());
+	m_iNumKeyFrames = max(pChannel.Get_NumPositionKeys(), m_iNumKeyFrames);
 
 	_float3		vScale;
 	_float4		vRotation;
@@ -39,24 +39,24 @@ HRESULT CChannel::Initialize(const aiNodeAnim * pChannel, const CModel::BONES& B
 	{
 		KEYFRAME			KeyFrame = {};
 
-		if(i < pChannel->mNumScalingKeys)
+		if (i < pChannel.Get_NumScalingKeys())
 		{
-			memcpy(&vScale, &pChannel->mScalingKeys[i].mValue, sizeof(_float3));
-			KeyFrame.fTrackPosition = (_float)pChannel->mScalingKeys[i].mTime;
+			memcpy(&vScale, &pChannel.Get_ScalingKeys(i).Get_Value(), sizeof(_float3));
+			KeyFrame.fTrackPosition = pChannel.Get_ScalingKeys(i).Get_Time();
 		}
-		if (i < pChannel->mNumRotationKeys)
+		if (i < pChannel.Get_NumRotationKeys())
 		{
 			// memcpy(&vRotation, &pChannel->mRotationKeys[i].mValue, sizeof(_float4));
-			vRotation.x = pChannel->mRotationKeys[i].mValue.x;
-			vRotation.y = pChannel->mRotationKeys[i].mValue.y;
-			vRotation.z = pChannel->mRotationKeys[i].mValue.z;
-			vRotation.w = pChannel->mRotationKeys[i].mValue.w;
-			KeyFrame.fTrackPosition = (_float)pChannel->mRotationKeys[i].mTime;
+			vRotation.x = pChannel.Get_RotationKeys(i).Get_X();
+			vRotation.y = pChannel.Get_RotationKeys(i).Get_Y();
+			vRotation.z = pChannel.Get_RotationKeys(i).Get_Z();
+			vRotation.w = pChannel.Get_RotationKeys(i).Get_W();
+			KeyFrame.fTrackPosition = pChannel.Get_RotationKeys(i).Get_Time();
 		}
-		if (i < pChannel->mNumPositionKeys)
+		if (i < pChannel.Get_NumPositionKeys())
 		{
-			memcpy(&vPosition, &pChannel->mPositionKeys[i].mValue, sizeof(_float3));
-			KeyFrame.fTrackPosition = (_float)pChannel->mPositionKeys[i].mTime;
+			memcpy(&vPosition, &pChannel.Get_PositionKeys(i).Get_Value(), sizeof(_float3));
+			KeyFrame.fTrackPosition = pChannel.Get_PositionKeys(i).Get_Time();
 		}
 
 		KeyFrame.vScale = vScale;
@@ -65,6 +65,9 @@ HRESULT CChannel::Initialize(const aiNodeAnim * pChannel, const CModel::BONES& B
 
 		m_KeyFrames.push_back(KeyFrame);
 	}
+
+	//ZeroMemory(&m_StartFrame, sizeof(m_StartFrame));
+	//ZeroMemory(&m_EndFrame, sizeof(m_EndFrame));
 
 	return S_OK;
 }
@@ -300,7 +303,7 @@ KEYFRAME CChannel::Make_NowFrame(_float fCurrentTrackPosition, _uint* pCurrentKe
 	return result;
 }
 
-CChannel * CChannel::Create(const aiNodeAnim * pChannel, const CModel::BONES& Bones)
+CChannel * CChannel::Create(CMyAINodeAnimation pChannel, const CModel::BONES& Bones)
 {
 	CChannel*		pInstance = new CChannel();
 

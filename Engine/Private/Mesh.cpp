@@ -12,25 +12,25 @@ CMesh::CMesh(const CMesh & rhs)
 {
 }
 
-HRESULT CMesh::Initialize_Prototype(CModel::TYPE eModelType, const aiMesh * pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones)
+HRESULT CMesh::Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones)
 {
-	m_iMaterialIndex = pAIMesh->mMaterialIndex;
-	strcpy_s(m_szName, pAIMesh->mName.data);
+	m_iMaterialIndex = pAIMesh.Get_MaterialIndex();
+	strcpy_s(m_szName, pAIMesh.Get_Name().c_str());
 	m_iNumVertexBuffers = 1;
-	m_iNumVertices = pAIMesh->mNumVertices;
-	m_iNumIndices = pAIMesh->mNumFaces * 3;
+	m_iNumVertices = pAIMesh.Get_NumVertices();
+	m_iNumIndices = pAIMesh.Get_NumFaces() * 3;//삼각형의 정점 인덱스기 떄문에 *3 한거임
 	m_iIndexStride = 4;
 	m_eIndexFormat = m_iIndexStride == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
 	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	
+
 #pragma region VERTEX_BUFFER
-	
 	HRESULT		hr = CModel::TYPE_NONANIM == eModelType ? Ready_Vertices_NonAnim(pAIMesh, PivotMatrix) : Ready_Vertices_Anim(pAIMesh, Bones);
 
 	if (FAILED(hr))
 		return E_FAIL;
 
 #pragma endregion
+
 
 #pragma region INDEX_BUFFER
 	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
@@ -43,25 +43,26 @@ HRESULT CMesh::Initialize_Prototype(CModel::TYPE eModelType, const aiMesh * pAIM
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 
-	_uint*		pIndices = new _uint[m_iNumIndices];
+	m_pIndices = new _uint[m_iNumIndices];
 
 	_uint		iNumIndices = { 0 };
 
-	for (size_t i = 0; i < pAIMesh->mNumFaces; i++)
-	{		
-		pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[0];
-		pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[1];
-		pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[2];
+	for (size_t i = 0; i < pAIMesh.Get_NumFaces(); i++)
+	{
+		m_pIndices[iNumIndices++] = pAIMesh.Get_Face(i).Get_Indices()[0];
+		m_pIndices[iNumIndices++] = pAIMesh.Get_Face(i).Get_Indices()[1];
+		m_pIndices[iNumIndices++] = pAIMesh.Get_Face(i).Get_Indices()[2];
 	}
 
-	m_SubResourceData.pSysMem = pIndices;
+	m_SubResourceData.pSysMem = m_pIndices;
 
 	if (FAILED(__super::Create_Buffer(&m_pIB)))
 		return E_FAIL;
 
-	Safe_Delete_Array(pIndices);
 
 #pragma endregion
+
+	//Safe_Delete_Array(m_pIndices);
 
 	return S_OK;
 }
@@ -83,7 +84,7 @@ HRESULT CMesh::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName,
 	return pShader->Bind_Matrices(pConstantName, BoneMatrices, 256);
 }
 
-HRESULT CMesh::Ready_Vertices_NonAnim(const aiMesh * pAIMesh, _fmatrix PivotMatrix)
+HRESULT CMesh::Ready_Vertices_NonAnim(CMyAIMesh pAIMesh, _fmatrix PivotMatrix)
 {
 	m_iStride = sizeof(VTXMESH);
 
@@ -98,37 +99,35 @@ HRESULT CMesh::Ready_Vertices_NonAnim(const aiMesh * pAIMesh, _fmatrix PivotMatr
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 
-	VTXMESH*		pVertices = new VTXMESH[m_iNumVertices];
+	m_pVertices = new VTXMESH[m_iNumVertices];
 
 	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
-		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
-		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PivotMatrix));
+		memcpy(&m_pVertices[i].vPosition, &pAIMesh.Get_Vertice(i), sizeof(_float3));
+		XMStoreFloat3(&m_pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&m_pVertices[i].vPosition), PivotMatrix));
 
-		memcpy(&pVertices[i].vNormal, &pAIMesh->mNormals[i], sizeof(_float3));
-		XMStoreFloat3(&pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), PivotMatrix));
+		memcpy(&m_pVertices[i].vNormal, &pAIMesh.Get_Normal(i), sizeof(_float3));
+		XMStoreFloat3(&m_pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&m_pVertices[i].vNormal), PivotMatrix));
 
-		memcpy(&pVertices[i].vTexcoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float3));
-		memcpy(&pVertices[i].vTangent, &pAIMesh->mTangents[i], sizeof(_float3));
-		XMStoreFloat3(&pVertices[i].vTangent, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vTangent), PivotMatrix));
-
-		
+		memcpy(&m_pVertices[i].vTexcoord, &pAIMesh.Get_TextureCoord(i), sizeof(_float3));
+		memcpy(&m_pVertices[i].vTangent, &pAIMesh.Get_Tangent(i), sizeof(_float3));
+		XMStoreFloat3(&m_pVertices[i].vTangent, XMVector3TransformNormal(XMLoadFloat3(&m_pVertices[i].vTangent), PivotMatrix));
 	}
 
 
-	m_SubResourceData.pSysMem = pVertices;
+	m_SubResourceData.pSysMem = m_pVertices;
 
 	/* pVertices에 할당하여 채워놨던 정점들의 정보를 ID3D11Buffer로 할당한 공간에 복사하여 채워넣는다. */
 	if (FAILED(__super::Create_Buffer(&m_pVB)))
 		return E_FAIL;
 
-	Safe_Delete_Array(pVertices);
+	//Safe_Delete_Array(m_pVertices);
 
 	return S_OK;
 	
 }
 
-HRESULT CMesh::Ready_Vertices_Anim(const aiMesh * pAIMesh, const vector<class CBone*>& Bones)
+HRESULT CMesh::Ready_Vertices_Anim(CMyAIMesh pAIMesh, const vector<class CBone*>& Bones)
 {
 	m_iStride = sizeof(VTXANIMMESH);
 
@@ -143,43 +142,43 @@ HRESULT CMesh::Ready_Vertices_Anim(const aiMesh * pAIMesh, const vector<class CB
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 
-	VTXANIMMESH*		pVertices = new VTXANIMMESH[m_iNumVertices];
-	ZeroMemory(pVertices, sizeof(VTXANIMMESH) * m_iNumVertices);
+	m_pAnimVertices = new VTXANIMMESH[m_iNumVertices];
+	ZeroMemory(m_pAnimVertices, sizeof(VTXANIMMESH) * m_iNumVertices);
 
 	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
-		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
-		memcpy(&pVertices[i].vNormal, &pAIMesh->mNormals[i], sizeof(_float3));
-		memcpy(&pVertices[i].vTexcoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float3));
-		memcpy(&pVertices[i].vTangent, &pAIMesh->mTangents[i], sizeof(_float3));
+		memcpy(&m_pAnimVertices[i].vPosition, &pAIMesh.Get_Vertice(i), sizeof(_float3));
+		memcpy(&m_pAnimVertices[i].vNormal, &pAIMesh.Get_Normal(i), sizeof(_float3));
+		memcpy(&m_pAnimVertices[i].vTexcoord, &pAIMesh.Get_TextureCoord(i), sizeof(_float3));
+		memcpy(&m_pAnimVertices[i].vTangent, &pAIMesh.Get_Tangent(i), sizeof(_float3));
 	}
 
-	m_iNumBones = pAIMesh->mNumBones;
+	m_iNumBones = pAIMesh.Get_NumBones();
 
 	/* 이 메시에게 영향을 주는 뼈을 순회하면서 각각의 뼈가 어떤 정점들에게 영향을 주는지 파악한다.*/
-	for (size_t i = 0; i < pAIMesh->mNumBones; i++)
+	for (size_t i = 0; i < pAIMesh.Get_NumBones(); i++)
 	{
-		aiBone*		pAIBone = pAIMesh->mBones[i];
+		CMyAIBone		pAIBone = pAIMesh.Get_Bone(i);
 
 		_float4x4		OffsetMatrix;
-		memcpy(&OffsetMatrix, &pAIBone->mOffsetMatrix, sizeof(_float4x4));
+		memcpy(&OffsetMatrix, &pAIBone.Get_OffsetMatrix(), sizeof(_float4x4));
 		XMStoreFloat4x4(&OffsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&OffsetMatrix)));
 
-		m_OffsetMatrices.push_back(OffsetMatrix);		
+		m_OffsetMatrices.push_back(OffsetMatrix);
 
 		_uint		iBoneIndex = { 0 };
 
 		auto	iter = find_if(Bones.begin(), Bones.end(), [&](CBone* pBone)
-		{
-			if (false == strcmp(pAIBone->mName.data, pBone->Get_Name()))
 			{
-				return true;
-			}
+				if (false == strcmp(pAIBone.Get_Name().c_str(), pBone->Get_Name()))
+				{
+					return true;
+				}
 
-			++iBoneIndex;
+				++iBoneIndex;
 
-			return false;
-		});
+				return false;
+			});
 
 		if (iter == Bones.end())
 			return E_FAIL;
@@ -187,42 +186,43 @@ HRESULT CMesh::Ready_Vertices_Anim(const aiMesh * pAIMesh, const vector<class CB
 		m_BoneIndices.push_back(iBoneIndex);
 
 		/* 이 뼈는 몇개의 정점에게 영향을 주는가?! */
-		for (size_t j = 0; j < pAIBone->mNumWeights; j++)
+		for (size_t j = 0; j < pAIBone.Get_NumWeights(); j++)
 		{
 			/* pAIBone->mWeights[j].mVertexId : 이 뼈가 영향을 주는 j번째 정점의 인덱스 */
-			if(0.0f == pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.x)
+
+			if (0.0f == m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.x)
 			{
-				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndices.x = (uint32_t)i;
-				pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.x = pAIBone->mWeights[j].mWeight;
+				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendIndices.x = i;
+				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.x = pAIBone.Get_Weights(j).Get_Weight();
 			}
 
-			else if (0.0f == pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.y)
+			else if (0.0f == m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.y)
 			{
-				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndices.y = (uint32_t)i;
-				pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.y = pAIBone->mWeights[j].mWeight;
+				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendIndices.y = i;
+				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.y = pAIBone.Get_Weights(j).Get_Weight();
 			}
 
-			else if (0.0f == pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.z)
+			else if (0.0f == m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.z)
 			{
-				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndices.z = (uint32_t)i;
-				pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.z = pAIBone->mWeights[j].mWeight;
+				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendIndices.z = i;
+				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.z = pAIBone.Get_Weights(j).Get_Weight();
 			}
 
-			else if (0.0f == pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.w)
+			else if (0.0f == m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.w)
 			{
-				pVertices[pAIBone->mWeights[j].mVertexId].vBlendIndices.w = (uint32_t)i;
-				pVertices[pAIBone->mWeights[j].mVertexId].vBlendWeights.w = pAIBone->mWeights[j].mWeight;
+				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendIndices.w = i;
+				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.w = pAIBone.Get_Weights(j).Get_Weight();
 			}
-		}		
+		}
 	};
 
-	m_SubResourceData.pSysMem = pVertices;
+	m_SubResourceData.pSysMem = m_pAnimVertices;
 
 	/* pVertices에 할당하여 채워놨던 정점들의 정보를 ID3D11Buffer로 할당한 공간에 복사하여 채워넣는다. */
 	if (FAILED(__super::Create_Buffer(&m_pVB)))
 		return E_FAIL;
 
-	Safe_Delete_Array(pVertices);
+	//Safe_Delete_Array(m_pAnimVertices);
 
 	if (0 == m_iNumBones)
 	{
@@ -231,16 +231,16 @@ HRESULT CMesh::Ready_Vertices_Anim(const aiMesh * pAIMesh, const vector<class CB
 		_uint		iBoneIndex = { 0 };
 
 		auto	iter = find_if(Bones.begin(), Bones.end(), [&](CBone* pBone)
-		{
-			if (false == strcmp(m_szName, pBone->Get_Name()))
 			{
-				return true;
-			}
+				if (false == strcmp(m_szName, pBone->Get_Name()))
+				{
+					return true;
+				}
 
-			++iBoneIndex;
+				++iBoneIndex;
 
-			return false;
-		});
+				return false;
+			});
 
 		if (iter == Bones.end())
 			return E_FAIL;
@@ -252,12 +252,10 @@ HRESULT CMesh::Ready_Vertices_Anim(const aiMesh * pAIMesh, const vector<class CB
 		m_OffsetMatrices.push_back(OffsetMatrix);
 	}
 
-
 	return S_OK;
-
 }
 
-CMesh * CMesh::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, CModel::TYPE eModelType, const aiMesh * pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones)
+CMesh * CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones)
 {
 	CMesh*		pInstance = new CMesh(pDevice, pContext);
 
@@ -276,5 +274,12 @@ CComponent * CMesh::Clone(void * pArg)
 
 void CMesh::Free()
 {
+	if (false == m_isCloned)
+	{
+		Safe_Delete_Array(m_pIndices);
+		Safe_Delete_Array(m_pVertices);
+		Safe_Delete_Array(m_pAnimVertices);
+	}
+
 	__super::Free();
 }

@@ -4,13 +4,13 @@ CBone::CBone()
 {
 }
 
-HRESULT CBone::Initialize(aiNode * pAINode, _int iParentIndex)
+HRESULT CBone::Initialize(CMyAINode pAINode, _int iParentIndex)
 {
 	m_iParentIndex = iParentIndex;
 
-	strcpy_s(m_szName, pAINode->mName.data);
+	strcpy_s(m_szName, pAINode.Get_Name().c_str());
 
-	memcpy(&m_TransformationMatrix, &pAINode->mTransformation, sizeof(_float4x4));
+	memcpy(&m_TransformationMatrix, &pAINode.Get_Transformation(), sizeof(_float4x4));
 
 	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_TransformationMatrix)));
 
@@ -32,7 +32,7 @@ void CBone::Invalidate_CombinedTransformationMatrix(CModel::BONES& Bones, _fmatr
 	
 }
 
-CBone * CBone::Create(aiNode * pAINode, _int iParentIndex)
+CBone * CBone::Create(CMyAINode pAINode, _int iParentIndex)
 {
 	CBone*		pInstance = new CBone();
 

@@ -15,7 +15,7 @@ private:
 	virtual ~CAnimation() = default;
 
 public:
-	HRESULT Initialize(const aiAnimation* pAIAnimation, const CModel::BONES& Bones);
+	HRESULT Initialize(CMyAIAnimation pAIAnimation, const CModel::BONES& Bones);
 	void Invalidate_TransformationMatrix(_bool isLoop, _float fTimeDelta, const CModel::BONES& Bones);
 
 public:
@@ -82,7 +82,7 @@ private:
 	_float					m_fStiffnessRate = { 1.f };
 
 public:
-	static CAnimation* Create(const aiAnimation* pAIAnimation, const CModel::BONES& Bones);
+	static CAnimation* Create(CMyAIAnimation pAIAnimation, const CModel::BONES& Bones);
 	CAnimation* Clone();
 	virtual void Free() override;
 };

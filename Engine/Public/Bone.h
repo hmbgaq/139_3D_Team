@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Model.h"
+#include "MyAINode.h"
 
 BEGIN(Engine)
 
@@ -24,7 +25,7 @@ public:
 	}
 
 public:
-	HRESULT Initialize(aiNode* pAINode, _int iParentIndex);
+	HRESULT Initialize(CMyAINode pAINode, _int iParentIndex);
 	void Invalidate_CombinedTransformationMatrix(CModel::BONES& Bones, _fmatrix PivotMatrix);
 
 private:
@@ -38,7 +39,7 @@ private:
 	_float4x4			m_CombinedTransformationMatrix;
 
 public:
-	static CBone* Create(aiNode* pAINode, _int iParentIndex);
+	static CBone* Create(CMyAINode pAINode, _int iParentIndex);
 	CBone* Clone();
 	virtual void Free() override;
 };
