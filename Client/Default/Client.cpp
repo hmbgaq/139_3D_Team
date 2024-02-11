@@ -1,11 +1,14 @@
 // Client.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
 //
-
 #include "stdafx.h"
-#include "Client.h"
 
+//#include "Imgui/imgui_impl_win32.h"
+
+
+#include "Client.h"
 #include "MainApp.h"
 #include "GameInstance.h"
+
 
 #define MAX_LOADSTRING 100
 
@@ -14,6 +17,8 @@ HINSTANCE	g_hInst;                                // 현재 인스턴스입니다.
 HWND		g_hWnd;
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
+
+//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -33,6 +38,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
+
+#ifdef _DEBUG
+	FILE* ConsoleStream;
+
+	AllocConsole();
+	AttachConsole(GetCurrentProcessId());
+	freopen_s(&ConsoleStream, "CON", "w", stdout);
+
+	printf("Debug Console\n");
+#endif // _DEBUG
+
     // TODO: 여기에 코드를 입력합니다.
 	CMainApp*		pMainApp = nullptr;
 
@@ -40,7 +56,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_CLIENT, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
-	
+
     if (!InitInstance (hInstance, nCmdShow))
     {
         return FALSE;
@@ -84,7 +100,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				DispatchMessage(&msg);
 			}
 		}
-		
+
 		fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Default"));
 
 		if (1/*fTimeAcc >= 1.f / 60.0f*/ /* 1초에 60번만 true*/ )
@@ -100,6 +116,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	if (0 != Safe_Release(pMainApp))
 		MSG_BOX("Memory Leak Detected");
+
+#ifdef  _DEBUG
+	//system("pause");
+	fclose(ConsoleStream);
+	//_CrtDumpMemoryLeaks()6;
+#endif //  _DEBUG
 
     return (int) msg.wParam;
 }
@@ -178,6 +200,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	//if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+	//	return true;
+
     switch (message)
     {
     case WM_COMMAND:
