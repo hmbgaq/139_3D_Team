@@ -2,6 +2,9 @@
 
 #include "Component.h"
 
+#include "MyAssimp.h"
+#include "MyAIScene.h"
+
 BEGIN(Engine)
 
 class ENGINE_DLL CModel final : public CComponent
@@ -30,6 +33,8 @@ public:
 
 	_bool Is_AnimEnd() { return m_bIsAnimEnd; };
 
+	void Set_StiffnessRate(_float fStiffnessRate);
+
 
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);
@@ -54,8 +59,8 @@ public:
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 
 private:
-	const aiScene*			m_pAIScene = { nullptr };
-	Assimp::Importer		m_Importer;
+	CMyAssimp					m_MyAssimp;
+	CMyAIScene					m_pAIScene;
 
 private:
 	_float4x4				m_PivotMatrix;
@@ -86,7 +91,7 @@ public:
 private:
 	HRESULT	Ready_Meshes(_fmatrix PivotMatrix);	
 	HRESULT Ready_Materials(const string& strModelFilePath);
-	HRESULT Ready_Bones(aiNode* pAINode, _int iParentIndex);
+	HRESULT Ready_Bones(CMyAINode pAINode, _int iParentIndex);
 	HRESULT Ready_Animations();
 
 public:

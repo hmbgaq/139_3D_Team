@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "Bone.h"
 #include "Animation.h"
+#include "Channel.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -53,10 +54,13 @@ CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 	return *iter;	
 }
 
+void CModel::Set_StiffnessRate(_float fStiffnessRate)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_StiffnessRate(fStiffnessRate);
+}
+
 HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath, _fmatrix PivotMatrix)
 {
-	/*aiProcess_PreTransformVertices | aiProcess_GlobalScale*/
-
 	m_eModelType = eType;
 
 	_uint	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
@@ -64,13 +68,17 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath
 	if (TYPE_NONANIM == eType)
 		iFlag |= aiProcess_PreTransformVertices;
 
-	m_pAIScene = m_Importer.ReadFile(strModelFilePath, iFlag);
-	if (nullptr == m_pAIScene)
-		return E_FAIL;
+
+	m_pAIScene = m_MyAssimp.ReadFile(strModelFilePath, iFlag);
+
+	//if (nullptr == m_pAIScene.Get_AIScene())
+	//	return E_FAIL;
 
 	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
 
-	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
+	CMyAINode root = m_pAIScene.Get_RootNode();
+
+	if (FAILED(Ready_Bones(m_pAIScene.Get_RootNode(), -1)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Meshes(PivotMatrix)))
@@ -195,13 +203,13 @@ _bool CModel::Is_Inputable_Front(_uint _iIndexFront)
 
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 {
-	m_iNumMeshes = m_pAIScene->mNumMeshes;
+	m_iNumMeshes = m_pAIScene.Get_NumMeshes();
 
 	m_Meshes.reserve(m_iNumMeshes);
 
 	for (size_t i = 0; i < m_iNumMeshes; i++)
 	{
-		CMesh*		pMesh = CMesh::Create(m_pDevice, m_pContext, m_eModelType, m_pAIScene->mMeshes[i], PivotMatrix, m_Bones);
+		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eModelType, m_pAIScene.Get_Mesh(i), PivotMatrix, m_Bones);
 
 		if (nullptr == pMesh)
 			return E_FAIL;
@@ -214,40 +222,43 @@ HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 
 HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 {
-	m_iNumMaterials = m_pAIScene->mNumMaterials;
+	m_iNumMaterials = m_pAIScene.Get_NumMaterials();
 
 	for (size_t i = 0; i < m_iNumMaterials; i++)
 	{
-		aiMaterial*	pAIMaterial = m_pAIScene->mMaterials[i];
+		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material(i);
 
 		MATERIAL_DESC			MaterialDesc = {  };
 
 		for (size_t j = 1; j < AI_TEXTURE_TYPE_MAX; j++)
 		{
-			/*for (size_t k = 0; k < pAIMaterial->GetTextureCount(aiTextureType(j)); k++)
-			{
-				pAIMaterial->GetTexture(aiTextureType(j), k, );
-			};*/
-
 			_char		szDrive[MAX_PATH] = "";
 			_char		szDirectory[MAX_PATH] = "";
 
 			_splitpath_s(strModelFilePath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
 
-			aiString			strPath;
-			if (FAILED(pAIMaterial->GetTexture(aiTextureType(j), 0, &strPath)))
+			//aiString			strPath;
+			//if (FAILED(pAIMaterial.GetTexture(aiTextureType(j), 0, &strPath)))
+			//	continue;
+
+			string strPath = pAIMaterial.Get_Textures(j);
+			if (strPath == "")
 				continue;
 
 			_char		szFileName[MAX_PATH] = "";
 			_char		szEXT[MAX_PATH] = "";
 
-			_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
+			//_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
+			_splitpath_s(strPath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
 
 			_char		szTmp[MAX_PATH] = "";
 			strcpy_s(szTmp, szDrive);
 			strcat_s(szTmp, szDirectory);
 			strcat_s(szTmp, szFileName);
 			strcat_s(szTmp, szEXT);
+
+			//_char szTest[MAX_PATH] = ".dds";
+			//strcat_s(szTmp, szTest);
 
 			_tchar		szFullPath[MAX_PATH] = TEXT("");
 
@@ -256,28 +267,28 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			MaterialDesc.pMtrlTextures[j] = CTexture::Create(m_pDevice, m_pContext, szFullPath, 1);
 			if (nullptr == MaterialDesc.pMtrlTextures[j])
-				return E_FAIL;			
+				return E_FAIL;
 		}
 
-		m_Materials.push_back(MaterialDesc);		
+		m_Materials.push_back(MaterialDesc);
 	}
 
 	return S_OK;
 }
 
-HRESULT CModel::Ready_Bones(aiNode* pAINode, _int iParentIndex)
+HRESULT CModel::Ready_Bones(CMyAINode pAINode, _int iParentIndex)
 {
-	CBone*		pBone = CBone::Create(pAINode, iParentIndex);
+	CBone* pBone = CBone::Create(pAINode, iParentIndex);
 	if (nullptr == pBone)
 		return E_FAIL;
 
 	m_Bones.push_back(pBone);
 
-	_int		iParentIdx = m_Bones.size() - (_int)1;
+	_int		iParentIdx = m_Bones.size() - 1;
 
-	for (size_t i = 0; i < pAINode->mNumChildren; i++)
+	for (size_t i = 0; i < pAINode.Get_NumChildren(); i++)
 	{
-		Ready_Bones(pAINode->mChildren[i], iParentIdx);
+		Ready_Bones(CMyAINode(pAINode.Get_Children(i)), iParentIdx);
 	}
 
 	return S_OK;
@@ -285,15 +296,15 @@ HRESULT CModel::Ready_Bones(aiNode* pAINode, _int iParentIndex)
 
 HRESULT CModel::Ready_Animations()
 {
-	m_iNumAnimations = m_pAIScene->mNumAnimations;
+	m_iNumAnimations = m_pAIScene.Get_NumAnimations();
 
 	for (size_t i = 0; i < m_iNumAnimations; i++)
 	{
-		CAnimation*		pAnimation = CAnimation::Create(m_pAIScene->mAnimations[i], m_Bones);
+		CAnimation* pAnimation = CAnimation::Create(m_pAIScene.Get_Animation(i), m_Bones);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
-		m_Animations.push_back(pAnimation);		
+		m_Animations.push_back(pAnimation);
 	}
 
 	return S_OK;
@@ -350,6 +361,6 @@ void CModel::Free()
 	}
 	m_Meshes.clear();
 
-	if(false == m_isCloned)
-		m_Importer.FreeScene();
+	if (false == m_isCloned)
+		m_MyAssimp.FreeScene();
 }
