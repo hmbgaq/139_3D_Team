@@ -35,7 +35,6 @@ public:
 		}
 	};
 
-
 private:
 	//_bool			m_bIsBianry = { false };
 	//aiNode*				m_pNode = { nullptr };

@@ -69,7 +69,9 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath
 		iFlag |= aiProcess_PreTransformVertices;
 
 
-	m_pAIScene = m_MyAssimp.ReadFile(strModelFilePath, iFlag);
+	m_pAIScene = m_MyAssimp.ReadFile(strModelFilePath, iFlag, true);
+
+	
 
 	//if (nullptr == m_pAIScene.Get_AIScene())
 	//	return E_FAIL;
@@ -89,6 +91,8 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath
 
 	if (FAILED(Ready_Animations()))
 		return E_FAIL;
+
+	Write_Names(strModelFilePath);
 
 	return S_OK;
 }
@@ -199,6 +203,36 @@ _bool CModel::Is_Transition()
 _bool CModel::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_Animations[m_iCurrentAnimIndex]->Is_Inputable_Front(_iIndexFront);
+}
+
+void CModel::Write_Names(const string& strModelFilePath)
+{
+	ofstream osTxt(strModelFilePath + ".txt");
+
+	osTxt << "Meshes: " << endl;
+	for (_uint i = 0; i < m_iNumMeshes; ++i) 
+	{
+		osTxt << i << ". " << m_Meshes[i]->Get_Name() << endl;
+	}
+	osTxt << endl;
+
+
+
+	osTxt << "Animations: " << endl;
+	for (_uint i = 0; i < m_iNumAnimations; ++i)
+	{
+		osTxt << i << ". " << m_Animations[i]->Get_Name() << endl;
+	}
+	osTxt << endl;
+
+	osTxt << "Bones: " << endl;
+	for (CBone* pBone : m_Bones)
+	{
+		osTxt << pBone->Get_Name() << endl;
+	}
+	osTxt << endl;
+
+	osTxt.close();
 }
 
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)

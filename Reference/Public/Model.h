@@ -58,6 +58,8 @@ public:
 	void	Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 
+	void Write_Names(const string& strModelFilePath);
+
 private:
 	CMyAssimp					m_MyAssimp;
 	CMyAIScene					m_pAIScene;

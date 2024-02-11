@@ -60,6 +60,10 @@ public:
 		m_fStiffnessRate = fStiffnessRate;
 	}
 
+	_char* Get_Name() {
+		return m_szName;
+	}
+
 private:
 	_char					m_szName[MAX_PATH] = "";
 	_float					m_fDuration = { 0.0f }; /* 내 애니메이션을 전체 재생하기위한 전체 길이. */

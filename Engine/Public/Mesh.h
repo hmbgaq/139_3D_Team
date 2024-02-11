@@ -26,6 +26,10 @@ public:
 public:
 	HRESULT Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, const vector<CBone*>& Bones);
 
+	_char* Get_Name() {
+		return m_szName;
+	}
+
 private:
 	_char				m_szName[MAX_PATH];
 	_uint				m_iMaterialIndex = { 0 } ;

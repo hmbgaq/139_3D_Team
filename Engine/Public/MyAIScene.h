@@ -90,6 +90,7 @@ public:
 
 		ofstream os(filePath, ios::binary);
 
+
 		mRootNode.Bake_Binary(os);
 
 		write_typed_data(os, mNumMeshes);
@@ -100,16 +101,19 @@ public:
 		{
 			mMeshes[i].Bake_Binary(os);
 		}
+		
 
 		for (_uint i = 0; i < mNumMaterials; ++i)
 		{
 			mMaterials[i].Bake_Binary(os);
 		}
 
+		
 		for (_uint i = 0; i < mNumAnimations; ++i)
 		{
 			mAnimations[i].Bake_Binary(os);
 		}
+		
 
 		os.close();
 	};
