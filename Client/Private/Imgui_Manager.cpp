@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Imgui_Manager.h"
-#include "..\Public\Imgui_Manager.h"
-
+#include "Imgui_Manager.h"
 
 CImgui_Manager::CImgui_Manager()
 {
