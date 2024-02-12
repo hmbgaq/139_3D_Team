@@ -43,7 +43,8 @@ void CMonster::Priority_Tick(_float fTimeDelta)
 
 void CMonster::Tick(_float fTimeDelta)
 {
-
+	//if (GetKeyState('K') & 0x8000)
+	//	m_bDead = true;
 
 	SetUp_OnTerrain(m_pTransformCom);
 

@@ -77,7 +77,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 		nullptr == m_pObject_Manager ||
 		nullptr == m_pPipeLine ||
 		nullptr == m_pInput_Device ||
-		nullptr == m_pFrustum)
+		nullptr == m_pFrustum ||
+		nullptr == m_pRenderer)
 		return;
 
 	m_pInput_Device->Update_InputDev();
@@ -90,6 +91,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pFrustum->Tick();
 
+	m_pRenderer->Clear();
+
 	m_pObject_Manager->Late_Tick(fTimeDelta);
 
 	m_pLevel_Manager->Tick(fTimeDelta);
@@ -98,7 +101,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 void CGameInstance::Clear(_uint iLevelIndex)
 {
 	if (nullptr == m_pObject_Manager ||
-		nullptr == m_pComponent_Manager)
+		nullptr == m_pComponent_Manager ||
+		nullptr == m_pRenderer)
 		return;
 
 	/* 오브젝트 매니져에 레벨별로 구분해 놓은 객체들 중 특정된 객체들을 지운다.  */

@@ -58,7 +58,7 @@ void CLayer::Late_Tick(_float fTimeDelta)
 
 		if ((*iter)->Is_Dead())
 		{
-			Safe_Release((*iter));
+			//Safe_Release((*iter));
 			iter = m_GameObjects.erase(iter);
 		}
 		else

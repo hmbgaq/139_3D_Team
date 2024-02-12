@@ -147,7 +147,9 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eGroupID, CGameObject* pGameObjec
 
 	/* 원래 객체들은 오브젝트 매니져에 담겨있다. */
 	/* 렌더러에 객체를 공유했다. */
-	m_RenderObjects[eGroupID].push_back(pGameObject);
+
+	if (false == pGameObject->Is_Dead())
+		m_RenderObjects[eGroupID].push_back(pGameObject);
 
 	//Safe_AddRef(pGameObject);
 
