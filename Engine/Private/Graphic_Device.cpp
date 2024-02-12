@@ -3,7 +3,7 @@
 CGraphic_Device::CGraphic_Device()
 	: m_pDevice(nullptr)
 	, m_pDeviceContext(nullptr)
-{	
+{
 
 }
 
@@ -19,6 +19,7 @@ HRESULT CGraphic_Device::Initialize(const GRAPHIC_DESC& GraphicDesc, ID3D11Devic
 	/* 뎁스스텐실 뷰를 생성한다. */
 
 	_uint		iFlag = 0;
+	m_tGraphicDesc = GraphicDesc;
 
 #ifdef _DEBUG
 	iFlag = D3D11_CREATE_DEVICE_DEBUG;
@@ -46,13 +47,13 @@ HRESULT CGraphic_Device::Initialize(const GRAPHIC_DESC& GraphicDesc, ID3D11Devic
 	/* 장치에 바인드해놓을 렌더타겟들과 뎁스스텐실뷰를 셋팅한다. */
 	/* 장치는 최대 8개의 렌더타겟을 동시에 들고 있을 수 있다. */
 	ID3D11RenderTargetView*		pRTVs[1] = {
-		m_pBackBufferRTV, 
-		
+		m_pBackBufferRTV,
+
 	};
 
 	m_pDeviceContext->OMSetRenderTargets(1, pRTVs,
-		m_pDepthStencilView);		
-	
+		m_pDepthStencilView);
+
 	D3D11_VIEWPORT			ViewPortDesc;
 	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
 	ViewPortDesc.TopLeftX = 0;
@@ -78,7 +79,7 @@ HRESULT CGraphic_Device::Clear_BackBuffer_View(_float4 vClearColor)
 	if (nullptr == m_pDeviceContext)
 		return E_FAIL;
 
-	//m_pGraphic_Device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL, 
+	//m_pGraphic_Device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL,
 	//	vClearColor, 1.f, 0)
 	//
 
@@ -103,11 +104,11 @@ HRESULT CGraphic_Device::Present()
 	if (nullptr == m_pSwapChain)
 		return E_FAIL;
 
-	
-	
+
+
 	/* 전면 버퍼와 후면버퍼를 교체하여 후면버퍼를 전면으로 보여주는 역할을 한다. */
-	/* 후면버퍼를 직접화면에 보여줄께. */	
-	return m_pSwapChain->Present(0, 0);	
+	/* 후면버퍼를 직접화면에 보여줄께. */
+	return m_pSwapChain->Present(0, 0);
 }
 
 
@@ -125,12 +126,12 @@ HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMo
 	/* 스왑체인을 생성한다. = 텍스쳐를 생성하는 행위 + 스왑하는 형태  */
 	DXGI_SWAP_CHAIN_DESC		SwapChain;
 	ZeroMemory(&SwapChain, sizeof(DXGI_SWAP_CHAIN_DESC));
-			
+
 	/*텍스쳐(백버퍼)를 생성하는 행위*/
 	SwapChain.BufferDesc.Width = iWinCX;
 	SwapChain.BufferDesc.Height = iWinCY;
 
-	
+
 	SwapChain.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 	SwapChain.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	SwapChain.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
@@ -141,9 +142,9 @@ HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMo
 	SwapChain.BufferDesc.RefreshRate.Numerator = 60;
 	SwapChain.BufferDesc.RefreshRate.Denominator = 1;
 	SwapChain.SampleDesc.Quality = 0;
-	SwapChain.SampleDesc.Count = 1;	
+	SwapChain.SampleDesc.Count = 1;
 
-	SwapChain.OutputWindow = hWnd;	
+	SwapChain.OutputWindow = hWnd;
 	SwapChain.Windowed = eWinMode;
 	SwapChain.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
@@ -151,7 +152,7 @@ HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMo
 	if (FAILED(pFactory->CreateSwapChain(m_pDevice, &SwapChain, &m_pSwapChain)))
 		return E_FAIL;
 
-	
+
 
 	Safe_Release(pFactory);
 	Safe_Release(pAdapter);
@@ -166,7 +167,7 @@ HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
 	if (nullptr == m_pDevice)
 		return E_FAIL;
 
-	
+
 
 	/* 내가 앞으로 사용하기위한 용도의 텍스쳐를 생성하기위한 베이스 데이터를 가지고 있는 객체이다. */
 	/* 내가 앞으로 사용하기위한 용도의 텍스쳐 : ID3D11RenderTargetView, ID3D11ShaderResoureView, ID3D11DepthStencilView */
@@ -177,7 +178,7 @@ HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
 		return E_FAIL;
 
 	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, &m_pBackBufferRTV)))
-		return E_FAIL;	
+		return E_FAIL;
 
 
 
@@ -192,7 +193,7 @@ HRESULT CGraphic_Device::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint 
 		return E_FAIL;
 
 	ID3D11Texture2D*		pDepthStencilTexture = nullptr;
-	
+
 	D3D11_TEXTURE2D_DESC	TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
@@ -211,17 +212,17 @@ HRESULT CGraphic_Device::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint 
 	TextureDesc.CPUAccessFlags = 0;
 	TextureDesc.MiscFlags = 0;
 
-	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, 
+	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr,
 		&pDepthStencilTexture)))
 		return E_FAIL;
 
 	/* RenderTarget */
 	/* ShaderResource */
-	/* DepthStencil */	
+	/* DepthStencil */
 
 	if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr,
 		&m_pDepthStencilView)))
-		return E_FAIL;	
+		return E_FAIL;
 
 	Safe_Release(pDepthStencilTexture);
 

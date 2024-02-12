@@ -172,6 +172,21 @@
     <Filter Include="97.MyAssimp">
       <UniqueIdentifier>{5f3e9d16-d2b3-4fa1-ae9a-e82cffb661ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.MyAssimp\0.Importer">
+      <UniqueIdentifier>{4ba2e755-4a43-4aaa-a4fe-59e8d4f5416f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.MyAssimp\1.AIScene">
+      <UniqueIdentifier>{c2981cdd-865e-4993-a5f1-c9dd40790b84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.MyAssimp\2.AIMesh">
+      <UniqueIdentifier>{d9769b39-4ed3-43f4-8498-c6d587fc9a11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.MyAssimp\3.AIMaterial">
+      <UniqueIdentifier>{4831951e-918f-4700-9908-76317e02462f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.MyAssimp\4.AIAnimation">
+      <UniqueIdentifier>{241bb832-96c1-40e2-ad6b-7117aeeb82d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -251,9 +266,6 @@
     </ClInclude>
     <ClInclude Include="..\public\PipeLine.h">
       <Filter>01.Utility\04.PipeLine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Input_Device.h">
-      <Filter>00.System\00.Device\Input</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Model.h">
       <Filter>01.Utility\03.Components\05.Model</Filter>
@@ -340,40 +352,43 @@
       <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MyAssimp.h">
-      <Filter>97.MyAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyAIVertexWeight.h">
-      <Filter>97.MyAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyAIAnimation.h">
-      <Filter>97.MyAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyAIBone.h">
-      <Filter>97.MyAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyAIFace.h">
-      <Filter>97.MyAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyAIMaterial.h">
-      <Filter>97.MyAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyAIMesh.h">
-      <Filter>97.MyAssimp</Filter>
+      <Filter>97.MyAssimp\0.Importer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MyAINode.h">
-      <Filter>97.MyAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyAINodeAnimation.h">
-      <Filter>97.MyAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyAIQuatKey.h">
-      <Filter>97.MyAssimp</Filter>
+      <Filter>97.MyAssimp\1.AIScene</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MyAIScene.h">
-      <Filter>97.MyAssimp</Filter>
+      <Filter>97.MyAssimp\1.AIScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIBone.h">
+      <Filter>97.MyAssimp\2.AIMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIFace.h">
+      <Filter>97.MyAssimp\2.AIMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIMesh.h">
+      <Filter>97.MyAssimp\2.AIMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIMaterial.h">
+      <Filter>97.MyAssimp\3.AIMaterial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIAnimation.h">
+      <Filter>97.MyAssimp\4.AIAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAINodeAnimation.h">
+      <Filter>97.MyAssimp\4.AIAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIQuatKey.h">
+      <Filter>97.MyAssimp\4.AIAnimation</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MyAIVectorKey.h">
-      <Filter>97.MyAssimp</Filter>
+      <Filter>97.MyAssimp\4.AIAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyAIVertexWeight.h">
+      <Filter>97.MyAssimp\4.AIAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Input_Device.h">
+      <Filter>00.System\00.Device\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -439,9 +454,6 @@
     </ClCompile>
     <ClCompile Include="..\private\PipeLine.cpp">
       <Filter>01.Utility\04.PipeLine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Input_Device.cpp">
-      <Filter>00.System\00.Device\Input</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Model.cpp">
       <Filter>01.Utility\03.Components\05.Model</Filter>
@@ -526,6 +538,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Engine_Struct.cpp">
       <Filter>99.Defines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Input_Device.cpp">
+      <Filter>00.System\00.Device\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

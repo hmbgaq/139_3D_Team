@@ -13,7 +13,7 @@ private:
 
 public:
 	virtual HRESULT Initialize() override;
-	virtual void Tick(_float fTimeDelta) override;
+	virtual void	Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
 private:

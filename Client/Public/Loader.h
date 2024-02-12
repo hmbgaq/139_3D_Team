@@ -23,10 +23,10 @@ public:
 	_bool isFinished() const {
 		return m_isFinished;
 	}
-		
 
 
-public:	
+
+public:
 	HRESULT Initialize(LEVEL eNextLevelID);
 
 	void Print_LoadingText();
@@ -37,6 +37,7 @@ public:
 	HRESULT Loading();
 	HRESULT Loading_For_Logo_Level();
 	HRESULT Loading_For_GamePlay_Level();
+	HRESULT	Loading_For_Tool_Level();
 
 
 private:
@@ -56,7 +57,7 @@ private:
 public:
 	static CLoader * Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, LEVEL eNextLevelID);
 	virtual void Free() override;
-	
+
 };
 
 END
