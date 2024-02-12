@@ -33,7 +33,7 @@ protected:
 	_float				m_fFar = { 0.0f };
 
 public:
-	virtual CGameObject* Clone(void* pArg) = 0;
+	virtual shared_ptr<CGameObject> Clone(void* pArg) = 0;
 	virtual void Free() override;
 };
 

@@ -62,7 +62,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	{
 		m_pModelCom->Play_Animation(fTimeDelta, true);
 
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, shared_ptr<CMonster>(this))))//
 			return;
 
 #ifdef _DEBUG
@@ -147,9 +147,9 @@ HRESULT CMonster::Bind_ShaderResources()
 	return S_OK;
 }
 
-CMonster * CMonster::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+shared_ptr<CMonster> CMonster::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CMonster*		pInstance = new CMonster(pDevice, pContext);
+	shared_ptr<CMonster>		pInstance = make_shared<CMonster>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -160,9 +160,9 @@ CMonster * CMonster::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pConte
 	return pInstance;
 }
 
-CGameObject * CMonster::Clone(void* pArg)
+shared_ptr<CGameObject> CMonster::Clone(void* pArg)
 {
-	CMonster*		pInstance = new CMonster(*this);
+	shared_ptr<CMonster>		pInstance = make_shared<CMonster>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
@@ -177,8 +177,8 @@ void CMonster::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pColliderCom);
-	Safe_Release(m_pModelCom);	
-	Safe_Release(m_pShaderCom);
+	//Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pModelCom);	
+	//Safe_Release(m_pShaderCom);
 }
 

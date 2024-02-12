@@ -70,7 +70,7 @@ void CWeapon_Player::Tick(_float fTimeDelta)
 
 void CWeapon_Player::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, shared_ptr<CWeapon_Player>(this))))//
 		return ;
 
 
@@ -148,9 +148,9 @@ HRESULT CWeapon_Player::Bind_ShaderResources()
 	return S_OK;
 }
 
-CWeapon_Player * CWeapon_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+shared_ptr<CWeapon_Player> CWeapon_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CWeapon_Player*		pInstance = new CWeapon_Player(pDevice, pContext);
+	shared_ptr<CWeapon_Player>		pInstance = make_shared<CWeapon_Player>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -161,9 +161,9 @@ CWeapon_Player * CWeapon_Player::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 	return pInstance;
 }
 
-CGameObject * CWeapon_Player::Clone(void* pArg)
+shared_ptr<CGameObject> CWeapon_Player::Clone(void* pArg)
 {
-	CWeapon_Player*		pInstance = new CWeapon_Player(*this);
+	shared_ptr<CWeapon_Player>		pInstance = make_shared<CWeapon_Player>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
@@ -178,10 +178,10 @@ void CWeapon_Player::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pParentTransform);
-	Safe_Release(m_pColliderCom);
-	Safe_Release(m_pSocketBone);
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pModelCom);		
+	//Safe_Release(m_pParentTransform);
+	//Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pSocketBone);
+	//Safe_Release(m_pShaderCom);
+	//Safe_Release(m_pModelCom);
 }
 

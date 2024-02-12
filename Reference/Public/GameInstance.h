@@ -55,9 +55,9 @@ public: /* For.Level_Manager */
 	HRESULT Open_Level(_uint iCurrentLevelIndex, CLevel* pNewLevel);
 
 public: /* For.Object_Manager */
-	HRESULT Add_Prototype(const wstring& strPrototypeTag, CGameObject* pPrototype);
+	HRESULT Add_Prototype(const wstring& strPrototypeTag, shared_ptr<CGameObject> pPrototype);
 	HRESULT Add_CloneObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
-	CGameObject* Clone_Prototype(const wstring& strPrototypeTag, void* pArg = nullptr);
+	shared_ptr<CGameObject> Clone_Prototype(const wstring& strPrototypeTag, void* pArg = nullptr);
 	shared_ptr<CComponent> Get_Component(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strComponentTag, _uint iIndex = 0, const wstring & strPartTag = TEXT(""));
 
 public: /* For.Component_Manager */
@@ -65,7 +65,7 @@ public: /* For.Component_Manager */
 	shared_ptr<CComponent> Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 public: /* For.Renderer */
-	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, CGameObject* pGameObject);
+	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, shared_ptr<CGameObject> pGameObject);
 	HRESULT Add_DebugRender(shared_ptr<CComponent> pDebugCom);
 
 public: /* For.PipeLine */

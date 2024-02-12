@@ -65,7 +65,7 @@ void CPlayer::Priority_Tick(_float fTimeDelta)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-	CBody_Player*		pBody = dynamic_cast<CBody_Player*>(Find_PartObject(TEXT("Part_Body")));
+	shared_ptr<CBody_Player>		pBody = dynamic_pointer_cast<CBody_Player>(Find_PartObject(TEXT("Part_Body")));
 	Safe_AddRef(pBody);
 
 	if (GetKeyState(VK_DOWN) & 0x8000)
@@ -109,7 +109,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			Pair.second->Late_Tick(fTimeDelta);
 	}
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, shared_ptr<CPlayer>(this))))//
 		return;
 
 #ifdef _DEBUG
@@ -129,7 +129,7 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
-CGameObject * CPlayer::Find_PartObject(const wstring & strPartTag)
+shared_ptr<CGameObject> CPlayer::Find_PartObject(const wstring & strPartTag)
 {
 	auto	iter = m_PartObjects.find(strPartTag);
 
@@ -173,7 +173,7 @@ HRESULT CPlayer::Ready_PartObjects()
 
 	CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
 
-	CBody_Player*	pBody = (CBody_Player*)Find_PartObject(TEXT("Part_Body"));	
+	shared_ptr<CBody_Player>	pBody = dynamic_pointer_cast<CBody_Player>(Find_PartObject(TEXT("Part_Body")));
 
 	WeaponDesc.m_pSocketBone = pBody->Get_BonePtr("SWORD");
 	WeaponDesc.m_pParentTransform = m_pTransformCom;
@@ -191,7 +191,7 @@ HRESULT CPlayer::Add_PartObject(const wstring & strPrototypeTag, const wstring &
 	if (nullptr != Find_PartObject(strPrototypeTag))
 		return E_FAIL;
 
-	CGameObject*		pPartObject = m_pGameInstance->Clone_Prototype(strPrototypeTag, pArg);
+	shared_ptr<CGameObject>		pPartObject = m_pGameInstance->Clone_Prototype(strPrototypeTag, pArg);
 	if (nullptr == pPartObject)
 		return E_FAIL;
 
@@ -202,9 +202,9 @@ HRESULT CPlayer::Add_PartObject(const wstring & strPrototypeTag, const wstring &
 
 
 
-CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+shared_ptr<CPlayer> CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CPlayer*		pInstance = new CPlayer(pDevice, pContext);
+	shared_ptr<CPlayer>		pInstance = make_shared<CPlayer>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -215,9 +215,9 @@ CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext
 	return pInstance;
 }
 
-CGameObject * CPlayer::Clone(void* pArg)
+shared_ptr<CGameObject> CPlayer::Clone(void* pArg)
 {
-	CPlayer*		pInstance = new CPlayer(*this);
+	shared_ptr<CPlayer>		pInstance = make_shared<CPlayer>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
@@ -232,11 +232,11 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-	for (auto& Pair : m_PartObjects)
-		Safe_Release(Pair.second);
+	//for (auto& Pair : m_PartObjects)
+	//	Safe_Release(Pair.second);
 	m_PartObjects.clear();
 
-	Safe_Release(m_pColliderCom);
-	Safe_Release(m_pNavigationCom);
+	//Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pNavigationCom);
 }
 

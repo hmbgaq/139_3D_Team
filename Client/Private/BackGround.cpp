@@ -81,7 +81,7 @@ void CBackGround::Tick(_float fTimeDelta)
 
 void CBackGround::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_PRIORITY, shared_ptr<CBackGround>(this))))
 		return ;
 }
 
@@ -137,9 +137,9 @@ HRESULT CBackGround::Bind_ShaderResources()
 	return S_OK;
 }
 
-CBackGround * CBackGround::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+shared_ptr<CBackGround> CBackGround::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CBackGround*		pInstance = new CBackGround(pDevice, pContext);
+	shared_ptr<CBackGround>		pInstance = make_shared<CBackGround>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -150,9 +150,9 @@ CBackGround * CBackGround::Create(ID3D11Device * pDevice, ID3D11DeviceContext * 
 	return pInstance;
 }
 
-CGameObject * CBackGround::Clone(void* pArg)
+shared_ptr<CGameObject> CBackGround::Clone(void* pArg)
 {
-	CBackGround*		pInstance = new CBackGround(*this);
+	shared_ptr<CBackGround>		pInstance = make_shared<CBackGround>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

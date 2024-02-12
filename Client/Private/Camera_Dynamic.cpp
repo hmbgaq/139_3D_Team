@@ -78,9 +78,9 @@ void CCamera_Dynamic::Late_Tick(_float fTimeDelta)
 {
 }
 
-CCamera_Dynamic * CCamera_Dynamic::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+shared_ptr<CCamera_Dynamic> CCamera_Dynamic::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CCamera_Dynamic*		pInstance = new CCamera_Dynamic(pDevice, pContext);
+	shared_ptr<CCamera_Dynamic>		pInstance = make_shared<CCamera_Dynamic>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -91,9 +91,9 @@ CCamera_Dynamic * CCamera_Dynamic::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 	return pInstance;
 }
 
-CGameObject * CCamera_Dynamic::Clone(void* pArg)
+shared_ptr<CGameObject> CCamera_Dynamic::Clone(void* pArg)
 {
-	CCamera_Dynamic*		pInstance = new CCamera_Dynamic(*this);
+	shared_ptr<CCamera_Dynamic>		pInstance = make_shared<CCamera_Dynamic>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

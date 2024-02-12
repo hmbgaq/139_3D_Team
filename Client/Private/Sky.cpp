@@ -47,7 +47,7 @@ void CSky::Late_Tick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_pGameInstance->Get_CamPosition()));
 	
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_PRIORITY, shared_ptr<CSky>(this))))//
 		return ;
 }
 
@@ -102,9 +102,9 @@ HRESULT CSky::Bind_ShaderResources()
 	return S_OK;
 }
 
-CSky * CSky::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+shared_ptr<CSky> CSky::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CSky*		pInstance = new CSky(pDevice, pContext);
+	shared_ptr<CSky>		pInstance = make_shared<CSky>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -115,9 +115,9 @@ CSky * CSky::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	return pInstance;
 }
 
-CGameObject * CSky::Clone(void* pArg)
+shared_ptr<CGameObject> CSky::Clone(void* pArg)
 {
-	CSky*		pInstance = new CSky(*this);
+	shared_ptr<CSky>		pInstance = make_shared<CSky>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
@@ -132,8 +132,8 @@ void CSky::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pVIBufferCom);	
-	Safe_Release(m_pShaderCom);
+	//Safe_Release(m_pTextureCom);
+	//Safe_Release(m_pVIBufferCom);	
+	//Safe_Release(m_pShaderCom);
 }
 

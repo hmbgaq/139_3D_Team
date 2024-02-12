@@ -47,7 +47,7 @@ void CForkLift::Tick(_float fTimeDelta)
 
 void CForkLift::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, shared_ptr<CForkLift>(this))))//
 		return ;
 }
 
@@ -100,9 +100,9 @@ HRESULT CForkLift::Bind_ShaderResources()
 	return S_OK;
 }
 
-CForkLift * CForkLift::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+shared_ptr<CForkLift> CForkLift::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CForkLift*		pInstance = new CForkLift(pDevice, pContext);
+	shared_ptr<CForkLift>		pInstance = make_shared<CForkLift>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -113,9 +113,9 @@ CForkLift * CForkLift::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pCon
 	return pInstance;
 }
 
-CGameObject * CForkLift::Clone(void* pArg)
+shared_ptr<CGameObject> CForkLift::Clone(void* pArg)
 {
-	CForkLift*		pInstance = new CForkLift(*this);
+	shared_ptr<CForkLift>		pInstance = make_shared<CForkLift>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
@@ -130,7 +130,7 @@ void CForkLift::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pModelCom);	
-	Safe_Release(m_pShaderCom);
+	//Safe_Release(m_pModelCom);	
+	//Safe_Release(m_pShaderCom);
 }
 

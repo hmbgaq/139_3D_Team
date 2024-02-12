@@ -47,7 +47,7 @@ void CTerrain::Late_Tick(_float fTimeDelta)
 {
 	m_pVIBufferCom->Culling(m_pTransformCom->Get_WorldMatrix());
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, shared_ptr<CTerrain>(this))))//
 		return ;
 
 
@@ -126,9 +126,9 @@ HRESULT CTerrain::Bind_ShaderResources()
 	return S_OK;
 }
 
-CTerrain * CTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+shared_ptr<CTerrain> CTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CTerrain*		pInstance = new CTerrain(pDevice, pContext);
+	shared_ptr<CTerrain>		pInstance = make_shared<CTerrain>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -139,9 +139,9 @@ CTerrain * CTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pConte
 	return pInstance;
 }
 
-CGameObject * CTerrain::Clone(void* pArg)
+shared_ptr<CGameObject> CTerrain::Clone(void* pArg)
 {
-	CTerrain*		pInstance = new CTerrain(*this);
+	shared_ptr<CTerrain>		pInstance = make_shared<CTerrain>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

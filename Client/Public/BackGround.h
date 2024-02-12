@@ -19,7 +19,7 @@ public:
 		_float			fX, fY, fSizeX, fSizeY;
 	}BACKGROUND_DESC;
 	
-private:
+public:
 	CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBackGround(const CBackGround& rhs);
 	virtual ~CBackGround() = default;
@@ -49,10 +49,10 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CBackGround* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static shared_ptr<CBackGround> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 	/* 사본객체를 생성한다. */
-	virtual CGameObject* Clone(void* pArg) override;
+	virtual shared_ptr<CGameObject> Clone(void* pArg) override;
 
 	virtual void Free() override;
 };

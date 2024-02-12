@@ -5,10 +5,11 @@
 BEGIN(Engine)
 
 class CComponent;
+class CGameObject;
 
 class CLayer final : public CBase
 {
-private:
+public:
 	CLayer();
 	virtual ~CLayer() = default;
 
@@ -16,16 +17,16 @@ public:
 	shared_ptr<CComponent> Get_Component(const wstring & strComponentTag, _uint iIndex, const wstring& strPartTag);
 
 public:
-	HRESULT Add_GameObject(class CGameObject* pGameObject);
+	HRESULT Add_GameObject(shared_ptr<CGameObject> pGameObject);
 	void Priority_Tick(_float fTimeDelta);
 	void Tick(_float fTimeDelta);
 	void Late_Tick(_float fTimeDelta);
 
 private:
-	list<class CGameObject*>			m_GameObjects;
+	list<shared_ptr<CGameObject>>			m_GameObjects;
 
 public:
-	static CLayer* Create();
+	static shared_ptr<CLayer> Create();
 	virtual void Free() override;
 };
 

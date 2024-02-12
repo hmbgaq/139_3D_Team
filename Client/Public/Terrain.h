@@ -16,7 +16,7 @@ class CTerrain final : public CGameObject
 {
 	enum TEXTURE { TYPE_DIFFUSE, TYPE_MASK, TYPE_BRUSH, TYPE_END };
 	
-private:
+public:
 	CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CTerrain(const CTerrain& rhs);
 	virtual ~CTerrain() = default;
@@ -43,10 +43,10 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static shared_ptr<CTerrain> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 	/* 사본객체를 생성한다. */
-	virtual CGameObject* Clone(void* pArg) override;
+	virtual shared_ptr<CGameObject> Clone(void* pArg) override;
 
 	virtual void Free() override;
 };

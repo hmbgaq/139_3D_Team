@@ -12,7 +12,7 @@ BEGIN(Client)
 
 class CForkLift final : public CLandObject
 {
-private:
+public:
 	CForkLift(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CForkLift(const CForkLift& rhs);
 	virtual ~CForkLift() = default;
@@ -36,10 +36,10 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CForkLift* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static shared_ptr<CForkLift> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 	/* 사본객체를 생성한다. */
-	virtual CGameObject* Clone(void* pArg) override;
+	virtual shared_ptr<CGameObject> Clone(void* pArg) override;
 
 	virtual void Free() override;
 };

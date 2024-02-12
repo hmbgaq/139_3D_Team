@@ -55,7 +55,7 @@ void CParticle_Blue::Tick(_float fTimeDelta)
 
 void CParticle_Blue::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, shared_ptr<CParticle_Blue>(this))))//
 		return;
 }
 
@@ -120,9 +120,9 @@ HRESULT CParticle_Blue::Bind_ShaderResources()
 	return S_OK;
 }
 
-CParticle_Blue * CParticle_Blue::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+shared_ptr<CParticle_Blue> CParticle_Blue::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CParticle_Blue*		pInstance = new CParticle_Blue(pDevice, pContext);
+	shared_ptr<CParticle_Blue>		pInstance = make_shared<CParticle_Blue>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -133,9 +133,9 @@ CParticle_Blue * CParticle_Blue::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 	return pInstance;
 }
 
-CGameObject * CParticle_Blue::Clone(void* pArg)
+shared_ptr<CGameObject> CParticle_Blue::Clone(void* pArg)
 {
-	CParticle_Blue*		pInstance = new CParticle_Blue(*this);
+	shared_ptr<CParticle_Blue>		pInstance = make_shared<CParticle_Blue>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
@@ -150,8 +150,8 @@ void CParticle_Blue::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pShaderCom);
+	//Safe_Release(m_pVIBufferCom);
+	//Safe_Release(m_pTextureCom);
+	//Safe_Release(m_pShaderCom);
 }
 

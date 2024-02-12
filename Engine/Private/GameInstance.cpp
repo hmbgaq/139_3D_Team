@@ -210,7 +210,7 @@ HRESULT CGameInstance::Open_Level(_uint iCurrentLevelIndex, CLevel * pNewLevel)
 	return m_pLevel_Manager->Open_Level(iCurrentLevelIndex, pNewLevel);
 }
 
-HRESULT CGameInstance::Add_Prototype(const wstring & strPrototypeTag, CGameObject * pPrototype)
+HRESULT CGameInstance::Add_Prototype(const wstring & strPrototypeTag, shared_ptr<CGameObject> pPrototype)
 {
 	if (nullptr == m_pObject_Manager)
 		return E_FAIL;
@@ -226,7 +226,7 @@ HRESULT CGameInstance::Add_CloneObject(_uint iLevelIndex, const wstring & strLay
 	return m_pObject_Manager->Add_CloneObject(iLevelIndex, strLayerTag, strPrototypeTag, pArg);
 }
 
-CGameObject * CGameInstance::Clone_Prototype(const wstring & strPrototypeTag, void * pArg)
+shared_ptr<CGameObject> CGameInstance::Clone_Prototype(const wstring & strPrototypeTag, void * pArg)
 {
 	if (nullptr == m_pObject_Manager)
 		return nullptr;
@@ -258,7 +258,7 @@ shared_ptr<CComponent> CGameInstance::Clone_Component(_uint iLevelIndex, const w
 	return m_pComponent_Manager->Clone_Component(iLevelIndex, strPrototypeTag, pArg);
 }
 
-HRESULT CGameInstance::Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, CGameObject * pGameObject)
+HRESULT CGameInstance::Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, shared_ptr<CGameObject> pGameObject)
 {
 	if (nullptr == m_pRenderer)
 		return E_FAIL;

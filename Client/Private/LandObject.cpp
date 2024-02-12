@@ -68,7 +68,6 @@ void CLandObject::Free()
 {
 	__super::Free();
 
-
-	Safe_Release(m_pVIBuffer_Terrain);
-	Safe_Release(m_pTransform_Terrain);
+	//Safe_Release(m_pVIBuffer_Terrain);
+	//Safe_Release(m_pTransform_Terrain);
 }

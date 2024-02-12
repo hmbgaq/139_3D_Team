@@ -18,7 +18,7 @@ public:
 		shared_ptr<CTransform>				pTerrainTransform;
 	}LANDOBJECT_DESC;
 
-protected:
+public:
 	CLandObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CLandObject(const CLandObject& rhs);
 	virtual ~CLandObject() = default;
@@ -40,7 +40,7 @@ protected:
 	
 public:
 	/* 사본객체를 생성한다. */
-	virtual CGameObject* Clone(void* pArg) = 0;
+	virtual shared_ptr<CGameObject> Clone(void* pArg) = 0;
 	virtual void Free() override;
 };
 

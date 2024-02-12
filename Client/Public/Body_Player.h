@@ -20,7 +20,7 @@ public:
 	{
 		class shared_ptr<CTransform>		m_pParentTransform = { nullptr };
 	}BODY_DESC;
-private:
+public:
 	CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBody_Player(const CBody_Player& rhs);
 	virtual ~CBody_Player() = default;
@@ -56,10 +56,10 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CBody_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static shared_ptr<CBody_Player> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 	/* 사본객체를 생성한다. */
-	virtual CGameObject* Clone(void* pArg) override;
+	virtual shared_ptr<CGameObject> Clone(void* pArg) override;
 
 	virtual void Free() override;
 };

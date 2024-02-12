@@ -24,7 +24,7 @@ private:
 
 public:
 	HRESULT Initialize();
-	HRESULT Add_RenderGroup(RENDERGROUP eGroupID, class CGameObject* pGameObject);
+	HRESULT Add_RenderGroup(RENDERGROUP eGroupID, shared_ptr<CGameObject> pGameObject);
 
 	HRESULT Add_DebugRender(shared_ptr<CComponent> pDebugCom);
 
@@ -34,7 +34,7 @@ private:
 	ID3D11Device*							m_pDevice = { nullptr };
 	ID3D11DeviceContext*					m_pContext = { nullptr };
 	CGameInstance*					m_pGameInstance = { nullptr };
-	list<CGameObject*>				m_RenderObjects[RENDER_END];
+	list<shared_ptr<CGameObject>>				m_RenderObjects[RENDER_END];
 
 #ifdef _DEBUG
 	list<shared_ptr<CComponent>>					m_DebugComponent;

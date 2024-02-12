@@ -62,10 +62,10 @@ void CBody_Player::Late_Tick(_float fTimeDelta)
 {
 	
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, shared_ptr<CBody_Player>(this))))//
 		return ;
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, shared_ptr<CBody_Player>(this))))//
 		return;
 
 #ifdef _DEBUG
@@ -175,9 +175,9 @@ HRESULT CBody_Player::Bind_ShaderResources()
 	return S_OK;
 }
 
-CBody_Player * CBody_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+shared_ptr<CBody_Player> CBody_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CBody_Player*		pInstance = new CBody_Player(pDevice, pContext);
+	shared_ptr<CBody_Player>		pInstance = make_shared<CBody_Player>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -188,9 +188,9 @@ CBody_Player * CBody_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext 
 	return pInstance;
 }
 
-CGameObject * CBody_Player::Clone(void* pArg)
+shared_ptr<CGameObject> CBody_Player::Clone(void* pArg)
 {
-	CBody_Player*		pInstance = new CBody_Player(*this);
+	shared_ptr<CBody_Player>		pInstance = make_shared<CBody_Player>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
@@ -205,9 +205,9 @@ void CBody_Player::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pParentTransform);
-	Safe_Release(m_pColliderCom);
-	Safe_Release(m_pModelCom);	
-	Safe_Release(m_pShaderCom);
+	//Safe_Release(m_pParentTransform);
+	//Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pModelCom);	
+	//Safe_Release(m_pShaderCom);
 }
 

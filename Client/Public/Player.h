@@ -12,7 +12,7 @@ BEGIN(Client)
 
 class CPlayer final : public CLandObject
 {
-private:
+public:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& rhs);
 	virtual ~CPlayer() = default;
@@ -29,14 +29,14 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	CGameObject* Find_PartObject(const wstring& strPartTag);
+	shared_ptr<CGameObject> Find_PartObject(const wstring& strPartTag);
 
 private:
 	shared_ptr<CNavigation>		m_pNavigationCom = { nullptr };
 	shared_ptr<CCollider>		m_pColliderCom = { nullptr };
 
 private:
-	map<const wstring, class CGameObject*>		m_PartObjects;
+	map<const wstring, shared_ptr<CGameObject>>		m_PartObjects;
 
 private:
 	HRESULT Ready_Components();
@@ -47,10 +47,10 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static shared_ptr<CPlayer> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 	/* 사본객체를 생성한다. */
-	virtual CGameObject* Clone(void* pArg) override;
+	virtual shared_ptr<CGameObject> Clone(void* pArg) override;
 
 	virtual void Free() override;
 };

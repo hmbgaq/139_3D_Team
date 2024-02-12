@@ -139,7 +139,7 @@ HRESULT CRenderer::Initialize()
 	return S_OK;
 }
 
-HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eGroupID, CGameObject * pGameObject)
+HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eGroupID, shared_ptr<CGameObject> pGameObject)
 {
 	if (nullptr == pGameObject ||
 		eGroupID >= RENDER_END)
@@ -149,7 +149,7 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eGroupID, CGameObject * pGameObje
 	/* 렌더러에 객체를 공유했다. */
 	m_RenderObjects[eGroupID].push_back(pGameObject);
 
-	Safe_AddRef(pGameObject);
+	//Safe_AddRef(pGameObject);
 
 	return S_OK;
 }
@@ -202,7 +202,7 @@ HRESULT CRenderer::Render_Priority()
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 
-		Safe_Release(pGameObject);
+		//Safe_Release(pGameObject);
 	}
 
 	m_RenderObjects[RENDER_PRIORITY].clear();
@@ -261,7 +261,7 @@ HRESULT CRenderer::Render_NonLight()
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 
-		Safe_Release(pGameObject);
+		//Safe_Release(pGameObject);
 	}
 
 	m_RenderObjects[RENDER_NONLIGHT].clear();
@@ -281,7 +281,7 @@ HRESULT CRenderer::Render_NonBlend()
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 
-		Safe_Release(pGameObject);
+		//Safe_Release(pGameObject);
 	}
 
 	m_RenderObjects[RENDER_NONBLEND].clear();
@@ -294,9 +294,9 @@ HRESULT CRenderer::Render_NonBlend()
 }
 HRESULT CRenderer::Render_Blend()
 {
-	m_RenderObjects[RENDER_BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
+	m_RenderObjects[RENDER_BLEND].sort([](shared_ptr<CGameObject> pSour, shared_ptr<CGameObject> pDest)->_bool
 	{
-		return ((CAlphaObject*)pSour)->Get_CamDistance() > ((CAlphaObject*)pDest)->Get_CamDistance();
+		return (static_pointer_cast<CAlphaObject>(pSour))->Get_CamDistance() > (static_pointer_cast<CAlphaObject>(pDest))->Get_CamDistance();
 	});
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_BLEND])
@@ -304,7 +304,7 @@ HRESULT CRenderer::Render_Blend()
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 
-		Safe_Release(pGameObject);
+		//Safe_Release(pGameObject);
 	}
 
 	m_RenderObjects[RENDER_BLEND].clear();
@@ -319,7 +319,7 @@ HRESULT CRenderer::Render_UI()
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 
-		Safe_Release(pGameObject);
+		//Safe_Release(pGameObject);
 	}
 
 	m_RenderObjects[RENDER_UI].clear();

@@ -16,7 +16,7 @@ shared_ptr<CComponent> CLayer::Get_Component(const wstring & strComponentTag, _u
 	return (*iter)->Find_Component(strComponentTag, strPartTag);
 }
 
-HRESULT CLayer::Add_GameObject(CGameObject * pGameObject)
+HRESULT CLayer::Add_GameObject(shared_ptr<CGameObject> pGameObject)
 {
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -68,9 +68,9 @@ void CLayer::Late_Tick(_float fTimeDelta)
 	}
 }
 
-CLayer * CLayer::Create()
+shared_ptr<CLayer> CLayer::Create()
 {
-	return new CLayer;
+	return make_shared<CLayer>();
 }
 
 void CLayer::Free()
