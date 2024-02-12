@@ -41,10 +41,10 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	ImGui::SetNextWindowPos(viewport->Pos);
 	ImGui::SetNextWindowSize(viewport->Size);
 
-	if (!ImGui_ImplWin32_Init(g_hWnd))
+	if (false == ImGui_ImplWin32_Init(g_hWnd))
 		return E_FAIL;
 
-	if (!ImGui_ImplDX11_Init(m_pDevice, m_pContext))
+	if (false == ImGui_ImplDX11_Init(m_pDevice, m_pContext))
 		return E_FAIL;
 
 	ImGui::StyleColorsDark();
@@ -53,6 +53,13 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	if(FAILED(Ready_Windows()))
 		return E_FAIL;
 
+
+	_int iSize = _int(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_WINDOW_END);
+
+	for (_int i = 0; i < iSize; ++i)
+	{
+		m_bEnableTool[i] = false;
+	}
 
 	return S_OK;
 
@@ -80,12 +87,13 @@ HRESULT CImgui_Manager::Ready_Windows()
 
 	CImgui_Window* pWindow = CWindow_MapTool::Create(m_pDevice, m_pContext);
 
-	if(pWindow == nullptr)
+	if (pWindow == nullptr)
 		return E_FAIL;
 
 	pWindow->SetUp_ImGuiDESC(u8"맵툴", ImVec2{ 200.f, 200.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
 
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW, pWindow);
+
 
 
 	return S_OK;
@@ -102,32 +110,31 @@ void CImgui_Manager::Tick(_float fTimeDelta)
 	ImGui::NewFrame();
 	//ImGuizmo::BeginFrame();
 
-
-	///* ---------------------- IMGUI ---------------------- */
+	/////* ---------------------- IMGUI ---------------------- */
 	//ImGuiWindowFlags window_flags = 0;
 	//window_flags |= ImGuiWindowFlags_NoBackground;
-
+	//
 	//auto& style = ImGui::GetStyle();
 	//ImVec4* colors = style.Colors;
-
+	//
 	///* 투명하게 */
 	//const ImVec4 bgColor = ImVec4(0.1f, 0.1f, 0.1f, 0.5f);
 	//colors[ImGuiCol_WindowBg] = bgColor;
 	//colors[ImGuiCol_ChildBg] = bgColor;
 	//colors[ImGuiCol_TitleBg] = bgColor;
-
+	//
 	//ImGui::SetNextWindowSize(ImVec2(g_iWinSizeX, g_iWinSizeY), ImGuiCond_FirstUseEver);
 	//ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
 
 
-	//! 최상단 메뉴방와 관련된 함수
+	//! 최상단 메뉴바와 관련된 함수
 		MenuTick(fTimeDelta);
 
-	for (auto& pWindowPair : m_mapWindows)
-	{
-		if(true == pWindowPair.second->Is_Enable()) //!현재 윈도우가 활성화상태인지 체크.
-			pWindowPair.second->Tick(fTimeDelta);
-	}
+ 	for (auto& pWindowPair : m_mapWindows)
+ 	{
+ 		if(true == pWindowPair.second->Is_Enable()) //!현재 윈도우가 활성화상태인지 체크.
+ 			pWindowPair.second->Tick(fTimeDelta);
+ 	}
 
 }
 
@@ -137,62 +144,63 @@ void CImgui_Manager::MenuTick(_float fTimeDelta)
 	{
 		if (ImGui::BeginMenu("Tools"))
 		{
-			if (ImGui::MenuItem("MapTool"))
-			{
-				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW);
+ 			if (ImGui::MenuItem("MapTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW]))
+ 			{
+ 				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW);
 
-				if (nullptr == pWindow)
-				{
-					MSG_BOX("맵 윈도우가 없음. Ready_Window 함수 확인 바람");
-					return;
-				}
+ 				if (nullptr == pWindow)
+ 				{
+ 					MSG_BOX("맵 윈도우가 없음. Ready_Window 함수 확인 바람");
+ 					return;
+ 				}
 
-				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
-			}
+ 				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+ 			}
 
-			if (ImGui::MenuItem("AnimationTool"))
-			{
-				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW);
+ 			if (ImGui::MenuItem("AnimationTool"))
+ 			{
+ 				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW);
 
-				if (nullptr == pWindow)
-				{
-					MSG_BOX("애니메이션 윈도우가 없음. Ready_Window 함수 확인 바람");
-					return;
-				}
+ 				if (nullptr == pWindow)
+ 				{
+ 					MSG_BOX("애니메이션 윈도우가 없음. Ready_Window 함수 확인 바람");
+ 					return;
+ 				}
 
-				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
-			}
+ 				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+ 			}
 
-			if (ImGui::MenuItem("EffectTool"))
-			{
-				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW);
+ 			if (ImGui::MenuItem("EffectTool"))
+ 			{
+ 				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW);
 
-				if (nullptr == pWindow)
-				{
-					MSG_BOX("이펙트 윈도우가 없음. Ready_Window 함수 확인 바람");
-					return;
-				}
+ 				if (nullptr == pWindow)
+ 				{
+ 					MSG_BOX("이펙트 윈도우가 없음. Ready_Window 함수 확인 바람");
+ 					return;
+ 				}
 
-				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
-			}
+ 				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+ 			}
 
-			if (ImGui::MenuItem("UITool"))
-			{
-				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_UITOOL_WINDOW);
+ 			if (ImGui::MenuItem("UITool"))
+ 			{
+ 				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_UITOOL_WINDOW);
 
-				if (nullptr == pWindow)
-				{
-					MSG_BOX("UI 윈도우가 없음. Ready_Window 함수 확인 바람");
-					return;
-				}
+ 				if (nullptr == pWindow)
+ 				{
+ 					MSG_BOX("UI 윈도우가 없음. Ready_Window 함수 확인 바람");
+ 					return;
+ 				}
 
-				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
-			}
+ 				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+ 			}
 
-			ImGui::EndMenu();
+ 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
 	}
+
 }
 
 void CImgui_Manager::Render()
@@ -215,6 +223,7 @@ void CImgui_Manager::Render()
 
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	ImGui::EndFrame();
 }
 
 

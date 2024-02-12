@@ -24,7 +24,7 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	__super::Begin();
 
 
-
+	ImGui::Text("Test");
 
 
 	__super::End();
