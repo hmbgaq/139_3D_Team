@@ -195,6 +195,15 @@ HRESULT CRenderer::Draw_RenderGroup()
 	return S_OK;
 }
 
+void CRenderer::Clear()
+{
+	for (_uint i = 0; i < RENDER_END; ++i) 
+	{
+		m_RenderObjects[i].clear();
+	}
+	
+}
+
 HRESULT CRenderer::Render_Priority()
 {
 	for (auto& pGameObject : m_RenderObjects[RENDER_PRIORITY])

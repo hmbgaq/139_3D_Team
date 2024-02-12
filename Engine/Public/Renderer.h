@@ -30,11 +30,13 @@ public:
 
 	HRESULT Draw_RenderGroup();
 
+	void Clear();
+
 private:
 	ID3D11Device*							m_pDevice = { nullptr };
 	ID3D11DeviceContext*					m_pContext = { nullptr };
 	CGameInstance*							m_pGameInstance = { nullptr };
-	list<CGameObject*>			m_RenderObjects[RENDER_END];
+	list<CGameObject*>						m_RenderObjects[RENDER_END];
 
 #ifdef _DEBUG
 	list<shared_ptr<CComponent>>					m_DebugComponent;

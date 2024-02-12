@@ -84,8 +84,8 @@ void CBackGround::Late_Tick(_float fTimeDelta)
 	//if (nullptr == this)
 	//	return;
 
-	//if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this))) //shared_ptr<CBackGround>(this)
-	//	return ;
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this))) //shared_ptr<CBackGround>(this)
+		return ;
 }
 
 HRESULT CBackGround::Render()

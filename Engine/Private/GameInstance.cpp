@@ -106,6 +106,9 @@ void CGameInstance::Clear(_uint iLevelIndex)
 
 	/* 컴포넌트 매니져에 레벨별로 구분해 놓은 컴포넌트들 중 특정된 객체들을 지운다.  */
 	m_pComponent_Manager->Clear(iLevelIndex);
+
+	m_pRenderer->Clear();
+
 }
 
 HRESULT CGameInstance::Render_Engine()
