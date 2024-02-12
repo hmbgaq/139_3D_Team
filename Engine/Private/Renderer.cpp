@@ -154,12 +154,12 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eGroupID, CGameObject * pGameObje
 	return S_OK;
 }
 
-HRESULT CRenderer::Add_DebugRender(CComponent * pDebugCom)
+HRESULT CRenderer::Add_DebugRender(shared_ptr<CComponent> pDebugCom)
 {
 	#ifdef _DEBUG
 		m_DebugComponent.push_back(pDebugCom);
 
-		Safe_AddRef(pDebugCom);
+		//Safe_AddRef(pDebugCom);
 	#endif
 
 
@@ -414,8 +414,7 @@ HRESULT CRenderer::Render_Debug()
 	for (auto& pDebugCom : m_DebugComponent)
 	{
 		pDebugCom->Render();
-		/* 나 얼믕ㅁ 물었어. 말못해. */
-		Safe_Release(pDebugCom);
+		//Safe_Release(pDebugCom);
 	}
 	m_DebugComponent.clear();
 

@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CCollider;
+
 class CBounding abstract : public CBase
 {
 public:
@@ -11,13 +13,13 @@ public:
 	{
 		_float3		vCenter;
 	}BOUNDING_DESC;
-protected:
+public:
 	CBounding(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CBounding() = default;
 
 public:
 	virtual void Update(_fmatrix TransformMatrix) = 0;
-	virtual _bool Collision(class CCollider* pTargetCollider, _bool* pisCollision) = 0;
+	virtual _bool Collision(shared_ptr<CCollider> pTargetCollider, _bool* pisCollision) = 0;
 
 #ifdef _DEBUG
 public:

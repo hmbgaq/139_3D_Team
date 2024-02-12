@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CComponent;
+
 class CLayer final : public CBase
 {
 private:
@@ -11,7 +13,7 @@ private:
 	virtual ~CLayer() = default;
 
 public:
-	class CComponent* Get_Component(const wstring & strComponentTag, _uint iIndex, const wstring& strPartTag);
+	shared_ptr<CComponent> Get_Component(const wstring & strComponentTag, _uint iIndex, const wstring& strPartTag);
 
 public:
 	HRESULT Add_GameObject(class CGameObject* pGameObject);
@@ -28,3 +30,4 @@ public:
 };
 
 END
+

@@ -28,44 +28,10 @@ HRESULT CTransform::Initialize_Prototype(_float fSpeedPerSec, _float fRotationPe
 
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 
-	_matrix			matTmp;
-	/*
-	matTmp = XMLoadFloat4x4(&m_WorldMatrix);*/
-
-
-	/*_float3		vTmp = _float3(0.f, 0.f, 0.f);
-	_float4		vTmp2 = _float4(0.f, 0.f, 0.f, 0.f);
-
-	_vector		vTmp1 = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-	_vector		vTmp3 = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-
-	XMVector3Normalize(vTmp1);
-
-	_float		fDot = XMVectorGetX(XMVector3Dot(vTmp1, vTmp3));
-
-	_float		fLength = XMVectorGetX(XMVector3Length(vTmp1));
-
-	XMStoreFloat3(&vTmp, vTmp1);
-	XMStoreFloat4(&vTmp2, vTmp1);*/
-
-
-	
-	
-
-	
-
-
-
-
-
-
-
-
-
 	return S_OK;
 }
 
-void CTransform::Go_Straight(_float fTimeDelta, CNavigation* pNavigation)
+void CTransform::Go_Straight(_float fTimeDelta, shared_ptr<CNavigation> pNavigation)
 {
 	_vector		vPosition = Get_State(STATE_POSITION);
 	_vector		vLook = Get_State(STATE_LOOK);
@@ -186,15 +152,15 @@ void CTransform::Look_At_OnLand(_fvector vTargetPos)
 	Set_State(STATE_LOOK, vLook);
 }
 
-HRESULT CTransform::Bind_ShaderResource(CShader * pShader, const _char * pConstantName)
+HRESULT CTransform::Bind_ShaderResource(shared_ptr<CShader> pShader, const _char * pConstantName)
 {
 	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);
 }
 
 	
-CTransform * CTransform::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _float fSpeedPerSec, _float fRotationPerSec)
+shared_ptr<CTransform> CTransform::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _float fSpeedPerSec, _float fRotationPerSec)
 {
-	CTransform*		pInstance = new CTransform(pDevice, pContext);
+	shared_ptr<CTransform>		pInstance = make_shared<CTransform>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype(fSpeedPerSec, fRotationPerSec)))
@@ -205,9 +171,9 @@ CTransform * CTransform::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pC
 	return pInstance;
 }
 
-CComponent * CTransform::Clone(void * pArg)
+shared_ptr<CComponent> CTransform::Clone(void * pArg)
 {
-	CTransform*		pInstance = new CTransform(*this);
+	shared_ptr<CTransform>		pInstance = make_shared<CTransform>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

@@ -4,6 +4,11 @@
 
 BEGIN(Engine)
 
+class CGameInstance;
+class CComponent;
+class CTransform;
+
+
 class ENGINE_DLL CGameObject abstract : public CBase
 {
 public:
@@ -32,7 +37,7 @@ public:
 	virtual HRESULT Render_Shadow() { return S_OK; }
 
 public:
-	virtual class CComponent* Find_Component(const wstring& strComTag, const wstring& strPartTag = TEXT(""));
+	virtual shared_ptr<CComponent> Find_Component(const wstring& strComTag, const wstring& strPartTag = TEXT(""));
 
 
 public:
@@ -45,11 +50,11 @@ protected:
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 
 protected:
-	class CGameInstance*		m_pGameInstance = { nullptr };
+	CGameInstance*		m_pGameInstance = { nullptr };
 
 protected:
-	class CTransform*							m_pTransformCom = { nullptr };
-	map<const wstring, class CComponent*>		m_Components;
+	shared_ptr<CTransform>							m_pTransformCom = { nullptr };
+	map<const wstring, shared_ptr<CComponent>>		m_Components;
 
 protected:
 	_bool						m_isCloned = { false };
@@ -59,9 +64,7 @@ protected:
 
 protected:
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& strPrototypeTag,
-		const wstring& strComTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
-
-
+		const wstring& strComTag, _Inout_ shared_ptr<CComponent>* ppOut, void* pArg = nullptr);
 
 
 public:

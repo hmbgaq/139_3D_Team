@@ -95,7 +95,7 @@ void CCell::Update(_fmatrix WorldMatrix)
 }
 
 #ifdef _DEBUG
-HRESULT CCell::Render(class CShader* pShader)
+HRESULT CCell::Render(shared_ptr<CShader> pShader)
 {
 	m_pVIBuffer->Bind_VIBuffers();
 
@@ -105,9 +105,9 @@ HRESULT CCell::Render(class CShader* pShader)
 }
 #endif
 
-CCell * CCell::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _float3 * pPoints, _uint iIndex)
+shared_ptr<CCell> CCell::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _float3 * pPoints, _uint iIndex)
 {
-	CCell*		pInstance = new CCell(pDevice, pContext);
+	shared_ptr<CCell>		pInstance = make_shared<CCell>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pPoints, iIndex)))

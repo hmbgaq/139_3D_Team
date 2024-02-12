@@ -6,7 +6,7 @@ CLayer::CLayer()
 
 }
 
-CComponent * CLayer::Get_Component(const wstring & strComponentTag, _uint iIndex, const wstring& strPartTag)
+shared_ptr<CComponent> CLayer::Get_Component(const wstring & strComponentTag, _uint iIndex, const wstring& strPartTag)
 {
 	auto	iter = m_GameObjects.begin();
 

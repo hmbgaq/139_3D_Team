@@ -4,6 +4,7 @@
 #include "GameObject.h"
 
 BEGIN(Engine)
+class CTransform;
 class CCollider;
 class CShader;
 class CModel;
@@ -17,7 +18,7 @@ class CBody_Player final : public CGameObject
 public:
 	typedef struct tagBodyDesc
 	{
-		class CTransform*		m_pParentTransform = { nullptr };
+		class shared_ptr<CTransform>		m_pParentTransform = { nullptr };
 	}BODY_DESC;
 private:
 	CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -40,12 +41,12 @@ public:
 	void SetUp_Animation(_uint iAnimIndex);
 
 private:
-	CShader*			m_pShaderCom = { nullptr };	
-	CModel*				m_pModelCom = { nullptr };
-	CCollider*			m_pColliderCom = { nullptr };
+	shared_ptr<CShader>		m_pShaderCom = { nullptr };
+	shared_ptr<CModel>		m_pModelCom = { nullptr };
+	shared_ptr<CCollider>	m_pColliderCom = { nullptr };
 
 private:
-	class CTransform*	m_pParentTransform = { nullptr };
+	shared_ptr<CTransform>	m_pParentTransform = { nullptr };
 	_float4x4			m_WorldMatrix = {};
 
 private:

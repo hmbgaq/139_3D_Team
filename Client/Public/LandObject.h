@@ -14,8 +14,8 @@ class CLandObject abstract : public CGameObject
 public:
 	typedef struct tagLandObjectDesc: public CGameObject::GAMEOBJECT_DESC
 	{
-		CVIBuffer_Terrain*		pTerrainBuffer;
-		CTransform*				pTerrainTransform;
+		shared_ptr<CVIBuffer_Terrain>		pTerrainBuffer;
+		shared_ptr<CTransform>				pTerrainTransform;
 	}LANDOBJECT_DESC;
 
 protected:
@@ -32,11 +32,11 @@ public:
 	virtual HRESULT Render() override;
 
 protected:
-	class CVIBuffer_Terrain*			m_pVIBuffer_Terrain = { nullptr };
-	class CTransform*					m_pTransform_Terrain = { nullptr };
+	shared_ptr<CVIBuffer_Terrain>			m_pVIBuffer_Terrain = { nullptr };
+	shared_ptr<CTransform>					m_pTransform_Terrain = { nullptr };
 
 protected:
-	HRESULT SetUp_OnTerrain(CTransform* pTargetTransform);
+	HRESULT SetUp_OnTerrain(shared_ptr<CTransform> pTargetTransform);
 	
 public:
 	/* 사본객체를 생성한다. */

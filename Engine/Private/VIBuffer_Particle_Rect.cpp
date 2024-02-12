@@ -118,9 +118,9 @@ HRESULT CVIBuffer_Particle_Rect::Initialize(void * pArg)
 //
 //}
 
-CVIBuffer_Particle_Rect * CVIBuffer_Particle_Rect::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iNumInstance)
+shared_ptr<CVIBuffer_Particle_Rect> CVIBuffer_Particle_Rect::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iNumInstance)
 {
-	CVIBuffer_Particle_Rect*		pInstance = new CVIBuffer_Particle_Rect(pDevice, pContext);
+	shared_ptr<CVIBuffer_Particle_Rect>		pInstance = make_shared<CVIBuffer_Particle_Rect>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype(iNumInstance)))
@@ -131,9 +131,9 @@ CVIBuffer_Particle_Rect * CVIBuffer_Particle_Rect::Create(ID3D11Device * pDevice
 	return pInstance;
 }
 
-CComponent * CVIBuffer_Particle_Rect::Clone(void* pArg)
+shared_ptr<CComponent> CVIBuffer_Particle_Rect::Clone(void* pArg)
 {
-	CVIBuffer_Particle_Rect*		pInstance = new CVIBuffer_Particle_Rect(*this);
+	shared_ptr<CVIBuffer_Particle_Rect>		pInstance = make_shared<CVIBuffer_Particle_Rect>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

@@ -106,17 +106,17 @@ HRESULT CBackGround::Ready_Components()
 {
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPosTex"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		TEXT("Com_Shader"), reinterpret_cast<shared_ptr<CComponent>*>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+		TEXT("Com_VIBuffer"), reinterpret_cast<shared_ptr<CComponent>*>(&m_pVIBufferCom))))
 		return E_FAIL;
 
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"),
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		TEXT("Com_Texture"), reinterpret_cast<shared_ptr<CComponent>*>(&m_pTextureCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -167,8 +167,8 @@ void CBackGround::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pShaderCom);
+	//Safe_Release(m_pVIBufferCom);
+	//Safe_Release(m_pTextureCom);
+	//Safe_Release(m_pShaderCom);
 }
 

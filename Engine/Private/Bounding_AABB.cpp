@@ -12,8 +12,8 @@ HRESULT CBounding_AABB::Initialize(BOUNDING_DESC * pBoundingDesc)
 {
 	BOUNDING_AABB_DESC* pDesc = (BOUNDING_AABB_DESC*)pBoundingDesc;
 
-	m_pOriginalAABB = new BoundingBox(pDesc->vCenter, pDesc->vExtents);
-	m_pAABB = new BoundingBox(*m_pOriginalAABB);
+	m_pOriginalAABB = make_shared<BoundingBox>(pDesc->vCenter, pDesc->vExtents);
+	m_pAABB = make_shared<BoundingBox>(*m_pOriginalAABB);
 
 	return S_OK;
 }
@@ -31,9 +31,9 @@ void CBounding_AABB::Update(_fmatrix TransformMatrix)
 
 }
 
-_bool CBounding_AABB::Collision(CCollider * pTargetCollider, _bool* pisCollision)
+_bool CBounding_AABB::Collision(shared_ptr<CCollider> pTargetCollider, _bool* pisCollision)
 {
-	CBounding*	pTargetBounding = pTargetCollider->Get_Bounding();
+	const CBounding* 	pTargetBounding = pTargetCollider->Get_Bounding();
 
 	*pisCollision = false;
 
@@ -87,6 +87,6 @@ void CBounding_AABB::Free()
 {
 	__super::Free();
 
-	Safe_Delete(m_pOriginalAABB);
-	Safe_Delete(m_pAABB);
+	//Safe_Delete(m_pOriginalAABB);
+	//Safe_Delete(m_pAABB);
 }

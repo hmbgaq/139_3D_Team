@@ -131,12 +131,12 @@ void CModel::Play_Animation(_float fTimeDelta, _bool isLoop)
 	}
 }
 
-HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, _uint iMeshIndex)
+HRESULT CModel::Bind_BoneMatrices(shared_ptr<CShader> pShader, const _char * pConstantName, _uint iMeshIndex)
 {
 	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);	
 }
 
-HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantName, _uint iMeshIndex, aiTextureType eTextureType)
+HRESULT CModel::Bind_ShaderResource(shared_ptr<CShader> pShader, const _char * pConstantName, _uint iMeshIndex, aiTextureType eTextureType)
 {
 
 	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
@@ -268,7 +268,7 @@ HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 
 	for (size_t i = 0; i < m_iNumMeshes; i++)
 	{
-		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eModelType, m_pAIScene.Get_Mesh(i), PivotMatrix, m_Bones);
+		shared_ptr<CMesh> pMesh = CMesh::Create(m_pDevice, m_pContext, m_eModelType, m_pAIScene.Get_Mesh(i), PivotMatrix, m_Bones);
 
 		if (nullptr == pMesh)
 			return E_FAIL;
@@ -369,9 +369,9 @@ HRESULT CModel::Ready_Animations()
 	return S_OK;
 }
 
-CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eType, const string & strModelFilePath, _fmatrix PivotMatrix)
+shared_ptr<CModel> CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eType, const string & strModelFilePath, _fmatrix PivotMatrix)
 {
-	CModel*		pInstance = new CModel(pDevice, pContext);
+	shared_ptr<CModel>		pInstance = make_shared<CModel>(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(eType, strModelFilePath, PivotMatrix)))
 	{
@@ -381,9 +381,9 @@ CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, 
 	return pInstance;
 }
 
-CComponent * CModel::Clone(void * pArg)
+shared_ptr<CComponent> CModel::Clone(void * pArg)
 {
-	CModel*		pInstance = new CModel(*this);
+	shared_ptr<CModel>		pInstance = make_shared<CModel>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

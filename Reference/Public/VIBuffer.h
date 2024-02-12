@@ -9,7 +9,7 @@ BEGIN(Engine)
 
 class ENGINE_DLL CVIBuffer abstract : public CComponent
 {
-protected:
+public:
 	CVIBuffer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CVIBuffer(const CVIBuffer& rhs);
 	virtual ~CVIBuffer() = default;
@@ -44,7 +44,7 @@ protected:
 
 	_float3*					m_pVerticesPos = { nullptr };
 public:
-	virtual CComponent* Clone(void* pArg) = 0;
+	virtual shared_ptr<CComponent> Clone(void* pArg) = 0;
 	virtual void Free() override;
 };
 

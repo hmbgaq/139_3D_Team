@@ -18,12 +18,12 @@ CNavigation::CNavigation(const CNavigation & rhs)
 	, m_pShader(rhs.m_pShader)
 #endif
 {
-	for (auto& pCell : m_Cells)
-		Safe_AddRef(pCell);
+	//for (auto& pCell : m_Cells)
+	//	Safe_AddRef(pCell);
 
 
 #ifdef _DEBUG
-	Safe_AddRef(m_pShader);
+	//Safe_AddRef(m_pShader);
 #endif
 
 }
@@ -46,7 +46,7 @@ HRESULT CNavigation::Initialize_Prototype(const wstring & strNavigationFilePath)
 		if (0 == dwByte)
 			break;
 
-		CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoints, _uint(m_Cells.size()));
+		shared_ptr<CCell> pCell = CCell::Create(m_pDevice, m_pContext, vPoints, _uint(m_Cells.size()));
 		if (nullptr == pCell)
 			return E_FAIL;
 
@@ -174,9 +174,9 @@ HRESULT CNavigation::Make_Neighbors()
 	return S_OK;
 }
 
-CNavigation * CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strNavigationFilePath)
+shared_ptr<CNavigation> CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strNavigationFilePath)
 {
-	CNavigation*		pInstance = new CNavigation(pDevice, pContext);
+	shared_ptr<CNavigation>		pInstance = make_shared<CNavigation>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype(strNavigationFilePath)))
@@ -187,9 +187,9 @@ CNavigation * CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * 
 	return pInstance;
 }
 
-CComponent * CNavigation::Clone(void * pArg)
+shared_ptr<CComponent> CNavigation::Clone(void * pArg)
 {
-	CNavigation*		pInstance = new CNavigation(*this);
+	shared_ptr<CNavigation>		pInstance = make_shared<CNavigation>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
@@ -204,12 +204,12 @@ void CNavigation::Free()
 {
 	__super::Free();
 
-	for (auto& pCell : m_Cells)
-		Safe_Release(pCell);
+	//for (auto& pCell : m_Cells)
+	//	Safe_Release(pCell);
 
 	m_Cells.clear();
 
 #ifdef _DEBUG
-	Safe_Release(m_pShader);
+	//Safe_Release(m_pShader);
 #endif
 }

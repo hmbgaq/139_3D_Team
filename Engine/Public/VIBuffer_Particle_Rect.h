@@ -12,7 +12,7 @@ public:
 		
 	}PARTICLE_RECT_DESC;
 
-private:
+public:
 	CVIBuffer_Particle_Rect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CVIBuffer_Particle_Rect(const CVIBuffer_Particle_Rect& rhs);
 	virtual ~CVIBuffer_Particle_Rect() = default;
@@ -24,8 +24,8 @@ public:
 
 
 public:
-	static CVIBuffer_Particle_Rect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumInstance);
-	virtual CComponent* Clone(void* pArg) override;
+	static shared_ptr<CVIBuffer_Particle_Rect> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumInstance);
+	virtual shared_ptr<CComponent> Clone(void* pArg) override;
 	virtual void Free() override;
 };
 

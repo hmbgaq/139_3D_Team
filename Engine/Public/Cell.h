@@ -4,12 +4,15 @@
 
 BEGIN(Engine)
 
+class CVIBuffer_Cell;
+class CShader;
+
 class CCell final : public CBase
 {
 public:
 	enum POINT { POINT_A, POINT_B, POINT_C, POINT_END};
 	enum LINE { LINE_AB, LINE_BC, LINE_CA, LINE_END};
-private:
+public:
 	CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CCell() = default;
 
@@ -23,13 +26,13 @@ public:
 	_bool Compare_Points(const _float3* pSourPoint, const _float3* pDestPoint);
 	_bool isIn(_fvector vPosition, _fmatrix WorldMatrix, _int* pNeighborIndex);
 	void Update(_fmatrix WorldMatrix);
-	void SetUp_Neighbor(LINE eLine, CCell* pNeighborCell) {
+	void SetUp_Neighbor(LINE eLine, shared_ptr<CCell> pNeighborCell) {
 		m_iNeighbors[eLine] = pNeighborCell->m_iIndex;		
 	}
 
 #ifdef _DEBUG
 public:
-	HRESULT Render(class CShader* pShader);
+	HRESULT Render(shared_ptr<CShader> pShader);
 #endif
 
 private:
@@ -43,13 +46,13 @@ private:
 
 #ifdef _DEBUG
 private:	
-	class CVIBuffer_Cell*	m_pVIBuffer = { nullptr };
+	shared_ptr<CVIBuffer_Cell>	m_pVIBuffer = { nullptr };
 
 
 #endif
 
 public:
-	static CCell* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _float3* pPoints, _uint iIndex);
+	static shared_ptr<CCell> Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _float3* pPoints, _uint iIndex);
 	virtual void Free() override;
 };
 

@@ -17,6 +17,8 @@
 
 BEGIN(Engine)
 
+class CComponent;
+
 class CComponent_Manager final : public CBase
 {
 private:
@@ -25,18 +27,18 @@ private:
 
 public:
 	HRESULT Initialize(_uint iNumLevels);
-	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, class CComponent* pPrototype);
-	class CComponent* Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg);
+	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, shared_ptr<CComponent> pPrototype);
+	shared_ptr<CComponent> Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg);
 	void Clear(_uint iLevelIndex);
 
 private:
 	_uint											m_iNumLevels = { 0 };
 
-	map<const wstring, class CComponent*>*			m_pPrototypes = { nullptr };
-	typedef map<const wstring, class CComponent*>	PROTOTYPES;
+	map<const wstring, shared_ptr<CComponent>>*			m_pPrototypes = { nullptr };
+	typedef map<const wstring, shared_ptr<CComponent>>	PROTOTYPES;
 
 private:
-	class CComponent* Find_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag);
+	shared_ptr<CComponent> Find_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag);
 
 public:
 	static CComponent_Manager* Create(_uint iNumLevels);

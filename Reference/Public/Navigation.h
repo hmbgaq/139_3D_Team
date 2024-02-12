@@ -4,6 +4,9 @@
 
 BEGIN(Engine)
 
+class CCell;
+class CShader;
+
 class ENGINE_DLL CNavigation final : public CComponent
 {
 public:
@@ -11,7 +14,7 @@ public:
 	{
 		_int		iCurrentIndex;
 	}NAVI_DESC;
-private:
+public:
 	CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CNavigation(const CNavigation& rhs);
 	virtual ~CNavigation() = default;
@@ -29,21 +32,21 @@ public:
 	_bool isMove(_fvector vPosition);
 
 private:
-	vector<class CCell*>			m_Cells;
+	vector<shared_ptr<CCell>>			m_Cells;
 	static _float4x4				m_WorldMatrix;
 	_int							m_iCurrentIndex = { -1 };
 
 #ifdef _DEBUG
 private:
-	class CShader*					m_pShader = { nullptr };
+	shared_ptr<CShader>					m_pShader = { nullptr };
 #endif
 
 private:
 	HRESULT Make_Neighbors();
 
 public:
-	static CNavigation* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strNavigationFilePath);
-	virtual CComponent* Clone(void* pArg) override;
+	static shared_ptr<CNavigation> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strNavigationFilePath);
+	virtual shared_ptr<CComponent> Clone(void* pArg) override;
 	virtual void Free() override;
 };
 

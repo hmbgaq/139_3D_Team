@@ -72,7 +72,7 @@ HRESULT CMesh::Initialize(void * pArg)
 	return S_OK;
 }
 
-HRESULT CMesh::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, const vector<CBone*>& Bones)
+HRESULT CMesh::Bind_BoneMatrices(shared_ptr<CShader> pShader, const _char * pConstantName, const vector<CBone*>& Bones)
 {
 	_float4x4		BoneMatrices[256];
 
@@ -255,9 +255,9 @@ HRESULT CMesh::Ready_Vertices_Anim(CMyAIMesh pAIMesh, const vector<class CBone*>
 	return S_OK;
 }
 
-CMesh * CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones)
+shared_ptr<CMesh> CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones)
 {
-	CMesh*		pInstance = new CMesh(pDevice, pContext);
+	shared_ptr<CMesh>		pInstance = make_shared<CMesh>(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(eModelType, pAIMesh, PivotMatrix, Bones)))
 	{
@@ -267,7 +267,7 @@ CMesh * CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CMod
 	return pInstance;
 }
 
-CComponent * CMesh::Clone(void * pArg)
+shared_ptr<CComponent> CMesh::Clone(void * pArg)
 {
 	return nullptr;
 }

@@ -234,7 +234,7 @@ CGameObject * CGameInstance::Clone_Prototype(const wstring & strPrototypeTag, vo
 	return m_pObject_Manager->Clone_Prototype(strPrototypeTag, pArg);
 }
 
-CComponent * CGameInstance::Get_Component(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strComponentTag, _uint iIndex, const wstring& strPartTag)
+shared_ptr<CComponent> CGameInstance::Get_Component(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strComponentTag, _uint iIndex, const wstring& strPartTag)
 {
 	if (nullptr == m_pObject_Manager)
 		return nullptr;
@@ -242,7 +242,7 @@ CComponent * CGameInstance::Get_Component(_uint iLevelIndex, const wstring & str
 	return m_pObject_Manager->Get_Component(iLevelIndex, strLayerTag, strComponentTag, iIndex, strPartTag);
 }
 
-HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, CComponent * pPrototype)
+HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, shared_ptr<CComponent> pPrototype)
 {
 	if (nullptr == m_pComponent_Manager)
 		return E_FAIL;
@@ -250,7 +250,7 @@ HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring & strProto
 	return m_pComponent_Manager->Add_Prototype(iLevelIndex, strPrototypeTag, pPrototype);
 }
 
-CComponent * CGameInstance::Clone_Component(_uint iLevelIndex, const wstring & strPrototypeTag, void * pArg)
+shared_ptr<CComponent> CGameInstance::Clone_Component(_uint iLevelIndex, const wstring & strPrototypeTag, void * pArg)
 {
 	if (nullptr == m_pComponent_Manager)
 		return nullptr;
@@ -266,7 +266,7 @@ HRESULT CGameInstance::Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, CGameObj
 	return m_pRenderer->Add_RenderGroup(eGroupID, pGameObject);
 }
 
-HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
+HRESULT CGameInstance::Add_DebugRender(shared_ptr<CComponent> pDebugCom)
 {
 	if (nullptr == m_pRenderer)
 		return E_FAIL;
@@ -360,7 +360,7 @@ HRESULT CGameInstance::End_MRT()
 	return m_pTarget_Manager->End_MRT();
 }
 
-HRESULT CGameInstance::Bind_RenderTarget_ShaderResource(const wstring & strTargetTag, CShader * pShader, const _char * pConstantName)
+HRESULT CGameInstance::Bind_RenderTarget_ShaderResource(const wstring & strTargetTag, shared_ptr<CShader> pShader, const _char * pConstantName)
 {
 	return m_pTarget_Manager->Bind_ShaderResource(strTargetTag, pShader, pConstantName);
 }
@@ -370,7 +370,7 @@ HRESULT CGameInstance::Ready_RenderTarget_Debug(const wstring & strTargetTag, _f
 {
 	return m_pTarget_Manager->Ready_Debug(strTargetTag, fX, fY, fSizeX, fSizeY);
 }
-HRESULT CGameInstance::Render_Debug_RTVs(const wstring & strMRTTag, CShader * pShader, CVIBuffer_Rect * pVIBuffer)
+HRESULT CGameInstance::Render_Debug_RTVs(const wstring & strMRTTag, shared_ptr<CShader> pShader, shared_ptr<CVIBuffer_Rect> pVIBuffer)
 {
 	return m_pTarget_Manager->Render_Debug(strMRTTag, pShader, pVIBuffer);
 }
@@ -385,7 +385,7 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc, _int& outLightInde
 	return m_pLight_Manager->Add_Light(LightDesc, outLightIndex);
 }
 
-HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
+HRESULT CGameInstance::Render_Lights(shared_ptr<CShader> pShader, shared_ptr<CVIBuffer_Rect> pVIBuffer)
 {
 	if (nullptr == m_pLight_Manager)
 		return E_FAIL;
@@ -407,6 +407,16 @@ _bool CGameInstance::isIn_LocalPlanes(_fvector vPoint, _float fRadius)
 {
 
 	return m_pFrustum->isIn_LocalPlanes(vPoint, fRadius);
+}
+
+void CGameInstance::String_To_WString(string _string, wstring& _wstring)
+{
+	_wstring.assign(_string.begin(), _string.end());
+}
+
+void CGameInstance::WString_To_String(wstring _wstring, string& _string)
+{
+	_string.assign(_wstring.begin(), _wstring.end());
 }
 
 void CGameInstance::Release_Manager()

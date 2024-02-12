@@ -137,12 +137,12 @@ HRESULT CBody_Player::Ready_Components()
 {
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_AnimModel"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		TEXT("Com_Shader"), reinterpret_cast<shared_ptr<CComponent>*>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
-		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+		TEXT("Com_Model"), reinterpret_cast<shared_ptr<CComponent>*>(&m_pModelCom))))
 		return E_FAIL;
 
 	/* For.Com_Collider */
@@ -152,7 +152,7 @@ HRESULT CBody_Player::Ready_Components()
 
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
+		TEXT("Com_Collider"), reinterpret_cast<shared_ptr<CComponent>*>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
 
 	

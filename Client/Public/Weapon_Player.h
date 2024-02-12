@@ -4,6 +4,7 @@
 #include "GameObject.h"
 
 BEGIN(Engine)
+class CTransform;
 class CCollider;
 class CShader;
 class CModel;
@@ -18,7 +19,7 @@ public:
 	typedef struct tagWeaponDesc
 	{
 		class CBone*			m_pSocketBone = { nullptr };
-		class CTransform*		m_pParentTransform = { nullptr };
+		shared_ptr<CTransform>		m_pParentTransform = { nullptr };
 	}WEAPON_DESC;
 private:
 	CWeapon_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -34,14 +35,14 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CShader*			m_pShaderCom = { nullptr };	
-	CModel*				m_pModelCom = { nullptr };
-	CCollider*			m_pColliderCom = { nullptr };
+	shared_ptr<CShader> 		m_pShaderCom = { nullptr };
+	shared_ptr<CModel>			m_pModelCom = { nullptr };
+	shared_ptr<CCollider>		m_pColliderCom = { nullptr };
 
 private:
-	class CTransform*	m_pParentTransform = { nullptr };
-	class CBone*	m_pSocketBone = { nullptr };
-	_float4x4			m_WorldMatrix = {};
+	shared_ptr<CTransform>	m_pParentTransform = { nullptr };
+	CBone*		m_pSocketBone = { nullptr };
+	_float4x4				m_WorldMatrix = {};
 
 private:
 	HRESULT Ready_Components();

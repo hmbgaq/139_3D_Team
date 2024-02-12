@@ -6,9 +6,11 @@
 
 BEGIN(Engine)
 
+class CShader;
+
 class CMesh final : public CVIBuffer
 {
-protected:
+public:
 	CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMesh(const CMesh& rhs);
 	virtual ~CMesh() = default;
@@ -24,7 +26,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	HRESULT Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, const vector<CBone*>& Bones);
+	HRESULT Bind_BoneMatrices(shared_ptr<CShader> pShader, const _char* pConstantName, const vector<CBone*>& Bones);
 
 	_char* Get_Name() {
 		return m_szName;
@@ -48,8 +50,8 @@ private:
 	HRESULT Ready_Vertices_Anim(CMyAIMesh pAIMesh, const vector<class CBone*>& Bone);
 
 public:
-	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones);
-	virtual CComponent* Clone(void* pArg);
+	static shared_ptr<CMesh> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones);
+	virtual shared_ptr<CComponent> Clone(void* pArg);
 	virtual void Free() override;
 };
 

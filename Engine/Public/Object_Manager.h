@@ -10,6 +10,8 @@
 
 BEGIN(Engine)
 
+class CComponent;
+
 class CObject_Manager final : public CBase
 {
 private:
@@ -17,7 +19,7 @@ private:
 	virtual ~CObject_Manager() = default;
 
 public:
-	class CComponent* Get_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex, const wstring& strPartTag);
+	shared_ptr<CComponent> Get_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex, const wstring& strPartTag);
 
 public:
 	HRESULT Initialize(_uint iNumLevels);

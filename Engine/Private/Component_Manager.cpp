@@ -13,7 +13,7 @@ HRESULT CComponent_Manager::Initialize(_uint iNumLevels)
 	return S_OK;
 }
 
-HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, CComponent * pPrototype)
+HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, shared_ptr<CComponent> pPrototype)
 {
 	if (nullptr == pPrototype || 
 		iLevelIndex >= m_iNumLevels || 
@@ -25,14 +25,14 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const wstring & str
 	return S_OK;
 }
 
-CComponent * CComponent_Manager::Clone_Component(_uint iLevelIndex, const wstring & strPrototypeTag, void * pArg)
+shared_ptr<CComponent> CComponent_Manager::Clone_Component(_uint iLevelIndex, const wstring & strPrototypeTag, void * pArg)
 {
-	CComponent*		pPrototype = Find_Prototype(iLevelIndex, strPrototypeTag);
+	shared_ptr<CComponent>		pPrototype = Find_Prototype(iLevelIndex, strPrototypeTag);
 
 	if (nullptr == pPrototype)
 		return nullptr;
 
-	CComponent*		pComponent = pPrototype->Clone(pArg);
+	shared_ptr<CComponent>		pComponent = pPrototype->Clone(pArg);
 
 	if (nullptr == pComponent)
 		return nullptr;
@@ -45,13 +45,13 @@ void CComponent_Manager::Clear(_uint iLevelIndex)
 	if (iLevelIndex >= m_iNumLevels)
 		return;
 
-	for (auto& Pair : m_pPrototypes[iLevelIndex])
-		Safe_Release(Pair.second);
+	//for (auto& Pair : m_pPrototypes[iLevelIndex])
+	//	Safe_Release(Pair.second);
 
 	m_pPrototypes[iLevelIndex].clear();
 }
 
-CComponent * CComponent_Manager::Find_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag)
+shared_ptr<CComponent> CComponent_Manager::Find_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag)
 {
 	auto	iter = m_pPrototypes[iLevelIndex].find(strPrototypeTag);
 

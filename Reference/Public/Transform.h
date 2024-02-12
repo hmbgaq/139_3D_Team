@@ -7,12 +7,15 @@
 
 BEGIN(Engine)
 
+class CShader;
+class CNavigation;
+
 class ENGINE_DLL CTransform final : public CComponent
 {
 public:
 	enum STATE { STATE_RIGHT, STATE_UP, STATE_LOOK, STATE_POSITION, STATE_END };
 
-private:
+public:
 	CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CTransform(const CTransform& rhs);
 	virtual ~CTransform() = default;
@@ -68,7 +71,7 @@ public:
 
 public:
 
-	void Go_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
+	void Go_Straight(_float fTimeDelta, shared_ptr<CNavigation> pNavigation = nullptr);
 	void Go_Left(_float fTimeDelta);
 	void Go_Right(_float fTimeDelta);
 	void Go_Backward(_float fTimeDelta);
@@ -79,7 +82,7 @@ public:
 	void Look_At_OnLand(_fvector vTargetPos);
 
 public:
-	HRESULT  Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
+	HRESULT  Bind_ShaderResource(shared_ptr<CShader> pShader, const _char* pConstantName);
 	
 
 private:
@@ -90,8 +93,8 @@ private:
 
 
 public:
-	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _float fSpeedPerSec, _float fRotationPerSec);
-	virtual CComponent* Clone(void* pArg) override;
+	static shared_ptr<CTransform> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _float fSpeedPerSec, _float fRotationPerSec);
+	virtual shared_ptr<CComponent> Clone(void* pArg) override;
 	virtual void Free() override;
 };
 

@@ -13,8 +13,8 @@ HRESULT CBounding_Sphere::Initialize(BOUNDING_DESC * pBoundingDesc)
 {
 	BOUNDING_SPHERE_DESC* pDesc = (BOUNDING_SPHERE_DESC*)pBoundingDesc;
 
-	m_pOriginalSphere = new BoundingSphere(pDesc->vCenter, pDesc->fRadius);
-	m_pSphere = new BoundingSphere(*m_pOriginalSphere);
+	m_pOriginalSphere = make_shared<BoundingSphere>(pDesc->vCenter, pDesc->fRadius);
+	m_pSphere = make_shared<BoundingSphere>(*m_pOriginalSphere);
 
 	return S_OK;
 }
@@ -25,9 +25,9 @@ void CBounding_Sphere::Update(_fmatrix TransformMatrix)
 	m_pOriginalSphere->Transform(*m_pSphere, TransformMatrix);
 }
 
-_bool CBounding_Sphere::Collision(CCollider * pTargetCollider, _bool * pisCollision)
+_bool CBounding_Sphere::Collision(shared_ptr<CCollider> pTargetCollider, _bool * pisCollision)
 {
-	CBounding*	pTargetBounding = pTargetCollider->Get_Bounding();
+	const CBounding*	pTargetBounding = pTargetCollider->Get_Bounding();
 
 	*pisCollision = false;
 
@@ -78,7 +78,7 @@ CBounding_Sphere * CBounding_Sphere::Create(ID3D11Device * pDevice, ID3D11Device
 void CBounding_Sphere::Free()
 {
 	__super::Free();
-	Safe_Delete(m_pOriginalSphere);
-	Safe_Delete(m_pSphere);
+	//Safe_Delete(m_pOriginalSphere);
+	//Safe_Delete(m_pSphere);
 
 }

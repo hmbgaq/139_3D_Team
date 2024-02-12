@@ -82,7 +82,7 @@ HRESULT CParticle_Red::Ready_Components()
 {
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_Particle_Point"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		TEXT("Com_Shader"), reinterpret_cast<shared_ptr<CComponent>*>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -95,12 +95,12 @@ HRESULT CParticle_Red::Ready_Components()
 	ParticleDesc.vLifeTime = _float2(0.5f, 3.0f);
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Particle_Point"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &ParticleDesc)))
+		TEXT("Com_VIBuffer"), reinterpret_cast<shared_ptr<CComponent>*>(&m_pVIBufferCom), &ParticleDesc)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Explosion"),
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		TEXT("Com_Texture"), reinterpret_cast<shared_ptr<CComponent>*>(&m_pTextureCom))))
 		return E_FAIL;
 
 	return S_OK;

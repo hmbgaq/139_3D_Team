@@ -13,6 +13,13 @@
 
 BEGIN(Engine)
 
+class CVIBuffer_Rect;
+class CGameObject;
+class CComponent;
+class CShader;
+class CLevel;
+
+
 class ENGINE_DLL CGameInstance final : public CBase
 {
 	DECLARE_SINGLETON(CGameInstance)
@@ -45,23 +52,21 @@ public: /* For.Timer_Manager */
 	_float Compute_TimeDelta(const wstring& strTimeTag);
 
 public: /* For.Level_Manager */
-	HRESULT Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
+	HRESULT Open_Level(_uint iCurrentLevelIndex, CLevel* pNewLevel);
 
 public: /* For.Object_Manager */
-	HRESULT Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
+	HRESULT Add_Prototype(const wstring& strPrototypeTag, CGameObject* pPrototype);
 	HRESULT Add_CloneObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
 	CGameObject* Clone_Prototype(const wstring& strPrototypeTag, void* pArg = nullptr);
-	class CComponent* Get_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex = 0, const wstring& strPartTag = TEXT(""));
-
+	shared_ptr<CComponent> Get_Component(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strComponentTag, _uint iIndex = 0, const wstring & strPartTag = TEXT(""));
 
 public: /* For.Component_Manager */
-	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, class CComponent* pPrototype);
-	class CComponent* Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
-
+	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, shared_ptr<CComponent> pPrototype);
+	shared_ptr<CComponent> Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 public: /* For.Renderer */
-	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, class CGameObject* pGameObject);
-	HRESULT Add_DebugRender(class CComponent* pDebugCom);
+	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, CGameObject* pGameObject);
+	HRESULT Add_DebugRender(shared_ptr<CComponent> pDebugCom);
 
 public: /* For.PipeLine */
 	void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix);
@@ -81,20 +86,24 @@ public: /* For.Target_Manager */
 	HRESULT Add_MRT(const wstring& strMRTTag, const wstring& strTargetTag);
 	HRESULT Begin_MRT(const wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
 	HRESULT End_MRT();
-	HRESULT Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
+	HRESULT Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, shared_ptr<CShader> pShader, const _char* pConstantName);
 #ifdef _DEBUG
 	HRESULT Ready_RenderTarget_Debug(const wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
-	HRESULT Render_Debug_RTVs(const wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	HRESULT Render_Debug_RTVs(const wstring& strMRTTag, shared_ptr<CShader> pShader, shared_ptr<CVIBuffer_Rect> pVIBuffer);
 #endif
 
 public: /* For.Light_Manager */
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc, _int & outLightIndex);
-	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	HRESULT Render_Lights(shared_ptr<CShader> pShader, shared_ptr<CVIBuffer_Rect> pVIBuffer);
 
 public: /* For.Frustum */
 	void	Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix);
 	_bool	isIn_WorldPlanes(_fvector vPoint, _float fRadius = 0.f);
 	_bool	isIn_LocalPlanes(_fvector vPoint, _float fRadius);
+
+
+	void		String_To_WString(string _string, wstring & _wstring);
+	void		WString_To_String(wstring _wstring, string & _string);
 
 
 private:

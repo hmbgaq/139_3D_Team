@@ -96,9 +96,9 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void * pArg)
 //
 //}
 
-CVIBuffer_Particle_Point * CVIBuffer_Particle_Point::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iNumInstance)
+shared_ptr<CVIBuffer_Particle_Point> CVIBuffer_Particle_Point::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iNumInstance)
 {
-	CVIBuffer_Particle_Point*		pInstance = new CVIBuffer_Particle_Point(pDevice, pContext);
+	shared_ptr<CVIBuffer_Particle_Point>		pInstance = make_shared<CVIBuffer_Particle_Point>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype(iNumInstance)))
@@ -109,9 +109,9 @@ CVIBuffer_Particle_Point * CVIBuffer_Particle_Point::Create(ID3D11Device * pDevi
 	return pInstance;
 }
 
-CComponent * CVIBuffer_Particle_Point::Clone(void* pArg)
+shared_ptr<CComponent> CVIBuffer_Particle_Point::Clone(void* pArg)
 {
-	CVIBuffer_Particle_Point*		pInstance = new CVIBuffer_Particle_Point(*this);
+	shared_ptr<CVIBuffer_Particle_Point>		pInstance = make_shared<CVIBuffer_Particle_Point>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

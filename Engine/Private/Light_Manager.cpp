@@ -57,7 +57,7 @@ CLight* CLight_Manager::Find_Light(const _int iIndex)
 
 	return nullptr;
 }
-HRESULT CLight_Manager::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
+HRESULT CLight_Manager::Render(shared_ptr<CShader> pShader, shared_ptr<CVIBuffer_Rect> pVIBuffer)
 {
 	for (auto& pLight : m_Lights)
 		pLight->Render(pShader, pVIBuffer);	

@@ -38,9 +38,9 @@ private:
 
 
 private:
-	CShader*			m_pShaderCom = { nullptr };
-	CTexture*			m_pTextureCom = { nullptr };
-	CVIBuffer_Rect*		m_pVIBufferCom = { nullptr };
+	shared_ptr<CShader>			m_pShaderCom = { nullptr };
+	shared_ptr<CTexture>		m_pTextureCom = { nullptr };
+	shared_ptr<CVIBuffer_Rect> 	m_pVIBufferCom = { nullptr };
 
 private:
 	HRESULT Ready_Components();

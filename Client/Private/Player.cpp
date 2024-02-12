@@ -18,7 +18,7 @@ CPlayer::CPlayer(const CPlayer & rhs)
 {
 }
 
-CComponent * CPlayer::Find_Component(const wstring & strComTag, const wstring & strPartTag)
+shared_ptr<CComponent> CPlayer::Find_Component(const wstring & strComTag, const wstring & strPartTag)
 {
 	auto	iter = m_PartObjects.find(strPartTag);
 	if (iter == m_PartObjects.end())
@@ -146,7 +146,7 @@ HRESULT CPlayer::Ready_Components()
 	NaviDesc.iCurrentIndex = 0;
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
-		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		TEXT("Com_Navigation"), reinterpret_cast<shared_ptr<CComponent>*>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
 
 	/* For.Com_Collider */
@@ -156,7 +156,7 @@ HRESULT CPlayer::Ready_Components()
 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);	
 
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
+		TEXT("Com_Collider"), reinterpret_cast<shared_ptr<CComponent>*>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
 
 	return S_OK;

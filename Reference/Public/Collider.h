@@ -11,12 +11,14 @@
 
 BEGIN(Engine)
 
+class CBounding;
+
 class ENGINE_DLL CCollider final : public CComponent
 {
 public:
 	enum TYPE { TYPE_SPHERE, TYPE_AABB, TYPE_OBB, TYPE_END};
 
-private:
+public:
 	CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CCollider(const CCollider& rhs);
 	virtual ~CCollider() = default;
@@ -26,7 +28,7 @@ public:
 		return m_eType;
 	}
 
-	class CBounding* Get_Bounding() {
+	const CBounding* Get_Bounding() {
 		return m_pBounding;
 	}
 
@@ -35,7 +37,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 public:
 	void Update(_fmatrix TransformMatrix);
-	_bool Collision(CCollider* pTargetCollider);
+	_bool Collision(shared_ptr<CCollider> pTargetCollider);
 
 #ifdef _DEBUG
 public:
@@ -44,7 +46,7 @@ public:
 
 private:
 	TYPE					m_eType = { TYPE_END };
-	class CBounding*		m_pBounding = { nullptr };
+	CBounding*				m_pBounding = { nullptr };
 	_bool					m_isCollision = { false };
 
 #ifdef _DEBUG
@@ -56,8 +58,8 @@ private:
 
 
 public:
-	static CCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType);
-	virtual CComponent* Clone(void* pArg) override;
+	static shared_ptr<CCollider> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType);
+	virtual  shared_ptr<CComponent> Clone(void* pArg) override;
 	virtual void Free() override;
 };
 

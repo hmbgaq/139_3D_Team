@@ -4,6 +4,9 @@
 
 BEGIN(Engine)
 
+class CShader;
+class CVIBuffer_Rect;
+
 class CLight final : public CBase
 {
 private:
@@ -12,7 +15,7 @@ private:
 
 public:
 	HRESULT Initialize(const LIGHT_DESC& LightDesc);
-	HRESULT Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	HRESULT Render(shared_ptr<CShader> pShader, shared_ptr<CVIBuffer_Rect> pVIBuffer);
 
 public:
 	const LIGHT_DESC&	Get_LightDesc() const { return m_LightDesc; }

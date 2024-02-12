@@ -6,7 +6,7 @@ CObject_Manager::CObject_Manager()
 {
 }
 
-CComponent * CObject_Manager::Get_Component(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strComponentTag, _uint iIndex, const wstring& strPartTag)
+shared_ptr<CComponent> CObject_Manager::Get_Component(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strComponentTag, _uint iIndex, const wstring& strPartTag)
 {
 	CLayer*		pLayer = Find_Layer(iLevelIndex, strLayerTag);
 

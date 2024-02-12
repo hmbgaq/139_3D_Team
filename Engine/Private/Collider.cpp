@@ -72,7 +72,7 @@ void CCollider::Update(_fmatrix TransformMatrix)
 	m_pBounding->Update(TransformMatrix);
 }
 
-_bool CCollider::Collision(CCollider * pTargetCollider)
+_bool CCollider::Collision(shared_ptr<CCollider> pTargetCollider)
 {
 	return m_pBounding->Collision(pTargetCollider, &m_isCollision);
 }
@@ -105,9 +105,9 @@ HRESULT CCollider::Render()
 
 #endif
 
-CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eType)
+shared_ptr<CCollider> CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eType)
 {
-	CCollider*		pInstance = new CCollider(pDevice, pContext);
+	shared_ptr<CCollider>	pInstance = make_shared<CCollider>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype(eType)))
@@ -118,9 +118,9 @@ CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pCon
 	return pInstance;
 }
 
-CComponent * CCollider::Clone(void* pArg)
+shared_ptr<CComponent> CCollider::Clone(void* pArg)
 {
-	CCollider*		pInstance = new CCollider(*this);
+	shared_ptr<CCollider>	pInstance = make_shared<CCollider>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

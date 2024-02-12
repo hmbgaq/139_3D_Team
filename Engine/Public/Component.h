@@ -4,9 +4,11 @@
 
 BEGIN(Engine)
 
+class CGameObject;
+
 class ENGINE_DLL CComponent abstract : public CBase
 {
-protected:
+public:
 	CComponent(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CComponent(const CComponent& rhs);
 	virtual ~CComponent() = default;
@@ -21,6 +23,10 @@ public:
 	}
 #endif
 
+public:
+	HRESULT	Set_Owner(weak_ptr<CGameObject> _pOwner);
+	weak_ptr<CGameObject> Get_Owner();
+
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
@@ -28,10 +34,11 @@ protected:
 
 protected:
 	_bool					m_isCloned = { false };
+	weak_ptr<CGameObject>	m_pOwner;
 
 
 public:
-	virtual CComponent* Clone(void* pArg) = 0;
+	virtual shared_ptr<CComponent> Clone(void* pArg) = 0;
 	virtual void Free() override;
 };
 

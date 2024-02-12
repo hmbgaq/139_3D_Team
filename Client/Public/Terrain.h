@@ -30,10 +30,10 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CShader*			m_pShaderCom = { nullptr };
-	CTexture*			m_pTextureCom[TYPE_END] = { nullptr };
-	CNavigation*		m_pNavigationCom = { nullptr };
-	CVIBuffer_Terrain*	m_pVIBufferCom = { nullptr };
+	shared_ptr<CShader>				m_pShaderCom = { nullptr };
+	shared_ptr<CTexture>			m_pTextureCom[TYPE_END] = { nullptr };
+	shared_ptr<CNavigation>			m_pNavigationCom = { nullptr };
+	shared_ptr<CVIBuffer_Terrain>	m_pVIBufferCom = { nullptr };
 	
 
 private:

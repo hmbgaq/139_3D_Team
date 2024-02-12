@@ -151,9 +151,9 @@ HRESULT CShader::Bind_RawValue(const _char * pConstantName, const void * pData, 
 	return pVariable->SetRawValue(pData, 0, iSize);	
 }
 
-CShader * CShader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
+shared_ptr<CShader> CShader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
-	CShader*		pInstance = new CShader(pDevice, pContext);
+	shared_ptr<CShader>		pInstance = make_shared<CShader>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype(strShaderFilePath, pElements, iNumElements)))
@@ -164,9 +164,9 @@ CShader * CShader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext
 	return pInstance;
 }
 
-CComponent * CShader::Clone(void * pArg)
+shared_ptr<CComponent> CShader::Clone(void * pArg)
 {
-	CShader*		pInstance = new CShader(*this);
+	shared_ptr<CShader>		pInstance = make_shared<CShader>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

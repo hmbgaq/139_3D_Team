@@ -18,7 +18,7 @@ private:
 	virtual ~CPlayer() = default;
 
 public:
-	virtual CComponent* Find_Component(const wstring & strComTag, const wstring & strPartTag = TEXT("")) override;
+	virtual shared_ptr<CComponent> Find_Component(const wstring & strComTag, const wstring & strPartTag = TEXT("")) override;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -32,8 +32,8 @@ public:
 	CGameObject* Find_PartObject(const wstring& strPartTag);
 
 private:
-	CNavigation*		m_pNavigationCom = { nullptr };
-	CCollider*			m_pColliderCom = { nullptr };
+	shared_ptr<CNavigation>		m_pNavigationCom = { nullptr };
+	shared_ptr<CCollider>		m_pColliderCom = { nullptr };
 
 private:
 	map<const wstring, class CGameObject*>		m_PartObjects;

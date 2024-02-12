@@ -16,8 +16,8 @@ HRESULT CBounding_OBB::Initialize(BOUNDING_DESC * pBoundingDesc)
 	
 	XMStoreFloat4(&vQuaternion, XMQuaternionRotationRollPitchYaw(pDesc->vRotation.x, pDesc->vRotation.y, pDesc->vRotation.z));
 
-	m_pOriginalOBB = new BoundingOrientedBox(pDesc->vCenter, pDesc->vExtents, vQuaternion);
-	m_pOBB = new BoundingOrientedBox(*m_pOriginalOBB);
+	m_pOriginalOBB = make_shared<BoundingOrientedBox>(pDesc->vCenter, pDesc->vExtents, vQuaternion);
+	m_pOBB = make_shared<BoundingOrientedBox>(*m_pOriginalOBB);
 
 	return S_OK;
 }
@@ -40,9 +40,9 @@ HRESULT CBounding_OBB::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _vect
 }
 #endif
 
-_bool CBounding_OBB::Collision(CCollider * pTargetCollider, _bool * pisCollision)
+_bool CBounding_OBB::Collision(shared_ptr<CCollider> pTargetCollider, _bool * pisCollision)
 {
-	CBounding*	pTargetBounding = pTargetCollider->Get_Bounding();
+	const CBounding*	pTargetBounding = pTargetCollider->Get_Bounding();
 
 	*pisCollision = false;
 
@@ -80,6 +80,6 @@ void CBounding_OBB::Free()
 {
 	__super::Free();
 
-	Safe_Delete(m_pOriginalOBB);
-	Safe_Delete(m_pOBB);
+	//Safe_Delete(m_pOriginalOBB);
+	//Safe_Delete(m_pOBB);
 }

@@ -6,7 +6,7 @@ BEGIN(Engine)
 
 class ENGINE_DLL CShader final : public CComponent
 {
-private:
+public:
 	CShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CShader(const CShader& rhs);
 	virtual ~CShader() = default;
@@ -33,8 +33,8 @@ private:
 	vector<ID3D11InputLayout*>	m_InputLayouts;
 
 public:
-	static CShader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements);
-	virtual CComponent* Clone(void* pArg) override;
+	static shared_ptr<CShader> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements);
+	virtual shared_ptr<CComponent> Clone(void* pArg) override;
 	virtual void Free() override;
 
 };

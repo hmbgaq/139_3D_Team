@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CCollider;
+
 class CBounding_AABB final : public CBounding
 {
 public:
@@ -11,12 +13,12 @@ public:
 	{
 		_float3		vExtents;
 	}BOUNDING_AABB_DESC;
-private:
+public:
 	CBounding_AABB(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CBounding_AABB() = default;
 
 public:
-	const BoundingBox* Get_Bounding() {
+	const shared_ptr<BoundingBox> Get_Bounding() {
 		return m_pAABB;
 	}
 
@@ -28,14 +30,14 @@ public:
 	virtual void Update(_fmatrix TransformMatrix);
 
 public:
-	virtual _bool Collision(class CCollider* pTargetCollider, _bool* pisCollision) override;
+	virtual _bool Collision(shared_ptr<CCollider> pTargetCollider, _bool* pisCollision) override;
 
 private:
 	/* 초기상태를 가지는 데이터 */
-	BoundingBox*			m_pOriginalAABB = { nullptr };
+	shared_ptr<BoundingBox>			m_pOriginalAABB = { nullptr };
 
 	/* 월드로 갱신된 상태를 가지는 데이터 */
-	BoundingBox*			m_pAABB = { nullptr };
+	shared_ptr<BoundingBox>			m_pAABB = { nullptr };
 
 public:
 	static CBounding_AABB* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, BOUNDING_DESC* pBoundingDesc);

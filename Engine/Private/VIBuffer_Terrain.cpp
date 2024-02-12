@@ -286,9 +286,9 @@ void CVIBuffer_Terrain::Culling(_fmatrix WorldMatrix)
 	m_iNumIndices = iNumIndices;
 }
 
-CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strHeightMapFilePath)
+shared_ptr<CVIBuffer_Terrain> CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strHeightMapFilePath)
 {
-	CVIBuffer_Terrain*		pInstance = new CVIBuffer_Terrain(pDevice, pContext);
+	shared_ptr<CVIBuffer_Terrain>		pInstance = make_shared<CVIBuffer_Terrain>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype(strHeightMapFilePath)))
@@ -299,9 +299,9 @@ CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11Devi
 	return pInstance;
 }
 
-CComponent * CVIBuffer_Terrain::Clone(void* pArg)
+shared_ptr<CComponent> CVIBuffer_Terrain::Clone(void* pArg)
 {
-	CVIBuffer_Terrain*		pInstance = new CVIBuffer_Terrain(*this);
+	shared_ptr<CVIBuffer_Terrain>		pInstance = make_shared<CVIBuffer_Terrain>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

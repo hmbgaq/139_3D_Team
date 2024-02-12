@@ -249,9 +249,9 @@ _bool CQuadTree::isDraw(const _float3 * pVerticesPos)
 	return false;
 }
 
-CQuadTree * CQuadTree::Create(_uint iLT, _uint iRT, _uint iRB, _uint iLB)
+shared_ptr<CQuadTree> CQuadTree::Create(_uint iLT, _uint iRT, _uint iRB, _uint iLB)
 {
-	CQuadTree*		pInstance = new CQuadTree();
+	shared_ptr<CQuadTree>		pInstance = make_shared<CQuadTree>();
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(iLT, iRT, iRB, iLB)))

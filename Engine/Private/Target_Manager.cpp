@@ -99,7 +99,7 @@ HRESULT CTarget_Manager::End_MRT()
 	return S_OK;
 }
 
-HRESULT CTarget_Manager::Bind_ShaderResource(const wstring & strTargetTag, CShader * pShader, const _char * pConstantName)
+HRESULT CTarget_Manager::Bind_ShaderResource(const wstring & strTargetTag, shared_ptr<CShader> pShader, const _char * pConstantName)
 {
 	CRenderTarget*		pRenderTarget = Find_RenderTarget(strTargetTag);
 	if (nullptr == pRenderTarget)
@@ -119,7 +119,7 @@ HRESULT CTarget_Manager::Ready_Debug(const wstring & strTargetTag, _float fX, _f
 	return pRenderTarget->Ready_Debug(fX, fY, fSizeX, fSizeY);	
 }
 
-HRESULT CTarget_Manager::Render_Debug(const wstring& strMRTTag, CShader * pShader, CVIBuffer_Rect * pVIBuffer)
+HRESULT CTarget_Manager::Render_Debug(const wstring& strMRTTag, shared_ptr<CShader> pShader, shared_ptr<CVIBuffer_Rect> pVIBuffer)
 {
 	list<CRenderTarget*>*	pMRTList = Find_MRT(strMRTTag);
 	if (nullptr == pMRTList)

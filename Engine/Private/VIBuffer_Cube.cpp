@@ -123,9 +123,9 @@ HRESULT CVIBuffer_Cube::Initialize(void * pArg)
 	return S_OK;
 }
 
-CVIBuffer_Cube * CVIBuffer_Cube::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+shared_ptr<CVIBuffer_Cube> CVIBuffer_Cube::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CVIBuffer_Cube*		pInstance = new CVIBuffer_Cube(pDevice, pContext);
+	shared_ptr<CVIBuffer_Cube>		pInstance = make_shared<CVIBuffer_Cube>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -136,9 +136,9 @@ CVIBuffer_Cube * CVIBuffer_Cube::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 	return pInstance;
 }
 
-CComponent * CVIBuffer_Cube::Clone(void* pArg)
+shared_ptr<CComponent> CVIBuffer_Cube::Clone(void* pArg)
 {
-	CVIBuffer_Cube*		pInstance = new CVIBuffer_Cube(*this);
+	shared_ptr<CVIBuffer_Cube>		pInstance = make_shared<CVIBuffer_Cube>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

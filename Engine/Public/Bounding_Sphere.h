@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CCollider;
+
 class CBounding_Sphere final : public CBounding
 {
 public:
@@ -11,12 +13,12 @@ public:
 	{
 		_float		fRadius;
 	}BOUNDING_SPHERE_DESC;
-private:
+public:
 	CBounding_Sphere(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);	
 	virtual ~CBounding_Sphere() = default;
 
 public:
-	const BoundingSphere* Get_Bounding() {
+	const shared_ptr<BoundingSphere> Get_Bounding() {
 		return m_pSphere;
 	}
 
@@ -28,11 +30,11 @@ public:
 	virtual void Update(_fmatrix TransformMatrix);
 
 public:
-	virtual _bool Collision(class CCollider* pTargetCollider, _bool* pisCollision) override;
+	virtual _bool Collision(shared_ptr<CCollider> pTargetCollider, _bool* pisCollision) override;
 
 private:
-	BoundingSphere*			m_pOriginalSphere = { nullptr };
-	BoundingSphere*			m_pSphere = { nullptr };
+	shared_ptr<BoundingSphere>			m_pOriginalSphere = { nullptr };
+	shared_ptr<BoundingSphere>			m_pSphere = { nullptr };
 
 
 

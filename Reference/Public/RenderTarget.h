@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CShader;
+
 class CRenderTarget final : public CBase
 {
 private:
@@ -17,13 +19,13 @@ public:
 
 public:
 	HRESULT Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, _float4 vClearColor);
-	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
+	HRESULT Bind_ShaderResource(shared_ptr<CShader> pShader, const _char* pConstantName);
 	HRESULT Clear();
 
 #ifdef _DEBUG
 public:
 	HRESULT Ready_Debug(_float fX, _float fY, _float fSizeX, _float fSizeY);
-	HRESULT Render_Debug(class CShader* pShader, class CVIBuffer* pVIBuffer);
+	HRESULT Render_Debug(shared_ptr<CShader> pShader, shared_ptr<CVIBuffer> pVIBuffer);
 #endif
 
 private:

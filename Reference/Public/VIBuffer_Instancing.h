@@ -16,7 +16,7 @@ public:
 		_float2		vLifeTime;
 	}INSTANCING_DESC;
 
-protected:
+public:
 	CVIBuffer_Instancing(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CVIBuffer_Instancing(const CVIBuffer_Instancing& rhs);
 	virtual ~CVIBuffer_Instancing() = default;
@@ -46,7 +46,7 @@ protected:
 	_float						m_fTimeAcc = { 0.0f };
 
 public:
-	virtual CComponent* Clone(void* pArg) = 0;
+	virtual shared_ptr<CComponent> Clone(void* pArg) = 0;
 	virtual void Free() override;
 };
 

@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CCollider;
+
 class CBounding_OBB final : public CBounding
 {
 public:
@@ -12,12 +14,12 @@ public:
 		_float3		vExtents;
 		_float3		vRotation;
 	}BOUNDING_OBB_DESC;
-private:
+public:
 	CBounding_OBB(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);	
 	virtual ~CBounding_OBB() = default;
 
 public:
-	const BoundingOrientedBox* Get_Bounding() {
+	const shared_ptr<BoundingOrientedBox> Get_Bounding() {
 		return m_pOBB;
 	}
 
@@ -29,11 +31,11 @@ public:
 #endif
 	
 public:
-	virtual _bool Collision(class CCollider* pTargetCollider, _bool* pisCollision) override;
+	virtual _bool Collision(shared_ptr<CCollider> pTargetCollider, _bool* pisCollision) override;
 
 private:
-	BoundingOrientedBox*			m_pOriginalOBB = { nullptr };
-	BoundingOrientedBox*			m_pOBB = { nullptr };
+	shared_ptr<BoundingOrientedBox>			m_pOriginalOBB = { nullptr };
+	shared_ptr<BoundingOrientedBox>			m_pOBB = { nullptr };
 
 
 

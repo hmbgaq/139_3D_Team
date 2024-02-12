@@ -12,7 +12,7 @@ public:
 		
 	}PARTICLE_POINT_DESC;
 
-private:
+public:
 	CVIBuffer_Particle_Point(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CVIBuffer_Particle_Point(const CVIBuffer_Particle_Point& rhs);
 	virtual ~CVIBuffer_Particle_Point() = default;
@@ -24,8 +24,8 @@ public:
 
 
 public:
-	static CVIBuffer_Particle_Point* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumInstance);
-	virtual CComponent* Clone(void* pArg) override;
+	static shared_ptr<CVIBuffer_Particle_Point> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumInstance);
+	virtual shared_ptr<CComponent> Clone(void* pArg) override;
 	virtual void Free() override;
 };
 

@@ -47,7 +47,7 @@ HRESULT CGameObject::Initialize(void* pArg)
 
 	m_Components.emplace(g_pTransformTag, m_pTransformCom);
 
-	Safe_AddRef(m_pTransformCom);
+	//Safe_AddRef(m_pTransformCom);
 
 	return S_OK;
 }
@@ -69,7 +69,7 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
-CComponent * CGameObject::Find_Component(const wstring & strComTag, const wstring & strPartTag)
+shared_ptr<CComponent> CGameObject::Find_Component(const wstring & strComTag, const wstring & strPartTag)
 {
 	auto	iter = m_Components.find(strComTag);
 
@@ -79,12 +79,12 @@ CComponent * CGameObject::Find_Component(const wstring & strComTag, const wstrin
 	return iter->second;
 }
 
-HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComTag, _Inout_ CComponent** ppOut, void * pArg)
+HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComTag, _Inout_ shared_ptr<CComponent>* ppOut, void * pArg)
 {
 	if (nullptr != Find_Component(strComTag))
 		return E_FAIL;
 
-	CComponent*		pComponent = m_pGameInstance->Clone_Component(iLevelIndex, strPrototypeTag, pArg);
+	shared_ptr<CComponent>	pComponent = m_pGameInstance->Clone_Component(iLevelIndex, strPrototypeTag, pArg);
 	if (nullptr == pComponent)
 		return E_FAIL;
 
@@ -92,7 +92,7 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototy
 
 	m_Components.emplace(strComTag, pComponent);
 
-	Safe_AddRef(pComponent);
+	//Safe_AddRef(pComponent);
 
 	return S_OK;
 }
@@ -101,10 +101,10 @@ void CGameObject::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pTransformCom);
+	//Safe_Release(m_pTransformCom);
 
-	for (auto& Pair : m_Components)
-		Safe_Release(Pair.second);
+	//for (auto& Pair : m_Components)
+	//	Safe_Release(Pair.second);
 
 	m_Components.clear();
 

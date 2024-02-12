@@ -51,7 +51,7 @@ HRESULT CLandObject::Render()
 	return S_OK;
 }
 
-HRESULT CLandObject::SetUp_OnTerrain(CTransform * pTargetTransform)
+HRESULT CLandObject::SetUp_OnTerrain(shared_ptr<CTransform> pTargetTransform)
 {
 	_vector		vTargetWorldPos = pTargetTransform->Get_State(CTransform::STATE_POSITION);
 

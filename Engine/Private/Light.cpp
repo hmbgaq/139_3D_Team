@@ -15,7 +15,7 @@ HRESULT CLight::Initialize(const LIGHT_DESC & LightDesc)
 	return S_OK;
 }
 
-HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
+HRESULT CLight::Render(shared_ptr<CShader> pShader, shared_ptr<CVIBuffer_Rect> pVIBuffer)
 {
 	if (!m_LightDesc.bEnable)
 		return E_FAIL;

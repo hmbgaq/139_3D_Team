@@ -73,19 +73,19 @@ HRESULT CTexture::Initialize(void * pArg)
 	return S_OK;
 }
 
-HRESULT CTexture::Bind_ShaderResource(CShader * pShader, const _char * pConstantName, _uint iTextureIndex)
+HRESULT CTexture::Bind_ShaderResource(shared_ptr<CShader> pShader, const _char * pConstantName, _uint iTextureIndex)
 {
 	return pShader->Bind_SRV(pConstantName, m_SRVs[iTextureIndex]);
 }
 
-HRESULT CTexture::Bind_ShaderResources(CShader * pShader, const _char * pConstantName)
+HRESULT CTexture::Bind_ShaderResources(shared_ptr<CShader> pShader, const _char * pConstantName)
 {
 	return pShader->Bind_SRVs(pConstantName, &m_SRVs.front(), m_iNumTextures);
 }
 
-CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strTextureFilePath, _uint iNumTextures)
+shared_ptr<CTexture> CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strTextureFilePath, _uint iNumTextures)
 {
-	CTexture*		pInstance = new CTexture(pDevice, pContext);
+	shared_ptr<CTexture>	pInstance = make_shared<CTexture>(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype(strTextureFilePath, iNumTextures)))
@@ -96,9 +96,9 @@ CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pConte
 	return pInstance;
 }
 
-CComponent * CTexture::Clone(void * pArg)
+shared_ptr<CComponent> CTexture::Clone(void * pArg)
 {
-	CTexture*		pInstance = new CTexture(*this);
+	shared_ptr<CTexture>	pInstance = make_shared<CTexture>(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

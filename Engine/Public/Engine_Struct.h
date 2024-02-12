@@ -5,6 +5,8 @@
 
 namespace Engine
 {
+	class CTexture;
+
 	typedef struct tagGraphicDesc
 	{
 		enum WINMODE { WINMODE_FULL, WINMODE_WIN, WINMODE_END };
@@ -18,7 +20,7 @@ namespace Engine
 
 	typedef struct tagMtrl_Texture
 	{
-		class CTexture* pMtrlTextures[AI_TEXTURE_TYPE_MAX];
+		shared_ptr<CTexture> pMtrlTextures[AI_TEXTURE_TYPE_MAX];
 
 	}MATERIAL_DESC;
 

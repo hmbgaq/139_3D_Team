@@ -44,7 +44,7 @@ HRESULT CRenderTarget::Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixel
 	return S_OK;
 }
 
-HRESULT CRenderTarget::Bind_ShaderResource(CShader * pShader, const _char * pConstantName)
+HRESULT CRenderTarget::Bind_ShaderResource(shared_ptr<CShader> pShader, const _char * pConstantName)
 {
 	return pShader->Bind_SRV(pConstantName, m_pSRV);	
 }
@@ -76,7 +76,7 @@ HRESULT CRenderTarget::Ready_Debug(_float fX, _float fY, _float fSizeX, _float f
 	return S_OK;
 }
 
-HRESULT CRenderTarget::Render_Debug(CShader * pShader, CVIBuffer * pVIBuffer)
+HRESULT CRenderTarget::Render_Debug(shared_ptr<CShader> pShader, shared_ptr<CVIBuffer> pVIBuffer)
 {
 	if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
