@@ -299,6 +299,9 @@
     <ClCompile Include="..\Private\Window_MapTool.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\MapToolWindow</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
