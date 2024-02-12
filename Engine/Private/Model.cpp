@@ -216,7 +216,32 @@ void CModel::Write_Names(const string& strModelFilePath)
 	}
 	osTxt << endl;
 
+	osTxt << "Materials: " << endl;
 
+	for (_uint i = 0; i < m_iNumMaterials; ++i)
+	{
+		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material(i);
+
+		for (size_t j = 1; j < AI_TEXTURE_TYPE_MAX; j++) 
+		{
+			_char		szDrive[MAX_PATH] = "";
+			_char		szDirectory[MAX_PATH] = "";
+
+			_splitpath_s(strModelFilePath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
+
+			string strPath = pAIMaterial.Get_Textures(j);
+			if (strPath == "")
+				continue;
+
+			_char		szFileName[MAX_PATH] = "";
+			_char		szEXT[MAX_PATH] = "";
+
+			_splitpath_s(strPath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
+
+			osTxt << i << "-" << j << ". " << szFileName << endl;
+		}
+	}
+	osTxt << endl;
 
 	osTxt << "Animations: " << endl;
 	for (_uint i = 0; i < m_iNumAnimations; ++i)
