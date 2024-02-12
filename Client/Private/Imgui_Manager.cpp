@@ -85,6 +85,9 @@ HRESULT CImgui_Manager::Ready_Windows()
 		// ImGuiWindowFlags_NoBringToFrontOnFocus |
 		// ImGuiWindowFlags_NoNavFocus;
 
+
+	//! 여기다가 자기가 필요한 툴 윈도우 객체 추가해서 쓰셈. 아래는 예시
+
 	CImgui_Window* pWindow = CWindow_MapTool::Create(m_pDevice, m_pContext);
 
 	if (pWindow == nullptr)
@@ -93,7 +96,6 @@ HRESULT CImgui_Manager::Ready_Windows()
 	pWindow->SetUp_ImGuiDESC(u8"맵툴", ImVec2{ 200.f, 200.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
 
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW, pWindow);
-
 
 
 	return S_OK;
@@ -157,7 +159,7 @@ void CImgui_Manager::MenuTick(_float fTimeDelta)
  				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
  			}
 
- 			if (ImGui::MenuItem("AnimationTool"))
+ 			if (ImGui::MenuItem("AnimationTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW]))
  			{
  				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW);
 
@@ -170,7 +172,7 @@ void CImgui_Manager::MenuTick(_float fTimeDelta)
  				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
  			}
 
- 			if (ImGui::MenuItem("EffectTool"))
+ 			if (ImGui::MenuItem("EffectTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW]))
  			{
  				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW);
 
@@ -183,7 +185,7 @@ void CImgui_Manager::MenuTick(_float fTimeDelta)
  				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
  			}
 
- 			if (ImGui::MenuItem("UITool"))
+ 			if (ImGui::MenuItem("UITool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_UITOOL_WINDOW]))
  			{
  				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_UITOOL_WINDOW);
 
