@@ -65,7 +65,7 @@ public: /* For.Component_Manager */
 	shared_ptr<CComponent> Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 public: /* For.Renderer */
-	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, shared_ptr<CGameObject> pGameObject);
+	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, CGameObject* pGameObject);
 	HRESULT Add_DebugRender(shared_ptr<CComponent> pDebugCom);
 
 public: /* For.PipeLine */

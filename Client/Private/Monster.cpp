@@ -52,6 +52,9 @@ void CMonster::Tick(_float fTimeDelta)
 
 void CMonster::Late_Tick(_float fTimeDelta)
 {
+	if (nullptr == this)
+		return;
+
 	shared_ptr<CCollider>	pTargetCollider = dynamic_pointer_cast<CCollider>(m_pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Collider"), 0, TEXT("Part_Weapon")));
 
 	m_pColliderCom->Collision(pTargetCollider);
@@ -62,7 +65,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	{
 		m_pModelCom->Play_Animation(fTimeDelta, true);
 
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, shared_ptr<CMonster>(this))))//
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))//shared_ptr<CMonster>(this)
 			return;
 
 #ifdef _DEBUG

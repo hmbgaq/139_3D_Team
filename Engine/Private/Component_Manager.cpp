@@ -77,10 +77,10 @@ void CComponent_Manager::Free()
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
-		for (auto& Pair : m_pPrototypes[i])
-		{
-			Safe_Release(Pair.second);
-		}
+		//for (auto& Pair : m_pPrototypes[i])
+		//{
+		//	Safe_Release(Pair.second);
+		//}
 		m_pPrototypes[i].clear();
 	}
 

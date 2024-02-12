@@ -70,7 +70,10 @@ void CWeapon_Player::Tick(_float fTimeDelta)
 
 void CWeapon_Player::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, shared_ptr<CWeapon_Player>(this))))//
+	if (nullptr == this)
+		return;
+
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))//shared_ptr<CWeapon_Player>(this)
 		return ;
 
 

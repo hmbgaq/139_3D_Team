@@ -55,7 +55,10 @@ void CParticle_Blue::Tick(_float fTimeDelta)
 
 void CParticle_Blue::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, shared_ptr<CParticle_Blue>(this))))//
+	if (nullptr == this)
+		return;
+
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, this)))//shared_ptr<CParticle_Blue>(this)
 		return;
 }
 

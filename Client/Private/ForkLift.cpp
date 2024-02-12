@@ -47,7 +47,10 @@ void CForkLift::Tick(_float fTimeDelta)
 
 void CForkLift::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, shared_ptr<CForkLift>(this))))//
+	if (nullptr == this)
+		return;
+
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))//shared_ptr<CForkLift>(this)
 		return ;
 }
 

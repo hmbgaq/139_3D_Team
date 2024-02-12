@@ -258,7 +258,7 @@ shared_ptr<CComponent> CGameInstance::Clone_Component(_uint iLevelIndex, const w
 	return m_pComponent_Manager->Clone_Component(iLevelIndex, strPrototypeTag, pArg);
 }
 
-HRESULT CGameInstance::Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, shared_ptr<CGameObject> pGameObject)
+HRESULT CGameInstance::Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, CGameObject* pGameObject)
 {
 	if (nullptr == m_pRenderer)
 		return E_FAIL;

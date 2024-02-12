@@ -58,9 +58,12 @@ void CEffect_Explosion::Tick(_float fTimeDelta)
 
 void CEffect_Explosion::Late_Tick(_float fTimeDelta)
 {
+	if (nullptr == this)
+		return;
+
 	Compute_CamDistance();
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, shared_ptr<CEffect_Explosion>(this))))//
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, this)))//shared_ptr<CEffect_Explosion>(this)
 		return ;
 }
 

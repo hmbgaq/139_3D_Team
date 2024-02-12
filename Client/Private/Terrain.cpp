@@ -45,9 +45,12 @@ void CTerrain::Tick(_float fTimeDelta)
 
 void CTerrain::Late_Tick(_float fTimeDelta)
 {
+	if (nullptr == this)
+		return;
+
 	m_pVIBufferCom->Culling(m_pTransformCom->Get_WorldMatrix());
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, shared_ptr<CTerrain>(this))))//
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))//shared_ptr<CTerrain>(this)
 		return ;
 
 

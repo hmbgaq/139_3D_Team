@@ -60,12 +60,13 @@ void CBody_Player::Tick(_float fTimeDelta)
 
 void CBody_Player::Late_Tick(_float fTimeDelta)
 {
-	
+	if (nullptr == this)
+		return;
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, shared_ptr<CBody_Player>(this))))//
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))//shared_ptr<CBody_Player>(this)
 		return ;
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, shared_ptr<CBody_Player>(this))))//
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this)))//shared_ptr<CBody_Player>(this)
 		return;
 
 #ifdef _DEBUG

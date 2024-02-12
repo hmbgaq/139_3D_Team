@@ -139,7 +139,7 @@ HRESULT CRenderer::Initialize()
 	return S_OK;
 }
 
-HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eGroupID, shared_ptr<CGameObject> pGameObject)
+HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eGroupID, CGameObject* pGameObject)
 {
 	if (nullptr == pGameObject ||
 		eGroupID >= RENDER_END)
@@ -159,7 +159,7 @@ HRESULT CRenderer::Add_DebugRender(shared_ptr<CComponent> pDebugCom)
 	#ifdef _DEBUG
 		m_DebugComponent.push_back(pDebugCom);
 
-		//Safe_AddRef(pDebugCom);
+		Safe_AddRef(pDebugCom);
 	#endif
 
 
@@ -233,7 +233,7 @@ HRESULT CRenderer::Render_Shadow()
 		if (nullptr != pGameObject)
 			pGameObject->Render_Shadow();
 
-		Safe_Release(pGameObject);
+		//Safe_Release(pGameObject);
 	}
 
 	m_RenderObjects[RENDER_SHADOW].clear();
@@ -294,9 +294,9 @@ HRESULT CRenderer::Render_NonBlend()
 }
 HRESULT CRenderer::Render_Blend()
 {
-	m_RenderObjects[RENDER_BLEND].sort([](shared_ptr<CGameObject> pSour, shared_ptr<CGameObject> pDest)->_bool
+	m_RenderObjects[RENDER_BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
 	{
-		return (static_pointer_cast<CAlphaObject>(pSour))->Get_CamDistance() > (static_pointer_cast<CAlphaObject>(pDest))->Get_CamDistance();
+		return (static_cast<CAlphaObject*>(pSour))->Get_CamDistance() > (static_cast<CAlphaObject*>(pDest))->Get_CamDistance();
 	});
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_BLEND])
@@ -442,22 +442,22 @@ void CRenderer::Free()
 {
 	for (auto& ObjectList : m_RenderObjects)
 	{
-		for (auto& pGameObject : ObjectList)
-			Safe_Release(pGameObject);
+		//for (auto& pGameObject : ObjectList)
+		//	Safe_Release(pGameObject);
 		ObjectList.clear();
 	}
 
 #ifdef _DEBUG
 
-	for (auto pDebugCom : m_DebugComponent)
-		Safe_Release(pDebugCom);
+	//for (auto pDebugCom : m_DebugComponent)
+	//	Safe_Release(pDebugCom);
 	m_DebugComponent.clear();
 #endif
 
 
 
-	Safe_Release(m_pShader);
-	Safe_Release(m_pVIBuffer);
+	//Safe_Release(m_pShader);
+	//Safe_Release(m_pVIBuffer);
 
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);

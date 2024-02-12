@@ -158,8 +158,8 @@ void CObject_Manager::Free()
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
-		for (auto& Pair : m_pLayers[i])		
-			Safe_Release(Pair.second);
+		//for (auto& Pair : m_pLayers[i])		
+		//	Safe_Release(Pair.second);
 
 		m_pLayers[i].clear();		
 	}
@@ -167,8 +167,8 @@ void CObject_Manager::Free()
 	Safe_Delete_Array(m_pLayers);
 
 
-	for (auto& Pair : m_Prototypes)
-		Safe_Release(Pair.second);
+	//for (auto& Pair : m_Prototypes)
+	//	Safe_Release(Pair.second);
 
 	m_Prototypes.clear();
 }

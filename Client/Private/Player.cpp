@@ -103,13 +103,16 @@ void CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
+	if (nullptr == this)
+		return;
+
 	for (auto& Pair : m_PartObjects)
 	{
 		if (nullptr != Pair.second)
 			Pair.second->Late_Tick(fTimeDelta);
 	}
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, shared_ptr<CPlayer>(this))))//
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))//shared_ptr<CPlayer>(this)
 		return;
 
 #ifdef _DEBUG
