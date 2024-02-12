@@ -80,7 +80,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 		nullptr == m_pFrustum)
 		return;
 
-	m_pInput_Device->Update_InputDev();
+	m_pInput_Device->Tick();
 
 	m_pObject_Manager->Priority_Tick(fTimeDelta);
 
@@ -120,6 +120,8 @@ HRESULT CGameInstance::Render_Engine()
 #ifdef _DEBUG
 	m_pLevel_Manager->Render();
 #endif
+
+	m_pInput_Device->LateTick();
 
 	return S_OK;
 }
@@ -163,6 +165,14 @@ ID3D11DepthStencilView * CGameInstance::Get_DSV() const
 	return m_pGraphic_Device->Get_DSV();
 }
 
+GRAPHIC_DESC* CGameInstance::Get_GraphicDesc()
+{
+	if (nullptr == m_pGraphic_Device)
+		return nullptr;
+
+	return m_pGraphic_Device->Get_GraphicDesc();
+}
+
 _byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
 {
 	if (nullptr == m_pInput_Device)
@@ -184,6 +194,36 @@ _long CGameInstance::Get_DIMouseMove(MOUSEMOVESTATE eMouseState)
 		return 0;
 
 	return m_pInput_Device->Get_DIMouseMove(eMouseState);
+}
+
+_bool CGameInstance::Key_Pressing(_ubyte byKeyID)
+{
+	return m_pInput_Device->Key_Pressing(byKeyID);
+}
+
+_bool CGameInstance::Key_Down(_ubyte byKeyID)
+{
+	return m_pInput_Device->Key_Down(byKeyID);
+}
+
+_bool CGameInstance::Key_Up(_ubyte byKeyID)
+{
+	return m_pInput_Device->Key_Up(byKeyID);
+}
+
+_bool CGameInstance::Mouse_Pressing(MOUSEKEYSTATE eMouse)
+{
+	return m_pInput_Device->Mouse_Pressing(eMouse);
+}
+
+_bool CGameInstance::Mouse_Down(MOUSEKEYSTATE eMouse)
+{
+	return m_pInput_Device->Mouse_Down(eMouse);
+}
+
+_bool CGameInstance::Mouse_Up(MOUSEKEYSTATE eMouse)
+{
+	return m_pInput_Device->Mouse_Up(eMouse);
 }
 
 HRESULT CGameInstance::Add_Timer(const wstring & strTimeTag)

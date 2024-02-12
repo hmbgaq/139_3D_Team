@@ -5,7 +5,7 @@
 #include "GameInstance.h"
 #include "Level_Logo.h"
 #include "Level_GamePlay.h"
-
+#include "Level_Tool.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -49,6 +49,9 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 			case LEVEL_GAMEPLAY:
 				pNewLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
 				break;
+			case LEVEL_TOOL:
+				pNewLevel = CLevel_Tool::Create(m_pDevice, m_pContext);
+				break;
 			}
 
 			if (nullptr == pNewLevel)
@@ -76,7 +79,7 @@ CLevel_Loading * CLevel_Loading::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 		MSG_BOX("Failed to Created : CLevel_Loading");
 		Safe_Release(pInstance);
 	}
-	return pInstance; 
+	return pInstance;
 }
 
 void CLevel_Loading::Free()

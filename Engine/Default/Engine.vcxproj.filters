@@ -267,9 +267,6 @@
     <ClInclude Include="..\public\PipeLine.h">
       <Filter>01.Utility\04.PipeLine</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Input_Device.h">
-      <Filter>00.System\00.Device\Input</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Model.h">
       <Filter>01.Utility\03.Components\05.Model</Filter>
     </ClInclude>
@@ -390,6 +387,9 @@
     <ClInclude Include="..\Public\MyAIVertexWeight.h">
       <Filter>97.MyAssimp\4.AIAnimation</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Input_Device.h">
+      <Filter>00.System\00.Device\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -454,9 +454,6 @@
     </ClCompile>
     <ClCompile Include="..\private\PipeLine.cpp">
       <Filter>01.Utility\04.PipeLine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Input_Device.cpp">
-      <Filter>00.System\00.Device\Input</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Model.cpp">
       <Filter>01.Utility\03.Components\05.Model</Filter>
@@ -541,6 +538,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Engine_Struct.cpp">
       <Filter>99.Defines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Input_Device.cpp">
+      <Filter>00.System\00.Device\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
