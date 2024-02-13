@@ -210,6 +210,10 @@ void CImgui_Manager::MenuTick(_float fTimeDelta)
 
  			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("RenderTarget ON/OFF"))
+		{
+
+		}
 		ImGui::EndMainMenuBar();
 	}
 
