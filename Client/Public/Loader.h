@@ -39,6 +39,13 @@ public:
 	HRESULT Loading_For_GamePlay_Level();
 	HRESULT	Loading_For_Tool_Level();
 
+// SH_Add
+public: /* ===================== UI ===================== */
+	HRESULT	Ready_UITexture();
+	HRESULT	Ready_Enemy_Small();
+	HRESULT	Ready_Enemy_Mid();
+	HRESULT	Ready_Enemy_Large();
+	HRESULT	Ready_Enemy_Side();
 
 private:
 	ID3D11Device*			m_pDevice = { nullptr };

@@ -187,6 +187,9 @@
     <Filter Include="97.MyAssimp\4.AIAnimation">
       <UniqueIdentifier>{241bb832-96c1-40e2-ad6b-7117aeeb82d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\02.GameObjects\UI">
+      <UniqueIdentifier>{aa7f815b-72c0-476b-a0ce-5d21b70e98a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -390,6 +393,9 @@
     <ClInclude Include="..\Public\Input_Device.h">
       <Filter>00.System\00.Device\Input</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Base.h">
+      <Filter>01.Utility\02.GameObjects\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -541,6 +547,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Input_Device.cpp">
       <Filter>00.System\00.Device\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Base.cpp">
+      <Filter>01.Utility\02.GameObjects\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -18,6 +18,10 @@
 #include "Sky.h"
 #pragma endregion
 
+#pragma region UI
+#include "UI_MonsterHpFrame.h"
+#include "UI_MonsterHp.h"
+#pragma endregion
 
 #include <process.h>
 
@@ -106,15 +110,21 @@ HRESULT CLoader::Loading_For_Logo_Level()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
 		return E_FAIL;
 
+	/* For.Ready_UITexture */ // + SH_Add
+	if (FAILED(Ready_UITexture()))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("모델를(을) 로드하는 중입니다."));
 
-
-
 	lstrcpy(m_szLoadingText, TEXT("셰이더를(을) 로드하는 중입니다."));
-
+	/* For.Prototype_Component_Shader_UI */ // + SH_Add
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_UI.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체를(을) 로드하는 중입니다."));
+
+	/* Texture 원형 추가해주기 */
 
 	/* For.Prototype_GameObject_BackGround */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"),
@@ -199,8 +209,6 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CVIBuffer_Particle_Point::Create(m_pDevice, m_pContext, 100))))
 		return E_FAIL;
 
-
-
 	lstrcpy(m_szLoadingText, TEXT("셰이더를(을) 로드하는 중입니다."));
 	/* For.Prototype_Component_Shader_VtxNorTex */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxNorTex"),
@@ -254,7 +262,6 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
 		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
 		return E_FAIL;
-
 
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체를(을) 로드하는 중입니다."));
@@ -313,6 +320,17 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CEffect_Explosion::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+#pragma region UI
+	/* For.Prototype_GameObject_UI_MonsterHpFrame */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHpFrame"),
+		CUI_MonsterHpFrame::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_UI_MonsterHp */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHp"),
+		CUI_MonsterHp::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+#pragma endregion
 
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
@@ -326,6 +344,82 @@ HRESULT CLoader::Loading_For_Tool_Level()
 {
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_UITexture()
+{
+	/* For.Enemy_Small */
+	if (FAILED(Ready_Enemy_Small()))
+		return E_FAIL;
+
+	/* For.Enemy_Mid */
+	if (FAILED(Ready_Enemy_Mid()))
+		return E_FAIL;
+
+	/* For.Enemy_Large */
+	if (FAILED(Ready_Enemy_Large()))
+		return E_FAIL;
+
+	/* For.Enemy_Side */
+	if (FAILED(Ready_Enemy_Side()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Enemy_Small()
+{
+	/* For.Prototype_Component_Texture_EnemyHpBarSmall */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpBarSmall"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Small/ui_enemybar_smal_shard_%d.png"), 4))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_EnemyHpFrameSmall */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameSmall"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Small/ui_enemy_hp_big_%d.png"), 2))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Enemy_Mid()
+{
+	/* For.Prototype_Component_Texture_EnemyHpBarMid */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpBarMid"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Mid/ui_enemybar_middle_shard_%d.png"), 4))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_EnemyHpFrameMid */ /* 2 : Frame */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameMid"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Mid/ui_enemy_hp_mid_%d.png"), 3))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Enemy_Large()
+{
+	/* For.Prototype_Component_Texture_EnemyHpBarLarge */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpBarLarge"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Large/ui_enemybar_big_shard_%d.png"), 4))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_EnemyHpFrameLarge */ /* 2 : Frame, 3 : Skull */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameLarge"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Large/ui_large_enemy_hp_big_%d.png"), 4))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Enemy_Side()
+{
+	/* For.Prototype_Component_Texture_SideEnemyHpFrameSide */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SideEnemyHpFrameSide"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Side/ui_enemy_hp_small_%d.png"), 2))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

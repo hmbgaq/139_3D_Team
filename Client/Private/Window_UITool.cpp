@@ -21,6 +21,11 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	/* Test */
+	// 윈도우 창 크기 변경시 변경된 값을 마우스위치값을 이용해 창 사이즈를 바꿔줘야 할 것 같다.
+	//ImGui::IsMouseDown();
+	//m_tImGuiDESC.vWindowSize; 
+	
 	__super::Begin();
 
 	UI_List(fTimeDelta);

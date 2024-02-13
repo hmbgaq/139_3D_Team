@@ -100,6 +100,51 @@
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\UIToolWindow">
       <UniqueIdentifier>{1a5b74d7-77b9-4acd-a158-0465913241ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI">
+      <UniqueIdentifier>{3d23e05d-7dbf-442a-aca2-0054872a4f00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player">
+      <UniqueIdentifier>{024c41b2-74e5-498e-8ad3-22f7e6a0bde1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Monster">
+      <UniqueIdentifier>{4fbd45e8-23c6-4ff2-916d-b5b6ec906d8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\00. Blood">
+      <UniqueIdentifier>{e281a8b6-477d-49a8-9048-7c03c7e5e0de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\01. Hp">
+      <UniqueIdentifier>{fc5b542d-a7bf-4b5e-a9ee-85c458609df1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\02. Info">
+      <UniqueIdentifier>{d124210c-f729-4c2b-b76f-6cebbbb71024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\03. Skill">
+      <UniqueIdentifier>{eed3b339-fea4-4170-a09e-fa3e4ce89df1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\04. Weapon">
+      <UniqueIdentifier>{0a3fb696-2eff-44f2-81b1-1df525329490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System">
+      <UniqueIdentifier>{47c53a2b-c542-4b2a-b07b-817b6be951a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\00. Tip">
+      <UniqueIdentifier>{019c2a9a-4108-440b-98d2-078b8ccff9ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\01. Quest">
+      <UniqueIdentifier>{2bdea739-4478-4ba8-9ea1-536b2f8fe484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\02. Obtain">
+      <UniqueIdentifier>{c89fbdd3-1a4f-4c79-8b04-56dd8eb82098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Monster\00. Hp">
+      <UniqueIdentifier>{3b41fb5d-ce98-43f4-994c-a4bea97a9835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Frame">
+      <UniqueIdentifier>{91ed537f-e3b8-4c30-8935-be704bc3fae7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Hp">
+      <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -213,6 +258,12 @@
     <ClInclude Include="..\Public\Window_UITool.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_MonsterHp.h">
+      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Hp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_MonsterHpFrame.h">
+      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -311,6 +362,12 @@
     <ClCompile Include="..\Private\Window_UITool.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UI_MonsterHp.cpp">
+      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Hp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MonsterHpFrame.cpp">
+      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -350,6 +407,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Point.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
