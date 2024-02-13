@@ -16,7 +16,7 @@ private:
 
 public:
 	HRESULT Initialize(CMyAIAnimation pAIAnimation, const CModel::BONES& Bones);
-	void Invalidate_TransformationMatrix(_bool isLoop, _float fTimeDelta, const CModel::BONES& Bones);
+	_bool Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones);
 
 public:
 	vector<class CChannel*>* Get_Channels() { return &m_Channels; };
