@@ -98,6 +98,19 @@ HRESULT CImgui_Manager::Ready_Windows()
 
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW, pWindow);
 
+#pragma region UI_START
+	/* 툴상에 새 윈도우를 만들어준다. */
+	CImgui_Window* pWindowUI = CWindow_UITool::Create(m_pDevice, m_pContext);
+
+	if (pWindowUI == nullptr)
+		return E_FAIL;
+
+	/* UI윈도우에대한 옵션 설정 */
+	pWindowUI->SetUp_ImGuiDESC(u8"UI툴", ImVec2{ 400.f, 600.f }, ImGuiWindowFlags_MenuBar /*| ImGuiWindowFlags_NoCollapse*/ /*| ImGuiWindowFlags_NoBringToFrontOnFocus*/ /*| ImGuiWindowFlags_NoNavFocus*/);
+
+	/* 세팅된 윈도우를 추가시켜준다. */
+	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_UITOOL_WINDOW, pWindowUI);
+#pragma endregion UI_END
 
 	return S_OK;
 }
