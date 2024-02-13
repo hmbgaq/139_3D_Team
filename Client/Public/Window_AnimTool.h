@@ -8,9 +8,17 @@ class CAnimation;
 END
 
 BEGIN(Client)
+class CPreviewAnimationModel;
 
 class CWindow_AnimTool final : public CImgui_Window
 {
+	enum class ROOTNODE_FLAG
+	{
+		X = (1 << 0),
+		Y = (1 << 1),
+		Z = (1 << 2),
+		FLAG_END
+	};
 public:
 	struct WINDOW_MAPTOOL_DESC : public ImGuiDESC
 	{
@@ -53,6 +61,7 @@ private:
 	void			Draw_AnimationList();
 
 private:
+	CPreviewAnimationModel*	m_pPreViewModel = { nullptr };
 	CAnimation*		m_pCurrentAnimation = nullptr;
 
 	_float			m_fCurrentTime = 0.f;

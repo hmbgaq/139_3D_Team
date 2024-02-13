@@ -4,6 +4,8 @@
 #include "../../Reference/Imgui/ImGuiFileDialog/ImGuiFileDialog.h"
 #include "CustomDialogFont.h"
 #include "Model.h"
+#include "PreviewAnimationModel.h"
+
 
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -89,6 +91,8 @@ void CWindow_AnimTool::Render()
 	{
 		if (ImGui::BeginTabItem("Player"))
 		{
+			ImGui::Text(u8"플레이어");
+
 			Draw_Player();
 			Draw_AnimationList();
 
@@ -183,6 +187,31 @@ void CWindow_AnimTool::Draw_KeyEventEditer()
 
 void CWindow_AnimTool::Draw_AnimationList()
 {
+	if (!m_pCurrentAnimation)
+		return;
+
+	if (ImGui::Button("Play"))
+	{
+		m_bStop = !m_bStop;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Hold"))
+	{
+		m_bHold = !m_bHold;
+
+		_byte byFlag(0);
+
+		CModel* pCurrentModel = m_pPreViewModel->Get_CurrentModel();
+
+		if (m_bHold)
+		{
+			byFlag = (_byte)ROOTNODE_FLAG::X | (_byte)ROOTNODE_FLAG::Z;
+		}
+
+
+	}
 }
 
 

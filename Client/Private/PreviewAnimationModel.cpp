@@ -4,7 +4,7 @@
 #include "Animation.h"
 #include "GameInstance.h"
 #include "Bone.h"
-#include "Wea"
+
 
 CPreviewAnimationModel::CPreviewAnimationModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CGameObject(pDevice,pContext)
