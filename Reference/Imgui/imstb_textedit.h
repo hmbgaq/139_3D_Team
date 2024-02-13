@@ -1,3 +1,6 @@
+
+#include "stdafx.h"
+
 // [DEAR IMGUI]
 // This is a slightly modified version of stb_textedit.h 1.14.
 // Those changes would need to be pushed into nothings/stb:

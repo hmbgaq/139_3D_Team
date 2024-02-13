@@ -129,7 +129,7 @@
 xcopy "$(SolutionDir)Engine\Public\*.*"    "$(SolutionDir)Reference\Public\" /y /e
 attrib +r "$(SolutionDir)Reference\Public\*.*" /s
 xcopy "$(OutDir)*.lib" "$(SolutionDir)Reference\Librarys\" /y
-xcopy "$(OutDir)*.dll" "$(SolutionDir)Client\Bin\\$(Configuration)\$(PlatformTarget)\" /y
+xcopy "$(OutDir)*.dll" "$(SolutionDir)Client\Bin\$(Configuration)\$(PlatformTarget)\" /y
 xcopy "$(SolutionDir)Engine\ThirdPartyLib\*.*" "$(SolutionDir)Reference\Librarys\" /y /e
 xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\ShaderFiles\" /y</Command>
     </PostBuildEvent>
@@ -184,7 +184,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
 xcopy "$(SolutionDir)Engine\Public\*.*"    "$(SolutionDir)Reference\Public\" /y /e
 attrib +r "$(SolutionDir)Reference\Public\*.*" /s
 xcopy "$(OutDir)*.lib" "$(SolutionDir)Reference\Librarys\" /y
-xcopy "$(OutDir)*.dll" "$(SolutionDir)Client\Bin\\$(Configuration)\$(PlatformTarget)\" /y
+xcopy "$(OutDir)*.dll" "$(SolutionDir)Client\Bin\$(Configuration)\$(PlatformTarget)\" /y
 xcopy "$(SolutionDir)Engine\ThirdPartyLib\*.*" "$(SolutionDir)Reference\Librarys\" /y /e
 xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\ShaderFiles\" /y</Command>
     </PostBuildEvent>

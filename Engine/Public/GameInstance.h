@@ -27,18 +27,26 @@ public: /* For.Engine */
 	HRESULT  Render_Engine();
 	void Clear(_uint iLevelIndex);
 
-public: /* For.Graphic_Device */		
+public: /* For.Graphic_Device */
 	HRESULT Clear_BackBuffer_View(_float4 vClearColor);
-	HRESULT Clear_DepthStencil_View();	
+	HRESULT Clear_DepthStencil_View();
 	HRESULT Present();
 	ID3D11RenderTargetView* Get_BackBufferRTV() const;
 	ID3D11DepthStencilView* Get_DSV() const;
+	GRAPHIC_DESC* Get_GraphicDesc();
 
 
 public: /* For.Input_Device */
 	_byte	Get_DIKeyState(_ubyte byKeyID);
 	_byte	Get_DIMouseState(MOUSEKEYSTATE eMouse);
 	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState);
+
+	_bool   Key_Pressing(_ubyte byKeyID);
+	_bool   Key_Down(_ubyte byKeyID);
+	_bool   Key_Up(_ubyte byKeyID);
+	_bool   Mouse_Pressing(MOUSEKEYSTATE eMouse);
+	_bool   Mouse_Down(MOUSEKEYSTATE eMouse);
+	_bool   Mouse_Up(MOUSEKEYSTATE eMouse);
 
 public: /* For.Timer_Manager */
 	HRESULT	Add_Timer(const wstring& strTimeTag);
@@ -110,7 +118,7 @@ private:
 	class CTarget_Manager*			m_pTarget_Manager = { nullptr };
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 	class CFrustum*					m_pFrustum = { nullptr };
-	
+
 public:
 	void Release_Manager();
 	static void Release_Engine();

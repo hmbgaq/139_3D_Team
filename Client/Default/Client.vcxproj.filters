@@ -82,11 +82,20 @@
     <Filter Include="01.Levels\02.Tool">
       <UniqueIdentifier>{ee7454c4-3db4-4d49-88f2-61b448176ddc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.Tool\Manager">
+    <Filter Include="01.Levels\02.Tool\Imgui">
+      <UniqueIdentifier>{01366b00-7eab-495a-9ebd-61cf6069e168}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Manager">
       <UniqueIdentifier>{a8d37e80-ffc2-4bd9-b0b6-160fb0e8899e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.Tool\Default">
+    <Filter Include="01.Levels\02.Tool\Imgui\Default">
       <UniqueIdentifier>{8a64ba68-3989-4545-b4c9-10ff2da66c95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows">
+      <UniqueIdentifier>{fbc2a996-4d09-4fa5-a2fc-fa6f85483cc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\MapToolWindow">
+      <UniqueIdentifier>{f8398acc-9828-4192-a11c-95f7c96e1b69}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -160,31 +169,43 @@
       <Filter>02.GameObjects\Effect\Explosion</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Imgui_Manager.h">
-      <Filter>01.Levels\02.Tool\Manager</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imconfig.h">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imgui.h">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imgui_impl_dx11.h">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imgui_impl_win32.h">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imgui_internal.h">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imstb_rectpack.h">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imstb_textedit.h">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Tool.h">
+      <Filter>01.Levels\02.Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_Window.h">
+      <Filter>01.Levels\02.Tool\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Window_MapTool.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\MapToolWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Include_Imgui_Windows.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -249,28 +270,37 @@
       <Filter>02.GameObjects\Effect\Explosion</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Imgui_Manager.cpp">
-      <Filter>01.Levels\02.Tool\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imgui_demo.cpp">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imgui_draw.cpp">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imgui_impl_dx11.cpp">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imgui_impl_win32.cpp">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imgui_tables.cpp">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imgui_widgets.cpp">
-      <Filter>01.Levels\02.Tool\Default</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Tool.cpp">
+      <Filter>01.Levels\02.Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Imgui_Window.cpp">
+      <Filter>01.Levels\02.Tool\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Window_MapTool.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\MapToolWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

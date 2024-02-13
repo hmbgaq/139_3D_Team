@@ -419,6 +419,7 @@ HRESULT CRenderer::Render_Debug()
 	}
 	m_DebugComponent.clear();
 
+
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_LightAcc"), m_pShader, m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Shadow"), m_pShader, m_pVIBuffer);

@@ -48,7 +48,7 @@ namespace Engine
 	//typedef		HXMVECTOR					_hvector;
 	//typedef		CXMVECTOR					_cvector;
 
-	typedef struct ENGINE_DLL	float2 : public DirectX::XMFLOAT2
+	typedef struct ENGINE_DLL float2 : public DirectX::XMFLOAT2
 	{
 		float2() : XMFLOAT2{} {}
 		float2(_float _x, _float _y) : XMFLOAT2(_x, _y) {}

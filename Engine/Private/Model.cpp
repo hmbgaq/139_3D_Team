@@ -17,20 +17,20 @@ CModel::CModel(const CModel & rhs)
 	, m_iNumMeshes(rhs.m_iNumMeshes)
 	, m_Meshes(rhs.m_Meshes)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
-	, m_Materials(rhs.m_Materials)	
+	, m_Materials(rhs.m_Materials)
 	, m_iNumAnimations(rhs.m_iNumAnimations)
-	
+
 {
 	for (auto& pPrototypeAnimation : rhs.m_Animations)
 		m_Animations.push_back(pPrototypeAnimation->Clone());
 
-	for (auto& pPrototypeBone : rhs.m_Bones)	
-		m_Bones.push_back(pPrototypeBone->Clone());		
+	for (auto& pPrototypeBone : rhs.m_Bones)
+		m_Bones.push_back(pPrototypeBone->Clone());
 
 	for (auto& MaterialDesc : m_Materials)
 	{
-		for (auto& pTexture : MaterialDesc.pMtrlTextures)		
-			Safe_AddRef(pTexture);		
+		for (auto& pTexture : MaterialDesc.pMtrlTextures)
+			Safe_AddRef(pTexture);
 	}
 
 	for (auto& pMesh : m_Meshes)
@@ -41,7 +41,7 @@ CModel::CModel(const CModel & rhs)
 
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
-	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone) 
+	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)
 	{
 		if (!strcmp(pBone->Get_Name(), pBoneName))
 			return true;
@@ -51,7 +51,7 @@ CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 	if (iter == m_Bones.end())
 		return nullptr;
 
-	return *iter;	
+	return *iter;
 }
 
 void CModel::Set_StiffnessRate(_float fStiffnessRate)
@@ -70,8 +70,6 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath
 
 
 	m_pAIScene = m_MyAssimp.ReadFile(strModelFilePath, iFlag);
-
-	
 
 	//if (nullptr == m_pAIScene.Get_AIScene())
 	//	return E_FAIL;
@@ -133,7 +131,7 @@ void CModel::Play_Animation(_float fTimeDelta, _bool isLoop)
 
 HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, _uint iMeshIndex)
 {
-	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);	
+	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);
 }
 
 HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantName, _uint iMeshIndex, aiTextureType eTextureType)
@@ -143,7 +141,7 @@ HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantNa
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;
 
-	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Bind_ShaderResource(pShader, pConstantName);	
+	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Bind_ShaderResource(pShader, pConstantName);
 }
 
 void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
@@ -210,7 +208,7 @@ void CModel::Write_Names(const string& strModelFilePath)
 	ofstream osTxt(strModelFilePath + ".txt");
 
 	osTxt << "Meshes: " << endl;
-	for (_uint i = 0; i < m_iNumMeshes; ++i) 
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
 	{
 		osTxt << i << ". " << m_Meshes[i]->Get_Name() << endl;
 	}
