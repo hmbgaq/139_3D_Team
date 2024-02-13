@@ -1,22 +1,20 @@
 #pragma once
-
+#include "GameObject.h"
 #include "Client_Defines.h"
-#include "LandObject.h"
 
 BEGIN(Engine)
 class CShader;
-class CCollider;
 class CModel;
 END
 
 BEGIN(Client)
 
-class CMonster final : public CLandObject
+class CInteract_Chain  final : public CGameObject
 {
 private:
-	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMonster(const CMonster& rhs);
-	virtual ~CMonster() = default;
+	CInteract_Chain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CInteract_Chain(const CInteract_Chain& rhs);
+	virtual ~CInteract_Chain() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -27,27 +25,18 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CModel*				m_pModelCom = { nullptr };
-	CShader*			m_pShaderCom = { nullptr };	
-	CCollider*			m_pColliderCom = { nullptr };
-	CTexture*			m_pDissolveTexCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
+	CModel* m_pModelCom = { nullptr };
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
-private:
-	_int					m_iRenderPass = {};
-	_float					m_fTimeDelta;
-
 public:
-	/* 원형객체를 생성한다. */
-	static CMonster* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-
-	/* 사본객체를 생성한다. */
+	static CInteract_Chain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
-
 	virtual void Free() override;
 };
 
 END
+

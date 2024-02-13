@@ -17,7 +17,7 @@
 #include "Player.h"
 #include "Sky.h"
 #pragma endregion
-
+#include "Interact_Chain.h"
 
 #include <process.h>
 
@@ -161,6 +161,11 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Explosion"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Explosion/Explosion%d.png"), 90))))
 		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_Dissolve */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/dissolve_tex.png")))))
+		return E_FAIL;
 
 
 	lstrcpy(m_szLoadingText, TEXT("모델를(을) 로드하는 중입니다."));
@@ -178,6 +183,12 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/ForkLift/ForkLift", PivotMatrix))))
 		return E_FAIL;
+
+	/* For. Prototype_Component_Model_Chain */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Chain"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix))))
+		return E_FAIL;
+
 
 	/* For.Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
@@ -313,6 +324,10 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CEffect_Explosion::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For. Chain*/
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Interact_Chain"),
+		CInteract_Chain::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));

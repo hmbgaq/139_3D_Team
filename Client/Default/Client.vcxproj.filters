@@ -22,9 +22,6 @@
     <Filter Include="01.Levels\99.Loading">
       <UniqueIdentifier>{c592615f-8e52-4bcb-8aa4-531b29f548fd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\99.Loading\Loader">
-      <UniqueIdentifier>{e392c2b5-5a93-41cd-9971-3527a5924eae}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects">
       <UniqueIdentifier>{f4ef5773-1c76-425c-b19e-509c54dbffe7}</UniqueIdentifier>
     </Filter>
@@ -97,6 +94,12 @@
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\MapToolWindow">
       <UniqueIdentifier>{f8398acc-9828-4192-a11c-95f7c96e1b69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\Loader">
+      <UniqueIdentifier>{e392c2b5-5a93-41cd-9971-3527a5924eae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Interact">
+      <UniqueIdentifier>{daed6591-e3f1-4e31-8a6a-3942dcf39622}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -127,7 +130,7 @@
       <Filter>01.Levels\99.Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Loader.h">
-      <Filter>01.Levels\99.Loading\Loader</Filter>
+      <Filter>01.Levels\Loader</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BackGround.h">
       <Filter>02.GameObjects\BackGround</Filter>
@@ -207,6 +210,9 @@
     <ClInclude Include="..\Public\Include_Imgui_Windows.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Interact_Chain.h">
+      <Filter>02.GameObjects\Interact</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -228,7 +234,7 @@
       <Filter>01.Levels\99.Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Loader.cpp">
-      <Filter>01.Levels\99.Loading\Loader</Filter>
+      <Filter>01.Levels\Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BackGround.cpp">
       <Filter>02.GameObjects\BackGround</Filter>
@@ -301,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Interact_Chain.cpp">
+      <Filter>02.GameObjects\Interact</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

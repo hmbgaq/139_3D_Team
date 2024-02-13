@@ -1,4 +1,4 @@
-#include "Shader_DEfines.hlsli"
+#include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix			g_ProjMatrixInv, g_ViewMatrixInv;

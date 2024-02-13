@@ -33,6 +33,9 @@ HRESULT CMonster::Initialize(void* pArg)
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(rand() % 20, 0.f, rand() % 20, 1.f));
 
+	m_iRenderPass = 0;
+	m_fTimeDelta = 0;
+
 	return S_OK;
 }
 
@@ -43,7 +46,13 @@ void CMonster::Priority_Tick(_float fTimeDelta)
 
 void CMonster::Tick(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_9))
+		m_iRenderPass = 3;
 
+	if (3 == m_iRenderPass) /* Dissolve Test */
+	{
+		m_fTimeDelta += fTimeDelta * 0.5f;
+	}
 
 	SetUp_OnTerrain(m_pTransformCom);
 
@@ -94,8 +103,14 @@ HRESULT CMonster::Render()
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS); /* 노말 텍스쳐 추가 */
 
-		m_pShaderCom->Begin(0);
+		if (3 == m_iRenderPass)
+		{
+			m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fTimeDelta, sizeof(_float));
+			m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
+		}
+		m_pShaderCom->Begin(m_iRenderPass);
 
 		m_pModelCom->Render(_uint(i));
 	}
@@ -109,26 +124,36 @@ HRESULT CMonster::Render()
 HRESULT CMonster::Ready_Components()
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_AnimModel"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+	{
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_AnimModel"),
+			TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+			return E_FAIL;
+	}
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
-		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
+	{
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
+			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+			return E_FAIL;
+	}
+
+	/* For. Texture */
+	{
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"),
+			TEXT("Com_DissolveTex"), reinterpret_cast<CComponent**>(&m_pDissolveTexCom))))
+			return E_FAIL;
+	}
 
 	/* For.Com_Collider */
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
+	{
+		BoundingDesc.vExtents = _float3(0.5f, 0.7f, 0.5f);
+		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 
-	BoundingDesc.vExtents = _float3(0.5f, 0.7f, 0.5f);
-	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
-
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
-		return E_FAIL;
-
-
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

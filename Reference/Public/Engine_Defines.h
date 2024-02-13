@@ -77,14 +77,5 @@ using namespace Engine;
 
 #endif // _DEBUG
 
-/* No DebugBreak */
-#ifdef _DEBUG
-#define DEBUG_ASSERT assert(false)
-#endif
-
-#ifndef _DEBUG
-#define DEBUG_ASSERT void(0);
-#endif // _DEBUG
-
 
 

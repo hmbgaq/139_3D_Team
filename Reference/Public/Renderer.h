@@ -10,7 +10,11 @@ BEGIN(Engine)
 class CRenderer final : public CBase
 {
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_SHADOW, RENDER_NONLIGHT, RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_SHADOW, RENDER_NONLIGHT, 
+					   RENDER_GODRAY, 
+					   RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
+
+	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_OUTLINE, SHADER_BLUR, SHADER_SSAO, SHADER_FINAL, SHADER_END };
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -23,6 +27,14 @@ public:
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
 
 	HRESULT Draw_RenderGroup();
+	
+	/* Ready */
+	HRESULT Create_Buffer();
+	HRESULT	Create_Shader();
+	HRESULT Create_RenderTarget();
+	HRESULT Create_DepthStencil();
+	HRESULT Ready_DebugRender();
+	HRESULT Ready_SSAO();
 
 private:
 	ID3D11Device*							m_pDevice = { nullptr };
@@ -35,7 +47,7 @@ private:
 #endif
 
 private:
-	class CShader*							m_pShader = { nullptr };
+	class CShader*							m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
 	class CVIBuffer_Rect*					m_pVIBuffer = { nullptr };
 
 	_float4x4								m_WorldMatrix;

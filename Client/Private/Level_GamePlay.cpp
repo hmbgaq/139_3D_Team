@@ -29,6 +29,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_LandObjects()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -105,7 +108,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 	Desc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	Desc.fNear = 0.1f;
 	Desc.fFar = 1000.f;
-	Desc.fSpeedPerSec = 5.f;
+	Desc.fSpeedPerSec = 15.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 
 	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc)))
@@ -141,11 +144,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* pArg)
 {
-	for (size_t i = 0; i < 20; i++)
-	{
+	//for (size_t i = 0; i < 20; i++)
+	//{
 		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg)))
 			return E_FAIL;
-	}
+//	}
 
 	return S_OK;
 }
@@ -187,6 +190,14 @@ HRESULT CLevel_GamePlay::Ready_LandObjects()
 HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void* pArg)
 {
 	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain"))))
 		return E_FAIL;
 
 	return S_OK;

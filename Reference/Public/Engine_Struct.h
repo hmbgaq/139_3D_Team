@@ -166,8 +166,7 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTXANIMMESH;
 
-
-
+	/* 파티클 + 인스턴싱 */
 	typedef struct ENGINE_DLL tagParticle_Rect /* 셰이더 그리는용도 */
 	{
 		static const unsigned int					iNumElements = 7;

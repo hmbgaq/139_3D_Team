@@ -188,6 +188,7 @@
     <ClInclude Include="..\Public\Imgui_Manager.h" />
     <ClInclude Include="..\public\Imgui_Window.h" />
     <ClInclude Include="..\Public\Include_Imgui_Windows.h" />
+    <ClInclude Include="..\Public\Interact_Chain.h" />
     <ClInclude Include="..\public\LandObject.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
@@ -223,6 +224,7 @@
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\Private\Imgui_Manager.cpp" />
     <ClCompile Include="..\Private\Imgui_Window.cpp" />
+    <ClCompile Include="..\Private\Interact_Chain.cpp" />
     <ClCompile Include="..\private\LandObject.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
