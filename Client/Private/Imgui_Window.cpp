@@ -43,7 +43,7 @@ HRESULT CImgui_Window::Begin()
 
 	if (!(ImGui::Begin(m_tImGuiDESC.strName.c_str(), 0, m_tImGuiDESC.eWindowFlags)))
 		return S_OK;
-
+	
 	/*if (ImGui::IsWindowFocused())
 	{
 		m_BackgroundColor.w += m_fTimeDelta;

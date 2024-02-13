@@ -42,6 +42,7 @@ public:
 protected:
 	_bool				m_bEnable = false;
 	_bool				m_bRenderTargetOnOff = true;
+	_bool				m_bdialogCheck = false;
 
 	ImGuiDESC			m_tImGuiDESC;
 	ImVec4				m_BackgroundColor = ImVec4(1.f, 1.f, 1.f, 1.f);

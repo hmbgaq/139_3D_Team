@@ -47,7 +47,7 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	if (false == ImGui_ImplDX11_Init(m_pDevice, m_pContext))
 		return E_FAIL;
 
-	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsDark();
 	g_io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.0f, NULL, g_io.Fonts->GetGlyphRangesKorean());
 
 	if(FAILED(Ready_Windows()))
