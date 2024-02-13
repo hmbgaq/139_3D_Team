@@ -196,7 +196,7 @@ _bool CChannel::Update_KeyFrame(KEYFRAME& _StartFrame, KEYFRAME& _EndFrame, _flo
 		}
 		catch (_uint e)
 		{
-			*pCurrentKeyFrameIndex = _uint(m_KeyFrames.size() - 2);
+			*pCurrentKeyFrameIndex = (_uint)m_KeyFrames.size() - 2;
 		}
 
 		_StartFrame = m_KeyFrames[*pCurrentKeyFrameIndex];

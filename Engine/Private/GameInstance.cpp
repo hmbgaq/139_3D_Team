@@ -314,6 +314,16 @@ HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
 
+void CGameInstance::Set_OutLine(_bool bOutLine)
+{
+	if (nullptr == m_pRenderer)
+		return;
+
+	m_pRenderer->Set_OutLine(bOutLine);
+
+	return;
+}
+
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {
 	if (nullptr == m_pPipeLine)

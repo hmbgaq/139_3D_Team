@@ -11,7 +11,7 @@ class CRenderer final : public CBase
 {
 public:
 	enum RENDERGROUP { RENDER_PRIORITY, RENDER_SHADOW, RENDER_NONLIGHT, 
-					   RENDER_GODRAY, 
+					   RENDER_GODRAY, RENDER_OUTLINE,
 					   RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
 
 	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_OUTLINE, SHADER_BLUR, SHADER_SSAO, SHADER_FINAL, SHADER_END };
@@ -23,9 +23,7 @@ private:
 public:
 	HRESULT Initialize();
 	HRESULT Add_RenderGroup(RENDERGROUP eGroupID, class CGameObject* pGameObject);
-
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
-
 	HRESULT Draw_RenderGroup();
 	
 	/* Ready */
@@ -36,10 +34,18 @@ public:
 	HRESULT Ready_DebugRender();
 	HRESULT Ready_SSAO();
 
+	/* Set */
+	void Set_OutLine(_bool bOutLine) { m_bOutLine = bOutLine; }
+
+
 private:
+	class CShader*							m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
+	class CGameInstance*					m_pGameInstance = { nullptr };
+	class CVIBuffer_Rect*					m_pVIBuffer = { nullptr };
+
 	ID3D11Device*							m_pDevice = { nullptr };
 	ID3D11DeviceContext*					m_pContext = { nullptr };
-	class CGameInstance*					m_pGameInstance = { nullptr };
+	ID3D11DepthStencilView*					m_pLightDepthDSV = { nullptr };
 	list<class CGameObject*>				m_RenderObjects[RENDER_END];
 
 #ifdef _DEBUG
@@ -47,13 +53,11 @@ private:
 #endif
 
 private:
-	class CShader*							m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
-	class CVIBuffer_Rect*					m_pVIBuffer = { nullptr };
-
 	_float4x4								m_WorldMatrix;
 	_float4x4								m_ViewMatrix, m_ProjMatrix;
+	_float4									m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
 
-	ID3D11DepthStencilView*					m_pLightDepthDSV = { nullptr };
+	_bool									m_bOutLine = { false };
 
 private:
 	HRESULT Render_Priority();
@@ -66,6 +70,8 @@ private:
 	HRESULT Render_LightAcc();
 	HRESULT Render_Deferred();
 
+	/* Post */
+	HRESULT Render_OutLine();
 #ifdef _DEBUG
 private:
 	HRESULT Render_Debug();

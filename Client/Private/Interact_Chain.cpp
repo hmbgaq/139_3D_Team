@@ -41,14 +41,12 @@ void CInteract_Chain::Late_Tick(_float fTimeDelta)
 {
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 		return;
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-		return;
-
-
 }
 
 HRESULT CInteract_Chain::Render()
 {
+	m_pGameInstance->Set_OutLine(true);
+
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
@@ -63,6 +61,8 @@ HRESULT CInteract_Chain::Render()
 
 		m_pModelCom->Render((_uint)i);
 	}
+
+	m_pGameInstance->Set_OutLine(false);
 
 	return S_OK;
 }
