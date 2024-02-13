@@ -43,6 +43,7 @@ public:
 	void Bind_KeyFrameEvent(const string& In_szKeyFrameEventFileName);
 private:
 	void Release_BeforeModel();
+
 private:
 	CBone*				m_pParentBone;
 	_float4x4			m_TransformationMatrix;
