@@ -24,6 +24,11 @@ public:
 
 	HRESULT Draw_RenderGroup();
 
+public:
+	void Set_RenderDebug(_bool _bRenderDebug) {
+		m_bRenderDebug = _bRenderDebug;
+	}
+
 private:
 	ID3D11Device*							m_pDevice = { nullptr };
 	ID3D11DeviceContext*					m_pContext = { nullptr };
@@ -42,6 +47,8 @@ private:
 	_float4x4								m_ViewMatrix, m_ProjMatrix;
 
 	ID3D11DepthStencilView*					m_pLightDepthDSV = { nullptr };
+
+	_bool									m_bRenderDebug = { false };
 
 private:
 	HRESULT Render_Priority();

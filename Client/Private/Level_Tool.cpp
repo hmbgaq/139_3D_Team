@@ -28,15 +28,15 @@ HRESULT CLevel_Tool::Initialize()
 	//if(FAILED(Ready_EffectTool()))
 	//	return E_FAIL;
 
+	//m_pGameInstance->Set_RenderDebug(true);
+
 	return S_OK;
 
 }
 
 void CLevel_Tool::Tick(_float fTimeDelta)
 {
-
 	m_pImguiManager->Tick(fTimeDelta);
-
 }
 
 HRESULT CLevel_Tool::Render()
