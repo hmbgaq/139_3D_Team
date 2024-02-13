@@ -103,6 +103,9 @@
     <Filter Include="01.Levels\02.Tool\Imgui\ImGuiFileDialog">
       <UniqueIdentifier>{0cded70d-6ebd-4df6-b312-4e2c3ec5b147}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\AnimationWindow\PreviewAnimationModel">
+      <UniqueIdentifier>{cf295498-c3ad-4328-b382-0d272f088d96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -222,6 +225,9 @@
     <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialogConfig.h">
       <Filter>01.Levels\02.Tool\Imgui\ImGuiFileDialog</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PreviewAnimationModel.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow\PreviewAnimationModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -322,6 +328,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialog.cpp">
       <Filter>01.Levels\02.Tool\Imgui\ImGuiFileDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PreviewAnimationModel.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow\PreviewAnimationModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

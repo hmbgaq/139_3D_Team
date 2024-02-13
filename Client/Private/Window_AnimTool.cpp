@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "../../Reference/Imgui/ImGuiFileDialog/ImGuiFileDialog.h"
 #include "CustomDialogFont.h"
+#include "Model.h"
 
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -15,12 +16,8 @@ HRESULT CWindow_AnimTool::Initialize()
 	//! 현재는 특별한 기능없음. 추후 필요할 것 같아서 셋팅.
 	if(FAILED(__super::Initialize()))
 		return E_FAIL;
- 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-// 	ImGui::StyleColorsDark();
 
-	ImGui::StyleColorsClassic();
-
-
+	//FileDialog 파일별 색
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByFullName, "((Custom.+[.]h))", ImVec4(0.1f, 0.9f, 0.1f, 0.9f));  // use a regex
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".cpp", ImVec4(1.0f, 1.0f, 0.0f, 0.9f));
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".hpp", ImVec4(0.0f, 0.0f, 1.0f, 0.9f));
@@ -44,15 +41,12 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	__super::Begin();
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
-	if (dockspaceFlags & ImGuiDockNodeFlags_PassthruCentralNode)
-		window_flags |= ImGuiWindowFlags_NoBackground;
+	
 	if (ImGui::Checkbox("RenderTarget", &m_bRenderTargetOnOff))
 	{
 		m_pGameInstance->Set_RenderDebug(m_bRenderTargetOnOff);
 	}
-	
+	//dialog========================================================================
 	static bool canValidateDialog = false;
 		
 	if (ImGui::Button("Open File Dialog"))
@@ -79,26 +73,116 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 		ImGuiFileDialog::Instance()->Close();
 		m_bdialogCheck = false;
 	}
-	
-	
-	
-
-	
-	
-
-	//ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
-
-
-	
-
+	//===============================dialog============================================
 
 	__super::End();
 }
 
 void CWindow_AnimTool::Render()
 {
-	
+	__super::Begin();
 
+	ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
+
+	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+	if (ImGui::BeginTabBar("Animation View", tab_bar_flags))
+	{
+		if (ImGui::BeginTabItem("Player"))
+		{
+			Draw_Player();
+			Draw_AnimationList();
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem(("Monster")))
+		{
+			Draw_Monster();
+			Draw_AnimationList();
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Event Editer"))
+		{
+			Draw_KeyEventEditer();
+
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
+
+	__super::End();
+	
+}
+
+void CWindow_AnimTool::Call_UpdatePreViewModel()
+{
+}
+
+void CWindow_AnimTool::Call_NextAnimationKey(const _uint& In_Key)
+{
+}
+
+void CWindow_AnimTool::Add_EffectKeyEvent()
+{
+}
+
+void CWindow_AnimTool::Add_EnableWeaponEvent(const _bool In_bEnable)
+{
+}
+
+void CWindow_AnimTool::Add_SoundKeyEvent()
+{
+}
+
+void CWindow_AnimTool::Add_RandomSoundKeyEvent()
+{
+}
+
+void CWindow_AnimTool::Save_KeyEvent()
+{
+}
+
+HRESULT CWindow_AnimTool::Load_KeyEvent()
+{
+	return E_NOTIMPL;
+}
+
+void CWindow_AnimTool::Clear_KeyEvent()
+{
+}
+
+void CWindow_AnimTool::ClearBack_KeyEvent()
+{
+}
+
+void CWindow_AnimTool::ClearAll_KeyEvent()
+{
+}
+
+void CWindow_AnimTool::Clear_WeaponEvent()
+{
+}
+
+void CWindow_AnimTool::Draw_Player()
+{
+	if (!m_pCurrentAnimation)
+		return; 
+
+}
+
+void CWindow_AnimTool::Draw_Monster()
+{
+}
+
+void CWindow_AnimTool::Draw_KeyEventEditer()
+{
+}
+
+void CWindow_AnimTool::Draw_AnimationList()
+{
 }
 
 
