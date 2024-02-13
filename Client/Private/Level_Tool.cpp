@@ -20,8 +20,6 @@ HRESULT CLevel_Tool::Initialize()
 		return E_FAIL;
 	}
 
-	//m_pGameInstance->Set_RenderDebug(true);
-
 	return S_OK;
 
 }

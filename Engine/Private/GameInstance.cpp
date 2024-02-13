@@ -282,6 +282,29 @@ CComponent * CGameInstance::Get_Component(_uint iLevelIndex, const wstring & str
 	return m_pObject_Manager->Get_Component(iLevelIndex, strLayerTag, strComponentTag, iIndex, strPartTag);
 }
 
+list<class CGameObject*>* CGameInstance::Get_GameObjects(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	return m_pObject_Manager->Get_GameObjects(iLevelIndex, strLayerTag);
+}
+
+CGameObject* CGameInstance::Get_GameObect_Last(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	list<class CGameObject*>* pGameObjects = Get_GameObjects();
+	if (nullptr == pGameObjects)
+		return nullptr;
+
+	return pGameObjects->back();
+}
+
+CGameObject* CGameInstance::Add_CloneObject_And_Get(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg)
+{
+	if (FAILED(Add_CloneObject(iLevelIndex, strLayerTag, strPrototypeTag, pArg)))
+		return nullptr;
+
+	return Get_GameObect_Last(iLevelIndex, strLayerTag);
+}
+
+
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, CComponent * pPrototype)
 {
 	if (nullptr == m_pComponent_Manager)
@@ -314,10 +337,12 @@ HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
 
+#ifdef _DEBUG
 void CGameInstance::Set_RenderDebug(_bool _bRenderDebug)
 {
 	m_pRenderer->Set_RenderDebug(_bRenderDebug);
 }
+#endif
 
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {
