@@ -145,6 +145,9 @@
     <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Hp">
       <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\99. Anything">
+      <UniqueIdentifier>{2f1fe2e2-39d2-4a2b-9ddf-bebbdab26f5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -264,6 +267,12 @@
     <ClInclude Include="..\Public\UI_MonsterHpFrame.h">
       <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Anything.h">
+      <Filter>02.GameObjects\UI\99. Anything</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\stb_image.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -367,6 +376,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_MonsterHpFrame.cpp">
       <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Anything.cpp">
+      <Filter>02.GameObjects\UI\99. Anything</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
