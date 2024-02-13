@@ -19,17 +19,29 @@ HRESULT CBone::Initialize(CMyAINode pAINode, _int iParentIndex)
 	return S_OK;
 }
 
-void CBone::Invalidate_CombinedTransformationMatrix(CModel::BONES& Bones, _fmatrix PivotMatrix)
+void CBone::Invalidate_CombinedTransformationMatrix(CModel::BONES& Bones, _fmatrix PivotMatrix, _float3& _Pos)
 {
 	if (-1 == m_iParentIndex)
+	{
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * PivotMatrix);
+	}
 	else
 	{
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix,
 			XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&Bones[m_iParentIndex]->m_CombinedTransformationMatrix));
 	}
 
-	
+	if (!strcmp(m_szName, "root"))
+	{
+		_Pos.x = m_CombinedTransformationMatrix._41;
+		_Pos.y = m_CombinedTransformationMatrix._42;
+		_Pos.z = m_CombinedTransformationMatrix._43;
+
+		m_CombinedTransformationMatrix._41 = 0;
+		m_CombinedTransformationMatrix._42 = 0;
+		m_CombinedTransformationMatrix._43 = 0;
+	}
+
 }
 
 CBone * CBone::Create(CMyAINode pAINode, _int iParentIndex)
