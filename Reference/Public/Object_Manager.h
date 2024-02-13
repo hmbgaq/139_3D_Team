@@ -29,6 +29,10 @@ public:
 	void Late_Tick(_float fTimeDelta);
 	void Clear(_uint iLevelIndex);
 
+public:
+	list<class CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring& strLayerTag);
+
+
 private:
 	_uint			m_iNumLevels = { 0 };
 

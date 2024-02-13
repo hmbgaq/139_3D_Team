@@ -60,6 +60,11 @@ using namespace std;
 
 using namespace Engine;
 
+///* for PhysX */
+//#include "PhysX/PxPhysics.h"
+//#include "PhysX/PxPhysicsAPI.h"
+//#include "PhysX/PxConfig.h"
+
 
 /* Leak */
 #ifdef _DEBUG

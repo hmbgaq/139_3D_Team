@@ -289,7 +289,7 @@ list<class CGameObject*>* CGameInstance::Get_GameObjects(_uint iLevelIndex, cons
 
 CGameObject* CGameInstance::Get_GameObect_Last(_uint iLevelIndex, const wstring& strLayerTag)
 {
-	list<class CGameObject*>* pGameObjects = Get_GameObjects();
+	list<class CGameObject*>* pGameObjects = Get_GameObjects(iLevelIndex, strLayerTag);
 	if (nullptr == pGameObjects)
 		return nullptr;
 
