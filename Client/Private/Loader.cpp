@@ -16,6 +16,7 @@
 #include "Monster.h"
 #include "Player.h"
 #include "Sky.h"
+#include "SkyDome.h"
 #pragma endregion
 
 
@@ -149,7 +150,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 
 	/* For.Prototype_Component_Texture_Sky */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 6))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Snow */
@@ -179,6 +180,13 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/ForkLift/ForkLift", PivotMatrix))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Model_ForkLift */
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_SkyDome"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/SkyDome/SkyDome", PivotMatrix))))
+		return E_FAIL;
+
+	
 	/* For.Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
@@ -286,6 +294,11 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	/* For.Prototype_GameObject_ForkLift */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ForkLift"),
 		CForkLift::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_ForkLift */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Skydome"),
+		CSkyDome::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Camera_Dynamic */

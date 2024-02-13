@@ -169,7 +169,7 @@ void CImgui_Manager::MenuTick(_float fTimeDelta)
  					return;
  				}
 
- 				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+ 				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로o
  			}
 
  			if (ImGui::MenuItem("EffectTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW]))

@@ -200,6 +200,7 @@
     <ClInclude Include="..\Public\Particle_Red.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Sky.h" />
+    <ClInclude Include="..\Public\SkyDome.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Weapon_Player.h" />
     <ClInclude Include="..\Public\Window_MapTool.h" />
@@ -235,6 +236,7 @@
     <ClCompile Include="..\Private\Particle_Red.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
+    <ClCompile Include="..\Private\SkyDome.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Weapon_Player.cpp" />
     <ClCompile Include="..\Private\Window_MapTool.cpp" />

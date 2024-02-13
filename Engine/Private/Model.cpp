@@ -69,7 +69,7 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath
 		iFlag |= aiProcess_PreTransformVertices;
 
 
-	m_pAIScene = m_MyAssimp.ReadFile(strModelFilePath, iFlag, true);
+	m_pAIScene = m_MyAssimp.ReadFile(strModelFilePath, iFlag);
 
 	
 
