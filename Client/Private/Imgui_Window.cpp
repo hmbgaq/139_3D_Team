@@ -1,13 +1,16 @@
 #include "stdafx.h"
 #include "Imgui_Window.h"
-
+#include "GameInstance.h"
 
 CImgui_Window::CImgui_Window(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
+	, m_pGameInstance(CGameInstance::GetInstance())
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
+	Safe_AddRef(m_pGameInstance);
+
 }
 
 HRESULT CImgui_Window::SetUp_ImGuiDESC(string _strName, const ImVec2& _vWindowSize, ImGuiWindowFlags _eWindowFlags)
@@ -21,6 +24,7 @@ HRESULT CImgui_Window::SetUp_ImGuiDESC(string _strName, const ImVec2& _vWindowSi
 
 HRESULT CImgui_Window::Initialize()
 {
+
 	return S_OK;
 }
 
@@ -68,4 +72,5 @@ void CImgui_Window::Free()
 {
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+	Safe_Release(m_pGameInstance);
 }

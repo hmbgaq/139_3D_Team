@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Window_AnimTool.h"
+#include "GameInstance.h"
 
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -13,7 +14,6 @@ HRESULT CWindow_AnimTool::Initialize()
 	if(FAILED(__super::Initialize()))
 		return E_FAIL;
 
-
 	return S_OK;
 }
 
@@ -22,6 +22,11 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	__super::Begin();
+
+	if (ImGui::Checkbox("RenderTarget", &m_bRenderTargetOnOff))
+	{
+		m_pGameInstance->Set_RenderDebug(m_bRenderTargetOnOff);
+	}
 
 	ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
 
