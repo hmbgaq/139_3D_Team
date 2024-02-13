@@ -4,6 +4,8 @@
 #include "Imgui_Manager.h"
 #include "GameInstance.h"
 
+#include "Camera_Dynamic.h"
+#include "Particle_Edit.h"
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -19,6 +21,12 @@ HRESULT CLevel_Tool::Initialize()
 		Safe_Release(m_pContext);
 		return E_FAIL;
 	}
+
+	//if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	//	return E_FAIL;
+
+	//if(FAILED(Ready_EffectTool()))
+	//	return E_FAIL;
 
 	return S_OK;
 
@@ -54,6 +62,43 @@ HRESULT CLevel_Tool::Ready_Imgui()
 
 
 	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
+{
+	CCamera_Dynamic::DYNAMIC_CAMERA_DESC		tDesc = {};
+	tDesc.fMouseSensor = 0.05f;
+	tDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
+	tDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+	tDesc.fFovy = XMConvertToRadians(60.0f);
+	tDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	tDesc.fNear = 0.1f;
+	tDesc.fFar = 1000.f;
+	tDesc.fSpeedPerSec = 5.f;
+	tDesc.fRotationPerSec = XMConvertToRadians(180.0f);
+
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &tDesc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_EffectTool()
+{
+
+	if (FAILED(Ready_Layer_Particle(TEXT("Layer_Particle"))))
+		return E_FAIL;
+
+}
+
+HRESULT CLevel_Tool::Ready_Layer_Particle(const wstring& strLayerTag)
+{
+	CGameObject::GAMEOBJECT_DESC	tDesc = {};
+	tDesc.fSpeedPerSec = { 0.f };
+	tDesc.fRotationPerSec = { XMConvertToRadians(0.0f) };
+
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Particle_Edit"), &tDesc)))
+		return E_FAIL;
 }
 
 

@@ -99,6 +99,13 @@ HRESULT CImgui_Manager::Ready_Windows()
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW, pWindow);
 
 
+	/* 이펙트 툴 윈도우 추가 */
+	pWindow = CWindow_EffectTool::Create(m_pDevice, m_pContext);
+	if (pWindow == nullptr)
+		return E_FAIL;
+	pWindow->SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 500.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus);
+	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW, pWindow);
+
 	return S_OK;
 }
 

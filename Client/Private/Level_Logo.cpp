@@ -21,6 +21,7 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Tick(_float fTimeDelta)
 {
+	//m_pGameInstance->Key_Down(VK_TAB);
 	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
 		_int iCheckPoint = 0;

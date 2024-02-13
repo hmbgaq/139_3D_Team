@@ -97,6 +97,12 @@
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\MapToolWindow">
       <UniqueIdentifier>{f8398acc-9828-4192-a11c-95f7c96e1b69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
+      <UniqueIdentifier>{bdf9a6e6-179a-44e0-a993-be1ba828fec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Particles\00.Edit">
+      <UniqueIdentifier>{c1df78fd-5ef3-45b2-a46f-845d10f9fa4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -207,6 +213,15 @@
     <ClInclude Include="..\Public\Include_Imgui_Windows.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Window_EffectTool.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Object.h">
+      <Filter>02.GameObjects\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle_Edit.h">
+      <Filter>02.GameObjects\Effect\Particles\00.Edit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -301,6 +316,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Window_EffectTool.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Object.cpp">
+      <Filter>02.GameObjects\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Particle_Edit.cpp">
+      <Filter>02.GameObjects\Effect\Particles\00.Edit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
