@@ -188,8 +188,13 @@ HRESULT CRenderer::Draw_RenderGroup()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	if (FAILED(Render_Debug()))
-		return E_FAIL;
+
+	if (m_bRenderDebug) 
+	{
+		if (FAILED(Render_Debug()))
+			return E_FAIL;
+	}
+
 #endif
 
 	return S_OK;
