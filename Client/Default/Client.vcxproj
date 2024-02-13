@@ -173,6 +173,8 @@
   <ItemGroup>
     <ClInclude Include="..\..\Reference\Imgui\imconfig.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui.h" />
+    <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialog.h" />
+    <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialogConfig.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui_impl_win32.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui_internal.h" />
@@ -202,6 +204,7 @@
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Weapon_Player.h" />
+    <ClInclude Include="..\Public\Window_AnimTool.h" />
     <ClInclude Include="..\Public\Window_MapTool.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -210,6 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Reference\Imgui\imgui.cpp" />
+    <ClCompile Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialog.cpp" />
     <ClCompile Include="..\..\Reference\Imgui\imgui_demo.cpp" />
     <ClCompile Include="..\..\Reference\Imgui\imgui_draw.cpp" />
     <ClCompile Include="..\..\Reference\Imgui\imgui_impl_dx11.cpp" />
@@ -237,6 +241,7 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Weapon_Player.cpp" />
+    <ClCompile Include="..\Private\Window_AnimTool.cpp" />
     <ClCompile Include="..\Private\Window_MapTool.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -94,10 +94,19 @@ HRESULT CImgui_Manager::Ready_Windows()
 	if (pWindow == nullptr)
 		return E_FAIL;
 
-	pWindow->SetUp_ImGuiDESC(u8"맵툴", ImVec2{ 200.f, 200.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
+	pWindow->SetUp_ImGuiDESC(u8"맵툴", ImVec2{ 200.f, 200.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
 
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW, pWindow);
 
+
+	pWindow = CWindow_AnimTool::Create(m_pDevice, m_pContext);
+
+	if (pWindow == nullptr)
+		return E_FAIL;
+
+	pWindow->SetUp_ImGuiDESC(u8"애니메이션툴", ImVec2{ 200.f, 200.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
+
+	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW, pWindow);
 
 	return S_OK;
 }
