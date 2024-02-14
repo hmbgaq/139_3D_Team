@@ -1,28 +1,30 @@
 #include "stdafx.h"
-#include "..\Public\TestInstance.h"
+#include "Effect_Instance.h"
 
 #include "GameInstance.h"
-#include "VIBuffer_Environment_Model_Instance.h"
+#include "VIBuffer_Effect_Model_Instance.h"
 
-CTestInstance::CTestInstance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CLandObject(pDevice, pContext)
+CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CGameObject(pDevice, pContext)
 {
 
 }
 
-CTestInstance::CTestInstance(const CTestInstance & rhs)
-	: CLandObject(rhs)
+CEffect_Instance::CEffect_Instance(const CEffect_Instance & rhs)
+	: CGameObject(rhs)
 {
 }
 
-HRESULT CTestInstance::Initialize_Prototype()
+HRESULT CEffect_Instance::Initialize_Prototype()
 {	
 
 	return S_OK;
 }
 
-HRESULT CTestInstance::Initialize(void* pArg)
+HRESULT CEffect_Instance::Initialize(void* pArg)
 {	
+	m_tInstanceDesc = *(EFFECT_INSTANCE_DESC*)pArg;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
 
@@ -36,30 +38,25 @@ HRESULT CTestInstance::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CTestInstance::Priority_Tick(_float fTimeDelta)
+void CEffect_Instance::Priority_Tick(_float fTimeDelta)
 {
 
 }
 
-void CTestInstance::Tick(_float fTimeDelta)
+void CEffect_Instance::Tick(_float fTimeDelta)
 {
 
 }
 
-void CTestInstance::Late_Tick(_float fTimeDelta)
+void CEffect_Instance::Late_Tick(_float fTimeDelta)
 {
 
-// 	m_pGameInstance->Transform_Frustum_ToLocalSpace(m_pTransformCom->Get_WorldMatrix());
-// 
-// 	if (true == m_pGameInstance->isIn_LocalPlanes(XMVector3TransformCoord(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_WorldMatrixInverse()), 0.f))
-// 	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-			return;
-/*	}*/
+	if (FAILED(m_pGameInstance->Add_RenderGroup(m_tInstanceDesc.eRenderGroup, this)))
+		return;
 
 }
 
-HRESULT CTestInstance::Render()
+HRESULT CEffect_Instance::Render()
 {
 	if(FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -74,7 +71,7 @@ HRESULT CTestInstance::Render()
 		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		
 
-		m_pShaderCom->Begin(1);
+		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
 		m_pInstanceModelCom->Render(i);
 
 		//m_pModelCom->Render(i);
@@ -86,7 +83,7 @@ HRESULT CTestInstance::Render()
 	return S_OK;
 }
 
-HRESULT CTestInstance::Ready_Components()
+HRESULT CEffect_Instance::Ready_Components()
 {
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_Model_Instance"),
@@ -94,15 +91,15 @@ HRESULT CTestInstance::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, m_tInstanceDesc.strModelTag,
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	CVIBuffer_Environment_Model_Instance::ENVIRONMENT_MODEL_INSTANCE_DESC Desc;
+	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
 
 	Desc.pModel = m_pModelCom;
 	
-	Desc.iNumInstance = 10; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
+	Desc.iNumInstance = m_tInstanceDesc.iNumInstance; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
 	
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"),
@@ -112,7 +109,7 @@ HRESULT CTestInstance::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CTestInstance::Bind_ShaderResources()
+HRESULT CEffect_Instance::Bind_ShaderResources()
 {
 	//if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	//	return E_FAIL;
@@ -129,33 +126,33 @@ HRESULT CTestInstance::Bind_ShaderResources()
 	return S_OK;
 }
 
-CTestInstance * CTestInstance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CEffect_Instance * CEffect_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CTestInstance*		pInstance = new CTestInstance(pDevice, pContext);
+	CEffect_Instance*		pInstance = new CEffect_Instance(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CTestInstance");
+		MSG_BOX("Failed to Created : CEffect_Instance");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject * CTestInstance::Clone(void* pArg)
+CGameObject * CEffect_Instance::Clone(void* pArg)
 {
-	CTestInstance*		pInstance = new CTestInstance(*this);
+	CEffect_Instance*		pInstance = new CEffect_Instance(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CTestInstance");
+		MSG_BOX("Failed to Cloned : CEffect_Instance");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CTestInstance::Free()
+void CEffect_Instance::Free()
 {
 	__super::Free();
 

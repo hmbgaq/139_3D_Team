@@ -17,7 +17,8 @@
 #include "Player.h"
 #include "Sky.h"
 #include "SkyDome.h"
-#include "TestInstance.h"
+#include "Effect_Instance.h"
+#include "Environment_Instance.h"
 #pragma endregion
 
 
@@ -209,8 +210,13 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		return E_FAIL;
 
 	/* For.Prototype_Component_VIBuffer_Particle_Point */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Model_Instance"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"),
+		CVIBuffer_Environment_Model_Instance::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Particle_Point */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),
+		CVIBuffer_Effect_Model_Instance::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -308,8 +314,8 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_ForkLift */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TestInstance"),
-		CTestInstance::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Environment_Instance"),
+		CEnvironment_Instance::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_ForkLift */
@@ -340,6 +346,11 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	/* For.Prototype_GameObject_Effect_Explosion */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Explosion"),
 		CEffect_Explosion::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_ForkLift */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Instance"),
+		CEffect_Instance::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

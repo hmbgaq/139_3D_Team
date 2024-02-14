@@ -252,6 +252,8 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\public\VIBuffer.h" />
     <ClInclude Include="..\Public\VIBuffer_Cell.h" />
     <ClInclude Include="..\Public\VIBuffer_Cube.h" />
+    <ClInclude Include="..\Public\VIBuffer_Effect_Model_Instance.h" />
+    <ClInclude Include="..\Public\VIBuffer_Environment_Model_Instance.h" />
     <ClInclude Include="..\public\VIBuffer_Instancing.h" />
     <ClInclude Include="..\Public\VIBuffer_Model_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Particle_Point.h" />
@@ -305,6 +307,8 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\private\VIBuffer.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Effect_Model_Instance.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Environment_Model_Instance.cpp" />
     <ClCompile Include="..\private\VIBuffer_Instancing.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Model_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Particle_Point.cpp" />

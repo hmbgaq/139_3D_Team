@@ -190,6 +190,12 @@
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Model_Instance">
       <UniqueIdentifier>{22e03326-c8c8-4edf-b29c-6e6d15854599}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Model_Instance\Environment">
+      <UniqueIdentifier>{aaed5d8b-f893-444b-8bfb-d8ca8b744249}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect">
+      <UniqueIdentifier>{8bcbac06-d32d-418b-977c-b6a675263715}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -396,6 +402,12 @@
     <ClInclude Include="..\Public\VIBuffer_Model_Instance.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Environment_Model_Instance.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Effect_Model_Instance.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -550,6 +562,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Model_Instance.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Environment_Model_Instance.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Effect_Model_Instance.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

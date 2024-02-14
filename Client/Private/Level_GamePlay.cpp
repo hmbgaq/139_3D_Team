@@ -5,7 +5,8 @@
 #include "Player.h"
 
 #include "Camera_Dynamic.h"
-
+#include "Environment_Instance.h"
+#include "Effect_Instance.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -195,8 +196,21 @@ HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void*
 {
 	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg)))
 	//	return E_FAIL;
+	CLandObject::LANDOBJECT_DESC LandObjectDesc = *(CLandObject::LANDOBJECT_DESC*)pArg;
 
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_TestInstance"), pArg)))
+
+	CEnvironment_Instance::ENVIRONMENT_INSTANCE_DESC Desc;
+
+	Desc.strModelTag = TEXT("Prototype_Component_Model_ForkLift");
+	Desc.iShaderPassIndex = 1;
+	Desc.iNumInstance = 10;
+
+	Desc.fRotationPerSec = LandObjectDesc.fRotationPerSec;
+	Desc.fSpeedPerSec = LandObjectDesc.fSpeedPerSec;
+	Desc.pTerrainBuffer = LandObjectDesc.pTerrainBuffer;
+	Desc.pTerrainTransform = LandObjectDesc.pTerrainTransform;
+
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Environment_Instance"), &Desc)))
 		return E_FAIL;
 
 	return S_OK;

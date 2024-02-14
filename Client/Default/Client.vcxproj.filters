@@ -100,8 +100,11 @@
     <Filter Include="02.GameObjects\Sky\SkyDome">
       <UniqueIdentifier>{4772a3fc-a02f-4359-a871-e22dd5a076b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\LandObject\TestInstance">
+    <Filter Include="02.GameObjects\LandObject\Environment_Instance">
       <UniqueIdentifier>{07401b06-626f-4b88-ab5f-7765959b393a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effect_Instance">
+      <UniqueIdentifier>{df70ff5e-761f-4541-b7f2-d7d3a9ccdb1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -217,7 +220,13 @@
       <Filter>02.GameObjects\Sky\SkyDome</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TestInstance.h">
-      <Filter>02.GameObjects\LandObject\TestInstance</Filter>
+      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Environment_Instance.h">
+      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Instance.h">
+      <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -318,7 +327,13 @@
       <Filter>02.GameObjects\Sky\SkyDome</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TestInstance.cpp">
-      <Filter>02.GameObjects\LandObject\TestInstance</Filter>
+      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Environment_Instance.cpp">
+      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Instance.cpp">
+      <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
