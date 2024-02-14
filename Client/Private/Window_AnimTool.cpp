@@ -325,7 +325,8 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 					ImGui::SetItemDefaultFocus();
 					if(m_bStop == false)
 						pcharacters->Get_Model()->Play_Animation(fTimeDelta, true);
-					pcharacters->Get_Model()->Set_StiffnessRate()
+					pcharacters->Get_Model()->Set_StiffnessRate(m_fSpeed);
+					m_pAnimation[n]->Set_TrackPosition(m_fCurrentTrackPosition);
 				}
 
 			}
@@ -336,7 +337,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 
 
 	if (ImGui::SliderFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration));
-	ImGui::SameLine();
+	
 	if (ImGui::SliderFloat("AnimationSpeed", &m_fSpeed, 0.f, 100.f));
 
 	if (ImGui::Button("Play"))
