@@ -27,14 +27,18 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CShader*			m_pShaderCom = { nullptr };	
 	CModel*				m_pModelCom = { nullptr };
+	CShader*			m_pShaderCom = { nullptr };	
 	CCollider*			m_pColliderCom = { nullptr };
+	CTexture*			m_pDissolveTexCom = { nullptr };
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
+private:
+	_int					m_iRenderPass = {};
+	_float					m_fTimeDelta;
 
 public:
 	/* 원형객체를 생성한다. */

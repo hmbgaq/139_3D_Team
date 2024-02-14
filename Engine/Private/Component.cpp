@@ -1,4 +1,4 @@
-#include "..\Public\Component.h"
+#include "Component.h"
 #include "GameInstance.h"
 
 CComponent::CComponent(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

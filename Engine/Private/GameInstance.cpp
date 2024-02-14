@@ -352,12 +352,14 @@ HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
 
+
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebug(_bool _bRenderDebug)
 {
 	m_pRenderer->Set_RenderDebug(_bRenderDebug);
 }
 #endif
+
 
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {

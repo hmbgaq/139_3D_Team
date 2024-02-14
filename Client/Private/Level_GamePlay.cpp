@@ -15,20 +15,12 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * p
 
 HRESULT CLevel_GamePlay::Initialize()
 {
-	if (FAILED(Ready_LightDesc()))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
-		return E_FAIL;	
-
-	if (FAILED(Ready_Layer_Effect(TEXT("Layer_Effect"))))
-		return E_FAIL;
-		
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_LandObjects()))
-		return E_FAIL;
+	FAILED_CHECK(Ready_LightDesc());
+	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
+	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
+	FAILED_CHECK(Ready_LandObjects());
+	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 
 	return S_OK;
 }
@@ -106,7 +98,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 	Desc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	Desc.fNear = 0.1f;
 	Desc.fFar = 1000.f;
-	Desc.fSpeedPerSec = 5.f;
+	Desc.fSpeedPerSec = 15.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 
 	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc)))
@@ -148,11 +140,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* pArg)
 {
+
 	//for (size_t i = 0; i < 20; i++)
 	//{
 	//	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg)))
 	//			return E_FAIL;
 	//}
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg));
 
 
 
@@ -163,15 +157,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* 
 
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Terrain"))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky"))))
-		return E_FAIL;
 
 	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Skydome"))))
 	//	return E_FAIL;
 
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Terrain")));
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky")));
 
 
 	return S_OK;
@@ -185,15 +176,9 @@ HRESULT CLevel_GamePlay::Ready_LandObjects()
 	LandObjectDesc.pTerrainBuffer = dynamic_cast<CVIBuffer_Terrain*>(m_pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_BackGround"), TEXT("Com_VIBuffer")));
 	LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
 
-	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc)))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc)))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc)))
-		return E_FAIL;
-
+	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
+	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
+	FAILED_CHECK(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc));
 
 	return S_OK;
 }
@@ -218,6 +203,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void*
 
 	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Environment_Instance"), &Desc)))
 		return E_FAIL;
+
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg));
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
+{
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
 
 	return S_OK;
 }

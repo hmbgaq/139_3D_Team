@@ -91,9 +91,6 @@ HRESULT CBody_Player::Render()
 		m_pModelCom->Render((_uint)i);
 	}
 
-
-	
-
 	return S_OK;
 }
 

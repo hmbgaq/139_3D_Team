@@ -1,3 +1,4 @@
+/* ---------------- Sampler ---------------- */
 
 sampler LinearSampler = sampler_state
 {
@@ -12,6 +13,15 @@ sampler PointSampler = sampler_state
 	AddressU = wrap;
 	AddressV = wrap;
 };
+
+sampler ClampSampler = sampler_state
+{
+    filter = min_mag_mip_linear;
+    AddressU = CLAMP;
+    AddressV = CLAMP;
+};
+
+/* ---------------- Rasterizer ---------------- */
 
 RasterizerState RS_Default
 {
@@ -35,6 +45,16 @@ RasterizerState RS_Cull_None
 };
 
 
+RasterizerState RS_Cull_CW
+{
+    FillMode = Solid;
+    CullMode = FRONT;
+    FrontCounterClockwise = false;
+};
+
+/* ---------------- DepthStencil ---------------- */
+
+
 DepthStencilState DSS_Default
 {
 	DepthEnable = true;
@@ -48,7 +68,6 @@ DepthStencilState DSS_None
 	DepthEnable = false;
 	DepthWriteMask = zero;
 };
-
 
 DepthStencilState DSS_DepthStencilEnable
 {
@@ -64,6 +83,8 @@ DepthStencilState DSS_DepthStencilEnable
     FrontFaceStencilPass = replace;
     FrontFaceStencilFail = keep;
 };
+
+/* ---------------- BlendState ---------------- */
 
 BlendState BS_Default
 {

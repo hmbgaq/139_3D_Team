@@ -1,16 +1,11 @@
-
 #include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-
 texture2D		g_DiffuseTexture[2];
 texture2D		g_MaskTexture;
 texture2D		g_BrushTexture;
-
 vector			g_vBrushPos = vector(50.f, 0.f, 20.f, 1.f);
 float			g_fBrushRange = 10.f;
-
-
 
 struct VS_IN
 {

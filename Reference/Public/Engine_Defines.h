@@ -5,6 +5,7 @@
 #pragma warning(disable : 4251) /* dll template export warning */
 #pragma warning	(disable : 4819)  /* 한글 주석 경고 */
 #pragma warning (disable : 26812) /* enumclass warning */
+#pragma warning (disable : 4275) /* XMFLOAT에서 DLL EXPORT 하는 warning  */
 //#pragma warning (disable : 26495) /* initialize warning */
 
 /* DX */
@@ -57,19 +58,8 @@ using namespace std;
 #include "Engine_Struct.h"
 #include "Engine_Function.h"
 #include "Engine_Enum.h"
-
-namespace Engine 
-{
-	static float					g_fLightFar = 3000.f;
-	static DirectX::XMFLOAT4		g_vLightPos = { 0.f, 120.f, -105.f, 1.f };
-}
-
 using namespace Engine;
 
-/* for PhysX */
-#include "PhysX/PxPhysics.h"
-#include "PhysX/PxPhysicsAPI.h"
-using namespace physx;
 
 /* Leak */
 #ifdef _DEBUG
@@ -85,15 +75,6 @@ using namespace physx;
 
 #endif
 
-#endif // _DEBUG
-
-/* No DebugBreak */
-#ifdef _DEBUG
-#define DEBUG_ASSERT assert(false)
-#endif
-
-#ifndef _DEBUG
-#define DEBUG_ASSERT void(0);
 #endif // _DEBUG
 
 

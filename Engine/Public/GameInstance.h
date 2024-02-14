@@ -83,6 +83,7 @@ public: /* For.Renderer */
 	void Set_RenderDebug(_bool _bRenderDebug);
 #endif
 
+
 public: /* For.PipeLine */
 	void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix);
 	void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _float4x4 TransformMatrix);
