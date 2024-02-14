@@ -18,9 +18,37 @@ HRESULT CWindow_UITool::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+	/* Texture 사이즈 */
+
+
+	//UI_TextureLoad();
+
+	//LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures"))));
+	LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures/PlayerHUD"))));
+
 	// 이미지 로드 Test
-	bool ret = LoadTextureFromFile("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Small/ui_enemy_hp_big_0.png", &my_texture, &my_image_width, &my_image_height);
-	IM_ASSERT(ret);
+	_int iSize = m_vecPaths.size();
+	for (_int i = 0; i < iSize; i++)
+	{
+		IMAGEINFO* tTexture = new IMAGEINFO;
+
+		_bool bRet = LoadTextureFromFile(ConverWStringtoC(m_vecPaths[i]->strFilePath), &tTexture->SRV_Texture, &tTexture->iImage_Width, &tTexture->iImage_Height);
+		IM_ASSERT(bRet);
+		
+		/* Texture 크기를 임의로 조절하고 싶다면, 여기서 강제로 덮어씌우자. 값을 안주면 원래 텍스처 크기대로 나온다. 추 후 원본 크기를 이용해 비율만 줄여서 출력해도 좋을 것 같다. */
+		//tTexture->iImage_Width = 100;
+		//tTexture->iImage_Height = 100;
+		tTexture->iTextureNum = i;
+		m_vecTexture.push_back(tTexture);
+
+	}
+
+	// 문자열 벡터를 const char* 배열로 변환
+	//std::vector<const char*> charImagePaths;
+	for (auto& iter : m_vecPaths)
+	{
+		m_vecImagePaths.push_back(ConverWStringtoC(iter->strFilePath.c_str()));
+	}
 
 	return S_OK;
 }
@@ -35,18 +63,13 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 	//m_tImGuiDESC.vWindowSize; 
 	
 	__super::Begin();
-
-
-	//// 이미지 미리보기 호출
-	//if (!imageData.empty())
-	//{
-	//	ShowImagePreview(imageData, iWidth, iHeight);
-	//}
+	ImGui::Text("UI_Tool");
 
 	// Test
 	UI_List(fTimeDelta);
 
-	ImGui::Text("UI_Test");
+
+
 
 
 
@@ -63,14 +86,14 @@ void CWindow_UITool::Render()
 void CWindow_UITool::UI_List(_float fTimeDelta)
 {
 	/* Test Value */
-	tUI_Info.strName = "Test UI List";
-	tUI_Info.iNum = 1;
-	tUI_Info.fNum = 1.5f;
+	m_tUI_Info.strName = "Test UI List";
+	m_tUI_Info.iNum = 1;
+	m_tUI_Info.fNum = 1.5f;
 
 	// 정보를 목록으로 표시
-	if (ImGui::TreeNode(tUI_Info.strName.c_str())) {
-		ImGui::Text(u8"값1 : %d", tUI_Info.iNum);
-		ImGui::Text(u8"값2 : %.2f", tUI_Info.fNum);
+	if (ImGui::TreeNode(m_tUI_Info.strName.c_str())) {
+		ImGui::Text(u8"값1 : %d", m_tUI_Info.iNum);
+		ImGui::Text(u8"값2 : %.2f", m_tUI_Info.fNum);
 
 		// 버튼
 		if (ImGui::Button(u8"버튼")) 
@@ -101,6 +124,28 @@ void CWindow_UITool::UI_ToolTip(_float fTimeDelta)
 	_float	fScreenPosX = 20.f;
 	_float	fScreenPosY = 40.f;
 
+	// Test
+	if (ImGui::IsKeyDown(ImGuiKey_1))
+	{
+		if (m_iTestNum < m_vecTexture.size() - 1)
+			++m_iTestNum;
+	}
+	if(ImGui::IsKeyDown(ImGuiKey_2))
+	{
+		if (m_iTestNum >= 1)
+			--m_iTestNum;
+	}
+
+	//int selectedPathIndex = 0; // 선택된 이미지 경로 인덱스
+
+	if (ImGui::CollapsingHeader(u8"이미지"))
+	{
+		if (ImGui::ListBox("Image Paths", &m_iSelectedPathIndex, m_vecImagePaths.data(), (int)m_vecImagePaths.size()))
+		{
+
+		}
+	}
+
 	// 마우스가 해당 위치 위에 있는 경우에만 툴팁 표시 (마우스 오버)
 	if (ImGui::IsMouseHoveringRect(
 		ImVec2(fTestX - fHoverRangeX, fTestY - fHoverRangeY),
@@ -110,12 +155,31 @@ void CWindow_UITool::UI_ToolTip(_float fTimeDelta)
 		// 표시할 정보
 		ImGui::SetCursorScreenPos(ImVec2(fTestX + fScreenPosX, fTestY - fScreenPosY));
 		ImGui::BeginTooltip();
-		ImGui::Text("pointer = %p", my_texture);
-		ImGui::Text("size = %d x %d", my_image_width, my_image_height);
-		ImGui::Image((void*)my_texture, ImVec2(my_image_width, my_image_height));
-
+		//ImGui::Text("pointer = %p", m_vecTexture[i]->SRV_Texture);
+		//ImGui::Text("size = %f x %f", m_vecTexture[i]->iImage_Width, m_vecTexture[i]->iImage_Height);
+		//ImGui::Image((void*)m_vecTexture[i]->SRV_Texture, ImVec2(m_vecTexture[i]->iImage_Width, m_vecTexture[i]->iImage_Height));
+		ImGui::Text("pointer = %p", m_vecTexture[m_iSelectedPathIndex]->SRV_Texture);
+		ImGui::Text("size = %f x %f", m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height);
+		ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2(m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
 		ImGui::EndTooltip(); // 툴팁 종료
 	}
+	//// 마우스가 해당 위치 위에 있는 경우에만 툴팁 표시 (마우스 오버)
+	//if (ImGui::IsMouseHoveringRect(
+	//	ImVec2(fTestX - fHoverRangeX, fTestY - fHoverRangeY),
+	//	ImVec2(fTestX + fHoverRangeX, fTestY + fHoverRangeY)))
+	//{
+
+	//	// 표시할 정보
+	//	ImGui::SetCursorScreenPos(ImVec2(fTestX + fScreenPosX, fTestY - fScreenPosY));
+	//	ImGui::BeginTooltip();
+	//	//ImGui::Text("pointer = %p", m_vecTexture[i]->SRV_Texture);
+	//	//ImGui::Text("size = %f x %f", m_vecTexture[i]->iImage_Width, m_vecTexture[i]->iImage_Height);
+	//	//ImGui::Image((void*)m_vecTexture[i]->SRV_Texture, ImVec2(m_vecTexture[i]->iImage_Width, m_vecTexture[i]->iImage_Height));
+	//	ImGui::Text("pointer = %p", m_vecTexture[m_iTestNum]->SRV_Texture);
+	//	ImGui::Text("size = %f x %f", m_vecTexture[m_iTestNum]->iImage_Width, m_vecTexture[m_iTestNum]->iImage_Height);
+	//	ImGui::Image((void*)m_vecTexture[m_iTestNum]->SRV_Texture, ImVec2(m_vecTexture[m_iTestNum]->iImage_Width, m_vecTexture[m_iTestNum]->iImage_Height));
+	//	ImGui::EndTooltip(); // 툴팁 종료
+	//}
 }
 
 // 이미지를 메모리에 로드하는 함수
@@ -200,6 +264,164 @@ bool CWindow_UITool::LoadTextureFromFile(const char* filename, ID3D11ShaderResou
 	stbi_image_free(image_data);
 
 	return true;
+}
+
+void CWindow_UITool::UI_TextureLoad()
+{
+	//if (ImGui::Begin(u8"텍스처"))
+	//{
+
+		// 문자열 벡터를 const char* 배열로 변환
+		//std::vector<const char*> charImagePaths = ConvertStringVectorToCharArray(m_vecImagePaths);
+
+		//int selectedPathIndex = 0; // 선택된 이미지 경로 인덱스
+
+		//if (ImGui::CollapsingHeader(u8"이미지 불러오기"))
+		//{
+			//if (ImGui::ListBox("Image Paths", &selectedPathIndex, charImagePaths.data(), (int)charImagePaths.size())) 
+			//{
+
+			//	// 선택한 이미지 경로를 사용하여 이미지를 로드하는 함수 호출
+			//	const std::string& selectedImagePath = m_vecImagePaths[selectedPathIndex];
+			//	//LoadImg(ConverCtoWC(selectedImagePath.c_str()));
+			//	LoadImg(ConverCtoWC(ConverWStringtoC(ConvertToWideString(m_vecImagePaths[selectedPathIndex]))));
+			//}
+
+		//	_int iSize = m_vecImagePaths.size();
+		//	for (_int i = 0; i < iSize; i++)
+		//	{
+		//		// 선택한 이미지 경로를 사용하여 이미지를 로드하는 함수 호출
+		//		const std::string& selectedImagePath = m_vecImagePaths[i];
+		//		//LoadImg(ConverCtoWC(selectedImagePath.c_str()));
+		//		LoadImg(ConverCtoWC(ConverWStringtoC(ConvertToWideString(UIPATH()))));
+		//	}
+		//}
+
+		//static const char* ini_to_load = NULL;
+		//if (ini_to_load)
+		//{
+		//	ImGui::LoadIniSettingsFromDisk(ini_to_load);
+		//	ini_to_load = NULL;
+		//}
+
+		//if (ImGui::Button(u8"저장 버튼"))
+		//{
+		//	//SaveObjectInformationData();
+
+		//}
+
+		//ImGui::SameLine();
+
+		//if (ImGui::Button(u8"불러오기 버튼"))
+		//{
+		//	//LoadObjectInforamtionData();
+		//}
+
+	//}
+	//ImGui::End();
+}
+
+// std::string 벡터를 const char* 배열로 변환하는 함수
+std::vector<const char*> CWindow_UITool::ConvertStringVectorToCharArray(const std::vector<std::string>& stringVector)
+{
+	std::vector<const char*> charArray;
+	charArray.reserve(stringVector.size());
+	for (const std::string& str : stringVector) 
+	{
+		charArray.push_back(str.c_str());
+	}
+	return charArray;
+}
+
+std::wstring CWindow_UITool::ConvertToWideString(const std::string& ansiString)
+{
+	int wideStrLen = MultiByteToWideChar(CP_ACP, 0, ansiString.c_str(), -1, nullptr, 0);
+	if (wideStrLen == 0)
+	{
+		// 변환 실패 처리
+		return L"Fail";
+	}
+	
+	std::wstring wideString(wideStrLen, L'\0');
+	MultiByteToWideChar(CP_ACP, 0, ansiString.c_str(), -1, &wideString[0], wideStrLen);
+
+	return wideString;
+}
+
+char* CWindow_UITool::ConverWStringtoC(const wstring& wstr)
+{
+	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
+	char* result = new char[size_needed];
+	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result, size_needed, NULL, NULL);
+	return result;
+}
+
+wchar_t* CWindow_UITool::ConverCtoWC(char* str)
+{
+	_tchar* pStr;
+	int strSize = MultiByteToWideChar(CP_ACP, 0, str, -1, NULL, NULL);
+	pStr = new WCHAR[strSize];
+	MultiByteToWideChar(CP_ACP, 0, str, (_int)strlen(str) + (size_t)1, pStr, strSize);
+
+	return pStr;
+}
+
+void CWindow_UITool::LoadImg(const _tchar* folderPath)
+{
+	// 찾은 이미지 데이터를 받을 변수
+	WIN32_FIND_DATA findData;
+
+	// 폴더 경로
+	wstring wfolderPath = (wstring)folderPath + L"/*.*";
+
+	// 폴더 경로 저장 및 핸들 반환
+	HANDLE hFind = FindFirstFile(wfolderPath.c_str(), &findData);
+
+	// 핸들이 있을 경우
+	if (hFind != INVALID_HANDLE_VALUE)
+	{
+		// 하위 디렉토리
+		vector<wstring> subDirectories;
+		// 이미지 파일
+		vector<wstring> imageFiles;
+		do
+		{
+			//  파일의 속성 정보가 입력된다. (디렉토리인지 파일인지 등)
+			if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+			{
+				if (lstrcmp(findData.cFileName, L".") != 0 && lstrcmp(findData.cFileName, L"..") != 0)
+				{
+					// 폴더 경로 = 경로 + / + 파일명
+					wstring subFolderPath = (wstring)folderPath + L"/" + findData.cFileName;
+					subDirectories.push_back(subFolderPath);
+					LoadImg(subFolderPath.c_str());
+				}
+			}
+			else
+			{
+				// 파일인 경우, 이미지 파일인지 확인하고 로드
+				wstring filePath = (wstring)folderPath + L"/" + findData.cFileName;
+
+				// 파일 확장자 확인
+				if (wcsstr(findData.cFileName, L".png") || wcsstr(findData.cFileName, L".jpg") ||
+					/*wcsstr(findData.cFileName, L".bmp") || wcsstr(findData.cFileName, L".tga") ||*/
+					wcsstr(findData.cFileName, L".dds"))
+				{
+					PATHINFO* pPathInfo = new PATHINFO;
+
+					pPathInfo->strFilePath = filePath;
+					pPathInfo->cFileName[MAX_PATH] = *findData.cFileName;
+					pPathInfo->iPathNum = m_iTextureNum;
+
+					m_vecPaths.push_back(pPathInfo);
+
+					m_iTextureNum++;
+				}
+			}
+		} while (FindNextFile(hFind, &findData));
+
+		FindClose(hFind);
+	}
 }
 
 // ImGui를 사용하여 이미지를 표시하는 함수
