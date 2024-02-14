@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-
 #include "../Imgui/imgui.h"
 #include "../Imgui/imgui_impl_dx11.h"
 #include "../Imgui/imgui_impl_win32.h"
@@ -22,6 +21,7 @@ CImgui_Manager::CImgui_Manager()
 
 HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
+
 	m_pDevice = pDevice;
 	m_pContext = pContext;
 	m_pGameInstance = CGameInstance::GetInstance();
@@ -60,6 +60,7 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	{
 		m_bEnableTool[i] = false;
 	}
+
 
 	return S_OK;
 

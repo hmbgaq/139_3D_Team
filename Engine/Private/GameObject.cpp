@@ -79,6 +79,11 @@ CComponent * CGameObject::Find_Component(const wstring & strComTag, const wstrin
 	return iter->second;
 }
 
+CTransform* CGameObject::Get_Transform()
+{
+	return m_pTransformCom;
+}
+
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComTag, _Inout_ CComponent** ppOut, void * pArg)
 {
 	if (nullptr != Find_Component(strComTag))

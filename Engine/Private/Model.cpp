@@ -17,20 +17,20 @@ CModel::CModel(const CModel & rhs)
 	, m_iNumMeshes(rhs.m_iNumMeshes)
 	, m_Meshes(rhs.m_Meshes)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
-	, m_Materials(rhs.m_Materials)	
+	, m_Materials(rhs.m_Materials)
 	, m_iNumAnimations(rhs.m_iNumAnimations)
-	
+
 {
 	for (auto& pPrototypeAnimation : rhs.m_Animations)
 		m_Animations.push_back(pPrototypeAnimation->Clone());
 
-	for (auto& pPrototypeBone : rhs.m_Bones)	
-		m_Bones.push_back(pPrototypeBone->Clone());		
+	for (auto& pPrototypeBone : rhs.m_Bones)
+		m_Bones.push_back(pPrototypeBone->Clone());
 
 	for (auto& MaterialDesc : m_Materials)
 	{
-		for (auto& pTexture : MaterialDesc.pMtrlTextures)		
-			Safe_AddRef(pTexture);		
+		for (auto& pTexture : MaterialDesc.pMtrlTextures)
+			Safe_AddRef(pTexture);
 	}
 
 	for (auto& pMesh : m_Meshes)
@@ -46,7 +46,7 @@ _uint CModel::Get_NumMeshIndice(_int iMeshIndex)
 
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
-	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone) 
+	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)
 	{
 		if (!strcmp(pBone->Get_Name(), pBoneName))
 			return true;
@@ -56,7 +56,7 @@ CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 	if (iter == m_Bones.end())
 		return nullptr;
 
-	return *iter;	
+	return *iter;
 }
 
 void CModel::Set_StiffnessRate(_float fStiffnessRate)
@@ -75,8 +75,6 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath
 
 
 	m_pAIScene = m_MyAssimp.ReadFile(strModelFilePath, iFlag);
-
-	
 
 	//if (nullptr == m_pAIScene.Get_AIScene())
 	//	return E_FAIL;
@@ -119,26 +117,67 @@ HRESULT CModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-void CModel::Play_Animation(_float fTimeDelta, _bool isLoop)
+void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 {
 	if (m_iCurrentAnimIndex >= m_iNumAnimations)
 		return;
 
-	/* 현재 애니메이션이 사용하고 있는 뼈들의 TransformationMatrix를 갱신한다. */
-	m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(isLoop, fTimeDelta, m_Bones);
+	if (true == bIsLoop)
+		m_eAnimState = ANIM_STATE::ANIM_STATE_LOOP;
+	else
+		m_eAnimState = ANIM_STATE::ANIM_STATE_NORMAL;
+
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones);
 
 
-	/* 화면에 최종적인 상태로 그려내기위해서는 반드시 뼈들의 CombinedTransformationMatrix가 갱신되어야한다. */
-	/* 모든 뼈들을 다 갱신하며 부모로부터 자식까지 쭈우우욱돌아서 CombinedTransformationMatrix를 갱신한다. */
+	_float3 NowPos;
 	for (auto& pBone : m_Bones)
 	{
-		pBone->Invalidate_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PivotMatrix));
+		pBone->Invalidate_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PivotMatrix), NowPos);
 	}
+
+	if (true == m_bUseAnimationPos && false == m_bIsAnimEnd && false == Is_Transition())
+	{
+		if (false == m_Animations[m_iCurrentAnimIndex]->Is_TransitionEnd_Now())
+		{
+			_float3 ChangedPos = NowPos - m_Animations[m_iCurrentAnimIndex]->Get_PrevPos();
+			//_Pos = ChangedPos;
+		}
+
+		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
+	}
+}
+
+void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
+{
+	if (m_iCurrentAnimIndex >= m_iNumAnimations)
+		return;
+
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones);
+
+
+	_float3 NowPos;
+	for (auto& pBone : m_Bones)
+	{
+		pBone->Invalidate_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PivotMatrix), NowPos);
+	}
+
+	if (true == m_bUseAnimationPos && false == m_bIsAnimEnd && false == Is_Transition())
+	{
+		if (false == m_Animations[m_iCurrentAnimIndex]->Is_TransitionEnd_Now())
+		{
+			_float3 ChangedPos = NowPos - m_Animations[m_iCurrentAnimIndex]->Get_PrevPos();
+			_Pos = ChangedPos;
+		}
+
+		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
+	}
+
 }
 
 HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, _uint iMeshIndex)
 {
-	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);	
+	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);
 }
 
 HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantName, _uint iMeshIndex, aiTextureType eTextureType)
@@ -148,7 +187,7 @@ HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantNa
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;
 
-	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Bind_ShaderResource(pShader, pConstantName);	
+	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Bind_ShaderResource(pShader, pConstantName);
 }
 
 void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
@@ -215,13 +254,38 @@ void CModel::Write_Names(const string& strModelFilePath)
 	ofstream osTxt(strModelFilePath + ".txt");
 
 	osTxt << "Meshes: " << endl;
-	for (_uint i = 0; i < m_iNumMeshes; ++i) 
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
 	{
 		osTxt << i << ". " << m_Meshes[i]->Get_Name() << endl;
 	}
 	osTxt << endl;
 
+	osTxt << "Materials: " << endl;
 
+	for (_uint i = 0; i < m_iNumMaterials; ++i)
+	{
+		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material(i);
+
+		for (size_t j = 1; j < AI_TEXTURE_TYPE_MAX; j++) 
+		{
+			_char		szDrive[MAX_PATH] = "";
+			_char		szDirectory[MAX_PATH] = "";
+
+			_splitpath_s(strModelFilePath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
+
+			string strPath = pAIMaterial.Get_Textures(j);
+			if (strPath == "")
+				continue;
+
+			_char		szFileName[MAX_PATH] = "";
+			_char		szEXT[MAX_PATH] = "";
+
+			_splitpath_s(strPath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
+
+			osTxt << i << "-" << j << ". " << szFileName << endl;
+		}
+	}
+	osTxt << endl;
 
 	osTxt << "Animations: " << endl;
 	for (_uint i = 0; i < m_iNumAnimations; ++i)

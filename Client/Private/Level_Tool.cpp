@@ -12,6 +12,7 @@ CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Tool::Initialize()
 {
+
 	if (FAILED(Ready_Imgui()))
 	{
 		Safe_Release(m_pDevice);
@@ -20,13 +21,12 @@ HRESULT CLevel_Tool::Initialize()
 	}
 
 	return S_OK;
+
 }
 
 void CLevel_Tool::Tick(_float fTimeDelta)
 {
-
 	m_pImguiManager->Tick(fTimeDelta);
-
 }
 
 HRESULT CLevel_Tool::Render()
@@ -42,15 +42,13 @@ HRESULT CLevel_Tool::Ready_Imgui()
 {
 	m_pImguiManager = CImgui_Manager::GetInstance();
 
+	m_pImguiManager->AddRef();
 
 	if(nullptr == m_pImguiManager)
 		return E_FAIL;
 
-
-
 	if(FAILED(m_pImguiManager->Initialize(m_pDevice,m_pContext)))
 		return E_FAIL;
-
 
 
 	return S_OK;

@@ -34,10 +34,12 @@ public:
 public:
 	virtual class CComponent* Find_Component(const wstring& strComTag, const wstring& strPartTag = TEXT(""));
 
-
 public:
 	_bool Is_Dead() { return m_bDead; }
 	void Set_Dead(_bool _bDead) { m_bDead = _bDead; }
+
+public:
+	class CTransform* Get_Transform();
 
 
 protected:

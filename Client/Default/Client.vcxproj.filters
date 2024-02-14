@@ -290,9 +290,6 @@
     <ClCompile Include="..\Private\Imgui_Manager.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imgui_demo.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
@@ -326,8 +323,11 @@
     <ClCompile Include="..\Private\Environment_Instance.cpp">
       <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Effect_Instance.cpp">
-      <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
+	 <ClCompile Include="..\Private\Effect_Instance.cpp">
+	  <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
+	 </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

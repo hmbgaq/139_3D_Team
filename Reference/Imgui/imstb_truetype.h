@@ -329,6 +329,7 @@ void my_stbtt_print(float x, float y, char *text)
 //
 // Complete program (this compiles): get a single bitmap, print as ASCII art
 //
+#include "stdafx.h"
 #if 0
 #include <stdio.h>
 #define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation

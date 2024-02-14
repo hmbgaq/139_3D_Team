@@ -4,7 +4,6 @@
 
 #include "../Imgui/imgui_impl_win32.h"
 
-
 #include "Client.h"
 #include "MainApp.h"
 #include "GameInstance.h"

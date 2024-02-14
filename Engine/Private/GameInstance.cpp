@@ -282,6 +282,44 @@ CComponent * CGameInstance::Get_Component(_uint iLevelIndex, const wstring & str
 	return m_pObject_Manager->Get_Component(iLevelIndex, strLayerTag, strComponentTag, iIndex, strPartTag);
 }
 
+list<class CGameObject*>* CGameInstance::Get_GameObjects(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	return m_pObject_Manager->Get_GameObjects(iLevelIndex, strLayerTag);
+}
+
+CGameObject* CGameInstance::Get_GameObect_Last(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	list<class CGameObject*>* pGameObjects = Get_GameObjects(iLevelIndex, strLayerTag);
+	if (nullptr == pGameObjects)
+		return nullptr;
+
+	return pGameObjects->back();
+}
+
+CGameObject* CGameInstance::Add_CloneObject_And_Get(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg)
+{
+	if (FAILED(Add_CloneObject(iLevelIndex, strLayerTag, strPrototypeTag, pArg)))
+		return nullptr;
+
+	return Get_GameObect_Last(iLevelIndex, strLayerTag);
+}
+
+CGameObject* CGameInstance::Get_Player()
+{
+	return m_pObject_Manager->Get_Player();
+}
+
+void CGameInstance::Set_Player(CGameObject* _pPlayer)
+{
+	m_pObject_Manager->Set_Player(_pPlayer);
+}
+
+void CGameInstance::Fill_PrototypeTags(vector<string>* _vector)
+{
+	m_pObject_Manager->Fill_PrototypeTags(_vector);
+}
+
+
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, CComponent * pPrototype)
 {
 	if (nullptr == m_pComponent_Manager)
@@ -313,6 +351,13 @@ HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
+
+#ifdef _DEBUG
+void CGameInstance::Set_RenderDebug(_bool _bRenderDebug)
+{
+	m_pRenderer->Set_RenderDebug(_bRenderDebug);
+}
+#endif
 
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {
@@ -447,6 +492,16 @@ _bool CGameInstance::isIn_LocalPlanes(_fvector vPoint, _float fRadius)
 {
 
 	return m_pFrustum->isIn_LocalPlanes(vPoint, fRadius);
+}
+
+void CGameInstance::String_To_WString(string _string, wstring& _wstring)
+{
+	_wstring.assign(_string.begin(), _string.end());
+}
+
+void CGameInstance::WString_To_String(wstring _wstring, string& _string)
+{
+	_string.assign(_wstring.begin(), _wstring.end());
 }
 
 void CGameInstance::Release_Manager()

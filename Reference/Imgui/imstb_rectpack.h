@@ -1,3 +1,5 @@
+
+#include "stdafx.h"
 // [DEAR IMGUI]
 // This is a slightly modified version of stb_rect_pack.h 1.01.
 // Grep for [DEAR IMGUI] to find the changes.
