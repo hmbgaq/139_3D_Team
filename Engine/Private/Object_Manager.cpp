@@ -144,6 +144,16 @@ void CObject_Manager::Fill_PrototypeTags(vector<string>* _vector)
 	}
 }
 
+CGameObject* CObject_Manager::Get_Player()
+{
+	return m_pPlayer;
+}
+
+void CObject_Manager::Set_Player(CGameObject* _pPlayer)
+{
+	m_pPlayer = _pPlayer;
+}
+
 CGameObject * CObject_Manager::Find_Prototype(const wstring & strPrototypeTag)
 {
 	auto	iter = m_Prototypes.find(strPrototypeTag);

@@ -116,8 +116,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag, void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg)))
+	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg)))
+	//	return E_FAIL;
+
+	CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
+	if (nullptr == pPlayer)
 		return E_FAIL;
+
+	m_pGameInstance->Set_Player(pPlayer);
 
 	return S_OK;
 }

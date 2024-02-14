@@ -304,6 +304,16 @@ CGameObject* CGameInstance::Add_CloneObject_And_Get(_uint iLevelIndex, const wst
 	return Get_GameObect_Last(iLevelIndex, strLayerTag);
 }
 
+CGameObject* CGameInstance::Get_Player()
+{
+	return m_pObject_Manager->Get_Player();
+}
+
+void CGameInstance::Set_Player(CGameObject* _pPlayer)
+{
+	m_pObject_Manager->Set_Player(_pPlayer);
+}
+
 void CGameInstance::Fill_PrototypeTags(vector<string>* _vector)
 {
 	m_pObject_Manager->Fill_PrototypeTags(_vector);
