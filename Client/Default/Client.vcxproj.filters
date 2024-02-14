@@ -94,11 +94,11 @@
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\MapToolWindow">
       <UniqueIdentifier>{f8398acc-9828-4192-a11c-95f7c96e1b69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\Loader">
-      <UniqueIdentifier>{e392c2b5-5a93-41cd-9971-3527a5924eae}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Interact">
       <UniqueIdentifier>{daed6591-e3f1-4e31-8a6a-3942dcf39622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\98. Loader">
+      <UniqueIdentifier>{e392c2b5-5a93-41cd-9971-3527a5924eae}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -130,7 +130,7 @@
       <Filter>01.Levels\99.Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Loader.h">
-      <Filter>01.Levels\Loader</Filter>
+      <Filter>01.Levels\98. Loader</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BackGround.h">
       <Filter>02.GameObjects\BackGround</Filter>
@@ -234,7 +234,7 @@
       <Filter>01.Levels\99.Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Loader.cpp">
-      <Filter>01.Levels\Loader</Filter>
+      <Filter>01.Levels\98. Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BackGround.cpp">
       <Filter>02.GameObjects\BackGround</Filter>

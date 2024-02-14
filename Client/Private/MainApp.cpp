@@ -35,11 +35,7 @@ void CMainApp::Tick(_float fTimeDelta)
 {
 	m_pGameInstance->Tick_Engine(fTimeDelta);
 
-//#ifdef _DEBUG
 	m_fTimeAcc += fTimeDelta;
-
-//#endif
-
 }
 
 HRESULT CMainApp::Render()
@@ -47,7 +43,6 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 
-	/* 그려야할 모델들을 그리낟.*/
 	m_pGameInstance->Render_Engine();
 
 	++m_iNumRender;
@@ -76,13 +71,10 @@ HRESULT CMainApp::Ready_Font()
 
 HRESULT CMainApp::Open_Level(LEVEL eStartLevelID)
 {
-	if (nullptr == m_pGameInstance)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
 
-	/* 무조건 로딩레벨부터 시작ㅇ르 할꺼야 .*/
 	CLevel*		pLevel = CLevel_Loading::Create(m_pDevice, m_pContext, eStartLevelID);
-	if (nullptr == pLevel)
-		return E_FAIL;
+	NULL_CHECK_RETURN(pLevel, E_FAIL);
 
 	return m_pGameInstance->Open_Level(LEVEL_LOADING, pLevel);
 }
@@ -90,14 +82,10 @@ HRESULT CMainApp::Open_Level(LEVEL eStartLevelID)
 HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 {
 	/* For.Prototype_Component_VIBuffer_Rect*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
-		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), CVIBuffer_Rect::Create(m_pDevice, m_pContext)));
 
 	/* For.Prototype_Component_Shader_VtxPosTex*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPosTex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements))))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPosTex"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)));
 
 	return S_OK;
 }

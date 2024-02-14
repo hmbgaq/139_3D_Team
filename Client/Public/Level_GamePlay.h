@@ -16,7 +16,6 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	
-
 private:	
 	HRESULT Ready_LightDesc();
 	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);

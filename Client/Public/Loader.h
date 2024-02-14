@@ -20,19 +20,11 @@ private:
 	virtual ~CLoader() = default;
 
 public:
-
-	_bool isFinished() const {
-		return m_isFinished;
-	}
-
-
+	_bool isFinished() const { return m_isFinished; }
 
 public:
 	HRESULT Initialize(LEVEL eNextLevelID);
-
-	void Print_LoadingText();
-
-
+	void	Print_LoadingText();
 
 public:
 	HRESULT Loading();
@@ -40,20 +32,19 @@ public:
 	HRESULT Loading_For_GamePlay_Level();
 	HRESULT	Loading_For_Tool_Level();
 
-
 private:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 	CGameInstance*			m_pGameInstance = { nullptr };
 
-private:
+	/* For. LoadingThread */
 	HANDLE					m_hThread;
 	CRITICAL_SECTION		m_CriticalSection;
 
 private:
-	LEVEL					m_eNextLevelID = { LEVEL_END };
-	_tchar					m_szLoadingText[MAX_PATH] = TEXT("");
-	_bool					m_isFinished = { false };
+	LEVEL					m_eNextLevelID				= { LEVEL_END };
+	_tchar					m_szLoadingText[MAX_PATH]	= TEXT("");
+	_bool					m_isFinished				= { false };
 
 public:
 	static CLoader * Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, LEVEL eNextLevelID);
