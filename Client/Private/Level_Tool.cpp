@@ -3,7 +3,13 @@
 
 #include "Imgui_Manager.h"
 #include "GameInstance.h"
+
 #include "Camera_Dynamic.h"
+
+
+#include "Camera_Dynamic.h"
+#include "Particle_Custom.h"
+
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -22,6 +28,7 @@ HRESULT CLevel_Tool::Initialize()
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -58,23 +65,24 @@ HRESULT CLevel_Tool::Ready_Imgui()
 
 HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 {
-	CCamera_Dynamic::DYNAMIC_CAMERA_DESC		Desc = {};
 
-	Desc.fMouseSensor = 0.05f;
-	Desc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
-	Desc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-	Desc.fFovy = XMConvertToRadians(60.0f);
-	Desc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-	Desc.fNear = 0.1f;
-	Desc.fFar = 1000.f;
-	Desc.fSpeedPerSec = 5.f;
-	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
+	CCamera_Dynamic::DYNAMIC_CAMERA_DESC		tDesc = {};
+	tDesc.fMouseSensor = 0.05f;
+	tDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
+	tDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+	tDesc.fFovy = XMConvertToRadians(60.0f);
+	tDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	tDesc.fNear = 0.1f;
+	tDesc.fFar = 1000.f;
+	tDesc.fSpeedPerSec = 5.f;
+	tDesc.fRotationPerSec = XMConvertToRadians(180.0f);
 
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc)))
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &tDesc)))
 		return E_FAIL;
 
 	return S_OK;
 }
+
 
 CLevel_Tool* CLevel_Tool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

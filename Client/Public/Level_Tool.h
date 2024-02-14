@@ -19,6 +19,7 @@ public:
 private:
 	HRESULT Ready_Imgui();
 
+private:
 	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
 
 public:

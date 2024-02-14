@@ -296,6 +296,142 @@
 				<Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
 			</ClInclude>
 		</ItemGroup>
+   <ItemGroup>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
+      <UniqueIdentifier>{bdf9a6e6-179a-44e0-a993-be1ba828fec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Particles\00.Custom">
+      <UniqueIdentifier>{c1df78fd-5ef3-45b2-a46f-845d10f9fa4a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Client.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Defines.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MainApp.h">
+      <Filter>00.MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Logo.h">
+      <Filter>01.Levels\00.Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Levels\01.GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Loading.h">
+      <Filter>01.Levels\99.Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Loader.h">
+      <Filter>01.Levels\99.Loading\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BackGround.h">
+      <Filter>02.GameObjects\BackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>02.GameObjects\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Camera_Dynamic.h">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02.GameObjects\LandObject\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ForkLift.h">
+      <Filter>02.GameObjects\LandObject\ForkLift</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\LandObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sky.h">
+      <Filter>02.GameObjects\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Player.h">
+      <Filter>02.GameObjects\LandObject\Player\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Player.h">
+      <Filter>02.GameObjects\LandObject\Player\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle_Blue.h">
+      <Filter>02.GameObjects\Effect\Particles\Blue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle_Red.h">
+      <Filter>02.GameObjects\Effect\Particles\Red</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LandObject.h">
+      <Filter>02.GameObjects\LandObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Explosion.h">
+      <Filter>02.GameObjects\Effect\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui_Manager.h">
+      <Filter>01.Levels\02.Tool\Imgui\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imconfig.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imgui.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imgui_impl_dx11.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imgui_impl_win32.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imgui_internal.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imstb_rectpack.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imstb_textedit.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Tool.h">
+      <Filter>01.Levels\02.Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_Window.h">
+      <Filter>01.Levels\02.Tool\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Window_MapTool.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\MapToolWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Include_Imgui_Windows.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkyDome.h">
+      <Filter>02.GameObjects\Sky\SkyDome</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Environment_Instance.h">
+      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Instance.h">
+      <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Window_EffectTool.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Object.h">
+      <Filter>02.GameObjects\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle_Custom.h">
+      <Filter>02.GameObjects\Effect\Particles\00.Custom</Filter>
+    </ClInclude>
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
       <Filter>98.Default</Filter>
@@ -412,8 +548,17 @@
     <ClCompile Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialog.cpp">
       <Filter>01.Levels\02.Tool\Imgui\ImGuiFileDialog</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PreviewAnimationModel.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow\PreviewAnimationModel</Filter>
+	  <ClCompile Include="..\Private\PreviewAnimationModel.cpp">
+		  <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow\PreviewAnimationModel</Filter>
+	  </ClCompile>
+    <ClCompile Include="..\Private\Window_EffectTool.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Object.cpp">
+      <Filter>02.GameObjects\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Particle_Custom.cpp">
+      <Filter>02.GameObjects\Effect\Particles\00.Custom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

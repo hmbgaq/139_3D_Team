@@ -21,6 +21,7 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Tick(_float fTimeDelta)
 {
+
 	if (m_pGameInstance->Key_Down(DIK_TAB))
 	{
 		_int iCheckPoint = 0;

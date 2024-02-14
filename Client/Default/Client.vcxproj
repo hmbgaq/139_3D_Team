@@ -195,6 +195,7 @@
     <ClInclude Include="..\Public\Effect_Instance.h" />
     <ClInclude Include="..\Public\Environment_Instance.h" />
     <ClInclude Include="..\Public\EW_Actor.h" />
+    <ClInclude Include="..\Public\Effect_Object.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\Public\Imgui_Manager.h" />
     <ClInclude Include="..\public\Imgui_Window.h" />
@@ -209,6 +210,7 @@
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\Particle_Blue.h" />
+    <ClInclude Include="..\Public\Particle_Custom.h" />
     <ClInclude Include="..\Public\Particle_Red.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PreviewAnimationModel.h" />
@@ -217,6 +219,7 @@
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Weapon_Player.h" />
     <ClInclude Include="..\Public\Window_AnimTool.h" />
+    <ClInclude Include="..\Public\Window_EffectTool.h" />
     <ClInclude Include="..\Public\Window_MapTool.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -239,6 +242,7 @@
     <ClCompile Include="..\Private\Effect_Instance.cpp" />
     <ClCompile Include="..\Private\Environment_Instance.cpp" />
     <ClCompile Include="..\Private\EW_Actor.cpp" />
+    <ClCompile Include="..\Private\Effect_Object.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\Private\Imgui_Manager.cpp" />
     <ClCompile Include="..\Private\Imgui_Window.cpp" />
@@ -252,6 +256,7 @@
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Particle_Blue.cpp" />
+    <ClCompile Include="..\Private\Particle_Custom.cpp" />
     <ClCompile Include="..\Private\Particle_Red.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PreviewAnimationModel.cpp" />
@@ -260,6 +265,7 @@
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Weapon_Player.cpp" />
     <ClCompile Include="..\Private\Window_AnimTool.cpp" />
+    <ClCompile Include="..\Private\Window_EffectTool.cpp" />
     <ClCompile Include="..\Private\Window_MapTool.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
