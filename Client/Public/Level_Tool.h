@@ -22,9 +22,7 @@ private:
 private:
 	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
 
-public:
-	HRESULT Ready_EffectTool();
-	HRESULT Ready_Layer_Particle(const wstring& strLayerTag);
+
 
 public:
 	static CLevel_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

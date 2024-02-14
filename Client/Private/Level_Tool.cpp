@@ -22,11 +22,9 @@ HRESULT CLevel_Tool::Initialize()
 		return E_FAIL;
 	}
 
-	//if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+		return E_FAIL;
 
-	//if(FAILED(Ready_EffectTool()))
-	//	return E_FAIL;
 
 	//m_pGameInstance->Set_RenderDebug(true);
 
@@ -81,24 +79,6 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 		return E_FAIL;
 
 	return S_OK;
-}
-
-HRESULT CLevel_Tool::Ready_EffectTool()
-{
-
-	if (FAILED(Ready_Layer_Particle(TEXT("Layer_Particle"))))
-		return E_FAIL;
-
-}
-
-HRESULT CLevel_Tool::Ready_Layer_Particle(const wstring& strLayerTag)
-{
-	CGameObject::GAMEOBJECT_DESC	tDesc = {};
-	tDesc.fSpeedPerSec = { 0.f };
-	tDesc.fRotationPerSec = { XMConvertToRadians(0.0f) };
-
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Particle_Edit"), &tDesc)))
-		return E_FAIL;
 }
 
 

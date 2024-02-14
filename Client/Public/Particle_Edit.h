@@ -28,6 +28,17 @@ public:
 	virtual void	Late_Tick(_float fTimeDelta)		override;
 	virtual HRESULT Render()							override;
 
+public:
+	CVIBuffer_Particle_Point::PARTICLE_POINT_DESC* Get_Desc() { return &m_tParticleDesc; }
+
+private:
+	_bool			m_bActive = { TRUE };
+	_float			m_fTimer = { 0.0f };
+
+	CVIBuffer_Particle_Point::PARTICLE_POINT_DESC		m_tParticleDesc = {};
+
+
+
 private:
 	CShader*						m_pShaderCom = { nullptr };
 	CTexture*						m_pTextureCom = { nullptr };
