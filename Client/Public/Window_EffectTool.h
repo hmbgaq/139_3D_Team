@@ -4,7 +4,7 @@
 
 BEGIN(Engine)
 class CEffect_Object;
-class CVIBuffer_Particle_Point;
+//class CParticle_Custom;
 END
 
 BEGIN(Client)
@@ -26,24 +26,32 @@ public:
 	virtual void	Render()				override;
 
 public:
-	string WstringToUTF8(const wstring& wstr);
+	void	Update_PlayArea_Particle();
+	void	Update_ColorEditArea_Particle();
+
+
+/* For.Imgui Util */
+public:
+	void HelpMarker(const char* desc);
+
+/* For.string Util */
+public:
+	string	WstringToUTF8(const wstring& wstr);
 	wstring CharToWstring(char* szChar);
 
+/* For.Particle */
 public:
 	HRESULT Create_NewParticle();
-
-public:
 	HRESULT Ready_Layer_Particle(const wstring& strLayerTag);
+	
+private:
+	map<const wstring, class CParticle_Custom*>	m_pParticles;
 
 private:
-	map<const wstring, CVIBuffer_Particle_Point*>	m_pParticles;
-
-private:
-	char**  m_szParticleNames					= { nullptr };
-	_int	m_iCurParticleIndex					= { 0 };
-	_float	m_fLifeTimePositionEdit				= { 0.f };
-	CVIBuffer_Particle_Point* m_pCurParticle	= { nullptr };
-
+	char**  m_szParticleNames						= { nullptr };
+	_int	m_iCurParticleIndex						= { 0 };
+	_float	m_fLifeTimePositionEdit					= { 0.f };
+	class CParticle_Custom* m_pCurParticle			= { nullptr };
 
 	_int	m_iPlayType = { 0 };
 	_int	m_iLoop = { 0 };
@@ -53,6 +61,9 @@ private:
 	_float m_vRotationZ[2] = { 0.f, 0.f };
 	_float m_fParticleAcceleration	= { 1.f };
 	_float m_fParticleAccPosition	= { 0.1f };
+
+
+	_float m_fColor_Particle[3] = { 0.f, 0.f, 0.f };
 
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };

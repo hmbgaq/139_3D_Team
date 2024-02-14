@@ -219,7 +219,7 @@
     <ClInclude Include="..\Public\Effect_Object.h">
       <Filter>02.GameObjects\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Particle_Edit.h">
+    <ClInclude Include="..\Public\Particle_Custom.h">
       <Filter>02.GameObjects\Effect\Particles\00.Edit</Filter>
     </ClInclude>
   </ItemGroup>
@@ -323,7 +323,7 @@
     <ClCompile Include="..\Private\Effect_Object.cpp">
       <Filter>02.GameObjects\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Particle_Edit.cpp">
+    <ClCompile Include="..\Private\Particle_Custom.cpp">
       <Filter>02.GameObjects\Effect\Particles\00.Edit</Filter>
     </ClCompile>
   </ItemGroup>

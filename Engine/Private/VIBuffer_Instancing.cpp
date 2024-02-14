@@ -65,6 +65,21 @@ HRESULT CVIBuffer_Instancing::Initialize(void * pArg)
 		pVertices[i].vUp = _float4(0.f, fScale, 0.f, 0.f);
 		pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
 
+
+		//_float3		vScale = Get_Scaled();
+
+		//_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
+		//_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+		//_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+
+		//_matrix		RotationMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(90.f));
+
+		//XMStoreFloat4(&pVertices[i].vRight, XMVector3TransformNormal(vRight, RotationMatrix));
+		//XMStoreFloat4(&pVertices[i].vUp, XMVector3TransformNormal(vUp, RotationMatrix));
+		//XMStoreFloat4(&pVertices[i].vLook, XMVector3TransformNormal(vLook, RotationMatrix));
+
+
+
 		vDir = XMVector3Normalize(vDir) * RandomRange(m_RandomNumber);
 
 		m_vRotation = { RandomRotationX(m_RandomNumber), RandomRotationY(m_RandomNumber), RandomRotationZ(m_RandomNumber) };
@@ -74,7 +89,7 @@ HRESULT CVIBuffer_Instancing::Initialize(void * pArg)
 
 		XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat3(&m_InstancingDesc.vCenter) + XMVector3TransformNormal(vDir, RotationMatrix));
 		pVertices[i].vPosition.w = 1.f;
-		pVertices[i].vColor = _float4(1.f, 1.f, 1.f, 1.f);
+		pVertices[i].vColor = m_InstancingDesc.vColor;
 	}
 
 	m_SubResourceData.pSysMem = pVertices;

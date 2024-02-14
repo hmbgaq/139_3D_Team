@@ -11,14 +11,19 @@ END
 
 BEGIN(Client)
 
-class CParticle_Edit final : public CEffect_Object
+class CParticle_Custom final : public CEffect_Object
 {
-public:	
-	
+public:
+	typedef struct tagParticleCustomDesc : public CGameObject::GAMEOBJECT_DESC
+	{
+		wstring		strTextureTag;
+
+	}PARTICLE_CUSTOM_DESC;
+
 private:
-	CParticle_Edit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CParticle_Edit(const CParticle_Edit& rhs);
-	virtual ~CParticle_Edit() = default;
+	CParticle_Custom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CParticle_Custom(const CParticle_Custom& rhs);
+	virtual ~CParticle_Custom() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype()				override;
@@ -29,15 +34,20 @@ public:
 	virtual HRESULT Render()							override;
 
 public:
-	CVIBuffer_Particle_Point::PARTICLE_POINT_DESC* Get_Desc() { return &m_tParticleDesc; }
+	void		Set_Active(_bool bActive) { m_bActive = bActive; }
+
+public:
+	CVIBuffer_Particle_Point*	Get_VIBufferCom() { return m_pVIBufferCom; }
+	CTransform*					Get_TransformCom() { return m_pTransformCom; }
+
+
+private:
+	wstring			m_strTextureTag;
+
 
 private:
 	_bool			m_bActive = { TRUE };
 	_float			m_fTimer = { 0.0f };
-
-	CVIBuffer_Particle_Point::PARTICLE_POINT_DESC		m_tParticleDesc = {};
-
-
 
 private:
 	CShader*						m_pShaderCom = { nullptr };
@@ -51,7 +61,7 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CParticle_Edit* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CParticle_Custom* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;

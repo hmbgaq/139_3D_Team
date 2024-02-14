@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 
-#include "Particle_Edit.h"
+#include "Particle_Custom.h"
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -67,33 +67,46 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 				}
 
+				/* 선택 파티클 활성화 */
+				if (ImGui::Button(" Active Particle "))
+				{
+					if (nullptr != m_pCurParticle)
+					{
+						m_pCurParticle->Set_Active(TRUE);
+					}
+				}
+				/* 선택 파티클 비활성화 */
+				ImGui::SameLine();
+				if (ImGui::Button(" UnActive Particle "))
+				{
+					if (nullptr != m_pCurParticle)
+					{
+						m_pCurParticle->Set_Active(FALSE);
+					}
+				}
+
+
+				if (nullptr != m_pCurParticle)
+				{
+					_float4 vParticlePos = m_pCurParticle->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+					ImGui::Text("Particle Pos  : %.2f %.2f %.2f", vParticlePos.x, vParticlePos.y, vParticlePos.z);
+				}
+			
 
 				/* 파티클 리스트 & 현재 파티클 선택 */
-				if (ImGui::ListBox(" Particle List ", &m_iCurParticleIndex, m_szParticleNames, m_pParticles.size(), 6))
+				if (ImGui::ListBox(" Particle List ", &m_iCurParticleIndex, m_szParticleNames, m_pParticles.size(), 4))
 				{
 					wstring strCurName = CharToWstring(m_szParticleNames[m_iCurParticleIndex]);
 					m_pCurParticle = m_pParticles.find(strCurName)->second;
 
-					m_vRotationX[1] = m_pCurParticle->Get_RotX();
-					m_vRotationY[1] = m_pCurParticle->Get_RotY();
-					m_vRotationZ[1] = m_pCurParticle->Get_RotZ();
+					m_vRotationX[1] = m_pCurParticle->Get_VIBufferCom()->Get_RotX();
+					m_vRotationY[1] = m_pCurParticle->Get_VIBufferCom()->Get_RotY();
+					m_vRotationZ[1] = m_pCurParticle->Get_VIBufferCom()->Get_RotZ();
 				}
 	
 
-				/* 재생바 */
-				if (nullptr != m_pCurParticle)
-				{		
-					_float fLifeTimePosition = m_pCurParticle->Get_TimePosition();
-					ImGui::SliderFloat("Play_Particle", &fLifeTimePosition, 0.f, m_pCurParticle->Get_Desc()->vLifeTime.y);
 
-
-					///* 현재 재생 위치(포지션) 이동 */
-					//if (ImGui::SliderFloat(" ", &m_fLifeTimePositionEdit, 0.f, m_pCurParticle->Get_Desc()->vLifeTime.y))
-					//{
-					//	m_pCurParticle->Set_Play(FALSE);
-					//	m_pCurParticle->Set_TimePosition(m_fLifeTimePositionEdit);
-					//}
-				}
+				Update_PlayArea_Particle();
 
 
 				/* 회전 범위 */
@@ -109,7 +122,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 						m_vRotationX[1] = m_vRotationX[0];
 
 					//m_pCurParticle->Set_RotX(vRotationX[0]);
-					m_pCurParticle->Set_RotX(m_vRotationX[1]);
+					m_pCurParticle->Get_VIBufferCom()->Set_RotX(m_vRotationX[1]);
 
 
 					/* RotY */
@@ -122,7 +135,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 						m_vRotationY[1] = m_vRotationY[0];
 
 					//m_pCurParticle->Set_RotX(vRotationX[0]);
-					m_pCurParticle->Set_RotY(m_vRotationY[1]);
+					m_pCurParticle->Get_VIBufferCom()->Set_RotY(m_vRotationY[1]);
 
 
 					/* RotZ */
@@ -135,7 +148,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 						m_vRotationZ[1] = m_vRotationZ[0];
 
 					//m_pCurParticle->Set_RotX(vRotationX[0]);
-					m_pCurParticle->Set_RotZ(m_vRotationZ[1]);
+					m_pCurParticle->Get_VIBufferCom()->Set_RotZ(m_vRotationZ[1]);
 				}
 
 
@@ -143,33 +156,35 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 				if (nullptr != m_pCurParticle)
 				{
 					ImGui::SliderFloat("AccPos_Particle", &m_fParticleAccPosition, 0.f, 1.f);
-					m_pCurParticle->Set_AccPosition(m_fParticleAccPosition);
+					m_pCurParticle->Get_VIBufferCom()->Set_AccPosition(m_fParticleAccPosition);
 
 
 					ImGui::SliderFloat("ACC_Particle", &m_fParticleAcceleration, 0.f, 100.f);
-					m_pCurParticle->Set_Acceleration(m_fParticleAcceleration);
+					m_pCurParticle->Get_VIBufferCom()->Set_Acceleration(m_fParticleAcceleration);
 				}
+
+				Update_ColorEditArea_Particle();
 
 
 				/* 재생, 역재생 */
-				ImGui::SeparatorText("Play Type");
-				ImGui::RadioButton("Normal", &m_iPlayType, 0);  ImGui::SameLine();	
-				ImGui::RadioButton("Reverse", &m_iPlayType, 1);
-		
-				if (0 == m_iPlayType)
+				if (ImGui::Button(" Normal "))
 				{
 					if (nullptr != m_pCurParticle)
 					{
-						m_pCurParticle->Set_ReversePlay(FALSE);
+						m_pCurParticle->Get_VIBufferCom()->Set_ReversePlay(FALSE);
 					}
 				}
-				else if (1 == m_iPlayType)
+
+				ImGui::SameLine();
+				if (ImGui::Button(" Reverse "))
 				{
 					if (nullptr != m_pCurParticle)
 					{
-						m_pCurParticle->Set_ReversePlay(TRUE);
+						m_pCurParticle->Get_VIBufferCom()->Set_ReversePlay(TRUE);
 					}
 				}
+				ImGui::SameLine(); HelpMarker(u8"재생, 역재생");
+
 
 
 				/* 루프 여부 */
@@ -181,78 +196,19 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 				{
 					if (nullptr != m_pCurParticle)
 					{
-						m_pCurParticle->Set_Loop(TRUE);
+						m_pCurParticle->Get_VIBufferCom()->Set_Loop(TRUE);
 					}
 				}
 				else if (1 == m_iLoop)
 				{
 					if (nullptr != m_pCurParticle)
 					{
-						m_pCurParticle->Set_Loop(FALSE);
+						m_pCurParticle->Get_VIBufferCom()->Set_Loop(FALSE);
 					}
 				}
 
 
-				/* 재생, 정지, 리셋 */
-				ImGui::SeparatorText(" ");
-				if (ImGui::Button(" Play "))
-				{
-					if (nullptr != m_pCurParticle)
-					{
-						m_pCurParticle->Set_Play(TRUE);
-					}
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(" Stop "))
-				{
-					if (nullptr != m_pCurParticle)
-					{
-						m_pCurParticle->Set_Play(FALSE);
-					}
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Reset"))
-				{
-					if (nullptr != m_pCurParticle)
-					{
-						m_pCurParticle->ReSet();
-					}
-				}
 
-
-				/* 전체 재생, 정지, 리셋 */
-				if (ImGui::Button(" All Play "))
-				{
-					if (!m_pParticles.empty())
-					{
-						for (auto& Pair : m_pParticles)
-						{
-							Pair.second->Set_Play(TRUE);
-						}
-					}
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(" All Stop "))
-				{
-					if (!m_pParticles.empty())
-					{
-						for (auto& Pair : m_pParticles)
-						{
-							Pair.second->Set_Play(FALSE);
-						}
-					}
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("All Reset"))
-				{
-					if (!m_pParticles.empty())
-					{
-						for (auto& Pair : m_pParticles)
-						{
-							Pair.second->ReSet();
-						}
-					}
-				}
 
 
 			}
@@ -286,46 +242,142 @@ void CWindow_EffectTool::Render()
 
 }
 
+void CWindow_EffectTool::Update_PlayArea_Particle()
+{
+	/* 재생바 */
+	if (nullptr != m_pCurParticle)
+	{
+		_float fLifeTimePosition = m_pCurParticle->Get_VIBufferCom()->Get_TimePosition();
+		ImGui::SliderFloat("Play_Particle", &fLifeTimePosition, 0.f, m_pCurParticle->Get_VIBufferCom()->Get_Desc()->vLifeTime.y);
+
+
+		///* 현재 재생 위치(포지션) 이동 */
+		//if (ImGui::SliderFloat(" ", &m_fLifeTimePositionEdit, 0.f, m_pCurParticle->Get_Desc()->vLifeTime.y))
+		//{
+		//	m_pCurParticle->Set_Play(FALSE);
+		//	m_pCurParticle->Set_TimePosition(m_fLifeTimePositionEdit);
+		//}
+	}
+
+
+	/* 재생, 정지, 리셋 */
+	ImGui::SeparatorText(" ");
+	if (ImGui::Button(" Play "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Play(TRUE);
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(" Stop "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Play(FALSE);
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Reset"))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->ReSet();
+		}
+	}
+
+
+	/* 전체 재생, 정지, 리셋 */
+	if (ImGui::Button(" All Play "))
+	{
+		if (!m_pParticles.empty())
+		{
+			for (auto& Pair : m_pParticles)
+			{
+				Pair.second->Get_VIBufferCom()->Set_Play(TRUE);
+			}
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(" All Stop "))
+	{
+		if (!m_pParticles.empty())
+		{
+			for (auto& Pair : m_pParticles)
+			{
+				Pair.second->Get_VIBufferCom()->Set_Play(FALSE);
+			}
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("All Reset"))
+	{
+		if (!m_pParticles.empty())
+		{
+			for (auto& Pair : m_pParticles)
+			{
+				Pair.second->Get_VIBufferCom()->ReSet();
+			}
+		}
+	}
+}
+
+void CWindow_EffectTool::Update_ColorEditArea_Particle()
+{
+	ImGui::ColorEdit3("Particle Color 1", m_fColor_Particle, ImGuiColorEditFlags_None);
+
+}
+
 
 HRESULT CWindow_EffectTool::Ready_Layer_Particle(const wstring& strLayerTag)
 {
-	CGameObject::GAMEOBJECT_DESC	tDesc = {};
-	tDesc.fSpeedPerSec = { 0.f };
-	tDesc.fRotationPerSec = { XMConvertToRadians(0.0f) };
+	CParticle_Custom::PARTICLE_CUSTOM_DESC	tDesc = {};
+	tDesc.fSpeedPerSec = { 5.f };
+	tDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Particle_Edit"), &tDesc)))
-		return E_FAIL;
+	tDesc.strTextureTag = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
 
-	CVIBuffer_Particle_Point* pBuffer = dynamic_cast<CVIBuffer_Particle_Point*>(m_pGameInstance->Get_Component(LEVEL_TOOL, TEXT("Layer_Particle"), TEXT("Com_VIBuffer"), m_pParticles.size()));
+	CParticle_Custom* pParticle = dynamic_cast<CParticle_Custom*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Particle_Custom"), &tDesc));
 
 	wstring strName = TEXT("Particle_");
 	strName = strName + to_wstring(m_pParticles.size() + 1);
-	m_pParticles.emplace(strName, pBuffer);
+	m_pParticles.emplace(strName, pParticle);
 
-	m_pCurParticle = pBuffer;
-	m_vRotationX[1] = m_pCurParticle->Get_RotX();
-	m_vRotationY[1] = m_pCurParticle->Get_RotY();
-	m_vRotationZ[1] = m_pCurParticle->Get_RotZ();
+	m_pCurParticle = pParticle;
+	m_vRotationX[1] = m_pCurParticle->Get_VIBufferCom()->Get_RotX();
+	m_vRotationY[1] = m_pCurParticle->Get_VIBufferCom()->Get_RotY();
+	m_vRotationZ[1] = m_pCurParticle->Get_VIBufferCom()->Get_RotZ();
 	
-	m_fParticleAcceleration = m_pCurParticle->Get_Acceleration();
-	m_fParticleAccPosition = m_pCurParticle->Get_AccPosition();
+	m_fParticleAcceleration = m_pCurParticle->Get_VIBufferCom()->Get_Acceleration();
+	m_fParticleAccPosition = m_pCurParticle->Get_VIBufferCom()->Get_AccPosition();
 
 	return S_OK;
 }
 
 
+void CWindow_EffectTool::HelpMarker(const char* desc)
+{
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::TextUnformatted(desc);
+		ImGui::EndTooltip();
+	}
+}
+
 string CWindow_EffectTool::WstringToUTF8(const wstring& wstr)
 {
-	int utf8Length = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
-	if (utf8Length == 0)
+	_int iUtf8Length = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	if (iUtf8Length == 0)
 	{
 		return string();
 	}
 
-	string utf8Str(utf8Length + 1, 0);
-	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &utf8Str[0], utf8Length + 1, nullptr, nullptr);
+	string strUtf8(iUtf8Length + 1, 0);
+	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &strUtf8[0], iUtf8Length + 1, nullptr, nullptr);
 
-	return utf8Str;
+	return strUtf8;
 }
 
 

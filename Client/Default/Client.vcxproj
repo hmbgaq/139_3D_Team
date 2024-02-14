@@ -198,7 +198,7 @@
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\Particle_Blue.h" />
-    <ClInclude Include="..\Public\Particle_Edit.h" />
+    <ClInclude Include="..\Public\Particle_Custom.h" />
     <ClInclude Include="..\Public\Particle_Red.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Sky.h" />
@@ -236,7 +236,7 @@
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Particle_Blue.cpp" />
-    <ClCompile Include="..\Private\Particle_Edit.cpp" />
+    <ClCompile Include="..\Private\Particle_Custom.cpp" />
     <ClCompile Include="..\Private\Particle_Red.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />

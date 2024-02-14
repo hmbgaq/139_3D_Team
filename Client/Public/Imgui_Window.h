@@ -41,7 +41,7 @@ public:
 protected:
 	_bool				m_bEnable = false;
 	ImGuiDESC			m_tImGuiDESC;
-	ImVec4				m_BackgroundColor = ImVec4(1.f, 1.f, 1.f, 1.f);
+	ImVec4				m_BackgroundColor = ImVec4(0.f, 0.f, 0.f, 1.f);
 	_float				m_fWindowAlpha = 1.f;
 	_float				m_fTimeDelta = 0.f;
 
