@@ -199,6 +199,15 @@
     <Filter Include="01.Utility\02.GameObjects\0. Character\Body">
       <UniqueIdentifier>{502f0abd-2bb1-4d2c-9fd0-2683ff5bc917}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\96.Utility">
+      <UniqueIdentifier>{d544db3e-75c4-46f7-9cc6-7e6ed4edb7e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Utility\SMath">
+      <UniqueIdentifier>{fcc5c7a4-44f3-4248-801a-56ba55cdd5a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Utility\Json">
+      <UniqueIdentifier>{77f2f73f-4aaf-4a32-a6b2-760db060bdf7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -414,6 +423,12 @@
     <ClInclude Include="..\Public\Weapon.h">
       <Filter>01.Utility\02.GameObjects\0. Character\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SMath.h">
+      <Filter>01.Utility\96.Utility\SMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Json_Utility.h">
+      <Filter>01.Utility\96.Utility\Json</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -577,6 +592,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Character.cpp">
       <Filter>01.Utility\02.GameObjects\0. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SMath.cpp">
+      <Filter>01.Utility\96.Utility\SMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Json_Utility.cpp">
+      <Filter>01.Utility\96.Utility\Json</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
