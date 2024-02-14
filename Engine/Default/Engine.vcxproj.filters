@@ -187,6 +187,18 @@
     <Filter Include="97.MyAssimp\4.AIAnimation">
       <UniqueIdentifier>{241bb832-96c1-40e2-ad6b-7117aeeb82d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\97. PhysX">
+      <UniqueIdentifier>{619f889e-6947-4fcb-98d7-0c03f0861054}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObjects\0. Character">
+      <UniqueIdentifier>{8f2e8ed0-9a67-47d1-ab26-99617d3574ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObjects\0. Character\Weapon">
+      <UniqueIdentifier>{4e3e94c0-ea05-4a60-a675-01503ff0c068}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObjects\0. Character\Body">
+      <UniqueIdentifier>{502f0abd-2bb1-4d2c-9fd0-2683ff5bc917}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -390,6 +402,18 @@
     <ClInclude Include="..\Public\Input_Device.h">
       <Filter>00.System\00.Device\Input</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PhysXManager.h">
+      <Filter>01.Utility\97. PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Character.h">
+      <Filter>01.Utility\02.GameObjects\0. Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body.h">
+      <Filter>01.Utility\02.GameObjects\0. Character\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon.h">
+      <Filter>01.Utility\02.GameObjects\0. Character\Weapon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -541,6 +565,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Input_Device.cpp">
       <Filter>00.System\00.Device\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PhysXManager.cpp">
+      <Filter>01.Utility\97. PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon.cpp">
+      <Filter>01.Utility\02.GameObjects\0. Character\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body.cpp">
+      <Filter>01.Utility\02.GameObjects\0. Character\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Character.cpp">
+      <Filter>01.Utility\02.GameObjects\0. Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

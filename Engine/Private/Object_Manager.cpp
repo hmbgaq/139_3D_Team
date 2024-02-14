@@ -120,6 +120,15 @@ void CObject_Manager::Clear(_uint iLevelIndex)
 	m_pLayers[iLevelIndex].clear();
 }
 
+list<class CGameObject*>* CObject_Manager::Get_GameObjects(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	CLayer* layer = Find_Layer(iLevelIndex, strLayerTag);
+	if (nullptr == layer)
+		return nullptr;
+
+	return layer->Get_GameObjects();
+}
+
 CGameObject * CObject_Manager::Find_Prototype(const wstring & strPrototypeTag)
 {
 	auto	iter = m_Prototypes.find(strPrototypeTag);
