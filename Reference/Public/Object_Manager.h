@@ -31,6 +31,7 @@ public:
 
 public:
 	list<class CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring& strLayerTag);
+	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>* clonevector);
 	void Fill_PrototypeTags(vector<string>* _vector);
 
 private:

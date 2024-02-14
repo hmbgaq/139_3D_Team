@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "LandObject.h"
+#include "Character.h"
 
 BEGIN(Engine)
 class CCollider;
@@ -10,7 +10,7 @@ END
 
 BEGIN(Client)
 
-class CPlayer final : public CLandObject
+class CPlayer final : public CCharacter
 {
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -31,12 +31,12 @@ public:
 public:
 	CGameObject* Find_PartObject(const wstring& strPartTag);
 
-private:
-	CNavigation*		m_pNavigationCom = { nullptr };
-	CCollider*			m_pColliderCom = { nullptr };
-
-private:
-	map<const wstring, class CGameObject*>		m_PartObjects;
+// private:
+// 	CNavigation*		m_pNavigationCom = { nullptr };
+// 	CCollider*			m_pColliderCom = { nullptr };
+// 
+// private:
+// 	map<const wstring, class CGameObject*>		m_PartObjects;
 
 private:
 	HRESULT Ready_Components();

@@ -5,13 +5,13 @@
 
 
 CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CBody(pDevice, pContext)
 {
 
 }
 
 CBody_Player::CBody_Player(const CBody_Player & rhs)
-	: CGameObject(rhs)
+	: CBody(rhs)
 {
 }
 
@@ -28,16 +28,16 @@ HRESULT CBody_Player::Initialize_Prototype()
 
 HRESULT CBody_Player::Initialize(void* pArg)
 {	
-	m_pParentTransform = ((BODY_DESC*)pArg)->m_pParentTransform;
-	if (nullptr == m_pParentTransform)
-		return E_FAIL;
-	Safe_AddRef(m_pParentTransform);
+// 	m_pParentTransform = ((BODY_DESC*)pArg)->m_pParentTransform;
+// 	if (nullptr == m_pParentTransform)
+// 		return E_FAIL;
+// 	Safe_AddRef(m_pParentTransform);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
+// 	if (FAILED(Ready_Components()))
+// 		return E_FAIL;
 
 	m_pModelCom->Set_Animation(3);
 
@@ -135,13 +135,14 @@ void CBody_Player::SetUp_Animation(_uint iAnimIndex)
 
 HRESULT CBody_Player::Ready_Components()
 {
+
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_AnimModel"),
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Shader_AnimModel"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Model_Fiona"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
@@ -151,7 +152,7 @@ HRESULT CBody_Player::Ready_Components()
 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
 
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
 

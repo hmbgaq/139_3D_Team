@@ -11,7 +11,7 @@ END
 
 BEGIN(Client)
 
-class CMonster final : public CLandObject
+class CMonster final : public CGameObject
 {
 private:
 	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

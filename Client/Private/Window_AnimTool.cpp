@@ -180,13 +180,14 @@ void CWindow_AnimTool::Clear_WeaponEvent()
 
 void CWindow_AnimTool::Create_Object(const wstring& strLayerTag, const wstring& strPrototypeTag)
 {
-	m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, strPrototypeTag);
+	m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, strPrototypeTag);
+// 	m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, strPrototypeTag);
 
-	list<CGameObject*> pGameObjects = *(m_pGameInstance->Get_GameObjects(LEVEL_TOOL, strLayerTag));
-	CGameObject* pGameObject = pGameObjects.back();
-
-	const _float3& temp = _float3(0.0f, 0.0f, 5.0f);
-	pGameObject->Set_Position(temp);
+// 	list<CGameObject*> pGameObjects = *(m_pGameInstance->Get_GameObjects(LEVEL_TOOL, strLayerTag));
+// 	CGameObject* pGameObject = pGameObjects.back();
+// 
+// 	const _float3& temp = _float3(0.0f, 0.0f, 0.0f);
+// 	pGameObject->Set_Position(temp);
 }
 
 void CWindow_AnimTool::Draw_Player()
@@ -297,45 +298,49 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 				}
 				ImGui::EndListBox();
 			}
-			if (ImGui::BeginListBox("AnimationList"))
+			
+			
+		}
+		ImGui::Spacing();
+		if (ImGui::BeginListBox("AnimationList"))
+		{
+			if (m_CreateList.size() > 0)
 			{
-				if (m_CreateList.size() > 0)
-				{
-					CBody* pcharacters = dynamic_cast<CBody*>(m_CreateList.back());
-					m_pAnimation = *(pcharacters->Get_Model()->Get_Animations());
-					m_iAnimationNum = pcharacters->Get_Model()->Get_AnimationNum();
+				CCharacter* pcharacters = dynamic_cast<CCharacter*>(m_CreateList.back());
+				
+				m_pAnimation = *(pcharacters->Get_Body()->Get_Model()->Get_Animations());
+				m_iAnimationNum = pcharacters->Get_Body()->Get_Model()->Get_AnimationNum();
 
-				}
-
-				for (int n = 0; n < m_iAnimationNum; n++)
-				{
-					const bool is_selected = (m_iAnimationNum == n);
-					if (ImGui::Selectable(m_pAnimation[n]->Get_Name(), is_selected))
-						m_iAnimationNum = n;
-
-					// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-					//캐릭터 애니메이션 돌리기위해
-					CBody* pcharacters = dynamic_cast<CBody*>(m_pAnimation[n]);
-					m_fDuration = m_pAnimation[n]->Get_Duration();
-					if (is_selected)
-					{
-						ImGui::SetItemDefaultFocus();
-						if (m_bStop == false)
-							pcharacters->Get_Model()->Play_Animation(fTimeDelta, true);
-						pcharacters->Get_Model()->Set_StiffnessRate(m_fSpeed);
-						m_pAnimation[n]->Set_TrackPosition(m_fCurrentTrackPosition);
-					}
-
-				}
-
-				ImGui::EndListBox();
 			}
+
+			for (int n = 0; n < m_iAnimationNum; n++)
+			{
+				const bool is_selected = (m_iAnimationNum == n);
+				if (ImGui::Selectable(m_pAnimation[n]->Get_Name(), is_selected))
+					m_iAnimationNum = n;
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				//캐릭터 애니메이션 돌리기위해
+				CBody* pcharacters = dynamic_cast<CBody*>(m_pAnimation[n]);
+				m_fDuration = m_pAnimation[n]->Get_Duration();
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+					if (m_bStop == false)
+						pcharacters->Get_Model()->Play_Animation(fTimeDelta, true);
+					pcharacters->Get_Model()->Set_StiffnessRate(m_fSpeed);
+					m_pAnimation[n]->Set_TrackPosition(m_fCurrentTrackPosition);
+				}
+
+			}
+
+			ImGui::EndListBox();
 		}
 		ImGui::TreePop();
 
 		
 	}
-
+	
 
 	if (ImGui::SliderFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration));
 	
@@ -348,6 +353,16 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 
 	ImGui::SameLine();
 
+
+
+
+	if (m_bCloneCount)
+	{
+		m_CreateList.clear();
+		m_pGameInstance->Get_CloneGameObjects(LEVEL_TOOL, &m_CreateList);
+
+		m_bCloneCount = false;
+	}
 // 	if (ImGui::Button("Hold"))
 // 	{
 // 		m_bHold = !m_bHold;

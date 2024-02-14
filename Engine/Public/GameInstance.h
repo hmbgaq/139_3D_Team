@@ -62,6 +62,7 @@ public: /* For.Object_Manager */
 	class CComponent* Get_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex = 0, const wstring& strPartTag = TEXT(""));
 
 	list<class CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring & strLayerTag);
+	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>*clonevector);
 	class CGameObject* Get_GameObect_Last(_uint iLevelIndex, const wstring & strLayerTag);
 	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
 
