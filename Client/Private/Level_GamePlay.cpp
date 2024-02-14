@@ -209,7 +209,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void*
 
 	Desc.strModelTag = TEXT("Prototype_Component_Model_ForkLift");
 	Desc.iShaderPassIndex = 1;
-	Desc.iNumInstance = 10;
+	Desc.iNumInstance = 4;
 
 	Desc.fRotationPerSec = LandObjectDesc.fRotationPerSec;
 	Desc.fSpeedPerSec = LandObjectDesc.fSpeedPerSec;

@@ -35,6 +35,42 @@ HRESULT CEnvironment_Instance::Initialize(void* pArg)
 
 	//m_pInstanceModelCom->Add_Mesh(m_pTransformCom->Get_WorldMatrix());
 
+	CVIBuffer_Environment_Model_Instance::INSTANCE_INFO_DESC InstanceInfoDesc = {};
+
+	
+	//InstanceInfoDesc.vCenter = _float3(0.f, 10.f, 0.f);
+	InstanceInfoDesc.vRotation = _float3(0.f, 0.f, 0.f);
+	InstanceInfoDesc.vScale = _float3(1.f, 1.f, 1.f);
+	InstanceInfoDesc.vTranslation = _float3(10.f, 5.f, 10.f);
+	
+
+	vector<CVIBuffer_Environment_Model_Instance::INSTANCE_INFO_DESC> vecInfoDesc;
+
+	vecInfoDesc.push_back(InstanceInfoDesc);
+
+	//InstanceInfoDesc.vCenter = _float3(0.f, 10.f, 0.f);
+	InstanceInfoDesc.vRotation = _float3(0.f, 0.f, 0.f);
+	InstanceInfoDesc.vScale = _float3(1.f, 1.f, 1.f);
+	InstanceInfoDesc.vTranslation = _float3(20.f, 5.f, 10.f);
+
+	vecInfoDesc.push_back(InstanceInfoDesc);
+
+	//InstanceInfoDesc.vCenter = _float3(0.f, 10.f, 0.f);
+	InstanceInfoDesc.vRotation = _float3(0.f, 0.f, 0.f);
+	InstanceInfoDesc.vScale = _float3(1.f, 1.f, 1.f);
+	InstanceInfoDesc.vTranslation = _float3(30.f, 5.f, 10.f);
+
+	vecInfoDesc.push_back(InstanceInfoDesc);
+
+	//InstanceInfoDesc.vCenter = _float3(0.f, 10.f, 0.f);
+	InstanceInfoDesc.vRotation = _float3(0.f, 0.f, 0.f);
+	InstanceInfoDesc.vScale = _float3(1.f, 1.f, 1.f);
+	InstanceInfoDesc.vTranslation = _float3(40.f, 5.f, 10.f);
+
+	vecInfoDesc.push_back(InstanceInfoDesc);
+
+	m_pInstanceModelCom->Update(vecInfoDesc);
+
 	return S_OK;
 }
 

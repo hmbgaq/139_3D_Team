@@ -7,7 +7,7 @@ BEGIN(Engine)
 class CShader;
 class CCollider;
 class CModel;
-class CVIBuffer_Model_Instance;
+class CVIBuffer_Effect_Model_Instance;
 END
 
 BEGIN(Client)
@@ -37,9 +37,9 @@ public:
 	virtual HRESULT				Render() override;
 
 private:
-	CShader*					m_pShaderCom = { nullptr };	
-	CModel*						m_pModelCom = { nullptr };
-	CVIBuffer_Model_Instance*	m_pInstanceModelCom = { nullptr };
+	CShader*							m_pShaderCom = { nullptr };	
+	CModel*								m_pModelCom = { nullptr };
+	CVIBuffer_Effect_Model_Instance*	m_pInstanceModelCom = { nullptr };
 
 	EFFECT_INSTANCE_DESC		m_tInstanceDesc = {};
 
