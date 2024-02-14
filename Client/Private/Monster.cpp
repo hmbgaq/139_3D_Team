@@ -5,13 +5,13 @@
 
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CLandObject(pDevice, pContext)
+	: CGameObject(pDevice, pContext)
 {
 
 }
 
 CMonster::CMonster(const CMonster & rhs)
-	: CLandObject(rhs)
+	: CGameObject(rhs)
 {
 }
 
@@ -70,9 +70,9 @@ void CMonster::Tick(_float fTimeDelta)
 
 void CMonster::Late_Tick(_float fTimeDelta)
 {
-	CCollider*	pTargetCollider = dynamic_cast<CCollider*>(m_pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Collider"), 0, TEXT("Part_Weapon")));
-
-	m_pColliderCom->Collision(pTargetCollider);
+	//CCollider*	pTargetCollider = dynamic_cast<CCollider*>(m_pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Collider"), 0, TEXT("Part_Weapon")));
+	//
+	//m_pColliderCom->Collision(pTargetCollider);
 
 	m_pGameInstance->Transform_Frustum_ToLocalSpace(m_pTransformCom->Get_WorldMatrix());
 

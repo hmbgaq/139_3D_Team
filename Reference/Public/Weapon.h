@@ -51,6 +51,7 @@ protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CTexture* m_pDissolveTexture = { nullptr };
+	
 
 protected:
 	CTransform* m_pParentTransform = { nullptr };

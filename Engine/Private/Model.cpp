@@ -304,6 +304,11 @@ void CModel::Write_Names(const string& strModelFilePath)
 	osTxt.close();
 }
 
+vector<CAnimation*>* CModel::Get_Animations()
+{
+	return &m_Animations;
+}
+
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 {
 	m_iNumMeshes = m_pAIScene.Get_NumMeshes();

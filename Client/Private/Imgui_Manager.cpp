@@ -47,7 +47,7 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	if (false == ImGui_ImplDX11_Init(m_pDevice, m_pContext))
 		return E_FAIL;
 
-	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsDark();
 	g_io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.0f, NULL, g_io.Fonts->GetGlyphRangesKorean());
 
 	if(FAILED(Ready_Windows()))
@@ -99,6 +99,15 @@ HRESULT CImgui_Manager::Ready_Windows()
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW, pWindow);
 
 
+	pWindow = CWindow_AnimTool::Create(m_pDevice, m_pContext);
+
+	if (pWindow == nullptr)
+		return E_FAIL;
+
+	pWindow->SetUp_ImGuiDESC(u8"애니메이션툴", ImVec2{ 300.f,300.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
+
+	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW, pWindow);
+
 	return S_OK;
 }
 
@@ -131,7 +140,7 @@ void CImgui_Manager::Tick(_float fTimeDelta)
 
 
 	//! 최상단 메뉴바와 관련된 함수
-		MenuTick(fTimeDelta);
+	MenuTick(fTimeDelta);
 
  	for (auto& pWindowPair : m_mapWindows)
  	{
@@ -201,9 +210,13 @@ void CImgui_Manager::MenuTick(_float fTimeDelta)
 
  			ImGui::EndMenu();
 		}
+		
+		
 		ImGui::EndMainMenuBar();
+		
 	}
 
+	
 }
 
 void CImgui_Manager::Render()
