@@ -161,7 +161,11 @@ _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta)
 		return true;
 	}
 
-	_int iDir = fTargetAngle > fAngle ? 1 : -1;
+	_float fDiff = fTargetAngle - fAngle;
+	if (0 > fDiff)
+		fDiff += 360;
+
+	_int iDir = fDiff <= 180 ? 1 : -1;
 
 	_vector		vRight = Get_State(STATE_RIGHT);
 	_vector		vUp = Get_State(STATE_UP);
