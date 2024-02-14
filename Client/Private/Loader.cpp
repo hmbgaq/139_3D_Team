@@ -98,28 +98,22 @@ HRESULT CLoader::Loading()
 
 HRESULT CLoader::Loading_For_Logo_Level()
 {
+
 	/* 로고 레벨에 필요한 자원을 로드하자. */
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐를 로드하는 중입니다."));
 
 	/* For.Prototype_Component_Texture_Logo */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2)));
 
 
 	lstrcpy(m_szLoadingText, TEXT("모델를(을) 로드하는 중입니다."));
-
 
 
 	lstrcpy(m_szLoadingText, TEXT("셰이더를(을) 로드하는 중입니다."));
 
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체를(을) 로드하는 중입니다."));
-
-	/* For.Prototype_GameObject_BackGround */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"),
-		CBackGround::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	Ready_Origin();
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
@@ -171,7 +165,27 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"), CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_OBB)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"), CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE)));
 
-	lstrcpy(m_szLoadingText, TEXT("원형객체를(을) 로드하는 중입니다."));
+	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
+
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Tool_Level()
+{
+
+	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
+	m_isFinished = true;
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Origin()
+{
+	/* Logo 원형객체 */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext)));
+
+	/* GamePlay 원형객체 */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"), CPlayer::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Player"), CBody_Player::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Player"), CWeapon_Player::Create(m_pDevice, m_pContext)));
@@ -185,17 +199,6 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Explosion"), CEffect_Explosion::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Interact_Chain"), CInteract_Chain::Create(m_pDevice, m_pContext)));
 
-	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
-
-	m_isFinished = true;
-
-	return S_OK;
-}
-
-HRESULT CLoader::Loading_For_Tool_Level()
-{
-	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
-	m_isFinished = true;
 	return S_OK;
 }
 
@@ -214,11 +217,8 @@ CLoader * CLoader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext
 void CLoader::Free()
 {
 	WaitForSingleObject(m_hThread, INFINITE);
-
 	DeleteCriticalSection(&m_CriticalSection);
-
 	DeleteObject(m_hThread);
-
 	CloseHandle(m_hThread);
 
 	Safe_Release(m_pGameInstance);
