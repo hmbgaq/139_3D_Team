@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\Public\Loader.h"
+#include "Loader.h"
 
 #include "GameInstance.h"
 
