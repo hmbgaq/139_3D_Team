@@ -255,64 +255,9 @@ HRESULT CRenderer::Ready_DebugRender()
 HRESULT CRenderer::Ready_SSAO()
 {
 
-	if (nullptr == pGameObject ||
-		eGroupID >= RENDER_END)
-		return E_FAIL;
-
-	/* 원래 객체들은 오브젝트 매니져에 담겨있다. */
-	/* 렌더러에 객체를 공유했다. */
-	m_RenderObjects[eGroupID].push_back(pGameObject);
-
-	Safe_AddRef(pGameObject);
-
 	return S_OK;
 }
 
-HRESULT CRenderer::Add_DebugRender(CComponent * pDebugCom)
-{
-	#ifdef _DEBUG
-		m_DebugComponent.push_back(pDebugCom);
-
-		Safe_AddRef(pDebugCom);
-	#endif
-
-
-
-	return S_OK;
-}
-
-
-HRESULT CRenderer::Draw_RenderGroup()
-{
-	if (FAILED(Render_Priority()))
-		return E_FAIL;
-	if (FAILED(Render_Shadow()))
-		return E_FAIL;
-	if (FAILED(Render_NonLight()))
-		return E_FAIL;
-	if (FAILED(Render_NonBlend()))
-		return E_FAIL;
-	if (FAILED(Render_LightAcc()))
-		return E_FAIL;
-	if (FAILED(Render_Deferred()))
-		return E_FAIL;
-	if (FAILED(Render_Blend()))
-		return E_FAIL;
-	if (FAILED(Render_UI()))
-		return E_FAIL;
-
-#ifdef _DEBUG
-
-	if (m_bRenderDebug) 
-	{
-		if (FAILED(Render_Debug()))
-			return E_FAIL;
-	}
-
-#endif
-
-	return S_OK;
-}
 
 HRESULT CRenderer::Render_Priority()
 {
