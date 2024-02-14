@@ -11,6 +11,8 @@
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_Particle_Rect.h"
 #include "VIBuffer_Particle_Point.h"
+#include "VIBuffer_Effect_Model_Instance.h"
+#include "VIBuffer_Environment_Model_Instance.h"
 
 /* 원형 컴포넌트들을 레벨별로 보관한다. */
 /* 복제하고하는 원형을 찾아 복제하여 리턴한다. */

@@ -28,6 +28,9 @@ public: /* 카메라 관련 */
 	_float4 Get_CamSetting();
 
 public:
+	_float4x4 Get_PreViewMatrix();
+
+public:
 	HRESULT Initialize();
 	void Tick();
 
@@ -36,6 +39,10 @@ private:
 	_float4x4			m_Transform[D3DTS_END];
 	_float4x4			m_Transform_Inverse[D3DTS_END];
 	_float4				m_vCamPosition;
+
+	_float4				m_vPreCamPosition;
+	_float4				m_vPreCamQuaternion;
+	_float4x4			m_PreViewMatrix;
 
 public:
 	static CPipeLine* Create();

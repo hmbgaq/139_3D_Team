@@ -7,6 +7,7 @@
 
 BEGIN(Engine)
 
+
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
@@ -25,6 +26,13 @@ public:
 		return m_iNumMeshes;
 	}
 
+
+	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Ãß°¡
+	_uint Get_NumMaterials() const { return m_iNumMaterials; }
+	_uint Get_NumMeshIndice(_int iMeshIndex);//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
+	vector<class CMesh*>& Get_Meshes() { return m_Meshes;}
+	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
+
 	class CBone* Get_BonePtr(const _char* pBoneName) const;
 
 	//void Set_Animation(_uint iAnimIndex) {
@@ -42,7 +50,8 @@ public:
 	virtual HRESULT Render(_uint iMeshIndex);
 
 public:
-	void Play_Animation(_float fTimeDelta, _bool isLoop = true);
+	void Play_Animation(_float fTimeDelta, _bool bIsLoop);
+	void Play_Animation(_float fTimeDelta, _float3& _Pos);
 
 public:
 	HRESULT Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
@@ -58,7 +67,7 @@ public:
 	void	Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 
-	void Write_Names(const string& strModelFilePath);
+	void	Write_Names(const string& strModelFilePath);
 
 private:
 	CMyAssimp					m_MyAssimp;

@@ -7,11 +7,21 @@ CPipeLine::CPipeLine()
 
 void CPipeLine::Set_Transform(D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {
+	if (D3DTS_VIEW == eState)
+	{
+		m_PreViewMatrix = m_Transform[D3DTS_VIEW];
+	}
+
 	XMStoreFloat4x4(&m_Transform[eState], TransformMatrix);
 }
 
 void CPipeLine::Set_Transform(D3DTRANSFORMSTATE eState, _float4x4 TransformMatrix)
 {
+	if (D3DTS_VIEW == eState)
+	{
+		m_PreViewMatrix = m_Transform[D3DTS_VIEW];
+	}
+
 	m_Transform[eState] = TransformMatrix;
 }
 
@@ -57,6 +67,13 @@ _float4 CPipeLine::Get_CamSetting()
 	Result = { Cam_near, Cam_far, Cam_fovY, Cam_aspectRatio };
 
 	return Result;
+}
+
+_float4x4 CPipeLine::Get_PreViewMatrix()
+{
+	_float4x4 PreViewMat = m_PreViewMatrix;
+	
+	return PreViewMat;
 }
 
 HRESULT CPipeLine::Initialize()

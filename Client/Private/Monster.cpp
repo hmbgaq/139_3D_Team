@@ -46,6 +46,15 @@ void CMonster::Priority_Tick(_float fTimeDelta)
 
 void CMonster::Tick(_float fTimeDelta)
 {
+
+	if (m_pGameInstance->Key_Pressing(DIK_T)) 
+	{
+		CGameObject* pPlayer = m_pGameInstance->Get_Player();
+		CTransform* pPlayerTransform = pPlayer->Get_Transform();
+		_vector pPos = pPlayerTransform->Get_State(CTransform::STATE::STATE_POSITION);
+		m_pTransformCom->Look_At_Lerp(pPos, fTimeDelta);
+	}
+
 	if (m_pGameInstance->Key_Down(DIK_9))
 		m_iRenderPass = 3;
 

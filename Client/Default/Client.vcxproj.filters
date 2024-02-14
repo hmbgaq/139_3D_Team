@@ -85,6 +85,12 @@
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\MapToolWindow">
       <UniqueIdentifier>{f8398acc-9828-4192-a11c-95f7c96e1b69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\LandObject\Environment_Instance">
+      <UniqueIdentifier>{07401b06-626f-4b88-ab5f-7765959b393a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effect_Instance">
+      <UniqueIdentifier>{df70ff5e-761f-4541-b7f2-d7d3a9ccdb1a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01.Levels\98. Loader">
       <UniqueIdentifier>{e392c2b5-5a93-41cd-9971-3527a5924eae}</UniqueIdentifier>
     </Filter>
@@ -222,6 +228,12 @@
     <ClInclude Include="..\Public\Include_Imgui_Windows.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Environment_Instance.h">
+      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Instance.h">
+      <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
+    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>98.Default\Useless</Filter>
     </ClInclude>
@@ -236,6 +248,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Interact_Chain.h">
       <Filter>02.GameObjects\01. Interact\0. Chain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkyDome.h">
+      <Filter>02.GameObjects\99. Sky</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -326,6 +341,12 @@
     <ClCompile Include="..\Private\Window_MapTool.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\MapToolWindow</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Environment_Instance.cpp">
+      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Instance.cpp">
+      <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
@@ -337,6 +358,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Interact_Chain.cpp">
       <Filter>02.GameObjects\01. Interact\0. Chain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkyDome.cpp">
+      <Filter>02.GameObjects\99. Sky</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -367,6 +391,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Point.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModelInstance.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

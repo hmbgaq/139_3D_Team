@@ -39,6 +39,11 @@ CModel::CModel(const CModel & rhs)
 	}
 }
 
+_uint CModel::Get_NumMeshIndice(_int iMeshIndex)
+{
+	 return m_Meshes[iMeshIndex]->Get_NumIndices();
+}
+
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)
@@ -112,21 +117,62 @@ HRESULT CModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-void CModel::Play_Animation(_float fTimeDelta, _bool isLoop)
+void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 {
 	if (m_iCurrentAnimIndex >= m_iNumAnimations)
 		return;
 
-	/* 현재 애니메이션이 사용하고 있는 뼈들의 TransformationMatrix를 갱신한다. */
-	m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(isLoop, fTimeDelta, m_Bones);
+	if (true == bIsLoop)
+		m_eAnimState = ANIM_STATE::ANIM_STATE_LOOP;
+	else
+		m_eAnimState = ANIM_STATE::ANIM_STATE_NORMAL;
+
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones);
 
 
-	/* 화면에 최종적인 상태로 그려내기위해서는 반드시 뼈들의 CombinedTransformationMatrix가 갱신되어야한다. */
-	/* 모든 뼈들을 다 갱신하며 부모로부터 자식까지 쭈우우욱돌아서 CombinedTransformationMatrix를 갱신한다. */
+	_float3 NowPos;
 	for (auto& pBone : m_Bones)
 	{
-		pBone->Invalidate_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PivotMatrix));
+		pBone->Invalidate_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PivotMatrix), NowPos);
 	}
+
+	if (true == m_bUseAnimationPos && false == m_bIsAnimEnd && false == Is_Transition())
+	{
+		if (false == m_Animations[m_iCurrentAnimIndex]->Is_TransitionEnd_Now())
+		{
+			_float3 ChangedPos = NowPos - m_Animations[m_iCurrentAnimIndex]->Get_PrevPos();
+			//_Pos = ChangedPos;
+		}
+
+		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
+	}
+}
+
+void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
+{
+	if (m_iCurrentAnimIndex >= m_iNumAnimations)
+		return;
+
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones);
+
+
+	_float3 NowPos;
+	for (auto& pBone : m_Bones)
+	{
+		pBone->Invalidate_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PivotMatrix), NowPos);
+	}
+
+	if (true == m_bUseAnimationPos && false == m_bIsAnimEnd && false == Is_Transition())
+	{
+		if (false == m_Animations[m_iCurrentAnimIndex]->Is_TransitionEnd_Now())
+		{
+			_float3 ChangedPos = NowPos - m_Animations[m_iCurrentAnimIndex]->Get_PrevPos();
+			_Pos = ChangedPos;
+		}
+
+		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
+	}
+
 }
 
 HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, _uint iMeshIndex)
@@ -214,7 +260,32 @@ void CModel::Write_Names(const string& strModelFilePath)
 	}
 	osTxt << endl;
 
+	osTxt << "Materials: " << endl;
 
+	for (_uint i = 0; i < m_iNumMaterials; ++i)
+	{
+		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material(i);
+
+		for (size_t j = 1; j < AI_TEXTURE_TYPE_MAX; j++) 
+		{
+			_char		szDrive[MAX_PATH] = "";
+			_char		szDirectory[MAX_PATH] = "";
+
+			_splitpath_s(strModelFilePath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
+
+			string strPath = pAIMaterial.Get_Textures(j);
+			if (strPath == "")
+				continue;
+
+			_char		szFileName[MAX_PATH] = "";
+			_char		szEXT[MAX_PATH] = "";
+
+			_splitpath_s(strPath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
+
+			osTxt << i << "-" << j << ". " << szFileName << endl;
+		}
+	}
+	osTxt << endl;
 
 	osTxt << "Animations: " << endl;
 	for (_uint i = 0; i < m_iNumAnimations; ++i)

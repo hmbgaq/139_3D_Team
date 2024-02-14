@@ -26,6 +26,9 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 
 	ImGui::Text("Test");
 
+	static float col1[3] = { 1.0f, 0.0f, 0.2f };
+	ImGui::ColorEdit3("color 1", col1, ImGuiColorEditFlags_None);
+	ImGui::SameLine();
 
 	__super::End();
 }

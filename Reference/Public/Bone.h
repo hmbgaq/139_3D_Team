@@ -26,7 +26,7 @@ public:
 
 public:
 	HRESULT Initialize(CMyAINode pAINode, _int iParentIndex);
-	void Invalidate_CombinedTransformationMatrix(CModel::BONES& Bones, _fmatrix PivotMatrix);
+	void Invalidate_CombinedTransformationMatrix(CModel::BONES& Bones, _fmatrix PivotMatrix, _float3& _Pos);
 
 private:
 	_char				m_szName[MAX_PATH] = "";

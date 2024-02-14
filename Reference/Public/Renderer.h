@@ -48,6 +48,11 @@ public:
 	void	BuildFrustumFarCorners();
 	void	BuildOffsetVectors();
 
+#ifdef _DEBUG
+public:
+	void Set_RenderDebug(_bool _bRenderDebug) {	m_bRenderDebug = _bRenderDebug;	}
+#endif
+
 private:
 	class CShader*							m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
 	class CGameInstance*					m_pGameInstance = { nullptr };
@@ -60,6 +65,7 @@ private:
 
 #ifdef _DEBUG
 	list<class CComponent*>					m_DebugComponent;
+	_bool									m_bRenderDebug = { false };
 #endif
 
 private:
@@ -76,6 +82,7 @@ private: // SSAO
 	_float4			m_vOffsets[26];
 	_int			m_iQuadVerCount;
 	_int			m_iQuadIndexCount;
+
 
 private:
 	HRESULT Render_Priority();

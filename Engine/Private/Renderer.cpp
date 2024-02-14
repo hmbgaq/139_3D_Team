@@ -263,10 +263,9 @@ HRESULT CRenderer::Ready_SSAO()
 
 	BuildOffsetVectors();
 
-	m_pRandomVectorTexture = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Texture/ETC/RandomTexture.png"));
-	if (nullptr == m_pRandomVectorTexture)
-		return E_FAIL;
-
+	//m_pRandomVectorTexture = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Texture/ETC/RandomTexture.png"));
+	//if (nullptr == m_pRandomVectorTexture)
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -372,9 +371,7 @@ void CRenderer::BuildOffsetVectors()
 
 		m_vOffsets[6] = _float4(-1.0f, +1.0f, -1.0f, 0.0f);
 		m_vOffsets[7] = _float4(+1.0f, -1.0f, +1.0f, 0.0f);
-	}
 
-	{
 		// 6개의 표면 중심점 벡터
 		m_vOffsets[8] = _float4(-1.0f, 0.0f, 0.0f, 0.0f);
 		m_vOffsets[9] = _float4(+1.0f, 0.0f, 0.0f, 0.0f);
@@ -384,23 +381,17 @@ void CRenderer::BuildOffsetVectors()
 
 		m_vOffsets[12] = _float4(0.0f, 0.0f, -1.0f, 0.0f);
 		m_vOffsets[13] = _float4(0.0f, 0.0f, +1.0f, 0.0f);
-	}
 
-	{
 		m_vOffsets[14] = _float4(-1.0f, 1.0f, 0.0f, 0.0f);
 		m_vOffsets[15] = _float4(1.0f, 1.0f, 0.0f, 0.0f);
 		m_vOffsets[16] = _float4(0.0f, 1.0f, -1.0f, 0.0f);
 		m_vOffsets[17] = _float4(0.0f, 1.0f, 1.0f, 0.0f);
-	}
 
-	{
 		m_vOffsets[18] = _float4(1.0f, 0.0f, 1.0f, 0.0f);
 		m_vOffsets[19] = _float4(-1.0f, 0.0f, 1.0f, 0.0f);
 		m_vOffsets[20] = _float4(-1.0f, 0.0f, -1.0f, 0.0f);
 		m_vOffsets[21] = _float4(1.0f, 0.0f, -1.0f, 0.0f);
-	}
 
-	{
 		m_vOffsets[22] = _float4(-1.0f, -1.0f, 0.0f, 0.0f);
 		m_vOffsets[23] = _float4(1.0f, -1.0f, 0.0f, 0.0f);
 		m_vOffsets[24] = _float4(0.0f, -1.0f, -1.0f, 0.0f);
@@ -416,13 +407,12 @@ void CRenderer::BuildOffsetVectors()
 		// [0.25, 1.0] 사이의 임의의 벡터를 만든다.
 		_float s = randF(randEngine);
 
-		m_vOffsets[i].Normalize();
+		/*m_vOffsets[i].Normalize();
 		Vec4 v = s * m_vOffsets[i];
-		m_vOffsets[i] = v;
+		m_vOffsets[i] = v;*/
 	}
 
 }
-
 HRESULT CRenderer::Render_Priority()
 {
 	for (auto& pGameObject : m_RenderObjects[RENDER_PRIORITY])

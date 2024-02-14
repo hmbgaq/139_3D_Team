@@ -61,6 +61,15 @@ public: /* For.Object_Manager */
 	CGameObject* Clone_Prototype(const wstring& strPrototypeTag, void* pArg = nullptr);
 	class CComponent* Get_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex = 0, const wstring& strPartTag = TEXT(""));
 
+	list<class CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring & strLayerTag);
+	class CGameObject* Get_GameObect_Last(_uint iLevelIndex, const wstring & strLayerTag);
+	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
+	class CGameObject* Get_Player();
+	void Set_Player(class CGameObject* _pPlayer);
+
+
+
+	void Fill_PrototypeTags(vector<string>*_vector);
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, class CComponent* pPrototype);
@@ -70,8 +79,10 @@ public: /* For.Component_Manager */
 public: /* For.Renderer */
 	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
+#ifdef _DEBUG
+	void Set_RenderDebug(_bool _bRenderDebug);
+#endif
 
-	void Set_OutLine(_bool bOutLine);
 
 public: /* For.PipeLine */
 	void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix);
@@ -106,6 +117,11 @@ public: /* For.Frustum */
 	void	Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix);
 	_bool	isIn_WorldPlanes(_fvector vPoint, _float fRadius = 0.f);
 	_bool	isIn_LocalPlanes(_fvector vPoint, _float fRadius);
+
+
+public:
+	void		String_To_WString(string _string, wstring & _wstring);
+	void		WString_To_String(wstring _wstring, string & _string);
 
 
 private:
