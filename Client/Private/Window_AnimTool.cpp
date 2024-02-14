@@ -297,42 +297,43 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 				}
 				ImGui::EndListBox();
 			}
+			if (ImGui::BeginListBox("AnimationList"))
+			{
+				if (m_CreateList.size() > 0)
+				{
+					CBody* pcharacters = dynamic_cast<CBody*>(m_CreateList.back());
+					m_pAnimation = *(pcharacters->Get_Model()->Get_Animations());
+					m_iAnimationNum = pcharacters->Get_Model()->Get_AnimationNum();
+
+				}
+
+				for (int n = 0; n < m_iAnimationNum; n++)
+				{
+					const bool is_selected = (m_iAnimationNum == n);
+					if (ImGui::Selectable(m_pAnimation[n]->Get_Name(), is_selected))
+						m_iAnimationNum = n;
+
+					// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+					//캐릭터 애니메이션 돌리기위해
+					CBody* pcharacters = dynamic_cast<CBody*>(m_pAnimation[n]);
+					m_fDuration = m_pAnimation[n]->Get_Duration();
+					if (is_selected)
+					{
+						ImGui::SetItemDefaultFocus();
+						if (m_bStop == false)
+							pcharacters->Get_Model()->Play_Animation(fTimeDelta, true);
+						pcharacters->Get_Model()->Set_StiffnessRate(m_fSpeed);
+						m_pAnimation[n]->Set_TrackPosition(m_fCurrentTrackPosition);
+					}
+
+				}
+
+				ImGui::EndListBox();
+			}
 		}
 		ImGui::TreePop();
 
-		if (ImGui::BeginListBox("AnimationList"))
-		{
-			if (m_CreateList.size() > 0)
-			{
-				CBody* pcharacters = dynamic_cast<CBody*>(m_CreateList.back());
-				m_pAnimation = *(pcharacters->Get_Model()->Get_Animations());
-				m_iAnimationNum = pcharacters->Get_Model()->Get_AnimationNum();
-				
-			}
-
-			for (int n = 0; n < m_iAnimationNum; n++)
-			{
-				const bool is_selected = (m_iAnimationNum == n);
-				if (ImGui::Selectable(m_pAnimation[n]->Get_Name(), is_selected))
-					m_iAnimationNum = n;
-
-				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-				//캐릭터 애니메이션 돌리기위해
-				CBody* pcharacters = dynamic_cast<CBody*>(m_pAnimation[n]);
-				m_fDuration = m_pAnimation[n]->Get_Duration();
-				if (is_selected)
-				{
-					ImGui::SetItemDefaultFocus();
-					if(m_bStop == false)
-						pcharacters->Get_Model()->Play_Animation(fTimeDelta, true);
-					pcharacters->Get_Model()->Set_StiffnessRate(m_fSpeed);
-					m_pAnimation[n]->Set_TrackPosition(m_fCurrentTrackPosition);
-				}
-
-			}
-
-			ImGui::EndListBox();
-		}
+		
 	}
 
 
