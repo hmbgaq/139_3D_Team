@@ -2,6 +2,8 @@
 #include "Shader.h"
 #include "Navigation.h"
 
+#include "SMath.h"
+
 CTransform::CTransform(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
 {
@@ -11,8 +13,6 @@ CTransform::CTransform(const CTransform & rhs)
 	: CComponent(rhs)
 {
 }
-
-
 
 void CTransform::Set_Scaling(_float fScaleX, _float fScaleY, _float fScaleZ)
 {
@@ -27,40 +27,6 @@ HRESULT CTransform::Initialize_Prototype(_float fSpeedPerSec, _float fRotationPe
 	m_fRotationPerSec = fRotationPerSec;
 
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
-
-	_matrix			matTmp;
-	/*
-	matTmp = XMLoadFloat4x4(&m_WorldMatrix);*/
-
-
-	/*_float3		vTmp = _float3(0.f, 0.f, 0.f);
-	_float4		vTmp2 = _float4(0.f, 0.f, 0.f, 0.f);
-
-	_vector		vTmp1 = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-	_vector		vTmp3 = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-
-	XMVector3Normalize(vTmp1);
-
-	_float		fDot = XMVectorGetX(XMVector3Dot(vTmp1, vTmp3));
-
-	_float		fLength = XMVectorGetX(XMVector3Length(vTmp1));
-
-	XMStoreFloat3(&vTmp, vTmp1);
-	XMStoreFloat4(&vTmp2, vTmp1);*/
-
-
-	
-	
-
-	
-
-
-
-
-
-
-
-
 
 	return S_OK;
 }
@@ -147,7 +113,14 @@ void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 	_vector		vUp = Get_State(STATE_UP);
 	_vector		vLook = Get_State(STATE_LOOK);
 
-	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, m_fRotationPerSec * fTimeDelta);
+	_float fAdditionalRadian = m_fRotationPerSec * fTimeDelta;
+	m_fRadian += fAdditionalRadian;
+
+	_float fAngle = XMConvertToDegrees(m_fRadian);
+	fAngle = (_uint)fAngle % 360;
+	m_fRadian = XMConvertToRadians(fAngle);
+
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fAdditionalRadian);
 
 	Set_State(STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
 	Set_State(STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
@@ -162,11 +135,46 @@ void CTransform::Rotation(_fvector vAxis, _float fRadian)
 	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
 	_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
 
-	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fRadian);
+	m_fRadian = fRadian;
+
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, m_fRadian);
 
 	Set_State(STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
 	Set_State(STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
 	Set_State(STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
+}
+
+_bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta)
+{
+	_fvector vAxis = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	m_fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(m_WorldMatrix).y;
+
+	_float fTargetAngle = XMConvertToDegrees(fRadian);
+	_float fAngle = XMConvertToDegrees(m_fRadian);
+
+	if (1.f > abs(fTargetAngle - fAngle))
+	{
+		Rotation(vAxis, fRadian);
+		return true;
+	}
+
+	_int iDir = fTargetAngle > fAngle ? 1 : -1;
+
+	_vector		vRight = Get_State(STATE_RIGHT);
+	_vector		vUp = Get_State(STATE_UP);
+	_vector		vLook = Get_State(STATE_LOOK);
+
+	_float fAdditionalRadian = m_fRotationPerSec * fTimeDelta * iDir;
+	m_fRadian += fAdditionalRadian;
+
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fAdditionalRadian);
+
+	Set_State(STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
+	Set_State(STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
+	Set_State(STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
+
+	return false;
 }
 
 void CTransform::Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare)
@@ -215,11 +223,67 @@ void CTransform::Look_At_OnLand(_fvector vTargetPos)
 	Set_State(STATE_LOOK, vLook);
 }
 
+void CTransform::Look_At_Direction(_fvector _vLook)
+{
+	_float3		vScale = Get_Scaled();
+
+	_vector		vLook	= XMVector3Normalize(_vLook);
+	_vector		vUp		= XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	_vector		vRight	= XMVector3Normalize(XMVector3Cross(vUp, vLook));
+	vUp = XMVector3Normalize(XMVector3Cross(vLook, vRight));
+
+	vRight	*= vScale.x;
+	vUp		*= vScale.y;
+	vLook	*= vScale.z;
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+}
+
+void CTransform::Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta)
+{
+	_float3		vScale = Get_Scaled();
+
+	_vector		vPosition = Get_State(STATE_POSITION);
+	_vector		vLook = vTargetPos - vPosition;
+
+	_matrix matrixLook = SMath::Bake_MatrixNormalizeUseLookVector(vLook);
+
+	_float fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(matrixLook).y;
+
+	Rotation_Lerp(fRadian, fTimeDelta);
+}
+
 void CTransform::Add_RootBone_Position(const _float3& vPos, CNavigation* pNavigation)
 {
 	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), m_WorldMatrix);
 	_vector vResult = vRootMove;
 	Move_On_Navigation(vResult, pNavigation);
+}
+
+
+_float3 Calculate_SlidingVector(const _fvector& velocity, const _fvector& normal) {
+	// velocity: 물체의 현재 속도
+	// normal: 충돌 지점의 법선 벡터
+
+	// 법선 벡터와 속도 벡터 사이의 수직 성분을 계산
+	_vector normalComponent = XMVector3Dot(velocity, normal) * normal;
+	// 수평 성분을 계산
+	_vector tangentComponent = velocity - normalComponent;
+
+	// 수평 성분이 없으면(법선 벡터와 평행한 경우), 슬라이딩 벡터는 영벡터
+	if (XMVector3Equal(tangentComponent, XMVectorZero())) {
+		return _float3(0.0f, 0.0f, 0.0f);
+	}
+
+	// 수평 성분을 정규화하여 슬라이딩 벡터를 계산
+	_vector slidingVector = XMVector3Normalize(tangentComponent);
+
+	// 슬라이딩 벡터를 반환
+	_float3 result;
+	XMStoreFloat3(&result, slidingVector);
+	return result;
 }
 
 HRESULT CTransform::Bind_ShaderResource(CShader * pShader, const _char * pConstantName)

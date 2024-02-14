@@ -31,7 +31,11 @@ public:
 
 public:
 	list<class CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring& strLayerTag);
+	void Fill_PrototypeTags(vector<string>* _vector);
 
+public:
+	class CGameObject* Get_Player();
+	void Set_Player(CGameObject* _pPlayer);
 
 private:
 	_uint			m_iNumLevels = { 0 };
@@ -40,6 +44,10 @@ private:
 	map<const wstring, class CGameObject*>			m_Prototypes;
 	map<const wstring, class CLayer*>*				m_pLayers = { nullptr } ;
 	typedef map<const wstring, class CLayer*>		LAYERS;
+
+private:
+	class CGameInstance* m_pGameInstance = { nullptr };
+	class CGameObject* m_pPlayer = { nullptr };
 
 private:
 	class CGameObject* Find_Prototype(const wstring& strPrototypeTag);

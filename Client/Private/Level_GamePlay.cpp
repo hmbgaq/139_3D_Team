@@ -5,7 +5,8 @@
 #include "Player.h"
 
 #include "Camera_Dynamic.h"
-
+#include "Environment_Instance.h"
+#include "Effect_Instance.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -116,8 +117,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag, void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg)))
+	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg)))
+	//	return E_FAIL;
+
+	CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
+	if (nullptr == pPlayer)
 		return E_FAIL;
+
+	m_pGameInstance->Set_Player(pPlayer);
 
 	return S_OK;
 }
@@ -141,12 +148,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* pArg)
 {
-	for (size_t i = 0; i < 20; i++)
-	{
-		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg)))
-			return E_FAIL;
-	}
+	//for (size_t i = 0; i < 20; i++)
+	//{
+	//	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg)))
+	//			return E_FAIL;
+	//}
 
+
+
+
+	
 	return S_OK;
 }
 
@@ -157,6 +168,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 
 	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky"))))
 		return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Skydome"))))
+	//	return E_FAIL;
 
 
 
@@ -186,7 +200,23 @@ HRESULT CLevel_GamePlay::Ready_LandObjects()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg)))
+	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg)))
+	//	return E_FAIL;
+	CLandObject::LANDOBJECT_DESC LandObjectDesc = *(CLandObject::LANDOBJECT_DESC*)pArg;
+
+
+	CEnvironment_Instance::ENVIRONMENT_INSTANCE_DESC Desc;
+
+	Desc.strModelTag = TEXT("Prototype_Component_Model_ForkLift");
+	Desc.iShaderPassIndex = 1;
+	Desc.iNumInstance = 10;
+
+	Desc.fRotationPerSec = LandObjectDesc.fRotationPerSec;
+	Desc.fSpeedPerSec = LandObjectDesc.fSpeedPerSec;
+	Desc.pTerrainBuffer = LandObjectDesc.pTerrainBuffer;
+	Desc.pTerrainTransform = LandObjectDesc.pTerrainTransform;
+
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Environment_Instance"), &Desc)))
 		return E_FAIL;
 
 	return S_OK;

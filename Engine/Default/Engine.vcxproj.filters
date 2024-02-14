@@ -136,18 +136,6 @@
     <Filter Include="01.Utility\05.Fonts\Manager">
       <UniqueIdentifier>{931ef747-b5f1-46b3-b320-a2b577a64f71}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles">
-      <UniqueIdentifier>{cbf68baf-2cb3-485d-842e-d613a07fc0ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing">
-      <UniqueIdentifier>{3033c523-d7b7-42fc-8e91-1a12021165a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect">
-      <UniqueIdentifier>{5a2d3fa4-2baf-4041-a7b7-8e66ffc41c72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Point">
-      <UniqueIdentifier>{af1d67e4-c372-4d14-97cc-c9ea53ae80f3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\06.RenderTargets">
       <UniqueIdentifier>{badb726d-9bf5-40d5-b40d-ff261fe1a98a}</UniqueIdentifier>
     </Filter>
@@ -187,6 +175,27 @@
     <Filter Include="97.MyAssimp\4.AIAnimation">
       <UniqueIdentifier>{241bb832-96c1-40e2-ad6b-7117aeeb82d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles">
+      <UniqueIdentifier>{cbf68baf-2cb3-485d-842e-d613a07fc0ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing">
+      <UniqueIdentifier>{3033c523-d7b7-42fc-8e91-1a12021165a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect">
+      <UniqueIdentifier>{5a2d3fa4-2baf-4041-a7b7-8e66ffc41c72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Point">
+      <UniqueIdentifier>{af1d67e4-c372-4d14-97cc-c9ea53ae80f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Model_Instance">
+      <UniqueIdentifier>{22e03326-c8c8-4edf-b29c-6e6d15854599}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Model_Instance\Environment">
+      <UniqueIdentifier>{aaed5d8b-f893-444b-8bfb-d8ca8b744249}</UniqueIdentifier>
+    </Filter>
+	<Filter Include="01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect">
+	 <UniqueIdentifier>{8bcbac06-d32d-418b-977c-b6a675263715}</UniqueIdentifier>
+	</Filter>
     <Filter Include="01.Utility\97. PhysX">
       <UniqueIdentifier>{619f889e-6947-4fcb-98d7-0c03f0861054}</UniqueIdentifier>
     </Filter>
@@ -198,6 +207,15 @@
     </Filter>
     <Filter Include="01.Utility\02.GameObjects\0. Character\Body">
       <UniqueIdentifier>{502f0abd-2bb1-4d2c-9fd0-2683ff5bc917}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Utility">
+      <UniqueIdentifier>{d544db3e-75c4-46f7-9cc6-7e6ed4edb7e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Utility\SMath">
+      <UniqueIdentifier>{fcc5c7a4-44f3-4248-801a-56ba55cdd5a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Utility\Json">
+      <UniqueIdentifier>{77f2f73f-4aaf-4a32-a6b2-760db060bdf7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -402,6 +420,15 @@
     <ClInclude Include="..\Public\Input_Device.h">
       <Filter>00.System\00.Device\Input</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Model_Instance.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Environment_Model_Instance.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Environment</Filter>
+    </ClInclude>
+	<ClInclude Include="..\Public\VIBuffer_Effect_Model_Instance.h">
+	 <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\PhysXManager.h">
       <Filter>01.Utility\97. PhysX</Filter>
     </ClInclude>
@@ -413,6 +440,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Weapon.h">
       <Filter>01.Utility\02.GameObjects\0. Character\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SMath.h">
+      <Filter>01.Utility\96.Utility\SMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Json_Utility.h">
+      <Filter>01.Utility\96.Utility\Json</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -566,6 +599,15 @@
     <ClCompile Include="..\Private\Input_Device.cpp">
       <Filter>00.System\00.Device\Input</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Model_Instance.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Environment_Model_Instance.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Environment</Filter>
+    </ClCompile>
+	<ClCompile Include="..\Private\VIBuffer_Effect_Model_Instance.cpp">
+	  <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
+	</ClCompile>
     <ClCompile Include="..\Private\PhysXManager.cpp">
       <Filter>01.Utility\97. PhysX</Filter>
     </ClCompile>
@@ -577,6 +619,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Character.cpp">
       <Filter>01.Utility\02.GameObjects\0. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SMath.cpp">
+      <Filter>01.Utility\96.Utility\SMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Json_Utility.cpp">
+      <Filter>01.Utility\96.Utility\Json</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
