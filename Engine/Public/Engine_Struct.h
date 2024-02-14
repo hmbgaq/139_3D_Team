@@ -185,6 +185,11 @@ namespace Engine
 		XMFLOAT4		vColor;
 	}VTXINSTANCE;
 
+	template <typename T>
+	constexpr const T& clamp(const T& value, const T& start, const T& end) 
+	{
+		return (value < start) ? start : (value > end) ? end : value;
+	}
 #pragma endregion
 	
 }

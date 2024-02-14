@@ -17,7 +17,6 @@ vector			g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 vector			g_vCamPosition;
 
-
 texture2D		g_ShadeTexture;
 texture2D		g_NormalTexture;
 texture2D		g_DepthTexture;

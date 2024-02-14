@@ -11,7 +11,10 @@ class CRenderer final : public CBase
 {
 public:
 	enum RENDERGROUP { RENDER_PRIORITY, RENDER_SHADOW, RENDER_NONLIGHT, 
+					   
+						/* Shader */
 					   RENDER_GODRAY, RENDER_OUTLINE,
+					   
 					   RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
 
 	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_OUTLINE, SHADER_BLUR, SHADER_SSAO, SHADER_FINAL, SHADER_END };
@@ -36,7 +39,6 @@ public:
 
 	/* Set */
 	void Set_OutLine(_bool bOutLine) { m_bOutLine = bOutLine; }
-
 
 private:
 	class CShader*							m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };

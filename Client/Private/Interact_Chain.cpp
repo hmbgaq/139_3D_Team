@@ -23,8 +23,7 @@ HRESULT CInteract_Chain::Initialize(void* pArg)
 	if(FAILED(Ready_Components()))
 		return E_FAIL;
 
-	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(20.f, 0.f, 0.f, 1.f));
-	//m_pTransformCom->Set_Scaling(100.f, 100.f, 100.f);
+	m_fLineThick = 1.2f;
 
 	return S_OK;
 }
@@ -35,20 +34,46 @@ void CInteract_Chain::Priority_Tick(_float fTimeDelta)
 
 void CInteract_Chain::Tick(_float fTimeDelta)
 {
+	if (m_bInteractActive)
+	{
+		if (m_bIncrease)
+		{
+			m_fTimeAcc += fTimeDelta;
+
+			if (m_fTimeAcc > 1)
+				m_bIncrease = false;
+		}
+		else
+		{
+			m_fTimeAcc -= fTimeDelta;
+			if (m_fTimeAcc < 0 )
+				m_bIncrease = true;
+		}
+
+		m_vLineColor = { 1.f, 1.f, 1.f, m_fTimeAcc };
+	}
+	else
+		m_fTimeAcc = 0.f;
 }
 
 void CInteract_Chain::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-		return;
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this),);
+	
+	if (m_pGameInstance->Key_Pressing(DIK_8))
+	{
+		m_bInteractActive = true; 
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
+
+	}
+	else
+		m_bInteractActive = false;
 }
 
 HRESULT CInteract_Chain::Render()
 {
-	m_pGameInstance->Set_OutLine(true);
-
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
@@ -57,12 +82,34 @@ HRESULT CInteract_Chain::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 
-		m_pShaderCom->Begin(0);
+		if (m_bInteractActive)
+			iRenderPass = 3;
+		else
+			iRenderPass = 0;
+
+		m_pShaderCom->Begin(iRenderPass);
 
 		m_pModelCom->Render((_uint)i);
 	}
 
-	m_pGameInstance->Set_OutLine(false);
+	return S_OK;
+}
+
+HRESULT CInteract_Chain::Render_OutLine()
+{
+	FAILED_CHECK(Bind_ShaderResources());
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+
+		m_pShaderCom->Begin(4);
+
+		m_pModelCom->Render((_uint)i);
+	}
 
 	return S_OK;
 }
@@ -71,22 +118,17 @@ HRESULT CInteract_Chain::Ready_Components()
 {
 	/* For. Transform*/
 	{
-		if (FAILED(__super::Initialize(nullptr)))
-			return E_FAIL;
+		FAILED_CHECK(__super::Initialize(nullptr));
 	}
 
 	/* For.Com_Shader */
 	{
-		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_Model"),
-			TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-			return E_FAIL;
+		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 
 	/* For.Com_Model */
 	{
-		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Chain"),
-			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-			return E_FAIL;
+		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Chain"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 	}
 
 	return S_OK;
@@ -94,12 +136,16 @@ HRESULT CInteract_Chain::Ready_Components()
 
 HRESULT CInteract_Chain::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+
+	if (m_bInteractActive)
+	{
+		m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
+		m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fTimeAcc, sizeof(_float));
+	}
 
 	return S_OK;
 }
@@ -132,6 +178,7 @@ void CInteract_Chain::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pMaskTextureCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);
 }

@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class CShader;
 class CModel;
+class CTexture;
 END
 
 BEGIN(Client)
@@ -25,10 +26,20 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_OutLine() override;
 
 private:
-	CShader* m_pShaderCom = { nullptr };
-	CModel* m_pModelCom = { nullptr };
+	CShader*	m_pShaderCom = { nullptr };
+	CModel*		m_pModelCom = { nullptr };
+	CTexture*	m_pMaskTextureCom = { nullptr };
+
+	_int		iRenderPass = 0;
+	_bool		m_bInteractActive = { false };
+
+	_float4		m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
+	_float		m_fLineThick = 0;
+	_float		m_fTimeAcc = 0;
+	_bool		m_bIncrease = true;
 
 private:
 	HRESULT Ready_Components();

@@ -85,9 +85,6 @@
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\MapToolWindow">
       <UniqueIdentifier>{f8398acc-9828-4192-a11c-95f7c96e1b69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Interact">
-      <UniqueIdentifier>{daed6591-e3f1-4e31-8a6a-3942dcf39622}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\98. Loader">
       <UniqueIdentifier>{e392c2b5-5a93-41cd-9971-3527a5924eae}</UniqueIdentifier>
     </Filter>
@@ -117,6 +114,12 @@
     </Filter>
     <Filter Include="03. Effect">
       <UniqueIdentifier>{e5d2bd3f-eadc-4303-9426-7cfc18334f0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01. Interact">
+      <UniqueIdentifier>{daed6591-e3f1-4e31-8a6a-3942dcf39622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01. Interact\0. Chain">
+      <UniqueIdentifier>{4640b070-669a-48d8-9c94-8bed528d2d18}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -219,9 +222,6 @@
     <ClInclude Include="..\Public\Include_Imgui_Windows.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Interact_Chain.h">
-      <Filter>02.GameObjects\Interact</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>98.Default\Useless</Filter>
     </ClInclude>
@@ -233,6 +233,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\EW_Actor.h">
       <Filter>02.GameObjects\00. Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Interact_Chain.h">
+      <Filter>02.GameObjects\01. Interact\0. Chain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -326,14 +329,14 @@
     <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Interact_Chain.cpp">
-      <Filter>02.GameObjects\Interact</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>98.Default\Useless</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EW_Actor.cpp">
       <Filter>02.GameObjects\00. Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Interact_Chain.cpp">
+      <Filter>02.GameObjects\01. Interact\0. Chain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

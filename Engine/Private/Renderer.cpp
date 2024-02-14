@@ -76,13 +76,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_NonLight()); 
 	FAILED_CHECK(Render_NonBlend());	/* MRT_GameObjects*/
 	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
-
-	// Post : Ssao / Bloom / OutLine
-	{
-		FAILED_CHECK(Render_OutLine());	/* MRT_OutLine */
-	}
-
 	FAILED_CHECK(Render_Deferred());
+	FAILED_CHECK(Render_OutLine());	/* MRT_OutLine */
 	FAILED_CHECK(Render_Blend());
 	FAILED_CHECK(Render_UI());
 
@@ -231,8 +226,8 @@ HRESULT CRenderer::Ready_DebugRender()
 	_float fSizeY = 100.f;
 
 	/* MRT_GameObject */
-	//FAILED_CHECK(m_pGameInstance->Render_Font())
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse"),	(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 1.f) , fSizeX, fSizeY));
+	//FAILED_CHECK(m_pGameInstance->Render_Font(TEXT("Font_Arial"), L"Target_Diffuse", float2((fSizeX / 2.f * 1.f), (fSizeY / 2.f * 1.f)), XMVectorSet(0.f, 0.f, 0.f, 1.f), 0.5f));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"),	(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Depth"),	(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 5.f),  fSizeX, fSizeY));
 
@@ -245,27 +240,14 @@ HRESULT CRenderer::Ready_DebugRender()
 
 	/* MRT_SSAO	*/
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine"),	(fSizeX / 2.f * 5.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+
+	/* MRT_OutLine */
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_GodRay"),	(fSizeX / 2.f * 5.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+
+	/* MRT_GodRay */
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_SSAO"),		(fSizeX / 2.f * 5.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
 
 	return S_OK;
-
-
-	/* MRT_LightAcc - Q. Ambient 추가하는가 ? */
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade")));
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular")));
-
-	/* MRT_Shadow */
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow"), TEXT("Target_LightDepth")));
-
-	/* MRT_SSAO	*/
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO"), TEXT("Target_SSAO")));
-
-	/* MRT_OutLine */
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_OutLine"), TEXT("Target_OutLine")));
-
-	/* MRT_GodRay */
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GodRay"), TEXT("Target_GodRay")));
 }
 
 #endif // _DEBUG
@@ -460,23 +442,30 @@ HRESULT CRenderer::Render_Deferred()
 
 HRESULT CRenderer::Render_OutLine()
 {
-	if (!m_bOutLine)
-		return S_OK;
+	for (auto& pGameObject : m_RenderObjects[RENDER_OUTLINE])
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Render_OutLine();
 
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_OutLine"), m_pLightDepthDSV));
+		Safe_Release(pGameObject);
+	}
 
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
-	
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader[SHADER_TYPE::SHADER_OUTLINE],"g_NormalTarget"));
-	
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
-	
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Begin(0));
-	FAILED_CHECK(m_pVIBuffer->Render());
+	m_RenderObjects[RENDER_OUTLINE].clear();
 
-	FAILED_CHECK(m_pGameInstance->End_MRT());
+	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_OutLine"), m_pLightDepthDSV));
+
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+	//
+	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader[SHADER_TYPE::SHADER_OUTLINE],"g_NormalTexture"));
+	//
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
+	//
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Begin(0));
+	//FAILED_CHECK(m_pVIBuffer->Render());
+
+	//FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }

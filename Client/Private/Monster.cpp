@@ -160,8 +160,6 @@ HRESULT CMonster::Ready_Components()
 
 HRESULT CMonster::Bind_ShaderResources()
 {
-	
-
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
@@ -202,6 +200,7 @@ void CMonster::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pDissolveTexCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
