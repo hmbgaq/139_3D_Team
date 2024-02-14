@@ -7,62 +7,75 @@
 
 
 CPreviewAnimationModel::CPreviewAnimationModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CGameObject(pDevice,pContext)
+	:CCharacter(pDevice,pContext)
 {
 }
 
 CPreviewAnimationModel::CPreviewAnimationModel(const CPreviewAnimationModel& rhs)
-	:CGameObject(rhs)
+	: CCharacter(rhs)
 {
 }
 
 CModel* CPreviewAnimationModel::Get_CurrentModel()
 {
-	return nullptr;
+	return Get_Body()->Get_Model();
 }
 
 HRESULT CPreviewAnimationModel::Initialize_Prototype()
 {
-	return E_NOTIMPL;
+	__super::Initialize_Prototype();
+
+	return S_OK;
 }
 
 HRESULT CPreviewAnimationModel::Initialize(void* pArg)
 {
-	return E_NOTIMPL;
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 void CPreviewAnimationModel::Priority_Tick(_float fTimeDelta)
 {
+	__super::Priority_Tick(fTimeDelta);
 }
 
 void CPreviewAnimationModel::Tick(_float fTimeDelta)
 {
+	__super::Tick(fTimeDelta);
 }
 
 void CPreviewAnimationModel::Late_Tick(_float fTimeDelta)
 {
+	__super::Late_Tick(fTimeDelta);
 }
 
 HRESULT CPreviewAnimationModel::Render()
 {
-	return E_NOTIMPL;
+	if (FAILED(__super::Render()))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CPreviewAnimationModel::Render_Shadow()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 void CPreviewAnimationModel::Init_EditPreviewAnimationModel(const string& In_szModelKey)
 {
+
 }
 
 void CPreviewAnimationModel::Change_AnimationFromIndex(const _uint& In_iAnimIndex)
 {
 }
 
-void CPreviewAnimationModel::Play_Animation(_float fTimeDelta)
+void CPreviewAnimationModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 {
+	m_pBody->Get_Model()->Play_Animation(fTimeDelta, true);
 }
 
 void CPreviewAnimationModel::Add_DebugWeapon(const string& In_szBoneName, const _float3& In_vOffset, const _float In_fSize)

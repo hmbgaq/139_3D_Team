@@ -57,7 +57,8 @@ public:
 	void Set_StiffnessRate(_float fStiffnessRate) {
 		m_pModelCom->Set_StiffnessRate(fStiffnessRate);
 	}
-
+public:
+	CModel* Get_Model() { return m_pModelCom; }
 //public:
 //	void Activate_Dissolve() {
 //		m_bDissolve = true;

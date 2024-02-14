@@ -55,6 +55,7 @@ private:
 	void			ClearAll_KeyEvent();
 	void			Clear_WeaponEvent();
 
+	void			Create_Object(const wstring& strLayerTag, const wstring& strPrototypeTag);
 	void			Draw_Player();
 	void			Draw_Monster();
 	void			Draw_KeyEventEditer();
@@ -62,23 +63,30 @@ private:
 
 private:
 	CPreviewAnimationModel*	m_pPreViewModel = { nullptr };
-	CAnimation*		m_pCurrentAnimation = nullptr;
+	CAnimation*				m_pCurrentAnimation = { nullptr };
+	CGameObject*			m_PickingObject = { nullptr };
 
-	_float			m_fCurrentTime = 0.f;
-	_float			m_fMaxAnimationTime = 0.f;
-	_float			m_fSpeed = 1.f;
+	_float					m_fCurrentTime = 0.f;
+	_float					m_fMaxAnimationTime = 0.f;
+	_float					m_fSpeed = 1.f;
 
-	_bool			m_bStop = false;
-	_bool			m_bHold = false;
+	_int					m_CurrentAnimationIndex = 0;
+	_int					m_iCreateObjectSize = 0;
+	
+	string					m_strKeyEventFileName = "";
+	string					m_strSoundFileName = "";
 
-	vector<string>	m_AllAnimationKeys;
-	_int			m_CurrentAnimationIndex = 0;
-
-	string			m_strKeyEventFileName = "";
-	string			m_strSoundFileName = "";
-
+	vector<string>			m_AllAnimationKeys;
+	vector<string>			m_vObjectTag;
+	vector<CGameObject*>	m_CreateList;
 public:
-	_bool			m_bKeyEventEditer = false;
+	_bool					m_bStop = false;
+	_bool					m_bHold = false;
+	_bool					m_bKeyEventEditer = false;
+	_bool					m_bCreateCheck = false;
+	_bool					m_bDeleteCheck = false;
+	_bool					m_bListCheck = false;
+	_bool					m_bCloneCount = false;
 public:
 	static CWindow_AnimTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

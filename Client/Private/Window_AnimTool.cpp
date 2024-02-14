@@ -170,6 +170,17 @@ void CWindow_AnimTool::Clear_WeaponEvent()
 {
 }
 
+void CWindow_AnimTool::Create_Object(const wstring& strLayerTag, const wstring& strPrototypeTag)
+{
+	m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, strPrototypeTag);
+
+	list<CGameObject*> pGameObjects = *(m_pGameInstance->Get_GameObjects(LEVEL_TOOL, strLayerTag));
+	CGameObject* pGameObject = pGameObjects.back();
+
+	const _float3& temp = _float3(0.0f, 0.0f, 5.0f);
+	pGameObject->
+}
+
 void CWindow_AnimTool::Draw_Player()
 {
 	if (!m_pCurrentAnimation)
@@ -190,6 +201,103 @@ void CWindow_AnimTool::Draw_AnimationList()
 	if (!m_pCurrentAnimation)
 		return;
 
+	if (ImGui::TreeNode("AnimationModel"))
+	{
+		string items[] = { "Layer_Player", "Layer_Monster","Layer_Environment","Layer_Object","Layer_Effect","Layer_Something"};
+
+		static int Object_idx = 0; // Here we store our selection data as an index.
+		static int Layer_idx = 0; // Here we store our selection data as an index.
+		int ObjectTagSize = m_vObjectTag.size();
+
+		if (ImGui::BeginListBox("ObjectList"))
+		{
+			for (int n = 0; n < ObjectTagSize; n++)
+			{
+				const bool is_selected = (Object_idx == n);
+				if (ImGui::Selectable(m_vObjectTag[n].c_str(), is_selected))
+					Object_idx = n;
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+
+			}
+			ImGui::EndListBox();
+		}
+		ImGui::Spacing();
+		if (ImGui::BeginListBox("LayerList"))
+		{
+			for (int n = 0; n <6; n++)
+			{
+				const bool is_selected = (Layer_idx == n);
+				if (ImGui::Selectable(items[n].c_str(), is_selected))
+					Layer_idx = n;
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+					if (m_bCreateCheck)
+						if (m_pGameInstance->Mouse_Down(DIM_LB))
+						{
+							Create_Object(ConvertCtoWC(items[Layer_idx].c_str()), ConvertCtoWC(m_vObjectTag[Object_idx].c_str()));
+							//Create_Object_On_Map(ConvertCtoWC(items[Layer_idx].c_str()), ConvertCtoWC(m_vObjectTag[Object_idx].c_str()));
+							m_bCloneCount = true;
+							m_bListCheck = true;
+						}
+					
+				}
+
+			}
+			
+			ImGui::EndListBox();
+		}
+		ImGui::Spacing();
+		ImGui::Checkbox("Create",&m_bCreateCheck);
+		ImGui::Checkbox("Delete",& m_bDeleteCheck);
+		
+
+		
+		static int CreateIndex = 0; // Here we store our selection data as an index.
+		
+		if (m_bListCheck)
+		{
+			m_iCreateObjectSize =m_CreateList.size();
+			if (ImGui::BeginListBox("CreateList"))
+			{
+
+				for (int n = 0; n < m_iCreateObjectSize; n++)
+				{
+					string str ="Object";
+					string str2 = to_string(n);
+
+					const bool is_selected = (CreateIndex == n);
+					if (ImGui::Selectable((str + "." + str2).c_str(), is_selected))
+						CreateIndex = n;
+
+					// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+					if (is_selected)
+					{
+						m_PickingObject = m_CreateList[CreateIndex];
+						ImGui::SetItemDefaultFocus();
+						if (m_bDeleteCheck)
+						{
+							_bool isdead = true;
+							m_CreateList[CreateIndex]->Set_Dead(isdead);
+							m_CreateList.erase(m_CreateList.begin() + CreateIndex);
+							m_bDeleteCheck = false;
+						}
+							
+					}
+				}
+				ImGui::EndListBox();
+			}
+		}
+				
+				
+				ImGui::TreePop();
+			}
+
 	if (ImGui::Button("Play"))
 	{
 		m_bStop = !m_bStop;
@@ -201,14 +309,14 @@ void CWindow_AnimTool::Draw_AnimationList()
 	{
 		m_bHold = !m_bHold;
 
-		_byte byFlag(0);
-
-		CModel* pCurrentModel = m_pPreViewModel->Get_CurrentModel();
-
-		if (m_bHold)
-		{
-			byFlag = (_byte)ROOTNODE_FLAG::X | (_byte)ROOTNODE_FLAG::Z;
-		}
+// 		_byte byFlag(0);
+// 
+// 		CModel* pCurrentModel = m_pPreViewModel->Get_CurrentModel();
+// 
+// 		if (m_bHold)
+// 		{
+// 			byFlag = (_byte)ROOTNODE_FLAG::X | (_byte)ROOTNODE_FLAG::Z;
+// 		}
 
 
 	}

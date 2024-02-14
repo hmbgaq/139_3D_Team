@@ -201,7 +201,6 @@ HRESULT CPlayer::Add_PartObject(const wstring & strPrototypeTag, const wstring &
 }
 
 
-
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CPlayer*		pInstance = new CPlayer(pDevice, pContext);
