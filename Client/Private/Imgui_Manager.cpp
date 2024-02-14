@@ -103,7 +103,7 @@ HRESULT CImgui_Manager::Ready_Windows()
 	pWindow = CWindow_EffectTool::Create(m_pDevice, m_pContext);
 	if (pWindow == nullptr)
 		return E_FAIL;
-	pWindow->SetUp_ImGuiDESC(u8"¿Ã∆Â∆Æ ≈¯", ImVec2{ 350.f, 550.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus);
+	pWindow->SetUp_ImGuiDESC(u8"¿Ã∆Â∆Æ ≈¯", ImVec2{ 350.f, 550.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW, pWindow);
 
 	return S_OK;
