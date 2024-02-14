@@ -1,8 +1,29 @@
 #include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D		g_Texture;
+texture2D		g_DiffuseTexture;
 vector			g_vCamPosition;
+
+float			g_fDegree;
+
+
+/* Custom Function */
+float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
+{
+    float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
+    float fRotationRadian = fDegree * fDegree2Radian;
+    float cosA = cos(fRotationRadian);
+    float sinA = sin(fRotationRadian);
+
+    float2x2 RotateMatrix = float2x2(cosA, -sinA, sinA, cosA);
+	
+    vTexcoord -= 0.5f;
+    vTexcoord = mul(vTexcoord, RotateMatrix);
+    vTexcoord += 0.5f;
+	
+    return vTexcoord;
+}
+
 
 struct VS_IN
 {
@@ -63,21 +84,21 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);	
 
 	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
-	Out[0].vTexcoord = float2(0.f, 0.f);
+    Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
 	Out[0].vColor = In[0].vColor;
 
 	Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
-	Out[1].vTexcoord = float2(1.f, 0.f);
+    Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_fDegree);
 	Out[1].vColor = In[0].vColor;
 
 	Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
-	Out[2].vTexcoord = float2(1.f, 1.f);
+    Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_fDegree);
 	Out[2].vColor = In[0].vColor;
 
 	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
-	Out[3].vTexcoord = float2(0.f, 1.f);
+    Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_fDegree);
 	Out[3].vColor = In[0].vColor;
-
+	
 	OutStream.Append(Out[0]);
 	OutStream.Append(Out[1]);
 	OutStream.Append(Out[2]);
@@ -94,6 +115,8 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 /* 투영변환 : /w */ /* -> -1, 1 ~ 1, -1 */ 
 /* 뷰포트변환-> 0, 0 ~ WINSX, WINSY */ 
 /* 래스터라이즈 : 정점정보에 기반하여 픽셀의 정보를 만든다. */
+
+
 
 
 struct PS_IN
@@ -114,7 +137,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
-	Out.vColor = g_Texture.Sample(PointSampler, In.vTexcoord);	
+    Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
 
 	if (Out.vColor.a < 0.8f)
 		discard;

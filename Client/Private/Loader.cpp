@@ -29,7 +29,7 @@
 
 
 #pragma region FOR_EFFECTTOOL
-#include "Particle_Custom.h"
+
 #pragma endregion
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -333,7 +333,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체를(을) 로드하는 중입니다."));
-	/* For.Prototype_GameObject_Particle_Custom */
+
 	
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));

@@ -15,6 +15,8 @@ public:
 		_float2		vSpeed;
 
 		_float2		vScale;
+		_float2		vAddScale;
+
 		_float2		vRotX = { 0.0f, 360.f };
 		_float2		vRotY = { 0.0f, 360.f };
 		_float2		vRotZ = { 0.0f, 360.f };
@@ -58,6 +60,9 @@ public:
 	_bool			 Is_ReversePlay() { return m_bReverse; }
 	void			 Set_ReversePlay(_bool bReverse) { m_bReverse = bReverse; }
 
+	_float2			Get_AddScale() { return m_InstancingDesc.vAddScale; }
+	void			Set_AddScale(_float fX, _float fY) { m_InstancingDesc.vAddScale = _float2(fX, fY); }
+
 	_float			Get_RotX() { return m_InstancingDesc.vRotX.y; }
 	void			Set_RotX(_float fRotX) { m_InstancingDesc.vRotX.y = fRotX; }
 
@@ -66,6 +71,7 @@ public:
 
 	_float			Get_RotZ() { return m_InstancingDesc.vRotZ.y; }
 	void			Set_RotZ(_float fRotZ) { m_InstancingDesc.vRotZ.y = fRotZ; }
+	void			Set_RotZ_start(_float fRotZ) { m_InstancingDesc.vRotZ.x = fRotZ; }
 
 	_float			Get_Acceleration() { return m_InstancingDesc.fAcceleration; }
 	void			Set_Acceleration(_float fAcceleration) { m_InstancingDesc.fAcceleration = fAcceleration; }

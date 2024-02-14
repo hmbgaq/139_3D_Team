@@ -36,6 +36,9 @@ public:
 public:
 	void		Set_Active(_bool bActive) { m_bActive = bActive; }
 
+	void		Set_RotateUvDegree(_float fDegree) { m_fRotateUvDegree = fDegree; }
+	_float		Get_RotateUvDegree() { return m_fRotateUvDegree; }
+
 public:
 	CVIBuffer_Particle_Point*	Get_VIBufferCom() { return m_pVIBufferCom; }
 	CTransform*					Get_TransformCom() { return m_pTransformCom; }
@@ -43,7 +46,7 @@ public:
 
 private:
 	wstring			m_strTextureTag;
-
+	_float			m_fRotateUvDegree = { 0.f };
 
 private:
 	_bool			m_bActive = { TRUE };

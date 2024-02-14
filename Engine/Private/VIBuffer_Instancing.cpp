@@ -67,25 +67,6 @@ HRESULT CVIBuffer_Instancing::Initialize(void * pArg)
 		pVertices[i].vUp = _float4(0.f, fScale, 0.f, 0.f);
 		pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
 
-		
-
-		//_float3(XMVectorGetX(XMVector3Length(XMLoadFloat4(&pVertices[i].vRight)),
-		//	XMVectorGetX(XMVector3Length(XMLoadFloat4(&pVertices[i].vUp)),
-		//	XMVectorGetX(XMVector3Length(XMLoadFloat4(&pVertices[i].vLook)))
-
-
-		//_float3		vScale = Get_Scaled();
-
-		//_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
-		//_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
-		//_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
-
-		//_matrix		RotationMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(90.f));
-
-		//XMStoreFloat4(&pVertices[i].vRight, XMVector3TransformNormal(vRight, RotationMatrix));
-		//XMStoreFloat4(&pVertices[i].vUp, XMVector3TransformNormal(vUp, RotationMatrix));
-		//XMStoreFloat4(&pVertices[i].vLook, XMVector3TransformNormal(vLook, RotationMatrix));
-
 
 		vDir = XMVector3Normalize(vDir) * RandomRange(m_RandomNumber);
 
@@ -96,6 +77,13 @@ HRESULT CVIBuffer_Instancing::Initialize(void * pArg)
 
 		XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat3(&m_InstancingDesc.vCenter) + XMVector3TransformNormal(vDir, RotationMatrix));
 		pVertices[i].vPosition.w = 1.f;
+
+
+
+
+
+
+
 		pVertices[i].vColor = m_InstancingDesc.vColor;
 	}
 
@@ -238,7 +226,7 @@ void CVIBuffer_Instancing::ReSet()
 
 	uniform_real_distribution<float>	RandomRotationX(0.0f, XMConvertToRadians(m_InstancingDesc.vRotX.y));
 	uniform_real_distribution<float>	RandomRotationY(0.0f, XMConvertToRadians(m_InstancingDesc.vRotY.y));
-	uniform_real_distribution<float>	RandomRotationZ(0.0f, XMConvertToRadians(m_InstancingDesc.vRotZ.y));
+	uniform_real_distribution<float>	RandomRotationZ(XMConvertToRadians(m_InstancingDesc.vRotZ.x), XMConvertToRadians(m_InstancingDesc.vRotZ.y));
 
 	uniform_real_distribution<float>	RandomScale(m_InstancingDesc.vScale.x, m_InstancingDesc.vScale.y);
 	uniform_real_distribution<float>	RandomSpeed(m_InstancingDesc.vSpeed.x, m_InstancingDesc.vSpeed.y);
@@ -251,42 +239,34 @@ void CVIBuffer_Instancing::ReSet()
 
 		_float	fScale = RandomScale(m_RandomNumber);
 
-		pVertices[i].vRight = _float4(fScale, 0.f, 0.f, 0.f);
-		pVertices[i].vUp = _float4(0.f, fScale, 0.f, 0.f);
-		pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
+		m_vRotation = { RandomRotationX(m_RandomNumber), RandomRotationY(m_RandomNumber), RandomRotationZ(m_RandomNumber) };
+		_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_vRotation.x, m_vRotation.y, m_vRotation.z);
+
+		_float cosA = cos(m_vRotation.z);
+		_float sinA = sin(m_vRotation.z);
+		_float fDegree = XMConvertToDegrees(m_vRotation.z);
+
+
+		pVertices[i].vRight = _float4(cosA, 0.f, -sinA, 0.f) * (fScale + m_InstancingDesc.vAddScale.x);
+		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * (fScale + m_InstancingDesc.vAddScale.y);
+		pVertices[i].vLook = _float4(sinA, 0.f, cosA, 0.f) * 1.f;
+
+
+		//pVertices[i].vRight = _float4(fScale + m_InstancingDesc.vAddScale.x, 0.f, 0.f, 0.f);
+		//pVertices[i].vUp = _float4(0.f, fScale + m_InstancingDesc.vAddScale.y, 0.f, 0.f);
+		//pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
 
 		pVertices[i].vColor.w = 1.f;
 
 		vDir = XMVector3Normalize(vDir) * RandomRange(m_RandomNumber);
 
-		m_vRotation = { RandomRotationX(m_RandomNumber), RandomRotationY(m_RandomNumber), RandomRotationZ(m_RandomNumber) };
-		_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_vRotation.x, m_vRotation.y, m_vRotation.z);
+
 
 		_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
 
-		// 카메라를 바라보는 룩과 가야하는 방향 벡터를 외적하면 라이트 벡터가 나온다.
-		// 룩과 라이트를 외적하면 업이나옴 이걸로 회전?
-		//float4 vLook = m_pGameInstance->Get_CamPosition() - pVertices[i].vPosition;
-
-
-		_vector		vRotationTemp = XMQuaternionRotationRollPitchYaw(m_vRotation.x, m_vRotation.y, 0.f);
-		_matrix		RotationMatrixTemp = XMMatrixRotationQuaternion(vRotationTemp);
-
-		_float3		vScale = _float3(XMVectorGetX(XMVector3Length(XMLoadFloat4(&pVertices[i].vRight))),
-			XMVectorGetX(XMVector3Length(XMLoadFloat4(&pVertices[i].vUp))),
-			XMVectorGetX(XMVector3Length(XMLoadFloat4(&pVertices[i].vLook))));
-
-		_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
-		_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
-		_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
-
-		XMStoreFloat4(&pVertices[i].vRight, XMVector3TransformNormal(vRight, RotationMatrixTemp));
-		XMStoreFloat4(&pVertices[i].vUp, XMVector3TransformNormal(vUp, RotationMatrixTemp));
-		//XMStoreFloat4(&pVertices[i].vLook, XMVector3TransformNormal(vLook, RotationMatrixTemp));
-
-
 		XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat3(&m_InstancingDesc.vCenter) + XMVector3TransformNormal(vDir, RotationMatrix));
 		pVertices[i].vPosition.w = 1.f;
+
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);

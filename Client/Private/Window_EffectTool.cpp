@@ -109,58 +109,86 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 				Update_PlayArea_Particle();
 
 
+				/* UV 회전 */
+				if (nullptr != m_pCurParticle)
+				{
+					if(ImGui::SliderFloat("Uv Degree", &m_fRotateUvDegree, 0.f, 360.f))
+						m_pCurParticle->Set_RotateUvDegree(m_fRotateUvDegree);
+				}
+
+				/* 추가 크기조절 */
+				if (nullptr != m_pCurParticle)
+				{
+					if (ImGui::DragFloat2("AddScale", m_vAddScale, 0.1f, 0.f))
+					{
+						if (0 > m_vAddScale[0])
+							m_vAddScale[0] = 0.f;
+
+						if (0 > m_vAddScale[1])
+							m_vAddScale[1] = 0.f;
+
+						m_pCurParticle->Get_VIBufferCom()->Set_AddScale(m_vAddScale[0], m_vAddScale[1]);
+					}
+				}
+
+
 				/* 회전 범위 */
 				if (nullptr != m_pCurParticle)
 				{
 					/* RotX */
-					ImGui::DragFloat2("RotationX", m_vRotationX, 1.f, 0.f);
+					if (ImGui::DragFloat2("RotationX", m_vRotationX, 1.f, 0.f, 360.f))
+					{
+						if (0 > m_vRotationX[0])
+							m_vRotationX[0] = 0.f;
 
-					if (0 > m_vRotationX[0])
-						m_vRotationX[0] = 0.f;
+						if (m_vRotationX[0] > m_vRotationX[1])
+							m_vRotationX[1] = m_vRotationX[0];
 
-					if (m_vRotationX[0] > m_vRotationX[1])
-						m_vRotationX[1] = m_vRotationX[0];
-
-					//m_pCurParticle->Set_RotX(vRotationX[0]);
-					m_pCurParticle->Get_VIBufferCom()->Set_RotX(m_vRotationX[1]);
+						//m_pCurParticle->Set_RotX(vRotationX[0]);
+						m_pCurParticle->Get_VIBufferCom()->Set_RotX(m_vRotationX[1]);
+					}
 
 
 					/* RotY */
-					ImGui::DragFloat2("RotationY", m_vRotationY, 1.f, 0.f);
+					if (ImGui::DragFloat2("RotationY", m_vRotationY, 1.f, 0.f, 360.f))
+					{
+						if (0 > m_vRotationY[0])
+							m_vRotationY[0] = 0.f;
 
-					if (0 > m_vRotationY[0])
-						m_vRotationY[0] = 0.f;
+						if (m_vRotationY[0] > m_vRotationY[1])
+							m_vRotationY[1] = m_vRotationY[0];
 
-					if (m_vRotationY[0] > m_vRotationY[1])
-						m_vRotationY[1] = m_vRotationY[0];
-
-					//m_pCurParticle->Set_RotX(vRotationX[0]);
-					m_pCurParticle->Get_VIBufferCom()->Set_RotY(m_vRotationY[1]);
+						//m_pCurParticle->Set_RotX(vRotationX[0]);
+						m_pCurParticle->Get_VIBufferCom()->Set_RotY(m_vRotationY[1]);
+					}
 
 
 					/* RotZ */
-					ImGui::DragFloat2("RotationZ", m_vRotationZ, 1.f, 0.f);
+					if (ImGui::DragFloat2("RotationZ", m_vRotationZ, 1.f, 0.f, 360.f))
+					{
+						if (0 > m_vRotationZ[0])
+							m_vRotationZ[0] = 0.f;
 
-					if (0 > m_vRotationZ[0])
-						m_vRotationZ[0] = 0.f;
+						if (m_vRotationZ[0] > m_vRotationZ[1])
+							m_vRotationZ[1] = m_vRotationZ[0];
 
-					if (m_vRotationZ[0] > m_vRotationZ[1])
-						m_vRotationZ[1] = m_vRotationZ[0];
+						//m_pCurParticle->Set_RotX(vRotationX[0]);
+						m_pCurParticle->Get_VIBufferCom()->Set_RotZ_start(m_vRotationZ[0]);
+						m_pCurParticle->Get_VIBufferCom()->Set_RotZ(m_vRotationZ[1]);
+					}
 
-					//m_pCurParticle->Set_RotX(vRotationX[0]);
-					m_pCurParticle->Get_VIBufferCom()->Set_RotZ(m_vRotationZ[1]);
 				}
 
 
 				/* 가속도 */
 				if (nullptr != m_pCurParticle)
 				{
-					ImGui::SliderFloat("AccPos_Particle", &m_fParticleAccPosition, 0.f, 1.f);
-					m_pCurParticle->Get_VIBufferCom()->Set_AccPosition(m_fParticleAccPosition);
+					if(ImGui::SliderFloat("AccPos_Particle", &m_fParticleAccPosition, 0.f, 1.f))
+						m_pCurParticle->Get_VIBufferCom()->Set_AccPosition(m_fParticleAccPosition);
 
 
-					ImGui::SliderFloat("ACC_Particle", &m_fParticleAcceleration, 0.f, 100.f);
-					m_pCurParticle->Get_VIBufferCom()->Set_Acceleration(m_fParticleAcceleration);
+					if(ImGui::SliderFloat("ACC_Particle", &m_fParticleAcceleration, 0.f, 100.f))
+						m_pCurParticle->Get_VIBufferCom()->Set_Acceleration(m_fParticleAcceleration);
 				}
 
 				Update_ColorEditArea_Particle();
@@ -248,7 +276,7 @@ void CWindow_EffectTool::Update_PlayArea_Particle()
 	if (nullptr != m_pCurParticle)
 	{
 		_float fLifeTimePosition = m_pCurParticle->Get_VIBufferCom()->Get_TimePosition();
-		ImGui::SliderFloat("Play_Particle", &fLifeTimePosition, 0.f, m_pCurParticle->Get_VIBufferCom()->Get_Desc()->vLifeTime.y);
+		ImGui::SliderFloat("TimePos_Particle", &fLifeTimePosition, 0.f, m_pCurParticle->Get_VIBufferCom()->Get_Desc()->vLifeTime.y);
 
 
 		///* 현재 재생 위치(포지션) 이동 */

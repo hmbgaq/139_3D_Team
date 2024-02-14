@@ -61,7 +61,9 @@ private:
 	_float m_vRotationZ[2] = { 0.f, 0.f };
 	_float m_fParticleAcceleration	= { 1.f };
 	_float m_fParticleAccPosition	= { 0.1f };
+	_float m_fRotateUvDegree = { 0.f };
 
+	_float m_vAddScale[2] = { 0.f, 0.f };
 
 	_float m_fColor_Particle[3] = { 0.f, 0.f, 0.f };
 
