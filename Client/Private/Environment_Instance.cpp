@@ -17,7 +17,7 @@ CEnvironment_Instance::CEnvironment_Instance(const CEnvironment_Instance & rhs)
 
 HRESULT CEnvironment_Instance::Initialize_Prototype()
 {	
-
+	
 	return S_OK;
 }
 

@@ -219,9 +219,6 @@
     <ClInclude Include="..\Public\SkyDome.h">
       <Filter>02.GameObjects\Sky\SkyDome</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TestInstance.h">
-      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Environment_Instance.h">
       <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
     </ClInclude>
@@ -325,9 +322,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\SkyDome.cpp">
       <Filter>02.GameObjects\Sky\SkyDome</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\TestInstance.cpp">
-      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Environment_Instance.cpp">
       <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
