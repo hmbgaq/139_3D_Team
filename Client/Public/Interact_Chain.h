@@ -9,6 +9,8 @@ END
 
 BEGIN(Client)
 
+/* Gara클래스로 임시사용 용도임 */
+
 class CInteract_Chain  final : public CGameObject
 {
 private:

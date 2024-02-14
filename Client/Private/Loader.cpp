@@ -249,6 +249,8 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Navigation.dat")))))
 		return E_FAIL;
 
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation2"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Navigation2.dat"))));
+
 
 	lstrcpy(m_szLoadingText, TEXT("콜리이더를(을) 로드하는 중입니다."));
 	/* For.Prototype_Component_Collider_AABB */

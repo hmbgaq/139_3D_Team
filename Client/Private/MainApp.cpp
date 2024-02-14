@@ -1,27 +1,16 @@
 #include "stdafx.h"
-
-#include "..\Public\MainApp.h"
-
+#include "MainApp.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
-
-
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
 	Safe_AddRef(m_pGameInstance);
-
-
-	//D3D11_SAMPLER_DESC
-
-
 }
 
 HRESULT CMainApp::Initialize()
 {
-
-
 	GRAPHIC_DESC		GraphicDesc = {};
 
 	GraphicDesc.hWnd = g_hWnd;
@@ -29,17 +18,15 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.iBackBufferSizeX = g_iWinSizeX;
 	GraphicDesc.iBackBufferSizeY = g_iWinSizeY;
 
-	if (FAILED(m_pGameInstance->Initialize_Engine(LEVEL_END, g_hInst, GraphicDesc, &m_pDevice, &m_pContext)))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
 
-	//if (FAILED(Ready_Gara()))
-	//	return E_FAIL;
+	FAILED_CHECK(Ready_Font());
 
-	if (FAILED(Ready_Prototype_Component_ForStaticLevel()))
-		return E_FAIL;
+	// FAILED_CHECK(Ready_Gara());
 
-	if (FAILED(Open_Level(LEVEL_LOGO)))
-		return E_FAIL;
+	FAILED_CHECK(Ready_Prototype_Component_ForStaticLevel());
+
+	FAILED_CHECK(Open_Level(LEVEL_LOGO));
 
 	return S_OK;
 }
@@ -79,6 +66,14 @@ HRESULT CMainApp::Render()
 	return S_OK;
 }
 
+HRESULT CMainApp::Ready_Font()
+{
+	FAILED_CHECK(m_pGameInstance->Add_Font(TEXT("Font_Default"), TEXT("../Bin/Resources/Fonts/139ex.spritefont")));
+	FAILED_CHECK(m_pGameInstance->Add_Font(TEXT("Font_Arial"), TEXT("../Bin/Resources/Fonts/Arial.spritefont")));
+
+	return S_OK;
+}
+
 HRESULT CMainApp::Open_Level(LEVEL eStartLevelID)
 {
 	if (nullptr == m_pGameInstance)
@@ -109,13 +104,9 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 
 HRESULT CMainApp::Ready_Gara()
 {
-	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_Default"), TEXT("../Bin/Resources/Fonts/139ex.spritefont"))))
-		return E_FAIL;
-
 	//D3D11_BLEND_DESC			BlendDesc;
 	//D3D11_DEPTH_STENCIL_DESC	DepthStencilDesc;
 	//D3D11_RASTERIZER_DESC		RasterizerDesc;
-
 
 	//RasterizerDesc.CullMode
 
@@ -230,10 +221,6 @@ HRESULT CMainApp::Ready_Gara()
 	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
 
 	CloseHandle(hFile);
-
-
-
-
 
 	return S_OK;
 }

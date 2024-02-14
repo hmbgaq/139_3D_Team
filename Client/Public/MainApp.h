@@ -20,8 +20,11 @@ private:
 
 public:
 	HRESULT Initialize();
-	void Tick(_float fTimeDelta);
+	void	Tick(_float fTimeDelta);
 	HRESULT Render();
+
+private:
+	HRESULT Ready_Font();
 
 private:
 	/* IDirect3DDevice9 == LPDIRECT3DDEVICE9 */
