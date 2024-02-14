@@ -31,12 +31,6 @@ public:
 public:
 	CGameObject* Find_PartObject(const wstring& strPartTag);
 
-// private:
-// 	CNavigation*		m_pNavigationCom = { nullptr };
-// 	CCollider*			m_pColliderCom = { nullptr };
-// 
-// private:
-// 	map<const wstring, class CGameObject*>		m_PartObjects;
 
 private:
 	HRESULT Ready_Components();
