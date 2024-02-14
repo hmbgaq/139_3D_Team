@@ -68,7 +68,6 @@ public: /* For.Object_Manager */
 	class CGameObject* Get_Player();
 	void Set_Player(class CGameObject* _pPlayer);
 
-	void Fill_PrototypeTags(vector<string>*_vector);
 
 
 	void Fill_PrototypeTags(vector<string>*_vector);

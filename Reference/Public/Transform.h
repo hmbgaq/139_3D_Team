@@ -86,15 +86,22 @@ public:
 
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void Rotation(_fvector vAxis, _float fRadian);
-	_bool Rotation_Lerp(_fvector vAxis, _float fRadian, _float fTimeDelta);
+	_bool Rotation_Lerp(_float fRadian, _float fTimeDelta);
 
 	void Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare = 0.1f);
 	void Look_At(_fvector vTargetPos);
 	void Look_At_OnLand(_fvector vTargetPos);
-	void LookAt_Direction(_fvector _vLook);
+	void Look_At_Direction(_fvector _vLook);
+	void Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta);
+
+
 
 public:
 	void Add_RootBone_Position(const _float3& vPos, class CNavigation* pNavigation = nullptr);
+
+public:
+	_float3 CalculateSlidingVector(const _fvector& velocity, const _fvector& normal);
+
 
 public:
 	HRESULT  Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
@@ -117,3 +124,4 @@ public:
 };
 
 END
+

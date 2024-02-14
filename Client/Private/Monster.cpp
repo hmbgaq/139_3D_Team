@@ -63,7 +63,7 @@ void CMonster::Tick(_float fTimeDelta)
 		m_fTimeDelta += fTimeDelta * 0.5f;
 	}
 
-	SetUp_OnTerrain(m_pTransformCom);
+	//SetUp_OnTerrain(m_pTransformCom);
 
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
