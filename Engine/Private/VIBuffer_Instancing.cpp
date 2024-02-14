@@ -65,6 +65,13 @@ HRESULT CVIBuffer_Instancing::Initialize(void * pArg)
 		pVertices[i].vUp = _float4(0.f, fScale, 0.f, 0.f);
 		pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
 
+		
+		
+
+		//_float3(XMVectorGetX(XMVector3Length(XMLoadFloat4(&pVertices[i].vRight)),
+		//	XMVectorGetX(XMVector3Length(XMLoadFloat4(&pVertices[i].vUp)),
+		//	XMVectorGetX(XMVector3Length(XMLoadFloat4(&pVertices[i].vLook)))
+
 
 		//_float3		vScale = Get_Scaled();
 
