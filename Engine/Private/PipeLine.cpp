@@ -40,6 +40,25 @@ _float4 CPipeLine::Get_CamPosition()
 	return m_vCamPosition;
 }
 
+_float4 CPipeLine::Get_CamSetting()
+{
+	_float4 Result = {};
+
+	// 투영의 역행렬 계산
+	_matrix projectionMatrix = XMLoadFloat4x4(&m_Transform[D3DTS_PROJ]);
+	_matrix projectionInverse = XMMatrixInverse(nullptr, projectionMatrix);
+
+	// 역행렬에서 near, far, fov 추출
+	_float Cam_near = projectionInverse.r[3].m128_f32[2] / (projectionInverse.r[2].m128_f32[2] - 1.0f);
+	_float Cam_far = projectionInverse.r[3].m128_f32[2] / (projectionInverse.r[2].m128_f32[2] + 1.0f);
+	_float Cam_fovY = atan(1.0f / projectionInverse.r[1].m128_f32[1]) * 2.0f;
+	_float Cam_aspectRatio = projectionInverse.r[0].m128_f32[0] / projectionInverse.r[1].m128_f32[1];
+
+	Result = { Cam_near, Cam_far, Cam_fovY, Cam_aspectRatio };
+
+	return Result;
+}
+
 HRESULT CPipeLine::Initialize()
 {
 	for (size_t i = 0; i < D3DTS_END; i++)

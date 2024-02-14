@@ -18,7 +18,13 @@ public:
 					   RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
 
 	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_OUTLINE, SHADER_BLUR, SHADER_SSAO, SHADER_FINAL, SHADER_END };
-
+	
+	struct QuadVertex // ssao 
+	{
+		_float3 pos;
+		_float3 ToFarPlaneIndex;
+		_float2 tex;
+	};
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderer() = default;
@@ -38,7 +44,9 @@ public:
 	HRESULT Ready_SSAO();
 
 	/* Set */
-	void Set_OutLine(_bool bOutLine) { m_bOutLine = bOutLine; }
+	HRESULT Initialize_ScreenQuad();
+	void	BuildFrustumFarCorners();
+	void	BuildOffsetVectors();
 
 private:
 	class CShader*							m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
@@ -59,7 +67,15 @@ private:
 	_float4x4								m_ViewMatrix, m_ProjMatrix;
 	_float4									m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
 
-	_bool									m_bOutLine = { false };
+private: // SSAO
+	class CTexture* m_pRandomVectorTexture = { nullptr };
+	ID3D11Buffer*	m_pQuadVertexBuffer = { nullptr };
+	ID3D11Buffer*	m_pQuadIndexBuffer = { nullptr };
+
+	_float4			m_vFrustumFarCorner[4];
+	_float4			m_vOffsets[26];
+	_int			m_iQuadVerCount;
+	_int			m_iQuadIndexCount;
 
 private:
 	HRESULT Render_Priority();

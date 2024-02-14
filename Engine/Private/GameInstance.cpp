@@ -314,16 +314,6 @@ HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
 
-void CGameInstance::Set_OutLine(_bool bOutLine)
-{
-	if (nullptr == m_pRenderer)
-		return;
-
-	m_pRenderer->Set_OutLine(bOutLine);
-
-	return;
-}
-
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {
 	if (nullptr == m_pPipeLine)
@@ -378,6 +368,14 @@ _float4 CGameInstance::Get_CamPosition()
 		return _float4();
 
 	return m_pPipeLine->Get_CamPosition();
+}
+
+_float4 CGameInstance::Get_CamSetting()
+{
+	if (nullptr == m_pPipeLine)
+		return _float4();
+
+	return m_pPipeLine->Get_CamSetting();
 }
 
 HRESULT CGameInstance::Add_Font(const wstring & strFontTag, const wstring & strFontFilePath)
