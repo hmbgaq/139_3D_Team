@@ -11,7 +11,7 @@ public:
 		//m_pVectorKey = _pVectorKey; 
 
 		memcpy(&mValue, &_pVectorKey.mValue, sizeof(_float3));
-		mTime = _pVectorKey.mTime;
+		mTime = (_float)_pVectorKey.mTime;
 	};
 
 	CMyAIVectorKey(ifstream& is)

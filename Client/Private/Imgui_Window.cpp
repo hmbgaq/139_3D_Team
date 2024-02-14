@@ -1,13 +1,16 @@
 #include "stdafx.h"
 #include "Imgui_Window.h"
-
+#include "GameInstance.h"
 
 CImgui_Window::CImgui_Window(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
+	, m_pGameInstance(CGameInstance::GetInstance())
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
+	Safe_AddRef(m_pGameInstance);
+
 }
 
 HRESULT CImgui_Window::SetUp_ImGuiDESC(string _strName, const ImVec2& _vWindowSize, ImGuiWindowFlags _eWindowFlags, const ImVec4& _vBackGroundColor)
@@ -22,6 +25,7 @@ HRESULT CImgui_Window::SetUp_ImGuiDESC(string _strName, const ImVec2& _vWindowSi
 
 HRESULT CImgui_Window::Initialize()
 {
+
 	return S_OK;
 }
 
@@ -36,11 +40,11 @@ HRESULT CImgui_Window::Begin()
 {
 	ImGui::PushStyleColor(ImGuiCol_PopupBg, m_tImGuiDESC.vBackgroundColor);
 
-	ImGui::SetNextWindowSize(m_tImGuiDESC.vWindowSize, 0);
+	//ImGui::SetNextWindowSize(m_tImGuiDESC.vWindowSize, 0);
 
 	if (!(ImGui::Begin(m_tImGuiDESC.strName.c_str(), 0, m_tImGuiDESC.eWindowFlags)))
 		return S_OK;
-
+	
 	/*if (ImGui::IsWindowFocused())
 	{
 		m_BackgroundColor.w += m_fTimeDelta;
@@ -69,4 +73,5 @@ void CImgui_Window::Free()
 {
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+	Safe_Release(m_pGameInstance);
 }

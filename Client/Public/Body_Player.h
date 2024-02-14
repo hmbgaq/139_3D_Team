@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Body.h"
 
 BEGIN(Engine)
 class CCollider;
@@ -12,13 +12,9 @@ END
 
 BEGIN(Client)
 
-class CBody_Player final : public CGameObject
+class CBody_Player final : public CBody
 {
-public:
-	typedef struct tagBodyDesc
-	{
-		class CTransform*		m_pParentTransform = { nullptr };
-	}BODY_DESC;
+
 private:
 	CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBody_Player(const CBody_Player& rhs);
@@ -39,14 +35,6 @@ public:
 public:
 	void SetUp_Animation(_uint iAnimIndex);
 
-private:
-	CShader*			m_pShaderCom = { nullptr };	
-	CModel*				m_pModelCom = { nullptr };
-	CCollider*			m_pColliderCom = { nullptr };
-
-private:
-	class CTransform*	m_pParentTransform = { nullptr };
-	_float4x4			m_WorldMatrix = {};
 
 private:
 	HRESULT Ready_Components();

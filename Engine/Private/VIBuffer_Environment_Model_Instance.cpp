@@ -35,8 +35,24 @@ HRESULT CVIBuffer_Environment_Model_Instance::Bind_VIBuffers(_uint iMeshContaine
 	return S_OK;
 }
 
-void CVIBuffer_Environment_Model_Instance::Update(_float fTimeDelta)
+void CVIBuffer_Environment_Model_Instance::Update(vector<INSTANCE_INFO_DESC>& vecInstanceDesc)
 {
+	D3D11_MAPPED_SUBRESOURCE		SubResource;
+	ZeroMemory(&SubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
+
+	for (_uint i = 0; i < m_iNumInstance; ++i)
+	{
+		_matrix RotationMatrix = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&vecInstanceDesc[i].vRotation));
+
+		XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[i].vRight, RotationMatrix.r[0] * vecInstanceDesc[i].vScale.x);
+		XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[i].vUp, RotationMatrix.r[1] * vecInstanceDesc[i].vScale.y);
+		XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[i].vLook, RotationMatrix.r[2] * vecInstanceDesc[i].vScale.z);
+		XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[i].vTranslation, XMVectorSetW(XMLoadFloat3(&vecInstanceDesc[i].vTranslation), 1.f));
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
 	
 }
 
@@ -68,8 +84,8 @@ void CVIBuffer_Environment_Model_Instance::Init_Instance(_int iNumInstance)
 		pModelInstance[i].vRight		= _float4(1.f, 0.f, 0.f, 0.f);
 		pModelInstance[i].vUp			= _float4(0.f, 1.f, 0.f, 0.f);
 		pModelInstance[i].vLook			= _float4(0.f, 0.f, 1.f, 0.f);
-		//pModelInstance[i].vTranslation	= _float4(0.f, 0.f, 0.f, 1.f);
-		XMStoreFloat4(&pModelInstance[i].vTranslation, XMVectorSet(rand() % 20, 0.f, rand() % 20, 1.f));
+		pModelInstance[i].vTranslation	= _float4(0.f, 0.f, 0.f, 1.f);
+		/*XMStoreFloat4(&pModelInstance[i].vTranslation, XMVectorSet(rand() % 20, 0.f, rand() % 20, 1.f));*/
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));

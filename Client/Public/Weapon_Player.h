@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Weapon.h"
 
 BEGIN(Engine)
 class CCollider;
@@ -12,14 +12,8 @@ END
 
 BEGIN(Client)
 
-class CWeapon_Player final : public CGameObject
+class CWeapon_Player final : public CWeapon
 {
-public:
-	typedef struct tagWeaponDesc
-	{
-		class CBone*			m_pSocketBone = { nullptr };
-		class CTransform*		m_pParentTransform = { nullptr };
-	}WEAPON_DESC;
 private:
 	CWeapon_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CWeapon_Player(const CWeapon_Player& rhs);
@@ -32,16 +26,6 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-
-private:
-	CShader*			m_pShaderCom = { nullptr };	
-	CModel*				m_pModelCom = { nullptr };
-	CCollider*			m_pColliderCom = { nullptr };
-
-private:
-	class CTransform*	m_pParentTransform = { nullptr };
-	class CBone*	m_pSocketBone = { nullptr };
-	_float4x4			m_WorldMatrix = {};
 
 private:
 	HRESULT Ready_Components();

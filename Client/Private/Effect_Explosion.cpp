@@ -36,7 +36,7 @@ HRESULT CEffect_Explosion::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(rand() % 20, 5.0f, rand() % 20, 1.f));	
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(_float(rand() % 20), 5.0f, _float(rand() % 20), 1.f));	
 
 	return S_OK;
 }

@@ -238,7 +238,7 @@ HRESULT CQuadTree::Make_Neighbors()
 
 _bool CQuadTree::isDraw(const _float3 * pVerticesPos)
 {
-	_float		fWidth = m_iCorners[CORNER_RT] - m_iCorners[CORNER_LT];
+	_float		fWidth = _float(m_iCorners[CORNER_RT] - m_iCorners[CORNER_LT]);
 
 	_float		fCamDistance = XMVector3Length(XMLoadFloat4(&m_pGameInstance->Get_CamPosition()) - 
 		XMLoadFloat3(&pVerticesPos[m_iCenter])).m128_f32[0];

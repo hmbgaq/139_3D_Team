@@ -8,13 +8,13 @@
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CLandObject(pDevice, pContext)
+	: CCharacter(pDevice, pContext)
 {
 
 }
 
 CPlayer::CPlayer(const CPlayer & rhs)
-	: CLandObject(rhs)
+	: CCharacter(rhs)
 {
 }
 
@@ -35,12 +35,12 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {	
-	CGameObject::GAMEOBJECT_DESC*		pGameObjectDesc = (CGameObject::GAMEOBJECT_DESC*)pArg;
+	CGameObject::GAMEOBJECT_DESC pGameObjectDesc;// = (CGameObject::GAMEOBJECT_DESC*)pArg;
 
-	pGameObjectDesc->fSpeedPerSec = 10.f;
-	pGameObjectDesc->fRotationPerSec = XMConvertToRadians(90.0f);
+	pGameObjectDesc.fSpeedPerSec = 10.f;
+	pGameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 			
-	if (FAILED(__super::Initialize(pGameObjectDesc)))
+	if (FAILED(__super::Initialize(&pGameObjectDesc)))
 		return E_FAIL;	
 
 	if (FAILED(Ready_Components()))
@@ -96,9 +96,9 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	Safe_Release(pBody);
 
-	__super::SetUp_OnTerrain(m_pTransformCom);
+	//__super::SetUp_OnTerrain(m_pTransformCom);
 
-	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	//m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)
@@ -114,7 +114,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 #ifdef _DEBUG
 	m_pGameInstance->Add_DebugRender(m_pNavigationCom);
-	m_pGameInstance->Add_DebugRender(m_pColliderCom);
+	//m_pGameInstance->Add_DebugRender(m_pColliderCom);
 #endif	
 }
 
@@ -145,19 +145,10 @@ HRESULT CPlayer::Ready_Components()
 	CNavigation::NAVI_DESC		NaviDesc = {};
 	NaviDesc.iCurrentIndex = 0;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation2"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
 
-	/* For.Com_Collider */
-	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
-
-	BoundingDesc.vExtents = _float3(0.5f, 0.7f, 0.5f);
-	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);	
-
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -166,22 +157,18 @@ HRESULT CPlayer::Ready_PartObjects()
 {
 	/* For.Part_Body */
 	CBody_Player::BODY_DESC		BodyDesc = {};
-	BodyDesc.m_pParentTransform = m_pTransformCom;
-	if (FAILED(Add_PartObject(TEXT("Prototype_GameObject_Body_Player"), TEXT("Part_Body"), &BodyDesc)))
+	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
 		return E_FAIL;
 
+	
 
-	CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
+	{
+		CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
+		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
+			return E_FAIL;
+	}
+	CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
 
-	CBody_Player*	pBody = (CBody_Player*)Find_PartObject(TEXT("Part_Body"));	
-
-	WeaponDesc.m_pSocketBone = pBody->Get_BonePtr("SWORD");
-	WeaponDesc.m_pParentTransform = m_pTransformCom;
-
-
-	/* For.Part_Weapon*/
-	if (FAILED(Add_PartObject(TEXT("Prototype_GameObject_Weapon_Player"), TEXT("Part_Weapon"), &WeaponDesc)))
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -199,7 +186,6 @@ HRESULT CPlayer::Add_PartObject(const wstring & strPrototypeTag, const wstring &
 
 	return S_OK;
 }
-
 
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -236,7 +222,7 @@ void CPlayer::Free()
 		Safe_Release(Pair.second);
 	m_PartObjects.clear();
 
-	Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pColliderCom);
 	Safe_Release(m_pNavigationCom);
 }
 

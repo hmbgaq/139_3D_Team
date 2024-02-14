@@ -182,6 +182,8 @@ void CTransform::Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare
 	_vector		vPosition = Get_State(STATE_POSITION);
 	_vector		vDir = vTargetPos - vPosition;
 
+
+
 	_float		fDistance = XMVectorGetX(XMVector3Length(vDir));
 
 	if(fDistance >= fSpare)

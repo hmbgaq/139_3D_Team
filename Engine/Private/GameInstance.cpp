@@ -287,6 +287,11 @@ list<class CGameObject*>* CGameInstance::Get_GameObjects(_uint iLevelIndex, cons
 	return m_pObject_Manager->Get_GameObjects(iLevelIndex, strLayerTag);
 }
 
+void CGameInstance::Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>* clonevector)
+{
+	m_pObject_Manager->Get_CloneGameObjects(iLevelIndex, clonevector);
+}
+
 CGameObject* CGameInstance::Get_GameObect_Last(_uint iLevelIndex, const wstring& strLayerTag)
 {
 	list<class CGameObject*>* pGameObjects = Get_GameObjects(iLevelIndex, strLayerTag);
@@ -352,12 +357,14 @@ HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
 
+
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebug(_bool _bRenderDebug)
 {
 	m_pRenderer->Set_RenderDebug(_bRenderDebug);
 }
 #endif
+
 
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {

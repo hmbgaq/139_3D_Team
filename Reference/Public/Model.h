@@ -6,6 +6,9 @@
 #include "MyAIScene.h"
 
 BEGIN(Engine)
+class CAnimation;
+class CMesh;
+class CBone;
 
 
 class ENGINE_DLL CModel final : public CComponent
@@ -67,8 +70,10 @@ public:
 	void	Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 
-	void	Write_Names(const string& strModelFilePath);
-
+	void Write_Names(const string& strModelFilePath);
+public:
+	vector<CAnimation*>*	 Get_Animations();
+	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
 private:
 	CMyAssimp					m_MyAssimp;
 	CMyAIScene					m_pAIScene;
@@ -78,24 +83,24 @@ private:
 	TYPE					m_eModelType = { TYPE_END };
 
 	_uint					m_iNumMeshes = { 0 };
-	vector<class CMesh*>	m_Meshes;
+	vector<CMesh*>			m_Meshes;
 
 	_uint					m_iNumMaterials = { 0 };
 	vector<MATERIAL_DESC>	m_Materials;
 
 	/* 내 모델의 전체 뼈들을 부모관계를 포함하여 저장한다. */
-	vector<class CBone*>	m_Bones;	
+	vector<CBone*>			m_Bones;	
 	
 	_uint							m_iNumAnimations = { 0 };
 	_uint							m_iCurrentAnimIndex = { 0 };
-	vector<class CAnimation*>		m_Animations;
+	vector<CAnimation*>				m_Animations;
 
 	_bool							m_bIsAnimEnd = { false };
 	ANIM_STATE						m_eAnimState = { CModel::ANIM_STATE::ANIM_STATE_END };
 	_bool							m_bUseAnimationPos = { false };
 
 public:
-	typedef vector<class CBone*>	BONES;
+	typedef vector<CBone*>			BONES;
 
 
 

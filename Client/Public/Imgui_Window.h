@@ -8,6 +8,7 @@
 #include "Base.h"
 BEGIN(Engine)
 class CGameObject;
+class CGameInstance;
 END
 
 BEGIN(Client)
@@ -41,12 +42,16 @@ public:
 
 protected:
 	_bool				m_bEnable = false;
+	_bool				m_bRenderTargetOnOff = true;
+	_bool				m_bdialogCheck = false;
+
 	ImGuiDESC			m_tImGuiDESC;
 	_float				m_fWindowAlpha = 1.f;
 	_float				m_fTimeDelta = 0.f;
 
 	ID3D11Device*		m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
+	CGameInstance*		m_pGameInstance = { nullptr };
 
 public:
 	virtual void Free() override;

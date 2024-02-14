@@ -21,8 +21,8 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Tick(_float fTimeDelta)
 {
-	//m_pGameInstance->Key_Down(VK_TAB);
-	if (GetKeyState(VK_SPACE) & 0x8000)
+
+	if (m_pGameInstance->Key_Down(DIK_TAB))
 	{
 		_int iCheckPoint = 0;
 		iCheckPoint = MessageBox(g_hWnd,
@@ -40,12 +40,7 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 			if (FAILED(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_TOOL))))
 				return;
 		}
-
-
 	}
-
-
-
 }
 
 HRESULT CLevel_Logo::Render()

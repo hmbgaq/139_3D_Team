@@ -6,13 +6,13 @@
 
 
 CWeapon_Player::CWeapon_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CWeapon(pDevice, pContext)
 {
 
 }
 
 CWeapon_Player::CWeapon_Player(const CWeapon_Player & rhs)
-	: CGameObject(rhs)
+	: CWeapon(rhs)
 {
 }
 
@@ -24,21 +24,9 @@ HRESULT CWeapon_Player::Initialize_Prototype()
 
 HRESULT CWeapon_Player::Initialize(void* pArg)
 {	
-	m_pParentTransform = ((WEAPON_DESC*)pArg)->m_pParentTransform;
-	if (nullptr == m_pParentTransform)
-		return E_FAIL;
-	Safe_AddRef(m_pParentTransform);
-
-	m_pSocketBone = ((WEAPON_DESC*)pArg)->m_pSocketBone;
-	if (nullptr == m_pSocketBone)
-		return E_FAIL;
-	Safe_AddRef(m_pSocketBone);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
-
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
 
 	m_pTransformCom->Set_Scaling(0.1f, 0.1f, 0.1f);
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.0f));
@@ -64,7 +52,7 @@ void CWeapon_Player::Tick(_float fTimeDelta)
 
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix  * m_pParentTransform->Get_WorldMatrix());
 
-	m_pColliderCom->Update(XMLoadFloat4x4(&m_WorldMatrix));
+	//m_pColliderCom->Update(XMLoadFloat4x4(&m_WorldMatrix));
 
 }
 
@@ -75,7 +63,7 @@ void CWeapon_Player::Late_Tick(_float fTimeDelta)
 
 
 #ifdef _DEBUG
-	m_pGameInstance->Add_DebugRender(m_pColliderCom);
+	//m_pGameInstance->Add_DebugRender(m_pColliderCom);
 #endif	
 }
 
@@ -118,16 +106,16 @@ HRESULT CWeapon_Player::Ready_Components()
 
 
 	/* For.Com_Collider */
-	CBounding_OBB::BOUNDING_OBB_DESC			BoundingDesc = {};
-
-	BoundingDesc.vExtents = _float3(1.f, 1.f, 3.f);
-	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
-	BoundingDesc.vRotation = _float3(0.f, 0.f, 0.f);
-
-
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
-		return E_FAIL;
+// 	CBounding_OBB::BOUNDING_OBB_DESC			BoundingDesc = {};
+// 
+// 	BoundingDesc.vExtents = _float3(1.f, 1.f, 3.f);
+// 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
+// 	BoundingDesc.vRotation = _float3(0.f, 0.f, 0.f);
+// 
+// 
+// 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"),
+// 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
+// 		return E_FAIL;
 
 	return S_OK;
 }
@@ -179,7 +167,7 @@ void CWeapon_Player::Free()
 	__super::Free();
 
 	Safe_Release(m_pParentTransform);
-	Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pColliderCom);
 	Safe_Release(m_pSocketBone);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);		

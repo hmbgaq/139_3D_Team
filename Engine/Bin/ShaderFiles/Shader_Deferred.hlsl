@@ -1,4 +1,4 @@
-#include "Shader_DEfines.hlsli"
+#include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix			g_ProjMatrixInv, g_ViewMatrixInv;
@@ -16,7 +16,6 @@ vector			g_vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
 vector			g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 vector			g_vCamPosition;
-
 
 texture2D		g_ShadeTexture;
 texture2D		g_NormalTexture;

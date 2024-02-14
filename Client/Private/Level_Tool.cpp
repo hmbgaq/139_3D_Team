@@ -5,7 +5,11 @@
 #include "GameInstance.h"
 
 #include "Camera_Dynamic.h"
+
+
+#include "Camera_Dynamic.h"
 #include "Particle_Custom.h"
+
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -24,9 +28,6 @@ HRESULT CLevel_Tool::Initialize()
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
-
-
-	//m_pGameInstance->Set_RenderDebug(true);
 
 	return S_OK;
 
@@ -64,6 +65,7 @@ HRESULT CLevel_Tool::Ready_Imgui()
 
 HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 {
+
 	CCamera_Dynamic::DYNAMIC_CAMERA_DESC		tDesc = {};
 	tDesc.fMouseSensor = 0.05f;
 	tDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);

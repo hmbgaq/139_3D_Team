@@ -47,7 +47,7 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	if (false == ImGui_ImplDX11_Init(m_pDevice, m_pContext))
 		return E_FAIL;
 
-	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsDark();
 	g_io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.0f, NULL, g_io.Fonts->GetGlyphRangesKorean());
 
 	if(FAILED(Ready_Windows()))
@@ -89,6 +89,8 @@ HRESULT CImgui_Manager::Ready_Windows()
 
 	//! 여기다가 자기가 필요한 툴 윈도우 객체 추가해서 쓰셈. 아래는 예시
 
+	
+#pragma region 맵툴
 	CImgui_Window* pWindow = CWindow_MapTool::Create(m_pDevice, m_pContext);
 
 	if (pWindow == nullptr)
@@ -97,14 +99,30 @@ HRESULT CImgui_Manager::Ready_Windows()
 	pWindow->SetUp_ImGuiDESC(u8"맵툴", ImVec2{ 200.f, 200.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
 
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW, pWindow);
+#pragma endregion 맵툴
 
+	
+#pragma region 애니메이션툴
 
-	/* 이펙트 툴 윈도우 추가 */
+	pWindow = CWindow_AnimTool::Create(m_pDevice, m_pContext);
+
+	if (pWindow == nullptr)
+		return E_FAIL;
+
+	pWindow->SetUp_ImGuiDESC(u8"애니메이션툴", ImVec2{ 300.f,300.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
+
+	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW, pWindow);
+#pragma endregion 애니메이션툴
+
+#pragma region 이펙트툴
 	pWindow = CWindow_EffectTool::Create(m_pDevice, m_pContext);
 	if (pWindow == nullptr)
 		return E_FAIL;
+
 	pWindow->SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 350.f, 550.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW, pWindow);
+#pragma endregion 이펙트툴
+
 
 	return S_OK;
 }
@@ -138,7 +156,7 @@ void CImgui_Manager::Tick(_float fTimeDelta)
 
 
 	//! 최상단 메뉴바와 관련된 함수
-		MenuTick(fTimeDelta);
+	MenuTick(fTimeDelta);
 
  	for (auto& pWindowPair : m_mapWindows)
  	{
@@ -208,9 +226,13 @@ void CImgui_Manager::MenuTick(_float fTimeDelta)
 
  			ImGui::EndMenu();
 		}
+		
+		
 		ImGui::EndMainMenuBar();
+		
 	}
 
+	
 }
 
 void CImgui_Manager::Render()

@@ -213,7 +213,7 @@ void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitio
 {
 	if (_iAnimationIndex == m_iCurrentAnimIndex)
 	{
-		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(iTargetKeyFrameIndex);
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition((_float)iTargetKeyFrameIndex);
 	}
 
 	CAnimation* currentAnimation = m_Animations[m_iCurrentAnimIndex];
@@ -304,6 +304,11 @@ void CModel::Write_Names(const string& strModelFilePath)
 	osTxt.close();
 }
 
+vector<CAnimation*>* CModel::Get_Animations()
+{
+	return &m_Animations;
+}
+
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 {
 	m_iNumMeshes = m_pAIScene.Get_NumMeshes();
@@ -312,7 +317,7 @@ HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 
 	for (size_t i = 0; i < m_iNumMeshes; i++)
 	{
-		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eModelType, m_pAIScene.Get_Mesh(i), PivotMatrix, m_Bones);
+		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eModelType, m_pAIScene.Get_Mesh((_uint)i), PivotMatrix, m_Bones);
 
 		if (nullptr == pMesh)
 			return E_FAIL;
@@ -329,7 +334,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 	for (size_t i = 0; i < m_iNumMaterials; i++)
 	{
-		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material(i);
+		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material((_uint)i);
 
 		MATERIAL_DESC			MaterialDesc = {  };
 
@@ -344,7 +349,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 			//if (FAILED(pAIMaterial.GetTexture(aiTextureType(j), 0, &strPath)))
 			//	continue;
 
-			string strPath = pAIMaterial.Get_Textures(j);
+			string strPath = pAIMaterial.Get_Textures((_uint)j);
 			if (strPath == "")
 				continue;
 
@@ -365,7 +370,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			_tchar		szFullPath[MAX_PATH] = TEXT("");
 
-			MultiByteToWideChar(CP_ACP, 0, szTmp, strlen(szTmp), szFullPath, MAX_PATH);
+			MultiByteToWideChar((_uint)CP_ACP, 0, szTmp, (_int)strlen(szTmp), szFullPath, (_int)MAX_PATH);
 
 
 			MaterialDesc.pMtrlTextures[j] = CTexture::Create(m_pDevice, m_pContext, szFullPath, 1);
@@ -387,11 +392,11 @@ HRESULT CModel::Ready_Bones(CMyAINode pAINode, _int iParentIndex)
 
 	m_Bones.push_back(pBone);
 
-	_int		iParentIdx = m_Bones.size() - 1;
+	_int		iParentIdx = (_int)m_Bones.size() - 1;
 
 	for (size_t i = 0; i < pAINode.Get_NumChildren(); i++)
 	{
-		Ready_Bones(CMyAINode(pAINode.Get_Children(i)), iParentIdx);
+		Ready_Bones(CMyAINode(pAINode.Get_Children((_uint)i)), iParentIdx);
 	}
 
 	return S_OK;
@@ -403,7 +408,7 @@ HRESULT CModel::Ready_Animations()
 
 	for (size_t i = 0; i < m_iNumAnimations; i++)
 	{
-		CAnimation* pAnimation = CAnimation::Create(m_pAIScene.Get_Animation(i), m_Bones);
+		CAnimation* pAnimation = CAnimation::Create(m_pAIScene.Get_Animation((_uint)i), m_Bones);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
