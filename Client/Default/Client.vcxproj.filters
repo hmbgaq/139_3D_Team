@@ -106,6 +106,9 @@
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\AnimationWindow\PreviewAnimationModel">
       <UniqueIdentifier>{cf295498-c3ad-4328-b382-0d272f088d96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\ImGuizmo">
+      <UniqueIdentifier>{d8b27995-f49e-401e-b630-ad9c98fb076d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -227,6 +230,24 @@
     </ClInclude>
     <ClInclude Include="..\Public\PreviewAnimationModel.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow\PreviewAnimationModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImGradient.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImGuizmo.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImSequencer.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImZoomSlider.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\GraphEditor.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImCurveEdit.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

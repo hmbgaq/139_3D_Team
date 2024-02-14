@@ -1,7 +1,12 @@
 #include "stdafx.h"
 #include "Window_AnimTool.h"
 #include "GameInstance.h"
-#include "../../Reference/Imgui/ImGuiFileDialog/ImGuiFileDialog.h"
+#include "ImGuiFileDialog/ImGuiFileDialog.h"
+#include "ImGuizmo/ImGuizmo.h"
+#include "ImGuizmo/ImSequencer.h"
+#include "ImGuizmo/ImZoomSlider.h"
+#include "ImGuizmo/ImCurveEdit.h"
+#include "ImGuizmo/GraphEditor.h"
 #include "CustomDialogFont.h"
 #include "Model.h"
 #include "PreviewAnimationModel.h"
@@ -34,7 +39,7 @@ HRESULT CWindow_AnimTool::Initialize()
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByTypeFile | IGFD_FileStyleByTypeLink, nullptr, ImVec4(0.8f, 0.8f, 0.8f, 0.8f), ICON_IGFD_FILE);   // for all link files
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByTypeDir | IGFD_FileStyleByContainedInFullName, ".git", ImVec4(0.9f, 0.2f, 0.0f, 0.9f), ICON_IGFD_BOOKMARK);
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByTypeFile | IGFD_FileStyleByContainedInFullName, ".git", ImVec4(0.5f, 0.8f, 0.5f, 0.9f), ICON_IGFD_SAVE);
-
+	
 	return S_OK;
 }
 
@@ -76,7 +81,7 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 		m_bdialogCheck = false;
 	}
 	//===============================dialog============================================
-
+	
 	__super::End();
 }
 
@@ -93,7 +98,7 @@ void CWindow_AnimTool::Render()
 		{
 			ImGui::Text(u8"플레이어");
 
-			Draw_Player();
+			//Draw_Player();
 			Draw_AnimationList();
 
 			ImGui::EndTabItem();
@@ -178,7 +183,7 @@ void CWindow_AnimTool::Create_Object(const wstring& strLayerTag, const wstring& 
 	CGameObject* pGameObject = pGameObjects.back();
 
 	const _float3& temp = _float3(0.0f, 0.0f, 5.0f);
-	pGameObject->
+	pGameObject->Set_Position(temp);
 }
 
 void CWindow_AnimTool::Draw_Player()
@@ -198,9 +203,9 @@ void CWindow_AnimTool::Draw_KeyEventEditer()
 
 void CWindow_AnimTool::Draw_AnimationList()
 {
-	if (!m_pCurrentAnimation)
-		return;
-
+	//if (!m_pCurrentAnimation)
+	//	return;
+	
 	if (ImGui::TreeNode("AnimationModel"))
 	{
 		string items[] = { "Layer_Player", "Layer_Monster","Layer_Environment","Layer_Object","Layer_Effect","Layer_Something"};
@@ -254,6 +259,7 @@ void CWindow_AnimTool::Draw_AnimationList()
 		}
 		ImGui::Spacing();
 		ImGui::Checkbox("Create",&m_bCreateCheck);
+		ImGui::SameLine();
 		ImGui::Checkbox("Delete",& m_bDeleteCheck);
 		
 
@@ -293,10 +299,35 @@ void CWindow_AnimTool::Draw_AnimationList()
 				ImGui::EndListBox();
 			}
 		}
-				
-				
-				ImGui::TreePop();
+		ImGui::TreePop();
+		CCharacter* pcharacter = dynamic_cast<CCharacter*>(m_CreateList.back());
+		if (ImGui::BeginListBox("AnimationList"))
+		{
+			for (int n = 0; n < 6; n++)
+			{
+				const bool is_selected = (Layer_idx == n);
+				if (ImGui::Selectable(items[n].c_str(), is_selected))
+					Layer_idx = n;
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+					if (m_bCreateCheck)
+						if (m_pGameInstance->Mouse_Down(DIM_LB))
+						{
+							Create_Object(ConvertCtoWC(items[Layer_idx].c_str()), ConvertCtoWC(m_vObjectTag[Object_idx].c_str()));
+							m_bCloneCount = true;
+							m_bListCheck = true;
+						}
+
+				}
+
 			}
+
+			ImGui::EndListBox();
+		}
+	}
 
 	if (ImGui::Button("Play"))
 	{
@@ -320,6 +351,43 @@ void CWindow_AnimTool::Draw_AnimationList()
 
 
 	}
+}
+
+char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)
+{
+	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
+
+	char* result = new char[size_needed];
+
+	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result, size_needed, NULL, NULL);
+
+	return result;
+}
+
+char* CWindow_AnimTool::ConvertWCtoC(const wchar_t* str)
+{
+	//반환할 char* 변수 선언
+	char* pStr;
+	//입력받은 wchar_t 변수의 길이를 구함
+	int strSize = WideCharToMultiByte(CP_ACP, 0, str, -1, NULL, 0, NULL, NULL);
+	//char* 메모리 할당
+	pStr = new char[strSize];
+	//형 변환
+	WideCharToMultiByte(CP_ACP, 0, str, -1, pStr, strSize, 0, 0);
+	return pStr;
+}
+
+wchar_t* CWindow_AnimTool::ConvertCtoWC(const char* str)
+{
+	//wchar_t형 변수 선언
+	wchar_t* pStr;
+	//멀티 바이트 크기 계산 길이 반환
+	int strSize = MultiByteToWideChar(CP_ACP, 0, str, -1, NULL, NULL);
+	//wchar_t 메모리 할당
+	pStr = new WCHAR[strSize];
+	//형 변환
+	MultiByteToWideChar(CP_ACP, 0, str, (int)strlen(str) + 1, pStr, strSize);
+	return pStr;
 }
 
 

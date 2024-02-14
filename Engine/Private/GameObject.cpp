@@ -79,6 +79,16 @@ CComponent * CGameObject::Find_Component(const wstring & strComTag, const wstrin
 	return iter->second;
 }
 
+void CGameObject::Set_Position(const _float3& vState)
+{
+	m_pTransformCom->Set_Position(vState);
+}
+
+void CGameObject::Set_WorldMatrix(_float4x4 matrix)
+{
+	m_pTransformCom->Set_WorldMatrix(matrix);
+}
+
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComTag, _Inout_ CComponent** ppOut, void * pArg)
 {
 	if (nullptr != Find_Component(strComTag))

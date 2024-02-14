@@ -33,11 +33,12 @@ public:
 
 public:
 	virtual class CComponent* Find_Component(const wstring& strComTag, const wstring& strPartTag = TEXT(""));
-
-
 public:
-	_bool Is_Dead() { return m_bDead; }
-	void Set_Dead(_bool _bDead) { m_bDead = _bDead; }
+	void	Set_Position(const _float3& vState);
+	void	Set_WorldMatrix(_float4x4 matrix);
+public:
+	_bool	Is_Dead() { return m_bDead; }
+	void	Set_Dead(_bool _bDead) { m_bDead = _bDead; }
 
 
 protected:

@@ -61,6 +61,10 @@ private:
 	void			Draw_KeyEventEditer();
 	void			Draw_AnimationList();
 
+public://문자열 변환 
+	char*			ConverWStringtoC(const wstring& wstr);
+	char*			ConvertWCtoC(const wchar_t* str);
+	wchar_t*		ConvertCtoWC(const char* str);
 private:
 	CPreviewAnimationModel*	m_pPreViewModel = { nullptr };
 	CAnimation*				m_pCurrentAnimation = { nullptr };
