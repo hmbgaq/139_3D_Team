@@ -5,6 +5,7 @@
 #pragma warning(disable : 4251) /* dll template export warning */
 #pragma warning	(disable : 4819)  /* 한글 주석 경고 */
 #pragma warning (disable : 26812) /* enumclass warning */
+#pragma warning (disable : 4275) /* XMFLOAT에서 DLL EXPORT 하는 warning  */
 //#pragma warning (disable : 26495) /* initialize warning */
 
 /* DX */
@@ -57,7 +58,6 @@ using namespace std;
 #include "Engine_Struct.h"
 #include "Engine_Function.h"
 #include "Engine_Enum.h"
-
 using namespace Engine;
 
 

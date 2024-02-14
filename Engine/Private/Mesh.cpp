@@ -49,9 +49,9 @@ HRESULT CMesh::Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, 
 
 	for (size_t i = 0; i < pAIMesh.Get_NumFaces(); i++)
 	{
-		m_pIndices[iNumIndices++] = pAIMesh.Get_Face(i).Get_Indices()[0];
-		m_pIndices[iNumIndices++] = pAIMesh.Get_Face(i).Get_Indices()[1];
-		m_pIndices[iNumIndices++] = pAIMesh.Get_Face(i).Get_Indices()[2];
+		m_pIndices[iNumIndices++] = pAIMesh.Get_Face((_uint)i).Get_Indices()[0];
+		m_pIndices[iNumIndices++] = pAIMesh.Get_Face((_uint)i).Get_Indices()[1];
+		m_pIndices[iNumIndices++] = pAIMesh.Get_Face((_uint)i).Get_Indices()[2];
 	}
 
 	m_SubResourceData.pSysMem = m_pIndices;
@@ -103,15 +103,15 @@ HRESULT CMesh::Ready_Vertices_NonAnim(CMyAIMesh pAIMesh, _fmatrix PivotMatrix)
 
 	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
-		memcpy(&m_pVertices[i].vPosition, &pAIMesh.Get_Vertice(i), sizeof(_float3));
-		XMStoreFloat3(&m_pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&m_pVertices[i].vPosition), PivotMatrix));
+		memcpy(&m_pVertices[(_uint)i].vPosition, &pAIMesh.Get_Vertice((_uint)i), sizeof(_float3));
+		XMStoreFloat3(&m_pVertices[(_uint)i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&m_pVertices[(_uint)i].vPosition), PivotMatrix));
 
-		memcpy(&m_pVertices[i].vNormal, &pAIMesh.Get_Normal(i), sizeof(_float3));
-		XMStoreFloat3(&m_pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&m_pVertices[i].vNormal), PivotMatrix));
+		memcpy(&m_pVertices[(_uint)i].vNormal, &pAIMesh.Get_Normal((_uint)i), sizeof(_float3));
+		XMStoreFloat3(&m_pVertices[(_uint)i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&m_pVertices[(_uint)i].vNormal), PivotMatrix));
 
-		memcpy(&m_pVertices[i].vTexcoord, &pAIMesh.Get_TextureCoord(i), sizeof(_float3));
-		memcpy(&m_pVertices[i].vTangent, &pAIMesh.Get_Tangent(i), sizeof(_float3));
-		XMStoreFloat3(&m_pVertices[i].vTangent, XMVector3TransformNormal(XMLoadFloat3(&m_pVertices[i].vTangent), PivotMatrix));
+		memcpy(&m_pVertices[(_uint)i].vTexcoord, &pAIMesh.Get_TextureCoord((_uint)i), sizeof(_float3));
+		memcpy(&m_pVertices[(_uint)i].vTangent, &pAIMesh.Get_Tangent((_uint)i), sizeof(_float3));
+		XMStoreFloat3(&m_pVertices[(_uint)i].vTangent, XMVector3TransformNormal(XMLoadFloat3(&m_pVertices[(_uint)i].vTangent), PivotMatrix));
 	}
 
 
@@ -147,10 +147,10 @@ HRESULT CMesh::Ready_Vertices_Anim(CMyAIMesh pAIMesh, const vector<class CBone*>
 
 	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
-		memcpy(&m_pAnimVertices[i].vPosition, &pAIMesh.Get_Vertice(i), sizeof(_float3));
-		memcpy(&m_pAnimVertices[i].vNormal, &pAIMesh.Get_Normal(i), sizeof(_float3));
-		memcpy(&m_pAnimVertices[i].vTexcoord, &pAIMesh.Get_TextureCoord(i), sizeof(_float3));
-		memcpy(&m_pAnimVertices[i].vTangent, &pAIMesh.Get_Tangent(i), sizeof(_float3));
+		memcpy(&m_pAnimVertices[(_uint)i].vPosition, &pAIMesh.Get_Vertice((_uint)i), sizeof(_float3));
+		memcpy(&m_pAnimVertices[(_uint)i].vNormal, &pAIMesh.Get_Normal((_uint)i), sizeof(_float3));
+		memcpy(&m_pAnimVertices[(_uint)i].vTexcoord, &pAIMesh.Get_TextureCoord((_uint)i), sizeof(_float3));
+		memcpy(&m_pAnimVertices[(_uint)i].vTangent, &pAIMesh.Get_Tangent((_uint)i), sizeof(_float3));
 	}
 
 	m_iNumBones = pAIMesh.Get_NumBones();
@@ -158,7 +158,7 @@ HRESULT CMesh::Ready_Vertices_Anim(CMyAIMesh pAIMesh, const vector<class CBone*>
 	/* 이 메시에게 영향을 주는 뼈을 순회하면서 각각의 뼈가 어떤 정점들에게 영향을 주는지 파악한다.*/
 	for (size_t i = 0; i < pAIMesh.Get_NumBones(); i++)
 	{
-		CMyAIBone		pAIBone = pAIMesh.Get_Bone(i);
+		CMyAIBone		pAIBone = pAIMesh.Get_Bone((_uint)i);
 
 		_float4x4		OffsetMatrix;
 		memcpy(&OffsetMatrix, &pAIBone.Get_OffsetMatrix(), sizeof(_float4x4));
@@ -190,28 +190,28 @@ HRESULT CMesh::Ready_Vertices_Anim(CMyAIMesh pAIMesh, const vector<class CBone*>
 		{
 			/* pAIBone->mWeights[j].mVertexId : 이 뼈가 영향을 주는 j번째 정점의 인덱스 */
 
-			if (0.0f == m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.x)
+			if (0.0f == m_pAnimVertices[pAIBone.Get_Weights((_uint)j).Get_VertexId()].vBlendWeights.x)
 			{
-				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendIndices.x = i;
-				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.x = pAIBone.Get_Weights(j).Get_Weight();
+				m_pAnimVertices[pAIBone.Get_Weights((_uint)j).Get_VertexId()].vBlendIndices.x = (_uint)i;
+				m_pAnimVertices[pAIBone.Get_Weights((_uint)j).Get_VertexId()].vBlendWeights.x = pAIBone.Get_Weights((_uint)j).Get_Weight();
 			}
 
-			else if (0.0f == m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.y)
+			else if (0.0f == m_pAnimVertices[pAIBone.Get_Weights((_uint)j).Get_VertexId()].vBlendWeights.y)
 			{
-				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendIndices.y = i;
-				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.y = pAIBone.Get_Weights(j).Get_Weight();
+				m_pAnimVertices[pAIBone.Get_Weights((_uint)j).Get_VertexId()].vBlendIndices.y = (_uint)i;
+				m_pAnimVertices[pAIBone.Get_Weights((_uint)j).Get_VertexId()].vBlendWeights.y = pAIBone.Get_Weights((_uint)j).Get_Weight();
 			}
 
-			else if (0.0f == m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.z)
+			else if (0.0f == m_pAnimVertices[pAIBone.Get_Weights((_uint)j).Get_VertexId()].vBlendWeights.z)
 			{
-				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendIndices.z = i;
-				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.z = pAIBone.Get_Weights(j).Get_Weight();
+				m_pAnimVertices[pAIBone.Get_Weights((_uint)j).Get_VertexId()].vBlendIndices.z = (_uint)i;
+				m_pAnimVertices[pAIBone.Get_Weights((_uint)j).Get_VertexId()].vBlendWeights.z = pAIBone.Get_Weights((_uint)j).Get_Weight();
 			}
 
-			else if (0.0f == m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.w)
+			else if (0.0f == m_pAnimVertices[pAIBone.Get_Weights((_uint)j).Get_VertexId()].vBlendWeights.w)
 			{
-				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendIndices.w = i;
-				m_pAnimVertices[pAIBone.Get_Weights(j).Get_VertexId()].vBlendWeights.w = pAIBone.Get_Weights(j).Get_Weight();
+				m_pAnimVertices[pAIBone.Get_Weights((_uint)j).Get_VertexId()].vBlendIndices.w = (_uint)i;
+				m_pAnimVertices[pAIBone.Get_Weights((_uint)j).Get_VertexId()].vBlendWeights.w = pAIBone.Get_Weights((_uint)j).Get_Weight();
 			}
 		}
 	};
@@ -219,8 +219,8 @@ HRESULT CMesh::Ready_Vertices_Anim(CMyAIMesh pAIMesh, const vector<class CBone*>
 	m_SubResourceData.pSysMem = m_pAnimVertices;
 
 	/* pVertices에 할당하여 채워놨던 정점들의 정보를 ID3D11Buffer로 할당한 공간에 복사하여 채워넣는다. */
-	if (FAILED(__super::Create_Buffer(&m_pVB)))
-		return E_FAIL;
+
+	FAILED_CHECK(__super::Create_Buffer(&m_pVB));
 
 	//Safe_Delete_Array(m_pAnimVertices);
 

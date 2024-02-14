@@ -31,7 +31,7 @@ HRESULT CMonster::Initialize(void* pArg)
 
 	m_pModelCom->Set_Animation(rand() % 20);
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(rand() % 20, 0.f, rand() % 20, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(_float(rand() % 20), 0.f, _float(rand() % 20), 1.f));
 
 	m_iRenderPass = 0;
 	m_fTimeDelta = 0;

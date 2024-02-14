@@ -28,7 +28,6 @@ HRESULT CTransform::Initialize_Prototype(_float fSpeedPerSec, _float fRotationPe
 
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 
-	_matrix			matTmp;
 	/*
 	matTmp = XMLoadFloat4x4(&m_WorldMatrix);*/
 
