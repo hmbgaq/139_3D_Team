@@ -184,6 +184,7 @@
     <ClInclude Include="..\public\Camera_Dynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Effect_Explosion.h" />
+    <ClInclude Include="..\Public\EW_Actor.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\Public\Imgui_Manager.h" />
     <ClInclude Include="..\public\Imgui_Window.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\Private\Effect_Explosion.cpp" />
+    <ClCompile Include="..\Private\EW_Actor.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\Private\Imgui_Manager.cpp" />
     <ClCompile Include="..\Private\Imgui_Window.cpp" />

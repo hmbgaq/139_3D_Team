@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "..\Public\Loader.h"
-
+#include "Loader.h"
 #include "GameInstance.h"
+#include <process.h>
 
 #pragma region GAMEOBJECT
 #include "Effect_Explosion.h"
@@ -17,9 +17,10 @@
 #include "Player.h"
 #include "Sky.h"
 #pragma endregion
-#include "Interact_Chain.h"
 
-#include <process.h>
+#pragma region Test
+#include "Interact_Chain.h"
+#pragma endregion
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)

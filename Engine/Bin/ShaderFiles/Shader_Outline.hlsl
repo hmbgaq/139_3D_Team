@@ -3,7 +3,9 @@
 matrix      g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4      g_vLineColor;
 Texture2D   g_NormalTarget;
-
+float       g_fCoord[3] = { -1, 0, +1 };
+float       g_fDivier = 1;
+float       g_fBias = 0.5f;
 
 float g_fMask[9] =
 {
@@ -11,9 +13,6 @@ float g_fMask[9] =
 	-1,  8, -1,
 	-1, -1, -1
 };
-float g_fCoord[3] = { -1, 0, +1 };
-float g_fDivier = 1;
-float g_fBias = 0.5f;
 
 struct VS_IN
 {
@@ -44,7 +43,6 @@ VS_OUT VS_MAIN(VS_IN In)
 
     return Out;
 }
-
 
 struct PS_IN
 {

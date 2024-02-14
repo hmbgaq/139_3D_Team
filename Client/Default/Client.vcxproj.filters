@@ -31,15 +31,6 @@
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{792b3730-7c78-44ca-969f-540628b64c22}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Terrain">
-      <UniqueIdentifier>{d1e2e6da-e704-4c8a-8898-db7da37ba9fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Camera">
-      <UniqueIdentifier>{32729c05-9f24-4c42-9fa5-8bce31410a97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Sky">
-      <UniqueIdentifier>{a96d4144-0b55-405d-b9b8-32aba0a80903}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Effect">
       <UniqueIdentifier>{98abb3f3-bf6e-4d3c-b89d-4797ad65c8bf}</UniqueIdentifier>
     </Filter>
@@ -100,18 +91,36 @@
     <Filter Include="01.Levels\98. Loader">
       <UniqueIdentifier>{e392c2b5-5a93-41cd-9971-3527a5924eae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.Default\Useless">
+      <UniqueIdentifier>{7231f56e-ab16-4718-abe1-6a7faacad022}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Actor">
+      <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Actor\Character">
+      <UniqueIdentifier>{efbf965b-89e3-4770-bdc3-149dd60e9eff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Actor\Character\Player">
+      <UniqueIdentifier>{e610d425-749e-40a9-a4a7-33941c1a824a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Actor\Character\Monster">
+      <UniqueIdentifier>{97fc5167-2a35-4a58-a30c-4cc71dbe583b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\99. Sky">
+      <UniqueIdentifier>{a96d4144-0b55-405d-b9b8-32aba0a80903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\98. Terrain">
+      <UniqueIdentifier>{d1e2e6da-e704-4c8a-8898-db7da37ba9fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\97. Camera">
+      <UniqueIdentifier>{32729c05-9f24-4c42-9fa5-8bce31410a97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Effect">
+      <UniqueIdentifier>{e5d2bd3f-eadc-4303-9426-7cfc18334f0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
-      <Filter>98.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>98.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>98.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
       <Filter>98.Default</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Defines.h">
@@ -136,10 +145,10 @@
       <Filter>02.GameObjects\BackGround</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
-      <Filter>02.GameObjects\Terrain</Filter>
+      <Filter>02.GameObjects\98. Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Camera_Dynamic.h">
-      <Filter>02.GameObjects\Camera</Filter>
+      <Filter>02.GameObjects\97. Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02.GameObjects\LandObject\Monster</Filter>
@@ -151,7 +160,7 @@
       <Filter>02.GameObjects\LandObject\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sky.h">
-      <Filter>02.GameObjects\Sky</Filter>
+      <Filter>02.GameObjects\99. Sky</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Player.h">
       <Filter>02.GameObjects\LandObject\Player\Parts\Body</Filter>
@@ -213,12 +222,21 @@
     <ClInclude Include="..\Public\Interact_Chain.h">
       <Filter>02.GameObjects\Interact</Filter>
     </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98.Default\Useless</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>98.Default\Useless</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>98.Default\Useless</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EW_Actor.h">
+      <Filter>02.GameObjects\00. Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
-      <Filter>98.Default</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
       <Filter>98.Default</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MainApp.cpp">
@@ -240,10 +258,10 @@
       <Filter>02.GameObjects\BackGround</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
-      <Filter>02.GameObjects\Terrain</Filter>
+      <Filter>02.GameObjects\98. Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Camera_Dynamic.cpp">
-      <Filter>02.GameObjects\Camera</Filter>
+      <Filter>02.GameObjects\97. Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02.GameObjects\LandObject\Monster</Filter>
@@ -255,7 +273,7 @@
       <Filter>02.GameObjects\LandObject\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sky.cpp">
-      <Filter>02.GameObjects\Sky</Filter>
+      <Filter>02.GameObjects\99. Sky</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Player.cpp">
       <Filter>02.GameObjects\LandObject\Player\Parts\Body</Filter>
@@ -311,24 +329,20 @@
     <ClCompile Include="..\Private\Interact_Chain.cpp">
       <Filter>02.GameObjects\Interact</Filter>
     </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>98.Default\Useless</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EW_Actor.cpp">
+      <Filter>02.GameObjects\00. Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
-      <Filter>98.Default</Filter>
+      <Filter>98.Default\Useless</Filter>
     </Image>
     <Image Include="small.ico">
-      <Filter>98.Default</Filter>
+      <Filter>98.Default\Useless</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Client.rc">
-      <Filter>98.Default</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt">
-      <Filter>98.Default</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
@@ -352,5 +366,15 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Point.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Client.rc">
+      <Filter>98.Default\Useless</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>98.Default\Useless</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -194,7 +194,7 @@ _bool CChannel::Update_KeyFrame(KEYFRAME& _StartFrame, KEYFRAME& _EndFrame, _flo
 			while (fCurrentTrackPosition >= m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition)
 				++* pCurrentKeyFrameIndex;
 		}
-		catch (_uint e)
+		catch (_uint)
 		{
 			*pCurrentKeyFrameIndex = (_uint)m_KeyFrames.size() - 2;
 		}
