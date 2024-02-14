@@ -93,7 +93,7 @@ HRESULT CImgui_Manager::Ready_Windows()
 	if (pWindow == nullptr)
 		return E_FAIL;
 
-	pWindow->SetUp_ImGuiDESC(u8"맵툴", ImVec2{ 200.f, 200.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
+	pWindow->SetUp_ImGuiDESC(u8"맵툴", ImVec2{ 200.f, 200.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
 
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW, pWindow);
 
@@ -162,7 +162,7 @@ void CImgui_Manager::MenuTick(_float fTimeDelta)
  			if (ImGui::MenuItem("AnimationTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW]))
  			{
  				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW);
-
+				
  				if (nullptr == pWindow)
  				{
  					MSG_BOX("애니메이션 윈도우가 없음. Ready_Window 함수 확인 바람");

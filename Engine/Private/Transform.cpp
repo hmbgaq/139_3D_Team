@@ -12,8 +12,6 @@ CTransform::CTransform(const CTransform & rhs)
 {
 }
 
-
-
 void CTransform::Set_Scaling(_float fScaleX, _float fScaleY, _float fScaleZ)
 {
 	Set_State(STATE_RIGHT, XMVector3Normalize(Get_State(STATE_RIGHT)) * fScaleX);
@@ -47,20 +45,6 @@ HRESULT CTransform::Initialize_Prototype(_float fSpeedPerSec, _float fRotationPe
 
 	XMStoreFloat3(&vTmp, vTmp1);
 	XMStoreFloat4(&vTmp2, vTmp1);*/
-
-
-	
-	
-
-	
-
-
-
-
-
-
-
-
 
 	return S_OK;
 }

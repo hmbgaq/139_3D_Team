@@ -39,6 +39,11 @@ CModel::CModel(const CModel & rhs)
 	}
 }
 
+_uint CModel::Get_NumMeshIndice(_int iMeshIndex)
+{
+	 return m_Meshes[iMeshIndex]->Get_NumIndices();
+}
+
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone) 

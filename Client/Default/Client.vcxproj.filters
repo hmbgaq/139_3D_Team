@@ -100,6 +100,9 @@
     <Filter Include="02.GameObjects\Sky\SkyDome">
       <UniqueIdentifier>{4772a3fc-a02f-4359-a871-e22dd5a076b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\LandObject\TestInstance">
+      <UniqueIdentifier>{07401b06-626f-4b88-ab5f-7765959b393a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -213,6 +216,9 @@
     <ClInclude Include="..\Public\SkyDome.h">
       <Filter>02.GameObjects\Sky\SkyDome</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TestInstance.h">
+      <Filter>02.GameObjects\LandObject\TestInstance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -311,6 +317,9 @@
     <ClCompile Include="..\Private\SkyDome.cpp">
       <Filter>02.GameObjects\Sky\SkyDome</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\TestInstance.cpp">
+      <Filter>02.GameObjects\LandObject\TestInstance</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -350,6 +359,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Point.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModelInstance.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
