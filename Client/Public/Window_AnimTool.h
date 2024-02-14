@@ -59,7 +59,7 @@ private:
 	void			Draw_Player();
 	void			Draw_Monster();
 	void			Draw_KeyEventEditer();
-	void			Draw_AnimationList();
+	void			Draw_AnimationList(_float fTimeDelta);
 
 public://문자열 변환 
 	char*			ConverWStringtoC(const wstring& wstr);
@@ -70,19 +70,22 @@ private:
 	CAnimation*				m_pCurrentAnimation = { nullptr };
 	CGameObject*			m_PickingObject = { nullptr };
 
-	_float					m_fCurrentTime = 0.f;
-	_float					m_fMaxAnimationTime = 0.f;
+	
 	_float					m_fSpeed = 1.f;
+	_float					m_fCurrentTrackPosition = 0.f;
+	_float					m_fDuration = 0.f;
 
 	_int					m_CurrentAnimationIndex = 0;
 	_int					m_iCreateObjectSize = 0;
-	
+	_uint					m_iAnimationNum = 0;
+
 	string					m_strKeyEventFileName = "";
 	string					m_strSoundFileName = "";
 
 	vector<string>			m_AllAnimationKeys;
 	vector<string>			m_vObjectTag;
 	vector<CGameObject*>	m_CreateList;
+	vector<CAnimation*>		m_pAnimation;
 public:
 	_bool					m_bStop = false;
 	_bool					m_bHold = false;

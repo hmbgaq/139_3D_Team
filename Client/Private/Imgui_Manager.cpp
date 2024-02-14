@@ -140,7 +140,7 @@ void CImgui_Manager::Tick(_float fTimeDelta)
 
 
 	//! 최상단 메뉴바와 관련된 함수
-		MenuTick(fTimeDelta);
+	MenuTick(fTimeDelta);
 
  	for (auto& pWindowPair : m_mapWindows)
  	{

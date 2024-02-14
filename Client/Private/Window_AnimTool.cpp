@@ -10,7 +10,7 @@
 #include "CustomDialogFont.h"
 #include "Model.h"
 #include "PreviewAnimationModel.h"
-
+#include "Animation.h"
 
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -23,7 +23,7 @@ HRESULT CWindow_AnimTool::Initialize()
 	//! 현재는 특별한 기능없음. 추후 필요할 것 같아서 셋팅.
 	if(FAILED(__super::Initialize()))
 		return E_FAIL;
-
+	m_pGameInstance = CGameInstance::GetInstance();
 	//FileDialog 파일별 색
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByFullName, "((Custom.+[.]h))", ImVec4(0.1f, 0.9f, 0.1f, 0.9f));  // use a regex
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".cpp", ImVec4(1.0f, 1.0f, 0.0f, 0.9f));
@@ -40,6 +40,8 @@ HRESULT CWindow_AnimTool::Initialize()
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByTypeDir | IGFD_FileStyleByContainedInFullName, ".git", ImVec4(0.9f, 0.2f, 0.0f, 0.9f), ICON_IGFD_BOOKMARK);
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByTypeFile | IGFD_FileStyleByContainedInFullName, ".git", ImVec4(0.5f, 0.8f, 0.5f, 0.9f), ICON_IGFD_SAVE);
 	
+	m_pGameInstance->Fill_PrototypeTags(&m_vObjectTag);
+
 	return S_OK;
 }
 
@@ -82,13 +84,6 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	}
 	//===============================dialog============================================
 	
-	__super::End();
-}
-
-void CWindow_AnimTool::Render()
-{
-	__super::Begin();
-
 	ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
 
 	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
@@ -99,7 +94,7 @@ void CWindow_AnimTool::Render()
 			ImGui::Text(u8"플레이어");
 
 			//Draw_Player();
-			Draw_AnimationList();
+			Draw_AnimationList(fTimeDelta);
 
 			ImGui::EndTabItem();
 		}
@@ -107,7 +102,7 @@ void CWindow_AnimTool::Render()
 		if (ImGui::BeginTabItem(("Monster")))
 		{
 			Draw_Monster();
-			Draw_AnimationList();
+			Draw_AnimationList(fTimeDelta);
 
 			ImGui::EndTabItem();
 		}
@@ -121,6 +116,14 @@ void CWindow_AnimTool::Render()
 
 		ImGui::EndTabBar();
 	}
+	__super::End();
+}
+
+void CWindow_AnimTool::Render()
+{
+	__super::Begin();
+
+	
 
 	__super::End();
 	
@@ -188,8 +191,7 @@ void CWindow_AnimTool::Create_Object(const wstring& strLayerTag, const wstring& 
 
 void CWindow_AnimTool::Draw_Player()
 {
-	if (!m_pCurrentAnimation)
-		return; 
+	
 
 }
 
@@ -201,11 +203,8 @@ void CWindow_AnimTool::Draw_KeyEventEditer()
 {
 }
 
-void CWindow_AnimTool::Draw_AnimationList()
+void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 {
-	//if (!m_pCurrentAnimation)
-	//	return;
-	
 	if (ImGui::TreeNode("AnimationModel"))
 	{
 		string items[] = { "Layer_Player", "Layer_Monster","Layer_Environment","Layer_Object","Layer_Effect","Layer_Something"};
@@ -300,27 +299,33 @@ void CWindow_AnimTool::Draw_AnimationList()
 			}
 		}
 		ImGui::TreePop();
-		CCharacter* pcharacter = dynamic_cast<CCharacter*>(m_CreateList.back());
+
 		if (ImGui::BeginListBox("AnimationList"))
 		{
-			for (int n = 0; n < 6; n++)
+			if (m_CreateList.size() > 0)
 			{
-				const bool is_selected = (Layer_idx == n);
-				if (ImGui::Selectable(items[n].c_str(), is_selected))
-					Layer_idx = n;
+				CBody* pcharacters = dynamic_cast<CBody*>(m_CreateList.back());
+				m_pAnimation = *(pcharacters->Get_Model()->Get_Animations());
+				m_iAnimationNum = pcharacters->Get_Model()->Get_AnimationNum();
+				
+			}
+
+			for (int n = 0; n < m_iAnimationNum; n++)
+			{
+				const bool is_selected = (m_iAnimationNum == n);
+				if (ImGui::Selectable(m_pAnimation[n]->Get_Name(), is_selected))
+					m_iAnimationNum = n;
 
 				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				//캐릭터 애니메이션 돌리기위해
+				CBody* pcharacters = dynamic_cast<CBody*>(m_pAnimation[n]);
+				m_fDuration = m_pAnimation[n]->Get_Duration();
 				if (is_selected)
 				{
 					ImGui::SetItemDefaultFocus();
-					if (m_bCreateCheck)
-						if (m_pGameInstance->Mouse_Down(DIM_LB))
-						{
-							Create_Object(ConvertCtoWC(items[Layer_idx].c_str()), ConvertCtoWC(m_vObjectTag[Object_idx].c_str()));
-							m_bCloneCount = true;
-							m_bListCheck = true;
-						}
-
+					if(m_bStop == false)
+						pcharacters->Get_Model()->Play_Animation(fTimeDelta, true);
+					pcharacters->Get_Model()->Set_StiffnessRate()
 				}
 
 			}
@@ -329,6 +334,11 @@ void CWindow_AnimTool::Draw_AnimationList()
 		}
 	}
 
+
+	if (ImGui::SliderFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration));
+	ImGui::SameLine();
+	if (ImGui::SliderFloat("AnimationSpeed", &m_fSpeed, 0.f, 100.f));
+
 	if (ImGui::Button("Play"))
 	{
 		m_bStop = !m_bStop;
@@ -336,21 +346,21 @@ void CWindow_AnimTool::Draw_AnimationList()
 
 	ImGui::SameLine();
 
-	if (ImGui::Button("Hold"))
-	{
-		m_bHold = !m_bHold;
-
-// 		_byte byFlag(0);
+// 	if (ImGui::Button("Hold"))
+// 	{
+// 		m_bHold = !m_bHold;
 // 
-// 		CModel* pCurrentModel = m_pPreViewModel->Get_CurrentModel();
+// // 		_byte byFlag(0);
+// // 
+// // 		CModel* pCurrentModel = m_pPreViewModel->Get_CurrentModel();
+// // 
+// // 		if (m_bHold)
+// // 		{
+// // 			byFlag = (_byte)ROOTNODE_FLAG::X | (_byte)ROOTNODE_FLAG::Z;
+// // 		}
 // 
-// 		if (m_bHold)
-// 		{
-// 			byFlag = (_byte)ROOTNODE_FLAG::X | (_byte)ROOTNODE_FLAG::Z;
-// 		}
-
-
-	}
+// 
+// 	}
 }
 
 char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)
