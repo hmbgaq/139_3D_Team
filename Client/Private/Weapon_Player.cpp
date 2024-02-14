@@ -24,21 +24,9 @@ HRESULT CWeapon_Player::Initialize_Prototype()
 
 HRESULT CWeapon_Player::Initialize(void* pArg)
 {	
-// 	m_pParentTransform = ((WEAPON_DESC*)pArg)->m_pParentTransform;
-// 	if (nullptr == m_pParentTransform)
-// 		return E_FAIL;
-// 	Safe_AddRef(m_pParentTransform);
-// 
-// 	m_pSocketBone = ((WEAPON_DESC*)pArg)->m_pSocketBone;
-// 	if (nullptr == m_pSocketBone)
-// 		return E_FAIL;
-// 	Safe_AddRef(m_pSocketBone);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
-
-// 	if (FAILED(Ready_Components()))
-// 		return E_FAIL;
 
 	m_pTransformCom->Set_Scaling(0.1f, 0.1f, 0.1f);
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.0f));

@@ -149,15 +149,6 @@ HRESULT CPlayer::Ready_Components()
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
 
-// 	/* For.Com_Collider */
-// 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
-// 
-// 	BoundingDesc.vExtents = _float3(0.5f, 0.7f, 0.5f);
-// 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);	
-
-// 	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_AABB"),
-// 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
-// 		return E_FAIL;
 
 	return S_OK;
 }
@@ -166,29 +157,18 @@ HRESULT CPlayer::Ready_PartObjects()
 {
 	/* For.Part_Body */
 	CBody_Player::BODY_DESC		BodyDesc = {};
-	//BodyDesc.m_pParentTransform = m_pTransformCom;
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
 		return E_FAIL;
 
 	
 
-// 	{
-// 		CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
-// 		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
-// 			return E_FAIL;
-// 	}
-// 	CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
-// 	CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
-// 
-// 	CBody_Player*	pBody = (CBody_Player*)Find_PartObject(TEXT("Part_Body"));	
-// 
-// 	WeaponDesc.m_pSocketBone = pBody->Get_BonePtr("SWORD");
-// 	WeaponDesc.m_pParentTransform = m_pTransformCom;
-// 
-// 
-// 	/* For.Part_Weapon*/
-// 	if (FAILED(Add_PartObject(TEXT("Prototype_GameObject_Weapon_Player"), TEXT("Part_Weapon"), &WeaponDesc)))
-// 		return E_FAIL;
+	{
+		CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
+		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
+			return E_FAIL;
+	}
+	CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
+
 
 	return S_OK;
 }

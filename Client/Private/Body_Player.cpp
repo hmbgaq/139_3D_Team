@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\Public\Body_Player.h"
+#include "Body_Player.h"
 
 #include "GameInstance.h"
 
@@ -28,16 +28,10 @@ HRESULT CBody_Player::Initialize_Prototype()
 
 HRESULT CBody_Player::Initialize(void* pArg)
 {	
-// 	m_pParentTransform = ((BODY_DESC*)pArg)->m_pParentTransform;
-// 	if (nullptr == m_pParentTransform)
-// 		return E_FAIL;
-// 	Safe_AddRef(m_pParentTransform);
+
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
-
-// 	if (FAILED(Ready_Components()))
-// 		return E_FAIL;
 
 	m_pModelCom->Set_Animation(3);
 
