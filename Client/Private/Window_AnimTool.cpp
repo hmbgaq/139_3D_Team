@@ -53,7 +53,10 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	
 	if (ImGui::Checkbox("RenderTarget", &m_bRenderTargetOnOff))
 	{
+#ifdef _DEBUG
 		m_pGameInstance->Set_RenderDebug(m_bRenderTargetOnOff);
+#endif
+		
 	}
 	//dialog========================================================================
 	static bool canValidateDialog = false;
