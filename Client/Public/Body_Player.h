@@ -37,7 +37,7 @@ public:
 
 
 private:
-	HRESULT Ready_Components(LEVEL eLevel);
+	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
 

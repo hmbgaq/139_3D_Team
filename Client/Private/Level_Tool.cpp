@@ -18,16 +18,16 @@ CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Tool::Initialize()
 {
-
+	//Level_Tool 레벨 조정 
+	m_pGameInstance->Set_CurrentLevel(3);
 	if (FAILED(Ready_Imgui()))
 	{
 		Safe_Release(m_pDevice);
 		Safe_Release(m_pContext);
 		return E_FAIL;
 	}
-
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
-		return E_FAIL;
+	FAILED_CHECK(Ready_LightDesc());
+	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
 	return S_OK;
 
@@ -81,6 +81,20 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 		return E_FAIL;
 
 	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_LightDesc()
+{
+	LIGHT_DESC			LightDesc{};
+
+	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
+		return E_FAIL;
 }
 
 

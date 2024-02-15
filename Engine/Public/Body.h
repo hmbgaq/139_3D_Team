@@ -83,7 +83,7 @@ protected:
 	//_float		m_fDissolveWeight = { 0.f };
 
 protected:
-	//virtual HRESULT Ready_Components() PURE;
+	virtual HRESULT Ready_Components() PURE;
 	virtual HRESULT Bind_ShaderResources();
 
 

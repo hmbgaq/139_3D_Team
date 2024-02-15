@@ -28,9 +28,7 @@ HRESULT CWeapon_Player::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
 
-	if (FAILED(Ready_Components(LEVEL(m_pGameInstance->Get_NextLevel()))))
-		return E_FAIL;
-
+	
 	m_pTransformCom->Set_Scaling(0.1f, 0.1f, 0.1f);
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.0f));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.7f, 0.f, 0.f, 1.f));
@@ -95,15 +93,15 @@ HRESULT CWeapon_Player::Render()
 
 
 
-HRESULT CWeapon_Player::Ready_Components(LEVEL eLevel)
+HRESULT CWeapon_Player::Ready_Components()
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(eLevel, TEXT("Prototype_Component_Shader_Model"),
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_Model"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(eLevel, TEXT("Prototype_Component_Model_ForkLift"),
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Model_ForkLift"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
@@ -115,7 +113,7 @@ HRESULT CWeapon_Player::Ready_Components(LEVEL eLevel)
 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 	BoundingDesc.vRotation = _float3(0.f, 0.f, 0.f);
 
-	if (FAILED(__super::Add_Component(eLevel, TEXT("Prototype_Component_Collider_OBB"),
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders), &BoundingDesc)))
 		return E_FAIL;
 

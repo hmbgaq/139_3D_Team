@@ -37,7 +37,7 @@ public:
 	CNavigation* Get_Navigation();
 
 protected:
-	//virtual HRESULT Ready_Components() PURE;
+	virtual HRESULT Ready_Components() PURE;
 	virtual HRESULT Ready_PartObjects() PURE;
 
 	CGameObject* Find_PartObject(const wstring & strPartTag);
