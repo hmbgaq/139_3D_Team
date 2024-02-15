@@ -35,7 +35,8 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 public:
 	void Update(_fmatrix TransformMatrix);
-	_bool Collision(CCollider* pTargetCollider);
+	_bool Is_Collision(CCollider* pTargetCollider);
+	void Collision(CCollider* pTargetCollider);
 	void End_CollisionCheck();
 
 
@@ -43,6 +44,9 @@ public:
 	virtual void			OnCollisionEnter(CCollider* other);
 	virtual void			OnCollisionStay(CCollider* other);
 	virtual void			OnCollisionExit(CCollider* other);
+
+public:
+	virtual void Set_Enable(_bool _Enable) override;
 
 #ifdef _DEBUG
 public:
@@ -55,6 +59,8 @@ public:
 
 	list<CCollider*>				m_PreOtherColliders;
 	list<CCollider*>				m_OtherColliders;
+
+	_uint							m_iLayer = { 0 };
 
 	
 

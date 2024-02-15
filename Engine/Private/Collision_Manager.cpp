@@ -15,10 +15,12 @@ HRESULT CCollision_Manager::Initialize(const _uint& In_iNumLayer)
 {
 	m_iNumLayer = In_iNumLayer;
 	m_ColliderList.reserve(In_iNumLayer);
+	m_ReservedColliderList.reserve(In_iNumLayer);
 
 	for (_uint i(0); i < In_iNumLayer; ++i)
 	{
 		m_ColliderList.push_back({});
+		m_ReservedColliderList.push_back({});
 		m_arrCheck.push_back(0);
 	}
 

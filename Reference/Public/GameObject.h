@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CCollider;
+
 class ENGINE_DLL CGameObject abstract : public CBase
 {
 public:
@@ -47,6 +49,11 @@ public:
 public:
 	class CTransform* Get_Transform();
 
+
+public:
+	virtual void	OnCollisionEnter(CCollider* other) {};
+	virtual void	OnCollisionStay(CCollider* other) {};
+	virtual void	OnCollisionExit(CCollider* other) {};
 
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };

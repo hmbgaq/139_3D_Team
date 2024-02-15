@@ -45,6 +45,9 @@ public:
 	virtual void			OnCollisionStay(CCollider* other);
 	virtual void			OnCollisionExit(CCollider* other);
 
+public:
+	virtual void Set_Enable(_bool _Enable) override;
+
 #ifdef _DEBUG
 public:
 	virtual HRESULT Render();
@@ -56,6 +59,8 @@ public:
 
 	list<CCollider*>				m_PreOtherColliders;
 	list<CCollider*>				m_OtherColliders;
+
+	_uint							m_iLayer = { 0 };
 
 	
 

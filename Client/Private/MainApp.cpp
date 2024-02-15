@@ -18,7 +18,7 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.iBackBufferSizeX = g_iWinSizeX;
 	GraphicDesc.iBackBufferSizeY = g_iWinSizeY;
 
-	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
+	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, (_uint)(COLLISION_LAYER::LAYER_END), g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
 
 	FAILED_CHECK(Ready_Font());
 

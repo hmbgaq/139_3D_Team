@@ -21,7 +21,7 @@ public:
 	/* _ulong : 감소시키기 이전의 값을 리턴 .*/
 	_ulong Release();
 
-	void Set_Enable(_bool _Enable);
+	virtual void Set_Enable(_bool _Enable);
 	_bool Get_Enable();
 
 protected:

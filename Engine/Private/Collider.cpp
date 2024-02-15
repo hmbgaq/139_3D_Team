@@ -8,6 +8,7 @@
 
 #include "GameObject.h"
 
+
 CCollider::CCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
 {
@@ -53,6 +54,8 @@ HRESULT CCollider::Initialize(void * pArg)
 {
 	CBounding::BOUNDING_DESC*		pBoundingDesc = (CBounding::BOUNDING_DESC*)pArg;
 
+	m_iLayer = pBoundingDesc->iLayer;
+
 	switch (m_eType)
 	{
 	case TYPE_SPHERE:
@@ -65,6 +68,8 @@ HRESULT CCollider::Initialize(void * pArg)
 		m_pBounding = CBounding_OBB::Create(m_pDevice, m_pContext, pBoundingDesc);
 		break;
 	}
+
+	m_pGameInstance->Add_Collision(m_iLayer, this);
 
 	return S_OK;
 }
@@ -162,6 +167,16 @@ void CCollider::OnCollisionExit(CCollider* other)
 		return;
 
 	m_pOwner->OnCollisionExit(other);
+}
+
+void CCollider::Set_Enable(_bool _Enable)
+{
+	if (false == m_bEnable && true == _Enable)
+	{
+		m_pGameInstance->Add_Collision(m_iLayer, this);
+	}
+	__super::Set_Enable(_Enable);
+
 }
 
 #ifdef _DEBUG

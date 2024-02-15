@@ -15,10 +15,11 @@ private:
 public:
 	HRESULT Initialize(const _uint& In_iNumLayer);
 	void	Tick(const _float& fTimeDelta);
-
-private:
 	void	Add_Collision(const _uint& In_iLayer, CCollider* _pCollider);
 	void	Check_Group(const _uint& In_iLeftLayer, const _uint& In_iRightLayer);
+
+private:
+
 	void	Update_ReservedColliderList();
 	void	Remove_DeadCollision();
 	void	Update_CollisionGroup(const _uint& In_iLeftLayer, const _uint& In_iRightLayer);

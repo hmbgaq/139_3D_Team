@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CCollider;
+
 class ENGINE_DLL CGameObject abstract : public CBase
 {
 public:

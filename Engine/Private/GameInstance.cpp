@@ -1,4 +1,5 @@
 #include "..\Public\GameInstance.h"
+#include "Collision_Manager.h"
 #include "Graphic_Device.h"
 #include "Object_Manager.h"
 #include "Target_Manager.h"
@@ -16,7 +17,7 @@ CGameInstance::CGameInstance()
 {
 }
 
-HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
+HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
 {
 	/* 그래픽 디바이스를 초기화 하자.*/
 	m_pGraphic_Device = CGraphic_Device::Create(GraphicDesc, ppDevice, ppContext);
@@ -67,6 +68,11 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, HINSTANCE hInstance, 
 	m_pFrustum = CFrustum::Create();
 	if (nullptr == m_pFrustum)
 		return E_FAIL;
+
+	m_pCollision_Manager = CCollision_Manager::Create(iNumLayer);
+	if (nullptr == m_pCollision_Manager)
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -523,6 +529,11 @@ _bool CGameInstance::isIn_LocalPlanes(_fvector vPoint, _float fRadius)
 {
 
 	return m_pFrustum->isIn_LocalPlanes(vPoint, fRadius);
+}
+
+void CGameInstance::Add_Collision(const _uint& In_iLayer, CCollider* _pCollider)
+{
+	m_pCollision_Manager->Add_Collision(In_iLayer, _pCollider);
 }
 
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)

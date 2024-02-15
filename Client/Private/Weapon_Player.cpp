@@ -108,7 +108,7 @@ HRESULT CWeapon_Player::Ready_Components()
 
 	/* For.Com_Collider */
 // 	CBounding_OBB::BOUNDING_OBB_DESC			BoundingDesc = {};
-// 
+//	BoundingDesc.iLayer = (_uint)COLLISION_LAYER::PLAYER_ATTACK;
 // 	BoundingDesc.vExtents = _float3(1.f, 1.f, 3.f);
 // 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 // 	BoundingDesc.vRotation = _float3(0.f, 0.f, 0.f);
