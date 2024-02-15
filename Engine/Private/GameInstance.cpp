@@ -509,12 +509,17 @@ _bool CGameInstance::isIn_LocalPlanes(_fvector vPoint, _float fRadius)
 
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
 {
-	_wstring.assign(_string.begin(), _string.end());
+	wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
+	_wstring = converter.from_bytes(_string);
+
+	//_wstring.assign(_string.begin(), _string.end());
 }
 
 void CGameInstance::WString_To_String(wstring _wstring, string& _string)
 {
-	_string.assign(_wstring.begin(), _wstring.end());
+	wstring_convert<codecvt_utf8<wchar_t>> converter;
+	_string = converter.to_bytes(_wstring);
+//	_string.assign(_wstring.begin(), _wstring.end());
 }
 
 void CGameInstance::Release_Manager()

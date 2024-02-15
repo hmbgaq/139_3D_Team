@@ -18,14 +18,6 @@ CPlayer::CPlayer(const CPlayer & rhs)
 {
 }
 
-CComponent * CPlayer::Find_Component(const wstring & strComTag, const wstring & strPartTag)
-{
-	auto	iter = m_PartObjects.find(strPartTag);
-	if (iter == m_PartObjects.end())
-		return nullptr;
-
-	return iter->second->Find_Component(strComTag);
-}
 
 HRESULT CPlayer::Initialize_Prototype()
 {	
@@ -43,24 +35,14 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&pGameObjectDesc)))
 		return E_FAIL;	
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
 
-	if (FAILED(Ready_PartObjects()))
-		return E_FAIL;
 
 	return S_OK;
 }
 
 void CPlayer::Priority_Tick(_float fTimeDelta)
 {
-	for (auto& Pair : m_PartObjects)
-	{
-		if (nullptr != Pair.second)
-			Pair.second->Priority_Tick(fTimeDelta);
-	}
-
-
+	__super::Priority_Tick(fTimeDelta);
 }
 
 void CPlayer::Tick(_float fTimeDelta)
@@ -120,23 +102,11 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
-
 #ifdef _DEBUG
 	/*m_pNavigationCom->Render();
 	m_pColliderCom->Render();*/
 #endif	
-
 	return S_OK;
-}
-
-CGameObject * CPlayer::Find_PartObject(const wstring & strPartTag)
-{
-	auto	iter = m_PartObjects.find(strPartTag);
-
-	if (iter == m_PartObjects.end())
-		return nullptr;
-
-	return iter->second;	
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -149,7 +119,6 @@ HRESULT CPlayer::Ready_Components()
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
 
-
 	return S_OK;
 }
 
@@ -159,9 +128,6 @@ HRESULT CPlayer::Ready_PartObjects()
 	CBody_Player::BODY_DESC		BodyDesc = {};
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
 		return E_FAIL;
-
-	
-
 	{
 		CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
 		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
@@ -173,26 +139,10 @@ HRESULT CPlayer::Ready_PartObjects()
 	return S_OK;
 }
 
-HRESULT CPlayer::Add_PartObject(const wstring & strPrototypeTag, const wstring & strPartTag, void * pArg)
-{
-	if (nullptr != Find_PartObject(strPrototypeTag))
-		return E_FAIL;
-
-	CGameObject*		pPartObject = m_pGameInstance->Clone_Prototype(strPrototypeTag, pArg);
-	if (nullptr == pPartObject)
-		return E_FAIL;
-
-	m_PartObjects.emplace(strPartTag, pPartObject);
-
-	return S_OK;
-}
-
-
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CPlayer*		pInstance = new CPlayer(pDevice, pContext);
 
-	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CPlayer");
@@ -205,7 +155,6 @@ CGameObject * CPlayer::Clone(void* pArg)
 {
 	CPlayer*		pInstance = new CPlayer(*this);
 
-	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CPlayer");

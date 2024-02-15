@@ -83,21 +83,30 @@ HRESULT CInteract_Chain::Render()
 
 		/* 체인부분만 하얗게 변하고 나무부분은 원래 Diffuse로 그리도록함 */
 
-		if (0 == i) /* 체인 */
+		if (iNumMeshes >= 2)
 		{
-			if (m_bInteractActive)
-				iRenderPass = 3;
-			else
-				iRenderPass = 0;
+			if (0 == i) /* 체인 */
+			{
+				if (m_bInteractActive)
+					iRenderPass = 3;
+				else
+					iRenderPass = 0;
 
-			m_pShaderCom->Begin(iRenderPass);
-			m_pModelCom->Render(i);
+				m_pShaderCom->Begin(iRenderPass);
+				m_pModelCom->Render((_uint)i);
+			}
+			else if (0 != i) /* 나무 */
+			{
+				m_pShaderCom->Begin(0);
+
+				m_pModelCom->Render((_uint)i);
+			}
 		}
-		else if (0 != i) /* 나무 */
+		else
 		{
-			m_pShaderCom->Begin(0);
+			m_pShaderCom->Begin(iRenderPass);
 
-			m_pModelCom->Render(i);
+			m_pModelCom->Render((_uint)i);
 		}
 	}
 

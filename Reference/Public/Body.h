@@ -14,7 +14,7 @@ class CBone;
 class ENGINE_DLL CBody abstract : public CGameObject
 {
 public:
-	typedef struct
+	typedef struct tagBodyDesc
 	{
 		class CTransform* m_pParentTransform = { nullptr };
 	}BODY_DESC;

@@ -29,7 +29,7 @@ HRESULT CVIBuffer_Model_Instance::Initialize(void* pArg)
 	CModel* pModel = m_tModelDesc.pModel;
 
 	vector<CMesh*> Meshes = pModel->Get_Meshes();
-	m_iNumMeshes = Meshes.size();
+	m_iNumMeshes = (_int)Meshes.size();
 	
 	for (_int i = 0; i < m_iNumMeshes; ++i)
 	{

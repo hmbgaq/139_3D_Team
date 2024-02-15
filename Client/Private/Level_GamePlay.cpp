@@ -1,9 +1,7 @@
 #include "stdafx.h"
-#include "..\Public\Level_GamePlay.h"
-
+#include "Level_GamePlay.h"
 #include "GameInstance.h"
 #include "Player.h"
-
 #include "Camera_Dynamic.h"
 #include "Environment_Instance.h"
 #include "Effect_Instance.h"
@@ -39,51 +37,42 @@ HRESULT CLevel_GamePlay::Render()
 HRESULT CLevel_GamePlay::Ready_LightDesc()
 {
 	LIGHT_DESC			LightDesc{};
+	{
+		LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+		LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+		LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+		LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
+		LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
-	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
-	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+	}
+	{
+		ZeroMemory(&LightDesc, sizeof LightDesc);
 
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
-		return E_FAIL;
+		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+		LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
+		LightDesc.fRange = 20.f;
+		LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
+		LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
+		LightDesc.vSpecular = LightDesc.vDiffuse;
+		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
 
-	ZeroMemory(&LightDesc, sizeof LightDesc);
+		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+		LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
+		LightDesc.fRange = 20.f;
+		LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
+		LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
+		LightDesc.vSpecular = LightDesc.vDiffuse;
+		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
 
-	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-	LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
-	LightDesc.fRange = 20.f;
-	LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
-	LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
-	LightDesc.vSpecular = LightDesc.vDiffuse;
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
-		return E_FAIL;
-
-	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-	LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
-	LightDesc.fRange = 20.f;
-	LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
-	LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
-	LightDesc.vSpecular = LightDesc.vDiffuse;
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
-		return E_FAIL;
-
-	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-	LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
-	LightDesc.fRange = 20.f;
-	LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
-	LightDesc.vSpecular = LightDesc.vDiffuse;
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
-		return E_FAIL;
-
+		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+		LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
+		LightDesc.fRange = 20.f;
+		LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
+		LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
+		LightDesc.vSpecular = LightDesc.vDiffuse;
+		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+	}
 	return S_OK;
 }
 
@@ -101,72 +90,41 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 	Desc.fSpeedPerSec = 15.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc)))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc));
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag, void* pArg)
 {
-	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg)))
-	//	return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg)))
-		return E_FAIL;
-
-	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
-	//if (nullptr == pPlayer)
-	//	return E_FAIL;
-
-	//m_pGameInstance->Set_Player(pPlayer);
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 {
-	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue"))))
-	//	return E_FAIL;
-	//
-	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Particle_Red"))))
-	//	return E_FAIL;
-
-	//for (size_t i = 0; i < 30; i++)
-	//{
-	//	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion"))))
-	//		return E_FAIL;
-	//}
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion")));
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* pArg)
 {
-
-	//for (size_t i = 0; i < 20; i++)
-	//{
-	//	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg)))
-	//			return E_FAIL;
-	//}
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg));
 
-
-
-
-	
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 {
-
-	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Skydome"))))
-	//	return E_FAIL;
-
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Terrain")));
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky")));
 
+	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Skydome"))))
+	//	return E_FAIL;
 
 	return S_OK;
 
@@ -204,8 +162,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void*
 	Desc.pTerrainBuffer = LandObjectDesc.pTerrainBuffer;
 	Desc.pTerrainTransform = LandObjectDesc.pTerrainTransform;
 
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Environment_Instance"), &Desc)))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Environment_Instance"), &Desc));
 
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg));
 

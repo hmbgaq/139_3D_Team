@@ -40,7 +40,7 @@ void CTransform::Move_On_Navigation(_vector vMove, CNavigation* pNavigation)
 	if (nullptr != pNavigation)
 	{
 		if (false == pNavigation->isMove(vPosition))
-			return;
+			return; /* 슬라이딩들어갈자리 */
 	}
 	Set_State(STATE_POSITION, vPosition);
 }
@@ -117,7 +117,7 @@ void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 	m_fRadian += fAdditionalRadian;
 
 	_float fAngle = XMConvertToDegrees(m_fRadian);
-	fAngle = (_uint)fAngle % 360;
+	fAngle = _float((_int)fAngle % 360);
 	m_fRadian = XMConvertToRadians(fAngle);
 
 	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fAdditionalRadian);
