@@ -1,10 +1,8 @@
 #include "stdafx.h"
-#include "..\Public\Level_Logo.h"
+#include "Level_Logo.h"
 #include "GameInstance.h"
 #include "BackGround.h"
-
 #include "Level_Loading.h"
-
 
 CLevel_Logo::CLevel_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -13,15 +11,14 @@ CLevel_Logo::CLevel_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 
 HRESULT CLevel_Logo::Initialize()
 {
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-		return E_FAIL;
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 
 	return S_OK;
 }
 
 void CLevel_Logo::Tick(_float fTimeDelta)
 {
-	if (GetKeyState(VK_TAB) & 0x8000)
+	if (m_pGameInstance->Key_Down(DIK_TAB))
 	{
 		_int iCheckPoint = 0;
 		iCheckPoint = MessageBox(g_hWnd,
@@ -39,12 +36,7 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 			if (FAILED(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_TOOL))))
 				return;
 		}
-
-
 	}
-
-
-
 }
 
 HRESULT CLevel_Logo::Render()
@@ -65,8 +57,7 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const wstring & strLayerTag)
 	BackGroundDesc.fRotationPerSec = XMConvertToRadians(90.f);
 	BackGroundDesc.fSpeedPerSec = 10.f;
 
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_LOGO, strLayerTag, TEXT("Prototype_GameObject_BackGround"), &BackGroundDesc)))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_LOGO, strLayerTag, TEXT("Prototype_GameObject_BackGround"), &BackGroundDesc));
 
 	return S_OK;
 }
@@ -86,5 +77,4 @@ CLevel_Logo * CLevel_Logo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * 
 void CLevel_Logo::Free()
 {
 	__super::Free();
-
 }

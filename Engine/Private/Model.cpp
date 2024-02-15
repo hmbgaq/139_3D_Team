@@ -39,6 +39,11 @@ CModel::CModel(const CModel & rhs)
 	}
 }
 
+_uint CModel::Get_NumMeshIndice(_int iMeshIndex)
+{
+	 return m_Meshes[iMeshIndex]->Get_NumIndices();
+}
+
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)
@@ -112,21 +117,62 @@ HRESULT CModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-void CModel::Play_Animation(_float fTimeDelta, _bool isLoop)
+void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 {
 	if (m_iCurrentAnimIndex >= m_iNumAnimations)
 		return;
 
-	/* 현재 애니메이션이 사용하고 있는 뼈들의 TransformationMatrix를 갱신한다. */
-	m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(isLoop, fTimeDelta, m_Bones);
+	if (true == bIsLoop)
+		m_eAnimState = ANIM_STATE::ANIM_STATE_LOOP;
+	else
+		m_eAnimState = ANIM_STATE::ANIM_STATE_NORMAL;
+
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones);
 
 
-	/* 화면에 최종적인 상태로 그려내기위해서는 반드시 뼈들의 CombinedTransformationMatrix가 갱신되어야한다. */
-	/* 모든 뼈들을 다 갱신하며 부모로부터 자식까지 쭈우우욱돌아서 CombinedTransformationMatrix를 갱신한다. */
+	_float3 NowPos;
 	for (auto& pBone : m_Bones)
 	{
-		pBone->Invalidate_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PivotMatrix));
+		pBone->Invalidate_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PivotMatrix), NowPos);
 	}
+
+	if (true == m_bUseAnimationPos && false == m_bIsAnimEnd && false == Is_Transition())
+	{
+		if (false == m_Animations[m_iCurrentAnimIndex]->Is_TransitionEnd_Now())
+		{
+			_float3 ChangedPos = NowPos - m_Animations[m_iCurrentAnimIndex]->Get_PrevPos();
+			//_Pos = ChangedPos;
+		}
+
+		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
+	}
+}
+
+void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
+{
+	if (m_iCurrentAnimIndex >= m_iNumAnimations)
+		return;
+
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones);
+
+
+	_float3 NowPos;
+	for (auto& pBone : m_Bones)
+	{
+		pBone->Invalidate_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PivotMatrix), NowPos);
+	}
+
+	if (true == m_bUseAnimationPos && false == m_bIsAnimEnd && false == Is_Transition())
+	{
+		if (false == m_Animations[m_iCurrentAnimIndex]->Is_TransitionEnd_Now())
+		{
+			_float3 ChangedPos = NowPos - m_Animations[m_iCurrentAnimIndex]->Get_PrevPos();
+			_Pos = ChangedPos;
+		}
+
+		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
+	}
+
 }
 
 HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, _uint iMeshIndex)
@@ -167,7 +213,7 @@ void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitio
 {
 	if (_iAnimationIndex == m_iCurrentAnimIndex)
 	{
-		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(iTargetKeyFrameIndex);
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition((_float)iTargetKeyFrameIndex);
 	}
 
 	CAnimation* currentAnimation = m_Animations[m_iCurrentAnimIndex];
@@ -214,7 +260,32 @@ void CModel::Write_Names(const string& strModelFilePath)
 	}
 	osTxt << endl;
 
+	osTxt << "Materials: " << endl;
 
+	for (_uint i = 0; i < m_iNumMaterials; ++i)
+	{
+		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material(i);
+
+		for (size_t j = 1; j < AI_TEXTURE_TYPE_MAX; j++) 
+		{
+			_char		szDrive[MAX_PATH] = "";
+			_char		szDirectory[MAX_PATH] = "";
+
+			_splitpath_s(strModelFilePath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
+
+			string strPath = pAIMaterial.Get_Textures((_uint)j);
+			if (strPath == "")
+				continue;
+
+			_char		szFileName[MAX_PATH] = "";
+			_char		szEXT[MAX_PATH] = "";
+
+			_splitpath_s(strPath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
+
+			osTxt << i << "-" << j << ". " << szFileName << endl;
+		}
+	}
+	osTxt << endl;
 
 	osTxt << "Animations: " << endl;
 	for (_uint i = 0; i < m_iNumAnimations; ++i)
@@ -233,6 +304,11 @@ void CModel::Write_Names(const string& strModelFilePath)
 	osTxt.close();
 }
 
+vector<CAnimation*>* CModel::Get_Animations()
+{
+	return &m_Animations;
+}
+
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 {
 	m_iNumMeshes = m_pAIScene.Get_NumMeshes();
@@ -241,7 +317,7 @@ HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 
 	for (size_t i = 0; i < m_iNumMeshes; i++)
 	{
-		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eModelType, m_pAIScene.Get_Mesh(i), PivotMatrix, m_Bones);
+		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eModelType, m_pAIScene.Get_Mesh((_uint)i), PivotMatrix, m_Bones);
 
 		if (nullptr == pMesh)
 			return E_FAIL;
@@ -258,7 +334,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 	for (size_t i = 0; i < m_iNumMaterials; i++)
 	{
-		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material(i);
+		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material((_uint)i);
 
 		MATERIAL_DESC			MaterialDesc = {  };
 
@@ -273,7 +349,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 			//if (FAILED(pAIMaterial.GetTexture(aiTextureType(j), 0, &strPath)))
 			//	continue;
 
-			string strPath = pAIMaterial.Get_Textures(j);
+			string strPath = pAIMaterial.Get_Textures((_uint)j);
 			if (strPath == "")
 				continue;
 
@@ -294,7 +370,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			_tchar		szFullPath[MAX_PATH] = TEXT("");
 
-			MultiByteToWideChar(CP_ACP, 0, szTmp, strlen(szTmp), szFullPath, MAX_PATH);
+			MultiByteToWideChar((_uint)CP_ACP, 0, szTmp, (_int)strlen(szTmp), szFullPath, (_int)MAX_PATH);
 
 
 			MaterialDesc.pMtrlTextures[j] = CTexture::Create(m_pDevice, m_pContext, szFullPath, 1);
@@ -316,11 +392,11 @@ HRESULT CModel::Ready_Bones(CMyAINode pAINode, _int iParentIndex)
 
 	m_Bones.push_back(pBone);
 
-	_int		iParentIdx = m_Bones.size() - 1;
+	_int		iParentIdx = (_int)m_Bones.size() - 1;
 
 	for (size_t i = 0; i < pAINode.Get_NumChildren(); i++)
 	{
-		Ready_Bones(CMyAINode(pAINode.Get_Children(i)), iParentIdx);
+		Ready_Bones(CMyAINode(pAINode.Get_Children((_uint)i)), iParentIdx);
 	}
 
 	return S_OK;
@@ -332,7 +408,7 @@ HRESULT CModel::Ready_Animations()
 
 	for (size_t i = 0; i < m_iNumAnimations; i++)
 	{
-		CAnimation* pAnimation = CAnimation::Create(m_pAIScene.Get_Animation(i), m_Bones);
+		CAnimation* pAnimation = CAnimation::Create(m_pAIScene.Get_Animation((_uint)i), m_Bones);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 

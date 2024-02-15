@@ -7,11 +7,21 @@ CPipeLine::CPipeLine()
 
 void CPipeLine::Set_Transform(D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {
+	if (D3DTS_VIEW == eState)
+	{
+		m_PreViewMatrix = m_Transform[D3DTS_VIEW];
+	}
+
 	XMStoreFloat4x4(&m_Transform[eState], TransformMatrix);
 }
 
 void CPipeLine::Set_Transform(D3DTRANSFORMSTATE eState, _float4x4 TransformMatrix)
 {
+	if (D3DTS_VIEW == eState)
+	{
+		m_PreViewMatrix = m_Transform[D3DTS_VIEW];
+	}
+
 	m_Transform[eState] = TransformMatrix;
 }
 
@@ -38,6 +48,32 @@ _float4x4 CPipeLine::Get_TransformFloat4x4Inverse(D3DTRANSFORMSTATE eState)
 _float4 CPipeLine::Get_CamPosition()
 {
 	return m_vCamPosition;
+}
+
+_float4 CPipeLine::Get_CamSetting()
+{
+	_float4 Result = {};
+
+	// 투영의 역행렬 계산
+	_matrix projectionMatrix = XMLoadFloat4x4(&m_Transform[D3DTS_PROJ]);
+	_matrix projectionInverse = XMMatrixInverse(nullptr, projectionMatrix);
+
+	// 역행렬에서 near, far, fov 추출
+	_float Cam_near = projectionInverse.r[3].m128_f32[2] / (projectionInverse.r[2].m128_f32[2] - 1.0f);
+	_float Cam_far = projectionInverse.r[3].m128_f32[2] / (projectionInverse.r[2].m128_f32[2] + 1.0f);
+	_float Cam_fovY = atan(1.0f / projectionInverse.r[1].m128_f32[1]) * 2.0f;
+	_float Cam_aspectRatio = projectionInverse.r[0].m128_f32[0] / projectionInverse.r[1].m128_f32[1];
+
+	Result = { Cam_near, Cam_far, Cam_fovY, Cam_aspectRatio };
+
+	return Result;
+}
+
+_float4x4 CPipeLine::Get_PreViewMatrix()
+{
+	_float4x4 PreViewMat = m_PreViewMatrix;
+	
+	return PreViewMat;
 }
 
 HRESULT CPipeLine::Initialize()

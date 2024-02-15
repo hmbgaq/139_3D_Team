@@ -34,7 +34,7 @@ HRESULT CAnimation::Initialize(CMyAIAnimation pAIAnimation, const CModel::BONES&
 	/* 이 애니메이션에서 사용하기위한 뼈(aiNodeAnim,채널)의 정보를 만든다. */
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
-		CChannel* pChannel = CChannel::Create(pAIAnimation.Get_Channel(i), Bones);
+		CChannel* pChannel = CChannel::Create(pAIAnimation.Get_Channel((_uint)i), Bones);
 		if (nullptr == pChannel)
 			return E_FAIL;
 
@@ -44,27 +44,85 @@ HRESULT CAnimation::Initialize(CMyAIAnimation pAIAnimation, const CModel::BONES&
 	return S_OK;
 }
 
-void CAnimation::Invalidate_TransformationMatrix(_bool isLoop, _float fTimeDelta, const CModel::BONES& Bones)
+_bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones)
 {
-	m_fTrackPosition += m_fTickPerSecond * fTimeDelta;
-
-	if (m_fTrackPosition >= m_fDuration)
+	_bool _bPrevTransition = m_bIsTransition;
+	if (m_bIsTransition)
 	{
-		m_isFinished = true;
-		m_fTrackPosition = m_fDuration;
+		m_fTrackPosition += m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
 
-		if (true == isLoop)
+		if (m_fTransitionEnd <= m_fTrackPosition)
 		{
-			m_fTrackPosition = 0.0f;
-			m_isFinished = false;
+			m_bIsTransition = false;
+			m_fTrackPosition = m_fTransitionEnd;
 		}
-	}		
+	}
+	else
+	{
+		switch (_eAnimState)
+		{
+		case Engine::CModel::ANIM_STATE_NORMAL:
+			m_fTrackPosition += m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+			if (m_fTrackPosition >= m_fDuration)
+			{
+				m_isFinished = true;
+				m_fTrackPosition = m_fDuration;
+			}
+			break;
+		case Engine::CModel::ANIM_STATE_LOOP:
+			m_fTrackPosition += m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+			if (m_fTrackPosition >= m_fDuration)
+			{
+				m_fTrackPosition = 0.0f;
+				m_PrevPos = { 0.f, 0.f, 0.f };
+			}
+			break;
+		case Engine::CModel::ANIM_STATE_REVERSE:
+			m_fTrackPosition -= m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+			if (m_fTrackPosition <= 0)
+			{
+				m_isFinished = true;
+				m_fTrackPosition = 0.f;
+			}
+			break;
+		case Engine::CModel::ANIM_STATE_STOP:
+			m_isFinished = true;
+			break;
+		default:
+			break;
+		}
 
-	/* 내 애니메이션이 이용하는 전체 뼈의 상태를 m_fTrackPosition 시간에 맞는 상태로 갱신하다.*/
+	}
+
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
-		m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+		if (m_bIsTransition)
+		{
+			KEYFRAME	_StartFrame = m_StartTransitionKeyFrame[i];
+			KEYFRAME	_EndFrame = m_EndTransitionKeyFrame[i];
+
+			m_Channels[i]->Invalidate_TransformationMatrix_Transition(_StartFrame, _EndFrame, m_fTrackPosition, Bones);
+		}
+		else
+		{
+			switch (_eAnimState)
+			{
+			case Engine::CModel::ANIM_STATE_NORMAL:
+			case Engine::CModel::ANIM_STATE_LOOP:
+				m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+			case Engine::CModel::ANIM_STATE_REVERSE:
+				m_Channels[i]->Invalidate_TransformationMatrix_Reverse(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+				break;
+			default:
+				break;
+			}
+		}
+
 	}
+
+	m_bIsTransitionEnd_Now = _bPrevTransition != m_bIsTransition;
+
+	return m_isFinished;
 }
 
 CChannel* CAnimation::Get_Channel_By_BoneIndex(_uint _iBoneIndex, _uint& _iChannelIndex)

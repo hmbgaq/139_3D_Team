@@ -44,31 +44,48 @@
 #define ENGINE_DLL		_declspec(dllimport)
 #endif
 
-/*  Debug Check */
+/*  Debug */
+#ifdef _DEBUG
+#define DEBUG_BREAK  DebugBreak()
+#else
+#define DEBUG_BREAK
+#endif
+
+#ifdef _DEBUG
+#define DEBUG_ASSERT assert(false)
+#endif
+
+/* ================== NULL CHECK ================== */
 #define NULL_CHECK( _ptr)	\
-	{if( _ptr == 0){__asm { int 3 };return;}}
+	{if( 0 == (_ptr)){ DEBUG_BREAK;return;}}
+
+#define NOT_NULL_CHECK( _ptr)	\
+	{if( 0 != (_ptr)){ DEBUG_BREAK;return;}}
 
 #define NULL_CHECK_RETURN( _ptr, _return)	\
-	{if( _ptr == 0){__asm { int 3 };return _return;}}
+	{if( 0 == (_ptr) ){ DEBUG_BREAK;return _return;}}
+
+#define NOT_NULL_CHECK_RETURN( _ptr, _return)	\
+	{if( 0 != (_ptr) ){ DEBUG_BREAK;return _return;}}
 
 #define NULL_CHECK_MSG( _ptr, _message )		\
-	{if( _ptr == 0){MessageBox(nullptr, _message, L"System Message",MB_OK);__asm { int 3 };}}
+	{if( (_ptr) == 0){MessageBox(NULL, _message, L"System Message",MB_OK); DEBUG_BREAK;}}
 
 #define NULL_CHECK_RETURN_MSG( _ptr, _return, _message )	\
-	{if( _ptr == 0){MessageBox(nullptr, _message, L"System Message",MB_OK);__asm { int 3 };return _return;}}
+	{if( (_ptr) == 0){MessageBox(NULL, _message, L"System Message",MB_OK); DEBUG_BREAK;return _return;}}
 
-
+/* ================== FAILED CHECK ================== */
 #define FAILED_CHECK(_hr)	if( ((HRESULT)(_hr)) < 0 )	\
-	{ MessageBoxW(nullptr, L"Failed", L"System Error",MB_OK); __asm { int 3 }; return E_FAIL;}
+	{ MessageBoxW(NULL, L"Failed", L"System Error",MB_OK); DEBUG_BREAK; return E_FAIL;}
 
 #define FAILED_CHECK_RETURN(_hr, _return)	if( ((HRESULT)(_hr)) < 0 )		\
-	{ MessageBoxW(nullptr, L"Failed", L"System Error",MB_OK); __asm { int 3 }; return _return;}
+	{ MessageBoxW(NULL, L"Failed", L"System Error",MB_OK); DEBUG_BREAK; return _return;}
 
 #define FAILED_CHECK_MSG( _hr, _message)	if( ((HRESULT)(_hr)) < 0 )	\
-	{ MessageBoxW(nullptr, _message, L"System Message",MB_OK); __asm { int 3 };return E_FAIL;}
+	{ MessageBoxW(NULL, _message, L"System Message",MB_OK); DEBUG_BREAK;}
 
 #define FAILED_CHECK_RETURN_MSG( _hr, _return, _message)	if( ((HRESULT)(_hr)) < 0 )	\
-	{ MessageBoxW(nullptr, _message, L"System Message",MB_OK); __asm { int 3 };return _return;}
+	{ MessageBoxW(NULL, _message, L"System Message",MB_OK); DEBUG_BREAK;return _return;}
 
 /* Singleton */
 #define NO_COPY(CLASSNAME)								\

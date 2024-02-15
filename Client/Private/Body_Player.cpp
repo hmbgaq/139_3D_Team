@@ -1,17 +1,17 @@
 #include "stdafx.h"
-#include "..\Public\Body_Player.h"
+#include "Body_Player.h"
 
 #include "GameInstance.h"
 
 
 CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CBody(pDevice, pContext)
 {
 
 }
 
 CBody_Player::CBody_Player(const CBody_Player & rhs)
-	: CGameObject(rhs)
+	: CBody(rhs)
 {
 }
 
@@ -28,16 +28,10 @@ HRESULT CBody_Player::Initialize_Prototype()
 
 HRESULT CBody_Player::Initialize(void* pArg)
 {	
-	m_pParentTransform = ((BODY_DESC*)pArg)->m_pParentTransform;
-	if (nullptr == m_pParentTransform)
-		return E_FAIL;
-	Safe_AddRef(m_pParentTransform);
+
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
-
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
 
 	m_pModelCom->Set_Animation(3);
 
@@ -91,9 +85,6 @@ HRESULT CBody_Player::Render()
 		m_pModelCom->Render((_uint)i);
 	}
 
-
-	
-
 	return S_OK;
 }
 
@@ -105,7 +96,7 @@ HRESULT CBody_Player::Render_Shadow()
 	_float4x4		ViewMatrix, ProjMatrix;
 
 	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, 300.f));
+	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, m_pGameInstance->Get_CamFar()));
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
 		return E_FAIL;
@@ -135,6 +126,7 @@ void CBody_Player::SetUp_Animation(_uint iAnimIndex)
 
 HRESULT CBody_Player::Ready_Components()
 {
+
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_AnimModel"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
@@ -170,6 +162,11 @@ HRESULT CBody_Player::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	if(FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
+
 		return E_FAIL;
 
 	return S_OK;

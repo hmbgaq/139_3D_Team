@@ -282,6 +282,49 @@ CComponent * CGameInstance::Get_Component(_uint iLevelIndex, const wstring & str
 	return m_pObject_Manager->Get_Component(iLevelIndex, strLayerTag, strComponentTag, iIndex, strPartTag);
 }
 
+list<class CGameObject*>* CGameInstance::Get_GameObjects(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	return m_pObject_Manager->Get_GameObjects(iLevelIndex, strLayerTag);
+}
+
+void CGameInstance::Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>* clonevector)
+{
+	m_pObject_Manager->Get_CloneGameObjects(iLevelIndex, clonevector);
+}
+
+CGameObject* CGameInstance::Get_GameObect_Last(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	list<class CGameObject*>* pGameObjects = Get_GameObjects(iLevelIndex, strLayerTag);
+	if (nullptr == pGameObjects)
+		return nullptr;
+
+	return pGameObjects->back();
+}
+
+CGameObject* CGameInstance::Add_CloneObject_And_Get(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg)
+{
+	if (FAILED(Add_CloneObject(iLevelIndex, strLayerTag, strPrototypeTag, pArg)))
+		return nullptr;
+
+	return Get_GameObect_Last(iLevelIndex, strLayerTag);
+}
+
+CGameObject* CGameInstance::Get_Player()
+{
+	return m_pObject_Manager->Get_Player();
+}
+
+void CGameInstance::Set_Player(CGameObject* _pPlayer)
+{
+	m_pObject_Manager->Set_Player(_pPlayer);
+}
+
+void CGameInstance::Fill_PrototypeTags(vector<string>* _vector)
+{
+	m_pObject_Manager->Fill_PrototypeTags(_vector);
+}
+
+
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, CComponent * pPrototype)
 {
 	if (nullptr == m_pComponent_Manager)
@@ -313,6 +356,13 @@ HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
+
+#ifdef _DEBUG
+void CGameInstance::Set_RenderDebug(_bool _bRenderDebug)
+{
+	m_pRenderer->Set_RenderDebug(_bRenderDebug);
+}
+#endif
 
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {
@@ -368,6 +418,19 @@ _float4 CGameInstance::Get_CamPosition()
 		return _float4();
 
 	return m_pPipeLine->Get_CamPosition();
+}
+
+_float4 CGameInstance::Get_CamSetting()
+{
+	if (nullptr == m_pPipeLine)
+		return _float4();
+
+	return m_pPipeLine->Get_CamSetting();
+}
+
+_float CGameInstance::Get_CamFar()
+{
+	return m_pPipeLine->Get_CamFar();
 }
 
 HRESULT CGameInstance::Add_Font(const wstring & strFontTag, const wstring & strFontFilePath)
@@ -447,6 +510,21 @@ _bool CGameInstance::isIn_LocalPlanes(_fvector vPoint, _float fRadius)
 {
 
 	return m_pFrustum->isIn_LocalPlanes(vPoint, fRadius);
+}
+
+void CGameInstance::String_To_WString(string _string, wstring& _wstring)
+{
+	wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
+	_wstring = converter.from_bytes(_string);
+
+	//_wstring.assign(_string.begin(), _string.end());
+}
+
+void CGameInstance::WString_To_String(wstring _wstring, string& _string)
+{
+	wstring_convert<codecvt_utf8<wchar_t>> converter;
+	_string = converter.to_bytes(_wstring);
+//	_string.assign(_wstring.begin(), _wstring.end());
 }
 
 void CGameInstance::Release_Manager()

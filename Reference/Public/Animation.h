@@ -16,7 +16,7 @@ private:
 
 public:
 	HRESULT Initialize(CMyAIAnimation pAIAnimation, const CModel::BONES& Bones);
-	void Invalidate_TransformationMatrix(_bool isLoop, _float fTimeDelta, const CModel::BONES& Bones);
+	_bool Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones);
 
 public:
 	vector<class CChannel*>* Get_Channels() { return &m_Channels; };
@@ -64,6 +64,7 @@ public:
 		return m_szName;
 	}
 
+	_float Get_Duration() { return m_fDuration; }
 private:
 	_char					m_szName[MAX_PATH] = "";
 	_float					m_fDuration = { 0.0f }; /* 내 애니메이션을 전체 재생하기위한 전체 길이. */

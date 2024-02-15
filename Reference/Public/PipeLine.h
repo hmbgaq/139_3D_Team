@@ -22,7 +22,15 @@ public:
 	_float4x4 Get_TransformFloat4x4(D3DTRANSFORMSTATE eState);
 	_matrix Get_TransformMatrixInverse(D3DTRANSFORMSTATE eState);
 	_float4x4 Get_TransformFloat4x4Inverse(D3DTRANSFORMSTATE eState);
+
+public: /* 카메라 관련 */
 	_float4 Get_CamPosition();
+	_float4 Get_CamSetting();
+
+	_float	Get_CamFar() { return m_fCamFar; };
+
+public:
+	_float4x4 Get_PreViewMatrix();
 
 public:
 	HRESULT Initialize();
@@ -32,7 +40,14 @@ public:
 private:
 	_float4x4			m_Transform[D3DTS_END];
 	_float4x4			m_Transform_Inverse[D3DTS_END];
+
 	_float4				m_vCamPosition;
+
+
+	_float4				m_vPreCamPosition;
+	_float4				m_vPreCamQuaternion;
+	_float4x4			m_PreViewMatrix;
+	_float				m_fCamFar = 1000.f;
 
 public:
 	static CPipeLine* Create();

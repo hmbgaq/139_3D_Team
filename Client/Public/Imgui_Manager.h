@@ -61,7 +61,7 @@ private:
 	map<IMGUI_WINDOW_TYPE, CImgui_Window*>	m_mapWindows;
 	_bool									m_bMainMenu = true;
 	_bool									m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_WINDOW_END];
-
+	
 
 
 public:

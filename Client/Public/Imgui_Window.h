@@ -8,6 +8,7 @@
 #include "Base.h"
 BEGIN(Engine)
 class CGameObject;
+class CGameInstance;
 END
 
 BEGIN(Client)
@@ -20,6 +21,7 @@ public:
 		string				strName;
 		ImGuiWindowFlags	eWindowFlags = ImGuiWindowFlags_None;
 		ImVec2				vWindowSize = { 0.f, 0.f };
+		ImVec4				vBackgroundColor = ImVec4(0.f, 0.f, 0.f, 1.f);
 	};
 
 protected:
@@ -29,7 +31,7 @@ protected:
 public:
 	_bool			Is_Enable() { return m_bEnable;}
 	void			Set_Enable(_bool bEnable) { m_bEnable = bEnable; }
-	HRESULT			SetUp_ImGuiDESC(string _strName, const ImVec2& _vWindowSize, ImGuiWindowFlags _eWindowFlags);
+	HRESULT			SetUp_ImGuiDESC(string _strName, const ImVec2& _vWindowSize, ImGuiWindowFlags _eWindowFlags, const ImVec4& _vBackGroundColor);
 	HRESULT			Begin();
 	HRESULT			End();
 
@@ -40,14 +42,17 @@ public:
 
 protected:
 	_bool				m_bEnable = false;
+	_bool				m_bRenderTargetOnOff = true;
+	_bool				m_bdialogCheck = false;
+
 	ImGuiDESC			m_tImGuiDESC;
-	ImVec4				m_BackgroundColor = ImVec4(1.f, 1.f, 1.f, 1.f);
 	_float				m_fWindowAlpha = 1.f;
 	_float				m_fTimeDelta = 0.f;
 
 
 	ID3D11Device*		m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
+	CGameInstance*		m_pGameInstance = { nullptr };
 
 public:
 	virtual void Free() override;

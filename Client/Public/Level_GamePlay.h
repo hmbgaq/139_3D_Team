@@ -16,7 +16,6 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	
-
 private:	
 	HRESULT Ready_LightDesc();
 	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
@@ -26,6 +25,7 @@ private:
 	HRESULT Ready_Layer_Player(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_Monster(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_Building(const wstring& strLayerTag, void* pArg);
+	HRESULT Ready_Layer_Test(const wstring& strLayerTag);
 	
 private: /* UI */
 	HRESULT Ready_UI();

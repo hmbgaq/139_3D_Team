@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "Level_Tool.h"
-
 #include "Imgui_Manager.h"
 #include "GameInstance.h"
-
+#include "Camera_Dynamic.h"
+#include "Particle_Custom.h"
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -12,7 +12,6 @@ CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Tool::Initialize()
 {
-
 	if (FAILED(Ready_Imgui()))
 	{
 		Safe_Release(m_pDevice);
@@ -20,15 +19,14 @@ HRESULT CLevel_Tool::Initialize()
 		return E_FAIL;
 	}
 
-	return S_OK;
+	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
+	return S_OK;
 }
 
 void CLevel_Tool::Tick(_float fTimeDelta)
 {
-
 	m_pImguiManager->Tick(fTimeDelta);
-
 }
 
 HRESULT CLevel_Tool::Render()
@@ -44,14 +42,29 @@ HRESULT CLevel_Tool::Ready_Imgui()
 {
 	m_pImguiManager = CImgui_Manager::GetInstance();
 
+	NULL_CHECK_RETURN(m_pImguiManager, E_FAIL);
+
 	m_pImguiManager->AddRef();
 
-	if(nullptr == m_pImguiManager)
-		return E_FAIL;
+	FAILED_CHECK(m_pImguiManager->Initialize(m_pDevice,m_pContext));
 
-	if(FAILED(m_pImguiManager->Initialize(m_pDevice,m_pContext)))
-		return E_FAIL;
+	return S_OK;
+}
 
+HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
+{
+	CCamera_Dynamic::DYNAMIC_CAMERA_DESC		tDesc = {};
+	tDesc.fMouseSensor = 0.05f;
+	tDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
+	tDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+	tDesc.fFovy = XMConvertToRadians(60.0f);
+	tDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	tDesc.fNear = 0.1f;
+	tDesc.fFar = 1000.f;
+	tDesc.fSpeedPerSec = 5.f;
+	tDesc.fRotationPerSec = XMConvertToRadians(180.0f);
+
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &tDesc));
 
 	return S_OK;
 }

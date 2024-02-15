@@ -34,7 +34,7 @@ HRESULT CWindow_UITool::Initialize()
 
 		_bool bRet = LoadTextureFromFile(ConverWStringtoC(m_vecPaths[i]->strFilePath), &tTexture->SRV_Texture, &tTexture->iImage_Width, &tTexture->iImage_Height);
 		IM_ASSERT(bRet);
-		
+
 		/* Texture 크기를 임의로 조절하고 싶다면, 여기서 강제로 덮어씌우자. 값을 안주면 원래 텍스처 크기대로 나온다. 추 후 원본 크기를 이용해 비율만 줄여서 출력해도 좋을 것 같다. */
 		//tTexture->iImage_Width = 100;
 		//tTexture->iImage_Height = 100;
@@ -61,7 +61,7 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 	// 윈도우 창 크기 변경시 변경된 값을 마우스위치값을 이용해 창 사이즈를 바꿔줘야 할 것 같다.
 	//ImGui::IsMouseDown();
 	//m_tImGuiDESC.vWindowSize; 
-	
+
 	__super::Begin();
 	ImGui::Text("UI_Tool");
 
@@ -99,7 +99,7 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 		ImGui::Text(u8"값2 : %.2f", m_tUI_Info.fNum);
 
 		// 버튼
-		if (ImGui::Button(u8"버튼")) 
+		if (ImGui::Button(u8"버튼"))
 		{
 
 		}
@@ -118,7 +118,7 @@ void CWindow_UITool::UI_ToolTip(_float fTimeDelta)
 	/* 마우스 오버할 위치 */
 	_float	fTestX = 50.f;
 	_float	fTestY = 500.f;
-	
+
 	/* 마우스 오버할 범위 */
 	_float	fHoverRangeX = 200.f;
 	_float	fHoverRangeY = 200.f;
@@ -230,7 +230,7 @@ std::vector<const char*> CWindow_UITool::ConvertStringVectorToCharArray(const st
 {
 	std::vector<const char*> charArray;
 	charArray.reserve(stringVector.size());
-	for (const std::string& str : stringVector) 
+	for (const std::string& str : stringVector)
 	{
 		charArray.push_back(str.c_str());
 	}
@@ -245,7 +245,7 @@ std::wstring CWindow_UITool::ConvertToWideString(const std::string& ansiString)
 		// 변환 실패 처리
 		return L"Fail";
 	}
-	
+
 	std::wstring wideString(wideStrLen, L'\0');
 	MultiByteToWideChar(CP_ACP, 0, ansiString.c_str(), -1, &wideString[0], wideStrLen);
 
@@ -360,7 +360,11 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 	ImGui::Dummy(ImVec2(0, 2.5)); // 공백
 	ImGui::Separator();
 
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> Dev2
 	if (ImGui::Button("Create"))
 	{
 		UI2D_Create(fTimeDelta);
@@ -377,7 +381,11 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 
 void CWindow_UITool::UI2D_Create(_float fTimeDelta)
 {
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> Dev2
 }
 
 void CWindow_UITool::UI2D_Delete(_float fTimeDelta)

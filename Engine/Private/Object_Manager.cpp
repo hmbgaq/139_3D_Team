@@ -1,6 +1,7 @@
 #include "..\Public\Object_Manager.h"
 #include "GameObject.h"
 #include "Layer.h"
+#include "GameInstance.h"
 
 CObject_Manager::CObject_Manager()
 {
@@ -24,6 +25,9 @@ HRESULT CObject_Manager::Initialize(_uint iNumLevels)
 	m_iNumLevels = iNumLevels;
 
 	m_pLayers = new LAYERS[iNumLevels];
+
+	m_pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(m_pGameInstance);
 
 	return S_OK;
 }
@@ -120,6 +124,50 @@ void CObject_Manager::Clear(_uint iLevelIndex)
 	m_pLayers[iLevelIndex].clear();
 }
 
+list<class CGameObject*>* CObject_Manager::Get_GameObjects(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	CLayer* layer = Find_Layer(iLevelIndex, strLayerTag);
+	if (nullptr == layer)
+		return nullptr;
+
+	return layer->Get_GameObjects();
+}
+
+void CObject_Manager::Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>* clonevector)
+{
+	for (auto& item : m_pLayers[iLevelIndex])
+	{
+
+		list<CGameObject*> pGameObjects = *item.second->Get_GameObjects();
+		for (auto& pGameObject : pGameObjects)
+		{
+			clonevector->push_back(pGameObject);
+		}
+	}
+	//_bool test = false;
+}
+
+void CObject_Manager::Fill_PrototypeTags(vector<string>* _vector)
+{
+	for (auto& item : m_Prototypes)
+	{
+		string key;
+		m_pGameInstance->WString_To_String(item.first, key);
+
+		_vector->push_back(key);
+	}
+}
+
+CGameObject* CObject_Manager::Get_Player()
+{
+	return m_pPlayer;
+}
+
+void CObject_Manager::Set_Player(CGameObject* _pPlayer)
+{
+	m_pPlayer = _pPlayer;
+}
+
 CGameObject * CObject_Manager::Find_Prototype(const wstring & strPrototypeTag)
 {
 	auto	iter = m_Prototypes.find(strPrototypeTag);
@@ -171,4 +219,6 @@ void CObject_Manager::Free()
 		Safe_Release(Pair.second);
 
 	m_Prototypes.clear();
+
+	Safe_Release(m_pGameInstance);
 }

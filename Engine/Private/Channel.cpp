@@ -41,22 +41,22 @@ HRESULT CChannel::Initialize(CMyAINodeAnimation pChannel, const CModel::BONES& B
 
 		if (i < pChannel.Get_NumScalingKeys())
 		{
-			memcpy(&vScale, &pChannel.Get_ScalingKeys(i).Get_Value(), sizeof(_float3));
-			KeyFrame.fTrackPosition = pChannel.Get_ScalingKeys(i).Get_Time();
+			memcpy(&vScale, &pChannel.Get_ScalingKeys((_uint)i).Get_Value(), sizeof(_float3));
+			KeyFrame.fTrackPosition = pChannel.Get_ScalingKeys((_uint)i).Get_Time();
 		}
 		if (i < pChannel.Get_NumRotationKeys())
 		{
 			// memcpy(&vRotation, &pChannel->mRotationKeys[i].mValue, sizeof(_float4));
-			vRotation.x = pChannel.Get_RotationKeys(i).Get_X();
-			vRotation.y = pChannel.Get_RotationKeys(i).Get_Y();
-			vRotation.z = pChannel.Get_RotationKeys(i).Get_Z();
-			vRotation.w = pChannel.Get_RotationKeys(i).Get_W();
-			KeyFrame.fTrackPosition = pChannel.Get_RotationKeys(i).Get_Time();
+			vRotation.x = pChannel.Get_RotationKeys((_uint)i).Get_X();
+			vRotation.y = pChannel.Get_RotationKeys((_uint)i).Get_Y();
+			vRotation.z = pChannel.Get_RotationKeys((_uint)i).Get_Z();
+			vRotation.w = pChannel.Get_RotationKeys((_uint)i).Get_W();
+			KeyFrame.fTrackPosition = pChannel.Get_RotationKeys((_uint)i).Get_Time();
 		}
 		if (i < pChannel.Get_NumPositionKeys())
 		{
-			memcpy(&vPosition, &pChannel.Get_PositionKeys(i).Get_Value(), sizeof(_float3));
-			KeyFrame.fTrackPosition = pChannel.Get_PositionKeys(i).Get_Time();
+			memcpy(&vPosition, &pChannel.Get_PositionKeys((_uint)i).Get_Value(), sizeof(_float3));
+			KeyFrame.fTrackPosition = pChannel.Get_PositionKeys((_uint)i).Get_Time();
 		}
 
 		KeyFrame.vScale = vScale;
@@ -194,9 +194,9 @@ _bool CChannel::Update_KeyFrame(KEYFRAME& _StartFrame, KEYFRAME& _EndFrame, _flo
 			while (fCurrentTrackPosition >= m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition)
 				++* pCurrentKeyFrameIndex;
 		}
-		catch (_uint e)
+		catch (_uint)
 		{
-			*pCurrentKeyFrameIndex = m_KeyFrames.size() - 2;
+			*pCurrentKeyFrameIndex = (_uint)m_KeyFrames.size() - 2;
 		}
 
 		_StartFrame = m_KeyFrames[*pCurrentKeyFrameIndex];

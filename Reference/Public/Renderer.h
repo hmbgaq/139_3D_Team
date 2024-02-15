@@ -10,8 +10,21 @@ BEGIN(Engine)
 class CRenderer final : public CBase
 {
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_SHADOW, RENDER_NONLIGHT, RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_SHADOW, RENDER_NONLIGHT, 
+					   
+						/* Shader */
+					   RENDER_GODRAY, RENDER_OUTLINE,
+					   
+					   RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
 
+	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_OUTLINE, SHADER_BLUR, SHADER_SSAO, SHADER_FINAL, SHADER_END };
+	
+	struct QuadVertex // ssao 
+	{
+		_float3 pos;
+		_float3 ToFarPlaneIndex;
+		_float2 tex;
+	};
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderer() = default;
@@ -19,29 +32,57 @@ private:
 public:
 	HRESULT Initialize();
 	HRESULT Add_RenderGroup(RENDERGROUP eGroupID, class CGameObject* pGameObject);
-
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
-
 	HRESULT Draw_RenderGroup();
+	
+	/* Ready */
+	HRESULT Create_Buffer();
+	HRESULT	Create_Shader();
+	HRESULT Create_RenderTarget();
+	HRESULT Create_DepthStencil();
+	HRESULT Ready_DebugRender();
+	HRESULT Ready_SSAO();
+
+	/* Set */
+	HRESULT Initialize_ScreenQuad();
+	void	BuildFrustumFarCorners();
+	void	BuildOffsetVectors();
+
+#ifdef _DEBUG
+public:
+	void Set_RenderDebug(_bool _bRenderDebug) {	m_bRenderDebug = _bRenderDebug;	}
+#endif
 
 private:
+	class CShader*							m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
+	class CGameInstance*					m_pGameInstance = { nullptr };
+	class CVIBuffer_Rect*					m_pVIBuffer = { nullptr };
+
 	ID3D11Device*							m_pDevice = { nullptr };
 	ID3D11DeviceContext*					m_pContext = { nullptr };
-	class CGameInstance*					m_pGameInstance = { nullptr };
+	ID3D11DepthStencilView*					m_pLightDepthDSV = { nullptr };
 	list<class CGameObject*>				m_RenderObjects[RENDER_END];
 
 #ifdef _DEBUG
 	list<class CComponent*>					m_DebugComponent;
+	_bool									m_bRenderDebug = { false };
 #endif
 
 private:
-	class CShader*							m_pShader = { nullptr };
-	class CVIBuffer_Rect*					m_pVIBuffer = { nullptr };
-
 	_float4x4								m_WorldMatrix;
 	_float4x4								m_ViewMatrix, m_ProjMatrix;
+	_float4									m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
 
-	ID3D11DepthStencilView*					m_pLightDepthDSV = { nullptr };
+private: // SSAO
+	class CTexture* m_pRandomVectorTexture = { nullptr };
+	ID3D11Buffer*	m_pQuadVertexBuffer = { nullptr };
+	ID3D11Buffer*	m_pQuadIndexBuffer = { nullptr };
+
+	_float4			m_vFrustumFarCorner[4];
+	_float4			m_vOffsets[26];
+	_int			m_iQuadVerCount;
+	_int			m_iQuadIndexCount;
+
 
 private:
 	HRESULT Render_Priority();
@@ -54,6 +95,8 @@ private:
 	HRESULT Render_LightAcc();
 	HRESULT Render_Deferred();
 
+	/* Post */
+	HRESULT Render_OutLine();
 #ifdef _DEBUG
 private:
 	HRESULT Render_Debug();

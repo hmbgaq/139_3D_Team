@@ -17,6 +17,7 @@ public:
 		_float	fRotationPerSec = 0.f;
 
 	}GAMEOBJECT_DESC;
+
 protected:
 	CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject(const CGameObject& rhs);
@@ -29,15 +30,22 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
+
+	/* Ãß°¡ RenderGroup¿ë*/
 	virtual HRESULT Render_Shadow() { return S_OK; }
+	virtual HRESULT Render_OutLine() { return S_OK; }
 
 public:
 	virtual class CComponent* Find_Component(const wstring& strComTag, const wstring& strPartTag = TEXT(""));
-
+public:
+	void	Set_Position(const _float3& vState);
+	void	Set_WorldMatrix(_float4x4 matrix);
+public:
+	_bool	Is_Dead() { return m_bDead; }
+	void	Set_Dead(_bool _bDead) { m_bDead = _bDead; }
 
 public:
-	_bool Is_Dead() { return m_bDead; }
-	void Set_Dead(_bool _bDead) { m_bDead = _bDead; }
+	class CTransform* Get_Transform();
 
 
 protected:
