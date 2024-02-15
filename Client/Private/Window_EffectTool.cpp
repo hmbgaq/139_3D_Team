@@ -5,6 +5,8 @@
 
 #include "Particle_Custom.h"
 
+
+
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
 	, m_pGameInstance(CGameInstance::GetInstance())
@@ -409,9 +411,13 @@ HRESULT CWindow_EffectTool::Create_NewParticle()
 	for (auto& Pair : m_pParticles)
 	{
 		const string utf8Str = WstringToUTF8(Pair.first);
-		m_szParticleNames[iCount] = new char[utf8Str.length() + 1];
-		strcpy(m_szParticleNames[iCount], utf8Str.c_str());
+		//m_szParticleNames[iCount] = new char[utf8Str.length() + 1];
+		//strcpy(m_szParticleNames[iCount], utf8Str.c_str());
 
+		size_t length = utf8Str.length() + 1;
+		m_szParticleNames[iCount] = new char[length];
+		strcpy_s(m_szParticleNames[iCount], length, utf8Str.c_str());
+		
 		iCount++;
 	}
 

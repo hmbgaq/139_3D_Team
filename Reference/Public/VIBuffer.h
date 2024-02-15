@@ -32,6 +32,7 @@ protected:
 	/* 지금 내가 만들려고 하는 버퍼의 속성을 설정하낟. */
 	D3D11_BUFFER_DESC			m_BufferDesc;
 	D3D11_SUBRESOURCE_DATA		m_SubResourceData;
+
 protected:
 	_uint						m_iNumVertices = { 0 };
 	_uint						m_iStride = { 0 };

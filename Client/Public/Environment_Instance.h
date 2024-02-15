@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "LandObject.h"
+#include "GameObject.h"
 
 BEGIN(Engine)
 class CShader;
@@ -14,14 +14,6 @@ BEGIN(Client)
 
 class CEnvironment_Instance final : public CGameObject
 {
-public:
-	typedef struct tagEnvironment_Desc : public CGameObject::GAMEOBJECT_DESC
-	{
-		wstring strModelTag = {};
-		_uint	iNumInstance = { 0 };
-		_uint	iShaderPassIndex = { 1 };
-	}ENVIRONMENT_INSTANCE_DESC;
-
 private:
 	CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CEnvironment_Instance(const CEnvironment_Instance& rhs);
@@ -40,7 +32,7 @@ private:
 	CModel*									m_pModelCom = { nullptr };
 	CVIBuffer_Environment_Model_Instance*	m_pInstanceModelCom = { nullptr };
 
-	ENVIRONMENT_INSTANCE_DESC	m_tInstanceDesc = {};
+	MAPTOOL_INSTANCE_DESC					m_tInstanceDesc;
 
 private:
 	HRESULT Ready_Components();
