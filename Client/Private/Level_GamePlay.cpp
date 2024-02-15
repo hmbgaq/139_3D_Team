@@ -25,20 +25,10 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_LandObjects());
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
-		return E_FAIL;	
-
-	if (FAILED(Ready_Layer_Effect(TEXT("Layer_Effect"))))
-		return E_FAIL;
-		
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-		return E_FAIL;
-
 	if (FAILED(Ready_UI()))
 		return E_FAIL;
 
-	if (FAILED(Ready_LandObjects()))
-		return E_FAIL;
+	
 
 	return S_OK;
 }
