@@ -73,9 +73,6 @@
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\MapToolWindow">
       <UniqueIdentifier>{f8398acc-9828-4192-a11c-95f7c96e1b69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\LandObject\Environment_Instance">
-      <UniqueIdentifier>{07401b06-626f-4b88-ab5f-7765959b393a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Effect\Effect_Instance">
       <UniqueIdentifier>{df70ff5e-761f-4541-b7f2-d7d3a9ccdb1a}</UniqueIdentifier>
     </Filter>
@@ -147,6 +144,12 @@
     </Filter>
     <Filter Include="03.Effect">
       <UniqueIdentifier>{e5d2bd3f-eadc-4303-9426-7cfc18334f0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\02. Environment">
+      <UniqueIdentifier>{aa586dde-a612-4aab-bb4a-4551ed567bed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\02. Environment\Environment_Instance">
+      <UniqueIdentifier>{07401b06-626f-4b88-ab5f-7765959b393a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -229,7 +232,7 @@
       <Filter>01.Levels\02.Tool\Imgui\Windows</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Environment_Instance.h">
-      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
+      <Filter>02.GameObjects\02. Environment\Environment_Instance</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Instance.h">
       <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
@@ -311,6 +314,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Weapon_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Environment_Object.h">
+      <Filter>02.GameObjects\02. Environment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -770,7 +776,7 @@
       <Filter>01.Levels\02.Tool\Imgui\Windows\MapToolWindow</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Environment_Instance.cpp">
-      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
+      <Filter>02.GameObjects\02. Environment\Environment_Instance</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Instance.cpp">
       <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
@@ -825,6 +831,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Anything.cpp">
       <Filter>02.GameObjects\UI\99. Anything</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Environment_Object.cpp">
+      <Filter>02.GameObjects\02. Environment</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

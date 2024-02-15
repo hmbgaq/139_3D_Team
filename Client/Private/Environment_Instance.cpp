@@ -5,13 +5,13 @@
 #include "VIBuffer_Environment_Model_Instance.h"
 
 CEnvironment_Instance::CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CLandObject(pDevice, pContext)
+	: CGameObject(pDevice, pContext)
 {
 
 }
 
 CEnvironment_Instance::CEnvironment_Instance(const CEnvironment_Instance & rhs)
-	: CLandObject(rhs)
+	: CGameObject(rhs)
 {
 }
 

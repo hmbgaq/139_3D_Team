@@ -201,6 +201,17 @@ namespace Engine
 	}VTXMODEL_INSTANCE_DECLARATION;
 
 
+	typedef struct ENGINE_DLL tagVertex_Dynamic_Texture
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vNormal;
+		XMFLOAT2		vTexcoord;
+		XMFLOAT3		vTangent;
+
+		static const unsigned int					iNumElements = 4;
+		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
+	}VTXGROUND;
+
 	template <typename T>
 	constexpr const T& clamp(const T& value, const T& start, const T& end) 
 	{
@@ -209,6 +220,19 @@ namespace Engine
 
 #pragma endregion
 	
+
+#pragma region 구조체
+
+	typedef struct tagRayDesc
+	{
+		XMFLOAT4 vOrigin;
+		XMFLOAT3 vDirection;
+		float	fLength;
+	}RAY;
+
+
+#pragma endregion 구조체
+
 }
 
 #endif // Engine_Struct_h__

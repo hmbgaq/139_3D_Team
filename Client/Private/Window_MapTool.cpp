@@ -84,18 +84,22 @@ void CWindow_MapTool::Render()
 
 void CWindow_MapTool::Theme_IntroTabFunction()
 {
+	
 }
 
 void CWindow_MapTool::Theme_VolcanoTabFunction()
 {
+	
 }
 
 void CWindow_MapTool::Theme_SnowMountainTabFunction()
 {
+
 }
 
 void CWindow_MapTool::Theme_BossTabFunction()
 {
+
 }
 
 

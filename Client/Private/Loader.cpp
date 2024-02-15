@@ -151,6 +151,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 
 	lstrcpy(m_szLoadingText, TEXT("모델를(을) 로드하는 중입니다."));
 	
+	//! 캐릭터 모델
 	_matrix      PivotMatrix;
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Fiona/Fiona", PivotMatrix)));
@@ -160,6 +161,10 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/ForkLift/ForkLift", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Chain"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix)));
+
+	//!환경 모델
+	Ready_Environment_Model(LEVEL_GAMEPLAY);
+
 
 	//!버퍼 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp"))));
@@ -217,13 +222,19 @@ HRESULT CLoader::Loading_For_Tool_Level()
 	lstrcpy(m_szLoadingText, TEXT("모델를(을) 로드하는 중입니다."));
 	_matrix		PivotMatrix;
 
+	//! 캐릭터 모델
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Fiona"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Fiona/Fiona", PivotMatrix)));
 	
+	
+	
+	//! 환경 모델
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	Ready_Environment_Model(LEVEL_TOOL);
+
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_ForkLift"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/ForkLift/ForkLift", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Chain"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix)));
-	
+
 	//!버퍼 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Terrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Cube"), CVIBuffer_Cube::Create(m_pDevice, m_pContext)));
@@ -297,6 +308,57 @@ HRESULT CLoader::Ready_Origin()
 
 
 	return S_OK;
+}
+
+HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
+{
+	//! 로더에 원형
+	FAILED_CHECK(Read_FBXModelPath(m_MapModelPath.c_str(), eLevel));
+
+
+	return S_OK;
+}
+
+HRESULT CLoader::Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLevel) //! 승용
+{
+	//! C++ 17부터 지원하는 filesystem을 이용해서 특정 경로안에 하위경로들을 전부 탐색 하여 fbx확장자들을 찾아준다
+	//! 
+	namespace fs = std::filesystem; 
+
+
+	_matrix PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+
+
+	for (const auto& entry : fs::recursive_directory_iterator(StartDirectoryPath)) {
+		if (fs::is_regular_file(entry.path()) && entry.path().extension() == ".fbx") 
+		{
+
+			wstring strSearchPath = entry.path().wstring();
+			
+			fs::path PathObj(strSearchPath);
+
+
+			wstring wstrFileName = PathObj.stem().wstring();
+			wstring wstrFBXPath = PathObj.parent_path() / wstrFileName;
+
+			
+
+			wstring wstrSliceModelTag = L"Prototype_Component_Model_" + wstrFileName; //! 모델 태그 만들기
+
+			string strConvertFBXPath;
+			m_pGameInstance->WString_To_String(wstrFBXPath, strConvertFBXPath);
+			
+			//if (strConvertFBXPath == "../Bin/Resources/Models/Map/Road\\Track\\Track_Switch_Module20m\\Track_Module20m") 디버깅용
+			//{
+			//	_int i = 0;
+			//}
+
+			FAILED_CHECK(m_pGameInstance->Add_Prototype(eLevel, wstrSliceModelTag, CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, strConvertFBXPath, PivotMatrix)));
+			//fbxFiles.push_back(entry.path().wstring()); // 사용하고 있는 문자 타입에 따라 wstring 또는 string으로 변환하여 저장
+		}
+	}
+
+ 	return S_OK;
 }
 
 
