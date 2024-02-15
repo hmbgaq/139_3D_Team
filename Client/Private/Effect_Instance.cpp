@@ -72,7 +72,7 @@ HRESULT CEffect_Instance::Render()
 		
 
 		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
-		m_pInstanceModelCom->Render(i);
+		m_pInstanceModelCom->Render((_uint)i);
 
 		//m_pModelCom->Render(i);
 	}

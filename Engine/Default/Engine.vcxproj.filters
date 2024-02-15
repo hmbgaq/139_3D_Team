@@ -199,15 +199,6 @@
     <Filter Include="01.Utility\97. PhysX">
       <UniqueIdentifier>{619f889e-6947-4fcb-98d7-0c03f0861054}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\02.GameObjects\0. Character">
-      <UniqueIdentifier>{8f2e8ed0-9a67-47d1-ab26-99617d3574ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\02.GameObjects\0. Character\Weapon">
-      <UniqueIdentifier>{4e3e94c0-ea05-4a60-a675-01503ff0c068}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\02.GameObjects\0. Character\Body">
-      <UniqueIdentifier>{502f0abd-2bb1-4d2c-9fd0-2683ff5bc917}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\96.Utility">
       <UniqueIdentifier>{d544db3e-75c4-46f7-9cc6-7e6ed4edb7e6}</UniqueIdentifier>
     </Filter>
@@ -219,6 +210,15 @@
 	</Filter>
     <Filter Include="01.Utility\02.GameObjects\UI">
       <UniqueIdentifier>{aa7f815b-72c0-476b-a0ce-5d21b70e98a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObjects\Character">
+      <UniqueIdentifier>{8f2e8ed0-9a67-47d1-ab26-99617d3574ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObjects\Character\Weapon">
+      <UniqueIdentifier>{4e3e94c0-ea05-4a60-a675-01503ff0c068}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObjects\Character\Body">
+      <UniqueIdentifier>{502f0abd-2bb1-4d2c-9fd0-2683ff5bc917}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -433,13 +433,13 @@
       <Filter>01.Utility\97. PhysX</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Character.h">
-      <Filter>01.Utility\02.GameObjects\0. Character</Filter>
+      <Filter>01.Utility\02.GameObjects\Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body.h">
-      <Filter>01.Utility\02.GameObjects\0. Character\Body</Filter>
+      <Filter>01.Utility\02.GameObjects\Character\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon.h">
-      <Filter>01.Utility\02.GameObjects\0. Character\Weapon</Filter>
+      <Filter>01.Utility\02.GameObjects\Character\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SMath.h">
       <Filter>01.Utility\96.Utility\SMath</Filter>
@@ -615,13 +615,13 @@
       <Filter>01.Utility\97. PhysX</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon.cpp">
-      <Filter>01.Utility\02.GameObjects\0. Character\Weapon</Filter>
+      <Filter>01.Utility\02.GameObjects\Character\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body.cpp">
-      <Filter>01.Utility\02.GameObjects\0. Character\Body</Filter>
+      <Filter>01.Utility\02.GameObjects\Character\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Character.cpp">
-      <Filter>01.Utility\02.GameObjects\0. Character</Filter>
+      <Filter>01.Utility\02.GameObjects\Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SMath.cpp">
       <Filter>01.Utility\96.Utility\SMath</Filter>

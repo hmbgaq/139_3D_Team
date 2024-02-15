@@ -189,7 +189,6 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN In)
     return Out;
 }
 
-
 /* ------------------- Technique -------------------*/ 
 
 technique11 DefaultTechnique

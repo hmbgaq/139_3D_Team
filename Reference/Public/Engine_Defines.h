@@ -48,7 +48,8 @@ using namespace DirectX;
 #include <cstring>
 #include <ctime>
 #include <random>
-
+#include <locale>
+#include <codecvt>
 #include <fstream>
 using namespace std;
 

@@ -62,10 +62,9 @@ void CInteract_Chain::Late_Tick(_float fTimeDelta)
 	
 	if (m_pGameInstance->Key_Pressing(DIK_8))
 	{
+		/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
 		m_bInteractActive = true; 
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
-		/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
-
 	}
 	else
 		m_bInteractActive = false;
@@ -82,14 +81,33 @@ HRESULT CInteract_Chain::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 
-		if (m_bInteractActive)
-			iRenderPass = 3;
+		/* 체인부분만 하얗게 변하고 나무부분은 원래 Diffuse로 그리도록함 */
+
+		if (iNumMeshes >= 2)
+		{
+			if (0 == i) /* 체인 */
+			{
+				if (m_bInteractActive)
+					iRenderPass = 3;
+				else
+					iRenderPass = 0;
+
+				m_pShaderCom->Begin(iRenderPass);
+				m_pModelCom->Render((_uint)i);
+			}
+			else if (0 != i) /* 나무 */
+			{
+				m_pShaderCom->Begin(0);
+
+				m_pModelCom->Render((_uint)i);
+			}
+		}
 		else
-			iRenderPass = 0;
+		{
+			m_pShaderCom->Begin(iRenderPass);
 
-		m_pShaderCom->Begin(iRenderPass);
-
-		m_pModelCom->Render((_uint)i);
+			m_pModelCom->Render((_uint)i);
+		}
 	}
 
 	return S_OK;
@@ -108,7 +126,7 @@ HRESULT CInteract_Chain::Render_OutLine()
 
 		m_pShaderCom->Begin(4);
 
-		m_pModelCom->Render((_uint)i);
+		m_pModelCom->Render(0);
 	}
 
 	return S_OK;

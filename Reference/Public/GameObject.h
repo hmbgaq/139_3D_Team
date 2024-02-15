@@ -17,6 +17,7 @@ public:
 		_float	fRotationPerSec = 0.f;
 
 	}GAMEOBJECT_DESC;
+
 protected:
 	CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject(const CGameObject& rhs);

@@ -51,10 +51,15 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 	__super::Begin();
 	
+
+#ifdef DEBUG
 	if (ImGui::Checkbox("RenderTarget", &m_bRenderTargetOnOff))
 	{
 		m_pGameInstance->Set_RenderDebug(m_bRenderTargetOnOff);
 	}
+#endif 
+
+
 	//dialog========================================================================
 	static bool canValidateDialog = false;
 		
@@ -212,7 +217,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 
 		static int Object_idx = 0; // Here we store our selection data as an index.
 		static int Layer_idx = 0; // Here we store our selection data as an index.
-		int ObjectTagSize = m_vObjectTag.size();
+		_int ObjectTagSize = (_int)m_vObjectTag.size();
 
 		if (ImGui::BeginListBox("ObjectList"))
 		{
@@ -268,7 +273,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		
 		if (m_bListCheck)
 		{
-			m_iCreateObjectSize =m_CreateList.size();
+			m_iCreateObjectSize = (_int)m_CreateList.size();
 			if (ImGui::BeginListBox("CreateList"))
 			{
 
@@ -313,7 +318,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 
 			}
 
-			for (int n = 0; n < m_iAnimationNum; n++)
+			for (_uint n = 0; n < m_iAnimationNum; n++)
 			{
 				const bool is_selected = (m_iAnimationNum == n);
 				if (ImGui::Selectable(m_pAnimation[n]->Get_Name(), is_selected))
@@ -343,7 +348,8 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 	
 
 	if (ImGui::SliderFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration));
-	
+
+
 	if (ImGui::SliderFloat("AnimationSpeed", &m_fSpeed, 0.f, 100.f));
 
 	if (ImGui::Button("Play"))

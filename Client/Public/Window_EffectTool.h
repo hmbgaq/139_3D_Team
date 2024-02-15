@@ -65,8 +65,6 @@ private:
 
 	_float m_fColor_Particle[3] = { 0.f, 0.f, 0.f };
 
-private:
-	class CGameInstance* m_pGameInstance = { nullptr };
 
 public:
 	static CWindow_EffectTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

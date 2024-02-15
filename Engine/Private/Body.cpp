@@ -97,13 +97,13 @@ HRESULT CBody::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i);
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 
 		m_pShaderCom->Begin(iPass);
 
-		m_pModelCom->Render(i);
+		m_pModelCom->Render((_uint)i);
 	}
 
 	return S_OK;
@@ -146,13 +146,13 @@ HRESULT CBody::Render_Shadow()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i);
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 
 		m_pShaderCom->Begin(iPass);
 
-		m_pModelCom->Render(i);
+		m_pModelCom->Render((_uint)i);
 	}
 
 	return S_OK;

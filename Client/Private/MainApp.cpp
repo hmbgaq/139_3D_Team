@@ -167,7 +167,6 @@ HRESULT CMainApp::Ready_Gara()
 	m_pContext->OMSetDepthStencilState();
 	m_pContext->OMSetBlendState();*/
 
-
 	/* 텍스쳐를 생성해보자. */
 	ID3D11Texture2D*		pTexture2D = { nullptr };
 
@@ -200,7 +199,6 @@ HRESULT CMainApp::Ready_Gara()
 			pPixels[iIndex] = D3DCOLOR_ARGB(255, 0, 0, 0);
 		}
 	}
-
 
 	InitialData.pSysMem = pPixels;
 	InitialData.SysMemPitch = TextureDesc.Width * 4;
