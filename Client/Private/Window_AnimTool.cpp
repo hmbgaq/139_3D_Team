@@ -332,7 +332,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 					if (m_bStop == false)
 						pcharacters->Get_Model()->Play_Animation(fTimeDelta, true);
 					pcharacters->Get_Model()->Set_StiffnessRate(m_fSpeed);
-					m_pAnimation[n]->Set_TrackPosition(m_fCurrentTrackPosition);
+					//m_pAnimation[n]->Set_TrackPosition(m_fCurrentTrackPosition);
 				}
 
 			}

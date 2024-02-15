@@ -482,7 +482,8 @@ HRESULT CRenderer::Render_Debug()
 	for (auto& pDebugCom : m_DebugComponent)
 	{
 		pDebugCom->Render();
-		Safe_Release(pDebugCom);
+		//AnimTool 작업중에 애 있으면 삭제시에 터져버림 
+		//Safe_Release(pDebugCom);
 	}
 	m_DebugComponent.clear();
 

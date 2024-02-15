@@ -45,6 +45,7 @@ void CBody_Player::Priority_Tick(_float fTimeDelta)
 
 void CBody_Player::Tick(_float fTimeDelta)
 {
+	
 	m_pModelCom->Play_Animation(fTimeDelta, true);
 
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_pParentTransform->Get_WorldMatrix());
