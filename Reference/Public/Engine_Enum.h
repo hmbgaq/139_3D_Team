@@ -10,7 +10,6 @@ namespace Engine
 	/* Transform */
 	static const wchar_t* g_pTransformTag = TEXT("Com_Transform");
 
-
 }
 
 #endif // Engine_Enum_h__

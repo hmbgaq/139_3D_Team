@@ -39,7 +39,6 @@ struct VS_OUT
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
-
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;

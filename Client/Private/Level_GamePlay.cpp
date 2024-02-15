@@ -109,6 +109,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag, void* p
 {
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
 
+	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
+	//if (nullptr == pPlayer)
+	//	return E_FAIL;
+
+	//m_pGameInstance->Set_Player(pPlayer);
+
 	return S_OK;
 }
 
@@ -181,20 +187,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void*
 
 HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain"))))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_UI()
 {
+	FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
 
-	if (FAILED(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr)))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_UI_Player(TEXT("Layer_UI_Player"), nullptr)))
-		return E_FAIL;
+	FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Player"), nullptr));
 
 	return S_OK;
 }

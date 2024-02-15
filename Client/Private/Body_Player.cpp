@@ -28,10 +28,10 @@ HRESULT CBody_Player::Initialize_Prototype()
 
 HRESULT CBody_Player::Initialize(void* pArg)
 {	
-
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
+
+
 
 	m_pModelCom->Set_Animation(3);
 
@@ -126,14 +126,14 @@ void CBody_Player::SetUp_Animation(_uint iAnimIndex)
 
 HRESULT CBody_Player::Ready_Components()
 {
-
+	int i = m_pGameInstance->Get_NextLevel();
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_AnimModel"),
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_AnimModel"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Model_Fiona"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
@@ -143,7 +143,7 @@ HRESULT CBody_Player::Ready_Components()
 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
 
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
 
@@ -202,9 +202,10 @@ void CBody_Player::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pParentTransform);
-	Safe_Release(m_pColliderCom);
-	Safe_Release(m_pModelCom);	
-	Safe_Release(m_pShaderCom);
+	//Safe_Release(m_pParentTransform);
+	//Safe_Release(m_pColliderCom);
+	//Safe_Release(m_pModelCom);	
+	//Safe_Release(m_pShaderCom);
+	
 }
 

@@ -85,6 +85,18 @@
     <Filter Include="98.Default\Useless">
       <UniqueIdentifier>{7231f56e-ab16-4718-abe1-6a7faacad022}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Actor">
+      <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Actor\Character">
+      <UniqueIdentifier>{efbf965b-89e3-4770-bdc3-149dd60e9eff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Actor\Character\Player">
+      <UniqueIdentifier>{e610d425-749e-40a9-a4a7-33941c1a824a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Actor\Character\Monster">
+      <UniqueIdentifier>{97fc5167-2a35-4a58-a30c-4cc71dbe583b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\99. Sky">
       <UniqueIdentifier>{a96d4144-0b55-405d-b9b8-32aba0a80903}</UniqueIdentifier>
     </Filter>
@@ -93,6 +105,9 @@
     </Filter>
     <Filter Include="02.GameObjects\97. Camera">
       <UniqueIdentifier>{32729c05-9f24-4c42-9fa5-8bce31410a97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Effect">
+      <UniqueIdentifier>{e5d2bd3f-eadc-4303-9426-7cfc18334f0b}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\01. Interact">
       <UniqueIdentifier>{daed6591-e3f1-4e31-8a6a-3942dcf39622}</UniqueIdentifier>
@@ -361,6 +376,172 @@
     <ClInclude Include="Client.h">
       <Filter>98.Default</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Client_Defines.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MainApp.h">
+      <Filter>00.MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Logo.h">
+      <Filter>01.Levels\00.Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Levels\01.GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Loading.h">
+      <Filter>01.Levels\99.Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BackGround.h">
+      <Filter>02.GameObjects\BackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02.GameObjects\LandObject\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ForkLift.h">
+      <Filter>02.GameObjects\LandObject\ForkLift</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\LandObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Player.h">
+      <Filter>02.GameObjects\LandObject\Player\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Player.h">
+      <Filter>02.GameObjects\LandObject\Player\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle_Blue.h">
+      <Filter>02.GameObjects\Effect\Particles\Blue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle_Red.h">
+      <Filter>02.GameObjects\Effect\Particles\Red</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LandObject.h">
+      <Filter>02.GameObjects\LandObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Explosion.h">
+      <Filter>02.GameObjects\Effect\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui_Manager.h">
+      <Filter>01.Levels\02.Tool\Imgui\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imconfig.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imgui.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imgui_impl_dx11.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imgui_impl_win32.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imgui_internal.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imstb_rectpack.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imstb_textedit.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Tool.h">
+      <Filter>01.Levels\02.Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_Window.h">
+      <Filter>01.Levels\02.Tool\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Window_MapTool.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\MapToolWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Include_Imgui_Windows.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Environment_Instance.h">
+      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Instance.h">
+      <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98.Default\Useless</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>98.Default\Useless</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>98.Default\Useless</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EW_Actor.h">
+      <Filter>02.GameObjects\00. Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Interact_Chain.h">
+      <Filter>02.GameObjects\01. Interact\0. Chain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Window_AnimTool.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialog.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuiFileDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialogConfig.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuiFileDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PreviewAnimationModel.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow\PreviewAnimationModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImGradient.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImGuizmo.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImSequencer.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImZoomSlider.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\GraphEditor.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImCurveEdit.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Loader.h">
+      <Filter>01.Levels\98. Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Camera_Dynamic.h">
+      <Filter>02.GameObjects\97. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sky.h">
+      <Filter>02.GameObjects\99. Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkyDome.h">
+      <Filter>02.GameObjects\99. Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>02.GameObjects\98. Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomDialogFont.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
+      <UniqueIdentifier>{bdf9a6e6-179a-44e0-a993-be1ba828fec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Particles\00.Custom">
+      <UniqueIdentifier>{c1df78fd-5ef3-45b2-a46f-845d10f9fa4a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Client.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>98.Default</Filter>
     </ClInclude>
@@ -600,8 +781,11 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>98.Default\Useless</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Interact_Door.cpp">
-      <Filter>02.GameObjects\01. Interact\1. Door</Filter>
+	<ClCompile Include="..\Private\Interact_Door.cpp">
+	  <Filter>02.GameObjects\01. Interact\1. Door</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\EW_Actor.cpp">
+      <Filter>02.GameObjects\00. Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Interact_Chain.cpp">
       <Filter>02.GameObjects\01. Interact\0. Chain</Filter>

@@ -35,7 +35,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&pGameObjectDesc)))
 		return E_FAIL;	
 
-
+	
+	if (FAILED(Ready_PartObjects()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -115,7 +117,10 @@ HRESULT CPlayer::Ready_Components()
 	CNavigation::NAVI_DESC		NaviDesc = {};
 	NaviDesc.iCurrentIndex = 0;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation2"),
+
+	
+
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Navigation2"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
 
@@ -167,11 +172,11 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-	for (auto& Pair : m_PartObjects)
-		Safe_Release(Pair.second);
-	m_PartObjects.clear();
+// 	for (auto& Pair : m_PartObjects)
+// 		Safe_Release(Pair.second);
+// 	m_PartObjects.clear();
 
 	//Safe_Release(m_pColliderCom);
-	Safe_Release(m_pNavigationCom);
+	//Safe_Release(m_pNavigationCom);
 }
 

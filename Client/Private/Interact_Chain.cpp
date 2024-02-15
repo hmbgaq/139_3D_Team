@@ -65,6 +65,8 @@ void CInteract_Chain::Late_Tick(_float fTimeDelta)
 		/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
 		m_bInteractActive = true; 
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
+
 	}
 	else
 		m_bInteractActive = false;
@@ -87,10 +89,10 @@ HRESULT CInteract_Chain::Render()
 		{
 			if (0 == i) /* 체인 */
 			{
-				if (m_bInteractActive)
-					iRenderPass = 3;
-				else
-					iRenderPass = 0;
+		if (m_bInteractActive)
+			iRenderPass = 3;
+		else
+			iRenderPass = 0;
 
 				m_pShaderCom->Begin(iRenderPass);
 				m_pModelCom->Render((_uint)i);
@@ -104,10 +106,10 @@ HRESULT CInteract_Chain::Render()
 		}
 		else
 		{
-			m_pShaderCom->Begin(iRenderPass);
+		m_pShaderCom->Begin(iRenderPass);
 
-			m_pModelCom->Render((_uint)i);
-		}
+		m_pModelCom->Render((_uint)i);
+	}
 	}
 
 	return S_OK;

@@ -250,6 +250,16 @@ HRESULT CGameInstance::Open_Level(_uint iCurrentLevelIndex, CLevel * pNewLevel)
 	return m_pLevel_Manager->Open_Level(iCurrentLevelIndex, pNewLevel);
 }
 
+_uint CGameInstance::Get_NextLevel()
+{
+	return m_pLevel_Manager->Get_NextLevel();
+}
+
+void CGameInstance::Set_CurrentLevel(_uint CurrentLevel)
+{
+	m_pLevel_Manager->Set_CurrentLevel(CurrentLevel);
+}
+
 HRESULT CGameInstance::Add_Prototype(const wstring & strPrototypeTag, CGameObject * pPrototype)
 {
 	if (nullptr == m_pObject_Manager)
@@ -357,12 +367,14 @@ HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
 
+
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebug(_bool _bRenderDebug)
 {
 	m_pRenderer->Set_RenderDebug(_bRenderDebug);
 }
 #endif
+
 
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {

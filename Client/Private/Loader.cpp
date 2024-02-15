@@ -209,6 +209,11 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 	// FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Effect_Blood"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Single/Blood/%d.png"), 0)));
 
+	///* For.Prototype_Component_Texture_Effect_Blood */
+	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Effect_Blood"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Single/Blood/%d.png"), 0))))
+	//	return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("모델를(을) 로드하는 중입니다."));
 	_matrix		PivotMatrix;
 

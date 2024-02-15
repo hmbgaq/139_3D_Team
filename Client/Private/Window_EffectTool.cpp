@@ -7,8 +7,10 @@
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
+	, m_pGameInstance(CGameInstance::GetInstance())
 {
 
+	Safe_AddRef(m_pGameInstance);
 }
 
 
@@ -391,6 +393,7 @@ HRESULT CWindow_EffectTool::Create_NewParticle()
 
 	m_iCurParticleIndex = _int(m_pParticles.size());
 
+	/* 문자열 초기화 */
 	if (nullptr != m_szParticleNames)
 	{
 		for (_int i = 0; i < m_iCurParticleIndex; ++i)
@@ -449,4 +452,5 @@ void CWindow_EffectTool::Free()
 		m_szParticleNames = nullptr;
 	}
 
+	Safe_Release(m_pGameInstance);
 }
