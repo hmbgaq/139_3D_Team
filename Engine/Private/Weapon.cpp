@@ -40,8 +40,8 @@ HRESULT CWeapon::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
+	//if (FAILED(Ready_Components(m_pGameInstance->Get_NextLevel())))
+	//	return E_FAIL;
 
 
 	return S_OK;

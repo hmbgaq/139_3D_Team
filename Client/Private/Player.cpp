@@ -43,7 +43,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&pGameObjectDesc)))
 		return E_FAIL;	
 
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_Components(LEVEL(m_pGameInstance->Get_NextLevel()))))
 		return E_FAIL;
 
 	if (FAILED(Ready_PartObjects()))
@@ -139,13 +139,13 @@ CGameObject * CPlayer::Find_PartObject(const wstring & strPartTag)
 	return iter->second;	
 }
 
-HRESULT CPlayer::Ready_Components()
+HRESULT CPlayer::Ready_Components(LEVEL eLevel)
 {
 	/* For.Com_Navigation */
 	CNavigation::NAVI_DESC		NaviDesc = {};
 	NaviDesc.iCurrentIndex = 0;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation2"),
+	if (FAILED(__super::Add_Component(eLevel, TEXT("Prototype_Component_Navigation2"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
 

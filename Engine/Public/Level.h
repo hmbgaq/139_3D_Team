@@ -18,7 +18,8 @@ public:
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
-
+public:
+	_uint					m_iNextLevel = -1;
 protected:
 	class CGameInstance*	m_pGameInstance = { nullptr };
 

@@ -50,6 +50,11 @@ HRESULT CLevel_Manager::Open_Level(_uint iCurrentLevelIndex, CLevel * pNewLevel)
 	return S_OK;
 }
 
+_uint CLevel_Manager::Get_NextLevel()
+{
+	return m_pCurrentLevel->m_iNextLevel;
+}
+
 CLevel_Manager * CLevel_Manager::Create()
 {
 	CLevel_Manager*		pInstance = new CLevel_Manager();

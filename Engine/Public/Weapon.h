@@ -44,7 +44,7 @@ public:
 	}
 
 protected:
-	virtual HRESULT Ready_Components() PURE;
+	//virtual HRESULT Ready_Components() PURE;
 	virtual HRESULT Bind_ShaderResources();
 
 protected:
