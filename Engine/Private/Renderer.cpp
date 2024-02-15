@@ -83,7 +83,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_UI());
 
 #ifdef _DEBUG
-	FAILED_CHECK(Render_Debug());
+	if(m_bRenderDebug ==false)
+		FAILED_CHECK(Render_Debug());
 #endif
 
 	return S_OK;

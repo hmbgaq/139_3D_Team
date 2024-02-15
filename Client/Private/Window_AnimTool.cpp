@@ -51,7 +51,7 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 	__super::Begin();
 	
-	if (ImGui::Checkbox("RenderTarget", &m_bRenderTargetOnOff))
+	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
 #ifdef _DEBUG
 		m_pGameInstance->Set_RenderDebug(m_bRenderTargetOnOff);
