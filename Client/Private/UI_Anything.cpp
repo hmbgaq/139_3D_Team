@@ -59,12 +59,12 @@ void CUI_Anything::Tick(_float fTimeDelta)
 
 	/*m_tInfo.fCrntHPUV = m_tInfo.pOwnerStatus->fCurrentHp / m_tInfo.pOwnerStatus->fMaxHp;*/
 
-	if (m_tInfo.fCrntHPUV <= 0.0)
-	{
-		m_tInfo.fCrntHPUV = 0.0;
+	//if (m_tInfo.fCrntHPUV <= 0.0)
+	//{
+	//	m_tInfo.fCrntHPUV = 0.0;
 
-		Set_Dead(true);
-	}
+	//	Set_Dead(true);
+	//}
 
 
 }
@@ -144,47 +144,10 @@ HRESULT CUI_Anything::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-	switch (m_tInfo.eMonsterType)
-	{
-	case CUI_Anything::SMALL:
-	{
-		//! For.Com_Texture
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tInfo.strProtoTag,
-			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
-			return E_FAIL;
-		break;
-	}
-	case CUI_Anything::MID:
-	{
-		//! For.Com_Texture
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameMid"),
-			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
-			return E_FAIL;
-		break;
-	}
-	case CUI_Anything::LARGE:
-	{
-		//! For.Com_Texture
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameLarge"),
-			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
-			return E_FAIL;
-		break;
-	}
-	case CUI_Anything::BOSS:
-		break;
-	case CUI_Anything::SIDE:
-	{
-		//! For.Com_Texture
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SideEnemyHpFrameSide"),
-			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
-			return E_FAIL;
-		break;
-	}
-	case CUI_Anything::NONE:
-		break;
-	default:
-		break;
-	}
+	//! For.Com_Texture
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tInfo.strProtoTag,
+		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		return E_FAIL;
 
 	return S_OK;
 }

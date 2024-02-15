@@ -213,23 +213,23 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 {
 	/* 추 후 파싱해서 정보 받아오기 */
 	
-	// TEST
-	CUI_MonsterHp::MONSTER_HP tMonsterHp;
-	CUI_MonsterHpFrame::MONSTER_FRAME tMonsterFrame;
-	
-	tMonsterHp.fX = 50.f;
-	tMonsterHp.fY = 50.f;
-	tMonsterHp.fSizeX = 30.f;
-	tMonsterHp.fSizeY = 30.f;
+	//// TEST
+	//CUI_MonsterHp::MONSTER_HP tMonsterHp;
+	//CUI_MonsterHpFrame::MONSTER_FRAME tMonsterFrame;
+	//
+	//tMonsterHp.fX = 50.f;
+	//tMonsterHp.fY = 50.f;
+	//tMonsterHp.fSizeX = 30.f;
+	//tMonsterHp.fSizeY = 30.f;
 
-	tMonsterFrame.fX = 500.f;
-	tMonsterFrame.fY = 300.f;
-	tMonsterFrame.fSizeX = 100.f;
-	tMonsterFrame.fSizeY = 100.f;
-	tMonsterFrame.eMonsterType = CUI_MonsterHpFrame::SMALL;
+	//tMonsterFrame.fX = 500.f;
+	//tMonsterFrame.fY = 300.f;
+	//tMonsterFrame.fSizeX = 100.f;
+	//tMonsterFrame.fSizeY = 100.f;
+	//tMonsterFrame.eMonsterType = CUI_MonsterHpFrame::SMALL;
 
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_MonsterHpFrame"), &tMonsterFrame)))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_MonsterHpFrame"), &tMonsterFrame)))
+	//	return E_FAIL;
 
 	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_MonsterHp"), &tMonsterHp)))
 	//	return E_FAIL;

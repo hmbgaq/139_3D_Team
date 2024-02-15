@@ -2,6 +2,8 @@
 #include "MainApp.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "Json_Utility.h"
+
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -71,21 +73,47 @@ HRESULT CMainApp::Ready_Font()
 
 HRESULT CMainApp::Ready_UITexture()
 {
-	/* For.Enemy_Small */
-	if (FAILED(Ready_Enemy_Small()))
-		return E_FAIL;
+	json json_in;
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Texture_Info/Texture_Info";
 
-	/* For.Enemy_Mid */
-	if (FAILED(Ready_Enemy_Mid()))
-		return E_FAIL;
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
 
-	/* For.Enemy_Large */
-	if (FAILED(Ready_Enemy_Large()))
-		return E_FAIL;
+	CJson_Utility::Load_Json(filePath, json_in);
 
-	/* For.Enemy_Side */
-	if (FAILED(Ready_Enemy_Side()))
-		return E_FAIL;
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		iPathNum = object["PathNum"];
+		strFileName = object["FileName"];
+		strFilePath = object["FilePath"];
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(strFileName, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(strFilePath, wstrFilePath);
+
+		FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, wstrPrototag, CTexture::Create(m_pDevice, m_pContext, wstrFilePath)));
+	}
+
+	///* For.Enemy_Small */
+	//if (FAILED(Ready_Enemy_Small()))
+	//	return E_FAIL;
+
+	///* For.Enemy_Mid */
+	//if (FAILED(Ready_Enemy_Mid()))
+	//	return E_FAIL;
+
+	///* For.Enemy_Large */
+	//if (FAILED(Ready_Enemy_Large()))
+	//	return E_FAIL;
+
+	///* For.Enemy_Side */
+	//if (FAILED(Ready_Enemy_Side()))
+	//	return E_FAIL;
 
 	return S_OK;
 }

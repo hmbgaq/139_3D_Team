@@ -25,11 +25,13 @@ public: /* ==================== Struct ==================== */
 		ID3D11ShaderResourceView* SRV_Texture = NULL;
 	}IMAGEINFO;
 
+public:
+	// SH_Add
 	typedef struct tagPathInfo
 	{
 		_int		iPathNum = 0;
-		WCHAR		cFileName[MAX_PATH] = TEXT("");
-		wstring		strFilePath = TEXT("");
+		string		strFileName;
+		string		strFilePath;
 	}PATHINFO;
 
 public:
@@ -64,19 +66,31 @@ public: /* ==================== UI ===================== */
 	void						ShowImagePreview(const std::vector<unsigned char>& imageData, int width, int height);
 	bool						LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height);
 
-public: /* Function */
+public: /* ================= Function ================= */
+	// string타입을 받는 벡터 컨테이너를 char*타입을 받는 벡터 컨테이너로 변환 해주는 함수
 	std::vector<const char*> ConvertStringVectorToCharArray(const std::vector<std::string>& stringVector);
+	// string을 wstring으로 변환 해주는 함수
 	std::wstring ConvertToWideString(const std::string& ansiString);
-	//	wstring을 char로 변경
+	// wstring을 string으로 변환 해주는 함수
+	std::string WStringToString(const std::wstring& wstr);
+	//	wstring을 char로 변환 해주는 함수
 	char* ConverWStringtoC(const wstring& wstr);
-	//	char를 wchar_t로 변경
+	//	char를 wchar_t로 변환 해주는 함수
 	wchar_t* ConverCtoWC(char* str);
-
+	// WCHAR*를 string으로 변환 해주는 함수
+	std::string WideStringToString(const wchar_t* wideStr);
+	// 경로에서 파일이름과 확장자만 추출해주는 함수
+	std::string GetFileName(const std::string& filePath);
+	// 확장자를 제거해주는 함수
+	std::string RemoveExtension(const std::string& filePath);
+	WCHAR* StringTowchar(const std::string& str);
 public:
 	// UI 설정
 	void UI2D_Setting(_float fTimeDelta);
 	HRESULT UI2D_Create(_float fTimeDelta);
 	void UI2D_Delete(_float fTimeDelta);
+
+public: /* Save/Load */
 	void Save_Desc();
 	void Load_Desc();
 
@@ -100,12 +114,15 @@ private: /* Image_Member */
 
 	// 문자열 벡터를 const char* 배열로 변환
 	std::vector<const char*>	m_vecImagePaths;
+	std::vector<const char*>	m_vecObjectName;
 	_int						m_iSelectedPathIndex = 0; // 선택된 이미지 경로 인덱스
-
+	_int						m_iSelectedObjectIndex = 0; // 선택된 이미지 경로 인덱스
+	_int						m_iUINameNum = 0;
 private: /* 2D */
 	_float						m_fPosition[2] = { 0.f, 0.f };
 	_float						m_fScale[2] = { 0.f, 0.f };
 	vector<CGameObject*>		m_vecUIObject;
+
 public:
 	static CWindow_UITool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

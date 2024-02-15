@@ -250,6 +250,5 @@ HRESULT CUI_Base::Bind_ShaderResources()
 
 void CUI_Base::Free()
 {
+	__super::Free();
 }
-
-

@@ -23,6 +23,7 @@ HRESULT CWindow_UITool::Initialize()
 
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
 	LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures/PlayerHUD"))));
+	//LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures"))));
 
 	// 이미지 로드 Test
 	_int iSize = m_vecPaths.size();
@@ -30,7 +31,7 @@ HRESULT CWindow_UITool::Initialize()
 	{
 		IMAGEINFO* tTexture = new IMAGEINFO;
 
-		_bool bRet = LoadTextureFromFile(ConverWStringtoC(m_vecPaths[i]->strFilePath), &tTexture->SRV_Texture, &tTexture->iImage_Width, &tTexture->iImage_Height);
+		_bool bRet = LoadTextureFromFile(ConverWStringtoC(ConvertToWideString(m_vecPaths[i]->strFilePath)), &tTexture->SRV_Texture, &tTexture->iImage_Width, &tTexture->iImage_Height);
 		IM_ASSERT(bRet);
 
 		/* Texture 크기를 임의로 조절하고 싶다면, 여기서 강제로 덮어씌우자. 값을 안주면 원래 텍스처 크기대로 나온다. 추 후 원본 크기를 이용해 비율만 줄여서 출력해도 좋을 것 같다. */
@@ -43,8 +44,30 @@ HRESULT CWindow_UITool::Initialize()
 
 	for (auto& iter : m_vecPaths)
 	{
-		m_vecImagePaths.push_back(ConverWStringtoC(iter->strFilePath.c_str()));
+		string strFileNameWithoutExtension = GetFileName(iter->strFilePath);
+		string strFileName = RemoveExtension(strFileNameWithoutExtension);
+
+		/* 경로 잘라서 넣기 */
+		m_vecImagePaths.push_back(ConverWStringtoC(ConvertToWideString(strFileName)));
 	}
+
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Texture_Info/Texture_Info";
+
+	json Out_Json;
+	_ushort iIndex = 0;
+
+	for (PATHINFO* iter : m_vecPaths)
+	{
+		json object;
+		object["PathNum"] = iter->iPathNum;
+		object["FileName"] = iter->strFileName;
+		object["FilePath"] = iter->strFilePath;
+		Out_Json.emplace(to_string(iIndex++), object);
+	}
+
+	CJson_Utility::Save_Json(filePath, Out_Json);
+
+	//CJson_Utility::Load_Json(filePath, Out_Json);
 
 	return S_OK;
 }
@@ -79,14 +102,58 @@ void CWindow_UITool::Render()
 
 void CWindow_UITool::UI_List(_float fTimeDelta)
 {
-	m_vecUIObject;
-	if (ImGui::CollapsingHeader(u8"UI_List"))
-	{
-		if (ImGui::ListBox("UI_Object", &m_iSelectedPathIndex, m_vecImagePaths.data(), (int)m_vecImagePaths.size()))
-		{
+	//if (m_vecUIObject.empty())
+	//	return;
 
+	string items[] = { "Layer_UI_Player", "Layer_UI_Monster", "Layer_UI_Inventory" };
+
+	static int	Object_idx = 0; // Here we store our selection data as an index.
+	static int	Layer_idx = 0; // Here we store our selection data as an index.
+	_int		ObjectTagSize = (_int)m_vecObjectName.size();
+
+	if (ImGui::BeginListBox("LayerList"))
+	{
+		for (_int i = 0; i < 3; i++)
+		{
+			const bool is_selected = (Layer_idx == i);
+			if (ImGui::Selectable(items[i].c_str(), is_selected))
+				Layer_idx = i;
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
 		}
+
+		ImGui::EndListBox();
 	}
+	ImGui::Spacing();
+	if (ImGui::BeginListBox("ObjectList"))
+	{
+		for (_int i = 0; i < ObjectTagSize; i++)
+		{
+			const bool is_selected = (Object_idx == i);
+			if (ImGui::Selectable(m_vecObjectName[i], is_selected))
+			{			
+				Object_idx = i;
+			}
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+
+	if (!m_vecUIObject.empty())
+	{
+		_vector vPosition = m_vecUIObject[Object_idx]->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+
+		ImGui::InputFloat("PositionX", &vPosition.m128_f32[0]);
+		ImGui::InputFloat("PositionY", &vPosition.m128_f32[1]);
+		ImGui::InputFloat("PositionZ", &vPosition.m128_f32[2]);
+	}
+
 
 	///* Test Value */
 	//m_tUI_Info.strName = "Test UI List";
@@ -252,6 +319,12 @@ std::wstring CWindow_UITool::ConvertToWideString(const std::string& ansiString)
 	return wideString;
 }
 
+std::string CWindow_UITool::WStringToString(const std::wstring& wstr)
+{
+	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+	return converter.to_bytes(wstr);
+}
+
 char* CWindow_UITool::ConverWStringtoC(const wstring& wstr)
 {
 	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
@@ -268,6 +341,51 @@ wchar_t* CWindow_UITool::ConverCtoWC(char* str)
 	MultiByteToWideChar(CP_ACP, 0, str, (_int)strlen(str) + (size_t)1, pStr, strSize);
 
 	return pStr;
+}
+
+std::string CWindow_UITool::WideStringToString(const wchar_t* wideStr) 
+{
+	// std::wstring으로부터 std::string으로 변환
+	std::wstring wstr(wideStr);
+	// std::string으로 변환
+	return std::string(wstr.begin(), wstr.end());
+}
+
+// 파일 이름만 추출하는 함수
+std::string CWindow_UITool::GetFileName(const std::string& filePath) 
+{
+	size_t lastSlashPos = filePath.find_last_of("/");
+	if (lastSlashPos != std::string::npos) 
+	{
+		return filePath.substr(lastSlashPos + 1);
+	}
+	else 
+	{
+		// 경로 구분자가 없을 경우 전체 경로를 반환
+		return filePath;
+	}
+}
+
+std::string CWindow_UITool::RemoveExtension(const std::string& filePath)
+{
+	size_t lastDotPos = filePath.find_last_of(".");
+	if (lastDotPos != std::string::npos) 
+	{
+		return filePath.substr(0, lastDotPos);
+	}
+	else 
+	{
+		// 확장자가 없는 경우 그대로 반환
+		return filePath;
+	}
+}
+
+WCHAR* CWindow_UITool::StringTowchar(const std::string& str)
+{
+	// std::wstring으로 변환
+	std::wstring wstr(str.begin(), str.end());
+	// c_str() 함수를 사용하여 WCHAR* 포인터로 변환
+	return const_cast<WCHAR*>(wstr.c_str());
 }
 
 void CWindow_UITool::LoadImg(const _tchar* folderPath)
@@ -313,10 +431,11 @@ void CWindow_UITool::LoadImg(const _tchar* folderPath)
 				{
 					PATHINFO* pPathInfo = new PATHINFO;
 
-					pPathInfo->strFilePath = filePath;
-					pPathInfo->cFileName[MAX_PATH] = *findData.cFileName;
+					pPathInfo->strFilePath = WStringToString(filePath);
+					//wcscpy(&pPathInfo->cFileName[MAX_PATH], StringTowchar(RemoveExtension(WideStringToString(findData.cFileName))));
+					pPathInfo->strFileName = RemoveExtension(WStringToString(findData.cFileName));
+					//pPathInfo->cFileName[MAX_PATH] = *StringTowchar(RemoveExtension(WideStringToString(findData.cFileName)));
 					pPathInfo->iPathNum = m_iTextureNum;
-
 					m_vecPaths.push_back(pPathInfo);
 
 					m_iTextureNum++;
@@ -394,7 +513,11 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 HRESULT CWindow_UITool::UI2D_Create(_float fTimeDelta)
 {
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, TEXT("Layer_UI_Monster"), TEXT("Prototype_GameObject_UI_MonsterHpFrame"), &m_tUI_Info));
+	char* cUIName[MAX_PATH];
+	*cUIName = "UIObject %d", m_iUINameNum;
+	m_vecObjectName.push_back(*cUIName);
 	m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecUIObject);
+	m_iUINameNum++;
 }
 
 void CWindow_UITool::UI2D_Delete(_float fTimeDelta)
