@@ -282,26 +282,23 @@
     <ClInclude Include="..\Public\CustomDialogFont.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Terrain.h">
-      <Filter>02.GameObjects\98. Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Camera_Dynamic.h">
       <Filter>02.GameObjects\97. Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>02.GameObjects\98. Terrain</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Body_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player.h">
-      <Filter>02.GameObjects\00. Character\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Weapon_Player.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Camera_Dynamic.h">
       <Filter>02.GameObjects\97. Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Loader.h">
       <Filter>01.Levels\98. Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\00. Character\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sky.h">
       <Filter>02.GameObjects\99. Sky</Filter>
@@ -311,6 +308,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02.GameObjects\98. Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Player.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -781,9 +781,9 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>98.Default\Useless</Filter>
     </ClCompile>
-	<ClCompile Include="..\Private\Interact_Door.cpp">
-	  <Filter>02.GameObjects\01. Interact\1. Door</Filter>
-	</ClCompile>
+    <ClCompile Include="..\Private\Interact_Door.cpp">
+      <Filter>02.GameObjects\01. Interact\1. Door</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\EW_Actor.cpp">
       <Filter>02.GameObjects\00. Actor</Filter>
     </ClCompile>
