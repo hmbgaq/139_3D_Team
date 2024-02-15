@@ -23,7 +23,6 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 
 	__super::Begin();
 
-
 	ImGui::Text("Test");
 
 	static float col1[3] = { 1.0f, 0.0f, 0.2f };

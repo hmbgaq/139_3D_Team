@@ -422,6 +422,11 @@ _float4 CGameInstance::Get_CamPosition()
 	return m_pPipeLine->Get_CamPosition();
 }
 
+_float CGameInstance::Get_CamFar()
+{
+	return m_pPipeLine->Get_CamFar();
+}
+
 HRESULT CGameInstance::Add_Font(const wstring & strFontTag, const wstring & strFontFilePath)
 {
 	return m_pFont_Manager->Add_Font(strFontTag, strFontFilePath);
