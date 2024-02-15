@@ -239,6 +239,11 @@ _float CModel::Get_TickPerSecond()
 	return m_Animations[m_iCurrentAnimIndex]->Get_TickPerSecond();
 }
 
+void CModel::Set_TickPerSecond(_float _TickPerSecond)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_TickPerSecond(_TickPerSecond);
+}
+
 _bool CModel::Is_Transition()
 {
 	return m_Animations[m_iCurrentAnimIndex]->Is_Transition();

@@ -68,6 +68,7 @@ public:
 	void	Reset_Animation(_int iAnimIndex = -1);
 
 	_float	Get_TickPerSecond();
+	void	Set_TickPerSecond(_float _TickPerSecond);
 	_bool	Is_Transition();
 	void	Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
 	_bool	Is_Inputable_Front(_uint _iIndexFront);

@@ -333,9 +333,14 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 					{
 						m_fDuration = m_pAnimation[AnimationIndex]->Get_Duration();
 						m_fCurrentTrackPosition = m_pAnimation[AnimationIndex]->Get_TrackPosition();
-						m_pBody->Get_Model()->Set_Animation(AnimationIndex, CModel::ANIM_STATE_LOOP,true,1.f);
+						m_pBody->Get_Model()->Set_Animation(AnimationIndex, CModel::ANIM_STATE_LOOP);
 						m_bFirstcheck = false;
+						//m_pBody->Get_Model()->Set_StiffnessRate(1.f);
 					}
+// 					if (m_bStop)
+// 					{
+// 						m_pBody->Get_Model()->Set_StiffnessRate(1000.f);
+// 					}
 					if (m_bTrackPositionCheck)
 					{
 						m_pAnimation[AnimationIndex]->Set_TrackPosition(m_fCurrentTrackPosition);
@@ -354,34 +359,52 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		if (nullptr != m_pBody)
 		{
 			m_bFirstcheck = true;
-			
+			m_bStop = false;
+			m_pBody->Get_Model()->Play_Animation(fTimeDelta, true);
 		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button(" Stop "))
 	{
-		//if (nullptr != m_pBody)
-		//{
-		//	m_pBody->Get_Model()->Stop_Animation(0.f,false);
-		//}
+		m_bStop = true;
+// 		if (nullptr != m_pBody)
+// 		{
+// 			m_pBody->Get_Model()->Set_Animation(0.f, false);
+// 		}
 	}
+	
 	ImGui::Spacing();
 
 	if (ImGui::SliderFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
 	{
 		m_bTrackPositionCheck = true;
 	}
-
-	if (ImGui::SliderFloat("AnimationSpeed", &m_fSpeed, 0.f, 100.f));
-
-	//if(m_bFirstcheck)
-	if (nullptr != m_pBody)
+	
+// 
+	if (ImGui::InputFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
 	{
-		//m_bFirstcheck = true;
-		m_pBody->Get_Model()->Play_Animation(m_fSpeed * fTimeDelta, true);
-
+		m_bTrackPositionCheck = true;
 	}
 
+	//속도 값은 거꾸로 생각해야 함 ! 1/n의 분수 형태임 
+	if (ImGui::SliderFloat("AnimationSpeed", &m_fSpeed, 0.f, 1000.f))
+	{
+		if (nullptr != m_pBody)
+		{
+			m_pBody->Get_Model()->Set_StiffnessRate(m_fSpeed);
+		}
+	}
+	
+	if (ImGui::InputFloat("AnimationSpeed", &m_fSpeed, 0.f, 1000.f))
+	{
+		if (nullptr != m_pBody)
+		{
+			m_pBody->Get_Model()->Set_StiffnessRate(m_fSpeed);
+		
+		}
+		
+	}
+	
 	if (m_bCloneCount)
 	{
 		m_CreateList.clear();
