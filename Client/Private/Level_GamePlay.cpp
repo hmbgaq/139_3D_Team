@@ -175,8 +175,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void*
 
 	Desc.fRotationPerSec = LandObjectDesc.fRotationPerSec;
 	Desc.fSpeedPerSec = LandObjectDesc.fSpeedPerSec;
-	Desc.pTerrainBuffer = LandObjectDesc.pTerrainBuffer;
-	Desc.pTerrainTransform = LandObjectDesc.pTerrainTransform;
+	//Desc.pTerrainBuffer = LandObjectDesc.pTerrainBuffer;
+	//Desc.pTerrainTransform = LandObjectDesc.pTerrainTransform;
 
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Environment_Instance"), &Desc));
 

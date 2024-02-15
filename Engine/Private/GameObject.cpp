@@ -109,6 +109,8 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototy
 
 	Safe_AddRef(pComponent);
 
+	pComponent->Set_Owner(this);
+
 	return S_OK;
 }
 

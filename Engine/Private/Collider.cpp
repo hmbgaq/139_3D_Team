@@ -6,6 +6,8 @@
 
 #include "GameInstance.h"
 
+#include "GameObject.h"
+
 CCollider::CCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
 {
@@ -72,9 +74,94 @@ void CCollider::Update(_fmatrix TransformMatrix)
 	m_pBounding->Update(TransformMatrix);
 }
 
-_bool CCollider::Collision(CCollider * pTargetCollider)
+_bool CCollider::Is_Collision(CCollider* pTargetCollider)
 {
 	return m_pBounding->Collision(pTargetCollider, &m_isCollision);
+}
+
+void CCollider::Collision(CCollider * pTargetCollider)
+{
+	m_isCollision = true;
+
+	_bool bIs_SameColl = false;
+	for (CCollider* pPreOtherCollider : m_PreOtherColliders)
+	{
+		if (pPreOtherCollider == pTargetCollider) 
+		{
+			OnCollisionStay(pTargetCollider);
+			bIs_SameColl = true;
+			break;
+		}
+	}
+
+	if (false == bIs_SameColl)
+	{
+		OnCollisionEnter(pTargetCollider);
+	}
+
+	m_OtherColliders.push_back(pTargetCollider);
+
+}
+
+void CCollider::End_CollisionCheck()
+{
+	if (m_OtherColliders.empty()) 
+	{
+		m_isCollision = false;
+	}
+
+	_bool isErase = false;
+
+	for (auto iter = m_PreOtherColliders.begin(); iter != m_PreOtherColliders.end();)
+	{
+		isErase = false;
+
+		for (auto& elem : m_OtherColliders)
+		{
+			if ((*iter) == elem)
+			{
+				iter = m_PreOtherColliders.erase(iter);
+				isErase = true;
+				break;
+			}
+		}
+
+		if (!isErase)
+			iter++;
+
+	}
+
+	for (auto& elem : m_PreOtherColliders)
+	{
+		OnCollisionExit(elem);
+	}
+
+	m_PreOtherColliders = m_OtherColliders;
+	m_OtherColliders.clear();
+}
+
+void CCollider::OnCollisionEnter(CCollider* other)
+{
+	if (false == m_bEnable || nullptr == m_pOwner)
+		return;
+
+	m_pOwner->OnCollisionEnter(other);
+}
+
+void CCollider::OnCollisionStay(CCollider* other)
+{
+	if (false == m_bEnable || nullptr == m_pOwner)
+		return;
+
+	m_pOwner->OnCollisionStay(other);
+}
+
+void CCollider::OnCollisionExit(CCollider* other)
+{
+	if (false == m_bEnable || nullptr == m_pOwner)
+		return;
+
+	m_pOwner->OnCollisionExit(other);
 }
 
 #ifdef _DEBUG

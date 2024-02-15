@@ -21,8 +21,12 @@ public:
 	/* _ulong : 감소시키기 이전의 값을 리턴 .*/
 	_ulong Release();
 
+	void Set_Enable(_bool _Enable);
+	_bool Get_Enable();
+
 private:
 	_ulong			m_dwRefCnt = { 0 };
+	_bool			m_bEnable = { true };
 
 public:
 	virtual void Free() {}

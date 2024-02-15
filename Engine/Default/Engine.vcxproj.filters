@@ -235,6 +235,9 @@
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Terrain\Tool">
       <UniqueIdentifier>{b2b32e5c-9d17-4c34-abe4-330f091f1a02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\07.Collider\Manager">
+      <UniqueIdentifier>{39f10bc0-452c-409c-8e67-6373278f317f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -480,6 +483,9 @@
     <ClInclude Include="..\Public\VIBuffer_Dynamic_Terrain.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Terrain\Tool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Collision_Manager.h">
+      <Filter>01.Utility\03.Components\07.Collider\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -673,6 +679,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Dynamic_Terrain.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Terrain\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collision_Manager.cpp">
+      <Filter>01.Utility\03.Components\07.Collider\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

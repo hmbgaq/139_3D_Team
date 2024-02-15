@@ -48,6 +48,11 @@ public:
 	class CTransform* Get_Transform();
 
 
+public:
+	virtual void	OnCollisionEnter(CCollider* other) {};
+	virtual void	OnCollisionStay(CCollider* other) {};
+	virtual void	OnCollisionExit(CCollider* other) {};
+
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };
