@@ -66,12 +66,15 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 	ImGui::Text("UI_Tool");
 
 	// Test
-	UI_List(fTimeDelta);
+	//UI_List(fTimeDelta);
 
 
+	UI2D_Setting(fTimeDelta);
 
+	/* 이미지 선택 및 미리보기 */
+	ImagePreview(fTimeDelta);
 
-
+	ImGui::Dummy(ImVec2(0, 5.f)); // 공백
 
 	/* Default : LastNumber */
 	UI_ToolTip(fTimeDelta); // Tip : 툴팁은 오버레이시 모든 출력중 가장 마지막에 호출되어야한다. (안그러면 다른 녀석들이 툴팁에 밀려서 출력됨)
@@ -124,45 +127,6 @@ void CWindow_UITool::UI_ToolTip(_float fTimeDelta)
 	_float	fScreenPosX = 20.f;
 	_float	fScreenPosY = 40.f;
 
-	// Test
-	if (ImGui::IsKeyDown(ImGuiKey_1))
-	{
-		if (m_iTestNum < m_vecTexture.size() - 1)
-			++m_iTestNum;
-	}
-	if(ImGui::IsKeyDown(ImGuiKey_2))
-	{
-		if (m_iTestNum >= 1)
-			--m_iTestNum;
-	}
-
-	//int selectedPathIndex = 0; // 선택된 이미지 경로 인덱스
-
-	if (ImGui::CollapsingHeader(u8"이미지"))
-	{
-		if (ImGui::ListBox("Image Paths", &m_iSelectedPathIndex, m_vecImagePaths.data(), (int)m_vecImagePaths.size()))
-		{
-
-		}
-	}
-
-	// 마우스가 해당 위치 위에 있는 경우에만 툴팁 표시 (마우스 오버)
-	if (ImGui::IsMouseHoveringRect(
-		ImVec2(fTestX - fHoverRangeX, fTestY - fHoverRangeY),
-		ImVec2(fTestX + fHoverRangeX, fTestY + fHoverRangeY)))
-	{
-
-		// 표시할 정보
-		ImGui::SetCursorScreenPos(ImVec2(fTestX + fScreenPosX, fTestY - fScreenPosY));
-		ImGui::BeginTooltip();
-		//ImGui::Text("pointer = %p", m_vecTexture[i]->SRV_Texture);
-		//ImGui::Text("size = %f x %f", m_vecTexture[i]->iImage_Width, m_vecTexture[i]->iImage_Height);
-		//ImGui::Image((void*)m_vecTexture[i]->SRV_Texture, ImVec2(m_vecTexture[i]->iImage_Width, m_vecTexture[i]->iImage_Height));
-		ImGui::Text("pointer = %p", m_vecTexture[m_iSelectedPathIndex]->SRV_Texture);
-		ImGui::Text("size = %f x %f", m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height);
-		ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2(m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
-		ImGui::EndTooltip(); // 툴팁 종료
-	}
 	//// 마우스가 해당 위치 위에 있는 경우에만 툴팁 표시 (마우스 오버)
 	//if (ImGui::IsMouseHoveringRect(
 	//	ImVec2(fTestX - fHoverRangeX, fTestY - fHoverRangeY),
@@ -172,12 +136,7 @@ void CWindow_UITool::UI_ToolTip(_float fTimeDelta)
 	//	// 표시할 정보
 	//	ImGui::SetCursorScreenPos(ImVec2(fTestX + fScreenPosX, fTestY - fScreenPosY));
 	//	ImGui::BeginTooltip();
-	//	//ImGui::Text("pointer = %p", m_vecTexture[i]->SRV_Texture);
-	//	//ImGui::Text("size = %f x %f", m_vecTexture[i]->iImage_Width, m_vecTexture[i]->iImage_Height);
-	//	//ImGui::Image((void*)m_vecTexture[i]->SRV_Texture, ImVec2(m_vecTexture[i]->iImage_Width, m_vecTexture[i]->iImage_Height));
-	//	ImGui::Text("pointer = %p", m_vecTexture[m_iTestNum]->SRV_Texture);
-	//	ImGui::Text("size = %f x %f", m_vecTexture[m_iTestNum]->iImage_Width, m_vecTexture[m_iTestNum]->iImage_Height);
-	//	ImGui::Image((void*)m_vecTexture[m_iTestNum]->SRV_Texture, ImVec2(m_vecTexture[m_iTestNum]->iImage_Width, m_vecTexture[m_iTestNum]->iImage_Height));
+
 	//	ImGui::EndTooltip(); // 툴팁 종료
 	//}
 }
@@ -264,61 +223,6 @@ bool CWindow_UITool::LoadTextureFromFile(const char* filename, ID3D11ShaderResou
 	stbi_image_free(image_data);
 
 	return true;
-}
-
-void CWindow_UITool::UI_TextureLoad()
-{
-	//if (ImGui::Begin(u8"텍스처"))
-	//{
-
-		// 문자열 벡터를 const char* 배열로 변환
-		//std::vector<const char*> charImagePaths = ConvertStringVectorToCharArray(m_vecImagePaths);
-
-		//int selectedPathIndex = 0; // 선택된 이미지 경로 인덱스
-
-		//if (ImGui::CollapsingHeader(u8"이미지 불러오기"))
-		//{
-			//if (ImGui::ListBox("Image Paths", &selectedPathIndex, charImagePaths.data(), (int)charImagePaths.size())) 
-			//{
-
-			//	// 선택한 이미지 경로를 사용하여 이미지를 로드하는 함수 호출
-			//	const std::string& selectedImagePath = m_vecImagePaths[selectedPathIndex];
-			//	//LoadImg(ConverCtoWC(selectedImagePath.c_str()));
-			//	LoadImg(ConverCtoWC(ConverWStringtoC(ConvertToWideString(m_vecImagePaths[selectedPathIndex]))));
-			//}
-
-		//	_int iSize = m_vecImagePaths.size();
-		//	for (_int i = 0; i < iSize; i++)
-		//	{
-		//		// 선택한 이미지 경로를 사용하여 이미지를 로드하는 함수 호출
-		//		const std::string& selectedImagePath = m_vecImagePaths[i];
-		//		//LoadImg(ConverCtoWC(selectedImagePath.c_str()));
-		//		LoadImg(ConverCtoWC(ConverWStringtoC(ConvertToWideString(UIPATH()))));
-		//	}
-		//}
-
-		//static const char* ini_to_load = NULL;
-		//if (ini_to_load)
-		//{
-		//	ImGui::LoadIniSettingsFromDisk(ini_to_load);
-		//	ini_to_load = NULL;
-		//}
-
-		//if (ImGui::Button(u8"저장 버튼"))
-		//{
-		//	//SaveObjectInformationData();
-
-		//}
-
-		//ImGui::SameLine();
-
-		//if (ImGui::Button(u8"불러오기 버튼"))
-		//{
-		//	//LoadObjectInforamtionData();
-		//}
-
-	//}
-	//ImGui::End();
 }
 
 // std::string 벡터를 const char* 배열로 변환하는 함수
@@ -420,8 +324,65 @@ void CWindow_UITool::LoadImg(const _tchar* folderPath)
 			}
 		} while (FindNextFile(hFind, &findData));
 
+		
 		FindClose(hFind);
 	}
+}
+
+void CWindow_UITool::ImagePreview(_float fTimeDelta)
+{
+	if (ImGui::CollapsingHeader(u8"이미지"))
+	{
+		if (ImGui::ListBox("Image Paths", &m_iSelectedPathIndex, m_vecImagePaths.data(), (int)m_vecImagePaths.size()))
+		{
+
+		}
+	}
+
+	//ImGui::Text("pointer = %p", m_vecTexture[m_iSelectedPathIndex]->SRV_Texture);
+	//ImGui::Text("size = %f x %f", m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height);
+	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2(m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
+
+}
+
+void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
+{
+	ImGui::CollapsingHeader("2D_Setting");
+	/* Scale */
+	ImGui::SeparatorText(u8"크기 변경");
+	ImGui::InputFloat2("Scale", m_fScale);
+
+
+	/* Position*/
+	ImGui::SeparatorText(u8"위치 변경");
+	ImGui::InputFloat2("Position", m_fPosition);
+
+	ImGui::Dummy(ImVec2(0, 2.5)); // 공백
+	ImGui::Separator();
+
+	
+	if (ImGui::Button("Create"))
+	{
+		UI2D_Create(fTimeDelta);
+	}
+
+	ImGui::SameLine(70.f);
+
+	if (ImGui::Button("Delete"))
+	{
+		UI2D_Delete(fTimeDelta);
+	}
+
+}
+
+void CWindow_UITool::UI2D_Create(_float fTimeDelta)
+{
+	
+}
+
+void CWindow_UITool::UI2D_Delete(_float fTimeDelta)
+{
+
 }
 
 // ImGui를 사용하여 이미지를 표시하는 함수
