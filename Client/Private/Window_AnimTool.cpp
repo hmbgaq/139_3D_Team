@@ -327,11 +327,21 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 
 				if (is_selected)
 				{
+					
 					ImGui::SetItemDefaultFocus();
-					m_fDuration = m_pAnimation[AnimationIndex]->Get_Duration();
-
-					//m_pBody->Get_Model()->Set_StiffnessRate(m_fSpeed);
-					////m_pAnimation[AnimationIndex]->Set_TrackPosition(m_fCurrentTrackPosition);
+					if (m_bFirstcheck == true)
+					{
+						m_fDuration = m_pAnimation[AnimationIndex]->Get_Duration();
+						m_fCurrentTrackPosition = m_pAnimation[AnimationIndex]->Get_TrackPosition();
+						m_pBody->Get_Model()->Set_Animation(AnimationIndex, CModel::ANIM_STATE_LOOP);
+						m_bFirstcheck = false;
+					}
+					if (m_bTrackPositionCheck)
+					{
+						m_pAnimation[AnimationIndex]->Set_TrackPosition(m_fCurrentTrackPosition);
+						m_bTrackPositionCheck = false;
+					}
+					
 				}
 			}
 			ImGui::EndListBox();
@@ -343,7 +353,8 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 	{
 		if (nullptr != m_pBody)
 		{
-			m_pBody->Get_Model()->Play_Animation(m_fSpeed, true);
+			m_bFirstcheck = true;
+			m_pBody->Get_Model()->Play_Animation(m_fSpeed*fTimeDelta, true);
 		}
 	}
 	ImGui::SameLine();
@@ -356,7 +367,10 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 	}
 	ImGui::Spacing();
 
-	if (ImGui::SliderFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration));
+	if (ImGui::SliderFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
+	{
+		m_bTrackPositionCheck = true;
+	}
 
 	if (ImGui::SliderFloat("AnimationSpeed", &m_fSpeed, 0.f, 100.f));
 

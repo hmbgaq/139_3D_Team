@@ -95,6 +95,8 @@ public:
 	_bool					m_bDeleteCheck = false;
 	_bool					m_bListCheck = false;
 	_bool					m_bCloneCount = false;
+	_bool					m_bFirstcheck = false;
+	_bool					m_bTrackPositionCheck = false;
 public:
 	static CWindow_AnimTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
