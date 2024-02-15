@@ -333,7 +333,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 					{
 						m_fDuration = m_pAnimation[AnimationIndex]->Get_Duration();
 						m_fCurrentTrackPosition = m_pAnimation[AnimationIndex]->Get_TrackPosition();
-						m_pBody->Get_Model()->Set_Animation(AnimationIndex, CModel::ANIM_STATE_LOOP);
+						m_pBody->Get_Model()->Set_Animation(AnimationIndex, CModel::ANIM_STATE_LOOP,true,1.f);
 						m_bFirstcheck = false;
 					}
 					if (m_bTrackPositionCheck)
@@ -354,16 +354,16 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		if (nullptr != m_pBody)
 		{
 			m_bFirstcheck = true;
-			m_pBody->Get_Model()->Play_Animation(m_fSpeed*fTimeDelta, true);
+			
 		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button(" Stop "))
 	{
-		if (nullptr != m_pBody)
-		{
-			m_pBody->Get_Model()->Stop_Animation(0.f,false);
-		}
+		//if (nullptr != m_pBody)
+		//{
+		//	m_pBody->Get_Model()->Stop_Animation(0.f,false);
+		//}
 	}
 	ImGui::Spacing();
 
@@ -373,6 +373,14 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 	}
 
 	if (ImGui::SliderFloat("AnimationSpeed", &m_fSpeed, 0.f, 100.f));
+
+	//if(m_bFirstcheck)
+	if (nullptr != m_pBody)
+	{
+		//m_bFirstcheck = true;
+		m_pBody->Get_Model()->Play_Animation(m_fSpeed * fTimeDelta, true);
+
+	}
 
 	if (m_bCloneCount)
 	{
