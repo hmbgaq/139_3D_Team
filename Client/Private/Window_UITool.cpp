@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Window_UITool.h"
 #include "UI_Anything.h"
+#include "GameInstance.h"
+
+#include "Json_Utility.h"
 
 /* error 외부참조 기호 : define 걸어줘야함 */
 #define STB_IMAGE_IMPLEMENTATION
@@ -18,12 +21,7 @@ HRESULT CWindow_UITool::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-	/* Texture 사이즈 */
-
-
-	//UI_TextureLoad();
-
-	//LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures"))));
+	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
 	LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures/PlayerHUD"))));
 
 	// 이미지 로드 Test
@@ -43,8 +41,6 @@ HRESULT CWindow_UITool::Initialize()
 
 	}
 
-	// 문자열 벡터를 const char* 배열로 변환
-	//std::vector<const char*> charImagePaths;
 	for (auto& iter : m_vecPaths)
 	{
 		m_vecImagePaths.push_back(ConverWStringtoC(iter->strFilePath.c_str()));
@@ -57,18 +53,13 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	/* Test */
-	// 윈도우 창 크기 변경시 변경된 값을 마우스위치값을 이용해 창 사이즈를 바꿔줘야 할 것 같다.
-	//ImGui::IsMouseDown();
-	//m_tImGuiDESC.vWindowSize; 
-
 	__super::Begin();
 	ImGui::Text("UI_Tool");
 
-	// Test
-	//UI_List(fTimeDelta);
+	/* List */
+	UI_List(fTimeDelta);
 
-
+	/* UI_2D 세팅 */
 	UI2D_Setting(fTimeDelta);
 
 	/* 이미지 선택 및 미리보기 */
@@ -88,24 +79,33 @@ void CWindow_UITool::Render()
 
 void CWindow_UITool::UI_List(_float fTimeDelta)
 {
-	/* Test Value */
-	m_tUI_Info.strName = "Test UI List";
-	m_tUI_Info.iNum = 1;
-	m_tUI_Info.fNum = 1.5f;
-
-	// 정보를 목록으로 표시
-	if (ImGui::TreeNode(m_tUI_Info.strName.c_str())) {
-		ImGui::Text(u8"값1 : %d", m_tUI_Info.iNum);
-		ImGui::Text(u8"값2 : %.2f", m_tUI_Info.fNum);
-
-		// 버튼
-		if (ImGui::Button(u8"버튼"))
+	m_vecUIObject;
+	if (ImGui::CollapsingHeader(u8"UI_List"))
+	{
+		if (ImGui::ListBox("UI_Object", &m_iSelectedPathIndex, m_vecImagePaths.data(), (int)m_vecImagePaths.size()))
 		{
 
 		}
-
-		ImGui::TreePop();
 	}
+
+	///* Test Value */
+	//m_tUI_Info.strName = "Test UI List";
+	//m_tUI_Info.iNum = 1;
+	//m_tUI_Info.fNum = 1.5f;
+
+	//// 정보를 목록으로 표시
+	//if (ImGui::TreeNode(m_tUI_Info.strName.c_str())) {
+	//	ImGui::Text(u8"값1 : %d", m_tUI_Info.iNum);
+	//	ImGui::Text(u8"값2 : %.2f", m_tUI_Info.fNum);
+
+	//	// 버튼
+	//	if (ImGui::Button(u8"버튼"))
+	//	{
+
+	//	}
+
+	//	ImGui::TreePop();
+	//}
 }
 
 void CWindow_UITool::UI_ToolTip(_float fTimeDelta)
@@ -350,17 +350,19 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 	ImGui::CollapsingHeader("2D_Setting");
 	/* Scale */
 	ImGui::SeparatorText(u8"크기 변경");
-	ImGui::InputFloat2("Scale", m_fScale);
+	ImGui::InputFloat("ScaleX", &m_tUI_Info.fSizeX);
+	ImGui::InputFloat("ScaleY", &m_tUI_Info.fSizeY);
 
 
 	/* Position*/
 	ImGui::SeparatorText(u8"위치 변경");
-	ImGui::InputFloat2("Position", m_fPosition);
+	ImGui::InputFloat("PositionX", &m_tUI_Info.fX);
+	ImGui::InputFloat("PositionY", &m_tUI_Info.fY);
 
 	ImGui::Dummy(ImVec2(0, 2.5)); // 공백
 	ImGui::Separator();
 
-
+#pragma region Create/Delete
 	if (ImGui::Button("Create"))
 	{
 		UI2D_Create(fTimeDelta);
@@ -372,16 +374,62 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 	{
 		UI2D_Delete(fTimeDelta);
 	}
+#pragma endregion End
 
+#pragma region Save/Load
+	if (ImGui::Button("Save"))
+	{	
+		Save_Desc();
+	}
+
+	ImGui::SameLine(70.f);
+
+	if (ImGui::Button("Load"))
+	{
+		Load_Desc();
+	}
+#pragma endregion End
 }
 
-void CWindow_UITool::UI2D_Create(_float fTimeDelta)
+HRESULT CWindow_UITool::UI2D_Create(_float fTimeDelta)
 {
-
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, TEXT("Layer_UI_Monster"), TEXT("Prototype_GameObject_UI_MonsterHpFrame"), &m_tUI_Info));
+	m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecUIObject);
 }
 
 void CWindow_UITool::UI2D_Delete(_float fTimeDelta)
 {
+
+}
+
+/* ex : Save */
+void CWindow_UITool::Save_Desc()
+{
+	//string filePath = "Particle_Desc";
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+
+	json Out_Json;
+
+	Out_Json["PostionX"] = m_tUI_Info.fX;
+	Out_Json["PostionY"] = m_tUI_Info.fY;
+	Out_Json["SizeX"] = m_tUI_Info.fSizeX;
+	Out_Json["SizeY"] = m_tUI_Info.fSizeY;
+
+	CJson_Utility::Save_Json(filePath, Out_Json);
+}
+
+/* ex : Load */
+void CWindow_UITool::Load_Desc()
+{
+	json json_in;
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+
+	CJson_Utility::Load_Json(filePath, json_in);
+
+	m_tUI_Info.fX = json_in["PostionX"];
+	m_tUI_Info.fY = json_in["PostionY"];
+	m_tUI_Info.fSizeX = json_in["SizeX"];
+	m_tUI_Info.fSizeY = json_in["SizeY"];
 
 }
 

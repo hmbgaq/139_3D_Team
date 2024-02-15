@@ -15,13 +15,6 @@ public: /* ==================== Struct ==================== */
 	{
 	};
 
-	struct UI_DESC
-	{
-		string				strName = "";
-		_float				fNum = 0.0f;
-		_int				iNum = 0;
-	};
-
 	typedef struct tagImageInfo
 	{
 		_int						iImage_Width = 100;
@@ -38,6 +31,21 @@ public: /* ==================== Struct ==================== */
 		WCHAR		cFileName[MAX_PATH] = TEXT("");
 		wstring		strFilePath = TEXT("");
 	}PATHINFO;
+
+public:
+	typedef struct tagUIBaseDesc
+	{
+		//			위치 X,Y / 사이즈 X,Y
+		_float		fX, fY, fSizeX, fSizeY;
+
+		_float		fTexSizeX = 0.f, fTexSizeY = 0.f;
+
+		_float		fOffsetX = 0.f, fOffsetY = 0.f;
+
+		_bool		bWorldUI = false;	// 월드상의 UI인지
+		_bool		bFrame = false;		// Frame
+		_bool		bEnable = true;		// Enable 여부
+	}UI_DESC;
 
 protected: /* ============ Create/Extinction ============= */
 	CWindow_UITool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -67,8 +75,10 @@ public: /* Function */
 public:
 	// UI 설정
 	void UI2D_Setting(_float fTimeDelta);
-	void UI2D_Create(_float fTimeDelta);
+	HRESULT UI2D_Create(_float fTimeDelta);
 	void UI2D_Delete(_float fTimeDelta);
+	void Save_Desc();
+	void Load_Desc();
 
 public: /* Image */
 	// 이미지 로드 함수
@@ -95,7 +105,7 @@ private: /* Image_Member */
 private: /* 2D */
 	_float						m_fPosition[2] = { 0.f, 0.f };
 	_float						m_fScale[2] = { 0.f, 0.f };
-
+	vector<CGameObject*>		m_vecUIObject;
 public:
 	static CWindow_UITool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

@@ -220,6 +220,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\Public\GameObject.h" />
     <ClInclude Include="..\Public\Graphic_Device.h" />
     <ClInclude Include="..\Public\Input_Device.h" />
+    <ClInclude Include="..\Public\Json\json.hpp" />
     <ClInclude Include="..\Public\Json_Utility.h" />
     <ClInclude Include="..\Public\Layer.h" />
     <ClInclude Include="..\public\Level.h" />

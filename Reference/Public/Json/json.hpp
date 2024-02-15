@@ -36,6 +36,8 @@ SOFTWARE.
  * file docs/README.md.                                                      *
 \****************************************************************************/
 
+#undef snprintf
+
 #ifndef INCLUDE_NLOHMANN_JSON_HPP_
 #define INCLUDE_NLOHMANN_JSON_HPP_
 
