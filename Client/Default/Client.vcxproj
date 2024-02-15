@@ -151,6 +151,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../Reference/Public/;../Public/;../Default/;../../Reference/Imgui/</AdditionalIncludeDirectories>
       <ConformanceMode>false</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

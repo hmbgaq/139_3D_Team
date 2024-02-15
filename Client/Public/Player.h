@@ -28,16 +28,10 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-public:
-	CGameObject* Find_PartObject(const wstring& strPartTag);
-
 
 private:
-
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
-	HRESULT Add_PartObject(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg);
-
 
 
 public:
