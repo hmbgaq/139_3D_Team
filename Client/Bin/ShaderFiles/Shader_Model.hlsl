@@ -1,9 +1,11 @@
-
 #include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D		g_DiffuseTexture;
 texture2D		g_NormalTexture;
+texture2D		g_OcclusionTexture;
+texture2D		g_RougnessTexture;
+texture2D		g_MetallicTexture;
 float           g_fTimeDelta;
 
 /* OutLine */

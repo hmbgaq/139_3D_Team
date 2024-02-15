@@ -78,8 +78,11 @@ HRESULT CInteract_Chain::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE); // 1
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS); // 6
+		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_MetallicTexture", (_uint)i, aiTextureType_METALNESS);
+		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_RougnessTexture", (_uint)i, aiTextureType_DIFFUSE_ROUGHNESS);
+		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_OcclusionTexture", (_uint)i, aiTextureType_AMBIENT_OCCLUSION);
 
 		/* 체인부분만 하얗게 변하고 나무부분은 원래 Diffuse로 그리도록함 */
 

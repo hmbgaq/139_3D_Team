@@ -44,6 +44,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, HINSTANCE hInstance, 
 	if (nullptr == m_pComponent_Manager)
 		return E_FAIL;
 
+	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pFont_Manager)
+		return E_FAIL;
+
 	m_pTarget_Manager = CTarget_Manager::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pTarget_Manager)
 		return E_FAIL;
@@ -54,10 +58,6 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, HINSTANCE hInstance, 
 
 	m_pPipeLine = CPipeLine::Create();
 	if (nullptr == m_pPipeLine)
-		return E_FAIL;
-
-	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
-	if (nullptr == m_pFont_Manager)
 		return E_FAIL;
 
 	m_pLight_Manager = CLight_Manager::Create();
@@ -514,17 +514,17 @@ _bool CGameInstance::isIn_LocalPlanes(_fvector vPoint, _float fRadius)
 
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
 {
-	wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
-	_wstring = converter.from_bytes(_string);
+	//wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
+	//_wstring = converter.from_bytes(_string);
 
-	//_wstring.assign(_string.begin(), _string.end());
+	_wstring.assign(_string.begin(), _string.end());
 }
 
 void CGameInstance::WString_To_String(wstring _wstring, string& _string)
 {
-	wstring_convert<codecvt_utf8<wchar_t>> converter;
-	_string = converter.to_bytes(_wstring);
-//	_string.assign(_wstring.begin(), _wstring.end());
+//wstring_convert<codecvt_utf8<wchar_t>> converter;
+//_string = converter.to_bytes(_wstring);
+	_string.assign(_wstring.begin(), _wstring.end());
 }
 
 void CGameInstance::Release_Manager()

@@ -1,4 +1,5 @@
 /* ---------------- Sampler ---------------- */
+#define FLT_MAX 3.402823466e+38F
 
 sampler LinearSampler = sampler_state
 {
@@ -21,6 +22,23 @@ sampler ClampSampler = sampler_state
     AddressV = CLAMP;
 };
 
+sampler SSAONormalDepth = sampler_state
+{
+    filter = min_mag_linear_mip_point; // D3D11_FILTER 0x14
+    AddressU = Border; // 4
+    AddressV = Border; // 4
+    AddressW = Border; // 4
+
+    BorderColor = float4(0.0f, 0.0f, 0.0f, 1e5f); // float [4]
+    MinLOD = 0.0f; //_float
+    MaxLOD = FLT_MAX; //_float
+};
+sampler SSAORandVec = sampler_state
+{
+    filter = MIN_MAG_LINEAR_MIP_POINT;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
 /* ---------------- Rasterizer ---------------- */
 
 RasterizerState RS_Default

@@ -22,6 +22,8 @@ texture2D		g_NormalTexture;
 texture2D		g_DepthTexture;
 texture2D		g_SpecularTexture;
 texture2D		g_LightDepthTexture;
+texture2D		g_ORMTexture;
+texture2D		g_SSAOTexture;
 
 struct VS_IN
 {
@@ -229,7 +231,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 
 technique11 DefaultTechnique
 {
-	pass Debug
+	pass Debug // 0
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_None, 0);
@@ -240,7 +242,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_DEBUG();
 	}
 
-	pass Light_Directional
+	pass Light_Directional // 1
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_None, 0);
@@ -251,7 +253,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
 	}
 
-	pass Light_Point
+	pass Light_Point // 2
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_None, 0);
@@ -262,7 +264,11 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_POINT();
 	}
 
-	pass Final
+    pass Light_Spot // 3
+    {
+    }
+
+	pass Deferred // 4
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_None, 0);
