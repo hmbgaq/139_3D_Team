@@ -219,11 +219,11 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-	for (auto& Pair : m_PartObjects)
-		Safe_Release(Pair.second);
-	m_PartObjects.clear();
+// 	for (auto& Pair : m_PartObjects)
+// 		Safe_Release(Pair.second);
+// 	m_PartObjects.clear();
 
 	//Safe_Release(m_pColliderCom);
-	Safe_Release(m_pNavigationCom);
+	//Safe_Release(m_pNavigationCom);
 }
 

@@ -23,7 +23,7 @@ HRESULT CVIBuffer_Model_Instance::Initialize(void* pArg)
 {
 	m_tModelDesc = *(MODEL_INSTANCE_DESC*)pArg;
 
-	Safe_AddRef(m_tModelDesc.pModel);
+	//Safe_AddRef(m_tModelDesc.pModel);
 
 
 	CModel* pModel = m_tModelDesc.pModel;
@@ -34,7 +34,7 @@ HRESULT CVIBuffer_Model_Instance::Initialize(void* pArg)
 	for (_int i = 0; i < m_iNumMeshes; ++i)
 	{
 		m_vecInstanceMesh.push_back(Meshes[i]);
-		Safe_AddRef(Meshes[i]);
+		//Safe_AddRef(Meshes[i]);
 	}
 	
 
@@ -113,17 +113,17 @@ void CVIBuffer_Model_Instance::Free()
 	
 
 		
-	if (nullptr != m_tModelDesc.pModel)
-	{
-		for (_int i = 0; i < m_iNumMeshes; ++i)
-		{
-			Safe_Release(m_vecInstanceMesh[i]);
-		}
-
-		m_vecInstanceMesh.clear();
-		Safe_Release(m_tModelDesc.pModel);
-
-	}
+// 	if (nullptr != m_tModelDesc.pModel)
+// 	{
+// 		for (_int i = 0; i < m_iNumMeshes; ++i)
+// 		{
+// 			Safe_Release(m_vecInstanceMesh[i]);
+// 		}
+// 
+// 		m_vecInstanceMesh.clear();
+// 		Safe_Release(m_tModelDesc.pModel);
+// 
+// 	}
 
 	Safe_Release(m_pVBInstance);
 

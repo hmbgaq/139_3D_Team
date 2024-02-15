@@ -236,14 +236,16 @@ void CCharacter::Free()
 {
 	for (auto& Pair : m_PartObjects)
 		Safe_Release(Pair.second);
+
 	m_PartObjects.clear();
 
 	Safe_Release(m_pBody);
-	for (CWeapon* pWeapon : m_Weapons)
-	{
-		Safe_Release(pWeapon);
-	}
-	m_Weapons.clear();
+
+	//for (CWeapon* pWeapon : m_Weapons)
+	//{
+	//	Safe_Release(pWeapon);
+	//}
+	//m_Weapons.clear();
 
 	Safe_Release(m_pNavigationCom);
 

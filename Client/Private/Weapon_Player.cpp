@@ -107,15 +107,15 @@ HRESULT CWeapon_Player::Ready_Components()
 
 
 	/* For.Com_Collider */
-	CBounding_OBB::BOUNDING_OBB_DESC			BoundingDesc = {};
-
-	BoundingDesc.vExtents = _float3(1.f, 1.f, 3.f);
-	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
-	BoundingDesc.vRotation = _float3(0.f, 0.f, 0.f);
-
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders), &BoundingDesc)))
-		return E_FAIL;
+// 	CBounding_OBB::BOUNDING_OBB_DESC			BoundingDesc = {};
+// 
+// 	BoundingDesc.vExtents = _float3(1.f, 1.f, 3.f);
+// 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
+// 	BoundingDesc.vRotation = _float3(0.f, 0.f, 0.f);
+// 
+// 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_OBB"),
+// 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders), &BoundingDesc)))
+// 		return E_FAIL;
 
 	return S_OK;
 }
@@ -166,10 +166,12 @@ void CWeapon_Player::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pParentTransform);
-	//Safe_Release(m_pColliderCom);
-	Safe_Release(m_pSocketBone);
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pModelCom);		
+// 	Safe_Release(m_pParentTransform);
+// 
+// 
+// 	Safe_Release(m_pSocketBone);
+// 	Safe_Release(m_pShaderCom);
+// 	Safe_Release(m_pModelCom);	
+	
 }
 
