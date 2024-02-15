@@ -1,10 +1,7 @@
 #pragma once
 #include "stdafx.h"
-
 #include "Client_Defines.h"
 #include "Base.h"
-
-
 
 BEGIN(Engine)
 class CGameInstance;
@@ -20,29 +17,24 @@ private:
 
 public:
 	HRESULT Initialize();
-	void Tick(_float fTimeDelta);
+	void	Tick(_float fTimeDelta);
 	HRESULT Render();
-
-private:
-	/* IDirect3DDevice9 == LPDIRECT3DDEVICE9 */
-	ID3D11Device*			m_pDevice = { nullptr };
-	ID3D11DeviceContext*	m_pContext = { nullptr };
-	CGameInstance*			m_pGameInstance = { nullptr };
-
-//#ifdef _DEBUG
-private:
-	_tchar					m_szFPS[MAX_PATH] = TEXT("");
-	_float					m_fTimeAcc = { 0.f };
-	_uint					m_iNumRender = { 0 };
-
-//#endif
 
 private:
 	HRESULT Open_Level(LEVEL eStartLevelID);
 	HRESULT Ready_Prototype_Component_ForStaticLevel();
+	HRESULT Ready_Gara();
+	HRESULT Ready_Font();
 
 private:
-	HRESULT Ready_Gara();
+	ID3D11Device*			m_pDevice = { nullptr };
+	ID3D11DeviceContext*	m_pContext = { nullptr };
+	CGameInstance*			m_pGameInstance = { nullptr };
+
+private:
+	_tchar					m_szFPS[MAX_PATH] = TEXT("");
+	_float					m_fTimeAcc = { 0.f };
+	_uint					m_iNumRender = { 0 };
 
 public:
 	static CMainApp* Create();

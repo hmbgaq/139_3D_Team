@@ -10,6 +10,7 @@ class CAnimation;
 class CMesh;
 class CBone;
 
+
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
@@ -28,7 +29,14 @@ public:
 		return m_iNumMeshes;
 	}
 
-	CBone* Get_BonePtr(const _char* pBoneName) const;
+
+	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Ãß°¡
+	_uint Get_NumMaterials() const { return m_iNumMaterials; }
+	_uint Get_NumMeshIndice(_int iMeshIndex);//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
+	vector<class CMesh*>& Get_Meshes() { return m_Meshes;}
+	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
+
+	class CBone* Get_BonePtr(const _char* pBoneName) const;
 
 	//void Set_Animation(_uint iAnimIndex) {
 	//	m_iCurrentAnimIndex = iAnimIndex;

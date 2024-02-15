@@ -13,9 +13,9 @@ public:
 
 		mName = _pAnimation->mName.data;
 
-		mDuration		= _pAnimation->mDuration;
-		mTicksPerSecond = _pAnimation->mTicksPerSecond;
-		mNumChannels	= _pAnimation->mNumChannels;
+		mDuration		= (_float)_pAnimation->mDuration;
+		mTicksPerSecond = (_float)_pAnimation->mTicksPerSecond;
+		mNumChannels	= (_uint)_pAnimation->mNumChannels;
 
 		for (_uint i = 0; i < mNumChannels; ++i) 
 		{

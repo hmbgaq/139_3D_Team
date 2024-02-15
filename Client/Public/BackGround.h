@@ -48,13 +48,9 @@ private:
 
 
 public:
-	/* 원형객체를 생성한다. */
-	static CBackGround* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-
-	/* 사본객체를 생성한다. */
-	virtual CGameObject* Clone(void* pArg) override;
-
-	virtual void Free() override;
+	static CBackGround*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject*	Clone(void* pArg) override;
+	virtual void			Free() override;
 };
 
 END

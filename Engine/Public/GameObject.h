@@ -29,7 +29,10 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
+
+	/* Ãß°¡ RenderGroup¿ë*/
 	virtual HRESULT Render_Shadow() { return S_OK; }
+	virtual HRESULT Render_OutLine() { return S_OK; }
 
 public:
 	virtual class CComponent* Find_Component(const wstring& strComTag, const wstring& strPartTag = TEXT(""));
@@ -39,6 +42,9 @@ public:
 public:
 	_bool	Is_Dead() { return m_bDead; }
 	void	Set_Dead(_bool _bDead) { m_bDead = _bDead; }
+
+public:
+	class CTransform* Get_Transform();
 
 
 protected:

@@ -13,11 +13,12 @@ CImgui_Window::CImgui_Window(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 }
 
-HRESULT CImgui_Window::SetUp_ImGuiDESC(string _strName, const ImVec2& _vWindowSize, ImGuiWindowFlags _eWindowFlags)
+HRESULT CImgui_Window::SetUp_ImGuiDESC(string _strName, const ImVec2& _vWindowSize, ImGuiWindowFlags _eWindowFlags, const ImVec4& _vBackGroundColor)
 {
 	m_tImGuiDESC.strName = _strName;
 	m_tImGuiDESC.vWindowSize = _vWindowSize;
 	m_tImGuiDESC.eWindowFlags = _eWindowFlags;
+	m_tImGuiDESC.vBackgroundColor = _vBackGroundColor;
 
 	return S_OK;
 }
@@ -37,7 +38,7 @@ void CImgui_Window::Tick(_float fTimeDelta)
 
 HRESULT CImgui_Window::Begin()
 {
-	ImGui::PushStyleColor(ImGuiCol_PopupBg, m_BackgroundColor);
+	ImGui::PushStyleColor(ImGuiCol_PopupBg, m_tImGuiDESC.vBackgroundColor);
 
 	//ImGui::SetNextWindowSize(m_tImGuiDESC.vWindowSize, 0);
 

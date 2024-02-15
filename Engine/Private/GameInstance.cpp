@@ -309,6 +309,16 @@ CGameObject* CGameInstance::Add_CloneObject_And_Get(_uint iLevelIndex, const wst
 	return Get_GameObect_Last(iLevelIndex, strLayerTag);
 }
 
+CGameObject* CGameInstance::Get_Player()
+{
+	return m_pObject_Manager->Get_Player();
+}
+
+void CGameInstance::Set_Player(CGameObject* _pPlayer)
+{
+	m_pObject_Manager->Set_Player(_pPlayer);
+}
+
 void CGameInstance::Fill_PrototypeTags(vector<string>* _vector)
 {
 	m_pObject_Manager->Fill_PrototypeTags(_vector);
@@ -347,12 +357,14 @@ HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
 
+
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebug(_bool _bRenderDebug)
 {
 	m_pRenderer->Set_RenderDebug(_bRenderDebug);
 }
 #endif
+
 
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {

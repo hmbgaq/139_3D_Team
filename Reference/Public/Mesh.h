@@ -18,6 +18,16 @@ public:
 		return m_iMaterialIndex;
 	}
 
+	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
+	_uint						Get_NumIndices() { return m_iNumIndices; } 
+	_uint						Get_Stride() { return m_iStride; }
+	D3D11_PRIMITIVE_TOPOLOGY	Get_Topology() const { return m_eTopology; }
+	DXGI_FORMAT					Get_IndexFormat() const { return m_eIndexFormat; }
+
+	ID3D11Buffer*				Get_VertexBuffer() { return m_pVB; }
+	ID3D11Buffer*				Get_IndexBuffer() { return m_pIB; }
+	
+	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
 
 public:
 	virtual HRESULT Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones);

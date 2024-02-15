@@ -166,8 +166,7 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTXANIMMESH;
 
-
-
+	/* 파티클 + 인스턴싱 */
 	typedef struct ENGINE_DLL tagParticle_Rect /* 셰이더 그리는용도 */
 	{
 		static const unsigned int					iNumElements = 7;
@@ -185,6 +184,28 @@ namespace Engine
 		XMFLOAT4		vRight, vUp, vLook, vPosition;
 		XMFLOAT4		vColor;
 	}VTXINSTANCE;
+
+
+	typedef struct ENGINE_DLL tagVertex_Model_Instance
+	{
+		XMFLOAT4			vRight;
+		XMFLOAT4			vUp;
+		XMFLOAT4			vLook;
+		XMFLOAT4			vTranslation;
+	}VTXMODELINSTANCE;
+
+	typedef struct ENGINE_DLL tagVertex_Model_Instance_Declaration
+	{
+		static const unsigned int				iNumElements = 8;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXMODEL_INSTANCE_DECLARATION;
+
+
+	template <typename T>
+	constexpr const T& clamp(const T& value, const T& start, const T& end) 
+	{
+		return (value < start) ? start : (value > end) ? end : value;
+	}
 
 #pragma endregion
 	

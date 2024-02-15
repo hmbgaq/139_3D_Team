@@ -15,7 +15,7 @@ public:
 		z = _pQuatKey.mValue.z;
 		w = _pQuatKey.mValue.w;
 
-		mTime = _pQuatKey.mTime;
+		mTime = (_float)_pQuatKey.mTime;
 	};
 	
 	CMyAIQuatKey(ifstream& is) {

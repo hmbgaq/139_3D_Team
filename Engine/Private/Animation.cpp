@@ -34,7 +34,7 @@ HRESULT CAnimation::Initialize(CMyAIAnimation pAIAnimation, const CModel::BONES&
 	/* 이 애니메이션에서 사용하기위한 뼈(aiNodeAnim,채널)의 정보를 만든다. */
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
-		CChannel* pChannel = CChannel::Create(pAIAnimation.Get_Channel(i), Bones);
+		CChannel* pChannel = CChannel::Create(pAIAnimation.Get_Channel((_uint)i), Bones);
 		if (nullptr == pChannel)
 			return E_FAIL;
 

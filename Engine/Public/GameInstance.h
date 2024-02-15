@@ -65,6 +65,10 @@ public: /* For.Object_Manager */
 	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>*clonevector);
 	class CGameObject* Get_GameObect_Last(_uint iLevelIndex, const wstring & strLayerTag);
 	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
+	class CGameObject* Get_Player();
+	void Set_Player(class CGameObject* _pPlayer);
+
+
 
 	void Fill_PrototypeTags(vector<string>*_vector);
 
@@ -79,6 +83,7 @@ public: /* For.Renderer */
 #ifdef _DEBUG
 	void Set_RenderDebug(_bool _bRenderDebug);
 #endif
+
 
 public: /* For.PipeLine */
 	void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix);

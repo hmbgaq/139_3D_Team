@@ -89,6 +89,11 @@ void CGameObject::Set_WorldMatrix(_float4x4 matrix)
 	m_pTransformCom->Set_WorldMatrix(matrix);
 }
 
+CTransform* CGameObject::Get_Transform()
+{
+	return m_pTransformCom;
+}
+
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComTag, _Inout_ CComponent** ppOut, void * pArg)
 {
 	if (nullptr != Find_Component(strComTag))

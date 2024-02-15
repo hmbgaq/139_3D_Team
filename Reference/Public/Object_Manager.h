@@ -34,6 +34,10 @@ public:
 	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>* clonevector);
 	void Fill_PrototypeTags(vector<string>* _vector);
 
+public:
+	class CGameObject* Get_Player();
+	void Set_Player(CGameObject* _pPlayer);
+
 private:
 	_uint			m_iNumLevels = { 0 };
 
@@ -44,7 +48,7 @@ private:
 
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };
-	class CCharacter* m_pPlayer = { nullptr };
+	class CGameObject* m_pPlayer = { nullptr };
 
 private:
 	class CGameObject* Find_Prototype(const wstring& strPrototypeTag);
