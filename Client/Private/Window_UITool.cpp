@@ -360,11 +360,7 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 	ImGui::Dummy(ImVec2(0, 2.5)); // ฐ๘น้
 	ImGui::Separator();
 
-<<<<<<< HEAD
-	
-=======
 
->>>>>>> Dev2
 	if (ImGui::Button("Create"))
 	{
 		UI2D_Create(fTimeDelta);
@@ -381,11 +377,7 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 
 void CWindow_UITool::UI2D_Create(_float fTimeDelta)
 {
-<<<<<<< HEAD
-	
-=======
 
->>>>>>> Dev2
 }
 
 void CWindow_UITool::UI2D_Delete(_float fTimeDelta)

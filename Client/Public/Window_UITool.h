@@ -86,12 +86,7 @@ private: /* Image_Member */
 	_int						m_iTestNum = 0;
 	vector<IMAGEINFO*>			m_vecTexture;	// 이미지 미리보기
 	vector<PATHINFO*>			m_vecPaths;		// 경로, 파일이름 (프로토타입 파싱가능)
-<<<<<<< HEAD
 	IMAGEINFO*					m_tTexture;
-
-=======
-	IMAGEINFO* m_tTexture;
->>>>>>> Dev2
 
 	// 문자열 벡터를 const char* 배열로 변환
 	std::vector<const char*>	m_vecImagePaths;
