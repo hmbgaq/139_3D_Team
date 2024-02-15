@@ -371,7 +371,8 @@ void CRenderer::BuildOffsetVectors()
 
 		m_vOffsets[6] = _float4(-1.0f, +1.0f, -1.0f, 0.0f);
 		m_vOffsets[7] = _float4(+1.0f, -1.0f, +1.0f, 0.0f);
-
+	}
+	{
 		// 6개의 표면 중심점 벡터
 		m_vOffsets[8] = _float4(-1.0f, 0.0f, 0.0f, 0.0f);
 		m_vOffsets[9] = _float4(+1.0f, 0.0f, 0.0f, 0.0f);
@@ -381,7 +382,8 @@ void CRenderer::BuildOffsetVectors()
 
 		m_vOffsets[12] = _float4(0.0f, 0.0f, -1.0f, 0.0f);
 		m_vOffsets[13] = _float4(0.0f, 0.0f, +1.0f, 0.0f);
-
+	}
+	{
 		m_vOffsets[14] = _float4(-1.0f, 1.0f, 0.0f, 0.0f);
 		m_vOffsets[15] = _float4(1.0f, 1.0f, 0.0f, 0.0f);
 		m_vOffsets[16] = _float4(0.0f, 1.0f, -1.0f, 0.0f);

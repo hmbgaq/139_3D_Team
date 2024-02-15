@@ -88,16 +88,16 @@ HRESULT CInteract_Chain::Render()
 			if (0 == i) /* 체인 */
 			{
 				if (m_bInteractActive)
-					iRenderPass = 3;
+					iRenderPass = ECast(MODEL_SHADER::MODEL_WHITEBLINK);
 				else
-					iRenderPass = 0;
+					iRenderPass = ECast(MODEL_SHADER::MODEL_ORIGIN);
 
 				m_pShaderCom->Begin(iRenderPass);
 				m_pModelCom->Render((_uint)i);
 			}
 			else if (0 != i) /* 나무 */
 			{
-				m_pShaderCom->Begin(0);
+				m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ORIGIN));
 
 				m_pModelCom->Render((_uint)i);
 			}

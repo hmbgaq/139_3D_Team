@@ -126,13 +126,12 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
     return Out;
 }
 /* ------------------- Shadow Pixel Shader(3) -------------------*/
-PS_OUT PS_MAIN_ALPHA_MASK(PS_IN In)
+PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
-    //vector vMask = g_LineMaskTexture.Sample(ClampSampler, float2(In.vTexcoord.x, In.vTexcoord.y + g_fTimeDelta));
     vector vColor;
     
     /* Normal Setting */ 
@@ -140,9 +139,7 @@ PS_OUT PS_MAIN_ALPHA_MASK(PS_IN In)
     float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
     vNormal = mul(vNormal, WorldMatrix);
     
-   // vMtrlDiffuse.a = vMask.g;
-    
-     vColor = lerp(vMtrlDiffuse, mul(vMtrlDiffuse, float4(0.7f, 0.7f, 0.7f, 0.7f)), g_fTimeDelta);
+    vColor = lerp(vMtrlDiffuse, mul(vMtrlDiffuse, float4(0.7f, 0.7f, 0.7f, 0.7f)), g_fTimeDelta);
 
     Out.vDiffuse = vColor;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
@@ -231,7 +228,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
 
-    pass Alpha_Mask // 3
+    pass White_Blink // 3
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -241,7 +238,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_ALPHA_MASK();
+        PixelShader = compile ps_5_0 PS_MAIN_WHITE_BLINK();
     }
 
     pass OutLine // 4
