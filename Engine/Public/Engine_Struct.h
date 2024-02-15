@@ -179,7 +179,7 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTX_PARTICLE_POINT;
 
-	typedef struct
+	typedef struct 
 	{
 		XMFLOAT4		vRight, vUp, vLook, vPosition;
 		XMFLOAT4		vColor;
@@ -223,7 +223,49 @@ namespace Engine
 
 #pragma region ±¸Á¶Ã¼
 
-	typedef struct tagRayDesc
+	typedef struct ENGINE_DLL tag_InstanceDesc
+	{
+		_float3         vRotation;
+		_float3         vScale;
+		_float3			vTranslation;
+		_float			fMaxRange;
+		_float3			vCenter;
+
+		_matrix Get_Matrix() const
+		{
+			_matrix TransformationMatrix;
+			_matrix RotationMatrix, ScaleMatrix;
+
+			_vector vPitchYawRoll;
+			_vector vPosition;
+
+			vPitchYawRoll = XMLoadFloat3(&vRotation);
+			vPosition = XMVectorSetW(XMLoadFloat3(&vTranslation), 1.f);
+
+			RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
+			ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
+			TransformationMatrix = ScaleMatrix * RotationMatrix;
+			TransformationMatrix.r[3] = vPosition;
+
+			return TransformationMatrix;
+		}
+
+		void	Bake_CenterWithMatrix()
+		{
+			_vector vCenterFromVector = XMLoadFloat3(&vCenter);
+			XMStoreFloat3(&vCenter, XMVector3TransformCoord(vCenterFromVector, Get_Matrix()));
+		}
+	}INSTANCE_INFO_DESC;
+
+	typedef struct ENGINE_DLL tagEnvironment_Desc
+	{
+		wstring strModelTag = {};
+		_uint	iNumInstance = { 0 };
+		_uint	iShaderPassIndex = { 1 };
+		vector<INSTANCE_INFO_DESC> vecInstanceInfoDesc;
+	}MAPTOOL_INSTANCE_DESC;
+
+	typedef struct ENGINE_DLL tagRayDesc
 	{
 		XMFLOAT4 vOrigin;
 		XMFLOAT3 vDirection;

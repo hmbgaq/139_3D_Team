@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Interact_Chain.h"
 #include "Model.h"
 #include "Shader.h"

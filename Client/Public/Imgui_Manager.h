@@ -30,6 +30,13 @@ private:
 			 CImgui_Manager();
 	virtual ~CImgui_Manager() = default;
 
+
+public:
+	//!승용 전용
+	//! E는 Environment의 약자
+	vector<wstring>*	Get_NonAnim_E_ModelTag() { return &m_vecNonAnim_E_ModelTag; }
+	vector<wstring>*	Get_Anim_E_ModelTag() { return &m_vecAnim_E_ModelTag; }
+
 public:
 	HRESULT			Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
@@ -49,6 +56,7 @@ private:
 	CImgui_Window*	 Find_Window(IMGUI_WINDOW_TYPE eWindowType);
 	_bool			 Check_ImGui_Rect(); //! 마우스가 ImGui 창안에 있는지 체크
 
+
 private:
 	class CGameInstance*	m_pGameInstance = { nullptr };
 	ID3D11Device*			m_pDevice;
@@ -63,6 +71,9 @@ private:
 	_bool									m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_WINDOW_END];
 	
 
+private:
+	vector<wstring>							m_vecNonAnim_E_ModelTag = {}; //! 승용 논애님 환경 오브젝트 태그
+	vector<wstring>							m_vecAnim_E_ModelTag = {}; //! 승용 애님 환경 오브젝트 태그
 
 public:
 	virtual void	Free();

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+//#define IMGUI_DEFINE_MATH_OPERATORS
 #include "../Imgui/imgui.h"
 #include "../Imgui/imgui_impl_dx11.h"
 #include "../Imgui/imgui_impl_win32.h"
