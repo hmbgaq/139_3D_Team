@@ -8,6 +8,11 @@
 #include "Environment_Instance.h"
 #include "Effect_Instance.h"
 
+#pragma region UI
+#include "UI_MonsterHp.h"
+#include "UI_MonsterHpFrame.h"
+#pragma endregion
+
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -21,6 +26,21 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 	FAILED_CHECK(Ready_LandObjects());
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+
+	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+		return E_FAIL;	
+
+	if (FAILED(Ready_Layer_Effect(TEXT("Layer_Effect"))))
+		return E_FAIL;
+		
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_UI()))
+		return E_FAIL;
+
+	if (FAILED(Ready_LandObjects()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -214,8 +234,54 @@ HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void*
 
 HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ForkLift"))))
+		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_UI()
+{
+
+	if (FAILED(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_UI_Player(TEXT("Layer_UI_Player"), nullptr)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void* pArg)
+{
+	/* 추 후 파싱해서 정보 받아오기 */
+	
+	// TEST
+	CUI_MonsterHp::MONSTER_HP tMonsterHp;
+	CUI_MonsterHpFrame::MONSTER_FRAME tMonsterFrame;
+	
+	tMonsterHp.fX = 50.f;
+	tMonsterHp.fY = 50.f;
+	tMonsterHp.fSizeX = 30.f;
+	tMonsterHp.fSizeY = 30.f;
+
+	tMonsterFrame.fX = 500.f;
+	tMonsterFrame.fY = 300.f;
+	tMonsterFrame.fSizeX = 100.f;
+	tMonsterFrame.fSizeY = 100.f;
+	tMonsterFrame.eMonsterType = CUI_MonsterHpFrame::SMALL;
+
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_MonsterHpFrame"), &tMonsterFrame)))
+		return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_MonsterHp"), &tMonsterHp)))
+	//	return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_UI_Player(const wstring& strLayerTag, void* pArg)
+{
 	return S_OK;
 }
 

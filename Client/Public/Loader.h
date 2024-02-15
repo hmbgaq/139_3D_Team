@@ -32,6 +32,8 @@ public:
 	HRESULT Loading_For_GamePlay_Level();
 	HRESULT	Loading_For_Tool_Level();
 
+
+
 private:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };

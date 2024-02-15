@@ -214,8 +214,11 @@
     <Filter Include="01.Utility\96.Utility\SMath">
       <UniqueIdentifier>{fcc5c7a4-44f3-4248-801a-56ba55cdd5a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\96.Utility\Json">
-      <UniqueIdentifier>{77f2f73f-4aaf-4a32-a6b2-760db060bdf7}</UniqueIdentifier>
+	<Filter Include="01.Utility\96.Utility\Json">
+	  <UniqueIdentifier>{77f2f73f-4aaf-4a32-a6b2-760db060bdf7}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="01.Utility\02.GameObjects\UI">
+      <UniqueIdentifier>{aa7f815b-72c0-476b-a0ce-5d21b70e98a8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -444,8 +447,11 @@
     <ClInclude Include="..\Public\Json_Utility.h">
       <Filter>01.Utility\96.Utility\Json</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CustomFont.h">
-      <Filter>01.Utility\05.Fonts</Filter>
+	<ClInclude Include="..\Public\CustomFont.h">
+	  <Filter>01.Utility\05.Fonts</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\UI_Base.h">
+      <Filter>01.Utility\02.GameObjects\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -623,8 +629,11 @@
     <ClCompile Include="..\Private\Json_Utility.cpp">
       <Filter>01.Utility\96.Utility\Json</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CustomFont.cpp">
-      <Filter>01.Utility\05.Fonts</Filter>
+	<ClCompile Include="..\Private\CustomFont.cpp">
+	  <Filter>01.Utility\05.Fonts</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\UI_Base.cpp">
+      <Filter>01.Utility\02.GameObjects\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
