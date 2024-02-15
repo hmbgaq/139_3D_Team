@@ -133,6 +133,20 @@ list<class CGameObject*>* CObject_Manager::Get_GameObjects(_uint iLevelIndex, co
 	return layer->Get_GameObjects();
 }
 
+void CObject_Manager::Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>* clonevector)
+{
+	for (auto& item : m_pLayers[iLevelIndex])
+	{
+
+		list<CGameObject*> pGameObjects = *item.second->Get_GameObjects();
+		for (auto& pGameObject : pGameObjects)
+		{
+			clonevector->push_back(pGameObject);
+		}
+	}
+	//_bool test = false;
+}
+
 void CObject_Manager::Fill_PrototypeTags(vector<string>* _vector)
 {
 	for (auto& item : m_Prototypes)
