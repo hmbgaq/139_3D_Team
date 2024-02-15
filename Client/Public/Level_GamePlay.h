@@ -27,6 +27,11 @@ private:
 	HRESULT Ready_Layer_Building(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_Test(const wstring& strLayerTag);
 	
+private: /* UI */
+	HRESULT Ready_UI();
+	HRESULT Ready_Layer_UI_Monster(const wstring& strLayerTag, void* pArg);
+	HRESULT Ready_Layer_UI_Player(const wstring& strLayerTag, void* pArg);
+	
 private:
 	_int			TempLightNumber = 0;
 

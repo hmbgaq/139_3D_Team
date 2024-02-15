@@ -41,6 +41,7 @@ HRESULT CRenderer::Initialize()
 	/* ssao용도 - hqao+ 랑 고민중 */
 	FAILED_CHECK(Ready_SSAO());
 
+
 	return S_OK;
 }
 
@@ -254,11 +255,164 @@ HRESULT CRenderer::Ready_DebugRender()
 
 HRESULT CRenderer::Ready_SSAO()
 {
+	/* Quad 준비 */
+	FAILED_CHECK(Initialize_ScreenQuad());
+
+	/* 절두체 갱신 */
+	BuildFrustumFarCorners();
+
+	BuildOffsetVectors();
+
+	//m_pRandomVectorTexture = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Texture/ETC/RandomTexture.png"));
+	//if (nullptr == m_pRandomVectorTexture)
+	//	return E_FAIL;
 
 	return S_OK;
 }
 
+HRESULT CRenderer::Initialize_ScreenQuad()
+{
+	m_iQuadVerCount = 4;
+	m_iQuadIndexCount = 6;
 
+	QuadVertex* pVertices = new QuadVertex[m_iQuadVerCount];
+	NULL_CHECK_RETURN(pVertices, E_FAIL);
+
+	_ulong* pIndices = new _ulong[m_iQuadIndexCount];
+	NULL_CHECK_RETURN(pIndices, E_FAIL);
+
+	pVertices[0].pos = _float3(-0.5f, -0.5f, 0.0f);
+	pVertices[1].pos = _float3(-0.5f, +0.5f, 0.0f);
+	pVertices[2].pos = _float3(+0.5f, +0.5f, 0.0f);
+	pVertices[3].pos = _float3(+0.5f, -0.5f, 0.0f);
+
+	pVertices[0].ToFarPlaneIndex = _float3(0.0f, 0.0f, 0.0f);
+	pVertices[1].ToFarPlaneIndex = _float3(1.0f, 0.0f, 0.0f);
+	pVertices[2].ToFarPlaneIndex = _float3(2.0f, 0.0f, 0.0f);
+	pVertices[3].ToFarPlaneIndex = _float3(3.0f, 0.0f, 0.0f);
+
+	pVertices[0].tex = _float2(0.0f, 1.0f);
+	pVertices[1].tex = _float2(0.0f, 0.0f);
+	pVertices[2].tex = _float2(1.0f, 0.0f);
+	pVertices[3].tex = _float2(1.0f, 1.0f);
+
+	pIndices[0] = 0; pIndices[1] = 1; pIndices[2] = 2;
+	pIndices[3] = 0; pIndices[4] = 2; pIndices[5] = 3;
+
+	D3D11_BUFFER_DESC vertexBufferDesc;
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = sizeof(QuadVertex) * m_iQuadVerCount;
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA vertexData;
+	vertexData.pSysMem = pVertices;
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+	FAILED_CHECK(m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexData, &m_pQuadVertexBuffer));
+
+	D3D11_BUFFER_DESC  indexBufferDesc;
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth = sizeof(_ulong) * m_iQuadIndexCount;
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA indexData;
+	indexData.pSysMem = pIndices;
+	indexData.SysMemPitch = 0;
+	indexData.SysMemSlicePitch = 0;
+	FAILED_CHECK(m_pDevice->CreateBuffer(&indexBufferDesc, &indexData, &m_pQuadIndexBuffer));
+
+	Safe_Delete_Array<QuadVertex*>(pVertices);
+	Safe_Delete_Array<_ulong*>(pIndices);
+
+	return S_OK;
+}
+
+void CRenderer::BuildFrustumFarCorners()
+{
+	_float4 CamSetting = m_pGameInstance->Get_CamSetting();
+
+	_float fNest = CamSetting.x;
+	_float fFar = CamSetting.y;   
+	_float fFovY = CamSetting.z; 
+	_float fAspect = CamSetting.w; 
+
+	_float fHalfHeight = fFar * tanf(0.5f * fFovY);
+	_float fHalfWidth = fAspect * fHalfHeight;
+
+	m_vFrustumFarCorner[0] = _float4(-fHalfWidth, -fHalfHeight, fFar, 0.0f);
+	m_vFrustumFarCorner[1] = _float4(-fHalfWidth, +fHalfHeight, fFar, 0.0f);
+	m_vFrustumFarCorner[2] = _float4(+fHalfWidth, +fHalfHeight, fFar, 0.0f);
+	m_vFrustumFarCorner[3] = _float4(+fHalfWidth, -fHalfHeight, fFar, 0.0f);
+}
+
+void CRenderer::BuildOffsetVectors()
+{
+	// 14개의 균일하게 분포된 벡터로 시작한다.
+	// 큐브의 모서리 점 8개를 선택하고 큐브의 각 면을 따라 중심점을 선택한다.
+	// 항상 다른 쪽 면을 기준으로 이 점을 번갈아 사용한다.
+	// 이 방법은 14개 미만의 샘플링 포인트를 선택할 때에도 벡터를 균등하게 분산시킬 수 있다.
+
+	{
+		// 8개의 큐브 코너 벡터
+		m_vOffsets[0] = _float4(+1.0f, +1.0f, +1.0f, 0.0f);
+		m_vOffsets[1] = _float4(-1.0f, -1.0f, -1.0f, 0.0f);
+
+		m_vOffsets[2] = _float4(-1.0f, +1.0f, +1.0f, 0.0f);
+		m_vOffsets[3] = _float4(+1.0f, -1.0f, -1.0f, 0.0f);
+
+		m_vOffsets[4] = _float4(+1.0f, +1.0f, -1.0f, 0.0f);
+		m_vOffsets[5] = _float4(-1.0f, -1.0f, +1.0f, 0.0f);
+
+		m_vOffsets[6] = _float4(-1.0f, +1.0f, -1.0f, 0.0f);
+		m_vOffsets[7] = _float4(+1.0f, -1.0f, +1.0f, 0.0f);
+
+		// 6개의 표면 중심점 벡터
+		m_vOffsets[8] = _float4(-1.0f, 0.0f, 0.0f, 0.0f);
+		m_vOffsets[9] = _float4(+1.0f, 0.0f, 0.0f, 0.0f);
+
+		m_vOffsets[10] = _float4(0.0f, -1.0f, 0.0f, 0.0f);
+		m_vOffsets[11] = _float4(0.0f, +1.0f, 0.0f, 0.0f);
+
+		m_vOffsets[12] = _float4(0.0f, 0.0f, -1.0f, 0.0f);
+		m_vOffsets[13] = _float4(0.0f, 0.0f, +1.0f, 0.0f);
+
+		m_vOffsets[14] = _float4(-1.0f, 1.0f, 0.0f, 0.0f);
+		m_vOffsets[15] = _float4(1.0f, 1.0f, 0.0f, 0.0f);
+		m_vOffsets[16] = _float4(0.0f, 1.0f, -1.0f, 0.0f);
+		m_vOffsets[17] = _float4(0.0f, 1.0f, 1.0f, 0.0f);
+
+		m_vOffsets[18] = _float4(1.0f, 0.0f, 1.0f, 0.0f);
+		m_vOffsets[19] = _float4(-1.0f, 0.0f, 1.0f, 0.0f);
+		m_vOffsets[20] = _float4(-1.0f, 0.0f, -1.0f, 0.0f);
+		m_vOffsets[21] = _float4(1.0f, 0.0f, -1.0f, 0.0f);
+
+		m_vOffsets[22] = _float4(-1.0f, -1.0f, 0.0f, 0.0f);
+		m_vOffsets[23] = _float4(1.0f, -1.0f, 0.0f, 0.0f);
+		m_vOffsets[24] = _float4(0.0f, -1.0f, -1.0f, 0.0f);
+		m_vOffsets[25] = _float4(0.0f, -1.0f, 1.0f, 0.0f);
+	}
+
+	// 난수 데이터 초기화
+	mt19937 randEngine;
+	randEngine.seed(std::random_device()());
+	uniform_real_distribution<_float> randF(0.25f, 1.0f);
+	for (_uint i = 0; i < 26; ++i)
+	{
+		// [0.25, 1.0] 사이의 임의의 벡터를 만든다.
+		_float s = randF(randEngine);
+
+		/*m_vOffsets[i].Normalize();
+		Vec4 v = s * m_vOffsets[i];
+		m_vOffsets[i] = v;*/
+	}
+
+}
 HRESULT CRenderer::Render_Priority()
 {
 	for (auto& pGameObject : m_RenderObjects[RENDER_PRIORITY])
@@ -422,7 +576,7 @@ HRESULT CRenderer::Render_Deferred()
 	_float4x4		ViewMatrix, ProjMatrix;
 
 	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), 1280.0f / 720.0f, 0.1f, 300.f));
+	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), 1280.0f / 720.0f, 0.1f, m_pGameInstance->Get_CamFar()));
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_LightViewMatrix", &ViewMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_LightProjMatrix", &ProjMatrix));

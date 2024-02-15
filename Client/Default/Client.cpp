@@ -7,7 +7,7 @@
 #include "Client.h"
 #include "MainApp.h"
 #include "GameInstance.h"
-
+#define _CRTDBG_MAP_ALLOC
 
 #define MAX_LOADSTRING 100
 
@@ -25,11 +25,31 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
+#ifdef _DEBUG
+void D3DMemoryLeakCheck()
+{
+    HMODULE dxgidebugdll = GetModuleHandleW(L"dxgidebug.dll");
+    decltype(&DXGIGetDebugInterface) GetDebugInterface = reinterpret_cast<decltype(&DXGIGetDebugInterface)>(GetProcAddress(dxgidebugdll, "DXGIGetDebugInterface"));
+
+    IDXGIDebug* debug;
+
+    GetDebugInterface(IID_PPV_ARGS(&debug));
+
+    OutputDebugStringW(L">>>>>>>>>>>>>>>>>>>> Direct3D Object ref count 메모리 누수 체크 <<<<<<<<<<<<<<<<<<<<\r\n");
+    debug->ReportLiveObjects(DXGI_DEBUG_D3D11, DXGI_DEBUG_RLO_DETAIL);
+    OutputDebugStringW(L">>>>>>>>>>>>>>>>>>>> 반환되지 않은 IUnknown 객체가 있을경우 위에 나타납니다. <<<<<<<<<<<<<<<<<<<<\r\n");
+
+    debug->Release();
+}
+#endif
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
+
+
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
@@ -116,9 +136,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	if (0 != Safe_Release(pMainApp))
 		MSG_BOX("Memory Leak Detected");
 
-#ifdef  _DEBUG
+#ifdef _DEBUG
 	//system("pause");
 	fclose(ConsoleStream);
+    D3DMemoryLeakCheck();
 	//_CrtDumpMemoryLeaks()6;
 #endif //  _DEBUG
 

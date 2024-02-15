@@ -12,10 +12,10 @@ END
 
 BEGIN(Client)
 
-class CEnvironment_Instance final : public CLandObject
+class CEnvironment_Instance final : public CGameObject
 {
 public:
-	typedef struct tagEnvironment_Desc : public CLandObject::LANDOBJECT_DESC
+	typedef struct tagEnvironment_Desc : public CGameObject::GAMEOBJECT_DESC
 	{
 		wstring strModelTag = {};
 		_uint	iNumInstance = { 0 };

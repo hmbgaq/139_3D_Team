@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Instancing abstract : public CVIBuffer
 {
 public:
-	typedef struct
+	typedef struct tagInstancing_Desc
 	{
 		_float3		vCenter;
 

@@ -193,19 +193,34 @@
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Model_Instance\Environment">
       <UniqueIdentifier>{aaed5d8b-f893-444b-8bfb-d8ca8b744249}</UniqueIdentifier>
     </Filter>
-	<Filter Include="01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect">
-	 <UniqueIdentifier>{8bcbac06-d32d-418b-977c-b6a675263715}</UniqueIdentifier>
-	</Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect">
+      <UniqueIdentifier>{8bcbac06-d32d-418b-977c-b6a675263715}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect">
+      <UniqueIdentifier>{8bcbac06-d32d-418b-977c-b6a675263715}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01.Utility\97. PhysX">
       <UniqueIdentifier>{619f889e-6947-4fcb-98d7-0c03f0861054}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\02.GameObjects\0. Character">
+    <Filter Include="01.Utility\96.Utility">
+      <UniqueIdentifier>{d544db3e-75c4-46f7-9cc6-7e6ed4edb7e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Utility\SMath">
+      <UniqueIdentifier>{fcc5c7a4-44f3-4248-801a-56ba55cdd5a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Utility\Json">
+      <UniqueIdentifier>{77f2f73f-4aaf-4a32-a6b2-760db060bdf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObjects\UI">
+      <UniqueIdentifier>{aa7f815b-72c0-476b-a0ce-5d21b70e98a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObjects\Character">
       <UniqueIdentifier>{8f2e8ed0-9a67-47d1-ab26-99617d3574ee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\02.GameObjects\0. Character\Weapon">
+    <Filter Include="01.Utility\02.GameObjects\Character\Weapon">
       <UniqueIdentifier>{4e3e94c0-ea05-4a60-a675-01503ff0c068}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\02.GameObjects\0. Character\Body">
+    <Filter Include="01.Utility\02.GameObjects\Character\Body">
       <UniqueIdentifier>{502f0abd-2bb1-4d2c-9fd0-2683ff5bc917}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\96.Utility">
@@ -216,6 +231,9 @@
     </Filter>
     <Filter Include="01.Utility\96.Utility\Json">
       <UniqueIdentifier>{77f2f73f-4aaf-4a32-a6b2-760db060bdf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Terrain\Tool">
+      <UniqueIdentifier>{b2b32e5c-9d17-4c34-abe4-330f091f1a02}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -342,9 +360,6 @@
     <ClInclude Include="..\Public\DebugDraw.h">
       <Filter>01.Utility\03.Components\07.Collider\DebugDraw</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\CustomFont.h">
-      <Filter>01.Utility\05.Fonts</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Font_Manager.h">
       <Filter>01.Utility\05.Fonts\Manager</Filter>
     </ClInclude>
@@ -426,26 +441,44 @@
     <ClInclude Include="..\Public\VIBuffer_Environment_Model_Instance.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Environment</Filter>
     </ClInclude>
-	<ClInclude Include="..\Public\VIBuffer_Effect_Model_Instance.h">
-	 <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
-	</ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Effect_Model_Instance.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Effect_Model_Instance.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\PhysXManager.h">
       <Filter>01.Utility\97. PhysX</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Character.h">
-      <Filter>01.Utility\02.GameObjects\0. Character</Filter>
+      <Filter>01.Utility\02.GameObjects\Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body.h">
-      <Filter>01.Utility\02.GameObjects\0. Character\Body</Filter>
+      <Filter>01.Utility\02.GameObjects\Character\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon.h">
-      <Filter>01.Utility\02.GameObjects\0. Character\Weapon</Filter>
+      <Filter>01.Utility\02.GameObjects\Character\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SMath.h">
       <Filter>01.Utility\96.Utility\SMath</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Json_Utility.h">
       <Filter>01.Utility\96.Utility\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomFont.h">
+      <Filter>01.Utility\05.Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Base.h">
+      <Filter>01.Utility\02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SMath.h">
+      <Filter>01.Utility\96.Utility\SMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Json_Utility.h">
+      <Filter>01.Utility\96.Utility\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Dynamic_Terrain.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Terrain\Tool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -557,9 +590,6 @@
     <ClCompile Include="..\Private\DebugDraw.cpp">
       <Filter>01.Utility\03.Components\07.Collider\DebugDraw</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\CustomFont.cpp">
-      <Filter>01.Utility\05.Fonts</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Font_Manager.cpp">
       <Filter>01.Utility\05.Fonts\Manager</Filter>
     </ClCompile>
@@ -605,26 +635,44 @@
     <ClCompile Include="..\Private\VIBuffer_Environment_Model_Instance.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Environment</Filter>
     </ClCompile>
-	<ClCompile Include="..\Private\VIBuffer_Effect_Model_Instance.cpp">
-	  <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
-	</ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Effect_Model_Instance.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Effect_Model_Instance.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\PhysXManager.cpp">
       <Filter>01.Utility\97. PhysX</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon.cpp">
-      <Filter>01.Utility\02.GameObjects\0. Character\Weapon</Filter>
+      <Filter>01.Utility\02.GameObjects\Character\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body.cpp">
-      <Filter>01.Utility\02.GameObjects\0. Character\Body</Filter>
+      <Filter>01.Utility\02.GameObjects\Character\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Character.cpp">
-      <Filter>01.Utility\02.GameObjects\0. Character</Filter>
+      <Filter>01.Utility\02.GameObjects\Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SMath.cpp">
       <Filter>01.Utility\96.Utility\SMath</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Json_Utility.cpp">
       <Filter>01.Utility\96.Utility\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomFont.cpp">
+      <Filter>01.Utility\05.Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Base.cpp">
+      <Filter>01.Utility\02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SMath.cpp">
+      <Filter>01.Utility\96.Utility\SMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Json_Utility.cpp">
+      <Filter>01.Utility\96.Utility\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Dynamic_Terrain.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Terrain\Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

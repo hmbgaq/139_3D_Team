@@ -69,6 +69,60 @@ HRESULT CMainApp::Ready_Font()
 	return S_OK;
 }
 
+HRESULT CMainApp::Ready_UITexture()
+{
+	/* For.Enemy_Small */
+	if (FAILED(Ready_Enemy_Small()))
+		return E_FAIL;
+
+	/* For.Enemy_Mid */
+	if (FAILED(Ready_Enemy_Mid()))
+		return E_FAIL;
+
+	/* For.Enemy_Large */
+	if (FAILED(Ready_Enemy_Large()))
+		return E_FAIL;
+
+	/* For.Enemy_Side */
+	if (FAILED(Ready_Enemy_Side()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Enemy_Small()
+{
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpBarSmall"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Small/ui_enemybar_smal_shard_%d.png"), 4)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameSmall"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Small/ui_enemy_hp_big_%d.png"), 2)));
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Enemy_Mid()
+{
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpBarMid"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Mid/ui_enemybar_middle_shard_%d.png"), 4)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameMid"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Mid/ui_enemy_hp_mid_%d.png"), 3)));
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Enemy_Large()
+{
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpBarLarge"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Large/ui_enemybar_big_shard_%d.png"), 4)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameLarge"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Large/ui_large_enemy_hp_big_%d.png"), 4)));
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Enemy_Side()
+{
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SideEnemyHpFrameSide"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Side/ui_enemy_hp_small_%d.png"), 2)));
+
+	return S_OK;
+}
+
 HRESULT CMainApp::Open_Level(LEVEL eStartLevelID)
 {
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
@@ -86,6 +140,14 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 
 	/* For.Prototype_Component_Shader_VtxPosTex*/
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPosTex"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)));
+	//
+	/* For.Prototype_Component_Shader_UI */ // + SH_Add
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_UI.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)));
+	//
+	//
+	/* For.Ready_UITexture */ // + SH_Add
+	if (FAILED(Ready_UITexture()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -104,7 +166,6 @@ HRESULT CMainApp::Ready_Gara()
 	/*m_pContext->RSSetState();
 	m_pContext->OMSetDepthStencilState();
 	m_pContext->OMSetBlendState();*/
-
 
 	/* 텍스쳐를 생성해보자. */
 	ID3D11Texture2D*		pTexture2D = { nullptr };
@@ -138,7 +199,6 @@ HRESULT CMainApp::Ready_Gara()
 			pPixels[iIndex] = D3DCOLOR_ARGB(255, 0, 0, 0);
 		}
 	}
-
 
 	InitialData.pSysMem = pPixels;
 	InitialData.SysMemPitch = TextureDesc.Width * 4;

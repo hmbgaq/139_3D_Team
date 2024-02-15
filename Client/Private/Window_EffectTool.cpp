@@ -94,7 +94,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 			
 
 				/* 파티클 리스트 & 현재 파티클 선택 */
-				if (ImGui::ListBox(" Particle List ", &m_iCurParticleIndex, m_szParticleNames, m_pParticles.size(), 4))
+				if (ImGui::ListBox(" Particle List ", &m_iCurParticleIndex, m_szParticleNames, _int(m_pParticles.size()), 4))
 				{
 					wstring strCurName = CharToWstring(m_szParticleNames[m_iCurParticleIndex]);
 					m_pCurParticle = m_pParticles.find(strCurName)->second;
@@ -391,7 +391,7 @@ HRESULT CWindow_EffectTool::Create_NewParticle()
 	if (FAILED(Ready_Layer_Particle(TEXT("Layer_Particle"))))
 		return E_FAIL;
 
-	m_iCurParticleIndex = m_pParticles.size();
+	m_iCurParticleIndex = _int(m_pParticles.size());
 
 	/* 문자열 초기화 */
 	if (nullptr != m_szParticleNames)

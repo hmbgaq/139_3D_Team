@@ -27,10 +27,10 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;	
 
 protected:
-	_float				m_fFovy = { 0.f };
-	_float				m_fAspect = { 0.0f };
-	_float				m_fNear = { 0.0f };
-	_float				m_fFar = { 0.0f };
+	_float	m_fFovy			= { 0.f };
+	_float	m_fAspect		= { 0.0f };
+	_float	m_fNear			= { 0.0f };
+	_float	m_fFar			= { 0.0f };
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

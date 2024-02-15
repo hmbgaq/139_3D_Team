@@ -111,6 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../Public/;../Public/PhysX/;../Default/</AdditionalIncludeDirectories>
       <ConformanceMode>false</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -207,7 +208,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\public\Collider.h" />
     <ClInclude Include="..\public\Component.h" />
     <ClInclude Include="..\public\Component_Manager.h" />
-    <ClInclude Include="..\public\CustomFont.h" />
+    <ClInclude Include="..\Public\CustomFont.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
     <ClInclude Include="..\Public\Engine_Enum.h" />
@@ -255,9 +256,11 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\Public\Timer.h" />
     <ClInclude Include="..\Public\Timer_Manager.h" />
     <ClInclude Include="..\public\Transform.h" />
+    <ClInclude Include="..\Public\UI_Base.h" />
     <ClInclude Include="..\public\VIBuffer.h" />
     <ClInclude Include="..\Public\VIBuffer_Cell.h" />
     <ClInclude Include="..\Public\VIBuffer_Cube.h" />
+    <ClInclude Include="..\Public\VIBuffer_Dynamic_Terrain.h" />
     <ClInclude Include="..\Public\VIBuffer_Effect_Model_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Environment_Model_Instance.h" />
     <ClInclude Include="..\public\VIBuffer_Instancing.h" />
@@ -285,7 +288,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\private\Collider.cpp" />
     <ClCompile Include="..\private\Component.cpp" />
     <ClCompile Include="..\private\Component_Manager.cpp" />
-    <ClCompile Include="..\private\CustomFont.cpp" />
+    <ClCompile Include="..\Private\CustomFont.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\Private\Engine_Struct.cpp" />
     <ClCompile Include="..\private\Font_Manager.cpp" />
@@ -316,9 +319,11 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\Private\Timer.cpp" />
     <ClCompile Include="..\Private\Timer_Manager.cpp" />
     <ClCompile Include="..\private\Transform.cpp" />
+    <ClCompile Include="..\Private\UI_Base.cpp" />
     <ClCompile Include="..\private\VIBuffer.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Dynamic_Terrain.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Effect_Model_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Environment_Model_Instance.cpp" />
     <ClCompile Include="..\private\VIBuffer_Instancing.cpp" />

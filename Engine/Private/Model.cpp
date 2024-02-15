@@ -278,7 +278,7 @@ void CModel::Write_Names(const string& strModelFilePath)
 
 			_splitpath_s(strModelFilePath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
 
-			string strPath = pAIMaterial.Get_Textures(j);
+			string strPath = pAIMaterial.Get_Textures((_uint)j);
 			if (strPath == "")
 				continue;
 

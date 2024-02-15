@@ -16,6 +16,7 @@ namespace Engine
 
 	typedef		signed int					_int;
 	typedef		unsigned int				_uint;
+
 	typedef		XMINT2						_int2;
 
 	typedef		signed long					_long;
@@ -26,7 +27,6 @@ namespace Engine
 
 	typedef		float						_float;
 	typedef		double						_double;	
-
 
 	///* 저장용 데이터 타입. */
 	//typedef		XMFLOAT4X4					_float4x4;
@@ -47,6 +47,31 @@ namespace Engine
 	//typedef		GXMVECTOR					_gvector;
 	//typedef		HXMVECTOR					_hvector;
 	//typedef		CXMVECTOR					_cvector;
+
+	typedef struct tagInt32
+	{
+		tagInt32(unsigned int _ix, unsigned int _iy, unsigned int _iz)
+			: ix(_ix)
+			, iy(_iy)
+			, iz(_iz) {	}
+
+		tagInt32()
+			: ix(0)
+			, iy(0)
+			, iz(0) {	}
+
+		unsigned int ix, iy, iz;
+	} _uint3;
+
+	typedef struct tagFaceIndices32
+	{
+		_ulong _1, _2, _3;
+	}FACEINDICES32;
+
+	typedef struct tagFaceIndices16
+	{
+		unsigned short _1, _2, _3;
+	}FACEINDICES16;
 
 	typedef struct ENGINE_DLL float2 : public DirectX::XMFLOAT2
 	{

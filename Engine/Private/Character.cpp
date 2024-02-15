@@ -55,12 +55,6 @@ void CCharacter::Tick(_float fTimeDelta)
 		if (nullptr != Pair.second)
 			Pair.second->Tick(fTimeDelta);
 	}
-
-	//if (m_bIsDissolve)
-	//	m_fDissolveTime += fTimeDelta;
-
-	//if (1.3f <= m_fDissolveTime)
-	//	m_bisdead = true;
 }
 
 void CCharacter::Late_Tick(_float fTimeDelta)
@@ -77,11 +71,6 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 		return;
 
 	m_pTransformCom->Add_RootBone_Position(m_pBody->Get_MovePos(), m_pNavigationCom);
-
-	//if (m_fInvincibleTime > 0.f)
-	//{
-	//	m_fInvincibleTime -= fTimeDelta;
-	//}
 
 #ifdef _DEBUG
 	m_pGameInstance->Add_DebugRender(m_pNavigationCom);
@@ -216,7 +205,6 @@ void CCharacter::Go_Backward_L45(_float fTimeDelta)
 {
 	m_pTransformCom->Go_Backward_L45(fTimeDelta, m_pNavigationCom);
 }
-
 void CCharacter::Go_Backward_R45(_float fTimeDelta)
 {
 	m_pTransformCom->Go_Backward_R45(fTimeDelta, m_pNavigationCom);

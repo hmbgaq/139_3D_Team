@@ -5,13 +5,13 @@
 #include "VIBuffer_Environment_Model_Instance.h"
 
 CEnvironment_Instance::CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CLandObject(pDevice, pContext)
+	: CGameObject(pDevice, pContext)
 {
 
 }
 
 CEnvironment_Instance::CEnvironment_Instance(const CEnvironment_Instance & rhs)
-	: CLandObject(rhs)
+	: CGameObject(rhs)
 {
 }
 
@@ -113,7 +113,7 @@ HRESULT CEnvironment_Instance::Render()
 		
 
 		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
-		m_pInstanceModelCom->Render(i);
+		m_pInstanceModelCom->Render((_uint)i);
 
 		//m_pModelCom->Render(i);
 	}
