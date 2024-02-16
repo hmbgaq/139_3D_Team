@@ -66,7 +66,9 @@ public: /* ==================== UI ===================== */
 	std::vector<unsigned char>	UI_LoadImage(const std::string& filename, int& width, int& height, int& channels);
 	void						ShowImagePreview(const std::vector<unsigned char>& imageData, int width, int height);
 	bool						LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height);
+	HRESULT						Update_Pos();
 
+	
 public: /* ================= Function ================= */
 	// string타입을 받는 벡터 컨테이너를 char*타입을 받는 벡터 컨테이너로 변환 해주는 함수
 	std::vector<const char*> ConvertStringVectorToCharArray(const std::vector<std::string>& stringVector);
@@ -106,6 +108,8 @@ public: /* Image */
 private: /* Member */
 	UI_DESC						m_tUI_Info;
 
+private: /* ==================== Mouse ==================== */
+
 
 private: /* Image_Member */
 	_int						m_My_Image_Width = 100;
@@ -114,7 +118,7 @@ private: /* Image_Member */
 	_int						m_iTestNum = 0;
 	vector<IMAGEINFO*>			m_vecTexture;	// 이미지 미리보기
 	vector<PATHINFO*>			m_vecPaths;		// 경로, 파일이름 (프로토타입 파싱가능)
-	IMAGEINFO*					m_tTexture;
+	IMAGEINFO* m_tTexture;
 
 	// 문자열 벡터를 const char* 배열로 변환
 	std::vector<const char*>	m_vecImagePaths;

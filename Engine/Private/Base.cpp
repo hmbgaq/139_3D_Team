@@ -25,4 +25,14 @@ _ulong CBase::Release()
 		return m_dwRefCnt--;
 }
 
+void CBase::Set_Enable(_bool _Enable)
+{
+	m_bEnable = _Enable;
+}
+
+_bool CBase::Get_Enable()
+{
+	return m_bEnable;
+}
+
 

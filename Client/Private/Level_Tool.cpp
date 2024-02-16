@@ -90,6 +90,8 @@ HRESULT CLevel_Tool::Ready_LightDesc()
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
 		return E_FAIL;
+
+	return S_OK;
 }
 
 

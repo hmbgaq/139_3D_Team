@@ -35,17 +35,35 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 public:
 	void Update(_fmatrix TransformMatrix);
-	_bool Collision(CCollider* pTargetCollider);
+	_bool Is_Collision(CCollider* pTargetCollider);
+	void Collision(CCollider* pTargetCollider);
+	void End_CollisionCheck();
+
+
+public:
+	virtual void			OnCollisionEnter(CCollider* other);
+	virtual void			OnCollisionStay(CCollider* other);
+	virtual void			OnCollisionExit(CCollider* other);
+
+public:
+	virtual void Set_Enable(_bool _Enable) override;
 
 #ifdef _DEBUG
 public:
 	virtual HRESULT Render();
 #endif
 
-private:
-	TYPE					m_eType = { TYPE_END };
-	class CBounding*		m_pBounding = { nullptr };
-	_bool					m_isCollision = { false };
+	TYPE							m_eType = { TYPE_END };
+	class CBounding*				m_pBounding = { nullptr };
+	_bool							m_isCollision = { false };
+
+	list<CCollider*>				m_PreOtherColliders;
+	list<CCollider*>				m_OtherColliders;
+
+	_uint							m_iLayer = { 0 };
+
+	
+
 
 #ifdef _DEBUG
 private:

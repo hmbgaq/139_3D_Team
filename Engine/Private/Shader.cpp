@@ -1,4 +1,4 @@
-#include "..\Public\Shader.h"
+#include "Shader.h"
 
 CShader::CShader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)

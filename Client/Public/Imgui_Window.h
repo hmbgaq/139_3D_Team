@@ -76,7 +76,6 @@ protected:
 	_float				m_fWindowAlpha = 1.f;
 	_float				m_fTimeDelta = 0.f;
 
-
 	ID3D11Device*		m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	CGameInstance*		m_pGameInstance = { nullptr };

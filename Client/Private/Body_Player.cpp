@@ -108,6 +108,7 @@ HRESULT CBody_Player::Ready_Components()
 
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
+	BoundingDesc.iLayer = (_uint)COLLISION_LAYER::PLAYER;
 	BoundingDesc.fRadius = 0.5f;
 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
 

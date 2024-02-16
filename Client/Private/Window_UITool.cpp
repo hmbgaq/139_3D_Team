@@ -26,7 +26,7 @@ HRESULT CWindow_UITool::Initialize()
 	//LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures"))));
 
 	// 이미지 로드 Test
-	_int iSize = m_vecPaths.size();
+	_int iSize = (_int)m_vecPaths.size();
 	for (_int i = 0; i < iSize; i++)
 	{
 		IMAGEINFO* tTexture = new IMAGEINFO;
@@ -181,8 +181,11 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 		ImGui::InputFloat("PositionX", &vPosition.m128_f32[0]);
 		ImGui::InputFloat("PositionY", &vPosition.m128_f32[1]);
 		ImGui::InputFloat("PositionZ", &vPosition.m128_f32[2]);
-	}
 
+		Set_GuizmoCamView();
+		Set_GuizmoCamProj();
+		Set_Guizmo(m_vecUIObject[Object_idx]);
+	}
 
 	///* Test Value */
 	//m_tUI_Info.strName = "Test UI List";
@@ -202,6 +205,24 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 
 	//	ImGui::TreePop();
 	//}
+}
+
+/* Mouse */
+HRESULT CWindow_UITool::Update_Pos()
+{
+	//POINT cursorPos;
+	//GetCursorPos(&cursorPos);
+
+	//m_fX = cursorPos.x;
+	//m_fY = cursorPos.y;
+
+	//m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+	//XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	//XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
+
+	return S_OK;
 }
 
 void CWindow_UITool::UI_ToolTip(_float fTimeDelta)
@@ -472,7 +493,6 @@ void CWindow_UITool::LoadImg(const _tchar* folderPath)
 			}
 		} while (FindNextFile(hFind, &findData));
 
-		
 		FindClose(hFind);
 	}
 }
@@ -576,7 +596,7 @@ void CWindow_UITool::Load_Desc()
 // ImGui를 사용하여 이미지를 표시하는 함수
 void CWindow_UITool::ShowImagePreview(const std::vector<unsigned char>& imageData, int width, int height)
 {
-	ImVec2 imageSize(width, height);
+	ImVec2 imageSize((_float)width, (_float)height);
 	ImGui::Image(reinterpret_cast<void*>(const_cast<unsigned char*>(imageData.data())), imageSize);
 }
 

@@ -194,7 +194,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 
 		static int Object_idx = 0; // Here we store our selection data as an index.
 		static int Layer_idx = 0; // Here we store our selection data as an index.
-		int ObjectTagSize = m_vObjectTag.size();
+		int ObjectTagSize = (int)m_vObjectTag.size();
 
 		if (ImGui::BeginListBox("ObjectList"))
 		{
@@ -252,7 +252,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		
 		if (m_bListCheck)
 		{
-			m_iCreateObjectSize =m_CreateList.size();
+			m_iCreateObjectSize = (_int)m_CreateList.size();
 			if (ImGui::BeginListBox("CreateList"))
 			{
 
@@ -300,7 +300,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 
 			}
 			static int AnimationIndex = 0;
-			for (int n = 0; n < m_iAnimationNum; n++)
+			for (int n = 0; n < (_int)m_iAnimationNum; n++)
 			{
 				const bool is_selected = (AnimationIndex == n);
 				if (ImGui::Selectable(m_pAnimation[n]->Get_Name(), is_selected))
