@@ -34,7 +34,6 @@ public:
 	HRESULT Add_RenderGroup(RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
 	HRESULT Draw_RenderGroup();
-	HRESULT Draw_RenderName();
 	
 	/* Ready */
 	HRESULT Create_Buffer();
@@ -77,24 +76,25 @@ private:
 	_float4x4					m_ViewMatrix, m_ProjMatrix;
 	_float4						m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
 
-private: // SSAO
-	class CTexture* m_pRandomVectorTexture = { nullptr };
-	ID3D11Buffer*	m_ScreenQuadVB = { nullptr };
-	ID3D11Buffer*	m_ScreenQuadIB = { nullptr };
-	ID3D11ShaderResourceView* m_RandomVectorSRV;
+private: 
+	/* SSAO */
+	class CTexture*				m_pRandomVectorTexture = { nullptr };
+	ID3D11Buffer*				m_ScreenQuadVB = { nullptr };
+	ID3D11Buffer*				m_ScreenQuadIB = { nullptr };
+	ID3D11ShaderResourceView*	m_RandomVectorSRV;
+	_float4						m_vFrustumFarCorner[4];
+	_float4						m_vOffsets[14];
+	_float						m_OffsetsFloat[56];
+	_int						m_iQuadVerCount;
+	_int						m_iQuadIndexCount;
+	_float						RandF() {	return (float)(rand()) / (float)RAND_MAX; }
+	_float						RandF(float a, float b) { return a + RandF() * (b - a); };
 
-	_float4			m_vFrustumFarCorner[4];
-	_float4			m_vOffsets[14];
-	_float			m_OffsetsFloat[56];
-	_int			m_iQuadVerCount;
-	_int			m_iQuadIndexCount;
-	_float			RandF() {	return (float)(rand()) / (float)RAND_MAX; }
-	_float			RandF(float a, float b) { return a + RandF() * (b - a); };
-
-	HRESULT			Render_Blur_DownSample();
-	HRESULT			Render_Blur_Horizontal();
-	HRESULT			Render_Blur_Vertical();
-	HRESULT			Render_Blur_UpSample();
+	/* ssao_blur */
+	HRESULT						Render_Blur_DownSample(const wstring& strStartTargetTag);
+	HRESULT						Render_Blur_Horizontal(_int eHorizontalPass);
+	HRESULT						Render_Blur_Vertical(_int eVerticalPass);
+	HRESULT						Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bClear, _int eBlendType);
 
 private:
 	HRESULT Render_Priority();
@@ -109,11 +109,10 @@ private:
 
 	HRESULT Render_OutLine();
 	HRESULT Render_SSAO();
-	//HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
+	HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
 	HRESULT Render_GodRay();
 
-	/* Blur */
-	HRESULT Render_SSAO_Blur();
+
 public:
 	typedef struct tagXMCOLOR
 	{
@@ -139,3 +138,12 @@ public:
 };
 
 END
+
+/*
+Blur : 전체 / 개별을 흐리거나 뿌옇게 만드는작업 = 줄이고 늘리는과정자체가 또하나의 블러효과라서 더 좋은 결과를 낸다. 
+	화면에 텍스쳐를 그린다 
+	-> 텍스쳐를 절반 또는 그 이하로 다운샘플링한다 (두개의 삼각형으로 이루어진 2D & 256 혹은 화면의 절반  
+	-> 샘플된 텍스쳐에 수평블러를 수행한다 : 인접한 픽셀들의 가중평균을 구하는것이다. 
+	-> 수직블러를 수행한다 
+	-> 원래 화면 사이즈로 샘플링한다 
+	-> 화면에 텍스쳐를 그린다. */
