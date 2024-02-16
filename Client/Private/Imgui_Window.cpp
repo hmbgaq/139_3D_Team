@@ -19,8 +19,8 @@
 
 
 
-static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-static ImGuizmo::MODE	   mCurrentGizmoMode(ImGuizmo::WORLD);
+static ImGuizmo::OPERATION mCurrentGizmoOperation;
+static ImGuizmo::MODE	   mCurrentGizmoMode;
 static bool useSnap(false);
 
 ImGuiFileDialog* g_pFileDialog;
@@ -68,7 +68,7 @@ HRESULT CImgui_Window::Initialize()
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByTypeFile | IGFD_FileStyleByContainedInFullName, ".git", ImVec4(0.5f, 0.8f, 0.5f, 0.9f), ICON_IGFD_SAVE);
 
 	//TODO For.Guizmo
-		m_arrView = new _float[16];
+	m_arrView = new _float[16];
 	m_arrProj = new _float[16];
 
 	return S_OK;
@@ -129,8 +129,8 @@ void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
 			break;
 		}
 
-		g_pFileDialog->OpenDialog(m_strDialogKey, strTitle, szFilters, strPath, 1, nullptr, ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ConfirmOverwrite);
 	}
+	g_pFileDialog->OpenDialog(m_strDialogKey, strTitle, szFilters, strPath, 1, nullptr, ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ConfirmOverwrite);
 
 }
 

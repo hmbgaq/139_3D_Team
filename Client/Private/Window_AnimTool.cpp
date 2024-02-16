@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "Window_AnimTool.h"
 #include "GameInstance.h"
-#include "ImGuiFileDialog/ImGuiFileDialog.h"
-#include "ImGuizmo/ImGuizmo.h"
-#include "ImGuizmo/ImSequencer.h"
-#include "ImGuizmo/ImZoomSlider.h"
-#include "ImGuizmo/ImCurveEdit.h"
-#include "ImGuizmo/GraphEditor.h"
+// #include "ImGuiFileDialog/ImGuiFileDialog.h"
+// #include "ImGuizmo/ImGuizmo.h"
+// #include "ImGuizmo/ImSequencer.h"
+// #include "ImGuizmo/ImZoomSlider.h"
+// #include "ImGuizmo/ImCurveEdit.h"
+// #include "ImGuizmo/GraphEditor.h"
 #include "CustomDialogFont.h"
 #include "Model.h"
 #include "PreviewAnimationModel.h"
@@ -37,7 +37,24 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	__super::Begin();
-	
+
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("Menu"))
+		{
+			if (ImGui::MenuItem("Save"))
+			{
+
+			}
+			if (ImGui::MenuItem("Load"))
+			{
+
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
 	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
 #ifdef _DEBUG
@@ -46,32 +63,11 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 		
 	}
 	//dialog========================================================================
-	static bool canValidateDialog = false;
-		
-	if (ImGui::Button("Open File Dialog"))
-		ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".png,.fbx,.dds",
-			".", 1, nullptr);
+	
+	if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; OpenDialog(CImgui_Window::IMGUI_ANIMATIONTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_ANIMATIONTOOL_WINDOW); }
+	//disPlay
+	ShowDialog();
 
-	// display
-	if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))
-	{
-		if (ImGuiFileDialog::Instance()->IsOk())
-		{
-			std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-			std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-			std::string filter = ImGuiFileDialog::Instance()->GetCurrentFilter();
-			// here convert from string because a string was passed as a userDatas, but it can be what you want
-			std::string userDatas;
-			if (ImGuiFileDialog::Instance()->GetUserDatas())
-				userDatas = std::string((const char*)ImGuiFileDialog::Instance()->GetUserDatas());
-			auto selection = ImGuiFileDialog::Instance()->GetSelection(); // multiselection
-
-			// action
-		}
-		// close
-		ImGuiFileDialog::Instance()->Close();
-		m_bdialogCheck = false;
-	}
 	//===============================dialog============================================
 	
 	ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
@@ -81,9 +77,6 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	{
 		if (ImGui::BeginTabItem("Player"))
 		{
-			ImGui::Text(u8"플레이어");
-
-			//Draw_Player();
 			Draw_AnimationList(fTimeDelta);
 
 			ImGui::EndTabItem();
@@ -91,7 +84,6 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 		if (ImGui::BeginTabItem(("Monster")))
 		{
-			Draw_Monster();
 			Draw_AnimationList(fTimeDelta);
 
 			ImGui::EndTabItem();
@@ -293,6 +285,8 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 			
 		}
 
+		
+		
 		ImGui::Spacing();
 
 		if (ImGui::BeginListBox("AnimationList"))
@@ -340,7 +334,16 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		}
 		ImGui::TreePop();
 	}
-	
+	ImGui::Checkbox(u8"기즈모on/off", &m_bguizmo);
+	if (m_bguizmo)
+	{
+		if (nullptr == m_PickingObject)
+			return;
+		/*	ImGuizmo_Initialize();*/
+		Set_GuizmoCamProj();
+		Set_GuizmoCamView();
+		Set_Guizmo(m_PickingObject);
+	}
 	if (ImGui::Button(" Play "))
 	{
 		if (nullptr != m_pBody)
@@ -436,6 +439,15 @@ wchar_t* CWindow_AnimTool::ConvertCtoWC(const char* str)
 	//형 변환
 	MultiByteToWideChar(CP_ACP, 0, str, (int)strlen(str) + 1, pStr, strSize);
 	return pStr;
+}
+
+void CWindow_AnimTool::ImGuizmo_Initialize()
+{
+	/*기즈모 뷰, 투영 멤버변수 메모리 할당
+* SetUp 에서 쓰는 Guizmo가 float* [] 이므로 배열로 만들어야함
+* = 동적배열 */
+// 	m_arrView = new _float[16];
+// 	m_arrProj = new _float[16];
 }
 
 

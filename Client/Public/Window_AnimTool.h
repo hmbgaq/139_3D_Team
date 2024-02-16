@@ -65,6 +65,9 @@ public://문자열 변환
 	char*			ConverWStringtoC(const wstring& wstr);
 	char*			ConvertWCtoC(const wchar_t* str);
 	wchar_t*		ConvertCtoWC(const char* str);
+
+public:
+	void			ImGuizmo_Initialize();//임시 테스트 
 private:
 	CPreviewAnimationModel*	m_pPreViewModel = { nullptr };
 	CAnimation*				m_pCurrentAnimation = { nullptr };
@@ -97,6 +100,7 @@ public:
 	_bool					m_bCloneCount = false;
 	_bool					m_bFirstcheck = false;
 	_bool					m_bTrackPositionCheck = false;
+	_bool					m_bguizmo = false;
 public:
 	static CWindow_AnimTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
