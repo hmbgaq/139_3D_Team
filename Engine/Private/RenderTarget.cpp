@@ -15,8 +15,11 @@ HRESULT CRenderTarget::Initialize(const wstring& strTargetTag, _uint iSizeX, _ui
 	m_vClearColor = vClearColor;
 	//m_wstrTag = strTargetTag;
 	
+#ifdef _DEBUG
 	XMStoreFloat4(&m_vFontColor, (XMVectorSet( 1.f , 1.f, 1.f, 1.f ) - XMLoadFloat4(&m_vClearColor)));
+
 	m_vFontColor.z = 1.f;
+#endif
 
 	D3D11_TEXTURE2D_DESC	TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
