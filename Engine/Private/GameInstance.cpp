@@ -555,9 +555,80 @@ void CGameInstance::WString_To_String(wstring _wstring, string& _string)
 	//TODO C++ 17로 올리니 기존 Convert 함수들은 더 이상 지원하지 않아. window api에서 제공하는 변환 함수 사용으로 변경 - TO 승용
 
 	int len = WideCharToMultiByte(CP_UTF8, 0, _wstring.c_str(), -1, nullptr, 0, nullptr, nullptr);
-	if (len > 0) {
+	if (len > 0) 
+	{
 		_string.resize(len - 1);
 		WideCharToMultiByte(CP_UTF8, 0, _wstring.c_str(), -1, &_string[0], len, nullptr, nullptr);
+	}
+}
+
+string CGameInstance::Convert_WString_To_String(wstring _wstring)
+{
+	string out_string;
+
+	return out_string.assign(_wstring.begin(), _wstring.end());;
+}
+
+WCHAR* CGameInstance::StringTowchar(const std::string& str)
+{
+	// std::wstring으로 변환
+	std::wstring wstr(str.begin(), str.end());
+	// c_str() 함수를 사용하여 WCHAR* 포인터로 변환
+
+	return const_cast<WCHAR*>(wstr.c_str());
+}
+
+char* CGameInstance::ConverWStringtoC(const wstring& wstr)
+{
+	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
+	char* result = new char[size_needed];
+	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result, size_needed, NULL, NULL);
+	return result;
+}
+
+wchar_t* CGameInstance::ConverCtoWC(char* str)
+{
+	_tchar* pStr;
+	int strSize = MultiByteToWideChar(CP_ACP, 0, str, -1, NULL, NULL);
+	pStr = new WCHAR[strSize];
+	MultiByteToWideChar(CP_ACP, 0, str, (_int)strlen(str) + (size_t)1, pStr, strSize);
+
+	return pStr;
+}
+
+std::string CGameInstance::WideStringToString(const wchar_t* wideStr)
+{
+	// std::wstring으로부터 std::string으로 변환
+	std::wstring wstr(wideStr);
+	// std::string으로 변환
+	return std::string(wstr.begin(), wstr.end());
+}
+
+std::string CGameInstance::GetFileName(const std::string& filePath)
+{
+	size_t lastSlashPos = filePath.find_last_of("/");
+	if (lastSlashPos != std::string::npos)
+	{
+		return filePath.substr(lastSlashPos + 1);
+	}
+	else
+	{
+		// 경로 구분자가 없을 경우 전체 경로를 반환
+		return filePath;
+	}
+}
+
+std::string CGameInstance::RemoveExtension(const std::string& filePath)
+{
+		size_t lastDotPos = filePath.find_last_of(".");
+	if (lastDotPos != std::string::npos) 
+	{
+		return filePath.substr(0, lastDotPos);
+	}
+	else
+	{
+		// 확장자가 없는 경우 그대로 반환
+		return filePath;
 	}
 }
 

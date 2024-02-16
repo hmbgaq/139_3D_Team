@@ -15,6 +15,7 @@ BEGIN(Client)
 
 class CLoader final : public CBase
 {
+
 private:
 	CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CLoader() = default;

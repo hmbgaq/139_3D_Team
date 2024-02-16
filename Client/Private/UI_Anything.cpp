@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "UI_Anything.h"
 #include "GameInstance.h"
+#include "Json_Utility.h"
 
 CUI_Anything::CUI_Anything(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUI_Base(pDevice, pContext)
@@ -59,12 +60,12 @@ void CUI_Anything::Tick(_float fTimeDelta)
 
 	/*m_tInfo.fCrntHPUV = m_tInfo.pOwnerStatus->fCurrentHp / m_tInfo.pOwnerStatus->fMaxHp;*/
 
-	if (m_tInfo.fCrntHPUV <= 0.0)
-	{
-		m_tInfo.fCrntHPUV = 0.0;
+	//if (m_tInfo.fCrntHPUV <= 0.0)
+	//{
+	//	m_tInfo.fCrntHPUV = 0.0;
 
-		Set_Dead(true);
-	}
+	//	Set_Dead(true);
+	//}
 
 
 }
@@ -144,48 +145,14 @@ HRESULT CUI_Anything::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-	switch (m_tInfo.eMonsterType)
-	{
-	case CUI_Anything::SMALL:
-	{
-		//! For.Com_Texture
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tInfo.strProtoTag,
-			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
-			return E_FAIL;
-		break;
-	}
-	case CUI_Anything::MID:
-	{
-		//! For.Com_Texture
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameMid"),
-			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
-			return E_FAIL;
-		break;
-	}
-	case CUI_Anything::LARGE:
-	{
-		//! For.Com_Texture
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameLarge"),
-			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
-			return E_FAIL;
-		break;
-	}
-	case CUI_Anything::BOSS:
-		break;
-	case CUI_Anything::SIDE:
-	{
-		//! For.Com_Texture
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SideEnemyHpFrameSide"),
-			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
-			return E_FAIL;
-		break;
-	}
-	case CUI_Anything::NONE:
-		break;
-	default:
-		break;
-	}
+	wstring strPrototag;
+	m_pGameInstance->String_To_WString(m_tInfo.strProtoTag, strPrototag);
 
+	//! For.Com_Texture
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		return E_FAIL;
+	
 	return S_OK;
 }
 
@@ -215,6 +182,26 @@ void CUI_Anything::Compute_OwnerCamDistance()
 _bool CUI_Anything::In_Frustum()
 {
 	return m_pGameInstance->isIn_WorldPlanes(m_tInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
+}
+
+void CUI_Anything::Save_Desc()
+{
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+
+	json Out_Json;
+	
+	Out_Json["PostionX"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
+	Out_Json["PostionY"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
+	Out_Json["SizeX"] = m_pTransformCom->Get_Scaled().x;
+	Out_Json["SizeY"] = m_pTransformCom->Get_Scaled().y;
+	Out_Json["ProtoTag"] = m_tInfo.strProtoTag;
+
+	CJson_Utility::Save_Json(filePath, Out_Json);
+}
+
+void CUI_Anything::Load_Desc()
+{
+
 }
 
 CUI_Anything* CUI_Anything::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

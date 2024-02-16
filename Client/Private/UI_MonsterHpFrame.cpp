@@ -59,12 +59,13 @@ void CUI_MonsterHpFrame::Tick(_float fTimeDelta)
 
 	/*m_tInfo.fCrntHPUV = m_tInfo.pOwnerStatus->fCurrentHp / m_tInfo.pOwnerStatus->fMaxHp;*/
 
-	if (m_tInfo.fCrntHPUV <= 0.0)
-	{
-		m_tInfo.fCrntHPUV = 0.0;
+	/* UI생성하자마자 사라진 이유 :UV값이 0으로 들어와서 계속 생기자마자 삭제한거였음 */
+	//if (m_tInfo.fCrntHPUV <= 0.0)
+	//{
+	//	m_tInfo.fCrntHPUV = 0.0;
 
-		Set_Dead(true);
-	}
+	//	Set_Dead(true);
+	//}
 
 
 }

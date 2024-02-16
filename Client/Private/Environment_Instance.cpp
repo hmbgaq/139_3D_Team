@@ -23,7 +23,7 @@ HRESULT CEnvironment_Instance::Initialize_Prototype()
 
 HRESULT CEnvironment_Instance::Initialize(void* pArg)
 {	
-	m_tInstanceDesc = {};//*(MAPTOOL_INSTANCE_DESC*)pArg;
+	m_tInstanceDesc = {}; //*(MAPTOOL_INSTANCE_DESC*)pArg;
 
 	
 	if (FAILED(__super::Initialize(nullptr)))

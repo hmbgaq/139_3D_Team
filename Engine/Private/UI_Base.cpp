@@ -252,5 +252,3 @@ void CUI_Base::Free()
 {
 	__super::Free();
 }
-
-
