@@ -138,19 +138,22 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototy
 
 HRESULT CGameObject::Remove_Component(const wstring& strComTag, _Inout_ CComponent** ppOut) 
 {
-	CComponent* pComponent = Find_Component(strComTag);
+	auto	iter = m_Components.find(strComTag);
 
-	if (nullptr == pComponent)
+	if (iter == m_Components.end())
 		return E_FAIL;
+
+	CComponent* pComponent = iter->second;
 
 	Safe_Release(pComponent);
 
-	if (nullptr != *ppOut)
+	if (nullptr != ppOut && nullptr != *ppOut)
 	{
 		Safe_Release(pComponent);
 		*ppOut = nullptr;
 	}
 
+	m_Components.erase(iter);
 }
 
 void CGameObject::Free()
