@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine_Defines.h"
+#include "Json_Utility.h"
 
 /* 레퍼런스카운트를 관리하기위한 기능을 제공한다. */
 
@@ -21,8 +22,18 @@ public:
 	/* _ulong : 감소시키기 이전의 값을 리턴 .*/
 	_ulong Release();
 
+	virtual void Set_Enable(_bool _Enable);
+	_bool Get_Enable();
+
+	virtual _bool Write_Json(json& Out_Json) { return false; };
+	virtual void Load_FromJson(const json& In_Json) {};
+
+protected:
+	_bool			m_bEnable = { true };
+
 private:
 	_ulong			m_dwRefCnt = { 0 };
+	
 
 public:
 	virtual void Free() {}

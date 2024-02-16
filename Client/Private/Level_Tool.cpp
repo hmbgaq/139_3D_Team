@@ -2,8 +2,14 @@
 #include "Level_Tool.h"
 #include "Imgui_Manager.h"
 #include "GameInstance.h"
+
 #include "Camera_Dynamic.h"
 #include "Particle_Custom.h"
+
+
+#include "Camera_Dynamic.h"
+#include "Particle_Custom.h"
+
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -12,16 +18,19 @@ CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Tool::Initialize()
 {
+	//Level_Tool 레벨 조정 
+	m_pGameInstance->Set_CurrentLevel(3);
 	if (FAILED(Ready_Imgui()))
 	{
 		Safe_Release(m_pDevice);
 		Safe_Release(m_pContext);
 		return E_FAIL;
 	}
-
+	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
 	return S_OK;
+
 }
 
 void CLevel_Tool::Tick(_float fTimeDelta)
@@ -60,11 +69,27 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 	tDesc.fFovy = XMConvertToRadians(60.0f);
 	tDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	tDesc.fNear = 0.1f;
-	tDesc.fFar = 1000.f;
+	tDesc.fFar = m_pGameInstance->Get_CamFar();
 	tDesc.fSpeedPerSec = 5.f;
 	tDesc.fRotationPerSec = XMConvertToRadians(180.0f);
 
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &tDesc));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_LightDesc()
+{
+	LIGHT_DESC			LightDesc{};
+
+	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
+		return E_FAIL;
 
 	return S_OK;
 }

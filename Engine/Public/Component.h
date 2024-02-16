@@ -21,6 +21,10 @@ public:
 	}
 #endif
 
+public:
+	HRESULT	Set_Owner(class CGameObject* _pOwner);
+	class CGameObject* Get_Owner();
+
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
@@ -28,6 +32,7 @@ protected:
 
 protected:
 	_bool					m_isCloned = { false };
+	class CGameObject*		m_pOwner = { nullptr };
 
 
 public:

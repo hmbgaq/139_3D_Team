@@ -10,6 +10,7 @@ public:
 	typedef struct
 	{
 		_float3		vCenter;
+		_uint		iLayer;
 	}BOUNDING_DESC;
 protected:
 	CBounding(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

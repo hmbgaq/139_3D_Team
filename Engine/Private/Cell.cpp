@@ -9,8 +9,6 @@ CCell::CCell(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
-
-
 }
 
 HRESULT CCell::Initialize(const _float3 * pPoints, _uint iIndex)

@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #pragma region PVS STUDIO
 
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.

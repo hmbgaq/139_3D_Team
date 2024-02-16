@@ -89,8 +89,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_UI());
 
 #ifdef _DEBUG
-	if(m_bRenderDebug)
-	FAILED_CHECK(Render_Debug());
+	if(m_bRenderDebug ==false)
+		FAILED_CHECK(Render_Debug());
 #endif
 
 	return S_OK;
@@ -818,7 +818,8 @@ HRESULT CRenderer::Render_Debug()
 	for (auto& pDebugCom : m_DebugComponent)
 	{
 		pDebugCom->Render();
-		Safe_Release(pDebugCom);
+		//AnimTool 작업중에 애 있으면 삭제시에 터져버림 
+		//Safe_Release(pDebugCom);
 	}
 	m_DebugComponent.clear();
 

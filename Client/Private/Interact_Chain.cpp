@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Interact_Chain.h"
 #include "Model.h"
 #include "Shader.h"
@@ -107,9 +108,9 @@ HRESULT CInteract_Chain::Render()
 		}
 		else
 		{
-			m_pShaderCom->Begin(iRenderPass);
+		m_pShaderCom->Begin(iRenderPass);
 
-			m_pModelCom->Render((_uint)i);
+		m_pModelCom->Render((_uint)i);
 		}
 	}
 

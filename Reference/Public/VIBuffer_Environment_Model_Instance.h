@@ -8,45 +8,10 @@ class CMesh;
 class ENGINE_DLL CVIBuffer_Environment_Model_Instance : public CVIBuffer_Model_Instance
 {
 public:
-	typedef struct tagVIBuffer_EnvironmentModelInstanceDesc
+	typedef struct tagVIBuffer_EnvironmentModelInstanceDesc : public CVIBuffer_Model_Instance::MODEL_INSTANCE_DESC
 	{
-		class CModel*	  pModel = { nullptr };
-		_int			  iNumInstance = {0};
+		vector<INSTANCE_INFO_DESC> vecBufferInstanceInfo;
 	}ENVIRONMENT_MODEL_INSTANCE_DESC;
-
-	typedef struct tag_InstanceDesc
-	{
-		_float3         vRotation;
-		_float3         vScale;
-		_float3			vTranslation;
-		_float			fMaxRange;
-		_float3			vCenter;
-
-		_matrix Get_Matrix() const
-		{
-			_matrix TransformationMatrix;
-			_matrix RotationMatrix, ScaleMatrix;
-
-			_vector vPitchYawRoll;
-			_vector vPosition;
-
-			vPitchYawRoll = XMLoadFloat3(&vRotation);
-			vPosition = XMVectorSetW(XMLoadFloat3(&vTranslation), 1.f);
-
-			RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
-			ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
-			TransformationMatrix = ScaleMatrix * RotationMatrix;
-			TransformationMatrix.r[3] = vPosition;
-
-			return TransformationMatrix;
-		}
-
-		void	Bake_CenterWithMatrix()
-		{
-			_vector vCenterFromVector = XMLoadFloat3(&vCenter);
-			XMStoreFloat3(&vCenter, XMVector3TransformCoord(vCenterFromVector, Get_Matrix()));
-		}
-	}INSTANCE_INFO_DESC;
 
 private:
     CVIBuffer_Environment_Model_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -66,6 +31,9 @@ public:
 	void				Init_Instance(_int iNumInstance) override;
 	virtual				HRESULT	Render(_int iMeshIndex) override;
 
+
+private:
+	vector<INSTANCE_INFO_DESC> m_tInstanceInfo;
 
 public:
 	static CVIBuffer_Environment_Model_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -22,7 +22,7 @@ private:
 
 public: /* For.Engine */
 	/* 엔진라이브러리를 사용하기위한 준비를 모두 거친다. */
-	HRESULT		Initialize_Engine(_uint iNumLevels, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
+	HRESULT		Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
 	void		Tick_Engine(_float fTimeDelta);
 	HRESULT		Render_Engine();
 	void		Clear(_uint iLevelIndex);
@@ -53,7 +53,9 @@ public: /* For.Timer_Manager */
 	_float		Compute_TimeDelta(const wstring& strTimeTag);
 
 public: /* For.Level_Manager */
-	HRESULT		Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
+	HRESULT Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
+	_uint	Get_NextLevel();
+	void	Set_CurrentLevel(_uint CurrentLevel);
 
 public: /* For.Object_Manager */
 	HRESULT				Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
@@ -61,12 +63,15 @@ public: /* For.Object_Manager */
 	CGameObject*		Clone_Prototype(const wstring& strPrototypeTag, void* pArg = nullptr);
 	class CComponent*	Get_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex = 0, const wstring& strPartTag = TEXT(""));
 
-	list<class CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring & strLayerTag);
+	list<CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring & strLayerTag);
 	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>*clonevector);
 	class CGameObject* Get_GameObect_Last(_uint iLevelIndex, const wstring & strLayerTag);
 	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
 	class CGameObject* Get_Player();
 	void Set_Player(class CGameObject* _pPlayer);
+
+
+
 	void Fill_PrototypeTags(vector<string>*_vector);
 
 public: /* For.Component_Manager */
@@ -79,6 +84,7 @@ public: /* For.Renderer */
 #ifdef _DEBUG
 	void Set_RenderDebug(_bool _bRenderDebug);
 #endif
+
 
 public: /* For.PipeLine */
 	void		Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix);
@@ -115,6 +121,10 @@ public: /* For.Frustum */
 	_bool		isIn_WorldPlanes(_fvector vPoint, _float fRadius = 0.f);
 	_bool		isIn_LocalPlanes(_fvector vPoint, _float fRadius);
 
+public: /* For.Collision_Manager */
+	void		Add_Collision(const _uint& In_iLayer, CCollider* _pCollider);
+
+
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
@@ -132,6 +142,8 @@ private:
 	class CTarget_Manager*			m_pTarget_Manager = { nullptr };
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 	class CFrustum*					m_pFrustum = { nullptr };
+	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
+
 
 public:
 	void Release_Manager();
