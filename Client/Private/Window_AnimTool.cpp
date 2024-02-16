@@ -428,7 +428,6 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 
 			for (int n = 0; n < m_iBoneNum; n++)
 			{
-
 				const bool is_selected = (BoneIndex == n);
 				if (ImGui::Selectable(m_pBones[n]->Get_Name(), is_selected))
 					BoneIndex = n;
@@ -443,6 +442,8 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 		}
 		ImGui::TreePop();
 	}
+
+
 
 }
 

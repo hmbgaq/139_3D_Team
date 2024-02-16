@@ -27,7 +27,7 @@ HRESULT CBody_Player::Initialize(void* pArg)
 {	
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
-
+	
 	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
 
 	return S_OK;
@@ -165,10 +165,5 @@ void CBody_Player::Free()
 {
 	__super::Free();
 
-	//Safe_Release(m_pParentTransform);
-	//Safe_Release(m_pColliderCom);
-	//Safe_Release(m_pModelCom);	
-	//Safe_Release(m_pShaderCom);
-	
 }
 

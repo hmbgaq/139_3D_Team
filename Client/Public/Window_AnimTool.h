@@ -73,6 +73,7 @@ private:
 	CPreviewAnimationModel*	m_pPreViewModel = { nullptr };
 	CAnimation*				m_pCurrentAnimation = { nullptr };
 	CGameObject*			m_PickingObject = { nullptr };
+	CBody*					m_pBody = { nullptr };
 
 	
 	_float					m_fSpeed = 1.f;
@@ -91,7 +92,7 @@ private:
 	vector<CGameObject*>	m_CreateList;
 	vector<CAnimation*>		m_pAnimation;
 	vector<CBone*>			m_pBones;
-	CBody* m_pBody = { nullptr };
+
 public:
 	_bool					m_bStop = false;
 	_bool					m_bHold = false;
