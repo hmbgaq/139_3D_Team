@@ -1,5 +1,10 @@
 #include "stdafx.h"
 #include "Window_MapTool.h"
+#include "Imgui_Manager.h"
+#include "GameInstance.h"
+
+#include "Environment_Instance.h"
+#include "Environment_Object.h"
 
 CWindow_MapTool::CWindow_MapTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -10,9 +15,12 @@ CWindow_MapTool::CWindow_MapTool(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 HRESULT CWindow_MapTool::Initialize()
 {
 	//! 현재는 특별한 기능없음. 추후 필요할 것 같아서 셋팅.
-	if(FAILED(__super::Initialize()))
-		return E_FAIL;
 
+	FAILED_CHECK(__super::Initialize());
+
+
+	//! Loader에서 푸시백 해놓은 Imgui_Manager의 모델태그 벡터를 받아오자.
+	FAILED_CHECK(Ready_ModelTags());
 
 	return S_OK;
 }
@@ -39,40 +47,32 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 
 	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyMask_;
 	
-	if (ImGui::BeginTabBar(u8"테마", tab_bar_flags))
+	if (ImGui::BeginTabBar(u8"오브젝트 타입", tab_bar_flags))
 	{
-		if (ImGui::BeginTabItem(u8"인트로맵"))
+		if (ImGui::BeginTabItem(u8"그라운드"))
 		{
-			Theme_IntroTabFunction();
+			GroundTab_Function();
 
 			ImGui::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem(u8"화산맵"))
+		if (ImGui::BeginTabItem(u8"상호작용"))
 		{
-			Theme_VolcanoTabFunction();
+			InteractTab_Function();
 
 			ImGui::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem(u8"설산맵"))
+		if (ImGui::BeginTabItem(u8"환경"))
 		{
-			Theme_SnowMountainTabFunction();
-
-			ImGui::EndTabItem();
-		}
-
-		if (ImGui::BeginTabItem(u8"보스맵"))
-		{
-			Theme_BossTabFunction();
+			EnvironmentTab_Function();
 
 			ImGui::EndTabItem();
 		}
 
 		ImGui::EndTabBar();
 	}
-	
-	
+
 
 	__super::End();
 }
@@ -82,25 +82,55 @@ void CWindow_MapTool::Render()
 
 }
 
-void CWindow_MapTool::Theme_IntroTabFunction()
+HRESULT CWindow_MapTool::Ready_ModelTags()
+{
+	//! 애님태그
+	vector<wstring> vecAnimTags = *CImgui_Manager::GetInstance()->Get_Anim_E_ModelTag();
+	_int iAnimTagVectorSize = vecAnimTags.size();
+	
+	m_vecAnimModelTag.reserve(iAnimTagVectorSize);
+
+	for (_int i = 0; i < iAnimTagVectorSize; ++i)
+	{
+		string strAnimTag = {};
+		m_pGameInstance->WString_To_String(vecAnimTags[i], strAnimTag);
+		
+		m_vecAnimModelTag.push_back(strAnimTag);
+
+	}
+
+	//!논애님 태그
+	vector<wstring> vecNonAnimTags = *CImgui_Manager::GetInstance()->Get_NonAnim_E_ModelTag();
+	_int iNonAnimTagVectorSize = vecNonAnimTags.size();
+
+	m_vecNonAnimModelTag.reserve(iNonAnimTagVectorSize);
+
+	for (_int i = 0; i < iNonAnimTagVectorSize; ++i)
+	{
+		string strNonAnimTag = {};
+		m_pGameInstance->WString_To_String(vecNonAnimTags[i], strNonAnimTag);
+
+		m_vecNonAnimModelTag.push_back(strNonAnimTag);
+	}
+
+	
+	return S_OK;
+}
+
+void CWindow_MapTool::GroundTab_Function()
+{
+}
+
+void CWindow_MapTool::InteractTab_Function()
+{
+}
+
+void CWindow_MapTool::EnvironmentTab_Function()
 {
 	
 }
 
-void CWindow_MapTool::Theme_VolcanoTabFunction()
-{
-	
-}
 
-void CWindow_MapTool::Theme_SnowMountainTabFunction()
-{
-
-}
-
-void CWindow_MapTool::Theme_BossTabFunction()
-{
-
-}
 
 
 CWindow_MapTool* CWindow_MapTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

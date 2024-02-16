@@ -11,6 +11,8 @@
 #include "UI_MonsterHpFrame.h"
 #pragma endregion
 
+#include "LandObject.h"
+
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -27,8 +29,6 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_UI()))
 		return E_FAIL;
-
-	
 
 	return S_OK;
 }
@@ -162,6 +162,10 @@ HRESULT CLevel_GamePlay::Ready_LandObjects()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void* pArg)
 {
+<<<<<<< HEAD
+=======
+
+>>>>>>> ?¹ìš©
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg));
 
 	return S_OK;
