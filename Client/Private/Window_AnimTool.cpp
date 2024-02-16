@@ -50,7 +50,24 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	__super::Begin();
-	
+
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("Menu"))
+		{
+			if (ImGui::MenuItem("Save"))
+			{
+
+			}
+			if (ImGui::MenuItem("Load"))
+			{
+
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
 	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
 #ifdef _DEBUG
@@ -94,9 +111,6 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	{
 		if (ImGui::BeginTabItem("Player"))
 		{
-			ImGui::Text(u8"플레이어");
-
-			//Draw_Player();
 			Draw_AnimationList(fTimeDelta);
 
 			ImGui::EndTabItem();
@@ -104,7 +118,6 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 		if (ImGui::BeginTabItem(("Monster")))
 		{
-			Draw_Monster();
 			Draw_AnimationList(fTimeDelta);
 
 			ImGui::EndTabItem();
