@@ -24,7 +24,7 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 {	
 	m_tEnvironmentDesc = *(ENVIRONMENT_OBJECT_DESC*)pArg;
 
-	m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
+	//m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	

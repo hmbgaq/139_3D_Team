@@ -125,9 +125,10 @@ void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
 			break;
 		}
 
-		g_pFileDialog->OpenDialog(m_strDialogKey, strTitle, szFilters, strPath, 1, nullptr, ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ConfirmOverwrite);
+		
 	}
 
+	g_pFileDialog->OpenDialog(m_strDialogKey, strTitle, szFilters, strPath, 1, nullptr, ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ConfirmOverwrite);
 }
 
 void CImgui_Window::ShowDialog()
@@ -261,6 +262,26 @@ void CImgui_Window::Set_GuizmoCamProj()
 						  matCamProj._31,matCamProj._32,matCamProj._33,matCamProj._34,
 						  matCamProj._41,matCamProj._42,matCamProj._43,matCamProj._44 };
 	memcpy(m_arrProj, &arrProj, sizeof(arrProj));
+}
+
+_bool CImgui_Window::ImGui_MouseInCheck()
+{
+	POINT tMouse;
+
+	GetCursorPos(&tMouse);
+	ScreenToClient(m_pGameInstance->Get_GraphicDesc()->hWnd, &tMouse);
+
+
+	ImVec2 windowPos = ImGui::GetWindowPos(); //왼쪽상단모서리점
+	ImVec2 windowSize = ImGui::GetWindowSize();
+
+	if (tMouse.x >= windowPos.x && tMouse.x <= windowPos.x + windowSize.x &&
+		tMouse.y >= windowPos.y && tMouse.y <= windowPos.y + windowSize.y)
+	{
+		return false; //ImGui 영역 내
+	}
+
+	return true;
 }
 
 

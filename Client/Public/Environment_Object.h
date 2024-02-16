@@ -40,6 +40,9 @@ public:
 	virtual HRESULT		Render_Shadow() override;
 
 public:
+	wstring&			Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
+
+public:
 	void				Start_Environment_Animation() { m_bPlay = true; }
 
 private:

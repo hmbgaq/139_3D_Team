@@ -200,8 +200,7 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXMODEL_INSTANCE_DECLARATION;
 
-
-	typedef struct ENGINE_DLL tagVertex_Dynamic_Texture
+	typedef struct ENGINE_DLL tagVertex_Dynamic_Field
 	{
 		XMFLOAT3		vPosition;
 		XMFLOAT3		vNormal;
@@ -210,7 +209,7 @@ namespace Engine
 
 		static const unsigned int					iNumElements = 4;
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
-	}VTXGROUND;
+	}VTXFIELD;
 
 	template <typename T>
 	constexpr const T& clamp(const T& value, const T& start, const T& end) 
@@ -267,7 +266,7 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagRayDesc
 	{
-		XMFLOAT4 vOrigin;
+		XMFLOAT4 vPosition;
 		XMFLOAT3 vDirection;
 		float	fLength;
 	}RAY;

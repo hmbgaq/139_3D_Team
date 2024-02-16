@@ -67,18 +67,20 @@ HRESULT CSky::Render()
 
 HRESULT CSky::Ready_Components()
 {
+	LEVEL eCurrentLevel = (LEVEL)m_pGameInstance->Get_NextLevel();
+
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxCube"),
+	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Shader_VtxCube"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
+	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Sky"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"),
+	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_VIBuffer_Cube"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 

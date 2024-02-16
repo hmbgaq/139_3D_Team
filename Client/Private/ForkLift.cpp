@@ -74,13 +74,15 @@ HRESULT CForkLift::Render()
 
 HRESULT CForkLift::Ready_Components()
 {
+	LEVEL eCurrentLevel = (LEVEL)m_pGameInstance->Get_NextLevel();
+
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_Model"),
+	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Shader_Model"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
+	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Model_ForkLift"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 

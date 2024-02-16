@@ -55,7 +55,7 @@ public:
 	virtual	void	Tick(_float fTimeDelta);
 	virtual void	Render() PURE;
 
-protected:	//TODO ImguiDialog #다이얼로그
+public:	//TODO ImguiDialog #다이얼로그
 	void				OpenDialog(WINDOW_TYPE eWindowType);
 	void				ShowDialog();
 
@@ -66,6 +66,9 @@ protected: //TODO Guizmo #기즈모
 	void				Set_Guizmo(CGameObject* pGameObject);
 	void				Set_GuizmoCamView();
 	void				Set_GuizmoCamProj();
+
+protected: //TODO  유틸
+	_bool				ImGui_MouseInCheck();
 
 protected:
 	_bool				m_bEnable = false;

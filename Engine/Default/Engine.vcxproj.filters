@@ -235,6 +235,9 @@
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Terrain\Tool">
       <UniqueIdentifier>{b2b32e5c-9d17-4c34-abe4-330f091f1a02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Field">
+      <UniqueIdentifier>{ddda392a-0cf7-4a8b-a999-313814db4543}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -480,6 +483,9 @@
     <ClInclude Include="..\Public\VIBuffer_Dynamic_Terrain.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Terrain\Tool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Field.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Field</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -673,6 +679,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Dynamic_Terrain.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Terrain\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Field.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Field</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

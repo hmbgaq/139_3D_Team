@@ -97,6 +97,10 @@ public: /* For.PipeLine */
 	_float4		Get_CamSetting();
 	_float		Get_CamFar();
 
+	//!			레이캐스트
+	RAY			Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
+	RAY			Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY, _matrix matWorld);
+
 public: /* For.Font_Manager */
 	HRESULT		Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
 	HRESULT		Render_Font(const wstring& strFontTag, const wstring& strText, const _float2 & vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f ,1.f), _float fScale = 1.f, _float2 vOrigin = _float2(0.f, 0.f), _float fRotation = 0.f);
