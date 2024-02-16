@@ -137,10 +137,10 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 	{
 		for (_int i = 0; i < iTextureTagSize; i++)
 		{
-			const bool is_selected = (Texture_idx == i);
+			const bool is_selected = (m_iSelectedPathIndex == i);
 			if (ImGui::Selectable(m_vecImagePaths[i], is_selected))
 			{			
-				Texture_idx = i;
+				m_iSelectedPathIndex = i;
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -148,8 +148,13 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 		}
 		ImGui::EndListBox();
 	}
+
+	//ImGui::Text("pointer = %p", m_vecTexture[m_iSelectedPathIndex]->SRV_Texture);
+	//ImGui::Text("size = %f x %f", m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height);
+	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2(m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
+
 	/* 테그 */
-	m_tUI_Desc.strProtoTag = m_vecImagePaths[Texture_idx];
+	m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex];
 
 	ImGui::Spacing();
 	_int		ObjectTagSize = (_int)m_vecObjectName.size();
@@ -474,17 +479,6 @@ void CWindow_UITool::LoadImg(const _tchar* folderPath)
 
 void CWindow_UITool::ImagePreview(_float fTimeDelta)
 {
-	if (ImGui::CollapsingHeader(u8"이미지"))
-	{
-		if (ImGui::ListBox("Image Paths", &m_iSelectedPathIndex, m_vecImagePaths.data(), (int)m_vecImagePaths.size()))
-		{
-
-		}
-	}
-
-	//ImGui::Text("pointer = %p", m_vecTexture[m_iSelectedPathIndex]->SRV_Texture);
-	//ImGui::Text("size = %f x %f", m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height);
-	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2(m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
 
 }
 
