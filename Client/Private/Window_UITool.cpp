@@ -550,6 +550,9 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 
 HRESULT CWindow_UITool::UI2D_Create(_float fTimeDelta)
 {
+	// error : 아래 Get_CloneGameObjects로 오브젝트를 가져올때 기존 오브젝트까지 모두 다시들고 오기 때문에, 함수를 따로 만들거나 클리어하고 담아주자
+	m_vecUIObject.clear();
+
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, ConvertToWideString(m_strItems[m_iLayerNum]), TEXT("Prototype_GameObject_UI_Anything"), &m_tUI_Desc));
 
 	m_vecObjectName.push_back(m_tUI_Desc.strProtoTag);
@@ -565,17 +568,13 @@ void CWindow_UITool::UI2D_Delete(_float fTimeDelta)
 /* ex : Save */
 void CWindow_UITool::Save_Desc()
 {
-	//string filePath = "Particle_Desc";
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+	if (m_vecUIObject.empty())
+		return;
 
-	json Out_Json;
-	
-	Out_Json["PostionX"] = m_tUI_Info.fX;
-	Out_Json["PostionY"] = m_tUI_Info.fY;
-	Out_Json["SizeX"] = m_tUI_Info.fSizeX;
-	Out_Json["SizeY"] = m_tUI_Info.fSizeY;
-
-	CJson_Utility::Save_Json(filePath, Out_Json);
+	for (auto& UI : m_vecUIObject)
+	{
+		dynamic_cast<CUI_Anything*>(UI)->Save_Desc();
+	}
 }
 
 /* ex : Load */
