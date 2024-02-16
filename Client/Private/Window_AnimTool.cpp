@@ -2,11 +2,11 @@
 #include "Window_AnimTool.h"
 #include "GameInstance.h"
 // #include "ImGuiFileDialog/ImGuiFileDialog.h"
-// #include "ImGuizmo/ImGuizmo.h"
-// #include "ImGuizmo/ImSequencer.h"
-// #include "ImGuizmo/ImZoomSlider.h"
-// #include "ImGuizmo/ImCurveEdit.h"
-// #include "ImGuizmo/GraphEditor.h"
+#include "../../Reference/Imgui/ImGuizmo/ImGuizmo.h"
+#include "../../Reference/Imgui/ImGuizmo/ImSequencer.h"
+#include "../../Reference/Imgui/ImGuizmo/ImZoomSlider.h"
+#include "../../Reference/Imgui/ImGuizmo/ImCurveEdit.h"
+#include "../../Reference/Imgui/ImGuizmo/GraphEditor.h"
 #include "CustomDialogFont.h"
 #include "Model.h"
 #include "PreviewAnimationModel.h"
@@ -285,14 +285,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 			
 		}
 
-		ImGui::Checkbox(u8"기즈모on/off", &m_bguizmo);
-		if (m_bguizmo)
-		{
-		/*	ImGuizmo_Initialize();*/
-			Set_GuizmoCamProj();
-			Set_GuizmoCamView();
-			Set_Guizmo(m_PickingObject);
-		}
+		
 		
 		ImGui::Spacing();
 
@@ -341,7 +334,16 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		}
 		ImGui::TreePop();
 	}
-	
+	ImGui::Checkbox(u8"기즈모on/off", &m_bguizmo);
+	if (m_bguizmo)
+	{
+		if (nullptr == m_PickingObject)
+			return;
+		/*	ImGuizmo_Initialize();*/
+		Set_GuizmoCamProj();
+		Set_GuizmoCamView();
+		Set_Guizmo(m_PickingObject);
+	}
 	if (ImGui::Button(" Play "))
 	{
 		if (nullptr != m_pBody)

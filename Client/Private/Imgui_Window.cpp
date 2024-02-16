@@ -2,11 +2,11 @@
 
 
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
-#include "ImGuizmo/ImGuizmo.h"
-#include "ImGuizmo/ImSequencer.h"
-#include "ImGuizmo/ImZoomSlider.h"
-#include "ImGuizmo/ImCurveEdit.h"
-#include "ImGuizmo/GraphEditor.h"
+#include "../../Reference/Imgui/ImGuizmo/ImGuizmo.h"
+#include "../../Reference/Imgui/ImGuizmo/ImSequencer.h"
+#include "../../Reference/Imgui/ImGuizmo/ImZoomSlider.h"
+#include "../../Reference/Imgui/ImGuizmo/ImCurveEdit.h"
+#include "../../Reference/Imgui/ImGuizmo/GraphEditor.h"
 #include "CustomDialogFont.h"
 
 
@@ -19,8 +19,8 @@
 
 
 
-static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-static ImGuizmo::MODE	   mCurrentGizmoMode(ImGuizmo::WORLD);
+static ImGuizmo::OPERATION mCurrentGizmoOperation;
+static ImGuizmo::MODE	   mCurrentGizmoMode;
 static bool useSnap(false);
 
 ImGuiFileDialog* g_pFileDialog;
