@@ -314,6 +314,11 @@ vector<CAnimation*>* CModel::Get_Animations()
 	return &m_Animations;
 }
 
+vector<CBone*>* CModel::Get_Bones()
+{
+	return &m_Bones;
+}
+
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 {
 	m_iNumMeshes = m_pAIScene.Get_NumMeshes();

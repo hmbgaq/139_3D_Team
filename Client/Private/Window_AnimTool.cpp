@@ -11,6 +11,7 @@
 #include "Model.h"
 #include "PreviewAnimationModel.h"
 #include "Animation.h"
+#include "Bone.h"
 
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -78,6 +79,8 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 		if (ImGui::BeginTabItem("Player"))
 		{
 			Draw_AnimationList(fTimeDelta);
+			
+			Draw_BoneList(fTimeDelta);
 
 			ImGui::EndTabItem();
 		}
@@ -402,6 +405,45 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 
 		m_bCloneCount = false;
 	}
+}
+
+void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
+{
+	if (m_PickingObject == nullptr)
+		return;
+	if (ImGui::TreeNode("ModelBones"))
+	{
+		if (ImGui::BeginListBox("BoneList"))
+		{
+			if (m_PickingObject != nullptr)
+			{
+				CCharacter* pcharacters = dynamic_cast<CCharacter*>(m_PickingObject);
+				/*m_pBody = pcharacters->Get_Body();*/ //위에서 넣어주고 있어서 여기서 굳이 또 할필요 없음 
+				m_pBones = *(pcharacters->Get_Body()->Get_Model()->Get_Bones());
+				m_iBoneNum = m_pBones.size();
+
+			}
+			//m_PickingObject
+			static int BoneIndex = 0;
+
+			for (int n = 0; n < m_iBoneNum; n++)
+			{
+
+				const bool is_selected = (BoneIndex == n);
+				if (ImGui::Selectable(m_pBones[n]->Get_Name(), is_selected))
+					BoneIndex = n;
+
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+
+				}
+			}
+			ImGui::EndListBox();
+		}
+		ImGui::TreePop();
+	}
+
 }
 
 char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)

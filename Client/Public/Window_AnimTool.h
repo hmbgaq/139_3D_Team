@@ -60,6 +60,7 @@ private:
 	void			Draw_Monster();
 	void			Draw_KeyEventEditer();
 	void			Draw_AnimationList(_float fTimeDelta);
+	void			Draw_BoneList(_float fTimeDelta);
 
 public://문자열 변환 
 	char*			ConverWStringtoC(const wstring& wstr);
@@ -81,7 +82,7 @@ private:
 	_int					m_CurrentAnimationIndex = 0;
 	_int					m_iCreateObjectSize = 0;
 	_uint					m_iAnimationNum = 0;
-
+	_uint					m_iBoneNum = 0;
 	string					m_strKeyEventFileName = "";
 	string					m_strSoundFileName = "";
 
@@ -89,6 +90,7 @@ private:
 	vector<string>			m_vObjectTag;
 	vector<CGameObject*>	m_CreateList;
 	vector<CAnimation*>		m_pAnimation;
+	vector<CBone*>			m_pBones;
 	CBody* m_pBody = { nullptr };
 public:
 	_bool					m_bStop = false;
