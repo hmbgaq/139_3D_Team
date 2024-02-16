@@ -50,10 +50,10 @@ HRESULT CUI_Base::Initialize(void* pArg)
 		else
 			m_pTransformCom->Set_Scaling(m_tUIInfo.fSizeX, m_tUIInfo.fSizeY, 1.f);
 
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_tUIInfo.fX - g_iWinSizeX * 0.5f, -m_tUIInfo.fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_tUIInfo.fX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fY + (_float)g_iWinSizeY * 0.5f, 0.f, 1.f));
 
 		XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-		XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
+		XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
 
 		SetUp_ScreenPosRect(m_tUIInfo.fX, m_tUIInfo.fY, m_tUIInfo.fSizeX, m_tUIInfo.fSizeY);
 		SetUp_UV(0);
@@ -180,11 +180,11 @@ HRESULT CUI_Base::SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX, _fl
 
 	// 위치 이동
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		XMVectorSet(m_tUIInfo.fX - g_iWinSizeX * 0.5f, -m_tUIInfo.fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		XMVectorSet(m_tUIInfo.fX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fY + (_float)g_iWinSizeY * 0.5f, 0.f, 1.f));
 
 	// View Matrix 및 Projection Matrix 설정
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
 
 	return S_OK;
 

@@ -36,8 +36,7 @@ namespace Client
 
 using namespace Client;
 
-
 extern HWND g_hWnd;
 extern HINSTANCE g_hInst;
 
-
+#include "Client_Enum.h"

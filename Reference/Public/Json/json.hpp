@@ -35,6 +35,7 @@ SOFTWARE.
  * removed, but marked deprecated. See "Generate documentation" section in  *
  * file docs/README.md.                                                      *
 \****************************************************************************/
+#undef snprintf
 
 #undef snprintf;
 

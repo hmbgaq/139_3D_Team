@@ -45,6 +45,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 	if (nullptr == m_pComponent_Manager)
 		return E_FAIL;
 
+	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pFont_Manager)
+		return E_FAIL;
+
 	m_pTarget_Manager = CTarget_Manager::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pTarget_Manager)
 		return E_FAIL;
@@ -55,10 +59,6 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 
 	m_pPipeLine = CPipeLine::Create();
 	if (nullptr == m_pPipeLine)
-		return E_FAIL;
-
-	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
-	if (nullptr == m_pFont_Manager)
 		return E_FAIL;
 
 	m_pLight_Manager = CLight_Manager::Create();

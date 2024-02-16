@@ -27,7 +27,7 @@ HRESULT CWindow_UITool::Initialize()
 	LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures/PlayerHUD"))));
 
 	// 이미지 로드 Test
-	_int iSize = m_vecPaths.size();
+	_int iSize = (_int)m_vecPaths.size();
 	for (_int i = 0; i < iSize; i++)
 	{
 		IMAGEINFO* tTexture = new IMAGEINFO;
@@ -340,7 +340,7 @@ void CWindow_UITool::ImagePreview(_float fTimeDelta)
 
 	//ImGui::Text("pointer = %p", m_vecTexture[m_iSelectedPathIndex]->SRV_Texture);
 	//ImGui::Text("size = %f x %f", m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height);
-	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2(m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
+	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2((_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Width, (_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
 
 }
 
@@ -387,7 +387,7 @@ void CWindow_UITool::UI2D_Delete(_float fTimeDelta)
 // ImGui를 사용하여 이미지를 표시하는 함수
 void CWindow_UITool::ShowImagePreview(const std::vector<unsigned char>& imageData, int width, int height)
 {
-	ImVec2 imageSize(width, height);
+	ImVec2 imageSize((_float)width, (_float)height);
 	ImGui::Image(reinterpret_cast<void*>(const_cast<unsigned char*>(imageData.data())), imageSize);
 }
 

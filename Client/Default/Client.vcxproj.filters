@@ -97,14 +97,14 @@
     <Filter Include="02.GameObjects\LandObject\ForkLift">
       <UniqueIdentifier>{e9847c59-db02-4e1b-b257-e6ea1f73a11b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Actor">
-      <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\Effect\Explosion">
+      <UniqueIdentifier>{da344bb2-a626-4909-8e5e-9ae05ab65ac4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Actor\Character">
-      <UniqueIdentifier>{efbf965b-89e3-4770-bdc3-149dd60e9eff}</UniqueIdentifier>
+    <Filter Include="01.Levels\02.Tool">
+      <UniqueIdentifier>{ee7454c4-3db4-4d49-88f2-61b448176ddc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Actor\Character\Player">
-      <UniqueIdentifier>{e610d425-749e-40a9-a4a7-33941c1a824a}</UniqueIdentifier>
+    <Filter Include="01.Levels\02.Tool\Imgui">
+      <UniqueIdentifier>{01366b00-7eab-495a-9ebd-61cf6069e168}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Actor\Character\Monster">
       <UniqueIdentifier>{97fc5167-2a35-4a58-a30c-4cc71dbe583b}</UniqueIdentifier>
@@ -330,14 +330,12 @@
     <ClInclude Include="..\Public\Environment_Object.h">
       <Filter>02.GameObjects\02. Environment</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Camera_Dynamic.h">
-      <Filter>02.GameObjects\97. Camera</Filter>
-    </ClInclude>
+
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02.GameObjects\98. Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Environment_Object.h">
-      <Filter>02.GameObjects\02. Environment</Filter>
+    <ClInclude Include="..\Public\Client_Enum.h">
+      <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
@@ -347,6 +345,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\00. Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Camera_Dynamic.h">
+      <Filter>02.GameObjects\97. Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
@@ -369,9 +370,7 @@
     <ClInclude Include="..\public\Camera_Dynamic.h">
       <Filter>02.GameObjects\97. Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Environment_Instance.h">
-      <Filter>02.GameObjects\02. Environment\Environment_Instance</Filter>
-    </ClInclude>
+
     <ClInclude Include="..\Public\Weapon_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
     </ClInclude>
@@ -472,9 +471,7 @@
     <ClInclude Include="..\Public\Include_Imgui_Windows.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Environment_Instance.h">
-      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
-    </ClInclude>
+
     <ClInclude Include="..\Public\Effect_Instance.h">
       <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
     </ClInclude>
@@ -535,8 +532,8 @@
     <ClInclude Include="..\Public\SkyDome.h">
       <Filter>02.GameObjects\99. Sky</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Terrain.h">
-      <Filter>02.GameObjects\98. Terrain</Filter>
+    <ClInclude Include="..\public\Loader.h">
+      <Filter>01.Levels\98. Loader</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CustomDialogFont.h">
       <Filter>99.Defines</Filter>
@@ -662,9 +659,7 @@
     <ClInclude Include="..\Public\SkyDome.h">
       <Filter>02.GameObjects\Sky\SkyDome</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Environment_Instance.h">
-      <Filter>02.GameObjects\LandObject\Environment_Instance</Filter>
-    </ClInclude>
+
     <ClInclude Include="..\Public\Effect_Instance.h">
       <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
     </ClInclude>
@@ -795,9 +790,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Interact_Door.cpp">
       <Filter>02.GameObjects\01. Interact\1. Door</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\EW_Actor.cpp">
-      <Filter>02.GameObjects\00. Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Interact_Chain.cpp">
       <Filter>02.GameObjects\01. Interact\0. Chain</Filter>
