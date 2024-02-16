@@ -19,7 +19,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
-	FAILED_CHECK(Ready_LandObjects());
+	//FAILED_CHECK(Ready_LandObjects());
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 
 	return S_OK;

@@ -26,24 +26,27 @@ public:
 	virtual void	Render()				override;
 
 public:
+	void	Update_ParticleTab();
+	void	Update_Demo_Particle();
+	void	Update_ListArea_Particle();
 	void	Update_PlayArea_Particle();
-	void	Update_ColorEditArea_Particle();
+	void	Update_AppearArea_Particle();
+	void	Update_ActionArea_Particle();
 
+	void	Update_CurParameters();
 
-/* For.Imgui Util */
+/* For.Tool Util */
 public:
-	void HelpMarker(const char* desc);
-
-/* For.string Util */
-public:
-	string	WstringToUTF8(const wstring& wstr);
-	wstring CharToWstring(char* szChar);
+	HRESULT Ready_Layer_Greed(const wstring& strLayerTag);
 
 /* For.Particle */
 public:
 	HRESULT Create_NewParticle();
 	HRESULT Ready_Layer_Particle(const wstring& strLayerTag);
 	
+public:
+	wstring Make_NameWithPin(const wstring& strFrontName);
+
 private:
 	map<const wstring, class CParticle_Custom*>	m_pParticles;
 
@@ -63,9 +66,15 @@ private:
 	_float m_fParticleAccPosition	= { 0.1f };
 	_float m_fRotateUvDegree = { 0.f };
 
+	_float m_fAddScale = { 0.f };
 	_float m_vAddScale[2] = { 0.f, 0.f };
 
-	_float m_fColor_Particle[3] = { 0.f, 0.f, 0.f };
+	_float m_fColor_Particle[3] = { 1.f, 1.f, 1.f };
+
+	_int	m_iTextureIndex = { 0 };
+
+	_int	m_iMaxNumInstance = { 500 };
+	_int	m_iNumInstance = { 0 };
 
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };

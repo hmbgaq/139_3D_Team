@@ -20,7 +20,8 @@ public:
 		wstring strModelTag = {TEXT("")};
 		_uint	iNumInstance = { 0 };
 		_uint	iShaderPassIndex = { 0 };
-		CRenderer::RENDERGROUP eRenderGroup = CRenderer::RENDER_END;
+		
+		//CRenderer::RENDERGROUP eRenderGroup = CRenderer::RENDER_END; /* 안됨. int로 형변환해서 받기 */
 	}EFFECT_INSTANCE_DESC;
 
 private:

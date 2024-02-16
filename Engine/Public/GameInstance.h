@@ -122,7 +122,19 @@ public: /* For.Frustum */
 public:
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
+	string		Wstring_To_UTF8(const wstring& wstr);
+	wstring		Char_To_Wstring(char* szChar);
 
+	const wstring	Remove_LastNumChar(const wstring& str, const _uint& iNumCutCount);
+	const string	Remove_LastNumChar(const string& str, const _uint& iNumCutCount);
+	const wstring	Get_LastNumChar(const wstring& str, const _uint& iNumCutCount);
+
+	/* For.Math */
+public:
+	_float3 Add_Float3(const _float3& fLeft, const _float3& fRight);
+	_float3 Mul_Float3(const _float3& fLeft, const _float& fRight);
+	_bool	isIn_Range(const _float3 fLeft, const _float3 fRight, const _float fRange);
+	_matrix Make_WorldMatrix(const _float2& vScale, const _float3& vRot, const _float3& vPos);
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };

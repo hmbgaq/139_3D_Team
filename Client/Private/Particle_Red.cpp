@@ -86,8 +86,7 @@ HRESULT CParticle_Red::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-
-	CVIBuffer_Particle_Point::PARTICLE_POINT_DESC		ParticleDesc = {};
+	CVIBuffer_Instancing::INSTANCING_DESC		ParticleDesc = {};
 	ParticleDesc.vCenter = _float3(0.f, 0.f, 0.f);
 	ParticleDesc.fRange = 3.f;
 	ParticleDesc.vScale = _float2(0.2f, 0.5f);

@@ -10,6 +10,8 @@ namespace Engine
 	/* Transform */
 	static const wchar_t* g_pTransformTag = TEXT("Com_Transform");
 
+	enum MINMAX { MIN, MAX, MINMAX_END };
+	enum AXIS	{ AXIS_X, AXIS_Y, AXIS_Z, AXIS_END };
 
 }
 

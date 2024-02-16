@@ -46,19 +46,18 @@ void CParticle_Custom::Tick(_float fTimeDelta)
 {
 	if (m_bActive)
 	{
-		if (GetKeyState(VK_LEFT) & 0x8000)
-		{
-			//m_pTransformCom->Go_Left(fTimeDelta);
-			m_pTransformCom->Turn(XMVectorSet(0.f, 0.f, 1.f, 0.f), fTimeDelta * -1.f);
-		}
+		//if (GetKeyState(VK_LEFT) & 0x8000)
+		//{
+		//	//m_pTransformCom->Go_Left(fTimeDelta);
+		//	m_pTransformCom->Turn(XMVectorSet(0.f, 0.f, 1.f, 0.f), fTimeDelta * -1.f);
+		//}
 
-		_float4 vParticlePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		vParticlePos;
+		//_float4 vParticlePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 		
-
 		m_pVIBufferCom->Update(fTimeDelta);
-
+		//m_pVIBufferCom->Update_Particle(fTimeDelta, FALSE);
+		//Update_ParticlePosition(0, fTimeDelta);
 	}
 }
 
@@ -92,6 +91,7 @@ HRESULT CParticle_Custom::Render()
 	return S_OK;
 }
 
+
 HRESULT CParticle_Custom::Ready_Components()
 {
 	/* For.Com_Shader */
@@ -100,27 +100,60 @@ HRESULT CParticle_Custom::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	CVIBuffer_Particle_Point::PARTICLE_POINT_DESC		ParticleDesc = {};
-	ParticleDesc.vCenter	= _float3(0.f, 0.f, 0.f);
-	ParticleDesc.fRange		= 3.f;
-	ParticleDesc.vSpeed		= _float2(0.1f, 5.0f);
+	{
+		CVIBuffer_Particle_Point::PARTICLE_POINT_DESC		ParticleDesc = {};
+		ParticleDesc.eType = { CVIBuffer_Particle_Point::TYPE::CIRCLE };
 
-	ParticleDesc.vScale		= _float2(0.2f, 0.5f);
-	ParticleDesc.vRotX		= _float2(0.0f, 360.f);
-	ParticleDesc.vRotY		= _float2(0.0f, 360.f);
-	ParticleDesc.vRotZ		= _float2(0.0f, 360.f);
+		ParticleDesc.bActive				= { TRUE };
+		ParticleDesc.bBillBoard				= { TRUE };
+		ParticleDesc.bIsPlay				= { TRUE };
+		ParticleDesc.bReverse				= { FALSE };
+		ParticleDesc.bLoop					= { TRUE };
 
-	ParticleDesc.vColor		= _float4(1.f, 1.f, 1.f, 1.f);
+		ParticleDesc.bUseParentMatrix		= { FALSE };
 
-	ParticleDesc.vLifeTime		= _float2(0.5f, 3.0f);
-	ParticleDesc.fAcceleration	= { 2.f };
-	ParticleDesc.fAccPosition	= { 0.1f };
+		ParticleDesc.vMinMaxLifeTime		= _float2(0.5f, 3.0f);
+		ParticleDesc.vMinMaxSpawnTime		= { 0.f, 0.f };
+		ParticleDesc.iCurNumInstance		= { 300 };
 
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Particle_Point"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &ParticleDesc)))
-		return E_FAIL;
+		ParticleDesc.vMinMaxRange			= { 0.1f, 3.f };
+		ParticleDesc.vCenterPosition		= _float3(0.f, 0.f, 0.f);
+		ParticleDesc.vOffsetPosition		= _float3(0.f, 0.f, 0.f);
 
+		ParticleDesc.vMinMaxSpeed			= _float2(0.1f, 5.0f);
+		ParticleDesc.fAcceleration			= { 2.f };
+		ParticleDesc.fAccPosition			= { 0.1f };
 
+		ParticleDesc.fGravityAcc			= { 0.f };
+		ParticleDesc.vCurrentGravity		= { 0.f, 0.f, 0.f };
+
+		ParticleDesc.vMinMaxRotationOffsetX = { 0.0f, 360.f };
+		ParticleDesc.vMinMaxRotationOffsetY = { 0.0f, 360.f };
+		ParticleDesc.vMinMaxRotationOffsetZ = { 0.0f, 360.f };
+
+		ParticleDesc.vCurrentRotation		= { 0.f, 0.f, 0.f };
+		ParticleDesc.vMinMaxRotationForce	= { 0.f, 0.f, 0.f };
+
+		ParticleDesc.vMinMaxScale			= _float2(0.2f, 0.5f);
+		ParticleDesc.vAddScale				= { 0.f, 0.f };
+		ParticleDesc.vMinMaxScaleForce		= { 1.f, 1.f };
+
+		ParticleDesc.vCurrentColor			= _float4(1.f, 1.f, 1.f, 1.f);
+		ParticleDesc.vColorSpeed			= { 0.f, 0.f, 0.f, 0.f };
+		ParticleDesc.vColorForce			= { 0.f, 0.f, 0.f, 0.f };
+
+		ParticleDesc.fMinMaxAlpha			= { 1.f, 1.f };
+		ParticleDesc.fAlphaForce			= { 0.f };
+
+		ParticleDesc.vSpriteUV				= { 0.f, 0.f };
+		ParticleDesc.vSpriteUVForce			= { 0.f, 0.f };
+		ParticleDesc.iSpriteFrameIndex		= { 1 };
+
+		if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Particle_Point"),
+			TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &ParticleDesc)))
+			return E_FAIL;
+	}
+	
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_TOOL, m_strTextureTag,
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
@@ -144,12 +177,15 @@ HRESULT CParticle_Custom::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDegree", &m_fRotateUvDegree, sizeof(_float))))
 		return E_FAIL;
 
-
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", 0)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_iTextureIndex)))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
+
+	//_vector vCamDir = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamLook", &vCamDir, sizeof(_float4))))
+	//	return E_FAIL;
 
 	return S_OK;
 }

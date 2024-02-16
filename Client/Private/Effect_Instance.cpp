@@ -51,8 +51,8 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 void CEffect_Instance::Late_Tick(_float fTimeDelta)
 {
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(m_tInstanceDesc.eRenderGroup, this)))
-		return;
+	//if (FAILED(m_pGameInstance->Add_RenderGroup(m_tInstanceDesc.eRenderGroup, this)))
+	//	return;
 
 }
 

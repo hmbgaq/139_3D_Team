@@ -17,6 +17,7 @@ public:
 	typedef struct tagParticleCustomDesc : public CGameObject::GAMEOBJECT_DESC
 	{
 		wstring		strTextureTag;
+		_int		iMaxNumInstance;
 
 	}PARTICLE_CUSTOM_DESC;
 
@@ -33,8 +34,16 @@ public:
 	virtual void	Late_Tick(_float fTimeDelta)		override;
 	virtual HRESULT Render()							override;
 
+
+//public:
+//	void Update_ParticlePosition(const _uint& i, _float fTimeDelta);
+
+
 public:
 	void		Set_Active(_bool bActive) { m_bActive = bActive; }
+
+	void		Set_TextureIndex(_int iIndex) { m_iTextureIndex = iIndex; }
+	_int		Get_TextureIndex() { return m_iTextureIndex; }
 
 	void		Set_RotateUvDegree(_float fDegree) { m_fRotateUvDegree = fDegree; }
 	_float		Get_RotateUvDegree() { return m_fRotateUvDegree; }
@@ -46,11 +55,15 @@ public:
 
 private:
 	wstring			m_strTextureTag;
+
+	_int			m_iTextureIndex = { 0 };
+
 	_float			m_fRotateUvDegree = { 0.f };
 
 private:
 	_bool			m_bActive = { TRUE };
 	_float			m_fTimer = { 0.0f };
+
 
 private:
 	CShader*						m_pShaderCom = { nullptr };

@@ -109,6 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../Reference/Public/;../Public/;../Default/;../../Reference/Imgui/</AdditionalIncludeDirectories>
       <ConformanceMode>false</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,6 +152,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../Reference/Public/;../Public/;../Default/;../../Reference/Imgui/</AdditionalIncludeDirectories>
       <ConformanceMode>false</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -191,6 +193,8 @@
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\Public\Greed.h" />
+    <ClInclude Include="..\Public\CustomDialogFont.h" />
     <ClInclude Include="..\Public\Effect_Explosion.h" />
     <ClInclude Include="..\Public\Effect_Instance.h" />
     <ClInclude Include="..\Public\Environment_Instance.h" />
@@ -238,6 +242,8 @@
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
+    <ClCompile Include="..\Private\Greed.cpp" />
+    <ClCompile Include="..\Private\CustomDialogFont.cpp" />
     <ClCompile Include="..\Private\Effect_Explosion.cpp" />
     <ClCompile Include="..\Private\Effect_Instance.cpp" />
     <ClCompile Include="..\Private\Environment_Instance.cpp" />
