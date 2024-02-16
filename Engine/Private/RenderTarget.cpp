@@ -13,7 +13,7 @@ CRenderTarget::CRenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pCont
 HRESULT CRenderTarget::Initialize(const wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, _float4 vClearColor)
 {
 	m_vClearColor = vClearColor;
-	m_wstrTag = strTargetTag;
+	//m_wstrTag = strTargetTag;
 	
 	XMStoreFloat4(&m_vFontColor, (XMVectorSet( 1.f , 1.f, 1.f, 1.f ) - XMLoadFloat4(&m_vClearColor)));
 	m_vFontColor.z = 1.f;
@@ -76,6 +76,7 @@ HRESULT CRenderTarget::Ready_Debug(const wstring& strTargetTag, _float fX, _floa
 	m_WorldMatrix._41 = fX - Viewport.Width * 0.5f;
 	m_WorldMatrix._42 = -fY + Viewport.Height * 0.5f;
 
+	/* 디버그로 렌더타겟을 스크린에 올려서 볼 애들만 네임태그를 저장해서 렌더돌리기 */
 	m_wstrTag = strTargetTag;
 
 	XMStoreFloat4(&m_vFontColor, (XMVectorSet(1.f, 1.f, 1.f, 1.f) - XMLoadFloat4(&m_vClearColor)));

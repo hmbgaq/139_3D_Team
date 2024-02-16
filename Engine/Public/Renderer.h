@@ -13,7 +13,7 @@ public:
 	enum RENDERGROUP { RENDER_PRIORITY, RENDER_SHADOW, RENDER_NONLIGHT, 
 					   
 						/* Shader */
-					   RENDER_GODRAY, RENDER_OUTLINE,
+					  RENDER_SSAO, RENDER_GODRAY, RENDER_OUTLINE,
 					   
 					   RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
 
@@ -22,7 +22,7 @@ public:
 	struct QuadVertex // ssao 
 	{
 		_float3 pos;
-		_float3 ToFarPlaneIndex;
+		_float3 normal;
 		_float2 tex;
 	};
 private:
@@ -45,9 +45,10 @@ public:
 	HRESULT Ready_SSAO();
 
 	/* SSAO */
-	HRESULT Initialize_ScreenQuad();
-	void	BuildFrustumFarCorners();
+	HRESULT SSAO_OnSize();
+	HRESULT BuildFullScreenQuad();
 	void	BuildOffsetVectors();
+	void	BuildRandomVectorTexture();
 
 	HRESULT RenderScreenQuad();
 
@@ -68,7 +69,7 @@ private:
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponent;
-	_bool						m_bRenderDebug = { false };
+	_bool						m_bRenderDebug = { true };
 #endif
 
 private:
@@ -78,13 +79,17 @@ private:
 
 private: // SSAO
 	class CTexture* m_pRandomVectorTexture = { nullptr };
-	ID3D11Buffer*	m_pQuadVertexBuffer = { nullptr };
-	ID3D11Buffer*	m_pQuadIndexBuffer = { nullptr };
+	ID3D11Buffer*	m_ScreenQuadVB = { nullptr };
+	ID3D11Buffer*	m_ScreenQuadIB = { nullptr };
+	ID3D11ShaderResourceView* m_RandomVectorSRV;
 
 	_float4			m_vFrustumFarCorner[4];
-	_float4			m_vOffsets[26];
+	_float4			m_vOffsets[14];
+	_float			m_OffsetsFloat[56];
 	_int			m_iQuadVerCount;
 	_int			m_iQuadIndexCount;
+	_float			RandF() {	return (float)(rand()) / (float)RAND_MAX; }
+	_float			RandF(float a, float b) { return a + RandF() * (b - a); };
 
 	HRESULT			Render_Blur_DownSample();
 	HRESULT			Render_Blur_Horizontal();
@@ -104,9 +109,24 @@ private:
 
 	HRESULT Render_OutLine();
 	HRESULT Render_SSAO();
-	HRESULT Render_SSAO_Blur();
+	//HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
 	HRESULT Render_GodRay();
 
+	/* Blur */
+	HRESULT Render_SSAO_Blur();
+public:
+	typedef struct tagXMCOLOR
+	{
+		union {
+			struct {
+				uint8_t b;
+				uint8_t g;
+				uint8_t r;
+				uint8_t a;
+			};
+			uint32_t c;
+		};
+	}XMCOLOR;
 
 #ifdef _DEBUG
 private:

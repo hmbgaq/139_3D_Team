@@ -7,6 +7,7 @@ matrix			g_LightViewMatrix, g_LightProjMatrix;
 vector			g_vLightDir;
 vector			g_vLightPos;
 float			g_fLightRange;
+
 vector			g_vLightDiffuse;	
 vector			g_vLightAmbient;
 vector			g_vLightSpecular;
@@ -38,8 +39,6 @@ struct VS_OUT
 	float2		vTexcoord : TEXCOORD0;
 };
 
-
-
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
@@ -56,12 +55,6 @@ VS_OUT VS_MAIN(VS_IN In)
 	return Out;
 }
 
-/* 통과된 정점을 대기 .*/
-
-/* 투영변환 : /w */ /* -> -1, 1 ~ 1, -1 */
-				/* 뷰포트변환-> 0, 0 ~ WINSX, WINSY */
-				/* 래스터라이즈 : 정점정보에 기반하여 픽셀의 정보를 만든다. */
-
 
 struct PS_IN
 {
@@ -74,6 +67,7 @@ struct PS_OUT
 	float4		vColor : SV_TARGET0;	
 };
 
+/* ------------------ 0 - DEBUG ------------------ */
 
 PS_OUT PS_MAIN_DEBUG(PS_IN In)
 {
@@ -83,6 +77,8 @@ PS_OUT PS_MAIN_DEBUG(PS_IN In)
 
 	return Out;
 }
+
+/* ------------------ 1 - Directional ------------------ */
 
 struct PS_OUT_LIGHT
 {
@@ -130,6 +126,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	return Out;
 }
 
+/* ------------------ 2 - Point ------------------ */
 
 PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
@@ -178,6 +175,16 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	return Out;
 }
 
+
+/* ------------------ 3 - Spot  ------------------ */
+PS_OUT PS_MAIN_SPOT(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+	
+    return Out;
+}
+
+/* ------------------ 4 - Deferred ------------------ */
 PS_OUT PS_MAIN_FINAL(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
@@ -187,13 +194,15 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 		discard;
 
 	vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
-	vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    vector		vSSAO = g_SSAOTexture.Sample(ClampSampler, In.vTexcoord); /* SSAO 적용 */ 
 
-	Out.vColor = vDiffuse * vShade + vSpecular;
-
+    //Out.vColor = (vDiffuse * vShade ) + vSpecular;
+    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular;
+    
 	vector		vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
 	float		fViewZ = vDepthDesc.y * 1000.f;
-
+	
 	vector		vWorldPos;
 
 	/* 투영스페이스 상의 위치. */
@@ -211,7 +220,6 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 	/* 월드 상의 위치를 구하자. */
 	/* 로컬위치 * 월드행렬 */
 	vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-
 	vWorldPos = mul(vWorldPos, g_LightViewMatrix);
 	vWorldPos = mul(vWorldPos, g_LightProjMatrix);
 
@@ -224,7 +232,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 
 	if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
 		Out.vColor = Out.vColor * 0.7f;
-
+	
 	return Out;
 }
 
@@ -266,6 +274,13 @@ technique11 DefaultTechnique
 
     pass Light_Spot // 3
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SPOT();
     }
 
 	pass Deferred // 4
