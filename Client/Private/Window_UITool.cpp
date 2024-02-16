@@ -181,8 +181,11 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 		ImGui::InputFloat("PositionX", &vPosition.m128_f32[0]);
 		ImGui::InputFloat("PositionY", &vPosition.m128_f32[1]);
 		ImGui::InputFloat("PositionZ", &vPosition.m128_f32[2]);
-	}
 
+		Set_GuizmoCamView();
+		Set_GuizmoCamProj();
+		Set_Guizmo(m_vecUIObject[Object_idx]);
+	}
 
 	///* Test Value */
 	//m_tUI_Info.strName = "Test UI List";
@@ -202,6 +205,24 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 
 	//	ImGui::TreePop();
 	//}
+}
+
+/* Mouse */
+HRESULT CWindow_UITool::Update_Pos()
+{
+	//POINT cursorPos;
+	//GetCursorPos(&cursorPos);
+
+	//m_fX = cursorPos.x;
+	//m_fY = cursorPos.y;
+
+	//m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+	//XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	//XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
+
+	return S_OK;
 }
 
 void CWindow_UITool::UI_ToolTip(_float fTimeDelta)
