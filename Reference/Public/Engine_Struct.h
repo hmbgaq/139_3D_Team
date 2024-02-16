@@ -218,6 +218,13 @@ namespace Engine
 		return (value < start) ? start : (value > end) ? end : value;
 	}
 
+	template<typename T, typename = enable_if_t<is_enum<T>::value>,
+		typename Return = underlying_type_t<T>>
+		constexpr Return ECast(T value)
+	{
+		return static_cast<Return>(value);
+	}
+
 #pragma endregion
 	
 

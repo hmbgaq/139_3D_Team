@@ -121,7 +121,6 @@
 		}
 
 /* SH_Add */
-#define UIPATH() "../Bin/Resources/Textures/UI/Textures"
 #define UIPATH(path) "../Bin/Resources/Textures/UI/Textures/" path
 #define UIPATHPNG(path) "../Bin/Resources/Textures/UI/Textures/" path ".png"
 #define UIPATHJPG(path) "../Bin/Resources/Textures/UI/Textures/" path ".jpg"

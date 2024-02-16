@@ -20,7 +20,7 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.iBackBufferSizeX = g_iWinSizeX;
 	GraphicDesc.iBackBufferSizeY = g_iWinSizeY;
 
-	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
+	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, (_uint)(COLLISION_LAYER::LAYER_END), g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
 
 	FAILED_CHECK(Ready_Font());
 
@@ -57,7 +57,7 @@ HRESULT CMainApp::Render()
 	}
 	
 	// MakeSpriteFont "넥슨lv1고딕 Bold" /FontSize:30 /FastPack /CharacterRegion:0x0020-0x00FF /CharacterRegion:0x3131-0x3163 /CharacterRegion:0xAC00-0xD800 /DefaultCharacter:0xAC00 140.spritefont
-	m_pGameInstance->Render_Font(TEXT("Font_Default"), m_szFPS, _float2(1100.f, 20.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
+	m_pGameInstance->Render_Font(TEXT("Font_Default"), m_szFPS, _float2(700.f, 20.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
 	m_pGameInstance->Present();
 
 	return S_OK;
@@ -133,18 +133,19 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 
 HRESULT CMainApp::Ready_Gara()
 {
-	//D3D11_BLEND_DESC			BlendDesc;
-	//D3D11_DEPTH_STENCIL_DESC	DepthStencilDesc;
-	//D3D11_RASTERIZER_DESC		RasterizerDesc;
-
-	//RasterizerDesc.CullMode
+	// D3D11_BLEND_DESC			BlendDesc;
+	// D3D11_DEPTH_STENCIL_DESC	DepthStencilDesc;
+	// D3D11_RASTERIZER_DESC		RasterizerDesc;
+	// D3D11_SAMPLER_DESC
 
 	//ID3D11RasterizerState*		pRSState;
 	//m_pDevice->CreateRasterizerState(RasterizerDesc, &pRSState);
 
-	/*m_pContext->RSSetState();
+	/*
+	m_pContext->RSSetState();
 	m_pContext->OMSetDepthStencilState();
-	m_pContext->OMSetBlendState();*/
+	m_pContext->OMSetBlendState();
+	*/
 
 	/* 텍스쳐를 생성해보자. */
 	ID3D11Texture2D*		pTexture2D = { nullptr };

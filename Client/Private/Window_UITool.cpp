@@ -26,7 +26,7 @@ HRESULT CWindow_UITool::Initialize()
 	//LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures"))));
 
 	// 이미지 로드 Test
-	_int iSize = m_vecPaths.size();
+	_int iSize = (_int)m_vecPaths.size();
 	for (_int i = 0; i < iSize; i++)
 	{
 		IMAGEINFO* tTexture = new IMAGEINFO;
@@ -493,7 +493,6 @@ void CWindow_UITool::LoadImg(const _tchar* folderPath)
 			}
 		} while (FindNextFile(hFind, &findData));
 
-		
 		FindClose(hFind);
 	}
 }
@@ -597,7 +596,7 @@ void CWindow_UITool::Load_Desc()
 // ImGui를 사용하여 이미지를 표시하는 함수
 void CWindow_UITool::ShowImagePreview(const std::vector<unsigned char>& imageData, int width, int height)
 {
-	ImVec2 imageSize(width, height);
+	ImVec2 imageSize((_float)width, (_float)height);
 	ImGui::Image(reinterpret_cast<void*>(const_cast<unsigned char*>(imageData.data())), imageSize);
 }
 

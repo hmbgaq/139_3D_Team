@@ -86,7 +86,7 @@ HRESULT CWindow_MapTool::Ready_ModelTags()
 {
 	//! ╬ж╢теб╠в
 	vector<wstring> vecAnimTags = *CImgui_Manager::GetInstance()->Get_Anim_E_ModelTag();
-	_int iAnimTagVectorSize = vecAnimTags.size();
+	_int iAnimTagVectorSize = (_int)vecAnimTags.size();
 	
 	m_vecAnimModelTag.reserve(iAnimTagVectorSize);
 
@@ -101,7 +101,7 @@ HRESULT CWindow_MapTool::Ready_ModelTags()
 
 	//!ЁМ╬ж╢т еб╠в
 	vector<wstring> vecNonAnimTags = *CImgui_Manager::GetInstance()->Get_NonAnim_E_ModelTag();
-	_int iNonAnimTagVectorSize = vecNonAnimTags.size();
+	_int iNonAnimTagVectorSize = (_int)vecNonAnimTags.size();
 
 	m_vecNonAnimModelTag.reserve(iNonAnimTagVectorSize);
 
