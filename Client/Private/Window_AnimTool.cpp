@@ -285,7 +285,16 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 			
 		}
 
-		
+		ImGui::Checkbox(u8"기즈모on/off", &m_bguizmo);
+		if (m_bguizmo)
+		{
+			if (nullptr == m_PickingObject)
+				return;
+			/*	ImGuizmo_Initialize();*/
+			Set_GuizmoCamProj();
+			Set_GuizmoCamView();
+			Set_Guizmo(m_PickingObject);
+		}
 		
 		ImGui::Spacing();
 
@@ -334,16 +343,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		}
 		ImGui::TreePop();
 	}
-	ImGui::Checkbox(u8"기즈모on/off", &m_bguizmo);
-	if (m_bguizmo)
-	{
-		if (nullptr == m_PickingObject)
-			return;
-		/*	ImGuizmo_Initialize();*/
-		Set_GuizmoCamProj();
-		Set_GuizmoCamView();
-		Set_Guizmo(m_PickingObject);
-	}
+
 	if (ImGui::Button(" Play "))
 	{
 		if (nullptr != m_pBody)
