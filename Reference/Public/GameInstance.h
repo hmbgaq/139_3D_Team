@@ -53,7 +53,9 @@ public: /* For.Timer_Manager */
 	_float		Compute_TimeDelta(const wstring& strTimeTag);
 
 public: /* For.Level_Manager */
-	HRESULT		Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
+	HRESULT Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
+	_uint	Get_NextLevel();
+	void	Set_CurrentLevel(_uint CurrentLevel);
 
 public: /* For.Object_Manager */
 	HRESULT				Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
@@ -61,12 +63,15 @@ public: /* For.Object_Manager */
 	CGameObject*		Clone_Prototype(const wstring& strPrototypeTag, void* pArg = nullptr);
 	class CComponent*	Get_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex = 0, const wstring& strPartTag = TEXT(""));
 
-	list<class CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring & strLayerTag);
+	list<CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring & strLayerTag);
 	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>*clonevector);
 	class CGameObject* Get_GameObect_Last(_uint iLevelIndex, const wstring & strLayerTag);
 	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
 	class CGameObject* Get_Player();
 	void Set_Player(class CGameObject* _pPlayer);
+
+
+
 	void Fill_PrototypeTags(vector<string>*_vector);
 
 public: /* For.Component_Manager */
@@ -79,6 +84,7 @@ public: /* For.Renderer */
 #ifdef _DEBUG
 	void Set_RenderDebug(_bool _bRenderDebug);
 #endif
+
 
 public: /* For.PipeLine */
 	void		Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix);
@@ -120,8 +126,6 @@ public: /* Convert */
 	void		WString_To_String(wstring _wstring, string & _string);
 
 #pragma region 성희
-	// string을 wstring으로 변환 해주는 함수
-	wstring		Convert_String_To_WString(string _string);
 	// wstring을 string으로 변환 해주는 함수
 	string		Convert_WString_To_String(wstring _wstring);
 	// string을 wchar로 변환 해주는 함수

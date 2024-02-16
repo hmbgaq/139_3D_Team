@@ -250,6 +250,16 @@ HRESULT CGameInstance::Open_Level(_uint iCurrentLevelIndex, CLevel * pNewLevel)
 	return m_pLevel_Manager->Open_Level(iCurrentLevelIndex, pNewLevel);
 }
 
+_uint CGameInstance::Get_NextLevel()
+{
+	return m_pLevel_Manager->Get_NextLevel();
+}
+
+void CGameInstance::Set_CurrentLevel(_uint CurrentLevel)
+{
+	m_pLevel_Manager->Set_CurrentLevel(CurrentLevel);
+}
+
 HRESULT CGameInstance::Add_Prototype(const wstring & strPrototypeTag, CGameObject * pPrototype)
 {
 	if (nullptr == m_pObject_Manager)
@@ -330,6 +340,7 @@ HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring & strProto
 	if (nullptr == m_pComponent_Manager)
 		return E_FAIL;
 
+
 	return m_pComponent_Manager->Add_Prototype(iLevelIndex, strPrototypeTag, pPrototype);
 }
 
@@ -357,12 +368,14 @@ HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
 
+
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebug(_bool _bRenderDebug)
 {
 	m_pRenderer->Set_RenderDebug(_bRenderDebug);
 }
 #endif
+
 
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {
@@ -514,18 +527,39 @@ _bool CGameInstance::isIn_LocalPlanes(_fvector vPoint, _float fRadius)
 
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
 {
+	//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
+	//_wstring = converter.from_bytes(_string);
+
 	//wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
 	//_wstring = converter.from_bytes(_string);
 
-	_wstring.assign(_string.begin(), _string.end());
+	//_wstring.assign(_string.begin(), _string.end());
+
+	//TODO C++ 17로 올리니 기존 Convert 함수들은 더 이상 지원하지 않아. window api에서 제공하는 변환 함수 사용으로 변경 - TO 승용
+
+	int len = MultiByteToWideChar(CP_UTF8, 0, _string.c_str(), -1, nullptr, 0);
+	if (len > 0) {
+		_wstring.resize(len - 1);
+		MultiByteToWideChar(CP_UTF8, 0, _string.c_str(), -1, &_wstring[0], len);
+	}
 }
 
 void CGameInstance::WString_To_String(wstring _wstring, string& _string)
 {
-	//wstring_convert<codecvt_utf8<wchar_t>> converter;
+	//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
 	//_string = converter.to_bytes(_wstring);
 
-	_string.assign(_wstring.begin(), _wstring.end());
+	//wstring_convert<codecvt_utf8<wchar_t>> converter;
+	//_string = converter.to_bytes(_wstring);
+//	_string.assign(_wstring.begin(), _wstring.end());
+	//TODO C++ 17로 올리니 기존 Convert 함수들은 더 이상 지원하지 않아. window api에서 제공하는 변환 함수 사용으로 변경 - TO 승용
+
+	int len = WideCharToMultiByte(CP_UTF8, 0, _wstring.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	if (len > 0) 
+	{
+		_string.resize(len - 1);
+		WideCharToMultiByte(CP_UTF8, 0, _wstring.c_str(), -1, &_string[0], len, nullptr, nullptr);
+	}
 }
 
 string CGameInstance::Convert_WString_To_String(wstring _wstring)
@@ -591,7 +625,7 @@ std::string CGameInstance::RemoveExtension(const std::string& filePath)
 	{
 		return filePath.substr(0, lastDotPos);
 	}
-	else 
+	else
 	{
 		// 확장자가 없는 경우 그대로 반환
 		return filePath;

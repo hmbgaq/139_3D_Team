@@ -154,6 +154,9 @@ void CObject_Manager::Fill_PrototypeTags(vector<string>* _vector)
 		string key;
 		m_pGameInstance->WString_To_String(item.first, key);
 
+		wstring Test = {};
+		m_pGameInstance->String_To_WString(key, Test);
+
 		_vector->push_back(key);
 	}
 }

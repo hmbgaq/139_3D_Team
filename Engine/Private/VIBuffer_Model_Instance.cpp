@@ -112,7 +112,7 @@ void CVIBuffer_Model_Instance::Free()
 	__super::Free();
 	
 
-		
+
 	if (nullptr != m_tModelDesc.pModel)
 	{
 		for (_int i = 0; i < m_iNumMeshes; ++i)
@@ -122,7 +122,7 @@ void CVIBuffer_Model_Instance::Free()
 
 		m_vecInstanceMesh.clear();
 		Safe_Release(m_tModelDesc.pModel);
-
+		
 	}
 
 	Safe_Release(m_pVBInstance);
