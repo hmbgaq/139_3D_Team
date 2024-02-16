@@ -24,6 +24,7 @@
 #pragma region UI
 #include "UI_MonsterHpFrame.h"
 #include "UI_MonsterHp.h"
+#include "UI_Anything.h"
 #pragma endregion
 
 #pragma region Test
@@ -282,6 +283,7 @@ HRESULT CLoader::Ready_Origin()
 #pragma region UI
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHpFrame"), CUI_MonsterHpFrame::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHp"), CUI_MonsterHp::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Anything"), CUI_Anything::Create(m_pDevice, m_pContext)));
 #pragma endregion
 
 	

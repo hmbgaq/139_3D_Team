@@ -51,23 +51,25 @@ HRESULT CWindow_UITool::Initialize()
 		m_vecImagePaths.push_back(ConverWStringtoC(ConvertToWideString(strFileName)));
 	}
 
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Texture_Info/Texture_Info";
+#pragma region 경로저장
+	//char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Texture_Info/Texture_Info";
 
-	json Out_Json;
-	_ushort iIndex = 0;
+	//json Out_Json;
+	//_ushort iIndex = 0;
 
-	for (PATHINFO* iter : m_vecPaths)
-	{
-		json object;
-		object["PathNum"] = iter->iPathNum;
-		object["FileName"] = iter->strFileName;
-		object["FilePath"] = iter->strFilePath;
-		Out_Json.emplace(to_string(iIndex++), object);
-	}
+	//for (PATHINFO* iter : m_vecPaths)
+	//{
+	//	json object;
+	//	object["PathNum"] = iter->iPathNum;
+	//	object["FileName"] = iter->strFileName;
+	//	object["FilePath"] = iter->strFilePath;
+	//	Out_Json.emplace(to_string(iIndex++), object);
+	//}
 
-	CJson_Utility::Save_Json(filePath, Out_Json);
+	//CJson_Utility::Save_Json(filePath, Out_Json);
 
 	//CJson_Utility::Load_Json(filePath, Out_Json);
+#pragma endregion 
 
 	return S_OK;
 }
@@ -105,20 +107,19 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 	//if (m_vecUIObject.empty())
 	//	return;
 
-	string items[] = { "Layer_UI_Player", "Layer_UI_Monster", "Layer_UI_Inventory" };
-
-	static int	Object_idx = 0; // Here we store our selection data as an index.
-	static int	Layer_idx = 0; // Here we store our selection data as an index.
-	_int		ObjectTagSize = (_int)m_vecObjectName.size();
+	static int	Object_idx = 0;
+	static int	Texture_idx = 0;
+	static int	Layer_idx = 0;
 
 	if (ImGui::BeginListBox("LayerList"))
 	{
 		for (_int i = 0; i < 3; i++)
 		{
 			const bool is_selected = (Layer_idx == i);
-			if (ImGui::Selectable(items[i].c_str(), is_selected))
+			if (ImGui::Selectable(m_strItems[i].c_str(), is_selected))
 				Layer_idx = i;
-
+			m_iLayerNum = i;
+			
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
 			{
@@ -128,14 +129,37 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 
 		ImGui::EndListBox();
 	}
+
 	ImGui::Spacing();
+
+	_int		iTextureTagSize = (_int)m_vecImagePaths.size();
+	if (ImGui::BeginListBox("TextureList"))
+	{
+		for (_int i = 0; i < iTextureTagSize; i++)
+		{
+			const bool is_selected = (Texture_idx == i);
+			if (ImGui::Selectable(m_vecImagePaths[i], is_selected))
+			{			
+				Texture_idx = i;
+			}
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+	/* 테그 */
+	m_tUI_Desc.strProtoTag = m_vecImagePaths[Texture_idx];
+
+	ImGui::Spacing();
+	_int		ObjectTagSize = (_int)m_vecObjectName.size();
 	if (ImGui::BeginListBox("ObjectList"))
 	{
 		for (_int i = 0; i < ObjectTagSize; i++)
 		{
 			const bool is_selected = (Object_idx == i);
-			if (ImGui::Selectable(m_vecObjectName[i], is_selected))
-			{			
+			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecObjectName[i])), is_selected))
+			{
 				Object_idx = i;
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -469,16 +493,16 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 	ImGui::CollapsingHeader("2D_Setting");
 	/* Scale */
 	ImGui::SeparatorText(u8"크기 변경");
-	ImGui::InputFloat("ScaleX", &m_tUI_Info.fSizeX);
-	ImGui::InputFloat("ScaleY", &m_tUI_Info.fSizeY);
-
+	ImGui::InputFloat("ScaleX", &m_tUI_Desc.fSizeX);
+	ImGui::InputFloat("ScaleY", &m_tUI_Desc.fSizeY);
 
 	/* Position*/
 	ImGui::SeparatorText(u8"위치 변경");
-	ImGui::InputFloat("PositionX", &m_tUI_Info.fX);
-	ImGui::InputFloat("PositionY", &m_tUI_Info.fY);
+	ImGui::InputFloat("PositionX", &m_tUI_Desc.fX);
+	ImGui::InputFloat("PositionY", &m_tUI_Desc.fY);
 
 	ImGui::Dummy(ImVec2(0, 2.5)); // 공백
+
 	ImGui::Separator();
 
 #pragma region Create/Delete
@@ -512,10 +536,9 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 
 HRESULT CWindow_UITool::UI2D_Create(_float fTimeDelta)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, TEXT("Layer_UI_Monster"), TEXT("Prototype_GameObject_UI_MonsterHpFrame"), &m_tUI_Info));
-	char* cUIName[MAX_PATH];
-	*cUIName = "UIObject %d", m_iUINameNum;
-	m_vecObjectName.push_back(*cUIName);
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, ConvertToWideString(m_strItems[m_iLayerNum]), TEXT("Prototype_GameObject_UI_Anything"), &m_tUI_Desc));
+
+	m_vecObjectName.push_back(m_tUI_Desc.strProtoTag);
 	m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecUIObject);
 	m_iUINameNum++;
 }
@@ -532,7 +555,7 @@ void CWindow_UITool::Save_Desc()
 	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
 
 	json Out_Json;
-
+	
 	Out_Json["PostionX"] = m_tUI_Info.fX;
 	Out_Json["PostionY"] = m_tUI_Info.fY;
 	Out_Json["SizeX"] = m_tUI_Info.fSizeX;

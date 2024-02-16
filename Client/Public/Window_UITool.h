@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Imgui_Window.h"
+#include "UI_Anything.h"
 
 BEGIN(Engine)
 class CGameObject;
@@ -71,6 +72,8 @@ public: /* ================= Function ================= */
 	std::vector<const char*> ConvertStringVectorToCharArray(const std::vector<std::string>& stringVector);
 	// string을 wstring으로 변환 해주는 함수
 	std::wstring ConvertToWideString(const std::string& ansiString);
+	// string을 wchar로 변환 해주는 함수
+	WCHAR* StringTowchar(const std::string& str);
 	// wstring을 string으로 변환 해주는 함수
 	std::string WStringToString(const std::wstring& wstr);
 	//	wstring을 char로 변환 해주는 함수
@@ -83,7 +86,8 @@ public: /* ================= Function ================= */
 	std::string GetFileName(const std::string& filePath);
 	// 확장자를 제거해주는 함수
 	std::string RemoveExtension(const std::string& filePath);
-	WCHAR* StringTowchar(const std::string& str);
+
+
 public:
 	// UI 설정
 	void UI2D_Setting(_float fTimeDelta);
@@ -114,7 +118,7 @@ private: /* Image_Member */
 
 	// 문자열 벡터를 const char* 배열로 변환
 	std::vector<const char*>	m_vecImagePaths;
-	std::vector<const char*>	m_vecObjectName;
+	std::vector<string>			m_vecObjectName;
 	_int						m_iSelectedPathIndex = 0; // 선택된 이미지 경로 인덱스
 	_int						m_iSelectedObjectIndex = 0; // 선택된 이미지 경로 인덱스
 	_int						m_iUINameNum = 0;
@@ -122,6 +126,10 @@ private: /* 2D */
 	_float						m_fPosition[2] = { 0.f, 0.f };
 	_float						m_fScale[2] = { 0.f, 0.f };
 	vector<CGameObject*>		m_vecUIObject;
+	string						m_strItems[3] = { "Layer_UI_Player", "Layer_UI_Monster", "Layer_UI_Inventory" };
+
+	_int						m_iLayerNum = 0;
+	CUI_Anything::UIANYTHING	m_tUI_Desc;
 
 public:
 	static CWindow_UITool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

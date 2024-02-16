@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "UI_Anything.h"
 #include "GameInstance.h"
+#include "Json_Utility.h"
 
 CUI_Anything::CUI_Anything(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUI_Base(pDevice, pContext)
@@ -144,11 +145,14 @@ HRESULT CUI_Anything::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
+	wstring strPrototag;
+	m_pGameInstance->String_To_WString(m_tInfo.strProtoTag, strPrototag);
+
 	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tInfo.strProtoTag,
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
-
+	
 	return S_OK;
 }
 
@@ -178,6 +182,26 @@ void CUI_Anything::Compute_OwnerCamDistance()
 _bool CUI_Anything::In_Frustum()
 {
 	return m_pGameInstance->isIn_WorldPlanes(m_tInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
+}
+
+void CUI_Anything::Save_Desc()
+{
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+
+	json Out_Json;
+	
+	Out_Json["PostionX"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
+	Out_Json["PostionY"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
+	Out_Json["SizeX"] = m_pTransformCom->Get_Scaled().x;
+	Out_Json["SizeY"] = m_pTransformCom->Get_Scaled().y;
+	Out_Json["ProtoTag"] = m_tInfo.strProtoTag;
+
+	CJson_Utility::Save_Json(filePath, Out_Json);
+}
+
+void CUI_Anything::Load_Desc()
+{
+
 }
 
 CUI_Anything* CUI_Anything::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

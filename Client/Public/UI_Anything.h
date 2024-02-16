@@ -18,7 +18,7 @@ public:
 		CTransform*		pOwnerTransform;
 		//STATUS_DESC*	pOwnerStatus;
 		MONSTERTYPE		eMonsterType;
-		wstring			strProtoTag = TEXT("");
+		string			strProtoTag = "";
 		_float			fCrntHPUV = 1.0f;
 		_float			fPrevHPUV = 1.0f;
 		_float			fScreenPosXOffset = 1.f;
@@ -64,6 +64,10 @@ private:
 	_float					m_fPosXOffset = 0.f;
 	_float					m_fPosYOffset = 0.f;
 	_float					m_fOwnerCamDistance;
+
+public:
+	void				 Save_Desc();
+	void				 Load_Desc();
 
 public:
 	static CUI_Anything* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext); //! 원형객체 생성
