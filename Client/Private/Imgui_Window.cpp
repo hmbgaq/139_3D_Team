@@ -175,6 +175,9 @@ HRESULT CImgui_Window::Load_Function()
 
 void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 {
+	if (nullptr == pGameObject)
+		return;
+
 	/*==== Set ImGuizmo ====*/
 	ImGuizmo::SetOrthographic(false);
 	ImGuiIO& io = ImGui::GetIO();
@@ -229,6 +232,11 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 		ImGui::DragFloat3("Scale Snap", &snap[0]);
 		break;
 	}
+
+	if (arrView == nullptr ||
+		arrProj == nullptr ||
+		arrWorld == nullptr)
+		return;
 
 	ImGuizmo::Manipulate(arrView, arrProj, mCurrentGizmoOperation, mCurrentGizmoMode, arrWorld, NULL, useSnap ? &snap[0] : NULL);
 
