@@ -238,6 +238,15 @@
     <Filter Include="01.Utility\03.Components\07.Collider\Manager">
       <UniqueIdentifier>{39f10bc0-452c-409c-8e67-6373278f317f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\08.RigidBody">
+      <UniqueIdentifier>{a6b04bd9-746e-4674-ac7d-c50214fc9b95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.Manager">
+      <UniqueIdentifier>{0ede5438-29c2-491e-83db-695fc4798824}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.Manager\EventManager">
+      <UniqueIdentifier>{115626f4-e0e8-4b9b-a81b-d0cf6ea1dfd1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -489,6 +498,12 @@
     <ClInclude Include="..\Public\Json\json.hpp">
       <Filter>01.Utility\96.Utility\Json</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RigidBody.h">
+      <Filter>01.Utility\03.Components\08.RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EventManager.h">
+      <Filter>01.Utility\95.Manager\EventManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -685,6 +700,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collision_Manager.cpp">
       <Filter>01.Utility\03.Components\07.Collider\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RigidBody.cpp">
+      <Filter>01.Utility\03.Components\08.RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EventManager.cpp">
+      <Filter>01.Utility\95.Manager\EventManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
