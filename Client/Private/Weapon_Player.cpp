@@ -18,75 +18,45 @@ CWeapon_Player::CWeapon_Player(const CWeapon_Player & rhs)
 
 HRESULT CWeapon_Player::Initialize_Prototype()
 {	
+	if (FAILED(__super::Initialize_Prototype())) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
 
 HRESULT CWeapon_Player::Initialize(void* pArg)
 {	
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
 
-	
 	m_pTransformCom->Set_Scaling(0.1f, 0.1f, 0.1f);
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.0f));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.7f, 0.f, 0.f, 1.f));
-
 
 	return S_OK;
 }
 
 void CWeapon_Player::Priority_Tick(_float fTimeDelta)
 {
-
+	__super::Priority_Tick(fTimeDelta);
 }
 
 void CWeapon_Player::Tick(_float fTimeDelta)
 {
-	_matrix		SocketMatrix = m_pSocketBone->Get_CombinedTransformationMatrix();
-
-	for (size_t i = 0; i < 3; i++)
-	{
-		SocketMatrix.r[i] = XMVector3Normalize(SocketMatrix.r[i]);
-	}
-
-	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix  * m_pParentTransform->Get_WorldMatrix());
-
-	//m_pColliderCom->Update(XMLoadFloat4x4(&m_WorldMatrix));
-
+	__super::Tick(fTimeDelta);
 }
 
 void CWeapon_Player::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-		return ;
-
-
-#ifdef _DEBUG
-	//m_pGameInstance->Add_DebugRender(m_pColliderCom);
-#endif	
+	__super::Late_Tick(fTimeDelta);
 }
 
 HRESULT CWeapon_Player::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
+	if (FAILED(__super::Render())) {
 		return E_FAIL;
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (size_t i = 0; i < iNumMeshes; i++)
-	{
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-
-		m_pShaderCom->Begin(0);
-
-		m_pModelCom->Render((_uint)i);
 	}
-
-
-	
-	
 
 	return S_OK;
 }
@@ -95,43 +65,25 @@ HRESULT CWeapon_Player::Render()
 
 HRESULT CWeapon_Player::Ready_Components()
 {
+	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_Model"),
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Model"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Model_ForkLift"),
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_ForkLift"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
-
-
-	/* For.Com_Collider */
-// 	CBounding_OBB::BOUNDING_OBB_DESC			BoundingDesc = {};
-//	BoundingDesc.iLayer = (_uint)COLLISION_LAYER::PLAYER_ATTACK;
-// 	BoundingDesc.vExtents = _float3(1.f, 1.f, 3.f);
-// 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
-// 	BoundingDesc.vRotation = _float3(0.f, 0.f, 0.f);
-// 
-// 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_OBB"),
-// 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders), &BoundingDesc)))
-// 		return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CWeapon_Player::Bind_ShaderResources()
 {
-	/*if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;*/
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
-	
 	
 	return S_OK;
 }
@@ -165,13 +117,5 @@ CGameObject * CWeapon_Player::Clone(void* pArg)
 void CWeapon_Player::Free()
 {
 	__super::Free();
-
-// 	Safe_Release(m_pParentTransform);
-// 
-// 
-// 	Safe_Release(m_pSocketBone);
-// 	Safe_Release(m_pShaderCom);
-// 	Safe_Release(m_pModelCom);	
-	
 }
 

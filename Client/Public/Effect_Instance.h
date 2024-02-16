@@ -15,12 +15,16 @@ BEGIN(Client)
 class CEffect_Instance final : public CGameObject
 {
 public:
+	
+
+public:
 	typedef struct tagEffect_Desc : public CGameObject::GAMEOBJECT_DESC
 	{
 		wstring strModelTag = {TEXT("")};
 		_uint	iNumInstance = { 0 };
 		_uint	iShaderPassIndex = { 0 };
-		CRenderer::RENDERGROUP eRenderGroup = CRenderer::RENDER_END;
+		_int	iRenderGroup = 8; //! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 현재 작성기준 CRENDERER::RENDERGROUP::RENDER_END가 8임
+		
 	}EFFECT_INSTANCE_DESC;
 
 private:

@@ -53,24 +53,27 @@ public:
 	virtual HRESULT Render(_uint iMeshIndex);
 
 public:
-	void			Play_Animation(_float fTimeDelta, _bool bIsLoop);
-	void			Play_Animation(_float fTimeDelta, _float3& _Pos);
+	void Play_Animation(_float fTimeDelta, _bool bIsLoop);
+	void Play_Animation(_float fTimeDelta, _float3& _Pos);
+
+	void Stop_Animation(_float fTimeDelta,_bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
+	void Ctrl_Animation(_float fTimeDelta, _bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
+public:
+	HRESULT Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
+	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
 
 public:
-	HRESULT			Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
-	HRESULT			Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
+	void	Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _bool _bIsTransition = true, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
+	void	Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
+	void	Reset_Animation(_int iAnimIndex = -1);
 
-public:
-	void			Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _bool _bIsTransition = true, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
-	void			Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
-	void			Reset_Animation(_int iAnimIndex = -1);
+	_float	Get_TickPerSecond();
+	void	Set_TickPerSecond(_float _TickPerSecond);
+	_bool	Is_Transition();
+	void	Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
+	_bool	Is_Inputable_Front(_uint _iIndexFront);
 
-	_float			Get_TickPerSecond();
-	_bool			Is_Transition();
-	void			Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
-	_bool			Is_Inputable_Front(_uint _iIndexFront);
-
-	void			Write_Names(const string& strModelFilePath);
+	void Write_Names(const string& strModelFilePath);
 public:
 	vector<CAnimation*>*	 Get_Animations();
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }

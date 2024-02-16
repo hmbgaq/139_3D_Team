@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "VIBuffer_Effect_Model_Instance.h"
 
+
 CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -51,7 +52,7 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 void CEffect_Instance::Late_Tick(_float fTimeDelta)
 {
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(m_tInstanceDesc.eRenderGroup, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tInstanceDesc.iRenderGroup, this)))
 		return;
 
 }

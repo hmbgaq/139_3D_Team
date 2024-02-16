@@ -29,12 +29,10 @@ public:
 		return m_iNumMeshes;
 	}
 
-
-	//! 모델 인스턴싱 추가
 	_uint Get_NumMaterials() const { return m_iNumMaterials; }
-	_uint Get_NumMeshIndice(_int iMeshIndex);//! 모델 인스턴싱 전용
+	_uint Get_NumMeshIndice(_int iMeshIndex);
 	vector<class CMesh*>& Get_Meshes() { return m_Meshes;}
-	//! 모델 인스턴싱 앤드
+
 
 	class CBone* Get_BonePtr(const _char* pBoneName) const;
 
@@ -56,6 +54,8 @@ public:
 	void			Play_Animation(_float fTimeDelta, _bool bIsLoop);
 	void			Play_Animation(_float fTimeDelta, _float3& _Pos);
 
+	void Stop_Animation(_float fTimeDelta,_bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
+	void Ctrl_Animation(_float fTimeDelta, _bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
 public:
 	HRESULT			Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
 	HRESULT			Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
@@ -65,10 +65,11 @@ public:
 	void			Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void			Reset_Animation(_int iAnimIndex = -1);
 
-	_float			Get_TickPerSecond();
-	_bool			Is_Transition();
-	void			Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
-	_bool			Is_Inputable_Front(_uint _iIndexFront);
+	_float	Get_TickPerSecond();
+	void	Set_TickPerSecond(_float _TickPerSecond);
+	_bool	Is_Transition();
+	void	Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
+	_bool	Is_Inputable_Front(_uint _iIndexFront);
 
 	void			Write_Names(const string& strModelFilePath);
 public:
@@ -88,7 +89,6 @@ private:
 	_uint					m_iNumMaterials = { 0 };
 	vector<MATERIAL_DESC>	m_Materials;
 
-	/* 내 모델의 전체 뼈들을 부모관계를 포함하여 저장한다. */
 	vector<CBone*>			m_Bones;	
 	
 	_uint							m_iNumAnimations = { 0 };

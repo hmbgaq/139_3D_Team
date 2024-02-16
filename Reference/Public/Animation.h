@@ -49,6 +49,8 @@ public:
 		return m_fTickPerSecond;
 	}
 
+	void	Set_TickPerSecond(_float _fTickPerSecond) { m_fTickPerSecond = _fTickPerSecond; }
+
 	_bool	Is_TransitionEnd_Now() {
 		return m_bIsTransitionEnd_Now;
 	}

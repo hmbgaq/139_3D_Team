@@ -51,10 +51,9 @@ private:
 private:
 	HRESULT	Ready_Origin();
 	HRESULT Ready_Environment_Model(LEVEL eLevel); //TODO 승용
-	HRESULT Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLevel); //! 시작 디렉토리 부터 안에 있는 경로를 전부 탐색 , 승용
+	HRESULT Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLevel, _int iAnimType); //! 시작 디렉토리 부터 안에 있는 경로를 전부 탐색 , 승용
 
-private:
-	wstring					m_MapModelPath = TEXT("../Bin/Resources/Models/Map/");
+
 
 public:
 	static CLoader * Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, LEVEL eNextLevelID);

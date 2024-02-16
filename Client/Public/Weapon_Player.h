@@ -4,10 +4,6 @@
 #include "Weapon.h"
 
 BEGIN(Engine)
-class CCollider;
-class CShader;
-class CModel;
-class CBone;
 END
 
 BEGIN(Client)
