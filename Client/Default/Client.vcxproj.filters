@@ -231,9 +231,6 @@
     <ClInclude Include="..\Public\Include_Imgui_Windows.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Environment_Instance.h">
-      <Filter>02.GameObjects\02. Environment\Environment_Instance</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Effect_Instance.h">
       <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
     </ClInclude>
@@ -291,17 +288,23 @@
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02.GameObjects\98. Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Environment_Object.h">
+      <Filter>02.GameObjects\02. Environment</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Body_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Camera_Dynamic.h">
-      <Filter>02.GameObjects\97. Camera</Filter>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\00. Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Player.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Loader.h">
       <Filter>01.Levels\98. Loader</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player.h">
-      <Filter>02.GameObjects\00. Character\Player</Filter>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>02.GameObjects\98. Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sky.h">
       <Filter>02.GameObjects\99. Sky</Filter>
@@ -309,14 +312,11 @@
     <ClInclude Include="..\Public\SkyDome.h">
       <Filter>02.GameObjects\99. Sky</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Terrain.h">
-      <Filter>02.GameObjects\98. Terrain</Filter>
+    <ClInclude Include="..\public\Camera_Dynamic.h">
+      <Filter>02.GameObjects\97. Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Weapon_Player.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Environment_Object.h">
-      <Filter>02.GameObjects\02. Environment</Filter>
+    <ClInclude Include="..\Public\Environment_Instance.h">
+      <Filter>02.GameObjects\02. Environment\Environment_Instance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -47,6 +47,10 @@ public:
 	void	Set_Dead(_bool _bDead) { m_bDead = _bDead; }
 
 public:
+	virtual _bool Write_Json(json& Out_Json) override;
+	virtual void Load_FromJson(const json& In_Json) override;
+
+public:
 	class CTransform* Get_Transform();
 
 

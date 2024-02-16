@@ -89,6 +89,28 @@ void CGameObject::Set_WorldMatrix(_float4x4 matrix)
 	m_pTransformCom->Set_WorldMatrix(matrix);
 }
 
+_bool CGameObject::Write_Json(json& Out_Json)
+{
+	for (auto& elem_List : m_Components)
+	{
+		elem_List.second->Write_Json(Out_Json["Component"]);
+	}
+
+	return false;
+}
+
+void CGameObject::Load_FromJson(const json& In_Json)
+{
+	for (auto& elem_List : m_Components)
+	{
+		elem_List.second->Load_FromJson(In_Json["Component"]);
+	}
+
+	_float4x4 WorldMatrix;
+	ZeroMemory(&WorldMatrix, sizeof(_float4x4));
+	CJson_Utility::Load_JsonFloat4x4(In_Json["Component"]["Transform"], WorldMatrix);
+}
+
 CTransform* CGameObject::Get_Transform()
 {
 	return m_pTransformCom;
