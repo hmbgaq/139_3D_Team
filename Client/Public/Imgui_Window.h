@@ -66,8 +66,7 @@ protected: //TODO Guizmo #±âÁî¸ð
 	void				Set_Guizmo(CGameObject* pGameObject);
 	void				Set_GuizmoCamView();
 	void				Set_GuizmoCamProj();
-	//ImGuizmo::OPERATION		mCurrentGizmoOperation;
-	//ImGuizmo::MODE			mCurrentGizmoMode;
+
 protected:
 	_bool				m_bEnable = false;
 	_bool				m_bRenderTargetOnOff = true;

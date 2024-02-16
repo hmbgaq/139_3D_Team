@@ -2,11 +2,11 @@
 
 
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
-#include "../../Reference/Imgui/ImGuizmo/ImGuizmo.h"
-#include "../../Reference/Imgui/ImGuizmo/ImSequencer.h"
-#include "../../Reference/Imgui/ImGuizmo/ImZoomSlider.h"
-#include "../../Reference/Imgui/ImGuizmo/ImCurveEdit.h"
-#include "../../Reference/Imgui/ImGuizmo/GraphEditor.h"
+#include "ImGuizmo/ImGuizmo.h"
+#include "ImGuizmo/ImSequencer.h"
+#include "ImGuizmo/ImZoomSlider.h"
+#include "ImGuizmo/ImCurveEdit.h"
+#include "ImGuizmo/GraphEditor.h"
 #include "CustomDialogFont.h"
 
 
@@ -68,7 +68,7 @@ HRESULT CImgui_Window::Initialize()
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByTypeFile | IGFD_FileStyleByContainedInFullName, ".git", ImVec4(0.5f, 0.8f, 0.5f, 0.9f), ICON_IGFD_SAVE);
 
 	//TODO For.Guizmo
-		m_arrView = new _float[16];
+	m_arrView = new _float[16];
 	m_arrProj = new _float[16];
 
 	return S_OK;
