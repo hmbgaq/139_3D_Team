@@ -6,7 +6,7 @@
 class CUI_Anything final : public CUI_Base
 {
 public:
-	enum MONSTERTYPE { SMALL, MID, LARGE, BOSS, SIDE, NONE };
+	enum UITYPE { SMALL, MID, LARGE, BOSS, SIDE, NONE };
 
 	typedef struct tagUI_BasicInfo
 	{
@@ -17,8 +17,11 @@ public:
 	{
 		CTransform*		pOwnerTransform;
 		//STATUS_DESC*	pOwnerStatus;
-		MONSTERTYPE		eMonsterType;
+		UITYPE		eUIType;
+
 		string			strProtoTag = "";
+		string			strFilePath = "";
+
 		_float			fCrntHPUV = 1.0f;
 		_float			fPrevHPUV = 1.0f;
 		_float			fScreenPosXOffset = 1.f;
@@ -66,7 +69,7 @@ private:
 	_float					m_fOwnerCamDistance;
 
 public:
-	void				 Save_Desc();
+	json				 Save_Desc(json out_json);
 	void				 Load_Desc();
 
 public:

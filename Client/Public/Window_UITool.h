@@ -68,7 +68,11 @@ public: /* ==================== UI ===================== */
 	bool						LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height);
 	HRESULT						Update_Pos();
 
-	
+public: /* ==================== List ===================== */
+	void						Layer_List();
+	void						Texture_List();
+	void						Object_List();
+
 public: /* ================= Function ================= */
 	// string타입을 받는 벡터 컨테이너를 char*타입을 받는 벡터 컨테이너로 변환 해주는 함수
 	std::vector<const char*> ConvertStringVectorToCharArray(const std::vector<std::string>& stringVector);
@@ -95,6 +99,7 @@ public:
 	void UI2D_Setting(_float fTimeDelta);
 	HRESULT UI2D_Create(_float fTimeDelta);
 	void UI2D_Delete(_float fTimeDelta);
+	void AddIndexNumber(PATHINFO& str);
 
 public: /* Save/Load */
 	void Save_Desc();
@@ -121,8 +126,8 @@ private: /* Image_Member */
 	IMAGEINFO* m_tTexture;
 
 	// 문자열 벡터를 const char* 배열로 변환
-	std::vector<const char*>	m_vecImagePaths;
-	std::vector<string>			m_vecObjectName;
+	std::vector<PATHINFO*>		m_vecImagePaths;
+	std::vector<PATHINFO*>		m_vecObjectName;
 	_int						m_iSelectedPathIndex = 0; // 선택된 이미지 경로 인덱스
 	_int						m_iSelectedObjectIndex = 0; // 선택된 이미지 경로 인덱스
 	_int						m_iUINameNum = 0;

@@ -125,8 +125,8 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 	//
 	//
 	/* For.Ready_UITexture */ // + SH_Add
-	//if (FAILED(Ready_UITexture()))
-	//	return E_FAIL;
+	if (FAILED(Ready_UITexture()))
+		return E_FAIL;
 
 	return S_OK;
 }

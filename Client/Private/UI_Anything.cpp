@@ -90,7 +90,7 @@ HRESULT CUI_Anything::Render()
 		return E_FAIL;
 
 
-	switch (m_tInfo.eMonsterType)
+	switch (m_tInfo.eUIType)
 	{
 	case CUI_Anything::SMALL:
 	case CUI_Anything::MID:
@@ -184,19 +184,16 @@ _bool CUI_Anything::In_Frustum()
 	return m_pGameInstance->isIn_WorldPlanes(m_tInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
-void CUI_Anything::Save_Desc()
+json CUI_Anything::Save_Desc(json out_json)
 {
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+	out_json["PostionX"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
+	out_json["PostionY"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
+	out_json["SizeX"] = m_pTransformCom->Get_Scaled().x;
+	out_json["SizeY"] = m_pTransformCom->Get_Scaled().y;
+	out_json["ProtoTag"] = m_tInfo.strProtoTag;
+	out_json["FilePath"] = m_tInfo.strFilePath;
 
-	json Out_Json;
-	
-	Out_Json["PostionX"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
-	Out_Json["PostionY"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
-	Out_Json["SizeX"] = m_pTransformCom->Get_Scaled().x;
-	Out_Json["SizeY"] = m_pTransformCom->Get_Scaled().y;
-	Out_Json["ProtoTag"] = m_tInfo.strProtoTag;
-
-	CJson_Utility::Save_Json(filePath, Out_Json);
+	return out_json;
 }
 
 void CUI_Anything::Load_Desc()
