@@ -1,6 +1,7 @@
 #include "..\Public\Event_Manager.h"
 
 #include "GameInstance.h"
+#include "Event.h"
 
 CEvent_Manager::CEvent_Manager()
 {
@@ -8,10 +9,19 @@ CEvent_Manager::CEvent_Manager()
 
 HRESULT CEvent_Manager::Initialize()
 {
-	m_pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(m_pGameInstance);
-
 	return S_OK;
+}
+
+void CEvent_Manager::AddEventListener(CGameObject* pEventActor, OnEvent OnEvent, Condition Condition)
+{
+	//m_Events.push_back(new CEvent(pEventActor, OnEvent, Condition));
+}
+
+void CEvent_Manager::TriggerEvent()
+{
+	//for (auto& pEvent : m_Events) {
+	//	pEvent->OnEvent();
+	//}
 }
 
 CEvent_Manager* CEvent_Manager::Create(_uint iNumLevels)
@@ -28,5 +38,4 @@ CEvent_Manager* CEvent_Manager::Create(_uint iNumLevels)
 
 void CEvent_Manager::Free()
 {
-	Safe_Release(m_pGameInstance);
 }

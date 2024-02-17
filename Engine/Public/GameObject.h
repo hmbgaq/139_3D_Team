@@ -59,6 +59,10 @@ public:
 	virtual void	OnCollisionStay(CCollider* other) {};
 	virtual void	OnCollisionExit(CCollider* other) {};
 
+
+public:
+
+
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };

@@ -18,15 +18,6 @@ CPlayer::CPlayer(const CPlayer & rhs)
 {
 }
 
-CComponent * CPlayer::Find_Component(const wstring & strComTag, const wstring & strPartTag)
-{
-	auto	iter = m_PartObjects.find(strPartTag);
-	if (iter == m_PartObjects.end())
-		return nullptr;
-
-	return iter->second->Find_Component(strComTag);
-}
-
 HRESULT CPlayer::Initialize_Prototype()
 {	
 	if (FAILED(__super::Initialize_Prototype()))
