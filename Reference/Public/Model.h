@@ -36,6 +36,9 @@ public:
 	void					Set_StiffnessRate(_float fStiffnessRate);
 	//void					Set_Animation(_uint iAnimIndex) { m_iCurrentAnimIndex = iAnimIndex; }
 
+	_matrix					Get_PivotMatrix() { return m_PivotMatrix; }
+	_matrix					Get_CombinedMatrix(_uint iBoneIndex);
+
 public:
 	_bool					Is_AnimEnd() { return m_bIsAnimEnd; };
 

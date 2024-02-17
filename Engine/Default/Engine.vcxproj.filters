@@ -250,6 +250,15 @@
     <Filter Include="01.Utility\03.Components\02.Shader\ConstantBuffer">
       <UniqueIdentifier>{d5c42a15-c269-4316-8d14-a600354c777d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\02.GameObjects\Event">
+      <UniqueIdentifier>{5fdcee39-a4df-4216-8176-26aaeca1e37f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObjects\Event\Object">
+      <UniqueIdentifier>{50c088af-72bd-4889-af18-f382993c1195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObjects\Event\Trigger">
+      <UniqueIdentifier>{1a1ce231-05d5-4e8d-a27b-b268738b25d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -513,6 +522,12 @@
     <ClInclude Include="..\Public\ConstantBuffer.h">
       <Filter>01.Utility\03.Components\02.Shader\ConstantBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Trigger.h">
+      <Filter>01.Utility\02.GameObjects\Event\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EventActor.h">
+      <Filter>01.Utility\02.GameObjects\Event\Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -721,6 +736,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\ConstantBuffer.cpp">
       <Filter>01.Utility\03.Components\02.Shader\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EventActor.cpp">
+      <Filter>01.Utility\02.GameObjects\Event\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Trigger.cpp">
+      <Filter>01.Utility\02.GameObjects\Event\Trigger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
