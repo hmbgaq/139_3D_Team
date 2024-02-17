@@ -566,11 +566,196 @@ void CGameInstance::WString_To_String(wstring _wstring, string& _string)
 	//TODO C++ 17로 올리니 기존 Convert 함수들은 더 이상 지원하지 않아. window api에서 제공하는 변환 함수 사용으로 변경 - TO 승용
 
 	int len = WideCharToMultiByte(CP_UTF8, 0, _wstring.c_str(), -1, nullptr, 0, nullptr, nullptr);
-	if (len > 0) {
+	if (len > 0) 
+	{
 		_string.resize(len - 1);
 		WideCharToMultiByte(CP_UTF8, 0, _wstring.c_str(), -1, &_string[0], len, nullptr, nullptr);
 	}
 }
+
+string CGameInstance::Convert_WString_To_String(wstring _wstring)
+{
+	string out_string;
+
+	return out_string.assign(_wstring.begin(), _wstring.end());;
+}
+
+WCHAR* CGameInstance::StringTowchar(const std::string& str)
+{
+	// std::wstring으로 변환
+	std::wstring wstr(str.begin(), str.end());
+	// c_str() 함수를 사용하여 WCHAR* 포인터로 변환
+
+	return const_cast<WCHAR*>(wstr.c_str());
+}
+
+char* CGameInstance::ConverWStringtoC(const wstring& wstr)
+{
+	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
+	char* result = new char[size_needed];
+	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result, size_needed, NULL, NULL);
+	return result;
+}
+
+wchar_t* CGameInstance::ConverCtoWC(char* str)
+{
+	_tchar* pStr;
+	int strSize = MultiByteToWideChar(CP_ACP, 0, str, -1, NULL, NULL);
+	pStr = new WCHAR[strSize];
+	MultiByteToWideChar(CP_ACP, 0, str, (_int)strlen(str) + (size_t)1, pStr, strSize);
+
+	return pStr;
+}
+
+std::string CGameInstance::WideStringToString(const wchar_t* wideStr)
+{
+	// std::wstring으로부터 std::string으로 변환
+	std::wstring wstr(wideStr);
+	// std::string으로 변환
+	return std::string(wstr.begin(), wstr.end());
+}
+
+std::string CGameInstance::GetFileName(const std::string& filePath)
+{
+	size_t lastSlashPos = filePath.find_last_of("/");
+	if (lastSlashPos != std::string::npos)
+	{
+		return filePath.substr(lastSlashPos + 1);
+	}
+	else
+	{
+		// 경로 구분자가 없을 경우 전체 경로를 반환
+		return filePath;
+	}
+}
+
+std::string CGameInstance::RemoveExtension(const std::string& filePath)
+{
+		size_t lastDotPos = filePath.find_last_of(".");
+	if (lastDotPos != std::string::npos) 
+	{
+		return filePath.substr(0, lastDotPos);
+	}
+	else
+	{
+		// 확장자가 없는 경우 그대로 반환
+		return filePath;
+	}
+}
+
+string CGameInstance::Wstring_To_UTF8(const wstring& wstr)
+{
+	_int iUtf8Length = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	if (iUtf8Length == 0)
+	{
+		return string();
+	}
+
+	string strUtf8(iUtf8Length + 1, 0);
+	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &strUtf8[0], iUtf8Length + 1, nullptr, nullptr);
+
+	return strUtf8;
+}
+
+wstring CGameInstance::Char_To_Wstring(char* szChar)
+{
+	return wstring(szChar, szChar + strlen(szChar));
+}
+
+const wstring CGameInstance::Remove_LastNumChar(const wstring& str, const _uint& iNumCutCount)
+{
+	size_t iLength = str.length();
+
+	if (iLength <= iNumCutCount)
+		return L"";
+
+	wstring res = str.substr(0, iLength - iNumCutCount);
+
+	return res;
+}
+
+const string CGameInstance::Remove_LastNumChar(const string& str, const _uint& iNumCutCount)
+{
+	size_t iLength = str.length();
+
+	if (iLength <= iNumCutCount)
+		return "";
+
+	string res = str.substr(0, iLength - iNumCutCount);
+
+	return res;
+}
+
+const wstring CGameInstance::Get_LastNumChar(const wstring& str, const _uint& iNumCutCount)
+{
+	size_t iLength = str.length();
+
+	if (iLength <= iNumCutCount)
+		return str;
+
+	wstring res = str.substr(iLength - iNumCutCount);
+
+	return res;
+}
+
+_float3 CGameInstance::Add_Float3(const _float3& fLeft, const _float3& fRight)
+{
+	_vector vResult = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+
+	_vector vLeft = XMLoadFloat3(&fLeft);
+	_vector vRight = XMLoadFloat3(&fRight);
+
+	vResult = XMVectorSetX(vResult, XMVectorGetX(vLeft) + XMVectorGetX(vRight));
+	vResult = XMVectorSetY(vResult, XMVectorGetY(vLeft) + XMVectorGetY(vRight));
+	vResult = XMVectorSetZ(vResult, XMVectorGetZ(vLeft) + XMVectorGetZ(vRight));
+
+	_float3 f3Result;
+	XMStoreFloat3(&f3Result, vResult);
+	return f3Result;
+}
+
+_float3 CGameInstance::Mul_Float3(const _float3& fLeft, const _float& fRight)
+{
+	_vector vResult(XMVectorSet(0.f, 0.f, 0.f, 0.f));
+
+	_vector vLeft(XMLoadFloat3(&fLeft));
+
+	vResult = XMVectorSetX(vResult, XMVectorGetX(vLeft) * fRight);
+	vResult = XMVectorSetY(vResult, XMVectorGetY(vLeft) * fRight);
+	vResult = XMVectorSetZ(vResult, XMVectorGetZ(vLeft) * fRight);
+
+	_float3 f3Result;
+	XMStoreFloat3(&f3Result, vResult);
+	return f3Result;
+}
+
+_bool CGameInstance::isIn_Range(const _float3 fLeft, const _float3 fRight, const _float fRange)
+{
+	_vector vLeft = XMLoadFloat3(&fLeft);
+	_vector vRight = XMLoadFloat3(&fRight);
+	_vector vDistance = vLeft - vRight;
+
+	_float fDistance = XMVectorGetX(XMVector3Length(vDistance));
+
+	return fDistance < fRange ? TRUE : FALSE;
+}
+
+_matrix CGameInstance::Make_WorldMatrix(const _float2& vScale, const _float3& vRot, const _float3& vPos)
+{
+	_vector vPitchYawRoll = XMLoadFloat3(&vRot);
+
+	_vector vPosition = XMLoadFloat3(&vPos);
+	vPosition = XMVectorSetW(vPosition, 1.f);
+
+	_matrix RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
+	_matrix ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, 1.f);
+	_matrix TransformationMatrix = ScaleMatrix * RotationMatrix;
+
+	TransformationMatrix.r[3] = vPosition;
+
+	return TransformationMatrix;
+}
+
 
 void CGameInstance::Release_Manager()
 {

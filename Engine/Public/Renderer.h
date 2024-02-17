@@ -102,23 +102,11 @@ public:
 
 private:
 		/* SSAO */
-		typedef struct tagSSAO_Data
-		{
-			_matrix	matViewToTexSpace; // Proj*Texture
-			_float4 vOffsetVectors[14];
-			_float4 vFrustumCorners[4];
-
-			_float gOcclusionRadius = 0.5f;
-			_float gOcclusionFadeStart = 0.2f;
-			_float gOcclusionFadeEnd = 2.0f;
-			_float gSurfaceEpsilon = 0.05f;
-		} SSAO_Data;
-
 		class CTexture*				m_pRandomVectorTexture = { nullptr };
 		ID3D11Buffer*				m_ScreenQuadVB = { nullptr };
 		ID3D11Buffer*				m_ScreenQuadIB = { nullptr };
 		ID3D11ShaderResourceView*	m_RandomVectorSRV;
-		SSAO_Data					m_tSSAO_Data;
+		//SSAO_Data					m_tSSAO_Data;
 		const _matrix				m_mTexture = {	XMMatrixSet(0.5f, 0.0f, 0.0f, 0.0f,	0.0f, -0.5f, 0.0f, 0.0f,0.0f, 0.0f, 1.0f, 0.0f,	0.5f, 0.5f, 0.0f, 1.0f) };
 		_float4						m_vFrustumFarCorner[4];
 		_float4						m_vOffsets[14];
@@ -138,22 +126,19 @@ private:
 		HRESULT						Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bClear, _int eBlendType);
 		void						Calc_Blur_GaussianWeights(_int sigma, _int iSize, _Out_ void* Weights);
 
-		
-
-
 private:
-	class CShader* m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
-	class CGameInstance* m_pGameInstance = { nullptr };
-	class CVIBuffer_Rect* m_pVIBuffer = { nullptr };
+	class CShader*					m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
+	class CGameInstance*			m_pGameInstance = { nullptr };
+	class CVIBuffer_Rect*			m_pVIBuffer = { nullptr };
 
-	ID3D11Device* m_pDevice = { nullptr };
-	ID3D11DeviceContext* m_pContext = { nullptr };
-	ID3D11DepthStencilView* m_pLightDepthDSV = { nullptr };
-	list<class CGameObject*>	m_RenderObjects[RENDER_END];
+	ID3D11Device*					m_pDevice = { nullptr };
+	ID3D11DeviceContext*			m_pContext = { nullptr };
+	ID3D11DepthStencilView*			m_pLightDepthDSV = { nullptr };
+	list<class CGameObject*>		m_RenderObjects[RENDER_END];
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponent;
-	_bool						m_bRenderDebug = { true };
+	_bool						m_bRenderDebug = { false };
 #endif
 
 public:

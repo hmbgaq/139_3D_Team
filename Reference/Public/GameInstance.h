@@ -129,6 +129,39 @@ public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
 
+#pragma region 성희
+	// wstring을 string으로 변환 해주는 함수
+	string		Convert_WString_To_String(wstring _wstring);
+	// string을 wchar로 변환 해주는 함수
+	WCHAR*		StringTowchar(const std::string& str);
+	//	wstring을 char로 변환 해주는 함수
+	char*		ConverWStringtoC(const wstring& wstr);
+	//	char를 wchar_t로 변환 해주는 함수
+	wchar_t*	ConverCtoWC(char* str);
+	// WCHAR*를 string으로 변환 해주는 함수
+	std::string WideStringToString(const wchar_t* wideStr);
+	// 경로에서 파일이름과 확장자만 추출해주는 함수
+	std::string GetFileName(const std::string& filePath);
+	// 확장자를 제거해주는 함수
+	std::string RemoveExtension(const std::string& filePath);
+#pragma endregion End
+
+#pragma region 유정
+	string		Wstring_To_UTF8(const wstring& wstr);
+	wstring		Char_To_Wstring(char* szChar);
+
+	const wstring	Remove_LastNumChar(const wstring& str, const _uint& iNumCutCount);
+	const string	Remove_LastNumChar(const string& str, const _uint& iNumCutCount);
+	const wstring	Get_LastNumChar(const wstring& str, const _uint& iNumCutCount);
+
+	/* For.Math */
+public:
+	_float3 Add_Float3(const _float3& fLeft, const _float3& fRight);
+	_float3 Mul_Float3(const _float3& fLeft, const _float& fRight);
+	_bool	isIn_Range(const _float3 fLeft, const _float3 fRight, const _float fRange);
+	_matrix Make_WorldMatrix(const _float2& vScale, const _float3& vRot, const _float3& vPos);
+#pragma endregion End
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CInput_Device*			m_pInput_Device = { nullptr };

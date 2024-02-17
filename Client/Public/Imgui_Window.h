@@ -50,6 +50,19 @@ public:
 	HRESULT			Begin();
 	HRESULT			End();
 
+
+public:
+	void HelpMarker(const char* desc)
+	{
+		ImGui::TextDisabled("(?)");
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::TextUnformatted(desc);
+			ImGui::EndTooltip();
+		}
+	}
+
 public:
 	virtual	HRESULT Initialize();
 	virtual	void	Tick(_float fTimeDelta);

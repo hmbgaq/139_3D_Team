@@ -59,6 +59,10 @@ public:
 	virtual void	OnCollisionStay(CCollider* other) {};
 	virtual void	OnCollisionExit(CCollider* other) {};
 
+
+public:
+
+
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };
@@ -79,6 +83,8 @@ protected:
 protected:
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& strPrototypeTag,
 		const wstring& strComTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
+	HRESULT Remove_Component(const wstring& strComTag, _Inout_ CComponent** ppOut = nullptr);
+
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

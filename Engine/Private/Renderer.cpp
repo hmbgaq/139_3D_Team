@@ -494,7 +494,7 @@ HRESULT CRenderer::Render_SSAO()
 
 HRESULT CRenderer::Render_SSAO_Blur()
 {
-	cout << " SSAO + SSAO_BLUR " << endl;
+	//cout << " SSAO + SSAO_BLUR " << endl;
 	Render_Blur(L"Target_SSAO", L"MRT_SSAO_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER));
 	
 	return S_OK;
