@@ -23,14 +23,6 @@ HRESULT CUI_Base::Initialize(void* pArg)
 {
 	m_tUIInfo = *(UI_DESC*)pArg;
 
-
-	//m_fX = pDesc->fX;
-	//m_fY = pDesc->fY;
-	//m_fSizeX = pDesc->fSizeX;
-	//m_fSizeY = pDesc->fSizeY;
-
-	m_isEnable = m_tUIInfo.bEnable;
-
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext, 0.f, 0.f);
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
@@ -43,21 +35,15 @@ HRESULT CUI_Base::Initialize(void* pArg)
 	Safe_AddRef(m_pTransformCom);
 
 
-	if (false == m_tUIInfo.bWorldUI)
-	{
-		if (m_tUIInfo.bFrame == true)
-			m_pTransformCom->Set_Scaling(m_tUIInfo.fSizeX, m_tUIInfo.fSizeY * 2, 0.5f);
-		else
-			m_pTransformCom->Set_Scaling(m_tUIInfo.fSizeX, m_tUIInfo.fSizeY, 1.f);
+	m_pTransformCom->Set_Scaling(m_tUIInfo.fScaleX, m_tUIInfo.fScaleY, 1.f);
 
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_tUIInfo.fX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fY + (_float)g_iWinSizeY * 0.5f, 0.f, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_tUIInfo.fPositionX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fPositionY + (_float)g_iWinSizeY * 0.5f, 0.f, 1.f));
 
-		XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-		XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
 
-		SetUp_ScreenPosRect(m_tUIInfo.fX, m_tUIInfo.fY, m_tUIInfo.fSizeX, m_tUIInfo.fSizeY);
-		SetUp_UV(0);
-	}
+	SetUp_ScreenPosRect(m_tUIInfo.fPositionX, m_tUIInfo.fPositionY, m_tUIInfo.fScaleX, m_tUIInfo.fScaleY);
+	SetUp_UV(0);
 
 	return S_OK;
 }
@@ -93,9 +79,6 @@ void CUI_Base::SetUp_UV(_uint iTextureIndex)
 
 	/* TextureSize 조절 */
 	//m_pTextureCom->Get_TextureSize(&iTextureWidth, &iTextureHeight, iTextureIndex);
-
-	m_tUIInfo.fTexSizeX = (_float)iTextureWidth;
-	m_tUIInfo.fTexSizeY = (_float)iTextureHeight;
 
 
 	//m_tTexUVInfo.fOriginLeft = iTextureWidth - iTextureWidth;
@@ -161,40 +144,40 @@ HRESULT CUI_Base::SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX, _fl
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
 
-	m_tUIInfo.fX = fPosX;
-	m_tUIInfo.fY = fPosY;
-	m_tUIInfo.fSizeX = fSizeX;
-	m_tUIInfo.fSizeY = fSizeY;
-	//_float fAspectRatio = m_tUIInfo.fSizeY / m_tUIInfo.fSizeX;
-	//
-	//// Calculate the adjusted size to maintain the original image proportions
-	//_float fAdjustedSizeX = m_tUIInfo.fSizeX;
-	//_float fAdjustedSizeY = m_tUIInfo.fSizeX * fAspectRatio;
-	// 크기 조정
-	//m_pTransformCom->Set_Scaling(fAdjustedSizeX, fAdjustedSizeY, 1.f);
-	_float fCalcSizeX = fSizeX * m_tUIInfo.fTexSizeX;
-	_float fCalcSizeY = fSizeY * m_tUIInfo.fTexSizeY;
+	//m_tUIInfo.fX = fPosX;
+	//m_tUIInfo.fY = fPosY;
+	//m_tUIInfo.fSizeX = fSizeX;
+	//m_tUIInfo.fSizeY = fSizeY;
+	////_float fAspectRatio = m_tUIInfo.fSizeY / m_tUIInfo.fSizeX;
+	////
+	////// Calculate the adjusted size to maintain the original image proportions
+	////_float fAdjustedSizeX = m_tUIInfo.fSizeX;
+	////_float fAdjustedSizeY = m_tUIInfo.fSizeX * fAspectRatio;
+	//// 크기 조정
+	////m_pTransformCom->Set_Scaling(fAdjustedSizeX, fAdjustedSizeY, 1.f);
+	//_float fCalcSizeX = fSizeX * m_tUIInfo.fTexSizeX;
+	//_float fCalcSizeY = fSizeY * m_tUIInfo.fTexSizeY;
 
 
-	m_pTransformCom->Set_Scaling(fCalcSizeX, fCalcSizeY, 1.f);
+	//m_pTransformCom->Set_Scaling(fCalcSizeX, fCalcSizeY, 1.f);
 
-	// 위치 이동
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		XMVectorSet(m_tUIInfo.fX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fY + (_float)g_iWinSizeY * 0.5f, 0.f, 1.f));
+	//// 위치 이동
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+	//	XMVectorSet(m_tUIInfo.fX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fY + (_float)g_iWinSizeY * 0.5f, 0.f, 1.f));
 
-	// View Matrix 및 Projection Matrix 설정
-	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
+	//// View Matrix 및 Projection Matrix 설정
+	//XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	//XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
 
-	return S_OK;
+	//return S_OK;
 
-	if (nullptr == m_pTransformCom)
-		return E_FAIL;
+	//if (nullptr == m_pTransformCom)
+	//	return E_FAIL;
 
-	m_tUIInfo.fX = fPosX;
-	m_tUIInfo.fY = fPosY;
-	m_tUIInfo.fSizeX = fSizeX;
-	m_tUIInfo.fSizeY = fSizeY;
+	//m_tUIInfo.fX = fPosX;
+	//m_tUIInfo.fY = fPosY;
+	//m_tUIInfo.fSizeX = fSizeX;
+	//m_tUIInfo.fSizeY = fSizeY;
 
 	// Calculate the correct aspect ratio to maintain image proportions
 
@@ -221,10 +204,10 @@ HRESULT CUI_Base::SetUp_BillBoarding()
 
 HRESULT CUI_Base::SetUp_ScreenPosRect(_float fPosX, _float fPosY, _float fScaleX, _float fScaleY)
 {
-	m_ScreenPosRect.left = static_cast<LONG>(m_tUIInfo.fX - (m_tUIInfo.fSizeX * 0.5f));
+	/*m_ScreenPosRect.left = static_cast<LONG>(m_tUIInfo.fX - (m_tUIInfo.fSizeX * 0.5f));
 	m_ScreenPosRect.top = static_cast<LONG>(m_tUIInfo.fY - (m_tUIInfo.fSizeY * 0.5f));
 	m_ScreenPosRect.right = static_cast<LONG>(m_tUIInfo.fX + (m_tUIInfo.fSizeX * 0.5f));
-	m_ScreenPosRect.bottom = static_cast<LONG>(m_tUIInfo.fY + (m_tUIInfo.fSizeY * 0.5f));
+	m_ScreenPosRect.bottom = static_cast<LONG>(m_tUIInfo.fY + (m_tUIInfo.fSizeY * 0.5f));*/
 
 	return S_OK;
 }

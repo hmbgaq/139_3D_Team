@@ -24,9 +24,6 @@ HRESULT CUI_MonsterHp::Initialize_Prototype()
 HRESULT CUI_MonsterHp::Initialize(void* pArg)
 {
 	m_tInfo = *(MONSTER_HP*)pArg;
-	m_tInfo.bFrame = false;
-
-	m_isEnable = m_tInfo.bEnable;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;

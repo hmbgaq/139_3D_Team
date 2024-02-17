@@ -78,29 +78,49 @@ HRESULT CWindow_UITool::Initialize()
 	//CJson_Utility::Load_Json(filePath, Out_Json);
 #pragma endregion 
 
+
+#pragma region Start Setting
+	// 시작하자마자 아무것도 안눌렀을 때 기본 테그 값 주고 시작하기.
+	m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
+	m_tUI_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
+	m_tUI_Desc.fPositionX = g_iWinSizeX / 2;
+	m_tUI_Desc.fPositionY = g_iWinSizeY / 2;
+	m_tUI_Desc.fScaleX = 100;
+	m_tUI_Desc.fScaleY = 100;
+#pragma endregion End
 	return S_OK;
 }
 
 void CWindow_UITool::Tick(_float fTimeDelta)
 {
+	IndexCheck();
+
 	__super::Tick(fTimeDelta);
 
 	__super::Begin();
-	ImGui::Text("UI_Tool");
+	if (ImGui::BeginTabBar("Test Tab bar"))
+	{
+		if (ImGui::BeginTabItem("UI_Setting"))
+		{
+			/* List */
+			UI_List(fTimeDelta);
 
-	/* List */
-	UI_List(fTimeDelta);
+			/* UI_2D 세팅 */
+			UI2D_Setting(fTimeDelta);
 
-	/* UI_2D 세팅 */
-	UI2D_Setting(fTimeDelta);
+			/* 이미지 선택 및 미리보기 */
+			ImagePreview(fTimeDelta);
 
-	/* 이미지 선택 및 미리보기 */
-	ImagePreview(fTimeDelta);
+			ImGui::Dummy(ImVec2(0, 5.f)); // 공백
 
-	ImGui::Dummy(ImVec2(0, 5.f)); // 공백
+			/* Default : LastNumber */
+			UI_ToolTip(fTimeDelta); // Tip : 툴팁은 오버레이시 모든 출력중 가장 마지막에 호출되어야한다. (안그러면 다른 녀석들이 툴팁에 밀려서 출력됨)
 
-	/* Default : LastNumber */
-	UI_ToolTip(fTimeDelta); // Tip : 툴팁은 오버레이시 모든 출력중 가장 마지막에 호출되어야한다. (안그러면 다른 녀석들이 툴팁에 밀려서 출력됨)
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
 	__super::End();
 }
 
@@ -129,11 +149,11 @@ HRESULT CWindow_UITool::Update_Pos()
 	//POINT cursorPos;
 	//GetCursorPos(&cursorPos);
 
-	//m_fX = cursorPos.x;
-	//m_fY = cursorPos.y;
+	//m_fPositionX = cursorPos.x;
+	//m_fPositionY = cursorPos.y;
 
-	//m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	//m_pTransformCom->Set_Scale(m_fScaleX, m_fScaleY, 1.f);
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.f, 1.f));
 
 	//XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	//XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
@@ -150,7 +170,7 @@ void CWindow_UITool::Layer_List()
 		for (_int i = 0; i < 3; i++)
 		{
 			const bool is_selected = (Layer_idx == i);
-			if (ImGui::Selectable(m_strItems[i].c_str(), is_selected))
+			if (ImGui::Selectable(m_strLayer[i].c_str(), is_selected))
 				Layer_idx = i;
 			m_iLayerNum = i;
 
@@ -179,8 +199,10 @@ void CWindow_UITool::Texture_List()
 			{
 				m_iSelectedPathIndex = i;
 
-				// 문자열 중복 비교
-				AddIndexNumber(*m_vecImagePaths[m_iSelectedPathIndex]); // 오브젝트 테그 결정
+				//// 문자열 중복 비교
+				//AddIndexNumber(*m_vecImagePaths[m_iSelectedPathIndex]); // 오브젝트 테그 결정
+				/* 프로토 테그 설정 */
+				m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -188,21 +210,22 @@ void CWindow_UITool::Texture_List()
 		}
 		ImGui::EndListBox();
 	}
+	/* 미리보기 */
 	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2(m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
+	//m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName; // 리스트 박스 밖으로 뺀 이유 : 리스트에서 선택안했을 때도 생성 가능하도록 계속 갱신하게함
 }
 
 void CWindow_UITool::Object_List()
 {
-	static int	Object_idx = 0;
 	_int		ObjectTagSize = (_int)m_vecObjectName.size();
 	if (ImGui::BeginListBox("ObjectList"))
 	{
 		for (_int i = 0; i < ObjectTagSize; i++)
 		{
-			const bool is_selected = (Object_idx == i);
+			const bool is_selected = (m_iSelectedObjectIndex == i);
 			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecObjectName[i]->strFileName)), is_selected))
 			{
-				Object_idx = i;
+				m_iSelectedObjectIndex = i;
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -213,7 +236,7 @@ void CWindow_UITool::Object_List()
 
 	if (!m_vecUIObject.empty())
 	{
-		_vector vPosition = m_vecUIObject[Object_idx]->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+		_vector vPosition = m_vecUIObject[m_iSelectedObjectIndex]->Get_Transform()->Get_State(CTransform::STATE_POSITION);
 
 		ImGui::InputFloat("PositionX", &vPosition.m128_f32[0]);
 		ImGui::InputFloat("PositionY", &vPosition.m128_f32[1]);
@@ -221,7 +244,7 @@ void CWindow_UITool::Object_List()
 
 		Set_GuizmoCamView();
 		Set_GuizmoCamProj();
-		Set_Guizmo(m_vecUIObject[Object_idx]);
+		Set_Guizmo(m_vecUIObject[m_iSelectedObjectIndex]);
 	}
 }
 
@@ -502,18 +525,27 @@ void CWindow_UITool::ImagePreview(_float fTimeDelta)
 
 }
 
+void CWindow_UITool::IndexCheck()
+{
+	if (m_iSelectedObjectIndex <= 0)
+		m_iSelectedObjectIndex = 0;
+
+	if (m_iSelectedPathIndex <= 0)
+		m_iSelectedPathIndex = 0;
+}
+
 void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 {
 	ImGui::CollapsingHeader("2D_Setting");
 	/* Scale */
 	ImGui::SeparatorText(u8"크기 변경");
-	ImGui::InputFloat("ScaleX", &m_tUI_Desc.fSizeX);
-	ImGui::InputFloat("ScaleY", &m_tUI_Desc.fSizeY);
+	ImGui::InputFloat("ScaleX", &m_tUI_Desc.fScaleX);
+	ImGui::InputFloat("ScaleY", &m_tUI_Desc.fScaleY);
 
 	/* Position*/
 	ImGui::SeparatorText(u8"위치 변경");
-	ImGui::InputFloat("PositionX", &m_tUI_Desc.fX);
-	ImGui::InputFloat("PositionY", &m_tUI_Desc.fY);
+	ImGui::InputFloat("PositionX", &m_tUI_Desc.fPositionX);
+	ImGui::InputFloat("PositionY", &m_tUI_Desc.fPositionY);
 
 	ImGui::Dummy(ImVec2(0, 2.5)); // 공백
 
@@ -550,35 +582,34 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 
 HRESULT CWindow_UITool::UI2D_Create(_float fTimeDelta)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, ConvertToWideString(m_strItems[m_iLayerNum]), TEXT("Prototype_GameObject_UI_Anything"), &m_tUI_Desc));
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), TEXT("Prototype_GameObject_UI_Anything"), &m_tUI_Desc));
 
-	// error : 아래 Get_CloneGameObjects로 오브젝트를 가져올때 기존 오브젝트까지 모두 다시들고 오기 때문에, 함수를 따로 만들거나 클리어하고 담아주자
-	if(!m_vecUIObject.empty())
-		m_vecUIObject.clear();
-
-	PATHINFO*	tUI_Desc = new PATHINFO;
-
-	tUI_Desc->strFileName = m_tUI_Desc.strProtoTag;
-	tUI_Desc->strFilePath = m_tUI_Desc.strFilePath;
-
-	m_vecObjectName.push_back(tUI_Desc); // 이름 중복 검사 후 처리된 테그값으로 넣어주자.
-	m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecUIObject);
-	m_iUINameNum++;
+	Add_ObjectList(m_tUI_Desc);
 
 }
 
 void CWindow_UITool::UI2D_Delete(_float fTimeDelta)
 {
+	// 오브젝트 삭제
+	m_vecUIObject[m_iSelectedObjectIndex]->Set_Dead(true); // Set_Dead로 이녀석을 없애줘야 Layer에 담겨있는 Object가 죽는다.
 
+	Safe_Release(m_vecUIObject[m_iSelectedObjectIndex]);
+	m_vecUIObject.erase(m_vecUIObject.begin() + m_iSelectedObjectIndex);
+
+	m_vecObjectName.erase(m_vecObjectName.begin() + m_iSelectedObjectIndex); // 오브젝트 목록 이름 삭제
+
+	m_iSelectedObjectIndex = m_iSelectedObjectIndex - 1; // 현재 선택한 인덱스번째의 오브젝트를 삭제했으니, 선택된 인덱스도 뒤로 한칸 돌려주자.
 }
 
 //										현재 선택한 녀석의 전체 경로를 받아온다.
 void CWindow_UITool::AddIndexNumber(PATHINFO& UI_Info)
 {
-	int index = 0;
+	int		index = 0;
 	_bool	isPath = false;
 	//size_t underscorePos = str.find_last_of('_');
 	//auto it = std::find(m_vecObjectName.begin(), m_vecObjectName.end(), UI_Info.strFilePath); // 경로를 비교한다.
+	if (m_vecObjectName.empty())
+		return;
 
 	for (auto& iter : m_vecObjectName)
 	{
@@ -596,7 +627,12 @@ void CWindow_UITool::AddIndexNumber(PATHINFO& UI_Info)
 		{
 			if (strFilePath->strFilePath == UI_Info.strFilePath)
 			{
-				index++;
+				/* 모두 순회하고 */
+				if (strFilePath->iPathNum >= UI_Info.iPathNum); // 기존 컨테이너에 있는 마지막으로 비교한 녀석의 숫자보다 작거나 같을 경우
+				{
+					index = strFilePath->iPathNum + 1; // 마지막 녀석의 번호 + 1로 저장
+				}
+
 			}
 		}
 		
@@ -610,8 +646,25 @@ void CWindow_UITool::AddIndexNumber(PATHINFO& UI_Info)
 	}
 
 	/* 테그 */
-	m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName + string("_%d", index);
-	m_tUI_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
+	UI_Info.strFileName = UI_Info.strFileName + to_string(index);
+	UI_Info.iPathNum = index;
+}
+
+void CWindow_UITool::Add_ObjectList(CUI::UI_DESC tIn_UI_Desc)
+{
+	// error : 아래 Get_CloneGameObjects로 오브젝트를 가져올때 기존 오브젝트까지 모두 다시들고 오기 때문에, 함수를 따로 만들거나 클리어하고 담아주자
+	if (!m_vecUIObject.empty())
+		m_vecUIObject.clear();
+
+	PATHINFO* tUI_Desc = new PATHINFO;
+
+	// 문자열 중복 비교
+	tUI_Desc->strFileName = tIn_UI_Desc.strProtoTag;
+	tUI_Desc->strFilePath = tIn_UI_Desc.strFilePath;
+	AddIndexNumber(*tUI_Desc); // 오브젝트 테그 결정
+
+	m_vecObjectName.push_back(tUI_Desc); // 이름 중복 검사 후 처리된 테그값으로 넣어주자.
+	m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecUIObject);
 }
 
 /* ex : Save */
@@ -637,18 +690,49 @@ void CWindow_UITool::Save_Desc()
 }
 
 /* ex : Load */
-void CWindow_UITool::Load_Desc()
+HRESULT CWindow_UITool::Load_Desc()
 {
 	json json_in;
+
 	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
+
 
 	CJson_Utility::Load_Json(filePath, json_in);
 
-	m_tUI_Info.fX = json_in["PostionX"];
-	m_tUI_Info.fY = json_in["PostionY"];
-	m_tUI_Info.fSizeX = json_in["SizeX"];
-	m_tUI_Info.fSizeY = json_in["SizeY"];
+	for (auto& item : json_in.items())
+	{
+		json object = item.value(); 
 
+		CUI::UI_DESC tUI_Info;
+
+		//tUI_Info.fPositionX = object["PostionX"];
+		//tUI_Info.fPositionY = object["PostionY"];
+		//tUI_Info.fScaleX = object["SizeX"];
+		//tUI_Info.fScaleY = object["SizeY"];
+
+		tUI_Info.strProtoTag = object["ProtoTag"];
+		tUI_Info.strFilePath = object["FilePath"];
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		wstring wstrLayer;
+		m_pGameInstance->String_To_WString(m_strLayer[m_iLayerNum], wstrLayer);
+
+		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayer, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
+		
+		pUI_Object->Get_Transform()->Load_FromJson(object);
+
+		Add_ObjectList(tUI_Info);
+	}
+	return S_OK;
 }
 
 // ImGui를 사용하여 이미지를 표시하는 함수

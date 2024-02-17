@@ -7,6 +7,7 @@
 #include "Effect_Instance.h"
 
 #pragma region UI
+#include "UI_Anything.h"
 #include "UI_MonsterHp.h"
 #include "UI_MonsterHpFrame.h"
 #pragma endregion
@@ -187,15 +188,41 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 {
 	/* 추 후 파싱해서 정보 받아오기 */
 	
-	// 경로잡고 파싱중@@@@@@@
-	json In_Json;
+	json json_in;
 
-	CJson_Utility::Load_Json();
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
 
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tMonsterFrame)))
-		return E_FAIL;
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
+	
 
-	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_MonsterHp"), &tMonsterHp)))
+	CJson_Utility::Load_Json(filePath, json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		tUI_Info.fPositionX = object["PostionX"];
+		tUI_Info.fPositionY = object["PostionY"];
+		tUI_Info.fScaleX = object["SizeX"];
+		tUI_Info.fScaleY = object["SizeY"];
+		tUI_Info.strProtoTag = object["ProtoTag"];
+		tUI_Info.strFilePath = object["FilePath"];
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
+	}
+
+
+	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &json_in)))
 	//	return E_FAIL;
 
 	return S_OK;

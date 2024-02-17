@@ -4,13 +4,13 @@
 #include "Json_Utility.h"
 
 CUI_Anything::CUI_Anything(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI_Base(pDevice, pContext)
+	:CUI(pDevice, pContext)
 {
 
 }
 
 CUI_Anything::CUI_Anything(const CUI_Anything& rhs)
-	: CUI_Base(rhs)
+	: CUI(rhs)
 {
 }
 
@@ -25,27 +25,13 @@ HRESULT CUI_Anything::Initialize_Prototype()
 
 HRESULT CUI_Anything::Initialize(void* pArg)
 {
-	m_tInfo = *(UIANYTHING*)pArg;
-	m_tInfo.bFrame = true;
-	m_isEnable = m_tInfo.bEnable;
+	m_tUIInfo = *(UI_DESC*)pArg;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
+	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
-
-	//m_fCurrentHp = m_tInfo.pOwnerStatus->fCurrentHp;
-	//m_fPrevHp = m_fCurrentHp;
-	//m_tInfo.fCrntHPUV = m_tInfo.pOwnerStatus->fCurrentHp / m_tInfo.pOwnerStatus->fMaxHp;
-
-	// Test
-	m_fCurrentHp = 5.f;
-	m_fPrevHp = 5.f;
-	//m_tInfo.fCrntHPUV = m_tInfo.pOwnerStatus->fCurrentHp / m_tInfo.pOwnerStatus->fMaxHp;
-
-	SetUp_UV(0);
-
 
 	return S_OK;
 }
@@ -57,25 +43,14 @@ void CUI_Anything::Priority_Tick(_float fTimeDelta)
 void CUI_Anything::Tick(_float fTimeDelta)
 {
 
-
-	/*m_tInfo.fCrntHPUV = m_tInfo.pOwnerStatus->fCurrentHp / m_tInfo.pOwnerStatus->fMaxHp;*/
-
-	//if (m_tInfo.fCrntHPUV <= 0.0)
-	//{
-	//	m_tInfo.fCrntHPUV = 0.0;
-
-	//	Set_Dead(true);
-	//}
-
-
 }
 
 void CUI_Anything::Late_Tick(_float fTimeDelta)
 {
-	if (m_tUIInfo.bWorldUI == true)
-		Compute_OwnerCamDistance();
+	//if (m_tUIInfo.bWorldUI == true)
+	//	Compute_OwnerCamDistance();
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(m_tUIInfo.eRenderGroup, this)))
 		return;
 }
 
@@ -86,37 +61,33 @@ HRESULT CUI_Anything::Render()
 	//! Apply 호출 후에 행렬을 던져줘도 에러는 나지 않지만, 안정성이 떨어진다.
 	//! Apply 호출 후에 행렬을 던져주면, 어떤 때에는 정상적으로 수행되고, 어떤 때에는 값이 제대로 안 넘어가는 경우가 있다.
 
-	if (false == m_isEnable)
-		return E_FAIL;
+	//switch (m_tUIInfo.eUIType)
+	//{
+	//case CUI_Anything::SMALL:
+	//case CUI_Anything::MID:
+	//case CUI_Anything::LARGE:
+	//case CUI_Anything::SIDE:
+	//{
+	//	///* 월드상의 몬스터 위치로 계산된 UI를 카메라 절두체 안에 들어왔을 경우에만 표시하기 위함 */
+	//	//if (m_fOwnerCamDistance > 40.f || false == In_Frustum())
+	//	//{
+	//	//	// m_pGameInstance->Get_CamDir();
+	//	//	return E_FAIL;
+	//	//}
+	//	//__super::SetUp_WorldToScreen(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION));
+
+	//	//__super::SetUp_Transform(m_fWorldToScreenX, m_fWorldToScreenY, m_fDefaultScale * m_fScaleOffsetX, m_fDefaultScale * m_fScaleOffsetY);
 
 
-	switch (m_tInfo.eUIType)
-	{
-	case CUI_Anything::SMALL:
-	case CUI_Anything::MID:
-	case CUI_Anything::LARGE:
-	case CUI_Anything::SIDE:
-	{
-		///* 월드상의 몬스터 위치로 계산된 UI를 카메라 절두체 안에 들어왔을 경우에만 표시하기 위함 */
-		//if (m_fOwnerCamDistance > 40.f || false == In_Frustum())
-		//{
-		//	// m_pGameInstance->Get_CamDir();
-		//	return E_FAIL;
-		//}
-		//__super::SetUp_WorldToScreen(m_tInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION));
-
-		//__super::SetUp_Transform(m_fWorldToScreenX, m_fWorldToScreenY, m_fDefaultScale * m_fScaleOffsetX, m_fDefaultScale * m_fScaleOffsetY);
-
-
-		//__super::SetUp_BillBoarding();
-		break;
-	}
-	case CUI_Anything::BOSS:
-	case CUI_Anything::NONE:
-		break;
-	default:
-		break;
-	}
+	//	//__super::SetUp_BillBoarding();
+	//	break;
+	//}
+	//case CUI_Anything::BOSS:
+	//case CUI_Anything::NONE:
+	//	break;
+	//default:
+	//	break;
+	//}
 
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -146,7 +117,7 @@ HRESULT CUI_Anything::Ready_Components()
 		return E_FAIL;
 
 	wstring strPrototag;
-	m_pGameInstance->String_To_WString(m_tInfo.strProtoTag, strPrototag);
+	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
 
 	//! For.Com_Texture
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
@@ -173,25 +144,49 @@ HRESULT CUI_Anything::Bind_ShaderResources()
 
 void CUI_Anything::Compute_OwnerCamDistance()
 {
-	_vector		vPosition = m_tInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION);
-	_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
+	//_vector		vPosition = m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION);
+	//_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
 
-	m_fOwnerCamDistance = XMVectorGetX(XMVector3Length(vPosition - vCamPosition));
+	//m_fOwnerCamDistance = XMVectorGetX(XMVector3Length(vPosition - vCamPosition));
 }
 
 _bool CUI_Anything::In_Frustum()
 {
-	return m_pGameInstance->isIn_WorldPlanes(m_tInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
+	return false;
+	//return m_pGameInstance->isIn_WorldPlanes(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
-json CUI_Anything::Save_Desc(json out_json)
+json CUI_Anything::Save_Desc(json& out_json)
 {
-	out_json["PostionX"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
-	out_json["PostionY"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
-	out_json["SizeX"] = m_pTransformCom->Get_Scaled().x;
-	out_json["SizeY"] = m_pTransformCom->Get_Scaled().y;
-	out_json["ProtoTag"] = m_tInfo.strProtoTag;
-	out_json["FilePath"] = m_tInfo.strFilePath;
+	_float fSizeX = 0.f;
+	_float fSizeY = 0.f;
+	_float fPositionX = 0.f;
+	_float fPositionY = 0.f;
+
+	_float fCurPosX = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
+	_float fCurPosY = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
+
+	fCurPosX = fCurPosX + (_float)g_iWinSizeX * 0.5f;
+	fCurPosY = (_float)g_iWinSizeY * 0.5f - fCurPosY;
+
+	//out_json["PostionX"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
+	//out_json["PostionY"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
+	//out_json["PostionX"] = fCurPosX;
+	//out_json["PostionY"] = fCurPosY;
+	//out_json["PostionX"] = fCurPosX;
+	//out_json["PostionY"] = fCurPosY;
+	//out_json["RotationX"] = ;
+	//out_json["RotationY"] = ;
+	//out_json["RotationZ"] = ;
+	//out_json["SizeX"]	 = m_pTransformCom->Get_Scaled().x;
+	//out_json["SizeY"]	 = m_pTransformCom->Get_Scaled().y;
+
+
+	out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
+
+	out_json["FilePath"] = m_tUIInfo.strFilePath;
+
+	m_pTransformCom->Write_Json(out_json);
 
 	return out_json;
 }

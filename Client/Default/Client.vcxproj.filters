@@ -106,9 +106,6 @@
     <Filter Include="01.Levels\02.Tool\Imgui">
       <UniqueIdentifier>{01366b00-7eab-495a-9ebd-61cf6069e168}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Actor\Character\Monster">
-      <UniqueIdentifier>{97fc5167-2a35-4a58-a30c-4cc71dbe583b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\99. Sky">
       <UniqueIdentifier>{a96d4144-0b55-405d-b9b8-32aba0a80903}</UniqueIdentifier>
     </Filter>
@@ -195,6 +192,12 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\99. Anything">
       <UniqueIdentifier>{2f1fe2e2-39d2-4a2b-9ddf-bebbdab26f5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpBar">
+      <UniqueIdentifier>{a2c893a7-a963-48f9-85c3-e09e81d6f5e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpFrame">
+      <UniqueIdentifier>{1f7043e8-8716-4d91-9666-4babdf5647c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -330,15 +333,11 @@
     <ClInclude Include="..\Public\Environment_Object.h">
       <Filter>02.GameObjects\02. Environment</Filter>
     </ClInclude>
-
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02.GameObjects\98. Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Enum.h">
       <Filter>99.Defines</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Body_Player.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Environment_Instance.h">
       <Filter>02.GameObjects\02. Environment\Environment_Instance</Filter>
@@ -351,9 +350,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Weapon_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Body_Player.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02.GameObjects\98. Terrain</Filter>
@@ -370,9 +366,27 @@
     <ClInclude Include="..\public\Camera_Dynamic.h">
       <Filter>02.GameObjects\97. Camera</Filter>
     </ClInclude>
-
     <ClInclude Include="..\Public\Weapon_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EW_Actor.h" />
+    <ClInclude Include="..\Public\Body_Player.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Player.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_HP.h">
+      <Filter>02.GameObjects\UI\00. Player\01. Hp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_HPBar.h">
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_HPFrame.h">
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpFrame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -471,7 +485,6 @@
     <ClInclude Include="..\Public\Include_Imgui_Windows.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows</Filter>
     </ClInclude>
-
     <ClInclude Include="..\Public\Effect_Instance.h">
       <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
     </ClInclude>
@@ -483,9 +496,6 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>98.Default\Useless</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\EW_Actor.h">
-      <Filter>02.GameObjects\00. Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Interact_Chain.h">
       <Filter>02.GameObjects\01. Interact\0. Chain</Filter>
@@ -659,7 +669,6 @@
     <ClInclude Include="..\Public\SkyDome.h">
       <Filter>02.GameObjects\Sky\SkyDome</Filter>
     </ClInclude>
-
     <ClInclude Include="..\Public\Effect_Instance.h">
       <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
     </ClInclude>
@@ -832,6 +841,19 @@
     </ClCompile>
     <ClCompile Include="..\Private\Environment_Object.cpp">
       <Filter>02.GameObjects\02. Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EW_Actor.cpp" />
+    <ClCompile Include="..\Private\UI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_HP.cpp">
+      <Filter>02.GameObjects\UI\00. Player\01. Hp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_HPBar.cpp">
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_HPFrame.cpp">
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpFrame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
