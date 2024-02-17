@@ -154,6 +154,8 @@ HRESULT CGameObject::Remove_Component(const wstring& strComTag, _Inout_ CCompone
 	}
 
 	m_Components.erase(iter);
+
+	return S_OK;
 }
 
 void CGameObject::Free()

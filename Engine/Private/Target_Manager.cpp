@@ -53,7 +53,7 @@ HRESULT CTarget_Manager::Add_MRT(const wstring & strMRTTag, const wstring & strT
 	return S_OK;
 }
 
-HRESULT CTarget_Manager::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV)
+HRESULT CTarget_Manager::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV, _bool bClear)
 {
 	ID3D11ShaderResourceView*			pSRV[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = {
 		nullptr
@@ -72,7 +72,9 @@ HRESULT CTarget_Manager::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencil
 
 	for (auto& pRenderTarget : *pMRTList)
 	{
-		pRenderTarget->Clear();
+		if (true == bClear)
+			pRenderTarget->Clear();
+
 		pRTVs[iNumRTVs++] = pRenderTarget->Get_RTV();
 	}
 
