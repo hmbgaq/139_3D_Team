@@ -199,6 +199,9 @@
     <Filter Include="96.Manager\Data">
       <UniqueIdentifier>{9547ba74-3a7b-4d91-a6c0-c164618749aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.Manager\Clone">
+      <UniqueIdentifier>{c1f65662-6377-485d-9ea2-50c25d7f8e21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -348,7 +351,6 @@
     <ClInclude Include="..\Public\Body_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
     </ClInclude>
-
     <ClInclude Include="..\public\Loader.h">
       <Filter>01.Levels\98. Loader</Filter>
     </ClInclude>
@@ -372,6 +374,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Data_Manager.h">
       <Filter>96.Manager\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Clone_Manager.h">
+      <Filter>96.Manager\Clone</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -549,7 +554,6 @@
     <ClInclude Include="..\public\BackGround.h">
       <Filter>02.GameObjects\BackGround</Filter>
     </ClInclude>
-
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02.GameObjects\LandObject\Monster</Filter>
     </ClInclude>
@@ -782,6 +786,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Data_Manager.cpp">
       <Filter>96.Manager\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Clone_Manager.cpp">
+      <Filter>96.Manager\Clone</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

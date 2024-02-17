@@ -1,17 +1,19 @@
 #include "stdafx.h"
-#include "Data_Manager.h"
+#include "Clone_Manager.h"
 
 #include "GameInstance.h"
 
-IMPLEMENT_SINGLETON(CData_Manager);
+IMPLEMENT_SINGLETON(CClone_Manager);
 
-CData_Manager::CData_Manager()
+CClone_Manager::CClone_Manager()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
 	Safe_AddRef(m_pGameInstance);
+
+
 }
 
-HRESULT CData_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+HRESULT CClone_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	if (nullptr == pDevice || nullptr == pContext)
 		return E_FAIL;
@@ -26,7 +28,7 @@ HRESULT CData_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pC
 }
 
 
-void CData_Manager::Free()
+void CClone_Manager::Free()
 {
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);

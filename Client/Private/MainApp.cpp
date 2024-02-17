@@ -3,6 +3,10 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 
+#include "Data_Manager.h"
+#include "Clone_Manager.h"
+
+
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
@@ -19,6 +23,11 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.iBackBufferSizeY = g_iWinSizeY;
 
 	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, (_uint)(COLLISION_LAYER::LAYER_END), g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
+
+	//Client Managers
+	CClone_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
+	CData_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
+
 
 	FAILED_CHECK(Ready_Font());
 
@@ -294,7 +303,10 @@ void CMainApp::Free()
 	/*  내 멤버를 정리하면. */
 	Safe_Release(m_pGameInstance);
 
-	CGameInstance::Release_Engine();
+	
+	CClone_Manager::DestroyInstance();
+	CData_Manager::DestroyInstance();
 
+	CGameInstance::Release_Engine();
 }
 
