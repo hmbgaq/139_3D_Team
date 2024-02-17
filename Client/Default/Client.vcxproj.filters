@@ -106,9 +106,6 @@
     <Filter Include="01.Levels\02.Tool\Imgui">
       <UniqueIdentifier>{01366b00-7eab-495a-9ebd-61cf6069e168}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Actor\Character\Monster">
-      <UniqueIdentifier>{97fc5167-2a35-4a58-a30c-4cc71dbe583b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\99. Sky">
       <UniqueIdentifier>{a96d4144-0b55-405d-b9b8-32aba0a80903}</UniqueIdentifier>
     </Filter>
@@ -330,36 +327,32 @@
     <ClInclude Include="..\Public\Environment_Object.h">
       <Filter>02.GameObjects\02. Environment</Filter>
     </ClInclude>
-
-    <ClInclude Include="..\Public\Terrain.h">
-      <Filter>02.GameObjects\98. Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Client_Enum.h">
       <Filter>99.Defines</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Body_Player.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Environment_Instance.h">
       <Filter>02.GameObjects\02. Environment\Environment_Instance</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player.h">
-      <Filter>02.GameObjects\00. Character\Player</Filter>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>02.GameObjects\98. Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Camera_Dynamic.h">
       <Filter>02.GameObjects\97. Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Weapon_Player.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Body_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Terrain.h">
-      <Filter>02.GameObjects\98. Terrain</Filter>
+    <ClInclude Include="..\public\Camera_Dynamic.h">
+      <Filter>02.GameObjects\97. Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Loader.h">
       <Filter>01.Levels\98. Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Player.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>02.GameObjects\98. Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sky.h">
       <Filter>02.GameObjects\99. Sky</Filter>
@@ -367,10 +360,12 @@
     <ClInclude Include="..\Public\SkyDome.h">
       <Filter>02.GameObjects\99. Sky</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Camera_Dynamic.h">
-      <Filter>02.GameObjects\97. Camera</Filter>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\00. Character\Player</Filter>
     </ClInclude>
-
+    <ClInclude Include="..\Public\Body_Player.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Weapon_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
     </ClInclude>
@@ -471,7 +466,6 @@
     <ClInclude Include="..\Public\Include_Imgui_Windows.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows</Filter>
     </ClInclude>
-
     <ClInclude Include="..\Public\Effect_Instance.h">
       <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
     </ClInclude>
@@ -483,9 +477,6 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>98.Default\Useless</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\EW_Actor.h">
-      <Filter>02.GameObjects\00. Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Interact_Chain.h">
       <Filter>02.GameObjects\01. Interact\0. Chain</Filter>
@@ -659,7 +650,6 @@
     <ClInclude Include="..\Public\SkyDome.h">
       <Filter>02.GameObjects\Sky\SkyDome</Filter>
     </ClInclude>
-
     <ClInclude Include="..\Public\Effect_Instance.h">
       <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
     </ClInclude>

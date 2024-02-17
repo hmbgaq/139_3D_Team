@@ -222,20 +222,22 @@ void CCharacter::Go_Right(_float fTimeDelta)
 
 void CCharacter::Free()
 {
+	__super::Free();
+
+	Safe_Release(m_pBody);
+
+	for (CWeapon* pWeapon : m_Weapons)
+	{
+		Safe_Release(pWeapon);
+	}
+	m_Weapons.clear();
+
 	for (auto& Pair : m_PartObjects)
 		Safe_Release(Pair.second);
 
 	m_PartObjects.clear();
 
-	Safe_Release(m_pBody);
-
-	//for (CWeapon* pWeapon : m_Weapons)
-	//{
-	//	Safe_Release(pWeapon);
-	//}
-	//m_Weapons.clear();
-
 	Safe_Release(m_pNavigationCom);
 
-	__super::Free();
+	
 }

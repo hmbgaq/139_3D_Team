@@ -18,9 +18,6 @@ private:
 	virtual ~CPlayer() = default;
 
 public:
-	virtual CComponent* Find_Component(const wstring & strComTag, const wstring & strPartTag = TEXT("")) override;
-
-public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Tick(_float fTimeDelta) override;

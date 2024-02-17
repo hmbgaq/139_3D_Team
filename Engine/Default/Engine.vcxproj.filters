@@ -199,9 +199,6 @@
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect">
       <UniqueIdentifier>{8bcbac06-d32d-418b-977c-b6a675263715}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\97. PhysX">
-      <UniqueIdentifier>{619f889e-6947-4fcb-98d7-0c03f0861054}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\96.Utility">
       <UniqueIdentifier>{d544db3e-75c4-46f7-9cc6-7e6ed4edb7e6}</UniqueIdentifier>
     </Filter>
@@ -237,6 +234,18 @@
     </Filter>
     <Filter Include="01.Utility\03.Components\07.Collider\Manager">
       <UniqueIdentifier>{39f10bc0-452c-409c-8e67-6373278f317f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\08.RigidBody">
+      <UniqueIdentifier>{a6b04bd9-746e-4674-ac7d-c50214fc9b95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\09.Event">
+      <UniqueIdentifier>{0ede5438-29c2-491e-83db-695fc4798824}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\09.Event\Manager">
+      <UniqueIdentifier>{115626f4-e0e8-4b9b-a81b-d0cf6ea1dfd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\97.PhysX">
+      <UniqueIdentifier>{619f889e-6947-4fcb-98d7-0c03f0861054}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -451,7 +460,7 @@
       <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PhysXManager.h">
-      <Filter>01.Utility\97. PhysX</Filter>
+      <Filter>01.Utility\97.PhysX</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Character.h">
       <Filter>01.Utility\02.GameObjects\Character</Filter>
@@ -488,6 +497,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Json\json.hpp">
       <Filter>01.Utility\96.Utility\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RigidBody.h">
+      <Filter>01.Utility\03.Components\08.RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Event_Manager.h">
+      <Filter>01.Utility\09.Event\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Event.h">
+      <Filter>01.Utility\09.Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -651,7 +669,7 @@
       <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PhysXManager.cpp">
-      <Filter>01.Utility\97. PhysX</Filter>
+      <Filter>01.Utility\97.PhysX</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon.cpp">
       <Filter>01.Utility\02.GameObjects\Character\Weapon</Filter>
@@ -685,6 +703,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collision_Manager.cpp">
       <Filter>01.Utility\03.Components\07.Collider\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RigidBody.cpp">
+      <Filter>01.Utility\03.Components\08.RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Event_Manager.cpp">
+      <Filter>01.Utility\09.Event\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Event.cpp">
+      <Filter>01.Utility\09.Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
