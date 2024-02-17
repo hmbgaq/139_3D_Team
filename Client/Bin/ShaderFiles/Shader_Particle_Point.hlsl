@@ -1,8 +1,13 @@
 #include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+
 texture2D		g_DiffuseTexture;
+texture2D		g_MaskTexture;
+texture2D		g_NoiseTexture;
+
 vector			g_vCamPosition;
+vector			g_vCamLook;
 
 float			g_fDegree;
 

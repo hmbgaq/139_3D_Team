@@ -139,6 +139,18 @@
     <Filter Include="02.GameObjects\Effect\00.Greed">
       <UniqueIdentifier>{159cd6b3-4cda-4661-bcd8-e984e3c7bd4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\01.Effect_Custom">
+      <UniqueIdentifier>{d2f5dc77-1e0e-4461-b6df-242e10195e3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\01.Effect_Custom\01.Particle">
+      <UniqueIdentifier>{bd27525c-d80f-4816-87a8-110c9b56725b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\01.Effect_Custom\02.Mesh_Effect">
+      <UniqueIdentifier>{c1308ccb-8f81-4f58-a445-ef3dd2bfbcd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\01.Effect_Custom\03.Sprite_Effect">
+      <UniqueIdentifier>{14307220-1bc0-4bf7-85c1-e1a1db6d60d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -300,13 +312,13 @@
     <ClInclude Include="..\public\Camera_Dynamic.h">
       <Filter>02.GameObjects\97. Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Particle_Custom.h">
+      <Filter>02.GameObjects\Effect\01.Effect_Custom\01.Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
       <UniqueIdentifier>{bdf9a6e6-179a-44e0-a993-be1ba828fec8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Effect\Particles\00.Custom">
-      <UniqueIdentifier>{c1df78fd-5ef3-45b2-a46f-845d10f9fa4a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -433,9 +445,6 @@
     <ClInclude Include="..\Public\Effect_Object.h">
       <Filter>02.GameObjects\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Particle_Custom.h">
-      <Filter>02.GameObjects\Effect\Particles\00.Custom</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -561,14 +570,14 @@
     <ClCompile Include="..\Private\Effect_Object.cpp">
       <Filter>02.GameObjects\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Particle_Custom.cpp">
-      <Filter>02.GameObjects\Effect\Particles\00.Custom</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\CustomDialogFont.cpp">
       <Filter>99.Defines</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Greed.cpp">
       <Filter>02.GameObjects\Effect\00.Greed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Particle_Custom.cpp">
+      <Filter>02.GameObjects\Effect\01.Effect_Custom\01.Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

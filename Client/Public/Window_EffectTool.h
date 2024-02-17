@@ -69,12 +69,18 @@ private:
 	_float m_fAddScale = { 0.f };
 	_float m_vAddScale[2] = { 0.f, 0.f };
 
+	_float m_vMinMaxLifeTime[2] = { 0.f, 0.f };
+	_float m_vMinMaxRange[2] = { 0.f, 0.f };
+
 	_float m_fColor_Particle[3] = { 1.f, 1.f, 1.f };
 
 	_int	m_iTextureIndex = { 0 };
 
 	_int	m_iMaxNumInstance = { 500 };
 	_int	m_iNumInstance = { 0 };
+
+	CVIBuffer_Particle_Point::TYPE_ACTION	m_eParticleTypeAction = { CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE };
+	CVIBuffer_Particle_Point::TYPE_FADE		m_eParticleTypeFade = { CVIBuffer_Particle_Point::TYPE_FADE::FADE_NONE };
 
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };

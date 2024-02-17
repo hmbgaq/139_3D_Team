@@ -7,12 +7,13 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Particle_Point final : public CVIBuffer_Instancing
 {
 public:
-	enum TYPE	{ CIRCLE, FALL, RISE, TORNADO, TYPE_END};
-
+	enum TYPE_ACTION { SPHERE, SPARK, FALL, RISE, TORNADO, TYPE_ACTION_END};
+	enum TYPE_FADE	 { FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
 
 	typedef struct tagParticlePoint
 	{
-		TYPE		eType = { CIRCLE };
+		TYPE_ACTION		eType_Action = { SPHERE };
+		TYPE_FADE		eType_Fade = { FADE_NONE };
 
 		/* 상태 */
 		_bool		bActive			= { TRUE };
@@ -21,6 +22,7 @@ public:
 		_bool		bIsPlay			= { TRUE };
 		_bool		bReverse		= { FALSE };
 		_bool		bLoop			= { TRUE };
+
 
 		/* 부모 */
 		_bool		bUseParentMatrix = { FALSE };
@@ -40,6 +42,9 @@ public:
 		_float3		vCenterPosition;
 		_float3		vOffsetPosition;
 		_float3		vCurrentPosition;
+
+		_float		fMaxLengthPosition = { 5.f };
+		_float		fCurLengthPosition;
 
 		/* For.Speed */
 		_float2		vMinMaxSpeed;
@@ -120,12 +125,18 @@ public:
 public:
 	PARTICLE_POINT_DESC* Get_Desc() { return &m_ParticleDesc; }
 
+	void			Set_Type_Action(TYPE_ACTION eType) { m_ParticleDesc.eType_Action = eType; }
+	void			Set_Type_Fade(TYPE_FADE eType) { m_ParticleDesc.eType_Fade = eType; }
 
 	void			Set_Loop(_bool bLoop) { m_ParticleDesc.bLoop = bLoop; }
 
 	void			Set_Play(_bool bPlay) { m_ParticleDesc.bIsPlay = bPlay; }
 
 	void			Set_ReversePlay(_bool bReverse) { m_ParticleDesc.bReverse = bReverse; }
+
+	void			Set_LifeTime(_float fMin, _float fMax) { m_ParticleDesc.vMinMaxLifeTime = _float2(fMin, fMax); }
+
+	void			Set_Range(_float fMinRange, _float fMaxFange) { m_ParticleDesc.vMinMaxRange = _float2(fMinRange, fMaxFange); }
 
 	void			Set_AddScale(_float fX, _float fY) { m_ParticleDesc.vAddScale = _float2(fX, fY); }
 

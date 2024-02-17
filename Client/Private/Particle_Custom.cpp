@@ -102,7 +102,8 @@ HRESULT CParticle_Custom::Ready_Components()
 	/* For.Com_VIBuffer */
 	{
 		CVIBuffer_Particle_Point::PARTICLE_POINT_DESC		ParticleDesc = {};
-		ParticleDesc.eType = { CVIBuffer_Particle_Point::TYPE::CIRCLE };
+		ParticleDesc.eType_Action = { CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE };
+		ParticleDesc.eType_Fade = { CVIBuffer_Particle_Point::TYPE_FADE::FADE_OUT };
 
 		ParticleDesc.bActive				= { TRUE };
 		ParticleDesc.bBillBoard				= { TRUE };
@@ -154,10 +155,19 @@ HRESULT CParticle_Custom::Ready_Components()
 			return E_FAIL;
 	}
 	
+
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_TOOL, m_strTextureTag,
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_DIFFUSE]))))
 		return E_FAIL;
+	///* For.Com_Mask */
+	//if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Mask"),
+	//	TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_MASK]))))
+	//	return E_FAIL;
+	///* For.Com_Noise */
+	//if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Brush"),
+	//	TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_NOISE]))))
+	//	return E_FAIL;
 
 
 	return S_OK;
@@ -177,8 +187,21 @@ HRESULT CParticle_Custom::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDegree", &m_fRotateUvDegree, sizeof(_float))))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_iTextureIndex)))
+	if (FAILED(m_pTextureCom[TYPE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_iTextureIndex[TYPE_DIFFUSE])))
 		return E_FAIL;
+
+	if (nullptr != m_pTextureCom[TYPE_MASK])
+	{
+		if (FAILED(m_pTextureCom[TYPE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_iTextureIndex[TYPE_MASK])))
+			return E_FAIL;
+	}
+
+	if (nullptr != m_pTextureCom[TYPE_NOISE])
+	{
+		if (FAILED(m_pTextureCom[TYPE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_iTextureIndex[TYPE_NOISE])))
+			return E_FAIL;
+	}
+
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
@@ -221,7 +244,10 @@ void CParticle_Custom::Free()
 	__super::Free();
 
 	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pTextureCom);
+
+	for (_int i = 0; i < TYPE_END; i++)
+		Safe_Release(m_pTextureCom[i]);
+
 	Safe_Release(m_pShaderCom);
 }
 

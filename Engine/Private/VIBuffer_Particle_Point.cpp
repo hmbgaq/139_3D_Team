@@ -125,6 +125,12 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 	m_iNumInstance = m_ParticleDesc.iCurNumInstance;
 	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
+		if(FADE_IN == m_ParticleDesc.eType_Fade)
+			pVertices[i].vColor.w = 0.f;
+		else
+			pVertices[i].vColor.w = 1.f;
+		
+
 		m_pSpeeds[i] = RandomSpeed(m_RandomNumber);
 		m_pLifeTimes[i] = RandomLifeTime(m_RandomNumber);
 
@@ -135,20 +141,9 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 		m_ParticleDesc.vRotationOffset = { RandomRotationX(m_RandomNumber), RandomRotationY(m_RandomNumber), RandomRotationZ(m_RandomNumber) };
 		_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_ParticleDesc.vRotationOffset.x, m_ParticleDesc.vRotationOffset.y, m_ParticleDesc.vRotationOffset.z);
 
-		_float cosA = cos(m_ParticleDesc.vRotationOffset.z);
-		_float sinA = sin(m_ParticleDesc.vRotationOffset.z);
-		_float fDegree = XMConvertToDegrees(m_ParticleDesc.vRotationOffset.z);
-
-
-		pVertices[i].vRight = _float4(cosA, 0.f, -sinA, 0.f) * m_ParticleDesc.vCurrentScale.x;
-		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_ParticleDesc.vCurrentScale.y;
-		pVertices[i].vLook = _float4(sinA, 0.f, cosA, 0.f) * 1.f;
-
-		//pVertices[i].vRight = _float4(fScale + m_ParticleDesc.vAddScale.x, 0.f, 0.f, 0.f);
-		//pVertices[i].vUp = _float4(0.f, fScale + m_ParticleDesc.vAddScale.y, 0.f, 0.f);
-		//pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
-
-		pVertices[i].vColor.w = 1.f;
+		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_ParticleDesc.vCurrentScale.x;
+		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_ParticleDesc.vCurrentScale.x;
+		pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
 
 		vDir = XMVector3Normalize(vDir) * RandomRange(m_RandomNumber);
 
@@ -185,7 +180,12 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 		{
 			if (m_ParticleDesc.bLoop)
 			{
-				ReSet();
+				if(SPHERE == m_ParticleDesc.eType_Action)
+					ReSet();
+				//else
+				//{
+				//	m_fTimeAcc = 0.f;
+				//}
 			}
 			else
 			{
@@ -202,27 +202,85 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 
 		for (_uint i = 0; i < m_iNumInstance; i++)
 		{
-			_float		fAlpha = max(m_pLifeTimes[i] - m_fTimeAcc, 0.f);
-
+			_float		fAlpha;
+			if (FADE_OUT == m_ParticleDesc.eType_Fade)
+			{
+				fAlpha = max(m_pLifeTimes[i] - m_fTimeAcc, 0.f);
+			}	
+			if (FADE_IN == m_ParticleDesc.eType_Fade)
+			{
+				fAlpha = MIN(m_pLifeTimes[i] - m_fTimeAcc, 1.f);
+			}
+			if (FADE_NONE == m_ParticleDesc.eType_Fade)
+			{
+				fAlpha = 1.f;
+			}
+				
 			pVertices[i].vColor = m_ParticleDesc.vCurrentColor;
 			pVertices[i].vColor.w = fAlpha;
 
-			_vector		vDir;
+			if (SPHERE == m_ParticleDesc.eType_Action)
+			{
+				_vector		vDir;
 
-			if (m_ParticleDesc.bReverse)
-				vDir = XMLoadFloat3(&m_ParticleDesc.vCenterPosition) - XMVector3Normalize(XMLoadFloat4(&pVertices[i].vPosition));
-			else
-				vDir = XMVector3Normalize(XMLoadFloat4(&pVertices[i].vPosition) - XMLoadFloat3(&m_ParticleDesc.vCenterPosition));
+				if (m_ParticleDesc.bReverse)
+					vDir = XMLoadFloat3(&m_ParticleDesc.vCenterPosition) - XMVector3Normalize(XMLoadFloat4(&pVertices[i].vPosition));
+				else
+					vDir = XMVector3Normalize(XMLoadFloat4(&pVertices[i].vPosition) - XMLoadFloat3(&m_ParticleDesc.vCenterPosition));
 
-			// 가속도
-			_float fSpeed;
-			if (fTime < m_ParticleDesc.fAccPosition)
-				fSpeed = m_pSpeeds[i] + m_ParticleDesc.fAcceleration;
-			else
-				fSpeed = m_pSpeeds[i];
+				// 가속도
+				_float fSpeed;
+				if (fTime < m_ParticleDesc.fAccPosition)
+					fSpeed = m_pSpeeds[i] + m_ParticleDesc.fAcceleration;
+				else
+					fSpeed = m_pSpeeds[i];
 
-			vDir = XMVectorSetW(vDir, 0.f);
-			XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + vDir * fSpeed * fTimeDelta);
+				// 센터에서 현재 위치까지의 거리
+				_vector vCurPos = XMLoadFloat4(&pVertices[i].vPosition);	
+				_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - XMLoadFloat3(&m_ParticleDesc.vCenterPosition)));
+
+				if (fLength < m_ParticleDesc.fMaxLengthPosition)
+				{
+					vDir = XMVectorSetW(vDir, 0.f);
+					XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + vDir * fSpeed * fTimeDelta);
+				}
+			}
+
+			if (FALL == m_ParticleDesc.eType_Action)
+			{
+				// 가속도
+				_float fSpeed;
+				if (fTime < m_ParticleDesc.fAccPosition)
+					fSpeed = m_pSpeeds[i] + m_ParticleDesc.fAcceleration;
+				else
+					fSpeed = m_pSpeeds[i];
+
+				pVertices[i].vPosition.y -= fSpeed * fTimeDelta;
+
+				if (m_ParticleDesc.vMinMaxRange.x >= pVertices[i].vPosition.y)
+					pVertices[i].vPosition.y = m_ParticleDesc.vMinMaxRange.y;
+			}
+
+			if (RISE == m_ParticleDesc.eType_Action)
+			{
+				// 가속도
+				_float fSpeed;
+				if (fTime < m_ParticleDesc.fAccPosition)
+					fSpeed = m_pSpeeds[i] + m_ParticleDesc.fAcceleration;
+				else
+					fSpeed = m_pSpeeds[i];
+
+				pVertices[i].vPosition.y += fSpeed * fTimeDelta;
+
+				if (m_ParticleDesc.vMinMaxRange.x >= pVertices[i].vPosition.y)
+					pVertices[i].vPosition.y = m_ParticleDesc.vMinMaxRange.y;
+			}
+
+			if (TORNADO == m_ParticleDesc.eType_Action)
+			{
+
+			}
+
 		}
 
 		m_pContext->Unmap(m_pVBInstance, 0);
@@ -255,6 +313,11 @@ void CVIBuffer_Particle_Point::ReSet()
 
 	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
+		if (FADE_IN == m_ParticleDesc.eType_Fade)
+			pVertices[i].vColor.w = 0.f;
+		else
+			pVertices[i].vColor.w = 1.f;
+
 		m_pSpeeds[i] = RandomSpeed(m_RandomNumber);
 		m_pLifeTimes[i] = RandomLifeTime(m_RandomNumber);
 
@@ -265,20 +328,11 @@ void CVIBuffer_Particle_Point::ReSet()
 		m_ParticleDesc.vRotationOffset = { RandomRotationX(m_RandomNumber), RandomRotationY(m_RandomNumber), RandomRotationZ(m_RandomNumber) };
 		_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_ParticleDesc.vRotationOffset.x, m_ParticleDesc.vRotationOffset.y, m_ParticleDesc.vRotationOffset.z);
 
-		_float cosA = cos(m_ParticleDesc.vRotationOffset.z);
-		_float sinA = sin(m_ParticleDesc.vRotationOffset.z);
-		_float fDegree = XMConvertToDegrees(m_ParticleDesc.vRotationOffset.z);
 
+		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_ParticleDesc.vCurrentScale.x;
+		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_ParticleDesc.vCurrentScale.x;
+		pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
 
-		pVertices[i].vRight = _float4(cosA, 0.f, -sinA, 0.f) * m_ParticleDesc.vCurrentScale.x;
-		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_ParticleDesc.vCurrentScale.y;
-		pVertices[i].vLook = _float4(sinA, 0.f, cosA, 0.f) * 1.f;
-
-		//pVertices[i].vRight = _float4(fScale + m_ParticleDesc.vAddScale.x, 0.f, 0.f, 0.f);
-		//pVertices[i].vUp = _float4(0.f, fScale + m_ParticleDesc.vAddScale.y, 0.f, 0.f);
-		//pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
-
-		pVertices[i].vColor.w = 1.f;
 
 		vDir = XMVector3Normalize(vDir) * RandomRange(m_RandomNumber);
 

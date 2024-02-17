@@ -246,7 +246,17 @@ void CWindow_EffectTool::Update_PlayArea_Particle()
 		//	m_pCurParticle->Set_Play(FALSE);
 		//	m_pCurParticle->Set_TimePosition(m_fLifeTimePositionEdit);
 		//}
+
+		if (ImGui::DragFloat2("MinMaxLifeTime", m_vMinMaxLifeTime, 1.f, 0.f, 360.f))
+		{
+			if (m_vMinMaxLifeTime[0] > m_vMinMaxLifeTime[1])
+				m_vMinMaxLifeTime[0] = m_vMinMaxLifeTime[1];
+
+			m_pCurParticle->Get_VIBufferCom()->Set_LifeTime(m_vMinMaxLifeTime[0], m_vMinMaxLifeTime[1]);
+		}
+
 	}
+
 
 
 	/* 루프 여부 */
@@ -288,6 +298,68 @@ void CWindow_EffectTool::Update_PlayArea_Particle()
 	}
 	ImGui::SameLine(); HelpMarker(u8"재생, 역재생");
 
+
+	/* 파티클 업데이트 모양(타입) */
+	ImGui::SeparatorText(" Action Type ");
+	if (ImGui::Button(" Sphere "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Type_Action(CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE);
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(" Fall "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Type_Action(CVIBuffer_Particle_Point::TYPE_ACTION::FALL);
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(" Rise "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Type_Action(CVIBuffer_Particle_Point::TYPE_ACTION::RISE);
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(" Tornado "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Type_Action(CVIBuffer_Particle_Point::TYPE_ACTION::TORNADO);
+		}
+	}
+
+	/* 파티클 페이드 인아웃 사용 */
+	ImGui::SeparatorText(" Fade Type ");
+	if (ImGui::Button(" Fade_None "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Type_Fade(CVIBuffer_Particle_Point::TYPE_FADE::FADE_NONE);
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(" Fade_In "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Type_Fade(CVIBuffer_Particle_Point::TYPE_FADE::FADE_IN);
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(" Fade_Out "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Type_Fade(CVIBuffer_Particle_Point::TYPE_FADE::FADE_OUT);
+		}
+	}
+
+
 }
 
 void CWindow_EffectTool::Update_AppearArea_Particle()
@@ -298,15 +370,18 @@ void CWindow_EffectTool::Update_AppearArea_Particle()
 		if (nullptr != m_pCurParticle)
 		{
 			if (ImGui::DragInt("Texture", &m_iTextureIndex, 1, 0, 5))
-				m_pCurParticle->Set_TextureIndex(m_iTextureIndex);
+				m_pCurParticle->Set_TextureIndex(CParticle_Custom::TEXTURE::TYPE_DIFFUSE, m_iTextureIndex);
 		}
 	}
 
 	/* 파티클 개수 */
 	if (nullptr != m_pCurParticle)
 	{
+		ImGui::Text("MaxInstance : %d", m_iMaxNumInstance);
+
 		if (ImGui::DragInt("Instance Count", &m_iNumInstance, 1, 1, m_iMaxNumInstance))
 			m_pCurParticle->Get_VIBufferCom()->Set_NumInstance(m_iNumInstance);
+		
 	}
 
 	/* UV 회전 */
@@ -325,7 +400,7 @@ void CWindow_EffectTool::Update_AppearArea_Particle()
 			m_pCurParticle->Get_VIBufferCom()->Set_AddScale(m_fAddScale, m_fAddScale);
 		}
 
-		if (ImGui::DragFloat("AddScale_2", m_vAddScale, 1.f, 0.f, 360.f))
+		if (ImGui::DragFloat2("AddScale_2", m_vAddScale, 1.f, 0.f, 360.f))
 		{
 			if (0 > m_vAddScale[0])
 				m_vAddScale[0] = 0.f;
@@ -348,9 +423,20 @@ void CWindow_EffectTool::Update_AppearArea_Particle()
 
 void CWindow_EffectTool::Update_ActionArea_Particle()
 {
-	/* 회전 범위 */
 	if (nullptr != m_pCurParticle)
-	{
+	{	
+		CVIBuffer_Particle_Point* pVIBuffer = m_pCurParticle->Get_VIBufferCom();
+
+		if (ImGui::DragFloat2("MinMaxRange", m_vMinMaxRange, 1.f, 0.1f, 360.f))
+		{
+			if (m_vMinMaxRange[0] > m_vMinMaxRange[1])
+				m_vMinMaxRange[0] = m_vMinMaxRange[1];
+
+			pVIBuffer->Set_Range(m_vMinMaxRange[0], m_vMinMaxRange[1]);
+		}
+
+
+		/* 회전 범위(오프셋) */
 		/* RotX */
 		if (ImGui::DragFloat2("RotationX", m_vRotationX, 1.f, 0.f, 360.f))
 		{
@@ -360,8 +446,8 @@ void CWindow_EffectTool::Update_ActionArea_Particle()
 			if (m_vRotationX[0] > m_vRotationX[1])
 				m_vRotationX[1] = m_vRotationX[0];
 
-			m_pCurParticle->Get_VIBufferCom()->Set_RotationOffset(MIN, AXIS_X, m_vRotationX[0]);
-			m_pCurParticle->Get_VIBufferCom()->Set_RotationOffset(MAX, AXIS_X, m_vRotationX[1]);
+			pVIBuffer->Set_RotationOffset(MIN, AXIS_X, m_vRotationX[0]);
+			pVIBuffer->Set_RotationOffset(MAX, AXIS_X, m_vRotationX[1]);
 		}
 
 
@@ -414,6 +500,12 @@ void CWindow_EffectTool::Update_CurParameters()
 		CVIBuffer_Particle_Point::PARTICLE_POINT_DESC* pDesc = pVIBuffer->Get_Desc();
 
 		m_iNumInstance = pVIBuffer->Get_NumInstance();
+
+		m_vMinMaxLifeTime[0] = pDesc->vMinMaxLifeTime.x;
+		m_vMinMaxLifeTime[1] = pDesc->vMinMaxLifeTime.y;
+
+		m_vMinMaxRange[0] = pDesc->vMinMaxRange.x;
+		m_vMinMaxRange[1] = pDesc->vMinMaxRange.y;
 
 		m_vRotationX[0] = pDesc->vMinMaxRotationOffsetX.x;
 		m_vRotationY[0] = pDesc->vMinMaxRotationOffsetY.x;
