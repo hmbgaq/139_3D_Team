@@ -182,7 +182,6 @@ HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName
 
 HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantName, _uint iMeshIndex, aiTextureType eTextureType)
 {
-
 	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;

@@ -84,8 +84,13 @@ private:
 	HRESULT Render_OutLine();
 	HRESULT Render_SSAO();
 	HRESULT Render_SSAO_Blur();
+	HRESULT Render_HBO_Plus();
+
+	HRESULT Render_RadialBlur();
 
 	HRESULT Render_GodRay();
+
+	/* perlin을 이용한 바다물결, 나뭇잎, 불 등 자연스러운 무작위패턴생성 */
 
 #ifdef _DEBUG
 
@@ -126,10 +131,14 @@ private:
 		HRESULT						Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bClear, _int eBlendType);
 		void						Calc_Blur_GaussianWeights(_int sigma, _int iSize, _Out_ void* Weights);
 
+		/* Radial Blur */
+		_float4 m_fRadialBlurQuality = {};
+		_float4 m_fRadialBlurPower = {};
 private:
 	class CShader*					m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
 	class CGameInstance*			m_pGameInstance = { nullptr };
 	class CVIBuffer_Rect*			m_pVIBuffer = { nullptr };
+	class CVIBuffer_SSAO*			m_pSSAO_VIBuffer = { nullptr };
 
 	ID3D11Device*					m_pDevice = { nullptr };
 	ID3D11DeviceContext*			m_pContext = { nullptr };
@@ -138,7 +147,7 @@ private:
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponent;
-	_bool						m_bRenderDebug = { false };
+	_bool						m_bRenderDebug = { true };
 #endif
 
 public:

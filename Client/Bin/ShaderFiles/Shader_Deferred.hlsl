@@ -197,14 +197,18 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 		discard;
 
 	vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
-    vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    vector		vSSAO = g_SSAOTexture.Sample(ClampSampler, In.vTexcoord); /* SSAO 적용 */ 
-
-    //Out.vColor = (vDiffuse * vShade ) + vSpecular;
-    if (true == g_bSSAO_Active)
-		Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular;
-    else
-		Out.vColor = (vDiffuse * vShade ) + vSpecular;
+    vShade = saturate(vShade);
+	
+    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+		vSpecular = saturate(vSpecular);
+	
+    vector		vSSAO = float4(1.f, 1.f, 1.f, 1.f);
+    if(g_bSSAO_Active)
+        vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord); /* SSAO 적용 */
+	
+    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular;
+	
+    //Out.vColor = ((vDiffuse * vShade * vShadow * vSSAO) + vSpecular + vBloom) * vOutline;
 	
 	vector		vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
 	float		fViewZ = vDepthDesc.y * 1000.f;
@@ -237,7 +241,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 	float4		vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
 
 	if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
-		Out.vColor = Out.vColor * 0.7f;
+		Out.vColor = Out.vColor * 0.8f;
 	
 	return Out;
 }

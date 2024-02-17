@@ -34,7 +34,7 @@ public: /* For.Graphic_Device */
 	ID3D11RenderTargetView* Get_BackBufferRTV() const;
 	ID3D11DepthStencilView* Get_DSV() const;
 	GRAPHIC_DESC*			Get_GraphicDesc();
-
+	ID3D11ShaderResourceView* Get_DepthSRV();
 
 public: /* For.Input_Device */
 	_byte		Get_DIKeyState(_ubyte byKeyID);

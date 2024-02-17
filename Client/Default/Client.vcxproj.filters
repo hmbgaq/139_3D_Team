@@ -199,6 +199,12 @@
     <Filter Include="02.GameObjects\03. Effect\04.Effect_Sprite">
       <UniqueIdentifier>{03bc8c0a-88ed-4b3d-b82f-b2cad26b7790}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monter">
+      <UniqueIdentifier>{9087e9de-c65a-4eb8-aff0-d8af60e30b78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monter\0. Screamer">
+      <UniqueIdentifier>{6ab1225a-12f3-4ff6-9880-7a7c7881548c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -365,6 +371,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Camera_Dynamic.h">
       <Filter>02.GameObjects\97. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Screamer.h">
+      <Filter>02.GameObjects\00. Character\Monter\0. Screamer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -741,6 +750,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body_Player.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Screamer.cpp">
+      <Filter>02.GameObjects\00. Character\Monter\0. Screamer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-#include "..\Public\VIBuffer.h"
+#include "VIBuffer.h"
 
 CVIBuffer::CVIBuffer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -38,8 +38,6 @@ HRESULT CVIBuffer::Render()
 {
 	m_pContext->DrawIndexed(m_iNumIndices, 0, 0);
 
-	
-
 	return S_OK;
 }
 
@@ -77,9 +75,6 @@ HRESULT CVIBuffer::Bind_VIBuffers()
 	///* 장치에게 내가 그릴려고하는 정점의 구성정보를 모두 보여준다. */
 	///* DX9기준, 정점의 변환을 장치가 알아서 수행한다(고정기능렌더링파이플아ㅣㄴ)(.*/
 	//m_pContext->SetFVF(D3DFVF_XYZ | D3DFVF_TEX1);
-
-
-	
 
 	return S_OK;
 }

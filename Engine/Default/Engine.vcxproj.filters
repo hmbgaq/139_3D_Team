@@ -250,6 +250,15 @@
     <Filter Include="01.Utility\03.Components\02.Shader\ConstantBuffer">
       <UniqueIdentifier>{d5c42a15-c269-4316-8d14-a600354c777d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\98.Renderer\Util">
+      <UniqueIdentifier>{97ab11a5-ce3a-4739-8633-9c3898280a3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\02.Shader\Hash">
+      <UniqueIdentifier>{24ebb489-1b14-4cc5-b40f-03e5d5593cd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\SSAO">
+      <UniqueIdentifier>{45142160-3e8f-4c21-b613-06aecc2af5e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -513,6 +522,18 @@
     <ClInclude Include="..\Public\ConstantBuffer.h">
       <Filter>01.Utility\03.Components\02.Shader\ConstantBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GFSDK_SSAO.h">
+      <Filter>01.Utility\98.Renderer\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hasher.h">
+      <Filter>01.Utility\03.Components\02.Shader\Hash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MurmurHash3.h">
+      <Filter>01.Utility\03.Components\02.Shader\Hash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_SSAO.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\SSAO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -721,6 +742,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\ConstantBuffer.cpp">
       <Filter>01.Utility\03.Components\02.Shader\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MurmurHash3.cpp">
+      <Filter>01.Utility\03.Components\02.Shader\Hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_SSAO.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\SSAO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

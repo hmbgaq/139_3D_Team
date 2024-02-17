@@ -1,0 +1,49 @@
+#pragma once
+#include "Client_Defines.h"
+#include "GameObject.h"
+
+BEGIN(Engine)
+class CShader;
+class CCollider;
+class CModel;
+END
+
+/* 셰이더 테스트용 모델입니다! */
+
+BEGIN(Client)
+
+class CScreamer final : public CGameObject
+{
+private:
+	CScreamer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CScreamer(const CScreamer& rhs);
+	virtual ~CScreamer() = default;
+
+public:
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
+	virtual void	Priority_Tick(_float fTimeDelta) override;
+	virtual void	Tick(_float fTimeDelta) override;
+	virtual void	Late_Tick(_float fTimeDelta) override;
+	virtual HRESULT Render() override;
+	virtual HRESULT Render_Shadow() override;
+
+private:
+	HRESULT			Ready_Components();
+	HRESULT			Bind_ShaderResources();
+
+private:
+	_int				m_iRenderPass			= {};
+
+private:
+	CModel*				m_pModelCom				= { nullptr };
+	CShader*			m_pShaderCom			= { nullptr };
+	CCollider*			m_pColliderCom			= { nullptr };
+
+public:
+	static CScreamer*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject*	Clone(void* pArg) override;
+	virtual void			Free() override;
+};
+
+END

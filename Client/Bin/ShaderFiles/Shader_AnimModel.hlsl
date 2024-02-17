@@ -5,7 +5,6 @@ texture2D		g_DiffuseTexture;
 
 matrix			g_BoneMatrices[256];
 
-
 float			g_fCamFar;
 
 /* Dissolve */

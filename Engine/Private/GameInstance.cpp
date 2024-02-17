@@ -179,6 +179,14 @@ GRAPHIC_DESC* CGameInstance::Get_GraphicDesc()
 	return m_pGraphic_Device->Get_GraphicDesc();
 }
 
+ID3D11ShaderResourceView* CGameInstance::Get_DepthSRV()
+{
+	if (nullptr == m_pGraphic_Device)
+		return nullptr;
+
+	return m_pGraphic_Device->Get_DepthSRV();
+}
+
 _byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
 {
 	if (nullptr == m_pInput_Device)
