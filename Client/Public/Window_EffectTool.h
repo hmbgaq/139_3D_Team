@@ -2,10 +2,6 @@
 
 #include "Imgui_Window.h"
 
-BEGIN(Engine)
-class CEffect_Object;
-//class CParticle_Custom;
-END
 
 BEGIN(Client)
 
@@ -81,9 +77,6 @@ private:
 
 	CVIBuffer_Particle_Point::TYPE_ACTION	m_eParticleTypeAction = { CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE };
 	CVIBuffer_Particle_Point::TYPE_FADE		m_eParticleTypeFade = { CVIBuffer_Particle_Point::TYPE_FADE::FADE_NONE };
-
-private:
-	class CGameInstance* m_pGameInstance = { nullptr };
 
 public:
 	static CWindow_EffectTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

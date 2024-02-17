@@ -7,7 +7,6 @@
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
-	, m_pGameInstance(CGameInstance::GetInstance())
 {
 
 	Safe_AddRef(m_pGameInstance);
