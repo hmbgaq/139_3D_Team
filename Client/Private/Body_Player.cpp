@@ -15,13 +15,10 @@ CBody_Player::CBody_Player(const CBody_Player & rhs)
 {
 }
 
-CBone * CBody_Player::Get_BonePtr(const _char * pBoneName)
-{
-	return m_pModelCom->Get_BonePtr(pBoneName);	
-}
-
 HRESULT CBody_Player::Initialize_Prototype()
 {	
+	if (FAILED(__super::Initialize_Prototype()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -31,59 +28,30 @@ HRESULT CBody_Player::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
 
-
-
-	m_pModelCom->Set_Animation(3);
+	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
 
 	return S_OK;
 }
 
 void CBody_Player::Priority_Tick(_float fTimeDelta)
 {
-
+	__super::Priority_Tick(fTimeDelta);
 }
 
 void CBody_Player::Tick(_float fTimeDelta)
 {
-	m_pModelCom->Play_Animation(fTimeDelta, true);
-
-	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_pParentTransform->Get_WorldMatrix());
-
-	m_pColliderCom->Update(XMLoadFloat4x4(&m_WorldMatrix));
+	__super::Tick(fTimeDelta);
 }
 
 void CBody_Player::Late_Tick(_float fTimeDelta)
 {
-	
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-		return ;
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this)))
-		return;
-
-#ifdef _DEBUG
-	m_pGameInstance->Add_DebugRender(m_pColliderCom);
-#endif	
+	__super::Late_Tick(fTimeDelta);
 }
 
 HRESULT CBody_Player::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
+	if (FAILED(__super::Render()))
 		return E_FAIL;
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (size_t i = 0; i < iNumMeshes; i++)
-	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-
-		m_pShaderCom->Begin(0);
-
-		m_pModelCom->Render((_uint)i);
-	}
 
 	return S_OK;
 }
@@ -126,19 +94,21 @@ void CBody_Player::SetUp_Animation(_uint iAnimIndex)
 
 HRESULT CBody_Player::Ready_Components()
 {
-	int i = m_pGameInstance->Get_NextLevel();
+	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_AnimModel"),
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Model_Fiona"),
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Fiona"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
+	BoundingDesc.iLayer = (_uint)COLLISION_LAYER::PLAYER;
 	BoundingDesc.fRadius = 0.5f;
 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
 
@@ -154,14 +124,7 @@ HRESULT CBody_Player::Ready_Components()
 
 HRESULT CBody_Player::Bind_ShaderResources()
 {
-	/*if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;*/
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();

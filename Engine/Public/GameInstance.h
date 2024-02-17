@@ -22,7 +22,7 @@ private:
 
 public: /* For.Engine */
 	/* 엔진라이브러리를 사용하기위한 준비를 모두 거친다. */
-	HRESULT		Initialize_Engine(_uint iNumLevels, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
+	HRESULT		Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
 	void		Tick_Engine(_float fTimeDelta);
 	HRESULT		Render_Engine();
 	void		Clear(_uint iLevelIndex);
@@ -110,7 +110,7 @@ public: /* For.Font_Manager */
 public: /* For.Target_Manager */
 	HRESULT		Add_RenderTarget(const wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT		Add_MRT(const wstring& strMRTTag, const wstring& strTargetTag);
-	HRESULT		Begin_MRT(const wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
+	HRESULT		Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView * pDSV = nullptr, _bool bClear = true);
 	HRESULT		End_MRT();
 	HRESULT		Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 #ifdef _DEBUG
@@ -127,11 +127,48 @@ public: /* For.Frustum */
 	_bool		isIn_WorldPlanes(_fvector vPoint, _float fRadius = 0.f);
 	_bool		isIn_LocalPlanes(_fvector vPoint, _float fRadius);
 
+public: /* For.Collision_Manager */
+	void		Add_Collision(const _uint& In_iLayer, CCollider* _pCollider);
+
+
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
 	wstring		SliceObjectTag(const wstring& strObjectTag);
 	
+
+#pragma region 성희
+	// wstring을 string으로 변환 해주는 함수
+	string		Convert_WString_To_String(wstring _wstring);
+	// string을 wchar로 변환 해주는 함수
+	WCHAR*		StringTowchar(const std::string& str);
+	//	wstring을 char로 변환 해주는 함수
+	char*		ConverWStringtoC(const wstring& wstr);
+	//	char를 wchar_t로 변환 해주는 함수
+	wchar_t*	ConverCtoWC(char* str);
+	// WCHAR*를 string으로 변환 해주는 함수
+	std::string WideStringToString(const wchar_t* wideStr);
+	// 경로에서 파일이름과 확장자만 추출해주는 함수
+	std::string GetFileName(const std::string& filePath);
+	// 확장자를 제거해주는 함수
+	std::string RemoveExtension(const std::string& filePath);
+#pragma endregion End
+
+#pragma region 유정
+	string		Wstring_To_UTF8(const wstring& wstr);
+	wstring		Char_To_Wstring(char* szChar);
+
+	const wstring	Remove_LastNumChar(const wstring& str, const _uint& iNumCutCount);
+	const string	Remove_LastNumChar(const string& str, const _uint& iNumCutCount);
+	const wstring	Get_LastNumChar(const wstring& str, const _uint& iNumCutCount);
+
+	/* For.Math */
+public:
+	_float3 Add_Float3(const _float3& fLeft, const _float3& fRight);
+	_float3 Mul_Float3(const _float3& fLeft, const _float& fRight);
+	_bool	isIn_Range(const _float3 fLeft, const _float3 fRight, const _float fRange);
+	_matrix Make_WorldMatrix(const _float2& vScale, const _float3& vRot, const _float3& vPos);
+#pragma endregion End
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
@@ -146,6 +183,8 @@ private:
 	class CTarget_Manager*			m_pTarget_Manager = { nullptr };
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 	class CFrustum*					m_pFrustum = { nullptr };
+	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
+
 
 public:
 	void Release_Manager();

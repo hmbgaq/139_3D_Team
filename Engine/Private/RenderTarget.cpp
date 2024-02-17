@@ -1,5 +1,4 @@
-#include "..\Public\RenderTarget.h"
-
+#include "RenderTarget.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
 
@@ -11,9 +10,16 @@ CRenderTarget::CRenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pCont
 	Safe_AddRef(m_pContext);
 }
 
-HRESULT CRenderTarget::Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, _float4 vClearColor)
+HRESULT CRenderTarget::Initialize(const wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, _float4 vClearColor)
 {
 	m_vClearColor = vClearColor;
+	//m_wstrTag = strTargetTag;
+	
+#ifdef _DEBUG
+	XMStoreFloat4(&m_vFontColor, (XMVectorSet( 1.f , 1.f, 1.f, 1.f ) - XMLoadFloat4(&m_vClearColor)));
+
+	m_vFontColor.z = 1.f;
+#endif
 
 	D3D11_TEXTURE2D_DESC	TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
@@ -58,7 +64,7 @@ HRESULT CRenderTarget::Clear()
 
 #ifdef _DEBUG
 
-HRESULT CRenderTarget::Ready_Debug(_float fX, _float fY, _float fSizeX, _float fSizeY)
+HRESULT CRenderTarget::Ready_Debug(const wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 
@@ -73,17 +79,21 @@ HRESULT CRenderTarget::Ready_Debug(_float fX, _float fY, _float fSizeX, _float f
 	m_WorldMatrix._41 = fX - Viewport.Width * 0.5f;
 	m_WorldMatrix._42 = -fY + Viewport.Height * 0.5f;
 
+	/* 디버그로 렌더타겟을 스크린에 올려서 볼 애들만 네임태그를 저장해서 렌더돌리기 */
+	m_wstrTag = strTargetTag;
+
+	XMStoreFloat4(&m_vFontColor, (XMVectorSet(1.f, 1.f, 1.f, 1.f) - XMLoadFloat4(&m_vClearColor)));
+	m_vFontColor.w = 1.f;
+
 	return S_OK;
 }
 
 HRESULT CRenderTarget::Render_Debug(CShader * pShader, CVIBuffer * pVIBuffer)
 {
-	if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
-		return E_FAIL;
+	FAILED_CHECK(pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 
-	if (FAILED(pShader->Bind_SRV("g_DiffuseTexture", m_pSRV)))
-		return E_FAIL;
-
+	FAILED_CHECK(pShader->Bind_SRV("g_DiffuseTexture", m_pSRV));
+	
 	pShader->Begin(0);
 
 	pVIBuffer->Bind_VIBuffers();
@@ -93,11 +103,11 @@ HRESULT CRenderTarget::Render_Debug(CShader * pShader, CVIBuffer * pVIBuffer)
 
 #endif
 
-CRenderTarget * CRenderTarget::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, _float4 vClearColor)
+CRenderTarget * CRenderTarget::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, _float4 vClearColor)
 {
 	CRenderTarget* pInstance = new CRenderTarget(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize(iSizeX, iSizeY, ePixelFormat, vClearColor)))
+	if (FAILED(pInstance->Initialize(strTargetTag, iSizeX, iSizeY, ePixelFormat, vClearColor)))
 	{
 		MSG_BOX("Failed to Created : CRenderTarget");
 		Safe_Release(pInstance);

@@ -1,5 +1,6 @@
 #include "Component.h"
 #include "GameInstance.h"
+#include "GameObject.h"
 
 CComponent::CComponent(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -33,9 +34,29 @@ HRESULT CComponent::Initialize(void * pArg)
 	return S_OK;
 }
 
+HRESULT CComponent::Set_Owner(CGameObject* _pOwner)
+{
+	//if (m_pOwner) 
+	//	Safe_Release(m_pOwner);
+
+	m_pOwner = _pOwner;
+	//Safe_AddRef(m_pOwner);
+
+	return S_OK;
+}
+
+CGameObject* CComponent::Get_Owner()
+{
+	return m_pOwner;
+}
+
 void CComponent::Free()
 {
+	//Safe_Release(m_pOwner);
+
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+
+
 }

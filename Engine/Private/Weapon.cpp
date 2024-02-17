@@ -167,11 +167,11 @@ HRESULT CWeapon::Bind_ShaderResources()
 void CWeapon::Free()
 {
 	__super::Free();
-	//for (_uint i = 0; i < m_iColliderSize; ++i) 
-	//{
-	//   Safe_Release(m_pColliders[i]);
-	//}
-	//m_pColliders.clear();
+	for (_uint i = 0; i < m_iColliderSize; ++i) 
+	{
+	   Safe_Release(m_pColliders[i]);
+	}
+	m_pColliders.clear();
 	Safe_Release(m_pParentTransform);
 	Safe_Release(m_pSocketBone);
 	Safe_Release(m_pShaderCom);

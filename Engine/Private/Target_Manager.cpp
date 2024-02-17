@@ -14,8 +14,6 @@ CTarget_Manager::CTarget_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * p
 
 HRESULT CTarget_Manager::Initialize()
 {
-	
-
 	return S_OK;
 }
 
@@ -24,7 +22,7 @@ HRESULT CTarget_Manager::Add_RenderTarget(const wstring & strTargetTag, _uint iS
 	if (nullptr != Find_RenderTarget(strTargetTag))
 		return E_FAIL;
 
-	CRenderTarget*		pRenderTarget = CRenderTarget::Create(m_pDevice, m_pContext, iSizeX, iSizeY, ePixelFormat, vClearColor);
+	CRenderTarget*		pRenderTarget = CRenderTarget::Create(m_pDevice, m_pContext, strTargetTag, iSizeX, iSizeY, ePixelFormat, vClearColor);
 	if (nullptr == pRenderTarget)
 		return E_FAIL;
 
@@ -55,7 +53,7 @@ HRESULT CTarget_Manager::Add_MRT(const wstring & strMRTTag, const wstring & strT
 	return S_OK;
 }
 
-HRESULT CTarget_Manager::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV)
+HRESULT CTarget_Manager::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV, _bool bClear)
 {
 	ID3D11ShaderResourceView*			pSRV[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = {
 		nullptr
@@ -74,7 +72,9 @@ HRESULT CTarget_Manager::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencil
 
 	for (auto& pRenderTarget : *pMRTList)
 	{
-		pRenderTarget->Clear();
+		if (true == bClear)
+			pRenderTarget->Clear();
+
 		pRTVs[iNumRTVs++] = pRenderTarget->Get_RTV();
 	}
 
@@ -116,7 +116,7 @@ HRESULT CTarget_Manager::Ready_Debug(const wstring & strTargetTag, _float fX, _f
 	if (nullptr == pRenderTarget)
 		return E_FAIL;
 
-	return pRenderTarget->Ready_Debug(fX, fY, fSizeX, fSizeY);	
+	return pRenderTarget->Ready_Debug(strTargetTag, fX, fY, fSizeX, fSizeY);
 }
 
 HRESULT CTarget_Manager::Render_Debug(const wstring& strMRTTag, CShader * pShader, CVIBuffer_Rect * pVIBuffer)
@@ -128,6 +128,10 @@ HRESULT CTarget_Manager::Render_Debug(const wstring& strMRTTag, CShader * pShade
 	for (auto& pRenderTarget : *pMRTList)
 	{
 		pRenderTarget->Render_Debug(pShader, pVIBuffer);
+		float2 fPos = float2(pRenderTarget->Get_PosX() + 565.f, -pRenderTarget->Get_PosY() + 310.f );
+		wstring TargetTag = pRenderTarget->Get_TargetTag();
+		_float4 vColor = pRenderTarget->Get_FontColor();
+		m_pGameInstance->Render_Font(TEXT("Font_Gulim"), TargetTag, fPos, vColor, 0.5f);
 	}
 	return S_OK;
 }

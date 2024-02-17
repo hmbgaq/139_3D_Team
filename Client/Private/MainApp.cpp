@@ -2,6 +2,12 @@
 #include "MainApp.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "Json_Utility.h"
+
+
+#include "Data_Manager.h"
+#include "Clone_Manager.h"
+
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -18,7 +24,12 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.iBackBufferSizeX = g_iWinSizeX;
 	GraphicDesc.iBackBufferSizeY = g_iWinSizeY;
 
-	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
+	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, (_uint)(COLLISION_LAYER::LAYER_END), g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
+
+	//Client Managers
+	CClone_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
+	CData_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
+
 
 	FAILED_CHECK(Ready_Font());
 
@@ -55,7 +66,7 @@ HRESULT CMainApp::Render()
 	}
 	
 	// MakeSpriteFont "넥슨lv1고딕 Bold" /FontSize:30 /FastPack /CharacterRegion:0x0020-0x00FF /CharacterRegion:0x3131-0x3163 /CharacterRegion:0xAC00-0xD800 /DefaultCharacter:0xAC00 140.spritefont
-	m_pGameInstance->Render_Font(TEXT("Font_Default"), m_szFPS, _float2(1100.f, 20.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
+	m_pGameInstance->Render_Font(TEXT("Font_Default"), m_szFPS, _float2(600.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
 	m_pGameInstance->Present();
 
 	return S_OK;
@@ -71,54 +82,31 @@ HRESULT CMainApp::Ready_Font()
 
 HRESULT CMainApp::Ready_UITexture()
 {
-	/* For.Enemy_Small */
-	if (FAILED(Ready_Enemy_Small()))
-		return E_FAIL;
+	json json_in;
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Texture_Info/Texture_Info";
 
-	/* For.Enemy_Mid */
-	if (FAILED(Ready_Enemy_Mid()))
-		return E_FAIL;
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
 
-	/* For.Enemy_Large */
-	if (FAILED(Ready_Enemy_Large()))
-		return E_FAIL;
+	CJson_Utility::Load_Json(filePath, json_in);
 
-	/* For.Enemy_Side */
-	if (FAILED(Ready_Enemy_Side()))
-		return E_FAIL;
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
 
-	return S_OK;
-}
+		iPathNum = object["PathNum"];
+		strFileName = object["FileName"];
+		strFilePath = object["FilePath"];
 
-HRESULT CMainApp::Ready_Enemy_Small()
-{
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpBarSmall"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Small/ui_enemybar_smal_shard_%d.png"), 4)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameSmall"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Small/ui_enemy_hp_big_%d.png"), 2)));
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(strFileName, wstrPrototag);
 
-	return S_OK;
-}
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(strFilePath, wstrFilePath);
 
-HRESULT CMainApp::Ready_Enemy_Mid()
-{
-
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpBarMid"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Mid/ui_enemybar_middle_shard_%d.png"), 4)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameMid"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Mid/ui_enemy_hp_mid_%d.png"), 3)));
-
-	return S_OK;
-}
-
-HRESULT CMainApp::Ready_Enemy_Large()
-{
-
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpBarLarge"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Large/ui_enemybar_big_shard_%d.png"), 4)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EnemyHpFrameLarge"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Large/ui_large_enemy_hp_big_%d.png"), 4)));
-
-	return S_OK;
-}
-
-HRESULT CMainApp::Ready_Enemy_Side()
-{
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SideEnemyHpFrameSide"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Side/ui_enemy_hp_small_%d.png"), 2)));
+		FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, wstrPrototag, CTexture::Create(m_pDevice, m_pContext, wstrFilePath)));
+	}
 
 	return S_OK;
 }
@@ -154,18 +142,19 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 
 HRESULT CMainApp::Ready_Gara()
 {
-	//D3D11_BLEND_DESC			BlendDesc;
-	//D3D11_DEPTH_STENCIL_DESC	DepthStencilDesc;
-	//D3D11_RASTERIZER_DESC		RasterizerDesc;
-
-	//RasterizerDesc.CullMode
+	// D3D11_BLEND_DESC			BlendDesc;
+	// D3D11_DEPTH_STENCIL_DESC	DepthStencilDesc;
+	// D3D11_RASTERIZER_DESC		RasterizerDesc;
+	// D3D11_SAMPLER_DESC
 
 	//ID3D11RasterizerState*		pRSState;
 	//m_pDevice->CreateRasterizerState(RasterizerDesc, &pRSState);
 
-	/*m_pContext->RSSetState();
+	/*
+	m_pContext->RSSetState();
 	m_pContext->OMSetDepthStencilState();
-	m_pContext->OMSetBlendState();*/
+	m_pContext->OMSetBlendState();
+	*/
 
 	/* 텍스쳐를 생성해보자. */
 	ID3D11Texture2D*		pTexture2D = { nullptr };
@@ -293,7 +282,10 @@ void CMainApp::Free()
 	/*  내 멤버를 정리하면. */
 	Safe_Release(m_pGameInstance);
 
-	CGameInstance::Release_Engine();
+	
+	CClone_Manager::DestroyInstance();
+	CData_Manager::DestroyInstance();
 
+	CGameInstance::Release_Engine();
 }
 

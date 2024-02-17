@@ -175,7 +175,7 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagParticle_Point
 	{
-		static const unsigned int					iNumElements = 7;
+		static const unsigned int					iNumElements = 8;
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTX_PARTICLE_POINT;
 
@@ -215,6 +215,13 @@ namespace Engine
 	constexpr const T& clamp(const T& value, const T& start, const T& end) 
 	{
 		return (value < start) ? start : (value > end) ? end : value;
+	}
+
+	template<typename T, typename = enable_if_t<is_enum<T>::value>,
+		typename Return = underlying_type_t<T>>
+		constexpr Return ECast(T value)
+	{
+		return static_cast<Return>(value);
 	}
 
 #pragma endregion

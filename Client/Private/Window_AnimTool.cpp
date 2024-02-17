@@ -38,18 +38,13 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 	__super::Begin();
 	
-
-#ifdef DEBUG
-	if (ImGui::Checkbox("RenderTarget", &m_bRenderTargetOnOff))
+	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
 #ifdef _DEBUG
 		m_pGameInstance->Set_RenderDebug(m_bRenderTargetOnOff);
 #endif
 		
 	}
-#endif 
-
-
 	//dialog========================================================================
 	static bool canValidateDialog = false;
 		
@@ -207,7 +202,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 
 		static int Object_idx = 0; // Here we store our selection data as an index.
 		static int Layer_idx = 0; // Here we store our selection data as an index.
-		_int ObjectTagSize = (_int)m_vObjectTag.size();
+		int ObjectTagSize = (int)m_vObjectTag.size();
 
 		if (ImGui::BeginListBox("ObjectList"))
 		{
@@ -224,7 +219,9 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 			}
 			ImGui::EndListBox();
 		}
+
 		ImGui::Spacing();
+
 		if (ImGui::BeginListBox("LayerList"))
 		{
 			for (int n = 0; n <6; n++)
@@ -244,6 +241,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 							//Create_Object_On_Map(ConvertCtoWC(items[Layer_idx].c_str()), ConvertCtoWC(m_vObjectTag[Object_idx].c_str()));
 							m_bCloneCount = true;
 							m_bListCheck = true;
+							m_bCreateCheck = false;
 						}
 					
 				}
@@ -252,13 +250,12 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 			
 			ImGui::EndListBox();
 		}
+
 		ImGui::Spacing();
 		ImGui::Checkbox("Create",&m_bCreateCheck);
 		ImGui::SameLine();
 		ImGui::Checkbox("Delete",& m_bDeleteCheck);
-		
 
-		
 		static int CreateIndex = 0; // Here we store our selection data as an index.
 		
 		if (m_bListCheck)
@@ -294,64 +291,107 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 				ImGui::EndListBox();
 			}
 			
-			
 		}
+
 		ImGui::Spacing();
+
 		if (ImGui::BeginListBox("AnimationList"))
 		{
 			if (m_CreateList.size() > 0)
 			{
 				CCharacter* pcharacters = dynamic_cast<CCharacter*>(m_CreateList.back());
-				
+				m_pBody = pcharacters->Get_Body();
 				m_pAnimation = *(pcharacters->Get_Body()->Get_Model()->Get_Animations());
 				m_iAnimationNum = pcharacters->Get_Body()->Get_Model()->Get_AnimationNum();
 
 			}
-
-			for (_uint n = 0; n < m_iAnimationNum; n++)
+			static int AnimationIndex = 0;
+			for (int n = 0; n < (_int)m_iAnimationNum; n++)
 			{
-				const bool is_selected = (m_iAnimationNum == n);
+				const bool is_selected = (AnimationIndex == n);
 				if (ImGui::Selectable(m_pAnimation[n]->Get_Name(), is_selected))
-					m_iAnimationNum = n;
+					AnimationIndex = n;
 
-				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-				//캐릭터 애니메이션 돌리기위해
-				CBody* pcharacters = dynamic_cast<CBody*>(m_pAnimation[n]);
-				m_fDuration = m_pAnimation[n]->Get_Duration();
 				if (is_selected)
 				{
+					
 					ImGui::SetItemDefaultFocus();
-					if (m_bStop == false)
-						pcharacters->Get_Model()->Play_Animation(fTimeDelta, true);
-					pcharacters->Get_Model()->Set_StiffnessRate(m_fSpeed);
-					m_pAnimation[n]->Set_TrackPosition(m_fCurrentTrackPosition);
+					if (m_bFirstcheck == true)
+					{
+						m_fDuration = m_pAnimation[AnimationIndex]->Get_Duration();
+						m_fCurrentTrackPosition = m_pAnimation[AnimationIndex]->Get_TrackPosition();
+						m_pBody->Get_Model()->Set_Animation(AnimationIndex, CModel::ANIM_STATE_LOOP);
+						m_bFirstcheck = false;
+						//m_pBody->Get_Model()->Set_StiffnessRate(1.f);
+					}
+// 					if (m_bStop)
+// 					{
+// 						m_pBody->Get_Model()->Set_StiffnessRate(1000.f);
+// 					}
+					if (m_bTrackPositionCheck)
+					{
+						m_pAnimation[AnimationIndex]->Set_TrackPosition(m_fCurrentTrackPosition);
+						m_bTrackPositionCheck = false;
+					}
+					
 				}
-
 			}
-
 			ImGui::EndListBox();
 		}
 		ImGui::TreePop();
+	}
+	
+	if (ImGui::Button(" Play "))
+	{
+		if (nullptr != m_pBody)
+		{
+			m_bFirstcheck = true;
+			m_bStop = false;
+			m_pBody->Get_Model()->Play_Animation(fTimeDelta, true);
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(" Stop "))
+	{
+		m_bStop = true;
+// 		if (nullptr != m_pBody)
+// 		{
+// 			m_pBody->Get_Model()->Set_Animation(0.f, false);
+// 		}
+	}
+	
+	ImGui::Spacing();
 
+	if (ImGui::SliderFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
+	{
+		m_bTrackPositionCheck = true;
+	}
+	
+// 
+	if (ImGui::InputFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
+	{
+		m_bTrackPositionCheck = true;
+	}
+
+	//속도 값은 거꾸로 생각해야 함 ! 1/n의 분수 형태임 
+	if (ImGui::SliderFloat("AnimationSpeed", &m_fSpeed, 0.f, 1000.f))
+	{
+		if (nullptr != m_pBody)
+		{
+			m_pBody->Get_Model()->Set_StiffnessRate(m_fSpeed);
+		}
+	}
+	
+	if (ImGui::InputFloat("AnimationSpeed", &m_fSpeed, 0.f, 1000.f))
+	{
+		if (nullptr != m_pBody)
+		{
+			m_pBody->Get_Model()->Set_StiffnessRate(m_fSpeed);
+		
+		}
 		
 	}
 	
-
-	if (ImGui::SliderFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration));
-
-
-	if (ImGui::SliderFloat("AnimationSpeed", &m_fSpeed, 0.f, 100.f));
-
-	if (ImGui::Button("Play"))
-	{
-		m_bStop = !m_bStop;
-	}
-
-	ImGui::SameLine();
-
-
-
-
 	if (m_bCloneCount)
 	{
 		m_CreateList.clear();
@@ -359,21 +399,6 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 
 		m_bCloneCount = false;
 	}
-// 	if (ImGui::Button("Hold"))
-// 	{
-// 		m_bHold = !m_bHold;
-// 
-// // 		_byte byFlag(0);
-// // 
-// // 		CModel* pCurrentModel = m_pPreViewModel->Get_CurrentModel();
-// // 
-// // 		if (m_bHold)
-// // 		{
-// // 			byFlag = (_byte)ROOTNODE_FLAG::X | (_byte)ROOTNODE_FLAG::Z;
-// // 		}
-// 
-// 
-// 	}
 }
 
 char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)

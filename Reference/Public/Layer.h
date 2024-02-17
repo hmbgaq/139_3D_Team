@@ -22,8 +22,24 @@ public:
 public:
 	list<class CGameObject*>* Get_GameObjects() { return &m_GameObjects; };
 
+public:
+	void Set_Speed(_float _fSpeed) {
+		m_fSpeed = _fSpeed;
+	};
+
+	void Set_Stop(_bool _bStop) {
+		m_bStop = _bStop;
+	};
+
+	_bool Get_Stop() {
+		return m_bStop;
+	}
+
+
 private:
 	list<class CGameObject*>			m_GameObjects;
+	_float								m_fSpeed = {1.f};
+	_bool								m_bStop = { false };
 
 public:
 	static CLayer* Create();

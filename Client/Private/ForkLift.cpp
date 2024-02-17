@@ -47,8 +47,7 @@ void CForkLift::Tick(_float fTimeDelta)
 
 void CForkLift::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-		return ;
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 }
 
 HRESULT CForkLift::Render()

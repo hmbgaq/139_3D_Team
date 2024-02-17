@@ -12,7 +12,7 @@ public:
 	{
 		CTransform* pOwnerTransform;
 		//STATUS_DESC* pOwnerStatus;
-		MONSTERTYPE		eMonsterType;
+		MONSTERTYPE		eMonsterType = LARGE;
 		_float			fCrntHPUV = 1.0f;
 		_float			fPrevHPUV = 1.0f;
 		_float			fScreenPosXOffset = 1.f;

@@ -25,14 +25,19 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-private:
 
+private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
 
+
 public:
+	/* 원형객체를 생성한다. */
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+
+	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
+
 	virtual void Free() override;
 };
 

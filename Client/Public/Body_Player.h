@@ -4,10 +4,6 @@
 #include "Body.h"
 
 BEGIN(Engine)
-class CCollider;
-class CShader;
-class CModel;
-class CBone;
 END
 
 BEGIN(Client)
@@ -19,9 +15,6 @@ private:
 	CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBody_Player(const CBody_Player& rhs);
 	virtual ~CBody_Player() = default;
-
-public:
-	class CBone* Get_BonePtr(const _char* pBoneName);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
