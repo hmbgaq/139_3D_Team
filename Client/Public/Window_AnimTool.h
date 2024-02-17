@@ -61,6 +61,7 @@ private:
 private://콜라이더 
 	void			BonePoint_Update();
 	void			Create_Bounding(_float3 fPoint,_float fRadius);
+	void			Set_Bounding(CBounding_Sphere* _Bounding);
 
 public://문자열 변환 
 	char*			ConverWStringtoC(const wstring& wstr);
@@ -72,7 +73,7 @@ private:
 	CAnimation*				m_pCurrentAnimation = { nullptr };
 	CGameObject*			m_PickingObject = { nullptr };
 	CBody*					m_pBody = { nullptr };
-	CBounding*				m_pBounding = { nullptr };
+	CBounding_Sphere*		m_pBounding = { nullptr };
 	CCollider*				m_pCollider = { nullptr };
 	//CComponent*				m_pComponent = { nullptr };
 
@@ -91,6 +92,7 @@ private:
 	_uint					m_iAnimationNum = 0;
 	_uint					m_iBoneNum = 0;
 	_uint					m_iCreateColliderNum = 0;
+	_uint					m_iSelectColliderIndex = 0;
 
 	string					m_strKeyEventFileName = "";
 	string					m_strSoundFileName = "";
@@ -112,6 +114,8 @@ public:
 	_bool					m_bTrackPositionCheck = false;
 	_bool					m_bguizmo = false;
 	_bool					m_bCreatCollider = false;
+	_bool					m_bColliderSize = false;
+	_bool					m_bDeleteCollider = false;
 public:
 	static CWindow_AnimTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

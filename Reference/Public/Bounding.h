@@ -19,6 +19,7 @@ protected:
 public:
 	virtual void Update(_fmatrix TransformMatrix) = 0;
 	virtual _bool Collision(class CCollider* pTargetCollider, _bool* pisCollision) = 0;
+public:
 
 #ifdef _DEBUG
 public:

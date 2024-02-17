@@ -20,6 +20,8 @@ public:
 		return m_pSphere;
 	}
 
+	void Set_Bounding(BoundingSphere* pSphere) { m_pSphere = pSphere; }
+
 public:
 	HRESULT Initialize(BOUNDING_DESC* pBoundingDesc);
 #ifdef _DEBUG

@@ -6,7 +6,7 @@
 #include "Model.h"
 #include "Animation.h"
 #include "Bone.h"
-#include "Bounding.h"
+#include "Bounding_Sphere.h"
 #include "Collider.h"
 
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -412,7 +412,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 	if (m_PickingObject == nullptr)
 		return;
 	static int BoneIndex = 0;
-
+	//static int ColliderIndex = 0;
 	if (ImGui::TreeNode("ModelBones"))
 	{
 		if (ImGui::BeginListBox("BoneList"))
@@ -454,40 +454,55 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 			}
 			ImGui::EndListBox();
 		}
-// 		if (ImGui::BeginListBox("ColliderList"))
-// 		{
-// 			if (m_pBoneCollider.size() > 0)
-// 			{
-// // 				CCharacter* pcharacters = dynamic_cast<CCharacter*>(m_PickingObject);
-// // 				/*m_pBody = pcharacters->Get_Body();*/ //위에서 넣어주고 있어서 여기서 굳이 또 할필요 없음 
-// // 				m_pBones = *(pcharacters->Get_Body()->Get_Model()->Get_Bones());
-// // 				m_iBoneNum = m_pBones.size();
-// 
-// 			}
-// 			//m_PickingObject
-// 			string str = m_pBones[BoneIndex]->Get_Name();
-// 			string str2 = "Collider";
-// 
-// 			static int ColliderIndex = 0;
-// 
-// 			for (int n = 0; n < m_iCreateColliderNum; n++)
-// 			{
-// 				const bool is_selected = (ColliderIndex == n);
-// 				if (ImGui::Selectable((str + "." + str2).c_str(), is_selected))
-// 					ColliderIndex = n;
-// 
-// 				m_pBoneCollider.reserve(m_iBoneNum);
-// 
-// 				if (is_selected)
-// 				{
-// 					ImGui::SetItemDefaultFocus();
-// 					//셋 바운딩해서 컬러색을 바꿔버리기
-// 					//m_pBoneCollider[ColliderIndex]->
-// 
-// 				}
-// 			}
-// 			ImGui::EndListBox();
-//		}
+		if (ImGui::BeginListBox("ColliderList"))
+		{
+			if (m_pBoneCollider.size() < 0)
+				return;
+
+			//m_PickingObject
+			string str = m_pBones[BoneIndex]->Get_Name();
+			string str2 = "Collider";
+
+			
+
+			for (int n = 0; n < m_iCreateColliderNum; n++)
+			{
+				const bool is_selected = (m_iSelectColliderIndex == n);
+				if (ImGui::Selectable((str + "." + str2).c_str(), is_selected))
+					m_iSelectColliderIndex = n;
+
+				m_pBoneCollider.reserve(m_iBoneNum);
+
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+					if (m_bColliderSize)
+					{
+						BoundingSphere* pSphere;
+						//pSphere->Center = 
+						pSphere->Radius = m_iColliderSize;
+						m_pBounding->Set_Bounding(pSphere);
+						Set_Bounding(m_pBounding);
+						m_bColliderSize = false;
+						m_pBoneCollider[m_iSelectColliderIndex]->Set_isCollision(true);
+					}
+					if (m_bDeleteCollider)
+					{
+						CCollider* pDeleteCollider = m_pBoneCollider[m_iSelectColliderIndex];
+
+						m_pBoneCollider.erase(m_pBoneCollider.begin() + m_iSelectColliderIndex);
+						
+						Safe_Release(pDeleteCollider);
+
+						m_bDeleteCheck = false;
+					}
+					//셋 바운딩해서 컬러색을 바꿔버리기
+					//m_pBoneCollider[ColliderIndex]->
+
+				}
+			}
+			ImGui::EndListBox();
+		}
 		ImGui::TreePop();
 	}
 
@@ -496,8 +511,15 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 	{
 		m_bCreatCollider = true;
 	}
-	if (ImGui::SliderFloat("ColliderSize", &m_iColliderSize, 0.f, 100.f));
-
+	ImGui::SameLine();
+	if (ImGui::Button("Collider Delete"))
+	{
+		m_bDeleteCollider = true;
+	}
+	if (ImGui::DragFloat("ColliderSize", &m_iColliderSize, 0.f, 10.f));
+	{
+		m_bColliderSize = true;
+	}
 
 }
 
@@ -523,6 +545,15 @@ void CWindow_AnimTool::Create_Bounding(_float3 fPoint, _float fRadius)
 
 	m_pBoneCollider.push_back(m_pCollider);
 	++m_iCreateColliderNum;
+}
+
+void CWindow_AnimTool::Set_Bounding(CBounding_Sphere* _Bounding)
+{
+// 	BoundingSphere* pSphere;
+// 	//pSphere->Center = 
+// 	pSphere->Radius = m_iColliderSize;
+// 	_Bounding->Set_Bounding(pSphere);
+	m_pBoneCollider[m_iSelectColliderIndex]->Set_Bounding(_Bounding);
 }
 
 char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)
