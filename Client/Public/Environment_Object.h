@@ -23,6 +23,7 @@ public:
 		_bool		bAnimModel = { false };
 		_int		iPlayAnimationIndex = { 0 };
 		
+		_bool		bPreview = true; //! 미리보기용 오브젝트인지 확인
 	}ENVIRONMENT_OBJECT_DESC;
 
 private:
@@ -41,6 +42,9 @@ public:
 
 public:
 	wstring&			Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
+
+public: //! For.Tool
+	virtual _bool		Picking(_Out_ _float3* vPickedPos) override;
 
 public:
 	void				Start_Environment_Animation() { m_bPlay = true; }

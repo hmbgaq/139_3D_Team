@@ -1,22 +1,18 @@
 #include "stdafx.h"
 
-
-#include "ImGuiFileDialog/ImGuiFileDialog.h"
-#include "ImGuizmo/ImGuizmo.h"
-#include "ImGuizmo/ImSequencer.h"
-#include "ImGuizmo/ImZoomSlider.h"
-#include "ImGuizmo/ImCurveEdit.h"
-#include "ImGuizmo/GraphEditor.h"
-#include "CustomDialogFont.h"
-
-
-
 #include "Imgui_Window.h"
 #include "Imgui_Manager.h"
 
 #include "GameInstance.h"
 #include "GameObject.h"
 
+#include "ImGuizmo.h"
+#include "ImCurveEdit.h"
+#include "GraphEditor.h"
+#include "ImSequencer.h"
+#include "ImZoomSlider.h"
+#include "CustomDialogFont.h"
+#include "ImGuiFileDialog/ImGuiFileDialog.h"
 
 
 static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
@@ -74,12 +70,16 @@ HRESULT CImgui_Window::Initialize()
 		Set_GuizmoCamView();
 		Set_GuizmoCamProj();
 
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->WorkPos, ImGuiCond_FirstUseEver);
+
 	return S_OK;
 }
 
 void CImgui_Window::Tick(_float fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
+	ImGuizmo::BeginFrame();
 }
 
 void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
@@ -290,6 +290,8 @@ HRESULT CImgui_Window::Begin()
 {
 	ImGui::PushStyleColor(ImGuiCol_PopupBg, m_tImGuiDESC.vBackgroundColor);
 
+
+	
 	//ImGui::SetNextWindowSize(m_tImGuiDESC.vWindowSize, 0);
 
 	if (!(ImGui::Begin(m_tImGuiDESC.strName.c_str(), 0, m_tImGuiDESC.eWindowFlags)))

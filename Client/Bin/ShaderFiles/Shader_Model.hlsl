@@ -88,8 +88,8 @@ PS_OUT PS_MAIN(PS_IN In)
 	vNormal = mul(vNormal, WorldMatrix);
 
 
-	if (vMtrlDiffuse.a < 0.3f)
-		discard;
+	//if (vMtrlDiffuse.a == 0.f)
+	//	discard;
 	
 	Out.vDiffuse = vMtrlDiffuse;	
 	Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);

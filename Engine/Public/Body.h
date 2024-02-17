@@ -59,6 +59,11 @@ public:
 	}
 public:
 	CModel* Get_Model() { return m_pModelCom; }
+	
+public: //!For.Tool
+	virtual _bool Picking(_Out_ _float3* vPickedPos) override;
+	
+
 //public:
 //	void Activate_Dissolve() {
 //		m_bDissolve = true;

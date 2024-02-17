@@ -76,6 +76,8 @@ using namespace Engine;
 #include "PhysX/PxPhysicsAPI.h"
 using namespace physx;
 
+#define IMGUI_DEFINE_MATH_OPERATORS
+
 /* Leak */
 #ifdef _DEBUG
 
@@ -83,6 +85,7 @@ using namespace physx;
 #include <stdlib.h>
 #include <crtdbg.h>
 #include "dxgidebug.h"
+#define NOMINMAX
 
 #ifndef DBG_NEW
 
@@ -91,7 +94,8 @@ using namespace physx;
 
 #endif
 
-#endif // _DEBUG
 
+
+#endif // _DEBUG
 
 

@@ -220,6 +220,11 @@ void CCharacter::Go_Right(_float fTimeDelta)
 	m_pTransformCom->Go_Right(fTimeDelta, m_pNavigationCom);
 }
 
+_bool CCharacter::Picking(_Out_ _float3* vPickedPos)
+{
+	return m_pBody->Picking(vPickedPos);
+}
+
 void CCharacter::Free()
 {
 	for (auto& Pair : m_PartObjects)

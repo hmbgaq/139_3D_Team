@@ -100,6 +100,8 @@ public: /* For.PipeLine */
 	//!			레이캐스트
 	RAY			Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
 	RAY			Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY, _matrix matWorld);
+	_bool		Picking_Mesh(RAY ray, _float3 * out, vector<class CMesh*> Meshes);
+	_bool		Picking_Vertex(RAY ray, _float3 * out, _uint triNum, VTXMESH * pVertices, _uint * pIndices);
 
 public: /* For.Font_Manager */
 	HRESULT		Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
@@ -128,6 +130,8 @@ public: /* For.Frustum */
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
+	wstring		SliceObjectTag(const wstring& strObjectTag);
+	
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };

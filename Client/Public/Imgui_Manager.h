@@ -52,8 +52,6 @@ public:
 
 private:
 	//!Intialize
-	void			 ImGuizmo_Initialize();
-	void			 ImGuiFileDialog_Initialize();
 	HRESULT			 Ready_Windows();
 	//
 

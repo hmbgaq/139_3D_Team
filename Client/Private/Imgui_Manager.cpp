@@ -1,9 +1,10 @@
 #include "stdafx.h"
 
-//#define IMGUI_DEFINE_MATH_OPERATORS
 #include "../Imgui/imgui.h"
 #include "../Imgui/imgui_impl_dx11.h"
 #include "../Imgui/imgui_impl_win32.h"
+
+
 
 #include "GameInstance.h"
 #include "Imgui_Manager.h"
@@ -67,13 +68,6 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 }
 
-void CImgui_Manager::ImGuizmo_Initialize()
-{
-}
-
-void CImgui_Manager::ImGuiFileDialog_Initialize()
-{
-}
 
 HRESULT CImgui_Manager::Ready_Windows()
 {

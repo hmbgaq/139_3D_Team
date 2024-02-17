@@ -24,7 +24,7 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 {	
 	m_tEnvironmentDesc = *(ENVIRONMENT_OBJECT_DESC*)pArg;
 
-	//m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
+	
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
@@ -32,6 +32,8 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 	
+	if (false == m_tEnvironmentDesc.bPreview)
+		m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
 
 	return S_OK;
 }
@@ -64,6 +66,7 @@ HRESULT CEnvironment_Object::Render()
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
 
@@ -104,8 +107,22 @@ HRESULT CEnvironment_Object::Render_Shadow()
 		m_pModelCom->Render(i);
 	}
 
-
 	return S_OK;
+}
+
+_bool CEnvironment_Object::Picking(_float3* vPickedPos)
+{
+	GRAPHIC_DESC GraphicDesc = *m_pGameInstance->Get_GraphicDesc();
+
+	HWND hWnd = GraphicDesc.hWnd;
+
+	_int iWinSizeX = GraphicDesc.iBackBufferSizeX;
+	_int iWinSizeY = GraphicDesc.iBackBufferSizeY;
+
+	RAY ray = m_pGameInstance->Get_MouseRayLocal(hWnd, iWinSizeX, iWinSizeY, m_pTransformCom->Get_WorldMatrix());
+	vector<class CMesh*> meshes = m_pModelCom->Get_Meshes();
+
+	return m_pGameInstance->Picking_Mesh(ray, vPickedPos, meshes);
 }
 
 HRESULT CEnvironment_Object::Ready_Components()

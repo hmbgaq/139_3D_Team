@@ -35,6 +35,9 @@ public:
 	virtual HRESULT Render_Shadow() { return S_OK; }
 	virtual HRESULT Render_OutLine() { return S_OK; }
 
+	virtual _bool	Picking(_Out_ _float3* vPickedPos);
+	
+
 public:
 	virtual class CComponent* Find_Component(const wstring& strComTag, const wstring& strPartTag = TEXT(""));
 public:

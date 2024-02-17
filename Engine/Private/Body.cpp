@@ -174,6 +174,23 @@ _bool CBody::Is_Inputable_Front(_uint _iIndexFront)
 	return m_pModelCom->Is_Inputable_Front(_iIndexFront);
 }
 
+_bool CBody::Picking(_float3* vPickedPos)
+{
+	GRAPHIC_DESC GraphicDesc = *m_pGameInstance->Get_GraphicDesc();
+
+	HWND hWnd = GraphicDesc.hWnd;
+	
+	_int iWinSizeX = GraphicDesc.iBackBufferSizeX;
+	_int iWinSizeY = GraphicDesc.iBackBufferSizeY;
+	
+	RAY ray = m_pGameInstance->Get_MouseRayLocal(hWnd, iWinSizeX, iWinSizeY, m_pTransformCom->Get_WorldMatrix());
+	vector<class CMesh*> meshes = m_pModelCom->Get_Meshes();
+
+	return m_pGameInstance->Picking_Mesh(ray, vPickedPos, meshes);
+
+
+}
+
 HRESULT CBody::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))

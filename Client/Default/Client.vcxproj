@@ -172,22 +172,22 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Reference\Imgui\GraphEditor.h" />
     <ClInclude Include="..\..\Reference\Imgui\imconfig.h" />
+    <ClInclude Include="..\..\Reference\Imgui\ImCurveEdit.h" />
+    <ClInclude Include="..\..\Reference\Imgui\ImGradient.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui.h" />
     <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialog.h" />
     <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialogConfig.h" />
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\GraphEditor.h" />
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImCurveEdit.h" />
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImGradient.h" />
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImGuizmo.h" />
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImSequencer.h" />
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImZoomSlider.h" />
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui_impl_win32.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui_internal.h" />
+    <ClInclude Include="..\..\Reference\Imgui\ImSequencer.h" />
     <ClInclude Include="..\..\Reference\Imgui\imstb_rectpack.h" />
     <ClInclude Include="..\..\Reference\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h" />
+    <ClInclude Include="..\..\Reference\Imgui\ImZoomSlider.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />

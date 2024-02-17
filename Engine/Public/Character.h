@@ -63,6 +63,9 @@ public:
 	void Go_Left(_float fTimeDelta);		
 	void Go_Right(_float fTimeDelta);		
 
+public: //! For.Tool
+	virtual _bool Picking(_Out_ _float3 * vPickedPos) override;
+
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
 	CBody* m_pBody = { nullptr };

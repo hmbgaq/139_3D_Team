@@ -1,4 +1,3 @@
-#include "stdafx.h"
 // https://github.com/CedricGuillemet/ImGuizmo
 // v 1.89 WIP
 //
@@ -130,29 +129,29 @@ static void FitNodes(Delegate& delegate, ViewState& viewState, const ImVec2 view
     for (NodeIndex nodeIndex = 0; nodeIndex < nodeCount; nodeIndex++)
     {
         const Node& node = delegate.GetNode(nodeIndex);
-
+        
         if (selectedNodesOnly && !node.mSelected)
         {
             continue;
         }
-
+        
         min = ImMin(min, node.mRect.Min);
         min = ImMin(min, node.mRect.Max);
         max = ImMax(max, node.mRect.Min);
         max = ImMax(max, node.mRect.Max);
         validNode = true;
     }
-
+    
     if (!validNode)
     {
         return;
     }
-
+    
     min -= viewSize * 0.05f;
     max += viewSize * 0.05f;
     ImVec2 nodesSize = max - min;
     ImVec2 nodeCenter = (max + min) * 0.5f;
-
+    
     float ratioY = viewSize.y / nodesSize.y;
     float ratioX = viewSize.x / nodesSize.x;
 
@@ -379,7 +378,7 @@ static bool HandleConnections(ImDrawList* drawList,
         ImVec2 closestTextPos;
         ImVec2 closestPos;
         const size_t slotCount[2] = {InputsCount, OutputsCount};
-
+        
         for (SlotIndex slotIndex = 0; slotIndex < slotCount[i]; slotIndex++)
         {
             const char** con = i ? nodeTemplate.mOutputNames : nodeTemplate.mInputNames;
@@ -391,7 +390,7 @@ static bool HandleConnections(ImDrawList* drawList,
             bool overCon = (nodeOperation == NO_None || nodeOperation == NO_EditingLink) &&
                            (distance < options.mNodeSlotRadius * 2.f) && (distance < closestDistance);
 
-
+            
             ImVec2 textSize;
             textSize = ImGui::CalcTextSize(conText);
             ImVec2 textPos =
@@ -406,7 +405,7 @@ static bool HandleConnections(ImDrawList* drawList,
                 closestConn = slotIndex;
                 closestTextPos = textPos;
                 closestPos = p;
-
+                
                 if (i)
                 {
                     outputSlotOver = slotIndex;
@@ -476,7 +475,7 @@ static bool HandleConnections(ImDrawList* drawList,
                             if (link.mOutputNodeIndex == nl.mOutputNodeIndex && link.mOutputSlotIndex == nl.mOutputSlotIndex)
                             {
                                 delegate.DelLink(linkIndex);
-
+                                
                                 break;
                             }
                         }
@@ -561,13 +560,13 @@ static bool DrawNode(ImDrawList* drawList,
     for (int i = 0; i < 2; i++)
     {
         const size_t slotCount[2] = {InputsCount, OutputsCount};
-
+        
         for (size_t slotIndex = 0; slotIndex < slotCount[i]; slotIndex++)
         {
             const char* con = i ? nodeTemplate.mOutputNames[slotIndex] : nodeTemplate.mInputNames[slotIndex];//node.mOutputs[slot_idx] : node->mInputs[slot_idx];
             if (!delegate->IsIOPinned(nodeIndex, slot_idx, i == 1))
             {
-
+               
             }
             continue;
 
@@ -786,14 +785,14 @@ bool DrawMiniMap(ImDrawList* drawList, Delegate& delegate, ViewState& viewState,
     ImVec2 viewMaxScreen = (viewMax - middleWorld) * factor + middleScreen;
     drawList->AddRectFilled(viewMinScreen, viewMaxScreen, IM_COL32(255, 255, 255, 32), 1, ImDrawFlags_RoundCornersAll);
     drawList->AddRect(viewMinScreen, viewMaxScreen, IM_COL32(255, 255, 255, 128), 1, ImDrawFlags_RoundCornersAll);
-
+    
     ImGuiIO& io = ImGui::GetIO();
     const bool mouseInMinimap = ImRect(minScreen, maxScreen).Contains(io.MousePos);
     if (mouseInMinimap && io.MouseClicked[0])
     {
         const ImVec2 clickedRatio = (io.MousePos - minScreen) / viewSize;
         const ImVec2 worldPosCenter = ImVec2(ImLerp(min.x, max.x, clickedRatio.x), ImLerp(min.y, max.y, clickedRatio.y));
-
+        
         ImVec2 worldPosViewMin = worldPosCenter - worldSizeView * 0.5;
         ImVec2 worldPosViewMax = worldPosCenter + worldSizeView * 0.5;
         if (worldPosViewMin.x < min.x)
@@ -859,7 +858,7 @@ void Show(Delegate& delegate, const Options& options, ViewState& viewState, bool
     {
         DrawGrid(drawList, windowPos, viewState, canvasSize, options.mGridColor, options.mGridColor2, options.mGridSize);
     }
-
+    
     // Fit view
     if (fit && ((*fit == Fit_AllNodes) || (*fit == Fit_SelectedNodes)))
     {
@@ -898,7 +897,7 @@ void Show(Delegate& delegate, const Options& options, ViewState& viewState, bool
         // Display nodes
         drawList->PushClipRect(regionRect.Min, regionRect.Max, true);
         hoveredNode = -1;
-
+        
         SlotIndex inputSlotOver = -1;
         SlotIndex outputSlotOver = -1;
         NodeIndex nodeOver = -1;
@@ -968,9 +967,9 @@ void Show(Delegate& delegate, const Options& options, ViewState& viewState, bool
                 ImGui::PopID();
             }
         }
+        
 
-
-
+        
         drawList->PopClipRect();
 
         if (nodeOperation == NO_MovingNodes)
@@ -1034,7 +1033,7 @@ void Show(Delegate& delegate, const Options& options, ViewState& viewState, bool
     ImGui::EndChildFrame();
 
     ImGui::PopStyleVar(3);
-
+    
     // change fit to none
     if (fit)
     {
@@ -1089,7 +1088,7 @@ bool EditOptions(Options& options)
         updated |= ImGui::InputFloat("Slot Hover Factor", &options.mNodeSlotHoverFactor);
         updated |= ImGui::InputFloat2("Zoom min/max", &options.mMinZoom);
         updated |= ImGui::InputFloat("Slot Hover Factor", &options.mSnap);
-
+        
         if (ImGui::RadioButton("Curved Links", options.mDisplayLinksAsCurves))
         {
             options.mDisplayLinksAsCurves = !options.mDisplayLinksAsCurves;

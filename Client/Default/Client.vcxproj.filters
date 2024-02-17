@@ -199,6 +199,9 @@
     <Filter Include="02.GameObjects\98. Terrain\Tool_Field">
       <UniqueIdentifier>{cac8625e-3883-4637-b916-f23057d9a854}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\02. Environment\Environment_Interact">
+      <UniqueIdentifier>{d89d3dad-c81a-4fcb-af12-1b4c2e69c84f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -243,30 +246,6 @@
     <ClInclude Include="..\Public\Imgui_Manager.h">
       <Filter>01.Levels\02.Tool\Imgui\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\imconfig.h">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\imgui.h">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\imgui_impl_dx11.h">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\imgui_impl_win32.h">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\imgui_internal.h">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\imstb_rectpack.h">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\imstb_textedit.h">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_Tool.h">
       <Filter>01.Levels\02.Tool</Filter>
     </ClInclude>
@@ -300,29 +279,8 @@
     <ClInclude Include="..\Public\Window_AnimTool.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialog.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuiFileDialog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialogConfig.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuiFileDialog</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\PreviewAnimationModel.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow\PreviewAnimationModel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImGradient.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImSequencer.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImZoomSlider.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\GraphEditor.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImCurveEdit.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CustomDialogFont.h">
       <Filter>99.Defines</Filter>
@@ -363,11 +321,56 @@
     <ClInclude Include="..\Public\Weapon_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImGuizmo.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Field.h">
       <Filter>02.GameObjects\98. Terrain\Tool_Field</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialog.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuiFileDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialogConfig.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuiFileDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imgui.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imgui_impl_dx11.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imgui_impl_win32.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imgui_internal.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imstb_rectpack.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imstb_textedit.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imconfig.h">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImZoomSlider.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\GraphEditor.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImCurveEdit.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImGradient.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\ImSequencer.h">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -748,24 +751,6 @@
     <ClCompile Include="..\Private\Imgui_Manager.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Reference\Imgui\imgui_demo.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Reference\Imgui\imgui_draw.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Reference\Imgui\imgui_impl_dx11.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Reference\Imgui\imgui_impl_win32.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Reference\Imgui\imgui_tables.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Reference\Imgui\imgui_widgets.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Level_Tool.cpp">
       <Filter>01.Levels\02.Tool</Filter>
     </ClCompile>
@@ -780,9 +765,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Instance.cpp">
       <Filter>02.GameObjects\Effect\Effect_Instance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>98.Default\Useless</Filter>
@@ -801,9 +783,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Window_AnimTool.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialog.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuiFileDialog</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PreviewAnimationModel.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow\PreviewAnimationModel</Filter>
@@ -837,6 +816,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\Field.cpp">
       <Filter>02.GameObjects\98. Terrain\Tool_Field</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialog.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\ImGuiFileDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\imgui_demo.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\imgui_draw.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\imgui_impl_dx11.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\imgui_impl_win32.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\imgui_tables.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\imgui_widgets.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
