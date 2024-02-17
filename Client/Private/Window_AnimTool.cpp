@@ -8,7 +8,6 @@
 #include "Bone.h"
 #include "Bounding.h"
 #include "Collider.h"
-#include "DebugDraw.h"
 
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -27,18 +26,7 @@ HRESULT CWindow_AnimTool::Initialize()
 	
 	m_pGameInstance->Fill_PrototypeTags(&m_vObjectTag);
 
-	/* Navi */
-	m_pBatch = new PrimitiveBatch<VertexPositionColor>(m_pContext);
-	m_pEffect = new BasicEffect(m_pDevice);
-	m_pEffect->SetVertexColorEnabled(true);
-
-	const void* pShaderByteCode = { nullptr };
-	size_t   iShaderCodeLength = { 0 };
-
-	m_pEffect->GetVertexShaderBytecode(&pShaderByteCode, &iShaderCodeLength);
-
-	FAILED_CHECK(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements,
-		VertexPositionColor::InputElementCount, pShaderByteCode, iShaderCodeLength, &m_pInputLayout));
+	//m_pCollider->Create(m_pDevice,m_p)
 
 	return S_OK;
 }
@@ -120,8 +108,8 @@ void CWindow_AnimTool::Render()
 {
 	__super::Begin();
 
-	BonePoint_Render();
-
+	//BonePoint_Render();
+	BonePoint_Update();
 	__super::End();
 	
 }
@@ -423,6 +411,8 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 {
 	if (m_PickingObject == nullptr)
 		return;
+	static int BoneIndex = 0;
+
 	if (ImGui::TreeNode("ModelBones"))
 	{
 		if (ImGui::BeginListBox("BoneList"))
@@ -436,64 +426,96 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 
 			}
 			//m_PickingObject
-			static int BoneIndex = 0;
 
 			for (int n = 0; n < m_iBoneNum; n++)
 			{
 				const bool is_selected = (BoneIndex == n);
 				if (ImGui::Selectable(m_pBones[n]->Get_Name(), is_selected))
 					BoneIndex = n;
+				
+				m_pBoneCollider.reserve(m_iBoneNum);
 
 				if (is_selected)
 				{                                                                              
-					ImGui::SetItemDefaultFocus();                                                                                                                                                                       
+					ImGui::SetItemDefaultFocus();
+					if (m_bCreatCollider)
+					{
+						m_fBoneMatrix = m_pBones[BoneIndex]->Get_CombinedTransformationMatrix();
+						m_fBonePosition.x = m_fBoneMatrix._41;
+						m_fBonePosition.y = m_fBoneMatrix._42;
+						m_fBonePosition.z = m_fBoneMatrix._43;
+
+						Create_Bounding(m_fBonePosition, m_iColliderSize);
+
+						m_bCreatCollider = false;
+					}
 				}                                                                                                                
 			}
 			ImGui::EndListBox();
 		}
+// 		if (ImGui::BeginListBox("ColliderList"))
+// 		{
+// 			if (m_pBoneCollider.size() > 0)
+// 			{
+// // 				CCharacter* pcharacters = dynamic_cast<CCharacter*>(m_PickingObject);
+// // 				/*m_pBody = pcharacters->Get_Body();*/ //위에서 넣어주고 있어서 여기서 굳이 또 할필요 없음 
+// // 				m_pBones = *(pcharacters->Get_Body()->Get_Model()->Get_Bones());
+// // 				m_iBoneNum = m_pBones.size();
+// 
+// 			}
+// 			//m_PickingObject
+// 			string str = m_pBones[BoneIndex]->Get_Name();
+// 			string str2 = "Collider";
+// 
+// 			static int ColliderIndex = 0;
+// 
+// 			for (int n = 0; n < m_iCreateColliderNum; n++)
+// 			{
+// 				const bool is_selected = (ColliderIndex == n);
+// 				if (ImGui::Selectable((str + "." + str2).c_str(), is_selected))
+// 					ColliderIndex = n;
+// 
+// 				m_pBoneCollider.reserve(m_iBoneNum);
+// 
+// 				if (is_selected)
+// 				{
+// 					ImGui::SetItemDefaultFocus();
+// 					//셋 바운딩해서 컬러색을 바꿔버리기
+// 					//m_pBoneCollider[ColliderIndex]->
+// 
+// 				}
+// 			}
+// 			ImGui::EndListBox();
+//		}
 		ImGui::TreePop();
 	}
+
 	//현재 해야 하는 것은 콜라이더 생성하는 버튼을 일단 만들어 보자 
 	if (ImGui::Button("Collider Crate"))
 	{
-
+		m_bCreatCollider = true;
 	}
+	if (ImGui::SliderFloat("ColliderSize", &m_iColliderSize, 0.f, 100.f));
 
 
 }
 
-void CWindow_AnimTool::BonePoint_Render()
+void CWindow_AnimTool::BonePoint_Update()
 {
-#ifdef  _DEBUG
-	if (m_pBoneCollider.empty())
-		return;
-
-	m_pEffect->SetWorld(XMMatrixIdentity());
-	m_pEffect->SetView(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
-	m_pEffect->SetProjection(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
-
-	m_pEffect->Apply(m_pContext);
-	m_pContext->IASetInputLayout(m_pInputLayout);
-
-	m_pBatch->Begin();
-
-	for (auto& boundingDesc : m_pBoneCollider)
-		DX::Draw(m_pBatch, boundingDesc.bSphere, ::XMLoadFloat4(reinterpret_cast<_float4*>(&boundingDesc.vColor)));
-
-	m_pBatch->End();
-#endif //  _DEBUG
 
 }
 
-void CWindow_AnimTool::Create_Bounding(_float3 fPoint)
+void CWindow_AnimTool::Create_Bounding(_float3 fPoint, _float fRadius)
 {
-	BOUNDING_DESC sphere_desc;
+	CBounding_Sphere::BOUNDING_SPHERE_DESC pBoundingSphere;
 
-	sphere_desc = BoundingSphere(fPoint, 0.2f);
-	sphere_desc.bChoose = false;
-	sphere_desc.vColor = DEBUG_RGBA_WHITE;
+	pBoundingSphere.vCenter = fPoint;
+	pBoundingSphere.fRadius = fRadius;
+	
+	m_pCollider = dynamic_cast<CCollider*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_Sphere"), &pBoundingSphere));
 
-	m_pBoneCollider.push_back(sphere_desc);
+	m_pBoneCollider.push_back(m_pCollider);
+	++m_iCreateColliderNum;
 }
 
 char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)
