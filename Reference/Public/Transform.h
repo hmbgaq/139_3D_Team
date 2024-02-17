@@ -19,7 +19,7 @@ private:
 
 public:
 	virtual _bool Write_Json(json& Out_Json)			override;
-	virtual void  Load_FromJson(const json& In_Json)		override;
+	virtual void  Load_FromJson(const json& In_Json)	override;
 
 public:
 	/* 행렬의 행의 정보를 교체한다. */

@@ -16,12 +16,12 @@ public:
 		TYPE_FADE		eType_Fade = { FADE_NONE };
 
 		/* ป๓ลย */
-		_bool		bActive = { TRUE };
-		_bool		bBillBoard = { TRUE };
+		_bool		bActive		= { TRUE };
+		_bool		bBillBoard	= { TRUE };
 
-		_bool		bIsPlay = { TRUE };
-		_bool		bReverse = { FALSE };
-		_bool		bLoop = { TRUE };
+		_bool		bIsPlay		= { TRUE };
+		_bool		bReverse	= { FALSE };
+		_bool		bLoop		= { TRUE };
 
 		/* LifeTime */
 		_float2		vMinMaxLifeTime;
