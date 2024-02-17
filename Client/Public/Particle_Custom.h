@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "Effect_Object.h"
+#include "AlphaObject.h"
 
 BEGIN(Engine)
 class CShader;
@@ -11,7 +11,7 @@ END
 
 BEGIN(Client)
 
-class CParticle_Custom final : public CEffect_Object
+class CParticle_Custom final : public CAlphaObject
 {
 public:
 	enum TEXTURE { TYPE_DIFFUSE, TYPE_MASK, TYPE_NOISE, TYPE_END };
@@ -37,9 +37,6 @@ public:
 	virtual HRESULT Render()							override;
 
 
-	//public:
-	//	void Update_ParticlePosition(const _uint& i, _float fTimeDelta);
-
 
 public:
 	void		Set_Active(_bool bActive) { m_bActive = bActive; }
@@ -52,7 +49,6 @@ public:
 
 public:
 	CVIBuffer_Particle_Point* Get_VIBufferCom() { return m_pVIBufferCom; }
-	CTransform* Get_TransformCom() { return m_pTransformCom; }
 
 
 private:

@@ -11,7 +11,9 @@ private:
 	CShader(const CShader& rhs);
 	virtual ~CShader() = default;
 
-
+public:
+	virtual _bool Write_Json(json & Out_Json)			override;
+	virtual void Load_FromJson(const json & In_Json)	override;
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements);

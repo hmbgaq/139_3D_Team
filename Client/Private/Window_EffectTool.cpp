@@ -32,22 +32,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 	__super::Begin();
 
-	if (ImGui::BeginMenuBar())
-	{
-		if (ImGui::BeginMenu("Menu"))
-		{
-			if (ImGui::MenuItem("Save"))
-			{
-
-			}
-			if (ImGui::MenuItem("Load"))
-			{
-
-			}
-			ImGui::EndMenu();
-		}
-		ImGui::EndMenuBar();
-	}
+	Update_SaveLoad_Particle();
 
 
 	if (ImGui::BeginTabBar("Tab_Effect", ImGuiTabBarFlags_None))
@@ -89,6 +74,9 @@ void CWindow_EffectTool::Update_ParticleTab()
 {
 	//if (ImGui::CollapsingHeader(" Particle ", ImGuiTabBarFlags_None))
 	{
+		Update_Demo_Particle();
+
+		ImGui::SeparatorText("");
 		Update_ListArea_Particle();
 
 		ImGui::SeparatorText("");
@@ -101,6 +89,9 @@ void CWindow_EffectTool::Update_ParticleTab()
 		Update_ActionArea_Particle();
 
 		ImGui::SeparatorText("");
+		Update_WorldPositionArea_Particle();
+
+		ImGui::SeparatorText("");
 		ImGui::Spacing();
 		ImGui::Spacing();
 		ImGui::Spacing();
@@ -110,8 +101,31 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 void CWindow_EffectTool::Update_Demo_Particle()
 {
+	if (ImGui::Button(" Sphere_Demo "))
+	{
+		Create_NewParticle();
 
+		json In_Json;
+		char filePath[MAX_PATH] = "../Bin/DataFiles/Data_Effect/Particle_Info/Particle_TestSphere_Normal_Backup_Info";
+		CJson_Utility::Load_Json(filePath, In_Json);
 
+		m_pCurParticle->Load_FromJson(In_Json);
+
+		Update_CurParameters();
+	}
+
+	if (ImGui::Button(" Sphere_Reverse_Demo "))
+	{
+		Create_NewParticle();
+
+		json In_Json;
+		char filePath[MAX_PATH] = "../Bin/DataFiles/Data_Effect/Particle_Info/Particle_TestSphere_Reverse_Backup_Info";
+		CJson_Utility::Load_Json(filePath, In_Json);
+
+		m_pCurParticle->Load_FromJson(In_Json);
+
+		Update_CurParameters();
+	}
 }
 
 void CWindow_EffectTool::Update_ListArea_Particle()
@@ -131,7 +145,7 @@ void CWindow_EffectTool::Update_ListArea_Particle()
 
 	if (nullptr != m_pCurParticle)
 	{
-		_float4 vParticlePos = m_pCurParticle->Get_TransformCom()->Get_State(CTransform::STATE_POSITION);
+		_float4 vParticlePos = m_pCurParticle->Get_Transform()->Get_State(CTransform::STATE_POSITION);
 		ImGui::Text("Particle Pos  : %.2f %.2f %.2f", vParticlePos.x, vParticlePos.y, vParticlePos.z);
 	}
 
@@ -306,6 +320,14 @@ void CWindow_EffectTool::Update_PlayArea_Particle()
 		}
 	}
 	ImGui::SameLine();
+	if (ImGui::Button(" Spark "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Type_Action(CVIBuffer_Particle_Point::TYPE_ACTION::SPARK);
+		}
+	}
+	ImGui::SameLine();
 	if (ImGui::Button(" Fall "))
 	{
 		if (nullptr != m_pCurParticle)
@@ -322,6 +344,14 @@ void CWindow_EffectTool::Update_PlayArea_Particle()
 		}
 	}
 	ImGui::SameLine();
+	if (ImGui::Button(" Blink "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Type_Action(CVIBuffer_Particle_Point::TYPE_ACTION::BLINK);
+		}
+	}
+	ImGui::SameLine();
 	if (ImGui::Button(" Tornado "))
 	{
 		if (nullptr != m_pCurParticle)
@@ -329,6 +359,17 @@ void CWindow_EffectTool::Update_PlayArea_Particle()
 			m_pCurParticle->Get_VIBufferCom()->Set_Type_Action(CVIBuffer_Particle_Point::TYPE_ACTION::TORNADO);
 		}
 	}
+
+	if (nullptr != m_pCurParticle)
+	{
+		if (CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE == m_pCurParticle->Get_VIBufferCom()->Get_Desc()->eType_Action)
+		{
+			if (ImGui::DragFloat("MaxLength", &m_fMaxLengthPosition, 1.f, 0.1f, 360.f))
+				m_pCurParticle->Get_VIBufferCom()->Set_MaxLengthPosition(m_fMaxLengthPosition);
+		}
+
+	}
+
 
 	/* 파티클 페이드 인아웃 사용 */
 	ImGui::SeparatorText(" Fade Type ");
@@ -366,8 +407,14 @@ void CWindow_EffectTool::Update_AppearArea_Particle()
 	{
 		if (nullptr != m_pCurParticle)
 		{
-			if (ImGui::DragInt("Texture", &m_iTextureIndex, 1, 0, 5))
+			if (ImGui::DragInt("Texture", &m_iTextureIndex, 1, 0, 4))
+			{
+				if (4 <= m_iTextureIndex)
+					m_iTextureIndex = 4;
+
 				m_pCurParticle->Set_TextureIndex(CParticle_Custom::TEXTURE::TYPE_DIFFUSE, m_iTextureIndex);
+			}
+				
 		}
 	}
 
@@ -388,6 +435,7 @@ void CWindow_EffectTool::Update_AppearArea_Particle()
 		if (ImGui::DragFloat("Uv Degree", &m_fRotateUvDegree, 1.f, 0.f, 360.f))
 			m_pCurParticle->Set_RotateUvDegree(m_fRotateUvDegree);
 	}
+
 
 	/* 추가 크기조절 */
 	if (nullptr != m_pCurParticle)
@@ -489,6 +537,17 @@ void CWindow_EffectTool::Update_ActionArea_Particle()
 	}
 }
 
+void CWindow_EffectTool::Update_WorldPositionArea_Particle()
+{
+	if (nullptr != m_pCurParticle)
+	{
+		if (ImGui::DragFloat3("WorldPosition", m_vWorldPosition, 1.f, 0.f))
+		{
+			m_pCurParticle->Set_Position(_float3(m_vWorldPosition[0], m_vWorldPosition[1], m_vWorldPosition[2]));
+		}
+	}
+}
+
 void CWindow_EffectTool::Update_CurParameters()
 {
 	if (nullptr != m_pCurParticle)
@@ -496,7 +555,15 @@ void CWindow_EffectTool::Update_CurParameters()
 		CVIBuffer_Particle_Point* pVIBuffer = m_pCurParticle->Get_VIBufferCom();
 		CVIBuffer_Particle_Point::PARTICLE_POINT_DESC* pDesc = pVIBuffer->Get_Desc();
 
-		m_iNumInstance = pVIBuffer->Get_NumInstance();
+		//m_iNumInstance = pVIBuffer->Get_NumInstance();
+
+		m_vWorldPosition[0] = m_pCurParticle->Get_Transform()->Get_State(CTransform::STATE_POSITION).m128_f32[0];
+		m_vWorldPosition[1] = m_pCurParticle->Get_Transform()->Get_State(CTransform::STATE_POSITION).m128_f32[1];
+		m_vWorldPosition[2] = m_pCurParticle->Get_Transform()->Get_State(CTransform::STATE_POSITION).m128_f32[2];
+
+		m_iNumInstance = pDesc->iCurNumInstance;
+		m_pCurParticle->Get_VIBufferCom()->Set_NumInstance(m_iNumInstance);
+
 
 		m_vMinMaxLifeTime[0] = pDesc->vMinMaxLifeTime.x;
 		m_vMinMaxLifeTime[1] = pDesc->vMinMaxLifeTime.y;
@@ -515,6 +582,62 @@ void CWindow_EffectTool::Update_CurParameters()
 		m_fParticleAcceleration = pDesc->fAcceleration;
 		m_fParticleAccPosition = pDesc->fAccPosition;
 	}
+}
+
+void CWindow_EffectTool::Update_SaveLoad_Particle()
+{
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("Menu"))
+		{
+			if (ImGui::MenuItem("Save"))
+			{
+				Save_Function();
+			}
+			if (ImGui::MenuItem("Load"))
+			{
+				m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
+				m_strDialogPath = "../Bin/DataFiles/Data_Effect/Particle_Info/";
+
+				Load_Function();
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+}
+
+HRESULT CWindow_EffectTool::Save_Function()
+{
+	if (nullptr != m_pCurParticle)
+	{
+		char filePath[MAX_PATH] = "../Bin/DataFiles/Data_Effect/Particle_Info/Particle_TestSphere_Info";
+
+		json Out_Json;
+		m_pCurParticle->Write_Json(Out_Json);
+
+		CJson_Utility::Save_Json(filePath, Out_Json);
+	}
+
+	return S_OK;
+}
+
+HRESULT CWindow_EffectTool::Load_Function()
+{
+	if (nullptr == m_pCurParticle)
+	{
+		Create_NewParticle();
+	}
+
+	json In_Json;
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_Effect/Particle_Info/Particle_TestSphere_Info";
+	CJson_Utility::Load_Json(filePath, In_Json);
+
+	m_pCurParticle->Load_FromJson(In_Json);
+
+	Update_CurParameters();
+
+	return S_OK;
 }
 
 

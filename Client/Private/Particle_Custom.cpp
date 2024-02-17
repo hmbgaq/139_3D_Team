@@ -4,13 +4,13 @@
 #include "GameInstance.h"
 
 CParticle_Custom::CParticle_Custom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CEffect_Object(pDevice, pContext)
+	: CAlphaObject(pDevice, pContext)
 {
 
 }
 
 CParticle_Custom::CParticle_Custom(const CParticle_Custom& rhs)
-	: CEffect_Object(rhs)
+	: CAlphaObject(rhs)
 {
 }
 
@@ -110,8 +110,6 @@ HRESULT CParticle_Custom::Ready_Components()
 		ParticleDesc.bIsPlay = { TRUE };
 		ParticleDesc.bReverse = { FALSE };
 		ParticleDesc.bLoop = { TRUE };
-
-		ParticleDesc.bUseParentMatrix = { FALSE };
 
 		ParticleDesc.vMinMaxLifeTime = _float2(0.5f, 3.0f);
 		ParticleDesc.vMinMaxSpawnTime = { 0.f, 0.f };

@@ -15,6 +15,16 @@ CTexture::CTexture(const CTexture & rhs)
 		Safe_AddRef(pSRV);
 }
 
+_bool CTexture::Write_Json(json& Out_Json)
+{
+	return false;
+}
+
+void CTexture::Load_FromJson(const json& In_Json)
+{
+	_int iTest = 0;
+}
+
 HRESULT CTexture::Initialize_Prototype(const wstring & strTextureFilePath, _uint iNumTextures)
 {
 	m_iNumTextures = iNumTextures;

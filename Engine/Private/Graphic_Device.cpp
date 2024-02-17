@@ -46,7 +46,7 @@ HRESULT CGraphic_Device::Initialize(const GRAPHIC_DESC& GraphicDesc, ID3D11Devic
 
 	/* 장치에 바인드해놓을 렌더타겟들과 뎁스스텐실뷰를 셋팅한다. */
 	/* 장치는 최대 8개의 렌더타겟을 동시에 들고 있을 수 있다. */
-	ID3D11RenderTargetView*		pRTVs[1] = {
+	ID3D11RenderTargetView* pRTVs[1] = {
 		m_pBackBufferRTV,
 
 	};
@@ -107,7 +107,7 @@ HRESULT CGraphic_Device::Present()
 
 
 	/* 전면 버퍼와 후면버퍼를 교체하여 후면버퍼를 전면으로 보여주는 역할을 한다. */
-	/* 후면버퍼를 직접화면에 보여줄께. */
+	/* 후면버퍼를 직접화면에 보여줄게. */
 	return m_pSwapChain->Present(0, 0);
 }
 

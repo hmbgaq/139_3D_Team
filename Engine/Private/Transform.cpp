@@ -14,6 +14,25 @@ CTransform::CTransform(const CTransform & rhs)
 {
 }
 
+_bool CTransform::Write_Json(json& Out_Json)
+{
+	CJson_Utility::Write_Float4(Out_Json["Transform"][0], XMLoadFloat4x4(&m_WorldMatrix).r[STATE_RIGHT]);
+	CJson_Utility::Write_Float4(Out_Json["Transform"][1], XMLoadFloat4x4(&m_WorldMatrix).r[STATE_UP]);
+	CJson_Utility::Write_Float4(Out_Json["Transform"][2], XMLoadFloat4x4(&m_WorldMatrix).r[STATE_LOOK]);
+	CJson_Utility::Write_Float4(Out_Json["Transform"][3], XMLoadFloat4x4(&m_WorldMatrix).r[STATE_POSITION]);
+
+	return false;
+}
+
+void CTransform::Load_FromJson(const json& In_Json)
+{
+	_float4x4 WorldMatrix;
+	ZeroMemory(&WorldMatrix, sizeof(_float4x4));
+	CJson_Utility::Load_JsonFloat4x4(In_Json["Transform"], WorldMatrix);
+
+	m_WorldMatrix = WorldMatrix;
+}
+
 void CTransform::Set_Scaling(_float fScaleX, _float fScaleY, _float fScaleZ)
 {
 	Set_State(STATE_RIGHT, XMVector3Normalize(Get_State(STATE_RIGHT)) * fScaleX);

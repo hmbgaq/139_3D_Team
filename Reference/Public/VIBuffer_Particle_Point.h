@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Particle_Point final : public CVIBuffer_Instancing
 {
 public:
-	enum TYPE_ACTION { SPHERE, SPARK, FALL, RISE, TORNADO, TYPE_ACTION_END };
+	enum TYPE_ACTION { SPHERE, SPARK, FALL, RISE, BLINK, TORNADO, TYPE_ACTION_END };
 	enum TYPE_FADE { FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
 
 	typedef struct tagParticlePoint
@@ -23,11 +23,6 @@ public:
 		_bool		bReverse = { FALSE };
 		_bool		bLoop = { TRUE };
 
-
-		/* ºÎ¸ð */
-		_bool		bUseParentMatrix = { FALSE };
-		_float4x4	ParentMatrix;
-
 		/* LifeTime */
 		_float2		vMinMaxLifeTime;
 
@@ -39,9 +34,9 @@ public:
 		/* For.Position */
 		_float2		vMinMaxRange = { 0.1f, 3.f };
 
-		_float3		vCenterPosition;
-		_float3		vOffsetPosition;
-		_float3		vCurrentPosition;
+		_float4		vCenterPosition;
+		_float4		vOffsetPosition;
+		_float4		vCurrentPosition;
 
 		_float		fMaxLengthPosition = { 5.f };
 		_float		fCurLengthPosition;
@@ -98,6 +93,10 @@ public:
 
 	}PARTICLE_POINT_DESC;
 
+public:
+	virtual _bool Write_Json(json& Out_Json)		override;
+	virtual void Load_FromJson(const json& In_Json)	override;
+
 private:
 	CVIBuffer_Particle_Point(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CVIBuffer_Particle_Point(const CVIBuffer_Particle_Point& rhs);
@@ -116,13 +115,13 @@ public:
 
 public:
 	_uint			Get_NumInstance() { return m_iNumInstance; }
-	void			Set_NumInstance(_uint iNum) { m_iNumInstance = iNum; }
+	void			Set_NumInstance(_uint iNum) { m_iNumInstance = iNum; m_ParticleDesc.iCurNumInstance = iNum; }
 
 	_float			Get_TimePosition() { return m_fTimeAcc; }
 	void			Set_TimePosition(_float fTimePosition) { m_fTimeAcc = fTimePosition; }
 
 	/* For.Desc */
-	public:
+public:
 		PARTICLE_POINT_DESC* Get_Desc() { return &m_ParticleDesc; }
 
 		void			Set_Type_Action(TYPE_ACTION eType) { m_ParticleDesc.eType_Action = eType; }
@@ -138,6 +137,8 @@ public:
 
 		void			Set_Range(_float fMinRange, _float fMaxFange) { m_ParticleDesc.vMinMaxRange = _float2(fMinRange, fMaxFange); }
 
+		void			Set_MaxLengthPosition(_float fLength) { m_ParticleDesc.fMaxLengthPosition = fLength; };
+
 		void			Set_AddScale(_float fX, _float fY) { m_ParticleDesc.vAddScale = _float2(fX, fY); }
 
 		void			Set_RotationOffset(MINMAX eMinMax, AXIS eAxis, _float fRotationOffset);
@@ -149,8 +150,8 @@ public:
 		void			Set_Color(_float fRed, _float fGreen, _float fBlue);
 
 
-	private:
-		PARTICLE_POINT_DESC			m_ParticleDesc;
+private:
+	PARTICLE_POINT_DESC			m_ParticleDesc;
 
 
 	public:

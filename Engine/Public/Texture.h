@@ -18,6 +18,10 @@ private:
 	virtual ~CTexture() = default;
 
 public:
+	virtual _bool Write_Json(json & Out_Json)			override;
+	virtual void  Load_FromJson(const json & In_Json)	override;
+
+public:
 	virtual HRESULT Initialize_Prototype(const wstring& strTextureFilePath, _uint iNumTextures);
 	virtual HRESULT Initialize(void* pArg) override;
 public:

@@ -5,13 +5,13 @@
 
 
 CEffect_Object::CEffect_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CAlphaObject(pDevice, pContext)
+	: CGameObject(pDevice, pContext)
 {
 
 }
 
 CEffect_Object::CEffect_Object(const CEffect_Object & rhs)
-	: CAlphaObject(rhs)
+	: CGameObject(rhs)
 {
 }
 
@@ -53,6 +53,32 @@ HRESULT CEffect_Object::Render()
 	return S_OK;
 }
 
+CEffect_Object* CEffect_Object::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CEffect_Object* pInstance = new CEffect_Object(pDevice, pContext);
+
+	/* 원형객체를 초기화한다.  */
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CEffect_Object");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+
+CGameObject* CEffect_Object::Clone(void* pArg)
+{
+	CEffect_Object* pInstance = new CEffect_Object(*this);
+
+	/* 원형객체를 초기화한다.  */
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CEffect_Object");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
 
 void CEffect_Object::Free()
 {

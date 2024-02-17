@@ -29,7 +29,16 @@ public:
 	void	Update_AppearArea_Particle();
 	void	Update_ActionArea_Particle();
 
+	void	Update_WorldPositionArea_Particle();
+
 	void	Update_CurParameters();
+
+/* For.Save&Load */
+public:
+	void	Update_SaveLoad_Particle();
+	virtual	HRESULT		Save_Function() override;
+	virtual HRESULT		Load_Function() override;
+
 
 	/* For.Tool Util */
 public:
@@ -47,13 +56,18 @@ private:
 	map<const wstring, class CParticle_Custom*>	m_pParticles;
 
 private:
-	char** m_szParticleNames = { nullptr };
-	_int	m_iCurParticleIndex = { 0 };
-	_float	m_fLifeTimePositionEdit = { 0.f };
+#pragma region Particle_List
+	char**					m_szParticleNames = { nullptr };
+	_int					m_iCurParticleIndex = { 0 };
+	_float					m_fLifeTimePositionEdit = { 0.f };
 	class CParticle_Custom* m_pCurParticle = { nullptr };
+	CVIBuffer_Particle_Point::PARTICLE_POINT_DESC m_pCurParticleDesc;
+#pragma endregion
 
 	_int	m_iPlayType = { 0 };
 	_int	m_iLoop = { 0 };
+
+	_float m_vWorldPosition[4] = { 0.f, 0.f, 0.f, 1.f };
 
 	_float m_vRotationX[2] = { 0.f, 0.f };
 	_float m_vRotationY[2] = { 0.f, 0.f };
@@ -62,6 +76,8 @@ private:
 	_float m_fParticleAccPosition = { 0.1f };
 	_float m_fRotateUvDegree = { 0.f };
 
+
+	_float m_fMaxLengthPosition = { 0.f };
 	_float m_fAddScale = { 0.f };
 	_float m_vAddScale[2] = { 0.f, 0.f };
 

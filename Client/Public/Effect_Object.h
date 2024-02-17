@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "AlphaObject.h"
+#include "GameObject.h"
 
 BEGIN(Client)
 
-class CEffect_Object abstract : public CAlphaObject
+class CEffect_Object final : public CGameObject
 {
 	
 protected:
@@ -23,7 +23,12 @@ public:
 
 
 public:
-	virtual CGameObject* Clone(void* pArg) = 0;
+	/* 원형객체를 생성한다. */
+	static CEffect_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+
+	/* 사본객체를 생성한다. */
+	virtual CGameObject* Clone(void* pArg) override;
+
 	virtual void Free() override;
 };
 
