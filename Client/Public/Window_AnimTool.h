@@ -75,7 +75,7 @@ private:
 	CBody*					m_pBody = { nullptr };
 	CBounding_Sphere*		m_pBounding = { nullptr };
 	CCollider*				m_pCollider = { nullptr };
-	//CComponent*				m_pComponent = { nullptr };
+	BoundingSphere*			m_pSphere = {};
 
 	//애니메이션 재생
 	_float					m_fSpeed = 1.f;
@@ -96,6 +96,7 @@ private:
 
 	string					m_strKeyEventFileName = "";
 	string					m_strSoundFileName = "";
+	string					m_strTest = "";
 
 	vector<string>			m_vObjectTag;
 	vector<CGameObject*>	m_CreateList;

@@ -16,7 +16,7 @@ private:
 	virtual ~CBounding_Sphere() = default;
 
 public:
-	const BoundingSphere* Get_Bounding() {
+	BoundingSphere* Get_Bounding() {
 		return m_pSphere;
 	}
 

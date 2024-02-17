@@ -26,8 +26,8 @@ HRESULT CWindow_AnimTool::Initialize()
 	
 	m_pGameInstance->Fill_PrototypeTags(&m_vObjectTag);
 
-	//m_pCollider->Create(m_pDevice,m_p)
-
+	m_pSphere = new BoundingSphere();
+	
 	return S_OK;
 }
 
@@ -166,13 +166,6 @@ void CWindow_AnimTool::Clear_WeaponEvent()
 void CWindow_AnimTool::Create_Object(const wstring& strLayerTag, const wstring& strPrototypeTag)
 {
 	m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, strPrototypeTag);
-// 	m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, strPrototypeTag);
-
-// 	list<CGameObject*> pGameObjects = *(m_pGameInstance->Get_GameObjects(LEVEL_TOOL, strLayerTag));
-// 	CGameObject* pGameObject = pGameObjects.back();
-// 
-// 	const _float3& temp = _float3(0.0f, 0.0f, 0.0f);
-// 	pGameObject->Set_Position(temp);
 }
 
 void CWindow_AnimTool::Draw_Player()
@@ -328,12 +321,8 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 						m_fCurrentTrackPosition = m_pAnimation[AnimationIndex]->Get_TrackPosition();
 						m_pBody->Get_Model()->Set_Animation(AnimationIndex, CModel::ANIM_STATE_LOOP);
 						m_bFirstcheck = false;
-						//m_pBody->Get_Model()->Set_StiffnessRate(1.f);
 					}
-// 					if (m_bStop)
-// 					{
-// 						m_pBody->Get_Model()->Set_StiffnessRate(1000.f);
-// 					}
+
 					if (m_bTrackPositionCheck)
 					{
 						m_pAnimation[AnimationIndex]->Set_TrackPosition(m_fCurrentTrackPosition);
@@ -460,45 +449,49 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 				return;
 
 			//m_PickingObject
-			string str = m_pBones[BoneIndex]->Get_Name();
-			string str2 = "Collider";
+			m_strTest = m_pBones[BoneIndex]->Get_Name();
 
-			
+			static int iSelectColliderIndex;
 
 			for (int n = 0; n < m_iCreateColliderNum; n++)
 			{
-				const bool is_selected = (m_iSelectColliderIndex == n);
-				if (ImGui::Selectable((str + "." + str2).c_str(), is_selected))
-					m_iSelectColliderIndex = n;
+				string str = "Collider";
+				string str2 = to_string(n);
 
+				const bool is_selected = (iSelectColliderIndex == n);
+				if (ImGui::Selectable((m_strTest +str + "." + str2).c_str(), is_selected))
+					iSelectColliderIndex = n;
+				//m_iSelectColliderIndex = iSelectColliderIndex;
 				m_pBoneCollider.reserve(m_iBoneNum);
 
 				if (is_selected)
 				{
 					ImGui::SetItemDefaultFocus();
+					m_pBoneCollider[iSelectColliderIndex]->Set_isCollision(true);
 					if (m_bColliderSize)
 					{
-						BoundingSphere* pSphere;
-						//pSphere->Center = 
-						pSphere->Radius = m_iColliderSize;
-						m_pBounding->Set_Bounding(pSphere);
-						Set_Bounding(m_pBounding);
-						m_bColliderSize = false;
-						m_pBoneCollider[m_iSelectColliderIndex]->Set_isCollision(true);
+						m_pSphere->Radius = m_iColliderSize;
+						((CBounding_Sphere*)m_pBoneCollider[iSelectColliderIndex])->Set_Bounding(m_pSphere);
+						//m_pBounding = ((CBounding_Sphere*)m_pBoneCollider[m_iSelectColliderIndex]);
+						
+						//m_bColliderSize = false;
 					}
 					if (m_bDeleteCollider)
 					{
-						CCollider* pDeleteCollider = m_pBoneCollider[m_iSelectColliderIndex];
+						CCollider* pDeleteCollider = m_pBoneCollider[iSelectColliderIndex];
 
-						m_pBoneCollider.erase(m_pBoneCollider.begin() + m_iSelectColliderIndex);
+						m_pBoneCollider.erase(m_pBoneCollider.begin() + iSelectColliderIndex);
 						
 						Safe_Release(pDeleteCollider);
 
 						m_bDeleteCheck = false;
 					}
-					//셋 바운딩해서 컬러색을 바꿔버리기
-					//m_pBoneCollider[ColliderIndex]->
 
+
+				}
+				else
+				{
+					m_pBoneCollider[n]->Set_isCollision(false);
 				}
 			}
 			ImGui::EndListBox();
@@ -516,9 +509,15 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 	{
 		m_bDeleteCollider = true;
 	}
+
 	if (ImGui::DragFloat("ColliderSize", &m_iColliderSize, 0.f, 10.f));
 	{
 		m_bColliderSize = true;
+		if (m_pBoneCollider.size() > 0)
+		{
+			
+		}
+		
 	}
 
 }
@@ -549,11 +548,10 @@ void CWindow_AnimTool::Create_Bounding(_float3 fPoint, _float fRadius)
 
 void CWindow_AnimTool::Set_Bounding(CBounding_Sphere* _Bounding)
 {
-// 	BoundingSphere* pSphere;
-// 	//pSphere->Center = 
-// 	pSphere->Radius = m_iColliderSize;
-// 	_Bounding->Set_Bounding(pSphere);
-	m_pBoneCollider[m_iSelectColliderIndex]->Set_Bounding(_Bounding);
+	//m_pSphere = _Bounding->Get_Bounding()->Radius;
+	////m_pSphere->Radius = m_iColliderSize;
+	//m_pBounding->Set_Bounding(m_pSphere);
+	//m_pBoneCollider[m_iSelectColliderIndex]->Set_Bounding(_Bounding);
 }
 
 char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)
