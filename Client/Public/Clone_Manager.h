@@ -43,6 +43,13 @@ public:	// 생성 함수 작성
 
 
 
+	template<typename T>
+	T* Clone_Component() 
+	{
+	};
+
+
+
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };
 	ID3D11Device* m_pDevice = { nullptr };
