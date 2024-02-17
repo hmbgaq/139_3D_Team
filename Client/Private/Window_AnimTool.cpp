@@ -101,6 +101,8 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 		ImGui::EndTabBar();
 	}
+	BonePoint_Update();//콜라이더 렌더
+
 	__super::End();
 }
 
@@ -108,8 +110,6 @@ void CWindow_AnimTool::Render()
 {
 	__super::Begin();
 
-	//BonePoint_Render();
-	BonePoint_Update();
 	__super::End();
 	
 }
@@ -441,10 +441,11 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 					if (m_bCreatCollider)
 					{
 						m_fBoneMatrix = m_pBones[BoneIndex]->Get_CombinedTransformationMatrix();
+						_float4x4 pPickObject = m_PickingObject->Get_Transform()->Get_WorldMatrix();
+						m_fBoneMatrix = pPickObject * m_fBoneMatrix;
 						m_fBonePosition.x = m_fBoneMatrix._41;
 						m_fBonePosition.y = m_fBoneMatrix._42;
 						m_fBonePosition.z = m_fBoneMatrix._43;
-
 						Create_Bounding(m_fBonePosition, m_iColliderSize);
 
 						m_bCreatCollider = false;
@@ -502,7 +503,13 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 
 void CWindow_AnimTool::BonePoint_Update()
 {
-
+	if (m_pBoneCollider.size() > 0)
+	{
+		for (auto& pCollider : m_pBoneCollider)
+		{
+			m_pGameInstance->Add_DebugRender(pCollider);
+		}
+	}
 }
 
 void CWindow_AnimTool::Create_Bounding(_float3 fPoint, _float fRadius)

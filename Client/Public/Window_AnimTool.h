@@ -84,6 +84,7 @@ private:
 
 	_float3					m_fBonePosition = { 0.f,0.f,0.f };
 	_float4x4				m_fBoneMatrix = {};
+	
 	_int					m_CurrentAnimationIndex = 0;
 	_int					m_iCreateObjectSize = 0;
 
