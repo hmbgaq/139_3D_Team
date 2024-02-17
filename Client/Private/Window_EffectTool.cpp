@@ -3,8 +3,6 @@
 
 #include "GameInstance.h"
 
-#include "Greed.h"
-
 #include "Particle_Custom.h"
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -19,12 +17,12 @@ CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContex
 HRESULT CWindow_EffectTool::Initialize()
 {
 	//! 현재는 특별한 기능없음. 추후 필요할 것 같아서 셋팅.
-	if(FAILED(__super::Initialize()))
+	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
 
-	if (FAILED(Ready_Layer_Greed(TEXT("Layer_Greed"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Greed(TEXT("Layer_Greed"))))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -381,7 +379,7 @@ void CWindow_EffectTool::Update_AppearArea_Particle()
 
 		if (ImGui::DragInt("Instance Count", &m_iNumInstance, 1, 1, m_iMaxNumInstance))
 			m_pCurParticle->Get_VIBufferCom()->Set_NumInstance(m_iNumInstance);
-		
+
 	}
 
 	/* UV 회전 */
@@ -424,7 +422,7 @@ void CWindow_EffectTool::Update_AppearArea_Particle()
 void CWindow_EffectTool::Update_ActionArea_Particle()
 {
 	if (nullptr != m_pCurParticle)
-	{	
+	{
 		CVIBuffer_Particle_Point* pVIBuffer = m_pCurParticle->Get_VIBufferCom();
 
 		if (ImGui::DragFloat2("MinMaxRange", m_vMinMaxRange, 1.f, 0.1f, 360.f))
@@ -554,7 +552,7 @@ wstring CWindow_EffectTool::Make_NameWithPin(const wstring& strFrontName)
 			continue;
 
 		// Particle, Particle_000
-		if (strFrontName ==	m_pGameInstance->Remove_LastNumChar(iter.first, 4))
+		if (strFrontName == m_pGameInstance->Remove_LastNumChar(iter.first, 4))
 		{
 			_int iPinNum = stoi(m_pGameInstance->Get_LastNumChar(iter.first, 3));
 
@@ -647,7 +645,7 @@ void CWindow_EffectTool::Free()
 		Safe_Release(Pair.second);
 	m_pParticles.clear();
 
-	if(nullptr != m_pCurParticle)
+	if (nullptr != m_pCurParticle)
 		Safe_Release(m_pCurParticle);
 
 	if (nullptr != m_szParticleNames)

@@ -22,46 +22,48 @@ private:
 
 public: /* For.Engine */
 	/* 엔진라이브러리를 사용하기위한 준비를 모두 거친다. */
-	HRESULT Initialize_Engine(_uint iNumLevels, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
-	void Tick_Engine(_float fTimeDelta);
-	HRESULT  Render_Engine();
-	void Clear(_uint iLevelIndex);
+	HRESULT		Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
+	void		Tick_Engine(_float fTimeDelta);
+	HRESULT		Render_Engine();
+	void		Clear(_uint iLevelIndex);
 
 public: /* For.Graphic_Device */
-	HRESULT Clear_BackBuffer_View(_float4 vClearColor);
-	HRESULT Clear_DepthStencil_View();
-	HRESULT Present();
+	HRESULT		Clear_BackBuffer_View(_float4 vClearColor);
+	HRESULT		Clear_DepthStencil_View();
+	HRESULT		Present();
 	ID3D11RenderTargetView* Get_BackBufferRTV() const;
 	ID3D11DepthStencilView* Get_DSV() const;
-	GRAPHIC_DESC* Get_GraphicDesc();
+	GRAPHIC_DESC*			Get_GraphicDesc();
 
 
 public: /* For.Input_Device */
-	_byte	Get_DIKeyState(_ubyte byKeyID);
-	_byte	Get_DIMouseState(MOUSEKEYSTATE eMouse);
-	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState);
+	_byte		Get_DIKeyState(_ubyte byKeyID);
+	_byte		Get_DIMouseState(MOUSEKEYSTATE eMouse);
+	_long		Get_DIMouseMove(MOUSEMOVESTATE eMouseState);
 
-	_bool   Key_Pressing(_ubyte byKeyID);
-	_bool   Key_Down(_ubyte byKeyID);
-	_bool   Key_Up(_ubyte byKeyID);
-	_bool   Mouse_Pressing(MOUSEKEYSTATE eMouse);
-	_bool   Mouse_Down(MOUSEKEYSTATE eMouse);
-	_bool   Mouse_Up(MOUSEKEYSTATE eMouse);
+	_bool		Key_Pressing(_ubyte byKeyID);
+	_bool		Key_Down(_ubyte byKeyID);
+	_bool		Key_Up(_ubyte byKeyID);
+	_bool		Mouse_Pressing(MOUSEKEYSTATE eMouse);
+	_bool		Mouse_Down(MOUSEKEYSTATE eMouse);
+	_bool		Mouse_Up(MOUSEKEYSTATE eMouse);
 
 public: /* For.Timer_Manager */
-	HRESULT	Add_Timer(const wstring& strTimeTag);
-	_float Compute_TimeDelta(const wstring& strTimeTag);
+	HRESULT		Add_Timer(const wstring& strTimeTag);
+	_float		Compute_TimeDelta(const wstring& strTimeTag);
 
 public: /* For.Level_Manager */
 	HRESULT Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
+	_uint	Get_NextLevel();
+	void	Set_CurrentLevel(_uint CurrentLevel);
 
 public: /* For.Object_Manager */
-	HRESULT Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
-	HRESULT Add_CloneObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
-	CGameObject* Clone_Prototype(const wstring& strPrototypeTag, void* pArg = nullptr);
-	class CComponent* Get_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex = 0, const wstring& strPartTag = TEXT(""));
+	HRESULT				Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
+	HRESULT				Add_CloneObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
+	CGameObject*		Clone_Prototype(const wstring& strPrototypeTag, void* pArg = nullptr);
+	class CComponent*	Get_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex = 0, const wstring& strPartTag = TEXT(""));
 
-	list<class CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring & strLayerTag);
+	list<CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring & strLayerTag);
 	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>*clonevector);
 	class CGameObject* Get_GameObect_Last(_uint iLevelIndex, const wstring & strLayerTag);
 	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
@@ -76,7 +78,6 @@ public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, class CComponent* pPrototype);
 	class CComponent* Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
 
-
 public: /* For.Renderer */
 	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
@@ -86,42 +87,66 @@ public: /* For.Renderer */
 
 
 public: /* For.PipeLine */
-	void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix);
-	void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _float4x4 TransformMatrix);
-	_matrix Get_TransformMatrix(CPipeLine::D3DTRANSFORMSTATE eState);
-	_float4x4 Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE eState);
-	_matrix Get_TransformMatrixInverse(CPipeLine::D3DTRANSFORMSTATE eState);
-	_float4x4 Get_TransformFloat4x4Inverse(CPipeLine::D3DTRANSFORMSTATE eState);
-	_float4 Get_CamPosition();
+	void		Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix);
+	void		Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _float4x4 TransformMatrix);
+	_matrix		Get_TransformMatrix(CPipeLine::D3DTRANSFORMSTATE eState);
+	_float4x4	Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE eState);
+	_matrix		Get_TransformMatrixInverse(CPipeLine::D3DTRANSFORMSTATE eState);
+	_float4x4	Get_TransformFloat4x4Inverse(CPipeLine::D3DTRANSFORMSTATE eState);
+	_float4		Get_CamPosition();
+	_float4		Get_CamSetting();
+	_float		Get_CamFar();
 
 public: /* For.Font_Manager */
-	HRESULT Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
-	HRESULT Render_Font(const wstring& strFontTag, const wstring& strText, const _float2 & vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f ,1.f), _float fScale = 1.f, _float2 vOrigin = _float2(0.f, 0.f), _float fRotation = 0.f);
+	HRESULT		Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
+	HRESULT		Render_Font(const wstring& strFontTag, const wstring& strText, const _float2 & vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f ,1.f), _float fScale = 1.f, _float2 vOrigin = _float2(0.f, 0.f), _float fRotation = 0.f);
 
 public: /* For.Target_Manager */
-	HRESULT Add_RenderTarget(const wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
-	HRESULT Add_MRT(const wstring& strMRTTag, const wstring& strTargetTag);
-	HRESULT Begin_MRT(const wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
-	HRESULT End_MRT();
-	HRESULT Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
+	HRESULT		Add_RenderTarget(const wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
+	HRESULT		Add_MRT(const wstring& strMRTTag, const wstring& strTargetTag);
+	HRESULT		Begin_MRT(const wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
+	HRESULT		End_MRT();
+	HRESULT		Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 #ifdef _DEBUG
-	HRESULT Ready_RenderTarget_Debug(const wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
-	HRESULT Render_Debug_RTVs(const wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	HRESULT		Ready_RenderTarget_Debug(const wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
+	HRESULT		Render_Debug_RTVs(const wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 #endif
 
 public: /* For.Light_Manager */
-	HRESULT Add_Light(const LIGHT_DESC& LightDesc, _int & outLightIndex);
-	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	HRESULT		Add_Light(const LIGHT_DESC& LightDesc, _int & outLightIndex);
+	HRESULT		Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 
 public: /* For.Frustum */
-	void	Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix);
-	_bool	isIn_WorldPlanes(_fvector vPoint, _float fRadius = 0.f);
-	_bool	isIn_LocalPlanes(_fvector vPoint, _float fRadius);
+	void		Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix);
+	_bool		isIn_WorldPlanes(_fvector vPoint, _float fRadius = 0.f);
+	_bool		isIn_LocalPlanes(_fvector vPoint, _float fRadius);
+
+public: /* For.Collision_Manager */
+	void		Add_Collision(const _uint& In_iLayer, CCollider* _pCollider);
 
 
-public:
+public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
+
+#pragma region 성희
+	// wstring을 string으로 변환 해주는 함수
+	string		Convert_WString_To_String(wstring _wstring);
+	// string을 wchar로 변환 해주는 함수
+	WCHAR*		StringTowchar(const std::string& str);
+	//	wstring을 char로 변환 해주는 함수
+	char*		ConverWStringtoC(const wstring& wstr);
+	//	char를 wchar_t로 변환 해주는 함수
+	wchar_t*	ConverCtoWC(char* str);
+	// WCHAR*를 string으로 변환 해주는 함수
+	std::string WideStringToString(const wchar_t* wideStr);
+	// 경로에서 파일이름과 확장자만 추출해주는 함수
+	std::string GetFileName(const std::string& filePath);
+	// 확장자를 제거해주는 함수
+	std::string RemoveExtension(const std::string& filePath);
+#pragma endregion End
+
+#pragma region 유정
 	string		Wstring_To_UTF8(const wstring& wstr);
 	wstring		Char_To_Wstring(char* szChar);
 
@@ -135,6 +160,7 @@ public:
 	_float3 Mul_Float3(const _float3& fLeft, const _float& fRight);
 	_bool	isIn_Range(const _float3 fLeft, const _float3 fRight, const _float fRange);
 	_matrix Make_WorldMatrix(const _float2& vScale, const _float3& vRot, const _float3& vPos);
+#pragma endregion End
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
@@ -149,6 +175,8 @@ private:
 	class CTarget_Manager*			m_pTarget_Manager = { nullptr };
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 	class CFrustum*					m_pFrustum = { nullptr };
+	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
+
 
 public:
 	void Release_Manager();

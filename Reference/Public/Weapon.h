@@ -14,7 +14,7 @@ class CBone;
 class ENGINE_DLL CWeapon abstract : public CGameObject
 {
 public:
-	typedef struct
+	typedef struct tagWeaponDesc
 	{
 		class CBone* m_pSocketBone = { nullptr };
 		class CTransform* m_pParentTransform = { nullptr };
@@ -50,12 +50,13 @@ protected:
 protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
-	CTexture* m_pDissolveTexture = { nullptr };
+	//CTexture* m_pDissolveTexture = { nullptr };
 	
 
 protected:
 	CTransform* m_pParentTransform = { nullptr };
 	CBone* m_pSocketBone = { nullptr };
+
 	_float4x4	m_WorldMatrix = {};
 
 protected:

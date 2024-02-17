@@ -15,8 +15,6 @@ class CNavigation;
 
 class ENGINE_DLL CCharacter abstract : public CGameObject
 {
-
-
 protected:
 	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	CCharacter(const CCharacter& rhs);
@@ -53,7 +51,6 @@ public:
 		, _bool _bUseAnimationPos = true
 		, _uint iTargetKeyFrameIndex = 0);
 
-
 	_bool	Is_Animation_End();
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 
@@ -66,20 +63,13 @@ public:
 	void Go_Left(_float fTimeDelta);		
 	void Go_Right(_float fTimeDelta);		
 
-//public:
-//	void Activate_Dissolve();
-
-
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
-
-
 	CBody* m_pBody = { nullptr };
 	vector<CWeapon*> m_Weapons;
 
 protected:
 	map<const wstring, class CGameObject*>		m_PartObjects;
-
 
 protected:
 	virtual CGameObject* Clone(void* pArg) PURE;

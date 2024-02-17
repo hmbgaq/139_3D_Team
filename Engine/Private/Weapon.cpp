@@ -109,11 +109,11 @@ HRESULT CWeapon::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 
 		m_pShaderCom->Begin(0);
 
-		m_pModelCom->Render(i);
+		m_pModelCom->Render((_uint)i);
 	}
 
 	return S_OK;
@@ -140,13 +140,13 @@ HRESULT CWeapon::Render_Shadow()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i);
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 
-		m_pShaderCom->Begin(1);
+		m_pShaderCom->Begin((_uint)1);
 
-		m_pModelCom->Render(i);
+		m_pModelCom->Render((_uint)i);
 	}
 
 	return S_OK;
@@ -167,7 +167,11 @@ HRESULT CWeapon::Bind_ShaderResources()
 void CWeapon::Free()
 {
 	__super::Free();
-
+	for (_uint i = 0; i < m_iColliderSize; ++i) 
+	{
+	   Safe_Release(m_pColliders[i]);
+	}
+	m_pColliders.clear();
 	Safe_Release(m_pParentTransform);
 	Safe_Release(m_pSocketBone);
 	Safe_Release(m_pShaderCom);

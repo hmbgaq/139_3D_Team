@@ -9,7 +9,7 @@ CParticle_Custom::CParticle_Custom(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 }
 
-CParticle_Custom::CParticle_Custom(const CParticle_Custom & rhs)
+CParticle_Custom::CParticle_Custom(const CParticle_Custom& rhs)
 	: CEffect_Object(rhs)
 {
 }
@@ -22,10 +22,10 @@ HRESULT CParticle_Custom::Initialize_Prototype()
 }
 
 HRESULT CParticle_Custom::Initialize(void* pArg)
-{	
+{
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-	
+
 	PARTICLE_CUSTOM_DESC* pDesc = (PARTICLE_CUSTOM_DESC*)pArg;
 	m_strTextureTag = pDesc->strTextureTag;
 
@@ -37,9 +37,9 @@ HRESULT CParticle_Custom::Initialize(void* pArg)
 
 void CParticle_Custom::Priority_Tick(_float fTimeDelta)
 {
-	
 
-	
+
+
 }
 
 void CParticle_Custom::Tick(_float fTimeDelta)
@@ -54,7 +54,7 @@ void CParticle_Custom::Tick(_float fTimeDelta)
 
 		//_float4 vParticlePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-		
+
 		m_pVIBufferCom->Update(fTimeDelta);
 		//m_pVIBufferCom->Update_Particle(fTimeDelta, FALSE);
 		//Update_ParticlePosition(0, fTimeDelta);
@@ -105,56 +105,56 @@ HRESULT CParticle_Custom::Ready_Components()
 		ParticleDesc.eType_Action = { CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE };
 		ParticleDesc.eType_Fade = { CVIBuffer_Particle_Point::TYPE_FADE::FADE_OUT };
 
-		ParticleDesc.bActive				= { TRUE };
-		ParticleDesc.bBillBoard				= { TRUE };
-		ParticleDesc.bIsPlay				= { TRUE };
-		ParticleDesc.bReverse				= { FALSE };
-		ParticleDesc.bLoop					= { TRUE };
+		ParticleDesc.bActive = { TRUE };
+		ParticleDesc.bBillBoard = { TRUE };
+		ParticleDesc.bIsPlay = { TRUE };
+		ParticleDesc.bReverse = { FALSE };
+		ParticleDesc.bLoop = { TRUE };
 
-		ParticleDesc.bUseParentMatrix		= { FALSE };
+		ParticleDesc.bUseParentMatrix = { FALSE };
 
-		ParticleDesc.vMinMaxLifeTime		= _float2(0.5f, 3.0f);
-		ParticleDesc.vMinMaxSpawnTime		= { 0.f, 0.f };
-		ParticleDesc.iCurNumInstance		= { 300 };
+		ParticleDesc.vMinMaxLifeTime = _float2(0.5f, 3.0f);
+		ParticleDesc.vMinMaxSpawnTime = { 0.f, 0.f };
+		ParticleDesc.iCurNumInstance = { 300 };
 
-		ParticleDesc.vMinMaxRange			= { 0.1f, 3.f };
-		ParticleDesc.vCenterPosition		= _float3(0.f, 0.f, 0.f);
-		ParticleDesc.vOffsetPosition		= _float3(0.f, 0.f, 0.f);
+		ParticleDesc.vMinMaxRange = { 0.1f, 3.f };
+		ParticleDesc.vCenterPosition = _float3(0.f, 0.f, 0.f);
+		ParticleDesc.vOffsetPosition = _float3(0.f, 0.f, 0.f);
 
-		ParticleDesc.vMinMaxSpeed			= _float2(0.1f, 5.0f);
-		ParticleDesc.fAcceleration			= { 2.f };
-		ParticleDesc.fAccPosition			= { 0.1f };
+		ParticleDesc.vMinMaxSpeed = _float2(0.1f, 5.0f);
+		ParticleDesc.fAcceleration = { 2.f };
+		ParticleDesc.fAccPosition = { 0.1f };
 
-		ParticleDesc.fGravityAcc			= { 0.f };
-		ParticleDesc.vCurrentGravity		= { 0.f, 0.f, 0.f };
+		ParticleDesc.fGravityAcc = { 0.f };
+		ParticleDesc.vCurrentGravity = { 0.f, 0.f, 0.f };
 
 		ParticleDesc.vMinMaxRotationOffsetX = { 0.0f, 360.f };
 		ParticleDesc.vMinMaxRotationOffsetY = { 0.0f, 360.f };
 		ParticleDesc.vMinMaxRotationOffsetZ = { 0.0f, 360.f };
 
-		ParticleDesc.vCurrentRotation		= { 0.f, 0.f, 0.f };
-		ParticleDesc.vMinMaxRotationForce	= { 0.f, 0.f, 0.f };
+		ParticleDesc.vCurrentRotation = { 0.f, 0.f, 0.f };
+		ParticleDesc.vMinMaxRotationForce = { 0.f, 0.f, 0.f };
 
-		ParticleDesc.vMinMaxScale			= _float2(0.2f, 0.5f);
-		ParticleDesc.vAddScale				= { 0.f, 0.f };
-		ParticleDesc.vMinMaxScaleForce		= { 1.f, 1.f };
+		ParticleDesc.vMinMaxScale = _float2(0.2f, 0.5f);
+		ParticleDesc.vAddScale = { 0.f, 0.f };
+		ParticleDesc.vMinMaxScaleForce = { 1.f, 1.f };
 
-		ParticleDesc.vCurrentColor			= _float4(1.f, 1.f, 1.f, 1.f);
-		ParticleDesc.vColorSpeed			= { 0.f, 0.f, 0.f, 0.f };
-		ParticleDesc.vColorForce			= { 0.f, 0.f, 0.f, 0.f };
+		ParticleDesc.vCurrentColor = _float4(1.f, 1.f, 1.f, 1.f);
+		ParticleDesc.vColorSpeed = { 0.f, 0.f, 0.f, 0.f };
+		ParticleDesc.vColorForce = { 0.f, 0.f, 0.f, 0.f };
 
-		ParticleDesc.fMinMaxAlpha			= { 1.f, 1.f };
-		ParticleDesc.fAlphaForce			= { 0.f };
+		ParticleDesc.fMinMaxAlpha = { 1.f, 1.f };
+		ParticleDesc.fAlphaForce = { 0.f };
 
-		ParticleDesc.vSpriteUV				= { 0.f, 0.f };
-		ParticleDesc.vSpriteUVForce			= { 0.f, 0.f };
-		ParticleDesc.iSpriteFrameIndex		= { 1 };
+		ParticleDesc.vSpriteUV = { 0.f, 0.f };
+		ParticleDesc.vSpriteUVForce = { 0.f, 0.f };
+		ParticleDesc.iSpriteFrameIndex = { 1 };
 
 		if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Particle_Point"),
 			TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &ParticleDesc)))
 			return E_FAIL;
 	}
-	
+
 
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_TOOL, m_strTextureTag,
@@ -174,10 +174,10 @@ HRESULT CParticle_Custom::Ready_Components()
 }
 
 HRESULT CParticle_Custom::Bind_ShaderResources()
-{	
+{
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
-	
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
@@ -213,9 +213,9 @@ HRESULT CParticle_Custom::Bind_ShaderResources()
 	return S_OK;
 }
 
-CParticle_Custom * CParticle_Custom::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CParticle_Custom* CParticle_Custom::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CParticle_Custom*		pInstance = new CParticle_Custom(pDevice, pContext);
+	CParticle_Custom* pInstance = new CParticle_Custom(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -226,9 +226,9 @@ CParticle_Custom * CParticle_Custom::Create(ID3D11Device * pDevice, ID3D11Device
 	return pInstance;
 }
 
-CGameObject * CParticle_Custom::Clone(void* pArg)
+CGameObject* CParticle_Custom::Clone(void* pArg)
 {
-	CParticle_Custom*		pInstance = new CParticle_Custom(*this);
+	CParticle_Custom* pInstance = new CParticle_Custom(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CCollider;
+
 class ENGINE_DLL CGameObject abstract : public CBase
 {
 public:
@@ -17,6 +19,7 @@ public:
 		_float	fRotationPerSec = 0.f;
 
 	}GAMEOBJECT_DESC;
+
 protected:
 	CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject(const CGameObject& rhs);
@@ -44,7 +47,20 @@ public:
 	void	Set_Dead(_bool _bDead) { m_bDead = _bDead; }
 
 public:
+	virtual _bool Write_Json(json& Out_Json) override;
+	virtual void Load_FromJson(const json& In_Json) override;
+
+public:
 	class CTransform* Get_Transform();
+
+
+public:
+	virtual void	OnCollisionEnter(CCollider* other) {};
+	virtual void	OnCollisionStay(CCollider* other) {};
+	virtual void	OnCollisionExit(CCollider* other) {};
+
+
+public:
 
 
 protected:
@@ -67,8 +83,7 @@ protected:
 protected:
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& strPrototypeTag,
 		const wstring& strComTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
-
-
+	HRESULT Remove_Component(const wstring& strComTag, _Inout_ CComponent** ppOut = nullptr);
 
 
 public:

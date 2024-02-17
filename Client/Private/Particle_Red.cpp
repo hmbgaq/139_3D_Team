@@ -11,7 +11,7 @@ CParticle_Red::CParticle_Red(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 }
 
-CParticle_Red::CParticle_Red(const CParticle_Red & rhs)
+CParticle_Red::CParticle_Red(const CParticle_Red& rhs)
 	: CGameObject(rhs)
 {
 }
@@ -29,10 +29,10 @@ HRESULT CParticle_Red::Initialize_Prototype()
 }
 
 HRESULT CParticle_Red::Initialize(void* pArg)
-{	
+{
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-	
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
@@ -43,9 +43,9 @@ HRESULT CParticle_Red::Initialize(void* pArg)
 
 void CParticle_Red::Priority_Tick(_float fTimeDelta)
 {
-	
 
-	
+
+
 }
 
 void CParticle_Red::Tick(_float fTimeDelta)
@@ -106,7 +106,7 @@ HRESULT CParticle_Red::Ready_Components()
 }
 
 HRESULT CParticle_Red::Bind_ShaderResources()
-{	
+{
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 
@@ -123,9 +123,9 @@ HRESULT CParticle_Red::Bind_ShaderResources()
 	return S_OK;
 }
 
-CParticle_Red * CParticle_Red::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CParticle_Red* CParticle_Red::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CParticle_Red*		pInstance = new CParticle_Red(pDevice, pContext);
+	CParticle_Red* pInstance = new CParticle_Red(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -136,9 +136,9 @@ CParticle_Red * CParticle_Red::Create(ID3D11Device * pDevice, ID3D11DeviceContex
 	return pInstance;
 }
 
-CGameObject * CParticle_Red::Clone(void* pArg)
+CGameObject* CParticle_Red::Clone(void* pArg)
 {
-	CParticle_Red*		pInstance = new CParticle_Red(*this);
+	CParticle_Red* pInstance = new CParticle_Red(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

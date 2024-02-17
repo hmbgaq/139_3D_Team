@@ -10,9 +10,19 @@ namespace Engine
 	/* Transform */
 	static const wchar_t* g_pTransformTag = TEXT("Com_Transform");
 
-	enum MINMAX { MIN, MAX, MINMAX_END };
-	enum AXIS	{ AXIS_X, AXIS_Y, AXIS_Z, AXIS_END };
+	/* Shader */
+	enum class DEFERRED_SHADER { DEBUG, 
+								 DIRECTIONAL_LIGHT, 
+								 POINT_LIGHT, 
+								 SPOT_LIGHT, 
+								 DEFERRED, 
+								 SHADER_END };
 
+	enum class SSAO_SHADER { SSAO, GODRAY , SHADER_END};
+
+	
+	enum MINMAX { MIN, MAX, MINMAX_END };
+	enum AXIS { AXIS_X, AXIS_Y, AXIS_Z, AXIS_END };
 }
 
 #endif // Engine_Enum_h__

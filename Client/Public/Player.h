@@ -18,9 +18,6 @@ private:
 	virtual ~CPlayer() = default;
 
 public:
-	virtual CComponent* Find_Component(const wstring & strComTag, const wstring & strPartTag = TEXT("")) override;
-
-public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Tick(_float fTimeDelta) override;
@@ -28,15 +25,10 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-public:
-	CGameObject* Find_PartObject(const wstring& strPartTag);
-
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
-	HRESULT Add_PartObject(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg);
-
 
 
 public:

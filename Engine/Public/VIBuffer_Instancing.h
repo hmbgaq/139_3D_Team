@@ -42,8 +42,8 @@ protected:
 	mt19937_64					m_RandomNumber;
 
 protected:
-	_float*						m_pSpeeds = { nullptr };
-	_float*						m_pLifeTimes = { nullptr };
+	_float* m_pSpeeds = { nullptr };
+	_float* m_pLifeTimes = { nullptr };
 	INSTANCING_DESC				m_InstancingDesc;
 	_float						m_fTimeAcc = { 0.0f };
 

@@ -5,13 +5,13 @@
 #include "VIBuffer_Environment_Model_Instance.h"
 
 CEnvironment_Instance::CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CLandObject(pDevice, pContext)
+	: CGameObject(pDevice, pContext)
 {
 
 }
 
 CEnvironment_Instance::CEnvironment_Instance(const CEnvironment_Instance & rhs)
-	: CLandObject(rhs)
+	: CGameObject(rhs)
 {
 }
 
@@ -23,53 +23,15 @@ HRESULT CEnvironment_Instance::Initialize_Prototype()
 
 HRESULT CEnvironment_Instance::Initialize(void* pArg)
 {	
-	m_tInstanceDesc = *(ENVIRONMENT_INSTANCE_DESC*)pArg;
+	m_tInstanceDesc = {}; //*(MAPTOOL_INSTANCE_DESC*)pArg;
 
-	if (FAILED(__super::Initialize(pArg)))
+	
+	if (FAILED(__super::Initialize(nullptr)))
 		return E_FAIL;	
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(rand() % 20, 0.f, rand() % 20, 1.f));
-
-	//m_pInstanceModelCom->Add_Mesh(m_pTransformCom->Get_WorldMatrix());
-
-	CVIBuffer_Environment_Model_Instance::INSTANCE_INFO_DESC InstanceInfoDesc = {};
-
-	
-	//InstanceInfoDesc.vCenter = _float3(0.f, 10.f, 0.f);
-	InstanceInfoDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	InstanceInfoDesc.vScale = _float3(1.f, 1.f, 1.f);
-	InstanceInfoDesc.vTranslation = _float3(10.f, 5.f, 10.f);
-	
-
-	vector<CVIBuffer_Environment_Model_Instance::INSTANCE_INFO_DESC> vecInfoDesc;
-
-	vecInfoDesc.push_back(InstanceInfoDesc);
-
-	//InstanceInfoDesc.vCenter = _float3(0.f, 10.f, 0.f);
-	InstanceInfoDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	InstanceInfoDesc.vScale = _float3(1.f, 1.f, 1.f);
-	InstanceInfoDesc.vTranslation = _float3(20.f, 5.f, 10.f);
-
-	vecInfoDesc.push_back(InstanceInfoDesc);
-
-	//InstanceInfoDesc.vCenter = _float3(0.f, 10.f, 0.f);
-	InstanceInfoDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	InstanceInfoDesc.vScale = _float3(1.f, 1.f, 1.f);
-	InstanceInfoDesc.vTranslation = _float3(30.f, 5.f, 10.f);
-
-	vecInfoDesc.push_back(InstanceInfoDesc);
-
-	//InstanceInfoDesc.vCenter = _float3(0.f, 10.f, 0.f);
-	InstanceInfoDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	InstanceInfoDesc.vScale = _float3(1.f, 1.f, 1.f);
-	InstanceInfoDesc.vTranslation = _float3(40.f, 5.f, 10.f);
-
-	vecInfoDesc.push_back(InstanceInfoDesc);
-
-	m_pInstanceModelCom->Update(vecInfoDesc);
 
 	return S_OK;
 }
@@ -113,7 +75,7 @@ HRESULT CEnvironment_Instance::Render()
 		
 
 		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
-		m_pInstanceModelCom->Render(i);
+		m_pInstanceModelCom->Render((_uint)i);
 
 		//m_pModelCom->Render(i);
 	}
@@ -127,26 +89,26 @@ HRESULT CEnvironment_Instance::Render()
 HRESULT CEnvironment_Instance::Ready_Components()
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_Model_Instance"),
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_Model_Instance"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, m_tInstanceDesc.strModelTag,
+	//* For.Com_Model */
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), m_tInstanceDesc.strModelTag,
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
-
+	
 	CVIBuffer_Environment_Model_Instance::ENVIRONMENT_MODEL_INSTANCE_DESC Desc;
-
+	
 	Desc.pModel = m_pModelCom;
-	
 	Desc.iNumInstance = m_tInstanceDesc.iNumInstance; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
+	Desc.vecBufferInstanceInfo = m_tInstanceDesc.vecInstanceInfoDesc;
 	
-	/* For.Com_Model */
+	// For.Com_Model */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pInstanceModelCom), &Desc)))
 		return E_FAIL;
-
+	
 	return S_OK;
 }
 

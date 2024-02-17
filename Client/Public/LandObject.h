@@ -7,6 +7,7 @@ BEGIN(Engine)
 class CVIBuffer_Terrain;
 class CTransform;
 END
+
 BEGIN(Client)
 
 class CLandObject abstract : public CGameObject

@@ -35,15 +35,15 @@ public:
 
 	void	Update_CurParameters();
 
-/* For.Tool Util */
+	/* For.Tool Util */
 public:
 	HRESULT Ready_Layer_Greed(const wstring& strLayerTag);
 
-/* For.Particle */
+	/* For.Particle */
 public:
 	HRESULT Create_NewParticle();
 	HRESULT Ready_Layer_Particle(const wstring& strLayerTag);
-	
+
 public:
 	wstring Make_NameWithPin(const wstring& strFrontName);
 
@@ -51,10 +51,10 @@ private:
 	map<const wstring, class CParticle_Custom*>	m_pParticles;
 
 private:
-	char**  m_szParticleNames						= { nullptr };
-	_int	m_iCurParticleIndex						= { 0 };
-	_float	m_fLifeTimePositionEdit					= { 0.f };
-	class CParticle_Custom* m_pCurParticle			= { nullptr };
+	char** m_szParticleNames = { nullptr };
+	_int	m_iCurParticleIndex = { 0 };
+	_float	m_fLifeTimePositionEdit = { 0.f };
+	class CParticle_Custom* m_pCurParticle = { nullptr };
 
 	_int	m_iPlayType = { 0 };
 	_int	m_iLoop = { 0 };
@@ -62,8 +62,8 @@ private:
 	_float m_vRotationX[2] = { 0.f, 0.f };
 	_float m_vRotationY[2] = { 0.f, 0.f };
 	_float m_vRotationZ[2] = { 0.f, 0.f };
-	_float m_fParticleAcceleration	= { 1.f };
-	_float m_fParticleAccPosition	= { 0.1f };
+	_float m_fParticleAcceleration = { 1.f };
+	_float m_fParticleAccPosition = { 0.1f };
 	_float m_fRotateUvDegree = { 0.f };
 
 	_float m_fAddScale = { 0.f };

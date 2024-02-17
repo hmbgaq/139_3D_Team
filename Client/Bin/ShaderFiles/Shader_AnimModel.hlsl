@@ -1,10 +1,12 @@
-
 #include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D		g_DiffuseTexture;
 
 matrix			g_BoneMatrices[256];
+
+
+float			g_fCamFar;
 
 /* Dissolve */
 Texture2D		g_DissolveTexture;
@@ -36,7 +38,6 @@ struct VS_OUT
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
-
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
@@ -112,7 +113,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
 {
 	PS_OUT_SHADOW		Out = (PS_OUT_SHADOW)0;
 
-	Out.vLightDepth = In.vProjPos.w / 300.0f;
+	Out.vLightDepth = In.vProjPos.w / g_fCamFar;
 	
 	return Out;
 }

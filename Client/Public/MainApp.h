@@ -26,6 +26,10 @@ private:
 	HRESULT Ready_Gara();
 	HRESULT Ready_Font();
 
+	// SH_Add
+private: /* ===================== UI ===================== */
+	HRESULT	Ready_UITexture();
+
 private:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };

@@ -7,8 +7,8 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Particle_Point final : public CVIBuffer_Instancing
 {
 public:
-	enum TYPE_ACTION { SPHERE, SPARK, FALL, RISE, TORNADO, TYPE_ACTION_END};
-	enum TYPE_FADE	 { FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
+	enum TYPE_ACTION { SPHERE, SPARK, FALL, RISE, TORNADO, TYPE_ACTION_END };
+	enum TYPE_FADE { FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
 
 	typedef struct tagParticlePoint
 	{
@@ -16,12 +16,12 @@ public:
 		TYPE_FADE		eType_Fade = { FADE_NONE };
 
 		/* 상태 */
-		_bool		bActive			= { TRUE };
-		_bool		bBillBoard		= { TRUE };
+		_bool		bActive = { TRUE };
+		_bool		bBillBoard = { TRUE };
 
-		_bool		bIsPlay			= { TRUE };
-		_bool		bReverse		= { FALSE };
-		_bool		bLoop			= { TRUE };
+		_bool		bIsPlay = { TRUE };
+		_bool		bReverse = { FALSE };
+		_bool		bLoop = { TRUE };
 
 
 		/* 부모 */
@@ -91,9 +91,9 @@ public:
 		void Reset_Desc()
 		{
 			ZeroMemory(this, sizeof(PARTICLE_POINT_DESC));
-			bIsPlay		= { TRUE };
-			bReverse	= { FALSE };
-			bLoop		= { TRUE };
+			bIsPlay = { TRUE };
+			bReverse = { FALSE };
+			bLoop = { TRUE };
 		}
 
 	}PARTICLE_POINT_DESC;
@@ -121,42 +121,42 @@ public:
 	_float			Get_TimePosition() { return m_fTimeAcc; }
 	void			Set_TimePosition(_float fTimePosition) { m_fTimeAcc = fTimePosition; }
 
-/* For.Desc */
-public:
-	PARTICLE_POINT_DESC* Get_Desc() { return &m_ParticleDesc; }
+	/* For.Desc */
+	public:
+		PARTICLE_POINT_DESC* Get_Desc() { return &m_ParticleDesc; }
 
-	void			Set_Type_Action(TYPE_ACTION eType) { m_ParticleDesc.eType_Action = eType; }
-	void			Set_Type_Fade(TYPE_FADE eType) { m_ParticleDesc.eType_Fade = eType; }
+		void			Set_Type_Action(TYPE_ACTION eType) { m_ParticleDesc.eType_Action = eType; }
+		void			Set_Type_Fade(TYPE_FADE eType) { m_ParticleDesc.eType_Fade = eType; }
 
-	void			Set_Loop(_bool bLoop) { m_ParticleDesc.bLoop = bLoop; }
+		void			Set_Loop(_bool bLoop) { m_ParticleDesc.bLoop = bLoop; }
 
-	void			Set_Play(_bool bPlay) { m_ParticleDesc.bIsPlay = bPlay; }
+		void			Set_Play(_bool bPlay) { m_ParticleDesc.bIsPlay = bPlay; }
 
-	void			Set_ReversePlay(_bool bReverse) { m_ParticleDesc.bReverse = bReverse; }
+		void			Set_ReversePlay(_bool bReverse) { m_ParticleDesc.bReverse = bReverse; }
 
-	void			Set_LifeTime(_float fMin, _float fMax) { m_ParticleDesc.vMinMaxLifeTime = _float2(fMin, fMax); }
+		void			Set_LifeTime(_float fMin, _float fMax) { m_ParticleDesc.vMinMaxLifeTime = _float2(fMin, fMax); }
 
-	void			Set_Range(_float fMinRange, _float fMaxFange) { m_ParticleDesc.vMinMaxRange = _float2(fMinRange, fMaxFange); }
+		void			Set_Range(_float fMinRange, _float fMaxFange) { m_ParticleDesc.vMinMaxRange = _float2(fMinRange, fMaxFange); }
 
-	void			Set_AddScale(_float fX, _float fY) { m_ParticleDesc.vAddScale = _float2(fX, fY); }
+		void			Set_AddScale(_float fX, _float fY) { m_ParticleDesc.vAddScale = _float2(fX, fY); }
 
-	void			Set_RotationOffset(MINMAX eMinMax, AXIS eAxis, _float fRotationOffset);
+		void			Set_RotationOffset(MINMAX eMinMax, AXIS eAxis, _float fRotationOffset);
 
-	void			Set_Acceleration(_float fAcceleration) { m_ParticleDesc.fAcceleration = fAcceleration; }
+		void			Set_Acceleration(_float fAcceleration) { m_ParticleDesc.fAcceleration = fAcceleration; }
 
-	void			Set_AccPosition(_float fAccPosition) { m_ParticleDesc.fAccPosition = fAccPosition; }
+		void			Set_AccPosition(_float fAccPosition) { m_ParticleDesc.fAccPosition = fAccPosition; }
 
-	void			Set_Color(_float fRed, _float fGreen, _float fBlue);
-
-
-private:
-	PARTICLE_POINT_DESC			m_ParticleDesc;
+		void			Set_Color(_float fRed, _float fGreen, _float fBlue);
 
 
-public:
-	static CVIBuffer_Particle_Point* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iNumInstance);
-	virtual CComponent* Clone(void* pArg) override;
-	virtual void Free() override;
+	private:
+		PARTICLE_POINT_DESC			m_ParticleDesc;
+
+
+	public:
+		static CVIBuffer_Particle_Point* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iNumInstance);
+		virtual CComponent* Clone(void* pArg) override;
+		virtual void Free() override;
 };
 
 END

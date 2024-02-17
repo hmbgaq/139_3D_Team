@@ -13,12 +13,18 @@ public:
 	enum RENDERGROUP { RENDER_PRIORITY, RENDER_SHADOW, RENDER_NONLIGHT, 
 					   
 						/* Shader */
-					   RENDER_GODRAY, RENDER_OUTLINE,
+					  RENDER_SSAO, RENDER_GODRAY, RENDER_OUTLINE,
 					   
 					   RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
 
-	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_OUTLINE, SHADER_BLUR, SHADER_SSAO, SHADER_FINAL, SHADER_END };
-
+	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_FINAL, SHADER_END };
+	
+	struct QuadVertex // ssao 
+	{
+		_float3 pos;
+		_float3 normal;
+		_float2 tex;
+	};
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderer() = default;
@@ -28,6 +34,7 @@ public:
 	HRESULT Add_RenderGroup(RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
 	HRESULT Draw_RenderGroup();
+	HRESULT Draw_RenderName();
 	
 	/* Ready */
 	HRESULT Create_Buffer();
@@ -37,38 +44,57 @@ public:
 	HRESULT Ready_DebugRender();
 	HRESULT Ready_SSAO();
 
-	/* Set */
-	void Set_OutLine(_bool bOutLine) { m_bOutLine = bOutLine; }
+	/* SSAO */
+	HRESULT SSAO_OnSize();
+	HRESULT BuildFullScreenQuad();
+	void	BuildOffsetVectors();
+	void	BuildRandomVectorTexture();
+
+	HRESULT RenderScreenQuad();
 
 #ifdef _DEBUG
 public:
-	void Set_RenderDebug(_bool _bRenderDebug) {
-		m_bRenderDebug = _bRenderDebug;
-	}
+	void Set_RenderDebug(_bool _bRenderDebug) {	m_bRenderDebug = _bRenderDebug;	}
 #endif
 
 private:
-	class CShader*							m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
-	class CGameInstance*					m_pGameInstance = { nullptr };
-	class CVIBuffer_Rect*					m_pVIBuffer = { nullptr };
+	class CShader*				m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
+	class CGameInstance*		m_pGameInstance = { nullptr };
+	class CVIBuffer_Rect*		m_pVIBuffer = { nullptr };
 
-	ID3D11Device*							m_pDevice = { nullptr };
-	ID3D11DeviceContext*					m_pContext = { nullptr };
-	ID3D11DepthStencilView*					m_pLightDepthDSV = { nullptr };
-	list<class CGameObject*>				m_RenderObjects[RENDER_END];
+	ID3D11Device*				m_pDevice = { nullptr };
+	ID3D11DeviceContext*		m_pContext = { nullptr };
+	ID3D11DepthStencilView*		m_pLightDepthDSV = { nullptr };
+	list<class CGameObject*>	m_RenderObjects[RENDER_END];
 
 #ifdef _DEBUG
-	list<class CComponent*>					m_DebugComponent;
-	_bool									m_bRenderDebug = { false };
+	list<class CComponent*>		m_DebugComponent;
+	_bool						m_bRenderDebug = { true };
 #endif
 
 private:
-	_float4x4								m_WorldMatrix;
-	_float4x4								m_ViewMatrix, m_ProjMatrix;
-	_float4									m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
+	_float4x4					m_WorldMatrix;
+	_float4x4					m_ViewMatrix, m_ProjMatrix;
+	_float4						m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
 
-	_bool									m_bOutLine = { false };
+private: // SSAO
+	class CTexture* m_pRandomVectorTexture = { nullptr };
+	ID3D11Buffer*	m_ScreenQuadVB = { nullptr };
+	ID3D11Buffer*	m_ScreenQuadIB = { nullptr };
+	ID3D11ShaderResourceView* m_RandomVectorSRV;
 
+	_float4			m_vFrustumFarCorner[4];
+	_float4			m_vOffsets[14];
+	_float			m_OffsetsFloat[56];
+	_int			m_iQuadVerCount;
+	_int			m_iQuadIndexCount;
+	_float			RandF() {	return (float)(rand()) / (float)RAND_MAX; }
+	_float			RandF(float a, float b) { return a + RandF() * (b - a); };
+
+	HRESULT			Render_Blur_DownSample();
+	HRESULT			Render_Blur_Horizontal();
+	HRESULT			Render_Blur_Vertical();
+	HRESULT			Render_Blur_UpSample();
 
 private:
 	HRESULT Render_Priority();
@@ -81,8 +107,27 @@ private:
 	HRESULT Render_LightAcc();
 	HRESULT Render_Deferred();
 
-	/* Post */
 	HRESULT Render_OutLine();
+	HRESULT Render_SSAO();
+	//HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
+	HRESULT Render_GodRay();
+
+	/* Blur */
+	HRESULT Render_SSAO_Blur();
+public:
+	typedef struct tagXMCOLOR
+	{
+		union {
+			struct {
+				uint8_t b;
+				uint8_t g;
+				uint8_t r;
+				uint8_t a;
+			};
+			uint32_t c;
+		};
+	}XMCOLOR;
+
 #ifdef _DEBUG
 private:
 	HRESULT Render_Debug();

@@ -239,6 +239,11 @@ _float CModel::Get_TickPerSecond()
 	return m_Animations[m_iCurrentAnimIndex]->Get_TickPerSecond();
 }
 
+void CModel::Set_TickPerSecond(_float _TickPerSecond)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_TickPerSecond(_TickPerSecond);
+}
+
 _bool CModel::Is_Transition()
 {
 	return m_Animations[m_iCurrentAnimIndex]->Is_Transition();
@@ -273,7 +278,7 @@ void CModel::Write_Names(const string& strModelFilePath)
 
 			_splitpath_s(strModelFilePath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
 
-			string strPath = pAIMaterial.Get_Textures(j);
+			string strPath = pAIMaterial.Get_Textures((_uint)j);
 			if (strPath == "")
 				continue;
 

@@ -179,7 +179,7 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTX_PARTICLE_POINT;
 
-	typedef struct
+	typedef struct 
 	{
 		XMFLOAT4		vRight, vUp, vLook, vPosition;
 		XMFLOAT4		vColor;
@@ -201,13 +201,86 @@ namespace Engine
 	}VTXMODEL_INSTANCE_DECLARATION;
 
 
+	typedef struct ENGINE_DLL tagVertex_Dynamic_Texture
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vNormal;
+		XMFLOAT2		vTexcoord;
+		XMFLOAT3		vTangent;
+
+		static const unsigned int					iNumElements = 4;
+		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
+	}VTXGROUND;
+
 	template <typename T>
-	constexpr const T& clamp(const T& value, const T& start, const T& end)
+	constexpr const T& clamp(const T& value, const T& start, const T& end) 
 	{
 		return (value < start) ? start : (value > end) ? end : value;
 	}
 
+	template<typename T, typename = enable_if_t<is_enum<T>::value>,
+		typename Return = underlying_type_t<T>>
+		constexpr Return ECast(T value)
+	{
+		return static_cast<Return>(value);
+	}
+
 #pragma endregion
+	
+
+#pragma region 구조체
+
+	typedef struct ENGINE_DLL tag_InstanceDesc
+	{
+		_float3         vRotation;
+		_float3         vScale;
+		_float3			vTranslation;
+		_float			fMaxRange;
+		_float3			vCenter;
+
+		_matrix Get_Matrix() const
+		{
+			_matrix TransformationMatrix;
+			_matrix RotationMatrix, ScaleMatrix;
+
+			_vector vPitchYawRoll;
+			_vector vPosition;
+
+			vPitchYawRoll = XMLoadFloat3(&vRotation);
+			vPosition = XMVectorSetW(XMLoadFloat3(&vTranslation), 1.f);
+
+			RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
+			ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
+			TransformationMatrix = ScaleMatrix * RotationMatrix;
+			TransformationMatrix.r[3] = vPosition;
+
+			return TransformationMatrix;
+		}
+
+		void	Bake_CenterWithMatrix()
+		{
+			_vector vCenterFromVector = XMLoadFloat3(&vCenter);
+			XMStoreFloat3(&vCenter, XMVector3TransformCoord(vCenterFromVector, Get_Matrix()));
+		}
+	}INSTANCE_INFO_DESC;
+
+	typedef struct ENGINE_DLL tagEnvironment_Desc
+	{
+		wstring strModelTag = {};
+		_uint	iNumInstance = { 0 };
+		_uint	iShaderPassIndex = { 1 };
+		vector<INSTANCE_INFO_DESC> vecInstanceInfoDesc;
+	}MAPTOOL_INSTANCE_DESC;
+
+	typedef struct ENGINE_DLL tagRayDesc
+	{
+		XMFLOAT4 vOrigin;
+		XMFLOAT3 vDirection;
+		float	fLength;
+	}RAY;
+
+
+#pragma endregion 구조체
 
 }
 

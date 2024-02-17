@@ -15,6 +15,7 @@ BEGIN(Client)
 
 class CLoader final : public CBase
 {
+
 private:
 	CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CLoader() = default;
@@ -32,6 +33,8 @@ public:
 	HRESULT Loading_For_GamePlay_Level();
 	HRESULT	Loading_For_Tool_Level();
 
+
+
 private:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
@@ -48,6 +51,10 @@ private:
 
 private:
 	HRESULT	Ready_Origin();
+	HRESULT Ready_Environment_Model(LEVEL eLevel); //TODO 승용
+	HRESULT Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLevel, _int iAnimType); //! 시작 디렉토리 부터 안에 있는 경로를 전부 탐색 , 승용
+
+
 
 public:
 	static CLoader * Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, LEVEL eNextLevelID);

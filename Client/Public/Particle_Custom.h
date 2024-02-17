@@ -37,8 +37,8 @@ public:
 	virtual HRESULT Render()							override;
 
 
-//public:
-//	void Update_ParticlePosition(const _uint& i, _float fTimeDelta);
+	//public:
+	//	void Update_ParticlePosition(const _uint& i, _float fTimeDelta);
 
 
 public:
@@ -51,8 +51,8 @@ public:
 	_float		Get_RotateUvDegree() { return m_fRotateUvDegree; }
 
 public:
-	CVIBuffer_Particle_Point*	Get_VIBufferCom() { return m_pVIBufferCom; }
-	CTransform*					Get_TransformCom() { return m_pTransformCom; }
+	CVIBuffer_Particle_Point* Get_VIBufferCom() { return m_pVIBufferCom; }
+	CTransform* Get_TransformCom() { return m_pTransformCom; }
 
 
 private:
@@ -68,9 +68,9 @@ private:
 
 
 private:
-	CShader*						m_pShaderCom = { nullptr };
-	CTexture*						m_pTextureCom[TYPE_END] = { nullptr };
-	CVIBuffer_Particle_Point*		m_pVIBufferCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
+	CTexture* m_pTextureCom[TYPE_END] = { nullptr };
+	CVIBuffer_Particle_Point* m_pVIBufferCom = { nullptr };
 
 private:
 	HRESULT Ready_Components();

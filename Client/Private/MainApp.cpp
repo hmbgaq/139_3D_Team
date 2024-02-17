@@ -2,6 +2,8 @@
 #include "MainApp.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "Json_Utility.h"
+
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -18,7 +20,7 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.iBackBufferSizeX = g_iWinSizeX;
 	GraphicDesc.iBackBufferSizeY = g_iWinSizeY;
 
-	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
+	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, (_uint)(COLLISION_LAYER::LAYER_END), g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
 
 	FAILED_CHECK(Ready_Font());
 
@@ -55,7 +57,7 @@ HRESULT CMainApp::Render()
 	}
 	
 	// MakeSpriteFont "³Ø½¼lv1°íµñ Bold" /FontSize:30 /FastPack /CharacterRegion:0x0020-0x00FF /CharacterRegion:0x3131-0x3163 /CharacterRegion:0xAC00-0xD800 /DefaultCharacter:0xAC00 140.spritefont
-	m_pGameInstance->Render_Font(TEXT("Font_Default"), m_szFPS, _float2(1100.f, 20.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
+	m_pGameInstance->Render_Font(TEXT("Font_Default"), m_szFPS, _float2(700.f, 20.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
 	m_pGameInstance->Present();
 
 	return S_OK;
@@ -65,6 +67,37 @@ HRESULT CMainApp::Ready_Font()
 {
 	FAILED_CHECK(m_pGameInstance->Add_Font(TEXT("Font_Default"), TEXT("../Bin/Resources/Fonts/139ex.spritefont")));
 	FAILED_CHECK(m_pGameInstance->Add_Font(TEXT("Font_Arial"), TEXT("../Bin/Resources/Fonts/Arial.spritefont")));
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_UITexture()
+{
+	json json_in;
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Texture_Info/Texture_Info";
+
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
+
+	CJson_Utility::Load_Json(filePath, json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		iPathNum = object["PathNum"];
+		strFileName = object["FileName"];
+		strFilePath = object["FilePath"];
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(strFileName, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(strFilePath, wstrFilePath);
+
+		FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, wstrPrototag, CTexture::Create(m_pDevice, m_pContext, wstrFilePath)));
+	}
 
 	return S_OK;
 }
@@ -86,25 +119,33 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 
 	/* For.Prototype_Component_Shader_VtxPosTex*/
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPosTex"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)));
+	//
+	/* For.Prototype_Component_Shader_UI */ // + SH_Add
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_UI.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)));
+	//
+	//
+	/* For.Ready_UITexture */ // + SH_Add
+	if (FAILED(Ready_UITexture()))
+		return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CMainApp::Ready_Gara()
 {
-	//D3D11_BLEND_DESC			BlendDesc;
-	//D3D11_DEPTH_STENCIL_DESC	DepthStencilDesc;
-	//D3D11_RASTERIZER_DESC		RasterizerDesc;
-
-	//RasterizerDesc.CullMode
+	// D3D11_BLEND_DESC			BlendDesc;
+	// D3D11_DEPTH_STENCIL_DESC	DepthStencilDesc;
+	// D3D11_RASTERIZER_DESC		RasterizerDesc;
+	// D3D11_SAMPLER_DESC
 
 	//ID3D11RasterizerState*		pRSState;
 	//m_pDevice->CreateRasterizerState(RasterizerDesc, &pRSState);
 
-	/*m_pContext->RSSetState();
+	/*
+	m_pContext->RSSetState();
 	m_pContext->OMSetDepthStencilState();
-	m_pContext->OMSetBlendState();*/
-
+	m_pContext->OMSetBlendState();
+	*/
 
 	/* ÅØ½ºÃÄ¸¦ »ý¼ºÇØº¸ÀÚ. */
 	ID3D11Texture2D*		pTexture2D = { nullptr };
@@ -138,7 +179,6 @@ HRESULT CMainApp::Ready_Gara()
 			pPixels[iIndex] = D3DCOLOR_ARGB(255, 0, 0, 0);
 		}
 	}
-
 
 	InitialData.pSysMem = pPixels;
 	InitialData.SysMemPitch = TextureDesc.Width * 4;

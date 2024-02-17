@@ -125,11 +125,11 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 	m_iNumInstance = m_ParticleDesc.iCurNumInstance;
 	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
-		if(FADE_IN == m_ParticleDesc.eType_Fade)
+		if (FADE_IN == m_ParticleDesc.eType_Fade)
 			pVertices[i].vColor.w = 0.f;
 		else
 			pVertices[i].vColor.w = 1.f;
-		
+
 
 		m_pSpeeds[i] = RandomSpeed(m_RandomNumber);
 		m_pLifeTimes[i] = RandomLifeTime(m_RandomNumber);
@@ -168,7 +168,7 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 
 void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 {
-	if ( 0 >= m_iNumInstance)
+	if (0 >= m_iNumInstance)
 		return;
 
 	if (m_ParticleDesc.bIsPlay)
@@ -180,7 +180,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 		{
 			if (m_ParticleDesc.bLoop)
 			{
-				if(SPHERE == m_ParticleDesc.eType_Action)
+				if (SPHERE == m_ParticleDesc.eType_Action)
 					ReSet();
 				//else
 				//{
@@ -206,7 +206,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 			if (FADE_OUT == m_ParticleDesc.eType_Fade)
 			{
 				fAlpha = max(m_pLifeTimes[i] - m_fTimeAcc, 0.f);
-			}	
+			}
 			if (FADE_IN == m_ParticleDesc.eType_Fade)
 			{
 				fAlpha = MIN(m_pLifeTimes[i] - m_fTimeAcc, 1.f);
@@ -215,7 +215,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 			{
 				fAlpha = 1.f;
 			}
-				
+
 			pVertices[i].vColor = m_ParticleDesc.vCurrentColor;
 			pVertices[i].vColor.w = fAlpha;
 
@@ -236,7 +236,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 					fSpeed = m_pSpeeds[i];
 
 				// 센터에서 현재 위치까지의 거리
-				_vector vCurPos = XMLoadFloat4(&pVertices[i].vPosition);	
+				_vector vCurPos = XMLoadFloat4(&pVertices[i].vPosition);
 				_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - XMLoadFloat3(&m_ParticleDesc.vCenterPosition)));
 
 				if (fLength < m_ParticleDesc.fMaxLengthPosition)
