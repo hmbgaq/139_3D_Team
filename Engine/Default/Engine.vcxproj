@@ -265,7 +265,6 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\public\VIBuffer.h" />
     <ClInclude Include="..\Public\VIBuffer_Cell.h" />
     <ClInclude Include="..\Public\VIBuffer_Cube.h" />
-    <ClInclude Include="..\Public\VIBuffer_Dynamic_Terrain.h" />
     <ClInclude Include="..\Public\VIBuffer_Effect_Model_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Environment_Model_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Field.h" />
@@ -335,7 +334,6 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\private\VIBuffer.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
-    <ClCompile Include="..\Private\VIBuffer_Dynamic_Terrain.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Effect_Model_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Environment_Model_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Field.cpp" />
