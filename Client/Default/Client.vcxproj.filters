@@ -363,9 +363,6 @@
     <ClInclude Include="..\Public\Weapon_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Body_Player.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Loader.h">
       <Filter>01.Levels\98. Loader</Filter>
     </ClInclude>
@@ -408,9 +405,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\LandObject\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Body_Player.h">
-      <Filter>02.GameObjects\LandObject\Player\Parts\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon_Player.h">
       <Filter>02.GameObjects\LandObject\Player\Parts\Weapon</Filter>
@@ -589,9 +583,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Sky.h">
       <Filter>02.GameObjects\Sky</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Body_Player.h">
-      <Filter>02.GameObjects\LandObject\Player\Parts\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon_Player.h">
       <Filter>02.GameObjects\LandObject\Player\Parts\Weapon</Filter>

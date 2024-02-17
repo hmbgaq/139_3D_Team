@@ -5,10 +5,10 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 /* ssao */
 vector  g_OffsetVector[26];
 vector  FrustumCorner[4];
-Texture2D NormalDepthMap;
-Texture2D RandomVecMap;
-
 matrix  ViewToTexSpcace;
+
+Texture2D g_NormalDepthTarget;
+Texture2D g_RandomVectorTexture;
 
 /* godray */
 
@@ -92,24 +92,24 @@ PS_OUT PS_SSAO(PS_IN In) : SV_Target
     
     float gOcclusionRadius = 0.5f;
     
-    float4 normalDepth = NormalDepthMap.Sample(SSAONormalDepth, In.vTexcoord, 0.0f);
+	// Get viewspace normal and z-coord of this pixel.  The tex-coords for
+	// the fullscreen quad we drew are already in uv-space.
+    float4 vNormalDepth = g_NormalDepthTarget.Sample(SSAONormalDepth, In.vTexcoord, 0.0f);
     
-    // 카메라 공간의 픽셀좌표와 Z 값
-    float3 n = normalDepth.xyz;
-    float pz = normalDepth.w;
-    
+    float3 vNormalV = vNormalDepth.xyz;
+    float fViewZ = vNormalDepth.w * 2000.f;
     // p = t * In.ToFarPlane.
 	// p.z = t * In.ToFarPlane.z
 	// t = p.z / pin.ToFarPlane.z
     
-    float3 p = (pz / In.ToFarPlane.z) * In.ToFarPlane;
+    float3 vPosV = (fViewZ / In.ToFarPlane.z) * In.ToFarPlane;
     
     // 랜덤 벡터 맵의 값을 구하고 값을 [0, 1]에서 [-1, 1] 범위로 변경한다.
     // 랜덤 벡터 타일링에 주의.
-    float3 randVec = 2.0f * RandomVecMap.Sample(SSAORandVec, 4.0f * In.vTexcoord, 0.0f).rgb - 1.0f;
+    float3 randVec = 2.0f * g_RandomVectorTexture.Sample(SSAORandVec, 4.0f * In.vTexcoord, 0.0f).rgb - 1.0f;
     
     // 폐색 값의 합
-    float occlusionSum = 0.0f;
+    float fOcclusionSum = 0.0f;
     
     // 샘플 수 설정
     const int sampleCount = 14;
@@ -119,42 +119,41 @@ PS_OUT PS_SSAO(PS_IN In) : SV_Target
     [unroll]
     for (int i = 0; i < sampleCount; ++i)
     {
-        // 변위 벡터는 고정되고 균일하게 분산된다
-        // 왜냐하면 변위가 같은 방향에서 동일하기 때문에 변위 벡터를 사용하여 반영하면 무작위로 동일한 변위 분산 벡터를 얻는다.
-        // 무작위 벡터를 사용하여 압사하고 고정한다.
-        // 큐브 벡터는 법선 벡터로 사용되어 반사 벡터를 최종 변위 벡터로 찾는다.
+		// Are offset vectors are fixed and uniformly distributed (so that our offset vectors
+		// do not clump in the same direction).  If we reflect them about a random vector
+		// then we get a random uniform distribution of offset vectors.
         float3 offset = reflect(g_OffsetVector[i].xyz, randVec);
         
-        // 변위 벡터가 표면 뒤에 있는 경우 Flip은 점 q가 항상 시점에 가까운 p측면에 있도록 변위 벡터를 뒤집는다.
-        // sign()은 값의 부호를 찾는다.
-        float flip = sign(dot(offset, n));
+        float flip = sign(dot(offset, vNormalV.xyz));
+		// Sample a point near p within the occlusion radius.
+        //float3 q = p + gOcclusionRadius * offset;
         
         // 점 p의 교합반경에서 점 q를 찾는다.
-        float3 q = p + flip * gOcclusionRadius * offset;
+        float3 q = vPosV + flip * gOcclusionRadius * offset; // q = 차폐 검사할 벡터
         
-        // q를 투영하고 투영된 텍스쳐 좌표를 생성.
-        // q 자체가 카메라 공간에 있으므로 투영된 텍스쳐 좌표로 변경된다.
-        // 관점 분할은 마지막에 수행되어야 한다.
+		// Project q and generate projective tex-coords.
         float4 ProjQ = mul(float4(q, 1.0f), ViewToTexSpcace);
         ProjQ /= ProjQ.w;
-
-        // 원점에서 q까지의 카메라 공간에서 NormalDepthMap에 해당하는 최소 깊이 값을 찾는다.
-        // 이 최소 깊이는 카메라 공간의 q 깊이와 같지 않다.
-        float rz = NormalDepthMap.Sample(SSAONormalDepth, ProjQ.xy, 0.0f).a;
+        
+		// Find the nearest depth value along the ray from the eye to q (this is not
+		// the depth of q, as q is just an arbitrary point near p and might
+		// occupy empty space).  To find the nearest depth we look it up in the depthmap.
+        float fRealZ = g_NormalDepthTarget.Sample(SSAONormalDepth, ProjQ.xy, 0.f).w;
+        fRealZ *= 2000.f;
         
         // 다시 유사 삼각형 원리를 사용한다.
-        float3 r = (rz / q.z) * q;
+        float3 r = (fRealZ / q.z) * q;
         
-        float distZ = p.z - r.z;
-        float dp = max(dot(n, normalize(r - p)), 0.0f);
-        float occlusion = dp * OcclusionFunction(distZ);
-        
-        occlusionSum += occlusion;
+        float distZ = vPosV.z - r.z;
+        float dp = max(dot(vNormalV, normalize(r - vPosV)), 0.0f);
+        float fOcclusion = dp * OcclusionFunction(distZ);
+		
+        fOcclusionSum += fOcclusion;
     }
     
-    occlusionSum /= (float) sampleCount;
+    fOcclusionSum /= (float) sampleCount;
     
-    float access = 1.0f - occlusionSum;
+    float access = 1.0f - fOcclusionSum;
     
     // 너무 어둡다는 피드백이 있어서 0.5~1 사이의 값으로 사상함
     Out.vColor = (saturate(pow(access, 4.0f)) + 1) * 0.4;
@@ -212,18 +211,21 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_SSAO();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_SSAO();
     }
-   // pass GodRay // 0
+
+   // pass GodRay // 1
    // {
    //     /* 옵션조절 아직안함 */ 
    //     SetRasterizerState(RS_Default);
    //     SetDepthStencilState(DSS_None, 0);
    //     SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.f), 0xffffffff);
+
    //     VertexShader = compile vs_5_0 VS_GODRAY();
    //     GeometryShader = NULL;
    //     HullShader = NULL;

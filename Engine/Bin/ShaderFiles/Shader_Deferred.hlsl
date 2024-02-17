@@ -26,6 +26,9 @@ texture2D		g_LightDepthTexture;
 texture2D		g_ORMTexture;
 texture2D		g_SSAOTexture;
 
+/* 활성 여부 */ 
+bool			g_bSSAO_Active;
+
 struct VS_IN
 {
 	float3		vPosition : POSITION;
@@ -198,8 +201,11 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vector		vSSAO = g_SSAOTexture.Sample(ClampSampler, In.vTexcoord); /* SSAO 적용 */ 
 
     //Out.vColor = (vDiffuse * vShade ) + vSpecular;
-    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular;
-    
+    if (true == g_bSSAO_Active)
+		Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular;
+    else
+		Out.vColor = (vDiffuse * vShade ) + vSpecular;
+	
 	vector		vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
 	float		fViewZ = vDepthDesc.y * 1000.f;
 	

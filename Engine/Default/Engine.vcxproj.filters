@@ -238,6 +238,9 @@
     <Filter Include="01.Utility\03.Components\07.Collider\Manager">
       <UniqueIdentifier>{39f10bc0-452c-409c-8e67-6373278f317f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\02.Shader\ConstantBuffer">
+      <UniqueIdentifier>{d5c42a15-c269-4316-8d14-a600354c777d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -489,6 +492,9 @@
     <ClInclude Include="..\Public\Json\json.hpp">
       <Filter>01.Utility\96.Utility\Json</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ConstantBuffer.h">
+      <Filter>01.Utility\03.Components\02.Shader\ConstantBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -686,6 +692,9 @@
     <ClCompile Include="..\Private\Collision_Manager.cpp">
       <Filter>01.Utility\03.Components\07.Collider\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\ConstantBuffer.cpp">
+      <Filter>01.Utility\03.Components\02.Shader\ConstantBuffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Navigation.hlsl">
@@ -698,6 +707,9 @@
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcess.hlsl">
+      <Filter>98.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Blur.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

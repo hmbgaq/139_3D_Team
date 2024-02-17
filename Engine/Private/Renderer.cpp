@@ -41,6 +41,11 @@ HRESULT CRenderer::Initialize()
 	/* ssao - PostProcessing */
 	FAILED_CHECK(Ready_SSAO());
 
+//	_float fTest[9] = {};
+//
+//	Calc_Blur_GaussianWeights(1, 9, fTest);
+
+
 	return S_OK;
 }
 
@@ -83,8 +88,8 @@ HRESULT CRenderer::Create_RenderTarget()
 		/* MRT_GameObject */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f)));
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Normal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Depth"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_AmbientMapViewport"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(1.f, 1.f, 1.f, 0.f)));
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Depth"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))); /* 깊이버퍼 그 깊이 */
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Outline"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 
 		/* MRT_Shadow */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shade"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 1.f)));
@@ -94,10 +99,9 @@ HRESULT CRenderer::Create_RenderTarget()
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_LightDepth"), g_iSizeX, g_iSizeY, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
 
 		/* MRT_SSAO	*/
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f))); /* 검정색이 맞음. 그런데 연산이 완벽하지 않아서 일단 1로 밀어서 원래값으로 나타나게한것 */
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f)));/* 검정색이 맞음. 그런데 연산이 완벽하지 않아서 일단 1로 밀어서 원래값으로 나타나게한것 */
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f)));
 		{
-			/* Blur Target */
 			FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_DownSampling"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 			FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_Horizontal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 			FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_Vertical"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
@@ -114,7 +118,10 @@ HRESULT CRenderer::Create_RenderTarget()
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Normal")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Depth")));
-		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_AmbientMapViewport")));
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Outline")));
+
+		/* MRT_OutLine */
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_OutlineObject"), TEXT("Target_Outline")));
 
 		/* MRT_LightAcc - Q. Ambient 추가하는가 ? */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade")));
@@ -125,7 +132,7 @@ HRESULT CRenderer::Create_RenderTarget()
 
 		/* MRT_SSAO	*/
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO"), TEXT("Target_SSAO")));
-		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_SSAOBlur"), TEXT("Target_SSAO_Blur")));
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_Blur"), TEXT("Target_SSAO_Blur")));
 
 		/* Blur -  여러군데서 사용하는 블러를 하나로 병합하기위해 Target_Blur_DownSampling에 g_값 으로 넘겨서 하나로 사용하기위해 나눠둠*/
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_DownSampling"), TEXT("Target_Blur_DownSampling")));
@@ -134,7 +141,7 @@ HRESULT CRenderer::Create_RenderTarget()
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_UpSampling"), TEXT("Target_Blur_UpSampling")));
 
 		/* MRT_GodRay */
-		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GodRay"), TEXT("Target_GodRay")));
+		//FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GodRay"), TEXT("Target_GodRay")));
 	}
 
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(Viewport.Width, Viewport.Height, 1.f));
@@ -190,11 +197,11 @@ HRESULT CRenderer::Ready_DebugRender()
 	_float fSizeX = 150.f;
 	_float fSizeY = 100.f;
 
-	/* MRT_GameObject */
+	/* MRT_GameObject - 좌상단 Default */
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Depth"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
-	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_AmbientMapViewport"),	(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 7.f),  fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Outline"),	(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 7.f),  fSizeX, fSizeY));
 
 	/* MRT_LightAcc */
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
@@ -205,9 +212,9 @@ HRESULT CRenderer::Ready_DebugRender()
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_SSAO_Blur"), (fSizeX / 2.f * 5.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
 
 	/* MRT_OutLine */
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_GodRay"), (fSizeX / 2.f * 7.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_GodRay"), (fSizeX / 2.f * 7.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 
-	/* MRT_Shadow */
+	/* MRT_Shadow - 우상단 Default */
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_LightDepth"), (1280.f - fSizeX * 0.5f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 
 	return S_OK;
@@ -219,6 +226,9 @@ HRESULT CRenderer::Ready_DebugRender()
 
 HRESULT CRenderer::Draw_RenderGroup()
 {
+	if (m_pGameInstance->Key_Down(DIK_1))
+		m_bSSAO_Active = !m_bSSAO_Active;
+
 	FAILED_CHECK(Render_Priority());	/* SkyBox */
 	FAILED_CHECK(Render_Shadow());		/* MRT_Shadow */
 	FAILED_CHECK(Render_NonLight()); 
@@ -226,8 +236,12 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
 
 	{ /* PostProcessing */
-		FAILED_CHECK(Render_SSAO());
-		FAILED_CHECK(Render_GodRay());
+		if (true == m_bSSAO_Active)
+		{
+			FAILED_CHECK(Render_SSAO());
+			FAILED_CHECK(Render_SSAO_Blur());
+		}
+		//FAILED_CHECK(Render_GodRay());
 	}
 
 	FAILED_CHECK(Render_Deferred());
@@ -408,7 +422,7 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
-
+	
 	_float4x4		ViewMatrix, ProjMatrix;
 
 	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
@@ -417,13 +431,22 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_LightViewMatrix", &ViewMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_LightProjMatrix", &ProjMatrix));
 
+	/* MRT_GameObject */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DiffuseTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DepthTexture"));
+	
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Shade"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_ShadeTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SpecularTexture"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DepthTexture"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_LightDepthTexture"))
-		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao 추가 */
+	
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_LightDepthTexture"));
+	
+	m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bSSAO_Active", &m_bSSAO_Active, sizeof(_bool));
 
+	if (true == m_bSSAO_Active)
+	{
+		//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao 추가 */
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao 추가 */
+	}
 	m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Begin(ECast(DEFERRED_SHADER::DEFERRED));
 
 	m_pVIBuffer->Bind_VIBuffers();
@@ -435,40 +458,45 @@ HRESULT CRenderer::Render_Deferred()
 
 HRESULT CRenderer::Render_SSAO()
 {
-	/* 블러까지 연계되어야 명암이 좀더 선명하게 잘나옴 */
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO")));
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO"))); /* Target SSAO 단독 */
 
-	if (m_pGameInstance->Key_Pressing(DIK_U)) /* Test */
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	/* 변수 올리기 */
 	{
-		cout << " ssao" << endl;
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_OffsetVector", &m_vOffsets, sizeof(_float4) * 14));
-
-		static const _matrix T(
-			0.5f, 0.0f, 0.0f, 0.0f,
-			0.0f, -0.5f, 0.0f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			0.5f, 0.5f, 0.0f, 1.0f);
-
-		_matrix Camera_Proj = m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ);
-		_matrix PT = XMMatrixMultiply(Camera_Proj, T);
-
+		/* matViewToTEXsPACE*/
+		_matrix P = m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ);
+		_matrix PT = XMMatrixMultiply(P, m_mTexture);
 		_float4x4 ViewToTexSpcace = {};
 		XMStoreFloat4x4(&ViewToTexSpcace, PT);
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("ViewToTexSpcace", &ViewToTexSpcace));
+
+		/* Offset */
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_OffsetVector", &m_vOffsets, sizeof(_float4) * 14));
+
+		/* Frustum*/
 		SSAO_OnSize();
-		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_AmbientMapViewport"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "NormalDepthMap")); /* ScreenQuad의 좌표 */
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("FrustumCorner", &m_vFrustumFarCorner, sizeof(_float4) * 4));
-		FAILED_CHECK(m_pRandomVectorTexture->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "RandomVecMap"));
-
-
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(SSAO_SHADER::SSAO)));
+		
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_NormalDepthTarget")); /* ScreenQuad의 좌표 */
+		FAILED_CHECK(m_pRandomVectorTexture->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_RandomVectorTexture"));
 	}
+
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(SSAO_SHADER::SSAO)));
+	
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_SSAO_Blur()
+{
+	cout << " SSAO + SSAO_BLUR " << endl;
+	Render_Blur(L"Target_SSAO", L"MRT_SSAO_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER));
+	
 	return S_OK;
 }
 
@@ -506,20 +534,7 @@ HRESULT CRenderer::Render_OutLine()
 
 	m_RenderObjects[RENDER_OUTLINE].clear();
 
-	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_OutLine"), m_pLightDepthDSV));
-
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
-	//
-	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader[SHADER_TYPE::SHADER_OUTLINE],"g_NormalTexture"));
-	//
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
-	//
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Begin(0));
-	//FAILED_CHECK(m_pVIBuffer->Render());
-
-	//FAILED_CHECK(m_pGameInstance->End_MRT());
+	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
@@ -557,11 +572,11 @@ HRESULT CRenderer::Ready_SSAO()
 {
 	FAILED_CHECK(SSAO_OnSize());
 
-	FAILED_CHECK(BuildFullScreenQuad());
+	FAILED_CHECK(BuildFullScreenQuad());/* 왜 이거안하지..? */
 
 	BuildOffsetVectors();
 
-	BuildRandomVectorTexture();
+	BuildRandomVectorTexture(); /* 왜 이거안하지..? */
 
 	m_pRandomVectorTexture = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/RandomNormalTexture.jpg"), 1);
 
@@ -666,44 +681,38 @@ void CRenderer::BuildOffsetVectors()
 	// 정육면체의 8개의 모서리를 선택, 각 면을 따라 6개 중심점을 선택한다.
 	// 항상 다른 쪽 면을 기준으로 이 점을 번갈아 사용한다. -> 정육면체 반대쪽도 균등하게 가능 
 	// 14개 미만의 샘플링 포인트를 선택할 때에도 벡터를 균등하게 분산시킬 수 있다.
-	{
-		// 8코너 
-		m_vOffsets[0] = _float4(+1.0f, +1.0f, +1.0f, 0.0f);
-		m_vOffsets[1] = _float4(-1.0f, -1.0f, -1.0f, 0.0f);
+	
+	// 8 cube corners
+	m_vOffsets[0] = _float4(+1.0f, +1.0f, +1.0f, 0.0f);
+	m_vOffsets[1] = _float4(-1.0f, -1.0f, -1.0f, 0.0f);
+					
+	m_vOffsets[2] = _float4(-1.0f, +1.0f, +1.0f, 0.0f);
+	m_vOffsets[3] = _float4(+1.0f, -1.0f, -1.0f, 0.0f);
+					
+	m_vOffsets[4] = _float4(+1.0f, +1.0f, -1.0f, 0.0f);
+	m_vOffsets[5] = _float4(-1.0f, -1.0f, +1.0f, 0.0f);
+					
+	m_vOffsets[6] = _float4(-1.0f, +1.0f, -1.0f, 0.0f);
+	m_vOffsets[7] = _float4(+1.0f, -1.0f, +1.0f, 0.0f);
 
-		m_vOffsets[2] = _float4(-1.0f, +1.0f, +1.0f, 0.0f);
-		m_vOffsets[3] = _float4(+1.0f, -1.0f, -1.0f, 0.0f);
+	// 6 centers of cube faces
+	m_vOffsets[8] = _float4(-1.0f, 0.0f, 0.0f, 0.0f);
+	m_vOffsets[9] = _float4(+1.0f, 0.0f, 0.0f, 0.0f);
 
-		m_vOffsets[4] = _float4(+1.0f, +1.0f, -1.0f, 0.0f);
-		m_vOffsets[5] = _float4(-1.0f, -1.0f, +1.0f, 0.0f);
+	m_vOffsets[10] = _float4(0.0f, -1.0f, 0.0f, 0.0f);
+	m_vOffsets[11] = _float4(0.0f, +1.0f, 0.0f, 0.0f);
 
-		m_vOffsets[6] = _float4(-1.0f, +1.0f, -1.0f, 0.0f);
-		m_vOffsets[7] = _float4(+1.0f, -1.0f, +1.0f, 0.0f);
-	}
-	{
-		// 6중심
-		m_vOffsets[8] = _float4(-1.0f, 0.0f, 0.0f, 0.0f);
-		m_vOffsets[9] = _float4(+1.0f, 0.0f, 0.0f, 0.0f);
-
-		m_vOffsets[10] = _float4(0.0f, -1.0f, 0.0f, 0.0f);
-		m_vOffsets[11] = _float4(0.0f, +1.0f, 0.0f, 0.0f);
-
-		m_vOffsets[12] = _float4(0.0f, 0.0f, -1.0f, 0.0f);
-		m_vOffsets[13] = _float4(0.0f, 0.0f, +1.0f, 0.0f);
-	}
+	m_vOffsets[12] = _float4(0.0f, 0.0f, -1.0f, 0.0f);
+	m_vOffsets[13] = _float4(0.0f, 0.0f, +1.0f, 0.0f);
 
 	for (_uint i = 0; i < 14; ++i)
 	{
 		// [0.25, 1.0] 사이의 임의의 벡터를 만든다.
-		_float s = RandF(0.25f, 1.0f);
+		_float fRandom = SMath::fRandom(0.25f, 1.0f);
 
-		_vector v = s * XMVector4Normalize(XMLoadFloat4(&m_vOffsets[i]));
+		_vector v = fRandom * XMVector4Normalize(XMLoadFloat4(&m_vOffsets[i]));
 
-		_uint _idx = i * 4;
-		m_OffsetsFloat[_idx + 0] = v.m128_f32[0];
-		m_OffsetsFloat[_idx + 1] = v.m128_f32[1];
-		m_OffsetsFloat[_idx + 2] = v.m128_f32[2];
-		m_OffsetsFloat[_idx + 3] = v.m128_f32[3];
+		XMStoreFloat4(&m_vOffsets[i], v);
 	}
 }
 
@@ -730,7 +739,7 @@ void CRenderer::BuildRandomVectorTexture()
 	{
 		for (int j = 0; j < 256; ++j)
 		{
-			_float3 vRand = { RandF(), RandF(), RandF() };
+			_float3 vRand = { SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f) };
 
 			color[i * 256 + j] = { (uint8_t)vRand.x, (uint8_t)vRand.y, (uint8_t)vRand.z, (uint8_t)0.0f };
 		}
@@ -852,6 +861,38 @@ HRESULT CRenderer::Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bCl
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
+}
+void CRenderer::Calc_Blur_GaussianWeights(_int sigma, _int iSize , _Out_ void* Weights)
+{
+	/* Calc_Blur_GaussianWeights(3, g_fWeight_middle[7]) 이런식으로 들어올예정 */
+	/* sigma 는 작을수록 가중치가 빠르게 감소. 클수록 천천히 감소해서 부드러운 블러가 나타난다.  */
+	/* */
+
+	/*example : sigma = 1, iSize = 3*/
+	_float coeff = 1.0f / (2.0f * sigma * sigma);
+
+	// 가중치를 계산하고 저장
+	_float* Weight = static_cast<float*>(Weights);
+	_int halfSize = iSize / 2; /* 중앙의 인덱스 */
+
+	_float sum = 0.0f;
+
+	for (_int i = -halfSize; i <= halfSize; ++i)
+	{
+		_int x = i + halfSize;
+		Weight[x] = exp(-static_cast<float>(i * i) * coeff);
+	}
+
+	// 가중치 정규화
+	for (_int i = 0; i < iSize; ++i)
+	{
+		sum += Weight[i];
+	}
+
+	for (_int i = 0; i < iSize; ++i)
+	{
+		Weight[i] /= sum;
+	}
 }
 
 #pragma endregion

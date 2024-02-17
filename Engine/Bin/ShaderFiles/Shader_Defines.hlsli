@@ -127,4 +127,16 @@ BlendState BS_Blend_Add
 	SrcBlend = one;
 	DestBlend = one;
 	BlendOp = add;
+	/* Src색상과 대상 색상을 더할 때 Add연산을 사용하도록 설정한다. */ 
+};
+
+BlendState BS_Blend_Max
+{
+	BlendEnable[0] = true;
+	BlendEnable[1] = true;
+
+	SrcBlend = one;
+	DestBlend = one;
+	BlendOp = max; 
+	/* 렌더타겟 블렌딩 동작중에 색상 및 알파 블렌딩중에 각각 두개의 값중 큰값ㅇ르 사용하여 렌더링한다. */ 
 };
