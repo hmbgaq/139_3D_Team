@@ -25,6 +25,8 @@ private:
 	//PxScene*							m_PxScene = { nullptr };
 	//PxMaterial*							m_pMaterial = { nullptr };
 
+
+
 	PxFoundation* m_PxFoundation = nullptr;
 
 	PxDefaultAllocator					m_PxAllocator;
@@ -47,9 +49,3 @@ public:
 };
 
 END
-
-
-//PxPvd* m_Pvd = nullptr;
-//std::string							m_pvdIPAddress = "127.0.0.1";
-//int									m_pvdPortNumber = 5425;
-//_uint								m_pvdTimeOutSeconds = 10;
