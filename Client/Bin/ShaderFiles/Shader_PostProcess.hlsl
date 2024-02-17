@@ -18,8 +18,8 @@ Texture2D g_RandomVectorTexture;
 struct VS_SSAO_IN
 {
     float3 vPosition : POSITION; /* 들어온값 */ 
-    float2 ToFarPlaneIndex : NORMAL;
-    float3 vTexcoord : TEXCOORD;
+    float3 ToFarPlaneIndex : NORMAL;
+    float2 vTexcoord : TEXCOORD;
 };
 
 struct VS_SSAO_OUT
@@ -81,7 +81,7 @@ float OcclusionFunction(float distZ)
     return occlusion;
 }
 
-PS_OUT PS_SSAO(PS_IN In) : SV_Target
+PS_OUT PS_SSAO(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     

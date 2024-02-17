@@ -209,8 +209,8 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 			}
 			if (FADE_IN == m_ParticleDesc.eType_Fade)
 			{
-				fAlpha = (m_pLifeTimes[i] - m_fTimeAcc < 1.f) ? (m_pLifeTimes[i] - m_fTimeAcc) : 1.f;
-				//fAlpha = MIN(m_pLifeTimes[i] - m_fTimeAcc, 1.f);
+				//fAlpha = (m_pLifeTimes[i] - m_fTimeAcc < 1.f) ? (m_pLifeTimes[i] - m_fTimeAcc) : 1.f;
+				fAlpha = min(m_pLifeTimes[i] - m_fTimeAcc, 1.f);
 				/* 비표준 확장이 일어나서 바꿈 */
 			}
 			if (FADE_NONE == m_ParticleDesc.eType_Fade)
