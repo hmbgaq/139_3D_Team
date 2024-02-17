@@ -333,9 +333,6 @@
     <ClInclude Include="..\Public\Client_Enum.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Body_Player.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Environment_Instance.h">
       <Filter>02.GameObjects\02. Environment\Environment_Instance</Filter>
     </ClInclude>
@@ -366,10 +363,6 @@
     <ClInclude Include="..\public\Camera_Dynamic.h">
       <Filter>02.GameObjects\97. Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Weapon_Player.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\EW_Actor.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -824,7 +817,6 @@
     <ClCompile Include="..\Private\Environment_Object.cpp">
       <Filter>02.GameObjects\02. Environment</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\EW_Actor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

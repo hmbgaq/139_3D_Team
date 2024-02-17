@@ -1,17 +1,14 @@
 #include "stdafx.h"
 #include "Window_AnimTool.h"
 #include "GameInstance.h"
-// #include "ImGuiFileDialog/ImGuiFileDialog.h"
-// #include "ImGuizmo/ImGuizmo.h"
-// #include "ImGuizmo/ImSequencer.h"
-// #include "ImGuizmo/ImZoomSlider.h"
-// #include "ImGuizmo/ImCurveEdit.h"
-// #include "ImGuizmo/GraphEditor.h"
+#include "PreviewAnimationModel.h"
 #include "CustomDialogFont.h"
 #include "Model.h"
-#include "PreviewAnimationModel.h"
 #include "Animation.h"
 #include "Bone.h"
+#include "Bounding.h"
+#include "Collider.h"
+#include "DebugDraw.h"
 
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -30,6 +27,19 @@ HRESULT CWindow_AnimTool::Initialize()
 	
 	m_pGameInstance->Fill_PrototypeTags(&m_vObjectTag);
 
+	/* Navi */
+	m_pBatch = new PrimitiveBatch<VertexPositionColor>(m_pContext);
+	m_pEffect = new BasicEffect(m_pDevice);
+	m_pEffect->SetVertexColorEnabled(true);
+
+	const void* pShaderByteCode = { nullptr };
+	size_t   iShaderCodeLength = { 0 };
+
+	m_pEffect->GetVertexShaderBytecode(&pShaderByteCode, &iShaderCodeLength);
+
+	FAILED_CHECK(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements,
+		VertexPositionColor::InputElementCount, pShaderByteCode, iShaderCodeLength, &m_pInputLayout));
+
 	return S_OK;
 }
 
@@ -39,22 +49,22 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 	__super::Begin();
 
-	if (ImGui::BeginMenuBar())
-	{
-		if (ImGui::BeginMenu("Menu"))
-		{
-			if (ImGui::MenuItem("Save"))
-			{
-
-			}
-			if (ImGui::MenuItem("Load"))
-			{
-
-			}
-			ImGui::EndMenu();
-		}
-		ImGui::EndMenuBar();
-	}
+// 	if (ImGui::BeginMenuBar())
+// 	{
+// 		if (ImGui::BeginMenu("Menu"))
+// 		{
+// 			if (ImGui::MenuItem("Save"))
+// 			{
+// 
+// 			}
+// 			if (ImGui::MenuItem("Load"))
+// 			{
+// 
+// 			}
+// 			ImGui::EndMenu();
+// 		}
+// 		ImGui::EndMenuBar();
+// 	}
 
 	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
@@ -65,7 +75,9 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	}
 	//dialog========================================================================
 	
-	if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; OpenDialog(CImgui_Window::IMGUI_ANIMATIONTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_ANIMATIONTOOL_WINDOW); }
+	if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; OpenDialog(CImgui_Window::IMGUI_ANIMATIONTOOL_WINDOW); } 
+	ImGui::SameLine(); 
+	if (ImGui::Button(u8"불러오기")) { m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_ANIMATIONTOOL_WINDOW); }
 	//disPlay
 	ShowDialog();
 
@@ -108,7 +120,7 @@ void CWindow_AnimTool::Render()
 {
 	__super::Begin();
 
-	
+	BonePoint_Render();
 
 	__super::End();
 	
@@ -433,18 +445,55 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 					BoneIndex = n;
 
 				if (is_selected)
-				{
-					ImGui::SetItemDefaultFocus();
-
-				}
+				{                                                                              
+					ImGui::SetItemDefaultFocus();                                                                                                                                                                       
+				}                                                                                                                
 			}
 			ImGui::EndListBox();
 		}
 		ImGui::TreePop();
 	}
+	//현재 해야 하는 것은 콜라이더 생성하는 버튼을 일단 만들어 보자 
+	if (ImGui::Button("Collider Crate"))
+	{
+
+	}
 
 
+}
 
+void CWindow_AnimTool::BonePoint_Render()
+{
+#ifdef  _DEBUG
+	if (m_pBoneCollider.empty())
+		return;
+
+	m_pEffect->SetWorld(XMMatrixIdentity());
+	m_pEffect->SetView(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
+	m_pEffect->SetProjection(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
+
+	m_pEffect->Apply(m_pContext);
+	m_pContext->IASetInputLayout(m_pInputLayout);
+
+	m_pBatch->Begin();
+
+	for (auto& boundingDesc : m_pBoneCollider)
+		DX::Draw(m_pBatch, boundingDesc.bSphere, ::XMLoadFloat4(reinterpret_cast<_float4*>(&boundingDesc.vColor)));
+
+	m_pBatch->End();
+#endif //  _DEBUG
+
+}
+
+void CWindow_AnimTool::Create_Bounding(_float3 fPoint)
+{
+	BOUNDING_DESC sphere_desc;
+
+	sphere_desc = BoundingSphere(fPoint, 0.2f);
+	sphere_desc.bChoose = false;
+	sphere_desc.vColor = DEBUG_RGBA_WHITE;
+
+	m_pBoneCollider.push_back(sphere_desc);
 }
 
 char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)
@@ -483,16 +532,6 @@ wchar_t* CWindow_AnimTool::ConvertCtoWC(const char* str)
 	MultiByteToWideChar(CP_ACP, 0, str, (int)strlen(str) + 1, pStr, strSize);
 	return pStr;
 }
-
-void CWindow_AnimTool::ImGuizmo_Initialize()
-{
-	/*기즈모 뷰, 투영 멤버변수 메모리 할당
-* SetUp 에서 쓰는 Guizmo가 float* [] 이므로 배열로 만들어야함
-* = 동적배열 */
-// 	m_arrView = new _float[16];
-// 	m_arrProj = new _float[16];
-}
-
 
 CWindow_AnimTool* CWindow_AnimTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

@@ -200,7 +200,6 @@
     <ClInclude Include="..\Public\Environment_Instance.h" />
     <ClInclude Include="..\Public\Environment_Object.h" />
     <ClInclude Include="..\Public\Interact_Door.h" />
-    <ClInclude Include="..\Public\EW_Actor.h" />
     <ClInclude Include="..\Public\Effect_Object.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\Public\Imgui_Manager.h" />
@@ -255,7 +254,6 @@
     <ClCompile Include="..\Private\Environment_Instance.cpp" />
     <ClCompile Include="..\Private\Environment_Object.cpp" />
     <ClCompile Include="..\Private\Interact_Door.cpp" />
-    <ClCompile Include="..\Private\EW_Actor.cpp" />
     <ClCompile Include="..\Private\Effect_Object.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\Private\Imgui_Manager.cpp" />
