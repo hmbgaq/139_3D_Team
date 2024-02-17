@@ -2,12 +2,15 @@
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D		g_DiffuseTexture;
+Texture2D		g_NormalTexture;
+
+float4			g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; 
 
 matrix			g_BoneMatrices[256];
 
 float			g_fCamFar;
 
-/* Dissolve */
+/* texture */
 Texture2D		g_DissolveTexture;
 float			g_fDissolveWeight;
 
@@ -17,23 +20,25 @@ matrix			g_ReflectionMatrix;
 
 struct VS_IN
 {
-	float3		vPosition : POSITION;
-	float3		vNormal : NORMAL;
-	float2		vTexcoord : TEXCOORD0;
-	float3		vTangent : TANGENT;
-
-	uint4		vBlendIndices : BLENDINDEX;
-	float4		vBlendWeights : BLENDWEIGHT;
+	float3		vPosition		: POSITION;
+	float3		vNormal			: NORMAL;
+	float2		vTexcoord		: TEXCOORD0;
+	float3		vTangent		: TANGENT;
+	uint4		vBlendIndices	: BLENDINDEX;
+	float4		vBlendWeights	: BLENDWEIGHT;
 };
 
 
 struct VS_OUT
 {
-	float4		vPosition : SV_POSITION;
-	float4		vNormal : NORMAL;
-	float2		vTexcoord : TEXCOORD0;	
-	float4		vWorldPos : TEXCOORD1;
-	float4		vProjPos : TEXCOORD2;
+	float4		vPosition		: SV_POSITION;
+	float4		vNormal			: NORMAL;
+	float2		vTexcoord		: TEXCOORD0;	
+	float4		vWorldPos		: TEXCOORD1;
+	float4		vProjPos		: TEXCOORD2;
+	
+    float3		vViewNormal		: NORMAL1;		/* ssao */ 
+    float3		vPositionView	: POSITION;
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -61,24 +66,33 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vTexcoord = In.vTexcoord;
 	Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
 	Out.vProjPos = Out.vPosition;
-
+	
+	// SSAO
+    Out.vViewNormal = mul(Out.vNormal.xyz, (float3x3) g_ViewMatrix);
+    Out.vPositionView = mul(float4(In.vPosition, 1.0f), matWV);
+	
 	return Out;
 }
 
 struct PS_IN
 {
-	float4		vPosition : SV_POSITION;
-	float4		vNormal : NORMAL;
-	float2		vTexcoord : TEXCOORD0;
-	float4		vWorldPos : TEXCOORD1;
-	float4		vProjPos : TEXCOORD2;
+	float4	vPosition		: SV_POSITION;
+	float4	vNormal			: NORMAL;
+	float2	vTexcoord		: TEXCOORD0;
+	float4	vWorldPos		: TEXCOORD1;
+    float4	vProjPos		: TEXCOORD2;
+	/* ssao */
+    float3	vViewNormal		: NORMAL1;
+    float3	vPositionView	: POSITION;
 };
 
 struct PS_OUT 
 {
-	float4		vDiffuse : SV_TARGET0;
-	float4		vNormal : SV_TARGET1;
-	float4		vDepth : SV_TARGET2;
+	float4	vDiffuse        : SV_TARGET0;
+	float4	vNormal         : SV_TARGET1;
+    float4  vDepth          : SV_TARGET2;
+    float4  vViewNormal     : SV_TARGET3;
+    float4  vBloom          : SV_TARGET4;
 };
 
 /* ------------------- Base Pixel Shader (0) -------------------*/
@@ -93,10 +107,11 @@ PS_OUT PS_MAIN(PS_IN In)
 		discard;
 
 	Out.vDiffuse = vMtrlDiffuse;
-
-	/* -1 ~ 1 -> 0 ~ 1 */
-	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w , In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+    Out.vBloom = float4(1.0f, 0.f, 0.f, 1.0f);
+    //Out.vBloom = float4(g_TimeDelta, g_TimeDelta, g_TimeDelta, 1.0f);
+    Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	return Out;
 }

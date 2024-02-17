@@ -25,9 +25,11 @@ texture2D		g_SpecularTexture;
 texture2D		g_LightDepthTexture;
 texture2D		g_ORMTexture;
 texture2D		g_SSAOTexture;
+Texture2D		g_BloomTarget;
 
 /* 활성 여부 */ 
 bool			g_bSSAO_Active;
+bool			g_bBloom_Active;
 
 struct VS_IN
 {
@@ -206,7 +208,11 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     if(g_bSSAO_Active)
         vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord); /* SSAO 적용 */
 	
-    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular;
+    vector vBloom = float4(0.f, 0.f, 0.f, 0.f);
+	if(g_bBloom_Active)
+        vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
+	
+    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
 	
     //Out.vColor = ((vDiffuse * vShade * vShadow * vSSAO) + vSpecular + vBloom) * vOutline;
 	

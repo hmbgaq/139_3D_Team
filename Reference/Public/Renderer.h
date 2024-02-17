@@ -85,6 +85,7 @@ private:
 	HRESULT Render_SSAO();
 	HRESULT Render_SSAO_Blur();
 	HRESULT Render_HBO_Plus();
+	HRESULT Render_Bloom();
 
 	HRESULT Render_RadialBlur();
 
@@ -101,39 +102,42 @@ private:
 	/* 활성 제어 */
 private:
 	_bool m_bSSAO_Active = true;
+	_bool m_bBloom_Active = true;
 
 public:
 	void Set_SSAO(_bool _ssao_active) { m_bSSAO_Active = _ssao_active; } /* 외곽선 옵션조절 */
+	void Set_Bloom(_bool _bloom_active) { m_bBloom_Active = _bloom_active; }
 
 private:
-		/* SSAO */
-		class CTexture*				m_pRandomVectorTexture = { nullptr };
-		ID3D11Buffer*				m_ScreenQuadVB = { nullptr };
-		ID3D11Buffer*				m_ScreenQuadIB = { nullptr };
-		ID3D11ShaderResourceView*	m_RandomVectorSRV;
-		//SSAO_Data					m_tSSAO_Data;
-		const _matrix				m_mTexture = {	XMMatrixSet(0.5f, 0.0f, 0.0f, 0.0f,	0.0f, -0.5f, 0.0f, 0.0f,0.0f, 0.0f, 1.0f, 0.0f,	0.5f, 0.5f, 0.0f, 1.0f) };
-		_float4						m_vFrustumFarCorner[4];
-		_float4						m_vOffsets[14];
-		_float						m_OffsetsFloat[56];
-		_int						m_iQuadVerCount;
-		_int						m_iQuadIndexCount;
+	/* SSAO */
+	class CTexture*				m_pRandomVectorTexture = { nullptr };
+	ID3D11Buffer*				m_ScreenQuadVB = { nullptr };
+	ID3D11Buffer*				m_ScreenQuadIB = { nullptr };
+	ID3D11ShaderResourceView*	m_RandomVectorSRV;
+	//SSAO_Data					m_tSSAO_Data;
+	const _matrix				m_mTexture = {	XMMatrixSet(0.5f, 0.0f, 0.0f, 0.0f,	0.0f, -0.5f, 0.0f, 0.0f,0.0f, 0.0f, 1.0f, 0.0f,	0.5f, 0.5f, 0.0f, 1.0f) };
+	_float4						m_vFrustumFarCorner[4];
+	_float4						m_vOffsets[14];
+	_float						m_OffsetsFloat[56];
+	_int						m_iQuadVerCount;
+	_int						m_iQuadIndexCount;
 
-		HRESULT						SSAO_OnSize();
-		HRESULT						BuildFullScreenQuad();
-		void						BuildOffsetVectors();
-		void						BuildRandomVectorTexture();
-		
-		/* BLUR */
-		HRESULT						Render_Blur_DownSample(const wstring& strStartTargetTag);
-		HRESULT						Render_Blur_Horizontal(_int eHorizontalPass);
-		HRESULT						Render_Blur_Vertical(_int eVerticalPass);
-		HRESULT						Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bClear, _int eBlendType);
-		void						Calc_Blur_GaussianWeights(_int sigma, _int iSize, _Out_ void* Weights);
+	HRESULT						SSAO_OnSize();
+	HRESULT						BuildFullScreenQuad();
+	void						BuildOffsetVectors();
+	void						BuildRandomVectorTexture();
+	
+	/* BLUR */
+	HRESULT						Render_Blur_DownSample(const wstring& strStartTargetTag);
+	HRESULT						Render_Blur_Horizontal(_int eHorizontalPass);
+	HRESULT						Render_Blur_Vertical(_int eVerticalPass);
+	HRESULT						Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bClear, _int eBlendType);
+	void						Calc_Blur_GaussianWeights(_int sigma, _int iSize, _Out_ void* Weights);
 
-		/* Radial Blur */
-		_float4 m_fRadialBlurQuality = {};
-		_float4 m_fRadialBlurPower = {};
+	/* Radial Blur */
+	_float4 m_fRadialBlurQuality = {};
+	_float4 m_fRadialBlurPower = {};
+
 private:
 	class CShader*					m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
 	class CGameInstance*			m_pGameInstance = { nullptr };

@@ -34,22 +34,23 @@ void CScreamer::Priority_Tick(_float fTimeDelta)
 
 void CScreamer::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_3))
-	{
-		m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_NORMAL, true);
-	}
-	if (m_pGameInstance->Key_Down(DIK_4))
-	{
-		m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
-	}
-	if (m_pGameInstance->Key_Down(DIK_5))
-	{
-		m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
-	}
-	if (m_pGameInstance->Key_Down(DIK_6))
-	{
-		m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_REVERSE, true);
-	}
+	/* Example */
+	//if (m_pGameInstance->Key_Down(DIK_3))
+	//{
+	//	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_NORMAL, true);
+	//}
+	//if (m_pGameInstance->Key_Down(DIK_4))
+	//{
+	//	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
+	//}
+	//if (m_pGameInstance->Key_Down(DIK_5))
+	//{
+	//	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
+	//}
+	//if (m_pGameInstance->Key_Down(DIK_6))
+	//{
+	//	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_REVERSE, false); /* 문제있음 쓰지마셈 */
+	//}
 
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
@@ -67,8 +68,6 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
 
 	}
-
-	
 
 
 	m_pGameInstance->Add_DebugRender(m_pColliderCom);
