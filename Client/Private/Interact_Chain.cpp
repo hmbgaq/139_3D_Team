@@ -126,6 +126,7 @@ HRESULT CInteract_Chain::Render()
 
 HRESULT CInteract_Chain::Render_OutLine()
 {
+	m_bInteractActive = true;
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();

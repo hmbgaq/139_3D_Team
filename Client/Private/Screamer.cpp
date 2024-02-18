@@ -21,12 +21,12 @@ HRESULT CScreamer::Initialize(void* pArg)
 {
 	FAILED_CHECK(Ready_Components());
 
-	m_iRenderPass = 0;
+	m_iRenderPass = ECast(ANIM_SHADER::ANIM_BLOOM);
 
 	m_pTransformCom->Set_Scaling(0.01f, 0.01f, 0.01f);
 	m_pTransformCom->Set_Position(_float3(25.f, 0.5f, 10.f));
 	m_vBloomColor = { 0.5f, 0.f, 0.5f, 1.f };
-	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
+	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
 
 	return S_OK;
 }
@@ -86,6 +86,7 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
 
 	}
 
@@ -114,6 +115,7 @@ HRESULT CScreamer::Render()
 		m_pModelCom->Render(_uint(i));
 	}
 
+
 	return S_OK;
 }
 
@@ -140,6 +142,30 @@ HRESULT CScreamer::Render_Shadow()
 		m_pShaderCom->Begin(2);
 
 		m_pModelCom->Render((_uint)i);
+	}
+
+	return S_OK;
+}
+
+HRESULT CScreamer::Render_OutLine()
+{
+	FAILED_CHECK(Bind_ShaderResources());
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		_float m_fLineThick = 3.f;
+		//m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
+		//m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fTimeAcc, sizeof(_float));
+
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+
+		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
+
+		m_pModelCom->Render(0);
 	}
 
 	return S_OK;
