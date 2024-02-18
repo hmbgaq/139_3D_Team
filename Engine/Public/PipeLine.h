@@ -29,6 +29,11 @@ public: /* 카메라 관련 */
 
 	_float	Get_CamFar() { return m_fCamFar; };
 
+public: /* 레이 캐스트 */
+	RAY			Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
+	RAY			Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY, _matrix matWorld);
+
+
 public:
 	_float4x4 Get_PreViewMatrix();
 
@@ -36,6 +41,8 @@ public:
 	HRESULT Initialize();
 	void Tick();
 
+private:
+	class CGameInstance* m_pGameInstace = { nullptr };
 
 private:
 	_float4x4			m_Transform[D3DTS_END];

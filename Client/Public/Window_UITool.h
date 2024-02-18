@@ -108,8 +108,8 @@ public:
 public: /* Save/Load */
 	void				Save_Desc();
 	HRESULT				Load_Desc();
-	virtual	HRESULT		Save_Function() override;
-	virtual HRESULT		Load_Function() override;
+	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
+	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
 
 public: /* Image */
 	// 이미지 로드 함수

@@ -1,6 +1,7 @@
 #include "..\Public\Mesh.h"
 #include "Shader.h"
 #include "Bone.h"
+#include "GameInstance.h"
 
 CMesh::CMesh(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -62,7 +63,11 @@ HRESULT CMesh::Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, 
 
 #pragma endregion
 
-	//Safe_Delete_Array(m_pIndices);
+#ifndef _DEBUG
+	Safe_Delete_Array(m_pIndices);
+#endif // !_DEBUG
+
+	
 
 	return S_OK;
 }
@@ -83,6 +88,17 @@ HRESULT CMesh::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName,
 
 	return pShader->Bind_Matrices(pConstantName, BoneMatrices, 256);
 }
+
+#ifdef _DEBUG
+_bool CMesh::Picking(RAY ray, _float3* out)
+{
+	_uint triNum = m_iNumIndices / 3;
+
+	return m_pGameInstance->Picking_Vertex(ray, out, triNum, m_pVertices, m_pIndices);
+}
+#endif // _DEBUG
+
+
 
 HRESULT CMesh::Ready_Vertices_NonAnim(CMyAIMesh pAIMesh, _fmatrix PivotMatrix)
 {
@@ -121,8 +137,10 @@ HRESULT CMesh::Ready_Vertices_NonAnim(CMyAIMesh pAIMesh, _fmatrix PivotMatrix)
 	if (FAILED(__super::Create_Buffer(&m_pVB)))
 		return E_FAIL;
 
-	//Safe_Delete_Array(m_pVertices);
 
+#ifndef _DEBUG
+	Safe_Delete_Array(m_pVertices);
+#endif // !_DEBUG
 	return S_OK;
 	
 }
@@ -222,7 +240,10 @@ HRESULT CMesh::Ready_Vertices_Anim(CMyAIMesh pAIMesh, const vector<class CBone*>
 
 	FAILED_CHECK(__super::Create_Buffer(&m_pVB));
 
-	//Safe_Delete_Array(m_pAnimVertices);
+#ifndef _DEBUG
+	Safe_Delete_Array(m_pAnimVertices);
+#endif // !_DEBUG
+	
 
 	if (0 == m_iNumBones)
 	{
@@ -273,13 +294,15 @@ CComponent * CMesh::Clone(void * pArg)
 }
 
 void CMesh::Free()
-{
-	if (false == m_isCloned)
+{			
+	#ifdef _DEBUG
+	if	(false == m_isCloned)
 	{
 		Safe_Delete_Array(m_pIndices);
 		Safe_Delete_Array(m_pVertices);
 		Safe_Delete_Array(m_pAnimVertices);
 	}
+	#endif // _DEBUG
 
 	__super::Free();
 }

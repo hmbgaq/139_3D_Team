@@ -1,11 +1,11 @@
 #include "Shader.h"
 
-CShader::CShader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CShader::CShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 {
 }
 
-CShader::CShader(const CShader & rhs)
+CShader::CShader(const CShader& rhs)
 	: CComponent(rhs)
 	, m_pEffect(rhs.m_pEffect)
 	, m_InputLayouts(rhs.m_InputLayouts)
@@ -21,7 +21,7 @@ CShader::CShader(const CShader & rhs)
 
 /* 셰이더파일을 빌드하여 ID3DX11Effect를 만들어냈다. */
 /* ID3DX11Effect로부터 Pass에 까지 접근하여 인자도 던진 정점정보를 이 셰이더 패스에서 잘 받아줄 수있는지에 대한 InputLayout을 만들었다. */
-HRESULT CShader::Initialize_Prototype(const wstring & strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
+HRESULT CShader::Initialize_Prototype(const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
 	_uint		iHlslFlag = 0;
 
@@ -35,18 +35,18 @@ HRESULT CShader::Initialize_Prototype(const wstring & strShaderFilePath, const D
 	if (FAILED(D3DX11CompileEffectFromFile(strShaderFilePath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, iHlslFlag, 0, m_pDevice, &m_pEffect, nullptr)))
 		return E_FAIL;
 
-	ID3DX11EffectTechnique*		pTechnique = m_pEffect->GetTechniqueByIndex(0);
+	ID3DX11EffectTechnique* pTechnique = m_pEffect->GetTechniqueByIndex(0);
 	if (nullptr == pTechnique)
-		return E_FAIL;	
+		return E_FAIL;
 
 	pTechnique->GetDesc(&m_TechniqueDesc);
 
 	for (size_t i = 0; i < m_TechniqueDesc.Passes; i++)
 	{
-		ID3DX11EffectPass*		pPass = pTechnique->GetPassByIndex((uint32_t)i);
+		ID3DX11EffectPass* pPass = pTechnique->GetPassByIndex((uint32_t)i);
 
 		D3DX11_PASS_DESC		PassDesc;
-		pPass->GetDesc(&PassDesc);		
+		pPass->GetDesc(&PassDesc);
 
 		/* InputLayout : 내가 그리기위해 사용하는 정점의 입력정보.  */
 		/* dx11에서는 고정기능 렌더링파이프라인에 대한 기능이 삭제되었다. */
@@ -55,18 +55,18 @@ HRESULT CShader::Initialize_Prototype(const wstring & strShaderFilePath, const D
 		/* 우리가 이 정점들을 그리기위해서는 셰이더가 필요하고, 이 셰이더는 반드시 내가 그릴려고하는 정점을 받아줄 수 있어야한다. */
 		/* 내가 그리려고하는 정점이 사용하려고하는 셰이더에 입력이 가능한지?에 대한 체크를 사전에 미리 처리하고.
 		가능하다면 dx11이 InputLayout이란 객체를 만들어준다. */
-		ID3D11InputLayout*		pInputLayout = nullptr;
+		ID3D11InputLayout* pInputLayout = nullptr;
 
 		if (FAILED(m_pDevice->CreateInputLayout(pElements, iNumElements, PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &pInputLayout)))
 			return E_FAIL;
 
 		m_InputLayouts.push_back(pInputLayout);
 	}
-	
+
 	return S_OK;
 }
 
-HRESULT CShader::Initialize(void * pArg)
+HRESULT CShader::Initialize(void* pArg)
 {
 	return S_OK;
 }
@@ -76,11 +76,11 @@ HRESULT CShader::Begin(_uint iPassIndex)
 	if (iPassIndex >= m_TechniqueDesc.Passes)
 		return E_FAIL;
 
-	ID3DX11EffectTechnique*		pTechnique = m_pEffect->GetTechniqueByIndex(0);
+	ID3DX11EffectTechnique* pTechnique = m_pEffect->GetTechniqueByIndex(0);
 	if (nullptr == pTechnique)
 		return E_FAIL;
 
-	ID3DX11EffectPass*		pPass = pTechnique->GetPassByIndex(iPassIndex);
+	ID3DX11EffectPass* pPass = pTechnique->GetPassByIndex(iPassIndex);
 
 	pPass->Apply(0, m_pContext);
 
@@ -89,71 +89,71 @@ HRESULT CShader::Begin(_uint iPassIndex)
 	return S_OK;
 }
 
-HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4 * pMatrix)
+HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatrix)
 {
 	/* 이 셰이더에 선언되어있는 전역변수의 핸들을 얻어온다.*/
-	ID3DX11EffectVariable*		pVariable = m_pEffect->GetVariableByName(pConstantName);
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)
 		return E_FAIL;
 
-	ID3DX11EffectMatrixVariable*	pMatrixVariable = pVariable->AsMatrix();
+	ID3DX11EffectMatrixVariable* pMatrixVariable = pVariable->AsMatrix();
 	if (nullptr == pMatrixVariable)
 		return E_FAIL;
 
 	return pMatrixVariable->SetMatrix((_float*)pMatrix);
 }
 
-HRESULT CShader::Bind_Matrices(const _char * pConstantName, const _float4x4 * pMatrix, _uint iNumMatrices)
+HRESULT CShader::Bind_Matrices(const _char* pConstantName, const _float4x4* pMatrix, _uint iNumMatrices)
 {
-	ID3DX11EffectVariable*		pVariable = m_pEffect->GetVariableByName(pConstantName);
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)
 		return E_FAIL;
 
-	ID3DX11EffectMatrixVariable*	pMatrixVariable = pVariable->AsMatrix();
+	ID3DX11EffectMatrixVariable* pMatrixVariable = pVariable->AsMatrix();
 	if (nullptr == pMatrixVariable)
 		return E_FAIL;
 
 	return pMatrixVariable->SetMatrixArray((_float*)pMatrix, 0, iNumMatrices);
 }
 
-HRESULT CShader::Bind_SRV(const _char * pConstantName, ID3D11ShaderResourceView * pSRV)
+HRESULT CShader::Bind_SRV(const _char* pConstantName, ID3D11ShaderResourceView* pSRV)
 {
-	ID3DX11EffectVariable*		pVariable = m_pEffect->GetVariableByName(pConstantName);
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)
 		return E_FAIL;
 
-	ID3DX11EffectShaderResourceVariable*	pSRVariable = pVariable->AsShaderResource();
+	ID3DX11EffectShaderResourceVariable* pSRVariable = pVariable->AsShaderResource();
 	if (nullptr == pSRVariable)
 		return E_FAIL;
 
 	return pSRVariable->SetResource(pSRV);
 }
 
-HRESULT CShader::Bind_SRVs(const _char * pConstantName, ID3D11ShaderResourceView ** ppSRV, _uint iNumTextures)
+HRESULT CShader::Bind_SRVs(const _char* pConstantName, ID3D11ShaderResourceView** ppSRV, _uint iNumTextures)
 {
-	ID3DX11EffectVariable*		pVariable = m_pEffect->GetVariableByName(pConstantName);
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)
 		return E_FAIL;
 
-	ID3DX11EffectShaderResourceVariable*	pSRVariable = pVariable->AsShaderResource();
+	ID3DX11EffectShaderResourceVariable* pSRVariable = pVariable->AsShaderResource();
 	if (nullptr == pSRVariable)
 		return E_FAIL;
 
 	return pSRVariable->SetResourceArray(ppSRV, 0, iNumTextures);
 }
 
-HRESULT CShader::Bind_RawValue(const _char * pConstantName, const void * pData, _uint iSize)
+HRESULT CShader::Bind_RawValue(const _char* pConstantName, const void* pData, _uint iSize)
 {
-	ID3DX11EffectVariable*		pVariable = m_pEffect->GetVariableByName(pConstantName);
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)
 		return E_FAIL;
 
-	return pVariable->SetRawValue(pData, 0, iSize);	
+	return pVariable->SetRawValue(pData, 0, iSize);
 }
 
-CShader * CShader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
+CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
-	CShader*		pInstance = new CShader(pDevice, pContext);
+	CShader* pInstance = new CShader(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype(strShaderFilePath, pElements, iNumElements)))
@@ -164,9 +164,9 @@ CShader * CShader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext
 	return pInstance;
 }
 
-CComponent * CShader::Clone(void * pArg)
+CComponent* CShader::Clone(void* pArg)
 {
-	CShader*		pInstance = new CShader(*this);
+	CShader* pInstance = new CShader(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

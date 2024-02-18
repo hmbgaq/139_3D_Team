@@ -1,10 +1,11 @@
 #pragma once
 
 #define IMGUI_DEFINE_MATH_OPERATORS
-
 #include "imgui_impl_win32.h"
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
+
+
 
 #include "Client_Defines.h"
 #include "Base.h"
@@ -68,17 +69,21 @@ public:
 	virtual	void	Tick(_float fTimeDelta);
 	virtual void	Render() PURE;
 
-protected:	//TODO ImguiDialog #다이얼로그
+public:	//TODO ImguiDialog #다이얼로그
 	void				OpenDialog(WINDOW_TYPE eWindowType);
 	void				ShowDialog();
 
-	virtual	HRESULT		Save_Function(); //! 각자 윈도우 특성에따라 override 시켜서 저장 함수 구현
-	virtual HRESULT		Load_Function(); //! 각자 윈도우 특성에따라 override 시켜서 불러오기 함수 구현
+	virtual	HRESULT		Save_Function(string strPath, string strFileName); //! 각자 윈도우 특성에따라 override 시켜서 저장 함수 구현
+	virtual HRESULT		Load_Function(string strPath, string strFileName); //! 각자 윈도우 특성에따라 override 시켜서 불러오기 함수 구현
+
 
 protected: //TODO Guizmo #기즈모
 	void				Set_Guizmo(CGameObject* pGameObject);
 	void				Set_GuizmoCamView();
 	void				Set_GuizmoCamProj();
+
+protected: //TODO  유틸
+	_bool				ImGui_MouseInCheck();
 
 protected:
 	_bool				m_bEnable = false;

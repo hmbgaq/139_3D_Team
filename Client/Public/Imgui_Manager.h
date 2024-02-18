@@ -26,6 +26,11 @@ public:
 		IMGUI_WINDOW_END
 	};
 
+	enum class JSY_MODEL_TYPE
+	{
+		MODEL_GROUND, MODEL_ENVIRONMENT, MODEL_INTERACT, MODEL_END 
+	};
+
 private:
 			 CImgui_Manager();
 	virtual ~CImgui_Manager() = default;
@@ -34,8 +39,8 @@ private:
 public:
 	//!승용 전용
 	//! E는 Environment의 약자
-	vector<wstring>*	Get_NonAnim_E_ModelTag() { return &m_vecNonAnim_E_ModelTag; }
-	vector<wstring>*	Get_Anim_E_ModelTag() { return &m_vecAnim_E_ModelTag; }
+	map<wstring, JSY_MODEL_TYPE>*	Get_NonAnim_E_ModelTag() { return &m_mapNonAnim_E_ModelTag; }
+	map<wstring, JSY_MODEL_TYPE>*	Get_Anim_E_ModelTag() { return &m_mapAnim_E_ModelTag; }
 
 public:
 	HRESULT			Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -47,8 +52,6 @@ public:
 
 private:
 	//!Intialize
-	void			 ImGuizmo_Initialize();
-	void			 ImGuiFileDialog_Initialize();
 	HRESULT			 Ready_Windows();
 	//
 
@@ -72,9 +75,9 @@ private:
 	
 
 private:
-	vector<wstring>							m_vecNonAnim_E_ModelTag = {}; //! 승용 논애님 환경 오브젝트 태그
-	vector<wstring>							m_vecAnim_E_ModelTag = {}; //! 승용 애님 환경 오브젝트 태그
-
+	map<wstring, JSY_MODEL_TYPE>			m_mapNonAnim_E_ModelTag = {};
+	map<wstring, JSY_MODEL_TYPE>			m_mapAnim_E_ModelTag = {};
+	
 public:
 	virtual void	Free();
 };

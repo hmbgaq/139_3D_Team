@@ -224,7 +224,9 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\public\Frustum.h" />
     <ClInclude Include="..\public\GameInstance.h" />
     <ClInclude Include="..\Public\GameObject.h" />
+    <ClInclude Include="..\Public\GFSDK_SSAO.h" />
     <ClInclude Include="..\Public\Graphic_Device.h" />
+    <ClInclude Include="..\Public\Hasher.h" />
     <ClInclude Include="..\Public\Input_Device.h" />
     <ClInclude Include="..\Public\Json\json.hpp" />
     <ClInclude Include="..\Public\Json_Utility.h" />
@@ -235,6 +237,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\public\Light_Manager.h" />
     <ClInclude Include="..\public\Mesh.h" />
     <ClInclude Include="..\public\Model.h" />
+    <ClInclude Include="..\Public\MurmurHash3.h" />
     <ClInclude Include="..\Public\MyAIAnimation.h" />
     <ClInclude Include="..\Public\MyAIBone.h" />
     <ClInclude Include="..\Public\MyAIFace.h" />
@@ -265,14 +268,15 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\public\VIBuffer.h" />
     <ClInclude Include="..\Public\VIBuffer_Cell.h" />
     <ClInclude Include="..\Public\VIBuffer_Cube.h" />
-    <ClInclude Include="..\Public\VIBuffer_Dynamic_Terrain.h" />
     <ClInclude Include="..\Public\VIBuffer_Effect_Model_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Environment_Model_Instance.h" />
+    <ClInclude Include="..\Public\VIBuffer_Field.h" />
     <ClInclude Include="..\public\VIBuffer_Instancing.h" />
     <ClInclude Include="..\Public\VIBuffer_Model_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Particle_Point.h" />
     <ClInclude Include="..\public\VIBuffer_Particle_Rect.h" />
     <ClInclude Include="..\public\VIBuffer_Rect.h" />
+    <ClInclude Include="..\Public\VIBuffer_SSAO.h" />
     <ClInclude Include="..\Public\VIBuffer_Terrain.h" />
     <ClInclude Include="..\Public\Weapon.h" />
     <ClInclude Include="..\Public\RigidBody.h" />
@@ -315,6 +319,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\private\Light_Manager.cpp" />
     <ClCompile Include="..\private\Mesh.cpp" />
     <ClCompile Include="..\private\Model.cpp" />
+    <ClCompile Include="..\Private\MurmurHash3.cpp" />
     <ClCompile Include="..\private\Navigation.cpp" />
     <ClCompile Include="..\private\Object_Manager.cpp" />
     <ClCompile Include="..\Private\PhysXManager.cpp" />
@@ -334,14 +339,15 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\private\VIBuffer.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
-    <ClCompile Include="..\Private\VIBuffer_Dynamic_Terrain.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Effect_Model_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Environment_Model_Instance.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Field.cpp" />
     <ClCompile Include="..\private\VIBuffer_Instancing.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Model_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Particle_Point.cpp" />
     <ClCompile Include="..\private\VIBuffer_Particle_Rect.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_SSAO.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
   </ItemGroup>

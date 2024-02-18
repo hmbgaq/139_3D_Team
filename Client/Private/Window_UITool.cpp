@@ -470,6 +470,7 @@ std::string CWindow_UITool::WideStringToString(const wchar_t* wideStr)
 	std::wstring wstr(wideStr);
 	// std::string으로 변환
 	return std::string(wstr.begin(), wstr.end());
+
 }
 
 // 파일 이름만 추출하는 함수
@@ -619,7 +620,7 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 #pragma region Save/Load
 	if (ImGui::Button("Save"))
 	{	
-		Save_Function();
+		//Save_Function();
 		Save_Desc();
 	}
 
@@ -791,13 +792,13 @@ HRESULT CWindow_UITool::Load_Desc()
 	return S_OK;
 }
 
-HRESULT CWindow_UITool::Save_Function()
+HRESULT CWindow_UITool::Save_Function(string strPath, string strFileName)
 {
-
+	
 	return S_OK;
 }
 
-HRESULT CWindow_UITool::Load_Function()
+HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 {
 
 	return S_OK;

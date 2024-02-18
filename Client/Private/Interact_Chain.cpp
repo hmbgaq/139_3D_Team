@@ -60,16 +60,22 @@ void CInteract_Chain::Tick(_float fTimeDelta)
 
 void CInteract_Chain::Late_Tick(_float fTimeDelta)
 {
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this),);
-	
-	if (m_pGameInstance->Key_Pressing(DIK_8))
+	m_pGameInstance->Transform_Frustum_ToLocalSpace(m_pTransformCom->Get_WorldMatrix());
+
+	if (true == m_pGameInstance->isIn_LocalPlanes(XMVector3TransformCoord(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_WorldMatrixInverse()), 0.f))
 	{
-		/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
-		m_bInteractActive = true; 
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
+
+		if (m_pGameInstance->Key_Pressing(DIK_8))
+		{
+			/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
+			m_bInteractActive = true;
+			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		}
+		else
+			m_bInteractActive = false;
 	}
-	else
-		m_bInteractActive = false;
+
 }
 
 HRESULT CInteract_Chain::Render()

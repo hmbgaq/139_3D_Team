@@ -1,8 +1,8 @@
 #include "UI_Base.h"
 #include "GameInstance.h"
-
-_int g_iWinSizeX = 1280;
-_int g_iWinSizeY = 720;
+//
+//_int g_iWinSizeX = 1280;
+//_int g_iWinSizeY = 720;
 
 CUI_Base::CUI_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CGameObject(pDevice, pContext)
@@ -37,10 +37,10 @@ HRESULT CUI_Base::Initialize(void* pArg)
 
 	m_pTransformCom->Set_Scaling(m_tUIInfo.fScaleX, m_tUIInfo.fScaleY, 1.f);
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_tUIInfo.fPositionX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fPositionY + (_float)g_iWinSizeY * 0.5f, 0.f, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_tUIInfo.fPositionX - (_float)g_iWinsizeX * 0.5f, -m_tUIInfo.fPositionY + (_float)g_iWinsizeY * 0.5f, 0.f, 1.f));
 
-	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
+		XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+		XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinsizeX, g_iWinsizeY, 0.f, 1.f));
 
 	SetUp_ScreenPosRect(m_tUIInfo.fPositionX, m_tUIInfo.fPositionY, m_tUIInfo.fScaleX, m_tUIInfo.fScaleY);
 	SetUp_UV(0);
@@ -108,10 +108,10 @@ void CUI_Base::SetUp_WorldToScreen(_fvector vWorldPos)
 
 	XMStoreFloat4(&vViewPort, vTargetPos);
 
-	m_fWorldToScreenX = (vViewPort.x + 1.f) * (g_iWinSizeX >> 1);
-	m_fWorldToScreenY = abs((vViewPort.y - 1.f) * (g_iWinSizeY >> 1));
+	m_fWorldToScreenX = (vViewPort.x + 1.f) * (g_iWinsizeX / 2);
+	m_fWorldToScreenY = abs((vViewPort.y - 1.f) * (g_iWinsizeY / 2));
 
-	if (g_iWinSizeX < m_fWorldToScreenX || m_fWorldToScreenX < 0 || g_iWinSizeY < m_fWorldToScreenY || m_fWorldToScreenY < 0)
+	if (g_iWinsizeX < m_fWorldToScreenX || m_fWorldToScreenX < 0 || g_iWinsizeY < m_fWorldToScreenY || m_fWorldToScreenY < 0)
 	{
 		m_fWorldToScreenX = -300.f;
 		m_fWorldToScreenY = -300.f;
