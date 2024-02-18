@@ -422,7 +422,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 				if (ImGui::Selectable(m_pBones[n]->Get_Name(), is_selected))
 					BoneIndex = n;
 				
-				m_pBoneCollider.reserve(m_iBoneNum);
+				//m_pBoneCollider.reserve(m_iBoneNum);
 
 				if (is_selected)
 				{                                                                              
@@ -436,10 +436,11 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 						m_fBonePosition.y = m_fBoneMatrix._42;
 						m_fBonePosition.z = m_fBoneMatrix._43;
 						Create_Bounding(m_fBonePosition, m_iColliderSize);
-
+						m_vBoneColliderIndex.push_back(m_pBones[BoneIndex]);
 						m_bCreatCollider = false;
 					}
-				}                                                                                                                
+				}    
+					
 			}
 			ImGui::EndListBox();
 		}
@@ -449,7 +450,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 				return;
 
 			//m_PickingObject
-			m_strTest = m_pBones[BoneIndex]->Get_Name();
+			//m_strTest = m_pBones[BoneIndex]->Get_Name();
 
 			static int iSelectColliderIndex;
 
@@ -459,7 +460,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 				string str2 = to_string(n);
 
 				const bool is_selected = (iSelectColliderIndex == n);
-				if (ImGui::Selectable((m_strTest +str + "." + str2).c_str(), is_selected))
+				if (ImGui::Selectable((str + "." + str2).c_str(), is_selected))
 					iSelectColliderIndex = n;
 				//m_iSelectColliderIndex = iSelectColliderIndex;
 				m_pBoneCollider.reserve(m_iBoneNum);
@@ -470,8 +471,14 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 					m_pBoneCollider[iSelectColliderIndex]->Set_isCollision(true);
 					if (m_bColliderSize)
 					{
-						m_pSphere->Radius = m_iColliderSize;
-						((CBounding_Sphere*)m_pBoneCollider[iSelectColliderIndex])->Set_Bounding(m_pSphere);
+						//m_pSphere->Radius = m_iColliderSize;
+						_float4x4	Temp = XMMatrixIdentity();
+						Temp.m[0][0] = m_iColliderSize;
+						Temp.m[1][1] = m_iColliderSize;
+						Temp.m[2][2] = m_iColliderSize;
+
+						m_pBoneCollider[iSelectColliderIndex]->Get_Bounding()->Set_matScale(Temp);
+						//((CBounding_Sphere*)m_pBoneCollider[iSelectColliderIndex])->Set_matScale(Temp);
 						//m_pBounding = ((CBounding_Sphere*)m_pBoneCollider[m_iSelectColliderIndex]);
 						
 						//m_bColliderSize = false;
@@ -493,6 +500,12 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 				{
 					m_pBoneCollider[n]->Set_isCollision(false);
 				}
+				//CBone* pBone = m_vBoneColliderIndex[n];
+				_float4x4 Temp = m_vBoneColliderIndex[n]->Get_CombinedTransformationMatrix();
+				_float4x4 Desc =Temp * m_PickingObject->Get_Transform()->Get_WorldMatrix();
+				////_float4x4 Result = Temp * Desc;
+				m_pBoneCollider[n]->Update(Temp);
+				
 			}
 			ImGui::EndListBox();
 		}
@@ -528,7 +541,9 @@ void CWindow_AnimTool::BonePoint_Update()
 	{
 		for (auto& pCollider : m_pBoneCollider)
 		{
+			//CBone* pBone = m_vBoneColliderIndex[m_iCreateColliderNum]
 			m_pGameInstance->Add_DebugRender(pCollider);
+			//pCollider->Update()
 		}
 	}
 }
@@ -541,7 +556,7 @@ void CWindow_AnimTool::Create_Bounding(_float3 fPoint, _float fRadius)
 	pBoundingSphere.fRadius = fRadius;
 	
 	m_pCollider = dynamic_cast<CCollider*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_Sphere"), &pBoundingSphere));
-
+	
 	m_pBoneCollider.push_back(m_pCollider);
 	++m_iCreateColliderNum;
 }

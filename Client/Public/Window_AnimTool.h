@@ -103,6 +103,7 @@ private:
 	vector<CAnimation*>		m_pAnimation;
 	vector<CBone*>			m_pBones;
 	vector<CCollider*>		m_pBoneCollider;
+	vector<CBone*>			m_vBoneColliderIndex;
 public:
 	_bool					m_bStop = false;
 	_bool					m_bHold = false;

@@ -21,7 +21,8 @@ public:
 	}
 
 	void Set_Bounding(BoundingSphere* pSphere) { m_pSphere = pSphere; }
-
+	virtual void Set_matScale(_matrix _matScale) override { m_matScale = _matScale; }
+	virtual void Set_Test(_vector _vTest) override { m_vTest = _vTest; }
 public:
 	HRESULT Initialize(BOUNDING_DESC* pBoundingDesc);
 #ifdef _DEBUG
@@ -35,7 +36,7 @@ public:
 private:
 	BoundingSphere*			m_pOriginalSphere = { nullptr };
 	BoundingSphere*			m_pSphere = { nullptr };
-
+	
 
 
 public:
