@@ -62,7 +62,6 @@ private:
 private://콜라이더 
 	void			BonePoint_Update();
 	void			Create_Bounding(_float3 fPoint,_float fRadius);
-	void			Set_Bounding(CBounding_Sphere* _Bounding);
 
 public://문자열 변환 
 	char*			ConverWStringtoC(const wstring& wstr);

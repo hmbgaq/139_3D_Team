@@ -540,17 +540,24 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 		ImGui::TreePop();
 	}
 	//애니메이션 콜라이더 끄고 키는 조건 
-	if (m_fCurrentTrackPosition >= m_iColliderOnTrackPosition && m_fCurrentTrackPosition < m_iColliderOffTrackPosition)
+	if (m_pBoneCollider.size() > 0)
 	{
-		m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(true);
-
+		if (m_fCurrentTrackPosition >= m_iColliderOnTrackPosition && m_fCurrentTrackPosition < m_iColliderOffTrackPosition)
+		{
+			m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(true);
+			m_bCheckOnCollider = true;
+		}
+		else
+		{
+			m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(false);
+			m_bCheckOnCollider = false;
+		}
 	}
-
-	if (m_fCurrentTrackPosition >= m_iColliderOffTrackPosition && m_fCurrentTrackPosition < m_iColliderOnTrackPosition)
-	{
-		m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(false);
-
-	}
+	
+// 	if (m_fCurrentTrackPosition >= m_iColliderOffTrackPosition && m_fCurrentTrackPosition < m_iColliderOnTrackPosition)
+// 	{
+// 
+// 	}
 	//현재 해야 하는 것은 콜라이더 생성하는 버튼을 일단 만들어 보자 
 	ImGui::SeparatorText("Create/Delete");
 
@@ -601,13 +608,7 @@ void CWindow_AnimTool::Create_Bounding(_float3 fPoint, _float fRadius)
 	++m_iCreateColliderNum;
 }
 
-void CWindow_AnimTool::Set_Bounding(CBounding_Sphere* _Bounding)
-{
-	//m_pSphere = _Bounding->Get_Bounding()->Radius;
-	////m_pSphere->Radius = m_iColliderSize;
-	//m_pBounding->Set_Bounding(m_pSphere);
-	//m_pBoneCollider[m_iSelectColliderIndex]->Set_Bounding(_Bounding);
-}
+
 
 char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)
 {
