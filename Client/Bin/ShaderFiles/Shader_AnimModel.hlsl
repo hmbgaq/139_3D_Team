@@ -3,7 +3,7 @@
 /* Base */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix			g_BoneMatrices[256];
-float			g_fCamFar = 1000.f;
+float			g_fCamFar;
 float           g_TimeDelta;
 
 texture2D		g_DiffuseTexture;

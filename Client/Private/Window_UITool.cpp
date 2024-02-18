@@ -42,7 +42,7 @@ HRESULT CWindow_UITool::Initialize()
 
 	}
 
-	_int iPathSize = m_vecPaths.size();
+	_int iPathSize = (_int)m_vecPaths.size();
 	//for (auto& iter : m_vecPaths)
 	for(_int i = 0; i < iPathSize; i++)
 	{
@@ -211,7 +211,7 @@ void CWindow_UITool::Texture_List()
 		ImGui::EndListBox();
 	}
 	/* 미리보기 */
-	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2(m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
+	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2((_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Width, (_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
 	//m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName; // 리스트 박스 밖으로 뺀 이유 : 리스트에서 선택안했을 때도 생성 가능하도록 계속 갱신하게함
 }
 
@@ -631,7 +631,7 @@ void CWindow_UITool::AddIndexNumber(PATHINFO& UI_Info)
 			if (strFilePath->strFilePath == UI_Info.strFilePath)
 			{
 				/* 모두 순회하고 */
-				if (strFilePath->iPathNum >= UI_Info.iPathNum); // 기존 컨테이너에 있는 마지막으로 비교한 녀석의 숫자보다 작거나 같을 경우
+				if (strFilePath->iPathNum >= UI_Info.iPathNum) // 기존 컨테이너에 있는 마지막으로 비교한 녀석의 숫자보다 작거나 같을 경우
 				{
 					index = strFilePath->iPathNum + 1; // 마지막 녀석의 번호 + 1로 저장
 				}

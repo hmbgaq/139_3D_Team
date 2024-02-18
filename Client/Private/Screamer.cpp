@@ -235,6 +235,9 @@ void CScreamer::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pDissolveTexCom);
+	Safe_Release(m_pBreakTextureCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pColliderCom);
 }

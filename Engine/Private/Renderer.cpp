@@ -249,6 +249,9 @@ HRESULT CRenderer::Draw_RenderGroup()
 		m_bSSAO_Active = !m_bSSAO_Active;
 	if (m_pGameInstance->Key_Down(DIK_2))
 		m_bSSAO_Active = !m_bBloom_Active;
+	if (m_pGameInstance->Key_Down(DIK_3))
+		m_bOutline_Active = !m_bOutline_Active;
+
 
 	FAILED_CHECK(Render_Priority());	/* SkyBox */
 	FAILED_CHECK(Render_Shadow());		/* MRT_Shadow */
@@ -267,14 +270,16 @@ HRESULT CRenderer::Draw_RenderGroup()
 		{
 			FAILED_CHECK(Render_Bloom());
 		}
-		//else
-		//	FAILED_CHECK(Render_HBO_Plus());
 
-		//FAILED_CHECK(Render_GodRay());
+		
+		if (true == m_bOutline_Active)
+		{
+			FAILED_CHECK(Render_OutLine_PostProcessing());
+		}
 	}
 
 	FAILED_CHECK(Render_Deferred());
-	FAILED_CHECK(Render_OutLine());	/* MRT_OutLine */
+	FAILED_CHECK(Render_OutLineGroup());	/* Render_Group */
 	FAILED_CHECK(Render_Blend());
 	FAILED_CHECK(Render_UI());
 
@@ -493,6 +498,11 @@ HRESULT CRenderer::Render_Deferred()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_OutLine_PostProcessing()
+{
+	return E_NOTIMPL;
+}
+
 HRESULT CRenderer::Render_SSAO()
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO"))); /* Target SSAO ´Üµ¶ */
@@ -610,7 +620,7 @@ HRESULT CRenderer::Render_GodRay()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_OutLine()
+HRESULT CRenderer::Render_OutLineGroup()
 {
 	for (auto& pGameObject : m_RenderObjects[RENDER_OUTLINE])
 	{

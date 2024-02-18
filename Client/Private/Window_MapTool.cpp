@@ -363,7 +363,7 @@ void CWindow_MapTool::GroundTab_Function()
 
 				ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
 					
-				_uint iModelTagSize = m_vecGroundModelTag.size();
+				_uint iModelTagSize = (_uint)m_vecGroundModelTag.size();
 
 				if (ImGui::BeginListBox(u8"모델 태그 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 				{
@@ -493,7 +493,7 @@ void CWindow_MapTool::InteractTab_Function()
 		
 		ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
 
-		_uint iModelTagSize = m_vecInteractModelTag.size();
+		_uint iModelTagSize = (_uint)m_vecInteractModelTag.size();
 
 		if (ImGui::BeginListBox(u8"모델 태그 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
@@ -616,7 +616,7 @@ void CWindow_MapTool::EnvironmentTab_Function()
 
 		}ImGui::Separator(); ImGui::NewLine();
 
-		_uint iModelTagSize = m_vecEnviroModelTag.size();
+		_uint iModelTagSize = (_uint)m_vecEnviroModelTag.size();
 
 		if (ImGui::BeginListBox(u8"모델 태그 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
@@ -686,11 +686,11 @@ void CWindow_MapTool::EnvironmentTab_Function()
 
 		ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
 
-		_int iCreateInstanceSize = m_vecCreateInstance.size();
+		_int iCreateInstanceSize = (_int)m_vecCreateInstance.size();
 
 		if (ImGui::BeginListBox(u8"환경 객체 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
-			for (_uint i = 0; i < iCreateInstanceSize; ++i)
+			for (_uint i = 0; i < (_uint)iCreateInstanceSize; ++i)
 			{
 				const _bool isSelected = (m_iSelectEnvironmentIndex == i);
 
@@ -703,7 +703,7 @@ void CWindow_MapTool::EnvironmentTab_Function()
 
 					vector<INSTANCE_INFO_DESC> Desc = *m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_InstanceInfoDesc();
 
-					_int iInstanceInfoSize = Desc.size();
+					_int iInstanceInfoSize = (_int)Desc.size();
 
 					for (_int i = 0; i < iInstanceInfoSize; ++i)
 					{
@@ -739,10 +739,10 @@ void CWindow_MapTool::EnvironmentTab_Function()
 				
 				vector<INSTANCE_INFO_DESC> Desc = *m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_InstanceInfoDesc();
 
-				_int iNumInstance = Desc.size();
+				_int iNumInstance = (_int)Desc.size();
 
 
-				for (_uint i = 0; i < iNumInstance; ++i)
+				for (_uint i = 0; i < (_uint)iNumInstance; ++i)
 				{
 					const _bool isSelected = (m_iSelectInstanceIndex == i);
 
@@ -815,7 +815,7 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 					m_tWorldRay = m_pGameInstance->Get_MouseRayWorld(g_hWnd, g_iWinSizeX, g_iWinSizeY);
 					
 
-					_int iCreateObjectSize = m_vecCreateObject.size();
+					_int iCreateObjectSize = (_int)m_vecCreateObject.size();
 
 					for (_int i = 0; i < iCreateObjectSize; ++i)
 					{
@@ -1005,7 +1005,7 @@ void CWindow_MapTool::Ground_CreateFunction()
 		if(m_vecCreateObject.empty())
 			return;
 		
-		_int iCreateObjectSize = m_vecCreateObject.size();
+		_int iCreateObjectSize = (_int)m_vecCreateObject.size();
 
 		for (_int i = 0; i < iCreateObjectSize; ++i)
 		{
@@ -1073,7 +1073,7 @@ void CWindow_MapTool::Preview_Environment_CreateFunction()
 		if (m_vecCreateObject.empty())
 			return;
 
-		_int iCreateObjectSize = m_vecCreateObject.size();
+		_int iCreateObjectSize = (_int)m_vecCreateObject.size();
 
 		for (_int i = 0; i < iCreateObjectSize; ++i)
 		{
@@ -1104,11 +1104,11 @@ void CWindow_MapTool::Create_Instance()
 	
 	MAPTOOL_INSTANCE_DESC InstanceDesc;
 
-	InstanceDesc.iNumInstance = m_vecPreViewInstance.size();
-	InstanceDesc.iShaderPassIndex = m_iShaderPassIndex;
-	InstanceDesc.strModelTag = m_pPreviewObject->Get_ModelTag();
+	InstanceDesc.iNumInstance		= (_uint)m_vecPreViewInstance.size();
+	InstanceDesc.iShaderPassIndex	= (_uint)m_iShaderPassIndex;
+	InstanceDesc.strModelTag		= m_pPreviewObject->Get_ModelTag();
 	
-	for (_int i = 0; i < InstanceDesc.iNumInstance; ++i)
+	for (_int i = 0; i < (_int)InstanceDesc.iNumInstance; ++i)
 	{
 		INSTANCE_INFO_DESC InfoDesc;
 
@@ -1143,7 +1143,7 @@ void CWindow_MapTool::Create_Instance()
 
 void CWindow_MapTool::Basic_SelectFunction()
 {
-	_uint iObjectTagSize = m_vecCreateObject.size();
+	_uint iObjectTagSize = (_uint)m_vecCreateObject.size();
 
 	if (true == m_vecCreateObject.empty())
 	{
