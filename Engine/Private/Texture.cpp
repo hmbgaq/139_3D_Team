@@ -75,6 +75,9 @@ HRESULT CTexture::Initialize(void * pArg)
 
 HRESULT CTexture::Bind_ShaderResource(CShader * pShader, const _char * pConstantName, _uint iTextureIndex)
 {
+	if (nullptr == this)
+		return S_OK;
+
 	return pShader->Bind_SRV(pConstantName, m_SRVs[iTextureIndex]);
 }
 

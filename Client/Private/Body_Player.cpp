@@ -1,13 +1,10 @@
 #include "stdafx.h"
 #include "Body_Player.h"
-
 #include "GameInstance.h"
-
 
 CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBody(pDevice, pContext)
 {
-
 }
 
 CBody_Player::CBody_Player(const CBody_Player & rhs)

@@ -2,8 +2,9 @@
 
 namespace Client
 {
-	static const unsigned int	g_iWinSizeX = 1280;
-	static const unsigned int	g_iWinSizeY = 720;
+	/* 1600 x 900 가능할지도 ㄱㄷ */
+	static const unsigned int	g_iWinSizeX = 1920;
+	static const unsigned int	g_iWinSizeY = 1080;
 
 	enum LEVEL { LEVEL_STATIC, LEVEL_LOGO, LEVEL_GAMEPLAY, LEVEL_TOOL, LEVEL_LOADING, LEVEL_END };
 

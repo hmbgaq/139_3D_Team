@@ -1,12 +1,10 @@
-#include "..\public\Graphic_Device.h"
+#include "Graphic_Device.h"
 
 CGraphic_Device::CGraphic_Device()
 	: m_pDevice(nullptr)
 	, m_pDeviceContext(nullptr)
 {
-
 }
-
 
 HRESULT CGraphic_Device::Initialize(const GRAPHIC_DESC& GraphicDesc, ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppDeviceContextOut)
 {
@@ -37,7 +35,7 @@ HRESULT CGraphic_Device::Initialize(const GRAPHIC_DESC& GraphicDesc, ID3D11Devic
 	if (FAILED(Ready_SwapChain(GraphicDesc.hWnd, GraphicDesc.eWinMode, GraphicDesc.iBackBufferSizeX, GraphicDesc.iBackBufferSizeY)))
 		return E_FAIL;
 
-	/* 스왑체인이 들고 있는 텍스쳐 2ㅇ를 각져와서 이를 바탕으로 백버퍼 렌더타겟뷰 를 만든다.*/
+	/* 스왑체인이 들고 있는 텍스쳐 2D를 각져와서 이를 바탕으로 백버퍼 렌더타겟뷰 를 만든다.*/
 	if (FAILED(Ready_BackBufferRenderTargetView()))
 		return E_FAIL;
 
@@ -64,6 +62,24 @@ HRESULT CGraphic_Device::Initialize(const GRAPHIC_DESC& GraphicDesc, ID3D11Devic
 	ViewPortDesc.MaxDepth = 1.f;
 
 	m_pDeviceContext->RSSetViewports(1, &ViewPortDesc);
+
+//	//ssao -> nvid 
+//#ifdef new
+//#undef new
+//#endif
+//	GFSDK_SSAO_CustomHeap CustomHeap;
+//	CustomHeap.new_ = ::operator new;
+//	CustomHeap.delete_ = ::operator delete;
+//#ifdef DBG_NEW
+//
+//#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+//#define new DBG_NEW
+//
+//#endif
+//
+//	GFSDK_SSAO_Status status;
+//	status = GFSDK_SSAO_CreateContext_D3D11(m_pDevice, &m_pAOContext, &CustomHeap);
+//	assert(status == GFSDK_SSAO_OK); // HBAO+ requires feature level 11_0 or above
 
 	*ppDeviceOut = m_pDevice;
 	*ppDeviceContextOut = m_pDeviceContext;
@@ -212,19 +228,19 @@ HRESULT CGraphic_Device::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint 
 	TextureDesc.CPUAccessFlags = 0;
 	TextureDesc.MiscFlags = 0;
 
-	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr,
-		&pDepthStencilTexture)))
-		return E_FAIL;
+	FAILED_CHECK(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pDepthStencilTexture));
 
 	/* RenderTarget */
 	/* ShaderResource */
 	/* DepthStencil */
 
-	if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr,
-		&m_pDepthStencilView)))
-		return E_FAIL;
+	/* HBO 추가사항 */
+	FAILED_CHECK(m_pDevice->CreateDepthStencilView(m_pDepthStencilTexture, nullptr, &m_pDepthStencilView));
 
-	Safe_Release(pDepthStencilTexture);
+	/* 이하 = 수업코드 */
+	//FAILED_CHECK(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pDepthStencilView));
+
+	//Safe_Release(pDepthStencilTexture);
 
 	return S_OK;
 }

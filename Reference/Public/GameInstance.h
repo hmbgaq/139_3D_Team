@@ -34,7 +34,7 @@ public: /* For.Graphic_Device */
 	ID3D11RenderTargetView* Get_BackBufferRTV() const;
 	ID3D11DepthStencilView* Get_DSV() const;
 	GRAPHIC_DESC*			Get_GraphicDesc();
-
+	ID3D11ShaderResourceView* Get_DepthSRV();
 
 public: /* For.Input_Device */
 	_byte		Get_DIKeyState(_ubyte byKeyID);
@@ -97,6 +97,12 @@ public: /* For.PipeLine */
 	_float4		Get_CamSetting();
 	_float		Get_CamFar();
 
+	//!			레이캐스트
+	RAY			Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
+	RAY			Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY, _matrix matWorld);
+	_bool		Picking_Mesh(RAY ray, _float3 * out, vector<class CMesh*> Meshes);
+	_bool		Picking_Vertex(RAY ray, _float3 * out, _uint triNum, VTXMESH * pVertices, _uint * pIndices);
+
 public: /* For.Font_Manager */
 	HRESULT		Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
 	HRESULT		Render_Font(const wstring& strFontTag, const wstring& strText, const _float2 & vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f ,1.f), _float fScale = 1.f, _float2 vOrigin = _float2(0.f, 0.f), _float fRotation = 0.f);
@@ -128,6 +134,8 @@ public: /* For.Collision_Manager */
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
+	wstring		SliceObjectTag(const wstring& strObjectTag);
+	
 
 #pragma region 성희
 	// wstring을 string으로 변환 해주는 함수
