@@ -45,7 +45,7 @@ private:
 	CModel*								m_pModelCom = { nullptr };
 	CVIBuffer_Effect_Model_Instance*	m_pInstanceModelCom = { nullptr };
 
-	EFFECT_INSTANCE_DESC		m_tInstanceDesc = {};
+	EFFECT_INSTANCE_DESC				m_tInstanceDesc = {};
 
 private:
 	HRESULT Ready_Components();

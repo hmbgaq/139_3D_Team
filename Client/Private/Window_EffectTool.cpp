@@ -30,10 +30,22 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+#pragma region 재생바 창
+	SetUp_ImGuiDESC(" Play ", ImVec2{ 400.f, 300.f },  ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
+	__super::Begin();
+
+	Update_PlayBarArea_Particle();
+
+	__super::End();
+#pragma endregion 재생바 창
+
+
+
+#pragma region 이펙트 툴
+	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 800.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
 	__super::Begin();
 
 	Update_SaveLoad_Particle();
-
 
 	if (ImGui::BeginTabBar("Tab_Effect", ImGuiTabBarFlags_None))
 	{
@@ -47,7 +59,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 		if (ImGui::BeginTabItem(" Mesh "))
 		{
 			ImGui::Text(" Mesh Effect ");
-
+			Update_MeshTab();
 			ImGui::EndTabItem();
 		}
 
@@ -63,10 +75,68 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	ImGui::EndTabBar();
 
 	__super::End();
+#pragma endregion 이펙트 툴
+
 }
 
 void CWindow_EffectTool::Render()
 {
+
+}
+
+void CWindow_EffectTool::Update_PlayBarArea_Particle()
+{
+	/* 재생바 */
+	if (nullptr != m_pCurParticle)
+	{
+		_float fLifeTimePosition = m_pCurParticle->Get_VIBufferCom()->Get_TimePosition();
+		ImGui::SliderFloat("TimePos", &fLifeTimePosition, 0.f, m_pCurParticle->Get_VIBufferCom()->Get_Desc()->vMinMaxLifeTime.y);
+	}
+
+	/* 재생, 정지, 리셋 */
+	if (ImGui::Button("   Play   "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Play(TRUE);
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("   Stop   "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Play(FALSE);
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("   Reset  "))
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->ReSet();
+		}
+	}
+
+
+	/* 루프 여부 */
+	ImGui::RadioButton("Loop", &m_iLoop, 0);  ImGui::SameLine();
+	ImGui::RadioButton("Once", &m_iLoop, 1);
+
+	if (0 == m_iLoop)
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Loop(TRUE);
+		}
+	}
+	else if (1 == m_iLoop)
+	{
+		if (nullptr != m_pCurParticle)
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Loop(FALSE);
+		}
+	}
 
 }
 
@@ -97,6 +167,12 @@ void CWindow_EffectTool::Update_ParticleTab()
 		ImGui::Spacing();
 
 	}
+}
+
+void CWindow_EffectTool::Update_MeshTab()
+{
+
+
 }
 
 void CWindow_EffectTool::Update_Demo_Particle()
@@ -178,10 +254,6 @@ void CWindow_EffectTool::Update_ListArea_Particle()
 		}
 	}
 
-}
-
-void CWindow_EffectTool::Update_PlayArea_Particle()
-{
 	/* 전체 재생, 정지, 리셋 */
 	if (ImGui::Button(" All Play "))
 	{
@@ -216,79 +288,10 @@ void CWindow_EffectTool::Update_PlayArea_Particle()
 		}
 	}
 
+}
 
-	/* 재생, 정지, 리셋 */
-	ImGui::SeparatorText(" ");
-	if (ImGui::Button("   Play   "))
-	{
-		if (nullptr != m_pCurParticle)
-		{
-			m_pCurParticle->Get_VIBufferCom()->Set_Play(TRUE);
-		}
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("   Stop   "))
-	{
-		if (nullptr != m_pCurParticle)
-		{
-			m_pCurParticle->Get_VIBufferCom()->Set_Play(FALSE);
-		}
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("   Reset  "))
-	{
-		if (nullptr != m_pCurParticle)
-		{
-			m_pCurParticle->Get_VIBufferCom()->ReSet();
-		}
-	}
-
-
-	/* 재생바 */
-	if (nullptr != m_pCurParticle)
-	{
-		_float fLifeTimePosition = m_pCurParticle->Get_VIBufferCom()->Get_TimePosition();
-		ImGui::SliderFloat("TimePos_Particle", &fLifeTimePosition, 0.f, m_pCurParticle->Get_VIBufferCom()->Get_Desc()->vMinMaxLifeTime.y);
-
-
-		///* 현재 재생 위치(포지션) 이동 */
-		//if (ImGui::SliderFloat(" ", &m_fLifeTimePositionEdit, 0.f, m_pCurParticle->Get_Desc()->vLifeTime.y))
-		//{
-		//	m_pCurParticle->Set_Play(FALSE);
-		//	m_pCurParticle->Set_TimePosition(m_fLifeTimePositionEdit);
-		//}
-
-		if (ImGui::DragFloat2("MinMaxLifeTime", m_vMinMaxLifeTime, 1.f, 0.f, 360.f))
-		{
-			if (m_vMinMaxLifeTime[0] > m_vMinMaxLifeTime[1])
-				m_vMinMaxLifeTime[0] = m_vMinMaxLifeTime[1];
-
-			m_pCurParticle->Get_VIBufferCom()->Set_LifeTime(m_vMinMaxLifeTime[0], m_vMinMaxLifeTime[1]);
-		}
-
-	}
-
-
-
-	/* 루프 여부 */
-	ImGui::RadioButton("Loop", &m_iLoop, 0);  ImGui::SameLine();
-	ImGui::RadioButton("Once", &m_iLoop, 1);
-
-	if (0 == m_iLoop)
-	{
-		if (nullptr != m_pCurParticle)
-		{
-			m_pCurParticle->Get_VIBufferCom()->Set_Loop(TRUE);
-		}
-	}
-	else if (1 == m_iLoop)
-	{
-		if (nullptr != m_pCurParticle)
-		{
-			m_pCurParticle->Get_VIBufferCom()->Set_Loop(FALSE);
-		}
-	}
-
+void CWindow_EffectTool::Update_PlayArea_Particle()
+{
 
 	/* 재생, 역재생 */
 	if (ImGui::Button(" Normal "))
@@ -472,6 +475,16 @@ void CWindow_EffectTool::Update_ActionArea_Particle()
 	{
 		CVIBuffer_Particle_Point* pVIBuffer = m_pCurParticle->Get_VIBufferCom();
 
+
+		if (ImGui::DragFloat2("MinMaxLifeTime", m_vMinMaxLifeTime, 1.f, 0.f, 360.f))
+		{
+			if (m_vMinMaxLifeTime[0] > m_vMinMaxLifeTime[1])
+				m_vMinMaxLifeTime[0] = m_vMinMaxLifeTime[1];
+
+			m_pCurParticle->Get_VIBufferCom()->Set_LifeTime(m_vMinMaxLifeTime[0], m_vMinMaxLifeTime[1]);
+		}
+
+
 		if (ImGui::DragFloat2("MinMaxRange", m_vMinMaxRange, 1.f, 0.1f, 360.f))
 		{
 			if (m_vMinMaxRange[0] > m_vMinMaxRange[1])
@@ -483,44 +496,44 @@ void CWindow_EffectTool::Update_ActionArea_Particle()
 
 		/* 회전 범위(오프셋) */
 		/* RotX */
-		if (ImGui::DragFloat2("RotationX", m_vRotationX, 1.f, 0.f, 360.f))
+		if (ImGui::DragFloat2("RotationX", m_vRotationOffsetX, 1.f, 0.f, 360.f))
 		{
-			if (0 > m_vRotationX[0])
-				m_vRotationX[0] = 0.f;
+			if (0 > m_vRotationOffsetX[0])
+				m_vRotationOffsetX[0] = 0.f;
 
-			if (m_vRotationX[0] > m_vRotationX[1])
-				m_vRotationX[1] = m_vRotationX[0];
+			if (m_vRotationOffsetX[0] > m_vRotationOffsetX[1])
+				m_vRotationOffsetX[1] = m_vRotationOffsetX[0];
 
-			pVIBuffer->Set_RotationOffset(MIN, AXIS_X, m_vRotationX[0]);
-			pVIBuffer->Set_RotationOffset(MAX, AXIS_X, m_vRotationX[1]);
+			pVIBuffer->Set_RotationOffset(MIN, AXIS_X, m_vRotationOffsetX[0]);
+			pVIBuffer->Set_RotationOffset(MAX, AXIS_X, m_vRotationOffsetX[1]);
 		}
 
 
 		/* RotY */
-		if (ImGui::DragFloat2("RotationY", m_vRotationY, 1.f, 0.f, 360.f))
+		if (ImGui::DragFloat2("RotationY", m_vRotationOffsetY, 1.f, 0.f, 360.f))
 		{
-			if (0 > m_vRotationY[0])
-				m_vRotationY[0] = 0.f;
+			if (0 > m_vRotationOffsetY[0])
+				m_vRotationOffsetY[0] = 0.f;
 
-			if (m_vRotationY[0] > m_vRotationY[1])
-				m_vRotationY[1] = m_vRotationY[0];
+			if (m_vRotationOffsetY[0] > m_vRotationOffsetY[1])
+				m_vRotationOffsetY[1] = m_vRotationOffsetY[0];
 
-			m_pCurParticle->Get_VIBufferCom()->Set_RotationOffset(MIN, AXIS_Y, m_vRotationY[0]);
-			m_pCurParticle->Get_VIBufferCom()->Set_RotationOffset(MAX, AXIS_Y, m_vRotationY[1]);
+			m_pCurParticle->Get_VIBufferCom()->Set_RotationOffset(MIN, AXIS_Y, m_vRotationOffsetY[0]);
+			m_pCurParticle->Get_VIBufferCom()->Set_RotationOffset(MAX, AXIS_Y, m_vRotationOffsetY[1]);
 		}
 
 
 		/* RotZ */
-		if (ImGui::DragFloat2("RotationZ", m_vRotationZ, 1.f, 0.f, 360.f))
+		if (ImGui::DragFloat2("RotationZ", m_vRotationOffsetZ, 1.f, 0.f, 360.f))
 		{
-			if (0 > m_vRotationZ[0])
-				m_vRotationZ[0] = 0.f;
+			if (0 > m_vRotationOffsetZ[0])
+				m_vRotationOffsetZ[0] = 0.f;
 
-			if (m_vRotationZ[0] > m_vRotationZ[1])
-				m_vRotationZ[1] = m_vRotationZ[0];
+			if (m_vRotationOffsetZ[0] > m_vRotationOffsetZ[1])
+				m_vRotationOffsetZ[1] = m_vRotationOffsetZ[0];
 
-			m_pCurParticle->Get_VIBufferCom()->Set_RotationOffset(MIN, AXIS_Z, m_vRotationZ[0]);
-			m_pCurParticle->Get_VIBufferCom()->Set_RotationOffset(MAX, AXIS_Z, m_vRotationZ[1]);
+			m_pCurParticle->Get_VIBufferCom()->Set_RotationOffset(MIN, AXIS_Z, m_vRotationOffsetZ[0]);
+			m_pCurParticle->Get_VIBufferCom()->Set_RotationOffset(MAX, AXIS_Z, m_vRotationOffsetZ[1]);
 		}
 	}
 
@@ -564,20 +577,19 @@ void CWindow_EffectTool::Update_CurParameters()
 		m_iNumInstance = pDesc->iCurNumInstance;
 		m_pCurParticle->Get_VIBufferCom()->Set_NumInstance(m_iNumInstance);
 
-
 		m_vMinMaxLifeTime[0] = pDesc->vMinMaxLifeTime.x;
 		m_vMinMaxLifeTime[1] = pDesc->vMinMaxLifeTime.y;
 
 		m_vMinMaxRange[0] = pDesc->vMinMaxRange.x;
 		m_vMinMaxRange[1] = pDesc->vMinMaxRange.y;
 
-		m_vRotationX[0] = pDesc->vMinMaxRotationOffsetX.x;
-		m_vRotationY[0] = pDesc->vMinMaxRotationOffsetY.x;
-		m_vRotationZ[0] = pDesc->vMinMaxRotationOffsetZ.x;
+		m_vRotationOffsetX[0] = pDesc->vMinMaxRotationOffsetX.x;
+		m_vRotationOffsetY[0] = pDesc->vMinMaxRotationOffsetY.x;
+		m_vRotationOffsetZ[0] = pDesc->vMinMaxRotationOffsetZ.x;
 
-		m_vRotationX[1] = pDesc->vMinMaxRotationOffsetX.y;
-		m_vRotationY[1] = pDesc->vMinMaxRotationOffsetY.y;
-		m_vRotationZ[1] = pDesc->vMinMaxRotationOffsetZ.y;
+		m_vRotationOffsetX[1] = pDesc->vMinMaxRotationOffsetX.y;
+		m_vRotationOffsetY[1] = pDesc->vMinMaxRotationOffsetY.y;
+		m_vRotationOffsetZ[1] = pDesc->vMinMaxRotationOffsetZ.y;
 
 		m_fParticleAcceleration = pDesc->fAcceleration;
 		m_fParticleAccPosition = pDesc->fAccPosition;
@@ -648,8 +660,23 @@ HRESULT CWindow_EffectTool::Ready_Layer_Particle(const wstring& strLayerTag)
 	tDesc.fSpeedPerSec = { 5.f };
 	tDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
-	tDesc.strTextureTag = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
+	tDesc.strTextureTag[CParticle_Custom::TYPE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
+	tDesc.iTextureIndex[CParticle_Custom::TYPE_DIFFUSE] = { 0 };
 
+	tDesc.strTextureTag[CParticle_Custom::TYPE_MASK] = TEXT("");
+	tDesc.iTextureIndex[CParticle_Custom::TYPE_MASK] = { 0 };
+
+	tDesc.strTextureTag[CParticle_Custom::TYPE_NOISE] = TEXT("");
+	tDesc.iTextureIndex[CParticle_Custom::TYPE_NOISE] = { 0 };
+
+	tDesc.strShaderTag = TEXT("Prototype_Component_Shader_Particle_Point");
+	tDesc.iShaderPassIndex = { 0 };
+	tDesc.iRenderGroup = { 7 };
+
+	tDesc.iNumInstance = { (_uint)m_iNumInstance };
+	tDesc.iMaxNumInstance = { (_uint)m_iMaxNumInstance };
+
+	tDesc.fRotateUvDegree = { 0.f };
 
 	CParticle_Custom* pParticle = dynamic_cast<CParticle_Custom*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Particle_Custom"), &tDesc));
 

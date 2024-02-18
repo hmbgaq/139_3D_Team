@@ -199,6 +199,9 @@
     <Filter Include="02.GameObjects\03. Effect\04.Effect_Sprite">
       <UniqueIdentifier>{03bc8c0a-88ed-4b3d-b82f-b2cad26b7790}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\03. Effect\05.Effect_Trail">
+      <UniqueIdentifier>{d5149fec-40d6-45e2-8090-fdb3fb70342b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">

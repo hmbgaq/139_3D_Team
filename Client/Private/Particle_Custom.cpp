@@ -27,7 +27,21 @@ HRESULT CParticle_Custom::Initialize(void* pArg)
 		return E_FAIL;
 
 	PARTICLE_CUSTOM_DESC* pDesc = (PARTICLE_CUSTOM_DESC*)pArg;
-	m_strTextureTag = pDesc->strTextureTag;
+
+	for (_int i = 0; i < (_int)TYPE_END; i++)
+	{
+		m_tParticleDesc.strTextureTag[i] = pDesc->strTextureTag[i];
+		m_tParticleDesc.iTextureIndex[i] = pDesc->iTextureIndex[i];
+	}
+
+	m_tParticleDesc.strShaderTag = pDesc->strShaderTag;
+	m_tParticleDesc.iShaderPassIndex = pDesc->iShaderPassIndex;
+
+	m_tParticleDesc.iRenderGroup = pDesc->iRenderGroup;
+	m_tParticleDesc.iNumInstance = pDesc->iNumInstance;
+	m_tParticleDesc.iMaxNumInstance = pDesc->iMaxNumInstance;
+
+	m_tParticleDesc.fRotateUvDegree = pDesc->fRotateUvDegree;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -65,7 +79,8 @@ void CParticle_Custom::Late_Tick(_float fTimeDelta)
 {
 	if (m_bActive)
 	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, this)))
+		// CRenderer::RENDER_BLEND
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tParticleDesc.iRenderGroup), this)))
 			return;
 	}
 }
@@ -91,81 +106,112 @@ HRESULT CParticle_Custom::Render()
 	return S_OK;
 }
 
+_bool CParticle_Custom::Write_Json(json& Out_Json)
+{
+	__super::Write_Json(Out_Json);
+
+	for (_int i = 0; i < (_int)TYPE_END; i++)
+		Out_Json["strTextureTag"][i] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strTextureTag[i]);
+
+	Out_Json["strShaderTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strShaderTag);
+
+	return true;
+}
+
+void CParticle_Custom::Load_FromJson(const json& In_Json)
+{
+	__super::Load_FromJson(In_Json);
+
+	for (_int i = 0; i < (_int)TYPE_END; i++)
+		m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strTextureTag[i]) = In_Json["strTextureTag"][i];
+
+	m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strShaderTag) = In_Json["strShaderTag"];
+
+}
+
 
 HRESULT CParticle_Custom::Ready_Components()
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Shader_Particle_Point"),
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, m_tParticleDesc.strShaderTag,
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	{
-		CVIBuffer_Particle_Point::PARTICLE_POINT_DESC		ParticleDesc = {};
-		ParticleDesc.eType_Action = { CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE };
-		ParticleDesc.eType_Fade = { CVIBuffer_Particle_Point::TYPE_FADE::FADE_OUT };
+		CVIBuffer_Particle_Point::PARTICLE_POINT_DESC		tVIBufferDesc = {};
+		tVIBufferDesc.eType_Action = { CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE };
+		tVIBufferDesc.eType_Fade = { CVIBuffer_Particle_Point::TYPE_FADE::FADE_OUT };
 
-		ParticleDesc.bActive = { TRUE };
-		ParticleDesc.bBillBoard = { TRUE };
-		ParticleDesc.bIsPlay = { TRUE };
-		ParticleDesc.bReverse = { FALSE };
-		ParticleDesc.bLoop = { TRUE };
+		tVIBufferDesc.bActive		= { TRUE };
+		tVIBufferDesc.bBillBoard	= { TRUE };
+		tVIBufferDesc.bIsPlay		= { TRUE };
+		tVIBufferDesc.bReverse		= { FALSE };
+		tVIBufferDesc.bLoop			= { TRUE };
 
-		ParticleDesc.vMinMaxLifeTime = _float2(0.5f, 3.0f);
-		ParticleDesc.vMinMaxSpawnTime = { 0.f, 0.f };
-		ParticleDesc.iCurNumInstance = { 300 };
+		tVIBufferDesc.vMinMaxLifeTime = _float2(0.5f, 3.0f);
+		tVIBufferDesc.vMinMaxSpawnTime = { 0.f, 0.f };
+		tVIBufferDesc.iCurNumInstance = { m_tParticleDesc.iNumInstance };
 
-		ParticleDesc.vMinMaxRange = { 0.1f, 3.f };
-		ParticleDesc.vCenterPosition = _float3(0.f, 0.f, 0.f);
-		ParticleDesc.vOffsetPosition = _float3(0.f, 0.f, 0.f);
+		tVIBufferDesc.vMinMaxRange = { 0.1f, 3.f };
+		tVIBufferDesc.vCenterPosition = _float3(0.f, 0.f, 0.f);
+		tVIBufferDesc.vOffsetPosition = _float3(0.f, 0.f, 0.f);
 
-		ParticleDesc.vMinMaxSpeed = _float2(0.1f, 5.0f);
-		ParticleDesc.fAcceleration = { 2.f };
-		ParticleDesc.fAccPosition = { 0.1f };
+		tVIBufferDesc.vMinMaxSpeed = _float2(0.1f, 5.0f);
+		tVIBufferDesc.fAcceleration = { 2.f };
+		tVIBufferDesc.fAccPosition = { 0.1f };
 
-		ParticleDesc.fGravityAcc = { 0.f };
-		ParticleDesc.vCurrentGravity = { 0.f, 0.f, 0.f };
+		tVIBufferDesc.fGravityAcc = { 0.f };
+		tVIBufferDesc.vCurrentGravity = { 0.f, 0.f, 0.f };
 
-		ParticleDesc.vMinMaxRotationOffsetX = { 0.0f, 360.f };
-		ParticleDesc.vMinMaxRotationOffsetY = { 0.0f, 360.f };
-		ParticleDesc.vMinMaxRotationOffsetZ = { 0.0f, 360.f };
+		tVIBufferDesc.vMinMaxRotationOffsetX = { 0.0f, 360.f };
+		tVIBufferDesc.vMinMaxRotationOffsetY = { 0.0f, 360.f };
+		tVIBufferDesc.vMinMaxRotationOffsetZ = { 0.0f, 360.f };
 
-		ParticleDesc.vCurrentRotation = { 0.f, 0.f, 0.f };
-		ParticleDesc.vMinMaxRotationForce = { 0.f, 0.f, 0.f };
+		tVIBufferDesc.vCurrentRotation = { 0.f, 0.f, 0.f };
+		tVIBufferDesc.vMinMaxRotationForce = { 0.f, 0.f, 0.f };
 
-		ParticleDesc.vMinMaxScale = _float2(0.2f, 0.5f);
-		ParticleDesc.vAddScale = { 0.f, 0.f };
-		ParticleDesc.vMinMaxScaleForce = { 1.f, 1.f };
+		tVIBufferDesc.vMinMaxScale = _float2(0.2f, 0.5f);
+		tVIBufferDesc.vAddScale = { 0.f, 0.f };
+		tVIBufferDesc.vMinMaxScaleForce = { 1.f, 1.f };
 
-		ParticleDesc.vCurrentColor = _float4(1.f, 1.f, 1.f, 1.f);
-		ParticleDesc.vColorSpeed = { 0.f, 0.f, 0.f, 0.f };
-		ParticleDesc.vColorForce = { 0.f, 0.f, 0.f, 0.f };
+		tVIBufferDesc.vCurrentColor = _float4(1.f, 1.f, 1.f, 1.f);
+		tVIBufferDesc.vColorSpeed = { 0.f, 0.f, 0.f, 0.f };
+		tVIBufferDesc.vColorForce = { 0.f, 0.f, 0.f, 0.f };
 
-		ParticleDesc.fMinMaxAlpha = { 1.f, 1.f };
-		ParticleDesc.fAlphaForce = { 0.f };
+		tVIBufferDesc.fMinMaxAlpha = { 1.f, 1.f };
+		tVIBufferDesc.fAlphaForce = { 0.f };
 
-		ParticleDesc.vSpriteUV = { 0.f, 0.f };
-		ParticleDesc.vSpriteUVForce = { 0.f, 0.f };
-		ParticleDesc.iSpriteFrameIndex = { 1 };
+		tVIBufferDesc.vSpriteUV = { 0.f, 0.f };
+		tVIBufferDesc.vSpriteUVForce = { 0.f, 0.f };
+		tVIBufferDesc.iSpriteFrameIndex = { 1 };
 
 		if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Particle_Point"),
-			TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &ParticleDesc)))
+			TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &tVIBufferDesc)))
 			return E_FAIL;
 	}
 
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, m_strTextureTag,
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, m_tParticleDesc.strTextureTag[TYPE_DIFFUSE],
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_DIFFUSE]))))
 		return E_FAIL;
-	///* For.Com_Mask */
-	//if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Mask"),
-	//	TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_MASK]))))
-	//	return E_FAIL;
-	///* For.Com_Noise */
-	//if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Brush"),
-	//	TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_NOISE]))))
-	//	return E_FAIL;
+
+	if (nullptr != m_pTextureCom[TYPE_MASK])
+	{
+		/* For.Com_Mask */
+		if (FAILED(__super::Add_Component(LEVEL_TOOL, m_tParticleDesc.strTextureTag[TYPE_MASK],
+			TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_MASK]))))
+			return E_FAIL;
+	}
+
+	if (nullptr != m_pTextureCom[TYPE_NOISE])
+	{
+		/* For.Com_Noise */
+		if (FAILED(__super::Add_Component(LEVEL_TOOL, m_tParticleDesc.strTextureTag[TYPE_NOISE],
+			TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_NOISE]))))
+			return E_FAIL;
+	}
 
 
 	return S_OK;
@@ -182,21 +228,20 @@ HRESULT CParticle_Custom::Bind_ShaderResources()
 		return E_FAIL;
 	//if (FAILED(m_pTextureCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTexture")))
 	//	return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDegree", &m_fRotateUvDegree, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tParticleDesc.fRotateUvDegree, sizeof(_float))))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom[TYPE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_iTextureIndex[TYPE_DIFFUSE])))
+	if (FAILED(m_pTextureCom[TYPE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tParticleDesc.iTextureIndex[TYPE_DIFFUSE])))
 		return E_FAIL;
 
 	if (nullptr != m_pTextureCom[TYPE_MASK])
 	{
-		if (FAILED(m_pTextureCom[TYPE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_iTextureIndex[TYPE_MASK])))
+		if (FAILED(m_pTextureCom[TYPE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tParticleDesc.iTextureIndex[TYPE_MASK])))
 			return E_FAIL;
 	}
-
 	if (nullptr != m_pTextureCom[TYPE_NOISE])
 	{
-		if (FAILED(m_pTextureCom[TYPE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_iTextureIndex[TYPE_NOISE])))
+		if (FAILED(m_pTextureCom[TYPE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tParticleDesc.iTextureIndex[TYPE_NOISE])))
 			return E_FAIL;
 	}
 
@@ -243,7 +288,7 @@ void CParticle_Custom::Free()
 
 	Safe_Release(m_pVIBufferCom);
 
-	for (_int i = 0; i < TYPE_END; i++)
+	for (_int i = 0; i < (_int)TYPE_END; i++)
 		Safe_Release(m_pTextureCom[i]);
 
 	Safe_Release(m_pShaderCom);

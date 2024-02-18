@@ -21,7 +21,7 @@ _bool CTransform::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float4(Out_Json["Transform"][2], XMLoadFloat4x4(&m_WorldMatrix).r[STATE_LOOK]);
 	CJson_Utility::Write_Float4(Out_Json["Transform"][3], XMLoadFloat4x4(&m_WorldMatrix).r[STATE_POSITION]);
 
-	return false;
+	return true;
 }
 
 void CTransform::Load_FromJson(const json& In_Json)

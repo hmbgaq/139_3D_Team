@@ -120,7 +120,7 @@ HRESULT CImgui_Manager::Ready_Windows()
 	if (pWindow == nullptr)
 		return E_FAIL;
 
-	pWindow->SetUp_ImGuiDESC(u8"¿Ã∆Â∆Æ ≈¯", ImVec2{ 300.f, 650.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
+	pWindow->SetUp_ImGuiDESC(u8"¿Ã∆Â∆Æ ≈¯", ImVec2{ 300.f, 680.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW, pWindow);
 #pragma endregion ¿Ã∆Â∆Æ≈¯
 

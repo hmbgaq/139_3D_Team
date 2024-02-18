@@ -18,8 +18,18 @@ public:
 
 	typedef struct tagParticleCustomDesc : public CGameObject::GAMEOBJECT_DESC
 	{
-		wstring		strTextureTag;
-		_int		iMaxNumInstance;
+		wstring		strTextureTag[TYPE_END];
+		_int		iTextureIndex[TYPE_END] = { 0 };
+
+		wstring		strShaderTag;
+		_uint		iShaderPassIndex = { 0 };
+
+		_int		iRenderGroup = { 7 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 현재 작성기준 CRENDERER::RENDERGROUP::RENDER_END가 8임
+
+		_uint		iNumInstance = { 0 };
+		_uint		iMaxNumInstance;
+
+		_float		fRotateUvDegree;
 
 	}PARTICLE_CUSTOM_DESC;
 
@@ -36,37 +46,34 @@ public:
 	virtual void	Late_Tick(_float fTimeDelta)		override;
 	virtual HRESULT Render()							override;
 
-
-
 public:
+	virtual _bool Write_Json(json& Out_Json)		 override;
+	virtual void  Load_FromJson(const json& In_Json) override;
+
+	/* For.Desc */
+public:
+	PARTICLE_CUSTOM_DESC* Get_Desc() { return &m_tParticleDesc; }
+
 	void		Set_Active(_bool bActive) { m_bActive = bActive; }
 
-	void		Set_TextureIndex(TEXTURE eTexture, _int iIndex) { m_iTextureIndex[eTexture] = iIndex; }
-	_int		Get_TextureIndex(TEXTURE eTexture) { return m_iTextureIndex[eTexture]; }
+	void		Set_TextureIndex(TEXTURE eTexture, _int iIndex) { m_tParticleDesc.iTextureIndex[eTexture] = iIndex; }
 
-	void		Set_RotateUvDegree(_float fDegree) { m_fRotateUvDegree = fDegree; }
-	_float		Get_RotateUvDegree() { return m_fRotateUvDegree; }
+	void		Set_RotateUvDegree(_float fDegree) { m_tParticleDesc.fRotateUvDegree = fDegree; }
 
 public:
 	CVIBuffer_Particle_Point* Get_VIBufferCom() { return m_pVIBufferCom; }
 
-
 private:
-	wstring			m_strTextureTag;
-
-	_int			m_iTextureIndex[TYPE_END] = { 0 };
-
-	_float			m_fRotateUvDegree = { 0.f };
+	PARTICLE_CUSTOM_DESC		m_tParticleDesc = {};
 
 private:
 	_bool			m_bActive = { TRUE };
-	_float			m_fTimer = { 0.0f };
 
 
 private:
-	CShader* m_pShaderCom = { nullptr };
-	CTexture* m_pTextureCom[TYPE_END] = { nullptr };
-	CVIBuffer_Particle_Point* m_pVIBufferCom = { nullptr };
+	CShader*					m_pShaderCom = { nullptr };
+	CTexture*					m_pTextureCom[TYPE_END] = { nullptr };
+	CVIBuffer_Particle_Point*	m_pVIBufferCom = { nullptr };
 
 private:
 	HRESULT Ready_Components();
