@@ -46,6 +46,7 @@ public:
 	HRESULT Initialize();
 	HRESULT Add_RenderGroup(RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
+	HRESULT Pre_Setting(); /* 클라에서 옵션값 바꾸는용도 */
 	HRESULT Draw_RenderGroup();
 	
 	/* Ready */

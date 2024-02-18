@@ -7,7 +7,7 @@ Texture2D   g_BlurTarget;
 int         g_iBlurSamplers = 15;
 float       g_fBlurRange = 0.09f;
 
-float2      g_WinSize = float2(1280.f, 720.f);
+float2      g_WinSize = float2(1920.f, 1080.f);
 
 float       g_fWeight_low[3] = { 0.025f, 0.95f, 0.025f };
 float       g_fWeight_quarter[7] = { 0.2f, 0.5f, 0.8f, 1.f, 0.8f, 0.5f, 0.2f };

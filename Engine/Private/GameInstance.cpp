@@ -120,6 +120,8 @@ HRESULT CGameInstance::Render_Engine()
 		nullptr == m_pRenderer)
 		return E_FAIL;
 
+	m_pRenderer->Pre_Setting();
+
 	m_pRenderer->Draw_RenderGroup();
 
 
@@ -128,7 +130,7 @@ HRESULT CGameInstance::Render_Engine()
 #endif
 
 	m_pInput_Device->LateTick();
-
+	
 	return S_OK;
 }
 
@@ -585,7 +587,7 @@ string CGameInstance::Convert_WString_To_String(wstring _wstring)
 {
 	string out_string;
 
-	return out_string.assign(_wstring.begin(), _wstring.end());;
+	return out_string.assign(_wstring.begin(), _wstring.end());
 }
 
 WCHAR* CGameInstance::StringTowchar(const std::string& str)

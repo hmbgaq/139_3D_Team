@@ -23,6 +23,7 @@ HRESULT CScreamer::Initialize(void* pArg)
 
 	m_iRenderPass = 0;
 
+	m_vBloomColor = { 0.f, 0.f, 0.f, 1.f };
 	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
 
 	return S_OK;
@@ -34,7 +35,7 @@ void CScreamer::Priority_Tick(_float fTimeDelta)
 
 void CScreamer::Tick(_float fTimeDelta)
 {
-	/* Example */
+	/* Example - Animation*/
 	//if (m_pGameInstance->Key_Down(DIK_3))
 	//{
 	//	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_NORMAL, true);
@@ -51,6 +52,23 @@ void CScreamer::Tick(_float fTimeDelta)
 	//{
 	//	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_REVERSE, false); /* 문제있음 쓰지마셈 */
 	//}
+
+	if (m_pGameInstance->Key_Down(DIK_9))
+	{
+		m_iRenderPass += 1;
+		if (m_iRenderPass >= ECast(ANIM_SHADER::ANIM_SHADER_END))
+			m_iRenderPass = 0;
+
+		cout << "Render Pass : " << m_iRenderPass << endl;
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_8))
+	{
+		m_vBloomColor += _float4(fTimeDelta, 0.f, 0.f, 0.f);
+	}
+
+	m_fTimeDelta += fTimeDelta;
+	m_fDissolveWeight += fTimeDelta * 0.5f;
 
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
@@ -158,14 +176,31 @@ HRESULT CScreamer::Ready_Components()
 		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 	}
 
+	/* For. Com_Texture*/
+	{
+		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BreakMask"), TEXT("Com_BreakMask"), reinterpret_cast<CComponent**>(&m_pBreakTextureCom)));
+		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"), TEXT("Com_DissolveTex"), reinterpret_cast<CComponent**>(&m_pDissolveTexCom)));
+	}
+
 	return S_OK;
+
 }
 
 HRESULT CScreamer::Bind_ShaderResources()
 {
+	/* Base */
 	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+
+	/* Variable */
+	m_pShaderCom->Bind_RawValue("g_TimeDelta", &m_fTimeDelta, sizeof(_float));
+	m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float));
+	m_pShaderCom->Bind_RawValue("g_BloomColor", &m_vBloomColor, sizeof(_float4));
+
+	/* Texture */
+	m_pBreakTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture");
+	m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
 
 	return S_OK;
 }

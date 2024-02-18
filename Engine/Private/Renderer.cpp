@@ -476,7 +476,7 @@ HRESULT CRenderer::Render_Deferred()
 	m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bBloom_Active", &m_bBloom_Active, sizeof(_bool));
 
 	if(true == m_bBloom_Active)
-		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget")); /* ssao 추가 */
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
 	
 	m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Begin(ECast(DEFERRED_SHADER::DEFERRED));
 
@@ -512,6 +512,7 @@ HRESULT CRenderer::Render_SSAO()
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("FrustumCorner", &m_vFrustumFarCorner, sizeof(_float4) * 4));
 		
 		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ViewNormal"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_NormalDepthTarget"));
+		//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_RandomVectorTexture"));
 		FAILED_CHECK(m_pRandomVectorTexture->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_RandomVectorTexture"));
 		
 		/* SSAO : crysis 게임을 위해 crytek에서 개발한 주변 폐색을 근사화하는 빠른기술. 
@@ -548,8 +549,7 @@ HRESULT CRenderer::Render_HBO_Plus()
 
 HRESULT CRenderer::Render_Bloom()
 {
-	//FAILED_CHECK(Render_Blur(L"Target_Bloom", L"MRT_Bloom_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_HIGH), ECast(BLUR_SHADER::BLUR_VERTICAL_HIGH), ECast(BLUR_SHADER::BLUR_UP_ADD)));
-	FAILED_CHECK(Render_Blur(L"Target_Bloom", L"MRT_Bloom_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER), ECast(BLUR_SHADER::BLUR_UP_ADD)));
+	FAILED_CHECK(Render_Blur(L"Target_Bloom", L"MRT_Bloom_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER), ECast(BLUR_SHADER::BLUR_UP_MAX)));
 	
 	return S_OK;
 }
@@ -1013,6 +1013,11 @@ HRESULT CRenderer::Add_DebugRender(CComponent* pDebugCom)
 #endif
 
 	return S_OK;
+}
+
+HRESULT CRenderer::Pre_Setting()
+{
+	return E_NOTIMPL;
 }
 
 #pragma endregion

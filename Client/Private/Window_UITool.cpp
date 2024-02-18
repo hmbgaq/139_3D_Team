@@ -399,6 +399,7 @@ std::string CWindow_UITool::WideStringToString(const wchar_t* wideStr)
 	std::wstring wstr(wideStr);
 	// std::string으로 변환
 	return std::string(wstr.begin(), wstr.end());
+
 }
 
 // 파일 이름만 추출하는 함수

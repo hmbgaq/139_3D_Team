@@ -34,16 +34,24 @@ private:
 
 private:
 	_int				m_iRenderPass			= {};
+	_float				m_fTimeDelta			= {};
+	_float				m_fDissolveWeight		= {};
+	_float4				m_vBloomColor			= {};
 
 private:
 	CModel*				m_pModelCom				= { nullptr };
 	CShader*			m_pShaderCom			= { nullptr };
 	CCollider*			m_pColliderCom			= { nullptr };
 
+	/* Test Texture */
+	CTexture*			m_pBreakTextureCom		= { nullptr };
+	CTexture*			m_pDissolveTexCom		= { nullptr };
+
 public:
 	static CScreamer*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg) override;
 	virtual void			Free() override;
+
 };
 
 END

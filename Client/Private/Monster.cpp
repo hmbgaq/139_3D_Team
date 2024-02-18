@@ -55,13 +55,7 @@ void CMonster::Tick(_float fTimeDelta)
 		m_pTransformCom->Look_At_Lerp(pPos, fTimeDelta);
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_9))
-		m_iRenderPass = 3;
 
-	if (3 == m_iRenderPass) /* Dissolve Test */
-	{
-		m_fTimeDelta += fTimeDelta * 0.5f;
-	}
 
 	//SetUp_OnTerrain(m_pTransformCom);
 

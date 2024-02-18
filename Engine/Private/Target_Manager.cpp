@@ -128,7 +128,7 @@ HRESULT CTarget_Manager::Render_Debug(const wstring& strMRTTag, CShader * pShade
 	for (auto& pRenderTarget : *pMRTList)
 	{
 		pRenderTarget->Render_Debug(pShader, pVIBuffer);
-		float2 fPos = float2(pRenderTarget->Get_PosX() + 565.f, -pRenderTarget->Get_PosY() + 310.f );
+		float2 fPos = float2(pRenderTarget->Get_PosX()+ 885.f, -pRenderTarget->Get_PosY() + 490.f); /* 1920 1080 -> 1770 980 */
 		wstring TargetTag = pRenderTarget->Get_TargetTag();
 		_float4 vColor = pRenderTarget->Get_FontColor();
 		m_pGameInstance->Render_Font(TEXT("Font_Gulim"), TargetTag, fPos, vColor, 0.5f);
