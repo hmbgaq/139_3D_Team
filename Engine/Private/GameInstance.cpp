@@ -1,5 +1,6 @@
 #include "..\Public\GameInstance.h"
 #include "Collision_Manager.h"
+#include "Event_Manager.h"
 #include "Graphic_Device.h"
 #include "Object_Manager.h"
 #include "Target_Manager.h"
@@ -73,6 +74,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 	if (nullptr == m_pCollision_Manager)
 		return E_FAIL;
 
+	m_pEvent_Manager = CEvent_Manager::Create();
+	if (nullptr == m_pEvent_Manager)
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -95,6 +100,10 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pPipeLine->Tick();
 
 	m_pFrustum->Tick();
+
+	m_pEvent_Manager->Tick(fTimeDelta);
+
+	m_pCollision_Manager->Tick(fTimeDelta);
 
 	m_pObject_Manager->Late_Tick(fTimeDelta);
 
@@ -536,6 +545,11 @@ void CGameInstance::Add_Collision(const _uint& In_iLayer, CCollider* _pCollider)
 	m_pCollision_Manager->Add_Collision(In_iLayer, _pCollider);
 }
 
+void CGameInstance::Add_Event(IEvent* pEvent)
+{
+	m_pEvent_Manager->Add_Event(pEvent);
+}
+
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
 {
 	//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
@@ -759,6 +773,8 @@ _matrix CGameInstance::Make_WorldMatrix(const _float2& vScale, const _float3& vR
 
 void CGameInstance::Release_Manager()
 {
+	Safe_Release(m_pEvent_Manager);
+	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pFrustum);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTarget_Manager);

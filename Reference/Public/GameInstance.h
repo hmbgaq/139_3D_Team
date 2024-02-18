@@ -125,6 +125,10 @@ public: /* For.Collision_Manager */
 	void		Add_Collision(const _uint& In_iLayer, CCollider* _pCollider);
 
 
+public: /* For.Event_Manager */
+	void		Add_Event(class IEvent* pEvent);
+
+
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
@@ -176,6 +180,7 @@ private:
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 	class CFrustum*					m_pFrustum = { nullptr };
 	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
+	class CEvent_Manager*			m_pEvent_Manager = { nullptr };
 
 
 public:

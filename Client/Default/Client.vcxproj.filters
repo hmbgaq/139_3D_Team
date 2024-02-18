@@ -208,6 +208,18 @@
     <Filter Include="02.GameObjects\03. Effect\04.Effect_Sprite">
       <UniqueIdentifier>{03bc8c0a-88ed-4b3d-b82f-b2cad26b7790}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Event">
+      <UniqueIdentifier>{227ff5cf-0829-40bc-a874-626477a4a86b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Event\Test">
+      <UniqueIdentifier>{60cfa9f6-6760-4483-9f37-ec29cbccaee2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Event\Test\Default">
+      <UniqueIdentifier>{f4e337de-15eb-42df-bd49-4940c60b3613}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Event\Test\With_Actor">
+      <UniqueIdentifier>{945e673b-ae20-4a44-9ab5-8074d7590ee2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -380,6 +392,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Clone_Manager.h">
       <Filter>96.Manager\Clone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestEvent.h">
+      <Filter>03.Event\Test\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestEventWithActor.h">
+      <Filter>03.Event\Test\With_Actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -762,6 +780,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body_Player.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestEvent.cpp">
+      <Filter>03.Event\Test\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestEventWithActor.cpp">
+      <Filter>03.Event\Test\With_Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
