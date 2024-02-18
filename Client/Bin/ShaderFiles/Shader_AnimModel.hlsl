@@ -121,7 +121,9 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
    // Out.vBloom = float4(1.0f, 0.f, 0.f, 1.0f);
-    Out.vViewNormal = Out.vNormal;
+    //Out.vViewNormal = Out.vNormal;
+    //Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
 
 	return Out;
 }
@@ -271,6 +273,9 @@ struct VS_OUT_OUTLINE
     float4 vProjPos     : TEXCOORD2;
     float4 vTangent     : TANGENT;
     float4 vBinormal    : BINORMAL;
+    
+    float3 vViewNormal  : NORMAL1; /* ssao */
+    float3 vPositionView : POSITION;
 };
 
 VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
@@ -295,18 +300,24 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
     Out.vPosition = mul(OutPos, matWVP);
     Out.vTexcoord = In.vTexcoord;
     
+	// SSAO
+    Out.vViewNormal = mul(Out.vNormal.xyz, (float3x3) g_ViewMatrix);
+    Out.vPositionView = mul(float4(In.vPosition, 1.0f), matWV);
+    
     return Out;
 }
 
 struct PS_IN_OUTLINE
 {
-    float4 vPosition    : SV_POSITION;
-    float4 vNormal      : NORMAL;
-    float2 vTexcoord    : TEXCOORD0;
-    float4 vWorldPos    : TEXCOORD1;
-    float4 vProjPos     : TEXCOORD2;
-    float4 vTangent     : TANGENT;
-    float4 vBinormal    : BINORMAL;
+    float4 vPosition        : SV_POSITION;
+    float4 vNormal          : NORMAL;
+    float2 vTexcoord        : TEXCOORD0;
+    float4 vWorldPos        : TEXCOORD1;
+    float4 vProjPos         : TEXCOORD2;
+    float4 vTangent         : TANGENT;
+    float4 vBinormal        : BINORMAL;
+    float3 vViewNormal      : NORMAL1; /* ssao */
+    float3 vPositionView    : POSITION;
 };
 
 PS_OUT PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
@@ -327,7 +338,8 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
    // Out.vBloom = g_BloomColor;
-    Out.vViewNormal = Out.vNormal;
+   // Out.vViewNormal = Out.vNormal;
+    Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
     
     return Out;
 }
