@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Window_EffectTool.h"
 
+#include "imNeoSequencer/imgui_neo_sequencer.h"
+
 #include "GameInstance.h"
 
 #include "Particle_Custom.h"
@@ -31,7 +33,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 #pragma region 재생바 창
-	SetUp_ImGuiDESC(" Play ", ImVec2{ 400.f, 300.f },  ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
+	SetUp_ImGuiDESC(" Play ", ImVec2{ 400.f, 300.f },  ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
 	__super::Begin();
 
 	Update_PlayBarArea_Particle();
@@ -40,9 +42,19 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 #pragma endregion 재생바 창
 
 
+#pragma region 시퀀서 창
+	SetUp_ImGuiDESC(" Sequencer ", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse |  /*ImGuiWindowFlags_NoResize | */ ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+	__super::Begin();
+
+	Update_Demo_Sequencer();
+
+	__super::End();
+#pragma endregion 시퀀서 창
+
+
 
 #pragma region 이펙트 툴
-	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 800.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
+	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 800.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
 	__super::Begin();
 
 	Update_SaveLoad_Particle();
@@ -152,6 +164,10 @@ void CWindow_EffectTool::Update_ParticleTab()
 		ImGui::SeparatorText("");
 		Update_PlayArea_Particle();
 
+
+		//ImGui::SeparatorText("");
+		//Update_Demo_Sequencer();
+
 		ImGui::SeparatorText("");
 		Update_AppearArea_Particle();
 
@@ -172,6 +188,55 @@ void CWindow_EffectTool::Update_ParticleTab()
 void CWindow_EffectTool::Update_MeshTab()
 {
 
+
+}
+
+void CWindow_EffectTool::Update_Demo_Sequencer()
+{
+	if (nullptr != m_pCurParticle)
+	{
+		int32_t startFrame = -2;
+		int32_t endFrame = (int32_t)((m_pCurParticle->Get_VIBufferCom()->Get_Desc()->vMinMaxLifeTime.y) + 2);
+
+
+		m_iCurrentFrame = (int32_t)m_pCurParticle->Get_VIBufferCom()->Get_TimePosition();
+
+		if (ImGui::BeginNeoSequencer("Sequencer", &m_iCurrentFrame, &startFrame, &endFrame, { 0, 0 },
+			ImGuiNeoSequencerFlags_EnableSelection |
+			ImGuiNeoSequencerFlags_Selection_EnableDragging |
+			ImGuiNeoSequencerFlags_Selection_EnableDeletion)
+			)
+		{
+			_bool	bTransformOpen = true;
+			if (ImGui::BeginNeoGroup(m_cCurParticleName, &bTransformOpen))
+			{
+				vector<ImGui::FrameIndexType> keys = {};
+
+				//if (!m_mapCutScene.empty())
+				//{
+				//	keys.clear();	// 깨끗하게 비우고
+
+				//	// 컷신의 키 프레임 위치 불러오기
+				//	_int MaxCnt = Find_CutScene(ConverCtoWC2(m_cMyCutScene))->Get_MaxFrameIdx();
+
+				//	for (int i = 0; i <= MaxCnt; ++i)
+				//	{
+				//		_int ikeyPos = (_int)((Find_CutScene(ConverCtoWC2(m_cMyCutScene))->Get_KeyFrame(i).fKeyTime) * 10);
+				//		keys.push_back(ikeyPos);
+				//	}
+				//}
+
+				// 파티클
+				if (ImGui::BeginNeoTimeline("Particle", keys))
+				{
+					ImGui::EndNeoTimeLine();
+				}
+				ImGui::EndNeoGroup();
+			}
+
+			ImGui::EndNeoSequencer();
+		}
+	}
 
 }
 
@@ -227,12 +292,12 @@ void CWindow_EffectTool::Update_ListArea_Particle()
 
 
 	/* 파티클 리스트 & 현재 파티클 선택 */
-	if (ImGui::ListBox(" List ", &m_iCurParticleIndex, m_szParticleNames, m_pParticles.size(), 4))
+	if (ImGui::ListBox(" List ", &m_iCurParticleIndex, m_szParticleNames, m_pParticles.size(), (_int)4))
 	{
 		wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szParticleNames[m_iCurParticleIndex]);
 		m_pCurParticle = m_pParticles.find(strCurName)->second;
 
-		Update_CurParameters();
+		Update_CurParameters(strCurName);
 	}
 
 
@@ -561,10 +626,18 @@ void CWindow_EffectTool::Update_WorldPositionArea_Particle()
 	}
 }
 
-void CWindow_EffectTool::Update_CurParameters()
+void CWindow_EffectTool::Update_CurParameters(wstring strName)
 {
 	if (nullptr != m_pCurParticle)
 	{
+		if (TEXT("") != strName)
+		{
+			const string utf8Str = m_pGameInstance->Wstring_To_UTF8(strName);
+			m_cCurParticleName = new char[utf8Str.length() + 1];
+			strcpy(m_cCurParticleName, utf8Str.c_str());
+		}
+
+
 		CVIBuffer_Particle_Point* pVIBuffer = m_pCurParticle->Get_VIBufferCom();
 		CVIBuffer_Particle_Point::PARTICLE_POINT_DESC* pDesc = pVIBuffer->Get_Desc();
 
@@ -685,7 +758,7 @@ HRESULT CWindow_EffectTool::Ready_Layer_Particle(const wstring& strLayerTag)
 
 	m_pCurParticle = pParticle;
 
-	Update_CurParameters();
+	Update_CurParameters(strName);
 
 	return S_OK;
 }
@@ -796,6 +869,8 @@ void CWindow_EffectTool::Free()
 
 	if (nullptr != m_pCurParticle)
 		Safe_Release(m_pCurParticle);
+
+	m_cCurParticleName = nullptr;
 
 	if (nullptr != m_szParticleNames)
 	{

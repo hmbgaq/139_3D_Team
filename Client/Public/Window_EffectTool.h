@@ -30,6 +30,7 @@ public:
 
 /* For.Particle_Update */
 public:
+	void	Update_Demo_Sequencer();
 
 	void	Update_Demo_Particle();
 	void	Update_ListArea_Particle();
@@ -39,7 +40,7 @@ public:
 
 	void	Update_WorldPositionArea_Particle();
 
-	void	Update_CurParameters();
+	void	Update_CurParameters(wstring strName = TEXT(""));
 
 
 /* For.Save&Load */
@@ -61,12 +62,18 @@ public:
 	HRESULT Create_NewParticle();
 	HRESULT Ready_Layer_Particle(const wstring& strLayerTag);
 	
-
-#pragma region Particle_List
+#pragma region Sequencer
 private:
+	int32_t m_iCurrentFrame = { 0 };
+#pragma endregion
+
+private:
+#pragma region Particle_List
 	map<const wstring, class CParticle_Custom*>	m_pParticles;
 
 	char**					m_szParticleNames		= { nullptr };
+
+	char*					m_cCurParticleName		= { nullptr };	
 	_int					m_iCurParticleIndex		= { 0 };
 	class CParticle_Custom*	m_pCurParticle			= { nullptr };
 #pragma endregion

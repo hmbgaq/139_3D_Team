@@ -186,6 +186,8 @@
     <ClInclude Include="..\..\Reference\Imgui\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui_impl_win32.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui_internal.h" />
+    <ClInclude Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_internal.h" />
+    <ClInclude Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_sequencer.h" />
     <ClInclude Include="..\..\Reference\Imgui\imstb_rectpack.h" />
     <ClInclude Include="..\..\Reference\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h" />
@@ -245,6 +247,8 @@
     <ClCompile Include="..\..\Reference\Imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="..\..\Reference\Imgui\imgui_tables.cpp" />
     <ClCompile Include="..\..\Reference\Imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_internal.cpp" />
+    <ClCompile Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_sequencer.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />

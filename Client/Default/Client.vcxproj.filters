@@ -202,6 +202,9 @@
     <Filter Include="02.GameObjects\03. Effect\05.Effect_Trail">
       <UniqueIdentifier>{d5149fec-40d6-45e2-8090-fdb3fb70342b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\imNeoSequencer">
+      <UniqueIdentifier>{d4963b0e-d3d7-46a2-a9b6-a3c7eb309514}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -368,6 +371,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Camera_Dynamic.h">
       <Filter>02.GameObjects\97. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_internal.h">
+      <Filter>01.Levels\02.Tool\Imgui\imNeoSequencer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_sequencer.h">
+      <Filter>01.Levels\02.Tool\Imgui\imNeoSequencer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -744,6 +753,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body_Player.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_internal.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\imNeoSequencer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_sequencer.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\imNeoSequencer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
