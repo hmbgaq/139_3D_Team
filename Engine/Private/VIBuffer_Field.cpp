@@ -97,7 +97,7 @@ HRESULT CVIBuffer_Field::Initialize(void* pArg)
 	{
 		for (size_t j = 0; j < m_iNumVerticesX; ++j)
 		{
-			_uint iIndex = i * m_iNumVerticesX + j;
+			_uint iIndex = _uint(i * m_iNumVerticesX + j);
 
 			if (bTest)
 			{

@@ -40,6 +40,8 @@ HRESULT CWindow_UITool::Initialize()
 		tTexture->iTextureNum = i;
 		m_vecTexture.push_back(tTexture);
 
+		tTexture = nullptr;
+		delete[] tTexture;
 	}
 
 	_int iPathSize = m_vecPaths.size();
@@ -56,6 +58,9 @@ HRESULT CWindow_UITool::Initialize()
 
 		/* 경로 잘라서 넣기 */
 		m_vecImagePaths.push_back(pPathInfo);
+
+		pPathInfo = nullptr;
+		delete[] pPathInfo;
 	}
 
 #pragma region 경로저장
@@ -98,13 +103,18 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	__super::Begin();
-	if (ImGui::BeginTabBar("Test Tab bar"))
+
+	if (ImGui::BeginTabBar("MyTabBar", m_Tab_bar_flags))
 	{
-		if (ImGui::BeginTabItem("UI_Setting"))
+		if (ImGui::BeginTabItem("Texture"))
 		{
 			/* List */
 			UI_List(fTimeDelta);
 
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Setting"))
+		{
 			/* UI_2D 세팅 */
 			UI2D_Setting(fTimeDelta);
 
@@ -113,15 +123,23 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 
 			ImGui::Dummy(ImVec2(0, 5.f)); // 공백
 
-			/* Default : LastNumber */
-			UI_ToolTip(fTimeDelta); // Tip : 툴팁은 오버레이시 모든 출력중 가장 마지막에 호출되어야한다. (안그러면 다른 녀석들이 툴팁에 밀려서 출력됨)
-
 			ImGui::EndTabItem();
 		}
-
+		if (ImGui::BeginTabItem("Text"))
+		{
+			ImGui::Text("This is the Cucumber tab!\nblah blah blah blah blah");
+			ImGui::EndTabItem();
+		}
 		ImGui::EndTabBar();
 	}
+
+	/* Default : LastNumber */
+	UI_ToolTip(fTimeDelta); // Tip : 툴팁은 오버레이시 모든 출력중 가장 마지막에 호출되어야한다. (안그러면 다른 녀석들이 툴팁에 밀려서 출력됨)
+
+	Shortcut_Key();
+
 	__super::End();
+
 }
 
 void CWindow_UITool::Render()
@@ -159,6 +177,17 @@ HRESULT CWindow_UITool::Update_Pos()
 	//XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
 
 	return S_OK;
+}
+
+void CWindow_UITool::Shortcut_Key()
+{
+	if (ImGui::IsKeyPressed(ImGuiKey_LeftCtrl))
+	{
+		if (ImGui::IsKeyDown(ImGuiKey_S))
+		{
+			Save_Desc();
+		}
+	}
 }
 
 void CWindow_UITool::Layer_List()
@@ -226,12 +255,21 @@ void CWindow_UITool::Object_List()
 			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecObjectName[i]->strFileName)), is_selected))
 			{
 				m_iSelectedObjectIndex = i;
+				Set_Guizmo(m_vecUIObject[m_iSelectedObjectIndex]);
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
 				ImGui::SetItemDefaultFocus();
 		}
 		ImGui::EndListBox();
+	}
+
+	for (auto& UIObject : m_vecUIObject)
+	{
+		if (dynamic_cast<CUI_Anything*>(UIObject)->Get_Pick() == true)
+		{
+			Set_Guizmo(UIObject);
+		}
 	}
 
 	if (!m_vecUIObject.empty())
@@ -244,7 +282,6 @@ void CWindow_UITool::Object_List()
 
 		Set_GuizmoCamView();
 		Set_GuizmoCamProj();
-		Set_Guizmo(m_vecUIObject[m_iSelectedObjectIndex]);
 	}
 }
 
@@ -403,7 +440,13 @@ char* CWindow_UITool::ConverWStringtoC(const wstring& wstr)
 	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
 	char* result = new char[size_needed];
 	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result, size_needed, NULL, NULL);
-	return result;
+
+	char* newResult = result;
+
+	result = nullptr;
+	delete[] result;
+
+	return newResult;
 }
 
 wchar_t* CWindow_UITool::ConverCtoWC(char* str)
@@ -413,7 +456,12 @@ wchar_t* CWindow_UITool::ConverCtoWC(char* str)
 	pStr = new WCHAR[strSize];
 	MultiByteToWideChar(CP_ACP, 0, str, (_int)strlen(str) + (size_t)1, pStr, strSize);
 
-	return pStr;
+	_tchar* newResult = pStr;
+
+	pStr = nullptr;
+	delete[] pStr;
+
+	return newResult;
 }
 
 std::string CWindow_UITool::WideStringToString(const wchar_t* wideStr) 
@@ -422,6 +470,7 @@ std::string CWindow_UITool::WideStringToString(const wchar_t* wideStr)
 	std::wstring wstr(wideStr);
 	// std::string으로 변환
 	return std::string(wstr.begin(), wstr.end());
+
 }
 
 // 파일 이름만 추출하는 함수
@@ -511,6 +560,9 @@ void CWindow_UITool::LoadImg(const _tchar* folderPath)
 					pPathInfo->iPathNum = m_iTextureNum;
 					m_vecPaths.push_back(pPathInfo);
 
+					pPathInfo = nullptr;
+					delete[] pPathInfo;
+
 					m_iTextureNum++;
 				}
 			}
@@ -568,6 +620,7 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 #pragma region Save/Load
 	if (ImGui::Button("Save"))
 	{	
+		//Save_Function();
 		Save_Desc();
 	}
 
@@ -629,7 +682,7 @@ void CWindow_UITool::AddIndexNumber(PATHINFO& UI_Info)
 			if (strFilePath->strFilePath == UI_Info.strFilePath)
 			{
 				/* 모두 순회하고 */
-				if (strFilePath->iPathNum >= UI_Info.iPathNum); // 기존 컨테이너에 있는 마지막으로 비교한 녀석의 숫자보다 작거나 같을 경우
+				if (strFilePath->iPathNum >= UI_Info.iPathNum) // 기존 컨테이너에 있는 마지막으로 비교한 녀석의 숫자보다 작거나 같을 경우
 				{
 					index = strFilePath->iPathNum + 1; // 마지막 녀석의 번호 + 1로 저장
 				}
@@ -666,6 +719,9 @@ void CWindow_UITool::Add_ObjectList(CUI::UI_DESC tIn_UI_Desc)
 
 	m_vecObjectName.push_back(tUI_Desc); // 이름 중복 검사 후 처리된 테그값으로 넣어주자.
 	m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecUIObject);
+
+	tUI_Desc = nullptr;
+	delete[] tUI_Desc;
 }
 
 /* ex : Save */
@@ -736,6 +792,18 @@ HRESULT CWindow_UITool::Load_Desc()
 	return S_OK;
 }
 
+HRESULT CWindow_UITool::Save_Function(string strPath, string strFileName)
+{
+	
+	return S_OK;
+}
+
+HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
+{
+
+	return S_OK;
+}
+
 // ImGui를 사용하여 이미지를 표시하는 함수
 void CWindow_UITool::ShowImagePreview(const std::vector<unsigned char>& imageData, int width, int height)
 {
@@ -770,9 +838,11 @@ void CWindow_UITool::Free()
 	//if (!m_vecUIObject.empty())
 	//	Safe_Delete(m_vecUIObject);
 	
+
+
 	if (!m_vecObjectName.empty())
 	{
-		for (auto& path : m_vecObjectName) 
+		for (auto& path : m_vecObjectName)
 		{
 			delete path;
 		}
@@ -780,7 +850,7 @@ void CWindow_UITool::Free()
 	}
 	if (!m_vecImagePaths.empty())
 	{
-		for (auto& path : m_vecImagePaths) 
+		for (auto& path : m_vecImagePaths)
 		{
 			delete path;
 		}
@@ -788,7 +858,7 @@ void CWindow_UITool::Free()
 	}
 	if (!m_vecPaths.empty())
 	{
-		for (auto& path : m_vecPaths) 
+		for (auto& path : m_vecPaths)
 		{
 			delete path;
 		}
@@ -796,7 +866,7 @@ void CWindow_UITool::Free()
 	}
 	if (!m_vecTexture.empty())
 	{
-		for (auto& path : m_vecTexture) 
+		for (auto& path : m_vecTexture)
 		{
 			delete path;
 		}

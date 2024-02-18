@@ -3,21 +3,18 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 /* ssao */
-vector  g_OffsetVector[26];
+vector  g_OffsetVector[14];
 vector  FrustumCorner[4];
 matrix  ViewToTexSpcace;
 
 Texture2D g_NormalDepthTarget;
 Texture2D g_RandomVectorTexture;
 
-/* godray */
-
-
 /* ------------------- Vertex Shader(0) -------------------*/
 
 struct VS_SSAO_IN
 {
-    float3 vPosition : POSITION; /* 들어온값 */ 
+    float3 vPosition : POSITION; /* 들어온값 - 예제에서는 여기가 Proj * Texture임 */ 
     float3 ToFarPlaneIndex : NORMAL;
     float2 vTexcoord : TEXCOORD;
 };
@@ -65,6 +62,18 @@ struct PS_OUT
 // 교합값을 찾는 기능
 float OcclusionFunction(float distZ)
 {
+    // depth(q)
+	//
+	//       1.0     -------------\
+	//               |           |  \
+	//               |           |    \
+	//               |           |      \ 
+	//               |           |        \
+	//               |           |          \
+	//               |           |            \
+	//  ------|------|-----------|-------------|---------|--> zv
+	//        0     Eps          z0            z1        
+	//
     float gSurfaceEpsilon = 0.05f;
     float gOcclusionFadeStart = 0.2f;
     float gOcclusionFadeEnd = 2.0f;

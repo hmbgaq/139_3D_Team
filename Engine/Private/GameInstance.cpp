@@ -1,5 +1,6 @@
 #include "..\Public\GameInstance.h"
 #include "Collision_Manager.h"
+#include "Event_Manager.h"
 #include "Graphic_Device.h"
 #include "Object_Manager.h"
 #include "Target_Manager.h"
@@ -74,6 +75,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 	if (nullptr == m_pCollision_Manager)
 		return E_FAIL;
 
+	m_pEvent_Manager = CEvent_Manager::Create();
+	if (nullptr == m_pEvent_Manager)
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -97,6 +102,10 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pFrustum->Tick();
 
+	m_pEvent_Manager->Tick(fTimeDelta);
+
+	m_pCollision_Manager->Tick(fTimeDelta);
+
 	m_pObject_Manager->Late_Tick(fTimeDelta);
 
 	m_pLevel_Manager->Tick(fTimeDelta);
@@ -105,7 +114,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 void CGameInstance::Clear(_uint iLevelIndex)
 {
 	if (nullptr == m_pObject_Manager ||
-		nullptr == m_pComponent_Manager)
+		nullptr == m_pComponent_Manager || 
+		nullptr == m_pEvent_Manager)
 		return;
 
 	/* 오브젝트 매니져에 레벨별로 구분해 놓은 객체들 중 특정된 객체들을 지운다.  */
@@ -113,6 +123,8 @@ void CGameInstance::Clear(_uint iLevelIndex)
 
 	/* 컴포넌트 매니져에 레벨별로 구분해 놓은 컴포넌트들 중 특정된 객체들을 지운다.  */
 	m_pComponent_Manager->Clear(iLevelIndex);
+
+	m_pEvent_Manager->Clear();
 }
 
 HRESULT CGameInstance::Render_Engine()
@@ -120,6 +132,8 @@ HRESULT CGameInstance::Render_Engine()
 	if (nullptr == m_pLevel_Manager ||
 		nullptr == m_pRenderer)
 		return E_FAIL;
+
+	m_pRenderer->Pre_Setting();
 
 	m_pRenderer->Draw_RenderGroup();
 
@@ -129,7 +143,7 @@ HRESULT CGameInstance::Render_Engine()
 #endif
 
 	m_pInput_Device->LateTick();
-
+	
 	return S_OK;
 }
 
@@ -178,6 +192,14 @@ GRAPHIC_DESC* CGameInstance::Get_GraphicDesc()
 		return nullptr;
 
 	return m_pGraphic_Device->Get_GraphicDesc();
+}
+
+ID3D11ShaderResourceView* CGameInstance::Get_DepthSRV()
+{
+	if (nullptr == m_pGraphic_Device)
+		return nullptr;
+
+	return m_pGraphic_Device->Get_DepthSRV();
 }
 
 _byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
@@ -326,12 +348,12 @@ CGameObject* CGameInstance::Add_CloneObject_And_Get(_uint iLevelIndex, const wst
 	return Get_GameObect_Last(iLevelIndex, strLayerTag);
 }
 
-CGameObject* CGameInstance::Get_Player()
+CCharacter* CGameInstance::Get_Player()
 {
 	return m_pObject_Manager->Get_Player();
 }
 
-void CGameInstance::Set_Player(CGameObject* _pPlayer)
+void CGameInstance::Set_Player(CCharacter* _pPlayer)
 {
 	m_pObject_Manager->Set_Player(_pPlayer);
 }
@@ -508,7 +530,7 @@ RAY CGameInstance::Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX
 _bool CGameInstance::Picking_Mesh(RAY ray, _float3* out, vector<class CMesh*> Meshes)
 {
 	//_vector		vPickedPos;
-	_vector		vVec0, vVec1, vVec2;
+	//_vector		vVec0, vVec1, vVec2;
 
 	_vector		vRayPos = XMLoadFloat4(&ray.vPosition);
 	_vector		vRayDir = XMLoadFloat3(&ray.vDirection);
@@ -676,6 +698,11 @@ void CGameInstance::Add_Collision(const _uint& In_iLayer, CCollider* _pCollider)
 	m_pCollision_Manager->Add_Collision(In_iLayer, _pCollider);
 }
 
+void CGameInstance::Add_Event(IEvent* pEvent)
+{
+	m_pEvent_Manager->Add_Event(pEvent);
+}
+
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
 {
 	//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
@@ -717,7 +744,7 @@ string CGameInstance::Convert_WString_To_String(wstring _wstring)
 {
 	string out_string;
 
-	return out_string.assign(_wstring.begin(), _wstring.end());;
+	return out_string.assign(_wstring.begin(), _wstring.end());
 }
 
 WCHAR* CGameInstance::StringTowchar(const std::string& str)
@@ -734,7 +761,13 @@ char* CGameInstance::ConverWStringtoC(const wstring& wstr)
 	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
 	char* result = new char[size_needed];
 	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result, size_needed, NULL, NULL);
-	return result;
+
+	char* newResult = result;
+
+	result = nullptr;
+	delete[] result;
+
+	return newResult;
 }
 
 wchar_t* CGameInstance::ConverCtoWC(char* str)
@@ -744,7 +777,13 @@ wchar_t* CGameInstance::ConverCtoWC(char* str)
 	pStr = new WCHAR[strSize];
 	MultiByteToWideChar(CP_ACP, 0, str, (_int)strlen(str) + (size_t)1, pStr, strSize);
 
-	return pStr;
+
+	_tchar* newResult = pStr;
+
+	pStr = nullptr;
+	delete[] pStr;
+
+	return newResult;
 }
 
 std::string CGameInstance::WideStringToString(const wchar_t* wideStr)
@@ -904,10 +943,14 @@ wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 
 	{
 		return strObjectTag.substr(pos + 1);
 	}
+
+	return {};
 }
 
 void CGameInstance::Release_Manager()
 {
+	Safe_Release(m_pEvent_Manager);
+	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pFrustum);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTarget_Manager);

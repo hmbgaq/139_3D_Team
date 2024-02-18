@@ -6,6 +6,7 @@
 #pragma warning	(disable : 4819)  /* 한글 주석 경고 */
 #pragma warning (disable : 26812) /* enumclass warning */
 #pragma warning (disable : 4275) /* XMFLOAT에서 DLL EXPORT 하는 warning  */
+//#pragma warning (disable : 2532) /* 템플릿 인스턴스화 경고 무시  */
 //#pragma warning (disable : 4353) /* 비표준확장 */
 //#pragma warning (disable : 26495) /* initialize warning */
 
@@ -32,6 +33,7 @@
 #include "assimp\postprocess.h"
 #include "Assimp\Importer.hpp"
 #include <d3dcompiler.h>
+#include "GFSDK_SSAO.h"
 
 using namespace DirectX;
 
@@ -65,6 +67,8 @@ using namespace std;
 
 namespace Engine 
 {
+	static float					g_iWinsizeX = 1920.f;
+	static float					g_iWinsizeY = 1080.f;
 	static float					g_fLightFar = 3000.f;
 	static DirectX::XMFLOAT4		g_vLightPos = { 0.f, 120.f, -105.f, 1.f };
 }
@@ -91,6 +95,7 @@ using namespace physx;
 #define NOMINMAX
 
 #ifndef DBG_NEW
+#define PURE_NEW new
 
 #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
 #define new DBG_NEW

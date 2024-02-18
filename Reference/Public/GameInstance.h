@@ -34,7 +34,7 @@ public: /* For.Graphic_Device */
 	ID3D11RenderTargetView* Get_BackBufferRTV() const;
 	ID3D11DepthStencilView* Get_DSV() const;
 	GRAPHIC_DESC*			Get_GraphicDesc();
-
+	ID3D11ShaderResourceView* Get_DepthSRV();
 
 public: /* For.Input_Device */
 	_byte		Get_DIKeyState(_ubyte byKeyID);
@@ -67,8 +67,8 @@ public: /* For.Object_Manager */
 	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>*clonevector);
 	class CGameObject* Get_GameObect_Last(_uint iLevelIndex, const wstring & strLayerTag);
 	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
-	class CGameObject* Get_Player();
-	void Set_Player(class CGameObject* _pPlayer);
+	class CCharacter* Get_Player();
+	void Set_Player(class CCharacter* _pPlayer);
 
 
 
@@ -131,6 +131,10 @@ public: /* For.Collision_Manager */
 	void		Add_Collision(const _uint& In_iLayer, CCollider* _pCollider);
 
 
+public: /* For.Event_Manager */
+	void		Add_Event(class IEvent* pEvent);
+
+
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
@@ -184,6 +188,7 @@ private:
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 	class CFrustum*					m_pFrustum = { nullptr };
 	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
+	class CEvent_Manager*			m_pEvent_Manager = { nullptr };
 
 
 public:

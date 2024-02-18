@@ -64,6 +64,11 @@ void CModel::Set_StiffnessRate(_float fStiffnessRate)
 	m_Animations[m_iCurrentAnimIndex]->Set_StiffnessRate(fStiffnessRate);
 }
 
+_matrix CModel::Get_CombinedMatrix(_uint iBoneIndex)
+{
+	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
+}
+
 HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath, _fmatrix PivotMatrix)
 {
 	m_eModelType = eType;
@@ -182,7 +187,6 @@ HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName
 
 HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantName, _uint iMeshIndex, aiTextureType eTextureType)
 {
-
 	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;
