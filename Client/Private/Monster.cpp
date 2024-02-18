@@ -55,8 +55,6 @@ void CMonster::Tick(_float fTimeDelta)
 		m_pTransformCom->Look_At_Lerp(pPos, fTimeDelta);
 	}
 
-
-
 	//SetUp_OnTerrain(m_pTransformCom);
 
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());

@@ -23,7 +23,9 @@ HRESULT CScreamer::Initialize(void* pArg)
 
 	m_iRenderPass = 0;
 
-	m_vBloomColor = { 0.f, 0.f, 0.f, 1.f };
+	m_pTransformCom->Set_Scaling(0.01f, 0.01f, 0.01f);
+	m_pTransformCom->Set_Position(_float3(25.f, 0.5f, 10.f));
+	m_vBloomColor = { 0.5f, 0.f, 0.5f, 1.f };
 	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
 
 	return S_OK;
@@ -152,8 +154,6 @@ HRESULT CScreamer::Ready_Components()
 		tTransformDESC.fSpeedPerSec = 10.f;
 
 		FAILED_CHECK(__super::Initialize(&tTransformDESC));
-		m_pTransformCom->Set_Scaling(0.01f, 0.01f, 0.01f);
-		m_pTransformCom->Set_Position(_float3(25.f, 2.f, 10.f));
 	}
 
 	/* For.Com_Shader */
