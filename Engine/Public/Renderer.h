@@ -31,7 +31,7 @@ public:
 	struct QuadVertex // ssao 
 	{
 		_float3 pos;
-		_float3 normal;
+		_float3 ToFarPlaneIndex; // normal
 		_float2 tex;
 	};
 
@@ -129,7 +129,8 @@ private:
 	//SSAO_Data					m_tSSAO_Data;
 	const _matrix				m_mTexture = {	XMMatrixSet(0.5f, 0.0f, 0.0f, 0.0f,	0.0f, -0.5f, 0.0f, 0.0f,0.0f, 0.0f, 1.0f, 0.0f,	0.5f, 0.5f, 0.0f, 1.0f) };
 	_float4						m_vFrustumFarCorner[4];
-	_float4						m_vOffsets[14];
+	//_float4						m_vOffsets[14];
+	_float4						m_vOffsets[26];
 	_float						m_OffsetsFloat[56];
 	_int						m_iQuadVerCount;
 	_int						m_iQuadIndexCount;
@@ -138,7 +139,7 @@ private:
 	HRESULT						BuildFullScreenQuad();
 	void						BuildOffsetVectors();
 	void						BuildRandomVectorTexture();
-	
+	/*  Screen Space Ambient Occlusion VS Horizon Based Ambient Occlusion */
 	/* BLUR */
 	HRESULT						Render_Blur_DownSample(const wstring& strStartTargetTag);
 	HRESULT						Render_Blur_Horizontal(_int eHorizontalPass);
@@ -166,7 +167,7 @@ private:
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponent;
-	_bool						m_bRenderDebug = { false };
+	_bool						m_bRenderDebug = { true };
 #endif
 
 public:
@@ -178,6 +179,8 @@ END
 
 /*
 * Blur : 전체 / 개별을 흐리거나 뿌옇게 만드는작업 = 줄이고 늘리는과정자체가 또하나의 블러효과라서 더 좋은 결과를 낸다. 
+	주변 폐색, 물체가 서로 겹치는 영역의 가장 자리를 희미하게 가리는 기능이다. 외관적으로는 오브젝트의 경계를 따라 그림자가 생기기 때문에 오브젝트를 구분하기 쉬워진다.
+	
 	화면에 텍스쳐를 그린다 
 	-> 텍스쳐를 절반 또는 그 이하로 다운샘플링한다 (두개의 삼각형으로 이루어진 2D & 256 혹은 화면의 절반  
 	-> 샘플된 텍스쳐에 수평블러를 수행한다 : 인접한 픽셀들의 가중평균을 구하는것이다. 
@@ -190,5 +193,8 @@ END
 		- 가중치가 높다면 주변픽셀의 기여가 높아져 더 강한 블러효과가 나타난다. 
 */
 
-/*
+/* HBO+ : NVIDIA가 제공하는 기술. 최근 들어 쓰이는 차세대 AO로 배틀필드4, 위쳐3, 라이즈 오브 툼 레이더 등 많은 곳에 적용되었다. 
+	SSAO보다 좀 더 높은 연산능력을 필요로 하지만 그림자의 정확성이 좀 더 높아진다.
+
+
 */

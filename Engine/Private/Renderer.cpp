@@ -552,10 +552,10 @@ HRESULT CRenderer::Render_SSAO()
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("ViewToTexSpcace", &ViewToTexSpcace));
 
 		/* Offset */
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_OffsetVector", &m_vOffsets, sizeof(_float4) * 14));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_OffsetVector", &m_vOffsets, sizeof(_float4) * 26));
 		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_
 		/* Frustum*/
-		//SSAO_OnSize();
+		SSAO_OnSize();
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("FrustumCorner", &m_vFrustumFarCorner, sizeof(_float4) * 4));
 		
 		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ViewNormal"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_NormalDepthTarget"));
@@ -569,7 +569,7 @@ HRESULT CRenderer::Render_SSAO()
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(SSAO_SHADER::SSAO)));
 	
-	//FAILED_CHECK(m_pSSAO_VIBuffer->Render());
+	FAILED_CHECK(RenderScreenQuad());
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
@@ -703,13 +703,13 @@ HRESULT CRenderer::Ready_SSAO()
 {
 	/* ssao 객체 생성 
 		: SSAO 개체를 만들려면 Direct3D 장치, DeviceContext, 화면 크기, 카메라 fov 및 카메라 원거리 평면 거리를 전달해야한다. */
-	FAILED_CHECK(SSAO_OnSize());
-
 	FAILED_CHECK(BuildFullScreenQuad());/* 왜 이거안하지..? */
+
+	FAILED_CHECK(SSAO_OnSize());
 
 	BuildOffsetVectors();
 
-	BuildRandomVectorTexture();
+	//BuildRandomVectorTexture();
 
 	m_pRandomVectorTexture = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/RandomNormalTexture.jpg"), 1);
 
@@ -750,60 +750,59 @@ HRESULT CRenderer::BuildFullScreenQuad()
 	/* Vertex */
 	QuadVertex* pVertices = new QuadVertex[m_iQuadVerCount];
 	NULL_CHECK_RETURN(pVertices, E_FAIL);
-	{
-		pVertices[0].pos = _float3(-1.0f, -1.0f, 0.0f);
-		pVertices[1].pos = _float3(-1.0f, +1.0f, 0.0f);
-		pVertices[2].pos = _float3(+1.0f, +1.0f, 0.0f);
-		pVertices[3].pos = _float3(+1.0f, -1.0f, 0.0f);
-
-		pVertices[0].normal = _float3(0.0f, 0.0f, 0.0f);
-		pVertices[1].normal = _float3(1.0f, 0.0f, 0.0f);
-		pVertices[2].normal = _float3(2.0f, 0.0f, 0.0f);
-		pVertices[3].normal = _float3(3.0f, 0.0f, 0.0f);
-
-		pVertices[0].tex = _float2(0.0f, 1.0f);
-		pVertices[1].tex = _float2(0.0f, 0.0f);
-		pVertices[2].tex = _float2(1.0f, 0.0f);
-		pVertices[3].tex = _float2(1.0f, 1.0f);
-
-		D3D11_BUFFER_DESC vertexBufferDesc;
-		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		vertexBufferDesc.ByteWidth = sizeof(QuadVertex) * m_iQuadVerCount;
-		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBufferDesc.CPUAccessFlags = 0;
-		vertexBufferDesc.MiscFlags = 0;
-		vertexBufferDesc.StructureByteStride = 0;
-
-		D3D11_SUBRESOURCE_DATA vertexData;
-		vertexData.pSysMem = pVertices;
-		vertexData.SysMemPitch = 0;
-		vertexData.SysMemSlicePitch = 0;
-
-		FAILED_CHECK(m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexData, &m_ScreenQuadVB));
-	}
 
 	/* Index */
 	_ulong* pIndices = new _ulong[m_iQuadIndexCount];
 	NULL_CHECK_RETURN(pIndices, E_FAIL);
-	{
-		D3D11_BUFFER_DESC  indexBufferDesc;
-		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		indexBufferDesc.ByteWidth = sizeof(_ulong) * m_iQuadIndexCount;
-		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		indexBufferDesc.CPUAccessFlags = 0;
-		indexBufferDesc.MiscFlags = 0;
-		indexBufferDesc.StructureByteStride = 0;
 
-		pIndices[0] = 0; pIndices[1] = 1; pIndices[2] = 2;
-		pIndices[3] = 0; pIndices[4] = 2; pIndices[5] = 3;
+	pVertices[0].pos = _float3(-0.5f, -0.5f, 0.0f);
+	pVertices[1].pos = _float3(-0.5f, +0.5f, 0.0f);
+	pVertices[2].pos = _float3(+0.5f, +0.5f, 0.0f);
+	pVertices[3].pos = _float3(+0.5f, -0.5f, 0.0f);
 
-		D3D11_SUBRESOURCE_DATA indexData;
-		indexData.pSysMem = pIndices;
-		indexData.SysMemPitch = 0;
-		indexData.SysMemSlicePitch = 0;
+	pVertices[0].ToFarPlaneIndex = _float3(0.0f, 0.0f, 0.0f);
+	pVertices[1].ToFarPlaneIndex = _float3(1.0f, 0.0f, 0.0f);
+	pVertices[2].ToFarPlaneIndex = _float3(2.0f, 0.0f, 0.0f);
+	pVertices[3].ToFarPlaneIndex = _float3(3.0f, 0.0f, 0.0f);
 
-		FAILED_CHECK(m_pDevice->CreateBuffer(&indexBufferDesc, &indexData, &m_ScreenQuadIB));
-	}
+	pVertices[0].tex = _float2(0.0f, 1.0f);
+	pVertices[1].tex = _float2(0.0f, 0.0f);
+	pVertices[2].tex = _float2(1.0f, 0.0f);
+	pVertices[3].tex = _float2(1.0f, 1.0f);
+
+	// 
+	pIndices[0] = 0; pIndices[1] = 1; pIndices[2] = 2;
+	pIndices[3] = 0; pIndices[4] = 2; pIndices[5] = 3;
+
+	D3D11_BUFFER_DESC vertexBufferDesc;
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = sizeof(QuadVertex) * m_iQuadVerCount;
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA vertexData;
+	vertexData.pSysMem = pVertices;
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+	if (FAILED(m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexData, &m_ScreenQuadVB)))
+		return E_FAIL;
+
+	D3D11_BUFFER_DESC  indexBufferDesc;
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth = sizeof(_ulong) * m_iQuadIndexCount;
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA indexData;
+	indexData.pSysMem = pIndices;
+	indexData.SysMemPitch = 0;
+	indexData.SysMemSlicePitch = 0;
+	if (FAILED(m_pDevice->CreateBuffer(&indexBufferDesc, &indexData, &m_ScreenQuadIB)))
+		return E_FAIL;
 
 	Safe_Delete_Array<QuadVertex*>(pVertices);
 	Safe_Delete_Array<_ulong*>(pIndices);
@@ -817,38 +816,67 @@ void CRenderer::BuildOffsetVectors()
 	// 정육면체의 8개의 모서리를 선택, 각 면을 따라 6개 중심점을 선택한다.
 	// 항상 다른 쪽 면을 기준으로 이 점을 번갈아 사용한다. -> 정육면체 반대쪽도 균등하게 가능 
 	// 14개 미만의 샘플링 포인트를 선택할 때에도 벡터를 균등하게 분산시킬 수 있다.
-	
-	// 8 cube corners
-	m_vOffsets[0] = _float4(+1.0f, +1.0f, +1.0f, 0.0f);
-	m_vOffsets[1] = _float4(-1.0f, -1.0f, -1.0f, 0.0f);
-					
-	m_vOffsets[2] = _float4(-1.0f, +1.0f, +1.0f, 0.0f);
-	m_vOffsets[3] = _float4(+1.0f, -1.0f, -1.0f, 0.0f);
-					
-	m_vOffsets[4] = _float4(+1.0f, +1.0f, -1.0f, 0.0f);
-	m_vOffsets[5] = _float4(-1.0f, -1.0f, +1.0f, 0.0f);
-					
-	m_vOffsets[6] = _float4(-1.0f, +1.0f, -1.0f, 0.0f);
-	m_vOffsets[7] = _float4(+1.0f, -1.0f, +1.0f, 0.0f);
 
-	// 6 centers of cube faces
-	m_vOffsets[8] = _float4(-1.0f, 0.0f, 0.0f, 0.0f);
-	m_vOffsets[9] = _float4(+1.0f, 0.0f, 0.0f, 0.0f);
+	{
+		// 8개의 큐브 코너 벡터
+		m_vOffsets[0] = _float4(+1.0f, +1.0f, +1.0f, 0.0f);
+		m_vOffsets[1] = _float4(-1.0f, -1.0f, -1.0f, 0.0f);
+						
+		m_vOffsets[2] = _float4(-1.0f, +1.0f, +1.0f, 0.0f);
+		m_vOffsets[3] = _float4(+1.0f, -1.0f, -1.0f, 0.0f);
+						
+		m_vOffsets[4] = _float4(+1.0f, +1.0f, -1.0f, 0.0f);
+		m_vOffsets[5] = _float4(-1.0f, -1.0f, +1.0f, 0.0f);
+						
+		m_vOffsets[6] = _float4(-1.0f, +1.0f, -1.0f, 0.0f);
+		m_vOffsets[7] = _float4(+1.0f, -1.0f, +1.0f, 0.0f);
+	}
 
-	m_vOffsets[10] = _float4(0.0f, -1.0f, 0.0f, 0.0f);
-	m_vOffsets[11] = _float4(0.0f, +1.0f, 0.0f, 0.0f);
+	{
+		// 6개의 표면 중심점 벡터
+		m_vOffsets[8]	= _float4(-1.0f, 0.0f, 0.0f, 0.0f);
+		m_vOffsets[9]	= _float4(+1.0f, 0.0f, 0.0f, 0.0f);
+						  
+		m_vOffsets[10]	= _float4(0.0f, -1.0f, 0.0f, 0.0f);
+		m_vOffsets[11]	= _float4(0.0f, +1.0f, 0.0f, 0.0f);
+						  
+		m_vOffsets[12]	= _float4(0.0f, 0.0f, -1.0f, 0.0f);
+		m_vOffsets[13]	= _float4(0.0f, 0.0f, +1.0f, 0.0f);
+	}					  
+						  
+	{					  
+		m_vOffsets[14]	= _float4(-1.0f, 1.0f, 0.0f, 0.0f);
+		m_vOffsets[15]	= _float4(1.0f, 1.0f, 0.0f, 0.0f);
+		m_vOffsets[16]	= _float4(0.0f, 1.0f, -1.0f, 0.0f);
+		m_vOffsets[17]	= _float4(0.0f, 1.0f, 1.0f, 0.0f);
+	}
 
-	m_vOffsets[12] = _float4(0.0f, 0.0f, -1.0f, 0.0f);
-	m_vOffsets[13] = _float4(0.0f, 0.0f, +1.0f, 0.0f);
+	{
+		m_vOffsets[18] = _float4(1.0f, 0.0f, 1.0f, 0.0f);
+		m_vOffsets[19] = _float4(-1.0f, 0.0f, 1.0f, 0.0f);
+		m_vOffsets[20] = _float4(-1.0f, 0.0f, -1.0f, 0.0f);
+		m_vOffsets[21] = _float4(1.0f, 0.0f, -1.0f, 0.0f);
+	}
 
-	for (_uint i = 0; i < 14; ++i)
+	{
+		m_vOffsets[22] = _float4(-1.0f, -1.0f, 0.0f, 0.0f);
+		m_vOffsets[23] = _float4(1.0f, -1.0f, 0.0f, 0.0f);
+		m_vOffsets[24] = _float4(0.0f, -1.0f, -1.0f, 0.0f);
+		m_vOffsets[25] = _float4(0.0f, -1.0f, 1.0f, 0.0f);
+	}
+
+	// 난수 데이터 초기화
+	mt19937 randEngine;
+	randEngine.seed(std::random_device()());
+	uniform_real_distribution<_float> randF(0.25f, 1.0f);
+	for (_uint i = 0; i < 26; ++i)
 	{
 		// [0.25, 1.0] 사이의 임의의 벡터를 만든다.
 		_float fRandom = SMath::fRandom(0.25f, 1.0f);
 
 		_vector v = fRandom * XMVector4Normalize(XMLoadFloat4(&m_vOffsets[i]));
-
-		XMStoreFloat4(&m_vOffsets[i], v);
+		
+		m_vOffsets[i] = v;
 	}
 }
 

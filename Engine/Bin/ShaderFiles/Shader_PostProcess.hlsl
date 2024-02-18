@@ -4,7 +4,7 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 /* ssao */
-vector  g_OffsetVector[14];
+vector  g_OffsetVector[26];
 vector  FrustumCorner[4];
 matrix  ViewToTexSpcace;
 
