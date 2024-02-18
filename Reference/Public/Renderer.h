@@ -13,15 +13,9 @@ public:
 	enum RENDERGROUP 
 	{ 
 		/* Priority */
-		RENDER_PRIORITY,
-
-		/* Shadow */
-		RENDER_SHADOW,
-
-		/* Light */
-		RENDER_NONLIGHT, 
+		RENDER_PRIORITY,RENDER_SHADOW, RENDER_NONLIGHT, 
 					   
-		/* Shader */
+		/* Post Processing  */
 		RENDER_SSAO, RENDER_GODRAY, RENDER_OUTLINE,
 		
 		/* Blend */
@@ -168,7 +162,7 @@ private:
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponent;
-	_bool						m_bRenderDebug = { false };
+	_bool						m_bRenderDebug = { true };
 #endif
 
 public:

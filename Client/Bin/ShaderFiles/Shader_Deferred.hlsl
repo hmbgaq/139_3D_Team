@@ -3,6 +3,7 @@
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix			g_ProjMatrixInv, g_ViewMatrixInv;
 matrix			g_LightViewMatrix, g_LightProjMatrix;
+float			g_CamFar;
 
 vector			g_vLightDir;
 vector			g_vLightPos;
@@ -103,7 +104,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	Out.vShade = g_vLightDiffuse * min((max(dot(normalize(g_vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)), 1.f);
 
 	vector		vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
-	float		fViewZ = vDepthDesc.y * 1000.f;
+    float		fViewZ = vDepthDesc.y * g_CamFar;
 
 	vector		vWorldPos;
 
@@ -217,7 +218,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     //Out.vColor = ((vDiffuse * vShade * vShadow * vSSAO) + vSpecular + vBloom) * vOutline;
 	
 	vector		vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
-	float		fViewZ = vDepthDesc.y * 1000.f;
+    float		fViewZ = vDepthDesc.y * g_CamFar;
 	
 	vector		vWorldPos;
 

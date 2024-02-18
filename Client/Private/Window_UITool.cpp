@@ -587,6 +587,7 @@ HRESULT CWindow_UITool::UI2D_Create(_float fTimeDelta)
 
 	Add_ObjectList(m_tUI_Desc);
 
+	return S_OK;
 }
 
 void CWindow_UITool::UI2D_Delete(_float fTimeDelta)

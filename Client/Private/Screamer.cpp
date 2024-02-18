@@ -194,6 +194,8 @@ HRESULT CScreamer::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
 	/* Variable */
+	_float gCamFar = m_pGameInstance->Get_CamFar();
+	m_pShaderCom->Bind_RawValue("g_fCamFar", &gCamFar, sizeof(_float));
 	m_pShaderCom->Bind_RawValue("g_TimeDelta", &m_fTimeDelta, sizeof(_float));
 	m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float));
 	m_pShaderCom->Bind_RawValue("g_BloomColor", &m_vBloomColor, sizeof(_float4));

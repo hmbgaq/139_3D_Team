@@ -3,7 +3,7 @@
 /* Base */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix			g_BoneMatrices[256];
-float			g_fCamFar;
+float			g_fCamFar = 1000.f;
 float           g_TimeDelta;
 
 texture2D		g_DiffuseTexture;
@@ -115,7 +115,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
    // Out.vBloom = float4(1.0f, 0.f, 0.f, 1.0f);
     Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -178,7 +178,7 @@ PS_OUT PS_MAIN_DISSOVLE(PS_IN In)
     
     Out.vDiffuse = vColor;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
     return Out;
@@ -207,7 +207,7 @@ PS_OUT PS_MAIN_GRAY(PS_IN In)
     
     Out.vDiffuse = float4(grayscale, grayscale, grayscale, vColor.a);
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
     
     return Out;
@@ -230,7 +230,7 @@ PS_OUT PS_MAIN_MASKING(PS_IN In)
     
     Out.vDiffuse = vColor;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	
     return Out;
@@ -249,7 +249,7 @@ PS_OUT PS_MAIN_BLOOM(PS_IN In)
 
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vBloom = g_BloomColor;
     Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
     
