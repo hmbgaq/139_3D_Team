@@ -107,7 +107,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../Reference/Public/;../Public/;../Default/;../../Reference/Imgui/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Reference/Public/;../Public/;../Default/;../../Reference/Imgui/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -173,22 +173,22 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Reference\Imgui\GraphEditor.h" />
     <ClInclude Include="..\..\Reference\Imgui\imconfig.h" />
+    <ClInclude Include="..\..\Reference\Imgui\ImCurveEdit.h" />
+    <ClInclude Include="..\..\Reference\Imgui\ImGradient.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui.h" />
     <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialog.h" />
     <ClInclude Include="..\..\Reference\Imgui\ImGuiFileDialog\ImGuiFileDialogConfig.h" />
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\GraphEditor.h" />
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImCurveEdit.h" />
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImGradient.h" />
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImGuizmo.h" />
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImSequencer.h" />
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImZoomSlider.h" />
+    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui_impl_win32.h" />
     <ClInclude Include="..\..\Reference\Imgui\imgui_internal.h" />
+    <ClInclude Include="..\..\Reference\Imgui\ImSequencer.h" />
     <ClInclude Include="..\..\Reference\Imgui\imstb_rectpack.h" />
     <ClInclude Include="..\..\Reference\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h" />
+    <ClInclude Include="..\..\Reference\Imgui\ImZoomSlider.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
@@ -201,6 +201,7 @@
     <ClInclude Include="..\Public\Effect_Instance.h" />
     <ClInclude Include="..\Public\Environment_Instance.h" />
     <ClInclude Include="..\Public\Environment_Object.h" />
+    <ClInclude Include="..\Public\Field.h" />
     <ClInclude Include="..\Public\Interact_Door.h" />
     <ClInclude Include="..\Public\Effect_Object.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
@@ -221,15 +222,20 @@
     <ClInclude Include="..\Public\Particle_Red.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PreviewAnimationModel.h" />
+    <ClInclude Include="..\Public\Screamer.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\SkyDome.h" />
     <ClInclude Include="..\Public\stb_image.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\TestEvent.h" />
     <ClInclude Include="..\Public\TestEventWithActor.h" />
+    <ClInclude Include="..\Public\UI.h" />
     <ClInclude Include="..\Public\UI_Anything.h" />
     <ClInclude Include="..\Public\UI_MonsterHp.h" />
     <ClInclude Include="..\Public\UI_MonsterHpFrame.h" />
+    <ClInclude Include="..\Public\UI_Player_HP.h" />
+    <ClInclude Include="..\Public\UI_Player_HPBar.h" />
+    <ClInclude Include="..\Public\UI_Player_HPFrame.h" />
     <ClInclude Include="..\Public\Weapon_Player.h" />
     <ClInclude Include="..\Public\Window_AnimTool.h" />
     <ClInclude Include="..\Public\Window_EffectTool.h" />
@@ -259,6 +265,7 @@
     <ClCompile Include="..\Private\Effect_Instance.cpp" />
     <ClCompile Include="..\Private\Environment_Instance.cpp" />
     <ClCompile Include="..\Private\Environment_Object.cpp" />
+    <ClCompile Include="..\Private\Field.cpp" />
     <ClCompile Include="..\Private\Interact_Door.cpp" />
     <ClCompile Include="..\Private\Effect_Object.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
@@ -278,14 +285,19 @@
     <ClCompile Include="..\Private\Particle_Red.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PreviewAnimationModel.cpp" />
+    <ClCompile Include="..\Private\Screamer.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\SkyDome.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\TestEvent.cpp" />
     <ClCompile Include="..\Private\TestEventWithActor.cpp" />
+    <ClCompile Include="..\Private\UI.cpp" />
     <ClCompile Include="..\Private\UI_Anything.cpp" />
     <ClCompile Include="..\Private\UI_MonsterHp.cpp" />
     <ClCompile Include="..\Private\UI_MonsterHpFrame.cpp" />
+    <ClCompile Include="..\Private\UI_Player_HP.cpp" />
+    <ClCompile Include="..\Private\UI_Player_HPBar.cpp" />
+    <ClCompile Include="..\Private\UI_Player_HPFrame.cpp" />
     <ClCompile Include="..\Private\Weapon_Player.cpp" />
     <ClCompile Include="..\Private\Window_AnimTool.cpp" />
     <ClCompile Include="..\Private\Window_EffectTool.cpp" />

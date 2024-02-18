@@ -1,26 +1,22 @@
 #include "stdafx.h"
 
-
-#include "ImGuiFileDialog/ImGuiFileDialog.h"
-#include "ImGuizmo/ImGuizmo.h"
-#include "ImGuizmo/ImSequencer.h"
-#include "ImGuizmo/ImZoomSlider.h"
-#include "ImGuizmo/ImCurveEdit.h"
-#include "ImGuizmo/GraphEditor.h"
-#include "CustomDialogFont.h"
-
-
-
 #include "Imgui_Window.h"
 #include "Imgui_Manager.h"
 
 #include "GameInstance.h"
 #include "GameObject.h"
 
+#include "../Imgui/ImGuizmo/ImGuizmo.h"
+#include "../Imgui/ImGuizmo/ImCurveEdit.h"
+#include "../Imgui/ImGuizmo/GraphEditor.h"
+#include "../Imgui/ImGuizmo/ImSequencer.h"
+#include "../Imgui/ImGuizmo/ImZoomSlider.h"
+#include "CustomDialogFont.h"
+#include "ImGuiFileDialog/ImGuiFileDialog.h"
 
 
-static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-static ImGuizmo::MODE	   mCurrentGizmoMode(ImGuizmo::WORLD);
+static ImGuizmo::OPERATION mCurrentGizmoOperation;
+static ImGuizmo::MODE	   mCurrentGizmoMode;
 static bool useSnap(false);
 
 ImGuiFileDialog* g_pFileDialog;
@@ -68,8 +64,14 @@ HRESULT CImgui_Window::Initialize()
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByTypeFile | IGFD_FileStyleByContainedInFullName, ".git", ImVec4(0.5f, 0.8f, 0.5f, 0.9f), ICON_IGFD_SAVE);
 
 	//TODO For.Guizmo
-		m_arrView = new _float[16];
+	m_arrView = new _float[16];
 	m_arrProj = new _float[16];
+
+		Set_GuizmoCamView();
+		Set_GuizmoCamProj();
+
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->WorkPos, ImGuiCond_FirstUseEver);
 
 	return S_OK;
 }
@@ -77,13 +79,14 @@ HRESULT CImgui_Window::Initialize()
 void CImgui_Window::Tick(_float fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
-
+	ImGuizmo::BeginFrame();
 	/*
 	기즈모 세팅 예시 : 틱 마다 돌 수 있게 세팅해주세요.
 	Set_GuizmoCamView();
 	Set_GuizmoCamProj();
 	Set_Guizmo(기즈모를 달고싶은 대상 오브젝트를 넣어주세요.);
 	*/
+	ImGuizmo::BeginFrame();
 }
 
 void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
@@ -129,9 +132,11 @@ void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
 			break;
 		}
 
-		g_pFileDialog->OpenDialog(m_strDialogKey, strTitle, szFilters, strPath, 1, nullptr, ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ConfirmOverwrite);
+		
 	}
+	g_pFileDialog->OpenDialog(m_strDialogKey, strTitle, szFilters, strPath, 1, nullptr, ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ConfirmOverwrite);
 
+	g_pFileDialog->OpenDialog(m_strDialogKey, strTitle, szFilters, strPath, 1, nullptr, ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ConfirmOverwrite);
 }
 
 void CImgui_Window::ShowDialog()
@@ -152,9 +157,9 @@ void CImgui_Window::ShowDialog()
 			auto selection = g_pFileDialog->GetSelection();
 
 			if (m_eDialogType == CImgui_Window::SAVE_DIALOG)
-				Save_Function();
+				Save_Function(filePath, fileName);
 			else if(m_eDialogType == CImgui_Window::LOAD_DIALOG)
-				Load_Function();
+				Load_Function(filePath, fileName);
 			else
 				MSG_BOX("m_eDialogType 셋팅 하자");
 		}
@@ -163,18 +168,21 @@ void CImgui_Window::ShowDialog()
 	}
 }
 
-HRESULT CImgui_Window::Save_Function()
+HRESULT CImgui_Window::Save_Function(string strPath, string strFileName)
 {
 	return S_OK;
 }
 
-HRESULT CImgui_Window::Load_Function()
+HRESULT CImgui_Window::Load_Function(string strPath, string strFileName)
 {
 	return S_OK;
 }
 
 void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 {
+	if (nullptr == pGameObject)
+		return;
+
 	/*==== Set ImGuizmo ====*/
 	ImGuizmo::SetOrthographic(false);
 	ImGuiIO& io = ImGui::GetIO();
@@ -230,6 +238,11 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 		break;
 	}
 
+	if (arrView == nullptr ||
+		arrProj == nullptr ||
+		arrWorld == nullptr)
+		return;
+
 	ImGuizmo::Manipulate(arrView, arrProj, mCurrentGizmoOperation, mCurrentGizmoMode, arrWorld, NULL, useSnap ? &snap[0] : NULL);
 
 	XMFLOAT4X4 matW = { arrWorld[0],arrWorld[1],arrWorld[2],arrWorld[3],
@@ -267,12 +280,34 @@ void CImgui_Window::Set_GuizmoCamProj()
 	memcpy(m_arrProj, &arrProj, sizeof(arrProj));
 }
 
+_bool CImgui_Window::ImGui_MouseInCheck()
+{
+	POINT tMouse;
+
+	GetCursorPos(&tMouse);
+	ScreenToClient(m_pGameInstance->Get_GraphicDesc()->hWnd, &tMouse);
+
+
+	ImVec2 windowPos = ImGui::GetWindowPos(); //왼쪽상단모서리점
+	ImVec2 windowSize = ImGui::GetWindowSize();
+
+	if (tMouse.x >= windowPos.x && tMouse.x <= windowPos.x + windowSize.x &&
+		tMouse.y >= windowPos.y && tMouse.y <= windowPos.y + windowSize.y)
+	{
+		return false; //ImGui 영역 내
+	}
+
+	return true;
+}
+
 
 
 HRESULT CImgui_Window::Begin()
 {
 	ImGui::PushStyleColor(ImGuiCol_PopupBg, m_tImGuiDESC.vBackgroundColor);
 
+
+	
 	//ImGui::SetNextWindowSize(m_tImGuiDESC.vWindowSize, 0);
 
 	if (!(ImGui::Begin(m_tImGuiDESC.strName.c_str(), 0, m_tImGuiDESC.eWindowFlags)))

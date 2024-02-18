@@ -71,8 +71,12 @@ public:
 
 	void					Write_Names(const string& strModelFilePath);
 public:
-	vector<CAnimation*>*	Get_Animations();
-	_uint&					Get_AnimationNum() { return m_iNumAnimations; }
+	vector<CAnimation*>*	 Get_Animations();
+	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
+
+public:
+	vector<CBone*>*			Get_Bones();
+	/*_uint&					Get_BoneNum() {return }*/
 private:
 	CMyAssimp				m_MyAssimp;
 	CMyAIScene				m_pAIScene;

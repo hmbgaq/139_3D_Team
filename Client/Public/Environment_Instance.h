@@ -27,6 +27,21 @@ public:
 	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	virtual _bool	Write_Json(json& Out_Json) override;
+	virtual void	Load_FromJson(const json& In_Json) override;
+
+public:
+	void		Update(INSTANCE_INFO_DESC InstanceDesc, _int iIndex);
+
+public:
+	MAPTOOL_INSTANCE_DESC&					Get_InstanceDesc() { return m_tInstanceDesc; }
+	wstring									Get_ModelTag() { return m_tInstanceDesc.strModelTag;}
+
+	vector<INSTANCE_INFO_DESC>*				Get_InstanceInfoDesc() { return &m_tInstanceDesc.vecInstanceInfoDesc; }
+
+	INSTANCE_INFO_DESC*						Get_InstanceInfo(_uint iIndex) { return &m_tInstanceDesc.vecInstanceInfoDesc[iIndex]; }
+
 private:
 	CShader*								m_pShaderCom = { nullptr };	
 	CModel*									m_pModelCom = { nullptr };

@@ -30,6 +30,8 @@ public:
 		return m_pBounding;
 	}
 
+	void  Set_Bounding(CBounding* _Bounding) { m_pBounding = _Bounding; }
+	void  Set_isCollision(_bool _isCollision) { m_isCollision = _isCollision; }
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eType);
 	virtual HRESULT Initialize(void* pArg);

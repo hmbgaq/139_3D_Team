@@ -96,7 +96,7 @@ SOFTWARE.
 #endif  // USE_STD_FILESYSTEM
 #define PATH_SEP '/'
 #endif  // _IGFD_UNIX_
-
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui.h"
 #include "imgui_internal.h"
 
