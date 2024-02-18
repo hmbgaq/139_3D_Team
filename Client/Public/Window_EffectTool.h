@@ -43,6 +43,11 @@ public:
 	void	Update_CurParameters(wstring strName = TEXT(""));
 
 
+/* For.Effect_Instance_Update */
+public:
+	void	Update_Demo_Effect_Instance();
+	void	Update_Trnasform_Effect_Instance();
+
 /* For.Save&Load */
 public:
 	void	Update_SaveLoad_Particle();
@@ -59,9 +64,13 @@ public:
 public:
 	HRESULT Ready_Layer_Greed(const wstring& strLayerTag);
 
-	HRESULT Create_NewParticle();
+	HRESULT Create_New_Particle();
 	HRESULT Ready_Layer_Particle(const wstring& strLayerTag);
-	
+
+	HRESULT Create_New_EffectInstance(wstring strModelTag);
+	HRESULT Ready_Layer_EffectInstance(const wstring& strLayerTag, wstring strModelTag);
+
+
 #pragma region Sequencer
 private:
 	int32_t m_iCurrentFrame = { 0 };
@@ -110,6 +119,27 @@ private:
 
 	_float	m_vWorldPosition[4] = { 0.f, 0.f, 0.f, 1.f };
 #pragma endregion
+
+
+#pragma region EffectInstance_List
+	map<const wstring, class CEffect_Instance*>	m_pEffectInstances;
+
+	char** m_szEffectInstanceNames = { nullptr };
+
+	char* m_cCurEffectInstanceName = { nullptr };
+	_int					m_iCurEffectInstanceIndex = { 0 };
+	class CEffect_Instance* m_pCurEffectInstance = { nullptr };
+#pragma endregion
+
+
+#pragma region EffectInstance_Option
+	_int	m_iShaderPassIndex = { 0 };
+
+	_float	m_vWorldPosition_EffectInstance[4] = { 0.f, 0.f, 0.f, 1.f };
+	_float	m_vScale_EffectInstance = { 0.f };
+
+#pragma endregion
+
 
 public:
 	static CWindow_EffectTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

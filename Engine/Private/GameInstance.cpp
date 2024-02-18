@@ -698,64 +698,6 @@ const wstring CGameInstance::Get_LastNumChar(const wstring& str, const _uint& iN
 	return res;
 }
 
-_float3 CGameInstance::Add_Float3(const _float3& fLeft, const _float3& fRight)
-{
-	_vector vResult = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-
-	_vector vLeft = XMLoadFloat3(&fLeft);
-	_vector vRight = XMLoadFloat3(&fRight);
-
-	vResult = XMVectorSetX(vResult, XMVectorGetX(vLeft) + XMVectorGetX(vRight));
-	vResult = XMVectorSetY(vResult, XMVectorGetY(vLeft) + XMVectorGetY(vRight));
-	vResult = XMVectorSetZ(vResult, XMVectorGetZ(vLeft) + XMVectorGetZ(vRight));
-
-	_float3 f3Result;
-	XMStoreFloat3(&f3Result, vResult);
-	return f3Result;
-}
-
-_float3 CGameInstance::Mul_Float3(const _float3& fLeft, const _float& fRight)
-{
-	_vector vResult(XMVectorSet(0.f, 0.f, 0.f, 0.f));
-
-	_vector vLeft(XMLoadFloat3(&fLeft));
-
-	vResult = XMVectorSetX(vResult, XMVectorGetX(vLeft) * fRight);
-	vResult = XMVectorSetY(vResult, XMVectorGetY(vLeft) * fRight);
-	vResult = XMVectorSetZ(vResult, XMVectorGetZ(vLeft) * fRight);
-
-	_float3 f3Result;
-	XMStoreFloat3(&f3Result, vResult);
-	return f3Result;
-}
-
-_bool CGameInstance::isIn_Range(const _float3 fLeft, const _float3 fRight, const _float fRange)
-{
-	_vector vLeft = XMLoadFloat3(&fLeft);
-	_vector vRight = XMLoadFloat3(&fRight);
-	_vector vDistance = vLeft - vRight;
-
-	_float fDistance = XMVectorGetX(XMVector3Length(vDistance));
-
-	return fDistance < fRange ? TRUE : FALSE;
-}
-
-_matrix CGameInstance::Make_WorldMatrix(const _float2& vScale, const _float3& vRot, const _float3& vPos)
-{
-	_vector vPitchYawRoll = XMLoadFloat3(&vRot);
-
-	_vector vPosition = XMLoadFloat3(&vPos);
-	vPosition = XMVectorSetW(vPosition, 1.f);
-
-	_matrix RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
-	_matrix ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, 1.f);
-	_matrix TransformationMatrix = ScaleMatrix * RotationMatrix;
-
-	TransformationMatrix.r[3] = vPosition;
-
-	return TransformationMatrix;
-}
-
 
 void CGameInstance::Release_Manager()
 {

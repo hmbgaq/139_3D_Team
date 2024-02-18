@@ -23,25 +23,10 @@ HRESULT CParticle_Custom::Initialize_Prototype()
 
 HRESULT CParticle_Custom::Initialize(void* pArg)
 {
+	m_tParticleDesc = *(PARTICLE_CUSTOM_DESC*)pArg;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
-	PARTICLE_CUSTOM_DESC* pDesc = (PARTICLE_CUSTOM_DESC*)pArg;
-
-	for (_int i = 0; i < (_int)TYPE_END; i++)
-	{
-		m_tParticleDesc.strTextureTag[i] = pDesc->strTextureTag[i];
-		m_tParticleDesc.iTextureIndex[i] = pDesc->iTextureIndex[i];
-	}
-
-	m_tParticleDesc.strShaderTag = pDesc->strShaderTag;
-	m_tParticleDesc.iShaderPassIndex = pDesc->iShaderPassIndex;
-
-	m_tParticleDesc.iRenderGroup = pDesc->iRenderGroup;
-	m_tParticleDesc.iNumInstance = pDesc->iNumInstance;
-	m_tParticleDesc.iMaxNumInstance = pDesc->iMaxNumInstance;
-
-	m_tParticleDesc.fRotateUvDegree = pDesc->fRotateUvDegree;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -51,7 +36,6 @@ HRESULT CParticle_Custom::Initialize(void* pArg)
 
 void CParticle_Custom::Priority_Tick(_float fTimeDelta)
 {
-
 
 
 }
@@ -68,10 +52,32 @@ void CParticle_Custom::Tick(_float fTimeDelta)
 
 		//_float4 vParticlePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
+		if (SPRITE == m_tParticleDesc.eType)
+		{
+			m_tSpriteDesc.fTimeAcc += fTimeDelta;
+
+			if (m_tSpriteDesc.fTimeAcc > m_tSpriteDesc.fAddTime)
+			{
+				m_tSpriteDesc.iCurrentHor++;
+
+				if (m_tSpriteDesc.iCurrentHor == m_tSpriteDesc.iMaxHor)
+				{
+					m_tSpriteDesc.iCurrentVer++;
+					m_tSpriteDesc.iCurrentHor = m_tSpriteDesc.iMinVer;
+
+					if (m_tSpriteDesc.iCurrentVer == m_tSpriteDesc.iMaxVer)
+					{
+						m_tSpriteDesc.iCurrentVer = m_tSpriteDesc.iMinHor;
+					}
+				}
+
+				m_tSpriteDesc.fTimeAcc = 0.f;
+			}
+		}
+
 
 		m_pVIBufferCom->Update(fTimeDelta);
-		//m_pVIBufferCom->Update_Particle(fTimeDelta, FALSE);
-		//Update_ParticlePosition(0, fTimeDelta);
+
 	}
 }
 
@@ -93,7 +99,7 @@ HRESULT CParticle_Custom::Render()
 			return E_FAIL;
 
 		/* 이 쉐이더에 0번째 패스로 그릴거야. */
-		m_pShaderCom->Begin(0);
+		m_pShaderCom->Begin(m_tParticleDesc.iShaderPassIndex);
 
 		/* 내가 그리려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
 		m_pVIBufferCom->Bind_VIBuffers();
@@ -132,8 +138,10 @@ void CParticle_Custom::Load_FromJson(const json& In_Json)
 
 HRESULT CParticle_Custom::Ready_Components()
 {
+	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, m_tParticleDesc.strShaderTag,
+	if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strShaderTag,
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
@@ -186,21 +194,21 @@ HRESULT CParticle_Custom::Ready_Components()
 		tVIBufferDesc.vSpriteUVForce = { 0.f, 0.f };
 		tVIBufferDesc.iSpriteFrameIndex = { 1 };
 
-		if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Particle_Point"),
+		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle_Point"),
 			TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &tVIBufferDesc)))
 			return E_FAIL;
 	}
 
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, m_tParticleDesc.strTextureTag[TYPE_DIFFUSE],
+	if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TYPE_DIFFUSE],
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_DIFFUSE]))))
 		return E_FAIL;
 
 	if (nullptr != m_pTextureCom[TYPE_MASK])
 	{
 		/* For.Com_Mask */
-		if (FAILED(__super::Add_Component(LEVEL_TOOL, m_tParticleDesc.strTextureTag[TYPE_MASK],
+		if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TYPE_MASK],
 			TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_MASK]))))
 			return E_FAIL;
 	}
@@ -208,7 +216,7 @@ HRESULT CParticle_Custom::Ready_Components()
 	if (nullptr != m_pTextureCom[TYPE_NOISE])
 	{
 		/* For.Com_Noise */
-		if (FAILED(__super::Add_Component(LEVEL_TOOL, m_tParticleDesc.strTextureTag[TYPE_NOISE],
+		if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TYPE_NOISE],
 			TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_NOISE]))))
 			return E_FAIL;
 	}
@@ -249,9 +257,31 @@ HRESULT CParticle_Custom::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
 
-	//_vector vCamDir = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamLook", &vCamDir, sizeof(_float4))))
-	//	return E_FAIL;
+	if (SPRITE == m_tParticleDesc.eType)
+	{
+		_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
+		vCamDirection = XMVector4Normalize(vCamDirection);
+		_float4 vCamDirectionFloat4 = {};
+		XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat4, sizeof(_float4))))
+			return E_FAIL;
+
+
+		_float2 uvOffset = { (_float)(m_tSpriteDesc.iCurrentHor * m_tSpriteDesc.fAnimationSizeX) / m_tSpriteDesc.fSpriteSizeX, (_float)(m_tSpriteDesc.iCurrentVer * m_tSpriteDesc.fAnimationSizeY) / m_tSpriteDesc.fSpriteSizeY };
+		_float2 uvScale = { (_float)m_tSpriteDesc.fAnimationSizeX / m_tSpriteDesc.fSpriteSizeX, (_float)m_tSpriteDesc.fAnimationSizeY / m_tSpriteDesc.fSpriteSizeY };
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_UVOffset", &uvOffset, sizeof(_float2))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_UVScale", &uvScale, sizeof(_float2))))
+			return E_FAIL;
+
+
+		if (FAILED(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
+			return E_FAIL;
+	}
+
 
 	return S_OK;
 }

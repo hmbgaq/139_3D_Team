@@ -5,7 +5,9 @@
 
 #include "GameInstance.h"
 
+#include "Effect_Instance.h"
 #include "Particle_Custom.h"
+
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -32,10 +34,13 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	ShowDialog();
+
 #pragma region 재생바 창
 	SetUp_ImGuiDESC(" Play ", ImVec2{ 400.f, 300.f },  ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
 	__super::Begin();
 
+	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
 	Update_PlayBarArea_Particle();
 
 	__super::End();
@@ -43,9 +48,11 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 
 #pragma region 시퀀서 창
+
 	SetUp_ImGuiDESC(" Sequencer ", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse |  /*ImGuiWindowFlags_NoResize | */ ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
 	__super::Begin();
 
+	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
 	Update_Demo_Sequencer();
 
 	__super::End();
@@ -54,9 +61,11 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 
 #pragma region 이펙트 툴
+
 	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 800.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
 	__super::Begin();
 
+	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
 	Update_SaveLoad_Particle();
 
 	if (ImGui::BeginTabBar("Tab_Effect", ImGuiTabBarFlags_None))
@@ -187,7 +196,10 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 void CWindow_EffectTool::Update_MeshTab()
 {
+	Update_Demo_Effect_Instance();
 
+	ImGui::Separator();
+	Update_Trnasform_Effect_Instance();
 
 }
 
@@ -244,7 +256,7 @@ void CWindow_EffectTool::Update_Demo_Particle()
 {
 	if (ImGui::Button(" Sphere_Demo "))
 	{
-		Create_NewParticle();
+		Create_New_Particle();
 
 		json In_Json;
 		char filePath[MAX_PATH] = "../Bin/DataFiles/Data_Effect/Particle_Info/Particle_TestSphere_Normal_Backup_Info";
@@ -254,10 +266,10 @@ void CWindow_EffectTool::Update_Demo_Particle()
 
 		Update_CurParameters();
 	}
-
+	ImGui::SameLine();
 	if (ImGui::Button(" Sphere_Reverse_Demo "))
 	{
-		Create_NewParticle();
+		Create_New_Particle();
 
 		json In_Json;
 		char filePath[MAX_PATH] = "../Bin/DataFiles/Data_Effect/Particle_Info/Particle_TestSphere_Reverse_Backup_Info";
@@ -274,7 +286,7 @@ void CWindow_EffectTool::Update_ListArea_Particle()
 	/* 기본 파티클 생성 */
 	if (ImGui::Button(" Create "))
 	{
-		Create_NewParticle();
+		Create_New_Particle();
 	}
 
 	/* 선택 파티클 삭제 */
@@ -669,6 +681,63 @@ void CWindow_EffectTool::Update_CurParameters(wstring strName)
 	}
 }
 
+void CWindow_EffectTool::Update_Demo_Effect_Instance()
+{
+	if (ImGui::Button("Create Demo Mesh"))
+	{
+		// Prototype_Component_Model_Mesh_Fire_Test
+		//Create_New_EffectInstance(TEXT("Prototype_Component_Model_Xray_ManHeavy"));
+		Create_New_EffectInstance(TEXT("Prototype_Component_Model_Mesh_Fire_Test"));
+	}
+
+
+
+	if (ImGui::DragInt("ShaderPassIndex", &m_iShaderPassIndex, 1, 0, 7))
+	{
+		if (nullptr != m_pCurEffectInstance)
+		{
+			if (7 < m_iShaderPassIndex)
+				m_iShaderPassIndex = 7;
+
+			m_pCurEffectInstance->Set_ShaderPassIndex(m_iShaderPassIndex);
+		}
+	}
+
+	if (ImGui::Button("TRUE"))
+	{
+		if (nullptr != m_pCurEffectInstance)
+		{
+			m_pCurEffectInstance->bTest = TRUE;
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("FALSE"))
+	{
+		if (nullptr != m_pCurEffectInstance)
+		{
+			m_pCurEffectInstance->bTest = FALSE;
+		}
+	}
+
+}
+
+void CWindow_EffectTool::Update_Trnasform_Effect_Instance()
+{
+	if (nullptr != m_pCurEffectInstance)
+	{
+		if (ImGui::DragFloat3("WorldPosition_Mesh", m_vWorldPosition_EffectInstance, 1.f, 0.f))
+		{
+			m_pCurEffectInstance->Set_Position(_float3(m_vWorldPosition_EffectInstance[0], m_vWorldPosition_EffectInstance[1], m_vWorldPosition_EffectInstance[2]));
+		}
+
+		if (ImGui::DragFloat("Scale_Mesh", &m_vScale_EffectInstance, 1.f, 0.f))
+		{
+			m_pCurEffectInstance->Get_Transform()->Set_Scaling(m_vScale_EffectInstance, m_vScale_EffectInstance, m_vScale_EffectInstance);
+		}
+	}
+
+}
+
 void CWindow_EffectTool::Update_SaveLoad_Particle()
 {
 	if (ImGui::BeginMenuBar())
@@ -683,6 +752,8 @@ void CWindow_EffectTool::Update_SaveLoad_Particle()
 			{
 				m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
 				m_strDialogPath = "../Bin/DataFiles/Data_Effect/Particle_Info/";
+
+				OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
 
 				Load_Function();
 			}
@@ -709,9 +780,10 @@ HRESULT CWindow_EffectTool::Save_Function()
 
 HRESULT CWindow_EffectTool::Load_Function()
 {
+
 	if (nullptr == m_pCurParticle)
 	{
-		Create_NewParticle();
+		Create_New_Particle();
 	}
 
 	json In_Json;
@@ -725,7 +797,39 @@ HRESULT CWindow_EffectTool::Load_Function()
 	return S_OK;
 }
 
+HRESULT CWindow_EffectTool::Create_New_Particle()
+{
+	if (FAILED(Ready_Layer_Particle(TEXT("Layer_Particle"))))
+		return E_FAIL;
 
+	m_iCurParticleIndex = m_pParticles.size();
+
+	/* 문자열 초기화 */
+	if (nullptr != m_szParticleNames)
+	{
+		for (_int i = 0; i < m_iCurParticleIndex; ++i)
+		{
+			m_szParticleNames[i] = nullptr;
+		}
+		m_szParticleNames = nullptr;
+	}
+
+	m_szParticleNames = new char* [m_iCurParticleIndex];
+
+	_int iCount = 0;
+	for (auto& Pair : m_pParticles)
+	{
+		const string utf8Str = m_pGameInstance->Wstring_To_UTF8(Pair.first);
+		m_szParticleNames[iCount] = new char[utf8Str.length() + 1];
+		strcpy(m_szParticleNames[iCount], utf8Str.c_str());
+
+		iCount++;
+	}
+
+	m_iCurParticleIndex -= 1;
+
+	return S_OK;
+}
 
 HRESULT CWindow_EffectTool::Ready_Layer_Particle(const wstring& strLayerTag)
 {
@@ -733,6 +837,7 @@ HRESULT CWindow_EffectTool::Ready_Layer_Particle(const wstring& strLayerTag)
 	tDesc.fSpeedPerSec = { 5.f };
 	tDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
+	tDesc.eType = CParticle_Custom::SINGLE;
 	tDesc.strTextureTag[CParticle_Custom::TYPE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
 	tDesc.iTextureIndex[CParticle_Custom::TYPE_DIFFUSE] = { 0 };
 
@@ -759,6 +864,72 @@ HRESULT CWindow_EffectTool::Ready_Layer_Particle(const wstring& strLayerTag)
 	m_pCurParticle = pParticle;
 
 	Update_CurParameters(strName);
+
+	return S_OK;
+}
+
+HRESULT CWindow_EffectTool::Create_New_EffectInstance(wstring strModelTag)
+{
+	if (FAILED(Ready_Layer_EffectInstance(TEXT("Layer_EffectInstance"), strModelTag)))
+		return E_FAIL;
+
+	m_iCurEffectInstanceIndex = m_pEffectInstances.size();
+
+	/* 문자열 초기화 */
+	if (nullptr != m_szEffectInstanceNames)
+	{
+		for (_int i = 0; i < m_iCurEffectInstanceIndex; ++i)
+		{
+			m_szEffectInstanceNames[i] = nullptr;
+		}
+		m_szEffectInstanceNames = nullptr;
+	}
+
+	m_szEffectInstanceNames = new char* [m_iCurParticleIndex];
+
+	_int iCount = 0;
+	for (auto& Pair : m_pParticles)
+	{
+		const string utf8Str = m_pGameInstance->Wstring_To_UTF8(Pair.first);
+		m_szEffectInstanceNames[iCount] = new char[utf8Str.length() + 1];
+		strcpy(m_szEffectInstanceNames[iCount], utf8Str.c_str());
+
+		iCount++;
+	}
+
+	m_iCurEffectInstanceIndex -= 1;
+
+	return S_OK;
+}
+
+HRESULT CWindow_EffectTool::Ready_Layer_EffectInstance(const wstring& strLayerTag, wstring strModelTag)
+{
+	CEffect_Instance::EFFECT_INSTANCE_DESC tDesc = {};
+	tDesc.fSpeedPerSec = { 5.f };
+	tDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
+
+	tDesc.eType = { CEffect_Instance::FLAT };
+
+	tDesc.strModelTag = strModelTag;
+	tDesc.iNumInstance = { 10 };
+
+	tDesc.strTextureTag[CEffect_Instance::TYPE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
+	tDesc.iTextureIndex[CEffect_Instance::TYPE_DIFFUSE] = { 0 };
+
+	//Shader_AnimModel
+	tDesc.strShaderTag = TEXT("Prototype_Component_Shader_Effect_Model_Instance");
+	//Prototype_Component_Shader_Effect_Model_Instance
+	//tDesc.strShaderTag = TEXT("Prototype_Component_Shader_AnimModel");
+	tDesc.iShaderPassIndex = { 0 };
+	tDesc.iRenderGroup = { 6 };
+
+
+	CEffect_Instance* pMesh = dynamic_cast<CEffect_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strModelTag, TEXT("Prototype_GameObject_Effect_Instance"), &tDesc));
+
+	wstring strName = Make_NameWithPin(TEXT("EffectInstance"));
+	m_pEffectInstances.emplace(strName, pMesh);
+
+	m_pCurEffectInstance = pMesh;
 
 	return S_OK;
 }
@@ -813,39 +984,6 @@ HRESULT CWindow_EffectTool::Ready_Layer_Greed(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CWindow_EffectTool::Create_NewParticle()
-{
-	if (FAILED(Ready_Layer_Particle(TEXT("Layer_Particle"))))
-		return E_FAIL;
-
-	m_iCurParticleIndex = m_pParticles.size();
-
-	/* 문자열 초기화 */
-	if (nullptr != m_szParticleNames)
-	{
-		for (_int i = 0; i < m_iCurParticleIndex; ++i)
-		{
-			m_szParticleNames[i] = nullptr;
-		}
-		m_szParticleNames = nullptr;
-	}
-
-	m_szParticleNames = new char* [m_iCurParticleIndex];
-
-	_int iCount = 0;
-	for (auto& Pair : m_pParticles)
-	{
-		const string utf8Str = m_pGameInstance->Wstring_To_UTF8(Pair.first);
-		m_szParticleNames[iCount] = new char[utf8Str.length() + 1];
-		strcpy(m_szParticleNames[iCount], utf8Str.c_str());
-
-		iCount++;
-	}
-
-	m_iCurParticleIndex -= 1;
-
-	return S_OK;
-}
 
 CWindow_EffectTool* CWindow_EffectTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

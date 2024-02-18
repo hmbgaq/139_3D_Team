@@ -14,14 +14,17 @@ BEGIN(Client)
 class CParticle_Custom final : public CAlphaObject
 {
 public:
+	enum TYPE { SINGLE, SPRITE, TEXTURE_TYPE_END };
 	enum TEXTURE { TYPE_DIFFUSE, TYPE_MASK, TYPE_NOISE, TYPE_END };
 
 	typedef struct tagParticleCustomDesc : public CGameObject::GAMEOBJECT_DESC
 	{
+		TYPE		eType = { SINGLE };
+
 		wstring		strTextureTag[TYPE_END];
 		_int		iTextureIndex[TYPE_END] = { 0 };
 
-		wstring		strShaderTag;
+		wstring		strShaderTag = {TEXT("")};
 		_uint		iShaderPassIndex = { 0 };
 
 		_int		iRenderGroup = { 7 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 현재 작성기준 CRENDERER::RENDERGROUP::RENDER_END가 8임
@@ -32,6 +35,28 @@ public:
 		_float		fRotateUvDegree;
 
 	}PARTICLE_CUSTOM_DESC;
+
+	typedef struct tagSpriteUV
+	{
+		_float	fTimeAcc = { 0.f };
+		_float	fAddTime = { 0.05f };
+
+		_float	fAnimationSizeX = { 292.5f };
+		_float	fAnimationSizeY = { 292.5f };
+
+		_float	fSpriteSizeX = { 2048.f };
+		_float	fSpriteSizeY = { 2048.f };
+
+		_int	iCurrentVer = { 0 };
+		_int	iCurrentHor = { 0 };
+
+		_int	iMinVer = { 0 };
+		_int	iMinHor = { 0 };
+
+		_int	iMaxVer = { 7 };
+		_int	iMaxHor = { 7 };
+
+	}SPRITEUV_DESC;
 
 private:
 	CParticle_Custom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -52,7 +77,8 @@ public:
 
 	/* For.Desc */
 public:
-	PARTICLE_CUSTOM_DESC* Get_Desc() { return &m_tParticleDesc; }
+	PARTICLE_CUSTOM_DESC*	Get_Desc() { return &m_tParticleDesc; }
+	SPRITEUV_DESC*			Get_Sprite_Desc() { return &m_tSpriteDesc; }
 
 	void		Set_Active(_bool bActive) { m_bActive = bActive; }
 
@@ -63,8 +89,10 @@ public:
 public:
 	CVIBuffer_Particle_Point* Get_VIBufferCom() { return m_pVIBufferCom; }
 
+
 private:
 	PARTICLE_CUSTOM_DESC		m_tParticleDesc = {};
+	SPRITEUV_DESC				m_tSpriteDesc = {};
 
 private:
 	_bool			m_bActive = { TRUE };

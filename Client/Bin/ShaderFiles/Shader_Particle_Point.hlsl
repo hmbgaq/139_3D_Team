@@ -7,7 +7,7 @@ texture2D		g_MaskTexture;
 texture2D		g_NoiseTexture;
 
 vector			g_vCamPosition;
-vector			g_vCamLook;
+vector			g_vCamDirection;
 
 float			g_fDegree;
 
@@ -61,6 +61,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	return Out;
 }
+
 
 struct GS_IN
 {
@@ -155,10 +156,36 @@ PS_OUT PS_MAIN(PS_IN In)
 }
 
 
+PS_OUT PS_MAIN_SPRITE_ANIMATION(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
+
+	// Set Color
+	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, clippedTexCoord);
+
+	float2 vDepthTexcoord;
+	vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+	vDepthTexcoord.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+
+	float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, vDepthTexcoord);
+
+	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
+	// Alpha Test
+	if (Out.vDiffuse.a < 0.1f)
+	{
+		discard;
+	}
+
+	return Out;
+}
+
+
 technique11 DefaultTechnique
 {
 	/* 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
-	pass Particle
+	pass Particle  //0
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);
@@ -170,4 +197,18 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
+
+	pass Sprite_Animation //1
+	{
+		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(DSS_DepthStencilEnable, 0);
+		SetRasterizerState(RS_Cull_None);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_SPRITE_ANIMATION();
+	}
+
 }
