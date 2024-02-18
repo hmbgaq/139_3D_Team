@@ -91,6 +91,7 @@ HRESULT CUI::Render()
 
 void CUI::Picking_UI()
 {
+	/* @@@ 마우스 좌표가 실제 렉트 좌표랑 다르게찍힘 확인해야함 @@@ */
 	POINT pt;
 	GetCursorPos(&pt);
 	ScreenToClient(g_hWnd, &pt);  // 클라이언트 내에 마우스 포인터 가져오기 
@@ -128,10 +129,23 @@ HRESULT CUI::SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX, _float fSiz
 
 void CUI::Moving_Rect()
 {
-	m_rcUI.left = LONG(m_fPositionX - (m_fScaleX / 2));
-	m_rcUI.top = LONG(m_fPositionY - (m_fScaleY / 2));
-	m_rcUI.right = LONG(m_fPositionX + (m_fScaleX / 2));
-	m_rcUI.bottom = LONG(m_fPositionY + (m_fScaleY / 2));
+	_float fPosX = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0] + g_iWinSizeX * 0.5;
+	_float fPosY = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1] - g_iWinSizeY * 0.5;
+
+	m_rcUI.left = LONG(fPosX - (m_fScaleX / 2));
+	m_rcUI.top = LONG(fPosY - (m_fScaleY / 2));
+	m_rcUI.right = LONG(fPosX + (m_fScaleX / 2));
+	m_rcUI.bottom = LONG(fPosY + (m_fScaleY / 2));
+}
+
+void CUI::Move_UI(POINT pt)
+{
+	m_fPositionX = (_float)pt.x;
+	m_fPositionY = (_float)pt.y;
+
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
 }
 
 HRESULT CUI::SetUp_BillBoarding()

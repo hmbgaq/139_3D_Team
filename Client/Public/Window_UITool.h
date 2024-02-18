@@ -110,14 +110,17 @@ public: /* Save/Load */
 	HRESULT				Load_Desc();
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
+	void				Load_Paths();
 
 public: /* Image */
 	// 이미지 로드 함수
-	void LoadImg(const _tchar* folderPath);
+	void LoadImgPath(const _tchar* folderPath);
 	void ImagePreview(_float fTimeDelta);
 
 public:
 	void IndexCheck();
+	void SetUp_Initialize(); // Load
+	_bool bSetUpComplete = true;
 
 private: /* Member */
 	CUI::UI_DESC				m_tUI_Info;
@@ -130,13 +133,14 @@ private: /* Image_Member */
 	_int						m_My_Image_Height = 100;
 	_int						m_iTextureNum = 0;
 	_int						m_iTestNum = 0;
-	vector<IMAGEINFO*>			m_vecTexture;	// 이미지 미리보기
-	vector<PATHINFO*>			m_vecPaths;		// 경로, 파일이름 (프로토타입 파싱가능)
-	IMAGEINFO* m_tTexture;
+	vector<IMAGEINFO*>			m_vecTexture;		// 이미지 미리보기를 위한 텍스처 정보들
+	vector<PATHINFO*>			m_vecPaths;			// 경로, 파일이름 담긴 컨테이너 (프로토타입 파싱가능)
+	std::vector<PATHINFO*>		m_vecImagePaths;	// 이미지 로드를 위한 경로
+	std::vector<PATHINFO*>		m_vecObjectName;	// 추가된 오브젝트들의 이름 (리스트 박스 출력용)
 
-	// 문자열 벡터를 const char* 배열로 변환
-	std::vector<PATHINFO*>		m_vecImagePaths;
-	std::vector<PATHINFO*>		m_vecObjectName;
+	IMAGEINFO*					m_tTexture;
+
+
 	_int						m_iSelectedPathIndex = 0; // 선택된 이미지 경로 인덱스
 	_int						m_iSelectedObjectIndex = 0; // 선택된 UI오브젝트
 	_int						m_iUINameNum = 0;
@@ -148,6 +152,26 @@ private: /* 2D */
 
 	_int						m_iLayerNum = 0;
 	CUI::UI_DESC				m_tUI_Desc;
+	CGameObject*				m_CurrObject = nullptr;
+
+
+private:
+	//// ==============폴더 경로==============
+	//// 이미지 경로 목록을 저장하는 벡터
+	//std::vector<std::string> m_vecImgPs =
+	//{
+	//	"../Bin/Resources/Textures/UI/Textures/Blood",
+	//	"../Bin/Resources/Textures/UI/Textures/Buttons",
+	//	"../Bin/Resources/Textures/UI/Textures/Crosshairs",
+	//	"../Bin/Resources/Textures/UI/Textures/DeathScreen",
+	//	"../Bin/Resources/Textures/UI/Textures/EnemyHUD",
+	//	"../Bin/Resources/Textures/UI/Textures/EnemyIndicators",
+	//	"../Bin/Resources/Textures/UI/Textures/Icons",
+	//	"../Bin/Resources/Textures/UI/Textures/Interaction",
+	//	"../Bin/Resources/Textures/UI/Textures/InText",
+	//	"../Bin/Resources/Textures/UI/Textures/Inventory",
+	//	"../Bin/Resources/Textures/UI/Textures/Journal",
+	//};
 
 private:
 	ImGuiTabBarFlags m_Tab_bar_flags = ImGuiTabBarFlags_None;

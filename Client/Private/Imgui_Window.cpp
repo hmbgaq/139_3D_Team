@@ -14,10 +14,10 @@
 #include "CustomDialogFont.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
 
-
 static ImGuizmo::OPERATION mCurrentGizmoOperation;
 static ImGuizmo::MODE	   mCurrentGizmoMode;
 static bool useSnap(false);
+static bool useSnap2D(false);
 
 ImGuiFileDialog* g_pFileDialog;
 
@@ -135,8 +135,6 @@ void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
 		
 	}
 	g_pFileDialog->OpenDialog(m_strDialogKey, strTitle, szFilters, strPath, 1, nullptr, ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ConfirmOverwrite);
-
-	g_pFileDialog->OpenDialog(m_strDialogKey, strTitle, szFilters, strPath, 1, nullptr, ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ConfirmOverwrite);
 }
 
 void CImgui_Window::ShowDialog()
@@ -253,6 +251,86 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 
 	pGameObject->Get_Transform()->Set_WorldMatrix(matW);
 
+
+	if (ImGuizmo::IsOver())
+	{
+		int a = 0;
+	}
+}
+
+void CImgui_Window::Set_Guizmo2D(CGameObject* pGameObject)
+{
+	if (nullptr == pGameObject)
+		return;
+
+	/*==== Set ImGuizmo ====*/
+	ImGuizmo::SetOrthographic(true);
+	ImGuiIO& io = ImGui::GetIO();
+	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+	if (ImGui::IsKeyPressed(ImGuiKey_T))
+		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	if (ImGui::IsKeyPressed(ImGuiKey_R))
+		mCurrentGizmoOperation = ImGuizmo::ROTATE;
+	if (ImGui::IsKeyPressed(ImGuiKey_E))
+		mCurrentGizmoOperation = ImGuizmo::SCALE;
+
+	if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
+		mCurrentGizmoOperation = ImGuizmo::ROTATE;
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
+		mCurrentGizmoOperation = ImGuizmo::SCALE;
+
+	_float* arrView = m_arrView;
+	_float* arrProj = m_arrProj;
+
+	_float fPosX = pGameObject->Get_Transform()->Get_State(CTransform::STATE_POSITION).m128_f32[0] + g_iWinSizeX * 0.5;
+	_float fPosY = pGameObject->Get_Transform()->Get_State(CTransform::STATE_POSITION).m128_f32[1] - g_iWinSizeY * 0.5;
+
+	ImVec2 minBound = ImVec2(fPosX, fPosY);
+	ImVec2 maxBound = ImVec2(fPosX, fPosY);
+
+	float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+	matrixTranslation[0] = (maxBound.x - minBound.x) / 2.0f;
+	matrixTranslation[1] = (maxBound.y - minBound.y) / 2.0f;
+	matrixTranslation[2] = 0.0f;
+	matrixScale[0] = (maxBound.x - minBound.x);
+	matrixScale[1] = (maxBound.y - minBound.y);
+	matrixScale[2] = 1.0f;
+
+	XMFLOAT4X4 matWorld = pGameObject->Get_Transform()->Get_WorldFloat4x4();
+	_float arrWorld2D[] = { matWorld._11,matWorld._12,matWorld._13,matWorld._14,
+						  matWorld._21,matWorld._22,matWorld._23,matWorld._24,
+						  matWorld._31,matWorld._32,matWorld._33,matWorld._34,
+						  matWorld._41,matWorld._42,matWorld._43,matWorld._44 };
+
+	ImGuizmo::DecomposeMatrixToComponents(arrWorld2D, matrixTranslation, matrixRotation, matrixScale);
+	ImGui::DragFloat3("Position", matrixTranslation);
+	ImGui::DragFloat3("Rtation", matrixRotation);
+	ImGui::DragFloat2("Scale", matrixScale);
+	ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, arrWorld2D);
+
+
+	if (arrView == nullptr ||
+		arrProj == nullptr)
+		return;
+
+	ImGuizmo::Manipulate(arrView, arrProj, mCurrentGizmoOperation, mCurrentGizmoMode, arrWorld2D, NULL, useSnap2D ? snap2D : NULL);
+
+	//XMFLOAT4X4 arrWorld = { matrixScale[0],				0.0f,							0.0f,						0.0f,
+	//						0.0f,						matrixScale[1],					0.0f,						0.0f,
+	//						0.0f,						0.0f,							1.0f,						0.0f,
+	//						matrixTranslation[0],		matrixTranslation[1],			0.0f,						1.0f };
+	
+	XMFLOAT4X4 matW = { matrixScale[0],				arrWorld2D[1],				arrWorld2D[2],		arrWorld2D[3],
+						arrWorld2D[4],				matrixScale[1],				arrWorld2D[6],		arrWorld2D[7],
+						arrWorld2D[8],				arrWorld2D[9],				arrWorld2D[10],		arrWorld2D[11],
+						matrixTranslation[0],		matrixTranslation[1],		arrWorld2D[14],		arrWorld2D[15] };
+
+	pGameObject->Get_Transform()->Set_WorldMatrix(matW);
 
 	if (ImGuizmo::IsOver())
 	{

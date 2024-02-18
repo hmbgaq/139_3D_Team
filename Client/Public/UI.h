@@ -61,6 +61,7 @@ public: /* ================================ Basic ==============================
 public: /* ============================== Function ============================= */
 	virtual void	Picking_UI();	// Pick
 	virtual void	Moving_Rect();	// Moving
+	void			Move_UI(POINT pt);
 
 protected: /* ============================= Ready ============================= */
 	virtual HRESULT Ready_Components();

@@ -14,16 +14,21 @@ CWindow_UITool::CWindow_UITool(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 {
 }
 
-
 HRESULT CWindow_UITool::Initialize()
 {
 	//! 현재는 특별한 기능없음. 추후 필요할 것 같아서 셋팅.
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+	SetWindowText(g_hWnd, TEXT("TOOL 로딩중."));
+
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
-	LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures/PlayerHUD"))));
-	//LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures"))));
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD"))));
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));
+	
+	/* 툴 들어갈때 오래걸리니까 따로 버튼눌러서 불러오자.. */
+	/* 저장해둔 이미지 경로들을 불러온다. */
+	// Load_Paths();
 
 	// 이미지 로드
 	_int iSize = (_int)m_vecPaths.size();
@@ -45,6 +50,7 @@ HRESULT CWindow_UITool::Initialize()
 	}
 
 	_int iPathSize = m_vecPaths.size();
+
 	//for (auto& iter : m_vecPaths)
 	for(_int i = 0; i < iPathSize; i++)
 	{
@@ -93,12 +99,18 @@ HRESULT CWindow_UITool::Initialize()
 	m_tUI_Desc.fScaleX = 100;
 	m_tUI_Desc.fScaleY = 100;
 #pragma endregion End
+
+	SetWindowText(g_hWnd, TEXT("TOOL 로딩이 완료되었습니다."));
+
 	return S_OK;
 }
 
 void CWindow_UITool::Tick(_float fTimeDelta)
 {
-	IndexCheck();
+	/* Load */
+	SetUp_Initialize();
+	
+	//IndexCheck();
 
 	__super::Tick(fTimeDelta);
 
@@ -130,6 +142,7 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 			ImGui::Text("This is the Cucumber tab!\nblah blah blah blah blah");
 			ImGui::EndTabItem();
 		}
+
 		ImGui::EndTabBar();
 	}
 
@@ -149,6 +162,10 @@ void CWindow_UITool::Render()
 
 void CWindow_UITool::UI_List(_float fTimeDelta)
 {
+	if (m_vecImagePaths.empty() ||
+		m_vecTexture.empty())
+		return;
+
 	// Layer
 	Layer_List();
 	ImGui::Spacing();
@@ -159,6 +176,36 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 
 	// Object
 	Object_List();
+
+
+#pragma region Create/Delete
+	if (ImGui::Button("Create"))
+	{
+		UI2D_Create(fTimeDelta);
+	}
+
+	ImGui::SameLine(70.f);
+
+	if (ImGui::Button("Delete"))
+	{
+		UI2D_Delete(fTimeDelta);
+	}
+#pragma endregion End
+
+#pragma region Save/Load
+	if (ImGui::Button("Save"))
+	{
+		//Save_Function();
+		Save_Desc();
+	}
+
+	ImGui::SameLine(70.f);
+
+	if (ImGui::Button("Load"))
+	{
+		Load_Desc();
+	}
+#pragma endregion End
 }
 
 /* Mouse */
@@ -181,6 +228,7 @@ HRESULT CWindow_UITool::Update_Pos()
 
 void CWindow_UITool::Shortcut_Key()
 {
+
 	if (ImGui::IsKeyPressed(ImGuiKey_LeftCtrl))
 	{
 		if (ImGui::IsKeyDown(ImGuiKey_S))
@@ -188,6 +236,7 @@ void CWindow_UITool::Shortcut_Key()
 			Save_Desc();
 		}
 	}
+
 }
 
 void CWindow_UITool::Layer_List()
@@ -247,6 +296,7 @@ void CWindow_UITool::Texture_List()
 void CWindow_UITool::Object_List()
 {
 	_int		ObjectTagSize = (_int)m_vecObjectName.size();
+
 	if (ImGui::BeginListBox("ObjectList"))
 	{
 		for (_int i = 0; i < ObjectTagSize; i++)
@@ -255,7 +305,7 @@ void CWindow_UITool::Object_List()
 			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecObjectName[i]->strFileName)), is_selected))
 			{
 				m_iSelectedObjectIndex = i;
-				Set_Guizmo(m_vecUIObject[m_iSelectedObjectIndex]);
+				m_CurrObject = m_vecUIObject[m_iSelectedObjectIndex];
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -268,13 +318,17 @@ void CWindow_UITool::Object_List()
 	{
 		if (dynamic_cast<CUI_Anything*>(UIObject)->Get_Pick() == true)
 		{
-			Set_Guizmo(UIObject);
+			if (m_pGameInstance->Mouse_Down(DIM_LB))
+			{
+				m_CurrObject = nullptr;
+				m_CurrObject = UIObject;
+			}
 		}
 	}
 
-	if (!m_vecUIObject.empty())
+	if (m_CurrObject != nullptr)
 	{
-		_vector vPosition = m_vecUIObject[m_iSelectedObjectIndex]->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+		_vector vPosition = dynamic_cast<CUI_Anything*>(m_CurrObject)->Get_Transform()->Get_State(CTransform::STATE_POSITION);
 
 		ImGui::InputFloat("PositionX", &vPosition.m128_f32[0]);
 		ImGui::InputFloat("PositionY", &vPosition.m128_f32[1]);
@@ -282,6 +336,7 @@ void CWindow_UITool::Object_List()
 
 		Set_GuizmoCamView();
 		Set_GuizmoCamProj();
+		Set_Guizmo(m_CurrObject);
 	}
 }
 
@@ -354,6 +409,56 @@ std::vector<unsigned char> CWindow_UITool::UI_LoadImage(const std::string& filen
 
 	return imageData;
 }
+
+//bool LoadDDSTextureFromFile(const wchar_t* filename, ID3D11Device* device, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height)
+//{
+	//DirectX::ScratchImage image;
+	//HRESULT hr = DirectX::LoadFromDDSFile(filename, DirectX::DDS_FLAGS_NONE, nullptr, image);
+	//if (FAILED(hr))
+	//{
+	//	// Failed to load DDS file
+	//	return false;
+	//}
+
+	//// Create texture from DDS image
+	//ID3D11Resource* texture = nullptr;
+	//hr = DirectX::CreateTexture(device, image.GetImages(), image.GetImageCount(), image.GetMetadata(), &texture);
+	//if (FAILED(hr))
+	//{
+	//	// Failed to create texture from DDS image
+	//	return false;
+	//}
+
+	//// Create shader resource view
+	////D3D11_TEXTURE2D_DESC desc;
+	////texture->GetPrivateData(&desc);
+
+	//D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	//srvDesc.Format = desc.Format;
+	//srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	//srvDesc.Texture2D.MipLevels = desc.MipLevels;
+	//srvDesc.Texture2D.MostDetailedMip = 0;
+
+	//hr = device->CreateShaderResourceView(texture, &srvDesc, out_srv);
+	//if (FAILED(hr))
+	//{
+	//	// Failed to create shader resource view
+	//	texture->Release();
+	//	return false;
+	//}
+
+	//if (out_width)
+	//{
+	//	*out_width = image.GetMetadata().width;
+	//}
+
+	//if (out_height)
+	//{
+	//	*out_height = image.GetMetadata().height;
+	//}
+
+//	return true;
+//}
 
 // Simple helper function to load an image into a DX11 texture with common settings
 bool CWindow_UITool::LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height)
@@ -510,7 +615,7 @@ WCHAR* CWindow_UITool::StringTowchar(const std::string& str)
 	return const_cast<WCHAR*>(wstr.c_str());
 }
 
-void CWindow_UITool::LoadImg(const _tchar* folderPath)
+void CWindow_UITool::LoadImgPath(const _tchar* folderPath)
 {
 	// 찾은 이미지 데이터를 받을 변수
 	WIN32_FIND_DATA findData;
@@ -538,7 +643,7 @@ void CWindow_UITool::LoadImg(const _tchar* folderPath)
 					// 폴더 경로 = 경로 + / + 파일명
 					wstring subFolderPath = (wstring)folderPath + L"/" + findData.cFileName;
 					subDirectories.push_back(subFolderPath);
-					LoadImg(subFolderPath.c_str());
+					LoadImgPath(subFolderPath.c_str());
 				}
 			}
 			else
@@ -553,10 +658,9 @@ void CWindow_UITool::LoadImg(const _tchar* folderPath)
 				{
 					PATHINFO* pPathInfo = new PATHINFO;
 
-					pPathInfo->strFilePath = WStringToString(filePath);
-					//wcscpy(&pPathInfo->cFileName[MAX_PATH], StringTowchar(RemoveExtension(WideStringToString(findData.cFileName))));
+					/* 순서 확인하기 */
 					pPathInfo->strFileName = RemoveExtension(WStringToString(findData.cFileName));
-					//pPathInfo->cFileName[MAX_PATH] = *StringTowchar(RemoveExtension(WideStringToString(findData.cFileName)));
+					pPathInfo->strFilePath = WStringToString(filePath);
 					pPathInfo->iPathNum = m_iTextureNum;
 					m_vecPaths.push_back(pPathInfo);
 
@@ -586,6 +690,94 @@ void CWindow_UITool::IndexCheck()
 		m_iSelectedPathIndex = 0;
 }
 
+/* 공통 로딩시간을 줄이기 위해 따로 빼서 실행시키자. */
+void CWindow_UITool::SetUp_Initialize()
+{
+	if (ImGui::IsKeyDown(ImGuiKey_F1))
+	{
+		bSetUpComplete = false;
+	}
+
+	if (!bSetUpComplete)
+	{
+		
+		/* 저장해둔 이미지 경로들을 불러온다. */
+		Load_Paths();
+
+		// 이미지 로드
+		_int iSize = (_int)m_vecPaths.size();
+		for (_int i = 0; i < iSize; i++)
+		{
+			IMAGEINFO* tTexture = new IMAGEINFO;
+
+			_bool bRet = LoadTextureFromFile(ConverWStringtoC(ConvertToWideString(m_vecPaths[i]->strFilePath)), &tTexture->SRV_Texture, &tTexture->iImage_Width, &tTexture->iImage_Height);
+			IM_ASSERT(bRet);
+
+			/* Texture 크기를 임의로 조절하고 싶다면, 여기서 강제로 덮어씌우자. 값을 안주면 원래 텍스처 크기대로 나온다. 추 후 원본 크기를 이용해 비율만 줄여서 출력해도 좋을 것 같다. */
+			//tTexture->iImage_Width = 100;
+			//tTexture->iImage_Height = 100;
+			tTexture->iTextureNum = i;
+			m_vecTexture.push_back(tTexture);
+
+			tTexture = nullptr;
+			delete[] tTexture;
+		}
+
+		_int iPathSize = m_vecPaths.size();
+
+		//for (auto& iter : m_vecPaths)
+		for (_int i = 0; i < iPathSize; i++)
+		{
+			string strFileNameWithoutExtension = GetFileName(m_vecPaths[i]->strFilePath);
+			string strFileName = RemoveExtension(strFileNameWithoutExtension);
+
+			PATHINFO* pPathInfo = new PATHINFO;
+
+			pPathInfo->strFileName = strFileName;
+			pPathInfo->strFilePath = m_vecPaths[i]->strFilePath;
+
+			/* 경로 잘라서 넣기 */
+			m_vecImagePaths.push_back(pPathInfo);
+
+			pPathInfo = nullptr;
+			delete[] pPathInfo;
+		}
+
+#pragma region 경로저장
+		//char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Texture_Info/Texture_Info";
+
+		//json Out_Json;
+		//_ushort iIndex = 0;
+
+		//for (PATHINFO* iter : m_vecPaths)
+		//{
+		//	json object;
+		//	object["PathNum"] = iter->iPathNum;
+		//	object["FileName"] = iter->strFileName;
+		//	object["FilePath"] = iter->strFilePath;
+		//	Out_Json.emplace(to_string(iIndex++), object);
+		//}
+
+		//CJson_Utility::Save_Json(filePath, Out_Json);
+
+		//CJson_Utility::Load_Json(filePath, Out_Json);
+#pragma endregion 
+
+
+#pragma region Start Setting
+	// 시작하자마자 아무것도 안눌렀을 때 기본 테그 값 주고 시작하기.
+		m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
+		m_tUI_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
+		m_tUI_Desc.fPositionX = g_iWinSizeX / 2;
+		m_tUI_Desc.fPositionY = g_iWinSizeY / 2;
+		m_tUI_Desc.fScaleX = 100;
+		m_tUI_Desc.fScaleY = 100;
+#pragma endregion End
+
+		bSetUpComplete = true;
+	}	
+}
+
 void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 {
 	ImGui::CollapsingHeader("2D_Setting");
@@ -603,34 +795,6 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 
 	ImGui::Separator();
 
-#pragma region Create/Delete
-	if (ImGui::Button("Create"))
-	{
-		UI2D_Create(fTimeDelta);
-	}
-
-	ImGui::SameLine(70.f);
-
-	if (ImGui::Button("Delete"))
-	{
-		UI2D_Delete(fTimeDelta);
-	}
-#pragma endregion End
-
-#pragma region Save/Load
-	if (ImGui::Button("Save"))
-	{	
-		//Save_Function();
-		Save_Desc();
-	}
-
-	ImGui::SameLine(70.f);
-
-	if (ImGui::Button("Load"))
-	{
-		Load_Desc();
-	}
-#pragma endregion End
 }
 
 HRESULT CWindow_UITool::UI2D_Create(_float fTimeDelta)
@@ -651,6 +815,8 @@ void CWindow_UITool::UI2D_Delete(_float fTimeDelta)
 	m_vecUIObject.erase(m_vecUIObject.begin() + m_iSelectedObjectIndex);
 
 	m_vecObjectName.erase(m_vecObjectName.begin() + m_iSelectedObjectIndex); // 오브젝트 목록 이름 삭제
+
+	m_CurrObject = nullptr; // 현재 선택돼있는 녀석이 죽었으니 주소 비워주자.
 
 	m_iSelectedObjectIndex = m_iSelectedObjectIndex - 1; // 현재 선택한 인덱스번째의 오브젝트를 삭제했으니, 선택된 인덱스도 뒤로 한칸 돌려주자.
 }
@@ -804,6 +970,31 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 	return S_OK;
 }
 
+void CWindow_UITool::Load_Paths()
+{
+	json json_in;
+
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Texture_Info/Texture_Info";
+
+	CJson_Utility::Load_Json(filePath, json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		PATHINFO* tPath = new PATHINFO;
+
+		tPath->strFileName = object["FileName"];
+		tPath->strFilePath = object["FilePath"];
+		tPath->iPathNum = object["PathNum"];
+
+		m_vecPaths.push_back(tPath);
+
+		tPath = nullptr;
+		delete[] tPath;
+	}
+}
+
 // ImGui를 사용하여 이미지를 표시하는 함수
 void CWindow_UITool::ShowImagePreview(const std::vector<unsigned char>& imageData, int width, int height)
 {
@@ -838,7 +1029,7 @@ void CWindow_UITool::Free()
 	//if (!m_vecUIObject.empty())
 	//	Safe_Delete(m_vecUIObject);
 	
-
+	m_CurrObject = nullptr;
 
 	if (!m_vecObjectName.empty())
 	{

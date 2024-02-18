@@ -38,6 +38,7 @@ HRESULT CUI_Anything::Initialize(void* pArg)
 
 void CUI_Anything::Priority_Tick(_float fTimeDelta)
 {
+
 }
 
 void CUI_Anything::Tick(_float fTimeDelta)

@@ -79,6 +79,7 @@ public:	//TODO ImguiDialog #다이얼로그
 
 protected: //TODO Guizmo #기즈모
 	void				Set_Guizmo(CGameObject* pGameObject);
+	void				Set_Guizmo2D(CGameObject* pGameObject);
 	void				Set_GuizmoCamView();
 	void				Set_GuizmoCamProj();
 
@@ -107,6 +108,7 @@ protected: //TODO Guizmo #기즈모
 	_float*				m_arrView = { nullptr };
 	_float*				m_arrProj = { nullptr };
 	_float				snap[3] = { 1.f, 1.f, 1.f };
+	_float				snap2D[3] = { 1.f, 1.f, 1.f };
 
 public:
 	virtual void Free() override;
