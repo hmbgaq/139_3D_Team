@@ -6,11 +6,11 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 
-#include "ImGuizmo.h"
-#include "ImCurveEdit.h"
-#include "GraphEditor.h"
-#include "ImSequencer.h"
-#include "ImZoomSlider.h"
+#include "../Imgui/ImGuizmo/ImGuizmo.h"
+#include "../Imgui/ImGuizmo/ImCurveEdit.h"
+#include "../Imgui/ImGuizmo/GraphEditor.h"
+#include "../Imgui/ImGuizmo/ImSequencer.h"
+#include "../Imgui/ImGuizmo/ImZoomSlider.h"
 #include "CustomDialogFont.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
 

@@ -9,11 +9,11 @@
 
 #include "LandObject.h"
 
-#include "ImGuizmo.h"
-#include "ImCurveEdit.h"
-#include "GraphEditor.h"
-#include "ImSequencer.h"
-#include "ImZoomSlider.h"
+#include "../Imgui/ImGuizmo/ImGuizmo.h"
+#include "../Imgui/ImGuizmo/ImCurveEdit.h"
+#include "../Imgui/ImGuizmo/GraphEditor.h"
+#include "../Imgui/ImGuizmo/ImSequencer.h"
+#include "../Imgui/ImGuizmo/ImZoomSlider.h"
 
 static ImGuizmo::OPERATION InstanceCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 static ImGuizmo::MODE	   InstanceCurrentGizmoMode(ImGuizmo::WORLD);
@@ -153,83 +153,83 @@ void CWindow_MapTool::Render()
 
 HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 {
-	json SaveJson;
+// 	json SaveJson;
+// 
+// 	string strNoExtFileName = filesystem::path(strFileName).stem().string();
+// 
+// 	string strBasic = "Basic";
+// 	string strInstance = "Instance";
+// 
+// 	for (auto& tag : m_vecCreateObjectTag)
+// 	{
+// 		// 문자열에서 '@' 문자 이후의 부분을 지움
+// 		size_t atIndex = tag.find('@');
+// 		if (atIndex != std::string::npos) {
+// 			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+// 		}
+// 	}
+// 
+// 	for (auto& tag : m_vecCreateInstanceTag)
+// 	{
+// 		// 문자열에서 '@' 문자 이후의 부분을 지움
+// 		size_t atIndex = tag.find('@');
+// 		if (atIndex != std::string::npos) {
+// 			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+// 		}
+// 	}
+// 
+// 			_int iAccIndex = 0; //! 이 친구로 계속 인덱스 누적시킬 거임
+// 
+// 			_int iCreateObjectSize = m_vecCreateObject.size();
+// 
+// 
+// 			for (_int i = 0; i < iCreateObjectSize; ++i)
+// 			{
+// 				CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+// 
+// 				Desc = *m_vecCreateObject[i]->Get_EnvironmentDesc();
+// 
+// 				SaveJson[iAccIndex].emplace("Type", strBasic);
+// 				SaveJson[iAccIndex].emplace("Index", i);
+// 				SaveJson[iAccIndex].emplace("ObjectTag", m_vecCreateObjectTag[i]);
+// 				SaveJson[iAccIndex].emplace("AnimType", Desc.bAnimModel);
+// 				SaveJson[iAccIndex].emplace("ShaderPassIndex", Desc.iShaderPassIndex);
+// 				SaveJson[iAccIndex].emplace("PlayAnimationIndex", Desc.iPlayAnimationIndex);
+// 
+// 				m_vecCreateObject[i]->Write_Json(SaveJson[iAccIndex]);
+// 
+// 				iAccIndex++;
+// 			}
+// 
+// 
+// 			_int iCreateInstanceObjectSize = m_vecCreateInstance.size();
+// 
+// 
+// 
+// 			for (_int i = 0; i < iCreateInstanceObjectSize; ++i)
+// 			{
+// 				MAPTOOL_INSTANCE_DESC InstanceObjDesc = m_vecCreateInstance[i]->Get_InstanceDesc();
+// 
+// 				SaveJson[iAccIndex].emplace("Type", strInstance);
+// 				SaveJson[iAccIndex].emplace("Index", i);
+// 				SaveJson[iAccIndex].emplace("ObjectTag", m_vecCreateInstanceTag[i]);
+// 				SaveJson[iAccIndex].emplace("InstanceCount", InstanceObjDesc.iNumInstance);
+// 				SaveJson[iAccIndex].emplace("InstanceInfoVector", InstanceObjDesc.vecInstanceInfoDesc);
+// 
+// 
+// 				m_vecCreateInstance[i]->Write_Json(SaveJson[iAccIndex]);
+// 
+// 				iAccIndex++;
+// 			}
 
-	string strNoExtFileName = filesystem::path(strFileName).stem().string();
-
-	string strBasic = "Basic";
-	string strInstance = "Instance";
-
-	for (auto& tag : m_vecCreateObjectTag)
-	{
-		// 문자열에서 '@' 문자 이후의 부분을 지움
-		size_t atIndex = tag.find('@');
-		if (atIndex != std::string::npos) {
-			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
-		}
-	}
-
-	for (auto& tag : m_vecCreateInstanceTag)
-	{
-		// 문자열에서 '@' 문자 이후의 부분을 지움
-		size_t atIndex = tag.find('@');
-		if (atIndex != std::string::npos) {
-			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
-		}
-	}
-
-			_int iAccIndex = 0; //! 이 친구로 계속 인덱스 누적시킬 거임
-
-			_int iCreateObjectSize = m_vecCreateObject.size();
-
-
-			for (_int i = 0; i < iCreateObjectSize; ++i)
-			{
-				CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-
-				Desc = *m_vecCreateObject[i]->Get_EnvironmentDesc();
-
-				SaveJson[iAccIndex].emplace("Type", strBasic);
-				SaveJson[iAccIndex].emplace("Index", i);
-				SaveJson[iAccIndex].emplace("ObjectTag", m_vecCreateObjectTag[i]);
-				SaveJson[iAccIndex].emplace("AnimType", Desc.bAnimModel);
-				SaveJson[iAccIndex].emplace("ShaderPassIndex", Desc.iShaderPassIndex);
-				SaveJson[iAccIndex].emplace("PlayAnimationIndex", Desc.iPlayAnimationIndex);
-
-				m_vecCreateObject[i]->Write_Json(SaveJson[iAccIndex]);
-
-				iAccIndex++;
-			}
-
-
-			_int iCreateInstanceObjectSize = m_vecCreateInstance.size();
-
-
-
-			for (_int i = 0; i < iCreateInstanceObjectSize; ++i)
-			{
-				MAPTOOL_INSTANCE_DESC InstanceObjDesc = m_vecCreateInstance[i]->Get_InstanceDesc();
-
-				SaveJson[iAccIndex].emplace("Type", strInstance);
-				SaveJson[iAccIndex].emplace("Index", i);
-				SaveJson[iAccIndex].emplace("ObjectTag", m_vecCreateInstanceTag[i]);
-				SaveJson[iAccIndex].emplace("InstanceCount", InstanceObjDesc.iNumInstance);
-				SaveJson[iAccIndex].emplace("InstanceInfoVector", InstanceObjDesc.vecInstanceInfoDesc);
-
-
-				m_vecCreateInstance[i]->Write_Json(SaveJson[iAccIndex]);
-
-				iAccIndex++;
-			}
-
-			if (FAILED(CJson_Utility::Save_Json(strPath.c_str(), SaveJson)))
-			{
-				MSG_BOX("맵툴 저장 실패");
-			}
-			else
-			{
-				MSG_BOX("맵툴 저장 성공");
-			}
+			//if (FAILED(CJson_Utility::Save_Json(strPath.c_str(), SaveJson)))
+			//{
+			//	MSG_BOX("맵툴 저장 실패");
+			//}
+			//else
+			//{
+			//	MSG_BOX("맵툴 저장 성공");
+			//}
 
 			return S_OK;
 }
