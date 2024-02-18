@@ -758,7 +758,13 @@ char* CGameInstance::ConverWStringtoC(const wstring& wstr)
 	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
 	char* result = new char[size_needed];
 	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result, size_needed, NULL, NULL);
-	return result;
+
+	char* newResult = result;
+
+	result = nullptr;
+	delete[] result;
+
+	return newResult;
 }
 
 wchar_t* CGameInstance::ConverCtoWC(char* str)
@@ -768,7 +774,13 @@ wchar_t* CGameInstance::ConverCtoWC(char* str)
 	pStr = new WCHAR[strSize];
 	MultiByteToWideChar(CP_ACP, 0, str, (_int)strlen(str) + (size_t)1, pStr, strSize);
 
-	return pStr;
+
+	_tchar* newResult = pStr;
+
+	pStr = nullptr;
+	delete[] pStr;
+
+	return newResult;
 }
 
 std::string CGameInstance::WideStringToString(const wchar_t* wideStr)

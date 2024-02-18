@@ -41,7 +41,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
-	
+
 }
 
 HRESULT CLevel_GamePlay::Render()
