@@ -67,8 +67,8 @@ public: /* For.Object_Manager */
 	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>*clonevector);
 	class CGameObject* Get_GameObect_Last(_uint iLevelIndex, const wstring & strLayerTag);
 	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
-	class CGameObject* Get_Player();
-	void Set_Player(class CGameObject* _pPlayer);
+	class CCharacter* Get_Player();
+	void Set_Player(class CCharacter* _pPlayer);
 
 
 

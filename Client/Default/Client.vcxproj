@@ -189,6 +189,7 @@
     <ClInclude Include="..\..\Reference\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\..\Reference\Imgui\ImZoomSlider.h" />
+    <ClInclude Include="..\Public\Actor.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
@@ -211,8 +212,10 @@
     <ClInclude Include="..\Public\Interact_Chain.h" />
     <ClInclude Include="..\public\LandObject.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
+    <ClInclude Include="..\Public\Level_Lava.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\public\Level_Logo.h" />
+    <ClInclude Include="..\Public\Level_SnowMountain.h" />
     <ClInclude Include="..\Public\Level_Tool.h" />
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
@@ -225,6 +228,8 @@
     <ClInclude Include="..\Public\Screamer.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\SkyDome.h" />
+    <ClInclude Include="..\Public\SpringCamera.h" />
+    <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\stb_image.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\TestEvent.h" />
@@ -274,8 +279,10 @@
     <ClCompile Include="..\Private\Interact_Chain.cpp" />
     <ClCompile Include="..\private\LandObject.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
+    <ClCompile Include="..\Private\Level_Lava.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\private\Level_Logo.cpp" />
+    <ClCompile Include="..\Private\Level_SnowMountain.cpp" />
     <ClCompile Include="..\Private\Level_Tool.cpp" />
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
@@ -288,6 +295,7 @@
     <ClCompile Include="..\Private\Screamer.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\SkyDome.cpp" />
+    <ClCompile Include="..\Private\SpringCamera.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\TestEvent.cpp" />
     <ClCompile Include="..\Private\TestEventWithActor.cpp" />
@@ -303,6 +311,7 @@
     <ClCompile Include="..\Private\Window_EffectTool.cpp" />
     <ClCompile Include="..\Private\Window_MapTool.cpp" />
     <ClCompile Include="..\Private\Window_UITool.cpp" />
+    <ClCompile Include="..\Private\Actor.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

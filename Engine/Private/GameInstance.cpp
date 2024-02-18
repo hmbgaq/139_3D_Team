@@ -114,7 +114,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 void CGameInstance::Clear(_uint iLevelIndex)
 {
 	if (nullptr == m_pObject_Manager ||
-		nullptr == m_pComponent_Manager)
+		nullptr == m_pComponent_Manager || 
+		nullptr == m_pEvent_Manager)
 		return;
 
 	/* 오브젝트 매니져에 레벨별로 구분해 놓은 객체들 중 특정된 객체들을 지운다.  */
@@ -122,6 +123,8 @@ void CGameInstance::Clear(_uint iLevelIndex)
 
 	/* 컴포넌트 매니져에 레벨별로 구분해 놓은 컴포넌트들 중 특정된 객체들을 지운다.  */
 	m_pComponent_Manager->Clear(iLevelIndex);
+
+	m_pEvent_Manager->Clear();
 }
 
 HRESULT CGameInstance::Render_Engine()
@@ -345,12 +348,12 @@ CGameObject* CGameInstance::Add_CloneObject_And_Get(_uint iLevelIndex, const wst
 	return Get_GameObect_Last(iLevelIndex, strLayerTag);
 }
 
-CGameObject* CGameInstance::Get_Player()
+CCharacter* CGameInstance::Get_Player()
 {
 	return m_pObject_Manager->Get_Player();
 }
 
-void CGameInstance::Set_Player(CGameObject* _pPlayer)
+void CGameInstance::Set_Player(CCharacter* _pPlayer)
 {
 	m_pObject_Manager->Set_Player(_pPlayer);
 }

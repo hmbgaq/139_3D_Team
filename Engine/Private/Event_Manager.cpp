@@ -43,6 +43,15 @@ void CEvent_Manager::Tick(_float fTimeDelta)
 //{
 //}
 
+void CEvent_Manager::Clear()
+{
+	for (IEvent* pEvent : m_Events)
+	{
+		Safe_Delete(pEvent);
+	}
+	m_Events.clear();
+}
+
 CEvent_Manager* CEvent_Manager::Create()
 {
 	CEvent_Manager* pInstance = new CEvent_Manager;

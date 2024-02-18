@@ -33,6 +33,8 @@ public:
 	//// 이벤트 발생
 	//void TriggerEvent();
 
+	void Clear();
+
 
 
 private:
