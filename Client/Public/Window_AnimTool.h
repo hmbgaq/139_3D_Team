@@ -80,9 +80,11 @@ private:
 
 	//애니메이션 재생
 	_float					m_fSpeed = 1.f;
-	_float					m_fCurrentTrackPosition = 0.f;
-	_float					m_fDuration = 0.f;
-	_float					m_iColliderSize = 0;
+	_float					m_fCurrentTrackPosition = 0.0f;
+	_float					m_fDuration = 0.0f;
+	_float					m_iColliderSize = 0.0f;
+	_float					m_iColliderOnTrackPosition = 0.0f;
+	_float					m_iColliderOffTrackPosition = 0.0f;
 
 	_float3					m_fBonePosition = { 0.f,0.f,0.f };
 	_float4x4				m_fBoneMatrix = {};
@@ -119,6 +121,8 @@ public:
 	_bool					m_bCreatCollider = false;
 	_bool					m_bColliderSize = false;
 	_bool					m_bDeleteCollider = false;
+	_bool					m_bCheckOnCollider = false;
+	_bool					m_bCheckOffCollider = false; 
 public:
 	static CWindow_AnimTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

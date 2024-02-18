@@ -234,10 +234,11 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 							m_bCloneCount = true;
 							m_bListCheck = true;
 							m_bCreateCheck = false;
+							
 						}
 					
 				}
-
+				
 			}
 			
 			ImGui::EndListBox();
@@ -520,7 +521,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 
 						m_bDeleteCheck = false;
 					}
-
+				
 
 				}
 				else
@@ -538,8 +539,21 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 		}
 		ImGui::TreePop();
 	}
+	//애니메이션 콜라이더 끄고 키는 조건 
+	if (m_fCurrentTrackPosition >= m_iColliderOnTrackPosition && m_fCurrentTrackPosition < m_iColliderOffTrackPosition)
+	{
+		m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(true);
 
+	}
+
+	if (m_fCurrentTrackPosition >= m_iColliderOffTrackPosition && m_fCurrentTrackPosition < m_iColliderOnTrackPosition)
+	{
+		m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(false);
+
+	}
 	//현재 해야 하는 것은 콜라이더 생성하는 버튼을 일단 만들어 보자 
+	ImGui::SeparatorText("Create/Delete");
+
 	if (ImGui::Button("Collider Crate"))
 	{
 		m_bCreatCollider = true;
@@ -549,16 +563,17 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 	{
 		m_bDeleteCollider = true;
 	}
+	ImGui::SeparatorText("ColliderSize");
 
-	if (ImGui::DragFloat("ColliderSize", &m_iColliderSize, 0.f, 10.f));
+	if (ImGui::DragFloat("ColliderSize", &m_iColliderSize, 0.f, 10.f))
 	{
 		m_bColliderSize = true;
-		if (m_pBoneCollider.size() > 0)
-		{
-			
-		}
-		
+
 	}
+	ImGui::SeparatorText("ColliderOn");
+	if (ImGui::InputFloat("ColliderOn", &m_iColliderOnTrackPosition, 0.01f, 1.f));
+	ImGui::SeparatorText("TrackPositionOff");
+	if (ImGui::InputFloat("ColliderOff", &m_iColliderOffTrackPosition, 0.01f, 1.f));
 
 }
 
@@ -568,9 +583,7 @@ void CWindow_AnimTool::BonePoint_Update()
 	{
 		for (auto& pCollider : m_pBoneCollider)
 		{
-			//CBone* pBone = m_vBoneColliderIndex[m_iCreateColliderNum]
 			m_pGameInstance->Add_DebugRender(pCollider);
-			//pCollider->Update()
 		}
 	}
 }
@@ -604,6 +617,7 @@ char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)
 
 	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result, size_needed, NULL, NULL);
 
+
 	return result;
 }
 
@@ -617,6 +631,8 @@ char* CWindow_AnimTool::ConvertWCtoC(const wchar_t* str)
 	pStr = new char[strSize];
 	//형 변환
 	WideCharToMultiByte(CP_ACP, 0, str, -1, pStr, strSize, 0, 0);
+
+
 	return pStr;
 }
 
@@ -630,6 +646,8 @@ wchar_t* CWindow_AnimTool::ConvertCtoWC(const char* str)
 	pStr = new WCHAR[strSize];
 	//형 변환
 	MultiByteToWideChar(CP_ACP, 0, str, (int)strlen(str) + 1, pStr, strSize);
+
+
 	return pStr;
 }
 
@@ -648,4 +666,5 @@ CWindow_AnimTool* CWindow_AnimTool::Create(ID3D11Device* pDevice, ID3D11DeviceCo
 void CWindow_AnimTool::Free()
 {
 	__super::Free();
+	Safe_Delete(m_pSphere);
 }
