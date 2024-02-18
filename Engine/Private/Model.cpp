@@ -64,6 +64,11 @@ void CModel::Set_StiffnessRate(_float fStiffnessRate)
 	m_Animations[m_iCurrentAnimIndex]->Set_StiffnessRate(fStiffnessRate);
 }
 
+_matrix CModel::Get_CombinedMatrix(_uint iBoneIndex)
+{
+	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
+}
+
 HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath, _fmatrix PivotMatrix)
 {
 	m_eModelType = eType;

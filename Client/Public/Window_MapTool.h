@@ -42,6 +42,8 @@ public:
 private:
 	virtual	HRESULT Save_Function(string strPath, string strFileName) override;
 	virtual HRESULT Load_Function(string strPath, string strFileName) override;
+				void	Reset_Function();
+
 
 private:
 	HRESULT			Ready_ModelTags();
@@ -127,7 +129,7 @@ private: //! 레이캐스트
 
 private://!For. CreateObject
 	vector<CEnvironment_Object*>	m_vecCreateObject = {}; //! 생성한 오브젝트
-	vector<string>					m_vecCreateObjectTag = {};
+	vector<string>					m_vecCreateObjectTag = {};	
 	_int							m_vecCreateObjectIndex = 0;
 	_int							m_iCreateObjectIndex = 0;
 	_int							m_iSelectObjectIndex = 0;

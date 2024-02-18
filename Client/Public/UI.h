@@ -41,12 +41,12 @@ protected:
 	virtual ~CUI() = default;
 
 public: /* ================================ Get =============================== */
-	void		Set_UIDesc(UI_DESC UIDesc) { m_tUIInfo = UIDesc; }
-	_bool		Set_Pick(_bool Pick) { m_bPick = Pick; }
+	void			Set_UIDesc(UI_DESC UIDesc) { m_tUIInfo = UIDesc; }
+	_bool			Set_Pick(_bool Pick) { m_bPick = Pick; }
 
 public: /* ================================ Set =============================== */
-	UI_DESC		Get_UIDesc() { return m_tUIInfo; }
-	_bool		Get_Pick() { return m_bPick; }
+	UI_DESC			Get_UIDesc() { return m_tUIInfo; }
+	_bool			Get_Pick() { return m_bPick; }
 
 public: /* ================================ Basic =============================== */
 	virtual HRESULT Initialize_Prototype();
@@ -58,12 +58,16 @@ public: /* ================================ Basic ==============================
 	virtual void	Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+public: /* ============================== Function ============================= */
+	virtual void	Picking_UI();	// Pick
+	virtual void	Moving_Rect();	// Moving
+
 protected: /* ============================= Ready ============================= */
 	virtual HRESULT Ready_Components();
 	virtual HRESULT Bind_ShaderResources();
 
 protected: /* ============================= SetUp ============================= */
-	HRESULT			SetUp_ScreenPosRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
+	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
 	HRESULT			SetUp_BillBoarding();
 	HRESULT			SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
 
@@ -88,6 +92,10 @@ protected: /* ============================== UI =============================== 
 	UI_DESC				m_tUIInfo;
 	RECT				m_rcUI = {};
 	UISTATE				m_eState;
+
+	// UI_Member
+	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
+	_float				m_fScaleX = 0.f, m_fScaleY = 0.f;
 
 protected: /* ============================== bool =============================== */
 	_bool				m_bPick = false;

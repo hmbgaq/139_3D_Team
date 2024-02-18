@@ -76,6 +76,13 @@ void CVIBuffer_Environment_Model_Instance::Update(INSTANCE_INFO_DESC InstanceDes
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
+HRESULT CVIBuffer_Environment_Model_Instance::Bind_ShaderResources(CShader* pShader, _int iIndex)
+{
+	
+	
+	return S_OK;
+}
+
 void CVIBuffer_Environment_Model_Instance::Init_Instance(_int iNumInstance)
 {
 
