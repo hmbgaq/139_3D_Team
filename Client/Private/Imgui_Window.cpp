@@ -165,6 +165,7 @@ void CImgui_Window::ShowDialog()
 
 HRESULT CImgui_Window::Save_Function()
 {
+
 	return S_OK;
 }
 

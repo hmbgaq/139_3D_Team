@@ -68,6 +68,9 @@ public: /* ==================== UI ===================== */
 	bool						LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height);
 	HRESULT						Update_Pos();
 
+public:
+	void						Shortcut_Key();
+
 public: /* ==================== List ===================== */
 	void						Layer_List();
 	void						Texture_List();
@@ -103,8 +106,10 @@ public:
 	void Add_ObjectList(CUI::UI_DESC tIn_UI_Desc);
 
 public: /* Save/Load */
-	void Save_Desc();
-	HRESULT Load_Desc();
+	void				Save_Desc();
+	HRESULT				Load_Desc();
+	virtual	HRESULT		Save_Function() override;
+	virtual HRESULT		Load_Function() override;
 
 public: /* Image */
 	// 이미지 로드 함수
@@ -144,6 +149,8 @@ private: /* 2D */
 	_int						m_iLayerNum = 0;
 	CUI::UI_DESC				m_tUI_Desc;
 
+private:
+	ImGuiTabBarFlags m_Tab_bar_flags = ImGuiTabBarFlags_None;
 public:
 	static CWindow_UITool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
