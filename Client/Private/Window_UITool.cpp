@@ -681,7 +681,7 @@ void CWindow_UITool::AddIndexNumber(PATHINFO& UI_Info)
 			if (strFilePath->strFilePath == UI_Info.strFilePath)
 			{
 				/* 모두 순회하고 */
-				if (strFilePath->iPathNum >= UI_Info.iPathNum); // 기존 컨테이너에 있는 마지막으로 비교한 녀석의 숫자보다 작거나 같을 경우
+				if (strFilePath->iPathNum >= UI_Info.iPathNum) // 기존 컨테이너에 있는 마지막으로 비교한 녀석의 숫자보다 작거나 같을 경우
 				{
 					index = strFilePath->iPathNum + 1; // 마지막 녀석의 번호 + 1로 저장
 				}
