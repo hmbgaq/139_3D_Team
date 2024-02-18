@@ -104,7 +104,7 @@ public: /* For.Font_Manager */
 public: /* For.Target_Manager */
 	HRESULT		Add_RenderTarget(const wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT		Add_MRT(const wstring& strMRTTag, const wstring& strTargetTag);
-	HRESULT		Begin_MRT(const wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
+	HRESULT		Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView * pDSV = nullptr, _bool bClear = true);
 	HRESULT		End_MRT();
 	HRESULT		Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 #ifdef _DEBUG
@@ -144,6 +144,22 @@ public: /* Common */
 	std::string GetFileName(const std::string& filePath);
 	// 확장자를 제거해주는 함수
 	std::string RemoveExtension(const std::string& filePath);
+#pragma endregion End
+
+#pragma region 유정
+	string		Wstring_To_UTF8(const wstring& wstr);
+	wstring		Char_To_Wstring(char* szChar);
+
+	const wstring	Remove_LastNumChar(const wstring& str, const _uint& iNumCutCount);
+	const string	Remove_LastNumChar(const string& str, const _uint& iNumCutCount);
+	const wstring	Get_LastNumChar(const wstring& str, const _uint& iNumCutCount);
+
+	/* For.Math */
+public:
+	_float3 Add_Float3(const _float3& fLeft, const _float3& fRight);
+	_float3 Mul_Float3(const _float3& fLeft, const _float& fRight);
+	_bool	isIn_Range(const _float3 fLeft, const _float3 fRight, const _float fRange);
+	_matrix Make_WorldMatrix(const _float2& vScale, const _float3& vRot, const _float3& vPos);
 #pragma endregion End
 
 private:

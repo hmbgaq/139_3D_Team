@@ -107,6 +107,7 @@ void CGameObject::Load_FromJson(const json& In_Json)
 	}
 
 	_float4x4 WorldMatrix;
+
 	ZeroMemory(&WorldMatrix, sizeof(_float4x4));
 	CJson_Utility::Load_JsonFloat4x4(In_Json["Component"]["Transform"], WorldMatrix);
 }
@@ -132,6 +133,28 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototy
 	Safe_AddRef(pComponent);
 
 	pComponent->Set_Owner(this);
+
+	return S_OK;
+}
+
+HRESULT CGameObject::Remove_Component(const wstring& strComTag, _Inout_ CComponent** ppOut) 
+{
+	auto	iter = m_Components.find(strComTag);
+
+	if (iter == m_Components.end())
+		return E_FAIL;
+
+	CComponent* pComponent = iter->second;
+
+	Safe_Release(pComponent);
+
+	if (nullptr != ppOut && nullptr != *ppOut)
+	{
+		Safe_Release(pComponent);
+		*ppOut = nullptr;
+	}
+
+	m_Components.erase(iter);
 
 	return S_OK;
 }

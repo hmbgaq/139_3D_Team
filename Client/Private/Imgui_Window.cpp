@@ -77,7 +77,7 @@ HRESULT CImgui_Window::Initialize()
 void CImgui_Window::Tick(_float fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
-
+	ImGuizmo::BeginFrame();
 	/*
 	기즈모 세팅 예시 : 틱 마다 돌 수 있게 세팅해주세요.
 	Set_GuizmoCamView();
@@ -175,10 +175,10 @@ HRESULT CImgui_Window::Load_Function()
 
 void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 {
-	/*==== Set ImGuizmo ====*/
-	if (pGameObject == nullptr)
+	if (nullptr == pGameObject)
 		return;
 
+	/*==== Set ImGuizmo ====*/
 	ImGuizmo::SetOrthographic(false);
 	ImGuiIO& io = ImGui::GetIO();
 	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
@@ -232,8 +232,12 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 		ImGui::DragFloat3("Scale Snap", &snap[0]);
 		break;
 	}
-	if (arrView == nullptr || arrProj == nullptr || arrWorld == nullptr)
+
+	if (arrView == nullptr ||
+		arrProj == nullptr ||
+		arrWorld == nullptr)
 		return;
+
 	ImGuizmo::Manipulate(arrView, arrProj, mCurrentGizmoOperation, mCurrentGizmoMode, arrWorld, NULL, useSnap ? &snap[0] : NULL);
 
 	XMFLOAT4X4 matW = { arrWorld[0],arrWorld[1],arrWorld[2],arrWorld[3],

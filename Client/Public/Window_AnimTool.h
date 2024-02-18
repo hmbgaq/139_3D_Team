@@ -8,6 +8,7 @@ class CAnimation;
 class CCollider;
 class CBounding;
 class CBone;
+class CBody;
 END
 
 BEGIN(Client)

@@ -25,91 +25,78 @@ private:
 	virtual ~CModel() = default;
 
 public:
-	_uint Get_NumMeshes() const {
-		return m_iNumMeshes;
-	}
-
-
+	_uint					Get_NumMeshes() const {return m_iNumMeshes; }
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Ãß°¡
-	_uint Get_NumMaterials() const { return m_iNumMaterials; }
-	_uint Get_NumMeshIndice(_int iMeshIndex);//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
-	vector<class CMesh*>& Get_Meshes() { return m_Meshes;}
+	_uint					Get_NumMaterials() const { return m_iNumMaterials; }
+	_uint					Get_NumMeshIndice(_int iMeshIndex);//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
+	vector<class CMesh*>&	Get_Meshes() { return m_Meshes;}
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
+	class CBone*			Get_BonePtr(const _char* pBoneName) const;
 
-	class CBone* Get_BonePtr(const _char* pBoneName) const;
-
-	//void Set_Animation(_uint iAnimIndex) {
-	//	m_iCurrentAnimIndex = iAnimIndex;
-	//}
-
-	_bool Is_AnimEnd() { return m_bIsAnimEnd; };
-
-	void Set_StiffnessRate(_float fStiffnessRate);
-
+	void					Set_StiffnessRate(_float fStiffnessRate);
+	//void					Set_Animation(_uint iAnimIndex) { m_iCurrentAnimIndex = iAnimIndex; }
 
 public:
-	virtual HRESULT Initialize_Prototype(TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);
-	virtual HRESULT Initialize(void* pArg);
-	virtual HRESULT Render(_uint iMeshIndex);
+	_bool					Is_AnimEnd() { return m_bIsAnimEnd; };
 
 public:
-	void Play_Animation(_float fTimeDelta, _bool bIsLoop);
-	void Play_Animation(_float fTimeDelta, _float3& _Pos);
-
-	void Stop_Animation(_float fTimeDelta,_bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
-	void Ctrl_Animation(_float fTimeDelta, _bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
-public:
-	HRESULT Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
-	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
+	virtual HRESULT			Initialize_Prototype(TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);
+	virtual HRESULT			Initialize(void* pArg);
+	virtual HRESULT			Render(_uint iMeshIndex);
 
 public:
-	void	Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _bool _bIsTransition = true, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
-	void	Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
-	void	Reset_Animation(_int iAnimIndex = -1);
+	void					Play_Animation(_float fTimeDelta, _bool bIsLoop);
+	void					Play_Animation(_float fTimeDelta, _float3& _Pos);
 
-	_float	Get_TickPerSecond();
-	void	Set_TickPerSecond(_float _TickPerSecond);
-	_bool	Is_Transition();
-	void	Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
-	_bool	Is_Inputable_Front(_uint _iIndexFront);
-
-	void Write_Names(const string& strModelFilePath);
-public:
-	vector<CAnimation*>*	 Get_Animations();
-	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
+	void					Stop_Animation(_float fTimeDelta,_bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
+	void					Ctrl_Animation(_float fTimeDelta, _bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
 
 public:
-	vector<CBone*>*			Get_Bones();
-	/*_uint&					Get_BoneNum() {return }*/
+	HRESULT					Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
+	HRESULT					Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
+
+public:
+	void					Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _bool _bIsTransition = true, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
+	void					Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
+	void					Reset_Animation(_int iAnimIndex = -1);
+
+	_float					Get_TickPerSecond();
+	void					Set_TickPerSecond(_float _TickPerSecond);
+	_bool					Is_Transition();
+	void					Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
+	_bool					Is_Inputable_Front(_uint _iIndexFront);
+
+	void					Write_Names(const string& strModelFilePath);
+public:
+	vector<CAnimation*>*	Get_Animations();
+	_uint&					Get_AnimationNum() { return m_iNumAnimations; }
 private:
-	CMyAssimp					m_MyAssimp;
-	CMyAIScene					m_pAIScene;
+	CMyAssimp				m_MyAssimp;
+	CMyAIScene				m_pAIScene;
 
 private:
 	_float4x4				m_PivotMatrix;
-	TYPE					m_eModelType = { TYPE_END };
+	TYPE					m_eModelType			= { TYPE_END };
 
-	_uint					m_iNumMeshes = { 0 };
+	_uint					m_iNumMeshes			= { 0 };
 	vector<CMesh*>			m_Meshes;
 
-	_uint					m_iNumMaterials = { 0 };
+	_uint					m_iNumMaterials			= { 0 };
 	vector<MATERIAL_DESC>	m_Materials;
 
 	/* ³» ¸ðµ¨ÀÇ ÀüÃ¼ »ÀµéÀ» ºÎ¸ð°ü°è¸¦ Æ÷ÇÔÇÏ¿© ÀúÀåÇÑ´Ù. */
 	vector<CBone*>			m_Bones;	
 	
-	_uint							m_iNumAnimations = { 0 };
-	_uint							m_iCurrentAnimIndex = { 0 };
-	vector<CAnimation*>				m_Animations;
+	_uint					m_iNumAnimations		= { 0 };
+	_uint					m_iCurrentAnimIndex		= { 0 };
+	vector<CAnimation*>		m_Animations;
 
-	_bool							m_bIsAnimEnd = { false };
-	ANIM_STATE						m_eAnimState = { CModel::ANIM_STATE::ANIM_STATE_END };
-	_bool							m_bUseAnimationPos = { false };
+	_bool					m_bIsAnimEnd			= { false };
+	ANIM_STATE				m_eAnimState			= { CModel::ANIM_STATE::ANIM_STATE_END };
+	_bool					m_bUseAnimationPos		= { false };
 
 public:
-	typedef vector<CBone*>			BONES;
-
-
+	typedef vector<CBone*>	BONES;
 
 private:
 	HRESULT	Ready_Meshes(_fmatrix PivotMatrix);	

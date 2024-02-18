@@ -18,6 +18,8 @@ private:
 	virtual ~CTransform() = default;
 
 public:
+	_bool Write_Json(json& Out_Json);
+	void Load_FromJson(const json& In_Json);
 	/* 행렬의 행의 정보를 교체한다. */
 	void Set_State(STATE eState, const _float4& vState) {
 		memcpy(&m_WorldMatrix.m[eState], &vState, sizeof(_float3));
@@ -66,6 +68,13 @@ public:
 
 		XMStoreFloat4(&m_fPosition, vPosVec);
 		Set_State(STATE::STATE_POSITION, m_fPosition);
+	}
+
+	_float3 Get_Position() 
+	{
+		_float3 vPos;
+		XMStoreFloat3(&vPos, Get_State(CTransform::STATE::STATE_POSITION));
+		return vPos;
 	}
 
 
