@@ -31,4 +31,17 @@ namespace Engine
 
 }
 
+namespace Client
+{
+#pragma region UI
+	enum class UISTATE
+	{
+		READY,
+		APPEAR,
+		TICK,
+		DISAPPEAR,
+		STATE_END
+	};
+#pragma endregion End
+}
 #endif // Client_Enum_h__

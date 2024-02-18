@@ -11,6 +11,7 @@
 #include "Particle_Red.h"
 #include "Body_Player.h"
 #include "BackGround.h"
+#include "Field.h"
 #include "ForkLift.h"
 #include "Terrain.h"
 #include "Monster.h"
@@ -18,6 +19,8 @@
 #include "Sky.h"
 #include "SkyDome.h"
 #include "Effect_Instance.h"
+
+#include "Environment_Object.h"
 #include "Environment_Instance.h"
 #include "Screamer.h"
 #pragma endregion
@@ -166,7 +169,9 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/ForkLift/ForkLift", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Chain"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix)));
 
-	//!환경 모델FPrototype_Component_Model_Screamer
+	//!환경 모델
+	//!		
+
 	//Ready_Environment_Model(LEVEL_GAMEPLAY);
 
 
@@ -227,18 +232,20 @@ HRESULT CLoader::Loading_For_Tool_Level()
 	
 	//! 환경 모델
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	//Ready_Environment_Model(LEVEL_TOOL);
+	Ready_Environment_Model(LEVEL_TOOL);
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_ForkLift"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/ForkLift/ForkLift", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Chain"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix)));
 
 	//!버퍼 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Terrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Field"), CVIBuffer_Field::Create(m_pDevice, m_pContext))); //! 툴용 버퍼
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Cube"), CVIBuffer_Cube::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Particle_Rect"), CVIBuffer_Particle_Rect::Create(m_pDevice, m_pContext, 100)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Particle_Point"), CVIBuffer_Particle_Point::Create(m_pDevice, m_pContext, 500)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"), CVIBuffer_Environment_Model_Instance::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"), CVIBuffer_Effect_Model_Instance::Create(m_pDevice, m_pContext)));
+
 
 	//!셰이더
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_VtxNorTex"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements)));
@@ -269,7 +276,8 @@ HRESULT CLoader::Loading_For_Tool_Level()
 HRESULT CLoader::Ready_Origin()
 {
 	/* Logo 원형객체 */
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext)));\
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Field"), CField::Create(m_pDevice, m_pContext)));
 
 	/* GamePlay 원형객체 */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"), CPlayer::Create(m_pDevice, m_pContext)));
@@ -289,6 +297,9 @@ HRESULT CLoader::Ready_Origin()
 
 	//! 상호작용 없는 환경
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Environment_Instance"), CEnvironment_Instance::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Environment_Object"), CEnvironment_Object::Create(m_pDevice, m_pContext)));
+	
+
 
 	//! 상호작용 환경
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Interact_Chain"), CInteract_Chain::Create(m_pDevice, m_pContext)));
@@ -331,16 +342,37 @@ HRESULT CLoader::Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLeve
 
 
 	_matrix PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	vector<wstring>* pVecModelTag; //! Imgui_Manager의 모델태그 벡터 받기 위함.
+	
+	map<wstring,CImgui_Manager::JSY_MODEL_TYPE>* pMapModelTag;
 
-	if (iAnimType == ECast(CModel::TYPE::TYPE_ANIM))
-		pVecModelTag = CImgui_Manager::GetInstance()->Get_Anim_E_ModelTag();
+	//vector<wstring>* pVecModelTag; //! Imgui_Manager의 모델태그 벡터 받기 위함.
+
+	if (iAnimType == CModel::TYPE::TYPE_ANIM)
+		pMapModelTag = CImgui_Manager::GetInstance()->Get_Anim_E_ModelTag();
 	else
-		pVecModelTag = CImgui_Manager::GetInstance()->Get_NonAnim_E_ModelTag();
+		pMapModelTag = CImgui_Manager::GetInstance()->Get_NonAnim_E_ModelTag();
 
-	for (const auto& entry : fs::recursive_directory_iterator(StartDirectoryPath)) {
-		if (fs::is_regular_file(entry.path()) && entry.path().extension().string() == ".fbx") 
+	//! 폴더명으로 타입을 분류하기위해
+		wstring strDirName = {}; 
+		CImgui_Manager::JSY_MODEL_TYPE eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_END;
+
+	for (const auto& entry : fs::recursive_directory_iterator(StartDirectoryPath)) 
+	{
+		if (fs::is_directory(entry.path())) {
+			strDirName = entry.path().filename();
+
+			if (strDirName == L"Environment")
+				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_ENVIRONMENT;
+			else if (strDirName == L"Interact")
+				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_INTERACT;
+			else if (strDirName == L"Ground")
+				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_GROUND;
+		}
+
+
+		 if (fs::is_regular_file(entry.path()) && entry.path().extension() == ".fbx") 
 		{
+			
 
 			wstring strSearchPath = entry.path().wstring();
 			
@@ -361,10 +393,13 @@ HRESULT CLoader::Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLeve
 			//{
 			//	_int i = 0;
 			//}
-			
+
 			FAILED_CHECK(m_pGameInstance->Add_Prototype(eLevel, wstrSliceModelTag, CModel::Create(m_pDevice, m_pContext, (CModel::TYPE)iAnimType, strConvertFBXPath, PivotMatrix)));
 
-			pVecModelTag->push_back(wstrSliceModelTag);
+			
+			pMapModelTag->emplace(wstrSliceModelTag, eModelType);
+
+			
 		}
 	}
 

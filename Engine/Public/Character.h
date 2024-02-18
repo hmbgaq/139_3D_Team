@@ -34,6 +34,7 @@ public:
 	CCollider* Get_Collider();
 	CNavigation* Get_Navigation();
 
+	virtual _bool Picking(_Out_ _float3 * vPickedPos) override;
 protected:
 	virtual HRESULT Ready_Components() PURE;
 	virtual HRESULT Ready_PartObjects() PURE;
@@ -62,6 +63,18 @@ public:
 	void Go_Backward_R45(_float fTimeDelta);
 	void Go_Left(_float fTimeDelta);		
 	void Go_Right(_float fTimeDelta);		
+
+public:
+	_int Get_Hp() {
+		return m_iHp;
+	};
+
+	void Set_Hp(_uint _iHp) {
+		m_iHp = _iHp;
+	};
+
+protected:
+	_int m_iHp = { 0 };
 
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };

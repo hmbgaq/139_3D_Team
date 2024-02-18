@@ -250,6 +250,9 @@
     <Filter Include="01.Utility\03.Components\02.Shader\ConstantBuffer">
       <UniqueIdentifier>{d5c42a15-c269-4316-8d14-a600354c777d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Field">
+      <UniqueIdentifier>{ddda392a-0cf7-4a8b-a999-313814db4543}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01.Utility\98.Renderer\Util">
       <UniqueIdentifier>{97ab11a5-ce3a-4739-8633-9c3898280a3b}</UniqueIdentifier>
     </Filter>
@@ -522,6 +525,9 @@
     <ClInclude Include="..\Public\ConstantBuffer.h">
       <Filter>01.Utility\03.Components\02.Shader\ConstantBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Field.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Field</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\GFSDK_SSAO.h">
       <Filter>01.Utility\98.Renderer\Util</Filter>
     </ClInclude>
@@ -742,6 +748,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ConstantBuffer.cpp">
       <Filter>01.Utility\03.Components\02.Shader\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Field.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Field</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MurmurHash3.cpp">
       <Filter>01.Utility\03.Components\02.Shader\Hash</Filter>

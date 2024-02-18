@@ -30,11 +30,17 @@ public:
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
 
 public:
-	virtual HRESULT Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones);
+    virtual HRESULT Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones);
+    
+
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	HRESULT Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, const vector<CBone*>& Bones);
+	HRESULT			Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, const vector<CBone*>& Bones);
+	
+#ifdef _DEBUG
+	_bool			Picking(RAY ray, _float3* out);
+#endif // _DEBUG
 
 	_char* Get_Name() {
 		return m_szName;
@@ -50,8 +56,8 @@ private:
 	vector<_float4x4>	m_OffsetMatrices;
 
 	VTXANIMMESH* m_pAnimVertices = { nullptr };
-	VTXMESH* m_pVertices = { nullptr };
-	_uint* m_pIndices = { nullptr };
+	VTXMESH*	 m_pVertices = { nullptr };
+	_uint*		 m_pIndices = { nullptr };
 
 private:
 	HRESULT Ready_Vertices_NonAnim(CMyAIMesh pAIMesh, _fmatrix PivotMatrix);

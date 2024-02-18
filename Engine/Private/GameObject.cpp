@@ -69,6 +69,11 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
+_bool CGameObject::Picking(_Out_ _float3* vPickedPos)
+{
+	return false;
+}
+
 CComponent * CGameObject::Find_Component(const wstring & strComTag, const wstring & strPartTag)
 {
 	auto	iter = m_Components.find(strComTag);
@@ -107,6 +112,7 @@ void CGameObject::Load_FromJson(const json& In_Json)
 	}
 
 	_float4x4 WorldMatrix;
+
 	ZeroMemory(&WorldMatrix, sizeof(_float4x4));
 	CJson_Utility::Load_JsonFloat4x4(In_Json["Component"]["Transform"], WorldMatrix);
 }

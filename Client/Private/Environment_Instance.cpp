@@ -23,7 +23,7 @@ HRESULT CEnvironment_Instance::Initialize_Prototype()
 
 HRESULT CEnvironment_Instance::Initialize(void* pArg)
 {	
-	m_tInstanceDesc = {}; //*(MAPTOOL_INSTANCE_DESC*)pArg;
+	m_tInstanceDesc = *(MAPTOOL_INSTANCE_DESC*)pArg;
 
 	
 	if (FAILED(__super::Initialize(nullptr)))
@@ -32,7 +32,9 @@ HRESULT CEnvironment_Instance::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	
 
+	
 	return S_OK;
 }
 
@@ -86,6 +88,22 @@ HRESULT CEnvironment_Instance::Render()
 	return S_OK;
 }
 
+_bool CEnvironment_Instance::Write_Json(json& Out_Json)
+{
+	return __super::Write_Json(Out_Json);
+	
+}
+
+void CEnvironment_Instance::Load_FromJson(const json& In_Json)
+{
+	return __super::Load_FromJson(In_Json);
+}
+
+void CEnvironment_Instance::Update(INSTANCE_INFO_DESC InstanceDesc, _int iIndex)
+{
+	m_pInstanceModelCom->Update(InstanceDesc, iIndex);
+}
+
 HRESULT CEnvironment_Instance::Ready_Components()
 {
 	/* For.Com_Shader */
@@ -105,7 +123,7 @@ HRESULT CEnvironment_Instance::Ready_Components()
 	Desc.vecBufferInstanceInfo = m_tInstanceDesc.vecInstanceInfoDesc;
 	
 	// For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"),
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pInstanceModelCom), &Desc)))
 		return E_FAIL;
 	

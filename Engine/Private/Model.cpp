@@ -172,7 +172,7 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 
 		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
 	}
-
+	min(1,2);
 }
 
 HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, _uint iMeshIndex)
@@ -311,6 +311,11 @@ void CModel::Write_Names(const string& strModelFilePath)
 vector<CAnimation*>* CModel::Get_Animations()
 {
 	return &m_Animations;
+}
+
+vector<CBone*>* CModel::Get_Bones()
+{
+	return &m_Bones;
 }
 
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
