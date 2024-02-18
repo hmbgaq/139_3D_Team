@@ -27,7 +27,7 @@ HRESULT CBody_Player::Initialize(void* pArg)
 {	
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
-
+	
 	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
 
 	return S_OK;
@@ -107,13 +107,14 @@ HRESULT CBody_Player::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Collider */
-	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
+	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = (_uint)COLLISION_LAYER::PLAYER;
-	BoundingDesc.fRadius = 0.5f;
-	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
+	//BoundingDesc.fRadius = 0.5f;
+
+	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
 
 
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"),
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
 
@@ -165,10 +166,5 @@ void CBody_Player::Free()
 {
 	__super::Free();
 
-	//Safe_Release(m_pParentTransform);
-	//Safe_Release(m_pColliderCom);
-	//Safe_Release(m_pModelCom);	
-	//Safe_Release(m_pShaderCom);
-	
 }
 

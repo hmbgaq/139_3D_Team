@@ -107,7 +107,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../Reference/Public/;../Public/;../Default/;../../Reference/Imgui/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Reference/Public/;../Public/;../Default/;../../Reference/Imgui/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -226,9 +226,13 @@
     <ClInclude Include="..\Public\SkyDome.h" />
     <ClInclude Include="..\Public\stb_image.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\Public\UI.h" />
     <ClInclude Include="..\Public\UI_Anything.h" />
     <ClInclude Include="..\Public\UI_MonsterHp.h" />
     <ClInclude Include="..\Public\UI_MonsterHpFrame.h" />
+    <ClInclude Include="..\Public\UI_Player_HP.h" />
+    <ClInclude Include="..\Public\UI_Player_HPBar.h" />
+    <ClInclude Include="..\Public\UI_Player_HPFrame.h" />
     <ClInclude Include="..\Public\Weapon_Player.h" />
     <ClInclude Include="..\Public\Window_AnimTool.h" />
     <ClInclude Include="..\Public\Window_EffectTool.h" />
@@ -281,9 +285,13 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\SkyDome.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\UI.cpp" />
     <ClCompile Include="..\Private\UI_Anything.cpp" />
     <ClCompile Include="..\Private\UI_MonsterHp.cpp" />
     <ClCompile Include="..\Private\UI_MonsterHpFrame.cpp" />
+    <ClCompile Include="..\Private\UI_Player_HP.cpp" />
+    <ClCompile Include="..\Private\UI_Player_HPBar.cpp" />
+    <ClCompile Include="..\Private\UI_Player_HPFrame.cpp" />
     <ClCompile Include="..\Private\Weapon_Player.cpp" />
     <ClCompile Include="..\Private\Window_AnimTool.cpp" />
     <ClCompile Include="..\Private\Window_EffectTool.cpp" />

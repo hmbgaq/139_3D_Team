@@ -25,8 +25,6 @@ HRESULT CUI_MonsterHpFrame::Initialize_Prototype()
 HRESULT CUI_MonsterHpFrame::Initialize(void* pArg)
 {
 	m_tInfo = *(MONSTER_FRAME*)pArg;
-	m_tInfo.bFrame = true;
-	m_isEnable = m_tInfo.bEnable;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -72,8 +70,8 @@ void CUI_MonsterHpFrame::Tick(_float fTimeDelta)
 
 void CUI_MonsterHpFrame::Late_Tick(_float fTimeDelta)
 {
-	if(m_tUIInfo.bWorldUI == true)
-	Compute_OwnerCamDistance();
+	//if(m_tUIInfo.bWorldUI == true)
+	//Compute_OwnerCamDistance();
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;

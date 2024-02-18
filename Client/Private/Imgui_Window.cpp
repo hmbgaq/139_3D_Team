@@ -15,8 +15,8 @@
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
 
 
-static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-static ImGuizmo::MODE	   mCurrentGizmoMode(ImGuizmo::WORLD);
+static ImGuizmo::OPERATION mCurrentGizmoOperation;
+static ImGuizmo::MODE	   mCurrentGizmoMode;
 static bool useSnap(false);
 
 ImGuiFileDialog* g_pFileDialog;
@@ -64,7 +64,7 @@ HRESULT CImgui_Window::Initialize()
 	ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByTypeFile | IGFD_FileStyleByContainedInFullName, ".git", ImVec4(0.5f, 0.8f, 0.5f, 0.9f), ICON_IGFD_SAVE);
 
 	//TODO For.Guizmo
-		m_arrView = new _float[16];
+	m_arrView = new _float[16];
 	m_arrProj = new _float[16];
 
 		Set_GuizmoCamView();
@@ -79,7 +79,7 @@ HRESULT CImgui_Window::Initialize()
 void CImgui_Window::Tick(_float fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
-
+	ImGuizmo::BeginFrame();
 	/*
 	기즈모 세팅 예시 : 틱 마다 돌 수 있게 세팅해주세요.
 	Set_GuizmoCamView();
@@ -134,6 +134,7 @@ void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
 
 		
 	}
+	g_pFileDialog->OpenDialog(m_strDialogKey, strTitle, szFilters, strPath, 1, nullptr, ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ConfirmOverwrite);
 
 	g_pFileDialog->OpenDialog(m_strDialogKey, strTitle, szFilters, strPath, 1, nullptr, ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ConfirmOverwrite);
 }
@@ -179,6 +180,9 @@ HRESULT CImgui_Window::Load_Function(string strPath, string strFileName)
 
 void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 {
+	if (nullptr == pGameObject)
+		return;
+
 	/*==== Set ImGuizmo ====*/
 	ImGuizmo::SetOrthographic(false);
 	ImGuiIO& io = ImGui::GetIO();
@@ -233,6 +237,11 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 		ImGui::DragFloat3("Scale Snap", &snap[0]);
 		break;
 	}
+
+	if (arrView == nullptr ||
+		arrProj == nullptr ||
+		arrWorld == nullptr)
+		return;
 
 	ImGuizmo::Manipulate(arrView, arrProj, mCurrentGizmoOperation, mCurrentGizmoMode, arrWorld, NULL, useSnap ? &snap[0] : NULL);
 

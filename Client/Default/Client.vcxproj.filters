@@ -208,6 +208,12 @@
     <Filter Include="02.GameObjects\03. Effect\04.Effect_Sprite">
       <UniqueIdentifier>{03bc8c0a-88ed-4b3d-b82f-b2cad26b7790}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpFrame">
+      <UniqueIdentifier>{dd90327a-0190-4771-96f6-0f97d5f047fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpBar">
+      <UniqueIdentifier>{009fd7cc-9024-4ccd-b651-e9b51bbb3038}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\98. Terrain\Tool_Field">
       <UniqueIdentifier>{cac8625e-3883-4637-b916-f23057d9a854}</UniqueIdentifier>
     </Filter>
@@ -338,6 +344,24 @@
     </ClInclude>
     <ClInclude Include="..\Public\Clone_Manager.h">
       <Filter>96.Manager\Clone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Player.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>02.GameObjects\98. Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_HP.h">
+      <Filter>02.GameObjects\UI\00. Player\01. Hp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_HPBar.h">
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_HPFrame.h">
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpFrame</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Field.h">
       <Filter>02.GameObjects\98. Terrain\Tool_Field</Filter>
@@ -729,6 +753,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body_Player.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_HP.cpp">
+      <Filter>02.GameObjects\UI\00. Player\01. Hp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_HPBar.cpp">
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_HPFrame.cpp">
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpFrame</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Field.cpp">
       <Filter>02.GameObjects\98. Terrain\Tool_Field</Filter>

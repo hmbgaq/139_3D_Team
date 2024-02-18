@@ -112,6 +112,7 @@ void CGameObject::Load_FromJson(const json& In_Json)
 	}
 
 	_float4x4 WorldMatrix;
+
 	ZeroMemory(&WorldMatrix, sizeof(_float4x4));
 	CJson_Utility::Load_JsonFloat4x4(In_Json["Component"]["Transform"], WorldMatrix);
 }
