@@ -545,19 +545,16 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 		if (m_fCurrentTrackPosition >= m_iColliderOnTrackPosition && m_fCurrentTrackPosition < m_iColliderOffTrackPosition)
 		{
 			m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(true);
-			m_bCheckOnCollider = true;
+			//m_bCheckOnCollider = true;
 		}
 		else
 		{
 			m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(false);
-			m_bCheckOnCollider = false;
+			//m_bCheckOnCollider = false;
 		}
 	}
 	
-// 	if (m_fCurrentTrackPosition >= m_iColliderOffTrackPosition && m_fCurrentTrackPosition < m_iColliderOnTrackPosition)
-// 	{
-// 
-// 	}
+
 	//현재 해야 하는 것은 콜라이더 생성하는 버튼을 일단 만들어 보자 
 	ImGui::SeparatorText("Create/Delete");
 

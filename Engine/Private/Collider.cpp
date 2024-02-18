@@ -185,22 +185,25 @@ HRESULT CCollider::Render()
 {
 	if (nullptr == m_pBounding)
 		return E_FAIL;
+	if (m_bEnable == true)
+	{
+		m_pContext->GSSetShader(nullptr, nullptr, 0);
 
-	m_pContext->GSSetShader(nullptr, nullptr, 0);
+		m_pBatch->Begin();
 
-	m_pBatch->Begin();
+		m_pEffect->SetWorld(XMMatrixIdentity());
+		m_pEffect->SetView(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
+		m_pEffect->SetProjection(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
 
-	m_pEffect->SetWorld(XMMatrixIdentity());
-	m_pEffect->SetView(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
-	m_pEffect->SetProjection(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
+		m_pContext->IASetInputLayout(m_pInputLayout);
 
-	m_pContext->IASetInputLayout(m_pInputLayout);
+		m_pEffect->Apply(m_pContext);
 
-	m_pEffect->Apply(m_pContext);
+		m_pBounding->Render(m_pBatch, m_isCollision == true ? XMVectorSet(1.f, 0.f, 0.f, 1.f) : XMVectorSet(0.f, 1.f, 0.f, 1.f));
 
-	m_pBounding->Render(m_pBatch, m_isCollision == true ? XMVectorSet(1.f, 0.f, 0.f, 1.f) : XMVectorSet(0.f, 1.f, 0.f, 1.f));
-
-	m_pBatch->End();
+		m_pBatch->End();
+	}
+	
 
 	return S_OK;
 }
