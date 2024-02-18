@@ -47,7 +47,7 @@ public:
 		_float3 vRotation;
 
 		_float4x4 WorldMatrix = Get_WorldFloat4x4();
-		_matrix rotationMatrix;
+		_matrix rotationMatrix = XMMatrixIdentity();
 
 		vRotation.x = asin(WorldMatrix._32); // ÇÇÄ¡
 		vRotation.y = atan2(-WorldMatrix._31, WorldMatrix._33); // ¿ä

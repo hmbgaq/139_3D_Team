@@ -41,7 +41,14 @@ public:
 	virtual HRESULT		Render_Shadow() override;
 
 public:
+	virtual _bool		Write_Json(json& Out_Json) override;
+	virtual void		Load_FromJson(const json& In_Json) override;
+
+public:
+	ENVIRONMENT_OBJECT_DESC* Get_EnvironmentDesc() { return &m_tEnvironmentDesc; }
 	wstring&			Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
+	_bool				Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
+	
 
 public: //! For.Tool
 	virtual _bool		Picking(_Out_ _float3* vPickedPos) override;

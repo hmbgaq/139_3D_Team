@@ -156,9 +156,9 @@ void CImgui_Window::ShowDialog()
 			auto selection = g_pFileDialog->GetSelection();
 
 			if (m_eDialogType == CImgui_Window::SAVE_DIALOG)
-				Save_Function();
+				Save_Function(filePath, fileName);
 			else if(m_eDialogType == CImgui_Window::LOAD_DIALOG)
-				Load_Function();
+				Load_Function(filePath, fileName);
 			else
 				MSG_BOX("m_eDialogType 実特 馬切");
 		}
@@ -167,12 +167,12 @@ void CImgui_Window::ShowDialog()
 	}
 }
 
-HRESULT CImgui_Window::Save_Function()
+HRESULT CImgui_Window::Save_Function(string strPath, string strFileName)
 {
 	return S_OK;
 }
 
-HRESULT CImgui_Window::Load_Function()
+HRESULT CImgui_Window::Load_Function(string strPath, string strFileName)
 {
 	return S_OK;
 }

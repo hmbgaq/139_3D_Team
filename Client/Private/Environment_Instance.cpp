@@ -88,6 +88,17 @@ HRESULT CEnvironment_Instance::Render()
 	return S_OK;
 }
 
+_bool CEnvironment_Instance::Write_Json(json& Out_Json)
+{
+	return __super::Write_Json(Out_Json);
+	
+}
+
+void CEnvironment_Instance::Load_FromJson(const json& In_Json)
+{
+	return __super::Load_FromJson(In_Json);
+}
+
 void CEnvironment_Instance::Update(INSTANCE_INFO_DESC InstanceDesc, _int iIndex)
 {
 	m_pInstanceModelCom->Update(InstanceDesc, iIndex);

@@ -150,55 +150,92 @@ void CWindow_MapTool::Render()
 
 }
 
-HRESULT CWindow_MapTool::Save_Function()
+
+HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 {
-	switch (m_eTabType)
+	json SaveJson;
+
+	string strNoExtFileName = filesystem::path(strFileName).stem().string();
+
+	string strBasic = "Basic";
+	string strInstance = "Instance";
+
+	for (auto& tag : m_vecCreateObjectTag)
 	{
-		case Client::CWindow_MapTool::TAP_TYPE::TAB_GROUND:
-			{
-				
-				break;
-			}
-
-		case Client::CWindow_MapTool::TAP_TYPE::TAB_INTERACT:
-			{
-				
-				break;
-			}
-
-		case Client::CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT:
-			{
-				
-				break;
-			}
+		// 문자열에서 '@' 문자 이후의 부분을 지움
+		size_t atIndex = tag.find('@');
+		if (atIndex != std::string::npos) {
+			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+		}
 	}
 
-	return S_OK;
+	for (auto& tag : m_vecCreateInstanceTag)
+	{
+		// 문자열에서 '@' 문자 이후의 부분을 지움
+		size_t atIndex = tag.find('@');
+		if (atIndex != std::string::npos) {
+			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+		}
+	}
+
+			_int iAccIndex = 0; //! 이 친구로 계속 인덱스 누적시킬 거임
+
+			_int iCreateObjectSize = m_vecCreateObject.size();
+
+
+			for (_int i = 0; i < iCreateObjectSize; ++i)
+			{
+				CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+
+				Desc = *m_vecCreateObject[i]->Get_EnvironmentDesc();
+
+				SaveJson[iAccIndex].emplace("Type", strBasic);
+				SaveJson[iAccIndex].emplace("Index", i);
+				SaveJson[iAccIndex].emplace("ObjectTag", m_vecCreateObjectTag[i]);
+				SaveJson[iAccIndex].emplace("AnimType", Desc.bAnimModel);
+				SaveJson[iAccIndex].emplace("ShaderPassIndex", Desc.iShaderPassIndex);
+				SaveJson[iAccIndex].emplace("PlayAnimationIndex", Desc.iPlayAnimationIndex);
+
+				m_vecCreateObject[i]->Write_Json(SaveJson[iAccIndex]);
+
+				iAccIndex++;
+			}
+
+
+			_int iCreateInstanceObjectSize = m_vecCreateInstance.size();
+
+
+
+			for (_int i = 0; i < iCreateInstanceObjectSize; ++i)
+			{
+				MAPTOOL_INSTANCE_DESC InstanceObjDesc = m_vecCreateInstance[i]->Get_InstanceDesc();
+
+				SaveJson[iAccIndex].emplace("Type", strInstance);
+				SaveJson[iAccIndex].emplace("Index", i);
+				SaveJson[iAccIndex].emplace("ObjectTag", m_vecCreateInstanceTag[i]);
+				SaveJson[iAccIndex].emplace("InstanceCount", InstanceObjDesc.iNumInstance);
+				SaveJson[iAccIndex].emplace("InstanceInfoVector", InstanceObjDesc.vecInstanceInfoDesc);
+
+
+				m_vecCreateInstance[i]->Write_Json(SaveJson[iAccIndex]);
+
+				iAccIndex++;
+			}
+
+			if (FAILED(CJson_Utility::Save_Json(strPath.c_str(), SaveJson)))
+			{
+				MSG_BOX("맵툴 저장 실패");
+			}
+			else
+			{
+				MSG_BOX("맵툴 저장 성공");
+			}
+
+			return S_OK;
 }
 
-HRESULT CWindow_MapTool::Load_Function()
+HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 {
-	switch (m_eTabType)
-	{
-		case Client::CWindow_MapTool::TAP_TYPE::TAB_GROUND:
-		{
-
-			break;
-		}
-
-		case Client::CWindow_MapTool::TAP_TYPE::TAB_INTERACT:
-		{
-
-			break;
-		}
-
-		case Client::CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT:
-		{
-
-			break;
-		}
-	}
-
 	return S_OK;
 }
 
@@ -953,7 +990,7 @@ void CWindow_MapTool::Ground_CreateFunction()
 			m_vecCreateObject.push_back(pObject);
 			
 			
-			wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pObject->Get_ModelTag() + to_wstring(m_iCreateObjectIndex));
+			wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pObject->Get_ModelTag() + L"@" + to_wstring(m_iCreateObjectIndex));
 			string strConvertTag;
 			m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
 			m_vecCreateObjectTag.push_back(strConvertTag);
@@ -987,27 +1024,19 @@ void CWindow_MapTool::Ground_CreateFunction()
 				CEnvironment_Object* pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 
 				m_vecCreateObject.push_back(pObject);
+
+				wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pObject->Get_ModelTag() + L"@" + to_wstring(m_iCreateObjectIndex));
+				string strConvertTag;
+				m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
+				m_vecCreateObjectTag.push_back(strConvertTag);
+
+				m_iCreateObjectIndex++;
 //			}
 			
 		}
 
 	}
-	
 
-	//!if (true == m_pField->MouseOnTerrain() && true == ImGui_MouseInCheck())
-	//!{
-	//!	CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-	//!
-	//!	Desc.bAnimModel = m_bAnimType;
-	//!	Desc.iShaderPassIndex = m_iShaderPassIndex;
-	//!	Desc.strModelTag = m_pPreviewObject->Get_ModelTag();
-	//!	Desc.bPreview = false;
-	//!	Desc.WorldMatrix = m_pPreviewObject->Get_Transform()->Get_WorldMatrix();
-	//!
-	//!	CEnvironment_Object* pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
-	//!	
-	//!	m_vecCreateObject.push_back(pObject);
-	//!}
 		
 }
 
@@ -1102,7 +1131,7 @@ void CWindow_MapTool::Create_Instance()
 //	InstanceDesc.vecInstanceInfoDesc.clear();
 	m_vecCreateInstance.push_back(pInstanceObject);
 
-	wstring strCreateInstanceTag = m_pGameInstance->SliceObjectTag(pInstanceObject->Get_ModelTag() + to_wstring(m_iCreateInstanceIndex));
+	wstring strCreateInstanceTag = m_pGameInstance->SliceObjectTag(pInstanceObject->Get_ModelTag() + L"@" + to_wstring(m_iCreateInstanceIndex));
 	string strConvertTag;
 	m_pGameInstance->WString_To_String(strCreateInstanceTag, strConvertTag);
 	m_vecCreateInstanceTag.push_back(strConvertTag);

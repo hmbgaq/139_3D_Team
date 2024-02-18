@@ -86,7 +86,7 @@ private:
 	vector<string>			m_vObjectTag;
 	vector<CGameObject*>	m_CreateList;
 	vector<CAnimation*>		m_pAnimation;
-	CBody* m_pBody = { nullptr };
+	class CBody*					m_pBody = { nullptr };
 public:
 	_bool					m_bStop = false;
 	_bool					m_bHold = false;

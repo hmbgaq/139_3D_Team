@@ -493,24 +493,6 @@
     <ClInclude Include="..\Public\PreviewAnimationModel.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow\PreviewAnimationModel</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImGradient.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImGuizmo.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImSequencer.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImZoomSlider.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\GraphEditor.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Reference\Imgui\ImGuizmo\ImCurveEdit.h">
-      <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\CustomDialogFont.h">
       <Filter>99.Defines</Filter>
     </ClInclude>

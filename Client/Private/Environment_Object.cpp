@@ -110,6 +110,16 @@ HRESULT CEnvironment_Object::Render_Shadow()
 	return S_OK;
 }
 
+_bool CEnvironment_Object::Write_Json(json& Out_Json)
+{
+	return __super::Write_Json(Out_Json);
+}
+
+void CEnvironment_Object::Load_FromJson(const json& In_Json)
+{
+	return __super::Load_FromJson(In_Json);
+}
+
 _bool CEnvironment_Object::Picking(_float3* vPickedPos)
 {
 	GRAPHIC_DESC GraphicDesc = *m_pGameInstance->Get_GraphicDesc();

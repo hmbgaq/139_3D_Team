@@ -40,8 +40,8 @@ public:
 	virtual void	Render() override;
 
 private:
-	virtual	HRESULT Save_Function() override;
-	virtual HRESULT Load_Function() override;
+	virtual	HRESULT Save_Function(string strPath, string strFileName) override;
+	virtual HRESULT Load_Function(string strPath, string strFileName) override;
 
 private:
 	HRESULT			Ready_ModelTags();
