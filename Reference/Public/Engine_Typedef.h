@@ -48,6 +48,10 @@ namespace Engine
 	//typedef		HXMVECTOR					_hvector;
 	//typedef		CXMVECTOR					_cvector;
 
+	typedef void(*OnEvent)();
+	typedef _bool(*Condition)();
+
+
 	typedef struct tagInt32
 	{
 		tagInt32(unsigned int _ix, unsigned int _iy, unsigned int _iz)

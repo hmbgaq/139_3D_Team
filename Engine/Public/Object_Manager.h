@@ -38,6 +38,18 @@ public:
 	class CGameObject* Get_Player();
 	void Set_Player(CGameObject* _pPlayer);
 
+public:
+	void Set_Layer_Speed(_uint iLevelIndex, const wstring& strLayerTag, _float fSpeed);
+	void Reset_Layers_Speed(_uint iLevelIndex);
+
+	void Set_Layer_Stop(_uint iLevelIndex, const wstring& strLayerTag, _bool bStop);
+	void Reset_Layer_Stop(_uint iLevelIndex);
+
+
+
+
+
+
 private:
 	_uint			m_iNumLevels = { 0 };
 

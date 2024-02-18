@@ -37,10 +37,6 @@ SOFTWARE.
 \****************************************************************************/
 #undef snprintf
 
-#undef snprintf;
-
-#undef snprintf
-
 #ifndef INCLUDE_NLOHMANN_JSON_HPP_
 #define INCLUDE_NLOHMANN_JSON_HPP_
 

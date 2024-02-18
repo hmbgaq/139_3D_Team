@@ -63,6 +63,18 @@ public:
 	void Go_Left(_float fTimeDelta);		
 	void Go_Right(_float fTimeDelta);		
 
+public:
+	_int Get_Hp() {
+		return m_iHp;
+	};
+
+	void Set_Hp(_uint _iHp) {
+		m_iHp = _iHp;
+	};
+
+protected:
+	_int m_iHp = { 0 };
+
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
 	CBody* m_pBody = { nullptr };

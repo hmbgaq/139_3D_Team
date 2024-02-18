@@ -5,6 +5,8 @@
 #include "Weapon_Player.h"
 #include "Body_Player.h"
 
+#include "Data_Manager.h"
+#include "Clone_Manager.h"
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -16,15 +18,6 @@ CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CPlayer::CPlayer(const CPlayer & rhs)
 	: CCharacter(rhs)
 {
-}
-
-CComponent * CPlayer::Find_Component(const wstring & strComTag, const wstring & strPartTag)
-{
-	auto	iter = m_PartObjects.find(strPartTag);
-	if (iter == m_PartObjects.end())
-		return nullptr;
-
-	return iter->second->Find_Component(strComTag);
 }
 
 HRESULT CPlayer::Initialize_Prototype()
@@ -90,6 +83,32 @@ void CPlayer::Tick(_float fTimeDelta)
 	Safe_Release(pBody);
 
 	__super::Tick(fTimeDelta);
+
+	CData_Manager::GetInstance()->Set_Player_Hp(m_iHp);
+
+	if (m_pGameInstance->Key_Down(DIK_C)) 
+	{
+		CGameObject* pMonster = CClone_Manager::GetInstance()->Clone_Object<CGameObject>(LEVEL_GAMEPLAY, LAYER_MONSTER, TEXT("Prototype_GameObject_Monster"));
+		if (pMonster)
+		{
+			_float3 vPos = Get_Transform()->Get_Position();
+			pMonster->Get_Transform()->Set_Position(vPos);
+		}
+		else 
+		{
+			_bool test = false;
+		}
+		
+
+	}
+	
+
+	//_uint iHp = CData_Manager::GetInstance()->Get_Player_Hp();
+	//_bool test = false;
+
+
+
+
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)

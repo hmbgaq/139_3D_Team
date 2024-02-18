@@ -177,9 +177,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_UI()
 {
-	FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
+	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
 
-	FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Player"), nullptr));
+	FAILED_CHECK(Ready_Layer_UI_Player(TEXT("Layer_UI_Player"), nullptr));
 
 	return S_OK;
 }

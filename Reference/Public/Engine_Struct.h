@@ -175,7 +175,7 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagParticle_Point
 	{
-		static const unsigned int					iNumElements = 7;
+		static const unsigned int					iNumElements = 8;
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTX_PARTICLE_POINT;
 

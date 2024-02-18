@@ -26,6 +26,7 @@ HRESULT CInteract_Chain::Initialize(void* pArg)
 
 	m_fLineThick = 1.2f;
 
+	m_pTransformCom->Set_Position(_float3(25.f, 0.f, 7.f));
 	return S_OK;
 }
 

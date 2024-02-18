@@ -93,6 +93,9 @@ void CObject_Manager::Priority_Tick(_float fTimeDelta)
 	{
 		for (auto& Pair : m_pLayers[i])
 		{
+			if (true == Pair.second->Get_Stop())
+				continue;
+
 			Pair.second->Priority_Tick(fTimeDelta);		
 		}
 	}
@@ -102,8 +105,13 @@ void CObject_Manager::Tick(_float fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
-		for (auto& Pair : m_pLayers[i])
+		for (auto& Pair : m_pLayers[i]) 
+		{
+			if (true == Pair.second->Get_Stop())
+				continue;
+
 			Pair.second->Tick(fTimeDelta);
+		}
 	}
 }
 
@@ -112,7 +120,13 @@ void CObject_Manager::Late_Tick(_float fTimeDelta)
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
 		for (auto& Pair : m_pLayers[i])
+		{
+			if (true == Pair.second->Get_Stop())
+				continue;
+
 			Pair.second->Late_Tick(fTimeDelta);
+		}
+			
 	}
 }
 
@@ -169,6 +183,37 @@ CGameObject* CObject_Manager::Get_Player()
 void CObject_Manager::Set_Player(CGameObject* _pPlayer)
 {
 	m_pPlayer = _pPlayer;
+}
+
+void CObject_Manager::Set_Layer_Speed(_uint iLevelIndex, const wstring& strLayerTag, _float fSpeed)
+{
+	CLayer* layer = Find_Layer(iLevelIndex, strLayerTag);
+	if (nullptr == layer)
+		return;
+
+	layer->Set_Speed(fSpeed);
+}
+
+void CObject_Manager::Reset_Layers_Speed(_uint iLevelIndex)
+{
+	for (auto& Pair : m_pLayers[iLevelIndex])
+		Pair.second->Set_Speed(1.f);
+}
+
+
+void CObject_Manager::Set_Layer_Stop(_uint iLevelIndex, const wstring& strLayerTag, _bool bStop)
+{
+	CLayer* layer = Find_Layer(iLevelIndex, strLayerTag);
+	if (nullptr == layer)
+		return;
+
+	layer->Set_Stop(bStop);
+}
+
+void CObject_Manager::Reset_Layer_Stop(_uint iLevelIndex)
+{
+	for (auto& Pair : m_pLayers[iLevelIndex])
+		Pair.second->Set_Stop(false);
 }
 
 CGameObject * CObject_Manager::Find_Prototype(const wstring & strPrototypeTag)

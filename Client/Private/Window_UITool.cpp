@@ -593,7 +593,8 @@ void CWindow_UITool::UI2D_Delete(_float fTimeDelta)
 	// 오브젝트 삭제
 	m_vecUIObject[m_iSelectedObjectIndex]->Set_Dead(true); // Set_Dead로 이녀석을 없애줘야 Layer에 담겨있는 Object가 죽는다.
 
-	Safe_Release(m_vecUIObject[m_iSelectedObjectIndex]);
+	/* Set_Dead를 요청하면 매니저에게 알아서 해당 객체를 지워달라고 한거니까 그 객체에 대한 삭제처리는 내가 따로 또 하면 안된다. (근데 왜 됐지?) */
+	//Safe_Release(m_vecUIObject[m_iSelectedObjectIndex]);
 	m_vecUIObject.erase(m_vecUIObject.begin() + m_iSelectedObjectIndex);
 
 	m_vecObjectName.erase(m_vecObjectName.begin() + m_iSelectedObjectIndex); // 오브젝트 목록 이름 삭제

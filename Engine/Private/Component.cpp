@@ -36,11 +36,11 @@ HRESULT CComponent::Initialize(void * pArg)
 
 HRESULT CComponent::Set_Owner(CGameObject* _pOwner)
 {
-	if (m_pOwner) 
-		Safe_Release(m_pOwner);
+	//if (m_pOwner) 
+	//	Safe_Release(m_pOwner);
 
 	m_pOwner = _pOwner;
-	Safe_AddRef(m_pOwner);
+	//Safe_AddRef(m_pOwner);
 
 	return S_OK;
 }
@@ -52,9 +52,11 @@ CGameObject* CComponent::Get_Owner()
 
 void CComponent::Free()
 {
+	//Safe_Release(m_pOwner);
+
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 
-	Safe_Release(m_pOwner);
+
 }
