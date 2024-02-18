@@ -184,6 +184,9 @@ void CWindow_AnimTool::Draw_KeyEventEditer()
 
 void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 {
+	ImGui::SeparatorText("AnimationModel");
+	ImGui::NewLine();
+
 	if (ImGui::TreeNode("AnimationModel"))
 	{
 		string items[] = { "Layer_Player", "Layer_Monster","Layer_Environment","Layer_Object","Layer_Effect","Layer_Something"};
@@ -209,7 +212,8 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		}
 
 		ImGui::Spacing();
-
+		ImGui::SeparatorText("LayerList");
+		ImGui::NewLine();
 		if (ImGui::BeginListBox("LayerList"))
 		{
 			for (int n = 0; n <6; n++)
@@ -244,6 +248,8 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		ImGui::SameLine();
 		ImGui::Checkbox("Delete",& m_bDeleteCheck);
 
+		ImGui::SeparatorText("CreateList");
+		ImGui::NewLine();
 		static int CreateIndex = 0; // Here we store our selection data as an index.
 		
 		if (m_bListCheck)
@@ -293,7 +299,9 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		}
 		
 		ImGui::Spacing();
-
+		ImGui::SeparatorText("AnimationList");
+		ImGui::NewLine();
+		
 		if (ImGui::BeginListBox("AnimationList"))
 		{
 			if (m_CreateList.size() > 0)
@@ -310,7 +318,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 				const bool is_selected = (AnimationIndex == n);
 				if (ImGui::Selectable(m_pAnimation[n]->Get_Name(), is_selected))
 					AnimationIndex = n;
-
+				m_CurrentAnimationIndex = AnimationIndex;
 				if (is_selected)
 				{
 					
@@ -354,13 +362,27 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 // 			m_pBody->Get_Model()->Set_Animation(0.f, false);
 // 		}
 	}
+	if (m_bStop)
+	{
+		if (nullptr != m_pBody)
+			{
+				m_pBody->Get_Model()->Set_Animation(m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition(),CModel::ANIM_STATE_LOOP);
+			}
+	}
 	
-	ImGui::Spacing();
+	if (nullptr != m_pBody)
+	{
+		m_fCurrentTrackPosition = m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition();
+	}
 
+	ImGui::Spacing();
+	//if (ImGui::SliderFloat("CurrnetTrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
+	
 	if (ImGui::SliderFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
 	{
 		m_bTrackPositionCheck = true;
 	}
+	
 	
 // 
 	if (ImGui::InputFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
@@ -401,9 +423,12 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 	if (m_PickingObject == nullptr)
 		return;
 	static int BoneIndex = 0;
+
 	//static int ColliderIndex = 0;
 	if (ImGui::TreeNode("ModelBones"))
 	{
+		ImGui::SeparatorText("BoneList");
+		ImGui::NewLine();
 		if (ImGui::BeginListBox("BoneList"))
 		{
 			if (m_PickingObject != nullptr)
@@ -444,6 +469,8 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 			}
 			ImGui::EndListBox();
 		}
+		ImGui::SeparatorText("ColliderList");
+		ImGui::NewLine();
 		if (ImGui::BeginListBox("ColliderList"))
 		{
 			if (m_pBoneCollider.size() < 0)

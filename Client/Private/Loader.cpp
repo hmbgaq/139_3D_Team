@@ -310,9 +310,9 @@ HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
 	wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Anim/");
 
 	//! 로더에 원형
-	FAILED_CHECK(Read_FBXModelPath(strNonAnimModelPath.c_str(), eLevel, CModel::TYPE_NONANIM));
-
-	FAILED_CHECK(Read_FBXModelPath(strAnimModelPath.c_str(), eLevel, CModel::TYPE_ANIM));
+	//FAILED_CHECK(Read_FBXModelPath(strNonAnimModelPath.c_str(), eLevel, CModel::TYPE_NONANIM));
+	//
+	//FAILED_CHECK(Read_FBXModelPath(strAnimModelPath.c_str(), eLevel, CModel::TYPE_ANIM));
 
 
 	return S_OK;
