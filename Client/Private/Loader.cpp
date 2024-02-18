@@ -169,7 +169,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	//!환경 모델
 	//!		
 
-	//Ready_Environment_Model(LEVEL_GAMEPLAY);
+	Ready_Environment_Model(LEVEL_GAMEPLAY);
 
 
 	//!버퍼 

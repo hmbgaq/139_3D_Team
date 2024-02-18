@@ -35,6 +35,8 @@ private: /* UI */
 private:
 	_int			TempLightNumber = 0;
 
+	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Test1_MapData.json";
+
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
