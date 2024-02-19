@@ -145,9 +145,13 @@ HRESULT CMonster::Ready_Components()
 
 
 	{
-		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_BeastBoss_Phase3"),
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
 			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 			return E_FAIL;
+
+		//if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_BeastBoss_Phase3"),
+		//	TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+		//	return E_FAIL;
 	}
 
 	/* For. Texture */
