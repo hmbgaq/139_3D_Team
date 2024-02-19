@@ -527,6 +527,7 @@ RAY CGameInstance::Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX
 	return vMouseRayLocal;
 }
 
+#ifdef _DEBUG
 _bool CGameInstance::Picking_Mesh(RAY ray, _float3* out, vector<class CMesh*> Meshes)
 {
 	//_vector		vPickedPos;
@@ -579,7 +580,9 @@ _bool CGameInstance::Picking_Mesh(RAY ray, _float3* out, vector<class CMesh*> Me
 
 	return bIsPicked;
 }
+#endif
 
+#ifdef _DEBUG
 _bool CGameInstance::Picking_Vertex(RAY ray, _float3* out, _uint triNum, VTXMESH* pVertices, _uint* pIndices)
 {
 	_vector		vPickedPos;
@@ -613,6 +616,7 @@ _bool CGameInstance::Picking_Vertex(RAY ray, _float3* out, _uint triNum, VTXMESH
 	}
 	return false;
 }
+#endif
 
 HRESULT CGameInstance::Add_Font(const wstring & strFontTag, const wstring & strFontFilePath)
 {
