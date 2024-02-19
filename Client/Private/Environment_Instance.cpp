@@ -46,6 +46,7 @@ void CEnvironment_Instance::Priority_Tick(_float fTimeDelta)
 void CEnvironment_Instance::Tick(_float fTimeDelta)
 {
 	m_pInstanceModelCom->Update(m_tInstanceDesc.vecInstanceInfoDesc);
+	
 }
 
 void CEnvironment_Instance::Late_Tick(_float fTimeDelta)
@@ -130,6 +131,11 @@ HRESULT CEnvironment_Instance::Ready_Components()
 	Desc.pModel = m_pModelCom;
 	Desc.iNumInstance = m_tInstanceDesc.iNumInstance; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
 	Desc.vecBufferInstanceInfo = m_tInstanceDesc.vecInstanceInfoDesc;
+
+	
+	
+	
+	
 	
 	// For.Com_Model */
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"),

@@ -30,6 +30,7 @@ public:
 	_uint					Get_NumMaterials() const { return m_iNumMaterials; }
 	_uint					Get_NumMeshIndice(_int iMeshIndex);//! ¸ğµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
 	vector<class CMesh*>&	Get_Meshes() { return m_Meshes;}
+	class CMesh*			Get_Mesh_For_Index(_int iMeshIndex);
 	//! ¸ğµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
 	class CBone*			Get_BonePtr(const _char* pBoneName) const;
 
@@ -73,6 +74,7 @@ public:
 public:
 	vector<CAnimation*>*	 Get_Animations();
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
+	
 
 public:
 	vector<CBone*>*			Get_Bones();

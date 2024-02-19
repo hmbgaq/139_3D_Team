@@ -36,6 +36,7 @@ public:
 	virtual _bool Activate_Condition() override;
 	virtual _bool End_Condition() override;
 
+	
 
 public:
 	/* 원형객체를 생성한다. */

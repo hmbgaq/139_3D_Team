@@ -44,6 +44,11 @@ _uint CModel::Get_NumMeshIndice(_int iMeshIndex)
 	 return m_Meshes[iMeshIndex]->Get_NumIndices();
 }
 
+CMesh* CModel::Get_Mesh_For_Index(_int iMeshIndex)
+{
+	return m_Meshes[iMeshIndex];
+}
+
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)
@@ -78,6 +83,8 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath
 	if (TYPE_NONANIM == eType)
 		iFlag |= aiProcess_PreTransformVertices;
 
+
+	/*TODOm_pAIScene = m_MyAssimp.ReadFile(strModelFilePath, iFlag, false); */ //! 무조건 FBX 로드, TRUE 일 시 BINARY 로드
 
 	m_pAIScene = m_MyAssimp.ReadFile(strModelFilePath, iFlag);
 

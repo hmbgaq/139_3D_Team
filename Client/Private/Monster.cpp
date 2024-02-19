@@ -57,6 +57,8 @@ void CMonster::Tick(_float fTimeDelta)
 
 	//SetUp_OnTerrain(m_pTransformCom);
 
+	
+
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
@@ -70,7 +72,11 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (true == m_pGameInstance->isIn_LocalPlanes(XMVector3TransformCoord(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_WorldMatrixInverse()), 0.f))
 	{
-		m_pModelCom->Play_Animation(fTimeDelta, true);
+		_float3 vRootAnimPos = {};
+
+		m_pModelCom->Play_Animation(fTimeDelta, &vRootAnimPos);
+
+		m_pTransformCom->Add_RootBone_Position(vRootAnimPos);
 
 		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 			return;
@@ -132,8 +138,14 @@ HRESULT CMonster::Ready_Components()
 	}
 
 	/* For.Com_Model */
+
+	//!Prototype_Component_Model_BeastBoss_Phase1
+	//! //!Prototype_Component_Model_BeastBoss_Phase2
+	//! //!Prototype_Component_Model_BeastBoss_Phase3
+
+
 	{
-		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_BeastBoss_Phase3"),
 			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 			return E_FAIL;
 	}
@@ -170,6 +182,8 @@ HRESULT CMonster::Bind_ShaderResources()
 	
 	return S_OK;
 }
+
+
 
 CMonster * CMonster::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {

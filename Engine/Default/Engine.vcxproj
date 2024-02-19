@@ -268,6 +268,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\Public\Trigger.h" />
     <ClInclude Include="..\Public\UI_Base.h" />
     <ClInclude Include="..\public\VIBuffer.h" />
+    <ClInclude Include="..\Public\VIBuffer_AnimModel_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Cell.h" />
     <ClInclude Include="..\Public\VIBuffer_Cube.h" />
     <ClInclude Include="..\Public\VIBuffer_Effect_Model_Instance.h" />
@@ -340,6 +341,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\Private\Trigger.cpp" />
     <ClCompile Include="..\Private\UI_Base.cpp" />
     <ClCompile Include="..\private\VIBuffer.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_AnimModel_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Effect_Model_Instance.cpp" />

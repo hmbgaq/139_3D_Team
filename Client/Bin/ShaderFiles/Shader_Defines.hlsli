@@ -39,6 +39,7 @@ sampler SSAORandVec = sampler_state
     AddressU = Wrap;
     AddressV = Wrap;
 };
+
 /* ---------------- Rasterizer ---------------- */
 
 RasterizerState RS_Default

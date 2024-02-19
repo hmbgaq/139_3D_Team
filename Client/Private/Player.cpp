@@ -113,8 +113,7 @@ void CPlayer::Tick(_float fTimeDelta)
 		m_pGameInstance->Add_Event(pEvent);
 	}
 
-
-
+	
 
 
 }
@@ -140,9 +139,9 @@ HRESULT CPlayer::Ready_Components()
 
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Navigation2"),
-		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
-		return E_FAIL;
+//	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Navigation2"),
+//		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+//		return E_FAIL;
 
 
 	return S_OK;
@@ -155,12 +154,12 @@ HRESULT CPlayer::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
 		return E_FAIL;
 
-	{
-		CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
-		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
-			return E_FAIL;
-	}
-	CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
+	//{
+	//	CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
+	//	if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
+	//		return E_FAIL;
+	//}
+	//CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
 
 
 	return S_OK;

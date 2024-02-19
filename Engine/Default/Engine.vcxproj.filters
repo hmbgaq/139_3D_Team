@@ -271,6 +271,9 @@
     <Filter Include="01.Utility\03.Components\01.VIBuffer\SSAO">
       <UniqueIdentifier>{45142160-3e8f-4c21-b613-06aecc2af5e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\AnimModel_Instance">
+      <UniqueIdentifier>{e61dfa5c-0fd5-489c-a70a-dd06e1dd4c7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -513,9 +516,6 @@
     <ClInclude Include="..\Public\Json_Utility.h">
       <Filter>01.Utility\96.Utility\Json</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VIBuffer_Dynamic_Terrain.h">
-      <Filter>01.Utility\03.Components\01.VIBuffer\Terrain\Tool</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Collision_Manager.h">
       <Filter>01.Utility\03.Components\07.Collider\Manager</Filter>
     </ClInclude>
@@ -554,6 +554,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_SSAO.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\SSAO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_AnimModel_Instance.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\AnimModel_Instance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -746,9 +749,6 @@
     <ClCompile Include="..\Private\Json_Utility.cpp">
       <Filter>01.Utility\96.Utility\Json</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VIBuffer_Dynamic_Terrain.cpp">
-      <Filter>01.Utility\03.Components\01.VIBuffer\Terrain\Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Collision_Manager.cpp">
       <Filter>01.Utility\03.Components\07.Collider\Manager</Filter>
     </ClCompile>
@@ -775,6 +775,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_SSAO.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\SSAO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_AnimModel_Instance.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\AnimModel_Instance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

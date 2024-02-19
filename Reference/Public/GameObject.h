@@ -40,6 +40,7 @@ public:
 	virtual _bool	Picking(_Out_ _float3* vPickedPos);
 	
 
+
 public:
 	virtual class CComponent* Find_Component(const wstring& strComTag, const wstring& strPartTag = TEXT(""));
 public:

@@ -19,7 +19,9 @@ CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 HRESULT CLevel_Tool::Initialize()
 {
 	//Level_Tool 레벨 조정 
-	m_pGameInstance->Set_CurrentLevel(3);
+	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
+
+
 	if (FAILED(Ready_Imgui()))
 	{
 		Safe_Release(m_pDevice);

@@ -194,11 +194,31 @@ namespace Engine
 		XMFLOAT4			vTranslation;
 	}VTXMODELINSTANCE;
 
+	typedef struct ENGINE_DLL tagVertex_AnimModel_Instance
+	{
+		_float3		vPosition;
+		_float3		vNormal;
+		_float2		vTexture;
+		_float3		vTangent;
+		XMUINT4		vBlendIndex; /* 이 정점에 영향을 주는 뼈의 인덱스 네개. */
+		_float4		vBlendWeight; /* 영향르 주고 있는 각 뼈대의 영향 비율 */
+
+		_uint		iID;
+		_matrix		matWorld;
+
+	}VTXANIMMODELINSTANCE;
+
 	typedef struct ENGINE_DLL tagVertex_Model_Instance_Declaration
 	{
 		static const unsigned int				iNumElements = 8;
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXMODEL_INSTANCE_DECLARATION;
+
+	typedef struct ENGINE_DLL tagVertex_AnimModel_Instance_Declaration
+	{
+		static const unsigned int				iNumElements = 11;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXMODEL_ANIMMODEL_INSTANCE_DECLARATION;
 
 	typedef struct ENGINE_DLL tagVertex_Dynamic_Field
 	{
@@ -263,6 +283,14 @@ namespace Engine
 		}
 	}INSTANCE_INFO_DESC;
 
+	typedef struct ENGINE_DLL tagAnimInstanceDesc
+	{
+		const _uint			iMaxInstanceCount = 100;
+		_uint				iNumInstance = { 0 };
+		ID3D11Texture2D*	pAnimInstanceTexture = { nullptr };
+		//ID3D11ShaderResourceView* pAnimSRV = nullptr;
+	};
+
 	typedef struct ENGINE_DLL tagEnvironment_Desc
 	{
 		wstring strModelTag = {};
@@ -277,6 +305,17 @@ namespace Engine
 		XMFLOAT3 vDirection;
 		float	fLength;
 	}RAY;
+
+	typedef struct ENGINE_DLL AnimInstanceDesc
+	{
+		_uint				iMaxInstanceCount = 0;
+		class CShader*		pInstanceShader = { nullptr };
+		ID3D11Texture2D*	pInstanceTexture = { nullptr };
+		ID3D11ShaderResourceView* pInstanceSRV = { nullptr };
+
+		BYTE*				pByte = { nullptr };
+		_float4x4*			pMatrix = { nullptr };
+	}ANIMMODEL_INSTANCE_DESC;
 
 
 #pragma endregion 구조체
