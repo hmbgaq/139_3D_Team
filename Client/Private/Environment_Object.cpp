@@ -52,8 +52,8 @@ void CEnvironment_Object::Tick(_float fTimeDelta)
 
 void CEnvironment_Object::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-		return ;
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
+	//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
 }
 
 HRESULT CEnvironment_Object::Render()

@@ -32,15 +32,11 @@ HRESULT CEnvironment_Instance::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	
-
-	
 	return S_OK;
 }
 
 void CEnvironment_Instance::Priority_Tick(_float fTimeDelta)
 {
-
 }
 
 void CEnvironment_Instance::Tick(_float fTimeDelta)
@@ -55,8 +51,8 @@ void CEnvironment_Instance::Late_Tick(_float fTimeDelta)
 // 
 // 	if (true == m_pGameInstance->isIn_LocalPlanes(XMVector3TransformCoord(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_WorldMatrixInverse()), 0.f))
 // 	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-			return;
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
 /*	}*/
 
 }
@@ -72,13 +68,9 @@ HRESULT CEnvironment_Instance::Render()
 	{
 		_matrix Test = m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix();
 
-		
-
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		
-		
-
 		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 
@@ -91,8 +83,33 @@ HRESULT CEnvironment_Instance::Render()
 		//m_pModelCom->Render(i);
 	}
 
-		
-	
+	return S_OK;
+}
+
+HRESULT CEnvironment_Instance::Render_Shadow()
+{
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldFloat4x4()));
+
+	_float4x4		ViewMatrix, ProjMatrix;
+
+	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, m_pGameInstance->Get_CamFar()));
+
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix));
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+
+		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_SHADOW));
+
+		m_pModelCom->Render((_uint)i);
+	}
 
 	return S_OK;
 }

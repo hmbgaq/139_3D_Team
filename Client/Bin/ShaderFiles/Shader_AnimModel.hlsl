@@ -112,20 +112,25 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-
-	if (vMtrlDiffuse.a < 0.1f)
-		discard;
-
-	Out.vDiffuse = vMtrlDiffuse;
+    Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-   // Out.vBloom = float4(1.0f, 0.f, 0.f, 1.0f);
-    //Out.vViewNormal = Out.vNormal;
-    //Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
-    Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
+    Out.vBloom = float4(1.0f, 0.f, 0.f, 1.0f);
+    Out.vViewNormal = Out.vNormal;
+    Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    //Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
+    
+    
+    //float fRimPower = 1.f - saturate(dot(In.vNormal, normalize((-1.f * (In.vWorldPosition - g_vCamPosition)))));
+    //fRimPower = pow(fRimPower, 5.f);
+    //vector vRimColor = g_vRimColor * fRimPower;
+    //Out.vDiffuse += vRimColor;
+    //Out.vBloom = Caculation_Brightness(Out.vDiffuse) + vRimColor;
+    
+    if (0.f == Out.vDiffuse.a)
+        discard;
 
-	return Out;
+    return Out;
 }
 
 /* ------------------- Shadow Pixel Shader(2) -------------------*/
