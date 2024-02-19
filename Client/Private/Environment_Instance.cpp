@@ -45,7 +45,7 @@ void CEnvironment_Instance::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Instance::Tick(_float fTimeDelta)
 {
-
+	m_pInstanceModelCom->Update(m_tInstanceDesc.vecInstanceInfoDesc);
 }
 
 void CEnvironment_Instance::Late_Tick(_float fTimeDelta)
@@ -70,13 +70,22 @@ HRESULT CEnvironment_Instance::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		_matrix Test = m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix();
+
 		
 
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		
+		
+
+		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+
 		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
+
+
+
 		m_pInstanceModelCom->Render((_uint)i);
 
 		//m_pModelCom->Render(i);
@@ -143,6 +152,11 @@ HRESULT CEnvironment_Instance::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
+
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &fCamFar, sizeof(_float))))
+		return E_FAIL;
+
 
 	return S_OK;
 }

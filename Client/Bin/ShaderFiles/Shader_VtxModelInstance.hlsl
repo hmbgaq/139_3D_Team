@@ -45,7 +45,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	VS_OUT		Out = (VS_OUT)0;
 
 	
-	matrix			WorldMatrix= float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+	matrix			WorldMatrix	= float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
 
 	vector			vPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
 
@@ -90,7 +90,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    clip(Out.vDiffuse.a - 0.1f);
+    //clip(Out.vDiffuse.a - 0.1f);
 	
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
@@ -264,8 +264,8 @@ technique11 DefaultTechnique
 {
 	pass Default //0
 	{
-		SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-        SetDepthStencilState(DSS_DepthStencilEnable, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_Default, 0);
 		SetRasterizerState(RS_Default);
 
         VertexShader = compile vs_5_0 VS_MAIN();
