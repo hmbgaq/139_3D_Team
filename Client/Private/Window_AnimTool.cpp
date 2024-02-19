@@ -38,23 +38,6 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 	__super::Begin();
 
-// 	if (ImGui::BeginMenuBar())
-// 	{
-// 		if (ImGui::BeginMenu("Menu"))
-// 		{
-// 			if (ImGui::MenuItem("Save"))
-// 			{
-// 
-// 			}
-// 			if (ImGui::MenuItem("Load"))
-// 			{
-// 
-// 			}
-// 			ImGui::EndMenu();
-// 		}
-// 		ImGui::EndMenuBar();
-// 	}
-
 	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
 #ifdef _DEBUG
