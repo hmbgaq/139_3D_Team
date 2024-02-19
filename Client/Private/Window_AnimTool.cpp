@@ -183,7 +183,13 @@ void CWindow_AnimTool::Create_Weapon(CCharacter* ParentObject, string strBonenam
 {
 	CWeapon_Player::WEAPON_DESC weaponDesc = {};
 
-	ParentObject->Add_Weapon(strPrototypeTag, strBonename, weaponDesc, TEXT("Weapon_L"));
+	const wstring str = TEXT("Weapon") + m_CreateWeaponList.size();
+
+	ParentObject->Add_Weapon(strPrototypeTag, strBonename, weaponDesc, str);
+
+	CGameObject* pWeapon = ParentObject->Get_Weapon(str);
+
+	m_CreateWeaponList.push_back(pWeapon);
 }
 
 
@@ -589,6 +595,10 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 void CWindow_AnimTool::Draw_Weapon(_float fTimeDelta)
 {
 	ImGui::SeparatorText("WeaponList");
+
+	if (m_pBones.empty())
+		return;
+
 	if (ImGui::TreeNode("Weapon"))
 	{
 		string items[] = { "Layer_Player", "Layer_Monster","Layer_Effect" };
@@ -631,13 +641,12 @@ void CWindow_AnimTool::Draw_Weapon(_float fTimeDelta)
 					if (m_bCreateWeaponCheck)
 						if (m_pGameInstance->Mouse_Down(DIM_LB))
 						{
+							
 							CCharacter* pickingObject = dynamic_cast<CCharacter*>(m_PickingObject);
 							Create_Weapon(pickingObject,m_pBones[m_iSelectBoneIndex]->Get_Name(), ConvertCtoWC(m_vObjectTag[Object_idx].c_str()));
-							//Create_Object_On_Map(ConvertCtoWC(items[Layer_idx].c_str()), ConvertCtoWC(m_vObjectTag[Object_idx].c_str()));
 							m_bCloneCount = true;
 							m_bListCheck = true;
 							m_bCreateWeaponCheck = false;
-
 						}
 
 				}

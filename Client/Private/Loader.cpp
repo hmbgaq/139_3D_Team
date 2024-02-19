@@ -176,9 +176,15 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 
 	//! 캐릭터 모델
 	_matrix      PivotMatrix;
-	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Fiona"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Fiona/Fiona", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Screamer"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Screamer/Screamer", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Shotgun"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/Shotgun/Shotgun", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_ELShotgun"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/ELShotgun/ELShotgun", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_ELWinchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/ELWinchester/ELWinchester", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_FlameBelcher"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/FlameBelcher/FlameBelcher", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Winchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/Winchester/Winchester", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Revolver"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/Revolver/PlayerRevolver", PivotMatrix)));
 
 	/* 1/100 스케일 적용 */
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
@@ -268,6 +274,12 @@ HRESULT CLoader::Loading_For_Tool_Level()
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Fiona"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Fiona/Fiona", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Fiona"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Player/Player", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_Shotgun"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Shotgun/Shotgun", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_ELShotgun"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/ELShotgun/ELShotgun", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_ELWinchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/ELWinchester/ELWinchester", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_FlameBelcher"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/FlameBelcher/FlameBelcher", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_Winchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Winchester/Winchester", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_Revolver"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Revolver/PlayerRevolver", PivotMatrix)));
 
 	
 	
@@ -324,13 +336,13 @@ HRESULT CLoader::Ready_Origin()
 	//! Player
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"), CPlayer::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Player"), CBody_Player::Create(m_pDevice, m_pContext)));
-	//? PlayerWeapon
+	//! PlayerWeapon
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Revolver"), CPlayer_Weapon_Revolver::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_Component_Model_Player_Weapon_ELShotgun"), CPlayer_Weapon_ELShotgun::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_Component_Model_Player_Weapon_ELWinchester"), CPlayer_Weapon_ELWinchester::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_Component_Model_Player_Weapon_FlameBelcher"), CPlayer_Weapon_FlameBelcher::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_Component_Model_Player_Weapon_Shotgun"), CPlayer_Weapon_Shotgun::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_Component_Model_Player_Weapon_Winchester"), CPlayer_Weapon_Winchester::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_ELShotgun"), CPlayer_Weapon_ELShotgun::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_ELWinchester"), CPlayer_Weapon_ELWinchester::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_FlameBelcher"), CPlayer_Weapon_FlameBelcher::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Shotgun"), CPlayer_Weapon_Shotgun::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Winchester"), CPlayer_Weapon_Winchester::Create(m_pDevice, m_pContext)));
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Player"), CWeapon_Player::Create(m_pDevice, m_pContext)));
 
