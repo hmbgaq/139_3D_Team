@@ -16,6 +16,8 @@ public: /* ==================== Struct ==================== */
 	{
 	};
 
+	enum CHANGETYPE { NONE, SCALE, ROTATION, POSITION, CHANGE_END };
+
 	typedef struct tagImageInfo
 	{
 		_int						iImage_Width = 100;
@@ -163,9 +165,21 @@ private: /* 2D */
 	POINT						m_pt;
 
 private:
+	char cInputText[MAX_PATH] = "";
+private: /* Value */
+	_float						m_fChangeValue = 0.1f;
+
+private: /* enum */
+	_int						m_iChangeType = (_int)CHANGETYPE::NONE;
+	_int						m_iRenderGroup = (_int)CRenderer::RENDER_UI;
+
+private:
 	_bool						m_bOpenTexture = true;
 	_bool						m_bOpenSetting = false;
 	_bool						m_bOpenUI = false;
+	_bool						m_bScaleChange = false;
+	_bool						m_bRotChange = false;
+	_bool						m_bPosChange = false;
 
 private:
 	//// ==============폴더 경로==============

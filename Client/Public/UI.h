@@ -50,7 +50,7 @@ public: /* ============================== Set =============================== */
 	_bool			Get_Pick() { return m_bPick; }
 
 public: /* =========================== Set_Position =========================== */
-	void			Set_Pos(_float2 vPos);
+	void			Set_Pos(_float fPosX, _float fPosY);
 	void			Set_PosZ(_float fZ);
 
 public: /* ========================== Set_Rect_Scale ========================== */

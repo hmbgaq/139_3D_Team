@@ -69,7 +69,6 @@ void CUI::Tick(_float fTimeDelta)
 		break;
 	}
 
-
 	Check_RectPos();
 	Picking_UI();
 }
@@ -205,10 +204,10 @@ void CUI::Set_PosZ(_float fZ)
 		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, Z));
 }
 
-void CUI::Set_Pos(_float2 vPos)
+void CUI::Set_Pos(_float fPosX, _float fPosY)
 {
-	m_fPositionX = vPos.x;
-	m_fPositionY = vPos.y;
+	m_fPositionX = fPosX;
+	m_fPositionY = fPosY;
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
@@ -218,7 +217,10 @@ void CUI::Set_Pos(_float2 vPos)
 void CUI::Check_RectPos()
 {
 	_float fPosX = m_pTransformCom->Get_Position().x + g_iWinSizeX * 0.5f;
-	_float fPosY = m_pTransformCom->Get_Position().y + g_iWinSizeY * 0.5f;
+	_float fPosY = -m_pTransformCom->Get_Position().y + g_iWinSizeY * 0.5f;
+
+	m_fScaleX = m_pTransformCom->Get_Scaled().x;
+	m_fScaleY = m_pTransformCom->Get_Scaled().y;
 
 	m_rcUI.left = LONG(fPosX - (m_fScaleX / 2));
 	m_rcUI.top = LONG(fPosY - (m_fScaleY / 2));
@@ -257,16 +259,16 @@ HRESULT CUI::SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX, _float f
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
 
-	m_tUIInfo.fPositionX = fPosX;
-	m_tUIInfo.fPositionY = fPosY;
-	m_tUIInfo.fScaleX = fSizeX;
-	m_tUIInfo.fScaleY = fSizeY;
+	m_fPositionX = fPosX;
+	m_fPositionY = fPosY;
+	m_fScaleX = fSizeX;
+	m_fScaleY = fSizeY;
 
-	m_pTransformCom->Set_Scaling(m_tUIInfo.fScaleX, m_tUIInfo.fScaleY, 1.f);
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 
 	// 위치 이동
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		XMVectorSet(m_tUIInfo.fPositionX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fPositionY + (_float)g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ, 1.f));
+		XMVectorSet(m_fPositionX - (_float)g_iWinSizeX * 0.5f, -m_fPositionY + (_float)g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ, 1.f));
 
 	// View Matrix 및 Projection Matrix 설정
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
@@ -292,10 +294,6 @@ void CUI::Load_UIData(const char* _FilePath)
 
 		CUI::UI_DESC tUI_Info;
 
-		tUI_Info.fPositionX = object["PostionX"];
-		tUI_Info.fPositionY = object["PostionY"];
-		tUI_Info.fScaleX = object["SizeX"];
-		tUI_Info.fScaleY = object["SizeY"];
 		tUI_Info.strProtoTag = object["ProtoTag"];
 		tUI_Info.strFilePath = object["FilePath"];
 	}

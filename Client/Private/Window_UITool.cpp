@@ -109,7 +109,7 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 {
 	/* Load */
 	// SetUp_Initialize();
-	
+
 	IndexCheck();
 	GetCursorPos(&m_pt);
 	ScreenToClient(g_hWnd, &m_pt);
@@ -117,6 +117,14 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 	ShowDialog();
 
 	__super::Tick(fTimeDelta);
+
+	SetUp_ImGuiDESC("Anim", { 600.f, 300.f }, 0, { 0.f, 0.f, 0.f, 0.f });
+
+	__super::Begin();
+
+	ImGui::Text("new");
+
+	__super::End();
 
 	__super::Begin();
 
@@ -151,6 +159,9 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 		if (ImGui::BeginTabItem("Text", &m_bOpenUI))
 		{
 			ImGui::Text("Tab");
+
+
+
 			ImGui::EndTabItem();
 		}
 
@@ -174,6 +185,12 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 	if (m_vecImagePaths.empty() ||
 		m_vecTexture.empty())
 		return;
+
+	ImGui::RadioButton("UI_FRONT", &m_iRenderGroup, (_int)CRenderer::RENDERGROUP::RENDER_UI_FRONT); ImGui::SameLine();
+	ImGui::RadioButton("UI", &m_iRenderGroup, (_int)CRenderer::RENDERGROUP::RENDER_UI); ImGui::SameLine();
+	ImGui::RadioButton("UI_BACK", &m_iRenderGroup, (_int)CRenderer::RENDERGROUP::RENDER_UI_BACK);
+
+	
 
 	// Layer
 	Layer_List();
@@ -243,7 +260,24 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 		m_bOpenUI = true;
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_Z))
+	if (m_pGameInstance->Key_Down(DIK_Q))
+	{
+		m_iChangeType = SCALE;
+	}
+	if (m_pGameInstance->Key_Down(DIK_W))
+	{
+		m_iChangeType = ROTATION;
+	}
+	if (m_pGameInstance->Key_Down(DIK_E))
+	{
+		m_iChangeType = POSITION;
+	}
+	if (m_pGameInstance->Key_Down(DIK_R))
+	{
+		m_iChangeType = NONE;
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_DELETE))
 	{
 		++m_iSelectedObjectIndex;
 
@@ -265,19 +299,82 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Pressing(DIK_UP))
 	{
-
+		if(m_iChangeType == (_int)SCALE)
+			m_CurrObject->Change_SizeTop(m_fChangeValue);
+		if (m_iChangeType == (_int)ROTATION)
+			m_CurrObject->Get_Transform()->Turn(_vector({ 1.f, 0.f, 0.f, 0.f }), m_fChangeValue);
+		if (m_iChangeType == (_int)POSITION)
+		{
+			_vector vPos = m_CurrObject->Get_Transform()->Get_Position();
+			vPos.m128_f32[1] += m_fChangeValue;
+			m_CurrObject->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
+		}
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_DOWN))
 	{
-
+		if (m_iChangeType == (_int)SCALE)
+			m_CurrObject->Change_SizeBottom(m_fChangeValue);
+		if (m_iChangeType == (_int)ROTATION)
+			m_CurrObject->Get_Transform()->Turn(_vector({ 1.f, 0.f, 0.f, 0.f }), -m_fChangeValue);
+		if (m_iChangeType == (_int)POSITION)
+		{
+			_vector vPos = m_CurrObject->Get_Transform()->Get_Position();
+			vPos.m128_f32[1] += -m_fChangeValue;
+			m_CurrObject->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
+		}
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_LEFT))
 	{
-
+		if (m_iChangeType == (_int)SCALE)
+			m_CurrObject->Change_SizeLeft(m_fChangeValue);
+		if (m_iChangeType == (_int)ROTATION)
+			m_CurrObject->Get_Transform()->Turn(_vector({ 0.f, 0.f, 1.f, 0.f }), -m_fChangeValue);
+		if (m_iChangeType == (_int)POSITION)
+		{
+			_vector vPos = m_CurrObject->Get_Transform()->Get_Position();
+			vPos.m128_f32[0] += -m_fChangeValue;
+			m_CurrObject->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
+		}
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_RIGHT))
 	{
+		if (m_iChangeType == (_int)SCALE)
+			m_CurrObject->Change_SizeRight(m_fChangeValue);
+		if (m_iChangeType == (_int)ROTATION)
+			m_CurrObject->Get_Transform()->Turn(_vector({ 0.f, 0.f, 1.f, 0.f }), m_fChangeValue);
+		if (m_iChangeType == (_int)POSITION)
+		{
+			_vector vPos = m_CurrObject->Get_Transform()->Get_Position();
+			vPos.m128_f32[0] += m_fChangeValue;
+			m_CurrObject->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
+		}
+	}
 
+	if (m_pGameInstance->Key_Pressing(DIK_0))
+	{
+		m_fChangeValue = 0.1f;
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_MINUS))
+	{
+		m_fChangeValue += 0.1f;
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_EQUALS))
+	{
+		m_fChangeValue -= 0.1f;
+		if (m_fChangeValue <= 0.f)
+			m_fChangeValue = 0.f;
+	}
+
+	/* SHIFT_L */
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+	{
+		if (m_pGameInstance->Mouse_Down(DIM_LB))
+		{
+			m_tUI_Desc.fPositionX = m_pt.x;
+			m_tUI_Desc.fPositionY = m_pt.y;
+			UI2D_Create(fTimeDelta);
+			
+		}
 	}
 
 	/* Control_L */
@@ -847,6 +944,12 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 {
 	ImGui::CollapsingHeader("2D_Setting");
 
+	/* Mod */
+	ImGui::SeparatorText(u8"변경 모드 설정");
+	ImGui::RadioButton("Scale", &m_iChangeType, 1);
+	ImGui::RadioButton("Rotation", &m_iChangeType, 2);
+	ImGui::RadioButton("Position", &m_iChangeType, 3);
+
 	/* Scale */
 	ImGui::SeparatorText(u8"크기 변경");
 	ImGui::InputFloat("ScaleX", &m_tUI_Desc.fScaleX);
@@ -856,6 +959,10 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 	ImGui::SeparatorText(u8"위치 변경");
 	ImGui::InputFloat("PositionX", &m_tUI_Desc.fPositionX);
 	ImGui::InputFloat("PositionY", &m_tUI_Desc.fPositionY);
+
+	ImGui::Separator();
+	ImGui::InputTextWithHint(u8"입력 ", u8"텍스트를 입력하세요.", cInputText, IM_ARRAYSIZE(cInputText));
+	ImGui::Text(cInputText);
 
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
 
