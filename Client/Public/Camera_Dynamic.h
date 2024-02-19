@@ -14,7 +14,7 @@ public:
 	} DYNAMIC_CAMERA_DESC;
 
 private:
-	CCamera_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCamera_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CCamera_Dynamic(const CCamera_Dynamic& rhs);
 	virtual ~CCamera_Dynamic() = default;
 
@@ -29,7 +29,7 @@ private:
 	_float				m_fMouseSensor = { 0.0f };
 
 public:
-	static CCamera_Dynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CCamera_Dynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

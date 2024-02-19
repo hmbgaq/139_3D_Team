@@ -1,8 +1,8 @@
 #include "..\Public\UI.h"
 #include "GameInstance.h"
 
-CUI::CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CGameObject(pDevice, pContext)
+CUI::CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 

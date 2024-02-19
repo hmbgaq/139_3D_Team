@@ -40,6 +40,9 @@ HRESULT CObject_Manager::Add_Prototype(const wstring & strPrototypeTag, CGameObj
 
 	m_Prototypes.emplace(strPrototypeTag, pPrototype);
 
+	list<CGameObject*> ObjectList;
+	m_Pool.emplace(strPrototypeTag, ObjectList);
+	
 	return S_OK;
 }
 
@@ -51,10 +54,32 @@ HRESULT CObject_Manager::Add_CloneObject(_uint iLevelIndex, const wstring & strL
 	if (nullptr == pPrototype)
 		return E_FAIL;
 
-	/* 원형을 복제하여 실제 게임내에 사용할 사본 객체를 생성해낸다.  */
-	CGameObject*		pGameObject = pPrototype->Clone(pArg);
+	CGameObject* pGameObject = { nullptr };
+
+	auto	iter = m_Pool.find(strPrototypeTag);
+	if (iter == m_Pool.end())
+	{
+		return E_FAIL;
+	}
+	else 
+	{
+		if (0 < (*iter).second.size())
+		{
+			pGameObject = (*iter).second.back();
+			pGameObject->Initialize(pArg);
+			pGameObject->Set_Enable(true);
+			(*iter).second.pop_back();
+		}
+		else 
+		{
+			/* 원형을 복제하여 실제 게임내에 사용할 사본 객체를 생성해낸다.  */
+			pGameObject = pPrototype->Clone(pArg);
+		}
+	}
+
 	if (nullptr == pGameObject)
 		return E_FAIL;
+
 
 	/* 만들어낸 사본객체를 추가해야할 레이어를 찾자. */
 	CLayer*			pLayer = Find_Layer(iLevelIndex, strLayerTag);
@@ -63,7 +88,7 @@ HRESULT CObject_Manager::Add_CloneObject(_uint iLevelIndex, const wstring & strL
 	/* 이 이름을 가진 레이어에 최초로 추가하고 있는 상황이다. */
 	if (nullptr == pLayer)
 	{
-		pLayer = CLayer::Create();
+		pLayer = CLayer::Create(this);
 		if (nullptr == pLayer)
 			return E_FAIL;
 
@@ -85,6 +110,44 @@ CGameObject * CObject_Manager::Clone_Prototype(const wstring & strPrototypeTag, 
 		return nullptr;
 
 	return pPrototype->Clone(pArg);
+}
+
+HRESULT CObject_Manager::Fill_PoolObject(CGameObject* pGameObject)
+{
+	if (nullptr == pGameObject || true == pGameObject->Get_Enable())
+		return E_FAIL;
+
+	auto	iter = m_Pool.find(pGameObject->Get_ProtoTypeTag());
+	if (iter == m_Pool.end())
+		return E_FAIL;
+
+	(*iter).second.push_back(pGameObject);
+
+	return S_OK;
+}
+
+HRESULT CObject_Manager::Create_PoolObjects(const wstring& strPrototypeTag, void* pArg, _uint iSize)
+{
+	CGameObject* pPrototype = Find_Prototype(strPrototypeTag);
+	if (nullptr == pPrototype)
+		return E_FAIL;
+
+	//if (false == pPrototype->Is_PoolObject())
+	//	return S_OK;
+
+	auto	iter = m_Pool.find(strPrototypeTag);
+	if (iter == m_Pool.end())
+		return E_FAIL;
+
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		CGameObject* pCloneObject = pPrototype->Clone(pArg);
+		pCloneObject->Set_Enable(false);
+		(*iter).second.push_back(pCloneObject);
+	}
+	
+	return S_OK;
 }
 
 void CObject_Manager::Priority_Tick(_float fTimeDelta)
@@ -113,6 +176,7 @@ void CObject_Manager::Tick(_float fTimeDelta)
 			Pair.second->Tick(fTimeDelta);
 		}
 	}
+
 }
 
 void CObject_Manager::Late_Tick(_float fTimeDelta)

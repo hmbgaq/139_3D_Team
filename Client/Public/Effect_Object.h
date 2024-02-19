@@ -9,7 +9,7 @@ class CEffect_Object abstract : public CAlphaObject
 {
 	
 protected:
-	CEffect_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEffect_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CEffect_Object(const CEffect_Object& rhs);
 	virtual ~CEffect_Object() = default;
 

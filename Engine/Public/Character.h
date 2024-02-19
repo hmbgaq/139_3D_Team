@@ -16,7 +16,7 @@ class CNavigation;
 class ENGINE_DLL CCharacter abstract : public CGameObject
 {
 protected:
-	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
+	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag);
 	CCharacter(const CCharacter& rhs);
 	virtual ~CCharacter() = default;
 

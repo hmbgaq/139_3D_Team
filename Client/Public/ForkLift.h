@@ -13,7 +13,7 @@ BEGIN(Client)
 class CForkLift final : public CLandObject
 {
 private:
-	CForkLift(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CForkLift(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CForkLift(const CForkLift& rhs);
 	virtual ~CForkLift() = default;
 
@@ -36,7 +36,7 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CForkLift* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CForkLift* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;

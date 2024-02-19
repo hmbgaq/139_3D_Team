@@ -358,6 +358,11 @@ void CGameInstance::Set_Player(CCharacter* _pPlayer)
 	m_pObject_Manager->Set_Player(_pPlayer);
 }
 
+HRESULT CGameInstance::Create_PoolObjects(const wstring& strPrototypeTag, void* pArg, _uint iSize)
+{
+	return m_pObject_Manager->Create_PoolObjects(strPrototypeTag, pArg, iSize);
+}
+
 void CGameInstance::Fill_PrototypeTags(vector<string>* _vector)
 {
 	m_pObject_Manager->Fill_PrototypeTags(_vector);

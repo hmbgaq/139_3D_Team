@@ -14,7 +14,7 @@ BEGIN(Client)
 class CSky final : public CGameObject
 {
 private:
-	CSky(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSky(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CSky(const CSky& rhs);
 	virtual ~CSky() = default;
 
@@ -39,7 +39,7 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CSky* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSky* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;

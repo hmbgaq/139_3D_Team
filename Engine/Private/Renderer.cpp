@@ -303,7 +303,7 @@ HRESULT CRenderer::Render_Priority()
 {
 	for (auto& pGameObject : m_RenderObjects[RENDER_PRIORITY])
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
 			pGameObject->Render();
 
 		Safe_Release(pGameObject);
@@ -331,7 +331,7 @@ HRESULT CRenderer::Render_Shadow()
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_SHADOW])
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
 			pGameObject->Render_Shadow();
 
 		Safe_Release(pGameObject);
@@ -358,7 +358,7 @@ HRESULT CRenderer::Render_NonLight()
 {
 	for (auto& pGameObject : m_RenderObjects[RENDER_NONLIGHT])
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
 			pGameObject->Render();
 
 		Safe_Release(pGameObject);
@@ -377,7 +377,7 @@ HRESULT CRenderer::Render_NonBlend()
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_NONBLEND])
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
 			pGameObject->Render();
 
 		Safe_Release(pGameObject);
@@ -400,7 +400,7 @@ HRESULT CRenderer::Render_Blend()
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_BLEND])
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
 			pGameObject->Render();
 
 		Safe_Release(pGameObject);
@@ -415,7 +415,7 @@ HRESULT CRenderer::Render_UI()
 {
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
 			pGameObject->Render();
 
 		Safe_Release(pGameObject);

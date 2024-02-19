@@ -54,7 +54,7 @@ public:
 	}TEXUVRATIO;
 
 protected:
-	CUI_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CUI_Base(const CGameObject& rhs);
 	virtual ~CUI_Base() = default;
 

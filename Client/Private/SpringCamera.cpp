@@ -4,8 +4,8 @@
 #include "GameObject.h"
 #include "Character.h"
 
-CSpringCamera::CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CCamera(pDevice, pContext)
+CSpringCamera::CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CCamera(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -252,9 +252,9 @@ void CSpringCamera::Mouse_Fix()
 }
 
 
-CSpringCamera* CSpringCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSpringCamera* CSpringCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CSpringCamera* pInstance = new CSpringCamera(pDevice, pContext);
+	CSpringCamera* pInstance = new CSpringCamera(pDevice, pContext, strPrototypeTag);
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{

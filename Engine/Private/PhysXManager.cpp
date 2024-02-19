@@ -1,70 +1,95 @@
 #include "..\Public\PhysXManager.h"
 
-#include "Model.h"
-#include "Transform.h"
+#include "PhysXCollider.h"
+#include "PhysXController.h"
 
 
-
-HRESULT CPhysXManager::Initialize()
+CPhysXManager::CPhysXManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: m_pDevice(pDevice)
+	, m_pContext(pContext)
 {
-	m_PxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_PxAllocator, m_PXErrorCallback);
-	m_PhysX = PxCreatePhysics(PX_PHYSICS_VERSION, *m_PxFoundation, PxTolerancesScale(), true);
+}
 
-	PxSceneDesc sceneDesc(m_PhysX->getTolerancesScale());
-	sceneDesc.gravity = PxVec3(0.0f, -9.81f * 10.0f, 0.0f);
+void CPhysXManager::Register_PhysXCollider(CPhysXCollider* pPhysXCollider)
+{
+	m_pPhysXCollders.emplace(pPhysXCollider->Get_PColliderIndex(), pPhysXCollider);
+}
 
-	m_PxDispatcher = PxDefaultCpuDispatcherCreate(2);
-	sceneDesc.cpuDispatcher = m_PxDispatcher;
-	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+CPhysXCollider* CPhysXManager::Find_PhysXCollider(const _uint iPhysXColliderIndex)
+{
+	return nullptr;
+}
 
-	m_PxScene = m_PhysX->createScene(sceneDesc);
+void CPhysXManager::Register_PhysXController(CPhysXController* pPhysXController)
+{
+}
+
+CPhysXController* CPhysXManager::Find_PhysXController(const _uint iPhysXControllerIndex)
+{
+	return nullptr;
+}
+
+HRESULT CPhysXManager::Initialize(const _uint In_iNumLayer)
+{
+	m_arrCheck.reserve(In_iNumLayer);
+
+	for (_uint i = 0; i < In_iNumLayer; ++i)
+	{
+		m_arrCheck.emplace_back(0);
+	}
+
+	// Create Foundation
+	m_pFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
+	PxRevoluteJointCreate;
+	// Create PVD
+	char* strTransport = "127.0.0.1";
+	m_pPVD = PxCreatePvd(*m_pFoundation);
+	PxPvdTransport* Transport = PxDefaultPvdSocketTransportCreate(strTransport, 5425, 10);
+	_bool	bPVDConnectionResult = m_pPVD->connect(*Transport, PxPvdInstrumentationFlag::eALL);
+	if (!bPVDConnectionResult)
+	{
+		//MSG_BOX("Faiied to connect to PVD!");
+	}
+
+	// Create PhysX
+	m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, PxTolerancesScale(), true, m_pPVD);
+
+	// Create Cooking
+	m_pCooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_pFoundation, PxCookingParams(PxTolerancesScale()));
+
+	// Create Cuda
+	PxCudaContextManagerDesc tCudaDesc;
+	//tCudaDesc.graphicsDevice = DEVICE;
+	//tCudaDesc.interopMode = PxCudaInteropMode::Enum::D3D11_INTEROP;
+	//tCudaDesc.ctx = GET_SINGLE(CCuda_Device)->Get_CudaContext();
+
+	m_pCudaContextManager = PxCreateCudaContextManager(*m_pFoundation, tCudaDesc, PxGetProfilerCallback());
+
+	if (m_pCudaContextManager)
+	{
+		if (!m_pCudaContextManager->contextIsValid())
+		{
+			if (m_pCudaContextManager)
+				m_pCudaContextManager->release();
+			m_pCudaContextManager = nullptr;
+		}
+	}
+
+
+	m_pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, -10.f);
+
+
+
+
 
 	return S_OK;
 }
 
-void CPhysXManager::Late_Tick(_float fTimeDelta)
-{
-	//Update_Branches();
-
-	m_PxScene->simulate(fTimeDelta);
-	m_PxScene->fetchResults(true);
-
-	//Set_BranchesToBone();
-}
-
-//void CPhysXManager::Update_Branches()
-//{
-//	for (auto& Player : m_PlayerInfos)
-//	{
-//		CModel* pModel = Player.pPlayerModel;
-//		_matrix matPivot = pModel->Get_PivotMatrix();
-//		_matrix matPlayerWorld = Player.pPlayerTransform->Get_WorldMatrix();
-//
-//		for (auto& Branch : Player.Branches)
-//		{
-//			_matrix matFirst = pModel->Get_CombinedMatrix(Branch.Bones[0]) * matPivot * matPlayerWorld;
-//			Branch.Frames[0]->setKinematicTarget(MatrixToPxTrans(matFirst));
-//		}
-//	}
-//}
-//
-//void CPhysXManager::Set_BranchesToBone()
-//{
-//}
-//
-//void CPhysXManager::Add_Player(CGameObject* pPlayer)
-//{
-//}
-//
-//void CPhysXManager::Add_BoneBranch(CGameObject* pPlayer, vector<_uint>& Bones)
-//{
-//}
-
-void CPhysXManager::Reset()
+void CPhysXManager::Tick(_float fTimeDelta)
 {
 }
 
-CPhysXManager* CPhysXManager::Create(_uint iNumLevels)
+CPhysXManager* CPhysXManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumLevels)
 {
 	return nullptr;
 }

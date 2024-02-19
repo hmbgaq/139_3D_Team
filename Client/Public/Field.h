@@ -37,7 +37,7 @@ public:
 	}DINFO;
 
 private:
-	CField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CField(const CField& rhs);
 	virtual ~CField() = default;
 
@@ -85,7 +85,7 @@ private:
 	void						ReceiveInfo(DINFO pInfo);
 
 public:
-	static CField* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext); //! 盔屈按眉 积己
+	static CField* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 盔屈按眉 积己
 	virtual CGameObject* Clone(void* pArg) override; //! 荤夯按眉 积己
 	virtual void				Free() override;
 };

@@ -24,6 +24,11 @@ public:
 	HRESULT Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_CloneObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg);
 	CGameObject* Clone_Prototype(const wstring& strPrototypeTag, void* pArg);
+
+	HRESULT Fill_PoolObject(class CGameObject* pGameObject);
+	HRESULT Create_PoolObjects(const wstring& strPrototypeTag, void* pArg, _uint iSize = 10);
+
+
 	void Priority_Tick(_float fTimeDelta);
 	void Tick(_float fTimeDelta);
 	void Late_Tick(_float fTimeDelta);
@@ -57,6 +62,8 @@ private:
 	map<const wstring, class CGameObject*>			m_Prototypes;
 	map<const wstring, class CLayer*>*				m_pLayers = { nullptr } ;
 	typedef map<const wstring, class CLayer*>		LAYERS;
+
+	map<const wstring, list<class CGameObject*>>	m_Pool;
 
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };

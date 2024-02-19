@@ -15,8 +15,8 @@
 
 
 
-CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CCharacter(pDevice, pContext)
+CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CCharacter(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -200,9 +200,9 @@ _bool CPlayer::End_Condition()
 	return true;
 }
 
-CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CPlayer*		pInstance = new CPlayer(pDevice, pContext);
+	CPlayer*		pInstance = new CPlayer(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))

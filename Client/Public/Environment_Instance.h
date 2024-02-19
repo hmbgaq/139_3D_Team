@@ -15,7 +15,7 @@ BEGIN(Client)
 class CEnvironment_Instance final : public CGameObject
 {
 private:
-	CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CEnvironment_Instance(const CEnvironment_Instance& rhs);
 	virtual ~CEnvironment_Instance() = default;
 
@@ -56,7 +56,7 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CEnvironment_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEnvironment_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;

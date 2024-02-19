@@ -1,7 +1,7 @@
 #include "UI_Player_HP.h"
 
-CUI_Player_HP::CUI_Player_HP(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI(pDevice, pContext)
+CUI_Player_HP::CUI_Player_HP(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CUI(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -40,9 +40,9 @@ HRESULT CUI_Player_HP::Ready_UI()
 	return S_OK;
 }
 
-CUI_Player_HP* CUI_Player_HP::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Player_HP* CUI_Player_HP::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Player_HP* pInstance = new CUI_Player_HP(pDevice, pContext);
+	CUI_Player_HP* pInstance = new CUI_Player_HP(pDevice, pContext, strPrototypeTag);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{

@@ -6,7 +6,7 @@
 class CUI_Anything final : public CUI
 {
 private:
-	CUI_Anything(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Anything(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CUI_Anything(const CUI_Anything& rhs);
 	virtual ~CUI_Anything() = default;
 
@@ -31,7 +31,7 @@ public:
 	void				 Load_Desc();
 
 public:
-	static CUI_Anything* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext); //! 盔屈按眉 积己
+	static CUI_Anything* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 盔屈按眉 积己
 	virtual CGameObject* Clone(void* pArg) override; //! 荤夯按眉 积己
 	virtual void			Free() override;
 };

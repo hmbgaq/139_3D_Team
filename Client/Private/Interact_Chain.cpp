@@ -4,8 +4,8 @@
 #include "Shader.h"
 #include "GameInstance.h"
 
-CInteract_Chain::CInteract_Chain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CInteract_Chain::CInteract_Chain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -180,9 +180,9 @@ HRESULT CInteract_Chain::Bind_ShaderResources()
 	return S_OK;
 }
 
-CInteract_Chain* CInteract_Chain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CInteract_Chain* CInteract_Chain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CInteract_Chain* pInstance = new CInteract_Chain(pDevice, pContext);
+	CInteract_Chain* pInstance = new CInteract_Chain(pDevice, pContext, strPrototypeTag);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{

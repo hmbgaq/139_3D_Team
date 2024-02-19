@@ -2,8 +2,8 @@
 #include "GameInstance.h"
 #include "Model.h"
 
-CScreamer::CScreamer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CScreamer::CScreamer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -233,9 +233,9 @@ HRESULT CScreamer::Bind_ShaderResources()
 	return S_OK;
 }
 
-CScreamer* CScreamer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CScreamer* CScreamer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CScreamer* pInstance = new CScreamer(pDevice, pContext);
+	CScreamer* pInstance = new CScreamer(pDevice, pContext, strPrototypeTag);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{

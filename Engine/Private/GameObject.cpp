@@ -3,11 +3,12 @@
 #include "Transform.h"
 
 
-CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
 	, m_pGameInstance(CGameInstance::GetInstance())
 	, m_isCloned(false)
+	, m_strPrototypeTag(strPrototypeTag)
 {
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pDevice);
@@ -19,6 +20,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, m_pContext(rhs.m_pContext)
 	, m_pGameInstance(rhs.m_pGameInstance)
 	, m_isCloned(true)
+	, m_strPrototypeTag(rhs.m_strPrototypeTag)
 {
 
 	Safe_AddRef(m_pGameInstance);
@@ -33,6 +35,8 @@ HRESULT CGameObject::Initialize_Prototype()
 
 HRESULT CGameObject::Initialize(void* pArg)
 {
+	m_bEnable = true;
+
 	GAMEOBJECT_DESC		Desc = {};
 	
 	if(nullptr != pArg)

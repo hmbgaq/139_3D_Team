@@ -3,8 +3,8 @@
 
 #include "GameInstance.h"
 
-CCamera_Dynamic::CCamera_Dynamic(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CCamera(pDevice, pContext)
+CCamera_Dynamic::CCamera_Dynamic(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
+	: CCamera(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -83,9 +83,9 @@ void CCamera_Dynamic::Late_Tick(_float fTimeDelta)
 {
 }
 
-CCamera_Dynamic * CCamera_Dynamic::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CCamera_Dynamic * CCamera_Dynamic::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CCamera_Dynamic*		pInstance = new CCamera_Dynamic(pDevice, pContext);
+	CCamera_Dynamic*		pInstance = new CCamera_Dynamic(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))

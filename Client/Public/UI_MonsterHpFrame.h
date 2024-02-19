@@ -19,7 +19,7 @@ public:
 	}MONSTER_FRAME;
 
 private:
-	CUI_MonsterHpFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_MonsterHpFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CUI_MonsterHpFrame(const CUI_MonsterHpFrame& rhs);
 	virtual ~CUI_MonsterHpFrame() = default;
 
@@ -59,7 +59,7 @@ private:
 	_float					m_fOwnerCamDistance;
 
 public:
-	static CUI_MonsterHpFrame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext); //! 盔屈按眉 积己
+	static CUI_MonsterHpFrame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 盔屈按眉 积己
 	virtual CGameObject* Clone(void* pArg) override; //! 荤夯按眉 积己
 	virtual void			Free() override;
 };

@@ -36,7 +36,7 @@ public:
 	}UI_DESC;
 
 protected:
-	CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CUI(const CGameObject& rhs);
 	virtual ~CUI() = default;
 

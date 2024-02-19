@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 
 
-CParticle_Blue::CParticle_Blue(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CParticle_Blue::CParticle_Blue(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -120,9 +120,9 @@ HRESULT CParticle_Blue::Bind_ShaderResources()
 	return S_OK;
 }
 
-CParticle_Blue * CParticle_Blue::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CParticle_Blue * CParticle_Blue::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CParticle_Blue*		pInstance = new CParticle_Blue(pDevice, pContext);
+	CParticle_Blue*		pInstance = new CParticle_Blue(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))

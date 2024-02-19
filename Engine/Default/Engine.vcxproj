@@ -253,6 +253,8 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\Public\MyAssimp.h" />
     <ClInclude Include="..\public\Navigation.h" />
     <ClInclude Include="..\public\Object_Manager.h" />
+    <ClInclude Include="..\Public\PhysXCollider.h" />
+    <ClInclude Include="..\Public\PhysXController.h" />
     <ClInclude Include="..\Public\PhysXManager.h" />
     <ClInclude Include="..\public\PipeLine.h" />
     <ClInclude Include="..\public\QuadTree.h" />
@@ -324,6 +326,8 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\Private\MurmurHash3.cpp" />
     <ClCompile Include="..\private\Navigation.cpp" />
     <ClCompile Include="..\private\Object_Manager.cpp" />
+    <ClCompile Include="..\Private\PhysXCollider.cpp" />
+    <ClCompile Include="..\Private\PhysXController.cpp" />
     <ClCompile Include="..\Private\PhysXManager.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />
     <ClCompile Include="..\private\QuadTree.cpp" />

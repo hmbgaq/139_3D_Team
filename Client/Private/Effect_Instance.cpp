@@ -5,8 +5,8 @@
 #include "VIBuffer_Effect_Model_Instance.h"
 
 
-CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -128,9 +128,9 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	return S_OK;
 }
 
-CEffect_Instance * CEffect_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CEffect_Instance * CEffect_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CEffect_Instance*		pInstance = new CEffect_Instance(pDevice, pContext);
+	CEffect_Instance*		pInstance = new CEffect_Instance(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))

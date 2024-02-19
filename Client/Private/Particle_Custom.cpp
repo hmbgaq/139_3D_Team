@@ -3,8 +3,8 @@
 
 #include "GameInstance.h"
 
-CParticle_Custom::CParticle_Custom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CEffect_Object(pDevice, pContext)
+CParticle_Custom::CParticle_Custom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CEffect_Object(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -213,9 +213,9 @@ HRESULT CParticle_Custom::Bind_ShaderResources()
 	return S_OK;
 }
 
-CParticle_Custom* CParticle_Custom::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CParticle_Custom* CParticle_Custom::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CParticle_Custom* pInstance = new CParticle_Custom(pDevice, pContext);
+	CParticle_Custom* pInstance = new CParticle_Custom(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))

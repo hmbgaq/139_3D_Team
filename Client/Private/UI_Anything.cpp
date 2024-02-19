@@ -3,8 +3,8 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
-CUI_Anything::CUI_Anything(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI(pDevice, pContext)
+CUI_Anything::CUI_Anything(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -197,9 +197,9 @@ void CUI_Anything::Load_Desc()
 
 }
 
-CUI_Anything* CUI_Anything::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Anything* CUI_Anything::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Anything* pInstance = new CUI_Anything(pDevice, pContext);
+	CUI_Anything* pInstance = new CUI_Anything(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))

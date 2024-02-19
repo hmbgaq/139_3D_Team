@@ -12,7 +12,7 @@ BEGIN(Client)
 class CSkyDome final : public CGameObject
 {
 private:
-	CSkyDome(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSkyDome(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CSkyDome(const CSkyDome& rhs);
 	virtual ~CSkyDome() = default;
 
@@ -34,7 +34,7 @@ private:
 	CShader*		m_pShaderCom = { nullptr };
 
 public:
-	static	CSkyDome*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static	CSkyDome*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject*	Clone(void* pArg) override;
 	virtual void			Free() override;
 };

@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 
 
-CSky::CSky(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CSky::CSky(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -104,9 +104,9 @@ HRESULT CSky::Bind_ShaderResources()
 	return S_OK;
 }
 
-CSky * CSky::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CSky * CSky::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CSky*		pInstance = new CSky(pDevice, pContext);
+	CSky*		pInstance = new CSky(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))

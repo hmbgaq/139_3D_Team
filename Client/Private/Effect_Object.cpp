@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 
 
-CEffect_Object::CEffect_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CAlphaObject(pDevice, pContext)
+CEffect_Object::CEffect_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CAlphaObject(pDevice, pContext, strPrototypeTag)
 {
 
 }

@@ -21,7 +21,7 @@ public:
 	}SPRING_CAMERA_DESC;
 
 private:
-	CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CSpringCamera(const CSpringCamera& rhs);
 	virtual ~CSpringCamera() = default;
 
@@ -68,7 +68,7 @@ private:
 private:
 	_float				m_fMouseSensor = { 0.0f };
 public:
-	static CSpringCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSpringCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
