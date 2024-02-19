@@ -22,8 +22,10 @@ public:
 
 
 private:
+	class CGameInstance* m_pGameInstance;
 	LIGHT_DESC			m_LightDesc;
 	static _uint		g_iLightIndex;
+	_float				g_fCamFar = {};
 
 public:
 	static CLight* Create(const LIGHT_DESC& LightDesc);

@@ -42,7 +42,8 @@ void CUI_Anything::Priority_Tick(_float fTimeDelta)
 
 void CUI_Anything::Tick(_float fTimeDelta)
 {
-
+	Moving_Rect();
+	Picking_UI();
 }
 
 void CUI_Anything::Late_Tick(_float fTimeDelta)

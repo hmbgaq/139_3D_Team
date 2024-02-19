@@ -1,4 +1,5 @@
 #include "Shader_Defines.hlsli"
+#define NUM_SAMPLERS 64
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
@@ -9,6 +10,8 @@ matrix  ViewToTexSpcace;
 
 Texture2D g_NormalDepthTarget;
 Texture2D g_RandomVectorTexture;
+
+/* GodRay */ 
 
 /* ------------------- Vertex Shader(0) -------------------*/
 
@@ -106,7 +109,7 @@ PS_OUT PS_SSAO(PS_IN In)
     float4 vNormalDepth = g_NormalDepthTarget.Sample(SSAONormalDepth, In.vTexcoord, 0.0f);
     
     float3 vNormalV = vNormalDepth.xyz;
-    float fViewZ = vNormalDepth.w * 2000.f;
+    float fViewZ = vNormalDepth.w * 1000.f;
     // p = t * In.ToFarPlane.
 	// p.z = t * In.ToFarPlane.z
 	// t = p.z / pin.ToFarPlane.z
@@ -148,7 +151,7 @@ PS_OUT PS_SSAO(PS_IN In)
 		// the depth of q, as q is just an arbitrary point near p and might
 		// occupy empty space).  To find the nearest depth we look it up in the depthmap.
         float fRealZ = g_NormalDepthTarget.Sample(SSAONormalDepth, ProjQ.xy, 0.f).w;
-        fRealZ *= 2000.f;
+        fRealZ *= 1000.f;
         
         // 다시 유사 삼각형 원리를 사용한다.
         float3 r = (fRealZ / q.z) * q;
@@ -172,44 +175,84 @@ PS_OUT PS_SSAO(PS_IN In)
 
 /* ------------------- Vertex Shader(1) -------------------*/
 
-//struct VS_GOD_IN
-//{
-//    float3 vPosition : POSITION; /* 들어온값 */
-//    float2 vTexcoord : TEXCOORD0;
-//    float3 vFarPlaneIndex : NORMAL;
-//};
+struct VS_GOD_IN
+{
+    float3 vPosition : POSITION; /* 들어온값 */
+    float2 vTexcoord : TEXCOORD0;
+    float3 vFarPlaneIndex : NORMAL;
+};
 
-//struct VS_GOD_OUT
-//{
-//    float4 vPosition : SV_POSITION;
-//    float3 vTexcoord : TEXCOORD0;
-//    float2 vTexcoord1 : TEXCOORD1;
-//};
+struct VS_GOD_OUT
+{
+    float4 vPosition : SV_POSITION;
+    float3 vTexcoord : TEXCOORD0;
+    float2 vTexcoord1 : TEXCOORD1;
+};
 
-//VS_GOD_OUT VS_GODRAY(VS_GOD_IN In)
-//{
-//    VS_GOD_OUT Out = (VS_GOD_OUT) 0;
+VS_GOD_OUT VS_GODRAY(VS_GOD_IN In)
+{
+    VS_GOD_OUT Out = (VS_GOD_OUT) 0;
     
-//    return Out;
-//}
+    return Out;
+}
 
 ///* ------------------- Pixel Shader (1) -------------------*/
-//struct PS_GOD_IN
-//{
+struct PS_GOD_IN
+{
     
-//};
+};
 
-//struct PS_GOD_Out
-//{
+struct PS_GOD_Out
+{
     
-//};
+};
 
-//PS_GOD_Out PS_GODRAY(PS_GOD_IN In)
-//{
-//    PS_GOD_Out Out = (PS_GOD_Out) 0;
+PS_GOD_Out PS_GODRAY(PS_GOD_IN In)
+{
+    PS_GOD_Out Out = (PS_GOD_Out) 0;
+    
+    //float2 vTexcoord = In.vTexcoord;
+    
+    //float4 lightData = vLightShaftValue;
+    // // x = Density, y = Weight, z = Decay , w = Exposure
+     
+    // // MaskColor
+    //float4 vMaskColor = SunOccluderTexture.SampleLevel(LinearSamplerClamp, vTexcoord, 0);
+    //float4 vTempColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    
+    //if (vMaskColor.a == 1.0f)
+    //    vTempColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    
+    //float2 lightPosition = vScreenSunPosition;
+    //float2 deltaTexcoord = (vTexcoord - lightPosition);
 
-//    return Out;
-//}
+    
+    //deltaTexcoord *= lightData.x / NUM_SAMPLERS; // Density / NUM_SAMPLERS
+    
+    //float illuminationDecay = 1.0f;
+    //float3 accumulatedGodRays = float3(0.0f, 0.0f, 0.0f);
+    //float3 accumulated = 0.0f;
+    
+    //for (int i = 0; i < NUM_SAMPLERS; ++i)
+    //{
+    //    vTexcoord.xy -= deltaTexcoord;
+    //    float4 sample = SunOccluderTexture.SampleLevel(LinearSamplerClamp, vTexcoord.xy, 0);
+    
+    //    float4 vSrcColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    
+    //    if (sample.a == 1.0f)
+    //        vSrcColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    
+    //    vSrcColor.rgb *= illuminationDecay * lightData.y; // illuminationDecay * Weight
+    //    accumulated += vSrcColor.rgb;
+    //    illuminationDecay *= lightData.z; // illuminationDecay *= lightData.z (Decay)
+    //}
+    
+    //accumulated *= lightData.w;
+    //Out.vColor = saturate(float4(vTempColor.rgb + accumulated, 1.0f));
+    
+    return Out;
+}
 
 /* ------------------- Technique -------------------*/ 
 

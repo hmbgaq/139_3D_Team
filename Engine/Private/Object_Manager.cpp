@@ -175,12 +175,12 @@ void CObject_Manager::Fill_PrototypeTags(vector<string>* _vector)
 	}
 }
 
-CGameObject* CObject_Manager::Get_Player()
+CCharacter* CObject_Manager::Get_Player()
 {
 	return m_pPlayer;
 }
 
-void CObject_Manager::Set_Player(CGameObject* _pPlayer)
+void CObject_Manager::Set_Player(CCharacter* _pPlayer)
 {
 	m_pPlayer = _pPlayer;
 }

@@ -250,6 +250,15 @@
     <Filter Include="01.Utility\03.Components\02.Shader\ConstantBuffer">
       <UniqueIdentifier>{d5c42a15-c269-4316-8d14-a600354c777d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\09.Event\Object">
+      <UniqueIdentifier>{5fdcee39-a4df-4216-8176-26aaeca1e37f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\09.Event\Object\Actor">
+      <UniqueIdentifier>{50c088af-72bd-4889-af18-f382993c1195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\09.Event\Object\Trigger">
+      <UniqueIdentifier>{1a1ce231-05d5-4e8d-a27b-b268738b25d7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Field">
       <UniqueIdentifier>{ddda392a-0cf7-4a8b-a999-313814db4543}</UniqueIdentifier>
     </Filter>
@@ -519,11 +528,17 @@
     <ClInclude Include="..\Public\Event_Manager.h">
       <Filter>01.Utility\09.Event\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Event.h">
-      <Filter>01.Utility\09.Event</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\ConstantBuffer.h">
       <Filter>01.Utility\03.Components\02.Shader\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Trigger.h">
+      <Filter>01.Utility\09.Event\Object\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EventActor.h">
+      <Filter>01.Utility\09.Event\Object\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Event.h">
+      <Filter>01.Utility\09.Event</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Field.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Field</Filter>
@@ -743,11 +758,14 @@
     <ClCompile Include="..\Private\Event_Manager.cpp">
       <Filter>01.Utility\09.Event\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Event.cpp">
-      <Filter>01.Utility\09.Event</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\ConstantBuffer.cpp">
       <Filter>01.Utility\03.Components\02.Shader\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EventActor.cpp">
+      <Filter>01.Utility\09.Event\Object\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Trigger.cpp">
+      <Filter>01.Utility\09.Event\Object\Trigger</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Field.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Field</Filter>

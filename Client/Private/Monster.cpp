@@ -46,7 +46,6 @@ void CMonster::Priority_Tick(_float fTimeDelta)
 
 void CMonster::Tick(_float fTimeDelta)
 {
-
 	//if (m_pGameInstance->Key_Pressing(DIK_T)) 
 	//{
 	//	CGameObject* pPlayer = m_pGameInstance->Get_Player();

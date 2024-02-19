@@ -35,8 +35,8 @@ public:
 	void Fill_PrototypeTags(vector<string>* _vector);
 
 public:
-	class CGameObject* Get_Player();
-	void Set_Player(CGameObject* _pPlayer);
+	class CCharacter* Get_Player();
+	void Set_Player(CCharacter* _pPlayer);
 
 public:
 	void Set_Layer_Speed(_uint iLevelIndex, const wstring& strLayerTag, _float fSpeed);
@@ -60,7 +60,7 @@ private:
 
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };
-	class CGameObject* m_pPlayer = { nullptr };
+	class CCharacter* m_pPlayer = { nullptr };
 
 private:
 	class CGameObject* Find_Prototype(const wstring& strPrototypeTag);

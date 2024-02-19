@@ -438,12 +438,12 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 				CCharacter* pcharacters = dynamic_cast<CCharacter*>(m_PickingObject);
 				/*m_pBody = pcharacters->Get_Body();*/ //위에서 넣어주고 있어서 여기서 굳이 또 할필요 없음 
 				m_pBones = *(pcharacters->Get_Body()->Get_Model()->Get_Bones());
-				m_iBoneNum = m_pBones.size();
+				m_iBoneNum = (_uint)m_pBones.size();
 
 			}
 			//m_PickingObject
 
-			for (int n = 0; n < m_iBoneNum; n++)
+			for (_uint n = 0; n < m_iBoneNum; n++)
 			{
 				const bool is_selected = (BoneIndex == n);
 				if (ImGui::Selectable(m_pBones[n]->Get_Name(), is_selected))
@@ -483,7 +483,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 
 			static int iSelectColliderIndex;
 
-			for (int n = 0; n < m_iCreateColliderNum; n++)
+			for (_uint n = 0; n < m_iCreateColliderNum; n++)
 			{
 				string str = "Collider";
 				string str2 = to_string(n);
