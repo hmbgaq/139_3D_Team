@@ -68,12 +68,16 @@ public: /* ==================== UI ===================== */
 	bool						LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height);
 	HRESULT						Update_Pos();
 
+public: /* ==================== Shortcut_Key ===================== */
+	void						Shortcut_Key(_float fTimeDelta);
+
 public:
-	void						Shortcut_Key();
+	void						UI_Set();
 
 public: /* ==================== List ===================== */
 	void						Layer_List();
 	void						Texture_List();
+	void						Class_List();
 	void						Object_List();
 
 public: /* ================= Function ================= */
@@ -93,6 +97,8 @@ public: /* ================= Function ================= */
 	std::string WideStringToString(const wchar_t* wideStr);
 	// 경로에서 파일이름과 확장자만 추출해주는 함수
 	std::string GetFileName(const std::string& filePath);
+	// _기준으로 가장 마지막 이름을 추출해주는 함수
+	std::string GetUnderbarName(const std::string& filePath);
 	// 확장자를 제거해주는 함수
 	std::string RemoveExtension(const std::string& filePath);
 
@@ -143,6 +149,7 @@ private: /* Image_Member */
 
 	_int						m_iSelectedPathIndex = 0; // 선택된 이미지 경로 인덱스
 	_int						m_iSelectedObjectIndex = 0; // 선택된 UI오브젝트
+	_int						m_iSelectedClassIndex = 0; // 선택된 Class
 	_int						m_iUINameNum = 0;
 private: /* 2D */
 	_float						m_fPosition[2] = { 0.f, 0.f };
@@ -152,8 +159,13 @@ private: /* 2D */
 
 	_int						m_iLayerNum = 0;
 	CUI::UI_DESC				m_tUI_Desc;
-	CGameObject*				m_CurrObject = nullptr;
+	CUI*						m_CurrObject = nullptr;
+	POINT						m_pt;
 
+private:
+	_bool						m_bOpenTexture = true;
+	_bool						m_bOpenSetting = false;
+	_bool						m_bOpenUI = false;
 
 private:
 	//// ==============폴더 경로==============
@@ -172,6 +184,14 @@ private:
 	//	"../Bin/Resources/Textures/UI/Textures/Inventory",
 	//	"../Bin/Resources/Textures/UI/Textures/Journal",
 	//};
+
+	// ============== 클래스 목록 ==============
+	// 클래스 목록을 저장하는 벡터
+	std::vector<std::string> m_vecClass =
+	{
+		"Anything",
+		"Player_HPBar"
+	};
 
 private:
 	ImGuiTabBarFlags m_Tab_bar_flags = ImGuiTabBarFlags_None;

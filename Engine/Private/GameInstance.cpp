@@ -805,6 +805,15 @@ std::string CGameInstance::RemoveExtension(const std::string& filePath)
 	}
 }
 
+_vector CGameInstance::Convert_Orthogonal(_vector vPosition)
+{
+	_float fPosX = vPosition.m128_f32[0] + g_iWinsizeX * 0.5f;
+	_float fPosY = vPosition.m128_f32[1] + g_iWinsizeY * 0.5f;
+
+	_vector vOrthoPos = { fPosX, fPosY, vPosition.m128_f32[2], vPosition.m128_f32[3] };
+	return vOrthoPos;
+}
+
 string CGameInstance::Wstring_To_UTF8(const wstring& wstr)
 {
 	_int iUtf8Length = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);

@@ -13,11 +13,12 @@
 #include "../Imgui/ImGuizmo/ImZoomSlider.h"
 #include "CustomDialogFont.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
+#include "UI.h"
 
 static ImGuizmo::OPERATION mCurrentGizmoOperation;
 static ImGuizmo::MODE	   mCurrentGizmoMode;
 static bool useSnap(false);
-static bool useSnap2D(false);
+static bool useSnapUI(false);
 
 ImGuiFileDialog* g_pFileDialog;
 
@@ -66,12 +67,14 @@ HRESULT CImgui_Window::Initialize()
 	//TODO For.Guizmo
 	m_arrView = new _float[16];
 	m_arrProj = new _float[16];
+	m_arrOrthoProj = new _float[16];
 
-		Set_GuizmoCamView();
-		Set_GuizmoCamProj();
+	Set_GuizmoCamView();
+	Set_GuizmoCamProj();
+	Set_GuizmoOrthographicLH();
 
-		ImGuiViewport* viewport = ImGui::GetMainViewport();
-		ImGui::SetNextWindowPos(viewport->WorkPos, ImGuiCond_FirstUseEver);
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->WorkPos, ImGuiCond_FirstUseEver);
 
 	return S_OK;
 }
@@ -187,6 +190,9 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 	ImGuiIO& io = ImGui::GetIO();
 	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 
+	CUI* pUI = dynamic_cast<CUI*>(pGameObject);
+	if (pUI)
+		return;
 
 	if (ImGui::IsKeyPressed(ImGuiKey_T))
 		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
@@ -220,7 +226,6 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 	ImGui::DragFloat3("Sc", matrixScale);
 	ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, arrWorld);
 
-
 	ImGui::Checkbox("UseSnap", &useSnap);
 	ImGui::SameLine();
 
@@ -247,7 +252,8 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 	XMFLOAT4X4 matW = { arrWorld[0],arrWorld[1],arrWorld[2],arrWorld[3],
 				arrWorld[4],arrWorld[5],arrWorld[6],arrWorld[7],
 				arrWorld[8],arrWorld[9],arrWorld[10],arrWorld[11],
-				arrWorld[12],arrWorld[13],arrWorld[14],arrWorld[15] };
+				arrWorld[12],arrWorld[13],arrWorld[14] * -1,arrWorld[15] };
+		
 
 	pGameObject->Get_Transform()->Set_WorldMatrix(matW);
 
@@ -258,15 +264,16 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 	}
 }
 
-void CImgui_Window::Set_Guizmo2D(CGameObject* pGameObject)
+void CImgui_Window::Set_GuizmoUI(CGameObject* pGameObject)
 {
 	if (nullptr == pGameObject)
 		return;
 
 	/*==== Set ImGuizmo ====*/
-	ImGuizmo::SetOrthographic(true);
+	ImGuizmo::SetOrthographic(true); // true 변경
 	ImGuiIO& io = ImGui::GetIO();
-	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+	ImGuizmo::SetRect(0, 0, g_iWinSizeX, g_iWinSizeY);
+
 
 	if (ImGui::IsKeyPressed(ImGuiKey_T))
 		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
@@ -285,52 +292,55 @@ void CImgui_Window::Set_Guizmo2D(CGameObject* pGameObject)
 		mCurrentGizmoOperation = ImGuizmo::SCALE;
 
 	_float* arrView = m_arrView;
-	_float* arrProj = m_arrProj;
-
-	_float fPosX = pGameObject->Get_Transform()->Get_State(CTransform::STATE_POSITION).m128_f32[0] + g_iWinSizeX * 0.5;
-	_float fPosY = pGameObject->Get_Transform()->Get_State(CTransform::STATE_POSITION).m128_f32[1] - g_iWinSizeY * 0.5;
-
-	ImVec2 minBound = ImVec2(fPosX, fPosY);
-	ImVec2 maxBound = ImVec2(fPosX, fPosY);
-
-	float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-	matrixTranslation[0] = (maxBound.x - minBound.x) / 2.0f;
-	matrixTranslation[1] = (maxBound.y - minBound.y) / 2.0f;
-	matrixTranslation[2] = 0.0f;
-	matrixScale[0] = (maxBound.x - minBound.x);
-	matrixScale[1] = (maxBound.y - minBound.y);
-	matrixScale[2] = 1.0f;
 
 	XMFLOAT4X4 matWorld = pGameObject->Get_Transform()->Get_WorldFloat4x4();
-	_float arrWorld2D[] = { matWorld._11,matWorld._12,matWorld._13,matWorld._14,
+
+	/* 위치 이동 */
+	_float arrWorld[] = { matWorld._11,matWorld._12,matWorld._13,matWorld._14,
 						  matWorld._21,matWorld._22,matWorld._23,matWorld._24,
 						  matWorld._31,matWorld._32,matWorld._33,matWorld._34,
 						  matWorld._41,matWorld._42,matWorld._43,matWorld._44 };
 
-	ImGuizmo::DecomposeMatrixToComponents(arrWorld2D, matrixTranslation, matrixRotation, matrixScale);
-	ImGui::DragFloat3("Position", matrixTranslation);
-	ImGui::DragFloat3("Rtation", matrixRotation);
-	ImGui::DragFloat2("Scale", matrixScale);
-	ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, arrWorld2D);
+	float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+	ImGuizmo::DecomposeMatrixToComponents(arrWorld, matrixTranslation, matrixRotation, matrixScale);
+	ImGui::DragFloat3("Tr", matrixTranslation);
+	ImGui::DragFloat3("Rt", matrixRotation);
+	ImGui::DragFloat3("Sc", matrixScale);
+ 	ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, arrWorld);
 
+	ImGui::Checkbox("UseSnap", &useSnap);
+	//ImGui::SameLine();
+
+	switch (mCurrentGizmoOperation)
+	{
+	case ImGuizmo::TRANSLATE:
+		ImGui::DragFloat3("Snap", &snap[0]);
+		break;
+	case ImGuizmo::ROTATE:
+		ImGui::DragFloat3("Angle Snap", &snap[0]);
+		break;
+	case ImGuizmo::SCALE:
+		ImGui::DragFloat3("Scale Snap", &snap[0]);
+		break;
+	}
 
 	if (arrView == nullptr ||
-		arrProj == nullptr)
+		arrWorld == nullptr)
 		return;
 
-	ImGuizmo::Manipulate(arrView, arrProj, mCurrentGizmoOperation, mCurrentGizmoMode, arrWorld2D, NULL, useSnap2D ? snap2D : NULL);
+	ImGuizmo::Manipulate(arrView, m_arrOrthoProj, mCurrentGizmoOperation, mCurrentGizmoMode, arrWorld, NULL, useSnapUI ? &snap[0] : NULL);
 
-	//XMFLOAT4X4 arrWorld = { matrixScale[0],				0.0f,							0.0f,						0.0f,
-	//						0.0f,						matrixScale[1],					0.0f,						0.0f,
-	//						0.0f,						0.0f,							1.0f,						0.0f,
-	//						matrixTranslation[0],		matrixTranslation[1],			0.0f,						1.0f };
-	
-	XMFLOAT4X4 matW = { matrixScale[0],				arrWorld2D[1],				arrWorld2D[2],		arrWorld2D[3],
-						arrWorld2D[4],				matrixScale[1],				arrWorld2D[6],		arrWorld2D[7],
-						arrWorld2D[8],				arrWorld2D[9],				arrWorld2D[10],		arrWorld2D[11],
-						matrixTranslation[0],		matrixTranslation[1],		arrWorld2D[14],		arrWorld2D[15] };
+	XMFLOAT4X4 matW = { arrWorld[0],arrWorld[1],arrWorld[2],arrWorld[3],
+				arrWorld[4],arrWorld[5],arrWorld[6],arrWorld[7],
+				arrWorld[8],arrWorld[9],arrWorld[10],arrWorld[11],
+				arrWorld[12],arrWorld[13],arrWorld[14],arrWorld[15] };
 
-	pGameObject->Get_Transform()->Set_WorldMatrix(matW);
+	CUI* pUI = dynamic_cast<CUI*>(pGameObject);
+	if (nullptr == pUI)
+		return;
+
+
+	pUI->Get_Transform()->Set_WorldMatrix(matW);
 
 	if (ImGuizmo::IsOver())
 	{
@@ -357,6 +367,18 @@ void CImgui_Window::Set_GuizmoCamProj()
 						  matCamProj._31,matCamProj._32,matCamProj._33,matCamProj._34,
 						  matCamProj._41,matCamProj._42,matCamProj._43,matCamProj._44 };
 	memcpy(m_arrProj, &arrProj, sizeof(arrProj));
+}
+
+void CImgui_Window::Set_GuizmoOrthographicLH()
+{
+	_float4x4 matCamProj = m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ);
+	XMStoreFloat4x4(&matCamProj, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
+
+	_float	  arrProj[] = { matCamProj._11,matCamProj._12,matCamProj._13,matCamProj._14,
+						  matCamProj._21,matCamProj._22,matCamProj._23,matCamProj._24,
+						  matCamProj._31,matCamProj._32,matCamProj._33,matCamProj._34,
+						  matCamProj._41,matCamProj._42,matCamProj._43,matCamProj._44 };
+	memcpy(m_arrOrthoProj, &arrProj, sizeof(arrProj));
 }
 
 _bool CImgui_Window::ImGui_MouseInCheck()
@@ -421,6 +443,7 @@ void CImgui_Window::Free()
 
 	Safe_Delete_Array(m_arrView);
 	Safe_Delete_Array(m_arrProj);
+	Safe_Delete_Array(m_arrOrthoProj);
 
 	g_pFileDialog->Close();
 

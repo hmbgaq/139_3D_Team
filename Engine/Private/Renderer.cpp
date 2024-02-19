@@ -404,6 +404,16 @@ HRESULT CRenderer::Render_Blend()
 
 HRESULT CRenderer::Render_UI()
 {
+	for (auto& pGameObject : m_RenderObjects[RENDER_UI_BACK])
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_UI_BACK].clear();
+
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
 		if (nullptr != pGameObject)
@@ -413,6 +423,16 @@ HRESULT CRenderer::Render_UI()
 	}
 
 	m_RenderObjects[RENDER_UI].clear();
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_UI_FRONT])
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_UI_FRONT].clear();
 
 	return S_OK;
 }

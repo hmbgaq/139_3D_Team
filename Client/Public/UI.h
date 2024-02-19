@@ -17,8 +17,8 @@ public:
 		_float		fRotationY = 0.0f;
 
 		/* 이동 */
-		_float		fPositionX = (_float)1280 / 2;
-		_float		fPositionY = (_float)720 / 2;
+		_float		fPositionX = (_float)g_iWinSizeX / 2;
+		_float		fPositionY = (_float)g_iWinSizeY / 2;
 		_float		fPositionZ = 0.0f;
 
 		/* 알파 */
@@ -27,8 +27,9 @@ public:
 		/* 색상 */
 		_vector		vColor;
 
-		string		strProtoTag = "";
-		string		strFilePath = "";
+		string		strCloneTag = "Not Added";
+		string		strProtoTag = "Not Added";
+		string		strFilePath = "Not Added";
 
 		/* 랜더그룹 */
 		CRenderer::RENDERGROUP eRenderGroup = CRenderer::RENDER_UI;
@@ -40,15 +41,28 @@ protected:
 	CUI(const CGameObject& rhs);
 	virtual ~CUI() = default;
 
-public: /* ================================ Get =============================== */
+public: /* ============================== Get =============================== */
 	void			Set_UIDesc(UI_DESC UIDesc) { m_tUIInfo = UIDesc; }
 	_bool			Set_Pick(_bool Pick) { m_bPick = Pick; }
 
-public: /* ================================ Set =============================== */
+public: /* ============================== Set =============================== */
 	UI_DESC			Get_UIDesc() { return m_tUIInfo; }
 	_bool			Get_Pick() { return m_bPick; }
 
-public: /* ================================ Basic =============================== */
+public: /* =========================== Set_Position =========================== */
+	void			Set_Pos(_float2 vPos);
+	void			Set_PosZ(_float fZ);
+
+public: /* ========================== Set_Rect_Scale ========================== */
+	void			Set_Size(_float fSizeX, _float fSizeY);
+	void			Change_SizeBottom(_float MMY);
+	void			Change_SizeTop(_float MMY);
+	void			Change_SizeLeft(_float MMX);
+	void			Change_SizeRight(_float MMX);
+	void			Change_SizeY(_float MMY);
+	void			Change_SizeX(_float MMX);
+
+public: /* ============================= Basic =============================== */
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void	Priority_Tick(_float fTimeDelta);
@@ -58,37 +72,36 @@ public: /* ================================ Basic ==============================
 	virtual void	Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 
-public: /* ============================== Function ============================= */
+public: /* ============================= Function ============================= */
 	virtual void	Picking_UI();	// Pick
-	virtual void	Moving_Rect();	// Moving
-	void			Move_UI(POINT pt);
+	virtual void	Check_RectPos();	// Moving
+	void			Moving_Picking_Point(POINT pt); // Picking Moving
 
-protected: /* ============================= Ready ============================= */
+protected: /* =========================== Ready ============================= */
 	virtual HRESULT Ready_Components();
 	virtual HRESULT Bind_ShaderResources();
 
-protected: /* ============================= SetUp ============================= */
+protected: /* =========================== SetUp ============================= */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
 	HRESULT			SetUp_BillBoarding();
 	HRESULT			SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
 
-protected: /* ============================= Load ============================= */
+protected: /* =========================== Load ============================= */
 	void			Load_UIData(const char* _FilePath);
 
-protected: /* =========================== Component =========================== */
+protected: /* ========================= Component =========================== */
 	CShader*			m_pShaderCom = { nullptr };
 	CTexture*			m_pTextureCom = { nullptr };
 	CVIBuffer_Rect*		m_pVIBufferCom = { nullptr };
 
-protected: /* ============================ Space ============================ */
+protected: /* =========================== Space ============================ */
 	_float4x4			m_ViewMatrix, m_ProjMatrix;
 
-protected: /* ============================ Screen ============================ */
-	RECT				m_ScreenPosRect = {};
+protected: /* =========================== Screen ============================ */
 	_float				m_fWorldToScreenX = 0.f;
 	_float				m_fWorldToScreenY = 0.f;
 
-protected: /* ============================== UI =============================== */
+protected: /* ============================= UI =============================== */
 	vector<CUI*>		m_vecUIParts;
 	UI_DESC				m_tUIInfo;
 	RECT				m_rcUI = {};
@@ -98,7 +111,7 @@ protected: /* ============================== UI =============================== 
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f;
 
-protected: /* ============================== bool =============================== */
+protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;
 
 public:
