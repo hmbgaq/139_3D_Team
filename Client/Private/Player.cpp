@@ -86,21 +86,21 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	CData_Manager::GetInstance()->Set_Player_Hp(m_iHp);
 
-	if (m_pGameInstance->Key_Down(DIK_C)) 
-	{
-		CGameObject* pMonster = CClone_Manager::GetInstance()->Clone_Object<CGameObject>(LEVEL_GAMEPLAY, LAYER_MONSTER, TEXT("Prototype_GameObject_Monster"));
-		if (pMonster)
-		{
-			_float3 vPos = Get_Transform()->Get_Position();
-			pMonster->Get_Transform()->Set_Position(vPos);
-		}
-		else 
-		{
-			_bool test = false;
-		}
-		
-
-	}
+	//if (m_pGameInstance->Key_Down(DIK_C)) 
+	//{
+	//	CGameObject* pMonster = CClone_Manager::GetInstance()->Clone_Object<CGameObject>(LEVEL_GAMEPLAY, LAYER_MONSTER, TEXT("Prototype_GameObject_Monster"));
+	//	if (pMonster)
+	//	{
+	//		_float3 vPos = Get_Transform()->Get_Position();
+	//		pMonster->Get_Transform()->Set_Position(vPos);
+	//	}
+	//	else 
+	//	{
+	//		_bool test = false;
+	//	}
+	//	
+	//
+	//}
 	
 
 	//_uint iHp = CData_Manager::GetInstance()->Get_Player_Hp();
@@ -147,12 +147,12 @@ HRESULT CPlayer::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
 		return E_FAIL;
 
-	{
-		CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
-		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
-			return E_FAIL;
-	}
-	CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
+//	{
+//		CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
+//		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
+//			return E_FAIL;
+//	}
+//	CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
 
 
 	return S_OK;

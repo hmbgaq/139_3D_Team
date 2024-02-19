@@ -163,6 +163,7 @@ HRESULT CScreamer::Ready_Components()
 
 	/* For.Com_Model */
 	{
+
 		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Screamer"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 	
 	}

@@ -12,6 +12,7 @@
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
 {
+
 }
 
 
@@ -27,7 +28,7 @@ HRESULT CWindow_AnimTool::Initialize()
 	m_pGameInstance->Fill_PrototypeTags(&m_vObjectTag);
 
 	m_pSphere = new BoundingSphere();
-	
+	//ID3D11Device::GetFeatureLevel();
 	return S_OK;
 }
 
