@@ -79,14 +79,14 @@ HRESULT CMesh::Initialize(void * pArg)
 
 HRESULT CMesh::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, const vector<CBone*>& Bones)
 {
-	_float4x4		BoneMatrices[256];
+	_float4x4		BoneMatrices[800];
 
-	for (size_t i = 0; i < m_iNumBones; i++)
+	for (_uint i = 0; i < m_iNumBones; i++)
 	{
 		XMStoreFloat4x4(&BoneMatrices[i], XMLoadFloat4x4(&m_OffsetMatrices[i]) * Bones[m_BoneIndices[i]]->Get_CombinedTransformationMatrix());
 	}
 
-	return pShader->Bind_Matrices(pConstantName, BoneMatrices, 256);
+	return pShader->Bind_Matrices(pConstantName, BoneMatrices, 800);
 }
 
 #ifdef _DEBUG

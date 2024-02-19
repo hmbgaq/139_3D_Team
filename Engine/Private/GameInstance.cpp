@@ -1,5 +1,6 @@
 #include "..\Public\GameInstance.h"
 #include "Collision_Manager.h"
+#include "Event_Manager.h"
 #include "Graphic_Device.h"
 #include "Object_Manager.h"
 #include "Target_Manager.h"
@@ -74,6 +75,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 	if (nullptr == m_pCollision_Manager)
 		return E_FAIL;
 
+	m_pEvent_Manager = CEvent_Manager::Create();
+	if (nullptr == m_pEvent_Manager)
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -97,6 +102,10 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pFrustum->Tick();
 
+	m_pEvent_Manager->Tick(fTimeDelta);
+
+	m_pCollision_Manager->Tick(fTimeDelta);
+
 	m_pObject_Manager->Late_Tick(fTimeDelta);
 
 	m_pLevel_Manager->Tick(fTimeDelta);
@@ -105,7 +114,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 void CGameInstance::Clear(_uint iLevelIndex)
 {
 	if (nullptr == m_pObject_Manager ||
-		nullptr == m_pComponent_Manager)
+		nullptr == m_pComponent_Manager || 
+		nullptr == m_pEvent_Manager)
 		return;
 
 	/* 오브젝트 매니져에 레벨별로 구분해 놓은 객체들 중 특정된 객체들을 지운다.  */
@@ -113,6 +123,8 @@ void CGameInstance::Clear(_uint iLevelIndex)
 
 	/* 컴포넌트 매니져에 레벨별로 구분해 놓은 컴포넌트들 중 특정된 객체들을 지운다.  */
 	m_pComponent_Manager->Clear(iLevelIndex);
+
+	m_pEvent_Manager->Clear();
 }
 
 HRESULT CGameInstance::Render_Engine()
@@ -336,12 +348,12 @@ CGameObject* CGameInstance::Add_CloneObject_And_Get(_uint iLevelIndex, const wst
 	return Get_GameObect_Last(iLevelIndex, strLayerTag);
 }
 
-CGameObject* CGameInstance::Get_Player()
+CCharacter* CGameInstance::Get_Player()
 {
 	return m_pObject_Manager->Get_Player();
 }
 
-void CGameInstance::Set_Player(CGameObject* _pPlayer)
+void CGameInstance::Set_Player(CCharacter* _pPlayer)
 {
 	m_pObject_Manager->Set_Player(_pPlayer);
 }
@@ -515,6 +527,7 @@ RAY CGameInstance::Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX
 	return vMouseRayLocal;
 }
 
+#ifdef _DEBUG
 _bool CGameInstance::Picking_Mesh(RAY ray, _float3* out, vector<class CMesh*> Meshes)
 {
 	//_vector		vPickedPos;
@@ -567,7 +580,9 @@ _bool CGameInstance::Picking_Mesh(RAY ray, _float3* out, vector<class CMesh*> Me
 
 	return bIsPicked;
 }
+#endif
 
+#ifdef _DEBUG
 _bool CGameInstance::Picking_Vertex(RAY ray, _float3* out, _uint triNum, VTXMESH* pVertices, _uint* pIndices)
 {
 	_vector		vPickedPos;
@@ -601,6 +616,7 @@ _bool CGameInstance::Picking_Vertex(RAY ray, _float3* out, _uint triNum, VTXMESH
 	}
 	return false;
 }
+#endif
 
 HRESULT CGameInstance::Add_Font(const wstring & strFontTag, const wstring & strFontFilePath)
 {
@@ -684,6 +700,11 @@ _bool CGameInstance::isIn_LocalPlanes(_fvector vPoint, _float fRadius)
 void CGameInstance::Add_Collision(const _uint& In_iLayer, CCollider* _pCollider)
 {
 	m_pCollision_Manager->Add_Collision(In_iLayer, _pCollider);
+}
+
+void CGameInstance::Add_Event(IEvent* pEvent)
+{
+	m_pEvent_Manager->Add_Event(pEvent);
 }
 
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
@@ -941,6 +962,8 @@ wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 
 
 void CGameInstance::Release_Manager()
 {
+	Safe_Release(m_pEvent_Manager);
+	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pFrustum);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTarget_Manager);

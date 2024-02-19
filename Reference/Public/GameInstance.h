@@ -67,8 +67,8 @@ public: /* For.Object_Manager */
 	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>*clonevector);
 	class CGameObject* Get_GameObect_Last(_uint iLevelIndex, const wstring & strLayerTag);
 	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
-	class CGameObject* Get_Player();
-	void Set_Player(class CGameObject* _pPlayer);
+	class CCharacter* Get_Player();
+	void Set_Player(class CCharacter* _pPlayer);
 
 
 
@@ -100,8 +100,11 @@ public: /* For.PipeLine */
 	//!			레이캐스트
 	RAY			Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
 	RAY			Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY, _matrix matWorld);
+
+#ifdef _DEBUG
 	_bool		Picking_Mesh(RAY ray, _float3 * out, vector<class CMesh*> Meshes);
 	_bool		Picking_Vertex(RAY ray, _float3 * out, _uint triNum, VTXMESH * pVertices, _uint * pIndices);
+#endif // _DEBUG
 
 public: /* For.Font_Manager */
 	HRESULT		Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
@@ -129,6 +132,10 @@ public: /* For.Frustum */
 
 public: /* For.Collision_Manager */
 	void		Add_Collision(const _uint& In_iLayer, CCollider* _pCollider);
+
+
+public: /* For.Event_Manager */
+	void		Add_Event(class IEvent* pEvent);
 
 
 public: /* Common */
@@ -186,6 +193,7 @@ private:
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 	class CFrustum*					m_pFrustum = { nullptr };
 	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
+	class CEvent_Manager*			m_pEvent_Manager = { nullptr };
 
 
 public:

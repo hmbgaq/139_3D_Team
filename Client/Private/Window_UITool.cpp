@@ -49,8 +49,7 @@ HRESULT CWindow_UITool::Initialize()
 		delete[] tTexture;
 	}
 
-	_int iPathSize = m_vecPaths.size();
-
+	_int iPathSize = (_int)m_vecPaths.size();
 	//for (auto& iter : m_vecPaths)
 	for(_int i = 0; i < iPathSize; i++)
 	{
@@ -389,7 +388,7 @@ void CWindow_UITool::Texture_List()
 		ImGui::EndListBox();
 	}
 	/* 미리보기 */
-	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2(m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
+	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2((_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Width, (_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
 	//m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName; // 리스트 박스 밖으로 뺀 이유 : 리스트에서 선택안했을 때도 생성 가능하도록 계속 갱신하게함
 }
 
@@ -875,6 +874,8 @@ HRESULT CWindow_UITool::UI2D_Create(_float fTimeDelta)
 	m_pGameInstance->String_To_WString(m_tUI_Desc.strCloneTag, strCloneProto);
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &m_tUI_Desc));
 	Add_ObjectList(m_tUI_Desc);
+
+	return S_OK;
 }
 
 void CWindow_UITool::UI2D_Delete(_float fTimeDelta)

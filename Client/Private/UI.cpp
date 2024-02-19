@@ -104,17 +104,6 @@ void CUI::Picking_UI()
 
 	m_pContext->RSGetViewports(&ViewPortIndex, &ViewPort); // 뷰포트 가져오기 
 	
-	for (_int i = 0; i < 27; i++)
-	{
-		cout << endl;
-	}
-
-	// 28줄
-	cout << "Mouse Pos : " << pt.x << " , " << pt.y << endl;
-	cout << "UI_Rect : " << m_rcUI.left << " , " << m_rcUI.top << " , " << m_rcUI.right << " , " << m_rcUI.bottom << endl;
-
-
-
 	if (PtInRect(&m_rcUI, pt))   //  PtInRect(렉트주소, 마우스 포인트)
 		m_bPick = true;
 	else

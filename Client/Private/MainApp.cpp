@@ -143,7 +143,7 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 
 HRESULT CMainApp::Ready_Gara()
 {
-	// D3D11_BLEND_DESC			BlendDesc;
+	 //D3D11_BLEND_DESC			BlendDesc;
 	// D3D11_DEPTH_STENCIL_DESC	DepthStencilDesc;
 	// D3D11_RASTERIZER_DESC		RasterizerDesc;
 	// D3D11_SAMPLER_DESC

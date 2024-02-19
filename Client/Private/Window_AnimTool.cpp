@@ -12,6 +12,7 @@
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
 {
+
 }
 
 
@@ -27,7 +28,7 @@ HRESULT CWindow_AnimTool::Initialize()
 	m_pGameInstance->Fill_PrototypeTags(&m_vObjectTag);
 
 	m_pSphere = new BoundingSphere();
-	
+	//ID3D11Device::GetFeatureLevel();
 	return S_OK;
 }
 
@@ -36,23 +37,6 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	__super::Begin();
-
-// 	if (ImGui::BeginMenuBar())
-// 	{
-// 		if (ImGui::BeginMenu("Menu"))
-// 		{
-// 			if (ImGui::MenuItem("Save"))
-// 			{
-// 
-// 			}
-// 			if (ImGui::MenuItem("Load"))
-// 			{
-// 
-// 			}
-// 			ImGui::EndMenu();
-// 		}
-// 		ImGui::EndMenuBar();
-// 	}
 
 	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
@@ -184,6 +168,9 @@ void CWindow_AnimTool::Draw_KeyEventEditer()
 
 void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 {
+	ImGui::SeparatorText("AnimationModel");
+	ImGui::NewLine();
+
 	if (ImGui::TreeNode("AnimationModel"))
 	{
 		string items[] = { "Layer_Player", "Layer_Monster","Layer_Environment","Layer_Object","Layer_Effect","Layer_Something"};
@@ -209,7 +196,8 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		}
 
 		ImGui::Spacing();
-
+		ImGui::SeparatorText("LayerList");
+		ImGui::NewLine();
 		if (ImGui::BeginListBox("LayerList"))
 		{
 			for (int n = 0; n <6; n++)
@@ -230,10 +218,11 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 							m_bCloneCount = true;
 							m_bListCheck = true;
 							m_bCreateCheck = false;
+							
 						}
 					
 				}
-
+				
 			}
 			
 			ImGui::EndListBox();
@@ -244,6 +233,8 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		ImGui::SameLine();
 		ImGui::Checkbox("Delete",& m_bDeleteCheck);
 
+		ImGui::SeparatorText("CreateList");
+		ImGui::NewLine();
 		static int CreateIndex = 0; // Here we store our selection data as an index.
 		
 		if (m_bListCheck)
@@ -293,7 +284,9 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		}
 		
 		ImGui::Spacing();
-
+		ImGui::SeparatorText("AnimationList");
+		ImGui::NewLine();
+		
 		if (ImGui::BeginListBox("AnimationList"))
 		{
 			if (m_CreateList.size() > 0)
@@ -310,7 +303,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 				const bool is_selected = (AnimationIndex == n);
 				if (ImGui::Selectable(m_pAnimation[n]->Get_Name(), is_selected))
 					AnimationIndex = n;
-
+				m_CurrentAnimationIndex = AnimationIndex;
 				if (is_selected)
 				{
 					
@@ -354,13 +347,27 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 // 			m_pBody->Get_Model()->Set_Animation(0.f, false);
 // 		}
 	}
+	if (m_bStop)
+	{
+		if (nullptr != m_pBody)
+			{
+				m_pBody->Get_Model()->Set_Animation(m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition(),CModel::ANIM_STATE_LOOP);
+			}
+	}
 	
-	ImGui::Spacing();
+	if (nullptr != m_pBody)
+	{
+		m_fCurrentTrackPosition = m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition();
+	}
 
+	ImGui::Spacing();
+	//if (ImGui::SliderFloat("CurrnetTrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
+	
 	if (ImGui::SliderFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
 	{
 		m_bTrackPositionCheck = true;
 	}
+	
 	
 // 
 	if (ImGui::InputFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
@@ -401,9 +408,12 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 	if (m_PickingObject == nullptr)
 		return;
 	static int BoneIndex = 0;
+
 	//static int ColliderIndex = 0;
 	if (ImGui::TreeNode("ModelBones"))
 	{
+		ImGui::SeparatorText("BoneList");
+		ImGui::NewLine();
 		if (ImGui::BeginListBox("BoneList"))
 		{
 			if (m_PickingObject != nullptr)
@@ -411,12 +421,12 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 				CCharacter* pcharacters = dynamic_cast<CCharacter*>(m_PickingObject);
 				/*m_pBody = pcharacters->Get_Body();*/ //위에서 넣어주고 있어서 여기서 굳이 또 할필요 없음 
 				m_pBones = *(pcharacters->Get_Body()->Get_Model()->Get_Bones());
-				m_iBoneNum = m_pBones.size();
+				m_iBoneNum = (_uint)m_pBones.size();
 
 			}
 			//m_PickingObject
 
-			for (int n = 0; n < m_iBoneNum; n++)
+			for (_uint n = 0; n < m_iBoneNum; n++)
 			{
 				const bool is_selected = (BoneIndex == n);
 				if (ImGui::Selectable(m_pBones[n]->Get_Name(), is_selected))
@@ -444,6 +454,8 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 			}
 			ImGui::EndListBox();
 		}
+		ImGui::SeparatorText("ColliderList");
+		ImGui::NewLine();
 		if (ImGui::BeginListBox("ColliderList"))
 		{
 			if (m_pBoneCollider.size() < 0)
@@ -454,7 +466,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 
 			static int iSelectColliderIndex;
 
-			for (int n = 0; n < m_iCreateColliderNum; n++)
+			for (_uint n = 0; n < m_iCreateColliderNum; n++)
 			{
 				string str = "Collider";
 				string str2 = to_string(n);
@@ -493,7 +505,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 
 						m_bDeleteCheck = false;
 					}
-
+				
 
 				}
 				else
@@ -511,8 +523,25 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 		}
 		ImGui::TreePop();
 	}
+	//애니메이션 콜라이더 끄고 키는 조건 
+	if (m_pBoneCollider.size() > 0)
+	{
+		if (m_fCurrentTrackPosition >= m_iColliderOnTrackPosition && m_fCurrentTrackPosition < m_iColliderOffTrackPosition)
+		{
+			m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(true);
+			//m_bCheckOnCollider = true;
+		}
+		else
+		{
+			m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(false);
+			//m_bCheckOnCollider = false;
+		}
+	}
+	
 
 	//현재 해야 하는 것은 콜라이더 생성하는 버튼을 일단 만들어 보자 
+	ImGui::SeparatorText("Create/Delete");
+
 	if (ImGui::Button("Collider Crate"))
 	{
 		m_bCreatCollider = true;
@@ -522,16 +551,17 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 	{
 		m_bDeleteCollider = true;
 	}
+	ImGui::SeparatorText("ColliderSize");
 
-	if (ImGui::DragFloat("ColliderSize", &m_iColliderSize, 0.f, 10.f));
+	if (ImGui::DragFloat("ColliderSize", &m_iColliderSize, 0.f, 10.f))
 	{
 		m_bColliderSize = true;
-		if (m_pBoneCollider.size() > 0)
-		{
-			
-		}
-		
+
 	}
+	ImGui::SeparatorText("ColliderOn");
+	if (ImGui::InputFloat("ColliderOn", &m_iColliderOnTrackPosition, 0.01f, 1.f));
+	ImGui::SeparatorText("TrackPositionOff");
+	if (ImGui::InputFloat("ColliderOff", &m_iColliderOffTrackPosition, 0.01f, 1.f));
 
 }
 
@@ -541,9 +571,7 @@ void CWindow_AnimTool::BonePoint_Update()
 	{
 		for (auto& pCollider : m_pBoneCollider)
 		{
-			//CBone* pBone = m_vBoneColliderIndex[m_iCreateColliderNum]
 			m_pGameInstance->Add_DebugRender(pCollider);
-			//pCollider->Update()
 		}
 	}
 }
@@ -561,13 +589,7 @@ void CWindow_AnimTool::Create_Bounding(_float3 fPoint, _float fRadius)
 	++m_iCreateColliderNum;
 }
 
-void CWindow_AnimTool::Set_Bounding(CBounding_Sphere* _Bounding)
-{
-	//m_pSphere = _Bounding->Get_Bounding()->Radius;
-	////m_pSphere->Radius = m_iColliderSize;
-	//m_pBounding->Set_Bounding(m_pSphere);
-	//m_pBoneCollider[m_iSelectColliderIndex]->Set_Bounding(_Bounding);
-}
+
 
 char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)
 {
@@ -576,6 +598,7 @@ char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)
 	char* result = new char[size_needed];
 
 	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result, size_needed, NULL, NULL);
+
 
 	return result;
 }
@@ -590,6 +613,8 @@ char* CWindow_AnimTool::ConvertWCtoC(const wchar_t* str)
 	pStr = new char[strSize];
 	//형 변환
 	WideCharToMultiByte(CP_ACP, 0, str, -1, pStr, strSize, 0, 0);
+
+
 	return pStr;
 }
 
@@ -603,6 +628,8 @@ wchar_t* CWindow_AnimTool::ConvertCtoWC(const char* str)
 	pStr = new WCHAR[strSize];
 	//형 변환
 	MultiByteToWideChar(CP_ACP, 0, str, (int)strlen(str) + 1, pStr, strSize);
+
+
 	return pStr;
 }
 
@@ -621,4 +648,5 @@ CWindow_AnimTool* CWindow_AnimTool::Create(ID3D11Device* pDevice, ID3D11DeviceCo
 void CWindow_AnimTool::Free()
 {
 	__super::Free();
+	Safe_Delete(m_pSphere);
 }

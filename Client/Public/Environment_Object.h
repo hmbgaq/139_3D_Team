@@ -49,9 +49,11 @@ public:
 	wstring&			Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
 	_bool				Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
 	
-
+#ifdef DEBUG
 public: //! For.Tool
 	virtual _bool		Picking(_Out_ _float3* vPickedPos) override;
+
+#endif 
 
 public:
 	void				Start_Environment_Animation() { m_bPlay = true; }

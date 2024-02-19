@@ -120,6 +120,8 @@ void CEnvironment_Object::Load_FromJson(const json& In_Json)
 	return __super::Load_FromJson(In_Json);
 }
 
+#ifdef DEBUG
+
 _bool CEnvironment_Object::Picking(_float3* vPickedPos)
 {
 	GRAPHIC_DESC GraphicDesc = *m_pGameInstance->Get_GraphicDesc();
@@ -134,6 +136,8 @@ _bool CEnvironment_Object::Picking(_float3* vPickedPos)
 
 	return m_pGameInstance->Picking_Mesh(ray, vPickedPos, meshes);
 }
+
+#endif
 
 HRESULT CEnvironment_Object::Ready_Components()
 {

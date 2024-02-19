@@ -1,4 +1,4 @@
-#include "Shader_DEfines.hlsli"
+#include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 vector			g_vColor = vector(1.f, 1.f, 1.f, 1.f);

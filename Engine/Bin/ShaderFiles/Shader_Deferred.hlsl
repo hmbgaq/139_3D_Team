@@ -3,6 +3,7 @@
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix			g_ProjMatrixInv, g_ViewMatrixInv;
 matrix			g_LightViewMatrix, g_LightProjMatrix;
+float			g_CamFar;
 
 vector			g_vLightDir;
 vector			g_vLightPos;
@@ -26,10 +27,12 @@ texture2D		g_LightDepthTexture;
 texture2D		g_ORMTexture;
 texture2D		g_SSAOTexture;
 Texture2D		g_BloomTarget;
+Texture2D		g_OutlineTarget;
 
 /* 활성 여부 */ 
 bool			g_bSSAO_Active;
 bool			g_bBloom_Active;
+bool			g_Outline_Active;
 
 struct VS_IN
 {
@@ -103,7 +106,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	Out.vShade = g_vLightDiffuse * min((max(dot(normalize(g_vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)), 1.f);
 
 	vector		vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
-	float		fViewZ = vDepthDesc.y * 1000.f;
+    float		fViewZ = vDepthDesc.y * g_CamFar;
 
 	vector		vWorldPos;
 
@@ -212,12 +215,16 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 	if(g_bBloom_Active)
         vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
 	
+    vector vOutline = float4(1.f, 1.f, 1.f, 1.f);
+    if (g_Outline_Active)
+        vOutline = g_OutlineTarget.Sample(LinearSampler, In.vTexcoord);
+	
     Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
 	
-    //Out.vColor = ((vDiffuse * vShade * vShadow * vSSAO) + vSpecular + vBloom) * vOutline;
+    //Out.vColor = ((vDiffuse * vShade * vSSAO) + vSpecular + vBloom) * vOutline;
 	
 	vector		vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
-	float		fViewZ = vDepthDesc.y * 1000.f;
+    float		fViewZ = vDepthDesc.y * g_CamFar;
 	
 	vector		vWorldPos;
 

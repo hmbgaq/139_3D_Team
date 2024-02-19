@@ -60,8 +60,15 @@ public:
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	
+
+#ifdef _DEBUG
 public: //!For.Tool
 	virtual _bool Picking(_Out_ _float3* vPickedPos) override;
+
+
+#endif 
+
+
 	
 
 //public:

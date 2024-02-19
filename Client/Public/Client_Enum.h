@@ -22,6 +22,7 @@ namespace Engine
 		ANIM_GRAYSCALE,			// 5 - 회색조 : 죽거나 했을때
 		ANIM_MASKING,			// 6 - 마스킹텍스쳐로 자르기 
 		ANIM_BLOOM,				// 7 - 색 + 뿌옇게 흐리기까지 
+		ANIM_OUTLINE,			// 8 - 외곽선 보이기 
 		ANIM_SHADER_END };
 
 	enum class UI_SHADER {UI_SHADER_END};
