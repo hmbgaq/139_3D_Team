@@ -94,7 +94,7 @@ private:
 	HRESULT Render_OutLineGroup();
 	HRESULT Render_SSAO();
 	HRESULT Render_SSAO_Blur();
-	HRESULT Render_HBO_Plus();
+	HRESULT Render_HBAO_Plus();
 	HRESULT Render_Bloom();
 
 	HRESULT Render_RadialBlur();

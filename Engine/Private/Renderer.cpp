@@ -6,6 +6,7 @@
 #include "AlphaObject.h"
 #include "Shader.h"
 #include "SMath.h"
+#include "RenderTarget.h"
 
 _uint		g_iSizeX = 8192;
 _uint		g_iSizeY = 4608;
@@ -112,6 +113,9 @@ HRESULT CRenderer::Create_RenderTarget()
 			FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_Vertical"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 			FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_UpSampling"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 		}
+
+		/* MRT_HBAO+ */
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_HBAO"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 1.f)));
 
 		/* MRT_Bloom_Blur*/
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
@@ -272,6 +276,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 			FAILED_CHECK(Render_SSAO());
 			FAILED_CHECK(Render_SSAO_Blur());
 		}
+		else
+			FAILED_CHECK(Render_HBAO_Plus());
 
 		if (true == m_bBloom_Active)
 		{
@@ -495,6 +501,9 @@ HRESULT CRenderer::Render_Deferred()
 			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture"));
 			//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao Ãß°¡ */
 		}
+		else
+			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture"));
+
 
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bBloom_Active", &m_bBloom_Active, sizeof(_bool)));
 		if (true == m_bBloom_Active)
@@ -597,13 +606,33 @@ HRESULT CRenderer::Render_SSAO_Blur()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_HBO_Plus()
+HRESULT CRenderer::Render_HBAO_Plus()
 {
-	//GFSDK_SSAO_InputData_D3D11 Input;
-	//Input.DepthData.DepthTextureType = GFSDK_SSAO_HARDWARE_DEPTHS;
-	//Input.DepthData.pFullResDepthTextureSRV = m_pGameInstance->Get_DepthSRV();
+	GFSDK_SSAO_InputData_D3D11 Input;
+	Input.DepthData.DepthTextureType = GFSDK_SSAO_HARDWARE_DEPTHS;
+	Input.DepthData.pFullResDepthTextureSRV = m_pGameInstance->Get_DepthSRV();
 
+	_matrix ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
 
+	Input.DepthData.ProjectionMatrix.Data = GFSDK_SSAO_Float4x4((const GFSDK_SSAO_FLOAT*)&ProjMatrix);
+	Input.DepthData.ProjectionMatrix.Layout = GFSDK_SSAO_ROW_MAJOR_ORDER;
+	Input.DepthData.MetersToViewSpaceUnits = 1.f;
+
+	GFSDK_SSAO_Parameters Params;
+	Params.Radius = 2.f;
+	Params.Bias = 0.1f;
+	Params.PowerExponent = 2.f;
+	Params.Blur.Enable = true;
+	Params.Blur.Radius = GFSDK_SSAO_BLUR_RADIUS_4;
+	Params.Blur.Sharpness = 16.f;
+
+	GFSDK_SSAO_Output_D3D11 Output;
+	Output.pRenderTargetView = m_pGameInstance->Find_RenderTarget(TEXT("Target_HBAO"))->Get_RTV();
+	Output.Blend.Mode = GFSDK_SSAO_OVERWRITE_RGB;
+
+	GFSDK_SSAO_Status status;
+	status = m_pGameInstance->Get_AOContext()->RenderAO(m_pContext, Input, Params, Output);
+	assert(status == GFSDK_SSAO_OK);
 
 	return S_OK;
 }

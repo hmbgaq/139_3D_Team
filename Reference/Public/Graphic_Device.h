@@ -71,6 +71,7 @@ private:
 
 public: 	/* 이하 모두 HBO+ 준비사항 */
 	ID3D11ShaderResourceView* Get_DepthSRV() { return m_pDepthStencilSRV; }
+	GFSDK_SSAO_Context_D3D11* Get_AOContext() { return m_pAOContext; }
 
 private:
 	ID3D11ShaderResourceView* m_pDepthStencilSRV = nullptr;

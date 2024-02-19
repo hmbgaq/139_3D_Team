@@ -513,9 +513,6 @@
     <ClInclude Include="..\Public\Json_Utility.h">
       <Filter>01.Utility\96.Utility\Json</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VIBuffer_Dynamic_Terrain.h">
-      <Filter>01.Utility\03.Components\01.VIBuffer\Terrain\Tool</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Collision_Manager.h">
       <Filter>01.Utility\03.Components\07.Collider\Manager</Filter>
     </ClInclude>
@@ -745,9 +742,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Json_Utility.cpp">
       <Filter>01.Utility\96.Utility\Json</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\VIBuffer_Dynamic_Terrain.cpp">
-      <Filter>01.Utility\03.Components\01.VIBuffer\Terrain\Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Collision_Manager.cpp">
       <Filter>01.Utility\03.Components\07.Collider\Manager</Filter>

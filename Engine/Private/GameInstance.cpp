@@ -188,24 +188,29 @@ ID3D11DepthStencilView * CGameInstance::Get_DSV() const
 
 GRAPHIC_DESC* CGameInstance::Get_GraphicDesc()
 {
-	if (nullptr == m_pGraphic_Device)
-		return nullptr;
+	NULL_CHECK_RETURN(m_pGraphic_Device, nullptr);
 
 	return m_pGraphic_Device->Get_GraphicDesc();
 }
 
 ID3D11ShaderResourceView* CGameInstance::Get_DepthSRV()
 {
-	if (nullptr == m_pGraphic_Device)
-		return nullptr;
+	NULL_CHECK_RETURN(m_pGraphic_Device, nullptr);
 
 	return m_pGraphic_Device->Get_DepthSRV();
 }
 
+GFSDK_SSAO_Context_D3D11* CGameInstance::Get_AOContext()
+{
+	NULL_CHECK_RETURN(m_pGraphic_Device, nullptr);
+
+	return m_pGraphic_Device->Get_AOContext();
+}
+
 _byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
 {
-	if (nullptr == m_pInput_Device)
-		return 0;
+	NULL_CHECK_RETURN(m_pGraphic_Device, 0);
+
 	return m_pInput_Device->Get_DIKeyState(byKeyID);
 }
 
@@ -647,6 +652,11 @@ HRESULT CGameInstance::End_MRT()
 HRESULT CGameInstance::Bind_RenderTarget_ShaderResource(const wstring & strTargetTag, CShader * pShader, const _char * pConstantName)
 {
 	return m_pTarget_Manager->Bind_ShaderResource(strTargetTag, pShader, pConstantName);
+}
+
+CRenderTarget* CGameInstance::Find_RenderTarget(const wstring& strTargetTag)
+{
+	return m_pTarget_Manager->Find_RenderTarget(strTargetTag);
 }
 
 #ifdef _DEBUG

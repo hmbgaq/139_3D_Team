@@ -46,7 +46,6 @@ HRESULT CGraphic_Device::Initialize(const GRAPHIC_DESC& GraphicDesc, ID3D11Devic
 	/* 장치는 최대 8개의 렌더타겟을 동시에 들고 있을 수 있다. */
 	ID3D11RenderTargetView*		pRTVs[1] = {
 		m_pBackBufferRTV,
-
 	};
 
 	m_pDeviceContext->OMSetRenderTargets(1, pRTVs,
@@ -63,23 +62,25 @@ HRESULT CGraphic_Device::Initialize(const GRAPHIC_DESC& GraphicDesc, ID3D11Devic
 
 	m_pDeviceContext->RSSetViewports(1, &ViewPortDesc);
 
-//	//ssao -> nvid 
-//#ifdef new
-//#undef new
-//#endif
-//	GFSDK_SSAO_CustomHeap CustomHeap;
-//	CustomHeap.new_ = ::operator new;
-//	CustomHeap.delete_ = ::operator delete;
-//#ifdef DBG_NEW
-//
-//#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-//#define new DBG_NEW
-//
-//#endif
-//
-//	GFSDK_SSAO_Status status;
-//	status = GFSDK_SSAO_CreateContext_D3D11(m_pDevice, &m_pAOContext, &CustomHeap);
-//	assert(status == GFSDK_SSAO_OK); // HBAO+ requires feature level 11_0 or above
+	//ssao -> nvid 
+#ifdef new
+#undef new
+#endif
+	GFSDK_SSAO_CustomHeap CustomHeap;
+	CustomHeap.new_ = ::operator new;
+	CustomHeap.delete_ = ::operator delete;
+#ifdef DBG_NEW
+
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+
+#endif
+
+	GFSDK_SSAO_Status status;
+	status = GFSDK_SSAO_CreateContext_D3D11(m_pDevice, &m_pAOContext, &CustomHeap);
+	if (GFSDK_SSAO_OK != status)
+		return E_FAIL;
+	//assert(status == GFSDK_SSAO_OK); // HBAO+ requires feature level 11_0 or above
 
 	*ppDeviceOut = m_pDevice;
 	*ppDeviceContextOut = m_pDeviceContext;
@@ -169,7 +170,6 @@ HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMo
 		return E_FAIL;
 
 
-
 	Safe_Release(pFactory);
 	Safe_Release(pAdapter);
 	Safe_Release(pDevice);
@@ -208,7 +208,7 @@ HRESULT CGraphic_Device::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint 
 	if (nullptr == m_pDevice)
 		return E_FAIL;
 
-	ID3D11Texture2D*		pDepthStencilTexture = nullptr;
+	//ID3D11Texture2D*		pDepthStencilTexture = nullptr;
 
 	D3D11_TEXTURE2D_DESC	TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
@@ -217,13 +217,14 @@ HRESULT CGraphic_Device::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint 
 	TextureDesc.Height = iWinCY;
 	TextureDesc.MipLevels = 1;
 	TextureDesc.ArraySize = 1;
-	TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;	
+	TextureDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
 
 	TextureDesc.SampleDesc.Quality = 0;
 	TextureDesc.SampleDesc.Count = 1;
 
 	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
-	TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL
+	TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 		/*| D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE*/;
 	TextureDesc.CPUAccessFlags = 0;
 	TextureDesc.MiscFlags = 0;
@@ -235,7 +236,22 @@ HRESULT CGraphic_Device::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint 
 	/* DepthStencil */
 
 	/* HBO 추가사항 */
-	FAILED_CHECK(m_pDevice->CreateDepthStencilView(m_pDepthStencilTexture, nullptr, &m_pDepthStencilView));
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+	ZeroMemory(&depthStencilViewDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDesc.Texture2D.MipSlice = 0;
+
+	FAILED_CHECK(m_pDevice->CreateDepthStencilView(m_pDepthStencilTexture, &depthStencilViewDesc, &m_pDepthStencilView));
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	ZeroMemory(&shaderResourceViewDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	FAILED_CHECK(m_pDevice->CreateShaderResourceView(m_pDepthStencilTexture, &shaderResourceViewDesc, &m_pDepthStencilSRV))
+
 
 	/* 이하 = 수업코드 */
 	//FAILED_CHECK(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pDepthStencilView));
@@ -264,6 +280,7 @@ void CGraphic_Device::Free()
 	Safe_Release(m_pDepthStencilView);
 	Safe_Release(m_pBackBufferRTV);
 	Safe_Release(m_pDeviceContext);
+	Safe_Release(m_pDepthStencilSRV);
 
 //#if defined(DEBUG) || defined(_DEBUG)
 //	ID3D11Debug* d3dDebug;

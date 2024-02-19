@@ -104,9 +104,9 @@ struct PS_OUT
 	float4	vDiffuse         : SV_TARGET0;
 	float4	vNormal          : SV_TARGET1;
     float4  vDepth           : SV_TARGET2;
-    float4  vBloom           : SV_TARGET5;
     float4  vORM             : SV_TARGET3;
     float4  vViewNormal      : SV_TARGET4;
+    float4  vBloom           : SV_TARGET5;
     //float4  vViewNormal     : SV_TARGET3;
     //float4  vBloom          : SV_TARGET4;
     //float4  vORM            : SV_TARGET5;
