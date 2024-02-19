@@ -35,7 +35,7 @@ public:
 	CNavigation* Get_Navigation();
 
 	virtual _bool Picking(_Out_ _float3 * vPickedPos) override;
-protected:
+public:
 	virtual HRESULT Ready_Components() PURE;
 	virtual HRESULT Ready_PartObjects() PURE;
 

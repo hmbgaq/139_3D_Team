@@ -54,11 +54,12 @@ private:
 	void			Clear_WeaponEvent();
 
 	void			Create_Object(const wstring& strLayerTag, const wstring& strPrototypeTag);
-	void			Draw_Player();
-	void			Draw_Monster();
+	void			Create_Weapon(CCharacter* ParentObject,string strBonename ,const wstring& strPrototypeTag);
+
 	void			Draw_KeyEventEditer();
 	void			Draw_AnimationList(_float fTimeDelta);
 	void			Draw_BoneList(_float fTimeDelta);
+	void			Draw_Weapon(_float fTimeDelta);
 private://콜라이더 
 	void			BonePoint_Update();
 	void			Create_Bounding(_float3 fPoint,_float fRadius);
@@ -72,6 +73,7 @@ private:
 	CPreviewAnimationModel*	m_pPreViewModel = { nullptr };
 	CAnimation*				m_pCurrentAnimation = { nullptr };
 	CGameObject*			m_PickingObject = { nullptr };
+	CGameObject*			m_PickingWeapon = { nullptr };
 	CBody*					m_pBody = { nullptr };
 	CBounding_Sphere*		m_pBounding = { nullptr };
 	CCollider*				m_pCollider = { nullptr };
@@ -88,8 +90,10 @@ private:
 	_float3					m_fBonePosition = { 0.f,0.f,0.f };
 	_float4x4				m_fBoneMatrix = {};
 	
+	_uint					m_iSelectBoneIndex = 0;
 	_int					m_CurrentAnimationIndex = 0;
 	_int					m_iCreateObjectSize = 0;
+	_int					m_iCreateWeaponSize = 0;
 
 	_uint					m_iAnimationNum = 0;
 	_uint					m_iBoneNum = 0;
@@ -101,27 +105,35 @@ private:
 	string					m_strTest = "";
 
 	vector<string>			m_vObjectTag;
+
 	vector<CGameObject*>	m_CreateList;
+	vector<CGameObject*>	m_CreateWeaponList;
+
 	vector<CAnimation*>		m_pAnimation;
-	vector<CBone*>			m_pBones;
 	vector<CCollider*>		m_pBoneCollider;
+	vector<CBone*>			m_pBones;
 	vector<CBone*>			m_vBoneColliderIndex;
 public:
 	_bool					m_bStop = false;
 	_bool					m_bHold = false;
 	_bool					m_bKeyEventEditer = false;
+
 	_bool					m_bCreateCheck = false;
 	_bool					m_bDeleteCheck = false;
+	_bool					m_bCreateWeaponCheck = false;
+	_bool					m_bDeleteWeaponCheck = false;
+
 	_bool					m_bListCheck = false;
 	_bool					m_bCloneCount = false;
 	_bool					m_bFirstcheck = false;
 	_bool					m_bTrackPositionCheck = false;
+
 	_bool					m_bguizmo = false;
+	_bool					m_bWeaponguizmo = false;
+
 	_bool					m_bCreatCollider = false;
-	_bool					m_bColliderSize = false;
 	_bool					m_bDeleteCollider = false;
-	_bool					m_bCheckOnCollider = false;
-	_bool					m_bCheckOffCollider = false; 
+	_bool					m_bColliderSize = false;
 public:
 	static CWindow_AnimTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

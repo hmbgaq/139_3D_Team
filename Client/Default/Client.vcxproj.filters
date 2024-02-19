@@ -256,6 +256,24 @@
     <Filter Include="03.Event\Test\With_Player">
       <UniqueIdentifier>{09a4854d-ee74-455e-9951-e429d36f5abb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun">
+      <UniqueIdentifier>{6d5730ed-0d9f-4256-8614-5b8fbc8dc1ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester">
+      <UniqueIdentifier>{82d551f8-32ce-4b55-a1cc-6b74911c9d9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\FlameBelcher">
+      <UniqueIdentifier>{a29f9d7b-47d9-493f-abc5-337c00570c18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Revolver">
+      <UniqueIdentifier>{c1c8678b-e18b-425f-b2c8-6f98fb7f998a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Shotgun">
+      <UniqueIdentifier>{14125927-c377-47e2-9ad0-c17103e55886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Winchester">
+      <UniqueIdentifier>{d057b74f-8d65-4329-abbb-e66eface2c8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -476,6 +494,24 @@
     </ClInclude>
     <ClInclude Include="..\Public\TestEventWithPlayer.h">
       <Filter>03.Event\Test\With_Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_Revolver.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Revolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_Winchester.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Winchester</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_ELShotgun.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_FlameBelcher.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\FlameBelcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_ELWinchester.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_Shotgun.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Shotgun</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -879,6 +915,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\TestEventWithPlayer.cpp">
       <Filter>03.Event\Test\With_Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Revolver.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Revolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Winchester.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Winchester</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_ELShotgun.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_FlameBelcher.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\FlameBelcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_ELWinchester.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Shotgun.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Shotgun</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

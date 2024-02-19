@@ -6,16 +6,13 @@
 #pragma region GAMEOBJECT
 #include "Effect_Explosion.h"
 #include "Camera_Dynamic.h"
-#include "Weapon_Player.h"
 #include "Particle_Blue.h"
 #include "Particle_Red.h"
-#include "Body_Player.h"
 #include "BackGround.h"
 #include "Field.h"
 #include "ForkLift.h"
 #include "Terrain.h"
 #include "Monster.h"
-#include "Player.h"
 #include "Sky.h"
 #include "SkyDome.h"
 #include "Effect_Instance.h"
@@ -25,6 +22,17 @@
 #include "Screamer.h"
 #pragma endregion
 
+#pragma region PLAYER
+#include "Player.h"
+#include "Body_Player.h"
+#include "Weapon_Player.h"
+#include "Player_Weapon_Revolver.h"
+#include "Player_Weapon_ELShotgun.h"
+#include "Player_Weapon_ELWinchester.h"
+#include "Player_Weapon_FlameBelcher.h"
+#include "Player_Weapon_Shotgun.h"
+#include "Player_Weapon_Winchester.h"
+#pragma endregion
 #pragma region UI
 #include "UI_MonsterHpFrame.h"
 #include "UI_MonsterHp.h"
@@ -313,10 +321,18 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Field"), CField::Create(m_pDevice, m_pContext)));
 
 	/* GamePlay ¿øÇü°´Ã¼ */
-	//Player
+	//! Player
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"), CPlayer::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Player"), CBody_Player::Create(m_pDevice, m_pContext)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Player"), CWeapon_Player::Create(m_pDevice, m_pContext)));
+	//? PlayerWeapon
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Revolver"), CPlayer_Weapon_Revolver::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_Component_Model_Player_Weapon_ELShotgun"), CPlayer_Weapon_ELShotgun::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_Component_Model_Player_Weapon_ELWinchester"), CPlayer_Weapon_ELWinchester::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_Component_Model_Player_Weapon_FlameBelcher"), CPlayer_Weapon_FlameBelcher::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_Component_Model_Player_Weapon_Shotgun"), CPlayer_Weapon_Shotgun::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_Component_Model_Player_Weapon_Winchester"), CPlayer_Weapon_Winchester::Create(m_pDevice, m_pContext)));
+
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Player"), CWeapon_Player::Create(m_pDevice, m_pContext)));
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"), CTerrain::Create(m_pDevice, m_pContext)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster"), CMonster::Create(m_pDevice, m_pContext)));

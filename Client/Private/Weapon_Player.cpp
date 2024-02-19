@@ -72,10 +72,10 @@ HRESULT CWeapon_Player::Ready_Components()
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_ForkLift"),
-		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
+	///* For.Com_Model */
+	//if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_ForkLift"),
+	//	TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+	//	return E_FAIL;
 
 
 
@@ -91,31 +91,31 @@ HRESULT CWeapon_Player::Bind_ShaderResources()
 	return S_OK;
 }
 
-CWeapon_Player * CWeapon_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-{
-	CWeapon_Player*		pInstance = new CWeapon_Player(pDevice, pContext);
-
-	/* 원형객체를 초기화한다.  */
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		MSG_BOX("Failed to Created : CWeapon_Player");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-CGameObject * CWeapon_Player::Clone(void* pArg)
-{
-	CWeapon_Player*		pInstance = new CWeapon_Player(*this);
-
-	/* 원형객체를 초기화한다.  */
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		MSG_BOX("Failed to Cloned : CWeapon_Player");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
+// CWeapon_Player * CWeapon_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+// {
+// 	CWeapon_Player*		pInstance = new CWeapon_Player(pDevice, pContext);
+// 
+// 	/* 원형객체를 초기화한다.  */
+// 	if (FAILED(pInstance->Initialize_Prototype()))
+// 	{
+// 		MSG_BOX("Failed to Created : CWeapon_Player");
+// 		Safe_Release(pInstance);
+// 	}
+// 	return pInstance;
+// }
+// 
+ CGameObject * CWeapon_Player::Clone(void* pArg)
+ {
+ 	CWeapon_Player*		pInstance = new CWeapon_Player(*this);
+ 
+ 	/* 원형객체를 초기화한다.  */
+ 	if (FAILED(pInstance->Initialize(pArg)))
+ 	{
+ 		MSG_BOX("Failed to Cloned : CWeapon_Player");
+ 		Safe_Release(pInstance);
+ 	}
+ 	return pInstance;
+ }
 
 void CWeapon_Player::Free()
 {

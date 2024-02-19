@@ -8,6 +8,8 @@
 #include "Bone.h"
 #include "Bounding_Sphere.h"
 #include "Collider.h"
+#include "Weapon_Player.h"
+#include "Character.h"
 
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -73,6 +75,8 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 		{
 			Draw_AnimationList(fTimeDelta);
 
+			Draw_BoneList(fTimeDelta);
+
 			ImGui::EndTabItem();
 		}
 
@@ -82,12 +86,35 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 			ImGui::EndTabItem();
 		}
-
+		
 		ImGui::EndTabBar();
 	}
+
+	if (m_CreateList.size() > 0)
+	{
+		if (ImGui::BeginTabBar("Weapon", tab_bar_flags))
+		{
+			if (ImGui::BeginTabItem("Event Editer"))
+			{
+				Draw_Weapon(fTimeDelta);
+
+				ImGui::EndTabItem();
+			}
+
+			ImGui::EndTabBar();
+		}
+	}
+
+
+
 	BonePoint_Update();//콜라이더 렌더
 
 	__super::End();
+
+	
+
+
+	
 }
 
 void CWindow_AnimTool::Render()
@@ -152,15 +179,14 @@ void CWindow_AnimTool::Create_Object(const wstring& strLayerTag, const wstring& 
 	m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, strPrototypeTag);
 }
 
-void CWindow_AnimTool::Draw_Player()
+void CWindow_AnimTool::Create_Weapon(CCharacter* ParentObject, string strBonename, const wstring& strPrototypeTag)
 {
-	
+	CWeapon_Player::WEAPON_DESC weaponDesc = {};
 
+	ParentObject->Add_Weapon(strPrototypeTag, strBonename, weaponDesc, TEXT("Weapon_L"));
 }
 
-void CWindow_AnimTool::Draw_Monster()
-{
-}
+
 
 void CWindow_AnimTool::Draw_KeyEventEditer()
 {
@@ -431,7 +457,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 				const bool is_selected = (BoneIndex == n);
 				if (ImGui::Selectable(m_pBones[n]->Get_Name(), is_selected))
 					BoneIndex = n;
-				
+				m_iSelectBoneIndex = BoneIndex;
 				//m_pBoneCollider.reserve(m_iBoneNum);
 
 				if (is_selected)
@@ -490,10 +516,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 						Temp.m[2][2] = m_iColliderSize;
 
 						m_pBoneCollider[iSelectColliderIndex]->Get_Bounding()->Set_matScale(Temp);
-						//((CBounding_Sphere*)m_pBoneCollider[iSelectColliderIndex])->Set_matScale(Temp);
-						//m_pBounding = ((CBounding_Sphere*)m_pBoneCollider[m_iSelectColliderIndex]);
 						
-						//m_bColliderSize = false;
 					}
 					if (m_bDeleteCollider)
 					{
@@ -512,10 +535,10 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 				{
 					m_pBoneCollider[n]->Set_isCollision(false);
 				}
-				//CBone* pBone = m_vBoneColliderIndex[n];
+
 				_float4x4 Temp = m_vBoneColliderIndex[n]->Get_CombinedTransformationMatrix();
 				_float4x4 Desc =Temp * m_PickingObject->Get_Transform()->Get_WorldMatrix();
-				////_float4x4 Result = Temp * Desc;
+
 				m_pBoneCollider[n]->Update(Temp);
 				
 			}
@@ -529,12 +552,10 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 		if (m_fCurrentTrackPosition >= m_iColliderOnTrackPosition && m_fCurrentTrackPosition < m_iColliderOffTrackPosition)
 		{
 			m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(true);
-			//m_bCheckOnCollider = true;
 		}
 		else
 		{
 			m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(false);
-			//m_bCheckOnCollider = false;
 		}
 	}
 	
@@ -562,6 +583,125 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 	if (ImGui::InputFloat("ColliderOn", &m_iColliderOnTrackPosition, 0.01f, 1.f));
 	ImGui::SeparatorText("TrackPositionOff");
 	if (ImGui::InputFloat("ColliderOff", &m_iColliderOffTrackPosition, 0.01f, 1.f));
+
+}
+
+void CWindow_AnimTool::Draw_Weapon(_float fTimeDelta)
+{
+	ImGui::SeparatorText("WeaponList");
+	if (ImGui::TreeNode("Weapon"))
+	{
+		string items[] = { "Layer_Player", "Layer_Monster","Layer_Effect" };
+
+		static int Object_idx = 0; // Here we store our selection data as an index.
+		static int Layer_idx = 0; // Here we store our selection data as an index.
+		int ObjectTagSize = (int)m_vObjectTag.size();
+
+		if (ImGui::BeginListBox("ObjectList"))
+		{
+			for (int n = 0; n < ObjectTagSize; n++)
+			{
+				const bool is_selected = (Object_idx == n);
+				if (ImGui::Selectable(m_vObjectTag[n].c_str(), is_selected))
+					Object_idx = n;
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+
+			}
+			ImGui::EndListBox();
+		}
+
+		ImGui::Spacing();
+		ImGui::SeparatorText("LayerList");
+		ImGui::NewLine();
+		if (ImGui::BeginListBox("LayerList"))
+		{
+			for (int n = 0; n < 3; n++)
+			{
+				const bool is_selected = (Layer_idx == n);
+				if (ImGui::Selectable(items[n].c_str(), is_selected))
+					Layer_idx = n;
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+					if (m_bCreateWeaponCheck)
+						if (m_pGameInstance->Mouse_Down(DIM_LB))
+						{
+							CCharacter* pickingObject = dynamic_cast<CCharacter*>(m_PickingObject);
+							Create_Weapon(pickingObject,m_pBones[m_iSelectBoneIndex]->Get_Name(), ConvertCtoWC(m_vObjectTag[Object_idx].c_str()));
+							//Create_Object_On_Map(ConvertCtoWC(items[Layer_idx].c_str()), ConvertCtoWC(m_vObjectTag[Object_idx].c_str()));
+							m_bCloneCount = true;
+							m_bListCheck = true;
+							m_bCreateWeaponCheck = false;
+
+						}
+
+				}
+
+			}
+
+			ImGui::EndListBox();
+		}
+
+		ImGui::Spacing();
+		ImGui::Checkbox("Create", &m_bCreateWeaponCheck);
+		ImGui::SameLine();
+		ImGui::Checkbox("Delete", &m_bDeleteWeaponCheck);
+
+		ImGui::SeparatorText("CreateWeaponList");
+		ImGui::NewLine();
+		static int CreateIndex = 0; // Here we store our selection data as an index.
+
+		if (m_bListCheck)
+		{
+			m_iCreateWeaponSize = (_int)m_CreateWeaponList.size();
+			if (ImGui::BeginListBox("CreateList"))
+			{
+
+				for (int n = 0; n < m_iCreateWeaponSize; n++)
+				{
+					string str = "Weapon";
+					string str2 = to_string(n);
+
+					const bool is_selected = (CreateIndex == n);
+					if (ImGui::Selectable((str + "." + str2).c_str(), is_selected))
+						CreateIndex = n;
+
+					// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+					if (is_selected)
+					{
+						m_PickingWeapon = m_CreateWeaponList[CreateIndex];
+						ImGui::SetItemDefaultFocus();
+						if (m_bDeleteWeaponCheck)
+						{
+							_bool isdead = true;
+							m_CreateWeaponList[CreateIndex]->Set_Dead(isdead);
+							m_CreateWeaponList.erase(m_CreateWeaponList.begin() + CreateIndex);
+							m_bDeleteWeaponCheck = false;
+						}
+
+					}
+				}
+				ImGui::EndListBox();
+			}
+
+		}
+		ImGui::Checkbox(u8"기즈모on/off", &m_bWeaponguizmo);
+		if (m_bWeaponguizmo)
+		{
+			if (nullptr == m_PickingWeapon)
+				return;
+			/*	ImGuizmo_Initialize();*/
+			Set_GuizmoCamProj();
+			Set_GuizmoCamView();
+			Set_Guizmo(m_PickingWeapon);
+		}
+		ImGui::TreePop();
+	}
 
 }
 
