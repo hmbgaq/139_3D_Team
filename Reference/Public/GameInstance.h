@@ -100,8 +100,11 @@ public: /* For.PipeLine */
 	//!			레이캐스트
 	RAY			Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
 	RAY			Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY, _matrix matWorld);
+
+#ifdef _DEBUG
 	_bool		Picking_Mesh(RAY ray, _float3 * out, vector<class CMesh*> Meshes);
 	_bool		Picking_Vertex(RAY ray, _float3 * out, _uint triNum, VTXMESH * pVertices, _uint * pIndices);
+#endif // _DEBUG
 
 public: /* For.Font_Manager */
 	HRESULT		Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);

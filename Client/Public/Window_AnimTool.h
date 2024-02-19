@@ -9,6 +9,7 @@ class CCollider;
 class CBounding;
 class CBone;
 class CBody;
+class CCharacter;
 END
 
 BEGIN(Client)
