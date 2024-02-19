@@ -1027,9 +1027,7 @@ HRESULT CWindow_UITool::Save_Function(string strPath, string strFileName)
 
 	_ushort iIndex = 0;
 
-	char filePath[MAX_PATH] = "Not Added";
-
-	memcpy(&filePath, ConverWStringtoC(ConvertToWideString(strFileName)), sizeof(string));
+	strPath = strPath + "\\" + strFileName;
 
 	json Out_Json;
 
@@ -1041,7 +1039,7 @@ HRESULT CWindow_UITool::Save_Function(string strPath, string strFileName)
 		Out_Json.emplace(to_string(iIndex++), Out_Object);
 	}
 
-	CJson_Utility::Save_Json(filePath, Out_Json);
+	CJson_Utility::Save_Json(ConverWStringtoC(ConvertToWideString(strPath)), Out_Json);
 
 	return S_OK;
 }
@@ -1050,11 +1048,7 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 {
 	json json_in;
 
-	char filePath[MAX_PATH] = "Not Added";
-	
 	strPath = strPath + "\\" + strFileName;
-
-	//memcpy(&filePath, ConverWStringtoC(ConvertToWideString(strPath)), sizeof(string));
 
 	CJson_Utility::Load_Json(ConverWStringtoC(ConvertToWideString(strPath)), json_in);
 
