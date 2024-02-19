@@ -3,25 +3,42 @@
 matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 texture2D	g_DiffuseTexture;
-texture2D	g_NormalTexture;
-
 texture2D	g_MaskTexture;
+
+texture2D	g_NormalTexture;
 texture2D   g_SpecularTexture;
+
 texture2D	g_DissolveTexture;
 texture2D	g_DissolveDiffTexture;
 
 texture2D	g_DepthTexture;
 
+
 vector      g_vCamPosition;
 vector      g_vCamDirection;
+
 vector      g_vPlayerPosition;
 float		g_fFar;
 float		g_fDissolveRatio;
 
-
 float2      g_UVOffset;
 float2      g_UVScale;
 
+
+cbuffer FX_Particle
+{
+    float fGameTime = false;
+    float3 vEmitPosition;
+    float3 vEmitDirection;
+    float fTimeStep;
+    
+    float3 vRandomMul = float3(1.f, 1.f, 1.f);
+    float fSpreadSpeed = 1.f;
+    float fEmitTerm = 0.005f;
+    float fParticleLifeTime = 1.f;
+    float fSequenceTerm = 0.0f;
+    int iIsLoop = 0;
+};
 
 struct VS_IN
 {

@@ -48,7 +48,8 @@ public:
 		_float		fAccPosition = { 0.1f };
 
 		/* For.Gravity */
-		_float		fGravityAcc;
+		_bool		bUseGravity = { FALSE };
+		_float		fGravityAcc = { -9.8f };
 		_float3		vCurrentGravity;
 
 		/* For.Rotation */
@@ -149,6 +150,8 @@ public:
 		void			Set_AccPosition(_float fAccPosition) { m_tBufferDesc.fAccPosition = fAccPosition; }
 
 		void			Set_Color(_float fRed, _float fGreen, _float fBlue);
+
+		void			Set_Gravity(_bool bUseGravity) { m_tBufferDesc.bUseGravity = bUseGravity; }
 
 private:
 	PARTICLE_POINT_DESC			m_tBufferDesc;

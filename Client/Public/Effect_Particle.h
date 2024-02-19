@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "AlphaObject.h"
+#include "Effect.h"
 
 BEGIN(Engine)
 class CShader;
@@ -11,18 +11,17 @@ END
 
 BEGIN(Client)
 
-class CParticle_Custom final : public CAlphaObject
+class CEffect_Particle final : public CEffect
 {
 public:
 	enum TYPE { SINGLE, SPRITE, TEXTURE_TYPE_END };
-	enum TEXTURE { TYPE_DIFFUSE, TYPE_MASK, TYPE_NOISE, TYPE_END };
 
-	typedef struct tagParticleCustomDesc : public CGameObject::GAMEOBJECT_DESC
+	typedef struct tagParticleDesc : public CGameObject::GAMEOBJECT_DESC
 	{
 		TYPE		eType = { SINGLE };
 
-		wstring		strTextureTag[TYPE_END];
-		_int		iTextureIndex[TYPE_END] = { 0 };
+		wstring		strTextureTag[TEXTURE_END];
+		_int		iTextureIndex[TEXTURE_END] = { 0 };
 
 		wstring		strShaderTag = {TEXT("")};
 		_uint		iShaderPassIndex = { 0 };
@@ -34,7 +33,8 @@ public:
 
 		_float		fRotateUvDegree;
 
-	}PARTICLE_CUSTOM_DESC;
+	}EFFECT_PARTICLE_DESC;
+	
 
 	typedef struct tagSpriteUV
 	{
@@ -59,9 +59,9 @@ public:
 	}SPRITEUV_DESC;
 
 private:
-	CParticle_Custom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CParticle_Custom(const CParticle_Custom& rhs);
-	virtual ~CParticle_Custom() = default;
+	CEffect_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEffect_Particle(const CEffect_Particle& rhs);
+	virtual ~CEffect_Particle() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype()				override;
@@ -77,7 +77,7 @@ public:
 
 	/* For.Desc */
 public:
-	PARTICLE_CUSTOM_DESC*	Get_Desc() { return &m_tParticleDesc; }
+	EFFECT_PARTICLE_DESC*	Get_Desc() { return &m_tParticleDesc; }
 	SPRITEUV_DESC*			Get_Sprite_Desc() { return &m_tSpriteDesc; }
 
 	void		Set_Active(_bool bActive) { m_bActive = bActive; }
@@ -91,7 +91,7 @@ public:
 
 
 private:
-	PARTICLE_CUSTOM_DESC		m_tParticleDesc = {};
+	EFFECT_PARTICLE_DESC		m_tParticleDesc = {};
 	SPRITEUV_DESC				m_tSpriteDesc = {};
 
 private:
@@ -100,17 +100,17 @@ private:
 
 private:
 	CShader*					m_pShaderCom = { nullptr };
-	CTexture*					m_pTextureCom[TYPE_END] = { nullptr };
+	CTexture*					m_pTextureCom[TEXTURE_END] = { nullptr };
 	CVIBuffer_Particle_Point*	m_pVIBufferCom = { nullptr };
 
 private:
 	HRESULT Ready_Components();
-	HRESULT Bind_ShaderResources();
+	virtual HRESULT Bind_ShaderResources() override;
 
 
 public:
 	/* 원형객체를 생성한다. */
-	static CParticle_Custom* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEffect_Particle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;

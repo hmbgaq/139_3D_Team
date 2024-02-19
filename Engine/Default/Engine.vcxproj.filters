@@ -247,6 +247,12 @@
     <Filter Include="01.Utility\97.PhysX">
       <UniqueIdentifier>{619f889e-6947-4fcb-98d7-0c03f0861054}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\96.Utility\Easing">
+      <UniqueIdentifier>{c18c355c-5d19-4875-9409-845c9c0e4392}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Trail">
+      <UniqueIdentifier>{e480044b-d834-4279-9897-b45f19103cbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -507,6 +513,9 @@
     <ClInclude Include="..\Public\Event.h">
       <Filter>01.Utility\09.Event</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Easing_Utillity.h">
+      <Filter>01.Utility\96.Utility\Easing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -712,6 +721,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Event.cpp">
       <Filter>01.Utility\09.Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Easing_Utillity.cpp">
+      <Filter>01.Utility\96.Utility\Easing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

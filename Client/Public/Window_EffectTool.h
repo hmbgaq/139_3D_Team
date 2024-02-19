@@ -25,6 +25,7 @@ public:
 public:
 	void	Update_PlayBarArea_Particle();
 	void	Update_ParticleTab();
+	void	Update_TextureTab();
 	void	Update_MeshTab();
 
 
@@ -42,6 +43,11 @@ public:
 
 	void	Update_CurParameters(wstring strName = TEXT(""));
 
+
+/* For.Texture_Update */
+public:
+	void Update_Demo_Texture();
+	void Update_Texture_Edit();
 
 /* For.Effect_Instance_Update */
 public:
@@ -67,6 +73,9 @@ public:
 	HRESULT Create_New_Particle();
 	HRESULT Ready_Layer_Particle(const wstring& strLayerTag);
 
+	HRESULT Create_New_Texture(CEffect_Texture::TYPE eType);
+	HRESULT Ready_Layer_Texture(const wstring& strLayerTag, CEffect_Texture::TYPE eType);
+
 	HRESULT Create_New_EffectInstance(wstring strModelTag);
 	HRESULT Ready_Layer_EffectInstance(const wstring& strLayerTag, wstring strModelTag);
 
@@ -78,13 +87,13 @@ private:
 
 private:
 #pragma region Particle_List
-	map<const wstring, class CParticle_Custom*>	m_pParticles;
+	map<const wstring, class CEffect_Particle*>	m_pParticles;
 
 	char**					m_szParticleNames		= { nullptr };
 
 	char*					m_cCurParticleName		= { nullptr };	
 	_int					m_iCurParticleIndex		= { 0 };
-	class CParticle_Custom*	m_pCurParticle			= { nullptr };
+	class CEffect_Particle*	m_pCurParticle			= { nullptr };
 #pragma endregion
 
 #pragma region Particle_Option
@@ -115,11 +124,45 @@ private:
 	_float	m_fParticleAcceleration = { 1.f };
 	_float	m_fParticleAccPosition = { 0.1f };
 
-	_float	m_fColor_Particle[3] = { 1.f, 1.f, 1.f };
+	_float	m_fColor_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 
 	_float	m_vWorldPosition[4] = { 0.f, 0.f, 0.f, 1.f };
 #pragma endregion
 
+
+#pragma region Texture_List
+	map<const wstring, class CEffect_Texture*>	m_pEffectTextures;
+
+	char** m_szEffectTextureNames = { nullptr };
+
+	char* m_cCurEffectTextureName = { nullptr };
+	_int					m_iCurEffectTextureIndex = { 0 };
+	class CEffect_Texture* m_pCurEffectTexture = { nullptr };
+#pragma endregion
+
+#pragma region Texture_Option
+	_int	m_iTextureEffectIndex = { 0 };
+	_int	m_iMaskTexIndex = { 0 };
+	_int	m_iNoiseTexIndex = { 0 };
+
+	_int	m_iMaxVerHor[2] = { 7, 7 };
+	_float	m_fIntervalTime = { 0.05f };
+
+
+	_float m_fNoiseIntervalTime = { 1.f };
+
+	_float	m_vScrollSpeeds[3]	= { 0.f, 1.f, 1.f };
+	_float	m_vScales[3]		= { 0.f, 1.f, 1.f };
+
+	_float	m_vDistortion1[2]	= { 0.1f, 0.2f };
+	_float	m_vDistortion2[2]	= { 0.1f, 0.3f };
+	_float	m_vDistortion3[2]	= { 0.1f, 0.1f };
+
+	_float	m_fDistortionScale	= { 1.f };
+	_float	m_fDistortionBias	= { 1.f };
+
+
+#pragma endregion
 
 #pragma region EffectInstance_List
 	map<const wstring, class CEffect_Instance*>	m_pEffectInstances;

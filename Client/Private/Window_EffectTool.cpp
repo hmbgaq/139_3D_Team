@@ -5,8 +5,9 @@
 
 #include "GameInstance.h"
 
+#include "Effect_Particle.h"
+#include "Effect_Texture.h"
 #include "Effect_Instance.h"
-#include "Particle_Custom.h"
 
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -66,6 +67,10 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	__super::Begin();
 
 	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
+	POINT	pt;
+	GetCursorPos(&pt);
+	ScreenToClient(g_hWnd, &pt);
+	ImGui::Text("Mouse Pos : %d, %d", pt.x, pt.y);
 	Update_SaveLoad_Particle();
 
 	if (ImGui::BeginTabBar("Tab_Effect", ImGuiTabBarFlags_None))
@@ -77,18 +82,18 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 		}
 
 
-		if (ImGui::BeginTabItem(" Mesh "))
+		if (ImGui::BeginTabItem(" Texture "))
 		{
-			ImGui::Text(" Mesh Effect ");
-			Update_MeshTab();
+			//ImGui::Text(" Texture Effect ");
+			Update_TextureTab();
 			ImGui::EndTabItem();
 		}
 
 
-		if (ImGui::BeginTabItem(" Sprite "))
+		if (ImGui::BeginTabItem(" Mesh "))
 		{
-			ImGui::Text(" Sprite Effect ");
-
+			//ImGui::Text(" Mesh Effect ");
+			Update_MeshTab();
 			ImGui::EndTabItem();
 		}
 
@@ -192,6 +197,15 @@ void CWindow_EffectTool::Update_ParticleTab()
 		ImGui::Spacing();
 
 	}
+}
+
+void CWindow_EffectTool::Update_TextureTab()
+{
+	Update_Demo_Texture();
+
+	ImGui::Separator();
+	Update_Texture_Edit();
+
 }
 
 void CWindow_EffectTool::Update_MeshTab()
@@ -492,7 +506,7 @@ void CWindow_EffectTool::Update_AppearArea_Particle()
 				if (4 <= m_iTextureIndex)
 					m_iTextureIndex = 4;
 
-				m_pCurParticle->Set_TextureIndex(CParticle_Custom::TEXTURE::TYPE_DIFFUSE, m_iTextureIndex);
+				m_pCurParticle->Set_TextureIndex(CEffect::TEXTURE_DIFFUSE, m_iTextureIndex);
 			}
 				
 		}
@@ -541,7 +555,8 @@ void CWindow_EffectTool::Update_AppearArea_Particle()
 	ImGui::ColorEdit3("Particle Color 1", m_fColor_Particle, ImGuiColorEditFlags_None);
 	if (nullptr != m_pCurParticle)
 	{
-		m_pCurParticle->Get_VIBufferCom()->Set_Color(m_fColor_Particle[0], m_fColor_Particle[1], m_fColor_Particle[2]);
+		//m_pCurParticle->Get_VIBufferCom()->Set_Color(m_fColor_Particle[0], m_fColor_Particle[1], m_fColor_Particle[2]);
+		m_pCurParticle->Set_Color_Offset(m_fColor_Particle[0], m_fColor_Particle[1], m_fColor_Particle[2], m_fColor_Particle[3]);
 	}
 
 }
@@ -625,6 +640,23 @@ void CWindow_EffectTool::Update_ActionArea_Particle()
 		if (ImGui::DragFloat("ACC_Particle", &m_fParticleAcceleration, 1.f, 0.f, 100.f))
 			m_pCurParticle->Get_VIBufferCom()->Set_Acceleration(m_fParticleAcceleration);
 	}
+
+	/* 중력 사용 여부 */
+	ImGui::SeparatorText("");
+	/* 가속도 */
+	if (nullptr != m_pCurParticle)
+	{
+		if (ImGui::Button("Gravity"))
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Gravity(TRUE);
+		}
+
+		if (ImGui::Button("NoGravity"))
+		{
+			m_pCurParticle->Get_VIBufferCom()->Set_Gravity(FALSE);
+		}
+	}
+
 }
 
 void CWindow_EffectTool::Update_WorldPositionArea_Particle()
@@ -681,18 +713,178 @@ void CWindow_EffectTool::Update_CurParameters(wstring strName)
 	}
 }
 
+void CWindow_EffectTool::Update_Demo_Texture()
+{
+	if (ImGui::Button("Create Demo Texture"))
+	{
+		Create_New_Texture(CEffect_Texture::TYPE::SINGLE);
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Create Demo Sprite"))
+	{
+		Create_New_Texture(CEffect_Texture::TYPE::SPRITE);
+	}
+}
+
+void CWindow_EffectTool::Update_Texture_Edit()
+{
+	if (nullptr != m_pCurEffectTexture)
+	{
+		CEffect_Texture::TYPE eType = m_pCurEffectTexture->Get_Desc()->eType;
+
+		_int iMaxDiffuseCount = 0;
+		if (CEffect_Texture::TYPE::SINGLE == eType)
+			iMaxDiffuseCount = 3;
+		else if (CEffect_Texture::TYPE::SPRITE == eType)
+			iMaxDiffuseCount = 12;
+		else
+			iMaxDiffuseCount = 0;
+
+
+		if (ImGui::InputInt("Textures_D", &m_iTextureEffectIndex), 1)
+		{
+			if (iMaxDiffuseCount < m_iTextureEffectIndex)
+				m_iTextureEffectIndex = iMaxDiffuseCount;
+
+			if (0 > m_iTextureEffectIndex)
+				m_iTextureEffectIndex = 0;
+
+			m_pCurEffectTexture->Set_TextureIndex(CEffect::TEXTURE_DIFFUSE, m_iTextureEffectIndex);
+
+			_uint iX, iY;
+			m_pCurEffectTexture->Get_TextureCom(CEffect::TEXTURE_DIFFUSE)->Get_TextureSize(&iX, &iY, m_iTextureEffectIndex);
+
+			m_pCurEffectTexture->Set_SpriteSize(iX, iY);
+
+			_float fSizeX, fSizeY;
+			fSizeX = (_float)iX / m_iMaxVerHor[0];
+			fSizeY = (_float)iY / m_iMaxVerHor[1];
+
+			m_pCurEffectTexture->Set_AnimationSize(fSizeX, fSizeY);
+
+			//m_pCurEffectTexture->Set_SpriteSize(1024.f, 1024.f);
+			//m_pCurEffectTexture->Set_MaxVerHor(4, 4);
+			//m_pCurEffectTexture->Set_AnimationSize(256.f, 256.f);
+		}
+
+		if (CEffect_Texture::TYPE::SINGLE == eType)
+		{
+			if (ImGui::InputInt("Textures_M", &m_iMaskTexIndex), 1)
+			{
+				if (17 < m_iMaskTexIndex)
+					m_iMaskTexIndex = 17;
+
+				if (0 > m_iMaskTexIndex)
+					m_iMaskTexIndex = 0;
+
+				m_pCurEffectTexture->Set_TextureIndex(CEffect::TEXTURE_MASK, m_iMaskTexIndex);
+			}
+
+			if (ImGui::InputInt("Textures_Noise", &m_iNoiseTexIndex), 1)
+			{
+				if (5 < m_iNoiseTexIndex)
+					m_iNoiseTexIndex = 5;
+
+				if (0 > m_iNoiseTexIndex)
+					m_iNoiseTexIndex = 0;
+
+				m_pCurEffectTexture->Set_TextureIndex(CEffect::TEXTURE_NOISE, m_iNoiseTexIndex);
+			}
+
+
+			if (ImGui::DragFloat("Noise_TimeInterval", &m_fNoiseIntervalTime, 1.f, 0.f))
+			{
+				m_pCurEffectTexture->Set_NoiseTimeInterval(m_fNoiseIntervalTime);
+			}
+
+			if (ImGui::DragFloat3("ScrollSpeeds", m_vScrollSpeeds, 1.f, 0.f))
+			{
+				m_pCurEffectTexture->Set_ScrollSpeeds(m_vScrollSpeeds[0], m_vScrollSpeeds[1], m_vScrollSpeeds[2]);
+			}
+
+			if (ImGui::DragFloat3("Noise_Scales", m_vScales, 1.f, 0.f))
+			{
+				m_pCurEffectTexture->Set_Scales(m_vScales[0], m_vScales[1], m_vScales[2]);
+			}
+
+			if (ImGui::DragFloat2("Distortion1", m_vDistortion1, 1.f, 0.f))
+			{
+				m_pCurEffectTexture->Set_Distortion1(m_vDistortion1[0], m_vDistortion1[1]);
+			}
+
+			if (ImGui::DragFloat2("Distortion2", m_vDistortion2, 1.f, 0.f))
+			{
+				m_pCurEffectTexture->Set_Distortion2(m_vDistortion2[0], m_vDistortion2[1]);
+			}
+
+			if (ImGui::DragFloat2("Distortion3", m_vDistortion3, 1.f, 0.f))
+			{
+				m_pCurEffectTexture->Set_Distortion3(m_vDistortion3[0], m_vDistortion3[1]);
+			}
+
+			if (ImGui::DragFloat("DistortionScale__", &m_fDistortionScale, 1.f, 0.f))
+			{
+				m_pCurEffectTexture->Set_DistortionScale(m_fDistortionScale);
+			}
+
+			if (ImGui::DragFloat("DistortionBias", &m_fDistortionBias, 1.f, 0.f))
+			{
+				m_pCurEffectTexture->Set_DistortionBias(m_fDistortionBias);
+			}
+
+		}
+
+
+
+		ImGui::SeparatorText("");
+		if (ImGui::DragFloat("IntervalTime", &m_fIntervalTime, 1, 1))
+		{
+			m_pCurEffectTexture->Set_IntervalTime(m_fIntervalTime);
+		}
+
+		//if (ImGui::DragInt2("MaxVerHor", m_iMaxVerHor, 1, 1))
+		//{
+		//	m_pCurEffectTexture->Set_MaxVerHor(m_iMaxVerHor[0], m_iMaxVerHor[1]);
+		//}
+		if (ImGui::InputInt("MaxVerHor", &m_iMaxVerHor[0], 1))
+		{
+			m_pCurEffectTexture->Set_MaxVerHor(m_iMaxVerHor[0], m_iMaxVerHor[0]);
+		}
+
+
+		if (ImGui::Button("Play_Tex"))
+		{
+			m_pCurEffectTexture->Set_Play(TRUE);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Stop_Tex"))
+		{
+			m_pCurEffectTexture->Set_Play(FALSE);
+		}
+
+		ImGui::Text("Current Index : %d, %d", m_pCurEffectTexture->Get_Sprite_Desc()->iCurrentHor, m_pCurEffectTexture->Get_Sprite_Desc()->iCurrentVer);
+
+
+	}
+
+
+}
+
 void CWindow_EffectTool::Update_Demo_Effect_Instance()
 {
 	if (ImGui::Button("Create Demo Mesh"))
 	{
 		// Prototype_Component_Model_Mesh_Fire_Test
 		//Create_New_EffectInstance(TEXT("Prototype_Component_Model_Xray_ManHeavy"));
-		Create_New_EffectInstance(TEXT("Prototype_Component_Model_Mesh_Fire_Test"));
+		// Prototype_Component_Model_ShieldDome
+		// Prototype_Component_Model_Mesh_Fire_Test
+		Create_New_EffectInstance(TEXT("Prototype_Component_Model_ShieldDome"));
 	}
 
 
 
-	if (ImGui::DragInt("ShaderPassIndex", &m_iShaderPassIndex, 1, 0, 7))
+	if (ImGui::InputInt("ShaderPassIndex", &m_iShaderPassIndex, 1))
 	{
 		if (nullptr != m_pCurEffectInstance)
 		{
@@ -833,19 +1025,19 @@ HRESULT CWindow_EffectTool::Create_New_Particle()
 
 HRESULT CWindow_EffectTool::Ready_Layer_Particle(const wstring& strLayerTag)
 {
-	CParticle_Custom::PARTICLE_CUSTOM_DESC	tDesc = {};
+	CEffect_Particle::EFFECT_PARTICLE_DESC	tDesc = {};
 	tDesc.fSpeedPerSec = { 5.f };
 	tDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
-	tDesc.eType = CParticle_Custom::SINGLE;
-	tDesc.strTextureTag[CParticle_Custom::TYPE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
-	tDesc.iTextureIndex[CParticle_Custom::TYPE_DIFFUSE] = { 0 };
+	tDesc.eType = CEffect_Particle::SINGLE;
+	tDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
+	tDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
 
-	tDesc.strTextureTag[CParticle_Custom::TYPE_MASK] = TEXT("");
-	tDesc.iTextureIndex[CParticle_Custom::TYPE_MASK] = { 0 };
+	tDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("");
+	tDesc.iTextureIndex[CEffect_Particle::TEXTURE_MASK] = { 0 };
 
-	tDesc.strTextureTag[CParticle_Custom::TYPE_NOISE] = TEXT("");
-	tDesc.iTextureIndex[CParticle_Custom::TYPE_NOISE] = { 0 };
+	tDesc.strTextureTag[CEffect_Particle::TEXTURE_NOISE] = TEXT("");
+	tDesc.iTextureIndex[CEffect_Particle::TEXTURE_NOISE] = { 0 };
 
 	tDesc.strShaderTag = TEXT("Prototype_Component_Shader_Particle_Point");
 	tDesc.iShaderPassIndex = { 0 };
@@ -856,7 +1048,7 @@ HRESULT CWindow_EffectTool::Ready_Layer_Particle(const wstring& strLayerTag)
 
 	tDesc.fRotateUvDegree = { 0.f };
 
-	CParticle_Custom* pParticle = dynamic_cast<CParticle_Custom*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Particle_Custom"), &tDesc));
+	CEffect_Particle* pParticle = dynamic_cast<CEffect_Particle*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Effect_Particle"), &tDesc));
 
 	wstring strName = Make_NameWithPin(TEXT("Particle"));
 	m_pParticles.emplace(strName, pParticle);
@@ -864,6 +1056,110 @@ HRESULT CWindow_EffectTool::Ready_Layer_Particle(const wstring& strLayerTag)
 	m_pCurParticle = pParticle;
 
 	Update_CurParameters(strName);
+
+	return S_OK;
+}
+
+HRESULT CWindow_EffectTool::Create_New_Texture(CEffect_Texture::TYPE eType)
+{
+	if (FAILED(Ready_Layer_Texture(TEXT("Layer_Texture_Effect"), eType)))
+		return E_FAIL;
+
+	m_iCurEffectTextureIndex = m_pEffectTextures.size();
+
+	/* 문자열 초기화 */
+	if (nullptr != m_szEffectTextureNames)
+	{
+		for (_int i = 0; i < m_iCurEffectTextureIndex; ++i)
+		{
+			m_szEffectTextureNames[i] = nullptr;
+		}
+		m_szEffectTextureNames = nullptr;
+	}
+
+	m_szEffectTextureNames = new char* [m_iCurEffectTextureIndex];
+
+	_int iCount = 0;
+	for (auto& Pair : m_pEffectTextures)
+	{
+		const string utf8Str = m_pGameInstance->Wstring_To_UTF8(Pair.first);
+		m_szEffectTextureNames[iCount] = new char[utf8Str.length() + 1];
+		strcpy(m_szEffectTextureNames[iCount], utf8Str.c_str());
+
+		iCount++;
+	}
+
+	m_iCurEffectTextureIndex -= 1;
+
+	return S_OK;
+
+	return S_OK;
+}
+
+HRESULT CWindow_EffectTool::Ready_Layer_Texture(const wstring& strLayerTag, CEffect_Texture::TYPE eType)
+{
+
+	CEffect_Texture::EFFECT_TEXTURE_DESC tDesc = {};
+
+	tDesc.eType = eType;
+
+	//tDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
+	//tDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
+
+	tDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
+	tDesc.iTextureIndex[CEffect_Particle::TEXTURE_MASK] = { 0 };
+
+	tDesc.strTextureTag[CEffect_Particle::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
+	tDesc.iTextureIndex[CEffect_Particle::TEXTURE_NOISE] = { 0 };
+
+	tDesc.strShaderTag = TEXT("Prototype_Component_Shader_EffectTex");
+
+	if (CEffect_Texture::TYPE::SINGLE)
+	{
+		tDesc.iShaderPassIndex = { 1 };
+	}
+	else
+	{
+		tDesc.iShaderPassIndex = { 2 };
+	}
+
+	tDesc.iRenderGroup = { 7 };
+
+	CEffect_Texture* pEffect = dynamic_cast<CEffect_Texture*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Effect_Texture"), &tDesc));
+
+	wstring strName = Make_NameWithPin(TEXT("Texture"));
+	m_pEffectTextures.emplace(strName, pEffect);
+
+	m_pCurEffectTexture = pEffect;
+
+	Update_CurParameters(strName);
+
+
+	pEffect->Get_Noise_Desc()->fIntervalTime =  m_fNoiseIntervalTime;
+
+	pEffect->Get_Noise_Desc()->vScrollSpeeds.x = m_vScrollSpeeds[0];
+	pEffect->Get_Noise_Desc()->vScrollSpeeds.y = m_vScrollSpeeds[1];
+	pEffect->Get_Noise_Desc()->vScrollSpeeds.z = m_vScrollSpeeds[2];
+
+
+	pEffect->Get_Noise_Desc()->fDistortionBias = m_fDistortionBias;
+	pEffect->Get_Noise_Desc()->fDistortionScale = m_fDistortionScale;
+
+	pEffect->Get_Noise_Desc()->vDistortion1.x = m_vDistortion1[0];
+	pEffect->Get_Noise_Desc()->vDistortion1.y = m_vDistortion1[1];
+
+	pEffect->Get_Noise_Desc()->vDistortion2.x = m_vDistortion2[0];
+	pEffect->Get_Noise_Desc()->vDistortion2.y = m_vDistortion2[1];
+
+	pEffect->Get_Noise_Desc()->vDistortion3.x = m_vDistortion3[0];
+	pEffect->Get_Noise_Desc()->vDistortion3.y = m_vDistortion3[1];
+
+	pEffect->Get_Noise_Desc()->vScales.x = m_vScales[0];
+	pEffect->Get_Noise_Desc()->vScales.x = m_vScales[1];
+	pEffect->Get_Noise_Desc()->vScales.x = m_vScales[2];
+
+
+
 
 	return S_OK;
 }
@@ -911,7 +1207,7 @@ HRESULT CWindow_EffectTool::Ready_Layer_EffectInstance(const wstring& strLayerTa
 	tDesc.eType = { CEffect_Instance::FLAT };
 
 	tDesc.strModelTag = strModelTag;
-	tDesc.iNumInstance = { 10 };
+	tDesc.iNumInstance = { 1 };
 
 	tDesc.strTextureTag[CEffect_Instance::TYPE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
 	tDesc.iTextureIndex[CEffect_Instance::TYPE_DIFFUSE] = { 0 };
@@ -1008,7 +1304,26 @@ void CWindow_EffectTool::Free()
 	if (nullptr != m_pCurParticle)
 		Safe_Release(m_pCurParticle);
 
+
+	for (auto& Pair : m_pEffectTextures)
+		Safe_Release(Pair.second);
+	m_pEffectTextures.clear();
+
+	if (nullptr != m_pCurEffectTexture)
+		Safe_Release(m_pCurEffectTexture);
+
+
+	for (auto& Pair : m_pEffectInstances)
+		Safe_Release(Pair.second);
+	m_pEffectInstances.clear();
+
+	if (nullptr != m_pCurEffectInstance)
+		Safe_Release(m_pCurEffectInstance);
+
+
 	m_cCurParticleName = nullptr;
+	m_cCurEffectTextureName = nullptr;
+	m_cCurEffectInstanceName = nullptr;
 
 	if (nullptr != m_szParticleNames)
 	{
@@ -1017,6 +1332,24 @@ void CWindow_EffectTool::Free()
 			m_szParticleNames[i] = nullptr;
 		}
 		m_szParticleNames = nullptr;
+	}
+
+	if (nullptr != m_szEffectTextureNames)
+	{
+		for (_int i = 0; i < m_iCurEffectTextureIndex; ++i)
+		{
+			m_szEffectTextureNames[i] = nullptr;
+		}
+		m_szEffectTextureNames = nullptr;
+	}
+
+	if (nullptr != m_szEffectInstanceNames)
+	{
+		for (_int i = 0; i < m_iCurEffectInstanceIndex; ++i)
+		{
+			m_szEffectInstanceNames[i] = nullptr;
+		}
+		m_szEffectInstanceNames = nullptr;
 	}
 
 	Safe_Release(m_pGameInstance);

@@ -12,6 +12,19 @@ vector			g_vCamDirection;
 float			g_fDegree;
 
 
+cbuffer FX_Variables
+{
+    float2	vUV_Offset		= float2(0.f, 0.f);
+    bool	bUV_Wave		= false;
+    float	fUV_WaveSpeed	= 1.f;
+    float2	vUV_TileCount	= float2(1.f, 1.f);
+    float2	vUV_TileIndex	= float2(0.f, 0.f);
+    float4	vColor_Offset	= float4(0.f, 0.f, 0.f, 0.f);
+    float4	vColor_Clip		= float4(0.f, 0.f, 0.f, 0.f);
+    float4	vColor_Mul		= float4(1.f, 1.f, 1.f, 1.f);
+};
+
+
 /* Custom Function */
 float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
 {
@@ -143,40 +156,14 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
-	Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
 
-	if (Out.vColor.a < 0.5f)
-		discard;
+    if (Out.vColor.a < 0.5f)
+        discard;
 
-	Out.vColor.rgb *= In.vColor.rgb;
+    Out.vColor.rgb *= In.vColor.rgb;
 
-	Out.vColor.a = In.vColor.a;
-
-	return Out;
-}
-
-
-PS_OUT PS_MAIN_SPRITE_ANIMATION(PS_IN In)
-{
-	PS_OUT Out = (PS_OUT)0;
-
-	float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
-
-	// Set Color
-	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, clippedTexCoord);
-
-	float2 vDepthTexcoord;
-	vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
-	vDepthTexcoord.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
-
-	float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, vDepthTexcoord);
-
-	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
-	// Alpha Test
-	if (Out.vDiffuse.a < 0.1f)
-	{
-		discard;
-	}
+    Out.vColor.a = In.vColor.a;
 
 	return Out;
 }
@@ -198,17 +185,5 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
-	pass Sprite_Animation //1
-	{
-		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-		SetDepthStencilState(DSS_DepthStencilEnable, 0);
-		SetRasterizerState(RS_Cull_None);
-
-		VertexShader = compile vs_5_0 VS_MAIN();
-		HullShader = NULL;
-		DomainShader = NULL;
-		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_SPRITE_ANIMATION();
-	}
 
 }

@@ -1,6 +1,6 @@
 #include "..\Public\VIBuffer_Particle_Point.h"
 
-
+#include "Easing_Utillity.h"
 
 CVIBuffer_Particle_Point::CVIBuffer_Particle_Point(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer_Instancing(pDevice, pContext)
@@ -252,11 +252,13 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 					vDir = XMVector3Normalize(XMLoadFloat4(&pVertices[i].vPosition) - XMLoadFloat4(&m_tBufferDesc.vCenterPosition));
 
 				// 가속도
-				_float fSpeed;
+				_float fSpeed = 0.f;
 				if (fTime < m_tBufferDesc.fAccPosition)
 					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fAcceleration;
 				else
-					fSpeed = m_pSpeeds[i];
+					fSpeed = (m_pSpeeds[i] - fSpeed) * m_fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y + m_pSpeeds[i];
+
+				
 
 				//if (m_tBufferDesc.bReverse)
 				//{
@@ -296,7 +298,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 					vDir = XMVector3Normalize(XMLoadFloat4(&pVertices[i].vPosition) - XMLoadFloat4(&m_tBufferDesc.vCenterPosition));
 
 				// 가속도
-				_float fSpeed;
+				_float fSpeed = 0.f;
 				if (fTime < m_tBufferDesc.fAccPosition)
 					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fAcceleration;
 				else
@@ -304,18 +306,33 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 
 
 				vDir = XMVectorSetW(vDir, 0.f);
-				XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + vDir * fSpeed * fTimeDelta);
+
+				if (m_tBufferDesc.bUseGravity)
+				{
+					_vector vWithGravityDir = vDir * fSpeed * fTimeDelta;
+
+					// 중력에 의한 변화 계산(안됨)
+					_vector vGravity = XMVectorSet(0.f, m_tBufferDesc.fGravityAcc * fTimeDelta, 0.f, 0.f);
+
+					// 새로운 위치 계산
+					XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + vWithGravityDir + vGravity);
+					//XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + vDir * fSpeed * fTimeDelta);
+				}
+				else
+				{
+					XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + vDir * fSpeed * fTimeDelta);
+				}
 
 			}
 
 			if (FALL == m_tBufferDesc.eType_Action)
 			{
 				// 가속도
-				_float fSpeed;
+				_float fSpeed = 0.f;
 				if (fTime < m_tBufferDesc.fAccPosition)
 					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fAcceleration;
 				else
-					fSpeed = m_pSpeeds[i];
+					fSpeed = (m_pSpeeds[i] - fSpeed) * m_fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y + m_pSpeeds[i];
 
 				pVertices[i].vPosition.y -= fSpeed * fTimeDelta;
 
@@ -326,11 +343,11 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 			if (RISE == m_tBufferDesc.eType_Action)
 			{
 				// 가속도
-				_float fSpeed;
+				_float fSpeed = 0.f;
 				if (fTime < m_tBufferDesc.fAccPosition)
 					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fAcceleration;
 				else
-					fSpeed = m_pSpeeds[i];
+					fSpeed = (m_pSpeeds[i] - fSpeed) * m_fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y + m_pSpeeds[i];
 
 				pVertices[i].vPosition.y += fSpeed * fTimeDelta;
 

@@ -172,9 +172,6 @@
     <Filter Include="02.GameObjects\03. Effect">
       <UniqueIdentifier>{98abb3f3-bf6e-4d3c-b89d-4797ad65c8bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\03. Effect\01.Effect_Instance">
-      <UniqueIdentifier>{df70ff5e-761f-4541-b7f2-d7d3a9ccdb1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\03. Effect\99.Effect_Legacy">
       <UniqueIdentifier>{a29adc02-2415-4e21-ae36-0a362e4734ca}</UniqueIdentifier>
     </Filter>
@@ -190,20 +187,26 @@
     <Filter Include="02.GameObjects\03. Effect\99.Effect_Legacy\Particles\Red">
       <UniqueIdentifier>{ef0faeb9-3544-4960-9a8e-1eb492bdb7eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\03. Effect\02.Effect_Particle">
-      <UniqueIdentifier>{7ab3690b-d252-42bf-9ce3-8e496797dcfb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\03. Effect\03.Effect_Mesh">
-      <UniqueIdentifier>{647b9c85-d4cf-4062-afa7-0d2f0649f656}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\03. Effect\04.Effect_Sprite">
-      <UniqueIdentifier>{03bc8c0a-88ed-4b3d-b82f-b2cad26b7790}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\03. Effect\05.Effect_Trail">
       <UniqueIdentifier>{d5149fec-40d6-45e2-8090-fdb3fb70342b}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\02.Tool\Imgui\imNeoSequencer">
       <UniqueIdentifier>{d4963b0e-d3d7-46a2-a9b6-a3c7eb309514}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03. Effect\06.Effect_Decal">
+      <UniqueIdentifier>{a85e216f-a908-46e0-9df3-a1d06fe18537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03. Effect\01.Effect_Particle">
+      <UniqueIdentifier>{7ab3690b-d252-42bf-9ce3-8e496797dcfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03. Effect\02.Effect_Texture">
+      <UniqueIdentifier>{03bc8c0a-88ed-4b3d-b82f-b2cad26b7790}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03. Effect\03.Effect_Instance">
+      <UniqueIdentifier>{df70ff5e-761f-4541-b7f2-d7d3a9ccdb1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03. Effect\04.Effect_Mesh">
+      <UniqueIdentifier>{647b9c85-d4cf-4062-afa7-0d2f0649f656}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -342,11 +345,11 @@
     <ClInclude Include="..\Public\Environment_Instance.h">
       <Filter>02.GameObjects\02. Environment\Environment_Instance</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Particle_Custom.h">
-      <Filter>02.GameObjects\03. Effect\02.Effect_Particle</Filter>
+    <ClInclude Include="..\Public\Effect_Particle.h">
+      <Filter>02.GameObjects\03. Effect\01.Effect_Particle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Instance.h">
-      <Filter>02.GameObjects\03. Effect\01.Effect_Instance</Filter>
+      <Filter>02.GameObjects\03. Effect\03.Effect_Instance</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Player.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
@@ -377,6 +380,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_sequencer.h">
       <Filter>01.Levels\02.Tool\Imgui\imNeoSequencer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Texture.h">
+      <Filter>02.GameObjects\03. Effect\02.Effect_Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Trail.h">
+      <Filter>02.GameObjects\03. Effect\05.Effect_Trail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -590,7 +599,7 @@
     <ClInclude Include="..\Public\Window_EffectTool.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Effect_Object.h">
+    <ClInclude Include="..\Public\Effect.h">
       <Filter>02.GameObjects\03. Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Window_UITool.h">
@@ -698,7 +707,7 @@
       <Filter>02.GameObjects\02. Environment\Environment_Instance</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Instance.cpp">
-      <Filter>02.GameObjects\03. Effect\01.Effect_Instance</Filter>
+      <Filter>02.GameObjects\03. Effect\03.Effect_Instance</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imgui.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
@@ -727,7 +736,7 @@
     <ClCompile Include="..\Private\Window_EffectTool.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Effect_Object.cpp">
+    <ClCompile Include="..\Private\Effect.cpp">
       <Filter>02.GameObjects\03. Effect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CustomDialogFont.cpp">
@@ -748,8 +757,8 @@
     <ClCompile Include="..\Private\Environment_Object.cpp">
       <Filter>02.GameObjects\02. Environment</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Particle_Custom.cpp">
-      <Filter>02.GameObjects\03. Effect\02.Effect_Particle</Filter>
+    <ClCompile Include="..\Private\Effect_Particle.cpp">
+      <Filter>02.GameObjects\03. Effect\01.Effect_Particle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Player.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
@@ -759,6 +768,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_sequencer.cpp">
       <Filter>01.Levels\02.Tool\Imgui\imNeoSequencer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Texture.cpp">
+      <Filter>02.GameObjects\03. Effect\02.Effect_Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Trail.cpp">
+      <Filter>02.GameObjects\03. Effect\05.Effect_Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -795,6 +810,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxEffectModelInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_EffectTex.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

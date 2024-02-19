@@ -1,29 +1,29 @@
 #include "stdafx.h"
-#include "..\Public\Particle_Custom.h"
+#include "..\Public\Effect_Particle.h"
 
 #include "GameInstance.h"
 
-CParticle_Custom::CParticle_Custom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CAlphaObject(pDevice, pContext)
+CEffect_Particle::CEffect_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CEffect(pDevice, pContext)
 {
 
 }
 
-CParticle_Custom::CParticle_Custom(const CParticle_Custom& rhs)
-	: CAlphaObject(rhs)
+CEffect_Particle::CEffect_Particle(const CEffect_Particle& rhs)
+	: CEffect(rhs)
 {
 }
 
-HRESULT CParticle_Custom::Initialize_Prototype()
+HRESULT CEffect_Particle::Initialize_Prototype()
 {
 
 
 	return S_OK;
 }
 
-HRESULT CParticle_Custom::Initialize(void* pArg)
+HRESULT CEffect_Particle::Initialize(void* pArg)
 {
-	m_tParticleDesc = *(PARTICLE_CUSTOM_DESC*)pArg;
+	m_tParticleDesc = *(EFFECT_PARTICLE_DESC*)pArg;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -34,13 +34,13 @@ HRESULT CParticle_Custom::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CParticle_Custom::Priority_Tick(_float fTimeDelta)
+void CEffect_Particle::Priority_Tick(_float fTimeDelta)
 {
 
 
 }
 
-void CParticle_Custom::Tick(_float fTimeDelta)
+void CEffect_Particle::Tick(_float fTimeDelta)
 {
 	if (m_bActive)
 	{
@@ -51,6 +51,9 @@ void CParticle_Custom::Tick(_float fTimeDelta)
 		//}
 
 		//_float4 vParticlePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+		__super::Tick(fTimeDelta);
+
 
 		if (SPRITE == m_tParticleDesc.eType)
 		{
@@ -76,12 +79,13 @@ void CParticle_Custom::Tick(_float fTimeDelta)
 		}
 
 
+		m_pVIBufferCom->Set_Color(m_tVariables.vColor_Offset.x, m_tVariables.vColor_Offset.y, m_tVariables.vColor_Offset.z);
 		m_pVIBufferCom->Update(fTimeDelta);
 
 	}
 }
 
-void CParticle_Custom::Late_Tick(_float fTimeDelta)
+void CEffect_Particle::Late_Tick(_float fTimeDelta)
 {
 	if (m_bActive)
 	{
@@ -91,7 +95,7 @@ void CParticle_Custom::Late_Tick(_float fTimeDelta)
 	}
 }
 
-HRESULT CParticle_Custom::Render()
+HRESULT CEffect_Particle::Render()
 {
 	if (m_bActive)
 	{
@@ -112,11 +116,11 @@ HRESULT CParticle_Custom::Render()
 	return S_OK;
 }
 
-_bool CParticle_Custom::Write_Json(json& Out_Json)
+_bool CEffect_Particle::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
 
-	for (_int i = 0; i < (_int)TYPE_END; i++)
+	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 		Out_Json["strTextureTag"][i] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strTextureTag[i]);
 
 	Out_Json["strShaderTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strShaderTag);
@@ -124,11 +128,11 @@ _bool CParticle_Custom::Write_Json(json& Out_Json)
 	return true;
 }
 
-void CParticle_Custom::Load_FromJson(const json& In_Json)
+void CEffect_Particle::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-	for (_int i = 0; i < (_int)TYPE_END; i++)
+	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 		m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strTextureTag[i]) = In_Json["strTextureTag"][i];
 
 	m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strShaderTag) = In_Json["strShaderTag"];
@@ -136,7 +140,7 @@ void CParticle_Custom::Load_FromJson(const json& In_Json)
 }
 
 
-HRESULT CParticle_Custom::Ready_Components()
+HRESULT CEffect_Particle::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
@@ -169,7 +173,7 @@ HRESULT CParticle_Custom::Ready_Components()
 		tVIBufferDesc.fAcceleration = { 2.f };
 		tVIBufferDesc.fAccPosition = { 0.1f };
 
-		tVIBufferDesc.fGravityAcc = { 0.f };
+		tVIBufferDesc.fGravityAcc = { -9.8 };
 		tVIBufferDesc.vCurrentGravity = { 0.f, 0.f, 0.f };
 
 		tVIBufferDesc.vMinMaxRotationOffsetX = { 0.0f, 360.f };
@@ -201,23 +205,23 @@ HRESULT CParticle_Custom::Ready_Components()
 
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TYPE_DIFFUSE],
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_DIFFUSE]))))
+	if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TEXTURE_DIFFUSE],
+		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
 		return E_FAIL;
 
-	if (nullptr != m_pTextureCom[TYPE_MASK])
+	if (TEXT("") != m_tParticleDesc.strTextureTag[TEXTURE_MASK])
 	{
 		/* For.Com_Mask */
-		if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TYPE_MASK],
-			TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_MASK]))))
+		if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TEXTURE_MASK],
+			TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
 			return E_FAIL;
 	}
 
-	if (nullptr != m_pTextureCom[TYPE_NOISE])
+	if (TEXT("") != m_tParticleDesc.strTextureTag[TEXTURE_NOISE])
 	{
 		/* For.Com_Noise */
-		if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TYPE_NOISE],
-			TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_NOISE]))))
+		if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TEXTURE_NOISE],
+			TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
 			return E_FAIL;
 	}
 
@@ -225,8 +229,11 @@ HRESULT CParticle_Custom::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CParticle_Custom::Bind_ShaderResources()
+HRESULT CEffect_Particle::Bind_ShaderResources()
 {
+	if (FAILED(__super::Bind_ShaderResources()))
+		return E_FAIL;
+
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 
@@ -239,17 +246,17 @@ HRESULT CParticle_Custom::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tParticleDesc.fRotateUvDegree, sizeof(_float))))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom[TYPE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tParticleDesc.iTextureIndex[TYPE_DIFFUSE])))
+	if (FAILED(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tParticleDesc.iTextureIndex[TEXTURE_DIFFUSE])))
 		return E_FAIL;
 
-	if (nullptr != m_pTextureCom[TYPE_MASK])
+	if (nullptr != m_pTextureCom[TEXTURE_MASK])
 	{
-		if (FAILED(m_pTextureCom[TYPE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tParticleDesc.iTextureIndex[TYPE_MASK])))
+		if (FAILED(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tParticleDesc.iTextureIndex[TEXTURE_MASK])))
 			return E_FAIL;
 	}
-	if (nullptr != m_pTextureCom[TYPE_NOISE])
+	if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 	{
-		if (FAILED(m_pTextureCom[TYPE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tParticleDesc.iTextureIndex[TYPE_NOISE])))
+		if (FAILED(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tParticleDesc.iTextureIndex[TEXTURE_NOISE])))
 			return E_FAIL;
 	}
 
@@ -283,42 +290,48 @@ HRESULT CParticle_Custom::Bind_ShaderResources()
 	}
 
 
+
+
+	//if (FAILED(m_pShaderCom->Bind_RawValue("FX_Variables", &m_tVariables, sizeof(tagFX_Variables))))
+	//	return E_FAIL;
+
+
 	return S_OK;
 }
 
-CParticle_Custom* CParticle_Custom::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEffect_Particle* CEffect_Particle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CParticle_Custom* pInstance = new CParticle_Custom(pDevice, pContext);
+	CEffect_Particle* pInstance = new CEffect_Particle(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CParticle_Custom");
+		MSG_BOX("Failed to Created : CEffect_Particle");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CParticle_Custom::Clone(void* pArg)
+CGameObject* CEffect_Particle::Clone(void* pArg)
 {
-	CParticle_Custom* pInstance = new CParticle_Custom(*this);
+	CEffect_Particle* pInstance = new CEffect_Particle(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CParticle_Custom");
+		MSG_BOX("Failed to Cloned : CEffect_Particle");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CParticle_Custom::Free()
+void CEffect_Particle::Free()
 {
 	__super::Free();
 
 	Safe_Release(m_pVIBufferCom);
 
-	for (_int i = 0; i < (_int)TYPE_END; i++)
+	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 		Safe_Release(m_pTextureCom[i]);
 
 	Safe_Release(m_pShaderCom);

@@ -24,10 +24,13 @@ public:
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strTextureFilePath, _uint iNumTextures);
 	virtual HRESULT Initialize(void* pArg) override;
+
 public:
 	HRESULT  Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iTextureIndex = 0);
 	HRESULT  Bind_ShaderResources(class CShader* pShader, const _char* pConstantName);
 
+public:
+	HRESULT Get_TextureSize(_uint * iWidth, _uint * iHeight, _uint iTextureIndex = 0);
 
 
 private:
