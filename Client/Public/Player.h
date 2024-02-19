@@ -26,15 +26,19 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-private:
-	HRESULT Ready_Components();
-	HRESULT Ready_PartObjects();
 
-
+public:
+	void Test_Create_Monster();
 public:
 	virtual void Activate() override;
 	virtual _bool Activate_Condition() override;
 	virtual _bool End_Condition() override;
+
+
+private:
+	HRESULT Ready_Components();
+	HRESULT Ready_PartObjects();
+
 
 
 public:

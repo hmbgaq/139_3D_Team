@@ -20,7 +20,8 @@ void CEvent_Manager::Tick(_float fTimeDelta)
 		{
 			iter = m_Events.erase(iter);
 		}
-			
+
+		(*iter)->Tick_Event(fTimeDelta);
 
 		if ((*iter)->Activate_Condition())
 		{

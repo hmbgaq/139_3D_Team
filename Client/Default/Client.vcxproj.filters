@@ -253,6 +253,9 @@
     <Filter Include="95.StatePattern">
       <UniqueIdentifier>{0e13856d-2978-4224-881c-2c07d37e7584}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Event\Test\With_Player">
+      <UniqueIdentifier>{09a4854d-ee74-455e-9951-e429d36f5abb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -470,6 +473,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\State.h">
       <Filter>95.StatePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestEventWithPlayer.h">
+      <Filter>03.Event\Test\With_Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -870,6 +876,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Actor.cpp">
       <Filter>95.StatePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestEventWithPlayer.cpp">
+      <Filter>03.Event\Test\With_Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

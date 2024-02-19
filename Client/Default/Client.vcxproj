@@ -234,6 +234,7 @@
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\TestEvent.h" />
     <ClInclude Include="..\Public\TestEventWithActor.h" />
+    <ClInclude Include="..\Public\TestEventWithPlayer.h" />
     <ClInclude Include="..\Public\UI.h" />
     <ClInclude Include="..\Public\UI_Anything.h" />
     <ClInclude Include="..\Public\UI_MonsterHp.h" />
@@ -299,6 +300,7 @@
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\TestEvent.cpp" />
     <ClCompile Include="..\Private\TestEventWithActor.cpp" />
+    <ClCompile Include="..\Private\TestEventWithPlayer.cpp" />
     <ClCompile Include="..\Private\UI.cpp" />
     <ClCompile Include="..\Private\UI_Anything.cpp" />
     <ClCompile Include="..\Private\UI_MonsterHp.cpp" />

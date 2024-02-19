@@ -11,6 +11,8 @@
 
 #include "TestEvent.h"
 #include "TestEventWithActor.h"
+#include "TestEventWithPlayer.h"
+
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -109,7 +111,9 @@ void CPlayer::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_E))
 	{
 		//IEvent* pEvent = CTestEvent::Create();
-		IEvent* pEvent = CTestEventWithActor::Create(this);
+		//IEvent* pEvent = CTestEventWithActor::Create(this);
+		IEvent* pEvent = CTestEventWithPlayer::Create(this);
+
 		m_pGameInstance->Add_Event(pEvent);
 	}
 
@@ -167,7 +171,7 @@ HRESULT CPlayer::Ready_PartObjects()
 }
 
 
-void CPlayer::Activate()
+void CPlayer::Test_Create_Monster()
 {
 	CGameObject* pMonster = CClone_Manager::GetInstance()->Clone_Object<CGameObject>(LEVEL_GAMEPLAY, LAYER_MONSTER, TEXT("Prototype_GameObject_Monster"));
 	if (pMonster)
@@ -179,6 +183,11 @@ void CPlayer::Activate()
 	{
 		_bool test = false;
 	}
+}
+
+void CPlayer::Activate()
+{
+	Test_Create_Monster();
 }
 
 _bool CPlayer::Activate_Condition()
