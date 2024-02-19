@@ -23,8 +23,7 @@ public:
 public:
 	HRESULT  Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iTextureIndex = 0);
 	HRESULT  Bind_ShaderResources(class CShader* pShader, const _char* pConstantName);
-
-
+	ID3D11ShaderResourceView* Get_SRV(_uint iTextureIndex = 0);
 
 private:
 	_uint										m_iNumTextures = { 0 };

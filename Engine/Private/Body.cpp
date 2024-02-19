@@ -88,18 +88,13 @@ HRESULT CBody::Render()
 
 	_uint iPass = 0; // false == m_bDissolve ? 0 : 3;
 
-	//if (FAILED(m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
-	//	return E_FAIL;
-
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float))))
-	//	return E_FAIL;
-
-
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 
 		m_pShaderCom->Begin(iPass);
 
@@ -119,8 +114,6 @@ HRESULT CBody::Render_Shadow()
 	_float			g_fLightFar = Engine::g_fLightFar;
 	_float4			vLightPos = Engine::g_vLightPos;
 
-
-
 	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(Engine::g_vLightPos.x, Engine::g_vLightPos.y, Engine::g_vLightPos.z, Engine::g_vLightPos.w), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinsizeX / g_iWinsizeY, 0.1f, Engine::g_fLightFar));
 
@@ -132,17 +125,9 @@ HRESULT CBody::Render_Shadow()
 	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fLightFar", &g_fLightFar, sizeof(_float))))
 	//	return E_FAIL;
 
-
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-
-	_uint iPass = 2; // false == m_bDissolve ? 2 : 3;
-
-	//if (FAILED(m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
-	//	return E_FAIL;
-
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float))))
-	//	return E_FAIL;
+	_uint iPass = 2; // false == m_
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{

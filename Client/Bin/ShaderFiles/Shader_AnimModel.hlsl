@@ -7,7 +7,8 @@ float			g_fCamFar;
 float           g_TimeDelta;
 
 texture2D		g_DiffuseTexture;
-Texture2D		g_NormalTexture;
+texture2D		g_NormalTexture;
+texture2D       g_SpecularTexture;
 
 /* Dissolve  */
 Texture2D		g_DissolveTexture;
@@ -78,7 +79,8 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vProjPos = Out.vPosition;
 	
 	// SSAO
-    Out.vViewNormal = mul(Out.vNormal.xyz, (float3x3) g_ViewMatrix);
+   // Out.vViewNormal = mul(Out.vNormal.xyz, g_ViewMatrix.xyz);
+    Out.vViewNormal = normalize(mul(Out.vNormal, g_ViewMatrix).xyz);
     Out.vPositionView = mul(float4(In.vPosition, 1.0f), matWV);
 	
 	return Out;
@@ -99,11 +101,17 @@ struct PS_IN
 
 struct PS_OUT 
 {
-	float4	vDiffuse        : SV_TARGET0;
-	float4	vNormal         : SV_TARGET1;
-    float4  vDepth          : SV_TARGET2;
-    float4  vViewNormal     : SV_TARGET3;
-    float4  vBloom          : SV_TARGET4;
+	float4	vDiffuse         : SV_TARGET0;
+	float4	vNormal          : SV_TARGET1;
+    float4  vDepth           : SV_TARGET2;
+    float4  vBloom           : SV_TARGET5;
+    float4  vORM             : SV_TARGET3;
+    float4  vViewNormal      : SV_TARGET4;
+    //float4  vViewNormal     : SV_TARGET3;
+    //float4  vBloom          : SV_TARGET4;
+    //float4  vORM            : SV_TARGET5;
+    
+    
 };
 
 /* ------------------- Base Pixel Shader (0) -------------------*/
@@ -116,8 +124,9 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vBloom = float4(1.0f, 0.f, 0.f, 1.0f);
-    Out.vViewNormal = Out.vNormal;
-    Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     //Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
     
     

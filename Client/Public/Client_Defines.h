@@ -42,8 +42,6 @@ namespace Client
 	#define LAYER_UI_PLAYER					TEXT("Layer_UI_Player")
 	#define LAYER_PARTICLE					TEXT("Layer_Particle")
 
-
-
 	enum class COLLISION_LAYER
 	{
 		NONE,

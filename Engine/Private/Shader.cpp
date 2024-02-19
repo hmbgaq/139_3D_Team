@@ -151,6 +151,32 @@ HRESULT CShader::Bind_RawValue(const _char* pConstantName, const void* pData, _u
 	return pVariable->SetRawValue(pData, 0, iSize);
 }
 
+HRESULT CShader::Bind_Texture(const _char* pConstantName, ID3D11ShaderResourceView* pSRV) const
+{
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	ID3DX11EffectShaderResourceVariable* pSRVariable = pVariable->AsShaderResource();
+	if (nullptr == pSRVariable)
+		return E_FAIL;
+
+	return pSRVariable->SetResource(pSRV);
+}
+
+HRESULT CShader::Bind_Textures(const _char* pConstantName, ID3D11ShaderResourceView** ppSRVs, _uint iNumTextures) const
+{
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	ID3DX11EffectShaderResourceVariable* pSRVariable = pVariable->AsShaderResource();
+	if (nullptr == pSRVariable)
+		return E_FAIL;
+
+	return pSRVariable->SetResourceArray(ppSRVs, 0, iNumTextures);
+}
+
 CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
 	CShader* pInstance = new CShader(pDevice, pContext);

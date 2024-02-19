@@ -188,7 +188,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 			if (false == m_vecCreateObject.empty())
 			{
-				_int iCreateObjectSize = m_vecCreateObject.size();
+				_int iCreateObjectSize = (_int)m_vecCreateObject.size();
 
 			
 
@@ -223,7 +223,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
  
 			if (false == m_vecCreateInstance.empty())
 			{
-				_int iCreateInstanceObjectSize = m_vecCreateInstance.size();
+				_int iCreateInstanceObjectSize = (_int)m_vecCreateInstance.size();
 
 				
 
@@ -245,7 +245,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 					json InstanceInfoJson = {};
 
 
-					for (_int j = 0; j < InstanceObjDesc.iNumInstance; ++j)
+					for (_uint j = 0; j < InstanceObjDesc.iNumInstance; ++j)
 					{
 						INSTANCE_INFO_DESC InstanceInfoDesc = InstanceObjDesc.vecInstanceInfoDesc[j];
 
@@ -301,7 +301,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 	
 
 	json BasicJson = LoadJson["Basic_Json"];
-	_int iBasicJsonSize = BasicJson.size();
+	_int iBasicJsonSize = (_int)BasicJson.size();
 
 	for (_int i = 0; i < iBasicJsonSize; ++i)
 	{
@@ -350,7 +350,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 
 	json InteractJson = LoadJson["Interact_Json"];
-	_int InteractJsonSize = InteractJson.size();
+	_int InteractJsonSize = (_int)InteractJson.size();
 
 	for(_int i = 0; i < InteractJsonSize; ++i)
 	{
@@ -363,7 +363,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 	}
 
 	json InstanceJson = LoadJson["Instance_Json"];
-	_int InstanceJsonSize = InstanceJson.size();
+	_int InstanceJsonSize = (_int)InstanceJson.size();
 
 	for(_int i = 0; i < InstanceJsonSize; ++i)
 	{
@@ -387,9 +387,9 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
  		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
 		
  		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
+		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
  
- 		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
+ 		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
  		{
  			INSTANCE_INFO_DESC InstanceInfoDesc = {};
  
@@ -418,7 +418,7 @@ void CWindow_MapTool::Reset_Function()
 	m_pPickingObject = nullptr;
 	m_pPickingInstanceInfo = nullptr;
 
-	_int iCreateObjectSize = m_vecCreateObject.size();
+	_int iCreateObjectSize = (_int)m_vecCreateObject.size();
 
 	for (_int i = 0; i < iCreateObjectSize; ++i)
 	{
@@ -431,7 +431,7 @@ void CWindow_MapTool::Reset_Function()
 	m_vecCreateObjectTag.clear();
 
 
-	_int iCreateInstanceSize = m_vecCreateInstance.size();
+	_int iCreateInstanceSize = (_int)m_vecCreateInstance.size();
 
 	for (_int i = 0; i < iCreateInstanceSize; ++i)
 	{
@@ -446,7 +446,7 @@ void CWindow_MapTool::Reset_Function()
 	m_iInstanceInfoTagIndex = 0;
 	
 
-	_int iPreviewInstanceSize = m_vecPreViewInstance.size();
+	_int iPreviewInstanceSize = (_int)m_vecPreViewInstance.size();
 
 	for (_int i = 0; i < iPreviewInstanceSize; ++i)
 	{

@@ -1,12 +1,12 @@
 #include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+
 texture2D		g_DiffuseTexture;
 texture2D		g_NormalTexture;
-texture2D		g_OcclusionTexture;
-texture2D		g_RougnessTexture;
-texture2D		g_MetallicTexture;
-float           g_fTimeDelta;
+texture2D       g_SpecularTexture;
+
+float g_fTimeDelta;
 
 /* OutLine */
 float4	        g_vLineColor;
@@ -15,10 +15,10 @@ texture2D       g_LineMaskTexture;
 
 struct VS_IN
 {
-	float3		vPosition : POSITION;
-	float3		vNormal : NORMAL;
-	float2		vTexcoord : TEXCOORD0;
-	float3		vTangent : TANGENT;
+	float3		vPosition   : POSITION;
+	float3		vNormal     : NORMAL;
+	float2		vTexcoord   : TEXCOORD0;
+	float3		vTangent    : TANGENT;
 };
 
 
@@ -71,7 +71,7 @@ struct PS_OUT
 {
 	float4		vDiffuse : SV_TARGET0;
 	float4		vNormal : SV_TARGET1;
-	float4		vDepth : SV_TARGET2;
+    float4      vDepth : SV_TARGET2;
 };
 
 /* ------------------- Base Pixel Shader (0) -------------------*/

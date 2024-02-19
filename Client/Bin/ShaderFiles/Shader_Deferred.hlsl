@@ -3,6 +3,7 @@
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix			g_ProjMatrixInv, g_ViewMatrixInv;
 matrix			g_LightViewMatrix, g_LightProjMatrix;
+matrix			g_CamProjMatrix, g_CamViewMatrix; /* ssr에서 사용 */ 
 float			g_CamFar;
 
 vector			g_vLightDir;
@@ -12,6 +13,8 @@ float			g_fLightRange;
 vector			g_vLightDiffuse;	
 vector			g_vLightAmbient;
 vector			g_vLightSpecular;
+float			g_fLightIntensity;
+vector			g_vLightFlag;
 
 texture2D		g_DiffuseTexture;
 vector			g_vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
@@ -33,6 +36,7 @@ Texture2D		g_OutlineTarget;
 bool			g_bSSAO_Active;
 bool			g_bBloom_Active;
 bool			g_Outline_Active;
+bool			g_PBR_Active;
 
 struct VS_IN
 {
@@ -98,14 +102,19 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
 	PS_OUT_LIGHT		Out = (PS_OUT_LIGHT)0;
 
+	vector		vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
 	vector		vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
-
+    vector		vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
+    vector		vORMDesc = g_ORMTexture.Sample(PointSampler, In.vTexcoord); /* Occlusion , Roughness, Metalic */
+	//vector		
+	
+    vDiffuseColor = pow(vDiffuseColor, 2.2f);
+    vDiffuseColor.a = 1.f;
 	/* 0, 1 -> -1, 1 */
 	float4		vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);	
 
 	Out.vShade = g_vLightDiffuse * min((max(dot(normalize(g_vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)), 1.f);
 
-	vector		vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
     float		fViewZ = vDepthDesc.y * g_CamFar;
 
 	vector		vWorldPos;
@@ -185,10 +194,16 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 
 
 /* ------------------ 3 - Spot  ------------------ */
-PS_OUT PS_MAIN_SPOT(PS_IN In)
+PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT) 0;
-	
+    PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 1;
+
+	/* 방향성광원의 정보와 노멀 타겟에 담겨있는 노멀과의 빛연산을 수행한다. */
+    vector vDiffuseColor	= g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    vector vNormalDesc		= g_NormalTexture.Sample(PointSampler, In.vTexcoord);
+    vector vDepthDesc		= g_DepthTexture.Sample(PointSampler, In.vTexcoord);
+    vector vORMDesc			= g_ORMTexture.Sample(PointSampler, In.vTexcoord);
+
     return Out;
 }
 

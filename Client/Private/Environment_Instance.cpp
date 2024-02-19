@@ -46,7 +46,6 @@ void CEnvironment_Instance::Tick(_float fTimeDelta)
 
 void CEnvironment_Instance::Late_Tick(_float fTimeDelta)
 {
-
 // 	m_pGameInstance->Transform_Frustum_ToLocalSpace(m_pTransformCom->Get_WorldMatrix());
 // 
 // 	if (true == m_pGameInstance->isIn_LocalPlanes(XMVector3TransformCoord(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_WorldMatrixInverse()), 0.f))

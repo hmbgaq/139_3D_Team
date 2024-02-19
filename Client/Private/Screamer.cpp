@@ -86,7 +86,6 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
-		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
 
 	}
 
@@ -106,15 +105,12 @@ HRESULT CScreamer::Render()
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_MetallicTexture", (_uint)i, aiTextureType_METALNESS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_RougnessTexture", (_uint)i, aiTextureType_DIFFUSE_ROUGHNESS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_OcclusionTexture", (_uint)i, aiTextureType_AMBIENT_OCCLUSION);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 		
 		m_pShaderCom->Begin(m_iRenderPass);
 
 		m_pModelCom->Render(_uint(i));
 	}
-
 
 	return S_OK;
 }
@@ -124,9 +120,8 @@ HRESULT CScreamer::Render_Shadow()
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldFloat4x4()));
 
 	_float4x4		ViewMatrix, ProjMatrix;
-
-	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, m_pGameInstance->Get_CamFar()));
+	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(Engine::g_vLightPos.x, Engine::g_vLightPos.y, Engine::g_vLightPos.z, Engine::g_vLightPos.w), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinsizeX / g_iWinsizeY, 0.1f, Engine::g_fLightFar));
 
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix));
@@ -138,6 +133,8 @@ HRESULT CScreamer::Render_Shadow()
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 
 		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_SHADOW));
 

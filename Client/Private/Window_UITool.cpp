@@ -466,10 +466,15 @@ wchar_t* CWindow_UITool::ConverCtoWC(char* str)
 
 std::string CWindow_UITool::WideStringToString(const wchar_t* wideStr) 
 {
-	// std::wstring으로부터 std::string으로 변환
-	std::wstring wstr(wideStr);
-	// std::string으로 변환
-	return std::string(wstr.begin(), wstr.end());
+	using convert_typeX = std::codecvt_utf8<wchar_t>;
+	std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+	return converterX.to_bytes(wideStr);
+
+	//wstring wstr(wideStr);
+	//string result(wstr.begin(), wstr.end());
+
+	//return result;
 
 }
 

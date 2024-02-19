@@ -352,7 +352,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 		MATERIAL_DESC			MaterialDesc = {  };
 
-		for (size_t j = 1; j < AI_TEXTURE_TYPE_MAX; j++)
+		for (size_t j = 1; j < ECast(AI_TEXTURE_TYPE_MAX); j++)
 		{
 			_char		szDrive[MAX_PATH] = "";
 			_char		szDirectory[MAX_PATH] = "";

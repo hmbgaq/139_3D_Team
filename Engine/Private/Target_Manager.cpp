@@ -101,7 +101,7 @@ HRESULT CTarget_Manager::End_MRT()
 
 HRESULT CTarget_Manager::Bind_ShaderResource(const wstring & strTargetTag, CShader * pShader, const _char * pConstantName)
 {
-	CRenderTarget*		pRenderTarget = Find_RenderTarget(strTargetTag);
+	CRenderTarget*		pRenderTarget = Find_RenderTarget(strTargetTag); 
 	if (nullptr == pRenderTarget)
 		return E_FAIL;
 

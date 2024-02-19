@@ -114,6 +114,7 @@ private:
 	_bool						m_bSSAO_Active			= { true };
 	_bool						m_bBloom_Active			= { true };
 	_bool						m_bOutline_Active		= { true };
+	_bool						m_bPBR_Active			= { true };
 
 public:
 	void Set_SSAO(_bool _ssao_active)		{ m_bSSAO_Active = _ssao_active; } /* 외곽선 옵션조절 */
@@ -125,12 +126,11 @@ private:
 	class CTexture*				m_pRandomVectorTexture = { nullptr };
 	ID3D11Buffer*				m_ScreenQuadVB = { nullptr };
 	ID3D11Buffer*				m_ScreenQuadIB = { nullptr };
-	ID3D11ShaderResourceView*	m_RandomVectorSRV;
-	//SSAO_Data					m_tSSAO_Data;
+	ID3D11ShaderResourceView*	m_pRandomSRV = nullptr;
+
 	const _matrix				m_mTexture = {	XMMatrixSet(0.5f, 0.0f, 0.0f, 0.0f,	0.0f, -0.5f, 0.0f, 0.0f,0.0f, 0.0f, 1.0f, 0.0f,	0.5f, 0.5f, 0.0f, 1.0f) };
 	_float4						m_vFrustumFarCorner[4];
-	//_float4						m_vOffsets[14];
-	_float4						m_vOffsets[26];
+	_float4						m_vOffsets[14];
 	_float						m_OffsetsFloat[56];
 	_int						m_iQuadVerCount;
 	_int						m_iQuadIndexCount;

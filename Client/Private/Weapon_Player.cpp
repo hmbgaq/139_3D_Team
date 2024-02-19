@@ -77,9 +77,6 @@ HRESULT CWeapon_Player::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-
-
-
 	return S_OK;
 }
 

@@ -4,12 +4,12 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 /* ssao */
-vector  g_OffsetVector[26];
-vector  FrustumCorner[4];
-matrix  ViewToTexSpcace;
+vector      g_OffsetVector[26];
+vector      FrustumCorner[4];
+matrix      ViewToTexSpcace;
 
-Texture2D g_NormalDepthTarget;
-Texture2D g_RandomVectorTexture;
+Texture2D   g_NormalDepthTarget;
+Texture2D   g_RandomVectorTexture;
 
 /* GodRay */ 
 

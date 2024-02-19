@@ -1,10 +1,10 @@
 #pragma once
 
-#define interface class
+#define Interface class
 
 BEGIN(Engine) 
 
-interface ENGINE_DLL IEvent
+Interface ENGINE_DLL IEvent
 {
 //public:
 //	IEvent();

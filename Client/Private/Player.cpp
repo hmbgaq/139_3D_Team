@@ -112,11 +112,6 @@ void CPlayer::Tick(_float fTimeDelta)
 		IEvent* pEvent = CTestEventWithActor::Create(this);
 		m_pGameInstance->Add_Event(pEvent);
 	}
-
-
-
-
-
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)
