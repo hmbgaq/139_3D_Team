@@ -94,8 +94,15 @@ void CLayer::Free()
 {
 	for (auto& pGameObject : m_GameObjects)
 	{
-		m_pObjectManager->Fill_PoolObject(pGameObject);
-		//Safe_Release(pGameObject);
+		if (false == pGameObject->Get_Enable())
+		{
+			m_pObjectManager->Fill_PoolObject(pGameObject);
+		}
+		else 
+		{
+			Safe_Release(pGameObject);
+		}
+		
 	}
 		
 	m_GameObjects.clear();
