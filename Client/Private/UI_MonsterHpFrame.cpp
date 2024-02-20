@@ -2,8 +2,8 @@
 #include "UI_MonsterHPFrame.h"
 #include "GameInstance.h"
 
-CUI_MonsterHpFrame::CUI_MonsterHpFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI_Base(pDevice, pContext)
+CUI_MonsterHpFrame::CUI_MonsterHpFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CUI_Base(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -25,8 +25,6 @@ HRESULT CUI_MonsterHpFrame::Initialize_Prototype()
 HRESULT CUI_MonsterHpFrame::Initialize(void* pArg)
 {
 	m_tInfo = *(MONSTER_FRAME*)pArg;
-	m_tInfo.bFrame = true;
-	m_isEnable = m_tInfo.bEnable;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -72,8 +70,8 @@ void CUI_MonsterHpFrame::Tick(_float fTimeDelta)
 
 void CUI_MonsterHpFrame::Late_Tick(_float fTimeDelta)
 {
-	if(m_tUIInfo.bWorldUI == true)
-	Compute_OwnerCamDistance();
+	//if(m_tUIInfo.bWorldUI == true)
+	//Compute_OwnerCamDistance();
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
@@ -218,9 +216,9 @@ _bool CUI_MonsterHpFrame::In_Frustum()
 	return m_pGameInstance->isIn_WorldPlanes(m_tInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
-CUI_MonsterHpFrame* CUI_MonsterHpFrame::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_MonsterHpFrame* CUI_MonsterHpFrame::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_MonsterHpFrame* pInstance = new CUI_MonsterHpFrame(pDevice, pContext);
+	CUI_MonsterHpFrame* pInstance = new CUI_MonsterHpFrame(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -244,6 +242,11 @@ CGameObject* CUI_MonsterHpFrame::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CUI_MonsterHpFrame::Pool()
+{
+	return new CUI_MonsterHpFrame(*this);
+}
+
 void CUI_MonsterHpFrame::Free()
 {
 	__super::Free();
@@ -253,3 +256,5 @@ void CUI_MonsterHpFrame::Free()
 	Safe_Release(m_pTextureCom);
 
 }
+
+

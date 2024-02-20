@@ -1,8 +1,8 @@
 #include "..\Public\Body.h"
 #include "GameInstance.h"
 
-CBody::CBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CBody::CBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -122,7 +122,7 @@ HRESULT CBody::Render_Shadow()
 
 
 	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(Engine::g_vLightPos.x, Engine::g_vLightPos.y, Engine::g_vLightPos.z, Engine::g_vLightPos.w), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), 1280.0f / 720.0f, 0.1f, Engine::g_fLightFar));
+	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinsizeX / g_iWinsizeY, 0.1f, Engine::g_fLightFar));
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
 		return E_FAIL;
@@ -173,6 +173,26 @@ _bool CBody::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_pModelCom->Is_Inputable_Front(_iIndexFront);
 }
+
+#ifdef _DEBUG
+
+_bool CBody::Picking(_float3* vPickedPos)
+{
+	GRAPHIC_DESC GraphicDesc = *m_pGameInstance->Get_GraphicDesc();
+
+	HWND hWnd = GraphicDesc.hWnd;
+	
+	_int iWinSizeX = GraphicDesc.iBackBufferSizeX;
+	_int iWinSizeY = GraphicDesc.iBackBufferSizeY;
+	
+	RAY ray = m_pGameInstance->Get_MouseRayLocal(hWnd, iWinSizeX, iWinSizeY, m_pTransformCom->Get_WorldMatrix());
+	vector<class CMesh*> meshes = m_pModelCom->Get_Meshes();
+
+	return m_pGameInstance->Picking_Mesh(ray, vPickedPos, meshes);
+
+}
+
+#endif
 
 HRESULT CBody::Bind_ShaderResources()
 {

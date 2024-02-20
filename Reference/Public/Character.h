@@ -16,7 +16,7 @@ class CNavigation;
 class ENGINE_DLL CCharacter abstract : public CGameObject
 {
 protected:
-	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
+	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag);
 	CCharacter(const CCharacter& rhs);
 	virtual ~CCharacter() = default;
 
@@ -34,6 +34,7 @@ public:
 	CCollider* Get_Collider();
 	CNavigation* Get_Navigation();
 
+	virtual _bool Picking(_Out_ _float3 * vPickedPos) override;
 protected:
 	virtual HRESULT Ready_Components() PURE;
 	virtual HRESULT Ready_PartObjects() PURE;
@@ -63,6 +64,27 @@ public:
 	void Go_Left(_float fTimeDelta);		
 	void Go_Right(_float fTimeDelta);		
 
+
+	_bool Is_Rotate_In_CameraDir() {
+		return m_bRotate_In_CameraDir;
+	}
+	void Set_Rotate_In_CameraDir(_bool _bRotate_In_CameraDir) {
+		m_bRotate_In_CameraDir = _bRotate_In_CameraDir;
+	}
+
+public:
+	_int Get_Hp() {
+		return m_iHp;
+	};
+
+	void Set_Hp(_uint _iHp) {
+		m_iHp = _iHp;
+	};
+
+protected:
+	_int m_iHp = { 0 };
+	_bool	m_bRotate_In_CameraDir = { false };
+
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
 	CBody* m_pBody = { nullptr };
@@ -73,6 +95,7 @@ protected:
 
 protected:
 	virtual CGameObject* Clone(void* pArg) PURE;
+	virtual CGameObject* Pool() PURE;
 	virtual void Free() override;
 };
 

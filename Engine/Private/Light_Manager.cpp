@@ -1,4 +1,4 @@
-#include "..\Public\Light_Manager.h"
+#include "Light_Manager.h"
 #include "Light.h"
 
 CLight_Manager::CLight_Manager()

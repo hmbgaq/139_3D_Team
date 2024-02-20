@@ -5,6 +5,10 @@
 #include "Json_Utility.h"
 
 
+#include "Data_Manager.h"
+#include "Clone_Manager.h"
+
+
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
@@ -23,17 +27,22 @@ HRESULT CMainApp::Initialize()
 #ifdef _DEBUG
 #pragma region Imgui용 Rect 설정
 	// imGui때문에.. imgui는 제목표시줄 크기를 인식 못해서 이렇게 안해주면 마우스 오차가 생긴다.
-	RECT rect = { 0 };
-	GetClientRect(GraphicDesc.hWnd, &rect);
-	_int iClientSizeX = rect.right - rect.left;
-	_int iClientSizeY = rect.bottom - rect.top;
-	GraphicDesc.iBackBufferSizeX = iClientSizeX;
-	GraphicDesc.iBackBufferSizeY = iClientSizeY;
+	//RECT rect = { 0 };
+	//GetClientRect(GraphicDesc.hWnd, &rect);
+	//_int iClientSizeX = rect.right - rect.left;
+	//_int iClientSizeY = rect.bottom - rect.top;
+	//GraphicDesc.iBackBufferSizeX = iClientSizeX;
+	//GraphicDesc.iBackBufferSizeY = iClientSizeY;
 #pragma endregion Imgui용 Rect 설정
 #endif // _DEBUG
 
 
 	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, (_uint)(COLLISION_LAYER::LAYER_END), g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
+
+	//Client Managers
+	CClone_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
+	CData_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
+
 
 	FAILED_CHECK(Ready_Font());
 
@@ -74,7 +83,7 @@ HRESULT CMainApp::Render()
 	}
 	
 	// MakeSpriteFont "넥슨lv1고딕 Bold" /FontSize:30 /FastPack /CharacterRegion:0x0020-0x00FF /CharacterRegion:0x3131-0x3163 /CharacterRegion:0xAC00-0xD800 /DefaultCharacter:0xAC00 140.spritefont
-	m_pGameInstance->Render_Font(TEXT("Font_Default"), m_szFPS, _float2(700.f, 20.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
+	m_pGameInstance->Render_Font(TEXT("Font_Default"), m_szFPS, _float2(600.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
 	m_pGameInstance->Present();
 
 	return S_OK;
@@ -103,9 +112,10 @@ HRESULT CMainApp::Ready_UITexture()
 	{
 		json object = item.value();
 
-		iPathNum = object["PathNum"];
+		/* 순서 확인하기 */
 		strFileName = object["FileName"];
 		strFilePath = object["FilePath"];
+		iPathNum = object["PathNum"];
 
 		wstring wstrPrototag;
 		m_pGameInstance->String_To_WString(strFileName, wstrPrototag);
@@ -152,7 +162,7 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 
 HRESULT CMainApp::Ready_Gara()
 {
-	// D3D11_BLEND_DESC			BlendDesc;
+	 //D3D11_BLEND_DESC			BlendDesc;
 	// D3D11_DEPTH_STENCIL_DESC	DepthStencilDesc;
 	// D3D11_RASTERIZER_DESC		RasterizerDesc;
 	// D3D11_SAMPLER_DESC
@@ -292,7 +302,10 @@ void CMainApp::Free()
 	/*  내 멤버를 정리하면. */
 	Safe_Release(m_pGameInstance);
 
-	CGameInstance::Release_Engine();
+	
+	CClone_Manager::DestroyInstance();
+	CData_Manager::DestroyInstance();
 
+	CGameInstance::Release_Engine();
 }
 

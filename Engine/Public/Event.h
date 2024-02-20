@@ -1,29 +1,27 @@
 #pragma once
 
-#include "Base.h"
+#define interface class
 
-BEGIN(Engine)
+BEGIN(Engine) 
 
-class CGameObject;
-
-class ENGINE_DLL CEvent abstract : public CBase
+interface ENGINE_DLL IEvent
 {
+//public:
+//	IEvent();
+//	virtual ~IEvent() = default;
 
 public:
-	CEvent(CGameObject* pEventActor, OnEvent OnEvnet, Condition Condition);
-	virtual ~CEvent() = default;
+	virtual void Activate() PURE;
+	virtual _bool Activate_Condition() PURE;
+	virtual _bool End_Condition() PURE;
+	virtual void Tick_Event(_float fTimeDelta) {};
+	//virtual _bool Is_End() {
+	//	m_bIsEnd = End_Condition();
+	//	return m_bIsEnd;
+	//}
 
-public:
-	_bool Activate();
-
-
-private:
-	OnEvent m_OnEvnet;
-	Condition m_Condition;
-	CGameObject* m_pEventActor = { nullptr };
-
-public:
-	virtual void Free() override;
+//protected:
+//	_bool m_bIsEnd = { false };
 };
 
 END

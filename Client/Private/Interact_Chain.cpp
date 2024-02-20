@@ -4,8 +4,8 @@
 #include "Shader.h"
 #include "GameInstance.h"
 
-CInteract_Chain::CInteract_Chain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CInteract_Chain::CInteract_Chain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -26,6 +26,7 @@ HRESULT CInteract_Chain::Initialize(void* pArg)
 
 	m_fLineThick = 1.2f;
 
+	m_pTransformCom->Set_Position(_float3(25.f, 0.f, 7.f));
 	return S_OK;
 }
 
@@ -59,16 +60,22 @@ void CInteract_Chain::Tick(_float fTimeDelta)
 
 void CInteract_Chain::Late_Tick(_float fTimeDelta)
 {
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this),);
-	
-	if (m_pGameInstance->Key_Pressing(DIK_8))
+	m_pGameInstance->Transform_Frustum_ToLocalSpace(m_pTransformCom->Get_WorldMatrix());
+
+	if (true == m_pGameInstance->isIn_LocalPlanes(XMVector3TransformCoord(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_WorldMatrixInverse()), 0.f))
 	{
-		/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
-		m_bInteractActive = true; 
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
+
+		if (m_pGameInstance->Key_Pressing(DIK_8))
+		{
+			/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
+			m_bInteractActive = true;
+			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		}
+		else
+			m_bInteractActive = false;
 	}
-	else
-		m_bInteractActive = false;
+
 }
 
 HRESULT CInteract_Chain::Render()
@@ -119,6 +126,7 @@ HRESULT CInteract_Chain::Render()
 
 HRESULT CInteract_Chain::Render_OutLine()
 {
+	m_bInteractActive = true;
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -172,9 +180,9 @@ HRESULT CInteract_Chain::Bind_ShaderResources()
 	return S_OK;
 }
 
-CInteract_Chain* CInteract_Chain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CInteract_Chain* CInteract_Chain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CInteract_Chain* pInstance = new CInteract_Chain(pDevice, pContext);
+	CInteract_Chain* pInstance = new CInteract_Chain(pDevice, pContext, strPrototypeTag);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -196,6 +204,11 @@ CGameObject* CInteract_Chain::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CInteract_Chain::Pool()
+{
+	return new CInteract_Chain(*this);
+}
+
 void CInteract_Chain::Free()
 {
 	__super::Free();
@@ -204,3 +217,5 @@ void CInteract_Chain::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);
 }
+
+

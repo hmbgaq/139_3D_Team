@@ -1,9 +1,7 @@
 // Client.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
 //
 #include "stdafx.h"
-
 #include "../Imgui/imgui_impl_win32.h"
-
 #include "Client.h"
 #include "MainApp.h"
 #include "GameInstance.h"
@@ -146,8 +144,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     return (int) msg.wParam;
 }
 
-
-
 //
 //  함수: MyRegisterClass()
 //
@@ -193,7 +189,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, TRUE);
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, rcWindow.right - rcWindow.left, rcWindow.bottom- rcWindow.top, nullptr, nullptr, hInstance, nullptr);
+                             CW_USEDEFAULT, 0, 
+                             rcWindow.right - rcWindow.left, 
+                             rcWindow.bottom- rcWindow.top, 
+                             nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {

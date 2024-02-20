@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Base.h"
-
 /* 내 컴퓨터에 꽂혀있는 그래픽카드를 사용할 수 있도록 초기호한다. */
 
 /* 1. 추후, 그래픽카드를 통해 어떤 일을 할 수 있도록 디바이스를 대표하는 컴 객체를 생성하낟. */
@@ -22,12 +21,8 @@ private:
 	virtual ~CGraphic_Device() = default;
 
 public:
-	ID3D11RenderTargetView* Get_BackBufferRTV() const {
-		return m_pBackBufferRTV;
-	}
-	ID3D11DepthStencilView* Get_DSV() const {
-		return m_pDepthStencilView;
-	}
+	ID3D11RenderTargetView* Get_BackBufferRTV() const { return m_pBackBufferRTV; }
+	ID3D11DepthStencilView* Get_DSV() const { return m_pDepthStencilView;	}
 
 	GRAPHIC_DESC*			Get_GraphicDesc() { return &m_tGraphicDesc; }
 
@@ -69,9 +64,17 @@ private:
 	/* ID3D11DepthStencilView : 깊이스텐실버퍼로서 사용될 수 있는 타입.  */
 	ID3D11RenderTargetView*		m_pBackBufferRTV = nullptr;
 	ID3D11DepthStencilView*		m_pDepthStencilView = nullptr;
-
+	ID3D11Texture2D*			m_pDepthStencilTexture = nullptr;
 
 	GRAPHIC_DESC				m_tGraphicDesc = {};
+
+
+public: 	/* 이하 모두 HBO+ 준비사항 */
+	ID3D11ShaderResourceView* Get_DepthSRV() { return m_pDepthStencilSRV; }
+
+private:
+	ID3D11ShaderResourceView* m_pDepthStencilSRV = nullptr;
+	GFSDK_SSAO_Context_D3D11* m_pAOContext = nullptr;
 
 
 private:

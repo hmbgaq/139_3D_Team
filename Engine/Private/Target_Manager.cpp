@@ -53,7 +53,7 @@ HRESULT CTarget_Manager::Add_MRT(const wstring & strMRTTag, const wstring & strT
 	return S_OK;
 }
 
-HRESULT CTarget_Manager::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV)
+HRESULT CTarget_Manager::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV, _bool bClear)
 {
 	ID3D11ShaderResourceView*			pSRV[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = {
 		nullptr
@@ -72,7 +72,9 @@ HRESULT CTarget_Manager::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencil
 
 	for (auto& pRenderTarget : *pMRTList)
 	{
-		pRenderTarget->Clear();
+		if (true == bClear)
+			pRenderTarget->Clear();
+
 		pRTVs[iNumRTVs++] = pRenderTarget->Get_RTV();
 	}
 
@@ -126,7 +128,8 @@ HRESULT CTarget_Manager::Render_Debug(const wstring& strMRTTag, CShader * pShade
 	for (auto& pRenderTarget : *pMRTList)
 	{
 		pRenderTarget->Render_Debug(pShader, pVIBuffer);
-		float2 fPos = float2(pRenderTarget->Get_PosX() + 565.f, -pRenderTarget->Get_PosY() + 310.f );
+		float2 fPos = float2(pRenderTarget->Get_PosX()+ g_iWinsizeX * 0.5f - pRenderTarget->Get_SizeX() * 0.5f ,
+							-pRenderTarget->Get_PosY() + g_iWinsizeY* 0.5f - pRenderTarget->Get_SizeY() * 0.5f); /* 1920 1080 -> 1770 980 */
 		wstring TargetTag = pRenderTarget->Get_TargetTag();
 		_float4 vColor = pRenderTarget->Get_FontColor();
 		m_pGameInstance->Render_Font(TEXT("Font_Gulim"), TargetTag, fPos, vColor, 0.5f);

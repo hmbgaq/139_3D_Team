@@ -34,7 +34,7 @@ public: /* For.Graphic_Device */
 	ID3D11RenderTargetView* Get_BackBufferRTV() const;
 	ID3D11DepthStencilView* Get_DSV() const;
 	GRAPHIC_DESC*			Get_GraphicDesc();
-
+	ID3D11ShaderResourceView* Get_DepthSRV();
 
 public: /* For.Input_Device */
 	_byte		Get_DIKeyState(_ubyte byKeyID);
@@ -67,8 +67,9 @@ public: /* For.Object_Manager */
 	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>*clonevector);
 	class CGameObject* Get_GameObect_Last(_uint iLevelIndex, const wstring & strLayerTag);
 	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
-	class CGameObject* Get_Player();
-	void Set_Player(class CGameObject* _pPlayer);
+	class CCharacter* Get_Player();
+	void Set_Player(class CCharacter* _pPlayer);
+	HRESULT Create_PoolObjects(const wstring & strPrototypeTag, _uint iSize = 10);
 
 
 
@@ -97,6 +98,15 @@ public: /* For.PipeLine */
 	_float4		Get_CamSetting();
 	_float		Get_CamFar();
 
+	//!			레이캐스트
+	RAY			Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
+	RAY			Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY, _matrix matWorld);
+
+#ifdef _DEBUG
+	_bool		Picking_Mesh(RAY ray, _float3 * out, vector<class CMesh*> Meshes);
+	_bool		Picking_Vertex(RAY ray, _float3 * out, _uint triNum, VTXMESH * pVertices, _uint * pIndices);
+#endif // _DEBUG
+
 public: /* For.Font_Manager */
 	HRESULT		Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
 	HRESULT		Render_Font(const wstring& strFontTag, const wstring& strText, const _float2 & vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f ,1.f), _float fScale = 1.f, _float2 vOrigin = _float2(0.f, 0.f), _float fRotation = 0.f);
@@ -104,7 +114,7 @@ public: /* For.Font_Manager */
 public: /* For.Target_Manager */
 	HRESULT		Add_RenderTarget(const wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT		Add_MRT(const wstring& strMRTTag, const wstring& strTargetTag);
-	HRESULT		Begin_MRT(const wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
+	HRESULT		Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView * pDSV = nullptr, _bool bClear = true);
 	HRESULT		End_MRT();
 	HRESULT		Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 #ifdef _DEBUG
@@ -125,9 +135,15 @@ public: /* For.Collision_Manager */
 	void		Add_Collision(const _uint& In_iLayer, CCollider* _pCollider);
 
 
+public: /* For.Event_Manager */
+	void		Add_Event(class IEvent* pEvent);
+
+
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
+	wstring		SliceObjectTag(const wstring& strObjectTag);
+	
 
 #pragma region 성희
 	// wstring을 string으로 변환 해주는 함수
@@ -144,6 +160,8 @@ public: /* Common */
 	std::string GetFileName(const std::string& filePath);
 	// 확장자를 제거해주는 함수
 	std::string RemoveExtension(const std::string& filePath);
+	// 포지션 값을 직교로 계산해주는 함수
+	_vector		Convert_Orthogonal(_vector vPosition);
 #pragma endregion End
 
 #pragma region 유정
@@ -169,6 +187,7 @@ private:
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 	class CFrustum*					m_pFrustum = { nullptr };
 	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
+	class CEvent_Manager*			m_pEvent_Manager = { nullptr };
 
 
 public:

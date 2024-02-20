@@ -16,7 +16,7 @@ class CParticle_Red final : public CGameObject
 public:	
 	
 private:
-	CParticle_Red(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CParticle_Red(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CParticle_Red(const CParticle_Red& rhs);
 	virtual ~CParticle_Red() = default;
 
@@ -40,12 +40,15 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CParticle_Red* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CParticle_Red* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
 
+	virtual Engine::CGameObject* Pool() override;
+
 	virtual void Free() override;
+
 };
 
 END

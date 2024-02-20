@@ -15,7 +15,7 @@ BEGIN(Client)
 class CEnvironment_Instance final : public CGameObject
 {
 private:
-	CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CEnvironment_Instance(const CEnvironment_Instance& rhs);
 	virtual ~CEnvironment_Instance() = default;
 
@@ -26,6 +26,21 @@ public:
 	virtual void	Tick(_float fTimeDelta) override;
 	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+
+public:
+	virtual _bool	Write_Json(json& Out_Json) override;
+	virtual void	Load_FromJson(const json& In_Json) override;
+
+public:
+	void			Update(INSTANCE_INFO_DESC InstanceDesc, _int iIndex);
+
+public:
+	MAPTOOL_INSTANCE_DESC&					Get_InstanceDesc() { return m_tInstanceDesc; }
+	wstring									Get_ModelTag() { return m_tInstanceDesc.strModelTag;}
+
+	vector<INSTANCE_INFO_DESC>*				Get_InstanceInfoDesc() { return &m_tInstanceDesc.vecInstanceInfoDesc; }
+
+	INSTANCE_INFO_DESC*						Get_InstanceInfo(_uint iIndex) { return &m_tInstanceDesc.vecInstanceInfoDesc[iIndex]; }
 
 private:
 	CShader*								m_pShaderCom = { nullptr };	
@@ -41,10 +56,11 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CEnvironment_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEnvironment_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 
 	virtual void Free() override;
 };

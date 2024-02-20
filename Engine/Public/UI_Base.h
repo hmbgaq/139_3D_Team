@@ -20,16 +20,24 @@ class ENGINE_DLL CUI_Base abstract: public CGameObject
 public:
 	typedef struct tagUIBaseDesc
 	{
-		//			위치 X,Y / 사이즈 X,Y
-		_float		fX, fY, fSizeX, fSizeY;
+		/* 크기 */
+		_float		fScaleX = 100.f;
+		_float		fScaleY = 100.f;
+		_float		fScaleZ = 1.0f;
+		
+		/* 회전 */
+		_float		fRotationX = 0.0f;
+		_float		fRotationY = 0.0f;
+		_float		fRotationZ = 0.0f;
 
-		_float		fTexSizeX = 0.f, fTexSizeY = 0.f;
+		/* 이동 */
+		_float		fPositionX = (_float)1280 / 2;
+		_float		fPositionY = (_float)720 / 2;
+		_float		fPositionZ = 1.f;
 
-		_float		fOffsetX = 0.f, fOffsetY = 0.f;
+		/* 랜더그룹 */
+		CRenderer::RENDERGROUP eRenderGroup = CRenderer::RENDER_UI;
 
-		_bool		bWorldUI = false;	// 월드상의 UI인지
-		_bool		bFrame = false;		// Frame
-		_bool		bEnable = true;		// Enable 여부
 	}UI_DESC;
 
 
@@ -46,7 +54,7 @@ public:
 	}TEXUVRATIO;
 
 protected:
-	CUI_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CUI_Base(const CGameObject& rhs);
 	virtual ~CUI_Base() = default;
 

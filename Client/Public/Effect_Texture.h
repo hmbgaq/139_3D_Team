@@ -62,7 +62,7 @@ public:
 	}NOISE_DESC;
 
 private:
-	CEffect_Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEffect_Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CEffect_Texture(const CEffect_Texture& rhs);
 	virtual ~CEffect_Texture() = default;
 
@@ -133,10 +133,11 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CEffect_Texture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEffect_Texture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 
 	virtual void Free() override;
 };

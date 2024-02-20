@@ -46,6 +46,20 @@ public:
 			XMVectorGetX(XMVector3Length(XMLoadFloat4x4(&m_WorldMatrix).r[STATE_LOOK])));
 	}
 
+	_float3 Get_Rotated() //! 승용 추가 수정할거면 물어봐주셈
+	{
+		_float3 vRotation;
+
+		_float4x4 WorldMatrix = Get_WorldFloat4x4();
+		_matrix rotationMatrix = XMMatrixIdentity();
+
+		vRotation.x = asin(WorldMatrix._32); // 피치
+		vRotation.y = atan2(-WorldMatrix._31, WorldMatrix._33); // 요
+		vRotation.z = atan2(-WorldMatrix._12, WorldMatrix._22); // 롤
+
+		return vRotation;
+	}
+
 	_matrix Get_WorldMatrix() {
 		return XMLoadFloat4x4(&m_WorldMatrix);
 	}
@@ -70,6 +84,13 @@ public:
 
 		XMStoreFloat4(&m_fPosition, vPosVec);
 		Set_State(STATE::STATE_POSITION, m_fPosition);
+	}
+
+	_float3 Get_Position() 
+	{
+		_float3 vPos;
+		XMStoreFloat3(&vPos, Get_State(CTransform::STATE::STATE_POSITION));
+		return vPos;
 	}
 
 

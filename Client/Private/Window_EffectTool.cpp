@@ -1155,16 +1155,16 @@ void CWindow_EffectTool::Update_SaveLoad_Particle()
 		{
 			if (ImGui::MenuItem("Save"))
 			{
-				Save_Function();
+				Save_Function("../Bin/DataFiles/Data_Effect/Particle_Info/", "Particle_TestSphere_Info");
 			}
 			if (ImGui::MenuItem("Load"))
 			{
-				m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
-				m_strDialogPath = "../Bin/DataFiles/Data_Effect/Particle_Info/";
+				//m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
+				//m_strDialogPath = "../Bin/DataFiles/Data_Effect/Particle_Info/";
 
 				OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
 
-				Load_Function();
+				Load_Function("../Bin/DataFiles/Data_Effect/Particle_Info/", "Particle_TestSphere_Info");
 			}
 			ImGui::EndMenu();
 		}
@@ -1172,7 +1172,7 @@ void CWindow_EffectTool::Update_SaveLoad_Particle()
 	}
 }
 
-HRESULT CWindow_EffectTool::Save_Function()
+HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 {
 	if (nullptr != m_pCurParticle)
 	{
@@ -1187,7 +1187,7 @@ HRESULT CWindow_EffectTool::Save_Function()
 	return S_OK;
 }
 
-HRESULT CWindow_EffectTool::Load_Function()
+HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 {
 
 	if (nullptr == m_pCurParticle)

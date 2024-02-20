@@ -20,9 +20,10 @@ HRESULT CVIBuffer_Environment_Model_Instance::Initialize(void* pArg)
 {
 	ENVIRONMENT_MODEL_INSTANCE_DESC Desc = *(ENVIRONMENT_MODEL_INSTANCE_DESC*)pArg;
 
+	m_tInstanceInfo = Desc.vecBufferInstanceInfo;
+
 	__super::Initialize(pArg);
 
-	m_tInstanceInfo = Desc.vecBufferInstanceInfo;
 	
 
 	return S_OK;
@@ -54,7 +55,32 @@ void CVIBuffer_Environment_Model_Instance::Update(vector<INSTANCE_INFO_DESC>& ve
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_Environment_Model_Instance::Update(INSTANCE_INFO_DESC InstanceDesc, _int iIndex)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource;
+	ZeroMemory(&SubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
+
 	
+		_matrix RotationMatrix = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&InstanceDesc.vRotation));
+
+		XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[iIndex].vRight, RotationMatrix.r[0] * InstanceDesc.vScale.x);
+		XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[iIndex].vUp, RotationMatrix.r[1] * InstanceDesc.vScale.y);
+		XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[iIndex].vLook, RotationMatrix.r[2] * InstanceDesc.vScale.z);
+		XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[iIndex].vTranslation, XMVectorSetW(XMLoadFloat3(&InstanceDesc.vTranslation), 1.f));
+	
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+HRESULT CVIBuffer_Environment_Model_Instance::Bind_ShaderResources(CShader* pShader, _int iIndex)
+{
+	
+	
+	return S_OK;
 }
 
 void CVIBuffer_Environment_Model_Instance::Init_Instance(_int iNumInstance)

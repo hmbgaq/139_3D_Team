@@ -28,7 +28,7 @@ void CTransform::Load_FromJson(const json& In_Json)
 	ZeroMemory(&WorldMatrix, sizeof(_float4x4));
 	CJson_Utility::Load_JsonFloat4x4(In_Json["Transform"], WorldMatrix);
 
-	m_WorldMatrix = WorldMatrix;
+	Set_WorldMatrix(WorldMatrix);
 }
 
 void CTransform::Set_Scaling(_float fScaleX, _float fScaleY, _float fScaleZ)

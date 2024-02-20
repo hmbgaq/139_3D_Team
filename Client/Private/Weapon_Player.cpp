@@ -5,8 +5,8 @@
 #include "Bone.h"
 
 
-CWeapon_Player::CWeapon_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CWeapon(pDevice, pContext)
+CWeapon_Player::CWeapon_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CWeapon(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -91,9 +91,9 @@ HRESULT CWeapon_Player::Bind_ShaderResources()
 	return S_OK;
 }
 
-CWeapon_Player * CWeapon_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CWeapon_Player * CWeapon_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CWeapon_Player*		pInstance = new CWeapon_Player(pDevice, pContext);
+	CWeapon_Player*		pInstance = new CWeapon_Player(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -117,8 +117,15 @@ CGameObject * CWeapon_Player::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CWeapon_Player::Pool()
+{
+	return new CWeapon_Player(*this);
+}
+
 void CWeapon_Player::Free()
 {
 	__super::Free();
 }
+
+
 

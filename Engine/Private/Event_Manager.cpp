@@ -12,19 +12,48 @@ HRESULT CEvent_Manager::Initialize()
 	return S_OK;
 }
 
-void CEvent_Manager::AddEventListener(CGameObject* pEventActor, OnEvent OnEvent, Condition Condition)
+void CEvent_Manager::Tick(_float fTimeDelta)
 {
-	//m_Events.push_back(new CEvent(pEventActor, OnEvent, Condition));
+	for (auto iter = m_Events.begin(); iter != m_Events.end();)
+	{
+		if (nullptr == (*iter)) 
+		{
+			iter = m_Events.erase(iter);
+		}
+
+		(*iter)->Tick_Event(fTimeDelta);
+
+		if ((*iter)->Activate_Condition())
+		{
+			(*iter)->Activate();
+		}
+			
+		if ((*iter)->End_Condition()) 
+		{
+			Safe_Delete(*iter);
+			iter = m_Events.erase(iter);
+		}
+		else 
+		{
+			++iter;
+		}
+	}
 }
 
-void CEvent_Manager::TriggerEvent()
+//void CEvent_Manager::TriggerEvent()
+//{
+//}
+
+void CEvent_Manager::Clear()
 {
-	//for (auto& pEvent : m_Events) {
-	//	pEvent->OnEvent();
-	//}
+	for (IEvent* pEvent : m_Events)
+	{
+		Safe_Delete(pEvent);
+	}
+	m_Events.clear();
 }
 
-CEvent_Manager* CEvent_Manager::Create(_uint iNumLevels)
+CEvent_Manager* CEvent_Manager::Create()
 {
 	CEvent_Manager* pInstance = new CEvent_Manager;
 
@@ -38,4 +67,12 @@ CEvent_Manager* CEvent_Manager::Create(_uint iNumLevels)
 
 void CEvent_Manager::Free()
 {
+	__super::Free();
+
+	for (IEvent* pEvent : m_Events) 
+	{
+		Safe_Delete(pEvent);
+	}
+	m_Events.clear();
+
 }

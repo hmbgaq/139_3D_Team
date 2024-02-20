@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 
 
-CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -46,22 +46,18 @@ void CMonster::Priority_Tick(_float fTimeDelta)
 
 void CMonster::Tick(_float fTimeDelta)
 {
-
-	if (m_pGameInstance->Key_Pressing(DIK_T)) 
+	if (m_pGameInstance->Key_Down(DIK_K))
 	{
-		CGameObject* pPlayer = m_pGameInstance->Get_Player();
-		CTransform* pPlayerTransform = pPlayer->Get_Transform();
-		_vector pPos = pPlayerTransform->Get_State(CTransform::STATE::STATE_POSITION);
-		m_pTransformCom->Look_At_Lerp(pPos, fTimeDelta);
+		m_bEnable = false;
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_9))
-		m_iRenderPass = 3;
-
-	if (3 == m_iRenderPass) /* Dissolve Test */
-	{
-		m_fTimeDelta += fTimeDelta * 0.5f;
-	}
+	//if (m_pGameInstance->Key_Pressing(DIK_T)) 
+	//{
+	//	CGameObject* pPlayer = m_pGameInstance->Get_Player();
+	//	CTransform* pPlayerTransform = pPlayer->Get_Transform();
+	//	_vector pPos = pPlayerTransform->Get_State(CTransform::STATE::STATE_POSITION);
+	//	m_pTransformCom->Look_At_Lerp(pPos, fTimeDelta);
+	//}
 
 	//SetUp_OnTerrain(m_pTransformCom);
 
@@ -179,9 +175,9 @@ HRESULT CMonster::Bind_ShaderResources()
 	return S_OK;
 }
 
-CMonster * CMonster::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CMonster * CMonster::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CMonster*		pInstance = new CMonster(pDevice, pContext);
+	CMonster*		pInstance = new CMonster(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -205,6 +201,11 @@ CGameObject * CMonster::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CMonster::Pool()
+{
+	return new CMonster(*this);
+}
+
 void CMonster::Free()
 {
 	__super::Free();
@@ -214,4 +215,6 @@ void CMonster::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

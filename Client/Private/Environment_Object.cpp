@@ -3,8 +3,8 @@
 
 #include "GameInstance.h"
 
-CEnvironment_Object::CEnvironment_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CEnvironment_Object::CEnvironment_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 	
 }
@@ -24,7 +24,7 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 {	
 	m_tEnvironmentDesc = *(ENVIRONMENT_OBJECT_DESC*)pArg;
 
-	m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
+	
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
@@ -32,6 +32,8 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 	
+	if (false == m_tEnvironmentDesc.bPreview)
+		m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
 
 	return S_OK;
 }
@@ -64,6 +66,7 @@ HRESULT CEnvironment_Object::Render()
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
 
@@ -104,9 +107,37 @@ HRESULT CEnvironment_Object::Render_Shadow()
 		m_pModelCom->Render((_uint)i);
 	}
 
-
 	return S_OK;
 }
+
+_bool CEnvironment_Object::Write_Json(json& Out_Json)
+{
+	return __super::Write_Json(Out_Json);
+}
+
+void CEnvironment_Object::Load_FromJson(const json& In_Json)
+{
+	return __super::Load_FromJson(In_Json);
+}
+
+#ifdef DEBUG
+
+_bool CEnvironment_Object::Picking(_float3* vPickedPos)
+{
+	GRAPHIC_DESC GraphicDesc = *m_pGameInstance->Get_GraphicDesc();
+
+	HWND hWnd = GraphicDesc.hWnd;
+
+	_int iWinSizeX = GraphicDesc.iBackBufferSizeX;
+	_int iWinSizeY = GraphicDesc.iBackBufferSizeY;
+
+	RAY ray = m_pGameInstance->Get_MouseRayLocal(hWnd, iWinSizeX, iWinSizeY, m_pTransformCom->Get_WorldMatrix());
+	vector<class CMesh*> meshes = m_pModelCom->Get_Meshes();
+
+	return m_pGameInstance->Picking_Mesh(ray, vPickedPos, meshes);
+}
+
+#endif
 
 HRESULT CEnvironment_Object::Ready_Components()
 {
@@ -141,9 +172,9 @@ HRESULT CEnvironment_Object::Bind_ShaderResources()
 	return S_OK;
 }
 
-CEnvironment_Object * CEnvironment_Object::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CEnvironment_Object * CEnvironment_Object::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CEnvironment_Object*		pInstance = new CEnvironment_Object(pDevice, pContext);
+	CEnvironment_Object*		pInstance = new CEnvironment_Object(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -167,6 +198,11 @@ CGameObject * CEnvironment_Object::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CEnvironment_Object::Pool()
+{
+	return new CEnvironment_Object(*this);
+}
+
 void CEnvironment_Object::Free()
 {
 	__super::Free();
@@ -174,4 +210,6 @@ void CEnvironment_Object::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

@@ -2,8 +2,8 @@
 #include "UI_MonsterHp.h"
 #include "GameInstance.h"
 
-CUI_MonsterHp::CUI_MonsterHp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI_Base(pDevice, pContext)
+CUI_MonsterHp::CUI_MonsterHp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CUI_Base(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -24,9 +24,6 @@ HRESULT CUI_MonsterHp::Initialize_Prototype()
 HRESULT CUI_MonsterHp::Initialize(void* pArg)
 {
 	m_tInfo = *(MONSTER_HP*)pArg;
-	m_tInfo.bFrame = false;
-
-	m_isEnable = m_tInfo.bEnable;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -198,9 +195,9 @@ _bool CUI_MonsterHp::In_Frustum()
 }
 
 
-CUI_MonsterHp* CUI_MonsterHp::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_MonsterHp* CUI_MonsterHp::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_MonsterHp* pInstance = new CUI_MonsterHp(pDevice, pContext);
+	CUI_MonsterHp* pInstance = new CUI_MonsterHp(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -224,6 +221,11 @@ CGameObject* CUI_MonsterHp::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CUI_MonsterHp::Pool()
+{
+	return new CUI_MonsterHp(*this);
+}
+
 void CUI_MonsterHp::Free()
 {
 	__super::Free();
@@ -233,3 +235,5 @@ void CUI_MonsterHp::Free()
 	Safe_Release(m_pTextureCom);
 
 }
+
+

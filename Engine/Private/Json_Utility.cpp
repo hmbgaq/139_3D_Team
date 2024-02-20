@@ -124,6 +124,16 @@ void CJson_Utility::Load_JsonFloat4x4(const json& _Json, _float4x4& Out_Float4x4
 	}
 }
 
+wstring CJson_Utility::String_To_WString(const json& _Json)
+{
+	if (_Json.is_string()) {
+		string strConvert = _Json.get<string>();
+		return std::wstring(strConvert.begin(), strConvert.end());
+	}
+}
+
+
+
 XMFLOAT4 CJson_Utility::Get_VectorFromJson(json& _json)
 {
 	if (_json.empty())

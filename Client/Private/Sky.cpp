@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 
 
-CSky::CSky(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CSky::CSky(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -67,18 +67,20 @@ HRESULT CSky::Render()
 
 HRESULT CSky::Ready_Components()
 {
+	LEVEL eCurrentLevel = (LEVEL)m_pGameInstance->Get_NextLevel();
+
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxCube"),
+	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Shader_VtxCube"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
+	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Sky"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"),
+	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_VIBuffer_Cube"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
@@ -102,9 +104,9 @@ HRESULT CSky::Bind_ShaderResources()
 	return S_OK;
 }
 
-CSky * CSky::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CSky * CSky::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CSky*		pInstance = new CSky(pDevice, pContext);
+	CSky*		pInstance = new CSky(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -128,6 +130,11 @@ CGameObject * CSky::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CSky::Pool()
+{
+	return new CSky(*this);
+}
+
 void CSky::Free()
 {
 	__super::Free();
@@ -136,4 +143,6 @@ void CSky::Free()
 	Safe_Release(m_pVIBufferCom);	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

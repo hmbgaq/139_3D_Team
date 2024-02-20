@@ -60,8 +60,8 @@ public:
 /* For.Save&Load */
 public:
 	void	Update_SaveLoad_Particle();
-	virtual	HRESULT		Save_Function() override;
-	virtual HRESULT		Load_Function() override;
+	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
+	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
 
 
 /* For.Tool Util */

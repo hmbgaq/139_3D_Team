@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 #include "VIBuffer_Environment_Model_Instance.h"
 
-CEnvironment_Instance::CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CEnvironment_Instance::CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -23,7 +23,7 @@ HRESULT CEnvironment_Instance::Initialize_Prototype()
 
 HRESULT CEnvironment_Instance::Initialize(void* pArg)
 {	
-	m_tInstanceDesc = {}; //*(MAPTOOL_INSTANCE_DESC*)pArg;
+	m_tInstanceDesc = *(MAPTOOL_INSTANCE_DESC*)pArg;
 
 	
 	if (FAILED(__super::Initialize(nullptr)))
@@ -32,7 +32,9 @@ HRESULT CEnvironment_Instance::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	
 
+	
 	return S_OK;
 }
 
@@ -43,7 +45,7 @@ void CEnvironment_Instance::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Instance::Tick(_float fTimeDelta)
 {
-
+	m_pInstanceModelCom->Update(m_tInstanceDesc.vecInstanceInfoDesc);
 }
 
 void CEnvironment_Instance::Late_Tick(_float fTimeDelta)
@@ -68,13 +70,22 @@ HRESULT CEnvironment_Instance::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		_matrix Test = m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix();
+
 		
 
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		
+		
+
+		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+
 		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
+
+
+
 		m_pInstanceModelCom->Render((_uint)i);
 
 		//m_pModelCom->Render(i);
@@ -84,6 +95,22 @@ HRESULT CEnvironment_Instance::Render()
 	
 
 	return S_OK;
+}
+
+_bool CEnvironment_Instance::Write_Json(json& Out_Json)
+{
+	return __super::Write_Json(Out_Json);
+	
+}
+
+void CEnvironment_Instance::Load_FromJson(const json& In_Json)
+{
+	return __super::Load_FromJson(In_Json);
+}
+
+void CEnvironment_Instance::Update(INSTANCE_INFO_DESC InstanceDesc, _int iIndex)
+{
+	m_pInstanceModelCom->Update(InstanceDesc, iIndex);
 }
 
 HRESULT CEnvironment_Instance::Ready_Components()
@@ -105,7 +132,7 @@ HRESULT CEnvironment_Instance::Ready_Components()
 	Desc.vecBufferInstanceInfo = m_tInstanceDesc.vecInstanceInfoDesc;
 	
 	// For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"),
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pInstanceModelCom), &Desc)))
 		return E_FAIL;
 	
@@ -126,12 +153,17 @@ HRESULT CEnvironment_Instance::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &fCamFar, sizeof(_float))))
+		return E_FAIL;
+
+
 	return S_OK;
 }
 
-CEnvironment_Instance * CEnvironment_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CEnvironment_Instance * CEnvironment_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CEnvironment_Instance*		pInstance = new CEnvironment_Instance(pDevice, pContext);
+	CEnvironment_Instance*		pInstance = new CEnvironment_Instance(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -162,5 +194,10 @@ void CEnvironment_Instance::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pInstanceModelCom);
+}
+
+CGameObject* CEnvironment_Instance::Pool()
+{
+	return new CEnvironment_Instance(*this);
 }
 

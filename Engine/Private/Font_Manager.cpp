@@ -1,4 +1,4 @@
-#include "..\Public\Font_Manager.h"
+#include "Font_Manager.h"
 #include "CustomFont.h"
 
 CFont_Manager::CFont_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

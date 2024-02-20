@@ -5,8 +5,8 @@
 
 #include "Easing_Utillity.h"
 
-CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CAlphaObject(pDevice, pContext)
+CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CAlphaObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -88,9 +88,9 @@ HRESULT CEffect::Bind_ShaderResources()
 	return S_OK;
 }
 
-CEffect* CEffect::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEffect* CEffect::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CEffect* pInstance = new CEffect(pDevice, pContext);
+	CEffect* pInstance = new CEffect(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -113,6 +113,11 @@ CGameObject* CEffect::Clone(void* pArg)
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+CGameObject* CEffect::Pool()
+{
+	return new CEffect(*this);
 }
 
 void CEffect::Free()

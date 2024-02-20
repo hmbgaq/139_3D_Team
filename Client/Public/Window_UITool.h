@@ -68,7 +68,18 @@ public: /* ==================== UI ===================== */
 	bool						LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height);
 	HRESULT						Update_Pos();
 
-	
+public: /* ==================== Shortcut_Key ===================== */
+	void						Shortcut_Key(_float fTimeDelta);
+
+public:
+	void						UI_Set();
+
+public: /* ==================== List ===================== */
+	void						Layer_List();
+	void						Texture_List();
+	void						Class_List();
+	void						Object_List();
+
 public: /* ================= Function ================= */
 	// string타입을 받는 벡터 컨테이너를 char*타입을 받는 벡터 컨테이너로 변환 해주는 함수
 	std::vector<const char*> ConvertStringVectorToCharArray(const std::vector<std::string>& stringVector);
@@ -86,6 +97,8 @@ public: /* ================= Function ================= */
 	std::string WideStringToString(const wchar_t* wideStr);
 	// 경로에서 파일이름과 확장자만 추출해주는 함수
 	std::string GetFileName(const std::string& filePath);
+	// _기준으로 가장 마지막 이름을 추출해주는 함수
+	std::string GetUnderbarName(const std::string& filePath);
 	// 확장자를 제거해주는 함수
 	std::string RemoveExtension(const std::string& filePath);
 
@@ -95,18 +108,28 @@ public:
 	void UI2D_Setting(_float fTimeDelta);
 	HRESULT UI2D_Create(_float fTimeDelta);
 	void UI2D_Delete(_float fTimeDelta);
+	void AddIndexNumber(PATHINFO& str);
+	void Add_ObjectList(CUI::UI_DESC tIn_UI_Desc);
 
 public: /* Save/Load */
-	void Save_Desc();
-	void Load_Desc();
+	void				Save_Desc();
+	HRESULT				Load_Desc();
+	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
+	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
+	void				Load_Paths();
 
 public: /* Image */
 	// 이미지 로드 함수
-	void LoadImg(const _tchar* folderPath);
+	void LoadImgPath(const _tchar* folderPath);
 	void ImagePreview(_float fTimeDelta);
 
+public:
+	void IndexCheck();
+	void SetUp_Initialize(); // Load
+	_bool bSetUpComplete = true;
+
 private: /* Member */
-	UI_DESC						m_tUI_Info;
+	CUI::UI_DESC				m_tUI_Info;
 
 private: /* ==================== Mouse ==================== */
 
@@ -116,25 +139,62 @@ private: /* Image_Member */
 	_int						m_My_Image_Height = 100;
 	_int						m_iTextureNum = 0;
 	_int						m_iTestNum = 0;
-	vector<IMAGEINFO*>			m_vecTexture;	// 이미지 미리보기
-	vector<PATHINFO*>			m_vecPaths;		// 경로, 파일이름 (프로토타입 파싱가능)
-	IMAGEINFO* m_tTexture;
+	vector<IMAGEINFO*>			m_vecTexture;		// 이미지 미리보기를 위한 텍스처 정보들
+	vector<PATHINFO*>			m_vecPaths;			// 경로, 파일이름 담긴 컨테이너 (프로토타입 파싱가능)
+	std::vector<PATHINFO*>		m_vecImagePaths;	// 이미지 로드를 위한 경로
+	std::vector<PATHINFO*>		m_vecObjectName;	// 추가된 오브젝트들의 이름 (리스트 박스 출력용)
 
-	// 문자열 벡터를 const char* 배열로 변환
-	std::vector<const char*>	m_vecImagePaths;
-	std::vector<string>			m_vecObjectName;
+	IMAGEINFO*					m_tTexture;
+
+
 	_int						m_iSelectedPathIndex = 0; // 선택된 이미지 경로 인덱스
-	_int						m_iSelectedObjectIndex = 0; // 선택된 이미지 경로 인덱스
+	_int						m_iSelectedObjectIndex = 0; // 선택된 UI오브젝트
+	_int						m_iSelectedClassIndex = 0; // 선택된 Class
 	_int						m_iUINameNum = 0;
 private: /* 2D */
 	_float						m_fPosition[2] = { 0.f, 0.f };
 	_float						m_fScale[2] = { 0.f, 0.f };
 	vector<CGameObject*>		m_vecUIObject;
-	string						m_strItems[3] = { "Layer_UI_Player", "Layer_UI_Monster", "Layer_UI_Inventory" };
+	string						m_strLayer[3] = { "Layer_UI_Player", "Layer_UI_Monster", "Layer_UI_Inventory" };
 
 	_int						m_iLayerNum = 0;
-	CUI_Anything::UIANYTHING	m_tUI_Desc;
+	CUI::UI_DESC				m_tUI_Desc;
+	CUI*						m_CurrObject = nullptr;
+	POINT						m_pt;
 
+private:
+	_bool						m_bOpenTexture = true;
+	_bool						m_bOpenSetting = false;
+	_bool						m_bOpenUI = false;
+
+private:
+	//// ==============폴더 경로==============
+	//// 이미지 경로 목록을 저장하는 벡터
+	//std::vector<std::string> m_vecImgPs =
+	//{
+	//	"../Bin/Resources/Textures/UI/Textures/Blood",
+	//	"../Bin/Resources/Textures/UI/Textures/Buttons",
+	//	"../Bin/Resources/Textures/UI/Textures/Crosshairs",
+	//	"../Bin/Resources/Textures/UI/Textures/DeathScreen",
+	//	"../Bin/Resources/Textures/UI/Textures/EnemyHUD",
+	//	"../Bin/Resources/Textures/UI/Textures/EnemyIndicators",
+	//	"../Bin/Resources/Textures/UI/Textures/Icons",
+	//	"../Bin/Resources/Textures/UI/Textures/Interaction",
+	//	"../Bin/Resources/Textures/UI/Textures/InText",
+	//	"../Bin/Resources/Textures/UI/Textures/Inventory",
+	//	"../Bin/Resources/Textures/UI/Textures/Journal",
+	//};
+
+	// ============== 클래스 목록 ==============
+	// 클래스 목록을 저장하는 벡터
+	std::vector<std::string> m_vecClass =
+	{
+		"Anything",
+		"Player_HPBar"
+	};
+
+private:
+	ImGuiTabBarFlags m_Tab_bar_flags = ImGuiTabBarFlags_None;
 public:
 	static CWindow_UITool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

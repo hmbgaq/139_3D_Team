@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 
 
-CEffect_Texture::CEffect_Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CEffect(pDevice, pContext)
+CEffect_Texture::CEffect_Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CEffect(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -254,9 +254,9 @@ HRESULT CEffect_Texture::Bind_ShaderResources()
 	return S_OK;
 }
 
-CEffect_Texture * CEffect_Texture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CEffect_Texture * CEffect_Texture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CEffect_Texture*		pInstance = new CEffect_Texture(pDevice, pContext);
+	CEffect_Texture*		pInstance = new CEffect_Texture(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -278,6 +278,11 @@ CGameObject * CEffect_Texture::Clone(void* pArg)
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+CGameObject* CEffect_Texture::Pool()
+{
+	return new CEffect_Texture(*this);
 }
 
 void CEffect_Texture::Free()

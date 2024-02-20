@@ -23,10 +23,11 @@ public:
 		_bool		bAnimModel = { false };
 		_int		iPlayAnimationIndex = { 0 };
 		
+		_bool		bPreview = true; //! 미리보기용 오브젝트인지 확인
 	}ENVIRONMENT_OBJECT_DESC;
 
 private:
-	CEnvironment_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEnvironment_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CEnvironment_Object(const CEnvironment_Object& rhs);
 	virtual ~CEnvironment_Object() = default;
 
@@ -38,6 +39,21 @@ public:
 	virtual void		Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT		Render() override;
 	virtual HRESULT		Render_Shadow() override;
+
+public:
+	virtual _bool		Write_Json(json& Out_Json) override;
+	virtual void		Load_FromJson(const json& In_Json) override;
+
+public:
+	ENVIRONMENT_OBJECT_DESC* Get_EnvironmentDesc() { return &m_tEnvironmentDesc; }
+	wstring&			Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
+	_bool				Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
+	
+#ifdef DEBUG
+public: //! For.Tool
+	virtual _bool		Picking(_Out_ _float3* vPickedPos) override;
+
+#endif 
 
 public:
 	void				Start_Environment_Animation() { m_bPlay = true; }
@@ -57,12 +73,14 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CEnvironment_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEnvironment_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 
 	virtual void Free() override;
+
 };
 
 END

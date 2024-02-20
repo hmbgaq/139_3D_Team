@@ -20,7 +20,7 @@ public:
 	}LANDOBJECT_DESC;
 
 protected:
-	CLandObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CLandObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CLandObject(const CLandObject& rhs);
 	virtual ~CLandObject() = default;
 

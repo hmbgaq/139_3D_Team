@@ -7,11 +7,24 @@
 #include "Effect_Instance.h"
 
 #pragma region UI
+#include "UI_Anything.h"
 #include "UI_MonsterHp.h"
 #include "UI_MonsterHpFrame.h"
 #pragma endregion
 
 #include "LandObject.h"
+
+#pragma region MAP
+#include "Environment_Object.h"
+#include "Environment_Instance.h"
+
+#pragma endregion
+
+
+#pragma region Test
+#include "Screamer.h"  
+#pragma endregion
+
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -35,6 +48,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
+
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -129,15 +143,113 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* pArg)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg));
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Terrain")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Terrain")));
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky")));
+
+
+	json Stage1MapJson = {};
+
+	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
+	{
+		MSG_BOX("맵 불러오기 실패");
+		return E_FAIL;
+	}
+
+	json BasicJson = Stage1MapJson["Basic_Json"];
+	_int iBasicJsonSize = BasicJson.size();
+
+	for (_int i = 0; i < iBasicJsonSize; ++i)
+	{
+		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+
+		Desc.bAnimModel = BasicJson[i]["AnimType"];
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = BasicJson[i]["ModelTag"];
+
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+
+		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
+		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
+		Desc.bPreview = false;
+
+		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
+
+		CEnvironment_Object* pObject = { nullptr };
+
+		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+	}
+
+
+	json InteractJson = Stage1MapJson["Interact_Json"];
+	_int InteractJsonSize = InteractJson.size();
+
+	for (_int i = 0; i < InteractJsonSize; ++i)
+	{
+
+		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
+		//! L"Layer_Event"
+	}
+
+	json InstanceJson = Stage1MapJson["Instance_Json"];
+	_int InstanceJsonSize = InstanceJson.size();
+
+	for (_int i = 0; i < InstanceJsonSize; ++i)
+	{
+		MAPTOOL_INSTANCE_DESC InstanceDesc;
+
+		InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
+
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = InstanceJson[i]["ModelTag"];
+
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		InstanceDesc.strModelTag = strLoadModelTag;
+
+		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
+
+		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
+		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
+
+		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
+		{
+			INSTANCE_INFO_DESC InstanceInfoDesc = {};
+
+			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
+			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
+			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
+			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
+
+			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
+		}
+
+
+		CEnvironment_Instance* pInstanceObject = { nullptr };
+
+		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+
+	}
 
 	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Skydome"))))
 	//	return E_FAIL;
@@ -162,24 +274,27 @@ HRESULT CLevel_GamePlay::Ready_LandObjects()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void* pArg)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg));
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_UI()
 {
-	FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
+	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
 
-	FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Player"), nullptr));
+	FAILED_CHECK(Ready_Layer_UI_Player(TEXT("Layer_UI_Player"), nullptr));
 
+	FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
+	
 	return S_OK;
 }
 
@@ -187,25 +302,38 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 {
 	/* 추 후 파싱해서 정보 받아오기 */
 	
-	//// TEST
-	//CUI_MonsterHp::MONSTER_HP tMonsterHp;
-	//CUI_MonsterHpFrame::MONSTER_FRAME tMonsterFrame;
-	//
-	//tMonsterHp.fX = 50.f;
-	//tMonsterHp.fY = 50.f;
-	//tMonsterHp.fSizeX = 30.f;
-	//tMonsterHp.fSizeY = 30.f;
+	json json_in;
 
-	//tMonsterFrame.fX = 500.f;
-	//tMonsterFrame.fY = 300.f;
-	//tMonsterFrame.fSizeX = 100.f;
-	//tMonsterFrame.fSizeY = 100.f;
-	//tMonsterFrame.eMonsterType = CUI_MonsterHpFrame::SMALL;
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
 
-	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_MonsterHpFrame"), &tMonsterFrame)))
-	//	return E_FAIL;
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
+	
+	CJson_Utility::Load_Json(filePath, json_in);
 
-	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_MonsterHp"), &tMonsterHp)))
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		tUI_Info.strProtoTag = object["ProtoTag"];
+		tUI_Info.strFilePath = object["FilePath"];
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
+
+		pUI_Object->Get_Transform()->Load_FromJson(object);
+	}
+
+
+	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &json_in)))
 	//	return E_FAIL;
 
 	return S_OK;
@@ -213,6 +341,45 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI_Player(const wstring& strLayerTag, void* pArg)
 {
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
+{
+	json json_in;
+
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info.json";
+
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
+
+	CJson_Utility::Load_Json(filePath, json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		tUI_Info.strCloneTag = object["CloneTag"];
+		tUI_Info.strProtoTag = object["ProtoTag"];
+		tUI_Info.strFilePath = object["FilePath"];
+
+		wstring wstrCloneTag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrCloneTag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, wstrCloneTag, &tUI_Info));
+
+		pUI_Object->Get_Transform()->Load_FromJson(object);
+	}
+
 	return S_OK;
 }
 

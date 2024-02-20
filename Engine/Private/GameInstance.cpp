@@ -1,5 +1,6 @@
 #include "..\Public\GameInstance.h"
 #include "Collision_Manager.h"
+#include "Event_Manager.h"
 #include "Graphic_Device.h"
 #include "Object_Manager.h"
 #include "Target_Manager.h"
@@ -10,6 +11,7 @@
 #include "Font_Manager.h"
 #include "Renderer.h"
 #include "Frustum.h"
+#include "Mesh.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -73,6 +75,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 	if (nullptr == m_pCollision_Manager)
 		return E_FAIL;
 
+	m_pEvent_Manager = CEvent_Manager::Create();
+	if (nullptr == m_pEvent_Manager)
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -96,6 +102,10 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pFrustum->Tick();
 
+	m_pEvent_Manager->Tick(fTimeDelta);
+
+	m_pCollision_Manager->Tick(fTimeDelta);
+
 	m_pObject_Manager->Late_Tick(fTimeDelta);
 
 	m_pLevel_Manager->Tick(fTimeDelta);
@@ -104,7 +114,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 void CGameInstance::Clear(_uint iLevelIndex)
 {
 	if (nullptr == m_pObject_Manager ||
-		nullptr == m_pComponent_Manager)
+		nullptr == m_pComponent_Manager || 
+		nullptr == m_pEvent_Manager)
 		return;
 
 	/* 오브젝트 매니져에 레벨별로 구분해 놓은 객체들 중 특정된 객체들을 지운다.  */
@@ -112,6 +123,8 @@ void CGameInstance::Clear(_uint iLevelIndex)
 
 	/* 컴포넌트 매니져에 레벨별로 구분해 놓은 컴포넌트들 중 특정된 객체들을 지운다.  */
 	m_pComponent_Manager->Clear(iLevelIndex);
+
+	m_pEvent_Manager->Clear();
 }
 
 HRESULT CGameInstance::Render_Engine()
@@ -119,6 +132,8 @@ HRESULT CGameInstance::Render_Engine()
 	if (nullptr == m_pLevel_Manager ||
 		nullptr == m_pRenderer)
 		return E_FAIL;
+
+	m_pRenderer->Pre_Setting();
 
 	m_pRenderer->Draw_RenderGroup();
 
@@ -128,7 +143,7 @@ HRESULT CGameInstance::Render_Engine()
 #endif
 
 	m_pInput_Device->LateTick();
-
+	
 	return S_OK;
 }
 
@@ -177,6 +192,14 @@ GRAPHIC_DESC* CGameInstance::Get_GraphicDesc()
 		return nullptr;
 
 	return m_pGraphic_Device->Get_GraphicDesc();
+}
+
+ID3D11ShaderResourceView* CGameInstance::Get_DepthSRV()
+{
+	if (nullptr == m_pGraphic_Device)
+		return nullptr;
+
+	return m_pGraphic_Device->Get_DepthSRV();
 }
 
 _byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
@@ -325,14 +348,19 @@ CGameObject* CGameInstance::Add_CloneObject_And_Get(_uint iLevelIndex, const wst
 	return Get_GameObect_Last(iLevelIndex, strLayerTag);
 }
 
-CGameObject* CGameInstance::Get_Player()
+CCharacter* CGameInstance::Get_Player()
 {
 	return m_pObject_Manager->Get_Player();
 }
 
-void CGameInstance::Set_Player(CGameObject* _pPlayer)
+void CGameInstance::Set_Player(CCharacter* _pPlayer)
 {
 	m_pObject_Manager->Set_Player(_pPlayer);
+}
+
+HRESULT CGameInstance::Create_PoolObjects(const wstring& strPrototypeTag, _uint iSize)
+{
+	return m_pObject_Manager->Create_PoolObjects(strPrototypeTag, iSize);
 }
 
 void CGameInstance::Fill_PrototypeTags(vector<string>* _vector)
@@ -452,6 +480,149 @@ _float CGameInstance::Get_CamFar()
 	return m_pPipeLine->Get_CamFar();
 }
 
+
+RAY CGameInstance::Get_MouseRayWorld(HWND g_hWnd, const unsigned int g_iWinSizeX, const unsigned int g_iWinSizeY)
+{
+	//return m_pPipeLine->Get_MouseRayWorld(g_hWnd, g_iWinSizeX, g_iWinSizeY);
+	POINT pt;
+	GetCursorPos(&pt);
+	ScreenToClient(g_hWnd, &pt);
+
+	_vector vProjPos(XMVectorSet(pt.x / (g_iWinSizeX * 0.5f) - 1.f, pt.y / -(g_iWinSizeY * 0.5f) + 1.f, 0.f, 0.f));
+
+	_matrix ProjMatrixInv = Get_TransformMatrixInverse(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ);
+
+	_vector vViewPos(XMVector3TransformCoord(vProjPos, ProjMatrixInv));
+
+	_vector vRayDir(vViewPos);
+	_vector vRayPos(XMVectorSet(0.f, 0.f, 0.f, 1.f));
+
+	_matrix ViewMatrixInv = Get_TransformMatrixInverse(CPipeLine::D3DTRANSFORMSTATE::D3DTS_VIEW);
+
+	RAY MouseRay;
+	ZeroMemory(&MouseRay, sizeof(RAY));
+
+	XMStoreFloat3(&MouseRay.vDirection, XMVector3Normalize(XMVector3TransformNormal(vRayDir, ViewMatrixInv)));
+	XMStoreFloat4(&MouseRay.vPosition, XMVector3TransformCoord(vRayPos, ViewMatrixInv));
+
+	MouseRay.fLength = 1000000.0f;
+	return MouseRay;
+}
+
+RAY CGameInstance::Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY, _matrix matWorld)
+{
+	//return m_pPipeLine->Get_MouseRayLocal(g_hWnd, g_iWinSizeX, g_iWinSizeY, matWorld);
+
+	RAY vMouseRayLocal;
+	ZeroMemory(&vMouseRayLocal, sizeof(vMouseRayLocal));
+
+	RAY vMouseRayWorld = Get_MouseRayWorld(g_hWnd, g_iWinSizeX, g_iWinSizeY);
+
+	_vector vMousePos = XMLoadFloat4(&vMouseRayWorld.vPosition);
+	_vector vMouseDir = XMLoadFloat3(&vMouseRayWorld.vDirection);
+
+	_matrix matWorldInv = XMMatrixInverse(nullptr, matWorld);
+	vMousePos = XMVector3TransformCoord(vMousePos, matWorldInv);
+	vMouseDir = XMVector3Normalize(XMVector3TransformNormal(vMouseDir, matWorldInv));
+
+	XMStoreFloat4(&vMouseRayLocal.vPosition, vMousePos);
+	XMStoreFloat3(&vMouseRayLocal.vDirection, vMouseDir);
+	vMouseRayLocal.fLength = 1000000.0f;
+
+	return vMouseRayLocal;
+}
+
+#ifdef _DEBUG
+_bool CGameInstance::Picking_Mesh(RAY ray, _float3* out, vector<class CMesh*> Meshes)
+{
+	//_vector		vPickedPos;
+	//_vector		vVec0, vVec1, vVec2;
+
+	_vector		vRayPos = XMLoadFloat4(&ray.vPosition);
+	_vector		vRayDir = XMLoadFloat3(&ray.vDirection);
+	_float		fMinDist = 100000.f;
+
+	_bool bIsPicked = false;
+	_float3 vPickedPos = { 0.f, 0.f, 0.f };
+
+	for (CMesh* mesh : Meshes)
+	{
+		
+		if (nullptr == mesh)
+			return false;
+
+		if (mesh->Picking(ray, out))
+		{
+			bIsPicked = true;
+
+			_vector vPos = XMLoadFloat3(out);
+			_float3 rayPos = XMLoadFloat4(&ray.vPosition);
+
+			rayPos.y += 2;
+
+			_float3 vDist = rayPos - *out;
+			//XMStoreFloat3(&vDist, vRayPos - vPos);
+
+			_float fDist = sqrt(vDist.x * vDist.x + vDist.y * vDist.y + vDist.z * vDist.z);
+
+
+			if (fMinDist >= fDist)
+			{
+				fMinDist = fDist;
+				vPickedPos = *out;
+
+				
+			}
+		}
+	}
+
+	//if (bIsPicked)
+	//{
+	//	*out = vPickedPos;
+	//}
+
+	*out = vPickedPos;
+
+	return bIsPicked;
+}
+#endif
+
+#ifdef _DEBUG
+_bool CGameInstance::Picking_Vertex(RAY ray, _float3* out, _uint triNum, VTXMESH* pVertices, _uint* pIndices)
+{
+	_vector		vPickedPos;
+	_vector		vVec0, vVec1, vVec2;
+
+	_vector		vRayPos = XMLoadFloat4(&ray.vPosition);
+	_vector		vRayDir = XMLoadFloat3(&ray.vDirection);
+	_float		fDist = 0.f;
+
+	for (_uint i = 0; i < triNum; ++i)
+	{
+		_int iStartIndex = i * 3;
+
+		_float3 vVtxPos1 = pVertices[pIndices[iStartIndex + 0]].vPosition;
+		_float3 vVtxPos2 = pVertices[pIndices[iStartIndex + 1]].vPosition;
+		_float3 vVtxPos3 = pVertices[pIndices[iStartIndex + 2]].vPosition;
+
+		vVec0 = XMLoadFloat3(&vVtxPos1);
+		vVec1 = XMLoadFloat3(&vVtxPos2);
+		vVec2 = XMLoadFloat3(&vVtxPos3);
+
+		if (DirectX::TriangleTests::Intersects(
+			vRayPos, vRayDir,
+			vVec0, vVec1, vVec2,
+			fDist))
+		{
+			vPickedPos = vRayPos + XMVector3Normalize(vRayDir) * fDist;
+			XMStoreFloat3(out, vPickedPos);
+			return true;
+		}
+	}
+	return false;
+}
+#endif
+
 HRESULT CGameInstance::Add_Font(const wstring & strFontTag, const wstring & strFontFilePath)
 {
 	return m_pFont_Manager->Add_Font(strFontTag, strFontFilePath);
@@ -472,9 +643,9 @@ HRESULT CGameInstance::Add_MRT(const wstring & strMRTTag, const wstring & strTar
 	return m_pTarget_Manager->Add_MRT(strMRTTag, strTargetTag);
 }
 
-HRESULT CGameInstance::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV)
+HRESULT CGameInstance::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV, _bool bClear)
 {
-	return m_pTarget_Manager->Begin_MRT(strMRTTag, pDSV);
+	return m_pTarget_Manager->Begin_MRT(strMRTTag, pDSV, bClear);
 }
 
 HRESULT CGameInstance::End_MRT()
@@ -536,6 +707,11 @@ void CGameInstance::Add_Collision(const _uint& In_iLayer, CCollider* _pCollider)
 	m_pCollision_Manager->Add_Collision(In_iLayer, _pCollider);
 }
 
+void CGameInstance::Add_Event(IEvent* pEvent)
+{
+	m_pEvent_Manager->Add_Event(pEvent);
+}
+
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
 {
 	//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
@@ -577,7 +753,7 @@ string CGameInstance::Convert_WString_To_String(wstring _wstring)
 {
 	string out_string;
 
-	return out_string.assign(_wstring.begin(), _wstring.end());;
+	return out_string.assign(_wstring.begin(), _wstring.end());
 }
 
 WCHAR* CGameInstance::StringTowchar(const std::string& str)
@@ -594,7 +770,13 @@ char* CGameInstance::ConverWStringtoC(const wstring& wstr)
 	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
 	char* result = new char[size_needed];
 	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result, size_needed, NULL, NULL);
-	return result;
+
+	char* newResult = result;
+
+	result = nullptr;
+	delete[] result;
+
+	return newResult;
 }
 
 wchar_t* CGameInstance::ConverCtoWC(char* str)
@@ -604,7 +786,13 @@ wchar_t* CGameInstance::ConverCtoWC(char* str)
 	pStr = new WCHAR[strSize];
 	MultiByteToWideChar(CP_ACP, 0, str, (_int)strlen(str) + (size_t)1, pStr, strSize);
 
-	return pStr;
+
+	_tchar* newResult = pStr;
+
+	pStr = nullptr;
+	delete[] pStr;
+
+	return newResult;
 }
 
 std::string CGameInstance::WideStringToString(const wchar_t* wideStr)
@@ -641,6 +829,15 @@ std::string CGameInstance::RemoveExtension(const std::string& filePath)
 		// 확장자가 없는 경우 그대로 반환
 		return filePath;
 	}
+}
+
+_vector CGameInstance::Convert_Orthogonal(_vector vPosition)
+{
+	_float fPosX = vPosition.m128_f32[0] + g_iWinsizeX * 0.5f;
+	_float fPosY = vPosition.m128_f32[1] + g_iWinsizeY * 0.5f;
+
+	_vector vOrthoPos = { fPosX, fPosY, vPosition.m128_f32[2], vPosition.m128_f32[3] };
+	return vOrthoPos;
 }
 
 string CGameInstance::Wstring_To_UTF8(const wstring& wstr)
@@ -699,8 +896,21 @@ const wstring CGameInstance::Get_LastNumChar(const wstring& str, const _uint& iN
 }
 
 
+wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 기준으로 잘라서 오브젝트 이름만 가져오자 - TO 승용
+{
+	size_t pos = strObjectTag.rfind(L"_");
+	if (pos != wstring::npos)
+	{
+		return strObjectTag.substr(pos + 1);
+	}
+
+	return {};
+}
+
 void CGameInstance::Release_Manager()
 {
+	Safe_Release(m_pEvent_Manager);
+	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pFrustum);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTarget_Manager);

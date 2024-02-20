@@ -5,10 +5,18 @@
 #include "Weapon_Player.h"
 #include "Body_Player.h"
 
+#include "Data_Manager.h"
+#include "Clone_Manager.h"
 
 
-CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CCharacter(pDevice, pContext)
+#include "TestEvent.h"
+#include "TestEventWithActor.h"
+#include "TestEventWithPlayer.h"
+
+
+
+CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CCharacter(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -48,7 +56,7 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	CBody_Player*		pBody = dynamic_cast<CBody_Player*>(Find_PartObject(TEXT("Part_Body")));
 	Safe_AddRef(pBody);
-	if (m_pGameInstance->Get_NextLevel() != 3)
+	if (m_pGameInstance->Get_NextLevel() != 5)
 	{
 		if (GetKeyState(VK_DOWN) & 0x8000)
 		{
@@ -81,6 +89,38 @@ void CPlayer::Tick(_float fTimeDelta)
 	Safe_Release(pBody);
 
 	__super::Tick(fTimeDelta);
+
+	CData_Manager::GetInstance()->Set_Player_Hp(m_iHp);
+	//_uint iHp = CData_Manager::GetInstance()->Get_Player_Hp();
+	//_bool test = false;
+
+	//if (m_pGameInstance->Key_Down(DIK_C)) 
+	//{
+	//	CGameObject* pMonster = CClone_Manager::GetInstance()->Clone_Object<CGameObject>(LEVEL_GAMEPLAY, LAYER_MONSTER, TEXT("Prototype_GameObject_Monster"));
+	//	if (pMonster)
+	//	{
+	//		_float3 vPos = Get_Transform()->Get_Position();
+	//		pMonster->Get_Transform()->Set_Position(vPos);
+	//	}
+	//	else 
+	//	{
+	//		_bool test = false;
+	//	}
+	//}
+	//
+	if (m_pGameInstance->Key_Down(DIK_E))
+	{
+		//IEvent* pEvent = CTestEvent::Create();
+		//IEvent* pEvent = CTestEventWithActor::Create(this);
+		IEvent* pEvent = CTestEventWithPlayer::Create(this);
+	
+		m_pGameInstance->Add_Event(pEvent);
+	}
+
+
+
+
+
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)
@@ -119,20 +159,50 @@ HRESULT CPlayer::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
 		return E_FAIL;
 
-	{
-		CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
-		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
-			return E_FAIL;
-	}
-	CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
+//	{
+//		CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
+//		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
+//			return E_FAIL;
+//	}
+//	CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
 
 
 	return S_OK;
 }
 
-CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+
+void CPlayer::Test_Create_Monster()
 {
-	CPlayer*		pInstance = new CPlayer(pDevice, pContext);
+	CGameObject* pMonster = CClone_Manager::GetInstance()->Clone_Object<CGameObject>(LEVEL_GAMEPLAY, LAYER_MONSTER, TEXT("Prototype_GameObject_Monster"));
+	if (pMonster)
+	{
+		_float3 vPos = Get_Transform()->Get_Position();
+		pMonster->Get_Transform()->Set_Position(vPos);
+	}
+	else
+	{
+		_bool test = false;
+	}
+}
+
+void CPlayer::Activate()
+{
+	Test_Create_Monster();
+}
+
+_bool CPlayer::Activate_Condition()
+{
+	return true;
+}
+
+_bool CPlayer::End_Condition()
+{
+	return true;
+}
+
+CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
+{
+	CPlayer*		pInstance = new CPlayer(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -156,8 +226,17 @@ CGameObject * CPlayer::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CPlayer::Pool()
+{
+	return new CPlayer(*this);
+}
+
 void CPlayer::Free()
 {
 	__super::Free();
 }
+
+
+
+
 

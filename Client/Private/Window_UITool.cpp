@@ -14,18 +14,23 @@ CWindow_UITool::CWindow_UITool(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 {
 }
 
-
 HRESULT CWindow_UITool::Initialize()
 {
 	//! 현재는 특별한 기능없음. 추후 필요할 것 같아서 셋팅.
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
-	LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures/PlayerHUD"))));
-	//LoadImg(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Textures"))));
+	SetWindowText(g_hWnd, TEXT("TOOL 로딩중."));
 
-	// 이미지 로드 Test
+	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD"))));
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));
+	
+	/* 툴 들어갈때 오래걸리니까 따로 버튼눌러서 불러오자.. */
+	/* 저장해둔 이미지 경로들을 불러온다. */
+	// Load_Paths();
+
+	// 이미지 로드
 	_int iSize = (_int)m_vecPaths.size();
 	for (_int i = 0; i < iSize; i++)
 	{
@@ -40,15 +45,27 @@ HRESULT CWindow_UITool::Initialize()
 		tTexture->iTextureNum = i;
 		m_vecTexture.push_back(tTexture);
 
+		tTexture = nullptr;
+		delete[] tTexture;
 	}
 
-	for (auto& iter : m_vecPaths)
+	_int iPathSize = (_int)m_vecPaths.size();
+	//for (auto& iter : m_vecPaths)
+	for(_int i = 0; i < iPathSize; i++)
 	{
-		string strFileNameWithoutExtension = GetFileName(iter->strFilePath);
+		string strFileNameWithoutExtension = GetFileName(m_vecPaths[i]->strFilePath);
 		string strFileName = RemoveExtension(strFileNameWithoutExtension);
 
+		PATHINFO* pPathInfo = new PATHINFO;
+
+		pPathInfo->strFileName = strFileName;
+		pPathInfo->strFilePath = m_vecPaths[i]->strFilePath;
+
 		/* 경로 잘라서 넣기 */
-		m_vecImagePaths.push_back(ConverWStringtoC(ConvertToWideString(strFileName)));
+		m_vecImagePaths.push_back(pPathInfo);
+
+		pPathInfo = nullptr;
+		delete[] pPathInfo;
 	}
 
 #pragma region 경로저장
@@ -71,30 +88,80 @@ HRESULT CWindow_UITool::Initialize()
 	//CJson_Utility::Load_Json(filePath, Out_Json);
 #pragma endregion 
 
+
+#pragma region Start Setting
+	// 시작하자마자 아무것도 안눌렀을 때 기본 테그 값 주고 시작하기.
+	m_tUI_Desc.strCloneTag = "Prototype_GameObject_UI_Anything";
+	m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
+	m_tUI_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
+	m_tUI_Desc.fPositionX = g_iWinSizeX / 2;
+	m_tUI_Desc.fPositionY = g_iWinSizeY / 2;
+	m_tUI_Desc.fScaleX = 100;
+	m_tUI_Desc.fScaleY = 100;
+#pragma endregion End
+
+	SetWindowText(g_hWnd, TEXT("TOOL 로딩이 완료되었습니다."));
+
 	return S_OK;
 }
 
 void CWindow_UITool::Tick(_float fTimeDelta)
 {
+	/* Load */
+	// SetUp_Initialize();
+	
+	IndexCheck();
+	GetCursorPos(&m_pt);
+	ScreenToClient(g_hWnd, &m_pt);
+	Shortcut_Key(fTimeDelta);
+	ShowDialog();
+
 	__super::Tick(fTimeDelta);
 
 	__super::Begin();
-	ImGui::Text("UI_Tool");
 
-	/* List */
-	UI_List(fTimeDelta);
+	if (ImGui::BeginTabBar("MyTabBar", m_Tab_bar_flags))
+	{
 
-	/* UI_2D 세팅 */
-	UI2D_Setting(fTimeDelta);
+		if (ImGui::BeginTabItem("Texture", &m_bOpenTexture))
+		{
+			ImGui::Text("Mouse Pos : %d, %d", m_pt.x, m_pt.y);
 
-	/* 이미지 선택 및 미리보기 */
-	ImagePreview(fTimeDelta);
+			ImGui::Dummy(ImVec2(0.f, 10.f));
 
-	ImGui::Dummy(ImVec2(0, 5.f)); // 공백
+			/* List */
+			UI_List(fTimeDelta);
+
+			ImGui::Dummy(ImVec2(0.f, 10.f));
+
+			/* UI_2D 세팅 */
+			UI2D_Setting(fTimeDelta);
+
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Setting", &m_bOpenSetting))
+		{
+			/* 이미지 선택 및 미리보기 */
+			ImagePreview(fTimeDelta);
+
+			ImGui::Dummy(ImVec2(0, 5.f)); // 공백
+
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Text", &m_bOpenUI))
+		{
+			ImGui::Text("Tab");
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
 
 	/* Default : LastNumber */
 	UI_ToolTip(fTimeDelta); // Tip : 툴팁은 오버레이시 모든 출력중 가장 마지막에 호출되어야한다. (안그러면 다른 녀석들이 툴팁에 밀려서 출력됨)
+
 	__super::End();
+
 }
 
 void CWindow_UITool::Render()
@@ -104,22 +171,186 @@ void CWindow_UITool::Render()
 
 void CWindow_UITool::UI_List(_float fTimeDelta)
 {
-	//if (m_vecUIObject.empty())
-	//	return;
+	if (m_vecImagePaths.empty() ||
+		m_vecTexture.empty())
+		return;
 
-	static int	Object_idx = 0;
-	static int	Texture_idx = 0;
-	static int	Layer_idx = 0;
+	// Layer
+	Layer_List();
+	ImGui::Spacing();
+
+	// Textuer
+	Texture_List();
+	ImGui::Spacing();
+
+	// Class
+	Class_List();
+	ImGui::Spacing();
+
+	// Object
+	Object_List();
+
+
+#pragma region Create/Delete
+	if (ImGui::Button("Create"))
+	{
+		UI2D_Create(fTimeDelta);
+	}
+
+	ImGui::SameLine(70.f);
+
+	if (ImGui::Button("Delete"))
+	{
+		UI2D_Delete(fTimeDelta);
+	}
+#pragma endregion End
+
+#pragma region Save/Load
+	if (ImGui::Button("Save"))
+	{
+		m_eDialogType = CImgui_Window::SAVE_DIALOG;
+		OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
+	}
+
+	ImGui::SameLine(70.f);
+
+	if (ImGui::Button("Load"))
+	{
+		m_eDialogType = CImgui_Window::LOAD_DIALOG;
+		OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
+	}
+#pragma endregion End
+}
+
+void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
+{
+	if (m_pGameInstance->Key_Down(DIK_1))
+	{
+		m_bOpenTexture = true;
+		m_bOpenSetting = false;
+		m_bOpenUI = false;
+	}
+	if (m_pGameInstance->Key_Down(DIK_2))
+	{
+		m_bOpenTexture = false;
+		m_bOpenSetting = true;
+		m_bOpenUI = false;
+	}
+	if (m_pGameInstance->Key_Down(DIK_3))
+	{
+		m_bOpenTexture = false;
+		m_bOpenSetting = false;
+		m_bOpenUI = true;
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_Z))
+	{
+		++m_iSelectedObjectIndex;
+
+		if (!m_vecUIObject.empty())
+		{
+			_int iSize = m_vecUIObject.size();
+			if (m_iSelectedObjectIndex >= iSize)
+				m_iSelectedObjectIndex = iSize - 1;
+		}
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_X))
+	{
+		--m_iSelectedObjectIndex;
+
+		if (m_iSelectedObjectIndex <= 0)
+			m_iSelectedObjectIndex = 0;
+	}
+
+	if (m_pGameInstance->Key_Pressing(DIK_UP))
+	{
+
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_DOWN))
+	{
+
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_LEFT))
+	{
+
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_RIGHT))
+	{
+
+	}
+
+	/* Control_L */
+	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+	{
+		if (m_pGameInstance->Key_Down(DIK_S))
+		{
+			m_eDialogType = CImgui_Window::SAVE_DIALOG;
+			OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_D))
+		{
+			UI2D_Create(fTimeDelta);
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_L))
+		{
+			m_eDialogType = CImgui_Window::LOAD_DIALOG;
+			OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
+		}
+
+		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
+		{
+			if(m_CurrObject != nullptr)
+				m_CurrObject->Moving_Picking_Point(m_pt);
+		}
+	}
+
+}
+
+void CWindow_UITool::UI_Set()
+{
+	_int iSize = m_vecUIObject.size();
+	for (_int i = 0; i < iSize; i++)
+	{
+		if (dynamic_cast<CUI*>(m_vecUIObject[i])->Get_Pick() == true)
+		{
+			if (m_pGameInstance->Mouse_Down(DIM_LB))
+			{
+				m_CurrObject = nullptr;
+				m_CurrObject = dynamic_cast<CUI*>(m_vecUIObject[i]);
+				m_iSelectedObjectIndex = i;
+			}
+		}
+	}
+
+	if (m_CurrObject != nullptr)
+	{
+		_vector vPosition = dynamic_cast<CUI*>(m_CurrObject)->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+		_vector vOrthoPos = m_pGameInstance->Convert_Orthogonal(vPosition);
+
+		ImGui::InputFloat("PositionX", &vOrthoPos.m128_f32[0]);
+		ImGui::InputFloat("PositionY", &vOrthoPos.m128_f32[1]);
+		ImGui::InputFloat("PositionZ", &vOrthoPos.m128_f32[2]);
+
+		Set_GuizmoCamView();
+		Set_GuizmoCamProj();
+		Set_GuizmoUI(m_CurrObject);
+	}
+}
+
+void CWindow_UITool::Layer_List()
+{
 
 	if (ImGui::BeginListBox("LayerList"))
 	{
 		for (_int i = 0; i < 3; i++)
 		{
-			const bool is_selected = (Layer_idx == i);
-			if (ImGui::Selectable(m_strItems[i].c_str(), is_selected))
-				Layer_idx = i;
-			m_iLayerNum = i;
-			
+			const bool is_selected = (m_iLayerNum == i);
+			if (ImGui::Selectable(m_strLayer[i].c_str(), is_selected))
+				m_iLayerNum = i;
+
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
 			{
@@ -129,18 +360,26 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 
 		ImGui::EndListBox();
 	}
+}
 
-	ImGui::Spacing();
-
+void CWindow_UITool::Texture_List()
+{
+	static int	Texture_idx = 0;
 	_int		iTextureTagSize = (_int)m_vecImagePaths.size();
+
 	if (ImGui::BeginListBox("TextureList"))
 	{
 		for (_int i = 0; i < iTextureTagSize; i++)
 		{
 			const bool is_selected = (m_iSelectedPathIndex == i);
-			if (ImGui::Selectable(m_vecImagePaths[i], is_selected))
-			{			
+			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecImagePaths[i]->strFileName)), is_selected))
+			{
 				m_iSelectedPathIndex = i;
+
+				//// 문자열 중복 비교
+				//AddIndexNumber(*m_vecImagePaths[m_iSelectedPathIndex]); // 오브젝트 테그 결정
+				/* 프로토 테그 설정 */
+				m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -148,24 +387,48 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 		}
 		ImGui::EndListBox();
 	}
+	/* 미리보기 */
+	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2((_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Width, (_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
+	//m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName; // 리스트 박스 밖으로 뺀 이유 : 리스트에서 선택안했을 때도 생성 가능하도록 계속 갱신하게함
+}
 
-	//ImGui::Text("pointer = %p", m_vecTexture[m_iSelectedPathIndex]->SRV_Texture);
-	//ImGui::Text("size = %f x %f", m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height);
-	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2(m_vecTexture[m_iSelectedPathIndex]->iImage_Width, m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
+void CWindow_UITool::Class_List()
+{
+	_int		ClassTagSize = (_int)m_vecClass.size();
 
-	/* 테그 */
-	m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex];
+	if (ImGui::BeginListBox("ClassList"))
+	{
+		for (_int i = 0; i < ClassTagSize; i++)
+		{
+			const bool is_selected = (m_iSelectedClassIndex == i);
+			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecClass[i].c_str())), is_selected))
+			{
+				m_iSelectedClassIndex = i;
+				/* 클래스 테그 설정 */
+				m_tUI_Desc.strCloneTag = "Prototype_GameObject_UI_";
+				m_tUI_Desc.strCloneTag += m_vecClass[m_iSelectedClassIndex].c_str();
+			}
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+}
 
-	ImGui::Spacing();
+void CWindow_UITool::Object_List()
+{
 	_int		ObjectTagSize = (_int)m_vecObjectName.size();
+
 	if (ImGui::BeginListBox("ObjectList"))
 	{
 		for (_int i = 0; i < ObjectTagSize; i++)
 		{
-			const bool is_selected = (Object_idx == i);
-			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecObjectName[i])), is_selected))
+			const bool is_selected = (m_iSelectedObjectIndex == i);
+			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecObjectName[i]->strFileName)), is_selected))
 			{
-				Object_idx = i;
+				m_iSelectedObjectIndex = i;
+				m_CurrObject = dynamic_cast<CUI*>(m_vecUIObject[m_iSelectedObjectIndex]);
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -174,55 +437,6 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 		ImGui::EndListBox();
 	}
 
-	if (!m_vecUIObject.empty())
-	{
-		_vector vPosition = m_vecUIObject[Object_idx]->Get_Transform()->Get_State(CTransform::STATE_POSITION);
-
-		ImGui::InputFloat("PositionX", &vPosition.m128_f32[0]);
-		ImGui::InputFloat("PositionY", &vPosition.m128_f32[1]);
-		ImGui::InputFloat("PositionZ", &vPosition.m128_f32[2]);
-
-		Set_GuizmoCamView();
-		Set_GuizmoCamProj();
-		Set_Guizmo(m_vecUIObject[Object_idx]);
-	}
-
-	///* Test Value */
-	//m_tUI_Info.strName = "Test UI List";
-	//m_tUI_Info.iNum = 1;
-	//m_tUI_Info.fNum = 1.5f;
-
-	//// 정보를 목록으로 표시
-	//if (ImGui::TreeNode(m_tUI_Info.strName.c_str())) {
-	//	ImGui::Text(u8"값1 : %d", m_tUI_Info.iNum);
-	//	ImGui::Text(u8"값2 : %.2f", m_tUI_Info.fNum);
-
-	//	// 버튼
-	//	if (ImGui::Button(u8"버튼"))
-	//	{
-
-	//	}
-
-	//	ImGui::TreePop();
-	//}
-}
-
-/* Mouse */
-HRESULT CWindow_UITool::Update_Pos()
-{
-	//POINT cursorPos;
-	//GetCursorPos(&cursorPos);
-
-	//m_fX = cursorPos.x;
-	//m_fY = cursorPos.y;
-
-	//m_pTransformCom->Set_Scale(m_fSizeX, m_fSizeY, 1.f);
-	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
-
-	//XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-	//XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
-
-	return S_OK;
 }
 
 void CWindow_UITool::UI_ToolTip(_float fTimeDelta)
@@ -380,7 +594,13 @@ char* CWindow_UITool::ConverWStringtoC(const wstring& wstr)
 	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
 	char* result = new char[size_needed];
 	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result, size_needed, NULL, NULL);
-	return result;
+
+	char* newResult = result;
+
+	result = nullptr;
+	delete[] result;
+
+	return newResult;
 }
 
 wchar_t* CWindow_UITool::ConverCtoWC(char* str)
@@ -390,7 +610,12 @@ wchar_t* CWindow_UITool::ConverCtoWC(char* str)
 	pStr = new WCHAR[strSize];
 	MultiByteToWideChar(CP_ACP, 0, str, (_int)strlen(str) + (size_t)1, pStr, strSize);
 
-	return pStr;
+	_tchar* newResult = pStr;
+
+	pStr = nullptr;
+	delete[] pStr;
+
+	return newResult;
 }
 
 std::string CWindow_UITool::WideStringToString(const wchar_t* wideStr) 
@@ -399,6 +624,7 @@ std::string CWindow_UITool::WideStringToString(const wchar_t* wideStr)
 	std::wstring wstr(wideStr);
 	// std::string으로 변환
 	return std::string(wstr.begin(), wstr.end());
+
 }
 
 // 파일 이름만 추출하는 함수
@@ -410,6 +636,21 @@ std::string CWindow_UITool::GetFileName(const std::string& filePath)
 		return filePath.substr(lastSlashPos + 1);
 	}
 	else 
+	{
+		// 경로 구분자가 없을 경우 전체 경로를 반환
+		return filePath;
+	}
+}
+
+// _기준으로 이름만 추출하는 함수
+std::string CWindow_UITool::GetUnderbarName(const std::string& filePath)
+{
+	size_t lastSlashPos = filePath.find_last_of("_");
+	if (lastSlashPos != std::string::npos)
+	{
+		return filePath.substr(lastSlashPos + 1);
+	}
+	else
 	{
 		// 경로 구분자가 없을 경우 전체 경로를 반환
 		return filePath;
@@ -438,7 +679,7 @@ WCHAR* CWindow_UITool::StringTowchar(const std::string& str)
 	return const_cast<WCHAR*>(wstr.c_str());
 }
 
-void CWindow_UITool::LoadImg(const _tchar* folderPath)
+void CWindow_UITool::LoadImgPath(const _tchar* folderPath)
 {
 	// 찾은 이미지 데이터를 받을 변수
 	WIN32_FIND_DATA findData;
@@ -466,7 +707,7 @@ void CWindow_UITool::LoadImg(const _tchar* folderPath)
 					// 폴더 경로 = 경로 + / + 파일명
 					wstring subFolderPath = (wstring)folderPath + L"/" + findData.cFileName;
 					subDirectories.push_back(subFolderPath);
-					LoadImg(subFolderPath.c_str());
+					LoadImgPath(subFolderPath.c_str());
 				}
 			}
 			else
@@ -481,12 +722,14 @@ void CWindow_UITool::LoadImg(const _tchar* folderPath)
 				{
 					PATHINFO* pPathInfo = new PATHINFO;
 
-					pPathInfo->strFilePath = WStringToString(filePath);
-					//wcscpy(&pPathInfo->cFileName[MAX_PATH], StringTowchar(RemoveExtension(WideStringToString(findData.cFileName))));
+					/* 순서 확인하기 */
 					pPathInfo->strFileName = RemoveExtension(WStringToString(findData.cFileName));
-					//pPathInfo->cFileName[MAX_PATH] = *StringTowchar(RemoveExtension(WideStringToString(findData.cFileName)));
+					pPathInfo->strFilePath = WStringToString(filePath);
 					pPathInfo->iPathNum = m_iTextureNum;
 					m_vecPaths.push_back(pPathInfo);
+
+					pPathInfo = nullptr;
+					delete[] pPathInfo;
 
 					m_iTextureNum++;
 				}
@@ -502,95 +745,366 @@ void CWindow_UITool::ImagePreview(_float fTimeDelta)
 
 }
 
+void CWindow_UITool::IndexCheck()
+{
+	if (m_iSelectedObjectIndex <= 0)
+		m_iSelectedObjectIndex = 0;
+
+	if (m_iSelectedPathIndex <= 0)
+		m_iSelectedPathIndex = 0;
+}
+
+/* 공통 로딩시간을 줄이기 위해 따로 빼서 실행시키자. */
+void CWindow_UITool::SetUp_Initialize()
+{
+	if (ImGui::IsKeyDown(ImGuiKey_F1))
+	{
+		bSetUpComplete = false;
+	}
+
+	if (!bSetUpComplete)
+	{
+		
+		/* 저장해둔 이미지 경로들을 불러온다. */
+		Load_Paths();
+
+		// 이미지 로드
+		_int iSize = (_int)m_vecPaths.size();
+
+		for (_int i = 0; i < iSize; i++)
+		{
+			IMAGEINFO* tTexture = new IMAGEINFO;
+
+			_bool bRet = LoadTextureFromFile(ConverWStringtoC(ConvertToWideString(m_vecPaths[i]->strFilePath)), &tTexture->SRV_Texture, &tTexture->iImage_Width, &tTexture->iImage_Height);
+			IM_ASSERT(bRet);
+
+			/* Texture 크기를 임의로 조절하고 싶다면, 여기서 강제로 덮어씌우자. 값을 안주면 원래 텍스처 크기대로 나온다. 추 후 원본 크기를 이용해 비율만 줄여서 출력해도 좋을 것 같다. */
+			//tTexture->iImage_Width = 100;
+			//tTexture->iImage_Height = 100;
+			tTexture->iTextureNum = i;
+			m_vecTexture.push_back(tTexture);
+
+			tTexture = nullptr;
+			delete[] tTexture;
+		}
+
+		_int iPathSize = m_vecPaths.size();
+
+		//for (auto& iter : m_vecPaths)
+		for (_int i = 0; i < iPathSize; i++)
+		{
+			string strFileNameWithoutExtension = GetFileName(m_vecPaths[i]->strFilePath);
+			string strFileName = RemoveExtension(strFileNameWithoutExtension);
+
+			PATHINFO* pPathInfo = new PATHINFO;
+
+			pPathInfo->strFileName = strFileName;
+			pPathInfo->strFilePath = m_vecPaths[i]->strFilePath;
+
+			/* 경로 잘라서 넣기 */
+			m_vecImagePaths.push_back(pPathInfo);
+
+			pPathInfo = nullptr;
+			delete[] pPathInfo;
+		}
+
+#pragma region 경로저장
+		//char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Texture_Info/Texture_Info";
+
+		//json Out_Json;
+		//_ushort iIndex = 0;
+
+		//for (PATHINFO* iter : m_vecPaths)
+		//{
+		//	json object;
+		//	object["PathNum"] = iter->iPathNum;
+		//	object["FileName"] = iter->strFileName;
+		//	object["FilePath"] = iter->strFilePath;
+		//	Out_Json.emplace(to_string(iIndex++), object);
+		//}
+
+		//CJson_Utility::Save_Json(filePath, Out_Json);
+
+		//CJson_Utility::Load_Json(filePath, Out_Json);
+#pragma endregion 
+
+
+#pragma region Start Setting
+	// 시작하자마자 아무것도 안눌렀을 때 기본 테그 값 주고 시작하기.
+		m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
+		m_tUI_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
+		m_tUI_Desc.fPositionX = g_iWinSizeX / 2;
+		m_tUI_Desc.fPositionY = g_iWinSizeY / 2;
+		m_tUI_Desc.fScaleX = 100;
+		m_tUI_Desc.fScaleY = 100;
+#pragma endregion End
+
+		bSetUpComplete = true;
+	}	
+}
+
 void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 {
 	ImGui::CollapsingHeader("2D_Setting");
+
 	/* Scale */
 	ImGui::SeparatorText(u8"크기 변경");
-	ImGui::InputFloat("ScaleX", &m_tUI_Desc.fSizeX);
-	ImGui::InputFloat("ScaleY", &m_tUI_Desc.fSizeY);
+	ImGui::InputFloat("ScaleX", &m_tUI_Desc.fScaleX);
+	ImGui::InputFloat("ScaleY", &m_tUI_Desc.fScaleY);
 
 	/* Position*/
 	ImGui::SeparatorText(u8"위치 변경");
-	ImGui::InputFloat("PositionX", &m_tUI_Desc.fX);
-	ImGui::InputFloat("PositionY", &m_tUI_Desc.fY);
+	ImGui::InputFloat("PositionX", &m_tUI_Desc.fPositionX);
+	ImGui::InputFloat("PositionY", &m_tUI_Desc.fPositionY);
 
-	ImGui::Dummy(ImVec2(0, 2.5)); // 공백
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+
+	UI_Set();
 
 	ImGui::Separator();
 
-#pragma region Create/Delete
-	if (ImGui::Button("Create"))
-	{
-		UI2D_Create(fTimeDelta);
-	}
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
 
-	ImGui::SameLine(70.f);
 
-	if (ImGui::Button("Delete"))
-	{
-		UI2D_Delete(fTimeDelta);
-	}
-#pragma endregion End
-
-#pragma region Save/Load
-	if (ImGui::Button("Save"))
-	{	
-		Save_Desc();
-	}
-
-	ImGui::SameLine(70.f);
-
-	if (ImGui::Button("Load"))
-	{
-		Load_Desc();
-	}
-#pragma endregion End
 }
 
 HRESULT CWindow_UITool::UI2D_Create(_float fTimeDelta)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, ConvertToWideString(m_strItems[m_iLayerNum]), TEXT("Prototype_GameObject_UI_Anything"), &m_tUI_Desc));
+	wstring strCloneProto = TEXT("");
+	m_pGameInstance->String_To_WString(m_tUI_Desc.strCloneTag, strCloneProto);
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &m_tUI_Desc));
+	Add_ObjectList(m_tUI_Desc);
 
-	m_vecObjectName.push_back(m_tUI_Desc.strProtoTag);
-	m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecUIObject);
-	m_iUINameNum++;
+	return S_OK;
 }
 
 void CWindow_UITool::UI2D_Delete(_float fTimeDelta)
 {
+	if (m_vecUIObject.empty())
+		return;
 
+	// 오브젝트 삭제
+	m_vecUIObject[m_iSelectedObjectIndex]->Set_Dead(true); // Set_Dead로 이녀석을 없애줘야 Layer에 담겨있는 Object가 죽는다.
+
+	/* Set_Dead를 요청하면 매니저에게 알아서 해당 객체를 지워달라고 한거니까 그 객체에 대한 삭제처리는 내가 따로 또 하면 안된다. (근데 왜 됐지?) */
+	//Safe_Release(m_vecUIObject[m_iSelectedObjectIndex]);
+	m_vecUIObject.erase(m_vecUIObject.begin() + m_iSelectedObjectIndex);
+
+	if(!m_vecObjectName.empty())
+		m_vecObjectName.erase(m_vecObjectName.begin() + m_iSelectedObjectIndex); // 오브젝트 목록 이름 삭제
+
+	if(m_CurrObject)
+		m_CurrObject = nullptr; // 현재 선택돼있는 녀석이 죽었으니 주소 비워주자.
+
+	m_iSelectedObjectIndex = m_iSelectedObjectIndex - 1; // 현재 선택한 인덱스번째의 오브젝트를 삭제했으니, 선택된 인덱스도 뒤로 한칸 돌려주자.
+}
+
+//										현재 선택한 녀석의 전체 경로를 받아온다.
+void CWindow_UITool::AddIndexNumber(PATHINFO& UI_Info)
+{
+	int		index = 0;
+	_bool	isPath = false;
+	//size_t underscorePos = str.find_last_of('_');
+	//auto it = std::find(m_vecObjectName.begin(), m_vecObjectName.end(), UI_Info.strFilePath); // 경로를 비교한다.
+	if (m_vecObjectName.empty())
+		return;
+
+	for (auto& iter : m_vecObjectName)
+	{
+		if (iter->strFilePath == UI_Info.strFilePath)
+		{
+			isPath = true;
+			break;
+		}
+	}
+
+	// 문자열이 이미 존재하는 경우
+	if (isPath)
+	{
+		for (auto& strFilePath : m_vecObjectName)
+		{
+			if (strFilePath->strFilePath == UI_Info.strFilePath)
+			{
+				/* 모두 순회하고 */
+				if (strFilePath->iPathNum >= UI_Info.iPathNum) // 기존 컨테이너에 있는 마지막으로 비교한 녀석의 숫자보다 작거나 같을 경우
+				{
+					index = strFilePath->iPathNum + 1; // 마지막 녀석의 번호 + 1로 저장
+				}
+
+			}
+		}
+		
+		//std::cout << "Name: " << str << ", Index: " << index << std::endl;
+	}
+	else 
+	{
+		// 새로운 문자열인 경우
+		index = 0;
+		//std::cout << "Name: " << str << ", Index: " << m_vecObjectName.size() - 1 << std::endl;
+	}
+
+	/* 테그 */
+	UI_Info.strFileName = UI_Info.strFileName + to_string(index);
+	UI_Info.iPathNum = index;
+}
+
+void CWindow_UITool::Add_ObjectList(CUI::UI_DESC tIn_UI_Desc)
+{
+	// error : 아래 Get_CloneGameObjects로 오브젝트를 가져올때 기존 오브젝트까지 모두 다시들고 오기 때문에, 함수를 따로 만들거나 클리어하고 담아주자
+	if (!m_vecUIObject.empty())
+		m_vecUIObject.clear();
+
+	PATHINFO* tUI_Desc = new PATHINFO;
+
+	// 문자열 중복 비교
+	tUI_Desc->strFileName = tIn_UI_Desc.strProtoTag;
+	tUI_Desc->strFilePath = tIn_UI_Desc.strFilePath;
+	AddIndexNumber(*tUI_Desc); // 오브젝트 테그 결정
+
+	m_vecObjectName.push_back(tUI_Desc); // 이름 중복 검사 후 처리된 테그값으로 넣어주자.
+	m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecUIObject);
+
+	tUI_Desc = nullptr;
+	delete[] tUI_Desc;
 }
 
 /* ex : Save */
 void CWindow_UITool::Save_Desc()
 {
-	//string filePath = "Particle_Desc";
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
 
-	json Out_Json;
-	
-	Out_Json["PostionX"] = m_tUI_Info.fX;
-	Out_Json["PostionY"] = m_tUI_Info.fY;
-	Out_Json["SizeX"] = m_tUI_Info.fSizeX;
-	Out_Json["SizeY"] = m_tUI_Info.fSizeY;
-
-	CJson_Utility::Save_Json(filePath, Out_Json);
 }
 
 /* ex : Load */
-void CWindow_UITool::Load_Desc()
+HRESULT CWindow_UITool::Load_Desc()
 {
 	json json_in;
+
 	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
+
 
 	CJson_Utility::Load_Json(filePath, json_in);
 
-	m_tUI_Info.fX = json_in["PostionX"];
-	m_tUI_Info.fY = json_in["PostionY"];
-	m_tUI_Info.fSizeX = json_in["SizeX"];
-	m_tUI_Info.fSizeY = json_in["SizeY"];
+	for (auto& item : json_in.items())
+	{
+		json object = item.value(); 
 
+		CUI::UI_DESC tUI_Info;
+
+		//tUI_Info.fPositionX = object["PostionX"];
+		//tUI_Info.fPositionY = object["PostionY"];
+		//tUI_Info.fScaleX = object["SizeX"];
+		//tUI_Info.fScaleY = object["SizeY"];
+
+		tUI_Info.strCloneTag = object["CloneTag"];
+		tUI_Info.strProtoTag = object["ProtoTag"];
+		tUI_Info.strFilePath = object["FilePath"];
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		wstring wstrLayer;
+		m_pGameInstance->String_To_WString(m_strLayer[m_iLayerNum], wstrLayer);
+
+		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayer, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
+		
+		pUI_Object->Get_Transform()->Load_FromJson(object);
+
+		Add_ObjectList(tUI_Info);
+	}
+	return S_OK;
+}
+
+HRESULT CWindow_UITool::Save_Function(string strPath, string strFileName)
+{
+	if (m_vecUIObject.empty())
+		return E_FAIL;
+
+	_ushort iIndex = 0;
+
+	strPath = strPath + "\\" + strFileName;
+
+	json Out_Json;
+
+	for (auto& UI : m_vecUIObject)
+	{
+		json Out_Object;
+
+		dynamic_cast<CUI_Anything*>(UI)->Save_Desc(Out_Object);
+		Out_Json.emplace(to_string(iIndex++), Out_Object);
+	}
+
+	CJson_Utility::Save_Json(ConverWStringtoC(ConvertToWideString(strPath)), Out_Json);
+
+	return S_OK;
+}
+
+HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
+{
+	json json_in;
+
+	strPath = strPath + "\\" + strFileName;
+
+	CJson_Utility::Load_Json(ConverWStringtoC(ConvertToWideString(strPath)), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		tUI_Info.strCloneTag = object["CloneTag"];
+		tUI_Info.strProtoTag = object["ProtoTag"];
+		tUI_Info.strFilePath = object["FilePath"];
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		wstring wstrLayer;
+		m_pGameInstance->String_To_WString(m_strLayer[m_iLayerNum], wstrLayer);
+
+		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayer, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
+
+		pUI_Object->Get_Transform()->Load_FromJson(object);
+
+		Add_ObjectList(tUI_Info);
+	}
+
+	return S_OK;
+}
+
+void CWindow_UITool::Load_Paths()
+{
+	json json_in;
+
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Texture_Info/Texture_Info";
+
+	CJson_Utility::Load_Json(filePath, json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		PATHINFO* tPath = new PATHINFO;
+
+		tPath->strFileName = object["FileName"];
+		tPath->strFilePath = object["FilePath"];
+		tPath->iPathNum = object["PathNum"];
+
+		m_vecPaths.push_back(tPath);
+
+		tPath = nullptr;
+		delete[] tPath;
+	}
 }
 
 // ImGui를 사용하여 이미지를 표시하는 함수
@@ -615,4 +1129,59 @@ CWindow_UITool* CWindow_UITool::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 void CWindow_UITool::Free()
 {
 	__super::Free();
+
+	//if (!m_vecObjectName.empty())
+	//	Safe_Delete(m_vecObjectName);
+	//if (!m_vecImagePaths.empty())
+	//	Safe_Delete(m_vecImagePaths);
+	//if (!m_vecPaths.empty())
+	//	Safe_Delete(m_vecPaths);
+	//if (!m_vecTexture.empty())
+	//	Safe_Delete(m_vecTexture);
+	//if (!m_vecUIObject.empty())
+	//	Safe_Delete(m_vecUIObject);
+	
+	m_CurrObject = nullptr;
+
+	if (!m_vecObjectName.empty())
+	{
+		for (auto& path : m_vecObjectName)
+		{
+			delete path;
+		}
+		m_vecObjectName.clear();
+	}
+	if (!m_vecImagePaths.empty())
+	{
+		for (auto& path : m_vecImagePaths)
+		{
+			delete path;
+		}
+		m_vecImagePaths.clear();
+	}
+	if (!m_vecPaths.empty())
+	{
+		for (auto& path : m_vecPaths)
+		{
+			delete path;
+		}
+		m_vecPaths.clear();
+	}
+	if (!m_vecTexture.empty())
+	{
+		for (auto& path : m_vecTexture)
+		{
+			delete path;
+		}
+		m_vecTexture.clear();
+	}
+	//if (!m_vecUIObject.empty())
+	//{
+	//	for (auto& path : m_vecUIObject) {
+	//		delete path;
+	//	}
+	//	m_vecUIObject.clear();
+	//}
+
+
 }

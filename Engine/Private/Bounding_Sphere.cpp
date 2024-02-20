@@ -15,14 +15,15 @@ HRESULT CBounding_Sphere::Initialize(BOUNDING_DESC * pBoundingDesc)
 
 	m_pOriginalSphere = new BoundingSphere(pDesc->vCenter, pDesc->fRadius);
 	m_pSphere = new BoundingSphere(*m_pOriginalSphere);
-
+	m_matScale = XMMatrixIdentity();
+	m_vTest = XMVector3Normalize(m_vTest);
 	return S_OK;
 }
 
 
 void CBounding_Sphere::Update(_fmatrix TransformMatrix)
 {
-	m_pOriginalSphere->Transform(*m_pSphere, TransformMatrix);
+	m_pOriginalSphere->Transform(*m_pSphere , m_matScale * TransformMatrix);
 }
 
 _bool CBounding_Sphere::Collision(CCollider * pTargetCollider, _bool * pisCollision)

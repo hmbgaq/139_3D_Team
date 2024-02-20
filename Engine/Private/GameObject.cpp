@@ -3,11 +3,12 @@
 #include "Transform.h"
 
 
-CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
 	, m_pGameInstance(CGameInstance::GetInstance())
 	, m_isCloned(false)
+	, m_strPrototypeTag(strPrototypeTag)
 {
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pDevice);
@@ -19,6 +20,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, m_pContext(rhs.m_pContext)
 	, m_pGameInstance(rhs.m_pGameInstance)
 	, m_isCloned(true)
+	, m_strPrototypeTag(rhs.m_strPrototypeTag)
 {
 
 	Safe_AddRef(m_pGameInstance);
@@ -33,6 +35,8 @@ HRESULT CGameObject::Initialize_Prototype()
 
 HRESULT CGameObject::Initialize(void* pArg)
 {
+	m_bEnable = true;
+
 	GAMEOBJECT_DESC		Desc = {};
 	
 	if(nullptr != pArg)
@@ -67,6 +71,11 @@ void CGameObject::Late_Tick(_float fTimeDelta)
 HRESULT CGameObject::Render()
 {
 	return S_OK;
+}
+
+_bool CGameObject::Picking(_Out_ _float3* vPickedPos)
+{
+	return false;
 }
 
 CComponent * CGameObject::Find_Component(const wstring & strComTag, const wstring & strPartTag)
@@ -107,8 +116,10 @@ void CGameObject::Load_FromJson(const json& In_Json)
 	}
 
 	_float4x4 WorldMatrix;
+
 	ZeroMemory(&WorldMatrix, sizeof(_float4x4));
 	CJson_Utility::Load_JsonFloat4x4(In_Json["Component"]["Transform"], WorldMatrix);
+
 	Set_WorldMatrix(WorldMatrix);
 }
 
@@ -155,6 +166,8 @@ HRESULT CGameObject::Remove_Component(const wstring& strComTag, _Inout_ CCompone
 	}
 
 	m_Components.erase(iter);
+
+	return S_OK;
 }
 
 void CGameObject::Free()

@@ -1,17 +1,21 @@
 #include "Light.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
+#include "GameInstance.h"
 
 _uint CLight::g_iLightIndex = 0;
 
 CLight::CLight()
 {
+	m_pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CLight::Initialize(const LIGHT_DESC & LightDesc)
 {
 	m_LightDesc = LightDesc;
 
+	g_fCamFar = m_pGameInstance->Get_CamFar();
 	return S_OK;
 }
 

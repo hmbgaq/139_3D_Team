@@ -24,8 +24,9 @@ public:
 	virtual HRESULT		Initialize(void* pArg) override;
 	virtual HRESULT		Bind_VIBuffers(_uint iMeshContainerIndex);
 	virtual void		Update(vector<INSTANCE_INFO_DESC>& vecInstanceDesc);
+			void		Update(INSTANCE_INFO_DESC InstanceDesc, _int iIndex);
 
-
+			HRESULT		Bind_ShaderResources(class CShader* pShader, _int iIndex);
 public:
 /*	void				Add_Mesh(_fmatrix vWorldMatrix);*/
 	void				Init_Instance(_int iNumInstance) override;

@@ -3,8 +3,8 @@
 
 #include "GameInstance.h"
 
-CForkLift::CForkLift(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CLandObject(pDevice, pContext)
+CForkLift::CForkLift(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CLandObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -73,13 +73,15 @@ HRESULT CForkLift::Render()
 
 HRESULT CForkLift::Ready_Components()
 {
+	LEVEL eCurrentLevel = (LEVEL)m_pGameInstance->Get_NextLevel();
+
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_Model"),
+	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Shader_Model"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
+	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Model_ForkLift"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
@@ -99,9 +101,9 @@ HRESULT CForkLift::Bind_ShaderResources()
 	return S_OK;
 }
 
-CForkLift * CForkLift::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CForkLift * CForkLift::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CForkLift*		pInstance = new CForkLift(pDevice, pContext);
+	CForkLift*		pInstance = new CForkLift(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -125,6 +127,11 @@ CGameObject * CForkLift::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CForkLift::Pool()
+{
+	return new CForkLift(*this);
+}
+
 void CForkLift::Free()
 {
 	__super::Free();
@@ -132,4 +139,6 @@ void CForkLift::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

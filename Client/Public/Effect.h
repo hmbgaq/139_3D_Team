@@ -105,7 +105,7 @@ public:
 
 
 protected:
-	CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CEffect(const CEffect& rhs);
 	virtual ~CEffect() = default;
 
@@ -143,10 +143,11 @@ protected:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CEffect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEffect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 
 	virtual void Free() override;
 };

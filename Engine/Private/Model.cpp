@@ -64,6 +64,11 @@ void CModel::Set_StiffnessRate(_float fStiffnessRate)
 	m_Animations[m_iCurrentAnimIndex]->Set_StiffnessRate(fStiffnessRate);
 }
 
+_matrix CModel::Get_CombinedMatrix(_uint iBoneIndex)
+{
+	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
+}
+
 HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath, _fmatrix PivotMatrix)
 {
 	m_eModelType = eType;
@@ -172,7 +177,7 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 
 		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
 	}
-
+	min(1,2);
 }
 
 HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, _uint iMeshIndex)
@@ -182,7 +187,6 @@ HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName
 
 HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantName, _uint iMeshIndex, aiTextureType eTextureType)
 {
-
 	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;
@@ -314,6 +318,11 @@ vector<CAnimation*>* CModel::Get_Animations()
 	return &m_Animations;
 }
 
+vector<CBone*>* CModel::Get_Bones()
+{
+	return &m_Bones;
+}
+
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 {
 	m_iNumMeshes = m_pAIScene.Get_NumMeshes();
@@ -339,6 +348,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 	for (size_t i = 0; i < m_iNumMaterials; i++)
 	{
+		//if() 내일 와서 이거 작업 할것 
 		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material((_uint)i);
 
 		MATERIAL_DESC			MaterialDesc = {  };

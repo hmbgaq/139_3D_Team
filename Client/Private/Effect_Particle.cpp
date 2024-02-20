@@ -3,8 +3,8 @@
 
 #include "GameInstance.h"
 
-CEffect_Particle::CEffect_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CEffect(pDevice, pContext)
+CEffect_Particle::CEffect_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CEffect(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -299,9 +299,9 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	return S_OK;
 }
 
-CEffect_Particle* CEffect_Particle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEffect_Particle* CEffect_Particle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CEffect_Particle* pInstance = new CEffect_Particle(pDevice, pContext);
+	CEffect_Particle* pInstance = new CEffect_Particle(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -323,6 +323,11 @@ CGameObject* CEffect_Particle::Clone(void* pArg)
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+CGameObject* CEffect_Particle::Pool()
+{
+	return new CEffect_Particle(*this);
 }
 
 void CEffect_Particle::Free()

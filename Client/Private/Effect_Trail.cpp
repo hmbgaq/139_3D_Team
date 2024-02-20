@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 
 
-CEffect_Trail::CEffect_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CEffect(pDevice, pContext)
+CEffect_Trail::CEffect_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CEffect(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -185,9 +185,9 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 	return S_OK;
 }
 
-CEffect_Trail* CEffect_Trail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEffect_Trail* CEffect_Trail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CEffect_Trail* pInstance = new CEffect_Trail(pDevice, pContext);
+	CEffect_Trail* pInstance = new CEffect_Trail(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -209,6 +209,11 @@ CGameObject* CEffect_Trail::Clone(void* pArg)
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+CGameObject* CEffect_Trail::Pool()
+{
+	return new CEffect_Trail(*this);
 }
 
 void CEffect_Trail::Free()
