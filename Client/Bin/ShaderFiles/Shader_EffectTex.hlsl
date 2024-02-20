@@ -279,10 +279,21 @@ PS_OUT PS_MAIN_NOISE(PS_IN_NOISE In)
 	float4	vAlphaColor;
 
 
+	// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
+	In.vTexcoord1 = (In.vTexcoord * g_vScales.x);
+	In.vTexcoord1.y = In.vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
+
+	In.vTexcoord2 = (In.vTexcoord * g_vScales.y);
+	In.vTexcoord2.y = In.vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
+
+	In.vTexcoord3 = (In.vTexcoord * g_vScales.z);
+	In.vTexcoord3.y = In.vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
+
+
 	// 동일한 노이즈 텍스쳐를 서로 다른 세 텍스쳐 좌표를 사용하여 세 개의 다른 크기의 노이즈를 얻는다.
-	vNoise1 = g_NoiseTexture.Sample(ClampSampler, In.vTexcoord1);
-	vNoise2 = g_NoiseTexture.Sample(ClampSampler, In.vTexcoord2);
-	vNoise3 = g_NoiseTexture.Sample(ClampSampler, In.vTexcoord3);
+	vNoise1 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord1);
+	vNoise2 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord2);
+	vNoise3 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord3);
 
 	// 노이즈 값의 범위를 (0, 1)에서 (-1, +1)이 되도록한다.
 	vNoise1 = (vNoise1 - 0.5f) * 2.0f;
