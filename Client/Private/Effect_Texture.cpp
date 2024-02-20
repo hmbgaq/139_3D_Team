@@ -38,7 +38,7 @@ HRESULT CEffect_Texture::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(_float(rand() % 20), 5.0f, _float(rand() % 20), 1.f));	
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(0.f, 0.f, 1.f));	
 
 	return S_OK;
 }
@@ -114,6 +114,13 @@ HRESULT CEffect_Texture::Render()
 	m_pVIBufferCom->Render();
 
 	return S_OK;
+}
+
+void CEffect_Texture::ReSet_Sprite()
+{
+	m_fTimeAcc = 0.f;
+	m_tSpriteDesc.iCurrentVer = m_tSpriteDesc.iMinVer;
+	m_tSpriteDesc.iCurrentHor = m_tSpriteDesc.iMinHor;
 }
 
 HRESULT CEffect_Texture::Ready_Components()

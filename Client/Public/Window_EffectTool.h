@@ -49,6 +49,8 @@ public:
 	void Update_Demo_Texture();
 	void Update_Texture_Edit();
 
+	void Update_CurParameters_Tex();
+
 /* For.Effect_Instance_Update */
 public:
 	void	Update_Demo_Effect_Instance();
@@ -141,6 +143,8 @@ private:
 #pragma endregion
 
 #pragma region Texture_Option
+	_int	m_iShaderPassIndex_Tex = { 0 };
+
 	_int	m_iTextureEffectIndex = { 0 };
 	_int	m_iMaskTexIndex = { 0 };
 	_int	m_iNoiseTexIndex = { 0 };
@@ -148,19 +152,23 @@ private:
 	_int	m_iMaxVerHor[2] = { 7, 7 };
 	_float	m_fIntervalTime = { 0.05f };
 
-
+	/* Distortion */
 	_float m_fNoiseIntervalTime = { 1.f };
 
-	_float	m_vScrollSpeeds[3]	= { 0.f, 1.f, 1.f };
-	_float	m_vScales[3]		= { 0.f, 1.f, 1.f };
+	_float	m_vScrollSpeeds[3]	= { 1.f, 1.f, 0.f };
+	_float	m_vScales[3]		= { 1.f, 1.f, 1.f };
 
-	_float	m_vDistortion1[2]	= { 0.1f, 0.2f };
-	_float	m_vDistortion2[2]	= { 0.1f, 0.3f };
-	_float	m_vDistortion3[2]	= { 0.1f, 0.1f };
+	_float	m_vDistortion1[2]	= { 0.1f, 0.1f };
+	_float	m_vDistortion2[2]	= { 0.0f, 0.0f };
+	_float	m_vDistortion3[2]	= { 0.0f, 0.1f };
 
 	_float	m_fDistortionScale	= { 1.f };
 	_float	m_fDistortionBias	= { 1.f };
 
+
+
+	_float	m_vWorldPosition_Tex[4] = { 0.f, 0.f, 0.f, 1.f };
+	_float	m_vScale_Tex[3] = { 1.f, 1.f, 1.f };
 
 #pragma endregion
 

@@ -203,6 +203,16 @@ void CWindow_EffectTool::Update_TextureTab()
 {
 	Update_Demo_Texture();
 
+	/* 텍스처 이펙트 리스트 & 현재 텍스처 이펙트 선택 */
+	if (ImGui::ListBox(" List_Tex ", &m_iCurEffectTextureIndex, m_szEffectTextureNames, m_pEffectTextures.size(), (_int)4))
+	{
+		wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szEffectTextureNames[m_iCurEffectTextureIndex]);
+		m_pCurEffectTexture = m_pEffectTextures.find(strCurName)->second;
+
+		Update_CurParameters_Tex();
+	}
+
+
 	ImGui::Separator();
 	Update_Texture_Edit();
 
@@ -316,14 +326,13 @@ void CWindow_EffectTool::Update_ListArea_Particle()
 		ImGui::Text("Particle Pos  : %.2f %.2f %.2f", vParticlePos.x, vParticlePos.y, vParticlePos.z);
 	}
 
-
 	/* 파티클 리스트 & 현재 파티클 선택 */
-	if (ImGui::ListBox(" List ", &m_iCurParticleIndex, m_szParticleNames, m_pParticles.size(), (_int)4))
+	if (ImGui::ListBox(" List_Particle ", &m_iCurParticleIndex, m_szParticleNames, m_pParticles.size(), (_int)4))
 	{
 		wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szParticleNames[m_iCurParticleIndex]);
 		m_pCurParticle = m_pParticles.find(strCurName)->second;
 
-		Update_CurParameters(strCurName);
+		Update_CurParameters();
 	}
 
 
@@ -633,11 +642,11 @@ void CWindow_EffectTool::Update_ActionArea_Particle()
 	/* 가속도 */
 	if (nullptr != m_pCurParticle)
 	{
-		if (ImGui::DragFloat("AccPos_Particle", &m_fParticleAccPosition, 1.f, 0.f, 1.f))
+		if (ImGui::DragFloat("AccPos_Particle", &m_fParticleAccPosition, 0.1f, 0.f, 1.f))
 			m_pCurParticle->Get_VIBufferCom()->Set_AccPosition(m_fParticleAccPosition);
 
 
-		if (ImGui::DragFloat("ACC_Particle", &m_fParticleAcceleration, 1.f, 0.f, 100.f))
+		if (ImGui::DragFloat("ACC_Particle", &m_fParticleAcceleration, 0.5f, 0.f, 100.f))
 			m_pCurParticle->Get_VIBufferCom()->Set_Acceleration(m_fParticleAcceleration);
 	}
 
@@ -742,7 +751,17 @@ void CWindow_EffectTool::Update_Texture_Edit()
 			iMaxDiffuseCount = 0;
 
 
-		if (ImGui::InputInt("Textures_D", &m_iTextureEffectIndex), 1)
+		if (ImGui::InputInt("ShaderPass", &m_iShaderPassIndex_Tex, 1))
+		{
+			if (2 < m_iShaderPassIndex_Tex)
+				m_iShaderPassIndex_Tex = 2;
+			if (0 > m_iShaderPassIndex_Tex)
+				m_iShaderPassIndex_Tex = 0;
+
+			m_pCurEffectTexture->Set_ShaderPassIndex(m_iShaderPassIndex_Tex);
+		}
+
+		if (ImGui::InputInt("Diffuse_Tex", &m_iTextureEffectIndex), 1)
 		{
 			if (iMaxDiffuseCount < m_iTextureEffectIndex)
 				m_iTextureEffectIndex = iMaxDiffuseCount;
@@ -768,31 +787,52 @@ void CWindow_EffectTool::Update_Texture_Edit()
 			//m_pCurEffectTexture->Set_AnimationSize(256.f, 256.f);
 		}
 
+		if (ImGui::InputInt("Mask_Tex", &m_iMaskTexIndex), 1)
+		{
+			if (17 < m_iMaskTexIndex)
+				m_iMaskTexIndex = 17;
+
+			if (0 > m_iMaskTexIndex)
+				m_iMaskTexIndex = 0;
+
+			m_pCurEffectTexture->Set_TextureIndex(CEffect::TEXTURE_MASK, m_iMaskTexIndex);
+		}
+
+		if (ImGui::InputInt("Noise_Tex", &m_iNoiseTexIndex), 1)
+		{
+			if (5 < m_iNoiseTexIndex)
+				m_iNoiseTexIndex = 5;
+
+			if (0 > m_iNoiseTexIndex)
+				m_iNoiseTexIndex = 0;
+
+			m_pCurEffectTexture->Set_TextureIndex(CEffect::TEXTURE_NOISE, m_iNoiseTexIndex);
+		}
+
 		if (CEffect_Texture::TYPE::SINGLE == eType)
 		{
-			if (ImGui::InputInt("Textures_M", &m_iMaskTexIndex), 1)
+			if (ImGui::CollapsingHeader(" Distortion Preset ", ImGuiTabBarFlags_None))
 			{
-				if (17 < m_iMaskTexIndex)
-					m_iMaskTexIndex = 17;
+				if (ImGui::Button(" Fire "))
+				{
+					m_pCurEffectTexture->Set_NoiseTimeInterval(1.f);
 
-				if (0 > m_iMaskTexIndex)
-					m_iMaskTexIndex = 0;
+					m_pCurEffectTexture->Set_ScrollSpeeds(1.f, 1.f, 1.f);
+					m_pCurEffectTexture->Set_Scales(1.f, 1.f, 1.f);
 
-				m_pCurEffectTexture->Set_TextureIndex(CEffect::TEXTURE_MASK, m_iMaskTexIndex);
+					m_pCurEffectTexture->Set_Distortion1(0.1f, 0.1f);
+					m_pCurEffectTexture->Set_Distortion2(0.f, 0.f);
+					m_pCurEffectTexture->Set_Distortion3(0.f, 0.1f);
+
+					m_pCurEffectTexture->Set_DistortionScale(1.f);
+					m_pCurEffectTexture->Set_DistortionBias(1.f);
+
+					Update_CurParameters_Tex();
+				}
+
 			}
 
-			if (ImGui::InputInt("Textures_Noise", &m_iNoiseTexIndex), 1)
-			{
-				if (5 < m_iNoiseTexIndex)
-					m_iNoiseTexIndex = 5;
-
-				if (0 > m_iNoiseTexIndex)
-					m_iNoiseTexIndex = 0;
-
-				m_pCurEffectTexture->Set_TextureIndex(CEffect::TEXTURE_NOISE, m_iNoiseTexIndex);
-			}
-
-
+			ImGui::SeparatorText("");
 			if (ImGui::DragFloat("Noise_TimeInterval", &m_fNoiseIntervalTime, 1.f, 0.f))
 			{
 				m_pCurEffectTexture->Set_NoiseTimeInterval(m_fNoiseIntervalTime);
@@ -835,39 +875,124 @@ void CWindow_EffectTool::Update_Texture_Edit()
 
 		}
 
+		if (CEffect_Texture::SPRITE == eType)
+		{
+			ImGui::SeparatorText("");
+			if (ImGui::DragFloat("IntervalTime", &m_fIntervalTime, 1, 1))
+			{
+				m_pCurEffectTexture->Set_IntervalTime(m_fIntervalTime);
+			}
+
+			//if (ImGui::DragInt2("MaxVerHor", m_iMaxVerHor, 1, 1))
+			//{
+			//	m_pCurEffectTexture->Set_MaxVerHor(m_iMaxVerHor[0], m_iMaxVerHor[1]);
+			//}
+			if (ImGui::InputInt2("MaxVerHor", m_iMaxVerHor, 1))
+			{
+				_uint iX, iY;
+				m_pCurEffectTexture->Get_TextureCom(CEffect::TEXTURE_DIFFUSE)->Get_TextureSize(&iX, &iY, m_iTextureEffectIndex);
+				m_pCurEffectTexture->Set_SpriteSize(iX, iY);
+
+				_float fSizeX, fSizeY;
+				fSizeX = (_float)iX / m_iMaxVerHor[0];
+				fSizeY = (_float)iY / m_iMaxVerHor[1];
+
+				m_pCurEffectTexture->Set_AnimationSize(fSizeX, fSizeY);
+
+				m_pCurEffectTexture->Set_MaxVerHor(m_iMaxVerHor[0], m_iMaxVerHor[0]);
+
+
+				m_pCurEffectTexture->ReSet_Sprite();
+			}
+
+
+			if (ImGui::Button("Play_Tex"))
+			{
+				m_pCurEffectTexture->Set_Play(TRUE);
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Stop_Tex"))
+			{
+				m_pCurEffectTexture->Set_Play(FALSE);
+			}
+
+			ImGui::Text("Current Index : %d, %d", m_pCurEffectTexture->Get_Sprite_Desc()->iCurrentHor, m_pCurEffectTexture->Get_Sprite_Desc()->iCurrentVer);
+		}
 
 
 		ImGui::SeparatorText("");
-		if (ImGui::DragFloat("IntervalTime", &m_fIntervalTime, 1, 1))
+		if (ImGui::DragFloat3("WorldPosition_Tex", m_vWorldPosition_Tex, 1.f, 0.f))
 		{
-			m_pCurEffectTexture->Set_IntervalTime(m_fIntervalTime);
+			m_pCurEffectTexture->Set_Position(_float3(m_vWorldPosition_Tex[0], m_vWorldPosition_Tex[1], m_vWorldPosition_Tex[2]));
 		}
 
-		//if (ImGui::DragInt2("MaxVerHor", m_iMaxVerHor, 1, 1))
-		//{
-		//	m_pCurEffectTexture->Set_MaxVerHor(m_iMaxVerHor[0], m_iMaxVerHor[1]);
-		//}
-		if (ImGui::InputInt("MaxVerHor", &m_iMaxVerHor[0], 1))
+		if (ImGui::DragFloat3("Scale_Tex", m_vScale_Tex, 1.f, 0.f))
 		{
-			m_pCurEffectTexture->Set_MaxVerHor(m_iMaxVerHor[0], m_iMaxVerHor[0]);
+			m_pCurEffectTexture->Get_Transform()->Set_Scaling(m_vScale_Tex[0], m_vScale_Tex[1], m_vScale_Tex[2]);
 		}
-
-
-		if (ImGui::Button("Play_Tex"))
-		{
-			m_pCurEffectTexture->Set_Play(TRUE);
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Stop_Tex"))
-		{
-			m_pCurEffectTexture->Set_Play(FALSE);
-		}
-
-		ImGui::Text("Current Index : %d, %d", m_pCurEffectTexture->Get_Sprite_Desc()->iCurrentHor, m_pCurEffectTexture->Get_Sprite_Desc()->iCurrentVer);
-
 
 	}
 
+}
+
+void CWindow_EffectTool::Update_CurParameters_Tex()
+{
+	if (nullptr != m_pCurEffectTexture)
+	{
+		//if (TEXT("") != strName)
+		//{
+		//	const string utf8Str = m_pGameInstance->Wstring_To_UTF8(strName);
+		//	m_cCurEffectTextureName = new char[utf8Str.length() + 1];
+		//	strcpy(m_cCurEffectTextureName, utf8Str.c_str());
+		//}
+
+		CEffect_Texture::EFFECT_TEXTURE_DESC* pDesc = m_pCurEffectTexture->Get_Desc();
+		CEffect_Texture::SPRITEUV_DESC* pSpriteDesc = m_pCurEffectTexture->Get_Sprite_Desc();
+		CEffect_Texture::NOISE_DESC* pDistortionDesc = m_pCurEffectTexture->Get_Noise_Desc();
+
+		_vector vPos = m_pCurEffectTexture->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+		m_vWorldPosition_Tex[0] = vPos.m128_f32[0];
+		m_vWorldPosition_Tex[1] = vPos.m128_f32[1];
+		m_vWorldPosition_Tex[2] = vPos.m128_f32[2];
+
+		m_vScale_Tex[0] = m_pCurEffectTexture->Get_Transform()->Get_Scaled().x;
+		m_vScale_Tex[1] = m_pCurEffectTexture->Get_Transform()->Get_Scaled().y;
+		m_vScale_Tex[2] = m_pCurEffectTexture->Get_Transform()->Get_Scaled().z;
+
+		m_iShaderPassIndex_Tex = pDesc->iShaderPassIndex;
+
+		m_iTextureEffectIndex = pDesc->iTextureIndex[CEffect::TEXTURE::TEXTURE_DIFFUSE];
+		m_iMaskTexIndex = pDesc->iTextureIndex[CEffect::TEXTURE::TEXTURE_MASK];
+		m_iNoiseTexIndex = pDesc->iTextureIndex[CEffect::TEXTURE::TEXTURE_NOISE];
+
+		/* Sprite */
+		m_iMaxVerHor[0] = pSpriteDesc->iMaxHor;
+		m_iMaxVerHor[1] = pSpriteDesc->iMaxVer;
+
+		m_fIntervalTime = pSpriteDesc->fIntervalTime;
+
+		/* Distortion */
+		m_vScrollSpeeds[0] = pDistortionDesc->vScrollSpeeds.x;
+		m_vScrollSpeeds[1] = pDistortionDesc->vScrollSpeeds.y;
+		m_vScrollSpeeds[2] = pDistortionDesc->vScrollSpeeds.z;
+
+		m_vScales[0] = pDistortionDesc->vScales.x;
+		m_vScales[1] = pDistortionDesc->vScales.y;
+		m_vScales[2] = pDistortionDesc->vScales.z;
+
+		m_vDistortion1[0] = pDistortionDesc->vDistortion1.x;
+		m_vDistortion1[1] = pDistortionDesc->vDistortion1.y;
+
+		m_vDistortion2[0] = pDistortionDesc->vDistortion2.x;
+		m_vDistortion2[1] = pDistortionDesc->vDistortion2.y;
+
+		m_vDistortion3[0] = pDistortionDesc->vDistortion3.x;
+		m_vDistortion3[1] = pDistortionDesc->vDistortion3.y;
+
+		m_fDistortionScale = pDistortionDesc->fDistortionScale;
+		m_fDistortionBias = pDistortionDesc->fDistortionBias;
+
+	}
 
 }
 
@@ -1093,7 +1218,6 @@ HRESULT CWindow_EffectTool::Create_New_Texture(CEffect_Texture::TYPE eType)
 
 	return S_OK;
 
-	return S_OK;
 }
 
 HRESULT CWindow_EffectTool::Ready_Layer_Texture(const wstring& strLayerTag, CEffect_Texture::TYPE eType)
@@ -1127,38 +1251,13 @@ HRESULT CWindow_EffectTool::Ready_Layer_Texture(const wstring& strLayerTag, CEff
 
 	CEffect_Texture* pEffect = dynamic_cast<CEffect_Texture*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Effect_Texture"), &tDesc));
 
-	wstring strName = Make_NameWithPin(TEXT("Texture"));
+	wstring strName = Make_NameWithPin(TEXT("Texture_"));
 	m_pEffectTextures.emplace(strName, pEffect);
 
 	m_pCurEffectTexture = pEffect;
 
-	Update_CurParameters(strName);
 
-
-	pEffect->Get_Noise_Desc()->fIntervalTime =  m_fNoiseIntervalTime;
-
-	pEffect->Get_Noise_Desc()->vScrollSpeeds.x = m_vScrollSpeeds[0];
-	pEffect->Get_Noise_Desc()->vScrollSpeeds.y = m_vScrollSpeeds[1];
-	pEffect->Get_Noise_Desc()->vScrollSpeeds.z = m_vScrollSpeeds[2];
-
-
-	pEffect->Get_Noise_Desc()->fDistortionBias = m_fDistortionBias;
-	pEffect->Get_Noise_Desc()->fDistortionScale = m_fDistortionScale;
-
-	pEffect->Get_Noise_Desc()->vDistortion1.x = m_vDistortion1[0];
-	pEffect->Get_Noise_Desc()->vDistortion1.y = m_vDistortion1[1];
-
-	pEffect->Get_Noise_Desc()->vDistortion2.x = m_vDistortion2[0];
-	pEffect->Get_Noise_Desc()->vDistortion2.y = m_vDistortion2[1];
-
-	pEffect->Get_Noise_Desc()->vDistortion3.x = m_vDistortion3[0];
-	pEffect->Get_Noise_Desc()->vDistortion3.y = m_vDistortion3[1];
-
-	pEffect->Get_Noise_Desc()->vScales.x = m_vScales[0];
-	pEffect->Get_Noise_Desc()->vScales.x = m_vScales[1];
-	pEffect->Get_Noise_Desc()->vScales.x = m_vScales[2];
-
-
+	Update_CurParameters_Tex();
 
 
 	return S_OK;

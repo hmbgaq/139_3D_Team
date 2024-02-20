@@ -85,6 +85,7 @@ public:
 
 	void					Set_Play(_bool bPlay) { m_tSpriteDesc.bPlay = bPlay; }
 	void					Set_IntervalTime(_float fIntervalTime) { m_tSpriteDesc.fIntervalTime = fIntervalTime; }
+	void					ReSet_Sprite();
 
 	void					Set_TextureIndex(CEffect::TEXTURE eTexture, _int iIndex) { m_tEffect.iTextureIndex[eTexture] = iIndex; }
 
@@ -92,6 +93,7 @@ public:
 	void					Set_SpriteSize(_float fX, _float fY) { m_tSpriteDesc.fSpriteSizeX = fX; m_tSpriteDesc.fSpriteSizeY = fY; }
 	void					Set_MaxVerHor(_int iX, _int iY) { m_tSpriteDesc.iMaxVer = iX; m_tSpriteDesc.iMaxHor = iY; }
 
+	void					Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEffect.iShaderPassIndex = iShaderPassIndex; }
 
 /* For.Noise Desc*/
 public:
