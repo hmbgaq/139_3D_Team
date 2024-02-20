@@ -93,7 +93,10 @@ CLayer * CLayer::Create(CObject_Manager* pObjectManager)
 void CLayer::Free()
 {
 	for (auto& pGameObject : m_GameObjects)
-		Safe_Release(pGameObject);
-
+	{
+		m_pObjectManager->Fill_PoolObject(pGameObject);
+		//Safe_Release(pGameObject);
+	}
+		
 	m_GameObjects.clear();
 }

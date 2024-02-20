@@ -130,6 +130,8 @@ HRESULT CObject_Manager::Fill_PoolObject(CGameObject* pGameObject)
 	if (iter == m_Pool.end())
 		return E_FAIL;
 
+	pGameObject->Set_Enable(false);
+
 	(*iter).second.push_back(pGameObject);
 
 	return S_OK;
