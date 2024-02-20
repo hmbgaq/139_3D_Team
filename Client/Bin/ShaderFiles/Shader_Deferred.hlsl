@@ -24,6 +24,7 @@ vector			g_vCamPosition;
 
 texture2D		g_ShadeTexture;
 texture2D		g_NormalTexture;
+texture2D		g_NormalDepthTarget;
 texture2D		g_DepthTexture;
 texture2D		g_SpecularTexture;
 texture2D		g_LightDepthTexture;
@@ -208,6 +209,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
 }
 
 /* ------------------ 4 - Deferred ------------------ */
+
 PS_OUT PS_MAIN_FINAL(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
@@ -274,6 +276,19 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 	return Out;
 }
 
+/* ------------------ 5 - PBR Deferred ------------------ */
+
+PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+	
+	
+	
+	
+    return Out;
+}
+
+/* ------------------ Technique ------------------ */
 
 technique11 DefaultTechnique
 {
@@ -331,4 +346,17 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_FINAL();
 	}
+
+    pass PBR_Deferred // 5
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PBR_DEFERRED();
+    }
 }

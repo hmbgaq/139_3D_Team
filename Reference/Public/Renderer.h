@@ -16,7 +16,7 @@ public:
 		RENDER_PRIORITY,RENDER_SHADOW, RENDER_NONLIGHT, 
 					   
 		/* Post Processing  */
-		RENDER_SSAO, RENDER_GODRAY, RENDER_OUTLINE,
+		RENDER_SSAO, RENDER_GODRAY, RENDER_OUTLINE, /* 흰색 외부선 */
 		
 		/* Blend */
 		RENDER_NONBLEND, RENDER_BLEND, 
@@ -93,14 +93,13 @@ private:
 	HRESULT Render_OutLine_PostProcessing();
 	HRESULT Render_OutLineGroup();
 	HRESULT Render_SSAO();
-	HRESULT Render_SSAO_Blur();
 	HRESULT Render_HBAO_Plus();
 	HRESULT Render_Bloom();
 
 	HRESULT Render_RadialBlur();
 
 	HRESULT Render_GodRay();
-
+	HRESULT Render_DebugOnOff();
 	/* perlin을 이용한 바다물결, 나뭇잎, 불 등 자연스러운 무작위패턴생성 */
 
 #ifdef _DEBUG
@@ -140,6 +139,7 @@ private:
 	void						BuildOffsetVectors();
 	void						BuildRandomVectorTexture();
 	/*  Screen Space Ambient Occlusion VS Horizon Based Ambient Occlusion */
+
 	/* BLUR */
 	HRESULT						Render_Blur_DownSample(const wstring& strStartTargetTag);
 	HRESULT						Render_Blur_Horizontal(_int eHorizontalPass);

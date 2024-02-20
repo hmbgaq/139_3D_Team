@@ -36,7 +36,8 @@ struct VS_IN
 	float2		vTexcoord		: TEXCOORD0;
 	float3		vTangent		: TANGENT;
 	uint4		vBlendIndices	: BLENDINDEX;
-	float4		vBlendWeights	: BLENDWEIGHT;
+    float4      vBlendWeights : BLENDWEIGHT;
+   // float       fRimLight : RIM;
 };
 
 
@@ -48,8 +49,9 @@ struct VS_OUT
 	float4		vWorldPos		: TEXCOORD1;
 	float4		vProjPos		: TEXCOORD2;
 	
+    float3      vTangent        : TANGENT;      /* pbr */ 
     float3		vViewNormal		: NORMAL1;		/* ssao */ 
-    float3		vPositionView	: POSITION;
+    float3		vPositionView	: POSITION;     /* shadow */ 
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -60,9 +62,9 @@ VS_OUT VS_MAIN(VS_IN In)
 	float		fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
 
 	matrix		BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
-		g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
-		g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
-		g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+		                     g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		                     g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		                     g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
 
 	vector		vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
 	vector		vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
@@ -75,11 +77,11 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vPosition = mul(vPosition, matWVP);
 	Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
 	Out.vTexcoord = In.vTexcoord;
+    
 	Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
 	Out.vProjPos = Out.vPosition;
 	
 	// SSAO
-   // Out.vViewNormal = mul(Out.vNormal.xyz, g_ViewMatrix.xyz);
     Out.vViewNormal = normalize(mul(Out.vNormal, g_ViewMatrix).xyz);
     Out.vPositionView = mul(float4(In.vPosition, 1.0f), matWV);
 	
@@ -107,11 +109,6 @@ struct PS_OUT
     float4  vORM             : SV_TARGET3;
     float4  vViewNormal      : SV_TARGET4;
     float4  vBloom           : SV_TARGET5;
-    //float4  vViewNormal     : SV_TARGET3;
-    //float4  vBloom          : SV_TARGET4;
-    //float4  vORM            : SV_TARGET5;
-    
-    
 };
 
 /* ------------------- Base Pixel Shader (0) -------------------*/
@@ -123,20 +120,12 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vBloom = float4(1.0f, 0.f, 0.f, 1.0f);
-
+   
+    /* SSAO & HBAO+ */ 
     Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    //Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
     
-    
-    //float fRimPower = 1.f - saturate(dot(In.vNormal, normalize((-1.f * (In.vWorldPosition - g_vCamPosition)))));
-    //fRimPower = pow(fRimPower, 5.f);
-    //vector vRimColor = g_vRimColor * fRimPower;
-    //Out.vDiffuse += vRimColor;
-    //Out.vBloom = Caculation_Brightness(Out.vDiffuse) + vRimColor;
-    
-    if (0.f == Out.vDiffuse.a)
+    if (0.2f >= Out.vDiffuse.a)
         discard;
 
     return Out;

@@ -137,6 +137,7 @@ HRESULT CTarget_Manager::Render_Debug(const wstring& strMRTTag, CShader * pShade
 	return S_OK;
 }
 
+
 #endif
 
 CRenderTarget * CTarget_Manager::Find_RenderTarget(const wstring & strTargetTag)

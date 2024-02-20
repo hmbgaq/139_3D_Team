@@ -453,9 +453,6 @@
     <ClInclude Include="..\Public\Screamer.h">
       <Filter>02.GameObjects\00. Character\Monter\0. Screamer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_SnowMountain.h">
       <Filter>01.Levels\01.GamePlay\1.SnowMountain</Filter>
     </ClInclude>
@@ -470,6 +467,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\State.h">
       <Filter>95.StatePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

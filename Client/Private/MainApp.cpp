@@ -30,7 +30,6 @@ HRESULT CMainApp::Initialize()
 	CClone_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 	CData_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 
-
 	FAILED_CHECK(Ready_Font());
 
 	// FAILED_CHECK(Ready_Gara());

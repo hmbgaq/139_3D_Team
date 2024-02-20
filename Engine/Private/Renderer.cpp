@@ -238,7 +238,7 @@ HRESULT CRenderer::Ready_DebugRender()
 	/* MRT_Pro */ 
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ViewNormal"),	(fSizeX / 2.f * 5.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_SSAO"),			(fSizeX / 2.f * 5.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_SSAO_Blur"),	(fSizeX / 2.f * 5.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_SSAO_Blur"),	(fSizeX / 2.f * 5.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
 
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_GodRay"),		(fSizeX / 2.f * 7.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 
@@ -254,16 +254,6 @@ HRESULT CRenderer::Ready_DebugRender()
 
 HRESULT CRenderer::Draw_RenderGroup()
 {
-#pragma region HOTKEY
-
-	if (m_pGameInstance->Key_Down(DIK_1))
-		m_bSSAO_Active = !m_bSSAO_Active;
-	if (m_pGameInstance->Key_Down(DIK_2))
-		m_bBloom_Active = !m_bBloom_Active;
-	if (m_pGameInstance->Key_Down(DIK_3))
-		m_bOutline_Active = !m_bOutline_Active;
-#pragma endregion
-
 	FAILED_CHECK(Render_Priority());	/* SkyBox */
 	FAILED_CHECK(Render_Shadow());		/* MRT_Shadow */
 	FAILED_CHECK(Render_NonLight()); 
@@ -274,7 +264,6 @@ HRESULT CRenderer::Draw_RenderGroup()
 		if (true == m_bSSAO_Active)
 		{
 			FAILED_CHECK(Render_SSAO());
-			FAILED_CHECK(Render_SSAO_Blur());
 		}
 		else
 			FAILED_CHECK(Render_HBAO_Plus());
@@ -284,10 +273,10 @@ HRESULT CRenderer::Draw_RenderGroup()
 			FAILED_CHECK(Render_Bloom());
 		}
 
-		//if (false == m_bOutline_Active)
-		//{
-		//	FAILED_CHECK(Render_OutLine_PostProcessing());
-		//}
+		if (true == m_bOutline_Active)
+		{
+			FAILED_CHECK(Render_OutLine_PostProcessing());
+		}
 	}
 
 	FAILED_CHECK(Render_Deferred());
@@ -487,6 +476,8 @@ HRESULT CRenderer::Render_Deferred()
 
 	/* MRT_GameObject */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DiffuseTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_NormalTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ViewNormal"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_NormalDepthTarget"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DepthTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Shade"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_ShadeTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SpecularTexture"));
@@ -495,15 +486,19 @@ HRESULT CRenderer::Render_Deferred()
 
 	/* Post Processing */
 	{
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bSSAO_Active", &m_bSSAO_Active, sizeof(_bool)));
-		if (true == m_bSSAO_Active)
+		if (true == m_bPBR_Active) /* 임시로 둘다 안하도록 막는용도로함 */
 		{
-			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture"));
-			//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao 추가 */
+			FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bSSAO_Active", &m_bSSAO_Active, sizeof(_bool)));
+			if (true == m_bSSAO_Active)
+			{
+				//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture"));
+				FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao 추가 */
+			}
+			else
+			{
+				FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture"));
+			}
 		}
-		else
-			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture"));
-
 
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bBloom_Active", &m_bBloom_Active, sizeof(_bool)));
 		if (true == m_bBloom_Active)
@@ -529,7 +524,7 @@ HRESULT CRenderer::Render_Deferred()
 
 HRESULT CRenderer::Render_OutLine_PostProcessing()
 {
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Outline"))); /* Target SSAO 단독 */	
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Outline"))); 
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
@@ -552,7 +547,11 @@ HRESULT CRenderer::Render_OutLine_PostProcessing()
 
 HRESULT CRenderer::Render_SSAO()
 {
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO"))); /* Target SSAO 단독 */
+	/* SSAO : crysis 게임을 위해 crytek에서 개발한 주변 폐색을 근사화하는 빠른기술. 
+		 * 장면의 각 픽셀에 대한 법선 및 깊이정보를 포함하는 렌더대상에 장면을 그린다. 
+		 * 이 값들을 샘플링하여 각 픽셀의 폐색값을 계산해 디퍼드 셰이더효과에서 폐색값ㅇ르 샘플링하여 조명계산에서 주변항목을 수정할 수 있도록한다. */
+
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO"))); /* Target SSAO 단독 -> Blur 연계해야함 */
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
@@ -581,9 +580,7 @@ HRESULT CRenderer::Render_SSAO()
 
 		//FAILED_CHECK(m_pRandomVectorTexture->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_RandomVectorTexture"));
 		
-		/* SSAO : crysis 게임을 위해 crytek에서 개발한 주변 폐색을 근사화하는 빠른기술. 
-		 * 장면의 각 픽셀에 대한 법선 및 깊이정보를 포함하는 렌더대상에 장면을 그린다. 
-		 * 이 값들을 샘플링하여 각 픽셀의 폐색값을 계산해 디퍼드 셰이더효과에서 폐색값ㅇ르 샘플링하여 조명계산에서 주변항목을 수정할 수 있도록한다. */
+		
 	}
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(SSAO_SHADER::SSAO)));
@@ -594,15 +591,8 @@ HRESULT CRenderer::Render_SSAO()
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
-
-
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_SSAO_Blur()
-{
 	Render_Blur(L"Target_SSAO", L"MRT_SSAO_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER), ECast(BLUR_SHADER::BLUR_UP_ADD));
-	
+
 	return S_OK;
 }
 
@@ -626,8 +616,13 @@ HRESULT CRenderer::Render_HBAO_Plus()
 	Params.Blur.Radius = GFSDK_SSAO_BLUR_RADIUS_4;
 	Params.Blur.Sharpness = 16.f;
 
+	ID3D11RenderTargetView* pView = {};
+	pView = m_pGameInstance->Find_RenderTarget(TEXT("Target_HBAO"))->Get_RTV();
+	NULL_CHECK_RETURN(pView, E_FAIL);
+
 	GFSDK_SSAO_Output_D3D11 Output;
-	Output.pRenderTargetView = m_pGameInstance->Find_RenderTarget(TEXT("Target_HBAO"))->Get_RTV();
+	Output.pRenderTargetView = pView;
+	
 	Output.Blend.Mode = GFSDK_SSAO_OVERWRITE_RGB;
 
 	GFSDK_SSAO_Status status;
@@ -694,6 +689,35 @@ HRESULT CRenderer::Render_GodRay()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_DebugOnOff()
+{
+	if (m_pGameInstance->Key_Down(DIK_GRAVE))
+	{
+		if (true == m_bPBR_Active)
+		{
+			if (true == m_bSSAO_Active)
+				cout << "SSAO : true " << endl;
+			else
+				cout << "HBAO+ : false " << endl;
+		}
+		else
+		{
+			cout << " NO SSAO HOB+ " << endl;
+
+		}
+		if (true == m_bBloom_Active)
+			cout << "BloomBlur : true " << endl;
+		else
+			cout << "BloomBlur : false " << endl;
+		/* --------------------------------- */
+		cout << "OutLine : Test중 " << endl;
+
+		cout << " ----------------------------- " << endl;
+	}
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_OutLineGroup()
 {
 	for (auto& pGameObject : m_RenderObjects[RENDER_OUTLINE])
@@ -730,7 +754,7 @@ HRESULT CRenderer::Render_Debug()
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_LightAcc"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Shadow"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
-	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_SSAO_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
+	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_SSAO_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Outline"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 
@@ -1122,7 +1146,23 @@ HRESULT CRenderer::Add_DebugRender(CComponent* pDebugCom)
 
 HRESULT CRenderer::Pre_Setting()
 {
-	return E_NOTIMPL;
+#pragma region HOTKEY
+
+	if (m_pGameInstance->Key_Down(DIK_1)) /* 임시로 SSAO 랑 HBAO 둘다 끄는용도 */
+		m_bPBR_Active = !m_bPBR_Active;
+	if (m_pGameInstance->Key_Down(DIK_2))
+		m_bSSAO_Active = !m_bSSAO_Active;
+	if (m_pGameInstance->Key_Down(DIK_3))
+		m_bBloom_Active = !m_bBloom_Active;
+	if (m_pGameInstance->Key_Down(DIK_4))
+		m_bOutline_Active = !m_bOutline_Active;
+	
+	Render_DebugOnOff();
+#pragma endregion
+
+
+
+	return S_OK;
 }
 
 #pragma endregion
