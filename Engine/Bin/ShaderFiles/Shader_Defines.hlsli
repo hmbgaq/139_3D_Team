@@ -3,9 +3,9 @@
 
 sampler LinearSampler = sampler_state
 {
-	filter = min_mag_mip_linear;
-	AddressU = wrap;
-	AddressV = wrap;
+    filter = min_mag_mip_linear;
+    AddressU = wrap;
+    AddressV = wrap;
 };
 
 sampler PointSampler = sampler_state
@@ -33,12 +33,27 @@ sampler SSAONormalDepth = sampler_state
     MinLOD = 0.0f; //_float
     MaxLOD = FLT_MAX; //_float
 };
+
 sampler SSAORandVec = sampler_state
 {
     filter = MIN_MAG_LINEAR_MIP_POINT;
     AddressU = Wrap;
     AddressV = Wrap;
 };
+
+sampler AnisotropicClampSampler = sampler_state /* For. ¾ÈÆ¼-¾Ù¸®¾î½Ì */
+{
+    Filter = ANISOTROPIC;
+    MaxAnisotropy = 4;
+    AddressU = clamp;
+    AddressV = clamp;
+    AddressW = clamp;
+
+    ComparisonFunc = ALWAYS;
+    MaxLOD = 0.f;
+    MinLOD = 0.f;
+};
+
 /* ---------------- Rasterizer ---------------- */
 
 RasterizerState RS_Default

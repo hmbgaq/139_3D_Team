@@ -329,6 +329,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_AnimModel.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Function.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Instance_Anim.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Model.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Point.hlsl" />

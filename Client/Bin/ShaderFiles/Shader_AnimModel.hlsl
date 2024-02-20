@@ -1,4 +1,5 @@
 #include "Shader_Defines.hlsli"
+#include "Shader_Function.hlsl"
 
 /* Base */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -84,6 +85,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	// SSAO
     Out.vViewNormal = normalize(mul(Out.vNormal, g_ViewMatrix).xyz);
     Out.vPositionView = mul(float4(In.vPosition, 1.0f), matWV);
+   //Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), WorldMatrix));
 	
 	return Out;
 }
@@ -97,6 +99,7 @@ struct PS_IN
     float4	vProjPos		: TEXCOORD2;
     
 	/* ssao */
+    float3 vTangent         : TANGENT; /* pbr */
     float3	vViewNormal		: NORMAL1;
     float3	vPositionView	: POSITION;
 };
