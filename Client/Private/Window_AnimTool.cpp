@@ -454,12 +454,12 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 					ImGui::SetItemDefaultFocus();
 					if (m_bCreatCollider)
 					{
-						m_fBoneMatrix = m_pBones[BoneIndex]->Get_CombinedTransformationMatrix();
-						_float4x4 pPickObject = m_PickingObject->Get_Transform()->Get_WorldMatrix();
-						m_fBoneMatrix = pPickObject * m_fBoneMatrix;
-						m_fBonePosition.x = m_fBoneMatrix._41;
-						m_fBonePosition.y = m_fBoneMatrix._42;
-						m_fBonePosition.z = m_fBoneMatrix._43;
+						//m_fBoneMatrix = m_pBones[BoneIndex]->Get_CombinedTransformationMatrix();
+						//_float4x4 pPickObject = m_PickingObject->Get_Transform()->Get_WorldMatrix();
+						//m_fBoneMatrix = pPickObject * m_fBoneMatrix;
+						//m_fBonePosition.x = m_fBoneMatrix._41;
+						//m_fBonePosition.y = m_fBoneMatrix._42;
+						//m_fBonePosition.z = m_fBoneMatrix._43;
 						Create_Bounding(m_fBonePosition, m_iColliderSize);
 						m_vBoneColliderIndex.push_back(m_pBones[BoneIndex]);
 						m_bCreatCollider = false;
@@ -526,7 +526,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 				}
 
 				_float4x4 Temp = m_vBoneColliderIndex[n]->Get_CombinedTransformationMatrix();
-				_float4x4 Desc =Temp * m_PickingObject->Get_Transform()->Get_WorldMatrix();
+				_float4x4 Desc = Temp * m_PickingObject->Get_Transform()->Get_WorldMatrix();
 
 				m_pBoneCollider[n]->Update(Temp);
 				
@@ -728,9 +728,9 @@ void CWindow_AnimTool::Draw_Weapon(_float fTimeDelta)
 					if (m_bColliderWeaponSize)
 					{
 						_float4x4	Temp = XMMatrixIdentity();
-						Temp.m[0][0] = m_iColliderSize;
-						Temp.m[1][1] = m_iColliderSize;
-						Temp.m[2][2] = m_iColliderSize;
+						Temp.m[0][0] = m_iColliderWeaponSize;
+						Temp.m[1][1] = m_iColliderWeaponSize;
+						Temp.m[2][2] = m_iColliderWeaponSize;
 
 						m_pWeaponCollider[iSelectColliderIndex]->Get_Bounding()->Set_matScale(Temp);
 
@@ -825,7 +825,7 @@ void CWindow_AnimTool::Create_Bounding(_float3 fPoint, _float fRadius)
 {
 	CBounding_Sphere::BOUNDING_SPHERE_DESC pBoundingSphere;
 
-	pBoundingSphere.vCenter = fPoint;
+	pBoundingSphere.vCenter = _float3(0.0f,0.0f,0.0f);
 	pBoundingSphere.fRadius = fRadius;
 	
 	m_pCollider = dynamic_cast<CCollider*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_Sphere"), &pBoundingSphere));
@@ -838,7 +838,7 @@ void CWindow_AnimTool::Create_Weapon_Bounding(_float3 fPoint, _float fRadius)
 {
 	CBounding_Sphere::BOUNDING_SPHERE_DESC pBoundingSphere;
 
-	pBoundingSphere.vCenter = fPoint;
+	pBoundingSphere.vCenter = _float3(0.0f, 0.0f, 0.0f);
 	pBoundingSphere.fRadius = fRadius;
 
 	m_pCollider = dynamic_cast<CCollider*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_Sphere"), &pBoundingSphere));

@@ -498,20 +498,20 @@
     <ClInclude Include="..\Public\Player_Weapon_Revolver.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Revolver</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_Weapon_Winchester.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Winchester</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player_Weapon_ELShotgun.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_Weapon_FlameBelcher.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\FlameBelcher</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Weapon_ELWinchester.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_FlameBelcher.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\FlameBelcher</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Player_Weapon_Shotgun.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Shotgun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_Winchester.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Winchester</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -919,20 +919,20 @@
     <ClCompile Include="..\Private\Player_Weapon_Revolver.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Revolver</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Player_Weapon_Winchester.cpp">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Winchester</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Player_Weapon_ELShotgun.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_Weapon_FlameBelcher.cpp">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\FlameBelcher</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Weapon_ELWinchester.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_FlameBelcher.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\FlameBelcher</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Player_Weapon_Shotgun.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Shotgun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Winchester.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Winchester</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
