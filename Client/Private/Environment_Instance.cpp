@@ -45,7 +45,7 @@ void CEnvironment_Instance::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Instance::Tick(_float fTimeDelta)
 {
-	m_pInstanceModelCom->Update(m_tInstanceDesc.vecInstanceInfoDesc);
+	//m_pInstanceModelCom->Update(m_tInstanceDesc.vecInstanceInfoDesc);
 	
 }
 

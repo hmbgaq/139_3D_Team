@@ -308,13 +308,17 @@ namespace Engine
 
 	typedef struct ENGINE_DLL AnimInstanceDesc
 	{
-		_uint				iMaxInstanceCount = 0;
-		class CShader*		pInstanceShader = { nullptr };
-		ID3D11Texture2D*	pInstanceTexture = { nullptr };
-		ID3D11ShaderResourceView* pInstanceSRV = { nullptr };
+		_uint						iMaxInstanceCount = 0;
+		_uint						iSizePerSecond = 0;
+		//class CShader*				pInstanceShader =	{ nullptr };
+		ID3D11ShaderResourceView*	pInstanceSRV = {nullptr};
+		ID3D11Texture2D*			pInstanceTexture =	{ nullptr };
+		BYTE*						pByte = { nullptr };
+		_float4x4*					pMatrix = { nullptr };
 
-		BYTE*				pByte = { nullptr };
-		_float4x4*			pMatrix = { nullptr };
+		AnimInstanceDesc() {};
+		~AnimInstanceDesc();
+
 	}ANIMMODEL_INSTANCE_DESC;
 
 

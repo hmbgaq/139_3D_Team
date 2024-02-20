@@ -28,6 +28,7 @@ Texture2D   g_InstanceTransform;
 
 
 
+
 float4x4 Get_AnimTexture_Transform(uint iIndex, uint iID)
 {
     float4 vRight, vUp, vLook, vPos;
@@ -39,6 +40,8 @@ float4x4 Get_AnimTexture_Transform(uint iIndex, uint iID)
 
     return matrix(vRight, vUp, vLook, vPos);
 }
+
+
 
 struct VS_IN
 {
@@ -65,7 +68,8 @@ struct VS_OUT
     float3 vPositionView : POSITION;
 };
 
-
+//(VS_to_PS ) CharacterAnimatedInstancedVS(A_to_VS)
+//(float4)CharacterPS(VS_to_PS)
 
 VS_OUT VS_MAIN(VS_IN In)
 {
@@ -105,8 +109,6 @@ VS_OUT VS_MAIN(VS_IN In)
     
     return Out;
 }
-
-
 
 struct PS_IN
 {
@@ -208,4 +210,5 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
+
 }

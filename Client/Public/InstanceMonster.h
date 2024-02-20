@@ -15,6 +15,8 @@ BEGIN(Client)
 
 class CInstanceMonster final : public CGameObject
 {
+
+
 private:
 	CInstanceMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CInstanceMonster(const CInstanceMonster& rhs);
@@ -29,18 +31,21 @@ public:
 	virtual HRESULT		Render() override;
 
 private:
+	HRESULT				Ready_Render(_uint iSize);
 	HRESULT				Render_Instance(_uint iSize);
-
 
 private:
 	HRESULT				Ready_Components();
 	HRESULT				Bind_ShaderResources();
+
 	HRESULT				Ready_Instance();
+		HRESULT				Create_AnimationTexture();
+	
 
 	void				Add_InstanceData(_uint iSize, _uint& iIndex);
 
 private:
-	_int					m_iRenderPass = {};
+	_int					m_iRenderPass = { 0 };
 	_float					m_fTimeDelta;
 
 private:

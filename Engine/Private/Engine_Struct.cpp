@@ -105,7 +105,12 @@ namespace Engine
 
 	
 
+	AnimInstanceDesc::~AnimInstanceDesc()
+	{
+		Safe_Delete(pByte);
+		Safe_Release(pInstanceSRV);
+		Safe_Delete(pMatrix);
+		Safe_Release(pInstanceTexture);
+	}
 
-
-	
 }

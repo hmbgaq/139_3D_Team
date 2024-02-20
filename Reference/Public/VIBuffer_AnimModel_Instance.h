@@ -10,9 +10,7 @@ class ENGINE_DLL CVIBuffer_AnimModel_Instance final : public CVIBuffer
 public:
 	typedef struct tagVIBuffer_AnimModelInstanceDesc
 	{
-		_uint iMaxInstance = {};
-		_uint iSizePerInstance = {};
-		void* pValue = { nullptr };
+		ANIMMODEL_INSTANCE_DESC Desc = {};
 	}ANIMINSTANCE_BUFFER_DESC;
 
 protected:

@@ -10,7 +10,8 @@ class ENGINE_DLL CVIBuffer_Environment_Model_Instance : public CVIBuffer_Model_I
 public:
 	typedef struct tagVIBuffer_EnvironmentModelInstanceDesc : public CVIBuffer_Model_Instance::MODEL_INSTANCE_DESC
 	{
-		vector<INSTANCE_INFO_DESC> vecBufferInstanceInfo;
+		_bool						bAnimType = false;
+		vector<INSTANCE_INFO_DESC>	vecBufferInstanceInfo;
 	}ENVIRONMENT_MODEL_INSTANCE_DESC;
 
 private:
@@ -28,7 +29,7 @@ public:
 
 			HRESULT		Bind_ShaderResources(class CShader* pShader, _int iIndex);
 public:
-/*	void				Add_Mesh(_fmatrix vWorldMatrix);*/
+/*	void					Add_Mesh(_fmatrix vWorldMatrix);*/
 	void				Init_Instance(_int iNumInstance) override;
 	virtual				HRESULT	Render(_int iMeshIndex) override;
 
