@@ -348,6 +348,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 	for (size_t i = 0; i < m_iNumMaterials; i++)
 	{
+		//if() 내일 와서 이거 작업 할것 
 		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material((_uint)i);
 
 		MATERIAL_DESC			MaterialDesc = {  };

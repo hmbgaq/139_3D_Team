@@ -68,6 +68,10 @@ void CUI::Tick(_float fTimeDelta)
 		UI_DisappearTick(fTimeDelta);
 		break;
 	}
+
+
+	Check_RectPos();
+	Picking_UI();
 }
 
 void CUI::UI_AppearTick(_float fTimeDelta)
@@ -99,7 +103,7 @@ void CUI::Picking_UI()
 	CD3D11_VIEWPORT ViewPort;
 
 	m_pContext->RSGetViewports(&ViewPortIndex, &ViewPort); // 뷰포트 가져오기 
-
+	
 	if (PtInRect(&m_rcUI, pt))   //  PtInRect(렉트주소, 마우스 포인트)
 		m_bPick = true;
 	else
@@ -118,20 +122,118 @@ HRESULT CUI::Bind_ShaderResources()
 
 HRESULT CUI::SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX, _float fSizeY)
 {
-	m_ScreenPosRect.left = static_cast<LONG>(fPosX - (fSizeX * 0.5f));
-	m_ScreenPosRect.top = static_cast<LONG>(fPosY - (fSizeY * 0.5f));
-	m_ScreenPosRect.right = static_cast<LONG>(fPosX + (fSizeX * 0.5f));
-	m_ScreenPosRect.bottom = static_cast<LONG>(fPosY + (fSizeY * 0.5f));
+	m_rcUI.left = static_cast<LONG>(fPosX - (fSizeX * 0.5f));
+	m_rcUI.top = static_cast<LONG>(fPosY - (fSizeY * 0.5f));
+	m_rcUI.right = static_cast<LONG>(fPosX + (fSizeX * 0.5f));
+	m_rcUI.bottom = static_cast<LONG>(fPosY + (fSizeY * 0.5f));
 
 	return S_OK;
 }
 
-void CUI::Moving_Rect()
+void CUI::Change_SizeX(_float MMX)
 {
-	m_rcUI.left = LONG(m_fPositionX - (m_fScaleX / 2));
-	m_rcUI.top = LONG(m_fPositionY - (m_fScaleY / 2));
-	m_rcUI.right = LONG(m_fPositionX + (m_fScaleX / 2));
-	m_rcUI.bottom = LONG(m_fPositionY + (m_fScaleY / 2));
+	m_fScaleX += MMX;
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+}
+
+void CUI::Change_SizeY(_float MMY)
+{
+	m_fScaleY += MMY;
+	m_fPositionY = m_fPositionY;
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+}
+
+void CUI::Change_SizeRight(_float MMX)
+{
+	m_fScaleX += MMX;
+	m_fPositionX += MMX * 0.5f;
+
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+}
+
+void CUI::Change_SizeLeft(_float MMX)
+{
+	m_fScaleX += -1.f * MMX;
+	m_fPositionX += MMX * 0.5f;
+
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+}
+
+void CUI::Change_SizeTop(_float MMY)
+{
+	m_fScaleY += MMY;
+	m_fPositionY -= MMY * 0.5f;
+
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+}
+
+void CUI::Change_SizeBottom(_float MMY)
+{
+	m_fScaleY += MMY;
+	m_fPositionY += MMY * 0.5f;
+
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+}
+
+void CUI::Set_Size(_float fSizeX, _float fSizeY)
+{
+	m_fScaleX = fSizeX;
+	m_fScaleY = fSizeY;
+
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+}
+
+void CUI::Set_PosZ(_float fZ)
+{
+	_float Z = fZ;
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, Z));
+}
+
+void CUI::Set_Pos(_float2 vPos)
+{
+	m_fPositionX = vPos.x;
+	m_fPositionY = vPos.y;
+
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+}
+
+void CUI::Check_RectPos()
+{
+	_float fPosX = m_pTransformCom->Get_Position().x + g_iWinSizeX * 0.5f;
+	_float fPosY = m_pTransformCom->Get_Position().y + g_iWinSizeY * 0.5f;
+
+	m_rcUI.left = LONG(fPosX - (m_fScaleX / 2));
+	m_rcUI.top = LONG(fPosY - (m_fScaleY / 2));
+	m_rcUI.right = LONG(fPosX + (m_fScaleX / 2));
+	m_rcUI.bottom = LONG(fPosY + (m_fScaleY / 2));
+}
+
+void CUI::Moving_Picking_Point(POINT pt)
+{
+	m_fPositionX = (_float)pt.x;
+	m_fPositionY = (_float)pt.y;
+
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
 }
 
 HRESULT CUI::SetUp_BillBoarding()

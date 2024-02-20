@@ -160,6 +160,8 @@ public: /* Common */
 	std::string GetFileName(const std::string& filePath);
 	// 확장자를 제거해주는 함수
 	std::string RemoveExtension(const std::string& filePath);
+	// 포지션 값을 직교로 계산해주는 함수
+	_vector		Convert_Orthogonal(_vector vPosition);
 #pragma endregion End
 
 #pragma region 유정

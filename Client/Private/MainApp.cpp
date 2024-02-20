@@ -95,9 +95,10 @@ HRESULT CMainApp::Ready_UITexture()
 	{
 		json object = item.value();
 
-		iPathNum = object["PathNum"];
+		/* 순서 확인하기 */
 		strFileName = object["FileName"];
 		strFilePath = object["FilePath"];
+		iPathNum = object["PathNum"];
 
 		wstring wstrPrototag;
 		m_pGameInstance->String_To_WString(strFileName, wstrPrototag);
