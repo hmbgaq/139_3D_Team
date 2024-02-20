@@ -281,3 +281,8 @@ void CSpringCamera::Free()
 {
 	__super::Free();
 }
+
+Engine::CGameObject* CSpringCamera::Pool()
+{
+	return new CSpringCamera(*this);
+}

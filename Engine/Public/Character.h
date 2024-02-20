@@ -95,6 +95,7 @@ protected:
 
 protected:
 	virtual CGameObject* Clone(void* pArg) PURE;
+	virtual CGameObject* Pool() PURE;
 	virtual void Free() override;
 };
 

@@ -26,7 +26,7 @@ public:
 	CGameObject* Clone_Prototype(const wstring& strPrototypeTag, void* pArg);
 
 	HRESULT Fill_PoolObject(class CGameObject* pGameObject);
-	HRESULT Create_PoolObjects(const wstring& strPrototypeTag, void* pArg, _uint iSize = 10);
+	HRESULT Create_PoolObjects(const wstring& strPrototypeTag, _uint iSize = 10);
 
 
 	void Priority_Tick(_float fTimeDelta);

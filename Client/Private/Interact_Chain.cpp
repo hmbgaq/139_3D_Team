@@ -204,6 +204,11 @@ CGameObject* CInteract_Chain::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CInteract_Chain::Pool()
+{
+	return new CInteract_Chain(*this);
+}
+
 void CInteract_Chain::Free()
 {
 	__super::Free();
@@ -212,3 +217,5 @@ void CInteract_Chain::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);
 }
+
+

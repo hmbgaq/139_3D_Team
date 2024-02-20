@@ -63,17 +63,12 @@ private:
 	PxRigidDynamic* m_pTemp = nullptr;
 	PxControllerManager* m_pControllerManager = nullptr;
 	
-
 	////Visual Debugger
 	PxPvd* m_pPVD;
 
-	PxCudaContextManager* m_pCudaContextManager = nullptr;
-	// MeshCooking을 하기 위해 생성
 	PxCooking* m_pCooking = nullptr;
-	// CPU 리소스를 효율적으로 공유할 수 있도록 하기 위해 구현하는 것을 추천
-	PxDefaultCpuDispatcher* m_pDispatcher = nullptr;
+	//PxDefaultCpuDispatcher* m_pDispatcher = nullptr;
 
-	
 
 private:
 	map<_uint, CPhysXCollider*>		m_pPhysXCollders;

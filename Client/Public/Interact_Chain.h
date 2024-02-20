@@ -48,7 +48,11 @@ private:
 public:
 	static CInteract_Chain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 	virtual void Free() override;
+
+	// CGameObject을(를) 통해 상속됨
+	
 };
 
 END

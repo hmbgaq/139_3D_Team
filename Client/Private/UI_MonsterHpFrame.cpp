@@ -242,6 +242,11 @@ CGameObject* CUI_MonsterHpFrame::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CUI_MonsterHpFrame::Pool()
+{
+	return new CUI_MonsterHpFrame(*this);
+}
+
 void CUI_MonsterHpFrame::Free()
 {
 	__super::Free();
@@ -251,3 +256,5 @@ void CUI_MonsterHpFrame::Free()
 	Safe_Release(m_pTextureCom);
 
 }
+
+

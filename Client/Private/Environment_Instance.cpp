@@ -196,3 +196,8 @@ void CEnvironment_Instance::Free()
 	Safe_Release(m_pInstanceModelCom);
 }
 
+CGameObject* CEnvironment_Instance::Pool()
+{
+	return new CEnvironment_Instance(*this);
+}
+

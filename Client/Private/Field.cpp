@@ -253,6 +253,11 @@ CGameObject* CField::Clone(void* pArg) // 여기서 사본을 만들때 지형을 설정할 값�
 	return pInstance;
 }
 
+Engine::CGameObject* CField::Pool()
+{
+	return new CField(*this);
+}
+
 void CField::Free()
 {
 	__super::Free();
@@ -269,3 +274,5 @@ void CField::Free()
 		Safe_Release(m_pTextureCom[i]);
 	}
 }
+
+

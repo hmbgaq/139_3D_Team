@@ -128,8 +128,15 @@ CGameObject* CSkyDome::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CSkyDome::Pool()
+{
+	return new CSkyDome(*this);
+}
+
 void CSkyDome::Free()
 {
 	__super::Free();
 
 }
+
+

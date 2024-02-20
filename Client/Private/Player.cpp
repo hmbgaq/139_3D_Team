@@ -226,10 +226,17 @@ CGameObject * CPlayer::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CPlayer::Pool()
+{
+	return new CPlayer(*this);
+}
+
 void CPlayer::Free()
 {
 	__super::Free();
 }
+
+
 
 
 

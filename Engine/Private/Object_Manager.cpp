@@ -41,8 +41,17 @@ HRESULT CObject_Manager::Add_Prototype(const wstring & strPrototypeTag, CGameObj
 	m_Prototypes.emplace(strPrototypeTag, pPrototype);
 
 	list<CGameObject*> ObjectList;
-	m_Pool.emplace(strPrototypeTag, ObjectList);
 	
+	if (true == pPrototype->Is_PoolObject()) 
+	{
+		for (_uint i = 0; i < 100; ++i)
+		{
+			ObjectList.push_back(pPrototype->Pool());
+		}
+	}
+	
+	m_Pool.emplace(strPrototypeTag, ObjectList);
+
 	return S_OK;
 }
 
@@ -126,14 +135,14 @@ HRESULT CObject_Manager::Fill_PoolObject(CGameObject* pGameObject)
 	return S_OK;
 }
 
-HRESULT CObject_Manager::Create_PoolObjects(const wstring& strPrototypeTag, void* pArg, _uint iSize)
+HRESULT CObject_Manager::Create_PoolObjects(const wstring& strPrototypeTag, _uint iSize)
 {
 	CGameObject* pPrototype = Find_Prototype(strPrototypeTag);
 	if (nullptr == pPrototype)
 		return E_FAIL;
 
-	//if (false == pPrototype->Is_PoolObject())
-	//	return S_OK;
+	if (false == pPrototype->Is_PoolObject())
+		return S_OK;
 
 	auto	iter = m_Pool.find(strPrototypeTag);
 	if (iter == m_Pool.end())
@@ -142,7 +151,7 @@ HRESULT CObject_Manager::Create_PoolObjects(const wstring& strPrototypeTag, void
 
 	for (_uint i = 0; i < iSize; ++i)
 	{
-		CGameObject* pCloneObject = pPrototype->Clone(pArg);
+		CGameObject* pCloneObject = pPrototype->Pool();
 		pCloneObject->Set_Enable(false);
 		(*iter).second.push_back(pCloneObject);
 	}
@@ -331,6 +340,15 @@ void CObject_Manager::Free()
 		Safe_Release(Pair.second);
 
 	m_Prototypes.clear();
+
+	for (auto& PoolList : m_Pool) 
+	{
+		for (auto& pPoolObject : PoolList.second)
+			Safe_Release(pPoolObject);
+	}
+
+	m_Pool.clear();
+
 
 	Safe_Release(m_pGameInstance);
 }

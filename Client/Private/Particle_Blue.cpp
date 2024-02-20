@@ -146,6 +146,12 @@ CGameObject * CParticle_Blue::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CParticle_Blue::Pool()
+{
+	return new CParticle_Blue(*this);
+}
+
+
 void CParticle_Blue::Free()
 {
 	__super::Free();
@@ -154,4 +160,5 @@ void CParticle_Blue::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pShaderCom);
 }
+
 

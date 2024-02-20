@@ -117,8 +117,15 @@ CGameObject * CWeapon_Player::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CWeapon_Player::Pool()
+{
+	return new CWeapon_Player(*this);
+}
+
 void CWeapon_Player::Free()
 {
 	__super::Free();
 }
+
+
 

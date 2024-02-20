@@ -120,6 +120,11 @@ CGameObject * CBackGround::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CBackGround::Pool()
+{
+	return new CBackGround(*this);
+}
+
 void CBackGround::Free()
 {
 	__super::Free();
@@ -128,4 +133,6 @@ void CBackGround::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pShaderCom);
 }
+
+
 

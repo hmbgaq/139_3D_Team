@@ -239,6 +239,11 @@ CGameObject* CParticle_Custom::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CParticle_Custom::Pool()
+{
+	return new CParticle_Custom(*this);
+}
+
 void CParticle_Custom::Free()
 {
 	__super::Free();
@@ -250,4 +255,6 @@ void CParticle_Custom::Free()
 
 	Safe_Release(m_pShaderCom);
 }
+
+
 

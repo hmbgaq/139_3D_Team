@@ -154,6 +154,11 @@ CGameObject * CEffect_Instance::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CEffect_Instance::Pool()
+{
+	return new CEffect_Instance(*this);
+}
+
 void CEffect_Instance::Free()
 {
 	__super::Free();
@@ -162,4 +167,6 @@ void CEffect_Instance::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pInstanceModelCom);
 }
+
+
 

@@ -223,6 +223,11 @@ CGameObject* CUI_Anything::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CUI_Anything::Pool()
+{
+	return new CUI_Anything(*this);
+}
+
 void CUI_Anything::Free()
 {
 	__super::Free();
@@ -232,3 +237,5 @@ void CUI_Anything::Free()
 	Safe_Release(m_pTextureCom);
 
 }
+
+

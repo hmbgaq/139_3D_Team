@@ -198,6 +198,11 @@ CGameObject * CEnvironment_Object::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CEnvironment_Object::Pool()
+{
+	return new CEnvironment_Object(*this);
+}
+
 void CEnvironment_Object::Free()
 {
 	__super::Free();
@@ -205,4 +210,6 @@ void CEnvironment_Object::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

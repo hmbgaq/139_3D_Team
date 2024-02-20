@@ -49,6 +49,9 @@ public:
 	virtual CGameObject* Clone(void* pArg) override;
 
 	virtual void Free() override;
+
+	// CGameObject을(를) 통해 상속됨
+	virtual Engine::CGameObject* Pool();
 };
 
 END

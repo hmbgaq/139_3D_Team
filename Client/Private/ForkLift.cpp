@@ -127,6 +127,11 @@ CGameObject * CForkLift::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CForkLift::Pool()
+{
+	return new CForkLift(*this);
+}
+
 void CForkLift::Free()
 {
 	__super::Free();
@@ -134,4 +139,6 @@ void CForkLift::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

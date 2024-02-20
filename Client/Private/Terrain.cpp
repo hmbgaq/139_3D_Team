@@ -154,6 +154,11 @@ CGameObject * CTerrain::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CTerrain::Pool()
+{
+	return new CTerrain(*this);
+}
+
 void CTerrain::Free()
 {
 	__super::Free();
@@ -169,4 +174,6 @@ void CTerrain::Free()
 	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

@@ -257,6 +257,11 @@ CGameObject* CScreamer::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CScreamer::Pool()
+{
+	return new CScreamer(*this);
+}
+
 void CScreamer::Free()
 {
 	__super::Free();
@@ -267,3 +272,5 @@ void CScreamer::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pColliderCom);
 }
+
+

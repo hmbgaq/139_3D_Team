@@ -69,7 +69,7 @@ public: /* For.Object_Manager */
 	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
 	class CCharacter* Get_Player();
 	void Set_Player(class CCharacter* _pPlayer);
-	HRESULT Create_PoolObjects(const wstring & strPrototypeTag, void* pArg, _uint iSize = 10);
+	HRESULT Create_PoolObjects(const wstring & strPrototypeTag, _uint iSize = 10);
 
 
 

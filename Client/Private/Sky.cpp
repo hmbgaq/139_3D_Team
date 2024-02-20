@@ -130,6 +130,11 @@ CGameObject * CSky::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CSky::Pool()
+{
+	return new CSky(*this);
+}
+
 void CSky::Free()
 {
 	__super::Free();
@@ -138,4 +143,6 @@ void CSky::Free()
 	Safe_Release(m_pVIBufferCom);	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

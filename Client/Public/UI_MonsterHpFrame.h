@@ -60,7 +60,9 @@ private:
 
 public:
 	static CUI_MonsterHpFrame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 盔屈按眉 积己
-	virtual CGameObject* Clone(void* pArg) override; //! 荤夯按眉 积己
+	virtual CGameObject*	Clone(void* pArg) override; //! 荤夯按眉 积己
+	virtual CGameObject*	Pool() override;
 	virtual void			Free() override;
+
 };
 

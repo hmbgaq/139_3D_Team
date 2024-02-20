@@ -23,7 +23,11 @@ private:
 public:
 	static  CUI_Player_HP* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 	virtual void Free() override;
+
+	// CUI을(를) 통해 상속됨
+	
 };
 
 END

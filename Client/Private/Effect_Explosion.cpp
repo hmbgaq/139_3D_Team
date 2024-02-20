@@ -145,6 +145,11 @@ CGameObject * CEffect_Explosion::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CEffect_Explosion::Pool()
+{
+	return new CEffect_Explosion(*this);
+}
+
 void CEffect_Explosion::Free()
 {
 	__super::Free();
@@ -153,4 +158,6 @@ void CEffect_Explosion::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pShaderCom);
 }
+
+
 

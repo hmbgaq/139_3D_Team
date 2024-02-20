@@ -12,6 +12,11 @@ private:
 	CPhysXController(const CPhysXController& rhs);
 	virtual ~CPhysXController() = default;
 
+public:
+	_uint	Get_PControllerIndex() const { return m_iControllerIndex; }
+
+private:
+	_uint									m_iControllerIndex;
 
 private:
 	void Free();

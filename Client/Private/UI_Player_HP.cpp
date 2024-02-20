@@ -66,6 +66,13 @@ CGameObject* CUI_Player_HP::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CUI_Player_HP::Pool()
+{
+	return new CUI_Player_HP(*this);
+}
+
 void CUI_Player_HP::Free()
 {
 }
+
+

@@ -159,9 +159,16 @@ CGameObject * CBody_Player::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CBody_Player::Pool()
+{
+	return new CBody_Player(*this);
+}
+
 void CBody_Player::Free()
 {
 	__super::Free();
 
 }
+
+
 

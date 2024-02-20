@@ -201,6 +201,11 @@ CGameObject * CMonster::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CMonster::Pool()
+{
+	return new CMonster(*this);
+}
+
 void CMonster::Free()
 {
 	__super::Free();
@@ -210,4 +215,6 @@ void CMonster::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

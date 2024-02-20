@@ -149,6 +149,11 @@ CGameObject* CParticle_Red::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CParticle_Red::Pool()
+{
+	return new CParticle_Red(*this);
+}
+
 void CParticle_Red::Free()
 {
 	__super::Free();
@@ -157,4 +162,6 @@ void CParticle_Red::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pShaderCom);
 }
+
+
 

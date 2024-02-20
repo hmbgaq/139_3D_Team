@@ -109,8 +109,15 @@ CGameObject * CCamera_Dynamic::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CCamera_Dynamic::Pool()
+{
+	return new CCamera_Dynamic(*this);
+}
+
+
 void CCamera_Dynamic::Free()
 {
 	__super::Free();
 
 }
+
