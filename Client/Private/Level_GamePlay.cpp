@@ -17,9 +17,7 @@
 #pragma region MAP
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
-
 #pragma endregion
-
 
 #pragma region Test
 #include "Screamer.h"  
@@ -250,8 +248,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
 	
 	}
-
-	
 
 	return S_OK;
 

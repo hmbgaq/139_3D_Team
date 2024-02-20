@@ -787,6 +787,9 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Blur.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\TIMOTHY LOTTES_Fxaa3_11.hlsl">
+      <Filter>98.ShaderFiles</Filter>
+    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Fxaa3_11.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>

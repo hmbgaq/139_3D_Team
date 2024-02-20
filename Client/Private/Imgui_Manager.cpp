@@ -4,8 +4,6 @@
 #include "../Imgui/imgui_impl_dx11.h"
 #include "../Imgui/imgui_impl_win32.h"
 
-
-
 #include "GameInstance.h"
 #include "Imgui_Manager.h"
 #include "Imgui_Window.h"
@@ -132,10 +130,17 @@ HRESULT CImgui_Manager::Ready_Windows()
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_UITOOL_WINDOW, pWindowUI);
 #pragma endregion UI_END
 
+#pragma region 셰이더 툴
+	pWindow = CWindow_ShaderTool::Create(m_pDevice, m_pContext);
+	if (pWindow == nullptr)
+		return E_FAIL;
+
+	pWindow->SetUp_ImGuiDESC(u8"셰이더 툴", ImVec2{ 300.f, 650.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
+	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_SHADER_WINDOW, pWindow);
+#pragma endregion 셰이더 툴
+
 	return S_OK;
 }
-
-
 
 #pragma endregion 이니셜라이즈
 
@@ -231,6 +236,20 @@ void CImgui_Manager::MenuTick(_float fTimeDelta)
 
  				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
  			}
+
+ 			if (ImGui::MenuItem("ShaderTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_SHADER_WINDOW]))
+ 			{
+ 				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_SHADER_WINDOW);
+
+ 				if (nullptr == pWindow)
+ 				{
+ 					MSG_BOX("Shader 윈도우가 없음. Ready_Window 함수 확인 바람");
+ 					return;
+ 				}
+
+ 				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+ 			}
+
 
  			ImGui::EndMenu();
 		}

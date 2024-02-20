@@ -1,4 +1,4 @@
-#include "Renderer.h"
+ï»¿#include "Renderer.h"
 #include "GameObject.h"
 #include "GameInstance.h"
 #include "VIBuffer_Rect.h"
@@ -23,20 +23,20 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CRenderer::Initialize()
 {
-	/* ¼ÎÀÌ´õ °´Ã¼ »ı¼º */
+	/* ì…°ì´ë” ê°ì²´ ìƒì„± */
 	FAILED_CHECK(Create_Shader());
 
-	/* ·»´õÅ¸°Ù »ı¼º + MRT ±×·ì ÁöÁ¤ */
+	/* ë Œë”íƒ€ê²Ÿ ìƒì„± + MRT ê·¸ë£¹ ì§€ì • */
 	FAILED_CHECK(Create_RenderTarget());
 
-	/* ¹öÆÛ °´Ã¼ »ı¼º */
+	/* ë²„í¼ ê°ì²´ ìƒì„± */
 	FAILED_CHECK(Create_Buffer());
 
-	/* ID3D11DepthStencilView ¼Ä»ó */
+	/* ID3D11DepthStencilView ì…ìƒ */
 	FAILED_CHECK(Create_DepthStencil());
 
 #ifdef _DEBUG
-	/* ¾Õ¼­ ¸¸µç MRT¸¦ µğ¹ö±×·»´õ¿¡ ±×¸®´Â¿ëµµ */
+	/* ì•ì„œ ë§Œë“  MRTë¥¼ ë””ë²„ê·¸ë Œë”ì— ê·¸ë¦¬ëŠ”ìš©ë„ */
 	FAILED_CHECK(Ready_DebugRender()); 
 #endif
 
@@ -73,9 +73,12 @@ HRESULT CRenderer::Create_Shader()
 	m_pShader[SHADER_TYPE::SHADER_OUTLINE] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Outline.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
 	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_OUTLINE], E_FAIL);
 
+	m_pShader[SHADER_TYPE::SHADER_FXAA] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Fxaa3_11.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
+	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_FXAA], E_FAIL);
 	//m_pShader[SHADER_TYPE::SHADER_FINAL] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Final.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
 	//NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_FINAL], E_FAIL);
 
+	/* pbr + ibl ê°™ì´ ë“¤ì–´ê°€ì•¼í•¨ */
 	return S_OK;
 }
 
@@ -91,10 +94,10 @@ HRESULT CRenderer::Create_RenderTarget()
 		/* MRT_GameObject */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f)));
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Normal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Depth"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))); /* ±íÀÌ¹öÆÛ ±× ±íÀÌ */
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Depth"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))); /* ê¹Šì´ë²„í¼ ê·¸ ê¹Šì´ */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_ORM"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_ViewNormal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))); 
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))); /* ³ÖÀº°Å ¾Ë¾Æ¼­ ºí·¯µÇµµ·Ï Ã³¸®ÇÔ */
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))); /* ë„£ì€ê±° ì•Œì•„ì„œ ë¸”ëŸ¬ë˜ë„ë¡ ì²˜ë¦¬í•¨ */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_OutLine"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 0.f)));
 
 		/* MRT_Shadow */
@@ -125,6 +128,9 @@ HRESULT CRenderer::Create_RenderTarget()
 	
 		/* MRT_RadialBlur */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_RadialBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+	
+		/* MRT_FXAA */
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_FXAA"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 	}
 
 	/* MRT*/
@@ -135,12 +141,12 @@ HRESULT CRenderer::Create_RenderTarget()
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Depth")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_ORM")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_ViewNormal")));
-		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Bloom"))); /* ¿ÀºêÁ§Æ® ¿Ü°û¼± */
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Bloom"))); /* ì˜¤ë¸Œì íŠ¸ ì™¸ê³½ì„  */
 
 		/* MRT_OutLine */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Outline"), TEXT("Target_OutLine")));
 
-		/* MRT_LightAcc - Q. Ambient Ãß°¡ÇÏ´Â°¡ ? */
+		/* MRT_LightAcc - Q. Ambient ì¶”ê°€í•˜ëŠ”ê°€ ? */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular")));
 
@@ -151,7 +157,7 @@ HRESULT CRenderer::Create_RenderTarget()
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO"), TEXT("Target_SSAO")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_Blur"), TEXT("Target_SSAO_Blur")));
 
-		/* Blur -  ¿©·¯±ºµ¥¼­ »ç¿ëÇÏ´Â ºí·¯¸¦ ÇÏ³ª·Î º´ÇÕÇÏ±âÀ§ÇØ Target_Blur_DownSampling¿¡ g_°ª À¸·Î ³Ñ°Ü¼­ ÇÏ³ª·Î »ç¿ëÇÏ±âÀ§ÇØ ³ª´²µÒ*/
+		/* Blur -  ì—¬ëŸ¬êµ°ë°ì„œ ì‚¬ìš©í•˜ëŠ” ë¸”ëŸ¬ë¥¼ í•˜ë‚˜ë¡œ ë³‘í•©í•˜ê¸°ìœ„í•´ Target_Blur_DownSamplingì— g_ê°’ ìœ¼ë¡œ ë„˜ê²¨ì„œ í•˜ë‚˜ë¡œ ì‚¬ìš©í•˜ê¸°ìœ„í•´ ë‚˜ëˆ ë‘ */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_DownSampling"), TEXT("Target_Blur_DownSampling")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_Horizontal"), TEXT("Target_Blur_Horizontal")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_Vertical"), TEXT("Target_Blur_Vertical")));
@@ -166,6 +172,8 @@ HRESULT CRenderer::Create_RenderTarget()
 		/* MRT_RadialBlur*/
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_RaidalBlur"), TEXT("Target_RadialBlur")));
 
+		/* MRT_FXAA*/
+		//FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_FXAA"), TEXT("Target_FXAA")));
 	}
 
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(Viewport.Width, Viewport.Height, 1.f));
@@ -221,7 +229,7 @@ HRESULT CRenderer::Ready_DebugRender()
 	_float fSizeX = 150.f;
 	_float fSizeY = 100.f;
 
-	/* MRT_GameObject - ÁÂ»ó´Ü Default */
+	/* MRT_GameObject - ì¢Œìƒë‹¨ Default */
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Depth"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
@@ -242,9 +250,12 @@ HRESULT CRenderer::Ready_DebugRender()
 
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_GodRay"),		(fSizeX / 2.f * 7.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 
-	/* MRT_Shadow - ¿ì»ó´Ü Default */
+	/* MRT_Shadow - ìš°ìƒë‹¨ Default */
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_LightDepth"),	(g_iWinsizeX - fSizeX * 0.5f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 
+	/* MRT_FXAA */
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_FXAA"),			(g_iWinsizeX - fSizeX * 0.5f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+	
 	return S_OK;
 }
 
@@ -281,6 +292,10 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Render_Deferred());
 	FAILED_CHECK(Render_OutLineGroup());	/* Render_Group */
+
+	if(m_pGameInstance->Key_Pressing(DIK_5))
+		FAILED_CHECK(Render_FXAA()); /* ì•ˆí‹°ì•¨ë¦¬ì–´ì‹± - í›„ì²˜ë¦¬ */ 
+	
 	FAILED_CHECK(Render_Blend());
 	FAILED_CHECK(Render_UI());
 
@@ -369,7 +384,7 @@ HRESULT CRenderer::Render_NonLight()
 HRESULT CRenderer::Render_NonBlend()
 {
 	/* Diffuse + Normal */
-	/* ±âÁ¸¿¡ ¼ÂÆÃµÇ¾îÀÖ´ø ¹é¹öÆÛ¸¦ »©³»°í Diffuse¿Í NormalÀ» ÀåÄ¡¿¡ ¹ÙÀÎµùÇÑ´Ù. */
+	/* ê¸°ì¡´ì— ì…‹íŒ…ë˜ì–´ìˆë˜ ë°±ë²„í¼ë¥¼ ë¹¼ë‚´ê³  Diffuseì™€ Normalì„ ì¥ì¹˜ì— ë°”ì¸ë”©í•œë‹¤. */
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects")));
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_NONBLEND])
@@ -382,7 +397,7 @@ HRESULT CRenderer::Render_NonBlend()
 
 	m_RenderObjects[RENDER_NONBLEND].clear();
 
-	/* ¹é¹öÆÛ¸¦ ¿ø·¡ À§Ä¡·Î ´Ù½Ã ÀåÄ¡¿¡ ¹ÙÀÎµùÇÑ´Ù. */
+	/* ë°±ë²„í¼ë¥¼ ì›ë˜ ìœ„ì¹˜ë¡œ ë‹¤ì‹œ ì¥ì¹˜ì— ë°”ì¸ë”©í•œë‹¤. */
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
@@ -428,7 +443,7 @@ HRESULT CRenderer::Render_UI()
 HRESULT CRenderer::Render_LightAcc()
 {
 	/* Shade */
-	/* ¿©·¯°³ ºûÀÇ ¿¬»ê °á°ú¸¦ ÀúÀåÇØ ÁØ´Ù. */
+	/* ì—¬ëŸ¬ê°œ ë¹›ì˜ ì—°ì‚° ê²°ê³¼ë¥¼ ì €ì¥í•´ ì¤€ë‹¤. */
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_LightAcc")));
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
@@ -451,7 +466,7 @@ HRESULT CRenderer::Render_LightAcc()
 
 	m_pGameInstance->Render_Lights(m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	
-	/* 0¹øÂ°¿¡ ¹é¹öÆÛ·»´õÅ¸°ÙÀÌ ¿Ã¶ó°¬´Ù. */
+	/* 0ë²ˆì§¸ì— ë°±ë²„í¼ë Œë”íƒ€ê²Ÿì´ ì˜¬ë¼ê°”ë‹¤. */
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
@@ -459,7 +474,7 @@ HRESULT CRenderer::Render_LightAcc()
 
 HRESULT CRenderer::Render_Deferred()
 {
-	/* µğÆÛµå¿¡ ÀÇÇÑ ÃÖÁ¾Àå¸é */
+	/* ë””í¼ë“œì— ì˜í•œ ìµœì¢…ì¥ë©´ */
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
@@ -486,13 +501,13 @@ HRESULT CRenderer::Render_Deferred()
 
 	/* Post Processing */
 	{
-		if (true == m_bPBR_Active) /* ÀÓ½Ã·Î µÑ´Ù ¾ÈÇÏµµ·Ï ¸·´Â¿ëµµ·ÎÇÔ */
+		if (true == m_bPBR_Active) /* ì„ì‹œë¡œ ë‘˜ë‹¤ ì•ˆí•˜ë„ë¡ ë§‰ëŠ”ìš©ë„ë¡œí•¨ */
 		{
 			FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bSSAO_Active", &m_bSSAO_Active, sizeof(_bool)));
 			if (true == m_bSSAO_Active)
 			{
 				//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture"));
-				FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao Ãß°¡ */
+				FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao ì¶”ê°€ */
 			}
 			else
 			{
@@ -547,17 +562,17 @@ HRESULT CRenderer::Render_OutLine_PostProcessing()
 
 HRESULT CRenderer::Render_SSAO()
 {
-	/* SSAO : crysis °ÔÀÓÀ» À§ÇØ crytek¿¡¼­ °³¹ßÇÑ ÁÖº¯ Æó»öÀ» ±Ù»çÈ­ÇÏ´Â ºü¸¥±â¼ú. 
-		 * Àå¸éÀÇ °¢ ÇÈ¼¿¿¡ ´ëÇÑ ¹ı¼± ¹× ±íÀÌÁ¤º¸¸¦ Æ÷ÇÔÇÏ´Â ·»´õ´ë»ó¿¡ Àå¸éÀ» ±×¸°´Ù. 
-		 * ÀÌ °ªµéÀ» »ùÇÃ¸µÇÏ¿© °¢ ÇÈ¼¿ÀÇ Æó»ö°ªÀ» °è»êÇØ µğÆÛµå ¼ÎÀÌ´õÈ¿°ú¿¡¼­ Æó»ö°ª¤·¸£ »ùÇÃ¸µÇÏ¿© Á¶¸í°è»ê¿¡¼­ ÁÖº¯Ç×¸ñÀ» ¼öÁ¤ÇÒ ¼ö ÀÖµµ·ÏÇÑ´Ù. */
+	/* SSAO : crysis ê²Œì„ì„ ìœ„í•´ crytekì—ì„œ ê°œë°œí•œ ì£¼ë³€ íìƒ‰ì„ ê·¼ì‚¬í™”í•˜ëŠ” ë¹ ë¥¸ê¸°ìˆ . 
+		 * ì¥ë©´ì˜ ê° í”½ì…€ì— ëŒ€í•œ ë²•ì„  ë° ê¹Šì´ì •ë³´ë¥¼ í¬í•¨í•˜ëŠ” ë Œë”ëŒ€ìƒì— ì¥ë©´ì„ ê·¸ë¦°ë‹¤. 
+		 * ì´ ê°’ë“¤ì„ ìƒ˜í”Œë§í•˜ì—¬ ê° í”½ì…€ì˜ íìƒ‰ê°’ì„ ê³„ì‚°í•´ ë””í¼ë“œ ì…°ì´ë”íš¨ê³¼ì—ì„œ íìƒ‰ê°’ã…‡ë¥´ ìƒ˜í”Œë§í•˜ì—¬ ì¡°ëª…ê³„ì‚°ì—ì„œ ì£¼ë³€í•­ëª©ì„ ìˆ˜ì •í•  ìˆ˜ ìˆë„ë¡í•œë‹¤. */
 
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO"))); /* Target SSAO ´Üµ¶ -> Blur ¿¬°èÇØ¾ßÇÔ */
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO"))); /* Target SSAO ë‹¨ë… -> Blur ì—°ê³„í•´ì•¼í•¨ */
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
-	/* º¯¼ö ¿Ã¸®±â */
+	/* ë³€ìˆ˜ ì˜¬ë¦¬ê¸° */
 	{
 		/* matViewToTEXsPACE*/
 		_matrix P = m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ);
@@ -577,18 +592,14 @@ HRESULT CRenderer::Render_SSAO()
 		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ViewNormal"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_NormalDepthTarget"));
 		
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Texture("g_RandomVectorTexture", m_pRandomSRV));
-
-		//FAILED_CHECK(m_pRandomVectorTexture->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_RandomVectorTexture"));
-		
-		
 	}
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(SSAO_SHADER::SSAO)));
 	
-	FAILED_CHECK(RenderScreenQuad());
+	//FAILED_CHECK(RenderScreenQuad());
 
 	FAILED_CHECK(m_pSSAO_VIBuffer->Render());
-
+	/* 	m_pContext->DrawIndexed(m_iNumIndices, 0, 0); */
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	Render_Blur(L"Target_SSAO", L"MRT_SSAO_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER), ECast(BLUR_SHADER::BLUR_UP_ADD));
@@ -647,7 +658,7 @@ HRESULT CRenderer::Render_RadialBlur()
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
-	/* º¯¼ö ¿Ã¸®±â */
+	/* ë³€ìˆ˜ ì˜¬ë¦¬ê¸° */
 	{
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fQuality", &m_fRadialBlurQuality, sizeof(_float4)));
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fRadialPower", &m_fRadialBlurPower, sizeof(_float4)));
@@ -662,7 +673,32 @@ HRESULT CRenderer::Render_RadialBlur()
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	//FAILED_CHECK(Render_AlphaBlendTargetMix(L"Target_RadialBlur", L"MRT_Blend", true))) 
-	//-> mix ½ÃÅ°°í deferred¼ÎÀÌ´õ¿¡ °ª ´Ù¸¥°÷¿¡ ´øÁö°í render -> clearÇÔ 
+	//-> mix ì‹œí‚¤ê³  deferredì…°ì´ë”ì— ê°’ ë‹¤ë¥¸ê³³ì— ë˜ì§€ê³  render -> clearí•¨ 
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_FXAA()
+{
+	/* MSAAì™€ ë¹„êµí•˜ì—¬ FXAAì˜ ëª©í‘œëŠ” ë” ë¹ ë¥´ê³  ë©”ëª¨ë¦¬ ì ìœ ìœ¨ì´ ë” ë‚®ìœ¼ë©°, í”½ì…€ì´ íë¦¿í•´ì§€ëŠ” í˜„ìƒì´ ì¼ì–´ë‚˜ì§€ ì•ŠëŠ”ë‹¤.
+	* í™”ë©´ì˜Â ìƒ‰ê¹”ë³€í™”ë¥¼Â í†µí•´Â ê²½ê³„ë¥¼Â ì°¾ëŠ”Â ì•Œê³ ë¦¬ì¦˜ì„Â ì´ìš©Â (ì—£ì§€Â ë””í…ì…˜ -> í”½ì…€ìˆ˜ì • -> ë¦¬ìƒ˜í”Œë§ -> ë¸”ëŸ¬ì²˜ë¦¬)í›„ì²˜ë¦¬ì´ê¸°Â ë•Œë¬¸ì—Â 
+	* í™”ë©´Â ì „ì²´ì—Â AAÂ ì ìš©ë¨Â ê´‘ì›íš¨ê³¼,Â í…ìŠ¤ì³,Â í›„ì²˜ë¦¬Â íš¨ê³¼ì—­ì‹œÂ AAÂ ëŒ€ìƒ ì„±ëŠ¥Â íƒ€ê²©ì´Â ê±°ì˜Â ì—†ìŒ
+	* ì•Œê³ ë¦¬ì¦˜Â íŠ¹ì„±ìƒÂ íë ¤ì§€ê±°ë‚˜Â ì ìš©ì´Â ì•ˆë˜ëŠ”Â í•œê³„ê°€Â ìˆì„ìˆ˜Â ìˆìŒ */
+
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	/* ë³€ìˆ˜ ì˜¬ë¦¬ê¸° */
+	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_RawValue("g_bFxaa", &m_bFXAA_Active, sizeof(_bool)));
+	}
+
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_FXAA"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
+
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Begin(0));
+
+	FAILED_CHECK(m_pVIBuffer->Render());
 
 	return S_OK;
 }
@@ -698,7 +734,7 @@ HRESULT CRenderer::Render_DebugOnOff()
 			if (true == m_bSSAO_Active)
 				cout << "SSAO : true " << endl;
 			else
-				cout << "HBAO+ : false " << endl;
+				cout << "HBAO+ : true " << endl;
 		}
 		else
 		{
@@ -710,7 +746,7 @@ HRESULT CRenderer::Render_DebugOnOff()
 		else
 			cout << "BloomBlur : false " << endl;
 		/* --------------------------------- */
-		cout << "OutLine : TestÁß " << endl;
+		cout << "OutLine : Testì¤‘ " << endl;
 
 		cout << " ----------------------------- " << endl;
 	}
@@ -745,7 +781,7 @@ HRESULT CRenderer::Render_Debug()
 	for (auto& pDebugCom : m_DebugComponent)
 	{
 		pDebugCom->Render();
-		//AnimTool ÀÛ¾÷Áß¿¡ ¾Ö ÀÖÀ¸¸é »èÁ¦½Ã¿¡ ÅÍÁ®¹ö¸² 
+		//AnimTool ì‘ì—…ì¤‘ì— ì•  ìˆìœ¼ë©´ ì‚­ì œì‹œì— í„°ì ¸ë²„ë¦¼ 
 		Safe_Release(pDebugCom);
 	}
 	m_DebugComponent.clear();
@@ -757,6 +793,7 @@ HRESULT CRenderer::Render_Debug()
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_SSAO_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Outline"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
+	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_FXAA"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 
 	return S_OK;
 }
@@ -768,13 +805,13 @@ HRESULT CRenderer::Render_Debug()
 
 HRESULT CRenderer::Ready_SSAO()
 {
-	/* ssao °´Ã¼ »ı¼º 
-		: SSAO °³Ã¼¸¦ ¸¸µé·Á¸é Direct3D ÀåÄ¡, DeviceContext, È­¸é Å©±â, Ä«¸Ş¶ó fov ¹× Ä«¸Ş¶ó ¿ø°Å¸® Æò¸é °Å¸®¸¦ Àü´ŞÇØ¾ßÇÑ´Ù. */
-	FAILED_CHECK(BuildFullScreenQuad());
+	/* ssao ê°ì²´ ìƒì„± 
+		: SSAO ê°œì²´ë¥¼ ë§Œë“¤ë ¤ë©´ Direct3D ì¥ì¹˜, DeviceContext, í™”ë©´ í¬ê¸°, ì¹´ë©”ë¼ fov ë° ì¹´ë©”ë¼ ì›ê±°ë¦¬ í‰ë©´ ê±°ë¦¬ë¥¼ ì „ë‹¬í•´ì•¼í•œë‹¤. */
+	BuildOffsetVectors();
 
 	FAILED_CHECK(SSAO_OnSize());
 
-	BuildOffsetVectors();
+	FAILED_CHECK(BuildFullScreenQuad()); /* ì´ê±¸ ë²„í¼ë¡œ ? */
 
 	//BuildRandomVectorTexture();
 
@@ -795,8 +832,8 @@ HRESULT CRenderer::SSAO_OnSize()
 	/* + BuildFrustumFarCorners */
 	_float4 CamSetting = m_pGameInstance->Get_CamSetting();
 	// { Cam_near, Cam_far, Cam_fovY, Cam_aspectRatio };
-	/* Ä«¸Ş¶óÀÇ ¿ø±ÙÅõ¿µÇà·Ä¿¡¼­ »ç¿ëµÇ´Â°ª. 
-	 * ¿ø±ÙÅõ¿µÀÇ °¡Àå ¸Õ Å¬¸®ÇÎ Æò¸éÀ» ³ªÅ¸³½´Ù. */
+	/* ì¹´ë©”ë¼ì˜ ì›ê·¼íˆ¬ì˜í–‰ë ¬ì—ì„œ ì‚¬ìš©ë˜ëŠ”ê°’. 
+	 * ì›ê·¼íˆ¬ì˜ì˜ ê°€ì¥ ë¨¼ í´ë¦¬í•‘ í‰ë©´ì„ ë‚˜íƒ€ë‚¸ë‹¤. */
 
 	_float fNear = CamSetting.x;
 	_float fFar = CamSetting.y;
@@ -884,13 +921,13 @@ HRESULT CRenderer::BuildFullScreenQuad()
 
 void CRenderer::BuildOffsetVectors()
 {
-	// 14°³ÀÇ ±ÕÀÏÇÏ°Ô ºĞÆ÷µÈ º¤ÅÍ·Î ½ÃÀÛ.
-	// Á¤À°¸éÃ¼ÀÇ 8°³ÀÇ ¸ğ¼­¸®¸¦ ¼±ÅÃ, °¢ ¸éÀ» µû¶ó 6°³ Áß½ÉÁ¡À» ¼±ÅÃÇÑ´Ù.
-	// Ç×»ó ´Ù¸¥ ÂÊ ¸éÀ» ±âÁØÀ¸·Î ÀÌ Á¡À» ¹ø°¥¾Æ »ç¿ëÇÑ´Ù. -> Á¤À°¸éÃ¼ ¹İ´ëÂÊµµ ±ÕµîÇÏ°Ô °¡´É 
-	// 14°³ ¹Ì¸¸ÀÇ »ùÇÃ¸µ Æ÷ÀÎÆ®¸¦ ¼±ÅÃÇÒ ¶§¿¡µµ º¤ÅÍ¸¦ ±ÕµîÇÏ°Ô ºĞ»ê½ÃÅ³ ¼ö ÀÖ´Ù.
+	// 14ê°œì˜ ê· ì¼í•˜ê²Œ ë¶„í¬ëœ ë²¡í„°ë¡œ ì‹œì‘.
+	// ì •ìœ¡ë©´ì²´ì˜ 8ê°œì˜ ëª¨ì„œë¦¬ë¥¼ ì„ íƒ, ê° ë©´ì„ ë”°ë¼ 6ê°œ ì¤‘ì‹¬ì ì„ ì„ íƒí•œë‹¤.
+	// í•­ìƒ ë‹¤ë¥¸ ìª½ ë©´ì„ ê¸°ì¤€ìœ¼ë¡œ ì´ ì ì„ ë²ˆê°ˆì•„ ì‚¬ìš©í•œë‹¤. -> ì •ìœ¡ë©´ì²´ ë°˜ëŒ€ìª½ë„ ê· ë“±í•˜ê²Œ ê°€ëŠ¥ 
+	// 14ê°œ ë¯¸ë§Œì˜ ìƒ˜í”Œë§ í¬ì¸íŠ¸ë¥¼ ì„ íƒí•  ë•Œì—ë„ ë²¡í„°ë¥¼ ê· ë“±í•˜ê²Œ ë¶„ì‚°ì‹œí‚¬ ìˆ˜ ìˆë‹¤.
 
 	//{
-	//	// 8°³ÀÇ Å¥ºê ÄÚ³Ê º¤ÅÍ
+	//	// 8ê°œì˜ íë¸Œ ì½”ë„ˆ ë²¡í„°
 	//	m_vOffsets[0] = _float4(+1.0f, +1.0f, +1.0f, 0.0f);
 	//	m_vOffsets[1] = _float4(-1.0f, -1.0f, -1.0f, 0.0f);
 	//					
@@ -905,7 +942,7 @@ void CRenderer::BuildOffsetVectors()
 	//}
 
 	//{
-	//	// 6°³ÀÇ Ç¥¸é Áß½ÉÁ¡ º¤ÅÍ
+	//	// 6ê°œì˜ í‘œë©´ ì¤‘ì‹¬ì  ë²¡í„°
 	//	m_vOffsets[8]	= _float4(-1.0f, 0.0f, 0.0f, 0.0f);
 	//	m_vOffsets[9]	= _float4(+1.0f, 0.0f, 0.0f, 0.0f);
 	//					  
@@ -959,13 +996,13 @@ void CRenderer::BuildOffsetVectors()
 	m_vOffsets[12] = _float4(0.0f, 0.0f, -1.0f, 0.0f);
 	m_vOffsets[13] = _float4(0.0f, 0.0f, +1.0f, 0.0f);
 
-	//// ³­¼ö µ¥ÀÌÅÍ ÃÊ±âÈ­
+	//// ë‚œìˆ˜ ë°ì´í„° ì´ˆê¸°í™”
 	//mt19937 randEngine;
 	//randEngine.seed(std::random_device()());
 	//uniform_real_distribution<_float> randF(0.25f, 1.0f);
 	for (_uint i = 0; i < 26; ++i)
 	{
-		// [0.25, 1.0] »çÀÌÀÇ ÀÓÀÇÀÇ º¤ÅÍ¸¦ ¸¸µç´Ù.
+		// [0.25, 1.0] ì‚¬ì´ì˜ ì„ì˜ì˜ ë²¡í„°ë¥¼ ë§Œë“ ë‹¤.
 		_float fRandom = SMath::fRandom(0.25f, 1.0f);
 
 		_vector v = fRandom * XMVector4Normalize(XMLoadFloat4(&m_vOffsets[i]));
@@ -1023,7 +1060,7 @@ HRESULT CRenderer::Render_Blur_Horizontal(_int eHorizontalPass)
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Blur_Horizontal")));
 
-	/* ´Ù¿î»ùÇÃ¸µÀÌ ³¡³­°É ¼öÇàÇÏ¹Ç·Î */
+	/* ë‹¤ìš´ìƒ˜í”Œë§ì´ ëë‚œê±¸ ìˆ˜í–‰í•˜ë¯€ë¡œ */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Blur_DownSampling"), m_pShader[SHADER_TYPE::SHADER_BLUR], "g_BlurTarget"));
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_BLUR]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
@@ -1043,7 +1080,7 @@ HRESULT CRenderer::Render_Blur_Vertical(_int eVerticalPass)
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Blur_Vertical")));
 
-	/* ¼öÆò»ùÇÃ¸µÀÌ ³¡³­°É ¼öÇà */
+	/* ìˆ˜í‰ìƒ˜í”Œë§ì´ ëë‚œê±¸ ìˆ˜í–‰ */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Blur_Horizontal"), m_pShader[SHADER_TYPE::SHADER_BLUR], "g_BlurTarget"));
 
 
@@ -1062,7 +1099,7 @@ HRESULT CRenderer::Render_Blur_Vertical(_int eVerticalPass)
 
 HRESULT CRenderer::Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bClear, _int eBlendType)
 {
-	/* ¿ø·¡»çÀÌÁî·Î ´Ù½Ã µÇµ¹¸² */
+	/* ì›ë˜ì‚¬ì´ì¦ˆë¡œ ë‹¤ì‹œ ë˜ëŒë¦¼ */
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(strFinalMrtTag, nullptr, bClear));
 
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShader[SHADER_TYPE::SHADER_BLUR], "g_BlurTarget"));
@@ -1085,16 +1122,16 @@ HRESULT CRenderer::Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bCl
 }
 void CRenderer::Calc_Blur_GaussianWeights(_int sigma, _int iSize , _Out_ void* Weights)
 {
-	/* Calc_Blur_GaussianWeights(3, g_fWeight_middle[7]) ÀÌ·±½ÄÀ¸·Î µé¾î¿Ã¿¹Á¤ */
-	/* sigma ´Â ÀÛÀ»¼ö·Ï °¡ÁßÄ¡°¡ ºü¸£°Ô °¨¼Ò. Å¬¼ö·Ï ÃµÃµÈ÷ °¨¼ÒÇØ¼­ ºÎµå·¯¿î ºí·¯°¡ ³ªÅ¸³­´Ù.  */
+	/* Calc_Blur_GaussianWeights(3, g_fWeight_middle[7]) ì´ëŸ°ì‹ìœ¼ë¡œ ë“¤ì–´ì˜¬ì˜ˆì • */
+	/* sigma ëŠ” ì‘ì„ìˆ˜ë¡ ê°€ì¤‘ì¹˜ê°€ ë¹ ë¥´ê²Œ ê°ì†Œ. í´ìˆ˜ë¡ ì²œì²œíˆ ê°ì†Œí•´ì„œ ë¶€ë“œëŸ¬ìš´ ë¸”ëŸ¬ê°€ ë‚˜íƒ€ë‚œë‹¤.  */
 	/* */
 
 	/*example : sigma = 1, iSize = 3*/
 	_float coeff = 1.0f / (2.0f * sigma * sigma);
 
-	// °¡ÁßÄ¡¸¦ °è»êÇÏ°í ÀúÀå
+	// ê°€ì¤‘ì¹˜ë¥¼ ê³„ì‚°í•˜ê³  ì €ì¥
 	_float* Weight = static_cast<float*>(Weights);
-	_int halfSize = iSize / 2; /* Áß¾ÓÀÇ ÀÎµ¦½º */
+	_int halfSize = iSize / 2; /* ì¤‘ì•™ì˜ ì¸ë±ìŠ¤ */
 
 	_float sum = 0.0f;
 
@@ -1104,7 +1141,7 @@ void CRenderer::Calc_Blur_GaussianWeights(_int sigma, _int iSize , _Out_ void* W
 		Weight[x] = exp(-static_cast<float>(i * i) * coeff);
 	}
 
-	// °¡ÁßÄ¡ Á¤±ÔÈ­
+	// ê°€ì¤‘ì¹˜ ì •ê·œí™”
 	for (_int i = 0; i < iSize; ++i)
 	{
 		sum += Weight[i];
@@ -1148,7 +1185,7 @@ HRESULT CRenderer::Pre_Setting()
 {
 #pragma region HOTKEY
 
-	if (m_pGameInstance->Key_Down(DIK_1)) /* ÀÓ½Ã·Î SSAO ¶û HBAO µÑ´Ù ²ô´Â¿ëµµ */
+	if (m_pGameInstance->Key_Down(DIK_1)) /* ì„ì‹œë¡œ SSAO ë‘ HBAO ë‘˜ë‹¤ ë„ëŠ”ìš©ë„ */
 		m_bPBR_Active = !m_bPBR_Active;
 	if (m_pGameInstance->Key_Down(DIK_2))
 		m_bSSAO_Active = !m_bSSAO_Active;
@@ -1201,7 +1238,7 @@ void CRenderer::Free()
 	for (_int i = 0; i < ECast(SHADER_TYPE::SHADER_END); ++i)
 		Safe_Release(m_pShader[i]);
 
-	/* ssao ÇØÁ¦ */
+	/* ssao í•´ì œ */
 	Safe_Release(m_pRandomVectorTexture);
 	Safe_Release(m_pRandomSRV);
 	Safe_Release(m_ScreenQuadVB);

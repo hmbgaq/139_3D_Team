@@ -36,6 +36,7 @@ HRESULT CVIBuffer::Initialize(void * pArg)
 
 HRESULT CVIBuffer::Render()
 {
+	/* m_iNumIndices = m_iNumPrimitives * m_iNumIndicesofPrimitive */
 	m_pContext->DrawIndexed(m_iNumIndices, 0, 0);
 
 	return S_OK;

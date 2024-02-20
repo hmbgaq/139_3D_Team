@@ -6,7 +6,8 @@ texture2D		g_DiffuseTexture;
 texture2D		g_NormalTexture;
 texture2D       g_SpecularTexture;
 
-float g_fTimeDelta;
+float           g_fTimeDelta;
+float           g_fCamFar;
 
 /* OutLine */
 float4	        g_vLineColor;
@@ -30,7 +31,9 @@ struct VS_OUT
 	float4		vWorldPos : TEXCOORD1;
 	float4		vProjPos : TEXCOORD2;
 	float4		vTangent : TANGENT;
-	float4		vBinormal : BINORMAL;
+    float4      vBinormal : BINORMAL;
+    float3      vViewNormal : NORMAL1; /* ssao */
+    float3      vPositionView : POSITION; /* ssao */
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -50,6 +53,8 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vTexcoord = In.vTexcoord;
 	Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
 	Out.vProjPos = Out.vPosition;
+    
+    /* ssao */ 
 	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
 	Out.vBinormal = normalize(vector(cross(Out.vNormal.xyz, Out.vTangent.xyz), 0.f));
 
@@ -64,14 +69,19 @@ struct PS_IN
 	float4		vWorldPos	: TEXCOORD1;
 	float4		vProjPos	: TEXCOORD2;
 	float4		vTangent	: TANGENT;
-	float4		vBinormal	: BINORMAL;
+    float4      vBinormal : BINORMAL;
+    float3      vViewNormal : NORMAL1; /* ssao */
+    float3      vPositionView : POSITION; /* ssao */
 };
 
 struct PS_OUT 
 {
-	float4		vDiffuse : SV_TARGET0;
-	float4		vNormal : SV_TARGET1;
-    float4      vDepth : SV_TARGET2;
+	float4		vDiffuse    : SV_TARGET0;
+	float4		vNormal     : SV_TARGET1;
+    float4      vDepth      : SV_TARGET2;
+    float4      vORM        : SV_TARGET3;
+    float4      vViewNormal : SV_TARGET4;
+    float4      vBloom      : SV_TARGET5;
 };
 
 /* ------------------- Base Pixel Shader (0) -------------------*/
@@ -96,7 +106,11 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDiffuse = vMtrlDiffuse;	
 	Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
-
+    
+    /* SSAO & HBAO+ */ 
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
 	return Out;
 }
 

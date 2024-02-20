@@ -1,4 +1,4 @@
-#include "..\Public\VIBuffer_Rect.h"
+#include "VIBuffer_Rect.h"
 
 CVIBuffer_Rect::CVIBuffer_Rect(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -10,13 +10,14 @@ CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer_Rect & rhs)
 {
 }
 
+/* 	m_pContext->DrawIndexed(m_iNumIndices, 0, 0); */
 HRESULT CVIBuffer_Rect::Initialize_Prototype()
 {
 	m_iNumVertexBuffers = 1;
 	m_iNumVertices = 4;
 	m_iStride = sizeof(VTXPOSTEX);
 
-	m_iNumIndices = 6;
+	m_iNumIndices = 6; /* m_iNumPrimitives x sizeof(FACEINDICES16) */ /* Render */
 	m_iIndexStride = 2;
 	m_eIndexFormat = m_iIndexStride == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
 	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;

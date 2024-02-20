@@ -1,5 +1,5 @@
 #include "Shader_Defines.hlsli"
-#include "Shader_Function.hlsl"
+//#include "Shader_Function.hlsl"
 
 /* Base */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -7,8 +7,8 @@ matrix			g_BoneMatrices[256];
 float			g_fCamFar;
 float           g_TimeDelta;
 
-texture2D		g_DiffuseTexture;
-texture2D		g_NormalTexture;
+texture2D       g_DiffuseTexture;
+texture2D       g_NormalTexture;
 texture2D       g_SpecularTexture;
 
 /* Dissolve  */
@@ -52,7 +52,7 @@ struct VS_OUT
 	
     float3      vTangent        : TANGENT;      /* pbr */ 
     float3		vViewNormal		: NORMAL1;		/* ssao */ 
-    float3		vPositionView	: POSITION;     /* shadow */ 
+    float3      vPositionView   : POSITION;     /* ssao */
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -69,7 +69,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	vector		vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
 	vector		vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
-
+ 
 	matrix		matWV, matWVP;
 
 	matWV = mul(g_WorldMatrix, g_ViewMatrix);
@@ -85,7 +85,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	// SSAO
     Out.vViewNormal = normalize(mul(Out.vNormal, g_ViewMatrix).xyz);
     Out.vPositionView = mul(float4(In.vPosition, 1.0f), matWV);
-   //Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), WorldMatrix));
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
 	
 	return Out;
 }
@@ -99,7 +99,7 @@ struct PS_IN
     float4	vProjPos		: TEXCOORD2;
     
 	/* ssao */
-    float3 vTangent         : TANGENT; /* pbr */
+    float3  vTangent         : TANGENT; /* pbr */
     float3	vViewNormal		: NORMAL1;
     float3	vPositionView	: POSITION;
 };
@@ -191,7 +191,9 @@ PS_OUT PS_MAIN_DISSOVLE(PS_IN In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    /* SSAO & HBAO+ */ 
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
 
     return Out;
 }
@@ -220,7 +222,9 @@ PS_OUT PS_MAIN_GRAY(PS_IN In)
     Out.vDiffuse = float4(grayscale, grayscale, grayscale, vColor.a);
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    /* SSAO & HBAO+ */ 
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
 }
@@ -243,8 +247,11 @@ PS_OUT PS_MAIN_MASKING(PS_IN In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vViewNormal = Out.vNormal;
-	
+
+    /* SSAO & HBAO+ */ 
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
     return Out;
 }
 
@@ -263,7 +270,10 @@ PS_OUT PS_MAIN_BLOOM(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vBloom = g_BloomColor;
-    Out.vViewNormal = Out.vNormal;
+    
+    /* SSAO & HBAO+ */ 
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
 }
@@ -332,7 +342,7 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     
     vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
     
-    vector vColor = { 1.f, 1.f, 1.f, 1.f };
+    vector vColor = { 0.f, 0.f, 0.f, 1.f };
     vColor.a = g_TimeDelta;
     
     /* Normal Setting */ 
@@ -343,10 +353,11 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-   // Out.vBloom = g_BloomColor;
-   // Out.vViewNormal = Out.vNormal;
-    Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
-    
+
+    /* SSAO & HBAO+ */ 
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+   
     return Out;
 }
 

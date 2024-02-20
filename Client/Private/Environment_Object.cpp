@@ -24,8 +24,6 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 {	
 	m_tEnvironmentDesc = *(ENVIRONMENT_OBJECT_DESC*)pArg;
 
-	
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
 
@@ -66,8 +64,9 @@ HRESULT CEnvironment_Object::Render()
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+
 		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
 
 		m_pModelCom->Render((_uint)i);
@@ -101,6 +100,8 @@ HRESULT CEnvironment_Object::Render_Shadow()
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+
 
 		m_pShaderCom->Begin(2); //TODO 추후 ENUM 으로 변경
 
@@ -157,14 +158,17 @@ HRESULT CEnvironment_Object::Ready_Components()
 
 HRESULT CEnvironment_Object::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
+	/* Base */
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
-	
+
+	_float gCamFar = m_pGameInstance->Get_CamFar();
+	m_pShaderCom->Bind_RawValue("g_fCamFar", &gCamFar, sizeof(_float));
+	//m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float));
+	//m_pShaderCom->Bind_RawValue("g_BloomColor", &m_vBloomColor, sizeof(_float4));
+
 	return S_OK;
 }
 

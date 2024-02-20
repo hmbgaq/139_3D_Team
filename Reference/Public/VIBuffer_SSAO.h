@@ -15,6 +15,11 @@ public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 
+private:
+	_uint m_iNumPrimitives = 0;
+	_uint m_iNumIndicesofPrimitive = 0;
+	_uint m_iIndexSizeofPrimitive = 0;
+
 public:
 	static CVIBuffer_SSAO* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	virtual CComponent* Clone(void* pArg) override;

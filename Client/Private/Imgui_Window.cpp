@@ -132,7 +132,12 @@ void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
 			break;
 		}
 
-		
+		case WINDOW_TYPE::IMGUI_SHADER_WINDOW:
+		{
+			m_strDialogKey = "ShaderToolDialog";
+			strTitle = u8"Shader Åø" + strAdd;
+			break;
+		}
 	}
 	g_pFileDialog->OpenDialog(m_strDialogKey, strTitle, szFilters, strPath, 1, nullptr, ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ConfirmOverwrite);
 

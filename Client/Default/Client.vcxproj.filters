@@ -253,6 +253,9 @@
     <Filter Include="95.StatePattern">
       <UniqueIdentifier>{0e13856d-2978-4224-881c-2c07d37e7584}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow">
+      <UniqueIdentifier>{3e1b63fe-e7e3-4749-b9ca-450befd7fb73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -470,6 +473,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Window_ShaderTool.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -870,6 +876,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Actor.cpp">
       <Filter>95.StatePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Window_ShaderTool.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -26,7 +26,7 @@ public:
 		
 		RENDER_END };
 
-	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FINAL, SHADER_END };
+	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, SHADER_FINAL, SHADER_END };
 	
 	struct QuadVertex // ssao 
 	{
@@ -98,6 +98,8 @@ private:
 
 	HRESULT Render_RadialBlur();
 
+	HRESULT Render_FXAA();
+
 	HRESULT Render_GodRay();
 	HRESULT Render_DebugOnOff();
 	/* perlin을 이용한 바다물결, 나뭇잎, 불 등 자연스러운 무작위패턴생성 */
@@ -114,6 +116,7 @@ private:
 	_bool						m_bBloom_Active			= { true };
 	_bool						m_bOutline_Active		= { true };
 	_bool						m_bPBR_Active			= { true };
+	_bool						m_bFXAA_Active			= { true };
 
 public:
 	void Set_SSAO(_bool _ssao_active)		{ m_bSSAO_Active = _ssao_active; } /* 외곽선 옵션조절 */
