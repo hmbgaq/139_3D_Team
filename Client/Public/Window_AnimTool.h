@@ -64,7 +64,7 @@ private:
 private://콜라이더 
 	void			BonePoint_Update();
 	void			Create_Bounding(_float3 fPoint,_float fRadius);
-
+	void			Create_Weapon_Bounding(_float3 fPoint, _float fRadius);
 public://문자열 변환 
 	char*			ConverWStringtoC(const wstring& wstr);
 	char*			ConvertWCtoC(const wchar_t* str);
@@ -72,34 +72,41 @@ public://문자열 변환
 
 private:
 	CPreviewAnimationModel*	m_pPreViewModel = { nullptr };
-	CAnimation*				m_pCurrentAnimation = { nullptr };
+	CBounding_Sphere*		m_pBounding = { nullptr };
+	BoundingSphere*			m_pSphere = {};
 	CGameObject*			m_PickingObject = { nullptr };
 	CGameObject*			m_PickingWeapon = { nullptr };
-	CBody*					m_pBody = { nullptr };
-	CBounding_Sphere*		m_pBounding = { nullptr };
+	CAnimation*				m_pCurrentAnimation = { nullptr };
 	CCollider*				m_pCollider = { nullptr };
-	BoundingSphere*			m_pSphere = {};
+	CBody*					m_pBody = { nullptr };
 
 	//애니메이션 재생
 	_float					m_fSpeed = 1.f;
-	_float					m_fCurrentTrackPosition = 0.0f;
 	_float					m_fDuration = 0.0f;
+	_float					m_fCurrentTrackPosition = 0.0f;
+
 	_float					m_iColliderSize = 0.0f;
 	_float					m_iColliderOnTrackPosition = 0.0f;
 	_float					m_iColliderOffTrackPosition = 0.0f;
 
+	_float					m_iColliderWeaponSize = 0.0f;
+	_float					m_iColliderWeaponOnTrackPosition = 0.0f;
+	_float					m_iColliderWeaponOffTrackPosition = 0.0f;
+
 	_float3					m_fBonePosition = { 0.f,0.f,0.f };
 	_float4x4				m_fBoneMatrix = {};
 	
-	_uint					m_iSelectBoneIndex = 0;
 	_int					m_CurrentAnimationIndex = 0;
 	_int					m_iCreateObjectSize = 0;
 	_int					m_iCreateWeaponSize = 0;
 
 	_uint					m_iAnimationNum = 0;
 	_uint					m_iBoneNum = 0;
+	_uint					m_iSelectBoneIndex = 0;
 	_uint					m_iCreateColliderNum = 0;
 	_uint					m_iSelectColliderIndex = 0;
+	_uint					m_iCreateWeaponColliderNum = 0;
+	_uint					m_iSelectWeaponColliderIndex = 0;
 
 	string					m_strKeyEventFileName = "";
 	string					m_strSoundFileName = "";
@@ -111,7 +118,10 @@ private:
 	vector<CGameObject*>	m_CreateWeaponList;
 
 	vector<CAnimation*>		m_pAnimation;
+
 	vector<CCollider*>		m_pBoneCollider;
+	vector<CCollider*>		m_pWeaponCollider;
+
 	vector<CBone*>			m_pBones;
 	vector<CBone*>			m_vBoneColliderIndex;
 public:
@@ -135,6 +145,10 @@ public:
 	_bool					m_bCreatCollider = false;
 	_bool					m_bDeleteCollider = false;
 	_bool					m_bColliderSize = false;
+
+	_bool					m_bCreatWeaponCollider = false;
+	_bool					m_bDeleteWeaponCollider = false;
+	_bool					m_bColliderWeaponSize = false;
 public:
 	static CWindow_AnimTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

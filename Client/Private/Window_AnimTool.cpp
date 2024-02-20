@@ -86,35 +86,22 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 			ImGui::EndTabItem();
 		}
-		
-		ImGui::EndTabBar();
-	}
 
-	if (m_CreateList.size() > 0)
-	{
-		if (ImGui::BeginTabBar("Weapon", tab_bar_flags))
+		if (m_CreateList.size() > 0)
 		{
-			if (ImGui::BeginTabItem("Event Editer"))
+			if (ImGui::BeginTabItem("Weapon"))
 			{
 				Draw_Weapon(fTimeDelta);
 
 				ImGui::EndTabItem();
 			}
-
-			ImGui::EndTabBar();
 		}
+		ImGui::EndTabBar();
 	}
-
-
 
 	BonePoint_Update();//콜라이더 렌더
 
 	__super::End();
-
-	
-
-
-	
 }
 
 void CWindow_AnimTool::Render()
@@ -374,10 +361,6 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 	if (ImGui::Button(" Stop "))
 	{
 		m_bStop = true;
-// 		if (nullptr != m_pBody)
-// 		{
-// 			m_pBody->Get_Model()->Set_Animation(0.f, false);
-// 		}
 	}
 	if (m_bStop)
 	{
@@ -685,6 +668,15 @@ void CWindow_AnimTool::Draw_Weapon(_float fTimeDelta)
 					{
 						m_PickingWeapon = m_CreateWeaponList[CreateIndex];
 						ImGui::SetItemDefaultFocus();
+
+						if (m_bCreatWeaponCollider)
+						{
+							_float3 Temp = m_PickingWeapon->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+							
+							Create_Weapon_Bounding(Temp, m_iColliderWeaponSize);
+							m_bCreatWeaponCollider = false;
+						}
+
 						if (m_bDeleteWeaponCheck)
 						{
 							_bool isdead = true;
@@ -709,9 +701,105 @@ void CWindow_AnimTool::Draw_Weapon(_float fTimeDelta)
 			Set_GuizmoCamView();
 			Set_Guizmo(m_PickingWeapon);
 		}
+
+		ImGui::SeparatorText("CreateWeaponCollider");
+		if (ImGui::BeginListBox("CreateWeaponColliderList"))
+		{
+			if (m_pWeaponCollider.size() < 0)
+				return;
+
+			static int iSelectColliderIndex;
+
+			for (_uint n = 0; n < m_iCreateWeaponColliderNum; n++)
+			{
+				string str = "ColliderWeapon";
+				string str2 = to_string(n);
+
+				const bool is_selected = (iSelectColliderIndex == n);
+				if (ImGui::Selectable((str + "." + str2).c_str(), is_selected))
+					iSelectColliderIndex = n;
+				m_iSelectWeaponColliderIndex = iSelectColliderIndex;
+				
+
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+					m_pWeaponCollider[iSelectColliderIndex]->Set_isCollision(true);
+					if (m_bColliderWeaponSize)
+					{
+						_float4x4	Temp = XMMatrixIdentity();
+						Temp.m[0][0] = m_iColliderSize;
+						Temp.m[1][1] = m_iColliderSize;
+						Temp.m[2][2] = m_iColliderSize;
+
+						m_pWeaponCollider[iSelectColliderIndex]->Get_Bounding()->Set_matScale(Temp);
+
+					}
+					if (m_bDeleteWeaponCollider)
+					{
+						CCollider* pDeleteCollider = m_pWeaponCollider[iSelectColliderIndex];
+
+						m_pWeaponCollider.erase(m_pWeaponCollider.begin() + iSelectColliderIndex);
+
+						Safe_Release(pDeleteCollider);
+
+						m_bDeleteWeaponCollider = false;
+					}
+
+
+				}
+				else
+				{
+					m_pWeaponCollider[n]->Set_isCollision(false);
+				}
+				_float4x4 Desc = m_PickingWeapon->Get_Transform()->Get_WorldMatrix();
+
+				m_pWeaponCollider[n]->Update(Desc);
+
+			}
+
+
+			ImGui::EndListBox();
+		}
 		ImGui::TreePop();
 	}
 
+	if (m_pWeaponCollider.size() > 0)
+	{
+		if (m_fCurrentTrackPosition >= m_iColliderOnTrackPosition && m_fCurrentTrackPosition < m_iColliderOffTrackPosition)
+		{
+			m_pWeaponCollider[m_iSelectWeaponColliderIndex]->Set_Enable(true);
+		}
+		else
+		{
+			m_pWeaponCollider[m_iSelectWeaponColliderIndex]->Set_Enable(false);
+		}
+	}
+
+
+	//현재 해야 하는 것은 콜라이더 생성하는 버튼을 일단 만들어 보자 
+	ImGui::SeparatorText("Create/Delete");
+
+	if (ImGui::Button("ColliderWeapon Crate"))
+	{
+		m_bCreatWeaponCollider = true;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("ColliderWeapon Delete"))
+	{
+		m_bDeleteWeaponCollider = true;
+	}
+	ImGui::SeparatorText("ColliderWeaponSize");
+
+	if (ImGui::DragFloat("ColliderWeaponSize", &m_iColliderWeaponSize, 0.f, 10.f))
+	{
+		m_bColliderWeaponSize = true;
+
+	}
+	ImGui::SeparatorText("ColliderWeaponOn");
+	if (ImGui::InputFloat("ColliderWeaponOn", &m_iColliderWeaponOnTrackPosition, 0.01f, 1.f));
+	ImGui::SeparatorText("ColliderWeaponOff");
+	if (ImGui::InputFloat("ColliderWeaponOff", &m_iColliderWeaponOffTrackPosition, 0.01f, 1.f));
 }
 
 void CWindow_AnimTool::BonePoint_Update()
@@ -721,6 +809,14 @@ void CWindow_AnimTool::BonePoint_Update()
 		for (auto& pCollider : m_pBoneCollider)
 		{
 			m_pGameInstance->Add_DebugRender(pCollider);
+		}
+	}
+
+	if (m_pWeaponCollider.size() > 0)
+	{
+		for (auto& pColliderWeapon : m_pWeaponCollider)
+		{
+			m_pGameInstance->Add_DebugRender(pColliderWeapon);
 		}
 	}
 }
@@ -736,6 +832,19 @@ void CWindow_AnimTool::Create_Bounding(_float3 fPoint, _float fRadius)
 	
 	m_pBoneCollider.push_back(m_pCollider);
 	++m_iCreateColliderNum;
+}
+
+void CWindow_AnimTool::Create_Weapon_Bounding(_float3 fPoint, _float fRadius)
+{
+	CBounding_Sphere::BOUNDING_SPHERE_DESC pBoundingSphere;
+
+	pBoundingSphere.vCenter = fPoint;
+	pBoundingSphere.fRadius = fRadius;
+
+	m_pCollider = dynamic_cast<CCollider*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_Sphere"), &pBoundingSphere));
+
+	m_pWeaponCollider.push_back(m_pCollider);
+	++m_iCreateWeaponColliderNum;
 }
 
 
