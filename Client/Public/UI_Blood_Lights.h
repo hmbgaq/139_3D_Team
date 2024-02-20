@@ -3,12 +3,12 @@
 #include "UI.h"
 
 /* 체력 프레임 */
-class CUI_Player_HPFrame final : public CUI
+class CUI_Blood_Lights final : public CUI
 {
 private:
-	CUI_Player_HPFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CUI_Player_HPFrame(const CUI_Player_HPFrame& rhs);
-	virtual ~CUI_Player_HPFrame() = default;
+	CUI_Blood_Lights(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Blood_Lights(const CUI_Blood_Lights& rhs);
+	virtual ~CUI_Blood_Lights() = default;
 
 public:
 	virtual HRESULT			Initialize_Prototype() override; //! 원형객체의 초기화를 위한 함수.
@@ -31,7 +31,7 @@ public:
 	void				 Load_Desc();
 
 public:
-	static CUI_Player_HPFrame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext); //! 원형객체 생성
+	static CUI_Blood_Lights* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext); //! 원형객체 생성
 	virtual CGameObject* Clone(void* pArg) override; //! 사본객체 생성
 	virtual void			Free() override;
 };

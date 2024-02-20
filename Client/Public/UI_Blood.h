@@ -3,12 +3,12 @@
 
 BEGIN(Client)
 
-class CUI_Player_HP : public CUI
+class CUI_Blood : public CUI
 {
 private:
-	CUI_Player_HP(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CUI_Player_HP(const CUI& rhs);
-	virtual ~CUI_Player_HP() = default;
+	CUI_Blood(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Blood(const CUI& rhs);
+	virtual ~CUI_Blood() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -17,8 +17,11 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+private:
+	HRESULT	Ready_UI();
+
 public:
-	static  CUI_Player_HP* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static  CUI_Blood* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

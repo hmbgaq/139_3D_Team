@@ -25,6 +25,7 @@ public:
 public:
 	HRESULT Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
 	_uint	Get_NextLevel();
+	_uint	Get_CurrentLevel();
 	void	Set_CurrentLevel(_uint CurrentLevel);
 private:
 	_uint						m_iNextLevelIndex = { 0 };

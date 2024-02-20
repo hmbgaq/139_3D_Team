@@ -139,9 +139,6 @@
     <Filter Include="02.GameObjects\UI\00. Player\03. Skill">
       <UniqueIdentifier>{eed3b339-fea4-4170-a09e-fa3e4ce89df1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\04. Weapon">
-      <UniqueIdentifier>{0a3fb696-2eff-44f2-81b1-1df525329490}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\01. Monster">
       <UniqueIdentifier>{4fbd45e8-23c6-4ff2-916d-b5b6ec906d8b}</UniqueIdentifier>
     </Filter>
@@ -255,6 +252,24 @@
     </Filter>
     <Filter Include="03.Event\Test\With_Player">
       <UniqueIdentifier>{09a4854d-ee74-455e-9951-e429d36f5abb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\03. Skill\Skill_Icon">
+      <UniqueIdentifier>{37a9a55a-4bfb-4dec-bcab-509c3b5f20a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\03. Skill\Skill_Frame">
+      <UniqueIdentifier>{982c3195-ca22-43de-8427-e513b86cda70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\03. Skill\Skill_Guige">
+      <UniqueIdentifier>{d54823ed-6d7e-4ef6-9922-4bbd0dec5ef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Lights">
+      <UniqueIdentifier>{a475bd59-f8b2-4e6a-961b-31b5b1e0bdf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Veins">
+      <UniqueIdentifier>{4f7fec7f-d472-4404-be09-abf85d3ddd63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Vignette">
+      <UniqueIdentifier>{f4d39fbe-3d41-437e-b224-2666fac37121}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -476,6 +491,30 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_Skill.h">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_Skill_Frame.h">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_Skill_Guige.h">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Guige</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_Skill_Icon.h">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Blood_Lights.h">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Blood_Veins.h">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood\Vignette</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Blood_Vignette.h">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood\Veins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Blood.h">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -879,6 +918,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\TestEventWithPlayer.cpp">
       <Filter>03.Event\Test\With_Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_Skill.cpp">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_Skill_Frame.cpp">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_Skill_Guige.cpp">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Guige</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_Skill_Icon.cpp">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Blood_Lights.cpp">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Blood_Veins.cpp">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood\Vignette</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Blood_Vignette.cpp">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood\Veins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Blood.cpp">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

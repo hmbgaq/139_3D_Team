@@ -284,6 +284,12 @@ _uint CGameInstance::Get_NextLevel()
 	return m_pLevel_Manager->Get_NextLevel();
 }
 
+// 현재 레벨 받아오기 추가
+_uint CGameInstance::Get_CurrentLevel()
+{
+	return m_pLevel_Manager->Get_CurrentLevel();
+}
+
 void CGameInstance::Set_CurrentLevel(_uint CurrentLevel)
 {
 	m_pLevel_Manager->Set_CurrentLevel(CurrentLevel);

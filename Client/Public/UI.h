@@ -34,7 +34,14 @@ public:
 		/* 랜더그룹 */
 		CRenderer::RENDERGROUP eRenderGroup = CRenderer::RENDER_UI;
 
+		_bool		bParent = false;
+
 	}UI_DESC;
+
+	enum BUTTON_STATE
+	{
+		BUTTON_NORMAL, BUTTON_PICKING, BUTTON_PICKED, BUTTON_END
+	};
 
 protected:
 	CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -48,6 +55,10 @@ public: /* ============================== Get =============================== */
 public: /* ============================== Set =============================== */
 	UI_DESC			Get_UIDesc() { return m_tUIInfo; }
 	_bool			Get_Pick() { return m_bPick; }
+	CUI*			Get_UIPart(const wstring& strPartTag);
+	vector<CUI*>	Get_UIParts();
+	_uint			Get_ButtonState() { return m_iButtonState; }
+	_uint			Set_ButtonState(_uint iButtonState) { m_iButtonState = (BUTTON_STATE)iButtonState; }
 
 public: /* =========================== Set_Position =========================== */
 	void			Set_Pos(_float fPosX, _float fPosY);
@@ -77,14 +88,16 @@ public: /* ============================= Function ============================= 
 	virtual void	Check_RectPos();	// Moving
 	void			Moving_Picking_Point(POINT pt); // Picking Moving
 
-protected: /* =========================== Ready ============================= */
-	virtual HRESULT Ready_Components();
-	virtual HRESULT Bind_ShaderResources();
-
-protected: /* =========================== SetUp ============================= */
+public: /* =========================== SetUp ============================= */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
 	HRESULT			SetUp_BillBoarding();
 	HRESULT			SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
+	HRESULT			Ready_UI(UI_DESC tUI_Desc);
+	HRESULT			Create_UIParts(UI_DESC tUI_Desc);
+
+protected: /* =========================== Ready ============================= */
+	virtual HRESULT Ready_Components();
+	virtual HRESULT Bind_ShaderResources();
 
 protected: /* =========================== Load ============================= */
 	void			Load_UIData(const char* _FilePath);
@@ -106,13 +119,14 @@ protected: /* ============================= UI =============================== *
 	UI_DESC				m_tUIInfo;
 	RECT				m_rcUI = {};
 	UISTATE				m_eState;
-
+	
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f;
 
 protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;
+	_uint				m_iButtonState = {};
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

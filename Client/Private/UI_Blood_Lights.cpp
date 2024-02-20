@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "UI_Player_HPFrame.h"
+#include "UI_Blood_Lights.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
-CUI_Player_HPFrame::CUI_Player_HPFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Blood_Lights::CUI_Blood_Lights(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUI(pDevice, pContext)
 {
 
 }
 
-CUI_Player_HPFrame::CUI_Player_HPFrame(const CUI_Player_HPFrame& rhs)
+CUI_Blood_Lights::CUI_Blood_Lights(const CUI_Blood_Lights& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CUI_Player_HPFrame::Initialize_Prototype()
+HRESULT CUI_Blood_Lights::Initialize_Prototype()
 {
 	//TODO 원형객체의 초기화과정을 수행한다.
 	/* 1.서버로부터 값을 받아와서 초기화한다 .*/
@@ -23,7 +23,7 @@ HRESULT CUI_Player_HPFrame::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CUI_Player_HPFrame::Initialize(void* pArg)
+HRESULT CUI_Blood_Lights::Initialize(void* pArg)
 {
 	m_tUIInfo = *(UI_DESC*)pArg;
 
@@ -36,26 +36,62 @@ HRESULT CUI_Player_HPFrame::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CUI_Player_HPFrame::Priority_Tick(_float fTimeDelta)
+void CUI_Blood_Lights::Priority_Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_Player_HPFrame::Tick(_float fTimeDelta)
+void CUI_Blood_Lights::Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_Player_HPFrame::Late_Tick(_float fTimeDelta)
+void CUI_Blood_Lights::Late_Tick(_float fTimeDelta)
 {
+	//if (m_tUIInfo.bWorldUI == true)
+	//	Compute_OwnerCamDistance();
+
 	__super::Tick(fTimeDelta);
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(m_tUIInfo.eRenderGroup, this)))
 		return;
 }
 
-HRESULT CUI_Player_HPFrame::Render()
+HRESULT CUI_Blood_Lights::Render()
 {
+	//TODO 셰이더에게 행렬을 던져주는 행위는 반드시 셰이더의 비긴함수를 호출하기 이전에 해야한다.
+	//! 그 이유는, 셰이더의 비긴함수 내에서 pPass->Apply(0, m_prContext); 코드를 수행한다.
+	//! Apply 호출 후에 행렬을 던져줘도 에러는 나지 않지만, 안정성이 떨어진다.
+	//! Apply 호출 후에 행렬을 던져주면, 어떤 때에는 정상적으로 수행되고, 어떤 때에는 값이 제대로 안 넘어가는 경우가 있다.
+
+	//switch (m_tUIInfo.eUIType)
+	//{
+	//case CUI_Blood_Lights::SMALL:
+	//case CUI_Blood_Lights::MID:
+	//case CUI_Blood_Lights::LARGE:
+	//case CUI_Blood_Lights::SIDE:
+	//{
+	//	///* 월드상의 몬스터 위치로 계산된 UI를 카메라 절두체 안에 들어왔을 경우에만 표시하기 위함 */
+	//	//if (m_fOwnerCamDistance > 40.f || false == In_Frustum())
+	//	//{
+	//	//	// m_pGameInstance->Get_CamDir();
+	//	//	return E_FAIL;
+	//	//}
+	//	//__super::SetUp_WorldToScreen(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION));
+
+	//	//__super::SetUp_Transform(m_fWorldToScreenX, m_fWorldToScreenY, m_fDefaultScale * m_fScaleOffsetX, m_fDefaultScale * m_fScaleOffsetY);
+
+
+	//	//__super::SetUp_BillBoarding();
+	//	break;
+	//}
+	//case CUI_Blood_Lights::BOSS:
+	//case CUI_Blood_Lights::NONE:
+	//	break;
+	//default:
+	//	break;
+	//}
+
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
@@ -71,7 +107,7 @@ HRESULT CUI_Player_HPFrame::Render()
 	return S_OK;
 }
 
-HRESULT CUI_Player_HPFrame::Ready_Components()
+HRESULT CUI_Blood_Lights::Ready_Components()
 {
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -94,7 +130,7 @@ HRESULT CUI_Player_HPFrame::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CUI_Player_HPFrame::Bind_ShaderResources()
+HRESULT CUI_Blood_Lights::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -109,7 +145,7 @@ HRESULT CUI_Player_HPFrame::Bind_ShaderResources()
 	return S_OK;
 }
 
-void CUI_Player_HPFrame::Compute_OwnerCamDistance()
+void CUI_Blood_Lights::Compute_OwnerCamDistance()
 {
 	//_vector		vPosition = m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION);
 	//_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
@@ -117,13 +153,13 @@ void CUI_Player_HPFrame::Compute_OwnerCamDistance()
 	//m_fOwnerCamDistance = XMVectorGetX(XMVector3Length(vPosition - vCamPosition));
 }
 
-_bool CUI_Player_HPFrame::In_Frustum()
+_bool CUI_Blood_Lights::In_Frustum()
 {
 	return false;
 	//return m_pGameInstance->isIn_WorldPlanes(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
-json CUI_Player_HPFrame::Save_Desc(json& out_json)
+json CUI_Blood_Lights::Save_Desc(json& out_json)
 {
 	_float fSizeX = 0.f;
 	_float fSizeY = 0.f;
@@ -147,38 +183,38 @@ json CUI_Player_HPFrame::Save_Desc(json& out_json)
 	return out_json;
 }
 
-void CUI_Player_HPFrame::Load_Desc()
+void CUI_Blood_Lights::Load_Desc()
 {
 
 }
 
-CUI_Player_HPFrame* CUI_Player_HPFrame::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Blood_Lights* CUI_Blood_Lights::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CUI_Player_HPFrame* pInstance = new CUI_Player_HPFrame(pDevice, pContext);
+	CUI_Blood_Lights* pInstance = new CUI_Blood_Lights(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CUI_Player_HPFrame");
+		MSG_BOX("Failed to Created : CUI_Blood_Lights");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_Player_HPFrame::Clone(void* pArg)
+CGameObject* CUI_Blood_Lights::Clone(void* pArg)
 {
-	CUI_Player_HPFrame* pInstance = new CUI_Player_HPFrame(*this);
+	CUI_Blood_Lights* pInstance = new CUI_Blood_Lights(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CUI_Player_HPFrame");
+		MSG_BOX("Failed to Cloned : CUI_Blood_Lights");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CUI_Player_HPFrame::Free()
+void CUI_Blood_Lights::Free()
 {
 	__super::Free();
 

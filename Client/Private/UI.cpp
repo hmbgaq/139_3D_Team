@@ -196,6 +196,22 @@ void CUI::Set_Size(_float fSizeX, _float fSizeY)
 		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
 }
 
+CUI* CUI::Get_UIPart(const wstring& strPartTag)
+{
+	for (auto& iter : m_vecUIParts)
+	{
+		//if (strPartTag == iter->Get_UITag())
+		//	return	 iter;
+	}
+
+	return nullptr;
+}
+
+vector<CUI*> CUI::Get_UIParts()
+{
+	return m_vecUIParts;
+}
+
 void CUI::Set_PosZ(_float fZ)
 {
 	_float Z = fZ;
@@ -273,6 +289,61 @@ HRESULT CUI::SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX, _float f
 	// View Matrix ¹× Projection Matrix ¼³Á¤
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
+
+	return S_OK;
+}
+
+HRESULT CUI::Ready_UI(UI_DESC tUI_Desc)
+{
+	json json_in;
+
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
+
+
+	CJson_Utility::Load_Json(filePath, json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		tUI_Info.strCloneTag = object["CloneTag"];
+		tUI_Info.strProtoTag = object["ProtoTag"];
+		tUI_Info.strFilePath = object["FilePath"];
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		//wstring wstrLayer;
+		//m_pGameInstance->String_To_WString(tUI_Info.Layer, wstrLayer);
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_CurrentLevel(), TEXT("Layer_UI"), wstrPrototag, &tUI_Info));
+
+		pUI_Object->Get_Transform()->Load_FromJson(object);
+
+	}
+
+	return S_OK;
+}
+
+HRESULT CUI::Create_UIParts(UI_DESC tUI_Desc)
+{
+	wstring wstrPrototag;
+	m_pGameInstance->String_To_WString(tUI_Desc.strProtoTag, wstrPrototag);
+
+	wstring wstrFilePath;
+	m_pGameInstance->String_To_WString(tUI_Desc.strFilePath, wstrFilePath);
+
+	CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_CurrentLevel(), TEXT("Layer_UI"), wstrPrototag, &tUI_Desc));
+	m_vecUIParts.push_back(pUI_Object);
 
 	return S_OK;
 }

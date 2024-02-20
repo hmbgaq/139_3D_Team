@@ -122,9 +122,14 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 
 	__super::Begin();
 
-	ImGui::Text("new");
+	ImGui::Text("Mouse Pos : %d, %d", m_pt.x, m_pt.y);
+
+	/* 미리보기 */
+	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2((_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Width, (_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
 
 	__super::End();
+
+	SetUp_ImGuiDESC("Anim2", { 600.f, 300.f }, 0, { 0.f, 0.f, 0.f, 0.f });
 
 	__super::Begin();
 
@@ -133,7 +138,6 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 
 		if (ImGui::BeginTabItem("Texture", &m_bOpenTexture))
 		{
-			ImGui::Text("Mouse Pos : %d, %d", m_pt.x, m_pt.y);
 
 			ImGui::Dummy(ImVec2(0.f, 10.f));
 
@@ -186,23 +190,38 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 		m_vecTexture.empty())
 		return;
 
-	ImGui::RadioButton("UI_FRONT", &m_iRenderGroup, (_int)CRenderer::RENDERGROUP::RENDER_UI_FRONT); ImGui::SameLine();
 	ImGui::RadioButton("UI", &m_iRenderGroup, (_int)CRenderer::RENDERGROUP::RENDER_UI); ImGui::SameLine();
-	ImGui::RadioButton("UI_BACK", &m_iRenderGroup, (_int)CRenderer::RENDERGROUP::RENDER_UI_BACK);
 
-	
+	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyMask_;
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
 
+	ImGui::BeginChild("Layer List", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 150), ImGuiChildFlags_Border, WindowFlag);
 	// Layer
 	Layer_List();
 	ImGui::Spacing();
+	ImGui::EndChild();
 
+	ImGui::SameLine();
+
+	ImGui::BeginChild("Texture List", ImVec2(ImGui::GetContentRegionAvail().x, 150), ImGuiChildFlags_Border, WindowFlag);
 	// Textuer
 	Texture_List();
 	ImGui::Spacing();
+	ImGui::EndChild();
 
+	ImGui::BeginChild("Parent2 List", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 150), ImGuiChildFlags_Border, WindowFlag);
+	// Parent
+	Parent_List();
+	ImGui::Spacing();
+	ImGui::EndChild();
+
+	ImGui::SameLine();
+
+	ImGui::BeginChild("Class List", ImVec2(ImGui::GetContentRegionAvail().x, 150), ImGuiChildFlags_Border, WindowFlag);
 	// Class
 	Class_List();
 	ImGui::Spacing();
+	ImGui::EndChild();
 
 	// Object
 	Object_List();
@@ -440,7 +459,7 @@ void CWindow_UITool::UI_Set()
 void CWindow_UITool::Layer_List()
 {
 
-	if (ImGui::BeginListBox("LayerList"))
+	if (ImGui::BeginListBox("Layer"))
 	{
 		for (_int i = 0; i < 3; i++)
 		{
@@ -464,7 +483,7 @@ void CWindow_UITool::Texture_List()
 	static int	Texture_idx = 0;
 	_int		iTextureTagSize = (_int)m_vecImagePaths.size();
 
-	if (ImGui::BeginListBox("TextureList"))
+	if (ImGui::BeginListBox("Texture"))
 	{
 		for (_int i = 0; i < iTextureTagSize; i++)
 		{
@@ -484,16 +503,45 @@ void CWindow_UITool::Texture_List()
 		}
 		ImGui::EndListBox();
 	}
-	/* 미리보기 */
-	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2((_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Width, (_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
+	///* 미리보기 */
+	//ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2((_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Width, (_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
 	//m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName; // 리스트 박스 밖으로 뺀 이유 : 리스트에서 선택안했을 때도 생성 가능하도록 계속 갱신하게함
+}
+
+void CWindow_UITool::Parent_List()
+{
+	if (m_vecParent.empty())
+		return;
+
+	_int		ParentTagSize = (_int)m_vecParent.size();
+
+	if (ImGui::BeginListBox("Parent"))
+	{
+		for (_int i = 0; i < ParentTagSize; i++)
+		{
+			const bool is_selected = (m_iSelectedParentIndex == i);
+			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecParent[i].c_str())), is_selected))
+			{
+				m_iSelectedParentIndex = i;
+
+				/* 클래스 테그 설정 */
+				m_tUI_Desc.strCloneTag = "Prototype_GameObject_UI_";
+				m_tUI_Desc.strCloneTag += m_vecParent[m_iSelectedParentIndex].c_str();
+				m_tUI_Desc.bParent = true;
+			}
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
 }
 
 void CWindow_UITool::Class_List()
 {
 	_int		ClassTagSize = (_int)m_vecClass.size();
 
-	if (ImGui::BeginListBox("ClassList"))
+	if (ImGui::BeginListBox("Class"))
 	{
 		for (_int i = 0; i < ClassTagSize; i++)
 		{
@@ -504,6 +552,7 @@ void CWindow_UITool::Class_List()
 				/* 클래스 테그 설정 */
 				m_tUI_Desc.strCloneTag = "Prototype_GameObject_UI_";
 				m_tUI_Desc.strCloneTag += m_vecClass[m_iSelectedClassIndex].c_str();
+				m_tUI_Desc.bParent = false;
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -517,7 +566,7 @@ void CWindow_UITool::Object_List()
 {
 	_int		ObjectTagSize = (_int)m_vecObjectName.size();
 
-	if (ImGui::BeginListBox("ObjectList"))
+	if (ImGui::BeginListBox("Object"))
 	{
 		for (_int i = 0; i < ObjectTagSize; i++)
 		{
@@ -977,10 +1026,27 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 
 HRESULT CWindow_UITool::UI2D_Create(_float fTimeDelta)
 {
+	CGameObject* pGameObject = nullptr;
+	CUI* pUI = nullptr;
 	wstring strCloneProto = TEXT("");
 	m_pGameInstance->String_To_WString(m_tUI_Desc.strCloneTag, strCloneProto);
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &m_tUI_Desc));
-	Add_ObjectList(m_tUI_Desc);
+
+	if (m_tUI_Desc.bParent == true)
+	{
+		pGameObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &m_tUI_Desc);
+		pUI = dynamic_cast<CUI*>(pGameObject);
+		Add_ParentList(m_tUI_Desc);
+		m_vecUIParentObject.push_back(pUI);
+	}
+	else
+	{
+		if (m_pCurrParent == nullptr)
+			return E_FAIL;
+
+		m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &m_tUI_Desc);
+		m_pCurrParent->Create_UIParts(m_tUI_Desc);
+		Add_ObjectList(m_tUI_Desc);
+	}
 
 	return S_OK;
 }
@@ -1053,6 +1119,26 @@ void CWindow_UITool::AddIndexNumber(PATHINFO& UI_Info)
 	/* 테그 */
 	UI_Info.strFileName = UI_Info.strFileName + to_string(index);
 	UI_Info.iPathNum = index;
+}
+
+void CWindow_UITool::Add_ParentList(CUI::UI_DESC tIn_UI_Desc)
+{
+	// error : 아래 Get_CloneGameObjects로 오브젝트를 가져올때 기존 오브젝트까지 모두 다시들고 오기 때문에, 함수를 따로 만들거나 클리어하고 담아주자
+	if (!m_vecUIObject.empty())
+		m_vecUIObject.clear();
+
+	PATHINFO* tUI_Desc = new PATHINFO;
+
+	// 문자열 중복 비교
+	tUI_Desc->strFileName = tIn_UI_Desc.strProtoTag;
+	tUI_Desc->strFilePath = tIn_UI_Desc.strFilePath;
+	AddIndexNumber(*tUI_Desc); // 오브젝트 테그 결정
+
+	m_vecParentObjectName.push_back(tUI_Desc); // 이름 중복 검사 후 처리된 테그값으로 넣어주자.
+	m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecUIParentObject);
+
+	tUI_Desc = nullptr;
+	delete[] tUI_Desc;
 }
 
 void CWindow_UITool::Add_ObjectList(CUI::UI_DESC tIn_UI_Desc)
@@ -1249,6 +1335,7 @@ void CWindow_UITool::Free()
 	//	Safe_Delete(m_vecUIObject);
 	
 	m_CurrObject = nullptr;
+	m_pCurrParent = nullptr;
 
 	if (!m_vecObjectName.empty())
 	{

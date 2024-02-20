@@ -413,15 +413,6 @@ HRESULT CRenderer::Render_Blend()
 
 HRESULT CRenderer::Render_UI()
 {
-	for (auto& pGameObject : m_RenderObjects[RENDER_UI_BACK])
-	{
-		if (nullptr != pGameObject)
-			pGameObject->Render();
-
-		Safe_Release(pGameObject);
-	}
-
-	m_RenderObjects[RENDER_UI_BACK].clear();
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
@@ -432,16 +423,6 @@ HRESULT CRenderer::Render_UI()
 	}
 
 	m_RenderObjects[RENDER_UI].clear();
-
-	for (auto& pGameObject : m_RenderObjects[RENDER_UI_FRONT])
-	{
-		if (nullptr != pGameObject)
-			pGameObject->Render();
-
-		Safe_Release(pGameObject);
-	}
-
-	m_RenderObjects[RENDER_UI_FRONT].clear();
 
 	return S_OK;
 }
@@ -608,8 +589,6 @@ HRESULT CRenderer::Render_HBO_Plus()
 	//GFSDK_SSAO_InputData_D3D11 Input;
 	//Input.DepthData.DepthTextureType = GFSDK_SSAO_HARDWARE_DEPTHS;
 	//Input.DepthData.pFullResDepthTextureSRV = m_pGameInstance->Get_DepthSRV();
-
-
 
 	return S_OK;
 }
