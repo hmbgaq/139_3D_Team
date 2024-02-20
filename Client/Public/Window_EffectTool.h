@@ -27,6 +27,7 @@ public:
 	void	Update_ParticleTab();
 	void	Update_TextureTab();
 	void	Update_MeshTab();
+	void	Update_TrailTab();
 
 
 /* For.Particle_Update */
@@ -126,7 +127,12 @@ private:
 	_float	m_fParticleAcceleration = { 1.f };
 	_float	m_fParticleAccPosition = { 0.1f };
 
-	_float	m_fColor_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fUseGravityPosition = { 0.1f };
+	_float  m_fGravityAcc = { -9.8f };
+
+
+	_float	m_fColor_Start_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fColor_End_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 
 	_float	m_vWorldPosition[4] = { 0.f, 0.f, 0.f, 1.f };
 #pragma endregion
@@ -144,6 +150,8 @@ private:
 
 #pragma region Texture_Option
 	_int	m_iShaderPassIndex_Tex = { 0 };
+	_float	m_fDiscardValue = { 0.8f };
+
 
 	_int	m_iTextureEffectIndex = { 0 };
 	_int	m_iMaskTexIndex = { 0 };

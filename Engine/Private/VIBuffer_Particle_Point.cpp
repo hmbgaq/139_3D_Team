@@ -302,21 +302,30 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 				if (fTime < m_tBufferDesc.fAccPosition)
 					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fAcceleration;
 				else
-					fSpeed = m_pSpeeds[i];
+					fSpeed = (m_pSpeeds[i] - fSpeed) * m_fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y + m_pSpeeds[i];
 
 
 				vDir = XMVectorSetW(vDir, 0.f);
 
 				if (m_tBufferDesc.bUseGravity)
 				{
-					_vector vWithGravityDir = vDir * fSpeed * fTimeDelta;
+					if (fTime > m_tBufferDesc.fUseGravityPosition)
+					{
+						_vector vWithGravityDir = vDir * fSpeed * fTimeDelta;
 
-					// 중력에 의한 변화 계산(안됨)
-					_vector vGravity = XMVectorSet(0.f, m_tBufferDesc.fGravityAcc * fTimeDelta, 0.f, 0.f);
+						// 중력에 의한 변화 계산(안됨. 전체가 아래로만 떨어짐..포물선모양이고 싶은데)
+						_vector vGravity = XMVectorSet(0.f, m_tBufferDesc.fGravityAcc * fTimeDelta, 0.f, 0.f);
 
-					// 새로운 위치 계산
-					XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + vWithGravityDir + vGravity);
-					//XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + vDir * fSpeed * fTimeDelta);
+						m_tBufferDesc.vTest = vWithGravityDir + vGravity;
+						// 새로운 위치 계산
+						XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + m_tBufferDesc.vTest);
+						//XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + vDir * fSpeed * fTimeDelta);
+					}
+					else
+					{
+						XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + vDir * fSpeed * fTimeDelta);
+					}
+
 				}
 				else
 				{

@@ -12,6 +12,8 @@ public:
 
 	typedef struct tagEffectDesc
 	{
+		_float		fDiscardValue = { 0.8f };
+
 		wstring		strTextureTag[TEXTURE_END];
 		_int		iTextureIndex[TEXTURE_END] = { 0 };
 
@@ -121,6 +123,7 @@ protected:
 
 public:
 	void	Set_Color_Offset(_float fRed, _float fGreen, _float fBlue, _float fAlpha) { m_tVariables.vColor_Offset = _float4(fRed, fGreen, fBlue, fAlpha); }
+
 
 protected:
 	//EFFECT_DESC m_tEffect = {};

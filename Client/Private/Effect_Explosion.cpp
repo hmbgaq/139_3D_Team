@@ -61,7 +61,7 @@ void CEffect_Explosion::Late_Tick(_float fTimeDelta)
 	Compute_CamDistance();
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, this)))
-		return ;
+		return;
 }
 
 HRESULT CEffect_Explosion::Render()

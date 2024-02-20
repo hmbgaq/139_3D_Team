@@ -40,8 +40,8 @@ public:
 		_int	iMinVer = { 0 };
 		_int	iMinHor = { 0 };
 
-		_int	iMaxVer = { 7 };
-		_int	iMaxHor = { 7 };
+		_int	iMaxVer = { 5 };
+		_int	iMaxHor = { 5 };
 
 	}SPRITEUV_DESC;
 
@@ -95,6 +95,8 @@ public:
 
 	void					Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEffect.iShaderPassIndex = iShaderPassIndex; }
 
+	void					Set_DiscardValue(_float fDiscardValue) { m_tEffect.fDiscardValue = fDiscardValue; }
+
 /* For.Noise Desc*/
 public:
 	void Set_NoiseTimeInterval(_float fValue) { m_tNoiseDesc.fIntervalTime = fValue; }
@@ -109,6 +111,7 @@ public:
 	void Set_DistortionScale(_float fValue) { m_tNoiseDesc.fDistortionScale = fValue; }
 	void Set_DistortionBias(_float fValue) { m_tNoiseDesc.fDistortionBias = fValue; }
 
+	void Set_Active(_bool bActive) { m_bActive = bActive; }
 
 private:
 	CShader*			m_pShaderCom				= { nullptr };
@@ -119,6 +122,9 @@ private:
 	EFFECT_TEXTURE_DESC	m_tEffect = {};
 	SPRITEUV_DESC		m_tSpriteDesc = {};
 	NOISE_DESC			m_tNoiseDesc = {};
+
+private:
+		_bool			m_bActive = { TRUE };
 
 private:
 	HRESULT Ready_Components();

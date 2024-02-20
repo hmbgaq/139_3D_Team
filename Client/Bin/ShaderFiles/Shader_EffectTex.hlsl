@@ -21,6 +21,7 @@ vector			g_vCamDirection;
 float2			g_UVOffset;
 float2			g_UVScale;
 
+float			g_DiscardValue;
 
 // ======= Noise
 float	g_fFrameTime;
@@ -246,7 +247,7 @@ PS_OUT PS_MAIN_SPRITE_ANIMATION(PS_IN_EFFECT In)
 	float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
 
 	// Set Color
-	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, clippedTexCoord);
+	Out.vColor = g_DiffuseTexture.Sample(PointSampler, clippedTexCoord);
 
 	float2 vDepthTexcoord;
 	vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
@@ -256,7 +257,7 @@ PS_OUT PS_MAIN_SPRITE_ANIMATION(PS_IN_EFFECT In)
 
 	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
 	// Alpha Test
-	if (Out.vColor.a < 0.9f)
+	if (Out.vColor.a < g_DiscardValue)
 	{
 		discard;
 	}
@@ -361,7 +362,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_SPRITE_ANIMATION();
 	}
 
-	pass Noise // 1
+	pass Noise // 2
 	{
 		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(DSS_DepthStencilEnable, 0);

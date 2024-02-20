@@ -49,8 +49,10 @@ public:
 
 		/* For.Gravity */
 		_bool		bUseGravity = { FALSE };
-		_float		fGravityAcc = { -9.8f };
+		_float		fGravityAcc = { -5.f };
 		_float3		vCurrentGravity;
+		_float		fUseGravityPosition = { 0.1f };
+
 
 		/* For.Rotation */
 		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
@@ -83,6 +85,8 @@ public:
 		_float2     vSpriteUVForce;
 
 		_int		iSpriteFrameIndex = { 1 };
+
+		_float4				vTest = {};
 
 		void Reset_Desc()
 		{
@@ -149,12 +153,18 @@ public:
 
 		void			Set_AccPosition(_float fAccPosition) { m_tBufferDesc.fAccPosition = fAccPosition; }
 
+		void			Set_UseGravityPosition(_float fUseGravityPosition) { m_tBufferDesc.fUseGravityPosition = fUseGravityPosition; }
+
 		void			Set_Color(_float fRed, _float fGreen, _float fBlue);
 
 		void			Set_Gravity(_bool bUseGravity) { m_tBufferDesc.bUseGravity = bUseGravity; }
 
+		void			Set_GravityAcc(_float fGravityAcc) { m_tBufferDesc.fGravityAcc = fGravityAcc; }
+	
+
 private:
 	PARTICLE_POINT_DESC			m_tBufferDesc;
+
 
 
 	public:

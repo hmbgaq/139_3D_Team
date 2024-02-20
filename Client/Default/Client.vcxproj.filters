@@ -190,9 +190,6 @@
     <Filter Include="02.GameObjects\03. Effect\05.Effect_Trail">
       <UniqueIdentifier>{d5149fec-40d6-45e2-8090-fdb3fb70342b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.Tool\Imgui\imNeoSequencer">
-      <UniqueIdentifier>{d4963b0e-d3d7-46a2-a9b6-a3c7eb309514}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\03. Effect\06.Effect_Decal">
       <UniqueIdentifier>{a85e216f-a908-46e0-9df3-a1d06fe18537}</UniqueIdentifier>
     </Filter>
@@ -207,6 +204,9 @@
     </Filter>
     <Filter Include="02.GameObjects\03. Effect\04.Effect_Mesh">
       <UniqueIdentifier>{647b9c85-d4cf-4062-afa7-0d2f0649f656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\ImNeoSequencer">
+      <UniqueIdentifier>{d4963b0e-d3d7-46a2-a9b6-a3c7eb309514}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -376,10 +376,10 @@
       <Filter>02.GameObjects\97. Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_internal.h">
-      <Filter>01.Levels\02.Tool\Imgui\imNeoSequencer</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\ImNeoSequencer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_sequencer.h">
-      <Filter>01.Levels\02.Tool\Imgui\imNeoSequencer</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\ImNeoSequencer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Texture.h">
       <Filter>02.GameObjects\03. Effect\02.Effect_Texture</Filter>
@@ -764,10 +764,10 @@
       <Filter>02.GameObjects\00. Character\Player\Parts\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_internal.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\imNeoSequencer</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\ImNeoSequencer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_sequencer.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\imNeoSequencer</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\ImNeoSequencer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Texture.cpp">
       <Filter>02.GameObjects\03. Effect\02.Effect_Texture</Filter>

@@ -157,13 +157,14 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
     Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+	//float4	vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
 
     if (Out.vColor.a < 0.5f)
         discard;
 
     Out.vColor.rgb *= In.vColor.rgb;
 
-    Out.vColor.a = In.vColor.a;
+    Out.vColor.a = In.vColor.a /** vAlphaColor*/;
 
 	return Out;
 }

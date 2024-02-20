@@ -35,6 +35,8 @@ HRESULT CEffect_Instance::Initialize(void* pArg)
 
 	//m_pInstanceModelCom->Add_Mesh(m_pTransformCom->Get_WorldMatrix());
 
+
+
 	return S_OK;
 }
 

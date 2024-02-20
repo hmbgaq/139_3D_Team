@@ -52,42 +52,43 @@ void CEffect_Texture::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Texture::Tick(_float fTimeDelta)
 {
-
-	if (SPRITE == m_tEffect.eType)
+	if (m_bActive)
 	{
-		if (m_tSpriteDesc.bPlay)
+		if (SPRITE == m_tEffect.eType)
+		{
+			if (m_tSpriteDesc.bPlay)
+			{
+				m_fTimeAcc += fTimeDelta;
+
+				if (m_fTimeAcc > m_tSpriteDesc.fIntervalTime)
+				{
+					m_tSpriteDesc.iCurrentHor++;
+
+					if (m_tSpriteDesc.iCurrentHor == m_tSpriteDesc.iMaxHor)
+					{
+						m_tSpriteDesc.iCurrentVer++;
+						m_tSpriteDesc.iCurrentHor = m_tSpriteDesc.iMinVer;
+
+						if (m_tSpriteDesc.iCurrentVer == m_tSpriteDesc.iMaxVer)
+						{
+							m_tSpriteDesc.iCurrentVer = m_tSpriteDesc.iMinHor;
+						}
+					}
+
+					m_fTimeAcc = 0.f;
+				}
+			}
+		}
+		else
 		{
 			m_fTimeAcc += fTimeDelta;
 
-			if (m_fTimeAcc > m_tSpriteDesc.fIntervalTime)
+			if (m_fTimeAcc >= m_tNoiseDesc.fIntervalTime)
 			{
-				m_tSpriteDesc.iCurrentHor++;
-
-				if (m_tSpriteDesc.iCurrentHor == m_tSpriteDesc.iMaxHor)
-				{
-					m_tSpriteDesc.iCurrentVer++;
-					m_tSpriteDesc.iCurrentHor = m_tSpriteDesc.iMinVer;
-
-					if (m_tSpriteDesc.iCurrentVer == m_tSpriteDesc.iMaxVer)
-					{
-						m_tSpriteDesc.iCurrentVer = m_tSpriteDesc.iMinHor;
-					}
-				}
-
 				m_fTimeAcc = 0.f;
 			}
 		}
 	}
-	else
-	{
-		m_fTimeAcc += fTimeDelta;
-
-		if (m_fTimeAcc >= m_tNoiseDesc.fIntervalTime)
-		{
-			m_fTimeAcc = 0.f;
-		}
-	}
-
 
 };
 
@@ -95,8 +96,12 @@ void CEffect_Texture::Late_Tick(_float fTimeDelta)
 {
 	Compute_CamDistance();
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, this)))
-		return;
+	if (m_bActive)
+	{
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, this)))
+			return;
+	}
+
 }
 
 HRESULT CEffect_Texture::Render()
@@ -240,6 +245,8 @@ HRESULT CEffect_Texture::Bind_ShaderResources()
 			return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tEffect.fDiscardValue, sizeof(_float))))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
 		return E_FAIL;
