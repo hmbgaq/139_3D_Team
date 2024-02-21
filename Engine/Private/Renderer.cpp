@@ -135,6 +135,9 @@ HRESULT CRenderer::Create_RenderTarget()
 
 	/* PostProcessing */
 	{
+		/* MRT_HDR */
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_HDR"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+		
 		/* MRT_RadialBlur */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_RadialBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 
@@ -188,6 +191,8 @@ HRESULT CRenderer::Create_RenderTarget()
 
 		/* MRT_FXAA*/
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_FXAA"), TEXT("Target_FXAA")));
+
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_HDR"), TEXT("Target_HDR")));
 	}
 
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(Viewport.Width, Viewport.Height, 1.f));
@@ -709,21 +714,18 @@ HRESULT CRenderer::Render_PostProcess()
 
 HRESULT CRenderer::Render_HDR()
 {
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_FXAA"))); /* Target_FXAA*/
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_HDR"))); /* Target_FXAA*/
 
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
 	/* 변수 올리기 */
 	{
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_RawValue("g_bFxaa", &m_bFXAA_Active, sizeof(_bool)));
+		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_FinalTarget"));
 	}
-
-	/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
-
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Begin(0));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(POST_SHADER::POST_HDR)));
 
 	FAILED_CHECK(m_pVIBuffer->Render());
 
@@ -747,13 +749,11 @@ HRESULT CRenderer::Render_FXAA()
 
 	/* 변수 올리기 */
 	{
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_RawValue("g_bFxaa", &m_bFXAA_Active, sizeof(_bool)));
+		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
 	}
 
-	/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
-
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Begin(0));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Begin(ECast(POST_SHADER::POST_HDR)));
 
 	FAILED_CHECK(m_pVIBuffer->Render());
 
@@ -761,7 +761,6 @@ HRESULT CRenderer::Render_FXAA()
 
 	return S_OK;
 }
-
 
 #pragma endregion
 
@@ -1196,7 +1195,8 @@ void CRenderer::Calc_Blur_GaussianWeights(_int sigma, _int iSize , _Out_ void* W
 HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eGroupID, CGameObject* pGameObject)
 {
 	if (nullptr == pGameObject ||
-		eGroupID >= RENDER_END)
+		eGroupID >= RENDER_END ||
+		eGroupID < RENDER_PRIORITY)
 		return E_FAIL;
 
 	m_RenderObjects[eGroupID].push_back(pGameObject);
@@ -1229,15 +1229,18 @@ HRESULT CRenderer::Pre_Setting()
 	if (m_pGameInstance->Key_Down(DIK_2))
 		m_bSSAO_Active = !m_bSSAO_Active;
 
-	if (m_pGameInstance->Key_Down(DIK_3))
-		m_bBloom_Active = !m_bBloom_Active;
+	//if (m_pGameInstance->Key_Down(DIK_3))
+	//	m_bBloom_Active = !m_bBloom_Active;
+	//
+	//if (m_pGameInstance->Key_Down(DIK_4))
+	//	m_bOutline_Active = !m_bOutline_Active;
 
-	if (m_pGameInstance->Key_Down(DIK_4))
-		m_bOutline_Active = !m_bOutline_Active;
-
-	if (m_pGameInstance->Key_Down(DIK_5))
+	if (m_pGameInstance->Key_Down(DIK_2))
 		m_bTest_Active = !m_bTest_Active;
 	
+	if (m_pGameInstance->Key_Down(DIK_3))
+		m_bHDR_Active = !m_bHDR_Active;
+
 	Render_DebugOnOff();
 #pragma endregion
 

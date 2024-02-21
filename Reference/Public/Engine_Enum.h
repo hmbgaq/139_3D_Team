@@ -32,6 +32,11 @@ namespace Engine
 		BLUR_END 
 		};
 
+	enum class POST_SHADER {
+		POST_ORIGIN, 
+		POST_HDR, 
+		POST_END
+	};
 	enum MINMAX { MIN, MAX, MINMAX_END };
 
 	enum AXIS { AXIS_X, AXIS_Y, AXIS_Z, AXIS_END };

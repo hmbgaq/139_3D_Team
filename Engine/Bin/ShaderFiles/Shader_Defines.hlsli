@@ -1,3 +1,7 @@
+
+
+#pragma warning(disable : 31) /* HLSL - Texture method 'Sample(sampler, float2)' 경고 */
+#pragma warning(disable: 6146) /* PS에서 RTV에 바인딩안했을때 뜨는 경고 무시 */
 /* ---------------- Sampler ---------------- */
 #define FLT_MAX 3.402823466e+38F
 
