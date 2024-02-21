@@ -22,14 +22,15 @@ vector			g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 vector			g_vCamPosition;
 
-texture2D		g_ShadeTexture;
-texture2D		g_NormalTexture;
-texture2D		g_NormalDepthTarget;
-texture2D		g_DepthTexture;
-texture2D		g_SpecularTexture;
-texture2D		g_LightDepthTexture;
-texture2D		g_ORMTexture;
-texture2D		g_SSAOTexture;
+Texture2D		g_PriorityTarget;
+Texture2D		g_ShadeTexture;
+Texture2D		g_NormalTexture;
+Texture2D		g_NormalDepthTarget;
+Texture2D		g_DepthTexture;
+Texture2D		g_SpecularTexture;
+Texture2D		g_LightDepthTexture;
+Texture2D		g_ORMTexture;
+Texture2D		g_SSAOTexture;
 Texture2D		g_BloomTarget;
 Texture2D		g_OutlineTarget;
 
@@ -215,9 +216,14 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	vector		vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-	if (0.0f == vDiffuse.a)
-		discard;
 
+    if (vDiffuse.a == 0.f)
+    {
+        float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
+        Out.vColor = vPriority;
+        return Out;
+    }
+	
 	vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
     vShade = saturate(vShade);
 	

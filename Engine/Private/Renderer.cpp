@@ -88,6 +88,9 @@ HRESULT CRenderer::Create_RenderTarget()
 
 	/* RenderTarget */
 	{
+		/* MRT_Priority - 스카이박스 등 우선그리는용도 */
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Priority"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+
 		/* MRT_GameObject - Target_ViewNormal 없애도 될듯 - SSAO 용도 */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f)));
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Normal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
@@ -136,6 +139,9 @@ HRESULT CRenderer::Create_RenderTarget()
 
 	/* MRT*/
 	{
+		/* MRT_Priority */
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Priority"), TEXT("Target_Priority")));
+
 		/* MRT_GameObject */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Normal")));
@@ -342,6 +348,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 HRESULT CRenderer::Render_Priority()
 {
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Priority")));
+
 	for (auto& pGameObject : m_RenderObjects[RENDER_PRIORITY])
 	{
 		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
@@ -351,6 +359,8 @@ HRESULT CRenderer::Render_Priority()
 	}
 
 	m_RenderObjects[RENDER_PRIORITY].clear();
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
@@ -623,6 +633,7 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_CamFar", &CamFar, sizeof(_float)));
 
 	/* MRT_GameObject */
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Priority"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_PriorityTarget"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DiffuseTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_NormalTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ViewNormal"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_NormalDepthTarget"));
@@ -835,6 +846,7 @@ HRESULT CRenderer::Render_Debug()
 	}
 	m_DebugComponent.clear();
 
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Priority"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_GameObjects"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_LightAcc"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Shadow"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
