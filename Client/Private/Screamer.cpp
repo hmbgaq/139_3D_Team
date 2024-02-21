@@ -21,12 +21,11 @@ HRESULT CScreamer::Initialize(void* pArg)
 {
 	FAILED_CHECK(Ready_Components());
 
-	m_iRenderPass = ECast(ANIM_SHADER::ANIM_BLOOM);
+	m_iRenderPass = ECast(ANIM_SHADER::ANIM_ORIGIN);
 
-	m_pTransformCom->Set_Scaling(0.01f, 0.01f, 0.01f);
-	m_pTransformCom->Set_Position(_float3(25.f, 0.5f, 10.f));
+	m_pTransformCom->Set_Position(_float3(15.f, 0.f, 10.f));
 	m_vBloomColor = { 0.5f, 0.f, 0.5f, 1.f };
-	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
+	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
 
 	return S_OK;
 }
@@ -106,15 +105,12 @@ HRESULT CScreamer::Render()
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_MetallicTexture", (_uint)i, aiTextureType_METALNESS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_RougnessTexture", (_uint)i, aiTextureType_DIFFUSE_ROUGHNESS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_OcclusionTexture", (_uint)i, aiTextureType_AMBIENT_OCCLUSION);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 		
 		m_pShaderCom->Begin(m_iRenderPass);
 
 		m_pModelCom->Render(_uint(i));
 	}
-
 
 	return S_OK;
 }
@@ -155,13 +151,12 @@ HRESULT CScreamer::Render_OutLine()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		_float m_fLineThick = 3.f;
-		//m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
+		_float m_fLineThick = 0.5f;
 		m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
-		//m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fTimeAcc, sizeof(_float));
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 
 		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
 

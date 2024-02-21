@@ -134,7 +134,6 @@ HRESULT CRenderer::Create_RenderTarget()
 
 	}
 
-
 	/* MRT*/
 	{
 		/* MRT_GameObject */
@@ -148,7 +147,7 @@ HRESULT CRenderer::Create_RenderTarget()
 		/* MRT_OutLine */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Outline"), TEXT("Target_OutLine")));
 
-		/* MRT_LightAcc - Q. Ambient 추가하는가 ? */
+		/* MRT_LightAcc */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular")));
 
@@ -267,13 +266,20 @@ HRESULT CRenderer::Control_HotKey()
 		else
 			cout << "FXAA : false " << endl;
 
+		if (true == m_bBloom_Active)
+			cout << "Bloom Blur : true " << endl;
+		else
+			cout << "Bloom Blur : false " << endl;
+
 		cout << " ----------------------------- " << endl;
 	}
 	if (m_pGameInstance->Key_Down(DIK_2))
 		m_bSSAO_Active = !m_bSSAO_Active;
 	if (m_pGameInstance->Key_Down(DIK_3))
-		m_bHDR_Active = !m_bHDR_Active;
+		m_bBloom_Active = !m_bBloom_Active;
 	if (m_pGameInstance->Key_Down(DIK_4))
+		m_bHDR_Active = !m_bHDR_Active;
+	if (m_pGameInstance->Key_Down(DIK_5))
 		m_bFXAA_Active = !m_bFXAA_Active;
 	return S_OK;
 }
@@ -832,10 +838,6 @@ HRESULT CRenderer::Render_Debug()
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_GameObjects"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_LightAcc"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Shadow"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
-	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
-	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_SSAO_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
-	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Outline"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
-	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_GodRay"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 
 	return S_OK;
 }

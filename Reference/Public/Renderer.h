@@ -133,7 +133,7 @@ private:
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponent;
-	_bool						m_bRenderDebug = { false };
+	_bool						m_bRenderDebug = { true };
 #endif
 
 public:

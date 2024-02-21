@@ -513,9 +513,6 @@
     <ClInclude Include="..\Public\Player_Weapon_Winchester.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Winchester</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_internal.h">
       <Filter>01.Levels\02.Tool\Imgui\ImNeoSequencer</Filter>
     </ClInclude>
@@ -539,6 +536,9 @@
     </ClInclude>
     <ClInclude Include="..\public\InstanceMonster.h">
       <Filter>02.GameObjects\00. Character\Monster\20. InstanceMonster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

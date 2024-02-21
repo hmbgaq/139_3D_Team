@@ -1,147 +1,153 @@
 #include "Shader_Defines.hlsli"
+//#include "Shader_Function.hlsl"
 
 /* Base */
-matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-matrix			g_BoneMatrices[800];
-float			g_fCamFar;
-float           g_TimeDelta;
+matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+matrix g_BoneMatrices[256];
+float g_fCamFar;
+float g_TimeDelta;
 
-texture2D		g_DiffuseTexture;
-Texture2D		g_NormalTexture;
+texture2D g_DiffuseTexture;
+texture2D g_NormalTexture;
+texture2D g_SpecularTexture;
 
 /* Dissolve  */
-Texture2D		g_DissolveTexture;
-float			g_fDissolveWeight;
+Texture2D g_DissolveTexture;
+float g_fDissolveWeight;
 
 /* Masking */
-Texture2D		g_MaskingTexture;
+Texture2D g_MaskingTexture;
 
 /* Bloom */
-float4          g_BloomColor;
+float4 g_BloomColor;
 
 /* Reflection */
-matrix			g_ReflectionMatrix;
+matrix g_ReflectionMatrix;
 
 /* OutLine */
-float4          g_vLineColor;
-float           g_LineThick;
+float4 g_vLineColor;
+float g_LineThick;
 
-float4			g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; 
+float4 g_vRimColor = { 0.f, 0.f, 0.f, 0.f };
 
 struct VS_IN
 {
-	float3		vPosition		: POSITION;
-	float3		vNormal			: NORMAL;
-	float2		vTexcoord		: TEXCOORD0;
-	float3		vTangent		: TANGENT;
-	uint4		vBlendIndices	: BLENDINDEX;
-	float4		vBlendWeights	: BLENDWEIGHT;
+    float3 vPosition : POSITION;
+    float3 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float3 vTangent : TANGENT;
+    uint4 vBlendIndices : BLENDINDEX;
+    float4 vBlendWeights : BLENDWEIGHT;
+   // float       fRimLight : RIM;
 };
 
 
 struct VS_OUT
 {
-	float4		vPosition		: SV_POSITION;
-	float4		vNormal			: NORMAL;
-	float2		vTexcoord		: TEXCOORD0;	
-	float4		vWorldPos		: TEXCOORD1;
-	float4		vProjPos		: TEXCOORD2;
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
 	
-    float3		vViewNormal		: NORMAL1;		/* ssao */ 
-    float3		vPositionView	: POSITION;
+    float3 vTangent : TANGENT; /* pbr */
+    float3 vViewNormal : NORMAL1; /* ssao */
+    float3 vPositionView : POSITION; /* ssao */
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
 VS_OUT VS_MAIN(VS_IN In)
 {
-	VS_OUT		Out = (VS_OUT)0;
+    VS_OUT Out = (VS_OUT) 0;
 
-	float		fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
 
-	matrix		BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
-		g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
-		g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
-		g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
+		                     g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		                     g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		                     g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
 
-	vector		vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
-	vector		vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
+ 
+    matrix matWV, matWVP;
 
-	matrix		matWV, matWVP;
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
 
-	matWV = mul(g_WorldMatrix, g_ViewMatrix);
-	matWVP = mul(matWV, g_ProjMatrix);
-
-	Out.vPosition = mul(vPosition, matWVP);
-	Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
-	Out.vTexcoord = In.vTexcoord;
-	Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
-	Out.vProjPos = Out.vPosition;
+    Out.vPosition = mul(vPosition, matWVP);
+    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
+    Out.vTexcoord = In.vTexcoord;
+    
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vProjPos = Out.vPosition;
 	
 	// SSAO
-    Out.vViewNormal = mul(Out.vNormal.xyz, (float3x3) g_ViewMatrix);
+    Out.vViewNormal = normalize(mul(Out.vNormal, g_ViewMatrix).xyz);
     Out.vPositionView = mul(float4(In.vPosition, 1.0f), matWV);
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
 	
-	return Out;
+    return Out;
 }
 
 struct PS_IN
 {
-	float4	vPosition		: SV_POSITION;
-	float4	vNormal			: NORMAL;
-	float2	vTexcoord		: TEXCOORD0;
-	float4	vWorldPos		: TEXCOORD1;
-    float4	vProjPos		: TEXCOORD2;
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
     
 	/* ssao */
-    float3	vViewNormal		: NORMAL1;
-    float3	vPositionView	: POSITION;
+    float3 vTangent : TANGENT; /* pbr */
+    float3 vViewNormal : NORMAL1;
+    float3 vPositionView : POSITION;
 };
 
-struct PS_OUT 
+struct PS_OUT
 {
-	float4	vDiffuse        : SV_TARGET0;
-	float4	vNormal         : SV_TARGET1;
-    float4  vDepth          : SV_TARGET2;
-    float4  vViewNormal     : SV_TARGET3;
-    float4  vBloom          : SV_TARGET4;
+    float4 vDiffuse : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
+    float4 vORM : SV_TARGET3;
+    float4 vViewNormal : SV_TARGET4;
+    float4 vBloom : SV_TARGET5;
 };
 
 /* ------------------- Base Pixel Shader (0) -------------------*/
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
 
-	vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-
-	if (vMtrlDiffuse.a < 0.1f)
-		discard;
-
-	Out.vDiffuse = vMtrlDiffuse;
+    Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-   // Out.vBloom = float4(1.0f, 0.f, 0.f, 1.0f);
-    //Out.vViewNormal = Out.vNormal;
-    //Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
-    Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
+   
+    /* SSAO & HBAO+ */ 
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (0.2f >= Out.vDiffuse.a)
+        discard;
 
-	return Out;
+    return Out;
 }
 
 /* ------------------- Shadow Pixel Shader(2) -------------------*/
 
 struct PS_OUT_SHADOW
 {
-	vector		vLightDepth : SV_TARGET0;
+    vector vLightDepth : SV_TARGET0;
 };
 
 PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
 {
-	PS_OUT_SHADOW		Out = (PS_OUT_SHADOW)0;
+    PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 
-	Out.vLightDepth = In.vProjPos.w / g_fCamFar;
+    Out.vLightDepth = In.vProjPos.w / g_fCamFar;
 	
-	return Out;
+    return Out;
 }
 
 /* ------------------- Dissolve Pixel Shader(3) -------------------*/
@@ -185,7 +191,9 @@ PS_OUT PS_MAIN_DISSOVLE(PS_IN In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    /* SSAO & HBAO+ */ 
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
 
     return Out;
 }
@@ -214,7 +222,9 @@ PS_OUT PS_MAIN_GRAY(PS_IN In)
     Out.vDiffuse = float4(grayscale, grayscale, grayscale, vColor.a);
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    /* SSAO & HBAO+ */ 
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
 }
@@ -237,8 +247,11 @@ PS_OUT PS_MAIN_MASKING(PS_IN In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vViewNormal = Out.vNormal;
-	
+
+    /* SSAO & HBAO+ */ 
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
     return Out;
 }
 
@@ -257,7 +270,10 @@ PS_OUT PS_MAIN_BLOOM(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vBloom = g_BloomColor;
-    Out.vViewNormal = Out.vNormal;
+    
+    /* SSAO & HBAO+ */ 
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
 }
@@ -265,16 +281,16 @@ PS_OUT PS_MAIN_BLOOM(PS_IN In)
 
 struct VS_OUT_OUTLINE
 {
-    float4 vPosition    : SV_POSITION;
-    float4 vNormal      : NORMAL;
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
     
-    float2 vTexcoord    : TEXCOORD0;
-    float4 vWorldPos    : TEXCOORD1;
-    float4 vProjPos     : TEXCOORD2;
-    float4 vTangent     : TANGENT;
-    float4 vBinormal    : BINORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
+    float4 vTangent : TANGENT;
+    float4 vBinormal : BINORMAL;
     
-    float3 vViewNormal  : NORMAL1; /* ssao */
+    float3 vViewNormal : NORMAL1; /* ssao */
     float3 vPositionView : POSITION;
 };
 
@@ -309,15 +325,15 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
 
 struct PS_IN_OUTLINE
 {
-    float4 vPosition        : SV_POSITION;
-    float4 vNormal          : NORMAL;
-    float2 vTexcoord        : TEXCOORD0;
-    float4 vWorldPos        : TEXCOORD1;
-    float4 vProjPos         : TEXCOORD2;
-    float4 vTangent         : TANGENT;
-    float4 vBinormal        : BINORMAL;
-    float3 vViewNormal      : NORMAL1; /* ssao */
-    float3 vPositionView    : POSITION;
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
+    float4 vTangent : TANGENT;
+    float4 vBinormal : BINORMAL;
+    float3 vViewNormal : NORMAL1; /* ssao */
+    float3 vPositionView : POSITION;
 };
 
 PS_OUT PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
@@ -326,7 +342,7 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     
     vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
     
-    vector vColor = { 1.f, 1.f, 1.f, 1.f };
+    vector vColor = { 0.f, 0.f, 0.f, 1.f };
     vColor.a = g_TimeDelta;
     
     /* Normal Setting */ 
@@ -337,52 +353,53 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-   // Out.vBloom = g_BloomColor;
-   // Out.vViewNormal = Out.vNormal;
-    Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
-    
+
+    /* SSAO & HBAO+ */ 
+    Out.vViewNormal = vector(In.vViewNormal * 0.5f + 0.5f, In.vProjPos.w / g_fCamFar);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+   
     return Out;
 }
 
 /* ------------------- Technique -------------------*/ 
 technique11 DefaultTechnique
-{	
-	pass Model // 0
-	{			
-		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DSS_Default, 0);
-		SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
-		HullShader = NULL;
-		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN();
-	}
+{
+    pass Model // 0
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN();
+    }
 
-	pass Model_Wireframe // 1
-	{
-		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DSS_None, 0);
-		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
-		HullShader = NULL;
-		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN();
-	}
+    pass Model_Wireframe // 1
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN();
+    }
 
-	pass Shadow // 2
-	{
-		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DSS_Default, 0);
-		SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+    pass Shadow // 2
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
-		HullShader = NULL;
-		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
-	}
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
+    }
 
     pass Dissolve // 3
     {

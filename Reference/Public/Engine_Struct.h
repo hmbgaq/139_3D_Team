@@ -290,7 +290,7 @@ namespace Engine
 		_uint				iNumInstance = { 0 };
 		ID3D11Texture2D*	pAnimInstanceTexture = { nullptr };
 		//ID3D11ShaderResourceView* pAnimSRV = nullptr;
-	};
+	}ANIM_INSTANCE_INFO_DESC;
 
 	typedef struct ENGINE_DLL tagEnvironment_Desc
 	{
