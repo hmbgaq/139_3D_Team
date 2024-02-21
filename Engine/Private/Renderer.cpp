@@ -301,7 +301,11 @@ HRESULT CRenderer::Draw_RenderGroup()
 			FAILED_CHECK(Render_HBAO_PLUS());
 		}
 		//FAILED_CHECK(Render_Bloom());
-		//FAILED_CHECK(Render_OutLine_PostProcessing());
+
+		if (true == m_bOutline_Active)
+		{
+			FAILED_CHECK(Render_OutLine_PostProcessing());
+		}
 	}
 	FAILED_CHECK(Render_Deferred());
 	{
@@ -546,18 +550,18 @@ HRESULT CRenderer::Render_Deferred()
 		//	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
 		//}
 		//
-		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_Outline_Active", &m_bOutline_Active, sizeof(_bool)));
-		//if (true == m_bOutline_Active)
-		//{
-		//	m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Outline"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_OutlineTarget");
-		//}
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_Outline_Active", &m_bOutline_Active, sizeof(_bool)));
+		if (true == m_bOutline_Active)
+		{
+			m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Outline"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_OutlineTarget");
+		}
 	}
 
 	m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Begin(ECast(DEFERRED_SHADER::DEFERRED));
 
 	m_pVIBuffer->Bind_VIBuffers();
 
-	m_pVIBuffer->Render();
+	FAILED_CHECK(m_pVIBuffer->Render());
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
@@ -566,23 +570,23 @@ HRESULT CRenderer::Render_Deferred()
 
 HRESULT CRenderer::Render_OutLine_PostProcessing()
 {
-	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Outline"))); /* Target SSAO 단독 */	
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Outline"))); /* Target SSAO 단독 */	
 
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
-	//{
-	//	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader[SHADER_TYPE::SHADER_OUTLINE], "g_NormalTarget"));
+	{
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader[SHADER_TYPE::SHADER_OUTLINE], "g_NormalTarget"));
 
-	//	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
-	//}
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
+	}
 
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Begin(0));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Begin(0));
 
-	////FAILED_CHECK(m_pVIBuffer->Render());
+	FAILED_CHECK(m_pVIBuffer->Render());
 
-	//FAILED_CHECK(m_pGameInstance->End_MRT());
+	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
