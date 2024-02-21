@@ -8,7 +8,6 @@
 #include "Data_Manager.h"
 #include "Clone_Manager.h"
 
-
 #include "TestEvent.h"
 #include "TestEventWithActor.h"
 #include "TestEventWithPlayer.h"
@@ -44,11 +43,15 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
 		return E_FAIL;
 
+	CData_Manager::GetInstance()->Set_Player(this);
+	
+
 	return S_OK;
 }
 
 void CPlayer::Priority_Tick(_float fTimeDelta)
 {
+	//CData_Manager::GetInstance()->Reset_Player((LEVEL)m_pGameInstance->Get_NextLevel());
 	__super::Priority_Tick(fTimeDelta);
 }
 
@@ -90,24 +93,6 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	CData_Manager::GetInstance()->Set_Player_Hp(m_iHp);
-	//_uint iHp = CData_Manager::GetInstance()->Get_Player_Hp();
-	//_bool test = false;
-
-	//if (m_pGameInstance->Key_Down(DIK_C)) 
-	//{
-	//	CGameObject* pMonster = CClone_Manager::GetInstance()->Clone_Object<CGameObject>(LEVEL_GAMEPLAY, LAYER_MONSTER, TEXT("Prototype_GameObject_Monster"));
-	//	if (pMonster)
-	//	{
-	//		_float3 vPos = Get_Transform()->Get_Position();
-	//		pMonster->Get_Transform()->Set_Position(vPos);
-	//	}
-	//	else 
-	//	{
-	//		_bool test = false;
-	//	}
-	//}
-	//
 	if (m_pGameInstance->Key_Down(DIK_E))
 	{
 		//IEvent* pEvent = CTestEvent::Create();

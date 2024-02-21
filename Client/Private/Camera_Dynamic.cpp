@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 
+#include "Data_Manager.h"
+
 CCamera_Dynamic::CCamera_Dynamic(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 	: CCamera(pDevice, pContext, strPrototypeTag)
 {
@@ -30,11 +32,14 @@ HRESULT CCamera_Dynamic::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pDesc)))
 		return E_FAIL;
 
+	CData_Manager::GetInstance()->Set_Camera_Dynamic(this);
+	
 	return S_OK;
 }
 
 void CCamera_Dynamic::Priority_Tick(_float fTimeDelta)
 {
+	//CData_Manager::GetInstance()->Reset_Camera_Dynamic((LEVEL)m_pGameInstance->Get_NextLevel());
 }
 
 void CCamera_Dynamic::Tick(_float fTimeDelta)

@@ -42,7 +42,12 @@ public:
 	_uint	Get_PColliderIndex() const { return m_iColliderIndex; }
 
 public:
-	void		CreatePhysXActor(PHYSXCOLLIDERDESC& PhysXColliderDesc);
+	void	CreatePhysXActor(PHYSXCOLLIDERDESC& PhysXColliderDesc);
+
+	void	Create_Geometry();
+	void	Create_DynamicActor(PHYSXCOLLIDERDESC& PhysXColliderDesc, PxTransform Transform);
+	void	Create_StaticActor(PHYSXCOLLIDERDESC& PhysXColliderDesc, PxTransform Transform);
+
 
 //public:
 //	CPhysXCollider* CallBack_CollisionEnter;
@@ -55,6 +60,17 @@ private:
 
 private:
 	PHYSXCOLLIDERDESC		m_PhysXColliderDesc;
+	PxRigidDynamic*			m_pRigidDynamic = { nullptr };
+	PxRigidStatic*			m_pRigidStatic = { nullptr };
+
+	vector<PxGeometry*>		m_pGeometry;
+	vector<PxShape*>		m_pShape;
+	PxFilterData			m_FilterData;
+
+	vector<PxConvexMesh*>	m_ConvexMeshes;
+	vector<PxTriangleMesh*>	m_TriangleMesh;
+
+	
 
 private:
 	CGameInstance* m_pGameInstance = { nullptr };
