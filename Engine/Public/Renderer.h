@@ -90,7 +90,7 @@ private:
 
 	HRESULT Render_LightAcc();
 	HRESULT Render_Deferred();
-	HRESULT Render_OutLine_PostProcessing();
+	HRESULT Render_OutLine();
 	HRESULT Render_OutLineGroup();
 	HRESULT Render_SSAO();
 	HRESULT Render_HBAO_Plus();
@@ -112,7 +112,7 @@ private:
 
 	/* 활성 제어 */
 private:
-	_bool						m_bSSAO_Active			= { false };
+	_bool						m_bSSAO_Active			= { true };
 	_bool						m_bBloom_Active			= { true };
 	_bool						m_bOutline_Active		= { true };
 	_bool						m_bPBR_Active			= { true };
@@ -135,7 +135,7 @@ private:
 	_float						m_OffsetsFloat[56];
 	_int						m_iQuadVerCount;
 	_int						m_iQuadIndexCount;
-
+	_bool						m_bInit = { true };
 	HRESULT						SSAO_OnSize();
 	HRESULT						BuildFullScreenQuad();
 	void						BuildOffsetVectors();

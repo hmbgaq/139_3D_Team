@@ -129,6 +129,9 @@ HRESULT CRenderer::Create_RenderTarget()
 		/* MRT_RadialBlur */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_RadialBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 	
+		/* MRT_PrePostProcess */
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_PrePostProcess"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+		
 		/* MRT_FXAA */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_FXAA"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 	}
@@ -172,8 +175,11 @@ HRESULT CRenderer::Create_RenderTarget()
 		/* MRT_RadialBlur*/
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_RaidalBlur"), TEXT("Target_RadialBlur")));
 
+		/* MRT_PrePostProcessScene */
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_PrePostProcessScene"), TEXT("Target_PrePostProcess")));
+
 		/* MRT_FXAA*/
-		//FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_FXAA"), TEXT("Target_FXAA")));
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_FXAA"), TEXT("Target_FXAA")));
 	}
 
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(Viewport.Width, Viewport.Height, 1.f));
@@ -236,17 +242,11 @@ HRESULT CRenderer::Ready_DebugRender()
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ORM"),			(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Bloom"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 9.f),  fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Bloom_Blur"),	(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 11.f),  fSizeX, fSizeY));
-	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 11.f),  fSizeX, fSizeY));
 
 	/* MRT_LightAcc */
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_LightDepth"),	(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade"),		(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"),		(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
-
-	/* MRT_Pro */ 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ViewNormal"),	(fSizeX / 2.f * 5.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_SSAO"),			(fSizeX / 2.f * 5.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
-	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_SSAO_Blur"),	(fSizeX / 2.f * 5.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
 
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_GodRay"),		(fSizeX / 2.f * 7.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 
@@ -271,7 +271,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_NonBlend());	/* MRT_GameObjects*/
 	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
 
-	{ /* PostProcessing */
+	{
 		if (true == m_bSSAO_Active)
 		{
 			FAILED_CHECK((Render_HBAO_Plus()));
@@ -285,15 +285,14 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 		if (true == m_bOutline_Active)
 		{
-			FAILED_CHECK(Render_OutLine_PostProcessing());
+			FAILED_CHECK(Render_OutLine());
 		}
 	}
 
 	FAILED_CHECK(Render_Deferred());
 	FAILED_CHECK(Render_OutLineGroup());	/* Render_Group */
 
-	if(m_pGameInstance->Key_Pressing(DIK_5))
-		FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 후처리 */ 
+	//FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 후처리 */ 
 	
 	FAILED_CHECK(Render_Blend());
 	FAILED_CHECK(Render_UI());
@@ -529,7 +528,7 @@ HRESULT CRenderer::Render_Deferred()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_OutLine_PostProcessing()
+HRESULT CRenderer::Render_OutLine()
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Outline"))); 
 
@@ -600,7 +599,19 @@ HRESULT CRenderer::Render_HBAO_Plus()
 	Input.DepthData.DepthTextureType = GFSDK_SSAO_HARDWARE_DEPTHS;
 	Input.DepthData.pFullResDepthTextureSRV = m_pGameInstance->Get_DepthSRV();
 
-	_matrix ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
+	_matrix ProjMatrix = {};
+
+	if (true == m_bInit)
+	{
+		_float fNear = 0.1f;
+		_float fFar = 2000.f;
+		_float fFovY = DirectX::XMConvertToRadians(60.0f);
+		_float fAspect = g_iWinsizeX / g_iWinsizeY;
+
+		ProjMatrix = DirectX::XMMatrixPerspectiveFovLH(fFovY, fAspect, fNear, fFar); /*DirectX 네임스페이스 없으면 함수 못찾음 */
+	}
+	else
+		ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
 
 	Input.DepthData.ProjectionMatrix.Data = GFSDK_SSAO_Float4x4((const GFSDK_SSAO_FLOAT*)&ProjMatrix);
 	Input.DepthData.ProjectionMatrix.Layout = GFSDK_SSAO_ROW_MAJOR_ORDER;
