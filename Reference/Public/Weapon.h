@@ -35,6 +35,9 @@ public:
 	virtual HRESULT Render_Shadow() override;
 
 public:
+	_float4x4	Get_WeaponWorldMatrix() { return m_WorldMatrix; }
+
+public:
 	void Set_Use(_bool _bUse) {
 		m_bUse = _bUse;
 	}

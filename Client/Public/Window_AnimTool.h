@@ -63,7 +63,7 @@ private:
 	void			Draw_Weapon(_float fTimeDelta);
 private://콜라이더 
 	void			BonePoint_Update();
-	void			Create_Bounding(_float3 fPoint,_float fRadius);
+	void			Create_Bounding(_float fRadius);
 	void			Create_Weapon_Bounding(_float3 fPoint, _float fRadius);
 public://문자열 변환 
 	char*			ConverWStringtoC(const wstring& wstr);
@@ -78,6 +78,7 @@ private:
 	CGameObject*			m_PickingWeapon = { nullptr };
 	CAnimation*				m_pCurrentAnimation = { nullptr };
 	CCollider*				m_pCollider = { nullptr };
+	CCollider*				m_pWCollider = { nullptr };
 	CBody*					m_pBody = { nullptr };
 
 	//애니메이션 재생
@@ -93,13 +94,20 @@ private:
 	_float					m_iColliderWeaponOnTrackPosition = 0.0f;
 	_float					m_iColliderWeaponOffTrackPosition = 0.0f;
 
-	_float3					m_fBonePosition = { 0.f,0.f,0.f };
+	//! 콜라이더 위치값 조정임 
+	_float					m_fBonePosition[3] = { 0.f,0.f,0.f };
+	_float					m_fWeaponPosition[3] = { 0.f,0.f,0.f };
+
+	_float3					m_fWeaponPos = { 0.f,0.f,0.f };
+
 	_float4x4				m_fBoneMatrix = {};
+	_float4x4				m_fWeaponMatrix = {};
 	
 	_int					m_CurrentAnimationIndex = 0;
 	_int					m_iCreateObjectSize = 0;
 	_int					m_iCreateWeaponSize = 0;
 
+	_uint					m_iSelectCreateListIndex = 0;
 	_uint					m_iAnimationNum = 0;
 	_uint					m_iBoneNum = 0;
 	_uint					m_iSelectBoneIndex = 0;

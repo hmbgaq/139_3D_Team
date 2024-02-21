@@ -159,12 +159,12 @@ HRESULT CPlayer::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
 		return E_FAIL;
 
-//	{
-//		CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
-//		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
-//			return E_FAIL;
-//	}
-//	CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
+	//{
+	//	CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
+	//	if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
+	//		return E_FAIL;
+	//}
+	//CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
 
 
 	return S_OK;
