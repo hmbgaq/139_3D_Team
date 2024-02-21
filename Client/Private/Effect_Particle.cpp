@@ -140,6 +140,11 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 }
 
 
+_bool CEffect_Particle::Picking(_float3* vPickedPos)
+{
+	return _bool();
+}
+
 HRESULT CEffect_Particle::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();

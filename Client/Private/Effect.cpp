@@ -70,6 +70,36 @@ HRESULT CEffect::Render()
 	return S_OK;
 }
 
+_bool CEffect::Picking(_float3* vPickedPos)
+{
+	return _bool();
+}
+
+
+CGameObject* CEffect::Find_PartObject(const wstring& strPartTag)
+{
+	auto	iter = m_PartObjects.find(strPartTag);
+
+	if (iter == m_PartObjects.end())
+		return nullptr;
+
+	return iter->second;
+}
+
+HRESULT CEffect::Add_PartObject(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg)
+{
+	if (nullptr != Find_PartObject(strPrototypeTag))
+		return E_FAIL;
+
+	CGameObject* pPartObject = m_pGameInstance->Clone_Prototype(strPrototypeTag, pArg);
+	if (nullptr == pPartObject)
+		return E_FAIL;
+
+	m_PartObjects.emplace(strPartTag, pPartObject);
+
+	return S_OK;
+}
+
 HRESULT CEffect::Bind_ShaderResources()
 {
 	//m_tVariables.vUV_Offset.x = m_tEffect.vUV_Speed.x * m_fTimeAcc;

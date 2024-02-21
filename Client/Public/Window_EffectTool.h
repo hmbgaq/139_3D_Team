@@ -8,6 +8,8 @@ BEGIN(Client)
 class CWindow_EffectTool final : public CImgui_Window
 {
 public:
+	enum EFFECTTYPE {EFFECT_PARTICLE, EFFECT_TEXTURE, EFFECT_MESH, EFFECT_TRAIL, EFFECT_END };
+
 	struct Window_EffectTool_DESC : public ImGuiDESC
 	{
 	};

@@ -277,6 +277,9 @@
     <Filter Include="01.Utility\04.PipeLine\05.Fonts\Manager">
       <UniqueIdentifier>{931ef747-b5f1-46b3-b320-a2b577a64f71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\96.Utility\Easing">
+      <UniqueIdentifier>{da81de29-9ced-416a-aa06-15faed64ac83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -564,6 +567,9 @@
     <ClInclude Include="..\Public\PhysXController.h">
       <Filter>01.Utility\97.PhysX\Controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Easing_Utillity.h">
+      <Filter>01.Utility\96.Utility\Easing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -787,6 +793,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PhysXController.cpp">
       <Filter>01.Utility\97.PhysX\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Easing_Utillity.cpp">
+      <Filter>01.Utility\96.Utility\Easing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -117,6 +117,18 @@ public:
 	virtual void	Late_Tick(_float fTimeDelta)		override;
 	virtual HRESULT Render()							override;
 
+
+public:
+	virtual _bool	Picking(_Out_ _float3* vPickedPos) override;
+
+//protected:
+//	virtual HRESULT Ready_Components() PURE;
+//	virtual HRESULT Ready_PartObjects() PURE;
+
+	CGameObject*	Find_PartObject(const wstring& strPartTag);
+	HRESULT			Add_PartObject(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg);
+
+
 protected:
 	virtual	HRESULT Bind_ShaderResources();
 
@@ -125,8 +137,6 @@ public:
 	void	Set_Color_Offset(_float fRed, _float fGreen, _float fBlue, _float fAlpha) { m_tVariables.vColor_Offset = _float4(fRed, fGreen, fBlue, fAlpha); }
 
 
-protected:
-	//EFFECT_DESC m_tEffect = {};
 
 protected:
 	_float4x4	m_matPivot		= {}; /*XMStoreFloat4x4(&m_matPivot, XMMatrixIdentity())*/
@@ -139,6 +149,10 @@ protected:
 
 	_float	m_fSequenceTimer	= { 0.0f };
 	_float	m_fDissolveStart	= { 1.f };
+
+
+protected:
+	map<const wstring, class CGameObject*>		m_PartObjects;
 
 
 public:

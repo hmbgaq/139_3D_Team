@@ -58,7 +58,7 @@ HRESULT CObject_Manager::Add_Prototype(const wstring & strPrototypeTag, CGameObj
 HRESULT CObject_Manager::Add_CloneObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void * pArg)
 {
 	/* 원형을 찾고. */
-	CGameObject*		pPrototype = Find_Prototype(strPrototypeTag);
+		CGameObject*		pPrototype = Find_Prototype(strPrototypeTag);
 
 	if (nullptr == pPrototype)
 		return E_FAIL;

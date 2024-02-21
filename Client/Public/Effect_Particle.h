@@ -75,6 +75,14 @@ public:
 	virtual _bool Write_Json(json& Out_Json)		 override;
 	virtual void  Load_FromJson(const json& In_Json) override;
 
+
+public:
+	virtual _bool	Picking(_Out_ _float3* vPickedPos) override;
+
+//protected:
+//	virtual HRESULT Ready_Components() PURE;
+//	virtual HRESULT Ready_PartObjects() PURE;
+
 	/* For.Desc */
 public:
 	EFFECT_PARTICLE_DESC*	Get_Desc() { return &m_tParticleDesc; }

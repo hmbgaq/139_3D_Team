@@ -474,9 +474,6 @@
     <ClInclude Include="..\Public\TestEventWithPlayer.h">
       <Filter>03.Event\Test\With_Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_internal.h">
       <Filter>01.Levels\02.Tool\Imgui\ImNeoSequencer</Filter>
     </ClInclude>
@@ -497,6 +494,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Effect.h">
       <Filter>02.GameObjects\03. Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
