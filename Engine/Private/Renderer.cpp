@@ -6,6 +6,7 @@
 #include "AlphaObject.h"
 #include "Shader.h"
 #include "SMath.h"
+#include "RenderTarget.h"
 
 _uint		g_iSizeX = 8192;
 _uint		g_iSizeY = 4608;
@@ -247,19 +248,44 @@ HRESULT CRenderer::Ready_DebugRender()
 	return S_OK;
 }
 
+HRESULT CRenderer::Control_HotKey()
+{
+	if (m_pGameInstance->Key_Down(DIK_GRAVE))
+	{
+		if (true == m_bSSAO_Active)
+			cout << "HBAO+ : true " << endl;
+		else
+			cout << "HBAO+ : false " << endl;
+
+		if (true == m_bHDR_Active)
+			cout << "HDR : true " << endl;
+		else
+			cout << "HDR : false " << endl;
+
+		if (true == m_bFXAA_Active)
+			cout << "FXAA : true " << endl;
+		else
+			cout << "FXAA : false " << endl;
+
+		cout << " ----------------------------- " << endl;
+	}
+	if (m_pGameInstance->Key_Down(DIK_2))
+		m_bSSAO_Active = !m_bSSAO_Active;
+	if (m_pGameInstance->Key_Down(DIK_3))
+		m_bHDR_Active = !m_bHDR_Active;
+	if (m_pGameInstance->Key_Down(DIK_4))
+		m_bFXAA_Active = !m_bFXAA_Active;
+	return S_OK;
+}
+
 #endif // _DEBUG
 
 #pragma endregion
 
 HRESULT CRenderer::Draw_RenderGroup()
 {
-#pragma region HOTKEY
-	if (m_pGameInstance->Key_Down(DIK_1))
-		m_bSSAO_Active = !m_bSSAO_Active;
-	if (m_pGameInstance->Key_Down(DIK_2))
-		m_bSSAO_Active = !m_bBloom_Active;
-	if (m_pGameInstance->Key_Down(DIK_3))
-		m_bOutline_Active = !m_bOutline_Active;
+#pragma region _DEBUG
+	Control_HotKey();
 #pragma endregion
 
 	FAILED_CHECK(Render_Priority());	/* SkyBox */
@@ -268,25 +294,19 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_NonBlend());	/* MRT_GameObjects*/
 	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
 
-	{ /* PostProcessing */
-		/*if (true == m_bSSAO_Active)
-		{
-			FAILED_CHECK(Render_SSAO());
-			FAILED_CHECK(Render_SSAO_Blur());
-		}
-
-		if (true == m_bBloom_Active)
-		{
-			FAILED_CHECK(Render_Bloom());
-		}*/
-
-		//if (false == m_bOutline_Active)
-		//{
-		//	FAILED_CHECK(Render_OutLine_PostProcessing());
-		//}
+	{ 
+		/* Pre-PostProcessing */
+		FAILED_CHECK(Render_HBAO_PLUS());
+		//FAILED_CHECK(Render_Bloom());
+		//FAILED_CHECK(Render_OutLine_PostProcessing());
 	}
-
 	FAILED_CHECK(Render_Deferred());
+	{
+		/* PostProcessing*/
+		//FAILED_CHECK(Render_PostProcess()); /* 모션블러, Radial 블러 등등 */
+	}
+	//FAILED_CHECK(Render_Final()); /* 마지막화면용 - 마지막 체크 위해서 */
+	
 	FAILED_CHECK(Render_OutLineGroup());	/* Render_Group */
 	FAILED_CHECK(Render_Blend());
 	FAILED_CHECK(Render_UI());
@@ -537,68 +557,112 @@ HRESULT CRenderer::Render_Deferred()
 
 HRESULT CRenderer::Render_OutLine_PostProcessing()
 {
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Outline"))); /* Target SSAO 단독 */	
+	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Outline"))); /* Target SSAO 단독 */	
 
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
-	{
-		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader[SHADER_TYPE::SHADER_OUTLINE], "g_NormalTarget"));
+	//{
+	//	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader[SHADER_TYPE::SHADER_OUTLINE], "g_NormalTarget"));
 
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
-	}
+	//	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
+	//}
 
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Begin(0));
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Begin(0));
 
-	//FAILED_CHECK(m_pVIBuffer->Render());
+	////FAILED_CHECK(m_pVIBuffer->Render());
 
-	FAILED_CHECK(m_pGameInstance->End_MRT());
+	//FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_HBAO_Plus()
+HRESULT CRenderer::Render_HBAO_PLUS()
 {
+	GFSDK_SSAO_InputData_D3D11 Input;
+	Input.DepthData.DepthTextureType = GFSDK_SSAO_HARDWARE_DEPTHS;
+	Input.DepthData.pFullResDepthTextureSRV = m_pGameInstance->Get_DepthSRV();
+
+	_matrix ProjMatrix = {};
+
+	if (true == m_bInit)
+	{
+		_float fNear = 0.1f;
+		_float fFar = 2000.f;
+		_float fFovY = DirectX::XMConvertToRadians(60.0f);
+		_float fAspect = g_iWinsizeX / g_iWinsizeY;
+
+		ProjMatrix = DirectX::XMMatrixPerspectiveFovLH(fFovY, fAspect, fNear, fFar); /*DirectX 네임스페이스 없으면 함수 못찾음 */
+	}
+	else
+		ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
+
+	Input.DepthData.ProjectionMatrix.Data = GFSDK_SSAO_Float4x4((const GFSDK_SSAO_FLOAT*)&ProjMatrix);
+	Input.DepthData.ProjectionMatrix.Layout = GFSDK_SSAO_ROW_MAJOR_ORDER;
+	Input.DepthData.MetersToViewSpaceUnits = 1.f;
+
+	GFSDK_SSAO_Parameters Params;
+	Params.Radius = 2.f;
+	Params.Bias = 0.1f;
+	Params.PowerExponent = 2.f;
+	Params.Blur.Enable = true;
+	Params.Blur.Radius = GFSDK_SSAO_BLUR_RADIUS_4;
+	Params.Blur.Sharpness = 16.f;
+
+	ID3D11RenderTargetView* pView = {};
+	pView = m_pGameInstance->Find_RenderTarget(TEXT("Target_HBAO"))->Get_RTV();
+	NULL_CHECK_RETURN(pView, E_FAIL);
+
+	GFSDK_SSAO_Output_D3D11 Output;
+	Output.pRenderTargetView = pView;
+	
+	Output.Blend.Mode = GFSDK_SSAO_OVERWRITE_RGB;
+	
+	GFSDK_SSAO_Status status;
+	status = m_pGameInstance->Get_AOContext()->RenderAO(m_pContext, Input, Params, Output);
+	assert(status == GFSDK_SSAO_OK);
+
 	return S_OK;
 }
+
 
 HRESULT CRenderer::Render_Bloom()
 {
-	FAILED_CHECK(Render_Blur(L"Target_Bloom", L"MRT_Bloom_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER), ECast(BLUR_SHADER::BLUR_UP_MAX)));
+	//FAILED_CHECK(Render_Blur(L"Target_Bloom", L"MRT_Bloom_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER), ECast(BLUR_SHADER::BLUR_UP_MAX)));
 	
 	return S_OK;
 }
 
 HRESULT CRenderer::Render_PostProcess()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 HRESULT CRenderer::Render_RadialBlur()
 {
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_RaidalBlur"))); /* Target SSAO 단독 */
+	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_RaidalBlur"))); /* Target SSAO 단독 */
 
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
-	/* 변수 올리기 */
-	{
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fQuality", &m_fRadialBlurQuality, sizeof(_float4)));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fRadialPower", &m_fRadialBlurPower, sizeof(_float4)));
-	}
+	///* 변수 올리기 */
+	//{
+	//	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fQuality", &m_fRadialBlurQuality, sizeof(_float4)));
+	//	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fRadialPower", &m_fRadialBlurPower, sizeof(_float4)));
+	//}
 
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Blend"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BlendTarget"));
+	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Blend"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BlendTarget"));
 
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Begin(ECast(DEFERRED_SHADER::SHADER_END)));
+	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Begin(ECast(DEFERRED_SHADER::SHADER_END)));
 
-	FAILED_CHECK(m_pVIBuffer->Render());
+	//FAILED_CHECK(m_pVIBuffer->Render());
 
-	FAILED_CHECK(m_pGameInstance->End_MRT());
+	//FAILED_CHECK(m_pGameInstance->End_MRT());
 
-	//FAILED_CHECK(Render_AlphaBlendTargetMix(L"Target_RadialBlur", L"MRT_Blend", true))) 
-	//-> mix 시키고 deferred셰이더에 값 다른곳에 던지고 render -> clear함 
+	////FAILED_CHECK(Render_AlphaBlendTargetMix(L"Target_RadialBlur", L"MRT_Blend", true))) 
+	////-> mix 시키고 deferred셰이더에 값 다른곳에 던지고 render -> clear함 
 
 	return S_OK;
 }
@@ -627,17 +691,15 @@ HRESULT CRenderer::Render_GodRay()
 
 HRESULT CRenderer::Render_FXAA()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
-
 HRESULT CRenderer::Render_HDR()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
-
 HRESULT CRenderer::Render_Final()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 HRESULT CRenderer::Render_OutLineGroup()

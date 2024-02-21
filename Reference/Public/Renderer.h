@@ -40,10 +40,12 @@ public:
 	HRESULT Create_RenderTarget();
 	HRESULT Create_DepthStencil();
 	HRESULT Ready_DebugRender();
+
 	
 #ifdef _DEBUG
 public:
-	void Set_RenderDebug(_bool _bRenderDebug) {	m_bRenderDebug = _bRenderDebug;	}
+	void	Set_RenderDebug(_bool _bRenderDebug) {	m_bRenderDebug = _bRenderDebug;	}
+	HRESULT	Control_HotKey();
 #endif
 
 private:
@@ -57,7 +59,8 @@ private:
 
 	/* Pre-Post Processing */
 	HRESULT Render_OutLine_PostProcessing();
-	HRESULT Render_HBAO_Plus();
+	HRESULT Render_HBAO_PLUS();
+	//HRESULT Render_HBAO_Plus();
 	HRESULT Render_Bloom();
 	HRESULT Render_Deferred();
 
@@ -94,6 +97,7 @@ private:
 	_bool						m_bPBR_Active			= { false };
 	_bool						m_bFXAA_Active			= { false };
 	_bool						m_bHDR_Active			= { false };
+	_bool						m_bInit					= { true };
 
 public:
 	void Set_SSAO(_bool _ssao_active)		{ m_bSSAO_Active = _ssao_active; } /* 외곽선 옵션조절 */

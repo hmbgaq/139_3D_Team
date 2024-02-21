@@ -213,6 +213,14 @@ ID3D11ShaderResourceView* CGameInstance::Get_DepthSRV()
 	return m_pGraphic_Device->Get_DepthSRV();
 }
 
+GFSDK_SSAO_Context_D3D11* CGameInstance::Get_AOContext()
+{
+	if (nullptr == m_pGraphic_Device)
+		return nullptr;
+
+	return m_pGraphic_Device->Get_AOContext();
+}
+
 _byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
 {
 	if (nullptr == m_pInput_Device)
@@ -667,6 +675,11 @@ HRESULT CGameInstance::End_MRT()
 HRESULT CGameInstance::Bind_RenderTarget_ShaderResource(const wstring & strTargetTag, CShader * pShader, const _char * pConstantName)
 {
 	return m_pTarget_Manager->Bind_ShaderResource(strTargetTag, pShader, pConstantName);
+}
+
+CRenderTarget* CGameInstance::Find_RenderTarget(const wstring& strTargetTag)
+{
+	return m_pTarget_Manager->Find_RenderTarget(strTargetTag);
 }
 
 #ifdef _DEBUG
