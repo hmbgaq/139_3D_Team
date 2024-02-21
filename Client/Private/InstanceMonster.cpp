@@ -7,8 +7,8 @@
 #include "Bone.h"
 #include "Mesh.h"
 
-CInstanceMonster::CInstanceMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CInstanceMonster::CInstanceMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -489,9 +489,9 @@ void CInstanceMonster::Add_InstanceData(_uint iSize, _uint& iIndex, _float4x4* C
 
 
 
-CInstanceMonster* CInstanceMonster::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CInstanceMonster* CInstanceMonster::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CInstanceMonster* pInstance = new CInstanceMonster(pDevice, pContext);
+	CInstanceMonster* pInstance = new CInstanceMonster(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -513,6 +513,11 @@ CGameObject* CInstanceMonster::Clone(void* pArg)
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+CGameObject* CInstanceMonster::Pool()
+{
+	return new CInstanceMonster(*this);
 }
 
 void CInstanceMonster::Free()

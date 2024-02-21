@@ -32,6 +32,7 @@ public:
 		mMaterials.reserve(mNumMaterials);
 		for (_uint i = 0; i < mNumMaterials; ++i)
 		{
+			
 			mMaterials.push_back(CMyAIMaterial(_pAIScene->mMaterials[i]));
 		}
 

@@ -1,8 +1,8 @@
 #include "..\Public\Body.h"
 #include "GameInstance.h"
 
-CBody::CBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CBody::CBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -174,6 +174,8 @@ _bool CBody::Is_Inputable_Front(_uint _iIndexFront)
 	return m_pModelCom->Is_Inputable_Front(_iIndexFront);
 }
 
+#ifdef _DEBUG
+
 _bool CBody::Picking(_float3* vPickedPos)
 {
 	GRAPHIC_DESC GraphicDesc = *m_pGameInstance->Get_GraphicDesc();
@@ -188,8 +190,9 @@ _bool CBody::Picking(_float3* vPickedPos)
 
 	return m_pGameInstance->Picking_Mesh(ray, vPickedPos, meshes);
 
-
 }
+
+#endif
 
 HRESULT CBody::Bind_ShaderResources()
 {

@@ -20,7 +20,7 @@ public:
 	}BACKGROUND_DESC;
 	
 private:
-	CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CBackGround(const CBackGround& rhs);
 	virtual ~CBackGround() = default;
 
@@ -48,9 +48,11 @@ private:
 
 
 public:
-	static CBackGround*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CBackGround*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject*	Clone(void* pArg) override;
+	virtual CGameObject*	Pool() override;
 	virtual void			Free() override;
+
 };
 
 END

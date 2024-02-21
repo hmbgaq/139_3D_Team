@@ -8,10 +8,13 @@
 #include "Bone.h"
 #include "Bounding_Sphere.h"
 #include "Collider.h"
-
+#include "Weapon_Player.h"
+#include "Character.h"
+#include "Weapon.h"
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
 {
+
 }
 
 
@@ -27,7 +30,7 @@ HRESULT CWindow_AnimTool::Initialize()
 	m_pGameInstance->Fill_PrototypeTags(&m_vObjectTag);
 
 	m_pSphere = new BoundingSphere();
-	
+	//ID3D11Device::GetFeatureLevel();
 	return S_OK;
 }
 
@@ -36,23 +39,6 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	__super::Begin();
-
-// 	if (ImGui::BeginMenuBar())
-// 	{
-// 		if (ImGui::BeginMenu("Menu"))
-// 		{
-// 			if (ImGui::MenuItem("Save"))
-// 			{
-// 
-// 			}
-// 			if (ImGui::MenuItem("Load"))
-// 			{
-// 
-// 			}
-// 			ImGui::EndMenu();
-// 		}
-// 		ImGui::EndMenuBar();
-// 	}
 
 	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
@@ -89,6 +75,8 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 		{
 			Draw_AnimationList(fTimeDelta);
 
+			Draw_BoneList(fTimeDelta);
+
 			ImGui::EndTabItem();
 		}
 
@@ -99,11 +87,29 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 			ImGui::EndTabItem();
 		}
 
+		
 		ImGui::EndTabBar();
 	}
+
 	BonePoint_Update();//콜라이더 렌더
 
 	__super::End();
+
+	ImGui::Begin("Weapon");
+	if (ImGui::BeginTabBar("Weapon View", tab_bar_flags))
+	{
+		if (m_CreateList.size() > 0)
+		{
+			if (ImGui::BeginTabItem("Weapon"))
+			{
+				Draw_Weapon(fTimeDelta);
+
+				ImGui::EndTabItem();
+			}
+		}
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
 }
 
 void CWindow_AnimTool::Render()
@@ -168,15 +174,27 @@ void CWindow_AnimTool::Create_Object(const wstring& strLayerTag, const wstring& 
 	m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, strPrototypeTag);
 }
 
-void CWindow_AnimTool::Draw_Player()
+void CWindow_AnimTool::Create_Weapon(CCharacter* ParentObject, string strBonename, const wstring& strPrototypeTag)
 {
+
+	//_float4x4 Temp = m_CreateList[m_iSelectCreateListIndex]->Get_Transform()->Get_WorldMatrix();
+	//_float4x4 Desc = Temp * m_pBones[m_iSelectBoneIndex]->Get_CombinedTransformationMatrix();
+	CWeapon_Player::WEAPON_DESC weaponDesc = {};
+
+	weaponDesc.m_pSocketBone = m_pBones[m_iSelectBoneIndex];
+	weaponDesc.m_pParentTransform = m_CreateList[m_iSelectCreateListIndex]->Get_Transform();
 	
 
+	const wstring str = TEXT("Weapon") + m_CreateWeaponList.size();
+
+	ParentObject->Add_Weapon(strPrototypeTag, strBonename, weaponDesc, str);
+
+	CGameObject* pWeapon = ParentObject->Get_Weapon(str);
+
+	m_CreateWeaponList.push_back(pWeapon);
 }
 
-void CWindow_AnimTool::Draw_Monster()
-{
-}
+
 
 void CWindow_AnimTool::Draw_KeyEventEditer()
 {
@@ -184,6 +202,9 @@ void CWindow_AnimTool::Draw_KeyEventEditer()
 
 void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 {
+	ImGui::SeparatorText("AnimationModel");
+	ImGui::NewLine();
+
 	if (ImGui::TreeNode("AnimationModel"))
 	{
 		string items[] = { "Layer_Player", "Layer_Monster","Layer_Environment","Layer_Object","Layer_Effect","Layer_Something"};
@@ -199,7 +220,6 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 				const bool is_selected = (Object_idx == n);
 				if (ImGui::Selectable(m_vObjectTag[n].c_str(), is_selected))
 					Object_idx = n;
-
 				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 				if (is_selected)
 					ImGui::SetItemDefaultFocus();
@@ -209,7 +229,8 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		}
 
 		ImGui::Spacing();
-
+		ImGui::SeparatorText("LayerList");
+		ImGui::NewLine();
 		if (ImGui::BeginListBox("LayerList"))
 		{
 			for (int n = 0; n <6; n++)
@@ -230,10 +251,11 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 							m_bCloneCount = true;
 							m_bListCheck = true;
 							m_bCreateCheck = false;
+							
 						}
 					
 				}
-
+				
 			}
 			
 			ImGui::EndListBox();
@@ -244,6 +266,8 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		ImGui::SameLine();
 		ImGui::Checkbox("Delete",& m_bDeleteCheck);
 
+		ImGui::SeparatorText("CreateList");
+		ImGui::NewLine();
 		static int CreateIndex = 0; // Here we store our selection data as an index.
 		
 		if (m_bListCheck)
@@ -260,6 +284,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 					const bool is_selected = (CreateIndex == n);
 					if (ImGui::Selectable((str + "." + str2).c_str(), is_selected))
 						CreateIndex = n;
+					m_iSelectCreateListIndex = CreateIndex;
 
 					// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 					if (is_selected)
@@ -293,7 +318,9 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		}
 		
 		ImGui::Spacing();
-
+		ImGui::SeparatorText("AnimationList");
+		ImGui::NewLine();
+		
 		if (ImGui::BeginListBox("AnimationList"))
 		{
 			if (m_CreateList.size() > 0)
@@ -310,7 +337,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 				const bool is_selected = (AnimationIndex == n);
 				if (ImGui::Selectable(m_pAnimation[n]->Get_Name(), is_selected))
 					AnimationIndex = n;
-
+				m_CurrentAnimationIndex = AnimationIndex;
 				if (is_selected)
 				{
 					
@@ -318,6 +345,8 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 					if (m_bFirstcheck == true)
 					{
 						m_fDuration = m_pAnimation[AnimationIndex]->Get_Duration();
+						m_iColliderOffTrackPosition = m_fDuration;
+						m_iColliderWeaponOffTrackPosition = m_fDuration;
 						m_fCurrentTrackPosition = m_pAnimation[AnimationIndex]->Get_TrackPosition();
 						m_pBody->Get_Model()->Set_Animation(AnimationIndex, CModel::ANIM_STATE_LOOP);
 						m_bFirstcheck = false;
@@ -349,18 +378,28 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 	if (ImGui::Button(" Stop "))
 	{
 		m_bStop = true;
-// 		if (nullptr != m_pBody)
-// 		{
-// 			m_pBody->Get_Model()->Set_Animation(0.f, false);
-// 		}
+	}
+	if (m_bStop)
+	{
+		if (nullptr != m_pBody)
+			{
+				m_pBody->Get_Model()->Set_Animation(m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition(),CModel::ANIM_STATE_LOOP);
+			}
 	}
 	
-	ImGui::Spacing();
+	if (nullptr != m_pBody)
+	{
+		m_fCurrentTrackPosition = m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition();
+	}
 
+	ImGui::Spacing();
+	//if (ImGui::SliderFloat("CurrnetTrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
+	
 	if (ImGui::SliderFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
 	{
 		m_bTrackPositionCheck = true;
 	}
+	
 	
 // 
 	if (ImGui::InputFloat("TrackPosition", &m_fCurrentTrackPosition, 0.f, m_fDuration))
@@ -401,9 +440,12 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 	if (m_PickingObject == nullptr)
 		return;
 	static int BoneIndex = 0;
+
 	//static int ColliderIndex = 0;
 	if (ImGui::TreeNode("ModelBones"))
 	{
+		ImGui::SeparatorText("BoneList");
+		ImGui::NewLine();
 		if (ImGui::BeginListBox("BoneList"))
 		{
 			if (m_PickingObject != nullptr)
@@ -411,17 +453,17 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 				CCharacter* pcharacters = dynamic_cast<CCharacter*>(m_PickingObject);
 				/*m_pBody = pcharacters->Get_Body();*/ //위에서 넣어주고 있어서 여기서 굳이 또 할필요 없음 
 				m_pBones = *(pcharacters->Get_Body()->Get_Model()->Get_Bones());
-				m_iBoneNum = m_pBones.size();
+				m_iBoneNum = (_uint)m_pBones.size();
 
 			}
 			//m_PickingObject
 
-			for (int n = 0; n < m_iBoneNum; n++)
+			for (_uint n = 0; n < m_iBoneNum; n++)
 			{
 				const bool is_selected = (BoneIndex == n);
 				if (ImGui::Selectable(m_pBones[n]->Get_Name(), is_selected))
 					BoneIndex = n;
-				
+				m_iSelectBoneIndex = BoneIndex;
 				//m_pBoneCollider.reserve(m_iBoneNum);
 
 				if (is_selected)
@@ -429,13 +471,13 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 					ImGui::SetItemDefaultFocus();
 					if (m_bCreatCollider)
 					{
-						m_fBoneMatrix = m_pBones[BoneIndex]->Get_CombinedTransformationMatrix();
-						_float4x4 pPickObject = m_PickingObject->Get_Transform()->Get_WorldMatrix();
-						m_fBoneMatrix = pPickObject * m_fBoneMatrix;
-						m_fBonePosition.x = m_fBoneMatrix._41;
-						m_fBonePosition.y = m_fBoneMatrix._42;
-						m_fBonePosition.z = m_fBoneMatrix._43;
-						Create_Bounding(m_fBonePosition, m_iColliderSize);
+						//m_fBoneMatrix = m_pBones[BoneIndex]->Get_CombinedTransformationMatrix();
+						//_float4x4 pPickObject = m_PickingObject->Get_Transform()->Get_WorldMatrix();
+						//m_fBoneMatrix = pPickObject * m_fBoneMatrix;
+						//m_fBonePosition.x = m_fBoneMatrix._41;
+						//m_fBonePosition.y = m_fBoneMatrix._42;
+						//m_fBonePosition.z = m_fBoneMatrix._43;
+						Create_Bounding(m_iColliderSize);
 						m_vBoneColliderIndex.push_back(m_pBones[BoneIndex]);
 						m_bCreatCollider = false;
 					}
@@ -444,6 +486,8 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 			}
 			ImGui::EndListBox();
 		}
+		ImGui::SeparatorText("ColliderList");
+		ImGui::NewLine();
 		if (ImGui::BeginListBox("ColliderList"))
 		{
 			if (m_pBoneCollider.size() < 0)
@@ -454,7 +498,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 
 			static int iSelectColliderIndex;
 
-			for (int n = 0; n < m_iCreateColliderNum; n++)
+			for (_uint n = 0; n < m_iCreateColliderNum; n++)
 			{
 				string str = "Collider";
 				string str2 = to_string(n);
@@ -478,10 +522,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 						Temp.m[2][2] = m_iColliderSize;
 
 						m_pBoneCollider[iSelectColliderIndex]->Get_Bounding()->Set_matScale(Temp);
-						//((CBounding_Sphere*)m_pBoneCollider[iSelectColliderIndex])->Set_matScale(Temp);
-						//m_pBounding = ((CBounding_Sphere*)m_pBoneCollider[m_iSelectColliderIndex]);
 						
-						//m_bColliderSize = false;
 					}
 					if (m_bDeleteCollider)
 					{
@@ -493,17 +534,19 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 
 						m_bDeleteCheck = false;
 					}
-
+				
 
 				}
 				else
 				{
 					m_pBoneCollider[n]->Set_isCollision(false);
 				}
-				//CBone* pBone = m_vBoneColliderIndex[n];
-				_float4x4 Temp = m_vBoneColliderIndex[n]->Get_CombinedTransformationMatrix();
-				_float4x4 Desc =Temp * m_PickingObject->Get_Transform()->Get_WorldMatrix();
-				////_float4x4 Result = Temp * Desc;
+				m_fBoneMatrix = XMMatrixIdentity();
+				m_fBoneMatrix._41 = m_fBonePosition[0];
+				m_fBoneMatrix._42 = m_fBonePosition[1];
+				m_fBoneMatrix._43 = m_fBonePosition[2];
+				_float4x4 Temp = m_fBoneMatrix + m_vBoneColliderIndex[n]->Get_CombinedTransformationMatrix();
+
 				m_pBoneCollider[n]->Update(Temp);
 				
 			}
@@ -511,8 +554,23 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 		}
 		ImGui::TreePop();
 	}
+	//애니메이션 콜라이더 끄고 키는 조건 
+	if (m_pBoneCollider.size() > 0)
+	{
+		if (m_fCurrentTrackPosition >= m_iColliderOnTrackPosition && m_fCurrentTrackPosition < m_iColliderOffTrackPosition)
+		{
+			m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(true);
+		}
+		else
+		{
+			m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(false);
+		}
+	}
+	
 
 	//현재 해야 하는 것은 콜라이더 생성하는 버튼을 일단 만들어 보자 
+	ImGui::SeparatorText("Create/Delete");
+
 	if (ImGui::Button("Collider Crate"))
 	{
 		m_bCreatCollider = true;
@@ -522,17 +580,269 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 	{
 		m_bDeleteCollider = true;
 	}
+	ImGui::SeparatorText("ColliderSize");
 
-	if (ImGui::DragFloat("ColliderSize", &m_iColliderSize, 0.f, 10.f));
+	if (ImGui::DragFloat("ColliderSize", &m_iColliderSize, 0.f, 10.f))
 	{
 		m_bColliderSize = true;
-		if (m_pBoneCollider.size() > 0)
-		{
-			
-		}
-		
+
 	}
 
+	if (ImGui::DragFloat3("ColliderPosition", m_fBonePosition, 0.01, -100.f, 100.f));
+
+	ImGui::SeparatorText("ColliderOn");
+	if (ImGui::InputFloat("ColliderOn", &m_iColliderOnTrackPosition, 0.01f, 1.f));
+	ImGui::SeparatorText("ColliderOff");
+	if (ImGui::InputFloat("ColliderOff", &m_iColliderOffTrackPosition, 0.01f, 1.f));
+
+}
+
+void CWindow_AnimTool::Draw_Weapon(_float fTimeDelta)
+{
+	ImGui::SeparatorText("WeaponList");
+
+	if (m_pBones.empty())
+		return;
+
+	if (ImGui::TreeNode("Weapon"))
+	{
+		string items[] = { "Layer_Player", "Layer_Monster","Layer_Effect" };
+
+		static int Object_idx = 0; // Here we store our selection data as an index.
+		static int Layer_idx = 0; // Here we store our selection data as an index.
+		int ObjectTagSize = (int)m_vObjectTag.size();
+
+		if (ImGui::BeginListBox("ObjectList"))
+		{
+			for (int n = 0; n < ObjectTagSize; n++)
+			{
+				const bool is_selected = (Object_idx == n);
+				if (ImGui::Selectable(m_vObjectTag[n].c_str(), is_selected))
+					Object_idx = n;
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+
+			}
+			ImGui::EndListBox();
+		}
+
+		ImGui::Spacing();
+		ImGui::SeparatorText("LayerList");
+		ImGui::NewLine();
+		if (ImGui::BeginListBox("LayerList"))
+		{
+			for (int n = 0; n < 3; n++)
+			{
+				const bool is_selected = (Layer_idx == n);
+				if (ImGui::Selectable(items[n].c_str(), is_selected))
+					Layer_idx = n;
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+					if (m_bCreateWeaponCheck)
+						if (m_pGameInstance->Mouse_Down(DIM_LB))
+						{
+							
+							CCharacter* pickingObject = dynamic_cast<CCharacter*>(m_PickingObject);
+							Create_Weapon(pickingObject,m_pBones[m_iSelectBoneIndex]->Get_Name(), ConvertCtoWC(m_vObjectTag[Object_idx].c_str()));
+							m_bCloneCount = true;
+							m_bListCheck = true;
+							m_bCreateWeaponCheck = false;
+						}
+
+				}
+
+			}
+
+			ImGui::EndListBox();
+		}
+
+		ImGui::Spacing();
+		ImGui::Checkbox("Create", &m_bCreateWeaponCheck);
+		ImGui::SameLine();
+		ImGui::Checkbox("Delete", &m_bDeleteWeaponCheck);
+
+		ImGui::SeparatorText("CreateWeaponList");
+		ImGui::NewLine();
+		static int CreateIndex = 0; // Here we store our selection data as an index.
+
+		if (m_bListCheck)
+		{
+			m_iCreateWeaponSize = (_int)m_CreateWeaponList.size();
+			if (ImGui::BeginListBox("CreateList"))
+			{
+
+				for (int n = 0; n < m_iCreateWeaponSize; n++)
+				{
+					string str = "Weapon";
+					string str2 = to_string(n);
+
+					const bool is_selected = (CreateIndex == n);
+					if (ImGui::Selectable((str + "." + str2).c_str(), is_selected))
+						CreateIndex = n;
+
+					// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+					if (is_selected)
+					{
+						CWeapon* test = dynamic_cast<CWeapon*>(m_CreateWeaponList[CreateIndex]);
+						m_PickingWeapon = test;
+						
+						ImGui::SetItemDefaultFocus();
+
+						if (m_bCreatWeaponCollider)
+						{
+							//_float3 Temp = m_PickingWeapon->Get_Transform()->
+						
+							//m_fWeaponMatrix = m_CreateWeaponList[CreateIndex]->Get_Transform()->Get_WorldMatrix();
+							//m_PickingWeapon->Set_WorldMatrix(m_PickingObject->Get_Transform()->Get_WorldMatrix());
+							_float4x4 pPickObject = m_PickingWeapon->Get_Transform()->Get_WorldMatrix();
+							m_fWeaponMatrix = pPickObject;
+							m_fWeaponPos.x = m_fWeaponMatrix._41;
+							m_fWeaponPos.y = m_fWeaponMatrix._42;
+							m_fWeaponPos.z = m_fWeaponMatrix._43;
+							Create_Weapon_Bounding(m_fWeaponPos,m_iColliderWeaponSize);
+							m_bCreatWeaponCollider = false;
+						}
+
+						if (m_bDeleteWeaponCheck)
+						{
+							_bool isdead = true;
+							m_CreateWeaponList[CreateIndex]->Set_Dead(isdead);
+							m_CreateWeaponList.erase(m_CreateWeaponList.begin() + CreateIndex);
+							m_bDeleteWeaponCheck = false;
+						}
+
+					}
+				}
+				ImGui::EndListBox();
+			}
+
+		}
+		ImGui::Checkbox(u8"기즈모on/off", &m_bWeaponguizmo);
+		if (m_bWeaponguizmo)
+		{
+			if (nullptr == m_PickingWeapon)
+				return;
+			/*	ImGuizmo_Initialize();*/
+			Set_GuizmoCamProj();
+			Set_GuizmoCamView();
+			Set_Guizmo(m_PickingWeapon);
+		}
+
+		ImGui::SeparatorText("CreateWeaponCollider");
+		if (ImGui::BeginListBox("CreateWeaponColliderList"))
+		{
+			if (m_pWeaponCollider.size() < 0)
+				return;
+
+			static int iSelectColliderIndex;
+
+			for (_uint n = 0; n < m_iCreateWeaponColliderNum; n++)
+			{
+				string str = "ColliderWeapon";
+				string str2 = to_string(n);
+
+				const bool is_selected = (iSelectColliderIndex == n);
+				if (ImGui::Selectable((str + "." + str2).c_str(), is_selected))
+					iSelectColliderIndex = n;
+				m_iSelectWeaponColliderIndex = iSelectColliderIndex;
+				
+
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+					m_pWeaponCollider[iSelectColliderIndex]->Set_isCollision(true);
+					if (m_bColliderWeaponSize)
+					{
+						_float4x4	Temp = XMMatrixIdentity();
+						Temp.m[0][0] = m_iColliderWeaponSize;
+						Temp.m[1][1] = m_iColliderWeaponSize;
+						Temp.m[2][2] = m_iColliderWeaponSize;
+
+						m_pWeaponCollider[iSelectColliderIndex]->Get_Bounding()->Set_matScale(Temp);
+
+					}
+					if (m_bDeleteWeaponCollider)
+					{
+						CCollider* pDeleteCollider = m_pWeaponCollider[iSelectColliderIndex];
+
+						m_pWeaponCollider.erase(m_pWeaponCollider.begin() + iSelectColliderIndex);
+
+						Safe_Release(pDeleteCollider);
+
+						m_bDeleteWeaponCollider = false;
+					}
+
+
+				}
+				else
+				{
+					m_pWeaponCollider[n]->Set_isCollision(false);
+				}
+				m_fWeaponMatrix = XMMatrixIdentity(); // 1 1 1 
+				m_fWeaponMatrix._41 = m_fWeaponPosition[0];
+				m_fWeaponMatrix._42 = m_fWeaponPosition[1];
+				m_fWeaponMatrix._43 = m_fWeaponPosition[2];
+
+				_float4x4 Test = dynamic_cast<CWeapon*>(m_PickingWeapon)->Get_WeaponWorldMatrix();
+
+				_float4x4 Desc = m_fWeaponMatrix + Test; //
+
+				m_pWeaponCollider[n]->Update(Desc);
+				//_float4x4 Temp = m_fWeaponMatrix + m_pBones[m_iSelectBoneIndex]->Get_CombinedTransformationMatrix();
+				//
+				//m_pBoneCollider[n]->Update(Temp);
+			}
+
+
+			ImGui::EndListBox();
+		}
+		ImGui::TreePop();
+	}
+
+	if (m_pWeaponCollider.size() > 0)
+	{
+		if (m_fCurrentTrackPosition >= m_iColliderOnTrackPosition && m_fCurrentTrackPosition < m_iColliderOffTrackPosition)
+		{
+			m_pWeaponCollider[m_iSelectWeaponColliderIndex]->Set_Enable(true);
+		}
+		else
+		{
+			m_pWeaponCollider[m_iSelectWeaponColliderIndex]->Set_Enable(false);
+		}
+	}
+
+
+	//현재 해야 하는 것은 콜라이더 생성하는 버튼을 일단 만들어 보자 
+	ImGui::SeparatorText("Create/Delete");
+
+	if (ImGui::Button("ColliderWeapon Crate"))
+	{
+		m_bCreatWeaponCollider = true;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("ColliderWeapon Delete"))
+	{
+		m_bDeleteWeaponCollider = true;
+	}
+	ImGui::SeparatorText("ColliderWeaponSize");
+
+	if (ImGui::DragFloat("ColliderWeaponSize", &m_iColliderWeaponSize, 0.f, 10.f))
+	{
+		m_bColliderWeaponSize = true;
+
+	}
+
+	if (ImGui::DragFloat3("ColliderPosition", m_fWeaponPosition, 0.01, -100.f, 100.f));
+
+	ImGui::SeparatorText("ColliderWeaponOn");
+	if (ImGui::InputFloat("ColliderWeaponOn", &m_iColliderWeaponOnTrackPosition, 0.01f, 1.f));
+	ImGui::SeparatorText("ColliderWeaponOff");
+	if (ImGui::InputFloat("ColliderWeaponOff", &m_iColliderWeaponOffTrackPosition, 0.01f, 1.f));
 }
 
 void CWindow_AnimTool::BonePoint_Update()
@@ -541,18 +851,24 @@ void CWindow_AnimTool::BonePoint_Update()
 	{
 		for (auto& pCollider : m_pBoneCollider)
 		{
-			//CBone* pBone = m_vBoneColliderIndex[m_iCreateColliderNum]
 			m_pGameInstance->Add_DebugRender(pCollider);
-			//pCollider->Update()
+		}
+	}
+
+	if (m_pWeaponCollider.size() > 0)
+	{
+		for (auto& pColliderWeapon : m_pWeaponCollider)
+		{
+			m_pGameInstance->Add_DebugRender(pColliderWeapon);
 		}
 	}
 }
 
-void CWindow_AnimTool::Create_Bounding(_float3 fPoint, _float fRadius)
+void CWindow_AnimTool::Create_Bounding(_float fRadius)
 {
 	CBounding_Sphere::BOUNDING_SPHERE_DESC pBoundingSphere;
 
-	pBoundingSphere.vCenter = fPoint;
+	pBoundingSphere.vCenter = _float3(0.0f,0.0f,0.0f);
 	pBoundingSphere.fRadius = fRadius;
 	
 	m_pCollider = dynamic_cast<CCollider*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_Sphere"), &pBoundingSphere));
@@ -561,13 +877,20 @@ void CWindow_AnimTool::Create_Bounding(_float3 fPoint, _float fRadius)
 	++m_iCreateColliderNum;
 }
 
-void CWindow_AnimTool::Set_Bounding(CBounding_Sphere* _Bounding)
+void CWindow_AnimTool::Create_Weapon_Bounding(_float3 fPoint, _float fRadius)
 {
-	//m_pSphere = _Bounding->Get_Bounding()->Radius;
-	////m_pSphere->Radius = m_iColliderSize;
-	//m_pBounding->Set_Bounding(m_pSphere);
-	//m_pBoneCollider[m_iSelectColliderIndex]->Set_Bounding(_Bounding);
+	CBounding_Sphere::BOUNDING_SPHERE_DESC pBoundingSphere;
+
+	pBoundingSphere.vCenter = _float3(0.0f, 0.0f, 0.0f);
+	pBoundingSphere.fRadius = fRadius;
+
+	m_pWCollider = dynamic_cast<CCollider*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_Sphere"), &pBoundingSphere));
+
+	m_pWeaponCollider.push_back(m_pWCollider);
+	++m_iCreateWeaponColliderNum;
 }
+
+
 
 char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)
 {
@@ -576,6 +899,7 @@ char* CWindow_AnimTool::ConverWStringtoC(const wstring& wstr)
 	char* result = new char[size_needed];
 
 	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result, size_needed, NULL, NULL);
+
 
 	return result;
 }
@@ -590,6 +914,8 @@ char* CWindow_AnimTool::ConvertWCtoC(const wchar_t* str)
 	pStr = new char[strSize];
 	//형 변환
 	WideCharToMultiByte(CP_ACP, 0, str, -1, pStr, strSize, 0, 0);
+
+
 	return pStr;
 }
 
@@ -603,6 +929,8 @@ wchar_t* CWindow_AnimTool::ConvertCtoWC(const char* str)
 	pStr = new WCHAR[strSize];
 	//형 변환
 	MultiByteToWideChar(CP_ACP, 0, str, (int)strlen(str) + 1, pStr, strSize);
+
+
 	return pStr;
 }
 
@@ -621,4 +949,5 @@ CWindow_AnimTool* CWindow_AnimTool::Create(ID3D11Device* pDevice, ID3D11DeviceCo
 void CWindow_AnimTool::Free()
 {
 	__super::Free();
+	Safe_Delete(m_pSphere);
 }

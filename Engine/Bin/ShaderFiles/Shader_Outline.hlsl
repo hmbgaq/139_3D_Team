@@ -2,29 +2,30 @@
 
 matrix      g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4      g_vLineColor;
+
 Texture2D   g_NormalTarget;
+
+float       g_fMask[9] = {
+            	-1, -1, -1,
+            	-1,  8, -1,
+            	-1, -1, -1
+            };
 float       g_fCoord[3] = { -1, 0, +1 };
 float       g_fDivier = 1;
-float       g_fBias = 0.5f;
 
-float g_fMask[9] =
-{
-    -1, -1, -1,
-	-1,  8, -1,
-	-1, -1, -1
-};
+float       g_fBias = 0.5f;
 
 struct VS_IN
 {
-    float3 vPosition : POSITION;
-    float2 vTexcoord : TEXCOORD0;
+	float3		vPosition : POSITION;
+	float2		vTexcoord : TEXCOORD0;
 };
 
 struct VS_OUT
 {
-    float4 vPosition : SV_POSITION;
-    float2 vTexcoord : TEXCOORD0;
-    float fFogFactor : FOG;
+	float4		vPosition : SV_POSITION;
+	float2		vTexcoord : TEXCOORD0;
+	float		fFogFactor : FOG;
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -65,7 +66,7 @@ PS_OUT PS_OUTLINE(PS_IN In)
 	
     for (int i = 0; i < 9; i++)
     {
-        vector vNormalDesc = g_NormalTarget.Sample(PointSampler, In.vTexcoord + float2(g_fCoord[i % 3.f] / 512.f, g_fCoord[i % 3.f] / 512.f) * g_fBias);
+        vector vNormalDesc = g_NormalTarget.Sample(PointSampler, In.vTexcoord + float2(g_fCoord[i % 3] / 1920.f, g_fCoord[i % 3] / 1080.f) * g_fBias);
         vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
         Color += g_fMask[i] * vNormal;
     }
@@ -78,7 +79,6 @@ PS_OUT PS_OUTLINE(PS_IN In)
     return Out;
 }
 
-
 /* ------------------- Technique -------------------*/ 
 
 technique11 DefaultTechnique
@@ -87,7 +87,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;

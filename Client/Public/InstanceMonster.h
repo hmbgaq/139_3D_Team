@@ -18,7 +18,7 @@ class CInstanceMonster final : public CGameObject
 
 
 private:
-	CInstanceMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CInstanceMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CInstanceMonster(const CInstanceMonster& rhs);
 	virtual ~CInstanceMonster() = default;
 
@@ -67,8 +67,9 @@ private:
 	ANIMMODEL_INSTANCE_DESC m_tInstanceDesc = {};
 
 public:
-	static CInstanceMonster* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CInstanceMonster* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 	virtual void Free() override;
 
 };

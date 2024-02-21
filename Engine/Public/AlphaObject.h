@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CAlphaObject abstract : public CGameObject
 {
 protected:
-	CAlphaObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CAlphaObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CAlphaObject(const CGameObject& rhs);
 	virtual ~CAlphaObject() = default;
 

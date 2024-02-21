@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 #include "VIBuffer_Environment_Model_Instance.h"
 
-CEnvironment_Instance::CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CEnvironment_Instance::CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -167,9 +167,9 @@ HRESULT CEnvironment_Instance::Bind_ShaderResources()
 	return S_OK;
 }
 
-CEnvironment_Instance * CEnvironment_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CEnvironment_Instance * CEnvironment_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CEnvironment_Instance*		pInstance = new CEnvironment_Instance(pDevice, pContext);
+	CEnvironment_Instance*		pInstance = new CEnvironment_Instance(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -200,5 +200,10 @@ void CEnvironment_Instance::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pInstanceModelCom);
+}
+
+CGameObject* CEnvironment_Instance::Pool()
+{
+	return new CEnvironment_Instance(*this);
 }
 

@@ -4,10 +4,10 @@
 
 
 
-CField::CField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CGameObject(pDevice, pContext)
+CField::CField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CGameObject(pDevice, pContext, strPrototypeTag)
 {
-
+	m_bIsPoolObject = false;
 }
 
 CField::CField(const CField& rhs)
@@ -227,9 +227,9 @@ void CField::ReceiveInfo(DINFO pInfo)
 // 
 // }
 
-CField* CField::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CField* CField::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CField* pInstance = new CField(pDevice, pContext);
+	CField* pInstance = new CField(pDevice, pContext, strPrototypeTag);
 
 	/* 원형 객체를 초기화한다. */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -253,6 +253,11 @@ CGameObject* CField::Clone(void* pArg) // 여기서 사본을 만들때 지형을 설정할 값�
 	return pInstance;
 }
 
+Engine::CGameObject* CField::Pool()
+{
+	return new CField(*this);
+}
+
 void CField::Free()
 {
 	__super::Free();
@@ -269,3 +274,5 @@ void CField::Free()
 		Safe_Release(m_pTextureCom[i]);
 	}
 }
+
+

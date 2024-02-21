@@ -5,8 +5,8 @@
 
 _uint		iTexIndex = rand() % 3;
 
-CParticle_Red::CParticle_Red(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CParticle_Red::CParticle_Red(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -123,9 +123,9 @@ HRESULT CParticle_Red::Bind_ShaderResources()
 	return S_OK;
 }
 
-CParticle_Red* CParticle_Red::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CParticle_Red* CParticle_Red::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CParticle_Red* pInstance = new CParticle_Red(pDevice, pContext);
+	CParticle_Red* pInstance = new CParticle_Red(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -149,6 +149,11 @@ CGameObject* CParticle_Red::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CParticle_Red::Pool()
+{
+	return new CParticle_Red(*this);
+}
+
 void CParticle_Red::Free()
 {
 	__super::Free();
@@ -157,4 +162,6 @@ void CParticle_Red::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pShaderCom);
 }
+
+
 

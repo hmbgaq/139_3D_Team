@@ -8,7 +8,7 @@ void CTestEventWithActor::Activate()
 {
 	if (nullptr == m_pActor) 
 	{
-		m_bIsEnd = true;
+		//m_bIsEnd = true;
 		return;
 	}
 		

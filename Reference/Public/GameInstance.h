@@ -69,6 +69,7 @@ public: /* For.Object_Manager */
 	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
 	class CCharacter* Get_Player();
 	void Set_Player(class CCharacter* _pPlayer);
+	HRESULT Create_PoolObjects(const wstring & strPrototypeTag, _uint iSize = 10);
 
 
 
@@ -100,8 +101,11 @@ public: /* For.PipeLine */
 	//!			레이캐스트
 	RAY			Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
 	RAY			Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY, _matrix matWorld);
+
+#ifdef _DEBUG
 	_bool		Picking_Mesh(RAY ray, _float3 * out, vector<class CMesh*> Meshes);
 	_bool		Picking_Vertex(RAY ray, _float3 * out, _uint triNum, VTXMESH * pVertices, _uint * pIndices);
+#endif // _DEBUG
 
 public: /* For.Font_Manager */
 	HRESULT		Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
@@ -134,6 +138,29 @@ public: /* For.Collision_Manager */
 public: /* For.Event_Manager */
 	void		Add_Event(class IEvent* pEvent);
 
+public: /* For.PhysX_Manager */
+	void					Register_PhysXCollider(class CPhysXCollider* pPhysXCollider);
+	class CPhysXCollider*	Find_PhysXCollider(const _uint iPhysXColliderIndex);
+
+	void					Register_PhysXController(class CPhysXController* pPhysXController);
+	class CPhysXController*	Find_PhysXController(const _uint iPhysXControllerIndex);
+
+	void					Check_PhysXFilterGroup(const _uint In_iLeftLayer, const _uint In_iRightLayer);
+	_uint					Get_PhysXFilterGroup(const _uint In_iIndex);
+
+	PxRigidDynamic*			Create_DynamicActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial = nullptr);
+	PxRigidDynamic*			Create_DynamicActor(const PxTransform& transform);
+	PxRigidStatic*			Create_StaticActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial = nullptr);
+	PxRigidStatic*			Create_StaticActor(const PxTransform& transform);
+
+	void					Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut);
+	void					Create_ConvexMesh(const PxConvexMeshDesc& In_MeshDesc, PxConvexMesh** ppOut);
+	void					Create_Shape(const PxGeometry& Geometry, PxMaterial* pMaterial, const _bool isExculsive, const PxShapeFlags In_ShapeFlags, PxShape** ppOut);
+	void					Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshDesc, PxTriangleMesh** ppOut);
+	void					Create_Controller(const PxCapsuleControllerDesc& In_ControllerDesc, PxController** ppOut);
+
+
+
 
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
@@ -156,6 +183,8 @@ public: /* Common */
 	std::string GetFileName(const std::string& filePath);
 	// 확장자를 제거해주는 함수
 	std::string RemoveExtension(const std::string& filePath);
+	// 포지션 값을 직교로 계산해주는 함수
+	_vector		Convert_Orthogonal(_vector vPosition);
 #pragma endregion End
 
 #pragma region 유정
@@ -166,13 +195,6 @@ public: /* Common */
 	const string	Remove_LastNumChar(const string& str, const _uint& iNumCutCount);
 	const wstring	Get_LastNumChar(const wstring& str, const _uint& iNumCutCount);
 
-	/* For.Math */
-public:
-	_float3 Add_Float3(const _float3& fLeft, const _float3& fRight);
-	_float3 Mul_Float3(const _float3& fLeft, const _float& fRight);
-	_bool	isIn_Range(const _float3 fLeft, const _float3 fRight, const _float fRange);
-	_matrix Make_WorldMatrix(const _float2& vScale, const _float3& vRot, const _float3& vPos);
-#pragma endregion End
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
@@ -189,6 +211,7 @@ private:
 	class CFrustum*					m_pFrustum = { nullptr };
 	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
 	class CEvent_Manager*			m_pEvent_Manager = { nullptr };
+	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
 
 
 public:

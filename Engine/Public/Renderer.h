@@ -13,15 +13,9 @@ public:
 	enum RENDERGROUP 
 	{ 
 		/* Priority */
-		RENDER_PRIORITY,
-
-		/* Shadow */
-		RENDER_SHADOW,
-
-		/* Light */
-		RENDER_NONLIGHT, 
+		RENDER_PRIORITY,RENDER_SHADOW, RENDER_NONLIGHT, 
 					   
-		/* Shader */
+		/* Post Processing  */
 		RENDER_SSAO, RENDER_GODRAY, RENDER_OUTLINE,
 		
 		/* Blend */
@@ -32,7 +26,7 @@ public:
 		
 		RENDER_END };
 
-	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_FINAL, SHADER_END };
+	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FINAL, SHADER_END };
 	
 	struct QuadVertex // ssao 
 	{
@@ -67,7 +61,7 @@ public:
 	
 	/* Ready */
 	HRESULT Create_Buffer();
-	HRESULT	Create_Shader();
+	HRESULT	Create_Shader();  
 	HRESULT Create_RenderTarget();
 	HRESULT Create_DepthStencil();
 	HRESULT Ready_DebugRender();
@@ -83,7 +77,6 @@ public:
 private:
 	_float4x4					m_WorldMatrix;
 	_float4x4					m_ViewMatrix, m_ProjMatrix;
-	_float4						m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
 
 private:
 	HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
@@ -97,8 +90,8 @@ private:
 
 	HRESULT Render_LightAcc();
 	HRESULT Render_Deferred();
-
-	HRESULT Render_OutLine();
+	HRESULT Render_OutLine_PostProcessing();
+	HRESULT Render_OutLineGroup();
 	HRESULT Render_SSAO();
 	HRESULT Render_SSAO_Blur();
 	HRESULT Render_HBO_Plus();
@@ -118,12 +111,14 @@ private:
 
 	/* 활성 제어 */
 private:
-	_bool m_bSSAO_Active = true;
-	_bool m_bBloom_Active = true;
+	_bool						m_bSSAO_Active			= { true };
+	_bool						m_bBloom_Active			= { true };
+	_bool						m_bOutline_Active		= { true };
 
 public:
-	void Set_SSAO(_bool _ssao_active) { m_bSSAO_Active = _ssao_active; } /* 외곽선 옵션조절 */
-	void Set_Bloom(_bool _bloom_active) { m_bBloom_Active = _bloom_active; }
+	void Set_SSAO(_bool _ssao_active)		{ m_bSSAO_Active = _ssao_active; } /* 외곽선 옵션조절 */
+	void Set_Bloom(_bool _bloom_active)		{ m_bBloom_Active = _bloom_active; }
+	void Set_OutLine(_bool _Outline_active) { m_bOutline_Active = _Outline_active; }
 
 private:
 	/* SSAO */
@@ -152,8 +147,11 @@ private:
 	void						Calc_Blur_GaussianWeights(_int sigma, _int iSize, _Out_ void* Weights);
 
 	/* Radial Blur */
-	_float4 m_fRadialBlurQuality = {};
-	_float4 m_fRadialBlurPower = {};
+	_float4						m_fRadialBlurQuality = {};
+	_float4						m_fRadialBlurPower = {};
+
+	/* OutLine */
+	_float4						m_vLineColor		= _float4(1.f, 0.f, 0.f, 1.f );
 
 private:
 	class CShader*					m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };

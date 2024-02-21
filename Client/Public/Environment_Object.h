@@ -27,7 +27,7 @@ public:
 	}ENVIRONMENT_OBJECT_DESC;
 
 private:
-	CEnvironment_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEnvironment_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CEnvironment_Object(const CEnvironment_Object& rhs);
 	virtual ~CEnvironment_Object() = default;
 
@@ -49,9 +49,11 @@ public:
 	wstring&			Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
 	_bool				Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
 	
-
+#ifdef DEBUG
 public: //! For.Tool
 	virtual _bool		Picking(_Out_ _float3* vPickedPos) override;
+
+#endif 
 
 public:
 	void				Start_Environment_Animation() { m_bPlay = true; }
@@ -71,12 +73,14 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CEnvironment_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEnvironment_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 
 	virtual void Free() override;
+
 };
 
 END

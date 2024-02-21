@@ -4,8 +4,8 @@
 #include "Shader.h"
 #include "GameInstance.h"
 
-CInteract_Chain::CInteract_Chain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CInteract_Chain::CInteract_Chain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -126,6 +126,7 @@ HRESULT CInteract_Chain::Render()
 
 HRESULT CInteract_Chain::Render_OutLine()
 {
+	m_bInteractActive = true;
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -179,9 +180,9 @@ HRESULT CInteract_Chain::Bind_ShaderResources()
 	return S_OK;
 }
 
-CInteract_Chain* CInteract_Chain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CInteract_Chain* CInteract_Chain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CInteract_Chain* pInstance = new CInteract_Chain(pDevice, pContext);
+	CInteract_Chain* pInstance = new CInteract_Chain(pDevice, pContext, strPrototypeTag);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -203,6 +204,11 @@ CGameObject* CInteract_Chain::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CInteract_Chain::Pool()
+{
+	return new CInteract_Chain(*this);
+}
+
 void CInteract_Chain::Free()
 {
 	__super::Free();
@@ -211,3 +217,5 @@ void CInteract_Chain::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);
 }
+
+

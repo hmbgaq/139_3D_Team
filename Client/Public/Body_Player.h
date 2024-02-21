@@ -12,7 +12,7 @@ class CBody_Player final : public CBody
 {
 
 private:
-	CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CBody_Player(const CBody_Player& rhs);
 	virtual ~CBody_Player() = default;
 
@@ -36,12 +36,16 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CBody_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CBody_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 
 	virtual void Free() override;
+
+	// CBody을(를) 통해 상속됨
+	
 };
 
 END

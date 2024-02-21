@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 
 
-CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -46,6 +46,10 @@ void CMonster::Priority_Tick(_float fTimeDelta)
 
 void CMonster::Tick(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+		m_bEnable = false;
+	}
 
 	//if (m_pGameInstance->Key_Pressing(DIK_T)) 
 	//{
@@ -187,11 +191,9 @@ HRESULT CMonster::Bind_ShaderResources()
 	return S_OK;
 }
 
-
-
-CMonster * CMonster::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CMonster * CMonster::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CMonster*		pInstance = new CMonster(pDevice, pContext);
+	CMonster*		pInstance = new CMonster(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -215,6 +217,11 @@ CGameObject * CMonster::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CMonster::Pool()
+{
+	return new CMonster(*this);
+}
+
 void CMonster::Free()
 {
 	__super::Free();
@@ -224,4 +231,6 @@ void CMonster::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

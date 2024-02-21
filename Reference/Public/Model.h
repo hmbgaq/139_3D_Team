@@ -76,6 +76,7 @@ public:
 	vector<CAnimation*>*	 Get_Animations();
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
 	
+	
 
 public:
 	vector<CBone*>*			Get_Bones();

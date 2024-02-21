@@ -6,8 +6,8 @@
 #include "Bone.h"
 
 
-CPreviewAnimationModel::CPreviewAnimationModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CCharacter(pDevice,pContext)
+CPreviewAnimationModel::CPreviewAnimationModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CCharacter(pDevice,pContext, strPrototypeTag)
 {
 }
 

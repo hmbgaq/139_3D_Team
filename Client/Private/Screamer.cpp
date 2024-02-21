@@ -2,8 +2,8 @@
 #include "GameInstance.h"
 #include "Model.h"
 
-CScreamer::CScreamer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CScreamer::CScreamer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -21,12 +21,12 @@ HRESULT CScreamer::Initialize(void* pArg)
 {
 	FAILED_CHECK(Ready_Components());
 
-	m_iRenderPass = 0;
+	m_iRenderPass = ECast(ANIM_SHADER::ANIM_BLOOM);
 
 	m_pTransformCom->Set_Scaling(0.01f, 0.01f, 0.01f);
 	m_pTransformCom->Set_Position(_float3(25.f, 0.5f, 10.f));
 	m_vBloomColor = { 0.5f, 0.f, 0.5f, 1.f };
-	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
+	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
 
 	return S_OK;
 }
@@ -86,6 +86,7 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
 
 	}
 
@@ -113,6 +114,7 @@ HRESULT CScreamer::Render()
 
 		m_pModelCom->Render(_uint(i));
 	}
+
 
 	return S_OK;
 }
@@ -145,6 +147,30 @@ HRESULT CScreamer::Render_Shadow()
 	return S_OK;
 }
 
+HRESULT CScreamer::Render_OutLine()
+{
+	FAILED_CHECK(Bind_ShaderResources());
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		_float m_fLineThick = 3.f;
+		//m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
+		//m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fTimeAcc, sizeof(_float));
+
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+
+		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
+
+		m_pModelCom->Render(0);
+	}
+
+	return S_OK;
+}
+
 HRESULT CScreamer::Ready_Components()
 {
 	/* For. Transform */
@@ -163,6 +189,7 @@ HRESULT CScreamer::Ready_Components()
 
 	/* For.Com_Model */
 	{
+
 		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Screamer"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 	
 	}
@@ -194,6 +221,8 @@ HRESULT CScreamer::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
 	/* Variable */
+	_float gCamFar = m_pGameInstance->Get_CamFar();
+	m_pShaderCom->Bind_RawValue("g_fCamFar", &gCamFar, sizeof(_float));
 	m_pShaderCom->Bind_RawValue("g_TimeDelta", &m_fTimeDelta, sizeof(_float));
 	m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float));
 	m_pShaderCom->Bind_RawValue("g_BloomColor", &m_vBloomColor, sizeof(_float4));
@@ -205,9 +234,9 @@ HRESULT CScreamer::Bind_ShaderResources()
 	return S_OK;
 }
 
-CScreamer* CScreamer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CScreamer* CScreamer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CScreamer* pInstance = new CScreamer(pDevice, pContext);
+	CScreamer* pInstance = new CScreamer(pDevice, pContext, strPrototypeTag);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -229,10 +258,20 @@ CGameObject* CScreamer::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CScreamer::Pool()
+{
+	return new CScreamer(*this);
+}
+
 void CScreamer::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pDissolveTexCom);
+	Safe_Release(m_pBreakTextureCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pColliderCom);
 }
+
+

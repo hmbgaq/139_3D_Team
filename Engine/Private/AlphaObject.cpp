@@ -1,8 +1,8 @@
 #include "..\Public\AlphaObject.h"
 #include "GameInstance.h"
 
-CAlphaObject::CAlphaObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+CAlphaObject::CAlphaObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 

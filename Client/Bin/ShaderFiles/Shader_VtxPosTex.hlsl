@@ -14,7 +14,10 @@ texture2D		g_Texture[2];
 texture2D		g_DiffuseTexture;
 texture2D		g_DepthTexture;
 
+vector			g_vCamDirection;
 
+float2      g_UVOffset;
+float2      g_UVScale;
 
 /* 정점의 변환(월드변환, 뷰변환, 투영변환.)을 수행한다. */
 /* 정점의 구성정보를 추가, 삭제등의 변경을 수행한다.*/
@@ -111,6 +114,35 @@ VS_OUT_EFFECT VS_MAIN_EFFECT(VS_IN In)
 	return Out;
 }
 
+
+VS_OUT_EFFECT  VS_MAIN_SPRITE(VS_IN In)
+{
+	VS_OUT_EFFECT Out = (VS_OUT_EFFECT)0;
+
+	matrix WorldMatrix = g_WorldMatrix;
+
+	float3 vLook = normalize((g_vCamDirection * -1.f).xyz);
+	float3 vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook));
+	float3 vUp = normalize(cross(vLook, vRight));
+
+	WorldMatrix[0] = float4(vRight, 0.f) * length(WorldMatrix[0]);
+	WorldMatrix[1] = float4(vUp, 0.f) * length(WorldMatrix[1]);
+	WorldMatrix[2] = float4(vLook, 0.f) * length(WorldMatrix[2]);
+
+	/* In.vPosition * 월드 * 뷰 * 투영 */
+	matrix matWV, matWVP;
+
+	matWV = mul(WorldMatrix, g_ViewMatrix);
+	matWVP = mul(matWV, g_ProjMatrix);
+
+	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+	Out.vTexcoord = In.vTexcoord;
+	Out.vProjPos = Out.vPosition;
+
+	return Out;
+}
+
+
 struct PS_IN_EFFECT
 {
 	float4		vPosition : SV_POSITION;
@@ -136,6 +168,30 @@ PS_OUT PS_MAIN_EFFECT(PS_IN_EFFECT In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_SPRITE_ANIMATION(PS_IN_EFFECT In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
+
+	// Set Color
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, clippedTexCoord);
+
+	float2 vDepthTexcoord;
+	vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+	vDepthTexcoord.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+
+	float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, vDepthTexcoord);
+
+	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
+	// Alpha Test
+	if (Out.vColor.a < 0.1f)
+	{
+		discard;
+	}
+
+	return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -166,4 +222,17 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_EFFECT();
 	}	
+
+	pass Sprite // 2
+	{
+		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetDepthStencilState(DSS_DepthStencilEnable, 0);
+		SetRasterizerState(RS_Cull_None);
+
+		VertexShader = compile vs_5_0 VS_MAIN_SPRITE();
+		HullShader = NULL;
+		DomainShader = NULL;
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_SPRITE_ANIMATION();
+	}
 }

@@ -19,7 +19,7 @@ public:
 		class CTransform* m_pParentTransform = { nullptr };
 	}BODY_DESC;
 protected:
-	CBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CBody(const CBody& rhs);
 	virtual ~CBody() = default;
 
@@ -60,8 +60,15 @@ public:
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	
+
+#ifdef _DEBUG
 public: //!For.Tool
 	virtual _bool Picking(_Out_ _float3* vPickedPos) override;
+
+
+#endif 
+
+
 	
 
 //public:

@@ -2,8 +2,8 @@
 #include "SkyDome.h"
 #include "GameInstance.h"
 
-CSkyDome::CSkyDome(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CSkyDome::CSkyDome(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -102,9 +102,9 @@ HRESULT CSkyDome::Bind_ShaderResources()
 	return S_OK;
 }
 
-CSkyDome* CSkyDome::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSkyDome* CSkyDome::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CSkyDome* pInstance = new CSkyDome(pDevice, pContext);
+	CSkyDome* pInstance = new CSkyDome(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -128,8 +128,15 @@ CGameObject* CSkyDome::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CSkyDome::Pool()
+{
+	return new CSkyDome(*this);
+}
+
 void CSkyDome::Free()
 {
 	__super::Free();
 
 }
+
+
