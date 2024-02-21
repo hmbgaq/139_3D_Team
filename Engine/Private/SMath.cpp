@@ -1,6 +1,5 @@
 #include "SMath.h"
 #include <random>
-#include "GameInstance.h"
 
 XMMATRIX Engine::SMath::Get_RotationMatrix(FXMMATRIX Mat)
 {

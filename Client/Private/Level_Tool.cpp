@@ -4,11 +4,7 @@
 #include "GameInstance.h"
 
 #include "Camera_Dynamic.h"
-#include "Particle_Custom.h"
-
-
-#include "Camera_Dynamic.h"
-#include "Particle_Custom.h"
+#include "Effect_Particle.h"
 
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -70,7 +66,7 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 	tDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	tDesc.fNear = 0.1f;
 	tDesc.fFar = m_pGameInstance->Get_CamFar();
-	tDesc.fSpeedPerSec = 5.f;
+	tDesc.fSpeedPerSec = 15.f;
 	tDesc.fRotationPerSec = XMConvertToRadians(180.0f);
 
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &tDesc));

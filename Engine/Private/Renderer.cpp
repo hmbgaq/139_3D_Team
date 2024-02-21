@@ -31,7 +31,7 @@ HRESULT CRenderer::Initialize()
 	/* 坊歹鸥百 积己 + MRT 弊缝 瘤沥 */
 	FAILED_CHECK(Create_RenderTarget());
 
-	/* ID3D11DepthStencilView 寄惑 */
+	/* ID3D11DepthStencilView 积己 */
 	FAILED_CHECK(Create_DepthStencil());
 
 #ifdef _DEBUG

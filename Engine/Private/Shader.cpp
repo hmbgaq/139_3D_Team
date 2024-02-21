@@ -19,6 +19,7 @@ CShader::CShader(const CShader& rhs)
 	Safe_AddRef(m_pEffect);
 }
 
+
 /* 셰이더파일을 빌드하여 ID3DX11Effect를 만들어냈다. */
 /* ID3DX11Effect로부터 Pass에 까지 접근하여 인자도 던진 정점정보를 이 셰이더 패스에서 잘 받아줄 수있는지에 대한 InputLayout을 만들었다. */
 HRESULT CShader::Initialize_Prototype(const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
