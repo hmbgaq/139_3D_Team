@@ -15,6 +15,16 @@ CTexture::CTexture(const CTexture & rhs)
 		Safe_AddRef(pSRV);
 }
 
+_bool CTexture::Write_Json(json& Out_Json)
+{
+	return false;
+}
+
+void CTexture::Load_FromJson(const json& In_Json)
+{
+	_int iTest = 0;
+}
+
 HRESULT CTexture::Initialize_Prototype(const wstring & strTextureFilePath, _uint iNumTextures)
 {
 	m_iNumTextures = iNumTextures;
@@ -84,6 +94,37 @@ HRESULT CTexture::Bind_ShaderResource(CShader * pShader, const _char * pConstant
 HRESULT CTexture::Bind_ShaderResources(CShader * pShader, const _char * pConstantName)
 {
 	return pShader->Bind_SRVs(pConstantName, &m_SRVs.front(), m_iNumTextures);
+}
+
+HRESULT CTexture::Get_TextureSize(_uint* iWidth, _uint* iHeight, _uint iTextureIndex)
+{
+
+	// 인덱스 범위 확인
+	if (iTextureIndex >= m_SRVs.size())
+		return E_FAIL; // 유효하지 않은 인덱스 처리
+
+	 // 특정 인덱스의 ID3D11ShaderResourceView를 가져옴
+	ID3D11ShaderResourceView* pSRV = m_SRVs[iTextureIndex];
+
+	// ID3D11Resource를 가져오기 위해 QueryInterface 호출
+	ID3D11Resource* pResource = nullptr;
+	pSRV->GetResource(reinterpret_cast<ID3D11Resource**>(&pResource));
+
+	// ID3D11Texture2D로 캐스팅하여 크기 얻기
+	ID3D11Texture2D* pTexture2D = static_cast<ID3D11Texture2D*>(pResource);
+
+	D3D11_TEXTURE2D_DESC desc;
+	pTexture2D->GetDesc(&desc);
+
+	// 너비와 높이 가져오기
+	*iWidth = desc.Width;
+	*iHeight = desc.Height;
+
+
+	// 리소스 해제
+	Safe_Release(pResource);
+
+	return S_OK;
 }
 
 CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strTextureFilePath, _uint iNumTextures)

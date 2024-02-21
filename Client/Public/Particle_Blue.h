@@ -16,7 +16,7 @@ class CParticle_Blue final : public CGameObject
 public:	
 	
 private:
-	CParticle_Blue(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CParticle_Blue(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CParticle_Blue(const CParticle_Blue& rhs);
 	virtual ~CParticle_Blue() = default;
 
@@ -40,12 +40,15 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CParticle_Blue* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CParticle_Blue* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
 
+	virtual CGameObject* Pool() override;
+
 	virtual void Free() override;
+
 };
 
 END

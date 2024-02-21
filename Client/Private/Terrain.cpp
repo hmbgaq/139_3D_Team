@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 
 
-CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -128,9 +128,9 @@ HRESULT CTerrain::Bind_ShaderResources()
 	return S_OK;
 }
 
-CTerrain * CTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CTerrain * CTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CTerrain*		pInstance = new CTerrain(pDevice, pContext);
+	CTerrain*		pInstance = new CTerrain(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -154,6 +154,11 @@ CGameObject * CTerrain::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CTerrain::Pool()
+{
+	return new CTerrain(*this);
+}
+
 void CTerrain::Free()
 {
 	__super::Free();
@@ -169,4 +174,6 @@ void CTerrain::Free()
 	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

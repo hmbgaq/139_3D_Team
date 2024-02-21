@@ -2,10 +2,10 @@
 #include "BackGround.h"
 #include "GameInstance.h"
 
-CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
-
+	m_bIsPoolObject = false;
 }
 
 CBackGround::CBackGround(const CBackGround & rhs)
@@ -96,9 +96,9 @@ HRESULT CBackGround::Bind_ShaderResources()
 	return S_OK;
 }
 
-CBackGround * CBackGround::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CBackGround * CBackGround::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CBackGround*		pInstance = new CBackGround(pDevice, pContext);
+	CBackGround*		pInstance = new CBackGround(pDevice, pContext, strPrototypeTag);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -120,6 +120,11 @@ CGameObject * CBackGround::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CBackGround::Pool()
+{
+	return new CBackGround(*this);
+}
+
 void CBackGround::Free()
 {
 	__super::Free();
@@ -128,4 +133,6 @@ void CBackGround::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pShaderCom);
 }
+
+
 

@@ -21,7 +21,7 @@ public:
 	}WEAPON_DESC;
 
 protected:
-	CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CWeapon(const CWeapon& rhs);
 	virtual ~CWeapon() = default;
 

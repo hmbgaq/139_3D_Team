@@ -2,8 +2,8 @@
 #include "Player_Weapon_Revolver.h"
 #include "GameInstance.h"
 
-CPlayer_Weapon_Revolver::CPlayer_Weapon_Revolver(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CWeapon_Player(pDevice, pContext)
+CPlayer_Weapon_Revolver::CPlayer_Weapon_Revolver(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CWeapon_Player(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -68,9 +68,9 @@ HRESULT CPlayer_Weapon_Revolver::Ready_Components()
 	return S_OK;
 }
 
-CPlayer_Weapon_Revolver* CPlayer_Weapon_Revolver::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPlayer_Weapon_Revolver* CPlayer_Weapon_Revolver::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CPlayer_Weapon_Revolver* pInstance = new CPlayer_Weapon_Revolver(pDevice, pContext);
+	CPlayer_Weapon_Revolver* pInstance = new CPlayer_Weapon_Revolver(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -92,6 +92,11 @@ CGameObject* CPlayer_Weapon_Revolver::Clone(void* pArg)
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+CGameObject* CPlayer_Weapon_Revolver::Pool()
+{
+	return nullptr;
 }
 
 void CPlayer_Weapon_Revolver::Free()

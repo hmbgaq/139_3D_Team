@@ -14,7 +14,7 @@ BEGIN(Client)
 class CPlayer final : public CCharacter, public IEvent
 {
 private:
-	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CPlayer(const CPlayer& rhs);
 	virtual ~CPlayer() = default;
 
@@ -43,14 +43,13 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 
 	virtual void Free() override;
-
-
 };
 
 END

@@ -293,6 +293,8 @@ HRESULT CLevel_GamePlay::Ready_UI()
 
 	FAILED_CHECK(Ready_Layer_UI_Player(TEXT("Layer_UI_Player"), nullptr));
 
+	FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
+	
 	return S_OK;
 }
 
@@ -308,7 +310,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 	string		strFileName;
 	string		strFilePath;
 	
-
 	CJson_Utility::Load_Json(filePath, json_in);
 
 	for (auto& item : json_in.items())
@@ -317,10 +318,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 
 		CUI::UI_DESC tUI_Info;
 
-		tUI_Info.fPositionX = object["PostionX"];
-		tUI_Info.fPositionY = object["PostionY"];
-		tUI_Info.fScaleX = object["SizeX"];
-		tUI_Info.fScaleY = object["SizeY"];
 		tUI_Info.strProtoTag = object["ProtoTag"];
 		tUI_Info.strFilePath = object["FilePath"];
 
@@ -330,7 +327,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 		wstring wstrFilePath;
 		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
 
-		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
+		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
+
+		pUI_Object->Get_Transform()->Load_FromJson(object);
 	}
 
 
@@ -342,6 +341,45 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI_Player(const wstring& strLayerTag, void* pArg)
 {
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
+{
+	json json_in;
+
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info.json";
+
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
+
+	CJson_Utility::Load_Json(filePath, json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		tUI_Info.strCloneTag = object["CloneTag"];
+		tUI_Info.strProtoTag = object["ProtoTag"];
+		tUI_Info.strFilePath = object["FilePath"];
+
+		wstring wstrCloneTag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrCloneTag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, wstrCloneTag, &tUI_Info));
+
+		pUI_Object->Get_Transform()->Load_FromJson(object);
+	}
+
 	return S_OK;
 }
 

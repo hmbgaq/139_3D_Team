@@ -5,8 +5,8 @@
 #include "Bone.h"
 
 
-CWeapon_Player::CWeapon_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CWeapon(pDevice, pContext)
+CWeapon_Player::CWeapon_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CWeapon(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -116,6 +116,11 @@ HRESULT CWeapon_Player::Bind_ShaderResources()
  	}
  	return pInstance;
  }
+
+CGameObject* CWeapon_Player::Pool()
+{
+	return new CWeapon_Player(*this);
+}
 
 void CWeapon_Player::Free()
 {

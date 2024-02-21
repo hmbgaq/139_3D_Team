@@ -15,7 +15,7 @@ BEGIN(Client)
 class CInteract_Chain  final : public CGameObject
 {
 private:
-	CInteract_Chain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CInteract_Chain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CInteract_Chain(const CInteract_Chain& rhs);
 	virtual ~CInteract_Chain() = default;
 
@@ -46,9 +46,13 @@ private:
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CInteract_Chain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CInteract_Chain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 	virtual void Free() override;
+
+	// CGameObject을(를) 통해 상속됨
+	
 };
 
 END

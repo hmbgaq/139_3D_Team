@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CObject_Manager;
+
 class CLayer final : public CBase
 {
 private:
@@ -21,6 +23,9 @@ public:
 
 public:
 	list<class CGameObject*>* Get_GameObjects() { return &m_GameObjects; };
+
+public:
+	void Set_ObjectManager(CObject_Manager* pObjectManager);
 
 public:
 	void Set_Speed(_float _fSpeed) {
@@ -41,8 +46,10 @@ private:
 	_float								m_fSpeed = {1.f};
 	_bool								m_bStop = { false };
 
+	CObject_Manager*					m_pObjectManager = { nullptr };
+
 public:
-	static CLayer* Create();
+	static CLayer* Create(CObject_Manager* pObjectManager);
 	virtual void Free() override;
 };
 

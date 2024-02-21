@@ -2,8 +2,8 @@
 #include "Player_Weapon_ELShotgun.h"
 #include "GameInstance.h"
 
-CPlayer_Weapon_ELShotgun::CPlayer_Weapon_ELShotgun(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CWeapon_Player(pDevice, pContext)
+CPlayer_Weapon_ELShotgun::CPlayer_Weapon_ELShotgun(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CWeapon_Player(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -68,9 +68,9 @@ HRESULT CPlayer_Weapon_ELShotgun::Ready_Components()
 	return S_OK;
 }
 
-CPlayer_Weapon_ELShotgun* CPlayer_Weapon_ELShotgun::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPlayer_Weapon_ELShotgun* CPlayer_Weapon_ELShotgun::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CPlayer_Weapon_ELShotgun* pInstance = new CPlayer_Weapon_ELShotgun(pDevice, pContext);
+	CPlayer_Weapon_ELShotgun* pInstance = new CPlayer_Weapon_ELShotgun(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))

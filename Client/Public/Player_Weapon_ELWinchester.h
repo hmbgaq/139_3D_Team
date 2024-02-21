@@ -8,7 +8,7 @@ BEGIN(Client)
 class CPlayer_Weapon_ELWinchester : public CWeapon_Player
 {
 private:
-	CPlayer_Weapon_ELWinchester(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CPlayer_Weapon_ELWinchester(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CPlayer_Weapon_ELWinchester(const CPlayer_Weapon_ELWinchester& rhs);
 	virtual ~CPlayer_Weapon_ELWinchester() = default;
 
@@ -24,7 +24,7 @@ public:
 protected:
 	virtual HRESULT Ready_Components();
 public:
-	static CPlayer_Weapon_ELWinchester* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CPlayer_Weapon_ELWinchester* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;

@@ -8,7 +8,7 @@ BEGIN(Client)
 class CPlayer_Weapon_Revolver : public CWeapon_Player
 {
 private:
-	CPlayer_Weapon_Revolver(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CPlayer_Weapon_Revolver(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CPlayer_Weapon_Revolver(const CPlayer_Weapon_Revolver& rhs);
 	virtual ~CPlayer_Weapon_Revolver() = default;
 
@@ -24,9 +24,12 @@ public:
 protected:
 	virtual HRESULT Ready_Components();
 public:
-	static CPlayer_Weapon_Revolver* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CPlayer_Weapon_Revolver* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	virtual CGameObject* Clone(void* pArg) override;
+
+	virtual CGameObject* Pool();
+
 	virtual void Free() override;
 };
 

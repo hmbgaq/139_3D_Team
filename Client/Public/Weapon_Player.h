@@ -11,7 +11,7 @@ BEGIN(Client)
 class CWeapon_Player : public CWeapon
 {
 protected:
-	CWeapon_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CWeapon_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CWeapon_Player(const CWeapon_Player& rhs);
 	virtual ~CWeapon_Player() = default;
 
@@ -34,6 +34,8 @@ public:
 	
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
+
+	virtual CGameObject* Pool();
 
 	virtual void Free() override;
 };

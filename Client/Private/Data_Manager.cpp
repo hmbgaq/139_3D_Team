@@ -3,6 +3,9 @@
 
 #include "GameInstance.h"
 
+#include "Player.h"
+#include "Camera_Dynamic.h"
+
 IMPLEMENT_SINGLETON(CData_Manager);
 
 CData_Manager::CData_Manager()
@@ -24,6 +27,97 @@ HRESULT CData_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pC
 
 	return S_OK;
 }
+
+void CData_Manager::Set_Player(CPlayer* _pPlayer)
+{
+	m_pPlayer = _pPlayer;
+}
+
+CPlayer* CData_Manager::Get_Player()
+{
+	return m_pPlayer;
+}
+
+void CData_Manager::Reset_Player(LEVEL eLEVEL)
+{
+	// Example
+	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
+
+	GameObjectDesc.fSpeedPerSec = 10.f;
+	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+	_float3 vPos = { 0.f, 0.f, 0.f };
+
+	switch (eLEVEL)
+	{
+	case Client::LEVEL_GAMEPLAY:
+		//vPos = { 0.f, 0.f, 0.f };
+		break;
+	case Client::LEVEL_SNOWMOUNTAIN:
+		//vPos = { 0.f, 0.f, 0.f };
+		break;
+	case Client::LEVEL_LAVA:
+		//vPos = { 0.f, 0.f, 0.f };
+		break;
+	case Client::LEVEL_TOOL:
+		//vPos = { 0.f, 0.f, 0.f };
+		break;
+	default:
+		break;
+	}
+
+	m_pPlayer->Initialize(&GameObjectDesc);
+	m_pPlayer->Set_Position(vPos);
+
+}
+
+void CData_Manager::Set_Camera_Dynamic(CCamera_Dynamic* _pCamera_Dynamic)
+{
+	m_pCamera_Dynamic = _pCamera_Dynamic;
+}
+
+CCamera_Dynamic* CData_Manager::Get_Camera_Dynamic()
+{
+	return m_pCamera_Dynamic;
+}
+
+void CData_Manager::Reset_Camera_Dynamic(LEVEL eLEVEL)
+{
+	CCamera_Dynamic::DYNAMIC_CAMERA_DESC tDesc = {};
+	tDesc.fMouseSensor = 0.05f;
+	tDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
+	tDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+	tDesc.fFovy = XMConvertToRadians(60.0f);
+	tDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	tDesc.fNear = 0.1f;
+	tDesc.fFar = m_pGameInstance->Get_CamFar();
+	tDesc.fSpeedPerSec = 5.f;
+	tDesc.fRotationPerSec = XMConvertToRadians(180.0f);
+
+	_float3 vPos = { 0.f, 0.f, 0.f };
+
+	switch (eLEVEL)
+	{
+	case Client::LEVEL_GAMEPLAY:
+		//vPos = { 0.f, 0.f, 0.f };
+		break;
+	case Client::LEVEL_SNOWMOUNTAIN:
+		//vPos = { 0.f, 0.f, 0.f };
+		break;
+	case Client::LEVEL_LAVA:
+		//vPos = { 0.f, 0.f, 0.f };
+		break;
+	case Client::LEVEL_TOOL:
+		//vPos = { 0.f, 0.f, 0.f };
+		break;
+	default:
+		break;
+	}
+
+	m_pCamera_Dynamic->Initialize(&tDesc);
+	m_pCamera_Dynamic->Set_Position(vPos);
+}
+
 
 
 void CData_Manager::Free()

@@ -2,8 +2,8 @@
 #include "Player_Weapon_Winchester.h"
 #include "GameInstance.h"
 
-CPlayer_Weapon_Winchester::CPlayer_Weapon_Winchester(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CWeapon_Player(pDevice, pContext)
+CPlayer_Weapon_Winchester::CPlayer_Weapon_Winchester(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CWeapon_Player(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -68,9 +68,9 @@ HRESULT CPlayer_Weapon_Winchester::Ready_Components()
 	return S_OK;
 }
 
-CPlayer_Weapon_Winchester* CPlayer_Weapon_Winchester::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPlayer_Weapon_Winchester* CPlayer_Weapon_Winchester::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CPlayer_Weapon_Winchester* pInstance = new CPlayer_Weapon_Winchester(pDevice, pContext);
+	CPlayer_Weapon_Winchester* pInstance = new CPlayer_Weapon_Winchester(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))

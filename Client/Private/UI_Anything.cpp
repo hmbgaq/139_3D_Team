@@ -3,8 +3,8 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
-CUI_Anything::CUI_Anything(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI(pDevice, pContext)
+CUI_Anything::CUI_Anything(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -38,18 +38,20 @@ HRESULT CUI_Anything::Initialize(void* pArg)
 
 void CUI_Anything::Priority_Tick(_float fTimeDelta)
 {
+
 }
 
 void CUI_Anything::Tick(_float fTimeDelta)
 {
-	Moving_Rect();
-	Picking_UI();
+
 }
 
 void CUI_Anything::Late_Tick(_float fTimeDelta)
 {
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
+
+	__super::Tick(fTimeDelta);
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(m_tUIInfo.eRenderGroup, this)))
 		return;
@@ -170,18 +172,7 @@ json CUI_Anything::Save_Desc(json& out_json)
 	fCurPosX = fCurPosX + (_float)g_iWinSizeX * 0.5f;
 	fCurPosY = (_float)g_iWinSizeY * 0.5f - fCurPosY;
 
-	//out_json["PostionX"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
-	//out_json["PostionY"] = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
-	//out_json["PostionX"] = fCurPosX;
-	//out_json["PostionY"] = fCurPosY;
-	//out_json["PostionX"] = fCurPosX;
-	//out_json["PostionY"] = fCurPosY;
-	//out_json["RotationX"] = ;
-	//out_json["RotationY"] = ;
-	//out_json["RotationZ"] = ;
-	//out_json["SizeX"]	 = m_pTransformCom->Get_Scaled().x;
-	//out_json["SizeY"]	 = m_pTransformCom->Get_Scaled().y;
-
+	out_json["CloneTag"] = m_tUIInfo.strCloneTag;
 
 	out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
 
@@ -197,9 +188,9 @@ void CUI_Anything::Load_Desc()
 
 }
 
-CUI_Anything* CUI_Anything::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Anything* CUI_Anything::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Anything* pInstance = new CUI_Anything(pDevice, pContext);
+	CUI_Anything* pInstance = new CUI_Anything(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -223,6 +214,11 @@ CGameObject* CUI_Anything::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CUI_Anything::Pool()
+{
+	return new CUI_Anything(*this);
+}
+
 void CUI_Anything::Free()
 {
 	__super::Free();
@@ -232,3 +228,5 @@ void CUI_Anything::Free()
 	Safe_Release(m_pTextureCom);
 
 }
+
+

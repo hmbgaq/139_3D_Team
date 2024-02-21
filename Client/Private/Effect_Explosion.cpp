@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 
 
-CEffect_Explosion::CEffect_Explosion(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CAlphaObject(pDevice, pContext)
+CEffect_Explosion::CEffect_Explosion(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CAlphaObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -61,7 +61,7 @@ void CEffect_Explosion::Late_Tick(_float fTimeDelta)
 	Compute_CamDistance();
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, this)))
-		return ;
+		return;
 }
 
 HRESULT CEffect_Explosion::Render()
@@ -119,9 +119,9 @@ HRESULT CEffect_Explosion::Bind_ShaderResources()
 	return S_OK;
 }
 
-CEffect_Explosion * CEffect_Explosion::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CEffect_Explosion * CEffect_Explosion::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CEffect_Explosion*		pInstance = new CEffect_Explosion(pDevice, pContext);
+	CEffect_Explosion*		pInstance = new CEffect_Explosion(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -145,6 +145,11 @@ CGameObject * CEffect_Explosion::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CEffect_Explosion::Pool()
+{
+	return new CEffect_Explosion(*this);
+}
+
 void CEffect_Explosion::Free()
 {
 	__super::Free();
@@ -153,4 +158,6 @@ void CEffect_Explosion::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pShaderCom);
 }
+
+
 
