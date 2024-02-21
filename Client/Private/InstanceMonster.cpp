@@ -86,16 +86,7 @@ void CInstanceMonster::Late_Tick(_float fTimeDelta)
 
 HRESULT CInstanceMonster::Render()
 {
-	/*_uint iIndex = 0;
 
-		
-	for (_int j = 0; j < m_iNumInstance; ++j)
-	{
-		Add_InstanceData(m_iNumInstance, iIndex);
-	}
-	*/
-
-	//Ready_Render(m_iNumInstance);
 	Render_Instance(m_iNumInstance);
 		
 	
@@ -187,7 +178,6 @@ HRESULT CInstanceMonster::Render_Instance(_uint iSize)
 		
 		_uint iIndex = 0;
 
-
 		for (_int j = 0; j < m_iNumInstance; ++j)
 		{
 			Add_InstanceData(m_iNumInstance, iIndex, m_fReturnMatrix);
@@ -197,7 +187,6 @@ HRESULT CInstanceMonster::Render_Instance(_uint iSize)
 
 		if(FAILED(m_pShaderCom->Bind_SRV("g_InstanceTransform", m_tInstanceDesc.pInstanceSRV)))
 			return E_FAIL;
-
 
 
 		if(FAILED(m_pShaderCom->Begin(m_iRenderPass)))
@@ -467,9 +456,6 @@ void CInstanceMonster::Add_InstanceData(_uint iSize, _uint& iIndex, _float4x4* C
 		size_t iSizePerInstance = iBoneSize * sizeof(_float4x4);
 		_uint iDataIndex = iIndex * iBoneSize;
 
-
-		
-
 		// 위치 성분 설정
 		for (_int i = 0; i < 800; ++i)
 		{
@@ -477,7 +463,6 @@ void CInstanceMonster::Add_InstanceData(_uint iSize, _uint& iIndex, _float4x4* C
 			
 		}
 		
-
 		memcpy(pAnimInstanceValue + iDataIndex, m_fReturnMatrix, iSizePerInstance);
 	}
 

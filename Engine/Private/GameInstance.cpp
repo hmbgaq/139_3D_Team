@@ -11,6 +11,8 @@
 #include "Input_Device.h"
 #include "Font_Manager.h"
 #include "PhysX_Manager.h"
+#include "RandomManager.h"
+
 #include "Renderer.h"
 #include "Frustum.h"
 #include "Mesh.h"
@@ -88,6 +90,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 	//TODO: 레벨 확인헤야
 	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, iNumLayer);
 	if (nullptr == m_pPhysX_Manager)
+		return E_FAIL;
+
+	m_pRandom_Manager = CRandom_Manager::Create();
+	if(nullptr == m_pRandom_Manager)
 		return E_FAIL;
 
 
@@ -798,6 +804,27 @@ void CGameInstance::Create_Controller(const PxCapsuleControllerDesc& In_Controll
 	m_pPhysX_Manager->Create_Controller(In_ControllerDesc, ppOut);
 }
 
+const _float& CGameInstance::Random_Float(_float fMin, _float fMax)
+{
+	return m_pRandom_Manager->Random_Float(fMin, fMax);
+	
+}
+
+const _int& CGameInstance::Random_Int(_int iMin, _int iMax)
+{
+	return m_pRandom_Manager->Random_Int(iMin, iMax);
+}
+
+const _bool& CGameInstance::Random_Coin(_float fProbality)
+{
+	return m_pRandom_Manager->Random_Coin(fProbality);
+}
+
+int64_t CGameInstance::GenerateUniqueID()
+{
+	return m_pRandom_Manager->GenerateUniqueID();
+}
+
 
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
 {
@@ -996,6 +1023,7 @@ wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 
 
 void CGameInstance::Release_Manager()
 {
+	Safe_Release(m_pRandom_Manager);
 	Safe_Release(m_pPhysX_Manager);
 	Safe_Release(m_pEvent_Manager);
 	Safe_Release(m_pCollision_Manager);

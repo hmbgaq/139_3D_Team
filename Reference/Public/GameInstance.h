@@ -159,6 +159,11 @@ public: /* For.PhysX_Manager */
 	void					Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshDesc, PxTriangleMesh** ppOut);
 	void					Create_Controller(const PxCapsuleControllerDesc& In_ControllerDesc, PxController** ppOut);
 
+public: /* For.Random_Manager*/
+	const _float&			Random_Float(_float fMin, _float fMax);
+	const _int&				Random_Int(_int iMin, _int iMax);
+	const _bool&			Random_Coin(_float fProbality);
+	int64_t					GenerateUniqueID();
 
 
 
@@ -212,6 +217,7 @@ private:
 	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
 	class CEvent_Manager*			m_pEvent_Manager = { nullptr };
 	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
+	class CRandom_Manager*			m_pRandom_Manager = { nullptr };
 
 
 public:
