@@ -144,6 +144,16 @@ void CWindow_AnimTool::Add_RandomSoundKeyEvent()
 {
 }
 
+HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
+{
+	return E_NOTIMPL;
+}
+
 void CWindow_AnimTool::Save_KeyEvent()
 {
 }

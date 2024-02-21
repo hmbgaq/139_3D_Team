@@ -47,6 +47,9 @@ private:
 	void			Add_SoundKeyEvent();
 	void			Add_RandomSoundKeyEvent();
 
+	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
+	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
+
 	void			Save_KeyEvent();
 	HRESULT			Load_KeyEvent();
 	void			Clear_KeyEvent();
