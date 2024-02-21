@@ -66,6 +66,7 @@ HRESULT CTarget_Manager::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencil
 	list<CRenderTarget*>*	pMRTList = Find_MRT(strMRTTag);
 	if (nullptr == pMRTList)
 		return E_FAIL;
+
 	ID3D11RenderTargetView*		pRTVs[8];
 
 	_uint		iNumRTVs = { 0 };

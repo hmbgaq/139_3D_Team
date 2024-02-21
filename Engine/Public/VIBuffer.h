@@ -45,6 +45,10 @@ protected:
 
 	_float3*					m_pVerticesPos = { nullptr };
 
+	_uint						m_iNumPrimitives = 0;
+	_uint						m_iNumIndicesofPrimitive = 0;
+	_uint						m_iIndexSizeofPrimitive = 0;
+
 public:
 	virtual CComponent* Clone(void* pArg) = 0;
 	virtual void Free() override;

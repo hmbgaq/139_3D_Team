@@ -274,10 +274,9 @@ HRESULT CRenderer::Draw_RenderGroup()
 	{ /* PostProcessing */
 		if (true == m_bSSAO_Active)
 		{
-			FAILED_CHECK(Render_SSAO());
+			FAILED_CHECK((Render_HBAO_Plus()));
+			//Render_SSAO
 		}
-		else
-			FAILED_CHECK(Render_HBAO_Plus());
 
 		if (true == m_bBloom_Active)
 		{
@@ -497,22 +496,15 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Shade"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_ShadeTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SpecularTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_LightDepthTexture"));
-	//FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_ORM"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-
+	
 	/* Post Processing */
 	{
-		if (true == m_bPBR_Active) /* 임시로 둘다 안하도록 막는용도로함 */
+		//Target_HBAO
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bSSAO_Active", &m_bSSAO_Active, sizeof(_bool)));
+		if (true == m_bSSAO_Active)
 		{
-			FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bSSAO_Active", &m_bSSAO_Active, sizeof(_bool)));
-			if (true == m_bSSAO_Active)
-			{
-				//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture"));
-				FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao 추가 */
-			}
-			else
-			{
-				FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture"));
-			}
+			//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture"));
+			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao 추가 */
 		}
 
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bBloom_Active", &m_bBloom_Active, sizeof(_bool)));
@@ -567,19 +559,18 @@ HRESULT CRenderer::Render_SSAO()
 		 * 이 값들을 샘플링하여 각 픽셀의 폐색값을 계산해 디퍼드 셰이더효과에서 폐색값ㅇ르 샘플링하여 조명계산에서 주변항목을 수정할 수 있도록한다. */
 
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO"))); /* Target SSAO 단독 -> Blur 연계해야함 */
-
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
-
 	/* 변수 올리기 */
 	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
 		/* matViewToTEXsPACE*/
 		_matrix P = m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ);
 		_matrix PT = XMMatrixMultiply(P, m_mTexture);
 		_float4x4 ViewToTexSpcace = {};
 		XMStoreFloat4x4(&ViewToTexSpcace, PT);
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("ViewToTexSpcace", &ViewToTexSpcace));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("ViewToTexSpcace", &ViewToTexSpcace)); /* matViewToTexSpace */
 
 		/* Offset */
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_OffsetVector", &m_vOffsets, sizeof(_float4) * 14));
@@ -596,13 +587,9 @@ HRESULT CRenderer::Render_SSAO()
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(SSAO_SHADER::SSAO)));
 	
-	//FAILED_CHECK(RenderScreenQuad());
-
 	FAILED_CHECK(m_pSSAO_VIBuffer->Render());
-	/* 	m_pContext->DrawIndexed(m_iNumIndices, 0, 0); */
-	FAILED_CHECK(m_pGameInstance->End_MRT());
 
-	Render_Blur(L"Target_SSAO", L"MRT_SSAO_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER), ECast(BLUR_SHADER::BLUR_UP_ADD));
+	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
@@ -729,22 +716,18 @@ HRESULT CRenderer::Render_DebugOnOff()
 {
 	if (m_pGameInstance->Key_Down(DIK_GRAVE))
 	{
-		if (true == m_bPBR_Active)
-		{
-			if (true == m_bSSAO_Active)
-				cout << "SSAO : true " << endl;
-			else
-				cout << "HBAO+ : true " << endl;
-		}
+		if (true == m_bSSAO_Active)
+			cout << "SSAO : true " << endl;
 		else
-		{
-			cout << " NO SSAO HOB+ " << endl;
+			cout << "SSAO+ : false " << endl;
+	
+		/* --------------------------------- */
 
-		}
 		if (true == m_bBloom_Active)
 			cout << "BloomBlur : true " << endl;
 		else
 			cout << "BloomBlur : false " << endl;
+
 		/* --------------------------------- */
 		cout << "OutLine : Test중 " << endl;
 
@@ -805,17 +788,16 @@ HRESULT CRenderer::Render_Debug()
 
 HRESULT CRenderer::Ready_SSAO()
 {
-	/* ssao 객체 생성 
-		: SSAO 개체를 만들려면 Direct3D 장치, DeviceContext, 화면 크기, 카메라 fov 및 카메라 원거리 평면 거리를 전달해야한다. */
-	BuildOffsetVectors();
+	/* ssao 객체 생성 : SSAO 개체를 만들려면 Direct3D 장치, DeviceContext, 화면 크기, 카메라 fov 및 카메라 원거리 평면 거리를 전달해야한다. */
+	BuildOffsetVectors(); /* m_vOffsets 만들기 */
 
-	FAILED_CHECK(SSAO_OnSize());
+	FAILED_CHECK(SSAO_OnSize()); /* 카메라 투영 역행렬 가져와서 m_vFrustumFarCorner 만들기 */
 
-	FAILED_CHECK(BuildFullScreenQuad()); /* 이걸 버퍼로 ? */
+	//FAILED_CHECK(BuildFullScreenQuad()); /* 이걸 버퍼로 ? */
 
 	//BuildRandomVectorTexture();
 
-	m_pRandomVectorTexture = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/RandomNormalTexture.jpg"), 1);
+	CTexture* m_pRandomVectorTexture = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/RandomNormalTexture.jpg"), 1);
 	NULL_CHECK_RETURN(m_pRandomVectorTexture, E_FAIL);
 
 	m_pRandomSRV = m_pRandomVectorTexture->Get_SRV();
@@ -926,54 +908,7 @@ void CRenderer::BuildOffsetVectors()
 	// 항상 다른 쪽 면을 기준으로 이 점을 번갈아 사용한다. -> 정육면체 반대쪽도 균등하게 가능 
 	// 14개 미만의 샘플링 포인트를 선택할 때에도 벡터를 균등하게 분산시킬 수 있다.
 
-	//{
-	//	// 8개의 큐브 코너 벡터
-	//	m_vOffsets[0] = _float4(+1.0f, +1.0f, +1.0f, 0.0f);
-	//	m_vOffsets[1] = _float4(-1.0f, -1.0f, -1.0f, 0.0f);
-	//					
-	//	m_vOffsets[2] = _float4(-1.0f, +1.0f, +1.0f, 0.0f);
-	//	m_vOffsets[3] = _float4(+1.0f, -1.0f, -1.0f, 0.0f);
-	//					
-	//	m_vOffsets[4] = _float4(+1.0f, +1.0f, -1.0f, 0.0f);
-	//	m_vOffsets[5] = _float4(-1.0f, -1.0f, +1.0f, 0.0f);
-	//					
-	//	m_vOffsets[6] = _float4(-1.0f, +1.0f, -1.0f, 0.0f);
-	//	m_vOffsets[7] = _float4(+1.0f, -1.0f, +1.0f, 0.0f);
-	//}
-
-	//{
-	//	// 6개의 표면 중심점 벡터
-	//	m_vOffsets[8]	= _float4(-1.0f, 0.0f, 0.0f, 0.0f);
-	//	m_vOffsets[9]	= _float4(+1.0f, 0.0f, 0.0f, 0.0f);
-	//					  
-	//	m_vOffsets[10]	= _float4(0.0f, -1.0f, 0.0f, 0.0f);
-	//	m_vOffsets[11]	= _float4(0.0f, +1.0f, 0.0f, 0.0f);
-	//					  
-	//	m_vOffsets[12]	= _float4(0.0f, 0.0f, -1.0f, 0.0f);
-	//	m_vOffsets[13]	= _float4(0.0f, 0.0f, +1.0f, 0.0f);
-	//}					  
-	//					  
-	//{					  
-	//	m_vOffsets[14]	= _float4(-1.0f, 1.0f, 0.0f, 0.0f);
-	//	m_vOffsets[15]	= _float4(1.0f, 1.0f, 0.0f, 0.0f);
-	//	m_vOffsets[16]	= _float4(0.0f, 1.0f, -1.0f, 0.0f);
-	//	m_vOffsets[17]	= _float4(0.0f, 1.0f, 1.0f, 0.0f);
-	//}
-
-	//{
-	//	m_vOffsets[18] = _float4(1.0f, 0.0f, 1.0f, 0.0f);
-	//	m_vOffsets[19] = _float4(-1.0f, 0.0f, 1.0f, 0.0f);
-	//	m_vOffsets[20] = _float4(-1.0f, 0.0f, -1.0f, 0.0f);
-	//	m_vOffsets[21] = _float4(1.0f, 0.0f, -1.0f, 0.0f);
-	//}
-
-	//{
-	//	m_vOffsets[22] = _float4(-1.0f, -1.0f, 0.0f, 0.0f);
-	//	m_vOffsets[23] = _float4(1.0f, -1.0f, 0.0f, 0.0f);
-	//	m_vOffsets[24] = _float4(0.0f, -1.0f, -1.0f, 0.0f);
-	//	m_vOffsets[25] = _float4(0.0f, -1.0f, 1.0f, 0.0f);
-	//}
-
+	// 8 corner  offsets
 	m_vOffsets[0]  = _float4(+1.0f, +1.0f, +1.0f, 0.0f);
 	m_vOffsets[1]  = _float4(-1.0f, -1.0f, -1.0f, 0.0f);
 				   	 
@@ -1000,14 +935,14 @@ void CRenderer::BuildOffsetVectors()
 	//mt19937 randEngine;
 	//randEngine.seed(std::random_device()());
 	//uniform_real_distribution<_float> randF(0.25f, 1.0f);
-	for (_uint i = 0; i < 26; ++i)
+	for (_uint i = 0; i < 14; ++i)
 	{
 		// [0.25, 1.0] 사이의 임의의 벡터를 만든다.
 		_float fRandom = SMath::fRandom(0.25f, 1.0f);
 
 		_vector v = fRandom * XMVector4Normalize(XMLoadFloat4(&m_vOffsets[i]));
 		
-		m_vOffsets[i] = v;
+		XMStoreFloat4(&m_vOffsets[i], v);
 	}
 }
 
@@ -1187,10 +1122,15 @@ HRESULT CRenderer::Pre_Setting()
 
 	if (m_pGameInstance->Key_Down(DIK_1)) /* 임시로 SSAO 랑 HBAO 둘다 끄는용도 */
 		m_bPBR_Active = !m_bPBR_Active;
+
+	/* -------------- 실전라인 -------------- */
+
 	if (m_pGameInstance->Key_Down(DIK_2))
 		m_bSSAO_Active = !m_bSSAO_Active;
+
 	if (m_pGameInstance->Key_Down(DIK_3))
 		m_bBloom_Active = !m_bBloom_Active;
+
 	if (m_pGameInstance->Key_Down(DIK_4))
 		m_bOutline_Active = !m_bOutline_Active;
 	
@@ -1239,12 +1179,13 @@ void CRenderer::Free()
 		Safe_Release(m_pShader[i]);
 
 	/* ssao 해제 */
-	Safe_Release(m_pRandomVectorTexture);
 	Safe_Release(m_pRandomSRV);
-	Safe_Release(m_ScreenQuadVB);
-	Safe_Release(m_ScreenQuadIB);
+	//Safe_Release(m_ScreenQuadVB);
+	//Safe_Release(m_ScreenQuadIB);
 
 	Safe_Release(m_pLightDepthDSV);
+	Safe_Release(m_pSSAO_VIBuffer);
+	Safe_Release(m_pVIBuffer);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 }

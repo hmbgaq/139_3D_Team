@@ -19,6 +19,9 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	, m_eIndexFormat(rhs.m_eIndexFormat)
 	, m_eTopology(rhs.m_eTopology)
 	, m_pVerticesPos(rhs.m_pVerticesPos)
+	, m_iNumPrimitives(rhs.m_iNumPrimitives)
+	, m_iNumIndicesofPrimitive(rhs.m_iNumIndicesofPrimitive)
+	, m_iIndexSizeofPrimitive(rhs.m_iIndexSizeofPrimitive)
 {
 	Safe_AddRef(m_pVB);
 	Safe_AddRef(m_pIB);
@@ -36,8 +39,11 @@ HRESULT CVIBuffer::Initialize(void * pArg)
 
 HRESULT CVIBuffer::Render()
 {
-	/* m_iNumIndices = m_iNumPrimitives * m_iNumIndicesofPrimitive */
-	m_pContext->DrawIndexed(m_iNumIndices, 0, 0);
+	/* m_iNumIndices = */
+	if(m_iNumIndicesofPrimitive != 0)
+		m_pContext->DrawIndexed(m_iNumPrimitives * m_iNumIndicesofPrimitive, 0, 0);
+	else
+		m_pContext->DrawIndexed(m_iNumIndices, 0, 0);
 
 	return S_OK;
 }

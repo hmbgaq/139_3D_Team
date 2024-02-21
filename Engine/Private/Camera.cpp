@@ -1,6 +1,5 @@
-#include "..\Public\Camera.h"
+#include "Camera.h"
 #include "Transform.h"
-
 #include "GameInstance.h"
 
 CCamera::CCamera(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

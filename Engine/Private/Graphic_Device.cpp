@@ -78,9 +78,7 @@ HRESULT CGraphic_Device::Initialize(const GRAPHIC_DESC& GraphicDesc, ID3D11Devic
 
 	GFSDK_SSAO_Status status;
 	status = GFSDK_SSAO_CreateContext_D3D11(m_pDevice, &m_pAOContext, &CustomHeap);
-	if (GFSDK_SSAO_OK != status)
-		return E_FAIL;
-	//assert(status == GFSDK_SSAO_OK); // HBAO+ requires feature level 11_0 or above
+	assert(status == GFSDK_SSAO_OK); // HBAO+ requires feature level 11_0 or above
 
 	*ppDeviceOut = m_pDevice;
 	*ppDeviceContextOut = m_pDeviceContext;
@@ -169,7 +167,6 @@ HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMo
 	if (FAILED(pFactory->CreateSwapChain(m_pDevice, &SwapChain, &m_pSwapChain)))
 		return E_FAIL;
 
-
 	Safe_Release(pFactory);
 	Safe_Release(pAdapter);
 	Safe_Release(pDevice);
@@ -252,10 +249,8 @@ HRESULT CGraphic_Device::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint 
 
 	FAILED_CHECK(m_pDevice->CreateShaderResourceView(m_pDepthStencilTexture, &shaderResourceViewDesc, &m_pDepthStencilSRV))
 
-
 	/* 이하 = 수업코드 */
 	//FAILED_CHECK(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pDepthStencilView));
-
 	//Safe_Release(pDepthStencilTexture);
 
 	return S_OK;

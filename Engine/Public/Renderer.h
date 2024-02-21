@@ -112,7 +112,7 @@ private:
 
 	/* 활성 제어 */
 private:
-	_bool						m_bSSAO_Active			= { true };
+	_bool						m_bSSAO_Active			= { false };
 	_bool						m_bBloom_Active			= { true };
 	_bool						m_bOutline_Active		= { true };
 	_bool						m_bPBR_Active			= { true };
@@ -125,7 +125,6 @@ public:
 
 private:
 	/* SSAO */
-	class CTexture*				m_pRandomVectorTexture = { nullptr };
 	ID3D11Buffer*				m_ScreenQuadVB = { nullptr };
 	ID3D11Buffer*				m_ScreenQuadIB = { nullptr };
 	ID3D11ShaderResourceView*	m_pRandomSRV = nullptr;

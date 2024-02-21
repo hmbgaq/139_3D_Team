@@ -7,7 +7,6 @@ CVIBuffer_SSAO::CVIBuffer_SSAO(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 CVIBuffer_SSAO::CVIBuffer_SSAO(const CVIBuffer_SSAO& rhs)
 	: CVIBuffer(rhs)
-
 {
 }
 
@@ -17,7 +16,6 @@ HRESULT CVIBuffer_SSAO::Initialize_Prototype()
 	m_iNumVertexBuffers = 1;
 	m_iNumVertices = 4;
 	m_iStride = sizeof(VTXNORTEX);
-
 
 #pragma region VERTEX_BUFFER
 	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
@@ -61,14 +59,13 @@ HRESULT CVIBuffer_SSAO::Initialize_Prototype()
 #pragma endregion
 
 #pragma region INDEX_BUFFER
-
 	m_iNumPrimitives = 2;
 	m_iIndexSizeofPrimitive = sizeof(FACEINDICES16);
 	m_iNumIndicesofPrimitive = 3;
-
-	m_iIndexStride = sizeof(FACEINDICES16);
 	m_eIndexFormat = DXGI_FORMAT_R16_UINT;
 	m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	m_iIndexStride = sizeof(FACEINDICES16);
 	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
 	m_BufferDesc.ByteWidth = m_iNumPrimitives * m_iIndexSizeofPrimitive;
 	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT /*D3D11_USAGE_DYNAMIC*/;
