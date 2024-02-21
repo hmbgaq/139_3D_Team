@@ -75,8 +75,9 @@ HRESULT CRenderer::Create_Shader()
 
 	m_pShader[SHADER_TYPE::SHADER_FXAA] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Fxaa3_11.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
 	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_FXAA], E_FAIL);
-	//m_pShader[SHADER_TYPE::SHADER_FINAL] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Final.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
-	//NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_FINAL], E_FAIL);
+
+	m_pShader[SHADER_TYPE::SHADER_FINAL] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Final.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
+	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_FINAL], E_FAIL);
 
 	/* pbr + ibl 같이 들어가야함 */
 	return S_OK;
@@ -289,11 +290,15 @@ HRESULT CRenderer::Draw_RenderGroup()
 		}
 	}
 
-	FAILED_CHECK(Render_Deferred());
-	FAILED_CHECK(Render_OutLineGroup());	/* Render_Group */
+	FAILED_CHECK(Render_Deferred()); /* PrePostProcess*/
 
-	//FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 후처리 */ 
+	FAILED_CHECK(Render_PostProcess()); /* 모션블러, Radial 블러 등등 */
+
+	FAILED_CHECK(Render_Final()); /* 모션블러, Radial 블러 등등 */
+
 	
+	/* 그려진 장면에 그리기 */
+	FAILED_CHECK(Render_OutLineGroup());	/* Render_Group */
 	FAILED_CHECK(Render_Blend());
 	FAILED_CHECK(Render_UI());
 
@@ -473,6 +478,9 @@ HRESULT CRenderer::Render_LightAcc()
 HRESULT CRenderer::Render_Deferred()
 {
 	/* 디퍼드에 의한 최종장면 */
+
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_PrePostProcessScene")));
+
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
@@ -524,6 +532,8 @@ HRESULT CRenderer::Render_Deferred()
 	m_pVIBuffer->Bind_VIBuffers();
 
 	m_pVIBuffer->Render();
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
@@ -676,6 +686,14 @@ HRESULT CRenderer::Render_RadialBlur()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_PostProcess()
+{
+	if(true == m_bTest_Active)
+		FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_FXAA()
 {
 	/* MSAA와 비교하여 FXAA의 목표는 더 빠르고 메모리 점유율이 더 낮으며, 픽셀이 흐릿해지는 현상이 일어나지 않는다.
@@ -692,7 +710,8 @@ HRESULT CRenderer::Render_FXAA()
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_RawValue("g_bFxaa", &m_bFXAA_Active, sizeof(_bool)));
 	}
 
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_FXAA"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
+	/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Begin(0));
 
@@ -746,6 +765,11 @@ HRESULT CRenderer::Render_DebugOnOff()
 	}
 
 	return S_OK;
+}
+
+HRESULT CRenderer::Render_Final()
+{
+	return E_NOTIMPL;
 }
 
 HRESULT CRenderer::Render_OutLineGroup()
@@ -1144,6 +1168,9 @@ HRESULT CRenderer::Pre_Setting()
 
 	if (m_pGameInstance->Key_Down(DIK_4))
 		m_bOutline_Active = !m_bOutline_Active;
+
+	if (m_pGameInstance->Key_Down(DIK_5))
+		m_bTest_Active = !m_bTest_Active;
 	
 	Render_DebugOnOff();
 #pragma endregion

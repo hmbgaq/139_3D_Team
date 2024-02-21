@@ -98,6 +98,7 @@ private:
 
 	HRESULT Render_RadialBlur();
 
+	HRESULT Render_PostProcess();
 	HRESULT Render_FXAA();
 
 	HRESULT Render_GodRay();
@@ -117,6 +118,7 @@ private:
 	_bool						m_bOutline_Active		= { true };
 	_bool						m_bPBR_Active			= { true };
 	_bool						m_bFXAA_Active			= { true };
+	_bool						m_bTest_Active			= { false };
 
 public:
 	void Set_SSAO(_bool _ssao_active)		{ m_bSSAO_Active = _ssao_active; } /* 외곽선 옵션조절 */
