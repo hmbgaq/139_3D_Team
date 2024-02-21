@@ -13,19 +13,23 @@ private:
 	CPhysXManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CPhysXManager() = default;
 
-public:
-	void	Register_PhysXCollider(CPhysXCollider* pPhysXCollider);
-	CPhysXCollider*	Find_PhysXCollider(const _uint iPhysXColliderIndex);
-
-	void	Register_PhysXController(CPhysXController* pPhysXController);
-	CPhysXController*	Find_PhysXController(const _uint iPhysXControllerIndex);
 
 
 public:
 	HRESULT	Initialize(const _uint In_iNumLayer);
 	void	Tick(_float fTimeDelta);
 
+private:
+	void	Garbage_Collector();
+
+
 public:
+	void	Register_PhysXCollider(CPhysXCollider* pPhysXCollider);
+	CPhysXCollider* Find_PhysXCollider(const _uint iPhysXColliderIndex);
+
+	void	Register_PhysXController(CPhysXController* pPhysXController);
+	CPhysXController* Find_PhysXController(const _uint iPhysXControllerIndex);
+
 	void			Check_PhysXFilterGroup(const _uint In_iLeftLayer, const _uint In_iRightLayer);
 	_uint			Get_PhysXFilterGroup(const _uint In_iIndex);
 
@@ -42,8 +46,7 @@ public:
 
 
 
-private:
-	void	Garbage_Collector();
+
 
 
 private:

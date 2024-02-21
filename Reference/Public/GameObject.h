@@ -65,6 +65,7 @@ public:
 
 public:
 	const wstring& Get_ProtoTypeTag() { return m_strPrototypeTag; };
+
 	_bool Is_PoolObject() { return m_bIsPoolObject; };
 
 

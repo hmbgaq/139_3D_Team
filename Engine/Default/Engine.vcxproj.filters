@@ -277,6 +277,9 @@
     <Filter Include="01.Utility\04.PipeLine\05.Fonts\Manager">
       <UniqueIdentifier>{931ef747-b5f1-46b3-b320-a2b577a64f71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\97.PhysX\SimulationEventCallback">
+      <UniqueIdentifier>{00dfac4a-a117-4698-8343-24af8286ae4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -489,7 +492,7 @@
     <ClInclude Include="..\Public\VIBuffer_Effect_Model_Instance.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PhysXManager.h">
+    <ClInclude Include="..\Public\PhysX_Manager.h">
       <Filter>01.Utility\97.PhysX</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Character.h">
@@ -563,6 +566,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\PhysXController.h">
       <Filter>01.Utility\97.PhysX\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CollisionSimulationEventCallBack.h">
+      <Filter>01.Utility\97.PhysX\SimulationEventCallback</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -725,7 +731,7 @@
     <ClCompile Include="..\Private\VIBuffer_Effect_Model_Instance.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Model_Instance\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PhysXManager.cpp">
+    <ClCompile Include="..\Private\PhysX_Manager.cpp">
       <Filter>01.Utility\97.PhysX</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon.cpp">
@@ -787,6 +793,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PhysXController.cpp">
       <Filter>01.Utility\97.PhysX\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CollisionSimulationEventCallBack.cpp">
+      <Filter>01.Utility\97.PhysX\SimulationEventCallback</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,10 +1,10 @@
-#include "..\Public\PhysXManager.h"
+#include "..\Public\PhysX_Manager.h"
 
 #include "PhysXCollider.h"
 #include "PhysXController.h"
 
 
-CPhysXManager::CPhysXManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPhysX_Manager::CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
 {
@@ -12,12 +12,12 @@ CPhysXManager::CPhysXManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	Safe_AddRef(m_pContext);
 }
 
-void CPhysXManager::Register_PhysXCollider(CPhysXCollider* pPhysXCollider)
+void CPhysX_Manager::Register_PhysXCollider(CPhysXCollider* pPhysXCollider)
 {
 	m_pPhysXCollders.emplace(pPhysXCollider->Get_PColliderIndex(), pPhysXCollider);
 }
 
-CPhysXCollider* CPhysXManager::Find_PhysXCollider(const _uint iPhysXColliderIndex)
+CPhysXCollider* CPhysX_Manager::Find_PhysXCollider(const _uint iPhysXColliderIndex)
 {
 	auto iter = m_pPhysXCollders.find(iPhysXColliderIndex);
 
@@ -29,12 +29,12 @@ CPhysXCollider* CPhysXManager::Find_PhysXCollider(const _uint iPhysXColliderInde
 	return nullptr;
 }
 
-void CPhysXManager::Register_PhysXController(CPhysXController* pPhysXController)
+void CPhysX_Manager::Register_PhysXController(CPhysXController* pPhysXController)
 {
 	m_pPhysXControllers.emplace(pPhysXController->Get_PControllerIndex(), pPhysXController);
 }
 
-CPhysXController* CPhysXManager::Find_PhysXController(const _uint iPhysXControllerIndex)
+CPhysXController* CPhysX_Manager::Find_PhysXController(const _uint iPhysXControllerIndex)
 {
 	auto iter = m_pPhysXControllers.find(iPhysXControllerIndex);
 
@@ -46,7 +46,7 @@ CPhysXController* CPhysXManager::Find_PhysXController(const _uint iPhysXControll
 	return nullptr;
 }
 
-HRESULT CPhysXManager::Initialize(const _uint In_iNumLayer)
+HRESULT CPhysX_Manager::Initialize(const _uint In_iNumLayer)
 {
 	m_arrCheck.reserve(In_iNumLayer);
 
@@ -81,7 +81,7 @@ HRESULT CPhysXManager::Initialize(const _uint In_iNumLayer)
 	return S_OK;
 }
 
-void CPhysXManager::Tick(_float fTimeDelta)
+void CPhysX_Manager::Tick(_float fTimeDelta)
 {
 	if (m_fTimeAcc > 1.f)
 	{
@@ -108,7 +108,7 @@ void CPhysXManager::Tick(_float fTimeDelta)
 
 }
 
-void CPhysXManager::Check_PhysXFilterGroup(const _uint In_iLeftLayer, const _uint In_iRightLayer)
+void CPhysX_Manager::Check_PhysXFilterGroup(const _uint In_iLeftLayer, const _uint In_iRightLayer)
 {
 	_uint iRow = (_uint)In_iLeftLayer;
 	_uint iCol = (_uint)In_iRightLayer; 
@@ -136,32 +136,32 @@ void CPhysXManager::Check_PhysXFilterGroup(const _uint In_iLeftLayer, const _uin
 	}
 }
 
-_uint CPhysXManager::Get_PhysXFilterGroup(const _uint In_iIndex)
+_uint CPhysX_Manager::Get_PhysXFilterGroup(const _uint In_iIndex)
 {
 	return m_arrCheck[In_iIndex];
 }
 
-PxRigidDynamic* CPhysXManager::Create_DynamicActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial)
+PxRigidDynamic* CPhysX_Manager::Create_DynamicActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial)
 {
 	return PxCreateDynamic(*m_pPhysics, transform, geometry, *pMaterial, 10.f);
 }
 
-PxRigidDynamic* CPhysXManager::Create_DynamicActor(const PxTransform& transform)
+PxRigidDynamic* CPhysX_Manager::Create_DynamicActor(const PxTransform& transform)
 {
 	return m_pPhysics->createRigidDynamic(transform);
 }
 
-PxRigidStatic* CPhysXManager::Create_StaticActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial)
+PxRigidStatic* CPhysX_Manager::Create_StaticActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial)
 {
 	return PxCreateStatic(*m_pPhysics, transform, geometry, *pMaterial);
 }
 
-PxRigidStatic* CPhysXManager::Create_StaticActor(const PxTransform& transform)
+PxRigidStatic* CPhysX_Manager::Create_StaticActor(const PxTransform& transform)
 {
 	return m_pPhysics->createRigidStatic(transform);
 }
 
-void CPhysXManager::Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut)
+void CPhysX_Manager::Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut)
 {
 	PxCookingParams params = m_pCooking->getParams();
 
@@ -186,7 +186,7 @@ void CPhysXManager::Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxC
 	*ppOut = m_pCooking->createConvexMesh(Desc, m_pPhysics->getPhysicsInsertionCallback());
 }
 
-void CPhysXManager::Create_ConvexMesh(const PxConvexMeshDesc& In_MeshDesc, PxConvexMesh** ppOut)
+void CPhysX_Manager::Create_ConvexMesh(const PxConvexMeshDesc& In_MeshDesc, PxConvexMesh** ppOut)
 {
 	PxCookingParams params = m_pCooking->getParams();
 
@@ -203,12 +203,12 @@ void CPhysXManager::Create_ConvexMesh(const PxConvexMeshDesc& In_MeshDesc, PxCon
 
 }
 
-void CPhysXManager::Create_Shape(const PxGeometry& Geometry, PxMaterial* pMaterial, const _bool isExculsive, const PxShapeFlags In_ShapeFlags, PxShape** ppOut)
+void CPhysX_Manager::Create_Shape(const PxGeometry& Geometry, PxMaterial* pMaterial, const _bool isExculsive, const PxShapeFlags In_ShapeFlags, PxShape** ppOut)
 {
 	*ppOut = m_pPhysics->createShape(Geometry, *pMaterial, isExculsive, In_ShapeFlags);
 }
 
-void CPhysXManager::Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshDesc, PxTriangleMesh** ppOut)
+void CPhysX_Manager::Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshDesc, PxTriangleMesh** ppOut)
 {
 	PxCookingParams params = m_pCooking->getParams();
 
@@ -228,13 +228,13 @@ void CPhysXManager::Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshDe
 	*ppOut = m_pPhysics->createTriangleMesh(readBuffer);
 }
 
-void CPhysXManager::Create_Controller(const PxCapsuleControllerDesc& In_ControllerDesc, PxController** ppOut)
+void CPhysX_Manager::Create_Controller(const PxCapsuleControllerDesc& In_ControllerDesc, PxController** ppOut)
 {
 	*ppOut = m_pControllerManager->createController(In_ControllerDesc);
 }
 
 
-void CPhysXManager::Garbage_Collector()
+void CPhysX_Manager::Garbage_Collector()
 {
 	for (auto iter = m_pPhysXCollders.begin(); iter != m_pPhysXCollders.end();)
 	{
@@ -261,12 +261,19 @@ void CPhysXManager::Garbage_Collector()
 	}
 }
 
-CPhysXManager* CPhysXManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumLevels)
+CPhysX_Manager* CPhysX_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint In_iNumLayer)
 {
-	return nullptr;
+	CPhysX_Manager* pInstance = new CPhysX_Manager(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize(In_iNumLayer)))
+	{
+		MSG_BOX("Failed to Created : CPhysX_Manager");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
 }
 
-void CPhysXManager::Free()
+void CPhysX_Manager::Free()
 {
 	PX_UNUSED(true);
 

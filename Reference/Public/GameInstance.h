@@ -138,6 +138,29 @@ public: /* For.Collision_Manager */
 public: /* For.Event_Manager */
 	void		Add_Event(class IEvent* pEvent);
 
+public: /* For.PhysX_Manager */
+	void					Register_PhysXCollider(class CPhysXCollider* pPhysXCollider);
+	class CPhysXCollider*	Find_PhysXCollider(const _uint iPhysXColliderIndex);
+
+	void					Register_PhysXController(class CPhysXController* pPhysXController);
+	class CPhysXController*	Find_PhysXController(const _uint iPhysXControllerIndex);
+
+	void					Check_PhysXFilterGroup(const _uint In_iLeftLayer, const _uint In_iRightLayer);
+	_uint					Get_PhysXFilterGroup(const _uint In_iIndex);
+
+	PxRigidDynamic*			Create_DynamicActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial = nullptr);
+	PxRigidDynamic*			Create_DynamicActor(const PxTransform& transform);
+	PxRigidStatic*			Create_StaticActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial = nullptr);
+	PxRigidStatic*			Create_StaticActor(const PxTransform& transform);
+
+	void					Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut);
+	void					Create_ConvexMesh(const PxConvexMeshDesc& In_MeshDesc, PxConvexMesh** ppOut);
+	void					Create_Shape(const PxGeometry& Geometry, PxMaterial* pMaterial, const _bool isExculsive, const PxShapeFlags In_ShapeFlags, PxShape** ppOut);
+	void					Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshDesc, PxTriangleMesh** ppOut);
+	void					Create_Controller(const PxCapsuleControllerDesc& In_ControllerDesc, PxController** ppOut);
+
+
+
 
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
@@ -195,6 +218,7 @@ private:
 	class CFrustum*					m_pFrustum = { nullptr };
 	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
 	class CEvent_Manager*			m_pEvent_Manager = { nullptr };
+	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
 
 
 public:

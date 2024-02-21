@@ -3,8 +3,31 @@
 
 BEGIN(Engine)
 
+class CGameInstance;
+
 class ENGINE_DLL CPhysXCollider final : public CComponent
 {
+public:
+	typedef struct PhysXColliderDesc
+	{
+		PhysXColliderDesc()
+		{
+			ZeroMemory(this, sizeof(PhysXColliderDesc));
+		}
+
+		PxConvexMesh* pConvecMesh;
+		PxMaterial* pMaterial;
+		PHYSXACTOR_TYPE		eActorType;
+		XMVECTOR			vPosition;
+		XMVECTOR			vAngles;
+		PHYSXCOLLIDER_TYPE	eShape;
+		_uint				iFilterType;
+		XMVECTOR			vScale;
+		float				fDensity;
+		_bool				bTrigger;
+
+	}PHYSXCOLLIDERDESC;
+
 
 private:
 	CPhysXCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -18,13 +41,23 @@ private:
 public:
 	_uint	Get_PColliderIndex() const { return m_iColliderIndex; }
 
+public:
+	void		CreatePhysXActor(PHYSXCOLLIDERDESC& PhysXColliderDesc);
+
 //public:
 //	CPhysXCollider* CallBack_CollisionEnter;
 //	CPhysXCollider* CallBack_CollisionStay;
 //	CPhysXCollider* CallBack_CollisionExit;
 
 private:
-	_uint m_iColliderIndex = { 0 };
+	static	_uint		m_iClonedColliderIndex;
+	_uint				m_iColliderIndex = { 0 };
+
+private:
+	PHYSXCOLLIDERDESC		m_PhysXColliderDesc;
+
+private:
+	CGameInstance* m_pGameInstance = { nullptr };
 
 private:
 	void Free();

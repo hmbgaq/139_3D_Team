@@ -1,17 +1,23 @@
 #include "..\Public\GameInstance.h"
+
 #include "Collision_Manager.h"
-#include "Event_Manager.h"
 #include "Graphic_Device.h"
 #include "Object_Manager.h"
 #include "Target_Manager.h"
+#include "Event_Manager.h"
 #include "TImer_Manager.h"
 #include "Level_Manager.h"
-#include "Input_Device.h"
 #include "Light_Manager.h"
+#include "Input_Device.h"
 #include "Font_Manager.h"
+#include "PhysX_Manager.h"
 #include "Renderer.h"
 #include "Frustum.h"
 #include "Mesh.h"
+
+#include "PhysXCollider.h"
+#include "PhysXController.h"
+
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -77,6 +83,11 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 
 	m_pEvent_Manager = CEvent_Manager::Create();
 	if (nullptr == m_pEvent_Manager)
+		return E_FAIL;
+
+	//TODO: 레벨 확인헤야
+	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, iNumLayer);
+	if (nullptr == m_pPhysX_Manager)
 		return E_FAIL;
 
 
@@ -712,6 +723,82 @@ void CGameInstance::Add_Event(IEvent* pEvent)
 	m_pEvent_Manager->Add_Event(pEvent);
 }
 
+void CGameInstance::Register_PhysXCollider(CPhysXCollider* pPhysXCollider)
+{
+	m_pPhysX_Manager->Register_PhysXCollider(pPhysXCollider);
+}
+
+CPhysXCollider* CGameInstance::Find_PhysXCollider(const _uint iPhysXColliderIndex)
+{
+	return m_pPhysX_Manager->Find_PhysXCollider(iPhysXColliderIndex);
+}
+
+void CGameInstance::Register_PhysXController(CPhysXController* pPhysXController)
+{
+	m_pPhysX_Manager->Register_PhysXController(pPhysXController);
+}
+
+CPhysXController* CGameInstance::Find_PhysXController(const _uint iPhysXControllerIndex)
+{
+	return m_pPhysX_Manager->Find_PhysXController(iPhysXControllerIndex);
+}
+
+void CGameInstance::Check_PhysXFilterGroup(const _uint In_iLeftLayer, const _uint In_iRightLayer)
+{
+	m_pPhysX_Manager->Check_PhysXFilterGroup(In_iLeftLayer, In_iRightLayer);
+}
+
+_uint CGameInstance::Get_PhysXFilterGroup(const _uint In_iIndex)
+{
+	return m_pPhysX_Manager->Get_PhysXFilterGroup(In_iIndex);
+}
+
+PxRigidDynamic* CGameInstance::Create_DynamicActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial)
+{
+	return m_pPhysX_Manager->Create_DynamicActor(transform, geometry, pMaterial);
+}
+
+PxRigidDynamic* CGameInstance::Create_DynamicActor(const PxTransform& transform)
+{
+	return m_pPhysX_Manager->Create_DynamicActor(transform);
+}
+
+PxRigidStatic* CGameInstance::Create_StaticActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial)
+{
+	return m_pPhysX_Manager->Create_StaticActor(transform, geometry, pMaterial);
+}
+
+PxRigidStatic* CGameInstance::Create_StaticActor(const PxTransform& transform)
+{
+	return m_pPhysX_Manager->Create_StaticActor(transform);
+}
+
+void CGameInstance::Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut)
+{
+	m_pPhysX_Manager->Create_ConvexMesh(pVertices, iNumVertice, ppOut);
+}
+
+void CGameInstance::Create_ConvexMesh(const PxConvexMeshDesc& In_MeshDesc, PxConvexMesh** ppOut)
+{
+	m_pPhysX_Manager->Create_ConvexMesh(In_MeshDesc, ppOut);
+}
+
+void CGameInstance::Create_Shape(const PxGeometry& Geometry, PxMaterial* pMaterial, const _bool isExculsive, const PxShapeFlags In_ShapeFlags, PxShape** ppOut)
+{
+	m_pPhysX_Manager->Create_Shape(Geometry, pMaterial, isExculsive, In_ShapeFlags, ppOut);
+}
+
+void CGameInstance::Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshDesc, PxTriangleMesh** ppOut)
+{
+	m_pPhysX_Manager->Create_MeshFromTriangles(In_MeshDesc, ppOut);
+}
+
+void CGameInstance::Create_Controller(const PxCapsuleControllerDesc& In_ControllerDesc, PxController** ppOut)
+{
+	m_pPhysX_Manager->Create_Controller(In_ControllerDesc, ppOut);
+}
+
+
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
 {
 	//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
@@ -967,6 +1054,7 @@ wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 
 
 void CGameInstance::Release_Manager()
 {
+	Safe_Release(m_pPhysX_Manager);
 	Safe_Release(m_pEvent_Manager);
 	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pFrustum);

@@ -35,6 +35,30 @@ namespace Engine
 	enum MINMAX { MIN, MAX, MINMAX_END };
 
 	enum AXIS { AXIS_X, AXIS_Y, AXIS_Z, AXIS_END };
+
+	/* PhysX */
+	enum class PHYSXCOLLIDER_TYPE
+	{
+		SPHERE,
+		BOX,
+		CYLINDER,
+		CONVEXMESH,
+		MESH,
+		MODEL,
+		CONVEXMODEL,
+		BOXWITHPOINTS,
+		TYPE_END
+	};
+
+	enum class PHYSXACTOR_TYPE
+	{
+		DYNAMIC,
+		YFIXED_DYNAMIC,
+		STATIC,
+		ZONE,
+		TYPE_END
+	};
+
 }
 
 #endif // Engine_Enum_h__

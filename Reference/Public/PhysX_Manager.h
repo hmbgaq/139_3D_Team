@@ -7,25 +7,29 @@ class CPhysXCollider;
 class CPhysXController;
 
 
-class ENGINE_DLL CPhysXManager : public CBase
+class ENGINE_DLL CPhysX_Manager : public CBase
 {
 private:
-	CPhysXManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CPhysXManager() = default;
+	CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CPhysX_Manager() = default;
 
-public:
-	void	Register_PhysXCollider(CPhysXCollider* pPhysXCollider);
-	CPhysXCollider*	Find_PhysXCollider(const _uint iPhysXColliderIndex);
-
-	void	Register_PhysXController(CPhysXController* pPhysXController);
-	CPhysXController*	Find_PhysXController(const _uint iPhysXControllerIndex);
 
 
 public:
 	HRESULT	Initialize(const _uint In_iNumLayer);
 	void	Tick(_float fTimeDelta);
 
+private:
+	void	Garbage_Collector();
+
+
 public:
+	void	Register_PhysXCollider(CPhysXCollider* pPhysXCollider);
+	CPhysXCollider* Find_PhysXCollider(const _uint iPhysXColliderIndex);
+
+	void	Register_PhysXController(CPhysXController* pPhysXController);
+	CPhysXController* Find_PhysXController(const _uint iPhysXControllerIndex);
+
 	void			Check_PhysXFilterGroup(const _uint In_iLeftLayer, const _uint In_iRightLayer);
 	_uint			Get_PhysXFilterGroup(const _uint In_iIndex);
 
@@ -42,8 +46,7 @@ public:
 
 
 
-private:
-	void	Garbage_Collector();
+
 
 
 private:
@@ -55,18 +58,18 @@ private:
 	PxDefaultAllocator		m_Allocator;
 	PxDefaultErrorCallback	m_ErrorCallback;
 
-	PxFoundation* m_pFoundation;
-	PxPhysics* m_pPhysics;
-	PxScene* m_pScene;
-	PxMaterial* m_pMaterial;
+	PxFoundation* m_pFoundation = { nullptr };
+	PxPhysics* m_pPhysics = { nullptr };
+	PxScene* m_pScene = { nullptr };
+	PxMaterial* m_pMaterial = { nullptr };
 
-	PxRigidDynamic* m_pTemp = nullptr;
+	PxRigidDynamic* m_pTemp = { nullptr };
 	PxControllerManager* m_pControllerManager = nullptr;
 	
 	////Visual Debugger
-	PxPvd* m_pPVD;
+	PxPvd* m_pPVD = { nullptr };
 
-	PxCooking* m_pCooking = nullptr;
+	PxCooking* m_pCooking = { nullptr };
 	//PxDefaultCpuDispatcher* m_pDispatcher = nullptr;
 
 
@@ -80,7 +83,7 @@ private:
 
 
 public:
-	static CPhysXManager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumLevels);
+	static CPhysX_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint In_iNumLayer);
 	virtual void Free() override;
 };
 

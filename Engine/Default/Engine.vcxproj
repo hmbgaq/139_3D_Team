@@ -206,6 +206,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\public\Channel.h" />
     <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\public\Collider.h" />
+    <ClInclude Include="..\Public\CollisionSimulationEventCallBack.h" />
     <ClInclude Include="..\Public\Collision_Manager.h" />
     <ClInclude Include="..\public\Component.h" />
     <ClInclude Include="..\public\Component_Manager.h" />
@@ -255,7 +256,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\public\Object_Manager.h" />
     <ClInclude Include="..\Public\PhysXCollider.h" />
     <ClInclude Include="..\Public\PhysXController.h" />
-    <ClInclude Include="..\Public\PhysXManager.h" />
+    <ClInclude Include="..\Public\PhysX_Manager.h" />
     <ClInclude Include="..\public\PipeLine.h" />
     <ClInclude Include="..\public\QuadTree.h" />
     <ClInclude Include="..\public\Renderer.h" />
@@ -300,6 +301,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\private\Channel.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\private\Collider.cpp" />
+    <ClCompile Include="..\Private\CollisionSimulationEventCallBack.cpp" />
     <ClCompile Include="..\Private\Collision_Manager.cpp" />
     <ClCompile Include="..\private\Component.cpp" />
     <ClCompile Include="..\private\Component_Manager.cpp" />
@@ -328,7 +330,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\private\Object_Manager.cpp" />
     <ClCompile Include="..\Private\PhysXCollider.cpp" />
     <ClCompile Include="..\Private\PhysXController.cpp" />
-    <ClCompile Include="..\Private\PhysXManager.cpp" />
+    <ClCompile Include="..\Private\PhysX_Manager.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />
     <ClCompile Include="..\private\QuadTree.cpp" />
     <ClCompile Include="..\private\Renderer.cpp" />
