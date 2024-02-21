@@ -55,9 +55,6 @@ HRESULT CRenderer::Create_Buffer()
 
 HRESULT CRenderer::Create_Shader()
 {
-	m_pShader[SHADER_TYPE::SHADER_SSAO] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_SSAO.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements);
-	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_SSAO], E_FAIL);
-
 	m_pShader[SHADER_TYPE::SHADER_DEFERRED] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
 	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_DEFERRED], E_FAIL);
 
@@ -633,14 +630,14 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_CamFar", &CamFar, sizeof(_float)));
 
 	/* MRT_GameObject */
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Priority"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_PriorityTarget"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DiffuseTexture"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_NormalTexture"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ViewNormal"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_NormalDepthTarget"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DepthTexture"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Shade"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_ShadeTexture"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SpecularTexture"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_LightDepthTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Priority"),		m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_PriorityTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse"),		m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DiffuseTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"),		m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_NormalTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ViewNormal"),	m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_NormalDepthTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"),		m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DepthTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Shade"),		m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_ShadeTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"),		m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SpecularTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"),	m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_LightDepthTexture"));
 
 	/* Post Processing */
 	{
@@ -739,6 +736,13 @@ HRESULT CRenderer::Render_GodRay()
 
 HRESULT CRenderer::Render_HDR()
 {
+	if (m_pGameInstance->Key_Down(DIK_O))
+	{
+		m_max_white -= 0.1f;
+	}
+	else if (m_pGameInstance->Key_Down(DIK_P))
+		m_max_white += 0.1f;
+
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_HDR"))); /* Target_FXAA*/
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
@@ -750,6 +754,9 @@ HRESULT CRenderer::Render_HDR()
 		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_bHDR_Active", &m_bHDR_Active, sizeof(_bool)));
 		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_ProcessingTarget"));
+		
+		/* 값 컨트롤용도 */
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_max_white", &m_max_white, sizeof(_float)));
 	}
 
 	if (false == m_bHDR_Active)

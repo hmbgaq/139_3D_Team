@@ -817,13 +817,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcess.hlsl">
-      <Filter>98.ShaderFiles</Filter>
-    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcessing.hlsl">
-      <Filter>98.ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_SSAO.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\TIMOTHY LOTTES_Fxaa3_11.hlsl">

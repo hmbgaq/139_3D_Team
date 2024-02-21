@@ -21,7 +21,7 @@ public:
 		/* UI */
 		RENDER_UI_FRONT, RENDER_UI, RENDER_UI_BACK,	RENDER_END };
 
-	enum SHADER_TYPE { SHADER_SSAO, SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, SHADER_FINAL, SHADER_END };
+	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, SHADER_FINAL, SHADER_END };
 	
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -113,13 +113,14 @@ private:
 	void						Calc_Blur_GaussianWeights(_int sigma, _int iSize, _Out_ void* Weights);
 
 	/* Radial Blur */
-	_float4						m_fRadialBlurQuality = {};
-	_float4						m_fRadialBlurPower = {};
+	_float4						m_fRadialBlurQuality	= {};
+	_float4						m_fRadialBlurPower		= {};
 
 	/* OutLine */
-	_float4						m_vLineColor		= _float4(1.f, 0.f, 0.f, 1.f );
+	_float4						m_vLineColor			= _float4(1.f, 0.f, 0.f, 1.f );
 
 	/* HDR */
+	_float						m_max_white				= { 0.3f };
 
 private:
 	class CShader*					m_pShader[SHADER_TYPE::SHADER_END]	= { nullptr };

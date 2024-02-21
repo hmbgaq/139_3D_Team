@@ -5,12 +5,11 @@ matrix      g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 Texture2D   g_ProcessingTarget;
 
-bool g_bHDR_Active;
+bool        g_bHDR_Active;
+
 /* HDR - off일수 있으므로 초기값 줘야함 */ 
-float       g_fGrayScale = 1.f;
-float       g_fContrastValue = 1.f;
-float       g_fSaturation = 1.f; /*  값을 0 ~ 1로 고정해주는 Clamp 역할*/ 
-float       g_fPadding;
+float g_max_white;
+float g_change_luminance;
 
 struct VS_IN
 {
@@ -70,10 +69,93 @@ PS_OUT PS_MAIN(PS_IN In)
 
 /* ------------------- 1 - HDR Pixel Shader -------------------*/
 
-float3 reinhard(float3 hdr)
+float3 reinhard_extended(float3 v, float max_white)
 {
-    return hdr / (1.0 + hdr);
+    /*  reinhard_extended */ 
+    float Value = max_white * max_white;
+    
+    float3 numerator = v * (1.0f + (v / float3(Value, Value, Value)));
+   
+    return numerator / (1.0f + v);
 }
+
+float luminance(float3 v)
+{
+    /* CommonFunction */ 
+    return dot(v, float3(0.2126f, 0.7152f, 0.0722f));
+}
+
+float3 change_luminance(float3 Color, float global_variable)
+{
+    /* Luminance */ 
+    float Temp = luminance(Color);
+    return Color * (global_variable / Temp);
+}
+
+float3 reinhard_extended_luminance(float3 Color, float global_variable)
+{
+    /* Extended Reinhard (Luminance Tone Map) */ 
+    float Old_Color = luminance(Color);
+    float numerator = Old_Color * (1.0f + (Old_Color / (global_variable * global_variable)));
+    float Temp_New = numerator / (1.0f + Old_Color);
+    return change_luminance(Color, Temp_New);
+}
+
+float3 reinhard_jodie(float3 Color)
+{
+    float l = luminance(Color);
+    float3 RJ_Map = Color / (1.0f + Color);
+    return lerp(Color / (1.0f + l), RJ_Map, RJ_Map);
+}
+
+float3 uncharted2_tonemap_partial(float3 Color)
+{
+    float A = 0.15f;
+    float B = 0.50f;
+    float C = 0.10f;
+    float D = 0.20f;
+    float E = 0.02f;
+    float F = 0.30f;
+    return ((Color * (A * Color + C * B) + D * E) / (Color * (A * Color + B) + D * F)) - E / F;
+}
+
+float3 uncharted2_filmic(float3 Color)
+{
+    float exposure_bias = 2.0f;
+    float3 curr = uncharted2_tonemap_partial(Color * exposure_bias);
+
+    float3 W = float3(11.2f, 11.2f, 11.2f);
+    float3 white_scale = float3(1.0f, 1.0f, 1.0f) / uncharted2_tonemap_partial(W);
+    return curr * white_scale;
+}
+
+float3 mul(float3x3 m, float3 v)
+{
+    float x = m[0][0] * v[0] + m[0][1] * v[1] + m[0][2] * v[2];
+    float y = m[1][0] * v[0] + m[1][1] * v[1] + m[1][2] * v[2];
+    float z = m[2][0] * v[0] + m[2][1] * v[1] + m[2][2] * v[2];
+    
+    return float3(x, y, z);
+}
+
+float3 rtt_and_odt_fit(float3 v)
+{
+    float3 a = v * (v + 0.0245786f) - 0.000090537f;
+    float3 b = v * (0.983729f * v + 0.4329510f) + 0.238081f;
+    return a / b;
+}
+
+float3 aces_fitted(float3 Color)
+{
+    float3x3 aces_input_matrix = (0.59719f, 0.35458f, 0.04823f, 0.07600f, 0.90834f, 0.01566f, 0.02840f, 0.13383f, 0.83777f);
+    float3x3 aces_output_matrix = (1.60475f, -0.53108f, -0.07367f, -0.10208f, 1.10813f, -0.00605f, -0.00327f, -0.07276f, 1.07602f);
+    
+    Color = mul(aces_input_matrix, Color);
+    Color = rtt_and_odt_fit(Color);
+    return mul(aces_output_matrix, Color);
+}
+
+
 
 PS_OUT PS_MAIN_HDR(PS_IN In)
 {
@@ -82,8 +164,20 @@ PS_OUT PS_MAIN_HDR(PS_IN In)
     
     float3 vColor = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord).xyz;
 	
-    vColor = reinhard(vColor);
-
+    //vColor = reinhard_extended(vColor, g_max_white);
+    
+    //vColor = change_luminance(vColor,g_max_white) ;
+    
+    vColor =  reinhard_extended_luminance(vColor, g_max_white);
+    
+    //vColor = reinhard_jodie(vColor);
+    
+   // vColor = uncharted2_filmic(vColor);
+    
+    //vColor = aces_fitted(vColor);
+    
+    // vColor = camera_tonemap(vColor, g_max_white); /* camera_irradiance 데이터값이 없어서불가 */ 
+    
     Out.vColor = float4(vColor, 1.f);
     
     return Out;
@@ -104,7 +198,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    pass HDR
+    pass HDR_
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
