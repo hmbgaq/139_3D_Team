@@ -79,7 +79,6 @@ HRESULT CRenderer::Create_Shader()
 	m_pShader[SHADER_TYPE::SHADER_FINAL] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Final.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
 	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_FINAL], E_FAIL);
 
-	/* pbr + ibl 같이 들어가야함 */
 	return S_OK;
 }
 
@@ -90,14 +89,14 @@ HRESULT CRenderer::Create_RenderTarget()
 
 	m_pContext->RSGetViewports(&iNumViewport, &Viewport);
 
-	/* RenderTarget */
+	/* Pre-PostProcessing */
 	{
 		/* MRT_GameObject */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f)));
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Normal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Depth"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))); /* 깊이버퍼 그 깊이 */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_ORM"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_ViewNormal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))); 
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_ViewNormal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))); /* 넣은거 알아서 블러되도록 처리함 */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_OutLine"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 0.f)));
 
@@ -126,16 +125,21 @@ HRESULT CRenderer::Create_RenderTarget()
 
 		/* MRT_GodRay */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_GodRay"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-	
-		/* MRT_RadialBlur */
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_RadialBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-	
+
 		/* MRT_PrePostProcess */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_PrePostProcess"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-		
+	}
+
+	/* PostProcessing */
+	{
+		/* MRT_RadialBlur */
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_RadialBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+
 		/* MRT_FXAA */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_FXAA"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+
 	}
+	
 
 	/* MRT*/
 	{
@@ -701,6 +705,8 @@ HRESULT CRenderer::Render_FXAA()
 	* 화면 전체에 AA 적용됨 광원효과, 텍스쳐, 후처리 효과역시 AA 대상 성능 타격이 거의 없음
 	* 알고리즘 특성상 흐려지거나 적용이 안되는 한계가 있을수 있음 */
 
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_FXAA"))); /* Target_FXAA*/
+
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
@@ -714,6 +720,30 @@ HRESULT CRenderer::Render_FXAA()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Begin(0));
+
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Final()
+{
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	/* 최종그림 그리기 */
+	wstring EndTarget = L"";
+
+	if (true == m_bTest_Active)
+		EndTarget = TEXT("Target_FXAA");
+	else
+		EndTarget = TEXT("Target_PrePostProcess");
+
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(EndTarget, m_pShader[SHADER_TYPE::SHADER_FINAL], "g_FinalTarget"));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Begin(0));
 
 	FAILED_CHECK(m_pVIBuffer->Render());
 
@@ -765,11 +795,6 @@ HRESULT CRenderer::Render_DebugOnOff()
 	}
 
 	return S_OK;
-}
-
-HRESULT CRenderer::Render_Final()
-{
-	return E_NOTIMPL;
 }
 
 HRESULT CRenderer::Render_OutLineGroup()

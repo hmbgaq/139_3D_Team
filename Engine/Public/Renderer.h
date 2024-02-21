@@ -26,7 +26,7 @@ public:
 		
 		RENDER_END };
 
-	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_Final, SHADER_FXAA, SHADER_FINAL, SHADER_END };
+	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, SHADER_FINAL, SHADER_END };
 	
 	struct QuadVertex // ssao 
 	{
@@ -120,7 +120,7 @@ private:
 	_bool						m_bOutline_Active		= { true };
 	_bool						m_bPBR_Active			= { true };
 	_bool						m_bFXAA_Active			= { true };
-	_bool						m_bTest_Active			= { false };
+	_bool						m_bTest_Active			= { true };
 
 public:
 	void Set_SSAO(_bool _ssao_active)		{ m_bSSAO_Active = _ssao_active; } /* 외곽선 옵션조절 */

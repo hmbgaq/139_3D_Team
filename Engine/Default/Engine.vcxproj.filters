@@ -793,6 +793,9 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Fxaa3_11.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Final.hlsl">
+      <Filter>98.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli">
