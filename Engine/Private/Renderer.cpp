@@ -289,10 +289,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 #pragma endregion
 
 	FAILED_CHECK(Render_Priority());	/* SkyBox */
-	FAILED_CHECK(Render_Shadow());		/* MRT_Shadow */
 	FAILED_CHECK(Render_NonLight()); 
 	FAILED_CHECK(Render_NonBlend());	/* MRT_GameObjects*/
-	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
 
 	{ 
 		/* Pre-PostProcessing */
@@ -300,19 +298,25 @@ HRESULT CRenderer::Draw_RenderGroup()
 		{
 			FAILED_CHECK(Render_HBAO_PLUS());
 		}
-		//FAILED_CHECK(Render_Bloom());
-
+		if (true == m_bBloom_Active)
+		{
+			FAILED_CHECK(Render_Bloom());
+		}
 		if (true == m_bOutline_Active)
 		{
 			FAILED_CHECK(Render_OutLine_PostProcessing());
 		}
+
+		FAILED_CHECK(Render_Shadow());		/* MRT_Shadow */
+		FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
 	}
 	FAILED_CHECK(Render_Deferred());
 	{
 		/* PostProcessing*/
 		FAILED_CHECK(Render_PostProcess()); /* 모션블러, Radial 블러 등등 */
 	}
-	FAILED_CHECK(Render_Final()); /* 마지막화면용 - 마지막 체크 위해서 */
+	/* 마지막화면용 - 마지막 체크 위해서 */
+	FAILED_CHECK(Render_Final()); 
 	
 	FAILED_CHECK(Render_OutLineGroup());	/* Render_Group */
 	FAILED_CHECK(Render_Blend());
@@ -479,6 +483,92 @@ HRESULT CRenderer::Render_UI()
 
 #pragma endregion
 
+HRESULT CRenderer::Render_OutLine_PostProcessing()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Outline"))); /* Target SSAO 단독 */
+
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	{
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader[SHADER_TYPE::SHADER_OUTLINE], "g_NormalTarget"));
+
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
+	}
+
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Begin(0));
+
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_HBAO_PLUS()
+{
+	GFSDK_SSAO_InputData_D3D11 Input;
+	Input.DepthData.DepthTextureType = GFSDK_SSAO_HARDWARE_DEPTHS;
+	Input.DepthData.pFullResDepthTextureSRV = m_pGameInstance->Get_DepthSRV();
+
+	_matrix ProjMatrix = {};
+
+	if (true == m_bInit)
+	{
+		_float fNear = 0.1f;
+		_float fFar = 2000.f;
+		_float fFovY = DirectX::XMConvertToRadians(60.0f);
+		_float fAspect = g_iWinsizeX / g_iWinsizeY;
+
+		ProjMatrix = DirectX::XMMatrixPerspectiveFovLH(fFovY, fAspect, fNear, fFar); /*DirectX 네임스페이스 없으면 함수 못찾음 */
+	}
+	else
+		ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
+
+	Input.DepthData.ProjectionMatrix.Data = GFSDK_SSAO_Float4x4((const GFSDK_SSAO_FLOAT*)&ProjMatrix);
+	Input.DepthData.ProjectionMatrix.Layout = GFSDK_SSAO_ROW_MAJOR_ORDER;
+	Input.DepthData.MetersToViewSpaceUnits = 1.f;
+
+	GFSDK_SSAO_Parameters Params;
+	Params.Radius = 2.f;
+	Params.Bias = 0.1f;
+	Params.PowerExponent = 2.f;
+	Params.Blur.Enable = true;
+	Params.Blur.Radius = GFSDK_SSAO_BLUR_RADIUS_4;
+	Params.Blur.Sharpness = 16.f;
+
+	ID3D11RenderTargetView* pView = {};
+	pView = m_pGameInstance->Find_RenderTarget(TEXT("Target_HBAO"))->Get_RTV();
+	NULL_CHECK_RETURN(pView, E_FAIL);
+
+	GFSDK_SSAO_Output_D3D11 Output;
+	Output.pRenderTargetView = pView;
+
+	Output.Blend.Mode = GFSDK_SSAO_OVERWRITE_RGB;
+
+	GFSDK_SSAO_Status status;
+	status = m_pGameInstance->Get_AOContext()->RenderAO(m_pContext, Input, Params, Output);
+	assert(status == GFSDK_SSAO_OK);
+
+	return S_OK;
+}
+
+
+HRESULT CRenderer::Render_Bloom()
+{
+	/* FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Blur_DownSampling"))); 로 시작 */
+	FAILED_CHECK(Render_Blur_DownSample(L"Target_Bloom"));
+
+	FAILED_CHECK(Render_Blur_Horizontal(ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER)));
+
+	FAILED_CHECK(Render_Blur_Vertical(ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER)));
+
+	FAILED_CHECK(Render_Blur_UpSample(L"MRT_Bloom_Blur", true, ECast(BLUR_SHADER::BLUR_UP_MAX)));
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_LightAcc()
 {
 	/* Shade */
@@ -544,12 +634,14 @@ HRESULT CRenderer::Render_Deferred()
 			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao 추가 */
 		}
 
-		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bBloom_Active", &m_bBloom_Active, sizeof(_bool)));
-		//if (true == m_bBloom_Active)
-		//{
-		//	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
-		//}
-		//
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bBloom_Active", &m_bBloom_Active, sizeof(_bool)));
+		if (true == m_bBloom_Active)
+		{
+			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
+		 
+//		if (true == m_bBloomBlur_Active)
+		}
+		
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_Outline_Active", &m_bOutline_Active, sizeof(_bool)));
 		if (true == m_bOutline_Active)
 		{
@@ -565,85 +657,6 @@ HRESULT CRenderer::Render_Deferred()
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_OutLine_PostProcessing()
-{
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Outline"))); /* Target SSAO 단독 */	
-
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
-
-	{
-		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader[SHADER_TYPE::SHADER_OUTLINE], "g_NormalTarget"));
-
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
-	}
-
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Begin(0));
-
-	FAILED_CHECK(m_pVIBuffer->Render());
-
-	FAILED_CHECK(m_pGameInstance->End_MRT());
-
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_HBAO_PLUS()
-{
-	GFSDK_SSAO_InputData_D3D11 Input;
-	Input.DepthData.DepthTextureType = GFSDK_SSAO_HARDWARE_DEPTHS;
-	Input.DepthData.pFullResDepthTextureSRV = m_pGameInstance->Get_DepthSRV();
-
-	_matrix ProjMatrix = {};
-
-	if (true == m_bInit)
-	{
-		_float fNear = 0.1f;
-		_float fFar = 2000.f;
-		_float fFovY = DirectX::XMConvertToRadians(60.0f);
-		_float fAspect = g_iWinsizeX / g_iWinsizeY;
-
-		ProjMatrix = DirectX::XMMatrixPerspectiveFovLH(fFovY, fAspect, fNear, fFar); /*DirectX 네임스페이스 없으면 함수 못찾음 */
-	}
-	else
-		ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
-
-	Input.DepthData.ProjectionMatrix.Data = GFSDK_SSAO_Float4x4((const GFSDK_SSAO_FLOAT*)&ProjMatrix);
-	Input.DepthData.ProjectionMatrix.Layout = GFSDK_SSAO_ROW_MAJOR_ORDER;
-	Input.DepthData.MetersToViewSpaceUnits = 1.f;
-
-	GFSDK_SSAO_Parameters Params;
-	Params.Radius = 2.f;
-	Params.Bias = 0.1f;
-	Params.PowerExponent = 2.f;
-	Params.Blur.Enable = true;
-	Params.Blur.Radius = GFSDK_SSAO_BLUR_RADIUS_4;
-	Params.Blur.Sharpness = 16.f;
-
-	ID3D11RenderTargetView* pView = {};
-	pView = m_pGameInstance->Find_RenderTarget(TEXT("Target_HBAO"))->Get_RTV();
-	NULL_CHECK_RETURN(pView, E_FAIL);
-
-	GFSDK_SSAO_Output_D3D11 Output;
-	Output.pRenderTargetView = pView;
-	
-	Output.Blend.Mode = GFSDK_SSAO_OVERWRITE_RGB;
-	
-	GFSDK_SSAO_Status status;
-	status = m_pGameInstance->Get_AOContext()->RenderAO(m_pContext, Input, Params, Output);
-	assert(status == GFSDK_SSAO_OK);
-
-	return S_OK;
-}
-
-
-HRESULT CRenderer::Render_Bloom()
-{
-	//FAILED_CHECK(Render_Blur(L"Target_Bloom", L"MRT_Bloom_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER), ECast(BLUR_SHADER::BLUR_UP_MAX)));
-	
 	return S_OK;
 }
 
