@@ -21,7 +21,7 @@ public:
 		/* UI */
 		RENDER_UI_FRONT, RENDER_UI, RENDER_UI_BACK,	RENDER_END };
 
-	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FINAL, SHADER_END };
+	enum SHADER_TYPE { SHADER_SSAO, SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, SHADER_FINAL, SHADER_END };
 	
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -47,29 +47,38 @@ public:
 #endif
 
 private:
-	_float4x4					m_WorldMatrix;
-	_float4x4					m_ViewMatrix, m_ProjMatrix;
+	_float4x4					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 
 private:
-	
 	HRESULT Render_Priority();
 	HRESULT Render_Shadow();
 	HRESULT Render_NonLight();
 	HRESULT Render_NonBlend();
+
+	/* Pre-Post Processing */
+	HRESULT Render_OutLine_PostProcessing();
+	HRESULT Render_HBAO_Plus();
+	HRESULT Render_Bloom();
+	HRESULT Render_Deferred();
+
+	/* Post Processing */
+	HRESULT Render_PostProcess();
+	HRESULT Render_RadialBlur();
+	HRESULT Render_GodRay();
+	HRESULT Render_FXAA();
+	HRESULT Render_HDR();
+
+	/* 최종 다 그리는곳 */
+	HRESULT Render_Final();
+
+	/* Common*/
+	HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
+
 	HRESULT Render_Blend();
 	HRESULT Render_UI();
 
 	HRESULT Render_LightAcc();
-	HRESULT Render_Deferred();
-	HRESULT Render_OutLine_PostProcessing();
-	HRESULT Render_OutLineGroup();
-	HRESULT Render_HBO_Plus();
-	HRESULT Render_Bloom();
-
-	HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
-	HRESULT Render_RadialBlur();
-	HRESULT Render_GodRay();
-
+	HRESULT Render_OutLineGroup(); /* RenderGroup*/
 	/* perlin을 이용한 바다물결, 나뭇잎, 불 등 자연스러운 무작위패턴생성 */
 
 #ifdef _DEBUG
@@ -79,9 +88,12 @@ private:
 
 	/* 활성 제어 */
 private:
-	_bool						m_bSSAO_Active			= { true };
-	_bool						m_bBloom_Active			= { true };
-	_bool						m_bOutline_Active		= { true };
+	_bool						m_bSSAO_Active			= { false };
+	_bool						m_bBloom_Active			= { false };
+	_bool						m_bOutline_Active		= { false };
+	_bool						m_bPBR_Active			= { false };
+	_bool						m_bFXAA_Active			= { false };
+	_bool						m_bHDR_Active			= { false };
 
 public:
 	void Set_SSAO(_bool _ssao_active)		{ m_bSSAO_Active = _ssao_active; } /* 외곽선 옵션조절 */
@@ -103,14 +115,16 @@ private:
 	/* OutLine */
 	_float4						m_vLineColor		= _float4(1.f, 0.f, 0.f, 1.f );
 
-private:
-	class CShader*					m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
-	class CGameInstance*			m_pGameInstance = { nullptr };
-	class CVIBuffer_Rect*			m_pVIBuffer = { nullptr };
+	/* HDR */
 
-	ID3D11Device*					m_pDevice = { nullptr };
-	ID3D11DeviceContext*			m_pContext = { nullptr };
-	ID3D11DepthStencilView*			m_pLightDepthDSV = { nullptr };
+private:
+	class CShader*					m_pShader[SHADER_TYPE::SHADER_END]	= { nullptr };
+	class CGameInstance*			m_pGameInstance						= { nullptr };
+	class CVIBuffer_Rect*			m_pVIBuffer							= { nullptr };
+
+	ID3D11Device*					m_pDevice							= { nullptr };
+	ID3D11DeviceContext*			m_pContext							= { nullptr };
+	ID3D11DepthStencilView*			m_pLightDepthDSV					= { nullptr };
 	list<class CGameObject*>		m_RenderObjects[RENDER_END];
 
 #ifdef _DEBUG

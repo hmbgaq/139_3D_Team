@@ -547,14 +547,8 @@ HRESULT CRenderer::Render_OutLine_PostProcessing()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_HBO_Plus()
+HRESULT CRenderer::Render_HBAO_Plus()
 {
-	//GFSDK_SSAO_InputData_D3D11 Input;
-	//Input.DepthData.DepthTextureType = GFSDK_SSAO_HARDWARE_DEPTHS;
-	//Input.DepthData.pFullResDepthTextureSRV = m_pGameInstance->Get_DepthSRV();
-
-
-
 	return S_OK;
 }
 
@@ -563,6 +557,11 @@ HRESULT CRenderer::Render_Bloom()
 	FAILED_CHECK(Render_Blur(L"Target_Bloom", L"MRT_Bloom_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER), ECast(BLUR_SHADER::BLUR_UP_MAX)));
 	
 	return S_OK;
+}
+
+HRESULT CRenderer::Render_PostProcess()
+{
+	return E_NOTIMPL;
 }
 
 HRESULT CRenderer::Render_RadialBlur()
@@ -613,6 +612,21 @@ HRESULT CRenderer::Render_GodRay()
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
+}
+
+HRESULT CRenderer::Render_FXAA()
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CRenderer::Render_HDR()
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CRenderer::Render_Final()
+{
+	return E_NOTIMPL;
 }
 
 HRESULT CRenderer::Render_OutLineGroup()
