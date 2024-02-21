@@ -192,15 +192,15 @@ VS_OUT_NOISE VS_MAIN_NOISE(VS_IN In)
 	Out.vProjPos = Out.vPosition;
 	
 
-	// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
-	Out.vTexcoord1 = (In.vTexcoord * g_vScales.x);
-	Out.vTexcoord1.y = Out.vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
+	//// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
+	//Out.vTexcoord1 = (In.vTexcoord * g_vScales.x);
+	//Out.vTexcoord1.y = Out.vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
 
-	Out.vTexcoord2 = (In.vTexcoord * g_vScales.y);
-	Out.vTexcoord2.y = Out.vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
+	//Out.vTexcoord2 = (In.vTexcoord * g_vScales.y);
+	//Out.vTexcoord2.y = Out.vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
 
-	Out.vTexcoord3 = (In.vTexcoord * g_vScales.z);
-	Out.vTexcoord3.y = Out.vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
+	//Out.vTexcoord3 = (In.vTexcoord * g_vScales.z);
+	//Out.vTexcoord3.y = Out.vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
 
 
 	return Out;

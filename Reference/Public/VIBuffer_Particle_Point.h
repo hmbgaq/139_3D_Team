@@ -16,12 +16,12 @@ public:
 		TYPE_FADE		eType_Fade = { FADE_NONE };
 
 		/* ป๓ลย */
-		_bool		bActive		= { TRUE };
-		_bool		bBillBoard	= { TRUE };
+		_bool		bActive = { TRUE };
+		_bool		bBillBoard = { TRUE };
 
-		_bool		bIsPlay		= { TRUE };
-		_bool		bReverse	= { FALSE };
-		_bool		bLoop		= { TRUE };
+		_bool		bIsPlay = { TRUE };
+		_bool		bReverse = { FALSE };
+		_bool		bLoop = { TRUE };
 
 		/* LifeTime */
 		_float2		vMinMaxLifeTime;
@@ -129,42 +129,9 @@ public:
 public:
 		PARTICLE_POINT_DESC* Get_Desc() { return &m_tBufferDesc; }
 
-		void			Set_Type_Action(TYPE_ACTION eType) { m_tBufferDesc.eType_Action = eType; }
-		void			Set_Type_Fade(TYPE_FADE eType) { m_tBufferDesc.eType_Fade = eType; }
-
-		void			Set_Loop(_bool bLoop) { m_tBufferDesc.bLoop = bLoop; }
-
-		void			Set_Play(_bool bPlay) { m_tBufferDesc.bIsPlay = bPlay; }
-
-		void			Set_ReversePlay(_bool bReverse) { m_tBufferDesc.bReverse = bReverse; }
-
-		void			Set_LifeTime(_float fMin, _float fMax) { m_tBufferDesc.vMinMaxLifeTime = _float2(fMin, fMax); }
-		void			Set_SpawnTime(_float fMin, _float fMax) { m_tBufferDesc.vMinMaxSpawnTime = _float2(fMin, fMax); }
-
-		void			Set_Range(_float fMinRange, _float fMaxFange) { m_tBufferDesc.vMinMaxRange = _float2(fMinRange, fMaxFange); }
-
-		void			Set_MaxLengthPosition(_float fLength) { m_tBufferDesc.fMaxLengthPosition = fLength; };
-
-		void			Set_AddScale(_float fX, _float fY) { m_tBufferDesc.vAddScale = _float2(fX, fY); }
-
-		void			Set_RotationOffset(MINMAX eMinMax, AXIS eAxis, _float fRotationOffset);
-
-		void			Set_Acceleration(_float fAcceleration) { m_tBufferDesc.fAcceleration = fAcceleration; }
-
-		void			Set_AccPosition(_float fAccPosition) { m_tBufferDesc.fAccPosition = fAccPosition; }
-
-		void			Set_UseGravityPosition(_float fUseGravityPosition) { m_tBufferDesc.fUseGravityPosition = fUseGravityPosition; }
-
-		void			Set_Color(_float fRed, _float fGreen, _float fBlue);
-
-		void			Set_Gravity(_bool bUseGravity) { m_tBufferDesc.bUseGravity = bUseGravity; }
-
-		void			Set_GravityAcc(_float fGravityAcc) { m_tBufferDesc.fGravityAcc = fGravityAcc; }
 	
-
 private:
 	PARTICLE_POINT_DESC			m_tBufferDesc;
-
 
 
 	public:

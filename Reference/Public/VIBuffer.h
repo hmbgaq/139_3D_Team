@@ -29,7 +29,7 @@ protected:
 	ID3D11Buffer*				m_pVB = { nullptr };
 	ID3D11Buffer*				m_pIB = { nullptr };
 
-	/* 지금 내가 만들려고 하는 버퍼의 속성을 설정하낟. */
+	/* 지금 내가 만들려고 하는 버퍼의 속성을 설정한다. */
 	D3D11_BUFFER_DESC			m_BufferDesc;
 	D3D11_SUBRESOURCE_DATA		m_SubResourceData;
 

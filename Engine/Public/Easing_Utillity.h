@@ -80,3 +80,5 @@ namespace Engine
 		 _vector ENGINE_DLL InOutBack(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime);
 	}
 }
+
+// Reference : https://gizma.com/easing/

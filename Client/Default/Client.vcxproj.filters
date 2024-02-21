@@ -250,9 +250,6 @@
     <Filter Include="02.GameObjects\03. Effect\01.Effect_Particle">
       <UniqueIdentifier>{df70ff5e-761f-4541-b7f2-d7d3a9ccdb1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\03. Effect\02.Effect_Texture">
-      <UniqueIdentifier>{7ab3690b-d252-42bf-9ce3-8e496797dcfb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\03. Effect\03.Effect_Instance">
       <UniqueIdentifier>{aba42538-9a52-4da1-a472-94388065bb9e}</UniqueIdentifier>
     </Filter>
@@ -261,6 +258,9 @@
     </Filter>
     <Filter Include="02.GameObjects\03. Effect\05.Effect_Trail">
       <UniqueIdentifier>{8bcd9f93-d4e5-4e7c-99f3-69b93e60c985}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03. Effect\02.Effect_Rect">
+      <UniqueIdentifier>{7ab3690b-d252-42bf-9ce3-8e496797dcfb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -489,14 +489,17 @@
     <ClInclude Include="..\Public\Effect_Trail.h">
       <Filter>02.GameObjects\03. Effect\05.Effect_Trail</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Effect_Texture.h">
-      <Filter>02.GameObjects\03. Effect\02.Effect_Texture</Filter>
+    <ClInclude Include="..\Public\Effect_Rect.h">
+      <Filter>02.GameObjects\03. Effect\02.Effect_Rect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect.h">
       <Filter>02.GameObjects\03. Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Void.h">
+      <Filter>02.GameObjects\03. Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -904,11 +907,14 @@
     <ClCompile Include="..\Private\Effect_Particle.cpp">
       <Filter>02.GameObjects\03. Effect\01.Effect_Particle</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Effect_Texture.cpp">
-      <Filter>02.GameObjects\03. Effect\02.Effect_Texture</Filter>
+    <ClCompile Include="..\Private\Effect_Rect.cpp">
+      <Filter>02.GameObjects\03. Effect\02.Effect_Rect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Trail.cpp">
       <Filter>02.GameObjects\03. Effect\05.Effect_Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Void.cpp">
+      <Filter>02.GameObjects\03. Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

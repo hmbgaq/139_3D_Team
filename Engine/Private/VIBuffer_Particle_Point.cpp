@@ -454,52 +454,6 @@ void CVIBuffer_Particle_Point::ReSet()
 }
 
 
-void CVIBuffer_Particle_Point::Set_RotationOffset(MINMAX eMinMax, AXIS eAxis, _float fRotationOffset)
-{
-	if (MIN == eMinMax)
-	{
-		switch (eAxis)
-		{
-		case Engine::AXIS_X:
-			m_tBufferDesc.vMinMaxRotationOffsetX.x = fRotationOffset;
-			break;
-
-		case Engine::AXIS_Y:
-			m_tBufferDesc.vMinMaxRotationOffsetY.x = fRotationOffset;;
-			break;
-
-		case Engine::AXIS_Z:
-			m_tBufferDesc.vMinMaxRotationOffsetZ.x = fRotationOffset;;
-			break;
-		}
-	}
-
-	if (MAX == eMinMax)
-	{
-		switch (eAxis)
-		{
-		case Engine::AXIS_X:
-			m_tBufferDesc.vMinMaxRotationOffsetX.y = fRotationOffset;;
-			break;
-
-		case Engine::AXIS_Y:
-			m_tBufferDesc.vMinMaxRotationOffsetY.y = fRotationOffset;;
-			break;
-
-		case Engine::AXIS_Z:
-			m_tBufferDesc.vMinMaxRotationOffsetZ.y = fRotationOffset;;
-			break;
-		}
-	}
-
-}
-
-void CVIBuffer_Particle_Point::Set_Color(_float fRed, _float fGreen, _float fBlue)
-{
-	m_tBufferDesc.vCurrentColor.x = fRed;
-	m_tBufferDesc.vCurrentColor.y = fGreen;
-	m_tBufferDesc.vCurrentColor.z = fBlue;
-}
 
 _bool CVIBuffer_Particle_Point::Write_Json(json& Out_Json)
 {

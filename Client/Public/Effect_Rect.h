@@ -6,24 +6,28 @@
 BEGIN(Engine)
 class CShader;
 class CTexture;
+class CVIBuffer_Rect;
 END
 
 BEGIN(Client)
 
-class CEffect_Trail final : public CEffect_Void
+class CEffect_Rect final : public CEffect_Void
 {
 public:
+	enum TYPE { SINGLE, SPRITE, TYPE_END };
+
 	typedef struct tagTextureEffectDesc : public CEffect_Void::EFFECTVOID_DESC
 	{
+		TYPE		eType = { SINGLE };
 
+	}EFFECT_RECT_DESC;
 
-	}TRAIL_DESC;
 
 
 private:
-	CEffect_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CEffect_Trail(const CEffect_Trail& rhs);
-	virtual ~CEffect_Trail() = default;
+	CEffect_Rect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CEffect_Rect(const CEffect_Rect& rhs);
+	virtual ~CEffect_Rect() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -38,9 +42,24 @@ public:
 	CTexture*				Get_TextureCom(TEXTURE eTexture) { return m_pTextureCom[eTexture]; }
 
 public:
-	TRAIL_DESC*		 Get_Desc() { return &m_tTrailDesc; }
-	DISTORTION_DESC* Get_Noise_Desc() { return &m_tDistortionDesc; }
+	EFFECT_RECT_DESC*		Get_Desc() { return &m_tRectDesc; }
+	UVSPRITE_DESC*			Get_Sprite_Desc() { return &m_tSpriteDesc; }
+	DISTORTION_DESC*		Get_Noise_Desc() { return &m_tDistortionDesc; }
 
+	void					Set_Play(_bool bPlay) { m_tRectDesc.bPlay = bPlay; }
+	void					Set_TextureIndex(CEffect_Void::TEXTURE eTexture, _int iIndex) { m_tRectDesc.iTextureIndex[eTexture] = iIndex; }
+
+/* For.UVSprite Desc */
+	void					ReSet_Sprite();
+	void					Set_SpriteTerm(_float fSequenceTerm) { m_tSpriteDesc.fSequenceTerm = fSequenceTerm; }
+
+	void					Set_SpriteTileSize(_float fX, _float fY) { m_tSpriteDesc.vTileSize.x = fX; m_tSpriteDesc.vTileSize.y = fY; }
+	void					Set_SpriteTexSize(_float fX, _float fY) { m_tSpriteDesc.vTextureSize.x = fX; m_tSpriteDesc.vTextureSize.y = fY; }
+	void					Set_MaxTileCount(_int iX, _int iY) { m_tSpriteDesc.vUV_MaxTileCount.x = iX; m_tSpriteDesc.vUV_MaxTileCount.y = iY; }
+
+	void					Set_ShaderPassIndex(_int iShaderPassIndex) { m_tRectDesc.iShaderPassIndex = iShaderPassIndex; }
+
+	void					Set_DiscardValue(_float fDiscardValue) { m_tRectDesc.vColor_Clip.z = fDiscardValue; }
 
 /* For.Distortion Desc*/
 public:
@@ -63,8 +82,10 @@ private:
 	CVIBuffer_Rect*		m_pVIBufferCom				= { nullptr };
 
 private:
-	TRAIL_DESC				m_tTrailDesc = {};
-	DISTORTION_DESC			m_tDistortionDesc = {};
+	EFFECT_RECT_DESC	m_tRectDesc = {};
+	UVSPRITE_DESC		m_tSpriteDesc = {};
+	DISTORTION_DESC		m_tDistortionDesc = {};
+
 
 private:
 	HRESULT Ready_Components();
@@ -73,7 +94,7 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CEffect_Trail* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	static CEffect_Rect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;

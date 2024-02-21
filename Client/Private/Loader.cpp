@@ -31,8 +31,9 @@
 #pragma endregion
 
 #pragma region Effect
+#include "Effect.h"
 #include "Effect_Particle.h"
-#include "Effect_Texture.h"
+#include "Effect_Rect.h"
 #include "Effect_Instance.h"
 //#include "Effect_Mesh.h"
 //#include "Effect_Trail.h"
@@ -186,7 +187,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 	//!환경 모델
 	//!		
 
-	Ready_Environment_Model(LEVEL_GAMEPLAY);
+	//Ready_Environment_Model(LEVEL_GAMEPLAY);
 
 
 	//!버퍼 
@@ -266,7 +267,8 @@ HRESULT CLoader::Loading_For_Tool_Level()
 	_matrix		PivotMatrix;
 
 	//! 캐릭터 모델
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Fiona"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Fiona/Fiona", PivotMatrix)));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Fiona"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Player/Player", PivotMatrix)));
 
@@ -364,8 +366,9 @@ HRESULT CLoader::Ready_Origin()
 
 #pragma region Effect
 	//!유정
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect"), CEffect::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Effect"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Particle"), CEffect_Particle::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Effect_Particle"))));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Texture"), CEffect_Texture::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Effect_Texture"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect_Rect"), CEffect_Rect::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Effect_Rect"))));
 #pragma endregion
 
 	return S_OK;
