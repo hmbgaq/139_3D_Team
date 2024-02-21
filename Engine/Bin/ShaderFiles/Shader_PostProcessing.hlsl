@@ -5,6 +5,7 @@ matrix      g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 Texture2D   g_ProcessingTarget;
 
+bool g_bHDR_Active;
 /* HDR - off일수 있으므로 초기값 줘야함 */ 
 float       g_fGrayScale = 1.f;
 float       g_fContrastValue = 1.f;

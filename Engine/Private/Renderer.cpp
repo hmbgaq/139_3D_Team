@@ -702,8 +702,7 @@ HRESULT CRenderer::Render_PostProcess()
 	 * Motion Blur 
 	 * HDR */
 
-	//if (true == m_bHDR_Active)
-	//	FAILED_CHECK(Render_HDR()); /* HDR - 톤맵핑 */
+	FAILED_CHECK(Render_HDR()); /* HDR - 톤맵핑 */
 
 	FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
 
@@ -722,6 +721,7 @@ HRESULT CRenderer::Render_HDR()
 	/* 변수 올리기 */
 	{
 		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_bHDR_Active", &m_bHDR_Active, sizeof(_bool)));
 		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_ProjMatrix", &HDR_fGrayScale, sizeof(_float)));
 		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_ProjMatrix", &HDR_fContrast, sizeof(_float)));
 		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_ProjMatrix", &HDR_fSaturation, sizeof(_float)));
@@ -730,8 +730,14 @@ HRESULT CRenderer::Render_HDR()
 		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_ProcessingTarget"));
 	}
 
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(POST_SHADER::POST_HDR)));
-
+	if (false == m_bHDR_Active)
+	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(POST_SHADER::POST_ORIGIN)));
+	}
+	else
+	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(POST_SHADER::POST_HDR)));
+	}
 	FAILED_CHECK(m_pVIBuffer->Render());
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
@@ -758,7 +764,7 @@ HRESULT CRenderer::Render_FXAA()
 
 		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
 		//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HDR"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
-		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HDR"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
 	}
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Begin(0));
