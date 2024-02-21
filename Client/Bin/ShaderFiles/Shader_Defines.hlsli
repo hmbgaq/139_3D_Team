@@ -1,11 +1,15 @@
+
+
+#pragma warning(disable : 31) /* HLSL - Texture method 'Sample(sampler, float2)' 경고 */
+#pragma warning(disable: 6146) /* PS에서 RTV에 바인딩안했을때 뜨는 경고 무시 */
 /* ---------------- Sampler ---------------- */
 #define FLT_MAX 3.402823466e+38F
 
 sampler LinearSampler = sampler_state
 {
-	filter = min_mag_mip_linear;
-	AddressU = wrap;
-	AddressV = wrap;
+    filter = min_mag_mip_linear;
+    AddressU = wrap;
+    AddressV = wrap;
 };
 
 sampler PointSampler = sampler_state
@@ -33,11 +37,25 @@ sampler SSAONormalDepth = sampler_state
     MinLOD = 0.0f; //_float
     MaxLOD = FLT_MAX; //_float
 };
+
 sampler SSAORandVec = sampler_state
 {
     filter = MIN_MAG_LINEAR_MIP_POINT;
     AddressU = Wrap;
     AddressV = Wrap;
+};
+
+sampler AnisotropicClampSampler = sampler_state /* For. 안티-앨리어싱 */
+{
+    Filter = ANISOTROPIC;
+    MaxAnisotropy = 4;
+    AddressU = clamp;
+    AddressV = clamp;
+    AddressW = clamp;
+
+    ComparisonFunc = ALWAYS;
+    MaxLOD = 0.f;
+    MinLOD = 0.f;
 };
 
 /* ---------------- Rasterizer ---------------- */

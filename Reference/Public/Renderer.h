@@ -14,40 +14,15 @@ public:
 	{ 
 		/* Priority */
 		RENDER_PRIORITY,RENDER_SHADOW, RENDER_NONLIGHT, 
-					   
 		/* Post Processing  */
 		RENDER_SSAO, RENDER_GODRAY, RENDER_OUTLINE,
-		
 		/* Blend */
 		RENDER_NONBLEND, RENDER_BLEND, 
-		
 		/* UI */
-		RENDER_UI_FRONT, RENDER_UI, RENDER_UI_BACK,
-		
-		RENDER_END };
+		RENDER_UI_FRONT, RENDER_UI, RENDER_UI_BACK,	RENDER_END };
 
 	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FINAL, SHADER_END };
 	
-	struct QuadVertex // ssao 
-	{
-		_float3 pos;
-		_float3 normal;
-		_float2 tex;
-	};
-
-	typedef struct tagXMCOLOR
-	{
-		union {
-			struct {
-				uint8_t b;
-				uint8_t g;
-				uint8_t r;
-				uint8_t a;
-			};
-			uint32_t c;
-		};
-	}XMCOLOR;
-
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderer() = default;
@@ -65,10 +40,7 @@ public:
 	HRESULT Create_RenderTarget();
 	HRESULT Create_DepthStencil();
 	HRESULT Ready_DebugRender();
-	HRESULT Ready_SSAO();
-
-	HRESULT RenderScreenQuad();
-
+	
 #ifdef _DEBUG
 public:
 	void Set_RenderDebug(_bool _bRenderDebug) {	m_bRenderDebug = _bRenderDebug;	}
@@ -79,7 +51,6 @@ private:
 	_float4x4					m_ViewMatrix, m_ProjMatrix;
 
 private:
-	HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
 	
 	HRESULT Render_Priority();
 	HRESULT Render_Shadow();
@@ -92,19 +63,16 @@ private:
 	HRESULT Render_Deferred();
 	HRESULT Render_OutLine_PostProcessing();
 	HRESULT Render_OutLineGroup();
-	HRESULT Render_SSAO();
-	HRESULT Render_SSAO_Blur();
 	HRESULT Render_HBO_Plus();
 	HRESULT Render_Bloom();
 
+	HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
 	HRESULT Render_RadialBlur();
-
 	HRESULT Render_GodRay();
 
 	/* perlin을 이용한 바다물결, 나뭇잎, 불 등 자연스러운 무작위패턴생성 */
 
 #ifdef _DEBUG
-
 private:
 	HRESULT Render_Debug();
 #endif
@@ -121,24 +89,6 @@ public:
 	void Set_OutLine(_bool _Outline_active) { m_bOutline_Active = _Outline_active; }
 
 private:
-	/* SSAO */
-	class CTexture*				m_pRandomVectorTexture = { nullptr };
-	ID3D11Buffer*				m_ScreenQuadVB = { nullptr };
-	ID3D11Buffer*				m_ScreenQuadIB = { nullptr };
-	ID3D11ShaderResourceView*	m_RandomVectorSRV;
-	//SSAO_Data					m_tSSAO_Data;
-	const _matrix				m_mTexture = {	XMMatrixSet(0.5f, 0.0f, 0.0f, 0.0f,	0.0f, -0.5f, 0.0f, 0.0f,0.0f, 0.0f, 1.0f, 0.0f,	0.5f, 0.5f, 0.0f, 1.0f) };
-	_float4						m_vFrustumFarCorner[4];
-	_float4						m_vOffsets[14];
-	_float						m_OffsetsFloat[56];
-	_int						m_iQuadVerCount;
-	_int						m_iQuadIndexCount;
-
-	HRESULT						SSAO_OnSize();
-	HRESULT						BuildFullScreenQuad();
-	void						BuildOffsetVectors();
-	void						BuildRandomVectorTexture();
-	
 	/* BLUR */
 	HRESULT						Render_Blur_DownSample(const wstring& strStartTargetTag);
 	HRESULT						Render_Blur_Horizontal(_int eHorizontalPass);
@@ -157,7 +107,6 @@ private:
 	class CShader*					m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
 	class CGameInstance*			m_pGameInstance = { nullptr };
 	class CVIBuffer_Rect*			m_pVIBuffer = { nullptr };
-	class CVIBuffer_SSAO*			m_pSSAO_VIBuffer = { nullptr };
 
 	ID3D11Device*					m_pDevice = { nullptr };
 	ID3D11DeviceContext*			m_pContext = { nullptr };
@@ -191,4 +140,49 @@ END
 */
 
 /*
+*/
+
+/* SSAO 
+
+	struct QuadVertex // ssao
+	{
+		_float3 pos;
+		_float3 normal;
+		_float2 tex;
+	};
+
+	typedef struct tagXMCOLOR
+	{
+		union {
+			struct {
+				uint8_t b;
+				uint8_t g;
+				uint8_t r;
+				uint8_t a;
+			};
+			uint32_t c;
+		};
+	}XMCOLOR;
+
+HRESULT RenderScreenQuad();
+class CTexture*				m_pRandomVectorTexture = { nullptr };
+	class CVIBuffer_SSAO*			m_pSSAO_VIBuffer = { nullptr };
+ID3D11Buffer*				m_ScreenQuadVB = { nullptr };
+ID3D11Buffer*				m_ScreenQuadIB = { nullptr };
+ID3D11ShaderResourceView*	m_RandomVectorSRV;
+//SSAO_Data					m_tSSAO_Data;
+const _matrix				m_mTexture = {	XMMatrixSet(0.5f, 0.0f, 0.0f, 0.0f,	0.0f, -0.5f, 0.0f, 0.0f,0.0f, 0.0f, 1.0f, 0.0f,	0.5f, 0.5f, 0.0f, 1.0f) };
+_float4						m_vFrustumFarCorner[4];
+_float4						m_vOffsets[14];
+_float						m_OffsetsFloat[56];
+_int						m_iQuadVerCount;
+_int						m_iQuadIndexCount;
+HRESULT Ready_SSAO();
+
+	HRESULT Render_SSAO();
+	HRESULT Render_SSAO_Blur();
+HRESULT						SSAO_OnSize();
+HRESULT						BuildFullScreenQuad();
+void						BuildOffsetVectors();
+void						BuildRandomVectorTexture();
 */

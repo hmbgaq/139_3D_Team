@@ -39,9 +39,6 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_DebugRender()); 
 #endif
 
-	/* ssao - PostProcessing */
-	FAILED_CHECK(Ready_SSAO());
-
 	return S_OK;
 }
 
@@ -51,9 +48,6 @@ HRESULT CRenderer::Create_Buffer()
 {
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	NULL_CHECK_RETURN(m_pVIBuffer, E_FAIL);
-
-	m_pSSAO_VIBuffer = CVIBuffer_SSAO::Create(m_pDevice, m_pContext);
-	NULL_CHECK_RETURN(m_pSSAO_VIBuffer, E_FAIL);
 
 	return S_OK;
 }
@@ -249,7 +243,6 @@ HRESULT CRenderer::Ready_DebugRender()
 HRESULT CRenderer::Draw_RenderGroup()
 {
 #pragma region HOTKEY
-
 	if (m_pGameInstance->Key_Down(DIK_1))
 		m_bSSAO_Active = !m_bSSAO_Active;
 	if (m_pGameInstance->Key_Down(DIK_2))
@@ -265,7 +258,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
 
 	{ /* PostProcessing */
-		if (true == m_bSSAO_Active)
+		/*if (true == m_bSSAO_Active)
 		{
 			FAILED_CHECK(Render_SSAO());
 			FAILED_CHECK(Render_SSAO_Blur());
@@ -274,7 +267,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 		if (true == m_bBloom_Active)
 		{
 			FAILED_CHECK(Render_Bloom());
-		}
+		}*/
 
 		//if (false == m_bOutline_Active)
 		//{
@@ -554,55 +547,6 @@ HRESULT CRenderer::Render_OutLine_PostProcessing()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_SSAO()
-{
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO"))); /* Target SSAO 단독 */
-
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
-
-	/* 변수 올리기 */
-	{
-		/* matViewToTEXsPACE*/
-		_matrix P = m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ);
-		_matrix PT = XMMatrixMultiply(P, m_mTexture);
-		_float4x4 ViewToTexSpcace = {};
-		XMStoreFloat4x4(&ViewToTexSpcace, PT);
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("ViewToTexSpcace", &ViewToTexSpcace));
-
-		/* Offset */
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_OffsetVector", &m_vOffsets, sizeof(_float4) * 14));
-		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_
-		/* Frustum*/
-		//SSAO_OnSize();
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("FrustumCorner", &m_vFrustumFarCorner, sizeof(_float4) * 4));
-		
-		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ViewNormal"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_NormalDepthTarget"));
-		//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_RandomVectorTexture"));
-		FAILED_CHECK(m_pRandomVectorTexture->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_RandomVectorTexture"));
-		
-		/* SSAO : crysis 게임을 위해 crytek에서 개발한 주변 폐색을 근사화하는 빠른기술. 
-		 * 장면의 각 픽셀에 대한 법선 및 깊이정보를 포함하는 렌더대상에 장면을 그린다. 
-		 * 이 값들을 샘플링하여 각 픽셀의 폐색값을 계산해 디퍼드 셰이더효과에서 폐색값ㅇ르 샘플링하여 조명계산에서 주변항목을 수정할 수 있도록한다. */
-	}
-
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(SSAO_SHADER::SSAO)));
-	
-	//FAILED_CHECK(m_pSSAO_VIBuffer->Render());
-
-	FAILED_CHECK(m_pGameInstance->End_MRT());
-
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_SSAO_Blur()
-{
-	Render_Blur(L"Target_SSAO", L"MRT_SSAO_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER), ECast(BLUR_SHADER::BLUR_UP_ADD));
-	
-	return S_OK;
-}
-
 HRESULT CRenderer::Render_HBO_Plus()
 {
 	//GFSDK_SSAO_InputData_D3D11 Input;
@@ -715,219 +659,6 @@ HRESULT CRenderer::Render_Debug()
 }
 #endif
 
-#pragma endregion
-
-#pragma region ssao_initialize
-
-HRESULT CRenderer::Ready_SSAO()
-{
-	/* ssao 객체 생성 
-		: SSAO 개체를 만들려면 Direct3D 장치, DeviceContext, 화면 크기, 카메라 fov 및 카메라 원거리 평면 거리를 전달해야한다. */
-	FAILED_CHECK(SSAO_OnSize());
-
-	FAILED_CHECK(BuildFullScreenQuad());/* 왜 이거안하지..? */
-
-	BuildOffsetVectors();
-
-	BuildRandomVectorTexture();
-
-	m_pRandomVectorTexture = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/RandomNormalTexture.jpg"), 1);
-
-	NULL_CHECK_RETURN(m_pRandomVectorTexture, E_FAIL);
-
-	return S_OK;
-}
-
-HRESULT CRenderer::SSAO_OnSize()
-{
-	/* + BuildFrustumFarCorners */
-	_float4 CamSetting = m_pGameInstance->Get_CamSetting();
-	// { Cam_near, Cam_far, Cam_fovY, Cam_aspectRatio };
-	/* 카메라의 원근투영행렬에서 사용되는값. 
-	 * 원근투영의 가장 먼 클리핑 평면을 나타낸다. */
-
-	_float fNear = CamSetting.x;
-	_float fFar = CamSetting.y;
-	_float fFovY = CamSetting.z;
-	_float fAspect = g_iWinsizeX / g_iWinsizeY;
-
-	_float fHalfHeight = fFar * tanf(0.5f * fFovY);
-	_float fHalfWidth = fAspect * fHalfHeight;
-
-	m_vFrustumFarCorner[0] = _float4(-fHalfWidth, -fHalfHeight, fFar, 0.0f);
-	m_vFrustumFarCorner[1] = _float4(-fHalfWidth, +fHalfHeight, fFar, 0.0f);
-	m_vFrustumFarCorner[2] = _float4(+fHalfWidth, +fHalfHeight, fFar, 0.0f);
-	m_vFrustumFarCorner[3] = _float4(+fHalfWidth, -fHalfHeight, fFar, 0.0f);
-
-	return S_OK;
-}
-
-HRESULT CRenderer::BuildFullScreenQuad()
-{
-	m_iQuadVerCount = 4;
-	m_iQuadIndexCount = 6;
-
-	/* Vertex */
-	QuadVertex* pVertices = new QuadVertex[m_iQuadVerCount];
-	NULL_CHECK_RETURN(pVertices, E_FAIL);
-	{
-		pVertices[0].pos = _float3(-1.0f, -1.0f, 0.0f);
-		pVertices[1].pos = _float3(-1.0f, +1.0f, 0.0f);
-		pVertices[2].pos = _float3(+1.0f, +1.0f, 0.0f);
-		pVertices[3].pos = _float3(+1.0f, -1.0f, 0.0f);
-
-		pVertices[0].normal = _float3(0.0f, 0.0f, 0.0f);
-		pVertices[1].normal = _float3(1.0f, 0.0f, 0.0f);
-		pVertices[2].normal = _float3(2.0f, 0.0f, 0.0f);
-		pVertices[3].normal = _float3(3.0f, 0.0f, 0.0f);
-
-		pVertices[0].tex = _float2(0.0f, 1.0f);
-		pVertices[1].tex = _float2(0.0f, 0.0f);
-		pVertices[2].tex = _float2(1.0f, 0.0f);
-		pVertices[3].tex = _float2(1.0f, 1.0f);
-
-		D3D11_BUFFER_DESC vertexBufferDesc;
-		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		vertexBufferDesc.ByteWidth = sizeof(QuadVertex) * m_iQuadVerCount;
-		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBufferDesc.CPUAccessFlags = 0;
-		vertexBufferDesc.MiscFlags = 0;
-		vertexBufferDesc.StructureByteStride = 0;
-
-		D3D11_SUBRESOURCE_DATA vertexData;
-		vertexData.pSysMem = pVertices;
-		vertexData.SysMemPitch = 0;
-		vertexData.SysMemSlicePitch = 0;
-
-		FAILED_CHECK(m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexData, &m_ScreenQuadVB));
-	}
-
-	/* Index */
-	_ulong* pIndices = new _ulong[m_iQuadIndexCount];
-	NULL_CHECK_RETURN(pIndices, E_FAIL);
-	{
-		D3D11_BUFFER_DESC  indexBufferDesc;
-		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		indexBufferDesc.ByteWidth = sizeof(_ulong) * m_iQuadIndexCount;
-		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		indexBufferDesc.CPUAccessFlags = 0;
-		indexBufferDesc.MiscFlags = 0;
-		indexBufferDesc.StructureByteStride = 0;
-
-		pIndices[0] = 0; pIndices[1] = 1; pIndices[2] = 2;
-		pIndices[3] = 0; pIndices[4] = 2; pIndices[5] = 3;
-
-		D3D11_SUBRESOURCE_DATA indexData;
-		indexData.pSysMem = pIndices;
-		indexData.SysMemPitch = 0;
-		indexData.SysMemSlicePitch = 0;
-
-		FAILED_CHECK(m_pDevice->CreateBuffer(&indexBufferDesc, &indexData, &m_ScreenQuadIB));
-	}
-
-	Safe_Delete_Array<QuadVertex*>(pVertices);
-	Safe_Delete_Array<_ulong*>(pIndices);
-
-	return S_OK;
-}
-
-void CRenderer::BuildOffsetVectors()
-{
-	// 14개의 균일하게 분포된 벡터로 시작.
-	// 정육면체의 8개의 모서리를 선택, 각 면을 따라 6개 중심점을 선택한다.
-	// 항상 다른 쪽 면을 기준으로 이 점을 번갈아 사용한다. -> 정육면체 반대쪽도 균등하게 가능 
-	// 14개 미만의 샘플링 포인트를 선택할 때에도 벡터를 균등하게 분산시킬 수 있다.
-	
-	// 8 cube corners
-	m_vOffsets[0] = _float4(+1.0f, +1.0f, +1.0f, 0.0f);
-	m_vOffsets[1] = _float4(-1.0f, -1.0f, -1.0f, 0.0f);
-					
-	m_vOffsets[2] = _float4(-1.0f, +1.0f, +1.0f, 0.0f);
-	m_vOffsets[3] = _float4(+1.0f, -1.0f, -1.0f, 0.0f);
-					
-	m_vOffsets[4] = _float4(+1.0f, +1.0f, -1.0f, 0.0f);
-	m_vOffsets[5] = _float4(-1.0f, -1.0f, +1.0f, 0.0f);
-					
-	m_vOffsets[6] = _float4(-1.0f, +1.0f, -1.0f, 0.0f);
-	m_vOffsets[7] = _float4(+1.0f, -1.0f, +1.0f, 0.0f);
-
-	// 6 centers of cube faces
-	m_vOffsets[8] = _float4(-1.0f, 0.0f, 0.0f, 0.0f);
-	m_vOffsets[9] = _float4(+1.0f, 0.0f, 0.0f, 0.0f);
-
-	m_vOffsets[10] = _float4(0.0f, -1.0f, 0.0f, 0.0f);
-	m_vOffsets[11] = _float4(0.0f, +1.0f, 0.0f, 0.0f);
-
-	m_vOffsets[12] = _float4(0.0f, 0.0f, -1.0f, 0.0f);
-	m_vOffsets[13] = _float4(0.0f, 0.0f, +1.0f, 0.0f);
-
-	for (_uint i = 0; i < 14; ++i)
-	{
-		// [0.25, 1.0] 사이의 임의의 벡터를 만든다.
-		_float fRandom = SMath::fRandom(0.25f, 1.0f);
-
-		_vector v = fRandom * XMVector4Normalize(XMLoadFloat4(&m_vOffsets[i]));
-
-		XMStoreFloat4(&m_vOffsets[i], v);
-	}
-}
-
-void CRenderer::BuildRandomVectorTexture()
-{
-	/* HLSL에 난수생성기가 없기 때문에 셰이더에서 사용할 수 있는 무작위 벡터로 채워진 텍스쳐를 만들어야한다. */
-	D3D11_TEXTURE2D_DESC textureDesc;
-	textureDesc.Width = 256;
-	textureDesc.Height = 256;
-	textureDesc.MipLevels = 1;
-	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	textureDesc.SampleDesc.Count = 1;
-	textureDesc.SampleDesc.Quality = 0;
-	textureDesc.Usage = D3D11_USAGE_IMMUTABLE;
-	textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	textureDesc.CPUAccessFlags = 0;
-	textureDesc.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA vertexData = { 0 };
-	vertexData.SysMemPitch = 256 * sizeof(XMCOLOR);
-
-	vector<XMCOLOR> color(256 * 256);
-	for (int i = 0; i < 256; ++i)
-	{
-		for (int j = 0; j < 256; ++j)
-		{
-			_float3 vRand = { SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f) };
-
-			color[i * 256 + j] = { (uint8_t)vRand.x, (uint8_t)vRand.y, (uint8_t)vRand.z, (uint8_t)0.0f };
-		}
-	}
-	vertexData.pSysMem = color.data();
-
-	ID3D11Texture2D* pTexture = nullptr;
-
-	m_pDevice->CreateTexture2D(&textureDesc, &vertexData, &pTexture);
-
-	m_pDevice->CreateShaderResourceView(pTexture, 0, &m_RandomVectorSRV);
-}
-
-HRESULT CRenderer::RenderScreenQuad()
-{
-	if (nullptr == m_pContext)
-		return E_FAIL;
-
-	_uint stride = sizeof(QuadVertex);
-	_uint offset = 0;
-
-	m_pContext->IASetVertexBuffers(0, 1, &m_ScreenQuadVB, &stride, &offset);
-
-	m_pContext->IASetIndexBuffer(m_ScreenQuadIB, DXGI_FORMAT_R32_UINT, 0);
-
-	m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	m_pContext->DrawIndexed(m_iQuadIndexCount, 0, 0);
-
-	return S_OK;
-}
 #pragma endregion
 
 #pragma region Blur
@@ -1121,15 +852,274 @@ void CRenderer::Free()
 	for (_int i = 0; i < ECast(SHADER_TYPE::SHADER_END); ++i)
 		Safe_Release(m_pShader[i]);
 
-	/* ssao 해제 */
-	Safe_Release(m_pRandomVectorTexture);
-	Safe_Release(m_RandomVectorSRV);
-	Safe_Release(m_ScreenQuadVB);
-	Safe_Release(m_ScreenQuadIB);
-
+	Safe_Release(m_pVIBuffer);
 	Safe_Release(m_pLightDepthDSV);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 }
+
+#pragma endregion
+
+#pragma region ssao_initialize
+//
+//HRESULT CRenderer::Ready_SSAO()
+//{
+//	// ssao 객체 생성
+//	//	: SSAO 개체를 만들려면 Direct3D 장치, DeviceContext, 화면 크기, 카메라 fov 및 카메라 원거리 평면 거리를 전달해야한다. 
+//		
+//FAILED_CHECK(SSAO_OnSize());
+//
+//FAILED_CHECK(BuildFullScreenQuad());/* 왜 이거안하지..? */
+//
+//BuildOffsetVectors();
+//
+//BuildRandomVectorTexture();
+//
+//m_pRandomVectorTexture = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/RandomNormalTexture.jpg"), 1);
+//
+//NULL_CHECK_RETURN(m_pRandomVectorTexture, E_FAIL);
+//
+//return S_OK;
+//}
+//
+//HRESULT CRenderer::SSAO_OnSize()
+//{
+//	/* + BuildFrustumFarCorners */
+//	_float4 CamSetting = m_pGameInstance->Get_CamSetting();
+//	// { Cam_near, Cam_far, Cam_fovY, Cam_aspectRatio };
+//	/* 카메라의 원근투영행렬에서 사용되는값.
+//	 * 원근투영의 가장 먼 클리핑 평면을 나타낸다. */
+//
+//	_float fNear = CamSetting.x;
+//	_float fFar = CamSetting.y;
+//	_float fFovY = CamSetting.z;
+//	_float fAspect = g_iWinsizeX / g_iWinsizeY;
+//
+//	_float fHalfHeight = fFar * tanf(0.5f * fFovY);
+//	_float fHalfWidth = fAspect * fHalfHeight;
+//
+//	m_vFrustumFarCorner[0] = _float4(-fHalfWidth, -fHalfHeight, fFar, 0.0f);
+//	m_vFrustumFarCorner[1] = _float4(-fHalfWidth, +fHalfHeight, fFar, 0.0f);
+//	m_vFrustumFarCorner[2] = _float4(+fHalfWidth, +fHalfHeight, fFar, 0.0f);
+//	m_vFrustumFarCorner[3] = _float4(+fHalfWidth, -fHalfHeight, fFar, 0.0f);
+//
+//	return S_OK;
+//}
+//
+//HRESULT CRenderer::BuildFullScreenQuad()
+//{
+//	m_iQuadVerCount = 4;
+//	m_iQuadIndexCount = 6;
+//
+//	/* Vertex */
+//	QuadVertex* pVertices = new QuadVertex[m_iQuadVerCount];
+//	NULL_CHECK_RETURN(pVertices, E_FAIL);
+//	{
+//		pVertices[0].pos = _float3(-1.0f, -1.0f, 0.0f);
+//		pVertices[1].pos = _float3(-1.0f, +1.0f, 0.0f);
+//		pVertices[2].pos = _float3(+1.0f, +1.0f, 0.0f);
+//		pVertices[3].pos = _float3(+1.0f, -1.0f, 0.0f);
+//
+//		pVertices[0].normal = _float3(0.0f, 0.0f, 0.0f);
+//		pVertices[1].normal = _float3(1.0f, 0.0f, 0.0f);
+//		pVertices[2].normal = _float3(2.0f, 0.0f, 0.0f);
+//		pVertices[3].normal = _float3(3.0f, 0.0f, 0.0f);
+//
+//		pVertices[0].tex = _float2(0.0f, 1.0f);
+//		pVertices[1].tex = _float2(0.0f, 0.0f);
+//		pVertices[2].tex = _float2(1.0f, 0.0f);
+//		pVertices[3].tex = _float2(1.0f, 1.0f);
+//
+//		D3D11_BUFFER_DESC vertexBufferDesc;
+//		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+//		vertexBufferDesc.ByteWidth = sizeof(QuadVertex) * m_iQuadVerCount;
+//		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+//		vertexBufferDesc.CPUAccessFlags = 0;
+//		vertexBufferDesc.MiscFlags = 0;
+//		vertexBufferDesc.StructureByteStride = 0;
+//
+//		D3D11_SUBRESOURCE_DATA vertexData;
+//		vertexData.pSysMem = pVertices;
+//		vertexData.SysMemPitch = 0;
+//		vertexData.SysMemSlicePitch = 0;
+//
+//		FAILED_CHECK(m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexData, &m_ScreenQuadVB));
+//	}
+//
+//	/* Index */
+//	_ulong* pIndices = new _ulong[m_iQuadIndexCount];
+//	NULL_CHECK_RETURN(pIndices, E_FAIL);
+//	{
+//		D3D11_BUFFER_DESC  indexBufferDesc;
+//		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+//		indexBufferDesc.ByteWidth = sizeof(_ulong) * m_iQuadIndexCount;
+//		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+//		indexBufferDesc.CPUAccessFlags = 0;
+//		indexBufferDesc.MiscFlags = 0;
+//		indexBufferDesc.StructureByteStride = 0;
+//
+//		pIndices[0] = 0; pIndices[1] = 1; pIndices[2] = 2;
+//		pIndices[3] = 0; pIndices[4] = 2; pIndices[5] = 3;
+//
+//		D3D11_SUBRESOURCE_DATA indexData;
+//		indexData.pSysMem = pIndices;
+//		indexData.SysMemPitch = 0;
+//		indexData.SysMemSlicePitch = 0;
+//
+//		FAILED_CHECK(m_pDevice->CreateBuffer(&indexBufferDesc, &indexData, &m_ScreenQuadIB));
+//	}
+//
+//	Safe_Delete_Array<QuadVertex*>(pVertices);
+//	Safe_Delete_Array<_ulong*>(pIndices);
+//
+//	return S_OK;
+//}
+//
+//void CRenderer::BuildOffsetVectors()
+//{
+//	// 14개의 균일하게 분포된 벡터로 시작.
+//	// 정육면체의 8개의 모서리를 선택, 각 면을 따라 6개 중심점을 선택한다.
+//	// 항상 다른 쪽 면을 기준으로 이 점을 번갈아 사용한다. -> 정육면체 반대쪽도 균등하게 가능 
+//	// 14개 미만의 샘플링 포인트를 선택할 때에도 벡터를 균등하게 분산시킬 수 있다.
+//
+//	// 8 cube corners
+//	m_vOffsets[0] = _float4(+1.0f, +1.0f, +1.0f, 0.0f);
+//	m_vOffsets[1] = _float4(-1.0f, -1.0f, -1.0f, 0.0f);
+//
+//	m_vOffsets[2] = _float4(-1.0f, +1.0f, +1.0f, 0.0f);
+//	m_vOffsets[3] = _float4(+1.0f, -1.0f, -1.0f, 0.0f);
+//
+//	m_vOffsets[4] = _float4(+1.0f, +1.0f, -1.0f, 0.0f);
+//	m_vOffsets[5] = _float4(-1.0f, -1.0f, +1.0f, 0.0f);
+//
+//	m_vOffsets[6] = _float4(-1.0f, +1.0f, -1.0f, 0.0f);
+//	m_vOffsets[7] = _float4(+1.0f, -1.0f, +1.0f, 0.0f);
+//
+//	// 6 centers of cube faces
+//	m_vOffsets[8] = _float4(-1.0f, 0.0f, 0.0f, 0.0f);
+//	m_vOffsets[9] = _float4(+1.0f, 0.0f, 0.0f, 0.0f);
+//
+//	m_vOffsets[10] = _float4(0.0f, -1.0f, 0.0f, 0.0f);
+//	m_vOffsets[11] = _float4(0.0f, +1.0f, 0.0f, 0.0f);
+//
+//	m_vOffsets[12] = _float4(0.0f, 0.0f, -1.0f, 0.0f);
+//	m_vOffsets[13] = _float4(0.0f, 0.0f, +1.0f, 0.0f);
+//
+//	for (_uint i = 0; i < 14; ++i)
+//	{
+//		// [0.25, 1.0] 사이의 임의의 벡터를 만든다.
+//		_float fRandom = SMath::fRandom(0.25f, 1.0f);
+//
+//		_vector v = fRandom * XMVector4Normalize(XMLoadFloat4(&m_vOffsets[i]));
+//
+//		XMStoreFloat4(&m_vOffsets[i], v);
+//	}
+//}
+//
+//void CRenderer::BuildRandomVectorTexture()
+//{
+//	/* HLSL에 난수생성기가 없기 때문에 셰이더에서 사용할 수 있는 무작위 벡터로 채워진 텍스쳐를 만들어야한다. */
+//	D3D11_TEXTURE2D_DESC textureDesc;
+//	textureDesc.Width = 256;
+//	textureDesc.Height = 256;
+//	textureDesc.MipLevels = 1;
+//	textureDesc.ArraySize = 1;
+//	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+//	textureDesc.SampleDesc.Count = 1;
+//	textureDesc.SampleDesc.Quality = 0;
+//	textureDesc.Usage = D3D11_USAGE_IMMUTABLE;
+//	textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+//	textureDesc.CPUAccessFlags = 0;
+//	textureDesc.MiscFlags = 0;
+//
+//	D3D11_SUBRESOURCE_DATA vertexData = { 0 };
+//	vertexData.SysMemPitch = 256 * sizeof(XMCOLOR);
+//
+//	vector<XMCOLOR> color(256 * 256);
+//	for (int i = 0; i < 256; ++i)
+//	{
+//		for (int j = 0; j < 256; ++j)
+//		{
+//			_float3 vRand = { SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f) };
+//
+//			color[i * 256 + j] = { (uint8_t)vRand.x, (uint8_t)vRand.y, (uint8_t)vRand.z, (uint8_t)0.0f };
+//		}
+//	}
+//	vertexData.pSysMem = color.data();
+//
+//	ID3D11Texture2D* pTexture = nullptr;
+//
+//	m_pDevice->CreateTexture2D(&textureDesc, &vertexData, &pTexture);
+//
+//	m_pDevice->CreateShaderResourceView(pTexture, 0, &m_RandomVectorSRV);
+//}
+//
+//HRESULT CRenderer::RenderScreenQuad()
+//{
+//	if (nullptr == m_pContext)
+//		return E_FAIL;
+//
+//	_uint stride = sizeof(QuadVertex);
+//	_uint offset = 0;
+//
+//	m_pContext->IASetVertexBuffers(0, 1, &m_ScreenQuadVB, &stride, &offset);
+//
+//	m_pContext->IASetIndexBuffer(m_ScreenQuadIB, DXGI_FORMAT_R32_UINT, 0);
+//
+//	m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+//
+//	m_pContext->DrawIndexed(m_iQuadIndexCount, 0, 0);
+//
+//	return S_OK;
+//}
+
+//HRESULT CRenderer::Render_SSAO()
+//{
+//	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO"))); /* Target SSAO 단독 */
+//
+//	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+//	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+//	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+//
+//	/* 변수 올리기 */
+//	{
+//		/* matViewToTEXsPACE*/
+//		_matrix P = m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ);
+//		_matrix PT = XMMatrixMultiply(P, m_mTexture);
+//		_float4x4 ViewToTexSpcace = {};
+//		XMStoreFloat4x4(&ViewToTexSpcace, PT);
+//		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("ViewToTexSpcace", &ViewToTexSpcace));
+//
+//		/* Offset */
+//		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_OffsetVector", &m_vOffsets, sizeof(_float4) * 14));
+//		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_
+//		/* Frustum*/
+//		//SSAO_OnSize();
+//		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("FrustumCorner", &m_vFrustumFarCorner, sizeof(_float4) * 4));
+//
+//		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ViewNormal"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_NormalDepthTarget"));
+//		//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_RandomVectorTexture"));
+//		FAILED_CHECK(m_pRandomVectorTexture->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_RandomVectorTexture"));
+//
+//		/* SSAO : crysis 게임을 위해 crytek에서 개발한 주변 폐색을 근사화하는 빠른기술.
+//		 * 장면의 각 픽셀에 대한 법선 및 깊이정보를 포함하는 렌더대상에 장면을 그린다.
+//		 * 이 값들을 샘플링하여 각 픽셀의 폐색값을 계산해 디퍼드 셰이더효과에서 폐색값ㅇ르 샘플링하여 조명계산에서 주변항목을 수정할 수 있도록한다. */
+//	}
+//
+//	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(SSAO_SHADER::SSAO)));
+//
+//	//FAILED_CHECK(m_pSSAO_VIBuffer->Render());
+//
+//	FAILED_CHECK(m_pGameInstance->End_MRT());
+//
+//	return S_OK;
+//}
+//
+//HRESULT CRenderer::Render_SSAO_Blur()
+//{
+//	Render_Blur(L"Target_SSAO", L"MRT_SSAO_Blur", true, ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER), ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER), ECast(BLUR_SHADER::BLUR_UP_ADD));
+//
+//	return S_OK;
+//}
 
 #pragma endregion
