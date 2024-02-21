@@ -5,6 +5,7 @@
 #include "Animation.h"
 #include "VIBuffer_AnimModel_Instance.h"
 #include "Bone.h"
+#include "Mesh.h"
 
 CInstanceMonster::CInstanceMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -23,21 +24,29 @@ HRESULT CInstanceMonster::Initialize_Prototype()
 
 HRESULT CInstanceMonster::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+
+	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
+
+	GameObjectDesc.fSpeedPerSec = 1.f;
+	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+	if (FAILED(__super::Initialize(&GameObjectDesc)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Instance()))
-		return E_FAIL;
-
-	m_pModelCom->Set_Animation(rand() % 20);
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(_float(rand() % 20), 0.f, _float(rand() % 20), 1.f));
 
 	m_iRenderPass = 0;
 	m_fTimeDelta = 0;
+
+	
+	m_pModelCom->Set_Animation(rand() % 20);
+
+	if (FAILED(Ready_Instance()))
+		return E_FAIL;
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(_float(rand() % 20), 0.f, _float(rand() % 20), 1.f));
 
 	return S_OK;
 }
@@ -48,6 +57,10 @@ void CInstanceMonster::Priority_Tick(_float fTimeDelta)
 
 void CInstanceMonster::Tick(_float fTimeDelta)
 {
+	m_fTimeDelta = fTimeDelta;
+
+	
+
 }
 
 void CInstanceMonster::Late_Tick(_float fTimeDelta)
@@ -60,7 +73,7 @@ void CInstanceMonster::Late_Tick(_float fTimeDelta)
 
 		m_pModelCom->Play_Animation(fTimeDelta, &vRootAnimPos);
 
-		m_pTransformCom->Add_RootBone_Position(vRootAnimPos);
+		//m_pTransformCom->Add_RootBone_Position(vRootAnimPos);
 
 		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 			return;
@@ -73,41 +86,60 @@ void CInstanceMonster::Late_Tick(_float fTimeDelta)
 
 HRESULT CInstanceMonster::Render()
 {
-	Ready_Render(24);
-	Render_Instance(24);
-		
+	/*_uint iIndex = 0;
 
+		
+	for (_int j = 0; j < m_iNumInstance; ++j)
+	{
+		Add_InstanceData(m_iNumInstance, iIndex);
+	}
+	*/
+
+	//Ready_Render(m_iNumInstance);
+	Render_Instance(m_iNumInstance);
+		
+	
 	return S_OK;
 }
 
 HRESULT CInstanceMonster::Ready_Render(_uint iSize)
 {
 	if(m_pContext == nullptr || m_tInstanceDesc.pInstanceTexture == nullptr || m_tInstanceDesc.pMatrix == nullptr)
+	{
+		MSG_BOX("레디 렌더에서 E_FAIL");
 		return E_FAIL;
+	}
 
 	
 	size_t iSizePerInstance = m_pModelCom->Get_Bones()->size() * sizeof(_float4x4);
-	
-
-	//for (_int i = 0; i < iSizePerInstance; ++i)
-	//{
-	//	XMStoreFloat4x4(&m_tInstanceDesc.pMatrix[i], XMMatrixIdentity());
-	//}
-
-	
 
 	D3D11_MAPPED_SUBRESOURCE		SubResource = {};
 
-	m_pContext->Map(m_tInstanceDesc.pInstanceTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
+	
 
-//	if (FAILED(m_pContext->Map(m_tInstanceDesc.pInstanceTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
-//		return E_FAIL;
+	if (FAILED(m_pContext->Map(m_tInstanceDesc.pInstanceTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
+		return E_FAIL;
+
+
 
 	memcpy(SubResource.pData, m_tInstanceDesc.pMatrix, iSizePerInstance * iSize);
 	
+
 	m_pContext->Unmap(m_tInstanceDesc.pInstanceTexture, 0);
 
+	{
 	
+		size_t iSizePerInstance = sizeof(_uint) + sizeof(_float4x4); // 인슽스턴싱 ID +  부모 월드행렬
+	
+		D3D11_MAPPED_SUBRESOURCE		SubResource = {};
+	
+		if (FAILED(m_pContext->Map(m_pInstanceModelCom->Get_VertexBuffer(), 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
+			return E_FAIL;
+	
+		memcpy(SubResource.pData, m_tInstanceDesc.pByte, iSizePerInstance * iSize);
+	
+		m_pContext->Unmap(m_pInstanceModelCom->Get_VertexBuffer(), 0);
+	}
 	
 	return S_OK;
 }
@@ -115,7 +147,6 @@ HRESULT CInstanceMonster::Ready_Render(_uint iSize)
 HRESULT CInstanceMonster::Render_Instance(_uint iSize)
 {
 	
-
 
 	//hr = FAILED(m_tInstanceDesc.pInstanceShader->Bind_SRV("g_InstanceTransform", m_tInstanceDesc.pInstanceSRV));
 	if(FAILED(m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture")))
@@ -135,7 +166,8 @@ HRESULT CInstanceMonster::Render_Instance(_uint iSize)
 	
 	for (_int i = 0; i < iMeshSize; ++i)
 	{
-		if(FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i)))
+
+		if(FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i, m_fReturnMatrix)))
 			return E_FAIL;
 		
 		if(FAILED(m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE)))
@@ -153,14 +185,26 @@ HRESULT CInstanceMonster::Render_Instance(_uint iSize)
 		}
 
 		
+		_uint iIndex = 0;
+
+
+		for (_int j = 0; j < m_iNumInstance; ++j)
+		{
+			Add_InstanceData(m_iNumInstance, iIndex, m_fReturnMatrix);
+		}
+
+
 
 		if(FAILED(m_pShaderCom->Bind_SRV("g_InstanceTransform", m_tInstanceDesc.pInstanceSRV)))
 			return E_FAIL;
 
+
+
 		if(FAILED(m_pShaderCom->Begin(m_iRenderPass)))
 			return E_FAIL;
 
-		if(FAILED(m_pInstanceModelCom->Render(m_pModelCom->Get_Mesh_For_Index(i), i)))
+
+		if(FAILED(m_pInstanceModelCom->Render(m_pModelCom->Get_Mesh_For_Index(i), m_iNumInstance)))
 			return E_FAIL;
 
 		
@@ -228,120 +272,78 @@ HRESULT CInstanceMonster::Bind_ShaderResources()
 HRESULT CInstanceMonster::Ready_Instance()
 {
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
-
-	if(FAILED(Create_AnimationTexture()))
-		return E_FAIL;
-
-
-
-// 	if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Shader_AnimModel_Instance"),
-// 		TEXT("Com_InstanceShader"), reinterpret_cast<CComponent**>(&m_tInstanceDesc.pInstanceShader))))
-// 		return E_FAIL;
+	m_tInstanceDesc.iMaxInstanceCount = 500;
 
 	//! 버퍼
 
 	//Instance
+	{
+ 		size_t iSizePerInstacne = sizeof(_uint) + sizeof(_float4x4);
+
+		m_tInstanceDesc.pByte = new BYTE[iSizePerInstacne * m_tInstanceDesc.iMaxInstanceCount];
+		ZeroMemory(m_tInstanceDesc.pByte, iSizePerInstacne * m_tInstanceDesc.iMaxInstanceCount);
+
+		{
+			CVIBuffer_AnimModel_Instance::ANIMINSTANCE_BUFFER_DESC BufferDesc = {};
+
+			BufferDesc.iMaxInstanceCount = m_tInstanceDesc.iMaxInstanceCount;
+			BufferDesc.iSizePerSecond = (_uint)iSizePerInstacne;
+			BufferDesc.pByte = m_tInstanceDesc.pByte;
+
+ 			if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_VIBuffer_AnimModel_Instance"),
+ 				TEXT("Com_InstanceBuffer"), reinterpret_cast<CComponent**>(&m_pInstanceModelCom), &BufferDesc)))
+ 				return E_FAIL;
+		}
+
+		{
+			_uint iBoneCount = m_pModelCom->Get_Bones()->size();
+
+
+			m_tInstanceDesc.pMatrix = new _float4x4[m_tInstanceDesc.iMaxInstanceCount * iBoneCount];
+			ZeroMemory(m_tInstanceDesc.pMatrix, m_tInstanceDesc.iMaxInstanceCount * iBoneCount);
+
+			//!텍스처 
+			
+			D3D11_TEXTURE2D_DESC desc;
+			ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+			desc.Width = iBoneCount * 4;
+			desc.Height = m_tInstanceDesc.iMaxInstanceCount;
+			desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
+			desc.Usage = D3D11_USAGE_DYNAMIC;
+			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			desc.MipLevels = 1;
+			desc.SampleDesc.Count = 1;
+			desc.ArraySize = 1;
+
+			D3D11_SUBRESOURCE_DATA tSubResources;
+
+			tSubResources.pSysMem = m_tInstanceDesc.pMatrix;
+			tSubResources.SysMemPitch = iBoneCount * sizeof(_float4x4);
+
+			if (FAILED(m_pDevice->CreateTexture2D(&desc, &tSubResources, &m_tInstanceDesc.pInstanceTexture)))
+				return E_FAIL;
+		}
+
+		{
+			//!SRV
+
+			D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+			ZeroMemory(&desc, sizeof(desc));
+			desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+			desc.Texture2D.MipLevels = 1;
+
+			if (FAILED(m_pDevice->CreateShaderResourceView(m_tInstanceDesc.pInstanceTexture, &desc, &m_tInstanceDesc.pInstanceSRV)))
+				return E_FAIL;
+		}
+		
+	}
 	
-// 		size_t iSizePerInstacne = sizeof(_uint) + sizeof(_float4x4);
-// 
-// 		
-// 		//BYTE* pData = new BYTE[iSizePerInstacne * m_tInstanceDesc.iMaxInstanceCount];
-// 		//ZeroMemory(pData, iSizePerInstacne * m_tInstanceDesc.iMaxInstanceCount);
-// 
-// 		m_tInstanceDesc.pByte = new BYTE[iSizePerInstacne * m_tInstanceDesc.iMaxInstanceCount];
-// 		ZeroMemory(m_tInstanceDesc.pByte, iSizePerInstacne * m_tInstanceDesc.iMaxInstanceCount);
-// 
-// 		m_tInstanceDesc.iSizePerSecond = iSizePerInstacne;
-// 	
-// 	//! 텍스처
-// 		_uint iBoneSize = m_pModelCom->Get_Bones()->size();
-// 		//_float4x4* pMatrix = new _float4x4[m_tInstanceDesc.iMaxInstanceCount * iBoneSize];
-// 		//ZeroMemory(pMatrix, sizeof(_float4x4) * (m_tInstanceDesc.iMaxInstanceCount * iBoneSize));
-// 		
-// 		m_tInstanceDesc.pMatrix = new _float4x4[m_tInstanceDesc.iMaxInstanceCount * iBoneSize];
-// 		ZeroMemory(m_tInstanceDesc.pMatrix, sizeof(_float4x4) * (m_tInstanceDesc.iMaxInstanceCount * iBoneSize));
-// 
-// 		
-// 
-// 		D3D11_TEXTURE2D_DESC	TextureDesc;
-// 		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
-// 
-// 		TextureDesc.Width = iBoneSize * 4;
-// 		TextureDesc.Height = m_tInstanceDesc.iMaxInstanceCount;
-// 		TextureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
-// 		TextureDesc.Usage = D3D11_USAGE_DYNAMIC;
-// 		TextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-// 		TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-// 		TextureDesc.MipLevels = 1;
-// 		TextureDesc.SampleDesc.Count = 1;
-// 		TextureDesc.ArraySize = 1;
-// 
-// 		D3D11_SUBRESOURCE_DATA tSubResources;
-// 
-// 		tSubResources.pSysMem = m_tInstanceDesc.pMatrix;
-// 		tSubResources.SysMemPitch = iBoneSize * sizeof(_float4x4);
-// 
-// 		
-// 		if(FAILED(m_pDevice->CreateTexture2D(&TextureDesc, &tSubResources, &m_tInstanceDesc.pInstanceTexture)))
-// 			return E_FAIL;
-// 
-// 
-// 		D3D11_TEXTURE2D_DESC Desc;
-// 		m_tInstanceDesc.pInstanceTexture->GetDesc(&Desc);
-// 
-// 		if (Desc.Width == 0 || Desc.Height == 0 || Desc.Format == DXGI_FORMAT_UNKNOWN)
-// 		{
-// 			return E_FAIL;
-// 		}
-// 
-// 		
-// 
-// 
-// 	// Create SRV
-// 		D3D11_SHADER_RESOURCE_VIEW_DESC desc;
-// 		ZeroMemory(&desc, sizeof(desc));
-// 		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-// 		desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-// 		desc.Texture2D.MipLevels = 1;
-// 
-// 		if (FAILED(m_pDevice->CreateShaderResourceView(m_tInstanceDesc.pInstanceTexture, &desc, &m_tInstanceDesc.pInstanceSRV)))
-// 			return E_FAIL;
-// 	
-// 
-// 	CVIBuffer_AnimModel_Instance::ANIMINSTANCE_BUFFER_DESC InstanceBufferDesc = {};
-// 
-// 	InstanceBufferDesc.Desc = m_tInstanceDesc;
-// 
-// 	if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_VIBuffer_AnimModel_Instance"),
-// 		TEXT("Com_InstanceBuffer"), reinterpret_cast<CComponent**>(&m_pInstanceModelCom), &InstanceBufferDesc)))
-// 		return E_FAIL;
 
-
+/*	Ready_Render(2);*/
 
 	return S_OK;
-
-	//!아래 내용은 임시보관
-	//! // 		{
-// 			D3D11_BUFFER_DESC			BufferDesc;
-// 
-// 			ZeroMemory(&BufferDesc, sizeof(D3D11_BUFFER_DESC));
-// 
-// 			// m_BufferDesc.ByteWidth = 정점하나의 크기(Byte) * 정점의 갯수;
-// 			BufferDesc.ByteWidth = m_tInstanceDesc.iMaxInstanceCount * (_uint)iSizePerInstacne;
-// 			BufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
-// 			BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-// 			BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-// 			BufferDesc.MiscFlags = 0;
-// 			BufferDesc.StructureByteStride = (_uint)iSizePerInstacne;
-// 
-// 			D3D11_SUBRESOURCE_DATA		InitialData;
-// 
-// 			InitialData.pSysMem = m_tInstanceDesc.pByte;
-// 
-// 			if (FAILED(m_pDevice->CreateBuffer(&BufferDesc, &InitialData, m_tInstanceDesc.pInstanceBuffer)))
-// 				return E_FAIL;
-// 		}
-
 }
 
 HRESULT CInstanceMonster::Create_AnimationTexture()
@@ -387,6 +389,7 @@ HRESULT CInstanceMonster::Create_AnimationTexture()
 	vector<CBone*> Bones = *m_pModelCom->Get_Bones();
 
 
+	_int iIndex = 0;
 
 	for (_int i = 0; i < iMaxBoneSize; ++i)
 	{
@@ -402,10 +405,10 @@ HRESULT CInstanceMonster::Create_AnimationTexture()
 		XMStoreFloat4(&vLook, pMatrix.r[2]);
 		XMStoreFloat4(&vPosition, pMatrix.r[3]);
 
-		memcpy(pCurrentDataPtr++, &vRight, sizeof(_float4));
-		memcpy(pCurrentDataPtr++, &vUp, sizeof(_float4));
-		memcpy(pCurrentDataPtr++, &vLook, sizeof(_float4));
-		memcpy(pCurrentDataPtr++, &vPosition, sizeof(_float4));
+		memcpy(&pCurrentDataPtr[iIndex++], &vRight, sizeof(_float4));
+		memcpy(&pCurrentDataPtr[iIndex++], &vUp, sizeof(_float4));
+		memcpy(&pCurrentDataPtr[iIndex++], &vLook, sizeof(_float4));
+		memcpy(&pCurrentDataPtr[iIndex++], &vPosition, sizeof(_float4));
 	}
 
 	D3D11_SUBRESOURCE_DATA SubResources = {};
@@ -419,6 +422,7 @@ HRESULT CInstanceMonster::Create_AnimationTexture()
 
 	Safe_Delete(pData);
 
+
 	D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc = {};
 
 	SRVDesc.Format = TextureDesc.Format;
@@ -431,31 +435,59 @@ HRESULT CInstanceMonster::Create_AnimationTexture()
 	return S_OK;
 }
 
-void CInstanceMonster::Add_InstanceData(_uint iSize, _uint& iIndex)
+void CInstanceMonster::Add_InstanceData(_uint iSize, _uint& iIndex, _float4x4* CalcMatrix)
 {
+	{
+		BYTE* pInstanceValue = m_tInstanceDesc.pByte;
+
+		size_t iBufferPerInstance = sizeof(_uint) + sizeof(_float4x4);
+		_uint  iDataIndex = iIndex * (_uint)iBufferPerInstance; 
+		_uint	iID = iIndex;
+
+
+		_float4x4 matWorld = m_pTransformCom->Get_WorldFloat4x4();
+	
+
+		memcpy(pInstanceValue + iDataIndex, &iID, sizeof(_uint));
+		memcpy(pInstanceValue + iDataIndex + sizeof(_uint), &matWorld, sizeof(_float4x4));
+
+	}
+
 	{
 		_float4x4* pAnimInstanceValue = m_tInstanceDesc.pMatrix;
 
-		_uint iBoneSize = m_pModelCom->Get_Bones()->size();
+
+
+		vector<CBone*> Bones = *m_pModelCom->Get_Bones();
+
+		
+
+		_uint iBoneSize = Bones.size();
 
 		size_t iSizePerInstance = iBoneSize * sizeof(_float4x4);
 		_uint iDataIndex = iIndex * iBoneSize;
 
-		vector<CBone*> Bones = *m_pModelCom->Get_Bones();
+
 		
 
-		vector<_float4x4> BoneMatrices;
-		BoneMatrices.reserve(Bones.size());
-
-		for (_int i = 0; i < Bones.size(); ++i)
+		// 위치 성분 설정
+		for (_int i = 0; i < 800; ++i)
 		{
-			BoneMatrices.push_back(Bones[i]->Get_CombinedTransformationMatrix());
+			m_fReturnMatrix[i]._41 = iIndex;
+			
 		}
+		
 
-		memcpy(pAnimInstanceValue + iDataIndex, BoneMatrices.data(), iSizePerInstance);
+		memcpy(pAnimInstanceValue + iDataIndex, m_fReturnMatrix, iSizePerInstance);
 	}
 
+	if (iSize - 1 == iIndex)
+		Ready_Render(iSize);
+	else
+		++iIndex;
 }
+
+
 
 CInstanceMonster* CInstanceMonster::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

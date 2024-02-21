@@ -281,6 +281,7 @@ namespace Engine
 			_vector vCenterFromVector = XMLoadFloat3(&vCenter);
 			XMStoreFloat3(&vCenter, XMVector3TransformCoord(vCenterFromVector, Get_Matrix()));
 		}
+
 	}INSTANCE_INFO_DESC;
 
 	typedef struct ENGINE_DLL tagAnimInstanceDesc
@@ -311,16 +312,29 @@ namespace Engine
 		_uint						iMaxInstanceCount = 0;
 		_uint						iSizePerSecond = 0;
 		//class CShader*				pInstanceShader =	{ nullptr };
+
 		ID3D11ShaderResourceView*	pInstanceSRV = {nullptr};
 		ID3D11Texture2D*			pInstanceTexture =	{ nullptr };
 		BYTE*						pByte = { nullptr };
 		_float4x4*					pMatrix = { nullptr };
 
-		AnimInstanceDesc() {};
+		 AnimInstanceDesc() {};
 		~AnimInstanceDesc();
 
 	}ANIMMODEL_INSTANCE_DESC;
 
+	struct InstanceDataElement
+	{
+		_float4 world1;            // the world transform for this matrix row 1
+		_float4 world2;            // the world transform for this matrix row 2
+		_float4 world3;            // the world transform for this matrix row 3 (row 4 is implicit)
+
+		// $ Technically this is bundled, but there is not class that makes a uint vector, so just keep flat
+		UINT animationIndex;            // offset in vectors into the whole data stream for the start of the animation playing
+		UINT frameOffset;            // offset in vectors into the animation stream for the start of the frame playing
+		UINT attachmentSet;            // the id to determine which geo attachments get set
+		UINT lerpValue;            // lerp between frames
+	};
 
 #pragma endregion ±¸Á¶Ã¼
 

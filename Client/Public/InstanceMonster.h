@@ -42,11 +42,19 @@ private:
 		HRESULT				Create_AnimationTexture();
 	
 
-	void				Add_InstanceData(_uint iSize, _uint& iIndex);
+	void				Add_InstanceData(_uint iSize, _uint& iIndex, _float4x4* CalcMatrix);
+	
 
 private:
 	_int					m_iRenderPass = { 0 };
+	_int					m_iNumInstance = 500;
 	_float					m_fTimeDelta;
+
+	_float					m_fTimeAcc = 0.f;
+	_bool					m_bTest = false;
+
+	
+	_float4x4				m_fReturnMatrix[800];
 
 private:
 	CModel*							m_pModelCom = { nullptr };

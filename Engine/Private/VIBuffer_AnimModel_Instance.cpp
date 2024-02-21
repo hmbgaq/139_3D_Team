@@ -5,7 +5,7 @@
 #include "Mesh.h"
 
 CVIBuffer_AnimModel_Instance::CVIBuffer_AnimModel_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CVIBuffer(pDevice,pContext)
+	: CVIBuffer(pDevice, pContext)
 {
 }
 
@@ -24,30 +24,32 @@ HRESULT CVIBuffer_AnimModel_Instance::Initialize(void* pArg)
 	m_tModelDesc = *(ANIMINSTANCE_BUFFER_DESC*)pArg;
 
 	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
-	
-	m_BufferDesc.ByteWidth = m_tModelDesc.Desc.iMaxInstanceCount * m_tModelDesc.Desc.iSizePerSecond;
+
+	m_BufferDesc.ByteWidth = m_tModelDesc.iMaxInstanceCount * m_tModelDesc.iSizePerSecond;
 	m_BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_SHADER_RESOURCE;
 	m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	m_BufferDesc.MiscFlags = 0;
-	m_BufferDesc.StructureByteStride = m_tModelDesc.Desc.iSizePerSecond;
-	
-	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-	m_SubResourceData.pSysMem = m_tModelDesc.Desc.pByte;
+	m_BufferDesc.StructureByteStride = m_tModelDesc.iSizePerSecond;
 
+	D3D11_SUBRESOURCE_DATA		InitialData;
 
-	FAILED_CHECK(__super::Create_Buffer(&m_pVB));
+	InitialData.pSysMem = m_tModelDesc.pByte;
+
+	FAILED_CHECK(m_pDevice->CreateBuffer(&m_BufferDesc, &InitialData, &m_pVB));
+
+	//FAILED_CHECK(__super::Create_Buffer(&m_pVB));
 
 	return S_OK;
 }
 
 HRESULT CVIBuffer_AnimModel_Instance::Bind_VIBuffers(CMesh* pMesh)
 {
-	if(nullptr == pMesh)
+	if (nullptr == pMesh)
 		return E_FAIL;
 
 
-	_uint iInstanceStride = sizeof(_float4x4);
+	_uint iInstanceStride = sizeof(_uint) + sizeof(_float4x4);
 
 	ID3D11Buffer* pVertexBuffers[] = {
 		pMesh->Get_VertexBuffer(),
@@ -78,18 +80,21 @@ HRESULT CVIBuffer_AnimModel_Instance::Bind_VIBuffers(CMesh* pMesh)
 
 }
 
-HRESULT CVIBuffer_AnimModel_Instance::Render(CMesh* pMesh, _int iMeshIndex)
+HRESULT CVIBuffer_AnimModel_Instance::Render(CMesh* pMesh, _uint iSize)
 {
-	Bind_VIBuffers(pMesh);
+	if(nullptr == pMesh || iSize <= 0)
+		return E_FAIL;
 
-	m_pContext->DrawIndexedInstanced(pMesh->Get_NumIndices(), m_tModelDesc.Desc.iSizePerSecond, 0, 0, 0);
-	
+	Bind_VIBuffers(pMesh);
+	 
+	m_pContext->DrawIndexedInstanced(pMesh->Get_NumIndices(), iSize, 0, 0, 0);
+
 	return S_OK;
 }
 
 void CVIBuffer_AnimModel_Instance::Update(_float fTimeDelta)
 {
-	
+
 }
 
 
@@ -124,7 +129,7 @@ CComponent* CVIBuffer_AnimModel_Instance::Clone(void* pArg)
 void CVIBuffer_AnimModel_Instance::Free()
 {
 	__super::Free();
-	
+
 
 	if (m_isCloned == true)
 	{
@@ -133,5 +138,5 @@ void CVIBuffer_AnimModel_Instance::Free()
 		//Safe_Delete(m_tModelDesc);
 
 	}
-	
+
 }
