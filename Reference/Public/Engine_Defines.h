@@ -2,10 +2,12 @@
  #pragma once
 
 /* Warning Disable */
+#pragma warning(disable : 31) /* HLSL - Texture method 'Sample(sampler, float2)' 경고 */
 #pragma warning(disable : 4251) /* dll template export warning */
 #pragma warning	(disable : 4819)  /* 한글 주석 경고 */
 #pragma warning (disable : 26812) /* enumclass warning */
 #pragma warning (disable : 4275) /* XMFLOAT에서 DLL EXPORT 하는 warning  */
+#pragma warning(disable: 6146) /* ps에서 RTV에 바인딩안했을때 뜨는 경고 무시 */
 //#pragma warning (disable : 2532) /* 템플릿 인스턴스화 경고 무시  */
 //#pragma warning (disable : 4353) /* 비표준확장 */
 //#pragma warning (disable : 26495) /* initialize warning */

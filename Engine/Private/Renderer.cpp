@@ -61,10 +61,13 @@ HRESULT CRenderer::Create_Buffer()
 
 HRESULT CRenderer::Create_Shader()
 {
+	m_pShader[SHADER_TYPE::SHADER_SSAO] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_SSAO.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements);
+	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_SSAO], E_FAIL);
+
 	m_pShader[SHADER_TYPE::SHADER_DEFERRED] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
 	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_DEFERRED], E_FAIL);
-
-	m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_PostProcess.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements);
+	
+	m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_PostProcessing.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
 	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], E_FAIL);
 
 	m_pShader[SHADER_TYPE::SHADER_BLUR] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Blur.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
@@ -298,7 +301,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Render_PostProcess()); /* 모션블러, Radial 블러 등등 */
 
-	FAILED_CHECK(Render_Final()); /* 모션블러, Radial 블러 등등 */
+	FAILED_CHECK(Render_Final()); /* 마지막화면용 - 마지막 체크 위해서 */
 
 	
 	/* 그려진 장면에 그리기 */
@@ -313,8 +316,6 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	return S_OK;
 }
-
-#pragma region RenderCall
 
 #pragma region RenderGroup
 
@@ -445,8 +446,6 @@ HRESULT CRenderer::Render_UI()
 	return S_OK;
 }
 
-#pragma endregion
-
 HRESULT CRenderer::Render_LightAcc()
 {
 	/* Shade */
@@ -574,31 +573,31 @@ HRESULT CRenderer::Render_SSAO()
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO"))); /* Target SSAO 단독 -> Blur 연계해야함 */
 	/* 변수 올리기 */
 	{
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_SSAO]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_SSAO]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_SSAO]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
 		/* matViewToTEXsPACE*/
 		_matrix P = m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ);
 		_matrix PT = XMMatrixMultiply(P, m_mTexture);
 		_float4x4 ViewToTexSpcace = {};
 		XMStoreFloat4x4(&ViewToTexSpcace, PT);
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("ViewToTexSpcace", &ViewToTexSpcace)); /* matViewToTexSpace */
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_SSAO]->Bind_Matrix("ViewToTexSpcace", &ViewToTexSpcace)); /* matViewToTexSpace */
 
 		/* Offset */
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_OffsetVector", &m_vOffsets, sizeof(_float4) * 14));
-		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_SSAO]->Bind_RawValue("g_OffsetVector", &m_vOffsets, sizeof(_float4) * 14));
+		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_SSAO]->Bind_
 		
 		/* Frustum*/
 		SSAO_OnSize();
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("FrustumCorner", &m_vFrustumFarCorner, sizeof(_float4) * 4));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_SSAO]->Bind_RawValue("FrustumCorner", &m_vFrustumFarCorner, sizeof(_float4) * 4));
 		
-		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ViewNormal"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_NormalDepthTarget"));
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ViewNormal"), m_pShader[SHADER_TYPE::SHADER_SSAO], "g_NormalDepthTarget"));
 		
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Texture("g_RandomVectorTexture", m_pRandomSRV));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_SSAO]->Bind_Texture("g_RandomVectorTexture", m_pRandomSRV));
 	}
 
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(SSAO_SHADER::SSAO)));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_SSAO]->Begin(ECast(SSAO_SHADER::SSAO)));
 	
 	FAILED_CHECK(m_pSSAO_VIBuffer->Render());
 
@@ -692,8 +691,43 @@ HRESULT CRenderer::Render_RadialBlur()
 
 HRESULT CRenderer::Render_PostProcess()
 {
+	/* Screen Space Reflect(SSR) 
+	 * Procedure Decal 
+	 * ChromaticAberration 
+	 * Motion Blur 
+	 * HDR */
+
+	if (true == m_bHDR_Active)
+		FAILED_CHECK(Render_HDR()); /* HDR - 톤맵핑 */
+
 	if(true == m_bTest_Active)
 		FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
+
+	return S_OK;
+}
+#pragma region PostPorcessing
+
+HRESULT CRenderer::Render_HDR()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_FXAA"))); /* Target_FXAA*/
+
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	/* 변수 올리기 */
+	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_RawValue("g_bFxaa", &m_bFXAA_Active, sizeof(_bool)));
+	}
+
+	/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
+
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Begin(0));
+
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
@@ -728,6 +762,11 @@ HRESULT CRenderer::Render_FXAA()
 	return S_OK;
 }
 
+
+#pragma endregion
+
+#pragma region Final
+
 HRESULT CRenderer::Render_Final()
 {
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
@@ -749,6 +788,8 @@ HRESULT CRenderer::Render_Final()
 
 	return S_OK;
 }
+
+#pragma endregion
 
 HRESULT CRenderer::Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear)
 {

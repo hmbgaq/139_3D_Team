@@ -781,7 +781,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Outline.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcess.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_SSAO.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Blur.hlsl">
@@ -794,6 +794,9 @@
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Final.hlsl">
+      <Filter>98.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcessing.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
