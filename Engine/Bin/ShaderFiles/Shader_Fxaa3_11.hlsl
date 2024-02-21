@@ -34,7 +34,7 @@ cbuffer cbFxaaFrame : register(b0)
     float4 gFrame = float4(1.0f / 1600.f, 1.0f / 900.f, 0, 0);
 };
 
-Texture2D g_FinalTarget : register(t0);
+Texture2D g_FinalTarget : register(t0); /* 올려야하는 텍스쳐가 이거임 */ 
 
 #define FxaaToFloat3(a) FxaaFloat3((a), (a), (a))
 

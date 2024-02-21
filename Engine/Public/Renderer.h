@@ -156,26 +156,32 @@ private:
 	void						Calc_Blur_GaussianWeights(_int sigma, _int iSize, _Out_ void* Weights);
 
 	/* Radial Blur */
-	_float4						m_fRadialBlurQuality = {};
-	_float4						m_fRadialBlurPower = {};
+	_float4						m_fRadialBlurQuality	= {};
+	_float4						m_fRadialBlurPower		= {};
 
 	/* OutLine */
-	_float4						m_vLineColor		= _float4(1.f, 0.f, 0.f, 1.f );
+	_float4						m_vLineColor			= _float4(1.f, 0.f, 0.f, 1.f );
+
+	/* HDR */
+	_float						HDR_fGrayScale			= 1.f;
+	_float						HDR_fContrast			= 1.f;
+	_float						HDR_fSaturation			= 1.f;
+	_float						HDR_fPadding;
 
 private:
-	class CShader*					m_pShader[SHADER_TYPE::SHADER_END] = { nullptr };
-	class CGameInstance*			m_pGameInstance = { nullptr };
-	class CVIBuffer_Rect*			m_pVIBuffer = { nullptr };
-	class CVIBuffer_SSAO*			m_pSSAO_VIBuffer = { nullptr };
+	class CShader*				m_pShader[SHADER_TYPE::SHADER_END]	= { nullptr };
+	class CGameInstance*		m_pGameInstance						= { nullptr };
+	class CVIBuffer_Rect*		m_pVIBuffer							= { nullptr };
+	class CVIBuffer_SSAO*		m_pSSAO_VIBuffer					= { nullptr };
 
-	ID3D11Device*					m_pDevice = { nullptr };
-	ID3D11DeviceContext*			m_pContext = { nullptr };
-	ID3D11DepthStencilView*			m_pLightDepthDSV = { nullptr };
-	list<class CGameObject*>		m_RenderObjects[RENDER_END];
+	ID3D11Device*				m_pDevice							= { nullptr };
+	ID3D11DeviceContext*		m_pContext							= { nullptr };
+	ID3D11DepthStencilView*		m_pLightDepthDSV					= { nullptr };
+	list<class CGameObject*>	m_RenderObjects[RENDER_END];
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponent;
-	_bool						m_bRenderDebug = { true };
+	_bool						m_bRenderDebug						= { true };
 #endif
 
 public:

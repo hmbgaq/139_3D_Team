@@ -1,8 +1,15 @@
 #include "Shader_Defines.hlsli"
 
-matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+/* Origin */
+matrix      g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-Texture2D g_ProcessingTarget;
+Texture2D   g_ProcessingTarget;
+
+/* HDR - off일수 있으므로 초기값 줘야함 */ 
+float       g_fGrayScale = 1.f;
+float       g_fContrastValue = 1.f;
+float       g_fSaturation = 1.f; /*  값을 0 ~ 1로 고정해주는 Clamp 역할*/ 
+float       g_fPadding;
 
 struct VS_IN
 {
@@ -52,7 +59,8 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    float4 vProcess = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+    float4 vProcess = g_ProcessingTarget.Sample(PointSampler, In.vTexcoord);
+    
     Out.vColor = vProcess;
     
     return Out;
@@ -60,9 +68,22 @@ PS_OUT PS_MAIN(PS_IN In)
 
 
 /* ------------------- 1 - HDR Pixel Shader -------------------*/
+
+float3 reinhard(float3 hdr)
+{
+    return hdr / (1.0 + hdr);
+}
+
 PS_OUT PS_MAIN_HDR(PS_IN In)
 {
+    /* Reinhard TMO */ 
     PS_OUT Out = (PS_OUT) 0;
+    
+    float3 vColor = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord).xyz;
+	
+    vColor = reinhard(vColor);
+
+    Out.vColor = float4(vColor, 1.f);
     
     return Out;
 }

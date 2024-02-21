@@ -702,11 +702,10 @@ HRESULT CRenderer::Render_PostProcess()
 	 * Motion Blur 
 	 * HDR */
 
-	if (true == m_bHDR_Active)
-		FAILED_CHECK(Render_HDR()); /* HDR - 톤맵핑 */
+	//if (true == m_bHDR_Active)
+	//	FAILED_CHECK(Render_HDR()); /* HDR - 톤맵핑 */
 
-	if(true == m_bTest_Active)
-		FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
+	FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
 
 	return S_OK;
 }
@@ -723,8 +722,14 @@ HRESULT CRenderer::Render_HDR()
 	/* 변수 올리기 */
 	{
 		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
-		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_FinalTarget"));
+		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_ProjMatrix", &HDR_fGrayScale, sizeof(_float)));
+		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_ProjMatrix", &HDR_fContrast, sizeof(_float)));
+		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_ProjMatrix", &HDR_fSaturation, sizeof(_float)));
+		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_ProjMatrix", &HDR_fPadding, sizeof(_float)));
+
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_ProcessingTarget"));
 	}
+
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(POST_SHADER::POST_HDR)));
 
 	FAILED_CHECK(m_pVIBuffer->Render());
@@ -749,11 +754,14 @@ HRESULT CRenderer::Render_FXAA()
 
 	/* 변수 올리기 */
 	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_RawValue("g_bFxaa", &m_bFXAA_Active, sizeof(_bool)));
+
 		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
+		//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HDR"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
 		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
 	}
 
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Begin(ECast(POST_SHADER::POST_HDR)));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Begin(0));
 
 	FAILED_CHECK(m_pVIBuffer->Render());
 
@@ -772,15 +780,7 @@ HRESULT CRenderer::Render_Final()
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
-	/* 최종그림 그리기 */
-	wstring EndTarget = L"";
-
-	if (true == m_bTest_Active)
-		EndTarget = TEXT("Target_FXAA");
-	else
-		EndTarget = TEXT("Target_PrePostProcess");
-
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(EndTarget, m_pShader[SHADER_TYPE::SHADER_FINAL], "g_FinalTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_FXAA"), m_pShader[SHADER_TYPE::SHADER_FINAL], "g_FinalTarget"));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Begin(0));
 
 	FAILED_CHECK(m_pVIBuffer->Render());
@@ -1235,11 +1235,11 @@ HRESULT CRenderer::Pre_Setting()
 	//if (m_pGameInstance->Key_Down(DIK_4))
 	//	m_bOutline_Active = !m_bOutline_Active;
 
-	if (m_pGameInstance->Key_Down(DIK_2))
-		m_bTest_Active = !m_bTest_Active;
-	
 	if (m_pGameInstance->Key_Down(DIK_3))
 		m_bHDR_Active = !m_bHDR_Active;
+	
+	if (m_pGameInstance->Key_Down(DIK_4))
+		m_bFXAA_Active = !m_bFXAA_Active;
 
 	Render_DebugOnOff();
 #pragma endregion
