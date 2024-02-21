@@ -48,6 +48,10 @@ private:
 private:
 	_int					m_iRenderPass = { 0 };
 	_int					m_iNumInstance = 500;
+
+
+
+
 	_float					m_fTimeDelta;
 
 	_float					m_fTimeAcc = 0.f;

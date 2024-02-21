@@ -164,7 +164,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 	}
 
 	json BasicJson = Stage1MapJson["Basic_Json"];
-	_int iBasicJsonSize = BasicJson.size();
+	_int iBasicJsonSize = (_int)BasicJson.size();
 
 	for (_int i = 0; i < iBasicJsonSize; ++i)
 	{

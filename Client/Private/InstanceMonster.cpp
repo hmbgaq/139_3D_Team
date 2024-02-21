@@ -86,16 +86,7 @@ void CInstanceMonster::Late_Tick(_float fTimeDelta)
 
 HRESULT CInstanceMonster::Render()
 {
-	/*_uint iIndex = 0;
 
-		
-	for (_int j = 0; j < m_iNumInstance; ++j)
-	{
-		Add_InstanceData(m_iNumInstance, iIndex);
-	}
-	*/
-
-	//Ready_Render(m_iNumInstance);
 	Render_Instance(m_iNumInstance);
 		
 	
@@ -187,7 +178,6 @@ HRESULT CInstanceMonster::Render_Instance(_uint iSize)
 		
 		_uint iIndex = 0;
 
-
 		for (_int j = 0; j < m_iNumInstance; ++j)
 		{
 			Add_InstanceData(m_iNumInstance, iIndex, m_fReturnMatrix);
@@ -197,7 +187,6 @@ HRESULT CInstanceMonster::Render_Instance(_uint iSize)
 
 		if(FAILED(m_pShaderCom->Bind_SRV("g_InstanceTransform", m_tInstanceDesc.pInstanceSRV)))
 			return E_FAIL;
-
 
 
 		if(FAILED(m_pShaderCom->Begin(m_iRenderPass)))
@@ -296,7 +285,7 @@ HRESULT CInstanceMonster::Ready_Instance()
 		}
 
 		{
-			_uint iBoneCount = m_pModelCom->Get_Bones()->size();
+			_uint iBoneCount = (_uint)m_pModelCom->Get_Bones()->size();
 
 
 			m_tInstanceDesc.pMatrix = new _float4x4[m_tInstanceDesc.iMaxInstanceCount * iBoneCount];
@@ -391,7 +380,7 @@ HRESULT CInstanceMonster::Create_AnimationTexture()
 
 	_int iIndex = 0;
 
-	for (_int i = 0; i < iMaxBoneSize; ++i)
+	for (_uint i = 0; i < iMaxBoneSize; ++i)
 	{
 		_float4x4* pFrameMatrices = new float4x4;
 		XMStoreFloat4x4(pFrameMatrices, Bones[i]->Get_CombinedTransformationMatrix());
@@ -462,22 +451,18 @@ void CInstanceMonster::Add_InstanceData(_uint iSize, _uint& iIndex, _float4x4* C
 
 		
 
-		_uint iBoneSize = Bones.size();
+		_uint iBoneSize = (_uint)Bones.size();
 
 		size_t iSizePerInstance = iBoneSize * sizeof(_float4x4);
 		_uint iDataIndex = iIndex * iBoneSize;
 
-
-		
-
 		// 위치 성분 설정
 		for (_int i = 0; i < 800; ++i)
 		{
-			m_fReturnMatrix[i]._41 = iIndex;
+			m_fReturnMatrix[i]._41 = (_float)iIndex;
 			
 		}
 		
-
 		memcpy(pAnimInstanceValue + iDataIndex, m_fReturnMatrix, iSizePerInstance);
 	}
 
