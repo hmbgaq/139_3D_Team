@@ -94,6 +94,11 @@ CGameObject* CPlayer_Weapon_ELWinchester::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CPlayer_Weapon_ELWinchester::Pool()
+{
+	return new CPlayer_Weapon_ELWinchester(*this);
+}
+
 void CPlayer_Weapon_ELWinchester::Free()
 {
 	__super::Free();

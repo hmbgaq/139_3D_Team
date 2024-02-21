@@ -27,6 +27,9 @@ public:
 	static CPlayer_Weapon_ELShotgun* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	virtual CGameObject* Clone(void* pArg) override;
+
+	virtual CGameObject* Pool();
+
 	virtual void Free() override;
 };
 

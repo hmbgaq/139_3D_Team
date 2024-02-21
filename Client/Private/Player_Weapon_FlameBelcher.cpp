@@ -94,6 +94,11 @@ CGameObject* CPlayer_Weapon_FlameBelcher::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CPlayer_Weapon_FlameBelcher::Pool()
+{
+	return new CPlayer_Weapon_FlameBelcher(*this);
+}
+
 void CPlayer_Weapon_FlameBelcher::Free()
 {
 	__super::Free();

@@ -193,7 +193,7 @@ void CPhysXCollider::Create_DynamicActor(PHYSXCOLLIDERDESC& tPhysXColliderDesc, 
 		if (!pShape)
 		{
 			// Shape가 생성되지 않음.
-			DEBUG_ASSERT;
+			//DEBUG_ASSERT;
 		}
 
 		pShape->setSimulationFilterData(m_FilterData);
@@ -239,7 +239,7 @@ void CPhysXCollider::Create_StaticActor(PHYSXCOLLIDERDESC& tPhysXColliderDesc, P
 		if (!pShape)
 		{
 			// Shape가 생성되지 않음.
-			DEBUG_ASSERT;
+			//DEBUG_ASSERT;
 		}
 
 		pShape->setSimulationFilterData(m_FilterData);

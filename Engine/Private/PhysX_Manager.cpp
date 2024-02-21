@@ -221,8 +221,8 @@ void CPhysX_Manager::Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshD
 	PxDefaultMemoryOutputStream writeBuffer;
 	PxTriangleMeshCookingResult::Enum result;
 	bool status = m_pCooking->cookTriangleMesh(In_MeshDesc, writeBuffer, &result);
-	if (!status)
-		DEBUG_ASSERT;
+	//if (!status)
+		//DEBUG_ASSERT;
 
 	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 	*ppOut = m_pPhysics->createTriangleMesh(readBuffer);

@@ -94,6 +94,11 @@ CGameObject* CPlayer_Weapon_Shotgun::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CPlayer_Weapon_Shotgun::Pool()
+{
+	return new CPlayer_Weapon_Shotgun(*this);
+}
+
 void CPlayer_Weapon_Shotgun::Free()
 {
 	__super::Free();

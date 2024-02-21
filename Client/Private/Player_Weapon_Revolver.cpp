@@ -96,7 +96,7 @@ CGameObject* CPlayer_Weapon_Revolver::Clone(void* pArg)
 
 CGameObject* CPlayer_Weapon_Revolver::Pool()
 {
-	return nullptr;
+	return new CPlayer_Weapon_Revolver(*this);
 }
 
 void CPlayer_Weapon_Revolver::Free()
