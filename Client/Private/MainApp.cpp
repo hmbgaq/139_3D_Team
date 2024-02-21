@@ -153,9 +153,9 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 	//
 
 	// UI텍스처 로드(주석 풀고 병합하기)
-	///* For.Ready_UITexture */ // + SH_Add
-	//if (FAILED(Ready_UITexture()))
-	//	return E_FAIL;
+	/* For.Ready_UITexture */ // + SH_Add
+	if (FAILED(Ready_UITexture()))
+		return E_FAIL;
 
 	return S_OK;
 }

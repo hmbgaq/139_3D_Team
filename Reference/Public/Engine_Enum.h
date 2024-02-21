@@ -36,7 +36,6 @@ namespace Engine
 
 	enum AXIS { AXIS_X, AXIS_Y, AXIS_Z, AXIS_END };
 
-
 	enum EASING_TYPE
 	{
 		LINEAR
@@ -54,6 +53,7 @@ namespace Engine
 
 		, EASING_TYPE_END
 	};
+
 
 	/* PhysX */
 	enum class PHYSXCOLLIDER_TYPE
@@ -77,6 +77,7 @@ namespace Engine
 		ZONE,
 		TYPE_END
 	};
+
 
 }
 
