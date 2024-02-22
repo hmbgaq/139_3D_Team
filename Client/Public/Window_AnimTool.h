@@ -106,7 +106,7 @@ private:
 
 	_float4x4				m_fBoneMatrix = {};
 	_float4x4				m_fWeaponMatrix = {};
-	
+	_float4x4				m_fWeaponWorldMatrix = {};
 	_int					m_CurrentAnimationIndex = 0;
 	_int					m_iCreateObjectSize = 0;
 	_int					m_iCreateWeaponSize = 0;
@@ -123,7 +123,7 @@ private:
 	string					m_strKeyEventFileName = "";
 	string					m_strSoundFileName = "";
 	string					m_strTest = "";
-
+	string					m_strLayer = "";
 	vector<string>			m_vObjectTag;
 
 	vector<CGameObject*>	m_CreateList;

@@ -56,7 +56,7 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	if (ImGui::Button(u8"승용이전용"))
 	{
 		m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Player"), TEXT("Prototype_GameObject_Player"));
-		
+		m_pGameInstance->Get_CloneGameObjects(LEVEL_TOOL, &m_CreateList);
 	}
 	//disPlay
 	ShowDialog();
@@ -164,13 +164,16 @@ HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
 		
 		BodyJson.emplace("Type", strBody);
 		BodyJson.emplace("Tag", m_PickingObject->Get_ProtoTypeTag());
+		BodyJson.emplace("Layer", m_strLayer);
 		BodyJson.emplace("AnimationName", m_pAnimation[m_CurrentAnimationIndex]->Get_Name());
+		BodyJson.emplace("AnimIndex", m_CurrentAnimationIndex);
 		BodyJson.emplace("AnimDuration", m_fDuration);
 		BodyJson.emplace("CurrentTrackPosition", m_fCurrentTrackPosition);
 		BodyJson.emplace("AnimationSpeed", m_fSpeed);
 		if (m_pBones.size() > 0)
 		{
 			BodyJson.emplace("BoneName", m_pBones[m_iSelectBoneIndex]->Get_Name());
+			BodyJson.emplace("BoneIndex", m_iSelectBoneIndex);
 			BodyJson.emplace("ColliderSize", m_iColliderSize);
 			BodyJson.emplace("ColliderTrackPositionOn", m_iColliderOnTrackPosition);
 			BodyJson.emplace("ColliderTrackPositionOff", m_iColliderOffTrackPosition);
@@ -183,6 +186,7 @@ HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
 		WeaponJson.emplace("Type", strWeapon);
 		WeaponJson.emplace("WeaponTag", m_PickingWeapon->Get_ProtoTypeTag());
 		WeaponJson.emplace("AnimationName", m_pAnimation[m_CurrentAnimationIndex]->Get_Name());
+		WeaponJson.emplace("AnimIndex", m_CurrentAnimationIndex);
 		WeaponJson.emplace("AnimDuration", m_fDuration);
 		WeaponJson.emplace("CurrentTrackPosition", m_fCurrentTrackPosition);
 		WeaponJson.emplace("AnimationSpeed", m_fSpeed);
@@ -195,6 +199,7 @@ HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
 				CJson_Utility::Write_Float4(WeaponJson["WeaponWorldMatrix"][i], XMLoadFloat4x4(&pPickingWeapon).r[i]);
 			//WeaponJson.emplace("WeaponPosition", pPickingWeapon);
 			//WeaponJson.emplace("ColliderPosition", m_pWeaponCollider[m_iSelectWeaponColliderIndex]->Get_Bounding());
+			WeaponJson.emplace("WeaponColliderSize", m_iColliderWeaponSize);
 			WeaponJson.emplace("WeaponColliderTrackPositionOn", m_iColliderWeaponOnTrackPosition);
 			WeaponJson.emplace("WeaponColliderTrackPositionOff", m_iColliderWeaponOffTrackPosition);
 		}
@@ -232,6 +237,74 @@ HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
 		Reset_AnimFunction();
 	}
 
+	json BodyJson = LoadJson["Body"];
+	json WeaponJson = LoadJson["Weapon"];
+
+	//Body
+	{
+		wstring strLoadprotoTag;
+		string proto_Tag = BodyJson["Tag"];
+
+		wstring strLoadLayer;
+		string strJsonLayer = BodyJson["Layer"];
+
+		m_pGameInstance->String_To_WString(proto_Tag, strLoadprotoTag);
+		m_pGameInstance->String_To_WString(strJsonLayer, strLoadLayer);
+
+		m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLoadprotoTag, strLoadLayer);
+
+		m_pGameInstance->Get_CloneGameObjects(LEVEL_TOOL, &m_CreateList);
+
+		m_PickingObject = m_CreateList.back();
+
+		m_CurrentAnimationIndex = BodyJson["AnimIndex"];
+
+		m_fDuration = BodyJson["AnimDuration"];
+
+		m_fCurrentTrackPosition = BodyJson["CurrentTrackPosition"];
+
+		m_fSpeed = BodyJson["AnimationSpeed"];
+
+		m_iSelectBoneIndex = BodyJson["BoneIndex"];
+		//콜라이더 생성
+		m_iColliderSize = BodyJson["ColliderSize"];
+		Create_Bounding(m_iColliderSize);
+
+		m_iColliderOnTrackPosition = BodyJson["ColliderTrackPositionOn"];
+		m_iColliderOffTrackPosition = BodyJson["ColliderTrackPositionOff"];
+	}
+	//Weapon
+	{
+		wstring strLoadWeaponTag;
+		string strWeaponTag = WeaponJson["WeaponTag"];
+		m_pGameInstance->String_To_WString(strWeaponTag, strLoadWeaponTag);
+
+		CCharacter* pObject = dynamic_cast<CCharacter*>(m_PickingObject);
+
+		string strBoneName = WeaponJson["BoneName"];
+		Create_Weapon(pObject, strBoneName, strLoadWeaponTag);
+
+		m_PickingWeapon = m_CreateWeaponList.back();
+
+		CJson_Utility::Load_JsonFloat4x4(WeaponJson["WeaponWorldMatrix"], m_fWeaponWorldMatrix);
+
+		dynamic_cast<CWeapon*>(m_PickingWeapon)->Set_WorldMatrix(m_fWeaponWorldMatrix);
+
+		CWeapon* pWeapon = dynamic_cast<CWeapon*>(m_PickingWeapon);
+
+		_float4x4 pPickObject = m_PickingWeapon->Get_Transform()->Get_WorldMatrix();
+		m_fWeaponMatrix = pPickObject;
+		m_fWeaponPos.x = m_fWeaponMatrix._41;
+		m_fWeaponPos.y = m_fWeaponMatrix._42;
+		m_fWeaponPos.z = m_fWeaponMatrix._43;
+
+		m_iColliderWeaponSize = WeaponJson["WeaponColliderSize"];
+		Create_Weapon_Bounding(m_fWeaponPos, m_iColliderWeaponSize);
+
+		m_iColliderWeaponOnTrackPosition = WeaponJson["WeaponColliderTrackPositionOn"];
+		m_iColliderWeaponOffTrackPosition = WeaponJson["WeaponColliderTrackPositionOff"];
+	}
+
 	return S_OK;
 }
 
@@ -248,12 +321,45 @@ void CWindow_AnimTool::Reset_AnimFunction()
 	m_pBody = { nullptr };
 
 	for (int i = 0; i < m_CreateList.size(); ++i)
+	{
+		for (int j = 0; j < m_iCreateColliderNum; ++j)
+		{
+			CComponent* pDeleteCollider = m_pBoneCollider[j];
+
+			m_PickingObject->Remove_Component(TEXT("Com_Collider"), &pDeleteCollider);
+
+			m_pBoneCollider.erase(m_pBoneCollider.begin() + j);
+
+			Safe_Release(pDeleteCollider);
+
+			--m_iCreateColliderNum;
+
+			m_bDeleteCheck = false;
+		}
 		m_CreateList[i]->Set_Dead(true);
+	}
 
 	for (int i = 0; i < m_CreateWeaponList.size(); ++i)
+	{
+		for (int j = 0; j < m_iCreateWeaponColliderNum; ++j)
+		{
+			CComponent* pDeleteCollider = m_pWeaponCollider[j];
+
+			m_PickingWeapon->Remove_Component(TEXT("Com_Collider"), &pDeleteCollider);
+
+			m_pWeaponCollider.erase(m_pWeaponCollider.begin() + j);
+
+			Safe_Release(pDeleteCollider);
+
+			--m_iCreateWeaponColliderNum;
+
+			m_bDeleteCheck = false;
+		}
 		m_CreateWeaponList[i]->Set_Dead(true);
+	}
 
-
+	m_CreateList.clear();
+	m_CreateWeaponList.clear();
 
 	m_fSpeed = 1.f;
 	m_fDuration = 0.0f;
@@ -410,6 +516,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 						if (m_pGameInstance->Mouse_Down(DIM_LB))
 						{
 							Create_Object(ConvertCtoWC(items[Layer_idx].c_str()), ConvertCtoWC(m_vObjectTag[Object_idx].c_str()));
+							m_strLayer = items[Layer_idx].c_str();
 							//Create_Object_On_Map(ConvertCtoWC(items[Layer_idx].c_str()), ConvertCtoWC(m_vObjectTag[Object_idx].c_str()));
 							m_bCloneCount = true;
 							m_bListCheck = true;
@@ -974,11 +1081,10 @@ void CWindow_AnimTool::Draw_Weapon(_float fTimeDelta)
 					m_fWeaponMatrix._42 = m_fWeaponPosition[1];
 					m_fWeaponMatrix._43 = m_fWeaponPosition[2];
 
-					_float4x4 Test = dynamic_cast<CWeapon*>(m_PickingWeapon)->Get_WeaponWorldMatrix();
+					m_fWeaponWorldMatrix = dynamic_cast<CWeapon*>(m_PickingWeapon)->Get_WeaponWorldMatrix();
+					m_fWeaponWorldMatrix = m_fWeaponMatrix + m_fWeaponWorldMatrix; //
 
-					_float4x4 Desc = m_fWeaponMatrix + Test; //
-
-					m_pWeaponCollider[n]->Update(Desc);
+					m_pWeaponCollider[n]->Update(m_fWeaponWorldMatrix);
 				}
 				
 				//_float4x4 Temp = m_fWeaponMatrix + m_pBones[m_iSelectBoneIndex]->Get_CombinedTransformationMatrix();
