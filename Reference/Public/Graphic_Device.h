@@ -22,9 +22,9 @@ private:
 
 public:
 	ID3D11RenderTargetView* Get_BackBufferRTV() const { return m_pBackBufferRTV; }
-	ID3D11DepthStencilView* Get_DSV() const { return m_pDepthStencilView;	}
+	ID3D11DepthStencilView* Get_DSV() const { return m_pDepthStencilView; }
 
-	GRAPHIC_DESC*			Get_GraphicDesc() { return &m_tGraphicDesc; }
+	GRAPHIC_DESC* Get_GraphicDesc() { return &m_tGraphicDesc; }
 
 public:
 	/* 그래픽 디바이스의 초기화. */
@@ -44,14 +44,14 @@ private:
 	// IDirect3DDevice9* == LPDIRECT3DDEVICE9 == ID3D11Device + ID3D11DeviceContext
 
 	/* 메모리 할당. (정점버퍼, 인덱스버퍼, 텍스쳐로드) 컴객체의 생성과 관련된 역활.  */
-	ID3D11Device*				m_pDevice = nullptr;
+	ID3D11Device* m_pDevice = nullptr;
 
 	/* 기능실행.(바인딩작업, 정점버퍼를 SetStreamSource(), SetIndices(), SetTransform(), SetTexture() */
 	/* 그린다. Draw */
-	ID3D11DeviceContext*		m_pDeviceContext = nullptr;
+	ID3D11DeviceContext* m_pDeviceContext = nullptr;
 
 	/* 후면버퍼와 전면버퍼를 교체해가면서 화면에 보여주는 역활. */
-	IDXGISwapChain*				m_pSwapChain = nullptr;
+	IDXGISwapChain* m_pSwapChain = nullptr;
 
 
 	/* IDirect3DTexture9 */
@@ -62,15 +62,16 @@ private:
 	/* ID3D11ShaderResourceView : 셰이더에 전달될 수 있는 텍스쳐타입. */
 	/* ID3D11RenderTargetView : 렌더타겟용으로 사용될 수 있는  텍스쳐타입. */
 	/* ID3D11DepthStencilView : 깊이스텐실버퍼로서 사용될 수 있는 타입.  */
-	ID3D11RenderTargetView*		m_pBackBufferRTV = nullptr;
-	ID3D11DepthStencilView*		m_pDepthStencilView = nullptr;
-	ID3D11Texture2D*			m_pDepthStencilTexture = nullptr;
+	ID3D11RenderTargetView* m_pBackBufferRTV = nullptr;
+	ID3D11DepthStencilView* m_pDepthStencilView = nullptr;
+	ID3D11Texture2D* m_pDepthStencilTexture = nullptr;
 
 	GRAPHIC_DESC				m_tGraphicDesc = {};
 
 
 public: 	/* 이하 모두 HBO+ 준비사항 */
 	ID3D11ShaderResourceView* Get_DepthSRV() { return m_pDepthStencilSRV; }
+	GFSDK_SSAO_Context_D3D11* Get_AOContext() { return m_pAOContext; }
 
 private:
 	ID3D11ShaderResourceView* m_pDepthStencilSRV = nullptr;

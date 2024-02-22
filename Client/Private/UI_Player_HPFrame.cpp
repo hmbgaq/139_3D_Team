@@ -3,8 +3,8 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
-CUI_Player_HPFrame::CUI_Player_HPFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI(pDevice, pContext)
+CUI_Player_HPFrame::CUI_Player_HPFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -156,9 +156,9 @@ void CUI_Player_HPFrame::Load_Desc()
 
 }
 
-CUI_Player_HPFrame* CUI_Player_HPFrame::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Player_HPFrame* CUI_Player_HPFrame::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Player_HPFrame* pInstance = new CUI_Player_HPFrame(pDevice, pContext);
+	CUI_Player_HPFrame* pInstance = new CUI_Player_HPFrame(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -180,6 +180,11 @@ CGameObject* CUI_Player_HPFrame::Clone(void* pArg)
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+CGameObject* CUI_Player_HPFrame::Pool()
+{
+	return new CUI_Player_HPFrame(*this);
 }
 
 void CUI_Player_HPFrame::Free()

@@ -302,7 +302,7 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 
 		if (!m_vecUIObject.empty())
 		{
-			_int iSize = m_vecUIObject.size();
+			_int iSize = (_int)m_vecUIObject.size();
 			if (m_iSelectedObjectIndex >= iSize)
 				m_iSelectedObjectIndex = iSize - 1;
 		}
@@ -427,7 +427,7 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 
 void CWindow_UITool::UI_Set()
 {
-	_int iSize = m_vecUIObject.size();
+	_int iSize = (_int)m_vecUIObject.size();
 	for (_int i = 0; i < iSize; i++)
 	{
 		if (dynamic_cast<CUI*>(m_vecUIObject[i])->Get_Pick() == true)
@@ -766,10 +766,16 @@ wchar_t* CWindow_UITool::ConverCtoWC(char* str)
 
 std::string CWindow_UITool::WideStringToString(const wchar_t* wideStr) 
 {
-	// std::wstring으로부터 std::string으로 변환
-	std::wstring wstr(wideStr);
-	// std::string으로 변환
-	return std::string(wstr.begin(), wstr.end());
+	char ch[260];
+	char DefChar = ' ';
+	WideCharToMultiByte(CP_ACP, 0, wideStr, -1, ch, 260, &DefChar, NULL);
+
+	string ss(ch);
+	return ss;
+	//// std::wstring으로부터 std::string으로 변환
+	//std::wstring wstr(wideStr);
+	//// std::string으로 변환
+	//return std::string(wstr.begin(), wstr.end());
 
 }
 
@@ -934,7 +940,7 @@ void CWindow_UITool::SetUp_Initialize()
 			delete[] tTexture;
 		}
 
-		_int iPathSize = m_vecPaths.size();
+		_int iPathSize = (_int)m_vecPaths.size();
 
 		//for (auto& iter : m_vecPaths)
 		for (_int i = 0; i < iPathSize; i++)

@@ -35,6 +35,8 @@ public: /* For.Graphic_Device */
 	ID3D11DepthStencilView* Get_DSV() const;
 	GRAPHIC_DESC*			Get_GraphicDesc();
 	ID3D11ShaderResourceView* Get_DepthSRV();
+	GFSDK_SSAO_Context_D3D11* Get_AOContext();
+
 
 public: /* For.Input_Device */
 	_byte		Get_DIKeyState(_ubyte byKeyID);
@@ -70,6 +72,7 @@ public: /* For.Object_Manager */
 	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
 	class CCharacter* Get_Player();
 	void Set_Player(class CCharacter* _pPlayer);
+	HRESULT Create_PoolObjects(const wstring & strPrototypeTag, _uint iSize = 10);
 
 
 
@@ -117,6 +120,9 @@ public: /* For.Target_Manager */
 	HRESULT		Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView * pDSV = nullptr, _bool bClear = true);
 	HRESULT		End_MRT();
 	HRESULT		Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
+	class CRenderTarget* Find_RenderTarget(const wstring& strTargetTag);
+	void		Create_RenderTarget(const wstring& strTargetTag);
+	
 #ifdef _DEBUG
 	HRESULT		Ready_RenderTarget_Debug(const wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
 	HRESULT		Render_Debug_RTVs(const wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
@@ -137,6 +143,34 @@ public: /* For.Collision_Manager */
 
 public: /* For.Event_Manager */
 	void		Add_Event(class IEvent* pEvent);
+
+public: /* For.PhysX_Manager */
+	void					Register_PhysXCollider(class CPhysXCollider* pPhysXCollider);
+	class CPhysXCollider*	Find_PhysXCollider(const _uint iPhysXColliderIndex);
+
+	void					Register_PhysXController(class CPhysXController* pPhysXController);
+	class CPhysXController*	Find_PhysXController(const _uint iPhysXControllerIndex);
+
+	void					Check_PhysXFilterGroup(const _uint In_iLeftLayer, const _uint In_iRightLayer);
+	_uint					Get_PhysXFilterGroup(const _uint In_iIndex);
+
+	PxRigidDynamic*			Create_DynamicActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial = nullptr);
+	PxRigidDynamic*			Create_DynamicActor(const PxTransform& transform);
+	PxRigidStatic*			Create_StaticActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial = nullptr);
+	PxRigidStatic*			Create_StaticActor(const PxTransform& transform);
+
+	void					Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut);
+	void					Create_ConvexMesh(const PxConvexMeshDesc& In_MeshDesc, PxConvexMesh** ppOut);
+	void					Create_Shape(const PxGeometry& Geometry, PxMaterial* pMaterial, const _bool isExculsive, const PxShapeFlags In_ShapeFlags, PxShape** ppOut);
+	void					Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshDesc, PxTriangleMesh** ppOut);
+	void					Create_Controller(const PxCapsuleControllerDesc& In_ControllerDesc, PxController** ppOut);
+
+public: /* For.Random_Manager*/
+	const _float&			Random_Float(_float fMin, _float fMax);
+	const _int&				Random_Int(_int iMin, _int iMax);
+	const _bool&			Random_Coin(_float fProbality);
+	int64_t					GenerateUniqueID();
+
 
 
 public: /* Common */
@@ -172,13 +206,6 @@ public: /* Common */
 	const string	Remove_LastNumChar(const string& str, const _uint& iNumCutCount);
 	const wstring	Get_LastNumChar(const wstring& str, const _uint& iNumCutCount);
 
-	/* For.Math */
-public:
-	_float3 Add_Float3(const _float3& fLeft, const _float3& fRight);
-	_float3 Mul_Float3(const _float3& fLeft, const _float& fRight);
-	_bool	isIn_Range(const _float3 fLeft, const _float3 fRight, const _float fRange);
-	_matrix Make_WorldMatrix(const _float2& vScale, const _float3& vRot, const _float3& vPos);
-#pragma endregion End
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
@@ -195,6 +222,8 @@ private:
 	class CFrustum*					m_pFrustum = { nullptr };
 	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
 	class CEvent_Manager*			m_pEvent_Manager = { nullptr };
+	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
+	class CRandom_Manager*			m_pRandom_Manager = { nullptr };
 
 
 public:

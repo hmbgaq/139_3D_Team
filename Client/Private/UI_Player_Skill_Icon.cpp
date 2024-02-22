@@ -3,8 +3,8 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
-CUI_Player_Skill_Icon::CUI_Player_Skill_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI(pDevice, pContext)
+CUI_Player_Skill_Icon::CUI_Player_Skill_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -155,9 +155,9 @@ void CUI_Player_Skill_Icon::Load_Desc()
 
 }
 
-CUI_Player_Skill_Icon* CUI_Player_Skill_Icon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Player_Skill_Icon* CUI_Player_Skill_Icon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Player_Skill_Icon* pInstance = new CUI_Player_Skill_Icon(pDevice, pContext);
+	CUI_Player_Skill_Icon* pInstance = new CUI_Player_Skill_Icon(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -166,6 +166,11 @@ CUI_Player_Skill_Icon* CUI_Player_Skill_Icon::Create(ID3D11Device* pDevice, ID3D
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+CGameObject* CUI_Player_Skill_Icon::Pool()
+{
+	return new CUI_Player_Skill_Icon(*this);
 }
 
 CGameObject* CUI_Player_Skill_Icon::Clone(void* pArg)

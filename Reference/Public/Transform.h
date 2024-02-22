@@ -18,8 +18,10 @@ private:
 	virtual ~CTransform() = default;
 
 public:
-	_bool Write_Json(json& Out_Json);
-	void Load_FromJson(const json& In_Json);
+	virtual _bool Write_Json(json& Out_Json)			override;
+	virtual void  Load_FromJson(const json& In_Json)	override;
+
+public:
 	/* 행렬의 행의 정보를 교체한다. */
 	void Set_State(STATE eState, const _float4& vState) {
 		memcpy(&m_WorldMatrix.m[eState], &vState, sizeof(_float3));

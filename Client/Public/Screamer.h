@@ -15,7 +15,7 @@ BEGIN(Client)
 class CScreamer final : public CGameObject
 {
 private:
-	CScreamer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CScreamer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CScreamer(const CScreamer& rhs);
 	virtual ~CScreamer() = default;
 
@@ -49,8 +49,9 @@ private:
 	CTexture*			m_pDissolveTexCom		= { nullptr };
 
 public:
-	static CScreamer*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CScreamer*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject*	Clone(void* pArg) override;
+	virtual CGameObject*	Pool();
 	virtual void			Free() override;
 
 };

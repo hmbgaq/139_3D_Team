@@ -15,7 +15,7 @@ class Cweapon;
 class CPreviewAnimationModel : public CCharacter
 {
 protected:
-	CPreviewAnimationModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CPreviewAnimationModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CPreviewAnimationModel(const CPreviewAnimationModel& rhs);
 	virtual ~CPreviewAnimationModel() = default;
 

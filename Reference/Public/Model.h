@@ -30,6 +30,7 @@ public:
 	_uint					Get_NumMaterials() const { return m_iNumMaterials; }
 	_uint					Get_NumMeshIndice(_int iMeshIndex);//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
 	vector<class CMesh*>&	Get_Meshes() { return m_Meshes;}
+	class CMesh*			Get_Mesh_For_Index(_int iMeshIndex);
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
 	class CBone*			Get_BonePtr(const _char* pBoneName) const;
 
@@ -55,7 +56,8 @@ public:
 	void					Ctrl_Animation(_float fTimeDelta, _bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
 
 public:
-	HRESULT					Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
+	HRESULT					Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices = nullptr);
+	
 	HRESULT					Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
 
 public:
@@ -73,6 +75,8 @@ public:
 public:
 	vector<CAnimation*>*	 Get_Animations();
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
+	
+	
 
 public:
 	vector<CBone*>*			Get_Bones();

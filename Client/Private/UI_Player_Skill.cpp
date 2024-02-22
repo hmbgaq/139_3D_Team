@@ -1,8 +1,8 @@
 #include "UI_Player_Skill.h"
 #include "GameInstance.h"
 
-CUI_Player_Skill::CUI_Player_Skill(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI(pDevice, pContext)
+CUI_Player_Skill::CUI_Player_Skill(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CUI(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -46,9 +46,9 @@ HRESULT CUI_Player_Skill::Ready_UI()
 	return S_OK;
 }
 
-CUI_Player_Skill* CUI_Player_Skill::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Player_Skill* CUI_Player_Skill::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Player_Skill* pInstance = new CUI_Player_Skill(pDevice, pContext);
+	CUI_Player_Skill* pInstance = new CUI_Player_Skill(pDevice, pContext, strPrototypeTag);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -57,6 +57,11 @@ CUI_Player_Skill* CUI_Player_Skill::Create(ID3D11Device* pDevice, ID3D11DeviceCo
 	}
 
 	return pInstance;
+}
+
+CGameObject* CUI_Player_Skill::Pool()
+{
+	return new CUI_Player_Skill(*this);
 }
 
 CGameObject* CUI_Player_Skill::Clone(void* pArg)

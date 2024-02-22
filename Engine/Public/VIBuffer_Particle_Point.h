@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Particle_Point final : public CVIBuffer_Instancing
 {
 public:
-	enum TYPE_ACTION { SPHERE, SPARK, FALL, RISE, TORNADO, TYPE_ACTION_END };
+	enum TYPE_ACTION { SPHERE, SPARK, FALL, RISE, BLINK, TORNADO, TYPE_ACTION_END };
 	enum TYPE_FADE { FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
 
 	typedef struct tagParticlePoint
@@ -16,17 +16,12 @@ public:
 		TYPE_FADE		eType_Fade = { FADE_NONE };
 
 		/* 상태 */
-		_bool		bActive = { TRUE };
-		_bool		bBillBoard = { TRUE };
+		_bool		bActive		= { TRUE };
+		_bool		bBillBoard	= { TRUE };
 
-		_bool		bIsPlay = { TRUE };
-		_bool		bReverse = { FALSE };
-		_bool		bLoop = { TRUE };
-
-
-		/* 부모 */
-		_bool		bUseParentMatrix = { FALSE };
-		_float4x4	ParentMatrix;
+		_bool		bIsPlay		= { TRUE };
+		_bool		bReverse	= { FALSE };
+		_bool		bLoop		= { TRUE };
 
 		/* LifeTime */
 		_float2		vMinMaxLifeTime;
@@ -39,9 +34,9 @@ public:
 		/* For.Position */
 		_float2		vMinMaxRange = { 0.1f, 3.f };
 
-		_float3		vCenterPosition;
-		_float3		vOffsetPosition;
-		_float3		vCurrentPosition;
+		_float4		vCenterPosition;
+		_float4		vOffsetPosition;
+		_float4		vCurrentPosition;
 
 		_float		fMaxLengthPosition = { 5.f };
 		_float		fCurLengthPosition;
@@ -53,8 +48,11 @@ public:
 		_float		fAccPosition = { 0.1f };
 
 		/* For.Gravity */
-		_float		fGravityAcc;
+		_bool		bUseGravity = { FALSE };
+		_float		fGravityAcc = { -5.f };
 		_float3		vCurrentGravity;
+		_float		fUseGravityPosition = { 0.1f };
+
 
 		/* For.Rotation */
 		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
@@ -88,6 +86,8 @@ public:
 
 		_int		iSpriteFrameIndex = { 1 };
 
+		_float4				vTest = {};
+
 		void Reset_Desc()
 		{
 			ZeroMemory(this, sizeof(PARTICLE_POINT_DESC));
@@ -97,6 +97,10 @@ public:
 		}
 
 	}PARTICLE_POINT_DESC;
+
+public:
+	virtual _bool Write_Json(json& Out_Json)		override;
+	virtual void Load_FromJson(const json& In_Json)	override;
 
 private:
 	CVIBuffer_Particle_Point(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -116,41 +120,51 @@ public:
 
 public:
 	_uint			Get_NumInstance() { return m_iNumInstance; }
-	void			Set_NumInstance(_uint iNum) { m_iNumInstance = iNum; }
+	void			Set_NumInstance(_uint iNum) { m_iNumInstance = iNum; m_tBufferDesc.iCurNumInstance = iNum; }
 
 	_float			Get_TimePosition() { return m_fTimeAcc; }
 	void			Set_TimePosition(_float fTimePosition) { m_fTimeAcc = fTimePosition; }
 
 	/* For.Desc */
-	public:
-		PARTICLE_POINT_DESC* Get_Desc() { return &m_ParticleDesc; }
+public:
+		PARTICLE_POINT_DESC* Get_Desc() { return &m_tBufferDesc; }
 
-		void			Set_Type_Action(TYPE_ACTION eType) { m_ParticleDesc.eType_Action = eType; }
-		void			Set_Type_Fade(TYPE_FADE eType) { m_ParticleDesc.eType_Fade = eType; }
+		void			Set_Type_Action(TYPE_ACTION eType) { m_tBufferDesc.eType_Action = eType; }
+		void			Set_Type_Fade(TYPE_FADE eType) { m_tBufferDesc.eType_Fade = eType; }
 
-		void			Set_Loop(_bool bLoop) { m_ParticleDesc.bLoop = bLoop; }
+		void			Set_Loop(_bool bLoop) { m_tBufferDesc.bLoop = bLoop; }
 
-		void			Set_Play(_bool bPlay) { m_ParticleDesc.bIsPlay = bPlay; }
+		void			Set_Play(_bool bPlay) { m_tBufferDesc.bIsPlay = bPlay; }
 
-		void			Set_ReversePlay(_bool bReverse) { m_ParticleDesc.bReverse = bReverse; }
+		void			Set_ReversePlay(_bool bReverse) { m_tBufferDesc.bReverse = bReverse; }
 
-		void			Set_LifeTime(_float fMin, _float fMax) { m_ParticleDesc.vMinMaxLifeTime = _float2(fMin, fMax); }
+		void			Set_LifeTime(_float fMin, _float fMax) { m_tBufferDesc.vMinMaxLifeTime = _float2(fMin, fMax); }
+		void			Set_SpawnTime(_float fMin, _float fMax) { m_tBufferDesc.vMinMaxSpawnTime = _float2(fMin, fMax); }
 
-		void			Set_Range(_float fMinRange, _float fMaxFange) { m_ParticleDesc.vMinMaxRange = _float2(fMinRange, fMaxFange); }
+		void			Set_Range(_float fMinRange, _float fMaxFange) { m_tBufferDesc.vMinMaxRange = _float2(fMinRange, fMaxFange); }
 
-		void			Set_AddScale(_float fX, _float fY) { m_ParticleDesc.vAddScale = _float2(fX, fY); }
+		void			Set_MaxLengthPosition(_float fLength) { m_tBufferDesc.fMaxLengthPosition = fLength; };
+
+		void			Set_AddScale(_float fX, _float fY) { m_tBufferDesc.vAddScale = _float2(fX, fY); }
 
 		void			Set_RotationOffset(MINMAX eMinMax, AXIS eAxis, _float fRotationOffset);
 
-		void			Set_Acceleration(_float fAcceleration) { m_ParticleDesc.fAcceleration = fAcceleration; }
+		void			Set_Acceleration(_float fAcceleration) { m_tBufferDesc.fAcceleration = fAcceleration; }
 
-		void			Set_AccPosition(_float fAccPosition) { m_ParticleDesc.fAccPosition = fAccPosition; }
+		void			Set_AccPosition(_float fAccPosition) { m_tBufferDesc.fAccPosition = fAccPosition; }
+
+		void			Set_UseGravityPosition(_float fUseGravityPosition) { m_tBufferDesc.fUseGravityPosition = fUseGravityPosition; }
 
 		void			Set_Color(_float fRed, _float fGreen, _float fBlue);
 
+		void			Set_Gravity(_bool bUseGravity) { m_tBufferDesc.bUseGravity = bUseGravity; }
 
-	private:
-		PARTICLE_POINT_DESC			m_ParticleDesc;
+		void			Set_GravityAcc(_float fGravityAcc) { m_tBufferDesc.fGravityAcc = fGravityAcc; }
+	
+
+private:
+	PARTICLE_POINT_DESC			m_tBufferDesc;
+
 
 
 	public:

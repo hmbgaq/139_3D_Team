@@ -116,7 +116,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;assimp-vc142-mtd.lib;imguizmod.lib;PhysX_64_Debug.lib;PhysXCharacterKinematic_static_64_Debug.lib;PhysXCommon_64_Debug.lib;PhysXCooking_64_Debug.lib;PhysXExtensions_static_64_Debug.lib;PhysXFoundation_64_Debug.lib;PhysXPvdSDK_static_64_Debug.lib;PhysXVehicle_static_64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;assimp-vc142-mtd.lib;imguizmod.lib;PhysX_64_Debug.lib;PhysXCharacterKinematic_static_64_Debug.lib;PhysXCommon_64_Debug.lib;PhysXCooking_64_Debug.lib;PhysXExtensions_static_64_Debug.lib;PhysXFoundation_64_Debug.lib;PhysXPvdSDK_static_64_Debug.lib;PhysXVehicle_static_64_Debug.lib;GFSDK_SSAO_D3D11.win64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
@@ -172,7 +172,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11.lib;DirectXTK.lib;assimp-vc142-mt.lib;imguizmo.lib;PhysX_64_Release.lib;PhysXCharacterKinematic_static_64_Release.lib;PhysXCommon_64_Release.lib;PhysXCooking_64_Release.lib;PhysXExtensions_static_64_Release.lib;PhysXFoundation_64_Release.lib;PhysXPvdSDK_static_64_Release.lib;PhysXVehicle_static_64_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11.lib;DirectXTK.lib;assimp-vc142-mt.lib;imguizmo.lib;PhysX_64_Release.lib;PhysXCharacterKinematic_static_64_Release.lib;PhysXCommon_64_Release.lib;PhysXCooking_64_Release.lib;PhysXExtensions_static_64_Release.lib;PhysXFoundation_64_Release.lib;PhysXPvdSDK_static_64_Release.lib;PhysXVehicle_static_64_Release.lib;GFSDK_SSAO_D3D11.win64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
@@ -206,12 +206,14 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\public\Channel.h" />
     <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\public\Collider.h" />
+    <ClInclude Include="..\Public\CollisionSimulationEventCallBack.h" />
     <ClInclude Include="..\Public\Collision_Manager.h" />
     <ClInclude Include="..\public\Component.h" />
     <ClInclude Include="..\public\Component_Manager.h" />
     <ClInclude Include="..\Public\ConstantBuffer.h" />
     <ClInclude Include="..\Public\CustomFont.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
+    <ClInclude Include="..\Public\Easing_Utillity.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
     <ClInclude Include="..\Public\Engine_Enum.h" />
     <ClInclude Include="..\Public\Engine_Function.h" />
@@ -253,9 +255,12 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\Public\MyAssimp.h" />
     <ClInclude Include="..\public\Navigation.h" />
     <ClInclude Include="..\public\Object_Manager.h" />
-    <ClInclude Include="..\Public\PhysXManager.h" />
+    <ClInclude Include="..\Public\PhysXCollider.h" />
+    <ClInclude Include="..\Public\PhysXController.h" />
+    <ClInclude Include="..\Public\PhysX_Manager.h" />
     <ClInclude Include="..\public\PipeLine.h" />
     <ClInclude Include="..\public\QuadTree.h" />
+    <ClInclude Include="..\Public\RandomManager.h" />
     <ClInclude Include="..\public\Renderer.h" />
     <ClInclude Include="..\public\RenderTarget.h" />
     <ClInclude Include="..\public\Shader.h" />
@@ -268,6 +273,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\Public\Trigger.h" />
     <ClInclude Include="..\Public\UI_Base.h" />
     <ClInclude Include="..\public\VIBuffer.h" />
+    <ClInclude Include="..\Public\VIBuffer_AnimModel_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Cell.h" />
     <ClInclude Include="..\Public\VIBuffer_Cube.h" />
     <ClInclude Include="..\Public\VIBuffer_Effect_Model_Instance.h" />
@@ -298,12 +304,14 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\private\Channel.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\private\Collider.cpp" />
+    <ClCompile Include="..\Private\CollisionSimulationEventCallBack.cpp" />
     <ClCompile Include="..\Private\Collision_Manager.cpp" />
     <ClCompile Include="..\private\Component.cpp" />
     <ClCompile Include="..\private\Component_Manager.cpp" />
     <ClCompile Include="..\Private\ConstantBuffer.cpp" />
     <ClCompile Include="..\Private\CustomFont.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
+    <ClCompile Include="..\Private\Easing_Utillity.cpp" />
     <ClCompile Include="..\Private\Engine_Struct.cpp" />
     <ClCompile Include="..\Private\EventActor.cpp" />
     <ClCompile Include="..\Private\Event_Manager.cpp" />
@@ -324,9 +332,12 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\Private\MurmurHash3.cpp" />
     <ClCompile Include="..\private\Navigation.cpp" />
     <ClCompile Include="..\private\Object_Manager.cpp" />
-    <ClCompile Include="..\Private\PhysXManager.cpp" />
+    <ClCompile Include="..\Private\PhysXCollider.cpp" />
+    <ClCompile Include="..\Private\PhysXController.cpp" />
+    <ClCompile Include="..\Private\PhysX_Manager.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />
     <ClCompile Include="..\private\QuadTree.cpp" />
+    <ClCompile Include="..\Private\RandomManager.cpp" />
     <ClCompile Include="..\private\Renderer.cpp" />
     <ClCompile Include="..\private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\RigidBody.cpp" />
@@ -340,6 +351,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\Private\Trigger.cpp" />
     <ClCompile Include="..\Private\UI_Base.cpp" />
     <ClCompile Include="..\private\VIBuffer.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_AnimModel_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Effect_Model_Instance.cpp" />
@@ -357,10 +369,12 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Blur.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred_UI.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Final.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Fxaa3_11.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Navigation.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Outline.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcess.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcessing.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\TIMOTHY LOTTES_Fxaa3_11.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli" />

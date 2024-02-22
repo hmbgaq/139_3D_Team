@@ -6,7 +6,7 @@ BEGIN(Client)
 class CUI_Blood : public CUI
 {
 private:
-	CUI_Blood(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Blood(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CUI_Blood(const CUI& rhs);
 	virtual ~CUI_Blood() = default;
 
@@ -21,8 +21,9 @@ private:
 	HRESULT	Ready_UI();
 
 public:
-	static  CUI_Blood* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static  CUI_Blood* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 	virtual void Free() override;
 };
 

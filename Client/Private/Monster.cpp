@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 
 
-CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -46,6 +46,11 @@ void CMonster::Priority_Tick(_float fTimeDelta)
 
 void CMonster::Tick(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+		m_bEnable = false;
+	}
+
 	//if (m_pGameInstance->Key_Pressing(DIK_T)) 
 	//{
 	//	CGameObject* pPlayer = m_pGameInstance->Get_Player();
@@ -55,6 +60,8 @@ void CMonster::Tick(_float fTimeDelta)
 	//}
 
 	//SetUp_OnTerrain(m_pTransformCom);
+
+	
 
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
@@ -69,13 +76,17 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (true == m_pGameInstance->isIn_LocalPlanes(XMVector3TransformCoord(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_WorldMatrixInverse()), 0.f))
 	{
-		m_pModelCom->Play_Animation(fTimeDelta, true);
+		_float3 vRootAnimPos = {};
+
+		m_pModelCom->Play_Animation(fTimeDelta, &vRootAnimPos);
+
+		m_pTransformCom->Add_RootBone_Position(vRootAnimPos);
 
 		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 			return;
 
 #ifdef _DEBUG
-		m_pGameInstance->Add_DebugRender(m_pColliderCom);
+	//	m_pGameInstance->Add_DebugRender(m_pColliderCom);
 #endif	
 	}
 
@@ -131,10 +142,20 @@ HRESULT CMonster::Ready_Components()
 	}
 
 	/* For.Com_Model */
+
+	//!Prototype_Component_Model_BeastBoss_Phase1
+	//! //!Prototype_Component_Model_BeastBoss_Phase2
+	//! //!Prototype_Component_Model_BeastBoss_Phase3
+
+
 	{
 		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
 			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 			return E_FAIL;
+
+		//if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_BeastBoss_Phase3"),
+		//	TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+		//	return E_FAIL;
 	}
 
 	/* For. Texture */
@@ -170,9 +191,9 @@ HRESULT CMonster::Bind_ShaderResources()
 	return S_OK;
 }
 
-CMonster * CMonster::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CMonster * CMonster::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CMonster*		pInstance = new CMonster(pDevice, pContext);
+	CMonster*		pInstance = new CMonster(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -196,6 +217,11 @@ CGameObject * CMonster::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CMonster::Pool()
+{
+	return new CMonster(*this);
+}
+
 void CMonster::Free()
 {
 	__super::Free();
@@ -205,4 +231,6 @@ void CMonster::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

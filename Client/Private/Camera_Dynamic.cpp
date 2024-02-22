@@ -3,8 +3,10 @@
 
 #include "GameInstance.h"
 
-CCamera_Dynamic::CCamera_Dynamic(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CCamera(pDevice, pContext)
+#include "Data_Manager.h"
+
+CCamera_Dynamic::CCamera_Dynamic(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
+	: CCamera(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -30,11 +32,14 @@ HRESULT CCamera_Dynamic::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pDesc)))
 		return E_FAIL;
 
+	CData_Manager::GetInstance()->Set_Camera_Dynamic(this);
+	
 	return S_OK;
 }
 
 void CCamera_Dynamic::Priority_Tick(_float fTimeDelta)
 {
+	//CData_Manager::GetInstance()->Reset_Camera_Dynamic((LEVEL)m_pGameInstance->Get_NextLevel());
 }
 
 void CCamera_Dynamic::Tick(_float fTimeDelta)
@@ -83,9 +88,9 @@ void CCamera_Dynamic::Late_Tick(_float fTimeDelta)
 {
 }
 
-CCamera_Dynamic * CCamera_Dynamic::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CCamera_Dynamic * CCamera_Dynamic::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CCamera_Dynamic*		pInstance = new CCamera_Dynamic(pDevice, pContext);
+	CCamera_Dynamic*		pInstance = new CCamera_Dynamic(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -109,8 +114,15 @@ CGameObject * CCamera_Dynamic::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CCamera_Dynamic::Pool()
+{
+	return new CCamera_Dynamic(*this);
+}
+
+
 void CCamera_Dynamic::Free()
 {
 	__super::Free();
 
 }
+

@@ -83,7 +83,6 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 
 HRESULT CVIBuffer_Effect_Model_Instance::Render(_int iMeshIndex)
 {
-	
 
 	CModel* pModel = m_tModelDesc.pModel;
 

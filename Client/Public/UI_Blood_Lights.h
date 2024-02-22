@@ -9,7 +9,7 @@ public: /* 각 UI파츠마다 어떤걸 얼마나 가질지 설정해주자. */
 	enum TEXTUREKIND { FRAME, TEXTURE_END };
 
 private:
-	CUI_Blood_Lights(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Blood_Lights(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CUI_Blood_Lights(const CUI_Blood_Lights& rhs);
 	virtual ~CUI_Blood_Lights() = default;
 
@@ -37,8 +37,9 @@ private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
 
 public:
-	static CUI_Blood_Lights* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext); //! 원형객체 생성
+	static CUI_Blood_Lights* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
 	virtual CGameObject* Clone(void* pArg) override; //! 사본객체 생성
+	virtual CGameObject* Pool() override;
 	virtual void			Free() override;
 };
 

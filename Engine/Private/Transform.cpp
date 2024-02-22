@@ -16,12 +16,10 @@ CTransform::CTransform(const CTransform & rhs)
 
 _bool CTransform::Write_Json(json& Out_Json)
 {
-	CJson_Utility::Write_Float4(Out_Json["Transform"][0], XMLoadFloat4x4(&m_WorldMatrix).r[STATE_RIGHT]);
-	CJson_Utility::Write_Float4(Out_Json["Transform"][1], XMLoadFloat4x4(&m_WorldMatrix).r[STATE_UP]);
-	CJson_Utility::Write_Float4(Out_Json["Transform"][2], XMLoadFloat4x4(&m_WorldMatrix).r[STATE_LOOK]);
-	CJson_Utility::Write_Float4(Out_Json["Transform"][3], XMLoadFloat4x4(&m_WorldMatrix).r[STATE_POSITION]);
+	for (_int i = 0; i < (_int)STATE_END; ++i)
+		CJson_Utility::Write_Float4(Out_Json["Transform"][i], XMLoadFloat4x4(&m_WorldMatrix).r[i]);
 
-	return false;
+	return true;
 }
 
 void CTransform::Load_FromJson(const json& In_Json)

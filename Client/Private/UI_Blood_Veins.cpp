@@ -3,8 +3,8 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
-CUI_Blood_Veins::CUI_Blood_Veins(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI(pDevice, pContext)
+CUI_Blood_Veins::CUI_Blood_Veins(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -189,9 +189,9 @@ void CUI_Blood_Veins::Load_Desc()
 
 }
 
-CUI_Blood_Veins* CUI_Blood_Veins::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Blood_Veins* CUI_Blood_Veins::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Blood_Veins* pInstance = new CUI_Blood_Veins(pDevice, pContext);
+	CUI_Blood_Veins* pInstance = new CUI_Blood_Veins(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -200,6 +200,11 @@ CUI_Blood_Veins* CUI_Blood_Veins::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+CGameObject* CUI_Blood_Veins::Pool()
+{
+	return new CUI_Blood_Veins(*this);
 }
 
 CGameObject* CUI_Blood_Veins::Clone(void* pArg)

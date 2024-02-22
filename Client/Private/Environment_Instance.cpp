@@ -4,8 +4,8 @@
 #include "GameInstance.h"
 #include "VIBuffer_Environment_Model_Instance.h"
 
-CEnvironment_Instance::CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CEnvironment_Instance::CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -45,7 +45,8 @@ void CEnvironment_Instance::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Instance::Tick(_float fTimeDelta)
 {
-	m_pInstanceModelCom->Update(m_tInstanceDesc.vecInstanceInfoDesc);
+	//m_pInstanceModelCom->Update(m_tInstanceDesc.vecInstanceInfoDesc);
+	
 }
 
 void CEnvironment_Instance::Late_Tick(_float fTimeDelta)
@@ -130,6 +131,11 @@ HRESULT CEnvironment_Instance::Ready_Components()
 	Desc.pModel = m_pModelCom;
 	Desc.iNumInstance = m_tInstanceDesc.iNumInstance; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
 	Desc.vecBufferInstanceInfo = m_tInstanceDesc.vecInstanceInfoDesc;
+
+	
+	
+	
+	
 	
 	// For.Com_Model */
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"),
@@ -161,9 +167,9 @@ HRESULT CEnvironment_Instance::Bind_ShaderResources()
 	return S_OK;
 }
 
-CEnvironment_Instance * CEnvironment_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CEnvironment_Instance * CEnvironment_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CEnvironment_Instance*		pInstance = new CEnvironment_Instance(pDevice, pContext);
+	CEnvironment_Instance*		pInstance = new CEnvironment_Instance(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -194,5 +200,10 @@ void CEnvironment_Instance::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pInstanceModelCom);
+}
+
+CGameObject* CEnvironment_Instance::Pool()
+{
+	return new CEnvironment_Instance(*this);
 }
 

@@ -8,15 +8,14 @@
 #include "Data_Manager.h"
 #include "Clone_Manager.h"
 
-
 #include "TestEvent.h"
 #include "TestEventWithActor.h"
 #include "TestEventWithPlayer.h"
 
 
 
-CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CCharacter(pDevice, pContext)
+CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CCharacter(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -44,11 +43,15 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
 		return E_FAIL;
 
+	CData_Manager::GetInstance()->Set_Player(this);
+	
+
 	return S_OK;
 }
 
 void CPlayer::Priority_Tick(_float fTimeDelta)
 {
+	//CData_Manager::GetInstance()->Reset_Player((LEVEL)m_pGameInstance->Get_NextLevel());
 	__super::Priority_Tick(fTimeDelta);
 }
 
@@ -90,35 +93,16 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	CData_Manager::GetInstance()->Set_Player_Hp(m_iHp);
-	//_uint iHp = CData_Manager::GetInstance()->Get_Player_Hp();
-	//_bool test = false;
+	if (m_pGameInstance->Key_Down(DIK_E))
+	{
+		//IEvent* pEvent = CTestEvent::Create();
+		//IEvent* pEvent = CTestEventWithActor::Create(this);
+		IEvent* pEvent = CTestEventWithPlayer::Create(this);
+	
+		m_pGameInstance->Add_Event(pEvent);
+	}
 
-	//if (m_pGameInstance->Key_Down(DIK_C)) 
-	//{
-	//	CGameObject* pMonster = CClone_Manager::GetInstance()->Clone_Object<CGameObject>(LEVEL_GAMEPLAY, LAYER_MONSTER, TEXT("Prototype_GameObject_Monster"));
-	//	if (pMonster)
-	//	{
-	//		_float3 vPos = Get_Transform()->Get_Position();
-	//		pMonster->Get_Transform()->Set_Position(vPos);
-	//	}
-	//	else 
-	//	{
-	//		_bool test = false;
-	//	}
-	//}
-	//
-	//if (m_pGameInstance->Key_Down(DIK_E))
-	//{
-	//	//IEvent* pEvent = CTestEvent::Create();
-	//	//IEvent* pEvent = CTestEventWithActor::Create(this);
-	//	IEvent* pEvent = CTestEventWithPlayer::Create(this);
-	//
-	//	m_pGameInstance->Add_Event(pEvent);
-	//}
-
-
-
+	
 
 
 }
@@ -144,9 +128,9 @@ HRESULT CPlayer::Ready_Components()
 
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Navigation2"),
-		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
-		return E_FAIL;
+//	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Navigation2"),
+//		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+//		return E_FAIL;
 
 
 	return S_OK;
@@ -159,12 +143,12 @@ HRESULT CPlayer::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
 		return E_FAIL;
 
-//	{
-//		CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
-//		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
-//			return E_FAIL;
-//	}
-//	CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
+	//{
+	//	CWeapon_Player::WEAPON_DESC	WeaponDesc = {};
+	//	if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Player"), "SWORD", WeaponDesc, TEXT("Weapon_L"))))
+	//		return E_FAIL;
+	//}
+	//CWeapon* m_pWeapon_L = Get_Weapon(TEXT("Weapon_L"));
 
 
 	return S_OK;
@@ -200,9 +184,9 @@ _bool CPlayer::End_Condition()
 	return true;
 }
 
-CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CPlayer*		pInstance = new CPlayer(pDevice, pContext);
+	CPlayer*		pInstance = new CPlayer(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -224,6 +208,11 @@ CGameObject * CPlayer::Clone(void* pArg)
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+CGameObject* CPlayer::Pool()
+{
+	return new CPlayer(*this);
 }
 
 void CPlayer::Free()

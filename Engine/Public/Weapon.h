@@ -21,7 +21,7 @@ public:
 	}WEAPON_DESC;
 
 protected:
-	CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CWeapon(const CWeapon& rhs);
 	virtual ~CWeapon() = default;
 
@@ -33,6 +33,9 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
+
+public:
+	_float4x4	Get_WeaponWorldMatrix() { return m_WorldMatrix; }
 
 public:
 	void Set_Use(_bool _bUse) {

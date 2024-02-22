@@ -1,17 +1,24 @@
 #include "..\Public\GameInstance.h"
+
 #include "Collision_Manager.h"
-#include "Event_Manager.h"
 #include "Graphic_Device.h"
 #include "Object_Manager.h"
 #include "Target_Manager.h"
+#include "Event_Manager.h"
 #include "TImer_Manager.h"
 #include "Level_Manager.h"
-#include "Input_Device.h"
 #include "Light_Manager.h"
+#include "Input_Device.h"
 #include "Font_Manager.h"
+#include "PhysX_Manager.h"
+#include "RandomManager.h"
+
 #include "Renderer.h"
 #include "Frustum.h"
 #include "Mesh.h"
+
+#include "PhysXCollider.h"
+#include "PhysXController.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -77,6 +84,15 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 
 	m_pEvent_Manager = CEvent_Manager::Create();
 	if (nullptr == m_pEvent_Manager)
+		return E_FAIL;
+
+	//TODO: 레벨 확인헤야
+	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, iNumLayer);
+	if (nullptr == m_pPhysX_Manager)
+		return E_FAIL;
+
+	m_pRandom_Manager = CRandom_Manager::Create();
+	if(nullptr == m_pRandom_Manager)
 		return E_FAIL;
 
 
@@ -200,6 +216,14 @@ ID3D11ShaderResourceView* CGameInstance::Get_DepthSRV()
 		return nullptr;
 
 	return m_pGraphic_Device->Get_DepthSRV();
+}
+
+GFSDK_SSAO_Context_D3D11* CGameInstance::Get_AOContext()
+{
+	if (nullptr == m_pGraphic_Device)
+		return nullptr;
+
+	return m_pGraphic_Device->Get_AOContext();
 }
 
 _byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
@@ -362,6 +386,11 @@ CCharacter* CGameInstance::Get_Player()
 void CGameInstance::Set_Player(CCharacter* _pPlayer)
 {
 	m_pObject_Manager->Set_Player(_pPlayer);
+}
+
+HRESULT CGameInstance::Create_PoolObjects(const wstring& strPrototypeTag, _uint iSize)
+{
+	return m_pObject_Manager->Create_PoolObjects(strPrototypeTag, iSize);
 }
 
 void CGameInstance::Fill_PrototypeTags(vector<string>* _vector)
@@ -659,6 +688,16 @@ HRESULT CGameInstance::Bind_RenderTarget_ShaderResource(const wstring & strTarge
 	return m_pTarget_Manager->Bind_ShaderResource(strTargetTag, pShader, pConstantName);
 }
 
+CRenderTarget* CGameInstance::Find_RenderTarget(const wstring& strTargetTag)
+{
+	return m_pTarget_Manager->Find_RenderTarget(strTargetTag);
+}
+
+void CGameInstance::Create_RenderTarget(const wstring& strTargetTag)
+{
+	m_pTarget_Manager->Create_RenderTarget(strTargetTag);
+}
+
 #ifdef _DEBUG
 HRESULT CGameInstance::Ready_RenderTarget_Debug(const wstring & strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {
@@ -713,6 +752,103 @@ void CGameInstance::Add_Event(IEvent* pEvent)
 	m_pEvent_Manager->Add_Event(pEvent);
 }
 
+void CGameInstance::Register_PhysXCollider(CPhysXCollider* pPhysXCollider)
+{
+	m_pPhysX_Manager->Register_PhysXCollider(pPhysXCollider);
+}
+
+CPhysXCollider* CGameInstance::Find_PhysXCollider(const _uint iPhysXColliderIndex)
+{
+	return m_pPhysX_Manager->Find_PhysXCollider(iPhysXColliderIndex);
+}
+
+void CGameInstance::Register_PhysXController(CPhysXController* pPhysXController)
+{
+	m_pPhysX_Manager->Register_PhysXController(pPhysXController);
+}
+
+CPhysXController* CGameInstance::Find_PhysXController(const _uint iPhysXControllerIndex)
+{
+	return m_pPhysX_Manager->Find_PhysXController(iPhysXControllerIndex);
+}
+
+void CGameInstance::Check_PhysXFilterGroup(const _uint In_iLeftLayer, const _uint In_iRightLayer)
+{
+	m_pPhysX_Manager->Check_PhysXFilterGroup(In_iLeftLayer, In_iRightLayer);
+}
+
+_uint CGameInstance::Get_PhysXFilterGroup(const _uint In_iIndex)
+{
+	return m_pPhysX_Manager->Get_PhysXFilterGroup(In_iIndex);
+}
+
+PxRigidDynamic* CGameInstance::Create_DynamicActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial)
+{
+	return m_pPhysX_Manager->Create_DynamicActor(transform, geometry, pMaterial);
+}
+
+PxRigidDynamic* CGameInstance::Create_DynamicActor(const PxTransform& transform)
+{
+	return m_pPhysX_Manager->Create_DynamicActor(transform);
+}
+
+PxRigidStatic* CGameInstance::Create_StaticActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial)
+{
+	return m_pPhysX_Manager->Create_StaticActor(transform, geometry, pMaterial);
+}
+
+PxRigidStatic* CGameInstance::Create_StaticActor(const PxTransform& transform)
+{
+	return m_pPhysX_Manager->Create_StaticActor(transform);
+}
+
+void CGameInstance::Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut)
+{
+	m_pPhysX_Manager->Create_ConvexMesh(pVertices, iNumVertice, ppOut);
+}
+
+void CGameInstance::Create_ConvexMesh(const PxConvexMeshDesc& In_MeshDesc, PxConvexMesh** ppOut)
+{
+	m_pPhysX_Manager->Create_ConvexMesh(In_MeshDesc, ppOut);
+}
+
+void CGameInstance::Create_Shape(const PxGeometry& Geometry, PxMaterial* pMaterial, const _bool isExculsive, const PxShapeFlags In_ShapeFlags, PxShape** ppOut)
+{
+	m_pPhysX_Manager->Create_Shape(Geometry, pMaterial, isExculsive, In_ShapeFlags, ppOut);
+}
+
+void CGameInstance::Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshDesc, PxTriangleMesh** ppOut)
+{
+	m_pPhysX_Manager->Create_MeshFromTriangles(In_MeshDesc, ppOut);
+}
+
+void CGameInstance::Create_Controller(const PxCapsuleControllerDesc& In_ControllerDesc, PxController** ppOut)
+{
+	m_pPhysX_Manager->Create_Controller(In_ControllerDesc, ppOut);
+}
+
+const _float& CGameInstance::Random_Float(_float fMin, _float fMax)
+{
+	return m_pRandom_Manager->Random_Float(fMin, fMax);
+	
+}
+
+const _int& CGameInstance::Random_Int(_int iMin, _int iMax)
+{
+	return m_pRandom_Manager->Random_Int(iMin, iMax);
+}
+
+const _bool& CGameInstance::Random_Coin(_float fProbality)
+{
+	return m_pRandom_Manager->Random_Coin(fProbality);
+}
+
+int64_t CGameInstance::GenerateUniqueID()
+{
+	return m_pRandom_Manager->GenerateUniqueID();
+}
+
+
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
 {
 	//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
@@ -752,18 +888,34 @@ void CGameInstance::WString_To_String(wstring _wstring, string& _string)
 
 string CGameInstance::Convert_WString_To_String(wstring _wstring)
 {
-	string out_string;
-
-	return out_string.assign(_wstring.begin(), _wstring.end());
+	int len;
+	int slength = (int)_wstring.length() + 1;
+	len = WideCharToMultiByte(CP_ACP, 0, _wstring.c_str(), slength, 0, 0, 0, 0);
+	std::string r(len, '\0');
+	WideCharToMultiByte(CP_ACP, 0, _wstring.c_str(), slength, &r[0], len, 0, 0);
+	return r;
+	//string out_string;
+	//
+	//return out_string.assign(_wstring.begin(), _wstring.end());
 }
 
 WCHAR* CGameInstance::StringTowchar(const std::string& str)
 {
-	// std::wstring으로 변환
-	std::wstring wstr(str.begin(), str.end());
-	// c_str() 함수를 사용하여 WCHAR* 포인터로 변환
+	int len;
+	int slength = (int)str.length() + 1;
+	len = MultiByteToWideChar(CP_ACP, 0, str.c_str(), slength, 0, 0);
+	wchar_t* buf = new wchar_t[len];
+	MultiByteToWideChar(CP_ACP, 0, str.c_str(), slength, buf, len);
+	std::wstring r(buf);
+	delete[] buf;
 
-	return const_cast<WCHAR*>(wstr.c_str());
+	return const_cast<WCHAR*>(r.c_str());
+
+	// std::wstring으로 변환
+	//std::wstring wstr(str.begin(), str.end());
+	//// c_str() 함수를 사용하여 WCHAR* 포인터로 변환
+	//
+	//return const_cast<WCHAR*>(wstr.c_str());
 }
 
 char* CGameInstance::ConverWStringtoC(const wstring& wstr)
@@ -798,10 +950,16 @@ wchar_t* CGameInstance::ConverCtoWC(char* str)
 
 std::string CGameInstance::WideStringToString(const wchar_t* wideStr)
 {
-	// std::wstring으로부터 std::string으로 변환
-	std::wstring wstr(wideStr);
-	// std::string으로 변환
-	return std::string(wstr.begin(), wstr.end());
+	char ch[260];
+	char DefChar = ' ';
+	WideCharToMultiByte(CP_ACP, 0, wideStr, -1, ch, 260, &DefChar, NULL);
+
+	string ss(ch);
+	return ss;
+	//// std::wstring으로부터 std::string으로 변환
+	//std::wstring wstr(wideStr);
+	//// std::string으로 변환
+	//return std::string(wstr.begin(), wstr.end());
 }
 
 std::string CGameInstance::GetFileName(const std::string& filePath)
@@ -896,64 +1054,6 @@ const wstring CGameInstance::Get_LastNumChar(const wstring& str, const _uint& iN
 	return res;
 }
 
-_float3 CGameInstance::Add_Float3(const _float3& fLeft, const _float3& fRight)
-{
-	_vector vResult = XMVectorSet(0.f, 0.f, 0.f, 0.f);
-
-	_vector vLeft = XMLoadFloat3(&fLeft);
-	_vector vRight = XMLoadFloat3(&fRight);
-
-	vResult = XMVectorSetX(vResult, XMVectorGetX(vLeft) + XMVectorGetX(vRight));
-	vResult = XMVectorSetY(vResult, XMVectorGetY(vLeft) + XMVectorGetY(vRight));
-	vResult = XMVectorSetZ(vResult, XMVectorGetZ(vLeft) + XMVectorGetZ(vRight));
-
-	_float3 f3Result;
-	XMStoreFloat3(&f3Result, vResult);
-	return f3Result;
-}
-
-_float3 CGameInstance::Mul_Float3(const _float3& fLeft, const _float& fRight)
-{
-	_vector vResult(XMVectorSet(0.f, 0.f, 0.f, 0.f));
-
-	_vector vLeft(XMLoadFloat3(&fLeft));
-
-	vResult = XMVectorSetX(vResult, XMVectorGetX(vLeft) * fRight);
-	vResult = XMVectorSetY(vResult, XMVectorGetY(vLeft) * fRight);
-	vResult = XMVectorSetZ(vResult, XMVectorGetZ(vLeft) * fRight);
-
-	_float3 f3Result;
-	XMStoreFloat3(&f3Result, vResult);
-	return f3Result;
-}
-
-_bool CGameInstance::isIn_Range(const _float3 fLeft, const _float3 fRight, const _float fRange)
-{
-	_vector vLeft = XMLoadFloat3(&fLeft);
-	_vector vRight = XMLoadFloat3(&fRight);
-	_vector vDistance = vLeft - vRight;
-
-	_float fDistance = XMVectorGetX(XMVector3Length(vDistance));
-
-	return fDistance < fRange ? TRUE : FALSE;
-}
-
-_matrix CGameInstance::Make_WorldMatrix(const _float2& vScale, const _float3& vRot, const _float3& vPos)
-{
-	_vector vPitchYawRoll = XMLoadFloat3(&vRot);
-
-	_vector vPosition = XMLoadFloat3(&vPos);
-	vPosition = XMVectorSetW(vPosition, 1.f);
-
-	_matrix RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
-	_matrix ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, 1.f);
-	_matrix TransformationMatrix = ScaleMatrix * RotationMatrix;
-
-	TransformationMatrix.r[3] = vPosition;
-
-	return TransformationMatrix;
-}
-
 
 wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 기준으로 잘라서 오브젝트 이름만 가져오자 - TO 승용
 {
@@ -968,6 +1068,8 @@ wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 
 
 void CGameInstance::Release_Manager()
 {
+	Safe_Release(m_pRandom_Manager);
+	Safe_Release(m_pPhysX_Manager);
 	Safe_Release(m_pEvent_Manager);
 	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pFrustum);

@@ -2,8 +2,8 @@
 #include "Body_Player.h"
 #include "GameInstance.h"
 
-CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CBody(pDevice, pContext)
+CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CBody(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -133,9 +133,9 @@ HRESULT CBody_Player::Bind_ShaderResources()
 	return S_OK;
 }
 
-CBody_Player * CBody_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CBody_Player * CBody_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CBody_Player*		pInstance = new CBody_Player(pDevice, pContext);
+	CBody_Player*		pInstance = new CBody_Player(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -159,9 +159,16 @@ CGameObject * CBody_Player::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CBody_Player::Pool()
+{
+	return new CBody_Player(*this);
+}
+
 void CBody_Player::Free()
 {
 	__super::Free();
 
 }
+
+
 

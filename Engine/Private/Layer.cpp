@@ -1,6 +1,8 @@
 #include "Layer.h"
 #include "GameObject.h"
 
+#include "Object_Manager.h"
+
 CLayer::CLayer()
 {
 
@@ -30,7 +32,7 @@ void CLayer::Priority_Tick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
 			pGameObject->Priority_Tick(fTimeDelta);
 	}	
 }
@@ -39,7 +41,7 @@ void CLayer::Tick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
 			pGameObject->Tick(fTimeDelta);
 		
 	}
@@ -55,11 +57,18 @@ void CLayer::Late_Tick(_float fTimeDelta)
 
 	for (auto iter = m_GameObjects.begin(); iter != m_GameObjects.end();)
 	{
-		(*iter)->Late_Tick(fTimeDelta);
+		if (nullptr != (*iter) && true == (*iter)->Get_Enable())
+			(*iter)->Late_Tick(fTimeDelta);
+		
 
 		if ((*iter)->Is_Dead())
 		{
 			Safe_Release((*iter));
+			iter = m_GameObjects.erase(iter);
+		}
+		else if (false == (*iter)->Get_Enable())
+		{
+			m_pObjectManager->Fill_PoolObject((*iter));
 			iter = m_GameObjects.erase(iter);
 		}
 		else
@@ -69,15 +78,32 @@ void CLayer::Late_Tick(_float fTimeDelta)
 	}
 }
 
-CLayer * CLayer::Create()
+void CLayer::Set_ObjectManager(CObject_Manager* pObjectManager)
 {
-	return new CLayer;
+	m_pObjectManager = pObjectManager;
+}
+
+CLayer * CLayer::Create(CObject_Manager* pObjectManager)
+{
+	CLayer* pInstance = new CLayer();
+	pInstance->Set_ObjectManager(pObjectManager);
+	return pInstance;
 }
 
 void CLayer::Free()
 {
 	for (auto& pGameObject : m_GameObjects)
-		Safe_Release(pGameObject);
-
+	{
+		if (false == pGameObject->Get_Enable())
+		{
+			m_pObjectManager->Fill_PoolObject(pGameObject);
+		}
+		else 
+		{
+			Safe_Release(pGameObject);
+		}
+		
+	}
+		
 	m_GameObjects.clear();
 }

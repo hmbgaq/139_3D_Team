@@ -11,9 +11,7 @@ private:
 	virtual ~CRenderTarget() = default;
 
 public:
-	ID3D11RenderTargetView* Get_RTV() const {
-		return m_pRTV;
-	}
+	ID3D11RenderTargetView* Get_RTV() const { return m_pRTV; }
 
 public:
 	HRESULT Initialize(const wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, _float4 vClearColor);
@@ -22,7 +20,7 @@ public:
 
 #ifdef _DEBUG
 public:
-	HRESULT Ready_Debug(const wstring& strTargetTag, float fX, _float fY, _float fSizeX, _float fSizeY);
+	HRESULT Ready_Debug(const wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
 	HRESULT Render_Debug(class CShader* pShader, class CVIBuffer* pVIBuffer);
 	_float Get_SizeX() { return m_WorldMatrix._11; }
 	_float Get_SizeY() { return m_WorldMatrix._22; }
@@ -30,6 +28,7 @@ public:
 	_float Get_PosY() { return m_WorldMatrix._42; }
 	wstring Get_TargetTag() { return m_wstrTag; }
 	_float4 Get_FontColor() { return m_vFontColor; }
+	void	Create_TargetTexture();
 #endif
 
 private:

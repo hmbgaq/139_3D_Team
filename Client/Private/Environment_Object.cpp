@@ -3,8 +3,8 @@
 
 #include "GameInstance.h"
 
-CEnvironment_Object::CEnvironment_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CEnvironment_Object::CEnvironment_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 	
 }
@@ -172,9 +172,9 @@ HRESULT CEnvironment_Object::Bind_ShaderResources()
 	return S_OK;
 }
 
-CEnvironment_Object * CEnvironment_Object::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CEnvironment_Object * CEnvironment_Object::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CEnvironment_Object*		pInstance = new CEnvironment_Object(pDevice, pContext);
+	CEnvironment_Object*		pInstance = new CEnvironment_Object(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -198,6 +198,11 @@ CGameObject * CEnvironment_Object::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CEnvironment_Object::Pool()
+{
+	return new CEnvironment_Object(*this);
+}
+
 void CEnvironment_Object::Free()
 {
 	__super::Free();
@@ -205,4 +210,6 @@ void CEnvironment_Object::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 }
+
+
 

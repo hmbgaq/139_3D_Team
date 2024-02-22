@@ -15,6 +15,9 @@ public:
 	CMyAIScene(const aiScene* _pAIScene)
 	{
 		mRootNode = _pAIScene->mRootNode;
+		
+		//aiProcess_LimitBoneWeights
+		
 
 		mNumMeshes = _pAIScene->mNumMeshes;
 		mNumMaterials = _pAIScene->mNumMaterials;

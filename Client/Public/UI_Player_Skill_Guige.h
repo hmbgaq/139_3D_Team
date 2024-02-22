@@ -9,7 +9,7 @@ public:
 	enum TEXTUREKIND { FRAME, TEXTURE_END };
 
 private:
-	CUI_Player_Skill_Guige(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Player_Skill_Guige(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CUI_Player_Skill_Guige(const CUI_Player_Skill_Guige& rhs);
 	virtual ~CUI_Player_Skill_Guige() = default;
 
@@ -33,8 +33,9 @@ private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
 
 public:
-	static CUI_Player_Skill_Guige* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext); //! 盔屈按眉 积己
+	static CUI_Player_Skill_Guige* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 盔屈按眉 积己
 	virtual CGameObject* Clone(void* pArg) override; //! 荤夯按眉 积己
+	virtual CGameObject* Pool() override;
 	virtual void			Free() override;
 };
 

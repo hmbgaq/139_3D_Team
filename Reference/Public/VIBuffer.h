@@ -20,6 +20,9 @@ public:
 	virtual HRESULT Render();
 
 public:
+	ID3D11Buffer*				Get_VertexBuffer() { return m_pVB; }
+	ID3D11Buffer*				Get_IndexBuffer() { return m_pIB; }
+
 
 	virtual HRESULT Bind_VIBuffers();
 	/* 정점, 인덱스, 인스턴스 버퍼들을 생성한다. */

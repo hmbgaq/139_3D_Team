@@ -1,8 +1,8 @@
 #include "UI_Blood.h"
 #include "GameInstance.h"
 
-CUI_Blood::CUI_Blood(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI(pDevice, pContext)
+CUI_Blood::CUI_Blood(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CUI(pDevice, pContext, strPrototypeTag)
 {
 }
 
@@ -45,9 +45,9 @@ HRESULT CUI_Blood::Ready_UI()
 	return S_OK;
 }
 
-CUI_Blood* CUI_Blood::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Blood* CUI_Blood::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Blood* pInstance = new CUI_Blood(pDevice, pContext);
+	CUI_Blood* pInstance = new CUI_Blood(pDevice, pContext, strPrototypeTag);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -56,6 +56,11 @@ CUI_Blood* CUI_Blood::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	}
 
 	return pInstance;
+}
+
+CGameObject* CUI_Blood::Pool()
+{
+	return new CUI_Blood(*this);
 }
 
 CGameObject* CUI_Blood::Clone(void* pArg)

@@ -3,8 +3,8 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
-CUI_Player_Skill_Frame::CUI_Player_Skill_Frame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI(pDevice, pContext)
+CUI_Player_Skill_Frame::CUI_Player_Skill_Frame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -139,9 +139,9 @@ void CUI_Player_Skill_Frame::Load_Desc()
 
 }
 
-CUI_Player_Skill_Frame* CUI_Player_Skill_Frame::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Player_Skill_Frame* CUI_Player_Skill_Frame::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Player_Skill_Frame* pInstance = new CUI_Player_Skill_Frame(pDevice, pContext);
+	CUI_Player_Skill_Frame* pInstance = new CUI_Player_Skill_Frame(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -150,6 +150,11 @@ CUI_Player_Skill_Frame* CUI_Player_Skill_Frame::Create(ID3D11Device* pDevice, ID
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+CGameObject* CUI_Player_Skill_Frame::Pool()
+{
+	return new CUI_Player_Skill_Frame(*this);
 }
 
 CGameObject* CUI_Player_Skill_Frame::Clone(void* pArg)

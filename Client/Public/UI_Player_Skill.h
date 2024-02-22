@@ -6,7 +6,7 @@ BEGIN(Client)
 class CUI_Player_Skill : public CUI
 {
 private:
-	CUI_Player_Skill(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Player_Skill(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CUI_Player_Skill(const CUI& rhs);
 	virtual ~CUI_Player_Skill() = default;
 
@@ -21,8 +21,9 @@ private:
 	HRESULT	Ready_UI();
 
 public:
-	static  CUI_Player_Skill* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static  CUI_Player_Skill* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 	virtual void Free() override;
 };
 

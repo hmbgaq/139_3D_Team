@@ -4,8 +4,8 @@
 //_int g_iWinSizeX = 1280;
 //_int g_iWinSizeY = 720;
 
-CUI_Base::CUI_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CGameObject(pDevice, pContext)
+CUI_Base::CUI_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 

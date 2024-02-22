@@ -3,8 +3,8 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
-CUI_Blood_Vignette::CUI_Blood_Vignette(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CUI(pDevice, pContext)
+CUI_Blood_Vignette::CUI_Blood_Vignette(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
@@ -189,9 +189,9 @@ void CUI_Blood_Vignette::Load_Desc()
 
 }
 
-CUI_Blood_Vignette* CUI_Blood_Vignette::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Blood_Vignette* CUI_Blood_Vignette::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Blood_Vignette* pInstance = new CUI_Blood_Vignette(pDevice, pContext);
+	CUI_Blood_Vignette* pInstance = new CUI_Blood_Vignette(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -200,6 +200,11 @@ CUI_Blood_Vignette* CUI_Blood_Vignette::Create(ID3D11Device* pDevice, ID3D11Devi
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+CGameObject* CUI_Blood_Vignette::Pool()
+{
+	return new CUI_Blood_Vignette(*this);
 }
 
 CGameObject* CUI_Blood_Vignette::Clone(void* pArg)

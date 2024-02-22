@@ -7,9 +7,22 @@ texture2D		g_MaskTexture;
 texture2D		g_NoiseTexture;
 
 vector			g_vCamPosition;
-vector			g_vCamLook;
+vector			g_vCamDirection;
 
 float			g_fDegree;
+
+
+cbuffer FX_Variables
+{
+    float2	vUV_Offset		= float2(0.f, 0.f);
+    bool	bUV_Wave		= false;
+    float	fUV_WaveSpeed	= 1.f;
+    float2	vUV_TileCount	= float2(1.f, 1.f);
+    float2	vUV_TileIndex	= float2(0.f, 0.f);
+    float4	vColor_Offset	= float4(0.f, 0.f, 0.f, 0.f);
+    float4	vColor_Clip		= float4(0.f, 0.f, 0.f, 0.f);
+    float4	vColor_Mul		= float4(1.f, 1.f, 1.f, 1.f);
+};
 
 
 /* Custom Function */
@@ -61,6 +74,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	return Out;
 }
+
 
 struct GS_IN
 {
@@ -142,14 +156,15 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
-	Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+	//float4	vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
 
-	if (Out.vColor.a < 0.8f)
-		discard;
+    if (Out.vColor.a < 0.5f)
+        discard;
 
-	Out.vColor.rgb *= In.vColor.rgb;
+    Out.vColor.rgb *= In.vColor.rgb;
 
-	Out.vColor.a = In.vColor.a;
+    Out.vColor.a = In.vColor.a /** vAlphaColor*/;
 
 	return Out;
 }
@@ -158,7 +173,7 @@ PS_OUT PS_MAIN(PS_IN In)
 technique11 DefaultTechnique
 {
 	/* 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
-	pass Particle
+	pass Particle  //0
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);
@@ -170,4 +185,6 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
+
+
 }
