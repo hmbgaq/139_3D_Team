@@ -43,6 +43,7 @@
 #include "UI_Player_HP.h"
 #include "UI_Player_HPFrame.h"
 #include "UI_Player_HPBar.h"
+#include "UI_Player_Left_Interface.h"
 #include "UI_Blood.h"
 #include "UI_Blood_Vignette.h"
 #include "UI_Blood_Veins.h"
@@ -471,6 +472,9 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_Hp"), CUI_Player_HP::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_Hp"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_HPBar"), CUI_Player_HPBar::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_HPBar"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_HPFrame"), CUI_Player_HPFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_HPFrame"))));
+
+	/* Player_Left_Interface */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_Left_Interface"), CUI_Player_Left_Interface::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_Left_Interface"))));
 	/* Blood */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Blood"), CUI_Blood::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Blood"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Blood_Lights"), CUI_Blood_Lights::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Blood_Lights"))));

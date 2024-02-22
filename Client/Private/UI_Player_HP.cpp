@@ -40,7 +40,14 @@ HRESULT CUI_Player_HP::Render()
 	return S_OK;
 }
 
+json CUI_Player_HP::Save_Desc(json& out_json)
+{
+	json Out_;
 
+	__super::Save_Desc(Out_);
+
+	return Out_;
+}
 
 CUI_Player_HP* CUI_Player_HP::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {

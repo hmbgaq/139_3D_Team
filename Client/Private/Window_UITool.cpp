@@ -532,7 +532,7 @@ void CWindow_UITool::Parent_List()
 				m_iSelectedParentIndex = i;
 
 				/* 클래스 테그 설정 */
-				m_tUI_Desc.strCloneTag = "Prototype_GameObject_UI_";
+				m_tUI_Desc.strCloneTag = "Prototype_GameObject_";
 				m_tUI_Desc.strCloneTag += m_vecParent[m_iSelectedParentIndex].c_str();
 				m_tUI_Desc.bParent = true;
 			}
@@ -996,11 +996,46 @@ void CWindow_UITool::SetUp_Initialize()
 		m_tUI_Desc.fPositionY = g_iWinSizeY / 2;
 		m_tUI_Desc.fScaleX = 100;
 		m_tUI_Desc.fScaleY = 100;
+
+		/* Parent */
+		m_tUIParent_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
+		m_tUIParent_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
+		m_tUIParent_Desc.fPositionX = g_iWinSizeX / 2;
+		m_tUIParent_Desc.fPositionY = g_iWinSizeY / 2;
+		m_tUIParent_Desc.fScaleX = 100;
+		m_tUIParent_Desc.fScaleY = 100;
 #pragma endregion End
 
+		
 		bSetUpComplete = true;
 	}	
 }
+
+#pragma region Parent
+void CWindow_UITool::Create_Add_UIParts(CUI::UI_DESC tUIDesc)
+{
+	dynamic_cast<CUI*>(m_vecUIParentObject[m_iSelectedParentIndex])->Create_Add_UIParts(&tUIDesc);
+}
+
+void CWindow_UITool::Add_UIParts(CUI* pUI)
+{
+	dynamic_cast<CUI*>(m_vecUIParentObject[m_iSelectedParentIndex])->Add_UIParts(pUI);
+}
+
+void CWindow_UITool::Delete_UIParts()
+{
+	if (m_vecUIParentObject.empty())
+		return;
+
+	dynamic_cast<CUI*>(m_vecUIParentObject[m_iSelectedParentIndex])->Is_Dead();
+
+	if(m_iSelectedParentIndex > 0 &&
+		m_iSelectedParentIndex <= m_vecUIParentObject.size())
+		--m_iSelectedParentIndex;
+
+	m_pCurrParent = nullptr;
+}
+#pragma endregion
 
 void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 {

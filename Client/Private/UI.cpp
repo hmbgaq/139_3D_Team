@@ -50,6 +50,8 @@ HRESULT CUI::Initialize(void* pArg)
 	SetUp_UIRect(m_fPositionX, m_fPositionY, m_fScaleX, m_fScaleY);
 #pragma endregion End
 
+	//FAILED_CHECK(Ready_UI("../Bin/DataFiles/Data_UI/UI_Info"));
+
 	return S_OK;
 }
 
@@ -200,6 +202,23 @@ void CUI::Set_Size(_float fSizeX, _float fSizeY)
 		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
 }
 
+void CUI::Create_Add_UIParts(void* pArg)
+{
+	CUI::UI_DESC* pUIDesc = (CUI::UI_DESC*)pArg;
+
+	wstring wstrLayerTag = TEXT("");
+	m_pGameInstance->String_To_WString(pUIDesc->strLayerTag, wstrLayerTag);
+	wstring wstrPartsTag = TEXT("");
+	m_pGameInstance->String_To_WString(pUIDesc->strCloneTag, wstrPartsTag);
+	CUI* pUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_CurrentLevel(), wstrLayerTag, wstrPartsTag, &pArg));
+	m_vecUIParts.push_back(pUI);
+}
+
+void CUI::Add_UIParts(CUI* pUI)
+{
+	m_vecUIParts.push_back(pUI);
+}
+
 CUI* CUI::Get_UIPart(const wstring& strPartTag)
 {
 	for (auto& iter : m_vecUIParts)
@@ -297,18 +316,14 @@ HRESULT CUI::SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX, _float f
 	return S_OK;
 }
 
-HRESULT CUI::Ready_UI(UI_DESC tUI_Desc)
+HRESULT CUI::Ready_UI(const char* cFilePath) // 컨테이너에 담을 UI 파츠들 불러오기
 {
 	json json_in;
 
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
-
 	_int		iPathNum = 0;
-	string		strFileName;
-	string		strFilePath;
 
 
-	CJson_Utility::Load_Json(filePath, json_in);
+	CJson_Utility::Load_Json(cFilePath, json_in);
 
 	for (auto& item : json_in.items())
 	{
@@ -316,9 +331,19 @@ HRESULT CUI::Ready_UI(UI_DESC tUI_Desc)
 
 		CUI::UI_DESC tUI_Info;
 
+		tUI_Info.strLayerTag = object["LayerTag"];
 		tUI_Info.strCloneTag = object["CloneTag"];
 		tUI_Info.strProtoTag = object["ProtoTag"];
 		tUI_Info.strFilePath = object["FilePath"];
+		tUI_Info.strMapTextureTag = object["FilePath"];
+
+		tUI_Info.iShaderNum = object["ShaderNum"];
+
+		wstring wstrLayertag;
+		m_pGameInstance->String_To_WString(tUI_Info.strLayerTag, wstrLayertag);
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
 
 		wstring wstrPrototag;
 		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
@@ -326,12 +351,9 @@ HRESULT CUI::Ready_UI(UI_DESC tUI_Desc)
 		wstring wstrFilePath;
 		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
 
-		//wstring wstrLayer;
-		//m_pGameInstance->String_To_WString(tUI_Info.Layer, wstrLayer);
+		CUI* pUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_CurrentLevel(), wstrLayertag, wstrClonetag, &tUI_Info));
 
-		CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_CurrentLevel(), TEXT("Layer_UI"), wstrPrototag, &tUI_Info));
-
-		pUI_Object->Get_Transform()->Load_FromJson(object);
+		pUI->Get_Transform()->Load_FromJson(object);
 
 	}
 
@@ -372,6 +394,29 @@ void CUI::Load_UIData(const char* _FilePath)
 		//tUI_Info.strProtoTag = object["ProtoTag"];
 		tUI_Info.strFilePath = object["FilePath"];
 	}
+}
+
+json CUI::Save_Desc(json& out_json)
+{
+	out_json["Alpha"] = m_tUIInfo.fAlpha;
+
+	out_json["ShaderNum"] = m_tUIInfo.iShaderNum;
+
+	out_json["LayerTag"] = m_tUIInfo.strLayerTag;
+
+	out_json["CloneTag"] = m_tUIInfo.strCloneTag;
+
+	out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
+
+	out_json["FilePath"] = m_tUIInfo.strFilePath;
+
+	out_json["MapTextureTag"] = m_tUIInfo.strMapTextureTag;
+	
+	out_json["Color"] = { m_tUIInfo.vColor.m128_f32[0], m_tUIInfo.vColor.m128_f32[1], m_tUIInfo.vColor.m128_f32[3], m_tUIInfo.vColor.m128_f32[4] };
+
+	m_pTransformCom->Write_Json(out_json);
+
+	return out_json;
 }
 
 void CUI::Free()

@@ -136,6 +136,12 @@ public:
 private: /* Member */
 	CUI::UI_DESC				m_tUI_Info;
 
+private: /* Parent */
+	void						Create_Add_UIParts(CUI::UI_DESC tUIDesc);
+	void						Add_UIParts(CUI* pUI);
+	void						Delete_UIParts();
+
+
 private: /* ==================== Mouse ==================== */
 
 
@@ -167,6 +173,7 @@ private: /* 2D */
 
 	_int						m_iLayerNum = 0;
 	CUI::UI_DESC				m_tUI_Desc;
+	CUI::UI_DESC				m_tUIParent_Desc;
 	CUI*						m_CurrObject = nullptr;
 	CUI*						m_pCurrParent = nullptr;
 	
@@ -211,9 +218,7 @@ private:
 	// 	// 클래스 목록을 저장하는 벡터
 	std::vector<std::string> m_vecParent =
 	{
-		"Player_Hp",
-		"Blood",
-		"Player_Skill",
+		"UI_Player_Left_Interface"
 	};
 	// 클래스 목록을 저장하는 벡터
 	std::vector<std::string> m_vecClass =

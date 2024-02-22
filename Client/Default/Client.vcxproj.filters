@@ -298,6 +298,12 @@
     <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Vignette">
       <UniqueIdentifier>{f4d39fbe-3d41-437e-b224-2666fac37121}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\Left_Interface">
+      <UniqueIdentifier>{e214bb53-14ac-4db7-97f6-b3b24eb46415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\Right_Interface">
+      <UniqueIdentifier>{52b0b806-bb9d-40cc-a902-d719e9dff60b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -578,6 +584,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_Left_Interface.h">
+      <Filter>02.GameObjects\UI\00. Player\Left_Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1035,6 +1044,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Blood.cpp">
       <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_Left_Interface.cpp">
+      <Filter>02.GameObjects\UI\00. Player\Left_Interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

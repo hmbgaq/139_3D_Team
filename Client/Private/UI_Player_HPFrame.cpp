@@ -129,24 +129,12 @@ _bool CUI_Player_HPFrame::In_Frustum()
 
 json CUI_Player_HPFrame::Save_Desc(json& out_json)
 {
-	_float fSizeX = 0.f;
-	_float fSizeY = 0.f;
-	_float fPositionX = 0.f;
-	_float fPositionY = 0.f;
+	/* 기본정보 저장 */
+	__super::Save_Desc(out_json);
 
-	_float fCurPosX = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
-	_float fCurPosY = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
 
-	fCurPosX = fCurPosX + (_float)g_iWinSizeX * 0.5f;
-	fCurPosY = (_float)g_iWinSizeY * 0.5f - fCurPosY;
+	/* 추가정보 저장 */
 
-	out_json["CloneTag"] = m_tUIInfo.strCloneTag;
-
-	out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
-
-	out_json["FilePath"] = m_tUIInfo.strFilePath;
-
-	m_pTransformCom->Write_Json(out_json);
 
 	return out_json;
 }

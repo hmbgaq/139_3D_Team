@@ -125,6 +125,9 @@ HRESULT CMainApp::Ready_UITexture()
 		FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, wstrPrototag, CTexture::Create(m_pDevice, m_pContext, wstrFilePath)));
 	}
 
+	// Test
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("UITargetTexture"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/TargetTexture/UITargetTexture.dds"))));
+
 	return S_OK;
 }
 

@@ -19,6 +19,9 @@ public:
 		_float3		vmaxRotation = { 360.f, 360.f, 360.f };
 		_float3		vminPosition = { 0.f, 0.f, 0.f };
 		_float3		vmaxPosition = { 300.f, 300.f, 300.f };
+
+		_int		iKeyframeNum = 0;
+
 	}UI_ANIMKEYFRAME;
 
 	typedef struct tagUIDesc /* 저장/불러오기 할때 순서 잘 맞추기 */
@@ -39,34 +42,49 @@ public:
 		_float		fPositionY = (_float)g_iWinSizeY / 2;
 		_float		fPositionZ = 0.0f;
 
+		/* 
+			(저장 순서)
+			=부모 여부=
+			bParent
+			=월드 여부=
+			bWorld
+			=크기 조절=
+			fScaleX = 1
+			fScaleY = 1
+			=회전 조절=
+			fRotationX
+			fRotationY
+			=위치 조절=
+			fPositionX
+			fPositionY
+			fPositionZ
+			=투명도 조절=
+			fAlpha
+			=셰이더 패스 선택=
+			iShaderNum
+			=테그 값=
+			strLayerTag
+			strCloneTag
+			strProtoTag
+			strFilePath
+			strMapTextureTag
+			=색상=
+			vColor
+		*/
+
 		/* 알파 */
 		_float		fAlpha = 1.f;
 
+		_int		iShaderNum = 0;			// 적용할 셰이더 넘버
+
+		string		strLayerTag = "";
+		string		strCloneTag = "";
+		string		strProtoTag = "";
+		string		strFilePath = "";
+		string		strMapTextureTag = "";	// 적용할 맵 텍스처
+
 		/* 색상 */
 		_vector		vColor = { 1.f, 1.f, 1.f, 1.f };
-
-		/* 
-			=텍스처 여러장을 갖게 만들자=
-			Texture를 몇장을 줄지 모르니, vector 컨테이너로 갖고, 넘겨준 사이즈만큼 돌려서 텍스처를 만들어주자. 
-			CTexture도 벡터컨테이너로 선언하여 가져온 텍스처 테그 수 만큼 텍스처를 만들어서 push_back 해주자.
-			mapTexture도 마찬가지. (파싱정보 바뀌어야함) (클래스/객체 대폭 축소됨)
-			구조체 하나 파서 셰이더 패스도 같이 저장하면 좋을거같다.
-			
-			=UV좌표로 텍스처를 조절하자=
-
-			=UI용 랜더타겟을 따로 만들고, 적용하고싶은 효과들을 적용시키자=
-
-			=UI용 렌더타겟에 그려진 UI들을 텍스처로 저장할 수 있게 만들어주자 (틀 저장하기)=
-
-			=>변경 : 클래스마다 기능과 어떤 녀석인지 정해져있으니 텍스처를 굳이 툴에서 받을 필요없이 완성된 클래스를 만들고, 툴에선 완성본을 생성하여 배치하자.
-
-		*/
-
-		string		strCloneTag; 
-		string		strProtoTag;
-		string		strFilePath;
-		string		strMapTextureTag;	// 적용할 맵 텍스처
-		_int		iShaderNum;			// 적용할 셰이더 넘버
 
 	}UI_DESC;
 
@@ -98,6 +116,10 @@ public: /* ============================== Get / Set ============================
 	void			Set_Pos(_float fPosX, _float fPosY);
 	void			Set_PosZ(_float fZ);
 
+public: /* ============================== Add ============================== */
+	void			Create_Add_UIParts(void* pArg);
+	void			Add_UIParts(CUI* pArg);
+
 public: /* ========================== Change_Size ========================== */
 	void			Set_Size(_float fSizeX, _float fSizeY);
 	void			Change_SizeBottom(_float MMY);
@@ -126,15 +148,16 @@ public: /* ============================== SetUp ============================== *
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
 	HRESULT			SetUp_BillBoarding();
 	HRESULT			SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
-	HRESULT			Ready_UI(UI_DESC tUI_Desc);
+	HRESULT			Ready_UI(const char* cFilePath);
 	HRESULT			Create_UIParts(UI_DESC tUI_Desc);
 
 protected: /* =========================== Ready ============================= */
 	virtual HRESULT Ready_Components();
 	virtual HRESULT Bind_ShaderResources();
 
-protected: /* =========================== Load ============================== */
+public: /* =========================== Save/Load ============================== */
 	void			Load_UIData(const char* _FilePath);
+	virtual json	Save_Desc(json& out_json);
 
 protected: /* ========================= Component =========================== */
 	CShader*			m_pShaderCom = { nullptr };

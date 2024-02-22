@@ -309,16 +309,17 @@ HRESULT CRenderer::Control_HotKey()
 
 		cout << " ----------------------------- " << endl;
 	}
+
 	if (m_pGameInstance->Key_Down(DIK_1))
-		m_bOutline_Active = !m_bOutline_Active;
+		m_bOutline_Active = !m_bOutline_Active; // 아웃라인 껏다 켯다
 	if (m_pGameInstance->Key_Down(DIK_2))
-		m_bSSAO_Active = !m_bSSAO_Active;
+		m_bSSAO_Active = !m_bSSAO_Active;		// SSAO 껏다 켯다
 	if (m_pGameInstance->Key_Down(DIK_3))
-		m_bBloom_Active = !m_bBloom_Active;
+		m_bBloom_Active = !m_bBloom_Active;		// Bloom 껏다 켯다
 	if (m_pGameInstance->Key_Down(DIK_4))
-		m_bHDR_Active = !m_bHDR_Active;
+		m_bHDR_Active = !m_bHDR_Active;			// HDR 껏다 켯다
 	if (m_pGameInstance->Key_Down(DIK_5))
-		m_bFXAA_Active = !m_bFXAA_Active;
+		m_bFXAA_Active = !m_bFXAA_Active;		// 안티에일리어싱 껏다 켯다
 
 	return S_OK;
 }
@@ -328,8 +329,8 @@ HRESULT CRenderer::Control_HotKey()
 
 HRESULT CRenderer::Draw_RenderGroup()
 {
-#pragma region _DEBUG
 	Control_HotKey();
+#pragma region _DEBUG
 #pragma endregion
 
 	FAILED_CHECK(Render_Priority());	/* SkyBox */
