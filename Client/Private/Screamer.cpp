@@ -106,9 +106,7 @@ HRESULT CScreamer::Render()
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_MetallicTexture", (_uint)i, aiTextureType_METALNESS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_RougnessTexture", (_uint)i, aiTextureType_DIFFUSE_ROUGHNESS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_OcclusionTexture", (_uint)i, aiTextureType_AMBIENT_OCCLUSION);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 		
 		m_pShaderCom->Begin(m_iRenderPass);
 
