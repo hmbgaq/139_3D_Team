@@ -21,7 +21,7 @@ public:
 		/* UI */
 		RENDER_UI_FRONT, RENDER_UI, RENDER_UI_BACK,	RENDER_END };
 
-	enum SHADER_TYPE { SHADER_SSAO, SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, SHADER_FINAL, SHADER_END };
+	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, SHADER_FINAL, SHADER_END };
 	
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -133,7 +133,7 @@ private:
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponent;
-	_bool						m_bRenderDebug = { false };
+	_bool						m_bRenderDebug = { true };
 #endif
 
 public:

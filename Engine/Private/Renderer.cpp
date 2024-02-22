@@ -55,9 +55,6 @@ HRESULT CRenderer::Create_Buffer()
 
 HRESULT CRenderer::Create_Shader()
 {
-	m_pShader[SHADER_TYPE::SHADER_SSAO] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_SSAO.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements);
-	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_SSAO], E_FAIL);
-
 	m_pShader[SHADER_TYPE::SHADER_DEFERRED] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
 	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_DEFERRED], E_FAIL);
 
@@ -88,6 +85,9 @@ HRESULT CRenderer::Create_RenderTarget()
 
 	/* RenderTarget */
 	{
+		/* MRT_Priority - 스카이박스 등 우선그리는용도 */
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Priority"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+
 		/* MRT_GameObject - Target_ViewNormal 없애도 될듯 - SSAO 용도 */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f)));
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Normal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
@@ -134,9 +134,11 @@ HRESULT CRenderer::Create_RenderTarget()
 
 	}
 
-
 	/* MRT*/
 	{
+		/* MRT_Priority */
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Priority"), TEXT("Target_Priority")));
+
 		/* MRT_GameObject */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Normal")));
@@ -148,7 +150,7 @@ HRESULT CRenderer::Create_RenderTarget()
 		/* MRT_OutLine */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Outline"), TEXT("Target_OutLine")));
 
-		/* MRT_LightAcc - Q. Ambient 추가하는가 ? */
+		/* MRT_LightAcc */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular")));
 
@@ -183,7 +185,7 @@ HRESULT CRenderer::Create_RenderTarget()
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(Viewport.Width, Viewport.Height, 0.f, 1.f));
 	//XMStoreFloat4x4(&m_MinimapProj, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), 1600.f / 900.f, 0.2f, 1000.0f));
-	
+
 	return S_OK;
 }
 
@@ -267,13 +269,20 @@ HRESULT CRenderer::Control_HotKey()
 		else
 			cout << "FXAA : false " << endl;
 
+		if (true == m_bBloom_Active)
+			cout << "Bloom Blur : true " << endl;
+		else
+			cout << "Bloom Blur : false " << endl;
+
 		cout << " ----------------------------- " << endl;
 	}
 	if (m_pGameInstance->Key_Down(DIK_2))
 		m_bSSAO_Active = !m_bSSAO_Active;
 	if (m_pGameInstance->Key_Down(DIK_3))
-		m_bHDR_Active = !m_bHDR_Active;
+		m_bBloom_Active = !m_bBloom_Active;
 	if (m_pGameInstance->Key_Down(DIK_4))
+		m_bHDR_Active = !m_bHDR_Active;
+	if (m_pGameInstance->Key_Down(DIK_5))
 		m_bFXAA_Active = !m_bFXAA_Active;
 	return S_OK;
 }
@@ -289,16 +298,26 @@ HRESULT CRenderer::Draw_RenderGroup()
 #pragma endregion
 
 	FAILED_CHECK(Render_Priority());	/* SkyBox */
-	FAILED_CHECK(Render_Shadow());		/* MRT_Shadow */
 	FAILED_CHECK(Render_NonLight()); 
 	FAILED_CHECK(Render_NonBlend());	/* MRT_GameObjects*/
-	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
 
 	{ 
 		/* Pre-PostProcessing */
-		FAILED_CHECK(Render_HBAO_PLUS());
-		//FAILED_CHECK(Render_Bloom());
-		//FAILED_CHECK(Render_OutLine_PostProcessing());
+		if (true == m_bSSAO_Active)
+		{
+			FAILED_CHECK(Render_HBAO_PLUS());
+		}
+		if (true == m_bBloom_Active)
+		{
+			FAILED_CHECK(Render_Bloom());
+		}
+		if (true == m_bOutline_Active)
+		{
+			FAILED_CHECK(Render_OutLine_PostProcessing());
+		}
+
+		FAILED_CHECK(Render_Shadow());		/* MRT_Shadow */
+		FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
 	}
 	FAILED_CHECK(Render_Deferred());
 	{
@@ -529,8 +548,7 @@ HRESULT CRenderer::Render_Deferred()
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bSSAO_Active", &m_bSSAO_Active, sizeof(_bool)));
 		if (true == m_bSSAO_Active)
 		{
-			//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture"));
-			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao 추가 */
+			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao 추가 */
 		}
 
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bBloom_Active", &m_bBloom_Active, sizeof(_bool)));
@@ -616,9 +634,9 @@ HRESULT CRenderer::Render_HBAO_PLUS()
 
 	GFSDK_SSAO_Output_D3D11 Output;
 	Output.pRenderTargetView = pView;
-	
+
 	Output.Blend.Mode = GFSDK_SSAO_OVERWRITE_RGB;
-	
+
 	GFSDK_SSAO_Status status;
 	status = m_pGameInstance->Get_AOContext()->RenderAO(m_pContext, Input, Params, Output);
 	assert(status == GFSDK_SSAO_OK);
@@ -890,6 +908,9 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eGroupID, CGameObject* pGameObjec
 HRESULT CRenderer::Add_DebugRender(CComponent* pDebugCom)
 {
 #ifdef _DEBUG
+	if (nullptr == pDebugCom)
+		return S_OK;
+
 	m_DebugComponent.push_back(pDebugCom);
 
 	Safe_AddRef(pDebugCom);
