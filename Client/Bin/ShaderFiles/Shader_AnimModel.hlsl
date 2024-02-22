@@ -27,7 +27,9 @@ matrix			g_ReflectionMatrix;
 float4          g_vLineColor;
 float           g_LineThick;
 
+/* RimLight */
 float4			g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; 
+float4          g_vCamPosition;
 
 struct VS_IN
 {
@@ -118,13 +120,17 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	if (vMtrlDiffuse.a < 0.1f)
 		discard;
-
-	Out.vDiffuse = vMtrlDiffuse;
+    
+    /* 림라이트 -> 프레넬 공식 사용 */
+    
+    float fRimPower = 1.f - saturate(dot(In.vNormal, normalize((-1.f * (In.vWorldPos - g_vCamPosition)))));
+    fRimPower = pow(fRimPower, 5.f);
+    vector vRimColor = g_vRimColor * fRimPower;
+    
+    Out.vDiffuse = vMtrlDiffuse + vRimColor;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-   // Out.vBloom = float4(1.0f, 0.f, 0.f, 1.0f);
-    //Out.vViewNormal = Out.vNormal;
-    //Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
 	return Out;

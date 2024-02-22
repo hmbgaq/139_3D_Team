@@ -39,6 +39,9 @@ private:
 	_float				m_fDissolveWeight		= {};
 	_float4				m_vBloomColor			= {};
 
+	_float4				m_vRimColor = { 1.0f, 0.f, 0.f, 1.f };
+	_float4				m_vCamPos = {};
+
 private:
 	CModel*				m_pModelCom				= { nullptr };
 	CShader*			m_pShaderCom			= { nullptr };
