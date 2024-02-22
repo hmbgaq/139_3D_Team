@@ -49,6 +49,7 @@ private:
 
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
+	void Reset_AnimFunction();
 
 	void			Save_KeyEvent();
 	HRESULT			Load_KeyEvent();
@@ -97,7 +98,7 @@ private:
 	_float					m_iColliderWeaponOnTrackPosition = 0.0f;
 	_float					m_iColliderWeaponOffTrackPosition = 0.0f;
 
-	//! 콜라이더 위치값 조정임 
+	//! 콜라이더 위치값 조정 
 	_float					m_fBonePosition[3] = { 0.f,0.f,0.f };
 	_float					m_fWeaponPosition[3] = { 0.f,0.f,0.f };
 

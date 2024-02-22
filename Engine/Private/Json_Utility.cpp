@@ -80,6 +80,23 @@ void CJson_Utility::Write_Float4(json& Out_Json, const _float4& In_Float4)
 	Out_Json = vInValue.m128_f32;
 }
 
+void CJson_Utility::Write_JsonFloat4x4(json& Out_Json, const  _float4x4& In_Float4x4)
+{
+	if (Out_Json.empty())
+	{
+		Out_Json.emplace();
+	}
+
+	for (_uint i = 0; i < 4; ++i)
+	{
+		for (_uint s = 0; s < 4; ++s)
+		{
+			Out_Json[i][s] = In_Float4x4.m[i][s];
+			
+		}
+	}
+}
+
 void CJson_Utility::Load_Float2(const json& In_Json, _float2& Out_Float2)
 {
 	if (In_Json.empty())

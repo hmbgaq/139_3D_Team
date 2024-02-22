@@ -106,6 +106,7 @@ protected: //TODO ImguiDialog #다이얼로그
 	string				m_strDialogKey = {};
 
 protected: //TODO Guizmo #기즈모
+	
 	_float*				m_arrView = { nullptr };
 	_float*				m_arrProj = { nullptr };
 	_float*				m_arrOrthoProj = { nullptr };

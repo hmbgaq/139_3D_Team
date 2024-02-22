@@ -42,7 +42,7 @@ public:
 private:
 	virtual	HRESULT Save_Function(string strPath, string strFileName) override;
 	virtual HRESULT Load_Function(string strPath, string strFileName) override;
-				void	Reset_Function();
+	void	Reset_Function();
 
 
 private:

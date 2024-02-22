@@ -154,7 +154,6 @@ void CWindow_MapTool::Render()
 HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 {
  	
- 
  	string strNoExtFileName = filesystem::path(strFileName).stem().string();
 	
 

@@ -17,6 +17,7 @@ public:
 	static void			Write_Float2(json& Out_Json, const _float2& In_Float2);
 	static void			Write_Float3(json& Out_Json, const _float3& In_Float3);
 	static void			Write_Float4(json& Out_Json, const _float4& In_Float4);
+	static void			Write_JsonFloat4x4(json& Out_Json, const _float4x4& In_Float4x4);
 	static void			Load_Float2(const json& In_Json, _float2& Out_Float2);
 	static void			Load_Float3(const json& In_Json, _float3& Out_Float3);
 	static void			Load_Float4(const json& In_Json, _float4& Out_Float4);
