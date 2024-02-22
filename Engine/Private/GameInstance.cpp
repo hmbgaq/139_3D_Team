@@ -308,6 +308,12 @@ _uint CGameInstance::Get_NextLevel()
 	return m_pLevel_Manager->Get_NextLevel();
 }
 
+// 현재 레벨 받아오기 추가
+_uint CGameInstance::Get_CurrentLevel()
+{
+	return m_pLevel_Manager->Get_CurrentLevel();
+}
+
 void CGameInstance::Set_CurrentLevel(_uint CurrentLevel)
 {
 	m_pLevel_Manager->Set_CurrentLevel(CurrentLevel);
@@ -685,6 +691,11 @@ HRESULT CGameInstance::Bind_RenderTarget_ShaderResource(const wstring & strTarge
 CRenderTarget* CGameInstance::Find_RenderTarget(const wstring& strTargetTag)
 {
 	return m_pTarget_Manager->Find_RenderTarget(strTargetTag);
+}
+
+void CGameInstance::Create_RenderTarget(const wstring& strTargetTag)
+{
+	m_pTarget_Manager->Create_RenderTarget(strTargetTag);
 }
 
 #ifdef _DEBUG

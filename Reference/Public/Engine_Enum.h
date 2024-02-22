@@ -11,14 +11,14 @@ namespace Engine
 	static const wchar_t* g_pTransformTag = TEXT("Com_Transform");
 
 	/* Shader */
-	enum class DEFERRED_SHADER {
-		DEBUG,
-		DIRECTIONAL_LIGHT,
-		POINT_LIGHT,
-		SPOT_LIGHT,
-		DEFERRED,
-		SHADER_END
-	};
+	enum class DEFERRED_SHADER { 
+		DEBUG, 
+		DIRECTIONAL_LIGHT, 
+		POINT_LIGHT, 
+		SPOT_LIGHT, 
+		DEFERRED, 
+		DEFERRED_UI, 
+		SHADER_END };
 
 	enum class SSAO_SHADER {
 		SSAO,

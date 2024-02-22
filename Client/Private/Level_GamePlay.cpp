@@ -385,6 +385,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 		pUI_Object->Get_Transform()->Load_FromJson(object);
 	}
 
+	m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
+
 	return S_OK;
 }
 

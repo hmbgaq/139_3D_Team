@@ -1,4 +1,5 @@
 #include "UI_Player_HP.h"
+#include "GameInstance.h"
 
 CUI_Player_HP::CUI_Player_HP(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -17,11 +18,17 @@ HRESULT CUI_Player_HP::Initialize_Prototype()
 
 HRESULT CUI_Player_HP::Initialize(void* pArg)
 {
+	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
+		return E_FAIL;
+
+	
+
 	return S_OK;
 }
 
 void CUI_Player_HP::Tick(_float fTimeDelta)
 {
+	__super::Tick(fTimeDelta);
 }
 
 void CUI_Player_HP::LateTick(_float fTimeDelta)
@@ -33,12 +40,7 @@ HRESULT CUI_Player_HP::Render()
 	return S_OK;
 }
 
-HRESULT CUI_Player_HP::Ready_UI()
-{
-	// Create
 
-	return S_OK;
-}
 
 CUI_Player_HP* CUI_Player_HP::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {

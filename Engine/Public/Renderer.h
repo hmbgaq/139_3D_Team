@@ -19,10 +19,35 @@ public:
 		/* Blend */
 		RENDER_NONBLEND, RENDER_BLEND, 
 		/* UI */
-		RENDER_UI_FRONT, RENDER_UI, RENDER_UI_BACK,	RENDER_END };
+		RENDER_UI,
+		RENDER_NONBLEND_UI, /*RENDER_UI_MINIMAP, RENDER_UI_MINIMAP_ICON,*/
+		RENDER_UI_EFFECT_NONBLEND, RENDER_UI_EFFECT_BLEND,
+		RENDER_CURSOR,
+		
+		RENDER_END };
 
-	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, SHADER_FINAL, SHADER_END };
+	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, SHADER_FINAL, SHADER_DEFERRED_UI, SHADER_END };
 	
+	struct QuadVertex // ssao 
+	{
+		_float3 pos;
+		_float3 normal;
+		_float2 tex;
+	};
+
+	typedef struct tagXMCOLOR
+	{
+		union {
+			struct {
+				uint8_t b;
+				uint8_t g;
+				uint8_t r;
+				uint8_t a;
+			};
+			uint32_t c;
+		};
+	}XMCOLOR;
+
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderer() = default;
@@ -78,12 +103,38 @@ private:
 	HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
 
 	HRESULT Render_Blend();
-	HRESULT Render_UI();
 
 	HRESULT Render_LightAcc();
 	HRESULT Render_OutLineGroup(); /* RenderGroup*/
+#pragma region
+	/* MRT */
+	HRESULT Add_MRT_UI();
+
+	/* Group */
+	HRESULT Render_UI();
+	HRESULT Render_Text();
+
+	HRESULT Render_NonBlend_UI();
+	HRESULT Render_Lights_UI();
+
+	/* OutLine */
+	HRESULT Render_OutLine_UI();
+
+	HRESULT Render_Deferred_UI();
+	HRESULT Render_UI_Minimap();
+	HRESULT Render_UI_Minimap_Icon();
+	HRESULT Render_UIEffectNonBlend();
+	HRESULT Render_UIEffectBlend();
+
+	HRESULT Render_Screen_Effect();
+	HRESULT Render_UI_Final();
+	HRESULT Render_Cursor();
+#pragma endregion
+
 	/* perlin을 이용한 바다물결, 나뭇잎, 불 등 자연스러운 무작위패턴생성 */
 
+private: /* !UI */
+	HRESULT Ready_UI_Target(D3D11_VIEWPORT Viewport);
 #ifdef _DEBUG
 private:
 	HRESULT Render_Debug();
@@ -135,6 +186,7 @@ private:
 	ID3D11DeviceContext*			m_pContext							= { nullptr };
 	ID3D11DepthStencilView*			m_pLightDepthDSV					= { nullptr };
 	list<class CGameObject*>		m_RenderObjects[RENDER_END];
+	D3D11_VIEWPORT					m_Viewport = {};
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponent;

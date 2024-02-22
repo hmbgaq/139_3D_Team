@@ -17,9 +17,6 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
-private:
-	HRESULT	Ready_UI();
-
 public:
 	static  CUI_Player_HP* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

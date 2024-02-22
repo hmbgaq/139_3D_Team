@@ -850,6 +850,9 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Outline.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred_UI.hlsl">
+      <Filter>98.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli">
