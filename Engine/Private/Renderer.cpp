@@ -360,6 +360,7 @@ HRESULT CRenderer::Render_Priority()
 	m_RenderObjects[RENDER_PRIORITY].clear();
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
+
 	return S_OK;
 }
 

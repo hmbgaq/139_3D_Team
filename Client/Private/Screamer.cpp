@@ -57,11 +57,10 @@ void CScreamer::Tick(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_9))
 	{
-		m_iRenderPass += 1;
-		if (m_iRenderPass >= ECast(ANIM_SHADER::ANIM_SHADER_END))
-			m_iRenderPass = 0;
-
-		cout << "Render Pass : " << m_iRenderPass << endl;
+		if (m_iRenderPass == ECast(ANIM_SHADER::ANIM_ORIGIN))
+			m_iRenderPass = ECast(ANIM_SHADER::ANIM_BLOOM);
+		else if (m_iRenderPass == ECast(ANIM_SHADER::ANIM_BLOOM))
+			m_iRenderPass = ECast(ANIM_SHADER::ANIM_ORIGIN);
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_8))
@@ -87,9 +86,7 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
-
 	}
-
 
 	m_pGameInstance->Add_DebugRender(m_pColliderCom);
 }
@@ -206,7 +203,6 @@ HRESULT CScreamer::Ready_Components()
 	}
 
 	return S_OK;
-
 }
 
 HRESULT CScreamer::Bind_ShaderResources()
