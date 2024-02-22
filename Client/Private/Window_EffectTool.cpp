@@ -1211,7 +1211,7 @@ HRESULT CWindow_EffectTool::Create_New_Particle()
 	if (FAILED(Ready_Layer_Particle(TEXT("Layer_Particle"))))
 		return E_FAIL;
 
-	m_iCurParticleIndex = m_pParticles.size();
+	m_iCurParticleIndex = (_int)m_pParticles.size();
 
 	/* 문자열 초기화 */
 	if (nullptr != m_szParticleNames)
@@ -1284,7 +1284,7 @@ HRESULT CWindow_EffectTool::Create_New_Texture(CEffect_Texture::TYPE eType)
 	if (FAILED(Ready_Layer_Texture(TEXT("Layer_Texture_Effect"), eType)))
 		return E_FAIL;
 
-	m_iCurEffectTextureIndex = m_pEffectTextures.size();
+	m_iCurEffectTextureIndex = (_int)m_pEffectTextures.size();
 
 	/* 문자열 초기화 */
 	if (nullptr != m_szEffectTextureNames)
@@ -1399,7 +1399,7 @@ HRESULT CWindow_EffectTool::Create_New_EffectInstance(wstring strModelTag)
 	if (FAILED(Ready_Layer_EffectInstance(TEXT("Layer_EffectInstance"), strModelTag)))
 		return E_FAIL;
 
-	m_iCurEffectInstanceIndex = m_pEffectInstances.size();
+	m_iCurEffectInstanceIndex = (_int)m_pEffectInstances.size();
 
 	/* 문자열 초기화 */
 	if (nullptr != m_szEffectInstanceNames)

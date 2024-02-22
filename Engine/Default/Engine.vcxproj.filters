@@ -286,6 +286,9 @@
     <Filter Include="01.Utility\03.Components\01.VIBuffer\AnimModel_Instance">
       <UniqueIdentifier>{e61dfa5c-0fd5-489c-a70a-dd06e1dd4c7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\90.Random">
+      <UniqueIdentifier>{52cc521c-5153-44a5-8034-52e06ea5fba1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -582,6 +585,9 @@
     <ClInclude Include="..\Public\VIBuffer_AnimModel_Instance.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\AnimModel_Instance</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RandomManager.h">
+      <Filter>01.Utility\90.Random</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -815,12 +821,12 @@
     <ClCompile Include="..\Private\VIBuffer_AnimModel_Instance.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\AnimModel_Instance</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\RandomManager.cpp">
+      <Filter>01.Utility\90.Random</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcessing.hlsl">
-      <Filter>98.ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_SSAO.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\TIMOTHY LOTTES_Fxaa3_11.hlsl">

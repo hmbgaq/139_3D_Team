@@ -11,13 +11,14 @@
 #include "Input_Device.h"
 #include "Font_Manager.h"
 #include "PhysX_Manager.h"
+#include "RandomManager.h"
+
 #include "Renderer.h"
 #include "Frustum.h"
 #include "Mesh.h"
 
 #include "PhysXCollider.h"
 #include "PhysXController.h"
-
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -88,6 +89,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 	//TODO: 레벨 확인헤야
 	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, iNumLayer);
 	if (nullptr == m_pPhysX_Manager)
+		return E_FAIL;
+
+	m_pRandom_Manager = CRandom_Manager::Create();
+	if(nullptr == m_pRandom_Manager)
 		return E_FAIL;
 
 
@@ -811,6 +816,27 @@ void CGameInstance::Create_Controller(const PxCapsuleControllerDesc& In_Controll
 	m_pPhysX_Manager->Create_Controller(In_ControllerDesc, ppOut);
 }
 
+const _float& CGameInstance::Random_Float(_float fMin, _float fMax)
+{
+	return m_pRandom_Manager->Random_Float(fMin, fMax);
+	
+}
+
+const _int& CGameInstance::Random_Int(_int iMin, _int iMax)
+{
+	return m_pRandom_Manager->Random_Int(iMin, iMax);
+}
+
+const _bool& CGameInstance::Random_Coin(_float fProbality)
+{
+	return m_pRandom_Manager->Random_Coin(fProbality);
+}
+
+int64_t CGameInstance::GenerateUniqueID()
+{
+	return m_pRandom_Manager->GenerateUniqueID();
+}
+
 
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
 {
@@ -851,18 +877,34 @@ void CGameInstance::WString_To_String(wstring _wstring, string& _string)
 
 string CGameInstance::Convert_WString_To_String(wstring _wstring)
 {
-	string out_string;
-
-	return out_string.assign(_wstring.begin(), _wstring.end());
+	int len;
+	int slength = (int)_wstring.length() + 1;
+	len = WideCharToMultiByte(CP_ACP, 0, _wstring.c_str(), slength, 0, 0, 0, 0);
+	std::string r(len, '\0');
+	WideCharToMultiByte(CP_ACP, 0, _wstring.c_str(), slength, &r[0], len, 0, 0);
+	return r;
+	//string out_string;
+	//
+	//return out_string.assign(_wstring.begin(), _wstring.end());
 }
 
 WCHAR* CGameInstance::StringTowchar(const std::string& str)
 {
-	// std::wstring으로 변환
-	std::wstring wstr(str.begin(), str.end());
-	// c_str() 함수를 사용하여 WCHAR* 포인터로 변환
+	int len;
+	int slength = (int)str.length() + 1;
+	len = MultiByteToWideChar(CP_ACP, 0, str.c_str(), slength, 0, 0);
+	wchar_t* buf = new wchar_t[len];
+	MultiByteToWideChar(CP_ACP, 0, str.c_str(), slength, buf, len);
+	std::wstring r(buf);
+	delete[] buf;
 
-	return const_cast<WCHAR*>(wstr.c_str());
+	return const_cast<WCHAR*>(r.c_str());
+
+	// std::wstring으로 변환
+	//std::wstring wstr(str.begin(), str.end());
+	//// c_str() 함수를 사용하여 WCHAR* 포인터로 변환
+	//
+	//return const_cast<WCHAR*>(wstr.c_str());
 }
 
 char* CGameInstance::ConverWStringtoC(const wstring& wstr)
@@ -897,10 +939,16 @@ wchar_t* CGameInstance::ConverCtoWC(char* str)
 
 std::string CGameInstance::WideStringToString(const wchar_t* wideStr)
 {
-	// std::wstring으로부터 std::string으로 변환
-	std::wstring wstr(wideStr);
-	// std::string으로 변환
-	return std::string(wstr.begin(), wstr.end());
+	char ch[260];
+	char DefChar = ' ';
+	WideCharToMultiByte(CP_ACP, 0, wideStr, -1, ch, 260, &DefChar, NULL);
+
+	string ss(ch);
+	return ss;
+	//// std::wstring으로부터 std::string으로 변환
+	//std::wstring wstr(wideStr);
+	//// std::string으로 변환
+	//return std::string(wstr.begin(), wstr.end());
 }
 
 std::string CGameInstance::GetFileName(const std::string& filePath)
@@ -1009,6 +1057,7 @@ wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 
 
 void CGameInstance::Release_Manager()
 {
+	Safe_Release(m_pRandom_Manager);
 	Safe_Release(m_pPhysX_Manager);
 	Safe_Release(m_pEvent_Manager);
 	Safe_Release(m_pCollision_Manager);

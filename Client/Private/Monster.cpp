@@ -86,7 +86,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 			return;
 
 #ifdef _DEBUG
-		m_pGameInstance->Add_DebugRender(m_pColliderCom);
+	//	m_pGameInstance->Add_DebugRender(m_pColliderCom);
 #endif	
 	}
 
