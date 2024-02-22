@@ -319,6 +319,7 @@ _bool CImgui_Manager::Check_ImGui_Rect()
 	return true; //ImGui ¿µ¿ªÀÌ¶û ¾È °ãÄ§!
 }
 
+
 void CImgui_Manager::Free()
 {
 	Safe_Release(m_pGameInstance);

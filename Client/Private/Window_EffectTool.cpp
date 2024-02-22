@@ -27,6 +27,8 @@ HRESULT CWindow_EffectTool::Initialize()
 		return E_FAIL;
 
 
+	Load_CustomStyle();
+
 	//if (FAILED(Ready_Layer_Greed(TEXT("Layer_Greed"))))
 	//	return E_FAIL;
 
@@ -148,13 +150,11 @@ void CWindow_EffectTool::Update_PlayBarArea()
 		if (ImGui::Button("   Play   ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
 		{
 			m_pCurEffectDesc->bPlay = TRUE;
-
 		}
 		//ImGui::SameLine();
 		if (ImGui::Button("   Stop   ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
 		{
 			m_pCurEffectDesc->bPlay = FALSE;
-
 		}
 		//ImGui::SameLine();
 		if (ImGui::Button("   Reset   ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))

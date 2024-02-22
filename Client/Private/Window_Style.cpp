@@ -30,7 +30,6 @@ void CWindow_Style::Tick(_float fTimeDelta)
 	auto& style = ImGui::GetStyle();
 	ImVec4* colors = style.Colors;
 
-
 	ImGui::ColorEdit4("BG Color", m_vBgColor, ImGuiColorEditFlags_None);
 	
 	m_tStyleDesc.vBgColor.x = m_vBgColor[0];
@@ -70,6 +69,46 @@ void CWindow_Style::Tick(_float fTimeDelta)
 		style.TabRounding = m_tStyleDesc.fTabRounding;
 	}
 
+
+	if (ImGui::Button(" SAVE ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
+	{
+		char filePath[MAX_PATH] = "../Bin/DataFiles/ImGui_Style_Custom.json";
+
+		json Out_Json;
+
+		Out_Json["TabRounding"] = m_tStyleDesc.fTabRounding;
+		Out_Json["GrabRounding"] = m_tStyleDesc.fGrabRounding;
+		Out_Json["PopupRounding"] = m_tStyleDesc.fPopupRounding;
+		Out_Json["FrameRounding"] = m_tStyleDesc.fFrameRounding;
+		Out_Json["WindowRounding"] = m_tStyleDesc.fWindowRounding;
+		Out_Json["vBgColor.x"] = m_vBgColor[0];
+		Out_Json["vBgColor.y"] = m_vBgColor[1];
+		Out_Json["vBgColor.z"] = m_vBgColor[2];
+		Out_Json["vBgColor.w"] = m_vBgColor[3];
+
+		CJson_Utility::Save_Json(filePath, Out_Json);
+	}
+
+
+	if (ImGui::Button(" LOAD ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
+	{
+		json json_in;
+		char filePath[MAX_PATH] = "../Bin/DataFiles/ImGui_Style_Custom.json";
+
+		CJson_Utility::Load_Json(filePath, json_in);
+
+		m_tStyleDesc.fTabRounding		= json_in["TabRounding"];
+		m_tStyleDesc.fGrabRounding		= json_in["GrabRounding"];
+		m_tStyleDesc.fPopupRounding		= json_in["PopupRounding"];
+		m_tStyleDesc.fFrameRounding		= json_in["FrameRounding"];
+		m_tStyleDesc.fWindowRounding	= json_in["WindowRounding"];
+
+		m_vBgColor[0] = json_in["vBgColor.x"];
+		m_vBgColor[1] = json_in["vBgColor.y"];
+		m_vBgColor[2] = json_in["vBgColor.z"];
+		m_vBgColor[3] = json_in["vBgColor.w"];
+
+	}
 
 	__super::End();
 
