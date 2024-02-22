@@ -33,6 +33,8 @@ public:
 	virtual	void	Tick(_float fTimeDelta) override;
 	virtual void	Render()				override;
 
+public:
+	void	Load_CustomStyle_ForMember();
 
 private:
 	STYLE_DESC	m_tStyleDesc = {};
