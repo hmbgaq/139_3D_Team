@@ -47,28 +47,7 @@ void CEffect_Instance::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Instance::Tick(_float fTimeDelta)
 {
-	if (FLAT == m_tInstanceDesc.eType_Mesh)
-	{
-		m_tSpriteDesc.fTimeAcc += fTimeDelta;
 
-		if (m_tSpriteDesc.fTimeAcc > m_tSpriteDesc.fAddTime)
-		{
-			m_tSpriteDesc.iCurrentHor++;
-
-			if (m_tSpriteDesc.iCurrentHor == m_tSpriteDesc.iMaxHor)
-			{
-				m_tSpriteDesc.iCurrentVer++;
-				m_tSpriteDesc.iCurrentHor = m_tSpriteDesc.iMinVer;
-
-				if (m_tSpriteDesc.iCurrentVer == m_tSpriteDesc.iMaxVer)
-				{
-					m_tSpriteDesc.iCurrentVer = m_tSpriteDesc.iMinHor;
-				}
-			}
-
-			m_tSpriteDesc.fTimeAcc = 0.f;
-		}
-	}
 }
 
 void CEffect_Instance::Late_Tick(_float fTimeDelta)
@@ -115,10 +94,7 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 
 }
 
-void CEffect_Instance::Set_ShaderPassIndex(_uint iShaderPassIndex)
-{
-	m_tInstanceDesc.iShaderPassIndex = iShaderPassIndex;
-}
+
 
 HRESULT CEffect_Instance::Ready_Components()
 {
@@ -149,7 +125,7 @@ HRESULT CEffect_Instance::Ready_Components()
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
 		return E_FAIL;
 
-	if (nullptr != m_pTextureCom[TEXTURE_MASK])
+	if (TEXT("") != m_tInstanceDesc.strTextureTag[TEXTURE_MASK])
 	{
 		/* For.Com_Mask */
 		if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strTextureTag[TEXTURE_MASK],
@@ -157,7 +133,7 @@ HRESULT CEffect_Instance::Ready_Components()
 			return E_FAIL;
 	}
 
-	if (nullptr != m_pTextureCom[TEXTURE_NOISE])
+	if (TEXT("") != m_tInstanceDesc.strTextureTag[TEXTURE_NOISE])
 	{
 		/* For.Com_Noise */
 		if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strTextureTag[TEXTURE_NOISE],
@@ -176,60 +152,28 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	_float4x4 WorldMatrix;
 	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
 	if (FLAT == m_tInstanceDesc.eType_Mesh)
 	{
-		if (FAILED(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_DIFFUSE])))
-			return E_FAIL;
+		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_DIFFUSE]));
 
 		if (nullptr != m_pTextureCom[TEXTURE_MASK])
 		{
-			if (FAILED(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_MASK])))
-				return E_FAIL;
+			FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_MASK]));
 		}
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 		{
-			if (FAILED(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_NOISE])))
-				return E_FAIL;
+			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_NOISE]));
 		}
-
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
-		return E_FAIL;
-	
-	if (bTest)
-	{
-		_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
-		vCamDirection = XMVector4Normalize(vCamDirection);
-		_float4 vCamDirectionFloat4 = {};
-		XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
-	
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat4, sizeof(_float4))))
-			return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
 
-
-		_float2 uvOffset = { (_float)(m_tSpriteDesc.iCurrentHor * m_tSpriteDesc.fAnimationSizeX) / m_tSpriteDesc.fSpriteSizeX, (_float)(m_tSpriteDesc.iCurrentVer * m_tSpriteDesc.fAnimationSizeY) / m_tSpriteDesc.fSpriteSizeY };
-		_float2 uvScale = { (_float)m_tSpriteDesc.fAnimationSizeX / m_tSpriteDesc.fSpriteSizeX, (_float)m_tSpriteDesc.fAnimationSizeY / m_tSpriteDesc.fSpriteSizeY };
-
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_UVOffset", &uvOffset, sizeof(_float2))))
-			return E_FAIL;
-
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_UVScale", &uvScale, sizeof(_float2))))
-			return E_FAIL;
-
-
-		if (FAILED(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
-			return E_FAIL;
-	}
-
-
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFar", &fCamFar, sizeof(_float)));
 
 	return S_OK;
 }

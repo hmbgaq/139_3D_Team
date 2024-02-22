@@ -35,17 +35,18 @@ public:
 // Refactoring Start =====================================================================================================
 
 public:
+	void	Update_EffectList();
+
 	void	Update_PlayBarArea();
 
 	void	Update_ParticleTab();
 	void	Update_RectTab();
 	void	Update_MeshTab();
 
-	void	Update_EffectList();
 	HRESULT Create_EffectObject(const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	HRESULT Add_Part_Particle();
 	HRESULT Add_Part_Rect();
-	HRESULT Add_Part_Mesh();
+	HRESULT Add_Part_Mesh(wstring strModelTag);
 
 	void	Update_CurMembers(wstring strName);
 
@@ -82,9 +83,15 @@ private:
 	_int m_iRenderGroup_Particle		= { 7 };
 	_int m_iShaderPassIndex_Particle	= { 0 };
 	_int m_iMaxShaderPassIndex_Particle = { 2 };
-
 	_int  m_iTexIndex_Particle[CEffect_Void::TEXTURE_END] = { };
 	_int  m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 13, 19, 8 };
+
+
+	_int m_iRenderGroup_Mesh = { 7 };
+	_int m_iShaderPassIndex_Mesh = { 0 };
+	_int m_iMaxShaderPassIndex_Mesh = { 6 };
+	_int  m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
+	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 13, 19, 8 };
 
 	// Refactoring end   =====================================================================================================
 
@@ -95,8 +102,17 @@ private:
 	_int m_iNumInstance		= { 200 };
 	_int m_iMaxNumInstance	= { 500 };
 
-	_float	m_vTimes_Effect[3]	= { 0.f, 8.f, 0.f }; // Wait, LifeTime, Remain
+	_float	m_vTimes_Effect[3]	= { 0.f, 8.f, 0.f };	// Wait, LifeTime, Remain
 	_float	m_vTimes_Part[3]	= { 1.f, 4.f, 0.f };	// Wait, LifeTime, Remain
+
+	_float	m_vWorldPosition_Effect[3]	 = { 0.f, 0.f, 0.f };
+	_float	m_vWorldPosition_Part[3]	 = { 0.f, 0.f, 0.f };
+
+	_float	m_vScale_Effect[3] = { 0.f, 0.f, 0.f };
+	_float	m_vScale_Part[3] = { 0.f, 0.f, 0.f };
+
+	_float	m_vRotate_Effect[3] = { 0.f, 0.f, 0.f };
+	_float	m_vRotate_Part[3] = { 0.f, 0.f, 0.f };
 
 	_float m_vColor_Clip_Part[4] = { 0.f, 0.f, 0.f, 0.8f };
 
@@ -127,7 +143,7 @@ private:
 	_float	m_fColor_End_Particle[4]	= { 1.f, 1.f, 1.f, 1.f };
 	_float	m_fColor_Cur_Particle[4]	= { 1.f, 1.f, 1.f, 1.f };
 
-	_float	m_vWorldPosition[4]			= { 0.f, 0.f, 0.f, 1.f };
+
 #pragma endregion
 
 

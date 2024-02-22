@@ -37,6 +37,7 @@ HRESULT CVIBuffer_Effect_Model_Instance::Bind_VIBuffers(_uint iMeshContainerInde
 
 void CVIBuffer_Effect_Model_Instance::Update(_float fTimeDelta)
 {
+
 	
 }
 
@@ -68,8 +69,9 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 		pModelInstance[i].vRight		= _float4(1.f, 0.f, 0.f, 0.f);
 		pModelInstance[i].vUp			= _float4(0.f, 1.f, 0.f, 0.f);
 		pModelInstance[i].vLook			= _float4(0.f, 0.f, 1.f, 0.f);
-		//pModelInstance[i].vTranslation	= _float4(0.f, 0.f, 0.f, 1.f);
-		XMStoreFloat4(&pModelInstance[i].vTranslation, XMVectorSet(_float(rand() % 20), 0.f, _float(rand() % 20), 1.f));
+		pModelInstance[i].vTranslation	= _float4(0.f, 0.f, 0.f, 1.f);
+
+		//XMStoreFloat4(&pModelInstance[i].vTranslation, XMVectorSet(_float(rand() % 20), 0.f, _float(rand() % 20), 1.f));
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));

@@ -132,6 +132,16 @@ HRESULT CImgui_Manager::Ready_Windows()
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_UITOOL_WINDOW, pWindowUI);
 #pragma endregion UI_END
 
+
+#pragma region ImGui스타일 옵션 창
+	pWindow = CWindow_Style::Create(m_pDevice, m_pContext);
+	if (pWindow == nullptr)
+		return E_FAIL;
+
+	pWindow->SetUp_ImGuiDESC("Style", ImVec2{ 300.f, 400.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
+	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_STYLE_WINDOW, pWindow);
+#pragma endregion ImGui스타일 옵션 창
+
 	return S_OK;
 }
 
@@ -234,13 +244,29 @@ void CImgui_Manager::MenuTick(_float fTimeDelta)
 
  			ImGui::EndMenu();
 		}
-		
+
+		if (ImGui::BeginMenu("Style"))
+		{
+			CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_STYLE_WINDOW);
+
+			if (nullptr == pWindow)
+			{
+				m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_STYLE_WINDOW] = FALSE;
+				MSG_BOX("Style 윈도우가 없음. Ready_Window 함수 확인 바람");
+				return;
+			}
+			pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+
+			ImGui::EndMenu();
+		}
+
 		ImGui::EndMainMenuBar();
 		
 	}
 
 	
 }
+
 
 void CImgui_Manager::Render()
 {

@@ -262,6 +262,9 @@
     <Filter Include="02.GameObjects\03. Effect\02.Effect_Rect">
       <UniqueIdentifier>{7ab3690b-d252-42bf-9ce3-8e496797dcfb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\99.StyleWindow">
+      <UniqueIdentifier>{0e6a7284-9a8b-4edc-b1dd-872708339601}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -495,11 +498,14 @@
     <ClInclude Include="..\Public\Effect.h">
       <Filter>02.GameObjects\03. Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Effect_Void.h">
+      <Filter>02.GameObjects\03. Effect</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Effect_Void.h">
-      <Filter>02.GameObjects\03. Effect</Filter>
+    <ClInclude Include="..\Public\Window_Style.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\99.StyleWindow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -915,6 +921,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Void.cpp">
       <Filter>02.GameObjects\03. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Window_Style.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\99.StyleWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

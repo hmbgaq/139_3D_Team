@@ -134,10 +134,6 @@ public:
 	
 private:
 	_float* m_pLengths	= { nullptr };
-	_float* m_pReds		= { nullptr };
-	_float* m_pGreens	= { nullptr };
-	_float* m_pBlues	= { nullptr };
-	_float* m_pAlphas	= { nullptr };
 
 	PARTICLE_POINT_DESC			m_tBufferDesc;
 

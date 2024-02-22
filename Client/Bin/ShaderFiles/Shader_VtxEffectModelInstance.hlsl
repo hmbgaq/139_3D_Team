@@ -4,6 +4,7 @@ matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 texture2D	g_DiffuseTexture;
 texture2D	g_MaskTexture;
+texture2D	g_NoiseTexture;
 
 texture2D	g_NormalTexture;
 texture2D   g_SpecularTexture;
@@ -353,7 +354,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
-	pass NormalMapping //1
+	pass Pass1_NormalMapping //1
 	{
         SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_DepthStencilEnable, 0);
@@ -366,7 +367,7 @@ technique11 DefaultTechnique
 		PixelShader		= compile ps_5_0 PS_MAIN_NORMAL();
 	}
 
-	pass ShadowDepth //2
+	pass Pass2_ShadowDepth //2
 	{
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_None, 0);

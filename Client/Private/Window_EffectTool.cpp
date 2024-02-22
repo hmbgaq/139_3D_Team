@@ -39,14 +39,12 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 	ShowDialog();
 
-
-
 #pragma region 리스트 창
-	SetUp_ImGuiDESC(" Object Lists ", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse |  /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | */ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+	SetUp_ImGuiDESC(" Object Lists ", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse |  ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |  ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	__super::Begin();
 
-	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
 
+	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
 
 	Update_EffectList();
 
@@ -55,7 +53,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 
 #pragma region 시퀀서 창
-	SetUp_ImGuiDESC(" Sequencer ", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse |  /*ImGuiWindowFlags_NoResize |  ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+	SetUp_ImGuiDESC(" Sequencer ", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse |  ImGuiWindowFlags_NoResize |  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	__super::Begin();
 
 	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
@@ -67,7 +65,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 
 #pragma region 재생바 창
-	SetUp_ImGuiDESC(" Play ", ImVec2{ 400.f, 300.f },  ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+	SetUp_ImGuiDESC(" Play ", ImVec2{ 400.f, 300.f },  ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	__super::Begin();
 
 	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
@@ -80,7 +78,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 #pragma region 이펙트 툴
 
-	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 800.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | */ ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 800.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | */ ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	__super::Begin();
 
 	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
@@ -140,24 +138,26 @@ void CWindow_EffectTool::Update_PlayBarArea()
 	/* 재생바 */
 	if (nullptr != m_pCurEffect)
 	{
+		auto& style = ImGui::GetStyle();
+
 		_float fSequenceTimePos = m_pCurEffectDesc->fSequenceAcc;
 		ImGui::SliderFloat("SequenceTimePos", &fSequenceTimePos, 0.f, m_pCurEffectDesc->fSequenceTime);
 
 
 		/* 재생, 정지, 리셋 */
-		if (ImGui::Button("   Play   "))
+		if (ImGui::Button("   Play   ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
 		{
 			m_pCurEffectDesc->bPlay = TRUE;
 
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("   Stop   "))
+		//ImGui::SameLine();
+		if (ImGui::Button("   Stop   ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
 		{
 			m_pCurEffectDesc->bPlay = FALSE;
 
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("   Reset  "))
+		//ImGui::SameLine();
+		if (ImGui::Button("   Reset   ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
 		{
 			m_pCurEffect->ReSet_Effect();
 		}
@@ -206,7 +206,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 				m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
 				m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
 				CVIBuffer_Particle_Point* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
-
 
 				/* 이름 */
 				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pParticleDesc->strPartTag));
@@ -403,184 +402,154 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::ColorEdit3("Start_Color_Particle", m_fColor_Start_Particle, ImGuiColorEditFlags_None);
 				ImGui::ColorEdit3("End_Color_Particle", m_fColor_End_Particle, ImGuiColorEditFlags_None);
 	
-				if (m_fColor_Start_Particle[0] > m_fColor_End_Particle[0])
-				{
-					m_pParticlePointDesc->vMinMaxRed.x = m_fColor_End_Particle[0];
-					m_pParticlePointDesc->vMinMaxRed.y = m_fColor_Start_Particle[0];
-				}
-				else
-				{
-					m_pParticlePointDesc->vMinMaxRed.x = m_fColor_Start_Particle[0];
-					m_pParticlePointDesc->vMinMaxRed.y = m_fColor_End_Particle[0];
-				}
+				m_pParticlePointDesc->vMinMaxRed.x = m_fColor_Start_Particle[0];
+				m_pParticlePointDesc->vMinMaxRed.y = m_fColor_End_Particle[0];
 
-				if (m_fColor_Start_Particle[1] > m_fColor_End_Particle[1])
-				{
-					m_pParticlePointDesc->vMinMaxGreen.x = m_fColor_End_Particle[1];
-					m_pParticlePointDesc->vMinMaxGreen.y = m_fColor_Start_Particle[1];
-				}
-				else
-				{
-					m_pParticlePointDesc->vMinMaxGreen.x = m_fColor_Start_Particle[1];
-					m_pParticlePointDesc->vMinMaxGreen.y = m_fColor_End_Particle[1];
-				}
+				m_pParticlePointDesc->vMinMaxGreen.x = m_fColor_Start_Particle[1];
+				m_pParticlePointDesc->vMinMaxGreen.y = m_fColor_End_Particle[1];
 
-				if (m_fColor_Start_Particle[2] > m_fColor_End_Particle[2])
-				{
-					m_pParticlePointDesc->vMinMaxBlue.x = m_fColor_End_Particle[2];
-					m_pParticlePointDesc->vMinMaxBlue.y = m_fColor_Start_Particle[2];
-				}
-				else
-				{
-					m_pParticlePointDesc->vMinMaxBlue.x = m_fColor_Start_Particle[2];
-					m_pParticlePointDesc->vMinMaxBlue.y = m_fColor_End_Particle[2];
-				}
+				m_pParticlePointDesc->vMinMaxBlue.x = m_fColor_Start_Particle[2];
+				m_pParticlePointDesc->vMinMaxBlue.y = m_fColor_End_Particle[2];
 
-				if (m_fColor_Start_Particle[3] > m_fColor_End_Particle[3])
-				{
-					m_pParticlePointDesc->vMinMaxAlpha.x = m_fColor_End_Particle[3];
-					m_pParticlePointDesc->vMinMaxAlpha.y = m_fColor_Start_Particle[3];
-				}
-				else
-				{
-					m_pParticlePointDesc->vMinMaxAlpha.x = m_fColor_Start_Particle[3];
-					m_pParticlePointDesc->vMinMaxAlpha.y = m_fColor_End_Particle[3];
-				}
+				m_pParticlePointDesc->vMinMaxAlpha.x = m_fColor_Start_Particle[3];
+				m_pParticlePointDesc->vMinMaxAlpha.y = m_fColor_End_Particle[3];
 
-				/* Easing Type */
-				ImGui::Text(" Easing Type ");
-				if (ImGui::Button("LINEAR"))
+	
+				/* Easing Type : 이징 타입 */
+				if (ImGui::CollapsingHeader(" Easing Types "))
 				{
-					m_pParticlePointDesc->eType_Easing = LINEAR;
+					if (ImGui::Button("LINEAR"))
+					{
+						m_pParticlePointDesc->eType_Easing = LINEAR;
+					}
+					if (ImGui::Button("QUAD_IN"))
+					{
+						m_pParticlePointDesc->eType_Easing = QUAD_IN;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("QUAD_OUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = QUAD_OUT;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("QUAD_INOUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = QUAD_INOUT;
+					}
+					if (ImGui::Button("CUBIC_IN"))
+					{
+						m_pParticlePointDesc->eType_Easing = CUBIC_IN;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("CUBIC_OUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = CUBIC_OUT;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("CUBIC_INOUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = CUBIC_INOUT;
+					}
+					if (ImGui::Button("QUART_IN"))
+					{
+						m_pParticlePointDesc->eType_Easing = QUART_IN;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("QUART_OUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = QUART_OUT;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("QUART_INOUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = QUART_INOUT;
+					}
+					if (ImGui::Button("QUINT_IN"))
+					{
+						m_pParticlePointDesc->eType_Easing = QUINT_IN;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("QUINT_OUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = QUINT_OUT;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("QUINT_INOUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = QUINT_INOUT;
+					}
+					if (ImGui::Button("SINE_IN"))
+					{
+						m_pParticlePointDesc->eType_Easing = SINE_IN;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("SINE_OUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = SINE_OUT;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("SINE_INOUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = SINE_INOUT;
+					}
+					if (ImGui::Button("EXPO_IN"))
+					{
+						m_pParticlePointDesc->eType_Easing = EXPO_IN;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("EXPO_OUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = EXPO_OUT;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("EXPO_INOUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = EXPO_INOUT;
+					}
+					if (ImGui::Button("CIRC_IN"))
+					{
+						m_pParticlePointDesc->eType_Easing = CIRC_IN;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("CIRC_OUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = CIRC_OUT;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("CIRC_INOUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = CIRC_INOUT;
+					}
+					if (ImGui::Button("ELASTIC_IN"))
+					{
+						m_pParticlePointDesc->eType_Easing = ELASTIC_IN;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("ELASTIC_OUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = ELASTIC_OUT;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("ELASTIC_INOUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = ELASTIC_INOUT;
+					}
+					if (ImGui::Button("BOUNCE_IN"))
+					{
+						m_pParticlePointDesc->eType_Easing = BOUNCE_IN;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("BOUNCE_OUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = BOUNCE_OUT;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("ELASTIC_INOUT"))
+					{
+						m_pParticlePointDesc->eType_Easing = ELASTIC_INOUT;
+					}
 				}
-				if (ImGui::Button("QUAD_IN"))
-				{
-					m_pParticlePointDesc->eType_Easing = QUAD_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("QUAD_OUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = QUAD_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("QUAD_INOUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = QUAD_INOUT;
-				}
-				if (ImGui::Button("CUBIC_IN"))
-				{
-					m_pParticlePointDesc->eType_Easing = CUBIC_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("CUBIC_OUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = CUBIC_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("CUBIC_INOUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = CUBIC_INOUT;
-				}
-				if (ImGui::Button("QUART_IN"))
-				{
-					m_pParticlePointDesc->eType_Easing = QUART_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("QUART_OUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = QUART_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("QUART_INOUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = QUART_INOUT;
-				}
-				if (ImGui::Button("QUINT_IN"))
-				{
-					m_pParticlePointDesc->eType_Easing = QUINT_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("QUINT_OUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = QUINT_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("QUINT_INOUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = QUINT_INOUT;
-				}
-				if (ImGui::Button("SINE_IN"))
-				{
-					m_pParticlePointDesc->eType_Easing = SINE_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("SINE_OUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = SINE_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("SINE_INOUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = SINE_INOUT;
-				}
-				if (ImGui::Button("EXPO_IN"))
-				{
-					m_pParticlePointDesc->eType_Easing = EXPO_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("EXPO_OUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = EXPO_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("EXPO_INOUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = EXPO_INOUT;
-				}
-				if (ImGui::Button("CIRC_IN"))
-				{
-					m_pParticlePointDesc->eType_Easing = CIRC_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("CIRC_OUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = CIRC_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("CIRC_INOUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = CIRC_INOUT;
-				}
-				if (ImGui::Button("ELASTIC_IN"))
-				{
-					m_pParticlePointDesc->eType_Easing = ELASTIC_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("ELASTIC_OUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = ELASTIC_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("ELASTIC_INOUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = ELASTIC_INOUT;
-				}
-				if (ImGui::Button("BOUNCE_IN"))
-				{
-					m_pParticlePointDesc->eType_Easing = BOUNCE_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("BOUNCE_OUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = BOUNCE_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("ELASTIC_INOUT"))
-				{
-					m_pParticlePointDesc->eType_Easing = ELASTIC_INOUT;
-				}
-
-
+				
 				//_float fSequenceTime = m_pCurPartEffect->Get_SequenceTime();
 				//for (_int i = 0; i < 3; ++i)
 				//{
@@ -656,7 +625,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticlePointDesc->vMinMaxRotationOffsetZ.y = m_vRotationOffsetZ[1];
 				}
 
-
 				/* 가속도 */
 				ImGui::SeparatorText("");
 				if (ImGui::DragFloat("AccPos_Particle", &m_fParticleAccPosition, 0.1f, 0.f, 1.f))
@@ -664,7 +632,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 				if (ImGui::DragFloat("ACC_Particle", &m_fParticleAcceleration, 0.5f, 0.f, 100.f))
 					m_pParticlePointDesc->fSpeedAcc = m_fParticleAcceleration;
-
 
 				/* 중력 사용 여부 */
 				ImGui::SeparatorText("");
@@ -683,7 +650,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 				if (ImGui::DragFloat("fGravityAcc", &m_fGravityAcc, -100.f, 0.f, 1.f))
 					m_pParticlePointDesc->fGravityAcc = m_fGravityAcc;
-
 
 			}
 		}
@@ -718,11 +684,80 @@ void CWindow_EffectTool::Update_MeshTab()
 		{
 			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
 
-			if (CEffect_Void::MESH == eType_Effect)
+			if (CEffect_Void::INSTANCE == eType_Effect)
 			{
 				m_pInstanceDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_Desc();
 
+				/* 이름 */
+				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pInstanceDesc->strPartTag));
 
+				/* 텍스처 변경 */
+				if (ImGui::InputInt("Diffuse_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE], 1))
+				{
+					if (m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] <= m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE])
+						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE];
+
+					if (0 > m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE])
+						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 0;
+
+					m_pInstanceDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE];
+				}
+
+				if (ImGui::InputInt("Mask_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK], 1))
+				{
+					if (m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] <= m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK])
+						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK];
+
+					if (0 > m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK])
+						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
+
+					m_pInstanceDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK];
+				}
+
+				if (ImGui::InputInt("Noise_Particle", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE], 1))
+				{
+					if (m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] <= m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE])
+						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE];
+
+					if (0 > m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE])
+						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = 0;
+
+					m_pInstanceDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE];
+				}
+
+				/* 쉐이더 태그 이름 */
+				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pInstanceDesc->strShaderTag));
+				/* 쉐이더 패스 인덱스 변경 */
+				if (ImGui::InputInt("Shader Pass_Mesh", &m_iShaderPassIndex_Mesh, 1))
+				{
+					if (m_iMaxShaderPassIndex_Mesh < m_iShaderPassIndex_Mesh)
+						m_iShaderPassIndex_Mesh = m_iMaxShaderPassIndex_Mesh;
+
+					if (0 > m_iShaderPassIndex_Mesh)
+						m_iShaderPassIndex_Mesh = 0;
+
+					m_pInstanceDesc->iShaderPassIndex = m_iShaderPassIndex_Mesh;
+				}
+				/* 쉐이더에 던질 디스카드 값 변경 */
+				//vColor_Clip
+				if (ImGui::DragFloat4("Discard_Mesh", m_vColor_Clip_Part, 0.1f, 0.f, 1.f))
+				{
+					m_pInstanceDesc->vColor_Clip.x = m_vColor_Clip_Part[0];
+					m_pInstanceDesc->vColor_Clip.y = m_vColor_Clip_Part[1];
+					m_pInstanceDesc->vColor_Clip.z = m_vColor_Clip_Part[2];
+					m_pInstanceDesc->vColor_Clip.w = m_vColor_Clip_Part[3];
+				}
+
+				/* 렌더그룹 변경 */
+				ImGui::SeparatorText("");
+				if (ImGui::InputInt("Render Group_Mesh", &m_iRenderGroup_Mesh, 1))
+				{
+					if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Mesh)
+					{
+						m_iRenderGroup_Mesh = (_int)CRenderer::RENDER_END - 1;
+					}
+					m_pInstanceDesc->iRenderGroup = m_iRenderGroup_Mesh;
+				}
 
 
 
@@ -801,8 +836,11 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 void CWindow_EffectTool::Update_EffectList()
 {
+	auto& style = ImGui::GetStyle();
+
 	/* 비어있는 이펙트 객체 생성 */
-	if (ImGui::Button("         Create         "))
+	ImGui::SeparatorText("");
+	if (ImGui::Button("         Create         ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
 	{
 		Create_EffectObject(TEXT("Layer_Effect"));
 	}
@@ -862,28 +900,10 @@ void CWindow_EffectTool::Update_EffectList()
 			m_pCurEffectDesc->bActive_Tool = FALSE;
 		}
 
-		/* 위치 표시 */
-		ImGui::SeparatorText("");
-		_float4 vPos = m_pCurEffect->Get_Transform()->Get_State(CTransform::STATE_POSITION);
-		ImGui::Text("Effect Pos  : %.2f %.2f %.2f", vPos.x, vPos.y, vPos.z);
-
-
-		/* Effect Edit Start */
-		ImGui::SeparatorText("");
-		ImGui::Text(" Waiting | LifeTime | SequenceTime ");
-		if (ImGui::DragFloat3("Times_Effect", m_vTimes_Effect, 0.2f, 0.f))
-		{
-			if (m_vTimes_Effect[0] > m_vTimes_Effect[1])
-				m_vTimes_Effect[0] = m_vTimes_Effect[1];
-
-			m_pCurEffectDesc->fWaitingTime = m_vTimes_Effect[0];
-			m_pCurEffectDesc->fLifeTime = m_vTimes_Effect[1];
-			m_pCurEffectDesc->fRemainTime = m_vTimes_Effect[2];
-		}
 
 		// =========================================
 
-		ImGui::SeparatorText("");
+		ImGui::SeparatorText(" Add Part Effect ");
 		if (ImGui::Button(" Add Particle "))
 		{
 			Add_Part_Particle();
@@ -896,18 +916,17 @@ void CWindow_EffectTool::Update_EffectList()
 		ImGui::SameLine();
 		if (ImGui::Button(" Add Mesh "))
 		{
-			//Add_Part_Particle();
+			Add_Part_Mesh(TEXT("Prototype_Component_Model_splineMesh_tornado"));
 		}
 		ImGui::SameLine();
 		if (ImGui::Button(" Add Trail "))
 		{
-			//Add_Part_Particle();
+			//Add_Part_Trail();
 		}
 
 		ImGui::SeparatorText("");
 
 		// =========================================
-
 
 		/* 이펙트 파트오브젝트 리스트 & 현재 파트오브젝트 선택 */
 		if (ImGui::ListBox(" Parts ", &m_iCurPartIndex, m_szPartNames, m_CurPartObjects.size(), (_int)6))
@@ -917,7 +936,6 @@ void CWindow_EffectTool::Update_EffectList()
 
 			Update_CurParameters_Parts();
 		}
-
 
 		if (nullptr != m_pCurPartEffect)
 		{
@@ -1000,43 +1018,127 @@ void CWindow_EffectTool::Update_EffectList()
 
 				}
 			}
+		}
 
-			/* 위치 표시 */
+
+		/* Effect Edit Start */
+		ImGui::SeparatorText("");
+		if (ImGui::CollapsingHeader("Effect_Times"))
+		{
+			ImGui::Text(" Waiting | LifeTime | SequenceTime ");
+			if (ImGui::DragFloat3("Times_Effect", m_vTimes_Effect, 0.2f, 0.f))
+			{
+				if (m_vTimes_Effect[0] > m_vTimes_Effect[1])
+					m_vTimes_Effect[0] = m_vTimes_Effect[1];
+
+				m_pCurEffectDesc->fWaitingTime = m_vTimes_Effect[0];
+				m_pCurEffectDesc->fLifeTime = m_vTimes_Effect[1];
+				m_pCurEffectDesc->fRemainTime = m_vTimes_Effect[2];
+			}
+		}
+
+
+		if (nullptr != m_pCurPartEffect)
+		{
+			ImGui::SeparatorText("");
+			if (ImGui::CollapsingHeader("Part_Times"))
+			{
+				CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
+
+				ImGui::Text(" Waiting | LifeTime | SequenceTime ");
+				if (ImGui::DragFloat3("Times_Part", m_vTimes_Part, 0.2f, 0.f))
+				{
+					m_pCurPartEffect->Set_WaitingTime(m_vTimes_Part[0]);
+					m_pCurPartEffect->Set_LifeTime(m_vTimes_Part[1]);
+
+					if (CEffect_Void::PARTICLE == eType_Effect)
+					{
+						m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
+						m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
+						m_pParticleDesc->fRemainTime = m_vTimes_Part[2];
+					}
+					else if (CEffect_Void::RECT == eType_Effect)
+					{
+						m_pRectDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Desc();
+						m_pRectDesc->fRemainTime = m_vTimes_Part[2];
+					}
+
+					if (CEffect_Void::INSTANCE == eType_Effect)
+					{
+
+					}
+
+					if (CEffect_Void::MESH == eType_Effect)
+					{
+
+					}
+				}
+			}
+		}
+
+
+
+		/* 이펙트 위치 표시 & 트랜스폼 */
+		ImGui::SeparatorText("");
+		_float4 vPos = m_pCurEffect->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+		ImGui::Text("Effect Pos  : %.2f %.2f %.2f", vPos.x, vPos.y, vPos.z);
+		if (ImGui::CollapsingHeader("Effect_Transform"))
+		{
+			CTransform* pTransform = m_pCurEffect->Get_Transform();
+			if (ImGui::DragFloat3("Effect_Pos", m_vWorldPosition_Effect, 0.5f))
+			{
+				m_pCurEffect->Set_Position(_float3(m_vWorldPosition_Effect[0], m_vWorldPosition_Effect[1], m_vWorldPosition_Effect[2]));
+			}
+
+			_float3 vScaled = pTransform->Get_Scaled();
+			ImGui::Text("Effect Scaled  : %.2f %.2f %.2f", vScaled.x, vScaled.y, vScaled.z);
+			if (ImGui::DragFloat3("Effect_Scale", m_vScale_Part, 0.5f))
+			{
+				pTransform->Set_Scaling(m_vScale_Part[0], m_vScale_Part[1], m_vScale_Part[2]);
+			}
+
+			_float3 vRotated = pTransform->Get_Rotated();
+			ImGui::Text("Effect Rotated  : %.2f %.2f %.2f", vRotated.x, vRotated.y, vRotated.z);
+			if (ImGui::DragFloat3("Effect_Rotate", m_vRotate_Effect, 0.5f))
+			{
+				pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Effect[0]));
+				pTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Effect[1]));
+				pTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(m_vRotate_Effect[2]));
+			}
+		}
+	
+
+		if (nullptr != m_pCurPartEffect)
+		{
+			/* 파트 위치 표시 & 트랜스폼 */
 			ImGui::SeparatorText("");
 			_float4 vPos = m_pCurPartEffect->Get_Transform()->Get_State(CTransform::STATE_POSITION);
 			ImGui::Text("Part Pos  : %.2f %.2f %.2f", vPos.x, vPos.y, vPos.z);
-
-			ImGui::SeparatorText("");
-			ImGui::Text(" Waiting | LifeTime | SequenceTime ");
-			if (ImGui::DragFloat3("Times_Part", m_vTimes_Part, 0.2f, 0.f))
+			if (ImGui::CollapsingHeader("Part_Transform"))
 			{
-				m_pCurPartEffect->Set_WaitingTime(m_vTimes_Part[0]);
-				m_pCurPartEffect->Set_LifeTime(m_vTimes_Part[1]);
+				CTransform* pPartTransform = m_pCurPartEffect->Get_Transform();
 
-				if (CEffect_Void::PARTICLE == eType_Effect)
+				if (ImGui::DragFloat3("Part_Pos", m_vWorldPosition_Part, 0.5f))
 				{
-					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-					m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
-					m_pParticleDesc->fRemainTime = m_vTimes_Part[2];
+					m_pCurPartEffect->Set_Position(_float3(m_vWorldPosition_Part[0], m_vWorldPosition_Part[1], m_vWorldPosition_Part[2]));
 				}
-				else if (CEffect_Void::RECT == eType_Effect)
+				_float3 vScaled = pPartTransform->Get_Scaled();
+				ImGui::Text("Part Scaled  : %.2f %.2f %.2f", vScaled.x, vScaled.y, vScaled.z);
+				if (ImGui::DragFloat3("Part_Scale", m_vScale_Part, 0.5f))
 				{
-					m_pRectDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Desc();
-					m_pRectDesc->fRemainTime = m_vTimes_Part[2];
+					m_pCurPartEffect->Get_Transform()->Set_Scaling(m_vScale_Part[0], m_vScale_Part[1], m_vScale_Part[2]);
 				}
 
-				if (CEffect_Void::INSTANCE == eType_Effect)
+				_float3 vRotated = pPartTransform->Get_Rotated();
+				ImGui::Text("Part Rotated  : %.2f %.2f %.2f", vRotated.x, vRotated.y, vRotated.z);
+				if (ImGui::DragFloat3("Part_Rotate", m_vRotate_Part, 0.5f))
 				{
-
-				}
-
-				if (CEffect_Void::MESH == eType_Effect)
-				{
-
+					pPartTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Part[0]));
+					pPartTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Part[1]));
+					pPartTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(m_vRotate_Part[2]));
 				}
 			}
-
-	
+			ImGui::SeparatorText("");	
 		}
 	}
 }
@@ -1060,11 +1162,11 @@ HRESULT CWindow_EffectTool::Create_EffectObject(const wstring& strLayerTag, CGam
 	tEffectDesc.fWaitingAcc		= { 0.f };
 	tEffectDesc.fSequenceAcc	= { 0.f };
 
-	tEffectDesc.fLifeTime = { 10.f };
-	tEffectDesc.fWaitingTime = { 0.f };
-	tEffectDesc.fRemainTime = { 0.f };
-	tEffectDesc.fSequenceTime = tEffectDesc.fWaitingTime + tEffectDesc.fLifeTime + tEffectDesc.fRemainTime;
-	tEffectDesc.fLifeTimeRatio = min(1.f, tEffectDesc.fTimeAcc / tEffectDesc.fLifeTime);
+	tEffectDesc.fLifeTime		= { 5.f };
+	tEffectDesc.fWaitingTime	= { 0.f };
+	tEffectDesc.fRemainTime		= { 0.f };
+	tEffectDesc.fSequenceTime	= tEffectDesc.fWaitingTime + tEffectDesc.fLifeTime + tEffectDesc.fRemainTime;
+	tEffectDesc.fLifeTimeRatio	= min(1.f, tEffectDesc.fTimeAcc / tEffectDesc.fLifeTime);
 	tEffectDesc.fDissolveStartTime = { 1.f };
 
 	tEffectDesc.pOwner = pOwner;
@@ -1274,7 +1376,6 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 
 HRESULT CWindow_EffectTool::Add_Part_Rect()
 {
-
 	if (nullptr != m_pCurEffect)
 	{
 		CEffect_Rect::EFFECT_RECT_DESC tRectDesc = {};
@@ -1282,14 +1383,14 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 		tRectDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
 		tRectDesc.eType = CEffect_Rect::SINGLE;
-		tRectDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
-		tRectDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
+		tRectDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
+		tRectDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
 
-		tRectDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
-		tRectDesc.iTextureIndex[CEffect_Particle::TEXTURE_MASK] = { 0 };
+		tRectDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
+		tRectDesc.iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 0 };
 
-		tRectDesc.strTextureTag[CEffect_Particle::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
-		tRectDesc.iTextureIndex[CEffect_Particle::TEXTURE_NOISE] = { 0 };
+		tRectDesc.strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
+		tRectDesc.iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 0 };
 
 		tRectDesc.strShaderTag = TEXT("Prototype_Component_Shader_EffectTex");
 
@@ -1390,9 +1491,113 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 	return S_OK;
 }
 
-HRESULT CWindow_EffectTool::Add_Part_Mesh()
+HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 {
-	return E_NOTIMPL;
+	if (nullptr != m_pCurEffect)
+	{
+		CEffect_Instance::EFFECT_INSTANCE_DESC tMeshDesc = {};
+		tMeshDesc.fSpeedPerSec = { 5.f };
+		tMeshDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
+
+		tMeshDesc.eType_Mesh = CEffect_Instance::FLAT;
+		tMeshDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
+		tMeshDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
+
+		tMeshDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
+		tMeshDesc.iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 0 };
+
+		tMeshDesc.strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
+		tMeshDesc.iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 0 };
+
+		tMeshDesc.strShaderTag = TEXT("Prototype_Component_Shader_Effect_Model_Instance");
+
+		tMeshDesc.iRenderGroup = { 7 };
+		tMeshDesc.iCurInstanceCnt = { 1 };
+
+		tMeshDesc.bBillBoard = { FALSE };
+
+		tMeshDesc.strModelTag = strModelTag;
+
+		tMeshDesc.bPlay = { TRUE };
+		tMeshDesc.fTimeAcc = { 0.f };
+
+		tMeshDesc.pOwner = m_pCurEffect;
+
+
+#pragma region 리스트 문자열 관련
+		wstring strName = TEXT("");
+		wstring strFrontName = TEXT("Part_Mesh");
+
+		_int iMaxNum = -1;
+		wstring strPin = TEXT("");
+
+		for (auto& iter : m_CurPartObjects)
+		{
+			if (nullptr == iter.second)
+				continue;
+
+			if (strFrontName == m_pGameInstance->Remove_LastNumChar(iter.first, 4))
+			{
+				_int iPinNum = stoi(m_pGameInstance->Get_LastNumChar(iter.first, 3));
+
+				if (iMaxNum < iPinNum)
+					iMaxNum = iPinNum;
+			}
+		}
+		/* 최댓값이 -1이라는 것은 해당 이름과 같은게 없으므로 고유번호를 000으로 세팅한다. */
+		if (-1 == iMaxNum)
+			strName = strFrontName + L"_000";
+		else /* 아니라면 최댓값에 + 1을 하여 고유 번호로 세팅한다. */
+		{
+			_int iPinNum = iMaxNum + 1;
+
+			if (0 == iPinNum / 10)
+				strPin = L"_00" + to_wstring(iPinNum);
+			else if (0 == iPinNum / 100)
+				strPin = L"_0" + to_wstring(iPinNum);
+			else
+				strPin = L"_" + to_wstring(iPinNum);
+
+			strName = strFrontName + strPin;
+		}
+
+		tMeshDesc.strPartTag = strName;
+
+		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Instance"), strName, &tMeshDesc));
+
+		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
+		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
+		m_pCurPartEffect->Set_EffectType(CEffect_Void::INSTANCE);
+
+		m_pCurPartEffect->Set_WaitingTime(0.5f);
+
+		m_iCurPartIndex = m_CurPartObjects.size();
+		/* 문자열 초기화 */
+		if (nullptr != m_szPartNames)
+		{
+			for (_int i = 0; i < m_iCurPartIndex; ++i)
+			{
+				m_szPartNames[i] = nullptr;
+			}
+			m_szPartNames = nullptr;
+		}
+
+		m_szPartNames = new char* [m_iCurPartIndex];
+
+		_int iCount = 0;
+		for (auto& Pair : m_CurPartObjects)
+		{
+			const string utf8Str = m_pGameInstance->Wstring_To_UTF8(Pair.first);
+			m_szPartNames[iCount] = new char[utf8Str.length() + 1];
+			strcpy(m_szPartNames[iCount], utf8Str.c_str());
+
+			iCount++;
+		}
+		m_iCurPartIndex -= 1;
+#pragma endregion
+	}
+
+	return S_OK;
 }
 
 void CWindow_EffectTool::Update_CurMembers(wstring strName)

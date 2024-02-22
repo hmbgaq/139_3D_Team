@@ -10,12 +10,7 @@ CVIBuffer_Particle_Point::CVIBuffer_Particle_Point(ID3D11Device* pDevice, ID3D11
 
 CVIBuffer_Particle_Point::CVIBuffer_Particle_Point(const CVIBuffer_Particle_Point& rhs)
 	: CVIBuffer_Instancing(rhs)
-	, m_pLengths(rhs.m_pLengths)
-	, m_pReds(rhs.m_pReds)
-	, m_pGreens(rhs.m_pGreens)
-	, m_pBlues(rhs.m_pBlues)
-	, m_pAlphas(rhs.m_pAlphas)
-	
+	, m_pLengths(rhs.m_pLengths)	
 {
 }
 
@@ -31,12 +26,6 @@ HRESULT CVIBuffer_Particle_Point::Initialize_Prototype(_uint iNumInstance)
 	m_pSpeeds = new _float[m_iNumInstance];
 	m_pLifeTimes = new _float[m_iNumInstance];
 	m_pLengths = new _float[m_iNumInstance];
-
-	m_pReds = new _float[m_iNumInstance];
-	m_pGreens = new _float[m_iNumInstance];
-	m_pBlues = new _float[m_iNumInstance];
-	m_pAlphas = new _float[m_iNumInstance];
-
 
 	m_iNumIndices = iNumInstance;
 	m_iIndexStride = 2;
@@ -141,10 +130,11 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 	uniform_real_distribution<float>	RandomLengthPosition(m_tBufferDesc.vMinMaxLengthPosition.x, m_tBufferDesc.vMinMaxLengthPosition.y);
 
 	
-	uniform_real_distribution<float>	RandomRed(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y);
-	uniform_real_distribution<float>	RandomGreen(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y);
-	uniform_real_distribution<float>	RandomBlue(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y);
-	uniform_real_distribution<float>	RandomAlpha(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y);
+
+	uniform_real_distribution<float>	RandomRed(min(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y), max(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y));
+	uniform_real_distribution<float>	RandomGreen(min(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y), max(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y));
+	uniform_real_distribution<float>	RandomBlue(min(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y), max(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y));
+	uniform_real_distribution<float>	RandomAlpha(min(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y), max(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y));
 
 	m_iNumInstance = m_tBufferDesc.iCurNumInstance;
 	for (_uint i = 0; i < m_iNumInstance; i++)
@@ -157,12 +147,6 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 		m_pSpeeds[i] = RandomSpeed(m_RandomNumber);
 		m_pLifeTimes[i] = RandomLifeTime(m_RandomNumber);
 		m_pLengths[i] = RandomLengthPosition(m_RandomNumber);
-
-		/* Colors */
-		m_pReds[i]		= RandomRed(m_RandomNumber);
-		m_pGreens[i]	= RandomGreen(m_RandomNumber);
-		m_pBlues[i]		= RandomBlue(m_RandomNumber);
-		m_pAlphas[i]	= RandomAlpha(m_RandomNumber);
 
 
 		_float	fScale = RandomScale(m_RandomNumber);
@@ -267,10 +251,14 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 				fAlpha = 1.f;
 			}
 
-			m_tBufferDesc.vCurrentColor.x = Easing::LerpToType(m_pReds[i], m_tBufferDesc.vMinMaxRed.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing);
-			m_tBufferDesc.vCurrentColor.y = Easing::LerpToType(m_pGreens[i], m_tBufferDesc.vMinMaxGreen.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing);
-			m_tBufferDesc.vCurrentColor.z = Easing::LerpToType(m_pBlues[i], m_tBufferDesc.vMinMaxBlue.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing);
-			m_tBufferDesc.vCurrentColor.w = Easing::LerpToType(m_pAlphas[i], m_tBufferDesc.vMinMaxAlpha.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing);
+			m_tBufferDesc.vCurrentColor.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
+			m_tBufferDesc.vCurrentColor.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
+			m_tBufferDesc.vCurrentColor.z = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
+
+			//m_tBufferDesc.vCurrentColor.x = abs(Easing::LerpToType(m_pReds[i], m_tBufferDesc.vMinMaxRed.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
+			//m_tBufferDesc.vCurrentColor.y = abs(Easing::LerpToType(m_pGreens[i], m_tBufferDesc.vMinMaxGreen.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
+			//m_tBufferDesc.vCurrentColor.z = abs(Easing::LerpToType(m_pBlues[i], m_tBufferDesc.vMinMaxBlue.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
+			//m_tBufferDesc.vCurrentColor.w = abs(Easing::LerpToType(m_pAlphas[i], m_tBufferDesc.vMinMaxAlpha.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
 
 			pVertices[i].vColor = m_tBufferDesc.vCurrentColor;
 			pVertices[i].vColor.w = fAlpha;
@@ -433,10 +421,10 @@ void CVIBuffer_Particle_Point::ReSet()
 	uniform_real_distribution<float>	RandomLifeTime(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
 	uniform_real_distribution<float>	RandomLengthPosition(m_tBufferDesc.vMinMaxLengthPosition.x, m_tBufferDesc.vMinMaxLengthPosition.y);
 
-	uniform_real_distribution<float>	RandomRed(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y);
-	uniform_real_distribution<float>	RandomGreen(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y);
-	uniform_real_distribution<float>	RandomBlue(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y);
-	uniform_real_distribution<float>	RandomAlpha(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y);
+	uniform_real_distribution<float>	RandomRed(min(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y), max(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y));
+	uniform_real_distribution<float>	RandomGreen(min(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y), max(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y));
+	uniform_real_distribution<float>	RandomBlue(min(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y), max(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y));
+	uniform_real_distribution<float>	RandomAlpha(min(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y), max(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y));
 
 	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
@@ -448,13 +436,6 @@ void CVIBuffer_Particle_Point::ReSet()
 		m_pSpeeds[i] = RandomSpeed(m_RandomNumber);
 		m_pLifeTimes[i] = RandomLifeTime(m_RandomNumber);
 		m_pLengths[i] = RandomLengthPosition(m_RandomNumber);
-
-
-		/* Colors */
-		m_pReds[i] = RandomRed(m_RandomNumber);
-		m_pGreens[i] = RandomGreen(m_RandomNumber);
-		m_pBlues[i] = RandomBlue(m_RandomNumber);
-		m_pAlphas[i] = RandomAlpha(m_RandomNumber);
 
 
 		_float	fScale = RandomScale(m_RandomNumber);
@@ -661,10 +642,6 @@ void CVIBuffer_Particle_Point::Free()
 	if (false == m_isCloned)
 	{
 		Safe_Delete_Array(m_pLengths);
-		Safe_Delete_Array(m_pReds);
-		Safe_Delete_Array(m_pGreens);
-		Safe_Delete_Array(m_pBlues);
-		Safe_Delete_Array(m_pAlphas);
 	}
 
 }
