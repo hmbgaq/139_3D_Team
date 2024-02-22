@@ -196,7 +196,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 
 	if (m_tBufferDesc.bIsPlay)
 	{
-		(m_fTimeAcc) += fTimeDelta;	// 시간누적
+		m_fTimeAcc += fTimeDelta;	// 시간누적
 		_float fTime = m_fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y;
 
 		if (m_tBufferDesc.vMinMaxLifeTime.y <= m_fTimeAcc)

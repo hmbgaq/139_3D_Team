@@ -24,12 +24,13 @@ public:
 	virtual void	Render()				override;
 
 
-public:
-	void	Update_PlayBarArea_Particle();
-
-	void	Update_TrailTab();
-
 	// Refactoring Start =====================================================================================================
+
+public:
+	void	Update_PlayBarArea();
+
+	void	Update_PartEffects();
+
 
 	void	Update_EffectList();
 	HRESULT Create_EffectObject(const wstring& strLayerTag, CGameObject* pOwner = nullptr);
@@ -37,7 +38,9 @@ public:
 
 
 	void	Update_CurMembers(wstring strName);
+
 	void	Update_CurParameters();
+	void	Update_CurParameters_Parts();
 
 private:
 	map<const wstring, class CEffect*>		m_pEffects;
@@ -74,8 +77,8 @@ private:
 	_int m_iNumInstance = { 200 };
 	_int m_iMaxNumInstance = { 500 };
 
-	_float	m_vTimes_Effect[3] = { 0.f, 3.f, 0.f }; // Wait, LifeTime, Remain
-	_float	m_vTimes_Particle[3] = { 0.f, 3.f, 0.f }; // Wait, LifeTime, Remain
+	_float	m_vTimes_Effect[3] = { 0.f, 10.f, 0.f }; // Wait, LifeTime, Remain
+	_float	m_vTimes_Particle[3] = { 1.f, 4.f, 0.f }; // Wait, LifeTime, Remain
 
 /* For.Save&Load */
 public:

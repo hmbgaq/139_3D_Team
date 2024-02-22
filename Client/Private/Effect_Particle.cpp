@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 
+#include "Effect.h"
+
 CEffect_Particle::CEffect_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
@@ -44,28 +46,26 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 {
 	if (m_tParticleDesc.bActive_Tool)
 	{
-		m_fLifeTime = m_fWaitingTime + m_fLifeTime;
+		//m_fLifeTime = m_fWaitingTime + m_fLifeTime;
 		m_fSequenceTime = m_fLifeTime + m_tParticleDesc.fRemainTime;
 
-		m_pVIBufferCom->Get_Desc()->bIsPlay = m_tParticleDesc.bActive_Tool;
 		m_pVIBufferCom->Get_Desc()->vMinMaxLifeTime.x = m_fWaitingTime;
-		m_pVIBufferCom->Get_Desc()->vMinMaxLifeTime.y = m_fSequenceTime;
-		m_pVIBufferCom->Update(fTimeDelta);
-
-
-		__super::Tick(fTimeDelta);
+		m_pVIBufferCom->Get_Desc()->vMinMaxLifeTime.y = m_fLifeTime;
 
 		if (m_tParticleDesc.bPlay)
 		{
 			m_tParticleDesc.fSequenceAcc += fTimeDelta;
 
 			// 시작지연 누적시간이 지나면 렌더 시작(파티클 시작)
-			if (m_tParticleDesc.fWaitingAcc < m_fWaitingTime)
+			if (m_tParticleDesc.fWaitingAcc <= m_fWaitingTime)
 			{
 				m_tParticleDesc.fWaitingAcc += fTimeDelta;
 
 				if (m_tParticleDesc.fWaitingAcc >= m_fWaitingTime)
-					m_tParticleDesc.bRender = true;
+				{
+					m_tParticleDesc.bRender = true;		
+					m_pVIBufferCom->Get_Desc()->bIsPlay = TRUE;
+				}		
 				else
 					return;
 			}
@@ -97,11 +97,16 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 			{
 				if (m_tParticleDesc.fTimeAcc >= m_fLifeTime + m_tParticleDesc.fRemainTime)
 				{
+					m_tParticleDesc.bRender = false;
+					m_pVIBufferCom->Get_Desc()->bIsPlay = FALSE;
 					//End_Effect();
 					return;
 				}
 
-
+				if (m_tParticleDesc.bRender)
+				{
+					m_pVIBufferCom->Update(fTimeDelta);
+				}
 			}
 
 		}
@@ -112,9 +117,12 @@ void CEffect_Particle::Late_Tick(_float fTimeDelta)
 {
 	if (m_tParticleDesc.bActive_Tool)
 	{
-		// CRenderer::RENDER_BLEND
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tParticleDesc.iRenderGroup), this)))
-			return;
+		if (m_tParticleDesc.bRender)
+		{
+			// CRenderer::RENDER_BLEND
+			if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tParticleDesc.iRenderGroup), this)))
+				return;
+		}
 	}
 }
 
@@ -149,6 +157,8 @@ void CEffect_Particle::ReSet_Effect()
 	m_tParticleDesc.fLifeTimeRatio	= 0.f;
 
 	m_tParticleDesc.bRender = FALSE;
+
+	m_pVIBufferCom->ReSet();
 
 }
 

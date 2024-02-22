@@ -68,7 +68,6 @@ public:
 public:
 	EFFECT_DESC* Get_Desc() { return &m_tEffectDesc; }
 
-
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();

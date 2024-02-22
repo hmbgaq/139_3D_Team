@@ -28,6 +28,8 @@ HRESULT CEffect::Initialize_Prototype()
 
 HRESULT CEffect::Initialize(void* pArg)
 {	
+	m_tEffectDesc = *(EFFECT_DESC*)pArg;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 	
@@ -127,6 +129,12 @@ void CEffect::ReSet_Effect()
 
 	m_tEffectDesc.bFinished = FALSE;
 	m_tEffectDesc.bRender	= FALSE;
+
+	for (auto& Pair : m_PartObjects)
+	{
+		if (nullptr != Pair.second)
+			dynamic_cast<CEffect_Void*>(Pair.second)->ReSet_Effect();
+	}
 }
 
 void CEffect::End_Effect()
@@ -135,6 +143,12 @@ void CEffect::End_Effect()
 
 	if (m_tEffectDesc.bLoop)
 	{	
+		for (auto& Pair : m_PartObjects)
+		{
+			if (nullptr != Pair.second)
+				dynamic_cast<CEffect_Void*>(Pair.second)->End_Effect();
+		}
+
 		ReSet_Effect();
 	}
 

@@ -43,7 +43,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	__super::Begin();
 
 	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
-	Update_PlayBarArea_Particle();
+	Update_PlayBarArea();
 
 	__super::End();
 #pragma endregion 재생바 창
@@ -62,6 +62,23 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 
 
+#pragma region 리스트 창
+
+
+	SetUp_ImGuiDESC(" Object Lists ", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse |  /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | */ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+	__super::Begin();
+
+	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
+
+
+	Update_EffectList();
+
+	__super::End();
+
+
+#pragma endregion 리스트 창
+
+
 #pragma region 이펙트 툴
 
 	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 800.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
@@ -75,14 +92,12 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	Update_SaveLoad();
 
 
-	Update_EffectList();
-
 
 	if (ImGui::BeginTabBar("Tab_Effect", ImGuiTabBarFlags_None))
 	{
 		if (ImGui::BeginTabItem(" Particle "))
 		{
-			//Update_ParticleTab();
+			Update_PartEffects();
 			ImGui::EndTabItem();
 		}
 
@@ -122,7 +137,7 @@ void CWindow_EffectTool::Render()
 
 }
 
-void CWindow_EffectTool::Update_PlayBarArea_Particle()
+void CWindow_EffectTool::Update_PlayBarArea()
 {
 	/* 재생바 */
 	if (nullptr != m_pCurEffect)
@@ -180,12 +195,51 @@ void CWindow_EffectTool::Update_PlayBarArea_Particle()
 }
 
 
-void CWindow_EffectTool::Update_TrailTab()
+void CWindow_EffectTool::Update_PartEffects()
 {
+	if (nullptr != m_pCurEffect)
+	{
+		
 
-
-
+	}
 }
+
+void CWindow_EffectTool::Update_CurParameters_Parts()
+{
+	if (nullptr != m_pCurPartEffect)
+	{
+		CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
+
+		m_vTimes_Particle[0] = m_pCurPartEffect->Get_WaitingTime();
+		m_vTimes_Particle[1] = m_pCurPartEffect->Get_LifeTime();
+
+		if (CEffect_Void::PARTICLE == eType_Effect)
+		{
+			m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
+			m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
+
+			m_vTimes_Particle[2] = m_pParticleDesc->fRemainTime;
+		}
+
+		if (CEffect_Void::RECT == eType_Effect)
+		{
+
+		}
+
+		if (CEffect_Void::INSTANCE == eType_Effect)
+		{
+
+		}
+
+		if (CEffect_Void::MESH == eType_Effect)
+		{
+
+		}
+
+	}
+	
+}
+
 
 void CWindow_EffectTool::Update_EffectList()
 {
@@ -201,8 +255,8 @@ void CWindow_EffectTool::Update_EffectList()
 		wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szEffectNames[m_iCurEffectIndex]);
 		m_pCurEffect = m_pEffects.find(strCurName)->second;
 
-		m_iCurPartIndex = m_CurPartObjects.size();
 		/* 문자열 초기화 */
+		m_iCurPartIndex = m_CurPartObjects.size();
 		if (nullptr != m_szPartNames)
 		{
 			for (_int i = 0; i < m_iCurPartIndex; ++i)
@@ -229,111 +283,42 @@ void CWindow_EffectTool::Update_EffectList()
 
 		m_iCurPartIndex = 0;
 		if (!m_CurPartObjects.empty())
-		{
 			m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.begin()->second);
-		}
 		else
-		{
 			m_pCurPartEffect = nullptr;
-		}
-	}
+
+	} // 이펙트 리스트 END
 
 
 	if (nullptr != m_pCurEffect)
 	{
-		/* 이펙트 파트오브젝트 리스트 & 현재 파트오브젝트 선택 */
-		if (ImGui::ListBox(" Parts ", &m_iCurPartIndex, m_szPartNames, m_CurPartObjects.size(), (_int)6))
-		{
-			wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szPartNames[m_iCurPartIndex]);
-			m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.find(strCurName)->second);
-
-			//Update_CurParameters_Parts();
-		}
-
-		if (ImGui::DragFloat3("Times_Effect", m_vTimes_Effect, 0.2f, 0.f))
-		{
-			m_pCurEffectDesc->fWaitingTime = m_vTimes_Effect[0];
-			m_pCurEffectDesc->fLifeTime = m_vTimes_Effect[1];
-			m_pCurEffectDesc->fRemainTime = m_vTimes_Effect[2];
-		}
-
-
-		if (nullptr != m_pCurPartEffect)
-		{
-			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
-			if (CEffect_Void::PARTICLE == eType_Effect)
-			{
-				m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-				m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
-
-				/* 선택 파티클 활성화 */
-				if (ImGui::Button(" Active Particle_Part "))
-				{
-					m_pParticleDesc->bActive_Tool = TRUE;
-				}
-				ImGui::SameLine();
-				/* 선택 파티클 비활성화 */
-				if (ImGui::Button(" UnActive Particle_Part "))
-				{
-					m_pParticleDesc->bActive_Tool = FALSE;
-				}
-
-				if (ImGui::DragFloat3("Times_Particle", m_vTimes_Particle, 0.2f, 0.f))
-				{
-					//if (m_vTimes_Particle[0] > m_vTimes_Particle[1])
-					//{
-
-					//}
-
-					m_pCurPartEffect->Set_WaitingTime(m_vTimes_Particle[0]);
-					m_pCurPartEffect->Set_LifeTime(m_vTimes_Particle[1]);
-					m_pParticleDesc->fRemainTime = m_vTimes_Particle[2];
-				}
-
-				if (ImGui::Button(" ReSet_Particle "))
-				{
-					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->ReSet();
-				}
-
-			}	
-
-			if (CEffect_Void::RECT == eType_Effect)
-			{
-
-			}
-
-			if (CEffect_Void::INSTANCE == eType_Effect)
-			{
-
-			}
-
-			if (CEffect_Void::MESH == eType_Effect)
-			{
-
-			}
-
-		}
-
-
-		// 위치 표시
-		_float4 vPos = m_pCurEffect->Get_Transform()->Get_State(CTransform::STATE_POSITION);
-		ImGui::Text("Effect Pos  : %.2f %.2f %.2f", vPos.x, vPos.y, vPos.z);
-
-
 		/* 선택 이펙트 활성화 */
 		if (ImGui::Button(" Active_Effect "))
 		{
 			m_pCurEffectDesc->bActive_Tool = TRUE;
 		}
 		/* 선택 이펙트 비활성화 */
-		ImGui::SameLine();	
+		ImGui::SameLine();
 		if (ImGui::Button(" UnActive_Effect "))
 		{
 			m_pCurEffectDesc->bActive_Tool = FALSE;
 		}
 
+		/* 위치 표시 */
+		_float4 vPos = m_pCurEffect->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+		ImGui::Text("Effect Pos  : %.2f %.2f %.2f", vPos.x, vPos.y, vPos.z);
 
 
+		/* Effect Edit Start */
+		if (ImGui::DragFloat3("Times_Effect", m_vTimes_Effect, 0.2f, 0.f))
+		{
+			if (m_vTimes_Effect[0] > m_vTimes_Effect[1])
+				m_vTimes_Effect[0] = m_vTimes_Effect[1];
+
+			m_pCurEffectDesc->fWaitingTime = m_vTimes_Effect[0];
+			m_pCurEffectDesc->fLifeTime = m_vTimes_Effect[1];
+			m_pCurEffectDesc->fRemainTime = m_vTimes_Effect[2];
+		}
 
 		// =========================================
 
@@ -342,12 +327,154 @@ void CWindow_EffectTool::Update_EffectList()
 		{
 			Add_Part_Particle();
 		}
-
+		ImGui::SameLine();
+		if (ImGui::Button(" Add Rect "))
+		{
+			//Add_Part_Particle();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(" Add Mesh "))
+		{
+			//Add_Part_Particle();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(" Add Trail "))
+		{
+			//Add_Part_Particle();
+		}
 
 		ImGui::SeparatorText("");
+
+		// =========================================
+
+
+		/* 이펙트 파트오브젝트 리스트 & 현재 파트오브젝트 선택 */
+		if (ImGui::ListBox(" Parts ", &m_iCurPartIndex, m_szPartNames, m_CurPartObjects.size(), (_int)6))
+		{
+			wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szPartNames[m_iCurPartIndex]);
+			m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.find(strCurName)->second);
+
+			Update_CurParameters_Parts();
+		}
+
+
+		if (nullptr != m_pCurPartEffect)
+		{
+			/* 위치 표시 */
+			_float4 vPos = m_pCurPartEffect->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+			ImGui::Text("Part Pos  : %.2f %.2f %.2f", vPos.x, vPos.y, vPos.z);
+
+			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
+
+			/* 선택 파티클 활성화 */
+			if (ImGui::Button(" Active Part "))
+			{
+				if (CEffect_Void::PARTICLE == eType_Effect)
+				{
+					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
+					m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
+
+					m_pParticleDesc->bActive_Tool = TRUE;
+				}
+
+				if (CEffect_Void::RECT == eType_Effect)
+				{
+
+				}
+
+				if (CEffect_Void::INSTANCE == eType_Effect)
+				{
+
+				}
+
+				if (CEffect_Void::MESH == eType_Effect)
+				{
+
+				}
+			}
+			ImGui::SameLine();
+			/* 선택 파티클 비활성화 */
+			if (ImGui::Button(" UnActive Part "))
+			{
+				if (CEffect_Void::PARTICLE == eType_Effect)
+				{
+					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
+					m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
+
+					m_pParticleDesc->bActive_Tool = FALSE;
+				}
+				if (CEffect_Void::RECT == eType_Effect)
+				{
+
+				}
+
+				if (CEffect_Void::INSTANCE == eType_Effect)
+				{
+
+				}
+
+				if (CEffect_Void::MESH == eType_Effect)
+				{
+
+				}
+			}
+
+			if (ImGui::Button(" ReSet_Part "))
+			{
+				if (CEffect_Void::PARTICLE == eType_Effect)
+				{
+					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
+					m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
+
+					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->ReSet();
+				}
+				if (CEffect_Void::RECT == eType_Effect)
+				{
+
+				}
+
+				if (CEffect_Void::INSTANCE == eType_Effect)
+				{
+
+				}
+
+				if (CEffect_Void::MESH == eType_Effect)
+				{
+
+				}
+			}
+
+			ImGui::SeparatorText("");
+			if (ImGui::DragFloat3("Times_Part", m_vTimes_Particle, 0.2f, 0.f))
+			{
+				if (CEffect_Void::PARTICLE == eType_Effect)
+				{
+					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
+					m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
+
+					m_pCurPartEffect->Set_WaitingTime(m_vTimes_Particle[0]);
+					m_pCurPartEffect->Set_LifeTime(m_vTimes_Particle[1]);
+					m_pParticleDesc->fRemainTime = m_vTimes_Particle[2];
+				}
+				if (CEffect_Void::RECT == eType_Effect)
+				{
+
+				}
+
+				if (CEffect_Void::INSTANCE == eType_Effect)
+				{
+
+				}
+
+				if (CEffect_Void::MESH == eType_Effect)
+				{
+
+				}
+			}
+
+	
+		}
 	}
-
-
 }
 
 HRESULT CWindow_EffectTool::Create_EffectObject(const wstring& strLayerTag, CGameObject* pOwner)
@@ -369,7 +496,7 @@ HRESULT CWindow_EffectTool::Create_EffectObject(const wstring& strLayerTag, CGam
 	tEffectDesc.fWaitingAcc		= { 0.f };
 	tEffectDesc.fSequenceAcc	= { 0.f };
 
-	tEffectDesc.fLifeTime = { 3.f };
+	tEffectDesc.fLifeTime = { 10.f };
 	tEffectDesc.fWaitingTime = { 0.f };
 	tEffectDesc.fRemainTime = { 0.f };
 	tEffectDesc.fSequenceTime = tEffectDesc.fWaitingTime + tEffectDesc.fLifeTime + tEffectDesc.fRemainTime;
@@ -430,6 +557,8 @@ HRESULT CWindow_EffectTool::Create_EffectObject(const wstring& strLayerTag, CGam
 	}
 	m_pEffects.emplace(strName, pEffect);
 	m_pCurEffect = pEffect;
+	m_pCurEffectDesc = pEffect->Get_Desc();
+
 #pragma endregion
 
 
@@ -492,6 +621,11 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 
 		tParticleDesc.fUV_RotDegree = { 0.f };
 
+
+
+		tParticleDesc.bPlay = { TRUE };
+		tParticleDesc.fTimeAcc = { 0.f };
+
 		tParticleDesc.pOwner = m_pCurEffect;
 
 
@@ -540,6 +674,9 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
 		m_pCurPartEffect->Set_EffectType(CEffect_Void::PARTICLE);
 		
+		m_pCurPartEffect->Set_WaitingTime(1.f);
+
+
 		m_iCurPartIndex = m_CurPartObjects.size();
 		/* 문자열 초기화 */
 		if (nullptr != m_szPartNames)
@@ -589,6 +726,14 @@ void CWindow_EffectTool::Update_CurMembers(wstring strName)
 
 void CWindow_EffectTool::Update_CurParameters()
 {
+	if (nullptr != m_pCurEffect)
+	{
+		m_vTimes_Effect[0] = m_pCurEffect->Get_Desc()->fWaitingTime;
+		m_vTimes_Effect[1] = m_pCurEffect->Get_Desc()->fLifeTime;
+		m_vTimes_Effect[2] = m_pCurEffect->Get_Desc()->fSequenceTime;
+
+
+	}
 
 }
 
