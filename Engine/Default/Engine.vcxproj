@@ -357,6 +357,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Blur.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred_UI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Navigation.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Outline.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcess.hlsl" />

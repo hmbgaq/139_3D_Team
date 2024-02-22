@@ -17,6 +17,7 @@ namespace Engine
 		POINT_LIGHT, 
 		SPOT_LIGHT, 
 		DEFERRED, 
+		DEFERRED_UI, 
 		SHADER_END };
 
 	enum class SSAO_SHADER { 

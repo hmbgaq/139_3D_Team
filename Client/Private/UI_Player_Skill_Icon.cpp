@@ -25,7 +25,8 @@ HRESULT CUI_Player_Skill_Icon::Initialize_Prototype()
 
 HRESULT CUI_Player_Skill_Icon::Initialize(void* pArg)
 {
-	m_tUIInfo = *(UI_DESC*)pArg;
+	if (pArg != nullptr)
+		m_tUIInfo = *(UI_DESC*)pArg;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -53,7 +54,7 @@ void CUI_Player_Skill_Icon::Late_Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(m_tUIInfo.eRenderGroup, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
 }
 
@@ -85,14 +86,24 @@ HRESULT CUI_Player_Skill_Icon::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
-
-	wstring strPrototag;
-	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
-
-	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+	
+	//! For.Com_Texture1 // 잠김
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_icons_hud_locked"),
+		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_LOCK]))))
 		return E_FAIL;
+
+#pragma region 아이콘은 텍스처를 골라서 넣을 수 있게 해줘야한다.
+	/* 첫 Create는 아무거나 기본 아이콘으로 Initialize에서 테그를 지정해주고, 선택된 텍스처를 파싱하면 파싱된 텍스처를 사용하게 해주자. */
+	//! For.Com_Texture2 // 쿨타임
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
+		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_COOLDOWN]))))
+		return E_FAIL;
+
+	//! For.Com_Texture2 // 활성화
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
+		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_ACTIVE]))))
+		return E_FAIL;
+#pragma endregion
 
 	return S_OK;
 }
@@ -106,8 +117,11 @@ HRESULT CUI_Player_Skill_Icon::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-		return E_FAIL;
+	for (auto& iter : m_pTextureCom)
+	{
+		if (FAILED(iter->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -173,6 +187,11 @@ void CUI_Player_Skill_Icon::Free()
 
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pTextureCom);
+
+	for (auto& pTexture : m_pTextureCom)
+	{
+		if (pTexture != nullptr)
+			Safe_Release(pTexture);
+	}
 
 }

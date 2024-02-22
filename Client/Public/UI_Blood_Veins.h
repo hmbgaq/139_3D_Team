@@ -5,6 +5,9 @@
 /* 체력 프레임 */
 class CUI_Blood_Veins final : public CUI
 {
+public: /* 각 UI파츠마다 어떤걸 얼마나 가질지 설정해주자. */
+	enum TEXTUREKIND { FRAME, TEXTURE_END };
+
 private:
 	CUI_Blood_Veins(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUI_Blood_Veins(const CUI_Blood_Veins& rhs);
@@ -25,6 +28,9 @@ private:
 private:
 	void					Compute_OwnerCamDistance();
 	_bool					In_Frustum();
+
+private:
+	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
 
 public:
 	json				 Save_Desc(json& out_json);

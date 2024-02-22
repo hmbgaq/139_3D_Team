@@ -25,7 +25,8 @@ HRESULT CUI_Player_HPBar::Initialize_Prototype()
 
 HRESULT CUI_Player_HPBar::Initialize(void* pArg)
 {
-	m_tUIInfo = *(UI_DESC*)pArg;
+	if(pArg != nullptr)
+		m_tUIInfo = *(UI_DESC*)pArg;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -53,45 +54,12 @@ void CUI_Player_HPBar::Late_Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(m_tUIInfo.eRenderGroup, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
 }
 
 HRESULT CUI_Player_HPBar::Render()
 {
-	//TODO 셰이더에게 행렬을 던져주는 행위는 반드시 셰이더의 비긴함수를 호출하기 이전에 해야한다.
-	//! 그 이유는, 셰이더의 비긴함수 내에서 pPass->Apply(0, m_prContext); 코드를 수행한다.
-	//! Apply 호출 후에 행렬을 던져줘도 에러는 나지 않지만, 안정성이 떨어진다.
-	//! Apply 호출 후에 행렬을 던져주면, 어떤 때에는 정상적으로 수행되고, 어떤 때에는 값이 제대로 안 넘어가는 경우가 있다.
-
-	//switch (m_tUIInfo.eUIType)
-	//{
-	//case CUI_Player_HPBar::SMALL:
-	//case CUI_Player_HPBar::MID:
-	//case CUI_Player_HPBar::LARGE:
-	//case CUI_Player_HPBar::SIDE:
-	//{
-	//	///* 월드상의 몬스터 위치로 계산된 UI를 카메라 절두체 안에 들어왔을 경우에만 표시하기 위함 */
-	//	//if (m_fOwnerCamDistance > 40.f || false == In_Frustum())
-	//	//{
-	//	//	// m_pGameInstance->Get_CamDir();
-	//	//	return E_FAIL;
-	//	//}
-	//	//__super::SetUp_WorldToScreen(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION));
-
-	//	//__super::SetUp_Transform(m_fWorldToScreenX, m_fWorldToScreenY, m_fDefaultScale * m_fScaleOffsetX, m_fDefaultScale * m_fScaleOffsetY);
-
-
-	//	//__super::SetUp_BillBoarding();
-	//	break;
-	//}
-	//case CUI_Player_HPBar::BOSS:
-	//case CUI_Player_HPBar::NONE:
-	//	break;
-	//default:
-	//	break;
-	//}
-
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
@@ -109,6 +77,23 @@ HRESULT CUI_Player_HPBar::Render()
 
 HRESULT CUI_Player_HPBar::Ready_Components()
 {
+	if(FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+
+	//! For.Com_Texture1 // 흰색 바
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_damagel"),
+		TEXT("Com_Texture_WhiteBar"), reinterpret_cast<CComponent**>(&m_pTextureCom[HPBAR_WHITE]))))
+		return E_FAIL;
+
+	//! For.Com_Texture2 // 빨간색 바
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_bg_full"),
+		TEXT("Com_Texture_RedBar"), reinterpret_cast<CComponent**>(&m_pTextureCom[HPBAR_RED]))))
+		return E_FAIL;
+
+	//! For.Com_Texture3 // 표시선
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("UI_PlayersHP_decal"),
+		TEXT("Com_Texture_Decal"), reinterpret_cast<CComponent**>(&m_pTextureCom[HP_DECAL]))))
+		return E_FAIL;
+
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
@@ -119,14 +104,7 @@ HRESULT CUI_Player_HPBar::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-	wstring strPrototag;
-	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
-
-	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
-		return E_FAIL;
-
+	/* 효과가 필요한 녀석은 Map텍스쳐도 추가해주기 */
 	return S_OK;
 }
 
@@ -139,8 +117,35 @@ HRESULT CUI_Player_HPBar::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-		return E_FAIL;
+	for (_int i = (_int)0; i < (_int)m_eTexture_Kind; ++i)
+	{
+		switch (i)
+		{
+		case CUI_Player_HPBar::HPBAR_WHITE:
+		{
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+			break;
+		}
+		case CUI_Player_HPBar::HPBAR_RED:
+		{
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+
+			break;
+		}
+		case CUI_Player_HPBar::HP_DECAL:
+		{
+			//if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+			//	return E_FAIL;
+			break;
+		}
+		case CUI_Player_HPBar::TEXTURE_END:
+			break;
+		default:
+			break;
+		}
+	}
 
 	return S_OK;
 }
@@ -218,8 +223,10 @@ void CUI_Player_HPBar::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pTextureCom);
+	for (auto& pTexture : m_pTextureCom)
+	{
+		if (pTexture != nullptr)
+			Safe_Release(pTexture);
+	}
 
 }

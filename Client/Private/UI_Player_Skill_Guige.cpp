@@ -25,7 +25,8 @@ HRESULT CUI_Player_Skill_Guige::Initialize_Prototype()
 
 HRESULT CUI_Player_Skill_Guige::Initialize(void* pArg)
 {
-	m_tUIInfo = *(UI_DESC*)pArg;
+	if (pArg != nullptr)
+		m_tUIInfo = *(UI_DESC*)pArg;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -53,7 +54,7 @@ void CUI_Player_Skill_Guige::Late_Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(m_tUIInfo.eRenderGroup, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
 }
 
@@ -106,8 +107,12 @@ HRESULT CUI_Player_Skill_Guige::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-		return E_FAIL;
+
+	for (auto& iter : m_pTextureCom)
+	{
+		if (FAILED(iter->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -173,6 +178,11 @@ void CUI_Player_Skill_Guige::Free()
 
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pTextureCom);
+
+	for (auto& pTexture : m_pTextureCom)
+	{
+		if (pTexture != nullptr)
+			Safe_Release(pTexture);
+	}
 
 }

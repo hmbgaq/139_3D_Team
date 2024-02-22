@@ -25,12 +25,13 @@ HRESULT CUI_Player_HPFrame::Initialize_Prototype()
 
 HRESULT CUI_Player_HPFrame::Initialize(void* pArg)
 {
-	m_tUIInfo = *(UI_DESC*)pArg;
+	if (pArg != nullptr)
+		m_tUIInfo = *(UI_DESC*)pArg;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
+	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
 	return S_OK;
@@ -50,7 +51,7 @@ void CUI_Player_HPFrame::Late_Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(m_tUIInfo.eRenderGroup, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
 }
 
@@ -67,12 +68,19 @@ HRESULT CUI_Player_HPFrame::Render()
 
 	//! 바인딩된 정점, 인덱스를 그려
 	m_pVIBufferCom->Render();
-
+	
 	return S_OK;
 }
 
 HRESULT CUI_Player_HPFrame::Ready_Components()
 {
+	if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+
+	//! For.Com_Texture_1
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_bg"), // HP_Bar_Red
+		TEXT("Com_Texture1"), reinterpret_cast<CComponent**>(&m_pTextureCom[FRAME]))))
+		return E_FAIL;
+
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
@@ -81,14 +89,6 @@ HRESULT CUI_Player_HPFrame::Ready_Components()
 	//! For.Com_VIBuffer
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
-		return E_FAIL;
-
-	wstring strPrototag;
-	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
-
-	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -102,9 +102,13 @@ HRESULT CUI_Player_HPFrame::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
+	
+	for (auto& iter : m_pTextureCom)
+	{
+		if (FAILED(iter->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+			return E_FAIL;
+	}
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -184,6 +188,10 @@ void CUI_Player_HPFrame::Free()
 
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pTextureCom);
+	for (auto& pTexture : m_pTextureCom)
+	{
+		if (pTexture != nullptr)
+			Safe_Release(pTexture);
+	}
 
 }

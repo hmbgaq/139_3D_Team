@@ -19,14 +19,17 @@ public:
 		RENDER_SSAO, RENDER_GODRAY, RENDER_OUTLINE,
 		
 		/* Blend */
-		RENDER_NONBLEND, RENDER_BLEND, 
+		RENDER_NONBLEND, RENDER_BLEND,
 		
 		/* UI */
 		RENDER_UI,
+		RENDER_NONBLEND_UI, /*RENDER_UI_MINIMAP, RENDER_UI_MINIMAP_ICON,*/
+		RENDER_UI_EFFECT_NONBLEND, RENDER_UI_EFFECT_BLEND,
+		RENDER_CURSOR,
 		
 		RENDER_END };
 
-	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FINAL, SHADER_END };
+	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_DEFERRED_UI, SHADER_FINAL, SHADER_END };
 	
 	struct QuadVertex // ssao 
 	{
@@ -86,7 +89,6 @@ private:
 	HRESULT Render_NonLight();
 	HRESULT Render_NonBlend();
 	HRESULT Render_Blend();
-	HRESULT Render_UI();
 
 	HRESULT Render_LightAcc();
 	HRESULT Render_Deferred();
@@ -101,8 +103,35 @@ private:
 
 	HRESULT Render_GodRay();
 
+#pragma region
+	/* MRT */
+	HRESULT Add_MRT_UI();
+
+	/* Group */
+	HRESULT Render_UI();
+	HRESULT Render_Text();
+
+	HRESULT Render_NonBlend_UI();
+	HRESULT Render_Lights_UI();
+
+	/* OutLine */
+	HRESULT Render_OutLine_UI();
+
+	HRESULT Render_Deferred_UI();
+	HRESULT Render_UI_Minimap();
+	HRESULT Render_UI_Minimap_Icon();
+	HRESULT Render_UIEffectNonBlend();
+	HRESULT Render_UIEffectBlend();
+
+	HRESULT Render_Screen_Effect();
+	HRESULT Render_UI_Final();
+	HRESULT Render_Cursor();
+#pragma endregion
+
 	/* perlin을 이용한 바다물결, 나뭇잎, 불 등 자연스러운 무작위패턴생성 */
 
+private: /* !UI */
+	HRESULT Ready_UI_Target(D3D11_VIEWPORT Viewport);
 #ifdef _DEBUG
 
 private:
@@ -163,10 +192,11 @@ private:
 	ID3D11DeviceContext*			m_pContext = { nullptr };
 	ID3D11DepthStencilView*			m_pLightDepthDSV = { nullptr };
 	list<class CGameObject*>		m_RenderObjects[RENDER_END];
+	D3D11_VIEWPORT					m_Viewport = {};
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponent;
-	_bool						m_bRenderDebug = { false };
+	_bool						m_bRenderDebug = { true };
 #endif
 
 public:

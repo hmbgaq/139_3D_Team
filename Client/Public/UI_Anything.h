@@ -27,8 +27,11 @@ private:
 	_bool					In_Frustum();
 
 public:
-	json				 Save_Desc(json& out_json);
-	void				 Load_Desc();
+	json					Save_Desc(json& out_json);
+	void					Load_Desc();
+
+private:
+	CTexture*				m_pTextureCom = nullptr;
 
 public:
 	static CUI_Anything* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext); //! 원형객체 생성

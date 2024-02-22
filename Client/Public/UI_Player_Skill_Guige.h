@@ -5,6 +5,9 @@
 /* 체력 프레임 */
 class CUI_Player_Skill_Guige final : public CUI
 {
+public:
+	enum TEXTUREKIND { FRAME, TEXTURE_END };
+
 private:
 	CUI_Player_Skill_Guige(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUI_Player_Skill_Guige(const CUI_Player_Skill_Guige& rhs);
@@ -25,6 +28,9 @@ private:
 public:
 	json				 Save_Desc(json& out_json);
 	void				 Load_Desc();
+
+private:
+	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
 
 public:
 	static CUI_Player_Skill_Guige* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext); //! 원형객체 생성

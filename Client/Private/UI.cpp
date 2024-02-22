@@ -19,7 +19,8 @@ HRESULT CUI::Initialize_Prototype()
 HRESULT CUI::Initialize(void* pArg)
 {
 	/* Info */
-	m_tUIInfo = *(UI_DESC*)pArg;
+	if (pArg != nullptr)
+		m_tUIInfo = *(UI_DESC*)pArg;
 
 #pragma region Transform
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext, 0.f, 0.f);
@@ -94,6 +95,7 @@ HRESULT CUI::Render()
 
 void CUI::Picking_UI()
 {
+
 	POINT pt;
 	GetCursorPos(&pt);
 	ScreenToClient(g_hWnd, &pt);  // 클라이언트 내에 마우스 포인터 가져오기 
@@ -111,6 +113,7 @@ void CUI::Picking_UI()
 
 HRESULT CUI::Ready_Components()
 {
+
 	return S_OK;
 }
 
@@ -121,6 +124,7 @@ HRESULT CUI::Bind_ShaderResources()
 
 HRESULT CUI::SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX, _float fSizeY)
 {
+	/* 렉트 크기를 표시할만한 디버깅 요소로 뭐가 좋을까 (Collider, Texture, Color..) */
 	m_rcUI.left = static_cast<LONG>(fPosX - (fSizeX * 0.5f));
 	m_rcUI.top = static_cast<LONG>(fPosY - (fSizeY * 0.5f));
 	m_rcUI.right = static_cast<LONG>(fPosX + (fSizeX * 0.5f));
@@ -365,11 +369,18 @@ void CUI::Load_UIData(const char* _FilePath)
 
 		CUI::UI_DESC tUI_Info;
 
-		tUI_Info.strProtoTag = object["ProtoTag"];
+		//tUI_Info.strProtoTag = object["ProtoTag"];
 		tUI_Info.strFilePath = object["FilePath"];
 	}
 }
 
 void CUI::Free()
 {
+	if (m_pVIBufferCom)
+		Safe_Release(m_pVIBufferCom);
+	if (m_pShaderCom)
+		Safe_Release(m_pShaderCom);
+	//Safe_Release(m_pTextureCom);
+	if (m_pMapTextureCom)
+		Safe_Release(m_pMapTextureCom);
 }
