@@ -108,28 +108,29 @@ public: /* ================= Function ================= */
 
 public:
 	// UI 설정
-	void UI2D_Setting(_float fTimeDelta);
-	HRESULT UI2D_Create(_float fTimeDelta);
-	void UI2D_Delete(_float fTimeDelta);
-	void AddIndexNumber(PATHINFO& str);
-	void Add_ParentList(CUI::UI_DESC tIn_UI_Desc);
-	void Add_ObjectList(CUI::UI_DESC tIn_UI_Desc);
+	void						UI2D_Setting(_float fTimeDelta);
+	HRESULT						UI2D_Create(_float fTimeDelta);
+	void						UI2D_Delete(_float fTimeDelta);
+	void						AddIndexNumber(PATHINFO& str);
+	void						Add_ParentList(CUI::UI_DESC tIn_UI_Desc);
+	void						Add_ObjectList(CUI::UI_DESC tIn_UI_Desc);
+	void						Create_TargetTexture();
 
 public: /* Save/Load */
-	void				Save_Desc();
-	HRESULT				Load_Desc();
-	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
-	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
-	void				Load_Paths();
+	void						Save_Desc();
+	HRESULT						Load_Desc();
+	virtual	HRESULT				Save_Function(string strPath, string strFileName) override;
+	virtual HRESULT				Load_Function(string strPath, string strFileName) override;
+	void						Load_Paths();
 
 public: /* Image */
 	// 이미지 로드 함수
-	void LoadImgPath(const _tchar* folderPath);
-	void ImagePreview(_float fTimeDelta);
+	void						LoadImgPath(const _tchar* folderPath);
+	void						ImagePreview(_float fTimeDelta);
 
 public:
-	void IndexCheck();
-	void SetUp_Initialize(); // Load
+	void						IndexCheck();
+	void						SetUp_Initialize(); // Load
 	_bool bSetUpComplete = true;
 
 private: /* Member */

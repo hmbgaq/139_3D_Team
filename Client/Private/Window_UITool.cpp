@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 
 #include "Json_Utility.h"
+#include "Target_Manager.h"
+#include "RenderTarget.h"
 
 /* error 외부참조 기호 : define 걸어줘야함 */
 #define STB_IMAGE_IMPLEMENTATION
@@ -399,6 +401,12 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 	/* Control_L */
 	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
 	{
+		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
+		{
+			if (m_CurrObject != nullptr)
+				m_CurrObject->Moving_Picking_Point(m_pt);
+		}
+
 		if (m_pGameInstance->Key_Down(DIK_S))
 		{
 			m_eDialogType = CImgui_Window::SAVE_DIALOG;
@@ -416,10 +424,9 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 			OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
 		}
 
-		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
+		if (m_pGameInstance->Key_Down(DIK_M))
 		{
-			if(m_CurrObject != nullptr)
-				m_CurrObject->Moving_Picking_Point(m_pt);
+			Create_TargetTexture();
 		}
 	}
 
@@ -1165,6 +1172,12 @@ void CWindow_UITool::Add_ObjectList(CUI::UI_DESC tIn_UI_Desc)
 
 	tUI_Desc = nullptr;
 	delete[] tUI_Desc;
+}
+
+void CWindow_UITool::Create_TargetTexture()
+{
+	/* error : Find함수로 랜더타겟을 찾아온 뒤, 그녀석으로 Create함수를 호출하면 외부참조기호 에러가 발생함.. 직접 게임인스턴스로 Create까지 직결되는 함수를 새로 만들어서 사용하며 해결 */
+	m_pGameInstance->Create_RenderTarget(TEXT("Target_Diffuse_UI"));
 }
 
 /* ex : Save */

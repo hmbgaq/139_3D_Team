@@ -2,8 +2,6 @@
 #include "UI_Player_HPBar.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
-#include "Target_Manager.h"
-#include "RenderTarget.h"
 
 CUI_Player_HPBar::CUI_Player_HPBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -46,10 +44,7 @@ void CUI_Player_HPBar::Priority_Tick(_float fTimeDelta)
 
 void CUI_Player_HPBar::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_M))
-	{
-		m_pGameInstance->Create_RenderTarget(TEXT("Target_Diffuse_UI"));
-	}
+
 }
 
 void CUI_Player_HPBar::Late_Tick(_float fTimeDelta)
