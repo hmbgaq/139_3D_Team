@@ -22,7 +22,7 @@ private:
 
 public: /* For.Engine */
 	/* 엔진라이브러리를 사용하기위한 준비를 모두 거친다. */
-	HRESULT		Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
+	HRESULT		Initialize_Engine(_uint iNumLevels, _uint iNumCollsionLayer, _uint iNumPhysXCollsionLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
 	void		Tick_Engine(_float fTimeDelta);
 	HRESULT		Render_Engine();
 	void		Clear(_uint iLevelIndex);
@@ -134,6 +134,8 @@ public: /* For.Frustum */
 public: /* For.Collision_Manager */
 	void		Add_Collision(const _uint& In_iLayer, CCollider* _pCollider);
 
+	void		Check_Group(const _uint& In_iLeftLayer, const _uint& In_iRightLayer);
+
 
 public: /* For.Event_Manager */
 	void		Add_Event(class IEvent* pEvent);
@@ -153,6 +155,10 @@ public: /* For.PhysX_Manager */
 	PxRigidStatic*			Create_StaticActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial = nullptr);
 	PxRigidStatic*			Create_StaticActor(const PxTransform& transform);
 
+	void					Add_DynamicActorAtCurrentScene(PxRigidDynamic& DynamicActor);
+	void					Add_StaticActorAtCurrentScene(PxRigidStatic& StaticActor);
+
+	void					Create_Material(_float fStaticFriction, _float fDynamicFriction, _float fRestitution, PxMaterial** ppOut);
 	void					Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut);
 	void					Create_ConvexMesh(const PxConvexMeshDesc& In_MeshDesc, PxConvexMesh** ppOut);
 	void					Create_Shape(const PxGeometry& Geometry, PxMaterial* pMaterial, const _bool isExculsive, const PxShapeFlags In_ShapeFlags, PxShape** ppOut);

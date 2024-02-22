@@ -262,6 +262,12 @@
     <Filter Include="02.GameObjects\03. Effect\05.Effect_Trail">
       <UniqueIdentifier>{8bcd9f93-d4e5-4e7c-99f3-69b93e60c985}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Componenet">
+      <UniqueIdentifier>{c773ceaa-99e3-4453-a030-0929a6c32625}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Preset">
+      <UniqueIdentifier>{f22542eb-83c2-4588-baa9-eaee46804047}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -474,9 +480,6 @@
     <ClInclude Include="..\Public\TestEventWithPlayer.h">
       <Filter>03.Event\Test\With_Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_internal.h">
       <Filter>01.Levels\02.Tool\Imgui\ImNeoSequencer</Filter>
     </ClInclude>
@@ -497,6 +500,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Effect.h">
       <Filter>02.GameObjects\03. Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Preset_PhysXControllerDesc.h">
+      <Filter>05. Preset</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Preset.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -909,6 +921,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Trail.cpp">
       <Filter>02.GameObjects\03. Effect\05.Effect_Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Preset_PhysXControllerDesc.cpp">
+      <Filter>05. Preset</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

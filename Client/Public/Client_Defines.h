@@ -68,6 +68,24 @@ namespace Client
 
 		LAYER_END
 	};
+
+	enum class PHYSX_COLLISION_LAYER
+	{
+		NONE,
+		PLAYER,
+		PLAYER_WEAPON,
+		MONSTER,
+		TERRAIN,
+		STATIC_PROP,
+		DYNAMIC_PROP,
+		DYNAMIC_PEICE,
+		GROUND,
+		CAMERA,
+		INTERIOR,
+		LAYER_END
+	};
+
+
 	
 }
 
@@ -77,3 +95,4 @@ extern HWND g_hWnd;
 extern HINSTANCE g_hInst;
 
 #include "Client_Enum.h"
+#include "Client_Preset.h"

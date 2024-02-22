@@ -11,12 +11,12 @@
 BEGIN(Engine)
 
 class CNavigation;
-
+class CPhysXCharacterController;
 
 class ENGINE_DLL CCharacter abstract : public CGameObject
 {
 protected:
-	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag);
+	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strPrototypeTag);
 	CCharacter(const CCharacter& rhs);
 	virtual ~CCharacter() = default;
 
@@ -55,14 +55,14 @@ public:
 	_bool	Is_Animation_End();
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 
-	void Go_Straight(_float fTimeDelta);	
+	void Go_Straight(_float fTimeDelta);
 	void Go_Straight_L45(_float fTimeDelta);
 	void Go_Straight_R45(_float fTimeDelta);
-	void Go_Backward(_float fTimeDelta);	
+	void Go_Backward(_float fTimeDelta);
 	void Go_Backward_L45(_float fTimeDelta);
 	void Go_Backward_R45(_float fTimeDelta);
-	void Go_Left(_float fTimeDelta);		
-	void Go_Right(_float fTimeDelta);		
+	void Go_Left(_float fTimeDelta);
+	void Go_Right(_float fTimeDelta);
 
 
 	_bool Is_Rotate_In_CameraDir() {
@@ -89,6 +89,10 @@ protected:
 	CNavigation* m_pNavigationCom = { nullptr };
 	CBody* m_pBody = { nullptr };
 	vector<CWeapon*> m_Weapons;
+
+protected:
+	CPhysXController* m_pPhysXControllerCom = { nullptr };
+	PxControllerCollisionFlags m_LastCollisionFlags;
 
 protected:
 	map<const wstring, class CGameObject*>		m_PartObjects;

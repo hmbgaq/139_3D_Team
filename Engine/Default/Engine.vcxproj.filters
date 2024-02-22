@@ -280,6 +280,12 @@
     <Filter Include="01.Utility\97.PhysX\SimulationEventCallback">
       <UniqueIdentifier>{00dfac4a-a117-4698-8343-24af8286ae4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\97.PhysX\Controller\Character">
+      <UniqueIdentifier>{3e08f005-8b91-4afc-9ac5-28acd7312843}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.ETC">
+      <UniqueIdentifier>{e6f5e488-5afc-4292-9943-c7e8e6dd1446}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -570,6 +576,13 @@
     <ClInclude Include="..\Public\CollisionSimulationEventCallBack.h">
       <Filter>01.Utility\97.PhysX\SimulationEventCallback</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Easing_Utillity.h" />
+    <ClInclude Include="..\Public\Delegate.h">
+      <Filter>95.ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PhysXCharacterController.h">
+      <Filter>01.Utility\97.PhysX\Controller\Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -796,6 +809,13 @@
     </ClCompile>
     <ClCompile Include="..\Private\CollisionSimulationEventCallBack.cpp">
       <Filter>01.Utility\97.PhysX\SimulationEventCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Easing_Utillity.cpp" />
+    <ClCompile Include="..\Private\PhysXCharacterController.cpp">
+      <Filter>01.Utility\97.PhysX\Controller\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Delegate.cpp">
+      <Filter>95.ETC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Bounding.h"
 
+
 CCollision_Manager::CCollision_Manager()
 	:m_pGameInstance(CGameInstance::GetInstance())
 {

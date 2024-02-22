@@ -5,6 +5,7 @@
 BEGIN(Engine)
 
 class CCollider;
+class CPhysXCollider;
 
 class ENGINE_DLL CGameObject abstract : public CBase
 {
@@ -61,6 +62,12 @@ public:
 	virtual void	OnCollisionEnter(CCollider * other) {};
 	virtual void	OnCollisionStay(CCollider * other) {};
 	virtual void	OnCollisionExit(CCollider * other) {};
+
+public:
+	virtual void OnPhysXCollisionEnter(CPhysXCollider* pOtherCollider) {};
+	virtual void OnPhysXCollisionStay(CPhysXCollider* pOtherCollider) {};
+	virtual void OnPhysXCollisionExit(CPhysXCollider* pOtherCollider) {};
+
 
 
 public:
