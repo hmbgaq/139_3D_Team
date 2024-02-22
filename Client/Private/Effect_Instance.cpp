@@ -6,13 +6,13 @@
 
 
 CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CGameObject(pDevice, pContext, strPrototypeTag)
+	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
 CEffect_Instance::CEffect_Instance(const CEffect_Instance & rhs)
-	: CGameObject(rhs)
+	: CEffect_Void(rhs)
 {
 }
 
@@ -47,7 +47,7 @@ void CEffect_Instance::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Instance::Tick(_float fTimeDelta)
 {
-	if (FLAT == m_tInstanceDesc.eType)
+	if (FLAT == m_tInstanceDesc.eType_Mesh)
 	{
 		m_tSpriteDesc.fTimeAcc += fTimeDelta;
 
@@ -88,7 +88,7 @@ HRESULT CEffect_Instance::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		if(FIGURE == m_tInstanceDesc.eType)
+		if(FIGURE == m_tInstanceDesc.eType_Mesh)
 			m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 
 		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
@@ -136,7 +136,7 @@ HRESULT CEffect_Instance::Ready_Components()
 
 	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
 	Desc.pModel = m_pModelCom;
-	Desc.iNumInstance = m_tInstanceDesc.iNumInstance; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
+	Desc.iNumInstance = m_tInstanceDesc.iCurInstanceCnt; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
 	
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),
@@ -145,23 +145,23 @@ HRESULT CEffect_Instance::Ready_Components()
 
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strTextureTag[TYPE_DIFFUSE],
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_DIFFUSE]))))
+	if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strTextureTag[TEXTURE_DIFFUSE],
+		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
 		return E_FAIL;
 
-	if (nullptr != m_pTextureCom[TYPE_MASK])
+	if (nullptr != m_pTextureCom[TEXTURE_MASK])
 	{
 		/* For.Com_Mask */
-		if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strTextureTag[TYPE_MASK],
-			TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_MASK]))))
+		if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strTextureTag[TEXTURE_MASK],
+			TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
 			return E_FAIL;
 	}
 
-	if (nullptr != m_pTextureCom[TYPE_NOISE])
+	if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 	{
 		/* For.Com_Noise */
-		if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strTextureTag[TYPE_NOISE],
-			TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_NOISE]))))
+		if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strTextureTag[TEXTURE_NOISE],
+			TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
 			return E_FAIL;
 	}
 
@@ -183,19 +183,19 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
-	if (FLAT == m_tInstanceDesc.eType)
+	if (FLAT == m_tInstanceDesc.eType_Mesh)
 	{
-		if (FAILED(m_pTextureCom[TYPE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tInstanceDesc.iTextureIndex[TYPE_DIFFUSE])))
+		if (FAILED(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_DIFFUSE])))
 			return E_FAIL;
 
-		if (nullptr != m_pTextureCom[TYPE_MASK])
+		if (nullptr != m_pTextureCom[TEXTURE_MASK])
 		{
-			if (FAILED(m_pTextureCom[TYPE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tInstanceDesc.iTextureIndex[TYPE_MASK])))
+			if (FAILED(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_MASK])))
 				return E_FAIL;
 		}
-		if (nullptr != m_pTextureCom[TYPE_NOISE])
+		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 		{
-			if (FAILED(m_pTextureCom[TYPE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tInstanceDesc.iTextureIndex[TYPE_NOISE])))
+			if (FAILED(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_NOISE])))
 				return E_FAIL;
 		}
 
@@ -273,7 +273,7 @@ void CEffect_Instance::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pVIBufferCom);
 
-	for (_int i = 0; i < (_int)TYPE_END; i++)
+	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 		Safe_Release(m_pTextureCom[i]);
 
 }

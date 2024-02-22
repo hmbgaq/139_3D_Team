@@ -258,7 +258,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 				else
 					fSpeed = (m_pSpeeds[i] - fSpeed) * m_fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y + m_pSpeeds[i];
 
-				
+			
 
 				//if (m_tBufferDesc.bReverse)
 				//{

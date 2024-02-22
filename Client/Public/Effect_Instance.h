@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Effect_Void.h"
 
 BEGIN(Engine)
 class CShader;
@@ -12,29 +12,21 @@ END
 
 BEGIN(Client)
 
-class CEffect_Instance final : public CGameObject
+class CEffect_Instance final : public CEffect_Void
 {
 public:
-	enum TYPE	{ FLAT, FIGURE, MESH_TYPE_END };
-	enum TEXTURE { TYPE_DIFFUSE, TYPE_MASK, TYPE_NOISE, TYPE_END };
+	enum TYPE_MESH	{ FLAT, FIGURE, TYPE_MESH_END };
 
 public:
-	typedef struct tagEffect_Desc : public CGameObject::GAMEOBJECT_DESC
+	typedef struct tagEffect_Desc : public CEffect_Void::EFFECTVOID_DESC
 	{
-		TYPE	eType				= { FLAT };
+		TYPE_MESH		eType_Mesh = { FLAT };
 
-		wstring strModelTag			= {TEXT("")};
-
-		_uint	iNumInstance		= { 0 };
-
-		wstring	strTextureTag[TYPE_END];
-		_int	iTextureIndex[TYPE_END] = { 0 };
-
-		wstring	strShaderTag		= { TEXT("") };
-		_uint	iShaderPassIndex	= { 0 };
-		_int	iRenderGroup		= { 8 }; //! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 현재 작성기준 CRENDERER::RENDERGROUP::RENDER_END가 8임
+		wstring			strModelTag = TEXT("");
 		
 	}EFFECT_INSTANCE_DESC;
+
+
 
 	typedef struct tagSpriteUV
 	{
@@ -78,7 +70,7 @@ public:
 
 /* For.Desc */
 public:
-	EFFECT_INSTANCE_DESC* Get_Instance_Desc() { return &m_tInstanceDesc; }
+	EFFECT_INSTANCE_DESC* Get_Desc() { return &m_tInstanceDesc; }
 	SPRITEUV_DESC*		  Get_Sprite_Desc() { return &m_tSpriteDesc; }
 
 	void		Set_ShaderPassIndex(_uint iShaderPassIndex);
@@ -86,10 +78,10 @@ public:
 	_bool		bTest = { FALSE };
 
 private:
-	CShader*							m_pShaderCom			= { nullptr };	
-	CModel*								m_pModelCom				= { nullptr };
-	CTexture*							m_pTextureCom[TYPE_END] = { nullptr };
-	CVIBuffer_Effect_Model_Instance*	m_pVIBufferCom			= { nullptr };
+	CShader*							m_pShaderCom				= { nullptr };	
+	CModel*								m_pModelCom					= { nullptr };
+	CTexture*							m_pTextureCom[TEXTURE_END]	= { nullptr };
+	CVIBuffer_Effect_Model_Instance*	m_pVIBufferCom				= { nullptr };
 
 	EFFECT_INSTANCE_DESC				m_tInstanceDesc = {};
 	SPRITEUV_DESC						m_tSpriteDesc = {};

@@ -54,6 +54,8 @@ void CEffect_Rect::Tick(_float fTimeDelta)
 {
 	if (m_tRectDesc.bActive_Tool)
 	{
+		m_fSequenceTime = m_fLifeTime + m_tRectDesc.fRemainTime;
+
 		if (SPRITE == m_tRectDesc.eType)
 		{
 			if (m_tRectDesc.bPlay)
@@ -119,6 +121,29 @@ HRESULT CEffect_Rect::Render()
 	m_pVIBufferCom->Render();
 
 	return S_OK;
+}
+
+void CEffect_Rect::ReSet_Effect()
+{
+	if (SPRITE == m_tRectDesc.eType)
+	{
+		ReSet_Sprite();
+	}
+	else
+	{
+
+	}
+
+}
+
+void CEffect_Rect::End_Effect()
+{
+	__super::End_Effect();
+
+	if (m_tRectDesc.bLoop)
+	{
+		ReSet_Effect();
+	}
 }
 
 void CEffect_Rect::ReSet_Sprite()

@@ -37,6 +37,9 @@ public:
 	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	virtual void	ReSet_Effect()	override;
+	virtual void	End_Effect()	override;
 
 public:
 	CTexture*				Get_TextureCom(TEXTURE eTexture) { return m_pTextureCom[eTexture]; }
