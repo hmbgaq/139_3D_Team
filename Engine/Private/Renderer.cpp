@@ -302,6 +302,8 @@ HRESULT CRenderer::Control_HotKey()
 		cout << " DIK_4 : HDR ON/OFF " << endl;
 		cout << " DIK_5 : FXAA ON/OFF " << endl;
 		cout << " DIK_6 : RimLight ON/OFF " << endl;
+		cout << " DIK_8 : Bloom Color Increase " << endl;
+		cout << " DIK_9 : Dont use !! Renderpass BloomBlur Test " << endl;
 
 		if (true == m_bSSAO_Active)
 			cout << "HBAO+ : true " << endl;
