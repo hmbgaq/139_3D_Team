@@ -335,9 +335,9 @@ HRESULT CRenderer::Control_HotKey()
 
 HRESULT CRenderer::Draw_RenderGroup()
 {
-#pragma region _DEBUG
+#ifdef _DEBUG
 	Control_HotKey();
-#pragma endregion
+#endif // _DEBUG
 
 	FAILED_CHECK(Render_Priority());	/* SkyBox */
 	FAILED_CHECK(Render_NonLight()); 

@@ -142,12 +142,12 @@ private:
 
 	/* 활성 제어 */
 private:
-	_bool						m_bSSAO_Active			= { false };
-	_bool						m_bBloom_Active			= { false };
-	_bool						m_bOutline_Active		= { false };
-	_bool						m_bPBR_Active			= { false };
-	_bool						m_bFXAA_Active			= { false };
-	_bool						m_bHDR_Active			= { false };
+	_bool						m_bSSAO_Active			= { true };
+	_bool						m_bBloom_Active			= { true };
+	_bool						m_bOutline_Active		= { true };
+	_bool						m_bPBR_Active			= { true };
+	_bool						m_bFXAA_Active			= { true };
+	_bool						m_bHDR_Active			= { true };
 	_bool						m_bInit					= { true };
 
 public:
@@ -190,7 +190,7 @@ private:
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponent;
-	_bool						m_bRenderDebug = { true };
+	_bool						m_bRenderDebug = { false };
 #endif
 
 public:

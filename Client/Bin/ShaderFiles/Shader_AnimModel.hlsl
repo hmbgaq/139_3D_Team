@@ -188,6 +188,7 @@ PS_OUT PS_MAIN_DISSOVLE(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
 
     return Out;
 }
@@ -217,6 +218,7 @@ PS_OUT PS_MAIN_GRAY(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
 }
@@ -240,6 +242,7 @@ PS_OUT PS_MAIN_MASKING(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vViewNormal = Out.vNormal;
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
 	
     return Out;
 }
@@ -259,6 +262,7 @@ PS_OUT PS_MAIN_BLOOM(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vBloom = g_BloomColor;
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vViewNormal = Out.vNormal;
     
     return Out;
@@ -336,11 +340,11 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     float3x3 WorldMatrix = float3x3(In.vPosition.xyz, In.vBinormal.xyz, In.vNormal.xyz);
     vNormal = mul(vNormal, WorldMatrix);
     
-    Out.vDiffuse = vColor;
-    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-   // Out.vBloom = g_BloomColor;
-   // Out.vViewNormal = Out.vNormal;
+    Out.vDiffuse    = vColor;
+    Out.vNormal     = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth      = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    
+    Out.vORM        = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
     
     return Out;
