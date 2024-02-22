@@ -287,6 +287,13 @@ HRESULT CRenderer::Control_HotKey()
 {
 	if (m_pGameInstance->Key_Down(DIK_GRAVE))
 	{
+		cout << " ----------------------------- " << endl;
+		cout << " DIK_1 : NONE ON/OFF " << endl;
+		cout << " DIK_2 : HBAO+ ON/OFF " << endl;
+		cout << " DIK_3 : BLOOM ON/OFF " << endl;
+		cout << " DIK_4 : HDR ON/OFF " << endl;
+		cout << " DIK_5 : FXAA ON/OFF " << endl;
+
 		if (true == m_bSSAO_Active)
 			cout << "HBAO+ : true " << endl;
 		else
