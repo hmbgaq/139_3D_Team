@@ -301,6 +301,7 @@ HRESULT CRenderer::Control_HotKey()
 		cout << " DIK_3 : BLOOM ON/OFF " << endl;
 		cout << " DIK_4 : HDR ON/OFF " << endl;
 		cout << " DIK_5 : FXAA ON/OFF " << endl;
+		cout << " DIK_6 : RimLight ON/OFF " << endl;
 
 		if (true == m_bSSAO_Active)
 			cout << "HBAO+ : true " << endl;
@@ -782,6 +783,7 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Shade"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_ShadeTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SpecularTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_LightDepthTexture"));
+	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RimLight"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_EmissiveTarget"));
 
 	/* Post Processing */
 	{
@@ -794,7 +796,7 @@ HRESULT CRenderer::Render_Deferred()
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bBloom_Active", &m_bBloom_Active, sizeof(_bool)));
 		if (true == m_bBloom_Active)
 		{
-			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
+			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
 		}
 
 		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_Outline_Active", &m_bOutline_Active, sizeof(_bool)));

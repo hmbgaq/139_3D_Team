@@ -1,5 +1,4 @@
 
-
 #pragma warning(disable : 31) /* HLSL - Texture method 'Sample(sampler, float2)' 경고 */
 #pragma warning(disable: 6146) /* PS에서 RTV에 바인딩안했을때 뜨는 경고 무시 */
 /* ---------------- Sampler ---------------- */
@@ -169,3 +168,6 @@ BlendState AdditiveBlendState
     BlendOp[0] = ADD;
     RenderTargetWriteMask[0] = 15;
 };
+
+/* -------------------------------------------- */
+

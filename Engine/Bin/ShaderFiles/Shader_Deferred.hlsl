@@ -24,6 +24,7 @@ vector g_vCamPosition;
 
 Texture2D g_PriorityTarget;
 Texture2D g_ShadeTexture;
+Texture2D g_EmissiveTarget;
 Texture2D g_NormalTexture;
 Texture2D g_NormalDepthTarget;
 Texture2D g_DepthTexture;
@@ -40,6 +41,54 @@ bool g_bBloom_Active;
 bool g_Outline_Active;
 bool g_PBR_Active;
 
+
+/* 안개 */
+float4 g_vFogColor = { 0.f, 0.635f, 1.f, 1.f };
+float2 g_fFogStartEnd = { 300.f, 600.f };
+float g_fFogStartDepth = 0.f;
+float g_fFogStartDistance = 0.f;
+float g_fFogDistanceValue = 0.f;
+float g_fFogHeightValue = 0.f;
+float g_fFogLimit = -1.f;
+float2 g_vFogUVAcc = { 0.f, 0.f };
+float g_fDistanceDensity = 0.f;
+float g_fHeightDensity = 0.f;
+
+/* ------------------ Function ------------------ */ 
+
+float DistanceFogFactor_Caculation(float fViewZ)
+{
+    return saturate((g_fFogStartEnd.y - fViewZ) / (g_fFogStartEnd.y - g_fFogStartEnd.x));
+}
+
+float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise)
+{
+    // 지정 범위로 변환된 Distance..
+    float pixelDistance = g_fDistanceDensity * (length(g_vCamPosition.w - toEye) - g_fFogStartDepth);
+    
+	// 지정 범위로 변환된 Height..
+    float pixelHeight = g_fHeightDensity * toEye.y;
+    
+    float distanceOffset = min(pow(2.0f, pixelDistance - g_fFogStartDistance), 1.0f);
+    float heightOffset = min(pow(1.2f, -(pixelHeight + 3.0f)), 1.0f);
+    
+	// 거리 기반 안개 강도 설정..
+    float distanceValue = exp(0.01f * pow(pixelDistance - g_fFogDistanceValue, 3.0f));
+    float fogDistanceFactor = min(distanceValue, 1.0f);
+
+	// 높이 기반 안개 강도 설정..
+    float heightValue = (pixelHeight * g_fFogHeightValue) - 0.1f;
+    float fogHeightFactor = pow(pow(2.0f, -heightValue), heightValue) * (1.0f - distanceOffset);
+
+	// 두 요소를 결합한 최종 요소..
+    float fogFinalFactor = min(fogDistanceFactor * fogHeightFactor * fNoise, 1.0f) + min(distanceOffset * heightOffset, 1.0f) + 0.01f;
+
+	// 최종 혼합 색상..
+    return lerp(vOriginColor.rgb, g_vFogColor.xyz, fogFinalFactor);
+}
+
+
+/* ------------------ ------------------ */ 
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -245,7 +294,9 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     if (g_Outline_Active)
         vOutline = g_OutlineTarget.Sample(LinearSampler, In.vTexcoord);
 	
-    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
+    vector vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom + vEmissive;
     Out.vColor.a = 1.f;
     //Out.vColor = ((vDiffuse * vShade * vSSAO) + vSpecular + vBloom) * vOutline;
 	
