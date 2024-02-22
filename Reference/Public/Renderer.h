@@ -112,6 +112,10 @@ private:
 	HRESULT						Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bClear, _int eBlendType);
 	void						Calc_Blur_GaussianWeights(_int sigma, _int iSize, _Out_ void* Weights);
 
+	/* HDR */
+	_float						Final_Brightness = 1.f;
+	_float						Final_Saturation = 1.f;
+
 	/* Radial Blur */
 	_float4						m_fRadialBlurQuality = {};
 	_float4						m_fRadialBlurPower = {};
@@ -120,6 +124,7 @@ private:
 	_float4						m_vLineColor		= _float4(1.f, 0.f, 0.f, 1.f );
 
 	/* HDR */
+	_float						m_max_white = { 0.3f };
 
 private:
 	class CShader*					m_pShader[SHADER_TYPE::SHADER_END]	= { nullptr };
