@@ -65,7 +65,7 @@ struct VS_OUT_EFFECT
 	float4		vProjPos : TEXCOORD1;
 };
 
-struct VS_OUT_NOISE
+struct VS_OUT_DISTORTION
 {
 	float4		vPosition	: SV_POSITION;
 
@@ -93,7 +93,7 @@ struct PS_IN_EFFECT
 	float4		vProjPos : TEXCOORD1;
 };
 
-struct PS_IN_NOISE
+struct PS_IN_DISTORTION
 {
 	float4		vPosition	: SV_POSITION;
 
@@ -177,9 +177,9 @@ VS_OUT_EFFECT  VS_MAIN_SPRITE(VS_IN In)
 	return Out;
 }
 
-VS_OUT_NOISE VS_MAIN_NOISE(VS_IN In)
+VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
 {
-	VS_OUT_NOISE		Out = (VS_OUT_NOISE)0;
+	VS_OUT_DISTORTION		Out = (VS_OUT_DISTORTION)0;
 
 	/* In.vPosition * ¿ùµå * ºä * Åõ¿µ */
 	matrix		matWV, matWVP;
@@ -265,7 +265,8 @@ PS_OUT PS_MAIN_SPRITE_ANIMATION(PS_IN_EFFECT In)
 	return Out;
 }
 
-PS_OUT PS_MAIN_NOISE(PS_IN_NOISE In)
+
+PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -362,16 +363,16 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_SPRITE_ANIMATION();
 	}
 
-	pass Noise // 2
+	pass Distortion // 2
 	{
 		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(DSS_DepthStencilEnable, 0);
 		SetRasterizerState(RS_Cull_None);
 
-		VertexShader = compile vs_5_0 VS_MAIN_NOISE();
+		VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
 		HullShader = NULL;
 		DomainShader = NULL;
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_NOISE();
+		PixelShader = compile ps_5_0 PS_MAIN_DISTORTION();
 	}
 }

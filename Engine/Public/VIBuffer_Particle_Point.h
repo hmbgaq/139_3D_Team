@@ -14,22 +14,22 @@ public:
 	{
 		TYPE_ACTION		eType_Action = { SPHERE };
 		TYPE_FADE		eType_Fade = { FADE_NONE };
+		EASING_TYPE		eType_Easing = { LINEAR };
 
-		/* 상태 */
-		_bool		bActive = { TRUE };
+		// States
 		_bool		bBillBoard = { TRUE };
 
-		_bool		bIsPlay = { TRUE };
-		_bool		bReverse = { FALSE };
-		_bool		bLoop = { TRUE };
+		_bool		bActive_Tool = { TRUE };
+		//_bool		bPlay		 = { TRUE };
+		_bool		bLoop		 = { TRUE };
+		_bool		bReverse	 = { FALSE };
 
-		/* LifeTime */
-		_float2		vMinMaxLifeTime;
-
-		_float2		vMinMaxSpawnTime;
 
 		/* 파티클 개수 */
 		_uint		iCurNumInstance;
+
+		/* LifeTime */
+		_float2		vMinMaxLifeTime;
 
 		/* For.Position */
 		_float2		vMinMaxRange = { 0.1f, 3.f };
@@ -38,21 +38,19 @@ public:
 		_float4		vOffsetPosition;
 		_float4		vCurrentPosition;
 
-		_float		fMaxLengthPosition = { 5.f };
-		_float		fCurLengthPosition;
+		_float2		vMinMaxLengthPosition;
 
 		/* For.Speed */
 		_float2		vMinMaxSpeed;
 		/* 가속도 */
-		_float		fAcceleration = { 1.f };
-		_float		fAccPosition = { 0.1f };
+		_float		fSpeedAcc		= { 1.f };
+		_float		fAccPosition	= { 0.1f };
 
 		/* For.Gravity */
 		_bool		bUseGravity = { FALSE };
 		_float		fGravityAcc = { -5.f };
 		_float3		vCurrentGravity;
 		_float		fUseGravityPosition = { 0.1f };
-
 
 		/* For.Rotation */
 		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
@@ -71,8 +69,12 @@ public:
 		_float2		vMinMaxScaleForce;
 
 		/* For.Color */
-		_float4     vCurrentColor;
+		_float2     vMinMaxRed		= { 0.f, 1.f };
+		_float2     vMinMaxGreen	= { 0.f, 1.f };
+		_float2     vMinMaxBlue		= { 0.f, 1.f };
+		_float2     vMinMaxAlpha	= { 0.f, 1.f };
 
+		_float4     vCurrentColor;
 		_float4		vColorSpeed;
 		_float4		vColorForce;
 
@@ -91,9 +93,9 @@ public:
 		void Reset_Desc()
 		{
 			ZeroMemory(this, sizeof(PARTICLE_POINT_DESC));
-			bIsPlay = { TRUE };
+			//bPlay	 = { TRUE };
 			bReverse = { FALSE };
-			bLoop = { TRUE };
+			bLoop	 = { TRUE };
 		}
 
 	}PARTICLE_POINT_DESC;
@@ -131,8 +133,13 @@ public:
 
 	
 private:
-	PARTICLE_POINT_DESC			m_tBufferDesc;
+	_float* m_pLengths	= { nullptr };
+	_float* m_pReds		= { nullptr };
+	_float* m_pGreens	= { nullptr };
+	_float* m_pBlues	= { nullptr };
+	_float* m_pAlphas	= { nullptr };
 
+	PARTICLE_POINT_DESC			m_tBufferDesc;
 
 	public:
 		static CVIBuffer_Particle_Point* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iNumInstance);

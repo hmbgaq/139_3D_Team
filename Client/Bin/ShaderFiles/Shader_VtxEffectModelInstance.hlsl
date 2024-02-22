@@ -116,10 +116,10 @@ VS_OUT VS_MAIN_SPRITE(VS_IN In)
 
 
 
-// w나누기연산을 수행하낟. (In 투영스페이스)
+// w나누기연산을 수행한다. (In 투영스페이스)
 // 뷰포트 변환. (In 뷰포트(윈도우좌표))
 
-// 래스터라이즈(픽셀정볼르 생성한다. )
+// 래스터라이즈(픽셀정보를 생성한다. )
 
 struct PS_IN
 {
@@ -153,7 +153,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
-////Normal Mapping ///////////
+//// Normal Mapping ///////////
 struct VS_OUT_NORMAL
 {
 	float4 vPosition : SV_POSITION;

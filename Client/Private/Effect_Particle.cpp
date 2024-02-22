@@ -44,13 +44,16 @@ void CEffect_Particle::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Particle::Tick(_float fTimeDelta)
 {
+
+	CVIBuffer_Particle_Point::PARTICLE_POINT_DESC* pDesc = m_pVIBufferCom->Get_Desc();
+
 	if (m_tParticleDesc.bActive_Tool)
 	{
-		//m_fLifeTime = m_fWaitingTime + m_fLifeTime;
 		m_fSequenceTime = m_fLifeTime + m_tParticleDesc.fRemainTime;
 
-		m_pVIBufferCom->Get_Desc()->vMinMaxLifeTime.x = m_fWaitingTime;
-		m_pVIBufferCom->Get_Desc()->vMinMaxLifeTime.y = m_fLifeTime;
+		pDesc->bActive_Tool = TRUE;
+		pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
+		pDesc->vMinMaxLifeTime.y = m_fLifeTime;
 
 		if (m_tParticleDesc.bPlay)
 		{
@@ -63,9 +66,9 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 				if (m_tParticleDesc.fWaitingAcc >= m_fWaitingTime)
 				{
-					m_tParticleDesc.bRender = true;		
-					m_pVIBufferCom->Get_Desc()->bIsPlay = TRUE;
-				}		
+					m_tParticleDesc.bRender = TRUE;
+					//pDesc->bPlay	= TRUE;
+				}
 				else
 					return;
 			}
@@ -74,42 +77,24 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 			m_tParticleDesc.fTimeAcc += fTimeDelta;
 			m_tParticleDesc.fLifeTimeRatio = min(1.0f, m_tParticleDesc.fTimeAcc / m_fLifeTime);
 
-			if (SPRITE == m_tParticleDesc.eType)
+			if (m_tParticleDesc.fTimeAcc >= m_fLifeTime + m_tParticleDesc.fRemainTime)
 			{
-				if (m_tParticleDesc.fTimeAcc > m_tSpriteDesc.fSequenceTerm)
-				{
-					(m_tSpriteDesc.vUV_CurTileIndex.x)++;
+				m_tParticleDesc.bRender = FALSE;
+				//pDesc->bPlay			= FALSE;
 
-					if (m_tSpriteDesc.vUV_CurTileIndex.x == m_tSpriteDesc.vUV_MaxTileCount.x)
-					{
-						(m_tSpriteDesc.vUV_CurTileIndex.y)++;
-						m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
-
-						if (m_tSpriteDesc.vUV_CurTileIndex.y == m_tSpriteDesc.vUV_MaxTileCount.y)
-						{
-							m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
-						}
-					}
-					m_tParticleDesc.fTimeAcc = 0.f;
-				}
-			}
-			else
-			{
-				if (m_tParticleDesc.fTimeAcc >= m_fLifeTime + m_tParticleDesc.fRemainTime)
-				{
-					m_tParticleDesc.bRender = false;
-					m_pVIBufferCom->Get_Desc()->bIsPlay = FALSE;
-					//End_Effect();
-					return;
-				}
-
-				if (m_tParticleDesc.bRender)
-				{
-					m_pVIBufferCom->Update(fTimeDelta);
-				}
+				//End_Effect();
+				return;
 			}
 
+			if (m_tParticleDesc.bRender)
+			{
+				m_pVIBufferCom->Update(fTimeDelta);
+			}
 		}
+	}
+	else
+	{
+		m_pVIBufferCom->Get_Desc()->bActive_Tool = FALSE;
 	}
 }
 
@@ -119,6 +104,8 @@ void CEffect_Particle::Late_Tick(_float fTimeDelta)
 	{
 		if (m_tParticleDesc.bRender)
 		{
+			Compute_CamDistance();
+
 			// CRenderer::RENDER_BLEND
 			if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tParticleDesc.iRenderGroup), this)))
 				return;
@@ -212,22 +199,23 @@ HRESULT CEffect_Particle::Ready_Components()
 		tVIBufferDesc.eType_Action = { CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE };
 		tVIBufferDesc.eType_Fade = { CVIBuffer_Particle_Point::TYPE_FADE::FADE_OUT };
 
-		tVIBufferDesc.bActive		= { TRUE };
+		tVIBufferDesc.bActive_Tool	= { TRUE };
 		tVIBufferDesc.bBillBoard	= { TRUE };
-		tVIBufferDesc.bIsPlay		= { TRUE };
+		//tVIBufferDesc.bPlay			= { TRUE };
 		tVIBufferDesc.bReverse		= { FALSE };
 		tVIBufferDesc.bLoop			= { TRUE };
 
 		tVIBufferDesc.vMinMaxLifeTime = _float2(0.5f, 3.0f);
-		tVIBufferDesc.vMinMaxSpawnTime = { 0.f, 0.f };
 		tVIBufferDesc.iCurNumInstance = { m_tParticleDesc.iCurInstanceCnt };
 
 		tVIBufferDesc.vMinMaxRange = { 0.1f, 3.f };
 		tVIBufferDesc.vCenterPosition = _float3(0.f, 0.f, 0.f);
 		tVIBufferDesc.vOffsetPosition = _float3(0.f, 0.f, 0.f);
 
+		tVIBufferDesc.vMinMaxLengthPosition = { 3.f, 3.f };
+
 		tVIBufferDesc.vMinMaxSpeed = _float2(0.1f, 5.0f);
-		tVIBufferDesc.fAcceleration = { 2.f };
+		tVIBufferDesc.fSpeedAcc = { 2.f };
 		tVIBufferDesc.fAccPosition = { 0.1f };
 
 		tVIBufferDesc.fGravityAcc = { -9.8 };
@@ -321,30 +309,35 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
 
-	if (SPRITE == m_tParticleDesc.eType)
-	{
-		_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
-		vCamDirection = XMVector4Normalize(vCamDirection);
-		_float4 vCamDirectionFloat4 = {};
-		XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
 
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat4, sizeof(_float4))))
-			return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tParticleDesc.vColor_Clip.w, sizeof(_float))))
+		return E_FAIL;
 
 
-		m_tParticleDesc.vUV_Offset = { (_float)(m_tSpriteDesc.vUV_CurTileIndex.x * m_tSpriteDesc.vTileSize.x) / m_tSpriteDesc.vTextureSize.x
-						, (_float)(m_tSpriteDesc.vUV_CurTileIndex.y * m_tSpriteDesc.vTileSize.y) / m_tSpriteDesc.vTextureSize.y };
+	//if (SPRITE == m_tParticleDesc.eType)
+	//{
+	//	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
+	//	vCamDirection = XMVector4Normalize(vCamDirection);
+	//	_float4 vCamDirectionFloat4 = {};
+	//	XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
 
-		m_tParticleDesc.vUV_Scale = { (_float)m_tSpriteDesc.vTileSize.x / m_tSpriteDesc.vTextureSize.x
-								, (_float)m_tSpriteDesc.vTileSize.y / m_tSpriteDesc.vTextureSize.y };
+	//	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat4, sizeof(_float4))))
+	//		return E_FAIL;
 
 
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tParticleDesc.vUV_Offset, sizeof(_float2))))
-			return E_FAIL;
+	//	m_tParticleDesc.vUV_Offset = { (_float)(m_tSpriteDesc.vUV_CurTileIndex.x * m_tSpriteDesc.vTileSize.x) / m_tSpriteDesc.vTextureSize.x
+	//					, (_float)(m_tSpriteDesc.vUV_CurTileIndex.y * m_tSpriteDesc.vTileSize.y) / m_tSpriteDesc.vTextureSize.y };
 
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tParticleDesc.vUV_Scale, sizeof(_float2))))
-			return E_FAIL;
-	}
+	//	m_tParticleDesc.vUV_Scale = { (_float)m_tSpriteDesc.vTileSize.x / m_tSpriteDesc.vTextureSize.x
+	//							, (_float)m_tSpriteDesc.vTileSize.y / m_tSpriteDesc.vTextureSize.y };
+
+
+	//	if (FAILED(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tParticleDesc.vUV_Offset, sizeof(_float2))))
+	//		return E_FAIL;
+
+	//	if (FAILED(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tParticleDesc.vUV_Scale, sizeof(_float2))))
+	//		return E_FAIL;
+	//}
 
 
 

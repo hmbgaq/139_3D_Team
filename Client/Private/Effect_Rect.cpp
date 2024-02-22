@@ -278,7 +278,7 @@ HRESULT CEffect_Rect::Bind_ShaderResources()
 	}
 
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tRectDesc.vColor_Clip.z, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tRectDesc.vColor_Clip.w, sizeof(_float))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))

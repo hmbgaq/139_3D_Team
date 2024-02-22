@@ -11,18 +11,7 @@ vector			g_vCamDirection;
 
 float			g_fDegree;
 
-
-cbuffer FX_Variables
-{
-    float2	vUV_Offset		= float2(0.f, 0.f);
-    bool	bUV_Wave		= false;
-    float	fUV_WaveSpeed	= 1.f;
-    float2	vUV_TileCount	= float2(1.f, 1.f);
-    float2	vUV_TileIndex	= float2(0.f, 0.f);
-    float4	vColor_Offset	= float4(0.f, 0.f, 0.f, 0.f);
-    float4	vColor_Clip		= float4(0.f, 0.f, 0.f, 0.f);
-    float4	vColor_Mul		= float4(1.f, 1.f, 1.f, 1.f);
-};
+float			g_DiscardValue;
 
 
 /* Custom Function */
@@ -157,14 +146,32 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
     Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-	//float4	vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
 
-    if (Out.vColor.a < 0.5f)
+    if (Out.vColor.a < g_DiscardValue)
         discard;
 
     Out.vColor.rgb *= In.vColor.rgb;
 
     Out.vColor.a = In.vColor.a /** vAlphaColor*/;
+
+	return Out;
+}
+
+
+PS_OUT PS_MAIN_MASKING(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
+	Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+	float4	vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
+
+	if (Out.vColor.a < g_DiscardValue)
+		discard;
+
+	Out.vColor.rgb *= In.vColor.rgb;
+
+	Out.vColor.a = In.vColor.a * vAlphaColor;
 
 	return Out;
 }
@@ -196,7 +203,7 @@ technique11 DefaultTechnique
 		GeometryShader = compile gs_5_0 GS_MAIN();
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN_MASKING();
 	}
 
 	pass Bloom  // 2

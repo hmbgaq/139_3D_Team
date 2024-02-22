@@ -15,14 +15,10 @@ class CEffect_Particle final : public CEffect_Void
 {
 public:
 	enum TYPE { SINGLE, SPRITE, TEXTURE_TYPE_END };
-	enum TYPE_ACTION { SPHERE, SPARK, FALL, RISE, BLINK, TORNADO, TYPE_ACTION_END };
-	enum TYPE_FADE { FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
 
 	typedef struct tagParticleDesc : public CEffect_Void::EFFECTVOID_DESC
 	{
-		TYPE		eType			= { SINGLE };
-		TYPE_ACTION	eType_Action	= { SPHERE };
-		TYPE_FADE	eType_Fade		= { FADE_NONE };
+		TYPE	eType			= { SINGLE };
 
 
 	}PARTICLE_DESC;
@@ -65,7 +61,8 @@ private:
 
 private:
 	PARTICLE_DESC				m_tParticleDesc = {};
-	UVSPRITE_DESC				m_tSpriteDesc = {};
+	//CVIBuffer_Particle_Point::PARTICLE_POINT_DESC 
+	//UVSPRITE_DESC				m_tSpriteDesc = {};
 
 
 private:
