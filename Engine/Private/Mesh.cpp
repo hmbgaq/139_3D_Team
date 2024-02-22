@@ -13,6 +13,7 @@ CMesh::CMesh(const CMesh & rhs)
 {
 }
 
+
 HRESULT CMesh::Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones)
 {
 	m_iMaterialIndex = pAIMesh.Get_MaterialIndex();
@@ -101,6 +102,8 @@ HRESULT CMesh::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName,
 	return pShader->Bind_Matrices(pConstantName, _BoneMatrices, 800);
 
 }
+
+
 
 #ifdef _DEBUG
 _bool CMesh::Picking(RAY ray, _float3* out)

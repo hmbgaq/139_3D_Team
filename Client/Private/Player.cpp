@@ -59,7 +59,7 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	CBody_Player*		pBody = dynamic_cast<CBody_Player*>(Find_PartObject(TEXT("Part_Body")));
 	Safe_AddRef(pBody);
-	if (m_pGameInstance->Get_NextLevel() != 5)
+	if (m_pGameInstance->Get_NextLevel() != _uint(LEVEL_TOOL))
 	{
 		if (GetKeyState(VK_DOWN) & 0x8000)
 		{
@@ -74,6 +74,28 @@ void CPlayer::Tick(_float fTimeDelta)
 			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 		}
 		if (GetKeyState(VK_UP) & 0x8000)
+		{
+			m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
+			pBody->SetUp_Animation(4);
+		}
+		else
+			pBody->SetUp_Animation(3);
+	}
+	else if (m_pGameInstance->Get_NextLevel() == _uint(LEVEL_TOOL))
+	{
+		if (m_pGameInstance->Key_Pressing(DIK_DOWNARROW))
+		{
+			m_pTransformCom->Go_Backward(fTimeDelta);
+		}
+		if (m_pGameInstance->Key_Pressing(DIK_LEFTARROW))
+		{
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * -1.f);
+		}
+		if (m_pGameInstance->Key_Pressing(DIK_RIGHTARROW))
+		{
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
+		}
+		if (m_pGameInstance->Key_Pressing(DIK_DOWNARROW))
 		{
 			m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
 			pBody->SetUp_Animation(4);
@@ -101,8 +123,6 @@ void CPlayer::Tick(_float fTimeDelta)
 	
 		m_pGameInstance->Add_Event(pEvent);
 	}
-
-	
 
 
 }

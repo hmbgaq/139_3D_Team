@@ -4,12 +4,13 @@
 
 BEGIN(Engine)
 class CGameObject;
+class CCamera;
 END
 
 BEGIN(Client)
 class CEnvironment_Instance;
 class CEnvironment_Object;
-
+class CPlayer;
 
 class CWindow_MapTool final : public CImgui_Window
 {
@@ -52,11 +53,13 @@ private:
 	void			GroundTab_Function();
 	void			InteractTab_Function();
 	void			EnvironmentTab_Function();
+	void			CameraWindow_Function();
 
 private:
 	void			MouseInfo_Window(_float fTimeDelta);
-
 	void			FieldWindowMenu();
+	void			IsCreatePlayer_ReadyCamara(); 
+
 	
 	
 private: //! For. Create_Function
@@ -83,6 +86,8 @@ private:
 	MODE_TYPE		m_eModeType = MODE_TYPE::MODE_END;
 	PICKING_TYPE	m_ePickingType = PICKING_TYPE::PICKING_END;
 	PICKING_MODE	m_ePickingMode = PICKING_MODE::MOUSE_PRESSING;
+
+	CPlayer*		m_pPlayer = nullptr;
 
 
 private:
@@ -150,6 +155,10 @@ private: //! For. CreateInstance
 	
 	vector<string>					m_vecInstanceInfoTag = {}; //! m_vecPreViewInstance를 픽킹해서 인스턴싱 디스크립션을 채워 준후 m_vecCreateInstance를 만들어주자
 	_int							m_iInstanceInfoTagIndex = 0;
+
+private:
+	vector<CCamera*>				m_vecCameras;
+	_bool							m_bCreateCamera = false;
 
 public:
 	static CWindow_MapTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

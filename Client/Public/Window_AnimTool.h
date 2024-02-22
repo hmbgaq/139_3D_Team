@@ -36,6 +36,7 @@ public:
 public:
 	_float			Get_Speed() const { return m_fSpeed; }
 	_bool			Is_Stop() const { return m_bStop; }
+	_bool			Is_CreatePlayer() const { return m_bCreatePlayer;}
 
 public:
 	void			Call_UpdatePreViewModel();
@@ -157,6 +158,10 @@ public:
 	_bool					m_bCreatWeaponCollider = false;
 	_bool					m_bDeleteWeaponCollider = false;
 	_bool					m_bColliderWeaponSize = false;
+
+private:
+	_bool					m_bCreatePlayer = false;
+
 public:
 	static CWindow_AnimTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

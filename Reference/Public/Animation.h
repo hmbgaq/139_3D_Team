@@ -16,11 +16,11 @@ private:
 
 public:
 	HRESULT Initialize(CMyAIAnimation pAIAnimation, const CModel::BONES& Bones);
-	_bool Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones);
+	_bool	Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones);
 
 public:
 	vector<class CChannel*>* Get_Channels() { return &m_Channels; };
-	CChannel* Get_Channel_By_BoneIndex(_uint _iBoneIndex, _uint& _iChannelIndex);
+	CChannel*	Get_Channel_By_BoneIndex(_uint _iBoneIndex, _uint& _iChannelIndex);
 	void	Reset_Animation(const CModel::BONES& Bones);
 
 	_float	Get_TrackPosition() { return m_fTrackPosition; };
@@ -67,9 +67,13 @@ public:
 	}
 
 	_float Get_Duration() { return m_fDuration; }
+
+public: //!For. AnimInstance
+	_float4x4*				Get_TransformationBoneMatrices(_float fTrackPosition, _float4x4* pMatrix);
+
 private:
 	_char					m_szName[MAX_PATH] = "";
-	_float					m_fDuration = { 0.0f }; /* 내 애니메이션을 전체 재생하기위한 전체 길이. */
+	_float					m_fDuration = { 0.0f };		/* 내 애니메이션을 전체 재생하기위한 전체 길이. */
 	_float					m_fTickPerSecond = { 0.f }; /* 애니메이션의 재생 속도 : m_TickPerSecond * fTimeDelta */
 	_float					m_fTrackPosition = { 0.f }; /* 현재 재생되고 있는 위치. */
 
@@ -87,6 +91,8 @@ private:
 
 	_float3					m_PrevPos = { 0.f, 0.f, 0.f };
 	_float					m_fStiffnessRate = { 1.f };
+
+	/*! "Stiffness Rate"은 물리학이나 엔지니어링 분야에서 사용되는 용어로, 물체가 변형될 때 얼마나 강하게 반발하는지를 나타내는 지표입니다. 일반적으로 강도와 관련이 있으며, 변형된 물체의 탄성을 측정하는 데 사용	*/
 
 public:
 	static CAnimation* Create(CMyAIAnimation pAIAnimation, const CModel::BONES& Bones);

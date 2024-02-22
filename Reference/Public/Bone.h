@@ -19,6 +19,8 @@ public:
 		return XMLoadFloat4x4(&m_CombinedTransformationMatrix);
 	}
 
+	_float4x4& Get_CombinedTransformationFloat4x4()  { return m_CombinedTransformationMatrix; }
+
 public:
 	void Set_TransformationMatrix(_fmatrix TransformationMatrix) {
 		XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix);

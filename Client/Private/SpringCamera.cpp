@@ -43,7 +43,12 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 		ActualPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	}
-	ShowCursor(FALSE);
+
+	if (m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_TOOL)
+		ShowCursor(true);
+	else 
+		ShowCursor(false);
+
 	return S_OK;
 }
 
@@ -71,7 +76,7 @@ void CSpringCamera::Tick(_float fTimeDelta)
 
 	//}
 	//else 
-	{
+	//{
 
 		/*if (0.7 - fTimeDelta > hDist)
 		{
@@ -91,6 +96,18 @@ void CSpringCamera::Tick(_float fTimeDelta)
 			vDist = 0.7f;
 		}*/
 
+		//m_pTransformCom->Look_At(m_ptarget->Get_State(CTransform::STATE::STATE_POSITION));
+		//CameraRotation(fTimeDelta);
+		//
+		////Player가 앞키를 누르면 카메라 회전했던 방향쪽에서 회전값을 받아서 카메라가 바라보고 있는 방향으로 플레이어도 쳐다 보게 만듬 
+		//if (true == m_pPlayer->Is_Rotate_In_CameraDir())
+		//{
+		//	RotatePlayer();
+		//}
+	//}
+
+	if (true == m_bEnable)
+	{
 		m_pTransformCom->Look_At(m_ptarget->Get_State(CTransform::STATE::STATE_POSITION));
 		CameraRotation(fTimeDelta);
 
@@ -99,38 +116,38 @@ void CSpringCamera::Tick(_float fTimeDelta)
 		{
 			RotatePlayer();
 		}
-	}
 
-
-
-
-	if (m_pGameInstance->Key_Down(DIK_TAB))
-	{
-		if (m_bFix)
+		if (m_pGameInstance->Key_Down(DIK_TAB))
 		{
-			m_bFix = false;
-			m_bCheck = false;
+			if (m_bFix)
+			{
+				m_bFix = false;
+				m_bCheck = false;
+			}
+			else
+			{
+				m_bFix = true;
+				m_bCheck = true;
+			}
 		}
+		if (m_bCheck == false)
+			ShowCursor(FALSE);
 		else
+			ShowCursor(TRUE);
+
+
+		if (false == m_bFix)
+			return;
+		if (true == m_bFix)
 		{
-			m_bFix = true;
-			m_bCheck = true;
+			Mouse_Fix();
 		}
-	}
-	if (m_bCheck == false)
-		ShowCursor(FALSE);
-	else
-		ShowCursor(TRUE);
 
-
-	if (false == m_bFix)
-		return;
-	if (true == m_bFix)
-	{
-		Mouse_Fix();
+		__super::Tick(fTimeDelta);
 	}
 
-	__super::Tick(fTimeDelta);
+
+	
 }
 
 void CSpringCamera::Late_Tick(_float fTimeDelta)

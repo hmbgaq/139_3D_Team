@@ -71,7 +71,12 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 	tDesc.fSpeedPerSec = 15.f;
 	tDesc.fRotationPerSec = XMConvertToRadians(180.0f);
 
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &tDesc));
+	CCamera* pDynamicCam = dynamic_cast<CCamera*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &tDesc));
+	
+	if(pDynamicCam == nullptr)
+		return E_FAIL;
+
+	pDynamicCam->Set_Enable(true);
 
 	return S_OK;
 }

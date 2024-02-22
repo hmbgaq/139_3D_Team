@@ -8,12 +8,15 @@
 #include "Field.h"
 
 #include "LandObject.h"
+#include "Player.h"
 
 #include "../Imgui/ImGuizmo/ImGuizmo.h"
 #include "../Imgui/ImGuizmo/ImCurveEdit.h"
 #include "../Imgui/ImGuizmo/GraphEditor.h"
 #include "../Imgui/ImGuizmo/ImSequencer.h"
 #include "../Imgui/ImGuizmo/ImZoomSlider.h"
+#include "Camera.h"
+#include "SpringCamera.h"
 
 static ImGuizmo::OPERATION InstanceCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 static ImGuizmo::MODE	   InstanceCurrentGizmoMode(ImGuizmo::WORLD);
@@ -35,6 +38,15 @@ HRESULT CWindow_MapTool::Initialize()
 
 	//! Loader에서 푸시백 해놓은 Imgui_Manager의 모델태그 벡터를 받아오자.
 	FAILED_CHECK(Ready_ModelTags());
+	
+	
+	
+
+	
+
+	//m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
+	//
+	//Safe_AddRef(m_pPlayer);
 
 	
 
@@ -53,7 +65,7 @@ HRESULT CWindow_MapTool::Initialize()
 
 void CWindow_MapTool::Tick(_float fTimeDelta)
 {
-
+	
 
 	__super::Tick(fTimeDelta);
 
@@ -79,6 +91,8 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
 	
 
+
+
 	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 80), ImGuiChildFlags_Border, WindowFlag);
 	
 	ImGui::SeparatorText(u8"세이브 / 로드");
@@ -96,9 +110,8 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 
 	ImGui::EndChild();
 
-	
 
-	
+	CameraWindow_Function();
 
 	if (ImGui::BeginTabBar(u8"오브젝트 타입", tab_bar_flags))
 	{
@@ -141,6 +154,10 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 
 	__super::End();
 
+	if (false == m_bCreateCamera)
+	{
+		IsCreatePlayer_ReadyCamara();
+	}
 
 	
 }
@@ -999,6 +1016,74 @@ void CWindow_MapTool::EnvironmentTab_Function()
 	}
 }
 
+void CWindow_MapTool::CameraWindow_Function()
+{
+	ImGui::Begin(u8"카메라 탭");
+	
+	if (false == m_bCreateCamera)
+	{
+		ImGui::Text(u8" 플레이어가 생성되지 않았습니다. ");
+		ImGui::Text(u8" 애니메이션툴에서 플레이어를 생성해주세요. ");
+	}
+	else
+	{
+		ImGui::SeparatorText(u8"카메라 타입");
+		{
+
+			static _int iCameraType = 0;
+			const char* CameraType[2] = { u8"프리 카메라", u8"스프링 카메라" };
+
+			for (_uint i = 0; i < IM_ARRAYSIZE(CameraType); ++i)
+			{
+				if (i > 0) { ImGui::SameLine(); }
+				
+				if (ImGui::RadioButton(CameraType[i], &iCameraType, i))
+				{
+					_int iCameraCount = m_vecCameras.size();
+
+					for (_int i = 0; i < iCameraCount; ++i)
+					{
+						if (i == iCameraType)
+							m_vecCameras[i]->Set_Enable(true);
+						else
+							m_vecCameras[i]->Set_Enable(false);
+						
+					}
+					
+				}
+			}
+			
+			ImGui::Text(u8"키보드 PAGE UP 키누를시 모드 전환입니다.");
+			
+			if (m_pGameInstance->Key_Down(DIK_PGUP))
+			{
+				
+					if(IM_ARRAYSIZE(CameraType) > iCameraType + 1)
+						iCameraType = iCameraType + 1;
+					else
+						iCameraType = 0;
+
+					_int iCameraCount = m_vecCameras.size();
+
+					for (_int i = 0; i < iCameraCount; ++i)
+					{
+						if (i == iCameraType)
+							m_vecCameras[i]->Set_Enable(true);
+						else
+							m_vecCameras[i]->Set_Enable(false);
+
+					}
+			}
+
+		}ImGui::NewLine();
+	}
+	
+
+
+
+	ImGui::End();
+}
+
 
 
 void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
@@ -1104,6 +1189,40 @@ void CWindow_MapTool::FieldWindowMenu()
 
 	MouseInfo_Window(m_fTimeDelta);
 
+}
+
+void CWindow_MapTool::IsCreatePlayer_ReadyCamara()
+{
+	if (nullptr != m_pGameInstance->Get_Player())
+	{
+		CCamera* pFreeCamera = dynamic_cast<CCamera*>(m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, L"Layer_Camera"));
+
+		m_vecCameras.push_back(pFreeCamera);
+
+		CSpringCamera::SPRING_CAMERA_DESC SpringDesc = {};
+
+		SpringDesc.fMouseSensor = 0.05f;
+		SpringDesc.fFovy = XMConvertToRadians(60.f);
+		SpringDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+		SpringDesc.fNear = 0.1f;
+		SpringDesc.fFar = m_pGameInstance->Get_CamFar();
+		SpringDesc.fSpeedPerSec = 20.f;
+		SpringDesc.fRotationPerSec = XMConvertToRadians(180.f);
+		SpringDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
+		SpringDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+
+		CCamera* pSpringCamera = dynamic_cast<CCamera*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Camera", L"Prototype_GameObject_Camera_Spring", &SpringDesc));
+		pSpringCamera->Set_Enable(false);
+
+		m_vecCameras.push_back(pSpringCamera);
+
+		
+
+
+		m_bCreateCamera = true;
+	}
+
+	return;
 }
 
 
@@ -1528,4 +1647,9 @@ void CWindow_MapTool::Free()
 
 	if(m_pField != nullptr)
 		Safe_Release(m_pField);
+
+	if(m_pPlayer != nullptr)
+		Safe_Release(m_pPlayer);
+
+
 }
