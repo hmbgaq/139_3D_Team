@@ -103,8 +103,9 @@ struct PS_OUT
 	float4	vDiffuse        : SV_TARGET0;
 	float4	vNormal         : SV_TARGET1;
     float4  vDepth          : SV_TARGET2;
-    float4  vViewNormal     : SV_TARGET3;
-    float4  vBloom          : SV_TARGET4;
+    float4  vORM            : SV_TARGET3;
+    float4  vViewNormal     : SV_TARGET4;
+    float4  vBloom          : SV_TARGET5;
 };
 
 /* ------------------- Base Pixel Shader (0) -------------------*/
@@ -124,8 +125,8 @@ PS_OUT PS_MAIN(PS_IN In)
    // Out.vBloom = float4(1.0f, 0.f, 0.f, 1.0f);
     //Out.vViewNormal = Out.vNormal;
     //Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
-
 	return Out;
 }
 
