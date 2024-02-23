@@ -83,7 +83,33 @@ public: /* ==================== List List List List List List List List List Lis
 	void						Class_List();
 	void						Object_List();
 
+#pragma region	Parent
+public:							/* Setting */
+	void						Setting_Parent();
+public:						    /* Create/Delete */
+	HRESULT						Create_Parent(CUI::UI_DESC pUIDesc);
+	void						Delete_Parent();
+#pragma endregion
 
+	
+#pragma region	Child
+public:							/* Setting */
+	void						Setting_Child();
+public:							/* Create/Delete */
+	HRESULT						Create_Child(CUI::UI_DESC pUIDesc);
+	void						Delete_Child(_float fTimeDelta);
+public:							/* Add */
+	void						Add_ParentList(CUI::UI_DESC tIn_UI_Desc);
+	void						Add_ParentIndexNumber(PATHINFO& UI_Info);
+#pragma endregion
+
+public:
+	void						Current_Info();
+	void						Create_TargetTexture();
+
+public: /* Save/Load */
+	virtual	HRESULT				Save_Function(string strPath, string strFileName) override;
+	virtual HRESULT				Load_Function(string strPath, string strFileName) override;
 
 public: /* ================= Function ================= */
 	// string타입을 받는 벡터 컨테이너를 char*타입을 받는 벡터 컨테이너로 변환 해주는 함수
@@ -109,23 +135,18 @@ public: /* ================= Function ================= */
 
 
 public:
-	// UI 설정
-	void						UI2D_Setting(_float fTimeDelta);
-	HRESULT						UI2D_Create(CUI::UI_DESC pUIDesc);
-	HRESULT						Parent_Create(CUI::UI_DESC pUIDesc);
-	HRESULT						Child_Create(CUI::UI_DESC pUIDesc);
-	void						UI2D_Delete(_float fTimeDelta);
-	void						AddIndexNumber(PATHINFO& str);
-	void						AddParentIndexNumber(PATHINFO& UI_Info);
-	void						Add_ParentList(CUI::UI_DESC tIn_UI_Desc);
-	void						Add_ObjectList(CUI::UI_DESC tIn_UI_Desc);
-	void						Create_TargetTexture();
+	/* Child */
 
-public: /* Save/Load */
-	void						Save_Desc();
-	HRESULT						Load_Desc();
-	virtual	HRESULT				Save_Function(string strPath, string strFileName) override;
-	virtual HRESULT				Load_Function(string strPath, string strFileName) override;
+
+
+	void						UI2D_Setting(_float fTimeDelta);
+
+	void						AddIndexNumber(PATHINFO& str);
+
+	void						Add_ObjectList(CUI::UI_DESC tIn_UI_Desc);
+
+
+
 	void						Load_Paths();
 
 public: /* Image */
@@ -144,7 +165,7 @@ private: /* Member */
 private: /* Parent */
 	void						Create_Add_UIParts(CUI::UI_DESC tUIDesc);
 	void						Add_UIParts(CUI* pUI);
-	void						Delete_UIParts();
+
 
 
 private: /* ==================== Mouse ==================== */
