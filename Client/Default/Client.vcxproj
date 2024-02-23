@@ -265,6 +265,7 @@
     <ClInclude Include="..\Public\Window_AnimTool.h" />
     <ClInclude Include="..\Public\Window_EffectTool.h" />
     <ClInclude Include="..\Public\Window_MapTool.h" />
+    <ClInclude Include="..\Public\Window_ShaderTool.h" />
     <ClInclude Include="..\Public\Window_UITool.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -350,6 +351,7 @@
     <ClCompile Include="..\Private\Window_AnimTool.cpp" />
     <ClCompile Include="..\Private\Window_EffectTool.cpp" />
     <ClCompile Include="..\Private\Window_MapTool.cpp" />
+    <ClCompile Include="..\Private\Window_ShaderTool.cpp" />
     <ClCompile Include="..\Private\Window_UITool.cpp" />
     <ClCompile Include="..\Private\Actor.cpp" />
     <ClCompile Include="Client.cpp" />

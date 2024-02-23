@@ -78,6 +78,7 @@ HRESULT CUI_Player_Skill_Frame::Render()
 HRESULT CUI_Player_Skill_Frame::Ready_Components()
 {
 	if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+		return E_FAIL;
 
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),

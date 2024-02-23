@@ -69,7 +69,7 @@ void CUI::Tick(_float fTimeDelta)
 		UI_DisappearTick(fTimeDelta);
 		break;
 	}
-
+	
 	Check_RectPos();
 	Picking_UI();
 }

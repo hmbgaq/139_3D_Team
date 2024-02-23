@@ -40,6 +40,13 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_DebugRender()); 
 #endif
 
+	m_CurrFog.fFogStartDepth		= 90.f;
+	m_CurrFog.fFogStartDistance		= 8.f;
+	m_CurrFog.fFogDistanceValue		= 25.f;
+	m_CurrFog.fFogHeightValue		= 50.f;
+	m_CurrFog.fFogDistanceDensity	= 0.4f;
+	m_CurrFog.fFogHeightDensity		= 0.3f;
+
 	return S_OK;
 }
 
@@ -50,7 +57,9 @@ HRESULT CRenderer::Create_Buffer()
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	NULL_CHECK_RETURN(m_pVIBuffer, E_FAIL);
 
-	//m_pPerlinNoiseTextureCom = CTexture::Create()
+	m_pPerlinNoiseTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/T_Perlin_Noise_M.png"));
+	NULL_CHECK_RETURN(m_pPerlinNoiseTextureCom, E_FAIL);
+
 	return S_OK;
 }
 
@@ -303,6 +312,7 @@ HRESULT CRenderer::Control_HotKey()
 		cout << " DIK_4 : HDR ON/OFF " << endl;
 		cout << " DIK_5 : FXAA ON/OFF " << endl;
 		cout << " DIK_6 : RimLight ON/OFF " << endl;
+		cout << " DIK_7 : Fog ON/OFF " << endl;
 		cout << " DIK_8 : Bloom Color Increase " << endl;
 		cout << " DIK_9 : Dont use !! Renderpass BloomBlur Test " << endl;
 
@@ -338,6 +348,8 @@ HRESULT CRenderer::Control_HotKey()
 		m_bHDR_Active = !m_bHDR_Active;
 	if (m_pGameInstance->Key_Down(DIK_5))
 		m_bFXAA_Active = !m_bFXAA_Active;
+	if (m_pGameInstance->Key_Down(DIK_7))
+		m_bFog_Active = !m_bFog_Active;
 
 	return S_OK;
 }
@@ -769,14 +781,28 @@ HRESULT CRenderer::Render_Deferred()
 	
 	_float			CamFar = m_pGameInstance->Get_CamFar();
 	_float4x4		ViewMatrix, ProjMatrix;
+	_float4			CamPos = m_pGameInstance->Get_CamPosition();
 
 	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinsizeX / g_iWinsizeY, 0.1f, CamFar));
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_LightViewMatrix", &ViewMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_LightProjMatrix", &ProjMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_CamFar", &CamFar, sizeof(_float)));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_CamFar", &CamFar, sizeof(_float))); 
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_vCamPosition", &CamPos, sizeof(_float4)));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bFog_Active", &m_bFog_Active, sizeof(_bool)));
 
+	if(true == m_bFog_Active)
+	{
+		/* test fog */
+		FAILED_CHECK(m_pPerlinNoiseTextureCom->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_PerlinNoiseTexture"));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogStartDepth",		&m_CurrFog.fFogStartDepth, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogStartDistance",	&m_CurrFog.fFogStartDistance, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogDistanceValue",	&m_CurrFog.fFogDistanceValue, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogHeightValue",	&m_CurrFog.fFogHeightValue, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fDistanceDensity",	&m_CurrFog.fFogDistanceDensity, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fHeightDensity",		&m_CurrFog.fFogHeightDensity, sizeof(_float)));
+	}
 	/* MRT_GameObject */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Priority"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_PriorityTarget"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DiffuseTexture"));

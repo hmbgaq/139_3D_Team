@@ -78,6 +78,7 @@ HRESULT CUI_Player_HPBar::Render()
 HRESULT CUI_Player_HPBar::Ready_Components()
 {
 	if(FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+		return E_FAIL;
 
 	//! For.Com_Texture1 // Èò»ö ¹Ù
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_damagel"),

@@ -179,7 +179,7 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTX_PARTICLE_POINT;
 
-	typedef struct 
+	typedef struct
 	{
 		XMFLOAT4		vRight, vUp, vLook, vPosition;
 		XMFLOAT4		vColor;
@@ -232,7 +232,7 @@ namespace Engine
 	}VTXFIELD;
 
 	template <typename T>
-	constexpr const T& clamp(const T& value, const T& start, const T& end) 
+	constexpr const T& clamp(const T& value, const T& start, const T& end)
 	{
 		return (value < start) ? start : (value > end) ? end : value;
 	}
@@ -245,7 +245,7 @@ namespace Engine
 	}
 
 #pragma endregion
-	
+
 
 #pragma region 구조체
 
@@ -288,7 +288,7 @@ namespace Engine
 	{
 		const _uint			iMaxInstanceCount = 100;
 		_uint				iNumInstance = { 0 };
-		ID3D11Texture2D*	pAnimInstanceTexture = { nullptr };
+		ID3D11Texture2D* pAnimInstanceTexture = { nullptr };
 		//ID3D11ShaderResourceView* pAnimSRV = nullptr;
 	}ANIM_INSTANCE_INFO_DESC;
 
@@ -313,12 +313,12 @@ namespace Engine
 		_uint						iSizePerSecond = 0;
 		//class CShader*				pInstanceShader =	{ nullptr };
 
-		ID3D11ShaderResourceView*	pInstanceSRV = {nullptr};
-		ID3D11Texture2D*			pInstanceTexture =	{ nullptr };
-		BYTE*						pByte = { nullptr };
-		_float4x4*					pMatrix = { nullptr };
+		ID3D11ShaderResourceView* pInstanceSRV = { nullptr };
+		ID3D11Texture2D* pInstanceTexture = { nullptr };
+		BYTE* pByte = { nullptr };
+		_float4x4* pMatrix = { nullptr };
 
-		 AnimInstanceDesc() {};
+		AnimInstanceDesc() {};
 		~AnimInstanceDesc();
 
 	}ANIMMODEL_INSTANCE_DESC;
@@ -338,6 +338,57 @@ namespace Engine
 
 #pragma endregion 구조체
 
+#pragma region Shader Control Struct 
+	/* 각자 구분용 */
+	typedef struct ENGINE_DLL tagHBAO_Plus_Desc
+	{
+		_float fRadius = 1.f;
+		_float fBias = 0.1f;
+		_float fPowerExponent = 2.f;
+		_float fBlur_Sharpness = 16.f;
+		_float fLargeScaleAO = 1.f;
+		_float fSmallScaleAO = 1.f;
+
+	}HBAO_PLUS_DESC;
+
+	typedef struct ENGINE_DLL tagFogDesc
+	{
+		_float fFogStartDepth = 100.f;
+		_float fFogStartDistance = 10.f;
+		_float fFogDistanceValue = 30.f;
+		_float fFogHeightValue = 50.f;
+		_float fFogDistanceDensity = 0.04f;
+		_float fFogHeightDensity = 0.04f;
+
+		_float2 fUVAcc = { 0.f, 0.f };
+	} FOG_DESC;
+
+	typedef struct ENGINE_DLL tagHDRDesc
+	{
+		_float fmax_white = 0.2f;
+	}HDR_DESC;
+
+	typedef struct ENGINE_DLL tagScreenDesc
+	{
+		_float fFinal_Saturation;
+		_float fFinal_Brightness;
+	}SCREEN_DESC;
+
+	/* 전체 컨트롤 */
+	typedef struct ENGINE_DLL tagLevelShader
+	{
+		/* 활성여부 */
+		_bool bHBAO_Plus_Active = { false };
+		_bool bFog_Active = { false };
+		_bool bHDR_Active = { false };
+		_bool bFXAA_Active = { false };
+
+		HBAO_PLUS_DESC	tHBAO_Plus_Desc;
+		FOG_DESC		tFog_Desc;
+		HDR_DESC		tHDR_Desc;
+		SCREEN_DESC		tScreen_Desc;
+	}LEVEL_SHADER_DESC;
+#pragma endregion
 }
 
 #endif // Engine_Struct_h__

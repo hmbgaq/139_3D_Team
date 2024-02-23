@@ -28,25 +28,7 @@ public:
 
 	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, SHADER_FINAL, SHADER_DEFERRED_UI, SHADER_END };
 	
-	struct QuadVertex // ssao 
-	{
-		_float3 pos;
-		_float3 normal;
-		_float2 tex;
-	};
 
-	typedef struct tagXMCOLOR
-	{
-		union {
-			struct {
-				uint8_t b;
-				uint8_t g;
-				uint8_t r;
-				uint8_t a;
-			};
-			uint32_t c;
-		};
-	}XMCOLOR;
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -85,7 +67,6 @@ private:
 	/* Pre-Post Processing */
 	HRESULT Render_OutLine_PostProcessing();
 	HRESULT Render_HBAO_PLUS();
-	//HRESULT Render_HBAO_Plus();
 	HRESULT Render_Bloom();
 	HRESULT Render_Deferred();
 
@@ -135,6 +116,7 @@ private:
 
 private: /* !UI */
 	HRESULT Ready_UI_Target(D3D11_VIEWPORT Viewport);
+
 #ifdef _DEBUG
 private:
 	HRESULT Render_Debug();
@@ -149,12 +131,16 @@ private:
 	_bool						m_bPBR_Active			= { false };
 	_bool						m_bFXAA_Active			= { false };
 	_bool						m_bHDR_Active			= { false };
+	_bool						m_bFog_Active			= { false };
+	_bool						m_bRim = { false };
 
 public:
 	void Set_SSAO(_bool _ssao_active)		{ m_bSSAO_Active = _ssao_active; } /* 외곽선 옵션조절 */
 	void Set_Bloom(_bool _bloom_active)		{ m_bBloom_Active = _bloom_active; }
 	void Set_OutLine(_bool _Outline_active) { m_bOutline_Active = _Outline_active; }
-
+	void Set_HDR(_bool _HDR_active)			{ m_bHDR_Active = _HDR_active; }
+	void Set_FXAA(_bool _FXAA_active)		{ m_bFXAA_Active = _FXAA_active; }
+	void Set_RimLight(_bool _RimLight) { m_bRim = _RimLight;  }
 private:
 	/* BLUR */
 	HRESULT						Render_Blur_DownSample(const wstring& strStartTargetTag);
@@ -176,6 +162,9 @@ private:
 
 	/* HDR */
 	_float						m_max_white = { 0.3f };
+
+	/* Fog */ 
+	FOG_DESC					m_CurrFog = {};
 
 private:
 	class CShader*					m_pShader[SHADER_TYPE::SHADER_END]	= { nullptr };

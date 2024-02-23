@@ -1,4 +1,6 @@
 #include "Shader_Defines.hlsli"
+//#include "HeightFogUsage.hlsl"
+//#pragma multi_compile _ HF_FOG_ENABLED HF_LIGHT_ATTEN
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_ProjMatrixInv, g_ViewMatrixInv;
@@ -34,26 +36,28 @@ Texture2D g_ORMTexture;
 Texture2D g_SSAOTexture;
 Texture2D g_BloomTarget;
 Texture2D g_OutlineTarget;
-Texture2D g_PerlinNoiseTextures;
+Texture2D g_PerlinNoiseTexture;
 
 /* 활성 여부 */ 
 bool g_bSSAO_Active;
 bool g_bBloom_Active;
 bool g_Outline_Active;
 bool g_PBR_Active;
+bool g_bFog_Active;
 
 
 /* 안개 */
-float4 g_vFogColor = { 0.f, 0.635f, 1.f, 1.f };
-float2 g_fFogStartEnd = { 300.f, 600.f };
-float g_fFogStartDepth = 0.f;
-float g_fFogStartDistance = 0.f;
-float g_fFogDistanceValue = 0.f;
-float g_fFogHeightValue = 0.f;
-float g_fFogLimit = -1.f;
-float2 g_vFogUVAcc = { 0.f, 0.f };
-float g_fDistanceDensity = 0.f;
-float g_fHeightDensity = 0.f;
+float4 g_vFogColor              = { 0.5f, 0.5f, 0.5f, 0.2f };
+float2  g_fFogStartEnd          = { 300.f, 600.f };
+float   g_fFogLimit             = -1.f;
+float2  g_vFogUVAcc             = { 0.f, 0.f };
+
+float   g_fFogStartDepth        = 0.f;
+float   g_fFogStartDistance     = 0.f;
+float   g_fFogDistanceValue     = 0.f;
+float   g_fFogHeightValue       = 0.f;
+float   g_fDistanceDensity      = 0.f;
+float   g_fHeightDensity        = 0.f;
 
 /* ------------------ Function ------------------ */ 
 
@@ -320,30 +324,42 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 	/* 월드 상의 위치를 구하자. */
 	/* 로컬위치 * 월드행렬 */
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-         
-    //float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
-    //vTexCoord.x += g_vFogUVAcc.x;
-    //vTexCoord.y += g_vFogUVAcc.y;
-    //
-    //float fNoise = g_PerlinNoiseTextures.Sample(LinearSampler, vTexCoord).r;
-    //
-    //float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise);
-    //
-    //Out.vColor = vector(vFinalColor.rgb, 1.f);
+        
+    if (true == g_bFog_Active )
+    {
+        float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
+        vTexCoord.x += g_vFogUVAcc.x;
+        vTexCoord.y += g_vFogUVAcc.y;
+    
+        float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
+    
+        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise);
+    
+        Out.vColor = vector(vFinalColor.rgb, 1.f);
+    }
+    else if (false == g_bFog_Active)
+    {
+        vWorldPos = mul(vWorldPos, g_LightViewMatrix);
+        vWorldPos = mul(vWorldPos, g_LightProjMatrix);
+   
+        float2 vUV = (float2) 0.0f;
+   
+        vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
+        vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
+   
+        float4 vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
+   
+        if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
+            Out.vColor = Out.vColor * 0.8f;
 	
-    vWorldPos = mul(vWorldPos, g_LightViewMatrix);
-    vWorldPos = mul(vWorldPos, g_LightProjMatrix);
    
-    float2 vUV = (float2) 0.0f;
-   
-    vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
-    vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
-   
-    float4 vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
-   
-    if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
-        Out.vColor = Out.vColor * 0.8f;
-	
+        //float FogFactor = saturate((300.f - fViewZ) / (300.f - 0.f));
+    
+        //float4 vFogColor = float4(0.5f, 0.5f, 0.5f, 1.f);
+    
+        //Out.vColor = FogFactor * Out.vColor + (1.f - FogFactor) * vFogColor;
+    }
+  
     return Out;
 }
 

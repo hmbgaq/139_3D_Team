@@ -298,6 +298,9 @@
     <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Vignette">
       <UniqueIdentifier>{f4d39fbe-3d41-437e-b224-2666fac37121}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow">
+      <UniqueIdentifier>{eb6483af-c74c-4ffa-9e3d-456a091385c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -575,6 +578,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_Blood.h">
       <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Window_ShaderTool.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
@@ -1035,6 +1041,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Blood.cpp">
       <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Window_ShaderTool.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
