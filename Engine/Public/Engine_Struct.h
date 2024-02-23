@@ -338,57 +338,93 @@ namespace Engine
 
 #pragma endregion 구조체
 
-#pragma region Shader Control Struct 
+#pragma region Shader Control Struct - Screen 
 	/* 각자 구분용 */
 	typedef struct ENGINE_DLL tagHBAO_Plus_Desc
 	{
-		_float fRadius = 1.f;
-		_float fBias = 0.1f;
-		_float fPowerExponent = 2.f;
-		_float fBlur_Sharpness = 16.f;
-		_float fLargeScaleAO = 1.f;
-		_float fSmallScaleAO = 1.f;
+		_bool  bHBAO_Active			= false;
+		_float fRadius				= 1.f;
+		_float fBias				= 0.1f;
+		_float fPowerExponent		= 2.f;
+		_float fBlur_Sharpness		= 16.f;
 
 	}HBAO_PLUS_DESC;
 
 	typedef struct ENGINE_DLL tagFogDesc
 	{
-		_float fFogStartDepth = 100.f;
-		_float fFogStartDistance = 10.f;
-		_float fFogDistanceValue = 30.f;
-		_float fFogHeightValue = 50.f;
-		_float fFogDistanceDensity = 0.04f;
-		_float fFogHeightDensity = 0.04f;
-
-		_float2 fUVAcc = { 0.f, 0.f };
+		_bool  bFog_Active			= false;
+		_float fFogStartDepth		= 100.f;
+		_float fFogStartDistance	= 10.f;
+		_float fFogDistanceValue	= 30.f;
+		_float fFogHeightValue		= 50.f;
+		_float fFogDistanceDensity	= 0.04f;
+		_float fFogHeightDensity	= 0.04f;
+		
 	} FOG_DESC;
 
 	typedef struct ENGINE_DLL tagHDRDesc
 	{
-		_float fmax_white = 0.2f;
+		_bool  bHDR_Active			= false;
+		_float fmax_white			= 0.4f;
+
 	}HDR_DESC;
 
 	typedef struct ENGINE_DLL tagScreenDesc
 	{
-		_float fFinal_Saturation;
-		_float fFinal_Brightness;
+		_bool  bFXAA_Active		= false;
+		_float fFinal_Saturation	= 1.f;
+		_float fFinal_Brightness	= 1.f;
+
 	}SCREEN_DESC;
 
-	/* 전체 컨트롤 */
+	/* 전체 컨트롤 - 레벨시작할때 초기 컨트롤용도 */
 	typedef struct ENGINE_DLL tagLevelShader
 	{
 		/* 활성여부 */
-		_bool bHBAO_Plus_Active = { false };
-		_bool bFog_Active = { false };
-		_bool bHDR_Active = { false };
-		_bool bFXAA_Active = { false };
+		_bool bHBAO_Plus_Active		= { false };
+		_bool bFog_Active			= { false };
+		_bool bHDR_Active			= { false };
+		_bool bFXAA_Active			= { false };
 
-		HBAO_PLUS_DESC	tHBAO_Plus_Desc;
-		FOG_DESC		tFog_Desc;
-		HDR_DESC		tHDR_Desc;
-		SCREEN_DESC		tScreen_Desc;
+		/* HBAO+ */
+		_float fRadius				= 1.f;
+		_float fBias				= 0.1f;
+		_float fPowerExponent		= 2.f;
+		_float fBlur_Sharpness		= 16.f;
+
+		/* Fog */
+		_float fFogStartDepth		= 100.f;
+		_float fFogStartDistance	= 10.f;
+		_float fFogDistanceValue	= 30.f;
+		_float fFogHeightValue		= 50.f;
+		_float fFogDistanceDensity	= 0.04f;
+		_float fFogHeightDensity	= 0.04f;
+		
+		/* HDR */
+		_float fmax_white			= 0.4f;
+
+		/* Screen */
+		_float fFinal_Saturation	= 1.f;
+		_float fFinal_Brightness	= 1.f;
+
 	}LEVEL_SHADER_DESC;
 #pragma endregion
+
+#pragma region Shader Control Struct - Object
+
+	typedef struct ENGINE_DLL tagObject_Shader_Desc
+	{
+		_bool bRimLight; 
+		_bool bBloom;
+		
+		_float4 vBloom_Color = {};
+		_float3 vBloomPoser = {};
+		_float4 vRimColor = {};
+
+	}OBJECT_SHADER_DESC;
+
+#pragma endregion
+
 }
 
 #endif // Engine_Struct_h__

@@ -43,9 +43,9 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* p
 		return E_FAIL;
 
 	//ImGui::StyleColorsDark();
-	//g_io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.0f, NULL, g_io.Fonts->GetGlyphRangesKorean());
-	g_io.Fonts->AddFontFromFileTTF("../Bin/Resources/Fonts/Medium.ttf", 12.0f, NULL, g_io.Fonts->GetGlyphRangesKorean());
-	g_io.Fonts->AddFontFromFileTTF("../Bin/Resources/Fonts/English.ttf", 12.0f, NULL, g_io.Fonts->GetGlyphRangesDefault());
+	g_io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.0f, NULL, g_io.Fonts->GetGlyphRangesKorean());
+	//g_io.Fonts->AddFontFromFileTTF("../Bin/Resources/Fonts/Medium.ttf", 16.0f, NULL, g_io.Fonts->GetGlyphRangesKorean());
+	//g_io.Fonts->AddFontFromFileTTF("../Bin/Resources/Fonts/English.ttf", 16.0f, NULL, g_io.Fonts->GetGlyphRangesDefault());
 
 	FAILED_CHECK(Ready_Windows());
 

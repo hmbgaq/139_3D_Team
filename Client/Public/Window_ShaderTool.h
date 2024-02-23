@@ -31,14 +31,10 @@ private:
 	/* Level Shader Struct */
 	HBAO_PLUS_DESC	m_eHBAO_Desc = {};
 	FOG_DESC		m_eFog_Desc = {};
+	HDR_DESC		m_eHDR_Desc = {};
+	SCREEN_DESC		m_eScreen_Desc = {};
 
-	/* Level Shader Active Control */
-	_bool		m_bHBAO_Plus_Active = { false };
-	_bool		m_bFog_Active = { false };
-	_bool		m_bRimLight_Active = { false };
-
-	_bool		m_bHDR_Active = { false };
-	_bool		m_bFXAA_Active = { false };
+	LEVEL_SHADER_DESC m_eTotalShader_Desc = {};
 
 
 private:
@@ -51,8 +47,16 @@ private:
 	HRESULT Load_Level(_int iLevel_Index);
 
 	/* Collapsing */
-	void Level_Shader_Control();
-	void Object_Shader_Control();
+	void Layer_Level_Shader_Control();
+	void Layer_Object_Shader_Control();
+
+	/* Compress */
+	void Compress_HBAO_Plus_Setting();
+	void Compress_Fog_Setting();
+	void Compress_HDR_Setting();
+	void Compress_FXAA_Setting();
+	void Compress_Screen_Setting();
+
 
 public:
 	static CWindow_ShaderTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

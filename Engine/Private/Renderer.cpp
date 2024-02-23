@@ -796,12 +796,12 @@ HRESULT CRenderer::Render_Deferred()
 	{
 		/* test fog */
 		FAILED_CHECK(m_pPerlinNoiseTextureCom->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_PerlinNoiseTexture"));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogStartDepth",		&m_CurrFog.fFogStartDepth, sizeof(_float)));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogStartDistance",	&m_CurrFog.fFogStartDistance, sizeof(_float)));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogDistanceValue",	&m_CurrFog.fFogDistanceValue, sizeof(_float)));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogHeightValue",	&m_CurrFog.fFogHeightValue, sizeof(_float)));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fDistanceDensity",	&m_CurrFog.fFogDistanceDensity, sizeof(_float)));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fHeightDensity",		&m_CurrFog.fFogHeightDensity, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogStartDepth",		&m_tFog_Option.fFogStartDepth, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogStartDistance",	&m_tFog_Option.fFogStartDistance, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogDistanceValue",	&m_tFog_Option.fFogDistanceValue, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogHeightValue",	&m_tFog_Option.fFogHeightValue, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fDistanceDensity",	&m_tFog_Option.fFogDistanceDensity, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fHeightDensity",		&m_tFog_Option.fFogHeightDensity, sizeof(_float)));
 	}
 	/* MRT_GameObject */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Priority"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_PriorityTarget"));
@@ -891,12 +891,12 @@ HRESULT CRenderer::Render_HBAO_PLUS()
 	Input.DepthData.MetersToViewSpaceUnits = 1.f;
 
 	GFSDK_SSAO_Parameters Params;
-	Params.Radius = 2.f;
-	Params.Bias = 0.1f;
-	Params.PowerExponent = 2.f;
+	Params.Radius = m_tHBAO_Option.fRadius;
+	Params.Bias = m_tHBAO_Option.fBias;
+	Params.PowerExponent = m_tHBAO_Option.fPowerExponent;
 	Params.Blur.Enable = true;
 	Params.Blur.Radius = GFSDK_SSAO_BLUR_RADIUS_4;
-	Params.Blur.Sharpness = 16.f;
+	Params.Blur.Sharpness = m_tHBAO_Option.fBlur_Sharpness;
 
 	ID3D11RenderTargetView* pView = {};
 	pView = m_pGameInstance->Find_RenderTarget(TEXT("Target_HBAO"))->Get_RTV();
@@ -1005,7 +1005,7 @@ HRESULT CRenderer::Render_FXAA()
 
 	/* 변수 올리기 */
 	{
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_RawValue("g_bFxaa", &m_bFXAA_Active, sizeof(_bool)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_RawValue("g_bFxaa", &m_tScreen_Option.bFXAA_Active, sizeof(_bool)));
 
 		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
 		//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HDR"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
@@ -1039,11 +1039,11 @@ HRESULT CRenderer::Render_HDR()
 	/* 변수 올리기 */
 	{
 		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_bHDR_Active", &m_bHDR_Active, sizeof(_bool)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_bHDR_Active", &m_tHDR_Option.bHDR_Active, sizeof(_bool)));
 		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_ProcessingTarget"));
 
 		/* 값 컨트롤용도 */
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_max_white", &m_max_white, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_max_white", &m_tHDR_Option.fmax_white, sizeof(_float)));
 	}
 
 	if (false == m_bHDR_Active)
@@ -1078,8 +1078,8 @@ HRESULT CRenderer::Render_Final()
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
 	/* 명도 채도 관리 */
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_RawValue("g_brightness", &Final_Brightness, sizeof(_float)));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_RawValue("g_saturation", &Final_Saturation, sizeof(_float)));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_RawValue("g_brightness", &m_tScreen_Option.fFinal_Brightness, sizeof(_float)));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_RawValue("g_saturation", &m_tScreen_Option.fFinal_Saturation, sizeof(_float)));
 
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_FXAA"), m_pShader[SHADER_TYPE::SHADER_FINAL], "g_FinalTarget"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse_UI"), m_pShader[SHADER_TYPE::SHADER_FINAL], "g_Diffuse_UITexture"));	// 색상

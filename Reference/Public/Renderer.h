@@ -134,14 +134,12 @@ private:
 	_bool						m_bFog_Active			= { false };
 	_bool						m_bRim = { false };
 
-public:
-	void Set_SSAO(_bool _ssao_active)		{ m_bSSAO_Active = _ssao_active; } /* 외곽선 옵션조절 */
-	void Set_Bloom(_bool _bloom_active)		{ m_bBloom_Active = _bloom_active; }
-	void Set_OutLine(_bool _Outline_active) { m_bOutline_Active = _Outline_active; }
-	void Set_HDR(_bool _HDR_active)			{ m_bHDR_Active = _HDR_active; }
-	void Set_FXAA(_bool _FXAA_active)		{ m_bFXAA_Active = _FXAA_active; }
-	void Set_RimLight(_bool _RimLight) { m_bRim = _RimLight;  }
 private:
+	HBAO_PLUS_DESC				m_tHBAO_Option			= {};
+	FOG_DESC					m_tFog_Option			= {};
+	HDR_DESC					m_tHDR_Option			= {};
+	SCREEN_DESC					m_tScreen_Option		= {};
+
 	/* BLUR */
 	HRESULT						Render_Blur_DownSample(const wstring& strStartTargetTag);
 	HRESULT						Render_Blur_Horizontal(_int eHorizontalPass);
@@ -165,6 +163,22 @@ private:
 
 	/* Fog */ 
 	FOG_DESC					m_CurrFog = {};
+
+public:
+	/* 활성화 */
+	void Set_SSAO(_bool _ssao_active) { m_bSSAO_Active = _ssao_active; } 
+	void Set_Bloom(_bool _bloom_active) { m_bBloom_Active = _bloom_active; }
+	void Set_OutLine(_bool _Outline_active) { m_bOutline_Active = _Outline_active; }
+	void Set_HDR(_bool _HDR_active) { m_bHDR_Active = _HDR_active; }
+	void Set_FXAA(_bool _FXAA_active) { m_bFXAA_Active = _FXAA_active; }
+	void Set_RimLight(_bool _RimLight) { m_bRim = _RimLight; }
+	void Set_Fog(_bool _Fog) { m_bFog_Active = _Fog; }
+
+	/* 옵션조절 */
+	void Set_HBAO_Option(HBAO_PLUS_DESC desc) {	m_tHBAO_Option = desc; }
+	void Set_Fog_Option(FOG_DESC desc) { m_tFog_Option = desc; }
+	void Set_HDR_Option(HDR_DESC desc) { m_tHDR_Option = desc; }
+	void Set_Screen_Option(SCREEN_DESC desc) { m_tScreen_Option = desc; }
 
 private:
 	class CShader*					m_pShader[SHADER_TYPE::SHADER_END]	= { nullptr };

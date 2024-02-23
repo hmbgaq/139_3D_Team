@@ -68,27 +68,27 @@ float DistanceFogFactor_Caculation(float fViewZ)
 
 float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise)
 {
-    // 지정 범위로 변환된 Distance..
+    // 지정 범위로 변환된 Distance
     float pixelDistance = g_fDistanceDensity * (length(g_vCamPosition.w - toEye) - g_fFogStartDepth);
     
-	// 지정 범위로 변환된 Height..
+	// 지정 범위로 변환된 Height
     float pixelHeight = g_fHeightDensity * toEye.y;
     
     float distanceOffset = min(pow(2.0f, pixelDistance - g_fFogStartDistance), 1.0f);
     float heightOffset = min(pow(1.2f, -(pixelHeight + 3.0f)), 1.0f);
     
-	// 거리 기반 안개 강도 설정..
+	// 거리 기반 안개 강도 설정
     float distanceValue = exp(0.01f * pow(pixelDistance - g_fFogDistanceValue, 3.0f));
     float fogDistanceFactor = min(distanceValue, 1.0f);
 
-	// 높이 기반 안개 강도 설정..
+	// 높이 기반 안개 강도 설정
     float heightValue = (pixelHeight * g_fFogHeightValue) - 0.1f;
     float fogHeightFactor = pow(pow(2.0f, -heightValue), heightValue) * (1.0f - distanceOffset);
 
-	// 두 요소를 결합한 최종 요소..
+	// 두 요소를 결합한 최종 요소
     float fogFinalFactor = min(fogDistanceFactor * fogHeightFactor * fNoise, 1.0f) + min(distanceOffset * heightOffset, 1.0f) + 0.01f;
 
-	// 최종 혼합 색상..
+	// 최종 혼합 색상
     return lerp(vOriginColor.rgb, g_vFogColor.xyz, fogFinalFactor);
 }
 
@@ -278,32 +278,32 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
             discard;
         
         Out.vColor = vPriority;
-        return Out;
     }
+    else
+    {
+        vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
+        vShade = saturate(vShade);
 	
-    vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
-    vShade = saturate(vShade);
+        vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+        vSpecular = saturate(vSpecular);
 	
-    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    vSpecular = saturate(vSpecular);
+        vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
+        if (g_bSSAO_Active)
+            vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord); /* SSAO 적용 */
 	
-    vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
-    if (g_bSSAO_Active)
-        vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord); /* SSAO 적용 */
+        vector vBloom = float4(0.f, 0.f, 0.f, 0.f);
+        if (g_bBloom_Active)
+            vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
 	
-    vector vBloom = float4(0.f, 0.f, 0.f, 0.f);
-    if (g_bBloom_Active)
-        vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
-	
-    vector vOutline = float4(1.f, 1.f, 1.f, 1.f);
-    if (g_Outline_Active)
-        vOutline = g_OutlineTarget.Sample(LinearSampler, In.vTexcoord);
+        vector vOutline = float4(1.f, 1.f, 1.f, 1.f);
+        if (g_Outline_Active)
+            vOutline = g_OutlineTarget.Sample(LinearSampler, In.vTexcoord);
 	
     
-    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
-    Out.vColor.a = 1.f;
+        Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
+        Out.vColor.a = 1.f;
     //Out.vColor = ((vDiffuse * vShade * vSSAO) + vSpecular + vBloom) * vOutline;
-	
+    }
     vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
     float fViewZ = vDepthDesc.y * g_CamFar;
 	

@@ -225,7 +225,7 @@ HRESULT CScreamer::Bind_ShaderResources()
 	m_pBreakTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture");
 	m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
 
-	/* Bloom */
+	/* RimLight */
 	if(true == m_bRim)
 	{
 		m_vRimColor = { 1.0f, 1.f, 1.f, 0.3f };

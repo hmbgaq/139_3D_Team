@@ -10,13 +10,14 @@ CWindow_ShaderTool::CWindow_ShaderTool(ID3D11Device* pDevice, ID3D11DeviceContex
 }
 
 HRESULT CWindow_ShaderTool::Initialize()
-{	
+{
 	//! 현재는 특별한 기능없음. 추후 필요할 것 같아서 셋팅.
 	FAILED_CHECK(__super::Initialize());
 
+	Imgui_Setting();
+
 	return S_OK;
 }
-
 
 void CWindow_ShaderTool::Tick(_float fTimeDelta)
 {
@@ -31,12 +32,12 @@ void CWindow_ShaderTool::Tick(_float fTimeDelta)
 	Select_Level(); /* 스테이지 선택 및 불러오기 */
 
 	if (ImGui::CollapsingHeader("Level Shader"))
-		Level_Shader_Control();
+		Layer_Level_Shader_Control();
 
 	ImGui::Spacing(); /* 여백 */
 
 	if (ImGui::CollapsingHeader("Object Shader"))
-		Object_Shader_Control();
+		Layer_Object_Shader_Control();
 
 	__super::End();
 }
@@ -44,8 +45,6 @@ void CWindow_ShaderTool::Tick(_float fTimeDelta)
 void CWindow_ShaderTool::Render()
 {
 }
-
-
 
 void CWindow_ShaderTool::Top_Setting()
 {
@@ -63,39 +62,122 @@ void CWindow_ShaderTool::Top_Setting()
 	ImGui::Spacing();
 }
 
-void CWindow_ShaderTool::Level_Shader_Control()
+void CWindow_ShaderTool::Layer_Level_Shader_Control()
 {
-	ImGui::SeparatorText("Shader Active ");
+	ImGui::SeparatorText("Pre-Post");
 
-	ImGui::Text("Pre-Post");
+	if (ImGui::TreeNode("HBAO+ Setting"))
 	{
-		if (ImGui::Checkbox(u8"HBAO+ Active", &m_bHBAO_Plus_Active))
-			m_pGameInstance->Get_Renderer()->Set_SSAO(m_bHBAO_Plus_Active);
-
-		ImGui::SameLine();
-
-		if (ImGui::Checkbox(u8"RimLight Active", &m_bRimLight_Active))
-			int a = 0;
-			//m_pGameInstance->Get_Renderer()->Set_SSAO(m_bRimLight_Active);
+		Compress_HBAO_Plus_Setting();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Fog Setting"))
+	{
+		Compress_Fog_Setting();
+		ImGui::TreePop();
 	}
 
-	ImGui::Text("Post");
+	ImGui::SeparatorText("Post");
+
+	if (ImGui::TreeNode("HDR Setting"))
 	{
-		if (ImGui::Checkbox(u8"HDR Active", &m_bHDR_Active))
-			m_pGameInstance->Get_Renderer()->Set_HDR(m_bHDR_Active);
-
-		ImGui::SameLine();
-
-		if (ImGui::Checkbox(u8"FXAA Active", &m_bFXAA_Active))
-			m_pGameInstance->Get_Renderer()->Set_FXAA(m_bFXAA_Active);
-
+		Compress_HDR_Setting();
+		ImGui::TreePop();
 	}
-
+	if (ImGui::TreeNode("FXAA Setting"))
+	{
+		Compress_FXAA_Setting();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Screen Setting"))
+	{
+		Compress_Screen_Setting();
+		ImGui::TreePop();
+	}
 }
 
-void CWindow_ShaderTool::Object_Shader_Control()
+void CWindow_ShaderTool::Layer_Object_Shader_Control()
 {
 }
+
+void CWindow_ShaderTool::Compress_HBAO_Plus_Setting()
+{
+	ImGui::Checkbox("HBAO+ Active", &m_eHBAO_Desc.bHBAO_Active);
+
+	ImGui::SliderFloat("Radius", &m_eHBAO_Desc.fRadius, 0.1f, 5.0f, "Radius = %.3f");
+
+	ImGui::SliderFloat("Bias", &m_eHBAO_Desc.fBias, 0.1f, 1.0f, "Bias = %.3f");
+
+	ImGui::SliderFloat("Power Exponent", &m_eHBAO_Desc.fPowerExponent, 0.1f, 3.0f, "Power = %.3f");
+
+	ImGui::SliderFloat("Blur Sharpness", &m_eHBAO_Desc.fBlur_Sharpness, 1.f, 20.0f, "Sharpness = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_SSAO(m_eHBAO_Desc.bHBAO_Active);
+
+	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(m_eHBAO_Desc);
+}
+
+void CWindow_ShaderTool::Compress_Fog_Setting()
+{
+	ImGui::Checkbox("Fog Active", &m_eFog_Desc.bFog_Active);
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Reset"))
+	{
+		m_eFog_Desc.fFogStartDepth = 100.f;
+		m_eFog_Desc.fFogStartDistance = 10.f;
+		m_eFog_Desc.fFogDistanceValue = 30.f;
+		m_eFog_Desc.fFogHeightValue = 50.f;
+		m_eFog_Desc.fFogDistanceDensity = 0.04f;
+		m_eFog_Desc.fFogHeightDensity = 0.04f;
+	}
+
+	ImGui::SliderFloat("FogStartDepth", &m_eFog_Desc.fFogStartDepth, 0.1f, 250.0f, "StartDepth = %.3f");
+
+	ImGui::SliderFloat("FogStartDistance", &m_eFog_Desc.fFogStartDistance, 0.1f, 30.0f, "StartDistance = %.3f");
+
+	ImGui::SliderFloat("FogDistanceValue", &m_eFog_Desc.fFogDistanceValue, 0.1f, 50.f, "FogDistanceValue = %.3f");
+
+	ImGui::SliderFloat("FogHeightValue", &m_eFog_Desc.fFogHeightValue, 0.1f, 100.f, "HeightValue = %.3f");
+
+	ImGui::SliderFloat("FogDistanceDensity", &m_eFog_Desc.fFogDistanceDensity, 0.1f, 1.0f, "FogDistanceValue = %.3f");
+
+	ImGui::SliderFloat("FogHeightDensity", &m_eFog_Desc.fFogHeightDensity, 0.1f, 1.0f, "HeightDensity = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_Fog(m_eFog_Desc.bFog_Active);
+
+	m_pGameInstance->Get_Renderer()->Set_Fog_Option(m_eFog_Desc);
+}
+
+void CWindow_ShaderTool::Compress_HDR_Setting()
+{
+	ImGui::Checkbox("HDR Active", &m_eHDR_Desc.bHDR_Active);
+
+	ImGui::SliderFloat("HDR_White", &m_eHDR_Desc.fmax_white, 0.0f, 1.0f, "HDR_White = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_HDR(m_eHDR_Desc.bHDR_Active);
+
+	m_pGameInstance->Get_Renderer()->Set_HDR_Option(m_eHDR_Desc);
+}
+
+void CWindow_ShaderTool::Compress_FXAA_Setting()
+{
+	ImGui::Checkbox("FXAA Active", &m_eScreen_Desc.bFXAA_Active);
+
+	m_pGameInstance->Get_Renderer()->Set_FXAA(m_eScreen_Desc.bFXAA_Active);
+	m_pGameInstance->Get_Renderer()->Set_Screen_Option(m_eScreen_Desc);
+}
+
+void CWindow_ShaderTool::Compress_Screen_Setting()
+{
+	ImGui::SliderFloat("Brightness", &m_eScreen_Desc.fFinal_Brightness, 0.0f, 2.0f, "Brightness = %.3f");
+
+	ImGui::SliderFloat("Saturation", &m_eScreen_Desc.fFinal_Saturation, 0.0f, 2.0f, "Saturation = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_Screen_Option(m_eScreen_Desc);
+}
+
 
 #pragma region Level 불러오기 
 
@@ -274,8 +356,6 @@ void CWindow_ShaderTool::Imgui_Setting()
 	colors[ImGuiCol_WindowBg] = bgColor;
 	colors[ImGuiCol_ChildBg] = bgColor;
 	colors[ImGuiCol_TitleBg] = bgColor;
-
-
 }
 
 CWindow_ShaderTool* CWindow_ShaderTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
