@@ -418,21 +418,22 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 
 				/* 색 변경 */
-				ImGui::ColorEdit4("Start_Color_Particle", m_fColor_Start_Particle, ImGuiColorEditFlags_None);
-				ImGui::ColorEdit4("End_Color_Particle", m_fColor_End_Particle, ImGuiColorEditFlags_None);
+				if (ImGui::ColorEdit4("Start_Color_Particle", m_fColor_Start_Particle, ImGuiColorEditFlags_None))
+				{
+					m_pParticlePointDesc->vMinMaxRed.x = m_fColor_Start_Particle[0];
+					m_pParticlePointDesc->vMinMaxGreen.x = m_fColor_Start_Particle[1];
+					m_pParticlePointDesc->vMinMaxBlue.x = m_fColor_Start_Particle[2];
+					m_pParticlePointDesc->vMinMaxAlpha.x = m_fColor_Start_Particle[3];
+				}
+				if (ImGui::ColorEdit4("End_Color_Particle", m_fColor_End_Particle, ImGuiColorEditFlags_None))
+				{
+					m_pParticlePointDesc->vMinMaxRed.y = m_fColor_End_Particle[0];
+					m_pParticlePointDesc->vMinMaxGreen.y = m_fColor_End_Particle[1];
+					m_pParticlePointDesc->vMinMaxBlue.y = m_fColor_End_Particle[2];
+					m_pParticlePointDesc->vMinMaxAlpha.y = m_fColor_End_Particle[3];
+				}
 
-				m_pParticlePointDesc->vMinMaxRed.x = m_fColor_Start_Particle[0];
-				m_pParticlePointDesc->vMinMaxRed.y = m_fColor_End_Particle[0];
-
-				m_pParticlePointDesc->vMinMaxGreen.x = m_fColor_Start_Particle[1];
-				m_pParticlePointDesc->vMinMaxGreen.y = m_fColor_End_Particle[1];
-
-				m_pParticlePointDesc->vMinMaxBlue.x = m_fColor_Start_Particle[2];
-				m_pParticlePointDesc->vMinMaxBlue.y = m_fColor_End_Particle[2];
-
-				m_pParticlePointDesc->vMinMaxAlpha.x = m_fColor_Start_Particle[3];
-				m_pParticlePointDesc->vMinMaxAlpha.y = m_fColor_End_Particle[3];
-
+			
 				ImGui::ColorEdit4("Cur_Color_Particle", m_fColor_Cur_Particle, ImGuiColorEditFlags_None);
 				m_fColor_Cur_Particle[0] = m_pParticlePointDesc->vCurrentColor.x;
 				m_fColor_Cur_Particle[1] = m_pParticlePointDesc->vCurrentColor.y;
@@ -687,16 +688,33 @@ void CWindow_EffectTool::Update_RectTab()
 				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pRectDesc->strPartTag));
 
 				/* 텍스처 변경 */
-				if (ImGui::InputInt("Diffuse_Rect", &m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE], 1))
+				if (CEffect_Rect::SINGLE == m_pRectDesc->eType)
 				{
-					if (m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] <= m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE])
-						m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE];
+					if (ImGui::InputInt("Diffuse_Rect", &m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE], 1))
+					{
+						if (m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] <= m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE])
+							m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE];
 
-					if (0 > m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE])
-						m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 0;
+						if (0 > m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE])
+							m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 
-					m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE];
+						m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE];
+					}
 				}
+				else
+				{
+					if (ImGui::InputInt("Sprite_Rect", &m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE], 1))
+					{
+						if (m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] <= m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE])
+							m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE];
+
+						if (0 > m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE])
+							m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 0;
+
+						m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE];
+					}
+				}
+				
 
 				if (ImGui::InputInt("Mask_Rect", &m_iTexIndex_Rect[CEffect_Void::TEXTURE_MASK], 1))
 				{
@@ -845,7 +863,7 @@ void CWindow_EffectTool::Update_RectTab()
 						pSpriteDesc->fSequenceTerm = m_fSequenceTerm_RectSprite;
 					}
 
-					if (ImGui::InputInt2("Max_TileCount", m_vUV_MaxTileCount, 1))
+					if (ImGui::InputInt2(" Max_TileCount ", m_vUV_MaxTileCount, 1))
 					{
 						_uint iX, iY;
 						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_TextureCom(CEffect_Void::TEXTURE_DIFFUSE)->Get_TextureSize(&iX, &iY, m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE]);
@@ -1229,6 +1247,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 		{
 			m_pRectDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Desc();
 			CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Distortion_Desc();
+			CEffect_Void::UVSPRITE_DESC*	pSpriteDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Sprite_Desc();
 
 			m_pRectDesc->iShaderPassIndex = { 2 };
 			m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 1 };
@@ -1255,6 +1274,13 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vDistortion3[1] = pDistortionDesc->vDistortion3.y;
 
 			m_fDistortionBias = pDistortionDesc->fDistortionBias;
+
+
+			m_fSequenceTerm_RectSprite = pSpriteDesc->fSequenceTerm;
+
+			m_vUV_MaxTileCount[0] = pSpriteDesc->vUV_MaxTileCount.x;
+			m_vUV_MaxTileCount[1] = pSpriteDesc->vUV_MaxTileCount.y;
+
 		}
 
 		if (CEffect_Void::INSTANCE == eType_Effect)
@@ -1932,9 +1958,6 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
 		m_pCurPartEffect->Set_EffectType(CEffect_Void::PARTICLE);
-		
-		m_pCurPartEffect->Set_WaitingTime(1.f);
-
 
 		m_iCurPartIndex = m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -1959,9 +1982,10 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 			iCount++;
 		}
 		m_iCurPartIndex -= 1;
+
+
+		Update_CurParameters_Parts();
 #pragma endregion
-
-
 	}
 
 	return S_OK;
@@ -1978,6 +2002,9 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 		tRectDesc.eType = CEffect_Rect::SINGLE;
 		tRectDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 		tRectDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
+		
+		tRectDesc.strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
+		tRectDesc.iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = { 0 };
 
 		tRectDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
 		tRectDesc.iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 0 };
@@ -2049,9 +2076,6 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
 		m_pCurPartEffect->Set_EffectType(CEffect_Void::RECT);
 
-		m_pCurPartEffect->Set_WaitingTime(1.f);
-
-
 		m_iCurPartIndex = m_CurPartObjects.size();
 		/* 문자열 초기화 */
 		if (nullptr != m_szPartNames)
@@ -2075,8 +2099,9 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 			iCount++;
 		}
 		m_iCurPartIndex -= 1;
-#pragma endregion
 
+		Update_CurParameters_Parts();
+#pragma endregion
 
 	}
 
@@ -2161,7 +2186,6 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
 		m_pCurPartEffect->Set_EffectType(CEffect_Void::INSTANCE);
 
-		m_pCurPartEffect->Set_WaitingTime(0.5f);
 
 		m_iCurPartIndex = m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -2186,6 +2210,9 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 			iCount++;
 		}
 		m_iCurPartIndex -= 1;
+
+
+		Update_CurParameters_Parts();
 #pragma endregion
 	}
 

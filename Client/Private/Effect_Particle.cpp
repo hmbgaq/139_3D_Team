@@ -99,7 +99,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 				if (m_fRemainAcc >= m_fRemainTime)
 				{
 					m_tParticleDesc.fDissolveAmount = 1.f;
-					m_tParticleDesc.bRender = FALSE;
+					m_tParticleDesc.bRender = TRUE;
 					return;
 				}
 			}

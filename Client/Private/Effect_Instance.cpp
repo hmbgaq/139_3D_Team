@@ -96,7 +96,7 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 				if (m_fRemainAcc >= m_fRemainTime)
 				{
 					m_tInstanceDesc.fDissolveAmount = 1.f;
-					m_tInstanceDesc.bRender = FALSE;
+					m_tInstanceDesc.bRender = TRUE;
 					return;
 				}
 			}

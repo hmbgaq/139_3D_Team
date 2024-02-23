@@ -11,7 +11,7 @@ class CEffect_Void abstract : public CAlphaObject
 {
 public:
 	enum TYPE_EFFECT { PARTICLE, RECT, INSTANCE, MESH, TRAIL, TYPE_EFFECT_END };
-	enum TEXTURE	 { TEXTURE_DIFFUSE, TEXTURE_MASK, TEXTURE_NOISE, TEXTURE_END };
+	enum TEXTURE	 { TEXTURE_DIFFUSE, TEXTURE_MASK, TEXTURE_NOISE, TEXTURE_SPRITE, TEXTURE_END };
 
 	typedef struct tagEffectVoidDesc : public CGameObject::GAMEOBJECT_DESC
 	{
@@ -112,7 +112,7 @@ public:
 
 		_int2	vUV_CurTileIndex = { 0, 0 }; // iCurrentHor, iCurrentVer
 		_int2	vUV_MinTileCount = { 0, 0 }; // iMinHor, iMinVer
-		_int2	vUV_MaxTileCount = { 5, 5 }; // iMaxHor, iMaxVer
+		_int2	vUV_MaxTileCount = { 7, 7 }; // iMaxHor, iMaxVer
 
 	}UVSPRITE_DESC;
 
@@ -186,17 +186,17 @@ public:
 protected:
 	TYPE_EFFECT	eEffectType		= { TYPE_EFFECT_END };
 
-	_float		m_fWaitingAcc = { 0.f };	/* 시작 딜레이 시간 누적 */
-	_float		m_fTimeAcc = { 0.f };		/* 시간 누적 */
-	_float		m_fRemainAcc = { 0.f };
-	_float		m_fSequenceAcc = { 0.f };	/* 시퀀스 시간 누적 */
+	_float		m_fWaitingAcc    = { 0.f };	/* 시작 딜레이 시간 누적 */
+	_float		m_fTimeAcc	    = { 0.f };		/* 시간 누적 */
+	_float		m_fRemainAcc    = { 0.f };
+	_float		m_fSequenceAcc  = { 0.f };	/* 시퀀스 시간 누적 */
 
 	_float		m_fLifeTimeRatio = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
 
-	_float		m_fWaitingTime  = { 0.f };	/* 이 값이 넘어가야 m_fTimeAcc가 누적되기 시작한다. */
-	_float		m_fLifeTime		= { 3.f };
-	_float		m_fRemainTime = { 0.f };	/* 라이프타임이 지나고, 이 시간이 넘어가야 이펙트 종료. */
-	_float		m_fSequenceTime = { 0.f };	/* 총 시퀀스 시간(fWaitingTime + fLifeTime + fRemainTime) */
+	_float		m_fWaitingTime   = { 0.f };	/* 이 값이 넘어가야 m_fTimeAcc가 누적되기 시작한다. */
+	_float		m_fLifeTime		 = { 5.f };
+	_float		m_fRemainTime	 = { 0.f };	/* 라이프타임이 지나고, 이 시간이 넘어가야 이펙트 종료. */
+	_float		m_fSequenceTime	 = { 0.f };	/* 총 시퀀스 시간(fWaitingTime + fLifeTime + fRemainTime) */
 
 
 	_float4x4	m_matCombined = {};

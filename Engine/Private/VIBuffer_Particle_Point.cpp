@@ -253,11 +253,6 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 			m_tBufferDesc.vCurrentColor.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
 			m_tBufferDesc.vCurrentColor.z = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
 
-			//m_tBufferDesc.vCurrentColor.x = abs(Easing::LerpToType(m_pReds[i], m_tBufferDesc.vMinMaxRed.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
-			//m_tBufferDesc.vCurrentColor.y = abs(Easing::LerpToType(m_pGreens[i], m_tBufferDesc.vMinMaxGreen.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
-			//m_tBufferDesc.vCurrentColor.z = abs(Easing::LerpToType(m_pBlues[i], m_tBufferDesc.vMinMaxBlue.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
-			//m_tBufferDesc.vCurrentColor.w = abs(Easing::LerpToType(m_pAlphas[i], m_tBufferDesc.vMinMaxAlpha.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
-
 			pVertices[i].vColor = m_tBufferDesc.vCurrentColor;
 			pVertices[i].vColor.w = fAlpha;
 

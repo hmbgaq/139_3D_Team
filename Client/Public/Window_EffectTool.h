@@ -114,7 +114,7 @@ private:
 	_int m_iMaxNumInstance	= { 500 };
 
 	_float	m_vTimes_Effect[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
-	_float	m_vTimes_Part[3]	= { 1.f, 4.f, 0.f };	// Wait, LifeTime, Remain
+	_float	m_vTimes_Part[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
 
 	_float	m_vWorldPosition_Effect[3]	 = { 0.f, 0.f, 0.f };
 	_float	m_vWorldPosition_Part[3]	 = { 0.f, 0.f, 0.f };

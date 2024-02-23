@@ -95,7 +95,10 @@ void CEffect_Rect::Tick(_float fTimeDelta)
 							m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
 						}
 					}
+					m_fTimeAcc = 0.f;
+					
 				}
+				return;
 			}
 
 			/* ======================= 라이프 타임 동작 끝  ======================= */
@@ -118,7 +121,7 @@ void CEffect_Rect::Tick(_float fTimeDelta)
 				if (m_fRemainAcc >= m_fRemainTime)
 				{
 					m_tRectDesc.fDissolveAmount = 1.f;
-					m_tRectDesc.bRender = FALSE;
+					m_tRectDesc.bRender = TRUE;
 					return;
 				}
 			}
@@ -161,8 +164,6 @@ HRESULT CEffect_Rect::Render()
 
 void CEffect_Rect::ReSet_Effect()
 {
-	__super::ReSet_Effect();
-
 	if (SPRITE == m_tRectDesc.eType)
 	{
 		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
@@ -170,9 +171,11 @@ void CEffect_Rect::ReSet_Effect()
 	}
 	else
 	{
+		__super::ReSet_Effect();
+
 		m_tRectDesc.fDissolveAmount = 0.f;
 		m_tRectDesc.bDissolve		= FALSE;
-		m_tRectDesc.bRender			= FALSE;
+		//m_tRectDesc.bRender			= FALSE;
 	}
 
 }
@@ -204,16 +207,16 @@ HRESULT CEffect_Rect::Ready_Components()
 
 	/* For.Com_Texture */
 	{
-		if (SINGLE == m_tRectDesc.eType)
+		//if (SINGLE == m_tRectDesc.eType)
 		{		
 			if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Texture_Effect_Diffuse"),
 				TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
 				return E_FAIL;
 		}
-		else
+		//else
 		{
 			if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Texture_Effect_Sprite"),
-				TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
+				TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE]))))
 				return E_FAIL;
 		}
 
@@ -249,8 +252,15 @@ HRESULT CEffect_Rect::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tRectDesc.iTextureIndex[TEXTURE_DIFFUSE])))
-		return E_FAIL;
+	if (SINGLE == m_tRectDesc.eType)
+	{
+		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tRectDesc.iTextureIndex[TEXTURE_DIFFUSE]));
+	}
+	else
+	{
+		FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tRectDesc.iTextureIndex[TEXTURE_SPRITE]));
+	}
+
 
 	if (nullptr != m_pTextureCom[TEXTURE_MASK])
 	{

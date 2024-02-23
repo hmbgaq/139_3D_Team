@@ -27,7 +27,7 @@ public:
 		_float  fRemainAcc			= { 0.f };
 		_float	fSequenceAcc		= { 0.f };	/* 시퀀스 시간 누적 */
 
-		_float	fLifeTime			= { 3.f };
+		_float	fLifeTime			= { 5.f };
 		_float	fWaitingTime		= { 0.f };	/* 이 값이 넘어가야 m_fTimeAcc가 누적되기 시작한다. */
 		_float	fRemainTime			= { 0.f };	/* 라이프타임이 지나고, 이 시간이 넘어가야 이펙트 종료. */
 		_float	fSequenceTime		= { 0.f };	/* 총 시퀀스 시간(fWaitingTime + fLifeTime + fRemainTime) */
