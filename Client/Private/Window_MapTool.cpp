@@ -583,7 +583,7 @@ void CWindow_MapTool::Reset_Function()
 
 	for (_int i = 0; i < iCreateMonsterSize; ++i)
 	{
-		m_vecCreateMonster[i]->Set_Dead(false);
+		m_vecCreateMonster[i]->Set_Enable(false);
 	}
 
 	m_iCreateMonsterIndex = 0;
