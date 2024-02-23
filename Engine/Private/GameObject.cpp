@@ -100,6 +100,13 @@ void CGameObject::Set_WorldMatrix(_float4x4 matrix)
 	m_pTransformCom->Set_WorldMatrix(matrix);
 }
 
+void CGameObject::Set_Enable(_bool _Enable)
+{
+	__super::Set_Enable(_Enable);
+	for (auto& Pair : m_Components)
+		Pair.second->Set_Enable(_Enable);
+}
+
 _bool CGameObject::Write_Json(json& Out_Json)
 {
 	for (auto& elem_List : m_Components)
@@ -156,6 +163,9 @@ HRESULT CGameObject::Remove_Component(const wstring& strComTag, _Inout_ CCompone
 
 	if (iter == m_Components.end())
 		return E_FAIL;
+
+	for (auto& Pair : m_Components)
+		Pair.second->Set_Enable(false);
 
 	CComponent* pComponent = iter->second;
 

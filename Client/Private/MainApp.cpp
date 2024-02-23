@@ -36,7 +36,7 @@ HRESULT CMainApp::Initialize()
 #endif // _DEBUG
 
 
-	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, (_uint)(COLLISION_LAYER::LAYER_END), g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
+	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, (_uint)(COLLISION_LAYER::LAYER_END), (_uint)(PHYSX_COLLISION_LAYER::LAYER_END), g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
 
 	//Client Managers
 	CClone_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);

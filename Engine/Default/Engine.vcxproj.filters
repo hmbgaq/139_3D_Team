@@ -289,6 +289,12 @@
     <Filter Include="01.Utility\90.Random">
       <UniqueIdentifier>{52cc521c-5153-44a5-8034-52e06ea5fba1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\97.PhysX\Controller\Character">
+      <UniqueIdentifier>{3e08f005-8b91-4afc-9ac5-28acd7312843}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.ETC">
+      <UniqueIdentifier>{e6f5e488-5afc-4292-9943-c7e8e6dd1446}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -588,6 +594,12 @@
     <ClInclude Include="..\Public\RandomManager.h">
       <Filter>01.Utility\90.Random</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Delegate.h">
+      <Filter>95.ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PhysXCharacterController.h">
+      <Filter>01.Utility\97.PhysX\Controller\Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -823,6 +835,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\RandomManager.cpp">
       <Filter>01.Utility\90.Random</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PhysXCharacterController.cpp">
+      <Filter>01.Utility\97.PhysX\Controller\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Delegate.cpp">
+      <Filter>95.ETC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

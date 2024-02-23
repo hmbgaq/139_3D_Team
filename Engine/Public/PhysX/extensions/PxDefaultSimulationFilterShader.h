@@ -115,12 +115,33 @@ conditions are met:
 
 PxFilterFlags PxDefaultSimulationFilterShader(
 	PxFilterObjectAttributes attributes0,
-	PxFilterData filterData0, 
+	PxFilterData filterData0,
 	PxFilterObjectAttributes attributes1,
 	PxFilterData filterData1,
 	PxPairFlags& pairFlags,
 	const void* constantBlock,
-	PxU32 constantBlockSize);
+	PxU32 constantBlockSize)
+{
+	if (filterData0.word2 != 1 || filterData1.word2 != 1)
+	{
+		return PxFilterFlag::eKILL;
+	}
+
+	if ((filterData0.word0 & filterData1.word1) && (filterData1.word0 & filterData0.word1))
+	{
+
+		pairFlags |= PxPairFlag::eDETECT_DISCRETE_CONTACT;
+		pairFlags |= PxPairFlag::eCONTACT_DEFAULT;
+		pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND;
+		return PxFilterFlag::eDEFAULT;
+	}
+	else
+	{
+		return PxFilterFlag::eKILL;
+	}
+
+	return PxFilterFlag::eDEFAULT;
+}
 
 /**
 	\brief Determines if collision detection is performed between a pair of groups

@@ -1,9 +1,12 @@
 #pragma once
 #include "Component.h"
+#include "Delegate.h"
 
 BEGIN(Engine)
 
 class CGameInstance;
+class CMyAIMesh;
+class CMyAIScene;
 
 class ENGINE_DLL CPhysXCollider final : public CComponent
 {
@@ -29,6 +32,46 @@ public:
 	}PHYSXCOLLIDERDESC;
 
 
+	struct INSTANCE_MESH_DESC
+	{
+		_float3         vRotation;
+		_float3         vScale;
+		_float3			vTarnslation;
+		_float			fMaxRange;
+		_float3			vCenter;
+
+		void Reset()
+		{
+			ZeroMemory(this, sizeof(INSTANCE_MESH_DESC));
+		}
+
+		_matrix Get_Matrix() const
+		{
+			_matrix TransformationMatrix;
+			_matrix RotationMatrix, ScaleMatrix;
+
+			_vector vPitchYawRoll;
+			_vector vPosition;
+
+			vPitchYawRoll = XMLoadFloat3(&vRotation);
+			vPosition = XMVectorSetW(XMLoadFloat3(&vTarnslation), 1.f);
+
+			RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
+			ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
+			TransformationMatrix = ScaleMatrix * RotationMatrix;
+			TransformationMatrix.r[3] = vPosition;
+
+			return TransformationMatrix;
+		}
+
+		void	Bake_CenterWithMatrix()
+		{
+			_vector vCenterFromVector = XMLoadFloat3(&vCenter);
+			XMStoreFloat3(&vCenter, XMVector3TransformCoord(vCenterFromVector, Get_Matrix()));
+		}
+	};
+
+
 private:
 	CPhysXCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPhysXCollider(const CPhysXCollider& rhs);
@@ -40,19 +83,47 @@ private:
 
 public:
 	_uint	Get_PColliderIndex() const { return m_iColliderIndex; }
+	PHYSXCOLLIDERDESC Get_ColliderDesc() const { return m_PhysXColliderDesc; }
+
 
 public:
+	void	Create_Collider();
+	void	Delete_Collider();
+
 	void	CreatePhysXActor(PHYSXCOLLIDERDESC& PhysXColliderDesc);
+	void	Add_PhysXActorAtSceneWithOption(const PxVec3& In_MassSpaceInertiaTensor = { 0.f, 0.f, 0.f }, const PxReal In_fMass = 0.f);
+
 
 	void	Create_Geometry();
 	void	Create_DynamicActor(PHYSXCOLLIDERDESC& PhysXColliderDesc, PxTransform Transform);
 	void	Create_StaticActor(PHYSXCOLLIDERDESC& PhysXColliderDesc, PxTransform Transform);
 
 
+public:
+	void	PhysXCollisionEnter(CPhysXCollider* pOtherCollider);
+	void	PhysXCollisionStay(CPhysXCollider* pOtherCollider);
+	void	PhysXCollisionExit(CPhysXCollider* pOtherCollider);
+
+public:
+	void	Init_MeshCollider(CMyAIMesh* pMeshData, const vector<INSTANCE_MESH_DESC>* In_ParticleDescs = nullptr);
+	void	Init_ConvexMeshCollider(CMyAIMesh* pMeshData, const vector<INSTANCE_MESH_DESC>* In_ParticleDescs = nullptr);
+	void	Init_ModelCollider(CMyAIScene* pModelData, const _bool In_isConvex);
+	void	Init_ModelInstanceCollider(CMyAIScene* pModelData, const vector<INSTANCE_MESH_DESC>& In_ParticleDescs, const _bool In_isConvex);
+
+
+public:
+	void	Synchronize_Collider(CTransform* pTransform, _fvector In_vOffset = { 0.f, 0.f, 0.f });
+
+
+public:
+	HRESULT Set_Position(_vector _vPos, _vector _vQuaternion);
+	HRESULT Set_Position(_vector _vPos);
+
+
 //public:
-//	CPhysXCollider* CallBack_CollisionEnter;
-//	CPhysXCollider* CallBack_CollisionStay;
-//	CPhysXCollider* CallBack_CollisionExit;
+	FDelegate<CPhysXCollider*> CallBack_CollisionEnter;
+	FDelegate<CPhysXCollider*> CallBack_CollisionStay;
+	FDelegate<CPhysXCollider*> CallBack_CollisionExit;
 
 private:
 	static	_uint		m_iClonedColliderIndex;
@@ -75,7 +146,9 @@ private:
 private:
 	CGameInstance* m_pGameInstance = { nullptr };
 
-private:
+public:
+	static CPhysXCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CComponent* Clone(void* pArg) override;
 	void Free();
 };
 

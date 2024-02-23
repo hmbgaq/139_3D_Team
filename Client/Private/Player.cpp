@@ -12,6 +12,9 @@
 #include "TestEventWithActor.h"
 #include "TestEventWithPlayer.h"
 
+#include "PhysXController.h"
+#include "PhysXCharacterController.h"
+
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -152,6 +155,13 @@ HRESULT CPlayer::Ready_Components()
 //	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Navigation2"),
 //		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 //		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"),
+		TEXT("Com_PhysXCharacterController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom))))
+		return E_FAIL;
+
+	m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
+
 
 
 	return S_OK;
