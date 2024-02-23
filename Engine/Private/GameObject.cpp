@@ -164,6 +164,9 @@ HRESULT CGameObject::Remove_Component(const wstring& strComTag, _Inout_ CCompone
 	if (iter == m_Components.end())
 		return E_FAIL;
 
+	for (auto& Pair : m_Components)
+		Pair.second->Set_Enable(false);
+
 	CComponent* pComponent = iter->second;
 
 	Safe_Release(pComponent);
