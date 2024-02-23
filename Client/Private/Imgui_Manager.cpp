@@ -138,7 +138,7 @@ HRESULT CImgui_Manager::Ready_Windows()
 	if (pWindow == nullptr)
 		return E_FAIL;
 
-	pWindow->SetUp_ImGuiDESC("Style", ImVec2{ 300.f, 400.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
+	pWindow->SetUp_ImGuiDESC("Style", ImVec2{ 300.f, 400.f }, /* ImGuiWindowFlags_MenuBar | */ ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_STYLE_WINDOW, pWindow);
 #pragma endregion ImGui스타일 옵션 창
 

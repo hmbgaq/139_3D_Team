@@ -22,6 +22,7 @@ public:
 		// Times
 		_float	fTimeAcc			= { 0.f };	/* 시간 누적 */
 		_float	fWaitingAcc			= { 0.f };	/* 시작 딜레이 시간 누적 */
+		_float  fRemainAcc			= { 0.f };
 		_float	fSequenceAcc		= { 0.f };	/* 시퀀스 시간 누적 */
 
 		_float	fLifeTime			= { 3.f };

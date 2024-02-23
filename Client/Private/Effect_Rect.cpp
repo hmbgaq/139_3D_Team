@@ -54,15 +54,15 @@ void CEffect_Rect::Tick(_float fTimeDelta)
 {
 	if (m_tRectDesc.bActive_Tool)
 	{
-		m_fSequenceTime = m_fLifeTime + m_tRectDesc.fRemainTime;
+		m_fSequenceTime = m_fLifeTime + m_fRemainTime;
 
 		if (SPRITE == m_tRectDesc.eType)
 		{
 			if (m_tRectDesc.bPlay)
 			{
-				m_tRectDesc.fTimeAcc += fTimeDelta;
+				m_fTimeAcc += fTimeDelta;
 
-				if (m_tRectDesc.fTimeAcc > m_tSpriteDesc.fSequenceTerm)
+				if (m_fTimeAcc > m_tSpriteDesc.fSequenceTerm)
 				{
 					(m_tSpriteDesc.vUV_CurTileIndex.x)++;
 
@@ -77,17 +77,17 @@ void CEffect_Rect::Tick(_float fTimeDelta)
 						}
 					}
 
-					m_tRectDesc.fTimeAcc = 0.f;
+					m_fTimeAcc = 0.f;
 				}
 			}
 		}
 		else
 		{
-			m_tRectDesc.fTimeAcc += fTimeDelta;
+			m_fTimeAcc += fTimeDelta;
 
-			if (m_tRectDesc.fTimeAcc >= m_tDistortionDesc.fSequenceTerm)
+			if (m_fTimeAcc >= m_tDistortionDesc.fSequenceTerm)
 			{
-				m_tRectDesc.fTimeAcc = 0.f;
+				m_fTimeAcc = 0.f;
 			}
 		}
 	}
@@ -148,7 +148,7 @@ void CEffect_Rect::End_Effect()
 
 void CEffect_Rect::ReSet_Sprite()
 {
-	m_tRectDesc.fTimeAcc = 0.f;
+	m_fTimeAcc = 0.f;
 	m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
 	m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.y;
 }
@@ -244,7 +244,7 @@ HRESULT CEffect_Rect::Bind_ShaderResources()
 
 	if (SINGLE == m_tRectDesc.eType)
 	{
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tRectDesc.fTimeAcc, sizeof(_float))))
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_fTimeAcc, sizeof(_float))))
 			return E_FAIL;
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3))))
 			return E_FAIL;

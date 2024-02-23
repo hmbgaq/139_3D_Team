@@ -119,7 +119,6 @@ public:
 public:
 	void ReSet();
 
-
 public:
 	_uint			Get_NumInstance() { return m_iNumInstance; }
 	void			Set_NumInstance(_uint iNum) { m_iNumInstance = iNum; m_tBufferDesc.iCurNumInstance = iNum; }

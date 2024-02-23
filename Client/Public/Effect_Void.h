@@ -16,6 +16,7 @@ public:
 	{
 		wstring		strPartTag = { TEXT("") };
 
+
 		// Texture
 		wstring		strTextureTag[TEXTURE_END];
 		_int		iTextureIndex[TEXTURE_END] = { 0 };
@@ -32,6 +33,7 @@ public:
 		_uint		iShaderPassIndex = { 0 };
 		// Shader Variables
 		_bool		bBillBoard		= { TRUE };
+		_bool		bDissolve		= { TRUE };
 		_float2		vUV_Offset		= { 0.f, 0.f };
 		_float2		vUV_Scale		= { 0.f, 0.f };
 
@@ -57,14 +59,8 @@ public:
 		_bool		bRender			= { FALSE };
 
 		// Times
-		_float	fTimeAcc			 = { 0.f };	/* 시간 누적 */
-		_float	fWaitingAcc			 = { 0.f }; /* 시작 딜레이 시간 누적 */
-		_float	fSequenceAcc		 = { 0.f };	/* 시퀀스 시간 누적 */
+		EASING_TYPE		eType_Easing = { LINEAR };
 
-		_float	fRemainTime			 = { 0.f }; /* 라이프타임이 지나고, 이 시간이 넘어가야 이펙트 종료. */
-
-		_float  fLifeTimeRatio		 = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
-		_float	fDissolveStartTime   = { 1.f };	/* 디졸브 시작 시간 */
 
 
 		// 주인
@@ -161,11 +157,28 @@ public:
 	TYPE_EFFECT Get_EffectType() { return eEffectType; }
 	void		Set_EffectType(TYPE_EFFECT eType) { eEffectType = eType; }
 
-	_float		Get_WaitingTime() { return m_fWaitingTime; }
-	void		Set_WaitingTime(_float fWaitingTime) { m_fWaitingTime = fWaitingTime; }
+	_float		Get_WaitingAcc() { return m_fWaitingAcc; }
+	void		Set_WaitingAcc(_float fTime) { m_fWaitingAcc = fTime; }
 
+	_float		Get_TimeAcc() { return m_fTimeAcc; }
+	void		Set_TimeAcc(_float fTime) { m_fTimeAcc = fTime; }
+
+	_float		Get_RemainAcc() { return m_fRemainAcc; }
+	void		Set_RemainAcc(_float fTime) { m_fRemainAcc = fTime; }
+
+	_float		Get_SequenceAcc() { return m_fSequenceAcc; }
+	void		Set_SequenceAcc(_float fTime) { m_fSequenceAcc = fTime; }
+
+	_float		Get_LifeTimeRatio() { return m_fLifeTimeRatio; }
+
+	_float		Get_WaitingTime() { return m_fWaitingTime; }
+	void		Set_WaitingTime(_float fTime) { m_fWaitingTime = fTime; }
+	
 	_float		Get_LifeTime() { return m_fLifeTime; }
 	void		Set_LifeTime(_float fLifeTime) { m_fLifeTime = fLifeTime; }
+
+	_float		Get_RemainTime() { return m_fRemainTime; }
+	void		Set_RemainTime(_float fTime) { m_fRemainTime = fTime; }
 
 	_float		Get_SequenceTime() { return m_fSequenceTime; }
 	void		Set_SequenceTime(_float fSequenceTime) { m_fSequenceTime = fSequenceTime; }
@@ -173,9 +186,18 @@ public:
 protected:
 	TYPE_EFFECT	eEffectType		= { TYPE_EFFECT_END };
 
+	_float		m_fWaitingAcc = { 0.f };	/* 시작 딜레이 시간 누적 */
+	_float		m_fTimeAcc = { 0.f };		/* 시간 누적 */
+	_float		m_fRemainAcc = { 0.f };
+	_float		m_fSequenceAcc = { 0.f };	/* 시퀀스 시간 누적 */
+
+	_float		m_fLifeTimeRatio = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
+
 	_float		m_fWaitingTime  = { 0.f };	/* 이 값이 넘어가야 m_fTimeAcc가 누적되기 시작한다. */
 	_float		m_fLifeTime		= { 3.f };
+	_float		m_fRemainTime = { 0.f };	/* 라이프타임이 지나고, 이 시간이 넘어가야 이펙트 종료. */
 	_float		m_fSequenceTime = { 0.f };	/* 총 시퀀스 시간(fWaitingTime + fLifeTime + fRemainTime) */
+
 
 	_float4x4	m_matCombined = {};
 

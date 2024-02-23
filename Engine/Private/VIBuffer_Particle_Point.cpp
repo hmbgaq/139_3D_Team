@@ -129,8 +129,6 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 
 	uniform_real_distribution<float>	RandomLengthPosition(m_tBufferDesc.vMinMaxLengthPosition.x, m_tBufferDesc.vMinMaxLengthPosition.y);
 
-	
-
 	uniform_real_distribution<float>	RandomRed(min(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y), max(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y));
 	uniform_real_distribution<float>	RandomGreen(min(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y), max(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y));
 	uniform_real_distribution<float>	RandomBlue(min(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y), max(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y));

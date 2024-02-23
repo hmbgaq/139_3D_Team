@@ -23,6 +23,7 @@ float2			g_UVScale;
 
 float			g_DiscardValue;
 
+
 // ======= Noise
 float	g_fFrameTime;
 float3	g_vScrollSpeeds;
@@ -35,7 +36,6 @@ float2	g_vDistortion2;
 float2	g_vDistortion3;
 float	g_fDistortionScale;
 float	g_fDistortionBias;
-
 
 
 

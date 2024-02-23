@@ -73,10 +73,17 @@ void CEffect::Tick(_float fTimeDelta)
 			// 시간 누적 시작
 			m_tEffectDesc.fTimeAcc += fTimeDelta;
 			m_tEffectDesc.fLifeTimeRatio = min(1.0f, m_tEffectDesc.fTimeAcc / m_tEffectDesc.fLifeTime);
-			if (m_tEffectDesc.fTimeAcc >= m_tEffectDesc.fLifeTime + m_tEffectDesc.fRemainTime)
+			
+			if (m_tEffectDesc.fTimeAcc >= m_tEffectDesc.fLifeTime)
 			{
-				End_Effect();
-				return;
+				// 삭제 대기시간 누적 시작
+				m_tEffectDesc.fRemainAcc += fTimeDelta;
+
+				if (m_tEffectDesc.fRemainAcc >= m_tEffectDesc.fRemainTime)
+				{
+					End_Effect();
+					return;
+				}
 			}
 
 
@@ -125,6 +132,7 @@ void CEffect::ReSet_Effect()
 	m_tEffectDesc.fSequenceAcc	 = 0.f;
 	m_tEffectDesc.fTimeAcc		 = 0.f;
 	m_tEffectDesc.fWaitingAcc	 = 0.f;
+	m_tEffectDesc.fRemainAcc	 = 0.f;
 	m_tEffectDesc.fLifeTimeRatio = 0.f;
 
 	m_tEffectDesc.bFinished = FALSE;

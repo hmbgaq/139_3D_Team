@@ -45,6 +45,7 @@ void CWindow_Style::Tick(_float fTimeDelta)
 	colors[ImGuiCol_ChildBg]	 = m_tStyleDesc.vBgColor;
 	colors[ImGuiCol_ScrollbarBg] = m_tStyleDesc.vBgColor;
 
+
 	if (ImGui::DragFloat(" WindowRounding ", &m_tStyleDesc.fWindowRounding, 0.5f, 0.f, 20.f))
 	{
 		style.WindowRounding = m_tStyleDesc.fWindowRounding;

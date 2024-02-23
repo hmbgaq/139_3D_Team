@@ -14,7 +14,6 @@ texture2D	g_DissolveDiffTexture;
 
 texture2D	g_DepthTexture;
 
-
 vector      g_vCamPosition;
 vector      g_vCamDirection;
 
@@ -25,21 +24,14 @@ float		g_fDissolveRatio;
 float2      g_UVOffset;
 float2      g_UVScale;
 
+float		g_DiscardValue;
 
-cbuffer FX_Particle
+
+float IsIn_Range(float fMin, float fMax, float fValue)
 {
-    float fGameTime = false;
-    float3 vEmitPosition;
-    float3 vEmitDirection;
-    float fTimeStep;
-    
-    float3 vRandomMul = float3(1.f, 1.f, 1.f);
-    float fSpreadSpeed = 1.f;
-    float fEmitTerm = 0.005f;
-    float fParticleLifeTime = 1.f;
-    float fSequenceTerm = 0.0f;
-    int iIsLoop = 0;
-};
+	return (fMin <= fValue) && (fMax >= fValue);
+}
+
 
 struct VS_IN
 {
@@ -143,13 +135,17 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
+	//* g_UVScale + g_UVOffset
+	In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
+
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    clip(Out.vDiffuse.a - 0.1f);
+	float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+
+    //clip(Out.vDiffuse.a - g_DiscardValue);
+	Out.vDiffuse.a *= vAlphaMask.a;
 	
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
-
-	
 	
 	return Out;
 }
@@ -211,7 +207,7 @@ PS_OUT PS_MAIN_NORMAL(PS_IN_NORMAL In)
 	PS_OUT Out = (PS_OUT)0;
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    clip(Out.vDiffuse.a - 0.1f);
+    clip(Out.vDiffuse.a - g_DiscardValue);
     Out.vDiffuse.a = 1.f;
 	/* 0 ~ 1 */
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
@@ -279,11 +275,6 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 }
 
 
-float IsIn_Range(float fMin, float fMax, float fValue)
-{
-    return (fMin <= fValue) && (fMax >= fValue);
-}
-
 PS_OUT PS_MAIN_Dissove(PS_IN_NORMAL In)
 {
 	PS_OUT Out = (PS_OUT)0;
@@ -293,7 +284,7 @@ PS_OUT PS_MAIN_Dissove(PS_IN_NORMAL In)
     clip(TexDissolve - g_fDissolveRatio);
 
     vector vTexDiff = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    float fStepValue = IsIn_Range(0.f,0.05f,TexDissolve.r - g_fDissolveRatio);
+    float fStepValue = IsIn_Range(0.f, 0.05f,TexDissolve.r - g_fDissolveRatio);
 	
     Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue * g_DissolveDiffTexture.Sample(LinearSampler, In.vTexUV);
 	
@@ -403,7 +394,7 @@ technique11 DefaultTechnique
         HullShader      = NULL;
         DomainShader    = NULL;
 		GeometryShader	= NULL;
-		PixelShader		= compile ps_5_0	PS_MAIN();
+		PixelShader		= compile ps_5_0 PS_MAIN();
 	}
 
 	pass Pass5_NonCulling_Norm //5

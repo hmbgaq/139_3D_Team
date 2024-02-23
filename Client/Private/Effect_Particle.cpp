@@ -49,7 +49,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 	if (m_tParticleDesc.bActive_Tool)
 	{
-		m_fSequenceTime = m_fLifeTime + m_tParticleDesc.fRemainTime;
+		m_fSequenceTime = m_fLifeTime + m_fRemainTime;
 
 		pDesc->bActive_Tool = TRUE;
 		pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
@@ -57,14 +57,14 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 		if (m_tParticleDesc.bPlay)
 		{
-			m_tParticleDesc.fSequenceAcc += fTimeDelta;
+			m_fSequenceAcc += fTimeDelta;
 
 			// 시작지연 누적시간이 지나면 렌더 시작(파티클 시작)
-			if (m_tParticleDesc.fWaitingAcc <= m_fWaitingTime)
+			if (m_fWaitingAcc <= m_fWaitingTime)
 			{
-				m_tParticleDesc.fWaitingAcc += fTimeDelta;
+				m_fWaitingAcc += fTimeDelta;
 
-				if (m_tParticleDesc.fWaitingAcc >= m_fWaitingTime)
+				if (m_fWaitingAcc >= m_fWaitingTime)
 				{
 					m_tParticleDesc.bRender = TRUE;
 					//pDesc->bPlay	= TRUE;
@@ -74,10 +74,10 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 			}
 
 			// 시간 누적 시작
-			m_tParticleDesc.fTimeAcc += fTimeDelta;
-			m_tParticleDesc.fLifeTimeRatio = min(1.0f, m_tParticleDesc.fTimeAcc / m_fLifeTime);
+			m_fTimeAcc += fTimeDelta;
+			m_fLifeTimeRatio = min(1.0f, m_fTimeAcc / m_fLifeTime);
 
-			if (m_tParticleDesc.fTimeAcc >= m_fLifeTime + m_tParticleDesc.fRemainTime)
+			if (m_fTimeAcc >= m_fLifeTime + m_fRemainTime)
 			{
 				m_tParticleDesc.bRender = FALSE;
 				//pDesc->bPlay			= FALSE;
@@ -138,10 +138,11 @@ void CEffect_Particle::ReSet_Effect()
 {
 	__super::ReSet_Effect();
 
-	m_tParticleDesc.fSequenceAcc	= 0.f;
-	m_tParticleDesc.fTimeAcc		= 0.f;
-	m_tParticleDesc.fWaitingAcc		= 0.f;
-	m_tParticleDesc.fLifeTimeRatio	= 0.f;
+	m_fSequenceAcc		= 0.f;
+	m_fTimeAcc			= 0.f;
+	m_fWaitingAcc		= 0.f;
+	m_fLifeTimeRatio	= 0.f;
+	m_fRemainAcc		= 0.f;
 
 	m_tParticleDesc.bRender = FALSE;
 
@@ -309,9 +310,7 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
 
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tParticleDesc.vColor_Clip.w, sizeof(_float))))
-		return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tParticleDesc.vColor_Clip.w, sizeof(_float)));
 
 
 	//if (SPRITE == m_tParticleDesc.eType)

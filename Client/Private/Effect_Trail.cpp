@@ -44,11 +44,11 @@ void CEffect_Trail::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Trail::Tick(_float fTimeDelta)
 {
-	m_tTrailDesc.fTimeAcc += fTimeDelta;
+	m_fTimeAcc += fTimeDelta;
 
-	if (m_tTrailDesc.fTimeAcc >= m_tDistortionDesc.fSequenceTerm)
+	if (m_fTimeAcc >= m_tDistortionDesc.fSequenceTerm)
 	{
-		m_tTrailDesc.fTimeAcc = 0.f;
+		m_fTimeAcc = 0.f;
 	}
 
 };
@@ -156,7 +156,7 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat4, sizeof(_float4))))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tTrailDesc.fTimeAcc, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_fTimeAcc, sizeof(_float))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3))))
 		return E_FAIL;

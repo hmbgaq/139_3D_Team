@@ -37,8 +37,18 @@ HRESULT CVIBuffer_Effect_Model_Instance::Bind_VIBuffers(_uint iMeshContainerInde
 
 void CVIBuffer_Effect_Model_Instance::Update(_float fTimeDelta)
 {
+	D3D11_MAPPED_SUBRESOURCE			SubResource = {};
 
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTXMODELINSTANCE* pModelInstance = ((VTXMODELINSTANCE*)SubResource.pData);
 	
+	for (_uint i = 0; i < m_iNumInstance; i++)
+	{
+		XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCurrentPosition);
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
 void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)

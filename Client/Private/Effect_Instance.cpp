@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "VIBuffer_Effect_Model_Instance.h"
 
+#include "Easing_Utillity.h"
 
 CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
@@ -48,14 +49,68 @@ void CEffect_Instance::Priority_Tick(_float fTimeDelta)
 void CEffect_Instance::Tick(_float fTimeDelta)
 {
 
+	if (m_tInstanceDesc.bActive_Tool)
+	{
+		m_fSequenceTime = m_fLifeTime + m_fRemainTime;
+
+		if (m_tInstanceDesc.bPlay)
+		{
+			m_fSequenceAcc += fTimeDelta;
+
+			// 시작지연 누적시간이 지나면 렌더 시작
+			if (m_fWaitingAcc <= m_fWaitingTime)
+			{
+				m_fWaitingAcc += fTimeDelta;
+
+				if (m_fWaitingAcc >= m_fWaitingTime)
+				{
+					m_tInstanceDesc.bRender = TRUE;
+				}
+				else
+					return;
+			}
+
+			// 시간 누적 시작
+			m_fTimeAcc += fTimeDelta;
+			m_fLifeTimeRatio = min(1.0f, m_fTimeAcc / m_fLifeTime);
+
+			if (m_fTimeAcc >= m_fLifeTime)
+			{
+				// 삭제 대기시간 누적 시작
+				m_fRemainAcc += fTimeDelta;
+
+				// 디졸브 시작
+				m_tInstanceDesc.bDissolve = TRUE;
+				if (m_tInstanceDesc.bDissolve)
+				{
+					m_tInstanceDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_fRemainAcc, m_fRemainTime, m_tInstanceDesc.eType_Easing);
+				}
+
+				if (m_fRemainAcc >= m_fRemainTime)
+				{
+					m_tInstanceDesc.bRender = TRUE;
+					return;
+				}
+			}
+
+		}
+	}
+
+
 }
 
 void CEffect_Instance::Late_Tick(_float fTimeDelta)
 {
+	if (m_tInstanceDesc.bActive_Tool)
+	{
+		if (m_tInstanceDesc.bRender)
+		{
+			//Compute_CamDistance();
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tInstanceDesc.iRenderGroup, this)))
-		return;
-
+			if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tInstanceDesc.iRenderGroup, this)))
+				return;
+		}
+	}
 }
 
 HRESULT CEffect_Instance::Render()
@@ -79,6 +134,31 @@ HRESULT CEffect_Instance::Render()
 	}	
 
 	return S_OK;
+}
+
+void CEffect_Instance::ReSet_Effect()
+{
+	__super::ReSet_Effect();
+
+	m_fSequenceAcc		= 0.f;
+	m_fTimeAcc			= 0.f;
+	m_fWaitingAcc		= 0.f;
+	m_fLifeTimeRatio	= 0.f;
+	m_fRemainAcc	    = 0.f;
+
+	m_tInstanceDesc.bDissolve = FALSE;
+	m_tInstanceDesc.bRender = FALSE;
+
+}
+
+void CEffect_Instance::End_Effect()
+{
+	__super::End_Effect();
+
+	if (m_tInstanceDesc.bLoop)
+	{
+		ReSet_Effect();
+	}
 }
 
 _bool CEffect_Instance::Write_Json(json& Out_Json)
@@ -149,10 +229,12 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 {
 	//if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	//	return E_FAIL;
-	_float4x4 WorldMatrix;
-	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
+	//_float4x4 WorldMatrix;
+	//XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
+	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix));
 
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix));
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
@@ -167,6 +249,7 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 		{
 			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_NOISE]));
+			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_NOISE]));
 		}
 	}
 
@@ -174,6 +257,15 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFar", &fCamFar, sizeof(_float)));
+
+
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tInstanceDesc.vUV_Offset, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tInstanceDesc.vUV_Scale, sizeof(_float2)));
+
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tInstanceDesc.fDissolveAmount, sizeof(_float)));
+
+
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tInstanceDesc.vColor_Clip.w, sizeof(_float)));
 
 	return S_OK;
 }
