@@ -147,6 +147,12 @@ HRESULT CUI_Anything::Bind_ShaderResources()
 	return S_OK;
 }
 
+HRESULT CUI_Anything::Set_ParentTransform(CTransform* pParentTransformCom)
+{
+	m_tUIInfo.pParentTransformCom = pParentTransformCom;
+	return S_OK;
+}
+
 void CUI_Anything::Compute_OwnerCamDistance()
 {
 	//_vector		vPosition = m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION);

@@ -72,6 +72,12 @@ void CUI::Tick(_float fTimeDelta)
 		break;
 	}
 
+	if (m_tUIInfo.pParentTransformCom != nullptr)
+	{
+		XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_tUIInfo.pParentTransformCom->Get_WorldMatrix());
+		m_pTransformCom->Set_WorldMatrix(m_WorldMatrix);
+	}
+
 	Check_RectPos();
 	Picking_UI();
 }
@@ -202,6 +208,13 @@ void CUI::Set_Size(_float fSizeX, _float fSizeY)
 		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
 }
 
+HRESULT CUI::Set_ParentTransform(CTransform* pParentTransformCom)
+{
+	m_tUIInfo.pParentTransformCom = pParentTransformCom;
+
+	return S_OK;
+}
+
 void CUI::Create_Add_UIParts(void* pArg)
 {
 	CUI::UI_DESC* pUIDesc = (CUI::UI_DESC*)pArg;
@@ -210,12 +223,16 @@ void CUI::Create_Add_UIParts(void* pArg)
 	m_pGameInstance->String_To_WString(pUIDesc->strLayerTag, wstrLayerTag);
 	wstring wstrPartsTag = TEXT("");
 	m_pGameInstance->String_To_WString(pUIDesc->strCloneTag, wstrPartsTag);
-	CUI* pUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_CurrentLevel(), wstrLayerTag, wstrPartsTag, &pArg));
+	CUI* pUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayerTag, wstrPartsTag, &pArg));
 	m_vecUIParts.push_back(pUI);
 }
 
 void CUI::Add_UIParts(CUI* pUI)
 {
+	if (pUI == nullptr)
+		return;
+	//pUI->Set_ParentTransform(m_pTransformCom);
+
 	m_vecUIParts.push_back(pUI);
 }
 
@@ -335,6 +352,7 @@ HRESULT CUI::Ready_UI(const char* cFilePath) // 컨테이너에 담을 UI 파츠들 불러오
 		tUI_Info.strCloneTag = object["CloneTag"];
 		tUI_Info.strProtoTag = object["ProtoTag"];
 		tUI_Info.strFilePath = object["FilePath"];
+
 		tUI_Info.strMapTextureTag = object["FilePath"];
 
 		tUI_Info.iShaderNum = object["ShaderNum"];
@@ -351,7 +369,7 @@ HRESULT CUI::Ready_UI(const char* cFilePath) // 컨테이너에 담을 UI 파츠들 불러오
 		wstring wstrFilePath;
 		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
 
-		CUI* pUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_CurrentLevel(), wstrLayertag, wstrClonetag, &tUI_Info));
+		CUI* pUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayertag, wstrClonetag, &tUI_Info));
 
 		pUI->Get_Transform()->Load_FromJson(object);
 
@@ -368,7 +386,7 @@ HRESULT CUI::Create_UIParts(UI_DESC tUI_Desc)
 	wstring wstrFilePath;
 	m_pGameInstance->String_To_WString(tUI_Desc.strFilePath, wstrFilePath);
 
-	CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_CurrentLevel(), TEXT("Layer_UI"), wstrPrototag, &tUI_Desc));
+	CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), wstrPrototag, &tUI_Desc));
 	m_vecUIParts.push_back(pUI_Object);
 
 	return S_OK;

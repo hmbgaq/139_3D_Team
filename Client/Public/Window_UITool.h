@@ -76,12 +76,14 @@ public: /* ==================== Shortcut_Key ===================== */
 public:
 	void						UI_Set();
 
-public: /* ==================== List ===================== */
+public: /* ==================== List List List List List List List List List List List List List List List List List List List List List List List List List List List List List List List ===================== */
 	void						Layer_List();
 	void						Texture_List();
 	void						Parent_List();
 	void						Class_List();
 	void						Object_List();
+
+
 
 public: /* ================= Function ================= */
 	// string타입을 받는 벡터 컨테이너를 char*타입을 받는 벡터 컨테이너로 변환 해주는 함수
@@ -109,9 +111,12 @@ public: /* ================= Function ================= */
 public:
 	// UI 설정
 	void						UI2D_Setting(_float fTimeDelta);
-	HRESULT						UI2D_Create(_float fTimeDelta);
+	HRESULT						UI2D_Create(CUI::UI_DESC pUIDesc);
+	HRESULT						Parent_Create(CUI::UI_DESC pUIDesc);
+	HRESULT						Child_Create(CUI::UI_DESC pUIDesc);
 	void						UI2D_Delete(_float fTimeDelta);
 	void						AddIndexNumber(PATHINFO& str);
+	void						AddParentIndexNumber(PATHINFO& UI_Info);
 	void						Add_ParentList(CUI::UI_DESC tIn_UI_Desc);
 	void						Add_ObjectList(CUI::UI_DESC tIn_UI_Desc);
 	void						Create_TargetTexture();
@@ -131,7 +136,7 @@ public: /* Image */
 public:
 	void						IndexCheck();
 	void						SetUp_Initialize(); // Load
-	_bool bSetUpComplete = true;
+	_bool						bSetUpComplete = true;
 
 private: /* Member */
 	CUI::UI_DESC				m_tUI_Info;
@@ -162,6 +167,7 @@ private: /* Image_Member */
 	_int						m_iSelectedPathIndex = 0; // 선택된 이미지 경로 인덱스
 	_int						m_iSelectedObjectIndex = 0; // 선택된 UI오브젝트
 	_int						m_iSelectedClassIndex = 0; // 선택된 Class
+	_int						m_iSelectedParentClassIndex = 0; // 선택된 Parent Class
 	_int						m_iSelectedParentIndex = 0; // 선택된 Parent
 	_int						m_iUINameNum = 0;
 private: /* 2D */
@@ -188,13 +194,14 @@ private: /* enum */
 	_int						m_iChangeType = (_int)CHANGETYPE::NONE;
 	_int						m_iRenderGroup = (_int)CRenderer::RENDER_UI;
 
-private:
+private: /* bool */
 	_bool						m_bOpenTexture = true;
 	_bool						m_bOpenSetting = false;
 	_bool						m_bOpenUI = false;
 	_bool						m_bScaleChange = false;
 	_bool						m_bRotChange = false;
 	_bool						m_bPosChange = false;
+	_bool						m_bParent = false;
 
 private:
 	//// ==============폴더 경로==============

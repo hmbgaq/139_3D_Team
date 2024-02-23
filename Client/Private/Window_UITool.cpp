@@ -6,6 +6,7 @@
 #include "Json_Utility.h"
 #include "Target_Manager.h"
 #include "RenderTarget.h"
+#include "UI_Anything.h"
 
 /* error 외부참조 기호 : define 걸어줘야함 */
 #define STB_IMAGE_IMPLEMENTATION
@@ -93,6 +94,7 @@ HRESULT CWindow_UITool::Initialize()
 
 #pragma region Start Setting
 	// 시작하자마자 아무것도 안눌렀을 때 기본 테그 값 주고 시작하기.
+	m_tUI_Desc.strLayerTag = "Layer_UI_Player";
 	m_tUI_Desc.strCloneTag = "Prototype_GameObject_UI_Anything";
 	m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
 	m_tUI_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
@@ -100,6 +102,15 @@ HRESULT CWindow_UITool::Initialize()
 	m_tUI_Desc.fPositionY = g_iWinSizeY / 2;
 	m_tUI_Desc.fScaleX = 100;
 	m_tUI_Desc.fScaleY = 100;
+
+	m_tUIParent_Desc.strLayerTag = "Layer_UI_Player";
+	m_tUIParent_Desc.strCloneTag = "Prototype_GameObject_UI_Player_Left_Interface";
+	m_tUIParent_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
+	m_tUIParent_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
+	m_tUIParent_Desc.fPositionX = g_iWinSizeX / 2;
+	m_tUIParent_Desc.fPositionY = g_iWinSizeY / 2;
+	m_tUIParent_Desc.fScaleX = 100;
+	m_tUIParent_Desc.fScaleY = 100;
 #pragma endregion End
 
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩이 완료되었습니다."));
@@ -120,21 +131,27 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	SetUp_ImGuiDESC("Anim", { 600.f, 300.f }, 0, { 0.f, 0.f, 0.f, 0.f });
 
+	SetUp_ImGuiDESC("Parent", { 600.f, 300.f }, 0, { 0.f, 0.f, 0.f, 0.f });
 	__super::Begin();
 
-	ImGui::Text("Mouse Pos : %d, %d", m_pt.x, m_pt.y);
-
-	/* 미리보기 */
-	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2((_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Width, (_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
+	// Parent
+	Parent_List();
+	ImGui::Spacing();
 
 	__super::End();
 
-	SetUp_ImGuiDESC("Anim2", { 600.f, 300.f }, 0, { 0.f, 0.f, 0.f, 0.f });
 
+	SetUp_ImGuiDESC("Info", { 600.f, 300.f }, 0, { 0.f, 0.f, 0.f, 0.f });
 	__super::Begin();
+	ImGui::Text("Mouse Pos : %d, %d", m_pt.x, m_pt.y);
+	/* 미리보기 */
+	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2((_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Width, (_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
+	__super::End();
 
+
+	SetUp_ImGuiDESC("Child", { 600.f, 300.f }, 0, { 0.f, 0.f, 0.f, 0.f });
+	__super::Begin();
 	if (ImGui::BeginTabBar("MyTabBar", m_Tab_bar_flags))
 	{
 
@@ -176,7 +193,6 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 
 	/* Default : LastNumber */
 	UI_ToolTip(fTimeDelta); // Tip : 툴팁은 오버레이시 모든 출력중 가장 마지막에 호출되어야한다. (안그러면 다른 녀석들이 툴팁에 밀려서 출력됨)
-
 	__super::End();
 
 }
@@ -192,47 +208,32 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 		m_vecTexture.empty())
 		return;
 
-	ImGui::RadioButton("UI", &m_iRenderGroup, (_int)CRenderer::RENDERGROUP::RENDER_UI); ImGui::SameLine();
+	//ImGui::RadioButton("UI", &m_iRenderGroup, (_int)CRenderer::RENDERGROUP::RENDER_UI); ImGui::SameLine();
 
 	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyMask_;
 	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
 
-	ImGui::BeginChild("Layer List", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 150), ImGuiChildFlags_Border, WindowFlag);
 	// Layer
 	Layer_List();
 	ImGui::Spacing();
-	ImGui::EndChild();
 
-	ImGui::SameLine();
-
-	ImGui::BeginChild("Texture List", ImVec2(ImGui::GetContentRegionAvail().x, 150), ImGuiChildFlags_Border, WindowFlag);
 	// Textuer
 	Texture_List();
 	ImGui::Spacing();
-	ImGui::EndChild();
 
-	ImGui::BeginChild("Parent2 List", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 150), ImGuiChildFlags_Border, WindowFlag);
-	// Parent
-	Parent_List();
-	ImGui::Spacing();
-	ImGui::EndChild();
-
-	ImGui::SameLine();
-
-	ImGui::BeginChild("Class List", ImVec2(ImGui::GetContentRegionAvail().x, 150), ImGuiChildFlags_Border, WindowFlag);
 	// Class
 	Class_List();
 	ImGui::Spacing();
-	ImGui::EndChild();
 
 	// Object
 	Object_List();
 
 
+
 #pragma region Create/Delete
 	if (ImGui::Button("Create"))
 	{
-		UI2D_Create(fTimeDelta);
+		UI2D_Create(m_tUI_Desc);
 	}
 
 	ImGui::SameLine(70.f);
@@ -393,7 +394,7 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 		{
 			m_tUI_Desc.fPositionX = m_pt.x;
 			m_tUI_Desc.fPositionY = m_pt.y;
-			UI2D_Create(fTimeDelta);
+			UI2D_Create(m_tUI_Desc);
 			
 		}
 	}
@@ -415,7 +416,7 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 
 		if (m_pGameInstance->Key_Down(DIK_D))
 		{
-			UI2D_Create(fTimeDelta);
+			UI2D_Create(m_tUI_Desc);
 		}
 
 		if (m_pGameInstance->Key_Down(DIK_L))
@@ -478,6 +479,8 @@ void CWindow_UITool::Layer_List()
 			if (is_selected)
 			{
 				ImGui::SetItemDefaultFocus();
+				m_tUI_Desc.strLayerTag = m_strLayer[is_selected].c_str();
+				m_tUIParent_Desc.strLayerTag = m_strLayer[is_selected].c_str();
 			}
 		}
 
@@ -503,6 +506,7 @@ void CWindow_UITool::Texture_List()
 				//AddIndexNumber(*m_vecImagePaths[m_iSelectedPathIndex]); // 오브젝트 테그 결정
 				/* 프로토 테그 설정 */
 				m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
+				m_tUIParent_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -520,21 +524,39 @@ void CWindow_UITool::Parent_List()
 	if (m_vecParent.empty())
 		return;
 
-	_int		ParentTagSize = (_int)m_vecParent.size();
-
-	if (ImGui::BeginListBox("Parent"))
+	if (ImGui::Button("Parent_Create"))
 	{
-		for (_int i = 0; i < ParentTagSize; i++)
+		Parent_Create(m_tUIParent_Desc);	// 부모생성
+	}
+
+	if (ImGui::Button("Parts_Create"))
+	{
+		Create_Add_UIParts(m_tUI_Desc);	// 부모에서 -> 자식생성
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Parts_Add"))
+	{
+		Add_UIParts(m_CurrObject); // 부모  <- 자식포함
+	}
+
+	_int iParentClassTagSize = (_int)m_vecParent.size();
+
+	if (ImGui::BeginListBox("Parent Class"))
+	{
+		for (_int i = 0; i < iParentClassTagSize; i++)
 		{
-			const bool is_selected = (m_iSelectedParentIndex == i);
+			const bool is_selected = (m_iSelectedParentClassIndex == i);
 			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecParent[i].c_str())), is_selected))
 			{
-				m_iSelectedParentIndex = i;
+				m_iSelectedParentClassIndex = i;
 
 				/* 클래스 테그 설정 */
-				m_tUI_Desc.strCloneTag = "Prototype_GameObject_";
-				m_tUI_Desc.strCloneTag += m_vecParent[m_iSelectedParentIndex].c_str();
-				m_tUI_Desc.bParent = true;
+				m_tUIParent_Desc.strCloneTag = "Prototype_GameObject_";
+				m_tUIParent_Desc.strCloneTag += m_vecParent[m_iSelectedParentClassIndex].c_str();
+
+				m_bParent = true;
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -542,11 +564,45 @@ void CWindow_UITool::Parent_List()
 		}
 		ImGui::EndListBox();
 	}
+
+	_int		ParentObjectTagSize = (_int)m_vecParentObjectName.size();
+
+	if (ImGui::Button("P_Delete"))
+	{
+		Delete_UIParts();
+	}
+	if (ImGui::BeginListBox("Parent Object"))
+	{
+		for (_int i = 0; i < ParentObjectTagSize; i++)
+		{
+			const bool is_selected = (m_iSelectedParentIndex == i);
+			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecParentObjectName[i]->strFileName)), is_selected))
+			{
+				m_iSelectedParentIndex = i;
+				m_pCurrParent = dynamic_cast<CUI*>(m_vecUIParentObject[m_iSelectedParentIndex]);
+				m_tUIParent_Desc.strCloneTag = m_vecParentObjectName[m_iSelectedParentIndex]->strFileName;
+			}
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+	ImGui::Spacing();
+
+	//ImGui::SameLine();
+
 }
 
 void CWindow_UITool::Class_List()
 {
 	_int		ClassTagSize = (_int)m_vecClass.size();
+
+
+	if (ImGui::Button("Child Create"))
+	{
+		Child_Create(m_tUI_Desc);
+	}
 
 	if (ImGui::BeginListBox("Class"))
 	{
@@ -559,7 +615,8 @@ void CWindow_UITool::Class_List()
 				/* 클래스 테그 설정 */
 				m_tUI_Desc.strCloneTag = "Prototype_GameObject_UI_";
 				m_tUI_Desc.strCloneTag += m_vecClass[m_iSelectedClassIndex].c_str();
-				m_tUI_Desc.bParent = false;
+
+				m_bParent = false;
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -571,9 +628,12 @@ void CWindow_UITool::Class_List()
 
 void CWindow_UITool::Object_List()
 {
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
 	_int		ObjectTagSize = (_int)m_vecObjectName.size();
 
-	if (ImGui::BeginListBox("Object"))
+	ImGui::BeginChild("Child List", ImVec2(ImGui::GetContentRegionAvail().x, 150), ImGuiChildFlags_Border, WindowFlag);
+	if (ImGui::BeginListBox("Child Object"))
 	{
 		for (_int i = 0; i < ObjectTagSize; i++)
 		{
@@ -589,7 +649,8 @@ void CWindow_UITool::Object_List()
 		}
 		ImGui::EndListBox();
 	}
-
+	ImGui::Spacing();
+	ImGui::EndChild();
 }
 
 void CWindow_UITool::UI_ToolTip(_float fTimeDelta)
@@ -1014,12 +1075,31 @@ void CWindow_UITool::SetUp_Initialize()
 #pragma region Parent
 void CWindow_UITool::Create_Add_UIParts(CUI::UI_DESC tUIDesc)
 {
-	dynamic_cast<CUI*>(m_vecUIParentObject[m_iSelectedParentIndex])->Create_Add_UIParts(&tUIDesc);
+	if (m_vecUIParentObject.empty())
+		return;
+
+		dynamic_cast<CUI*>(m_vecUIParentObject[m_iSelectedParentIndex])->Create_Add_UIParts(&tUIDesc);
 }
 
 void CWindow_UITool::Add_UIParts(CUI* pUI)
 {
-	dynamic_cast<CUI*>(m_vecUIParentObject[m_iSelectedParentIndex])->Add_UIParts(pUI);
+	if (m_vecUIParentObject.empty())
+		return;
+
+	CUI* _pUI = dynamic_cast<CUI*>(m_vecUIParentObject[m_iSelectedParentIndex]);
+	if (nullptr == _pUI)
+	{
+		_uint a = 0;
+		return;
+	}
+
+	CUI* pParentUI = _pUI;
+	CUI* pChild = pUI;
+
+	CTransform* pParentTransform = pParentUI->Get_Transform();
+	pChild->Set_ParentTransform(pParentTransform);
+
+	pParentUI->Add_UIParts(pChild);
 }
 
 void CWindow_UITool::Delete_UIParts()
@@ -1028,6 +1108,9 @@ void CWindow_UITool::Delete_UIParts()
 		return;
 
 	dynamic_cast<CUI*>(m_vecUIParentObject[m_iSelectedParentIndex])->Is_Dead();
+
+	if (!m_vecParentObjectName.empty())
+		m_vecParentObjectName.erase(m_vecParentObjectName.begin() + m_iSelectedObjectIndex); // 오브젝트 목록 이름 삭제
 
 	if(m_iSelectedParentIndex > 0 &&
 		m_iSelectedParentIndex <= m_vecUIParentObject.size())
@@ -1072,29 +1155,65 @@ void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
 
 }
 
-HRESULT CWindow_UITool::UI2D_Create(_float fTimeDelta)
+HRESULT CWindow_UITool::UI2D_Create(CUI::UI_DESC pUIDesc)
 {
 	CGameObject* pGameObject = nullptr;
 	CUI* pUI = nullptr;
 	wstring strCloneProto = TEXT("");
 	m_pGameInstance->String_To_WString(m_tUI_Desc.strCloneTag, strCloneProto);
 
-	if (m_tUI_Desc.bParent == true)
+	//if (m_bParent == true)
+	//{
+	//	pUIDesc.bParent = m_bParent;
+	//	pGameObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &pUIDesc);
+	//	pUI = dynamic_cast<CUI*>(pGameObject);
+	//	Add_ParentList(pUIDesc);
+	//	m_vecUIParentObject.push_back(pUI);
+	//	m_pCurrParent = pUI;
+	//}
+	//else
 	{
-		pGameObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &m_tUI_Desc);
-		pUI = dynamic_cast<CUI*>(pGameObject);
-		Add_ParentList(m_tUI_Desc);
-		m_vecUIParentObject.push_back(pUI);
+		pUIDesc.bParent = m_bParent;
+		CUI* pCurrObject = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &pUIDesc));
+		//pCurrObject->Create_UIParts(pUIDesc);
+		Add_ObjectList(pUIDesc);
+		m_vecUIObject.push_back(pCurrObject);
+		m_CurrObject = pCurrObject;
 	}
-	else
-	{
-		if (m_pCurrParent == nullptr)
-			return E_FAIL;
 
-		m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &m_tUI_Desc);
-		m_pCurrParent->Create_UIParts(m_tUI_Desc);
-		Add_ObjectList(m_tUI_Desc);
-	}
+	return S_OK;
+}
+
+HRESULT CWindow_UITool::Child_Create(CUI::UI_DESC pUIDesc)
+{
+	//CGameObject* pGameObject = nullptr;
+	//CUI* pUI = nullptr;
+	//wstring strCloneProto = TEXT("");
+	//m_pGameInstance->String_To_WString(pUIDesc.strCloneTag, strCloneProto);
+
+	//if (m_bParent == true)
+	//{
+	//	pUIDesc.bParent = m_bParent;
+	//	pGameObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &pUIDesc);
+	//	pUI = dynamic_cast<CUI*>(pGameObject);
+	//	Add_ParentList(pUIDesc);
+	//	m_vecUIObject.push_back(pUI);
+	//	m_CurrObject = pUI;
+	//}
+
+	return S_OK;
+}
+
+HRESULT CWindow_UITool::Parent_Create(CUI::UI_DESC pUIDesc)
+{
+	CGameObject* pGameObject = nullptr;
+	wstring strCloneProto = TEXT("");
+	m_pGameInstance->String_To_WString(pUIDesc.strCloneTag, strCloneProto);
+
+	CUI* m_pCurrObject = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &pUIDesc));
+	Add_ParentList(pUIDesc);
+	m_vecUIParentObject.push_back(m_pCurrObject);
+	m_pCurrParent = m_pCurrObject;
 
 	return S_OK;
 }
@@ -1169,21 +1288,64 @@ void CWindow_UITool::AddIndexNumber(PATHINFO& UI_Info)
 	UI_Info.iPathNum = index;
 }
 
+void CWindow_UITool::AddParentIndexNumber(PATHINFO& UI_Info)
+{
+	int		index = 0;
+	_bool	isPath = false;
+	//size_t underscorePos = str.find_last_of('_');
+	//auto it = std::find(m_vecObjectName.begin(), m_vecObjectName.end(), UI_Info.strFilePath); // 경로를 비교한다.
+	if (m_vecParentObjectName.empty())
+		return;
+
+	for (auto& iter : m_vecParentObjectName)
+	{
+		if (iter->strFilePath == UI_Info.strFilePath)
+		{
+			isPath = true;
+			break;
+		}
+	}
+
+	// 문자열이 이미 존재하는 경우
+	if (isPath)
+	{
+		for (auto& strFilePath : m_vecParentObjectName)
+		{
+			if (strFilePath->strFilePath == UI_Info.strFilePath)
+			{
+				/* 모두 순회하고 */
+				if (strFilePath->iPathNum >= UI_Info.iPathNum) // 기존 컨테이너에 있는 마지막으로 비교한 녀석의 숫자보다 작거나 같을 경우
+				{
+					index = strFilePath->iPathNum + 1; // 마지막 녀석의 번호 + 1로 저장
+				}
+
+			}
+		}
+
+		//std::cout << "Name: " << str << ", Index: " << index << std::endl;
+	}
+	else
+	{
+		// 새로운 문자열인 경우
+		index = 0;
+		//std::cout << "Name: " << str << ", Index: " << m_vecObjectName.size() - 1 << std::endl;
+	}
+
+	/* 테그 */
+	UI_Info.strFileName = UI_Info.strFileName + to_string(index);
+	UI_Info.iPathNum = index;
+}
+
 void CWindow_UITool::Add_ParentList(CUI::UI_DESC tIn_UI_Desc)
 {
-	// error : 아래 Get_CloneGameObjects로 오브젝트를 가져올때 기존 오브젝트까지 모두 다시들고 오기 때문에, 함수를 따로 만들거나 클리어하고 담아주자
-	if (!m_vecUIObject.empty())
-		m_vecUIObject.clear();
-
 	PATHINFO* tUI_Desc = new PATHINFO;
 
 	// 문자열 중복 비교
 	tUI_Desc->strFileName = tIn_UI_Desc.strProtoTag;
-	tUI_Desc->strFilePath = tIn_UI_Desc.strFilePath;
-	AddIndexNumber(*tUI_Desc); // 오브젝트 테그 결정
+	tUI_Desc->strFilePath = tIn_UI_Desc.strProtoTag;
+	AddParentIndexNumber(*tUI_Desc); // 오브젝트 테그 결정
 
 	m_vecParentObjectName.push_back(tUI_Desc); // 이름 중복 검사 후 처리된 테그값으로 넣어주자.
-	m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecUIParentObject);
 
 	tUI_Desc = nullptr;
 	delete[] tUI_Desc;

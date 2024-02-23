@@ -43,12 +43,27 @@ HRESULT CUI_Player_Left_Interface::Initialize(void* pArg)
 
 void CUI_Player_Left_Interface::Priority_Tick(_float fTimeDelta)
 {
+	//if (!m_vecUIParts.empty())
+	//{
+	//	for (auto& pUIParts : m_vecUIParts)
+	//	{
+	//		pUIParts->Priority_Tick(fTimeDelta);
+	//	}
+	//}
 
 }
 
 void CUI_Player_Left_Interface::Tick(_float fTimeDelta)
 {
+	__super::Tick(fTimeDelta);
 
+	//if (!m_vecUIParts.empty())
+	//{
+	//	for (auto& pUIParts : m_vecUIParts)
+	//	{
+	//		pUIParts->Tick(fTimeDelta);
+	//	}
+	//}
 }
 
 void CUI_Player_Left_Interface::Late_Tick(_float fTimeDelta)
@@ -56,7 +71,14 @@ void CUI_Player_Left_Interface::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	__super::Tick(fTimeDelta);
+	//if (!m_vecUIParts.empty())
+	//{
+	//	for (auto& pUIParts : m_vecUIParts)
+	//	{
+	//		pUIParts->Late_Tick(fTimeDelta);
+	//	}
+	//}
+
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
@@ -66,6 +88,14 @@ HRESULT CUI_Player_Left_Interface::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
+
+	//if (!m_vecUIParts.empty())
+	//{
+	//	for (auto& pUIParts : m_vecUIParts)
+	//	{
+	//		pUIParts->Render();
+	//	}
+	//}
 
 	//! 이 셰이더에 0번째 패스로 그릴거야.
 	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP

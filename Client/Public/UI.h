@@ -86,6 +86,7 @@ public:
 		/* »ö»ó */
 		_vector		vColor = { 1.f, 1.f, 1.f, 1.f };
 
+		class CTransform* pParentTransformCom = nullptr;
 	}UI_DESC;
 
 	enum UI_BUTTON_STATE
@@ -115,6 +116,14 @@ public: /* ============================== Get / Set ============================
 	// =>Position
 	void			Set_Pos(_float fPosX, _float fPosY);
 	void			Set_PosZ(_float fZ);
+
+
+
+//protected:
+public:
+	virtual HRESULT	Set_ParentTransform(CTransform* pParentTransformCom);
+
+
 
 public: /* ============================== Add ============================== */
 	void			Create_Add_UIParts(void* pArg);
@@ -178,7 +187,7 @@ protected: /* ============================= UI =============================== *
 	UI_DESC				m_tUIInfo;
 	RECT				m_rcUI = {};
 	UISTATE				m_eState;
-	
+	_float4x4			m_WorldMatrix = {};
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f;
