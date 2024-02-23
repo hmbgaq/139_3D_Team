@@ -59,6 +59,7 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	CBody_Player*		pBody = dynamic_cast<CBody_Player*>(Find_PartObject(TEXT("Part_Body")));
 	Safe_AddRef(pBody);
+
 	if (m_pGameInstance->Get_NextLevel() != _uint(LEVEL_TOOL))
 	{
 		if (GetKeyState(VK_DOWN) & 0x8000)

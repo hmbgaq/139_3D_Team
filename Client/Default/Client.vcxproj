@@ -207,6 +207,7 @@
     <ClInclude Include="..\Public\Effect_Texture.h" />
     <ClInclude Include="..\Public\Effect_Trail.h" />
     <ClInclude Include="..\Public\Environment_Instance.h" />
+    <ClInclude Include="..\Public\Environment_Interact.h" />
     <ClInclude Include="..\Public\Environment_Object.h" />
     <ClInclude Include="..\Public\Field.h" />
     <ClInclude Include="..\public\InstanceMonster.h" />
@@ -295,6 +296,7 @@
     <ClCompile Include="..\Private\Effect_Texture.cpp" />
     <ClCompile Include="..\Private\Effect_Trail.cpp" />
     <ClCompile Include="..\Private\Environment_Instance.cpp" />
+    <ClCompile Include="..\Private\Environment_Interact.cpp" />
     <ClCompile Include="..\Private\Environment_Object.cpp" />
     <ClCompile Include="..\Private\Field.cpp" />
     <ClCompile Include="..\private\InstanceMonster.cpp" />

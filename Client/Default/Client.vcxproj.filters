@@ -582,6 +582,9 @@
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Environment_Interact.h">
+      <Filter>02.GameObjects\02. Environment\Environment_Interact</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -1038,6 +1041,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Blood.cpp">
       <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Environment_Interact.cpp">
+      <Filter>02.GameObjects\02. Environment\Environment_Interact</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

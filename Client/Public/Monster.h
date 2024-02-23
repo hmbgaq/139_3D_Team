@@ -18,6 +18,7 @@ public:
 	{
 		_float4x4	WorldMatrix = XMMatrixIdentity();
 		_bool		bPreview = false;
+		wstring		strProtoTypeTag = L""; //! 파싱용
 	}MONSTER_DESC;
 
 private:
@@ -26,12 +27,20 @@ private:
 	virtual ~CMonster() = default;
 
 public:
+	MONSTER_DESC*	Get_MonsterDesc() { return &m_tMonsterDesc;}
+
+
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Tick(_float fTimeDelta) override;
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+
+public:
+	virtual _bool		Write_Json(json& Out_Json) override;
+	virtual void		Load_FromJson(const json& In_Json) override;
 
 private:
 	CModel*				m_pModelCom = { nullptr };
@@ -46,7 +55,7 @@ private:
 private:
 	_int					m_iRenderPass = {};
 	_float					m_fTimeDelta;
-
+	MONSTER_DESC			m_tMonsterDesc = {};
 public:
 	/* 원형객체를 생성한다. */
 	static CMonster* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

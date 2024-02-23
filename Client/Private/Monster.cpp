@@ -40,11 +40,11 @@ HRESULT CMonster::Initialize(void* pArg)
 
 	if (pArg != nullptr)
 	{
-		MONSTER_DESC MonsterDesc = *(MONSTER_DESC*)pArg;
+		m_tMonsterDesc = *(MONSTER_DESC*)pArg;
 
-		if (MonsterDesc.bPreview == false)
+		if (m_tMonsterDesc.bPreview == false)
 		{
-			m_pTransformCom->Set_WorldMatrix(MonsterDesc.WorldMatrix);
+			m_pTransformCom->Set_WorldMatrix(m_tMonsterDesc.WorldMatrix);
 		}
 	}
 	
@@ -145,6 +145,16 @@ HRESULT CMonster::Render()
 	
 
 	return S_OK;
+}
+
+_bool CMonster::Write_Json(json& Out_Json)
+{
+	return __super::Write_Json(Out_Json);
+}
+
+void CMonster::Load_FromJson(const json& In_Json)
+{
+	return __super::Load_FromJson(In_Json);
 }
 
 HRESULT CMonster::Ready_Components()

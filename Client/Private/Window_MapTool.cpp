@@ -200,6 +200,17 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
  			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
  		}
  	}
+
+	for (auto& tag : m_vecCreateMonsterTag)
+	{
+		// 문자열에서 '@' 문자 이후의 부분을 지움
+		size_t atIndex = tag.find('@');
+		if (atIndex != std::string::npos) {
+			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+		}
+	}
+
+	
 	
 			json SaveJson = {};
 
@@ -287,10 +298,54 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				
 			}
 
+			json MonsterJson;
+
+			if (false == m_vecCreateMonster.empty())
+			{
+				_int iCreateMonsterSize = (_int)m_vecCreateMonster.size();
+			
+			
+			
+				for (_int i = 0; i < iCreateMonsterSize; ++i)
+				{
+					CMonster::MONSTER_DESC Desc;
+			
+					Desc = *m_vecCreateMonster[i]->Get_MonsterDesc();
+			
+					string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
+					MonsterJson[i].emplace("PrototypeTag", strProtoTag);
+					m_vecCreateMonster[i]->Write_Json(MonsterJson[i]);
+				}
+			}
+			
+			//todo 추후 작성 npc
+			
+			//json NPCJson;
+			//
+			//if (false == m_vecCreateNPC.empty())
+			//{
+			//	_int iCreateNPCSize = (_int)m_vecCreateNPC.size();
+			//
+			//	for (_int i = 0; i < iCreateNPCSize; ++i)
+			//	{
+			//		CNPC::NPC_DESC Desc;
+			//
+			//		Desc = *m_vecCreateNPC[i]->Get_NPCDesc();
+			//
+			//		string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
+			//		NPCJson[i].emplace("PrototypeTag", strProtoTag);
+			//		m_vecCreateNPC[i]->Write_Json(NPCJson[i]);
+			//	}
+			//}
+
+
+
 
 			SaveJson.emplace("Basic_Json", BasicJson);
 			SaveJson.emplace("Interact_Json", InteractJson);
 			SaveJson.emplace("Instance_Json", InstanceJson);
+			SaveJson.emplace("Monster_Json", MonsterJson);
+			//! 추후 작성 npc SaveJson.emplace("NPC_Json", NPCJson);
 
 			string strSavePath = strPath + "/" + strNoExtFileName + "_MapData.json";
 			if (FAILED(CJson_Utility::Save_Json(strSavePath.c_str(), SaveJson)))
@@ -368,6 +423,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 
 		m_vecCreateObject.push_back(pObject);
+		m_iCreateObjectIndex++;
 	}
 
 
@@ -421,6 +477,8 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
  			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
  
  			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
+			m_iInstanceInfoTagIndex++;
+			
  		}
  
  
@@ -429,7 +487,45 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
  		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
  
  		m_vecCreateInstance.push_back(pInstanceObject);
+		m_iCreateInstanceIndex++;
  	}
+
+	json MonsterJson = LoadJson["Monster_Json"];
+	_int iMonsterJsonSize = (_int)MonsterJson.size();
+
+	for (_int i = 0; i < iMonsterJsonSize; ++i)
+	{
+		string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + "@" + to_string(i);
+
+		m_vecCreateMonsterTag.push_back(pushMonsterTag);
+
+		CMonster::MONSTER_DESC MonsterDesc;
+		MonsterDesc.bPreview = false;
+
+
+		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+		
+		MonsterDesc.WorldMatrix = WorldMatrix;
+
+		CMonster* pMonster = { nullptr };
+
+		wstring strProtoTypeTag;
+		m_pGameInstance->String_To_WString((string)MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
+
+		pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
+
+		m_vecCreateMonster.push_back(pMonster);
+		m_iCreateMonsterIndex++;
+	}
 
 	return S_OK;
 }
@@ -437,9 +533,11 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 void CWindow_MapTool::Reset_Function()
 {
 	m_pPreviewObject = nullptr;
+	m_pPreviewCharacter = nullptr;
 	m_pPickingObject = nullptr;
-		
 	m_pPickingInstanceInfo = nullptr;
+
+		
 
 	_int iCreateObjectSize = (_int)m_vecCreateObject.size();
 
@@ -480,8 +578,29 @@ void CWindow_MapTool::Reset_Function()
 
 	
 
-	
 
+	_int iCreateMonsterSize = (_int)m_vecCreateMonster.size();
+
+	for (_int i = 0; i < iCreateMonsterSize; ++i)
+	{
+		m_vecCreateMonster[i]->Set_Dead(false);
+	}
+
+	m_iCreateMonsterIndex = 0;
+	m_iSelectCharacterTag = 0;
+	m_vecCreateMonster.clear();
+	m_vecCreateMonsterTag.clear();
+
+	
+	
+	//!_int iCreateNPCSize = (_int)m_vecCreateNPC.size();
+	//!
+	//!for (_int i = 0; i < iCreateNPCSize; ++i)
+	//!{
+	//!	m_vecCreateNPC[i]->Set_Dead(true);
+	//!}
+	//!
+	//!m_vecCreateNPC.clear();
 
 }
 
@@ -1869,9 +1988,12 @@ void CWindow_MapTool::Monster_CreateFunction()
 	CMonster::MONSTER_DESC Desc;
 	Desc.bPreview = false;
 	Desc.WorldMatrix = m_pPreviewCharacter->Get_Transform()->Get_WorldMatrix();
+	
 
 	wstring strProtoTag;
 	m_pGameInstance->String_To_WString(m_vecMonsterTag[m_iSelectCharacterTag], strProtoTag);
+
+	Desc.strProtoTypeTag = strProtoTag;
 
 	CMonster* pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTag, &Desc));
 
