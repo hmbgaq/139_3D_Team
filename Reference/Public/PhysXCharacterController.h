@@ -5,7 +5,7 @@ BEGIN(Engine)
 
 class CTransform;
 
-class CPhysXCharacterController :
+class ENGINE_DLL CPhysXCharacterController :
 	public CPhysXController, public PxControllerBehaviorCallback
 {
 protected:

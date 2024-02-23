@@ -64,22 +64,22 @@ private:
 
 private:
 	// Foundation을 생성하는데 필요한 변수
-	PxDefaultAllocator		m_Allocator;
-	PxDefaultErrorCallback	m_ErrorCallback;
+	physx::PxDefaultAllocator		m_Allocator;
+	physx::PxDefaultErrorCallback	m_ErrorCallback;
 
-	PxFoundation* m_pFoundation = { nullptr };
-	PxPhysics* m_pPhysics = { nullptr };
-	PxScene* m_pScene = { nullptr };
-	PxMaterial* m_pMaterial = { nullptr };
+	physx::PxFoundation* m_pFoundation = { nullptr };
+	physx::PxPhysics* m_pPhysics = { nullptr };
+	physx::PxScene* m_pScene = { nullptr };
+	physx::PxMaterial* m_pMaterial = { nullptr };
 
-	PxRigidDynamic* m_pTemp = { nullptr };
-	PxControllerManager* m_pControllerManager = nullptr;
+	physx::PxRigidDynamic* m_pTemp = { nullptr };
+	physx::PxControllerManager* m_pControllerManager = nullptr;
 	
 	////Visual Debugger
-	PxPvd* m_pPVD = { nullptr };
+	physx::PxPvd* m_pPVD = { nullptr };
 
-	PxCooking* m_pCooking = { nullptr };
-	PxDefaultCpuDispatcher* m_pDispatcher = nullptr;
+	physx::PxCooking* m_pCooking = { nullptr };
+	physx::PxDefaultCpuDispatcher* m_pDispatcher = nullptr;
 	//PxCudaContextManager* m_pCudaContextManager = nullptr;
 
 private:
