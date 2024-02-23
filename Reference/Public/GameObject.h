@@ -51,6 +51,9 @@ public:
 	void	Set_Dead(_bool _bDead) { m_bDead = _bDead; }
 
 public:
+	virtual void Set_Enable(_bool _Enable) override;
+
+public:
 	virtual _bool Write_Json(json & Out_Json) override;
 	virtual void Load_FromJson(const json & In_Json) override;
 

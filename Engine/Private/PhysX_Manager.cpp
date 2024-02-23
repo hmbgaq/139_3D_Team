@@ -86,6 +86,7 @@ HRESULT CPhysX_Manager::Initialize(const _uint In_iNumLayer)
 	m_pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, -10.f);
 
 
+
 	//PxCudaContextManagerDesc tCudaDesc;
 	//tCudaDesc.graphicsDevice = m_pDevice;
 	//tCudaDesc.interopMode = PxCudaInteropMode::Enum::D3D11_INTEROP;
@@ -107,6 +108,37 @@ HRESULT CPhysX_Manager::Initialize(const _uint In_iNumLayer)
 	m_pCollisionSimulationEventCallBack = new CollisionSimulationEventCallBack();
 
 	Create_Scene();
+
+
+
+	////PxMaterial* mMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	//PxMaterial* mMaterial = { nullptr };
+	//Create_Material(0.5f, 0.5f, 0.6f, &mMaterial);
+
+	//float halfExtent = .5f;
+	//physx::PxShape* shape;
+	////shape = m_pPhysics->createShape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), *mMaterial);
+	//Create_Shape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), mMaterial, false, PxShapeFlag::eSIMULATION_SHAPE, &shape);
+	//
+
+	//physx::PxRigidStatic* groundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 50), *mMaterial);
+	//m_pScene->addActor(*groundPlane);
+
+
+	//physx::PxU32 size = 30;
+	//physx::PxTransform t(physx::PxVec3(0));
+	//for (physx::PxU32 i = 0; i < size; i++) {
+	//	for (physx::PxU32 j = 0; j < size - i; j++) {
+	//		physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i), physx::PxReal(i * 2 + 1), 0) * halfExtent);
+	//		physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(t.transform(localTm));
+	//		body->attachShape(*shape);
+	//		physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+	//		m_pScene->addActor(*body);
+	//	}
+	//}
+
+	//shape->release();
+
 
 
 	return S_OK;
