@@ -73,7 +73,7 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	m_pTransformCom->Add_RootBone_Position(m_pBody->Get_MovePos(), m_pNavigationCom);
 
 #ifdef _DEBUG
-	m_pGameInstance->Add_DebugRender(m_pNavigationCom);
+	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
 }
 

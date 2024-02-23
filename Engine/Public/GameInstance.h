@@ -35,6 +35,8 @@ public: /* For.Graphic_Device */
 	ID3D11DepthStencilView* Get_DSV() const;
 	GRAPHIC_DESC*			Get_GraphicDesc();
 	ID3D11ShaderResourceView* Get_DepthSRV();
+	GFSDK_SSAO_Context_D3D11* Get_AOContext();
+
 
 public: /* For.Input_Device */
 	_byte		Get_DIKeyState(_ubyte byKeyID);
@@ -55,6 +57,7 @@ public: /* For.Timer_Manager */
 public: /* For.Level_Manager */
 	HRESULT Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
 	_uint	Get_NextLevel();
+	_uint	Get_CurrentLevel();
 	void	Set_CurrentLevel(_uint CurrentLevel);
 
 public: /* For.Object_Manager */
@@ -117,6 +120,9 @@ public: /* For.Target_Manager */
 	HRESULT		Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView * pDSV = nullptr, _bool bClear = true);
 	HRESULT		End_MRT();
 	HRESULT		Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
+	class CRenderTarget* Find_RenderTarget(const wstring& strTargetTag);
+	void		Create_RenderTarget(const wstring& strTargetTag);
+	
 #ifdef _DEBUG
 	HRESULT		Ready_RenderTarget_Debug(const wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
 	HRESULT		Render_Debug_RTVs(const wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);

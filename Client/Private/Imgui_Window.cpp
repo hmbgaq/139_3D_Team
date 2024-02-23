@@ -324,11 +324,14 @@ void CImgui_Window::Set_GuizmoUI(CGameObject* pGameObject)
 		break;
 	}
 
+
+
 	if (arrView == nullptr ||
 		arrWorld == nullptr)
 		return;
 
 	ImGuizmo::Manipulate(arrView, m_arrOrthoProj, mCurrentGizmoOperation, mCurrentGizmoMode, arrWorld, NULL, useSnapUI ? &snap[0] : NULL);
+
 
 	XMFLOAT4X4 matW = { arrWorld[0],arrWorld[1],arrWorld[2],arrWorld[3],
 				arrWorld[4],arrWorld[5],arrWorld[6],arrWorld[7],

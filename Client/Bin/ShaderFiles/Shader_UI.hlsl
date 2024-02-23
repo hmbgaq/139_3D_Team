@@ -79,7 +79,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	/* 이 셰이더를 사용하는 객체의 색상을 g_DiffuseTexture의 색상으로 적용시키겠다. */
     Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-	
+		
 	return Out;
 }
 
@@ -143,7 +143,7 @@ technique11 DefaultTechnique
 		/* 셰이더(렌더스테이츠) 그리기전에 적용할것들 세팅해주고 */
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 		
 		/* 렌더스테이츠 */
 		VertexShader = compile vs_5_0 VS_MAIN();	// 값 받고
@@ -153,17 +153,5 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN();		// 마지막으로 결정/세팅 한 후 출력한다. (ex : 색상)
 	}
 
-	/* 위와 다른 형태에 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
-	pass Effect
-	{
-		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DSS_Default, 0);
-		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
-		VertexShader = compile vs_5_0 VS_MAIN_EFFECT();
-		GeometryShader = NULL;
-		HullShader = NULL;
-		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_EFFECT();
-	}	
 }

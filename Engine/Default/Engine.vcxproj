@@ -116,7 +116,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;assimp-vc142-mtd.lib;imguizmod.lib;PhysX_64_Debug.lib;PhysXCharacterKinematic_static_64_Debug.lib;PhysXCommon_64_Debug.lib;PhysXCooking_64_Debug.lib;PhysXExtensions_static_64_Debug.lib;PhysXFoundation_64_Debug.lib;PhysXPvdSDK_static_64_Debug.lib;PhysXVehicle_static_64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;assimp-vc142-mtd.lib;imguizmod.lib;PhysX_64_Debug.lib;PhysXCharacterKinematic_static_64_Debug.lib;PhysXCommon_64_Debug.lib;PhysXCooking_64_Debug.lib;PhysXExtensions_static_64_Debug.lib;PhysXFoundation_64_Debug.lib;PhysXPvdSDK_static_64_Debug.lib;PhysXVehicle_static_64_Debug.lib;GFSDK_SSAO_D3D11.win64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
@@ -172,7 +172,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11.lib;DirectXTK.lib;assimp-vc142-mt.lib;imguizmo.lib;PhysX_64_Release.lib;PhysXCharacterKinematic_static_64_Release.lib;PhysXCommon_64_Release.lib;PhysXCooking_64_Release.lib;PhysXExtensions_static_64_Release.lib;PhysXFoundation_64_Release.lib;PhysXPvdSDK_static_64_Release.lib;PhysXVehicle_static_64_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11.lib;DirectXTK.lib;assimp-vc142-mt.lib;imguizmo.lib;PhysX_64_Release.lib;PhysXCharacterKinematic_static_64_Release.lib;PhysXCommon_64_Release.lib;PhysXCooking_64_Release.lib;PhysXExtensions_static_64_Release.lib;PhysXFoundation_64_Release.lib;PhysXPvdSDK_static_64_Release.lib;PhysXVehicle_static_64_Release.lib;GFSDK_SSAO_D3D11.win64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
@@ -369,9 +369,12 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Blur.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Final.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Fxaa3_11.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Navigation.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Outline.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcess.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcessing.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\TIMOTHY LOTTES_Fxaa3_11.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli" />

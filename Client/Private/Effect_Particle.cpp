@@ -173,7 +173,7 @@ HRESULT CEffect_Particle::Ready_Components()
 		tVIBufferDesc.fAcceleration = { 2.f };
 		tVIBufferDesc.fAccPosition = { 0.1f };
 
-		tVIBufferDesc.fGravityAcc = { -9.8 };
+		tVIBufferDesc.fGravityAcc = { -9.8f };
 		tVIBufferDesc.vCurrentGravity = { 0.f, 0.f, 0.f };
 
 		tVIBufferDesc.vMinMaxRotationOffsetX = { 0.0f, 360.f };

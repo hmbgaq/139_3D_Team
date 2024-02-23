@@ -136,7 +136,6 @@ HRESULT CTarget_Manager::Render_Debug(const wstring& strMRTTag, CShader * pShade
 	}
 	return S_OK;
 }
-
 #endif
 
 CRenderTarget * CTarget_Manager::Find_RenderTarget(const wstring & strTargetTag)
@@ -147,6 +146,14 @@ CRenderTarget * CTarget_Manager::Find_RenderTarget(const wstring & strTargetTag)
 		return nullptr;
 
 	return iter->second;
+}
+
+void CTarget_Manager::Create_RenderTarget(const wstring& strTargetTag)
+{
+	auto	iter = m_RenderTargets.find(strTargetTag);
+
+	iter->second->Create_TargetTexture();
+
 }
 
 list<class CRenderTarget*>* CTarget_Manager::Find_MRT(const wstring & strMRTTag)

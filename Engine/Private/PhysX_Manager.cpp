@@ -57,7 +57,7 @@ HRESULT CPhysX_Manager::Initialize(const _uint In_iNumLayer)
 
 	// Create Foundation
 	m_pFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
-	PxRevoluteJointCreate;
+	//PxRevoluteJointCreate;
 	// Create PVD
 	char* strTransport = "127.0.0.1";
 	m_pPVD = PxCreatePvd(*m_pFoundation);

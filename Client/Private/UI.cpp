@@ -19,7 +19,8 @@ HRESULT CUI::Initialize_Prototype()
 HRESULT CUI::Initialize(void* pArg)
 {
 	/* Info */
-	m_tUIInfo = *(UI_DESC*)pArg;
+	if (pArg != nullptr)
+		m_tUIInfo = *(UI_DESC*)pArg;
 
 #pragma region Transform
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext, 0.f, 0.f);
@@ -69,7 +70,6 @@ void CUI::Tick(_float fTimeDelta)
 		break;
 	}
 
-
 	Check_RectPos();
 	Picking_UI();
 }
@@ -95,6 +95,7 @@ HRESULT CUI::Render()
 
 void CUI::Picking_UI()
 {
+
 	POINT pt;
 	GetCursorPos(&pt);
 	ScreenToClient(g_hWnd, &pt);  // 클라이언트 내에 마우스 포인터 가져오기 
@@ -112,6 +113,7 @@ void CUI::Picking_UI()
 
 HRESULT CUI::Ready_Components()
 {
+
 	return S_OK;
 }
 
@@ -122,6 +124,7 @@ HRESULT CUI::Bind_ShaderResources()
 
 HRESULT CUI::SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX, _float fSizeY)
 {
+	/* 렉트 크기를 표시할만한 디버깅 요소로 뭐가 좋을까 (Collider, Texture, Color..) */
 	m_rcUI.left = static_cast<LONG>(fPosX - (fSizeX * 0.5f));
 	m_rcUI.top = static_cast<LONG>(fPosY - (fSizeY * 0.5f));
 	m_rcUI.right = static_cast<LONG>(fPosX + (fSizeX * 0.5f));
@@ -197,6 +200,22 @@ void CUI::Set_Size(_float fSizeX, _float fSizeY)
 		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
 }
 
+CUI* CUI::Get_UIPart(const wstring& strPartTag)
+{
+	for (auto& iter : m_vecUIParts)
+	{
+		//if (strPartTag == iter->Get_UITag())
+		//	return	 iter;
+	}
+
+	return nullptr;
+}
+
+vector<CUI*> CUI::Get_UIParts()
+{
+	return m_vecUIParts;
+}
+
 void CUI::Set_PosZ(_float fZ)
 {
 	_float Z = fZ;
@@ -205,10 +224,10 @@ void CUI::Set_PosZ(_float fZ)
 		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, Z));
 }
 
-void CUI::Set_Pos(_float2 vPos)
+void CUI::Set_Pos(_float fPosX, _float fPosY)
 {
-	m_fPositionX = vPos.x;
-	m_fPositionY = vPos.y;
+	m_fPositionX = fPosX;
+	m_fPositionY = fPosY;
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
@@ -218,7 +237,10 @@ void CUI::Set_Pos(_float2 vPos)
 void CUI::Check_RectPos()
 {
 	_float fPosX = m_pTransformCom->Get_Position().x + g_iWinSizeX * 0.5f;
-	_float fPosY = m_pTransformCom->Get_Position().y + g_iWinSizeY * 0.5f;
+	_float fPosY = -m_pTransformCom->Get_Position().y + g_iWinSizeY * 0.5f;
+
+	m_fScaleX = m_pTransformCom->Get_Scaled().x;
+	m_fScaleY = m_pTransformCom->Get_Scaled().y;
 
 	m_rcUI.left = LONG(fPosX - (m_fScaleX / 2));
 	m_rcUI.top = LONG(fPosY - (m_fScaleY / 2));
@@ -257,20 +279,75 @@ HRESULT CUI::SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX, _float f
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
 
-	m_tUIInfo.fPositionX = fPosX;
-	m_tUIInfo.fPositionY = fPosY;
-	m_tUIInfo.fScaleX = fSizeX;
-	m_tUIInfo.fScaleY = fSizeY;
+	m_fPositionX = fPosX;
+	m_fPositionY = fPosY;
+	m_fScaleX = fSizeX;
+	m_fScaleY = fSizeY;
 
-	m_pTransformCom->Set_Scaling(m_tUIInfo.fScaleX, m_tUIInfo.fScaleY, 1.f);
+	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 
 	// 위치 이동
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		XMVectorSet(m_tUIInfo.fPositionX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fPositionY + (_float)g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ, 1.f));
+		XMVectorSet(m_fPositionX - (_float)g_iWinSizeX * 0.5f, -m_fPositionY + (_float)g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ, 1.f));
 
 	// View Matrix 및 Projection Matrix 설정
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
+
+	return S_OK;
+}
+
+HRESULT CUI::Ready_UI(UI_DESC tUI_Desc)
+{
+	json json_in;
+
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
+
+
+	CJson_Utility::Load_Json(filePath, json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		tUI_Info.strCloneTag = object["CloneTag"];
+		tUI_Info.strProtoTag = object["ProtoTag"];
+		tUI_Info.strFilePath = object["FilePath"];
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		//wstring wstrLayer;
+		//m_pGameInstance->String_To_WString(tUI_Info.Layer, wstrLayer);
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_CurrentLevel(), TEXT("Layer_UI"), wstrPrototag, &tUI_Info));
+
+		pUI_Object->Get_Transform()->Load_FromJson(object);
+
+	}
+
+	return S_OK;
+}
+
+HRESULT CUI::Create_UIParts(UI_DESC tUI_Desc)
+{
+	wstring wstrPrototag;
+	m_pGameInstance->String_To_WString(tUI_Desc.strProtoTag, wstrPrototag);
+
+	wstring wstrFilePath;
+	m_pGameInstance->String_To_WString(tUI_Desc.strFilePath, wstrFilePath);
+
+	CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_CurrentLevel(), TEXT("Layer_UI"), wstrPrototag, &tUI_Desc));
+	m_vecUIParts.push_back(pUI_Object);
 
 	return S_OK;
 }
@@ -292,15 +369,18 @@ void CUI::Load_UIData(const char* _FilePath)
 
 		CUI::UI_DESC tUI_Info;
 
-		tUI_Info.fPositionX = object["PostionX"];
-		tUI_Info.fPositionY = object["PostionY"];
-		tUI_Info.fScaleX = object["SizeX"];
-		tUI_Info.fScaleY = object["SizeY"];
-		tUI_Info.strProtoTag = object["ProtoTag"];
+		//tUI_Info.strProtoTag = object["ProtoTag"];
 		tUI_Info.strFilePath = object["FilePath"];
 	}
 }
 
 void CUI::Free()
 {
+	if (m_pVIBufferCom)
+		Safe_Release(m_pVIBufferCom);
+	if (m_pShaderCom)
+		Safe_Release(m_pShaderCom);
+	//Safe_Release(m_pTextureCom);
+	if (m_pMapTextureCom)
+		Safe_Release(m_pMapTextureCom);
 }

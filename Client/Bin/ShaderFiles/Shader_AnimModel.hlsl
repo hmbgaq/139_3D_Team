@@ -6,8 +6,9 @@ matrix			g_BoneMatrices[800];
 float			g_fCamFar;
 float           g_TimeDelta;
 
-texture2D		g_DiffuseTexture;
-Texture2D		g_NormalTexture;
+texture2D       g_DiffuseTexture;
+texture2D       g_NormalTexture;
+texture2D       g_SpecularTexture;
 
 /* Dissolve  */
 Texture2D		g_DissolveTexture;

@@ -55,6 +55,11 @@ _uint CLevel_Manager::Get_NextLevel()
 	return m_iNextLevelIndex;
 }
 
+_uint CLevel_Manager::Get_CurrentLevel()
+{
+	return m_iCurrentLevelIndex;
+}
+
 void CLevel_Manager::Set_CurrentLevel(_uint CurrentLevel)
 {
 	m_iNextLevelIndex = CurrentLevel;
