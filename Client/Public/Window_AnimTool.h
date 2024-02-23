@@ -10,6 +10,7 @@ class CBounding;
 class CBone;
 class CBody;
 class CCharacter;
+class CEffect_Particle;
 END
 
 BEGIN(Client)
@@ -84,11 +85,13 @@ private:
 	CCollider*				m_pCollider = { nullptr };
 	CCollider*				m_pWCollider = { nullptr };
 	CBody*					m_pBody = { nullptr };
+	CEffect_Particle*		m_TestEffect = { nullptr };
 
 	//애니메이션 재생
 	_float					m_fSpeed = 1.f;
 	_float					m_fDuration = 0.0f;
 	_float					m_fCurrentTrackPosition = 0.0f;
+	_float					m_TargetTrackPosition = 0.f;
 
 	_float					m_iColliderSize = 0.0f;
 	_float					m_iColliderOnTrackPosition = 0.0f;
@@ -161,6 +164,9 @@ public:
 	_bool					m_bCreatWeaponCollider = false;
 	_bool					m_bDeleteWeaponCollider = false;
 	_bool					m_bColliderWeaponSize = false;
+
+	_bool bTest = true;
+	_bool bTest2 = true;
 public:
 	static CWindow_AnimTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

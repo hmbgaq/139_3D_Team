@@ -142,7 +142,8 @@ void CCollision_Manager::End_CollisionCheck()
 	{
 		for (CCollider* elem : m_ColliderList[i])
 		{
-			elem->End_CollisionCheck();
+			if(nullptr != elem)
+				elem->End_CollisionCheck();
 		}
 	}
 }

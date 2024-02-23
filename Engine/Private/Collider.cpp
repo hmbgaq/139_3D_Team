@@ -173,7 +173,8 @@ void CCollider::Set_Enable(_bool _Enable)
 {
 	if (false == m_bEnable && true == _Enable)
 	{
-		m_pGameInstance->Add_Collision(m_iLayer, this);
+		if (m_pGameInstance->Get_NextLevel() != _uint(5))
+			m_pGameInstance->Add_Collision(m_iLayer, this);
 	}
 	__super::Set_Enable(_Enable);
 
