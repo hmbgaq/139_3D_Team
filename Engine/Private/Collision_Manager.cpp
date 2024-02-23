@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Bounding.h"
 
+
 CCollision_Manager::CCollision_Manager()
 	:m_pGameInstance(CGameInstance::GetInstance())
 {
@@ -51,6 +52,8 @@ void CCollision_Manager::Add_Collision(const _uint& In_iLayer, CCollider* _pColl
 	if (nullptr == _pCollider || In_iLayer >= m_iNumLayer)
 		return;
 
+
+
 	_bool is_Same = false;
 
 	for (CCollider* pCollier : m_ColliderList[In_iLayer]) 
@@ -65,6 +68,7 @@ void CCollision_Manager::Add_Collision(const _uint& In_iLayer, CCollider* _pColl
 	if (false == is_Same) 
 	{
 		m_ReservedColliderList[In_iLayer].push_back(_pCollider);
+		Safe_AddRef(_pCollider);
 	}
 }
 
@@ -105,6 +109,7 @@ void CCollision_Manager::Remove_DeadCollision()
 		{
 			if (nullptr == (*iter) || false == (*iter)->Get_Enable())
 			{
+				Safe_Release(*iter);
 				iter = m_ColliderList[i].erase(iter);
 			}
 			else
@@ -142,7 +147,7 @@ void CCollision_Manager::End_CollisionCheck()
 	{
 		for (CCollider* elem : m_ColliderList[i])
 		{
-			if(nullptr != elem)
+			if (nullptr != elem)
 				elem->End_CollisionCheck();
 		}
 	}

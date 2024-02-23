@@ -57,6 +57,8 @@ using namespace DirectX;
 #include <filesystem>
 using namespace std;
 
+#include "Delegate.h"
+
 
 #include "Engine_Macro.h"
 #include "Engine_Typedef.h"

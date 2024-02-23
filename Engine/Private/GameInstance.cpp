@@ -26,7 +26,7 @@ CGameInstance::CGameInstance()
 {
 }
 
-HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
+HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumCollsionLayer, _uint iNumPhysXCollsionLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
 {
 	/* 그래픽 디바이스를 초기화 하자.*/
 	m_pGraphic_Device = CGraphic_Device::Create(GraphicDesc, ppDevice, ppContext);
@@ -78,7 +78,7 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 	if (nullptr == m_pFrustum)
 		return E_FAIL;
 
-	m_pCollision_Manager = CCollision_Manager::Create(iNumLayer);
+	m_pCollision_Manager = CCollision_Manager::Create(iNumCollsionLayer);
 	if (nullptr == m_pCollision_Manager)
 		return E_FAIL;
 
@@ -87,13 +87,14 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 		return E_FAIL;
 
 	//TODO: 레벨 확인헤야
-	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, iNumLayer);
+	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, iNumPhysXCollsionLayer);
 	if (nullptr == m_pPhysX_Manager)
 		return E_FAIL;
 
 	m_pRandom_Manager = CRandom_Manager::Create();
 	if(nullptr == m_pRandom_Manager)
 		return E_FAIL;
+
 
 
 	return S_OK;
@@ -121,6 +122,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pEvent_Manager->Tick(fTimeDelta);
 
 	m_pCollision_Manager->Tick(fTimeDelta);
+
+	m_pPhysX_Manager->Tick(fTimeDelta);
 
 	m_pObject_Manager->Late_Tick(fTimeDelta);
 
@@ -747,6 +750,11 @@ void CGameInstance::Add_Collision(const _uint& In_iLayer, CCollider* _pCollider)
 	m_pCollision_Manager->Add_Collision(In_iLayer, _pCollider);
 }
 
+void CGameInstance::Check_Group(const _uint& In_iLeftLayer, const _uint& In_iRightLayer)
+{
+	m_pCollision_Manager->Check_Group(In_iLeftLayer, In_iRightLayer);
+}
+
 void CGameInstance::Add_Event(IEvent* pEvent)
 {
 	m_pEvent_Manager->Add_Event(pEvent);
@@ -800,6 +808,21 @@ PxRigidStatic* CGameInstance::Create_StaticActor(const PxTransform& transform, c
 PxRigidStatic* CGameInstance::Create_StaticActor(const PxTransform& transform)
 {
 	return m_pPhysX_Manager->Create_StaticActor(transform);
+}
+
+void CGameInstance::Add_DynamicActorAtCurrentScene(PxRigidDynamic& DynamicActor)
+{
+	m_pPhysX_Manager->Add_DynamicActorAtCurrentScene(DynamicActor);
+}
+
+void CGameInstance::Add_StaticActorAtCurrentScene(PxRigidStatic& StaticActor)
+{
+	m_pPhysX_Manager->Add_StaticActorAtCurrentScene(StaticActor);
+}
+
+void CGameInstance::Create_Material(_float fStaticFriction, _float fDynamicFriction, _float fRestitution, PxMaterial** ppOut)
+{
+	m_pPhysX_Manager->Create_Material(fStaticFriction, fDynamicFriction, fRestitution, ppOut);
 }
 
 void CGameInstance::Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut)

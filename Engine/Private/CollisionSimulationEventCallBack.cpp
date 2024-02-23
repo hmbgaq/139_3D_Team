@@ -35,43 +35,44 @@ void CollisionSimulationEventCallBack::onContact(const PxContactPairHeader& pair
 
 void CollisionSimulationEventCallBack::onTrigger(PxTriggerPair* pairs, PxU32 count)
 {
-	//while (count--)
-	//{
-	//	const PxTriggerPair& current = *pairs++;
-	//	if (current.status & PxPairFlag::eNOTIFY_TOUCH_FOUND)
-	//	{
-	//		CPhysXCollider* pColliderCom = m_pGameInstance->Find_PhysXCollider(*(_uint*)current.triggerActor->userData);
-	//		CPhysXCollider* pOtherColliderCom = GET_SINGLE(CPhysX_Manager)->Find_PhysXCollider(*(_uint*)current.otherActor->userData);
+	while (count--)
+	{
+		const PxTriggerPair& current = *pairs++;
+		if (current.status & PxPairFlag::eNOTIFY_TOUCH_FOUND)
+		{
+			CPhysXCollider* pColliderCom = m_pGameInstance->Find_PhysXCollider(*(_uint*)current.triggerActor->userData);
+			CPhysXCollider* pOtherColliderCom = m_pGameInstance->Find_PhysXCollider(*(_uint*)current.otherActor->userData);
 
-	//		if (pColliderCom.lock()->Get_ColliderDesc().bTrigger &&
-	//			pOtherColliderCom.lock()->Get_ColliderDesc().bTrigger)
-	//		{
-	//			pColliderCom.lock()->PhysXCollisionEnter(pOtherColliderCom);
-	//			pOtherColliderCom.lock()->PhysXCollisionEnter(pColliderCom);
-	//		}
+			if (pColliderCom->Get_ColliderDesc().bTrigger &&
+				pOtherColliderCom->Get_ColliderDesc().bTrigger)
+			{
+				pColliderCom->PhysXCollisionEnter(pOtherColliderCom);
+				pOtherColliderCom->PhysXCollisionEnter(pColliderCom);
+			}
 
-	//	}
-	//	if (current.status & PxPairFlag::eNOTIFY_TOUCH_LOST)
-	//	{
-	//		weak_ptr<CPhysXCollider> pColliderCom = GET_SINGLE(CPhysX_Manager)->Find_PhysXCollider(*(_uint*)current.triggerActor->userData);
-	//		weak_ptr<CPhysXCollider> pOtherColliderCom = GET_SINGLE(CPhysX_Manager)->Find_PhysXCollider(*(_uint*)current.otherActor->userData);
-
-	//		if (pColliderCom.lock()->Get_ColliderDesc().bTrigger &&
-	//			pOtherColliderCom.lock()->Get_ColliderDesc().bTrigger)
-	//		{
-	//			pColliderCom.lock()->PhysXCollisionExit(pOtherColliderCom);
-	//			pOtherColliderCom.lock()->PhysXCollisionExit(pColliderCom);
-	//		}
-	//	}
-	//	cout << "Shape is leaving trigger volume\n";
-	//}
+		}
+		if (current.status & PxPairFlag::eNOTIFY_TOUCH_LOST)
+		{
+			CPhysXCollider* pColliderCom = m_pGameInstance->Find_PhysXCollider(*(_uint*)current.triggerActor->userData);
+			CPhysXCollider* pOtherColliderCom = m_pGameInstance->Find_PhysXCollider(*(_uint*)current.otherActor->userData);
+			if (pColliderCom->Get_ColliderDesc().bTrigger &&
+				pOtherColliderCom->Get_ColliderDesc().bTrigger)
+			{
+				pColliderCom->PhysXCollisionExit(pOtherColliderCom);
+				pOtherColliderCom->PhysXCollisionExit(pColliderCom);
+			}
+		}
+		cout << "Shape is leaving trigger volume\n";
+	}
 }
 
 void CollisionSimulationEventCallBack::onAdvance(const PxRigidBody* const* bodyBuffer, const PxTransform* poseBuffer, const PxU32 count)
 {
+	cout << "onAdvance" << endl;
 }
 
 void CollisionSimulationEventCallBack::Release()
 {
 	Safe_Release(m_pGameInstance);
+	delete this;
 }

@@ -213,6 +213,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\Public\ConstantBuffer.h" />
     <ClInclude Include="..\Public\CustomFont.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
+    <ClInclude Include="..\Public\Delegate.h" />
     <ClInclude Include="..\Public\Easing_Utillity.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
     <ClInclude Include="..\Public\Engine_Enum.h" />
@@ -255,6 +256,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\Public\MyAssimp.h" />
     <ClInclude Include="..\public\Navigation.h" />
     <ClInclude Include="..\public\Object_Manager.h" />
+    <ClInclude Include="..\Public\PhysXCharacterController.h" />
     <ClInclude Include="..\Public\PhysXCollider.h" />
     <ClInclude Include="..\Public\PhysXController.h" />
     <ClInclude Include="..\Public\PhysX_Manager.h" />
@@ -311,6 +313,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\Private\ConstantBuffer.cpp" />
     <ClCompile Include="..\Private\CustomFont.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
+    <ClCompile Include="..\Private\Delegate.cpp" />
     <ClCompile Include="..\Private\Easing_Utillity.cpp" />
     <ClCompile Include="..\Private\Engine_Struct.cpp" />
     <ClCompile Include="..\Private\EventActor.cpp" />
@@ -332,6 +335,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\Private\MurmurHash3.cpp" />
     <ClCompile Include="..\private\Navigation.cpp" />
     <ClCompile Include="..\private\Object_Manager.cpp" />
+    <ClCompile Include="..\Private\PhysXCharacterController.cpp" />
     <ClCompile Include="..\Private\PhysXCollider.cpp" />
     <ClCompile Include="..\Private\PhysXController.cpp" />
     <ClCompile Include="..\Private\PhysX_Manager.cpp" />
