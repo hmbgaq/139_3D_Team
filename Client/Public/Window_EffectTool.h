@@ -88,11 +88,18 @@ private:
 	_int  m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 13, 19, 8 };
 
 
-	_int m_iRenderGroup_Mesh = { 7 };
-	_int m_iShaderPassIndex_Mesh = { 0 };
-	_int m_iMaxShaderPassIndex_Mesh = { 8 };
+	_int m_iRenderGroup_Mesh			= { 7 };
+	_int m_iShaderPassIndex_Mesh		= { 0 };
+	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
 	_int  m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
 	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 14, 19, 8 };
+
+
+	_int m_iRenderGroup_Rect			= { 7 };
+	_int m_iShaderPassIndex_Rect		= { 0 };
+	_int m_iMaxShaderPassIndex_Rect		= { 2 };
+	_int  m_iTexIndex_Rect[CEffect_Void::TEXTURE_END] = { };
+	_int  m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 13, 19, 8 };
 
 	// Refactoring end   =====================================================================================================
 
@@ -119,6 +126,7 @@ private:
 	_float	m_vRotate_Part[3] = { 0.f, 0.f, 0.f };
 
 	_float m_vColor_Clip_Part[4] = { 0.f, 0.f, 0.f, 0.8f };
+	_float m_vColor_Clip_Rect[4] = { 0.f, 0.f, 0.f, 0.8f };
 
 #pragma region Particle_Option
 private:
@@ -148,6 +156,29 @@ private:
 	_float	m_fColor_Cur_Particle[4]	= { 1.f, 1.f, 1.f, 1.f };
 
 #pragma endregion
+
+
+
+#pragma region Rect_Option
+	_int	m_vUV_MaxTileCount[2] = { 7, 7 };
+	_float	m_fSequenceTerm_RectSprite = { 0.05f };
+
+	/* Distortion */
+	_float m_fSequenceTerm_Distortion = { 1.f };
+
+	_float	m_vScrollSpeeds[3]			= { 1.f, 1.f, 0.f };
+	_float	m_vScales_Distortion[3]		= { 1.f, 1.f, 1.f };
+
+	_float	m_vDistortion1[2] = { 0.1f, 0.1f };
+	_float	m_vDistortion2[2] = { 0.0f, 0.0f };
+	_float	m_vDistortion3[2] = { 0.0f, 0.1f };
+
+	_float	m_fDistortionScale = { 1.f };
+	_float	m_fDistortionBias = { 1.f };
+
+#pragma endregion
+
+
 
 #pragma region Mesh_Option
 private:

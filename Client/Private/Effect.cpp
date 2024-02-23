@@ -51,9 +51,11 @@ void CEffect::Priority_Tick(_float fTimeDelta)
 
 void CEffect::Tick(_float fTimeDelta)
 {
+
 	if (m_tEffectDesc.bActive_Tool)
 	{
 		m_tEffectDesc.fSequenceTime = m_tEffectDesc.fWaitingTime + m_tEffectDesc.fLifeTime + m_tEffectDesc.fRemainTime;
+		//m_fEasingTimeAcc = Easing::LerpToType(0.f, m_tEffectDesc.fSequenceTime, m_tEffectDesc.fSequenceAcc, m_tEffectDesc.fSequenceTime, m_tEffectDesc.eType_Easing);
 
 		if (m_tEffectDesc.bPlay)
 		{
@@ -91,7 +93,11 @@ void CEffect::Tick(_float fTimeDelta)
 			for (auto& Pair : m_PartObjects)
 			{
 				if (nullptr != Pair.second)
+				{
+					//dynamic_cast<CEffect_Void*>(Pair.second)->Set_TimeAcc(m_fEasingTimeAcc);
 					Pair.second->Tick(fTimeDelta);
+				}
+					
 			}
 
 		}
@@ -154,9 +160,11 @@ void CEffect::End_Effect()
 		for (auto& Pair : m_PartObjects)
 		{
 			if (nullptr != Pair.second)
+			{
 				dynamic_cast<CEffect_Void*>(Pair.second)->End_Effect();
+			}
+				
 		}
-
 		ReSet_Effect();
 	}
 

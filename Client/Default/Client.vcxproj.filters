@@ -501,11 +501,11 @@
     <ClInclude Include="..\Public\Effect_Void.h">
       <Filter>02.GameObjects\03. Effect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Window_Style.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\99.StyleWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -528,9 +528,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Level_Logo.h">
       <Filter>01.Levels\00.Logo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Loading.h">
       <Filter>01.Levels\99.Loading</Filter>
@@ -640,9 +637,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Level_Logo.h">
       <Filter>01.Levels\00.Logo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Loading.h">
       <Filter>01.Levels\99.Loading</Filter>

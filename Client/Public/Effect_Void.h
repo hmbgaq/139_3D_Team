@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 
 #include "AlphaObject.h"
+#include "Easing_Utillity.h"
 
 BEGIN(Client)
 
@@ -15,7 +16,6 @@ public:
 	typedef struct tagEffectVoidDesc : public CGameObject::GAMEOBJECT_DESC
 	{
 		wstring		strPartTag = { TEXT("") };
-
 
 		// Texture
 		wstring		strTextureTag[TEXTURE_END];

@@ -70,9 +70,16 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 					return;
 			}
 
-			// 시간 누적 시작
+			// 라이프타임 누적 시작
 			m_fTimeAcc += fTimeDelta;
 			m_fLifeTimeRatio = min(1.0f, m_fTimeAcc / m_fLifeTime);
+
+			/* ======================= 라이프 타임 동작 시작 ======================= */
+
+
+
+			/* ======================= 라이프 타임 동작 끝  ======================= */
+
 
 			if (m_fTimeAcc >= m_fLifeTime)
 			{
@@ -88,7 +95,8 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 
 				if (m_fRemainAcc >= m_fRemainTime)
 				{
-					m_tInstanceDesc.bRender = TRUE;
+					m_tInstanceDesc.fDissolveAmount = 1.f;
+					m_tInstanceDesc.bRender = FALSE;
 					return;
 				}
 			}
@@ -140,12 +148,7 @@ void CEffect_Instance::ReSet_Effect()
 {
 	__super::ReSet_Effect();
 
-	m_fSequenceAcc		= 0.f;
-	m_fTimeAcc			= 0.f;
-	m_fWaitingAcc		= 0.f;
-	m_fLifeTimeRatio	= 0.f;
-	m_fRemainAcc	    = 0.f;
-
+	m_tInstanceDesc.fDissolveAmount = 0.f;
 	m_tInstanceDesc.bDissolve = FALSE;
 	m_tInstanceDesc.bRender = FALSE;
 

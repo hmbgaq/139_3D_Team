@@ -275,7 +275,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 }
 
 
-PS_OUT PS_MAIN_Dissove(PS_IN_NORMAL In)
+PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -420,7 +420,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_Dissove();
+        PixelShader = compile ps_5_0 PS_MAIN_Dissolve();
     }
 	
 	pass Pass7_Sprite_Animation //7

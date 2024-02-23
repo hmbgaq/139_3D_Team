@@ -77,13 +77,31 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 			m_fTimeAcc += fTimeDelta;
 			m_fLifeTimeRatio = min(1.0f, m_fTimeAcc / m_fLifeTime);
 
-			if (m_fTimeAcc >= m_fLifeTime + m_fRemainTime)
-			{
-				m_tParticleDesc.bRender = FALSE;
-				//pDesc->bPlay			= FALSE;
 
-				//End_Effect();
-				return;
+			/* ======================= 라이프 타임 동작 시작 ======================= */
+
+
+
+			/* ======================= 라이프 타임 동작 끝  ======================= */
+
+			if (m_fTimeAcc >= m_fLifeTime)
+			{
+				// 삭제 대기시간 누적 시작
+				m_fRemainAcc += fTimeDelta;
+
+				// 디졸브 시작
+				m_tParticleDesc.bDissolve = TRUE;
+				if (m_tParticleDesc.bDissolve)
+				{
+					m_tParticleDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_fRemainAcc, m_fRemainTime, m_tParticleDesc.eType_Easing);
+				}
+
+				if (m_fRemainAcc >= m_fRemainTime)
+				{
+					m_tParticleDesc.fDissolveAmount = 1.f;
+					m_tParticleDesc.bRender = FALSE;
+					return;
+				}
 			}
 
 			if (m_tParticleDesc.bRender)
@@ -138,12 +156,8 @@ void CEffect_Particle::ReSet_Effect()
 {
 	__super::ReSet_Effect();
 
-	m_fSequenceAcc		= 0.f;
-	m_fTimeAcc			= 0.f;
-	m_fWaitingAcc		= 0.f;
-	m_fLifeTimeRatio	= 0.f;
-	m_fRemainAcc		= 0.f;
-
+	m_tParticleDesc.fDissolveAmount = 0.f;
+	m_tParticleDesc.bDissolve = FALSE;
 	m_tParticleDesc.bRender = FALSE;
 
 	m_pVIBufferCom->ReSet();

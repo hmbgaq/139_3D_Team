@@ -56,12 +56,31 @@ void CEffect_Rect::Tick(_float fTimeDelta)
 	{
 		m_fSequenceTime = m_fLifeTime + m_fRemainTime;
 
-		if (SPRITE == m_tRectDesc.eType)
+		if (m_tRectDesc.bPlay)
 		{
-			if (m_tRectDesc.bPlay)
-			{
-				m_fTimeAcc += fTimeDelta;
+			m_fSequenceAcc += fTimeDelta;
 
+			// 시작지연 누적시간이 지나면 렌더 시작(이 이펙트 시작)
+			if (m_fWaitingAcc <= m_fWaitingTime)
+			{
+				m_fWaitingAcc += fTimeDelta;
+
+				if (m_fWaitingAcc >= m_fWaitingTime)
+				{
+					m_tRectDesc.bRender = TRUE;
+				}
+				else
+					return;
+			}
+
+			// 라이프타임 누적 시작
+			m_fTimeAcc += fTimeDelta;
+			m_fLifeTimeRatio = min(1.0f, m_fTimeAcc / m_fLifeTime);
+
+			/* ======================= 라이프 타임 동작 시작 ======================= */
+
+			if (SPRITE == m_tRectDesc.eType)
+			{
 				if (m_fTimeAcc > m_tSpriteDesc.fSequenceTerm)
 				{
 					(m_tSpriteDesc.vUV_CurTileIndex.x)++;
@@ -76,18 +95,32 @@ void CEffect_Rect::Tick(_float fTimeDelta)
 							m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
 						}
 					}
-
-					m_fTimeAcc = 0.f;
 				}
 			}
-		}
-		else
-		{
-			m_fTimeAcc += fTimeDelta;
 
-			if (m_fTimeAcc >= m_tDistortionDesc.fSequenceTerm)
+			/* ======================= 라이프 타임 동작 끝  ======================= */
+
+			if (m_fTimeAcc >= m_fLifeTime)
 			{
-				m_fTimeAcc = 0.f;
+				// 삭제 대기시간 누적 시작
+				m_fRemainAcc += fTimeDelta;
+
+				// 디졸브 시작
+				m_tRectDesc.bDissolve = TRUE;
+				if (m_tRectDesc.bDissolve)
+				{
+					m_tRectDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_fRemainAcc, m_fRemainTime, m_tRectDesc.eType_Easing);
+				}
+				// 디졸브 끝
+
+
+				// 이 이펙트의 타임라인 종료
+				if (m_fRemainAcc >= m_fRemainTime)
+				{
+					m_tRectDesc.fDissolveAmount = 1.f;
+					m_tRectDesc.bRender = FALSE;
+					return;
+				}
 			}
 		}
 	}
@@ -100,8 +133,11 @@ void CEffect_Rect::Late_Tick(_float fTimeDelta)
 
 	if (m_tRectDesc.bActive_Tool)
 	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, this)))
-			return;
+		if (m_tRectDesc.bRender)
+		{
+			if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, this)))
+				return;
+		}
 	}
 
 }
@@ -125,13 +161,18 @@ HRESULT CEffect_Rect::Render()
 
 void CEffect_Rect::ReSet_Effect()
 {
+	__super::ReSet_Effect();
+
 	if (SPRITE == m_tRectDesc.eType)
 	{
-		ReSet_Sprite();
+		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
+		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.y;
 	}
 	else
 	{
-
+		m_tRectDesc.fDissolveAmount = 0.f;
+		m_tRectDesc.bDissolve		= FALSE;
+		m_tRectDesc.bRender			= FALSE;
 	}
 
 }
@@ -146,12 +187,6 @@ void CEffect_Rect::End_Effect()
 	}
 }
 
-void CEffect_Rect::ReSet_Sprite()
-{
-	m_fTimeAcc = 0.f;
-	m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
-	m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.y;
-}
 
 HRESULT CEffect_Rect::Ready_Components()
 {
