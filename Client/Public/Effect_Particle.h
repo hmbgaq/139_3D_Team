@@ -64,6 +64,9 @@ private:
 	//CVIBuffer_Particle_Point::PARTICLE_POINT_DESC 
 	//UVSPRITE_DESC				m_tSpriteDesc = {};
 
+	CModel*							 m_pModelCom = { nullptr };
+	CVIBuffer_Effect_Model_Instance* m_pVIBufferCom_Model = { nullptr };
+
 
 private:
 	CShader*					m_pShaderCom = { nullptr };

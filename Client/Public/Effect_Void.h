@@ -62,12 +62,11 @@ public:
 		EASING_TYPE		eType_Easing = { LINEAR };
 
 
-
 		// ¡÷¿Œ
 		CGameObject* pOwner			 = { nullptr };
 		_bool		 bParentPivot	 = { FALSE };
 		_float4x4	 matPivot		 = {}; /* XMStoreFloat4x4(&m_matPivot, XMMatrixIdentity()) */
-		_float4x4	 matOffset	 = {};
+		_float4x4	 matOffset		 = {};
 
 		// Variables
 		_float3	vPosition_Start = _float3(0.f, 0.f, 0.f);

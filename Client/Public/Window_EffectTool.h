@@ -85,21 +85,21 @@ private:
 	_int m_iShaderPassIndex_Particle	= { 0 };
 	_int m_iMaxShaderPassIndex_Particle = { 2 };
 	_int  m_iTexIndex_Particle[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 13, 19, 8 };
+	_int  m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 13, 22, 8 };
 
 
 	_int m_iRenderGroup_Mesh			= { 7 };
 	_int m_iShaderPassIndex_Mesh		= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
 	_int  m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 14, 19, 8 };
+	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 14, 22, 8 };
 
 
 	_int m_iRenderGroup_Rect			= { 7 };
 	_int m_iShaderPassIndex_Rect		= { 0 };
 	_int m_iMaxShaderPassIndex_Rect		= { 2 };
 	_int  m_iTexIndex_Rect[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 13, 19, 8 };
+	_int  m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 13, 22, 8 };
 
 	// Refactoring end   =====================================================================================================
 
@@ -186,6 +186,8 @@ private:
 	_float  m_vUV_Scale[2]	= { 1.f, 1.f };
 
 	_float	m_DissolveAmount = { 0.f };
+
+	_float	m_fUV_RotDegree_Mesh = { 0.f };
 
 #pragma endregion
 

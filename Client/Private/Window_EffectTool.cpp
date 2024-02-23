@@ -441,140 +441,10 @@ void CWindow_EffectTool::Update_ParticleTab()
 				m_fColor_Cur_Particle[3] = m_pParticlePointDesc->vCurrentColor.w;
 
 
-				/* Easing Type : 이징 타입 */
-				if (ImGui::CollapsingHeader(" Easing Types "))
-				{
-					if (ImGui::Button("LINEAR"))
-					{
-						m_pParticlePointDesc->eType_Easing = LINEAR;
-					}
-					if (ImGui::Button("QUAD_IN"))
-					{
-						m_pParticlePointDesc->eType_Easing = QUAD_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("QUAD_OUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = QUAD_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("QUAD_INOUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = QUAD_INOUT;
-					}
-					if (ImGui::Button("CUBIC_IN"))
-					{
-						m_pParticlePointDesc->eType_Easing = CUBIC_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("CUBIC_OUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = CUBIC_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("CUBIC_INOUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = CUBIC_INOUT;
-					}
-					if (ImGui::Button("QUART_IN"))
-					{
-						m_pParticlePointDesc->eType_Easing = QUART_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("QUART_OUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = QUART_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("QUART_INOUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = QUART_INOUT;
-					}
-					if (ImGui::Button("QUINT_IN"))
-					{
-						m_pParticlePointDesc->eType_Easing = QUINT_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("QUINT_OUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = QUINT_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("QUINT_INOUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = QUINT_INOUT;
-					}
-					if (ImGui::Button("SINE_IN"))
-					{
-						m_pParticlePointDesc->eType_Easing = SINE_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("SINE_OUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = SINE_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("SINE_INOUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = SINE_INOUT;
-					}
-					if (ImGui::Button("EXPO_IN"))
-					{
-						m_pParticlePointDesc->eType_Easing = EXPO_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("EXPO_OUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = EXPO_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("EXPO_INOUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = EXPO_INOUT;
-					}
-					if (ImGui::Button("CIRC_IN"))
-					{
-						m_pParticlePointDesc->eType_Easing = CIRC_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("CIRC_OUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = CIRC_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("CIRC_INOUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = CIRC_INOUT;
-					}
-					if (ImGui::Button("ELASTIC_IN"))
-					{
-						m_pParticlePointDesc->eType_Easing = ELASTIC_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("ELASTIC_OUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = ELASTIC_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("ELASTIC_INOUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = ELASTIC_INOUT;
-					}
-					if (ImGui::Button("BOUNCE_IN"))
-					{
-						m_pParticlePointDesc->eType_Easing = BOUNCE_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("BOUNCE_OUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = BOUNCE_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("ELASTIC_INOUT"))
-					{
-						m_pParticlePointDesc->eType_Easing = ELASTIC_INOUT;
-					}
-				}
+				ImGui::SeparatorText("");
+				//TODO 이징 잘못지움ㅠ 살려야한다.
+
+
 				
 				ImGui::SeparatorText("");
 				/* 라이프 타임 */
@@ -908,6 +778,17 @@ void CWindow_EffectTool::Update_MeshTab()
 {
 	if (nullptr != m_pCurEffect)
 	{
+		if (ImGui::Button("Demo_Xray"))
+		{
+			Add_Part_Mesh(TEXT("Prototype_Component_Model_Xray_ManHeavy"));
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Demo_Dome"))
+		{
+			Add_Part_Mesh(TEXT("Prototype_Component_Model_ShieldDome"));
+		}
+		
+
 		if (nullptr != m_pCurPartEffect)
 		{
 			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
@@ -1008,6 +889,13 @@ void CWindow_EffectTool::Update_MeshTab()
 					m_pInstanceDesc->vUV_Scale.x = m_vUV_Scale[0];
 					m_pInstanceDesc->vUV_Scale.y = m_vUV_Scale[1];
 				}
+
+
+				if (ImGui::DragFloat(" RotDegree_Mesh ", &m_fUV_RotDegree_Mesh, 1.f, 0.f, 360.f))
+				{
+					m_pInstanceDesc->fUV_RotDegree = m_fUV_RotDegree_Mesh;
+				}
+
 
 				/* 디졸브 값 확인 */
 				ImGui::SeparatorText("");

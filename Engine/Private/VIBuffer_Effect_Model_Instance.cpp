@@ -53,7 +53,6 @@ void CVIBuffer_Effect_Model_Instance::Update(_float fTimeDelta)
 
 void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 {
-
 	m_iInstanceStride = sizeof(VTXMODELINSTANCE);
 	m_iNumInstance = iNumInstance;
 	m_iNumVertexBuffers = 2;
@@ -95,7 +94,6 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 
 HRESULT CVIBuffer_Effect_Model_Instance::Render(_int iMeshIndex)
 {
-
 	CModel* pModel = m_tModelDesc.pModel;
 
 	if(nullptr == pModel)

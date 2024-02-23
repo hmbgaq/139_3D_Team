@@ -23,15 +23,31 @@ float		g_fDissolveRatio;
 
 float2      g_UVOffset;
 float2      g_UVScale;
+float		g_fDegree;
 
 float		g_DiscardValue;
-
 
 float IsIn_Range(float fMin, float fMax, float fValue)
 {
 	return (fMin <= fValue) && (fMax >= fValue);
 }
 
+/* Custom Function */
+float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
+{
+	float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
+	float fRotationRadian = fDegree * fDegree2Radian;
+	float cosA = cos(fRotationRadian);
+	float sinA = sin(fRotationRadian);
+
+	float2x2 RotateMatrix = float2x2(cosA, -sinA, sinA, cosA);
+
+	vTexcoord -= 0.5f;
+	vTexcoord = mul(vTexcoord, RotateMatrix);
+	vTexcoord += 0.5f;
+
+	return vTexcoord;
+}
 
 struct VS_IN
 {
@@ -283,13 +299,21 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In)
 
     clip(TexDissolve - g_fDissolveRatio);
 
+	In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
+	In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
+
     vector vTexDiff = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    float fStepValue = IsIn_Range(0.f, 0.05f,TexDissolve.r - g_fDissolveRatio);
+
+    float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
 	
+
     Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue * g_DissolveDiffTexture.Sample(LinearSampler, In.vTexUV);
 	
-    clip(Out.vDiffuse.a - 0.1f);
-    Out.vDiffuse.a = 1.f;
+    clip(Out.vDiffuse.a - g_DiscardValue);
+    //Out.vDiffuse.a = 1.f;
+
+	float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vDiffuse.a *= vAlphaMask.a;
 	
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
 	vPixelNormal = vPixelNormal * 2.f - 1.f;

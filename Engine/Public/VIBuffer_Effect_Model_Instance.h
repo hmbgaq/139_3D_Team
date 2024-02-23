@@ -53,6 +53,7 @@ public:
 private:
 	EFFECT_MODEL_INSTANCE_DESC			m_tBufferDesc;
 
+
 public:
 	static CVIBuffer_Effect_Model_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(void* pArg) override;

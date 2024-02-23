@@ -248,6 +248,7 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 		if (nullptr != m_pTextureCom[TEXTURE_MASK])
 		{
 			FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_MASK]));
+			//FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_MASK]));
 		}
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 		{
@@ -261,6 +262,8 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	_float fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFar", &fCamFar, sizeof(_float)));
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tInstanceDesc.fUV_RotDegree, sizeof(_float))))
+		return E_FAIL;
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tInstanceDesc.vUV_Offset, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tInstanceDesc.vUV_Scale, sizeof(_float2)));

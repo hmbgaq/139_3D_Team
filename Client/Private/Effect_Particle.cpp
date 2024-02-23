@@ -285,6 +285,24 @@ HRESULT CEffect_Particle::Ready_Components()
 			return E_FAIL;
 	}
 
+	/* For.Com_Model */
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_splineMesh_tornado"),
+		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+		return E_FAIL;
+
+
+	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
+	Desc.pModel = m_pModelCom;
+	Desc.iNumInstance = 1; 
+
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),
+		TEXT("Com_VIBuffer_Model"), reinterpret_cast<CComponent**>(&m_pVIBufferCom_Model), &Desc)))
+		return E_FAIL;
+
+
+
 	return S_OK;
 }
 
@@ -396,6 +414,10 @@ CGameObject* CEffect_Particle::Pool()
 void CEffect_Particle::Free()
 {
 	__super::Free();
+
+
+	Safe_Release(m_pModelCom);
+	Safe_Release(m_pVIBufferCom_Model);
 
 	Safe_Release(m_pVIBufferCom);
 
