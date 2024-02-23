@@ -252,7 +252,7 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 	XMFLOAT4X4 matW = { arrWorld[0],arrWorld[1],arrWorld[2],arrWorld[3],
 				arrWorld[4],arrWorld[5],arrWorld[6],arrWorld[7],
 				arrWorld[8],arrWorld[9],arrWorld[10],arrWorld[11],
-				arrWorld[12],arrWorld[13],arrWorld[14] * -1,arrWorld[15] };
+				arrWorld[12],arrWorld[13],arrWorld[14],arrWorld[15] };
 		
 
 	pGameObject->Get_Transform()->Set_WorldMatrix(matW);

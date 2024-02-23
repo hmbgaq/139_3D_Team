@@ -11,19 +11,24 @@ BEGIN(Client)
 class CEnvironment_Instance;
 class CEnvironment_Object;
 class CPlayer;
+class CMonster;
+//TODO 추후 추가 class CNPC;
 
 class CWindow_MapTool final : public CImgui_Window
 {
 private:
-	enum class TAP_TYPE { TAB_GROUND, TAB_INTERACT, TAB_ENVIRONMENT, TAB_END };
+	enum class TAP_TYPE { TAB_GROUND, TAB_INTERACT, TAB_ENVIRONMENT, TAB_NORMALMONSTER, TAB_BOSSMONSTER, TAB_NPC, TAB_END };
 	enum class MODE_TYPE { MODE_CREATE, MODE_SELECT, MODE_DELETE, MODE_END };
 	enum class PICKING_TYPE { PICKING_FIELD, PICKING_MESH, PICKING_NONE, PICKING_END };
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
+	enum class OBJECTMODE_TYPE { OBJECTMODE_ENVIRONMENT, OBJECTMODE_CHARACTER};
 	
 	enum class MAP_KEY_TYPE //! 맵컨테이너 키
 	{
 		MODEL_GROUND, MODEL_ENVIRONMENT, MODEL_INTERACT, MODEL_END
 	};
+
+	
 
 public:
 	struct WINDOW_MAPTOOL_DESC : public ImGuiDESC
@@ -44,40 +49,69 @@ private:
 	virtual	HRESULT Save_Function(string strPath, string strFileName) override;
 	virtual HRESULT Load_Function(string strPath, string strFileName) override;
 				void	Reset_Function();
-
-
+				void	ObjectMode_Change_For_Reset();
 private:
+	//!For. Environment
 	HRESULT			Ready_ModelTags();
+	//!For. Character
+	HRESULT			Ready_PrototypeTags();
 	
 private:
+	void			EnvironmentMode_Function();
+	void			CharacterMode_Function();
+
+
+	//!For. Environment
 	void			GroundTab_Function();
 	void			InteractTab_Function();
-	void			EnvironmentTab_Function();
-	void			CameraWindow_Function();
+	void			InstanceTab_Function();
+
+	//!For. Character
+	void			MonsterTab_Function();
+	void			NPC_Tab_Function();
+
+
 
 private:
 	void			MouseInfo_Window(_float fTimeDelta);
 	void			FieldWindowMenu();
+	void			CameraWindow_Function();
 	void			IsCreatePlayer_ReadyCamara(); 
 
 	
 	
 private: //! For. Create_Function
-	void			Picking_Function();
 
+	void			Picking_Function();
 	void			Preview_Function();
 	void			Change_PreViewObject(TAP_TYPE eTabType);
 
+	//!For. Environment
 	void			Ground_CreateFunction();
 	void			Interact_CreateFunction();
 	void			Preview_Environment_CreateFunction();
 	void			Create_Instance();
 
+	//!For. Character
+	void			Character_CreateFunction();
+		void			Monster_CreateFunction();
+		void			Boss_CreateFunction();
+		void			NPC_CreateFunction();
+	
+
 private: //!For. Select_Function
+
+	//!For. Environment
 	void			Basic_SelectFunction();
 	void			Guizmo_Tick(CGameObject* pPickingObject = nullptr);
 
 	void			Instance_GuizmoTick(_int iIndex, INSTANCE_INFO_DESC* pInstance = nullptr);
+
+	//!For. Character
+	void			Character_SelectFunction();
+		void			Monster_SelectFunction();
+		void			Boss_SelectFunction();
+		void			NPC_SelectFunction();
 
 private:
 	ImTextureID		m_pSelectedTexture = { nullptr };
@@ -86,11 +120,22 @@ private:
 	MODE_TYPE		m_eModeType = MODE_TYPE::MODE_END;
 	PICKING_TYPE	m_ePickingType = PICKING_TYPE::PICKING_END;
 	PICKING_MODE	m_ePickingMode = PICKING_MODE::MOUSE_PRESSING;
+	OBJECTMODE_TYPE m_eObjectMode = OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT;
+
+	_bool			m_bChangeObjectMode = false;
 
 	CPlayer*		m_pPlayer = nullptr;
+	
 
+private: //!For. Character
+	vector<string>			  m_vecMonsterTag;
+	vector<string>			  m_vecBossTag;
+	vector<string>			  m_vecNpcTag;
+	 
+	_uint					  m_iSelectCharacterTag = {};
+	CGameObject*			  m_pPreviewCharacter = { nullptr };
 
-private:
+private: //!For. Environment
 	map<string, MAP_KEY_TYPE> m_mapNonAnimModelTag;
 	map<string, MAP_KEY_TYPE> m_mapAnimModelTag;
 	
@@ -132,7 +177,8 @@ private: //! 레이캐스트
 	_float			m_fRayUpdateTimeAcc = { 0.f };
 
 
-private://!For. CreateObject
+private:
+	//!For. CreateObject
 	vector<CEnvironment_Object*>	m_vecCreateObject = {}; //! 생성한 오브젝트
 	vector<string>					m_vecCreateObjectTag = {};	
 	_int							m_vecCreateObjectIndex = 0;
@@ -141,6 +187,19 @@ private://!For. CreateObject
 
 	CGameObject*					m_pPickingObject = { nullptr };
 	INSTANCE_INFO_DESC*				m_pPickingInstanceInfo = { nullptr };
+
+	//!For. CreateCharacter
+	vector<CMonster*>				m_vecCreateMonster;
+	vector<string>					m_vecCreateMonsterTag;
+
+	//TODO 추후 NPC추가되면 작성
+	//!vector<CNPC*>					m_vecCreateNPC;
+	//!vector<string>					m_vecCreateNPCTag ;
+	//!_int							m_iCreateNPCIndex = {};
+
+	
+	_int							m_iCreateMonsterIndex = {};
+	_int							m_iSelectCharacterIndex = {};
 
 private: //! For. CreateInstance
 	_uint							m_iSelectInstanceIndex = 0;

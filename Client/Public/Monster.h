@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "LandObject.h"
+#include "GameObject.h"
 
 BEGIN(Engine)
 class CShader;
@@ -13,6 +13,13 @@ BEGIN(Client)
 
 class CMonster final : public CGameObject
 {
+public:
+	typedef struct tagMonsterDesc : public CGameObject::tagGameObjectDesc
+	{
+		_float4x4	WorldMatrix = XMMatrixIdentity();
+		_bool		bPreview = false;
+	}MONSTER_DESC;
+
 private:
 	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CMonster(const CMonster& rhs);

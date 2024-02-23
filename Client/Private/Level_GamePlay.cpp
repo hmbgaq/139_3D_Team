@@ -22,6 +22,7 @@
 
 
 #pragma region Test
+#include "Monster.h"
 #include "Screamer.h"  
 #include "InstanceMonster.h"
 #pragma endregion
@@ -144,7 +145,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* pArg)
 {
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg));
+	CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
+
+	CMonster::MONSTER_DESC Desc = {};
+	Desc.fRotationPerSec = GameObjectDesc.fRotationPerSec;
+	Desc.fSpeedPerSec = GameObjectDesc.fSpeedPerSec;
+	Desc.bPreview = false;
+	Desc.WorldMatrix = XMMatrixIdentity();
+
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), &Desc));
 
 	return S_OK;
 }

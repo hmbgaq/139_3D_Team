@@ -298,6 +298,9 @@
     <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Vignette">
       <UniqueIdentifier>{f4d39fbe-3d41-437e-b224-2666fac37121}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\ETC">
+      <UniqueIdentifier>{b18d42ab-99b6-4330-a22a-3033f8d1b25f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">

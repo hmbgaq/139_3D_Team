@@ -244,6 +244,11 @@ namespace Engine
 		return static_cast<Return>(value);
 	}
 
+	template<typename EnumType>
+	EnumType ECast(int value) {
+		return static_cast<EnumType>(value);
+	}
+
 #pragma endregion
 	
 

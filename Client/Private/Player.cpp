@@ -95,7 +95,7 @@ void CPlayer::Tick(_float fTimeDelta)
 		{
 			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 		}
-		if (m_pGameInstance->Key_Pressing(DIK_DOWNARROW))
+		if (m_pGameInstance->Key_Pressing(DIK_UPARROW))
 		{
 			m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
 			pBody->SetUp_Animation(4);
