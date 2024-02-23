@@ -179,6 +179,7 @@ private:
 
 private:
 	class CShader*					m_pShader[SHADER_TYPE::SHADER_END]	= { nullptr };
+	class CTexture*					m_pPerlinNoiseTextureCom			= { nullptr };
 	class CGameInstance*			m_pGameInstance						= { nullptr };
 	class CVIBuffer_Rect*			m_pVIBuffer							= { nullptr };
 

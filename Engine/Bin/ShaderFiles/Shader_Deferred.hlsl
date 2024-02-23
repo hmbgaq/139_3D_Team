@@ -16,7 +16,7 @@ vector g_vLightSpecular;
 float g_fLightIntensity;
 vector g_vLightFlag;
 
-texture2D g_DiffuseTexture;
+Texture2D g_DiffuseTexture;
 vector g_vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
 vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
@@ -34,6 +34,7 @@ Texture2D g_ORMTexture;
 Texture2D g_SSAOTexture;
 Texture2D g_BloomTarget;
 Texture2D g_OutlineTarget;
+Texture2D g_PerlinNoiseTextures;
 
 /* 활성 여부 */ 
 bool g_bSSAO_Active;
@@ -294,9 +295,8 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     if (g_Outline_Active)
         vOutline = g_OutlineTarget.Sample(LinearSampler, In.vTexcoord);
 	
-    vector vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord);
     
-    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom + vEmissive;
+    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
     Out.vColor.a = 1.f;
     //Out.vColor = ((vDiffuse * vShade * vSSAO) + vSpecular + vBloom) * vOutline;
 	
@@ -320,16 +320,27 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 	/* 월드 상의 위치를 구하자. */
 	/* 로컬위치 * 월드행렬 */
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+         
+    //float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
+    //vTexCoord.x += g_vFogUVAcc.x;
+    //vTexCoord.y += g_vFogUVAcc.y;
+    //
+    //float fNoise = g_PerlinNoiseTextures.Sample(LinearSampler, vTexCoord).r;
+    //
+    //float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise);
+    //
+    //Out.vColor = vector(vFinalColor.rgb, 1.f);
+	
     vWorldPos = mul(vWorldPos, g_LightViewMatrix);
     vWorldPos = mul(vWorldPos, g_LightProjMatrix);
-
+   
     float2 vUV = (float2) 0.0f;
-
+   
     vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
     vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
-
+   
     float4 vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
-
+   
     if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
         Out.vColor = Out.vColor * 0.8f;
 	

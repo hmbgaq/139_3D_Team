@@ -50,6 +50,7 @@ HRESULT CRenderer::Create_Buffer()
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	NULL_CHECK_RETURN(m_pVIBuffer, E_FAIL);
 
+	//m_pPerlinNoiseTextureCom = CTexture::Create()
 	return S_OK;
 }
 
@@ -298,7 +299,7 @@ HRESULT CRenderer::Control_HotKey()
 		cout << " ----------------------------- " << endl;
 		cout << " DIK_1 : NONE ON/OFF " << endl;
 		cout << " DIK_2 : HBAO+ ON/OFF " << endl;
-		cout << " DIK_3 : BLOOM ON/OFF " << endl;
+		cout << " DIK_3 : Blur ON/OFF " << endl;
 		cout << " DIK_4 : HDR ON/OFF " << endl;
 		cout << " DIK_5 : FXAA ON/OFF " << endl;
 		cout << " DIK_6 : RimLight ON/OFF " << endl;
@@ -355,14 +356,12 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_NonBlend());	/* MRT_GameObjects*/
 
 	{ 
+		FAILED_CHECK(Render_Bloom());
+
 		/* Pre-PostProcessing */
 		if (true == m_bSSAO_Active)
 		{
 			FAILED_CHECK(Render_HBAO_PLUS());
-		}
-		if (true == m_bBloom_Active)
-		{
-			FAILED_CHECK(Render_Bloom());
 		}
 		if (true == m_bOutline_Active)
 		{
@@ -786,6 +785,7 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SpecularTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_LightDepthTexture"));
 	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RimLight"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_EmissiveTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
 
 	/* Post Processing */
 	{
@@ -796,10 +796,8 @@ HRESULT CRenderer::Render_Deferred()
 		}
 
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bBloom_Active", &m_bBloom_Active, sizeof(_bool)));
-		if (true == m_bBloom_Active)
-		{
-			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
-		}
+
+
 
 		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_Outline_Active", &m_bOutline_Active, sizeof(_bool)));
 		//if (true == m_bOutline_Active)

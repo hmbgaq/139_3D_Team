@@ -144,7 +144,6 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     
-    
     /* 림라이트 -> 프레넬 공식 사용 */
     /* 노말 (내적) 정점이 카메라를 바라보는방향 -> 카메라가 조명처럼 인식된다. */ 
     //float fRim = saturate(dot(In.vNormal, (g_vCamPosition - In.vWorldPos)));
@@ -161,8 +160,8 @@ PS_OUT PS_MAIN(PS_IN In)
     fRimPower = pow(fRimPower, 5.f);
     vector vRimColor = g_vRimColor * fRimPower;
     
-    Out.vDiffuse += vRimColor;
     Out.vBloom = Caculation_Brightness(Out.vDiffuse, g_vBloomPower) + vRimColor;
+    Out.vDiffuse += vRimColor;
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
 	return Out;
