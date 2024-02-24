@@ -11,6 +11,7 @@
 #include "Effect_Particle.h"
 #include "Effect_Instance.h"
 
+#include "Mesh.h"
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -442,9 +443,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 				ImGui::SeparatorText("");
-				//TODO 이징 잘못지움ㅠ 살려야한다.
 
-
+				Select_EasingType(&m_pParticlePointDesc->eType_Easing);
 				
 				ImGui::SeparatorText("");
 				/* 라이프 타임 */
@@ -535,6 +535,64 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 				if (ImGui::DragFloat("fGravityAcc", &m_fGravityAcc, -100.f, 0.f, 1.f))
 					m_pParticlePointDesc->fGravityAcc = m_fGravityAcc;
+
+
+
+
+
+				// ! 테스트 시작
+				CEffect_Void* pTest = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(TEXT("Part_Mesh_000")));
+				if (nullptr != pTest)
+				{
+					ImGui::SeparatorText("");
+					if (ImGui::SliderFloat("Test Term", &m_fTestTerm, 0.f, 1.f))
+					{
+						m_fTestTerm = m_fTestTerm;
+					}
+
+					ImGui::Text("Count : %d", m_iCount);
+
+					_uint iMaxVertices = dynamic_cast<CEffect_Instance*>(pTest)->Get_VIBufferCom()->Get_Mesh(0)->Get_NumVertices();
+					//m_fTimeAcc += m_fTimeDelta;
+
+					//if (m_fTestTerm <= m_fTimeAcc)
+					//{
+					//	if (m_iCount >= iMaxVertices)
+					//		m_iCount = 0;
+					//	else
+					//		m_iCount += 7;
+
+					//	m_fTimeAcc = 0.f;
+					//}
+
+					if (ImGui::InputInt("Count Term", &m_iCountTerm, 1))
+					{
+						m_iCountTerm = m_iCountTerm;
+					}
+
+					if (m_pGameInstance->Key_Down(DIK_RIGHT))
+					{
+						if (m_iCount >= iMaxVertices)
+							m_iCount = 0;
+						else
+							m_iCount += m_iCountTerm;
+					}
+
+					if (m_pGameInstance->Key_Down(DIK_LEFT))
+					{
+						if (m_iCount < 0)
+							m_iCount = 0;
+						else
+							m_iCount -= m_iCountTerm;
+
+					}
+
+					_uint* pIndices = dynamic_cast<CEffect_Instance*>(pTest)->Get_VIBufferCom()->Get_Mesh(0)->Get_Indices();
+					_float3 vMovePos = dynamic_cast<CEffect_Instance*>(pTest)->Get_VIBufferCom()->Get_Mesh(0)->Get_VerticePos(pIndices[m_iCount]);
+					m_pCurPartEffect->Set_Position(vMovePos);
+
+				}
+				// ! 테스트 끝
 
 			}
 		}
@@ -765,8 +823,6 @@ void CWindow_EffectTool::Update_RectTab()
 						m_pRectDesc->bPlay = FALSE;
 					}
 					ImGui::Text("Current Index : %d, %d", pSpriteDesc->vUV_CurTileIndex.x, pSpriteDesc->vUV_CurTileIndex.y);
-
-
 				}
 
 			}
@@ -904,141 +960,7 @@ void CWindow_EffectTool::Update_MeshTab()
 				HelpMarker(u8"마스크:1/노이즈:5/쉐이더패스:6/렌더그룹:7");
 
 
-				/* Easing Type : 이징 타입 */
-				if (ImGui::CollapsingHeader(" Easing Types "))
-				{
-					if (ImGui::Button("LINEAR"))
-					{
-						m_pInstanceDesc->eType_Easing = LINEAR;
-					}
-					if (ImGui::Button("QUAD_IN"))
-					{
-						m_pInstanceDesc->eType_Easing = QUAD_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("QUAD_OUT"))
-					{
-						m_pInstanceDesc->eType_Easing = QUAD_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("QUAD_INOUT"))
-					{
-						m_pInstanceDesc->eType_Easing = QUAD_INOUT;
-					}
-					if (ImGui::Button("CUBIC_IN"))
-					{
-						m_pInstanceDesc->eType_Easing = CUBIC_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("CUBIC_OUT"))
-					{
-						m_pInstanceDesc->eType_Easing = CUBIC_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("CUBIC_INOUT"))
-					{
-						m_pInstanceDesc->eType_Easing = CUBIC_INOUT;
-					}
-					if (ImGui::Button("QUART_IN"))
-					{
-						m_pInstanceDesc->eType_Easing = QUART_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("QUART_OUT"))
-					{
-						m_pInstanceDesc->eType_Easing = QUART_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("QUART_INOUT"))
-					{
-						m_pInstanceDesc->eType_Easing = QUART_INOUT;
-					}
-					if (ImGui::Button("QUINT_IN"))
-					{
-						m_pInstanceDesc->eType_Easing = QUINT_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("QUINT_OUT"))
-					{
-						m_pInstanceDesc->eType_Easing = QUINT_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("QUINT_INOUT"))
-					{
-						m_pInstanceDesc->eType_Easing = QUINT_INOUT;
-					}
-					if (ImGui::Button("SINE_IN"))
-					{
-						m_pInstanceDesc->eType_Easing = SINE_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("SINE_OUT"))
-					{
-						m_pInstanceDesc->eType_Easing = SINE_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("SINE_INOUT"))
-					{
-						m_pInstanceDesc->eType_Easing = SINE_INOUT;
-					}
-					if (ImGui::Button("EXPO_IN"))
-					{
-						m_pInstanceDesc->eType_Easing = EXPO_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("EXPO_OUT"))
-					{
-						m_pInstanceDesc->eType_Easing = EXPO_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("EXPO_INOUT"))
-					{
-						m_pInstanceDesc->eType_Easing = EXPO_INOUT;
-					}
-					if (ImGui::Button("CIRC_IN"))
-					{
-						m_pInstanceDesc->eType_Easing = CIRC_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("CIRC_OUT"))
-					{
-						m_pInstanceDesc->eType_Easing = CIRC_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("CIRC_INOUT"))
-					{
-						m_pInstanceDesc->eType_Easing = CIRC_INOUT;
-					}
-					if (ImGui::Button("ELASTIC_IN"))
-					{
-						m_pInstanceDesc->eType_Easing = ELASTIC_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("ELASTIC_OUT"))
-					{
-						m_pInstanceDesc->eType_Easing = ELASTIC_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("ELASTIC_INOUT"))
-					{
-						m_pInstanceDesc->eType_Easing = ELASTIC_INOUT;
-					}
-					if (ImGui::Button("BOUNCE_IN"))
-					{
-						m_pInstanceDesc->eType_Easing = BOUNCE_IN;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("BOUNCE_OUT"))
-					{
-						m_pInstanceDesc->eType_Easing = BOUNCE_OUT;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("ELASTIC_INOUT"))
-					{
-						m_pInstanceDesc->eType_Easing = ELASTIC_INOUT;
-					}
-				}
-				ImGui::SeparatorText("");
+				Select_EasingType(&m_pInstanceDesc->eType_Easing);
 
 			}
 		}
@@ -1168,7 +1090,6 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_vUV_MaxTileCount[0] = pSpriteDesc->vUV_MaxTileCount.x;
 			m_vUV_MaxTileCount[1] = pSpriteDesc->vUV_MaxTileCount.y;
-
 		}
 
 		if (CEffect_Void::INSTANCE == eType_Effect)
@@ -1198,6 +1119,144 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 	}
 	
+}
+
+void CWindow_EffectTool::Select_EasingType(EASING_TYPE* eType)
+{
+	/* Easing Type : 이징 타입 */
+	if (ImGui::CollapsingHeader(" Easing Types "))
+	{
+		if (ImGui::Button("LINEAR"))
+		{
+			*eType = LINEAR;
+		}
+		if (ImGui::Button("QUAD_IN"))
+		{
+			*eType = QUAD_IN;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("QUAD_OUT"))
+		{
+			*eType = QUAD_OUT;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("QUAD_INOUT"))
+		{
+			*eType = QUAD_INOUT;
+		}
+		if (ImGui::Button("CUBIC_IN"))
+		{
+			*eType = CUBIC_IN;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("CUBIC_OUT"))
+		{
+			*eType = CUBIC_OUT;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("CUBIC_INOUT"))
+		{
+			*eType = CUBIC_INOUT;
+		}
+		if (ImGui::Button("QUART_IN"))
+		{
+			*eType = QUART_IN;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("QUART_OUT"))
+		{
+			*eType = QUART_OUT;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("QUART_INOUT"))
+		{
+			*eType = QUART_INOUT;
+		}
+		if (ImGui::Button("QUINT_IN"))
+		{
+			*eType = QUINT_IN;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("QUINT_OUT"))
+		{
+			*eType = QUINT_OUT;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("QUINT_INOUT"))
+		{
+			*eType = QUINT_INOUT;
+		}
+		if (ImGui::Button("SINE_IN"))
+		{
+			*eType = SINE_IN;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("SINE_OUT"))
+		{
+			*eType = SINE_OUT;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("SINE_INOUT"))
+		{
+			*eType = SINE_INOUT;
+		}
+		if (ImGui::Button("EXPO_IN"))
+		{
+			*eType = EXPO_IN;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("EXPO_OUT"))
+		{
+			*eType = EXPO_OUT;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("EXPO_INOUT"))
+		{
+			*eType = EXPO_INOUT;
+		}
+		if (ImGui::Button("CIRC_IN"))
+		{
+			*eType = CIRC_IN;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("CIRC_OUT"))
+		{
+			*eType = CIRC_OUT;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("CIRC_INOUT"))
+		{
+			*eType = CIRC_INOUT;
+		}
+		if (ImGui::Button("ELASTIC_IN"))
+		{
+			*eType = ELASTIC_IN;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("ELASTIC_OUT"))
+		{
+			*eType = ELASTIC_OUT;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("ELASTIC_INOUT"))
+		{
+			*eType = ELASTIC_INOUT;
+		}
+		if (ImGui::Button("BOUNCE_IN"))
+		{
+			*eType = BOUNCE_IN;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("BOUNCE_OUT"))
+		{
+			*eType = BOUNCE_OUT;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("ELASTIC_INOUT"))
+		{
+			*eType = ELASTIC_INOUT;
+		}
+	}
 }
 
 
@@ -1393,7 +1452,8 @@ void CWindow_EffectTool::Update_EffectList()
 
 		/* Effect Edit Start */
 		ImGui::SeparatorText("");
-		if (ImGui::CollapsingHeader("Effect_Times"))
+		ImGui::CollapsingHeader("Effect_Times");
+		//if (ImGui::CollapsingHeader("Effect_Times"))
 		{
 			ImGui::Text("    Waiting   |   LifeTime   |   SequenceTime ");
 			if (ImGui::DragFloat3("Times_Effect", m_vTimes_Effect, 0.2f, 0.f))
@@ -1406,149 +1466,14 @@ void CWindow_EffectTool::Update_EffectList()
 				m_pCurEffectDesc->fRemainTime = m_vTimes_Effect[2];
 			}
 			ImGui::Text("Total_Time : %.2f", m_vTimes_Effect[0] + m_vTimes_Effect[1] + m_vTimes_Effect[2]);
-
-			ImGui::SeparatorText("");
-			if (ImGui::CollapsingHeader("Easing Time"))
-			{
-				if (ImGui::Button("LINEAR"))
-				{
-					m_pCurEffectDesc->eType_Easing = LINEAR;
-				}
-				if (ImGui::Button("QUAD_IN"))
-				{
-					m_pCurEffectDesc->eType_Easing = QUAD_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("QUAD_OUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = QUAD_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("QUAD_INOUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = QUAD_INOUT;
-				}
-				if (ImGui::Button("CUBIC_IN"))
-				{
-					m_pCurEffectDesc->eType_Easing = CUBIC_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("CUBIC_OUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = CUBIC_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("CUBIC_INOUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = CUBIC_INOUT;
-				}
-				if (ImGui::Button("QUART_IN"))
-				{
-					m_pCurEffectDesc->eType_Easing = QUART_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("QUART_OUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = QUART_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("QUART_INOUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = QUART_INOUT;
-				}
-				if (ImGui::Button("QUINT_IN"))
-				{
-					m_pCurEffectDesc->eType_Easing = QUINT_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("QUINT_OUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = QUINT_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("QUINT_INOUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = QUINT_INOUT;
-				}
-				if (ImGui::Button("SINE_IN"))
-				{
-					m_pCurEffectDesc->eType_Easing = SINE_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("SINE_OUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = SINE_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("SINE_INOUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = SINE_INOUT;
-				}
-				if (ImGui::Button("EXPO_IN"))
-				{
-					m_pCurEffectDesc->eType_Easing = EXPO_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("EXPO_OUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = EXPO_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("EXPO_INOUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = EXPO_INOUT;
-				}
-				if (ImGui::Button("CIRC_IN"))
-				{
-					m_pCurEffectDesc->eType_Easing = CIRC_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("CIRC_OUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = CIRC_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("CIRC_INOUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = CIRC_INOUT;
-				}
-				if (ImGui::Button("ELASTIC_IN"))
-				{
-					m_pCurEffectDesc->eType_Easing = ELASTIC_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("ELASTIC_OUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = ELASTIC_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("ELASTIC_INOUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = ELASTIC_INOUT;
-				}
-				if (ImGui::Button("BOUNCE_IN"))
-				{
-					m_pCurEffectDesc->eType_Easing = BOUNCE_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("BOUNCE_OUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = BOUNCE_OUT;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("ELASTIC_INOUT"))
-				{
-					m_pCurEffectDesc->eType_Easing = ELASTIC_INOUT;
-				}
-			}
-
 		}
 
 
 		if (nullptr != m_pCurPartEffect)
 		{
 			ImGui::SeparatorText("");
-			if (ImGui::CollapsingHeader("Part_Times"))
+			ImGui::CollapsingHeader("Part_Times");
+			//if (ImGui::CollapsingHeader("Part_Times"))
 			{
 				CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
 

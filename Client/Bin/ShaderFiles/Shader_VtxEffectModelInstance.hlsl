@@ -399,7 +399,7 @@ technique11 DefaultTechnique
 	{
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_DepthStencilEnable, 0);
-		SetRasterizerState(RS_Fill_Wireframe);
+        SetRasterizerState(RS_NoneCull_Wireframe);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		HullShader = NULL;

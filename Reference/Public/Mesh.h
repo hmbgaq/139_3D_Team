@@ -29,6 +29,12 @@ public:
 	
 	//! 모델 인스턴싱 앤드
 
+	//! 이펙트 메쉬 정점 위치 확인 테스트
+	_uint		Get_NumVertices() { return m_iNumVertices; }
+	_float3		Get_VerticePos(_int iIndex) { return m_pVertices[iIndex].vPosition; }
+	_uint*		Get_Indices() { return m_pIndices; }
+	//! 이펙트 메쉬 정점 위치 확인 테스트 끝
+	
 public:
     virtual HRESULT Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones);
     

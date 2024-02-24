@@ -22,8 +22,6 @@ HRESULT CVIBuffer_Effect_Model_Instance::Initialize(void* pArg)
 
 	__super::Initialize(pArg);
 
-	
-
 	return S_OK;
 }
 

@@ -53,6 +53,7 @@ public:
 public:
 	EFFECT_INSTANCE_DESC* Get_Desc() { return &m_tInstanceDesc; }
 
+	CVIBuffer_Effect_Model_Instance* Get_VIBufferCom() { return m_pVIBufferCom; }
 
 private:
 	CShader*							m_pShaderCom				= { nullptr };	

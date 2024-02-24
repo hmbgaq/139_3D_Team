@@ -122,6 +122,7 @@ HRESULT CVIBuffer_Instancing::Bind_VIBuffers()
 	return S_OK;
 }
 
+
 void CVIBuffer_Instancing::Update(_float fTimeDelta)
 {
 	m_fTimeAcc += fTimeDelta;

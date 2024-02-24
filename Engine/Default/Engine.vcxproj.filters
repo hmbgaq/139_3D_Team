@@ -570,6 +570,9 @@
     <ClInclude Include="..\Public\Easing_Utillity.h">
       <Filter>01.Utility\96.Utility\Easing</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Particle.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Paricles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -796,6 +799,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Easing_Utillity.cpp">
       <Filter>01.Utility\96.Utility\Easing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Particle.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Paricles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

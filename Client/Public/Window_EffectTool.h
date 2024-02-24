@@ -54,6 +54,9 @@ public:
 	void	Update_CurParameters();
 	void	Update_CurParameters_Parts();
 
+public:
+	void	Select_EasingType(EASING_TYPE* eType);
+
 private:
 	map<const wstring, class CEffect*>		m_pEffects;
 	map<const wstring, class CGameObject*>	m_CurPartObjects;
@@ -85,21 +88,21 @@ private:
 	_int m_iShaderPassIndex_Particle	= { 0 };
 	_int m_iMaxShaderPassIndex_Particle = { 2 };
 	_int  m_iTexIndex_Particle[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 13, 22, 8 };
+	_int  m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 13, 17, 5 };
 
 
 	_int m_iRenderGroup_Mesh			= { 7 };
 	_int m_iShaderPassIndex_Mesh		= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
 	_int  m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 14, 22, 8 };
+	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 4, 17, 5 };
 
 
 	_int m_iRenderGroup_Rect			= { 7 };
 	_int m_iShaderPassIndex_Rect		= { 0 };
 	_int m_iMaxShaderPassIndex_Rect		= { 2 };
 	_int  m_iTexIndex_Rect[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 13, 22, 8 };
+	_int  m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 4, 17, 5 };
 
 	// Refactoring end   =====================================================================================================
 
@@ -190,6 +193,10 @@ private:
 	_float	m_fUV_RotDegree_Mesh = { 0.f };
 
 #pragma endregion
+	_uint m_iCount = { 0 };
+	_int m_iCountTerm = { 1 };
+	_float m_fTimeAcc = { 0.f };
+	_float m_fTestTerm = { 0.05f };
 
 public:
 	HRESULT Ready_Layer_Greed(const wstring& strLayerTag);

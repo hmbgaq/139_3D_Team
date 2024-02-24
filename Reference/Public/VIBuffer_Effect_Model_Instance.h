@@ -49,9 +49,11 @@ public:
 
 public:
 	EFFECT_MODEL_INSTANCE_DESC* Get_Desc() { return &m_tBufferDesc; }
+	CMesh* Get_Mesh(_int iIndex) { return m_vecInstanceMesh[iIndex]; }
 
 private:
 	EFFECT_MODEL_INSTANCE_DESC			m_tBufferDesc;
+
 
 public:
 	static CVIBuffer_Effect_Model_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
