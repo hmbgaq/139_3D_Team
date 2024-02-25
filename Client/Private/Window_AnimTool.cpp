@@ -444,12 +444,13 @@ void CWindow_AnimTool::Clear_WeaponEvent()
 
 void CWindow_AnimTool::Create_Object(const wstring& strLayerTag, const wstring& strPrototypeTag)
 {
-	if (strLayerTag == L"Layer_Player")
-	{
-		m_pGameInstance->Set_Player(dynamic_cast<CCharacter*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, strPrototypeTag)));
-	}
-	else
-		m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, strPrototypeTag);
+	m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, strPrototypeTag);
+// 	if (strLayerTag == L"Layer_Player")
+// 	{
+// 		m_pGameInstance->Set_Player(dynamic_cast<CCharacter*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, strPrototypeTag)));
+// 	}
+// 	else
+// 		m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, strPrototypeTag);
 
 }
 

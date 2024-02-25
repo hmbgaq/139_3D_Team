@@ -104,8 +104,9 @@ void CPlayer::Tick(_float fTimeDelta)
 			m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
 			pBody->SetUp_Animation(4);
 		}
-		else
-			pBody->SetUp_Animation(3);
+		//TODO 여기다가 절대로 상시 애니메이션 걸지 마세요 애니메이션툴안돌아갑니다 모든 몬스터든 뭐든 상시 애니메이션 걸면안됌 준비 다된놈만 애니메이션 걸어두셈 
+		//else
+		//	pBody->SetUp_Animation(3);
 	}
 
 
@@ -159,7 +160,7 @@ HRESULT CPlayer::Ready_Components()
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"),
 		TEXT("Com_PhysXCharacterController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom))))
 		return E_FAIL;
-
+	
 	m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
 
 
