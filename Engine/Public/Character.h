@@ -64,6 +64,9 @@ public:
 	void Go_Left(_float fTimeDelta);
 	void Go_Right(_float fTimeDelta);
 
+public:
+	virtual void Set_Enable(_bool _Enable) override;
+
 
 	_bool Is_Rotate_In_CameraDir() {
 		return m_bRotate_In_CameraDir;

@@ -66,7 +66,7 @@ void CLayer::Late_Tick(_float fTimeDelta)
 			Safe_Release((*iter));
 			iter = m_GameObjects.erase(iter);
 		}
-		else if (false == (*iter)->Get_Enable())
+		else if (false == (*iter)->Get_Enable() && true == (*iter)->Is_PoolObject())
 		{
 			m_pObjectManager->Fill_PoolObject((*iter));
 			iter = m_GameObjects.erase(iter);

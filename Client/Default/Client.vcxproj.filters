@@ -591,11 +591,11 @@
     <ClInclude Include="..\Public\Client_Preset.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Environment_Interact.h">
       <Filter>02.GameObjects\02. Environment\Environment_Interact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

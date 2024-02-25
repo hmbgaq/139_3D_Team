@@ -100,7 +100,7 @@ protected:
 
 protected:
 	_bool						m_bDead = { false };
-	_bool						m_bIsPoolObject = { true };
+	_bool						m_bIsPoolObject = { false };
 
 protected:
 	wstring						m_strPrototypeTag;
