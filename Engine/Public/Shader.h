@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-//#include "Hasher.h"
+#include "Hasher.h"
 
 BEGIN(Engine)
 
@@ -36,36 +36,40 @@ private:
 
 #pragma region About Const Buffer 
 
-//public:
-//	typedef struct tagPassDesc
-//	{
-//		string									strName;
-//		ID3DX11EffectPass* pPass = nullptr;
-//		D3DX11_PASS_SHADER_DESC					passVsDesc;
-//		D3DX11_EFFECT_SHADER_DESC				effectVsDesc;
-//		vector<D3D11_SIGNATURE_PARAMETER_DESC>	signatureDescs;
-//
-//		ID3D11InputLayout* pInputLayout = nullptr;
-//	}PASSDESC;
-//
-//	typedef struct tagTechniqueDesc
-//	{
-//		string					strName;
-//		D3DX11_TECHNIQUE_DESC	desc;
-//		ID3DX11EffectTechnique* pTechnique = nullptr;
-//		vector<PASSDESC>		vecPasses;
-//		unordered_map<string, PASSDESC, djb2Hasher>	hashPasses;
-//
-//	}TECHNIQUEDESC;
-//public:
-//	using CBUFFERS = unordered_map<string, pair<CConstantBuffer*, ID3DX11EffectConstantBuffer*>, djb2Hasher>;
-//
-//	D3DX11_TECHNIQUE_DESC		m_TechniqueDesc;
-//	CBUFFERS* m_hashConstantBuffers;
-//	vector<TECHNIQUEDESC>	m_vecTechnique;
-//
-//	ID3DX11EffectConstantBuffer* GetConstantBuffer(const _char * pName);
-//	HRESULT Bind_CBuffer(const string & strCBufferName, const void* pData, _uint iLength = 0);
+public:
+	typedef struct tagPassDesc
+	{
+		string									strName;
+		ID3DX11EffectPass* pPass = nullptr;
+		D3DX11_PASS_SHADER_DESC					passVsDesc;
+		D3DX11_EFFECT_SHADER_DESC				effectVsDesc;
+		vector<D3D11_SIGNATURE_PARAMETER_DESC>	signatureDescs;
+
+		ID3D11InputLayout* pInputLayout = nullptr;
+	}PASSDESC;
+
+	typedef struct tagTechniqueDesc
+	{
+		string					strName;
+		D3DX11_TECHNIQUE_DESC	desc;
+		ID3DX11EffectTechnique* pTechnique = nullptr;
+		vector<PASSDESC>		vecPasses;
+		unordered_map<string, PASSDESC, djb2Hasher>	hashPasses;
+
+	}TECHNIQUEDESC;
+
+private:
+
+	vector<TECHNIQUEDESC>	m_vecTechnique;
+
+	_int					m_iTechniqueIndex = 0;
+	_int					m_iPassIndex = 0;
+
+	using CBUFFERS = unordered_map<string, pair<CConstantBuffer*, ID3DX11EffectConstantBuffer*>, djb2Hasher>;
+	
+	CBUFFERS* m_hashConstantBuffers;
+
+	static	unordered_map<ID3DX11Effect*, CBUFFERS*> m_hashBufferGroups;
 
 #pragma endregion
 

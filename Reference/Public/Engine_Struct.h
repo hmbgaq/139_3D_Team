@@ -358,12 +358,12 @@ namespace Engine
 	typedef struct ENGINE_DLL tagFogDesc
 	{
 		_bool  bFog_Active			= false;
-		_float fFogStartDepth		= 100.f;
-		_float fFogStartDistance	= 10.f;
+		_float fFogStartDepth		= 55.f;
+		_float fFogStartDistance	= 0.1f;
 		_float fFogDistanceValue	= 30.f;
 		_float fFogHeightValue		= 50.f;
-		_float fFogDistanceDensity	= 0.04f;
-		_float fFogHeightDensity	= 0.04f;
+		_float fFogDistanceDensity	= 0.05f;
+		_float fFogHeightDensity	= 0.05f;
 		
 	} FOG_DESC;
 

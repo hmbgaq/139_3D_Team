@@ -59,6 +59,17 @@ float   g_fFogHeightValue       = 0.f;
 float   g_fDistanceDensity      = 0.f;
 float   g_fHeightDensity        = 0.f;
 
+cbuffer FOG_DESC
+{
+    bool  bFog_Active;
+    float fFogStartDepth;
+    float fFogStartDistance;
+    float fFogDistanceValue;
+    float fFogHeightValue;
+    float fFogDistanceDensity;
+    float fFogHeightDensity;
+};
+
 /* ------------------ Function ------------------ */ 
 
 float DistanceFogFactor_Caculation(float fViewZ)

@@ -378,6 +378,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Navigation.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Outline.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcessing.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Struct.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\TIMOTHY LOTTES_Fxaa3_11.hlsl" />
   </ItemGroup>
   <ItemGroup>

@@ -125,12 +125,12 @@ void CWindow_ShaderTool::Compress_Fog_Setting()
 
 	if (ImGui::Button("Reset"))
 	{
-		m_eFog_Desc.fFogStartDepth = 100.f;
-		m_eFog_Desc.fFogStartDistance = 10.f;
-		m_eFog_Desc.fFogDistanceValue = 30.f;
-		m_eFog_Desc.fFogHeightValue = 50.f;
-		m_eFog_Desc.fFogDistanceDensity = 0.04f;
-		m_eFog_Desc.fFogHeightDensity = 0.04f;
+		m_eFog_Desc.fFogStartDepth		= 55.f;
+		m_eFog_Desc.fFogStartDistance	= 0.1f;
+		m_eFog_Desc.fFogDistanceValue	= 30.f;
+		m_eFog_Desc.fFogHeightValue		= 50.f;
+		m_eFog_Desc.fFogDistanceDensity = 0.05f;
+		m_eFog_Desc.fFogHeightDensity	= 0.05f;
 	}
 
 	ImGui::SliderFloat("FogStartDepth", &m_eFog_Desc.fFogStartDepth, 0.001f, 250.0f, "StartDepth = %.3f");

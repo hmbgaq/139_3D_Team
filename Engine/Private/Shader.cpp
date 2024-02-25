@@ -1,4 +1,7 @@
 #include "Shader.h"
+#include "ConstantBuffer.h"
+
+unordered_map<ID3DX11Effect*, CShader::CBUFFERS*> CShader::m_hashBufferGroups;
 
 CShader::CShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -69,6 +72,18 @@ HRESULT CShader::Initialize_Prototype(const wstring& strShaderFilePath, const D3
 
 HRESULT CShader::Initialize(void* pArg)
 {
+	auto iter = m_hashBufferGroups.find(m_pEffect);
+
+	if (iter == m_hashBufferGroups.end())
+	{
+		m_hashConstantBuffers = new CBUFFERS;
+		m_hashBufferGroups.emplace(m_pEffect, m_hashConstantBuffers);
+	}
+	else
+	{
+		m_hashConstantBuffers = iter->second;
+	}
+
 	return S_OK;
 }
 
@@ -152,6 +167,25 @@ HRESULT CShader::Bind_RawValue(const _char* pConstantName, const void* pData, _u
 	return pVariable->SetRawValue(pData, 0, iSize);
 }
 
+HRESULT CShader::Bind_Buffer(const _char* pConstantName, const void* pData, _uint iSize)
+{
+	if (0 == m_hashConstantBuffers->count(pConstantName))
+	{
+		if (0 == iSize) return E_FAIL;
+
+		CConstantBuffer* pCBuffer = CConstantBuffer::Create(m_pDevice, m_pContext, iSize);
+		ID3DX11EffectConstantBuffer* pEffectCBuffer = m_pEffect->GetConstantBufferByName(pConstantName);
+
+		m_hashConstantBuffers->emplace(pConstantName, make_pair(pCBuffer, pEffectCBuffer));
+	}
+
+	auto& pCBufferPair = m_hashConstantBuffers->find(pConstantName);
+	CConstantBuffer*& pCBuffer = pCBufferPair->second.first;
+	pCBuffer->CopyData(pData);
+
+	return pCBufferPair->second.second->SetConstantBuffer(pCBuffer->GetBuffer());
+}
+
 CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
 	CShader* pInstance = new CShader(pDevice, pContext);
@@ -177,7 +211,6 @@ CComponent* CShader::Clone(void* pArg)
 	}
 	return pInstance;
 }
-
 
 void CShader::Free()
 {

@@ -39,13 +39,10 @@ HRESULT CRenderer::Initialize()
 	/* 앞서 만든 MRT를 디버그렌더에 그리는용도 */
 	FAILED_CHECK(Ready_DebugRender()); 
 #endif
-
-	m_CurrFog.fFogStartDepth		= 28.f;
-	m_CurrFog.fFogStartDistance		= 3.f;
-	m_CurrFog.fFogDistanceValue		= 8.5f;
-	m_CurrFog.fFogHeightValue		= 50.f;
-	m_CurrFog.fFogDistanceDensity	= 0.1f;
-	m_CurrFog.fFogHeightDensity		= 0.2f;
+	m_tHBAO_Option.bHBAO_Active = m_bSSAO_Active;
+	m_tFog_Option.bFog_Active = m_bFog_Active;
+	m_tHDR_Option.bHDR_Active = m_bHDR_Active;
+	m_tScreen_Option.bFXAA_Active = m_bFXAA_Active;
 
 	return S_OK;
 }
@@ -796,6 +793,8 @@ HRESULT CRenderer::Render_Deferred()
 	{
 		/* test fog */
 		FAILED_CHECK(m_pPerlinNoiseTextureCom->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_PerlinNoiseTexture"));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Buffer("Bind_Buffer", &m_tFog_Option, sizeof(FOG_DESC)));
+
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogStartDepth",		&m_tFog_Option.fFogStartDepth, sizeof(_float)));
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogStartDistance",	&m_tFog_Option.fFogStartDistance, sizeof(_float)));
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogDistanceValue",	&m_tFog_Option.fFogDistanceValue, sizeof(_float)));
