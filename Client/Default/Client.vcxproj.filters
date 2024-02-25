@@ -148,9 +148,6 @@
     <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Frame">
       <UniqueIdentifier>{91ed537f-e3b8-4c30-8935-be704bc3fae7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Hp">
-      <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\02. System">
       <UniqueIdentifier>{47c53a2b-c542-4b2a-b07b-817b6be951a8}</UniqueIdentifier>
     </Filter>
@@ -204,9 +201,6 @@
     </Filter>
     <Filter Include="03.Event\Test\With_Actor">
       <UniqueIdentifier>{945e673b-ae20-4a44-9ab5-8074d7590ee2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpFrame">
-      <UniqueIdentifier>{dd90327a-0190-4771-96f6-0f97d5f047fa}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpBar">
       <UniqueIdentifier>{009fd7cc-9024-4ccd-b651-e9b51bbb3038}</UniqueIdentifier>
@@ -303,6 +297,12 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\00. Player\Right_Interface">
       <UniqueIdentifier>{52b0b806-bb9d-40cc-a902-d719e9dff60b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp">
+      <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpBar\HpFrame">
+      <UniqueIdentifier>{dd90327a-0190-4771-96f6-0f97d5f047fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -442,7 +442,7 @@
       <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_HPFrame.h">
-      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpFrame</Filter>
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar\HpFrame</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Field.h">
       <Filter>02.GameObjects\98. Terrain\Tool_Field</Filter>
@@ -786,7 +786,7 @@
       <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_MonsterHp.h">
-      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Hp</Filter>
+      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_MonsterHpFrame.h">
       <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame</Filter>
@@ -893,7 +893,7 @@
       <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_MonsterHp.cpp">
-      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Hp</Filter>
+      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_MonsterHpFrame.cpp">
       <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame</Filter>
@@ -929,7 +929,7 @@
       <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_HPFrame.cpp">
-      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpFrame</Filter>
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar\HpFrame</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Field.cpp">
       <Filter>02.GameObjects\98. Terrain\Tool_Field</Filter>

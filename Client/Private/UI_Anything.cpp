@@ -55,6 +55,20 @@ void CUI_Anything::Late_Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
+	//if (m_tUIInfo.pParentTransformCom != nullptr &&
+	//	m_tUIInfo.bParent == false)
+	//{
+	//	/* Parent */
+	//	_vector vPosition = m_tUIInfo.pParentTransformCom->Get_State(CTransform::STATE_POSITION);
+	//	XMMATRIX ParentMat = m_tUIInfo.pParentTransformCom->Get_WorldMatrix();
+	//	/* Child */
+	//	XMMATRIX ChildMat = m_pTransformCom->Get_WorldMatrix();
+
+	//	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_tUIInfo.pParentTransformCom->Get_WorldMatrix());
+
+	//	m_pTransformCom->Set_WorldMatrix(m_WorldMatrix);
+	//}
+
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
 }

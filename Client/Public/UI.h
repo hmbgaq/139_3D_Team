@@ -32,15 +32,21 @@ public:
 		/* 크기 */
 		_float		fScaleX = 100.f;
 		_float		fScaleY = 100.f;
+		_float		fOrigin_ScaleX = 100.f;
+		_float		fOrigin_ScaleY = 100.f;
 
 		/* 회전 */
-		_float		fRotationX = 0.0f;
-		_float		fRotationY = 0.0f;
+		_float		fRotationZ = 0.0f;
+		_float		fOrigin_fRotationZ = 0.f;
 
 		/* 이동 */
 		_float		fPositionX = (_float)g_iWinSizeX / 2;
 		_float		fPositionY = (_float)g_iWinSizeY / 2;
 		_float		fPositionZ = 0.0f;
+
+		_float		fOrigin_fRotationZ = 0.f;
+		_float		fOrigin_fRotationZ = 0.f;
+		_float		fOrigin_fRotationZ = 0.f;
 
 		/* 
 			(저장 순서)
@@ -96,7 +102,7 @@ public:
 
 protected:
 	CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CUI(const CGameObject& rhs);
+	CUI(const CUI& rhs);
 	virtual ~CUI() = default;
 
 public: /* ============================== Get / Set =============================== */
@@ -123,11 +129,13 @@ public: /* ============================== Get / Set ============================
 public:
 	virtual HRESULT	Set_ParentTransform(CTransform* pParentTransformCom);
 
-
+	
+protected:
+	void SetUp_WorldToScreen(_fvector vWorldPos);
 
 public: /* ============================== Add ============================== */
-	void			Create_Add_UIParts(void* pArg);
-	void			Add_UIParts(CUI* pArg);
+	void			Add_Create_Parts(void* pArg);
+	void			Add_Parts(CUI* pArg);
 
 public: /* ========================== Change_Size ========================== */
 	void			Set_Size(_float fSizeX, _float fSizeY);
@@ -152,9 +160,11 @@ public: /* ============================= Function ============================= 
 	virtual void	Picking_UI();	// Pick
 	virtual void	Check_RectPos();	// Moving
 	void			Moving_Picking_Point(POINT pt); // Picking Moving
+	virtual void	Parts_Delete();
 
 public: /* ============================== SetUp ============================== */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
+	HRESULT			SetUp_Transform(_float fPosX, _float fPosY, _float fScaleX, _float fScaleY);
 	HRESULT			SetUp_BillBoarding();
 	HRESULT			SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
 	HRESULT			Ready_UI(const char* cFilePath);
@@ -187,7 +197,7 @@ protected: /* ============================= UI =============================== *
 	UI_DESC				m_tUIInfo;
 	RECT				m_rcUI = {};
 	UISTATE				m_eState;
-	_float4x4			m_WorldMatrix = {};
+	_float4x4			m_Origin_WorldMatrix = {};
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f;

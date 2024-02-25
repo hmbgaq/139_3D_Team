@@ -6,8 +6,9 @@ CUI::CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& st
 {
 }
 
-CUI::CUI(const CGameObject& rhs)
+CUI::CUI(const CUI& rhs)
 	: CGameObject(rhs)
+	, m_ProjMatrix(rhs.m_ProjMatrix)
 {
 }
 
@@ -48,6 +49,7 @@ HRESULT CUI::Initialize(void* pArg)
 	m_fScaleY = m_tUIInfo.fScaleY;
 
 	SetUp_UIRect(m_fPositionX, m_fPositionY, m_fScaleX, m_fScaleY);
+	m_Origin_WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 #pragma endregion End
 
 	//FAILED_CHECK(Ready_UI("../Bin/DataFiles/Data_UI/UI_Info"));
@@ -72,11 +74,22 @@ void CUI::Tick(_float fTimeDelta)
 		break;
 	}
 
-	if (m_tUIInfo.pParentTransformCom != nullptr)
+	if (m_tUIInfo.pParentTransformCom != nullptr &&
+		m_tUIInfo.bParent == false)
 	{
-		XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_tUIInfo.pParentTransformCom->Get_WorldMatrix());
-		m_pTransformCom->Set_WorldMatrix(m_WorldMatrix);
+		/* Parent */
+		_vector vPosition = m_tUIInfo.pParentTransformCom->Get_State(CTransform::STATE_POSITION);
+		XMMATRIX ParentMat = m_tUIInfo.pParentTransformCom->Get_WorldMatrix();
+		/* Child */
+		float4x4 ChildMat = {};
+
+		//XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_tUIInfo.pParentTransformCom->Get_WorldMatrix());
+		XMStoreFloat4x4(&ChildMat, m_Origin_WorldMatrix * ParentMat); // Test
+		
+		m_pTransformCom->Set_WorldMatrix(ChildMat);
 	}
+
+	_int iSize = m_vecUIParts.size();
 
 	Check_RectPos();
 	Picking_UI();
@@ -215,8 +228,11 @@ HRESULT CUI::Set_ParentTransform(CTransform* pParentTransformCom)
 	return S_OK;
 }
 
-void CUI::Create_Add_UIParts(void* pArg)
+void CUI::Add_Create_Parts(void* pArg)
 {
+	if (pArg == nullptr)
+		return;
+
 	CUI::UI_DESC* pUIDesc = (CUI::UI_DESC*)pArg;
 
 	wstring wstrLayerTag = TEXT("");
@@ -227,7 +243,7 @@ void CUI::Create_Add_UIParts(void* pArg)
 	m_vecUIParts.push_back(pUI);
 }
 
-void CUI::Add_UIParts(CUI* pUI)
+void CUI::Add_Parts(CUI* pUI)
 {
 	if (pUI == nullptr)
 		return;
@@ -292,6 +308,22 @@ void CUI::Moving_Picking_Point(POINT pt)
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+}
+
+void CUI::Parts_Delete()
+{
+	if (m_vecUIParts.empty())
+		return;
+
+	_int iSize = m_vecUIParts.size();
+
+	for (_int i = 0; i < iSize; ++i)
+	{
+		if (m_vecUIParts[i]->m_bDead == true)
+		{
+			m_vecUIParts.erase(m_vecUIParts.begin() + i);
+		}
+	}
 }
 
 HRESULT CUI::SetUp_BillBoarding()
@@ -430,7 +462,10 @@ json CUI::Save_Desc(json& out_json)
 
 	out_json["MapTextureTag"] = m_tUIInfo.strMapTextureTag;
 	
-	out_json["Color"] = { m_tUIInfo.vColor.m128_f32[0], m_tUIInfo.vColor.m128_f32[1], m_tUIInfo.vColor.m128_f32[3], m_tUIInfo.vColor.m128_f32[4] };
+	out_json["ColorR"] = m_tUIInfo.vColor.m128_f32[0];
+	out_json["ColorG"] = m_tUIInfo.vColor.m128_f32[1];
+	out_json["ColorB"] = m_tUIInfo.vColor.m128_f32[2];
+	out_json["ColorA"] = m_tUIInfo.vColor.m128_f32[3];
 
 	m_pTransformCom->Write_Json(out_json);
 
