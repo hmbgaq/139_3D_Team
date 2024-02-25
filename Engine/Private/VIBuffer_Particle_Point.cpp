@@ -10,6 +10,7 @@ CVIBuffer_Particle_Point::CVIBuffer_Particle_Point(ID3D11Device* pDevice, ID3D11
 
 CVIBuffer_Particle_Point::CVIBuffer_Particle_Point(const CVIBuffer_Particle_Point& rhs)
 	: CVIBuffer_Instancing(rhs)
+	, m_pLengths(rhs.m_pLengths)	
 {
 }
 
@@ -24,6 +25,7 @@ HRESULT CVIBuffer_Particle_Point::Initialize_Prototype(_uint iNumInstance)
 
 	m_pSpeeds = new _float[m_iNumInstance];
 	m_pLifeTimes = new _float[m_iNumInstance];
+	m_pLengths = new _float[m_iNumInstance];
 
 	m_iNumIndices = iNumInstance;
 	m_iIndexStride = 2;
@@ -125,6 +127,12 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 
 	uniform_real_distribution<float>	RandomLifeTime(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
 
+	uniform_real_distribution<float>	RandomLengthPosition(m_tBufferDesc.vMinMaxLengthPosition.x, m_tBufferDesc.vMinMaxLengthPosition.y);
+
+	uniform_real_distribution<float>	RandomRed(min(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y), max(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y));
+	uniform_real_distribution<float>	RandomGreen(min(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y), max(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y));
+	uniform_real_distribution<float>	RandomBlue(min(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y), max(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y));
+	uniform_real_distribution<float>	RandomAlpha(min(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y), max(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y));
 
 	m_iNumInstance = m_tBufferDesc.iCurNumInstance;
 	for (_uint i = 0; i < m_iNumInstance; i++)
@@ -136,6 +144,8 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 
 		m_pSpeeds[i] = RandomSpeed(m_RandomNumber);
 		m_pLifeTimes[i] = RandomLifeTime(m_RandomNumber);
+		m_pLengths[i] = RandomLengthPosition(m_RandomNumber);
+
 
 		_float	fScale = RandomScale(m_RandomNumber);
 		m_tBufferDesc.vCurrentScale.x = fScale + m_tBufferDesc.vAddScale.x;
@@ -194,9 +204,9 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 	if (0 >= m_iNumInstance)
 		return;
 
-	if (m_tBufferDesc.bIsPlay)
+	//if (m_tBufferDesc.bPlay)
 	{
-		(m_fTimeAcc) += fTimeDelta;	// 시간누적
+		m_fTimeAcc += fTimeDelta;	// 시간누적
 		_float fTime = m_fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y;
 
 		if (m_tBufferDesc.vMinMaxLifeTime.y <= m_fTimeAcc)
@@ -239,6 +249,10 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 				fAlpha = 1.f;
 			}
 
+			m_tBufferDesc.vCurrentColor.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
+			m_tBufferDesc.vCurrentColor.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
+			m_tBufferDesc.vCurrentColor.z = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y, m_fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_Easing));
+
 			pVertices[i].vColor = m_tBufferDesc.vCurrentColor;
 			pVertices[i].vColor.w = fAlpha;
 
@@ -254,11 +268,11 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 				// 가속도
 				_float fSpeed = 0.f;
 				if (fTime < m_tBufferDesc.fAccPosition)
-					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fAcceleration;
+					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fSpeedAcc;
 				else
 					fSpeed = (m_pSpeeds[i] - fSpeed) * m_fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y + m_pSpeeds[i];
 
-				
+			
 
 				//if (m_tBufferDesc.bReverse)
 				//{
@@ -278,7 +292,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 					_vector vCurPos = XMLoadFloat4(&pVertices[i].vPosition);
 					_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - XMLoadFloat4(&m_tBufferDesc.vCenterPosition)));
 
-					if (fLength < m_tBufferDesc.fMaxLengthPosition)
+					if (fLength < m_pLengths[i])
 					{
 						vDir = XMVectorSetW(vDir, 0.f);
 						XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + vDir * fSpeed * fTimeDelta);
@@ -300,7 +314,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 				// 가속도
 				_float fSpeed = 0.f;
 				if (fTime < m_tBufferDesc.fAccPosition)
-					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fAcceleration;
+					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fSpeedAcc;
 				else
 					fSpeed = (m_pSpeeds[i] - fSpeed) * m_fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y + m_pSpeeds[i];
 
@@ -339,7 +353,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 				// 가속도
 				_float fSpeed = 0.f;
 				if (fTime < m_tBufferDesc.fAccPosition)
-					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fAcceleration;
+					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fSpeedAcc;
 				else
 					fSpeed = (m_pSpeeds[i] - fSpeed) * m_fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y + m_pSpeeds[i];
 
@@ -354,7 +368,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 				// 가속도
 				_float fSpeed = 0.f;
 				if (fTime < m_tBufferDesc.fAccPosition)
-					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fAcceleration;
+					fSpeed = m_pSpeeds[i] + m_tBufferDesc.fSpeedAcc;
 				else
 					fSpeed = (m_pSpeeds[i] - fSpeed) * m_fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y + m_pSpeeds[i];
 
@@ -398,6 +412,12 @@ void CVIBuffer_Particle_Point::ReSet()
 	uniform_real_distribution<float>	RandomScale(m_tBufferDesc.vMinMaxScale.x, m_tBufferDesc.vMinMaxScale.y);
 	uniform_real_distribution<float>	RandomSpeed(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);
 	uniform_real_distribution<float>	RandomLifeTime(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
+	uniform_real_distribution<float>	RandomLengthPosition(m_tBufferDesc.vMinMaxLengthPosition.x, m_tBufferDesc.vMinMaxLengthPosition.y);
+
+	uniform_real_distribution<float>	RandomRed(min(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y), max(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y));
+	uniform_real_distribution<float>	RandomGreen(min(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y), max(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y));
+	uniform_real_distribution<float>	RandomBlue(min(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y), max(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y));
+	uniform_real_distribution<float>	RandomAlpha(min(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y), max(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y));
 
 	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
@@ -408,6 +428,8 @@ void CVIBuffer_Particle_Point::ReSet()
 
 		m_pSpeeds[i] = RandomSpeed(m_RandomNumber);
 		m_pLifeTimes[i] = RandomLifeTime(m_RandomNumber);
+		m_pLengths[i] = RandomLengthPosition(m_RandomNumber);
+
 
 		_float	fScale = RandomScale(m_RandomNumber);
 		m_tBufferDesc.vCurrentScale.x = fScale + m_tBufferDesc.vAddScale.x;
@@ -454,65 +476,18 @@ void CVIBuffer_Particle_Point::ReSet()
 }
 
 
-void CVIBuffer_Particle_Point::Set_RotationOffset(MINMAX eMinMax, AXIS eAxis, _float fRotationOffset)
-{
-	if (MIN == eMinMax)
-	{
-		switch (eAxis)
-		{
-		case Engine::AXIS_X:
-			m_tBufferDesc.vMinMaxRotationOffsetX.x = fRotationOffset;
-			break;
-
-		case Engine::AXIS_Y:
-			m_tBufferDesc.vMinMaxRotationOffsetY.x = fRotationOffset;;
-			break;
-
-		case Engine::AXIS_Z:
-			m_tBufferDesc.vMinMaxRotationOffsetZ.x = fRotationOffset;;
-			break;
-		}
-	}
-
-	if (MAX == eMinMax)
-	{
-		switch (eAxis)
-		{
-		case Engine::AXIS_X:
-			m_tBufferDesc.vMinMaxRotationOffsetX.y = fRotationOffset;;
-			break;
-
-		case Engine::AXIS_Y:
-			m_tBufferDesc.vMinMaxRotationOffsetY.y = fRotationOffset;;
-			break;
-
-		case Engine::AXIS_Z:
-			m_tBufferDesc.vMinMaxRotationOffsetZ.y = fRotationOffset;;
-			break;
-		}
-	}
-
-}
-
-void CVIBuffer_Particle_Point::Set_Color(_float fRed, _float fGreen, _float fBlue)
-{
-	m_tBufferDesc.vCurrentColor.x = fRed;
-	m_tBufferDesc.vCurrentColor.y = fGreen;
-	m_tBufferDesc.vCurrentColor.z = fBlue;
-}
 
 _bool CVIBuffer_Particle_Point::Write_Json(json& Out_Json)
 {
 	Out_Json["Com_VIBuffer"]["eType_Action"]			= m_tBufferDesc.eType_Action;
 	Out_Json["Com_VIBuffer"]["eType_Fade"]				= m_tBufferDesc.eType_Fade;
-	Out_Json["Com_VIBuffer"]["bActive"]					= m_tBufferDesc.bActive;
+	Out_Json["Com_VIBuffer"]["bActive_Tool"]			= m_tBufferDesc.bActive_Tool;
 	Out_Json["Com_VIBuffer"]["bBillBoard"]				= m_tBufferDesc.bBillBoard;
-	Out_Json["Com_VIBuffer"]["bIsPlay"]					= m_tBufferDesc.bIsPlay;
+	//Out_Json["Com_VIBuffer"]["bPlay"]					= m_tBufferDesc.bPlay;
 	Out_Json["Com_VIBuffer"]["bReverse"]				= m_tBufferDesc.bReverse;
 	Out_Json["Com_VIBuffer"]["bLoop"]					= m_tBufferDesc.bLoop;
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxSpawnTime"], m_tBufferDesc.vMinMaxSpawnTime);
 
 	Out_Json["Com_VIBuffer"]["iCurNumInstance"]			= m_tBufferDesc.iCurNumInstance;
 
@@ -522,12 +497,11 @@ _bool CVIBuffer_Particle_Point::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float4(Out_Json["Com_VIBuffer"]["vOffsetPosition"], m_tBufferDesc.vOffsetPosition);
 	CJson_Utility::Write_Float4(Out_Json["Com_VIBuffer"]["vCurrentPosition"], m_tBufferDesc.vCurrentPosition);
 
-	Out_Json["Com_VIBuffer"]["fMaxLengthPosition"]		= m_tBufferDesc.fMaxLengthPosition;
-	Out_Json["Com_VIBuffer"]["fCurLengthPosition"]		= m_tBufferDesc.fCurLengthPosition;
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxLengthPosition"], m_tBufferDesc.vMinMaxLengthPosition);
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxSpeed"], m_tBufferDesc.vMinMaxSpeed);
 
-	Out_Json["Com_VIBuffer"]["fAcceleration"]			= m_tBufferDesc.fAcceleration;
+	Out_Json["Com_VIBuffer"]["fSpeedAcc"]				= m_tBufferDesc.fSpeedAcc;
 	Out_Json["Com_VIBuffer"]["fAccPosition"]			= m_tBufferDesc.fAccPosition;
 	Out_Json["Com_VIBuffer"]["fGravityAcc"]				= m_tBufferDesc.fGravityAcc;
 
@@ -564,18 +538,17 @@ _bool CVIBuffer_Particle_Point::Write_Json(json& Out_Json)
 
 void CVIBuffer_Particle_Point::Load_FromJson(const json& In_Json)
 {
-	m_tBufferDesc.eType_Action = In_Json["Com_VIBuffer"]["eType_Action"];
-	m_tBufferDesc.eType_Fade = In_Json["Com_VIBuffer"]["eType_Fade"];
-	m_tBufferDesc.bActive = In_Json["Com_VIBuffer"]["bActive"];
+	m_tBufferDesc.eType_Action	= In_Json["Com_VIBuffer"]["eType_Action"];
+	m_tBufferDesc.eType_Fade	= In_Json["Com_VIBuffer"]["eType_Fade"];
+	m_tBufferDesc.bActive_Tool	= In_Json["Com_VIBuffer"]["bActive_Tool"];
 
 	m_tBufferDesc.bBillBoard = In_Json["Com_VIBuffer"]["bBillBoard"];
 
-	m_tBufferDesc.bIsPlay = In_Json["Com_VIBuffer"]["bIsPlay"];
+	//m_tBufferDesc.bPlay = In_Json["Com_VIBuffer"]["bPlay"];
 	m_tBufferDesc.bReverse = In_Json["Com_VIBuffer"]["bReverse"];
 	m_tBufferDesc.bLoop = In_Json["Com_VIBuffer"]["bLoop"];
 
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxSpawnTime"], m_tBufferDesc.vMinMaxSpawnTime);
 
 	m_tBufferDesc.iCurNumInstance = In_Json["Com_VIBuffer"]["iCurNumInstance"];
 
@@ -585,13 +558,12 @@ void CVIBuffer_Particle_Point::Load_FromJson(const json& In_Json)
 	CJson_Utility::Load_Float4(In_Json["Com_VIBuffer"]["vOffsetPosition"], m_tBufferDesc.vOffsetPosition);
 	CJson_Utility::Load_Float4(In_Json["Com_VIBuffer"]["vCurrentPosition"], m_tBufferDesc.vCurrentPosition);
 
-	m_tBufferDesc.fMaxLengthPosition = In_Json["Com_VIBuffer"]["fMaxLengthPosition"];
-	m_tBufferDesc.fCurLengthPosition = In_Json["Com_VIBuffer"]["fCurLengthPosition"];
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxLengthPosition"], m_tBufferDesc.vMinMaxLengthPosition);
 
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxSpeed"], m_tBufferDesc.vMinMaxSpeed);
 
 
-	m_tBufferDesc.fAcceleration = In_Json["Com_VIBuffer"]["fAcceleration"];
+	m_tBufferDesc.fSpeedAcc = In_Json["Com_VIBuffer"]["fSpeedAcc"];
 	m_tBufferDesc.fAccPosition = In_Json["Com_VIBuffer"]["fAccPosition"];
 	m_tBufferDesc.fGravityAcc = In_Json["Com_VIBuffer"]["fGravityAcc"];
 
@@ -659,5 +631,10 @@ CComponent* CVIBuffer_Particle_Point::Clone(void* pArg)
 void CVIBuffer_Particle_Point::Free()
 {
 	__super::Free();
+
+	if (false == m_isCloned)
+	{
+		Safe_Delete_Array(m_pLengths);
+	}
 
 }

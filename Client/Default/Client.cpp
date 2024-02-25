@@ -50,6 +50,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    //_crtBreakAlloc = 1945;
+    //_crtBreakAlloc = 1944;
+    //_crtBreakAlloc = 1942;
+    //_crtBreakAlloc = 1941;
+    //_crtBreakAlloc = 1940;
+    //_crtBreakAlloc = 1939;
+    //_crtBreakAlloc = 1938;
+    //_crtBreakAlloc = 1934;
+    //_crtBreakAlloc = 1933;
+    //_crtBreakAlloc = 1931;
+    //_crtBreakAlloc = 1927;
+    //_crtBreakAlloc = 1926;
+    //_crtBreakAlloc = 1925;
+    //_crtBreakAlloc = 1921;
+    //_crtBreakAlloc = 768;
 #endif
 
     UNREFERENCED_PARAMETER(hPrevInstance);
@@ -133,6 +148,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	if (0 != Safe_Release(pMainApp))
 		MSG_BOX("Memory Leak Detected");
+
 
 #ifdef _DEBUG
 	//system("pause");

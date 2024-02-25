@@ -32,7 +32,7 @@ protected:
 	ID3D11Buffer*				m_pVB = { nullptr };
 	ID3D11Buffer*				m_pIB = { nullptr };
 
-	/* 지금 내가 만들려고 하는 버퍼의 속성을 설정하낟. */
+	/* 지금 내가 만들려고 하는 버퍼의 속성을 설정한다. */
 	D3D11_BUFFER_DESC			m_BufferDesc;
 	D3D11_SUBRESOURCE_DATA		m_SubResourceData;
 
@@ -41,7 +41,7 @@ protected:
 	_uint						m_iStride = { 0 };
 	_uint						m_iNumVertexBuffers = { 0 };
 
-	_uint						m_iNumIndices = { 0 }; //m_iIndexSizeofPrimitive
+	_uint						m_iNumIndices = { 0 };	//m_iIndexSizeofPrimitive
 	_uint						m_iIndexStride = { 0 }; // m_iNumPrimitives
 	DXGI_FORMAT					m_eIndexFormat = {  };
 	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology = { };

@@ -3,16 +3,20 @@
 
 #include "GameInstance.h"
 
-#include "Easing_Utillity.h"
+#include "Effect_Particle.h"
+#include "Effect_Rect.h"
+#include "Effect_Instance.h"
+#include "Effect_Trail.h"
+
 
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CAlphaObject(pDevice, pContext, strPrototypeTag)
+	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
 CEffect::CEffect(const CEffect & rhs)
-	: CAlphaObject(rhs)
+	: CGameObject(rhs)
 {
 }
 
@@ -24,6 +28,8 @@ HRESULT CEffect::Initialize_Prototype()
 
 HRESULT CEffect::Initialize(void* pArg)
 {	
+	m_tEffectDesc = *(EFFECT_DESC*)pArg;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 	
@@ -32,61 +38,179 @@ HRESULT CEffect::Initialize(void* pArg)
 
 void CEffect::Priority_Tick(_float fTimeDelta)
 {
+	if (m_tEffectDesc.bActive_Tool)
+	{
+		for (auto& Pair : m_PartObjects)
+		{
+			if (nullptr != Pair.second)
+				Pair.second->Priority_Tick(fTimeDelta);
+		}
+	}
 
-	
 }
 
 void CEffect::Tick(_float fTimeDelta)
 {
-	//if (m_fWaitingAcc < m_tEffect.fWaitingTime)
-	//{
-	//	m_fWaitingAcc += fTimeDelta;
-	//	//if (m_fWaitingAcc >= m_tEffect.fWaitingTime)
-	//	//	m_bRender = true;
-	//	//else
-	//	//	return;
-	//}
 
-	//if (m_fTimeAcc >= m_tEffect.fLifeTime + m_tEffect.fRemainTime)
-	//{
-	//	m_fTimeAcc = 0.f;
+	if (m_tEffectDesc.bActive_Tool)
+	{
+		m_tEffectDesc.fSequenceTime = m_tEffectDesc.fWaitingTime + m_tEffectDesc.fLifeTime + m_tEffectDesc.fRemainTime;
+		//m_fEasingTimeAcc = Easing::LerpToType(0.f, m_tEffectDesc.fSequenceTime, m_tEffectDesc.fSequenceAcc, m_tEffectDesc.fSequenceTime, m_tEffectDesc.eType_Easing);
 
-	//	//EffectEnd();
-	//	return;
-	//}
+		if (m_tEffectDesc.bPlay)
+		{
+			m_tEffectDesc.fSequenceAcc += fTimeDelta;
 
-	//m_fTimeAcc += fTimeDelta;
-	//m_fLifeTimeRatio = min(1.0f, m_fTimeAcc / m_tEffect.fLifeTime);
+			// 시작지연 누적시간이 지나면 렌더 시작(이펙트 시작)
+			if (m_tEffectDesc.fWaitingAcc < m_tEffectDesc.fWaitingTime)
+			{
+				m_tEffectDesc.fWaitingAcc += fTimeDelta;
 
+				if (m_tEffectDesc.fWaitingAcc >= m_tEffectDesc.fWaitingTime)
+					m_tEffectDesc.bRender = true;
+				else
+					return;
+			}
+
+			// 시간 누적 시작
+			m_tEffectDesc.fTimeAcc += fTimeDelta;
+			m_tEffectDesc.fLifeTimeRatio = min(1.0f, m_tEffectDesc.fTimeAcc / m_tEffectDesc.fLifeTime);
+			
+			if (m_tEffectDesc.fTimeAcc >= m_tEffectDesc.fLifeTime)
+			{
+				// 삭제 대기시간 누적 시작
+				m_tEffectDesc.fRemainAcc += fTimeDelta;
+
+				if (m_tEffectDesc.fRemainAcc >= m_tEffectDesc.fRemainTime)
+				{
+					End_Effect();
+					return;
+				}
+			}
+
+
+			/* 파트 이펙트들 Tick */
+			for (auto& Pair : m_PartObjects)
+			{
+				if (nullptr != Pair.second)
+				{
+					//dynamic_cast<CEffect_Void*>(Pair.second)->Set_TimeAcc(m_fEasingTimeAcc);
+					Pair.second->Tick(fTimeDelta);
+				}
+					
+			}
+
+		}
+	}
 }
 
 void CEffect::Late_Tick(_float fTimeDelta)
 {
-
+	if (m_tEffectDesc.bActive_Tool)
+	{
+		for (auto& Pair : m_PartObjects)
+		{
+			if (nullptr != Pair.second)
+				Pair.second->Late_Tick(fTimeDelta);
+		}
+	}
 }
 
 HRESULT CEffect::Render()
 {
+	if (m_tEffectDesc.bActive_Tool)
+	{
+		if (m_tEffectDesc.bRender)
+		{
+			for (auto& Pair : m_PartObjects)
+			{
+				if (nullptr != Pair.second)
+					Pair.second->Render();
+			}
+		}
+	}
+
 	return S_OK;
 }
 
-HRESULT CEffect::Bind_ShaderResources()
+void CEffect::ReSet_Effect()
 {
-	//m_tVariables.vUV_Offset.x = m_tEffect.vUV_Speed.x * m_fTimeAcc;
-	//m_tVariables.vUV_Offset.y = m_tEffect.vUV_Speed.y * m_fTimeAcc;
+	m_tEffectDesc.fSequenceAcc	 = 0.f;
+	m_tEffectDesc.fTimeAcc		 = 0.f;
+	m_tEffectDesc.fWaitingAcc	 = 0.f;
+	m_tEffectDesc.fRemainAcc	 = 0.f;
+	m_tEffectDesc.fLifeTimeRatio = 0.f;
 
-	//if (m_tVariables.vUV_Offset.x > 1.f) m_tVariables.vUV_Offset.x -= 1.f;
-	//if (m_tVariables.vUV_Offset.y > 1.f) m_tVariables.vUV_Offset.y -= 1.f;
+	m_tEffectDesc.bFinished = FALSE;
+	m_tEffectDesc.bRender	= FALSE;
 
-	//if (m_tEffect.bColor_Lerp)
-	//	m_tVariables.vColor_Offset = Easing::LerpToType(m_tEffect.vColor_Start, m_tEffect.vColor_End, m_fTimeAcc, m_tEffect.fLifeTime, EASING_TYPE::LINEAR);
-	//else
-	//	m_tVariables.vColor_Offset = m_tEffect.vColor_Start;
+	for (auto& Pair : m_PartObjects)
+	{
+		if (nullptr != Pair.second)
+			dynamic_cast<CEffect_Void*>(Pair.second)->ReSet_Effect();
+	}
+}
+
+void CEffect::End_Effect()
+{
+	m_tEffectDesc.bFinished = TRUE;
+
+	if (m_tEffectDesc.bLoop)
+	{	
+		for (auto& Pair : m_PartObjects)
+		{
+			if (nullptr != Pair.second)
+			{
+				dynamic_cast<CEffect_Void*>(Pair.second)->End_Effect();
+			}
+				
+		}
+		ReSet_Effect();
+	}
+
+}
+
+
+CGameObject* CEffect::Find_PartObject(const wstring& strPartTag)
+{
+	auto	iter = m_PartObjects.find(strPartTag);
+
+	if (iter == m_PartObjects.end())
+		return nullptr;
+
+	return iter->second;
+}
+
+HRESULT CEffect::Add_PartObject(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg)
+{
+	if (nullptr != Find_PartObject(strPrototypeTag))
+		return E_FAIL;
+
+	CGameObject* pPartObject = m_pGameInstance->Clone_Prototype(strPrototypeTag, pArg);
+	if (nullptr == pPartObject)
+		return E_FAIL;
+
+	m_PartObjects.emplace(strPartTag, pPartObject);
+
+	return S_OK;
+}
+
+HRESULT CEffect::Ready_Components()
+{
+
+
+	return S_OK;
+}
+
+HRESULT CEffect::Ready_PartObjects()
+{
+	/* Json로드해서 저장된 파트 오브젝트 준비하도록하자. */
 
 
 
 	return S_OK;
 }
+
 
 CEffect* CEffect::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
@@ -123,6 +247,11 @@ CGameObject* CEffect::Pool()
 void CEffect::Free()
 {
 	__super::Free();
+
+	for (auto& Pair : m_PartObjects)
+		Safe_Release(Pair.second);
+
+	m_PartObjects.clear();
 
 }
 

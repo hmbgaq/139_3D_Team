@@ -34,7 +34,7 @@ public:
 
 
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
-
+	
 public:
     virtual HRESULT Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones);
     

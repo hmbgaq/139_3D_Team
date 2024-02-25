@@ -4,6 +4,7 @@ matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 texture2D	g_DiffuseTexture;
 texture2D	g_MaskTexture;
+texture2D	g_NoiseTexture;
 
 texture2D	g_NormalTexture;
 texture2D   g_SpecularTexture;
@@ -12,7 +13,6 @@ texture2D	g_DissolveTexture;
 texture2D	g_DissolveDiffTexture;
 
 texture2D	g_DepthTexture;
-
 
 vector      g_vCamPosition;
 vector      g_vCamDirection;
@@ -23,22 +23,31 @@ float		g_fDissolveRatio;
 
 float2      g_UVOffset;
 float2      g_UVScale;
+float		g_fDegree;
 
+float		g_DiscardValue;
 
-cbuffer FX_Particle
+float IsIn_Range(float fMin, float fMax, float fValue)
 {
-    float fGameTime = false;
-    float3 vEmitPosition;
-    float3 vEmitDirection;
-    float fTimeStep;
-    
-    float3 vRandomMul = float3(1.f, 1.f, 1.f);
-    float fSpreadSpeed = 1.f;
-    float fEmitTerm = 0.005f;
-    float fParticleLifeTime = 1.f;
-    float fSequenceTerm = 0.0f;
-    int iIsLoop = 0;
-};
+	return (fMin <= fValue) && (fMax >= fValue);
+}
+
+/* Custom Function */
+float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
+{
+	float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
+	float fRotationRadian = fDegree * fDegree2Radian;
+	float cosA = cos(fRotationRadian);
+	float sinA = sin(fRotationRadian);
+
+	float2x2 RotateMatrix = float2x2(cosA, -sinA, sinA, cosA);
+
+	vTexcoord -= 0.5f;
+	vTexcoord = mul(vTexcoord, RotateMatrix);
+	vTexcoord += 0.5f;
+
+	return vTexcoord;
+}
 
 struct VS_IN
 {
@@ -116,10 +125,10 @@ VS_OUT VS_MAIN_SPRITE(VS_IN In)
 
 
 
-// w나누기연산을 수행하낟. (In 투영스페이스)
+// w나누기연산을 수행한다. (In 투영스페이스)
 // 뷰포트 변환. (In 뷰포트(윈도우좌표))
 
-// 래스터라이즈(픽셀정볼르 생성한다. )
+// 래스터라이즈(픽셀정보를 생성한다. )
 
 struct PS_IN
 {
@@ -142,18 +151,22 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
+	//* g_UVScale + g_UVOffset
+	In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
+
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    clip(Out.vDiffuse.a - 0.1f);
+	float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+
+    //clip(Out.vDiffuse.a - g_DiscardValue);
+	Out.vDiffuse.a *= vAlphaMask.a;
 	
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
-
-	
 	
 	return Out;
 }
 
-////Normal Mapping ///////////
+//// Normal Mapping ///////////
 struct VS_OUT_NORMAL
 {
 	float4 vPosition : SV_POSITION;
@@ -210,7 +223,7 @@ PS_OUT PS_MAIN_NORMAL(PS_IN_NORMAL In)
 	PS_OUT Out = (PS_OUT)0;
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    clip(Out.vDiffuse.a - 0.1f);
+    clip(Out.vDiffuse.a - g_DiscardValue);
     Out.vDiffuse.a = 1.f;
 	/* 0 ~ 1 */
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
@@ -278,12 +291,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 }
 
 
-float IsIn_Range(float fMin, float fMax, float fValue)
-{
-    return (fMin <= fValue) && (fMax >= fValue);
-}
-
-PS_OUT PS_MAIN_Dissove(PS_IN_NORMAL In)
+PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -291,13 +299,21 @@ PS_OUT PS_MAIN_Dissove(PS_IN_NORMAL In)
 
     clip(TexDissolve - g_fDissolveRatio);
 
+	In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
+	In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
+
     vector vTexDiff = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    float fStepValue = IsIn_Range(0.f,0.05f,TexDissolve.r - g_fDissolveRatio);
+
+    float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
 	
+
     Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue * g_DissolveDiffTexture.Sample(LinearSampler, In.vTexUV);
 	
-    clip(Out.vDiffuse.a - 0.1f);
-    Out.vDiffuse.a = 1.f;
+    clip(Out.vDiffuse.a - g_DiscardValue);
+    //Out.vDiffuse.a = 1.f;
+
+	float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vDiffuse.a *= vAlphaMask.a;
 	
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
 	vPixelNormal = vPixelNormal * 2.f - 1.f;
@@ -353,7 +369,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
-	pass NormalMapping //1
+	pass Pass1_NormalMapping //1
 	{
         SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_DepthStencilEnable, 0);
@@ -366,7 +382,7 @@ technique11 DefaultTechnique
 		PixelShader		= compile ps_5_0 PS_MAIN_NORMAL();
 	}
 
-	pass ShadowDepth //2
+	pass Pass2_ShadowDepth //2
 	{
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_None, 0);
@@ -383,7 +399,7 @@ technique11 DefaultTechnique
 	{
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_DepthStencilEnable, 0);
-		SetRasterizerState(RS_Fill_Wireframe);
+        SetRasterizerState(RS_NoneCull_Wireframe);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		HullShader = NULL;
@@ -402,7 +418,7 @@ technique11 DefaultTechnique
         HullShader      = NULL;
         DomainShader    = NULL;
 		GeometryShader	= NULL;
-		PixelShader		= compile ps_5_0	PS_MAIN();
+		PixelShader		= compile ps_5_0 PS_MAIN();
 	}
 
 	pass Pass5_NonCulling_Norm //5
@@ -428,7 +444,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_Dissove();
+        PixelShader = compile ps_5_0 PS_MAIN_Dissolve();
     }
 	
 	pass Pass7_Sprite_Animation //7

@@ -211,7 +211,7 @@ public: /* Common */
 	const wstring	Remove_LastNumChar(const wstring& str, const _uint& iNumCutCount);
 	const string	Remove_LastNumChar(const string& str, const _uint& iNumCutCount);
 	const wstring	Get_LastNumChar(const wstring& str, const _uint& iNumCutCount);
-
+#pragma endregion End
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };

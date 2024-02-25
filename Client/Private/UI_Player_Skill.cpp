@@ -79,4 +79,6 @@ CGameObject* CUI_Player_Skill::Clone(void* pArg)
 
 void CUI_Player_Skill::Free()
 {
+	__super::Free();
+
 }

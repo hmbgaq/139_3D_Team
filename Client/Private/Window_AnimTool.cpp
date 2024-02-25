@@ -23,7 +23,6 @@ HRESULT CWindow_AnimTool::Initialize()
 	//! 현재는 특별한 기능없음. 추후 필요할 것 같아서 셋팅.
 	if(FAILED(__super::Initialize()))
 		return E_FAIL;
-	m_pGameInstance = CGameInstance::GetInstance();
 	
 	//! ImGuiFileDialog  파일별 색은 슈퍼에서 처리하는 거로 이동
 	

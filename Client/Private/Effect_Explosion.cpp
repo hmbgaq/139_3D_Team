@@ -69,7 +69,7 @@ HRESULT CEffect_Explosion::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	/* 이 셰ㅒ이더에 0번째 패스로 그릴꺼야. */
+	/* 이 쉐이더에 0번째 패스로 그릴거야. */
 	m_pShaderCom->Begin(1);
 
 	/* 내가 그릴려고하는 정점, 인덷ㄱ스버퍼를 장치에 바인딩해. */

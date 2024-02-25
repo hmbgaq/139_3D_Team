@@ -75,6 +75,8 @@ CGameObject* CUI_Player_HP::Pool()
 
 void CUI_Player_HP::Free()
 {
+	__super::Free();
+
 }
 
 

@@ -50,7 +50,7 @@ public:
 	HRESULT			SetUp_ImGuiDESC(string _strName, const ImVec2& _vWindowSize, ImGuiWindowFlags _eWindowFlags, const ImVec4& _vBackGroundColor);
 	HRESULT			Begin();
 	HRESULT			End();
-
+	void			Load_CustomStyle(); //! 유정추가 : ImGui 스타일 설정파일 불러오기
 
 public:
 	void HelpMarker(const char* desc)

@@ -441,6 +441,52 @@ HRESULT CImgui_Window::End()
 	return S_OK;
 }
 
+void CImgui_Window::Load_CustomStyle()
+{
+	json json_in = { nullptr };
+	char filePath[MAX_PATH] = "../Bin/DataFiles/ImGui_Style_Custom.json";
+
+	if (FAILED(CJson_Utility::Load_Json(filePath, json_in)))
+		return;
+
+	_float		vBgColor[4] = { 0.f, 0.f, 0.f, 1.f };
+
+	_float fWindowRounding = { 0.f };
+	_float fFrameRounding = { 0.f };
+	_float fPopupRounding = { 0.f };
+	_float fGrabRounding = { 0.f };
+	_float fTabRounding = { 0.f };
+
+	fTabRounding = json_in["TabRounding"];
+	fGrabRounding = json_in["GrabRounding"];
+	fPopupRounding = json_in["PopupRounding"];
+	fFrameRounding = json_in["FrameRounding"];
+	fWindowRounding = json_in["WindowRounding"];
+
+	vBgColor[0] = json_in["vBgColor.x"];
+	vBgColor[1] = json_in["vBgColor.y"];
+	vBgColor[2] = json_in["vBgColor.z"];
+	vBgColor[3] = json_in["vBgColor.w"];
+
+	auto& style = ImGui::GetStyle();
+	ImVec4* colors = style.Colors;
+	ImVec4 bgColor = ImVec4(vBgColor[0], vBgColor[1], vBgColor[2], vBgColor[3]);
+
+	colors[ImGuiCol_WindowBg] = bgColor;
+	colors[ImGuiCol_TitleBg] = bgColor;
+	colors[ImGuiCol_MenuBarBg] = bgColor;
+	colors[ImGuiCol_Tab] = bgColor;
+	colors[ImGuiCol_ChildBg] = bgColor;
+	colors[ImGuiCol_ScrollbarBg] = bgColor;
+
+	style.WindowRounding = fWindowRounding;
+	style.FrameRounding = fFrameRounding;
+	style.PopupRounding = fPopupRounding;
+	style.GrabRounding = fGrabRounding;
+	style.TabRounding = fTabRounding;
+
+}
+
 void CImgui_Window::Free()
 {
 

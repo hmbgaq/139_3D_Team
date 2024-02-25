@@ -29,10 +29,10 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	CBody* Get_Body();
-	CWeapon* Get_Weapon(const wstring & strWeaponTag);
-	CCollider* Get_Collider();
-	CNavigation* Get_Navigation();
+	CBody*			Get_Body();
+	CWeapon*		Get_Weapon(const wstring & strWeaponTag);
+	CCollider*		Get_Collider();
+	CNavigation*	Get_Navigation();
 
 	virtual _bool Picking(_Out_ _float3 * vPickedPos) override;
 public:

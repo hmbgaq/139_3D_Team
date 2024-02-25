@@ -23,6 +23,7 @@ float2			g_UVScale;
 
 float			g_DiscardValue;
 
+
 // ======= Noise
 float	g_fFrameTime;
 float3	g_vScrollSpeeds;
@@ -35,7 +36,6 @@ float2	g_vDistortion2;
 float2	g_vDistortion3;
 float	g_fDistortionScale;
 float	g_fDistortionBias;
-
 
 
 
@@ -65,7 +65,7 @@ struct VS_OUT_EFFECT
 	float4		vProjPos : TEXCOORD1;
 };
 
-struct VS_OUT_NOISE
+struct VS_OUT_DISTORTION
 {
 	float4		vPosition	: SV_POSITION;
 
@@ -93,7 +93,7 @@ struct PS_IN_EFFECT
 	float4		vProjPos : TEXCOORD1;
 };
 
-struct PS_IN_NOISE
+struct PS_IN_DISTORTION
 {
 	float4		vPosition	: SV_POSITION;
 
@@ -177,9 +177,9 @@ VS_OUT_EFFECT  VS_MAIN_SPRITE(VS_IN In)
 	return Out;
 }
 
-VS_OUT_NOISE VS_MAIN_NOISE(VS_IN In)
+VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
 {
-	VS_OUT_NOISE		Out = (VS_OUT_NOISE)0;
+	VS_OUT_DISTORTION		Out = (VS_OUT_DISTORTION)0;
 
 	/* In.vPosition * 월드 * 뷰 * 투영 */
 	matrix		matWV, matWVP;
@@ -192,15 +192,15 @@ VS_OUT_NOISE VS_MAIN_NOISE(VS_IN In)
 	Out.vProjPos = Out.vPosition;
 	
 
-	// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
-	Out.vTexcoord1 = (In.vTexcoord * g_vScales.x);
-	Out.vTexcoord1.y = Out.vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
+	//// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
+	//Out.vTexcoord1 = (In.vTexcoord * g_vScales.x);
+	//Out.vTexcoord1.y = Out.vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
 
-	Out.vTexcoord2 = (In.vTexcoord * g_vScales.y);
-	Out.vTexcoord2.y = Out.vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
+	//Out.vTexcoord2 = (In.vTexcoord * g_vScales.y);
+	//Out.vTexcoord2.y = Out.vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
 
-	Out.vTexcoord3 = (In.vTexcoord * g_vScales.z);
-	Out.vTexcoord3.y = Out.vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
+	//Out.vTexcoord3 = (In.vTexcoord * g_vScales.z);
+	//Out.vTexcoord3.y = Out.vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
 
 
 	return Out;
@@ -265,7 +265,8 @@ PS_OUT PS_MAIN_SPRITE_ANIMATION(PS_IN_EFFECT In)
 	return Out;
 }
 
-PS_OUT PS_MAIN_NOISE(PS_IN_NOISE In)
+
+PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -362,16 +363,16 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_SPRITE_ANIMATION();
 	}
 
-	pass Noise // 2
+	pass Distortion // 2
 	{
 		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(DSS_DepthStencilEnable, 0);
 		SetRasterizerState(RS_Cull_None);
 
-		VertexShader = compile vs_5_0 VS_MAIN_NOISE();
+		VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
 		HullShader = NULL;
 		DomainShader = NULL;
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_NOISE();
+		PixelShader = compile ps_5_0 PS_MAIN_DISTORTION();
 	}
 }
