@@ -168,6 +168,7 @@ HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
 		BodyJson.emplace("Type", strBody);
 		BodyJson.emplace("Tag", ProtoType);
 		BodyJson.emplace("Layer", m_strLayer);
+		BodyJson.emplace("SelectCreateIndex", m_iSelectCreateListIndex);
 		BodyJson.emplace("AnimationName", m_pAnimation[m_CurrentAnimationIndex]->Get_Name());
 		BodyJson.emplace("AnimIndex", m_CurrentAnimationIndex);
 		BodyJson.emplace("AnimDuration", m_fDuration);
@@ -201,6 +202,9 @@ HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
 		{
 			WeaponJson.emplace("BoneName", m_pBones[m_iSelectBoneIndex]->Get_Name());
 			//m_PickingWeapon->Write_Json(WeaponJson);
+			CJson_Utility::Write_Float3(WeaponJson["GuizmoTranslation"], m_fGuizmoTranslation);
+			CJson_Utility::Write_Float3(WeaponJson["GuizmoRotation"], m_fGuizmoRotation);
+			CJson_Utility::Write_Float3(WeaponJson["GuizmoScale"], m_fGuizmoScale);
 			_float4x4 pPickingWeapon = dynamic_cast<CWeapon*>(m_PickingWeapon)->Get_WeaponWorldMatrix();
 			for (_int i = 0; i < 4; ++i)
 				CJson_Utility::Write_Float4(WeaponJson["WeaponWorldMatrix"][i], XMLoadFloat4x4(&pPickingWeapon).r[i]);
@@ -276,6 +280,8 @@ HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
 		
 		
 		}
+		m_iSelectCreateListIndex = BodyJson["SelectCreateIndex"];
+
 		m_CurrentAnimationIndex = BodyJson["AnimIndex"];
 
 		m_fDuration = BodyJson["AnimDuration"];
@@ -298,26 +304,31 @@ HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
 	{
 		wstring strLoadWeaponTag;
 		string strWeaponTag = WeaponJson["WeaponTag"];
+
 		m_pGameInstance->String_To_WString(strWeaponTag, strLoadWeaponTag);
 
 		CCharacter* pObject = dynamic_cast<CCharacter*>(m_PickingObject);
 
+		m_pBones = *(pObject->Get_Body()->Get_Model()->Get_Bones());
 		string strBoneName = WeaponJson["BoneName"];
 		Create_Weapon(pObject, strBoneName, strLoadWeaponTag);
 
 		m_PickingWeapon = m_CreateWeaponList.back();
 
-		CJson_Utility::Load_JsonFloat4x4(WeaponJson["WeaponWorldMatrix"], m_fWeaponWorldMatrix);
+		//CJson_Utility::Load_JsonFloat4x4(WeaponJson["WeaponWorldMatrix"], m_fWeaponWorldMatrix);
 
-		dynamic_cast<CWeapon*>(m_PickingWeapon)->Set_WorldMatrix(m_fWeaponWorldMatrix);
+		//dynamic_cast<CWeapon*>(m_PickingWeapon)->Set_WorldMatrix(m_fWeaponWorldMatrix);
 
-		CWeapon* pWeapon = dynamic_cast<CWeapon*>(m_PickingWeapon);
-
-		_float4x4 pPickObject = m_PickingWeapon->Get_Transform()->Get_WorldMatrix();
-		m_fWeaponMatrix = pPickObject;
-		m_fWeaponPos.x = m_fWeaponMatrix._41;
-		m_fWeaponPos.y = m_fWeaponMatrix._42;
-		m_fWeaponPos.z = m_fWeaponMatrix._43;
+		//CWeapon* pWeapon = dynamic_cast<CWeapon*>(m_PickingWeapon);
+		//
+		//_float4x4 pPickObject = m_PickingWeapon->Get_Transform()->Get_WorldMatrix();
+		//m_fWeaponMatrix = pPickObject;
+		//m_fWeaponPos.x = m_fWeaponMatrix._41;
+		//m_fWeaponPos.y = m_fWeaponMatrix._42;
+		//m_fWeaponPos.z = m_fWeaponMatrix._43;
+		CJson_Utility::Load_Float3(WeaponJson["GuizmoTranslation"], m_fGuizmoTranslation);
+		CJson_Utility::Load_Float3(WeaponJson["GuizmoRotation"], m_fGuizmoRotation);
+		CJson_Utility::Load_Float3(WeaponJson["GuizmoScale"], m_fGuizmoScale);
 
 		m_iColliderWeaponSize = WeaponJson["WeaponColliderSize"];
 		//Create_Weapon_Bounding(m_fWeaponPos, m_iColliderWeaponSize);
@@ -657,52 +668,52 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 	{
 		m_fCurrentTrackPosition = m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition();
 
-		//test particle
-		_float Temp = m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition();
-
-		
-		if (m_TargetTrackPosition <= Temp && bTest2 == true)
-			bTest = false;
-		if (Temp <= 0)
-			bTest2 = true;
-		if (m_pGameInstance->Key_Down(DIK_G) || bTest ==false)
-		{
-
-			CEffect_Particle::EFFECT_PARTICLE_DESC   tDesc = {};
-			tDesc.fSpeedPerSec = { 5.f };
-			tDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
-
-			tDesc.eType = CEffect_Particle::SINGLE;
-			tDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
-			//tDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
-			tDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
-
-			//tDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
-			tDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("");
-			tDesc.iTextureIndex[CEffect_Particle::TEXTURE_MASK] = { 0 /*1*/ };
-
-			tDesc.strTextureTag[CEffect_Particle::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
-			tDesc.iTextureIndex[CEffect_Particle::TEXTURE_NOISE] = { 0 };
-
-			tDesc.strShaderTag = TEXT("Prototype_Component_Shader_Particle_Point");
-			tDesc.iShaderPassIndex = { 0 };
-			tDesc.iRenderGroup = { 7 };
-
-			tDesc.iNumInstance = { (_uint)100 };
-			tDesc.iMaxNumInstance = { (_uint)500 };
-
-			tDesc.fRotateUvDegree = { 0.f };
-
-			//CEffect_Particle* pParticle = dynamic_cast<CEffect_Particle*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Effect_Particle"), &tDesc));
-			m_TestEffect = dynamic_cast<CEffect_Particle*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_EFFECT, TEXT("Prototype_GameObject_Effect_Particle"), &tDesc));
-			json In_Json;
-			char filePath[MAX_PATH] = "../Bin/DataFiles/Data_Effect/Particle_Info/Particle_TestSphere_Info";
-			CJson_Utility::Load_Json(filePath, In_Json);
-
-			m_TestEffect->Load_FromJson(In_Json);
-			bTest = true;
-			bTest2 = false;
-		}
+// 		test particle
+// 				_float Temp = m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition();
+// 		
+// 				
+// 				if (m_TargetTrackPosition <= Temp && bTest2 == true)
+// 					bTest = false;
+// 				if (Temp <= 0)
+// 					bTest2 = true;
+// 				if (m_pGameInstance->Key_Down(DIK_G) || bTest ==false)
+// 				{
+// 		
+// 					CEffect_Particle::EFFECT_PARTICLE_DESC   tDesc = {};
+// 					tDesc.fSpeedPerSec = { 5.f };
+// 					tDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
+// 		
+// 					tDesc.eType = CEffect_Particle::SINGLE;
+// 					tDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
+// 					//tDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
+// 					tDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
+// 		
+// 					//tDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
+// 					tDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("");
+// 					tDesc.iTextureIndex[CEffect_Particle::TEXTURE_MASK] = { 0 /*1*/ };
+// 		
+// 					tDesc.strTextureTag[CEffect_Particle::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
+// 					tDesc.iTextureIndex[CEffect_Particle::TEXTURE_NOISE] = { 0 };
+// 		
+// 					tDesc.strShaderTag = TEXT("Prototype_Component_Shader_Particle_Point");
+// 					tDesc.iShaderPassIndex = { 0 };
+// 					tDesc.iRenderGroup = { 7 };
+// 		
+// 					tDesc.iNumInstance = { (_uint)100 };
+// 					tDesc.iMaxNumInstance = { (_uint)500 };
+// 		
+// 					tDesc.fRotateUvDegree = { 0.f };
+// 		
+// 					//CEffect_Particle* pParticle = dynamic_cast<CEffect_Particle*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Effect_Particle"), &tDesc));
+// 					m_TestEffect = dynamic_cast<CEffect_Particle*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_EFFECT, TEXT("Prototype_GameObject_Effect_Particle"), &tDesc));
+// 					json In_Json;
+// 					char filePath[MAX_PATH] = "../Bin/DataFiles/Data_Effect/Particle_Info/Particle_TestSphere_Info";
+// 					CJson_Utility::Load_Json(filePath, In_Json);
+// 		
+// 					m_TestEffect->Load_FromJson(In_Json);
+// 					bTest = true;
+// 					bTest2 = false;
+// 				}
 	}
 	
 	
@@ -863,7 +874,7 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 						break;
 					}
 				
-
+					
 				}
 				else
 				{
@@ -1063,6 +1074,10 @@ void CWindow_AnimTool::Draw_Weapon(_float fTimeDelta)
 			Set_GuizmoCamProj();
 			Set_GuizmoCamView();
 			Set_Guizmo(m_PickingWeapon);
+
+			m_fGuizmoTranslation = Get_GuizmoTranslation();
+			m_fGuizmoRotation = Get_GuizmoRotation();
+			m_fGuizmoScale = Get_GuizmoScale();
 		}
 
 		ImGui::SeparatorText("CreateWeaponCollider");
@@ -1227,7 +1242,7 @@ void CWindow_AnimTool::Create_Weapon_Bounding(_float3 fPoint, _float fRadius)
 {
 	CBounding_Sphere::BOUNDING_SPHERE_DESC pBoundingSphere;
 
-	pBoundingSphere.vCenter = _float3(0.0f, 0.0f, 0.0f);
+	pBoundingSphere.vCenter = fPoint;
 	pBoundingSphere.fRadius = fRadius;
 
 	m_PickingWeapon->Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pWCollider), &pBoundingSphere);

@@ -69,7 +69,7 @@ HRESULT CCollider::Initialize(void * pArg)
 		break;
 	}
 
-	m_pGameInstance->Add_Collision(m_iLayer, this);
+	//m_pGameInstance->Add_Collision(m_iLayer, this);
 
 	return S_OK;
 }

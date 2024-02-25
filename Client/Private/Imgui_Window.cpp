@@ -226,6 +226,11 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 	ImGui::DragFloat3("Sc", matrixScale);
 	ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, arrWorld);
 
+	//무기 위치 회전 크기 조절하기위한 변수 저장
+	m_fmatrixTranslation = { matrixTranslation[0],matrixTranslation[1] ,matrixTranslation[2] };
+	m_fmatrixRotation = { matrixRotation[0],matrixRotation[1] ,matrixRotation[2] };
+	m_fmatrixScale = { matrixScale[0],matrixScale[1] ,matrixScale[2] };
+
 	ImGui::Checkbox("UseSnap", &useSnap);
 	ImGui::SameLine();
 
@@ -252,7 +257,7 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 	XMFLOAT4X4 matW = { arrWorld[0],arrWorld[1],arrWorld[2],arrWorld[3],
 				arrWorld[4],arrWorld[5],arrWorld[6],arrWorld[7],
 				arrWorld[8],arrWorld[9],arrWorld[10],arrWorld[11],
-				arrWorld[12],arrWorld[13],arrWorld[14] * -1,arrWorld[15] };
+				arrWorld[12],arrWorld[13],arrWorld[14],arrWorld[15] };
 		
 
 	pGameObject->Get_Transform()->Set_WorldMatrix(matW);

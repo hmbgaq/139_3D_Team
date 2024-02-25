@@ -106,7 +106,10 @@ private:
 	_float					m_fWeaponPosition[3] = { 0.f,0.f,0.f };
 
 	_float3					m_fWeaponPos = { 0.f,0.f,0.f };
-
+	_float3					m_fGuizmoTranslation = {};
+	_float3					m_fGuizmoRotation = {};
+	_float3					m_fGuizmoScale = {};
+	
 	_float4x4				m_fBoneMatrix = {};
 	_float4x4				m_fWeaponMatrix = {};
 	_float4x4				m_fWeaponWorldMatrix = {};
