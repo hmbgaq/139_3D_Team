@@ -159,10 +159,8 @@ HRESULT CBody_Player::Ready_Components()
 	//Preset::PhysXColliderDesc::ConvexStaticPropSetting(tDesc, m_pTransformCom);
 	//m_pPhysXCollider->CreatePhysXActor(tDesc);
 	//m_pPhysXCollider->Add_PhysXActorAtSceneWithOption();
-
-
-
-
+	
+	
 
 	
 

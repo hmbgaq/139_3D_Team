@@ -45,6 +45,7 @@ private:
 	_float					m_fTimeAcc = { 0.f };
 	_uint					m_iNumRender = { 0 };
 
+
 public:
 	static CMainApp* Create();
 	virtual void Free();

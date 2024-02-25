@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "Base.h"
+#include <future>
 
 BEGIN(Client)
 
@@ -18,8 +19,19 @@ public:
 private:
 	HANDLE	m_hOut;
 
+private:
+	/* Test Line */    
+	std::future<void> input_thread_;
+	int iDebugNumber;
+	bool bQuitRequested;
 
 
+	//HANDLE					m_hThread;
+	//CRITICAL_SECTION		m_CriticalSection;
+	//void Test_Function();
+	//std::future<void> input_thread_;
+	//int iDebugNumber;
+	//bool bQuitRequested;
 
 
 public:

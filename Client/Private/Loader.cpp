@@ -578,7 +578,7 @@ HRESULT CLoader::Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLeve
 
 	//vector<wstring>* pVecModelTag; //! Imgui_Manager의 모델태그 벡터 받기 위함.
 
-	if (iAnimType == CModel::TYPE::TYPE_ANIM)
+	if (iAnimType == ECast(CModel::TYPE::TYPE_ANIM))
 		pMapModelTag = CImgui_Manager::GetInstance()->Get_Anim_E_ModelTag();
 	else
 		pMapModelTag = CImgui_Manager::GetInstance()->Get_NonAnim_E_ModelTag();
