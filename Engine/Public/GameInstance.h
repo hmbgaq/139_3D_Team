@@ -33,6 +33,7 @@ public: /* For.Graphic_Device */
 	HRESULT		Present();
 	ID3D11RenderTargetView* Get_BackBufferRTV() const;
 	ID3D11DepthStencilView* Get_DSV() const;
+	ID3D11Device*			Get_Device();
 	GRAPHIC_DESC*			Get_GraphicDesc();
 	ID3D11ShaderResourceView* Get_DepthSRV();
 	GFSDK_SSAO_Context_D3D11* Get_AOContext();

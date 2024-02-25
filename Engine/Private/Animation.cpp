@@ -14,6 +14,7 @@ CAnimation::CAnimation(const CAnimation & rhs)
 	, m_Channels(rhs.m_Channels)
 	, m_isFinished(rhs.m_isFinished)
 	, m_CurrentKeyFrames(rhs.m_CurrentKeyFrames)
+	, m_iMaxFrameCount(rhs.m_iMaxFrameCount)
 {
 	strcpy_s(m_szName, rhs.m_szName);
 
@@ -41,7 +42,8 @@ HRESULT CAnimation::Initialize(CMyAIAnimation pAIAnimation, const CModel::BONES&
 
 		m_Channels.push_back(pChannel);
 	}
-
+	for (auto& pChannel : m_Channels)
+		m_iMaxFrameCount = max(m_iMaxFrameCount, (_uint)pChannel->Get_KeyFrames().size());
 	return S_OK;
 }
 
@@ -267,6 +269,19 @@ _float4x4* CAnimation::Get_TransformationBoneMatrices(_float fTrackPosition, _fl
 	}
 
 	return pMatrix;
+}
+
+HRESULT CAnimation::Clear_Channels()
+{
+	/* Channel */
+	for (auto& pChannel : m_Channels)
+		Safe_Release(pChannel);
+	m_Channels.clear();
+
+
+	m_CurrentKeyFrames.clear();
+
+	return S_OK;
 }
 
 

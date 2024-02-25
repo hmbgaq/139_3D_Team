@@ -4,6 +4,7 @@
 #include "Bone.h"
 #include "Animation.h"
 #include "Channel.h"
+#include "GameInstance.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -511,6 +512,209 @@ HRESULT CModel::Ready_Animations()
 
 	return S_OK;
 }
+
+HRESULT CModel::Create_Texture()
+{
+	if(TYPE::TYPE_NONANIM == m_eModelType)
+		return S_OK;
+	/* 01. For m_AnimTransforms */
+	/* 해당 모델이 사용하는 모든 애니메이션과 Bone의 정보를 m_AnimTransforms에 세팅한다. */
+	vector<ANIM_TRANSFORM_CACHE>		m_AnimTransformsCache;
+
+	_uint iBoneCount = (_uint)m_Bones.size();
+	_uint iAnimCnt = Get_AnimationCount();
+	_uint iAnimMaxFrameCount = 0;
+	for (uint32 i = 0; i < iAnimCnt; i++)
+	{
+		_uint iCurAnimFrameCnt = m_Animations[i]->Get_MaxFrameCount();
+
+		iAnimMaxFrameCount = iAnimMaxFrameCount < iCurAnimFrameCnt ? iCurAnimFrameCnt : iAnimMaxFrameCount;
+	}
+	{
+		if (0 == iAnimCnt) return S_OK;
+
+		m_AnimTransforms.resize(iAnimCnt);
+		m_AnimTransformsCache.resize(iAnimCnt);
+
+		for (uint32 i = 0; i < iAnimCnt; i++)
+			Create_AnimationTransform(i, m_AnimTransforms);
+
+		if (m_bRootAnimation)
+		{
+			for (uint32 i = 0; i < iAnimCnt; i++)
+				Create_AnimationTransformCache(i, m_AnimTransformsCache);
+		}
+	}
+
+	/* 02. For. m_pTexture */
+	ID3D11Texture2D* pTexture = nullptr;
+	{
+		D3D11_TEXTURE2D_DESC desc;
+		{
+			ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+			desc.Width = iBoneCount * 4;			/* 4개로 쪼개 쓰기 위해 4를 곱함*/
+			desc.Height = iAnimMaxFrameCount;
+			desc.ArraySize = iAnimCnt;
+			desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;	/* 16바이트 */
+			desc.Usage = D3D11_USAGE_IMMUTABLE;				/* 이후 수정할 일 없음 */
+			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+			desc.MipLevels = 1;
+			desc.SampleDesc.Count = 1;
+		}
+		/* 위에서 설정한 텍스처는 채널당 최대 16바이트까지 할당 가능한데 우리는 매트릭스 즉 64바이트를 할당해야한다. */
+		/* 따라서 한 채널을 4개로 쪼개서 사용한다. */
+
+		/* 데이터를 할당할 버퍼 생성 */
+		uint32 dataSize = iBoneCount * sizeof(_float4x4);  /* 가로 */
+		uint32 pageSize = dataSize * iAnimMaxFrameCount;			/* 한 장 (가로 * 세로) */
+		void* mallocPtr = ::malloc(pageSize * iAnimCnt);				/* 텍스처 총 데이터 = n 장 */
+
+		/* _animTransforms의 정보를 버퍼에 모두 할당한다. */
+		for (uint32 c = 0; c < iAnimCnt; c++) /* 애니메이션 갯수만큼 반복 (장 수) */
+		{
+			uint32 startOffset = c * pageSize; /* 애님 카운트 * 한 장 /
+
+			/* 포인트 연산을 쉽게 하기 위해 1바이트 짜리로 캐스팅 */
+			BYTE* pageStartPtr = reinterpret_cast<BYTE*>(mallocPtr) + startOffset;
+
+			for (uint32 f = 0; f < iAnimMaxFrameCount; f++) /* 키프레임 갯수만큼 반복 (세로 크기만큼) */
+			{
+				void* ptr = pageStartPtr + dataSize * f;
+
+				if (m_bRootAnimation)
+					::memcpy(ptr, m_AnimTransformsCache[c].transforms[f].data(), dataSize); /* 텍스처에 가로 1줄만큼 데이터 저장 */
+				else
+					::memcpy(ptr, m_AnimTransforms[c].transforms[f].data(), dataSize);
+			}
+		}
+
+		/* 텍스처를 만들기 위한 D3D11_SUBRESOURCE_DATA 생성 */
+		vector<D3D11_SUBRESOURCE_DATA> subResources(iAnimCnt);
+		for (uint32 c = 0; c < iAnimCnt; c++)
+		{
+			void* ptr = (BYTE*)mallocPtr + c * pageSize;
+			subResources[c].pSysMem = ptr;
+			subResources[c].SysMemPitch = dataSize;
+			subResources[c].SysMemSlicePitch = pageSize;
+		}
+
+		/* 텍스처 생성 */
+		if (FAILED(m_pGameInstance->Get_Device()->CreateTexture2D(&desc, subResources.data(), &pTexture)))
+			return E_FAIL;
+
+		::free(mallocPtr);
+	}
+
+	/* 03. For. m_pSrv */
+	{
+		D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+		ZeroMemory(&desc, sizeof(desc));
+		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+		desc.Texture2DArray.MipLevels = 1;
+		desc.Texture2DArray.ArraySize = iAnimCnt;
+
+		if (FAILED(m_pGameInstance->Get_Device()->CreateShaderResourceView(pTexture, &desc, &m_pSrv)))
+			return E_FAIL;
+	}
+
+	/* Clear Cache*/
+	if (FAILED(Clear_Cache()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CModel::Create_AnimationTransform(uint32 iAnimIndex, vector<ANIM_TRANSFORM>& pAnimTransform)
+{
+	/* 현재 애니메이션에 대한 텍스처 한 장(프레임 행, 본 열)정보를 세팅한다. */
+	CAnimation* pAnimation = m_Animations[iAnimIndex];
+
+	/* 모든 프레임 순회 (텍스처 가로) */
+	for (uint32 iFrameIndex = 0; iFrameIndex < pAnimation->Get_MaxFrameCount(); iFrameIndex++)
+	{
+		/* 모든 채널의 현재 프레임 갱신 */
+		pAnimation->Calculate_Animation(iFrameIndex);
+		
+		/* 모든 본 글로벌 변환 -> 애니메이션 변환 */
+
+		for (uint32 iBoneIndex = 0; iBoneIndex < m_Bones.size(); iBoneIndex++)
+		{
+			m_Bones[iBoneIndex]->Set_CombinedTransformation();
+
+			/* 멤버 컨테이너에는 루트랑 소켓만 저장 */
+			if (m_AnimBoneIndecies[BONE_ROOT] == iBoneIndex)
+			{
+				pAnimTransform[iAnimIndex].transforms[iFrameIndex][BONE_ROOT]
+					= m_Bones[iBoneIndex]->Get_OffSetMatrix() * m_Bones[iBoneIndex]->Get_CombinedTransformation() * Get_PivotMatrix();
+			}
+			/*else if (m_AnimBoneIndecies[BONE_SOCKET_LEFT] == iBoneIndex)
+			{
+				pAnimTransform[iAnimIndex].transforms[iFrameIndex][BONE_SOCKET_LEFT]
+					= m_Bones[iBoneIndex]->Get_OffSetMatrix() * m_Bones[iBoneIndex]->Get_CombinedTransformation() * Get_PivotMatrix();
+			}
+			else if (m_AnimBoneIndecies[BONE_SOCKET_RIGHT] == iBoneIndex)
+			{
+				pAnimTransform[iAnimIndex].transforms[iFrameIndex][BONE_SOCKET_RIGHT]
+					= m_Bones[iBoneIndex]->Get_OffSetMatrix() * m_Bones[iBoneIndex]->Get_CombinedTransformation() * Get_PivotMatrix();
+			}*/
+		}
+	}
+}
+
+void CModel::Create_AnimationTransformCache(uint32 iAnimIndex, vector<ANIM_TRANSFORM_CACHE>& pAnimTransformCache)
+{
+	/* 현재 애니메이션에 대한 텍스처 한 장(프레임 행, 본 열)정보를 세팅한다. */
+	CAnimation* pAnimation = m_Animations[iAnimIndex];
+
+	/* 모든 프레임 순회 (텍스처 가로) */
+	for (uint32 iFrameIndex = 0; iFrameIndex < pAnimation->Get_MaxFrameCount(); iFrameIndex++)
+	{
+		/* 모든 채널의 현재 프레임 갱신 */
+		pAnimation->Calculate_Animation(iFrameIndex);
+
+		/* 모든 본 글로벌 변환 -> 애니메이션 변환 -> 저장 */
+
+		for (uint32 iBoneIndex = 0; iBoneIndex < m_Bones.size(); iBoneIndex++)
+		{
+			if (iBoneIndex == m_AnimBoneIndecies[BONE_ROOT])
+				m_Bones[iBoneIndex]->Set_Translate(Vec4(0, 0, 0, 1));
+
+			m_Bones[iBoneIndex]->Set_CombinedTransformation();
+
+			if (m_AnimBoneIndecies[BONE_SOCKET_LEFT] == iBoneIndex)
+			{
+				m_AnimTransforms[iAnimIndex].transforms[iFrameIndex][BONE_SOCKET_LEFT]
+					= m_Bones[iBoneIndex]->Get_OffSetMatrix() * m_Bones[iBoneIndex]->Get_CombinedTransformation() * Get_PivotMatrix();
+			}
+			else if (m_AnimBoneIndecies[BONE_SOCKET_RIGHT] == iBoneIndex)
+			{
+				m_AnimTransforms[iAnimIndex].transforms[iFrameIndex][BONE_SOCKET_RIGHT]
+					= m_Bones[iBoneIndex]->Get_OffSetMatrix() * m_Bones[iBoneIndex]->Get_CombinedTransformation() * Get_PivotMatrix();
+			}
+			pAnimTransformCache[iAnimIndex].transforms[iFrameIndex][iBoneIndex]
+				= m_Bones[iBoneIndex]->Get_OffSetMatrix() * m_Bones[iBoneIndex]->Get_CombinedTransformation() * Get_PivotMatrix();
+		}
+	}
+}
+
+HRESULT CModel::Clear_Cache()
+{
+	/* Bone */
+	for (auto& pBone : m_Bones)
+		Safe_Release(pBone);
+	m_Bones.clear();
+
+	/* Clear Animation Member */
+	for (uint32 i = 0; i < m_Animations.size(); i++)
+	{
+		m_Animations[i]->Clear_Channels();
+		
+	}
+
+	return S_OK;
+}
+
 
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eType, const string & strModelFilePath, _fmatrix PivotMatrix)
 {

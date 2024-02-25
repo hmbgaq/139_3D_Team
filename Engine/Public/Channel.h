@@ -29,6 +29,7 @@ public:
 			return m_KeyFrames.back();
 		return m_KeyFrames[_iKeyFrameIndex];
 	};
+	vector<KEYFRAME>& Get_KeyFrames() { return m_KeyFrames; }
 
 	_bool		Is_Inputable(_float fCurrentTrackPosition, _uint _iIndex);
 	_bool		Is_Inputable_Front(_float fCurrentTrackPosition, _uint _iIndexFront);

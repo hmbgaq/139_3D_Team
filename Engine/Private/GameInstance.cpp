@@ -205,6 +205,14 @@ ID3D11DepthStencilView * CGameInstance::Get_DSV() const
 	return m_pGraphic_Device->Get_DSV();
 }
 
+ID3D11Device* CGameInstance::Get_Device()
+{
+	if (nullptr == m_pGraphic_Device)
+		return nullptr;
+
+	return m_pGraphic_Device->Get_Device();
+}
+
 GRAPHIC_DESC* CGameInstance::Get_GraphicDesc()
 {
 	if (nullptr == m_pGraphic_Device)

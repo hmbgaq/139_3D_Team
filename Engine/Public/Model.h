@@ -6,6 +6,10 @@
 #include "MyAIScene.h"
 
 BEGIN(Engine)
+
+#define MAX_MODEL_TRANSFORMS	600 
+#define MAX_MODEL_KEYFRAMES		400 
+
 class CAnimation;
 class CMesh;
 class CBone;
@@ -16,6 +20,7 @@ class ENGINE_DLL CModel final : public CComponent
 {
 public:
 	enum TYPE { TYPE_NONANIM, TYPE_ANIM, TYPE_END };
+	enum BONE_TYPE { BONE_ROOT, BONE_SOCKET, BONE_END };
 
 public:
 	enum ANIM_STATE { ANIM_STATE_NORMAL, ANIM_STATE_LOOP, ANIM_STATE_REVERSE, ANIM_STATE_STOP, ANIM_STATE_END };
@@ -24,6 +29,20 @@ private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CModel(const CModel& rhs);
 	virtual ~CModel() = default;
+
+private:
+	typedef struct	AnimTransformCache
+	{
+		using TransformArrayType = array<_float4x4, MAX_MODEL_TRANSFORMS>;
+		array<TransformArrayType, MAX_MODEL_KEYFRAMES> transforms;
+
+	}ANIM_TRANSFORM_CACHE;
+	typedef struct	AnimTransform
+	{
+		using TransformArrayType = array<_float4x4, BONE_END>;
+		array<TransformArrayType, MAX_MODEL_KEYFRAMES> transforms;
+
+	}ANIM_TRANSFORM;
 
 public:
 	_uint					Get_NumMeshes() const {return m_iNumMeshes; }
@@ -43,7 +62,7 @@ public:
 	_uint					Get_NumMeshIndice(_int iMeshIndex);//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
 	vector<class CMesh*>&	Get_Meshes() { return m_Meshes; }
 	class CMesh*			Get_Mesh_For_Index(_int iMeshIndex);
-
+	_uint					Get_AnimationCount() const { return (_uint)m_Animations.size(); }
 
 	CAnimation*				Get_Animation_For_Index(_uint iAnimIndex);
 	_float4x4*				Get_Combined_For_AnimationIndex(_uint iAnimationIndex, _float fTrackPosition);
@@ -87,6 +106,11 @@ public:
 	_bool					Is_Inputable_Front(_uint _iIndexFront);
 
 	void					Write_Names(const string& strModelFilePath);
+private:
+	HRESULT					Create_Texture();
+	void					Create_AnimationTransform(uint32 iAnimIndex, vector<ANIM_TRANSFORM>& pAnimTransform);
+	void					Create_AnimationTransformCache(uint32 iAnimIndex, vector<ANIM_TRANSFORM_CACHE>& pAnimTransformCache);
+	HRESULT Clear_Cache();
 public:
 	vector<CAnimation*>*	 Get_Animations();
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
@@ -121,14 +145,20 @@ private:
 	ANIM_STATE				m_eAnimState			= { CModel::ANIM_STATE::ANIM_STATE_END };
 	_bool					m_bUseAnimationPos		= { false };
 
+	_bool					m_bRootAnimation = true;
+	ID3D11ShaderResourceView* m_pSrv = { nullptr };
+	vector<ANIM_TRANSFORM>	  m_AnimTransforms;
 public:
 	typedef vector<CBone*>	BONES;
 
+
 private:
-	HRESULT	Ready_Meshes(_fmatrix PivotMatrix);	
-	HRESULT Ready_Materials(const string& strModelFilePath);
-	HRESULT Ready_Bones(CMyAINode pAINode, _int iParentIndex);
-	HRESULT Ready_Animations();
+	HRESULT					Ready_Meshes(_fmatrix PivotMatrix);	
+	HRESULT					Ready_Materials(const string& strModelFilePath);
+	HRESULT					Ready_Bones(CMyAINode pAINode, _int iParentIndex);
+	HRESULT					Ready_Animations();
+
+	
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);
