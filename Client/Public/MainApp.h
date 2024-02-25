@@ -9,6 +9,8 @@ END
 
 BEGIN(Client)
 
+class CDevConsole;
+
 class CMainApp final  : public CBase
 {
 private:
@@ -34,6 +36,9 @@ private:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 	CGameInstance*			m_pGameInstance = { nullptr };
+
+private:
+	CDevConsole*			m_pDevConsole = { nullptr };
 
 private:
 	_tchar					m_szFPS[MAX_PATH] = TEXT("");

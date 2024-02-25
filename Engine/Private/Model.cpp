@@ -397,6 +397,11 @@ vector<CAnimation*>* CModel::Get_Animations()
 	return &m_Animations;
 }
 
+CMyAIScene* CModel::Get_AIScene()
+{
+	return &m_pAIScene;
+}
+
 vector<CBone*>* CModel::Get_Bones()
 {
 	return &m_Bones;

@@ -147,6 +147,20 @@ HRESULT CMonster::Render()
 	return S_OK;
 }
 
+void CMonster::OnCollisionEnter(CCollider* other)
+{
+	//Set_Enable(false);
+}
+
+void CMonster::OnCollisionStay(CCollider* other)
+{
+	//m_bDead = true;
+}
+
+void CMonster::OnCollisionExit(CCollider* other)
+{
+}
+
 _bool CMonster::Write_Json(json& Out_Json)
 {
 	return __super::Write_Json(Out_Json);
@@ -198,6 +212,7 @@ HRESULT CMonster::Ready_Components()
 	{
 		BoundingDesc.vExtents = _float3(0.5f, 0.7f, 0.5f);
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
+		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
 
 		if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Collider_AABB"),
 			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))

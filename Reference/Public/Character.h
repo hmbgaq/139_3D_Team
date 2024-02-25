@@ -95,6 +95,8 @@ protected:
 
 protected:
 	CPhysXController* m_pPhysXControllerCom = { nullptr };
+
+
 	PxControllerCollisionFlags m_LastCollisionFlags;
 
 protected:

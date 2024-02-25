@@ -92,7 +92,7 @@ public:
 
 	void	CreatePhysXActor(PHYSXCOLLIDERDESC& PhysXColliderDesc);
 	void	Add_PhysXActorAtSceneWithOption(const PxVec3& In_MassSpaceInertiaTensor = { 0.f, 0.f, 0.f }, const PxReal In_fMass = 0.f);
-
+	void	Add_PhysXActorAtScene();
 
 	void	Create_Geometry();
 	void	Create_DynamicActor(PHYSXCOLLIDERDESC& PhysXColliderDesc, PxTransform Transform);
@@ -113,6 +113,10 @@ public:
 
 public:
 	void	Synchronize_Collider(CTransform* pTransform, _fvector In_vOffset = { 0.f, 0.f, 0.f });
+
+public:
+	void	PutToSleep();
+	void	WakeUp();
 
 
 public:

@@ -201,6 +201,7 @@
     <ClInclude Include="..\Public\Clone_Manager.h" />
     <ClInclude Include="..\Public\CustomDialogFont.h" />
     <ClInclude Include="..\Public\Data_Manager.h" />
+    <ClInclude Include="..\Public\DevConsole.h" />
     <ClInclude Include="..\Public\Effect.h" />
     <ClInclude Include="..\Public\Effect_Explosion.h" />
     <ClInclude Include="..\Public\Effect_Instance.h" />
@@ -237,6 +238,7 @@
     <ClInclude Include="..\Public\Player_Weapon_Revolver.h" />
     <ClInclude Include="..\Public\Player_Weapon_Shotgun.h" />
     <ClInclude Include="..\Public\Player_Weapon_Winchester.h" />
+    <ClInclude Include="..\Public\Preset_PhysXColliderDesc.h" />
     <ClInclude Include="..\Public\Preset_PhysXControllerDesc.h" />
     <ClInclude Include="..\Public\PreviewAnimationModel.h" />
     <ClInclude Include="..\Public\Screamer.h" />
@@ -291,6 +293,7 @@
     <ClCompile Include="..\Private\Clone_Manager.cpp" />
     <ClCompile Include="..\Private\CustomDialogFont.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
+    <ClCompile Include="..\Private\DevConsole.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
     <ClCompile Include="..\Private\Effect_Explosion.cpp" />
     <ClCompile Include="..\Private\Effect_Instance.cpp" />
@@ -326,6 +329,7 @@
     <ClCompile Include="..\Private\Player_Weapon_Revolver.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Shotgun.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Winchester.cpp" />
+    <ClCompile Include="..\Private\Preset_PhysXColliderDesc.cpp" />
     <ClCompile Include="..\Private\Preset_PhysXControllerDesc.cpp" />
     <ClCompile Include="..\Private\PreviewAnimationModel.cpp" />
     <ClCompile Include="..\Private\Screamer.cpp" />

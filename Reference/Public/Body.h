@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 
+class CPhysXCollider;
 class CCollider;
 class CTexture;
 class CShader;
@@ -80,6 +81,8 @@ public: //!For.Tool
 //public:
 //	virtual _bool Collision_Chcek() PURE;
 
+
+
 protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
@@ -93,6 +96,9 @@ protected:
 
 	//_bool		m_bDissolve = { false };
 	//_float		m_fDissolveWeight = { 0.f };
+
+protected:
+	CPhysXCollider* m_pPhysXCollider = { nullptr };
 
 protected:
 	virtual HRESULT Ready_Components() PURE;

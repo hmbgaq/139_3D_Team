@@ -99,7 +99,7 @@ PxControllerCollisionFlags CPhysXCharacterController::Set_Position(_fvector In_v
 	return  __super::Set_Position(In_vPosition, elapsedTime, filters);
 }
 
-PxControllerCollisionFlags CPhysXCharacterController::MoveWithRotation(_fvector disp, PxF32 minDist, PxF32 elapsedTime, PxControllerFilters& filters, const PxObstacleContext* obstacles, weak_ptr<CTransform> pTransform, const _flag In_RootFlag)
+PxControllerCollisionFlags CPhysXCharacterController::MoveWithRotation(_fvector disp, PxF32 minDist, PxF32 elapsedTime, PxControllerFilters& filters, const PxObstacleContext* obstacles, CTransform* pTransform, const _flag In_RootFlag)
 {
 	filters.mFilterCallback = this;
 

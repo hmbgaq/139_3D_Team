@@ -4,7 +4,7 @@
 #include "Level_Loading.h"
 #include "Json_Utility.h"
 
-
+#include "DevConsole.h"
 #include "Data_Manager.h"
 #include "Clone_Manager.h"
 
@@ -55,6 +55,9 @@ HRESULT CMainApp::Initialize()
 	ShowWindow(g_hWnd, SW_SHOW);
 	SetForegroundWindow(g_hWnd);	// 창을 최상위로 가져온다.
 
+	m_pDevConsole = CDevConsole::Create();
+	Safe_AddRef(m_pDevConsole);
+
 	return S_OK;
 }
 
@@ -63,6 +66,8 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_pGameInstance->Tick_Engine(fTimeDelta);
 
 	m_fTimeAcc += fTimeDelta;
+
+	m_pDevConsole->Tick();
 }
 
 HRESULT CMainApp::Render()
@@ -295,6 +300,8 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
+	Safe_Release(m_pDevConsole);
+
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
 

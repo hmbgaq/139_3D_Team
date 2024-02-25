@@ -307,6 +307,15 @@
     <Filter Include="05. Preset">
       <UniqueIdentifier>{f22542eb-83c2-4588-baa9-eaee46804047}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00.MainApp\DevConsole">
+      <UniqueIdentifier>{fe4a5bf2-8f52-475e-8223-de1e17983e90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Preset\Collider">
+      <UniqueIdentifier>{119a6ac7-36ed-426a-92cb-6e1c5e799995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Preset\Controller">
+      <UniqueIdentifier>{b60e7d43-e89e-4dc0-b28e-025176135616}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -585,9 +594,6 @@
     <ClInclude Include="..\Public\UI_Blood.h">
       <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Preset_PhysXControllerDesc.h">
-      <Filter>05. Preset</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Client_Preset.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
@@ -596,6 +602,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DevConsole.h">
+      <Filter>00.MainApp\DevConsole</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Preset_PhysXControllerDesc.h">
+      <Filter>05. Preset\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Preset_PhysXColliderDesc.h">
+      <Filter>05. Preset\Collider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1048,11 +1063,17 @@
     <ClCompile Include="..\Private\UI_Blood.cpp">
       <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Preset_PhysXControllerDesc.cpp">
-      <Filter>05. Preset</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Environment_Interact.cpp">
       <Filter>02.GameObjects\02. Environment\Environment_Interact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DevConsole.cpp">
+      <Filter>00.MainApp\DevConsole</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Preset_PhysXControllerDesc.cpp">
+      <Filter>05. Preset\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Preset_PhysXColliderDesc.cpp">
+      <Filter>05. Preset\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
