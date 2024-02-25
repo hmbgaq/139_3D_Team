@@ -225,7 +225,7 @@ void CCharacter::Set_Enable(_bool _Enable)
 {
 	__super::Set_Enable(_Enable);
 
-	if (true == m_bIsPoolObject)
+	if (true == m_bIsPoolObject && false == _Enable)
 	{
 		Safe_Release(m_pBody);
 

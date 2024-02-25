@@ -106,7 +106,7 @@ void CGameObject::Set_Enable(_bool _Enable)
 	for (auto& Pair : m_Components)
 		Pair.second->Set_Enable(_Enable);
 
-	if (true == m_bIsPoolObject)
+	if (true == m_bIsPoolObject && false == _Enable)
 	{
 		__super::Free();
 
