@@ -29,24 +29,29 @@ public:
 		_bool		bParent = false;
 		_bool		bWorld = false;
 
-		/* 크기 */
-		_float		fScaleX = 100.f;
-		_float		fScaleY = 100.f;
+
 		_float		fOrigin_ScaleX = 100.f;
 		_float		fOrigin_ScaleY = 100.f;
 
+		_float		fOrigin_fRotationZ = 0.f;
+
+		_float		fOrigin_fPositionX = 0.f;
+		_float		fOrigin_fPositionY = 0.f;
+
+
+		/* 크기 */
+		_float		fScaleX = 100.f;
+		_float		fScaleY = 100.f;
+
 		/* 회전 */
 		_float		fRotationZ = 0.0f;
-		_float		fOrigin_fRotationZ = 0.f;
 
 		/* 이동 */
 		_float		fPositionX = (_float)g_iWinSizeX / 2;
 		_float		fPositionY = (_float)g_iWinSizeY / 2;
 		_float		fPositionZ = 0.0f;
 
-		_float		fOrigin_fRotationZ = 0.f;
-		_float		fOrigin_fRotationZ = 0.f;
-		_float		fOrigin_fRotationZ = 0.f;
+
 
 		/* 
 			(저장 순서)
@@ -166,9 +171,9 @@ public: /* ============================== SetUp ============================== *
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
 	HRESULT			SetUp_Transform(_float fPosX, _float fPosY, _float fScaleX, _float fScaleY);
 	HRESULT			SetUp_BillBoarding();
-	HRESULT			SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
 	HRESULT			Ready_UI(const char* cFilePath);
 	HRESULT			Create_UIParts(UI_DESC tUI_Desc);
+	HRESULT			Update_Child_Transform();
 
 protected: /* =========================== Ready ============================= */
 	virtual HRESULT Ready_Components();
