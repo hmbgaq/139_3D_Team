@@ -81,6 +81,9 @@ public:
 		m_iHp = _iHp;
 	};
 
+public:
+	virtual void Set_Enable(_bool _Enable) override;
+
 protected:
 	_int m_iHp = { 0 };
 	_bool	m_bRotate_In_CameraDir = { false };
