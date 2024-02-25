@@ -17,6 +17,8 @@ public:
 	HRESULT Begin_MRT(const wstring& strMRTTag, ID3D11DepthStencilView* pDSV, _bool bClear);
 	HRESULT End_MRT();
 	HRESULT Bind_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
+	class CRenderTarget*	Find_RenderTarget(const wstring& strTargetTag);
+	void					Create_RenderTarget(const wstring& strTargetTag);
 
 #ifdef _DEBUG
 public:
@@ -34,7 +36,6 @@ private:
 	map<const wstring, list<class CRenderTarget*>>		m_MRTs;
 
 private:
-	class CRenderTarget* Find_RenderTarget(const wstring& strTargetTag);
 	list<class CRenderTarget*>* Find_MRT(const wstring& strMRTTag);
 
 public:

@@ -139,9 +139,6 @@
     <Filter Include="02.GameObjects\UI\00. Player\03. Skill">
       <UniqueIdentifier>{eed3b339-fea4-4170-a09e-fa3e4ce89df1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\04. Weapon">
-      <UniqueIdentifier>{0a3fb696-2eff-44f2-81b1-1df525329490}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\01. Monster">
       <UniqueIdentifier>{4fbd45e8-23c6-4ff2-916d-b5b6ec906d8b}</UniqueIdentifier>
     </Filter>
@@ -220,12 +217,6 @@
     <Filter Include="02.GameObjects\02. Environment\Environment_Interact">
       <UniqueIdentifier>{d89d3dad-c81a-4fcb-af12-1b4c2e69c84f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monter">
-      <UniqueIdentifier>{9087e9de-c65a-4eb8-aff0-d8af60e30b78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monter\0. Screamer">
-      <UniqueIdentifier>{6ab1225a-12f3-4ff6-9880-7a7c7881548c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\01.GamePlay\0.GamePlay">
       <UniqueIdentifier>{a77245cb-d30e-4b58-bfd9-80c8fcbf1470}</UniqueIdentifier>
     </Filter>
@@ -279,6 +270,42 @@
     </Filter>
     <Filter Include="02.GameObjects\03. Effect\05.Effect_Trail">
       <UniqueIdentifier>{8bcd9f93-d4e5-4e7c-99f3-69b93e60c985}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster">
+      <UniqueIdentifier>{9087e9de-c65a-4eb8-aff0-d8af60e30b78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\0. Screamer">
+      <UniqueIdentifier>{6ab1225a-12f3-4ff6-9880-7a7c7881548c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\20. InstanceMonster">
+      <UniqueIdentifier>{c458b000-11e4-4332-8c04-df6714f6be7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\03. Skill\Skill_Icon">
+      <UniqueIdentifier>{37a9a55a-4bfb-4dec-bcab-509c3b5f20a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\03. Skill\Skill_Frame">
+      <UniqueIdentifier>{982c3195-ca22-43de-8427-e513b86cda70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\03. Skill\Skill_Guige">
+      <UniqueIdentifier>{d54823ed-6d7e-4ef6-9922-4bbd0dec5ef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Lights">
+      <UniqueIdentifier>{a475bd59-f8b2-4e6a-961b-31b5b1e0bdf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Veins">
+      <UniqueIdentifier>{4f7fec7f-d472-4404-be09-abf85d3ddd63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Vignette">
+      <UniqueIdentifier>{f4d39fbe-3d41-437e-b224-2666fac37121}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\ETC">
+      <UniqueIdentifier>{b18d42ab-99b6-4330-a22a-3033f8d1b25f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Componenet">
+      <UniqueIdentifier>{c773ceaa-99e3-4453-a030-0929a6c32625}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Preset">
+      <UniqueIdentifier>{f22542eb-83c2-4588-baa9-eaee46804047}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -472,7 +499,7 @@
       <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Screamer.h">
-      <Filter>02.GameObjects\00. Character\Monter\0. Screamer</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\0. Screamer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_SnowMountain.h">
       <Filter>01.Levels\01.GamePlay\1.SnowMountain</Filter>
@@ -510,9 +537,6 @@
     <ClInclude Include="..\Public\Player_Weapon_Winchester.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Winchester</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_internal.h">
       <Filter>01.Levels\02.Tool\Imgui\ImNeoSequencer</Filter>
     </ClInclude>
@@ -533,6 +557,45 @@
     </ClInclude>
     <ClInclude Include="..\Public\Effect.h">
       <Filter>02.GameObjects\03. Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\InstanceMonster.h">
+      <Filter>02.GameObjects\00. Character\Monster\20. InstanceMonster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_Skill.h">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_Skill_Frame.h">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_Skill_Guige.h">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Guige</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_Skill_Icon.h">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Blood_Lights.h">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Blood_Veins.h">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood\Vignette</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Blood_Vignette.h">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood\Veins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Blood.h">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Preset_PhysXControllerDesc.h">
+      <Filter>05. Preset</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Preset.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Environment_Interact.h">
+      <Filter>02.GameObjects\02. Environment\Environment_Interact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -555,9 +618,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Level_Logo.h">
       <Filter>01.Levels\00.Logo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Loading.h">
       <Filter>01.Levels\99.Loading</Filter>
@@ -667,9 +727,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Level_Logo.h">
       <Filter>01.Levels\00.Logo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Loading.h">
       <Filter>01.Levels\99.Loading</Filter>
@@ -905,7 +962,7 @@
       <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Screamer.cpp">
-      <Filter>02.GameObjects\00. Character\Monter\0. Screamer</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\0. Screamer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_GamePlay.cpp">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
@@ -964,6 +1021,39 @@
     <ClCompile Include="..\Private\Effect_Trail.cpp">
       <Filter>02.GameObjects\03. Effect\05.Effect_Trail</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\InstanceMonster.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\20. InstanceMonster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_Skill.cpp">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_Skill_Frame.cpp">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_Skill_Guige.cpp">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Guige</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_Skill_Icon.cpp">
+      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Blood_Lights.cpp">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Blood_Veins.cpp">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood\Vignette</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Blood_Vignette.cpp">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood\Veins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Blood.cpp">
+      <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Preset_PhysXControllerDesc.cpp">
+      <Filter>05. Preset</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Environment_Interact.cpp">
+      <Filter>02.GameObjects\02. Environment\Environment_Interact</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1002,6 +1092,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxEffectModelInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModelInstance.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

@@ -1,6 +1,7 @@
 #include "SMath.h"
 #include <random>
 
+
 XMMATRIX Engine::SMath::Get_RotationMatrix(FXMMATRIX Mat)
 {
 	XMMATRIX ResultMat(XMMatrixIdentity());
@@ -456,6 +457,52 @@ void ENGINE_DLL Engine::SMath::Set_ClockwiseTriangle(XMFLOAT3* InOut_TrianglePos
 		XMStoreFloat3(&InOut_TrianglePosition[2], vPositionFromVector[1]);
 	}
 }
+
+void ENGINE_DLL Engine::SMath::Convert_PxVec3FromMeshData(PxVec3* In_PxVec3, CMyAIMesh* pMeshData)
+{
+	_uint iNumVertices(pMeshData->Get_NumVertices());
+	for (_uint i(0); i < iNumVertices; ++i)
+	{
+		memcpy(&In_PxVec3[i], &pMeshData->Get_Vertice(i), sizeof(PxVec3));
+	}
+}
+
+void ENGINE_DLL Engine::SMath::Convert_PxVec3FromMeshDataWithTransformMatrix(PxVec3* In_PxVec3, CMyAIMesh * pMeshData, FXMMATRIX In_TransformMatrix)
+{
+	_uint iNumVertices(pMeshData->Get_NumVertices());
+	_vector vPosition(XMVectorSet(0.f, 0.f, 0.f, 0.f));
+	for (_uint i(0); i < iNumVertices; ++i)
+	{
+		vPosition = XMVector3TransformCoord(XMLoadFloat3(&pMeshData->Get_Vertice(i)), In_TransformMatrix);
+		memcpy(&In_PxVec3[i], &vPosition, sizeof(PxVec3));
+	}
+}
+
+PxExtendedVec3 ENGINE_DLL Engine::SMath::Convert_PxExtendedVec3(FXMVECTOR In_Vector)
+{
+	return PxExtendedVec3(XMVectorGetX(In_Vector), XMVectorGetY(In_Vector), XMVectorGetZ(In_Vector));
+}
+
+PxExtendedVec3 ENGINE_DLL Engine::SMath::Convert_PxExtendedVec3(PxVec3 In_Vector)
+{
+	return PxExtendedVec3(In_Vector.x, In_Vector.y, In_Vector.z);
+}
+
+PxVec3 ENGINE_DLL Engine::SMath::Convert_PxVec3(FXMVECTOR In_Vector)
+{
+	return PxVec3(XMVectorGetX(In_Vector), XMVectorGetY(In_Vector), XMVectorGetZ(In_Vector));
+}
+
+PxVec3 ENGINE_DLL Engine::SMath::Convert_PxVec3(const XMFLOAT3& In_Float3)
+{
+	return PxVec3(In_Float3.x, In_Float3.y, In_Float3.z);
+}
+
+PxVec3 ENGINE_DLL Engine::SMath::Convert_PxVec3(PxExtendedVec3 In_Vector)
+{
+	return PxVec3(_float(In_Vector.x), _float(In_Vector.y), _float(In_Vector.z));
+}
+
 
 
 const _bool ENGINE_DLL Engine::SMath::Is_Equal(const XMFLOAT2 Left, const XMFLOAT2 Right)

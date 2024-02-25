@@ -69,7 +69,7 @@ HRESULT CCollider::Initialize(void * pArg)
 		break;
 	}
 
-	//m_pGameInstance->Add_Collision(m_iLayer, this);
+	m_pGameInstance->Add_Collision(m_iLayer, this);
 
 	return S_OK;
 }
@@ -171,11 +171,10 @@ void CCollider::OnCollisionExit(CCollider* other)
 
 void CCollider::Set_Enable(_bool _Enable)
 {
-	if (false == m_bEnable && true == _Enable)
-	{
-		if (m_pGameInstance->Get_NextLevel() != _uint(5))
-			m_pGameInstance->Add_Collision(m_iLayer, this);
-	}
+	//if (false == m_bEnable && true == _Enable)
+	//{
+	//	m_pGameInstance->Add_Collision(m_iLayer, this);
+	//}
 	__super::Set_Enable(_Enable);
 
 }

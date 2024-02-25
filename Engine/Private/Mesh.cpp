@@ -13,6 +13,7 @@ CMesh::CMesh(const CMesh & rhs)
 {
 }
 
+
 HRESULT CMesh::Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones)
 {
 	m_iMaterialIndex = pAIMesh.Get_MaterialIndex();
@@ -74,20 +75,35 @@ HRESULT CMesh::Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, 
 
 HRESULT CMesh::Initialize(void * pArg)
 {
+	
+	
+	
+
 	return S_OK;
 }
 
-HRESULT CMesh::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, const vector<CBone*>& Bones)
+HRESULT CMesh::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, const vector<CBone*>& Bones, _float4x4* BoneMatrix)
 {
-	_float4x4		BoneMatrices[800];
+	_float4x4   _BoneMatrices[800];
 
 	for (_uint i = 0; i < m_iNumBones; i++)
 	{
-		XMStoreFloat4x4(&BoneMatrices[i], XMLoadFloat4x4(&m_OffsetMatrices[i]) * Bones[m_BoneIndices[i]]->Get_CombinedTransformationMatrix());
+		XMStoreFloat4x4(&_BoneMatrices[i], XMLoadFloat4x4(&m_OffsetMatrices[i]) * Bones[m_BoneIndices[i]]->Get_CombinedTransformationMatrix());
+
 	}
 
-	return pShader->Bind_Matrices(pConstantName, BoneMatrices, 800);
+	if (nullptr != BoneMatrix)
+	{
+		memcpy(BoneMatrix, _BoneMatrices, sizeof(_float4x4) * 800);
+		//memcpy(BoneMatrix, _BoneMatrices, sizeof(_float4x4) * 800);
+		//BoneMatrix = _BoneMatrices;
+	}
+
+	return pShader->Bind_Matrices(pConstantName, _BoneMatrices, 800);
+
 }
+
+
 
 #ifdef _DEBUG
 _bool CMesh::Picking(RAY ray, _float3* out)

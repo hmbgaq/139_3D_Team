@@ -37,6 +37,7 @@ public:
 public:
 	_float			Get_Speed() const { return m_fSpeed; }
 	_bool			Is_Stop() const { return m_bStop; }
+	_bool			Is_CreatePlayer() const { return m_bCreatePlayer;}
 
 public:
 	void			Call_UpdatePreViewModel();
@@ -167,6 +168,10 @@ public:
 	_bool					m_bCreatWeaponCollider = false;
 	_bool					m_bDeleteWeaponCollider = false;
 	_bool					m_bColliderWeaponSize = false;
+
+private:
+	_bool					m_bCreatePlayer = false;
+
 
 	_bool bTest = true;
 	_bool bTest2 = true;

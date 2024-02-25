@@ -22,7 +22,7 @@ private:
 
 public: /* For.Engine */
 	/* 엔진라이브러리를 사용하기위한 준비를 모두 거친다. */
-	HRESULT		Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
+	HRESULT		Initialize_Engine(_uint iNumLevels, _uint iNumCollsionLayer, _uint iNumPhysXCollsionLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
 	void		Tick_Engine(_float fTimeDelta);
 	HRESULT		Render_Engine();
 	void		Clear(_uint iLevelIndex);
@@ -35,6 +35,8 @@ public: /* For.Graphic_Device */
 	ID3D11DepthStencilView* Get_DSV() const;
 	GRAPHIC_DESC*			Get_GraphicDesc();
 	ID3D11ShaderResourceView* Get_DepthSRV();
+	GFSDK_SSAO_Context_D3D11* Get_AOContext();
+
 
 public: /* For.Input_Device */
 	_byte		Get_DIKeyState(_ubyte byKeyID);
@@ -55,6 +57,7 @@ public: /* For.Timer_Manager */
 public: /* For.Level_Manager */
 	HRESULT Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
 	_uint	Get_NextLevel();
+	_uint	Get_CurrentLevel();
 	void	Set_CurrentLevel(_uint CurrentLevel);
 
 public: /* For.Object_Manager */
@@ -117,6 +120,9 @@ public: /* For.Target_Manager */
 	HRESULT		Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView * pDSV = nullptr, _bool bClear = true);
 	HRESULT		End_MRT();
 	HRESULT		Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
+	class CRenderTarget* Find_RenderTarget(const wstring& strTargetTag);
+	void		Create_RenderTarget(const wstring& strTargetTag);
+	
 #ifdef _DEBUG
 	HRESULT		Ready_RenderTarget_Debug(const wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
 	HRESULT		Render_Debug_RTVs(const wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
@@ -133,6 +139,8 @@ public: /* For.Frustum */
 
 public: /* For.Collision_Manager */
 	void		Add_Collision(const _uint& In_iLayer, CCollider* _pCollider);
+
+	void		Check_Group(const _uint& In_iLeftLayer, const _uint& In_iRightLayer);
 
 
 public: /* For.Event_Manager */
@@ -153,12 +161,21 @@ public: /* For.PhysX_Manager */
 	PxRigidStatic*			Create_StaticActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial = nullptr);
 	PxRigidStatic*			Create_StaticActor(const PxTransform& transform);
 
+	void					Add_DynamicActorAtCurrentScene(PxRigidDynamic& DynamicActor);
+	void					Add_StaticActorAtCurrentScene(PxRigidStatic& StaticActor);
+
+	void					Create_Material(_float fStaticFriction, _float fDynamicFriction, _float fRestitution, PxMaterial** ppOut);
 	void					Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut);
 	void					Create_ConvexMesh(const PxConvexMeshDesc& In_MeshDesc, PxConvexMesh** ppOut);
 	void					Create_Shape(const PxGeometry& Geometry, PxMaterial* pMaterial, const _bool isExculsive, const PxShapeFlags In_ShapeFlags, PxShape** ppOut);
 	void					Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshDesc, PxTriangleMesh** ppOut);
 	void					Create_Controller(const PxCapsuleControllerDesc& In_ControllerDesc, PxController** ppOut);
 
+public: /* For.Random_Manager*/
+	const _float&			Random_Float(_float fMin, _float fMax);
+	const _int&				Random_Int(_int iMin, _int iMax);
+	const _bool&			Random_Coin(_float fProbality);
+	int64_t					GenerateUniqueID();
 
 
 
@@ -212,6 +229,7 @@ private:
 	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
 	class CEvent_Manager*			m_pEvent_Manager = { nullptr };
 	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
+	class CRandom_Manager*			m_pRandom_Manager = { nullptr };
 
 
 public:

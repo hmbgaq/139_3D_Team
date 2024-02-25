@@ -23,18 +23,33 @@ HRESULT CMonster::Initialize_Prototype()
 
 HRESULT CMonster::Initialize(void* pArg)
 {	
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(rand() % 20);
+	m_pModelCom->Set_Animation(3);
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(_float(rand() % 20), 0.f, _float(rand() % 20), 1.f));
 
 	m_iRenderPass = 0;
 	m_fTimeDelta = 0;
+	 
+
+	if (pArg != nullptr)
+	{
+		m_tMonsterDesc = *(MONSTER_DESC*)pArg;
+
+		if (m_tMonsterDesc.bPreview == false)
+		{
+			m_pTransformCom->Set_WorldMatrix(m_tMonsterDesc.WorldMatrix);
+		}
+	}
+	
+
+ 	
 
 	return S_OK;
 }
@@ -61,6 +76,8 @@ void CMonster::Tick(_float fTimeDelta)
 
 	//SetUp_OnTerrain(m_pTransformCom);
 
+	
+
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
@@ -74,13 +91,17 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (true == m_pGameInstance->isIn_LocalPlanes(XMVector3TransformCoord(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_WorldMatrixInverse()), 0.f))
 	{
-		m_pModelCom->Play_Animation(fTimeDelta, true);
+		_float3 vRootAnimPos = {};
+
+		m_pModelCom->Play_Animation(fTimeDelta, &vRootAnimPos);
+
+		m_pTransformCom->Add_RootBone_Position(vRootAnimPos);
 
 		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 			return;
 
 #ifdef _DEBUG
-		m_pGameInstance->Add_DebugRender(m_pColliderCom);
+	//	m_pGameInstance->Add_DebugRender(m_pColliderCom);
 #endif	
 	}
 
@@ -126,25 +147,48 @@ HRESULT CMonster::Render()
 	return S_OK;
 }
 
+_bool CMonster::Write_Json(json& Out_Json)
+{
+	return __super::Write_Json(Out_Json);
+}
+
+void CMonster::Load_FromJson(const json& In_Json)
+{
+	return __super::Load_FromJson(In_Json);
+}
+
 HRESULT CMonster::Ready_Components()
 {
+
+	_int iCurrentLevel = m_pGameInstance->Get_CurrentLevel();
+
 	/* For.Com_Shader */
 	{
-		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_AnimModel"),
+		if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Shader_AnimModel"),
 			TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 			return E_FAIL;
 	}
 
 	/* For.Com_Model */
+
+	//!Prototype_Component_Model_BeastBoss_Phase1
+	//! //!Prototype_Component_Model_BeastBoss_Phase2
+	//! //!Prototype_Component_Model_BeastBoss_Phase3
+
+
 	{
-		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
+		if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Screamer"),
 			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 			return E_FAIL;
+
+		//if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_BeastBoss_Phase3"),
+		//	TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+		//	return E_FAIL;
 	}
 
 	/* For. Texture */
 	{
-		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"),
+		if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Texture_Dissolve"),
 			TEXT("Com_DissolveTex"), reinterpret_cast<CComponent**>(&m_pDissolveTexCom))))
 			return E_FAIL;
 	}
@@ -155,7 +199,7 @@ HRESULT CMonster::Ready_Components()
 		BoundingDesc.vExtents = _float3(0.5f, 0.7f, 0.5f);
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 
-		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+		if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Collider_AABB"),
 			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 			return E_FAIL;
 	}

@@ -52,7 +52,7 @@ void CTerrain::Late_Tick(_float fTimeDelta)
 
 
 #ifdef _DEBUG
-	m_pGameInstance->Add_DebugRender(m_pNavigationCom);
+	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
 }
 

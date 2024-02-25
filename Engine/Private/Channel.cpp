@@ -303,6 +303,42 @@ KEYFRAME CChannel::Make_NowFrame(_float fCurrentTrackPosition, _uint* pCurrentKe
 	return result;
 }
 
+_float4x4& CChannel::Get_NowMatrix(_float fTrackPosition)
+{
+	KEYFRAME StartFrame;
+	KEYFRAME EndFrame;
+
+	_uint pCurrentKeyFrameIndex = 0;
+	
+
+	KEYFRAME	LastKeyFrame = m_KeyFrames.back();
+	if (fTrackPosition >= LastKeyFrame.fTrackPosition)
+	{
+		StartFrame = m_KeyFrames.back();
+		EndFrame = m_KeyFrames.back();
+	}
+	else
+	{
+		while (fTrackPosition >= m_KeyFrames[pCurrentKeyFrameIndex + 1].fTrackPosition)
+			++pCurrentKeyFrameIndex;
+
+		StartFrame = m_KeyFrames[pCurrentKeyFrameIndex];
+		EndFrame = m_KeyFrames[pCurrentKeyFrameIndex + 1];
+	}
+
+	_float fRatio = Calc_Ratio(StartFrame.fTrackPosition, fTrackPosition, EndFrame.fTrackPosition);
+
+
+
+	_matrix matTemp = Make_TransformationMatrix(StartFrame, EndFrame, fRatio);
+
+	_float4x4 CalcMatrix;
+
+	XMStoreFloat4x4(&CalcMatrix, matTemp);
+
+	return CalcMatrix;
+}
+
 CChannel * CChannel::Create(CMyAINodeAnimation pChannel, const CModel::BONES& Bones)
 {
 	CChannel*		pInstance = new CChannel();

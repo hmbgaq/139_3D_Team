@@ -8,12 +8,16 @@
 #include "Field.h"
 
 #include "LandObject.h"
+#include "Player.h"
+#include "Monster.h"
 
 #include "../Imgui/ImGuizmo/ImGuizmo.h"
 #include "../Imgui/ImGuizmo/ImCurveEdit.h"
 #include "../Imgui/ImGuizmo/GraphEditor.h"
 #include "../Imgui/ImGuizmo/ImSequencer.h"
 #include "../Imgui/ImGuizmo/ImZoomSlider.h"
+#include "Camera.h"
+#include "SpringCamera.h"
 
 static ImGuizmo::OPERATION InstanceCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 static ImGuizmo::MODE	   InstanceCurrentGizmoMode(ImGuizmo::WORLD);
@@ -35,6 +39,15 @@ HRESULT CWindow_MapTool::Initialize()
 
 	//! Loader에서 푸시백 해놓은 Imgui_Manager의 모델태그 벡터를 받아오자.
 	FAILED_CHECK(Ready_ModelTags());
+	
+	FAILED_CHECK(Ready_PrototypeTags());
+	
+
+	
+
+	//m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
+	//
+	//Safe_AddRef(m_pPlayer);
 
 	
 
@@ -53,7 +66,7 @@ HRESULT CWindow_MapTool::Initialize()
 
 void CWindow_MapTool::Tick(_float fTimeDelta)
 {
-
+	
 
 	__super::Tick(fTimeDelta);
 
@@ -75,9 +88,11 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	//!	ImGuiTabBarFlags_FittingPolicyMask_ = ImGuiTabBarFlags_FittingPolicyResizeDown | ImGuiTabBarFlags_FittingPolicyScroll,
 	//!	ImGuiTabBarFlags_FittingPolicyDefault_ = ImGuiTabBarFlags_FittingPolicyResizeDown,
 
-	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyMask_;
+	
 	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
 	
+
+
 
 	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 80), ImGuiChildFlags_Border, WindowFlag);
 	
@@ -98,39 +113,42 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 
 	
 
-	
 
-	if (ImGui::BeginTabBar(u8"오브젝트 타입", tab_bar_flags))
+	CameraWindow_Function();
+
+	ImGui::SeparatorText(u8"오브젝트 타입");
 	{
 
-		if (ImGui::BeginTabItem(u8"그라운드"))
-		{
-			m_eTabType = CWindow_MapTool::TAP_TYPE::TAB_GROUND;
-			GroundTab_Function();
+		static _int iObjectType = 0;
+		const char* CharObjectType[2] = { u8"환경", u8"캐릭터" };
 
-			ImGui::EndTabItem();
+		for (_uint i = 0; i < IM_ARRAYSIZE(CharObjectType); ++i)
+		{
+			if (i > 0) { ImGui::SameLine(); }
+
+			if (ImGui::RadioButton(CharObjectType[i], &iObjectType, i))
+			{
+				m_bChangeObjectMode = true;
+
+				ObjectMode_Change_For_Reset();
+			}
 		}
 
-		if (ImGui::BeginTabItem(u8"상호작용"))
-		{
-			m_eTabType = CWindow_MapTool::TAP_TYPE::TAB_INTERACT;
-			InteractTab_Function();
-
-			ImGui::EndTabItem();
-		}
-
-		if (ImGui::BeginTabItem(u8"환경"))
-		{
-			m_eTabType = CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT;
-			EnvironmentTab_Function();
-
-			ImGui::EndTabItem();
-		}
-
-		ImGui::EndTabBar();
-
-		ShowDialog();
+		m_eObjectMode = ECast<OBJECTMODE_TYPE>(iObjectType);
 	}
+	ImGui::Separator();
+
+	
+	if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
+	{
+		EnvironmentMode_Function();
+	}
+	else //! OBJECTMODE_CHARACTER
+	{
+		CharacterMode_Function();
+	}
+
+	
 
 	if (m_eModeType != CWindow_MapTool::MODE_TYPE::MODE_CREATE && nullptr != m_pPreviewObject)
 	{
@@ -141,6 +159,10 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 
 	__super::End();
 
+	if (false == m_bCreateCamera)
+	{
+		IsCreatePlayer_ReadyCamara();
+	}
 
 	
 }
@@ -177,6 +199,17 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
  			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
  		}
  	}
+
+	for (auto& tag : m_vecCreateMonsterTag)
+	{
+		// 문자열에서 '@' 문자 이후의 부분을 지움
+		size_t atIndex = tag.find('@');
+		if (atIndex != std::string::npos) {
+			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+		}
+	}
+
+	
 	
 			json SaveJson = {};
 
@@ -187,7 +220,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 			if (false == m_vecCreateObject.empty())
 			{
-				_int iCreateObjectSize = m_vecCreateObject.size();
+				_int iCreateObjectSize = (_int)m_vecCreateObject.size();
 
 			
 
@@ -222,7 +255,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
  
 			if (false == m_vecCreateInstance.empty())
 			{
-				_int iCreateInstanceObjectSize = m_vecCreateInstance.size();
+				_int iCreateInstanceObjectSize = (_int)m_vecCreateInstance.size();
 
 				
 
@@ -244,7 +277,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 					json InstanceInfoJson = {};
 
 
-					for (_int j = 0; j < InstanceObjDesc.iNumInstance; ++j)
+					for (_uint j = 0; j < InstanceObjDesc.iNumInstance; ++j)
 					{
 						INSTANCE_INFO_DESC InstanceInfoDesc = InstanceObjDesc.vecInstanceInfoDesc[j];
 
@@ -264,10 +297,54 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				
 			}
 
+			json MonsterJson;
+
+			if (false == m_vecCreateMonster.empty())
+			{
+				_int iCreateMonsterSize = (_int)m_vecCreateMonster.size();
+			
+			
+			
+				for (_int i = 0; i < iCreateMonsterSize; ++i)
+				{
+					CMonster::MONSTER_DESC Desc;
+			
+					Desc = *m_vecCreateMonster[i]->Get_MonsterDesc();
+			
+					string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
+					MonsterJson[i].emplace("PrototypeTag", strProtoTag);
+					m_vecCreateMonster[i]->Write_Json(MonsterJson[i]);
+				}
+			}
+			
+			//todo 추후 작성 npc
+			
+			//json NPCJson;
+			//
+			//if (false == m_vecCreateNPC.empty())
+			//{
+			//	_int iCreateNPCSize = (_int)m_vecCreateNPC.size();
+			//
+			//	for (_int i = 0; i < iCreateNPCSize; ++i)
+			//	{
+			//		CNPC::NPC_DESC Desc;
+			//
+			//		Desc = *m_vecCreateNPC[i]->Get_NPCDesc();
+			//
+			//		string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
+			//		NPCJson[i].emplace("PrototypeTag", strProtoTag);
+			//		m_vecCreateNPC[i]->Write_Json(NPCJson[i]);
+			//	}
+			//}
+
+
+
 
 			SaveJson.emplace("Basic_Json", BasicJson);
 			SaveJson.emplace("Interact_Json", InteractJson);
 			SaveJson.emplace("Instance_Json", InstanceJson);
+			SaveJson.emplace("Monster_Json", MonsterJson);
+			//! 추후 작성 npc SaveJson.emplace("NPC_Json", NPCJson);
 
 			string strSavePath = strPath + "/" + strNoExtFileName + "_MapData.json";
 			if (FAILED(CJson_Utility::Save_Json(strSavePath.c_str(), SaveJson)))
@@ -300,7 +377,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 	
 
 	json BasicJson = LoadJson["Basic_Json"];
-	_int iBasicJsonSize = BasicJson.size();
+	_int iBasicJsonSize = (_int)BasicJson.size();
 
 	for (_int i = 0; i < iBasicJsonSize; ++i)
 	{
@@ -345,6 +422,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 
 		m_vecCreateObject.push_back(pObject);
+		m_iCreateObjectIndex++;
 	}
 
 
@@ -362,7 +440,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 	}
 
 	json InstanceJson = LoadJson["Instance_Json"];
-	_int InstanceJsonSize = InstanceJson.size();
+	_int InstanceJsonSize = (_int)InstanceJson.size();
 
 	for(_int i = 0; i < InstanceJsonSize; ++i)
 	{
@@ -386,9 +464,9 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
  		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
 		
  		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
+		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
  
- 		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
+ 		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
  		{
  			INSTANCE_INFO_DESC InstanceInfoDesc = {};
  
@@ -398,6 +476,8 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
  			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
  
  			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
+			m_iInstanceInfoTagIndex++;
+			
  		}
  
  
@@ -406,7 +486,45 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
  		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
  
  		m_vecCreateInstance.push_back(pInstanceObject);
+		m_iCreateInstanceIndex++;
  	}
+
+	json MonsterJson = LoadJson["Monster_Json"];
+	_int iMonsterJsonSize = (_int)MonsterJson.size();
+
+	for (_int i = 0; i < iMonsterJsonSize; ++i)
+	{
+		string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + "@" + to_string(i);
+
+		m_vecCreateMonsterTag.push_back(pushMonsterTag);
+
+		CMonster::MONSTER_DESC MonsterDesc;
+		MonsterDesc.bPreview = false;
+
+
+		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+		
+		MonsterDesc.WorldMatrix = WorldMatrix;
+
+		CMonster* pMonster = { nullptr };
+
+		wstring strProtoTypeTag;
+		m_pGameInstance->String_To_WString((string)MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
+
+		pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
+
+		m_vecCreateMonster.push_back(pMonster);
+		m_iCreateMonsterIndex++;
+	}
 
 	return S_OK;
 }
@@ -414,10 +532,13 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 void CWindow_MapTool::Reset_Function()
 {
 	m_pPreviewObject = nullptr;
+	m_pPreviewCharacter = nullptr;
 	m_pPickingObject = nullptr;
 	m_pPickingInstanceInfo = nullptr;
 
-	_int iCreateObjectSize = m_vecCreateObject.size();
+		
+
+	_int iCreateObjectSize = (_int)m_vecCreateObject.size();
 
 	for (_int i = 0; i < iCreateObjectSize; ++i)
 	{
@@ -430,7 +551,7 @@ void CWindow_MapTool::Reset_Function()
 	m_vecCreateObjectTag.clear();
 
 
-	_int iCreateInstanceSize = m_vecCreateInstance.size();
+	_int iCreateInstanceSize = (_int)m_vecCreateInstance.size();
 
 	for (_int i = 0; i < iCreateInstanceSize; ++i)
 	{
@@ -445,7 +566,7 @@ void CWindow_MapTool::Reset_Function()
 	m_iInstanceInfoTagIndex = 0;
 	
 
-	_int iPreviewInstanceSize = m_vecPreViewInstance.size();
+	_int iPreviewInstanceSize = (_int)m_vecPreViewInstance.size();
 
 	for (_int i = 0; i < iPreviewInstanceSize; ++i)
 	{
@@ -456,8 +577,53 @@ void CWindow_MapTool::Reset_Function()
 
 	
 
-	
 
+	_int iCreateMonsterSize = (_int)m_vecCreateMonster.size();
+
+	for (_int i = 0; i < iCreateMonsterSize; ++i)
+	{
+		m_vecCreateMonster[i]->Set_Enable(false);
+	}
+
+	m_iCreateMonsterIndex = 0;
+	m_iSelectCharacterTag = 0;
+	m_vecCreateMonster.clear();
+	m_vecCreateMonsterTag.clear();
+
+	
+	
+	//!_int iCreateNPCSize = (_int)m_vecCreateNPC.size();
+	//!
+	//!for (_int i = 0; i < iCreateNPCSize; ++i)
+	//!{
+	//!	m_vecCreateNPC[i]->Set_Dead(true);
+	//!}
+	//!
+	//!m_vecCreateNPC.clear();
+
+}
+
+void CWindow_MapTool::ObjectMode_Change_For_Reset()
+{
+	if (m_bChangeObjectMode == true)
+	{
+		if (m_eObjectMode == OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
+		{
+			m_iSelectCharacterTag = 0;
+			m_pPreviewCharacter = nullptr;
+			m_pPickingObject = nullptr;
+		}
+		else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER)
+		{
+			m_pPreviewObject = nullptr;
+			m_pPickingObject = nullptr;
+			m_iSelectEnvironmentIndex = 0;
+			m_iSelectInstanceIndex = 0;
+			m_iSelectObjectIndex = 0;
+		}
+
+		m_bChangeObjectMode = false;
+	}
 
 }
 
@@ -528,6 +694,90 @@ HRESULT CWindow_MapTool::Ready_ModelTags()
 
 	
 	return S_OK;
+}
+
+HRESULT CWindow_MapTool::Ready_PrototypeTags()
+{
+
+	m_vecMonsterTag.push_back("Prototype_GameObject_Monster");
+	m_vecMonsterTag.push_back("Prototype_GameObject_Player");
+	
+	//!m_vecBossTag.push_back("Prototype_GameObject_~!~!~!~");
+	//!m_vecNpcTag.push_back("Prototype_GameObject_NPC~!~!~");
+
+	//TODO 지금은 테스트용으로 직접 때려넣지만, 로더에서 원형 객체 추가할 때 매개인자 이넘 타입을 넣어서 타입에따라 오브젝트매니저에서 툴에서 불러오기용 컨테이너의 태그값만 추가로 보관한다면 불러오기 편할 것 같긴 하다.
+	//! 예시 m_mapMonsterProtoTag  // map<string, OBJECT_TYPE> 
+
+	return S_OK;
+}
+
+void CWindow_MapTool::EnvironmentMode_Function()
+{
+	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyMask_;
+
+	if (ImGui::BeginTabBar(u8"환경 오브젝트 타입", tab_bar_flags))
+	{
+
+		if (ImGui::BeginTabItem(u8"그라운드"))
+		{
+			m_eTabType = CWindow_MapTool::TAP_TYPE::TAB_GROUND;
+			GroundTab_Function();
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem(u8"상호작용"))
+		{
+			m_eTabType = CWindow_MapTool::TAP_TYPE::TAB_INTERACT;
+			InteractTab_Function();
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem(u8"환경_인스턴스"))
+		{
+			m_eTabType = CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT;
+			InstanceTab_Function();
+
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+
+		ShowDialog();
+	}
+}
+
+void CWindow_MapTool::CharacterMode_Function()
+{
+	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyMask_;
+
+
+	if (ImGui::BeginTabBar(u8"캐릭터 오브젝트 타입", tab_bar_flags))
+	{
+
+		if (ImGui::BeginTabItem(u8"일반 몬스터"))
+		{
+			m_eTabType = CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER;
+			
+			MonsterTab_Function();
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem(u8"NPC"))
+		{
+			m_eTabType = CWindow_MapTool::TAP_TYPE::TAB_NPC;
+			
+			NPC_Tab_Function();
+
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+
+		ShowDialog();
+	}
 }
 
 void CWindow_MapTool::GroundTab_Function()
@@ -647,7 +897,7 @@ void CWindow_MapTool::GroundTab_Function()
 
 		case Client::CWindow_MapTool::MODE_TYPE::MODE_SELECT:
 			{
-				Basic_SelectFunction();
+				Character_SelectFunction();
 				Guizmo_Tick(m_pPickingObject);
 				break;
 			}
@@ -787,7 +1037,7 @@ void CWindow_MapTool::InteractTab_Function()
 	}
 }
 
-void CWindow_MapTool::EnvironmentTab_Function()
+void CWindow_MapTool::InstanceTab_Function()
 {
 	ImGui::SeparatorText(u8"펑션 타입");
 	{
@@ -998,6 +1248,208 @@ void CWindow_MapTool::EnvironmentTab_Function()
 	}
 }
 
+void CWindow_MapTool::MonsterTab_Function()
+{
+	ImGui::SeparatorText(u8"펑션 타입");
+	{
+		static _int iModeIndex = 0;
+		const char* FunctionTypeName[3] = { u8"픽킹 / 생성", u8"픽킹 / 선택", u8"픽킹 / 삭제" };
+
+		for (_uint i = 0; i < IM_ARRAYSIZE(FunctionTypeName); ++i)
+		{
+			if (i > 0) { ImGui::SameLine(); }
+			ImGui::RadioButton(FunctionTypeName[i], &iModeIndex, i);
+		}
+
+		m_eModeType = (MODE_TYPE)iModeIndex;
+
+		ImGui::NewLine();
+
+		static _int iPickingMode = 0;
+		const char* PickingModeName[2] = { u8"마우스 다운", u8"마우스 업" };
+
+		for (_uint i = 0; i < IM_ARRAYSIZE(PickingModeName); ++i)
+		{
+			if (i > 0) { ImGui::SameLine(); }
+			ImGui::RadioButton(PickingModeName[i], &iPickingMode, i);
+		}
+
+		_int iAddNum = iPickingMode + 1;
+		m_ePickingMode = (PICKING_MODE)iAddNum;
+
+	}ImGui::Separator(); ImGui::NewLine();
+
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+	switch (m_eModeType)
+	{
+	case Client::CWindow_MapTool::MODE_TYPE::MODE_CREATE:
+	{
+		ImGui::SeparatorText(u8"픽킹 타입");
+		{
+			static _int iPickingType = 0;
+			const char* PickingTypeName[3] = { u8"필드 픽킹", u8"메쉬 픽킹", u8"픽킹 정지" };
+
+			for (_uint i = 0; i < IM_ARRAYSIZE(PickingTypeName); ++i)
+			{
+				if (i > 0) { ImGui::SameLine(); }
+				ImGui::RadioButton(PickingTypeName[i], &iPickingType, i);
+			}
+
+			m_ePickingType = (PICKING_TYPE)iPickingType;
+
+		}ImGui::Separator(); ImGui::NewLine();
+
+		ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
+
+		_uint iMonsterTagSize = (_uint)m_vecMonsterTag.size();
+
+		if (ImGui::BeginListBox(u8"몬스터 태그 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+			for (_uint i = 0; i < iMonsterTagSize; ++i)
+			{
+				const _bool isSelected = (m_iSelectCharacterTag == i);
+
+				if (ImGui::Selectable(m_vecMonsterTag[i].c_str(), isSelected))
+				{
+					m_iSelectCharacterTag = i;
+					m_bChange = true;
+
+
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+			}
+			ImGui::EndListBox();
+		}
+
+		ImGui::EndChild();
+
+		ImGui::SameLine();
+
+		ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
+
+		ImGui::Text(u8"테스트2");
+
+		ImGui::EndChild();
+
+		Preview_Function();
+
+		switch (m_ePickingMode)
+		{
+		case Client::CWindow_MapTool::PICKING_MODE::MOUSE_PRESSING:
+		{
+			if (true == m_pGameInstance->Mouse_Pressing(DIM_LB))
+				Picking_Function();
+			break;
+		}
+		case Client::CWindow_MapTool::PICKING_MODE::MOUSE_DOWN:
+		{
+			if (true == m_pGameInstance->Mouse_Down(DIM_LB))
+				Picking_Function();
+			break;
+		}
+		case Client::CWindow_MapTool::PICKING_MODE::MOUSE_UP:
+		{
+			if (true == m_pGameInstance->Mouse_Up(DIM_LB))
+				Picking_Function();
+			break;
+		}
+		}
+
+		break;
+	}
+
+	case Client::CWindow_MapTool::MODE_TYPE::MODE_SELECT:
+	{
+		Character_SelectFunction();
+		Guizmo_Tick(m_pPickingObject);
+		break;
+	}
+
+	case Client::CWindow_MapTool::MODE_TYPE::MODE_DELETE:
+	{
+
+		break;
+	}
+	}
+}
+
+
+void CWindow_MapTool::NPC_Tab_Function()
+{
+}
+
+void CWindow_MapTool::CameraWindow_Function()
+{
+	ImGui::Begin(u8"카메라 탭");
+	
+	if (false == m_bCreateCamera)
+	{
+		ImGui::Text(u8" 플레이어가 생성되지 않았습니다. ");
+		ImGui::Text(u8" 애니메이션툴에서 플레이어를 생성해주세요. ");
+	}
+	else
+	{
+		ImGui::SeparatorText(u8"카메라 타입");
+		{
+
+			static _int iCameraType = 0;
+			const char* CameraType[2] = { u8"프리 카메라", u8"스프링 카메라" };
+
+			for (_uint i = 0; i < IM_ARRAYSIZE(CameraType); ++i)
+			{
+				if (i > 0) { ImGui::SameLine(); }
+				
+				if (ImGui::RadioButton(CameraType[i], &iCameraType, i))
+				{
+					_int iCameraCount = m_vecCameras.size();
+
+					for (_int i = 0; i < iCameraCount; ++i)
+					{
+						if (i == iCameraType)
+							m_vecCameras[i]->Set_Enable(true);
+						else
+							m_vecCameras[i]->Set_Enable(false);
+						
+					}
+					
+				}
+			}
+			
+			ImGui::Text(u8"키보드 PAGE UP 키누를시 모드 전환입니다.");
+			
+			if (m_pGameInstance->Key_Down(DIK_PGUP))
+			{
+				
+					if(IM_ARRAYSIZE(CameraType) > iCameraType + 1)
+						iCameraType = iCameraType + 1;
+					else
+						iCameraType = 0;
+
+					_int iCameraCount = m_vecCameras.size();
+
+					for (_int i = 0; i < iCameraCount; ++i)
+					{
+						if (i == iCameraType)
+							m_vecCameras[i]->Set_Enable(true);
+						else
+							m_vecCameras[i]->Set_Enable(false);
+
+					}
+			}
+
+		}ImGui::NewLine();
+	}
+	
+
+
+
+	ImGui::End();
+}
+
 
 
 void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
@@ -1105,6 +1557,40 @@ void CWindow_MapTool::FieldWindowMenu()
 
 }
 
+void CWindow_MapTool::IsCreatePlayer_ReadyCamara()
+{
+	if (nullptr != m_pGameInstance->Get_Player())
+	{
+		CCamera* pFreeCamera = dynamic_cast<CCamera*>(m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, L"Layer_Camera"));
+
+		m_vecCameras.push_back(pFreeCamera);
+
+		CSpringCamera::SPRING_CAMERA_DESC SpringDesc = {};
+
+		SpringDesc.fMouseSensor = 0.05f;
+		SpringDesc.fFovy = XMConvertToRadians(60.f);
+		SpringDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+		SpringDesc.fNear = 0.1f;
+		SpringDesc.fFar = m_pGameInstance->Get_CamFar();
+		SpringDesc.fSpeedPerSec = 20.f;
+		SpringDesc.fRotationPerSec = XMConvertToRadians(180.f);
+		SpringDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
+		SpringDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+
+		CCamera* pSpringCamera = dynamic_cast<CCamera*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Camera", L"Prototype_GameObject_Camera_Spring", &SpringDesc));
+		pSpringCamera->Set_Enable(false);
+
+		m_vecCameras.push_back(pSpringCamera);
+
+		
+
+
+		m_bCreateCamera = true;
+	}
+
+	return;
+}
+
 
 void CWindow_MapTool::Preview_Function()
 {
@@ -1113,8 +1599,11 @@ void CWindow_MapTool::Preview_Function()
 	if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_NONE || m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_END)
 		return;
 
-	if (m_bDeadComplete == true && nullptr != m_pPreviewObject)
+
+
+	if (m_bDeadComplete == true && nullptr != m_pPreviewObject || nullptr != m_pPreviewCharacter)
 	{
+
 		_vector vPos = {};
 
 		if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
@@ -1122,72 +1611,133 @@ void CWindow_MapTool::Preview_Function()
 		else if(m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
 			vPos = { m_fMeshPos.x, m_fMeshPos.y, m_fMeshPos.z, 1.f };
 
+		if(m_pPreviewCharacter == nullptr)
+			m_pPreviewObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
+		else
+			m_pPreviewCharacter->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
 
-		
-		m_pPreviewObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 }
 
 void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 {	
-	if (m_bChange == true && m_pPreviewObject != nullptr)
+	if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER)
 	{
-		m_pPreviewObject->Set_Dead(true);
-		//! Dead 처리되는 걸 잠시 기다려주자.
-		
-		m_bChange = false;
-		m_pPreviewObject = nullptr;
-	}
-	
-	if (nullptr == m_pPreviewObject)
-	{
-		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-
-		switch (eTabType)
+		if (m_bChange == true && m_pPreviewCharacter != nullptr)
 		{
-		case Client::CWindow_MapTool::TAP_TYPE::TAB_GROUND:
-			m_pGameInstance->String_To_WString(m_vecGroundModelTag[m_iSelectModelTag], Desc.strModelTag);
-			break;
-		case Client::CWindow_MapTool::TAP_TYPE::TAB_INTERACT:
-			m_pGameInstance->String_To_WString(m_vecInteractModelTag[m_iSelectModelTag], Desc.strModelTag);
-			break;
-		case Client::CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT:
-			m_pGameInstance->String_To_WString(m_vecEnviroModelTag[m_iSelectModelTag], Desc.strModelTag);
-			break;
+			m_pPreviewCharacter->Set_Enable(false);
+
+			m_bChange = false;
+			m_pPreviewCharacter = nullptr;
 		}
 
-		m_pPreviewObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Test", L"Prototype_GameObject_Environment_Object", &Desc));
+		if (nullptr == m_pPreviewCharacter)
+		{
 
-		m_pPreviewObject->Get_Transform()->Set_Position(m_fRayPos);
+			wstring strPrototypeTag;
+			//m_vecMonsterTag[m_iSelectCharacterTag];
+			switch (m_eTabType)
+			{
+				case Client::CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER:
+					m_pGameInstance->String_To_WString(m_vecMonsterTag[m_iSelectCharacterTag], strPrototypeTag);
+					break;
+				case Client::CWindow_MapTool::TAP_TYPE::TAB_BOSSMONSTER:
+					m_pGameInstance->String_To_WString(m_vecBossTag[m_iSelectCharacterTag], strPrototypeTag);
+					break;
+				case Client::CWindow_MapTool::TAP_TYPE::TAB_NPC:
+					m_pGameInstance->String_To_WString(m_vecNpcTag[m_iSelectCharacterTag], strPrototypeTag);
+					break;
+				default:
+					break;
+			}
+
+			if (strPrototypeTag != L"")
+			{
+				m_pPreviewCharacter = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strPrototypeTag, nullptr);
+
+				m_pPreviewCharacter->Get_Transform()->Set_Position(m_fRayPos);
+			}
+			
+		}
 	}
+	else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
+	{
+		if (m_bChange == true && m_pPreviewObject != nullptr)
+		{
+			m_pPreviewObject->Set_Dead(true);
+			//! Dead 처리되는 걸 잠시 기다려주자.
+
+			m_bChange = false;
+			m_pPreviewObject = nullptr;
+		}
+
+		if (nullptr == m_pPreviewObject)
+		{
+			CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+
+			switch (eTabType)
+			{
+			case Client::CWindow_MapTool::TAP_TYPE::TAB_GROUND:
+				m_pGameInstance->String_To_WString(m_vecGroundModelTag[m_iSelectModelTag], Desc.strModelTag);
+				break;
+			case Client::CWindow_MapTool::TAP_TYPE::TAB_INTERACT:
+				m_pGameInstance->String_To_WString(m_vecInteractModelTag[m_iSelectModelTag], Desc.strModelTag);
+				break;
+			case Client::CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT:
+				m_pGameInstance->String_To_WString(m_vecEnviroModelTag[m_iSelectModelTag], Desc.strModelTag);
+				break;
+			}
+
+			m_pPreviewObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Test", L"Prototype_GameObject_Environment_Object", &Desc));
+
+			m_pPreviewObject->Get_Transform()->Set_Position(m_fRayPos);
+		}
+	}
+	
+	
+	
+	
 }
 
 void CWindow_MapTool::Picking_Function()
 {
 
-	if (nullptr != m_pPreviewObject && true == ImGui_MouseInCheck())
-	{
-		
-		switch (m_eTabType)
-		{
-			case Client::CWindow_MapTool::TAP_TYPE::TAB_GROUND:
-			{
-				Ground_CreateFunction();
-				break;
-			}
-			case Client::CWindow_MapTool::TAP_TYPE::TAB_INTERACT:
-			{
-				Interact_CreateFunction();
-				break;
-			}
-			case Client::CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT:
-			{
-				Preview_Environment_CreateFunction();
-				break;
-			}
-		}
 
+	if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
+	{
+		if (nullptr != m_pPreviewObject && true == ImGui_MouseInCheck())
+		{
+
+			switch (m_eTabType)
+			{
+				case Client::CWindow_MapTool::TAP_TYPE::TAB_GROUND:
+				{
+					Ground_CreateFunction();
+					break;
+				}
+				case Client::CWindow_MapTool::TAP_TYPE::TAB_INTERACT:
+				{
+					Interact_CreateFunction();
+					break;
+				}
+				case Client::CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT:
+				{
+					Preview_Environment_CreateFunction();
+					break;
+				}
+			}
+
+		}
 	}
+	else //! OBJECTMODE_CHARACTER
+	{
+		if (nullptr != m_pPreviewCharacter && true == ImGui_MouseInCheck())
+		{
+				Character_CreateFunction();
+		}
+	}
+
+	
 
 }
 
@@ -1363,6 +1913,126 @@ void CWindow_MapTool::Create_Instance()
 	
 }
 
+void CWindow_MapTool::Character_CreateFunction()
+{
+	if (m_ePickingType == PICKING_TYPE::PICKING_NONE)
+		return;
+
+	//TODO 추후 보스, NPC 분기 시켜서 추가 현재는 몬스터로만 테스트
+
+	if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
+	{
+		if (nullptr != m_pField && true == m_pField->MouseOnTerrain())
+		{
+			
+			switch (m_eTabType)
+			{
+				case Client::CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER:
+				{
+					Monster_CreateFunction();
+					break;
+				}
+				case Client::CWindow_MapTool::TAP_TYPE::TAB_BOSSMONSTER:
+				{
+					Boss_CreateFunction();
+					break;
+				}
+				case Client::CWindow_MapTool::TAP_TYPE::TAB_NPC:
+				{
+					NPC_CreateFunction();
+					break;
+				}
+				default:
+					break;
+			}
+
+		
+			
+		}
+	}
+
+	else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
+	{
+		if (m_vecCreateObject.empty())
+			return;
+
+		_int iCreateObjectSize = (_int)m_vecCreateObject.size();
+
+		switch (m_eTabType)
+		{
+		case Client::CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER:
+		{
+			Monster_CreateFunction();
+			break;
+		}
+		case Client::CWindow_MapTool::TAP_TYPE::TAB_BOSSMONSTER:
+		{
+			Boss_CreateFunction();
+			break;
+		}
+		case Client::CWindow_MapTool::TAP_TYPE::TAB_NPC:
+		{
+			NPC_CreateFunction();
+			break;
+		}
+		default:
+			break;
+		}
+
+	}
+}
+
+void CWindow_MapTool::Monster_CreateFunction()
+{
+	CMonster::MONSTER_DESC Desc;
+	Desc.bPreview = false;
+	Desc.WorldMatrix = m_pPreviewCharacter->Get_Transform()->Get_WorldMatrix();
+	
+
+	wstring strProtoTag;
+	m_pGameInstance->String_To_WString(m_vecMonsterTag[m_iSelectCharacterTag], strProtoTag);
+
+	Desc.strProtoTypeTag = strProtoTag;
+
+	CMonster* pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTag, &Desc));
+
+	m_vecCreateMonster.push_back(pMonster);
+
+
+	string strCreateMonsterTag = m_vecMonsterTag[m_iSelectCharacterTag] + "@" + to_string(m_iCreateMonsterIndex);
+
+	m_vecCreateMonsterTag.push_back(strCreateMonsterTag);
+
+	m_iCreateMonsterIndex++;
+}
+
+void CWindow_MapTool::Boss_CreateFunction()
+{
+}
+
+void CWindow_MapTool::NPC_CreateFunction()
+{
+	//TODO 추후 npc 추가시
+
+	//!CNPC::NPC_DESC Desc;
+	//!Desc.bPreview = true;
+	//!Desc.WorldMatrix = m_pPreviewCharacter->Get_Transform()->Get_WorldMatrix();
+	//!
+	//!wstring strProtoTag;
+	//!m_pGameInstance->String_To_WString(m_vecNpcTag[m_iSelectCharacterTag], strProtoTag);
+	//!
+	//!CNPC* pNPC = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", strProtoTag, &Desc));
+	//!
+	//!m_vecCreateNPC.push_back(pNPC);
+	//!
+	//!
+	//!string strCreateNPCTag = m_vecNpcTag[m_iSelectCharacterTag] + "@" + to_string(m_iCreateNPCIndex);
+	//!
+	//!m_vecCreateNPCTag.push_back(strCreateNPCTag);
+	//!
+	//!m_iCreateNPCIndex++;
+}
+
 void CWindow_MapTool::Basic_SelectFunction()
 {
 	_uint iObjectTagSize = (_uint)m_vecCreateObject.size();
@@ -1503,6 +2173,107 @@ void CWindow_MapTool::Instance_GuizmoTick(_int iIndex, INSTANCE_INFO_DESC* pInst
 		m_vecCreateInstance[iIndex]->Update(*pInstance, m_iSelectInstanceIndex);
 }
 
+void CWindow_MapTool::Character_SelectFunction()
+{
+	switch (m_eTabType)
+	{
+		case Client::CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER:
+		{
+			Monster_SelectFunction();
+			break;
+		}
+		case Client::CWindow_MapTool::TAP_TYPE::TAB_BOSSMONSTER:
+		{
+			Boss_SelectFunction();
+			break;
+		}
+		case Client::CWindow_MapTool::TAP_TYPE::TAB_NPC:
+		{
+			NPC_SelectFunction();
+			break;
+		}
+
+		default:
+			break;
+	}
+	
+}
+
+void CWindow_MapTool::Monster_SelectFunction()
+{
+	_uint iCreateMonsterTagSize = (_uint)m_vecCreateMonsterTag.size();
+
+	if (true == m_vecCreateMonster.empty())
+	{
+		ImGui::Text(u8"생성한 몬스터가 없습니다. ");
+	}
+	else
+	{
+		if (ImGui::BeginListBox(u8"몬스터 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+			for (_uint i = 0; i < iCreateMonsterTagSize; ++i)
+			{
+				const _bool isSelected = (m_iSelectCharacterTag == i);
+
+				if (ImGui::Selectable(m_vecCreateMonsterTag[i].c_str(), isSelected))
+				{
+					m_iSelectCharacterTag = i;
+
+					m_pPickingObject = m_vecCreateMonster[m_iSelectCharacterTag];
+					
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+			}
+			ImGui::EndListBox();
+		}
+	}
+}
+
+void CWindow_MapTool::Boss_SelectFunction()
+{
+}
+
+void CWindow_MapTool::NPC_SelectFunction()
+{
+	//TODO 추후 NPC 추가 되면 작성
+
+		//vector<CNPC*>					m_vecCreateNPC = { nullptr };
+		//vector<string>						m_vecCreateNPCTag = {};
+
+	//!_uint iCreateNpcTagSize = (_uint)m_vecCreateNPC.size();
+	//!
+	//!if (true == m_vecCreateNPC.empty())
+	//!{
+	//!	ImGui::Text(u8"생성한 NPC가 없습니다. ");
+	//!}
+	//!else
+	//!{
+	//!	if (ImGui::BeginListBox(u8"NPC 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	//!	{
+	//!		for (_uint i = 0; i < iCreateNpcTagSize; ++i)
+	//!		{
+	//!			const _bool isSelected = (m_iSelectCharacterTag == i);
+	//!
+	//!			if (ImGui::Selectable(m_vecCreateNPCTag[i].c_str(), isSelected))
+	//!			{
+	//!				m_iSelectCharacterTag = i;
+	//!
+	//!				m_pPickingObject = m_vecCreateNPC[m_iSelectCharacterTag];
+	//!
+	//!				if (isSelected)
+	//!				{
+	//!					ImGui::SetItemDefaultFocus();
+	//!				}
+	//!			}
+	//!		}
+	//!		ImGui::EndListBox();
+	//!	}
+	//!}
+}
+
 
 
 
@@ -1527,4 +2298,9 @@ void CWindow_MapTool::Free()
 
 	if(m_pField != nullptr)
 		Safe_Release(m_pField);
+
+	if(m_pPlayer != nullptr)
+		Safe_Release(m_pPlayer);
+
+
 }

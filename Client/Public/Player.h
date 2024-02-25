@@ -34,6 +34,7 @@ public:
 	virtual _bool Activate_Condition() override;
 	virtual _bool End_Condition() override;
 
+	
 
 private:
 	HRESULT Ready_Components();

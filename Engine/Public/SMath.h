@@ -2,6 +2,10 @@
 
 #include "Engine_Defines.h"
 
+#include "MyAIMesh.h"
+#include "MyAIScene.h"
+
+
 #define M_PI		3.14159265358979323846
 #define M_PI_FLOAT	3.141592f
 
@@ -65,13 +69,13 @@ namespace Engine
 
 		void			ENGINE_DLL Set_ClockwiseTriangle(XMFLOAT3* InOut_TrianglePosition);
 
-		//void			ENGINE_DLL Convert_PxVec3FromMeshData(PxVec3* In_PxVec3, weak_ptr<MESH_DATA> pMeshData);
-		//void			ENGINE_DLL Convert_PxVec3FromMeshDataWithTransformMatrix(PxVec3* In_PxVec3, weak_ptr<MESH_DATA> pMeshData, FXMMATRIX In_TransformMatrix);
-		//PxExtendedVec3	ENGINE_DLL Convert_PxExtendedVec3(FXMVECTOR In_Vector);
-		//PxExtendedVec3	ENGINE_DLL Convert_PxExtendedVec3(PxVec3 In_Vector);
-		//PxVec3			ENGINE_DLL Convert_PxVec3(FXMVECTOR In_Vector);
-		//PxVec3			ENGINE_DLL Convert_PxVec3(const XMFLOAT3& In_Float3);
-		//PxVec3			ENGINE_DLL Convert_PxVec3(PxExtendedVec3 In_Vector);
+		void			ENGINE_DLL Convert_PxVec3FromMeshData(PxVec3* In_PxVec3, CMyAIMesh* pMeshData);
+		void			ENGINE_DLL Convert_PxVec3FromMeshDataWithTransformMatrix(PxVec3* In_PxVec3, CMyAIMesh* pMeshData, FXMMATRIX In_TransformMatrix);
+		PxExtendedVec3	ENGINE_DLL Convert_PxExtendedVec3(FXMVECTOR In_Vector);
+		PxExtendedVec3	ENGINE_DLL Convert_PxExtendedVec3(PxVec3 In_Vector);
+		PxVec3			ENGINE_DLL Convert_PxVec3(FXMVECTOR In_Vector);
+		PxVec3			ENGINE_DLL Convert_PxVec3(const XMFLOAT3& In_Float3);
+		PxVec3			ENGINE_DLL Convert_PxVec3(PxExtendedVec3 In_Vector);
 		//XMVECTOR		ENGINE_DLL Convert_Vector(const PxVec3& In_PxVec3);
 		//XMVECTOR		ENGINE_DLL Convert_Vector(const PxVec4& In_PxVec4);
 		//XMVECTOR		ENGINE_DLL Convert_PxExtendedVec3ToVector(const PxExtendedVec3& In_PxVec3);

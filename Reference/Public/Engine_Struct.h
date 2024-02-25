@@ -194,11 +194,31 @@ namespace Engine
 		XMFLOAT4			vTranslation;
 	}VTXMODELINSTANCE;
 
+	typedef struct ENGINE_DLL tagVertex_AnimModel_Instance
+	{
+		_float3		vPosition;
+		_float3		vNormal;
+		_float2		vTexture;
+		_float3		vTangent;
+		XMUINT4		vBlendIndex; /* 이 정점에 영향을 주는 뼈의 인덱스 네개. */
+		_float4		vBlendWeight; /* 영향르 주고 있는 각 뼈대의 영향 비율 */
+
+		_uint		iID;
+		_matrix		matWorld;
+
+	}VTXANIMMODELINSTANCE;
+
 	typedef struct ENGINE_DLL tagVertex_Model_Instance_Declaration
 	{
 		static const unsigned int				iNumElements = 8;
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXMODEL_INSTANCE_DECLARATION;
+
+	typedef struct ENGINE_DLL tagVertex_AnimModel_Instance_Declaration
+	{
+		static const unsigned int				iNumElements = 11;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXMODEL_ANIMMODEL_INSTANCE_DECLARATION;
 
 	typedef struct ENGINE_DLL tagVertex_Dynamic_Field
 	{
@@ -222,6 +242,11 @@ namespace Engine
 		constexpr Return ECast(T value)
 	{
 		return static_cast<Return>(value);
+	}
+
+	template<typename EnumType>
+	EnumType ECast(int value) {
+		return static_cast<EnumType>(value);
 	}
 
 #pragma endregion
@@ -261,7 +286,16 @@ namespace Engine
 			_vector vCenterFromVector = XMLoadFloat3(&vCenter);
 			XMStoreFloat3(&vCenter, XMVector3TransformCoord(vCenterFromVector, Get_Matrix()));
 		}
+
 	}INSTANCE_INFO_DESC;
+
+	typedef struct ENGINE_DLL tagAnimInstanceDesc
+	{
+		const _uint			iMaxInstanceCount = 100;
+		_uint				iNumInstance = { 0 };
+		ID3D11Texture2D*	pAnimInstanceTexture = { nullptr };
+		//ID3D11ShaderResourceView* pAnimSRV = nullptr;
+	}ANIM_INSTANCE_INFO_DESC;
 
 	typedef struct ENGINE_DLL tagEnvironment_Desc
 	{
@@ -278,6 +312,34 @@ namespace Engine
 		float	fLength;
 	}RAY;
 
+	typedef struct ENGINE_DLL AnimInstanceDesc
+	{
+		_uint						iMaxInstanceCount = 0;
+		_uint						iSizePerSecond = 0;
+		//class CShader*				pInstanceShader =	{ nullptr };
+
+		ID3D11ShaderResourceView*	pInstanceSRV = {nullptr};
+		ID3D11Texture2D*			pInstanceTexture =	{ nullptr };
+		BYTE*						pByte = { nullptr };
+		_float4x4*					pMatrix = { nullptr };
+
+		 AnimInstanceDesc() {};
+		~AnimInstanceDesc();
+
+	}ANIMMODEL_INSTANCE_DESC;
+
+	struct InstanceDataElement
+	{
+		_float4 world1;            // the world transform for this matrix row 1
+		_float4 world2;            // the world transform for this matrix row 2
+		_float4 world3;            // the world transform for this matrix row 3 (row 4 is implicit)
+
+		// $ Technically this is bundled, but there is not class that makes a uint vector, so just keep flat
+		UINT animationIndex;            // offset in vectors into the whole data stream for the start of the animation playing
+		UINT frameOffset;            // offset in vectors into the animation stream for the start of the frame playing
+		UINT attachmentSet;            // the id to determine which geo attachments get set
+		UINT lerpValue;            // lerp between frames
+	};
 
 #pragma endregion 구조체
 

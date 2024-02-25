@@ -15,7 +15,9 @@ CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 HRESULT CLevel_Tool::Initialize()
 {
 	//Level_Tool 레벨 조정 
-	m_pGameInstance->Set_CurrentLevel(5);
+	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
+
+
 	if (FAILED(Ready_Imgui()))
 	{
 		Safe_Release(m_pDevice);
@@ -69,7 +71,12 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 	tDesc.fSpeedPerSec = 15.f;
 	tDesc.fRotationPerSec = XMConvertToRadians(180.0f);
 
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &tDesc));
+	CCamera* pDynamicCam = dynamic_cast<CCamera*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &tDesc));
+	
+	if(pDynamicCam == nullptr)
+		return E_FAIL;
+
+	pDynamicCam->Set_Enable(true);
 
 	return S_OK;
 }

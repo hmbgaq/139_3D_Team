@@ -27,6 +27,12 @@ public:
 	ID3D11Buffer*				Get_VertexBuffer() { return m_pVB; }
 	ID3D11Buffer*				Get_IndexBuffer() { return m_pIB; }
 	
+	vector<_float4x4>&			Get_OffsetMatrices() { return m_OffsetMatrices; }
+	vector<_uint>&				Get_BoneIndices() { return m_BoneIndices; }
+	_int						Get_NumBones() { return m_iNumBones;}
+
+
+
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
 
 public:
@@ -36,8 +42,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	HRESULT			Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, const vector<CBone*>& Bones);
+	HRESULT			Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, const vector<CBone*>& Bones, _float4x4* BoneMatrix);
 	
+
 #ifdef _DEBUG
 	_bool			Picking(RAY ray, _float3* out);
 #endif // _DEBUG

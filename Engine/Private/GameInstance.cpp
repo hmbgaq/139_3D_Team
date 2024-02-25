@@ -11,6 +11,8 @@
 #include "Input_Device.h"
 #include "Font_Manager.h"
 #include "PhysX_Manager.h"
+#include "RandomManager.h"
+
 #include "Renderer.h"
 #include "Frustum.h"
 #include "Mesh.h"
@@ -18,14 +20,13 @@
 #include "PhysXCollider.h"
 #include "PhysXController.h"
 
-
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
 {
 }
 
-HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
+HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumCollsionLayer, _uint iNumPhysXCollsionLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
 {
 	/* 그래픽 디바이스를 초기화 하자.*/
 	m_pGraphic_Device = CGraphic_Device::Create(GraphicDesc, ppDevice, ppContext);
@@ -77,7 +78,7 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 	if (nullptr == m_pFrustum)
 		return E_FAIL;
 
-	m_pCollision_Manager = CCollision_Manager::Create(iNumLayer);
+	m_pCollision_Manager = CCollision_Manager::Create(iNumCollsionLayer);
 	if (nullptr == m_pCollision_Manager)
 		return E_FAIL;
 
@@ -86,9 +87,14 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 		return E_FAIL;
 
 	//TODO: 레벨 확인헤야
-	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, iNumLayer);
+	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, iNumPhysXCollsionLayer);
 	if (nullptr == m_pPhysX_Manager)
 		return E_FAIL;
+
+	m_pRandom_Manager = CRandom_Manager::Create();
+	if(nullptr == m_pRandom_Manager)
+		return E_FAIL;
+
 
 
 	return S_OK;
@@ -116,6 +122,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pEvent_Manager->Tick(fTimeDelta);
 
 	m_pCollision_Manager->Tick(fTimeDelta);
+
+	m_pPhysX_Manager->Tick(fTimeDelta);
 
 	m_pObject_Manager->Late_Tick(fTimeDelta);
 
@@ -213,6 +221,14 @@ ID3D11ShaderResourceView* CGameInstance::Get_DepthSRV()
 	return m_pGraphic_Device->Get_DepthSRV();
 }
 
+GFSDK_SSAO_Context_D3D11* CGameInstance::Get_AOContext()
+{
+	if (nullptr == m_pGraphic_Device)
+		return nullptr;
+
+	return m_pGraphic_Device->Get_AOContext();
+}
+
 _byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
 {
 	if (nullptr == m_pInput_Device)
@@ -293,6 +309,12 @@ HRESULT CGameInstance::Open_Level(_uint iCurrentLevelIndex, CLevel * pNewLevel)
 _uint CGameInstance::Get_NextLevel()
 {
 	return m_pLevel_Manager->Get_NextLevel();
+}
+
+// 현재 레벨 받아오기 추가
+_uint CGameInstance::Get_CurrentLevel()
+{
+	return m_pLevel_Manager->Get_CurrentLevel();
 }
 
 void CGameInstance::Set_CurrentLevel(_uint CurrentLevel)
@@ -669,6 +691,16 @@ HRESULT CGameInstance::Bind_RenderTarget_ShaderResource(const wstring & strTarge
 	return m_pTarget_Manager->Bind_ShaderResource(strTargetTag, pShader, pConstantName);
 }
 
+CRenderTarget* CGameInstance::Find_RenderTarget(const wstring& strTargetTag)
+{
+	return m_pTarget_Manager->Find_RenderTarget(strTargetTag);
+}
+
+void CGameInstance::Create_RenderTarget(const wstring& strTargetTag)
+{
+	m_pTarget_Manager->Create_RenderTarget(strTargetTag);
+}
+
 #ifdef _DEBUG
 HRESULT CGameInstance::Ready_RenderTarget_Debug(const wstring & strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {
@@ -716,6 +748,11 @@ _bool CGameInstance::isIn_LocalPlanes(_fvector vPoint, _float fRadius)
 void CGameInstance::Add_Collision(const _uint& In_iLayer, CCollider* _pCollider)
 {
 	m_pCollision_Manager->Add_Collision(In_iLayer, _pCollider);
+}
+
+void CGameInstance::Check_Group(const _uint& In_iLeftLayer, const _uint& In_iRightLayer)
+{
+	m_pCollision_Manager->Check_Group(In_iLeftLayer, In_iRightLayer);
 }
 
 void CGameInstance::Add_Event(IEvent* pEvent)
@@ -773,6 +810,21 @@ PxRigidStatic* CGameInstance::Create_StaticActor(const PxTransform& transform)
 	return m_pPhysX_Manager->Create_StaticActor(transform);
 }
 
+void CGameInstance::Add_DynamicActorAtCurrentScene(PxRigidDynamic& DynamicActor)
+{
+	m_pPhysX_Manager->Add_DynamicActorAtCurrentScene(DynamicActor);
+}
+
+void CGameInstance::Add_StaticActorAtCurrentScene(PxRigidStatic& StaticActor)
+{
+	m_pPhysX_Manager->Add_StaticActorAtCurrentScene(StaticActor);
+}
+
+void CGameInstance::Create_Material(_float fStaticFriction, _float fDynamicFriction, _float fRestitution, PxMaterial** ppOut)
+{
+	m_pPhysX_Manager->Create_Material(fStaticFriction, fDynamicFriction, fRestitution, ppOut);
+}
+
 void CGameInstance::Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut)
 {
 	m_pPhysX_Manager->Create_ConvexMesh(pVertices, iNumVertice, ppOut);
@@ -796,6 +848,27 @@ void CGameInstance::Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshDe
 void CGameInstance::Create_Controller(const PxCapsuleControllerDesc& In_ControllerDesc, PxController** ppOut)
 {
 	m_pPhysX_Manager->Create_Controller(In_ControllerDesc, ppOut);
+}
+
+const _float& CGameInstance::Random_Float(_float fMin, _float fMax)
+{
+	return m_pRandom_Manager->Random_Float(fMin, fMax);
+	
+}
+
+const _int& CGameInstance::Random_Int(_int iMin, _int iMax)
+{
+	return m_pRandom_Manager->Random_Int(iMin, iMax);
+}
+
+const _bool& CGameInstance::Random_Coin(_float fProbality)
+{
+	return m_pRandom_Manager->Random_Coin(fProbality);
+}
+
+int64_t CGameInstance::GenerateUniqueID()
+{
+	return m_pRandom_Manager->GenerateUniqueID();
 }
 
 
@@ -838,18 +911,34 @@ void CGameInstance::WString_To_String(wstring _wstring, string& _string)
 
 string CGameInstance::Convert_WString_To_String(wstring _wstring)
 {
-	string out_string;
-
-	return out_string.assign(_wstring.begin(), _wstring.end());
+	int len;
+	int slength = (int)_wstring.length() + 1;
+	len = WideCharToMultiByte(CP_ACP, 0, _wstring.c_str(), slength, 0, 0, 0, 0);
+	std::string r(len, '\0');
+	WideCharToMultiByte(CP_ACP, 0, _wstring.c_str(), slength, &r[0], len, 0, 0);
+	return r;
+	//string out_string;
+	//
+	//return out_string.assign(_wstring.begin(), _wstring.end());
 }
 
 WCHAR* CGameInstance::StringTowchar(const std::string& str)
 {
-	// std::wstring으로 변환
-	std::wstring wstr(str.begin(), str.end());
-	// c_str() 함수를 사용하여 WCHAR* 포인터로 변환
+	int len;
+	int slength = (int)str.length() + 1;
+	len = MultiByteToWideChar(CP_ACP, 0, str.c_str(), slength, 0, 0);
+	wchar_t* buf = new wchar_t[len];
+	MultiByteToWideChar(CP_ACP, 0, str.c_str(), slength, buf, len);
+	std::wstring r(buf);
+	delete[] buf;
 
-	return const_cast<WCHAR*>(wstr.c_str());
+	return const_cast<WCHAR*>(r.c_str());
+
+	// std::wstring으로 변환
+	//std::wstring wstr(str.begin(), str.end());
+	//// c_str() 함수를 사용하여 WCHAR* 포인터로 변환
+	//
+	//return const_cast<WCHAR*>(wstr.c_str());
 }
 
 char* CGameInstance::ConverWStringtoC(const wstring& wstr)
@@ -884,10 +973,16 @@ wchar_t* CGameInstance::ConverCtoWC(char* str)
 
 std::string CGameInstance::WideStringToString(const wchar_t* wideStr)
 {
-	// std::wstring으로부터 std::string으로 변환
-	std::wstring wstr(wideStr);
-	// std::string으로 변환
-	return std::string(wstr.begin(), wstr.end());
+	char ch[260];
+	char DefChar = ' ';
+	WideCharToMultiByte(CP_ACP, 0, wideStr, -1, ch, 260, &DefChar, NULL);
+
+	string ss(ch);
+	return ss;
+	//// std::wstring으로부터 std::string으로 변환
+	//std::wstring wstr(wideStr);
+	//// std::string으로 변환
+	//return std::string(wstr.begin(), wstr.end());
 }
 
 std::string CGameInstance::GetFileName(const std::string& filePath)
@@ -996,6 +1091,7 @@ wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 
 
 void CGameInstance::Release_Manager()
 {
+	Safe_Release(m_pRandom_Manager);
 	Safe_Release(m_pPhysX_Manager);
 	Safe_Release(m_pEvent_Manager);
 	Safe_Release(m_pCollision_Manager);
