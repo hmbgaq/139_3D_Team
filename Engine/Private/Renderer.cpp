@@ -57,7 +57,7 @@ HRESULT CRenderer::Create_Buffer()
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	NULL_CHECK_RETURN(m_pVIBuffer, E_FAIL);
 
-	m_pPerlinNoiseTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/T_Perlin_Noise_M.png"));
+	m_pPerlinNoiseTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/T_Perlin_Noise_M.dds"));
 	NULL_CHECK_RETURN(m_pPerlinNoiseTextureCom, E_FAIL);
 
 	return S_OK;
@@ -316,17 +316,17 @@ HRESULT CRenderer::Control_HotKey()
 		cout << " DIK_8 : Bloom Color Increase " << endl;
 		cout << " DIK_9 : Dont use !! Renderpass BloomBlur Test " << endl;
 
-		if (true == m_bSSAO_Active)
+		if (true == m_tHBAO_Option.bHBAO_Active)
 			cout << "HBAO+ : true " << endl;
 		else
 			cout << "HBAO+ : false " << endl;
 
-		if (true == m_bHDR_Active)
+		if (true == m_tHDR_Option.bHDR_Active)
 			cout << "HDR : true " << endl;
 		else
 			cout << "HDR : false " << endl;
 
-		if (true == m_bFXAA_Active)
+		if (true == m_tScreen_Option.bFXAA_Active)
 			cout << "FXAA : true " << endl;
 		else
 			cout << "FXAA : false " << endl;
@@ -341,15 +341,15 @@ HRESULT CRenderer::Control_HotKey()
 	if (m_pGameInstance->Key_Down(DIK_1))
 		m_bOutline_Active = !m_bOutline_Active;
 	if (m_pGameInstance->Key_Down(DIK_2))
-		m_bSSAO_Active = !m_bSSAO_Active;
+		m_tHBAO_Option.bHBAO_Active = !m_tHBAO_Option.bHBAO_Active;
 	if (m_pGameInstance->Key_Down(DIK_3))
 		m_bBloom_Active = !m_bBloom_Active;
 	if (m_pGameInstance->Key_Down(DIK_4))
-		m_bHDR_Active = !m_bHDR_Active;
+		m_tHDR_Option.bHDR_Active = !m_tHDR_Option.bHDR_Active;
 	if (m_pGameInstance->Key_Down(DIK_5))
-		m_bFXAA_Active = !m_bFXAA_Active;
+		m_tScreen_Option.bFXAA_Active = !m_tScreen_Option.bFXAA_Active;
 	if (m_pGameInstance->Key_Down(DIK_7))
-		m_bFog_Active = !m_bFog_Active;
+		m_tFog_Option.bFog_Active = !m_tFog_Option.bFog_Active;
 
 	return S_OK;
 }
@@ -371,7 +371,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 		FAILED_CHECK(Render_Bloom());
 
 		/* Pre-PostProcessing */
-		if (true == m_bSSAO_Active)
+		if (true == m_tHBAO_Option.bHBAO_Active)
 		{
 			FAILED_CHECK(Render_HBAO_PLUS());
 		}
@@ -790,9 +790,9 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_LightProjMatrix", &ProjMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_CamFar", &CamFar, sizeof(_float))); 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_vCamPosition", &CamPos, sizeof(_float4)));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bFog_Active", &m_bFog_Active, sizeof(_bool)));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bFog_Active", &m_tFog_Option.bFog_Active, sizeof(_bool)));
 
-	if(true == m_bFog_Active)
+	if(true == m_tFog_Option.bFog_Active)
 	{
 		/* test fog */
 		FAILED_CHECK(m_pPerlinNoiseTextureCom->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_PerlinNoiseTexture"));
@@ -815,8 +815,8 @@ HRESULT CRenderer::Render_Deferred()
 
 	/* Post Processing */
 	{
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bSSAO_Active", &m_bSSAO_Active, sizeof(_bool)));
-		if (true == m_bSSAO_Active)
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bSSAO_Active", &m_tHBAO_Option.bHBAO_Active, sizeof(_bool)));
+		if (true == m_tHBAO_Option.bHBAO_Active)
 		{
 			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SSAOTexture")); /* ssao 추가 */
 		}
@@ -1008,7 +1008,6 @@ HRESULT CRenderer::Render_FXAA()
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FXAA]->Bind_RawValue("g_bFxaa", &m_tScreen_Option.bFXAA_Active, sizeof(_bool)));
 
 		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
-		//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HDR"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
 		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HDR"), m_pShader[SHADER_TYPE::SHADER_FXAA], "g_FinalTarget"));
 	}
 
@@ -1025,28 +1024,27 @@ HRESULT CRenderer::Render_HDR()
 {
 	if (m_pGameInstance->Key_Down(DIK_O))
 	{
-		m_max_white -= 0.1f;
+		m_tHDR_Option.fmax_white -= 0.1f;
 	}
 	else if (m_pGameInstance->Key_Down(DIK_P))
-		m_max_white += 0.1f;
+		m_tHDR_Option.fmax_white += 0.1f;
 
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_HDR"))); /* Target_FXAA*/
 
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
-
 	/* 변수 올리기 */
 	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+	
 		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_bHDR_Active", &m_tHDR_Option.bHDR_Active, sizeof(_bool)));
-		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_ProcessingTarget"));
-
 		/* 값 컨트롤용도 */
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_max_white", &m_tHDR_Option.fmax_white, sizeof(_float)));
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_ProcessingTarget"));
 	}
 
-	if (false == m_bHDR_Active)
+	if (false == m_tHDR_Option.bHDR_Active)
 	{
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(POST_SHADER::POST_ORIGIN)));
 	}
@@ -1065,13 +1063,13 @@ HRESULT CRenderer::Render_HDR()
 HRESULT CRenderer::Render_Final()
 {
 	if (m_pGameInstance->Key_Down(DIK_T))
-		Final_Brightness += 0.1f;
+		m_tScreen_Option.fFinal_Brightness += 0.1f;
 	if (m_pGameInstance->Key_Down(DIK_Y))
-		Final_Brightness -= 0.1f;
+		m_tScreen_Option.fFinal_Brightness -= 0.1f;
 	if (m_pGameInstance->Key_Down(DIK_U))
-		Final_Saturation += 0.1f;
+		m_tScreen_Option.fFinal_Saturation += 0.1f;
 	if (m_pGameInstance->Key_Down(DIK_I))
-		Final_Saturation -= 0.1f;
+		m_tScreen_Option.fFinal_Saturation -= 0.1f;
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));

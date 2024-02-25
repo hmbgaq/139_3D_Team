@@ -133,17 +133,17 @@ void CWindow_ShaderTool::Compress_Fog_Setting()
 		m_eFog_Desc.fFogHeightDensity = 0.04f;
 	}
 
-	ImGui::SliderFloat("FogStartDepth", &m_eFog_Desc.fFogStartDepth, 0.1f, 250.0f, "StartDepth = %.3f");
+	ImGui::SliderFloat("FogStartDepth", &m_eFog_Desc.fFogStartDepth, 0.001f, 250.0f, "StartDepth = %.3f");
 
-	ImGui::SliderFloat("FogStartDistance", &m_eFog_Desc.fFogStartDistance, 0.1f, 30.0f, "StartDistance = %.3f");
+	ImGui::SliderFloat("FogStartDistance", &m_eFog_Desc.fFogStartDistance, 0.001f, 30.0f, "StartDistance = %.3f");
 
-	ImGui::SliderFloat("FogDistanceValue", &m_eFog_Desc.fFogDistanceValue, 0.1f, 50.f, "FogDistanceValue = %.3f");
+	ImGui::SliderFloat("FogDistanceValue", &m_eFog_Desc.fFogDistanceValue, 0.001f, 50.f, "FogDistanceValue = %.3f");
 
-	ImGui::SliderFloat("FogHeightValue", &m_eFog_Desc.fFogHeightValue, 0.1f, 100.f, "HeightValue = %.3f");
+	ImGui::SliderFloat("FogHeightValue", &m_eFog_Desc.fFogHeightValue, 0.001f, 100.f, "HeightValue = %.3f");
 
-	ImGui::SliderFloat("FogDistanceDensity", &m_eFog_Desc.fFogDistanceDensity, 0.1f, 1.0f, "FogDistanceValue = %.3f");
+	ImGui::SliderFloat("FogDistanceDensity", &m_eFog_Desc.fFogDistanceDensity, 0.001f, 1.0f, "FogDistanceValue = %.3f");
 
-	ImGui::SliderFloat("FogHeightDensity", &m_eFog_Desc.fFogHeightDensity, 0.1f, 1.0f, "HeightDensity = %.3f");
+	ImGui::SliderFloat("FogHeightDensity", &m_eFog_Desc.fFogHeightDensity, 0.001f, 1.0f, "HeightDensity = %.3f");
 
 	m_pGameInstance->Get_Renderer()->Set_Fog(m_eFog_Desc.bFog_Active);
 
