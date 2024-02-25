@@ -3,6 +3,17 @@
 #include "GameInstance.h"
 #include "SMath.h"
 
+_bool CVIBuffer_Particle::Write_Json(json& Out_Json)
+{
+
+
+	return true;
+}
+
+void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
+{
+}
+
 CVIBuffer_Particle::CVIBuffer_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer_Instancing(pDevice, pContext)
 {
@@ -25,15 +36,14 @@ void CVIBuffer_Particle::Restart_ParticleBufferDesc(_uint iCount)
 	D3D11_MAPPED_SUBRESOURCE SubResource;
 	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 
-	for (size_t i = 0; i < m_iNumInstance; i++)
+	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
 		m_vecParticleInfoDesc[i].bIsDie = false;
 
 		// 위치 (분포 범위)
 		((VTXINSTANCE*)SubResource.pData)[i].vPosition = Get_NewPosition_Particle();
 		if ((*m_tParticleDesc.pVelocityChangeRandom))
-		{
-			
+		{		
 			m_vecParticleInfoDesc[i].fVelocityRanTimeAccs = 0.f;
 			m_vecParticleInfoDesc[i].fVelocityRanChange   = SMath::fRandom((*m_tParticleDesc.pVelocityChangeTime).x, (*m_tParticleDesc.pVelocityChangeTime).y);
 		}
@@ -219,14 +229,14 @@ void CVIBuffer_Particle::Restart_ParticleBufferDesc(_uint iCount)
 
 				m_vecParticleInfoDesc[i].iColorIndex = 0;
 				m_vecParticleInfoDesc[i].fColorChangeStartM = SMath::fRandom((*m_tParticleDesc.pColorChangeStartM).x, (*m_tParticleDesc.pColorChangeStartM).y);
-				m_vecParticleInfoDesc[i].fColorChangeStartF = SMath::fRandom((*m_tParticleDesc.pColorChangeStartF).x, (*m_tParticleDesc.pColorChangeStartF).y);
+				m_vecParticleInfoDesc[i].fColorChangeStartF = SMath::fRandom((*m_tParticleDesc.pColorChangeStartE).x, (*m_tParticleDesc.pColorChangeStartE).y);
 			}
 		}
 
 		if ((*m_tParticleDesc.pColorRandom))
 			m_vecParticleShaderDesc[i].fColor = _float3(SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f));
 		else
-			m_vecParticleShaderDesc[i].fColor = _float3((*m_tParticleDesc.pColorS).x, (*m_tParticleDesc.pColorS).y, (*m_tParticleDesc.pColorS).z);
+			m_vecParticleShaderDesc[i].fColor = _float3((*m_tParticleDesc.pColor_Start).x, (*m_tParticleDesc.pColor_Start).y, (*m_tParticleDesc.pColor_Start).z);
 #pragma endregion
 
 #pragma region 블러
@@ -396,8 +406,8 @@ HRESULT CVIBuffer_Particle::Initialize(void* pArg)
 
 	m_tParticleDesc = *static_cast<PARTICLE_BUFFER_DESC*>(pArg);
 
-	if ((*m_tParticleDesc.pNumEffectMaxCount) <= m_iMaxCount)
-		m_iMaxCount = (*m_tParticleDesc.pNumEffectMaxCount);
+	if ((*m_tParticleDesc.pMaxInstanceCnt) <= m_iMaxCount)
+		m_iMaxCount = (*m_tParticleDesc.pMaxInstanceCnt);
 
 	m_vecParticleInfoDesc.reserve(m_iMaxCount);
 	m_vecParticleShaderDesc.reserve(m_iMaxCount);
@@ -614,14 +624,14 @@ HRESULT CVIBuffer_Particle::Initialize(void* pArg)
 
 				ParticleInfo.iColorIndex = 0;
 				ParticleInfo.fColorChangeStartM = SMath::fRandom((*m_tParticleDesc.pColorChangeStartM).x, (*m_tParticleDesc.pColorChangeStartM).y);
-				ParticleInfo.fColorChangeStartF = SMath::fRandom((*m_tParticleDesc.pColorChangeStartF).x, (*m_tParticleDesc.pColorChangeStartF).y);
+				ParticleInfo.fColorChangeStartF = SMath::fRandom((*m_tParticleDesc.pColorChangeStartE).x, (*m_tParticleDesc.pColorChangeStartE).y);
 			}
 		}
 
 		if ((*m_tParticleDesc.pColorRandom))
 			ParticleShaderInfo.fColor = _float3(SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f));
 		else
-			ParticleShaderInfo.fColor = _float3((*m_tParticleDesc.pColorS).x, (*m_tParticleDesc.pColorS).y, (*m_tParticleDesc.pColorS).z);
+			ParticleShaderInfo.fColor = _float3((*m_tParticleDesc.pColor_Start).x, (*m_tParticleDesc.pColor_Start).y, (*m_tParticleDesc.pColor_Start).z);
 #pragma endregion
 
 #pragma region 블러
@@ -657,7 +667,7 @@ HRESULT CVIBuffer_Particle::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CVIBuffer_Particle::Tick(_float fTimeDelta)
+void CVIBuffer_Particle::Update(_float fTimeDelta)
 {
 	if (m_bFinished)
 		return;
@@ -671,7 +681,7 @@ void CVIBuffer_Particle::Tick(_float fTimeDelta)
 		if (m_vecParticleInfoDesc[i].bIsDie)
 		{
 			// 반복O
-			if ((*m_tParticleDesc.pParticleLoop))
+			if ((*m_tParticleDesc.pLoop))
 			{
 				m_vecParticleInfoDesc[i].bIsDie = false;
 				m_vecParticleInfoDesc[i].fTimeAccs = 0.f;
@@ -770,7 +780,7 @@ void CVIBuffer_Particle::Tick(_float fTimeDelta)
 								else
 								{
 									m_vecParticleShaderDesc[i].fAlpha = 0.f;
-									if ((*m_tParticleDesc.pParticleLoop))
+									if ((*m_tParticleDesc.pLoop))
 									{
 										m_vecParticleInfoDesc[i].fAlphaChangeStartTime  = 0.f;
 										m_vecParticleInfoDesc[i].fAlphaChangeStartDelay = SMath::fRandom((*m_tParticleDesc.pFadeChangeStartDelay).x, (*m_tParticleDesc.pFadeChangeStartDelay).y);
@@ -786,7 +796,7 @@ void CVIBuffer_Particle::Tick(_float fTimeDelta)
 								else
 								{
 									m_vecParticleShaderDesc[i].fAlpha = 1.f;
-									if ((*m_tParticleDesc.pParticleLoop))
+									if ((*m_tParticleDesc.pLoop))
 									{
 										m_vecParticleInfoDesc[i].fAlphaChangeStartTime  = 0.f;
 										m_vecParticleInfoDesc[i].fAlphaChangeStartDelay = SMath::fRandom((*m_tParticleDesc.pFadeChangeStartDelay).x, (*m_tParticleDesc.pFadeChangeStartDelay).y);
@@ -838,7 +848,7 @@ void CVIBuffer_Particle::Tick(_float fTimeDelta)
 						((VTXINSTANCE*)SubResource.pData)[i].vPosition.y += vNewVelocity.y;
 						((VTXINSTANCE*)SubResource.pData)[i].vPosition.z += vNewVelocity.z;
 
-						Tick_Rigidbody(fTimeDelta, i);
+						Update_Rigidbody(fTimeDelta, i);
 
 						if ((*m_tParticleDesc.pStopZero))
 						{
@@ -1144,8 +1154,8 @@ void CVIBuffer_Particle::Tick(_float fTimeDelta)
 						// S -> M
 						if (m_vecParticleInfoDesc[i].iColorIndex == 0 && m_vecParticleInfoDesc[i].fColorChangeStartTime >= m_vecParticleInfoDesc[i].fColorChangeStartM)
 						{
-							m_vecParticleInfoDesc[i].LerpInfo.Set_Start(_float3((*m_tParticleDesc.pColorS).x, (*m_tParticleDesc.pColorS).y, (*m_tParticleDesc.pColorS).z),
-								_float3((*m_tParticleDesc.pColorM).x, (*m_tParticleDesc.pColorM).y, (*m_tParticleDesc.pColorM).z), m_vecParticleInfoDesc[i].fColorChangeEndTime);
+							m_vecParticleInfoDesc[i].LerpInfo.Set_Start(_float3((*m_tParticleDesc.pColor_Start).x, (*m_tParticleDesc.pColor_Start).y, (*m_tParticleDesc.pColor_Start).z),
+								_float3((*m_tParticleDesc.pColor_End).x, (*m_tParticleDesc.pColor_End).y, (*m_tParticleDesc.pColor_End).z), m_vecParticleInfoDesc[i].fColorChangeEndTime);
 
 							m_vecParticleInfoDesc[i].iColorIndex++;
 						}
@@ -1154,8 +1164,8 @@ void CVIBuffer_Particle::Tick(_float fTimeDelta)
 						{
 							if (m_vecParticleInfoDesc[i].LerpInfo.fTimeAcc >= m_vecParticleInfoDesc[i].LerpInfo.fEndTime)
 							{
-								m_vecParticleInfoDesc[i].LerpInfo.Set_Start(_float3((*m_tParticleDesc.pColorM).x, (*m_tParticleDesc.pColorM).y, (*m_tParticleDesc.pColorM).z),
-									_float3((*m_tParticleDesc.pColorF).x, (*m_tParticleDesc.pColorF).y, (*m_tParticleDesc.pColorF).z), m_vecParticleInfoDesc[i].fColorChangeEndTime);
+								m_vecParticleInfoDesc[i].LerpInfo.Set_Start(_float3((*m_tParticleDesc.pColor_Mid).x, (*m_tParticleDesc.pColor_Mid).y, (*m_tParticleDesc.pColor_Mid).z),
+									_float3((*m_tParticleDesc.pColor_End).x, (*m_tParticleDesc.pColor_End).y, (*m_tParticleDesc.pColor_End).z), m_vecParticleInfoDesc[i].fColorChangeEndTime);
 
 								m_vecParticleInfoDesc[i].iColorIndex++;
 							}
@@ -1172,8 +1182,8 @@ void CVIBuffer_Particle::Tick(_float fTimeDelta)
 								{
 									if (m_vecParticleInfoDesc[i].iColorIndex == 2 && m_vecParticleInfoDesc[i].LerpInfo.fTimeAcc >= m_vecParticleInfoDesc[i].LerpInfo.fEndTime)
 									{
-										m_vecParticleInfoDesc[i].LerpInfo.Set_Start(_float3((*m_tParticleDesc.pColorF).x, (*m_tParticleDesc.pColorF).y, (*m_tParticleDesc.pColorF).z),
-											_float3((*m_tParticleDesc.pColorS).x, (*m_tParticleDesc.pColorS).y, (*m_tParticleDesc.pColorS).z), m_vecParticleInfoDesc[i].fColorChangeEndTime);
+										m_vecParticleInfoDesc[i].LerpInfo.Set_Start(_float3((*m_tParticleDesc.pColor_End).x, (*m_tParticleDesc.pColor_End).y, (*m_tParticleDesc.pColor_End).z),
+											_float3((*m_tParticleDesc.pColor_Start).x, (*m_tParticleDesc.pColor_Start).y, (*m_tParticleDesc.pColor_Start).z), m_vecParticleInfoDesc[i].fColorChangeEndTime);
 
 										m_vecParticleInfoDesc[i].iColorIndex++;
 									}
@@ -1187,14 +1197,14 @@ void CVIBuffer_Particle::Tick(_float fTimeDelta)
 
 										m_vecParticleInfoDesc[i].iColorIndex = 0;
 										m_vecParticleInfoDesc[i].fColorChangeStartM = SMath::fRandom((*m_tParticleDesc.pColorChangeStartM).x, (*m_tParticleDesc.pColorChangeStartM).y);
-										m_vecParticleInfoDesc[i].fColorChangeStartF = SMath::fRandom((*m_tParticleDesc.pColorChangeStartF).x, (*m_tParticleDesc.pColorChangeStartF).y);
+										m_vecParticleInfoDesc[i].fColorChangeStartF = SMath::fRandom((*m_tParticleDesc.pColorChangeStartE).x, (*m_tParticleDesc.pColorChangeStartE).y);
 
 										m_vecParticleInfoDesc[i].fColorChangeEndTime = SMath::fRandom((*m_tParticleDesc.pColorDuration).x, (*m_tParticleDesc.pColorDuration).y);
 
 										if ((*m_tParticleDesc.pColorRandom))
 											m_vecParticleShaderDesc[i].fColor = _float3(SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f));
 										else
-											m_vecParticleShaderDesc[i].fColor = _float3((*m_tParticleDesc.pColorS).x, (*m_tParticleDesc.pColorS).y, (*m_tParticleDesc.pColorS).z);
+											m_vecParticleShaderDesc[i].fColor = _float3((*m_tParticleDesc.pColor_Start).x, (*m_tParticleDesc.pColor_Start).y, (*m_tParticleDesc.pColor_Start).z);
 									}
 								}
 								else
@@ -1256,15 +1266,6 @@ HRESULT CVIBuffer_Particle::Bind_VIBuffers(_uint iCount)
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Particle::Render()
-{
-	/* 인덱스가 가르키는 정점을 활용하여 그린다. */
-	//m_pContext->DrawIndexedInstanced(m_iIndexStride * m_iNumIndices, m_iNumInstance, 0, 0, 0);
-	m_pContext->DrawIndexedInstanced(m_iIndexCountPerInstance, m_iNumInstance, 0, 0, 0);
-
-	return S_OK;
-}
-
 
 _float4 CVIBuffer_Particle::Get_NewPosition_Particle()
 {
@@ -1277,16 +1278,16 @@ _float4 CVIBuffer_Particle::Get_NewPosition_Particle()
 _float4 CVIBuffer_Particle::Get_NewVelocity_Particle()
 {
 	_vector vVelocity = XMVector3Normalize(
-		XMVectorSet(
-			SMath::fRandom((*m_tParticleDesc.pVelocityMinStart).x, (*m_tParticleDesc.pVelocityMaxStart).x),
-			SMath::fRandom((*m_tParticleDesc.pVelocityMinStart).y, (*m_tParticleDesc.pVelocityMaxStart).y),
-			SMath::fRandom((*m_tParticleDesc.pVelocityMinStart).z, (*m_tParticleDesc.pVelocityMaxStart).z),
-			0.f));
+						XMVectorSet(
+						SMath::fRandom((*m_tParticleDesc.pVelocityMinStart).x, (*m_tParticleDesc.pVelocityMaxStart).x),
+						SMath::fRandom((*m_tParticleDesc.pVelocityMinStart).y, (*m_tParticleDesc.pVelocityMaxStart).y),
+						SMath::fRandom((*m_tParticleDesc.pVelocityMinStart).z, (*m_tParticleDesc.pVelocityMaxStart).z),
+						0.f));
 
 	return _float4(XMVectorGetX(vVelocity), XMVectorGetY(vVelocity), XMVectorGetZ(vVelocity), XMVectorGetW(vVelocity));
 }
 
-void CVIBuffer_Particle::Tick_Rigidbody(_float fTimeDelta, _uint iParticleID)
+void CVIBuffer_Particle::Update_Rigidbody(_float fTimeDelta, _uint iParticleID)
 {
 	// 힘의 크기
 	_float fForce = XMVectorGetX(XMVector3Length(m_vecParticleRigidbodyDesc[iParticleID].vForce));

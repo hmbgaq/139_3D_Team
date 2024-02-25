@@ -330,9 +330,8 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 						// 중력에 의한 변화 계산(안됨. 전체가 아래로만 떨어짐..포물선모양이고 싶은데)
 						_vector vGravity = XMVectorSet(0.f, m_tBufferDesc.fGravityAcc * fTimeDelta, 0.f, 0.f);
 
-						m_tBufferDesc.vTest = vWithGravityDir + vGravity;
 						// 새로운 위치 계산
-						XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + m_tBufferDesc.vTest);
+						XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + (vWithGravityDir + vGravity));
 						//XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + vDir * fSpeed * fTimeDelta);
 					}
 					else

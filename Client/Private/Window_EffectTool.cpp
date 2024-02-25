@@ -45,6 +45,8 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	SetUp_ImGuiDESC(" Object Lists ", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	__super::Begin();
 
+	Update_SaveLoad();
+
 
 	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
 
@@ -2092,6 +2094,28 @@ void CWindow_EffectTool::Update_Demo_Sequencer()
 
 void CWindow_EffectTool::Update_SaveLoad()
 {
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("Menu"))
+		{
+			if (ImGui::MenuItem("Save"))
+			{
+
+
+				//Save_Function();
+			}
+			if (ImGui::MenuItem("Load"))
+			{
+
+
+
+				//Load_Function(TEXT("../bin"), );
+
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
 }
 
 HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
@@ -2101,6 +2125,13 @@ HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 
 HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 {
+
+
+	m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
+
+	OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
+
+
 	return S_OK;
 }
 

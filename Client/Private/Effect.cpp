@@ -133,6 +133,26 @@ HRESULT CEffect::Render()
 	return S_OK;
 }
 
+_bool CEffect::Write_Json(json& Out_Json)
+{
+	__super::Write_Json(Out_Json);
+
+
+	for (auto& Pair : m_PartObjects)
+	{
+		Pair.second->Write_Json(Out_Json);
+	}
+
+
+	return true;
+}
+
+void CEffect::Load_FromJson(const json& In_Json)
+{
+
+
+}
+
 void CEffect::ReSet_Effect()
 {
 	m_tEffectDesc.fSequenceAcc	 = 0.f;

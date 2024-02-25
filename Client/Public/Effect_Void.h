@@ -26,7 +26,7 @@ public:
 
 		// Instance
 		_uint		iCurInstanceCnt	 = { 1 };
-		_uint		iMaxInstanceCnt	 = { 100 };
+		_uint		iMaxInstanceCnt	 = { 1000 };
 
 		// Shader
 		wstring		strShaderTag	 = { TEXT("") };
@@ -77,9 +77,11 @@ public:
 		_float3	vRotation_End	= _float3(0.f, 0.f, 0.f);
 		_bool	bRotation_Lerp	= { TRUE };
 
-		_float3	vScaling_Start	= _float3(1.f, 1.f, 1.f);
-		_float3	vScaling_End	= _float3(1.f, 1.f, 1.f);
-		_bool	bScaling_Lerp	= { TRUE };
+		_bool	bScaleSameRate		= { TRUE }; // 정비율
+		_bool	bScaleChangeRandom	= { FALSE };
+		_float3	vScaling_Start		= _float3(1.f, 1.f, 1.f);
+		_float3	vScaling_End		= _float3(1.f, 1.f, 1.f);
+		_bool	bScaling_Lerp		= { TRUE };
 
 		_float3	vVelocity_Start = _float3(0.f, 0.f, 0.f);
 		_float3	vVelocity_End	= _float3(0.f, 0.f, 0.f);
@@ -153,8 +155,8 @@ public:
 
 
 public:
-	TYPE_EFFECT Get_EffectType() { return eEffectType; }
-	void		Set_EffectType(TYPE_EFFECT eType) { eEffectType = eType; }
+	TYPE_EFFECT Get_EffectType() { return m_eEffectType; }
+	void		Set_EffectType(TYPE_EFFECT eType) { m_eEffectType = eType; }
 
 	_float		Get_WaitingAcc() { return m_fWaitingAcc; }
 	void		Set_WaitingAcc(_float fTime) { m_fWaitingAcc = fTime; }
@@ -183,9 +185,9 @@ public:
 	void		Set_SequenceTime(_float fSequenceTime) { m_fSequenceTime = fSequenceTime; }
 
 protected:
-	TYPE_EFFECT	eEffectType		= { TYPE_EFFECT_END };
+	TYPE_EFFECT	m_eEffectType	= { TYPE_EFFECT_END };
 
-	_float		m_fWaitingAcc    = { 0.f };	/* 시작 딜레이 시간 누적 */
+	_float		m_fWaitingAcc   = { 0.f };	/* 시작 딜레이 시간 누적 */
 	_float		m_fTimeAcc	    = { 0.f };		/* 시간 누적 */
 	_float		m_fRemainAcc    = { 0.f };
 	_float		m_fSequenceAcc  = { 0.f };	/* 시퀀스 시간 누적 */

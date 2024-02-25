@@ -88,7 +88,6 @@ public:
 
 		_int		iSpriteFrameIndex = { 1 };
 
-		_float4				vTest = {};
 
 		void Reset_Desc()
 		{

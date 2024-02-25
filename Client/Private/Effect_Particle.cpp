@@ -199,6 +199,135 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 }
 
 
+void* CEffect_Particle::Get_BufferDesc()
+{
+	CVIBuffer_Particle::PARTICLE_BUFFER_DESC tBufferInfo = {};
+
+	tBufferInfo.pLoop = &m_tParticleDesc.bLoop;
+
+	tBufferInfo.pMaxInstanceCnt = &m_tParticleDesc.iMaxInstanceCnt;
+
+	tBufferInfo.pRange = &m_tParticleDesc.fRange;
+	tBufferInfo.pRangeDistance = &m_tParticleDesc.fRangeDistance;
+
+	tBufferInfo.pScaleSameRate = &m_tParticleDesc.bScaleSameRate;
+	tBufferInfo.pScaleStart = &m_tParticleDesc.fScaleStart;
+
+	tBufferInfo.pScaleChange = &m_tParticleDesc.bScaleChange;
+	tBufferInfo.pScaleChangeStartDelay = &m_tParticleDesc.fScaleChangeStartDelay;
+
+	tBufferInfo.pScaleChangeRandom = &m_tParticleDesc.bScaleChangeRandom;
+	tBufferInfo.pScaleChangeTime = &m_tParticleDesc.fScaleChangeTime;
+
+	tBufferInfo.pScaleAdd = &m_tParticleDesc.bScaleAdd;
+	tBufferInfo.pScaleLoop = &m_tParticleDesc.bScaleLoop;
+	tBufferInfo.pScaleLoopStart = &m_tParticleDesc.bScaleLoopStart;
+
+	tBufferInfo.pScaleMin = &m_tParticleDesc.fScaleMin;
+	tBufferInfo.pScaleMax = &m_tParticleDesc.fScaleMax;
+	tBufferInfo.pScaleSpeed = &m_tParticleDesc.fScaleSpeed;
+
+
+	tBufferInfo.pVelocitySpeed = &m_tParticleDesc.fVelocitySpeed;
+
+	tBufferInfo.pVelocityMinStart = &m_tParticleDesc.vVelocityMinStart;
+	tBufferInfo.pVelocityMaxStart = &m_tParticleDesc.vVelocityMaxStart;
+
+	tBufferInfo.pVelocityChange = &m_tParticleDesc.bVelocityChange;
+	tBufferInfo.pVelocityChangeStartDelay = &m_tParticleDesc.fVelocityChangeStartDelay;
+
+	tBufferInfo.pVelocityChangeRandom = &m_tParticleDesc.bVelocityChangeRandom;
+	tBufferInfo.pVelocityChangeTime = &m_tParticleDesc.fVelocityChangeTime;
+
+	tBufferInfo.pVelocityLoop = &m_tParticleDesc.bVelocityLoop;
+	tBufferInfo.pVelocityCountCur = &m_tParticleDesc.iVelocityCountCur;
+	tBufferInfo.pVelocityCountMax = &m_tParticleDesc.iVelocityCountMax;
+
+	tBufferInfo.pVelocityUse = &m_tParticleDesc.iVelocityUse;
+	tBufferInfo.pVelocityMin = m_tParticleDesc.pVelocityMin;
+	tBufferInfo.pVelocityMax = m_tParticleDesc.pVelocityMax;
+	tBufferInfo.pVelocityTime = m_tParticleDesc.pVelocityTime;
+
+
+	tBufferInfo.pBillboard = &m_tParticleDesc.bBillBoard;
+	tBufferInfo.pRandomAxis = &m_tParticleDesc.bRandomAxis;
+	tBufferInfo.pAxis = &m_tParticleDesc.vAxis;
+	tBufferInfo.pRandomAngle = &m_tParticleDesc.bRandomAngle;
+	tBufferInfo.pAngle = &m_tParticleDesc.fAngle;
+
+	tBufferInfo.pRotationChange = &m_tParticleDesc.bRotationChange;
+	tBufferInfo.pRotationChangeStartDelay = &m_tParticleDesc.fRotationChangeStartDelay;
+
+	tBufferInfo.pRotationChangeRandom = &m_tParticleDesc.bRotationChangeRandom;
+	tBufferInfo.pRotationChangeTime = &m_tParticleDesc.fRotationChangeTime;
+	tBufferInfo.pRotationAdd = &m_tParticleDesc.bRotationAdd;
+	tBufferInfo.pRotationSpeed = &m_tParticleDesc.fRotationSpeed;
+
+
+	tBufferInfo.pLifeTime = &m_tParticleDesc.vLifeTime;
+
+	tBufferInfo.pUseBox = &m_tParticleDesc.bUseBox;
+	tBufferInfo.pBoxMin = &m_tParticleDesc.fBoxMin;
+	tBufferInfo.pBoxMax = &m_tParticleDesc.fBoxMax;
+
+	tBufferInfo.pRandomStartIndex = &m_tParticleDesc.bRandomStartIndex;
+	tBufferInfo.pUVIndex = &m_tParticleDesc.fUVIndex;
+	tBufferInfo.pUVMaxCount = &m_tParticleDesc.fUVMaxCount;
+
+	tBufferInfo.pAnimation = &m_tParticleDesc.bAnimation;
+	tBufferInfo.pAnimationLoop = &m_tParticleDesc.bAnimationLoop;
+	tBufferInfo.pAnimationSpeed = &m_tParticleDesc.fAnimationSpeed;
+
+
+	tBufferInfo.pFadeCreate = &m_tParticleDesc.bFadeCreate;
+	tBufferInfo.pFadeDelete = &m_tParticleDesc.bFadeDelete;
+
+	tBufferInfo.pFadeChange = &m_tParticleDesc.bFadeChange;
+	tBufferInfo.pFadeChangeStartDelay = &m_tParticleDesc.fFadeChangeStartDelay;
+	tBufferInfo.pFadeIn = &m_tParticleDesc.bFadeIn;
+	tBufferInfo.pStartAlpha = &m_tParticleDesc.fStartAlpha;
+	tBufferInfo.pFadeSpeed = &m_tParticleDesc.fFadeSpeed;
+
+
+	tBufferInfo.pColorRandom = &m_tParticleDesc.bColorRandom;
+	tBufferInfo.pColorS = &m_tParticleDesc.vColor_Start;
+
+	tBufferInfo.pColorChange = &m_tParticleDesc.bColorChange;
+
+	tBufferInfo.pColorChangeRandom = &m_tParticleDesc.bColorChangeRandom;
+	tBufferInfo.pColorChangeRandomTime = &m_tParticleDesc.fColorChangeRandomTime;
+
+	tBufferInfo.pColorLoop = &m_tParticleDesc.bColorLoop;
+	tBufferInfo.pColorChangeStartDelay = &m_tParticleDesc.fColorChangeStartDelay;
+
+	tBufferInfo.pColorChangeStartM = &m_tParticleDesc.fColorChangeStartM;
+	tBufferInfo.pColorM = &m_tParticleDesc.fColorMid;
+
+	tBufferInfo.pColorChangeStartF = &m_tParticleDesc.vColorChangeStartE;
+	tBufferInfo.pColorF = &m_tParticleDesc.vColor_End;
+
+	tBufferInfo.pColorDuration = &m_tParticleDesc.fColorDuration;
+
+
+	tBufferInfo.pBloomPowerRandom = &m_tParticleDesc.bBloomPowerRandom;
+	tBufferInfo.pBloomPower = &m_tParticleDesc.fBloomPower;
+	tBufferInfo.pBlurPowerRandom = &m_tParticleDesc.bBlurPowerRandom;
+	tBufferInfo.pBlurPower = &m_tParticleDesc.fBlurPower;
+
+	tBufferInfo.pRigidbody = &m_tRigidbodyDesc.bRigidbody;
+	tBufferInfo.pGravity = &m_tRigidbodyDesc.bGravity;
+	tBufferInfo.pStopZero = &m_tRigidbodyDesc.bStopZero;
+	tBufferInfo.pStopStartY = &m_tRigidbodyDesc.bStopStartY;
+	tBufferInfo.pGroundSlide = &m_tRigidbodyDesc.bGroundSlide;
+
+	tBufferInfo.pMaxVelocity = &m_tRigidbodyDesc.vMaxVelocity;
+	tBufferInfo.pMass = &m_tRigidbodyDesc.fMass;
+	tBufferInfo.pFricCoeff = &m_tRigidbodyDesc.fFricCoeff;
+
+	return &tBufferInfo;
+
+}
+
 HRESULT CEffect_Particle::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
@@ -214,11 +343,11 @@ HRESULT CEffect_Particle::Ready_Components()
 		tVIBufferDesc.eType_Action = { CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE };
 		tVIBufferDesc.eType_Fade = { CVIBuffer_Particle_Point::TYPE_FADE::FADE_OUT };
 
-		tVIBufferDesc.bActive_Tool	= { TRUE };
-		tVIBufferDesc.bBillBoard	= { TRUE };
+		tVIBufferDesc.bActive_Tool = { TRUE };
+		tVIBufferDesc.bBillBoard = { TRUE };
 		//tVIBufferDesc.bPlay			= { TRUE };
-		tVIBufferDesc.bReverse		= { FALSE };
-		tVIBufferDesc.bLoop			= { TRUE };
+		tVIBufferDesc.bReverse = { FALSE };
+		tVIBufferDesc.bLoop = { TRUE };
 
 		tVIBufferDesc.vMinMaxLifeTime = _float2(0.5f, 3.0f);
 		tVIBufferDesc.iCurNumInstance = { m_tParticleDesc.iCurInstanceCnt };
@@ -233,7 +362,7 @@ HRESULT CEffect_Particle::Ready_Components()
 		tVIBufferDesc.fSpeedAcc = { 2.f };
 		tVIBufferDesc.fAccPosition = { 0.1f };
 
-		tVIBufferDesc.fGravityAcc = { -9.8f };
+		tVIBufferDesc.fGravityAcc = { -9.8 };
 		tVIBufferDesc.vCurrentGravity = { 0.f, 0.f, 0.f };
 
 		tVIBufferDesc.vMinMaxRotationOffsetX = { 0.0f, 360.f };
@@ -262,6 +391,9 @@ HRESULT CEffect_Particle::Ready_Components()
 			TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &tVIBufferDesc)))
 			return E_FAIL;
 	}
+
+
+
 
 
 	/* For.Com_Texture */
@@ -293,7 +425,7 @@ HRESULT CEffect_Particle::Ready_Components()
 
 	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
 	Desc.pModel = m_pModelCom;
-	Desc.iNumInstance = 1; 
+	Desc.iNumInstance = 1;
 
 
 	/* For.Com_VIBuffer */
@@ -319,8 +451,7 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
-	//if (FAILED(m_pTextureCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTexture")))
-	//	return E_FAIL;
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tParticleDesc.fUV_RotDegree, sizeof(_float))))
 		return E_FAIL;
 
