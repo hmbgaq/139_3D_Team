@@ -64,7 +64,8 @@ void CRigidBody::Late_Tick(_float fTimeDelta)
 		}
 	}
 
-	m_pOwnerTransform->Move_On_Navigation(vMoveValue);
+	if (true == m_pOwnerTransform->Get_Enable() && nullptr != m_pOwnerTransform)
+		m_pOwnerTransform->Move_On_Navigation(vMoveValue);
 
 }
 

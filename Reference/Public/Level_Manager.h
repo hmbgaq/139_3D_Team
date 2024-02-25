@@ -27,6 +27,7 @@ public:
 	_uint	Get_NextLevel();
 	_uint	Get_CurrentLevel();
 	void	Set_CurrentLevel(_uint CurrentLevel);
+
 private:
 	_uint						m_iNextLevelIndex = { 0 };
 	_uint						m_iCurrentLevelIndex = { 0 };

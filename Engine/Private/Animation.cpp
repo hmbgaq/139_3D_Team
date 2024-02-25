@@ -1,6 +1,7 @@
 #include "..\Public\Animation.h"
 #include "Channel.h"
 
+
 CAnimation::CAnimation()
 {
 }
@@ -255,6 +256,20 @@ _bool CAnimation::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_Channels[0]->Is_Inputable_Front(m_fTrackPosition, _iIndexFront);
 }
+
+_float4x4* CAnimation::Get_TransformationBoneMatrices(_float fTrackPosition, _float4x4* pMatrix)
+{
+	
+	for (_int i = 0; i < m_iNumChannels; ++i)
+	{
+		_uint iBoneIndex = m_Channels[i]->Get_BoneIndex();
+		pMatrix[iBoneIndex] = m_Channels[i]->Get_NowMatrix(fTrackPosition);
+	}
+
+	return pMatrix;
+}
+
+
 
 CAnimation * CAnimation::Create(CMyAIAnimation pAIAnimation, const CModel::BONES& Bones)
 {

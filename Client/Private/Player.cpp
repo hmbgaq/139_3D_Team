@@ -12,6 +12,9 @@
 #include "TestEventWithActor.h"
 #include "TestEventWithPlayer.h"
 
+#include "PhysXController.h"
+#include "PhysXCharacterController.h"
+
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -59,7 +62,8 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	CBody_Player*		pBody = dynamic_cast<CBody_Player*>(Find_PartObject(TEXT("Part_Body")));
 	Safe_AddRef(pBody);
-	if (m_pGameInstance->Get_NextLevel() != 5)
+
+	if (m_pGameInstance->Get_NextLevel() != _uint(LEVEL_TOOL))
 	{
 		if (GetKeyState(VK_DOWN) & 0x8000)
 		{
@@ -81,6 +85,29 @@ void CPlayer::Tick(_float fTimeDelta)
 		else
 			pBody->SetUp_Animation(3);
 	}
+	else if (m_pGameInstance->Get_NextLevel() == _uint(LEVEL_TOOL))
+	{
+		if (m_pGameInstance->Key_Pressing(DIK_DOWNARROW))
+		{
+			m_pTransformCom->Go_Backward(fTimeDelta);
+		}
+		if (m_pGameInstance->Key_Pressing(DIK_LEFTARROW))
+		{
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * -1.f);
+		}
+		if (m_pGameInstance->Key_Pressing(DIK_RIGHTARROW))
+		{
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
+		}
+		if (m_pGameInstance->Key_Pressing(DIK_UPARROW))
+		{
+			m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
+			pBody->SetUp_Animation(4);
+		}
+		//TODO 여기다가 절대로 상시 애니메이션 걸지 마세요 애니메이션툴안돌아갑니다 모든 몬스터든 뭐든 상시 애니메이션 걸면안됌 준비 다된놈만 애니메이션 걸어두셈 
+		//else
+		//	pBody->SetUp_Animation(3);
+	}
 
 
 	for (auto& Pair : m_PartObjects)
@@ -93,16 +120,14 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (m_pGameInstance->Key_Down(DIK_E))
-	{
-		//IEvent* pEvent = CTestEvent::Create();
-		//IEvent* pEvent = CTestEventWithActor::Create(this);
-		IEvent* pEvent = CTestEventWithPlayer::Create(this);
-	
-		m_pGameInstance->Add_Event(pEvent);
-	}
-
-	
+	//if (m_pGameInstance->Key_Down(DIK_E))
+	//{
+	//	//IEvent* pEvent = CTestEvent::Create();
+	//	//IEvent* pEvent = CTestEventWithActor::Create(this);
+	//	IEvent* pEvent = CTestEventWithPlayer::Create(this);
+	//
+	//	m_pGameInstance->Add_Event(pEvent);
+	//}
 
 
 }
@@ -131,6 +156,13 @@ HRESULT CPlayer::Ready_Components()
 //	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Navigation2"),
 //		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 //		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"),
+		TEXT("Com_PhysXCharacterController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom))))
+		return E_FAIL;
+	
+	m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
+
 
 
 	return S_OK;

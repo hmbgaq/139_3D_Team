@@ -41,13 +41,17 @@ public:
 	_matrix Make_SelectedFrame_TransformationMatrix(_uint iIndex);
 	_matrix Make_StartFrame_TransformationMatrix();
 	_matrix Make_EndFrame_TransformationMatrix();
+
 	KEYFRAME Make_NowFrame(_float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex);
 
+	_float4x4& Get_NowMatrix(_float fTrackPosition);
 
 private:
 	_char				m_szName[MAX_PATH] = "";
 	_uint				m_iNumKeyFrames = { 0 };
 	vector<KEYFRAME>	m_KeyFrames;
+	
+	
 	/*_uint				m_iCurrentKeyFrameIndex = { 0 };*/
 	_uint				m_iBoneIndex = { 0 };
 

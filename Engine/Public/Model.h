@@ -9,6 +9,7 @@ BEGIN(Engine)
 class CAnimation;
 class CMesh;
 class CBone;
+class CShader;
 
 
 class ENGINE_DLL CModel final : public CComponent
@@ -26,12 +27,7 @@ private:
 
 public:
 	_uint					Get_NumMeshes() const {return m_iNumMeshes; }
-	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Ãß°¡
-	_uint					Get_NumMaterials() const { return m_iNumMaterials; }
-	_uint					Get_NumMeshIndice(_int iMeshIndex);//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
-	vector<class CMesh*>&	Get_Meshes() { return m_Meshes;}
-	class CMesh*			Get_Mesh_For_Index(_int iMeshIndex);
-	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
+	
 	class CBone*			Get_BonePtr(const _char* pBoneName) const;
 
 	void					Set_StiffnessRate(_float fStiffnessRate);
@@ -40,6 +36,24 @@ public:
 	_matrix					Get_PivotMatrix() { return m_PivotMatrix; }
 	_matrix					Get_CombinedMatrix(_uint iBoneIndex);
 
+
+public:						
+	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Ãß°¡
+	_uint					Get_NumMaterials() const { return m_iNumMaterials; }
+	_uint					Get_NumMeshIndice(_int iMeshIndex);//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
+	vector<class CMesh*>&	Get_Meshes() { return m_Meshes; }
+	class CMesh*			Get_Mesh_For_Index(_int iMeshIndex);
+
+
+	CAnimation*				Get_Animation_For_Index(_uint iAnimIndex);
+	_float4x4*				Get_Combined_For_AnimationIndex(_uint iAnimationIndex, _float fTrackPosition);
+
+	_float4x4*				Calc_OffsetMatrice(_uint iAnimationIndex, _float fTrackPosition, _float4x4* pMatrix);
+	_float4x4*				Get_OffsetMatrices();
+	
+	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
+
+
 public:
 	_bool					Is_AnimEnd() { return m_bIsAnimEnd; };
 
@@ -47,6 +61,7 @@ public:
 	virtual HRESULT			Initialize_Prototype(TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);
 	virtual HRESULT			Initialize(void* pArg);
 	virtual HRESULT			Render(_uint iMeshIndex);
+	
 
 public:
 	void					Play_Animation(_float fTimeDelta, _bool bIsLoop);

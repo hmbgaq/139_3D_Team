@@ -6,6 +6,7 @@
 #include "VIBuffer_AnimModel_Instance.h"
 #include "Bone.h"
 #include "Mesh.h"
+#include "Model.h"
 
 CInstanceMonster::CInstanceMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -48,6 +49,30 @@ HRESULT CInstanceMonster::Initialize(void* pArg)
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(_float(rand() % 20), 0.f, _float(rand() % 20), 1.f));
 
+	//! 각각 다른 애니메이션 행렬을 가져야한다.
+	//! 이미 모델이 애니메이션 행렬은 가지고있다.
+	
+	//m_pModelCom->Get_Animations()->back()->Get_Channels()
+
+	//ZeroMemory(m_AnimationIndexArray, sizeof(_uint) * 800);
+	//
+	//
+	//vector<CAnimation*> vecAnimations = *m_pModelCom->Get_Animations();
+	//_int iAnimSize = vecAnimations.size();
+	//
+	//for (_int i = 0; i < 800; ++i)
+	//{
+	//	m_AnimationIndexArray[i] = m_pGameInstance->Random_Int(0, iAnimSize - 1);
+	//
+	//	m_AnimationTrackPositionArray[i] = 0.f;
+	//
+	//	m_fTestMatrix[i] = XMMatrixIdentity();
+	//}
+	
+	//! 셰이더에서 애니메이션 재생해야한다.
+	//! 애니메이션 행렬 보
+
+
 	return S_OK;
 }
 
@@ -58,30 +83,23 @@ void CInstanceMonster::Priority_Tick(_float fTimeDelta)
 void CInstanceMonster::Tick(_float fTimeDelta)
 {
 	m_fTimeDelta = fTimeDelta;
-
 	
+	Debug_KeyInput();
 
 }
 
 void CInstanceMonster::Late_Tick(_float fTimeDelta)
 {
-	//m_pGameInstance->Transform_Frustum_ToLocalSpace(m_pTransformCom->Get_WorldMatrix());
 
-	//if (true == m_pGameInstance->isIn_LocalPlanes(XMVector3TransformCoord(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_WorldMatrixInverse()), 0.f))
-	//{
 		_float3 vRootAnimPos = {};
 
 		m_pModelCom->Play_Animation(fTimeDelta, &vRootAnimPos);
 
-		//m_pTransformCom->Add_RootBone_Position(vRootAnimPos);
+		
 
 		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 			return;
 
-//#ifdef _DEBUG
-//		m_pGameInstance->Add_DebugRender(m_pColliderCom);
-//#endif	
-	//}
 }
 
 HRESULT CInstanceMonster::Render()
@@ -138,18 +156,7 @@ HRESULT CInstanceMonster::Ready_Render(_uint iSize)
 HRESULT CInstanceMonster::Render_Instance(_uint iSize)
 {
 	
-
-	//hr = FAILED(m_tInstanceDesc.pInstanceShader->Bind_SRV("g_InstanceTransform", m_tInstanceDesc.pInstanceSRV));
-	if(FAILED(m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture")))
-			return E_FAIL;
-	
-	if(FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-
-	if(FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-
-	if(FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+	if(FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
 
@@ -157,12 +164,13 @@ HRESULT CInstanceMonster::Render_Instance(_uint iSize)
 	
 	for (_int i = 0; i < iMeshSize; ++i)
 	{
+		//if(FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i, m_fReturnMatrix)))
+		//	return E_FAIL;
 
-		if(FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i, m_fReturnMatrix)))
-			return E_FAIL;
-		
+
 		if(FAILED(m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
+		
 		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS); /* 노말 텍스쳐 추가 */
 		
 
@@ -175,15 +183,13 @@ HRESULT CInstanceMonster::Render_Instance(_uint iSize)
 				return E_FAIL;
 		}
 
-		
 		_uint iIndex = 0;
-
+		
 		for (_int j = 0; j < m_iNumInstance; ++j)
 		{
 			Add_InstanceData(m_iNumInstance, iIndex, m_fReturnMatrix);
 		}
-
-
+		
 
 		if(FAILED(m_pShaderCom->Bind_SRV("g_InstanceTransform", m_tInstanceDesc.pInstanceSRV)))
 			return E_FAIL;
@@ -191,6 +197,7 @@ HRESULT CInstanceMonster::Render_Instance(_uint iSize)
 
 		if(FAILED(m_pShaderCom->Begin(m_iRenderPass)))
 			return E_FAIL;
+
 
 
 		if(FAILED(m_pInstanceModelCom->Render(m_pModelCom->Get_Mesh_For_Index(i), m_iNumInstance)))
@@ -242,6 +249,7 @@ HRESULT CInstanceMonster::Ready_Components()
 			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 			return E_FAIL;
 	}
+
 
 	return S_OK;
 }
@@ -463,13 +471,46 @@ void CInstanceMonster::Add_InstanceData(_uint iSize, _uint& iIndex, _float4x4* C
 			
 		}
 		
-		memcpy(pAnimInstanceValue + iDataIndex, m_fReturnMatrix, iSizePerInstance);
+		memcpy(pAnimInstanceValue + iDataIndex, CalcMatrix, iSizePerInstance);
 	}
 
 	if (iSize - 1 == iIndex)
 		Ready_Render(iSize);
 	else
 		++iIndex;
+}
+
+
+
+void CInstanceMonster::Debug_KeyInput()
+{
+	if (m_pGameInstance->Key_Down(DIK_N))
+	{
+		m_iTestAnimIndex++;
+		//!
+		//!
+		_float fTest11 = 0.f;
+		//!
+//		//!CAnimation* pAnimation = m_pModelCom->Get_Animation_For_Index(m_iTestAnimIndex);
+		//!
+		_float4x4* pTest = m_fTestMatrix;
+		
+		pTest = m_pModelCom->Calc_OffsetMatrice(m_iTestAnimIndex, fTest11, m_fTestMatrix);
+		//CAnimation* pAnimation = m_pModelCom->Get_Animation_For_Index(m_iTestAnimIndex)->Get_TransformationBoneMatrices();
+		
+		memcpy(m_fTestMatrix, pTest, sizeof(_float4x4) * 800);
+		
+		_uint iIndex = 0;
+		
+		for (_int j = 0; j < m_iNumInstance; ++j)
+		{
+			Add_InstanceData(m_iNumInstance, iIndex, m_fTestMatrix);
+		}
+
+
+	}
+
+
 }
 
 

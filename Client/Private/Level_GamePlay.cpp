@@ -22,6 +22,7 @@
 
 
 #pragma region Test
+#include "Monster.h"
 #include "Screamer.h"  
 #include "InstanceMonster.h"
 #pragma endregion
@@ -43,6 +44,8 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	//if (FAILED(Ready_UI()))
 	//	return E_FAIL;
+
+	Set_Filter();
 
 	return S_OK;
 }
@@ -144,7 +147,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* pArg)
 {
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg));
+	CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
+
+	CMonster::MONSTER_DESC Desc = {};
+	Desc.fRotationPerSec = GameObjectDesc.fRotationPerSec;
+	Desc.fSpeedPerSec = GameObjectDesc.fSpeedPerSec;
+	Desc.bPreview = false;
+	Desc.WorldMatrix = XMMatrixIdentity();
+
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), &Desc));
 
 	return S_OK;
 }
@@ -267,7 +278,7 @@ HRESULT CLevel_GamePlay::Ready_LandObjects()
 	LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
 
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
-	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
+	//FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
 	FAILED_CHECK(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc));
 
 	return S_OK;
@@ -284,8 +295,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
-
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
+	//! ¾Ö´ÔÀÎ½ºÅÏ½ÌÀÌ ÇÒÇÊ¿ä¾ø¾îÁü. ¤¾¤¾¤¾¤¾¤¾¤¾FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
 
 
 
@@ -388,6 +398,39 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 	m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
 
 	return S_OK;
+}
+
+void CLevel_GamePlay::Set_Filter()
+{
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::DYNAMIC_PROP);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::PLAYER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::BOSS_DYNAMIC_PROP);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::TRIGGER, (_uint)COLLISION_LAYER::PLAYER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::LADDER_DOWN, (_uint)COLLISION_LAYER::PLAYER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::LADDER_UP, (_uint)COLLISION_LAYER::PLAYER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::ELEVATOR, (_uint)COLLISION_LAYER::PLAYER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::DOOR, (_uint)COLLISION_LAYER::PLAYER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::CHECKPOINT, (_uint)COLLISION_LAYER::PLAYER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER, (_uint)COLLISION_LAYER::PLAYER_BATCOL);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::CHECK_DIR, (_uint)COLLISION_LAYER::PLAYER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::INTERIOR, (_uint)COLLISION_LAYER::INTERIOR);
+
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::GROUND);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::MONSTER, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::MONSTER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::MONSTER);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::INTERIOR);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER_WEAPON, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::CAMERA, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::CAMERA, (_uint)PHYSX_COLLISION_LAYER::GROUND);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP, (_uint)PHYSX_COLLISION_LAYER::GROUND);
+	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
 }
 
 CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

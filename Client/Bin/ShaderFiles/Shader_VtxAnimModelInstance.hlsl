@@ -3,6 +3,7 @@
 /* Base */
 matrix      g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix      g_BoneMatrices[800];
+
 float       g_fCamFar;
 float       g_TimeDelta;
 
@@ -21,10 +22,30 @@ float4      g_BloomColor;
 
 /* Reflection */
 matrix      g_ReflectionMatrix;
-
 float4      g_vRimColor = { 0.f, 0.f, 0.f, 0.f };
 
 Texture2D   g_InstanceTransform;
+
+struct KeyframeDesc
+{
+    int  iAnimIndex;
+    uint iStartFrame;
+    uint iEndFrame;
+    float fRatio;
+    
+    //SoundEventDesc tSoundEventDesc;
+};
+
+struct TweenFrameDesc
+{
+    KeyframeDesc StartKeyFrame;
+    KeyframeDesc EndKeyFrame;
+    
+    float fTweenDuration;
+    float fTweenRatio;
+    float fTweenAcc;
+    float fPadding;
+};
 
 
 

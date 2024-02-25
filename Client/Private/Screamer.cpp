@@ -23,7 +23,7 @@ HRESULT CScreamer::Initialize(void* pArg)
 
 	m_iRenderPass = ECast(ANIM_SHADER::ANIM_ORIGIN);
 
-	m_pTransformCom->Set_Scaling(0.01f, 0.01f, 0.01f);
+	
 	m_pTransformCom->Set_Position(_float3(15.f, 0.f, 10.f));
 	m_vBloomColor = { 0.5f, 0.f, 0.5f, 1.f };
 	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
@@ -177,15 +177,17 @@ HRESULT CScreamer::Ready_Components()
 		FAILED_CHECK(__super::Initialize(&tTransformDESC));
 	}
 
+	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
 	/* For.Com_Shader */
 	{
-		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_AnimModel"),	TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Shader_AnimModel"),	TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 
 	/* For.Com_Model */
 	{
 
-		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Screamer"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Screamer"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 	
 	}
 
@@ -195,13 +197,13 @@ HRESULT CScreamer::Ready_Components()
 		BoundingDesc.fRadius = 200.f;
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
 		
-		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
+		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 	}
 
 	/* For. Com_Texture*/
 	{
-		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BreakMask"), TEXT("Com_BreakMask"), reinterpret_cast<CComponent**>(&m_pBreakTextureCom)));
-		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"), TEXT("Com_DissolveTex"), reinterpret_cast<CComponent**>(&m_pDissolveTexCom)));
+		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Texture_BreakMask"), TEXT("Com_BreakMask"), reinterpret_cast<CComponent**>(&m_pBreakTextureCom)));
+		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Texture_Dissolve"), TEXT("Com_DissolveTex"), reinterpret_cast<CComponent**>(&m_pDissolveTexCom)));
 	}
 
 	return S_OK;

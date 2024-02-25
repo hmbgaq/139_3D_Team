@@ -31,6 +31,8 @@ public:
 	vector<_uint>&				Get_BoneIndices() { return m_BoneIndices; }
 	_int						Get_NumBones() { return m_iNumBones;}
 
+
+
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
 
 public:
@@ -41,7 +43,6 @@ public:
 
 public:
 	HRESULT			Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, const vector<CBone*>& Bones, _float4x4* BoneMatrix);
-	
 	
 
 #ifdef _DEBUG

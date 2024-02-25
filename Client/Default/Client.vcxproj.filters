@@ -298,6 +298,15 @@
     <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Vignette">
       <UniqueIdentifier>{f4d39fbe-3d41-437e-b224-2666fac37121}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\ETC">
+      <UniqueIdentifier>{b18d42ab-99b6-4330-a22a-3033f8d1b25f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Componenet">
+      <UniqueIdentifier>{c773ceaa-99e3-4453-a030-0929a6c32625}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Preset">
+      <UniqueIdentifier>{f22542eb-83c2-4588-baa9-eaee46804047}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow">
       <UniqueIdentifier>{eb6483af-c74c-4ffa-9e3d-456a091385c6}</UniqueIdentifier>
     </Filter>
@@ -579,6 +588,15 @@
     <ClInclude Include="..\Public\UI_Blood.h">
       <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Preset_PhysXControllerDesc.h">
+      <Filter>05. Preset</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Preset.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Environment_Interact.h">
+      <Filter>02.GameObjects\02. Environment\Environment_Interact</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Window_ShaderTool.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow</Filter>
     </ClInclude>
@@ -606,9 +624,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Level_Logo.h">
       <Filter>01.Levels\00.Logo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Loading.h">
       <Filter>01.Levels\99.Loading</Filter>
@@ -718,9 +733,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Level_Logo.h">
       <Filter>01.Levels\00.Logo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Loading.h">
       <Filter>01.Levels\99.Loading</Filter>
@@ -1041,6 +1053,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Blood.cpp">
       <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Preset_PhysXControllerDesc.cpp">
+      <Filter>05. Preset</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Environment_Interact.cpp">
+      <Filter>02.GameObjects\02. Environment\Environment_Interact</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Window_ShaderTool.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow</Filter>

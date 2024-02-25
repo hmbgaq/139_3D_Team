@@ -32,6 +32,9 @@ private: /* UI */
 	HRESULT Ready_Layer_UI_Monster(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_UI_Player(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_UI(const wstring& strLayerTag, void* pArg);
+
+private:
+	void Set_Filter();
 	
 private:
 	_int			TempLightNumber = 0;

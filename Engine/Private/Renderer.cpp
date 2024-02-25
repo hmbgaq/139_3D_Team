@@ -40,12 +40,12 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_DebugRender()); 
 #endif
 
-	m_CurrFog.fFogStartDepth		= 90.f;
-	m_CurrFog.fFogStartDistance		= 8.f;
-	m_CurrFog.fFogDistanceValue		= 25.f;
+	m_CurrFog.fFogStartDepth		= 28.f;
+	m_CurrFog.fFogStartDistance		= 3.f;
+	m_CurrFog.fFogDistanceValue		= 8.5f;
 	m_CurrFog.fFogHeightValue		= 50.f;
-	m_CurrFog.fFogDistanceDensity	= 0.4f;
-	m_CurrFog.fFogHeightDensity		= 0.3f;
+	m_CurrFog.fFogDistanceDensity	= 0.1f;
+	m_CurrFog.fFogHeightDensity		= 0.2f;
 
 	return S_OK;
 }

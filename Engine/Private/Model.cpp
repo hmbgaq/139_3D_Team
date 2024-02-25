@@ -49,6 +49,71 @@ CMesh* CModel::Get_Mesh_For_Index(_int iMeshIndex)
 	return m_Meshes[iMeshIndex];
 }
 
+CAnimation* CModel::Get_Animation_For_Index(_uint iAnimIndex)
+{
+	return m_Animations[iAnimIndex];
+}
+
+_float4x4* CModel::Get_Combined_For_AnimationIndex(_uint iAnimationIndex, _float fTrackPosition)
+{
+
+	return nullptr;
+	//return m_Animations[iAnimationIndex]->Get_TransformationBoneMatrices(fTrackPosition);
+}
+
+_float4x4* CModel::Calc_OffsetMatrice(_uint iAnimationIndex, _float fTrackPosition, _float4x4* pMatrix)
+{
+	
+	_float4x4* pCalcMatrix = pMatrix;
+	_uint iNumBones = m_Bones.size();
+
+
+	for (_int i = 0; i < iNumBones; ++i)
+	{
+		pCalcMatrix[i] = m_Bones[i]->Get_CombinedTransformationFloat4x4();
+	}
+
+
+	pMatrix = m_Animations[iAnimationIndex]->Get_TransformationBoneMatrices(fTrackPosition, pCalcMatrix);
+
+
+//_float4x4* pOffsetMatrices = Get_OffsetMatrices();
+//
+//for (_int i = 0; i < m_iNumMeshes; ++i)
+//{
+//	vector<_float4x4> m_OffsetMatrices = m_Meshes[i]->Get_OffsetMatrices();
+//	vector<_uint> vecIndices = m_Meshes[i]->Get_BoneIndices();
+//	_int iNumBones = m_Meshes[i]->Get_NumBones();
+//
+//	for (_int j = 0; j < iNumBones; ++j)
+//	{
+//		XMStoreFloat4x4(&pMatrix[vecIndices[j]], XMLoadFloat4x4(&pMatrix[vecIndices[j]]) * XMLoadFloat4x4(&m_OffsetMatrices[j]));
+//	}
+//}
+
+
+	return pMatrix;
+}
+
+_float4x4* CModel::Get_OffsetMatrices()
+{
+	_float4x4 BoneMatrices[800];
+	
+	for (_int i = 0; i < m_iNumMeshes; ++i)
+	{
+		vector<_float4x4> m_OffsetMatrices = m_Meshes[i]->Get_OffsetMatrices();
+		vector<_uint> vecIndices = m_Meshes[i]->Get_BoneIndices();
+		_int iNumBones = m_Meshes[i]->Get_NumBones();
+
+		for (_int j = 0; j < iNumBones; ++j)
+		{
+			BoneMatrices[vecIndices[j]] = m_OffsetMatrices[j];
+		}
+	}
+
+	return BoneMatrices;
+}
+
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)
@@ -128,6 +193,8 @@ HRESULT CModel::Render(_uint iMeshIndex)
 
 	return S_OK;
 }
+
+
 
 void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 {

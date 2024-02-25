@@ -351,13 +351,6 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
    
         if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
             Out.vColor = Out.vColor * 0.8f;
-	
-   
-        //float FogFactor = saturate((300.f - fViewZ) / (300.f - 0.f));
-    
-        //float4 vFogColor = float4(0.5f, 0.5f, 0.5f, 1.f);
-    
-        //Out.vColor = FogFactor * Out.vColor + (1.f - FogFactor) * vFogColor;
     }
   
     return Out;
