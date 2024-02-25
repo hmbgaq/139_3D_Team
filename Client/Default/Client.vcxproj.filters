@@ -304,6 +304,9 @@
     <Filter Include="05. Preset">
       <UniqueIdentifier>{f22542eb-83c2-4588-baa9-eaee46804047}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow">
+      <UniqueIdentifier>{eb6483af-c74c-4ffa-9e3d-456a091385c6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\99.StyleWindow">
       <UniqueIdentifier>{878c0a39-123a-47f1-9886-b7358e46d58a}</UniqueIdentifier>
     </Filter>
@@ -593,6 +596,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Environment_Interact.h">
       <Filter>02.GameObjects\02. Environment\Environment_Interact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Window_ShaderTool.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
@@ -1065,6 +1071,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Environment_Interact.cpp">
       <Filter>02.GameObjects\02. Environment\Environment_Interact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Window_ShaderTool.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Window_Style.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\99.StyleWindow</Filter>

@@ -1,16 +1,11 @@
 #include "stdafx.h"
-
 #include "../Imgui/imgui.h"
 #include "../Imgui/imgui_impl_dx11.h"
 #include "../Imgui/imgui_impl_win32.h"
-
-
-
 #include "GameInstance.h"
 #include "Imgui_Manager.h"
 #include "Imgui_Window.h"
 #include "Include_Imgui_Windows.h"
-
 
 ImGuiIO g_io;
 IMPLEMENT_SINGLETON(CImgui_Manager);
@@ -23,7 +18,6 @@ CImgui_Manager::CImgui_Manager()
 
 HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-
 	m_pDevice = pDevice;
 	m_pContext = pContext;
 	m_pGameInstance = CGameInstance::GetInstance();
@@ -38,7 +32,6 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	g_io = ImGui::GetIO(); (void)g_io;
 	g_io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 
-
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::SetNextWindowPos(viewport->Pos);
 	ImGui::SetNextWindowSize(viewport->Size);
@@ -51,10 +44,10 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 	//ImGui::StyleColorsDark();
 	g_io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.0f, NULL, g_io.Fonts->GetGlyphRangesKorean());
+	//g_io.Fonts->AddFontFromFileTTF("../Bin/Resources/Fonts/Medium.ttf", 16.0f, NULL, g_io.Fonts->GetGlyphRangesKorean());
+	//g_io.Fonts->AddFontFromFileTTF("../Bin/Resources/Fonts/English.ttf", 16.0f, NULL, g_io.Fonts->GetGlyphRangesDefault());
 
-	if(FAILED(Ready_Windows()))
-		return E_FAIL;
-
+	FAILED_CHECK(Ready_Windows());
 
 	_int iSize = _int(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_WINDOW_END);
 
@@ -131,6 +124,10 @@ HRESULT CImgui_Manager::Ready_Windows()
 	/* 세팅된 윈도우를 추가시켜준다. */
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_UITOOL_WINDOW, pWindowUI);
 #pragma endregion UI_END
+#pragma region 셰이더 툴
+	pWindow = CWindow_ShaderTool::Create(m_pDevice, m_pContext);
+	if (pWindow == nullptr)
+		return E_FAIL;
 
 
 #pragma region ImGui스타일 옵션 창
@@ -142,10 +139,11 @@ HRESULT CImgui_Manager::Ready_Windows()
 	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_STYLE_WINDOW, pWindow);
 #pragma endregion ImGui스타일 옵션 창
 
+	pWindow->SetUp_ImGuiDESC(u8"셰이더 툴", ImVec2{ 300.f, 650.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse /*| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove*/ | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 1.f));
+	m_mapWindows.emplace(IMGUI_WINDOW_TYPE::IMGUI_SHADER_WINDOW, pWindow);
+#pragma endregion 셰이더 툴
 	return S_OK;
 }
-
-
 
 #pragma endregion 이니셜라이즈
 
@@ -242,6 +240,19 @@ void CImgui_Manager::MenuTick(_float fTimeDelta)
  				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
  			}
 
+			if (ImGui::MenuItem("ShaderTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_SHADER_WINDOW]))
+			{
+				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_SHADER_WINDOW);
+
+				if (nullptr == pWindow)
+				{
+					MSG_BOX("Shader 윈도우가 없음. Ready_Window 함수 확인 바람");
+					return;
+				}
+
+				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+			}
+
  			ImGui::EndMenu();
 		}
 
@@ -278,7 +289,6 @@ void CImgui_Manager::Render()
 		ImGui::NewFrame();
 		m_bFirstTick = true;
 	}
-
 
 	for (auto& pWindowPair : m_mapWindows)
 	{

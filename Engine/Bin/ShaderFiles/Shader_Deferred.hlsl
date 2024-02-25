@@ -1,4 +1,6 @@
 #include "Shader_Defines.hlsli"
+//#include "HeightFogUsage.hlsl"
+//#pragma multi_compile _ HF_FOG_ENABLED HF_LIGHT_ATTEN
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_ProjMatrixInv, g_ViewMatrixInv;
@@ -16,7 +18,7 @@ vector g_vLightSpecular;
 float g_fLightIntensity;
 vector g_vLightFlag;
 
-texture2D g_DiffuseTexture;
+Texture2D g_DiffuseTexture;
 vector g_vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
 vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
@@ -24,6 +26,7 @@ vector g_vCamPosition;
 
 Texture2D g_PriorityTarget;
 Texture2D g_ShadeTexture;
+Texture2D g_EmissiveTarget;
 Texture2D g_NormalTexture;
 Texture2D g_NormalDepthTarget;
 Texture2D g_DepthTexture;
@@ -33,13 +36,64 @@ Texture2D g_ORMTexture;
 Texture2D g_SSAOTexture;
 Texture2D g_BloomTarget;
 Texture2D g_OutlineTarget;
+Texture2D g_PerlinNoiseTexture;
 
 /* 활성 여부 */ 
 bool g_bSSAO_Active;
 bool g_bBloom_Active;
 bool g_Outline_Active;
 bool g_PBR_Active;
+bool g_bFog_Active;
 
+
+/* 안개 */
+float4 g_vFogColor              = { 0.5f, 0.5f, 0.5f, 0.2f };
+float2  g_fFogStartEnd          = { 300.f, 600.f };
+float   g_fFogLimit             = -1.f;
+float2  g_vFogUVAcc             = { 0.f, 0.f };
+
+float   g_fFogStartDepth        = 0.f;
+float   g_fFogStartDistance     = 0.f;
+float   g_fFogDistanceValue     = 0.f;
+float   g_fFogHeightValue       = 0.f;
+float   g_fDistanceDensity      = 0.f;
+float   g_fHeightDensity        = 0.f;
+
+/* ------------------ Function ------------------ */ 
+
+float DistanceFogFactor_Caculation(float fViewZ)
+{
+    return saturate((g_fFogStartEnd.y - fViewZ) / (g_fFogStartEnd.y - g_fFogStartEnd.x));
+}
+
+float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise)
+{
+    // 지정 범위로 변환된 Distance
+    float pixelDistance = g_fDistanceDensity * (length(g_vCamPosition.w - toEye) - g_fFogStartDepth);
+    
+	// 지정 범위로 변환된 Height
+    float pixelHeight = g_fHeightDensity * toEye.y;
+    
+    float distanceOffset = min(pow(2.0f, pixelDistance - g_fFogStartDistance), 1.0f);
+    float heightOffset = min(pow(1.2f, -(pixelHeight + 3.0f)), 1.0f);
+    
+	// 거리 기반 안개 강도 설정
+    float distanceValue = exp(0.01f * pow(pixelDistance - g_fFogDistanceValue, 3.0f));
+    float fogDistanceFactor = min(distanceValue, 1.0f);
+
+	// 높이 기반 안개 강도 설정
+    float heightValue = (pixelHeight * g_fFogHeightValue) - 0.1f;
+    float fogHeightFactor = pow(pow(2.0f, -heightValue), heightValue) * (1.0f - distanceOffset);
+
+	// 두 요소를 결합한 최종 요소
+    float fogFinalFactor = min(fogDistanceFactor * fogHeightFactor * fNoise, 1.0f) + min(distanceOffset * heightOffset, 1.0f) + 0.01f;
+
+	// 최종 혼합 색상
+    return lerp(vOriginColor.rgb, g_vFogColor.xyz, fogFinalFactor);
+}
+
+
+/* ------------------ ------------------ */ 
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -224,31 +278,32 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
             discard;
         
         Out.vColor = vPriority;
-        return Out;
     }
+    else
+    {
+        vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
+        vShade = saturate(vShade);
 	
-    vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
-    vShade = saturate(vShade);
+        vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+        vSpecular = saturate(vSpecular);
 	
-    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    vSpecular = saturate(vSpecular);
+        vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
+        if (g_bSSAO_Active)
+            vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord); /* SSAO 적용 */
 	
-    vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
-    if (g_bSSAO_Active)
-        vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord); /* SSAO 적용 */
+        vector vBloom = float4(0.f, 0.f, 0.f, 0.f);
+        if (g_bBloom_Active)
+            vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
 	
-    vector vBloom = float4(0.f, 0.f, 0.f, 0.f);
-    if (g_bBloom_Active)
-        vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
+        vector vOutline = float4(1.f, 1.f, 1.f, 1.f);
+        if (g_Outline_Active)
+            vOutline = g_OutlineTarget.Sample(LinearSampler, In.vTexcoord);
 	
-    vector vOutline = float4(1.f, 1.f, 1.f, 1.f);
-    if (g_Outline_Active)
-        vOutline = g_OutlineTarget.Sample(LinearSampler, In.vTexcoord);
-	
-    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
-    Out.vColor.a = 1.f;
+    
+        Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
+        Out.vColor.a = 1.f;
     //Out.vColor = ((vDiffuse * vShade * vSSAO) + vSpecular + vBloom) * vOutline;
-	
+    }
     vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
     float fViewZ = vDepthDesc.y * g_CamFar;
 	
@@ -269,19 +324,35 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 	/* 월드 상의 위치를 구하자. */
 	/* 로컬위치 * 월드행렬 */
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-    vWorldPos = mul(vWorldPos, g_LightViewMatrix);
-    vWorldPos = mul(vWorldPos, g_LightProjMatrix);
-
-    float2 vUV = (float2) 0.0f;
-
-    vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
-    vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
-
-    float4 vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
-
-    if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
-        Out.vColor = Out.vColor * 0.8f;
-	
+        
+    if (true == g_bFog_Active )
+    {
+        float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
+        vTexCoord.x += g_vFogUVAcc.x;
+        vTexCoord.y += g_vFogUVAcc.y;
+    
+        float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
+    
+        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise);
+    
+        Out.vColor = vector(vFinalColor.rgb, 1.f);
+    }
+    else if (false == g_bFog_Active)
+    {
+        vWorldPos = mul(vWorldPos, g_LightViewMatrix);
+        vWorldPos = mul(vWorldPos, g_LightProjMatrix);
+   
+        float2 vUV = (float2) 0.0f;
+   
+        vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
+        vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
+   
+        float4 vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
+   
+        if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
+            Out.vColor = Out.vColor * 0.8f;
+    }
+  
     return Out;
 }
 

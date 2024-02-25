@@ -42,8 +42,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_LandObjects());
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 
-	if (FAILED(Ready_UI()))
-		return E_FAIL;
+	//if (FAILED(Ready_UI()))
+	//	return E_FAIL;
 
 	Set_Filter();
 

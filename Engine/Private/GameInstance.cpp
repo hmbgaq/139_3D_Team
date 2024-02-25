@@ -435,6 +435,11 @@ HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
 
+CRenderer* CGameInstance::Get_Renderer()
+{
+	return m_pRenderer;
+}
+
 
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebug(_bool _bRenderDebug)

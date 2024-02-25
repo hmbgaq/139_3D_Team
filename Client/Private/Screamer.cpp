@@ -57,17 +57,18 @@ void CScreamer::Tick(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_9))
 	{
-		m_iRenderPass += 1;
-		if (m_iRenderPass >= ECast(ANIM_SHADER::ANIM_SHADER_END))
-			m_iRenderPass = 0;
-
-		cout << "Render Pass : " << m_iRenderPass << endl;
+		if (m_iRenderPass == ECast(ANIM_SHADER::ANIM_ORIGIN))
+			m_iRenderPass = ECast(ANIM_SHADER::ANIM_BLOOM);
+		else if (m_iRenderPass == ECast(ANIM_SHADER::ANIM_BLOOM))
+			m_iRenderPass = ECast(ANIM_SHADER::ANIM_ORIGIN);
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_8))
 	{
 		m_vBloomColor += _float4(fTimeDelta, 0.f, 0.f, 0.f);
 	}
+	if (m_pGameInstance->Key_Down(DIK_6))
+		m_bRim = !m_bRim;
 
 	m_fTimeDelta += fTimeDelta;
 	m_fDissolveWeight += fTimeDelta * 0.5f;
@@ -87,9 +88,7 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
-
 	}
-
 
 	m_pGameInstance->Add_DebugRender(m_pColliderCom);
 }
@@ -208,7 +207,6 @@ HRESULT CScreamer::Ready_Components()
 	}
 
 	return S_OK;
-
 }
 
 HRESULT CScreamer::Bind_ShaderResources()
@@ -228,6 +226,24 @@ HRESULT CScreamer::Bind_ShaderResources()
 	/* Texture */
 	m_pBreakTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture");
 	m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
+
+	/* RimLight */
+	if(true == m_bRim)
+	{
+		m_vRimColor = { 1.0f, 1.f, 1.f, 0.3f };
+		m_vBloomPower = _float3(0.1f, 0.1f, 0.1f);
+	}
+	else
+	{
+		m_vRimColor = { 0.0f, 0.0f, 0.0f, 0.0f };
+		m_vBloomPower = { 0.0f, 0.0f, 0.0f };
+	}
+	m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
+
+	/* RimLight */
+	m_vCamPos = m_pGameInstance->Get_CamPosition();
+	m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+	m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
 
 	return S_OK;
 }
