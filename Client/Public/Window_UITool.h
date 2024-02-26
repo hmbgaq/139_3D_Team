@@ -18,6 +18,8 @@ public: /* ==================== Struct ==================== */
 
 	enum CHANGETYPE { NONE, SCALE, ROTATION, POSITION, CHANGE_END };
 
+	enum UITYPE { CHILD, PARENT, GROUP, TYPE_END };
+
 	typedef struct tagImageInfo
 	{
 		_int						iImage_Width = 100;
@@ -33,8 +35,9 @@ public:
 	typedef struct tagPathInfo
 	{
 		_int		iPathNum = 0;
-		string		strFileName;
-		string		strFilePath;
+		string		strObjectName = "";
+		string		strFileName = "";
+		string		strFilePath = "";
 	}PATHINFO;
 
 public:
@@ -95,20 +98,25 @@ public:							/* Add */
 	void						Add_ParentList(CUI::UI_DESC tIn_UI_Desc);
 	void						Add_ParentIndexNumber(PATHINFO& UI_Info);
 	void						Add_Create_Parts(CUI::UI_DESC tUIDesc);
+public:							/* Group */
 	void						Add_Parts(CUI* pUI);
+	void						Delete_Group();
 
 private:						/* Member */
-	_float3						m_fParent_Scale = { 0.f, 0.f, 0.f };
+	_float3						m_fParent_Scale = { 100.f, 100.f, 100.f };
 	_float3						m_fParent_Rotation = { 0.f, 0.f, 0.f };
-	_float3						m_fParent_Possition = { 0.f, 0.f, 0.f };
+	_float3						m_fParent_Position = { 0.f, 0.f, 0.5f };
 	
 	_int						m_iSelected_ParentClassIndex = 0; // 선택된 Parent Class
 	_int						m_iSelected_ParentObjectIndex = 0; // 선택된 Parent Object
+	_int						m_iSelected_GroupObjectIndex = 0; // 선택된 Parent Object
 
 	CUI::UI_DESC				m_tParent_Desc;
 	CUI*						m_pCurrParent = nullptr;
+	CUI*						m_pCurrGroup = nullptr;
 
 	vector<CGameObject*>		m_vecParentObject;
+	vector<CUI*>*				m_vecParentGroup = nullptr;
 	std::vector<PATHINFO*>		m_vecParentObjectName;	// 추가된 Parent오브젝트들의 이름 (리스트 박스 출력용)
 #pragma endregion Parent End
 
@@ -138,7 +146,7 @@ private:						/* Member */
 	CUI*						m_pCurrChild = nullptr;
 
 	vector<CGameObject*>		m_vecChildObject;
-	std::vector<PATHINFO*>		m_vecChildObjectName;	// 추가된 오브젝트들의 이름 (리스트 박스 출력용)
+	//std::vector<PATHINFO*>		m_vecChildObjectName;	// 추가된 오브젝트들의 이름 (리스트 박스 출력용)
 #pragma endregion Child End
 
 #pragma region	Info
@@ -146,6 +154,7 @@ public:
 	void						UI_Info();
 	HRESULT						Menu_Info();
 	void						Curr_Info();
+	CUI*						m_pCurrSelectUI = nullptr;
 #pragma endregion Info End
 
 #pragma region	Common
@@ -209,8 +218,8 @@ private: /* 2D */
 	_int						m_iCurrLayerNum = 0;
 
 
-private:
-
+private: /* enum */
+	UITYPE						m_eUIType;
 
 private: /* Value */
 	_float						m_fChangeValue = 0.1f;
@@ -225,6 +234,7 @@ private: /* bool */
 	_bool						m_bRotChange = false;
 	_bool						m_bPosChange = false;
 	_bool						m_bParent = false;
+	_bool						m_bGroupObject = false;
 
 private:
 	//// ==============폴더 경로==============

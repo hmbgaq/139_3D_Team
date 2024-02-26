@@ -86,8 +86,10 @@ public:
 		/* 알파 */
 		_float		fAlpha = 1.f;
 
+		_int		iObjectNum = 0;			// 몇번째 녀석인지
 		_int		iShaderNum = 0;			// 적용할 셰이더 넘버
 
+		string		strObjectName = "";
 		string		strLayerTag = "";
 		string		strCloneTag = "";
 		string		strProtoTag = "";
@@ -174,6 +176,15 @@ public: /* ============================== SetUp ============================== *
 	HRESULT			Ready_UI(const char* cFilePath);
 	HRESULT			Create_UIParts(UI_DESC tUI_Desc);
 	HRESULT			Update_Child_Transform();
+
+public:
+#ifdef _DEBUG
+	/* (컨테이너의 주소를 받아오는건 릴리즈 모드에서 터지는 버그가있음. 툴용) */
+	vector<CUI*>*	Get_vecUIParts() { return &m_vecUIParts; }
+#endif // DEBUG
+	string			Get_FilePathTag() { return m_tUIInfo.strFilePath; }
+	string			Get_ObjectNameTag() { return m_tUIInfo.strObjectName; }
+	_int			Get_ObjectNum() { return m_tUIInfo.iObjectNum; }
 
 protected: /* =========================== Ready ============================= */
 	virtual HRESULT Ready_Components();

@@ -369,6 +369,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_OutLineGroup());	/* Render_Group */
 	FAILED_CHECK(Render_Blend());
 
+
 	/* 효과넣어주기 */
 	//FAILED_CHECK(Render_Lights_UI());	// 빛
 	//FAILED_CHECK(Render_Deferred_UI());

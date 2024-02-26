@@ -44,7 +44,7 @@ void CUI_Player_HPBar::Priority_Tick(_float fTimeDelta)
 
 void CUI_Player_HPBar::Tick(_float fTimeDelta)
 {
-
+	__super::Tick(fTimeDelta);
 }
 
 void CUI_Player_HPBar::Late_Tick(_float fTimeDelta)
@@ -52,7 +52,6 @@ void CUI_Player_HPBar::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	__super::Tick(fTimeDelta);
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
@@ -117,6 +116,7 @@ HRESULT CUI_Player_HPBar::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+	string TestName = m_tUIInfo.strObjectName;
 	for (_int i = (_int)0; i < (_int)m_eTexture_Kind; ++i)
 	{
 		switch (i)
@@ -129,8 +129,8 @@ HRESULT CUI_Player_HPBar::Bind_ShaderResources()
 		}
 		case CUI_Player_HPBar::HPBAR_RED:
 		{
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-				return E_FAIL;
+			//if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+			//	return E_FAIL;
 
 			break;
 		}

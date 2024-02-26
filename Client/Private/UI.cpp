@@ -75,55 +75,7 @@ void CUI::Tick(_float fTimeDelta)
 		break;
 	}
 
-		Update_Child_Transform();
-
-	if (m_tUIInfo.pParentTransformCom != nullptr &&
-		m_tUIInfo.bParent == false)
-	{
-		///* Parent */
-		//_vector vPosition = m_tUIInfo.pParentTransformCom->Get_State(CTransform::STATE_POSITION);
-		//XMMATRIX ParentMat = m_tUIInfo.pParentTransformCom->Get_WorldMatrix();
-		///* Child */
-		//float4x4 ChildMat = {};
-
-		////XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_tUIInfo.pParentTransformCom->Get_WorldMatrix());
-		//XMStoreFloat4x4(&ChildMat, m_Origin_WorldMatrix * ParentMat); // Test
-		//
-		//// 스케일 값을 따로 가져오기
-		//XMVECTOR scale;
-		//XMVECTOR rotation;
-		//XMVECTOR translation;
-
-		//XMVECTOR Parent_scale;
-		//XMVECTOR Parent_rotation;
-		//XMVECTOR Parent_translation;
-
-		////XMMatrixDecompose(&scale, &rotation, &translation, ChildMat);
-		//XMMatrixDecompose(&scale, &rotation, &translation, m_Origin_WorldMatrix);
-		//XMMatrixDecompose(&Parent_scale, &Parent_rotation, &Parent_translation, ParentMat);
-
-		//m_Origin_WorldMatrix * ParentMat;
-
-		//// 원하는 스케일 값으로 변경
-		//XMVECTOR newScale = XMVectorSet(100, 100, 1, 0.0f);
-		//_vector newTrans = (translation - Parent_translation);
-		//// 스케일 값을 적용한 새로운 월드 행렬 계산
-		//// XMMATRIX newChildMat = XMMatrixScalingFromVector(newScale) * XMMatrixRotationQuaternion(rotation) * XMMatrixTranslationFromVector(translation);
-		//XMMATRIX newChildMat = XMMatrixScalingFromVector(scale) * XMMatrixRotationQuaternion(rotation) * XMMatrixTranslationFromVector(translation) * XMMatrixTranslationFromVector(newTrans);
-		////XMMATRIX newChildMat2 = XMMatrixScalingFromVector(scale2) * XMMatrixRotationQuaternion(rotation2) * XMMatrixTranslationFromVector(translation2);
-
-		//// 변환 행렬 설정
-		//float4x4 ResultMat;
-		//XMStoreFloat4x4(&ResultMat, newChildMat);
-
-		//// ChildMat을 사용하여 월드 행렬을 설정
-		//m_pTransformCom->Set_WorldMatrix(ResultMat);
-		////m_pTransformCom->Set_WorldMatrix(ChildMat);
-
-	}
-
-	_int iSize = m_vecUIParts.size();
-
+	Update_Child_Transform();
 	Check_RectPos();
 	Picking_UI();
 }
@@ -487,8 +439,6 @@ HRESULT CUI::Update_Child_Transform()
 			Origin_scale = SMath::Get_Scale(m_Origin_WorldMatrix);
 			Curr_scale = SMath::Get_Scale(m_pTransformCom->Get_WorldFloat4x4());
 
-
-
 			_vector vOrigin_rotation;
 			_vector vCurr_rotation;
 			
@@ -502,15 +452,6 @@ HRESULT CUI::Update_Child_Transform()
 			_float3 Result_Rotation = vCurr_rotation - vOrigin_rotation;
 			_float3 Result_Position = Curr_translation - Origin_translation;
 
-			_vector vCurRotPos =SMath::Rotate_PositionPitchYawRoll(Curr_translation, vCurr_rotation);
-			_vector vOriginRotPos =SMath::Rotate_PositionPitchYawRoll(Origin_translation, vOrigin_rotation);
-
-			_vector vResultRotPos;
-			vResultRotPos.m128_f32[0] = vCurRotPos.m128_f32[0] - vOriginRotPos.m128_f32[0];
-			vResultRotPos.m128_f32[1] = vCurRotPos.m128_f32[1] - vOriginRotPos.m128_f32[1];
-			vResultRotPos.m128_f32[2] = vCurRotPos.m128_f32[2] - vOriginRotPos.m128_f32[2];
-
-
 
 			for (auto& iter : m_vecUIParts)
 			{
@@ -518,34 +459,9 @@ HRESULT CUI::Update_Child_Transform()
 				_vector Child_Rot = iter->Get_Transform()->Get_Rotated();
 				_vector Child_Pos = iter->Get_Transform()->Get_State(CTransform::STATE_POSITION);
 
-				// 부모 객체의 회전값과 자식 객체의 회전값 차이 계산
-				_vector RotDiff = XMVectorSubtract(vCurr_rotation, Child_Rot);
-
-				// 자식 객체의 회전값 및 크기 조정
-				_vector New_Rot = XMVectorAdd(Child_Rot, RotDiff);
-
 				_float3 Finish_Scale;
 				_float3 Finish_Rot;
 				_float3 Finish_Pos;
-
-				// 중심 좌표를 원점으로 이동하여 계산
-				XMFLOAT3 localPoint;
-				localPoint.x = Curr_translation.m128_f32[0] - Child_Pos.m128_f32[0];
-				localPoint.y = Curr_translation.m128_f32[1] - Child_Pos.m128_f32[1];
-				localPoint.z = Curr_translation.m128_f32[2] - Child_Pos.m128_f32[2];
-
-				_float fAngle = XMConvertToRadians(Result_Rotation.z);
-
-				// 회전 후의 좌표 계산
-				float cosTheta = cos(fAngle);
-				float sinTheta = sin(fAngle);
-				float newX = localPoint.x * cosTheta - localPoint.y * sinTheta;
-				float newY = localPoint.x * sinTheta + localPoint.y * cosTheta;
-
-				// 회전 후의 좌표를 다시 원래 위치로 이동
-				Curr_translation.m128_f32[0] = newX + Child_Pos.m128_f32[0];
-				Curr_translation.m128_f32[1] = newY + Child_Pos.m128_f32[1];
-				Curr_translation.m128_f32[2] = localPoint.z + Child_Pos.m128_f32[2];
 
 				Finish_Scale.x = Result_Scale.x * Child_Scale.m128_f32[0];
 				Finish_Scale.y = Result_Scale.y * Child_Scale.m128_f32[1];
@@ -555,27 +471,20 @@ HRESULT CUI::Update_Child_Transform()
 				Finish_Rot.y = Result_Rotation.y + Child_Rot.m128_f32[1];
 				Finish_Rot.z = Result_Rotation.z + Child_Rot.m128_f32[2];
 
-				//_float parentAngle = XMConvertToRadians(Finish_Rot.z);
+				Finish_Pos.x = Result_Position.x + Child_Pos.m128_f32[0];
+				Finish_Pos.y = Result_Position.y + Child_Pos.m128_f32[1];
+				Finish_Pos.z = Result_Position.z + Child_Pos.m128_f32[2];
 
-
-
-				Finish_Pos = Result_Position + Child_Pos;
-
-				iter->Get_Transform()->Set_Scaling(Finish_Scale.x, Finish_Scale.y, Finish_Scale.z);
-				//iter->Get_Transform()->Rotation({ 0.f, 0.f, 1.f, 0.f }, vResultRotPos.m128_f32[2]);
-				iter->Get_Transform()->Set_State(CTransform::STATE_POSITION, Finish_Pos);
-
-
-				iter->Set_WorldMatrix(iter->Get_Transform()->Get_WorldMatrix() * RotMat);
+				iter->Get_Transform()->Set_Scaling(Finish_Scale.x, Finish_Scale.y, Finish_Scale.z); // Scale
+				iter->Get_Transform()->Set_State(CTransform::STATE_POSITION, Finish_Pos);			// Pos
+				iter->Set_WorldMatrix(iter->Get_Transform()->Get_WorldMatrix() * RotMat);			// Rot
 			}
 			m_Origin_WorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
 		}
 	}
 
-
 	return S_OK;
 }
-
 
 /* @@@보류@@@ */
 void CUI::Load_UIData(const char* _FilePath)
