@@ -19,7 +19,5 @@ void CPlayer_State_Attack::Release(CPlayer* pActor)
 
 CState<CPlayer>* CPlayer_State_Attack::Update_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-
-
-	return nullptr;
+	return Attack_State(pActor, fTimeDelta, _iAnimIndex);
 }

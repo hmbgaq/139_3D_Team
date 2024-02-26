@@ -266,7 +266,8 @@ void CCharacter::Free()
 
 	m_PartObjects.clear();
 
-	Safe_Release(m_pNavigationCom);
+	if (m_pNavigationCom)
+		Safe_Release(m_pNavigationCom);
 
 	
 }

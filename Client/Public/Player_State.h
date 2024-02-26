@@ -16,18 +16,33 @@ public:
 	virtual void Release(CPlayer* pActor) override;
 
 public:
-	CState<CPlayer>* MeleeCombo(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	virtual CState<CPlayer>* Update_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex) PURE;
 
-	//CState<CPlayer>* Ground_Normal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
-
-	//CState<CPlayer>* Run(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
-	//CState<CPlayer>* Roll(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
-
-	//CState<CPlayer>* Hitted(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 
 public:
-	virtual CState<CPlayer>* Update_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex) PURE;
+	CState<CPlayer>* Normal_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Attack_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Run_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Dodge_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Roll_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+
+public:
+	CState<CPlayer>* Normal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Run(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Dodge(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Attack(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* MeleeCombo(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+
+
+public:
+	_int iKeyUp		= DIK_UP;
+	_int iKeyDown	= DIK_DOWN;
+	_int iKeyLeft	= DIK_LEFT;
+	_int iKeyRight	= DIK_RIGHT;
+
 
 protected:
 	CGameInstance* m_pGameInstance = { nullptr };

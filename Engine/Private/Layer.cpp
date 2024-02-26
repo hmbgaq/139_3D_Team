@@ -102,6 +102,8 @@ void CLayer::Free()
 		{
 			Safe_Release(pGameObject);
 		}
+
+
 		
 	}
 		

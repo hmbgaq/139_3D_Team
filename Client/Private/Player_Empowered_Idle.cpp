@@ -10,7 +10,7 @@ void CPlayer_Empowered_Idle::Initialize(CPlayer* pActor)
 
 CState<CPlayer>* CPlayer_Empowered_Idle::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	return MeleeCombo(pActor, fTimeDelta, g_iAnimIndex);
+	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CPlayer_Empowered_Idle::Release(CPlayer* pActor)

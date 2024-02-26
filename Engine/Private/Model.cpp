@@ -568,6 +568,6 @@ void CModel::Free()
 	}
 	m_Meshes.clear();
 
-	if (false == m_isCloned)
-		m_MyAssimp.FreeScene();
+	//if (false == m_isCloned)
+	m_MyAssimp.FreeScene();
 }

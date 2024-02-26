@@ -11,7 +11,7 @@
 BEGIN(Engine)
 
 class CNavigation;
-class CPhysXCharacterController;
+//class CPhysXCharacterController;
 
 class ENGINE_DLL CCharacter abstract : public CGameObject
 {
@@ -93,8 +93,8 @@ protected:
 	CBody* m_pBody = { nullptr };
 	vector<CWeapon*> m_Weapons;
 
-protected:
-	CPhysXController* m_pPhysXControllerCom = { nullptr };
+//protected:
+//	CPhysXController* m_pPhysXControllerCom = { nullptr };
 
 
 	PxControllerCollisionFlags m_LastCollisionFlags;

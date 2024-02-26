@@ -298,9 +298,6 @@
     <Filter Include="02.GameObjects\00. Character\Player\State">
       <UniqueIdentifier>{2008ca2a-2599-4def-8e8a-e70c5329525f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\Idle">
-      <UniqueIdentifier>{e032c20b-1056-45cc-8d2b-11d88e2f2603}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent">
       <UniqueIdentifier>{7b921b65-953d-42b7-9c54-0be2db1cbd0c}</UniqueIdentifier>
     </Filter>
@@ -337,29 +334,152 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\1. Normal">
       <UniqueIdentifier>{26a92569-28d0-4a48-bc82-5691f980f161}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\1. Normal\0. Parent">
-      <UniqueIdentifier>{0fe2072a-a136-4d09-bc7f-55d3d12d9dc2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack">
       <UniqueIdentifier>{35f19b44-3af0-4e67-acca-e8bb4ca19b8b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\MeleeCombo">
-      <UniqueIdentifier>{94f5efea-dced-482a-8f83-1ca010e54559}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\1. Normal\0. Parent">
+      <UniqueIdentifier>{0fe2072a-a136-4d09-bc7f-55d3d12d9dc2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Hit">
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\1. Normal\1. Idle">
+      <UniqueIdentifier>{e032c20b-1056-45cc-8d2b-11d88e2f2603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\1. Normal\1. Idle\Empowered">
+      <UniqueIdentifier>{0d3a6495-7a3a-413d-99cb-72e67c1659b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\1. Normal\1. Idle\IdleLoop">
+      <UniqueIdentifier>{c3b78a0d-3500-4456-b9ac-b37ed9df2cb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Run">
+      <UniqueIdentifier>{37f753f8-1900-4e45-89e2-8bbed3caac9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Run\0. Parent">
+      <UniqueIdentifier>{4f2474a5-48f3-4710-89f6-64316593612c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front">
+      <UniqueIdentifier>{8d1be346-5a29-4526-be5b-f53c2ed9c5d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front\Left">
+      <UniqueIdentifier>{35c06441-c941-4b4d-a641-c256518e6fc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front\Left\45">
+      <UniqueIdentifier>{d6815c91-0b65-4287-b5cc-a76bc9e72ff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front\Right">
+      <UniqueIdentifier>{11be868b-cea2-4aa4-b642-eac7e29f56b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front\Right\45">
+      <UniqueIdentifier>{72df19ea-5532-4b0c-b310-bf640ee671c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back">
+      <UniqueIdentifier>{8a9e2223-3434-49e3-a71e-5a81fd9aac67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back\Left">
+      <UniqueIdentifier>{5f3b9bb7-36c2-485b-a32a-515aa0070da3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back\Left\135">
+      <UniqueIdentifier>{7385b9c9-bda6-4357-a1c7-d1908b32c021}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back\Right">
+      <UniqueIdentifier>{11c0541d-43ef-4ff8-871c-793864c059d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back\Right\135">
+      <UniqueIdentifier>{ea5a1d63-95f3-4849-ae8d-0fd231a500cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\99. Hit">
       <UniqueIdentifier>{e4140b58-b112-422c-963e-07dd414f1574}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge">
+      <UniqueIdentifier>{9ebe664d-6a8e-40aa-ad68-add2ed0bcec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\5. Roll">
+      <UniqueIdentifier>{fd3b974d-c27a-497d-92d4-a681feefab2b}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\0. Parent">
       <UniqueIdentifier>{bf0517fe-1859-4909-9576-2755e4e0c64b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\MeleeCombo\01">
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo">
+      <UniqueIdentifier>{166e3330-b419-4cb0-b748-6d52760110a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\01">
+      <UniqueIdentifier>{692c4f52-5f66-452a-a4b2-60f6abe875a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\02">
+      <UniqueIdentifier>{f203c6aa-ab1d-4537-a59a-12a9ab9b73cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\02\L_New">
+      <UniqueIdentifier>{ec894c4f-702e-473e-abe8-466211f51a7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\03">
+      <UniqueIdentifier>{28c5f495-7aa0-4615-86fa-2ac901dba296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\04">
+      <UniqueIdentifier>{be03726b-b676-4ab8-98dd-3b83b0aa0439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered">
+      <UniqueIdentifier>{a64a50db-3e5c-49c1-a65a-01529862c468}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\3. SlamDown">
+      <UniqueIdentifier>{7a350570-a566-45c6-8c4d-bdd0f93098ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\3. SlamDown\3. ManHero">
+      <UniqueIdentifier>{e47d8ed8-c936-4880-974d-1c2b0c635ab7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\3. SlamDown\1. v2">
+      <UniqueIdentifier>{2fa2f9cb-0584-4ec7-8c15-8012de51ea51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\3. SlamDown\2. v3">
+      <UniqueIdentifier>{6a8d00f5-1362-458c-9ada-eee2801118a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\0. MeleeCombo">
+      <UniqueIdentifier>{94f5efea-dced-482a-8f83-1ca010e54559}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\0. MeleeCombo\01">
       <UniqueIdentifier>{65f0be10-9d5e-4cf2-9420-e9c4e7fe4ea8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\MeleeCombo\02">
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\0. MeleeCombo\02">
       <UniqueIdentifier>{a6672b69-8554-4266-b360-9d748afc8dd6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\MeleeCombo\03">
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\0. MeleeCombo\03">
       <UniqueIdentifier>{99a88c61-81ec-45a4-bf0b-91ea88b255e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\1. Shot">
+      <UniqueIdentifier>{9b12a1fc-5331-4beb-9e7a-7d8812670b9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\2. SlamGround">
+      <UniqueIdentifier>{ca78baac-a5c5-4c26-bbd8-4b63fa978ffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\0. Parent">
+      <UniqueIdentifier>{b7ebb911-d2a3-4c89-b6ab-895e3ef0826d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge">
+      <UniqueIdentifier>{9ff65b0c-66c0-42b7-8cf1-29ea6cfdbf0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink">
+      <UniqueIdentifier>{bca5b963-1c90-4688-8671-f4d4dc8edfa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\B_03">
+      <UniqueIdentifier>{98346229-e371-4770-ac2f-d81c7d0be797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\CCW">
+      <UniqueIdentifier>{cf4438f1-a786-4d96-aab3-044053d5d581}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\CW">
+      <UniqueIdentifier>{8dd060b6-dded-4423-bb27-ef5f6b90263c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\L_03">
+      <UniqueIdentifier>{fc412b3f-7c6e-4a13-88e9-15ab3dc44c04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\R_03">
+      <UniqueIdentifier>{3e678654-6aee-4054-b4d0-740d78175e2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\B">
+      <UniqueIdentifier>{e3c1e96a-10c4-4a21-ac2d-b575fd83f791}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\L">
+      <UniqueIdentifier>{fca091fd-17ef-4910-943f-149a04eb7896}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\R">
+      <UniqueIdentifier>{a38107b3-f486-4ddb-9a4b-07b5ea9efb37}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -663,9 +783,6 @@
     <ClInclude Include="..\Public\Body_Rentier.h">
       <Filter>02.GameObjects\00. Character\ETC\Rentier%28임시%29\Parts</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_Empowered_Idle.h">
-      <Filter>02.GameObjects\00. Character\Player\State\Idle</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player_State.h">
       <Filter>02.GameObjects\00. Character\Player\State\0. Parent\0. Origin</Filter>
     </ClInclude>
@@ -676,7 +793,109 @@
       <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Empowered_MeleeCombo_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\MeleeCombo\01</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\0. MeleeCombo\01</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Empowered_MeleeCombo_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\0. MeleeCombo\02</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Empowered_MeleeCombo_03.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\0. MeleeCombo\03</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Empowered_Shot.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\1. Shot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Empowered_SlamGround.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\2. SlamGround</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SlamDown_v2.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\3. SlamDown\1. v2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SlamDown_v3.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\3. SlamDown\2. v3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SlamDown_ManHero.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\3. SlamDown\3. ManHero</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Empowered_Idle.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\1. Normal\1. Idle\Empowered</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_DodgeBlink_B_03.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\B_03</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_DodgeBlink_CCW.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\CCW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_DodgeBlink_CW.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\CW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_DodgeBlink_L_03.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\L_03</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_DodgeBlink_R_03.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\R_03</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Run_B.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Run_F.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Run_BL.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Run_BR.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Run_BR135.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back\Right\135</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Run_BL135.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back\Left\135</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Run_FL45.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front\Left\45</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Run_FR45.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front\Right\45</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Run_FL.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Run_FR.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Run.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_IdleLoop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\1. Normal\1. Idle\IdleLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeCombo_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\01</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeCombo_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\02</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeCombo_02_L_NEW.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\02\L_New</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeCombo_03_SlamAOEJump.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\03</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeCombo_04.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\04</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Dodge.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Dodge_B.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\B</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Dodge_L.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\L</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Dodge_R.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\R</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1147,9 +1366,6 @@
     <ClCompile Include="..\Private\Body_Rentier.cpp">
       <Filter>02.GameObjects\00. Character\ETC\Rentier%28임시%29\Parts</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Player_Empowered_Idle.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\Idle</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Player_State.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\0. Parent\0. Origin</Filter>
     </ClCompile>
@@ -1160,7 +1376,109 @@
       <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Empowered_MeleeCombo_01.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\MeleeCombo\01</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\0. MeleeCombo\01</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Empowered_MeleeCombo_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\0. MeleeCombo\02</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Empowered_MeleeCombo_03.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\0. MeleeCombo\03</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Empowered_Shot.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\1. Shot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Empowered_SlamGround.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\2. SlamGround</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_SlamDown_v2.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\3. SlamDown\1. v2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_SlamDown_v3.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\3. SlamDown\2. v3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_SlamDown_ManHero.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\2. Empowered\3. SlamDown\3. ManHero</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Empowered_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\1. Normal\1. Idle\Empowered</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_DodgeBlink_B_03.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\B_03</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_DodgeBlink_CCW.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\CCW</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_DodgeBlink_CW.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\CW</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_DodgeBlink_L_03.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\L_03</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_DodgeBlink_R_03.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\R_03</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Run.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Run_F.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Run_FR.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Run_FR45.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front\Right\45</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Run_FL.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Run_FL45.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\1. Front\Left\45</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Run_BL135.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back\Left\135</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Run_BR135.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back\Right\135</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Run_BR.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Run_BL.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Run_B.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\3. Run\2. Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Player_IdleLoop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\1. Normal\1. Idle\IdleLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeCombo_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\01</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeCombo_02_L_NEW.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\02\L_New</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeCombo_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\02</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeCombo_03_SlamAOEJump.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\03</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeCombo_04.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\1. MeleeCombo\04</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Dodge.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Dodge_B.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\B</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Dodge_L.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\L</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Dodge_R.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\R</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
