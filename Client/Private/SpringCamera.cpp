@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "Character.h"
+#include "Data_Manager.h"
+#include "Player.h"
 
 CSpringCamera::CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CCamera(pDevice, pContext, strPrototypeTag)
@@ -38,8 +40,8 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 		m_CameraOffsetY = 3.5f;
 		m_CameraOffsetZ = -7.0f;
 
-		m_pPlayer = m_pGameInstance->Get_Player();
-		m_ptarget = dynamic_cast<CTransform*>(m_pGameInstance->Get_Player()->Get_Transform());
+		m_pPlayer = CData_Manager::GetInstance()->Get_Player();
+		m_ptarget = m_pPlayer->Get_Transform();
 		ActualPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	}

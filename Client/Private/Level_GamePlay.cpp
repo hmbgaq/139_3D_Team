@@ -36,11 +36,11 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * p
 HRESULT CLevel_GamePlay::Initialize()
 {
 	FAILED_CHECK(Ready_LightDesc());
-	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 	FAILED_CHECK(Ready_LandObjects());
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
 	if (FAILED(Ready_UI()))
 		return E_FAIL;
@@ -106,19 +106,23 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 {
-	CCamera_Dynamic::DYNAMIC_CAMERA_DESC		Desc = {};
+	//CCamera_Dynamic::DYNAMIC_CAMERA_DESC		Desc = {};
 
-	Desc.fMouseSensor = 0.05f;
-	Desc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
-	Desc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-	Desc.fFovy = XMConvertToRadians(60.0f);
-	Desc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-	Desc.fNear = 0.1f;
-	Desc.fFar = m_pGameInstance->Get_CamFar();
-	Desc.fSpeedPerSec = 15.f;
-	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
+	//Desc.fMouseSensor = 0.05f;
+	//Desc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
+	//Desc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+	//Desc.fFovy = XMConvertToRadians(60.0f);
+	//Desc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	//Desc.fNear = 0.1f;
+	//Desc.fFar = m_pGameInstance->Get_CamFar();
+	//Desc.fSpeedPerSec = 15.f;
+	//Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc));
+
+
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
+		return E_FAIL;
 
 	return S_OK;
 }

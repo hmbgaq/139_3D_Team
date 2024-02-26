@@ -6,6 +6,7 @@
 #pragma region GAMEOBJECT
 #include "Camera_Dynamic.h"
 #include "SpringCamera.h"
+#include "MasterCamera.h"
 
 #include "Weapon_Player.h"
 #include "Particle_Blue.h"
@@ -497,6 +498,8 @@ HRESULT CLoader::Ready_Origin()
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Dynamic"), CCamera_Dynamic::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Camera_Dynamic"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Spring"), CSpringCamera::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Camera_Spring"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MasterCamera"), CMasterCamera::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_MasterCamera"))));
+
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"), CSky::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Sky"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Blue"), CParticle_Blue::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Particle_Blue"))));

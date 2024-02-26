@@ -1,10 +1,9 @@
 #pragma once
-#include "Player_State_Attack.h"
-
+#include "Player_State.h"
 
 BEGIN(Client)
 
-class CPlayer_MeleeCombo_02_L_NEW : public CPlayer_State_Attack
+class CPlayer_State_Walk : public CPlayer_State
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;
@@ -12,7 +11,8 @@ public:
 	virtual void Release(CPlayer* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_MeleeCombo_02_L_NEW;
+	virtual CState<CPlayer>* Update_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
+
 
 };
 

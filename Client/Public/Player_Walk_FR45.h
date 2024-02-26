@@ -1,10 +1,10 @@
 #pragma once
-#include "Player_State_Attack.h"
+#include "Player_State_Walk.h"
 
 
 BEGIN(Client)
 
-class CPlayer_MeleeCombo_02_L_NEW : public CPlayer_State_Attack
+class CPlayer_Walk_FR45 : public CPlayer_State_Walk
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;
@@ -12,7 +12,7 @@ public:
 	virtual void Release(CPlayer* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_MeleeCombo_02_L_NEW;
+	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_Walk_FR45;
 
 };
 

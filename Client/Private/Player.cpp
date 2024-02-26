@@ -3,7 +3,8 @@
 #include "GameInstance.h"
 #include "Body_Player.h"
 
-#include "Player_Empowered_Idle.h"
+#include "Player_IdleLoop.h"
+#include "Data_Manager.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
@@ -36,8 +37,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CPlayer>(this);
-		m_pActor->Set_State(new CPlayer_Empowered_Idle());
+		m_pActor->Set_State(new CPlayer_IdleLoop());
 	}
+
+	CData_Manager::GetInstance()->Set_Player(this);
 
 	return S_OK;
 }
