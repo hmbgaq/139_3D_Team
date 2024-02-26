@@ -18,6 +18,8 @@ public:
 		RENDER_SSAO, RENDER_GODRAY, RENDER_OUTLINE,
 		/* Blend */
 		RENDER_NONBLEND, RENDER_BLEND, 
+		/* EFFECT */
+		RENDER_EFFECT, RENDER_EFFECT_PARTICLE, RENDER_EFFECT_MESH, 
 		/* UI */
 		RENDER_UI,
 		RENDER_NONBLEND_UI, /*RENDER_UI_MINIMAP, RENDER_UI_MINIMAP_ICON,*/
@@ -65,10 +67,12 @@ private:
 	HRESULT Render_NonBlend();
 
 	/* Pre-Post Processing */
-	HRESULT Render_OutLine_PostProcessing();
+	HRESULT Render_OutLine();
 	HRESULT Render_HBAO_PLUS();
 	HRESULT Render_Bloom();
 	HRESULT Render_Deferred();
+	HRESULT Render_Cascade_Shadow();
+	HRESULT Render_Decal();
 
 	/* Post Processing */
 	HRESULT Render_PostProcess();
@@ -76,6 +80,10 @@ private:
 	HRESULT Render_GodRay();
 	HRESULT Render_FXAA();
 	HRESULT Render_HDR();
+	HRESULT Render_SSR();
+
+	/* Effect */
+	HRESULT Render_Effect();
 
 	/* 최종 다 그리는곳 */
 	HRESULT Render_Final();

@@ -39,6 +39,7 @@ HRESULT CRenderer::Initialize()
 	/* 앞서 만든 MRT를 디버그렌더에 그리는용도 */
 	FAILED_CHECK(Ready_DebugRender()); 
 #endif
+
 	m_tHBAO_Option.bHBAO_Active = m_bSSAO_Active;
 	m_tFog_Option.bFog_Active = m_bFog_Active;
 	m_tHDR_Option.bHDR_Active = m_bHDR_Active;
@@ -81,10 +82,10 @@ HRESULT CRenderer::Create_Shader()
 	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_FINAL], E_FAIL);
 
 
-		/* Shader_UI */
+	/* Shader_UI */
 	{ // error : 같은 셰이더 배열에 넣어서
-		//m_pShader[SHADER_TYPE::SHADER_DEFERRED_UI] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_UI.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
-		//NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_DEFERRED], E_FAIL);
+	  //m_pShader[SHADER_TYPE::SHADER_DEFERRED_UI] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_UI.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
+	  //NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_DEFERRED], E_FAIL);
 	}
 
 	return S_OK;
@@ -305,7 +306,7 @@ HRESULT CRenderer::Control_HotKey()
 		cout << " ----------------------------- " << endl;
 		cout << " DIK_1 : NONE ON/OFF " << endl;
 		cout << " DIK_2 : HBAO+ ON/OFF " << endl;
-		cout << " DIK_3 : Blur ON/OFF " << endl;
+		cout << " DIK_3 : BlurBloom ON/OFF " << endl;
 		cout << " DIK_4 : HDR ON/OFF " << endl;
 		cout << " DIK_5 : FXAA ON/OFF " << endl;
 		cout << " DIK_6 : RimLight ON/OFF " << endl;
@@ -360,39 +361,53 @@ HRESULT CRenderer::Draw_RenderGroup()
 	Control_HotKey();
 #endif // _DEBUG
 
-	FAILED_CHECK(Render_Priority());	/* SkyBox */
-	FAILED_CHECK(Render_NonLight()); 
-	FAILED_CHECK(Render_NonBlend());	/* MRT_GameObjects*/
+	FAILED_CHECK(Render_Priority());			/* SkyBox */
 
-	{ 
-		FAILED_CHECK(Render_Bloom());
+	/* Pre-PostProcessing */
+	FAILED_CHECK(Render_NonBlend());			/* MRT_GameObjects*/
+	
+	FAILED_CHECK(Render_Cascade_Shadow());		/* MRT_Cascade */
 
-		/* Pre-PostProcessing */
-		if (true == m_tHBAO_Option.bHBAO_Active)
-		{
-			FAILED_CHECK(Render_HBAO_PLUS());
-		}
-		if (true == m_bOutline_Active)
-		{
-			FAILED_CHECK(Render_OutLine_PostProcessing());
-		}
-
-		FAILED_CHECK(Render_Shadow());		/* MRT_Shadow */
-		FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
-	}
-	FAILED_CHECK(Render_Deferred());
+	if (true == m_tHBAO_Option.bHBAO_Active)
 	{
-		/* PostProcessing*/
-		FAILED_CHECK(Render_PostProcess()); /* 모션블러, Radial 블러 등등 */
+		FAILED_CHECK(Render_HBAO_PLUS());
 	}
+
+	FAILED_CHECK(Render_Decal());	/* MRT_LightAcc */
+
+	/* 외곽선 */
+	FAILED_CHECK(Render_OutLine()); 
+	
+	FAILED_CHECK(Render_Effect());	/* - 외곽선 필요유무에 따라 위치가 달라질듯? */
+
+	FAILED_CHECK(Render_Shadow());		/* MRT_Shadow */
+
+	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
+
+	FAILED_CHECK(Render_Bloom()); /* 림라이트 밀릴수있음 주의 */
+
+	/* ★ Deferred ★*/
+	FAILED_CHECK(Render_Deferred());
+
+	FAILED_CHECK(Render_SSR());
+
+	FAILED_CHECK(Render_Blend());
+
+	FAILED_CHECK(Render_NonLight());
+
+	/* ★ PostProcessing ★*/
+	FAILED_CHECK(Render_PostProcess()); /* 모션블러, Radial 블러 등등 */
 
 	/* 그리기 */
 	FAILED_CHECK(Render_UI());
 	/* 마지막화면용 - 마지막 체크 위해서 */
 	FAILED_CHECK(Render_Final());
 
-	FAILED_CHECK(Render_OutLineGroup());	/* Render_Group */
-	FAILED_CHECK(Render_Blend());
+	/* 그리기 */
+	FAILED_CHECK(Render_UI());
+
+	/* 마지막화면용 - 마지막 체크 위해서 */
+	FAILED_CHECK(Render_Final());
 
 	/* 효과넣어주기 */
 	//FAILED_CHECK(Render_Lights_UI());	// 빛
@@ -400,6 +415,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	
 	/* 최종 완성본 그리기 */
 	//FAILED_CHECK(Render_UI_Final());
+
 #ifdef _DEBUG
 	if(true == m_bRenderDebug)
 		FAILED_CHECK(Render_Debug());
@@ -803,8 +819,7 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Shade"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_ShadeTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SpecularTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_LightDepthTexture"));
-	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RimLight"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_EmissiveTarget"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
 
 	/* Post Processing */
 	{
@@ -836,9 +851,19 @@ HRESULT CRenderer::Render_Deferred()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_OutLine_PostProcessing()
+HRESULT CRenderer::Render_Cascade_Shadow()
 {
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_OutLine"))); /* Target SSAO 단독 */
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Decal()
+{
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_OutLine()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_OutLine"))); /* Target_OutLine저장 */
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_OUTLINE]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
@@ -1053,6 +1078,16 @@ HRESULT CRenderer::Render_HDR()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_SSR()
+{
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Effect()
+{
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_Final()
 {
 	if (m_pGameInstance->Key_Down(DIK_T))
@@ -1073,7 +1108,7 @@ HRESULT CRenderer::Render_Final()
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_RawValue("g_saturation", &m_tScreen_Option.fFinal_Saturation, sizeof(_float)));
 
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_FXAA"), m_pShader[SHADER_TYPE::SHADER_FINAL], "g_FinalTarget"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse_UI"), m_pShader[SHADER_TYPE::SHADER_FINAL], "g_Diffuse_UITexture"));	// 색상
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse_UI"), m_pShader[SHADER_TYPE::SHADER_FINAL], "g_Diffuse_UITexture"));	// MRT_GameObjects_UI
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Begin(0));
 
@@ -1543,7 +1578,7 @@ void CRenderer::Free()
 //
 //	m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 //
-//	m_pContext->DrawIndexed(m_iQuadIndexCount, 0, 0);
+//	m_pContext->DIndexed(m_iQuadIndexCount, 0, 0);
 //
 //	return S_OK;
 //}
