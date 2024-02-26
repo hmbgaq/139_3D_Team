@@ -178,10 +178,84 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
 
-	for (_int i = 0; i < (_int)TEXTURE_END; i++)
-		Out_Json["strTextureTag"][i] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strTextureTag[i]);
+	Out_Json["strProtoTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strProtoTag);
+	Out_Json["strPartTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strPartTag);
 
+	for (_int i = 0; i < (_int)TEXTURE_END; i++)
+	{
+		Out_Json["strTextureTag"][i] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strTextureTag[i]);
+	}
+		
+	for (_int i = 0; i < (_int)TEXTURE_END; i++)
+	{
+		Out_Json["iTextureIndex"][i] = m_tParticleDesc.iTextureIndex[i];
+	}
+	
+	Out_Json["iRenderGroup"] = m_tParticleDesc.iRenderGroup;
 	Out_Json["strShaderTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strShaderTag);
+	Out_Json["iShaderPassIndex"] = m_tParticleDesc.iShaderPassIndex;
+
+	Out_Json["bBillBoard"] = m_tParticleDesc.bBillBoard;
+	Out_Json["bDissolve"] = m_tParticleDesc.bDissolve;
+
+	CJson_Utility::Write_Float2(Out_Json["vUV_Offset"], m_tParticleDesc.vUV_Offset);
+	CJson_Utility::Write_Float2(Out_Json["vUV_Scale"], m_tParticleDesc.vUV_Scale);
+
+	Out_Json["fUV_RotDegree"] = m_tParticleDesc.fUV_RotDegree;
+
+	Out_Json["bUV_Wave"] = m_tParticleDesc.bUV_Wave;
+	Out_Json["fUV_WaveSpeed"] = m_tParticleDesc.fUV_WaveSpeed;
+
+	CJson_Utility::Write_Float4(Out_Json["vColor_Offset"], m_tParticleDesc.vColor_Offset);
+	CJson_Utility::Write_Float4(Out_Json["vColor_Clip"], m_tParticleDesc.vColor_Clip);
+	CJson_Utility::Write_Float4(Out_Json["vColor_Mul"], m_tParticleDesc.vColor_Mul);
+
+	Out_Json["fBloom"] = m_tParticleDesc.fBloom;
+	Out_Json["fRadial"] = m_tParticleDesc.fRadial;
+	Out_Json["fDissolveAmount"] = m_tParticleDesc.fDissolveAmount;
+	Out_Json["padding"] = m_tParticleDesc.padding;
+	
+	Out_Json["bActive_Tool"] = m_tParticleDesc.bActive_Tool;
+	Out_Json["bPlay"] = m_tParticleDesc.bPlay;
+	Out_Json["bLoop"] = m_tParticleDesc.bLoop;
+	Out_Json["bReverse"] = m_tParticleDesc.bReverse;
+	Out_Json["bRender"] = m_tParticleDesc.bRender;
+
+	Out_Json["eType_Easing"] = m_tParticleDesc.eType_Easing;
+	Out_Json["bParentPivot"] = m_tParticleDesc.bParentPivot;
+
+	for (_int i = 0; i < 4; ++i)
+		CJson_Utility::Write_Float4(Out_Json["matPivot"][i], XMLoadFloat4x4(&m_tParticleDesc.matPivot).r[i]);
+
+	for (_int i = 0; i < 4; ++i)
+		CJson_Utility::Write_Float4(Out_Json["matOffset"][i], XMLoadFloat4x4(&m_tParticleDesc.matOffset).r[i]);
+		
+	CJson_Utility::Write_Float3(Out_Json["vPosition_Start"], m_tParticleDesc.vPosition_Start);
+	CJson_Utility::Write_Float3(Out_Json["vPosition_End"], m_tParticleDesc.vPosition_End);
+	Out_Json["bPosition_Lerp"] = m_tParticleDesc.bPosition_Lerp;
+
+	CJson_Utility::Write_Float3(Out_Json["vRotation_Start"], m_tParticleDesc.vRotation_Start);
+	CJson_Utility::Write_Float3(Out_Json["vRotation_End"], m_tParticleDesc.vRotation_End);
+	Out_Json["bRotation_Lerp"] = m_tParticleDesc.bRotation_Lerp;
+
+	CJson_Utility::Write_Float3(Out_Json["vScaling_Start"], m_tParticleDesc.vScaling_Start);
+	CJson_Utility::Write_Float3(Out_Json["vScaling_End"], m_tParticleDesc.vScaling_End);
+	Out_Json["bScaling_Lerp"] = m_tParticleDesc.bScaling_Lerp;
+
+	CJson_Utility::Write_Float3(Out_Json["vVelocity_Start"], m_tParticleDesc.vVelocity_Start);
+	CJson_Utility::Write_Float3(Out_Json["vVelocity_End"], m_tParticleDesc.vVelocity_End);
+	CJson_Utility::Write_Float3(Out_Json["vVelocity_Cur"], m_tParticleDesc.vVelocity_Cur);
+	Out_Json["bVelocity_Lerp"] = m_tParticleDesc.bVelocity_Lerp;
+
+
+	CJson_Utility::Write_Float4(Out_Json["vColor_Start"], m_tParticleDesc.vColor_Start);
+	CJson_Utility::Write_Float4(Out_Json["vColor_End"], m_tParticleDesc.vColor_End);
+	CJson_Utility::Write_Float4(Out_Json["vColor_Cur"], m_tParticleDesc.vColor_Cur);
+	Out_Json["bColor_Lerp"] = m_tParticleDesc.bColor_Lerp;
+
+
+	/* Particle */
+
 
 	return true;
 }
@@ -190,10 +264,85 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-	for (_int i = 0; i < (_int)TEXTURE_END; i++)
-		m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strTextureTag[i]) = In_Json["strTextureTag"][i];
+	m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strProtoTag) = In_Json["strProtoTag"];
+	m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strPartTag) = In_Json["strPartTag"];
 
+	for (_int i = 0; i < (_int)TEXTURE_END; i++)
+	{
+		m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strTextureTag[i]) = In_Json["strTextureTag"][i];
+		m_tParticleDesc.iTextureIndex[i] = In_Json["iTextureIndex"][i];
+	}
+
+	m_tParticleDesc.iRenderGroup = In_Json["iRenderGroup"];
 	m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strShaderTag) = In_Json["strShaderTag"];
+	m_tParticleDesc.iShaderPassIndex = In_Json["iShaderPassIndex"];
+
+	m_tParticleDesc.bBillBoard = In_Json["bBillBoard"];
+	m_tParticleDesc.bDissolve = In_Json["bDissolve"];
+
+
+	CJson_Utility::Load_Float2(In_Json["vUV_Offset"], m_tParticleDesc.vUV_Offset);
+	CJson_Utility::Load_Float2(In_Json["vUV_Scale"], m_tParticleDesc.vUV_Scale);
+
+
+	m_tParticleDesc.fUV_RotDegree = In_Json["fUV_RotDegree"];
+
+	m_tParticleDesc.bUV_Wave = In_Json["bUV_Wave"];
+	m_tParticleDesc.fUV_WaveSpeed = In_Json["fUV_WaveSpeed"];
+
+
+	CJson_Utility::Load_Float4(In_Json["vColor_Offset"], m_tParticleDesc.vColor_Offset);
+	CJson_Utility::Load_Float4(In_Json["vColor_Clip"], m_tParticleDesc.vColor_Clip);
+	CJson_Utility::Load_Float4(In_Json["vColor_Mul"], m_tParticleDesc.vColor_Mul);
+
+	m_tParticleDesc.fBloom = In_Json["fBloom"];
+	m_tParticleDesc.fRadial = In_Json["fRadial"];
+	m_tParticleDesc.fDissolveAmount = In_Json["fDissolveAmount"];
+	m_tParticleDesc.padding = In_Json["padding"];
+
+
+	m_tParticleDesc.bActive_Tool = In_Json["bActive_Tool"];
+	m_tParticleDesc.bPlay = In_Json["bPlay"];
+	m_tParticleDesc.bLoop = In_Json["bLoop"];
+	m_tParticleDesc.bReverse = In_Json["bReverse"];
+	m_tParticleDesc.bRender = In_Json["bRender"];
+
+	m_tParticleDesc.eType_Easing = In_Json["eType_Easing"];
+
+	m_tParticleDesc.bParentPivot = In_Json["bParentPivot"];
+
+	_float4x4 matPivot;
+	ZeroMemory(&matPivot, sizeof(_float4x4));
+	CJson_Utility::Load_JsonFloat4x4(In_Json["matPivot"], matPivot);
+
+	_float4x4 matOffset;
+	ZeroMemory(&matOffset, sizeof(_float4x4));
+	CJson_Utility::Load_JsonFloat4x4(In_Json["matOffset"], matOffset);
+
+
+	CJson_Utility::Load_Float3(In_Json["vPosition_Start"], m_tParticleDesc.vPosition_Start);
+	CJson_Utility::Load_Float3(In_Json["vPosition_End"], m_tParticleDesc.vPosition_End);
+
+	m_tParticleDesc.bPosition_Lerp = In_Json["bPosition_Lerp"];
+
+	CJson_Utility::Load_Float3(In_Json["vRotation_Start"], m_tParticleDesc.vRotation_Start);
+	CJson_Utility::Load_Float3(In_Json["vRotation_End"], m_tParticleDesc.vRotation_End);
+	m_tParticleDesc.bRotation_Lerp = In_Json["bRotation_Lerp"];
+
+	CJson_Utility::Load_Float3(In_Json["vScaling_Start"], m_tParticleDesc.vScaling_Start);
+	CJson_Utility::Load_Float3(In_Json["vScaling_End"], m_tParticleDesc.vScaling_End);
+	m_tParticleDesc.bScaling_Lerp = In_Json["bScaling_Lerp"];
+
+	CJson_Utility::Load_Float3(In_Json["vVelocity_Start"], m_tParticleDesc.vVelocity_Start);
+	CJson_Utility::Load_Float3(In_Json["vVelocity_End"], m_tParticleDesc.vVelocity_End);
+	CJson_Utility::Load_Float3(In_Json["vVelocity_Cur"], m_tParticleDesc.vVelocity_Cur);
+	m_tParticleDesc.bVelocity_Lerp = In_Json["bVelocity_Lerp"];
+
+
+	CJson_Utility::Load_Float4(In_Json["vColor_Start"], m_tParticleDesc.vColor_Start);
+	CJson_Utility::Load_Float4(In_Json["vColor_End"], m_tParticleDesc.vColor_End);
+	CJson_Utility::Load_Float4(In_Json["vColor_Cur"], m_tParticleDesc.vColor_Cur);
+	 m_tParticleDesc.bColor_Lerp = In_Json["bColor_Lerp"];
 
 }
 
@@ -271,7 +420,7 @@ HRESULT CEffect_Particle::Ready_Components()
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strShaderTag,
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Particle_Point"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 

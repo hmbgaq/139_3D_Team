@@ -36,6 +36,7 @@ public:
 
 		// ¡÷¿Œ
 		CGameObject* pOwner			= { nullptr };
+		wstring		strOwnerTag		= { TEXT("") };
 		_bool		 bParentPivot	= { FALSE };
 		_float4x4	 matPivot		= {};		/* XMStoreFloat4x4(&m_matPivot, XMMatrixIdentity()) */
 		_float4x4	 matOffset		= {};
@@ -57,6 +58,10 @@ public:
 	virtual HRESULT Render()							override;
 
 public:
+	virtual _bool Write_Json(json& Out_Json)		override;
+	virtual void Load_FromJson(const json& In_Json)	override;
+
+public:
 	void	ReSet_Effect();
 	void	End_Effect();
 
@@ -72,7 +77,7 @@ public:
 
 private:
 	HRESULT Ready_Components();
-	HRESULT Ready_PartObjects();
+	HRESULT Ready_PartObjects(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg);
 
 private:
 	EFFECT_DESC	m_tEffectDesc = {};

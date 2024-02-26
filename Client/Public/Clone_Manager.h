@@ -11,7 +11,7 @@ END
 
 
 BEGIN(Client)
-
+class CEffect;
 //class;
 
 
@@ -49,11 +49,17 @@ public:	// 생성 함수 작성
 	};
 
 
+	CEffect* Create_Effect(_uint iLevelIndex, const wstring& strLayerTag, string strFileName);
+
+
 
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
+
+
+
 
 public:
 	virtual void	Free();

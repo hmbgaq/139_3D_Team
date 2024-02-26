@@ -16,6 +16,7 @@ public:
 
 	typedef struct tagEffectVoidDesc : public CGameObject::GAMEOBJECT_DESC
 	{
+		wstring		strProtoTag = { TEXT("") };
 		wstring		strPartTag = { TEXT("") };
 
 		// Texture
@@ -105,9 +106,9 @@ public:
 		_float2 vTextureSize	 = { 1792.f, 1792.f };  // fSpriteSizeX, fSpriteSizeY
 		_float2 vTileSize		 = { 256.f, 256.f };	// fAnimationSizeX, fAnimationSizeY
 
-		_int2	vUV_CurTileIndex = { 0, 0 }; // iCurrentHor, iCurrentVer
-		_int2	vUV_MinTileCount = { 0, 0 }; // iMinHor, iMinVer
-		_int2	vUV_MaxTileCount = { 7, 7 }; // iMaxHor, iMaxVer
+		_float2	vUV_CurTileIndex = { 0, 0 }; // iCurrentHor, iCurrentVer
+		_float2	vUV_MinTileCount = { 0, 0 }; // iMinHor, iMinVer
+		_float2	vUV_MaxTileCount = { 7, 7 }; // iMaxHor, iMaxVer
 
 	}UVSPRITE_DESC;
 
@@ -141,6 +142,11 @@ public:
 	virtual void	Tick(_float fTimeDelta)				override;
 	virtual void	Late_Tick(_float fTimeDelta)		override;
 	virtual HRESULT Render()							override;
+
+
+public:
+	virtual _bool Write_Json(json& Out_Json)		override;
+	virtual void Load_FromJson(const json& In_Json)	override;
 
 
 public:

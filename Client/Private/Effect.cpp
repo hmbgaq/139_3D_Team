@@ -133,6 +133,135 @@ HRESULT CEffect::Render()
 	return S_OK;
 }
 
+_bool CEffect::Write_Json(json& Out_Json)
+{
+	__super::Write_Json(Out_Json);
+
+	Out_Json["Effect"]["bActive_Tool"] = m_tEffectDesc.bActive_Tool;
+	Out_Json["Effect"]["bPlay"] = m_tEffectDesc.bPlay;
+	Out_Json["Effect"]["bLoop"] = m_tEffectDesc.bLoop;
+	Out_Json["Effect"]["bFinished"] = m_tEffectDesc.bFinished;
+	Out_Json["Effect"]["bReverse"] = m_tEffectDesc.bReverse;
+	Out_Json["Effect"]["bRender"] = m_tEffectDesc.bRender;
+
+	Out_Json["Effect"]["iPartSize"] = m_tEffectDesc.iPartSize;
+
+	Out_Json["Effect"]["eType_Easing"] = m_tEffectDesc.eType_Easing;
+
+	Out_Json["Effect"]["fTimeAcc"] = m_tEffectDesc.fTimeAcc;
+	Out_Json["Effect"]["fWaitingAcc"] = m_tEffectDesc.fWaitingAcc;
+	Out_Json["Effect"]["fRemainAcc"] = m_tEffectDesc.fRemainAcc;
+	Out_Json["Effect"]["fSequenceAcc"] = m_tEffectDesc.fSequenceAcc;
+
+	Out_Json["Effect"]["fLifeTime"] = m_tEffectDesc.fLifeTime;
+	Out_Json["Effect"]["fWaitingTime"] = m_tEffectDesc.fWaitingTime;
+	Out_Json["Effect"]["fRemainTime"] = m_tEffectDesc.fRemainTime;
+	Out_Json["Effect"]["fSequenceTime"] = m_tEffectDesc.fSequenceTime;
+
+	Out_Json["Effect"]["fLifeTimeRatio"] = m_tEffectDesc.fLifeTimeRatio;
+
+
+	Out_Json["Effect"]["strOwnerTag"] = m_pGameInstance->Convert_WString_To_String(m_tEffectDesc.strOwnerTag);
+	
+	for (_int i = 0; i < 4; ++i)
+		CJson_Utility::Write_Float4(Out_Json["Effect"]["matPivot"][i], XMLoadFloat4x4(&m_tEffectDesc.matPivot).r[i]);
+
+	for (_int i = 0; i < 4; ++i)
+		CJson_Utility::Write_Float4(Out_Json["Effect"]["matOffset"][i], XMLoadFloat4x4(&m_tEffectDesc.matOffset).r[i]);
+
+
+	_int iCount = 0;
+	for (auto& Pair : m_PartObjects)
+	{
+		if (nullptr != Pair.second)
+		{
+			Pair.second->Write_Json(Out_Json["Part"][iCount]);
+			iCount += 1;
+		}
+	}
+
+	return true;
+}
+
+void CEffect::Load_FromJson(const json& In_Json)
+{
+	__super::Load_FromJson(In_Json);
+
+	m_tEffectDesc.bActive_Tool = In_Json["Effect"]["bActive_Tool"];
+	m_tEffectDesc.bPlay = In_Json["Effect"]["bPlay"];
+	m_tEffectDesc.bLoop = In_Json["Effect"]["bLoop"];
+	m_tEffectDesc.bFinished = In_Json["Effect"]["bFinished"];
+	m_tEffectDesc.bReverse = In_Json["Effect"]["bReverse"];
+	m_tEffectDesc.bRender = In_Json["Effect"]["bRender"];
+
+	m_tEffectDesc.iPartSize = In_Json["Effect"]["iPartSize"];
+
+	m_tEffectDesc.eType_Easing = In_Json["Effect"]["eType_Easing"];
+
+	m_tEffectDesc.fTimeAcc = In_Json["Effect"]["fTimeAcc"];
+	m_tEffectDesc.fWaitingAcc = In_Json["Effect"]["fWaitingAcc"];
+	m_tEffectDesc.fRemainAcc = In_Json["Effect"]["fRemainAcc"];
+	m_tEffectDesc.fSequenceAcc = In_Json["Effect"]["fSequenceAcc"];
+
+	m_tEffectDesc.fLifeTime = In_Json["Effect"]["fLifeTime"];
+	m_tEffectDesc.fWaitingTime = In_Json["Effect"]["fWaitingTime"];
+	m_tEffectDesc.fRemainTime = In_Json["Effect"]["fRemainTime"];
+	m_tEffectDesc.fSequenceTime = In_Json["Effect"]["fSequenceTime"];
+
+	m_tEffectDesc.fLifeTimeRatio = In_Json["Effect"]["fLifeTimeRatio"];
+
+	m_pGameInstance->Convert_WString_To_String(m_tEffectDesc.strOwnerTag) = In_Json["Effect"]["strOwnerTag"];
+
+	_float4x4 matPivot;
+	ZeroMemory(&matPivot, sizeof(_float4x4));
+	CJson_Utility::Load_JsonFloat4x4(In_Json["Effect"]["matPivot"], matPivot);
+
+	_float4x4 matOffset;
+	ZeroMemory(&matOffset, sizeof(_float4x4));
+	CJson_Utility::Load_JsonFloat4x4(In_Json["Effect"]["matOffset"], matOffset);
+
+
+	if (m_PartObjects.empty() && 0 < m_tEffectDesc.iPartSize)
+	{
+		for (_int i = 0; i < m_tEffectDesc.iPartSize; ++i)
+		{
+			wstring strProtoTag = TEXT("");
+			wstring strPartTag = TEXT("");
+			string strTag = "";
+
+			strTag = In_Json["Part"][i]["strProtoTag"];
+			m_pGameInstance->String_To_WString(strTag, strProtoTag);
+
+			strTag = In_Json["Part"][i]["strPartTag"];
+			m_pGameInstance->String_To_WString(strTag, strPartTag);
+	
+			
+			CEffect_Particle::PARTICLE_DESC	tParticleDesc = {};
+
+			strTag = In_Json["Part"][i]["strTextureTag"][CEffect_Void::TEXTURE_DIFFUSE];			
+			m_pGameInstance->String_To_WString(strTag, tParticleDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE]);
+			
+			strTag = In_Json["Part"][i]["strTextureTag"][CEffect_Void::TEXTURE_MASK];
+			m_pGameInstance->String_To_WString(strTag, tParticleDesc.strTextureTag[CEffect_Void::TEXTURE_MASK]);
+
+			strTag = In_Json["Part"][i]["strTextureTag"][CEffect_Void::TEXTURE_NOISE];
+			m_pGameInstance->String_To_WString(strTag, tParticleDesc.strTextureTag[CEffect_Void::TEXTURE_NOISE]);
+
+			Ready_PartObjects(strProtoTag, strPartTag, &tParticleDesc);
+		}
+	}
+
+	_int iCount = 0;
+	for (auto& Pair : m_PartObjects)
+	{
+		if (nullptr != Pair.second)
+		{
+			Pair.second->Load_FromJson(In_Json["Part"][iCount]);
+			iCount += 1;
+		}
+	}
+}
+
 void CEffect::ReSet_Effect()
 {
 	m_tEffectDesc.fSequenceAcc	 = 0.f;
@@ -191,6 +320,7 @@ HRESULT CEffect::Add_PartObject(const wstring& strPrototypeTag, const wstring& s
 		return E_FAIL;
 
 	m_PartObjects.emplace(strPartTag, pPartObject);
+	m_tEffectDesc.iPartSize += 1;
 
 	return S_OK;
 }
@@ -202,10 +332,18 @@ HRESULT CEffect::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CEffect::Ready_PartObjects()
+HRESULT CEffect::Ready_PartObjects(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg)
 {
 	/* Json로드해서 저장된 파트 오브젝트 준비하도록하자. */
 
+	if (nullptr != Find_PartObject(strPrototypeTag))
+		return E_FAIL;
+
+	CGameObject* pPartObject = m_pGameInstance->Clone_Prototype(strPrototypeTag, pArg);
+	if (nullptr == pPartObject)
+		return E_FAIL;
+
+	m_PartObjects.emplace(strPartTag, pPartObject);
 
 
 	return S_OK;

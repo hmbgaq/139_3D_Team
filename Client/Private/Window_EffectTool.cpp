@@ -10,8 +10,10 @@
 #include "Effect_Rect.h"
 #include "Effect_Particle.h"
 #include "Effect_Instance.h"
+//#include "Mesh.h"
 
-#include "Mesh.h"
+
+#include "Clone_Manager.h"
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -223,9 +225,9 @@ void CWindow_EffectTool::Update_ParticleTab()
 			if (CEffect_Void::PARTICLE == eType_Effect)
 			{
 				m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-				m_pParticlePointDesc = static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_BufferDesc());
-				//CVIBuffer_Particle_Point* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
-				m_pParticlePointDesc;
+				//m_pParticlePointDesc = static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_BufferDesc());
+				m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
+				CVIBuffer_Particle_Point* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 				
 
 				/* 이름 */
@@ -305,8 +307,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::Text("MaxInstance : %d", m_iMaxNumInstance);
 				if (ImGui::DragInt("Instance Count", &m_iNumInstance, 1, 1, m_iMaxNumInstance))
 				{
-					m_pParticlePointDesc->iCurNumInstance = m_iNumInstance;
-					//pVIBuffer->Set_NumInstance(m_iNumInstance);
+					//m_pParticlePointDesc->iCurNumInstance = m_iNumInstance;
+					pVIBuffer->Set_NumInstance(m_iNumInstance);
 				}
 
 				/* 빌보드 키고 끄기 */
@@ -314,9 +316,9 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::RadioButton("BillBoard", &m_iBillBoard, 0);  ImGui::SameLine();
 				ImGui::RadioButton("Off BillBoard", &m_iBillBoard, 1);
 				if (0 == m_iBillBoard)
-					m_pParticleDesc->bBillBoard = TRUE;
-				else if (1 == m_iBillBoard)
 					m_pParticleDesc->bBillBoard = FALSE;
+				else if (1 == m_iBillBoard)
+					m_pParticleDesc->bBillBoard = TRUE;
 
 
 				/* 파티클 업데이트 모양(타입) */
@@ -944,7 +946,8 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 		if (CEffect_Void::PARTICLE == eType_Effect)
 		{
 			m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-			m_pParticlePointDesc = static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_BufferDesc());
+			//m_pParticlePointDesc = static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_BufferDesc());
+			m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
 
 			m_pCurPartEffect->Set_RemainTime(m_vTimes_Part[2]);
 
@@ -1219,6 +1222,13 @@ void CWindow_EffectTool::Update_EffectList()
 		Create_EffectObject(TEXT("Layer_Effect"));
 	}
 
+	ImGui::SeparatorText("");
+	if (ImGui::Button("         Create Test        "))
+	{
+		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "test2.json");
+	}
+
+
 	/* 이펙트 리스트 & 현재 이펙트 선택 */
 	if (ImGui::ListBox(" Effects ", &m_iCurEffectIndex, m_szEffectNames, m_pEffects.size(), (_int)6))
 	{
@@ -1323,7 +1333,8 @@ void CWindow_EffectTool::Update_EffectList()
 				if (CEffect_Void::PARTICLE == eType_Effect)
 				{
 					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-					m_pParticlePointDesc = static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_BufferDesc());
+					//m_pParticlePointDesc = static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_BufferDesc());
+					m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
 
 					m_pParticleDesc->bActive_Tool = TRUE;
 				}
@@ -1350,7 +1361,8 @@ void CWindow_EffectTool::Update_EffectList()
 				if (CEffect_Void::PARTICLE == eType_Effect)
 				{
 					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-					m_pParticlePointDesc = static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_BufferDesc());
+					//m_pParticlePointDesc = static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_BufferDesc());
+					m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
 
 					m_pParticleDesc->bActive_Tool = FALSE;
 				}
@@ -1376,7 +1388,8 @@ void CWindow_EffectTool::Update_EffectList()
 				if (CEffect_Void::PARTICLE == eType_Effect)
 				{
 					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-					m_pParticlePointDesc = static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_BufferDesc());
+					//m_pParticlePointDesc = static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_BufferDesc());
+					m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
 
 					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->ReSet();
 				}
@@ -1435,7 +1448,8 @@ void CWindow_EffectTool::Update_EffectList()
 					if (CEffect_Void::PARTICLE == eType_Effect)
 					{
 						m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-						m_pParticlePointDesc = static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_BufferDesc());
+						//m_pParticlePointDesc = static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_BufferDesc());
+						m_pParticlePointDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->Get_Desc();
 
 					}
 					else if (CEffect_Void::RECT == eType_Effect)
@@ -1669,7 +1683,6 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		tParticleDesc.fUV_RotDegree = { 0.f };
 
 
-
 		tParticleDesc.bPlay = { TRUE };
 
 		tParticleDesc.pOwner = m_pCurEffect;
@@ -1713,7 +1726,7 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		}
 
 		tParticleDesc.strPartTag = strName;
-
+		tParticleDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Particle");
 		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Particle"), strName, &tParticleDesc));
 
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
@@ -1830,7 +1843,7 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 		}
 
 		tRectDesc.strPartTag = strName;
-
+		tRectDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Rect");
 		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Rect"), strName, &tRectDesc));
 
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
@@ -1940,7 +1953,7 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		}
 
 		tMeshDesc.strPartTag = strName;
-
+		tMeshDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Instance");
 		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Instance"), strName, &tMeshDesc));
 
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
@@ -2105,18 +2118,16 @@ void CWindow_EffectTool::Update_SaveLoad()
 			if (ImGui::MenuItem("Save"))
 			{
 				m_eDialogType = DIALOG_TYPE::SAVE_DIALOG;
-				m_strDialogPath = "../Bin/DataFiles/Data_Effect/Particle_Info";
+				m_strDialogPath = "../Bin/DataFiles/Data_Effect/";
 
 				OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
-
-				Save_Function(m_strDialogPath, "Test.json");
 
 
 			}
 			if (ImGui::MenuItem("Load"))
 			{
 				m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
-				m_strDialogPath = "../Bin/DataFiles/Data_Effect/Particle_Info";
+				m_strDialogPath = "../Bin/DataFiles/Data_Effect/";
 
 				OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
 
@@ -2131,14 +2142,17 @@ HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 {
 	if (nullptr != m_pCurEffect)
 	{
-		char filePath[MAX_PATH] = "../Bin/DataFiles/Data_Effect/Particle_Info/Particle_TestSphere_Info.json";
-
 		json Out_Json;
 		m_pCurEffect->Write_Json(Out_Json);
 
-		CJson_Utility::Save_Json(filePath, Out_Json);
+		string strSavePath = strPath + "\\" + strFileName;
+		CJson_Utility::Save_Json(strSavePath.c_str(), Out_Json);
 	}
+	else
+	{
 
+
+	}
 
 
 	return S_OK;
@@ -2146,6 +2160,19 @@ HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 
 HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 {
+	if (nullptr == m_pCurEffect)
+	{
+		Create_EffectObject(TEXT("Layer_Effect"));
+	}
+
+	json In_Json;
+	string strLoadPath = strPath + "\\" + strFileName;
+	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
+
+	m_pCurEffect->Load_FromJson(In_Json);
+
+	Update_CurParameters();
+
 	return S_OK;
 }
 
