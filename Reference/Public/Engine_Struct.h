@@ -357,14 +357,13 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagFogDesc
 	{
-		_bool  bFog_Active			= false;
-		_float fFogStartDepth		= 100.f;
-		_float fFogStartDistance	= 10.f;
-		_float fFogDistanceValue	= 30.f;
-		_float fFogHeightValue		= 50.f;
-		_float fFogDistanceDensity	= 0.04f;
-		_float fFogHeightDensity	= 0.04f;
-		
+		bool  bFog_Active			= false;
+		float fFogStartDepth		= 55.f;
+		float fFogStartDistance		= 0.1f;
+		float fFogDistanceValue		= 30.f;
+		float fFogHeightValue		= 50.f;
+		float fFogDistanceDensity	= 0.05f;
+		float fFogHeightDensity		= 0.05f;
 	} FOG_DESC;
 
 	typedef struct ENGINE_DLL tagHDRDesc
@@ -429,7 +428,6 @@ namespace Engine
 	}OBJECT_SHADER_DESC;
 
 #pragma endregion
-
 }
 
 #endif // Engine_Struct_h__

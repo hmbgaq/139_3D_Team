@@ -125,25 +125,25 @@ void CWindow_ShaderTool::Compress_Fog_Setting()
 
 	if (ImGui::Button("Reset"))
 	{
-		m_eFog_Desc.fFogStartDepth = 100.f;
-		m_eFog_Desc.fFogStartDistance = 10.f;
-		m_eFog_Desc.fFogDistanceValue = 30.f;
-		m_eFog_Desc.fFogHeightValue = 50.f;
-		m_eFog_Desc.fFogDistanceDensity = 0.04f;
-		m_eFog_Desc.fFogHeightDensity = 0.04f;
+		m_eFog_Desc.fFogStartDepth		= 55.f;
+		m_eFog_Desc.fFogStartDistance	= 0.1f;
+		m_eFog_Desc.fFogDistanceValue	= 30.f;
+		m_eFog_Desc.fFogHeightValue		= 50.f;
+		m_eFog_Desc.fFogDistanceDensity = 0.05f;
+		m_eFog_Desc.fFogHeightDensity	= 0.05f;
 	}
 
-	ImGui::SliderFloat("FogStartDepth", &m_eFog_Desc.fFogStartDepth, 0.1f, 250.0f, "StartDepth = %.3f");
+	ImGui::SliderFloat("FogStartDepth", &m_eFog_Desc.fFogStartDepth, 0.001f, 250.0f, "StartDepth = %.3f");
 
-	ImGui::SliderFloat("FogStartDistance", &m_eFog_Desc.fFogStartDistance, 0.1f, 30.0f, "StartDistance = %.3f");
+	ImGui::SliderFloat("FogStartDistance", &m_eFog_Desc.fFogStartDistance, 0.001f, 30.0f, "StartDistance = %.3f");
 
-	ImGui::SliderFloat("FogDistanceValue", &m_eFog_Desc.fFogDistanceValue, 0.1f, 50.f, "FogDistanceValue = %.3f");
+	ImGui::SliderFloat("FogDistanceValue", &m_eFog_Desc.fFogDistanceValue, 0.001f, 50.f, "FogDistanceValue = %.3f");
 
-	ImGui::SliderFloat("FogHeightValue", &m_eFog_Desc.fFogHeightValue, 0.1f, 100.f, "HeightValue = %.3f");
+	ImGui::SliderFloat("FogHeightValue", &m_eFog_Desc.fFogHeightValue, 0.001f, 100.f, "HeightValue = %.3f");
 
-	ImGui::SliderFloat("FogDistanceDensity", &m_eFog_Desc.fFogDistanceDensity, 0.1f, 1.0f, "FogDistanceValue = %.3f");
+	ImGui::SliderFloat("FogDistanceDensity", &m_eFog_Desc.fFogDistanceDensity, 0.001f, 1.0f, "FogDistanceValue = %.3f");
 
-	ImGui::SliderFloat("FogHeightDensity", &m_eFog_Desc.fFogHeightDensity, 0.1f, 1.0f, "HeightDensity = %.3f");
+	ImGui::SliderFloat("FogHeightDensity", &m_eFog_Desc.fFogHeightDensity, 0.001f, 1.0f, "HeightDensity = %.3f");
 
 	m_pGameInstance->Get_Renderer()->Set_Fog(m_eFog_Desc.bFog_Active);
 
@@ -240,7 +240,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 	m_wstrLayerTag = TEXT("Layer_BackGround");
 
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(m_eCurrLevel_Enum, m_wstrLayerTag, TEXT("Prototype_GameObject_Sky")));
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, m_wstrLayerTag, TEXT("Prototype_GameObject_Sky")));
 
 	json Stage1MapJson = {};
 
@@ -285,12 +285,12 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 		CEnvironment_Object* pObject = { nullptr };
 
-		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 	}
 
 
 	json InteractJson = Stage1MapJson["Interact_Json"];
-	_int InteractJsonSize = (_int)InteractJson.size();
+	_int InteractJsonSize = InteractJson.size();
 
 	for (_int i = 0; i < InteractJsonSize; ++i)
 	{
@@ -300,7 +300,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 	}
 
 	json InstanceJson = Stage1MapJson["Instance_Json"];
-	_int InstanceJsonSize = (_int)InstanceJson.size();
+	_int InstanceJsonSize = InstanceJson.size();
 
 	for (_int i = 0; i < InstanceJsonSize; ++i)
 	{
@@ -318,9 +318,9 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
 
 		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
+		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
 
-		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
+		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
 		{
 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
 
@@ -335,7 +335,8 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 		CEnvironment_Instance* pInstanceObject = { nullptr };
 
-		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(m_eCurrLevel_Enum, m_wstrLayerTag, L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+
 	}
 
 	return S_OK;

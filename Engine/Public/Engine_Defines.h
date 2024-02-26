@@ -105,4 +105,4 @@ using namespace physx;
 
 #endif // _DEBUG
 
-
+#define MAX_CASCADES  3

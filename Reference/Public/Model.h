@@ -72,8 +72,8 @@ public:
 
 public:
 	HRESULT					Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices = nullptr);
-	
 	HRESULT					Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
+	HRESULT					Bind_ShaderCascade(CShader* pShader);
 
 public:
 	void					Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _bool _bIsTransition = true, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
@@ -120,6 +120,11 @@ private:
 	_bool					m_bIsAnimEnd			= { false };
 	ANIM_STATE				m_eAnimState			= { CModel::ANIM_STATE::ANIM_STATE_END };
 	_bool					m_bUseAnimationPos		= { false };
+
+	/* Cascade */
+	vector<_matrix>			m_matCurrTransforms;
+	vector<KEYFRAME>		m_CurrKeyFrameDatas;
+	vector<KEYFRAME>		m_PrevKeyFrameDatas;
 
 public:
 	typedef vector<CBone*>	BONES;
