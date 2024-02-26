@@ -20,6 +20,8 @@ public:
 	void Invalidate_TransformationMatrix_Normal(_float fCurrentTrackPosition, const CModel::BONES& Bones, _uint* pCurrentKeyFrameIndex);
 	void Invalidate_TransformationMatrix_Reverse(_float fCurrentTrackPosition, const CModel::BONES& Bones, _uint* pCurrentKeyFrameIndex);
 	void Invalidate_TransformationMatrix_Transition(KEYFRAME& _StartFrame, KEYFRAME& _EndFrame, _float fCurrentTrackPosition, const CModel::BONES& Bones);
+	//test
+	_uint Invalidate_TransformationMatrix_Test(_float fCurrentTrackPosition, const CModel::BONES& Bones, _uint* pCurrentKeyFrameIndex);
 
 public:
 	_uint		Get_BoneIndex() { return m_iBoneIndex; };
@@ -29,6 +31,7 @@ public:
 			return m_KeyFrames.back();
 		return m_KeyFrames[_iKeyFrameIndex];
 	};
+	vector<KEYFRAME>& Get_KeyFrames() { return m_KeyFrames; }
 
 	_bool		Is_Inputable(_float fCurrentTrackPosition, _uint _iIndex);
 	_bool		Is_Inputable_Front(_float fCurrentTrackPosition, _uint _iIndexFront);

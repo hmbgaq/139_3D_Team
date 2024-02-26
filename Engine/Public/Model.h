@@ -79,7 +79,7 @@ public:
 public:
 	virtual HRESULT			Initialize_Prototype(TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);
 	virtual HRESULT			Initialize(void* pArg);
-	virtual HRESULT			Render(_uint iMeshIndex);
+	virtual HRESULT			Render(CShader* pShader,_uint iMeshIndex);
 	
 
 public:
@@ -145,6 +145,7 @@ private:
 	ANIM_STATE				m_eAnimState			= { CModel::ANIM_STATE::ANIM_STATE_END };
 	_bool					m_bUseAnimationPos		= { false };
 
+	_int					m_AnimBoneIndecies[BONE_END];
 	_bool					m_bRootAnimation = true;
 	ID3D11ShaderResourceView* m_pSrv = { nullptr };
 	vector<ANIM_TRANSFORM>	  m_AnimTransforms;

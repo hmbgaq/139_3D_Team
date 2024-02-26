@@ -104,20 +104,20 @@ HRESULT CInteract_Chain::Render()
 					iRenderPass = ECast(MODEL_SHADER::MODEL_ORIGIN);
 
 				m_pShaderCom->Begin(iRenderPass);
-				m_pModelCom->Render((_uint)i);
+				m_pModelCom->Render(m_pShaderCom, (_uint)i);
 			}
 			else if (0 != i) /* ³ª¹« */
 			{
 				m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ORIGIN));
 
-				m_pModelCom->Render((_uint)i);
+				m_pModelCom->Render(m_pShaderCom, (_uint)i);
 			}
 		}
 		else
 		{
 		m_pShaderCom->Begin(iRenderPass);
 
-		m_pModelCom->Render((_uint)i);
+		m_pModelCom->Render(m_pShaderCom, (_uint)i);
 		}
 	}
 
@@ -138,7 +138,7 @@ HRESULT CInteract_Chain::Render_OutLine()
 
 		m_pShaderCom->Begin(4);
 
-		m_pModelCom->Render(0);
+		m_pModelCom->Render(m_pShaderCom, 0);
 	}
 
 	return S_OK;

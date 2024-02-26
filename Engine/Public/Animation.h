@@ -30,6 +30,9 @@ public:
 	_bool	Is_Transition_End() { return m_fTransitionEnd <= m_fTrackPosition; }
 	_bool	Is_Transition() { return m_bIsTransition; }
 
+	//임시 테스트
+	HRESULT Calculate_Animation(_uint iFrame, const CModel::BONES& Bones);
+
 	KEYFRAME Make_NowFrame(_uint m_iChannelIndex);
 
 	void	Reset_TransitionKeyFrame() {

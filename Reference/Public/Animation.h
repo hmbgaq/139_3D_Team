@@ -30,6 +30,9 @@ public:
 	_bool	Is_Transition_End() { return m_fTransitionEnd <= m_fTrackPosition; }
 	_bool	Is_Transition() { return m_bIsTransition; }
 
+	//임시 테스트
+	HRESULT Calculate_Animation(_uint iFrame, const CModel::BONES& Bones);
+
 	KEYFRAME Make_NowFrame(_uint m_iChannelIndex);
 
 	void	Reset_TransitionKeyFrame() {
@@ -66,10 +69,12 @@ public:
 		return m_szName;
 	}
 
-	_float Get_Duration() { return m_fDuration; }
-
+	_float	 Get_Duration() { return m_fDuration; }
+	_uint	 Get_MaxFrameCount() { return m_iMaxFrameCount; }
 public: //!For. AnimInstance
 	_float4x4*				Get_TransformationBoneMatrices(_float fTrackPosition, _float4x4* pMatrix);
+
+	HRESULT Clear_Channels();
 
 private:
 	_char					m_szName[MAX_PATH] = "";
@@ -77,6 +82,7 @@ private:
 	_float					m_fTickPerSecond = { 0.f }; /* 애니메이션의 재생 속도 : m_TickPerSecond * fTimeDelta */
 	_float					m_fTrackPosition = { 0.f }; /* 현재 재생되고 있는 위치. */
 
+	_uint					m_iMaxFrameCount = 0;
 	_uint					m_iNumChannels = { 0 }; /* 이 애니메이션이 사용하는 뼈의 갯수. */
 	vector<class CChannel*>	m_Channels;
 	vector<_uint>			m_CurrentKeyFrames;

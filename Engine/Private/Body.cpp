@@ -103,7 +103,7 @@ HRESULT CBody::Render()
 
 		m_pShaderCom->Begin(iPass);
 
-		m_pModelCom->Render((_uint)i);
+		m_pModelCom->Render(m_pShaderCom, (_uint)i);
 	}
 
 	return S_OK;
@@ -152,7 +152,7 @@ HRESULT CBody::Render_Shadow()
 
 		m_pShaderCom->Begin(iPass);
 
-		m_pModelCom->Render((_uint)i);
+		m_pModelCom->Render(m_pShaderCom, (_uint)i);
 	}
 
 	return S_OK;

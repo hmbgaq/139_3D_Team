@@ -138,7 +138,7 @@ HRESULT CMonster::Render()
 		}
 		m_pShaderCom->Begin(m_iRenderPass);
 
-		m_pModelCom->Render(_uint(i));
+		m_pModelCom->Render(m_pShaderCom, _uint(i));
 	}
 
 

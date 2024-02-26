@@ -70,7 +70,7 @@ HRESULT CEnvironment_Object::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
 
-		m_pModelCom->Render((_uint)i);
+		m_pModelCom->Render(m_pShaderCom,(_uint)i);
 	}
 
 	return S_OK;
@@ -104,7 +104,7 @@ HRESULT CEnvironment_Object::Render_Shadow()
 
 		m_pShaderCom->Begin(2); //TODO 추후 ENUM 으로 변경
 
-		m_pModelCom->Render((_uint)i);
+		m_pModelCom->Render(m_pShaderCom,(_uint)i);
 	}
 
 	return S_OK;

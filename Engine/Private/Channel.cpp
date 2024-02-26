@@ -148,6 +148,33 @@ void CChannel::Invalidate_TransformationMatrix_Transition(KEYFRAME& _StartFrame,
 	Bones[m_iBoneIndex]->Set_TransformationMatrix(TransformationMatrix);
 }
 
+_uint CChannel::Invalidate_TransformationMatrix_Test(_float fCurrentTrackPosition, const CModel::BONES& Bones, _uint* pCurrentKeyFrameIndex)
+{
+	KEYFRAME _StartFrame;
+	KEYFRAME _EndFrame;
+
+	_bool bIsNotEndKeyFrame = Update_KeyFrame(_StartFrame, _EndFrame, fCurrentTrackPosition, pCurrentKeyFrameIndex);
+
+	_float	fStart = _StartFrame.fTrackPosition;
+	_float	fEnd = _EndFrame.fTrackPosition;
+	_float	fRatio = Calc_Ratio(fStart, fCurrentTrackPosition, fEnd);
+
+	_matrix		TransformationMatrix;
+
+	if (!bIsNotEndKeyFrame)
+	{
+		TransformationMatrix = Make_EndFrame_TransformationMatrix();
+	}
+	else
+	{
+		TransformationMatrix = Make_TransformationMatrix(_StartFrame, _EndFrame, fRatio);
+	}
+
+	Bones[m_iBoneIndex]->Set_TransformationMatrix(TransformationMatrix);
+
+	return *(pCurrentKeyFrameIndex);
+}
+
 void CChannel::Reset_Channel(_float fCurrentTrackPosition, const CModel::BONES& Bones, _uint* pCurrentKeyFrameIndex)
 {
 	Invalidate_TransformationMatrix(fCurrentTrackPosition, Bones, pCurrentKeyFrameIndex);

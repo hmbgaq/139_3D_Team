@@ -65,7 +65,7 @@ HRESULT CForkLift::Render()
 
 		m_pShaderCom->Begin(0);
 
-		m_pModelCom->Render((_uint)i);
+		m_pModelCom->Render(m_pShaderCom, (_uint)i);
 	}
 
 	return S_OK;

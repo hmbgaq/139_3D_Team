@@ -23,7 +23,7 @@ private:
 public:
 	ID3D11RenderTargetView* Get_BackBufferRTV() const { return m_pBackBufferRTV; }
 	ID3D11DepthStencilView* Get_DSV() const { return m_pDepthStencilView; }
-
+	ID3D11Device* Get_Device()		{ return m_pDevice; }
 	GRAPHIC_DESC* Get_GraphicDesc() { return &m_tGraphicDesc; }
 
 public:

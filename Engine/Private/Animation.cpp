@@ -208,6 +208,29 @@ void CAnimation::Set_Transition(CAnimation* prevAnimation, _float _fTransitionDu
 	m_bIsTransition = true;
 }
 
+HRESULT CAnimation::Calculate_Animation(_uint iFrame, const CModel::BONES& Bones)
+{
+	/* 모든 채널의 키프레임을 iFrame으로 세팅한다. */
+	for (auto& pChannel : m_Channels)
+	{
+		for (auto& iCurrentKeyFrame : m_CurrentKeyFrames)
+			iCurrentKeyFrame = iFrame;
+	}
+
+	/* 위에서 지전항 키프레임대로, 모든 채널의 키프레임을 보간한다. (아직 부모 기준) */
+	_uint iChannelIndex = 0;
+	
+	for (auto& pChannel : m_Channels)
+	{
+		m_CurrentKeyFrames[iChannelIndex]
+			= pChannel->Invalidate_TransformationMatrix_Test(m_fTrackPosition, Bones, &(m_CurrentKeyFrames[iChannelIndex]));
+
+		++iChannelIndex;
+	}
+
+	return S_OK;
+}
+
 KEYFRAME CAnimation::Make_NowFrame(_uint m_iChannelIndex)
 {
 	KEYFRAME result;

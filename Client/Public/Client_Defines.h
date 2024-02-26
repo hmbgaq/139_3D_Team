@@ -3,8 +3,8 @@
 namespace Client
 {
 	/* 1600 x 900 가능할지도 ㄱㄷ */
-	static const unsigned int	g_iWinSizeX = 1920;
-	static const unsigned int	g_iWinSizeY = 1080;
+	static const unsigned int	g_iWinSizeX = 1600;
+	static const unsigned int	g_iWinSizeY = 900;
 
 	enum LEVEL { 
 		LEVEL_STATIC, 

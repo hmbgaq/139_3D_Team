@@ -78,7 +78,7 @@ HRESULT CBody_Player::Render_Shadow()
 
 		m_pShaderCom->Begin(2);
 
-		m_pModelCom->Render((_uint)i);
+		m_pModelCom->Render(m_pShaderCom,(_uint)i);
 	}
 
 	return S_OK;

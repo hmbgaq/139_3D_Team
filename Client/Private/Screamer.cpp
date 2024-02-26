@@ -110,7 +110,7 @@ HRESULT CScreamer::Render()
 		
 		m_pShaderCom->Begin(m_iRenderPass);
 
-		m_pModelCom->Render(_uint(i));
+		m_pModelCom->Render(m_pShaderCom, _uint(i));
 	}
 
 	return S_OK;
@@ -138,7 +138,7 @@ HRESULT CScreamer::Render_Shadow()
 
 		m_pShaderCom->Begin(2);
 
-		m_pModelCom->Render((_uint)i);
+		m_pModelCom->Render(m_pShaderCom, (_uint)i);
 	}
 
 	return S_OK;
@@ -161,7 +161,7 @@ HRESULT CScreamer::Render_OutLine()
 
 		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
 
-		m_pModelCom->Render(0);
+		m_pModelCom->Render(m_pShaderCom, 0);
 	}
 
 	return S_OK;

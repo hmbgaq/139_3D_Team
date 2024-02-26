@@ -113,7 +113,7 @@ HRESULT CWeapon::Render()
 
 		m_pShaderCom->Begin(0);
 
-		m_pModelCom->Render((_uint)i);
+		m_pModelCom->Render(m_pShaderCom, (_uint)i);
 	}
 
 	return S_OK;
@@ -146,7 +146,7 @@ HRESULT CWeapon::Render_Shadow()
 
 		m_pShaderCom->Begin((_uint)1);
 
-		m_pModelCom->Render((_uint)i);
+		m_pModelCom->Render(m_pShaderCom, (_uint)i);
 	}
 
 	return S_OK;
