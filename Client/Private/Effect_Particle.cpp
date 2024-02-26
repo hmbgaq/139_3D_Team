@@ -44,14 +44,13 @@ void CEffect_Particle::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Particle::Tick(_float fTimeDelta)
 {
-
-	CVIBuffer_Particle_Point::PARTICLE_POINT_DESC* pDesc = m_pVIBufferCom->Get_Desc();
+	//CVIBuffer_Particle_Point::PARTICLE_POINT_DESC* pDesc = m_pVIBufferCom->Get_Desc();
 
 	if (m_tParticleDesc.bActive_Tool)
 	{
 		m_fSequenceTime = m_fLifeTime + m_fRemainTime;
 
-		pDesc->bActive_Tool = TRUE;
+		//pDesc->bActive_Tool = TRUE;
 		pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
 		pDesc->vMinMaxLifeTime.y = m_fLifeTime;
 
@@ -112,7 +111,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 	}
 	else
 	{
-		m_pVIBufferCom->Get_Desc()->bActive_Tool = FALSE;
+		m_tParticleDesc.bActive_Tool = FALSE;
 	}
 }
 
@@ -198,6 +197,73 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 
 }
 
+void* CEffect_Particle::Get_BufferDesc()
+{
+	CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferDesc = {};
+
+	tBufferDesc.eType_Action = &m_tParticleDesc.eType_Action;
+	tBufferDesc.eType_Fade = &m_tParticleDesc.eType_Fade;
+	tBufferDesc.eType_ColorLerp = &m_tParticleDesc.eType_ColorLerp;
+
+	tBufferDesc.bLoop = &m_tParticleDesc.bLoop;
+	tBufferDesc.bReverse = &m_tParticleDesc.bReverse;
+	tBufferDesc.bSpriteAnim = &m_tParticleDesc.bSpriteAnim;
+
+	tBufferDesc.iCurNumInstance = &m_tParticleDesc.iCurNumInstance;
+	
+	tBufferDesc.vMinMaxLifeTime = &m_tParticleDesc.vMinMaxLifeTime;
+
+	tBufferDesc.vMinMaxRange = &m_tParticleDesc.vMinMaxRange;
+	tBufferDesc.vCenterPosition = &m_tParticleDesc.vCenterPosition;
+
+	tBufferDesc.vMinMaxSpeed = &m_tParticleDesc.vMinMaxSpeed;
+
+	tBufferDesc.fSpeedAcc = &m_tParticleDesc.fSpeedAcc;
+	tBufferDesc.fAccPosition = &m_tParticleDesc.fAccPosition;
+
+
+	tBufferDesc.bUseGravity = &m_tParticleDesc.bUseGravity;
+	tBufferDesc.fGravityAcc = &m_tParticleDesc.fGravityAcc;
+	tBufferDesc.fUseGravityPosition = &m_tParticleDesc.fUseGravityPosition;
+
+
+	tBufferDesc.vMinMaxRotationOffsetX = &m_tParticleDesc.vMinMaxRotationOffsetX;
+	tBufferDesc.vMinMaxRotationOffsetY = &m_tParticleDesc.vMinMaxRotationOffsetY;
+	tBufferDesc.vMinMaxRotationOffsetZ = &m_tParticleDesc.vMinMaxRotationOffsetZ;
+	tBufferDesc.vRotationOffset = &m_tParticleDesc.vRotationOffset;
+
+
+	tBufferDesc.vCurrentRotation = &m_tParticleDesc.vCurrentRotation;
+	tBufferDesc.vMinMaxRotationForce = &m_tParticleDesc.vMinMaxRotationForce;
+
+
+	tBufferDesc.vMinMaxScale = &m_tParticleDesc.vMinMaxScale;
+	tBufferDesc.vAddScale = &m_tParticleDesc.vAddScale;
+	tBufferDesc.vCurrentScale = &m_tParticleDesc.vCurrentScale;
+
+
+	tBufferDesc.vMinMaxRed = &m_tParticleDesc.vMinMaxRed;
+	tBufferDesc.vMinMaxGreen = &m_tParticleDesc.vMinMaxGreen;
+	tBufferDesc.vMinMaxBlue = &m_tParticleDesc.vMinMaxBlue;
+	tBufferDesc.vMinMaxAlpha = &m_tParticleDesc.vMinMaxAlpha;
+
+	tBufferDesc.vCurrentColor = &m_tParticleDesc.vCurrentColor;
+
+
+	/* SpriteDesc */
+	tBufferDesc.fSequenceTerm = &m_tSpriteDesc.fSequenceTerm;
+
+	tBufferDesc.vTextureSize = &m_tSpriteDesc.vTextureSize;
+	tBufferDesc.vTileSize = &m_tSpriteDesc.vTileSize;
+
+	tBufferDesc.vUV_CurTileIndex = &m_tSpriteDesc.vUV_CurTileIndex;
+	tBufferDesc.vUV_MinTileCount = &m_tSpriteDesc.vUV_MinTileCount;
+	tBufferDesc.vUV_MaxTileCount = &m_tSpriteDesc.vUV_MaxTileCount;
+
+
+	return &tBufferDesc;
+}
+
 
 HRESULT CEffect_Particle::Ready_Components()
 {
@@ -210,56 +276,18 @@ HRESULT CEffect_Particle::Ready_Components()
 
 	/* For.Com_VIBuffer */
 	{
-		CVIBuffer_Particle_Point::PARTICLE_POINT_DESC		tVIBufferDesc = {};
-		tVIBufferDesc.eType_Action = { CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE };
-		tVIBufferDesc.eType_Fade = { CVIBuffer_Particle_Point::TYPE_FADE::FADE_OUT };
+		CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC pBufferInfo = *static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(Get_BufferDesc());
+		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle_Point"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &pBufferInfo)))
+			return E_FAIL;
 
-		tVIBufferDesc.bActive_Tool	= { TRUE };
-		tVIBufferDesc.bBillBoard	= { TRUE };
-		//tVIBufferDesc.bPlay			= { TRUE };
-		tVIBufferDesc.bReverse		= { FALSE };
-		tVIBufferDesc.bLoop			= { TRUE };
 
-		tVIBufferDesc.vMinMaxLifeTime = _float2(0.5f, 3.0f);
-		tVIBufferDesc.iCurNumInstance = { m_tParticleDesc.iCurInstanceCnt };
+		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
+		Desc.pModel = m_pModelCom;
+		Desc.iNumInstance = 1;
 
-		tVIBufferDesc.vMinMaxRange = { 0.1f, 3.f };
-		tVIBufferDesc.vCenterPosition = _float3(0.f, 0.f, 0.f);
-		tVIBufferDesc.vOffsetPosition = _float3(0.f, 0.f, 0.f);
-
-		tVIBufferDesc.vMinMaxLengthPosition = { 3.f, 3.f };
-
-		tVIBufferDesc.vMinMaxSpeed = _float2(0.1f, 5.0f);
-		tVIBufferDesc.fSpeedAcc = { 2.f };
-		tVIBufferDesc.fAccPosition = { 0.1f };
-
-		tVIBufferDesc.fGravityAcc = { -9.8f };
-		tVIBufferDesc.vCurrentGravity = { 0.f, 0.f, 0.f };
-
-		tVIBufferDesc.vMinMaxRotationOffsetX = { 0.0f, 360.f };
-		tVIBufferDesc.vMinMaxRotationOffsetY = { 0.0f, 360.f };
-		tVIBufferDesc.vMinMaxRotationOffsetZ = { 0.0f, 360.f };
-
-		tVIBufferDesc.vCurrentRotation = { 0.f, 0.f, 0.f };
-		tVIBufferDesc.vMinMaxRotationForce = { 0.f, 0.f, 0.f };
-
-		tVIBufferDesc.vMinMaxScale = _float2(0.2f, 0.5f);
-		tVIBufferDesc.vAddScale = { 0.f, 0.f };
-		tVIBufferDesc.vMinMaxScaleForce = { 1.f, 1.f };
-
-		tVIBufferDesc.vCurrentColor = _float4(1.f, 1.f, 1.f, 1.f);
-		tVIBufferDesc.vColorSpeed = { 0.f, 0.f, 0.f, 0.f };
-		tVIBufferDesc.vColorForce = { 0.f, 0.f, 0.f, 0.f };
-
-		tVIBufferDesc.fMinMaxAlpha = { 1.f, 1.f };
-		tVIBufferDesc.fAlphaForce = { 0.f };
-
-		tVIBufferDesc.vSpriteUV = { 0.f, 0.f };
-		tVIBufferDesc.vSpriteUVForce = { 0.f, 0.f };
-		tVIBufferDesc.iSpriteFrameIndex = { 1 };
-
-		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle_Point"),
-			TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &tVIBufferDesc)))
+		/* For.Com_VIBuffer */
+		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),
+			TEXT("Com_VIBuffer_Model"), reinterpret_cast<CComponent**>(&m_pVIBufferCom_Model), &Desc)))
 			return E_FAIL;
 	}
 
@@ -290,16 +318,6 @@ HRESULT CEffect_Particle::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-
-	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
-	Desc.pModel = m_pModelCom;
-	Desc.iNumInstance = 1; 
-
-
-	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),
-		TEXT("Com_VIBuffer_Model"), reinterpret_cast<CComponent**>(&m_pVIBufferCom_Model), &Desc)))
-		return E_FAIL;
 
 
 
@@ -414,7 +432,6 @@ CGameObject* CEffect_Particle::Pool()
 void CEffect_Particle::Free()
 {
 	__super::Free();
-
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pVIBufferCom_Model);

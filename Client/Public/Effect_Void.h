@@ -13,6 +13,7 @@ public:
 	enum TYPE_EFFECT { PARTICLE, RECT, INSTANCE, MESH, TRAIL, TYPE_EFFECT_END };
 	enum TEXTURE	 { TEXTURE_DIFFUSE, TEXTURE_MASK, TEXTURE_NOISE, TEXTURE_SPRITE, TEXTURE_END };
 
+
 	typedef struct tagEffectVoidDesc : public CGameObject::GAMEOBJECT_DESC
 	{
 		wstring		strPartTag = { TEXT("") };
@@ -23,10 +24,6 @@ public:
 
 		// Render Group
 		_int		iRenderGroup = { 7 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 현재 작성기준 CRENDERER::RENDERGROUP::RENDER_END가 8임
-
-		// Instance
-		_uint		iCurInstanceCnt	 = { 1 };
-		_uint		iMaxInstanceCnt	 = { 100 };
 
 		// Shader
 		wstring		strShaderTag	 = { TEXT("") };
@@ -60,7 +57,6 @@ public:
 
 		// Times
 		EASING_TYPE		eType_Easing = { LINEAR };
-
 
 		// 주인
 		CGameObject* pOwner			 = { nullptr };
