@@ -198,6 +198,7 @@
     <ClInclude Include="..\Public\Actor.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
+    <ClInclude Include="..\Public\Body_Rentier.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
@@ -245,6 +246,7 @@
     <ClInclude Include="..\Public\Preset_PhysXColliderDesc.h" />
     <ClInclude Include="..\Public\Preset_PhysXControllerDesc.h" />
     <ClInclude Include="..\Public\PreviewAnimationModel.h" />
+    <ClInclude Include="..\Public\Rentier.h" />
     <ClInclude Include="..\Public\Screamer.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\SkyDome.h" />
@@ -293,6 +295,7 @@
     <ClCompile Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_sequencer.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
+    <ClCompile Include="..\Private\Body_Rentier.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\Private\Clone_Manager.cpp" />
     <ClCompile Include="..\Private\CustomDialogFont.cpp" />
@@ -336,6 +339,7 @@
     <ClCompile Include="..\Private\Preset_PhysXColliderDesc.cpp" />
     <ClCompile Include="..\Private\Preset_PhysXControllerDesc.cpp" />
     <ClCompile Include="..\Private\PreviewAnimationModel.cpp" />
+    <ClCompile Include="..\Private\Rentier.cpp" />
     <ClCompile Include="..\Private\Screamer.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\SkyDome.cpp" />

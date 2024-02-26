@@ -316,6 +316,12 @@
     <Filter Include="05. Preset\Controller">
       <UniqueIdentifier>{b60e7d43-e89e-4dc0-b28e-025176135616}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\ETC\Rentier">
+      <UniqueIdentifier>{5adee538-8b90-4941-b573-4fdd571e6596}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\ETC\Rentier\Parts">
+      <UniqueIdentifier>{332c2c45-941f-4174-8fd7-2367eca4860e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -611,6 +617,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Preset_PhysXColliderDesc.h">
       <Filter>05. Preset\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Rentier.h">
+      <Filter>02.GameObjects\00. Character\ETC\Rentier</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Rentier.h">
+      <Filter>02.GameObjects\00. Character\ETC\Rentier\Parts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1074,6 +1086,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Preset_PhysXColliderDesc.cpp">
       <Filter>05. Preset\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Rentier.cpp">
+      <Filter>02.GameObjects\00. Character\ETC\Rentier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Rentier.cpp">
+      <Filter>02.GameObjects\00. Character\ETC\Rentier\Parts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

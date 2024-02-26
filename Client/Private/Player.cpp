@@ -8,12 +8,12 @@
 #include "Data_Manager.h"
 #include "Clone_Manager.h"
 
-#include "TestEvent.h"
-#include "TestEventWithActor.h"
-#include "TestEventWithPlayer.h"
-
-#include "PhysXController.h"
-#include "PhysXCharacterController.h"
+//#include "TestEvent.h"
+//#include "TestEventWithActor.h"
+//#include "TestEventWithPlayer.h"
+//
+//#include "PhysXController.h"
+//#include "PhysXCharacterController.h"
 
 
 
@@ -120,14 +120,14 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (m_pGameInstance->Key_Down(DIK_E))
-	{
-		//IEvent* pEvent = CTestEvent::Create();
-		//IEvent* pEvent = CTestEventWithActor::Create(this);
-		IEvent* pEvent = CTestEventWithPlayer::Create(this);
-	
-		m_pGameInstance->Add_Event(pEvent);
-	}
+	//if (m_pGameInstance->Key_Down(DIK_E))
+	//{
+	//	//IEvent* pEvent = CTestEvent::Create();
+	//	//IEvent* pEvent = CTestEventWithActor::Create(this);
+	//	IEvent* pEvent = CTestEventWithPlayer::Create(this);
+	//
+	//	m_pGameInstance->Add_Event(pEvent);
+	//}
 
 
 }
