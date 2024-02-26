@@ -48,52 +48,39 @@ bool g_bFog_Active;
 
 /* 안개 */
 float4 g_vFogColor              = { 0.5f, 0.5f, 0.5f, 0.2f };
-float2  g_fFogStartEnd          = { 300.f, 600.f };
-float   g_fFogLimit             = -1.f;
 float2  g_vFogUVAcc             = { 0.f, 0.f };
 
-float   g_fFogStartDepth        = 0.f;
-float   g_fFogStartDistance     = 0.f;
-float   g_fFogDistanceValue     = 0.f;
-float   g_fFogHeightValue       = 0.f;
-float   g_fDistanceDensity      = 0.f;
-float   g_fHeightDensity        = 0.f;
-
-cbuffer FOG_DESC
+struct FOG_DESC 
 {
-    bool  bFog_Active;
+    bool bFog_Active;
     float fFogStartDepth;
     float fFogStartDistance;
     float fFogDistanceValue;
     float fFogHeightValue;
     float fFogDistanceDensity;
     float fFogHeightDensity;
+    float padding;
 };
-
+FOG_DESC g_Fogdesc;
 /* ------------------ Function ------------------ */ 
 
-float DistanceFogFactor_Caculation(float fViewZ)
-{
-    return saturate((g_fFogStartEnd.y - fViewZ) / (g_fFogStartEnd.y - g_fFogStartEnd.x));
-}
-
-float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise)
+float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise, FOG_DESC desc)
 {
     // 지정 범위로 변환된 Distance
-    float pixelDistance = g_fDistanceDensity * (length(g_vCamPosition.w - toEye) - g_fFogStartDepth);
+    float pixelDistance = desc.fFogDistanceDensity * (length(g_vCamPosition.w - toEye) - desc.fFogStartDepth);
     
 	// 지정 범위로 변환된 Height
-    float pixelHeight = g_fHeightDensity * toEye.y;
+    float pixelHeight = desc.fFogHeightDensity * toEye.y;
     
-    float distanceOffset = min(pow(2.0f, pixelDistance - g_fFogStartDistance), 1.0f);
+    float distanceOffset = min(pow(2.0f, pixelDistance - desc.fFogStartDistance), 1.0f);
     float heightOffset = min(pow(1.2f, -(pixelHeight + 3.0f)), 1.0f);
     
 	// 거리 기반 안개 강도 설정
-    float distanceValue = exp(0.01f * pow(pixelDistance - g_fFogDistanceValue, 3.0f));
+    float distanceValue = exp(0.01f * pow(pixelDistance - desc.fFogDistanceValue, 3.0f));
     float fogDistanceFactor = min(distanceValue, 1.0f);
 
 	// 높이 기반 안개 강도 설정
-    float heightValue = (pixelHeight * g_fFogHeightValue) - 0.1f;
+    float heightValue = (pixelHeight * desc.fFogHeightValue) - 0.1f;
     float fogHeightFactor = pow(pow(2.0f, -heightValue), heightValue) * (1.0f - distanceOffset);
 
 	// 두 요소를 결합한 최종 요소
@@ -279,7 +266,10 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
 PS_OUT PS_MAIN_FINAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-
+    //;
+    //float Test = fFogStartDistance; 
+    FOG_DESC Fog = g_Fogdesc;
+    
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
 
     if (vDiffuse.a == 0.f)
@@ -344,7 +334,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     
         float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
     
-        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise);
+        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, Fog);
     
         Out.vColor = vector(vFinalColor.rgb, 1.f);
     }

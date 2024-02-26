@@ -792,17 +792,11 @@ HRESULT CRenderer::Render_Deferred()
 	if(true == m_tFog_Option.bFog_Active)
 	{
 		/* test fog */
-		FAILED_CHECK(m_pPerlinNoiseTextureCom->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_PerlinNoiseTexture"));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Buffer("Bind_Buffer", &m_tFog_Option, sizeof(FOG_DESC)));
-
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogStartDepth",		&m_tFog_Option.fFogStartDepth, sizeof(_float)));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogStartDistance",	&m_tFog_Option.fFogStartDistance, sizeof(_float)));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogDistanceValue",	&m_tFog_Option.fFogDistanceValue, sizeof(_float)));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fFogHeightValue",	&m_tFog_Option.fFogHeightValue, sizeof(_float)));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fDistanceDensity",	&m_tFog_Option.fFogDistanceDensity, sizeof(_float)));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fHeightDensity",		&m_tFog_Option.fFogHeightDensity, sizeof(_float)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_Fogdesc", &m_tFog_Option, sizeof(FOG_DESC)));
 	}
+
 	/* MRT_GameObject */
+	FAILED_CHECK(m_pPerlinNoiseTextureCom->Bind_ShaderResource(m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_PerlinNoiseTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Priority"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_PriorityTarget"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DiffuseTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_DepthTexture"));

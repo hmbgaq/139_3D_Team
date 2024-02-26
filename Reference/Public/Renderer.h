@@ -131,8 +131,8 @@ private:
 	_bool						m_bPBR_Active			= { false };
 	_bool						m_bFXAA_Active			= { false };
 	_bool						m_bHDR_Active			= { false };
-	_bool						m_bFog_Active			= { true };
-	_bool						m_bRim = { false };
+	_bool						m_bFog_Active			= { false };
+	_bool						m_bRim					= { false };
 
 private:
 	HBAO_PLUS_DESC				m_tHBAO_Option			= {};

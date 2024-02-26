@@ -72,17 +72,17 @@ HRESULT CShader::Initialize_Prototype(const wstring& strShaderFilePath, const D3
 
 HRESULT CShader::Initialize(void* pArg)
 {
-	auto iter = m_hashBufferGroups.find(m_pEffect);
+	//auto iter = m_hashBufferGroups.find(m_pEffect);
 
-	if (iter == m_hashBufferGroups.end())
-	{
-		m_hashConstantBuffers = new CBUFFERS;
-		m_hashBufferGroups.emplace(m_pEffect, m_hashConstantBuffers);
-	}
-	else
-	{
-		m_hashConstantBuffers = iter->second;
-	}
+	//if (iter == m_hashBufferGroups.end())
+	//{
+	//		m_hashConstantBuffers = new CBUFFERS;
+	//	m_hashBufferGroups.emplace(m_pEffect, m_hashConstantBuffers);
+	//}
+	//else
+	//{
+	//	m_hashConstantBuffers = iter->second;
+	//}
 
 	return S_OK;
 }
@@ -169,21 +169,34 @@ HRESULT CShader::Bind_RawValue(const _char* pConstantName, const void* pData, _u
 
 HRESULT CShader::Bind_Buffer(const _char* pConstantName, const void* pData, _uint iSize)
 {
-	if (0 == m_hashConstantBuffers->count(pConstantName))
-	{
-		if (0 == iSize) return E_FAIL;
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
 
-		CConstantBuffer* pCBuffer = CConstantBuffer::Create(m_pDevice, m_pContext, iSize);
-		ID3DX11EffectConstantBuffer* pEffectCBuffer = m_pEffect->GetConstantBufferByName(pConstantName);
+	ID3DX11EffectConstantBuffer* pConstantBuffer = pVariable->AsConstantBuffer();
+	if (nullptr == pConstantBuffer)
+		return E_FAIL;
 
-		m_hashConstantBuffers->emplace(pConstantName, make_pair(pCBuffer, pEffectCBuffer));
-	}
+	// 버퍼 생성
+	D3D11_BUFFER_DESC bufferDesc;
+	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	bufferDesc.ByteWidth = iSize;
+	bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bufferDesc.CPUAccessFlags = 0;
 
-	auto& pCBufferPair = m_hashConstantBuffers->find(pConstantName);
-	CConstantBuffer*& pCBuffer = pCBufferPair->second.first;
-	pCBuffer->CopyData(pData);
+	D3D11_SUBRESOURCE_DATA initData;
+	ZeroMemory(&initData, sizeof(initData));
+	initData.pSysMem = pData;
 
-	return pCBufferPair->second.second->SetConstantBuffer(pCBuffer->GetBuffer());
+	ID3D11Buffer* pBuffer;
+	HRESULT hr = m_pDevice->CreateBuffer(&bufferDesc, &initData, &pBuffer);
+	if (FAILED(hr))
+		return hr;
+
+	// 셰이더 리소스에 상수 버퍼 설정
+	return pConstantBuffer->SetConstantBuffer(pBuffer);
+
 }
 
 CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)

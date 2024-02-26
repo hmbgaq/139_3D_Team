@@ -357,14 +357,15 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagFogDesc
 	{
-		_bool  bFog_Active			= false;
-		_float fFogStartDepth		= 55.f;
-		_float fFogStartDistance	= 0.1f;
-		_float fFogDistanceValue	= 30.f;
-		_float fFogHeightValue		= 50.f;
-		_float fFogDistanceDensity	= 0.05f;
-		_float fFogHeightDensity	= 0.05f;
-		
+		bool  bFog_Active			= false;
+		float fFogStartDepth		= 55.f;
+		float fFogStartDistance		= 0.1f;
+		float fFogDistanceValue		= 30.f;
+		float fFogHeightValue		= 50.f;
+		float fFogDistanceDensity	= 0.05f;
+		float fFogHeightDensity		= 0.05f;
+		float	padding; // 패딩 추가하여 크기를 32바이트로 맞춤
+
 	} FOG_DESC;
 
 	typedef struct ENGINE_DLL tagHDRDesc
@@ -429,7 +430,6 @@ namespace Engine
 	}OBJECT_SHADER_DESC;
 
 #pragma endregion
-
 }
 
 #endif // Engine_Struct_h__
