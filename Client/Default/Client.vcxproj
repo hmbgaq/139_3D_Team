@@ -237,6 +237,11 @@
     <ClInclude Include="..\Public\Particle_Blue.h" />
     <ClInclude Include="..\Public\Particle_Red.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\Player_Empowered_Idle.h" />
+    <ClInclude Include="..\Public\Player_Empowered_MeleeCombo_01.h" />
+    <ClInclude Include="..\Public\Player_State.h" />
+    <ClInclude Include="..\Public\Player_State_Attack.h" />
+    <ClInclude Include="..\Public\Player_State_Normal.h" />
     <ClInclude Include="..\Public\Player_Weapon_ELShotgun.h" />
     <ClInclude Include="..\Public\Player_Weapon_ELWinchester.h" />
     <ClInclude Include="..\Public\Player_Weapon_FlameBelcher.h" />
@@ -330,6 +335,11 @@
     <ClCompile Include="..\Private\Particle_Blue.cpp" />
     <ClCompile Include="..\Private\Particle_Red.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\Player_Empowered_Idle.cpp" />
+    <ClCompile Include="..\Private\Player_Empowered_MeleeCombo_01.cpp" />
+    <ClCompile Include="..\Private\Player_State.cpp" />
+    <ClCompile Include="..\Private\Player_State_Attack.cpp" />
+    <ClCompile Include="..\Private\Player_State_Normal.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_ELShotgun.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_ELWinchester.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_FlameBelcher.cpp" />

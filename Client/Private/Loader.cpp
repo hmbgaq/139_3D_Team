@@ -33,10 +33,6 @@
 #include "Player_Weapon_FlameBelcher.h"
 #include "Player_Weapon_Shotgun.h"
 #include "Player_Weapon_Winchester.h"
-
-#include "Rentier.h"
-#include "Body_Rentier.h"
-
 #pragma endregion
 #pragma region UI
 /* Anything */
@@ -479,8 +475,8 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"), CPlayer::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Player"), CBody_Player::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Player"))));
 	
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Rentier"), CRentier::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Rentier"))));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Rentier"), CBody_Rentier::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Rentier"))));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Rentier"), CRentier::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Rentier"))));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Rentier"), CBody_Rentier::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Rentier"))));
 
 	//! PlayerWeapon
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Revolver"), CPlayer_Weapon_Revolver::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Revolver"))));

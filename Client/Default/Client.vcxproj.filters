@@ -106,15 +106,6 @@
     <Filter Include="02.GameObjects\00. Character\Player">
       <UniqueIdentifier>{97222327-20cf-4288-8bbb-6e462cd6f70e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts">
-      <UniqueIdentifier>{ae34e24c-3eb8-48d2-bfcc-4b7bb3b177a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts\Body">
-      <UniqueIdentifier>{5595c21d-9ee1-4b71-b378-db224a1126be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon">
-      <UniqueIdentifier>{c86e87ea-e489-4cb1-9311-39d4046e5af6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\02. Environment">
       <UniqueIdentifier>{aa586dde-a612-4aab-bb4a-4551ed567bed}</UniqueIdentifier>
     </Filter>
@@ -235,24 +226,6 @@
     <Filter Include="03.Event\Test\With_Player">
       <UniqueIdentifier>{09a4854d-ee74-455e-9951-e429d36f5abb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun">
-      <UniqueIdentifier>{6d5730ed-0d9f-4256-8614-5b8fbc8dc1ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester">
-      <UniqueIdentifier>{82d551f8-32ce-4b55-a1cc-6b74911c9d9b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\FlameBelcher">
-      <UniqueIdentifier>{a29f9d7b-47d9-493f-abc5-337c00570c18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Revolver">
-      <UniqueIdentifier>{c1c8678b-e18b-425f-b2c8-6f98fb7f998a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Shotgun">
-      <UniqueIdentifier>{14125927-c377-47e2-9ad0-c17103e55886}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Winchester">
-      <UniqueIdentifier>{d057b74f-8d65-4329-abbb-e66eface2c8a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\02.Tool\Imgui\ImNeoSequencer">
       <UniqueIdentifier>{ca5b3f93-ca68-4189-bbb8-344409e73f46}</UniqueIdentifier>
     </Filter>
@@ -316,11 +289,77 @@
     <Filter Include="05. Preset\Controller">
       <UniqueIdentifier>{b60e7d43-e89e-4dc0-b28e-025176135616}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\ETC\Rentier">
+    <Filter Include="02.GameObjects\00. Character\ETC\Rentier%28임시%29">
       <UniqueIdentifier>{5adee538-8b90-4941-b573-4fdd571e6596}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\ETC\Rentier\Parts">
+    <Filter Include="02.GameObjects\00. Character\ETC\Rentier%28임시%29\Parts">
       <UniqueIdentifier>{332c2c45-941f-4174-8fd7-2367eca4860e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State">
+      <UniqueIdentifier>{2008ca2a-2599-4def-8e8a-e70c5329525f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Idle">
+      <UniqueIdentifier>{e032c20b-1056-45cc-8d2b-11d88e2f2603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent">
+      <UniqueIdentifier>{7b921b65-953d-42b7-9c54-0be2db1cbd0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts">
+      <UniqueIdentifier>{ae34e24c-3eb8-48d2-bfcc-4b7bb3b177a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Body">
+      <UniqueIdentifier>{5595c21d-9ee1-4b71-b378-db224a1126be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon">
+      <UniqueIdentifier>{c86e87ea-e489-4cb1-9311-39d4046e5af6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun">
+      <UniqueIdentifier>{6d5730ed-0d9f-4256-8614-5b8fbc8dc1ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester">
+      <UniqueIdentifier>{82d551f8-32ce-4b55-a1cc-6b74911c9d9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\FlameBelcher">
+      <UniqueIdentifier>{a29f9d7b-47d9-493f-abc5-337c00570c18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Revolver">
+      <UniqueIdentifier>{c1c8678b-e18b-425f-b2c8-6f98fb7f998a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Shotgun">
+      <UniqueIdentifier>{14125927-c377-47e2-9ad0-c17103e55886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Winchester">
+      <UniqueIdentifier>{d057b74f-8d65-4329-abbb-e66eface2c8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\0. Origin">
+      <UniqueIdentifier>{bb2d9ecd-e21e-4b5b-90d1-3d3aeeb7290a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\1. Normal">
+      <UniqueIdentifier>{26a92569-28d0-4a48-bc82-5691f980f161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\1. Normal\0. Parent">
+      <UniqueIdentifier>{0fe2072a-a136-4d09-bc7f-55d3d12d9dc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack">
+      <UniqueIdentifier>{35f19b44-3af0-4e67-acca-e8bb4ca19b8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\MeleeCombo">
+      <UniqueIdentifier>{94f5efea-dced-482a-8f83-1ca010e54559}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\3. Hit">
+      <UniqueIdentifier>{e4140b58-b112-422c-963e-07dd414f1574}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\0. Parent">
+      <UniqueIdentifier>{bf0517fe-1859-4909-9576-2755e4e0c64b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\MeleeCombo\01">
+      <UniqueIdentifier>{65f0be10-9d5e-4cf2-9420-e9c4e7fe4ea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\MeleeCombo\02">
+      <UniqueIdentifier>{a6672b69-8554-4266-b360-9d748afc8dd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\MeleeCombo\03">
+      <UniqueIdentifier>{99a88c61-81ec-45a4-bf0b-91ea88b255e8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -619,10 +658,25 @@
       <Filter>05. Preset\Collider</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Rentier.h">
-      <Filter>02.GameObjects\00. Character\ETC\Rentier</Filter>
+      <Filter>02.GameObjects\00. Character\ETC\Rentier%28임시%29</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Rentier.h">
-      <Filter>02.GameObjects\00. Character\ETC\Rentier\Parts</Filter>
+      <Filter>02.GameObjects\00. Character\ETC\Rentier%28임시%29\Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Empowered_Idle.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\0. Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\1. Normal\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Attack.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Empowered_MeleeCombo_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\MeleeCombo\01</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1088,10 +1142,25 @@
       <Filter>05. Preset\Collider</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Rentier.cpp">
-      <Filter>02.GameObjects\00. Character\ETC\Rentier</Filter>
+      <Filter>02.GameObjects\00. Character\ETC\Rentier%28임시%29</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Rentier.cpp">
-      <Filter>02.GameObjects\00. Character\ETC\Rentier\Parts</Filter>
+      <Filter>02.GameObjects\00. Character\ETC\Rentier%28임시%29\Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Empowered_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\0. Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Normal.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\1. Normal\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Attack.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Empowered_MeleeCombo_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\2. Attack\MeleeCombo\01</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

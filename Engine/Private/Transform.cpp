@@ -60,6 +60,7 @@ void CTransform::Move_On_Navigation(_vector vMove, CNavigation* pNavigation)
 			return; /* 슬라이딩들어갈자리 */
 	}
 	Set_State(STATE_POSITION, vPosition);
+	
 }
 
 void CTransform::Go_Straight(_float fTimeDelta, CNavigation* pNavigation)
