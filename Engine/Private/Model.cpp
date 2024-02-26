@@ -112,6 +112,9 @@ _float4x4* CModel::Get_OffsetMatrices()
 		}
 	}
 
+
+	
+
 	return BoneMatrices;
 }
 
@@ -196,7 +199,7 @@ HRESULT CModel::Render(CShader* pShader,_uint iMeshIndex)
 		if (FAILED(pShader->Bind_Texture("g_TransformMap", m_pSrv)))
 			return E_FAIL;
 	}
-
+	pShader->Begin(0);
 	m_Meshes[iMeshIndex]->Bind_VIBuffers();
 	m_Meshes[iMeshIndex]->Render();
 
@@ -279,6 +282,7 @@ HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantNa
 
 	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Bind_ShaderResource(pShader, pConstantName);
 }
+
 
 void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
 {
@@ -434,7 +438,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 	for (size_t i = 0; i < m_iNumMaterials; i++)
 	{
-		//if() 내일 와서 이거 작업 할것 
+		
 		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material((_uint)i);
 
 		MATERIAL_DESC			MaterialDesc = {  };
@@ -525,7 +529,7 @@ HRESULT CModel::Create_Texture()
 		return S_OK;
 	/* 01. For m_AnimTransforms */
 	/* 해당 모델이 사용하는 모든 애니메이션과 Bone의 정보를 m_AnimTransforms에 세팅한다. */
-	//vector<ANIM_TRANSFORM_CACHE>		m_AnimTransformsCache;
+	vector<ANIM_TRANSFORM_CACHE>		m_AnimTransformsCache;
 
 	_uint iBoneCount = (_uint)m_Bones.size();
 	_uint iAnimCnt = Get_AnimationCount();
@@ -540,16 +544,15 @@ HRESULT CModel::Create_Texture()
 		if (0 == iAnimCnt) return S_OK;
 
 		m_AnimTransforms.resize(iAnimCnt);
-		//m_AnimTransformsCache.resize(iAnimCnt);
 
 		for (uint32 i = 0; i < iAnimCnt; i++)
-			Create_AnimationTransform(i, m_AnimTransforms);
-
+			Create_AnimationTransform(i, m_AnimTransforms); // 여기서 값들을 받아서 구조체에 채워줌 
 // 		if (m_bRootAnimation)
 // 		{
 // 			for (uint32 i = 0; i < iAnimCnt; i++)
 // 				Create_AnimationTransformCache(i, m_AnimTransformsCache);
 // 		}
+
 	}
 
 	/* 02. For. m_pTexture */
@@ -586,7 +589,7 @@ HRESULT CModel::Create_Texture()
 			for (uint32 f = 0; f < iAnimMaxFrameCount; f++) /* 키프레임 갯수만큼 반복 (세로 크기만큼) */
 			{
 				void* ptr = pageStartPtr + dataSize * f;
-
+// 
 // 				if (m_bRootAnimation)
 // 					::memcpy(ptr, m_AnimTransformsCache[c].transforms[f].data(), dataSize); /* 텍스처에 가로 1줄만큼 데이터 저장 */
 // 				else
@@ -605,11 +608,13 @@ HRESULT CModel::Create_Texture()
 		}
 
 		/* 텍스처 생성 */
-		if (FAILED(m_pGameInstance->Get_Device()->CreateTexture2D(&desc, subResources.data(), &pTexture)))
+		if (FAILED(m_pDevice->CreateTexture2D(&desc, subResources.data(), &pTexture)))
 			return E_FAIL;
 
 		::free(mallocPtr);
 	}
+
+	
 
 	/* 03. For. m_pSrv */
 	{
@@ -620,10 +625,20 @@ HRESULT CModel::Create_Texture()
 		desc.Texture2DArray.MipLevels = 1;
 		desc.Texture2DArray.ArraySize = iAnimCnt;
 
-		if (FAILED(m_pGameInstance->Get_Device()->CreateShaderResourceView(pTexture, &desc, &m_pSrv)))
+		if (FAILED(m_pDevice->CreateShaderResourceView(pTexture, &desc, &m_pSrv)))
 			return E_FAIL;
 	}
+	
 
+	ID3D11Resource* Resource;
+
+	D3D11_MAPPED_SUBRESOURCE SubResource;
+
+	HRESULT hr = m_pContext->Map(pTexture, 0, D3D11_MAP_READ, 0, &SubResource);
+
+	BYTE* TEST = (BYTE*)SubResource.pData;
+
+	m_pContext->Unmap(pTexture, 0);
 	/* Clear Cache*/
 	//if (FAILED(Clear_Cache()))
 	//	return E_FAIL;
@@ -635,6 +650,23 @@ void CModel::Create_AnimationTransform(uint32 iAnimIndex, vector<ANIM_TRANSFORM>
 {
 	/* 현재 애니메이션에 대한 텍스처 한 장(프레임 행, 본 열)정보를 세팅한다. */
 	CAnimation* pAnimation = m_Animations[iAnimIndex];
+
+	//! 메쉬한테 지가 연관이 있는 오프셋, 본인덱스, 넘본즈
+	
+// 	for(int i = 0; i < iNumMeshes)
+// 		m_Bones[지가 연관이있는 본인덱스] -> 메쉬오프셋[지가 연관이있는 본인덱스]
+
+	for (_int i = 0; i < m_iNumMeshes; ++i)
+	{
+		vector<_float4x4> m_OffsetMatrices = m_Meshes[i]->Get_OffsetMatrices();
+		vector<_uint> vecIndices = m_Meshes[i]->Get_BoneIndices();
+		_int iNumBones = m_Meshes[i]->Get_NumBones();
+
+		for (_int j = 0; j < iNumBones; ++j)
+		{
+			m_Bones[j]->m_OffSetMatrix = m_OffsetMatrices[j];
+		}
+	}
 
 	/* 모든 프레임 순회 (텍스처 가로) */
 	for (uint32 iFrameIndex = 0; iFrameIndex < pAnimation->Get_MaxFrameCount(); iFrameIndex++)
@@ -648,13 +680,18 @@ void CModel::Create_AnimationTransform(uint32 iAnimIndex, vector<ANIM_TRANSFORM>
 		{
 			m_Bones[iBoneIndex]->Invalidate_CombinedTransformationMatrix(m_Bones,XMLoadFloat4x4(&m_PivotMatrix),NowPos);
 
+			pAnimTransform[iAnimIndex].transforms[iFrameIndex][iBoneIndex]
+				=m_Bones[iBoneIndex]->m_OffSetMatrix * m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix() * Get_PivotMatrix();
 			/* 멤버 컨테이너에는 루트랑 소켓만 저장 */
-			if (m_AnimBoneIndecies[BONE_ROOT] == iBoneIndex)
-			{
-				pAnimTransform[iAnimIndex].transforms[iFrameIndex][BONE_ROOT]
-					=  m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix() * Get_PivotMatrix();
-				
-			}
+// 			if (m_AnimBoneIndecies[BONE_ROOT] == iBoneIndex)
+// 			{
+// 				pAnimTransform[iAnimIndex].transforms[iFrameIndex][iBoneIndex]
+// 					= m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix() * Get_PivotMatrix();
+// 
+// 				pAnimTransform[iAnimIndex].transforms[iFrameIndex][iBoneIndex]
+// 					= XMLoadFloat4x4(Get_OffsetMatrices()) * m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix() * Get_PivotMatrix();
+// 			}
+			
 			/*else if (m_AnimBoneIndecies[BONE_SOCKET_LEFT] == iBoneIndex)
 			{
 				pAnimTransform[iAnimIndex].transforms[iFrameIndex][BONE_SOCKET_LEFT]
@@ -678,7 +715,7 @@ void CModel::Create_AnimationTransformCache(uint32 iAnimIndex, vector<ANIM_TRANS
 // 	for (uint32 iFrameIndex = 0; iFrameIndex < pAnimation->Get_MaxFrameCount(); iFrameIndex++)
 // 	{
 // 		/* 모든 채널의 현재 프레임 갱신 */
-// 		pAnimation->Calculate_Animation(iFrameIndex);
+// 		pAnimation->Calculate_Animation(iFrameIndex,m_Bones);
 // 
 // 		/* 모든 본 글로벌 변환 -> 애니메이션 변환 -> 저장 */
 // 
@@ -689,16 +726,7 @@ void CModel::Create_AnimationTransformCache(uint32 iAnimIndex, vector<ANIM_TRANS
 // 
 // 			m_Bones[iBoneIndex]->Set_CombinedTransformation();
 // 
-// 			if (m_AnimBoneIndecies[BONE_SOCKET_LEFT] == iBoneIndex)
-// 			{
-// 				m_AnimTransforms[iAnimIndex].transforms[iFrameIndex][BONE_SOCKET_LEFT]
-// 					= m_Bones[iBoneIndex]->Get_OffSetMatrix() * m_Bones[iBoneIndex]->Get_CombinedTransformation() * Get_PivotMatrix();
-// 			}
-// 			else if (m_AnimBoneIndecies[BONE_SOCKET_RIGHT] == iBoneIndex)
-// 			{
-// 				m_AnimTransforms[iAnimIndex].transforms[iFrameIndex][BONE_SOCKET_RIGHT]
-// 					= m_Bones[iBoneIndex]->Get_OffSetMatrix() * m_Bones[iBoneIndex]->Get_CombinedTransformation() * Get_PivotMatrix();
-// 			}
+// 			
 // 			pAnimTransformCache[iAnimIndex].transforms[iFrameIndex][iBoneIndex]
 // 				= m_Bones[iBoneIndex]->Get_OffSetMatrix() * m_Bones[iBoneIndex]->Get_CombinedTransformation() * Get_PivotMatrix();
 // 		}

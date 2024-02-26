@@ -2,7 +2,7 @@
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-//Texture2D g_DiffuseTexture;
+Texture2D g_DiffuseTexture;
 
 Texture2DArray g_TransformMap;
 
@@ -25,7 +25,7 @@ struct VS_OUT
     float4 vProjPos     : TEXCOORD2;
 };
 
-float4  GetAnimationMatrix(VS_IN input)
+float4x4  GetAnimationMatrix(VS_IN input)
 {
     float indices[4] = { input.vBlendIndices.x, input.vBlendIndices.y, input.vBlendIndices.z, input.vBlendIndices.w };
     float weights[4] = { input.vBlendWeights.x, input.vBlendWeights.y, input.vBlendWeights.z, input.vBlendWeights.w };
@@ -161,8 +161,8 @@ PS_OUT PS_MAIN(PS_IN In)
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
 
-    if (vMtrlDiffuse.a < 0.3f)
-        discard;
+   // if (vMtrlDiffuse.a < 0.3f)
+   //     discard;
 
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);

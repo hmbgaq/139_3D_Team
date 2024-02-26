@@ -36,9 +36,10 @@ private:
 
 	/* 이 뼈만의 상태행렬 */
 	_float4x4			m_TransformationMatrix;
-
 	/* 이 뼈만의 상태행렬 * 부모뼈의 m_CombindTransformationMatrix */
 	_float4x4			m_CombinedTransformationMatrix;
+public:
+	_float4x4			m_OffSetMatrix; //offset 저장용 
 
 public:
 	static CBone* Create(CMyAINode pAINode, _int iParentIndex);

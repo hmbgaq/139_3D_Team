@@ -94,7 +94,11 @@ HRESULT CBody_Player::Ready_Components()
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"),
+	//if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"),
+	//	TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	//	return E_FAIL;
+	//test
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel_VTF"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
@@ -125,10 +129,9 @@ HRESULT CBody_Player::Bind_ShaderResources()
 	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
 
-	_float fCamFar = m_pGameInstance->Get_CamFar();
-	if(FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
-
-		return E_FAIL;
+	//_float fCamFar = m_pGameInstance->Get_CamFar();
+	//if(FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
+	//	return E_FAIL;
 
 	return S_OK;
 }

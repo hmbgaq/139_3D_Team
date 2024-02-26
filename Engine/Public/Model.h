@@ -39,7 +39,7 @@ private:
 	}ANIM_TRANSFORM_CACHE;
 	typedef struct	AnimTransform
 	{
-		using TransformArrayType = array<_float4x4, BONE_END>;
+		using TransformArrayType = array<_float4x4, MAX_MODEL_TRANSFORMS>;
 		array<TransformArrayType, MAX_MODEL_KEYFRAMES> transforms;
 
 	}ANIM_TRANSFORM;
@@ -60,7 +60,7 @@ public:
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Ãß°¡
 	_uint					Get_NumMaterials() const { return m_iNumMaterials; }
 	_uint					Get_NumMeshIndice(_int iMeshIndex);//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
-	vector<class CMesh*>&	Get_Meshes() { return m_Meshes; }
+	vector<CMesh*>&	Get_Meshes() { return m_Meshes; }
 	class CMesh*			Get_Mesh_For_Index(_int iMeshIndex);
 	_uint					Get_AnimationCount() const { return (_uint)m_Animations.size(); }
 
@@ -93,7 +93,7 @@ public:
 	HRESULT					Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices = nullptr);
 	
 	HRESULT					Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
-
+	HRESULT					Bind_Material(class CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* pConstantName);
 public:
 	void					Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _bool _bIsTransition = true, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
