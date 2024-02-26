@@ -50,6 +50,7 @@ public:
 
 	_float4x4*				Calc_OffsetMatrice(_uint iAnimationIndex, _float fTrackPosition, _float4x4* pMatrix);
 	_float4x4*				Get_OffsetMatrices();
+	_float3&				Calculate_AABB_Extents_From_Model();
 	
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
 
@@ -87,6 +88,7 @@ public:
 	_bool					Is_Inputable_Front(_uint _iIndexFront);
 
 	void					Write_Names(const string& strModelFilePath);
+
 public:
 	vector<CAnimation*>*	 Get_Animations();
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }

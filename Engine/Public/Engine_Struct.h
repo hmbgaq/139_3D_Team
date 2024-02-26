@@ -341,6 +341,7 @@ namespace Engine
 		UINT lerpValue;            // lerp between frames
 	};
 
+
 #pragma endregion ±¸Á¶Ã¼
 
 }

@@ -102,10 +102,7 @@ void CPlayer::Tick(_float fTimeDelta)
 		if (m_pGameInstance->Key_Pressing(DIK_UPARROW))
 		{
 			m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
-			pBody->SetUp_Animation(4);
 		}
-		else
-			pBody->SetUp_Animation(3);
 	}
 
 

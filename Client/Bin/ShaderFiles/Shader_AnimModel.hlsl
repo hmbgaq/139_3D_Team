@@ -29,6 +29,9 @@ float           g_LineThick;
 
 float4			g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; 
 
+
+
+
 struct VS_IN
 {
 	float3		vPosition		: POSITION;

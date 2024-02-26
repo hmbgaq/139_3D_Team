@@ -31,7 +31,7 @@ public:
 	vector<_uint>&				Get_BoneIndices() { return m_BoneIndices; }
 	_int						Get_NumBones() { return m_iNumBones;}
 
-
+	void						Calculate_AABB_Extents(_float3* pOutMin, _float3* pOutMax);
 
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
 

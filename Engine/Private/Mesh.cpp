@@ -14,6 +14,40 @@ CMesh::CMesh(const CMesh & rhs)
 }
 
 
+void CMesh::Calculate_AABB_Extents(_float3* pOutMin, _float3* pOutMax)
+{
+	if(m_pVertices == nullptr)
+		return;
+
+
+	_float3 Min, Max;
+
+	// 메쉬의 모든 정점에 대해 AABB 계산
+
+	for (_uint i = 0; i < m_iNumVertices; ++i)
+	{
+		_float3 VertexPos = m_pVertices[i].vPosition;
+
+		// 최소, 최대 좌표 업데이트
+
+		for (_uint j = 0; j < 3; ++j)
+		{
+			Min.x = min(Min.x, VertexPos.x);
+			Min.y = min(Min.y, VertexPos.y);
+			Min.z = min(Min.z, VertexPos.z);
+
+			Max.x = max(Max.x, VertexPos.x);
+			Max.y = max(Max.y, VertexPos.y);
+			Max.z = max(Max.z, VertexPos.z);
+		}
+	}
+
+	// 출력 변수에 결과 저장
+
+	*pOutMin = Min;
+	*pOutMax = Max;
+}
+
 HRESULT CMesh::Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones)
 {
 	m_iMaterialIndex = pAIMesh.Get_MaterialIndex();
@@ -55,7 +89,7 @@ HRESULT CMesh::Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, 
 		m_pIndices[iNumIndices++] = pAIMesh.Get_Face((_uint)i).Get_Indices()[1];
 		m_pIndices[iNumIndices++] = pAIMesh.Get_Face((_uint)i).Get_Indices()[2];
 	}
-
+	
 	m_SubResourceData.pSysMem = m_pIndices;
 
 	if (FAILED(__super::Create_Buffer(&m_pIB)))
@@ -109,6 +143,8 @@ HRESULT CMesh::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName,
 _bool CMesh::Picking(RAY ray, _float3* out)
 {
 	_uint triNum = m_iNumIndices / 3;
+
+	
 
 	return m_pGameInstance->Picking_Vertex(ray, out, triNum, m_pVertices, m_pIndices);
 }

@@ -114,6 +114,23 @@ _float4x4* CModel::Get_OffsetMatrices()
 	return BoneMatrices;
 }
 
+_float3& CModel::Calculate_AABB_Extents_From_Model()
+{
+	_float3 vMin = XMFLOAT3(FLT_MAX, FLT_MAX, FLT_MAX);
+	_float3 vMax = XMFLOAT3(FLT_MIN, FLT_MIN, FLT_MIN);
+
+	// 모델의 모든 메쉬에 대해 AABB 계산
+
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
+	{
+			m_Meshes[i]->Calculate_AABB_Extents(&vMin, &vMax);
+	}
+
+	_float3 vExtents = (vMin - vMax) * 0.5f;
+
+	return vExtents;
+}
+
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)

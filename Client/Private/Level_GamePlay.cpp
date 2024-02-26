@@ -35,6 +35,8 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * p
 
 HRESULT CLevel_GamePlay::Initialize()
 {
+	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
+
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
@@ -147,15 +149,56 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* pArg)
 {
-	CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
+	
 
-	CMonster::MONSTER_DESC Desc = {};
-	Desc.fRotationPerSec = GameObjectDesc.fRotationPerSec;
-	Desc.fSpeedPerSec = GameObjectDesc.fSpeedPerSec;
-	Desc.bPreview = false;
-	Desc.WorldMatrix = XMMatrixIdentity();
+	//CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
+	//
+	//CMonster::MONSTER_DESC Desc = {};
+	//Desc.fRotationPerSec = GameObjectDesc.fRotationPerSec;
+	//Desc.fSpeedPerSec = GameObjectDesc.fSpeedPerSec;
+	//Desc.bPreview = false;
+	//Desc.WorldMatrix = XMMatrixIdentity();
+	//
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), &Desc));
 
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), &Desc));
+
+
+
+	//!
+	//!for (_int i = 0; i < iMonsterJsonSize; ++i)
+	//!{
+	//!	string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + "@" + to_string(i);
+	//!
+	//!	m_vecCreateMonsterTag.push_back(pushMonsterTag);
+	//!
+	//!	CMonster::MONSTER_DESC MonsterDesc;
+	//!	MonsterDesc.bPreview = false;
+	//!
+	//!
+	//!	const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+	//!	_float4x4 WorldMatrix;
+	//!
+	//!	for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+	//!	{
+	//!		for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+	//!		{
+	//!			WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+	//!		}
+	//!	}
+	//!
+	//!	MonsterDesc.WorldMatrix = WorldMatrix;
+	//!
+	//!	CMonster* pMonster = { nullptr };
+	//!
+	//!	wstring strProtoTypeTag;
+	//!	m_pGameInstance->String_To_WString((string)MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
+	//!
+	//!	pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
+	//!
+	//!	m_vecCreateMonster.push_back(pMonster);
+	//!	m_iCreateMonsterIndex++;
+	//!}
+
 
 	return S_OK;
 }
@@ -263,8 +306,37 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 
 	}
 
-	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Skydome"))))
-	//	return E_FAIL;
+	json MonsterJson = Stage1MapJson["Monster_Json"];
+	_int iMonsterJsonSize = (_int)MonsterJson.size();
+
+	for (_int i = 0; i < iMonsterJsonSize; ++i)
+	{
+		CMonster::MONSTER_DESC MonsterDesc = {};
+
+		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
+
+		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
+		MonsterDesc.bPreview = false;
+
+
+		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		MonsterDesc.WorldMatrix = WorldMatrix;
+
+		if(FAILED(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+			return E_FAIL;
+		
+	}
+
 
 	return S_OK;
 
@@ -294,7 +366,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void*
 HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
 	//! ¾Ö´ÔÀÎ½ºÅÏ½ÌÀÌ ÇÒÇÊ¿ä¾ø¾îÁü. ¤¾¤¾¤¾¤¾¤¾¤¾FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
 
 
