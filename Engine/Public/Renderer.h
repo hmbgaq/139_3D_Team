@@ -50,6 +50,10 @@ public:
 	HRESULT Create_DepthStencil();
 	HRESULT Ready_DebugRender();
 
+	/* Cascade */
+	ID3D11DepthStencilView* m_pCascadeShadowDSV[3];
+	HRESULT Ready_CascadeShadow();
+
 	
 #ifdef _DEBUG
 public:
@@ -171,6 +175,9 @@ private:
 
 	/* Fog */ 
 	FOG_DESC					m_CurrFog = {};
+
+	/* Cascade Shadow */
+	vector<class CGameObject*> m_CascadeObjects[3];
 
 public:
 	/* È°¼ºÈ­ */

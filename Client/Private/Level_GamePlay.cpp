@@ -7,6 +7,7 @@
 #include "Effect_Instance.h"
 
 #pragma region UI
+#include "UI_Player_HPBar.h"
 #include "UI_Anything.h"
 #include "UI_MonsterHp.h"
 #include "UI_MonsterHpFrame.h"
@@ -42,8 +43,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_LandObjects());
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 
-	//if (FAILED(Ready_UI()))
-	//	return E_FAIL;
+	if (FAILED(Ready_UI()))
+		return E_FAIL;
 
 	Set_Filter();
 
@@ -297,7 +298,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
 	//! ¾Ö´ÔÀÎ½ºÅÏ½ÌÀÌ ÇÒÇÊ¿ä¾ø¾îÁü. ¤¾¤¾¤¾¤¾¤¾¤¾FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
 
+	m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
 
+	CUI_Player_HPBar::UI_DESC desc = {};
+	/* ÀÌµ¿ */
+	desc.fPositionX = (_float)g_iWinSizeX / 2 + 20.f;
+	desc.fPositionY = (_float)g_iWinSizeY / 2 + 20.f;
+	m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"), &desc);
+
+		
 
 	return S_OK;
 }
@@ -361,7 +370,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Player(const wstring& strLayerTag, void*
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 {
-	json json_in;
+	/*json json_in;
 
 	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info.json";
 
@@ -393,9 +402,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, wstrCloneTag, &tUI_Info));
 
 		pUI_Object->Get_Transform()->Load_FromJson(object);
-	}
+	}*/
 
-	m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
+//	m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
 
 	return S_OK;
 }

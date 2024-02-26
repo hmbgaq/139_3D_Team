@@ -1,8 +1,8 @@
 #include "Shader_Defines.hlsli"
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D g_FinalTarget;
-texture2D g_Diffuse_UITexture;
+Texture2D g_FinalTarget;
+Texture2D g_Diffuse_UITexture;
 
 /* 명도 채도 관리 */
 float g_brightness = 1.f; // 명도 
@@ -67,11 +67,11 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     
     Out.vColor = vUI;
     
-    if(vUI.a == 0)
+    if (vUI.a == 0.0f)
     {
         float4 originalColor = g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
-        if (originalColor.a == 0.f)
-            discard;
+            if (originalColor.a == 0.f)
+               discard;
     
         // 명도 적용
         float3 BrightColor = originalColor.rgb * g_brightness;

@@ -122,6 +122,11 @@ HRESULT CRenderer::Create_RenderTarget()
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shade"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Specular"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 
+		/* MRT_Cascade_Shadow */
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Cascade1"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.0f, 1.0f, 1.0f, 1.0f)));
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Cascade2"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.0f, 1.0f, 1.0f, 1.0f)));
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Cascade3"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.0f, 1.0f, 1.0f, 1.0f)));
+
 		/* MRT_LightAcc */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_LightDepth"), g_iSizeX, g_iSizeY, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
 
@@ -177,7 +182,6 @@ HRESULT CRenderer::Create_RenderTarget()
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_ORM")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_ViewNormal")));
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Bloom"))); /* 오브젝트 외곽선 */
-		//FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_RimLight"))); 
 		{
 			/* MRT_Bloom_Blur*/
 			FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom_Blur"), TEXT("Target_Bloom_Blur")));
@@ -192,6 +196,11 @@ HRESULT CRenderer::Create_RenderTarget()
 
 		/* MRT_Shadow */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow"), TEXT("Target_LightDepth")));
+
+		/* MRT_Cascade_Shadow */
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Cascade1"), TEXT("Target_Cascade1")));
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Cascade2"), TEXT("Target_Cascade2")));
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Cascade3"), TEXT("Target_Cascade3")));
 
 		/* Blur -  여러군데서 사용하는 블러를 하나로 병합하기위해 Target_Blur_DownSampling에 g_값 으로 넘겨서 하나로 사용하기위해 나눠둠*/
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_DownSampling"), TEXT("Target_Blur_DownSampling")));
@@ -282,7 +291,7 @@ HRESULT CRenderer::Ready_DebugRender()
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RimLight"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 13.f), fSizeX, fSizeY));
 
 	///* MRT_LightAcc */
-	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_LightDepth"),	(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse_UI"),	(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade"),		(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"),		(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
 
@@ -294,6 +303,43 @@ HRESULT CRenderer::Ready_DebugRender()
 		//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Depth_UI"), (fSizeX / 2.f * 24.5f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
 		//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade_UI"), (fSizeX / 2.f * 24.5f), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
 		//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular_UI"), (fSizeX / 2.f * 24.5f), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
+	}
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Ready_CascadeShadow()
+{
+	D3D11_VIEWPORT		ViewportDesc;
+
+	_uint				iNumViewports = 1;
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	//ShadowDepth
+	for (_uint i = 0; i < 3; ++i)
+	{
+		ID3D11Texture2D* pDepthStencilTexture = nullptr;
+
+		D3D11_TEXTURE2D_DESC	TextureDesc;
+		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+		TextureDesc.Width = g_iWinsizeX;
+		TextureDesc.Height = g_iWinsizeY;
+		TextureDesc.MipLevels = 1;
+		TextureDesc.ArraySize = 1;
+		TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		TextureDesc.SampleDesc.Quality = 0;
+		TextureDesc.SampleDesc.Count = 1;
+
+		TextureDesc.Usage = D3D11_USAGE_DEFAULT;
+		TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL/*| D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE*/;
+		TextureDesc.CPUAccessFlags = 0;
+		TextureDesc.MiscFlags = 0;
+
+		FAILED_CHECK(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture));
+
+		FAILED_CHECK(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pCascadeShadowDSV[i]));
 	}
 
 	return S_OK;
@@ -366,19 +412,19 @@ HRESULT CRenderer::Draw_RenderGroup()
 	/* Pre-PostProcessing */
 	FAILED_CHECK(Render_NonBlend());			/* MRT_GameObjects*/
 	
-	FAILED_CHECK(Render_Cascade_Shadow());		/* MRT_Cascade */
+	//FAILED_CHECK(Render_Cascade_Shadow());		/* MRT_Cascade */
 
 	if (true == m_tHBAO_Option.bHBAO_Active)
 	{
 		FAILED_CHECK(Render_HBAO_PLUS());
 	}
 
-	FAILED_CHECK(Render_Decal());	/* MRT_LightAcc */
+	FAILED_CHECK(Render_Decal());	/* MRT_LightAcc */                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 
 	/* 외곽선 */
 	FAILED_CHECK(Render_OutLine()); 
 	
-	FAILED_CHECK(Render_Effect());	/* - 외곽선 필요유무에 따라 위치가 달라질듯? */
+	FAILED_CHECK(Render_Effect());		/* - 외곽선 필요유무에 따라 위치가 달라질듯? */
 
 	FAILED_CHECK(Render_Shadow());		/* MRT_Shadow */
 
@@ -399,15 +445,15 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_PostProcess()); /* 모션블러, Radial 블러 등등 */
 
 	/* 그리기 */
-	FAILED_CHECK(Render_UI());
 	/* 마지막화면용 - 마지막 체크 위해서 */
+
 	FAILED_CHECK(Render_Final());
 
-	/* 그리기 */
-	FAILED_CHECK(Render_UI());
+	FAILED_CHECK(Render_UI()); /* 디버그에서 렌더타겟 한장으로 그린거 콜하는 그룹 여기 */
 
-	/* 마지막화면용 - 마지막 체크 위해서 */
-	FAILED_CHECK(Render_Final());
+	//FAILED_CHECK(Render_UI_EFFECT()); /* 그외 변하거나 이미지에 효과가 들어가야하는 UI 렌더그룹이 속하는곳 */
+
+	/* ------------------------ */
 
 	/* 효과넣어주기 */
 	//FAILED_CHECK(Render_Lights_UI());	// 빛
@@ -568,8 +614,9 @@ HRESULT CRenderer::Add_MRT_UI()
 
 HRESULT CRenderer::Render_UI()
 {
-	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects_UI"))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects_UI"))))
+	//	return E_FAIL;
+	
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
 		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
@@ -579,8 +626,10 @@ HRESULT CRenderer::Render_UI()
 	}
 
 	m_RenderObjects[RENDER_UI].clear();
-	if (FAILED(m_pGameInstance->End_MRT()))
-		return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->End_MRT()))
+	//	return E_FAIL;
+
 	return S_OK;
 }
 
@@ -851,7 +900,25 @@ HRESULT CRenderer::Render_Deferred()
 
 HRESULT CRenderer::Render_Cascade_Shadow()
 {
-	return S_OK;
+	for (_uint i = 0; i <MAX_CASCADES; ++i)
+	{
+		wstring szTargetName = L"MRT_Cascade";
+		szTargetName += to_wstring(i + 1); /* MRT_Cascade1, 2, 3 들어가도록 */
+
+		FAILED_CHECK(m_pGameInstance->Begin_MRT(szTargetName)); /* Target_OutLine저장 */
+
+		m_pContext->ClearDepthStencilView(m_pCascadeShadowDSV[i], D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+
+		for (auto& iter : m_CascadeObjects[i])
+		{
+			if (FAILED(iter->Render_Cascade_Shadow(i)))
+				return E_FAIL;
+			Safe_Release(iter);
+		}
+		m_CascadeObjects[i].clear();
+
+		FAILED_CHECK(m_pGameInstance->End_MRT());
+	}
 }
 
 HRESULT CRenderer::Render_Decal()
