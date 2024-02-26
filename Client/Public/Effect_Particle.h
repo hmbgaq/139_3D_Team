@@ -30,24 +30,24 @@ public:
 		_uint		iCurNumInstance = { 100 };
 
 		/* LifeTime */
-		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
+		_float2		vMinMaxLifeTime = { 0.5f, 3.0f };
 
 		/* For.Position */
 		_float2		vMinMaxRange = { 0.1f, 3.f };
-		_float2		vMinMaxRangeLength = { 0.1f, 5.f };
+		_float2		vMinMaxRangeLength = { 3.f, 3.f };
 
-		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f};
+		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
 
 		/* For.Speed */
-		_float2		vMinMaxSpeed = { 0.1f, 1.f };
+		_float2		vMinMaxSpeed = { 0.1f, 5.0 };
 
 		/* °¡¼Óµµ */
-		_float		fSpeedAcc = { 1.f };
+		_float		fSpeedAcc = { 2.f };
 		_float		fAccPosition = { 0.1f };
 
 		/* For.Gravity */
 		_bool		bUseGravity = { FALSE };
-		_float		fGravityAcc = { -5.f };
+		_float		fGravityAcc = { -9.8 };
 		_float		fUseGravityPosition = { 0.1f };
 
 		/* For.Rotation */
@@ -56,12 +56,12 @@ public:
 		_float2		vMinMaxRotationOffsetZ = { 0.0f, 360.f };
 		_float3		vRotationOffset = {0.f, 0.f, 0.f};
 
-		_float3     vCurrentRotation;
-		_float3		vMinMaxRotationForce;
+		_float3     vCurrentRotation = { 0.f, 0.f, 0.f };
+		_float3		vMinMaxRotationForce = { 0.f, 0.f, 0.f };
 
 		/* For.Scale */
-		_float2     vMinMaxScale;
-		_float2     vAddScale;
+		_float2     vMinMaxScale = { 0.2f, 0.5f };
+		_float2     vAddScale = { 0.f, 0.f };
 		_float2		vCurrentScale;
 
 		/* For.Color */
@@ -70,7 +70,7 @@ public:
 		_float2     vMinMaxBlue = { 0.f, 1.f };
 		_float2     vMinMaxAlpha = { 0.f, 1.f };
 
-		_float4     vCurrentColor;
+		_float4     vCurrentColor = { 0.f, 0.f, 0.f, 0.f };
 
 	}PARTICLE_DESC;
 

@@ -1,7 +1,6 @@
 #include "..\Public\VIBuffer_Particle_Point.h"
 
 #include "Easing_Utillity.h"
-#include "SMath.h"
 
 CVIBuffer_Particle_Point::CVIBuffer_Particle_Point(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer_Instancing(pDevice, pContext)
@@ -11,7 +10,7 @@ CVIBuffer_Particle_Point::CVIBuffer_Particle_Point(ID3D11Device* pDevice, ID3D11
 
 CVIBuffer_Particle_Point::CVIBuffer_Particle_Point(const CVIBuffer_Particle_Point& rhs)
 	: CVIBuffer_Instancing(rhs)
-	, m_pLengths(rhs.m_pLengths)	
+	, m_pLengths(rhs.m_pLengths)
 {
 }
 
@@ -100,8 +99,7 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 	m_fTimeAcc = 0.f;
 
 	m_InstancingDesc = *(INSTANCING_DESC*)pArg;
-	m_tBufferDesc = *static_cast<PARTICLE_BUFFER_DESC*>(pArg);
-
+	m_tBufferDesc = *(PARTICLE_BUFFER_DESC*)pArg;
 
 	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
 
@@ -118,6 +116,23 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 
 	_vector				vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
 
+	uniform_real_distribution<float>	RandomRange(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
+
+	uniform_real_distribution<float>	RandomRotationX(XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetX.x), XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetX.y));
+	uniform_real_distribution<float>	RandomRotationY(XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetY.x), XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetY.y));
+	uniform_real_distribution<float>	RandomRotationZ(XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetZ.x), XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetZ.y));
+
+	uniform_real_distribution<float>	RandomScale(m_tBufferDesc.vMinMaxScale.x, m_tBufferDesc.vMinMaxScale.y);
+	uniform_real_distribution<float>	RandomSpeed(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);
+
+	uniform_real_distribution<float>	RandomLifeTime(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
+
+	uniform_real_distribution<float>	RandomLengthPosition(m_tBufferDesc.vMinMaxRangeLength.x, m_tBufferDesc.vMinMaxRangeLength.y);
+
+	uniform_real_distribution<float>	RandomRed(min(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y), max(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y));
+	uniform_real_distribution<float>	RandomGreen(min(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y), max(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y));
+	uniform_real_distribution<float>	RandomBlue(min(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y), max(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y));
+	uniform_real_distribution<float>	RandomAlpha(min(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y), max(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y));
 
 	m_iNumInstance = m_tBufferDesc.iCurNumInstance;
 	for (_uint i = 0; i < m_iNumInstance; i++)
@@ -127,29 +142,24 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 		else
 			pVertices[i].vColor.w = 1.f;
 
-		m_pSpeeds[i] = SMath::fRandom(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);
-		m_pLifeTimes[i] = SMath::fRandom(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
-		m_pLengths[i] = SMath::fRandom(m_tBufferDesc.vMinMaxRangeLength.x, m_tBufferDesc.vMinMaxRangeLength.y);
-
-		_float	fScale = SMath::fRandom(m_tBufferDesc.vMinMaxScale.x, m_tBufferDesc.vMinMaxScale.y);
-										m_tBufferDesc.vCurrentScale.x = fScale + m_tBufferDesc.vAddScale.x;
-										m_tBufferDesc.vCurrentScale.y = fScale + m_tBufferDesc.vAddScale.y;
+		m_pSpeeds[i] = RandomSpeed(m_RandomNumber);
+		m_pLifeTimes[i] = RandomLifeTime(m_RandomNumber);
+		m_pLengths[i] = RandomLengthPosition(m_RandomNumber);
 
 
-		m_tBufferDesc.vRotationOffset = { 
-			  SMath::fRandom(XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetX.x), XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetX.y))
-			, SMath::fRandom(XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetY.x), XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetY.y))
-			, SMath::fRandom(XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetZ.x), XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetZ.y)) 
-		};
+		_float	fScale = RandomScale(m_RandomNumber);
+		m_tBufferDesc.vCurrentScale.x = fScale + m_tBufferDesc.vAddScale.x;
+		m_tBufferDesc.vCurrentScale.y = fScale + m_tBufferDesc.vAddScale.y;
 
+		m_tBufferDesc.vRotationOffset = { RandomRotationX(m_RandomNumber), RandomRotationY(m_RandomNumber), RandomRotationZ(m_RandomNumber) };
 		_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_tBufferDesc.vRotationOffset.x, m_tBufferDesc.vRotationOffset.y, m_tBufferDesc.vRotationOffset.z);
 
 		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vCurrentScale.x;
-		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurrentScale.y;
+		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurrentScale.x;
 		pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
 
 
-		vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
+		vDir = XMVector3Normalize(vDir) * RandomRange(m_RandomNumber);
 		_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
 
 		_vector vPos = XMLoadFloat4(&pVertices[i].vPosition);
@@ -164,14 +174,14 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 			//}
 			//else
 			{
-				_vector vNewPos = XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + XMVector3TransformNormal(vDir, RotationMatrix);
-				XMStoreFloat4(&pVertices[i].vPosition, vNewPos);
+				XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + XMVector3TransformNormal(vDir, RotationMatrix));
 			}
 		}
 		else
-		{		
-			_vector vNewPos = XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + XMVector3TransformNormal(vDir, RotationMatrix);
-			XMStoreFloat4(&pVertices[i].vPosition, vNewPos);
+		{
+
+
+			XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + XMVector3TransformNormal(vDir, RotationMatrix));
 		}
 		pVertices[i].vPosition.w = 1.f;
 	}
@@ -204,7 +214,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 			if (m_tBufferDesc.bLoop)
 			{
 				//if (SPHERE == m_tBufferDesc.eType_Action)
-					ReSet();
+				ReSet();
 				//else
 				//{
 				//	m_fTimeAcc = 0.f;
@@ -262,7 +272,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 				else
 					fSpeed = (m_pSpeeds[i] - fSpeed) * m_fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y + m_pSpeeds[i];
 
-			
+
 
 				//if (m_tBufferDesc.bReverse)
 				//{
@@ -392,6 +402,22 @@ void CVIBuffer_Particle_Point::ReSet()
 	_vector				vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
 	_float				fLength = { 0.0f };
 
+	uniform_real_distribution<float>	RandomRange(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
+
+	uniform_real_distribution<float>	RandomRotationX(XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetX.x), XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetX.y));
+	uniform_real_distribution<float>	RandomRotationY(XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetY.x), XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetY.y));
+	uniform_real_distribution<float>	RandomRotationZ(XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetZ.x), XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetZ.y));
+
+	uniform_real_distribution<float>	RandomScale(m_tBufferDesc.vMinMaxScale.x, m_tBufferDesc.vMinMaxScale.y);
+	uniform_real_distribution<float>	RandomSpeed(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);
+	uniform_real_distribution<float>	RandomLifeTime(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
+	uniform_real_distribution<float>	RandomLengthPosition(m_tBufferDesc.vMinMaxRangeLength.x, m_tBufferDesc.vMinMaxRangeLength.y);
+
+	uniform_real_distribution<float>	RandomRed(min(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y), max(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y));
+	uniform_real_distribution<float>	RandomGreen(min(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y), max(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y));
+	uniform_real_distribution<float>	RandomBlue(min(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y), max(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y));
+	uniform_real_distribution<float>	RandomAlpha(min(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y), max(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y));
+
 	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
 		if (FADE_IN == m_tBufferDesc.eType_Fade)
@@ -399,29 +425,25 @@ void CVIBuffer_Particle_Point::ReSet()
 		else
 			pVertices[i].vColor.w = 1.f;
 
-		m_pSpeeds[i] = SMath::fRandom(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);
-		m_pLifeTimes[i] = SMath::fRandom(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
-		m_pLengths[i] = SMath::fRandom(m_tBufferDesc.vMinMaxRangeLength.x, m_tBufferDesc.vMinMaxRangeLength.y);
+		m_pSpeeds[i] = RandomSpeed(m_RandomNumber);
+		m_pLifeTimes[i] = RandomLifeTime(m_RandomNumber);
+		m_pLengths[i] = RandomLengthPosition(m_RandomNumber);
 
-		_float	fScale = SMath::fRandom(m_tBufferDesc.vMinMaxScale.x, m_tBufferDesc.vMinMaxScale.y);
+
+		_float	fScale = RandomScale(m_RandomNumber);
 		m_tBufferDesc.vCurrentScale.x = fScale + m_tBufferDesc.vAddScale.x;
 		m_tBufferDesc.vCurrentScale.y = fScale + m_tBufferDesc.vAddScale.y;
 
-
-		m_tBufferDesc.vRotationOffset = {
-			  SMath::fRandom(XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetX.x), XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetX.y))
-			, SMath::fRandom(XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetY.x), XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetY.y))
-			, SMath::fRandom(XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetZ.x), XMConvertToRadians(m_tBufferDesc.vMinMaxRotationOffsetZ.y))
-		};
-
+		m_tBufferDesc.vRotationOffset = { RandomRotationX(m_RandomNumber), RandomRotationY(m_RandomNumber), RandomRotationZ(m_RandomNumber) };
 		_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_tBufferDesc.vRotationOffset.x, m_tBufferDesc.vRotationOffset.y, m_tBufferDesc.vRotationOffset.z);
 
+
 		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vCurrentScale.x;
-		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurrentScale.y;
+		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurrentScale.x;
 		pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
 
 
-		vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
+		vDir = XMVector3Normalize(vDir) * RandomRange(m_RandomNumber);
 		_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
 
 		_vector vPos = XMLoadFloat4(&pVertices[i].vPosition);
@@ -433,17 +455,18 @@ void CVIBuffer_Particle_Point::ReSet()
 			//	vDir = vDir * m_tBufferDesc.fMaxLengthPosition;
 
 			//	XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + vDir);
+
 			//}
 			//else
 			{
-				_vector vNewPos = XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + XMVector3TransformNormal(vDir, RotationMatrix);
-				XMStoreFloat4(&pVertices[i].vPosition, vNewPos);
+				XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + XMVector3TransformNormal(vDir, RotationMatrix));
 			}
 		}
 		else
-		{		
-			_vector vNewPos = XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + XMVector3TransformNormal(vDir, RotationMatrix);
-			XMStoreFloat4(&pVertices[i].vPosition, vNewPos);
+		{
+
+
+			XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + XMVector3TransformNormal(vDir, RotationMatrix));
 		}
 		pVertices[i].vPosition.w = 1.f;
 	}
@@ -455,29 +478,27 @@ void CVIBuffer_Particle_Point::ReSet()
 
 _bool CVIBuffer_Particle_Point::Write_Json(json& Out_Json)
 {
-	Out_Json["Com_VIBuffer"]["eType_Action"]			= m_tBufferDesc.eType_Action;
-	Out_Json["Com_VIBuffer"]["eType_Fade"]				= m_tBufferDesc.eType_Fade;
+	Out_Json["Com_VIBuffer"]["eType_Action"] = m_tBufferDesc.eType_Action;
+	Out_Json["Com_VIBuffer"]["eType_Fade"] = m_tBufferDesc.eType_Fade;
 
-
-	Out_Json["Com_VIBuffer"]["bReverse"]				= m_tBufferDesc.bReverse;
-	Out_Json["Com_VIBuffer"]["bLoop"]					= m_tBufferDesc.bLoop;
+	//Out_Json["Com_VIBuffer"]["bPlay"]					= m_tBufferDesc.bPlay;
+	Out_Json["Com_VIBuffer"]["bReverse"] = m_tBufferDesc.bReverse;
+	Out_Json["Com_VIBuffer"]["bLoop"] = m_tBufferDesc.bLoop;
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
 
-	Out_Json["Com_VIBuffer"]["iCurNumInstance"]			= m_tBufferDesc.iCurNumInstance;
+	Out_Json["Com_VIBuffer"]["iCurNumInstance"] = m_tBufferDesc.iCurNumInstance;
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRange"], m_tBufferDesc.vMinMaxRange);
 
 	CJson_Utility::Write_Float4(Out_Json["Com_VIBuffer"]["vCenterPosition"], m_tBufferDesc.vCenterPosition);
 
 
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRangeLength"], m_tBufferDesc.vMinMaxRangeLength);
-
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxSpeed"], m_tBufferDesc.vMinMaxSpeed);
 
-	Out_Json["Com_VIBuffer"]["fSpeedAcc"]				= m_tBufferDesc.fSpeedAcc;
-	Out_Json["Com_VIBuffer"]["fAccPosition"]			= m_tBufferDesc.fAccPosition;
-	Out_Json["Com_VIBuffer"]["fGravityAcc"]				= m_tBufferDesc.fGravityAcc;
+	Out_Json["Com_VIBuffer"]["fSpeedAcc"] = m_tBufferDesc.fSpeedAcc;
+	Out_Json["Com_VIBuffer"]["fAccPosition"] = m_tBufferDesc.fAccPosition;
+	Out_Json["Com_VIBuffer"]["fGravityAcc"] = m_tBufferDesc.fGravityAcc;
 
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRotationOffsetX"], m_tBufferDesc.vMinMaxRotationOffsetX);
@@ -496,15 +517,15 @@ _bool CVIBuffer_Particle_Point::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float4(Out_Json["Com_VIBuffer"]["vCurrentColor"], m_tBufferDesc.vCurrentColor);
 
 
-
 	return true;
 }
 
 void CVIBuffer_Particle_Point::Load_FromJson(const json& In_Json)
 {
-	m_tBufferDesc.eType_Action	= In_Json["Com_VIBuffer"]["eType_Action"];
-	m_tBufferDesc.eType_Fade	= In_Json["Com_VIBuffer"]["eType_Fade"];
+	m_tBufferDesc.eType_Action = In_Json["Com_VIBuffer"]["eType_Action"];
+	m_tBufferDesc.eType_Fade = In_Json["Com_VIBuffer"]["eType_Fade"];
 
+	//m_tBufferDesc.bPlay = In_Json["Com_VIBuffer"]["bPlay"];
 	m_tBufferDesc.bReverse = In_Json["Com_VIBuffer"]["bReverse"];
 	m_tBufferDesc.bLoop = In_Json["Com_VIBuffer"]["bLoop"];
 
@@ -516,8 +537,6 @@ void CVIBuffer_Particle_Point::Load_FromJson(const json& In_Json)
 
 	CJson_Utility::Load_Float4(In_Json["Com_VIBuffer"]["vCenterPosition"], m_tBufferDesc.vCenterPosition);
 
-
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRangeLength"], m_tBufferDesc.vMinMaxRangeLength);
 
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxSpeed"], m_tBufferDesc.vMinMaxSpeed);
 
@@ -536,14 +555,14 @@ void CVIBuffer_Particle_Point::Load_FromJson(const json& In_Json)
 	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vCurrentRotation"], m_tBufferDesc.vCurrentRotation);
 	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vMinMaxRotationForce"], m_tBufferDesc.vMinMaxRotationForce);
 
-	
+
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxScale"], m_tBufferDesc.vMinMaxScale);
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vAddScale"], m_tBufferDesc.vAddScale);
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vCurrentScale"],m_tBufferDesc.vCurrentScale);
-
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vCurrentScale"], m_tBufferDesc.vCurrentScale);
 
 
 	CJson_Utility::Load_Float4(In_Json["Com_VIBuffer"]["vCurrentColor"], m_tBufferDesc.vCurrentColor);
+
 
 }
 

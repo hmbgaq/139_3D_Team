@@ -44,15 +44,15 @@ void CEffect_Particle::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Particle::Tick(_float fTimeDelta)
 {
-	//CVIBuffer_Particle_Point::PARTICLE_POINT_DESC* pDesc = m_pVIBufferCom->Get_Desc();
+	CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC* pDesc = m_pVIBufferCom->Get_Desc();
 
 	if (m_tParticleDesc.bActive_Tool)
 	{
 		m_fSequenceTime = m_fLifeTime + m_fRemainTime;
 
 		//pDesc->bActive_Tool = TRUE;
-		//pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
-		//pDesc->vMinMaxLifeTime.y = m_fLifeTime;
+		pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
+		pDesc->vMinMaxLifeTime.y = m_fLifeTime;
 
 		if (m_tParticleDesc.bPlay)
 		{
@@ -201,65 +201,65 @@ void* CEffect_Particle::Get_BufferDesc()
 {
 	CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferDesc = {};
 
-	tBufferDesc.eType_Action = &m_tParticleDesc.eType_Action;
-	tBufferDesc.eType_Fade = &m_tParticleDesc.eType_Fade;
-	tBufferDesc.eType_ColorLerp = &m_tParticleDesc.eType_ColorLerp;
+	tBufferDesc.eType_Action = m_tParticleDesc.eType_Action;
+	tBufferDesc.eType_Fade = m_tParticleDesc.eType_Fade;
+	tBufferDesc.eType_ColorLerp = m_tParticleDesc.eType_ColorLerp;
 
-	tBufferDesc.bLoop = &m_tParticleDesc.bLoop;
-	tBufferDesc.bReverse = &m_tParticleDesc.bReverse;
-	tBufferDesc.bSpriteAnim = &m_tParticleDesc.bSpriteAnim;
+	tBufferDesc.bLoop = m_tParticleDesc.bLoop;
+	tBufferDesc.bReverse = m_tParticleDesc.bReverse;
+	tBufferDesc.bSpriteAnim = m_tParticleDesc.bSpriteAnim;
 
-	tBufferDesc.iCurNumInstance = &m_tParticleDesc.iCurNumInstance;
+	tBufferDesc.iCurNumInstance = m_tParticleDesc.iCurNumInstance;
 	
-	tBufferDesc.vMinMaxLifeTime = &m_tParticleDesc.vMinMaxLifeTime;
+	tBufferDesc.vMinMaxLifeTime = m_tParticleDesc.vMinMaxLifeTime;
 
-	tBufferDesc.vMinMaxRange = &m_tParticleDesc.vMinMaxRange;
-	tBufferDesc.vMinMaxRangeLength = &m_tParticleDesc.vMinMaxRangeLength;
-	tBufferDesc.vCenterPosition = &m_tParticleDesc.vCenterPosition;
+	tBufferDesc.vMinMaxRange = m_tParticleDesc.vMinMaxRange;
+	tBufferDesc.vMinMaxRangeLength = m_tParticleDesc.vMinMaxRangeLength;
+	tBufferDesc.vCenterPosition = m_tParticleDesc.vCenterPosition;
 
-	tBufferDesc.vMinMaxSpeed = &m_tParticleDesc.vMinMaxSpeed;
+	tBufferDesc.vMinMaxSpeed = m_tParticleDesc.vMinMaxSpeed;
 
-	tBufferDesc.fSpeedAcc = &m_tParticleDesc.fSpeedAcc;
-	tBufferDesc.fAccPosition = &m_tParticleDesc.fAccPosition;
-
-
-	tBufferDesc.bUseGravity = &m_tParticleDesc.bUseGravity;
-	tBufferDesc.fGravityAcc = &m_tParticleDesc.fGravityAcc;
-	tBufferDesc.fUseGravityPosition = &m_tParticleDesc.fUseGravityPosition;
+	tBufferDesc.fSpeedAcc = m_tParticleDesc.fSpeedAcc;
+	tBufferDesc.fAccPosition = m_tParticleDesc.fAccPosition;
 
 
-	tBufferDesc.vMinMaxRotationOffsetX = &m_tParticleDesc.vMinMaxRotationOffsetX;
-	tBufferDesc.vMinMaxRotationOffsetY = &m_tParticleDesc.vMinMaxRotationOffsetY;
-	tBufferDesc.vMinMaxRotationOffsetZ = &m_tParticleDesc.vMinMaxRotationOffsetZ;
-	tBufferDesc.vRotationOffset = &m_tParticleDesc.vRotationOffset;
+	tBufferDesc.bUseGravity = m_tParticleDesc.bUseGravity;
+	tBufferDesc.fGravityAcc = m_tParticleDesc.fGravityAcc;
+	tBufferDesc.fUseGravityPosition = m_tParticleDesc.fUseGravityPosition;
 
 
-	tBufferDesc.vCurrentRotation = &m_tParticleDesc.vCurrentRotation;
-	tBufferDesc.vMinMaxRotationForce = &m_tParticleDesc.vMinMaxRotationForce;
+	tBufferDesc.vMinMaxRotationOffsetX = m_tParticleDesc.vMinMaxRotationOffsetX;
+	tBufferDesc.vMinMaxRotationOffsetY = m_tParticleDesc.vMinMaxRotationOffsetY;
+	tBufferDesc.vMinMaxRotationOffsetZ = m_tParticleDesc.vMinMaxRotationOffsetZ;
+	tBufferDesc.vRotationOffset = m_tParticleDesc.vRotationOffset;
 
 
-	tBufferDesc.vMinMaxScale = &m_tParticleDesc.vMinMaxScale;
-	tBufferDesc.vAddScale = &m_tParticleDesc.vAddScale;
-	tBufferDesc.vCurrentScale = &m_tParticleDesc.vCurrentScale;
+	tBufferDesc.vCurrentRotation = m_tParticleDesc.vCurrentRotation;
+	tBufferDesc.vMinMaxRotationForce = m_tParticleDesc.vMinMaxRotationForce;
 
 
-	tBufferDesc.vMinMaxRed = &m_tParticleDesc.vMinMaxRed;
-	tBufferDesc.vMinMaxGreen = &m_tParticleDesc.vMinMaxGreen;
-	tBufferDesc.vMinMaxBlue = &m_tParticleDesc.vMinMaxBlue;
-	tBufferDesc.vMinMaxAlpha = &m_tParticleDesc.vMinMaxAlpha;
+	tBufferDesc.vMinMaxScale = m_tParticleDesc.vMinMaxScale;
+	tBufferDesc.vAddScale = m_tParticleDesc.vAddScale;
+	tBufferDesc.vCurrentScale = m_tParticleDesc.vCurrentScale;
 
-	tBufferDesc.vCurrentColor = &m_tParticleDesc.vCurrentColor;
+
+	tBufferDesc.vMinMaxRed = m_tParticleDesc.vMinMaxRed;
+	tBufferDesc.vMinMaxGreen = m_tParticleDesc.vMinMaxGreen;
+	tBufferDesc.vMinMaxBlue = m_tParticleDesc.vMinMaxBlue;
+	tBufferDesc.vMinMaxAlpha = m_tParticleDesc.vMinMaxAlpha;
+
+	tBufferDesc.vCurrentColor = m_tParticleDesc.vCurrentColor;
 
 
 	/* SpriteDesc */
-	tBufferDesc.fSequenceTerm = &m_tSpriteDesc.fSequenceTerm;
+	tBufferDesc.fSequenceTerm = m_tSpriteDesc.fSequenceTerm;
 
-	tBufferDesc.vTextureSize = &m_tSpriteDesc.vTextureSize;
-	tBufferDesc.vTileSize = &m_tSpriteDesc.vTileSize;
+	tBufferDesc.vTextureSize = m_tSpriteDesc.vTextureSize;
+	tBufferDesc.vTileSize = m_tSpriteDesc.vTileSize;
 
-	tBufferDesc.vUV_CurTileIndex = &m_tSpriteDesc.vUV_CurTileIndex;
-	tBufferDesc.vUV_MinTileCount = &m_tSpriteDesc.vUV_MinTileCount;
-	tBufferDesc.vUV_MaxTileCount = &m_tSpriteDesc.vUV_MaxTileCount;
+	tBufferDesc.vUV_CurTileIndex = m_tSpriteDesc.vUV_CurTileIndex;
+	tBufferDesc.vUV_MinTileCount = m_tSpriteDesc.vUV_MinTileCount;
+	tBufferDesc.vUV_MaxTileCount = m_tSpriteDesc.vUV_MaxTileCount;
 
 
 	return &tBufferDesc;
@@ -277,10 +277,9 @@ HRESULT CEffect_Particle::Ready_Components()
 
 	/* For.Com_VIBuffer */
 	{
-		CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC pBufferInfo = *static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(Get_BufferDesc());
-		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle_Point"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &pBufferInfo)))
+		CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferInfo = *static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(Get_BufferDesc());
+		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle_Point"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
 			return E_FAIL;
-
 	}
 
 
