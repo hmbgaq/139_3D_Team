@@ -6,9 +6,9 @@ matrix			g_BoneMatrices[800];
 float			g_fCamFar;
 float           g_TimeDelta;
 
-texture2D       g_DiffuseTexture;
-texture2D       g_NormalTexture;
-texture2D       g_SpecularTexture;
+Texture2D       g_DiffuseTexture;
+Texture2D       g_NormalTexture;
+Texture2D       g_SpecularTexture;
 
 /* Dissolve  */
 Texture2D		g_DissolveTexture;
@@ -18,7 +18,8 @@ float			g_fDissolveWeight;
 Texture2D		g_MaskingTexture;
 
 /* Bloom */
-float4          g_BloomColor;
+float4          g_BloomColor = { 0.f, 0.f, 0.f, 0.f };
+float3          g_vBloomPower;
 
 /* Reflection */
 matrix			g_ReflectionMatrix;
@@ -27,11 +28,25 @@ matrix			g_ReflectionMatrix;
 float4          g_vLineColor;
 float           g_LineThick;
 
+/* RimLight */
 float4			g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; 
+float4          g_vCamPosition;
 
+/* -------------------------------------- */
 
+float4 Caculation_Brightness(float4 vColor, float3 BloomPower)
+{
+    float4 vBrightnessColor = float4(0.f, 0.f, 0.f, 0.f);
 
+    float fPixelBrightness = dot(vColor.rgb, BloomPower.rgb);
+    
+    if (fPixelBrightness > 0.99f)
+        vBrightnessColor = float4(vColor.rgb, 1.0f);
 
+    return vBrightnessColor;
+}
+
+/* ------------------- ------------------- */ 
 struct VS_IN
 {
 	float3		vPosition		: POSITION;
@@ -55,7 +70,10 @@ struct VS_OUT
     float3		vPositionView	: POSITION;
 };
 
+
+
 /* ------------------- Base Vertex Shader -------------------*/
+
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
@@ -63,9 +81,9 @@ VS_OUT VS_MAIN(VS_IN In)
 	float		fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
 
 	matrix		BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
-		g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
-		g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
-		g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+		                     g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		                     g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		                     g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
 
 	vector		vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
 	vector		vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
@@ -106,8 +124,9 @@ struct PS_OUT
 	float4	vDiffuse        : SV_TARGET0;
 	float4	vNormal         : SV_TARGET1;
     float4  vDepth          : SV_TARGET2;
-    float4  vViewNormal     : SV_TARGET3;
-    float4  vBloom          : SV_TARGET4;
+    float4  vORM            : SV_TARGET3;
+    float4  vViewNormal     : SV_TARGET4;
+    float4  vBloom          : SV_TARGET5;
 };
 
 /* ------------------- Base Pixel Shader (0) -------------------*/
@@ -120,15 +139,31 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	if (vMtrlDiffuse.a < 0.1f)
 		discard;
-
-	Out.vDiffuse = vMtrlDiffuse;
+    
+    Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-   // Out.vBloom = float4(1.0f, 0.f, 0.f, 1.0f);
-    //Out.vViewNormal = Out.vNormal;
-    //Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    
+    /* 림라이트 -> 프레넬 공식 사용 */
+    /* 노말 (내적) 정점이 카메라를 바라보는방향 -> 카메라가 조명처럼 인식된다. */ 
+    //float fRim = saturate(dot(In.vNormal, (g_vCamPosition - In.vWorldPos)));
+    //int iRimPower = 5.f;
+    ///* 일정이상보다 작으면 Rim을 없앤다. */
+    //if(fRim > 0.3)
+    //    fRim = 1;
+    //else
+    //    fRim = -1;
+    
+    //Out.vEmissive = Out.vORM + float4(pow(1 - fRim, iRimPower) * g_vRimColor.xyz, 1.f);
+    
+    float fRimPower = 1.f - saturate(dot(In.vNormal, normalize((-1.f * (In.vWorldPos - g_vCamPosition)))));
+    fRimPower = pow(fRimPower, 5.f);
+    vector vRimColor = g_vRimColor * fRimPower;
+    
+    Out.vBloom = Caculation_Brightness(Out.vDiffuse, g_vBloomPower) + vRimColor;
+    Out.vDiffuse += vRimColor;
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
-
 	return Out;
 }
 
@@ -190,6 +225,7 @@ PS_OUT PS_MAIN_DISSOVLE(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
 
     return Out;
 }
@@ -219,6 +255,7 @@ PS_OUT PS_MAIN_GRAY(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
 }
@@ -242,6 +279,7 @@ PS_OUT PS_MAIN_MASKING(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vViewNormal = Out.vNormal;
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
 	
     return Out;
 }
@@ -261,6 +299,7 @@ PS_OUT PS_MAIN_BLOOM(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vBloom = g_BloomColor;
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vViewNormal = Out.vNormal;
     
     return Out;
@@ -338,11 +377,11 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     float3x3 WorldMatrix = float3x3(In.vPosition.xyz, In.vBinormal.xyz, In.vNormal.xyz);
     vNormal = mul(vNormal, WorldMatrix);
     
-    Out.vDiffuse = vColor;
-    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-   // Out.vBloom = g_BloomColor;
-   // Out.vViewNormal = Out.vNormal;
+    Out.vDiffuse    = vColor;
+    Out.vNormal     = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth      = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    
+    Out.vORM        = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
     
     return Out;

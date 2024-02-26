@@ -57,17 +57,18 @@ void CScreamer::Tick(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_9))
 	{
-		m_iRenderPass += 1;
-		if (m_iRenderPass >= ECast(ANIM_SHADER::ANIM_SHADER_END))
-			m_iRenderPass = 0;
-
-		cout << "Render Pass : " << m_iRenderPass << endl;
+		if (m_iRenderPass == ECast(ANIM_SHADER::ANIM_ORIGIN))
+			m_iRenderPass = ECast(ANIM_SHADER::ANIM_BLOOM);
+		else if (m_iRenderPass == ECast(ANIM_SHADER::ANIM_BLOOM))
+			m_iRenderPass = ECast(ANIM_SHADER::ANIM_ORIGIN);
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_8))
 	{
 		m_vBloomColor += _float4(fTimeDelta, 0.f, 0.f, 0.f);
 	}
+	if (m_pGameInstance->Key_Down(DIK_6))
+		m_bRim = !m_bRim;
 
 	m_fTimeDelta += fTimeDelta;
 	m_fDissolveWeight += fTimeDelta * 0.5f;
@@ -87,9 +88,7 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
-
 	}
-
 
 	m_pGameInstance->Add_DebugRender(m_pColliderCom);
 }
@@ -167,6 +166,34 @@ HRESULT CScreamer::Render_OutLine()
 	return S_OK;
 }
 
+HRESULT CScreamer::Render_Cascade_Shadow(_uint i)
+{
+	//if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
+	//	return S_OK;
+	//
+	//FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+	//
+	//m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+	//
+	//m_pShaderCom->Bind_Matrix("g_CascadeProj", &CGameInstance::GetInstance()->Get_ShadowProj()[iIndex]);
+	//
+	//_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	//
+	//for (_uint i = 0; i < iNumMeshes; ++i)
+	//{
+	//	if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+	//		return S_OK;
+	//
+	//	if (FAILED(m_pModelCom->Render(m_pShaderCom, i, "CascadeShadowPass")))
+	//		return S_OK;
+	//}
+	//
+	//return E_NOTIMPL;
+	return S_OK;
+}
+
 HRESULT CScreamer::Ready_Components()
 {
 	/* For. Transform */
@@ -208,7 +235,6 @@ HRESULT CScreamer::Ready_Components()
 	}
 
 	return S_OK;
-
 }
 
 HRESULT CScreamer::Bind_ShaderResources()
@@ -228,6 +254,24 @@ HRESULT CScreamer::Bind_ShaderResources()
 	/* Texture */
 	m_pBreakTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture");
 	m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
+
+	/* RimLight */
+	if(true == m_bRim)
+	{
+		m_vRimColor = { 1.0f, 1.f, 1.f, 0.3f };
+		m_vBloomPower = _float3(0.1f, 0.1f, 0.1f);
+	}
+	else
+	{
+		m_vRimColor = { 0.0f, 0.0f, 0.0f, 0.0f };
+		m_vBloomPower = { 0.0f, 0.0f, 0.0f };
+	}
+	m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
+
+	/* RimLight */
+	m_vCamPos = m_pGameInstance->Get_CamPosition();
+	m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+	m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
 
 	return S_OK;
 }

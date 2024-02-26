@@ -77,22 +77,23 @@ HRESULT CUI_Player_HPBar::Render()
 
 HRESULT CUI_Player_HPBar::Ready_Components()
 {
-	if(FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+	//if(FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+	//	return E_FAIL;
 
 	//! For.Com_Texture1 // Èò»ö ¹Ù
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_damagel"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_cooldown_active"),
 		TEXT("Com_Texture_WhiteBar"), reinterpret_cast<CComponent**>(&m_pTextureCom[HPBAR_WHITE]))))
 		return E_FAIL;
 
-	//! For.Com_Texture2 // »¡°£»ö ¹Ù
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_bg_full"),
-		TEXT("Com_Texture_RedBar"), reinterpret_cast<CComponent**>(&m_pTextureCom[HPBAR_RED]))))
-		return E_FAIL;
-
-	//! For.Com_Texture3 // Ç¥½Ã¼±
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("UI_PlayersHP_decal"),
-		TEXT("Com_Texture_Decal"), reinterpret_cast<CComponent**>(&m_pTextureCom[HP_DECAL]))))
-		return E_FAIL;
+	////! For.Com_Texture2 // »¡°£»ö ¹Ù
+	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_bg_full"),
+	//	TEXT("Com_Texture_RedBar"), reinterpret_cast<CComponent**>(&m_pTextureCom[HPBAR_RED]))))
+	//	return E_FAIL;
+	//
+	////! For.Com_Texture3 // Ç¥½Ã¼±
+	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("UI_PlayersHP_decal"),
+	//	TEXT("Com_Texture_Decal"), reinterpret_cast<CComponent**>(&m_pTextureCom[HP_DECAL]))))
+	//	return E_FAIL;
 
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -123,14 +124,15 @@ HRESULT CUI_Player_HPBar::Bind_ShaderResources()
 		{
 		case CUI_Player_HPBar::HPBAR_WHITE:
 		{
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-				return E_FAIL;
+			FAILED_CHECK(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture"));
+			FAILED_CHECK(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture"));
+			FAILED_CHECK(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture"));
 			break;
 		}
 		case CUI_Player_HPBar::HPBAR_RED:
 		{
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-				return E_FAIL;
+		//	if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+		//		return E_FAIL;
 
 			break;
 		}

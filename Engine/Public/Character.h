@@ -29,10 +29,10 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	CBody* Get_Body();
-	CWeapon* Get_Weapon(const wstring & strWeaponTag);
-	CCollider* Get_Collider();
-	CNavigation* Get_Navigation();
+	CBody*			Get_Body();
+	CWeapon*		Get_Weapon(const wstring & strWeaponTag);
+	CCollider*		Get_Collider();
+	CNavigation*	Get_Navigation();
 
 	virtual _bool Picking(_Out_ _float3 * vPickedPos) override;
 public:
@@ -63,6 +63,9 @@ public:
 	void Go_Backward_R45(_float fTimeDelta);
 	void Go_Left(_float fTimeDelta);
 	void Go_Right(_float fTimeDelta);
+
+public:
+	virtual void Set_Enable(_bool _Enable) override;
 
 
 	_bool Is_Rotate_In_CameraDir() {

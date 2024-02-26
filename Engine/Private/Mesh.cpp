@@ -182,13 +182,11 @@ HRESULT CMesh::Ready_Vertices_NonAnim(CMyAIMesh pAIMesh, _fmatrix PivotMatrix)
 		XMStoreFloat3(&m_pVertices[(_uint)i].vTangent, XMVector3TransformNormal(XMLoadFloat3(&m_pVertices[(_uint)i].vTangent), PivotMatrix));
 	}
 
-
 	m_SubResourceData.pSysMem = m_pVertices;
 
 	/* pVertices에 할당하여 채워놨던 정점들의 정보를 ID3D11Buffer로 할당한 공간에 복사하여 채워넣는다. */
 	if (FAILED(__super::Create_Buffer(&m_pVB)))
 		return E_FAIL;
-
 
 #ifndef _DEBUG
 	Safe_Delete_Array(m_pVertices);

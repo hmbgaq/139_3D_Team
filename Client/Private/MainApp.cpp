@@ -25,14 +25,14 @@ HRESULT CMainApp::Initialize()
 
 #ifdef _DEBUG
 #pragma region Imgui용 Rect 설정
-	// imGui때문에.. imgui는 제목표시줄 크기를 인식 못해서 이렇게 안해주면 마우스 오차가 생긴다.
-	//RECT rect = { 0 };
-	//GetClientRect(GraphicDesc.hWnd, &rect);
-	//_int iClientSizeX = rect.right - rect.left;
-	//_int iClientSizeY = rect.bottom - rect.top;
-	//GraphicDesc.iBackBufferSizeX = iClientSizeX;
-	//GraphicDesc.iBackBufferSizeY = iClientSizeY;
-#pragma endregion Imgui용 Rect 설정
+//	// 주석 걸고 병합하기 : imGui때문에.. imgui는 제목표시줄 크기를 인식 못해서 이렇게 안해주면 마우스 오차가 생긴다.
+//	RECT rect = { 0 };
+//	GetClientRect(GraphicDesc.hWnd, &rect);
+//	_int iClientSizeX = rect.right - rect.left;
+//	_int iClientSizeY = rect.bottom - rect.top;
+//	GraphicDesc.iBackBufferSizeX = iClientSizeX;
+//	GraphicDesc.iBackBufferSizeY = iClientSizeY;
+//#pragma endregion Imgui용 Rect 설정
 #endif // _DEBUG
 
 
@@ -148,8 +148,10 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 	//
 	/* For.Prototype_Component_Shader_UI */ // + SH_Add
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_UI.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)));
-	//
-	//
+
+
+
+
 
 	// UI텍스처 로드(주석 풀고 병합하기)
 	/* For.Ready_UITexture */ // + SH_Add
@@ -300,7 +302,6 @@ void CMainApp::Free()
 
 	/*  내 멤버를 정리하면. */
 	Safe_Release(m_pGameInstance);
-
 	
 	CClone_Manager::DestroyInstance();
 	CData_Manager::DestroyInstance();

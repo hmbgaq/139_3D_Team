@@ -105,6 +105,17 @@ void CGameObject::Set_Enable(_bool _Enable)
 	__super::Set_Enable(_Enable);
 	for (auto& Pair : m_Components)
 		Pair.second->Set_Enable(_Enable);
+
+	if (false == _Enable && true == m_bIsPoolObject)
+	{
+		Safe_Release(m_pTransformCom);
+
+		for (auto& Pair : m_Components)
+			Safe_Release(Pair.second);
+
+		m_Components.clear();
+	}
+
 }
 
 _bool CGameObject::Write_Json(json& Out_Json)

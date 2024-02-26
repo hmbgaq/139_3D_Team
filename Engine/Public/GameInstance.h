@@ -85,6 +85,7 @@ public: /* For.Component_Manager */
 public: /* For.Renderer */
 	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
+	CRenderer* Get_Renderer();
 #ifdef _DEBUG
 	void Set_RenderDebug(_bool _bRenderDebug);
 #endif
@@ -177,8 +178,6 @@ public: /* For.Random_Manager*/
 	const _bool&			Random_Coin(_float fProbality);
 	int64_t					GenerateUniqueID();
 
-
-
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
@@ -211,7 +210,7 @@ public: /* Common */
 	const wstring	Remove_LastNumChar(const wstring& str, const _uint& iNumCutCount);
 	const string	Remove_LastNumChar(const string& str, const _uint& iNumCutCount);
 	const wstring	Get_LastNumChar(const wstring& str, const _uint& iNumCutCount);
-
+#pragma endregion End
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };

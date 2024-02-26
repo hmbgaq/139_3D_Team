@@ -78,4 +78,5 @@ CGameObject* CUI_Blood::Clone(void* pArg)
 
 void CUI_Blood::Free()
 {
+	__super::Free();
 }

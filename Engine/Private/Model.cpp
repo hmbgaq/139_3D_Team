@@ -1,9 +1,10 @@
-#include "..\Public\Model.h"
+#include "Model.h"
 #include "Mesh.h"
 #include "Texture.h"
 #include "Bone.h"
 #include "Animation.h"
 #include "Channel.h"
+#include "Shader.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -288,6 +289,14 @@ HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantNa
 		return E_FAIL;
 
 	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Bind_ShaderResource(pShader, pConstantName);
+}
+
+HRESULT CModel::Bind_ShaderCascade(CShader* pShader)
+{
+	//if (FAILED(pShader->Bind_Matrices("g_BoneMatrices", m_matCurrTransforms.data(), (size_t)m_matCurrTransforms.size())))
+	//	return S_OK;
+
+	return S_OK;
 }
 
 void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)

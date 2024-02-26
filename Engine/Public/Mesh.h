@@ -34,7 +34,7 @@ public:
 	void						Calculate_AABB_Extents(_float3* pOutMin, _float3* pOutMax);
 
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
-
+	
 public:
     virtual HRESULT Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones);
     

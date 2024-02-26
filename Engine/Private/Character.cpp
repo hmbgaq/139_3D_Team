@@ -221,6 +221,29 @@ void CCharacter::Go_Right(_float fTimeDelta)
 	m_pTransformCom->Go_Right(fTimeDelta, m_pNavigationCom);
 }
 
+void CCharacter::Set_Enable(_bool _Enable)
+{
+	__super::Set_Enable(_Enable);
+
+	if (false == _Enable && true == m_bIsPoolObject)
+	{
+		Safe_Release(m_pBody);
+
+		for (CWeapon* pWeapon : m_Weapons)
+		{
+			Safe_Release(pWeapon);
+		}
+		m_Weapons.clear();
+
+		for (auto& Pair : m_PartObjects)
+			Safe_Release(Pair.second);
+
+		m_PartObjects.clear();
+	}
+
+
+}
+
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {
 	return m_pBody->Picking(vPickedPos);
