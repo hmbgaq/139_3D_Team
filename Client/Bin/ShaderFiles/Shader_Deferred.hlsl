@@ -285,7 +285,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
         if (vPriority.a == 0.f)
             discard;
         
-        Out.vColor = vPriority;
+        Out.vColor = vPriority + vBloom;
     }
     else
     {
@@ -304,9 +304,9 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
             vOutline = g_OutlineTarget.Sample(LinearSampler, In.vTexcoord);
 	
     
-        Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
+        Out.vColor = ((vDiffuse * vShade * vSSAO) + vSpecular + vBloom) * vOutline;
+        //Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
         Out.vColor.a = 1.f;
-    //Out.vColor = ((vDiffuse * vShade * vSSAO) + vSpecular + vBloom) * vOutline;
     }
     vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
     float fViewZ = vDepthDesc.y * g_CamFar;
