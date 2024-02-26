@@ -6,332 +6,24 @@
 _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 {
 
-
 	return true;
 }
 
 void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 {
+
 }
 
 CVIBuffer_Particle::CVIBuffer_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer_Instancing(pDevice, pContext)
 {
+
 }
 
 CVIBuffer_Particle::CVIBuffer_Particle(const CVIBuffer_Particle& rhs)
 	: CVIBuffer_Instancing(rhs)
 {
-}
 
-
-void CVIBuffer_Particle::Restart_ParticleBufferDesc(_uint iCount)
-{
-	m_iNumInstance = iCount;
-	if (m_iNumInstance > m_iMaxCount)
-		m_iNumInstance = m_iMaxCount;
-
-	m_bFinished = false;
-
-	D3D11_MAPPED_SUBRESOURCE SubResource;
-	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
-
-	for (_uint i = 0; i < m_iNumInstance; i++)
-	{
-		m_vecParticleInfoDesc[i].bIsDie = false;
-
-		// 위치 (분포 범위)
-		((VTXINSTANCE*)SubResource.pData)[i].vPosition = Get_NewPosition_Particle();
-		if ((*m_tParticleDesc.pVelocityChangeRandom))
-		{		
-			m_vecParticleInfoDesc[i].fVelocityRanTimeAccs = 0.f;
-			m_vecParticleInfoDesc[i].fVelocityRanChange   = SMath::fRandom((*m_tParticleDesc.pVelocityChangeTime).x, (*m_tParticleDesc.pVelocityChangeTime).y);
-		}
-
-#pragma region 크기
-		if ((*m_tParticleDesc.pScaleSameRate))
-		{
-			_float fScale = SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y);
-			((VTXINSTANCE*)SubResource.pData)[i].vRight = _float4(fScale, 0.f, 0.f, 0.f);
-			((VTXINSTANCE*)SubResource.pData)[i].vUp    = _float4(0.f, fScale, 0.f, 0.f);
-			((VTXINSTANCE*)SubResource.pData)[i].vLook = _float4(0.f, 0.f, fScale, 0.f);
-		}
-		else
-		{
-			((VTXINSTANCE*)SubResource.pData)[i].vRight = _float4(SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y), 0.f, 0.f, 0.f);
-			((VTXINSTANCE*)SubResource.pData)[i].vUp    = _float4(0.f, SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y), 0.f, 0.f);
-			((VTXINSTANCE*)SubResource.pData)[i].vLook  = _float4(0.f, 0.f, SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y), 0.f);
-		}
-
-		if ((*m_tParticleDesc.pScaleChange))
-		{
-			m_vecParticleInfoDesc[i].bScaleAdd = (*m_tParticleDesc.pScaleAdd);
-			m_vecParticleInfoDesc[i].fScaleSpeed = SMath::fRandom((*m_tParticleDesc.pScaleSpeed).x, (*m_tParticleDesc.pScaleSpeed).y);
-
-			m_vecParticleInfoDesc[i].fScaleTimeAccs = 0.f;
-			m_vecParticleInfoDesc[i].fScaleChange   = SMath::fRandom((*m_tParticleDesc.pScaleChangeTime).x, (*m_tParticleDesc.pScaleChangeTime).y);
-		
-			m_vecParticleInfoDesc[i].fScaleChangeStartTime  = 0.f;
-			m_vecParticleInfoDesc[i].fScaleChangeStartDelay = SMath::fRandom((*m_tParticleDesc.pScaleChangeStartDelay).x, (*m_tParticleDesc.pScaleChangeStartDelay).y);
-		}
-#pragma endregion
-
-#pragma region 이동 방향
-		m_vecParticleInfoDesc[i].fVelocitySpeeds = SMath::fRandom((*m_tParticleDesc.pVelocitySpeed).x, (*m_tParticleDesc.pVelocitySpeed).y);
-
-		if (!(*m_tParticleDesc.pVelocityChange))
-		{
-			m_vecParticleInfoDesc[i].vVelocity = Get_NewVelocity_Particle();
-		}
-		else
-		{
-			// 랜덤 x
-			if (!(*m_tParticleDesc.pVelocityChangeRandom) && (*m_tParticleDesc.pVelocityUse) > 0)
-			{
-				if (m_vecParticleInfoDesc[i].pVelocity == nullptr)
-					m_vecParticleInfoDesc[i].pVelocity = new _float3[(*m_tParticleDesc.pVelocityUse)];
-				if (m_vecParticleInfoDesc[i].pVelocityChange == nullptr)
-					m_vecParticleInfoDesc[i].pVelocityChange = new _float[(*m_tParticleDesc.pVelocityUse)];
-
-				for (size_t j = 0; j < (*m_tParticleDesc.pVelocityCountMax); ++j)
-				{
-					_vector vVelocity = XMVector3Normalize(
-						XMVectorSet(
-							SMath::fRandom(m_tParticleDesc.pVelocityMin[j].x, m_tParticleDesc.pVelocityMax[j].x),
-							SMath::fRandom(m_tParticleDesc.pVelocityMin[j].y, m_tParticleDesc.pVelocityMax[j].y),
-							SMath::fRandom(m_tParticleDesc.pVelocityMin[j].z, m_tParticleDesc.pVelocityMax[j].z),
-							0.f));
-					m_vecParticleInfoDesc[i].pVelocity[j] = _float3(XMVectorGetX(vVelocity), XMVectorGetY(vVelocity), XMVectorGetZ(vVelocity));
-					m_vecParticleInfoDesc[i].pVelocityChange[j] = SMath::fRandom(m_tParticleDesc.pVelocityTime[j].x, m_tParticleDesc.pVelocityTime[j].y);
-				}
-			}
-			else
-			{
-				m_vecParticleInfoDesc[i].vVelocity = Get_NewVelocity_Particle();
-			}
-
-			m_vecParticleInfoDesc[i].iVelocityCountCur = 0;
-			m_vecParticleInfoDesc[i].fVeloityTimeAccs  = 0.f;
-
-			m_vecParticleInfoDesc[i].fVelocityChangeStartTime  = 0.f;
-			m_vecParticleInfoDesc[i].fVelocityChangeStartDelay = SMath::fRandom((*m_tParticleDesc.pVelocityChangeStartDelay).x, (*m_tParticleDesc.pVelocityChangeStartDelay).y);
-		}
-#pragma endregion
-
-		// 시작 위치 거리 셋팅
-		_float fDistance = SMath::fRandom((*m_tParticleDesc.pRangeDistance).x, (*m_tParticleDesc.pRangeDistance).y);
-		((VTXINSTANCE*)SubResource.pData)[i].vPosition.x += m_vecParticleInfoDesc[i].vVelocity.x * fDistance;
-		((VTXINSTANCE*)SubResource.pData)[i].vPosition.y += m_vecParticleInfoDesc[i].vVelocity.y * fDistance;
-		((VTXINSTANCE*)SubResource.pData)[i].vPosition.z += m_vecParticleInfoDesc[i].vVelocity.z * fDistance;
-
-#pragma region 회전
-		if (!(*m_tParticleDesc.pBillboard))
-		{
-			if ((*m_tParticleDesc.pRandomAxis))
-			{
-				_uint iRandomCount = (_uint)SMath::fRandom(0.f, 2.9);
-				switch (iRandomCount)
-				{
-				case 0:
-					m_vecParticleShaderDesc[i].fAxis = _float3(1.f, 0.f, 0.f);
-					break;
-				case 1:
-					m_vecParticleShaderDesc[i].fAxis = _float3(0.f, 1.f, 0.f);
-					break;
-				default:
-					m_vecParticleShaderDesc[i].fAxis = _float3(0.f, 0.f, 1.f);
-					break;
-				}
-			}
-			else
-			{
-				m_vecParticleShaderDesc[i].fAxis = _float3(XMVectorGetX((*m_tParticleDesc.pAxis)), XMVectorGetY((*m_tParticleDesc.pAxis)), XMVectorGetZ((*m_tParticleDesc.pAxis)));
-			}
-
-			if ((*m_tParticleDesc.pRandomAngle))
-				m_vecParticleShaderDesc[i].fAngle = SMath::fRandom(0.f, 360.f);
-			else
-				m_vecParticleShaderDesc[i].fAngle = (*m_tParticleDesc.pAngle);
-
-			if ((*m_tParticleDesc.pRotationChange))
-			{
-				if ((*m_tParticleDesc.pRotationChangeRandom))
-				{
-					m_vecParticleInfoDesc[i].fRotationTime = 0.f;
-					m_vecParticleInfoDesc[i].fRotationChangeTime = SMath::fRandom((*m_tParticleDesc.pRotationChangeTime).x, (*m_tParticleDesc.pRotationChangeTime).y);
-				}
-
-				m_vecParticleInfoDesc[i].fRotationSpeed = SMath::fRandom((*m_tParticleDesc.pRotationSpeed).x, (*m_tParticleDesc.pRotationSpeed).y);
-			
-				m_vecParticleInfoDesc[i].fRotationChangeStartTime  = 0.f;
-				m_vecParticleInfoDesc[i].fRotationChangeStartDelay = SMath::fRandom((*m_tParticleDesc.pRotationChangeStartDelay).x, (*m_tParticleDesc.pRotationChangeStartDelay).y);
-			}
-		}
-#pragma endregion
-
-		// 시간
-		m_vecParticleInfoDesc[i].fTimeAccs  = 0.f;
-		m_vecParticleInfoDesc[i].fLifeTimes = SMath::fRandom((*m_tParticleDesc.pLifeTime).x, (*m_tParticleDesc.pLifeTime).y);
-
-#pragma region 텍스처 정보
-		m_vecParticleInfoDesc[i].bAmimationFinish = false;
-		m_vecParticleInfoDesc[i].fAccIndex        = 0.f;
-		m_vecParticleInfoDesc[i].fAnimationSpeed  = SMath::fRandom((*m_tParticleDesc.pAnimationSpeed).x, (*m_tParticleDesc.pAnimationSpeed).y);
-
-		if ((*m_tParticleDesc.pRandomStartIndex))
-			m_vecParticleShaderDesc[i].fUVIndex = _float2(
-				(_int)SMath::fRandom(0.f, (*m_tParticleDesc.pUVMaxCount).x),
-				(_int)SMath::fRandom(0.f, (*m_tParticleDesc.pUVMaxCount).y));
-		else
-			m_vecParticleShaderDesc[i].fUVIndex = (*m_tParticleDesc.pUVIndex);
-
-		m_vecParticleShaderDesc[i].fMaxCount = (*m_tParticleDesc.pUVMaxCount);
-#pragma endregion
-
-#pragma region 알파
-		if (!(*m_tParticleDesc.pFadeChange))
-			m_vecParticleShaderDesc[i].fAlpha = SMath::fRandom((*m_tParticleDesc.pStartAlpha).x, (*m_tParticleDesc.pStartAlpha).y);
-		else
-		{
-			m_vecParticleInfoDesc[i].fAlphaChangeStartTime  = 0.f;
-			m_vecParticleInfoDesc[i].fAlphaChangeStartDelay = SMath::fRandom((*m_tParticleDesc.pFadeChangeStartDelay).x, (*m_tParticleDesc.pFadeChangeStartDelay).y);
-
-			m_vecParticleShaderDesc[i].fAlpha = SMath::fRandom((*m_tParticleDesc.pStartAlpha).x, (*m_tParticleDesc.pStartAlpha).y);
-		}
-
-		if ((*m_tParticleDesc.pFadeCreate))
-		{
-			m_vecParticleShaderDesc[i].fAlpha        = 1.f;
-			m_vecParticleInfoDesc[i].bFadeCreateSucc = false;
-		}
-		else if((*m_tParticleDesc.pFadeDelete))
-			m_vecParticleInfoDesc[i].bFadeCreateSucc = true;
-
-		m_vecParticleInfoDesc[i].fAlphaSpeed = SMath::fRandom((*m_tParticleDesc.pFadeSpeed).x, (*m_tParticleDesc.pFadeSpeed).y);
-#pragma endregion
-
-#pragma region 색상
-		if ((*m_tParticleDesc.pColorChange))
-		{
-			m_vecParticleInfoDesc[i].LerpInfo = {};
-			m_vecParticleInfoDesc[i].fColorChangeEndTime = SMath::fRandom((*m_tParticleDesc.pColorDuration).x, (*m_tParticleDesc.pColorDuration).y);
-
-			if ((*m_tParticleDesc.pColorChangeRandom))
-			{
-				m_vecParticleInfoDesc[i].fNextColor = _float3(SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f));
-				m_vecParticleInfoDesc[i].fColorAccs = 0.f;
-				m_vecParticleInfoDesc[i].fColorChangeTime = SMath::fRandom((*m_tParticleDesc.pColorChangeRandomTime).x, (*m_tParticleDesc.pColorChangeRandomTime).y);
-			}
-			else
-			{
-				m_vecParticleInfoDesc[i].fColorChangeStartTime = 0.f;
-				m_vecParticleInfoDesc[i].fColorChangeStartDelay = SMath::fRandom((*m_tParticleDesc.pColorChangeStartDelay).x, (*m_tParticleDesc.pColorChangeStartDelay).y);
-
-				m_vecParticleInfoDesc[i].iColorIndex = 0;
-				m_vecParticleInfoDesc[i].fColorChangeStartM = SMath::fRandom((*m_tParticleDesc.pColorChangeStartM).x, (*m_tParticleDesc.pColorChangeStartM).y);
-				m_vecParticleInfoDesc[i].fColorChangeStartF = SMath::fRandom((*m_tParticleDesc.pColorChangeStartE).x, (*m_tParticleDesc.pColorChangeStartE).y);
-			}
-		}
-
-		if ((*m_tParticleDesc.pColorRandom))
-			m_vecParticleShaderDesc[i].fColor = _float3(SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f));
-		else
-			m_vecParticleShaderDesc[i].fColor = _float3((*m_tParticleDesc.pColor_Start).x, (*m_tParticleDesc.pColor_Start).y, (*m_tParticleDesc.pColor_Start).z);
-#pragma endregion
-
-#pragma region 블러
-		if ((*m_tParticleDesc.pBloomPowerRandom))
-			m_vecParticleShaderDesc[i].fBloomPower = _float3(SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f));
-		else
-			m_vecParticleShaderDesc[i].fBloomPower = _float3((*m_tParticleDesc.pBloomPower).x, (*m_tParticleDesc.pBloomPower).y, (*m_tParticleDesc.pBloomPower).z);
-
-		if ((*m_tParticleDesc.pBlurPowerRandom))
-			m_vecParticleShaderDesc[i].fBlurPower = SMath::fRandom(0.0f, 1.f);
-		else
-			m_vecParticleShaderDesc[i].fBlurPower = (*m_tParticleDesc.pBlurPower);
-#pragma endregion
-
-#pragma region 리지드바디
-		if (true == (*m_tParticleDesc.pRigidbody))
-		{
-			if (m_vecParticleRigidbodyDesc.size() < m_iNumInstance)
-			{
-				PARTICLE_RIGIDBODY_DESC ParticleRigidbody = {};
-				m_vecParticleRigidbodyDesc.push_back(ParticleRigidbody);
-			}
-
-			m_vecParticleRigidbodyDesc[i].vVelocity = _float4(0.f, 0.f, 0.f, 0.f);
-		}
-#pragma endregion
-	}
-
-	m_pContext->Unmap(m_pVBInstance, 0);
-}
-
-void CVIBuffer_Particle::Sort_Z(_uint iCount)
-{
-	D3D11_MAPPED_SUBRESOURCE SubResource;
-	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
-
-	vector<VTXINSTANCE> instanceData;
-	instanceData.resize(iCount);
-	memcpy(instanceData.data(), SubResource.pData, iCount * sizeof(VTXINSTANCE));
-
-	
-	_float4 fCamPos = m_pGameInstance->Get_CamPosition();
-	_vector vCampos = XMVectorSet(fCamPos.x, fCamPos.y, fCamPos.z, fCamPos.w);
-
-	// 현재 순서 그대로 해당 위치의 값 뷰Z를 구함.
-	vector<_float> vecViewZ;
-	for (size_t i = 0; i < iCount; i++) {
-		_vector vPosition = XMVectorSet(instanceData[i].vPosition.x, instanceData[i].vPosition.y, instanceData[i].vPosition.z, instanceData[i].vPosition.w);
-		vecViewZ.push_back(XMVectorGetX(XMVector3Length(vCampos - vPosition)));
-	}
-
-	// m_vecViewZ를 기준으로 정렬된 인덱스 구함.
-	vector<size_t> sortedIndices(vecViewZ.size());
-	iota(sortedIndices.begin(), sortedIndices.end(), 0);
-	sort(sortedIndices.begin(), sortedIndices.end(), [&](size_t a, size_t b) {
-		return vecViewZ[a] > vecViewZ[b]; }
-	);
-
-	// 정렬된 인덱스를 기반으로 다른 컨테이너들도 정렬
-	vector<VTXINSTANCE>          sortedInstanceData(instanceData.size());
-	vector<PARTICLE_INFO_DESC>   sortedParticleInfoDesc(m_vecParticleInfoDesc.size());
-	vector<PARTICLE_SHADER_DESC> sortedParticleShaderDesc(m_vecParticleShaderDesc.size());
-	for (size_t i = 0; i < sortedIndices.size(); ++i) {
-		size_t index = sortedIndices[i];
-		sortedInstanceData[i] = instanceData[index];
-		sortedParticleInfoDesc[i] = m_vecParticleInfoDesc[index];
-		sortedParticleShaderDesc[i] = m_vecParticleShaderDesc[index];
-	}
-
-	// 정렬된 결과 다시 할당
-	m_vecParticleInfoDesc = sortedParticleInfoDesc;
-	m_vecParticleShaderDesc = sortedParticleShaderDesc;
-	memcpy(SubResource.pData, sortedInstanceData.data(), iCount * sizeof(VTXINSTANCE));
-
-
-	m_pContext->Unmap(m_pVBInstance, 0);
-}
-
-void CVIBuffer_Particle::Add_Velocity(_uint iCount, _float4 _vMinVelocity, _float4 _vMaxVelocity)
-{
-	if (iCount > m_vecParticleRigidbodyDesc.size())
-		return;
-
-	for (size_t i = 0; i < iCount; i++)
-	{
-		m_vecParticleRigidbodyDesc[i].vVelocity.x += SMath::fRandom(_vMinVelocity.x, _vMaxVelocity.x);
-		m_vecParticleRigidbodyDesc[i].vVelocity.y += SMath::fRandom(_vMinVelocity.y, _vMaxVelocity.y);
-		m_vecParticleRigidbodyDesc[i].vVelocity.z += SMath::fRandom(_vMinVelocity.z, _vMaxVelocity.z);
-	}
-}
-
-void CVIBuffer_Particle::Set_Color(_float3 fColor)
-{
-	for (auto& iter : m_vecParticleShaderDesc)
-		iter.fColor = fColor;
 }
 
 HRESULT CVIBuffer_Particle::Initialize_Prototype()
@@ -341,30 +33,32 @@ HRESULT CVIBuffer_Particle::Initialize_Prototype()
 	m_iStride = sizeof(VTXPOINT);
 	m_iInstanceStride = sizeof(VTXINSTANCE);
 	m_iIndexCountPerInstance = 1;
-
+	m_iNumInstance = m_iMaxCount;
 
 	//m_iNumIndices = iNumInstance;
-	m_iNumIndices = sizeof(_ushort);
-	m_iIndexStride = 1;
-	m_eIndexFormat = DXGI_FORMAT_R16_UINT; //m_iIndexStride == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
+	m_iNumIndices = m_iMaxCount;
+
+	m_iIndexStride = 2;
+	m_eIndexFormat = m_iIndexStride == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
 	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
 
 #pragma region VERTEX_BUFFER
-	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
-	m_BufferDesc.ByteWidth = m_iNumVertices * m_iStride;
-	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
+
+	m_BufferDesc.ByteWidth = m_iStride * m_iNumVertices;
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT /*D3D11_USAGE_DYNAMIC*/;
 	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_BufferDesc.CPUAccessFlags = 0;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = m_iStride;
 
-	VTXPOINT* pVertices = new VTXPOINT;
-	ZeroMemory(pVertices, sizeof(VTXPOINT));
+	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 
-	pVertices->vPosition = _float3(0.0f, 0.0f, 0.f);
+	VTXPOINT* pVertices = new VTXPOINT;
+
+	pVertices->vPosition = _float3(0.f, 0.f, 0.f);
 	pVertices->vPSize = _float2(1.f, 1.f);
 
-	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pVertices;
 
 	/* pVertices에 할당하여 채워놨던 정점들의 정보를 ID3D11Buffer로 할당한 공간에 복사하여 채워넣는다. */
@@ -375,19 +69,19 @@ HRESULT CVIBuffer_Particle::Initialize_Prototype()
 #pragma endregion
 
 #pragma region INDEX_BUFFER
-
-	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
+	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
 	m_BufferDesc.ByteWidth = m_iIndexStride * m_iNumIndices; //m_iNumPrimitives * m_iIndexSizeofPrimitive;
-	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT /*D3D11_USAGE_DYNAMIC*/;
 	m_BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	m_BufferDesc.CPUAccessFlags = 0;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = 0;
 
-	_ushort* pIndices = new _ushort[m_iIndexStride];
-	ZeroMemory(pIndices, sizeof(_ushort) * m_iIndexStride);
+	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 
-	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+	_ushort* pIndices = new _ushort[m_iNumIndices];
+	ZeroMemory(pIndices, sizeof(_ushort) * m_iNumIndices);
+
 	m_SubResourceData.pSysMem = pIndices;
 
 	if (FAILED(__super::Create_Buffer(&m_pIB)))
@@ -413,14 +107,18 @@ HRESULT CVIBuffer_Particle::Initialize(void* pArg)
 	m_vecParticleShaderDesc.reserve(m_iMaxCount);
 
 #pragma region INSTANCEVERTEXBUFFER
-	m_iStride = sizeof(VTXINSTANCE);
+	//m_iStride = sizeof(VTXINSTANCE);
+
 	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
+
 	m_BufferDesc.ByteWidth = m_iInstanceStride * m_iMaxCount;
 	m_BufferDesc.Usage     = D3D11_USAGE_DYNAMIC;
 	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_BufferDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
 	m_BufferDesc.MiscFlags           = 0;
 	m_BufferDesc.StructureByteStride = m_iInstanceStride;
+
+	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 
 	m_pVertices = new VTXINSTANCE[m_iMaxCount];
 	ZeroMemory(m_pVertices, sizeof(VTXINSTANCE) * m_iMaxCount);
@@ -657,11 +355,14 @@ HRESULT CVIBuffer_Particle::Initialize(void* pArg)
 #pragma endregion
 	}
 
-	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	//ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+
 	m_SubResourceData.pSysMem = m_pVertices;
 
 	if (FAILED(__super::Create_Buffer(&m_pVBInstance)))
 		return E_FAIL;
+
+	Safe_Delete_Array(m_pVertices);
 #pragma endregion
 
 	return S_OK;
@@ -672,11 +373,20 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 	if (m_bFinished)
 		return;
 
-	D3D11_MAPPED_SUBRESOURCE SubResource;
+	D3D11_MAPPED_SUBRESOURCE			SubResource = {};
 	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 
+	VTXINSTANCE* pVertices = ((VTXINSTANCE*)SubResource.pData);
+
+	for (_uint i = 0; i < m_iNumInstance; i++)
+	{
+		pVertices[i].vPosition = { 0.f, 0.f, 0.f, 1.f };
+		pVertices[i].vColor = { 1.f, 0.f, 0.f, 1.f };
+		return;
+	}
+
 	_uint iDieParticleCount = 0;
-	for (size_t i = 0; i < m_iNumInstance; i++)
+	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
 		if (m_vecParticleInfoDesc[i].bIsDie)
 		{
@@ -687,7 +397,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 				m_vecParticleInfoDesc[i].fTimeAccs = 0.f;
 
 				// 위치
-				((VTXINSTANCE*)SubResource.pData)[i].vPosition = Get_NewPosition_Particle();
+				pVertices[i].vPosition = Get_NewPosition_Particle();
 
 				// 이동
 				m_vecParticleInfoDesc[i].vVelocity             = Get_NewVelocity_Particle();
@@ -697,23 +407,23 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 				if ((*m_tParticleDesc.pScaleSameRate))
 				{
 					_float fScale = SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y);
-					((VTXINSTANCE*)SubResource.pData)[i].vRight = _float4(fScale, 0.f, 0.f, 0.f);
-					((VTXINSTANCE*)SubResource.pData)[i].vUp    = _float4(0.f, fScale, 0.f, 0.f);
-					((VTXINSTANCE*)SubResource.pData)[i].vLook  = _float4(0.f, 0.f, fScale, 0.f);
+					pVertices[i].vRight = _float4(fScale, 0.f, 0.f, 0.f);
+					pVertices[i].vUp    = _float4(0.f, fScale, 0.f, 0.f);
+					pVertices[i].vLook  = _float4(0.f, 0.f, fScale, 0.f);
 				}
 				else
 				{
-					((VTXINSTANCE*)SubResource.pData)[i].vRight = _float4(SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y), 0.f, 0.f, 0.f);
-					((VTXINSTANCE*)SubResource.pData)[i].vUp    = _float4(0.f, SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y), 0.f, 0.f);
-					((VTXINSTANCE*)SubResource.pData)[i].vLook  = _float4(0.f, 0.f, SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y), 0.f);
+					pVertices[i].vRight = _float4(SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y), 0.f, 0.f, 0.f);
+					pVertices[i].vUp    = _float4(0.f, SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y), 0.f, 0.f);
+					pVertices[i].vLook  = _float4(0.f, 0.f, SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y), 0.f);
 				}
 
 
 				// 시작 위치 거리 셋팅
 				_float fDistance = SMath::fRandom((*m_tParticleDesc.pRangeDistance).x, (*m_tParticleDesc.pRangeDistance).y);
-				((VTXINSTANCE*)SubResource.pData)[i].vPosition.x += m_vecParticleInfoDesc[i].vVelocity.x * fDistance;
-				((VTXINSTANCE*)SubResource.pData)[i].vPosition.y += m_vecParticleInfoDesc[i].vVelocity.y * fDistance;
-				((VTXINSTANCE*)SubResource.pData)[i].vPosition.z += m_vecParticleInfoDesc[i].vVelocity.z * fDistance;
+				pVertices[i].vPosition.x += m_vecParticleInfoDesc[i].vVelocity.x * fDistance;
+				pVertices[i].vPosition.y += m_vecParticleInfoDesc[i].vVelocity.y * fDistance;
+				pVertices[i].vPosition.z += m_vecParticleInfoDesc[i].vVelocity.z * fDistance;
 
 
 				// 알파
@@ -731,9 +441,9 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 				if (iDieParticleCount == m_iNumInstance)
 					m_bFinished = true;
 
-				((VTXINSTANCE*)SubResource.pData)[i].vRight.x = 0.f;
-				((VTXINSTANCE*)SubResource.pData)[i].vUp.y    = 0.f;
-				((VTXINSTANCE*)SubResource.pData)[i].vLook.z  = 0.f;
+				pVertices[i].vRight.x = 0.f;
+				pVertices[i].vUp.y    = 0.f;
+				pVertices[i].vLook.z  = 0.f;
 			}
 		}
 		else
@@ -834,9 +544,9 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 							m_vecParticleRigidbodyDesc[i].vAccelA = _float4(0.f, -30.f, 0.f, 0.f);
 
 							_float4 vNewVelocity = m_vecParticleRigidbodyDesc[i].vVelocity * fTimeDelta;
-							((VTXINSTANCE*)SubResource.pData)[i].vPosition.x += vNewVelocity.x;
-							((VTXINSTANCE*)SubResource.pData)[i].vPosition.y += vNewVelocity.y;
-							((VTXINSTANCE*)SubResource.pData)[i].vPosition.z += vNewVelocity.z;
+							pVertices[i].vPosition.x += vNewVelocity.x;
+							pVertices[i].vPosition.y += vNewVelocity.y;
+							pVertices[i].vPosition.z += vNewVelocity.z;
 						}
 
 						m_vecParticleRigidbodyDesc[i].vForce.x += m_vecParticleInfoDesc[i].vVelocity.x * m_vecParticleInfoDesc[i].fVelocitySpeeds;
@@ -844,17 +554,17 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						m_vecParticleRigidbodyDesc[i].vForce.z += m_vecParticleInfoDesc[i].vVelocity.z * m_vecParticleInfoDesc[i].fVelocitySpeeds;
 
 						_float4 vNewVelocity = m_vecParticleRigidbodyDesc[i].vVelocity * fTimeDelta;
-						((VTXINSTANCE*)SubResource.pData)[i].vPosition.x += vNewVelocity.x;
-						((VTXINSTANCE*)SubResource.pData)[i].vPosition.y += vNewVelocity.y;
-						((VTXINSTANCE*)SubResource.pData)[i].vPosition.z += vNewVelocity.z;
+						pVertices[i].vPosition.x += vNewVelocity.x;
+						pVertices[i].vPosition.y += vNewVelocity.y;
+						pVertices[i].vPosition.z += vNewVelocity.z;
 
 						Update_Rigidbody(fTimeDelta, i);
 
 						if ((*m_tParticleDesc.pStopZero))
 						{
-							if (0.f > ((VTXINSTANCE*)SubResource.pData)[i].vPosition.y)
+							if (0.f > pVertices[i].vPosition.y)
 							{
-								((VTXINSTANCE*)SubResource.pData)[i].vPosition.y = 0.f;
+								pVertices[i].vPosition.y = 0.f;
 								if (!(*m_tParticleDesc.pGroundSlide))
 								{
 									m_vecParticleRigidbodyDesc[i].vVelocity = _float4(0.f, 0.f, 0.f, 0.f);
@@ -865,9 +575,9 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						}
 						else if ((*m_tParticleDesc.pStopStartY))
 						{
-							if (m_pVertices[i].vPosition.y > ((VTXINSTANCE*)SubResource.pData)[i].vPosition.y)
+							if (m_pVertices[i].vPosition.y > pVertices[i].vPosition.y)
 							{
-								((VTXINSTANCE*)SubResource.pData)[i].vPosition.y = m_pVertices[i].vPosition.y;
+								pVertices[i].vPosition.y = m_pVertices[i].vPosition.y;
 								if (!(*m_tParticleDesc.pGroundSlide))
 								{
 									m_vecParticleRigidbodyDesc[i].vVelocity = _float4(0.f, 0.f, 0.f, 0.f);
@@ -880,9 +590,9 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 				}
 				else
 				{
-					((VTXINSTANCE*)SubResource.pData)[i].vPosition.x += m_vecParticleInfoDesc[i].vVelocity.x * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
-					((VTXINSTANCE*)SubResource.pData)[i].vPosition.y += m_vecParticleInfoDesc[i].vVelocity.y * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
-					((VTXINSTANCE*)SubResource.pData)[i].vPosition.z += m_vecParticleInfoDesc[i].vVelocity.z * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
+					pVertices[i].vPosition.x += m_vecParticleInfoDesc[i].vVelocity.x * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
+					pVertices[i].vPosition.y += m_vecParticleInfoDesc[i].vVelocity.y * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
+					pVertices[i].vPosition.z += m_vecParticleInfoDesc[i].vVelocity.z * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
 				}
 			}
 			else
@@ -894,9 +604,9 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 					if ((*m_tParticleDesc.pVelocityChangeRandom))
 					{
 						// 자동
-						((VTXINSTANCE*)SubResource.pData)[i].vPosition.x += m_vecParticleInfoDesc[i].vVelocity.x * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
-						((VTXINSTANCE*)SubResource.pData)[i].vPosition.y += m_vecParticleInfoDesc[i].vVelocity.y * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
-						((VTXINSTANCE*)SubResource.pData)[i].vPosition.z += m_vecParticleInfoDesc[i].vVelocity.z * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
+						pVertices[i].vPosition.x += m_vecParticleInfoDesc[i].vVelocity.x * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
+						pVertices[i].vPosition.y += m_vecParticleInfoDesc[i].vVelocity.y * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
+						pVertices[i].vPosition.z += m_vecParticleInfoDesc[i].vVelocity.z * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
 
 						m_vecParticleInfoDesc[i].fVelocityRanTimeAccs += m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
 						if (m_vecParticleInfoDesc[i].fVelocityRanTimeAccs >= m_vecParticleInfoDesc[i].fVelocityRanChange)
@@ -912,9 +622,9 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						// 수동
 						if (nullptr != m_vecParticleInfoDesc[i].pVelocity)
 						{
-							((VTXINSTANCE*)SubResource.pData)[i].vPosition.x += m_vecParticleInfoDesc[i].pVelocity[m_vecParticleInfoDesc[i].iVelocityCountCur].x * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
-							((VTXINSTANCE*)SubResource.pData)[i].vPosition.y += m_vecParticleInfoDesc[i].pVelocity[m_vecParticleInfoDesc[i].iVelocityCountCur].y * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
-							((VTXINSTANCE*)SubResource.pData)[i].vPosition.z += m_vecParticleInfoDesc[i].pVelocity[m_vecParticleInfoDesc[i].iVelocityCountCur].z * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
+							pVertices[i].vPosition.x += m_vecParticleInfoDesc[i].pVelocity[m_vecParticleInfoDesc[i].iVelocityCountCur].x * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
+							pVertices[i].vPosition.y += m_vecParticleInfoDesc[i].pVelocity[m_vecParticleInfoDesc[i].iVelocityCountCur].y * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
+							pVertices[i].vPosition.z += m_vecParticleInfoDesc[i].pVelocity[m_vecParticleInfoDesc[i].iVelocityCountCur].z * m_vecParticleInfoDesc[i].fVelocitySpeeds * fTimeDelta;
 						}
 					
 						m_vecParticleInfoDesc[i].fVeloityTimeAccs += fTimeDelta;
@@ -942,12 +652,12 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 #pragma region 박스 범위 검사
 			if ((*m_tParticleDesc.pUseBox))
 			{
-				if (((VTXINSTANCE*)SubResource.pData)[i].vPosition.x < (*m_tParticleDesc.pBoxMin).x ||
-					((VTXINSTANCE*)SubResource.pData)[i].vPosition.y < (*m_tParticleDesc.pBoxMin).y ||
-					((VTXINSTANCE*)SubResource.pData)[i].vPosition.z < (*m_tParticleDesc.pBoxMin).z ||
-					((VTXINSTANCE*)SubResource.pData)[i].vPosition.x >(*m_tParticleDesc.pBoxMax).x ||
-					((VTXINSTANCE*)SubResource.pData)[i].vPosition.y >(*m_tParticleDesc.pBoxMax).y ||
-					((VTXINSTANCE*)SubResource.pData)[i].vPosition.z >(*m_tParticleDesc.pBoxMax).z)
+				if (pVertices[i].vPosition.x < (*m_tParticleDesc.pBoxMin).x ||
+					pVertices[i].vPosition.y < (*m_tParticleDesc.pBoxMin).y ||
+					pVertices[i].vPosition.z < (*m_tParticleDesc.pBoxMin).z ||
+					pVertices[i].vPosition.x >(*m_tParticleDesc.pBoxMax).x ||
+					pVertices[i].vPosition.y >(*m_tParticleDesc.pBoxMax).y ||
+					pVertices[i].vPosition.z >(*m_tParticleDesc.pBoxMax).z)
 				{
 					m_vecParticleInfoDesc[i].bIsDie = true;
 				}
@@ -967,8 +677,8 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						{
 							m_vecParticleInfoDesc[i].fScaleTimeAccs = 0.f;
 
-							((VTXINSTANCE*)SubResource.pData)[i].vRight.x = SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y);
-							((VTXINSTANCE*)SubResource.pData)[i].vUp.y = ((VTXINSTANCE*)SubResource.pData)[i].vRight.x;
+							pVertices[i].vRight.x = SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y);
+							pVertices[i].vUp.y = pVertices[i].vRight.x;
 
 							m_vecParticleInfoDesc[i].fScaleChange = SMath::fRandom((*m_tParticleDesc.pScaleChangeTime).x, (*m_tParticleDesc.pScaleChangeTime).y);
 						}
@@ -978,11 +688,11 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						// 확대
 						if (m_vecParticleInfoDesc[i].bScaleAdd)
 						{
-							((VTXINSTANCE*)SubResource.pData)[i].vRight.x += m_vecParticleInfoDesc[i].fScaleSpeed * fTimeDelta;
-							((VTXINSTANCE*)SubResource.pData)[i].vUp.y = ((VTXINSTANCE*)SubResource.pData)[i].vRight.x;
+							pVertices[i].vRight.x += m_vecParticleInfoDesc[i].fScaleSpeed * fTimeDelta;
+							pVertices[i].vUp.y = pVertices[i].vRight.x;
 
-							if (((VTXINSTANCE*)SubResource.pData)[i].vRight.x > (*m_tParticleDesc.pScaleMax).x ||
-								((VTXINSTANCE*)SubResource.pData)[i].vUp.y > (*m_tParticleDesc.pScaleMax).y)
+							if (pVertices[i].vRight.x > (*m_tParticleDesc.pScaleMax).x ||
+								pVertices[i].vUp.y > (*m_tParticleDesc.pScaleMax).y)
 							{
 								// 반복 O
 								if ((*m_tParticleDesc.pScaleLoop))
@@ -990,8 +700,8 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 									// 첫 크기로 반복
 									if ((*m_tParticleDesc.pScaleLoopStart))
 									{
-										((VTXINSTANCE*)SubResource.pData)[i].vRight.x = SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y);
-										((VTXINSTANCE*)SubResource.pData)[i].vUp.y = ((VTXINSTANCE*)SubResource.pData)[i].vRight.x;
+										pVertices[i].vRight.x = SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y);
+										pVertices[i].vUp.y = pVertices[i].vRight.x;
 									}
 									else
 									{
@@ -1002,19 +712,19 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 								// 반복 X
 								else
 								{
-									((VTXINSTANCE*)SubResource.pData)[i].vRight.x = (*m_tParticleDesc.pScaleMax).x;
-									((VTXINSTANCE*)SubResource.pData)[i].vUp.y = ((VTXINSTANCE*)SubResource.pData)[i].vRight.x;
+									pVertices[i].vRight.x = (*m_tParticleDesc.pScaleMax).x;
+									pVertices[i].vUp.y = pVertices[i].vRight.x;
 								}
 							}
 						}
 						// 축소
 						else
 						{
-							((VTXINSTANCE*)SubResource.pData)[i].vRight.x -= m_vecParticleInfoDesc[i].fScaleSpeed * fTimeDelta;
-							((VTXINSTANCE*)SubResource.pData)[i].vUp.y = ((VTXINSTANCE*)SubResource.pData)[i].vRight.x;
+							pVertices[i].vRight.x -= m_vecParticleInfoDesc[i].fScaleSpeed * fTimeDelta;
+							pVertices[i].vUp.y = pVertices[i].vRight.x;
 
-							if (((VTXINSTANCE*)SubResource.pData)[i].vRight.x < (*m_tParticleDesc.pScaleMin).x ||
-								((VTXINSTANCE*)SubResource.pData)[i].vUp.y < (*m_tParticleDesc.pScaleMin).y)
+							if (pVertices[i].vRight.x < (*m_tParticleDesc.pScaleMin).x ||
+								pVertices[i].vUp.y < (*m_tParticleDesc.pScaleMin).y)
 							{
 								// 반복 O
 								if ((*m_tParticleDesc.pScaleLoop))
@@ -1022,8 +732,8 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 									// 첫 크기로 반복
 									if ((*m_tParticleDesc.pScaleLoopStart))
 									{
-										((VTXINSTANCE*)SubResource.pData)[i].vRight.x = SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y);
-										((VTXINSTANCE*)SubResource.pData)[i].vUp.y = ((VTXINSTANCE*)SubResource.pData)[i].vRight.x;
+										pVertices[i].vRight.x = SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y);
+										pVertices[i].vUp.y = pVertices[i].vRight.x;
 									}
 									else
 									{
@@ -1033,8 +743,8 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 								// 반복 X
 								else
 								{
-									((VTXINSTANCE*)SubResource.pData)[i].vRight.x = (*m_tParticleDesc.pScaleMin).x;
-									((VTXINSTANCE*)SubResource.pData)[i].vUp.y = ((VTXINSTANCE*)SubResource.pData)[i].vRight.x;
+									pVertices[i].vRight.x = (*m_tParticleDesc.pScaleMin).x;
+									pVertices[i].vUp.y = pVertices[i].vRight.x;
 								}
 							}
 						}
@@ -1227,45 +937,250 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
-HRESULT CVIBuffer_Particle::Bind_VIBuffers(_uint iCount)
+void CVIBuffer_Particle::Restart_ParticleBufferDesc(_uint iCount)
 {
-	if (nullptr == m_pVB ||
-		nullptr == m_pIB)
-		return E_FAIL;
-
 	m_iNumInstance = iCount;
 	if (m_iNumInstance > m_iMaxCount)
 		m_iNumInstance = m_iMaxCount;
 
-	ID3D11Buffer* pVertexBuffers[] = {
-		m_pVB,
-		m_pVBInstance,
-	};
+	m_bFinished = false;
 
-	_uint				iStrides[] = {
-		m_iStride,
-		m_iInstanceStride
+	D3D11_MAPPED_SUBRESOURCE			SubResource = {};
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 
-	};
+	VTXINSTANCE* pVertices = ((VTXINSTANCE*)SubResource.pData);
 
-	_uint				iOffsets[] = {
-		0,
-		0,
-	};
+	for (_uint i = 0; i < m_iNumInstance; i++)
+	{
+		m_vecParticleInfoDesc[i].bIsDie = false;
 
+		// 위치 (분포 범위)
+		pVertices[i].vPosition = Get_NewPosition_Particle();
+		if ((*m_tParticleDesc.pVelocityChangeRandom))
+		{
+			m_vecParticleInfoDesc[i].fVelocityRanTimeAccs = 0.f;
+			m_vecParticleInfoDesc[i].fVelocityRanChange = SMath::fRandom((*m_tParticleDesc.pVelocityChangeTime).x, (*m_tParticleDesc.pVelocityChangeTime).y);
+		}
 
-	/* 어떤 버텍스 버퍼들을 이용할거다. */
-	m_pContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pVertexBuffers, iStrides, iOffsets);
+#pragma region 크기
+		if ((*m_tParticleDesc.pScaleSameRate))
+		{
+			_float fScale = SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y);
+			pVertices[i].vRight = _float4(fScale, 0.f, 0.f, 0.f);
+			pVertices[i].vUp = _float4(0.f, fScale, 0.f, 0.f);
+			pVertices[i].vLook = _float4(0.f, 0.f, fScale, 0.f);
+		}
+		else
+		{
+			pVertices[i].vRight = _float4(SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y), 0.f, 0.f, 0.f);
+			pVertices[i].vUp = _float4(0.f, SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y), 0.f, 0.f);
+			pVertices[i].vLook = _float4(0.f, 0.f, SMath::fRandom((*m_tParticleDesc.pScaleStart).x, (*m_tParticleDesc.pScaleStart).y), 0.f);
+		}
 
-	/* 어떤 인덱스 버퍼를 이용할거다. */
-	m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
+		if ((*m_tParticleDesc.pScaleChange))
+		{
+			m_vecParticleInfoDesc[i].bScaleAdd = (*m_tParticleDesc.pScaleAdd);
+			m_vecParticleInfoDesc[i].fScaleSpeed = SMath::fRandom((*m_tParticleDesc.pScaleSpeed).x, (*m_tParticleDesc.pScaleSpeed).y);
 
-	/* 정점을 어떤식으로 이어서 그릴거다. */
-	m_pContext->IASetPrimitiveTopology(m_eTopology);
+			m_vecParticleInfoDesc[i].fScaleTimeAccs = 0.f;
+			m_vecParticleInfoDesc[i].fScaleChange = SMath::fRandom((*m_tParticleDesc.pScaleChangeTime).x, (*m_tParticleDesc.pScaleChangeTime).y);
 
-	return S_OK;
+			m_vecParticleInfoDesc[i].fScaleChangeStartTime = 0.f;
+			m_vecParticleInfoDesc[i].fScaleChangeStartDelay = SMath::fRandom((*m_tParticleDesc.pScaleChangeStartDelay).x, (*m_tParticleDesc.pScaleChangeStartDelay).y);
+		}
+#pragma endregion
+
+#pragma region 이동 방향
+		m_vecParticleInfoDesc[i].fVelocitySpeeds = SMath::fRandom((*m_tParticleDesc.pVelocitySpeed).x, (*m_tParticleDesc.pVelocitySpeed).y);
+
+		if (!(*m_tParticleDesc.pVelocityChange))
+		{
+			m_vecParticleInfoDesc[i].vVelocity = Get_NewVelocity_Particle();
+		}
+		else
+		{
+			// 랜덤 x
+			if (!(*m_tParticleDesc.pVelocityChangeRandom) && (*m_tParticleDesc.pVelocityUse) > 0)
+			{
+				if (m_vecParticleInfoDesc[i].pVelocity == nullptr)
+					m_vecParticleInfoDesc[i].pVelocity = new _float3[(*m_tParticleDesc.pVelocityUse)];
+				if (m_vecParticleInfoDesc[i].pVelocityChange == nullptr)
+					m_vecParticleInfoDesc[i].pVelocityChange = new _float[(*m_tParticleDesc.pVelocityUse)];
+
+				for (size_t j = 0; j < (*m_tParticleDesc.pVelocityCountMax); ++j)
+				{
+					_vector vVelocity = XMVector3Normalize(
+						XMVectorSet(
+							SMath::fRandom(m_tParticleDesc.pVelocityMin[j].x, m_tParticleDesc.pVelocityMax[j].x),
+							SMath::fRandom(m_tParticleDesc.pVelocityMin[j].y, m_tParticleDesc.pVelocityMax[j].y),
+							SMath::fRandom(m_tParticleDesc.pVelocityMin[j].z, m_tParticleDesc.pVelocityMax[j].z),
+							0.f));
+					m_vecParticleInfoDesc[i].pVelocity[j] = _float3(XMVectorGetX(vVelocity), XMVectorGetY(vVelocity), XMVectorGetZ(vVelocity));
+					m_vecParticleInfoDesc[i].pVelocityChange[j] = SMath::fRandom(m_tParticleDesc.pVelocityTime[j].x, m_tParticleDesc.pVelocityTime[j].y);
+				}
+			}
+			else
+			{
+				m_vecParticleInfoDesc[i].vVelocity = Get_NewVelocity_Particle();
+			}
+
+			m_vecParticleInfoDesc[i].iVelocityCountCur = 0;
+			m_vecParticleInfoDesc[i].fVeloityTimeAccs = 0.f;
+
+			m_vecParticleInfoDesc[i].fVelocityChangeStartTime = 0.f;
+			m_vecParticleInfoDesc[i].fVelocityChangeStartDelay = SMath::fRandom((*m_tParticleDesc.pVelocityChangeStartDelay).x, (*m_tParticleDesc.pVelocityChangeStartDelay).y);
+		}
+#pragma endregion
+
+		// 시작 위치 거리 셋팅
+		_float fDistance = SMath::fRandom((*m_tParticleDesc.pRangeDistance).x, (*m_tParticleDesc.pRangeDistance).y);
+		pVertices[i].vPosition.x += m_vecParticleInfoDesc[i].vVelocity.x * fDistance;
+		pVertices[i].vPosition.y += m_vecParticleInfoDesc[i].vVelocity.y * fDistance;
+		pVertices[i].vPosition.z += m_vecParticleInfoDesc[i].vVelocity.z * fDistance;
+
+#pragma region 회전
+		if (!(*m_tParticleDesc.pBillboard))
+		{
+			if ((*m_tParticleDesc.pRandomAxis))
+			{
+				_uint iRandomCount = (_uint)SMath::fRandom(0.f, 2.9);
+				switch (iRandomCount)
+				{
+				case 0:
+					m_vecParticleShaderDesc[i].fAxis = _float3(1.f, 0.f, 0.f);
+					break;
+				case 1:
+					m_vecParticleShaderDesc[i].fAxis = _float3(0.f, 1.f, 0.f);
+					break;
+				default:
+					m_vecParticleShaderDesc[i].fAxis = _float3(0.f, 0.f, 1.f);
+					break;
+				}
+			}
+			else
+			{
+				m_vecParticleShaderDesc[i].fAxis = _float3(XMVectorGetX((*m_tParticleDesc.pAxis)), XMVectorGetY((*m_tParticleDesc.pAxis)), XMVectorGetZ((*m_tParticleDesc.pAxis)));
+			}
+
+			if ((*m_tParticleDesc.pRandomAngle))
+				m_vecParticleShaderDesc[i].fAngle = SMath::fRandom(0.f, 360.f);
+			else
+				m_vecParticleShaderDesc[i].fAngle = (*m_tParticleDesc.pAngle);
+
+			if ((*m_tParticleDesc.pRotationChange))
+			{
+				if ((*m_tParticleDesc.pRotationChangeRandom))
+				{
+					m_vecParticleInfoDesc[i].fRotationTime = 0.f;
+					m_vecParticleInfoDesc[i].fRotationChangeTime = SMath::fRandom((*m_tParticleDesc.pRotationChangeTime).x, (*m_tParticleDesc.pRotationChangeTime).y);
+				}
+
+				m_vecParticleInfoDesc[i].fRotationSpeed = SMath::fRandom((*m_tParticleDesc.pRotationSpeed).x, (*m_tParticleDesc.pRotationSpeed).y);
+
+				m_vecParticleInfoDesc[i].fRotationChangeStartTime = 0.f;
+				m_vecParticleInfoDesc[i].fRotationChangeStartDelay = SMath::fRandom((*m_tParticleDesc.pRotationChangeStartDelay).x, (*m_tParticleDesc.pRotationChangeStartDelay).y);
+			}
+		}
+#pragma endregion
+
+		// 시간
+		m_vecParticleInfoDesc[i].fTimeAccs = 0.f;
+		m_vecParticleInfoDesc[i].fLifeTimes = SMath::fRandom((*m_tParticleDesc.pLifeTime).x, (*m_tParticleDesc.pLifeTime).y);
+
+#pragma region 텍스처 정보
+		m_vecParticleInfoDesc[i].bAmimationFinish = false;
+		m_vecParticleInfoDesc[i].fAccIndex = 0.f;
+		m_vecParticleInfoDesc[i].fAnimationSpeed = SMath::fRandom((*m_tParticleDesc.pAnimationSpeed).x, (*m_tParticleDesc.pAnimationSpeed).y);
+
+		if ((*m_tParticleDesc.pRandomStartIndex))
+			m_vecParticleShaderDesc[i].fUVIndex = _float2(
+				(_int)SMath::fRandom(0.f, (*m_tParticleDesc.pUVMaxCount).x),
+				(_int)SMath::fRandom(0.f, (*m_tParticleDesc.pUVMaxCount).y));
+		else
+			m_vecParticleShaderDesc[i].fUVIndex = (*m_tParticleDesc.pUVIndex);
+
+		m_vecParticleShaderDesc[i].fMaxCount = (*m_tParticleDesc.pUVMaxCount);
+#pragma endregion
+
+#pragma region 알파
+		if (!(*m_tParticleDesc.pFadeChange))
+			m_vecParticleShaderDesc[i].fAlpha = SMath::fRandom((*m_tParticleDesc.pStartAlpha).x, (*m_tParticleDesc.pStartAlpha).y);
+		else
+		{
+			m_vecParticleInfoDesc[i].fAlphaChangeStartTime = 0.f;
+			m_vecParticleInfoDesc[i].fAlphaChangeStartDelay = SMath::fRandom((*m_tParticleDesc.pFadeChangeStartDelay).x, (*m_tParticleDesc.pFadeChangeStartDelay).y);
+
+			m_vecParticleShaderDesc[i].fAlpha = SMath::fRandom((*m_tParticleDesc.pStartAlpha).x, (*m_tParticleDesc.pStartAlpha).y);
+		}
+
+		if ((*m_tParticleDesc.pFadeCreate))
+		{
+			m_vecParticleShaderDesc[i].fAlpha = 1.f;
+			m_vecParticleInfoDesc[i].bFadeCreateSucc = false;
+		}
+		else if ((*m_tParticleDesc.pFadeDelete))
+			m_vecParticleInfoDesc[i].bFadeCreateSucc = true;
+
+		m_vecParticleInfoDesc[i].fAlphaSpeed = SMath::fRandom((*m_tParticleDesc.pFadeSpeed).x, (*m_tParticleDesc.pFadeSpeed).y);
+#pragma endregion
+
+#pragma region 색상
+		if ((*m_tParticleDesc.pColorChange))
+		{
+			m_vecParticleInfoDesc[i].LerpInfo = {};
+			m_vecParticleInfoDesc[i].fColorChangeEndTime = SMath::fRandom((*m_tParticleDesc.pColorDuration).x, (*m_tParticleDesc.pColorDuration).y);
+
+			if ((*m_tParticleDesc.pColorChangeRandom))
+			{
+				m_vecParticleInfoDesc[i].fNextColor = _float3(SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f));
+				m_vecParticleInfoDesc[i].fColorAccs = 0.f;
+				m_vecParticleInfoDesc[i].fColorChangeTime = SMath::fRandom((*m_tParticleDesc.pColorChangeRandomTime).x, (*m_tParticleDesc.pColorChangeRandomTime).y);
+			}
+			else
+			{
+				m_vecParticleInfoDesc[i].fColorChangeStartTime = 0.f;
+				m_vecParticleInfoDesc[i].fColorChangeStartDelay = SMath::fRandom((*m_tParticleDesc.pColorChangeStartDelay).x, (*m_tParticleDesc.pColorChangeStartDelay).y);
+
+				m_vecParticleInfoDesc[i].iColorIndex = 0;
+				m_vecParticleInfoDesc[i].fColorChangeStartM = SMath::fRandom((*m_tParticleDesc.pColorChangeStartM).x, (*m_tParticleDesc.pColorChangeStartM).y);
+				m_vecParticleInfoDesc[i].fColorChangeStartF = SMath::fRandom((*m_tParticleDesc.pColorChangeStartE).x, (*m_tParticleDesc.pColorChangeStartE).y);
+			}
+		}
+
+		if ((*m_tParticleDesc.pColorRandom))
+			m_vecParticleShaderDesc[i].fColor = _float3(SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f));
+		else
+			m_vecParticleShaderDesc[i].fColor = _float3((*m_tParticleDesc.pColor_Start).x, (*m_tParticleDesc.pColor_Start).y, (*m_tParticleDesc.pColor_Start).z);
+#pragma endregion
+
+#pragma region 블러
+		if ((*m_tParticleDesc.pBloomPowerRandom))
+			m_vecParticleShaderDesc[i].fBloomPower = _float3(SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f), SMath::fRandom(0.f, 1.f));
+		else
+			m_vecParticleShaderDesc[i].fBloomPower = _float3((*m_tParticleDesc.pBloomPower).x, (*m_tParticleDesc.pBloomPower).y, (*m_tParticleDesc.pBloomPower).z);
+
+		if ((*m_tParticleDesc.pBlurPowerRandom))
+			m_vecParticleShaderDesc[i].fBlurPower = SMath::fRandom(0.0f, 1.f);
+		else
+			m_vecParticleShaderDesc[i].fBlurPower = (*m_tParticleDesc.pBlurPower);
+#pragma endregion
+
+#pragma region 리지드바디
+		if (true == (*m_tParticleDesc.pRigidbody))
+		{
+			if (m_vecParticleRigidbodyDesc.size() < m_iNumInstance)
+			{
+				PARTICLE_RIGIDBODY_DESC ParticleRigidbody = {};
+				m_vecParticleRigidbodyDesc.push_back(ParticleRigidbody);
+			}
+
+			m_vecParticleRigidbodyDesc[i].vVelocity = _float4(0.f, 0.f, 0.f, 0.f);
+		}
+#pragma endregion
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
 }
-
 
 _float4 CVIBuffer_Particle::Get_NewPosition_Particle()
 {
@@ -1334,6 +1249,72 @@ void CVIBuffer_Particle::Update_Rigidbody(_float fTimeDelta, _uint iParticleID)
 }
 
 
+void CVIBuffer_Particle::Add_Velocity(_uint iCount, _float4 _vMinVelocity, _float4 _vMaxVelocity)
+{
+	if (iCount > m_vecParticleRigidbodyDesc.size())
+		return;
+
+	for (size_t i = 0; i < iCount; i++)
+	{
+		m_vecParticleRigidbodyDesc[i].vVelocity.x += SMath::fRandom(_vMinVelocity.x, _vMaxVelocity.x);
+		m_vecParticleRigidbodyDesc[i].vVelocity.y += SMath::fRandom(_vMinVelocity.y, _vMaxVelocity.y);
+		m_vecParticleRigidbodyDesc[i].vVelocity.z += SMath::fRandom(_vMinVelocity.z, _vMaxVelocity.z);
+	}
+}
+
+void CVIBuffer_Particle::Set_Color(_float3 fColor)
+{
+	for (auto& iter : m_vecParticleShaderDesc)
+		iter.fColor = fColor;
+}
+
+void CVIBuffer_Particle::Sort_Z(_uint iCount)
+{
+	D3D11_MAPPED_SUBRESOURCE SubResource;
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	vector<VTXINSTANCE> instanceData;
+	instanceData.resize(iCount);
+	memcpy(instanceData.data(), SubResource.pData, iCount * sizeof(VTXINSTANCE));
+
+
+	_float4 fCamPos = m_pGameInstance->Get_CamPosition();
+	_vector vCampos = XMVectorSet(fCamPos.x, fCamPos.y, fCamPos.z, fCamPos.w);
+
+	// 현재 순서 그대로 해당 위치의 값 뷰Z를 구함.
+	vector<_float> vecViewZ;
+	for (size_t i = 0; i < iCount; i++) {
+		_vector vPosition = XMVectorSet(instanceData[i].vPosition.x, instanceData[i].vPosition.y, instanceData[i].vPosition.z, instanceData[i].vPosition.w);
+		vecViewZ.push_back(XMVectorGetX(XMVector3Length(vCampos - vPosition)));
+	}
+
+	// m_vecViewZ를 기준으로 정렬된 인덱스 구함.
+	vector<size_t> sortedIndices(vecViewZ.size());
+	iota(sortedIndices.begin(), sortedIndices.end(), 0);
+	sort(sortedIndices.begin(), sortedIndices.end(), [&](size_t a, size_t b) {
+		return vecViewZ[a] > vecViewZ[b]; }
+	);
+
+	// 정렬된 인덱스를 기반으로 다른 컨테이너들도 정렬
+	vector<VTXINSTANCE>          sortedInstanceData(instanceData.size());
+	vector<PARTICLE_INFO_DESC>   sortedParticleInfoDesc(m_vecParticleInfoDesc.size());
+	vector<PARTICLE_SHADER_DESC> sortedParticleShaderDesc(m_vecParticleShaderDesc.size());
+	for (size_t i = 0; i < sortedIndices.size(); ++i) {
+		size_t index = sortedIndices[i];
+		sortedInstanceData[i] = instanceData[index];
+		sortedParticleInfoDesc[i] = m_vecParticleInfoDesc[index];
+		sortedParticleShaderDesc[i] = m_vecParticleShaderDesc[index];
+	}
+
+	// 정렬된 결과 다시 할당
+	m_vecParticleInfoDesc = sortedParticleInfoDesc;
+	m_vecParticleShaderDesc = sortedParticleShaderDesc;
+	memcpy(SubResource.pData, sortedInstanceData.data(), iCount * sizeof(VTXINSTANCE));
+
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
 CVIBuffer_Particle* CVIBuffer_Particle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CVIBuffer_Particle* pInstance = new CVIBuffer_Particle(pDevice, pContext);
@@ -1375,5 +1356,4 @@ void CVIBuffer_Particle::Free()
 	}
 
 	Safe_Delete_Array(m_pVertices);
-	Safe_Release(m_pVBInstance);
 }

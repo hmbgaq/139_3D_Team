@@ -18,7 +18,8 @@ CEffect_Particle::CEffect_Particle(const CEffect_Particle& rhs)
 
 HRESULT CEffect_Particle::Initialize_Prototype()
 {
-
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
 
 	return S_OK;
 }
@@ -33,6 +34,9 @@ HRESULT CEffect_Particle::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	if (m_tRigidbodyDesc.bStartJump)
+		m_pVIBufferCom->Add_Velocity(m_tParticleDesc.iCurInstanceCnt, m_tRigidbodyDesc.vStartMinVelocity, m_tRigidbodyDesc.vStartMaxVelocity);
+
 	return S_OK;
 }
 
@@ -45,15 +49,32 @@ void CEffect_Particle::Priority_Tick(_float fTimeDelta)
 void CEffect_Particle::Tick(_float fTimeDelta)
 {
 
-	CVIBuffer_Particle_Point::PARTICLE_POINT_DESC* pDesc = m_pVIBufferCom->Get_Desc();
+	if (Is_Dead() == true )
+		return;
+
+	if (m_bParticleDelete)
+	{
+		if (m_pVIBufferCom->Get_Finished())
+		{
+			m_bParticleDie = true;
+			if (ECast(LEVEL_TOOL) != m_pGameInstance->Get_CurrentLevel())
+				Set_Dead(true);
+			return;
+		}
+	}
+
+
+
+
+	//CVIBuffer_Particle_Point::PARTICLE_POINT_DESC* pDesc = m_pVIBufferCom_Point->Get_Desc();
 
 	if (m_tParticleDesc.bActive_Tool)
 	{
 		m_fSequenceTime = m_fLifeTime + m_fRemainTime;
 
-		pDesc->bActive_Tool = TRUE;
-		pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
-		pDesc->vMinMaxLifeTime.y = m_fLifeTime;
+		//pDesc->bActive_Tool = TRUE;
+		//pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
+		//pDesc->vMinMaxLifeTime.y = m_fLifeTime;
 
 		if (m_tParticleDesc.bPlay)
 		{
@@ -107,28 +128,70 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 			if (m_tParticleDesc.bRender)
 			{
 				m_pVIBufferCom->Update(fTimeDelta);
+				//m_pVIBufferCom_Point->Update(fTimeDelta);
 			}
 		}
 	}
 	else
 	{
-		m_pVIBufferCom->Get_Desc()->bActive_Tool = FALSE;
+		//m_pVIBufferCom_Point->Get_Desc()->bActive_Tool = FALSE;
 	}
 }
 
 void CEffect_Particle::Late_Tick(_float fTimeDelta)
 {
-	if (m_tParticleDesc.bActive_Tool)
-	{
-		if (m_tParticleDesc.bRender)
-		{
-			Compute_CamDistance();
+	if (Is_Dead() == true || m_bParticleDie)
+		return;
 
-			// CRenderer::RENDER_BLEND
-			if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tParticleDesc.iRenderGroup), this)))
-				return;
-		}
+	__super::Late_Tick(fTimeDelta);
+
+
+	//if (nullptr != m_tParticleDesc.pOwner)
+	//{
+	//	if (m_tParticleDesc.pOwner->Is_Dead())
+	//	{
+	//		Set_Dead(true);
+	//		return;
+	//	}
+
+	//	CTransform* pOwnerTransform = m_tParticleDesc.pOwner->Get_Transform();
+	//	if (nullptr != pOwnerTransform)
+	//	{
+	//		// Position
+	//		_vector vCurrentPosition = pOwnerTransform->Get_Position();
+	//		_vector vFinalPosition = vCurrentPosition;
+	//		vFinalPosition += m_pTransformCom->Get_State(CTransform::STATE_RIGHT) * m_vLocalPos.x;
+	//		vFinalPosition += m_pTransformCom->Get_State(CTransform::STATE_UP) * m_vLocalPos.y;
+	//		vFinalPosition += m_pTransformCom->Get_State(CTransform::STATE_LOOK) * m_vLocalPos.z;
+	//		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(XMVectorGetX(vFinalPosition) + m_vAddOffsetPos.x, XMVectorGetY(vFinalPosition) + m_vAddOffsetPos.y, XMVectorGetZ(vFinalPosition) + m_vAddOffsetPos.z, 1.f));
+	//	}
+	//}
+
+	//if (m_tParticleDesc.bSortZ)
+	//{
+	//	Compute_CamDistance();
+	//	m_pVIBufferCom->Sort_Z(m_tParticleDesc.iCurInstanceCnt);
+	//}
+		
+	if (m_tParticleDesc.eType_Proj == TYPE_PERSPECTIVE)
+	{
+		// CRenderer::RENDER_BLEND
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tParticleDesc.iRenderGroup), this)))
+			return;
 	}
+
+
+	//if (m_tParticleDesc.bActive_Tool)
+	//{
+	//	if (m_tParticleDesc.bRender)
+	//	{
+	//		Compute_CamDistance();
+
+	//		// CRenderer::RENDER_BLEND
+	//		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tParticleDesc.iRenderGroup), this)))
+	//			return;
+	//	}
+	//}
 }
 
 HRESULT CEffect_Particle::Render()
@@ -142,10 +205,13 @@ HRESULT CEffect_Particle::Render()
 		m_pShaderCom->Begin(m_tParticleDesc.iShaderPassIndex);
 
 		/* 내가 그리려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
+		//m_pVIBufferCom->Bind_VIBuffers(m_tParticleDesc.iCurInstanceCnt);
 		m_pVIBufferCom->Bind_VIBuffers();
+		//m_pVIBufferCom_Point->Bind_VIBuffers();
 
 		/* 바인딩된 정점, 인덱스를 그려. */
 		m_pVIBufferCom->Render();
+		//m_pVIBufferCom_Point->Render();
 	}
 
 
@@ -160,7 +226,9 @@ void CEffect_Particle::ReSet_Effect()
 	m_tParticleDesc.bDissolve = FALSE;
 	m_tParticleDesc.bRender = FALSE;
 
-	m_pVIBufferCom->ReSet();
+	//m_pVIBufferCom->ReSet();
+
+	m_pVIBufferCom->Restart_ParticleBufferDesc(m_tParticleDesc.iCurInstanceCnt);
 
 }
 
@@ -198,6 +266,98 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 
 }
 
+
+void CEffect_Particle::Set_ParticleDesc(const PARTICLE_DESC& tDesc)
+{
+	m_tParticleDesc = tDesc;
+
+	// 텍스처 셋팅
+	//Set_Texture_Diffuse();
+	//Set_Texture_Alpha();
+
+	// 버퍼 재시작
+	if (m_pVIBufferCom != nullptr)
+	{
+		m_pVIBufferCom->Restart_ParticleBufferDesc(m_tParticleDesc.iCurInstanceCnt);
+
+		if (m_tRigidbodyDesc.bStartJump)
+			m_pVIBufferCom->Add_Velocity(m_tParticleDesc.iCurInstanceCnt, m_tRigidbodyDesc.vStartMinVelocity, m_tRigidbodyDesc.vStartMaxVelocity);
+	}
+
+	m_bParticleDie = false;
+
+}
+
+void CEffect_Particle::Set_RigidbodyDesc(const PARTICLE_RIGIDBODY_DESC& tDesc)
+{
+	m_tRigidbodyDesc = tDesc;
+
+	// 버퍼 재시작
+	if (m_pVIBufferCom != nullptr)
+	{
+		m_pVIBufferCom->Restart_ParticleBufferDesc(m_tParticleDesc.iCurInstanceCnt);
+
+		if (m_tRigidbodyDesc.bStartJump)
+			m_pVIBufferCom->Add_Velocity(m_tParticleDesc.iCurInstanceCnt, m_tRigidbodyDesc.vStartMinVelocity, m_tRigidbodyDesc.vStartMaxVelocity);
+	}
+
+	m_bParticleDie = false;
+}
+
+void CEffect_Particle::Add_Velocity(_float4 _vMinVelocity, _float4 _vMaxVelocity)
+{
+	if (nullptr == m_pVIBufferCom)
+		return;
+
+	m_pVIBufferCom->Add_Velocity(m_tParticleDesc.iCurInstanceCnt, _vMinVelocity, _vMaxVelocity);
+}
+
+void CEffect_Particle::Set_Texture_Diffuse()
+{
+	_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
+
+	_int  iBufferSizeName = WideCharToMultiByte(CP_UTF8, 0, m_tParticleDesc.strTextureTag[TEXTURE_DIFFUSE].c_str(), -1, nullptr, 0, nullptr, nullptr);
+	char* pszFileName = new char[iBufferSizeName];
+	WideCharToMultiByte(CP_UTF8, 0, m_tParticleDesc.strTextureTag[TEXTURE_DIFFUSE].c_str(), -1, pszFileName, iBufferSizeName, nullptr, nullptr);
+	if (strcmp(pszFileName, "") != 0)
+	{
+		if (m_pTextureCom[TEXTURE_DIFFUSE] != nullptr)
+			Safe_Release(m_pTextureCom[TEXTURE_DIFFUSE]);	// 이전 텍스처 해제
+		
+		m_pTextureCom[TEXTURE_DIFFUSE] = static_cast<CTexture*>(m_pGameInstance->Clone_Component(iCurLevel, m_tParticleDesc.strTextureTag[TEXTURE_DIFFUSE]));
+	}
+	else
+	{
+		// 텍스처 이름이 비어있는 경우(이전 텍스처가 없었던 경우)
+
+		_int  iBufferSizePath = WideCharToMultiByte(CP_UTF8, 0, m_tParticleDesc.strTexturePath[TEXTURE_DIFFUSE].c_str(), -1, nullptr, 0, nullptr, nullptr);
+		char* pszFilePath = new char[iBufferSizePath];
+		WideCharToMultiByte(CP_UTF8, 0, m_tParticleDesc.strTexturePath[TEXTURE_DIFFUSE].c_str(), -1, pszFilePath, iBufferSizePath, nullptr, nullptr);
+		if (strcmp(pszFilePath, "") != 0)
+		{
+			if (m_pTextureCom[TEXTURE_DIFFUSE] != nullptr)
+				Safe_Release(m_pTextureCom[TEXTURE_DIFFUSE]);
+
+			char szFileName[MAX_PATH] = ""; // 파일이름
+			_splitpath_s(pszFilePath, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
+			if (strcmp(szFileName, "") == 0)
+				m_pTextureCom[TEXTURE_DIFFUSE] = CTexture::Create(m_pDevice, m_pContext, m_tParticleDesc.strTexturePath[TEXTURE_DIFFUSE], 0);
+			else
+				m_pTextureCom[TEXTURE_DIFFUSE] = CTexture::Create(m_pDevice, m_pContext, m_tParticleDesc.strTexturePath[TEXTURE_DIFFUSE]);
+		}
+		else
+		{
+			if (m_pTextureCom[TEXTURE_DIFFUSE] != nullptr)
+				Safe_Release(m_pTextureCom[TEXTURE_DIFFUSE]);
+		}
+		Safe_Delete(pszFilePath);
+	}
+	Safe_Delete(pszFileName);
+
+	if (m_pTextureCom[TEXTURE_DIFFUSE] != nullptr && m_tParticleDesc.iTextureIndex[TEXTURE_DIFFUSE] >= m_pTextureCom[TEXTURE_DIFFUSE]->Get_NumTextures())
+		m_tParticleDesc.iTextureIndex[TEXTURE_DIFFUSE] = m_pTextureCom[TEXTURE_DIFFUSE]->Get_NumTextures() - 1;
+
+}
 
 void* CEffect_Particle::Get_BufferDesc()
 {
@@ -290,7 +450,7 @@ void* CEffect_Particle::Get_BufferDesc()
 
 
 	tBufferInfo.pColorRandom = &m_tParticleDesc.bColorRandom;
-	tBufferInfo.pColorS = &m_tParticleDesc.vColor_Start;
+	tBufferInfo.pColor_Start = &m_tParticleDesc.vColor_Start;
 
 	tBufferInfo.pColorChange = &m_tParticleDesc.bColorChange;
 
@@ -301,10 +461,10 @@ void* CEffect_Particle::Get_BufferDesc()
 	tBufferInfo.pColorChangeStartDelay = &m_tParticleDesc.fColorChangeStartDelay;
 
 	tBufferInfo.pColorChangeStartM = &m_tParticleDesc.fColorChangeStartM;
-	tBufferInfo.pColorM = &m_tParticleDesc.fColorMid;
+	tBufferInfo.pColor_Mid = &m_tParticleDesc.fColorMid;
 
-	tBufferInfo.pColorChangeStartF = &m_tParticleDesc.vColorChangeStartE;
-	tBufferInfo.pColorF = &m_tParticleDesc.vColor_End;
+	tBufferInfo.pColorChangeStartE = &m_tParticleDesc.vColorChangeStartE;
+	tBufferInfo.pColor_End = &m_tParticleDesc.vColor_End;
 
 	tBufferInfo.pColorDuration = &m_tParticleDesc.fColorDuration;
 
@@ -336,6 +496,12 @@ HRESULT CEffect_Particle::Ready_Components()
 	if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strShaderTag,
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
+
+	/* For.Com_VIBuffer */
+	CVIBuffer_Particle::PARTICLE_BUFFER_DESC pBufferInfo = *static_cast<CVIBuffer_Particle::PARTICLE_BUFFER_DESC*>(Get_BufferDesc());
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle"), TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &pBufferInfo)))
+		return E_FAIL;
+
 
 	/* For.Com_VIBuffer */
 	{
@@ -387,13 +553,10 @@ HRESULT CEffect_Particle::Ready_Components()
 		tVIBufferDesc.vSpriteUVForce = { 0.f, 0.f };
 		tVIBufferDesc.iSpriteFrameIndex = { 1 };
 
-		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle_Point"),
-			TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &tVIBufferDesc)))
-			return E_FAIL;
+		//if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle_Point"),
+		//	TEXT("Com_VIBuffer_Point"), reinterpret_cast<CComponent**>(&m_pVIBufferCom_Point), &tVIBufferDesc)))
+		//	return E_FAIL;
 	}
-
-
-
 
 
 	/* For.Com_Texture */
@@ -428,10 +591,11 @@ HRESULT CEffect_Particle::Ready_Components()
 	Desc.iNumInstance = 1;
 
 
-	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),
-		TEXT("Com_VIBuffer_Model"), reinterpret_cast<CComponent**>(&m_pVIBufferCom_Model), &Desc)))
-		return E_FAIL;
+	///* For.Com_VIBuffer */
+	//if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),
+	//	TEXT("Com_VIBuffer_Model"), reinterpret_cast<CComponent**>(&m_pVIBufferCom_Model), &Desc)))
+	//	return E_FAIL;
+
 
 
 
@@ -468,13 +632,36 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 		if (FAILED(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tParticleDesc.iTextureIndex[TEXTURE_NOISE])))
 			return E_FAIL;
 	}
+	     
+
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
 
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
-		return E_FAIL;
+	// 이펙트 정보
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_EffectDesc", m_pVIBufferCom->Get_ParticleShaderInfo().data(), sizeof(CVIBuffer_Particle::PARTICLE_SHADER_DESC) * m_pVIBufferCom->Get_ParticleShaderInfo().size()));
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fUVIndex", &m_pVIBufferCom->Get_ParticleShaderInfo().data()->fUVIndex, sizeof(_float2)));
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fMaxCount", &m_pVIBufferCom->Get_ParticleShaderInfo().data()->fMaxCount, sizeof(_float2)));
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fColor", &m_pVIBufferCom->Get_ParticleShaderInfo().data()->fColor, sizeof(_float3)));
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_pVIBufferCom->Get_ParticleShaderInfo().data()->fAlpha, sizeof(_float)));
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAxis", &m_pVIBufferCom->Get_ParticleShaderInfo().data()->fAxis, sizeof(_float3)));
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAngle", &m_pVIBufferCom->Get_ParticleShaderInfo().data()->fAngle, sizeof(_float)));
 
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tParticleDesc.vColor_Clip.w, sizeof(_float)));
+	//_float3 fAxis = _float3(0.f, 1.f, 0.f);
+	//_float fAngle = 0.f;
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAxis", &fAxis, sizeof(_float3)));
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAngle", &fAngle, sizeof(_float)));
 
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fBloomPower", &m_pVIBufferCom->Get_ParticleShaderInfo().data()->fBloomPower, sizeof(_float3)));
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fBlurPower", &m_pVIBufferCom->Get_ParticleShaderInfo().data()->fBlurPower, sizeof(_float)));
+
+	//m_tParticleDesc.bBillBoard = false;
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tParticleDesc.bBillBoard, sizeof(_bool)));
+
+	_float3 vBalck_Discard = { m_tParticleDesc.vColor_Clip.x, m_tParticleDesc.vColor_Clip.y, m_tParticleDesc.vColor_Clip.z };
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fBlack_Discard", &vBalck_Discard, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tParticleDesc.vColor_Clip.w, sizeof(_float)));
+
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tParticleDesc.vColor_Clip.w, sizeof(_float)));
 
 	//if (SPRITE == m_tParticleDesc.eType)
 	//{

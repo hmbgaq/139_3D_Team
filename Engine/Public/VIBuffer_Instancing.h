@@ -44,8 +44,8 @@ protected:
 protected:
 	_float* m_pSpeeds		= { nullptr };
 	_float* m_pLifeTimes	= { nullptr };
-	INSTANCING_DESC				m_InstancingDesc;
-	_float						m_fTimeAcc = { 0.0f };
+	INSTANCING_DESC	m_InstancingDesc;
+	_float			m_fTimeAcc = { 0.0f };
 
 
 public:

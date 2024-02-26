@@ -31,6 +31,7 @@ public:
 
 public:
 	HRESULT Get_TextureSize(_uint * iWidth, _uint * iHeight, _uint iTextureIndex = 0);
+	_uint	Get_NumTextures() { return m_iNumTextures; }
 
 
 private:

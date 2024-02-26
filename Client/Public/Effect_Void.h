@@ -10,7 +10,7 @@ BEGIN(Client)
 class CEffect_Void abstract : public CAlphaObject
 {
 public:
-	enum TYPE_EFFECT { PARTICLE, RECT, INSTANCE, MESH, TRAIL, TYPE_EFFECT_END };
+	enum TYPE_EFFECT { PARTICLE, RECT, INSTANCE, MESH, TRAIL, PARTICLE_TEST, TYPE_EFFECT_END };
 	enum TEXTURE	 { TEXTURE_DIFFUSE, TEXTURE_MASK, TEXTURE_NOISE, TEXTURE_SPRITE, TEXTURE_END };
 
 	typedef struct tagEffectVoidDesc : public CGameObject::GAMEOBJECT_DESC
@@ -19,6 +19,7 @@ public:
 
 		// Texture
 		wstring		strTextureTag[TEXTURE_END];
+		wstring		strTexturePath[TEXTURE_END];
 		_int		iTextureIndex[TEXTURE_END] = { 0 };
 
 		// Render Group

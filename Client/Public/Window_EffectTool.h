@@ -35,6 +35,7 @@ public:
 	// Refactoring Start =====================================================================================================
 
 public:
+	void	Ready_Proto_Particles();
 	void	Update_EffectList();
 
 	void	Update_PlayBarArea();
