@@ -20,7 +20,7 @@ public:
 
 
 
-public:
+public:		//상태 그룹 별 업데이트 
 	CState<CPlayer>* Normal_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Attack_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Run_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
@@ -28,12 +28,14 @@ public:
 	CState<CPlayer>* Roll_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 
-public:
+public:		//개별 동작 상태 집합
 	CState<CPlayer>* Normal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Run(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
-	CState<CPlayer>* Dodge(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Attack(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* MeleeCombo(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Dodge(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Roll(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
 
 
 

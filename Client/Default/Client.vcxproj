@@ -257,6 +257,10 @@
     <ClInclude Include="..\Public\Player_MeleeCombo_02_L_NEW.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_03_SlamAOEJump.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_04.h" />
+    <ClInclude Include="..\Public\Player_Roll_B.h" />
+    <ClInclude Include="..\Public\Player_Roll_F.h" />
+    <ClInclude Include="..\Public\Player_Roll_L.h" />
+    <ClInclude Include="..\Public\Player_Roll_R.h" />
     <ClInclude Include="..\Public\Player_Run_B.h" />
     <ClInclude Include="..\Public\Player_Run_BL.h" />
     <ClInclude Include="..\Public\Player_Run_BL135.h" />
@@ -274,6 +278,7 @@
     <ClInclude Include="..\Public\Player_State_Attack.h" />
     <ClInclude Include="..\Public\Player_State_Dodge.h" />
     <ClInclude Include="..\Public\Player_State_Normal.h" />
+    <ClInclude Include="..\Public\Player_State_Roll.h" />
     <ClInclude Include="..\Public\Player_State_Run.h" />
     <ClInclude Include="..\Public\Player_Weapon_ELShotgun.h" />
     <ClInclude Include="..\Public\Player_Weapon_ELWinchester.h" />
@@ -387,6 +392,10 @@
     <ClCompile Include="..\Private\Player_MeleeCombo_02_L_NEW.cpp" />
     <ClCompile Include="..\Private\Player_MeleeCombo_03_SlamAOEJump.cpp" />
     <ClCompile Include="..\Private\Player_MeleeCombo_04.cpp" />
+    <ClCompile Include="..\Private\Player_Roll_B.cpp" />
+    <ClCompile Include="..\Private\Player_Roll_F.cpp" />
+    <ClCompile Include="..\Private\Player_Roll_L.cpp" />
+    <ClCompile Include="..\Private\Player_Roll_R.cpp" />
     <ClCompile Include="..\Private\Player_Run_B.cpp" />
     <ClCompile Include="..\Private\Player_Run_BL.cpp" />
     <ClCompile Include="..\Private\Player_Run_BL135.cpp" />
@@ -404,6 +413,7 @@
     <ClCompile Include="..\Private\Player_State_Attack.cpp" />
     <ClCompile Include="..\Private\Player_State_Dodge.cpp" />
     <ClCompile Include="..\Private\Player_State_Normal.cpp" />
+    <ClCompile Include="..\Private\Player_State_Roll.cpp" />
     <ClCompile Include="..\Private\Player_State_Run.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_ELShotgun.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_ELWinchester.cpp" />

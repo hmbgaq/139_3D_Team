@@ -21,6 +21,16 @@
 #include "Player_DodgeBlink_L_03.h"
 #include "Player_DodgeBlink_R_03.h"
 
+#include "Player_Dodge_B.h"
+#include "Player_Dodge_L.h"
+#include "Player_Dodge_R.h"
+
+#include "Player_Roll_B.h"
+#include "Player_Roll_F.h"
+#include "Player_Roll_L.h"
+#include "Player_Roll_R.h"
+
+
 #include "Player_DodgeBlink_CW.h"
 #include "Player_DodgeBlink_CCW.h"
 
@@ -91,8 +101,11 @@ CState<CPlayer>* CPlayer_State::Dodge_State(CPlayer* pActor, _float fTimeDelta, 
 {
 	CState<CPlayer>* pState = { nullptr };
 
-	//pState = Normal(pActor, fTimeDelta, _iAnimIndex);
+	//pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
 	//if (pState)	return pState;
+
+	pState = Roll(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
 
 	return nullptr;
 }
@@ -103,6 +116,12 @@ CState<CPlayer>* CPlayer_State::Roll_State(CPlayer* pActor, _float fTimeDelta, _
 
 	//pState = Normal(pActor, fTimeDelta, _iAnimIndex);
 	//if (pState)	return pState;
+
+
+	if (pActor->Is_Animation_End())
+	{
+		return new CPlayer_IdleLoop();
+	}
 
 	return nullptr;
 }
@@ -191,39 +210,6 @@ CState<CPlayer>* CPlayer_State::Run(CPlayer* pActor, _float fTimeDelta, _uint _i
 	return nullptr;
 }
 
-CState<CPlayer>* CPlayer_State::Dodge(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	if (m_pGameInstance->Key_Pressing(DIK_SPACE))
-	{
-		if (m_pGameInstance->Key_Pressing(iKeyDown))
-		{
-			if (CPlayer_DodgeBlink_B_03::g_iAnimIndex != _iAnimIndex)
-				return new CPlayer_DodgeBlink_B_03();
-		}
-		else if (m_pGameInstance->Key_Pressing(iKeyLeft))
-		{
-			if (CPlayer_DodgeBlink_L_03::g_iAnimIndex != _iAnimIndex)
-				return new CPlayer_DodgeBlink_L_03();
-		}
-		else if (m_pGameInstance->Key_Pressing(iKeyRight))
-		{
-			if (CPlayer_DodgeBlink_R_03::g_iAnimIndex != _iAnimIndex)
-				return new CPlayer_DodgeBlink_R_03();
-		}
-		else if (m_pGameInstance->Key_Pressing(iKeyUp))
-		{
-			if (CPlayer_DodgeBlink_CCW::g_iAnimIndex != _iAnimIndex)
-				return new CPlayer_DodgeBlink_CCW();
-		}
-	}
-
-	if (pActor->Is_Animation_End())
-	{
-		return new CPlayer_IdleLoop();
-	}
-
-	return nullptr;
-}
 
 CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
@@ -287,6 +273,105 @@ CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _
 		return new CPlayer_IdleLoop();
 	}
 
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Dodge(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Key_Pressing(DIK_SPACE))
+	{
+		if (true)
+		{
+			if (m_pGameInstance->Key_Pressing(iKeyDown))
+			{
+				if (CPlayer_DodgeBlink_B_03::g_iAnimIndex != _iAnimIndex)
+					return new CPlayer_DodgeBlink_B_03();
+			}
+			else if (m_pGameInstance->Key_Pressing(iKeyLeft))
+			{
+				if (CPlayer_DodgeBlink_L_03::g_iAnimIndex != _iAnimIndex)
+					return new CPlayer_DodgeBlink_L_03();
+			}
+			else if (m_pGameInstance->Key_Pressing(iKeyRight))
+			{
+				if (CPlayer_DodgeBlink_R_03::g_iAnimIndex != _iAnimIndex)
+					return new CPlayer_DodgeBlink_R_03();
+			}
+		}
+
+		//if (false) // 느림
+		//{
+		//	if (m_pGameInstance->Key_Pressing(iKeyDown))
+		//	{
+		//		if (CPlayer_Dodge_B::g_iAnimIndex != _iAnimIndex)
+		//			return new CPlayer_Dodge_B();
+		//	}
+		//	else if (m_pGameInstance->Key_Pressing(iKeyLeft))
+		//	{
+		//		if (CPlayer_Dodge_L::g_iAnimIndex != _iAnimIndex)
+		//			return new CPlayer_Dodge_L();
+		//	}
+		//	else if (m_pGameInstance->Key_Pressing(iKeyRight))
+		//	{
+		//		if (CPlayer_Dodge_R::g_iAnimIndex != _iAnimIndex)
+		//			return new CPlayer_Dodge_R();
+		//	}
+		//}
+
+
+		if (m_pGameInstance->Key_Pressing(iKeyUp))		// 임시
+		{
+			if (CPlayer_Roll_F::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_Roll_F();
+		}
+
+	}
+
+	if (pActor->Is_Animation_End())
+	{
+		return new CPlayer_IdleLoop();
+	}
+
+	return nullptr;
+}
+
+
+CState<CPlayer>* CPlayer_State::Roll(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	CPlayer::Player_State eState = (CPlayer::Player_State)_iAnimIndex;
+
+	if (m_pGameInstance->Key_Down(DIK_SPACE))
+	{
+		switch (eState)
+		{
+		case CPlayer_DodgeBlink_B_03::g_iAnimIndex:
+		case CPlayer_Dodge_B::g_iAnimIndex:
+			return new CPlayer_Roll_B();
+			break;
+
+		case CPlayer_DodgeBlink_L_03::g_iAnimIndex:
+		case CPlayer_Dodge_L::g_iAnimIndex:
+			return new CPlayer_Roll_L();
+			break;
+
+		case CPlayer_DodgeBlink_R_03::g_iAnimIndex:
+		case CPlayer_Dodge_R::g_iAnimIndex:
+			return new CPlayer_Roll_R();
+			break;
+
+		default:
+			return new CPlayer_Roll_F();
+			break;
+
+		}
+
+	}
+
+	if (pActor->Is_Animation_End())
+	{
+		return new CPlayer_IdleLoop();
+	}
 
 	return nullptr;
 }

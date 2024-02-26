@@ -12,7 +12,7 @@ CState<CPlayer>* CPlayer_DodgeBlink_CW::Update(CPlayer* pActor, _float fTimeDelt
 {
 	__super::Update(pActor, fTimeDelta);
 
-	return Normal(pActor, fTimeDelta, g_iAnimIndex);
+	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CPlayer_DodgeBlink_CW::Release(CPlayer* pActor)

@@ -472,14 +472,32 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\2. DodgeBlink\R_03">
       <UniqueIdentifier>{3e678654-6aee-4054-b4d0-740d78175e2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\B">
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\0. Parent">
+      <UniqueIdentifier>{1bb6d72e-0038-4ae5-a910-bc8f110aa1b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll">
+      <UniqueIdentifier>{c37424d3-fd81-4fc0-b035-a7ae137246f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\Back">
       <UniqueIdentifier>{e3c1e96a-10c4-4a21-ac2d-b575fd83f791}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\L">
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\Left">
       <UniqueIdentifier>{fca091fd-17ef-4910-943f-149a04eb7896}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\R">
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\Right">
       <UniqueIdentifier>{a38107b3-f486-4ddb-9a4b-07b5ea9efb37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll\Back">
+      <UniqueIdentifier>{1d2ca4ca-31e5-4296-bb8d-b481ef3825e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll\Front">
+      <UniqueIdentifier>{27caea45-f5e7-4218-865a-b28b08c5c27c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll\Left">
+      <UniqueIdentifier>{38a07a91-c2ff-4aaa-925f-fbe59e0d02bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll\Right">
+      <UniqueIdentifier>{daa3a9d2-f6e0-4ed1-9838-21c833396b4f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -889,13 +907,28 @@
       <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Dodge_B.h">
-      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\B</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Dodge_L.h">
-      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\L</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Dodge_R.h">
-      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\R</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Roll.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Roll_B.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Roll_F.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Roll_L.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Roll_R.h">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll\Right</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1472,13 +1505,28 @@
       <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Dodge_B.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\B</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Dodge_L.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\L</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Dodge_R.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\R</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\4. Dodge\1. Dodge\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Roll.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Roll_B.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Roll_F.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Roll_L.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Roll_R.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\0. Parent\5. Roll\1. Roll\Right</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
