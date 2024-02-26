@@ -169,6 +169,9 @@ HRESULT CShader::Bind_RawValue(const _char* pConstantName, const void* pData, _u
 
 HRESULT CShader::Bind_Buffer(const _char* pConstantName, const void* pData, _uint iSize)
 {
+	/* 주의사항 
+	 * bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER 일경우에는 던져지는 상수버퍼의 크기가 16의 배수여야한다. 
+	 따라서 빈공간에는 float[갯수] 만큼 padding 이 필요하다. */
 	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)
 		return E_FAIL;
@@ -197,6 +200,23 @@ HRESULT CShader::Bind_Buffer(const _char* pConstantName, const void* pData, _uin
 	// 셰이더 리소스에 상수 버퍼 설정
 	return pConstantBuffer->SetConstantBuffer(pBuffer);
 
+}
+
+HRESULT CShader::Bind_Struct(const _char* pConstantName, const void* pData, _uint iSize)
+{
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	ID3DX11EffectType* pType = pVariable->GetType();
+
+	D3DX11_EFFECT_TYPE_DESC typeDesc;
+	pType->GetDesc(&typeDesc);
+
+	if (typeDesc.Class != D3D10_SVC_STRUCT)
+		return E_FAIL;  // 지정된 변수가 구조체 타입이 아니면 실패
+
+	return pVariable->SetRawValue(pData, 0, iSize);
 }
 
 CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)

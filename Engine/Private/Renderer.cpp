@@ -808,7 +808,7 @@ HRESULT CRenderer::Render_Deferred()
 	if(true == m_tFog_Option.bFog_Active)
 	{
 		/* test fog */
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_Fogdesc", &m_tFog_Option, sizeof(FOG_DESC)));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Struct("g_Fogdesc", &m_tFog_Option, sizeof(FOG_DESC)));
 	}
 
 	/* MRT_GameObject */

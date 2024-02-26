@@ -364,8 +364,6 @@ namespace Engine
 		float fFogHeightValue		= 50.f;
 		float fFogDistanceDensity	= 0.05f;
 		float fFogHeightDensity		= 0.05f;
-		float	padding; // 패딩 추가하여 크기를 32바이트로 맞춤
-
 	} FOG_DESC;
 
 	typedef struct ENGINE_DLL tagHDRDesc

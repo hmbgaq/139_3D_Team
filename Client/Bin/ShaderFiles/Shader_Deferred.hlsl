@@ -52,24 +52,28 @@ float2  g_vFogUVAcc             = { 0.f, 0.f };
 
 struct FOG_DESC 
 {
-    bool bFog_Active;
+    bool  bFog_Active;
     float fFogStartDepth;
     float fFogStartDistance;
     float fFogDistanceValue;
     float fFogHeightValue;
     float fFogDistanceDensity;
     float fFogHeightDensity;
-    float padding;
 };
+
 FOG_DESC g_Fogdesc;
 /* ------------------ Function ------------------ */ 
 
 float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise, FOG_DESC desc)
 {
-    // 지정 범위로 변환된 Distance
+    /* 
+    vOriginColor : 안개없이 원래 그리는 색상 
+    toEye : 카메라에서 픽셀 바라보는벡터 */ 
+    
+    // 지정 범위 Distance
     float pixelDistance = desc.fFogDistanceDensity * (length(g_vCamPosition.w - toEye) - desc.fFogStartDepth);
     
-	// 지정 범위로 변환된 Height
+	// 지정 범위 Height
     float pixelHeight = desc.fFogHeightDensity * toEye.y;
     
     float distanceOffset = min(pow(2.0f, pixelDistance - desc.fFogStartDistance), 1.0f);
@@ -266,10 +270,13 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
 PS_OUT PS_MAIN_FINAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-    //;
-    //float Test = fFogStartDistance; 
+    
     FOG_DESC Fog = g_Fogdesc;
     
+    vector vBloom = float4(0.f, 0.f, 0.f, 0.f);
+    if (g_bBloom_Active)
+        vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
+	
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
 
     if (vDiffuse.a == 0.f)
@@ -291,10 +298,6 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
         vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
         if (g_bSSAO_Active)
             vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord); /* SSAO 적용 */
-	
-        vector vBloom = float4(0.f, 0.f, 0.f, 0.f);
-        if (g_bBloom_Active)
-            vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
 	
         vector vOutline = float4(1.f, 1.f, 1.f, 1.f);
         if (g_Outline_Active)

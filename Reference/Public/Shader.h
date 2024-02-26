@@ -27,6 +27,7 @@ public: /* B_SRV */
 	HRESULT Bind_SRVs(const _char* pConstantName, ID3D11ShaderResourceView** ppSRV, _uint iNumTextures);
 	HRESULT Bind_RawValue(const _char* pConstantName, const void* pData, _uint iSize);
 	HRESULT Bind_Buffer(const _char * pConstantName, const void* pData, _uint iSize);
+	HRESULT Bind_Struct(const _char * pConstantName, const void* pData, _uint iSize);
 
 private:
 	/* 내가 빌드하여 컴파일한 셰이더 파일 하나를 대표하는 컴객체 . */
