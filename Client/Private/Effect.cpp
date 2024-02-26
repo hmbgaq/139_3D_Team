@@ -271,7 +271,7 @@ void CEffect::ReSet_Effect()
 	m_tEffectDesc.fLifeTimeRatio = 0.f;
 
 	m_tEffectDesc.bFinished = FALSE;
-	m_tEffectDesc.bRender	= FALSE;
+	//m_tEffectDesc.bRender	= FALSE;
 
 	for (auto& Pair : m_PartObjects)
 	{
@@ -291,10 +291,13 @@ void CEffect::End_Effect()
 			if (nullptr != Pair.second)
 			{
 				dynamic_cast<CEffect_Void*>(Pair.second)->End_Effect();
-			}
-				
+			}				
 		}
 		ReSet_Effect();
+	}
+	else
+	{
+		Set_Dead(TRUE);
 	}
 
 }
@@ -325,6 +328,12 @@ HRESULT CEffect::Add_PartObject(const wstring& strPrototypeTag, const wstring& s
 	return S_OK;
 }
 
+void CEffect::Set_Owner(CGameObject* pOwner)
+{
+	m_tEffectDesc.pOwner = pOwner;
+
+}
+
 HRESULT CEffect::Ready_Components()
 {
 
@@ -335,9 +344,6 @@ HRESULT CEffect::Ready_Components()
 HRESULT CEffect::Ready_PartObjects(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg)
 {
 	/* Json로드해서 저장된 파트 오브젝트 준비하도록하자. */
-
-	if (nullptr != Find_PartObject(strPrototypeTag))
-		return E_FAIL;
 
 	CGameObject* pPartObject = m_pGameInstance->Clone_Prototype(strPrototypeTag, pArg);
 	if (nullptr == pPartObject)

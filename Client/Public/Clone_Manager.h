@@ -49,7 +49,8 @@ public:	// 생성 함수 작성
 	};
 
 
-	CEffect* Create_Effect(_uint iLevelIndex, const wstring& strLayerTag, string strFileName);
+	//! 유정 : strFileName은 json파일 이름. ("../Bin/DataFiles/Data_Effect/" 경로에 저장해 놓은 json파일 중 원하는거 골라쓰기!)
+	CEffect* Create_Effect(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner = nullptr);
 
 
 

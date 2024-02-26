@@ -165,22 +165,20 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 		_vector vPos = XMLoadFloat4(&pVertices[i].vPosition);
 		if (SPHERE == m_tBufferDesc.eType_Action)
 		{
-			//if (m_tBufferDesc.bReverse)
-			//{
-			//	vDir = XMVector3TransformNormal(vDir, RotationMatrix);
-			//	vDir = vDir * m_tBufferDesc.fMaxLengthPosition;
+			if (m_tBufferDesc.bReverse)
+			{
+				vDir = XMVector3TransformNormal(vDir, RotationMatrix);
+				vDir = vDir * m_tBufferDesc.vMinMaxRangeLength;
 
-			//	XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + vDir);
-			//}
-			//else
+				XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + vDir);
+			}
+			else
 			{
 				XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + XMVector3TransformNormal(vDir, RotationMatrix));
 			}
 		}
 		else
 		{
-
-
 			XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_tBufferDesc.vCenterPosition) + XMVector3TransformNormal(vDir, RotationMatrix));
 		}
 		pVertices[i].vPosition.w = 1.f;

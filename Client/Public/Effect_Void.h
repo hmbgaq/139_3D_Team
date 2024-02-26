@@ -27,7 +27,6 @@ public:
 		_int		iRenderGroup = { 7 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 현재 작성기준 CRENDERER::RENDERGROUP::RENDER_END가 8임
 
 		// Shader
-		wstring		strShaderTag	 = { TEXT("") };
 		_uint		iShaderPassIndex = { 0 };
 		// Shader Variables
 		_bool		bBillBoard		= { TRUE };
@@ -155,8 +154,8 @@ public:
 
 
 public:
-	TYPE_EFFECT Get_EffectType() { return eEffectType; }
-	void		Set_EffectType(TYPE_EFFECT eType) { eEffectType = eType; }
+	TYPE_EFFECT Get_EffectType() { return m_eType_Effect; }
+	void		Set_EffectType(TYPE_EFFECT eType) { m_eType_Effect = eType; }
 
 	_float		Get_WaitingAcc() { return m_fWaitingAcc; }
 	void		Set_WaitingAcc(_float fTime) { m_fWaitingAcc = fTime; }
@@ -185,7 +184,7 @@ public:
 	void		Set_SequenceTime(_float fSequenceTime) { m_fSequenceTime = fSequenceTime; }
 
 protected:
-	TYPE_EFFECT	eEffectType		= { TYPE_EFFECT_END };
+	TYPE_EFFECT	m_eType_Effect = { TYPE_EFFECT_END };
 
 	_float		m_fWaitingAcc    = { 0.f };	/* 시작 딜레이 시간 누적 */
 	_float		m_fTimeAcc	    = { 0.f };		/* 시간 누적 */

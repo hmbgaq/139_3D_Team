@@ -178,6 +178,8 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
 
+	Out_Json["eType_Effect"] = m_eType_Effect;
+
 	Out_Json["strProtoTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strProtoTag);
 	Out_Json["strPartTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strPartTag);
 
@@ -192,7 +194,6 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 	}
 	
 	Out_Json["iRenderGroup"] = m_tParticleDesc.iRenderGroup;
-	Out_Json["strShaderTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strShaderTag);
 	Out_Json["iShaderPassIndex"] = m_tParticleDesc.iShaderPassIndex;
 
 	Out_Json["bBillBoard"] = m_tParticleDesc.bBillBoard;
@@ -264,6 +265,8 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
+	m_eType_Effect = In_Json["eType_Effect"];
+
 	m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strProtoTag) = In_Json["strProtoTag"];
 	m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strPartTag) = In_Json["strPartTag"];
 
@@ -274,7 +277,6 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 	}
 
 	m_tParticleDesc.iRenderGroup = In_Json["iRenderGroup"];
-	m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strShaderTag) = In_Json["strShaderTag"];
 	m_tParticleDesc.iShaderPassIndex = In_Json["iShaderPassIndex"];
 
 	m_tParticleDesc.bBillBoard = In_Json["bBillBoard"];

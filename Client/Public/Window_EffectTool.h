@@ -61,8 +61,8 @@ private:
 	map<const wstring, class CEffect*>		m_pEffects;
 	map<const wstring, class CGameObject*>	m_CurPartObjects;
 
-	char** m_szEffectNames = { nullptr };
-	char* m_cCurEffectName = { nullptr };
+	char**			m_szEffectNames = { nullptr };
+	char*			m_cCurEffectName = { nullptr };
 	_int			m_iCurEffectIndex = { 0 };
 	class CEffect*	m_pCurEffect = { nullptr };
 

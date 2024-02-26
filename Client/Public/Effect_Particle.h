@@ -20,11 +20,9 @@ public:
 		CVIBuffer_Particle_Point::TYPE_FADE		eType_Fade = { CVIBuffer_Particle_Point::FADE_NONE };
 		EASING_TYPE								eType_ColorLerp = { LINEAR };
 
-
 		_bool		bLoop = { TRUE };
 		_bool		bReverse = { FALSE };
 		_bool		bSpriteAnim = { FALSE };
-
 
 		/* 파티클 개수 */
 		_uint		iCurNumInstance = { 100 };
