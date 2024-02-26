@@ -24,6 +24,7 @@ public:
 
 		wstring			strModelTag = TEXT("");
 
+		_uint			iNumInstance;
 		
 	}EFFECT_INSTANCE_DESC;
 

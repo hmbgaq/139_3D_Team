@@ -12,71 +12,71 @@ public:
 
 	typedef struct tagParticleBufferDesc
 	{
-		TYPE_ACTION*		eType_Action = { nullptr };
-		TYPE_FADE*			eType_Fade = { nullptr };
-		EASING_TYPE*		eType_ColorLerp = { nullptr };
+		TYPE_ACTION		eType_Action = { SPHERE };
+		TYPE_FADE		eType_Fade = { FADE_NONE };
+		EASING_TYPE		eType_ColorLerp = { LINEAR };
 
 
-		_bool*		bLoop		 = { nullptr };
-		_bool*		bReverse	 = { nullptr };
-		_bool*		bSpriteAnim = { nullptr };
+		_bool		bLoop = { TRUE };
+		_bool		bReverse = { FALSE };
+		_bool		bSpriteAnim = { FALSE };
 
 
 		/* 파티클 개수 */
-		_uint*		iCurNumInstance = { nullptr };
+		_uint		iCurNumInstance = { 100 };
 
 		/* LifeTime */
-		_float2*		vMinMaxLifeTime = { nullptr };
+		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
 
 		/* For.Position */
-		_float2*		vMinMaxRange = { nullptr };
-		_float2*		vMinMaxRangeLength = { nullptr };
+		_float2		vMinMaxRange = { 0.1f, 3.f };
+		_float2		vMinMaxRangeLength = { 0.1f, 5.f };
 
-		_float4*		vCenterPosition = { nullptr };
+		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
 
 		/* For.Speed */
-		_float2*		vMinMaxSpeed = { nullptr };
+		_float2		vMinMaxSpeed = { 0.1f, 1.f };
 
 		/* 가속도 */
-		_float*		fSpeedAcc = { nullptr };
-		_float*		fAccPosition = { nullptr };
+		_float		fSpeedAcc = { 1.f };
+		_float		fAccPosition = { 0.1f };
 
 		/* For.Gravity */
-		_bool*		bUseGravity = { nullptr };
-		_float*		fGravityAcc = { nullptr };
-		_float*		fUseGravityPosition = { nullptr };
+		_bool		bUseGravity = { FALSE };
+		_float		fGravityAcc = { -5.f };
+		_float		fUseGravityPosition = { 0.1f };
 
 		/* For.Rotation */
-		_float2*		vMinMaxRotationOffsetX = { nullptr };
-		_float2*		vMinMaxRotationOffsetY = { nullptr };
-		_float2*		vMinMaxRotationOffsetZ = { nullptr };
-		_float3*		vRotationOffset = { nullptr };
+		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
+		_float2		vMinMaxRotationOffsetY = { 0.0f, 360.f };
+		_float2		vMinMaxRotationOffsetZ = { 0.0f, 360.f };
+		_float3		vRotationOffset = { 0.f, 0.f, 0.f };
 
-		_float3*		vCurrentRotation = { nullptr };
-		_float3*		vMinMaxRotationForce = { nullptr };
+		_float3     vCurrentRotation;
+		_float3		vMinMaxRotationForce;
 
 		/* For.Scale */
-		_float2*     vMinMaxScale = { nullptr };
-		_float2*     vAddScale = { nullptr };
-		_float2*	 vCurrentScale = { nullptr };
+		_float2     vMinMaxScale;
+		_float2     vAddScale;
+		_float2		vCurrentScale;
 
 		/* For.Color */
-		_float2*     vMinMaxRed = { nullptr };
-		_float2*     vMinMaxGreen = { nullptr };
-		_float2*     vMinMaxBlue = { nullptr };
-		_float2*     vMinMaxAlpha = { nullptr };
+		_float2     vMinMaxRed = { 0.f, 1.f };
+		_float2     vMinMaxGreen = { 0.f, 1.f };
+		_float2     vMinMaxBlue = { 0.f, 1.f };
+		_float2     vMinMaxAlpha = { 0.f, 1.f };
 
-		_float4*     vCurrentColor = { nullptr };
+		_float4     vCurrentColor;
 
 		/* For.Sprite */
-		_float*	fSequenceTerm = { nullptr };
+		_float	fSequenceTerm = { 0.05f };
 
-		_float2* vTextureSize = { nullptr };		// fSpriteSizeX, fSpriteSizeY
-		_float2* vTileSize = { nullptr };			// fAnimationSizeX, fAnimationSizeY
+		_float2 vTextureSize = { 1792.f, 1792.f };  // fSpriteSizeX, fSpriteSizeY
+		_float2 vTileSize	 = { 256.f, 256.f };	// fAnimationSizeX, fAnimationSizeY
 
-		_int2*	vUV_CurTileIndex = { nullptr };		// iCurrentHor, iCurrentVer
-		_int2*	vUV_MinTileCount = { nullptr };		// iMinHor, iMinVer
-		_int2*	vUV_MaxTileCount = { nullptr };		// iMaxHor, iMaxVer
+		_int2	vUV_CurTileIndex = { 0, 0 }; // iCurrentHor, iCurrentVer
+		_int2	vUV_MinTileCount = { 0, 0 }; // iMinHor, iMinVer
+		_int2	vUV_MaxTileCount = { 7, 7 }; // iMaxHor, iMaxVer
 
 		void Reset_Desc()
 		{
@@ -105,9 +105,14 @@ public:
 public:
 	void ReSet();
 
+
+	/* For.Desc */
+public:
+	PARTICLE_BUFFER_DESC* Get_Desc() { return &m_tBufferDesc; }
+
 public:
 	_uint			Get_NumInstance() { return m_iNumInstance; }
-	void			Set_NumInstance(_uint iNum) { m_iNumInstance = iNum; *m_tBufferDesc.iCurNumInstance = iNum; }
+	void			Set_NumInstance(_uint iNum) { m_iNumInstance = iNum; m_tBufferDesc.iCurNumInstance = iNum; }
 
 	_float			Get_TimePosition() { return m_fTimeAcc; }
 	void			Set_TimePosition(_float fTimePosition) { m_fTimeAcc = fTimePosition; }

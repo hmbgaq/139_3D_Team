@@ -51,8 +51,8 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 		m_fSequenceTime = m_fLifeTime + m_fRemainTime;
 
 		//pDesc->bActive_Tool = TRUE;
-		pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
-		pDesc->vMinMaxLifeTime.y = m_fLifeTime;
+		//pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
+		//pDesc->vMinMaxLifeTime.y = m_fLifeTime;
 
 		if (m_tParticleDesc.bPlay)
 		{
@@ -214,6 +214,7 @@ void* CEffect_Particle::Get_BufferDesc()
 	tBufferDesc.vMinMaxLifeTime = &m_tParticleDesc.vMinMaxLifeTime;
 
 	tBufferDesc.vMinMaxRange = &m_tParticleDesc.vMinMaxRange;
+	tBufferDesc.vMinMaxRangeLength = &m_tParticleDesc.vMinMaxRangeLength;
 	tBufferDesc.vCenterPosition = &m_tParticleDesc.vCenterPosition;
 
 	tBufferDesc.vMinMaxSpeed = &m_tParticleDesc.vMinMaxSpeed;
@@ -280,15 +281,6 @@ HRESULT CEffect_Particle::Ready_Components()
 		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle_Point"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &pBufferInfo)))
 			return E_FAIL;
 
-
-		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
-		Desc.pModel = m_pModelCom;
-		Desc.iNumInstance = 1;
-
-		/* For.Com_VIBuffer */
-		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),
-			TEXT("Com_VIBuffer_Model"), reinterpret_cast<CComponent**>(&m_pVIBufferCom_Model), &Desc)))
-			return E_FAIL;
 	}
 
 
@@ -313,12 +305,19 @@ HRESULT CEffect_Particle::Ready_Components()
 			return E_FAIL;
 	}
 
-	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_splineMesh_tornado"),
-		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
+	///* For.Com_Model */
+	//if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_splineMesh_tornado"),
+	//	TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+	//	return E_FAIL;
 
+	//CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
+	//Desc.pModel = m_pModelCom;
+	//Desc.iNumInstance = 1;
 
+	///* For.Com_VIBuffer */
+	//if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),
+	//	TEXT("Com_VIBuffer_Model"), reinterpret_cast<CComponent**>(&m_pVIBufferCom_Model), &Desc)))
+	//	return E_FAIL;
 
 
 	return S_OK;
@@ -433,8 +432,8 @@ void CEffect_Particle::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pModelCom);
-	Safe_Release(m_pVIBufferCom_Model);
+	//Safe_Release(m_pModelCom);
+	//Safe_Release(m_pVIBufferCom_Model);
 
 	Safe_Release(m_pVIBufferCom);
 

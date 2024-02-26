@@ -16,8 +16,8 @@ class CEffect_Particle final : public CEffect_Void
 public:
 	typedef struct tagParticleDesc : public CEffect_Void::EFFECTVOID_DESC
 	{
-		CVIBuffer_Particle_Point::TYPE_ACTION	eType_Action = { SPHERE };
-		CVIBuffer_Particle_Point::TYPE_FADE		eType_Fade = { FADE_NONE };
+		CVIBuffer_Particle_Point::TYPE_ACTION	eType_Action = { CVIBuffer_Particle_Point::SPHERE };
+		CVIBuffer_Particle_Point::TYPE_FADE		eType_Fade = { CVIBuffer_Particle_Point::FADE_NONE };
 		EASING_TYPE								eType_ColorLerp = { LINEAR };
 
 
@@ -27,19 +27,19 @@ public:
 
 
 		/* 파티클 개수 */
-		_uint		iCurNumInstance;
+		_uint		iCurNumInstance = { 100 };
 
 		/* LifeTime */
-		_float2		vMinMaxLifeTime;
+		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
 
 		/* For.Position */
 		_float2		vMinMaxRange = { 0.1f, 3.f };
-		_float2		vMinMaxRangeLength;
+		_float2		vMinMaxRangeLength = { 0.1f, 5.f };
 
-		_float4		vCenterPosition;
+		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f};
 
 		/* For.Speed */
-		_float2		vMinMaxSpeed;
+		_float2		vMinMaxSpeed = { 0.1f, 1.f };
 
 		/* 가속도 */
 		_float		fSpeedAcc = { 1.f };
@@ -54,7 +54,7 @@ public:
 		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetY = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetZ = { 0.0f, 360.f };
-		_float3		vRotationOffset;
+		_float3		vRotationOffset = {0.f, 0.f, 0.f};
 
 		_float3     vCurrentRotation;
 		_float3		vMinMaxRotationForce;
@@ -115,8 +115,8 @@ private:
 	UVSPRITE_DESC				m_tSpriteDesc = {};
 	//CVIBuffer_Particle_Point::PARTICLE_POINT_DESC 
 
-	CModel*							 m_pModelCom = { nullptr };
-	CVIBuffer_Effect_Model_Instance* m_pVIBufferCom_Model = { nullptr };
+	//CModel*							 m_pModelCom = { nullptr };
+	//CVIBuffer_Effect_Model_Instance* m_pVIBufferCom_Model = { nullptr };
 
 
 private:

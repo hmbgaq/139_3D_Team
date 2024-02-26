@@ -78,7 +78,7 @@ private:
 	CEffect::EFFECT_DESC* m_pCurEffectDesc = { nullptr };
 
 	CEffect_Particle::PARTICLE_DESC*				m_pParticleDesc = {};
-	CVIBuffer_Particle_Point::PARTICLE_POINT_DESC*	m_pParticlePointDesc = {};
+	CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*	m_pParticlePointDesc = {};
 
 	CEffect_Rect::EFFECT_RECT_DESC*					m_pRectDesc			= {};
 	CEffect_Instance::EFFECT_INSTANCE_DESC*			m_pInstanceDesc		= {};
