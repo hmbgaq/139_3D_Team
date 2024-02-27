@@ -361,13 +361,13 @@ HRESULT CRenderer::Draw_RenderGroup()
 		FAILED_CHECK(Render_PostProcess()); /* 모션블러, Radial 블러 등등 */
 	}
 
-	/* 그리기 */
-	FAILED_CHECK(Render_UI());
 	/* 마지막화면용 - 마지막 체크 위해서 */
 	FAILED_CHECK(Render_Final());
 
 	FAILED_CHECK(Render_OutLineGroup());	/* Render_Group */
 	FAILED_CHECK(Render_Blend());
+	/* 그리기 */
+	FAILED_CHECK(Render_UI());
 
 
 	/* 효과넣어주기 */
@@ -527,8 +527,8 @@ HRESULT CRenderer::Add_MRT_UI()
 
 HRESULT CRenderer::Render_UI()
 {
-	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects_UI"))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects_UI"))))
+	//	return E_FAIL;
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
 		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
@@ -538,8 +538,8 @@ HRESULT CRenderer::Render_UI()
 	}
 
 	m_RenderObjects[RENDER_UI].clear();
-	if (FAILED(m_pGameInstance->End_MRT()))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->End_MRT()))
+	//	return E_FAIL;
 	return S_OK;
 }
 

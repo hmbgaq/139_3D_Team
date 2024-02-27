@@ -51,6 +51,9 @@
 /* Monster */
 #include "UI_MonsterHpFrame.h"
 #include "UI_MonsterHp.h"
+/* Text */
+#include "UI_TextBox.h"
+#include "UI_TutorialBox.h"
 #pragma endregion
 
 #pragma region Test
@@ -490,6 +493,10 @@ HRESULT CLoader::Ready_UI_Origin()
 #pragma region Monster
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHpFrame"), CUI_MonsterHpFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MonsterHpFrame"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHp"), CUI_MonsterHp::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MonsterHp"))));
+#pragma endregion End
+
+#pragma region Text
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_TutorialBox"), CUI_TutorialBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_TutorialBox"))));
 #pragma endregion End
 
 	return S_OK;

@@ -6,6 +6,38 @@
 class CUI abstract : public CGameObject
 {
 public:
+	enum UI_KIND { NORMAL, TEXT, KIND_END };
+
+	enum KEYTYPE
+	{
+		KEYTYPE_NONE,
+		KEYTYPE_NORMAL,
+		KEYTYPE_END
+	};
+
+	// 키프레임 구조체
+	typedef struct tagUIKeyframe
+	{
+		_float	fTime = 0.f;					// 키프레임의 시간 (0.0f ~ MaxTime 범위)
+		_float	fValue = 0.f;					// 애니메이션 값 (크기, 회전, 이동 등)
+		_float	fAnimSpeed = 0.f;				// 애니메이션 재생 속도
+
+		_int	iType = 0;						// 애니메이션 타입 (0: 크기, 1: 회전, 2: 이동)
+
+		_bool	isEaseIn = false;				// Ease In 설정 (True 또는 False)
+		_bool	isEaseOut = false;				// Ease Out 설정 (True 또는 False)
+
+		_int	iTexureframe = 0;				// 텍스처 변경 값
+
+		_float2	vScale = { 0.f, 0.f };			// 크기를 담을 그릇
+		_float	fRot = 0.f;						// 회전을 담을 그릇
+		_float2	vPos = { 0.f, 0.f };			// 위치를 담을 그릇
+
+		_float2	vKeyFramePos = { 0.00000000f, 0.00000000f };	// 툴에서의 해당 키프레임 위치
+
+	}UIKEYFRAME;
+
+
 	// 애니메이션 생성시 최소 및 최대 값을 입력 받는 구조체 (키프레임)
 	typedef struct tagUI_AnimKeyframe 
 	{
@@ -129,7 +161,9 @@ public: /* ============================== Get / Set ============================
 	// =>Position
 	void			Set_Pos(_float fPosX, _float fPosY);
 	void			Set_PosZ(_float fZ);
-
+	// =>Kind
+	void			Set_Kind(UI_KIND eUI_King) { m_eKind = eUI_King; }
+	UI_KIND			Get_Kind() { return m_eKind; }
 
 
 //protected:
@@ -138,7 +172,7 @@ public:
 
 	
 protected:
-	void SetUp_WorldToScreen(_fvector vWorldPos);
+	void			SetUp_WorldToScreen(_fvector vWorldPos);
 
 public: /* ============================== Add ============================== */
 	void			Add_Create_Parts(void* pArg);
@@ -194,6 +228,36 @@ public: /* =========================== Save/Load ============================== 
 	void			Load_UIData(const char* _FilePath);
 	virtual json	Save_Desc(json& out_json);
 
+public: /* =========================== Animation ============================== */
+	void		Play_Animation();
+	// 애니메이션 값
+	std::vector<UIKEYFRAME>* m_vecAnimation[KEYTYPE_END];
+	KEYTYPE				m_eKeyframe = KEYTYPE_NORMAL;
+	_int				m_iTextureNum[KEYTYPE_END];
+
+	void				Set_AnimPlay(_bool bPlay) { m_bPlayAnim = bPlay; }
+	_bool				Get_AnimPlay() { return m_bPlayAnim; }
+	_bool				m_bPlayAnim = false;
+
+	void				Set_CurrTime(_float fCurrTime) { m_fCurrTime = fCurrTime; }
+	_float				Get_CurrTime() { return m_fCurrTime; }
+	_float				m_fCurrTime = 0.f;
+
+	void				Set_Repetition(_bool bRepetition) { m_bRepetition = bRepetition; }
+	_bool				Get_Repetition() { return m_bRepetition; }
+	_bool				m_bRepetition = false;
+	// dt 값
+	_float fFrameTimeDelta, fCurFrameTimeDelta;
+
+	// 크기
+	_float fSizeX_Delta, fSizeY_Delta;
+
+	// 회전
+	_float fRotX_Delta, fRotY_Delta, fRotZ_Delta;
+
+	// 이동
+	_float fPosX_Delta, fPosY_Delta;
+
 protected: /* ========================= Component =========================== */
 	CShader*			m_pShaderCom = { nullptr };
 	//CTexture*			m_pTextureCom;
@@ -217,13 +281,13 @@ protected: /* ============================= UI =============================== *
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f;
+	UI_KIND				m_eKind = NORMAL;
 
 protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;
 	_uint				m_iButtonState = {};
 
 public:
-	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void		 Free() override;
 
 };

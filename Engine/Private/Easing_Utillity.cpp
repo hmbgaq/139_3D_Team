@@ -131,6 +131,136 @@ _vector Engine::Easing::LerpToType(_vector vStartPoint, _vector vTargetPoint, _f
 	return Linear(vStartPoint, vTargetPoint, fPassedTime, fTotalTime);
 }
 
+_float ENGINE_DLL Engine::Easing::LerpToType(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime, EASING_TYPE eType)
+{
+	switch (eType)
+	{
+	case EASING_TYPE::LINEAR:
+		return Linear(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::QUAD_IN:
+		return QuadIn_Float(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::QUAD_OUT:
+		return QuadInOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::QUAD_INOUT:
+		return QuadInOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::CUBIC_IN:
+		return CubicIn(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::CUBIC_OUT:
+		return CubicOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::CUBIC_INOUT:
+		return CubicInOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::QUART_IN:
+		return QuartIn(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::QUART_OUT:
+		return QuartOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::QUART_INOUT:
+		return QuartInOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::QUINT_IN:
+		return QuintIn(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::QUINT_OUT:
+		return QuintOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::QUINT_INOUT:
+		return QuintInOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::SINE_IN:
+		return SineIn(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::SINE_OUT:
+		return SineOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::SINE_INOUT:
+		return SineInOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::EXPO_IN:
+		return ExpoIn(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::EXPO_OUT:
+		return ExpoOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::EXPO_INOUT:
+		return ExpoInOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::CIRC_IN:
+		return CircIn(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::CIRC_OUT:
+		return CircOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::CIRC_INOUT:
+		return CircInOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::ELASTIC_IN:
+		return ElasticIn(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::ELASTIC_OUT:
+		return ElasticOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::ELASTIC_INOUT:
+		return ElasticInOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::BOUNCE_IN:
+		return BounceIn(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+	case EASING_TYPE::BOUNCE_OUT:
+		return BounceOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		break;
+
+		//case EASING_TYPE::OUT_BACK:
+		//   return OutBack(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		//   break;
+
+		//case EASING_TYPE::INOUT_BACK:
+		//   return InOutBack(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+		//   break;
+
+	case EASING_TYPE::EASING_TYPE_END:
+		break;
+
+	default:
+		break;
+	}
+
+	return Linear(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+}
+
 
 _vector Engine::Easing::Linear(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
@@ -145,14 +275,14 @@ _float Engine::Easing::Linear(_float fStartPoint, _float fTargetPoint, _float fP
 _vector Engine::Easing::QuadIn(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime;
-	return _vector((vTargetPoint - vStartPoint) * fPassedTime*fPassedTime + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) * fPassedTime * fPassedTime + vStartPoint);
 }
 
 _vector Engine::Easing::QuadIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime;
-	_vector	vStartPoint(XMVectorSet(fStartPoint, fStartPoint, fStartPoint, fStartPoint));
-	_vector	vTargetPoint(XMVectorSet(fTargetPoint, fTargetPoint, fTargetPoint, fTargetPoint));
+	_vector   vStartPoint(XMVectorSet(fStartPoint, fStartPoint, fStartPoint, fStartPoint));
+	_vector   vTargetPoint(XMVectorSet(fTargetPoint, fTargetPoint, fTargetPoint, fTargetPoint));
 
 	return QuadIn(vStartPoint, vTargetPoint, fPassedTime, fTotalTime);
 }
@@ -166,7 +296,7 @@ _float Engine::Easing::QuadIn_Float(_float fStartPoint, _float fTargetPoint, _fl
 _vector Engine::Easing::QuadOut(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime;
-	return _vector(-(vTargetPoint - vStartPoint) * fPassedTime*(fPassedTime - 2.f) + vStartPoint);
+	return _vector(-(vTargetPoint - vStartPoint) * fPassedTime * (fPassedTime - 2.f) + vStartPoint);
 }
 
 _float Engine::Easing::QuadOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -179,10 +309,10 @@ _vector Engine::Easing::QuadInOut(_vector vStartPoint, _vector vTargetPoint, _fl
 {
 	fPassedTime /= fTotalTime / 2.f;
 	if (fPassedTime < 1.f)
-		return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime*fPassedTime + vStartPoint);
+		return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime * fPassedTime + vStartPoint);
 
 	fPassedTime--;
-	return _vector(-(vTargetPoint - vStartPoint) / 2.f * (fPassedTime*(fPassedTime - 2.f) - 1.f) + vStartPoint);
+	return _vector(-(vTargetPoint - vStartPoint) / 2.f * (fPassedTime * (fPassedTime - 2.f) - 1.f) + vStartPoint);
 }
 
 _float Engine::Easing::QuadInOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -198,7 +328,7 @@ _float Engine::Easing::QuadInOut(_float fStartPoint, _float fTargetPoint, _float
 _vector Engine::Easing::CubicIn(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime;
-	return _vector((vTargetPoint - vStartPoint) * fPassedTime*fPassedTime*fPassedTime + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) * fPassedTime * fPassedTime * fPassedTime + vStartPoint);
 }
 
 _float Engine::Easing::CubicIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -211,7 +341,7 @@ _vector Engine::Easing::CubicOut(_vector vStartPoint, _vector vTargetPoint, _flo
 {
 	fPassedTime /= fTotalTime;
 	fPassedTime--;
-	return _vector((vTargetPoint - vStartPoint) * (fPassedTime*fPassedTime*fPassedTime + 1.f) + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) * (fPassedTime * fPassedTime * fPassedTime + 1.f) + vStartPoint);
 }
 
 _float Engine::Easing::CubicOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -224,9 +354,9 @@ _float Engine::Easing::CubicOut(_float fStartPoint, _float fTargetPoint, _float 
 _vector Engine::Easing::CubicInOut(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime / 2.f;
-	if (fPassedTime < 1.f) return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime*fPassedTime*fPassedTime + vStartPoint);
+	if (fPassedTime < 1.f) return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime * fPassedTime * fPassedTime + vStartPoint);
 	fPassedTime -= 2.f;
-	return _vector((vTargetPoint - vStartPoint) / 2.f * (fPassedTime*fPassedTime*fPassedTime + 2.f) + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) / 2.f * (fPassedTime * fPassedTime * fPassedTime + 2.f) + vStartPoint);
 }
 
 _float Engine::Easing::CubicInOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -240,7 +370,7 @@ _float Engine::Easing::CubicInOut(_float fStartPoint, _float fTargetPoint, _floa
 _vector Engine::Easing::QuartIn(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime;
-	return _vector((vTargetPoint - vStartPoint) * fPassedTime*fPassedTime*fPassedTime*fPassedTime + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) * fPassedTime * fPassedTime * fPassedTime * fPassedTime + vStartPoint);
 }
 
 _float Engine::Easing::QuartIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -253,7 +383,7 @@ _vector Engine::Easing::QuartOut(_vector vStartPoint, _vector vTargetPoint, _flo
 {
 	fPassedTime /= fTotalTime;
 	fPassedTime--;
-	return _vector(-(vTargetPoint - vStartPoint) * (fPassedTime*fPassedTime*fPassedTime*fPassedTime - 1.f) + vStartPoint);
+	return _vector(-(vTargetPoint - vStartPoint) * (fPassedTime * fPassedTime * fPassedTime * fPassedTime - 1.f) + vStartPoint);
 }
 
 _float Engine::Easing::QuartOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -266,9 +396,9 @@ _float Engine::Easing::QuartOut(_float fStartPoint, _float fTargetPoint, _float 
 _vector Engine::Easing::QuartInOut(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime / 2.f;
-	if (fPassedTime < 1.f) return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime*fPassedTime*fPassedTime*fPassedTime + vStartPoint);
+	if (fPassedTime < 1.f) return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime * fPassedTime * fPassedTime * fPassedTime + vStartPoint);
 	fPassedTime -= 2.f;
-	return _vector(-(vTargetPoint - vStartPoint) / 2.f * (fPassedTime*fPassedTime*fPassedTime*fPassedTime - 2.f) + vStartPoint);
+	return _vector(-(vTargetPoint - vStartPoint) / 2.f * (fPassedTime * fPassedTime * fPassedTime * fPassedTime - 2.f) + vStartPoint);
 }
 
 _float Engine::Easing::QuartInOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -282,7 +412,7 @@ _float Engine::Easing::QuartInOut(_float fStartPoint, _float fTargetPoint, _floa
 _vector Engine::Easing::QuintIn(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime;
-	return _vector((vTargetPoint - vStartPoint) * fPassedTime*fPassedTime*fPassedTime*fPassedTime*fPassedTime + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) * fPassedTime * fPassedTime * fPassedTime * fPassedTime * fPassedTime + vStartPoint);
 }
 
 _float Engine::Easing::QuintIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -295,7 +425,7 @@ _vector Engine::Easing::QuintOut(_vector vStartPoint, _vector vTargetPoint, _flo
 {
 	fPassedTime /= fTotalTime;
 	fPassedTime--;
-	return _vector((vTargetPoint - vStartPoint) * (fPassedTime*fPassedTime*fPassedTime*fPassedTime*fPassedTime + 1.f) + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) * (fPassedTime * fPassedTime * fPassedTime * fPassedTime * fPassedTime + 1.f) + vStartPoint);
 }
 
 _float Engine::Easing::QuintOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -308,9 +438,9 @@ _float Engine::Easing::QuintOut(_float fStartPoint, _float fTargetPoint, _float 
 _vector Engine::Easing::QuintInOut(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime / 2.f;
-	if (fPassedTime < 1.f) return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime*fPassedTime*fPassedTime*fPassedTime*fPassedTime + vStartPoint);
+	if (fPassedTime < 1.f) return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime * fPassedTime * fPassedTime * fPassedTime * fPassedTime + vStartPoint);
 	fPassedTime -= 2.f;
-	return _vector((vTargetPoint - vStartPoint) / 2.f * (fPassedTime*fPassedTime*fPassedTime*fPassedTime*fPassedTime + 2.f) + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) / 2.f * (fPassedTime * fPassedTime * fPassedTime * fPassedTime * fPassedTime + 2.f) + vStartPoint);
 }
 
 _float Engine::Easing::QuintInOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -343,7 +473,7 @@ _float Engine::Easing::SineOut(_float fStartPoint, _float fTargetPoint, _float f
 
 _vector Engine::Easing::SineInOut(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
-	return _vector(-(vTargetPoint - vStartPoint) / 2.f * (cosf(PI*fPassedTime / fTotalTime) - 1.f) + vStartPoint);
+	return _vector(-(vTargetPoint - vStartPoint) / 2.f * (cosf(PI * fPassedTime / fTotalTime) - 1.f) + vStartPoint);
 }
 
 _float Engine::Easing::SineInOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -541,7 +671,7 @@ _vector Engine::Easing::InOutBack(_vector vStartPoint, _vector vTargetPoint, _fl
 	return x < 0.5f
 		? (vTargetPoint - vStartPoint) * ((pow(2.f * x, 2.f) * ((c2 + 1.f) * 2.f * x - c2)) / 2.f) + vStartPoint
 		: (vTargetPoint - vStartPoint) * ((pow(2.f * x - 2.f, 2.f) * ((c2 + 1.f) * (x * 2.f - 2.f) + c2) + 2.f) / 2.f) + vStartPoint;
-	
+
 }
 
 

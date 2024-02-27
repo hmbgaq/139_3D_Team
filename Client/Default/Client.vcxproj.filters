@@ -304,6 +304,9 @@
     <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpBar\HpFrame">
       <UniqueIdentifier>{dd90327a-0190-4771-96f6-0f97d5f047fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\03. Tutorial">
+      <UniqueIdentifier>{750574f2-b386-48be-8045-c110f550205a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -587,6 +590,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_TextBox.h">
+      <Filter>02.GameObjects\UI\02. System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_TutorialBox.h">
+      <Filter>02.GameObjects\UI\02. System\03. Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Reference\Public\AntTweakBar.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\jAppSettings.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Text.h">
+      <Filter>02.GameObjects\UI\02. System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1047,6 +1065,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Left_Interface.cpp">
       <Filter>02.GameObjects\UI\00. Player\Left_Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_TextBox.cpp">
+      <Filter>02.GameObjects\UI\02. System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_TutorialBox.cpp">
+      <Filter>02.GameObjects\UI\02. System\03. Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\jAppSettings.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Text.cpp">
+      <Filter>02.GameObjects\UI\02. System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

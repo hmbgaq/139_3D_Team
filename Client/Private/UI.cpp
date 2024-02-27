@@ -75,6 +75,7 @@ void CUI::Tick(_float fTimeDelta)
 		break;
 	}
 
+	Play_Animation(); // 애니메이션 재생 m_eState를 통해 애니메이션 UI 타입일때만 탈 수 있게 해줘도 될듯하다.
 	Update_Child_Transform();
 	Check_RectPos();
 	Picking_UI();
@@ -534,8 +535,141 @@ json CUI::Save_Desc(json& out_json)
 	return out_json;
 }
 
+void CUI::Play_Animation()
+{
+	// 비었는지 검사
+	if (!m_vecAnimation[m_eKeyframe]->empty())
+	{
+		// 프레임 재생 여부
+		if (m_bPlayAnim)
+		{
+			// 현재 프레임을 시간(프레임)마다 증가시키기
+
+
+			// 현재 프레임이 최대 프레임에 도달한 경우
+			if (m_fCurrTime > (*m_vecAnimation[m_eKeyframe])[m_vecAnimation[m_eKeyframe]->size() - 1].fTime)
+			{
+				// 현재 프레임 초기화
+				//m_pAnimationTool->Get_currentTime() = 0.f;
+
+				// 반복 On/Off
+				if (m_bRepetition)
+				{
+					m_bPlayAnim = false;
+				}
+
+				// 시간 초기화
+				m_fCurrTime = 0.f;
+			}
+		}
+	}
+
+	if (!m_vecAnimation[m_eKeyframe]->empty()) // 비었는지 체크
+	{
+		//if (m_pAnimationTool->Get_FramePlaying()) // 재생 버튼을 눌렀을 경우만
+		//{
+		if (m_fCurrTime >= 0.f &&
+			m_fCurrTime <= m_vecAnimation[m_eKeyframe]->back().fTime)
+		{
+			//m_eAnimationInfo = m_vecAnimation[(int)m_iFrameCount].front();
+			_uint iFrameIndex = 0U;
+			for (_uint i = m_vecAnimation[m_eKeyframe]->size() - (_uint)1; i >= 0; i--)
+			{
+				if ((*m_vecAnimation[m_eKeyframe])[i].fTime <= m_fCurrTime)
+				{
+					iFrameIndex = i;
+					break;
+				}
+			}
+
+			// Constant
+			//m_fSizeX = (*m_vecAnimation[*m_eKeyframe])[iFrameIndex].vScale.x;
+			//m_fSizeY = (*m_vecAnimation[*m_eKeyframe])[iFrameIndex].vScale.y;
+
+			//m_fX = m_fSizeX * 0.5f; // 중점위치 
+			//m_fY = m_fSizeY * 0.5f;
+
+			//m_pTransformComp->Set_Pos({ (*m_vecAnimation[*m_eKeyframe])[iFrameIndex].vPos.x,
+			//							(*m_vecAnimation[*m_eKeyframe])[iFrameIndex].vPos.y,
+			//							0.f });	// 이미지 위치
+
+			//m_pTransformComp->Set_Scale({ m_fSizeX, m_fSizeY, 1.f });	// 이미지 크기
+
+
+			// Linear
+			if (iFrameIndex + 1U < m_vecAnimation[m_eKeyframe]->size())
+			{
+				// 키 프레임간 시간 변화율
+				fFrameTimeDelta = (*m_vecAnimation[m_eKeyframe])[iFrameIndex + 1U].fTime - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].fTime;
+				// 현재 키 프레임시간부터 현재 시간 변화율
+				fCurFrameTimeDelta = (m_fCurrTime - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].fTime);
+
+				fSizeX_Delta = (*m_vecAnimation[m_eKeyframe])[iFrameIndex + 1U].vScale.x - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vScale.x;
+				fSizeX_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				fSizeY_Delta = (*m_vecAnimation[m_eKeyframe])[iFrameIndex + 1U].vScale.y - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vScale.y;
+				fSizeY_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+
+				fRotZ_Delta = (*m_vecAnimation[m_eKeyframe])[iFrameIndex + 1U].fRot - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].fRot;
+				fRotZ_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+
+				fPosX_Delta = (*m_vecAnimation[m_eKeyframe])[iFrameIndex + 1U].vPos.x - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vPos.x;
+				fPosX_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				fPosY_Delta = (*m_vecAnimation[m_eKeyframe])[iFrameIndex + 1U].vPos.y - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vPos.y;
+				fPosY_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+
+				m_pTransformCom->Set_Position({ (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vPos.x + fPosX_Delta,
+											(*m_vecAnimation[m_eKeyframe])[iFrameIndex].vPos.y + fPosY_Delta,
+											0.f });	// 이미지 위치
+
+				m_pTransformCom->Set_Scaling((*m_vecAnimation[m_eKeyframe])[iFrameIndex].vScale.x + fSizeX_Delta, 	// 이미지 크기
+											  (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vScale.y + fSizeY_Delta,
+											  1.f);
+
+				m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, (*m_vecAnimation[m_eKeyframe])[iFrameIndex].fRot + fRotZ_Delta);// 이미지 회전
+
+				// 현재 키타입
+				switch (m_eKeyframe)
+				{
+					case KEYTYPE::KEYTYPE_NORMAL:
+					{
+						m_iTextureNum[KEYTYPE_NORMAL] = (*m_vecAnimation[m_eKeyframe])[iFrameIndex].iTexureframe;
+						break;
+					}
+				}
+
+			}
+			else
+			{
+				m_pTransformCom->Set_Scaling((*m_vecAnimation[m_eKeyframe])[iFrameIndex].vScale.x, 	// 이미지 크기
+											 (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vScale.y,
+											  1.f );
+
+				m_pTransformCom->Set_Position({ (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vPos.x,
+												(*m_vecAnimation[m_eKeyframe])[iFrameIndex].vPos.y,
+												0.f });	// 이미지 위치
+
+				// 현재 키타입
+				switch (m_eKeyframe)
+				{
+					case KEYTYPE::KEYTYPE_NORMAL:
+					{
+						m_iTextureNum[KEYTYPE_NORMAL] = (*m_vecAnimation[m_eKeyframe])[iFrameIndex].iTexureframe;
+						break;
+					}
+				}
+
+			}
+
+		}
+		//}
+
+	}
+}
+
 void CUI::Free()
 {
+	__super::Free();
+
 	if (m_pVIBufferCom)
 		Safe_Release(m_pVIBufferCom);
 	if (m_pShaderCom)

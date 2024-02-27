@@ -112,6 +112,7 @@ public: /* For.PipeLine */
 
 public: /* For.Font_Manager */
 	HRESULT		Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
+	// 매개변수 : ->폰트테그, 내용, 위치, 색상, 크기, 내용이 나올 원점(0~1 : UV좌표와 비슷함), 회전<-
 	HRESULT		Render_Font(const wstring& strFontTag, const wstring& strText, const _float2 & vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f ,1.f), _float fScale = 1.f, _float2 vOrigin = _float2(0.f, 0.f), _float fRotation = 0.f);
 
 public: /* For.Target_Manager */

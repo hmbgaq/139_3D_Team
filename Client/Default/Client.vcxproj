@@ -110,12 +110,13 @@
       <AdditionalIncludeDirectories>../../Reference/Public/;../Public/;../Default/;../../Reference/Imgui/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../Reference/Librarys/;../../Reference/Imgui/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;DirectXTKd.lib;imguizmod.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;DirectXTKd.lib;imguizmod.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderType>Effect</ShaderType>
@@ -191,6 +192,7 @@
     <ClInclude Include="..\..\Reference\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\..\Reference\Imgui\ImZoomSlider.h" />
+    <ClInclude Include="..\..\Reference\Public\AntTweakBar.h" />
     <ClInclude Include="..\Public\Actor.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
@@ -216,6 +218,7 @@
     <ClInclude Include="..\public\Imgui_Window.h" />
     <ClInclude Include="..\Public\Include_Imgui_Windows.h" />
     <ClInclude Include="..\Public\Interact_Chain.h" />
+    <ClInclude Include="..\Public\jAppSettings.h" />
     <ClInclude Include="..\public\LandObject.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Lava.h" />
@@ -262,6 +265,9 @@
     <ClInclude Include="..\Public\UI_Player_Skill_Frame.h" />
     <ClInclude Include="..\Public\UI_Player_Skill_Guige.h" />
     <ClInclude Include="..\Public\UI_Player_Skill_Icon.h" />
+    <ClInclude Include="..\Public\UI_Text.h" />
+    <ClInclude Include="..\Public\UI_TextBox.h" />
+    <ClInclude Include="..\Public\UI_TutorialBox.h" />
     <ClInclude Include="..\Public\Weapon_Player.h" />
     <ClInclude Include="..\Public\Window_AnimTool.h" />
     <ClInclude Include="..\Public\Window_EffectTool.h" />
@@ -304,6 +310,7 @@
     <ClCompile Include="..\Private\Imgui_Manager.cpp" />
     <ClCompile Include="..\Private\Imgui_Window.cpp" />
     <ClCompile Include="..\Private\Interact_Chain.cpp" />
+    <ClCompile Include="..\Private\jAppSettings.cpp" />
     <ClCompile Include="..\private\LandObject.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Lava.cpp" />
@@ -348,6 +355,9 @@
     <ClCompile Include="..\Private\UI_Player_Skill_Frame.cpp" />
     <ClCompile Include="..\Private\UI_Player_Skill_Guige.cpp" />
     <ClCompile Include="..\Private\UI_Player_Skill_Icon.cpp" />
+    <ClCompile Include="..\Private\UI_Text.cpp" />
+    <ClCompile Include="..\Private\UI_TextBox.cpp" />
+    <ClCompile Include="..\Private\UI_TutorialBox.cpp" />
     <ClCompile Include="..\Private\Weapon_Player.cpp" />
     <ClCompile Include="..\Private\Window_AnimTool.cpp" />
     <ClCompile Include="..\Private\Window_EffectTool.cpp" />
