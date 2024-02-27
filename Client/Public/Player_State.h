@@ -27,6 +27,8 @@ public:		//상태 그룹 별 업데이트
 	CState<CPlayer>* Run_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Dodge_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Roll_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Hit_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
 
 
 public:		//개별 동작 상태 집합

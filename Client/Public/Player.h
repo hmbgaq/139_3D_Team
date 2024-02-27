@@ -21,6 +21,14 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	_bool Is_Rotate_In_CameraDir() {
+		return m_bRotate_In_CameraDir;
+	}
+	void Set_Rotate_In_CameraDir(_bool _bRotate_In_CameraDir) {
+		m_bRotate_In_CameraDir = _bRotate_In_CameraDir;
+	}
+
 
 private:
 	HRESULT Ready_Components();
@@ -28,6 +36,7 @@ private:
 
 private:
 	CActor<CPlayer>* m_pActor = { nullptr };
+	_bool	m_bRotate_In_CameraDir = { false };
 
 public:
 	/* 원형객체를 생성한다. */

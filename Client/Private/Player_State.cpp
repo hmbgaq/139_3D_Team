@@ -59,7 +59,15 @@
 #include "Player_TeleportPunch_R03_Alt.h"
 
 
-
+#include "Player_HitNormal_B.h"
+#include "Player_HitNormal_B_Gatling.h"
+#include "Player_HitNormal_F.h"
+#include "Player_HitNormal_F_02_NEW.h"
+#include "Player_HitNormal_F_Gatling.h"
+#include "Player_HitNormal_L.h"
+#include "Player_HitNormal_L_Gatling.h"
+#include "Player_HitNormal_R.h"
+#include "Player_HitNormal_R_Gatling.h"
 
 
 
@@ -143,6 +151,16 @@ CState<CPlayer>* CPlayer_State::Roll_State(CPlayer* pActor, _float fTimeDelta, _
 	//if (pState)	return pState;
 
 
+	if (pActor->Is_Animation_End())
+	{
+		return new CPlayer_IdleLoop();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Hit_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
 	if (pActor->Is_Animation_End())
 	{
 		return new CPlayer_IdleLoop();

@@ -277,7 +277,7 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 {
 	m_eAnimState = _eAnimState;
 
-	//if (_iAnimationIndex != m_iCurrentAnimIndex)
+	if (_iAnimationIndex != m_iCurrentAnimIndex)
 	{
 		Reset_Animation(_iAnimationIndex);
 
@@ -288,7 +288,15 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 		else
 		{
 			m_iCurrentAnimIndex = _iAnimationIndex;
+			_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+			m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 		}
+	}
+	else 
+	{
+		m_iCurrentAnimIndex = _iAnimationIndex;
+		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 	}
 }
 
@@ -296,7 +304,8 @@ void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitio
 {
 	if (_iAnimationIndex == m_iCurrentAnimIndex)
 	{
-		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition((_float)iTargetKeyFrameIndex);
+		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 	}
 
 	CAnimation* currentAnimation = m_Animations[m_iCurrentAnimIndex];

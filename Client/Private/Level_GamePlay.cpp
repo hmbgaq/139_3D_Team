@@ -153,15 +153,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* pArg)
 {
-	CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
+	//CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
 
-	CMonster::MONSTER_DESC Desc = {};
-	Desc.fRotationPerSec = GameObjectDesc.fRotationPerSec;
-	Desc.fSpeedPerSec = GameObjectDesc.fSpeedPerSec;
-	Desc.bPreview = false;
-	Desc.WorldMatrix = XMMatrixIdentity();
+	//CMonster::MONSTER_DESC Desc = {};
+	//Desc.fRotationPerSec = GameObjectDesc.fRotationPerSec;
+	//Desc.fSpeedPerSec = GameObjectDesc.fSpeedPerSec;
+	//Desc.bPreview = false;
+	//Desc.WorldMatrix = XMMatrixIdentity();
 
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), &Desc));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), &Desc));
+
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Assassin")));
+
 
 	return S_OK;
 }
@@ -284,7 +287,8 @@ HRESULT CLevel_GamePlay::Ready_LandObjects()
 	LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
 
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
-	//FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
+	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
+
 	FAILED_CHECK(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc));
 
 	return S_OK;
