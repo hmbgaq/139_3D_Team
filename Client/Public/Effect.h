@@ -36,6 +36,7 @@ public:
 
 		// ¡÷¿Œ
 		CGameObject* pOwner			= { nullptr };
+		wstring		 strOwnerTag	= { TEXT("") };
 		_bool		 bParentPivot	= { FALSE };
 		_float4x4	 matPivot		= {};		/* XMStoreFloat4x4(&m_matPivot, XMMatrixIdentity()) */
 		_float4x4	 matOffset		= {};
@@ -63,14 +64,23 @@ public:
 
 
 public:
+	virtual _bool Write_Json(json& Out_Json)		override;
+	virtual void Load_FromJson(const json& In_Json)	override;
+
+public:
 	void	ReSet_Effect();
 	void	End_Effect();
 
 public:
 	map<const wstring, class CGameObject*>* Get_PartObjects() { return &m_PartObjects; }
+	CGameObject* Get_FirstPartObject() { return m_PartObjects.begin()->second; }
+
 	CGameObject*	Find_PartObject(const wstring& strPartTag);
 	HRESULT			Add_PartObject(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg);
 
+
+	void			Set_Owner(CGameObject* pOwner);
+	CGameObject*	Get_Owner() {return m_tEffectDesc.pOwner; }
 
 public:
 	EFFECT_DESC* Get_Desc() { return &m_tEffectDesc; }
@@ -78,11 +88,11 @@ public:
 
 private:
 	HRESULT Ready_Components();
-	HRESULT Ready_PartObjects();
+	HRESULT Ready_PartObjects(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg);
 
 private:
-	EFFECT_DESC	m_tEffectDesc = {};
-	_float4x4	m_matCombined = {};
+	EFFECT_DESC		m_tEffectDesc = {};
+	_float4x4		m_matCombined = {};
 	map<const wstring, class CGameObject*>		m_PartObjects;
 
 	_float m_fEasingTimeAcc = { 0.f };

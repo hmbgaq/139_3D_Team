@@ -50,6 +50,7 @@ public:
 
 	_float4x4*				Calc_OffsetMatrice(_uint iAnimationIndex, _float fTrackPosition, _float4x4* pMatrix);
 	_float4x4*				Get_OffsetMatrices();
+	_float3&				Calculate_AABB_Extents_From_Model();
 	
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
 
@@ -72,8 +73,8 @@ public:
 
 public:
 	HRESULT					Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices = nullptr);
-	
 	HRESULT					Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
+	HRESULT					Bind_ShaderCascade(CShader* pShader);
 
 public:
 	void					Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _bool _bIsTransition = true, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
@@ -87,6 +88,7 @@ public:
 	_bool					Is_Inputable_Front(_uint _iIndexFront);
 
 	void					Write_Names(const string& strModelFilePath);
+
 public:
 	vector<CAnimation*>*	 Get_Animations();
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
@@ -120,6 +122,11 @@ private:
 	_bool					m_bIsAnimEnd			= { false };
 	ANIM_STATE				m_eAnimState			= { CModel::ANIM_STATE::ANIM_STATE_END };
 	_bool					m_bUseAnimationPos		= { false };
+
+	/* Cascade */
+	vector<_matrix>			m_matCurrTransforms;
+	vector<KEYFRAME>		m_CurrKeyFrameDatas;
+	vector<KEYFRAME>		m_PrevKeyFrameDatas;
 
 public:
 	typedef vector<CBone*>	BONES;

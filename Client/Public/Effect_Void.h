@@ -10,27 +10,23 @@ BEGIN(Client)
 class CEffect_Void abstract : public CAlphaObject
 {
 public:
-	enum TYPE_EFFECT { PARTICLE, RECT, INSTANCE, MESH, TRAIL, PARTICLE_TEST, TYPE_EFFECT_END };
+	enum TYPE_EFFECT { PARTICLE, RECT, INSTANCE, MESH, TRAIL, TYPE_EFFECT_END };
 	enum TEXTURE	 { TEXTURE_DIFFUSE, TEXTURE_MASK, TEXTURE_NOISE, TEXTURE_SPRITE, TEXTURE_END };
+
 
 	typedef struct tagEffectVoidDesc : public CGameObject::GAMEOBJECT_DESC
 	{
+		wstring		strProtoTag = { TEXT("") };
 		wstring		strPartTag = { TEXT("") };
 
 		// Texture
 		wstring		strTextureTag[TEXTURE_END];
-		wstring		strTexturePath[TEXTURE_END];
 		_int		iTextureIndex[TEXTURE_END] = { 0 };
 
 		// Render Group
 		_int		iRenderGroup = { 7 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 현재 작성기준 CRENDERER::RENDERGROUP::RENDER_END가 8임
 
-		// Instance
-		_uint		iCurInstanceCnt	 = { 1 };
-		_uint		iMaxInstanceCnt	 = { 1000 };
-
 		// Shader
-		wstring		strShaderTag	 = { TEXT("") };
 		_uint		iShaderPassIndex = { 0 };
 		// Shader Variables
 		_bool		bBillBoard		= { TRUE };
@@ -62,10 +58,8 @@ public:
 		// Times
 		EASING_TYPE		eType_Easing = { LINEAR };
 
-
 		// 주인
-		CGameObject* pOwner			 = { nullptr };
-		_bool		 bParentPivot	 = { FALSE };
+		_bool		 bParentPivot	 = { TRUE };
 		_float4x4	 matPivot		 = {}; /* XMStoreFloat4x4(&m_matPivot, XMMatrixIdentity()) */
 		_float4x4	 matOffset		 = {};
 
@@ -78,11 +72,9 @@ public:
 		_float3	vRotation_End	= _float3(0.f, 0.f, 0.f);
 		_bool	bRotation_Lerp	= { TRUE };
 
-		_bool	bScaleSameRate		= { TRUE }; // 정비율
-		_bool	bScaleChangeRandom	= { FALSE };
-		_float3	vScaling_Start		= _float3(1.f, 1.f, 1.f);
-		_float3	vScaling_End		= _float3(1.f, 1.f, 1.f);
-		_bool	bScaling_Lerp		= { TRUE };
+		_float3	vScaling_Start	= _float3(1.f, 1.f, 1.f);
+		_float3	vScaling_End	= _float3(1.f, 1.f, 1.f);
+		_bool	bScaling_Lerp	= { TRUE };
 
 		_float3	vVelocity_Start = _float3(0.f, 0.f, 0.f);
 		_float3	vVelocity_End	= _float3(0.f, 0.f, 0.f);
@@ -112,9 +104,9 @@ public:
 		_float2 vTextureSize	 = { 1792.f, 1792.f };  // fSpriteSizeX, fSpriteSizeY
 		_float2 vTileSize		 = { 256.f, 256.f };	// fAnimationSizeX, fAnimationSizeY
 
-		_int2	vUV_CurTileIndex = { 0, 0 }; // iCurrentHor, iCurrentVer
-		_int2	vUV_MinTileCount = { 0, 0 }; // iMinHor, iMinVer
-		_int2	vUV_MaxTileCount = { 7, 7 }; // iMaxHor, iMaxVer
+		_float2	vUV_CurTileIndex = { 0, 0 }; // iCurrentHor, iCurrentVer
+		_float2	vUV_MinTileCount = { 0, 0 }; // iMinHor, iMinVer
+		_float2	vUV_MaxTileCount = { 7, 7 }; // iMaxHor, iMaxVer
 
 	}UVSPRITE_DESC;
 
@@ -151,13 +143,20 @@ public:
 
 
 public:
+	virtual _bool Write_Json(json& Out_Json)		override;
+	virtual void Load_FromJson(const json& In_Json)	override;
+
+
+public:
 	virtual void	ReSet_Effect();
 	virtual void	End_Effect();
 
 
 public:
-	TYPE_EFFECT Get_EffectType() { return m_eEffectType; }
-	void		Set_EffectType(TYPE_EFFECT eType) { m_eEffectType = eType; }
+	virtual void	Set_Owner(CGameObject* pOwner) { m_pOwner = pOwner; }
+
+	TYPE_EFFECT Get_EffectType() { return m_eType_Effect; }
+	void		Set_EffectType(TYPE_EFFECT eType) { m_eType_Effect = eType; }
 
 	_float		Get_WaitingAcc() { return m_fWaitingAcc; }
 	void		Set_WaitingAcc(_float fTime) { m_fWaitingAcc = fTime; }
@@ -186,9 +185,9 @@ public:
 	void		Set_SequenceTime(_float fSequenceTime) { m_fSequenceTime = fSequenceTime; }
 
 protected:
-	TYPE_EFFECT	m_eEffectType	= { TYPE_EFFECT_END };
+	TYPE_EFFECT	m_eType_Effect = { TYPE_EFFECT_END };
 
-	_float		m_fWaitingAcc   = { 0.f };	/* 시작 딜레이 시간 누적 */
+	_float		m_fWaitingAcc    = { 0.f };	/* 시작 딜레이 시간 누적 */
 	_float		m_fTimeAcc	    = { 0.f };		/* 시간 누적 */
 	_float		m_fRemainAcc    = { 0.f };
 	_float		m_fSequenceAcc  = { 0.f };	/* 시퀀스 시간 누적 */
@@ -201,7 +200,8 @@ protected:
 	_float		m_fSequenceTime	 = { 0.f };	/* 총 시퀀스 시간(fWaitingTime + fLifeTime + fRemainTime) */
 
 
-	_float4x4	m_matCombined = {};
+	/* 주인 */
+	CGameObject* m_pOwner = { nullptr };
 
 public:
 	virtual CGameObject* Clone(void* pArg)	override = 0;

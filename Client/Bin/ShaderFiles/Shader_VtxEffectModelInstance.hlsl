@@ -1,6 +1,7 @@
 #include "Shader_Defines.hlsli"
 
 matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float       g_TimeDelta;
 
 texture2D	g_DiffuseTexture;
 texture2D	g_MaskTexture;
@@ -9,12 +10,9 @@ texture2D	g_NoiseTexture;
 texture2D	g_NormalTexture;
 texture2D   g_SpecularTexture;
 
-texture2D	g_DissolveTexture;
-texture2D	g_DissolveDiffTexture;
-
 texture2D	g_DepthTexture;
 
-vector      g_vCamPosition;
+
 vector      g_vCamDirection;
 
 vector      g_vPlayerPosition;
@@ -26,6 +24,23 @@ float2      g_UVScale;
 float		g_fDegree;
 
 float		g_DiscardValue;
+
+
+/* Dissolve  */
+texture2D	g_DissolveTexture;
+texture2D	g_DissolveDiffTexture;
+float		g_fDissolveWeight;
+
+
+/* Bloom */
+float4      g_BloomColor = { 0.f, 0.f, 0.f, 0.f };
+float3      g_vBloomPower;
+
+
+/* RimLight */
+float4		g_vRimColor = { 0.f, 0.f, 0.f, 0.f };
+vector      g_vCamPosition;
+
 
 float IsIn_Range(float fMin, float fMax, float fValue)
 {

@@ -65,7 +65,8 @@ namespace Client
 		ONLY_VIEW,
 		CHECK_DIR,
 		INTERIOR,
-
+		PICKING_INSTANCE,
+		PICKING_MESH,
 		LAYER_END
 	};
 

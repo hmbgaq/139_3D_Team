@@ -184,7 +184,7 @@ HRESULT CEffect_Instance::Ready_Components()
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strShaderTag,
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Effect_Model_Instance"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
@@ -195,7 +195,7 @@ HRESULT CEffect_Instance::Ready_Components()
 
 	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
 	Desc.pModel = m_pModelCom;
-	Desc.iNumInstance = m_tInstanceDesc.iCurInstanceCnt; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
+	Desc.iNumInstance = m_tInstanceDesc.iNumInstance; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
 	
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),

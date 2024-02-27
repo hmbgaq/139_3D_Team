@@ -275,7 +275,7 @@ _float Engine::Easing::Linear(_float fStartPoint, _float fTargetPoint, _float fP
 _vector Engine::Easing::QuadIn(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime;
-	return _vector((vTargetPoint - vStartPoint) * fPassedTime*fPassedTime + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) * fPassedTime * fPassedTime + vStartPoint);
 }
 
 _vector Engine::Easing::QuadIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)

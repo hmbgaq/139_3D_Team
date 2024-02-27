@@ -35,6 +35,14 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 	if (false == m_tEnvironmentDesc.bPreview)
 		m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
 
+
+	if(true == m_tEnvironmentDesc.bAnimModel)
+	{
+		m_pModelCom->Set_Animation(m_tEnvironmentDesc.iPlayAnimationIndex);
+	}
+
+	
+
 	return S_OK;
 }
 
@@ -44,16 +52,31 @@ void CEnvironment_Object::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Object::Tick(_float fTimeDelta)
 {
-	if (true == m_tEnvironmentDesc.bAnimModel && true == m_bPlay)
+	if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
 	{
-		m_pModelCom->Play_Animation(fTimeDelta, true);
+		m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
 	}
 }
 
 void CEnvironment_Object::Late_Tick(_float fTimeDelta)
 {
+	if (true == m_tEnvironmentDesc.bAnimModel)
+	{
+		_float3 vRootAnimPos = {};
+
+		//m_pModelCom->Play_Animation(fTimeDelta, true);
+		m_pModelCom->Play_Animation(fTimeDelta, &vRootAnimPos);
+
+		m_pTransformCom->Add_RootBone_Position(vRootAnimPos);
+	}
+
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 		return ;
+
+	if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
+	{
+		m_pGameInstance->Add_DebugRender(m_pPickingCollider);
+	}
 }
 
 HRESULT CEnvironment_Object::Render()
@@ -65,10 +88,15 @@ HRESULT CEnvironment_Object::Render()
 	
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		if(m_tEnvironmentDesc.bAnimModel == true)
+		{
+			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+		}
+
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
+		m_pShaderCom->Begin(0);
 
 		m_pModelCom->Render((_uint)i);
 	}
@@ -120,7 +148,7 @@ void CEnvironment_Object::Load_FromJson(const json& In_Json)
 	return __super::Load_FromJson(In_Json);
 }
 
-#ifdef DEBUG
+#ifdef _DEBUG
 
 _bool CEnvironment_Object::Picking(_float3* vPickedPos)
 {
@@ -135,6 +163,37 @@ _bool CEnvironment_Object::Picking(_float3* vPickedPos)
 	vector<class CMesh*> meshes = m_pModelCom->Get_Meshes();
 
 	return m_pGameInstance->Picking_Mesh(ray, vPickedPos, meshes);
+}
+
+_bool CEnvironment_Object::Picking_VerJSY(RAY* pRay, _float3* vPickedPos)
+{
+	_vector vOrigin = XMLoadFloat4(&pRay->vPosition);
+	_vector vDir = XMLoadFloat3(&pRay->vDirection);
+
+	_float fDist;
+
+	_bool bResult;
+
+	
+		CBounding_AABB* pBoundingAABB = dynamic_cast<CBounding_AABB*>(m_pPickingCollider->Get_Bounding());
+
+		if (pBoundingAABB == nullptr)
+		{
+			MSG_BOX("콜라이더 없대");
+			return false;
+		}
+
+		const BoundingBox* pBoundingBox = pBoundingAABB->Get_Bounding();
+
+		if (true == pBoundingBox->Intersects(vOrigin, vDir, fDist))
+		{
+			//_vector vLocalPoint = vOrigin + fDist * vDir;
+			*vPickedPos = vOrigin + fDist * vDir;
+
+			return true;
+		}
+	
+	return false;
 }
 
 #endif
@@ -156,6 +215,20 @@ HRESULT CEnvironment_Object::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
+	CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
+	
+	Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_MESH;
+	Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
+	Desc_AABB.vCenter = _float3(0.f, 0.f, 0.f);
+
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Desc_AABB)))
+	{
+		MSG_BOX("ㅈ댐");
+		return E_FAIL;
+	}
+
+//	m_pPickingCollider
+
 	return S_OK;
 }
 
@@ -167,7 +240,6 @@ HRESULT CEnvironment_Object::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
-
 	
 	return S_OK;
 }
