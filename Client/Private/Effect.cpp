@@ -215,10 +215,13 @@ void CEffect::Load_FromJson(const json& In_Json)
 	_float4x4 matPivot;
 	ZeroMemory(&matPivot, sizeof(_float4x4));
 	CJson_Utility::Load_JsonFloat4x4(In_Json["Effect"]["matPivot"], matPivot);
+	m_tEffectDesc.matPivot = matPivot;
+
 
 	_float4x4 matOffset;
 	ZeroMemory(&matOffset, sizeof(_float4x4));
 	CJson_Utility::Load_JsonFloat4x4(In_Json["Effect"]["matOffset"], matOffset);
+	m_tEffectDesc.matOffset = matOffset;
 
 
 	if (m_PartObjects.empty() && 0 < m_tEffectDesc.iPartSize)
@@ -257,9 +260,12 @@ void CEffect::Load_FromJson(const json& In_Json)
 		if (nullptr != Pair.second)
 		{
 			Pair.second->Load_FromJson(In_Json["Part"][iCount]);
+			dynamic_cast<CEffect_Void*>(Pair.second)->Set_Owner(this);
 			iCount += 1;
 		}
 	}
+
+	ReSet_Effect();
 }
 
 void CEffect::ReSet_Effect()
@@ -349,9 +355,7 @@ HRESULT CEffect::Ready_PartObjects(const wstring& strPrototypeTag, const wstring
 	if (nullptr == pPartObject)
 		return E_FAIL;
 
-	dynamic_cast<CEffect_Void*>(pPartObject)->Set_Owner(this);
 	m_PartObjects.emplace(strPartTag, pPartObject);
-
 
 	return S_OK;
 }

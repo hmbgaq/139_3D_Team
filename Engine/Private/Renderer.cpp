@@ -437,7 +437,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Render_SSR());
 
-	FAILED_CHECK(Render_Blend());
+	//FAILED_CHECK(Render_Blend());
 
 	FAILED_CHECK(Render_NonLight());
 

@@ -2111,16 +2111,18 @@ HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 
 HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 {
+	json In_Json;
+	string strLoadPath = strPath + "\\" + strFileName;
+	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
+
 	if (nullptr == m_pCurEffect)
 	{
 		Create_EffectObject(TEXT("Layer_Effect"));
 	}
 
-	json In_Json;
-	string strLoadPath = strPath + "\\" + strFileName;
-	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
-
 	m_pCurEffect->Load_FromJson(In_Json);
+	m_pCurEffectDesc = m_pCurEffect->Get_Desc();
+	m_pCurEffectDesc->bLoop = TRUE;
 
 	Update_CurParameters();
 

@@ -63,16 +63,13 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 
 #pragma region Effect_Test	
-	CEffect* pEffect = { nullptr };
+
 	if (m_pGameInstance->Key_Down(DIK_TAB))
 	{
-		pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Test_Effect.json");
+		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Test_Effect.json");
+		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_RIGHT))
-	{
-		pEffect->Get_Transform()->Go_Right(fTimeDelta);
-	}
 #pragma endregion
 
 
