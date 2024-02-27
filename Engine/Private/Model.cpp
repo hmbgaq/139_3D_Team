@@ -1,9 +1,10 @@
-#include "..\Public\Model.h"
+#include "Model.h"
 #include "Mesh.h"
 #include "Texture.h"
 #include "Bone.h"
 #include "Animation.h"
 #include "Channel.h"
+#include "Shader.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -112,6 +113,23 @@ _float4x4* CModel::Get_OffsetMatrices()
 	}
 
 	return BoneMatrices;
+}
+
+_float3& CModel::Calculate_AABB_Extents_From_Model()
+{
+	_float3 vMin = XMFLOAT3(FLT_MAX, FLT_MAX, FLT_MAX);
+	_float3 vMax = XMFLOAT3(FLT_MIN, FLT_MIN, FLT_MIN);
+
+	// 모델의 모든 메쉬에 대해 AABB 계산
+
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
+	{
+			m_Meshes[i]->Calculate_AABB_Extents(&vMin, &vMax);
+	}
+
+	_float3 vExtents = (vMin - vMax) * 0.5f;
+
+	return vExtents;
 }
 
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
@@ -271,6 +289,14 @@ HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantNa
 		return E_FAIL;
 
 	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Bind_ShaderResource(pShader, pConstantName);
+}
+
+HRESULT CModel::Bind_ShaderCascade(CShader* pShader)
+{
+	//if (FAILED(pShader->Bind_Matrices("g_BoneMatrices", m_matCurrTransforms.data(), (size_t)m_matCurrTransforms.size())))
+	//	return S_OK;
+
+	return S_OK;
 }
 
 void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)

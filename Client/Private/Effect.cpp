@@ -315,8 +315,8 @@ CGameObject* CEffect::Find_PartObject(const wstring& strPartTag)
 
 HRESULT CEffect::Add_PartObject(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg)
 {
-	if (nullptr != Find_PartObject(strPrototypeTag))
-		return E_FAIL;
+	//if (nullptr != Find_PartObject(strPrototypeTag))
+	//	return E_FAIL;
 
 	CGameObject* pPartObject = m_pGameInstance->Clone_Prototype(strPrototypeTag, pArg);
 	if (nullptr == pPartObject)
@@ -349,6 +349,7 @@ HRESULT CEffect::Ready_PartObjects(const wstring& strPrototypeTag, const wstring
 	if (nullptr == pPartObject)
 		return E_FAIL;
 
+	dynamic_cast<CEffect_Void*>(pPartObject)->Set_Owner(this);
 	m_PartObjects.emplace(strPartTag, pPartObject);
 
 

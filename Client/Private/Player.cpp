@@ -102,7 +102,6 @@ void CPlayer::Tick(_float fTimeDelta)
 		if (m_pGameInstance->Key_Pressing(DIK_UPARROW))
 		{
 			m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
-			pBody->SetUp_Animation(4);
 		}
 		//TODO 여기다가 절대로 상시 애니메이션 걸지 마세요 애니메이션툴안돌아갑니다 모든 몬스터든 뭐든 상시 애니메이션 걸면안됌 준비 다된놈만 애니메이션 걸어두셈 
 		//else

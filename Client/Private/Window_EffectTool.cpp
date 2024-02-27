@@ -1382,6 +1382,7 @@ void CWindow_EffectTool::Update_EffectList()
 					m_vTimes_Effect[0] = m_vTimes_Effect[1];
 
 				m_pCurEffectDesc->fWaitingTime = m_vTimes_Effect[0];
+
 				m_pCurEffectDesc->fLifeTime = m_vTimes_Effect[1];
 				m_pCurEffectDesc->fRemainTime = m_vTimes_Effect[2];
 			}
@@ -1643,8 +1644,6 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 
 		tParticleDesc.bPlay = { TRUE };
 
-		tParticleDesc.pOwner = m_pCurEffect;
-
 
 #pragma region 리스트 문자열 관련
 		wstring strName = TEXT("");
@@ -1690,6 +1689,7 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
 		m_pCurPartEffect->Set_EffectType(CEffect_Void::PARTICLE);
+		dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Set_Owner(m_pCurEffect);
 
 		m_iCurPartIndex = m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -1759,8 +1759,6 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 
 		tRectDesc.bPlay = { TRUE };
 
-		tRectDesc.pOwner = m_pCurEffect;
-
 
 #pragma region 리스트 문자열 관련
 		wstring strName = TEXT("");
@@ -1806,6 +1804,7 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
 		m_pCurPartEffect->Set_EffectType(CEffect_Void::RECT);
+		m_pCurPartEffect->Set_Owner(m_pCurEffect);
 
 		m_iCurPartIndex = m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -1867,8 +1866,6 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tMeshDesc.strModelTag = strModelTag;
 
 		tMeshDesc.bPlay = { TRUE };
-
-		tMeshDesc.pOwner = m_pCurEffect;
 
 
 #pragma region 리스트 문자열 관련

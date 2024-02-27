@@ -59,8 +59,7 @@ public:
 		EASING_TYPE		eType_Easing = { LINEAR };
 
 		// ¡÷¿Œ
-		CGameObject* pOwner			 = { nullptr };
-		_bool		 bParentPivot	 = { FALSE };
+		_bool		 bParentPivot	 = { TRUE };
 		_float4x4	 matPivot		 = {}; /* XMStoreFloat4x4(&m_matPivot, XMMatrixIdentity()) */
 		_float4x4	 matOffset		 = {};
 
@@ -154,6 +153,8 @@ public:
 
 
 public:
+	virtual void	Set_Owner(CGameObject* pOwner) { m_pOwner = pOwner; }
+
 	TYPE_EFFECT Get_EffectType() { return m_eType_Effect; }
 	void		Set_EffectType(TYPE_EFFECT eType) { m_eType_Effect = eType; }
 
@@ -199,7 +200,8 @@ protected:
 	_float		m_fSequenceTime	 = { 0.f };	/* √— Ω√ƒˆΩ∫ Ω√∞£(fWaitingTime + fLifeTime + fRemainTime) */
 
 
-	_float4x4	m_matCombined = {};
+	/* ¡÷¿Œ */
+	CGameObject* m_pOwner = { nullptr };
 
 public:
 	virtual CGameObject* Clone(void* pArg)	override = 0;

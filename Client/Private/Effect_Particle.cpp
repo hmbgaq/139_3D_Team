@@ -121,6 +121,15 @@ void CEffect_Particle::Late_Tick(_float fTimeDelta)
 	{
 		if (m_tParticleDesc.bRender)
 		{
+			if (nullptr != m_pOwner)
+			{
+				if (m_tParticleDesc.bParentPivot)
+				{			
+					m_tParticleDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+					XMStoreFloat4x4(&m_tParticleDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tParticleDesc.matPivot);
+				}
+			}
+			
 			Compute_CamDistance();
 
 			// CRenderer::RENDER_BLEND
@@ -182,6 +191,21 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 
 	Out_Json["strProtoTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strProtoTag);
 	Out_Json["strPartTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strPartTag);
+
+
+	//m_fWaitingAcc
+	//m_fTimeAcc 
+	//m_fRemainAcc
+	//m_fSequenceAcc 
+
+	//m_fLifeTimeRatio
+
+	//m_fWaitingTime
+	//m_fLifeTime
+	//m_fRemainTime
+	//m_fSequenceTime
+
+
 
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 	{
@@ -316,10 +340,13 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 	_float4x4 matPivot;
 	ZeroMemory(&matPivot, sizeof(_float4x4));
 	CJson_Utility::Load_JsonFloat4x4(In_Json["matPivot"], matPivot);
+	m_tParticleDesc.matPivot = matPivot;
+
 
 	_float4x4 matOffset;
 	ZeroMemory(&matOffset, sizeof(_float4x4));
 	CJson_Utility::Load_JsonFloat4x4(In_Json["matOffset"], matOffset);
+	m_tParticleDesc.matOffset = matOffset;
 
 
 	CJson_Utility::Load_Float3(In_Json["vPosition_Start"], m_tParticleDesc.vPosition_Start);
@@ -347,6 +374,7 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 	 m_tParticleDesc.bColor_Lerp = In_Json["bColor_Lerp"];
 
 }
+
 
 void* CEffect_Particle::Get_BufferDesc()
 {
@@ -479,8 +507,17 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	//if (FAILED(__super::Bind_ShaderResources()))
 	//	return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
+	if (m_tParticleDesc.bParentPivot)
+	{
+		if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tParticleDesc.matOffset)))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+			return E_FAIL;
+	}
+
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
 		return E_FAIL;
