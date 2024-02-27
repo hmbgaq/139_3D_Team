@@ -24,8 +24,14 @@ public:
 
 		wstring			strModelTag = TEXT("");
 
-		_uint			iNumInstance;
-		
+		_uint			iCurNumInstance = { 1 };
+
+		_float4			vBloomColor = { 1.f, 1.f, 1.f, 1.f };
+		_float3			vBloomPower = { 1.f, 1.f, 1.f };
+
+		_float4			vRimColor = { 1.f, 1.f, 1.f, 1.f };
+		_float			fRimPower = { 1.f };
+
 	}EFFECT_INSTANCE_DESC;
 
 
@@ -43,12 +49,13 @@ public:
 	virtual HRESULT				Render()							override;
 
 public:
+	virtual _bool Write_Json(json& Out_Json)		 override;
+	virtual void  Load_FromJson(const json& In_Json) override;
+
+public:
 	virtual void	ReSet_Effect()	override;
 	virtual void	End_Effect()	override;
 
-public:
-	virtual _bool Write_Json(json& Out_Json)		 override;
-	virtual void  Load_FromJson(const json& In_Json) override;
 
 /* For.Desc */
 public:

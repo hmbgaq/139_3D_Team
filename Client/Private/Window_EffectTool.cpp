@@ -872,6 +872,43 @@ void CWindow_EffectTool::Update_MeshTab()
 
 				Select_EasingType(&m_pInstanceDesc->eType_Easing);
 
+				/* RimRight */
+				/* 림라이트 색 변경 */
+				ImGui::SeparatorText("");
+				if (ImGui::ColorEdit4("RimColor", m_fRimColor_Mesh, ImGuiColorEditFlags_None))
+				{
+					m_pInstanceDesc->vRimColor.x = m_fRimColor_Mesh[0];
+					m_pInstanceDesc->vRimColor.y = m_fRimColor_Mesh[1];
+					m_pInstanceDesc->vRimColor.z = m_fRimColor_Mesh[2];
+					m_pInstanceDesc->vRimColor.w = m_fRimColor_Mesh[3];
+				}
+
+				/* 림라이트 세기 */
+				if (ImGui::DragFloat(" RimPower ", &m_fRimPower_Mesh, 0.1f, 0.f, 1000.f))
+				{
+					m_pInstanceDesc->fRimPower = m_fRimPower_Mesh;
+				}
+				ImGui::SeparatorText("");
+
+
+				/* Bloom */
+				/* 색 변경 */
+				if (ImGui::ColorEdit4("BloomColor_Mesh", m_vBloomColor_Mesh, ImGuiColorEditFlags_None))
+				{
+					m_pInstanceDesc->vBloomColor.x = m_vBloomColor_Mesh[0];
+					m_pInstanceDesc->vBloomColor.y = m_vBloomColor_Mesh[1];
+					m_pInstanceDesc->vBloomColor.z = m_vBloomColor_Mesh[2];
+					m_pInstanceDesc->vBloomColor.w = m_vBloomColor_Mesh[3];
+				}
+
+				if (ImGui::DragFloat3(" BloomPower ", m_vBloomPower_Mesh, 100.f, 0.f, 1000.f))
+				{
+					m_pInstanceDesc->vBloomPower.x = m_vBloomPower_Mesh[0];
+					m_pInstanceDesc->vBloomPower.y = m_vBloomPower_Mesh[1];
+					m_pInstanceDesc->vBloomPower.z = m_vBloomPower_Mesh[2];
+				}
+
+
 			}
 		}
 	}
@@ -1689,7 +1726,7 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
 		m_pCurPartEffect->Set_EffectType(CEffect_Void::PARTICLE);
-		dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Set_Owner(m_pCurEffect);
+		dynamic_cast<CEffect_Void*>(m_pCurPartEffect)->Set_Owner(m_pCurEffect);
 
 		m_iCurPartIndex = m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -1859,7 +1896,7 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tMeshDesc.iShaderPassIndex = { 4 };
 
 		tMeshDesc.iRenderGroup = { 7 };
-		//tMeshDesc.iCurNumInstance = { 1 };
+		tMeshDesc.iCurNumInstance = { 1 };
 
 		tMeshDesc.bBillBoard = { FALSE };
 
@@ -1912,6 +1949,7 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
 		m_pCurPartEffect->Set_EffectType(CEffect_Void::INSTANCE);
+		dynamic_cast<CEffect_Void*>(m_pCurPartEffect)->Set_Owner(m_pCurEffect);
 
 
 		m_iCurPartIndex = m_CurPartObjects.size();

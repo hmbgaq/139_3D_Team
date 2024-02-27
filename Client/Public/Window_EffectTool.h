@@ -95,7 +95,7 @@ private:
 	_int m_iShaderPassIndex_Mesh		= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
 	_int  m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 4, 17, 5 };
+	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 15, 17, 5 };
 
 
 	_int m_iRenderGroup_Rect			= { 7 };
@@ -191,6 +191,13 @@ private:
 	_float	m_DissolveAmount = { 0.f };
 
 	_float	m_fUV_RotDegree_Mesh = { 0.f };
+
+	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fRimPower_Mesh = { 1.f };
+
+
+	_float	m_vBloomColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
 
 #pragma endregion
 

@@ -81,7 +81,7 @@ public:
 		_float3	vVelocity_Cur	= _float3(0.f, 0.f, 0.f);
 		_bool	bVelocity_Lerp	= { TRUE };
 
-		_float4	vColor_Start	= _float4(0.f, 0.f, 0.f, 0.f);
+		_float4	vColor_Start	= _float4(1.f, 1.f, 1.f, 1.f);
 		_float4	vColor_End		= _float4(1.f, 1.f, 1.f, 1.f);
 		_float4	vColor_Cur		= _float4(1.f, 1.f, 1.f, 1.f);
 		_bool	bColor_Lerp		= { TRUE };

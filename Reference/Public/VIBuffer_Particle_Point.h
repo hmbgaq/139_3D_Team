@@ -86,9 +86,7 @@ public:
 
 	}PARTICLE_BUFFER_DESC;
 
-public:
-	virtual _bool Write_Json(json& Out_Json)		override;
-	virtual void Load_FromJson(const json& In_Json)	override;
+
 
 private:
 	CVIBuffer_Particle_Point(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -100,10 +98,12 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Update(_float fTimeDelta) override;
 
-	//void		Update_Particle(_float fTimeDelta, const _bool _bUseParentMatrix);
-
 public:
 	void ReSet();
+
+public:
+	virtual _bool Write_Json(json& Out_Json)		override;
+	virtual void Load_FromJson(const json& In_Json)	override;
 
 
 	/* For.Desc */

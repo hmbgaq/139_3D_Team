@@ -10,21 +10,11 @@ class ENGINE_DLL CVIBuffer_Effect_Model_Instance : public CVIBuffer_Model_Instan
 public:
 	typedef struct tagVIBuffer_EffectModelInstanceDesc
 	{
-		class CModel*	  pModel = { nullptr };
-		_int			  iNumInstance = { 0 };
+		class CModel*	  pModel			= { nullptr };
 
-		EASING_TYPE		eType_Easing = { LINEAR };
+		_int			  iCurNumInstance	= { 1 };
 
-		/* LifeTime */
-		_float2		vMinMaxLifeTime;
-
-		_float3		vMinMaxRange = { 0.5f, 0.f, 0.5f };
-
-		_float4		vCenterPosition		= { 0.f, 0.f, 0.f, 1.f };
 		_float4		vCurrentPosition	= {0.f, 0.f, 0.f, 1.f};
-
-		_float3		vCurrentScale		= { 1.f, 1.f, 1.f };
-		_float3		vCurrentRotate		= { 0.f, 0.f, 0.f };
 
 	}EFFECT_MODEL_INSTANCE_DESC;
 

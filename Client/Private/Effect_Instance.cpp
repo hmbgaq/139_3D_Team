@@ -168,12 +168,17 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
 
+
+
+
 	return true;
 }
 
 void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
+
+
 
 }
 
@@ -195,7 +200,7 @@ HRESULT CEffect_Instance::Ready_Components()
 
 	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
 	Desc.pModel = m_pModelCom;
-	Desc.iNumInstance = m_tInstanceDesc.iNumInstance; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
+	Desc.iCurNumInstance = m_tInstanceDesc.iCurNumInstance; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
 	
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),
@@ -257,10 +262,7 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 		}
 	}
 
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
-
-	_float fCamFar = m_pGameInstance->Get_CamFar();
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFar", &fCamFar, sizeof(_float)));
+	
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tInstanceDesc.fUV_RotDegree, sizeof(_float))))
 		return E_FAIL;
@@ -272,6 +274,24 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tInstanceDesc.vColor_Clip.w, sizeof(_float)));
+
+
+	_float3 vBlack_Discard = { m_tInstanceDesc.vColor_Clip.x, m_tInstanceDesc.vColor_Clip.y, m_tInstanceDesc.vColor_Clip.z};
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fBlack_Discard", &vBlack_Discard, sizeof(_float3)));
+
+
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFar", &fCamFar, sizeof(_float)));
+
+
+	/* Bloom */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_BloomColor", &m_tInstanceDesc.vBloomColor, sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_tInstanceDesc.vBloomPower, sizeof(_float3)));
+
+	/* RimLight */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tInstanceDesc.vRimColor, sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_tInstanceDesc.fRimPower, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
 
 	return S_OK;
 }

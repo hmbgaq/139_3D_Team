@@ -120,7 +120,6 @@ HRESULT CVIBuffer_Instancing::Bind_VIBuffers()
 	m_pContext->IASetPrimitiveTopology(m_eTopology);
 
 	return S_OK;
-
 }
 
 
