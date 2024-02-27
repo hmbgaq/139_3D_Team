@@ -49,6 +49,19 @@
 #include "Player_Walk_FR.h"
 #include "Player_Walk_FR45.h"
 
+#include "Player_TeleportPunch_L01_Alt.h"
+#include "Player_TeleportPunch_L01_VeryFar.h"
+#include "Player_TeleportPunch_L02_Alt.h"
+#include "Player_TeleportPunch_L03_Alt.h"
+#include "Player_TeleportPunch_R01_Alt.h"
+#include "Player_TeleportPunch_R02_Alt.h"
+#include "Player_TeleportPunch_R02_VeryFar.h"
+#include "Player_TeleportPunch_R03_Alt.h"
+
+
+
+
+
 
 
 void CPlayer_State::Initialize(CPlayer* pActor)
@@ -293,10 +306,11 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 {
 	CState<CPlayer>* pState = { nullptr };
 
-	pState = MeleeCombo(pActor, fTimeDelta, _iAnimIndex);
+	pState = TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
 
-	if (pState)
-		return pState;
+	pState = MeleeCombo(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
 
 	if (pActor->Is_Animation_End())
 	{
@@ -339,6 +353,7 @@ CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _
 			return new CPlayer_MeleeCombo_04();
 			break;
 		case Client::CPlayer::Player_MeleeCombo_04:
+			return new CPlayer_MeleeCombo_02();
 			break;
 
 
@@ -454,6 +469,56 @@ CState<CPlayer>* CPlayer_State::Roll(CPlayer* pActor, _float fTimeDelta, _uint _
 	{
 		return new CPlayer_IdleLoop();
 	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Key_Down(DIK_Z))
+	{
+		CPlayer::Player_State eState = (CPlayer::Player_State)_iAnimIndex;
+		switch (eState)
+		{
+
+		case CPlayer_TeleportPunch_L01_Alt::g_iAnimIndex:
+		case CPlayer_TeleportPunch_L01_VeryFar::g_iAnimIndex:
+			return new CPlayer_TeleportPunch_R02_Alt();
+			break;
+		case CPlayer_TeleportPunch_L02_Alt::g_iAnimIndex:
+			return new CPlayer_TeleportPunch_R03_Alt();
+			break;
+		case CPlayer_TeleportPunch_L03_Alt::g_iAnimIndex:
+			return new CPlayer_TeleportPunch_R01_Alt();
+			break;
+
+		case CPlayer_TeleportPunch_R01_Alt::g_iAnimIndex:
+			return new CPlayer_TeleportPunch_L02_Alt();
+			break;
+		case CPlayer_TeleportPunch_R02_Alt::g_iAnimIndex:
+		case CPlayer_TeleportPunch_R02_VeryFar::g_iAnimIndex:
+			return new CPlayer_TeleportPunch_L03_Alt();
+			break;
+		case CPlayer_TeleportPunch_R03_Alt::g_iAnimIndex:
+			return new CPlayer_TeleportPunch_L01_Alt();
+			break;
+
+		default:
+			return new CPlayer_TeleportPunch_L01_Alt();
+			break;
+		}
+
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_X))
+	{
+		if (pActor->Is_Animation_End())
+		{
+			return new CPlayer_IdleLoop();
+		}
+	}
+
+	
 
 	return nullptr;
 }

@@ -253,6 +253,15 @@
     <ClInclude Include="..\Public\Player_Empowered_MeleeCombo_03.h" />
     <ClInclude Include="..\Public\Player_Empowered_Shot.h" />
     <ClInclude Include="..\Public\Player_Empowered_SlamGround.h" />
+    <ClInclude Include="..\Public\Player_HitNormal_B.h" />
+    <ClInclude Include="..\Public\Player_HitNormal_B_Gatling.h" />
+    <ClInclude Include="..\Public\Player_HitNormal_F.h" />
+    <ClInclude Include="..\Public\Player_HitNormal_F_02_NEW.h" />
+    <ClInclude Include="..\Public\Player_HitNormal_F_Gatling.h" />
+    <ClInclude Include="..\Public\Player_HitNormal_L.h" />
+    <ClInclude Include="..\Public\Player_HitNormal_L_Gatling.h" />
+    <ClInclude Include="..\Public\Player_HitNormal_R.h" />
+    <ClInclude Include="..\Public\Player_HitNormal_R_Gatling.h" />
     <ClInclude Include="..\Public\Player_IdleLoop.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_01.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_02.h" />
@@ -284,10 +293,12 @@
     <ClInclude Include="..\Public\Player_State_Run.h" />
     <ClInclude Include="..\Public\Player_State_Walk.h" />
     <ClInclude Include="..\Public\Player_TeleportPunch_L01_Alt.h" />
+    <ClInclude Include="..\Public\Player_TeleportPunch_L01_VeryFar.h" />
     <ClInclude Include="..\Public\Player_TeleportPunch_L02_Alt.h" />
     <ClInclude Include="..\Public\Player_TeleportPunch_L03_Alt.h" />
     <ClInclude Include="..\Public\Player_TeleportPunch_R01_Alt.h" />
     <ClInclude Include="..\Public\Player_TeleportPunch_R02_Alt.h" />
+    <ClInclude Include="..\Public\Player_TeleportPunch_R02_VeryFar.h" />
     <ClInclude Include="..\Public\Player_TeleportPunch_R03_Alt.h" />
     <ClInclude Include="..\Public\Player_Walk_B.h" />
     <ClInclude Include="..\Public\Player_Walk_BL.h" />
@@ -434,6 +445,13 @@
     <ClCompile Include="..\Private\Player_State_Roll.cpp" />
     <ClCompile Include="..\Private\Player_State_Run.cpp" />
     <ClCompile Include="..\Private\Player_State_Walk.cpp" />
+    <ClCompile Include="..\Private\Player_TeleportPunch_L01_VeryFar.cpp" />
+    <ClCompile Include="..\Private\Player_TeleportPunch_L02_Alt.cpp" />
+    <ClCompile Include="..\Private\Player_TeleportPunch_L03_Alt.cpp" />
+    <ClCompile Include="..\Private\Player_TeleportPunch_R01_Alt.cpp" />
+    <ClCompile Include="..\Private\Player_TeleportPunch_R02_Alt.cpp" />
+    <ClCompile Include="..\Private\Player_TeleportPunch_R02_VeryFar.cpp" />
+    <ClCompile Include="..\Private\Player_TeleportPunch_R03_Alt.cpp" />
     <ClCompile Include="..\Private\Player_Walk_B.cpp" />
     <ClCompile Include="..\Private\Player_Walk_BL.cpp" />
     <ClCompile Include="..\Private\Player_Walk_BL135.cpp" />
@@ -483,6 +501,7 @@
     <ClCompile Include="..\Private\Window_UITool.cpp" />
     <ClCompile Include="..\Private\Actor.cpp" />
     <ClCompile Include="..\Public\Player_IdleLoop.cpp" />
+    <ClCompile Include="..\Public\Player_TeleportPunch_L01_Alt.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

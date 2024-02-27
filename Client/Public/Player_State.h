@@ -39,13 +39,15 @@ public:		//개별 동작 상태 집합
 	CState<CPlayer>* Roll(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 
+	CState<CPlayer>* TeleportPunch(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
 
 
 public:
-	_int iKeyUp		= DIK_UP;
-	_int iKeyDown	= DIK_DOWN;
-	_int iKeyLeft	= DIK_LEFT;
-	_int iKeyRight	= DIK_RIGHT;
+	_int iKeyUp		= DIK_W;	//DIK_UP;
+	_int iKeyDown	= DIK_S;	//DIK_DOWN;
+	_int iKeyLeft	= DIK_A;	//DIK_LEFT;
+	_int iKeyRight	= DIK_D;	//DIK_RIGHT;
 
 
 protected:

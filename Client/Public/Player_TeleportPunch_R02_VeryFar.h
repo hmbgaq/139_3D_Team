@@ -4,7 +4,7 @@
 
 BEGIN(Client)
 
-class CPlayer_TeleportPunch_R01_Alt : public CPlayer_State_Attack
+class CPlayer_TeleportPunch_R02_VeryFar : public CPlayer_State_Attack
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;
@@ -12,7 +12,7 @@ public:
 	virtual void Release(CPlayer* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_TeleportPunch_R01_Alt;
+	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_TeleportPunch_R02_VeryFar;
 
 };
 
