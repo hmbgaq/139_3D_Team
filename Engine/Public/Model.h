@@ -109,7 +109,7 @@ public:
 private:
 	HRESULT					Create_Texture();
 	void					Create_AnimationTransform(uint32 iAnimIndex, vector<ANIM_TRANSFORM>& pAnimTransform);
-	void					Create_AnimationTransformCache(uint32 iAnimIndex, vector<ANIM_TRANSFORM_CACHE>& pAnimTransformCache);
+	
 	HRESULT Clear_Cache();
 public:
 	vector<CAnimation*>*	 Get_Animations();
@@ -133,7 +133,10 @@ private:
 
 	_uint					m_iNumMaterials			= { 0 };
 	vector<MATERIAL_DESC>	m_Materials;
-
+	/*VTF 용도 Test*/
+	vector<_float4x4>		m_OffsetMatrices;
+	vector<_uint>			m_vecIndices;
+	_int					m_iNumBones;
 	/* 내 모델의 전체 뼈들을 부모관계를 포함하여 저장한다. */
 	vector<CBone*>			m_Bones;	
 	

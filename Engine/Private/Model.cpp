@@ -655,12 +655,14 @@ void CModel::Create_AnimationTransform(uint32 iAnimIndex, vector<ANIM_TRANSFORM>
 	
 // 	for(int i = 0; i < iNumMeshes)
 // 		m_Bones[지가 연관이있는 본인덱스] -> 메쉬오프셋[지가 연관이있는 본인덱스]
-
+	vector<_float4x4> m_OffsetMatrices;
+	vector<_uint> vecIndices;
+	_int iNumBones;
 	for (_int i = 0; i < m_iNumMeshes; ++i)
 	{
-		vector<_float4x4> m_OffsetMatrices = m_Meshes[i]->Get_OffsetMatrices();
-		vector<_uint> vecIndices = m_Meshes[i]->Get_BoneIndices();
-		_int iNumBones = m_Meshes[i]->Get_NumBones();
+		m_OffsetMatrices = m_Meshes[i]->Get_OffsetMatrices();
+		vecIndices = m_Meshes[i]->Get_BoneIndices();
+		iNumBones = m_Meshes[i]->Get_NumBones();
 
 		for (_int j = 0; j < iNumBones; ++j)
 		{
@@ -674,7 +676,7 @@ void CModel::Create_AnimationTransform(uint32 iAnimIndex, vector<ANIM_TRANSFORM>
 		/* 모든 채널의 현재 프레임 갱신 */
 		pAnimation->Calculate_Animation(iFrameIndex, m_Bones);
 		
-		/* 모든 본 글로벌 변환 -> 애니메이션 변환 */
+		/* 애니메이션 저장 */
 		_float3 NowPos;
 		for (uint32 iBoneIndex = 0; iBoneIndex < m_Bones.size(); iBoneIndex++)
 		{
@@ -706,32 +708,6 @@ void CModel::Create_AnimationTransform(uint32 iAnimIndex, vector<ANIM_TRANSFORM>
 	}
 }
 
-void CModel::Create_AnimationTransformCache(uint32 iAnimIndex, vector<ANIM_TRANSFORM_CACHE>& pAnimTransformCache)
-{
-// 	/* 현재 애니메이션에 대한 텍스처 한 장(프레임 행, 본 열)정보를 세팅한다. */
-// 	CAnimation* pAnimation = m_Animations[iAnimIndex];
-// 
-// 	/* 모든 프레임 순회 (텍스처 가로) */
-// 	for (uint32 iFrameIndex = 0; iFrameIndex < pAnimation->Get_MaxFrameCount(); iFrameIndex++)
-// 	{
-// 		/* 모든 채널의 현재 프레임 갱신 */
-// 		pAnimation->Calculate_Animation(iFrameIndex,m_Bones);
-// 
-// 		/* 모든 본 글로벌 변환 -> 애니메이션 변환 -> 저장 */
-// 
-// 		for (uint32 iBoneIndex = 0; iBoneIndex < m_Bones.size(); iBoneIndex++)
-// 		{
-// 			if (iBoneIndex == m_AnimBoneIndecies[BONE_ROOT])
-// 				m_Bones[iBoneIndex]->Set_Translate(Vec4(0, 0, 0, 1));
-// 
-// 			m_Bones[iBoneIndex]->Set_CombinedTransformation();
-// 
-// 			
-// 			pAnimTransformCache[iAnimIndex].transforms[iFrameIndex][iBoneIndex]
-// 				= m_Bones[iBoneIndex]->Get_OffSetMatrix() * m_Bones[iBoneIndex]->Get_CombinedTransformation() * Get_PivotMatrix();
-// 		}
-// 	}
-}
 
 HRESULT CModel::Clear_Cache()
 {

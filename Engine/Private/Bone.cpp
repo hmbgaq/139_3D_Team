@@ -44,6 +44,15 @@ void CBone::Invalidate_CombinedTransformationMatrix(CModel::BONES& Bones, _fmatr
 
 }
 
+void CBone::Set_CombinedTransformation()
+{
+// 	if (-1 == m_iParentIndex) /* To Global */
+// 		XMStoreFloat4x4(&m_CombinedTransformation,
+// 			XMLoadFloat4x4(&m_Transformation) * XMLoadFloat4x4(&m_pParent->m_CombinedTransformation));
+// 	else
+// 		m_CombinedTransformation = m_Transformation;
+}
+
 CBone * CBone::Create(CMyAINode pAINode, _int iParentIndex)
 {
 	CBone*		pInstance = new CBone();
