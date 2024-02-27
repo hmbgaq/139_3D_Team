@@ -24,8 +24,14 @@ public:
 
 		wstring			strModelTag = TEXT("");
 
-		_uint			iNumInstance;
-		
+		_uint			iCurNumInstance = { 1 };
+
+		_float4			vBloomColor = { 1.f, 1.f, 1.f, 1.f };
+		_float3			vBloomPower = { 1.f, 1.f, 1.f };
+
+		_float4			vRimColor = { 1.f, 1.f, 1.f, 1.f };
+		_float			fRimPower = { 1.f };
+
 	}EFFECT_INSTANCE_DESC;
 
 

@@ -24,7 +24,7 @@ float2      g_UVScale;
 float		g_fDegree;
 
 float		g_DiscardValue;
-
+float3		g_fBlack_Discard;
 
 /* Dissolve  */
 texture2D	g_DissolveTexture;
@@ -38,16 +38,29 @@ float3      g_vBloomPower;
 
 
 /* RimLight */
-float4		g_vRimColor = { 0.f, 0.f, 0.f, 0.f };
+float4		g_vRimColor;
+float		g_fRimPower;
 vector      g_vCamPosition;
 
+
+/* Custom Function */
+float4 Caculation_Brightness(float4 vColor, float3 BloomPower)
+{
+	float4 vBrightnessColor = float4(0.f, 0.f, 0.f, 0.f);
+
+	float fPixelBrightness = dot(vColor.rgb, BloomPower.rgb);
+
+	if (fPixelBrightness > 0.99f)
+		vBrightnessColor = float4(vColor.rgb, 1.0f);
+
+	return vBrightnessColor;
+}
 
 float IsIn_Range(float fMin, float fMax, float fValue)
 {
 	return (fMin <= fValue) && (fMax >= fValue);
 }
 
-/* Custom Function */
 float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
 {
 	float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
@@ -85,6 +98,9 @@ struct VS_OUT
 	float2		vTexUV		: TEXCOORD0;
 	float4		vWorldPos	: TEXCOORD1;
 	float4		vProjPos	: TEXCOORD2;
+
+	float3		vViewNormal		: NORMAL1;		/* ssao */
+	float3		vPositionView	: POSITION;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -106,6 +122,11 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
 	Out.vTexUV = In.vTexUV;
 	Out.vProjPos = Out.vPosition;
+
+
+	// SSAO
+	Out.vViewNormal = mul(Out.vNormal.xyz, (float3x3) g_ViewMatrix);
+	Out.vPositionView = mul(float4(In.vPosition, 1.0f), matWV);
 
 	return Out;	
 }
@@ -152,33 +173,77 @@ struct PS_IN
 	float2		vTexUV : TEXCOORD0;
 	float4		vWorldPos : TEXCOORD1;
 	float4		vProjPos : TEXCOORD2;
+
+	/* ssao */
+	float3	vViewNormal		: NORMAL1;
+	float3	vPositionView	: POSITION;
 };
 
 struct PS_OUT
 {	
-	vector		vDiffuse : SV_TARGET0;
-	vector		vNormal : SV_TARGET1;
-	vector		vDepth : SV_TARGET2;
-    
+	float4	vDiffuse        : SV_TARGET0;
+	float4	vNormal         : SV_TARGET1;
+	float4  vDepth          : SV_TARGET2;
+	float4  vORM            : SV_TARGET3;
+	float4  vViewNormal     : SV_TARGET4;
+	float4  vBloom          : SV_TARGET5;
+  
 };
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	//* g_UVScale + g_UVOffset
-	In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
+	////* g_UVScale + g_UVOffset
+	//In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
 
-	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+	//Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	//float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
 
-    //clip(Out.vDiffuse.a - g_DiscardValue);
-	Out.vDiffuse.a *= vAlphaMask.a;
+	////clip(Out.vDiffuse.a - g_DiscardValue);
+	//Out.vDiffuse.a *= vAlphaMask.a;
+	//
+	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
+	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
 	
-	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
-	
+
+	vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (vMtrlDiffuse.a < 0.1f)
+		discard;
+
+	Out.vDiffuse = vMtrlDiffuse;
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 0.0f);
+
+	/* 림라이트 -> 프레넬 공식 사용 */
+	/* 노말 (내적) 정점이 카메라를 바라보는방향 -> 카메라가 조명처럼 인식된다. */
+	//float fRim = saturate(dot(In.vNormal, (g_vCamPosition - In.vWorldPos)));
+	//int iRimPower = 5.f;
+	///* 일정이상보다 작으면 Rim을 없앤다. */
+	//if(fRim > 0.3)
+	//    fRim = 1;
+	//else
+	//    fRim = -1;
+
+	//Out.vEmissive = Out.vORM + float4(pow(1 - fRim, iRimPower) * g_vRimColor.xyz, 1.f);
+
+	float fRimPower = 1.f - saturate(dot(In.vNormal, normalize((-1.f * (In.vWorldPos - g_vCamPosition)))));
+	fRimPower = pow(fRimPower, 5.f) * g_fRimPower;
+	vector vRimColor = g_vRimColor * fRimPower;
+
+	Out.vBloom = Caculation_Brightness(Out.vDiffuse, g_vBloomPower) + vRimColor;
+	Out.vDiffuse += vRimColor;
+	Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
+
+
+	// 검은색 잘라내기
+	if (Out.vDiffuse.r < g_fBlack_Discard.r && Out.vDiffuse.g < g_fBlack_Discard.g && Out.vDiffuse.b < g_fBlack_Discard.b)
+		discard;
+
 	return Out;
+
 }
 
 //// Normal Mapping ///////////
