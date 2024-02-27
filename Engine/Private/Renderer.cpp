@@ -40,6 +40,8 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_DebugRender()); 
 #endif
 
+	FAILED_CHECK(Ready_CascadeShadow());
+
 	m_tHBAO_Option.bHBAO_Active = m_bSSAO_Active;
 	m_tFog_Option.bFog_Active = m_bFog_Active;
 	m_tHDR_Option.bHDR_Active = m_bHDR_Active;
@@ -80,6 +82,9 @@ HRESULT CRenderer::Create_Shader()
 
 	m_pShader[SHADER_TYPE::SHADER_FINAL] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Final.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
 	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_FINAL], E_FAIL);
+	
+	m_pShader[SHADER_TYPE::SHADER_EFFECT] = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Effect_Engine.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
+	NULL_CHECK_RETURN(m_pShader[SHADER_TYPE::SHADER_EFFECT], E_FAIL);
 
 
 	/* Shader_UI */
@@ -142,6 +147,12 @@ HRESULT CRenderer::Create_RenderTarget()
 		
 		/* MRT_PrePostProcess */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_PrePostProcess"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+		
+		/* MRT_Effect */ 
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Normal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Depth"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+		
 	}
 	/* PostProcessing */
 	{
@@ -222,7 +233,14 @@ HRESULT CRenderer::Create_RenderTarget()
 		/* MRT_FXAA*/
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_FXAA"), TEXT("Target_FXAA")));
 
+		/* MRT_HDR */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_HDR"), TEXT("Target_HDR")));
+
+		/* MRT_Effect */
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Diffuse")));
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Normal")));
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Depth")));
+
 #pragma region ADD_MRT_UI
 		Add_MRT_UI();
 #pragma endregion End
@@ -289,6 +307,16 @@ HRESULT CRenderer::Ready_DebugRender()
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Bloom"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Bloom_Blur"),	(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RimLight"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 13.f), fSizeX, fSizeY));
+
+	/* MRT_CASCADE */
+	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade1"),	(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade2"),	(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade2"),	(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+
+	/* MRT_Effect */
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Diffuse"),	(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Normal"),	(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Depth"),		(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
 
 	///* MRT_LightAcc */
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse_UI"),	(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
@@ -375,10 +403,15 @@ HRESULT CRenderer::Control_HotKey()
 		else
 			cout << "FXAA : false " << endl;
 
-		if (true == m_bBloom_Active)
-			cout << "Bloom Blur : true " << endl;
+		if (true == m_bCascade_Shadow_Active)
+			cout << "Cascade : true " << endl;
 		else
-			cout << "Bloom Blur : false " << endl;
+			cout << "Cascade : false " << endl;
+
+		if (true == m_bCascade_Shadow_Active)
+			cout << "Cascade : true " << endl;
+		else
+			cout << "Cascade : false " << endl;
 
 		cout << " ----------------------------- " << endl;
 	}
@@ -387,7 +420,7 @@ HRESULT CRenderer::Control_HotKey()
 	if (m_pGameInstance->Key_Down(DIK_2))
 		m_tHBAO_Option.bHBAO_Active = !m_tHBAO_Option.bHBAO_Active;
 	if (m_pGameInstance->Key_Down(DIK_3))
-		m_bBloom_Active = !m_bBloom_Active;
+		m_bCascade_Shadow_Active = !m_bCascade_Shadow_Active;
 	if (m_pGameInstance->Key_Down(DIK_4))
 		m_tHDR_Option.bHDR_Active = !m_tHDR_Option.bHDR_Active;
 	if (m_pGameInstance->Key_Down(DIK_5))
@@ -412,17 +445,18 @@ HRESULT CRenderer::Draw_RenderGroup()
 	/* Pre-PostProcessing */
 	FAILED_CHECK(Render_NonBlend());			/* MRT_GameObjects*/
 	
-	//FAILED_CHECK(Render_Cascade_Shadow());		/* MRT_Cascade */
+	if(true == m_bCascade_Shadow_Active)
+		FAILED_CHECK(Render_Cascade_Shadow());		/* MRT_Cascade */
 
 	if (true == m_tHBAO_Option.bHBAO_Active)
 	{
 		FAILED_CHECK(Render_HBAO_PLUS());
 	}
 
-	FAILED_CHECK(Render_Decal());	/* MRT_LightAcc */                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+	//FAILED_CHECK(Render_Decal());	/* MRT_Decal */                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 
 	/* 외곽선 */
-	FAILED_CHECK(Render_OutLine()); 
+	//FAILED_CHECK(Render_OutLine()); 
 	
 	FAILED_CHECK(Render_Effect());		/* - 외곽선 필요유무에 따라 위치가 달라질듯? */
 
@@ -437,15 +471,15 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Render_SSR());
 
-	FAILED_CHECK(Render_Blend());
+	//FAILED_CHECK(Render_Blend());
 
 	FAILED_CHECK(Render_NonLight());
 
 	/* ★ PostProcessing ★*/
 	FAILED_CHECK(Render_PostProcess()); /* 모션블러, Radial 블러 등등 */
 
-	/* 그리기 */
 	/* 마지막화면용 - 마지막 체크 위해서 */
+	FAILED_CHECK(Render_Effect()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
 
 	FAILED_CHECK(Render_Final());
 
@@ -453,7 +487,9 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	//FAILED_CHECK(Render_UI_EFFECT()); /* 그외 변하거나 이미지에 효과가 들어가야하는 UI 렌더그룹이 속하는곳 */
 
-	FAILED_CHECK(Render_Blend()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
+	FAILED_CHECK(Render_Blend());  
+
+	
 	/* ------------------------ */
 
 	/* 효과넣어주기 */
@@ -871,6 +907,9 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_LightDepthTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
 
+	// test
+
+
 	/* Post Processing */
 	{
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bSSAO_Active", &m_tHBAO_Option.bHBAO_Active, sizeof(_bool)));
@@ -881,11 +920,10 @@ HRESULT CRenderer::Render_Deferred()
 
 		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_bBloom_Active", &m_bBloom_Active, sizeof(_bool)));
 
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_Outline_Active", &m_bOutline_Active, sizeof(_bool)));
-		if (true == m_bOutline_Active)
-		{
-			m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_OutLine"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_OutlineTarget");
-		}
+		//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_Outline_Active", &m_bOutline_Active, sizeof(_bool)));
+
+		//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_OutLine"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_OutlineTarget"));
+		
 	}
 
 	m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Begin(ECast(DEFERRED_SHADER::DEFERRED));
@@ -901,6 +939,9 @@ HRESULT CRenderer::Render_Deferred()
 
 HRESULT CRenderer::Render_Cascade_Shadow()
 {
+	/* Directional Light 로 그림자 맵핑을 하지만 장면이 커지게될경우 장면을 모두 담가 힘듬 + 똑같은 그림자가 만들어져야 하므로 고정적인 광원의 위치를 가지면 안된다. 
+	 현재 시야에 보이는 장면에 그림자를 만들기위해 단계를 나누어서 그림자맵을 만든다. + 그림자맵을 나누는 기준은 시야절두체가 되며 나눠진 시야절두체 안에 들어오는 오브젝트에 대해서만 그림자맵을 만든다. 
+	 -> 가까운거리에있는 물체에대한 그림자맵은 높은 정확도를 보여주게된다.*/
 	// Viewport -> RSSet -> OM DepthStencilSet -> Clear -> Matrix Tick -> Shader bind 
 
 	for (_uint i = 0; i < MAX_CASCADES; ++i)
@@ -912,20 +953,34 @@ HRESULT CRenderer::Render_Cascade_Shadow()
 
 		m_pContext->ClearDepthStencilView(m_pCascadeShadowDSV[i], D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
-		for (auto& iter : m_CascadeObjects[i])
+		for (auto& iter : m_CascadeObjects)
 		{
 			if (FAILED(iter->Render_Cascade_Shadow(i)))
 				return E_FAIL;
 			Safe_Release(iter);
 		}
-		m_CascadeObjects[i].clear();
+		m_CascadeObjects.clear();
 
 		FAILED_CHECK(m_pGameInstance->End_MRT());
 	}
+
+	return S_OK;
 }
 
 HRESULT CRenderer::Render_Decal()
 {
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Decal"))); /* Target_OutLine저장 */
+
+	for (auto& iter : m_RenderObjects[RENDERGROUP::RENDER_DECAL])
+	{
+		if (FAILED(iter->Render()))
+			return E_FAIL;
+		Safe_Release(iter);
+	}
+	m_RenderObjects[RENDER_DECAL].clear();
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
 	return S_OK;
 }
 
@@ -1153,6 +1208,22 @@ HRESULT CRenderer::Render_SSR()
 
 HRESULT CRenderer::Render_Effect()
 {
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Effect")));
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_EFFECT])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_EFFECT].clear();
+
+	/* 백버퍼를 원래 위치로 다시 장치에 바인딩한다. */
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+
 	return S_OK;
 }
 
@@ -1176,7 +1247,7 @@ HRESULT CRenderer::Render_Final()
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Bind_RawValue("g_saturation", &m_tScreen_Option.fFinal_Saturation, sizeof(_float)));
 
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_FXAA"), m_pShader[SHADER_TYPE::SHADER_FINAL], "g_FinalTarget"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse_UI"), m_pShader[SHADER_TYPE::SHADER_FINAL], "g_Diffuse_UITexture"));	// MRT_GameObjects_UI
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Diffuse"), m_pShader[SHADER_TYPE::SHADER_FINAL], "g_Effect_DiffuseTarget"));	// MRT_GameObjects_UI
 
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_FINAL]->Begin(0));
 
@@ -1219,6 +1290,13 @@ HRESULT CRenderer::Render_Debug()
 
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_GameObjects"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
+
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Cascade1"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Cascade2"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Cascade3"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
+
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Effect"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
+
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Shadow"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_SSAO"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_SSAO_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], m_pVIBuffer);
@@ -1397,6 +1475,14 @@ HRESULT CRenderer::Pre_Setting()
 #pragma endregion
 
 #pragma region Create / Free
+
+HRESULT CRenderer::Add_CascadeObject(CGameObject* pObject)
+{
+	m_CascadeObjects.push_back(pObject);
+	Safe_AddRef(pObject);
+
+	return S_OK;
+}
 
 CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

@@ -232,7 +232,7 @@ PS_OUT PS_MAIN_EFFECT(PS_IN_EFFECT In)
 	vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
 	vDepthTexcoord.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
 
-	float4	vDepthDesc = g_DepthTexture.Sample(PointSampler, vDepthTexcoord);
+    float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
 	
 	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
 

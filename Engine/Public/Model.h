@@ -40,6 +40,7 @@ public:
 public:						
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Ãß°¡
 	_uint					Get_NumMaterials() const { return m_iNumMaterials; }
+	_uint					Get_MaterialIndex(_uint iMeshIndex);
 	_uint					Get_NumMeshIndice(_int iMeshIndex);//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
 	vector<class CMesh*>&	Get_Meshes() { return m_Meshes; }
 	class CMesh*			Get_Mesh_For_Index(_int iMeshIndex);
@@ -136,6 +137,11 @@ private:
 	HRESULT Ready_Materials(const string& strModelFilePath);
 	HRESULT Ready_Bones(CMyAINode pAINode, _int iParentIndex);
 	HRESULT Ready_Animations();
+
+	/* Cascade */
+public:
+	HRESULT SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* strConstantName);
+	HRESULT Render(CShader*& pShader, const _uint& iMeshIndex, const _uint& strPassName);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);

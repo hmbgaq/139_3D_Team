@@ -45,7 +45,6 @@ bool g_Outline_Active;
 bool g_PBR_Active;
 bool g_bFog_Active;
 
-
 /* 안개 */
 float4 g_vFogColor              = { 0.5f, 0.5f, 0.5f, 0.2f };
 float2  g_vFogUVAcc             = { 0.f, 0.f };
@@ -299,13 +298,13 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
         if (g_bSSAO_Active)
             vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord); /* SSAO 적용 */
 	
-        vector vOutline = float4(1.f, 1.f, 1.f, 1.f);
-        if (g_Outline_Active)
-            vOutline = g_OutlineTarget.Sample(LinearSampler, In.vTexcoord);
+       // vector vOutline = float4(1.f, 1.f, 1.f, 1.f);
+       // if (g_Outline_Active)
+       //     vOutline = g_OutlineTarget.Sample(LinearSampler, In.vTexcoord);
 	
     
-        Out.vColor = ((vDiffuse * vShade * vSSAO) + vSpecular + vBloom) * vOutline;
-        //Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
+       // Out.vColor = ((vDiffuse * vShade * vSSAO) + vSpecular + vBloom) * vOutline;
+        Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
         Out.vColor.a = 1.f;
     }
     vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
