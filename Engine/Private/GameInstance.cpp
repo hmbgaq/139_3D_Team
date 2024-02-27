@@ -440,6 +440,14 @@ CRenderer* CGameInstance::Get_Renderer()
 	return m_pRenderer;
 }
 
+HRESULT CGameInstance::Add_CascadeObject(CGameObject* pGameObject)
+{
+	if (nullptr == m_pRenderer)
+		return E_FAIL;
+
+	return m_pRenderer->Add_CascadeObject(pGameObject);
+}
+
 
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebug(_bool _bRenderDebug)
@@ -515,7 +523,18 @@ _float4 CGameInstance::Get_CamSetting()
 
 _float CGameInstance::Get_CamFar()
 {
+	if (nullptr == m_pPipeLine)
+		return _float();
+
 	return m_pPipeLine->Get_CamFar();
+}
+
+_float4x4 CGameInstance::Get_Shadow_Proj()
+{
+	if (nullptr == m_pPipeLine)
+		return _float4x4();
+
+	return m_pPipeLine->Get_Shadow_Proj();
 }
 
 

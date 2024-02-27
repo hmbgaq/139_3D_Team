@@ -22,11 +22,11 @@ private:
 	/* Top Setting */
 	_bool bRenderTarget_Active = true;
 
-	/* Level Load */
+	/* Level Load - stringµµ ¹Ù²ã¾ßÇÔ */
 	_int		m_iCurrLevel_Index = {};
 	LEVEL		m_eCurrLevel_Enum = {};
 	wstring		m_wstrLayerTag = {};
-	string		m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Test1_MapData.json";
+	string		m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/TestMapData_MapData.json";
 
 	/* Level Shader Struct */
 	HBAO_PLUS_DESC	m_eHBAO_Desc = {};
@@ -47,6 +47,7 @@ private:
 	HRESULT Load_Level(_int iLevel_Index);
 
 	/* Collapsing */
+	void Layer_Light_Control();
 	void Layer_Level_Shader_Control();
 	void Layer_Object_Shader_Control();
 
