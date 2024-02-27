@@ -168,12 +168,17 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
 
+
+
+
 	return true;
 }
 
 void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
+
+
 
 }
 
@@ -195,7 +200,7 @@ HRESULT CEffect_Instance::Ready_Components()
 
 	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
 	Desc.pModel = m_pModelCom;
-	Desc.iNumInstance = m_tInstanceDesc.iCurNumInstance; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
+	Desc.iCurNumInstance = m_tInstanceDesc.iCurNumInstance; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
 	
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),

@@ -8,6 +8,8 @@
 #include "Navigation.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
+#include "VIBuffer_Point.h"
+#include "VIBuffer_Trail.h"
 #include "VIBuffer_Field.h"
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_Particle_Rect.h"

@@ -11,8 +11,8 @@ public:
 	typedef struct tagVIBuffer_EffectModelInstanceDesc
 	{
 		class CModel*	  pModel			= { nullptr };
-		_int			  iCurNumInstance	= { 1 };
 
+		_int			  iCurNumInstance	= { 1 };
 
 		_float4		vCurrentPosition	= {0.f, 0.f, 0.f, 1.f};
 

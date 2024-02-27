@@ -1,6 +1,7 @@
 #include "..\Public\VIBuffer_Particle_Point.h"
 
 #include "Easing_Utillity.h"
+#include "SMath.h"
 
 CVIBuffer_Particle_Point::CVIBuffer_Particle_Point(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer_Instancing(pDevice, pContext)
@@ -125,7 +126,7 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 	uniform_real_distribution<float>	RandomScale(m_tBufferDesc.vMinMaxScale.x, m_tBufferDesc.vMinMaxScale.y);
 	uniform_real_distribution<float>	RandomSpeed(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);
 
-	uniform_real_distribution<float>	RandomLifeTime(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
+	//uniform_real_distribution<float>	RandomLifeTime(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
 
 	uniform_real_distribution<float>	RandomLengthPosition(m_tBufferDesc.vMinMaxRangeLength.x, m_tBufferDesc.vMinMaxRangeLength.y);
 
@@ -133,6 +134,8 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 	uniform_real_distribution<float>	RandomGreen(min(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y), max(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y));
 	uniform_real_distribution<float>	RandomBlue(min(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y), max(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y));
 	uniform_real_distribution<float>	RandomAlpha(min(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y), max(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y));
+
+	
 
 	m_iNumInstance = m_tBufferDesc.iCurNumInstance;
 	for (_uint i = 0; i < m_iNumInstance; i++)
@@ -143,7 +146,7 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 			pVertices[i].vColor.w = 1.f;
 
 		m_pSpeeds[i] = RandomSpeed(m_RandomNumber);
-		m_pLifeTimes[i] = RandomLifeTime(m_RandomNumber);
+		m_pLifeTimes[i] = SMath::fRandom(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
 		m_pLengths[i] = RandomLengthPosition(m_RandomNumber);
 
 
@@ -408,7 +411,7 @@ void CVIBuffer_Particle_Point::ReSet()
 
 	uniform_real_distribution<float>	RandomScale(m_tBufferDesc.vMinMaxScale.x, m_tBufferDesc.vMinMaxScale.y);
 	uniform_real_distribution<float>	RandomSpeed(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);
-	uniform_real_distribution<float>	RandomLifeTime(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
+	//uniform_real_distribution<float>	RandomLifeTime(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
 	uniform_real_distribution<float>	RandomLengthPosition(m_tBufferDesc.vMinMaxRangeLength.x, m_tBufferDesc.vMinMaxRangeLength.y);
 
 	uniform_real_distribution<float>	RandomRed(min(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y), max(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y));
@@ -424,7 +427,7 @@ void CVIBuffer_Particle_Point::ReSet()
 			pVertices[i].vColor.w = 1.f;
 
 		m_pSpeeds[i] = RandomSpeed(m_RandomNumber);
-		m_pLifeTimes[i] = RandomLifeTime(m_RandomNumber);
+		m_pLifeTimes[i] = SMath::fRandom(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
 		m_pLengths[i] = RandomLengthPosition(m_RandomNumber);
 
 
