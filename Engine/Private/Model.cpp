@@ -40,6 +40,11 @@ CModel::CModel(const CModel & rhs)
 	}
 }
 
+_uint CModel::Get_MaterialIndex(_uint iMeshIndex)
+{
+	return m_Meshes[iMeshIndex]->Get_MaterialIndex();
+}
+
 _uint CModel::Get_NumMeshIndice(_int iMeshIndex)
 {
 	 return m_Meshes[iMeshIndex]->Get_NumIndices();
@@ -183,19 +188,6 @@ HRESULT CModel::Initialize(void * pArg)
 
 	return S_OK;
 }
-
-HRESULT CModel::Render(_uint iMeshIndex)
-{
-	if (iMeshIndex >= m_iNumMeshes)
-		return E_FAIL;
-
-	m_Meshes[iMeshIndex]->Bind_VIBuffers();
-	m_Meshes[iMeshIndex]->Render();
-
-	return S_OK;
-}
-
-
 
 void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 {
@@ -517,6 +509,43 @@ HRESULT CModel::Ready_Animations()
 
 		m_Animations.push_back(pAnimation);
 	}
+
+	return S_OK;
+}
+
+HRESULT CModel::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* strConstantName)
+{
+	if (iMaterialIndex >= m_iNumMaterials)
+		return E_FAIL;
+
+	NULL_CHECK_RETURN(m_Materials[iMaterialIndex].pMtrlTextures[eTextureType], E_FAIL);
+
+	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Set_SRV(pShader, strConstantName);
+}
+
+HRESULT CModel::Render(CShader*& pShader, const _uint& iMeshIndex, const _uint& strPassName)
+{
+	/* m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
+
+		m_pModelCom->Render(0);
+	*/
+
+	FAILED_CHECK(pShader->Begin(strPassName));
+
+	FAILED_CHECK(m_Meshes[iMeshIndex]->Bind_VIBuffers());
+
+	FAILED_CHECK(m_Meshes[iMeshIndex]->Render());
+
+	return S_OK;
+}
+
+HRESULT CModel::Render(_uint iMeshIndex)
+{
+	if (iMeshIndex >= m_iNumMeshes)
+		return E_FAIL;
+
+	m_Meshes[iMeshIndex]->Bind_VIBuffers();
+	m_Meshes[iMeshIndex]->Render();
 
 	return S_OK;
 }

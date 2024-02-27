@@ -27,6 +27,9 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;	
 
 public:
+	void	Update_Cascade();
+
+public:
 	void	Set_Enable(_bool _bEnable) { m_bEnable = _bEnable; }
 
 
@@ -38,6 +41,8 @@ protected:
 
 	_bool	m_bEnable = false; //! true일 경우에만 뷰 투영 셋팅하게~ 씅승용
 
+
+	_float						m_fCascadeEnd[4]; // 사다리꼴 절두체 끝부분 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;

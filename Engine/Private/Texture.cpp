@@ -127,6 +127,14 @@ HRESULT CTexture::Get_TextureSize(_uint* iWidth, _uint* iHeight, _uint iTextureI
 	return S_OK;
 }
 
+HRESULT CTexture::Set_SRV(CShader* pShader, const char* strConstantName, _uint iTextureIndex)
+{
+	if (iTextureIndex >= m_iNumTextures)
+		return E_FAIL;
+
+	return pShader->Bind_SRV(strConstantName, m_SRVs[iTextureIndex]);
+}
+
 CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strTextureFilePath, _uint iNumTextures)
 {
 	CTexture*		pInstance = new CTexture(pDevice, pContext);

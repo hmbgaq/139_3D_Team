@@ -31,10 +31,15 @@ void CWindow_ShaderTool::Tick(_float fTimeDelta)
 
 	Select_Level(); /* 스테이지 선택 및 불러오기 */
 
+	if (ImGui::CollapsingHeader("Light Control"))
+		Layer_Light_Control();
+
+	ImGui::Spacing();
+
 	if (ImGui::CollapsingHeader("Level Shader"))
 		Layer_Level_Shader_Control();
 
-	ImGui::Spacing(); /* 여백 */
+	ImGui::Spacing();
 
 	if (ImGui::CollapsingHeader("Object Shader"))
 		Layer_Object_Shader_Control();
@@ -60,6 +65,18 @@ void CWindow_ShaderTool::Top_Setting()
 	HelpMarker(u8"렌더타겟 끄고 켜기");
 
 	ImGui::Spacing();
+}
+
+void CWindow_ShaderTool::Layer_Light_Control()
+{
+	if (ImGui::TreeNode("Directional Light "))
+	{
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Spot Light"))
+	{
+		ImGui::TreePop();
+	}
 }
 
 void CWindow_ShaderTool::Layer_Level_Shader_Control()

@@ -47,6 +47,7 @@ private:
 	HRESULT Load_Level(_int iLevel_Index);
 
 	/* Collapsing */
+	void Layer_Light_Control();
 	void Layer_Level_Shader_Control();
 	void Layer_Object_Shader_Control();
 
