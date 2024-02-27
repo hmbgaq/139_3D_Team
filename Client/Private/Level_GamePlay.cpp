@@ -66,7 +66,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 	CEffect* pEffect = { nullptr };
 	if (m_pGameInstance->Key_Down(DIK_TAB))
 	{
-		pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Test2.json");
+		pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Test_Effect.json");
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_RIGHT))

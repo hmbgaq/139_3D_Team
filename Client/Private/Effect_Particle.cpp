@@ -192,19 +192,16 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 	Out_Json["strProtoTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strProtoTag);
 	Out_Json["strPartTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strPartTag);
 
+	Out_Json["m_fWaitingAcc"] = m_fWaitingAcc;
+	Out_Json["m_fRemainAcc"] = m_fRemainAcc;
+	Out_Json["m_fSequenceAcc"] = m_fSequenceAcc;
 
-	//m_fWaitingAcc
-	//m_fTimeAcc 
-	//m_fRemainAcc
-	//m_fSequenceAcc 
+	Out_Json["m_fLifeTimeRatio"] = m_fLifeTimeRatio;
 
-	//m_fLifeTimeRatio
-
-	//m_fWaitingTime
-	//m_fLifeTime
-	//m_fRemainTime
-	//m_fSequenceTime
-
+	Out_Json["m_fWaitingTime"] = m_fWaitingTime;
+	Out_Json["m_fLifeTime"] = m_fLifeTime;
+	Out_Json["m_fRemainTime"] = m_fRemainTime;
+	Out_Json["m_fSequenceTime"] = m_fSequenceTime;
 
 
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
@@ -293,6 +290,18 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 
 	m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strProtoTag) = In_Json["strProtoTag"];
 	m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strPartTag) = In_Json["strPartTag"];
+
+	m_fWaitingAcc = In_Json["m_fWaitingAcc"];
+	m_fRemainAcc = In_Json["m_fRemainAcc"];
+	m_fSequenceAcc = In_Json["m_fSequenceAcc"];
+
+	m_fLifeTimeRatio = In_Json["m_fLifeTimeRatio"];
+
+	m_fWaitingTime = In_Json["m_fWaitingTime"];
+	m_fLifeTime = In_Json["m_fLifeTime"];
+	m_fRemainTime = In_Json["m_fRemainTime"];
+	m_fSequenceTime = In_Json["m_fSequenceTime"];
+
 
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 	{
