@@ -119,6 +119,7 @@ HRESULT CRenderer::Create_RenderTarget()
 			/* MRT_Bloom_Blur*/
 			FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
 		}
+
 		/* MRT_OutLine*/
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_OutLine"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 		
@@ -149,13 +150,10 @@ HRESULT CRenderer::Create_RenderTarget()
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_PrePostProcess"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 		
 		/* MRT_Effect */ 
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Normal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Depth"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-		
-	}
-	/* PostProcessing */
-	{
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f)));
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Normal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 0.f)));
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Depth"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 0.f)));
+
 		/* MRT_HDR */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_HDR"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 
@@ -168,8 +166,6 @@ HRESULT CRenderer::Create_RenderTarget()
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_FXAA"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 
 	}
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_RadialBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-	
 
 	/* UI_Target */
 	{
@@ -453,7 +449,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	/* 외곽선 */
 	//FAILED_CHECK(Render_OutLine()); 
 	
-	FAILED_CHECK(Render_Effect());		/* - 외곽선 필요유무에 따라 위치가 달라질듯? */
+	//FAILED_CHECK(Render_Effect());		/* - 외곽선 필요유무에 따라 위치가 달라질듯? */
 
 	FAILED_CHECK(Render_Shadow());		/* MRT_Shadow */
 
@@ -1202,6 +1198,12 @@ HRESULT CRenderer::Render_Effect()
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Effect")));
 
+	/* CEffect_Void - CAlphaObject 자식클래스 확인 */
+	m_RenderObjects[RENDER_EFFECT].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
+	{
+		return ((CAlphaObject*)pSour)->Get_CamDistance() > ((CAlphaObject*)pDest)->Get_CamDistance();
+	});
+
 	for (auto& pGameObject : m_RenderObjects[RENDER_EFFECT])
 	{
 		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
@@ -1214,7 +1216,6 @@ HRESULT CRenderer::Render_Effect()
 
 	/* 백버퍼를 원래 위치로 다시 장치에 바인딩한다. */
 	FAILED_CHECK(m_pGameInstance->End_MRT());
-
 
 	return S_OK;
 }
@@ -1260,7 +1261,7 @@ HRESULT CRenderer::Render_OutLineGroup()
 
 	m_RenderObjects[RENDER_OUTLINE].clear();
 
-	FAILED_CHECK(m_pGameInstance->End_MRT());
+	//FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
