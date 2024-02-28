@@ -79,7 +79,11 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     {
         Out.vColor = vResult;
     }
-        return Out;
+    
+    if (Out.vColor.a == 0) // 백버퍼 blue 나오게 
+        discard;
+    
+    return Out;
     
 }
 
@@ -89,7 +93,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_FINAL();
         GeometryShader = NULL;
         HullShader = NULL;

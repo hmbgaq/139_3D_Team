@@ -152,7 +152,7 @@ HRESULT CRenderer::Create_RenderTarget()
 		/* MRT_PrePostProcess */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_PrePostProcess"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 		
-		/* MRT_Effect */ 
+		/* MRT_Effect - clear color가 111의 흰색일경우 이펙트에 묻어나와서 무조건 000 으로 클리어해야함  */ 
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 
 		/* MRT_Effect_deferred */
