@@ -80,7 +80,6 @@ private:
 	HRESULT Render_Decal();
 
 	/* Post Processing */
-	HRESULT Render_PostProcess();
 	HRESULT Render_RadialBlur();
 	HRESULT Render_GodRay();
 	HRESULT Render_FXAA();
@@ -138,16 +137,17 @@ private:
 
 	/* 활성 제어 */
 private:
-	_bool						m_bInit					= { true }; /* 없으면 터짐 건들지마세요 */
-	_bool						m_bSSAO_Active			= { false };
-	_bool						m_bBloom_Active			= { true };
-	_bool						m_bOutline_Active		= { false };
-	_bool						m_bPBR_Active			= { false };
-	_bool						m_bFXAA_Active			= { false };
-	_bool						m_bHDR_Active			= { false };
-	_bool						m_bFog_Active			= { false };
-	_bool						m_bRim					= { false };
-	_bool						m_bCascade_Shadow_Active = { false };
+	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
+	_bool						m_bSSAO_Active				= { false };
+	_bool						m_bBloom_Active				= { true };
+	_bool						m_bOutline_Active			= { false };
+	_bool						m_bPBR_Active				= { false };
+	_bool						m_bFXAA_Active				= { false };
+	_bool						m_bHDR_Active				= { false };
+	_bool						m_bFog_Active				= { false };
+	_bool						m_bRim						= { false };
+	_bool						m_bCascade_Shadow_Active	= { false };
+	_bool						m_bRadial_Blur_Active		= { false };
 
 private:
 	HBAO_PLUS_DESC				m_tHBAO_Option			= {};

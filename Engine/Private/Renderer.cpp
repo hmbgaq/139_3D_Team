@@ -162,7 +162,8 @@ HRESULT CRenderer::Create_RenderTarget()
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_HDR"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 
 		/* MRT_RadialBlur */
-		//FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_RadialBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_RadialBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+		
 		/* MRT_GodRay */
 		//FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_GodRay"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 
@@ -224,11 +225,11 @@ HRESULT CRenderer::Create_RenderTarget()
 		/* MRT_GodRay */
 		//FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GodRay"), TEXT("Target_GodRay")));
 
-		/* MRT_RadialBlur*/
-		//FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_RaidalBlur"), TEXT("Target_RadialBlur")));
-
 		/* MRT_PrePostProcessScene */
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_PrePostProcessScene"), TEXT("Target_PrePostProcess")));
+
+		/* MRT_RadialBlur*/
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_RaidalBlur"), TEXT("Target_RadialBlur")));
 
 		/* MRT_FXAA*/
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_FXAA"), TEXT("Target_FXAA")));
@@ -380,14 +381,14 @@ HRESULT CRenderer::Control_HotKey()
 	if (m_pGameInstance->Key_Down(DIK_GRAVE))
 	{
 		cout << " ----------------------------- " << endl;
-		cout << " DIK_1 : NONE ON/OFF " << endl;
+		cout << " DIK_1 : Test - Outline - ON/OFF " << endl;
 		cout << " DIK_2 : HBAO+ ON/OFF " << endl;
-		cout << " DIK_3 : BlurBloom ON/OFF " << endl;
+		cout << " DIK_3 : Test - Cascade : 터짐 ON/OFF " << endl;
 		cout << " DIK_4 : HDR ON/OFF " << endl;
 		cout << " DIK_5 : FXAA ON/OFF " << endl;
 		cout << " DIK_6 : RimLight ON/OFF " << endl;
 		cout << " DIK_7 : Fog ON/OFF " << endl;
-		cout << " DIK_8 : Bloom Color Increase " << endl;
+		cout << " DIK_8 : Test - Radial Blur " << endl;
 		cout << " DIK_9 : Dont use !! Renderpass BloomBlur Test " << endl;
 
 		if (true == m_tHBAO_Option.bHBAO_Active)
@@ -410,6 +411,11 @@ HRESULT CRenderer::Control_HotKey()
 		else
 			cout << "Cascade : false " << endl;
 
+		if (true == m_bRadial_Blur_Active)
+			cout << "Radial Blur : true " << endl;
+		else
+			cout << "Radial Blur : false " << endl;
+
 		cout << " ----------------------------- " << endl;
 	}
 	if (m_pGameInstance->Key_Down(DIK_1))
@@ -424,6 +430,8 @@ HRESULT CRenderer::Control_HotKey()
 		m_tScreen_Option.bFXAA_Active = !m_tScreen_Option.bFXAA_Active;
 	if (m_pGameInstance->Key_Down(DIK_7))
 		m_tFog_Option.bFog_Active = !m_tFog_Option.bFog_Active;
+	if (m_pGameInstance->Key_Down(DIK_8))
+		m_bRadial_Blur_Active = !m_bRadial_Blur_Active;
 
 	return S_OK;
 }
@@ -442,8 +450,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 	/* Pre-PostProcessing */
 	FAILED_CHECK(Render_NonBlend());			/* MRT_GameObjects*/
 	
-	//if(true == m_bCascade_Shadow_Active)
-	//	FAILED_CHECK(Render_Cascade_Shadow());		/* MRT_Cascade */
+	if(true == m_bCascade_Shadow_Active)
+		FAILED_CHECK(Render_Cascade_Shadow());		/* MRT_Cascade */
 
 	if (true == m_tHBAO_Option.bHBAO_Active)
 	{
@@ -463,13 +471,14 @@ HRESULT CRenderer::Draw_RenderGroup()
 	/* ★ Deferred ★*/
 	FAILED_CHECK(Render_Deferred());
 
+	/* ★ PostProcessing ★*/
+	FAILED_CHECK(Render_RadialBlur());
+
 	FAILED_CHECK(Render_SSR());
 
+	FAILED_CHECK(Render_HDR()); /* HDR - 톤맵핑 */
 
-	FAILED_CHECK(Render_NonLight());
-
-	/* ★ PostProcessing ★*/
-	FAILED_CHECK(Render_PostProcess()); /* 모션블러, Radial 블러 등등 */
+	FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
 
 	/* Effect */
 	FAILED_CHECK(Render_Effect()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
@@ -478,6 +487,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	/* 최종 합성 */
 	FAILED_CHECK(Render_Final());
+
+	FAILED_CHECK(Render_NonLight());
 
 	FAILED_CHECK(Render_UI()); /* 디버그에서 렌더타겟 한장으로 그린거 콜하는 그룹 여기 */
 
@@ -1065,14 +1076,6 @@ HRESULT CRenderer::Render_Bloom()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_PostProcess()
-{
-	FAILED_CHECK(Render_HDR()); /* HDR - 톤맵핑 */
-
-	FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
-
-	return S_OK;
-}
 
 HRESULT CRenderer::Render_RadialBlur()
 {
@@ -1097,7 +1100,6 @@ HRESULT CRenderer::Render_RadialBlur()
 	//FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	////FAILED_CHECK(Render_AlphaBlendTargetMix(L"Target_RadialBlur", L"MRT_Blend", true))) 
-	////-> mix 시키고 deferred셰이더에 값 다른곳에 던지고 render -> clear함 
 
 	return S_OK;
 }

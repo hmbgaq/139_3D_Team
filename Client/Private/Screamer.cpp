@@ -63,10 +63,6 @@ void CScreamer::Tick(_float fTimeDelta)
 			m_iRenderPass = ECast(ANIM_SHADER::ANIM_ORIGIN);
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_8))
-	{
-		m_vBloomColor += _float4(fTimeDelta, 0.f, 0.f, 0.f);
-	}
 	if (m_pGameInstance->Key_Down(DIK_6))
 		m_bRim = !m_bRim;
 
