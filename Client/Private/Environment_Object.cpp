@@ -172,26 +172,40 @@ _bool CEnvironment_Object::Picking_VerJSY(RAY* pRay, _float3* vPickedPos)
 
 	_float fDist;
 
-	_bool bResult;
-
 	
-		CBounding_AABB* pBoundingAABB = dynamic_cast<CBounding_AABB*>(m_pPickingCollider->Get_Bounding());
+	CBounding_Sphere* pBoundingSphere = dynamic_cast<CBounding_Sphere*>(m_pPickingCollider->Get_Bounding());
 
-		if (pBoundingAABB == nullptr)
-		{
-			MSG_BOX("콜라이더 없대");
-			return false;
-		}
+	if (pBoundingSphere == nullptr)
+	{
+		MSG_BOX("콜라이더 없대");
+		return false;
+	}
 
-		const BoundingBox* pBoundingBox = pBoundingAABB->Get_Bounding();
+	const BoundingSphere* pBoundingSphereBox = pBoundingSphere->Get_Bounding();
 
-		if (true == pBoundingBox->Intersects(vOrigin, vDir, fDist))
-		{
-			//_vector vLocalPoint = vOrigin + fDist * vDir;
-			*vPickedPos = vOrigin + fDist * vDir;
+	if (true == pBoundingSphereBox->Intersects(vOrigin, vDir, fDist))
+	{
+		*vPickedPos = vOrigin + fDist * vDir;
+		return true;
+	}
 
-			return true;
-		}
+// 		CBounding_AABB* pBoundingAABB = dynamic_cast<CBounding_AABB*>(m_pPickingCollider->Get_Bounding());
+// 
+// 		if (pBoundingAABB == nullptr)
+// 		{
+// 			MSG_BOX("콜라이더 없대");
+// 			return false;
+// 		}
+// 
+// 		const BoundingBox* pBoundingBox = pBoundingAABB->Get_Bounding();
+// 
+// 		if (true == pBoundingBox->Intersects(vOrigin, vDir, fDist))
+// 		{
+// 			//_vector vLocalPoint = vOrigin + fDist * vDir;
+// 			*vPickedPos = vOrigin + fDist * vDir;
+// 
+// 			return true;
+// 		}
 	
 	return false;
 }
@@ -215,17 +229,28 @@ HRESULT CEnvironment_Object::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
-	
-	Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_MESH;
-	Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
-	Desc_AABB.vCenter = _float3(0.f, 0.f, 0.f);
+	CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
 
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Desc_AABB)))
+	m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
+	Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
+
+	//!CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
+	//!
+	//!Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_MESH;
+	//!Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
+	//Desc_AABB.vCenter = _float3(0.f, 0.f, 0.f);
+
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Test)))
 	{
 		MSG_BOX("ㅈ댐");
 		return E_FAIL;
 	}
+
+	//!if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Desc_AABB)))
+	//!{
+	//!	MSG_BOX("ㅈ댐");
+	//!	return E_FAIL;
+	//!}
 
 //	m_pPickingCollider
 

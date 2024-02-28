@@ -108,7 +108,9 @@ void CPhysXCollider::Add_PhysXActorAtSceneWithOption(const PxVec3& In_MassSpaceI
 	if (m_pRigidDynamic && m_pRigidStatic)
 	{
 		// 둘 다 존재하면 안된다.
-		DEBUG_ASSERT;
+		#ifdef _DEBUG
+DEBUG_ASSERT;
+#endif // _DEBUG
 	}
 
 	else if (m_pRigidDynamic)
@@ -487,7 +489,9 @@ void CPhysXCollider::Init_ModelInstanceCollider(CMyAIScene* pModelData, const ve
 {
 	if (nullptr == pModelData)
 	{
-		DEBUG_ASSERT;
+		#ifdef _DEBUG
+DEBUG_ASSERT;
+#endif // _DEBUG
 	}
 
 	for (_uint i = 0; i < pModelData->Get_NumMeshes(); ++i)

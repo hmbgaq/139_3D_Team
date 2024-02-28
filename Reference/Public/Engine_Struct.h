@@ -256,8 +256,8 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tag_InstanceDesc
 	{
-		_float3         vRotation;
 		_float3         vScale;
+		_float3         vRotation;
 		_float3			vTranslation;
 		_float			fMaxRange;
 		_float3			vCenter;
@@ -270,6 +270,7 @@ namespace Engine
 			_vector vPitchYawRoll;
 			_vector vPosition;
 
+			
 			vPitchYawRoll = XMLoadFloat3(&vRotation);
 			vPosition = XMVectorSetW(XMLoadFloat3(&vTranslation), 1.f);
 
@@ -279,6 +280,20 @@ namespace Engine
 			TransformationMatrix.r[3] = vPosition;
 
 			return TransformationMatrix;
+		}
+
+
+		void Set_Matrix(const _fmatrix& matrix)
+		{
+
+			_vector vTempScale, vTempRotation, vTempTranslation;
+
+			
+			XMMatrixDecompose(&vTempScale, &vTempRotation, &vTempTranslation, matrix);
+
+			XMStoreFloat3(&vScale, vTempScale);
+			XMStoreFloat3(&vRotation, vTempRotation);
+			XMStoreFloat3(&vTranslation, vTempTranslation);
 		}
 
 		void	Bake_CenterWithMatrix()

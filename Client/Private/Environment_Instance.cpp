@@ -65,11 +65,11 @@ void CEnvironment_Instance::Tick(_float fTimeDelta)
 		for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 		{
 			_matrix WorldMatrix = m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix();
-
+			
 			_float3 vCenter = m_tInstanceDesc.vecInstanceInfoDesc[i].vCenter;
-
+			
 			WorldMatrix.r[3] -= XMLoadFloat3(&vCenter);
-
+			
 			m_vecColliders[i]->Update(WorldMatrix);
 		}
 	}
@@ -141,23 +141,38 @@ _bool CEnvironment_Instance::Picking_Instance(RAY* pRay, _float3* vOutPoint)
 
 	for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 	{
-		CBounding_AABB* pBoundingAABB = dynamic_cast<CBounding_AABB*>(m_vecColliders[i]->Get_Bounding());
+		CBounding_Sphere* pBoundingSphere = dynamic_cast<CBounding_Sphere*>(m_vecColliders[i]->Get_Bounding());
 
-		if (pBoundingAABB == nullptr)
+		if (pBoundingSphere == nullptr)
 		{
 			MSG_BOX("콜라이더 없대");
 			return false;
 		}
-		
-		const BoundingBox* pBoundingBox = pBoundingAABB->Get_Bounding();
 
-		if (true == pBoundingBox->Intersects(vOrigin, vDir, fDist))
+		const BoundingSphere* pBoundingSphereBox = pBoundingSphere->Get_Bounding();
+
+		if (true == pBoundingSphereBox->Intersects(vOrigin, vDir, fDist))
 		{
-			//_vector vLocalPoint = vOrigin + fDist * vDir;
 			*vOutPoint = vOrigin + fDist * vDir;
-
 			return true;
 		}
+		//!CBounding_AABB* pBoundingAABB = dynamic_cast<CBounding_AABB*>(m_vecColliders[i]->Get_Bounding());
+		//!
+		//!if (pBoundingAABB == nullptr)
+		//!{
+		//!	MSG_BOX("콜라이더 없대");
+		//!	return false;
+		//!}
+		
+		//!const BoundingBox* pBoundingBox = pBoundingAABB->Get_Bounding();
+		//!
+		//!if (true == pBoundingBox->Intersects(vOrigin, vDir, fDist))
+		//!{
+		//!	//_vector vLocalPoint = vOrigin + fDist * vDir;
+		//!	*vOutPoint = vOrigin + fDist * vDir;
+		//!
+		//!	return true;
+		//!}
 	}
 	
 	return false;
@@ -202,22 +217,37 @@ HRESULT CEnvironment_Instance::Ready_Components()
 	{
 		for (_int i = 0; i < Desc.iNumInstance; ++i)
 		{
-			CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
-
-			//Desc_AABB.vCenter = Desc.vecBufferInstanceInfo[i].vCenter;
-			//Desc_AABB.vCenter.y = Desc_AABB.vCenter.y + -Desc_AABB.vExtents.y * 0.5f;
-			Desc_AABB.vCenter = Desc.vecBufferInstanceInfo[i].vCenter;
-			Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
-			Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
+			CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
 			
+			
+			m_pModelCom->Calculate_Sphere_Radius(nullptr, &Test.fRadius);
+			Test.vCenter = Desc.vecBufferInstanceInfo[i].vCenter;
+			Test.vCenter.y = Desc.vecBufferInstanceInfo[i].vCenter.y * 2.f;
 
+			Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
+			//CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
+			//
+			////Desc_AABB.vCenter = Desc.vecBufferInstanceInfo[i].vCenter;
+			////Desc_AABB.vCenter.y = Desc_AABB.vCenter.y + -Desc_AABB.vExtents.y * 0.5f;
+			//Desc_AABB.vCenter = Desc.vecBufferInstanceInfo[i].vCenter;
+			//Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
+			//Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
+			
 			wstring strColliderComTag = L"Com_Collider" + i;
 
-			if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Desc_AABB)))
+			if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Test)))
 			{
 				MSG_BOX("ㅈ댐");
 				return E_FAIL;
 			}
+
+			//wstring strColliderComTag = L"Com_Collider" + i;
+			//
+			//if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Desc_AABB)))
+			//{
+			//	MSG_BOX("ㅈ댐");
+			//	return E_FAIL;
+			//}
 		}
 	}
 	

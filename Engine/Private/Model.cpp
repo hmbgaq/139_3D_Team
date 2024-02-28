@@ -132,6 +132,66 @@ _float3& CModel::Calculate_AABB_Extents_From_Model()
 	return vExtents;
 }
 
+void CModel::Calculate_Sphere_Radius(_float3* vOutCenter, _float* fOutRadius)
+{
+	_float fMaxRadius = 0.0f;
+	_float3 Min, Max;
+	
+	if (m_eModelType == CModel::TYPE_ANIM)
+	{
+		for (size_t i = 0; i < m_iNumMeshes; ++i)
+		{
+			m_Meshes[i]->Calculate_AABB_Extents(&Min, &Max);
+
+			// 중심점 계산
+			_float3 vCenter = (Min + Max) * 0.5f;
+
+
+			_uint iNumVertices = m_Meshes[i]->Get_NumVertices();
+			VTXANIMMESH* pAnimVertices = m_Meshes[i]->Get_AnimVertices();
+			// 중심점으로부터 각 정점까지의 거리 계산
+			for (_uint j = 0; j < iNumVertices; ++j)
+			{
+				_float3 VertexPos = pAnimVertices[j].vPosition;
+				fMaxRadius = max(fMaxRadius, XMVector3Length(XMLoadFloat3(&VertexPos) - XMLoadFloat3(&vCenter)).m128_f32[0]);
+			}
+		}
+
+	}
+	else if (m_eModelType == CModel::TYPE_NONANIM)
+	{
+		for (size_t i = 0; i < m_iNumMeshes; ++i)
+		{
+			m_Meshes[i]->Calculate_AABB_Extents(&Min, &Max);
+
+			// 중심점 계산
+			_float3 vCenter = (Min + Max) * 0.5f;
+
+
+			_uint iNumVertices = m_Meshes[i]->Get_NumVertices();
+			VTXMESH* pVertices = m_Meshes[i]->Get_Vertices();
+			// 중심점으로부터 각 정점까지의 거리 계산
+			for (_uint j = 0; j < iNumVertices; ++j)
+			{
+				_float3 VertexPos = pVertices[j].vPosition;
+				fMaxRadius = max(fMaxRadius, XMVector3Length(XMLoadFloat3(&VertexPos) - XMLoadFloat3(&vCenter)).m128_f32[0]);
+			}
+		}
+	}
+	
+
+	
+	
+	if (vOutCenter != nullptr)
+		*vOutCenter = (Min + Max) * 0.5f;
+
+	if(fOutRadius != nullptr)
+		*fOutRadius = fMaxRadius;
+}
+
+
+
+
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)

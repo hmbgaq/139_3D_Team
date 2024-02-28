@@ -17,7 +17,7 @@ class CMonster;
 class CWindow_MapTool final : public CImgui_Window
 {
 private:
-	enum class TAP_TYPE { TAB_GROUND, TAB_INTERACT, TAB_ENVIRONMENT, TAB_NORMALMONSTER, TAB_BOSSMONSTER, TAB_NPC, TAB_END };
+	enum class TAP_TYPE { TAB_SINGLE, TAB_INTERACT, TAB_ENVIRONMENT, TAB_NORMALMONSTER, TAB_BOSSMONSTER, TAB_NPC, TAB_END };
 	enum class MODE_TYPE { MODE_CREATE, MODE_SELECT, MODE_DELETE, MODE_END };
 	enum class PICKING_TYPE { PICKING_FIELD, PICKING_MESH, PICKING_INSTANCE, PICKING_NONE, PICKING_END };
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
@@ -26,7 +26,7 @@ private:
 	
 	enum class MAP_KEY_TYPE //! 맵컨테이너 키
 	{
-		MODEL_GROUND, MODEL_ENVIRONMENT, MODEL_INTERACT, MODEL_END
+		MODEL_SINGLE, MODEL_INSTANCE, MODEL_INTERACT, MODEL_END
 	};
 
 	
@@ -74,7 +74,9 @@ private:
 
 
 private:
-	void			MouseInfo_Window(_float fTimeDelta);
+	#ifdef _DEBUG
+void			MouseInfo_Window(_float fTimeDelta);
+#endif // _DEBUG
 	void			FieldWindowMenu();
 	void			CameraWindow_Function();
 	void			IsCreatePlayer_ReadyCamara();
@@ -139,6 +141,10 @@ private:
 	CPlayer*		m_pPlayer = nullptr;
 	
 	_bool			m_bOnTheInstance = false;
+	_float4x4		m_matInstanceMatrix = {};
+	_float3			m_vRotation = {};
+	_bool			m_bRotateMode = { false};
+
 private: //!For. Character
 	vector<string>			  m_vecMonsterTag;
 	vector<string>			  m_vecBossTag;
@@ -151,7 +157,7 @@ private: //!For. Environment
 	map<string, MAP_KEY_TYPE> m_mapNonAnimModelTag;
 	map<string, MAP_KEY_TYPE> m_mapAnimModelTag;
 	
-	vector<string>  m_vecGroundModelTag;
+	vector<string>  m_vecSingleModelTag;
 
 	vector<string>  m_vecEnviroModelTag;
 	vector<string>	m_vecAnimEnviroModelTag;
@@ -210,6 +216,8 @@ private:
 	//!vector<CNPC*>					m_vecCreateNPC;
 	//!vector<string>					m_vecCreateNPCTag ;
 	//!_int							m_iCreateNPCIndex = {};
+
+	
 
 	
 	_int							m_iCreateMonsterIndex = {};

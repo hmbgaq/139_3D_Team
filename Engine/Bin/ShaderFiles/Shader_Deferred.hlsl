@@ -353,7 +353,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
    
         float4 vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
    
-        if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
+        if (vWorldPos.w - 0.1f > vLightDepth.x * 1000.f)
             Out.vColor = Out.vColor * 0.8f;
     }
   
