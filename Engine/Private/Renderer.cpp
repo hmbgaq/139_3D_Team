@@ -42,10 +42,10 @@ HRESULT CRenderer::Initialize()
 
 	FAILED_CHECK(Ready_CascadeShadow());
 
-	m_tHBAO_Option.bHBAO_Active = m_bSSAO_Active;
-	m_tFog_Option.bFog_Active = m_bFog_Active;
-	m_tHDR_Option.bHDR_Active = m_bHDR_Active;
-	m_tScreen_Option.bFXAA_Active = m_bFXAA_Active;
+	m_tHBAO_Option.bHBAO_Active = true; //m_bSSAO_Active;
+	m_tFog_Option.bFog_Active = true; //m_bFog_Active;
+	m_tHDR_Option.bHDR_Active = true; //m_bHDR_Active;
+	m_tScreen_Option.bFXAA_Active = true;//m_bFXAA_Active;
 
 	return S_OK;
 }
@@ -295,6 +295,42 @@ HRESULT CRenderer::Create_DepthStencil()
 	return S_OK;
 }
 
+HRESULT CRenderer::Ready_CascadeShadow()
+{
+	D3D11_VIEWPORT		ViewportDesc;
+
+	_uint				iNumViewports = 1;
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	//ShadowDepth
+	for (_uint i = 0; i < 3; ++i)
+	{
+		ID3D11Texture2D* pDepthStencilTexture = nullptr;
+
+		D3D11_TEXTURE2D_DESC	TextureDesc;
+		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+		TextureDesc.Width = g_iWinsizeX;
+		TextureDesc.Height = g_iWinsizeY;
+		TextureDesc.MipLevels = 1;
+		TextureDesc.ArraySize = 1;
+		TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		TextureDesc.SampleDesc.Quality = 0;
+		TextureDesc.SampleDesc.Count = 1;
+
+		TextureDesc.Usage = D3D11_USAGE_DEFAULT;
+		TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL/*| D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE*/;
+		TextureDesc.CPUAccessFlags = 0;
+		TextureDesc.MiscFlags = 0;
+
+		FAILED_CHECK(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture));
+
+		FAILED_CHECK(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pCascadeShadowDSV[i]));
+	}
+
+	return S_OK;
+}
 #ifdef _DEBUG
 
 HRESULT CRenderer::Ready_DebugRender()
@@ -339,42 +375,7 @@ HRESULT CRenderer::Ready_DebugRender()
 	return S_OK;
 }
 
-HRESULT CRenderer::Ready_CascadeShadow()
-{
-	D3D11_VIEWPORT		ViewportDesc;
 
-	_uint				iNumViewports = 1;
-	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
-
-	//ShadowDepth
-	for (_uint i = 0; i < 3; ++i)
-	{
-		ID3D11Texture2D* pDepthStencilTexture = nullptr;
-
-		D3D11_TEXTURE2D_DESC	TextureDesc;
-		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
-
-		TextureDesc.Width = g_iWinsizeX;
-		TextureDesc.Height = g_iWinsizeY;
-		TextureDesc.MipLevels = 1;
-		TextureDesc.ArraySize = 1;
-		TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-		TextureDesc.SampleDesc.Quality = 0;
-		TextureDesc.SampleDesc.Count = 1;
-
-		TextureDesc.Usage = D3D11_USAGE_DEFAULT;
-		TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL/*| D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE*/;
-		TextureDesc.CPUAccessFlags = 0;
-		TextureDesc.MiscFlags = 0;
-
-		FAILED_CHECK(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture));
-
-		FAILED_CHECK(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pCascadeShadowDSV[i]));
-	}
-
-	return S_OK;
-}
 
 HRESULT CRenderer::Control_HotKey()
 {

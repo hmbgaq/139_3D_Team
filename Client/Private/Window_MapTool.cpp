@@ -1097,7 +1097,7 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 						if (false == pTargetObject->Get_EnvironmentDesc()->bAnimModel)
 						{
 							m_tWorldRay = m_pGameInstance->Get_MouseRayWorld(g_hWnd, g_iWinSizeX, g_iWinSizeY);
-
+#ifdef _DEBUG
 							if (pTargetObject->Picking_VerJSY(&m_tWorldRay, &m_fRayPos))
 							{
 								m_fMeshPos = m_fRayPos;
@@ -1107,6 +1107,8 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 							//
 							//	XMStoreFloat3(&m_fMeshPos, XMVector3TransformCoord(XMLoadFloat3(&m_fRayPos), m_vecCreateObject[i]->Get_Transform()->Get_WorldMatrix()));
 							//}
+#endif
+
 						}
 						else
 							continue;
