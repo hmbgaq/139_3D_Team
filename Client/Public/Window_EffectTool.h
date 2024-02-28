@@ -42,12 +42,14 @@ public:
 	void	Update_ParticleTab();
 	void	Update_RectTab();
 	void	Update_MeshTab();
+	void	Update_TrailTab();
 
 
 	HRESULT Create_EffectObject(const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	HRESULT Add_Part_Particle();
 	HRESULT Add_Part_Rect();
 	HRESULT Add_Part_Mesh(wstring strModelTag);
+	HRESULT Add_Part_Trail();
 
 	void	Update_CurMembers(wstring strName);
 

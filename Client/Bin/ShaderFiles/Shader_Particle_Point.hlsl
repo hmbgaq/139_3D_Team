@@ -6,6 +6,8 @@ Texture2D		g_DiffuseTexture;
 Texture2D		g_MaskTexture;
 Texture2D		g_NoiseTexture;
 
+texture2D		g_DepthTexture;
+
 vector			g_vCamPosition;
 vector			g_vCamDirection;
 
@@ -164,15 +166,17 @@ PS_OUT PS_MAIN_MASKING(PS_IN In)
 
 	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
     Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    float4 vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
-	
-    if (Out.vColor.a < g_DiscardValue)
-        discard;
+    float4 vAlphaColor = g_MaskTexture.Sample(ClampSampler, In.vTexcoord);
 	
     Out.vColor.rgb *= In.vColor.rgb;
 	
     Out.vColor.a = In.vColor.a * vAlphaColor;
 
+    if (Out.vColor.a < g_DiscardValue)
+        discard;
+	
+    //Out.vColor.a = vAlphaColor;
+	
 	return Out;
 }
 

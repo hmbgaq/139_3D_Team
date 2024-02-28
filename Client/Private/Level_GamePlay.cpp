@@ -67,7 +67,18 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_TAB))
 	{
 		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Test_Effect.json");
-		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
+		if (nullptr != m_pGameInstance->Get_Player())
+		{
+			CTransform* pTransform = m_pGameInstance->Get_Player()->Get_Transform();
+			_float3 vPos = pTransform->Get_Position();
+			vPos.y += 1.f;
+			pEffect->Set_Position(vPos);
+		}
+		else
+		{
+			pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
+		}
+			
 	}
 
 #pragma endregion
@@ -145,13 +156,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag, void* pArg)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
 
-	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
-	//if (nullptr == pPlayer)
-	//	return E_FAIL;
+	CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
+	if (nullptr == pPlayer)
+		return E_FAIL;
 
-	//m_pGameInstance->Set_Player(pPlayer);
+	m_pGameInstance->Set_Player(dynamic_cast<CCharacter*>(pPlayer));
 
 	return S_OK;
 }

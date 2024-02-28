@@ -520,13 +520,11 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 	if (m_tParticleDesc.bParentPivot)
 	{
-		if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tParticleDesc.matOffset)))
-			return E_FAIL;
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tParticleDesc.matOffset));
 	}
 	else
 	{
-		if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-			return E_FAIL;
+		FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
 	}
 
 

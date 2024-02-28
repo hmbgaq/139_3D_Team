@@ -10,6 +10,7 @@
 #include "Effect_Rect.h"
 #include "Effect_Particle.h"
 #include "Effect_Instance.h"
+#include "Effect_Trail.h"
 //#include "Mesh.h"
 
 
@@ -914,6 +915,10 @@ void CWindow_EffectTool::Update_MeshTab()
 	}
 }
 
+void CWindow_EffectTool::Update_TrailTab()
+{
+}
+
 void CWindow_EffectTool::Update_CurParameters_Parts()
 {
 	if (nullptr != m_pCurPartEffect)
@@ -1061,6 +1066,12 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 		if (CEffect_Void::MESH == eType_Effect)
 		{
+
+		}
+
+		if (CEffect_Void::TRAIL == eType_Effect)
+		{
+
 
 		}
 
@@ -1303,7 +1314,7 @@ void CWindow_EffectTool::Update_EffectList()
 		ImGui::SameLine();
 		if (ImGui::Button(" Add Trail "))
 		{
-			//Add_Part_Trail();
+			Add_Part_Trail();
 		}
 
 		ImGui::SeparatorText("");
@@ -1982,6 +1993,125 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 	}
 
 	return S_OK;
+}
+
+HRESULT CWindow_EffectTool::Add_Part_Trail()
+{
+
+	if (nullptr != m_pCurEffect)
+	{
+		CEffect_Trail::TRAIL_DESC	tTrailDesc = {};
+		tTrailDesc.fSpeedPerSec = { 5.f };
+		tTrailDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
+
+		//tTrailDesc.bSpriteAnim = FALSE;
+		tTrailDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
+		tTrailDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
+
+		tTrailDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
+		//tTrailDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("");
+		tTrailDesc.iTextureIndex[CEffect_Particle::TEXTURE_MASK] = { 0 /*1*/ };
+
+		tTrailDesc.strTextureTag[CEffect_Particle::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
+		tTrailDesc.iTextureIndex[CEffect_Particle::TEXTURE_NOISE] = { 0 };
+
+		tTrailDesc.iRenderGroup = { 7 };
+
+		tTrailDesc.iShaderPassIndex = { 1 };
+
+		tTrailDesc.bBillBoard = TRUE;
+
+		tTrailDesc.fUV_RotDegree = { 0.f };
+
+		tTrailDesc.bPlay = { TRUE };
+
+		tTrailDesc.bTrailOn = TRUE;
+		tTrailDesc.vPos_0 = m_pCurEffect->Get_Transform()->Get_Position();
+		tTrailDesc.vPos_1 = m_pCurEffect->Get_Transform()->Get_Position();
+
+		tTrailDesc.iVtxCnt = 0;
+		tTrailDesc.iMaxCnt = 24;
+
+
+
+
+#pragma region 리스트 문자열 관련
+		wstring strName = TEXT("");
+		wstring strFrontName = TEXT("Part_Trail");
+
+		_int iMaxNum = -1;
+		wstring strPin = TEXT("");
+
+		for (auto& iter : m_CurPartObjects)
+		{
+			if (nullptr == iter.second)
+				continue;
+
+			if (strFrontName == m_pGameInstance->Remove_LastNumChar(iter.first, 4))
+			{
+				_int iPinNum = stoi(m_pGameInstance->Get_LastNumChar(iter.first, 3));
+
+				if (iMaxNum < iPinNum)
+					iMaxNum = iPinNum;
+			}
+		}
+		/* 최댓값이 -1이라는 것은 해당 이름과 같은게 없으므로 고유번호를 000으로 세팅한다. */
+		if (-1 == iMaxNum)
+			strName = strFrontName + L"_000";
+		else /* 아니라면 최댓값에 + 1을 하여 고유 번호로 세팅한다. */
+		{
+			_int iPinNum = iMaxNum + 1;
+
+			if (0 == iPinNum / 10)
+				strPin = L"_00" + to_wstring(iPinNum);
+			else if (0 == iPinNum / 100)
+				strPin = L"_0" + to_wstring(iPinNum);
+			else
+				strPin = L"_" + to_wstring(iPinNum);
+
+			strName = strFrontName + strPin;
+		}
+
+		tTrailDesc.strPartTag = strName;
+		tTrailDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Trail");
+		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Trail"), strName, &tTrailDesc));
+
+		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
+		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
+		m_pCurPartEffect->Set_EffectType(CEffect_Void::TRAIL);
+		dynamic_cast<CEffect_Void*>(m_pCurPartEffect)->Set_Owner(m_pCurEffect);
+
+		m_iCurPartIndex = m_CurPartObjects.size();
+		/* 문자열 초기화 */
+		if (nullptr != m_szPartNames)
+		{
+			for (_int i = 0; i < m_iCurPartIndex; ++i)
+			{
+				m_szPartNames[i] = nullptr;
+			}
+			m_szPartNames = nullptr;
+		}
+
+		m_szPartNames = new char* [m_iCurPartIndex];
+
+		_int iCount = 0;
+		for (auto& Pair : m_CurPartObjects)
+		{
+			const string utf8Str = m_pGameInstance->Wstring_To_UTF8(Pair.first);
+			m_szPartNames[iCount] = new char[utf8Str.length() + 1];
+			strcpy(m_szPartNames[iCount], utf8Str.c_str());
+
+			iCount++;
+		}
+		m_iCurPartIndex -= 1;
+
+
+		Update_CurParameters_Parts();
+#pragma endregion
+	}
+
+	return S_OK;
+
 }
 
 void CWindow_EffectTool::Update_CurMembers(wstring strName)

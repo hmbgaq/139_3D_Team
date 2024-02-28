@@ -45,14 +45,31 @@ void CEffect_Trail::Priority_Tick(_float fTimeDelta)
 void CEffect_Trail::Tick(_float fTimeDelta)
 {
 
+	if (FALSE == m_tTrailDesc.bTrailOn)
+	{
+		m_pVIBufferCom->Reset_Points(m_tTrailDesc.matPivot);
+		return;
+	}
+
+	m_pVIBufferCom->Update(fTimeDelta, m_tTrailDesc.matPivot);
 
 };
 
 void CEffect_Trail::Late_Tick(_float fTimeDelta)
 {
+
+	if (nullptr != m_pOwner)
+	{
+		if (m_tTrailDesc.bParentPivot)
+		{
+			m_tTrailDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+			XMStoreFloat4x4(&m_tTrailDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tTrailDesc.matPivot);
+		}
+	}
+
 	Compute_CamDistance();
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_EFFECT, this)))
 		return;
 }
 
@@ -61,8 +78,8 @@ HRESULT CEffect_Trail::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	/* 이 쉐이더에 0번째 패스로 그릴거야. */
-	m_pShaderCom->Begin(2);
+	/* 이 쉐이더에 n번째 패스로 그릴거야. */
+	m_pShaderCom->Begin(0);
 
 	/* 내가 그릴려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
 	m_pVIBufferCom->Bind_VIBuffers();
@@ -102,7 +119,7 @@ HRESULT CEffect_Trail::Ready_Components()
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Particle_Point"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_EffectTex"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 
 
 	/* For.Com_VIBuffer */
@@ -140,34 +157,34 @@ HRESULT CEffect_Trail::Ready_Components()
 HRESULT CEffect_Trail::Bind_ShaderResources()
 {
 
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
+	if (m_tTrailDesc.bParentPivot)
+	{
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tTrailDesc.matOffset));
+	}
+	else
+	{
+		FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	}
 
-	if (FAILED(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tTrailDesc.iTextureIndex[TEXTURE_DIFFUSE])))
-		return E_FAIL;
+
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+
+
+	FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tTrailDesc.iTextureIndex[TEXTURE_DIFFUSE]));
 
 	if (nullptr != m_pTextureCom[TEXTURE_MASK])
 	{
-		if (FAILED(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tTrailDesc.iTextureIndex[TEXTURE_MASK])))
-			return E_FAIL;
+		FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tTrailDesc.iTextureIndex[TEXTURE_MASK]));
 	}
 	if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 	{
-		if (FAILED(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tTrailDesc.iTextureIndex[TEXTURE_NOISE])))
-			return E_FAIL;
+		FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tTrailDesc.iTextureIndex[TEXTURE_NOISE]));
 	}
 
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
-		return E_FAIL;
-
-
-	if (FAILED(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"));
 
 	return S_OK;
 }
