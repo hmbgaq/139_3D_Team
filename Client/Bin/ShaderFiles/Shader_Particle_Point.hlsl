@@ -136,9 +136,7 @@ struct PS_IN
 
 struct PS_OUT
 {
-	float4		vColor	: SV_TARGET0;
-    float4		vNormal : SV_Target1;
-    float4		vDepth	: SV_Target2;
+	float4		vColor : SV_TARGET0;
 };
 
 /* «»ºøºŒ¿Ã¥ı : «»ºø¿« ªˆ!!!! ¿ª ∞·¡§«—¥Ÿ. */
@@ -150,14 +148,12 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
 
     if (Out.vColor.a < g_DiscardValue)
-        discard;	
+        discard;
 
     Out.vColor.rgb *= In.vColor.rgb;
 
-    //Out.vColor.a	 = In.vColor.a /** vAlphaColor*/;
-    Out.vColor.a = 1.f; /** vAlphaColor*/;
-    Out.vDepth = Out.vColor;
-    Out.vNormal = Out.vColor;
+    Out.vColor.a = In.vColor.a /** vAlphaColor*/;
+
 	return Out;
 }
 

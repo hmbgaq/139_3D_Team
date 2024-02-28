@@ -58,6 +58,9 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
     
     Out.vColor = g_Diffuse_Target.Sample(LinearSampler, In.vTexcoord);
+    
+    if(Out.vColor.a == 0)
+        discard;
 
     return Out;
 }

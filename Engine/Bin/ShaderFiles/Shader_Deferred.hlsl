@@ -280,11 +280,12 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 
     if (vDiffuse.a == 0.f)
     {
-        float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
-        if (vPriority.a == 0.f)
-            discard;
+        //float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
+        //if (vPriority.a == 0.f)
+        //    discard;
         
-        Out.vColor = vPriority + vBloom;
+        //Out.vColor = vPriority + vBloom;
+        discard;
     }
     else
     {

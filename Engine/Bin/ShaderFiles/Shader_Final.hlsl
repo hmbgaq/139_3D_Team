@@ -2,9 +2,9 @@
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-Texture2D g_FinalTarget; /* 기존 Deferred로 넘어온색 */ 
-Texture2D g_Final_Effect;
-Texture2D g_Diffuse_UITarget;
+Texture2D g_Final_Deferred_Target;
+Texture2D g_Final_Effect_Target;
+Texture2D g_PriorityTarget;
 
 /* 명도 채도 관리 */
 float g_brightness = 1.f; // 명도 
@@ -66,25 +66,21 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
     
    // float4 vUI = g_Diffuse_UITexture.Sample(LinearSampler, In.vTexcoord);
-    float4 vEffect = g_Final_Effect.Sample(LinearSampler, In.vTexcoord);
+    float4 vEffect = g_Final_Effect_Target.Sample(LinearSampler, In.vTexcoord);
+    float4 originalColor = g_Final_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
     
-    if (vEffect.a == 0.0f)
+    float4 vResult = vEffect + originalColor;
+    
+    if (vResult.a == 0)
     {
-        float4 originalColor = g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
-            if (originalColor.a == 0.f)
-               discard;
-    
-        // 명도 적용
-        float3 BrightColor = originalColor.rgb * g_brightness;
-    
-        float value = BrightColor.r + (1.0 - g_brightness);
-    
-        // 채도 적용
-        BrightColor = lerp(float3(value, value, value), BrightColor, g_saturation);
-        Out.vColor = float4(BrightColor, originalColor.a);
+        Out.vColor = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
     }
-
-    return Out;
+    else
+    {
+        Out.vColor = vResult;
+    }
+        return Out;
+    
 }
 
 technique11 DefaultTechnique
