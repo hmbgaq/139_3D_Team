@@ -2,9 +2,9 @@
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-texture2D		g_DiffuseTexture;
-texture2D		g_MaskTexture;
-texture2D		g_NoiseTexture;
+Texture2D		g_DiffuseTexture;
+Texture2D		g_MaskTexture;
+Texture2D		g_NoiseTexture;
 
 vector			g_vCamPosition;
 vector			g_vCamDirection;
@@ -163,15 +163,15 @@ PS_OUT PS_MAIN_MASKING(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
-	Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-	float4	vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
-
-	if (Out.vColor.a < g_DiscardValue)
-		discard;
-
-	Out.vColor.rgb *= In.vColor.rgb;
-
-	Out.vColor.a = In.vColor.a * vAlphaColor;
+    Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    float4 vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
+	
+    if (Out.vColor.a < g_DiscardValue)
+        discard;
+	
+    Out.vColor.rgb *= In.vColor.rgb;
+	
+    Out.vColor.a = In.vColor.a * vAlphaColor;
 
 	return Out;
 }
@@ -182,7 +182,7 @@ technique11 DefaultTechnique
 	/* 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
 	pass Particle  // 0
 	{
-		SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
 		SetDepthStencilState(DSS_Default, 0);
 		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 		/* 렌더스테이츠 */

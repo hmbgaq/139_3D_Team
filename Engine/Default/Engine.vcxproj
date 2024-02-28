@@ -287,8 +287,10 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\Public\VIBuffer_Particle_Point.h" />
     <ClInclude Include="..\public\VIBuffer_Particle_Rect.h" />
     <ClInclude Include="..\public\VIBuffer_Rect.h" />
+    <ClInclude Include="..\Public\VIBuffer_Point.h" />
     <ClInclude Include="..\Public\VIBuffer_SSAO.h" />
     <ClInclude Include="..\Public\VIBuffer_Terrain.h" />
+    <ClInclude Include="..\Public\VIBuffer_Trail.h" />
     <ClInclude Include="..\Public\Weapon.h" />
     <ClInclude Include="..\Public\RigidBody.h" />
   </ItemGroup>
@@ -368,13 +370,16 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\Private\VIBuffer_Particle_Point.cpp" />
     <ClCompile Include="..\private\VIBuffer_Particle_Rect.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Point.cpp" />
     <ClCompile Include="..\Private\VIBuffer_SSAO.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Trail.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Blur.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Effect_Deferred.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Effect_Engine.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Final.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Fxaa3_11.hlsl" />

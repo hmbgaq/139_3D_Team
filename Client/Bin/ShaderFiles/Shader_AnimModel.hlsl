@@ -50,15 +50,15 @@ struct VS_IN
 
 struct KeyframeDesc
 {
-    int iAnimIndex;
-    uint iCurFrame;
-    uint iNextFrame;
-    float fRatio;
-    float fFrameAcc;
+    int     iAnimIndex;
+    uint    iCurFrame;
+    uint    iNextFrame;
+    float   fRatio;
+    float   fFrameAcc;
 
-    uint iFinish;
-    uint iFix;
-    uint iStop;
+    uint    iFinish;
+    uint    iFix;
+    uint    iStop;
 };
 
 struct TweenFrameDesc

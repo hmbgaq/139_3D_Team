@@ -63,10 +63,6 @@ void CScreamer::Tick(_float fTimeDelta)
 			m_iRenderPass = ECast(ANIM_SHADER::ANIM_ORIGIN);
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_8))
-	{
-		m_vBloomColor += _float4(fTimeDelta, 0.f, 0.f, 0.f);
-	}
 	if (m_pGameInstance->Key_Down(DIK_6))
 		m_bRim = !m_bRim;
 
@@ -87,7 +83,7 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
 		//m_pGameInstance->Add_CascadeObject(this);
 		
 	}
@@ -265,6 +261,7 @@ HRESULT CScreamer::Bind_ShaderResources()
 		m_vRimColor = { 0.0f, 0.0f, 0.0f, 0.0f };
 		m_vBloomPower = { 0.0f, 0.0f, 0.0f };
 	}
+
 	m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
 
 	/* RimLight */

@@ -14,12 +14,61 @@ BEGIN(Client)
 class CEffect_Particle final : public CEffect_Void
 {
 public:
-	enum TYPE { SINGLE, SPRITE, TEXTURE_TYPE_END };
-
 	typedef struct tagParticleDesc : public CEffect_Void::EFFECTVOID_DESC
 	{
-		TYPE	eType			= { SINGLE };
+		CVIBuffer_Particle_Point::TYPE_ACTION	eType_Action = { CVIBuffer_Particle_Point::SPHERE };
+		CVIBuffer_Particle_Point::TYPE_FADE		eType_Fade = { CVIBuffer_Particle_Point::FADE_NONE };
+		EASING_TYPE								eType_ColorLerp = { LINEAR };
 
+		_bool		bLoop = { TRUE };
+		_bool		bReverse = { FALSE };
+		_bool		bSpriteAnim = { FALSE };
+
+		/* 파티클 개수 */
+		_uint		iCurNumInstance = { 100 };
+
+		/* LifeTime */
+		_float2		vMinMaxLifeTime = { 0.5f, 3.0f };
+
+		/* For.Position */
+		_float2		vMinMaxRange = { 0.1f, 3.f };
+		_float2		vMinMaxRangeLength = { 3.f, 3.f };
+
+		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
+
+		/* For.Speed */
+		_float2		vMinMaxSpeed = { 0.1f, 5.0 };
+
+		/* 가속도 */
+		_float		fSpeedAcc = { 2.f };
+		_float		fAccPosition = { 0.1f };
+
+		/* For.Gravity */
+		_bool		bUseGravity = { FALSE };
+		_float		fGravityAcc = { -9.8 };
+		_float		fUseGravityPosition = { 0.1f };
+
+		/* For.Rotation */
+		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
+		_float2		vMinMaxRotationOffsetY = { 0.0f, 360.f };
+		_float2		vMinMaxRotationOffsetZ = { 0.0f, 360.f };
+		_float3		vRotationOffset = {0.f, 0.f, 0.f};
+
+		_float3     vCurrentRotation = { 0.f, 0.f, 0.f };
+		_float3		vMinMaxRotationForce = { 0.f, 0.f, 0.f };
+
+		/* For.Scale */
+		_float2     vMinMaxScale = { 0.2f, 0.5f };
+		_float2     vAddScale = { 0.f, 0.f };
+		_float2		vCurrentScale;
+
+		/* For.Color */
+		_float2     vMinMaxRed = { 0.f, 1.f };
+		_float2     vMinMaxGreen = { 0.f, 1.f };
+		_float2     vMinMaxBlue = { 0.f, 1.f };
+		_float2     vMinMaxAlpha = { 0.f, 1.f };
+
+		_float4     vCurrentColor = { 0.f, 0.f, 0.f, 0.f };
 
 	}PARTICLE_DESC;
 
@@ -49,7 +98,7 @@ public:
 	/* For.Desc */
 public:
 	PARTICLE_DESC*	Get_Desc() { return &m_tParticleDesc; }
-
+	void* Get_BufferDesc();
 
 public:
 	CVIBuffer_Particle_Point* Get_VIBufferCom() { return m_pVIBufferCom; }
@@ -61,11 +110,11 @@ private:
 
 private:
 	PARTICLE_DESC				m_tParticleDesc = {};
+	UVSPRITE_DESC				m_tSpriteDesc = {};
 	//CVIBuffer_Particle_Point::PARTICLE_POINT_DESC 
-	//UVSPRITE_DESC				m_tSpriteDesc = {};
 
-	CModel*							 m_pModelCom = { nullptr };
-	CVIBuffer_Effect_Model_Instance* m_pVIBufferCom_Model = { nullptr };
+	//CModel*							 m_pModelCom = { nullptr };
+	//CVIBuffer_Effect_Model_Instance* m_pVIBufferCom_Model = { nullptr };
 
 
 private:

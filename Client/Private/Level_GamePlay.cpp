@@ -28,6 +28,11 @@
 #include "InstanceMonster.h"
 #pragma endregion
 
+#pragma region Effect_Test
+#include "Clone_Manager.h"
+#include "Effect.h"
+#pragma endregion
+
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -55,6 +60,18 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
+
+
+#pragma region Effect_Test	
+
+	if (m_pGameInstance->Key_Down(DIK_TAB))
+	{
+		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Test_Effect.json");
+		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
+	}
+
+#pragma endregion
+
 
 }
 
@@ -367,7 +384,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void*
 HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
 	//! ¾Ö´ÔÀÎ½ºÅÏ½ÌÀÌ ÇÒÇÊ¿ä¾ø¾îÁü. ¤¾¤¾¤¾¤¾¤¾¤¾FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
 
 	m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));

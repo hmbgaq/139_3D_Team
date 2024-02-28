@@ -61,8 +61,8 @@ private:
 	map<const wstring, class CEffect*>		m_pEffects;
 	map<const wstring, class CGameObject*>	m_CurPartObjects;
 
-	char** m_szEffectNames = { nullptr };
-	char* m_cCurEffectName = { nullptr };
+	char**			m_szEffectNames = { nullptr };
+	char*			m_cCurEffectName = { nullptr };
 	_int			m_iCurEffectIndex = { 0 };
 	class CEffect*	m_pCurEffect = { nullptr };
 
@@ -78,7 +78,7 @@ private:
 	CEffect::EFFECT_DESC* m_pCurEffectDesc = { nullptr };
 
 	CEffect_Particle::PARTICLE_DESC*				m_pParticleDesc = {};
-	CVIBuffer_Particle_Point::PARTICLE_POINT_DESC*	m_pParticlePointDesc = {};
+	CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*	m_pParticlePointDesc = {};
 
 	CEffect_Rect::EFFECT_RECT_DESC*					m_pRectDesc			= {};
 	CEffect_Instance::EFFECT_INSTANCE_DESC*			m_pInstanceDesc		= {};
@@ -95,7 +95,7 @@ private:
 	_int m_iShaderPassIndex_Mesh		= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
 	_int  m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 4, 17, 5 };
+	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 15, 17, 5 };
 
 
 	_int m_iRenderGroup_Rect			= { 7 };
@@ -191,6 +191,13 @@ private:
 	_float	m_DissolveAmount = { 0.f };
 
 	_float	m_fUV_RotDegree_Mesh = { 0.f };
+
+	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fRimPower_Mesh = { 1.f };
+
+
+	_float	m_vBloomColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
 
 #pragma endregion
 
