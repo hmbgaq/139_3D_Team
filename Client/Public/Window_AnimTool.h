@@ -100,6 +100,10 @@ private:
 	_float					m_iColliderOnTrackPosition = 0.0f;
 	_float					m_iColliderOffTrackPosition = 0.0f;
 
+	//! Effect
+	_float					m_fEffectOnTrackPosition = 0.0f;
+	//_float					m_fEffectOffTrackPosition = 0.0f;
+
 	_float					m_iColliderWeaponSize = 0.0f;
 	_float					m_iColliderWeaponOnTrackPosition = 0.0f;
 	_float					m_iColliderWeaponOffTrackPosition = 0.0f;

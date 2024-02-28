@@ -93,7 +93,7 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 		if (ImGui::BeginTabItem("Event Editer"))
 		{
-			Draw_KeyEventEditer();
+			
 
 			ImGui::EndTabItem();
 		}
@@ -114,6 +114,22 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 			if (ImGui::BeginTabItem("Weapon"))
 			{
 				Draw_Weapon(fTimeDelta);
+
+				ImGui::EndTabItem();
+			}
+		}
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
+
+	ImGui::Begin("Effect_Add");
+	if (ImGui::BeginTabBar("Effect_Add View", tab_bar_flags))
+	{
+		if (m_CreateList.size() > 0)
+		{
+			if (ImGui::BeginTabItem("Effect_Add"))
+			{
+				Draw_KeyEventEditer();
 
 				ImGui::EndTabItem();
 			}
@@ -196,9 +212,9 @@ void CWindow_AnimTool::Add_EffectKeyEvent()
 					{
 						_float4x4 BoneMatrix = {};
 						BoneMatrix = m_pBones[m_iSelectBoneIndex]->Get_CombinedTransformationFloat4x4();
-						m_EffectPosition.x = BoneMatrix._41;
-						m_EffectPosition.y = BoneMatrix._42;
-						m_EffectPosition.z = BoneMatrix._43;
+						m_EffectPosition.x = BoneMatrix._41 + m_AddPositions[0];
+						m_EffectPosition.y = BoneMatrix._42 + m_AddPositions[1];
+						m_EffectPosition.z = BoneMatrix._43 + m_AddPositions[2];
 
 						pEffect->Set_Position(m_EffectPosition);
 						m_bCreateEffect = false;
@@ -229,6 +245,24 @@ void CWindow_AnimTool::Add_EffectKeyEvent()
 	{
 		m_bAddEffectposition = true;
 	}
+	ImGui::SeparatorText("EffectOn");
+	if (ImGui::InputFloat("EffectOn", &m_fEffectOnTrackPosition, 0.01f, 1.f));
+	
+	if (m_pBones.size() > 0)
+	{
+		if (m_fCurrentTrackPosition <= m_fEffectOnTrackPosition)
+			bTest = true;
+		
+		if (bTest == true)
+		{
+			if (m_fCurrentTrackPosition >= m_fEffectOnTrackPosition)
+			{
+				m_bCreateEffect = true;
+				bTest = false;
+			}
+		
+		}
+	}
 }
 
 void CWindow_AnimTool::Add_EnableWeaponEvent(const _bool In_bEnable)
@@ -247,10 +281,12 @@ HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
 {
 	string strBody = "TypeBody";
 	string strWeapon = "TypeWeapon";
+	string strEffect = "TypeEffect";
 
 	json SaveJson = {};
 	json BodyJson = {};
 	json WeaponJson = {};
+	json EffectJson = {};
 
 	if (m_CreateList.size() > 0)
 	{
@@ -306,9 +342,15 @@ HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
 			WeaponJson.emplace("WeaponColliderTrackPositionOff", m_iColliderWeaponOffTrackPosition);
 		}
 	}
+	//Effect
+	{
+		EffectJson.emplace("TypeEffect", strEffect);
+
+	}
 
 	SaveJson.emplace("Body", BodyJson);
 	SaveJson.emplace("Weapon", WeaponJson);
+	SaveJson.emplace("Effect", EffectJson);
 
 	string strSavePath = strPath + "/" +strFileName+  "_AnimationData.json";
 	if (FAILED(CJson_Utility::Save_Json(strSavePath.c_str(), SaveJson)))
@@ -341,7 +383,7 @@ HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
 
 	json BodyJson = LoadJson["Body"];
 	json WeaponJson = LoadJson["Weapon"];
-
+	json EffectJson = LoadJson["Effect"];
 	//Body
 	{
 		
@@ -430,7 +472,7 @@ HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
 		m_iColliderWeaponOnTrackPosition = WeaponJson["WeaponColliderTrackPositionOn"];
 		m_iColliderWeaponOffTrackPosition = WeaponJson["WeaponColliderTrackPositionOff"];
 	}
-
+	//Effect
 	return S_OK;
 }
 
