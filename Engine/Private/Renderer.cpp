@@ -46,6 +46,7 @@ HRESULT CRenderer::Initialize()
 	m_tFog_Option.bFog_Active = m_bFog_Active;
 	m_tHDR_Option.bHDR_Active = m_bHDR_Active;
 	m_tScreen_Option.bFXAA_Active = m_bFXAA_Active;
+	m_tRadial_Option.bRadial_Active = m_bRadial_Blur_Active;
 
 	return S_OK;
 }
@@ -169,7 +170,6 @@ HRESULT CRenderer::Create_RenderTarget()
 
 		/* MRT_FXAA */
 		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_FXAA"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-
 	}
 
 	/* UI_Target */
@@ -1077,33 +1077,6 @@ HRESULT CRenderer::Render_Bloom()
 }
 
 
-HRESULT CRenderer::Render_RadialBlur()
-{
-	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_RaidalBlur"))); /* Target SSAO 단독 */
-
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
-
-	///* 변수 올리기 */
-	//{
-	//	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fQuality", &m_fRadialBlurQuality, sizeof(_float4)));
-	//	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_RawValue("g_fRadialPower", &m_fRadialBlurPower, sizeof(_float4)));
-	//}
-
-	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Blend"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BlendTarget"));
-
-	//FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Begin(ECast(DEFERRED_SHADER::SHADER_END)));
-
-	//FAILED_CHECK(m_pVIBuffer->Render());
-
-	//FAILED_CHECK(m_pGameInstance->End_MRT());
-
-	////FAILED_CHECK(Render_AlphaBlendTargetMix(L"Target_RadialBlur", L"MRT_Blend", true))) 
-
-	return S_OK;
-}
-
 HRESULT CRenderer::Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear)
 {
 	FAILED_CHECK(Render_Blur_DownSample(strStartTargetTag));
@@ -1120,6 +1093,81 @@ HRESULT CRenderer::Render_Blur(const wstring& strStartTargetTag, const wstring& 
 HRESULT CRenderer::Render_GodRay()
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_GodRay")));
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_RadialBlur()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_RaidalBlur"))); /* Target SSAO 단독 */
+
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	/* 변수 올리기 */
+	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_Radial_Blur", &m_tRadial_Option, sizeof(RADIAL_DESC)));
+	}
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_ProcessingTarget"));
+
+	if (true == m_bRadial_Blur_Active)
+	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(POST_SHADER::POST_RADIAL)));
+	}
+	else
+	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(POST_SHADER::POST_ORIGIN)));
+	}
+
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_SSR()
+{
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_HDR()
+{
+	if (m_pGameInstance->Key_Down(DIK_O))
+	{
+		m_tHDR_Option.fmax_white -= 0.1f;
+	}
+	else if (m_pGameInstance->Key_Down(DIK_P))
+		m_tHDR_Option.fmax_white += 0.1f;
+
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_HDR"))); /* Target_FXAA*/
+
+	/* 변수 올리기 */
+	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+	
+		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_bHDR_Active", &m_tHDR_Option.bHDR_Active, sizeof(_bool)));
+		/* 값 컨트롤용도 */
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_max_white", &m_tHDR_Option.fmax_white, sizeof(_float)));
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RadialBlur"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_ProcessingTarget"));
+	}
+
+	if (false == m_tHDR_Option.bHDR_Active)
+	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(POST_SHADER::POST_ORIGIN)));
+	}
+	else
+	{
+		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(POST_SHADER::POST_HDR)));
+	}
+
+	FAILED_CHECK(m_pVIBuffer->Render());
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
@@ -1153,51 +1201,6 @@ HRESULT CRenderer::Render_FXAA()
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_HDR()
-{
-	if (m_pGameInstance->Key_Down(DIK_O))
-	{
-		m_tHDR_Option.fmax_white -= 0.1f;
-	}
-	else if (m_pGameInstance->Key_Down(DIK_P))
-		m_tHDR_Option.fmax_white += 0.1f;
-
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_HDR"))); /* Target_FXAA*/
-
-	/* 변수 올리기 */
-	{
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
-	
-		/* deferred 이후에 post process가 생긴다면 그걸로 타겟을 바꿔야함 일단 지금은 deferred가 그린 그림위에 만드는것 */
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_bHDR_Active", &m_tHDR_Option.bHDR_Active, sizeof(_bool)));
-		/* 값 컨트롤용도 */
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Bind_RawValue("g_max_white", &m_tHDR_Option.fmax_white, sizeof(_float)));
-		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_PrePostProcess"), m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING], "g_ProcessingTarget"));
-	}
-
-	if (false == m_tHDR_Option.bHDR_Active)
-	{
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(POST_SHADER::POST_ORIGIN)));
-	}
-	else
-	{
-		FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_POSTPROCESSING]->Begin(ECast(POST_SHADER::POST_HDR)));
-	}
-
-	FAILED_CHECK(m_pVIBuffer->Render());
-
-	FAILED_CHECK(m_pGameInstance->End_MRT());
-
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_SSR()
-{
 	return S_OK;
 }
 

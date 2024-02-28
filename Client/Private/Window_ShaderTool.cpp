@@ -97,6 +97,11 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 
 	ImGui::SeparatorText("Post");
 
+	if (ImGui::TreeNode("Radial Blur Setting"))
+	{
+		Compress_Radial_Setting();
+		ImGui::TreePop();
+	}
 	if (ImGui::TreeNode("HDR Setting"))
 	{
 		Compress_HDR_Setting();
@@ -166,6 +171,18 @@ void CWindow_ShaderTool::Compress_Fog_Setting()
 	m_pGameInstance->Get_Renderer()->Set_Fog(m_eFog_Desc.bFog_Active);
 
 	m_pGameInstance->Get_Renderer()->Set_Fog_Option(m_eFog_Desc);
+}
+
+void CWindow_ShaderTool::Compress_Radial_Setting()
+{
+	ImGui::Checkbox("Radial Active", &m_eRadial_Desc.bRadial_Active);
+
+	ImGui::SliderFloat("Power", &m_eRadial_Desc.fRadial_Power, 0.0f, 1.0f, "Power = %.3f");
+	ImGui::SliderFloat("Quality", &m_eRadial_Desc.fRadial_Quality, 0.0f, 20.0f, "Quality = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_Radial_Blur(m_eRadial_Desc.bRadial_Active);
+
+	m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(m_eRadial_Desc);
 }
 
 void CWindow_ShaderTool::Compress_HDR_Setting()

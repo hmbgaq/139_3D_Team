@@ -154,6 +154,7 @@ private:
 	FOG_DESC					m_tFog_Option			= {};
 	HDR_DESC					m_tHDR_Option			= {};
 	SCREEN_DESC					m_tScreen_Option		= {};
+	RADIAL_DESC					m_tRadial_Option		= {};
 
 	/* BLUR */
 	HRESULT						Render_Blur_DownSample(const wstring& strStartTargetTag);
@@ -176,9 +177,6 @@ private:
 	/* HDR */
 	_float						m_max_white = { 0.3f };
 
-	/* Fog */ 
-	FOG_DESC					m_CurrFog = {};
-
 	/* Cascade Shadow */
 	vector<class CGameObject*> m_CascadeObjects;
 
@@ -191,12 +189,14 @@ public:
 	void Set_FXAA(_bool _FXAA_active) { m_bFXAA_Active = _FXAA_active; }
 	void Set_RimLight(_bool _RimLight) { m_bRim = _RimLight; }
 	void Set_Fog(_bool _Fog) { m_bFog_Active = _Fog; }
+	void Set_Radial_Blur(_bool _Radial) { m_bRadial_Blur_Active = _Radial; }
 
 	/* 옵션조절 */
 	void Set_HBAO_Option(HBAO_PLUS_DESC desc) {	m_tHBAO_Option = desc; }
 	void Set_Fog_Option(FOG_DESC desc) { m_tFog_Option = desc; }
 	void Set_HDR_Option(HDR_DESC desc) { m_tHDR_Option = desc; }
 	void Set_Screen_Option(SCREEN_DESC desc) { m_tScreen_Option = desc; }
+	void Set_RadialBlur_Option(RADIAL_DESC desc) { m_tRadial_Option = desc; }
 
 	HRESULT Add_CascadeObject(CGameObject* pObject);
 

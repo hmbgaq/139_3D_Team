@@ -382,6 +382,14 @@ namespace Engine
 
 	}SCREEN_DESC;
 
+	typedef struct ENGINE_DLL tagRadialBlurDesc
+	{
+		_bool	bRadial_Active = false;
+		_float	fRadial_Quality = 16.f;
+		_float	fRadial_Power = 0.1f;
+	}RADIAL_DESC;
+
+
 	/* 전체 컨트롤 - 레벨시작할때 초기 컨트롤용도 */
 	typedef struct ENGINE_DLL tagLevelShader
 	{

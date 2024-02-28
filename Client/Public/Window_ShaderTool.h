@@ -33,9 +33,8 @@ private:
 	FOG_DESC		m_eFog_Desc = {};
 	HDR_DESC		m_eHDR_Desc = {};
 	SCREEN_DESC		m_eScreen_Desc = {};
-
+	RADIAL_DESC		m_eRadial_Desc = {};
 	LEVEL_SHADER_DESC m_eTotalShader_Desc = {};
-
 
 private:
 	/* 최상위 셋팅 */
@@ -54,6 +53,7 @@ private:
 	/* Compress */
 	void Compress_HBAO_Plus_Setting();
 	void Compress_Fog_Setting();
+	void Compress_Radial_Setting();
 	void Compress_HDR_Setting();
 	void Compress_FXAA_Setting();
 	void Compress_Screen_Setting();

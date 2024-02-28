@@ -8,7 +8,7 @@ BEGIN(Engine)
 class CPipeLine final : public CBase
 {
 public:
-	enum D3DTRANSFORMSTATE { D3DTS_VIEW, D3DTS_PROJ, D3DTS_END };
+	enum D3DTRANSFORMSTATE {D3DTS_WORLD, D3DTS_VIEW, D3DTS_PROJ, D3DTS_END };
 private:
 	CPipeLine();
 	virtual ~CPipeLine() = default;
@@ -53,7 +53,10 @@ private:
 
 	_float4				m_vPreCamPosition;
 	_float4				m_vPreCamQuaternion;
+
+	_float4x4			m_PreWorldMatrix;
 	_float4x4			m_PreViewMatrix;
+	_float4x4			m_PreProjMatrix;
 	_float				m_fCamFar = 1000.f;
 
 	/* For. Cascade */

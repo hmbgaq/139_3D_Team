@@ -1,4 +1,11 @@
 #include "Shader_Defines.hlsli"
+struct radial
+{
+    bool    bRadial_Active;
+    float   fRadial_Quality;
+    float   fRadial_Power;
+};
+/* ====================================== */
 
 /* Origin */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -11,6 +18,10 @@ bool g_bHDR_Active;
 float g_max_white;
 float g_change_luminance;
 
+// Radial Blur 
+radial g_Radial_Blur;
+
+/* ====================================== */
 struct VS_IN
 {
 
@@ -183,6 +194,27 @@ PS_OUT PS_MAIN_HDR(PS_IN In)
     return Out;
 }
 
+/* ------------------- 2 - Radial Blur Pixel Shader -------------------*/
+PS_OUT PS_MAIN_RADIAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    float4 colour = { 0.f, 0.f, 0.f, 0.f };
+    float v = 0.f;
+
+    for (float i = 0.0f; i < 1.0f; i += (1 / g_Radial_Blur.fRadial_Quality))
+    {
+        v = 0.9 + i * g_Radial_Blur.fRadial_Power;
+        colour += g_ProcessingTarget.Sample(PointSampler, In.vTexcoord * v + 0.5f - 0.5f * v);
+    }
+
+    colour /= g_Radial_Blur.fRadial_Quality;
+    colour.a = 1.f;
+    
+    Out.vColor = colour;
+    return Out;
+    
+}
 technique11 DefaultTechnique
 {
     pass Origin // 0
@@ -209,5 +241,19 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_HDR();
+    }
+
+    pass RADIAL // 2
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_RADIAL();
+
     }
 }
