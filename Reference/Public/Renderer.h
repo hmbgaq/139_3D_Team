@@ -27,7 +27,7 @@ public:
 		RENDER_END };
 
 	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, 
-		SHADER_EFFECT,
+		SHADER_EFFECT, SHADER_EFFECT_DEFERRED,
 		SHADER_FINAL,
 		SHADER_DEFERRED_UI, SHADER_END };
 	
@@ -89,6 +89,7 @@ private:
 
 	/* Effect */
 	HRESULT Render_Effect();
+	HRESULT Render_Effect_Deferred();
 
 	/* 최종 다 그리는곳 */
 	HRESULT Render_Final();

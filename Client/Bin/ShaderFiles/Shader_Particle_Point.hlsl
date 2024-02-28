@@ -136,7 +136,9 @@ struct PS_IN
 
 struct PS_OUT
 {
-	float4		vColor : SV_TARGET0;
+	float4		vColor	: SV_TARGET0;
+    float4		vNormal : SV_Target1;
+    float4		vDepth	: SV_Target2;
 };
 
 /* 픽셀셰이더 : 픽셀의 색!!!! 을 결정한다. */
@@ -148,12 +150,14 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
 
     if (Out.vColor.a < g_DiscardValue)
-        discard;
+        discard;	
 
     Out.vColor.rgb *= In.vColor.rgb;
 
-    Out.vColor.a = In.vColor.a /** vAlphaColor*/;
-
+    //Out.vColor.a	 = In.vColor.a /** vAlphaColor*/;
+    Out.vColor.a = 1.f; /** vAlphaColor*/;
+    Out.vDepth = Out.vColor;
+    Out.vNormal = Out.vColor;
 	return Out;
 }
 
@@ -182,7 +186,7 @@ technique11 DefaultTechnique
 	/* 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
 	pass Particle  // 0
 	{
-		SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
 		SetDepthStencilState(DSS_Default, 0);
 		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 		/* 렌더스테이츠 */

@@ -3,8 +3,8 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 Texture2D g_FinalTarget; /* 기존 Deferred로 넘어온색 */ 
-Texture2D g_Effect_DiffuseTarget;
-Texture2D g_Diffuse_UITexture;
+Texture2D g_Final_Effect;
+Texture2D g_Diffuse_UITarget;
 
 /* 명도 채도 관리 */
 float g_brightness = 1.f; // 명도 
@@ -66,7 +66,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
     
    // float4 vUI = g_Diffuse_UITexture.Sample(LinearSampler, In.vTexcoord);
-    float4 vEffect = g_Effect_DiffuseTarget.Sample(LinearSampler, In.vTexcoord);
+    float4 vEffect = g_Final_Effect.Sample(LinearSampler, In.vTexcoord);
     
     if (vEffect.a == 0.0f)
     {
