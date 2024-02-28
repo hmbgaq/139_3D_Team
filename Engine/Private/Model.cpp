@@ -576,7 +576,8 @@ HRESULT CModel::Create_Texture()
 		/* 데이터를 할당할 버퍼 생성 */
 		uint32 dataSize = iBoneCount * sizeof(_float4x4);  /* 가로 */
 		uint32 pageSize = dataSize * iAnimMaxFrameCount;			/* 한 장 (가로 * 세로) */
-		void* mallocPtr = ::malloc(pageSize * iAnimCnt);				/* 텍스처 총 데이터 = n 장 */
+		void* mallocPtr = ::malloc(pageSize*iAnimCnt);				/* 텍스처 총 데이터 = n 장 */
+		//void* mallocPtr = new uint64();				/* 텍스처 총 데이터 = n 장 */
 
 		/* _animTransforms의 정보를 버퍼에 모두 할당한다. */
 		for (uint32 c = 0; c < iAnimCnt; c++) /* 애니메이션 갯수만큼 반복 (장 수) */
@@ -593,7 +594,8 @@ HRESULT CModel::Create_Texture()
 // 				if (m_bRootAnimation)
 // 					::memcpy(ptr, m_AnimTransformsCache[c].transforms[f].data(), dataSize); /* 텍스처에 가로 1줄만큼 데이터 저장 */
 // 				else
-					::memcpy(ptr, m_AnimTransforms[c].transforms[f].data(), dataSize);
+				m_AnimTransforms[c].transforms[f];
+				::memcpy(ptr, m_AnimTransforms[c].transforms[f].data(), dataSize);
 			}
 		}
 

@@ -8,7 +8,7 @@
 BEGIN(Engine)
 
 #define MAX_MODEL_TRANSFORMS	600 
-#define MAX_MODEL_KEYFRAMES		400 
+#define MAX_MODEL_KEYFRAMES		800 
 
 class CAnimation;
 class CMesh;
