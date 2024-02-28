@@ -11,7 +11,12 @@
 #include "Weapon_Player.h"
 #include "Character.h"
 #include "Weapon.h"
+#pragma region Effect_Test
+#include "Clone_Manager.h"
+#include "Effect.h"
 #include "Effect_Particle.h"
+#pragma endregion
+
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
 {
@@ -134,8 +139,96 @@ void CWindow_AnimTool::Call_NextAnimationKey(const _uint& In_Key)
 {
 }
 
+HRESULT CWindow_AnimTool::Read_EffectPath(const _tchar* StartDirectoryPath) //! 준호
+{
+
+	//! C++ 17부터 지원하는 filesystem을 이용해서 특정 경로안에 하위경로들을 전부 탐색 하여 fbx확장자들을 찾아준다
+	//! 
+	namespace fs = std::filesystem;
+
+	//! 폴더명으로 타입을 분류하기위해
+	wstring strDirName = {};
+	
+	for (const auto& entry : fs::recursive_directory_iterator(StartDirectoryPath))
+	{
+		
+		if (fs::is_regular_file(entry.path()) && entry.path().extension() == ".json")
+		{
+			wstring strSearchPath = entry.path().wstring();
+
+			fs::path PathObj(strSearchPath);
+
+			wstring wstrFileName = PathObj.stem().wstring();
+			//wstring wstrFBXPath = PathObj.parent_path() / wstrFileName;
+
+			string strConvertEffectName;
+			m_pGameInstance->WString_To_String(wstrFileName, strConvertEffectName);
+			m_vecEffectName.push_back(strConvertEffectName);
+		}
+	}
+
+	return S_OK;
+}
+
 void CWindow_AnimTool::Add_EffectKeyEvent()
 {
+	if (m_bEffectLoad == false)
+	{
+		Read_EffectPath(L"../Bin/DataFiles/Data_Effect/");
+		m_bEffectLoad = true;
+	}
+	if (ImGui::BeginListBox("EffectList"))
+	{
+		static int Effect_idx = 0;
+		for (int n = 0; n < m_vecEffectName.size(); n++)
+		{
+			const bool is_selected = (Effect_idx == n);
+			if (ImGui::Selectable(m_vecEffectName[n].c_str(), is_selected))
+				Effect_idx = n;
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+			{
+				ImGui::SetItemDefaultFocus();
+				if (m_bCreateEffect)
+				{
+					CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, m_vecEffectName[n]+".json");
+					if (m_pBones.size() > 0)// 본이 존재한다면 
+					{
+						_float4x4 BoneMatrix = {};
+						BoneMatrix = m_pBones[m_iSelectBoneIndex]->Get_CombinedTransformationFloat4x4();
+						m_EffectPosition.x = BoneMatrix._41;
+						m_EffectPosition.y = BoneMatrix._42;
+						m_EffectPosition.z = BoneMatrix._43;
+
+						pEffect->Set_Position(m_EffectPosition);
+						m_bCreateEffect = false;
+					}
+					else // 만약 본이 선택되지 않고 없다라면 0값으로 초기화
+					{
+						pEffect->Set_Position({ 0.0f, 0.0f, 0.0f });
+					}
+					if (m_bAddEffectposition) // 값을 넣어서 위치를 수정하고 싶다면 조절하고 조절 값을 여기에 다시 늘린다.
+					{
+						m_EffectPosition.x = m_EffectPosition.x + m_AddPositions[0];
+						m_EffectPosition.y = m_EffectPosition.y + m_AddPositions[1];
+						m_EffectPosition.z = m_EffectPosition.z + m_AddPositions[2];
+						pEffect->Set_Position(m_EffectPosition);
+					}
+				}
+				
+			}
+
+		}
+		ImGui::EndListBox();
+	}
+	if (ImGui::Button(" EffectCreate "))
+	{
+		m_bCreateEffect = true;
+	}
+	ImGui::DragFloat3("Add_Trans", m_AddPositions);
+	{
+		m_bAddEffectposition = true;
+	}
 }
 
 void CWindow_AnimTool::Add_EnableWeaponEvent(const _bool In_bEnable)
@@ -265,6 +358,8 @@ HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
 
 		m_pGameInstance->Get_CloneGameObjects(LEVEL_TOOL, &m_CreateList);
 		m_bCloneCount = true;
+		m_bListCheck = true;
+		m_bCreateCheck = false;
 		m_PickingObject = m_CreateList.back();
 		if (m_CreateList.size() > 0)
 		{
@@ -477,8 +572,7 @@ void CWindow_AnimTool::Create_Weapon(CCharacter* ParentObject, string strBonenam
 
 void CWindow_AnimTool::Draw_KeyEventEditer()
 {
-
-
+	Add_EffectKeyEvent();
 }
 
 void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
@@ -593,7 +687,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		{
 			if (nullptr == m_PickingObject)
 				return;
-			/*	ImGuizmo_Initialize();*/
+		
 			Set_GuizmoCamProj();
 			Set_GuizmoCamView();
 			Set_Guizmo(m_PickingObject);
@@ -674,52 +768,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 	{
 		m_fCurrentTrackPosition = m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition();
 
-// 		test particle
-// 				_float Temp = m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition();
-// 		
-// 				
-// 				if (m_TargetTrackPosition <= Temp && bTest2 == true)
-// 					bTest = false;
-// 				if (Temp <= 0)
-// 					bTest2 = true;
-// 				if (m_pGameInstance->Key_Down(DIK_G) || bTest ==false)
-// 				{
-// 		
-// 					CEffect_Particle::EFFECT_PARTICLE_DESC   tDesc = {};
-// 					tDesc.fSpeedPerSec = { 5.f };
-// 					tDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
-// 		
-// 					tDesc.eType = CEffect_Particle::SINGLE;
-// 					tDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
-// 					//tDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
-// 					tDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
-// 		
-// 					//tDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
-// 					tDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("");
-// 					tDesc.iTextureIndex[CEffect_Particle::TEXTURE_MASK] = { 0 /*1*/ };
-// 		
-// 					tDesc.strTextureTag[CEffect_Particle::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
-// 					tDesc.iTextureIndex[CEffect_Particle::TEXTURE_NOISE] = { 0 };
-// 		
-// 					tDesc.strShaderTag = TEXT("Prototype_Component_Shader_Particle_Point");
-// 					tDesc.iShaderPassIndex = { 0 };
-// 					tDesc.iRenderGroup = { 7 };
-// 		
-// 					tDesc.iNumInstance = { (_uint)100 };
-// 					tDesc.iMaxNumInstance = { (_uint)500 };
-// 		
-// 					tDesc.fRotateUvDegree = { 0.f };
-// 		
-// 					//CEffect_Particle* pParticle = dynamic_cast<CEffect_Particle*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Effect_Particle"), &tDesc));
-// 					m_TestEffect = dynamic_cast<CEffect_Particle*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_EFFECT, TEXT("Prototype_GameObject_Effect_Particle"), &tDesc));
-// 					json In_Json;
-// 					char filePath[MAX_PATH] = "../Bin/DataFiles/Data_Effect/Particle_Info/Particle_TestSphere_Info";
-// 					CJson_Utility::Load_Json(filePath, In_Json);
-// 		
-// 					m_TestEffect->Load_FromJson(In_Json);
-// 					bTest = true;
-// 					bTest2 = false;
-// 				}
+
 	}
 	
 	
