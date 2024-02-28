@@ -408,11 +408,6 @@ HRESULT CRenderer::Control_HotKey()
 		else
 			cout << "Cascade : false " << endl;
 
-		if (true == m_bCascade_Shadow_Active)
-			cout << "Cascade : true " << endl;
-		else
-			cout << "Cascade : false " << endl;
-
 		cout << " ----------------------------- " << endl;
 	}
 	if (m_pGameInstance->Key_Down(DIK_1))
@@ -445,8 +440,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 	/* Pre-PostProcessing */
 	FAILED_CHECK(Render_NonBlend());			/* MRT_GameObjects*/
 	
-	if(true == m_bCascade_Shadow_Active)
-		FAILED_CHECK(Render_Cascade_Shadow());		/* MRT_Cascade */
+	//if(true == m_bCascade_Shadow_Active)
+	//	FAILED_CHECK(Render_Cascade_Shadow());		/* MRT_Cascade */
 
 	if (true == m_tHBAO_Option.bHBAO_Active)
 	{
@@ -906,9 +901,6 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_SpecularTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_LightDepthTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
-
-	// test
-
 
 	/* Post Processing */
 	{

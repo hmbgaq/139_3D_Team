@@ -384,7 +384,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void*
 HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
 	//! ¾Ö´ÔÀÎ½ºÅÏ½ÌÀÌ ÇÒÇÊ¿ä¾ø¾îÁü. ¤¾¤¾¤¾¤¾¤¾¤¾FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
 
 	m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));

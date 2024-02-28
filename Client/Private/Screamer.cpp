@@ -265,6 +265,7 @@ HRESULT CScreamer::Bind_ShaderResources()
 		m_vRimColor = { 0.0f, 0.0f, 0.0f, 0.0f };
 		m_vBloomPower = { 0.0f, 0.0f, 0.0f };
 	}
+
 	m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
 
 	/* RimLight */
