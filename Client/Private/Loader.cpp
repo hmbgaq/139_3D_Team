@@ -36,6 +36,11 @@
 #include "Player_Weapon_Winchester.h"
 #pragma endregion
 
+#pragma region INFECTED
+#include "Infected.h"
+#include "Body_Infected.h"
+#pragma endregion
+
 #pragma region ASSASSIN
 #include "Assassin.h"
 #include "Body_Assassin.h"
@@ -506,6 +511,10 @@ HRESULT CLoader::Ready_Origin()
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Player"), CWeapon_Player::Create(m_pDevice, m_pContext)));
 
+
+	//! Infected
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Infected"), CInfected::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Infected"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Infected"), CBody_Infected::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Infected"))));
 
 	//! Assassin
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Assassin"), CAssassin::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player"))));
