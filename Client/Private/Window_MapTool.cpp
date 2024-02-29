@@ -1098,10 +1098,14 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 						{
 							m_tWorldRay = m_pGameInstance->Get_MouseRayWorld(g_hWnd, g_iWinSizeX, g_iWinSizeY);
 
+						#ifdef DEBUG
 							if (pTargetObject->Picking_VerJSY(&m_tWorldRay, &m_fRayPos))
 							{
 								m_fMeshPos = m_fRayPos;
 							}
+						#endif // DEBUG
+
+
 							//if (true == pTargetObject->Picking(&m_fRayPos))
 							//{
 							//

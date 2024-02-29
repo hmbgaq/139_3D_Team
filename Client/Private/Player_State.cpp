@@ -118,6 +118,8 @@ CState<CPlayer>* CPlayer_State::Walk_State(CPlayer* pActor, _float fTimeDelta, _
 
 	pState = Normal(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
+
+	return nullptr;
 }
 
 CState<CPlayer>* CPlayer_State::Run_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)

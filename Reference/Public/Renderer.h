@@ -53,7 +53,11 @@ public:
 
 	/* Cascade */
 	ID3D11DepthStencilView* m_pCascadeShadowDSV[3];
+
+#ifdef DEBUG
 	HRESULT Ready_CascadeShadow();
+#endif // DEBUG
+
 
 	
 #ifdef _DEBUG

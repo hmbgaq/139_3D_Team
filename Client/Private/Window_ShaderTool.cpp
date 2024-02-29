@@ -59,7 +59,9 @@ void CWindow_ShaderTool::Top_Setting()
 
 	if (ImGui::Checkbox(u8"RenderTarget Active", &bRenderTarget_Active))
 	{
+#ifdef _DEBUG
 		m_pGameInstance->Set_RenderDebug(bRenderTarget_Active);
+#endif // _DEBUG
 	}
 
 	ImGui::SameLine();

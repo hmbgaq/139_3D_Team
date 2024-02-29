@@ -40,7 +40,9 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_DebugRender()); 
 #endif
 
+#ifdef _DEBUG
 	FAILED_CHECK(Ready_CascadeShadow());
+#endif
 
 	m_tHBAO_Option.bHBAO_Active = m_bSSAO_Active;
 	m_tFog_Option.bFog_Active = m_bFog_Active;
