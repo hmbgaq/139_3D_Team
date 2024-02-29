@@ -1,19 +1,30 @@
 #include "Shader_Defines.hlsli"
 
-matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+texture2D	g_DepthTexture;
 
-Texture2D		g_DiffuseTexture;
-Texture2D		g_MaskTexture;
-Texture2D		g_NoiseTexture;
+Texture2D	g_DiffuseTexture;
+Texture2D	g_MaskTexture;
+Texture2D	g_NoiseTexture;
 
-texture2D		g_DepthTexture;
+// Camera =========================
+vector		g_vCamPosition;
+vector		g_vCamDirection;
+float		g_fCamFar;
+// ================================
 
-vector			g_vCamPosition;
-vector			g_vCamDirection;
 
-float			g_fDegree;
+bool        g_bBillBoard;
+float       g_fAlpha_Discard;
+float3      g_vBlack_Discard;
 
-float			g_DiscardValue;
+float		g_fDegree;
+
+// Sprite ====================
+bool		g_bSprite;
+float2		g_UVOffset;
+float2		g_UVScale;
+// ===========================
 
 
 /* Custom Function */
@@ -149,7 +160,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
     Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
 
-    if (Out.vColor.a < g_DiscardValue)
+    if (Out.vColor.a < g_fAlpha_Discard)
         discard;
 
     Out.vColor.rgb *= In.vColor.rgb;
@@ -164,18 +175,33 @@ PS_OUT PS_MAIN_MASKING(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
-    Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    float4 vAlphaColor = g_MaskTexture.Sample(ClampSampler, In.vTexcoord);
-	
-    Out.vColor.rgb *= In.vColor.rgb;
-	
-    Out.vColor.a = In.vColor.a * vAlphaColor;
+	if (g_bSprite)
+	{
+		float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
 
-    if (Out.vColor.a < g_DiscardValue)
-        discard;
-	
-    //Out.vColor.a = vAlphaColor;
+		Out.vColor = g_DiffuseTexture.Sample(PointSampler, clippedTexCoord);
+
+		Out.vColor.rgb *= In.vColor.rgb;
+
+		if (Out.vColor.a < g_fAlpha_Discard)
+			discard;
+	}
+	else
+	{
+		/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
+		Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+		float4 vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
+
+		Out.vColor.rgb *= In.vColor.rgb;
+
+		Out.vColor.a = In.vColor.a * vAlphaColor;
+
+		if (Out.vColor.a < g_fAlpha_Discard)
+			discard;
+
+		//Out.vColor.a = vAlphaColor;
+	}
+
 	
 	return Out;
 }

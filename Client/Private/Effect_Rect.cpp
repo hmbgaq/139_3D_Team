@@ -167,7 +167,7 @@ void CEffect_Rect::ReSet_Effect()
 	if (SPRITE == m_tRectDesc.eType)
 	{
 		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
-		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.y;
+		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 	else
 	{

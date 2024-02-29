@@ -234,6 +234,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 
 		VTXINSTANCE* pVertices = ((VTXINSTANCE*)SubResource.pData);
 
+
 		for (_uint i = 0; i < m_iNumInstance; i++)
 		{
 			_float		fAlpha;
@@ -383,6 +384,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 
 			}
 
+
 		}
 
 		m_pContext->Unmap(m_pVBInstance, 0);
@@ -475,6 +477,47 @@ void CVIBuffer_Particle_Point::ReSet()
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
+void CVIBuffer_Particle_Point::Sort_Z(_uint iCount)
+{
+	D3D11_MAPPED_SUBRESOURCE SubResource;
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	vector<VTXINSTANCE> instanceData;
+	instanceData.resize(iCount);
+	memcpy(instanceData.data(), SubResource.pData, iCount * sizeof(VTXINSTANCE));
+
+
+	_float4 fCamPos = m_pGameInstance->Get_CamPosition();
+	_vector vCampos = XMVectorSet(fCamPos.x, fCamPos.y, fCamPos.z, fCamPos.w);
+
+	// 현재 순서 그대로 해당 위치의 값 뷰Z를 구함.
+	vector<_float> vecViewZ;
+	for (size_t i = 0; i < iCount; i++) {
+		_vector vPosition = XMVectorSet(instanceData[i].vPosition.x, instanceData[i].vPosition.y, instanceData[i].vPosition.z, instanceData[i].vPosition.w);
+		vecViewZ.push_back(XMVectorGetX(XMVector3Length(vCampos - vPosition)));
+	}
+
+	// m_vecViewZ를 기준으로 정렬된 인덱스 구함.
+	vector<size_t> sortedIndices(vecViewZ.size());
+	iota(sortedIndices.begin(), sortedIndices.end(), 0);
+	sort(sortedIndices.begin(), sortedIndices.end(), [&](size_t a, size_t b) {
+		return vecViewZ[a] > vecViewZ[b]; }
+	);
+
+	// 정렬된 인덱스를 기반으로 다른 컨테이너들도 정렬
+	vector<VTXINSTANCE>          sortedInstanceData(instanceData.size());
+
+	for (size_t i = 0; i < sortedIndices.size(); ++i) {
+		size_t index = sortedIndices[i];
+		sortedInstanceData[i] = instanceData[index];
+	}
+
+	// 정렬된 결과 다시 할당
+	memcpy(SubResource.pData, sortedInstanceData.data(), iCount * sizeof(VTXINSTANCE));
+
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
 
 
 _bool CVIBuffer_Particle_Point::Write_Json(json& Out_Json)
@@ -525,19 +568,8 @@ _bool CVIBuffer_Particle_Point::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxBlue"], m_tBufferDesc.vMinMaxBlue);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxAlpha"], m_tBufferDesc.vMinMaxAlpha);
 
-
 	CJson_Utility::Write_Float4(Out_Json["Com_VIBuffer"]["vCurrentColor"], m_tBufferDesc.vCurrentColor);
 
-
-	/* For.Sprite */
-	Out_Json["Com_VIBuffer"]["fSequenceTerm"] = m_tBufferDesc.fSequenceTerm;
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vTextureSize"], m_tBufferDesc.vTextureSize);
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vTileSize"], m_tBufferDesc.vTileSize);
-
-
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vUV_CurTileIndex"], m_tBufferDesc.vUV_CurTileIndex);
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vUV_MinTileCount"], m_tBufferDesc.vUV_MinTileCount);
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vUV_MaxTileCount"], m_tBufferDesc.vUV_MaxTileCount);
 
 	return true;
 }
@@ -553,7 +585,7 @@ void CVIBuffer_Particle_Point::Load_FromJson(const json& In_Json)
 	m_tBufferDesc.bSpriteAnim = In_Json["Com_VIBuffer"]["bSpriteAnim"];
 
 	m_tBufferDesc.iCurNumInstance = In_Json["Com_VIBuffer"]["iCurNumInstance"];
-
+	m_iNumInstance = In_Json["Com_VIBuffer"]["iCurNumInstance"];
 
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
 
@@ -598,17 +630,6 @@ void CVIBuffer_Particle_Point::Load_FromJson(const json& In_Json)
 
 
 	CJson_Utility::Load_Float4(In_Json["Com_VIBuffer"]["vCurrentColor"], m_tBufferDesc.vCurrentColor);
-
-
-	/* For.Sprite */
-	m_tBufferDesc.fSequenceTerm = In_Json["Com_VIBuffer"]["fSequenceTerm"];
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vTextureSize"], m_tBufferDesc.vTextureSize);
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vTileSize"], m_tBufferDesc.vTileSize);
-
-
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vUV_CurTileIndex"], m_tBufferDesc.vUV_CurTileIndex);
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vUV_MinTileCount"], m_tBufferDesc.vUV_MinTileCount);
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vUV_MaxTileCount"], m_tBufferDesc.vUV_MaxTileCount);
 
 }
 

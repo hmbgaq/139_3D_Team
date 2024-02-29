@@ -139,7 +139,7 @@ private:
 private:
 	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
 	_bool						m_bSSAO_Active				= { false };
-	_bool						m_bBloom_Active				= { true };
+	_bool						m_bBloom_Active				= { false };
 	_bool						m_bOutline_Active			= { false };
 	_bool						m_bPBR_Active				= { false };
 	_bool						m_bFXAA_Active				= { false };

@@ -13,6 +13,7 @@
 #include "Effect_Trail.h"
 //#include "Mesh.h"
 
+#include "Sky.h"
 
 #include "Clone_Manager.h"
 
@@ -93,7 +94,66 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	ScreenToClient(g_hWnd, &pt);
 	ImGui::Text("Mouse Pos : %d, %d", pt.x, pt.y);
 
+	ImGui::SeparatorText("");
+	_float4 vCamPos = m_pGameInstance->Get_CamPosition();
+	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
+	vCamDirection = XMVector4Normalize(vCamDirection);
+	_float4 vCamDirectionFloat4 = {};
+	XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
 
+	ImGui::Text("Cam Pos  : %.2f %.2f %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
+	ImGui::Text("Cam Look : %.2f %.2f %.2f", vCamDirectionFloat4.x, vCamDirectionFloat4.y, vCamDirectionFloat4.z);
+
+	if (ImGui::Button("CamPos Reset"))
+	{
+		CGameObject* pCamera = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_Camera"));
+		if (nullptr != pCamera)
+		{
+			pCamera->Set_Position(_float3(0.f, 20.f, -15.f));
+		}
+	}
+
+
+	ImGui::SeparatorText("");
+	if (ImGui::Button("Create Sky"))
+	{
+		Ready_Sky();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Delete Sky"))
+	{
+		CGameObject* pSky = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_BackGround"));
+		if(nullptr != pSky)
+			pSky->Set_Dead(TRUE);
+	}
+
+	//if (ImGui::Button("On Sky"))
+	//{
+	//	CGameObject* pSky = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_BackGround"));
+	//	if (nullptr != pSky)
+	//		pSky->Set_Enable(TRUE);
+	//}
+	//ImGui::SameLine();
+	//if (ImGui::Button("Off Sky"))
+	//{
+	//	CGameObject* pSky = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_BackGround"));
+	//	if (nullptr != pSky)
+	//		pSky->Set_Enable(FALSE);
+	//}
+
+	if (ImGui::InputInt(" Sky box Texture ", &m_iSkyTextureIndex, 1))
+	{
+		if (5 < m_iSkyTextureIndex)
+			m_iSkyTextureIndex = 5;
+
+		if (0 > m_iSkyTextureIndex)
+			m_iSkyTextureIndex = 0;
+
+		Set_SkyTexture();
+	}
+
+
+	ImGui::SeparatorText("");
 	if (ImGui::BeginTabBar("Tab_Effect", ImGuiTabBarFlags_None))
 	{
 		if (ImGui::BeginTabItem(" Particle "))
@@ -133,6 +193,28 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 void CWindow_EffectTool::Render()
 {
+
+}
+
+HRESULT CWindow_EffectTool::Ready_Sky()
+{
+	CGameObject* pSky = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky"));
+	if (nullptr != pSky)
+	{
+		dynamic_cast<CSky*>(pSky)->Set_TextureIndex(3);
+	}
+
+	return S_OK;
+}
+
+void CWindow_EffectTool::Set_SkyTexture()
+{
+	CGameObject* pSky = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_BackGround"));
+
+	if (nullptr != pSky)
+	{
+		dynamic_cast<CSky*>(pSky)->Set_TextureIndex(m_iSkyTextureIndex);
+	}
 
 }
 
@@ -205,15 +287,31 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pParticleDesc->strPartTag));
 
 				/* 텍스처 변경 */
-				if (ImGui::InputInt("Diffuse_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE], 1))
+				if (m_pParticleDesc->bSpriteAnim)
 				{
-					if (m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] <= m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE])
-						m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE];
+					if (ImGui::InputInt("Diffuse_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE], 1))
+					{
+						if (m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] <= m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE])
+							m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE];
 
-					if (0 > m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE])
-						m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
+						if (0 > m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE])
+							m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
 
-					m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE];
+						m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE];
+					}
+				}
+				else
+				{
+					if (ImGui::InputInt("Diffuse_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE], 1))
+					{
+						if (m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] <= m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE])
+							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE];
+
+						if (0 > m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE])
+							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
+
+						m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE];
+					}
 				}
 
 				if (ImGui::InputInt("Mask_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK], 1))
@@ -237,6 +335,43 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 					m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE];
 				}
+
+				ImGui::SeparatorText("");
+				if (m_pParticleDesc->bSpriteAnim)
+				{
+					CEffect_Void::UVSPRITE_DESC* pSpriteDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Sprite_Desc();
+
+					ImGui::SeparatorText("");
+					if (ImGui::DragFloat(" Sprite Term ", &m_fSequenceTerm_Particle, 1, 1))
+					{
+						pSpriteDesc->fSequenceTerm = m_fSequenceTerm_Particle;
+					}
+
+					if (ImGui::InputInt2(" Max_TileCount ", m_vUV_MaxTileCount_Particle, 1))
+					{
+						_uint iX, iY;
+						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_TextureCom(CEffect_Void::TEXTURE_SPRITE)->Get_TextureSize(&iX, &iY, m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE]);
+						pSpriteDesc->vTextureSize.x = iX;
+						pSpriteDesc->vTextureSize.y = iY;
+
+						_float fTileX, fTileY;
+						fTileX = (_float)iX / m_vUV_MaxTileCount_Particle[0];
+						fTileY = (_float)iY / m_vUV_MaxTileCount_Particle[1];
+
+						pSpriteDesc->vTileSize.x = fTileX;
+						pSpriteDesc->vTileSize.y = fTileY;
+
+						pSpriteDesc->vUV_MaxTileCount.x = m_vUV_MaxTileCount_Particle[0];
+						pSpriteDesc->vUV_MaxTileCount.y = m_vUV_MaxTileCount_Particle[1];
+
+
+						m_pCurPartEffect->ReSet_Effect();
+					}
+
+					ImGui::Text("Current Index : %d, %d", pSpriteDesc->vUV_CurTileIndex.x, pSpriteDesc->vUV_CurTileIndex.y);
+				}
+				ImGui::SeparatorText("");
+
 
 				/* 쉐이더 패스 인덱스 변경 */
 				if (ImGui::InputInt("Shader Pass_Particle", &m_iShaderPassIndex_Particle, 1))
@@ -276,6 +411,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::Text("MaxInstance : %d", m_iMaxNumInstance);
 				if (ImGui::DragInt("Instance Count", &m_iNumInstance, 1, 1, m_iMaxNumInstance))
 				{
+					m_pParticleDesc->iCurNumInstance;
+					m_pParticlePointDesc->iCurNumInstance = m_iNumInstance;
 					pVIBuffer->Set_NumInstance(m_iNumInstance);
 				}
 
@@ -287,6 +424,24 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticleDesc->bBillBoard = TRUE;
 				else if (1 == m_iBillBoard)
 					m_pParticleDesc->bBillBoard = FALSE;
+
+				/* Z소트 키고 끄기 */
+				ImGui::SeparatorText("");
+				ImGui::RadioButton("SortZ", &m_iSortZ, 0);  ImGui::SameLine();
+				ImGui::RadioButton("Off SortZ", &m_iSortZ, 1);
+				if (0 == m_iSortZ)
+					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Set_SortZ(TRUE);
+				else if (1 == m_iSortZ)
+					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Set_SortZ(FALSE);
+
+				/* 스프라이트 키고 끄기 */
+				ImGui::SeparatorText("");
+				ImGui::RadioButton("Off Sprite_Particle", &m_iSprite_Particle, 0); ImGui::SameLine();
+				ImGui::RadioButton("Sprite_Particle", &m_iSprite_Particle, 1);
+				if (0 == m_iSprite_Particle)
+					m_pParticleDesc->bSpriteAnim = FALSE;
+				else if (1 == m_iSprite_Particle)
+					m_pParticleDesc->bSpriteAnim = TRUE;
 
 
 				/* 파티클 업데이트 모양(타입) */
@@ -953,13 +1108,39 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_pCurPartEffect->Set_RemainTime(m_vTimes_Part[2]);
 
-			m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE];
+			if (m_pParticleDesc->bSpriteAnim)
+			{
+				m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE];
+			}
+			else
+			{
+				m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE];
+			}
+
 			m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK];
 			m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE];
 			m_iShaderPassIndex_Particle = m_pParticleDesc->iShaderPassIndex;
 			m_iRenderGroup_Particle = m_pParticleDesc->iRenderGroup;
 
-			m_iBillBoard = m_pParticleDesc->bBillBoard;
+			m_iNumInstance = m_pParticleDesc->iCurNumInstance;
+
+			if (m_pParticleDesc->bBillBoard)
+				m_iBillBoard = 0;
+			else
+				m_iBillBoard = 1;
+
+
+			if (dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_SortZ())
+				m_iSortZ = 0;
+			else
+				m_iSortZ = 1;
+
+
+			if (m_pParticleDesc->bSpriteAnim)
+				m_iSprite_Particle = 1;
+			else
+				m_iSprite_Particle = 0;
+
 
 			m_fUV_RotDegree = m_pParticleDesc->fUV_RotDegree;
 
@@ -1277,6 +1458,7 @@ void CWindow_EffectTool::Update_EffectList()
 	} // 이펙트 리스트 END
 
 
+
 	if (nullptr != m_pCurEffect)
 	{
 		/* 선택 이펙트 활성화 */
@@ -1436,6 +1618,17 @@ void CWindow_EffectTool::Update_EffectList()
 			}
 			ImGui::Text("Total_Time : %.2f", m_vTimes_Effect[0] + m_vTimes_Effect[1] + m_vTimes_Effect[2]);
 		}
+
+
+		/* 루프 키고 끄기 */
+		ImGui::SeparatorText("");
+		ImGui::RadioButton(" Loop_Effect ", &m_iLoop, 0);  ImGui::SameLine();
+		ImGui::RadioButton("None Loop_Effect", &m_iLoop, 1);
+		if (0 == m_iLoop)
+			m_pCurEffectDesc->bLoop = TRUE;
+		else if (1 == m_iLoop)
+			m_pCurEffectDesc->bLoop = FALSE;
+
 
 
 		if (nullptr != m_pCurPartEffect)
@@ -1670,18 +1863,20 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		tParticleDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
 		tParticleDesc.bSpriteAnim = FALSE;
-		tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
-		//tDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
+		//tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
+		tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 		tParticleDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
 
+		tParticleDesc.strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
+		tParticleDesc.iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = { 0 };
+
 		tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
-		//tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("");
 		tParticleDesc.iTextureIndex[CEffect_Particle::TEXTURE_MASK] = { 0 /*1*/ };
 
 		tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
 		tParticleDesc.iTextureIndex[CEffect_Particle::TEXTURE_NOISE] = { 0 };
 
-		tParticleDesc.iRenderGroup = { 7 };
+		tParticleDesc.iRenderGroup = { 9 };
 
 		tParticleDesc.iShaderPassIndex = { 1 };
 
@@ -1691,7 +1886,7 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		tParticleDesc.fUV_RotDegree = { 0.f };
 
 		tParticleDesc.bPlay = { TRUE };
-
+		tParticleDesc.bSpriteAnim = { FALSE };
 
 #pragma region 리스트 문자열 관련
 		wstring strName = TEXT("");
@@ -1802,7 +1997,7 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 			tRectDesc.iShaderPassIndex = { 1 };
 		}
 
-		tRectDesc.iRenderGroup = { 7 };
+		tRectDesc.iRenderGroup = { 9 };
 
 
 		tRectDesc.bPlay = { TRUE };
@@ -1896,7 +2091,7 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 
 		tMeshDesc.eType_Mesh = CEffect_Instance::FLAT;
 		tMeshDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
-		tMeshDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
+		tMeshDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 11 };
 
 		tMeshDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
 		tMeshDesc.iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 0 };
@@ -1904,9 +2099,9 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tMeshDesc.strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
 		tMeshDesc.iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 0 };
 
-		tMeshDesc.iShaderPassIndex = { 4 };
+		tMeshDesc.iShaderPassIndex = { 0 };
 
-		tMeshDesc.iRenderGroup = { 7 };
+		tMeshDesc.iRenderGroup = { 9 };
 		tMeshDesc.iCurNumInstance = { 1 };
 
 		tMeshDesc.bBillBoard = { FALSE };
@@ -1915,6 +2110,8 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 
 		tMeshDesc.bPlay = { TRUE };
 
+		tMeshDesc.vRimColor = { 2.f, 10.f, 255.f, 255.f };
+		tMeshDesc.fRimPower = { 950.f };
 
 #pragma region 리스트 문자열 관련
 		wstring strName = TEXT("");
@@ -2327,9 +2524,13 @@ void CWindow_EffectTool::Free()
 {
 	__super::Free();
 
-	for (auto& Pair : m_CurPartObjects)
-		Safe_Release(Pair.second);
-	m_CurPartObjects.clear();
+	if (!m_CurPartObjects.empty())
+	{
+		for (auto& Pair : m_CurPartObjects)
+			Safe_Release(Pair.second);
+		m_CurPartObjects.clear();
+	}
+
 
 	for (auto& Pair : m_pEffects)
 		Safe_Release(Pair.second);

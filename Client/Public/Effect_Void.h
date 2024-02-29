@@ -40,7 +40,7 @@ public:
 		_float		fUV_WaveSpeed	= { 1.f };
 
 		_float4		vColor_Offset	= { 0.f, 0.f, 0.f, 0.f };
-		_float4		vColor_Clip		= { 0.f, 0.f, 0.f, 0.8f };
+		_float4		vColor_Clip		= { 0.f, 0.f, 0.f, 0.f };
 		_float4		vColor_Mul		= { 1.f, 1.f, 1.f, 1.f };
 
 		_float		fBloom			= { 0.f };
@@ -99,6 +99,7 @@ public:
 
 	typedef struct tagUvSpriteDesc
 	{
+		_bool	bSpriteFinish   = { FALSE };
 		_float	fSequenceTerm	= { 0.05f };
 
 		_float2 vTextureSize	 = { 1792.f, 1792.f };  // fSpriteSizeX, fSpriteSizeY
@@ -170,6 +171,9 @@ public:
 	_float		Get_SequenceAcc() { return m_fSequenceAcc; }
 	void		Set_SequenceAcc(_float fTime) { m_fSequenceAcc = fTime; }
 
+	_float		Get_SpriteTimeAcc() { return m_fSpriteTimeAcc; }
+	void		Set_SpriteTimeAcc(_float fTime) { m_fSpriteTimeAcc = fTime; }
+
 	_float		Get_LifeTimeRatio() { return m_fLifeTimeRatio; }
 
 	_float		Get_WaitingTime() { return m_fWaitingTime; }
@@ -188,9 +192,10 @@ protected:
 	TYPE_EFFECT	m_eType_Effect = { TYPE_EFFECT_END };
 
 	_float		m_fWaitingAcc    = { 0.f };	/* 시작 딜레이 시간 누적 */
-	_float		m_fTimeAcc	    = { 0.f };		/* 시간 누적 */
+	_float		m_fTimeAcc	    = { 0.f };	/* 시간 누적 */
 	_float		m_fRemainAcc    = { 0.f };
 	_float		m_fSequenceAcc  = { 0.f };	/* 시퀀스 시간 누적 */
+	_float		m_fSpriteTimeAcc = { 0.f };	/* 스프라이트 시간 누적 */
 
 	_float		m_fLifeTimeRatio = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
 

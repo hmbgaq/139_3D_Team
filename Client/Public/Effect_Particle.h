@@ -20,9 +20,8 @@ public:
 		CVIBuffer_Particle_Point::TYPE_FADE		eType_Fade = { CVIBuffer_Particle_Point::FADE_NONE };
 		EASING_TYPE								eType_ColorLerp = { LINEAR };
 
-		_bool		bLoop = { TRUE };
-		_bool		bReverse = { FALSE };
 		_bool		bSpriteAnim = { FALSE };
+
 
 		/* 파티클 개수 */
 		_uint		iCurNumInstance = { 100 };
@@ -63,12 +62,12 @@ public:
 		_float2		vCurrentScale;
 
 		/* For.Color */
-		_float2     vMinMaxRed = { 0.f, 1.f };
-		_float2     vMinMaxGreen = { 0.f, 1.f };
-		_float2     vMinMaxBlue = { 0.f, 1.f };
-		_float2     vMinMaxAlpha = { 0.f, 1.f };
+		_float2     vMinMaxRed = { 1.f, 1.f };
+		_float2     vMinMaxGreen = { 1.f, 1.f };
+		_float2     vMinMaxBlue = { 1.f, 1.f };
+		_float2     vMinMaxAlpha = { 1.f, 1.f };
 
-		_float4     vCurrentColor = { 0.f, 0.f, 0.f, 0.f };
+		_float4     vCurrentColor = { 1.f, 1.f, 1.f, 1.f };
 
 	}PARTICLE_DESC;
 
@@ -94,15 +93,18 @@ public:
 	virtual _bool Write_Json(json& Out_Json)		 override;
 	virtual void  Load_FromJson(const json& In_Json) override;
 
+	void			Set_SortZ(_bool bSortz) { m_bSortZ = bSortz; }
+	_bool			Get_SortZ() { return m_bSortZ; }
 
 	/* For.Desc */
 public:
 	PARTICLE_DESC*	Get_Desc() { return &m_tParticleDesc; }
+	UVSPRITE_DESC*	Get_Sprite_Desc() { return &m_tSpriteDesc; }
 	void* Get_BufferDesc();
 
 public:
 	CVIBuffer_Particle_Point* Get_VIBufferCom() { return m_pVIBufferCom; }
-
+	CTexture* Get_TextureCom(TEXTURE eTexture) { return m_pTextureCom[eTexture]; }
 
 private:
 	HRESULT Ready_Components();
@@ -122,6 +124,7 @@ private:
 	CTexture*					m_pTextureCom[TEXTURE_END] = { nullptr };
 	CVIBuffer_Particle_Point*	m_pVIBufferCom = { nullptr };
 
+	_bool						m_bSortZ = { FALSE };
 
 public:
 	/* 원형객체를 생성한다. */

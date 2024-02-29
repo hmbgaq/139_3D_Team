@@ -24,6 +24,9 @@ public:
 	virtual	void	Tick(_float fTimeDelta) override;
 	virtual void	Render()				override;
 
+public:
+	HRESULT Ready_Sky();
+	void	Set_SkyTexture();
 
 /* For.Save&Load */
 public:
@@ -74,6 +77,9 @@ private:
 	_int m_iCurPartIndex		= { 0 };
 	class CEffect_Void* m_pCurPartEffect = { nullptr };
 
+	/* Sky */
+private:
+	_int m_iSkyTextureIndex = { 3 };
 
 /* Desc */
 private:
@@ -90,21 +96,21 @@ private:
 	_int m_iShaderPassIndex_Particle	= { 0 };
 	_int m_iMaxShaderPassIndex_Particle = { 2 };
 	_int  m_iTexIndex_Particle[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 13, 17, 5 };
+	_int  m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 15, 17, 5, 16 };
 
 
 	_int m_iRenderGroup_Mesh			= { 7 };
 	_int m_iShaderPassIndex_Mesh		= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
 	_int  m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 15, 17, 5 };
+	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 15, 17, 5, 16 };
 
 
 	_int m_iRenderGroup_Rect			= { 7 };
 	_int m_iShaderPassIndex_Rect		= { 0 };
 	_int m_iMaxShaderPassIndex_Rect		= { 2 };
 	_int  m_iTexIndex_Rect[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 4, 17, 5 };
+	_int  m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 4, 17, 5, 16 };
 
 	// Refactoring end   =====================================================================================================
 
@@ -130,8 +136,8 @@ private:
 	_float	m_vRotate_Effect[3] = { 0.f, 0.f, 0.f };
 	_float	m_vRotate_Part[3] = { 0.f, 0.f, 0.f };
 
-	_float m_vColor_Clip_Part[4] = { 0.f, 0.f, 0.f, 0.8f };
-	_float m_vColor_Clip_Rect[4] = { 0.f, 0.f, 0.f, 0.8f };
+	_float m_vColor_Clip_Part[4] = { 0.f, 0.f, 0.f, 0.f };
+	_float m_vColor_Clip_Rect[4] = { 0.f, 0.f, 0.f, 0.f };
 
 #pragma region Particle_Option
 private:
@@ -159,6 +165,12 @@ private:
 	_float	m_fColor_Start_Particle[4]	= { 1.f, 1.f, 1.f, 1.f };
 	_float	m_fColor_End_Particle[4]	= { 1.f, 1.f, 1.f, 1.f };
 	_float	m_fColor_Cur_Particle[4]	= { 1.f, 1.f, 1.f, 1.f };
+
+	_int	m_iSortZ = { 0 };
+	_int	m_iSprite_Particle = { 0 };
+
+	_int	m_vUV_MaxTileCount_Particle[2] = { 7, 7 };
+	_float	m_fSequenceTerm_Particle = { 0.05f };
 
 #pragma endregion
 

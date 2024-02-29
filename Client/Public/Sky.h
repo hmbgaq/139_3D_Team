@@ -26,11 +26,17 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void	Set_TextureIndex(_int iIndex) { m_iTextureIndex = iIndex; }
+	_int	Get_TextureIndex() { return m_iTextureIndex; }
+
 private:
 	CShader*			m_pShaderCom = { nullptr };	
 	CTexture*			m_pTextureCom = { nullptr };
 	CVIBuffer_Cube*		m_pVIBufferCom = { nullptr };
 	
+private:
+	_int				m_iTextureIndex = { 5 };
 
 private:
 	HRESULT Ready_Components();

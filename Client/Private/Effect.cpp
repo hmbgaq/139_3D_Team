@@ -241,14 +241,11 @@ void CEffect::Load_FromJson(const json& In_Json)
 			
 			CEffect_Particle::PARTICLE_DESC	tParticleDesc = {};
 
-			strTag = In_Json["Part"][i]["strTextureTag"][CEffect_Void::TEXTURE_DIFFUSE];			
-			m_pGameInstance->String_To_WString(strTag, tParticleDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE]);
-			
-			strTag = In_Json["Part"][i]["strTextureTag"][CEffect_Void::TEXTURE_MASK];
-			m_pGameInstance->String_To_WString(strTag, tParticleDesc.strTextureTag[CEffect_Void::TEXTURE_MASK]);
-
-			strTag = In_Json["Part"][i]["strTextureTag"][CEffect_Void::TEXTURE_NOISE];
-			m_pGameInstance->String_To_WString(strTag, tParticleDesc.strTextureTag[CEffect_Void::TEXTURE_NOISE]);
+			for (_int j = 0; j < (_int)CEffect_Void::TEXTURE_END; ++j)
+			{
+				strTag = In_Json["Part"][i]["strTextureTag"][j];
+				m_pGameInstance->String_To_WString(strTag, tParticleDesc.strTextureTag[j]);
+			}
 
 			Ready_PartObjects(strProtoTag, strPartTag, &tParticleDesc);
 		}
