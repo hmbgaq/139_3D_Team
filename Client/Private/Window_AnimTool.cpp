@@ -408,7 +408,6 @@ HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
 		m_PickingObject = m_CreateList.back();
 		if (m_CreateList.size() > 0)
 		{
-		
 			CCharacter* pcharacters = dynamic_cast<CCharacter*>(m_PickingObject);
 			if (pcharacters != nullptr)
 			{
@@ -416,8 +415,6 @@ HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
 				m_pAnimation = *(pcharacters->Get_Body()->Get_Model()->Get_Animations());
 				m_iAnimationNum = pcharacters->Get_Body()->Get_Model()->Get_AnimationNum();
 			}
-		
-		
 		}
 		m_iSelectCreateListIndex = BodyJson["SelectCreateIndex"];
 

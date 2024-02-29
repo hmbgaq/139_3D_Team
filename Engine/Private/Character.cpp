@@ -170,6 +170,7 @@ HRESULT CCharacter::Add_Weapon(const wstring& strPrototypeTag, string strBoneNam
 
 void CCharacter::Set_EventNotify(string strPath, string JsonFileName)
 {
+	/*string strPath = "../Bin/DataFiles/Data_Animation/";*/
 	LoadAnimJson(strPath, JsonFileName);
 }
 

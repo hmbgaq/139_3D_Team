@@ -15,6 +15,8 @@
 #include "PhysXController.h"
 #include "PhysXCharacterController.h"
 
+//test
+#include "Effect.h"
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
