@@ -606,13 +606,31 @@ HRESULT CLoader::Ready_UI_Origin()
 
 HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
 {
-	wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/NonAnim/");
-	wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Anim/");
 
-	//! 로더에 원형
-	FAILED_CHECK(Read_FBXModelPath(strNonAnimModelPath.c_str(), eLevel, CModel::TYPE_NONANIM));
-	//
-	FAILED_CHECK(Read_FBXModelPath(strAnimModelPath.c_str(), eLevel, CModel::TYPE_ANIM));
+
+
+	if (eLevel == LEVEL_GAMEPLAY)
+	{
+		wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/NonAnim/");
+		wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/Anim/");
+
+		//! 로더에 원형
+		FAILED_CHECK(Read_FBXModelPath(strNonAnimModelPath.c_str(), eLevel, CModel::TYPE_NONANIM));
+		FAILED_CHECK(Read_FBXModelPath(strAnimModelPath.c_str(), eLevel, CModel::TYPE_ANIM));
+	}
+	else if (eLevel == LEVEL_TOOL)
+	{
+		wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/NonAnim/");
+		wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/Anim/");
+
+		//! 로더에 원형
+		FAILED_CHECK(Read_FBXModelPath(strNonAnimModelPath.c_str(), eLevel, CModel::TYPE_NONANIM));
+		FAILED_CHECK(Read_FBXModelPath(strAnimModelPath.c_str(), eLevel, CModel::TYPE_ANIM));
+
+	}
+
+
+	
 
 
 	return S_OK;
@@ -638,22 +656,23 @@ HRESULT CLoader::Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLeve
 		pMapModelTag = CImgui_Manager::GetInstance()->Get_NonAnim_E_ModelTag();
 
 
+		
 	//! 폴더명으로 타입을 분류하기위해
 		wstring strDirName = {}; 
 		CImgui_Manager::JSY_MODEL_TYPE eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_END;
 
-	for (const auto& entry : fs::recursive_directory_iterator(StartDirectoryPath)) 
+		for (const auto& entry : fs::recursive_directory_iterator(StartDirectoryPath)) 
 	{
 		if (fs::is_directory(entry.path())) 
 		{
 			strDirName = entry.path().filename();
 
-			if (strDirName == L"Environment")
-				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_ENVIRONMENT;
+			if (strDirName == L"Instance")
+				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_INSTANCE;
 			else if (strDirName == L"Interact")
 				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_INTERACT;
-			else if (strDirName == L"Ground")
-				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_GROUND;
+			else if (strDirName == L"Single")
+				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_SINGLE;
 		}
 
 		 if (fs::is_regular_file(entry.path()) && entry.path().extension() == ".fbx")

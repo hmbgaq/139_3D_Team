@@ -16,31 +16,57 @@ CMesh::CMesh(const CMesh & rhs)
 
 void CMesh::Calculate_AABB_Extents(_float3* pOutMin, _float3* pOutMax)
 {
-	if(m_pVertices == nullptr)
-		return;
-
-
 	_float3 Min, Max;
+
+	if (m_pVertices != nullptr)
+	{
+		for (_uint i = 0; i < m_iNumVertices; ++i)
+		{
+			_float3 VertexPos = m_pVertices[i].vPosition;
+
+			// 최소, 최대 좌표 업데이트
+
+			for (_uint j = 0; j < 3; ++j)
+			{
+				Min.x = min(Min.x, VertexPos.x);
+				Min.y = min(Min.y, VertexPos.y);
+				Min.z = min(Min.z, VertexPos.z);
+
+				Max.x = max(Max.x, VertexPos.x);
+				Max.y = max(Max.y, VertexPos.y);
+				Max.z = max(Max.z, VertexPos.z);
+			}
+		}
+		
+	}
+
+	else if (m_pAnimVertices != nullptr)
+	{
+		for (_uint i = 0; i < m_iNumVertices; ++i)
+		{
+			_float3 VertexPos = m_pAnimVertices[i].vPosition;
+
+			// 최소, 최대 좌표 업데이트
+
+			for (_uint j = 0; j < 3; ++j)
+			{
+				Min.x = min(Min.x, VertexPos.x);
+				Min.y = min(Min.y, VertexPos.y);
+				Min.z = min(Min.z, VertexPos.z);
+
+				Max.x = max(Max.x, VertexPos.x);
+				Max.y = max(Max.y, VertexPos.y);
+				Max.z = max(Max.z, VertexPos.z);
+			}
+		}
+	}
+
+
+	
 
 	// 메쉬의 모든 정점에 대해 AABB 계산
 
-	for (_uint i = 0; i < m_iNumVertices; ++i)
-	{
-		_float3 VertexPos = m_pVertices[i].vPosition;
-
-		// 최소, 최대 좌표 업데이트
-
-		for (_uint j = 0; j < 3; ++j)
-		{
-			Min.x = min(Min.x, VertexPos.x);
-			Min.y = min(Min.y, VertexPos.y);
-			Min.z = min(Min.z, VertexPos.z);
-
-			Max.x = max(Max.x, VertexPos.x);
-			Max.y = max(Max.y, VertexPos.y);
-			Max.z = max(Max.z, VertexPos.z);
-		}
-	}
+	
 
 	// 출력 변수에 결과 저장
 
@@ -109,10 +135,6 @@ HRESULT CMesh::Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, 
 
 HRESULT CMesh::Initialize(void * pArg)
 {
-	
-	
-	
-
 	return S_OK;
 }
 

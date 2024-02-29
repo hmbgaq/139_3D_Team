@@ -297,7 +297,7 @@ HRESULT CRenderer::Create_DepthStencil()
 	return S_OK;
 }
 
-#ifdef DEBUG
+#ifdef _DEBUG
 HRESULT CRenderer::Ready_CascadeShadow()
 {
 	D3D11_VIEWPORT		ViewportDesc;

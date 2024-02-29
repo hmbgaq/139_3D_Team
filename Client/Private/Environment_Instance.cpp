@@ -65,11 +65,11 @@ void CEnvironment_Instance::Tick(_float fTimeDelta)
 		for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 		{
 			_matrix WorldMatrix = m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix();
-
-			_float3 vCenter = m_tInstanceDesc.vecInstanceInfoDesc[i].vCenter;
-
-			WorldMatrix.r[3] -= XMLoadFloat3(&vCenter);
-
+			
+			//_float3 vCenter = m_tInstanceDesc.vecInstanceInfoDesc[i].vCenter;
+			//
+			//WorldMatrix.r[3] -= XMLoadFloat3(&vCenter);
+			
 			m_vecColliders[i]->Update(WorldMatrix);
 		}
 	}
@@ -110,10 +110,6 @@ HRESULT CEnvironment_Instance::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		
-		
-
-		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 
 		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
 
@@ -136,28 +132,48 @@ _bool CEnvironment_Instance::Picking_Instance(RAY* pRay, _float3* vOutPoint)
 	_vector vDir = XMLoadFloat3(&pRay->vDirection);
 
 	_float fDist;
+	_float fClosestDist = FLT_MAX;
+	_bool bResult = false;
 
-	_bool bResult;
-
+	//nm_pGameInstance->iSIS
 	for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 	{
-		CBounding_AABB* pBoundingAABB = dynamic_cast<CBounding_AABB*>(m_vecColliders[i]->Get_Bounding());
-
-		if (pBoundingAABB == nullptr)
-		{
-			MSG_BOX("콜라이더 없대");
-			return false;
-		}
 		
-		const BoundingBox* pBoundingBox = pBoundingAABB->Get_Bounding();
-
-		if (true == pBoundingBox->Intersects(vOrigin, vDir, fDist))
+		if (true == m_pGameInstance->isIn_WorldPlanes(m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Position()))
 		{
-			//_vector vLocalPoint = vOrigin + fDist * vDir;
-			*vOutPoint = vOrigin + fDist * vDir;
+			CBounding_Sphere* pBoundingSphere = dynamic_cast<CBounding_Sphere*>(m_vecColliders[i]->Get_Bounding());
 
-			return true;
+			if (pBoundingSphere == nullptr)
+			{
+				MSG_BOX("콜라이더 없대");
+				return false;
+			}
+
+			const BoundingSphere* pBoundingSphereBox = pBoundingSphere->Get_Bounding();
+
+			if (true == pBoundingSphereBox->Intersects(vOrigin, vDir, fDist))
+			{
+
+				_matrix matLocal = XMMatrixInverse(nullptr, m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix());
+
+
+
+
+				*vOutPoint = vOrigin + fDist * vDir;
+				//_float3 CenterToHitPoint = vOrigin + fDist * vDir;
+
+				//_vector vCenterToHitPoint = vOrigin + fDist * vDir;
+				////pBoundingSphereBox->
+				//
+				//_float3 vClosestPointOnSurface = XMLoadFloat3(&pBoundingSphereBox->Center) + pBoundingSphereBox->Radius * XMVector3Normalize(vCenterToHitPoint);
+				//
+				//*vOutPoint = vClosestPointOnSurface;
+
+				return true;
+			}
 		}
+		else
+			return false;
 	}
 	
 	return false;
@@ -202,22 +218,30 @@ HRESULT CEnvironment_Instance::Ready_Components()
 	{
 		for (_int i = 0; i < Desc.iNumInstance; ++i)
 		{
-			CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
-
-			//Desc_AABB.vCenter = Desc.vecBufferInstanceInfo[i].vCenter;
-			//Desc_AABB.vCenter.y = Desc_AABB.vCenter.y + -Desc_AABB.vExtents.y * 0.5f;
-			Desc_AABB.vCenter = Desc.vecBufferInstanceInfo[i].vCenter;
-			Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
-			Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
+			CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
 			
+			
+			m_pModelCom->Calculate_Sphere_Radius(nullptr, &Test.fRadius);
+			Test.vCenter = {0.f, 0.f, 0.f};
+			Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
 
 			wstring strColliderComTag = L"Com_Collider" + i;
-
-			if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Desc_AABB)))
+			
+			if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Test)))
 			{
 				MSG_BOX("ㅈ댐");
 				return E_FAIL;
 			}
+			
+
+
+			//wstring strColliderComTag = L"Com_Collider" + i;
+			//
+			//if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Desc_AABB)))
+			//{
+			//	MSG_BOX("ㅈ댐");
+			//	return E_FAIL;
+			//}
 		}
 	}
 	

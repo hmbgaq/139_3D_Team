@@ -22,6 +22,7 @@ public:
 public:
 	ID3D11Buffer*				Get_VertexBuffer() { return m_pVB; }
 	ID3D11Buffer*				Get_IndexBuffer() { return m_pIB; }
+	_uint						Get_NumVertices() { return m_iNumVertices; }
 
 
 	virtual HRESULT Bind_VIBuffers();

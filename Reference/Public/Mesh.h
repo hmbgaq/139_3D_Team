@@ -30,6 +30,8 @@ public:
 	vector<_float4x4>&			Get_OffsetMatrices() { return m_OffsetMatrices; }
 	vector<_uint>&				Get_BoneIndices() { return m_BoneIndices; }
 	_int						Get_NumBones() { return m_iNumBones;}
+	VTXMESH*					Get_Vertices() { return m_pVertices; };
+	VTXANIMMESH*				Get_AnimVertices() { return m_pAnimVertices; }
 
 	void						Calculate_AABB_Extents(_float3* pOutMin, _float3* pOutMax);
 
@@ -62,6 +64,7 @@ private:
 
 	vector<_float4x4>	m_OffsetMatrices;
 
+	
 	VTXANIMMESH* m_pAnimVertices = { nullptr };
 	VTXMESH*	 m_pVertices = { nullptr };
 	_uint*		 m_pIndices = { nullptr };
