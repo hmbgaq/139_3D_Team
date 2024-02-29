@@ -257,6 +257,7 @@
     <ClInclude Include="..\Public\UI_Blood_Vignette.h" />
     <ClInclude Include="..\Public\UI_MonsterHp.h" />
     <ClInclude Include="..\Public\UI_MonsterHpFrame.h" />
+    <ClInclude Include="..\Public\UI_Player_ExpBar.h" />
     <ClInclude Include="..\Public\UI_Player_HP.h" />
     <ClInclude Include="..\Public\UI_Player_HPBar.h" />
     <ClInclude Include="..\Public\UI_Player_HPFrame.h" />
@@ -347,6 +348,7 @@
     <ClCompile Include="..\Private\UI_Blood_Vignette.cpp" />
     <ClCompile Include="..\Private\UI_MonsterHp.cpp" />
     <ClCompile Include="..\Private\UI_MonsterHpFrame.cpp" />
+    <ClCompile Include="..\Private\UI_Player_ExpBar.cpp" />
     <ClCompile Include="..\Private\UI_Player_HP.cpp" />
     <ClCompile Include="..\Private\UI_Player_HPBar.cpp" />
     <ClCompile Include="..\Private\UI_Player_HPFrame.cpp" />

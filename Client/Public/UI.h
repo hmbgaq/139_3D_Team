@@ -83,8 +83,6 @@ public:
 		_float		fPositionY = (_float)g_iWinSizeY / 2;
 		_float		fPositionZ = 0.0f;
 
-
-
 		/* 
 			(저장 순서)
 			=부모 여부=
@@ -232,7 +230,7 @@ public: /* =========================== Save/Load ============================== 
 	virtual json	Save_Desc(json& out_json);
 
 public: /* =========================== Animation ============================== */
-	void		Play_Animation();
+	void			Play_Animation();
 	// 애니메이션 값
 	std::vector<UIKEYFRAME>* m_vecAnimation[KEYTYPE_END] = {};
 	KEYTYPE				m_eKeyframe = KEYTYPE_NORMAL;

@@ -1783,8 +1783,6 @@ void CWindow_UITool::Curr_Info()
 		break;
 	}
 
-
-
 	if (pTransformCom != nullptr)
 	{
 		_vector vPosition = pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -1831,30 +1829,30 @@ void CWindow_UITool::KeyframeRender_ValueChange()
 {
 	ImDrawList* draw_list = ImGui::GetWindowDrawList(); // 그리기
 
-	if (timeline->empty())
+	if (timeline[m_eKeyType].empty())
 		return;
 
 	// 키프레임 렌더링 및 편집
 	for (int i = 0; i < timeline[m_eKeyType].size(); ++i)
 	{
-		CUI::UIKEYFRAME& keyframe = timeline[m_eKeyType][i];
+		//CUI::UIKEYFRAME& keyframe = timeline[m_eKeyType][i];
 
 		// 타임 라인 상의 위치를 계산
-		float xPos = timelinePos.x + (keyframe.fTime / 20.0f) * timelineSize.x;
-		float yPos = timelinePos.y + timelineSize.y - timelineSize.y * keyframe.fValue;
+		float xPos = timelinePos.x + (timeline[m_eKeyType][i].fTime / 20.0f) * timelineSize.x;
+		float yPos = timelinePos.y + timelineSize.y - timelineSize.y * timeline[m_eKeyType][i].fValue;
 
 		// 키프레임 위치 값이 0(초기값)일 경우
-		if (keyframe.vKeyFramePos.x <= 1 &&
-			keyframe.vKeyFramePos.y <= 1)
+		if (timeline[m_eKeyType][i].vKeyFramePos.x <= 1 &&
+			timeline[m_eKeyType][i].vKeyFramePos.y <= 1)
 		{
 			// 현재 선택된 키프레임 위치를 넣어준다.
-			keyframe.vKeyFramePos.x = xPos;
-			keyframe.vKeyFramePos.y = yPos;
+			timeline[m_eKeyType][i].vKeyFramePos.x = xPos;
+			timeline[m_eKeyType][i].vKeyFramePos.y = yPos;
 		}
 
 		// 현재 시간에 해당하는 키프레임 표시 (빨간색 원)
-		if (keyframe.fTime >= currentTime - 0.1 &&
-			keyframe.fTime <= currentTime + 0.1) {
+		if (timeline[m_eKeyType][i].fTime >= currentTime - 0.1 &&
+			timeline[m_eKeyType][i].fTime <= currentTime + 0.1) {
 			draw_list->AddCircleFilled(
 				ImVec2(xPos, yPos),
 				5.0f,
@@ -1881,17 +1879,17 @@ void CWindow_UITool::KeyframeRender_ValueChange()
 			ImGui::BeginTooltip();
 			ImGui::Text(u8"키프레임 %d", i);
 			ImGui::Separator();
-			ImGui::Text(u8"시간 : %.2f", keyframe.fTime);
-			ImGui::Text(u8"값 : %.2f", keyframe.fValue);
-			ImGui::Text(u8"크기 X, Y : (%.2f, %.2f, %.2f)", keyframe.vScale.x, keyframe.vScale.y);
-			ImGui::Text(u8"회전 Z :(%.2f)", keyframe.fRot);
-			ImGui::Text(u8"이동 X, Y : (%.2f, %.2f, %.2f)", keyframe.vPos.x, keyframe.vPos.y);
+			ImGui::Text(u8"시간 : %.2f", timeline[m_eKeyType][i].fTime);
+			ImGui::Text(u8"값 : %.2f", timeline[m_eKeyType][i].fValue);
+			ImGui::Text(u8"크기 X, Y : (%.2f, %.2f, %.2f)", timeline[m_eKeyType][i].vScale.x, timeline[m_eKeyType][i].vScale.y);
+			ImGui::Text(u8"회전 Z :(%.2f)", timeline[m_eKeyType][i].fRot);
+			ImGui::Text(u8"이동 X, Y : (%.2f, %.2f, %.2f)", timeline[m_eKeyType][i].vPos.x, timeline[m_eKeyType][i].vPos.y);
 
-			if (keyframe.isEaseIn)
+			if (timeline[m_eKeyType][i].isEaseIn)
 				ImGui::Text(u8"이징 In: 켜짐");
 			else
 				ImGui::Text(u8"이징 In: 꺼짐");
-			if (keyframe.isEaseOut)
+			if (timeline[m_eKeyType][i].isEaseOut)
 				ImGui::Text(u8"이징 Out: 켜짐");
 			else
 				ImGui::Text(u8"이징 Out: 꺼짐");
@@ -1949,7 +1947,7 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 	firstKeyframe.vPos = minTranslationValue;
 	firstKeyframe.iTexureframe = _minTexture;
 
-	timeline[m_eUIType].push_back(firstKeyframe);
+	timeline[m_eKeyType].push_back(firstKeyframe);
 
 	CUI::UIKEYFRAME lastKeyframe;
 
@@ -1961,7 +1959,7 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 	lastKeyframe.vPos = maxTranslationValue;
 	lastKeyframe.iTexureframe = _maxTexture;
 
-	timeline[m_eUIType].push_back(lastKeyframe);
+	timeline[m_eKeyType].push_back(lastKeyframe);
 
 
 	int num_decimal_places = 2; // 소수점 단위 설정
@@ -2033,11 +2031,11 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 		}
 
 		// 기존 timeline 벡터에 키프레임을 이어서 추가
-		timeline[m_eUIType].emplace_back(keyframe);
+		timeline[m_eKeyType].emplace_back(keyframe);
 	}
 
 	// 시간에 따라 키프레임 정렬
-	std::sort(timeline[m_eUIType].begin(), timeline[m_eUIType].end(), [](const CUI::UIKEYFRAME& a, const CUI::UIKEYFRAME& b)
+	std::sort(timeline[m_eKeyType].begin(), timeline[m_eKeyType].end(), [](const CUI::UIKEYFRAME& a, const CUI::UIKEYFRAME& b)
 		{
 			return a.fTime < b.fTime;
 		});
@@ -2062,26 +2060,26 @@ void CWindow_UITool::KeyframeAutomaticGeneration()
 
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
 	ImGui::SeparatorText(u8"크기 설정");
-	ImGui::InputFloat3(u8"시작 프레임 크기 입력", minScale);
+	ImGui::InputFloat2(u8"시작 프레임 크기 입력", minScale);
 
 	//ImGui::Dummy(ImVec2(0, 5)); // 공백
-	ImGui::InputFloat3(u8"끝 프레임 크기 입력", maxScale);
+	ImGui::InputFloat2(u8"끝 프레임 크기 입력", maxScale);
 	ImGui::Separator();
 
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
 	ImGui::SeparatorText(u8"회전 설정");
-	ImGui::InputFloat3(u8"시작 프레임 회전 입력", &minRot);
+	ImGui::InputFloat(u8"시작 프레임 회전 입력", &minRot);
 
 	//ImGui::Dummy(ImVec2(0, 5)); // 공백
-	ImGui::InputFloat3(u8"끝 프레임 회전 입력", &maxRot);
+	ImGui::InputFloat(u8"끝 프레임 회전 입력", &maxRot);
 	ImGui::Separator();
 
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
 	ImGui::SeparatorText(u8"이동 설정");
-	ImGui::InputFloat3(u8"시작 프레임 이동 입력", minPos);
+	ImGui::InputFloat2(u8"시작 프레임 이동 입력", minPos);
 
 	//ImGui::Dummy(ImVec2(0, 5)); // 공백
-	ImGui::InputFloat3(u8"끝 프레임 이동 입력", maxPos);
+	ImGui::InputFloat2(u8"끝 프레임 이동 입력", maxPos);
 	ImGui::Separator();
 
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
@@ -2109,7 +2107,7 @@ void CWindow_UITool::KeyframeAutomaticGeneration()
 	
 	if (ImGui::Button(u8"자동 생성")) {
 		// 버튼이 클릭되면 timeline 벡터를 비우고 CreateKeyframesWithLinearInterpolation 함수 호출
-		//timeline[m_eUIType].clear();
+		//timeline[m_eKeyType].clear();
 
 		/* float2로 변환해서 넘겨주기 */
 		_float2 fminScale = { minScale[0], minScale[1] };
@@ -2130,7 +2128,7 @@ void CWindow_UITool::KeyframeAutomaticGeneration()
 	if (ImGui::Button("clear"))
 	{
 		// 버튼이 클릭되면 timeline 벡터를 비우고 CreateKeyframesWithLinearInterpolation 함수 호출
-		timeline[m_eUIType].clear();
+		timeline[m_eKeyType].clear();
 	}
 }
 
@@ -2157,15 +2155,18 @@ void CWindow_UITool::PlayAnimation(_float fTimeDelta)
 	if (ImGui::Button(u8"초기화"))
 	{
 		m_fPlayTime = 0.0f;
+		currentTime = 0.0f;
 	}
 
 	// 애니메이션 시간 설정
 	if (m_isPlayAnim)
 	{
 		m_fPlayTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
+		currentTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
 		if (m_fPlayTime > MaxTime) // 현재 시간이 최대 시간 값 보다 클 경우
 		{
 			m_fPlayTime = MaxTime; // 현재 시간을 최대 시간 값으로 고정
+			currentTime = MaxTime; // 현재 시간을 최대 시간 값으로 고정
 			m_isPlayAnim = false;  // 플레이 중지
 		}
 	}
@@ -2215,12 +2216,12 @@ void CWindow_UITool::AnimationTimeLineBar()
 		float relativeStartTimeXPos = timelinePos.x;    //애니메이션 타임 라인 그래프의 시작
 		float relativeEndTimeXPos = timelinePos.x + timelineSize.x; // 애니메이션 타임 라인 그래프의 끝
 
-		//// 그래프 데이터 배열을 현재 시간에 맞게 업데이트
-		//for (int n = 0; n < 100; n++) 
-		//{
-		//	float time = n / 100.0f * MaxTime;
-		//	m_fFrame[n] = EvaluateAnimationAtTime(time);
-		//}
+		// 그래프 데이터 배열을 현재 시간에 맞게 업데이트
+		for (int n = 0; n < 100; n++) 
+		{
+			float time = n / 100.0f * MaxTime;
+			m_fFrame[n] = EvaluateAnimationAtTime(time);
+		}
 
 		// 현재 시간을 최대 시간 범위 내로 클램핑
 		currentTime = ImClamp(currentTime, 0.0f, MaxTime);
@@ -2256,39 +2257,47 @@ void CWindow_UITool::AnimationTimeLineBar()
 
 _float CWindow_UITool::EvaluateAnimationAtTime(float time)
 {
-	if (timeline[m_eUIType].empty()) {
+	if (timeline == nullptr) // error
+		return 0.0f;
+
+	if (timeline[m_eKeyType].empty()) 
+	{
 		// 만약 키프레임이 없다면 기본값 0.0을 반환하거나,
 		// 다른 처리를 수행.
 		return 0.0f;
 	}
 
 	// 키프레임을 시간에 따라 정렬.
-	std::sort(timeline[m_eUIType].begin(), timeline[m_eUIType].end(), [](const CUI::UIKEYFRAME& tFirst_UI, const CUI::UIKEYFRAME& tSecond_UI) {
-		return tFirst_UI.fTime < tSecond_UI.fTime;
+	std::sort(timeline[m_eKeyType].begin(), timeline[m_eKeyType].end(), [](const CUI::UIKEYFRAME& tFirst_UI, const CUI::UIKEYFRAME& tSecond_UI)
+		{
+			return tFirst_UI.fTime < tSecond_UI.fTime;
 		});
 
 	// 현재 시간과 가장 가까운 이전과 이후의 키프레임을 찾기
 	CUI::UIKEYFRAME* prevKeyframe = nullptr;
 	CUI::UIKEYFRAME* nextKeyframe = nullptr;
 
-	for (int i = 0; i < timeline[m_eUIType].size(); ++i) {
-		if (timeline[m_eUIType][i].fTime <= time) {
-			prevKeyframe = &timeline[m_eUIType][i];
+	for (int i = 0; i < timeline[m_eKeyType].size(); ++i) 
+	{
+		if (timeline[m_eKeyType][i].fTime <= time) 
+		{
+			prevKeyframe = &timeline[m_eKeyType][i];
 		}
-		if (timeline[m_eUIType][i].fTime >= time) {
-			nextKeyframe = &timeline[m_eUIType][i];
+		if (timeline[m_eKeyType][i].fTime >= time) 
+		{
+			nextKeyframe = &timeline[m_eKeyType][i];
 			break;
 		}
 	}
 
 	// 이전과 다음 키프레임을 찾지 못하면 첫 번째 키프레임을 사용.
 	if (!prevKeyframe) {
-		prevKeyframe = &timeline[m_eUIType][0];
+		prevKeyframe = &timeline[m_eKeyType][0];
 	}
 
 	// 다음 키프레임을 찾지 못하면 마지막 키프레임을 사용.
 	if (!nextKeyframe) {
-		nextKeyframe = &timeline[m_eUIType].back();
+		nextKeyframe = &timeline[m_eKeyType].back();
 	}
 
 	// 이전과 다음 키프레임 사이에서 시간을 보간하여 값을 계산.
@@ -2449,10 +2458,12 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 
 		if (tUI_Info.bParent == true)
 		{
+			m_vecParentObject.push_back(pUI_Object);
 			Add_ParentList(tUI_Info);
 		}
 		else
 		{
+			m_vecChildObject.push_back(pUI_Object);
 			Add_ChildList(tUI_Info);
 		}
 	}

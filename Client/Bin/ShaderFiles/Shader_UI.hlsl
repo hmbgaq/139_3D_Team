@@ -11,6 +11,9 @@
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 texture2D		g_DiffuseTexture;
+texture2D		g_DiffuseTexture_Second;
+texture2D		g_DiffuseTexture_Third;
+texture2D		g_DiffuseTexture_Fourth;
 texture2D		g_DepthTexture;
 
 

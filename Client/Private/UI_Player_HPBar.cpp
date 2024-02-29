@@ -28,10 +28,13 @@ HRESULT CUI_Player_HPBar::Initialize(void* pArg)
 	if(pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
+	m_tUIInfo.fScaleX = 169.f;
+	m_tUIInfo.fScaleY = 17.f;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
+	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
 	return S_OK;
@@ -45,6 +48,16 @@ void CUI_Player_HPBar::Priority_Tick(_float fTimeDelta)
 void CUI_Player_HPBar::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (m_pGameInstance->Key_Down(DIK_5))
+	{
+		Change_SizeRight(-5.f);
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_6))
+	{
+		Change_SizeRight(5.f);
+	}
 }
 
 void CUI_Player_HPBar::Late_Tick(_float fTimeDelta)
@@ -62,7 +75,7 @@ HRESULT CUI_Player_HPBar::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그릴거야.
+	//! 이 셰이더에 0번째 패스로 그린다.
 	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
 	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
@@ -117,7 +130,7 @@ HRESULT CUI_Player_HPBar::Bind_ShaderResources()
 		return E_FAIL;
 
 	string TestName = m_tUIInfo.strObjectName;
-	for (_int i = (_int)0; i < (_int)m_eTexture_Kind; ++i)
+	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
 	{
 		switch (i)
 		{
@@ -129,8 +142,8 @@ HRESULT CUI_Player_HPBar::Bind_ShaderResources()
 		}
 		case CUI_Player_HPBar::HPBAR_RED:
 		{
-			//if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			//	return E_FAIL;
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Second")))
+				return E_FAIL;
 
 			break;
 		}

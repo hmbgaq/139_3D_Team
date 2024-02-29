@@ -28,10 +28,13 @@ HRESULT CUI_Player_Skill_Icon::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
+	m_tUIInfo.fScaleX = 55.0f;
+	m_tUIInfo.fScaleY = 55.0f;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
+	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
 	return S_OK;
@@ -89,19 +92,36 @@ HRESULT CUI_Player_Skill_Icon::Ready_Components()
 	
 	//! For.Com_Texture1 // 잠김
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_icons_hud_locked"),
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_LOCK]))))
+		TEXT("Com_Texture_Lock"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_LOCK]))))
 		return E_FAIL;
 
 #pragma region 아이콘은 텍스처를 골라서 넣을 수 있게 해줘야한다.
 	/* 첫 Create는 아무거나 기본 아이콘으로 Initialize에서 테그를 지정해주고, 선택된 텍스처를 파싱하면 파싱된 텍스처를 사용하게 해주자. */
-	//! For.Com_Texture2 // 쿨타임
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_COOLDOWN]))))
-		return E_FAIL;
+	wstring strPrototag;
+	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
+	wstring strPrototagCooldown;
+	
+	// 부분 문자열 검색
+	size_t found = strPrototag.find(L"ui_icon");
 
+	// 발견된 경우
+	if (found != std::wstring::npos) 
+	{
+		strPrototagCooldown = strPrototag + L"_cooldown";
+
+		//! For.Com_Texture2 // 쿨타임	
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototagCooldown,
+			TEXT("Com_Texture_Cooldown"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_COOLDOWN]))))
+			return E_FAIL;
+	}
+	else //발견되지 않은 경우
+	{
+
+	}
+	
 	//! For.Com_Texture2 // 활성화
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_ACTIVE]))))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+		TEXT("Com_Texture_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_ACTIVE]))))
 		return E_FAIL;
 #pragma endregion
 
@@ -117,10 +137,34 @@ HRESULT CUI_Player_Skill_Icon::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	for (auto& iter : m_pTextureCom)
+
+	string TestName = m_tUIInfo.strObjectName;
+	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
 	{
-		if (FAILED(iter->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
+		switch (i)
+		{
+		case CUI_Player_Skill_Icon::ICON_LOCK:
+		{
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+			break;
+		}
+		case CUI_Player_Skill_Icon::ICON_COOLDOWN:
+		{
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Second")))
+				return E_FAIL;
+
+			break;
+		}
+		case CUI_Player_Skill_Icon::ICON_ACTIVE:
+		{
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Third")))
+				return E_FAIL;
+			break;
+		}
+		default:
+			break;
+		}
 	}
 
 	return S_OK;
@@ -128,24 +172,8 @@ HRESULT CUI_Player_Skill_Icon::Bind_ShaderResources()
 
 json CUI_Player_Skill_Icon::Save_Desc(json& out_json)
 {
-	_float fSizeX = 0.f;
-	_float fSizeY = 0.f;
-	_float fPositionX = 0.f;
-	_float fPositionY = 0.f;
-
-	_float fCurPosX = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
-	_float fCurPosY = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
-
-	fCurPosX = fCurPosX + (_float)g_iWinSizeX * 0.5f;
-	fCurPosY = (_float)g_iWinSizeY * 0.5f - fCurPosY;
-
-	out_json["CloneTag"] = m_tUIInfo.strCloneTag;
-
-	out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
-
-	out_json["FilePath"] = m_tUIInfo.strFilePath;
-
-	m_pTransformCom->Write_Json(out_json);
+	/* 기본정보 저장 */
+	__super::Save_Desc(out_json);
 
 	return out_json;
 }

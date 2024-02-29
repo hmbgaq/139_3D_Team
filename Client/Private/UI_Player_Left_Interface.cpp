@@ -35,7 +35,7 @@ HRESULT CUI_Player_Left_Interface::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
+	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
 	return S_OK;
@@ -114,8 +114,8 @@ HRESULT CUI_Player_Left_Interface::Ready_Components()
 	if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
 
 	//! For.Com_Texture1 // 플레이어 왼쪽 인터페이스 프레임
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("UITargetTexture"),
-		TEXT("Com_Texture_UITargetTexture"), reinterpret_cast<CComponent**>(&m_pTextureCom[LEFT_INTERFACE]))))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Player_LeftInterface"),
+		TEXT("Com_Texture_Player_LeftInterface"), reinterpret_cast<CComponent**>(&m_pTextureCom[LEFT_INTERFACE]))))
 		return E_FAIL;
 
 	//! For.Com_Shader

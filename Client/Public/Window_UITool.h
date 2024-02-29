@@ -222,9 +222,9 @@ public:
 		_float _minTexture, _float _maxTexture,
 		_int numKeyframes);
 	// 키프레임 자동생성 세팅 함수
-	void KeyframeAutomaticGeneration();
+	void	KeyframeAutomaticGeneration();
 #pragma region PlayAnim
-	void PlayAnimation(_float fTimeDelta);
+	void	PlayAnimation(_float fTimeDelta);
 	_bool	m_isPlayAnim = false;
 	_float  m_fPlayTime = 0.f;
 #pragma region TimeLineBar
@@ -240,14 +240,14 @@ public:
 	_float						Lerp_float(const _float& a, const _float& b, float t);
 
 	// 쿼드라틱 이징(InQuad) 함수 (시작)
-	_float ImEaseInQuad(float start, float end, float t);
+	_float						ImEaseInQuad(float start, float end, float t);
 
 	// 쿼드라틱 이징(OutQuad) 함수 (끝)
-	_float ImEaseOutQuad(float start, float end, float t);
+	_float						ImEaseOutQuad(float start, float end, float t);
 
 private:
 	// 애니메이션 타임 라인
-	std::vector<CUI::UIKEYFRAME>	timeline[CUI::KEYTYPE_NORMAL];
+	std::vector<CUI::UIKEYFRAME>	timeline[CUI::KEYTYPE_END];
 	float currentTime = 0.0f; // 현재 시간 값
 	float MaxTime = 20.f;
 	float fDisplayTime = 1.f;	// 눈금마다의 시간 값 표시
@@ -386,7 +386,8 @@ private:
 		"Player_Skill_Frame",
 		"Player_Skill_Guige",
 		"Player_Skill_Icon",
-		"TutorialBox"
+		"TutorialBox",
+		"Player_ExpBar"
 	};
 	// 클래스 목록을 저장하는 벡터
 	std::vector<std::string> m_vecTextBoxClass =
