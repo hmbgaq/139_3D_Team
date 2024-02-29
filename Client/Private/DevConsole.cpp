@@ -9,8 +9,11 @@ CDevConsole::CDevConsole()
 HRESULT CDevConsole::Initialize()
 {
 	//AllocConsole();
+#ifdef _DEBUG
+
 	freopen("CONOUT$", "w", stdout);
 	std::cout << "Dev Console" << std::endl;
+#endif
 
     //freopen("CONOUT$", "w", stdout);
     //std::cout << "Dev Console" << std::endl;

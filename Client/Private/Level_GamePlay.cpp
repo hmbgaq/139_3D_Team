@@ -230,136 +230,136 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* 
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Terrain")));
-// 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky")));
-// 
-// 
-// 	json Stage1MapJson = {};
-// 
-// 	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
-// 	{
-// 		MSG_BOX("맵 불러오기 실패");
-// 		return E_FAIL;
-// 	}
-// 
-// 	json BasicJson = Stage1MapJson["Basic_Json"];
-// 	_int iBasicJsonSize = (_int)BasicJson.size();
-// 
-// 	for (_int i = 0; i < iBasicJsonSize; ++i)
-// 	{
-// 		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-// 
-// 		Desc.bAnimModel = BasicJson[i]["AnimType"];
-// 
-// 		wstring strLoadModelTag;
-// 		string strJsonModelTag = BasicJson[i]["ModelTag"];
-// 
-// 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
-// 		Desc.strModelTag = strLoadModelTag;
-// 
-// 		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
-// 		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
-// 		Desc.bPreview = false;
-// 
-// 		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
-// 		_float4x4 WorldMatrix;
-// 
-// 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-// 		{
-// 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-// 			{
-// 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-// 			}
-// 		}
-// 
-// 		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
-// 		Desc.WorldMatrix = WorldMatrix;
-// 
-// 		CEnvironment_Object* pObject = { nullptr };
-// 
-// 		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
-// 	}
-// 
-// 
-// 	json InteractJson = Stage1MapJson["Interact_Json"];
-// 	_int InteractJsonSize = InteractJson.size();
-// 
-// 	for (_int i = 0; i < InteractJsonSize; ++i)
-// 	{
-// 
-// 		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
-// 		//! L"Layer_Event"
-// 	}
-// 
-// 	json InstanceJson = Stage1MapJson["Instance_Json"];
-// 	_int InstanceJsonSize = InstanceJson.size();
-// 
-// 	for (_int i = 0; i < InstanceJsonSize; ++i)
-// 	{
-// 		MAPTOOL_INSTANCE_DESC InstanceDesc;
-// 
-// 		InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
-// 
-// 
-// 		wstring strLoadModelTag;
-// 		string strJsonModelTag = InstanceJson[i]["ModelTag"];
-// 
-// 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
-// 		InstanceDesc.strModelTag = strLoadModelTag;
-// 
-// 		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
-// 
-// 		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-// 		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
-// 
-// 		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
-// 		{
-// 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
-// 
-// 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
-// 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
-// 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
-// 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
-// 
-// 			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
-// 		}
-// 
-// 
-// 		CEnvironment_Instance* pInstanceObject = { nullptr };
-// 
-// 		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
-// 
-// 	}
-// 
-// 	json MonsterJson = Stage1MapJson["Monster_Json"];
-// 	_int iMonsterJsonSize = (_int)MonsterJson.size();
-// 
-// 	for (_int i = 0; i < iMonsterJsonSize; ++i)
-// 	{
-// 		CMonster::MONSTER_DESC MonsterDesc = {};
-// 
-// 		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
-// 
-// 		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
-// 		MonsterDesc.bPreview = false;
-// 
-// 
-// 		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-// 		_float4x4 WorldMatrix;
-// 
-// 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-// 		{
-// 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-// 			{
-// 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-// 			}
-// 		}
-// 
-// 		MonsterDesc.WorldMatrix = WorldMatrix;
-// 
-// 		if(FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
-// 			return E_FAIL;
-// 		
-// 	}
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky")));
+
+
+	json Stage1MapJson = {};
+
+	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
+	{
+		MSG_BOX("맵 불러오기 실패");
+		return E_FAIL;
+	}
+
+	json BasicJson = Stage1MapJson["Basic_Json"];
+	_int iBasicJsonSize = (_int)BasicJson.size();
+
+	for (_int i = 0; i < iBasicJsonSize; ++i)
+	{
+		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+
+		Desc.bAnimModel = BasicJson[i]["AnimType"];
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = BasicJson[i]["ModelTag"];
+
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+
+		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
+		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
+		Desc.bPreview = false;
+
+		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
+
+		CEnvironment_Object* pObject = { nullptr };
+
+		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+	}
+
+
+	json InteractJson = Stage1MapJson["Interact_Json"];
+	_int InteractJsonSize = InteractJson.size();
+
+	for (_int i = 0; i < InteractJsonSize; ++i)
+	{
+
+		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
+		//! L"Layer_Event"
+	}
+
+	json InstanceJson = Stage1MapJson["Instance_Json"];
+	_int InstanceJsonSize = InstanceJson.size();
+
+	for (_int i = 0; i < InstanceJsonSize; ++i)
+	{
+		MAPTOOL_INSTANCE_DESC InstanceDesc;
+
+		InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
+
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = InstanceJson[i]["ModelTag"];
+
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		InstanceDesc.strModelTag = strLoadModelTag;
+
+		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
+
+		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
+		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
+
+		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
+		{
+			INSTANCE_INFO_DESC InstanceInfoDesc = {};
+
+			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
+			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
+			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
+			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
+
+			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
+		}
+
+
+		CEnvironment_Instance* pInstanceObject = { nullptr };
+
+		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+
+	}
+
+	json MonsterJson = Stage1MapJson["Monster_Json"];
+	_int iMonsterJsonSize = (_int)MonsterJson.size();
+
+	for (_int i = 0; i < iMonsterJsonSize; ++i)
+	{
+		CMonster::MONSTER_DESC MonsterDesc = {};
+
+		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
+
+		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
+		MonsterDesc.bPreview = false;
+
+
+		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		MonsterDesc.WorldMatrix = WorldMatrix;
+
+		if(FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+			return E_FAIL;
+		
+	}
 
 
 	return S_OK;

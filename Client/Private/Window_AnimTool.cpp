@@ -1025,12 +1025,12 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 
 	}
 
-	if (ImGui::DragFloat3("ColliderPosition", m_fBonePosition, 0.01, -100.f, 100.f));
+	ImGui::DragFloat3("ColliderPosition", m_fBonePosition, 0.01, -100.f, 100.f);
 
 	ImGui::SeparatorText("ColliderOn");
-	if (ImGui::InputFloat("ColliderOn", &m_iColliderOnTrackPosition, 0.01f, 1.f));
+	ImGui::InputFloat("ColliderOn", &m_iColliderOnTrackPosition, 0.01f, 1.f);
 	ImGui::SeparatorText("ColliderOff");
-	if (ImGui::InputFloat("ColliderOff", &m_iColliderOffTrackPosition, 0.01f, 1.f));
+	ImGui::InputFloat("ColliderOff", &m_iColliderOffTrackPosition, 0.01f, 1.f);
 
 }
 

@@ -120,7 +120,7 @@ protected:
 	vector<CWeapon*> m_Weapons;
 	CHARCTER_DESC CharAnimDesc = {};
 protected:
-	CPhysXController* m_pPhysXControllerCom = { nullptr };
+	//CPhysXController* m_pPhysXControllerCom = { nullptr };
 	PxControllerCollisionFlags m_LastCollisionFlags;
 
 protected:
