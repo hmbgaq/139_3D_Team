@@ -262,6 +262,8 @@ namespace Engine
 		_float			fMaxRange;
 		_float3			vCenter;
 
+		_float3 Get_Position() { return vTranslation; }
+
 		_matrix Get_Matrix() const
 		{
 			_matrix TransformationMatrix;

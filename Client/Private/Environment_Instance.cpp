@@ -132,43 +132,48 @@ _bool CEnvironment_Instance::Picking_Instance(RAY* pRay, _float3* vOutPoint)
 	_vector vDir = XMLoadFloat3(&pRay->vDirection);
 
 	_float fDist;
+	_float fClosestDist = FLT_MAX;
+	_bool bResult = false;
 
-	_bool bResult;
-
+	//nm_pGameInstance->iSIS
 	for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 	{
-		CBounding_Sphere* pBoundingSphere = dynamic_cast<CBounding_Sphere*>(m_vecColliders[i]->Get_Bounding());
-
-		if (pBoundingSphere == nullptr)
-		{
-			MSG_BOX("콜라이더 없대");
-			return false;
-		}
-
-		const BoundingSphere* pBoundingSphereBox = pBoundingSphere->Get_Bounding();
-
-		if (true == pBoundingSphereBox->Intersects(vOrigin, vDir, fDist))
-		{
-			*vOutPoint = vOrigin + fDist * vDir;
-			return true;
-		}
-		//!CBounding_AABB* pBoundingAABB = dynamic_cast<CBounding_AABB*>(m_vecColliders[i]->Get_Bounding());
-		//!
-		//!if (pBoundingAABB == nullptr)
-		//!{
-		//!	MSG_BOX("콜라이더 없대");
-		//!	return false;
-		//!}
 		
-		//!const BoundingBox* pBoundingBox = pBoundingAABB->Get_Bounding();
-		//!
-		//!if (true == pBoundingBox->Intersects(vOrigin, vDir, fDist))
-		//!{
-		//!	//_vector vLocalPoint = vOrigin + fDist * vDir;
-		//!	*vOutPoint = vOrigin + fDist * vDir;
-		//!
-		//!	return true;
-		//!}
+		if (true == m_pGameInstance->isIn_WorldPlanes(m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Position()))
+		{
+			CBounding_Sphere* pBoundingSphere = dynamic_cast<CBounding_Sphere*>(m_vecColliders[i]->Get_Bounding());
+
+			if (pBoundingSphere == nullptr)
+			{
+				MSG_BOX("콜라이더 없대");
+				return false;
+			}
+
+			const BoundingSphere* pBoundingSphereBox = pBoundingSphere->Get_Bounding();
+
+			if (true == pBoundingSphereBox->Intersects(vOrigin, vDir, fDist))
+			{
+
+				_matrix matLocal = XMMatrixInverse(nullptr, m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix());
+
+
+
+
+				*vOutPoint = vOrigin + fDist * vDir;
+				//_float3 CenterToHitPoint = vOrigin + fDist * vDir;
+
+				//_vector vCenterToHitPoint = vOrigin + fDist * vDir;
+				////pBoundingSphereBox->
+				//
+				//_float3 vClosestPointOnSurface = XMLoadFloat3(&pBoundingSphereBox->Center) + pBoundingSphereBox->Radius * XMVector3Normalize(vCenterToHitPoint);
+				//
+				//*vOutPoint = vClosestPointOnSurface;
+
+				return true;
+			}
+		}
+		else
+			return false;
 	}
 	
 	return false;

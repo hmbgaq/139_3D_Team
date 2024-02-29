@@ -170,43 +170,32 @@ _bool CEnvironment_Object::Picking_VerJSY(RAY* pRay, _float3* vPickedPos)
 	_vector vOrigin = XMLoadFloat4(&pRay->vPosition);
 	_vector vDir = XMLoadFloat3(&pRay->vDirection);
 
-	_float fDist;
 
-	
-	CBounding_Sphere* pBoundingSphere = dynamic_cast<CBounding_Sphere*>(m_pPickingCollider->Get_Bounding());
-
-	if (pBoundingSphere == nullptr)
+	if (true == m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION)))
 	{
-		MSG_BOX("콜라이더 없대");
+		_float fDist;
+
+
+		CBounding_Sphere* pBoundingSphere = dynamic_cast<CBounding_Sphere*>(m_pPickingCollider->Get_Bounding());
+
+		if (pBoundingSphere == nullptr)
+		{
+			MSG_BOX("콜라이더 없대");
+			return false;
+		}
+
+		const BoundingSphere* pBoundingSphereBox = pBoundingSphere->Get_Bounding();
+
+		if (true == pBoundingSphereBox->Intersects(vOrigin, vDir, fDist))
+		{
+			*vPickedPos = vOrigin + fDist * vDir;
+			return true;
+		}
+	}
+	else
 		return false;
-	}
 
-	const BoundingSphere* pBoundingSphereBox = pBoundingSphere->Get_Bounding();
 
-	if (true == pBoundingSphereBox->Intersects(vOrigin, vDir, fDist))
-	{
-		*vPickedPos = vOrigin + fDist * vDir;
-		return true;
-	}
-
-// 		CBounding_AABB* pBoundingAABB = dynamic_cast<CBounding_AABB*>(m_pPickingCollider->Get_Bounding());
-// 
-// 		if (pBoundingAABB == nullptr)
-// 		{
-// 			MSG_BOX("콜라이더 없대");
-// 			return false;
-// 		}
-// 
-// 		const BoundingBox* pBoundingBox = pBoundingAABB->Get_Bounding();
-// 
-// 		if (true == pBoundingBox->Intersects(vOrigin, vDir, fDist))
-// 		{
-// 			//_vector vLocalPoint = vOrigin + fDist * vDir;
-// 			*vPickedPos = vOrigin + fDist * vDir;
-// 
-// 			return true;
-// 		}
-	
 	return false;
 }
 

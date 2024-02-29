@@ -574,6 +574,8 @@ void CWindow_MapTool::Reset_Function()
 	}
 
 	m_vecPreViewInstance.clear();
+	m_iSelectPreviewIndex = 0;
+	m_iCreatePreviewIndex = 0;
 
 	
 
@@ -1532,6 +1534,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 				vecCreateTag = m_vecPreViewInstanceTag;
 				strListBoxName = u8"삭제할 미리보기 인스턴스 객체 리스트";
 				iSelectTag = m_iSelectPreviewIndex;
+				
 			}
 			else
 			{
@@ -1646,6 +1649,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 					m_vecPreViewInstance[m_iSelectPreviewIndex] = nullptr;
 					m_pPickingObject = nullptr;
 					m_vecPreViewInstance.erase(m_vecPreViewInstance.begin() + m_iSelectPreviewIndex);
+					m_iSelectPreviewIndex = 0;
 				}
 				else
 				{
@@ -2051,7 +2055,7 @@ void CWindow_MapTool::Preview_Environment_CreateFunction()
 				m_pGameInstance->WString_To_String(Desc.strModelTag, strModelTag);
 
 				strModelTag = strModelTag + "@" + to_string(m_vecPreViewInstance.size());
-
+				m_vecPreViewInstance.push_back(pObject);
 				m_vecPreViewInstanceTag.push_back(strModelTag);
 				m_iCreatePreviewIndex++;
 			}
@@ -2090,7 +2094,7 @@ void CWindow_MapTool::Preview_Environment_CreateFunction()
 				m_pGameInstance->WString_To_String(Desc.strModelTag, strModelTag);
 
 				strModelTag = strModelTag + "@" + to_string(m_vecPreViewInstance.size());
-
+				m_vecPreViewInstance.push_back(pObject);
 				m_vecPreViewInstanceTag.push_back(strModelTag);
 				m_iCreatePreviewIndex++;
 			}
@@ -2101,8 +2105,12 @@ void CWindow_MapTool::Create_Instance()
 {
 	
 	//_int iCreateInstanceSize = m_mapPreviewInstance.size();
-	m_pPickingObject->Set_Dead(true);
-	m_pPickingObject = nullptr;
+	if (m_pPickingObject != nullptr)
+	{
+		m_pPickingObject->Set_Dead(true);
+		m_pPickingObject = nullptr;
+	}
+
 
 	for (auto& Pair : m_mapPreviewInstance)
 	{
@@ -2466,6 +2474,7 @@ void CWindow_MapTool::Instance_SelectFunction()
 
 				m_vecInstanceInfoTag.clear();
 				m_iInstanceInfoTagIndex = 0;
+				m_iSelectInstanceIndex = 0;
 
 				vector<INSTANCE_INFO_DESC> Desc = *m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_InstanceInfoDesc();
 
