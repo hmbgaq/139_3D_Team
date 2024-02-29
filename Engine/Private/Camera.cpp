@@ -3,8 +3,12 @@
 #include "Light_Manager.h"
 #include "GameInstance.h"
 
+float g_fCameraFOV = XM_PI / 4.0f;
+float g_fAspectRatio = 1.0f;
+
 CCamera::CCamera(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
+	, m_fCascadeTotalRange(50.f)
 {
 }
 
@@ -37,6 +41,18 @@ HRESULT CCamera::Initialize(void * pArg)
 	m_fNear = pCameraDesc->fNear;
 	m_fFar = pCameraDesc->fFar;
 
+	/* Cascade */
+	// Set the range values
+	m_arrCascadeRanges[0] = m_fNear; /*  { Cam_near, Cam_far, Cam_fovY, Cam_aspectRatio };*/
+	m_arrCascadeRanges[1] = 10.0f;
+	m_arrCascadeRanges[2] = 25.0f;
+	m_arrCascadeRanges[3] = m_fCascadeTotalRange;
+
+	for (int i = 0; i < m_iTotalCascades; i++)
+	{
+		m_arrCascadeBoundCenter[i] = _float3(0.0f, 0.0f, 0.0f);
+		m_arrCascadeBoundRadius[i] = 0.0f;
+	}
 	return S_OK;
 }
 
@@ -46,11 +62,11 @@ void CCamera::Priority_Tick(_float fTimeDelta)
 
 void CCamera::Tick(_float fTimeDelta)
 {
-	
-		m_pGameInstance->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransformCom->Get_WorldMatrixInverse());
-		m_pGameInstance->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+	m_pGameInstance->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransformCom->Get_WorldMatrixInverse());
+	m_pGameInstance->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+	m_arrCameraWorld = m_pTransformCom->Get_WorldFloat4x4();
 
-	
+	//Update_Cascade();
 }
 
 void CCamera::Late_Tick(_float fTimeDelta)
@@ -58,92 +74,60 @@ void CCamera::Late_Tick(_float fTimeDelta)
 }
 
 
-void CCamera::Update_Cascade()
+void CCamera::Update_Cascade(const float3& vDirectionalDir)
 {
-	// 카메라의 역행렬과 시야각,화면비, 가까운 평면 Z,먼 평면 Z
-	_matrix matWorld = m_pTransformCom->Get_WorldMatrix();
-	_matrix matView = m_pTransformCom->Get_WorldMatrixInverse();
+	_float3 vWorldCenter = *GetEyePt() + *GetWorldAhead() * m_fCascadeTotalRange* 0.5f;
+	_float3 vPos = vWorldCenter; // worldCenter 기준으로 뷰매트릭스 생성 : Directional Light의 위치를 특정하기 어려워서 
+	_float3 vLookAt = vWorldCenter + vDirectionalDir * m_fFar;
+	_float3 vUp;
+	_float3 vRight = _float3(1.0f, 0.0f, 0.0f);
+	XMStoreFloat3(&vUp, XMVector3Cross(vDirectionalDir, vRight));
+	XMVector3Normalize(vUp);
+	_float4x4 mShadowView;
+	mShadowView = XMMatrixLookAtLH(XMLoadFloat3(&vPos), XMLoadFloat3(&vLookAt), XMLoadFloat3(&vUp));
 
 
-	//시야각을 이용하여 수직 시야각을 구함
-	_float tanHalfVFov = tanf(m_fFovy / 2.0f);
-	// 수직 시야각을 이용하여 수평 시야각을 구함
-	_float tanHalfHFov = tanHalfVFov * m_fAspect;
+	// Get the bounds for the shadow space
+}
 
-	// 절두체를 나누기위한 각 부분 절두체의 끝 지점 선언
-	m_fCascadeEnd[0] = m_fNear;
-	m_fCascadeEnd[1] = 10.f;
-	m_fCascadeEnd[2] = 20.f;
-	m_fCascadeEnd[3] = 40.f;
+const _float3* CCamera::GetEyePt() const
+{
+	return (_float3*)&m_arrCameraWorld._41;
+}
 
-	// 3개의 절두체로 나누기위해 3번 반복함
-	for (uint32_t i = 0; i < MAX_CASCADES; ++i)
-	{
-		//+X,+Y 좌표에 수평,수직 시야각을 이용하여 구함. 각 부분 절두체의 가까운,먼
-		//평면의 값을 곱하여 4개의 점을 구함
-		_float xn = m_fCascadeEnd[i] * tanHalfHFov;
-		_float xf = m_fCascadeEnd[i + 1] * tanHalfHFov;
-		_float yn = m_fCascadeEnd[i] * tanHalfVFov;
-		_float yf = m_fCascadeEnd[i + 1] * tanHalfVFov;
+const _float3* CCamera::GetWorldAhead() const
+{
+	return (_float3*)&m_arrCameraWorld._31;
+}
 
-		// +좌표값을 구하면 -좌표값을 구하여 각각의 절두체 평면을 구할수있음.
-		// 각 절두체의 Z값을 저장하여 i 가 낮은 순서로 가까운 평면 먼평면을 구성함
-		_float4 frustumCorners[8] = {
-			//near 사각형ㅁ
-			{xn,yn,m_fCascadeEnd[i],1.0f},
-			{-xn,yn,m_fCascadeEnd[i],1.0f},
-			{xn,-yn,m_fCascadeEnd[i],1.0f},
-			{-xn,-yn,m_fCascadeEnd[i],1.0f},
+const _float3* CCamera::GetWorldUp() const
+{
+	return (_float3*)&m_arrCameraWorld._21;
+}
 
-			//far 사각형ㅁ
-			{xf,yf,m_fCascadeEnd[i + 1],1.0f},
-			{-xf,yf,m_fCascadeEnd[i + 1],1.0f},
-			{xf,-yf,m_fCascadeEnd[i + 1],1.0f},
-			{-xf,-yf,m_fCascadeEnd[i + 1],1.0f}
-		};
+const _float3* CCamera::GetWorldRight() const
+{
+	return (_float3*)&m_arrCameraWorld._11;
+}
 
-		_float4 centerPos; // 절두체 중심점
-		for (uint32_t j = 0; j < 8; ++j)
-		{
-			frustumCorners[j] = XMVector4Transform(frustumCorners[j], matWorld);
-			centerPos += frustumCorners[j];
-		}
+void CCamera::ExtractFrustumBoundSphere(_float fNear, _float fFar, _float3& vBoundCenter, _float& fBoundRadius)
+{
+	// Get the camera bases
+	const _float3& camPos = *GetEyePt();
+	const _float3& camRight = *GetWorldRight();
+	const _float3& camUp = *GetWorldUp();
+	const _float3& camForward = *GetWorldAhead();
 
-		centerPos /= 8.0f;
-		_float radius = 0.0f;
+	// Calculate the tangent values (this can be cached as long as the FOV doesn't change)
+	const _float fTanFOVX = tanf(g_fAspectRatio * g_fCameraFOV);
+	const _float fTanFOVY = tanf(g_fAspectRatio);
 
-		for (uint32_t j = 0; j < 8; ++j)
-		{
-			_float distance = XMVectorGetX(XMVector4Length(frustumCorners[j] - centerPos));
-			radius = max(radius, distance);
-		}
+	// The center of the sphere is in the center of the frustum
+	vBoundCenter = camPos + camForward * (fNear + 0.5f * (fNear + fFar));
 
-		radius = ceil(radius * 16.0f) / 16.0f;
-	}
-		// using radius ,  we made aabb box
-	//	_float3 maxExtents(radius, radius, radius + 60.0f);
-	//	_float3 minExtents = -maxExtents;
-	//
-	//	_float3 vLightDir = CLight_Manager->Get_LightDir();
-	//	_float3 shadowCamPos = Vec3(centerPos) + (vLightDir * minExtents.z);
-	//	Matrix lightMatrix = Matrix::CreateWorld(shadowCamPos, -vLightDir, Vec3(0.0f, 1.0f, 0.0f));
-	//	Matrix lightInv = lightMatrix.Invert();
-	//
-	//	Vec3 cascadeExtents = maxExtents - minExtents;
-	//
-	//	Matrix matProj = XMMatrixOrthographicLH(cascadeExtents.x, cascadeExtents.y, 0.0f, cascadeExtents.z);
-	//	m_shadowOrthoProj[i] = lightInv * matProj;
-	//
-	//	Vec3 vPos, vScale;
-	//	Quaternion vQuat;
-	//	lightMatrix.Decompose(vScale, vQuat, vPos);
-	//	m_tCascadeShadowBox[i].Orientation = vQuat;
-	//	m_tCascadeShadowBox[i].Center = Vec3(centerPos);
-	//	m_tCascadeShadowBox[i].Extents = maxExtents;
-	//}
-	//
-	//CPipeLine::GetInstance()->Set_ShadowProj(m_shadowOrthoProj);
-	//CPipeLine::GetInstance()->Set_CascadeBoxes(m_tCascadeShadowBox);
+	// Radius is the distance to one of the frustum far corners
+	const _float3 vBoundSpan = camPos + (-camRight * fTanFOVX + camUp * fTanFOVY + camForward) * fFar - vBoundCenter;
+	//fBoundRadius = D3DXVec3Length(&vBoundSpan);
 }
 
 

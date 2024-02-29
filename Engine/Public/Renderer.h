@@ -76,7 +76,7 @@ private:
 	HRESULT Render_HBAO_PLUS();
 	HRESULT Render_Bloom();
 	HRESULT Render_Deferred();
-	HRESULT Render_Cascade_Shadow();
+	HRESULT Render_Cascade();
 	HRESULT Render_Decal();
 
 	/* Post Processing */

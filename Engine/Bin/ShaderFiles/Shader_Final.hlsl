@@ -5,6 +5,7 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 Texture2D g_Final_Deferred_Target;
 Texture2D g_Final_Effect_Target;
 Texture2D g_PriorityTarget;
+Texture2D g_Final_UI_Target;
 
 /* 명도 채도 관리 */
 float g_brightness = 1.f; // 명도 
@@ -68,6 +69,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
    // float4 vUI = g_Diffuse_UITexture.Sample(LinearSampler, In.vTexcoord);
     float4 vEffect = g_Final_Effect_Target.Sample(LinearSampler, In.vTexcoord);
     float4 originalColor = g_Final_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
+    float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
     
     float4 vResult = vEffect + originalColor;
     
@@ -82,11 +84,12 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     
     if (Out.vColor.a == 0) // 백버퍼 blue 나오게 
         discard;
-    
-    return Out;
-    
+
+    return Out;    
 }
 
+  
+    
 technique11 DefaultTechnique
 {
     pass Final // 0

@@ -533,23 +533,52 @@ struct GS_OUT
 };
 
 [maxvertexcount(9)]
-void GS_CASCADE(triangle GS_IN input[3], inout TriangleStream<GS_OUT> output)
+void GS_CASCADE(triangle GS_IN In[3] : SV_Position, inout TriangleStream<GS_OUT> OutStream)
 {
-    for (int face = 0; face < 3; ++face)
+    for (int iFace = 0; iFace < 3; ++iFace) // 모든 쉐도우 맵에 대하여 삼각형 버텍스를 출력한다. -> 쉐도우 맵 위치에 없는것도 출력한다. 
     {
-        GS_OUT element = (GS_OUT) 0;
-        element.RTIndex = face;
+        GS_OUT Out = (GS_OUT) 0;
         
-        for (int i = 0; i < 3; ++i)
+        Out.RTIndex = iFace; // 텍스처 배열 인덱스 
+        
+        for (int v = 0; v < 3; v++) 
         {
-            element.vPosition = mul(input[i].vPosition, CascadeViewProj[face]);
-            output.Append(element);
+            Out.vPosition = mul(In[v].vPosition, CascadeViewProj[iFace]);
+            OutStream.Append(Out);
         }
         
-        output.RestartStrip();
+        OutStream.RestartStrip();
     }
 }
 
+//float3 CalcDirection(float3 position, Material material, bool bUseShadow)
+//{
+    
+//}
+
+PS_OUT PS_MAIN_CASCADE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+ //// 정점을 라이트 공간으로 변환
+ //   float4 lightSpacePos1 = mul(In.vPosition, g_ViewProjMatrix1);
+ //   float4 lightSpacePos2 = mul(In.vPosition, g_ViewProjMatrix2);
+ //   float4 lightSpacePos3 = mul(In.vPosition, g_ViewProjMatrix3);
+
+ //   // 각 cascade에서 깊이 텍스처를 샘플링
+ //   float shadow1 = SampleShadowMap(lightSpacePos1, gShadowMap1);
+ //   float shadow2 = SampleShadowMap(lightSpacePos2, gShadowMap2);
+ //   float shadow3 = SampleShadowMap(lightSpacePos3, gShadowMap3);
+
+ //   // 각 cascade의 그림자 값을 결합
+ //   float finalShadow = CombineShadowCascades(shadow1, shadow2, shadow3);
+
+ //   // 그림자를 적용하여 최종 픽셀 색상을 계산
+ //   float4 color = CalculateFinalColor(finalShadow);
+
+    return Out;
+}
+ 
 /* ------------------- Technique -------------------*/ 
 technique11 DefaultTechnique
 {	
@@ -668,16 +697,16 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
     }
   
-    pass Cascade_Shadow // 9
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+    //pass Cascade_Shadow // 9
+    //{
+    //    SetRasterizerState(RS_Default);
+    //    SetDepthStencilState(DSS_Default, 0);
+    //    SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
-        VertexShader = compile vs_5_0 VS_MAIN_CASCADE();
-        GeometryShader = compile gs_5_0 GS_CASCADE();
-        HullShader = NULL;
-        DomainShader = NULL;
-        PixelShader = NULL;
-    }
+    //    VertexShader = compile vs_5_0 VS_MAIN_CASCADE();
+    //    GeometryShader = compile gs_5_0 GS_CASCADE();
+    //    HullShader = NULL;
+    //    DomainShader = NULL;
+    //    PixelShader = compile ps_5_0 PS_MAIN_CASCADE();
+    //}
 }
