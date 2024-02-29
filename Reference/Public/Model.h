@@ -87,7 +87,7 @@ public:
 	_bool					Is_Transition();
 	void					Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
 	_bool					Is_Inputable_Front(_uint _iIndexFront);
-
+	_float					Get_TrackPosition();
 	void					Write_Names(const string& strModelFilePath);
 
 public:

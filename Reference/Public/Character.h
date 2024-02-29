@@ -87,6 +87,8 @@ public:
 
 	_bool	Is_Animation_End();
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
+	_float	Get_TrackPosition();
+	CHARCTER_DESC Get_CharcterDesc() { return CharAnimDesc; }
 
 	void Go_Straight(_float fTimeDelta);
 	void Go_Straight_L45(_float fTimeDelta);
@@ -113,7 +115,8 @@ public:
 protected:
 	_int m_iHp = { 0 };
 
-
+public:
+	_float m_fCurrentTrackPosition = {0.f};
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
 	CBody* m_pBody = { nullptr };

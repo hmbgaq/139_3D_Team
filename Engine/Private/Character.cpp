@@ -242,6 +242,11 @@ _bool CCharacter::Is_Inputable_Front(_uint _iIndexFront)
 	return m_pBody->Is_Inputable_Front(_iIndexFront);
 }
 
+_float CCharacter::Get_TrackPosition()
+{
+	return m_pBody->Get_TrackPosition();
+}
+
 void CCharacter::Go_Straight(_float fTimeDelta)
 {
 	m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);

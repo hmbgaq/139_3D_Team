@@ -33,7 +33,8 @@ public:
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
-
+public:
+	_bool	bTest = true;
 private:
 	CActor<CPlayer>* m_pActor = { nullptr };
 	_bool	m_bRotate_In_CameraDir = { false };

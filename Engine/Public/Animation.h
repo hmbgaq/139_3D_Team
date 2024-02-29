@@ -57,6 +57,8 @@ public:
 
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 
+	_bool Is_Inputable_Front(_float _fTrackPosition, _uint _iIndexFront);
+
 	void Set_StiffnessRate(_float fStiffnessRate)
 	{
 		m_fStiffnessRate = fStiffnessRate;
