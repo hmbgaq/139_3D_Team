@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine_Defines.h"
+
 namespace Client
 {
 	/* 1600 x 900 가능할지도 ㄱㄷ */

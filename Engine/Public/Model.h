@@ -95,6 +95,8 @@ public:
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
 	
 	
+public:
+	CMyAIScene*				Get_AIScene();
 
 public:
 	vector<CBone*>*			Get_Bones();

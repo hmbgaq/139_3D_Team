@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Body_Player.h"
+#include "..\Public\Body_Player.h"
 #include "GameInstance.h"
 
 CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -7,13 +7,13 @@ CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 {
 }
 
-CBody_Player::CBody_Player(const CBody_Player & rhs)
+CBody_Player::CBody_Player(const CBody_Player& rhs)
 	: CBody(rhs)
 {
 }
 
 HRESULT CBody_Player::Initialize_Prototype()
-{	
+{
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
 
@@ -21,11 +21,9 @@ HRESULT CBody_Player::Initialize_Prototype()
 }
 
 HRESULT CBody_Player::Initialize(void* pArg)
-{	
+{
 	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;	
-	
-	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -84,6 +82,18 @@ HRESULT CBody_Player::Render_Shadow()
 	return S_OK;
 }
 
+void CBody_Player::OnCollisionEnter(CCollider* other)
+{
+}
+
+void CBody_Player::OnCollisionStay(CCollider* other)
+{
+}
+
+void CBody_Player::OnCollisionExit(CCollider* other)
+{
+}
+
 void CBody_Player::SetUp_Animation(_uint iAnimIndex)
 {
 	m_pModelCom->Set_Animation(iAnimIndex);
@@ -99,25 +109,20 @@ HRESULT CBody_Player::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Fiona"),
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Rentier"), // Prototype_Component_Model_Fiona
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
 	/* For.Com_Collider */
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
-	BoundingDesc.iLayer = (_uint)COLLISION_LAYER::PLAYER;
-	//BoundingDesc.fRadius = 0.5f;
-
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER);
+	BoundingDesc.vExtents = _float3(0.5f, 0.5f, 0.5f);
 	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
 
 
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
-
-	
-
-	return S_OK;
 }
 
 HRESULT CBody_Player::Bind_ShaderResources()
@@ -126,16 +131,13 @@ HRESULT CBody_Player::Bind_ShaderResources()
 		return E_FAIL;
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
-	if(FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
-
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
 		return E_FAIL;
-
-	return S_OK;
 }
 
-CBody_Player * CBody_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
+CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CBody_Player*		pInstance = new CBody_Player(pDevice, pContext, strPrototypeTag);
+	CBody_Player* pInstance = new CBody_Player(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
@@ -146,9 +148,9 @@ CBody_Player * CBody_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext 
 	return pInstance;
 }
 
-CGameObject * CBody_Player::Clone(void* pArg)
+CGameObject* CBody_Player::Clone(void* pArg)
 {
-	CBody_Player*		pInstance = new CBody_Player(*this);
+	CBody_Player* pInstance = new CBody_Player(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
@@ -167,8 +169,4 @@ CGameObject* CBody_Player::Pool()
 void CBody_Player::Free()
 {
 	__super::Free();
-
 }
-
-
-

@@ -261,7 +261,7 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 
 		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
 	}
-	min(1,2);
+	
 }
 
 HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices)
@@ -295,7 +295,7 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 {
 	m_eAnimState = _eAnimState;
 
-	//if (_iAnimationIndex != m_iCurrentAnimIndex)
+	if (_iAnimationIndex != m_iCurrentAnimIndex)
 	{
 		Reset_Animation(_iAnimationIndex);
 
@@ -306,7 +306,15 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 		else
 		{
 			m_iCurrentAnimIndex = _iAnimationIndex;
+			_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+			m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 		}
+	}
+	else 
+	{
+		m_iCurrentAnimIndex = _iAnimationIndex;
+		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 	}
 }
 
@@ -314,7 +322,8 @@ void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitio
 {
 	if (_iAnimationIndex == m_iCurrentAnimIndex)
 	{
-		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition((_float)iTargetKeyFrameIndex);
+		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 	}
 
 	CAnimation* currentAnimation = m_Animations[m_iCurrentAnimIndex];
@@ -413,6 +422,11 @@ void CModel::Write_Names(const string& strModelFilePath)
 vector<CAnimation*>* CModel::Get_Animations()
 {
 	return &m_Animations;
+}
+
+CMyAIScene* CModel::Get_AIScene()
+{
+	return &m_pAIScene;
 }
 
 vector<CBone*>* CModel::Get_Bones()
@@ -618,6 +632,6 @@ void CModel::Free()
 	}
 	m_Meshes.clear();
 
-	if (false == m_isCloned)
-		m_MyAssimp.FreeScene();
+	//if (false == m_isCloned)
+	m_MyAssimp.FreeScene();
 }

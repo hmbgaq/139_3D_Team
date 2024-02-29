@@ -11,7 +11,7 @@
 BEGIN(Engine)
 
 class CNavigation;
-class CPhysXCharacterController;
+//class CPhysXCharacterController;
 
 class ENGINE_DLL CCharacter abstract : public CGameObject
 {
@@ -101,13 +101,6 @@ public:
 	virtual void Set_Enable(_bool _Enable) override;
 
 
-	_bool Is_Rotate_In_CameraDir() {
-		return m_bRotate_In_CameraDir;
-	}
-	void Set_Rotate_In_CameraDir(_bool _bRotate_In_CameraDir) {
-		m_bRotate_In_CameraDir = _bRotate_In_CameraDir;
-	}
-
 public:
 	_int Get_Hp() {
 		return m_iHp;
@@ -119,7 +112,7 @@ public:
 
 protected:
 	_int m_iHp = { 0 };
-	_bool	m_bRotate_In_CameraDir = { false };
+
 
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };

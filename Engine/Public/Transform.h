@@ -93,6 +93,12 @@ public:
 		return vPos;
 	}
 
+	_float3 Get_Position_Float4()
+	{
+		_float4 vPos;
+		XMStoreFloat4(&vPos, Get_State(CTransform::STATE::STATE_POSITION));
+		return vPos;
+	}
 
 public:
 	virtual HRESULT Initialize_Prototype(_float fSpeedPerSec, _float fRotationPerSec);	
