@@ -222,7 +222,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* 
 	//!	m_vecCreateMonster.push_back(pMonster);
 	//!	m_iCreateMonsterIndex++;
 	//!}
->>>>>>> Dev2
+
 
 	return S_OK;
 }
