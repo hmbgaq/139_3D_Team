@@ -32,8 +32,6 @@
 
 
 
-
-
 void CInfected_State::Initialize(CInfected* pActor)
 {
 	m_pGameInstance = CGameInstance::GetInstance();
@@ -173,38 +171,39 @@ CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta,
 
 CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (true == m_pGameInstance->Key_Pressing(DIK_LSHIFT))
-		return nullptr;
 
-	if (m_pGameInstance->Key_Pressing(iKeyUp))
-	{
-		if (m_pGameInstance->Key_Pressing(iKeyLeft))
-		{
-			if (CInfected_Walk_FL45::g_iAnimIndex != _iAnimIndex)
-				return new CInfected_Walk_FL45();
-		}
-		else if (m_pGameInstance->Key_Pressing(iKeyRight))
-		{
-			if (CInfected_Walk_FR45::g_iAnimIndex != _iAnimIndex)
-				return new CInfected_Walk_FR45();
-		}
-		else
-		{
-			if (CInfected_Walk_F::g_iAnimIndex != _iAnimIndex)
-				return new CInfected_Walk_F();
-		}
-	}
-	else if (m_pGameInstance->Key_Pressing(iKeyDown))
-	{
-		if (CInfected_Walk_B::g_iAnimIndex != _iAnimIndex)
-			return new CInfected_Walk_B();
-		
-	}
-	else
-	{
-		if (CInfected_Idle::g_iAnimIndex != _iAnimIndex)
-			return new CInfected_Idle();
-	}
+	//if (true == m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+	//	return nullptr;
+
+	//if (m_pGameInstance->Key_Pressing(iKeyUp))
+	//{
+	//	if (m_pGameInstance->Key_Pressing(iKeyLeft))
+	//	{
+	//		if (CInfected_Walk_FL45::g_iAnimIndex != _iAnimIndex)
+	//			return new CInfected_Walk_FL45();
+	//	}
+	//	else if (m_pGameInstance->Key_Pressing(iKeyRight))
+	//	{
+	//		if (CInfected_Walk_FR45::g_iAnimIndex != _iAnimIndex)
+	//			return new CInfected_Walk_FR45();
+	//	}
+	//	else
+	//	{
+	//		if (CInfected_Walk_F::g_iAnimIndex != _iAnimIndex)
+	//			return new CInfected_Walk_F();
+	//	}
+	//}
+	//else if (m_pGameInstance->Key_Pressing(iKeyDown))
+	//{
+	//	if (CInfected_Walk_B::g_iAnimIndex != _iAnimIndex)
+	//		return new CInfected_Walk_B();
+	//	
+	//}
+	//else
+	//{
+	//	if (CInfected_Idle::g_iAnimIndex != _iAnimIndex)
+	//		return new CInfected_Idle();
+	//}
 
 
 	return nullptr;
@@ -212,152 +211,111 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 
 CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT))
-	{
-		if (m_pGameInstance->Key_Pressing(iKeyUp))
-		{
-			if (m_pGameInstance->Key_Pressing(iKeyLeft))
-			{
-				if (CInfected_Run_FL45::g_iAnimIndex != _iAnimIndex)
-					return new CInfected_Run_FL45();
-			}
-			else if (m_pGameInstance->Key_Pressing(iKeyRight))
-			{
-				if (CInfected_Run_FR45::g_iAnimIndex != _iAnimIndex)
-					return new CInfected_Run_FR45();
-			}
-			else
-			{
-				if (CInfected_Run_F::g_iAnimIndex != _iAnimIndex)
-					return new CInfected_Run_F();
-			}
-		}
-		else if (m_pGameInstance->Key_Pressing(iKeyDown))
-		{
-			if (CInfected_Run_B::g_iAnimIndex != _iAnimIndex)
-				return new CInfected_Run_B();
+	//if (m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+	//{
+	//	if (m_pGameInstance->Key_Pressing(iKeyUp))
+	//	{
+	//		if (m_pGameInstance->Key_Pressing(iKeyLeft))
+	//		{
+	//			if (CInfected_Run_FL45::g_iAnimIndex != _iAnimIndex)
+	//				return new CInfected_Run_FL45();
+	//		}
+	//		else if (m_pGameInstance->Key_Pressing(iKeyRight))
+	//		{
+	//			if (CInfected_Run_FR45::g_iAnimIndex != _iAnimIndex)
+	//				return new CInfected_Run_FR45();
+	//		}
+	//		else
+	//		{
+	//			if (CInfected_Run_F::g_iAnimIndex != _iAnimIndex)
+	//				return new CInfected_Run_F();
+	//		}
+	//	}
+	//	else if (m_pGameInstance->Key_Pressing(iKeyDown))
+	//	{
+	//		if (CInfected_Run_B::g_iAnimIndex != _iAnimIndex)
+	//			return new CInfected_Run_B();
 
-		}
-		else
-		{
-			if (CInfected_Idle::g_iAnimIndex != _iAnimIndex)
-				return new CInfected_Idle();
-		}
-	}
+	//	}
+	//	else
+	//	{
+	//		if (CInfected_Idle::g_iAnimIndex != _iAnimIndex)
+	//			return new CInfected_Idle();
+	//	}
+	//}
 
 	return nullptr;
 }
 
 CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Mouse_Down(DIM_LB))
-	{
-		CInfected::Infected_State eState = (CInfected::Infected_State)_iAnimIndex;
-		switch (eState)
-		{
+	//if (m_pGameInstance->Mouse_Down(DIM_LB))
+	//{
+	//	CInfected::Infected_State eState = (CInfected::Infected_State)_iAnimIndex;
+	//	switch (eState)
+	//	{
 
-		case Client::CInfected::Infected_Melee_RD_01:
-			return new CInfected_Melee_RM_01();
-			break;
-		case Client::CInfected::Infected_Melee_RM_01:
-			return new CInfected_Melee_RM_02();
-			break;
-		case Client::CInfected::Infected_Melee_RM_02:
-			return new CInfected_Melee_RU_01();
-			break;
-		case Client::CInfected::Infected_Melee_RU_01:
-			return new CInfected_Melee_RU_02();
-			break;
-		case Client::CInfected::Infected_Melee_RU_02:
-			return new CInfected_Melee_RD_01();
-			break;
-
-
-		default:
-			return new CInfected_Melee_RD_01();
-			break;
-
-		}
-	}
-
-	if (pActor->Is_Animation_End())
-	{
-		return new CInfected_Idle();
-	}
+	//	case Client::CInfected::Infected_Melee_RD_01:
+	//		return new CInfected_Melee_RM_01();
+	//		break;
+	//	case Client::CInfected::Infected_Melee_RM_01:
+	//		return new CInfected_Melee_RM_02();
+	//		break;
+	//	case Client::CInfected::Infected_Melee_RM_02:
+	//		return new CInfected_Melee_RU_01();
+	//		break;
+	//	case Client::CInfected::Infected_Melee_RU_01:
+	//		return new CInfected_Melee_RU_02();
+	//		break;
+	//	case Client::CInfected::Infected_Melee_RU_02:
+	//		return new CInfected_Melee_RD_01();
+	//		break;
 
 
-	return nullptr;
+	//	default:
+	//		return new CInfected_Melee_RD_01();
+	//		break;
 
+	//	}
+	//}
+
+	//if (pActor->Is_Animation_End())
+	//{
+	//	return new CInfected_Idle();
+	//}
 
 	return nullptr;
 }
 
-CState<CInfected>* CInfected_State::Hit(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-
-	if (pActor->Is_Animation_End())
-	{
-		return new CInfected_Idle();
-	}
-
-	return nullptr;
-}
-
-CState<CInfected>* CInfected_State::Knock(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	if (pActor->Is_Animation_End())
-	{
-		return new CInfected_Idle();
-	}
-
-	return nullptr;
-}
 
 CState<CInfected>* CInfected_State::Dodge(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Key_Pressing(DIK_SPACE))
-	{
-		if (m_pGameInstance->Key_Pressing(iKeyUp))
-		{
-			if (CInfected_Dodge_F_01_TEMP::g_iAnimIndex != _iAnimIndex)
-				return new CInfected_Dodge_F_01_TEMP();
-		}
-		else if (m_pGameInstance->Key_Pressing(iKeyLeft))
-		{
-			if (CInfected_Dodge_L_01_TEMP::g_iAnimIndex != _iAnimIndex)
-				return new CInfected_Dodge_L_01_TEMP();
-		}
-		else if (m_pGameInstance->Key_Pressing(iKeyRight))
-		{
-			if (CInfected_Dodge_R_01_TEMP::g_iAnimIndex != _iAnimIndex)
-				return new CInfected_Dodge_R_01_TEMP();
-		}
 
-	}
+	//if (m_pGameInstance->Key_Pressing(DIK_SPACE))
+	//{
+	//	if (m_pGameInstance->Key_Pressing(iKeyUp))
+	//	{
+	//		if (CInfected_Dodge_F_01_TEMP::g_iAnimIndex != _iAnimIndex)
+	//			return new CInfected_Dodge_F_01_TEMP();
+	//	}
+	//	else if (m_pGameInstance->Key_Pressing(iKeyLeft))
+	//	{
+	//		if (CInfected_Dodge_L_01_TEMP::g_iAnimIndex != _iAnimIndex)
+	//			return new CInfected_Dodge_L_01_TEMP();
+	//	}
+	//	else if (m_pGameInstance->Key_Pressing(iKeyRight))
+	//	{
+	//		if (CInfected_Dodge_R_01_TEMP::g_iAnimIndex != _iAnimIndex)
+	//			return new CInfected_Dodge_R_01_TEMP();
+	//	}
 
-	if (pActor->Is_Animation_End())
-	{
-		return new CInfected_Idle();
-	}
-	return nullptr;
-}
+	//}
 
-CState<CInfected>* CInfected_State::Spawn(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	if (pActor->Is_Animation_End())
-	{
-		return new CInfected_Idle();
-	}
+	//if (pActor->Is_Animation_End())
+	//{
+	//	return new CInfected_Idle();
+	//}
 
 	return nullptr;
 }
 
-CState<CInfected>* CInfected_State::Death(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	if (pActor->Is_Animation_End())
-	{
-		return new CInfected_Idle();
-	}
-
-	return nullptr;
-}
