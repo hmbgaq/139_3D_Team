@@ -1,10 +1,10 @@
 #pragma once
-#include "Infected_State_Idle.h"
+#include "Infected_State_Run.h"
 
 
 BEGIN(Client)
 
-class CInfected_Run_FL : public CInfected_State_Idle
+class CInfected_Run_FL : public CInfected_State_Run
 {
 public:
 	virtual void Initialize(CInfected* pActor) override;

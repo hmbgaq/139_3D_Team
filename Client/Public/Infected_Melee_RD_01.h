@@ -1,10 +1,10 @@
 #pragma once
-#include "Infected_State_Idle.h"
+#include "Infected_State_Attack.h"
 
 
 BEGIN(Client)
 
-class CInfected_Run_B : public CInfected_State_Idle
+class CInfected_Melee_RD_01 : public CInfected_State_Attack
 {
 public:
 	virtual void Initialize(CInfected* pActor) override;
@@ -12,7 +12,7 @@ public:
 	virtual void Release(CInfected* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CInfected::Infected_State::Infected_Run_B;
+	static const _uint g_iAnimIndex = CInfected::Infected_State::Infected_Melee_RD_01;
 
 };
 
