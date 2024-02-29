@@ -102,6 +102,19 @@ HRESULT CEffect_Void::Render()
 	return S_OK;
 }
 
+_bool CEffect_Void::Write_Json(json& Out_Json)
+{
+	__super::Write_Json(Out_Json);
+
+	return true;
+}
+
+void CEffect_Void::Load_FromJson(const json& In_Json)
+{
+	__super::Load_FromJson(In_Json);
+
+}
+
 void CEffect_Void::ReSet_Effect()
 {
 	//__super::ReSet_Effect();

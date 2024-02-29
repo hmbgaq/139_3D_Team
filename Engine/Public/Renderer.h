@@ -15,9 +15,7 @@ public:
 		/* Priority */
 		RENDER_PRIORITY,RENDER_SHADOW, RENDER_NONLIGHT, 
 		/* Post Processing  */
-		RENDER_SSAO, RENDER_GODRAY, RENDER_OUTLINE,
-		/* Blend */
-		RENDER_NONBLEND, RENDER_BLEND, 
+		RENDER_SSAO, RENDER_GODRAY, RENDER_DECAL, RENDER_OUTLINE,	RENDER_NONBLEND, RENDER_BLEND, 
 		/* EFFECT */
 		RENDER_EFFECT, RENDER_EFFECT_PARTICLE, RENDER_EFFECT_MESH, 
 		/* UI */
@@ -28,7 +26,10 @@ public:
 		
 		RENDER_END };
 
-	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, SHADER_FINAL, SHADER_DEFERRED_UI, SHADER_END };
+	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, 
+		SHADER_EFFECT, SHADER_EFFECT_DEFERRED,
+		SHADER_FINAL,
+		SHADER_DEFERRED_UI, SHADER_END };
 	
 
 
@@ -79,7 +80,6 @@ private:
 	HRESULT Render_Decal();
 
 	/* Post Processing */
-	HRESULT Render_PostProcess();
 	HRESULT Render_RadialBlur();
 	HRESULT Render_GodRay();
 	HRESULT Render_FXAA();
@@ -88,6 +88,7 @@ private:
 
 	/* Effect */
 	HRESULT Render_Effect();
+	HRESULT Render_Effect_Deferred();
 
 	/* 최종 다 그리는곳 */
 	HRESULT Render_Final();
@@ -136,15 +137,17 @@ private:
 
 	/* 활성 제어 */
 private:
-	_bool						m_bInit					= { true }; /* 없으면 터짐 건들지마세요 */
-	_bool						m_bSSAO_Active			= { false };
-	_bool						m_bBloom_Active			= { true };
-	_bool						m_bOutline_Active		= { false };
-	_bool						m_bPBR_Active			= { false };
-	_bool						m_bFXAA_Active			= { false };
-	_bool						m_bHDR_Active			= { false };
-	_bool						m_bFog_Active			= { false };
-	_bool						m_bRim					= { false };
+	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
+	_bool						m_bSSAO_Active				= { false };
+	_bool						m_bBloom_Active				= { true };
+	_bool						m_bOutline_Active			= { false };
+	_bool						m_bPBR_Active				= { false };
+	_bool						m_bFXAA_Active				= { false };
+	_bool						m_bHDR_Active				= { false };
+	_bool						m_bFog_Active				= { false };
+	_bool						m_bRim						= { false };
+	_bool						m_bCascade_Shadow_Active	= { false };
+	_bool						m_bRadial_Blur_Active		= { false };
 
 private:
 	HBAO_PLUS_DESC				m_tHBAO_Option			= {};
@@ -168,7 +171,7 @@ private:
 	_float4						m_fRadialBlurPower = {};
 
 	/* OutLine */
-	_float4						m_vLineColor		= _float4(1.f, 0.f, 0.f, 1.f );
+	_float4						m_vLineColor	= _float4(0.5f, 0.4f, 0.2f, 1.f);
 
 	/* HDR */
 	_float						m_max_white = { 0.3f };
@@ -177,7 +180,7 @@ private:
 	FOG_DESC					m_CurrFog = {};
 
 	/* Cascade Shadow */
-	vector<class CGameObject*> m_CascadeObjects[3];
+	vector<class CGameObject*> m_CascadeObjects;
 
 public:
 	/* 활성화 */
@@ -194,6 +197,8 @@ public:
 	void Set_Fog_Option(FOG_DESC desc) { m_tFog_Option = desc; }
 	void Set_HDR_Option(HDR_DESC desc) { m_tHDR_Option = desc; }
 	void Set_Screen_Option(SCREEN_DESC desc) { m_tScreen_Option = desc; }
+
+	HRESULT Add_CascadeObject(CGameObject* pObject);
 
 private:
 	class CShader*					m_pShader[SHADER_TYPE::SHADER_END]	= { nullptr };

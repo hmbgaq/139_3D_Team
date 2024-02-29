@@ -32,7 +32,124 @@ float           g_LineThick;
 float4			g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; 
 float4          g_vCamPosition;
 
+/* cascade */
+matrix CascadeViewProj;
+matrix g_CascadeProj;
+
+struct VS_IN
+{
+    float3 vPosition : POSITION;
+    float3 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float3 vTangent : TANGENT;
+    uint4 vBlendIndices : BLENDINDEX;
+    float4 vBlendWeights : BLENDWEIGHT;
+};
+
 /* -------------------------------------- */
+
+struct KeyframeDesc
+{
+    int     iAnimIndex;
+    uint    iCurFrame;
+    uint    iNextFrame;
+    float   fRatio;
+    float   fFrameAcc;
+
+    uint    iFinish;
+    uint    iFix;
+    uint    iStop;
+};
+
+struct TweenFrameDesc
+{
+    KeyframeDesc cur;
+    KeyframeDesc next;
+
+    float fTweenDuration;
+    float fTweenRatio;
+    float fTweenAcc;
+    float fPadding;
+};
+
+TweenFrameDesc g_TweenFrames;
+Texture2DArray g_TransformMap;
+
+matrix Create_BoneMatrix_By_Lerp(VS_IN In)
+{
+    float indices[4] = { In.vBlendIndices.x, In.vBlendIndices.y, In.vBlendIndices.z, In.vBlendIndices.w };
+    float weights[4] = { In.vBlendWeights.x, In.vBlendWeights.y, In.vBlendWeights.z, In.vBlendWeights.w };
+
+    int animIndex[2];
+    int currFrame[2];
+    int nextFrame[2];
+    float ratio[2];
+
+	/* cur */
+    animIndex[0] = g_TweenFrames.cur.iAnimIndex;
+    currFrame[0] = g_TweenFrames.cur.iCurFrame;
+    nextFrame[0] = g_TweenFrames.cur.iNextFrame;
+    ratio[0] = g_TweenFrames.cur.fRatio;
+
+	/* next */
+    animIndex[1] = g_TweenFrames.next.iAnimIndex;
+    currFrame[1] = g_TweenFrames.next.iCurFrame;
+    nextFrame[1] = g_TweenFrames.next.iNextFrame;
+    ratio[1] = g_TweenFrames.next.fRatio;
+
+    float4 c0, c1, c2, c3;
+    float4 n0, n1, n2, n3;
+    
+    float4x4 curr = 0;
+    float4x4 next = 0;
+    
+    float4x4 transform = 0;
+
+    for (int i = 0; i < 4; i++)
+    {
+		/* cur */
+        c0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, currFrame[0], animIndex[0], 0)) * weights[i];
+        c1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, currFrame[0], animIndex[0], 0)) * weights[i];
+        c2 = g_TransformMap.Load(int4(indices[i] * 4 + 2, currFrame[0], animIndex[0], 0)) * weights[i];
+        c3 = g_TransformMap.Load(int4(indices[i] * 4 + 3, currFrame[0], animIndex[0], 0)) * weights[i];
+        curr = float4x4(c0, c1, c2, c3);
+
+        n0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, nextFrame[0], animIndex[0], 0)) * weights[i];
+        n1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, nextFrame[0], animIndex[0], 0)) * weights[i];
+        n2 = g_TransformMap.Load(int4(indices[i] * 4 + 2, nextFrame[0], animIndex[0], 0)) * weights[i];
+        n3 = g_TransformMap.Load(int4(indices[i] * 4 + 3, nextFrame[0], animIndex[0], 0)) * weights[i];
+        next = float4x4(n0, n1, n2, n3);
+
+        float4x4 result = lerp(curr, next, ratio[0]);
+		
+		/* if next */
+        if (0 <= animIndex[1])
+        {
+            c0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, currFrame[1], animIndex[1], 0)) * weights[i];
+            c1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, currFrame[1], animIndex[1], 0)) * weights[i];
+            c2 = g_TransformMap.Load(int4(indices[i] * 4 + 2, currFrame[1], animIndex[1], 0)) * weights[i];
+            c3 = g_TransformMap.Load(int4(indices[i] * 4 + 3, currFrame[1], animIndex[1], 0)) * weights[i];
+            curr = float4x4(c0, c1, c2, c3);
+
+            n0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, nextFrame[1], animIndex[1], 0)) * weights[i];
+            n1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, nextFrame[1], animIndex[1], 0)) * weights[i];
+            n2 = g_TransformMap.Load(int4(indices[i] * 4 + 2, nextFrame[1], animIndex[1], 0)) * weights[i];
+            n3 = g_TransformMap.Load(int4(indices[i] * 4 + 3, nextFrame[1], animIndex[1], 0)) * weights[i];
+            next = float4x4(n0, n1, n2, n3);
+            
+            // Origin 
+            {
+                matrix nextResult = lerp(curr, next, ratio[1]);
+                         
+                result = lerp(result, nextResult, g_TweenFrames.fTweenRatio);
+            }
+            
+        }
+        transform += result;
+    }
+
+    return transform;
+}
 
 float4 Caculation_Brightness(float4 vColor, float3 BloomPower)
 {
@@ -47,15 +164,6 @@ float4 Caculation_Brightness(float4 vColor, float3 BloomPower)
 }
 
 /* ------------------- ------------------- */ 
-struct VS_IN
-{
-	float3		vPosition		: POSITION;
-	float3		vNormal			: NORMAL;
-	float2		vTexcoord		: TEXCOORD0;
-	float3		vTangent		: TANGENT;
-	uint4		vBlendIndices	: BLENDINDEX;
-	float4		vBlendWeights	: BLENDWEIGHT;
-};
 
 
 struct VS_OUT
@@ -304,6 +412,7 @@ PS_OUT PS_MAIN_BLOOM(PS_IN In)
     
     return Out;
 }
+
 /* ------------------- Outline Pixel Shader(8) -------------------*/
 
 struct VS_OUT_OUTLINE
@@ -385,6 +494,60 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
     
     return Out;
+}
+
+/* ------------------- Cascade Pixel Shader(9) -------------------*/
+struct VS_CASCADE_OUT
+{
+    float4 vPosition : SV_POSITION;
+};
+
+VS_CASCADE_OUT VS_MAIN_CASCADE(VS_IN In)
+{
+    VS_CASCADE_OUT Out = (VS_CASCADE_OUT) 0;
+    //float4x4 BoneMatrix = Create_BoneMatrix_By_Lerp(In);
+    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+
+    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
+		                     g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		                     g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		                     g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    
+    Out.vPosition = mul(vPosition, g_WorldMatrix);
+    
+    return Out;
+
+}
+
+struct GS_IN
+{
+    float4 vPosition : SV_POSITION;
+};
+
+struct GS_OUT
+{
+    float4 vPosition : SV_POSITION;
+    uint RTIndex : SV_RenderTargetArrayIndex;
+};
+
+[maxvertexcount(9)]
+void GS_CASCADE(triangle GS_IN input[3], inout TriangleStream<GS_OUT> output)
+{
+    for (int face = 0; face < 3; ++face)
+    {
+        GS_OUT element = (GS_OUT) 0;
+        element.RTIndex = face;
+        
+        for (int i = 0; i < 3; ++i)
+        {
+            element.vPosition = mul(input[i].vPosition, CascadeViewProj[face]);
+            output.Append(element);
+        }
+        
+        output.RestartStrip();
+    }
 }
 
 /* ------------------- Technique -------------------*/ 
@@ -504,8 +667,17 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
     }
-    //pass Motion_Trail // 8
-    //{
-    //
-    //}
+  
+    pass Cascade_Shadow // 9
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN_CASCADE();
+        GeometryShader = compile gs_5_0 GS_CASCADE();
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = NULL;
+    }
 }

@@ -8,7 +8,7 @@ template<class T>
 CActor<T>::CActor(T* _pOwner)
     : m_pOwner(_pOwner)
 {
-    Safe_AddRef(_pOwner);
+    //Safe_AddRef(_pOwner);
 }
 
 template<class T>
@@ -21,7 +21,7 @@ CActor<T>::~CActor()
 template<class T>
 void CActor<T>::Update_State(_float fTimeDelta)
 {
-    if (nullptr == m_pOwner || nullptr == m_pState)
+    if (nullptr == m_pOwner || false == m_pOwner->Get_Enable() || nullptr == m_pState)
         return;
 
     CState<T>* pNowState = m_pState->Update(m_pOwner, fTimeDelta);
@@ -51,7 +51,7 @@ void CActor<T>::Free()
     delete m_pState;
     m_pState = nullptr;
 
-    Safe_Release(m_pOwner);
+   // Safe_Release(m_pOwner);
 }
 
 

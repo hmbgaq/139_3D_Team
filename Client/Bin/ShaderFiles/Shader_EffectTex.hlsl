@@ -23,6 +23,7 @@ float2			g_UVScale;
 
 float			g_DiscardValue;
 
+float			g_fDegree;
 
 // ======= Noise
 float	g_fFrameTime;
@@ -37,6 +38,24 @@ float2	g_vDistortion3;
 float	g_fDistortionScale;
 float	g_fDistortionBias;
 
+
+
+/* Custom Function */
+float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
+{
+	float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
+	float fRotationRadian = fDegree * fDegree2Radian;
+	float cosA = cos(fRotationRadian);
+	float sinA = sin(fRotationRadian);
+
+	float2x2 RotateMatrix = float2x2(cosA, -sinA, sinA, cosA);
+
+	vTexcoord -= 0.5f;
+	vTexcoord = mul(vTexcoord, RotateMatrix);
+	vTexcoord += 0.5f;
+
+	return vTexcoord;
+}
 
 
 #pragma region STRUCT
@@ -206,6 +225,65 @@ VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
 	return Out;
 }
 
+
+
+struct GS_IN
+{
+	float4		vPosition : POSITION;
+	float2		vPSize : PSIZE;
+	float4		vColor : COLOR0;
+};
+
+struct GS_OUT
+{
+	float4		vPosition : SV_POSITION;
+	float2		vTexcoord : TEXCOORD0;
+	float4		vColor : COLOR0;
+};
+
+/* 지오메트리 쉐이더 : 셰이더안에서 정점을 추가적으로 생성해 준다. */
+[maxvertexcount(6)]
+void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
+{
+	GS_OUT		Out[4];
+
+	float4		vLook = g_vCamPosition - In[0].vPosition;
+	float3		vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook.xyz)) * In[0].vPSize.x * 0.5f;
+	float3		vUp = normalize(cross(vLook.xyz, vRight)) * In[0].vPSize.y * 0.5f;
+
+	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
+
+	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
+	Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
+	Out[0].vColor = In[0].vColor;
+
+	Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
+	Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_fDegree);
+	Out[1].vColor = In[0].vColor;
+
+	Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
+	Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_fDegree);
+	Out[2].vColor = In[0].vColor;
+
+	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
+	Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_fDegree);
+	Out[3].vColor = In[0].vColor;
+
+	OutStream.Append(Out[0]);
+	OutStream.Append(Out[1]);
+	OutStream.Append(Out[2]);
+	OutStream.RestartStrip();
+
+	OutStream.Append(Out[0]);
+	OutStream.Append(Out[2]);
+	OutStream.Append(Out[3]);
+	OutStream.RestartStrip();
+}
+
+
+
+
+
 /* ========================= PS_OUT ========================= */
 
 /* 픽셀셰이더 : 픽셀의 색!!!! 을 결정한다. */
@@ -232,7 +310,7 @@ PS_OUT PS_MAIN_EFFECT(PS_IN_EFFECT In)
 	vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
 	vDepthTexcoord.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
 
-	float4	vDepthDesc = g_DepthTexture.Sample(PointSampler, vDepthTexcoord);
+    float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
 	
 	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
 

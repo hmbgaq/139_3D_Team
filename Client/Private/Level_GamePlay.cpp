@@ -28,6 +28,11 @@
 #include "InstanceMonster.h"
 #pragma endregion
 
+#pragma region Effect_Test
+#include "Clone_Manager.h"
+#include "Effect.h"
+#pragma endregion
+
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -39,11 +44,11 @@ HRESULT CLevel_GamePlay::Initialize()
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
 
 	FAILED_CHECK(Ready_LightDesc());
-	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
-	//FAILED_CHECK(Ready_LandObjects());
-	//FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+	FAILED_CHECK(Ready_LandObjects());
+	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
 	if (FAILED(Ready_UI()))
 		return E_FAIL;
@@ -55,6 +60,18 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
+
+
+#pragma region Effect_Test	
+
+	if (m_pGameInstance->Key_Down(DIK_TAB))
+	{
+		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Test_Effect.json");
+		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
+	}
+
+#pragma endregion
+
 
 }
 
@@ -109,19 +126,23 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 {
-	CCamera_Dynamic::DYNAMIC_CAMERA_DESC		Desc = {};
+	//CCamera_Dynamic::DYNAMIC_CAMERA_DESC		Desc = {};
 
-	Desc.fMouseSensor = 0.05f;
-	Desc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
-	Desc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-	Desc.fFovy = XMConvertToRadians(60.0f);
-	Desc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-	Desc.fNear = 0.1f;
-	Desc.fFar = m_pGameInstance->Get_CamFar();
-	Desc.fSpeedPerSec = 15.f;
-	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
+	//Desc.fMouseSensor = 0.05f;
+	//Desc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
+	//Desc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+	//Desc.fFovy = XMConvertToRadians(60.0f);
+	//Desc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	//Desc.fNear = 0.1f;
+	//Desc.fFar = m_pGameInstance->Get_CamFar();
+	//Desc.fSpeedPerSec = 15.f;
+	//Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc));
+
+
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -129,6 +150,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag, void* pArg)
 {
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Rentier"), pArg));
+
 
 	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
 	//if (nullptr == pPlayer)
@@ -150,17 +173,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* pArg)
 {
-	
-
 	//CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
-	//
+
 	//CMonster::MONSTER_DESC Desc = {};
 	//Desc.fRotationPerSec = GameObjectDesc.fRotationPerSec;
 	//Desc.fSpeedPerSec = GameObjectDesc.fSpeedPerSec;
 	//Desc.bPreview = false;
 	//Desc.WorldMatrix = XMMatrixIdentity();
-	//
+
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), &Desc));
+
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Assassin")));
 
 
 
@@ -210,133 +233,133 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky")));
 
 
-// 	json Stage1MapJson = {};
-// 
-// 	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
-// 	{
-// 		MSG_BOX("맵 불러오기 실패");
-// 		return E_FAIL;
-// 	}
-// 
-// 	json BasicJson = Stage1MapJson["Basic_Json"];
-// 	_int iBasicJsonSize = (_int)BasicJson.size();
-// 
-// 	for (_int i = 0; i < iBasicJsonSize; ++i)
-// 	{
-// 		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-// 
-// 		Desc.bAnimModel = BasicJson[i]["AnimType"];
-// 
-// 		wstring strLoadModelTag;
-// 		string strJsonModelTag = BasicJson[i]["ModelTag"];
-// 
-// 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
-// 		Desc.strModelTag = strLoadModelTag;
-// 
-// 		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
-// 		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
-// 		Desc.bPreview = false;
-// 
-// 		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
-// 		_float4x4 WorldMatrix;
-// 
-// 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-// 		{
-// 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-// 			{
-// 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-// 			}
-// 		}
-// 
-// 		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
-// 		Desc.WorldMatrix = WorldMatrix;
-// 
-// 		CEnvironment_Object* pObject = { nullptr };
-// 
-// 		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
-// 	}
-// 
-// 
-// 	json InteractJson = Stage1MapJson["Interact_Json"];
-// 	_int InteractJsonSize = InteractJson.size();
-// 
-// 	for (_int i = 0; i < InteractJsonSize; ++i)
-// 	{
-// 
-// 		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
-// 		//! L"Layer_Event"
-// 	}
-// 
-// 	json InstanceJson = Stage1MapJson["Instance_Json"];
-// 	_int InstanceJsonSize = InstanceJson.size();
-// 
-// 	for (_int i = 0; i < InstanceJsonSize; ++i)
-// 	{
-// 		MAPTOOL_INSTANCE_DESC InstanceDesc;
-// 
-// 		InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
-// 
-// 
-// 		wstring strLoadModelTag;
-// 		string strJsonModelTag = InstanceJson[i]["ModelTag"];
-// 
-// 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
-// 		InstanceDesc.strModelTag = strLoadModelTag;
-// 
-// 		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
-// 
-// 		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-// 		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
-// 
-// 		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
-// 		{
-// 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
-// 
-// 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
-// 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
-// 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
-// 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
-// 
-// 			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
-// 		}
-// 
-// 
-// 		CEnvironment_Instance* pInstanceObject = { nullptr };
-// 
-// 		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
-// 
-// 	}
-// 
-// 	json MonsterJson = Stage1MapJson["Monster_Json"];
-// 	_int iMonsterJsonSize = (_int)MonsterJson.size();
-// 
-// 	for (_int i = 0; i < iMonsterJsonSize; ++i)
-// 	{
-// 		CMonster::MONSTER_DESC MonsterDesc = {};
-// 
-// 		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
-// 
-// 		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
-// 		MonsterDesc.bPreview = false;
-// 
-// 
-// 		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-// 		_float4x4 WorldMatrix;
-// 
-// 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-// 		{
-// 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-// 			{
-// 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-// 			}
-// 		}
-// 
-// 		MonsterDesc.WorldMatrix = WorldMatrix;
-// 
-// 		if(FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
-// 			return E_FAIL;
-// 		
-// 	}
+ 	json Stage1MapJson = {};
+ 
+ 	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
+ 	{
+ 		MSG_BOX("맵 불러오기 실패");
+ 		return E_FAIL;
+ 	}
+ 
+ 	json BasicJson = Stage1MapJson["Basic_Json"];
+ 	_int iBasicJsonSize = (_int)BasicJson.size();
+ 
+ 	for (_int i = 0; i < iBasicJsonSize; ++i)
+ 	{
+ 		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+ 
+ 		Desc.bAnimModel = BasicJson[i]["AnimType"];
+ 
+ 		wstring strLoadModelTag;
+ 		string strJsonModelTag = BasicJson[i]["ModelTag"];
+ 
+ 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+ 		Desc.strModelTag = strLoadModelTag;
+ 
+ 		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
+ 		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
+ 		Desc.bPreview = false;
+ 
+ 		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
+ 		_float4x4 WorldMatrix;
+ 
+ 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+ 		{
+ 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+ 			{
+ 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+ 			}
+ 		}
+ 
+ 		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+ 		Desc.WorldMatrix = WorldMatrix;
+ 
+ 		CEnvironment_Object* pObject = { nullptr };
+ 
+ 		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+ 	}
+ 
+ 
+ 	json InteractJson = Stage1MapJson["Interact_Json"];
+ 	_int InteractJsonSize = InteractJson.size();
+ 
+ 	for (_int i = 0; i < InteractJsonSize; ++i)
+ 	{
+ 
+ 		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
+ 		//! L"Layer_Event"
+ 	}
+ 
+ 	json InstanceJson = Stage1MapJson["Instance_Json"];
+ 	_int InstanceJsonSize = InstanceJson.size();
+ 
+ 	for (_int i = 0; i < InstanceJsonSize; ++i)
+ 	{
+ 		MAPTOOL_INSTANCE_DESC InstanceDesc;
+ 
+ 		InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
+ 
+ 
+ 		wstring strLoadModelTag;
+ 		string strJsonModelTag = InstanceJson[i]["ModelTag"];
+ 
+ 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+ 		InstanceDesc.strModelTag = strLoadModelTag;
+ 
+ 		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
+ 
+ 		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
+ 		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
+ 
+ 		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
+ 		{
+ 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
+ 
+ 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
+ 			CJson_Utility::Load_Float4(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
+ 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
+ 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
+ 
+ 			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
+ 		}
+ 
+ 
+ 		CEnvironment_Instance* pInstanceObject = { nullptr };
+ 
+ 		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+ 
+ 	}
+ 
+ 	json MonsterJson = Stage1MapJson["Monster_Json"];
+ 	_int iMonsterJsonSize = (_int)MonsterJson.size();
+ 
+ 	for (_int i = 0; i < iMonsterJsonSize; ++i)
+ 	{
+ 		CMonster::MONSTER_DESC MonsterDesc = {};
+ 
+ 		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
+ 
+ 		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
+ 		MonsterDesc.bPreview = false;
+ 
+ 
+ 		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+ 		_float4x4 WorldMatrix;
+ 
+ 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+ 		{
+ 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+ 			{
+ 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+ 			}
+ 		}
+ 
+ 		MonsterDesc.WorldMatrix = WorldMatrix;
+ 
+ 		if(FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+ 			return E_FAIL;
+ 		
+ 	}
 
 
 	return S_OK;
@@ -351,7 +374,8 @@ HRESULT CLevel_GamePlay::Ready_LandObjects()
 	LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
 
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
-	//FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
+	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
+
 	FAILED_CHECK(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc));
 
 	return S_OK;
@@ -367,7 +391,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void*
 HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
 	//! 애님인스턴싱이 할필요없어짐. ㅎㅎㅎㅎㅎㅎFAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
 
 	m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
@@ -483,35 +507,36 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 
 void CLevel_GamePlay::Set_Filter()
 {
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::DYNAMIC_PROP);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::PLAYER);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::BOSS_DYNAMIC_PROP);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::TRIGGER, (_uint)COLLISION_LAYER::PLAYER);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::LADDER_DOWN, (_uint)COLLISION_LAYER::PLAYER);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::LADDER_UP, (_uint)COLLISION_LAYER::PLAYER);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::ELEVATOR, (_uint)COLLISION_LAYER::PLAYER);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::DOOR, (_uint)COLLISION_LAYER::PLAYER);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::CHECKPOINT, (_uint)COLLISION_LAYER::PLAYER);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER, (_uint)COLLISION_LAYER::PLAYER_BATCOL);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::CHECK_DIR, (_uint)COLLISION_LAYER::PLAYER);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::INTERIOR, (_uint)COLLISION_LAYER::INTERIOR);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::DYNAMIC_PROP);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::PLAYER);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::BOSS_DYNAMIC_PROP);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::TRIGGER, (_uint)COLLISION_LAYER::PLAYER);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::LADDER_DOWN, (_uint)COLLISION_LAYER::PLAYER);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::LADDER_UP, (_uint)COLLISION_LAYER::PLAYER);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::ELEVATOR, (_uint)COLLISION_LAYER::PLAYER);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::DOOR, (_uint)COLLISION_LAYER::PLAYER);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::CHECKPOINT, (_uint)COLLISION_LAYER::PLAYER);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER, (_uint)COLLISION_LAYER::PLAYER_BATCOL);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::CHECK_DIR, (_uint)COLLISION_LAYER::PLAYER);
+	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::INTERIOR, (_uint)COLLISION_LAYER::INTERIOR);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER, (_uint)COLLISION_LAYER::MONSTER);
 
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::MONSTER, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::MONSTER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::MONSTER);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::INTERIOR);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER_WEAPON, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::CAMERA, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::CAMERA, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::GROUND);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::MONSTER, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::MONSTER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::MONSTER);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::INTERIOR);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER_WEAPON, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::CAMERA, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::CAMERA, (_uint)PHYSX_COLLISION_LAYER::GROUND);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP, (_uint)PHYSX_COLLISION_LAYER::GROUND);
+	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
 }
 
 CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

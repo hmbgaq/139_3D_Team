@@ -338,16 +338,6 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 			SaveJson.emplace("Monster_Json", MonsterJson);
 			//! 추후 작성 npc SaveJson.emplace("NPC_Json", NPCJson);
 
-			string strSavePath = strPath + "/" + strNoExtFileName + "_MapData.json";
-			if (FAILED(CJson_Utility::Save_Json(strSavePath.c_str(), SaveJson)))
-			{
-				MSG_BOX("맵툴 저장 실패");
-			}
-			else
-			{
-				MSG_BOX("맵툴 저장 성공");
-			}
-
 			return S_OK;
 }
 
@@ -1105,7 +1095,7 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 						if (false == pTargetObject->Get_EnvironmentDesc()->bAnimModel)
 						{
 							m_tWorldRay = m_pGameInstance->Get_MouseRayWorld(g_hWnd, g_iWinSizeX, g_iWinSizeY);
-
+#ifdef _DEBUG
 							if (pTargetObject->Picking_VerJSY(&m_tWorldRay, &m_fRayPos))
 							{
 								m_fMeshPos = m_fRayPos;
@@ -1115,6 +1105,8 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 							//
 							//	XMStoreFloat3(&m_fMeshPos, XMVector3TransformCoord(XMLoadFloat3(&m_fRayPos), m_vecCreateObject[i]->Get_Transform()->Get_WorldMatrix()));
 							//}
+#endif
+
 						}
 						else
 							continue;

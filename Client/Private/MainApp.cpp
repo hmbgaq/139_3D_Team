@@ -4,7 +4,7 @@
 #include "Level_Loading.h"
 #include "Json_Utility.h"
 
-
+#include "DevConsole.h"
 #include "Data_Manager.h"
 #include "Clone_Manager.h"
 
@@ -25,14 +25,14 @@ HRESULT CMainApp::Initialize()
 
 #ifdef _DEBUG
 #pragma region Imgui용 Rect 설정
-//	// 주석 걸고 병합하기 : imGui때문에.. imgui는 제목표시줄 크기를 인식 못해서 이렇게 안해주면 마우스 오차가 생긴다.
-//	RECT rect = { 0 };
-//	GetClientRect(GraphicDesc.hWnd, &rect);
-//	_int iClientSizeX = rect.right - rect.left;
-//	_int iClientSizeY = rect.bottom - rect.top;
-//	GraphicDesc.iBackBufferSizeX = iClientSizeX;
-//	GraphicDesc.iBackBufferSizeY = iClientSizeY;
-//#pragma endregion Imgui용 Rect 설정
+	// 주석 걸고 병합하기 : imGui때문에.. imgui는 제목표시줄 크기를 인식 못해서 이렇게 안해주면 마우스 오차가 생긴다.
+	//RECT rect = { 0 };
+	//GetClientRect(GraphicDesc.hWnd, &rect);
+	//_int iClientSizeX = rect.right - rect.left;
+	//_int iClientSizeY = rect.bottom - rect.top;
+	//GraphicDesc.iBackBufferSizeX = iClientSizeX;
+	//GraphicDesc.iBackBufferSizeY = iClientSizeY;
+#pragma endregion Imgui용 Rect 설정
 #endif // _DEBUG
 
 
@@ -55,6 +55,9 @@ HRESULT CMainApp::Initialize()
 	ShowWindow(g_hWnd, SW_SHOW);
 	SetForegroundWindow(g_hWnd);	// 창을 최상위로 가져온다.
 
+	m_pDevConsole = CDevConsole::Create();
+	Safe_AddRef(m_pDevConsole);
+
 	return S_OK;
 }
 
@@ -63,6 +66,8 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_pGameInstance->Tick_Engine(fTimeDelta);
 
 	m_fTimeAcc += fTimeDelta;
+	
+	m_pDevConsole->Tick();
 }
 
 HRESULT CMainApp::Render()
@@ -297,6 +302,8 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
+	Safe_Release(m_pDevConsole);
+
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
 

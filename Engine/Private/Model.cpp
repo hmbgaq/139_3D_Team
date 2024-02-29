@@ -40,6 +40,11 @@ CModel::CModel(const CModel & rhs)
 	}
 }
 
+_uint CModel::Get_MaterialIndex(_uint iMeshIndex)
+{
+	return m_Meshes[iMeshIndex]->Get_MaterialIndex();
+}
+
 _uint CModel::Get_NumMeshIndice(_int iMeshIndex)
 {
 	 return m_Meshes[iMeshIndex]->Get_NumIndices();
@@ -261,19 +266,6 @@ HRESULT CModel::Initialize(void * pArg)
 	return S_OK;
 }
 
-HRESULT CModel::Render(_uint iMeshIndex)
-{
-	if (iMeshIndex >= m_iNumMeshes)
-		return E_FAIL;
-
-	m_Meshes[iMeshIndex]->Bind_VIBuffers();
-	m_Meshes[iMeshIndex]->Render();
-
-	return S_OK;
-}
-
-
-
 void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 {
 	if (m_iCurrentAnimIndex >= m_iNumAnimations)
@@ -329,7 +321,7 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 
 		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
 	}
-	min(1,2);
+	
 }
 
 HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices)
@@ -363,7 +355,7 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 {
 	m_eAnimState = _eAnimState;
 
-	//if (_iAnimationIndex != m_iCurrentAnimIndex)
+	if (_iAnimationIndex != m_iCurrentAnimIndex)
 	{
 		Reset_Animation(_iAnimationIndex);
 
@@ -374,7 +366,15 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 		else
 		{
 			m_iCurrentAnimIndex = _iAnimationIndex;
+			_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+			m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 		}
+	}
+	else 
+	{
+		m_iCurrentAnimIndex = _iAnimationIndex;
+		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 	}
 }
 
@@ -382,7 +382,8 @@ void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitio
 {
 	if (_iAnimationIndex == m_iCurrentAnimIndex)
 	{
-		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition((_float)iTargetKeyFrameIndex);
+		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 	}
 
 	CAnimation* currentAnimation = m_Animations[m_iCurrentAnimIndex];
@@ -481,6 +482,11 @@ void CModel::Write_Names(const string& strModelFilePath)
 vector<CAnimation*>* CModel::Get_Animations()
 {
 	return &m_Animations;
+}
+
+CMyAIScene* CModel::Get_AIScene()
+{
+	return &m_pAIScene;
 }
 
 vector<CBone*>* CModel::Get_Bones()
@@ -598,6 +604,43 @@ HRESULT CModel::Ready_Animations()
 	return S_OK;
 }
 
+HRESULT CModel::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* strConstantName)
+{
+	if (iMaterialIndex >= m_iNumMaterials)
+		return E_FAIL;
+
+	NULL_CHECK_RETURN(m_Materials[iMaterialIndex].pMtrlTextures[eTextureType], E_FAIL);
+
+	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Set_SRV(pShader, strConstantName);
+}
+
+HRESULT CModel::Render(CShader*& pShader, const _uint& iMeshIndex, const _uint& strPassName)
+{
+	/* m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
+
+		m_pModelCom->Render(0);
+	*/
+
+	FAILED_CHECK(pShader->Begin(strPassName));
+
+	FAILED_CHECK(m_Meshes[iMeshIndex]->Bind_VIBuffers());
+
+	FAILED_CHECK(m_Meshes[iMeshIndex]->Render());
+
+	return S_OK;
+}
+
+HRESULT CModel::Render(_uint iMeshIndex)
+{
+	if (iMeshIndex >= m_iNumMeshes)
+		return E_FAIL;
+
+	m_Meshes[iMeshIndex]->Bind_VIBuffers();
+	m_Meshes[iMeshIndex]->Render();
+
+	return S_OK;
+}
+
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eType, const string & strModelFilePath, _fmatrix PivotMatrix)
 {
 	CModel*		pInstance = new CModel(pDevice, pContext);
@@ -649,6 +692,6 @@ void CModel::Free()
 	}
 	m_Meshes.clear();
 
-	if (false == m_isCloned)
-		m_MyAssimp.FreeScene();
+	//if (false == m_isCloned)
+	m_MyAssimp.FreeScene();
 }

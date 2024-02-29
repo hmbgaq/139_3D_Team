@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 
+class CPhysXCollider;
 class CCollider;
 class CTexture;
 class CShader;
@@ -17,6 +18,7 @@ public:
 	typedef struct tagBodyDesc
 	{
 		class CTransform* m_pParentTransform = { nullptr };
+
 	}BODY_DESC;
 protected:
 	CBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -80,6 +82,8 @@ public: //!For.Tool
 //public:
 //	virtual _bool Collision_Chcek() PURE;
 
+
+
 protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
@@ -93,6 +97,9 @@ protected:
 
 	//_bool		m_bDissolve = { false };
 	//_float		m_fDissolveWeight = { 0.f };
+
+protected:
+	CPhysXCollider* m_pPhysXCollider = { nullptr };
 
 protected:
 	virtual HRESULT Ready_Components() PURE;

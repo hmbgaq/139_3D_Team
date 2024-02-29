@@ -2,6 +2,7 @@
 #include "Window_ShaderTool.h"
 #include "GameInstance.h"
 #include "Environment_Object.h"
+#include "Monster.h"
 #include "Environment_Instance.h"
 
 CWindow_ShaderTool::CWindow_ShaderTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -31,10 +32,15 @@ void CWindow_ShaderTool::Tick(_float fTimeDelta)
 
 	Select_Level(); /* 스테이지 선택 및 불러오기 */
 
+	if (ImGui::CollapsingHeader("Light Control"))
+		Layer_Light_Control();
+
+	ImGui::Spacing();
+
 	if (ImGui::CollapsingHeader("Level Shader"))
 		Layer_Level_Shader_Control();
 
-	ImGui::Spacing(); /* 여백 */
+	ImGui::Spacing();
 
 	if (ImGui::CollapsingHeader("Object Shader"))
 		Layer_Object_Shader_Control();
@@ -53,15 +59,27 @@ void CWindow_ShaderTool::Top_Setting()
 
 	if (ImGui::Checkbox(u8"RenderTarget Active", &bRenderTarget_Active))
 	{
-		#ifdef _DEBUG
-			m_pGameInstance->Set_RenderDebug(bRenderTarget_Active);
-		#endif
+#ifdef _DEBUG
+		m_pGameInstance->Set_RenderDebug(bRenderTarget_Active);
+#endif
 	}
 
 	ImGui::SameLine();
 	HelpMarker(u8"렌더타겟 끄고 켜기");
 
 	ImGui::Spacing();
+}
+
+void CWindow_ShaderTool::Layer_Light_Control()
+{
+	if (ImGui::TreeNode("Directional Light "))
+	{
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Spot Light"))
+	{
+		ImGui::TreePop();
+	}
 }
 
 void CWindow_ShaderTool::Layer_Level_Shader_Control()
@@ -221,125 +239,159 @@ void CWindow_ShaderTool::Select_Level()
 
 HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 {
-	switch (iLevel_Index)
-	{
-	case 0:  /* None */
-		ImGui::Text("wrong choice");
-		break;
-	case 1: /* Test */
-		m_eCurrLevel_Enum = LEVEL::LEVEL_GAMEPLAY;
-		break;
-	case 2: /* SnowMountain */
-		m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAIN;
-		break;
-	case 3: /* Larva */
-		m_eCurrLevel_Enum = LEVEL::LEVEL_LAVA;
-		break;
-	}
+// 	switch (iLevel_Index)
+// 	{
+// 	case 0:  /* None */
+// 		ImGui::Text("wrong choice");
+// 		break;
+// 	case 1: /* Test */
+// 		m_eCurrLevel_Enum = LEVEL::LEVEL_GAMEPLAY;
+// 		break;
+// 	case 2: /* SnowMountain */
+// 		m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAIN;
+// 		break;
+// 	case 3: /* Larva */
+// 		m_eCurrLevel_Enum = LEVEL::LEVEL_LAVA;
+// 		break;
+// 	}
+// 
+// 	if (0 == iLevel_Index )
+// 		return S_OK;
+// 
+// 	m_wstrLayerTag = TEXT("Layer_BackGround");
+// 
+// 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, LAYER_BACKGROUND, TEXT("Prototype_GameObject_Sky")));
+// 
+// 
+// 	json Stage1MapJson = {};
+// 
+// 	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
+// 	{
+// 		MSG_BOX("맵 불러오기 실패");
+// 		return E_FAIL;
+// 	}
+// 
+// 	json BasicJson = Stage1MapJson["Basic_Json"];
+// 	_int iBasicJsonSize = (_int)BasicJson.size();
+// 
+// 	for (_int i = 0; i < iBasicJsonSize; ++i)
+// 	{
+// 		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+// 
+// 		Desc.bAnimModel = BasicJson[i]["AnimType"];
+// 
+// 		wstring strLoadModelTag;
+// 		string strJsonModelTag = BasicJson[i]["ModelTag"];
+// 
+// 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+// 		Desc.strModelTag = strLoadModelTag;
+// 
+// 		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
+// 		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
+// 		Desc.bPreview = false;
+// 
+// 		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
+// 		_float4x4 WorldMatrix;
+// 
+// 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+// 		{
+// 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+// 			{
+// 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+// 			}
+// 		}
+// 
+// 		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+// 		Desc.WorldMatrix = WorldMatrix;
+// 
+// 		CEnvironment_Object* pObject = { nullptr };
+// 
+// 		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_BACKGROUND, L"Prototype_GameObject_Environment_Object", &Desc));
+// 	}
+// 
+// 
+// 	json InteractJson = Stage1MapJson["Interact_Json"];
+// 	_int InteractJsonSize = InteractJson.size();
+// 
+// 	for (_int i = 0; i < InteractJsonSize; ++i)
+// 	{
+// 
+// 		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
+// 		//! L"Layer_Event"
+// 	}
+// 
+// 	json InstanceJson = Stage1MapJson["Instance_Json"];
+// 	_int InstanceJsonSize = InstanceJson.size();
+// 
+// 	for (_int i = 0; i < InstanceJsonSize; ++i)
+// 	{
+// 		MAPTOOL_INSTANCE_DESC InstanceDesc;
+// 
+// 		InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
+// 
+// 
+// 		wstring strLoadModelTag;
+// 		string strJsonModelTag = InstanceJson[i]["ModelTag"];
+// 
+// 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+// 		InstanceDesc.strModelTag = strLoadModelTag;
+// 
+// 		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
+// 
+// 		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
+// 		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
+// 
+// 		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
+// 		{
+// 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
+// 
+// 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
+// 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
+// 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
+// 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
+// 
+// 			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
+// 		}
+// 
+// 
+// 		CEnvironment_Instance* pInstanceObject = { nullptr };
+// 
+// 		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_BACKGROUND, L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+// 
+// 	}
+// 
+// 	json MonsterJson = Stage1MapJson["Monster_Json"];
+// 	_int iMonsterJsonSize = (_int)MonsterJson.size();
+// 
+// 	for (_int i = 0; i < iMonsterJsonSize; ++i)
+// 	{
+// 		CMonster::MONSTER_DESC MonsterDesc = {};
+// 
+// 		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
+// 
+// 		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
+// 		MonsterDesc.bPreview = false;
+// 
+// 
+// 		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+// 		_float4x4 WorldMatrix;
+// 
+// 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+// 		{
+// 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+// 			{
+// 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+// 			}
+// 		}
+// 
+// 		MonsterDesc.WorldMatrix = WorldMatrix;
+// 
+// 		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+// 			return E_FAIL;
+// 
+// 	}
+// 
 
-	if (0 == iLevel_Index)
-		return S_OK;
-
-	m_wstrLayerTag = TEXT("Layer_BackGround");
-
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, m_wstrLayerTag, TEXT("Prototype_GameObject_Sky")));
-
-	json Stage1MapJson = {};
-
-	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
-	{
-		MSG_BOX("맵 불러오기 실패");
-		return E_FAIL;
-	}
-
-	json BasicJson = Stage1MapJson["Basic_Json"];
-	_int iBasicJsonSize = (_int)BasicJson.size();
-
-	for (_int i = 0; i < iBasicJsonSize; ++i)
-	{
-		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-
-		Desc.bAnimModel = BasicJson[i]["AnimType"];
-
-		wstring strLoadModelTag;
-		string strJsonModelTag = BasicJson[i]["ModelTag"];
-
-		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
-		Desc.strModelTag = strLoadModelTag;
-
-		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
-		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
-		Desc.bPreview = false;
-
-		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
-		_float4x4 WorldMatrix;
-
-		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-		{
-			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-			{
-				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-			}
-		}
-
-		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
-		Desc.WorldMatrix = WorldMatrix;
-
-		CEnvironment_Object* pObject = { nullptr };
-
-		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
-	}
-
-
-	json InteractJson = Stage1MapJson["Interact_Json"];
-	_int InteractJsonSize = InteractJson.size();
-
-	for (_int i = 0; i < InteractJsonSize; ++i)
-	{
-
-		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
-		//! L"Layer_Event"
-	}
-
-	json InstanceJson = Stage1MapJson["Instance_Json"];
-	_int InstanceJsonSize = InstanceJson.size();
-
-	for (_int i = 0; i < InstanceJsonSize; ++i)
-	{
-		MAPTOOL_INSTANCE_DESC InstanceDesc;
-
-		InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
-
-
-		wstring strLoadModelTag;
-		string strJsonModelTag = InstanceJson[i]["ModelTag"];
-
-		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
-		InstanceDesc.strModelTag = strLoadModelTag;
-
-		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
-
-		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
-
-		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
-		{
-			INSTANCE_INFO_DESC InstanceInfoDesc = {};
-
-			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
-			CJson_Utility::Load_Float4(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
-			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
-			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
-
-			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
-		}
-
-
-		CEnvironment_Instance* pInstanceObject = { nullptr };
-
-		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
-
-	}
 
 	return S_OK;
 }

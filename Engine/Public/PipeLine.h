@@ -56,6 +56,16 @@ private:
 	_float4x4			m_PreViewMatrix;
 	_float				m_fCamFar = 1000.f;
 
+	/* For. Cascade */
+public:
+	_float4x4	m_matShadowProj = {};
+	BoundingOrientedBox	m_tCascadeShadowBox;
+
+	_float4x4	Get_Shadow_Proj() { return m_matShadowProj; }	
+	void		Set_ShadowProj(_float4x4* pMatrix) { memcpy(&m_matShadowProj, &pMatrix, sizeof(float4x4)); }
+	void		Set_CascadeBoxes(BoundingOrientedBox* pBoxes) {memcpy(&m_tCascadeShadowBox, pBoxes, sizeof(BoundingOrientedBox));}
+	BoundingOrientedBox* Get_CascadeBoxes() { return &m_tCascadeShadowBox; }
+
 public:
 	static CPipeLine* Create();
 	virtual void Free() override;

@@ -44,12 +44,7 @@ void CEffect_Trail::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Trail::Tick(_float fTimeDelta)
 {
-	m_fTimeAcc += fTimeDelta;
 
-	if (m_fTimeAcc >= m_tDistortionDesc.fSequenceTerm)
-	{
-		m_fTimeAcc = 0.f;
-	}
 
 };
 
@@ -78,19 +73,42 @@ HRESULT CEffect_Trail::Render()
 	return S_OK;
 }
 
+void* CEffect_Trail::Get_BufferDesc()
+{
+	CVIBuffer_Trail::TRAIL_BUFFER_DESC tBufferDesc = {};
+
+	tBufferDesc.bTrailOn = m_tTrailDesc.bTrailOn;
+
+	tBufferDesc.vPos_0	= m_tTrailDesc.vPos_0;
+	tBufferDesc.vPos_1	= m_tTrailDesc.vPos_1;
+	tBufferDesc.iPass	= m_tTrailDesc.iPass;
+
+	tBufferDesc.iNumVertices = m_tTrailDesc.iNumVertices;
+	tBufferDesc.iMaxCnt		= m_tTrailDesc.iMaxCnt;
+	tBufferDesc.iVtxCnt		= m_tTrailDesc.iVtxCnt;
+
+	tBufferDesc.vLocalSwordLow	= m_tTrailDesc.vLocalSwordLow;
+	tBufferDesc.vLocalSwordHigh = m_tTrailDesc.vLocalSwordHigh;
+
+	tBufferDesc.iLerpPointNum		= m_tTrailDesc.iLerpPointNum;
+	tBufferDesc.iCatMullRomIndex[4] = m_tTrailDesc.iCatMullRomIndex[4];
+
+
+	return &tBufferDesc;
+}
+
 HRESULT CEffect_Trail::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(iNextLevel, m_tTrailDesc.strShaderTag,
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Particle_Point"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
-		return E_FAIL;
+	CVIBuffer_Trail::TRAIL_BUFFER_DESC tBufferInfo = *static_cast<CVIBuffer_Trail::TRAIL_BUFFER_DESC*>(Get_BufferDesc());
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Trail"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo));
+
 
 	/* For.Com_Texture */
 	{
@@ -147,31 +165,6 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
 
-
-	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
-	vCamDirection = XMVector4Normalize(vCamDirection);
-	_float4 vCamDirectionFloat4 = {};
-	XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat4, sizeof(_float4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_fTimeAcc, sizeof(_float))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScales", &m_tDistortionDesc.vScales, sizeof(_float3))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tDistortionDesc.vDistortion1, sizeof(_float2))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion2", &m_tDistortionDesc.vDistortion2, sizeof(_float2))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion3", &m_tDistortionDesc.vDistortion3, sizeof(_float2))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionScale", &m_tDistortionDesc.fDistortionScale, sizeof(_float))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tDistortionDesc.fDistortionBias, sizeof(_float))))
-		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
 		return E_FAIL;

@@ -1055,7 +1055,7 @@ void CVIBuffer_Particle::Tick(_float fTimeDelta)
 							m_vecParticleInfoDesc[i].fRotationChangeTime = SMath::fRandom((*m_tParticleDesc.pRotationChangeTime).x, (*m_tParticleDesc.pRotationChangeTime).y);
 							m_vecParticleInfoDesc[i].fRotationSpeed = SMath::fRandom((*m_tParticleDesc.pRotationSpeed).x, (*m_tParticleDesc.pRotationSpeed).y);
 
-							_uint iRandomCount = (_uint)SMath::fRandom(0.f, 2.9);
+							_uint iRandomCount = (_uint)SMath::fRandom(0.f, 2.9f);
 							switch (iRandomCount)
 							{
 							case 0:
