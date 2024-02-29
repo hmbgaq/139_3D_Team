@@ -85,7 +85,9 @@ void CPlayer::Tick(_float fTimeDelta)
 			pBody->SetUp_Animation(4);
 		}
 		else
+		{
 			pBody->SetUp_Animation(3);
+		}
 	}
 	else if (m_pGameInstance->Get_NextLevel() == _uint(LEVEL_TOOL))
 	{
