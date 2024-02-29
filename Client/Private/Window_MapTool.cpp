@@ -165,185 +165,185 @@ void CWindow_MapTool::Render()
 HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 {
  	
- 	string strNoExtFileName = filesystem::path(strFileName).stem().string();
-	
-
- 	string strBasic = "Basic";
- 	string strInstance = "Instance";
- 
- 	for (auto& tag : m_vecCreateObjectTag)
- 	{
- 		// 문자열에서 '@' 문자 이후의 부분을 지움
- 		size_t atIndex = tag.find('@');
- 		if (atIndex != std::string::npos) {
- 			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
- 		}
- 	}
- 
- 	for (auto& tag : m_vecCreateInstanceTag)
- 	{
- 		// 문자열에서 '@' 문자 이후의 부분을 지움
- 		size_t atIndex = tag.find('@');
- 		if (atIndex != std::string::npos) {
- 			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
- 		}
- 	}
-
-	for (auto& tag : m_vecCreateMonsterTag)
-	{
-		// 문자열에서 '@' 문자 이후의 부분을 지움
-		size_t atIndex = tag.find('@');
-		if (atIndex != std::string::npos) {
-			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
-		}
-	}
-
-	
-	
-			json SaveJson = {};
-
-
-
-			json BasicJson = {};
-			
-
-			if (false == m_vecCreateObject.empty())
-			{
-				_int iCreateObjectSize = (_int)m_vecCreateObject.size();
-
-			
-
-				for (_int i = 0; i < iCreateObjectSize; ++i)
-				{
-					CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-
-					Desc = *m_vecCreateObject[i]->Get_EnvironmentDesc();
-
-					string strModelTag;
-					m_pGameInstance->WString_To_String(m_vecCreateObject[i]->Get_ModelTag(), strModelTag);
-
-					BasicJson[i].emplace("Type", strBasic);
-					BasicJson[i].emplace("Index", i);
-					BasicJson[i].emplace("ObjectTag", m_vecCreateObjectTag[i]);
-					BasicJson[i].emplace("LayerTag", L"Layer_BackGround");
-					BasicJson[i].emplace("ModelTag", strModelTag);
-					BasicJson[i].emplace("AnimType", Desc.bAnimModel);
-					BasicJson[i].emplace("ShaderPassIndex", Desc.iShaderPassIndex);
-					BasicJson[i].emplace("PlayAnimationIndex", Desc.iPlayAnimationIndex);
-
-					m_vecCreateObject[i]->Write_Json(BasicJson[i]);
-				}
-
-			}
-
-			json InteractJson = {};
-
-
-			json InstanceJson = {};
- 
- 
-			if (false == m_vecCreateInstance.empty())
-			{
-				_int iCreateInstanceObjectSize = (_int)m_vecCreateInstance.size();
-
-				
-
-				for (_int i = 0; i < iCreateInstanceObjectSize; ++i)
-				{
-					MAPTOOL_INSTANCE_DESC InstanceObjDesc = m_vecCreateInstance[i]->Get_InstanceDesc();
-
-					string strModelTag;
-					m_pGameInstance->WString_To_String(m_vecCreateInstance[i]->Get_ModelTag(), strModelTag);
-
-					InstanceJson[i].emplace("Type", strInstance);
-					InstanceJson[i].emplace("Index", i);
-					InstanceJson[i].emplace("ObjectTag", m_vecCreateInstanceTag[i]);
-					InstanceJson[i].emplace("ModelTag", strModelTag);
-					InstanceJson[i].emplace("LayerTag", L"Layer_BackGround");
-					InstanceJson[i].emplace("ShaderPassIndex", InstanceObjDesc.iShaderPassIndex);
-					InstanceJson[i].emplace("InstanceCount", InstanceObjDesc.iNumInstance);
-
-					json InstanceInfoJson = {};
-
-
-					for (_uint j = 0; j < InstanceObjDesc.iNumInstance; ++j)
-					{
-						INSTANCE_INFO_DESC InstanceInfoDesc = InstanceObjDesc.vecInstanceInfoDesc[j];
-
-						InstanceInfoJson[j].emplace("Instance_Index", j);
-						CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Scale"], XMLoadFloat3(&InstanceInfoDesc.vScale));
-						CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Rotation"], XMLoadFloat3(&InstanceInfoDesc.vRotation));
-						CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Translation"], XMLoadFloat3(&InstanceInfoDesc.vTranslation));
-						CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Center"], XMLoadFloat3(&InstanceInfoDesc.vCenter));
-
-					}
-
-					InstanceJson[i].emplace("InstanceInfo_Json", InstanceInfoJson);
-
-					m_vecCreateInstance[i]->Write_Json(InstanceJson[i]);
-				}
-
-				
-			}
-
-			json MonsterJson;
-
-			if (false == m_vecCreateMonster.empty())
-			{
-				_int iCreateMonsterSize = (_int)m_vecCreateMonster.size();
-			
-			
-			
-				for (_int i = 0; i < iCreateMonsterSize; ++i)
-				{
-					CMonster::MONSTER_DESC Desc;
-			
-					Desc = *m_vecCreateMonster[i]->Get_MonsterDesc();
-			
-					string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
-					MonsterJson[i].emplace("PrototypeTag", strProtoTag);
-					m_vecCreateMonster[i]->Write_Json(MonsterJson[i]);
-				}
-			}
-			
-			//todo 추후 작성 npc
-			
-			//json NPCJson;
-			//
-			//if (false == m_vecCreateNPC.empty())
-			//{
-			//	_int iCreateNPCSize = (_int)m_vecCreateNPC.size();
-			//
-			//	for (_int i = 0; i < iCreateNPCSize; ++i)
-			//	{
-			//		CNPC::NPC_DESC Desc;
-			//
-			//		Desc = *m_vecCreateNPC[i]->Get_NPCDesc();
-			//
-			//		string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
-			//		NPCJson[i].emplace("PrototypeTag", strProtoTag);
-			//		m_vecCreateNPC[i]->Write_Json(NPCJson[i]);
-			//	}
-			//}
-
-
-
-
-			SaveJson.emplace("Basic_Json", BasicJson);
-			SaveJson.emplace("Interact_Json", InteractJson);
-			SaveJson.emplace("Instance_Json", InstanceJson);
-			SaveJson.emplace("Monster_Json", MonsterJson);
-			//! 추후 작성 npc SaveJson.emplace("NPC_Json", NPCJson);
-
-			string strSavePath = strPath + "/" + strNoExtFileName + "_MapData.json";
-			if (FAILED(CJson_Utility::Save_Json(strSavePath.c_str(), SaveJson)))
-			{
-				MSG_BOX("맵툴 저장 실패");
-			}
-			else
-			{
-				MSG_BOX("맵툴 저장 성공");
-			}
+//  	string strNoExtFileName = filesystem::path(strFileName).stem().string();
+// 	
+// 
+//  	string strBasic = "Basic";
+//  	string strInstance = "Instance";
+//  
+//  	for (auto& tag : m_vecCreateObjectTag)
+//  	{
+//  		// 문자열에서 '@' 문자 이후의 부분을 지움
+//  		size_t atIndex = tag.find('@');
+//  		if (atIndex != std::string::npos) {
+//  			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+//  		}
+//  	}
+//  
+//  	for (auto& tag : m_vecCreateInstanceTag)
+//  	{
+//  		// 문자열에서 '@' 문자 이후의 부분을 지움
+//  		size_t atIndex = tag.find('@');
+//  		if (atIndex != std::string::npos) {
+//  			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+//  		}
+//  	}
+// 
+// 	for (auto& tag : m_vecCreateMonsterTag)
+// 	{
+// 		// 문자열에서 '@' 문자 이후의 부분을 지움
+// 		size_t atIndex = tag.find('@');
+// 		if (atIndex != std::string::npos) {
+// 			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+// 		}
+// 	}
+// 
+// 	
+// 	
+// 			json SaveJson = {};
+// 
+// 
+// 
+// 			json BasicJson = {};
+// 			
+// 
+// 			if (false == m_vecCreateObject.empty())
+// 			{
+// 				_int iCreateObjectSize = (_int)m_vecCreateObject.size();
+// 
+// 			
+// 
+// 				for (_int i = 0; i < iCreateObjectSize; ++i)
+// 				{
+// 					CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+// 
+// 					Desc = *m_vecCreateObject[i]->Get_EnvironmentDesc();
+// 
+// 					string strModelTag;
+// 					m_pGameInstance->WString_To_String(m_vecCreateObject[i]->Get_ModelTag(), strModelTag);
+// 
+// 					BasicJson[i].emplace("Type", strBasic);
+// 					BasicJson[i].emplace("Index", i);
+// 					BasicJson[i].emplace("ObjectTag", m_vecCreateObjectTag[i]);
+// 					BasicJson[i].emplace("LayerTag", L"Layer_BackGround");
+// 					BasicJson[i].emplace("ModelTag", strModelTag);
+// 					BasicJson[i].emplace("AnimType", Desc.bAnimModel);
+// 					BasicJson[i].emplace("ShaderPassIndex", Desc.iShaderPassIndex);
+// 					BasicJson[i].emplace("PlayAnimationIndex", Desc.iPlayAnimationIndex);
+// 
+// 					m_vecCreateObject[i]->Write_Json(BasicJson[i]);
+// 				}
+// 
+// 			}
+// 
+// 			json InteractJson = {};
+// 
+// 
+// 			json InstanceJson = {};
+//  
+//  
+// 			if (false == m_vecCreateInstance.empty())
+// 			{
+// 				_int iCreateInstanceObjectSize = (_int)m_vecCreateInstance.size();
+// 
+// 				
+// 
+// 				for (_int i = 0; i < iCreateInstanceObjectSize; ++i)
+// 				{
+// 					MAPTOOL_INSTANCE_DESC InstanceObjDesc = m_vecCreateInstance[i]->Get_InstanceDesc();
+// 
+// 					string strModelTag;
+// 					m_pGameInstance->WString_To_String(m_vecCreateInstance[i]->Get_ModelTag(), strModelTag);
+// 
+// 					InstanceJson[i].emplace("Type", strInstance);
+// 					InstanceJson[i].emplace("Index", i);
+// 					InstanceJson[i].emplace("ObjectTag", m_vecCreateInstanceTag[i]);
+// 					InstanceJson[i].emplace("ModelTag", strModelTag);
+// 					InstanceJson[i].emplace("LayerTag", L"Layer_BackGround");
+// 					InstanceJson[i].emplace("ShaderPassIndex", InstanceObjDesc.iShaderPassIndex);
+// 					InstanceJson[i].emplace("InstanceCount", InstanceObjDesc.iNumInstance);
+// 
+// 					json InstanceInfoJson = {};
+// 
+// 
+// 					for (_uint j = 0; j < InstanceObjDesc.iNumInstance; ++j)
+// 					{
+// 						INSTANCE_INFO_DESC InstanceInfoDesc = InstanceObjDesc.vecInstanceInfoDesc[j];
+// 
+// 						InstanceInfoJson[j].emplace("Instance_Index", j);
+// 						CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Scale"], XMLoadFloat3(&InstanceInfoDesc.vScale));
+// 						CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Rotation"], XMLoadFloat3(&InstanceInfoDesc.vRotation));
+// 						CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Translation"], XMLoadFloat3(&InstanceInfoDesc.vTranslation));
+// 						CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Center"], XMLoadFloat3(&InstanceInfoDesc.vCenter));
+// 
+// 					}
+// 
+// 					InstanceJson[i].emplace("InstanceInfo_Json", InstanceInfoJson);
+// 
+// 					m_vecCreateInstance[i]->Write_Json(InstanceJson[i]);
+// 				}
+// 
+// 				
+// 			}
+// 
+// 			json MonsterJson;
+// 
+// 			if (false == m_vecCreateMonster.empty())
+// 			{
+// 				_int iCreateMonsterSize = (_int)m_vecCreateMonster.size();
+// 			
+// 			
+// 			
+// 				for (_int i = 0; i < iCreateMonsterSize; ++i)
+// 				{
+// 					CMonster::MONSTER_DESC Desc;
+// 			
+// 					Desc = *m_vecCreateMonster[i]->Get_MonsterDesc();
+// 			
+// 					string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
+// 					MonsterJson[i].emplace("PrototypeTag", strProtoTag);
+// 					m_vecCreateMonster[i]->Write_Json(MonsterJson[i]);
+// 				}
+// 			}
+// 			
+// 			//todo 추후 작성 npc
+// 			
+// 			//json NPCJson;
+// 			//
+// 			//if (false == m_vecCreateNPC.empty())
+// 			//{
+// 			//	_int iCreateNPCSize = (_int)m_vecCreateNPC.size();
+// 			//
+// 			//	for (_int i = 0; i < iCreateNPCSize; ++i)
+// 			//	{
+// 			//		CNPC::NPC_DESC Desc;
+// 			//
+// 			//		Desc = *m_vecCreateNPC[i]->Get_NPCDesc();
+// 			//
+// 			//		string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
+// 			//		NPCJson[i].emplace("PrototypeTag", strProtoTag);
+// 			//		m_vecCreateNPC[i]->Write_Json(NPCJson[i]);
+// 			//	}
+// 			//}
+// 
+// 
+// 
+// 
+// 			SaveJson.emplace("Basic_Json", BasicJson);
+// 			SaveJson.emplace("Interact_Json", InteractJson);
+// 			SaveJson.emplace("Instance_Json", InstanceJson);
+// 			SaveJson.emplace("Monster_Json", MonsterJson);
+// 			//! 추후 작성 npc SaveJson.emplace("NPC_Json", NPCJson);
+// 
+// 			string strSavePath = strPath + "/" + strNoExtFileName + "_MapData.json";
+// 			if (FAILED(CJson_Utility::Save_Json(strSavePath.c_str(), SaveJson)))
+// 			{
+// 				MSG_BOX("맵툴 저장 실패");
+// 			}
+// 			else
+// 			{
+// 				MSG_BOX("맵툴 저장 성공");
+// 			}
 
 			return S_OK;
 }
@@ -351,169 +351,169 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 {
 
-	json LoadJson;
-
-	string strFullPath = strPath + "/" + strFileName;
-
-	if (FAILED(CJson_Utility::Load_Json(strFullPath.c_str(), LoadJson)))
-	{
-		MSG_BOX("맵툴 불러오기 실패");
-		return E_FAIL;
-	}
-	else
-		Reset_Function();
-
-	
-
-	json BasicJson = LoadJson["Basic_Json"];
-	_int iBasicJsonSize = (_int)BasicJson.size();
-
-	for (_int i = 0; i < iBasicJsonSize; ++i)
-	{
-		string IndexTag = "@" + to_string(i);
-
-		string pushObjectTag = (string)BasicJson[i]["ObjectTag"] + IndexTag;
-		
-		m_vecCreateObjectTag.push_back(pushObjectTag);
-
-		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-
-		Desc.bAnimModel = BasicJson[i]["AnimType"];
-
-
-
-		wstring strLoadModelTag;
-		string strJsonModelTag = BasicJson[i]["ModelTag"];
-
-		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
-		Desc.strModelTag = strLoadModelTag;
-		
-		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
-		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
-		Desc.bPreview = false;
-
-		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
-		_float4x4 WorldMatrix;
-
-		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-		{
-			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-			{
-				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-			}
-		}
-
-		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
-		Desc.WorldMatrix = WorldMatrix;
-
-		CEnvironment_Object* pObject = { nullptr};
-
-		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
-
-		m_vecCreateObject.push_back(pObject);
-		m_iCreateObjectIndex++;
-	}
-
-
-	json InteractJson = LoadJson["Interact_Json"];
-	_int InteractJsonSize = InteractJson.size();
-
-	for(_int i = 0; i < InteractJsonSize; ++i)
-	{
-		string IndexTag = "@" + to_string(i);
-
-		string pushObjectTag = string(InteractJson[i]["ObjectTag"]) + IndexTag;
-		
-		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
-		//! L"Layer_Event"
-	}
-
-	json InstanceJson = LoadJson["Instance_Json"];
-	_int InstanceJsonSize = (_int)InstanceJson.size();
-
-	for(_int i = 0; i < InstanceJsonSize; ++i)
-	{
-		string IndexTag = "@" + to_string(i);
-
-		string pushObjectTag = string(InstanceJson[i]["ObjectTag"]) + IndexTag;
- 			
- 		m_vecCreateInstanceTag.push_back(pushObjectTag);
- 
- 		MAPTOOL_INSTANCE_DESC InstanceDesc;
- 	
- 		InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
-
-
-		wstring strLoadModelTag;
-		string strJsonModelTag = InstanceJson[i]["ModelTag"];
-
-		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
- 		InstanceDesc.strModelTag = strLoadModelTag;
-
- 		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
-		
- 		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
- 
- 		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
- 		{
- 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
- 
- 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
- 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
- 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
- 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
- 
- 			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
-			m_iInstanceInfoTagIndex++;
-			
- 		}
- 
- 
- 		CEnvironment_Instance* pInstanceObject = { nullptr };
- 
- 		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
- 
- 		m_vecCreateInstance.push_back(pInstanceObject);
-		m_iCreateInstanceIndex++;
- 	}
-
-	json MonsterJson = LoadJson["Monster_Json"];
-	_int iMonsterJsonSize = (_int)MonsterJson.size();
-
-	for (_int i = 0; i < iMonsterJsonSize; ++i)
-	{
-		string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + "@" + to_string(i);
-
-		m_vecCreateMonsterTag.push_back(pushMonsterTag);
-
-		CMonster::MONSTER_DESC MonsterDesc;
-		MonsterDesc.bPreview = false;
-
-
-		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-		_float4x4 WorldMatrix;
-
-		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-		{
-			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-			{
-				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-			}
-		}
-		
-		MonsterDesc.WorldMatrix = WorldMatrix;
-
-		CMonster* pMonster = { nullptr };
-
-		wstring strProtoTypeTag;
-		m_pGameInstance->String_To_WString((string)MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
-
-		pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
-
-		m_vecCreateMonster.push_back(pMonster);
-		m_iCreateMonsterIndex++;
-	}
+// 	json LoadJson;
+// 
+// 	string strFullPath = strPath + "/" + strFileName;
+// 
+// 	if (FAILED(CJson_Utility::Load_Json(strFullPath.c_str(), LoadJson)))
+// 	{
+// 		MSG_BOX("맵툴 불러오기 실패");
+// 		return E_FAIL;
+// 	}
+// 	else
+// 		Reset_Function();
+// 
+// 	
+// 
+// 	json BasicJson = LoadJson["Basic_Json"];
+// 	_int iBasicJsonSize = (_int)BasicJson.size();
+// 
+// 	for (_int i = 0; i < iBasicJsonSize; ++i)
+// 	{
+// 		string IndexTag = "@" + to_string(i);
+// 
+// 		string pushObjectTag = (string)BasicJson[i]["ObjectTag"] + IndexTag;
+// 		
+// 		m_vecCreateObjectTag.push_back(pushObjectTag);
+// 
+// 		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+// 
+// 		Desc.bAnimModel = BasicJson[i]["AnimType"];
+// 
+// 
+// 
+// 		wstring strLoadModelTag;
+// 		string strJsonModelTag = BasicJson[i]["ModelTag"];
+// 
+// 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+// 		Desc.strModelTag = strLoadModelTag;
+// 		
+// 		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
+// 		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
+// 		Desc.bPreview = false;
+// 
+// 		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
+// 		_float4x4 WorldMatrix;
+// 
+// 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+// 		{
+// 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+// 			{
+// 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+// 			}
+// 		}
+// 
+// 		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+// 		Desc.WorldMatrix = WorldMatrix;
+// 
+// 		CEnvironment_Object* pObject = { nullptr};
+// 
+// 		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+// 
+// 		m_vecCreateObject.push_back(pObject);
+// 		m_iCreateObjectIndex++;
+// 	}
+// 
+// 
+// 	json InteractJson = LoadJson["Interact_Json"];
+// 	_int InteractJsonSize = InteractJson.size();
+// 
+// 	for(_int i = 0; i < InteractJsonSize; ++i)
+// 	{
+// 		string IndexTag = "@" + to_string(i);
+// 
+// 		string pushObjectTag = string(InteractJson[i]["ObjectTag"]) + IndexTag;
+// 		
+// 		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
+// 		//! L"Layer_Event"
+// 	}
+// 
+// 	json InstanceJson = LoadJson["Instance_Json"];
+// 	_int InstanceJsonSize = (_int)InstanceJson.size();
+// 
+// 	for(_int i = 0; i < InstanceJsonSize; ++i)
+// 	{
+// 		string IndexTag = "@" + to_string(i);
+// 
+// 		string pushObjectTag = string(InstanceJson[i]["ObjectTag"]) + IndexTag;
+//  			
+//  		m_vecCreateInstanceTag.push_back(pushObjectTag);
+//  
+//  		MAPTOOL_INSTANCE_DESC InstanceDesc;
+//  	
+//  		InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
+// 
+// 
+// 		wstring strLoadModelTag;
+// 		string strJsonModelTag = InstanceJson[i]["ModelTag"];
+// 
+// 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+//  		InstanceDesc.strModelTag = strLoadModelTag;
+// 
+//  		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
+// 		
+//  		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
+// 		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
+//  
+//  		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
+//  		{
+//  			INSTANCE_INFO_DESC InstanceInfoDesc = {};
+//  
+//  			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
+//  			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
+//  			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
+//  			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
+//  
+//  			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
+// 			m_iInstanceInfoTagIndex++;
+// 			
+//  		}
+//  
+//  
+//  		CEnvironment_Instance* pInstanceObject = { nullptr };
+//  
+//  		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+//  
+//  		m_vecCreateInstance.push_back(pInstanceObject);
+// 		m_iCreateInstanceIndex++;
+//  	}
+// 
+// 	json MonsterJson = LoadJson["Monster_Json"];
+// 	_int iMonsterJsonSize = (_int)MonsterJson.size();
+// 
+// 	for (_int i = 0; i < iMonsterJsonSize; ++i)
+// 	{
+// 		string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + "@" + to_string(i);
+// 
+// 		m_vecCreateMonsterTag.push_back(pushMonsterTag);
+// 
+// 		CMonster::MONSTER_DESC MonsterDesc;
+// 		MonsterDesc.bPreview = false;
+// 
+// 
+// 		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+// 		_float4x4 WorldMatrix;
+// 
+// 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+// 		{
+// 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+// 			{
+// 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+// 			}
+// 		}
+// 		
+// 		MonsterDesc.WorldMatrix = WorldMatrix;
+// 
+// 		CMonster* pMonster = { nullptr };
+// 
+// 		wstring strProtoTypeTag;
+// 		m_pGameInstance->String_To_WString((string)MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
+// 
+// 		pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
+// 
+// 		m_vecCreateMonster.push_back(pMonster);
+// 		m_iCreateMonsterIndex++;
+// 	}
 
 	return S_OK;
 }

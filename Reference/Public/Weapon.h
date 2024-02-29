@@ -18,6 +18,7 @@ public:
 	{
 		class CBone* m_pSocketBone = { nullptr };
 		class CTransform* m_pParentTransform = { nullptr };
+
 	}WEAPON_DESC;
 
 protected:

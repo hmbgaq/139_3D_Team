@@ -15,6 +15,37 @@ class CPhysXCharacterController;
 
 class ENGINE_DLL CCharacter abstract : public CGameObject
 {
+public:
+	typedef struct tagGameCharacterDesc
+	{
+		string	Body = "";
+		string	BoneName = "";
+
+		_float  AnimationIndex = { 0.f };
+		_float	Duration = { 0.f };
+		_float  EventTrackposition = {0.f};
+		_float  AnimationSpeed = { 0.f };
+		_float	BoneIndex = { 0.f };
+
+		_float	ColliderSize = { 0.f };
+		_float	ColliderTrackPositionOn = { 0.f };
+		_float	ColliderTrackPositionOff = { 0.f };
+		//Weapon
+		_float	EventWeaponTrackPosition = { 0.f };
+		_float	ColliderWeaponSize = { 0.f };
+		_float	ColliderWeaponTrackPositionOn = { 0.f };
+		_float	ColliderWeaponTrackPositionOff = { 0.f };
+
+		_float3 GuizmoTranslatrion = {};
+		_float3 GuizmoRotation = {};
+		_float3 GuizmoScale = {};
+		//Effect
+		string	EffectFileName = "";
+		_float	EffectOnTrackPosition = { 0.f };
+		_float3	EffectPosition = {};
+
+		//Sound
+	}CHARCTER_DESC;
 protected:
 	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strPrototypeTag);
 	CCharacter(const CCharacter& rhs);
@@ -43,7 +74,9 @@ public:
 	HRESULT Add_PartObject(const wstring & strPrototypeTag, const wstring & strPartTag, void* pArg);
 	HRESULT Add_Body(const wstring & strPrototypeTag, CBody::BODY_DESC pArg);
 	HRESULT Add_Weapon(const wstring & strPrototypeTag, string strBoneName, CWeapon::WEAPON_DESC pArg, const wstring & strWeaponTag = TEXT("Part_Weapon"));
-
+public:
+	void	Set_EventNotify(string strPath, string JsonFileName);
+	HRESULT	LoadAnimJson(string strPath, string strFileName);
 public:
 	void	Set_Animation(
 		_uint _iNextAnimation
@@ -92,7 +125,7 @@ protected:
 	CNavigation* m_pNavigationCom = { nullptr };
 	CBody* m_pBody = { nullptr };
 	vector<CWeapon*> m_Weapons;
-
+	CHARCTER_DESC CharAnimDesc = {};
 protected:
 	CPhysXController* m_pPhysXControllerCom = { nullptr };
 	PxControllerCollisionFlags m_LastCollisionFlags;

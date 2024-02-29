@@ -201,6 +201,7 @@ void CWindow_AnimTool::Add_EffectKeyEvent()
 			const bool is_selected = (Effect_idx == n);
 			if (ImGui::Selectable(m_vecEffectName[n].c_str(), is_selected))
 				Effect_idx = n;
+				m_iSelectEffectIndex = Effect_idx;
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
 			{
@@ -345,7 +346,9 @@ HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
 	//Effect
 	{
 		EffectJson.emplace("TypeEffect", strEffect);
-
+		EffectJson.emplace("EffectFileName", m_vecEffectName[m_iSelectEffectIndex]);
+		CJson_Utility::Write_Float3(EffectJson["EffectPosition"], m_EffectPosition);
+		EffectJson.emplace("EffectTrackPosition", m_fEffectOnTrackPosition);
 	}
 
 	SaveJson.emplace("Body", BodyJson);
@@ -903,9 +906,6 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 						m_vBoneColliderIndex.push_back(m_pBones[BoneIndex]);
 						m_bCreatCollider = false;
 
-						
-						
-						
 					}
 				}    
 					
