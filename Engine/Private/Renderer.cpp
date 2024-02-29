@@ -473,29 +473,29 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_Deferred());
 
 	/* ★ PostProcessing ★*/
-	FAILED_CHECK(Render_RadialBlur());
-
-	FAILED_CHECK(Render_SSR());
-
-	FAILED_CHECK(Render_HDR()); /* HDR - 톤맵핑 */
-
-	FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
-
-	/* Effect */
-	FAILED_CHECK(Render_Effect()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
-
-	FAILED_CHECK(Render_Effect_Deferred()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
-
-	/* 최종 합성 */
-	FAILED_CHECK(Render_Final());
-
-	FAILED_CHECK(Render_NonLight());
-
-	FAILED_CHECK(Render_UI()); /* 디버그에서 렌더타겟 한장으로 그린거 콜하는 그룹 여기 */
-
-	//FAILED_CHECK(Render_UI_EFFECT()); /* 그외 변하거나 이미지에 효과가 들어가야하는 UI 렌더그룹이 속하는곳 */
-
-	FAILED_CHECK(Render_Blend());  
+// 	FAILED_CHECK(Render_RadialBlur());
+// 
+// 	FAILED_CHECK(Render_SSR());
+// 
+// 	FAILED_CHECK(Render_HDR()); /* HDR - 톤맵핑 */
+// 
+// 	FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
+// 
+// 	/* Effect */
+ 	FAILED_CHECK(Render_Effect()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
+// 
+// 	FAILED_CHECK(Render_Effect_Deferred()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
+// 
+// 	/* 최종 합성 */
+// 	FAILED_CHECK(Render_Final());
+// 
+// 	FAILED_CHECK(Render_NonLight());
+// 
+// 	FAILED_CHECK(Render_UI()); /* 디버그에서 렌더타겟 한장으로 그린거 콜하는 그룹 여기 */
+// 
+// 	//FAILED_CHECK(Render_UI_EFFECT()); /* 그외 변하거나 이미지에 효과가 들어가야하는 UI 렌더그룹이 속하는곳 */
+// 
+// 	FAILED_CHECK(Render_Blend());  
 
 	
 	/* ------------------------ */
@@ -879,7 +879,7 @@ HRESULT CRenderer::Render_LightAcc()
 
 HRESULT CRenderer::Render_Deferred()
 {
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_PrePostProcessScene")));
+	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_PrePostProcessScene")));
 
 	/* 디퍼드에 의한 최종장면 */
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
@@ -937,7 +937,7 @@ HRESULT CRenderer::Render_Deferred()
 
 	m_pVIBuffer->Render();
 
-	FAILED_CHECK(m_pGameInstance->End_MRT());
+	//FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
@@ -1204,7 +1204,7 @@ HRESULT CRenderer::Render_SSR()
 
 HRESULT CRenderer::Render_Effect()
 {
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Effect")));
+	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Effect")));
 
 	/* CEffect_Void - CAlphaObject 자식클래스 확인 */
 	m_RenderObjects[RENDER_EFFECT].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
@@ -1222,7 +1222,7 @@ HRESULT CRenderer::Render_Effect()
 
 	m_RenderObjects[RENDER_EFFECT].clear();
 
-	FAILED_CHECK(m_pGameInstance->End_MRT());
+	//FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
