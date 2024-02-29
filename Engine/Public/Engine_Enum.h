@@ -40,6 +40,10 @@ namespace Engine
 		POST_END
 	};
 
+	enum class EFFECT_SHADER {
+		EFFECT_Default, EFFECT_Mask, EFFECT_END
+	};
+
 	enum MINMAX { MIN, MAX, MINMAX_END };
 
 	enum AXIS { AXIS_X, AXIS_Y, AXIS_Z, AXIS_END };

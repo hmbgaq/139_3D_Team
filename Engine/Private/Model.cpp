@@ -1,9 +1,10 @@
-#include "..\Public\Model.h"
+#include "Model.h"
 #include "Mesh.h"
 #include "Texture.h"
 #include "Bone.h"
 #include "Animation.h"
 #include "Channel.h"
+#include "Shader.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -37,6 +38,11 @@ CModel::CModel(const CModel & rhs)
 	{
 		Safe_AddRef(pMesh);
 	}
+}
+
+_uint CModel::Get_MaterialIndex(_uint iMeshIndex)
+{
+	return m_Meshes[iMeshIndex]->Get_MaterialIndex();
 }
 
 _uint CModel::Get_NumMeshIndice(_int iMeshIndex)
@@ -114,6 +120,23 @@ _float4x4* CModel::Get_OffsetMatrices()
 	return BoneMatrices;
 }
 
+_float3& CModel::Calculate_AABB_Extents_From_Model()
+{
+	_float3 vMin = XMFLOAT3(FLT_MAX, FLT_MAX, FLT_MAX);
+	_float3 vMax = XMFLOAT3(FLT_MIN, FLT_MIN, FLT_MIN);
+
+	// 모델의 모든 메쉬에 대해 AABB 계산
+
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
+	{
+			m_Meshes[i]->Calculate_AABB_Extents(&vMin, &vMax);
+	}
+
+	_float3 vExtents = (vMin - vMax) * 0.5f;
+
+	return vExtents;
+}
+
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)
@@ -182,19 +205,6 @@ HRESULT CModel::Initialize(void * pArg)
 
 	return S_OK;
 }
-
-HRESULT CModel::Render(_uint iMeshIndex)
-{
-	if (iMeshIndex >= m_iNumMeshes)
-		return E_FAIL;
-
-	m_Meshes[iMeshIndex]->Bind_VIBuffers();
-	m_Meshes[iMeshIndex]->Render();
-
-	return S_OK;
-}
-
-
 
 void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 {
@@ -271,6 +281,14 @@ HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantNa
 		return E_FAIL;
 
 	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Bind_ShaderResource(pShader, pConstantName);
+}
+
+HRESULT CModel::Bind_ShaderCascade(CShader* pShader)
+{
+	//if (FAILED(pShader->Bind_Matrices("g_BoneMatrices", m_matCurrTransforms.data(), (size_t)m_matCurrTransforms.size())))
+	//	return S_OK;
+
+	return S_OK;
 }
 
 void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
@@ -522,6 +540,43 @@ HRESULT CModel::Ready_Animations()
 
 		m_Animations.push_back(pAnimation);
 	}
+
+	return S_OK;
+}
+
+HRESULT CModel::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* strConstantName)
+{
+	if (iMaterialIndex >= m_iNumMaterials)
+		return E_FAIL;
+
+	NULL_CHECK_RETURN(m_Materials[iMaterialIndex].pMtrlTextures[eTextureType], E_FAIL);
+
+	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Set_SRV(pShader, strConstantName);
+}
+
+HRESULT CModel::Render(CShader*& pShader, const _uint& iMeshIndex, const _uint& strPassName)
+{
+	/* m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
+
+		m_pModelCom->Render(0);
+	*/
+
+	FAILED_CHECK(pShader->Begin(strPassName));
+
+	FAILED_CHECK(m_Meshes[iMeshIndex]->Bind_VIBuffers());
+
+	FAILED_CHECK(m_Meshes[iMeshIndex]->Render());
+
+	return S_OK;
+}
+
+HRESULT CModel::Render(_uint iMeshIndex)
+{
+	if (iMeshIndex >= m_iNumMeshes)
+		return E_FAIL;
+
+	m_Meshes[iMeshIndex]->Bind_VIBuffers();
+	m_Meshes[iMeshIndex]->Render();
 
 	return S_OK;
 }

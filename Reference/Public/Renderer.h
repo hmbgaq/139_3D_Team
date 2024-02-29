@@ -15,9 +15,9 @@ public:
 		/* Priority */
 		RENDER_PRIORITY,RENDER_SHADOW, RENDER_NONLIGHT, 
 		/* Post Processing  */
-		RENDER_SSAO, RENDER_GODRAY, RENDER_OUTLINE,
-		/* Blend */
-		RENDER_NONBLEND, RENDER_BLEND, 
+		RENDER_SSAO, RENDER_GODRAY, RENDER_DECAL, RENDER_OUTLINE,	RENDER_NONBLEND, RENDER_BLEND, 
+		/* EFFECT */
+		RENDER_EFFECT, RENDER_EFFECT_PARTICLE, RENDER_EFFECT_MESH, 
 		/* UI */
 		RENDER_UI,
 		RENDER_NONBLEND_UI, /*RENDER_UI_MINIMAP, RENDER_UI_MINIMAP_ICON,*/
@@ -26,27 +26,12 @@ public:
 		
 		RENDER_END };
 
-	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, SHADER_FINAL, SHADER_DEFERRED_UI, SHADER_END };
+	enum SHADER_TYPE { SHADER_DEFERRED, SHADER_POSTPROCESSING, SHADER_BLUR, SHADER_OUTLINE, SHADER_FXAA, 
+		SHADER_EFFECT, SHADER_EFFECT_DEFERRED,
+		SHADER_FINAL,
+		SHADER_DEFERRED_UI, SHADER_END };
 	
-	struct QuadVertex // ssao 
-	{
-		_float3 pos;
-		_float3 normal;
-		_float2 tex;
-	};
 
-	typedef struct tagXMCOLOR
-	{
-		union {
-			struct {
-				uint8_t b;
-				uint8_t g;
-				uint8_t r;
-				uint8_t a;
-			};
-			uint32_t c;
-		};
-	}XMCOLOR;
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -66,6 +51,10 @@ public:
 	HRESULT Create_DepthStencil();
 	HRESULT Ready_DebugRender();
 
+	/* Cascade */
+	ID3D11DepthStencilView* m_pCascadeShadowDSV[3];
+	HRESULT Ready_CascadeShadow();
+
 	
 #ifdef _DEBUG
 public:
@@ -83,18 +72,23 @@ private:
 	HRESULT Render_NonBlend();
 
 	/* Pre-Post Processing */
-	HRESULT Render_OutLine_PostProcessing();
+	HRESULT Render_OutLine();
 	HRESULT Render_HBAO_PLUS();
-	//HRESULT Render_HBAO_Plus();
 	HRESULT Render_Bloom();
 	HRESULT Render_Deferred();
+	HRESULT Render_Cascade_Shadow();
+	HRESULT Render_Decal();
 
 	/* Post Processing */
-	HRESULT Render_PostProcess();
 	HRESULT Render_RadialBlur();
 	HRESULT Render_GodRay();
 	HRESULT Render_FXAA();
 	HRESULT Render_HDR();
+	HRESULT Render_SSR();
+
+	/* Effect */
+	HRESULT Render_Effect();
+	HRESULT Render_Effect_Deferred();
 
 	/* 최종 다 그리는곳 */
 	HRESULT Render_Final();
@@ -135,6 +129,7 @@ private:
 
 private: /* !UI */
 	HRESULT Ready_UI_Target(D3D11_VIEWPORT Viewport);
+
 #ifdef _DEBUG
 private:
 	HRESULT Render_Debug();
@@ -142,20 +137,24 @@ private:
 
 	/* 활성 제어 */
 private:
-	_bool						m_bSSAO_Active			= { false };
-	_bool						m_bBloom_Active			= { false };
-	_bool						m_bOutline_Active		= { false };
-	_bool						m_bPBR_Active			= { false };
-	_bool						m_bFXAA_Active			= { false };
-	_bool						m_bHDR_Active			= { false };
-	_bool						m_bInit					= { true };
-
-public:
-	void Set_SSAO(_bool _ssao_active)		{ m_bSSAO_Active = _ssao_active; } /* 외곽선 옵션조절 */
-	void Set_Bloom(_bool _bloom_active)		{ m_bBloom_Active = _bloom_active; }
-	void Set_OutLine(_bool _Outline_active) { m_bOutline_Active = _Outline_active; }
+	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
+	_bool						m_bSSAO_Active				= { false };
+	_bool						m_bBloom_Active				= { true };
+	_bool						m_bOutline_Active			= { false };
+	_bool						m_bPBR_Active				= { false };
+	_bool						m_bFXAA_Active				= { false };
+	_bool						m_bHDR_Active				= { false };
+	_bool						m_bFog_Active				= { false };
+	_bool						m_bRim						= { false };
+	_bool						m_bCascade_Shadow_Active	= { false };
+	_bool						m_bRadial_Blur_Active		= { false };
 
 private:
+	HBAO_PLUS_DESC				m_tHBAO_Option			= {};
+	FOG_DESC					m_tFog_Option			= {};
+	HDR_DESC					m_tHDR_Option			= {};
+	SCREEN_DESC					m_tScreen_Option		= {};
+
 	/* BLUR */
 	HRESULT						Render_Blur_DownSample(const wstring& strStartTargetTag);
 	HRESULT						Render_Blur_Horizontal(_int eHorizontalPass);
@@ -172,13 +171,38 @@ private:
 	_float4						m_fRadialBlurPower = {};
 
 	/* OutLine */
-	_float4						m_vLineColor		= _float4(1.f, 0.f, 0.f, 1.f );
+	_float4						m_vLineColor	= _float4(0.5f, 0.4f, 0.2f, 1.f);
 
 	/* HDR */
 	_float						m_max_white = { 0.3f };
 
+	/* Fog */ 
+	FOG_DESC					m_CurrFog = {};
+
+	/* Cascade Shadow */
+	vector<class CGameObject*> m_CascadeObjects;
+
+public:
+	/* 활성화 */
+	void Set_SSAO(_bool _ssao_active) { m_bSSAO_Active = _ssao_active; } 
+	void Set_Bloom(_bool _bloom_active) { m_bBloom_Active = _bloom_active; }
+	void Set_OutLine(_bool _Outline_active) { m_bOutline_Active = _Outline_active; }
+	void Set_HDR(_bool _HDR_active) { m_bHDR_Active = _HDR_active; }
+	void Set_FXAA(_bool _FXAA_active) { m_bFXAA_Active = _FXAA_active; }
+	void Set_RimLight(_bool _RimLight) { m_bRim = _RimLight; }
+	void Set_Fog(_bool _Fog) { m_bFog_Active = _Fog; }
+
+	/* 옵션조절 */
+	void Set_HBAO_Option(HBAO_PLUS_DESC desc) {	m_tHBAO_Option = desc; }
+	void Set_Fog_Option(FOG_DESC desc) { m_tFog_Option = desc; }
+	void Set_HDR_Option(HDR_DESC desc) { m_tHDR_Option = desc; }
+	void Set_Screen_Option(SCREEN_DESC desc) { m_tScreen_Option = desc; }
+
+	HRESULT Add_CascadeObject(CGameObject* pObject);
+
 private:
 	class CShader*					m_pShader[SHADER_TYPE::SHADER_END]	= { nullptr };
+	class CTexture*					m_pPerlinNoiseTextureCom			= { nullptr };
 	class CGameInstance*			m_pGameInstance						= { nullptr };
 	class CVIBuffer_Rect*			m_pVIBuffer							= { nullptr };
 

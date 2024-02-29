@@ -19,9 +19,10 @@ class CWindow_MapTool final : public CImgui_Window
 private:
 	enum class TAP_TYPE { TAB_GROUND, TAB_INTERACT, TAB_ENVIRONMENT, TAB_NORMALMONSTER, TAB_BOSSMONSTER, TAB_NPC, TAB_END };
 	enum class MODE_TYPE { MODE_CREATE, MODE_SELECT, MODE_DELETE, MODE_END };
-	enum class PICKING_TYPE { PICKING_FIELD, PICKING_MESH, PICKING_NONE, PICKING_END };
+	enum class PICKING_TYPE { PICKING_FIELD, PICKING_MESH, PICKING_INSTANCE, PICKING_NONE, PICKING_END };
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
 	enum class OBJECTMODE_TYPE { OBJECTMODE_ENVIRONMENT, OBJECTMODE_CHARACTER};
+	enum class ANIM_TYPE { TYPE_NONANIM, TYPE_ANIM };
 	
 	enum class MAP_KEY_TYPE //! 맵컨테이너 키
 	{
@@ -64,7 +65,7 @@ private:
 	//!For. Environment
 	void			GroundTab_Function();
 	void			InteractTab_Function();
-	void			InstanceTab_Function();
+	void			EnvironmentTab_Function();
 
 	//!For. Character
 	void			MonsterTab_Function();
@@ -76,9 +77,17 @@ private:
 	void			MouseInfo_Window(_float fTimeDelta);
 	void			FieldWindowMenu();
 	void			CameraWindow_Function();
-	void			IsCreatePlayer_ReadyCamara(); 
-
+	void			IsCreatePlayer_ReadyCamara();
 	
+	//!For.Environment
+	void			Select_ModeType();
+	void			Select_PickingType();
+
+	//!For.Character
+	void			Select_CharacterModeType();
+	
+	void			Create_Tab(TAP_TYPE eTabType);
+
 	
 private: //! For. Create_Function
 
@@ -91,6 +100,7 @@ private: //! For. Create_Function
 	void			Interact_CreateFunction();
 	void			Preview_Environment_CreateFunction();
 	void			Create_Instance();
+	void			Anim_Environment_CreateFunction();
 
 	//!For. Character
 	void			Character_CreateFunction();
@@ -103,6 +113,7 @@ private: //!For. Select_Function
 
 	//!For. Environment
 	void			Basic_SelectFunction();
+	void			Instance_SelectFunction();
 	void			Guizmo_Tick(CGameObject* pPickingObject = nullptr);
 
 	void			Instance_GuizmoTick(_int iIndex, INSTANCE_INFO_DESC* pInstance = nullptr);
@@ -121,12 +132,13 @@ private:
 	PICKING_TYPE	m_ePickingType = PICKING_TYPE::PICKING_END;
 	PICKING_MODE	m_ePickingMode = PICKING_MODE::MOUSE_PRESSING;
 	OBJECTMODE_TYPE m_eObjectMode = OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT;
+	ANIM_TYPE		m_eAnimType = ANIM_TYPE::TYPE_NONANIM;
 
 	_bool			m_bChangeObjectMode = false;
 
 	CPlayer*		m_pPlayer = nullptr;
 	
-
+	_bool			m_bOnTheInstance = false;
 private: //!For. Character
 	vector<string>			  m_vecMonsterTag;
 	vector<string>			  m_vecBossTag;
@@ -172,7 +184,9 @@ private: //! 레이캐스트
 	RAY				m_tWorldRay = {};
 	_float3			m_fRayPos = {};
 	_float3			m_fMeshPos = {};
+	_float3			m_fInstanceMeshPos = {};
 	
+
 	_float			m_fRayUpdateTime = { 0.1f };
 	_float			m_fRayUpdateTimeAcc = { 0.f };
 
@@ -209,6 +223,9 @@ private: //! For. CreateInstance
 	vector<CEnvironment_Instance*>	m_vecCreateInstance = {};
 	vector<CEnvironment_Object*>	m_vecPreViewInstance = {}; //! 인스턴싱 디스크립션 만들기 위해.
 	
+	map<string, vector<CEnvironment_Object*>> m_mapPreviewInstance; //! 선택한 모델태그마다 각기 다른 벡터에 저장해서 생성하게하자.
+
+
 	vector<string>					m_vecCreateInstanceTag = {};
 	_int							m_iCreateInstanceIndex = 0;
 	

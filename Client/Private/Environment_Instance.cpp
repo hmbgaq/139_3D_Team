@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "VIBuffer_Environment_Model_Instance.h"
+#include "Model.h"
 
 CEnvironment_Instance::CEnvironment_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -29,11 +30,24 @@ HRESULT CEnvironment_Instance::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(nullptr)))
 		return E_FAIL;	
 
+
+	if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
+	{
+		m_vecColliders.reserve(m_tInstanceDesc.iNumInstance);
+
+		for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
+		{
+			m_vecColliders.push_back(nullptr);
+		}
+	}
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	
 
+	
+	
+	
 	
 	return S_OK;
 }
@@ -46,7 +60,19 @@ void CEnvironment_Instance::Priority_Tick(_float fTimeDelta)
 void CEnvironment_Instance::Tick(_float fTimeDelta)
 {
 	//m_pInstanceModelCom->Update(m_tInstanceDesc.vecInstanceInfoDesc);
-	
+	if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
+	{
+		for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
+		{
+			_matrix WorldMatrix = m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix();
+
+			_float3 vCenter = m_tInstanceDesc.vecInstanceInfoDesc[i].vCenter;
+
+			WorldMatrix.r[3] -= XMLoadFloat3(&vCenter);
+
+			m_vecColliders[i]->Update(WorldMatrix);
+		}
+	}
 }
 
 void CEnvironment_Instance::Late_Tick(_float fTimeDelta)
@@ -60,6 +86,15 @@ void CEnvironment_Instance::Late_Tick(_float fTimeDelta)
 			return;
 /*	}*/
 
+		if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
+		{
+			for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
+			{
+				m_pGameInstance->Add_DebugRender(m_vecColliders[i]);
+			}
+		}
+	
+
 }
 
 HRESULT CEnvironment_Instance::Render()
@@ -71,10 +106,7 @@ HRESULT CEnvironment_Instance::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		_matrix Test = m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix();
-
-		
-
+	
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		
@@ -92,10 +124,43 @@ HRESULT CEnvironment_Instance::Render()
 		//m_pModelCom->Render(i);
 	}
 
-		
+	
 	
 
 	return S_OK;
+}
+
+_bool CEnvironment_Instance::Picking_Instance(RAY* pRay, _float3* vOutPoint)
+{
+	_vector vOrigin = XMLoadFloat4(&pRay->vPosition);
+	_vector vDir = XMLoadFloat3(&pRay->vDirection);
+
+	_float fDist;
+
+	_bool bResult;
+
+	for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
+	{
+		CBounding_AABB* pBoundingAABB = dynamic_cast<CBounding_AABB*>(m_vecColliders[i]->Get_Bounding());
+
+		if (pBoundingAABB == nullptr)
+		{
+			MSG_BOX("콜라이더 없대");
+			return false;
+		}
+		
+		const BoundingBox* pBoundingBox = pBoundingAABB->Get_Bounding();
+
+		if (true == pBoundingBox->Intersects(vOrigin, vDir, fDist))
+		{
+			//_vector vLocalPoint = vOrigin + fDist * vDir;
+			*vOutPoint = vOrigin + fDist * vDir;
+
+			return true;
+		}
+	}
+	
+	return false;
 }
 
 _bool CEnvironment_Instance::Write_Json(json& Out_Json)
@@ -133,15 +198,36 @@ HRESULT CEnvironment_Instance::Ready_Components()
 	Desc.vecBufferInstanceInfo = m_tInstanceDesc.vecInstanceInfoDesc;
 
 	
-	
-	
-	
+	if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
+	{
+		for (_int i = 0; i < Desc.iNumInstance; ++i)
+		{
+			CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
+
+			//Desc_AABB.vCenter = Desc.vecBufferInstanceInfo[i].vCenter;
+			//Desc_AABB.vCenter.y = Desc_AABB.vCenter.y + -Desc_AABB.vExtents.y * 0.5f;
+			Desc_AABB.vCenter = Desc.vecBufferInstanceInfo[i].vCenter;
+			Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
+			Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
+			
+
+			wstring strColliderComTag = L"Com_Collider" + i;
+
+			if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Desc_AABB)))
+			{
+				MSG_BOX("ㅈ댐");
+				return E_FAIL;
+			}
+		}
+	}
 	
 	// For.Com_Model */
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pInstanceModelCom), &Desc)))
 		return E_FAIL;
 	
+	
+
 	return S_OK;
 }
 

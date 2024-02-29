@@ -26,6 +26,8 @@ public:
 		_bool		bPreview = true; //! 미리보기용 오브젝트인지 확인
 	}ENVIRONMENT_OBJECT_DESC;
 
+
+
 private:
 	CEnvironment_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CEnvironment_Object(const CEnvironment_Object& rhs);
@@ -49,9 +51,10 @@ public:
 	wstring&			Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
 	_bool				Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
 	
-#ifdef DEBUG
+#ifdef _DEBUG
 public: //! For.Tool
 	virtual _bool		Picking(_Out_ _float3* vPickedPos) override;
+	_bool				Picking_VerJSY(RAY* pRay, _Out_ _float3* vPickedPos);
 
 #endif 
 
@@ -61,6 +64,7 @@ public:
 private:
 	CShader*			m_pShaderCom = { nullptr };	
 	CModel*				m_pModelCom = { nullptr };
+	CCollider*			m_pPickingCollider = nullptr;
 
 private:
 	ENVIRONMENT_OBJECT_DESC m_tEnvironmentDesc = {};

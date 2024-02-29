@@ -64,7 +64,7 @@ void CVIBuffer_Environment_Model_Instance::Update(INSTANCE_INFO_DESC InstanceDes
 
 	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
 
-	
+		
 		_matrix RotationMatrix = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&InstanceDesc.vRotation));
 
 		XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[iIndex].vRight, RotationMatrix.r[0] * InstanceDesc.vScale.x);

@@ -37,6 +37,7 @@ public:
 	/* Ãß°¡ RenderGroup¿ë*/
 	virtual HRESULT Render_Shadow() { return S_OK; }
 	virtual HRESULT Render_OutLine() { return S_OK; }
+	virtual HRESULT Render_Cascade_Shadow(_uint iIndex) { return S_OK; }
 
 	virtual _bool	Picking(_Out_ _float3 * vPickedPos);
 
@@ -107,7 +108,7 @@ protected:
 
 
 
-protected:
+public:
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& strPrototypeTag,
 		const wstring& strComTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
 	HRESULT Remove_Component(const wstring& strComTag, _Inout_ CComponent** ppOut = nullptr);

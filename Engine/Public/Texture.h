@@ -31,7 +31,7 @@ public:
 
 public:
 	HRESULT Get_TextureSize(_uint * iWidth, _uint * iHeight, _uint iTextureIndex = 0);
-
+	HRESULT	Set_SRV(CShader * pShader, const char* strConstantName, _uint iTextureIndex = 0);
 
 private:
 	_uint										m_iNumTextures = { 0 };

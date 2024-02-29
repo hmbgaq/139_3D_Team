@@ -40,6 +40,7 @@ public:
 public:						
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Ãß°¡
 	_uint					Get_NumMaterials() const { return m_iNumMaterials; }
+	_uint					Get_MaterialIndex(_uint iMeshIndex);
 	_uint					Get_NumMeshIndice(_int iMeshIndex);//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì Àü¿ë
 	vector<class CMesh*>&	Get_Meshes() { return m_Meshes; }
 	class CMesh*			Get_Mesh_For_Index(_int iMeshIndex);
@@ -50,6 +51,7 @@ public:
 
 	_float4x4*				Calc_OffsetMatrice(_uint iAnimationIndex, _float fTrackPosition, _float4x4* pMatrix);
 	_float4x4*				Get_OffsetMatrices();
+	_float3&				Calculate_AABB_Extents_From_Model();
 	
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
 
@@ -72,8 +74,8 @@ public:
 
 public:
 	HRESULT					Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices = nullptr);
-	
 	HRESULT					Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
+	HRESULT					Bind_ShaderCascade(CShader* pShader);
 
 public:
 	void					Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _bool _bIsTransition = true, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
@@ -87,6 +89,7 @@ public:
 	_bool					Is_Inputable_Front(_uint _iIndexFront);
 
 	void					Write_Names(const string& strModelFilePath);
+
 public:
 	vector<CAnimation*>*	 Get_Animations();
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
@@ -123,6 +126,11 @@ private:
 	ANIM_STATE				m_eAnimState			= { CModel::ANIM_STATE::ANIM_STATE_END };
 	_bool					m_bUseAnimationPos		= { false };
 
+	/* Cascade */
+	vector<_matrix>			m_matCurrTransforms;
+	vector<KEYFRAME>		m_CurrKeyFrameDatas;
+	vector<KEYFRAME>		m_PrevKeyFrameDatas;
+
 public:
 	typedef vector<CBone*>	BONES;
 
@@ -131,6 +139,11 @@ private:
 	HRESULT Ready_Materials(const string& strModelFilePath);
 	HRESULT Ready_Bones(CMyAINode pAINode, _int iParentIndex);
 	HRESULT Ready_Animations();
+
+	/* Cascade */
+public:
+	HRESULT SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* strConstantName);
+	HRESULT Render(CShader*& pShader, const _uint& iMeshIndex, const _uint& strPassName);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);

@@ -1,20 +1,18 @@
 #include "Shader_Defines.hlsli"
 
 matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float       g_TimeDelta;
 
 texture2D	g_DiffuseTexture;
 texture2D	g_MaskTexture;
+texture2D	g_NoiseTexture;
 
 texture2D	g_NormalTexture;
 texture2D   g_SpecularTexture;
 
-texture2D	g_DissolveTexture;
-texture2D	g_DissolveDiffTexture;
-
 texture2D	g_DepthTexture;
 
 
-vector      g_vCamPosition;
 vector      g_vCamDirection;
 
 vector      g_vPlayerPosition;
@@ -23,22 +21,61 @@ float		g_fDissolveRatio;
 
 float2      g_UVOffset;
 float2      g_UVScale;
+float		g_fDegree;
+
+float		g_DiscardValue;
+float3		g_fBlack_Discard;
+
+/* Dissolve  */
+texture2D	g_DissolveTexture;
+texture2D	g_DissolveDiffTexture;
+float		g_fDissolveWeight;
 
 
-cbuffer FX_Particle
+/* Bloom */
+float4      g_BloomColor = { 0.f, 0.f, 0.f, 0.f };
+float3      g_vBloomPower;
+
+
+/* RimLight */
+float4		g_vRimColor;
+float		g_fRimPower;
+vector      g_vCamPosition;
+
+
+/* Custom Function */
+float4 Caculation_Brightness(float4 vColor, float3 BloomPower)
 {
-    float fGameTime = false;
-    float3 vEmitPosition;
-    float3 vEmitDirection;
-    float fTimeStep;
-    
-    float3 vRandomMul = float3(1.f, 1.f, 1.f);
-    float fSpreadSpeed = 1.f;
-    float fEmitTerm = 0.005f;
-    float fParticleLifeTime = 1.f;
-    float fSequenceTerm = 0.0f;
-    int iIsLoop = 0;
-};
+	float4 vBrightnessColor = float4(0.f, 0.f, 0.f, 0.f);
+
+	float fPixelBrightness = dot(vColor.rgb, BloomPower.rgb);
+
+	if (fPixelBrightness > 0.99f)
+		vBrightnessColor = float4(vColor.rgb, 1.0f);
+
+	return vBrightnessColor;
+}
+
+float IsIn_Range(float fMin, float fMax, float fValue)
+{
+	return (fMin <= fValue) && (fMax >= fValue);
+}
+
+float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
+{
+	float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
+	float fRotationRadian = fDegree * fDegree2Radian;
+	float cosA = cos(fRotationRadian);
+	float sinA = sin(fRotationRadian);
+
+	float2x2 RotateMatrix = float2x2(cosA, -sinA, sinA, cosA);
+
+	vTexcoord -= 0.5f;
+	vTexcoord = mul(vTexcoord, RotateMatrix);
+	vTexcoord += 0.5f;
+
+	return vTexcoord;
+}
 
 struct VS_IN
 {
@@ -61,6 +98,9 @@ struct VS_OUT
 	float2		vTexUV		: TEXCOORD0;
 	float4		vWorldPos	: TEXCOORD1;
 	float4		vProjPos	: TEXCOORD2;
+
+	float3		vViewNormal		: NORMAL1;		/* ssao */
+	float3		vPositionView	: POSITION;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -82,6 +122,11 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
 	Out.vTexUV = In.vTexUV;
 	Out.vProjPos = Out.vPosition;
+
+
+	// SSAO
+	Out.vViewNormal = mul(Out.vNormal.xyz, (float3x3) g_ViewMatrix);
+	Out.vPositionView = mul(float4(In.vPosition, 1.0f), matWV);
 
 	return Out;	
 }
@@ -116,10 +161,10 @@ VS_OUT VS_MAIN_SPRITE(VS_IN In)
 
 
 
-// w나누기연산을 수행하낟. (In 투영스페이스)
+// w나누기연산을 수행한다. (In 투영스페이스)
 // 뷰포트 변환. (In 뷰포트(윈도우좌표))
 
-// 래스터라이즈(픽셀정볼르 생성한다. )
+// 래스터라이즈(픽셀정보를 생성한다. )
 
 struct PS_IN
 {
@@ -128,32 +173,80 @@ struct PS_IN
 	float2		vTexUV : TEXCOORD0;
 	float4		vWorldPos : TEXCOORD1;
 	float4		vProjPos : TEXCOORD2;
+
+	/* ssao */
+	float3	vViewNormal		: NORMAL1;
+	float3	vPositionView	: POSITION;
 };
 
 struct PS_OUT
 {	
-	vector		vDiffuse : SV_TARGET0;
-	vector		vNormal : SV_TARGET1;
-	vector		vDepth : SV_TARGET2;
-    
+	float4	vDiffuse        : SV_TARGET0;
+	float4	vNormal         : SV_TARGET1;
+	float4  vDepth          : SV_TARGET2;
+	float4  vORM            : SV_TARGET3;
+	float4  vViewNormal     : SV_TARGET4;
+	float4  vBloom          : SV_TARGET5;
+  
 };
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    clip(Out.vDiffuse.a - 0.1f);
-	
-	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
+	////* g_UVScale + g_UVOffset
+	//In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
 
+	//Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	//float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+
+	////clip(Out.vDiffuse.a - g_DiscardValue);
+	//Out.vDiffuse.a *= vAlphaMask.a;
+	//
+	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
+	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
 	
-	
+
+	vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (vMtrlDiffuse.a < 0.1f)
+		discard;
+
+	Out.vDiffuse = vMtrlDiffuse;
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 0.0f);
+
+	/* 림라이트 -> 프레넬 공식 사용 */
+	/* 노말 (내적) 정점이 카메라를 바라보는방향 -> 카메라가 조명처럼 인식된다. */
+	//float fRim = saturate(dot(In.vNormal, (g_vCamPosition - In.vWorldPos)));
+	//int iRimPower = 5.f;
+	///* 일정이상보다 작으면 Rim을 없앤다. */
+	//if(fRim > 0.3)
+	//    fRim = 1;
+	//else
+	//    fRim = -1;
+
+	//Out.vEmissive = Out.vORM + float4(pow(1 - fRim, iRimPower) * g_vRimColor.xyz, 1.f);
+
+	float fRimPower = 1.f - saturate(dot(In.vNormal, normalize((-1.f * (In.vWorldPos - g_vCamPosition)))));
+	fRimPower = pow(fRimPower, 5.f) * g_fRimPower;
+	vector vRimColor = g_vRimColor * fRimPower;
+
+	Out.vBloom = Caculation_Brightness(Out.vDiffuse, g_vBloomPower) + vRimColor;
+	Out.vDiffuse += vRimColor;
+	Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
+
+
+	// 검은색 잘라내기
+	if (Out.vDiffuse.r < g_fBlack_Discard.r && Out.vDiffuse.g < g_fBlack_Discard.g && Out.vDiffuse.b < g_fBlack_Discard.b)
+		discard;
+
 	return Out;
+
 }
 
-////Normal Mapping ///////////
+//// Normal Mapping ///////////
 struct VS_OUT_NORMAL
 {
 	float4 vPosition : SV_POSITION;
@@ -210,7 +303,7 @@ PS_OUT PS_MAIN_NORMAL(PS_IN_NORMAL In)
 	PS_OUT Out = (PS_OUT)0;
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    clip(Out.vDiffuse.a - 0.1f);
+    clip(Out.vDiffuse.a - g_DiscardValue);
     Out.vDiffuse.a = 1.f;
 	/* 0 ~ 1 */
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
@@ -278,12 +371,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 }
 
 
-float IsIn_Range(float fMin, float fMax, float fValue)
-{
-    return (fMin <= fValue) && (fMax >= fValue);
-}
-
-PS_OUT PS_MAIN_Dissove(PS_IN_NORMAL In)
+PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -291,13 +379,21 @@ PS_OUT PS_MAIN_Dissove(PS_IN_NORMAL In)
 
     clip(TexDissolve - g_fDissolveRatio);
 
+	In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
+	In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
+
     vector vTexDiff = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    float fStepValue = IsIn_Range(0.f,0.05f,TexDissolve.r - g_fDissolveRatio);
+
+    float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
 	
+
     Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue * g_DissolveDiffTexture.Sample(LinearSampler, In.vTexUV);
 	
-    clip(Out.vDiffuse.a - 0.1f);
-    Out.vDiffuse.a = 1.f;
+    clip(Out.vDiffuse.a - g_DiscardValue);
+    //Out.vDiffuse.a = 1.f;
+
+	float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vDiffuse.a *= vAlphaMask.a;
 	
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
 	vPixelNormal = vPixelNormal * 2.f - 1.f;
@@ -353,7 +449,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
-	pass NormalMapping //1
+	pass Pass1_NormalMapping //1
 	{
         SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_DepthStencilEnable, 0);
@@ -366,7 +462,7 @@ technique11 DefaultTechnique
 		PixelShader		= compile ps_5_0 PS_MAIN_NORMAL();
 	}
 
-	pass ShadowDepth //2
+	pass Pass2_ShadowDepth //2
 	{
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_None, 0);
@@ -383,7 +479,7 @@ technique11 DefaultTechnique
 	{
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_DepthStencilEnable, 0);
-		SetRasterizerState(RS_Fill_Wireframe);
+        SetRasterizerState(RS_NoneCull_Wireframe);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		HullShader = NULL;
@@ -402,7 +498,7 @@ technique11 DefaultTechnique
         HullShader      = NULL;
         DomainShader    = NULL;
 		GeometryShader	= NULL;
-		PixelShader		= compile ps_5_0	PS_MAIN();
+		PixelShader		= compile ps_5_0 PS_MAIN();
 	}
 
 	pass Pass5_NonCulling_Norm //5
@@ -428,7 +524,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_Dissove();
+        PixelShader = compile ps_5_0 PS_MAIN_Dissolve();
     }
 	
 	pass Pass7_Sprite_Animation //7

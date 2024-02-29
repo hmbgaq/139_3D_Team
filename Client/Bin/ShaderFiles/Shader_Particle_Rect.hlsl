@@ -1,7 +1,7 @@
 #include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D		g_Texture;
+Texture2D		g_Texture;
 
 struct VS_IN
 {

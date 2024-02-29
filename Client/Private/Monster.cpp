@@ -78,7 +78,7 @@ void CMonster::Tick(_float fTimeDelta)
 
 	
 
-	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	//m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CMonster::Late_Tick(_float fTimeDelta)
@@ -174,7 +174,7 @@ void CMonster::Load_FromJson(const json& In_Json)
 HRESULT CMonster::Ready_Components()
 {
 
-	_int iCurrentLevel = m_pGameInstance->Get_CurrentLevel();
+	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
 	{

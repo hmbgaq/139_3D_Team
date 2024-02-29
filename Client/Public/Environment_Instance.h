@@ -28,11 +28,16 @@ public:
 	virtual HRESULT Render() override;
 
 public:
+	_bool			Picking_Instance(RAY* pRay, _float3* vOutPoint); 
+
+public:
 	virtual _bool	Write_Json(json& Out_Json) override;
 	virtual void	Load_FromJson(const json& In_Json) override;
 
 public:
 	void			Update(INSTANCE_INFO_DESC InstanceDesc, _int iIndex);
+
+	
 
 public:
 	MAPTOOL_INSTANCE_DESC&					Get_InstanceDesc() { return m_tInstanceDesc; }
@@ -48,6 +53,7 @@ private:
 	CVIBuffer_Environment_Model_Instance*	m_pInstanceModelCom = { nullptr };
 
 	MAPTOOL_INSTANCE_DESC					m_tInstanceDesc;
+	vector<CCollider*>						m_vecColliders;
 
 private:
 	HRESULT Ready_Components();

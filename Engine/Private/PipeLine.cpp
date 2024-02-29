@@ -1,4 +1,4 @@
-#include "..\Public\PipeLine.h"
+#include "PipeLine.h"
 #include "GameInstance.h"
 
 CPipeLine::CPipeLine()
@@ -71,6 +71,7 @@ _float4 CPipeLine::Get_CamSetting()
 	return Result;
 }
 
+
 //RAY CPipeLine::Get_MouseRayWorld(HWND g_hWnd, const unsigned int g_iWinSizeX, const unsigned int g_iWinSizeY)
 //{
 //	POINT pt;
@@ -129,7 +130,7 @@ _float4x4 CPipeLine::Get_PreViewMatrix()
 
 HRESULT CPipeLine::Initialize()
 {
-	for (size_t i = 0; i < D3DTS_END; i++)
+	for (size_t i = 0; i < ECast(D3DTS_END); i++)
 	{
 		XMStoreFloat4x4(&m_Transform[i], XMMatrixIdentity());
 		XMStoreFloat4x4(&m_Transform_Inverse[i], XMMatrixIdentity());
@@ -140,7 +141,7 @@ HRESULT CPipeLine::Initialize()
 
 void CPipeLine::Tick()
 {
-	for (size_t i = 0; i < D3DTS_END; i++)
+	for (size_t i = 0; i < ECast(D3DTS_END); i++)
 	{
 		XMStoreFloat4x4(&m_Transform_Inverse[i], XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_Transform[i])));
 	}

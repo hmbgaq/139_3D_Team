@@ -85,6 +85,8 @@ public: /* For.Component_Manager */
 public: /* For.Renderer */
 	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
+	HRESULT Add_CascadeObject(class CGameObject* pGameObject);
+	CRenderer* Get_Renderer(); /* 툴용 */
 #ifdef _DEBUG
 	void Set_RenderDebug(_bool _bRenderDebug);
 #endif
@@ -100,6 +102,7 @@ public: /* For.PipeLine */
 	_float4		Get_CamPosition();
 	_float4		Get_CamSetting();
 	_float		Get_CamFar();
+	_float4x4	Get_Shadow_Proj();
 
 	//!			레이캐스트
 	RAY			Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
@@ -177,8 +180,6 @@ public: /* For.Random_Manager*/
 	const _bool&			Random_Coin(_float fProbality);
 	int64_t					GenerateUniqueID();
 
-
-
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
@@ -211,7 +212,7 @@ public: /* Common */
 	const wstring	Remove_LastNumChar(const wstring& str, const _uint& iNumCutCount);
 	const string	Remove_LastNumChar(const string& str, const _uint& iNumCutCount);
 	const wstring	Get_LastNumChar(const wstring& str, const _uint& iNumCutCount);
-
+#pragma endregion End
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };

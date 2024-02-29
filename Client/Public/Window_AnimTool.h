@@ -10,6 +10,7 @@ class CBounding;
 class CBone;
 class CBody;
 class CCharacter;
+class CEffect_Particle;
 END
 
 BEGIN(Client)
@@ -48,6 +49,10 @@ private:
 	void			Add_SoundKeyEvent();
 	void			Add_RandomSoundKeyEvent();
 
+	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
+	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
+	void Reset_AnimFunction();
+
 	void			Save_KeyEvent();
 	HRESULT			Load_KeyEvent();
 	void			Clear_KeyEvent();
@@ -81,11 +86,13 @@ private:
 	CCollider*				m_pCollider = { nullptr };
 	CCollider*				m_pWCollider = { nullptr };
 	CBody*					m_pBody = { nullptr };
+	CEffect_Particle*		m_TestEffect = { nullptr };
 
 	//애니메이션 재생
 	_float					m_fSpeed = 1.f;
 	_float					m_fDuration = 0.0f;
 	_float					m_fCurrentTrackPosition = 0.0f;
+	_float					m_TargetTrackPosition = 0.f;
 
 	_float					m_iColliderSize = 0.0f;
 	_float					m_iColliderOnTrackPosition = 0.0f;
@@ -95,15 +102,18 @@ private:
 	_float					m_iColliderWeaponOnTrackPosition = 0.0f;
 	_float					m_iColliderWeaponOffTrackPosition = 0.0f;
 
-	//! 콜라이더 위치값 조정임 
+	//! 콜라이더 위치값 조정 
 	_float					m_fBonePosition[3] = { 0.f,0.f,0.f };
 	_float					m_fWeaponPosition[3] = { 0.f,0.f,0.f };
 
 	_float3					m_fWeaponPos = { 0.f,0.f,0.f };
-
+	_float3					m_fGuizmoTranslation = {};
+	_float3					m_fGuizmoRotation = {};
+	_float3					m_fGuizmoScale = {};
+	
 	_float4x4				m_fBoneMatrix = {};
 	_float4x4				m_fWeaponMatrix = {};
-	
+	_float4x4				m_fWeaponWorldMatrix = {};
 	_int					m_CurrentAnimationIndex = 0;
 	_int					m_iCreateObjectSize = 0;
 	_int					m_iCreateWeaponSize = 0;
@@ -120,7 +130,7 @@ private:
 	string					m_strKeyEventFileName = "";
 	string					m_strSoundFileName = "";
 	string					m_strTest = "";
-
+	string					m_strLayer = "";
 	vector<string>			m_vObjectTag;
 
 	vector<CGameObject*>	m_CreateList;
@@ -162,6 +172,9 @@ public:
 private:
 	_bool					m_bCreatePlayer = false;
 
+
+	_bool bTest = true;
+	_bool bTest2 = true;
 public:
 	static CWindow_AnimTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

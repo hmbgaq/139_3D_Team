@@ -245,10 +245,11 @@
     <ClInclude Include="..\Public\Player_DodgeBlink_L_03.h" />
     <ClInclude Include="..\Public\Player_DodgeBlink_R_03.h" />
     <ClInclude Include="..\Public\Effect.h" />
+    <ClInclude Include="..\Public\Effect_Void.h" />
     <ClInclude Include="..\Public\Effect_Explosion.h" />
     <ClInclude Include="..\Public\Effect_Instance.h" />
     <ClInclude Include="..\Public\Effect_Particle.h" />
-    <ClInclude Include="..\Public\Effect_Texture.h" />
+    <ClInclude Include="..\Public\Effect_Rect.h" />
     <ClInclude Include="..\Public\Effect_Trail.h" />
     <ClInclude Include="..\Public\Environment_Instance.h" />
     <ClInclude Include="..\Public\Environment_Interact.h" />
@@ -359,6 +360,7 @@
     <ClInclude Include="..\Public\SpringCamera.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\stb_image.h" />
+    <ClInclude Include="..\Public\Window_Style.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\TestEvent.h" />
     <ClInclude Include="..\Public\TestEventWithActor.h" />
@@ -382,6 +384,7 @@
     <ClInclude Include="..\Public\Window_AnimTool.h" />
     <ClInclude Include="..\Public\Window_EffectTool.h" />
     <ClInclude Include="..\Public\Window_MapTool.h" />
+    <ClInclude Include="..\Public\Window_ShaderTool.h" />
     <ClInclude Include="..\Public\Window_UITool.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -443,10 +446,11 @@
     <ClCompile Include="..\Private\Player_DodgeBlink_L_03.cpp" />
     <ClCompile Include="..\Private\Player_DodgeBlink_R_03.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
+    <ClCompile Include="..\Private\Effect_Void.cpp" />
     <ClCompile Include="..\Private\Effect_Explosion.cpp" />
     <ClCompile Include="..\Private\Effect_Instance.cpp" />
     <ClCompile Include="..\Private\Effect_Particle.cpp" />
-    <ClCompile Include="..\Private\Effect_Texture.cpp" />
+    <ClCompile Include="..\Private\Effect_Rect.cpp" />
     <ClCompile Include="..\Private\Effect_Trail.cpp" />
     <ClCompile Include="..\Private\Environment_Instance.cpp" />
     <ClCompile Include="..\Private\Environment_Interact.cpp" />
@@ -554,6 +558,7 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\SkyDome.cpp" />
     <ClCompile Include="..\Private\SpringCamera.cpp" />
+    <ClCompile Include="..\Private\Window_Style.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\TestEvent.cpp" />
     <ClCompile Include="..\Private\TestEventWithActor.cpp" />
@@ -577,6 +582,7 @@
     <ClCompile Include="..\Private\Window_AnimTool.cpp" />
     <ClCompile Include="..\Private\Window_EffectTool.cpp" />
     <ClCompile Include="..\Private\Window_MapTool.cpp" />
+    <ClCompile Include="..\Private\Window_ShaderTool.cpp" />
     <ClCompile Include="..\Private\Window_UITool.cpp" />
     <ClCompile Include="..\Private\Actor.cpp" />
     <ClCompile Include="Client.cpp" />

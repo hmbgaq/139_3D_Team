@@ -101,12 +101,13 @@ HRESULT CRenderTarget::Render_Debug(CShader * pShader, CVIBuffer * pVIBuffer)
 	return pVIBuffer->Render();
 }
 
+
+#endif
+
 void CRenderTarget::Create_TargetTexture()
 {
 	SaveDDSTextureToFile(m_pContext, m_pTexture2D, TEXT("../Bin/DataFiles/Data_UI/Target_Texture/UITargetTexture.dds"));
 }
-
-#endif
 
 CRenderTarget * CRenderTarget::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, _float4 vClearColor)
 {

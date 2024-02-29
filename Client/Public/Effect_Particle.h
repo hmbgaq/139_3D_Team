@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "Effect.h"
+#include "Effect_Void.h"
 
 BEGIN(Engine)
 class CShader;
@@ -11,52 +11,67 @@ END
 
 BEGIN(Client)
 
-class CEffect_Particle final : public CEffect
+class CEffect_Particle final : public CEffect_Void
 {
 public:
-	enum TYPE { SINGLE, SPRITE, TEXTURE_TYPE_END };
-
-	typedef struct tagParticleDesc : public CGameObject::GAMEOBJECT_DESC
+	typedef struct tagParticleDesc : public CEffect_Void::EFFECTVOID_DESC
 	{
-		TYPE		eType = { SINGLE };
+		CVIBuffer_Particle_Point::TYPE_ACTION	eType_Action = { CVIBuffer_Particle_Point::SPHERE };
+		CVIBuffer_Particle_Point::TYPE_FADE		eType_Fade = { CVIBuffer_Particle_Point::FADE_NONE };
+		EASING_TYPE								eType_ColorLerp = { LINEAR };
 
-		wstring		strTextureTag[TEXTURE_END];
-		_int		iTextureIndex[TEXTURE_END] = { 0 };
+		_bool		bLoop = { TRUE };
+		_bool		bReverse = { FALSE };
+		_bool		bSpriteAnim = { FALSE };
 
-		wstring		strShaderTag = {TEXT("")};
-		_uint		iShaderPassIndex = { 0 };
+		/* 파티클 개수 */
+		_uint		iCurNumInstance = { 100 };
 
-		_int		iRenderGroup = { 7 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 현재 작성기준 CRENDERER::RENDERGROUP::RENDER_END가 8임
+		/* LifeTime */
+		_float2		vMinMaxLifeTime = { 0.5f, 3.0f };
 
-		_uint		iNumInstance = { 0 };
-		_uint		iMaxNumInstance;
+		/* For.Position */
+		_float2		vMinMaxRange = { 0.1f, 3.f };
+		_float2		vMinMaxRangeLength = { 3.f, 3.f };
 
-		_float		fRotateUvDegree;
+		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
 
-	}EFFECT_PARTICLE_DESC;
-	
+		/* For.Speed */
+		_float2		vMinMaxSpeed = { 0.1f, 5.0 };
 
-	typedef struct tagSpriteUV
-	{
-		_float	fTimeAcc = { 0.f };
-		_float	fAddTime = { 0.05f };
+		/* 가속도 */
+		_float		fSpeedAcc = { 2.f };
+		_float		fAccPosition = { 0.1f };
 
-		_float	fAnimationSizeX = { 292.5f };
-		_float	fAnimationSizeY = { 292.5f };
+		/* For.Gravity */
+		_bool		bUseGravity = { FALSE };
+		_float		fGravityAcc = { -9.8 };
+		_float		fUseGravityPosition = { 0.1f };
 
-		_float	fSpriteSizeX = { 2048.f };
-		_float	fSpriteSizeY = { 2048.f };
+		/* For.Rotation */
+		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
+		_float2		vMinMaxRotationOffsetY = { 0.0f, 360.f };
+		_float2		vMinMaxRotationOffsetZ = { 0.0f, 360.f };
+		_float3		vRotationOffset = {0.f, 0.f, 0.f};
 
-		_int	iCurrentVer = { 0 };
-		_int	iCurrentHor = { 0 };
+		_float3     vCurrentRotation = { 0.f, 0.f, 0.f };
+		_float3		vMinMaxRotationForce = { 0.f, 0.f, 0.f };
 
-		_int	iMinVer = { 0 };
-		_int	iMinHor = { 0 };
+		/* For.Scale */
+		_float2     vMinMaxScale = { 0.2f, 0.5f };
+		_float2     vAddScale = { 0.f, 0.f };
+		_float2		vCurrentScale;
 
-		_int	iMaxVer = { 7 };
-		_int	iMaxHor = { 7 };
+		/* For.Color */
+		_float2     vMinMaxRed = { 0.f, 1.f };
+		_float2     vMinMaxGreen = { 0.f, 1.f };
+		_float2     vMinMaxBlue = { 0.f, 1.f };
+		_float2     vMinMaxAlpha = { 0.f, 1.f };
 
-	}SPRITEUV_DESC;
+		_float4     vCurrentColor = { 0.f, 0.f, 0.f, 0.f };
+
+	}PARTICLE_DESC;
+
 
 private:
 	CEffect_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -72,40 +87,40 @@ public:
 	virtual HRESULT Render()							override;
 
 public:
+	virtual void	ReSet_Effect()	override;
+	virtual void	End_Effect()	override;
+
+public:
 	virtual _bool Write_Json(json& Out_Json)		 override;
 	virtual void  Load_FromJson(const json& In_Json) override;
 
+
 	/* For.Desc */
 public:
-	EFFECT_PARTICLE_DESC*	Get_Desc() { return &m_tParticleDesc; }
-	SPRITEUV_DESC*			Get_Sprite_Desc() { return &m_tSpriteDesc; }
-
-	void		Set_Active(_bool bActive) { m_bActive = bActive; }
-
-	void		Set_TextureIndex(TEXTURE eTexture, _int iIndex) { m_tParticleDesc.iTextureIndex[eTexture] = iIndex; }
-
-	void		Set_RotateUvDegree(_float fDegree) { m_tParticleDesc.fRotateUvDegree = fDegree; }
+	PARTICLE_DESC*	Get_Desc() { return &m_tParticleDesc; }
+	void* Get_BufferDesc();
 
 public:
 	CVIBuffer_Particle_Point* Get_VIBufferCom() { return m_pVIBufferCom; }
 
 
 private:
-	EFFECT_PARTICLE_DESC		m_tParticleDesc = {};
-	SPRITEUV_DESC				m_tSpriteDesc = {};
+	HRESULT Ready_Components();
+	HRESULT Bind_ShaderResources();
 
 private:
-	_bool			m_bActive = { TRUE };
+	PARTICLE_DESC				m_tParticleDesc = {};
+	UVSPRITE_DESC				m_tSpriteDesc = {};
+	//CVIBuffer_Particle_Point::PARTICLE_POINT_DESC 
+
+	//CModel*							 m_pModelCom = { nullptr };
+	//CVIBuffer_Effect_Model_Instance* m_pVIBufferCom_Model = { nullptr };
 
 
 private:
 	CShader*					m_pShaderCom = { nullptr };
 	CTexture*					m_pTextureCom[TEXTURE_END] = { nullptr };
 	CVIBuffer_Particle_Point*	m_pVIBufferCom = { nullptr };
-
-private:
-	HRESULT Ready_Components();
-	virtual HRESULT Bind_ShaderResources() override;
 
 
 public:

@@ -23,6 +23,8 @@ public:
 		IMGUI_EFFECTTOOL_WINDOW,
 		IMGUI_UITOOL_WINDOW,
 		IMGUI_BINARY_WINDOW,
+		IMGUI_SHADER_WINDOW,
+		IMGUI_STYLE_WINDOW,
 		IMGUI_WINDOW_END
 	};
 
@@ -46,7 +48,7 @@ public:
 	HRESULT			Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 	void			Tick(_float fTimeDelta);
-		void			MenuTick(_float fTimeDelta);
+	void			MenuTick(_float fTimeDelta);
 
 	void			Render();
 
