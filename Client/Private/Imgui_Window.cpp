@@ -89,7 +89,6 @@ void CImgui_Window::Tick(_float fTimeDelta)
 	Set_GuizmoCamProj();
 	Set_Guizmo(기즈모를 달고싶은 대상 오브젝트를 넣어주세요.);
 	*/
-	ImGuizmo::BeginFrame();
 }
 
 void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
@@ -259,6 +258,11 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 				arrWorld[8],arrWorld[9],arrWorld[10],arrWorld[11],
 				arrWorld[12],arrWorld[13],arrWorld[14],arrWorld[15] };
 		
+
+	if (matrixRotation[0] > 0)
+	{
+		_int i = 0;
+	}
 
 	pGameObject->Get_Transform()->Set_WorldMatrix(matW);
 

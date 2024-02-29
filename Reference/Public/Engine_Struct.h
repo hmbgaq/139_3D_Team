@@ -257,7 +257,7 @@ namespace Engine
 	typedef struct ENGINE_DLL tag_InstanceDesc
 	{
 		_float3         vScale;
-		_float3         vRotation;
+		_float4         vRotation;
 		_float3			vTranslation;
 		_float			fMaxRange;
 		_float3			vCenter;
@@ -267,14 +267,17 @@ namespace Engine
 			_matrix TransformationMatrix;
 			_matrix RotationMatrix, ScaleMatrix;
 
-			_vector vPitchYawRoll;
+			_vector vQuarternion;
 			_vector vPosition;
 
 			
-			vPitchYawRoll = XMLoadFloat3(&vRotation);
+			vQuarternion = XMLoadFloat4(&vRotation);
 			vPosition = XMVectorSetW(XMLoadFloat3(&vTranslation), 1.f);
 
-			RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
+			//vPitchYawRoll = XMQuaternionRotationRollPitchYawFromVector(vPitchYawRoll);
+
+			RotationMatrix = XMMatrixRotationQuaternion(vQuarternion);
+//			RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
 			ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
 			TransformationMatrix = ScaleMatrix * RotationMatrix;
 			TransformationMatrix.r[3] = vPosition;
@@ -288,11 +291,11 @@ namespace Engine
 
 			_vector vTempScale, vTempRotation, vTempTranslation;
 
-			
+		
 			XMMatrixDecompose(&vTempScale, &vTempRotation, &vTempTranslation, matrix);
 
 			XMStoreFloat3(&vScale, vTempScale);
-			XMStoreFloat3(&vRotation, vTempRotation);
+			XMStoreFloat4(&vRotation, vTempRotation);
 			XMStoreFloat3(&vTranslation, vTempTranslation);
 		}
 

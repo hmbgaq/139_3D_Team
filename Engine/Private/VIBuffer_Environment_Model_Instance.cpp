@@ -46,7 +46,7 @@ void CVIBuffer_Environment_Model_Instance::Update(vector<INSTANCE_INFO_DESC>& ve
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
-		_matrix RotationMatrix = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&vecInstanceDesc[i].vRotation));
+		_matrix RotationMatrix = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat4(&vecInstanceDesc[i].vRotation));
 
 		XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[i].vRight, RotationMatrix.r[0] * vecInstanceDesc[i].vScale.x);
 		XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[i].vUp, RotationMatrix.r[1] * vecInstanceDesc[i].vScale.y);
@@ -118,7 +118,7 @@ void CVIBuffer_Environment_Model_Instance::Init_Instance(_int iNumInstance)
 		//XMStoreFloat4(&pModelInstance[i].vUp, WorldMatrix.r[1]);
 		//XMStoreFloat4(&pModelInstance[i].vLook, WorldMatrix.r[2]);
 		//XMStoreFloat4(&pModelInstance[i].vTranslation, WorldMatrix.r[3]);
-		_matrix RotationMatrix = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&m_tInstanceInfo[i].vRotation));
+		_matrix RotationMatrix = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat4(&m_tInstanceInfo[i].vRotation));
 
 		//XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[i].vRight, RotationMatrix.r[0] * vecInstanceDesc[i].vScale.x);
 		//XMStoreFloat4(&((VTXMODELINSTANCE*)SubResource.pData)[i].vUp, RotationMatrix.r[1] * vecInstanceDesc[i].vScale.y);

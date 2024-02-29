@@ -66,9 +66,9 @@ void CEnvironment_Instance::Tick(_float fTimeDelta)
 		{
 			_matrix WorldMatrix = m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix();
 			
-			_float3 vCenter = m_tInstanceDesc.vecInstanceInfoDesc[i].vCenter;
-			
-			WorldMatrix.r[3] -= XMLoadFloat3(&vCenter);
+			//_float3 vCenter = m_tInstanceDesc.vecInstanceInfoDesc[i].vCenter;
+			//
+			//WorldMatrix.r[3] -= XMLoadFloat3(&vCenter);
 			
 			m_vecColliders[i]->Update(WorldMatrix);
 		}
@@ -110,10 +110,6 @@ HRESULT CEnvironment_Instance::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		
-		
-
-		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 
 		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
 
@@ -221,25 +217,18 @@ HRESULT CEnvironment_Instance::Ready_Components()
 			
 			
 			m_pModelCom->Calculate_Sphere_Radius(nullptr, &Test.fRadius);
-			Test.vCenter = Desc.vecBufferInstanceInfo[i].vCenter;
-			Test.vCenter.y = Desc.vecBufferInstanceInfo[i].vCenter.y * 2.f;
-
+			Test.vCenter = {0.f, 0.f, 0.f};
 			Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
-			//CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
-			//
-			////Desc_AABB.vCenter = Desc.vecBufferInstanceInfo[i].vCenter;
-			////Desc_AABB.vCenter.y = Desc_AABB.vCenter.y + -Desc_AABB.vExtents.y * 0.5f;
-			//Desc_AABB.vCenter = Desc.vecBufferInstanceInfo[i].vCenter;
-			//Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
-			//Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
-			
-			wstring strColliderComTag = L"Com_Collider" + i;
 
+			wstring strColliderComTag = L"Com_Collider" + i;
+			
 			if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Test)))
 			{
 				MSG_BOX("¤¸´ï");
 				return E_FAIL;
 			}
+			
+
 
 			//wstring strColliderComTag = L"Com_Collider" + i;
 			//

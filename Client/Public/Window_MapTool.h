@@ -88,7 +88,9 @@ void			MouseInfo_Window(_float fTimeDelta);
 	//!For.Character
 	void			Select_CharacterModeType();
 	
+	//!For. Public
 	void			Create_Tab(TAP_TYPE eTabType);
+	void			Delete_Tab(TAP_TYPE eTabType);
 
 	
 private: //! For. Create_Function
@@ -228,8 +230,10 @@ private: //! For. CreateInstance
 	_uint							m_iSelectEnvironmentIndex = 0;
 
 	_int							m_iCreatePreviewIndex = 0;
+	_int							m_iSelectPreviewIndex = 0;
 	vector<CEnvironment_Instance*>	m_vecCreateInstance = {};
 	vector<CEnvironment_Object*>	m_vecPreViewInstance = {}; //! 인스턴싱 디스크립션 만들기 위해.
+	vector<string>					m_vecPreViewInstanceTag = {};
 	
 	map<string, vector<CEnvironment_Object*>> m_mapPreviewInstance; //! 선택한 모델태그마다 각기 다른 벡터에 저장해서 생성하게하자.
 
