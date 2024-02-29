@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include "PhysXCharacterController.h"
 
+
 CCharacter::CCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
@@ -164,6 +165,65 @@ HRESULT CCharacter::Add_Weapon(const wstring& strPrototypeTag, string strBoneNam
 	m_Weapons.push_back(pWeapon);
 	Safe_AddRef(pWeapon);
 
+	return S_OK;
+}
+
+void CCharacter::Set_EventNotify(string strPath, string JsonFileName)
+{
+	/*string strPath = "../Bin/DataFiles/Data_Animation/";*/
+	LoadAnimJson(strPath, JsonFileName);
+}
+
+HRESULT CCharacter::LoadAnimJson(string strPath, string strFileName)
+{
+	json LoadJson = {};
+
+	string strFullPath = strPath + "/" + strFileName;
+
+	if (FAILED(CJson_Utility::Load_Json(strFullPath.c_str(), LoadJson)))
+	{
+		MSG_BOX("애니메이션툴 로드 실패");
+		return E_FAIL;
+	}
+
+	json BodyJson = LoadJson["Body"];
+	json WeaponJson = LoadJson["Weapon"];
+	json EffectJson = LoadJson["Effect"];
+	
+	CharAnimDesc.Body = LoadJson["Body"];
+	CharAnimDesc.BoneName = WeaponJson["BoneName"];
+	CharAnimDesc.AnimationIndex = BodyJson["AnimIndex"];
+	CharAnimDesc.Duration = BodyJson["AnimDuration"];
+	CharAnimDesc.EventTrackposition = BodyJson["CurrentTrackPosition"];
+	CharAnimDesc.AnimationSpeed = BodyJson["AnimationSpeed"];
+	CharAnimDesc.BoneIndex = BodyJson["BoneIndex"];
+	CharAnimDesc.ColliderSize = BodyJson["ColliderSize"];
+	CharAnimDesc.ColliderTrackPositionOff = BodyJson["ColliderTrackPositionOff"];
+	CharAnimDesc.ColliderTrackPositionOn = BodyJson["ColliderTrackPositionOn"];
+	//Weapon
+
+	if (WeaponJson != nullptr)
+	{
+		CharAnimDesc.EventWeaponTrackPosition = BodyJson["CurrentTrackPosition"];
+		CharAnimDesc.ColliderWeaponSize = WeaponJson["WeaponColliderSize"];
+		CharAnimDesc.ColliderWeaponTrackPositionOn = WeaponJson["WeaponColliderTrackPositionOn"];
+		CharAnimDesc.ColliderWeaponTrackPositionOff= WeaponJson["WeaponColliderTrackPositionOff"];
+
+		CJson_Utility::Load_Float3(WeaponJson["GuizmoTranslation"], CharAnimDesc.GuizmoTranslatrion);
+		CJson_Utility::Load_Float3(WeaponJson["GuizmoRotation"], CharAnimDesc.GuizmoRotation);
+		CJson_Utility::Load_Float3(WeaponJson["GuizmoScale"], CharAnimDesc.GuizmoScale);
+	}
+	//Effect
+	{
+		CharAnimDesc.EffectFileName = EffectJson["EffectFileName"];
+		CJson_Utility::Load_Float3(EffectJson["EffectPosition"], CharAnimDesc.EffectPosition);
+		CharAnimDesc.EffectOnTrackPosition = EffectJson["EffectTrackPosition"];
+	}
+
+	string	EffectFileName = "";
+	_float	EffectOnTrackPosition = { 0.f };
+	_float3	EffectPosition = {};
+	
 	return S_OK;
 }
 

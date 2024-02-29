@@ -522,7 +522,9 @@ void CPhysXCollider::Init_ModelInstanceCollider(CMyAIScene* pModelData, const ve
 {
 	if (nullptr == pModelData)
 	{
-		//DEBUG_ASSERT;
+#ifdef _DEBUG
+		DEBUG_ASSERT;
+#endif
 	}
 
 	for (_uint i = 0; i < pModelData->Get_NumMeshes(); ++i)

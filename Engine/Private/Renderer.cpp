@@ -44,10 +44,10 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_CascadeShadow());
 #endif
 
-	m_tHBAO_Option.bHBAO_Active = m_bSSAO_Active;
-	m_tFog_Option.bFog_Active = m_bFog_Active;
-	m_tHDR_Option.bHDR_Active = m_bHDR_Active;
-	m_tScreen_Option.bFXAA_Active = m_bFXAA_Active;
+	m_tHBAO_Option.bHBAO_Active = false; //m_bSSAO_Active;
+	m_tFog_Option.bFog_Active = false; //m_bFog_Active;
+	m_tHDR_Option.bHDR_Active = false; //m_bHDR_Active;
+	m_tScreen_Option.bFXAA_Active = false;//m_bFXAA_Active;
 
 	return S_OK;
 }
@@ -297,6 +297,45 @@ HRESULT CRenderer::Create_DepthStencil()
 	return S_OK;
 }
 
+#ifdef DEBUG
+HRESULT CRenderer::Ready_CascadeShadow()
+{
+	D3D11_VIEWPORT		ViewportDesc;
+
+	_uint				iNumViewports = 1;
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	//ShadowDepth
+	for (_uint i = 0; i < 3; ++i)
+	{
+		ID3D11Texture2D* pDepthStencilTexture = nullptr;
+
+		D3D11_TEXTURE2D_DESC	TextureDesc;
+		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+		TextureDesc.Width = g_iWinsizeX;
+		TextureDesc.Height = g_iWinsizeY;
+		TextureDesc.MipLevels = 1;
+		TextureDesc.ArraySize = 1;
+		TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		TextureDesc.SampleDesc.Quality = 0;
+		TextureDesc.SampleDesc.Count = 1;
+
+		TextureDesc.Usage = D3D11_USAGE_DEFAULT;
+		TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL/*| D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE*/;
+		TextureDesc.CPUAccessFlags = 0;
+		TextureDesc.MiscFlags = 0;
+
+		FAILED_CHECK(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture));
+
+		FAILED_CHECK(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pCascadeShadowDSV[i]));
+	}
+
+	return S_OK;
+}
+#endif
+
 #ifdef _DEBUG
 
 HRESULT CRenderer::Ready_DebugRender()
@@ -341,42 +380,7 @@ HRESULT CRenderer::Ready_DebugRender()
 	return S_OK;
 }
 
-HRESULT CRenderer::Ready_CascadeShadow()
-{
-	D3D11_VIEWPORT		ViewportDesc;
 
-	_uint				iNumViewports = 1;
-	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
-
-	//ShadowDepth
-	for (_uint i = 0; i < 3; ++i)
-	{
-		ID3D11Texture2D* pDepthStencilTexture = nullptr;
-
-		D3D11_TEXTURE2D_DESC	TextureDesc;
-		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
-
-		TextureDesc.Width = g_iWinsizeX;
-		TextureDesc.Height = g_iWinsizeY;
-		TextureDesc.MipLevels = 1;
-		TextureDesc.ArraySize = 1;
-		TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-		TextureDesc.SampleDesc.Quality = 0;
-		TextureDesc.SampleDesc.Count = 1;
-
-		TextureDesc.Usage = D3D11_USAGE_DEFAULT;
-		TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL/*| D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE*/;
-		TextureDesc.CPUAccessFlags = 0;
-		TextureDesc.MiscFlags = 0;
-
-		FAILED_CHECK(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture));
-
-		FAILED_CHECK(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pCascadeShadowDSV[i]));
-	}
-
-	return S_OK;
-}
 
 HRESULT CRenderer::Control_HotKey()
 {
@@ -474,29 +478,29 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_Deferred());
 
 	/* ★ PostProcessing ★*/
-	FAILED_CHECK(Render_RadialBlur());
-
-	FAILED_CHECK(Render_SSR());
-
-	FAILED_CHECK(Render_HDR()); /* HDR - 톤맵핑 */
-
-	FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
-
-	/* Effect */
-	FAILED_CHECK(Render_Effect()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
-
-	FAILED_CHECK(Render_Effect_Deferred()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
-
-	/* 최종 합성 */
-	FAILED_CHECK(Render_Final());
-
-	FAILED_CHECK(Render_NonLight());
-
-	FAILED_CHECK(Render_UI()); /* 디버그에서 렌더타겟 한장으로 그린거 콜하는 그룹 여기 */
-
-	//FAILED_CHECK(Render_UI_EFFECT()); /* 그외 변하거나 이미지에 효과가 들어가야하는 UI 렌더그룹이 속하는곳 */
-
-	FAILED_CHECK(Render_Blend());  
+// 	FAILED_CHECK(Render_RadialBlur());
+// 
+// 	FAILED_CHECK(Render_SSR());
+// 
+// 	FAILED_CHECK(Render_HDR()); /* HDR - 톤맵핑 */
+// 
+// 	FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
+// 
+// 	/* Effect */
+ 	FAILED_CHECK(Render_Effect()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
+// 
+// 	FAILED_CHECK(Render_Effect_Deferred()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
+// 
+// 	/* 최종 합성 */
+// 	FAILED_CHECK(Render_Final());
+// 
+// 	FAILED_CHECK(Render_NonLight());
+// 
+// 	FAILED_CHECK(Render_UI()); /* 디버그에서 렌더타겟 한장으로 그린거 콜하는 그룹 여기 */
+// 
+// 	//FAILED_CHECK(Render_UI_EFFECT()); /* 그외 변하거나 이미지에 효과가 들어가야하는 UI 렌더그룹이 속하는곳 */
+// 
+// 	FAILED_CHECK(Render_Blend());  
 
 	
 	/* ------------------------ */
@@ -880,7 +884,7 @@ HRESULT CRenderer::Render_LightAcc()
 
 HRESULT CRenderer::Render_Deferred()
 {
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_PrePostProcessScene")));
+	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_PrePostProcessScene")));
 
 	/* 디퍼드에 의한 최종장면 */
 	FAILED_CHECK(m_pShader[SHADER_TYPE::SHADER_DEFERRED]->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
@@ -938,17 +942,18 @@ HRESULT CRenderer::Render_Deferred()
 
 	m_pVIBuffer->Render();
 
-	FAILED_CHECK(m_pGameInstance->End_MRT());
+	//FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
 
+
 HRESULT CRenderer::Render_Cascade_Shadow()
 {
-	/* Directional Light 로 그림자 맵핑을 하지만 장면이 커지게될경우 장면을 모두 담가 힘듬 + 똑같은 그림자가 만들어져야 하므로 고정적인 광원의 위치를 가지면 안된다. 
-	 현재 시야에 보이는 장면에 그림자를 만들기위해 단계를 나누어서 그림자맵을 만든다. + 그림자맵을 나누는 기준은 시야절두체가 되며 나눠진 시야절두체 안에 들어오는 오브젝트에 대해서만 그림자맵을 만든다. 
+	/* Directional Light 로 그림자 맵핑을 하지만 장면이 커지게될경우 장면을 모두 담가 힘듬 + 똑같은 그림자가 만들어져야 하므로 고정적인 광원의 위치를 가지면 안된다.
+	 현재 시야에 보이는 장면에 그림자를 만들기위해 단계를 나누어서 그림자맵을 만든다. + 그림자맵을 나누는 기준은 시야절두체가 되며 나눠진 시야절두체 안에 들어오는 오브젝트에 대해서만 그림자맵을 만든다.
 	 -> 가까운거리에있는 물체에대한 그림자맵은 높은 정확도를 보여주게된다.*/
-	// Viewport -> RSSet -> OM DepthStencilSet -> Clear -> Matrix Tick -> Shader bind 
+	 // Viewport -> RSSet -> OM DepthStencilSet -> Clear -> Matrix Tick -> Shader bind 
 
 	for (_uint i = 0; i < MAX_CASCADES; ++i)
 	{
@@ -972,6 +977,8 @@ HRESULT CRenderer::Render_Cascade_Shadow()
 
 	return S_OK;
 }
+
+
 
 HRESULT CRenderer::Render_Decal()
 {
@@ -1205,7 +1212,7 @@ HRESULT CRenderer::Render_SSR()
 
 HRESULT CRenderer::Render_Effect()
 {
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Effect")));
+	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Effect")));
 
 	/* CEffect_Void - CAlphaObject 자식클래스 확인 */
 	m_RenderObjects[RENDER_EFFECT].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
@@ -1223,7 +1230,7 @@ HRESULT CRenderer::Render_Effect()
 
 	m_RenderObjects[RENDER_EFFECT].clear();
 
-	FAILED_CHECK(m_pGameInstance->End_MRT());
+	//FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }

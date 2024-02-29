@@ -51,10 +51,10 @@ void CAssassin::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pActor)
-	{
-		m_pActor->Update_State(fTimeDelta);
-	}
+	//if (m_pActor)
+	//{
+	//	m_pActor->Update_State(fTimeDelta);
+	//}
 
 }
 
