@@ -19,5 +19,5 @@ void CInfected_State_Spawn::Release(CInfected* pActor)
 
 CState<CInfected>* CInfected_State_Spawn::Update_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	return Normal_State(pActor, fTimeDelta, _iAnimIndex);
+	return Spawn_State(pActor, fTimeDelta, _iAnimIndex);
 }
