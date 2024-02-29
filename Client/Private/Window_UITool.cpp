@@ -209,10 +209,22 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 		{
 			if (ImGui::BeginTabItem("UI_Anim"))
 			{
+				//PlayAnimation(fTimeDelta);
+				//AnimationTimeLineBar();
 				KeyframeAutomaticGeneration();
 				KeyframeRender_ValueChange();
 				ImGui::EndTabItem();
 			}
+			ImGui::EndTabBar();
+		}
+		__super::End();
+
+		SetUp_ImGuiDESC("UI_TimeLine", { 1000.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+		__super::Begin();
+		if (ImGui::BeginTabBar("TimeLineTab", m_Tab_bar_flags))
+		{
+			PlayAnimation(fTimeDelta);
+			AnimationTimeLineBar();
 			ImGui::EndTabBar();
 		}
 		__super::End();
@@ -1910,13 +1922,13 @@ void CWindow_UITool::KeyframeRender_ValueChange()
 
 // 최소, 최대 값 및 크기, 회전, 이동 값을 기반으로 선형 보간된 키프레임을 자동으로 생성하는 함수
 void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
-	std::vector<CUI::UIKEYFRAME>& Timeline, float minTime, float maxTime,
+	_float minTime, _float maxTime,
 	_float minValue, _float maxValue,
 	_float2 minScaleValue, _float2 maxScaleValue,
 	_float minRotationValue, _float maxRotationValue,
 	_float2 minTranslationValue, _float2 maxTranslationValue,
 	_float _minTexture, _float _maxTexture,
-	int numKeyframes)
+	_int numKeyframes)
 {
 	if (numKeyframes < 2) {
 		// 최소 2개 이상의 키프레임이 필요합니다.
@@ -1937,7 +1949,7 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 	firstKeyframe.vPos = minTranslationValue;
 	firstKeyframe.iTexureframe = _minTexture;
 
-	Timeline.push_back(firstKeyframe);
+	timeline[m_eUIType].push_back(firstKeyframe);
 
 	CUI::UIKEYFRAME lastKeyframe;
 
@@ -1949,7 +1961,7 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 	lastKeyframe.vPos = maxTranslationValue;
 	lastKeyframe.iTexureframe = _maxTexture;
 
-	Timeline.push_back(lastKeyframe);
+	timeline[m_eUIType].push_back(lastKeyframe);
 
 
 	int num_decimal_places = 2; // 소수점 단위 설정
@@ -2021,11 +2033,11 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 		}
 
 		// 기존 timeline 벡터에 키프레임을 이어서 추가
-		Timeline.emplace_back(keyframe);
+		timeline[m_eUIType].emplace_back(keyframe);
 	}
 
 	// 시간에 따라 키프레임 정렬
-	std::sort(Timeline.begin(), Timeline.end(), [](const CUI::UIKEYFRAME& a, const CUI::UIKEYFRAME& b) 
+	std::sort(timeline[m_eUIType].begin(), timeline[m_eUIType].end(), [](const CUI::UIKEYFRAME& a, const CUI::UIKEYFRAME& b)
 		{
 			return a.fTime < b.fTime;
 		});
@@ -2105,7 +2117,7 @@ void CWindow_UITool::KeyframeAutomaticGeneration()
 		_float2 fminPos = { minPos[0], minPos[1] };
 		_float2 fmaxPos = { maxPos[0], maxPos[1] };
 
-		CreateKeyframesWithLinearInterpolation(timeline[m_eUIType],
+		CreateKeyframesWithLinearInterpolation(
 			_v2Time[0], _v2Time[1],
 			_v2Value[0], _v2Value[1],
 			fminScale, fmaxScale,
@@ -2119,6 +2131,43 @@ void CWindow_UITool::KeyframeAutomaticGeneration()
 	{
 		// 버튼이 클릭되면 timeline 벡터를 비우고 CreateKeyframesWithLinearInterpolation 함수 호출
 		timeline[m_eUIType].clear();
+	}
+}
+
+void CWindow_UITool::PlayAnimation(_float fTimeDelta)
+{
+	// 애니메이션 재생/일시 정지 버튼
+	if (m_isPlayAnim) 
+	{
+		if (ImGui::Button(u8"정지"))
+		{
+			m_isPlayAnim = false;
+		}
+	}
+	else 
+	{
+		if (ImGui::Button(u8"재생"))
+		{
+			m_isPlayAnim = true;
+		}
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button(u8"초기화"))
+	{
+		m_fPlayTime = 0.0f;
+	}
+
+	// 애니메이션 시간 설정
+	if (m_isPlayAnim)
+	{
+		m_fPlayTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
+		if (m_fPlayTime > MaxTime) // 현재 시간이 최대 시간 값 보다 클 경우
+		{
+			m_fPlayTime = MaxTime; // 현재 시간을 최대 시간 값으로 고정
+			m_isPlayAnim = false;  // 플레이 중지
+		}
 	}
 }
 
@@ -2166,11 +2215,12 @@ void CWindow_UITool::AnimationTimeLineBar()
 		float relativeStartTimeXPos = timelinePos.x;    //애니메이션 타임 라인 그래프의 시작
 		float relativeEndTimeXPos = timelinePos.x + timelineSize.x; // 애니메이션 타임 라인 그래프의 끝
 
-		// 그래프 데이터 배열을 현재 시간에 맞게 업데이트
-		for (int n = 0; n < 100; n++) {
-			float time = n / 100.0f * MaxTime;
-			m_fFrame[n] = EvaluateAnimationAtTime(time);
-		}
+		//// 그래프 데이터 배열을 현재 시간에 맞게 업데이트
+		//for (int n = 0; n < 100; n++) 
+		//{
+		//	float time = n / 100.0f * MaxTime;
+		//	m_fFrame[n] = EvaluateAnimationAtTime(time);
+		//}
 
 		// 현재 시간을 최대 시간 범위 내로 클램핑
 		currentTime = ImClamp(currentTime, 0.0f, MaxTime);
@@ -2293,23 +2343,47 @@ _float CWindow_UITool::ImEaseOutQuad(float start, float end, float t)
 
 HRESULT CWindow_UITool::Save_Function(string strPath, string strFileName)
 {
-	if (m_vecChildObject.empty())
-		return E_FAIL;
-
 	_ushort iIndex = 0;
 
 	strPath = strPath + "\\" + strFileName;
 
 	json Out_Json;
 
-	for (auto& UI : m_vecChildObject)
+	if (!m_vecParentObject.empty())
 	{
-		json Out_Object;
+		for (auto& Parent : m_vecParentObject)
+		{
+			json Out_Object;
 
-		dynamic_cast<CUI_Anything*>(UI)->Save_Desc(Out_Object);
-		Out_Json.emplace(to_string(iIndex++), Out_Object);
+			dynamic_cast<CUI*>(Parent)->Save_Desc(Out_Object);
+			Out_Json.emplace(to_string(iIndex++), Out_Object);
+		}
 	}
 
+	if (m_vecParentGroup != nullptr)
+	{
+		if (!m_vecParentGroup->empty())
+		{
+			for (auto& Group : m_vecParentObject)
+			{
+				json Out_Object;
+
+				dynamic_cast<CUI*>(Group)->Save_Desc(Out_Object);
+				Out_Json.emplace(to_string(iIndex++), Out_Object);
+			}
+		}
+	}
+
+	if (!m_vecChildObject.empty())
+	{
+		for (auto& Child : m_vecChildObject)
+		{
+			json Out_Object;
+
+			dynamic_cast<CUI*>(Child)->Save_Desc(Out_Object);
+			Out_Json.emplace(to_string(iIndex++), Out_Object);
+		}
+	}
 	CJson_Utility::Save_Json(ConverWStringtoC(ConvertToWideString(strPath)), Out_Json);
 
 	return S_OK;
@@ -2319,9 +2393,13 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 {
 	json json_in;
 
-	strPath = strPath + "\\" + strFileName;
+	char filePath[MAX_PATH];
 
-	CJson_Utility::Load_Json(ConverWStringtoC(ConvertToWideString(strPath)), json_in);
+	string strFile;
+
+	strFile = strPath + "\\" + strFileName;
+	
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
 
 	for (auto& item : json_in.items())
 	{
@@ -2330,17 +2408,22 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.fAlpha = object["Alpha"];					// 1. Alpha
-		tUI_Info.iShaderNum = object["ShaderNum"];			// 2. ShaderPathNum
-		tUI_Info.strLayerTag = object["LayerTag"];			// 3. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];			// 4. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];			// 5. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];			// 6. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];// 7. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];		// 8. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];		// 9. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];		// 10. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];		// 11. A
+		tUI_Info.bParent = object["Parent"];					// 1. Parent
+		tUI_Info.bWorld = object["World"];						// 2. World
+		tUI_Info.bGroup = object["Group"];						// 3. Group
+		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 		wstring wstrLayer;
 		m_pGameInstance->String_To_WString(m_strLayer[m_iCurrLayerNum], wstrLayer);
@@ -2362,7 +2445,7 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 		if (pUI_Object == nullptr)
 			return E_FAIL;
 
-		pUI_Object->Get_Transform()->Load_FromJson(object); // 12. TransformCom
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
 
 		if (tUI_Info.bParent == true)
 		{
@@ -2372,7 +2455,6 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 		{
 			Add_ChildList(tUI_Info);
 		}
-
 	}
 
 	return S_OK;

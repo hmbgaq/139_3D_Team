@@ -214,21 +214,24 @@ public:
 	void						KeyframeRender_ValueChange();
 	// 키프레임 자동 생성 함수(선형 보간)
 	void CreateKeyframesWithLinearInterpolation(
-		std::vector<CUI::UIKEYFRAME>& Timeline, float minTime, float maxTime,
+		_float minTime, _float maxTime,
 		_float minValue, _float maxValue,
 		_float2 minScaleValue, _float2 maxScaleValue,
 		_float minRotationValue, _float maxRotationValue,
 		_float2 minTranslationValue, _float2 maxTranslationValue,
 		_float _minTexture, _float _maxTexture,
-		int numKeyframes);
+		_int numKeyframes);
 	// 키프레임 자동생성 세팅 함수
 	void KeyframeAutomaticGeneration();
-	
+#pragma region PlayAnim
+	void PlayAnimation(_float fTimeDelta);
+	_bool	m_isPlayAnim = false;
+	_float  m_fPlayTime = 0.f;
 #pragma region TimeLineBar
-	void AnimationTimeLineBar();				// 애니메이션 타임라임 바
-	_float EvaluateAnimationAtTime(float time);	// 애니메이션에 따른 현재 시간 계산
-	_float m_fFrame[100];						// 시간
-	_float m_fPlaybackSpeed = 1.0f;				// 재생 속도
+	void	AnimationTimeLineBar();					// 애니메이션 타임라임 바
+	_float	EvaluateAnimationAtTime(float time);	// 애니메이션에 따른 현재 시간 계산
+	_float	m_fFrame[100];							// 시간
+	_float	m_fPlaybackSpeed = 1.0f;				// 재생 속도
 #pragma endregion
 	// _vec3 선형 보간 함수
 	_float2						Lerp_float2(const _float2& a, const _float2& b, float t);
@@ -329,7 +332,7 @@ private: /* 2D */
 
 private: /* enum */
 	UITYPE						m_eUIType;
-	TOOLSTATE					m_eToolType;
+	TOOLSTATE					m_eToolType = TOOL_UI;
 
 private: /* Value */
 	_float						m_fChangeValue = 0.1f;

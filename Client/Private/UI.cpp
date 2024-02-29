@@ -511,9 +511,29 @@ void CUI::Load_UIData(const char* _FilePath)
 
 json CUI::Save_Desc(json& out_json)
 {
+	out_json["Parent"] = m_tUIInfo.bParent;
+
+	out_json["World"] = m_tUIInfo.bWorld;
+	
+	out_json["Group"] = m_tUIInfo.bGroup;
+
+	//out_json["ScaleX"] = m_tUIInfo.fScaleX;
+
+	//out_json["ScaleY"] = m_tUIInfo.fScaleY;
+
+	//out_json["PositionX"] = m_tUIInfo.fPositionX;
+
+	//out_json["PositionY"] = m_tUIInfo.fPositionY;
+
+	//out_json["PositionZ"] = m_tUIInfo.fPositionZ;
+
 	out_json["Alpha"] = m_tUIInfo.fAlpha;
 
+	out_json["ObjectNum"] = m_tUIInfo.iObjectNum;
+
 	out_json["ShaderNum"] = m_tUIInfo.iShaderNum;
+
+	out_json["ObjectName"] = m_tUIInfo.strObjectName;
 
 	out_json["LayerTag"] = m_tUIInfo.strLayerTag;
 
@@ -530,13 +550,28 @@ json CUI::Save_Desc(json& out_json)
 	out_json["ColorB"] = m_tUIInfo.vColor.m128_f32[2];
 	out_json["ColorA"] = m_tUIInfo.vColor.m128_f32[3];
 
+	/* TransformCom */
 	m_pTransformCom->Write_Json(out_json);
+
+	///* Group Save */
+	//if (!m_vecUIParts.empty())
+	//{
+	//	_int iSize = m_vecUIParts.size();
+
+	//	for (_int i = 0; i < iSize; ++i)
+	//	{
+
+	//	}
+	//}
 
 	return out_json;
 }
 
 void CUI::Play_Animation()
 {
+	if (m_vecAnimation[m_eKeyframe] == nullptr)
+		return;
+
 	// 비었는지 검사
 	if (!m_vecAnimation[m_eKeyframe]->empty())
 	{

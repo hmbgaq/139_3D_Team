@@ -60,7 +60,7 @@ public:
 	{
 		_bool		bParent = false;
 		_bool		bWorld = false;
-
+		_bool		bGroup = false;
 
 		_float		fOrigin_ScaleX = 100.f;
 		_float		fOrigin_ScaleY = 100.f;
@@ -103,9 +103,12 @@ public:
 			fPositionZ
 			=투명도 조절=
 			fAlpha
+			=오브젝트 넘버=
+			iObjectNum
 			=셰이더 패스 선택=
 			iShaderNum
 			=테그 값=
+			strObjectName
 			strLayerTag
 			strCloneTag
 			strProtoTag
@@ -231,7 +234,7 @@ public: /* =========================== Save/Load ============================== 
 public: /* =========================== Animation ============================== */
 	void		Play_Animation();
 	// 애니메이션 값
-	std::vector<UIKEYFRAME>* m_vecAnimation[KEYTYPE_END];
+	std::vector<UIKEYFRAME>* m_vecAnimation[KEYTYPE_END] = {};
 	KEYTYPE				m_eKeyframe = KEYTYPE_NORMAL;
 	_int				m_iTextureNum[KEYTYPE_END];
 

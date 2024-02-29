@@ -183,24 +183,27 @@ _bool CUI_Anything::In_Frustum()
 
 json CUI_Anything::Save_Desc(json& out_json)
 {
-	_float fSizeX = 0.f;
-	_float fSizeY = 0.f;
-	_float fPositionX = 0.f;
-	_float fPositionY = 0.f;
+	// Save error : 저장을 상위 부모에서 바꿨는데 이 클래스에는 적용안했음.
+	__super::Save_Desc(out_json);
 
-	_float fCurPosX = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
-	_float fCurPosY = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
+	//_float fSizeX = 0.f;
+	//_float fSizeY = 0.f;
+	//_float fPositionX = 0.f;
+	//_float fPositionY = 0.f;
 
-	fCurPosX = fCurPosX + (_float)g_iWinSizeX * 0.5f;
-	fCurPosY = (_float)g_iWinSizeY * 0.5f - fCurPosY;
+	//_float fCurPosX = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
+	//_float fCurPosY = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
 
-	out_json["CloneTag"] = m_tUIInfo.strCloneTag;
+	//fCurPosX = fCurPosX + (_float)g_iWinSizeX * 0.5f;
+	//fCurPosY = (_float)g_iWinSizeY * 0.5f - fCurPosY;
 
-	out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
+	//out_json["CloneTag"] = m_tUIInfo.strCloneTag;
 
-	out_json["FilePath"] = m_tUIInfo.strFilePath;
+	//out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
 
-	m_pTransformCom->Write_Json(out_json);
+	//out_json["FilePath"] = m_tUIInfo.strFilePath;
+
+	//m_pTransformCom->Write_Json(out_json);
 
 	return out_json;
 }

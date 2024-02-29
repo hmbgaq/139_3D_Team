@@ -177,26 +177,28 @@ _bool CUI_Player_Left_Interface::In_Frustum()
 
 json CUI_Player_Left_Interface::Save_Desc(json& out_json)
 {
-	json Out_Json;
-	_ushort iIndex = 1; // 본체 한번 했으니 1부터 시작
+	__super::Save_Desc(out_json);
 
-#pragma region 본체 한번 저장
-	json This_Object;
-	__super::Save_Desc(This_Object);
-	Out_Json.emplace(to_string(0), This_Object);
-#pragma endregion
-
-#pragma region 파츠들 저장
-	for (auto& UI : m_vecUIParts)
-	{
-		json Object;
-
-		dynamic_cast<CUI*>(UI)->Save_Desc(Object);
-		Out_Json.emplace(to_string(iIndex++), Object);
-	}
-#pragma endregion
-	
-	CJson_Utility::Save_Json("../Bin/DataFiles/Data_UI/UI_Player_Left_Interface.json", Out_Json);
+//	json Out_Json;
+//	_ushort iIndex = 1; // 본체 한번 했으니 1부터 시작
+//
+//#pragma region 본체 한번 저장
+//	json This_Object;
+//	__super::Save_Desc(This_Object);
+//	Out_Json.emplace(to_string(0), This_Object);
+//#pragma endregion
+//
+//#pragma region 파츠들 저장
+//	for (auto& UI : m_vecUIParts)
+//	{
+//		json Object;
+//
+//		dynamic_cast<CUI*>(UI)->Save_Desc(Object);
+//		Out_Json.emplace(to_string(iIndex++), Object);
+//	}
+//#pragma endregion
+//	
+//	CJson_Utility::Save_Json("../Bin/DataFiles/Data_UI/UI_Player_Left_Interface.json", Out_Json);
 
 	return out_json;
 }
