@@ -1486,8 +1486,9 @@ void CWindow_EffectTool::Update_EffectList()
 		if (ImGui::Button(" Add Mesh "))
 		{
 			//Add_Part_Mesh(TEXT("Prototype_Component_Model_Xray_ManHeavy"));
-			Add_Part_Mesh(TEXT("Prototype_Component_Model_splineMesh_tornado"));
+			//Add_Part_Mesh(TEXT("Prototype_Component_Model_splineMesh_tornado"));
 			//Add_Part_Mesh(TEXT("Prototype_Component_Model_ShieldDome"));
+			Add_Part_Mesh(TEXT("Prototype_Component_Model_Particle_Test"));
 		}
 		ImGui::SameLine();
 		if (ImGui::Button(" Add Trail "))
@@ -2064,7 +2065,7 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tMeshDesc.fSpeedPerSec = { 5.f };
 		tMeshDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
-		tMeshDesc.eType_Mesh = CEffect_Instance::FLAT;
+		tMeshDesc.eType_Mesh = CEffect_Instance::MESH_PARTICLE;
 		tMeshDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 		tMeshDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 11 };
 
@@ -2411,7 +2412,6 @@ void CWindow_EffectTool::Update_SaveLoad()
 				m_strDialogPath = "../Bin/DataFiles/Data_Effect/";
 
 				OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
-
 
 			}
 			if (ImGui::MenuItem("Load"))

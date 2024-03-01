@@ -97,6 +97,10 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 				}
 			}
 
+			if (m_tInstanceDesc.bRender)
+			{
+				m_pVIBufferCom->Update(fTimeDelta);
+			}
 		}
 	}
 
@@ -109,10 +113,18 @@ void CEffect_Instance::Late_Tick(_float fTimeDelta)
 	{
 		if (m_tInstanceDesc.bRender)
 		{
+			if (nullptr != m_pOwner)
+			{
+				if (m_tInstanceDesc.bParentPivot)
+				{
+					m_tInstanceDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+					XMStoreFloat4x4(&m_tInstanceDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tInstanceDesc.matPivot);
+				}
+			}
 			//Compute_CamDistance();
 
-			if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tInstanceDesc.iRenderGroup, this)))
-				return;
+			//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_EFFECT, this));
+			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tInstanceDesc.iRenderGroup, this));
 		}
 	}
 }
@@ -126,12 +138,11 @@ HRESULT CEffect_Instance::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		if(FIGURE == m_tInstanceDesc.eType_Mesh)
+		if(FALSE == m_tInstanceDesc.bUseCustomTex)
 			m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 
 		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		//Prototype_Component_Texture_Effect_Sprite
+
 
 		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
 		m_pVIBufferCom->Render((_uint)i);
@@ -148,6 +159,7 @@ void CEffect_Instance::ReSet_Effect()
 	m_tInstanceDesc.bDissolve = FALSE;
 	m_tInstanceDesc.bRender = FALSE;
 
+	m_pVIBufferCom->ReSet();
 }
 
 void CEffect_Instance::End_Effect()
@@ -160,11 +172,130 @@ void CEffect_Instance::End_Effect()
 	}
 }
 
+void* CEffect_Instance::Get_BufferDesc()
+{
+	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferDesc = {};
+
+	tBufferDesc.pModel = m_pModelCom;
+	tBufferDesc.iCurNumInstance = m_tInstanceDesc.iCurNumInstance;
+
+
+
+	return &tBufferDesc;
+}
+
 _bool CEffect_Instance::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
 
+	/* Effect_Void */
+	Out_Json["eType_Effect"] = m_eType_Effect;
 
+	Out_Json["strProtoTag"] = m_pGameInstance->Convert_WString_To_String(m_tInstanceDesc.strProtoTag);
+	Out_Json["strPartTag"] = m_pGameInstance->Convert_WString_To_String(m_tInstanceDesc.strPartTag);
+
+	Out_Json["m_fWaitingAcc"] = m_fWaitingAcc;
+	Out_Json["m_fRemainAcc"] = m_fRemainAcc;
+	Out_Json["m_fSequenceAcc"] = m_fSequenceAcc;
+
+	Out_Json["m_fLifeTimeRatio"] = m_fLifeTimeRatio;
+
+	Out_Json["m_fWaitingTime"] = m_fWaitingTime;
+	Out_Json["m_fLifeTime"] = m_fLifeTime;
+	Out_Json["m_fRemainTime"] = m_fRemainTime;
+	Out_Json["m_fSequenceTime"] = m_fSequenceTime;
+
+
+	for (_int i = 0; i < (_int)TEXTURE_END; i++)
+	{
+		Out_Json["strTextureTag"][i] = m_pGameInstance->Convert_WString_To_String(m_tInstanceDesc.strTextureTag[i]);
+	}
+
+	for (_int i = 0; i < (_int)TEXTURE_END; i++)
+	{
+		Out_Json["iTextureIndex"][i] = m_tInstanceDesc.iTextureIndex[i];
+	}
+
+	Out_Json["iRenderGroup"] = m_tInstanceDesc.iRenderGroup;
+	Out_Json["iShaderPassIndex"] = m_tInstanceDesc.iShaderPassIndex;
+
+	Out_Json["bBillBoard"] = m_tInstanceDesc.bBillBoard;
+	Out_Json["bDissolve"] = m_tInstanceDesc.bDissolve;
+
+	CJson_Utility::Write_Float2(Out_Json["vUV_Offset"], m_tInstanceDesc.vUV_Offset);
+	CJson_Utility::Write_Float2(Out_Json["vUV_Scale"], m_tInstanceDesc.vUV_Scale);
+
+	Out_Json["fUV_RotDegree"] = m_tInstanceDesc.fUV_RotDegree;
+
+	Out_Json["bUV_Wave"] = m_tInstanceDesc.bUV_Wave;
+	Out_Json["fUV_WaveSpeed"] = m_tInstanceDesc.fUV_WaveSpeed;
+
+	CJson_Utility::Write_Float4(Out_Json["vColor_Offset"], m_tInstanceDesc.vColor_Offset);
+	CJson_Utility::Write_Float4(Out_Json["vColor_Clip"], m_tInstanceDesc.vColor_Clip);
+	CJson_Utility::Write_Float4(Out_Json["vColor_Mul"], m_tInstanceDesc.vColor_Mul);
+
+	Out_Json["fBloom"] = m_tInstanceDesc.fBloom;
+	Out_Json["fRadial"] = m_tInstanceDesc.fRadial;
+	Out_Json["fDissolveAmount"] = m_tInstanceDesc.fDissolveAmount;
+	Out_Json["padding"] = m_tInstanceDesc.padding;
+
+	Out_Json["bActive_Tool"] = m_tInstanceDesc.bActive_Tool;
+	Out_Json["bPlay"] = m_tInstanceDesc.bPlay;
+	Out_Json["bLoop"] = m_tInstanceDesc.bLoop;
+	Out_Json["bReverse"] = m_tInstanceDesc.bReverse;
+	Out_Json["bRender"] = m_tInstanceDesc.bRender;
+
+	Out_Json["eType_Easing"] = m_tInstanceDesc.eType_Easing;
+	Out_Json["bParentPivot"] = m_tInstanceDesc.bParentPivot;
+
+	for (_int i = 0; i < 4; ++i)
+		CJson_Utility::Write_Float4(Out_Json["matPivot"][i], XMLoadFloat4x4(&m_tInstanceDesc.matPivot).r[i]);
+
+	for (_int i = 0; i < 4; ++i)
+		CJson_Utility::Write_Float4(Out_Json["matOffset"][i], XMLoadFloat4x4(&m_tInstanceDesc.matOffset).r[i]);
+
+	CJson_Utility::Write_Float3(Out_Json["vPosition_Start"], m_tInstanceDesc.vPosition_Start);
+	CJson_Utility::Write_Float3(Out_Json["vPosition_End"], m_tInstanceDesc.vPosition_End);
+	Out_Json["bPosition_Lerp"] = m_tInstanceDesc.bPosition_Lerp;
+
+	CJson_Utility::Write_Float3(Out_Json["vRotation_Start"], m_tInstanceDesc.vRotation_Start);
+	CJson_Utility::Write_Float3(Out_Json["vRotation_End"], m_tInstanceDesc.vRotation_End);
+	Out_Json["bRotation_Lerp"] = m_tInstanceDesc.bRotation_Lerp;
+
+	CJson_Utility::Write_Float3(Out_Json["vScaling_Start"], m_tInstanceDesc.vScaling_Start);
+	CJson_Utility::Write_Float3(Out_Json["vScaling_End"], m_tInstanceDesc.vScaling_End);
+	Out_Json["bScaling_Lerp"] = m_tInstanceDesc.bScaling_Lerp;
+
+	CJson_Utility::Write_Float3(Out_Json["vVelocity_Start"], m_tInstanceDesc.vVelocity_Start);
+	CJson_Utility::Write_Float3(Out_Json["vVelocity_End"], m_tInstanceDesc.vVelocity_End);
+	CJson_Utility::Write_Float3(Out_Json["vVelocity_Cur"], m_tInstanceDesc.vVelocity_Cur);
+	Out_Json["bVelocity_Lerp"] = m_tInstanceDesc.bVelocity_Lerp;
+
+
+	CJson_Utility::Write_Float4(Out_Json["vColor_Start"], m_tInstanceDesc.vColor_Start);
+	CJson_Utility::Write_Float4(Out_Json["vColor_End"], m_tInstanceDesc.vColor_End);
+	CJson_Utility::Write_Float4(Out_Json["vColor_Cur"], m_tInstanceDesc.vColor_Cur);
+	Out_Json["bColor_Lerp"] = m_tInstanceDesc.bColor_Lerp;
+
+
+
+	/* Mesh */
+	Out_Json["eType_Mesh"] = m_tInstanceDesc.eType_Mesh;
+
+	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
+
+	Out_Json["strModelTag"] = m_pGameInstance->Convert_WString_To_String(m_tInstanceDesc.strModelTag);
+
+	Out_Json["iCurNumInstance"] = m_tInstanceDesc.iCurNumInstance;
+
+
+	/* Bloom */
+	CJson_Utility::Write_Float4(Out_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);
+	CJson_Utility::Write_Float3(Out_Json["vBloomPower"], m_tInstanceDesc.vBloomPower);
+
+	/* Rim */
+	CJson_Utility::Write_Float4(Out_Json["vRimColor"], m_tInstanceDesc.vRimColor);
+	Out_Json["fRimPower"] = m_tInstanceDesc.fRimPower;
 
 
 	return true;
@@ -174,7 +305,121 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
+	/* Effect_Void */
+	m_eType_Effect = In_Json["eType_Effect"];
 
+	m_pGameInstance->Convert_WString_To_String(m_tInstanceDesc.strProtoTag) = In_Json["strProtoTag"];
+	m_pGameInstance->Convert_WString_To_String(m_tInstanceDesc.strPartTag) = In_Json["strPartTag"];
+
+	m_fWaitingAcc = In_Json["m_fWaitingAcc"];
+	m_fRemainAcc = In_Json["m_fRemainAcc"];
+	m_fSequenceAcc = In_Json["m_fSequenceAcc"];
+
+	m_fLifeTimeRatio = In_Json["m_fLifeTimeRatio"];
+
+	m_fWaitingTime = In_Json["m_fWaitingTime"];
+	m_fLifeTime = In_Json["m_fLifeTime"];
+	m_fRemainTime = In_Json["m_fRemainTime"];
+	m_fSequenceTime = In_Json["m_fSequenceTime"];
+
+
+	for (_int i = 0; i < (_int)TEXTURE_END; i++)
+	{
+		m_pGameInstance->Convert_WString_To_String(m_tInstanceDesc.strTextureTag[i]) = In_Json["strTextureTag"][i];
+		m_tInstanceDesc.iTextureIndex[i] = In_Json["iTextureIndex"][i];
+	}
+
+	m_tInstanceDesc.iRenderGroup = In_Json["iRenderGroup"];
+	m_tInstanceDesc.iShaderPassIndex = In_Json["iShaderPassIndex"];
+
+	m_tInstanceDesc.bBillBoard = In_Json["bBillBoard"];
+	m_tInstanceDesc.bDissolve = In_Json["bDissolve"];
+
+
+	CJson_Utility::Load_Float2(In_Json["vUV_Offset"], m_tInstanceDesc.vUV_Offset);
+	CJson_Utility::Load_Float2(In_Json["vUV_Scale"], m_tInstanceDesc.vUV_Scale);
+
+
+	m_tInstanceDesc.fUV_RotDegree = In_Json["fUV_RotDegree"];
+
+	m_tInstanceDesc.bUV_Wave = In_Json["bUV_Wave"];
+	m_tInstanceDesc.fUV_WaveSpeed = In_Json["fUV_WaveSpeed"];
+
+
+	CJson_Utility::Load_Float4(In_Json["vColor_Offset"], m_tInstanceDesc.vColor_Offset);
+	CJson_Utility::Load_Float4(In_Json["vColor_Clip"], m_tInstanceDesc.vColor_Clip);
+	CJson_Utility::Load_Float4(In_Json["vColor_Mul"], m_tInstanceDesc.vColor_Mul);
+
+	m_tInstanceDesc.fBloom = In_Json["fBloom"];
+	m_tInstanceDesc.fRadial = In_Json["fRadial"];
+	m_tInstanceDesc.fDissolveAmount = In_Json["fDissolveAmount"];
+	m_tInstanceDesc.padding = In_Json["padding"];
+
+
+	m_tInstanceDesc.bActive_Tool = In_Json["bActive_Tool"];
+	m_tInstanceDesc.bPlay = In_Json["bPlay"];
+	m_tInstanceDesc.bLoop = In_Json["bLoop"];
+	m_tInstanceDesc.bReverse = In_Json["bReverse"];
+	m_tInstanceDesc.bRender = In_Json["bRender"];
+
+	m_tInstanceDesc.eType_Easing = In_Json["eType_Easing"];
+
+	m_tInstanceDesc.bParentPivot = In_Json["bParentPivot"];
+
+	_float4x4 matPivot;
+	ZeroMemory(&matPivot, sizeof(_float4x4));
+	CJson_Utility::Load_JsonFloat4x4(In_Json["matPivot"], matPivot);
+	m_tInstanceDesc.matPivot = matPivot;
+
+
+	_float4x4 matOffset;
+	ZeroMemory(&matOffset, sizeof(_float4x4));
+	CJson_Utility::Load_JsonFloat4x4(In_Json["matOffset"], matOffset);
+	m_tInstanceDesc.matOffset = matOffset;
+
+
+	CJson_Utility::Load_Float3(In_Json["vPosition_Start"], m_tInstanceDesc.vPosition_Start);
+	CJson_Utility::Load_Float3(In_Json["vPosition_End"], m_tInstanceDesc.vPosition_End);
+
+	m_tInstanceDesc.bPosition_Lerp = In_Json["bPosition_Lerp"];
+
+	CJson_Utility::Load_Float3(In_Json["vRotation_Start"], m_tInstanceDesc.vRotation_Start);
+	CJson_Utility::Load_Float3(In_Json["vRotation_End"], m_tInstanceDesc.vRotation_End);
+	m_tInstanceDesc.bRotation_Lerp = In_Json["bRotation_Lerp"];
+
+	CJson_Utility::Load_Float3(In_Json["vScaling_Start"], m_tInstanceDesc.vScaling_Start);
+	CJson_Utility::Load_Float3(In_Json["vScaling_End"], m_tInstanceDesc.vScaling_End);
+	m_tInstanceDesc.bScaling_Lerp = In_Json["bScaling_Lerp"];
+
+	CJson_Utility::Load_Float3(In_Json["vVelocity_Start"], m_tInstanceDesc.vVelocity_Start);
+	CJson_Utility::Load_Float3(In_Json["vVelocity_End"], m_tInstanceDesc.vVelocity_End);
+	CJson_Utility::Load_Float3(In_Json["vVelocity_Cur"], m_tInstanceDesc.vVelocity_Cur);
+	m_tInstanceDesc.bVelocity_Lerp = In_Json["bVelocity_Lerp"];
+
+
+	CJson_Utility::Load_Float4(In_Json["vColor_Start"], m_tInstanceDesc.vColor_Start);
+	CJson_Utility::Load_Float4(In_Json["vColor_End"], m_tInstanceDesc.vColor_End);
+	CJson_Utility::Load_Float4(In_Json["vColor_Cur"], m_tInstanceDesc.vColor_Cur);
+	m_tInstanceDesc.bColor_Lerp = In_Json["bColor_Lerp"];
+
+
+
+	/* Mesh */
+	m_tInstanceDesc.eType_Mesh = In_Json["eType_Mesh"];
+
+	m_tInstanceDesc.bUseCustomTex = In_Json["bUseCustomTex"];
+
+	m_pGameInstance->Convert_WString_To_String(m_tInstanceDesc.strModelTag) = In_Json["strModelTag"];
+
+	m_tInstanceDesc.iCurNumInstance = In_Json["iCurNumInstance"];
+
+	/* Bloom */
+	CJson_Utility::Load_Float4(In_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);
+	CJson_Utility::Load_Float3(In_Json["vBloomPower"], m_tInstanceDesc.vBloomPower);
+
+	/* Rim */
+	CJson_Utility::Load_Float4(In_Json["vRimColor"], m_tInstanceDesc.vRimColor);
+	m_tInstanceDesc.fRimPower = In_Json["fRimPower"];
 
 }
 
@@ -194,14 +439,13 @@ HRESULT CEffect_Instance::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
-	Desc.pModel = m_pModelCom;
-	Desc.iCurNumInstance = m_tInstanceDesc.iCurNumInstance; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
-	
+
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &Desc)))
-		return E_FAIL;
+	{
+		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferInfo = *static_cast<CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC*>(Get_BufferDesc());
+		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
+			return E_FAIL;
+	}
 
 
 	/* For.Com_Texture */
@@ -231,18 +475,21 @@ HRESULT CEffect_Instance::Ready_Components()
 
 HRESULT CEffect_Instance::Bind_ShaderResources()
 {
-	//if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	//	return E_FAIL;
-	//_float4x4 WorldMatrix;
-	//XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
-	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix));
-
-	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	/* Matrix ============================================================================================ */
+	if (m_tInstanceDesc.bParentPivot)
+	{
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tInstanceDesc.matOffset));
+	}
+	else
+	{
+		FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	}
 
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
-	if (FLAT == m_tInstanceDesc.eType_Mesh)
+
+	if (TRUE == m_tInstanceDesc.bUseCustomTex)
 	{
 		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_DIFFUSE]));
 
@@ -254,30 +501,36 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 		{
 			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_NOISE]));
-			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_NOISE]));
 		}
 	}
 
-	
+	/* UV ============================================================================================ */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tInstanceDesc.fUV_RotDegree, sizeof(_float)));
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tInstanceDesc.fUV_RotDegree, sizeof(_float))))
-		return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tInstanceDesc.vColor_Clip.w, sizeof(_float)));
 
+	_float3 vBlack_Discard = float3(m_tInstanceDesc.vColor_Clip.x, m_tInstanceDesc.vColor_Clip.y, m_tInstanceDesc.vColor_Clip.z);
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
+
+
+	/* Camera ============================================================================================ */
+	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
+	vCamDirection = XMVector4Normalize(vCamDirection);
+	_float4 vCamDirectionFloat4 = {};
+	XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
+
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat4, sizeof(_float4)));
+
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
+
+	/* Dissolve */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tInstanceDesc.vUV_Offset, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tInstanceDesc.vUV_Scale, sizeof(_float2)));
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tInstanceDesc.fDissolveAmount, sizeof(_float)));
-
-
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tInstanceDesc.vColor_Clip.w, sizeof(_float)));
-
-
-	_float3 vBlack_Discard = { m_tInstanceDesc.vColor_Clip.x, m_tInstanceDesc.vColor_Clip.y, m_tInstanceDesc.vColor_Clip.z};
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fBlack_Discard", &vBlack_Discard, sizeof(_float3)));
-
-
-	_float fCamFar = m_pGameInstance->Get_CamFar();
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFar", &fCamFar, sizeof(_float)));
 
 
 	/* Bloom */

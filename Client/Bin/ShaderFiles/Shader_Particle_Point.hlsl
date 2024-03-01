@@ -13,7 +13,6 @@ vector		g_vCamDirection;
 float		g_fCamFar;
 // ================================
 
-
 bool        g_bBillBoard;
 float       g_fAlpha_Discard;
 float3      g_vBlack_Discard;

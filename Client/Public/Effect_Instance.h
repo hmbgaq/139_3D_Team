@@ -15,12 +15,14 @@ BEGIN(Client)
 class CEffect_Instance final : public CEffect_Void
 {
 public:
-	enum TYPE_MESH	{ FLAT, FIGURE, TYPE_MESH_END };
+	enum TYPE_MESH	{ MESH_PARTICLE, MESH_STATIC, TYPE_MESH_END };
+
 
 public:
 	typedef struct tagEffect_Desc : public CEffect_Void::EFFECTVOID_DESC
 	{
-		TYPE_MESH		eType_Mesh = { FLAT };
+		TYPE_MESH		eType_Mesh = { MESH_PARTICLE };
+		_bool			bUseCustomTex = { TRUE };
 
 		wstring			strModelTag = TEXT("");
 
@@ -60,6 +62,7 @@ public:
 /* For.Desc */
 public:
 	EFFECT_INSTANCE_DESC* Get_Desc() { return &m_tInstanceDesc; }
+	void* Get_BufferDesc();
 
 	CVIBuffer_Effect_Model_Instance* Get_VIBufferCom() { return m_pVIBufferCom; }
 

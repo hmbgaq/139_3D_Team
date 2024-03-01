@@ -24,7 +24,7 @@ public:
 		_int		iTextureIndex[TEXTURE_END] = { 0 };
 
 		// Render Group
-		_int		iRenderGroup = { 7 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 현재 작성기준 CRENDERER::RENDERGROUP::RENDER_END가 8임
+		_int		iRenderGroup = { 9 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 이펙트는 9번
 
 		// Shader
 		_uint		iShaderPassIndex = { 0 };

@@ -10,11 +10,11 @@ class ENGINE_DLL CVIBuffer_Effect_Model_Instance : public CVIBuffer_Model_Instan
 public:
 	typedef struct tagVIBuffer_EffectModelInstanceDesc
 	{
-		class CModel*	  pModel			= { nullptr };
+		class CModel*	  pModel	= { nullptr };
 
-		_int			  iCurNumInstance	= { 1 };
+		_int		iCurNumInstance	= { 1 };
 
-		_float4		vCurrentPosition	= {0.f, 0.f, 0.f, 1.f};
+		_float4		vCurrentPosition = {0.f, 0.f, 0.f, 1.f};
 
 	}EFFECT_MODEL_INSTANCE_DESC;
 
