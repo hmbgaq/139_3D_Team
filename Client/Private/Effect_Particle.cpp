@@ -231,9 +231,12 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 	/* Particle */
 	Out_Json["bSpriteAnim"] = m_tParticleDesc.bSpriteAnim;
 
+	Out_Json["iCurNumInstance"] = m_tParticleDesc.iCurNumInstance;
+
 
 	/* Sprite */
 	Out_Json["fSequenceTerm"] = m_tSpriteDesc.fSequenceTerm;
+
 
 	CJson_Utility::Write_Float2(Out_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
 	CJson_Utility::Write_Float2(Out_Json["vTileSize"], m_tSpriteDesc.vTileSize);
@@ -254,6 +257,8 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 	 /* Particle */
 	m_tParticleDesc.bSpriteAnim = In_Json["bSpriteAnim"];
 
+	m_tParticleDesc.iCurNumInstance = In_Json["iCurNumInstance"];
+
 	 /* Sprite */
 	m_tSpriteDesc.fSequenceTerm = In_Json["fSequenceTerm"];
 
@@ -273,6 +278,53 @@ void* CEffect_Particle::Get_BufferDesc()
 	tBufferDesc.bLoop = m_tParticleDesc.bLoop;
 	tBufferDesc.bReverse = m_tParticleDesc.bReverse;
 
+	tBufferDesc.eType_Action = m_tParticleDesc.eType_Action;
+	tBufferDesc.eType_Fade = m_tParticleDesc.eType_Fade;
+	tBufferDesc.eType_ColorLerp = m_tParticleDesc.eType_ColorLerp;
+
+
+	tBufferDesc.iCurNumInstance = m_tParticleDesc.iCurNumInstance;
+
+	tBufferDesc.vMinMaxLifeTime = m_tParticleDesc.vMinMaxLifeTime;
+
+	tBufferDesc.vMinMaxRange = m_tParticleDesc.vMinMaxRange;
+	tBufferDesc.vMinMaxRangeLength = m_tParticleDesc.vMinMaxRangeLength;
+	tBufferDesc.vCenterPosition = m_tParticleDesc.vCenterPosition;
+
+	tBufferDesc.vMinMaxSpeed = m_tParticleDesc.vMinMaxSpeed;
+
+	tBufferDesc.fSpeedAcc = m_tParticleDesc.fSpeedAcc;
+	tBufferDesc.fAccPosition = m_tParticleDesc.fAccPosition;
+
+
+	tBufferDesc.bUseGravity = m_tParticleDesc.bUseGravity;
+	tBufferDesc.fGravityAcc = m_tParticleDesc.fGravityAcc;
+	tBufferDesc.fUseGravityPosition = m_tParticleDesc.fUseGravityPosition;
+
+
+	tBufferDesc.vMinMaxRotationOffsetX = m_tParticleDesc.vMinMaxRotationOffsetX;
+	tBufferDesc.vMinMaxRotationOffsetY = m_tParticleDesc.vMinMaxRotationOffsetY;
+	tBufferDesc.vMinMaxRotationOffsetZ = m_tParticleDesc.vMinMaxRotationOffsetZ;
+	tBufferDesc.vRotationOffset = m_tParticleDesc.vRotationOffset;
+
+
+	tBufferDesc.vCurrentRotation = m_tParticleDesc.vCurrentRotation;
+	tBufferDesc.vMinMaxRotationForce = m_tParticleDesc.vMinMaxRotationForce;
+
+
+	tBufferDesc.vMinMaxScale = m_tParticleDesc.vMinMaxScale;
+	tBufferDesc.vAddScale = m_tParticleDesc.vAddScale;
+	tBufferDesc.vCurrentScale = m_tParticleDesc.vCurrentScale;
+
+
+	tBufferDesc.vMinMaxRed = m_tParticleDesc.vMinMaxRed;
+	tBufferDesc.vMinMaxGreen = m_tParticleDesc.vMinMaxGreen;
+	tBufferDesc.vMinMaxBlue = m_tParticleDesc.vMinMaxBlue;
+	tBufferDesc.vMinMaxAlpha = m_tParticleDesc.vMinMaxAlpha;
+
+	tBufferDesc.vCurrentColor = m_tParticleDesc.vCurrentColor;
+
+
 	return &tBufferDesc;
 }
 
@@ -289,8 +341,8 @@ HRESULT CEffect_Particle::Ready_Components()
 
 	/* For.Com_VIBuffer */
 	{
-		//CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferInfo = *static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(Get_BufferDesc());
-		CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferInfo = {};
+		CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferInfo = *static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(Get_BufferDesc());
+		//CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferInfo = {};
 		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle_Point"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
 			return E_FAIL;
 	}

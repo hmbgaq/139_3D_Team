@@ -29,7 +29,9 @@ HRESULT CEffect_Rect::Initialize_Prototype()
 
 HRESULT CEffect_Rect::Initialize(void* pArg)
 {	
-	m_tRectDesc = *(EFFECT_RECT_DESC*)pArg;
+	//m_tRectDesc = *(EFFECT_RECT_DESC*)pArg;
+
+	*static_cast<EFFECTVOID_DESC*>(&m_tRectDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;

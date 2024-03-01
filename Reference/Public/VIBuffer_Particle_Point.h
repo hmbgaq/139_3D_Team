@@ -19,6 +19,9 @@ public:
 		_bool		bLoop = { TRUE };
 		_bool		bReverse = { FALSE };
 
+		/* 파티클 입자 개수 */
+		_int			  iCurNumInstance = { 200 };
+
 		/* LifeTime */
 		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
 
@@ -55,12 +58,12 @@ public:
 		_float2		vCurrentScale;
 
 		/* For.Color */
-		_float2     vMinMaxRed = { 0.f, 0.f };
-		_float2     vMinMaxGreen = { 0.f, 0.f };
-		_float2     vMinMaxBlue = { 0.f, 0.f };
-		_float2     vMinMaxAlpha = { 0.f, 0.f };
+		_float2     vMinMaxRed		= { 1.f, 1.f };
+		_float2     vMinMaxGreen	= { 1.f, 1.f };
+		_float2     vMinMaxBlue		= { 1.f, 1.f };
+		_float2     vMinMaxAlpha	= { 1.f, 1.f };
 
-		_float4     vCurrentColor;
+		_float4     vCurrentColor = { 1.f, 1.f, 1.f, 1.f };
 
 
 		void Reset_Desc()

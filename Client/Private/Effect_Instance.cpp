@@ -26,6 +26,7 @@ HRESULT CEffect_Instance::Initialize_Prototype()
 HRESULT CEffect_Instance::Initialize(void* pArg)
 {	
 	m_tInstanceDesc = *(EFFECT_INSTANCE_DESC*)pArg;
+	//*static_cast<EFFECTVOID_DESC*>(&m_tInstanceDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	

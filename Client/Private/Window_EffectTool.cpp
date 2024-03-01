@@ -394,8 +394,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticleDesc->vColor_Clip.w = m_vColor_Clip_Part[3];
 				}
 
-				/* 렌더그룹 변경 */
-				ImGui::SeparatorText("");
+
 				if (ImGui::InputInt("Render Group_Particle", &m_iRenderGroup_Particle, 1))
 				{
 					if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Particle)
@@ -411,6 +410,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::Text("MaxInstance : %d", m_iMaxNumInstance);
 				if (ImGui::DragInt("Instance Count", &m_iNumInstance, 1, 1, m_iMaxNumInstance))
 				{
+					m_pParticleDesc->iCurNumInstance = m_iNumInstance;
+					m_pParticlePointDesc->iCurNumInstance = m_iNumInstance;
 					pVIBuffer->Set_NumInstance(m_iNumInstance);
 				}
 
@@ -1859,7 +1860,9 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		tParticleDesc.fUV_RotDegree = { 0.f };
 
 		tParticleDesc.bPlay = { TRUE };
+
 		tParticleDesc.bSpriteAnim = { FALSE };
+		tParticleDesc.iCurNumInstance = { 200 };
 
 #pragma region 리스트 문자열 관련
 		wstring strName = TEXT("");
