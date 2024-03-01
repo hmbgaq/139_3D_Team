@@ -175,7 +175,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* 
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Assassin")));
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected")));
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
+// 	for (int i = 0; i < 100; ++i)
+// 	{
+		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
+/*	}*/
 
 
 

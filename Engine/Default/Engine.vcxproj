@@ -55,6 +55,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.0.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -109,15 +110,16 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../Public/;../Public/PhysX/;../Default/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CUDA_PATH)\include;../Public/;../Public/PhysX/;../Default/</AdditionalIncludeDirectories>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;assimp-vc142-mtd.lib;imguizmod.lib;PhysX_64_Debug.lib;PhysXCharacterKinematic_static_64_Debug.lib;PhysXCommon_64_Debug.lib;PhysXCooking_64_Debug.lib;PhysXExtensions_static_64_Debug.lib;PhysXFoundation_64_Debug.lib;PhysXPvdSDK_static_64_Debug.lib;PhysXVehicle_static_64_Debug.lib;NvClothDEBUG_x64.lib;GFSDK_SSAO_D3D11.win64.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cuda.lib;cudart.lib;cublas.lib;cufft.lib
+;d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;assimp-vc142-mtd.lib;imguizmod.lib;PhysX_64_Debug.lib;PhysXCharacterKinematic_static_64_Debug.lib;PhysXCommon_64_Debug.lib;PhysXCooking_64_Debug.lib;PhysXExtensions_static_64_Debug.lib;PhysXFoundation_64_Debug.lib;PhysXPvdSDK_static_64_Debug.lib;PhysXVehicle_static_64_Debug.lib;NvClothDEBUG_x64.lib;GFSDK_SSAO_D3D11.win64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(CUDA_PATH)\lib\x64 ;../ThirdPartyLib/</AdditionalLibraryDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <FxCompile>
@@ -164,7 +166,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../Public/;../Public/PhysX/;../Default/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CUDA_PATH)\include;../Public/;../Public/PhysX/;../Default/</AdditionalIncludeDirectories>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -173,8 +175,9 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11.lib;DirectXTK.lib;assimp-vc142-mt.lib;imguizmo.lib;PhysX_64_Release.lib;PhysXCharacterKinematic_static_64_Release.lib;PhysXCommon_64_Release.lib;PhysXCooking_64_Release.lib;PhysXExtensions_static_64_Release.lib;PhysXFoundation_64_Release.lib;PhysXPvdSDK_static_64_Release.lib;PhysXVehicle_static_64_Release.lib;NvCloth_x64.lib;GFSDK_SSAO_D3D11.win64.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cuda.lib;cudart.lib;cublas.lib;cufft.lib
+;d3d11.lib;dinput8.lib;dxguid.lib;Effects11.lib;DirectXTK.lib;assimp-vc142-mt.lib;imguizmo.lib;PhysX_64_Release.lib;PhysXCharacterKinematic_static_64_Release.lib;PhysXCommon_64_Release.lib;PhysXCooking_64_Release.lib;PhysXExtensions_static_64_Release.lib;PhysXFoundation_64_Release.lib;PhysXPvdSDK_static_64_Release.lib;PhysXVehicle_static_64_Release.lib;NvCloth_x64.lib;GFSDK_SSAO_D3D11.win64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(CUDA_PATH)\lib\x64 ;../ThirdPartyLib/</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ShaderType>Effect</ShaderType>
@@ -395,5 +398,6 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.0.targets" />
   </ImportGroup>
 </Project>

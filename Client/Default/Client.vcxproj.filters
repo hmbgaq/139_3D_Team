@@ -1420,6 +1420,45 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\11.BloodRange">
       <UniqueIdentifier>{05d01a57-b484-4353-a220-4c9c5b614700}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle\0.Parent">
+      <UniqueIdentifier>{ed4561e5-0377-4dc7-8a60-0e76a53594d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle\1">
+      <UniqueIdentifier>{016990b8-7b51-45c7-9787-94db112d75e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\0.Parent">
+      <UniqueIdentifier>{5fab60c5-0f4b-4c8e-bd4b-6ebd83c7bc86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front">
+      <UniqueIdentifier>{1c028d9a-9de2-4bc7-b2d6-6950e054377f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back">
+      <UniqueIdentifier>{8dbdaa13-4db1-4524-92f1-9120be228fc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Left">
+      <UniqueIdentifier>{35db95b3-5606-49c8-88a0-bb371368b93b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right">
+      <UniqueIdentifier>{da5821a3-296b-4e6b-a042-a9727e2a361a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Left">
+      <UniqueIdentifier>{54315387-d66d-49d1-a8a6-14696414c2cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Right">
+      <UniqueIdentifier>{037feeba-aebd-4348-b85f-ff3e6bde644a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Left\BL135">
+      <UniqueIdentifier>{be56d168-1ff4-4033-beca-b5df944ec1fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Right\BR135">
+      <UniqueIdentifier>{8312a5b6-28bb-4e1f-a1cd-88342d2c99f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Left\FL45">
+      <UniqueIdentifier>{f7b7ff1a-2753-4e64-aee3-4118024af097}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right\FR45">
+      <UniqueIdentifier>{165e0797-5cca-44bf-a491-3b774e26cf68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -2606,6 +2645,48 @@
     </ClInclude>
     <ClInclude Include="..\Public\Body_VampireCommander.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_State.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\0.Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle\0.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Idle.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_State_Walk.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\0.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_B.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_F.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_FL45.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Left\FL45</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_FR45.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right\FR45</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_FL.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_FR.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_BL135.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Left\BL135</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_BR135.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Right\BR135</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_BL.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_BR.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Right</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3897,6 +3978,48 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body_VampireCommander.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_State.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\0.Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_State_Normal.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_State_Walk.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_B.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_F.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_FR.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_FL45.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Left\FL45</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_FL.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_FR45.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right\FR45</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_BL.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_BL135.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Left\BL135</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_BR.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_BR135.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Right\BR135</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
