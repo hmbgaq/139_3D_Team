@@ -51,9 +51,13 @@ public:
 
 	_float4x4*				Calc_OffsetMatrice(_uint iAnimationIndex, _float fTrackPosition, _float4x4* pMatrix);
 	_float4x4*				Get_OffsetMatrices();
-	_float3&				Calculate_AABB_Extents_From_Model();
-	
+
 	//! 모델 인스턴싱 앤드
+	
+	//! 맵툴 전용 콜라이더 사이즈 계산 추가
+	_float3&				Calculate_AABB_Extents_From_Model(); //! 모델 사이즈에 맞게 AABB 사이즈 잡아줌. 
+	void					Calculate_Sphere_Radius(_float3* vOutCenter, _float* fOutRadius); //! 모델 사이즈게 맞게 SPHERE 사이즈잡아줌.  
+	//! 맵툴 전용 콜라이더 사이즈 계산 앤드
 
 
 public:

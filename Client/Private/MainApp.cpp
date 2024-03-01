@@ -55,8 +55,8 @@ HRESULT CMainApp::Initialize()
 	ShowWindow(g_hWnd, SW_SHOW);
 	SetForegroundWindow(g_hWnd);	// 창을 최상위로 가져온다.
 
-	m_pDevConsole = CDevConsole::Create();
-	Safe_AddRef(m_pDevConsole);
+	//m_pDevConsole = CDevConsole::Create();
+	//Safe_AddRef(m_pDevConsole);
 
 	return S_OK;
 }
@@ -67,7 +67,7 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	m_fTimeAcc += fTimeDelta;
 	
-	m_pDevConsole->Tick();
+	//m_pDevConsole->Tick();
 }
 
 HRESULT CMainApp::Render()
@@ -302,7 +302,8 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	Safe_Release(m_pDevConsole);
+	if (m_pDevConsole)
+		Safe_Release(m_pDevConsole);
 
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);

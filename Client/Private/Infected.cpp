@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Body_Infected.h"
 
+#include "Infected_Idle.h"
+#include "Infected_SpawnGround.h"
 
 
 CInfected::CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -36,7 +38,7 @@ HRESULT CInfected::Initialize(void* pArg)
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CInfected>(this);
-		//m_pActor->Set_State(new CInfected_IdleAct_01());
+		m_pActor->Set_State(new CInfected_SpawnGround());
 	}
 
 	return S_OK;

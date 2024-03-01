@@ -19,5 +19,5 @@ void CInfected_State_Attack::Release(CInfected* pActor)
 
 CState<CInfected>* CInfected_State_Attack::Update_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	return Normal_State(pActor, fTimeDelta, _iAnimIndex);
+	return Attack_State(pActor, fTimeDelta, _iAnimIndex);
 }

@@ -12,6 +12,7 @@ END
 
 BEGIN(Client)
 
+
 class CEnvironment_Instance final : public CGameObject
 {
 private:
@@ -54,6 +55,10 @@ private:
 
 	MAPTOOL_INSTANCE_DESC					m_tInstanceDesc;
 	vector<CCollider*>						m_vecColliders;
+
+
+	
+
 
 private:
 	HRESULT Ready_Components();

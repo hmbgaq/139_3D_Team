@@ -36,9 +36,19 @@
 #include "Player_Weapon_Winchester.h"
 #pragma endregion
 
+#pragma region INFECTED
+#include "Infected.h"
+#include "Body_Infected.h"
+#pragma endregion
+
 #pragma region ASSASSIN
 #include "Assassin.h"
 #include "Body_Assassin.h"
+#pragma endregion
+
+#pragma region BANDIT_HEAVY
+#include "Bandit_Heavy.h"
+#include "Body_Bandit_Heavy.h"
 #pragma endregion
 
 
@@ -252,9 +262,9 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_BeastBoss_Phase2"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Beast/Phase2/Beast_Skeleton", PivotMatrix)));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_BeastBoss_Phase3"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Beast/Phase3/Beast_Skeleton", PivotMatrix)));
 
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Bandit_Heavy"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Heavy/ManHeavyBase_Skeleton", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Bandit_Heavy_Vampiric"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Heavy/Bandit_Heavy_Vampiric/ManHeavyBase_Skeleton", PivotMatrix)));
-	//
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Bandit_Heavy"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Heavy/ManHeavyBase_Skeleton", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Bandit_Heavy_Vampiric"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Heavy/Bandit_Heavy_Vampiric/ManHeavyBase_Skeleton", PivotMatrix)));
+	
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Bandit_Sniper"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/CharacterBase_Skeleton", PivotMatrix)));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_BooHag"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/BooHag/ReverseFootBase_Skeleton", PivotMatrix)));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Digger"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Digger/ReverseFootBase_Skeleton", PivotMatrix)));
@@ -507,9 +517,18 @@ HRESULT CLoader::Ready_Origin()
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Player"), CWeapon_Player::Create(m_pDevice, m_pContext)));
 
 
+	//! Infected
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Infected"), CInfected::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Infected"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Infected"), CBody_Infected::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Infected"))));
+
 	//! Assassin
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Assassin"), CAssassin::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Assassin"), CBody_Assassin::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Assassin"))));
+
+	//! Bandit_Heavy
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bandit_Heavy"), CBandit_Heavy::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Bandit_Heavy"), CBody_Bandit_Heavy::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Assassin"))));
+
 
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"), CTerrain::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Winchester"))));
@@ -587,13 +606,31 @@ HRESULT CLoader::Ready_UI_Origin()
 
 HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
 {
-	wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/NonAnim/");
-	wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Anim/");
 
-	//! 로더에 원형
-	FAILED_CHECK(Read_FBXModelPath(strNonAnimModelPath.c_str(), eLevel, CModel::TYPE_NONANIM));
-	//
-	FAILED_CHECK(Read_FBXModelPath(strAnimModelPath.c_str(), eLevel, CModel::TYPE_ANIM));
+
+
+	if (eLevel == LEVEL_GAMEPLAY)
+	{
+		wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/NonAnim/");
+		wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/Anim/");
+
+		//! 로더에 원형
+		FAILED_CHECK(Read_FBXModelPath(strNonAnimModelPath.c_str(), eLevel, CModel::TYPE_NONANIM));
+		FAILED_CHECK(Read_FBXModelPath(strAnimModelPath.c_str(), eLevel, CModel::TYPE_ANIM));
+	}
+	else if (eLevel == LEVEL_TOOL)
+	{
+		wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/NonAnim/");
+		wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/Anim/");
+
+		//! 로더에 원형
+		FAILED_CHECK(Read_FBXModelPath(strNonAnimModelPath.c_str(), eLevel, CModel::TYPE_NONANIM));
+		FAILED_CHECK(Read_FBXModelPath(strAnimModelPath.c_str(), eLevel, CModel::TYPE_ANIM));
+
+	}
+
+
+	
 
 
 	return S_OK;
@@ -619,22 +656,23 @@ HRESULT CLoader::Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLeve
 		pMapModelTag = CImgui_Manager::GetInstance()->Get_NonAnim_E_ModelTag();
 
 
+		
 	//! 폴더명으로 타입을 분류하기위해
 		wstring strDirName = {}; 
 		CImgui_Manager::JSY_MODEL_TYPE eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_END;
 
-	for (const auto& entry : fs::recursive_directory_iterator(StartDirectoryPath)) 
+		for (const auto& entry : fs::recursive_directory_iterator(StartDirectoryPath)) 
 	{
 		if (fs::is_directory(entry.path())) 
 		{
 			strDirName = entry.path().filename();
 
-			if (strDirName == L"Environment")
-				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_ENVIRONMENT;
+			if (strDirName == L"Instance")
+				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_INSTANCE;
 			else if (strDirName == L"Interact")
 				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_INTERACT;
-			else if (strDirName == L"Ground")
-				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_GROUND;
+			else if (strDirName == L"Single")
+				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_SINGLE;
 		}
 
 		 if (fs::is_regular_file(entry.path()) && entry.path().extension() == ".fbx")
