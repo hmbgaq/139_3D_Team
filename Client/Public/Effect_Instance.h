@@ -24,8 +24,6 @@ public:
 		TYPE_MESH		eType_Mesh = { MESH_PARTICLE };
 		_bool			bUseCustomTex = { TRUE };
 
-		wstring			strModelTag = TEXT("");
-
 		_uint			iCurNumInstance = { 1 };
 
 		_float4			vBloomColor = { 1.f, 1.f, 1.f, 1.f };

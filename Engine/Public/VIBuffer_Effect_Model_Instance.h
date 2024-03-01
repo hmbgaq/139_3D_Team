@@ -12,7 +12,7 @@ public:
 	{
 		class CModel*	  pModel	= { nullptr };
 
-		_int		iCurNumInstance	= { 1 };
+		_int			  iCurNumInstance = { 1 };
 
 		_float4		vCurrentPosition = {0.f, 0.f, 0.f, 1.f};
 
@@ -39,8 +39,6 @@ public:
 public:
 	virtual _bool Write_Json(json& Out_Json)		override;
 	virtual void Load_FromJson(const json& In_Json)	override;
-
-
 
 public:
 	EFFECT_MODEL_INSTANCE_DESC* Get_Desc() { return &m_tBufferDesc; }

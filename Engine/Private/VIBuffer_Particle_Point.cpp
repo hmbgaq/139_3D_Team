@@ -136,8 +136,6 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 	uniform_real_distribution<float>	RandomAlpha(min(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y), max(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y));
 
 	
-
-	m_iNumInstance = m_tBufferDesc.iCurNumInstance;
 	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
 		if (FADE_IN == m_tBufferDesc.eType_Fade)
@@ -522,15 +520,15 @@ void CVIBuffer_Particle_Point::Sort_Z(_uint iCount)
 
 _bool CVIBuffer_Particle_Point::Write_Json(json& Out_Json)
 {
+	Out_Json["Com_VIBuffer"]["m_iNumInstance"] = m_iNumInstance;
+
 	Out_Json["Com_VIBuffer"]["eType_Action"] = m_tBufferDesc.eType_Action;
 	Out_Json["Com_VIBuffer"]["eType_Fade"] = m_tBufferDesc.eType_Fade;
 	Out_Json["Com_VIBuffer"]["eType_ColorLerp"] = m_tBufferDesc.eType_ColorLerp;
 
 	Out_Json["Com_VIBuffer"]["bLoop"] = m_tBufferDesc.bLoop;
 	Out_Json["Com_VIBuffer"]["bReverse"] = m_tBufferDesc.bReverse;
-	Out_Json["Com_VIBuffer"]["bSpriteAnim"] = m_tBufferDesc.bSpriteAnim;
 
-	Out_Json["Com_VIBuffer"]["iCurNumInstance"] = m_tBufferDesc.iCurNumInstance;
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
 
@@ -576,16 +574,14 @@ _bool CVIBuffer_Particle_Point::Write_Json(json& Out_Json)
 
 void CVIBuffer_Particle_Point::Load_FromJson(const json& In_Json)
 {
+	m_iNumInstance = In_Json["Com_VIBuffer"]["iCurNumInstance"];
+
 	m_tBufferDesc.eType_Action = In_Json["Com_VIBuffer"]["eType_Action"];
 	m_tBufferDesc.eType_Fade = In_Json["Com_VIBuffer"]["eType_Fade"];
 	m_tBufferDesc.eType_ColorLerp = In_Json["Com_VIBuffer"]["eType_ColorLerp"];
 
 	m_tBufferDesc.bLoop = In_Json["Com_VIBuffer"]["bLoop"];
 	m_tBufferDesc.bReverse = In_Json["Com_VIBuffer"]["bReverse"];
-	m_tBufferDesc.bSpriteAnim = In_Json["Com_VIBuffer"]["bSpriteAnim"];
-
-	m_tBufferDesc.iCurNumInstance = In_Json["Com_VIBuffer"]["iCurNumInstance"];
-	m_iNumInstance = In_Json["Com_VIBuffer"]["iCurNumInstance"];
 
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
 

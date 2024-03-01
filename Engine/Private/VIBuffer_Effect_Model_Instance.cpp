@@ -18,9 +18,24 @@ HRESULT CVIBuffer_Effect_Model_Instance::Initialize_Prototype()
 
 HRESULT CVIBuffer_Effect_Model_Instance::Initialize(void* pArg)
 {
-	EFFECT_MODEL_INSTANCE_DESC Desc = *(EFFECT_MODEL_INSTANCE_DESC*)pArg;
+	m_tBufferDesc = *(EFFECT_MODEL_INSTANCE_DESC*)pArg;
 
-	__super::Initialize(pArg);
+	Safe_AddRef(m_tBufferDesc.pModel);
+
+	CModel* pModel = m_tBufferDesc.pModel;
+
+	vector<CMesh*> Meshes = pModel->Get_Meshes();
+	m_iNumMeshes = (_int)Meshes.size();
+
+	for (_int i = 0; i < m_iNumMeshes; ++i)
+	{
+		m_vecInstanceMesh.push_back(Meshes[i]);
+		Safe_AddRef(Meshes[i]);
+	}
+
+	m_iNumMaterials = pModel->Get_NumMaterials();
+
+	Init_Instance(m_tBufferDesc.iCurNumInstance);
 
 	return S_OK;
 }
@@ -92,11 +107,11 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 
 HRESULT CVIBuffer_Effect_Model_Instance::Render(_int iMeshIndex)
 {
-	CModel* pModel = m_tModelDesc.pModel;
+	CModel* pModel = m_tBufferDesc.pModel;
 
 	if(nullptr == pModel)
 		return E_FAIL;
-	//pModel->Bind_ShaderResource(pShader, pConstantName, iMeshIndex, eTextureType);
+
 	
 	Bind_VIBuffers(iMeshIndex);
 
@@ -111,7 +126,8 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 
 _bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
 {
-	return _bool();
+
+	return true;
 }
 
 void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)

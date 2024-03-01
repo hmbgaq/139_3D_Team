@@ -24,8 +24,10 @@ HRESULT CEffect_Particle::Initialize_Prototype()
 }
 
 HRESULT CEffect_Particle::Initialize(void* pArg)
-{
-	m_tParticleDesc = *(PARTICLE_DESC*)pArg;
+{	
+
+	*static_cast<EFFECTVOID_DESC*>(&m_tParticleDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
+	
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -53,7 +55,6 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 		//pDesc->bActive_Tool = TRUE;
 		pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
 		pDesc->vMinMaxLifeTime.y = m_fLifeTime;
-		pDesc->bSpriteAnim = m_tParticleDesc.bSpriteAnim;
 
 		if (m_tParticleDesc.bPlay)
 		{
@@ -157,7 +158,7 @@ void CEffect_Particle::Late_Tick(_float fTimeDelta)
 			
 			if (m_bSortZ)
 			{
-				m_pVIBufferCom->Sort_Z(m_tParticleDesc.iCurNumInstance);			
+				m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
 			}
 			Compute_CamDistance();
 
@@ -224,98 +225,11 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
 
-	Out_Json["eType_Effect"] = m_eType_Effect;
-
-	Out_Json["strProtoTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strProtoTag);
-	Out_Json["strPartTag"] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strPartTag);
-
-	Out_Json["m_fWaitingAcc"] = m_fWaitingAcc;
-	Out_Json["m_fRemainAcc"] = m_fRemainAcc;
-	Out_Json["m_fSequenceAcc"] = m_fSequenceAcc;
-
-	Out_Json["m_fLifeTimeRatio"] = m_fLifeTimeRatio;
-
-	Out_Json["m_fWaitingTime"] = m_fWaitingTime;
-	Out_Json["m_fLifeTime"] = m_fLifeTime;
-	Out_Json["m_fRemainTime"] = m_fRemainTime;
-	Out_Json["m_fSequenceTime"] = m_fSequenceTime;
-
-
-	for (_int i = 0; i < (_int)TEXTURE_END; i++)
-	{
-		Out_Json["strTextureTag"][i] = m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strTextureTag[i]);
-	}
-		
-	for (_int i = 0; i < (_int)TEXTURE_END; i++)
-	{
-		Out_Json["iTextureIndex"][i] = m_tParticleDesc.iTextureIndex[i];
-	}
-	
-	Out_Json["iRenderGroup"] = m_tParticleDesc.iRenderGroup;
-	Out_Json["iShaderPassIndex"] = m_tParticleDesc.iShaderPassIndex;
-
-	Out_Json["bBillBoard"] = m_tParticleDesc.bBillBoard;
-	Out_Json["bDissolve"] = m_tParticleDesc.bDissolve;
-
-	CJson_Utility::Write_Float2(Out_Json["vUV_Offset"], m_tParticleDesc.vUV_Offset);
-	CJson_Utility::Write_Float2(Out_Json["vUV_Scale"], m_tParticleDesc.vUV_Scale);
-
-	Out_Json["fUV_RotDegree"] = m_tParticleDesc.fUV_RotDegree;
-
-	Out_Json["bUV_Wave"] = m_tParticleDesc.bUV_Wave;
-	Out_Json["fUV_WaveSpeed"] = m_tParticleDesc.fUV_WaveSpeed;
-
-	CJson_Utility::Write_Float4(Out_Json["vColor_Offset"], m_tParticleDesc.vColor_Offset);
-	CJson_Utility::Write_Float4(Out_Json["vColor_Clip"], m_tParticleDesc.vColor_Clip);
-	CJson_Utility::Write_Float4(Out_Json["vColor_Mul"], m_tParticleDesc.vColor_Mul);
-
-	Out_Json["fBloom"] = m_tParticleDesc.fBloom;
-	Out_Json["fRadial"] = m_tParticleDesc.fRadial;
-	Out_Json["fDissolveAmount"] = m_tParticleDesc.fDissolveAmount;
-	Out_Json["padding"] = m_tParticleDesc.padding;
-	
-	Out_Json["bActive_Tool"] = m_tParticleDesc.bActive_Tool;
-	Out_Json["bPlay"] = m_tParticleDesc.bPlay;
-	Out_Json["bLoop"] = m_tParticleDesc.bLoop;
-	Out_Json["bReverse"] = m_tParticleDesc.bReverse;
-	Out_Json["bRender"] = m_tParticleDesc.bRender;
-	Out_Json["bSpriteAnim"] = m_tParticleDesc.bSpriteAnim;
-
-	Out_Json["eType_Easing"] = m_tParticleDesc.eType_Easing;
-	Out_Json["bParentPivot"] = m_tParticleDesc.bParentPivot;
-
-	for (_int i = 0; i < 4; ++i)
-		CJson_Utility::Write_Float4(Out_Json["matPivot"][i], XMLoadFloat4x4(&m_tParticleDesc.matPivot).r[i]);
-
-	for (_int i = 0; i < 4; ++i)
-		CJson_Utility::Write_Float4(Out_Json["matOffset"][i], XMLoadFloat4x4(&m_tParticleDesc.matOffset).r[i]);
-		
-	CJson_Utility::Write_Float3(Out_Json["vPosition_Start"], m_tParticleDesc.vPosition_Start);
-	CJson_Utility::Write_Float3(Out_Json["vPosition_End"], m_tParticleDesc.vPosition_End);
-	Out_Json["bPosition_Lerp"] = m_tParticleDesc.bPosition_Lerp;
-
-	CJson_Utility::Write_Float3(Out_Json["vRotation_Start"], m_tParticleDesc.vRotation_Start);
-	CJson_Utility::Write_Float3(Out_Json["vRotation_End"], m_tParticleDesc.vRotation_End);
-	Out_Json["bRotation_Lerp"] = m_tParticleDesc.bRotation_Lerp;
-
-	CJson_Utility::Write_Float3(Out_Json["vScaling_Start"], m_tParticleDesc.vScaling_Start);
-	CJson_Utility::Write_Float3(Out_Json["vScaling_End"], m_tParticleDesc.vScaling_End);
-	Out_Json["bScaling_Lerp"] = m_tParticleDesc.bScaling_Lerp;
-
-	CJson_Utility::Write_Float3(Out_Json["vVelocity_Start"], m_tParticleDesc.vVelocity_Start);
-	CJson_Utility::Write_Float3(Out_Json["vVelocity_End"], m_tParticleDesc.vVelocity_End);
-	CJson_Utility::Write_Float3(Out_Json["vVelocity_Cur"], m_tParticleDesc.vVelocity_Cur);
-	Out_Json["bVelocity_Lerp"] = m_tParticleDesc.bVelocity_Lerp;
-
-
-	CJson_Utility::Write_Float4(Out_Json["vColor_Start"], m_tParticleDesc.vColor_Start);
-	CJson_Utility::Write_Float4(Out_Json["vColor_End"], m_tParticleDesc.vColor_End);
-	CJson_Utility::Write_Float4(Out_Json["vColor_Cur"], m_tParticleDesc.vColor_Cur);
-	Out_Json["bColor_Lerp"] = m_tParticleDesc.bColor_Lerp;
+	Write_VoidDesc(Out_Json, &m_tParticleDesc);
 
 
 	/* Particle */
-	Out_Json["iCurNumInstance"] = m_tParticleDesc.iCurNumInstance;
+	Out_Json["bSpriteAnim"] = m_tParticleDesc.bSpriteAnim;
 
 
 	/* Sprite */
@@ -335,107 +249,10 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-	m_eType_Effect = In_Json["eType_Effect"];
-
-	m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strProtoTag) = In_Json["strProtoTag"];
-	m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strPartTag) = In_Json["strPartTag"];
-
-	m_fWaitingAcc = In_Json["m_fWaitingAcc"];
-	m_fRemainAcc = In_Json["m_fRemainAcc"];
-	m_fSequenceAcc = In_Json["m_fSequenceAcc"];
-
-	m_fLifeTimeRatio = In_Json["m_fLifeTimeRatio"];
-
-	m_fWaitingTime = In_Json["m_fWaitingTime"];
-	m_fLifeTime = In_Json["m_fLifeTime"];
-	m_fRemainTime = In_Json["m_fRemainTime"];
-	m_fSequenceTime = In_Json["m_fSequenceTime"];
-
-
-	for (_int i = 0; i < (_int)TEXTURE_END; i++)
-	{
-		m_pGameInstance->Convert_WString_To_String(m_tParticleDesc.strTextureTag[i]) = In_Json["strTextureTag"][i];
-		m_tParticleDesc.iTextureIndex[i] = In_Json["iTextureIndex"][i];
-	}
-
-	m_tParticleDesc.iRenderGroup = In_Json["iRenderGroup"];
-	m_tParticleDesc.iShaderPassIndex = In_Json["iShaderPassIndex"];
-
-	m_tParticleDesc.bBillBoard = In_Json["bBillBoard"];
-	m_tParticleDesc.bDissolve = In_Json["bDissolve"];
-
-
-	CJson_Utility::Load_Float2(In_Json["vUV_Offset"], m_tParticleDesc.vUV_Offset);
-	CJson_Utility::Load_Float2(In_Json["vUV_Scale"], m_tParticleDesc.vUV_Scale);
-
-
-	m_tParticleDesc.fUV_RotDegree = In_Json["fUV_RotDegree"];
-
-	m_tParticleDesc.bUV_Wave = In_Json["bUV_Wave"];
-	m_tParticleDesc.fUV_WaveSpeed = In_Json["fUV_WaveSpeed"];
-
-
-	CJson_Utility::Load_Float4(In_Json["vColor_Offset"], m_tParticleDesc.vColor_Offset);
-	CJson_Utility::Load_Float4(In_Json["vColor_Clip"], m_tParticleDesc.vColor_Clip);
-	CJson_Utility::Load_Float4(In_Json["vColor_Mul"], m_tParticleDesc.vColor_Mul);
-
-	m_tParticleDesc.fBloom = In_Json["fBloom"];
-	m_tParticleDesc.fRadial = In_Json["fRadial"];
-	m_tParticleDesc.fDissolveAmount = In_Json["fDissolveAmount"];
-	m_tParticleDesc.padding = In_Json["padding"];
-
-
-	m_tParticleDesc.bActive_Tool = In_Json["bActive_Tool"];
-	m_tParticleDesc.bPlay = In_Json["bPlay"];
-	m_tParticleDesc.bLoop = In_Json["bLoop"];
-	m_tParticleDesc.bReverse = In_Json["bReverse"];
-	m_tParticleDesc.bRender = In_Json["bRender"];
-	m_tParticleDesc.bSpriteAnim = In_Json["bSpriteAnim"];
-
-	m_tParticleDesc.eType_Easing = In_Json["eType_Easing"];
-
-	m_tParticleDesc.bParentPivot = In_Json["bParentPivot"];
-
-	_float4x4 matPivot;
-	ZeroMemory(&matPivot, sizeof(_float4x4));
-	CJson_Utility::Load_JsonFloat4x4(In_Json["matPivot"], matPivot);
-	m_tParticleDesc.matPivot = matPivot;
-
-
-	_float4x4 matOffset;
-	ZeroMemory(&matOffset, sizeof(_float4x4));
-	CJson_Utility::Load_JsonFloat4x4(In_Json["matOffset"], matOffset);
-	m_tParticleDesc.matOffset = matOffset;
-
-
-	CJson_Utility::Load_Float3(In_Json["vPosition_Start"], m_tParticleDesc.vPosition_Start);
-	CJson_Utility::Load_Float3(In_Json["vPosition_End"], m_tParticleDesc.vPosition_End);
-
-	m_tParticleDesc.bPosition_Lerp = In_Json["bPosition_Lerp"];
-
-	CJson_Utility::Load_Float3(In_Json["vRotation_Start"], m_tParticleDesc.vRotation_Start);
-	CJson_Utility::Load_Float3(In_Json["vRotation_End"], m_tParticleDesc.vRotation_End);
-	m_tParticleDesc.bRotation_Lerp = In_Json["bRotation_Lerp"];
-
-	CJson_Utility::Load_Float3(In_Json["vScaling_Start"], m_tParticleDesc.vScaling_Start);
-	CJson_Utility::Load_Float3(In_Json["vScaling_End"], m_tParticleDesc.vScaling_End);
-	m_tParticleDesc.bScaling_Lerp = In_Json["bScaling_Lerp"];
-
-	CJson_Utility::Load_Float3(In_Json["vVelocity_Start"], m_tParticleDesc.vVelocity_Start);
-	CJson_Utility::Load_Float3(In_Json["vVelocity_End"], m_tParticleDesc.vVelocity_End);
-	CJson_Utility::Load_Float3(In_Json["vVelocity_Cur"], m_tParticleDesc.vVelocity_Cur);
-	m_tParticleDesc.bVelocity_Lerp = In_Json["bVelocity_Lerp"];
-
-
-	CJson_Utility::Load_Float4(In_Json["vColor_Start"], m_tParticleDesc.vColor_Start);
-	CJson_Utility::Load_Float4(In_Json["vColor_End"], m_tParticleDesc.vColor_End);
-	CJson_Utility::Load_Float4(In_Json["vColor_Cur"], m_tParticleDesc.vColor_Cur);
-	 m_tParticleDesc.bColor_Lerp = In_Json["bColor_Lerp"];
-
+	*&m_tParticleDesc = *static_cast<PARTICLE_DESC*>(Load_VoidDesc(In_Json));
 
 	 /* Particle */
-	m_tParticleDesc.iCurNumInstance = In_Json["iCurNumInstance"];
-
+	m_tParticleDesc.bSpriteAnim = In_Json["bSpriteAnim"];
 
 	 /* Sprite */
 	m_tSpriteDesc.fSequenceTerm = In_Json["fSequenceTerm"];
@@ -453,66 +270,8 @@ void* CEffect_Particle::Get_BufferDesc()
 {
 	CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferDesc = {};
 
-	tBufferDesc.eType_Action = m_tParticleDesc.eType_Action;
-	tBufferDesc.eType_Fade = m_tParticleDesc.eType_Fade;
-	tBufferDesc.eType_ColorLerp = m_tParticleDesc.eType_ColorLerp;
-
 	tBufferDesc.bLoop = m_tParticleDesc.bLoop;
 	tBufferDesc.bReverse = m_tParticleDesc.bReverse;
-	tBufferDesc.bSpriteAnim = m_tParticleDesc.bSpriteAnim;
-
-	tBufferDesc.iCurNumInstance = m_tParticleDesc.iCurNumInstance;
-	
-	tBufferDesc.vMinMaxLifeTime = m_tParticleDesc.vMinMaxLifeTime;
-
-	tBufferDesc.vMinMaxRange = m_tParticleDesc.vMinMaxRange;
-	tBufferDesc.vMinMaxRangeLength = m_tParticleDesc.vMinMaxRangeLength;
-	tBufferDesc.vCenterPosition = m_tParticleDesc.vCenterPosition;
-
-	tBufferDesc.vMinMaxSpeed = m_tParticleDesc.vMinMaxSpeed;
-
-	tBufferDesc.fSpeedAcc = m_tParticleDesc.fSpeedAcc;
-	tBufferDesc.fAccPosition = m_tParticleDesc.fAccPosition;
-
-
-	tBufferDesc.bUseGravity = m_tParticleDesc.bUseGravity;
-	tBufferDesc.fGravityAcc = m_tParticleDesc.fGravityAcc;
-	tBufferDesc.fUseGravityPosition = m_tParticleDesc.fUseGravityPosition;
-
-
-	tBufferDesc.vMinMaxRotationOffsetX = m_tParticleDesc.vMinMaxRotationOffsetX;
-	tBufferDesc.vMinMaxRotationOffsetY = m_tParticleDesc.vMinMaxRotationOffsetY;
-	tBufferDesc.vMinMaxRotationOffsetZ = m_tParticleDesc.vMinMaxRotationOffsetZ;
-	tBufferDesc.vRotationOffset = m_tParticleDesc.vRotationOffset;
-
-
-	tBufferDesc.vCurrentRotation = m_tParticleDesc.vCurrentRotation;
-	tBufferDesc.vMinMaxRotationForce = m_tParticleDesc.vMinMaxRotationForce;
-
-
-	tBufferDesc.vMinMaxScale = m_tParticleDesc.vMinMaxScale;
-	tBufferDesc.vAddScale = m_tParticleDesc.vAddScale;
-	tBufferDesc.vCurrentScale = m_tParticleDesc.vCurrentScale;
-
-
-	tBufferDesc.vMinMaxRed = m_tParticleDesc.vMinMaxRed;
-	tBufferDesc.vMinMaxGreen = m_tParticleDesc.vMinMaxGreen;
-	tBufferDesc.vMinMaxBlue = m_tParticleDesc.vMinMaxBlue;
-	tBufferDesc.vMinMaxAlpha = m_tParticleDesc.vMinMaxAlpha;
-
-	tBufferDesc.vCurrentColor = m_tParticleDesc.vCurrentColor;
-
-
-	/* SpriteDesc */
-	tBufferDesc.fSequenceTerm = m_tSpriteDesc.fSequenceTerm;
-
-	tBufferDesc.vTextureSize = m_tSpriteDesc.vTextureSize;
-	tBufferDesc.vTileSize = m_tSpriteDesc.vTileSize;
-
-	tBufferDesc.vUV_CurTileIndex = m_tSpriteDesc.vUV_CurTileIndex;
-	tBufferDesc.vUV_MinTileCount = m_tSpriteDesc.vUV_MinTileCount;
-	tBufferDesc.vUV_MaxTileCount = m_tSpriteDesc.vUV_MaxTileCount;
-
 
 	return &tBufferDesc;
 }
@@ -530,7 +289,8 @@ HRESULT CEffect_Particle::Ready_Components()
 
 	/* For.Com_VIBuffer */
 	{
-		CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferInfo = *static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(Get_BufferDesc());
+		//CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferInfo = *static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(Get_BufferDesc());
+		CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferInfo = {};
 		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle_Point"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
 			return E_FAIL;
 	}

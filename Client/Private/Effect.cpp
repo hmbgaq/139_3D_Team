@@ -228,26 +228,25 @@ void CEffect::Load_FromJson(const json& In_Json)
 	{
 		for (_int i = 0; i < m_tEffectDesc.iPartSize; ++i)
 		{
-			wstring strProtoTag = TEXT("");
-			wstring strPartTag = TEXT("");
+			CEffect_Void::EFFECTVOID_DESC	tVoidDesc = {};
 			string strTag = "";
 
 			strTag = In_Json["Part"][i]["strProtoTag"];
-			m_pGameInstance->String_To_WString(strTag, strProtoTag);
+			m_pGameInstance->String_To_WString(strTag, tVoidDesc.strProtoTag);
 
 			strTag = In_Json["Part"][i]["strPartTag"];
-			m_pGameInstance->String_To_WString(strTag, strPartTag);
-	
-			
-			CEffect_Particle::PARTICLE_DESC	tParticleDesc = {};
+			m_pGameInstance->String_To_WString(strTag, tVoidDesc.strPartTag);
+		
 
+			strTag = In_Json["Part"][i]["strModelTag"];
+			m_pGameInstance->String_To_WString(strTag, tVoidDesc.strModelTag);
 			for (_int j = 0; j < (_int)CEffect_Void::TEXTURE_END; ++j)
 			{
 				strTag = In_Json["Part"][i]["strTextureTag"][j];
-				m_pGameInstance->String_To_WString(strTag, tParticleDesc.strTextureTag[j]);
+				m_pGameInstance->String_To_WString(strTag, tVoidDesc.strTextureTag[j]);
 			}
 
-			Ready_PartObjects(strProtoTag, strPartTag, &tParticleDesc);
+			Ready_PartObjects(tVoidDesc.strProtoTag, tVoidDesc.strPartTag, &tVoidDesc);
 		}
 	}
 

@@ -20,6 +20,7 @@ public:
 		wstring		strPartTag = { TEXT("") };
 
 		// Texture
+		wstring		strModelTag = TEXT("");
 		wstring		strTextureTag[TEXTURE_END];
 		_int		iTextureIndex[TEXTURE_END] = { 0 };
 
@@ -147,6 +148,8 @@ public:
 	virtual _bool Write_Json(json& Out_Json)		override;
 	virtual void Load_FromJson(const json& In_Json)	override;
 
+	void	Write_VoidDesc(json& Out_Json, void* pArg);
+	void*	Load_VoidDesc(const json& In_Json);
 
 public:
 	virtual void	ReSet_Effect();

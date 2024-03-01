@@ -411,8 +411,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::Text("MaxInstance : %d", m_iMaxNumInstance);
 				if (ImGui::DragInt("Instance Count", &m_iNumInstance, 1, 1, m_iMaxNumInstance))
 				{
-					m_pParticleDesc->iCurNumInstance;
-					m_pParticlePointDesc->iCurNumInstance = m_iNumInstance;
 					pVIBuffer->Set_NumInstance(m_iNumInstance);
 				}
 
@@ -1122,7 +1120,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_iShaderPassIndex_Particle = m_pParticleDesc->iShaderPassIndex;
 			m_iRenderGroup_Particle = m_pParticleDesc->iRenderGroup;
 
-			m_iNumInstance = m_pParticleDesc->iCurNumInstance;
+			m_iNumInstance = pVIBuffer->Get_NumInstance();
 
 			if (m_pParticleDesc->bBillBoard)
 				m_iBillBoard = 0;
@@ -1857,7 +1855,6 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		tParticleDesc.iShaderPassIndex = { 1 };
 
 		tParticleDesc.bBillBoard = TRUE;
-		tParticleDesc.iCurNumInstance = { (_uint)m_iNumInstance };
 
 		tParticleDesc.fUV_RotDegree = { 0.f };
 
@@ -2078,7 +2075,7 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tMeshDesc.iShaderPassIndex = { 0 };
 
 		tMeshDesc.iRenderGroup = { 9 };
-		tMeshDesc.iCurNumInstance = { 1 };
+		tMeshDesc.iCurNumInstance = { 1 };	// 인스턴스 개수 설정 생성
 
 		tMeshDesc.bBillBoard = { FALSE };
 
