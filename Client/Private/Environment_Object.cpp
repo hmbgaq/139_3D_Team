@@ -52,10 +52,10 @@ void CEnvironment_Object::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Object::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
-	{
-		m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
-	}
+	//f (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
+	//
+	//	m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
+	//
 }
 
 void CEnvironment_Object::Late_Tick(_float fTimeDelta)
@@ -73,10 +73,10 @@ void CEnvironment_Object::Late_Tick(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 		return ;
 
-	if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
-	{
-		m_pGameInstance->Add_DebugRender(m_pPickingCollider);
-	}
+	//if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
+	//{
+	//	m_pGameInstance->Add_DebugRender(m_pPickingCollider);
+	//}
 }
 
 HRESULT CEnvironment_Object::Render()
@@ -218,10 +218,10 @@ HRESULT CEnvironment_Object::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
-
-	m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
-	Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
+	//CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
+	//
+	//m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
+	//Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
 
 	//!CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
 	//!
@@ -229,11 +229,11 @@ HRESULT CEnvironment_Object::Ready_Components()
 	//!Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
 	//Desc_AABB.vCenter = _float3(0.f, 0.f, 0.f);
 
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Test)))
-	{
-		MSG_BOX("¤¸´ï");
-		return E_FAIL;
-	}
+	//if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Test)))
+	//{
+	//	MSG_BOX("¤¸´ï");
+	//	return E_FAIL;
+	//}
 
 	//!if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Desc_AABB)))
 	//!{

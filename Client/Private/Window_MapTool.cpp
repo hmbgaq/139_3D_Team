@@ -50,6 +50,8 @@ HRESULT CWindow_MapTool::Initialize()
 	
 	XMStoreFloat4x4(&m_matInstanceMatrix, XMMatrixIdentity());
 
+	
+	
 	//m_mapPreviewInstance
 	
 	return S_OK;
@@ -62,7 +64,7 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	__super::Begin();
-
+	
 	
 
 	//TODO ImGuiTabBarFlags_
@@ -89,7 +91,8 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	
 	ImGui::SeparatorText(u8"세이브 / 로드");
 	{
-		if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
+		
+		if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; m_strDialogPath = "../Bin/DafaFiles/Data_Map/"; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DafaFiles/Data_Map/";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
 	}ImGui::Separator(); 
 
 	ImGui::EndChild();
@@ -336,9 +339,20 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 			SaveJson.emplace("Interact_Json", InteractJson);
 			SaveJson.emplace("Instance_Json", InstanceJson);
 			SaveJson.emplace("Monster_Json", MonsterJson);
-			//! 추후 작성 npc SaveJson.emplace("NPC_Json", NPCJson);
+
+
+			string strSavePath = strPath + "/" + strNoExtFileName + "_MapData.json";
+			if (FAILED(CJson_Utility::Save_Json(strSavePath.c_str(), SaveJson)))
+			{
+				MSG_BOX("맵툴 저장 실패");
+			}
+			else
+			{
+				MSG_BOX("맵툴 저장 성공");
+			}
 
 			return S_OK;
+
 }
 
 HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
@@ -1096,7 +1110,7 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 						{
 							m_tWorldRay = m_pGameInstance->Get_MouseRayWorld(g_hWnd, g_iWinSizeX, g_iWinSizeY);
 #ifdef _DEBUG
-							if (pTargetObject->Picking_VerJSY(&m_tWorldRay, &m_fRayPos))
+							if (pTargetObject->Picking(&m_fRayPos))
 							{
 								m_fMeshPos = m_fRayPos;
 							}
@@ -1543,10 +1557,6 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 			strListBoxName = u8"삭제할 환경 객체 리스트";
 			iSelectTag = m_iSelectObjectIndex;
 		}
-		
-
-		
-
 
 	}
 
@@ -1634,7 +1644,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 					auto iter = m_mapPreviewInstance.find(m_vecPreViewInstanceTag[m_iSelectPreviewIndex]);
 
 					
-					iter->second.erase(iter->second.begin() + m_iSelectPreviewIndex);
+					iter->second.erase(iter->second.begin() + iter->second.size() - 1);
 					
 
 					m_vecPreViewInstance[m_iSelectPreviewIndex]->Set_Dead(true);
@@ -1646,15 +1656,19 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 				else
 				{
 					m_vecCreateObject[m_iSelectObjectIndex]->Set_Dead(true);
+					m_pPickingObject = nullptr;
 					m_vecCreateObject[m_iSelectObjectIndex] = nullptr;
 					m_vecCreateObject.erase(m_vecCreateObject.begin() + m_iSelectObjectIndex);
+					m_iSelectObjectIndex = 0;
 				}
 			}
 			else
 			{
 				m_vecCreateObject[m_iSelectObjectIndex]->Set_Dead(true);
 				m_vecCreateObject[m_iSelectObjectIndex] = nullptr;
+				m_pPickingObject = nullptr;
 				m_vecCreateObject.erase(m_vecCreateObject.begin() + m_iSelectObjectIndex);
+				m_iSelectObjectIndex = 0;
 			}
 			
 			

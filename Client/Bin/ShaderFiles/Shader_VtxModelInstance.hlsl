@@ -95,9 +95,11 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
 
+    if (Out.vDiffuse.a == 0)
+        discard;
 	
 	
-	return Out;
+        return Out;
 }
 
 ////Normal Mapping ///////////

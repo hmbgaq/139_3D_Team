@@ -100,8 +100,8 @@ PS_OUT PS_MAIN(PS_IN In)
 	vNormal = mul(vNormal, WorldMatrix);
 
 
-	//if (vMtrlDiffuse.a == 0.f)
-	//	discard;
+	if (vMtrlDiffuse.a == 0.f)
+		discard;
 
     
 	Out.vDiffuse = vMtrlDiffuse;	

@@ -551,6 +551,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 			strcat_s(szTmp, szFileName);
 			strcat_s(szTmp, szEXT);
 
+
 			//_char szTest[MAX_PATH] = ".dds";
 			//strcat_s(szTmp, szTest);
 
@@ -560,6 +561,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 
 			MaterialDesc.pMtrlTextures[j] = CTexture::Create(m_pDevice, m_pContext, szFullPath, 1);
+
 			if (nullptr == MaterialDesc.pMtrlTextures[j])
 				return E_FAIL;
 		}

@@ -86,13 +86,13 @@ void CEnvironment_Instance::Late_Tick(_float fTimeDelta)
 			return;
 /*	}*/
 
-		if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
-		{
-			for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
-			{
-				m_pGameInstance->Add_DebugRender(m_vecColliders[i]);
-			}
-		}
+		//if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
+		//{
+		//	for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
+		//	{
+		//		m_pGameInstance->Add_DebugRender(m_vecColliders[i]);
+		//	}
+		//}
 	
 
 }
@@ -225,7 +225,7 @@ HRESULT CEnvironment_Instance::Ready_Components()
 			Test.vCenter = {0.f, 0.f, 0.f};
 			Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
 
-			wstring strColliderComTag = L"Com_Collider" + i;
+			wstring strColliderComTag = L"Com_Collider" + to_wstring(i);
 			
 			if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Test)))
 			{
