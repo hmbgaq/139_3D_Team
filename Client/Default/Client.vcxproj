@@ -310,6 +310,7 @@
     <ClInclude Include="..\Public\Bandit_Sniper.h" />
     <ClInclude Include="..\Public\Body_Assassin.h" />
     <ClInclude Include="..\Public\Body_Bandit_Heavy.h" />
+    <ClInclude Include="..\Public\Body_Bandit_Sniper.h" />
     <ClInclude Include="..\Public\Body_Infected.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
@@ -530,6 +531,7 @@
     <ClInclude Include="..\Public\Player_Weapon_ELShotgun.h" />
     <ClInclude Include="..\Public\Player_Weapon_ELWinchester.h" />
     <ClInclude Include="..\Public\Player_Weapon_FlameBelcher.h" />
+    <ClInclude Include="..\Public\Player_Weapon_Punch.h" />
     <ClInclude Include="..\Public\Player_Weapon_Revolver.h" />
     <ClInclude Include="..\Public\Player_Weapon_Shotgun.h" />
     <ClInclude Include="..\Public\Player_Weapon_Winchester.h" />
@@ -681,6 +683,7 @@
     <ClCompile Include="..\Private\Bandit_Sniper.cpp" />
     <ClCompile Include="..\Private\Body_Assassin.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Heavy.cpp" />
+    <ClCompile Include="..\Private\Body_Bandit_Sniper.cpp" />
     <ClCompile Include="..\Private\Body_Infected.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
@@ -895,6 +898,7 @@
     <ClCompile Include="..\Private\Player_Weapon_ELShotgun.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_ELWinchester.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_FlameBelcher.cpp" />
+    <ClCompile Include="..\Private\Player_Weapon_Punch.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Revolver.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Shotgun.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Winchester.cpp" />

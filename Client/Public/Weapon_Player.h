@@ -28,6 +28,7 @@ protected:
 	HRESULT Bind_ShaderResources();
 
 
+
 public:
 	/* 원형객체를 생성한다. */
 	//static CWeapon_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

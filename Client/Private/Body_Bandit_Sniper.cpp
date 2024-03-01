@@ -1,18 +1,18 @@
 #include "stdafx.h"
-#include "..\Public\Body_Assassin.h"
+#include "..\Public\Body_Bandit_Sniper.h"
 #include "GameInstance.h"
 
-CBody_Assassin::CBody_Assassin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CBody_Bandit_Sniper::CBody_Bandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CBody(pDevice, pContext, strPrototypeTag)
 {
 }
 
-CBody_Assassin::CBody_Assassin(const CBody_Assassin& rhs)
+CBody_Bandit_Sniper::CBody_Bandit_Sniper(const CBody_Bandit_Sniper& rhs)
 	: CBody(rhs)
 {
 }
 
-HRESULT CBody_Assassin::Initialize_Prototype()
+HRESULT CBody_Bandit_Sniper::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -20,7 +20,7 @@ HRESULT CBody_Assassin::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CBody_Assassin::Initialize(void* pArg)
+HRESULT CBody_Bandit_Sniper::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -28,22 +28,22 @@ HRESULT CBody_Assassin::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CBody_Assassin::Priority_Tick(_float fTimeDelta)
+void CBody_Bandit_Sniper::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 }
 
-void CBody_Assassin::Tick(_float fTimeDelta)
+void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 }
 
-void CBody_Assassin::Late_Tick(_float fTimeDelta)
+void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 }
 
-HRESULT CBody_Assassin::Render()
+HRESULT CBody_Bandit_Sniper::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
@@ -51,7 +51,7 @@ HRESULT CBody_Assassin::Render()
 	return S_OK;
 }
 
-HRESULT CBody_Assassin::Render_Shadow()
+HRESULT CBody_Bandit_Sniper::Render_Shadow()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
@@ -82,20 +82,19 @@ HRESULT CBody_Assassin::Render_Shadow()
 	return S_OK;
 }
 
-void CBody_Assassin::OnCollisionEnter(CCollider* other)
+void CBody_Bandit_Sniper::OnCollisionEnter(CCollider* other)
 {
 }
 
-void CBody_Assassin::OnCollisionStay(CCollider* other)
+void CBody_Bandit_Sniper::OnCollisionStay(CCollider* other)
 {
 }
 
-void CBody_Assassin::OnCollisionExit(CCollider* other)
+void CBody_Bandit_Sniper::OnCollisionExit(CCollider* other)
 {
 }
 
-
-HRESULT CBody_Assassin::Ready_Components()
+HRESULT CBody_Bandit_Sniper::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
@@ -105,7 +104,7 @@ HRESULT CBody_Assassin::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Assassin"), 
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Bandit_Sniper"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
@@ -121,7 +120,7 @@ HRESULT CBody_Assassin::Ready_Components()
 		return E_FAIL;
 }
 
-HRESULT CBody_Assassin::Bind_ShaderResources()
+HRESULT CBody_Bandit_Sniper::Bind_ShaderResources()
 {
 	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
@@ -131,38 +130,38 @@ HRESULT CBody_Assassin::Bind_ShaderResources()
 		return E_FAIL;
 }
 
-CBody_Assassin* CBody_Assassin::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CBody_Bandit_Sniper* CBody_Bandit_Sniper::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CBody_Assassin* pInstance = new CBody_Assassin(pDevice, pContext, strPrototypeTag);
+	CBody_Bandit_Sniper* pInstance = new CBody_Bandit_Sniper(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CBody_Assassin");
+		MSG_BOX("Failed to Created : CBody_Bandit_Sniper");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CBody_Assassin::Clone(void* pArg)
+CGameObject* CBody_Bandit_Sniper::Clone(void* pArg)
 {
-	CBody_Assassin* pInstance = new CBody_Assassin(*this);
+	CBody_Bandit_Sniper* pInstance = new CBody_Bandit_Sniper(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CBody_Assassin");
+		MSG_BOX("Failed to Cloned : CBody_Bandit_Sniper");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CBody_Assassin::Pool()
+CGameObject* CBody_Bandit_Sniper::Pool()
 {
-	return new CBody_Assassin(*this);
+	return new CBody_Bandit_Sniper(*this);
 }
 
-void CBody_Assassin::Free()
+void CBody_Bandit_Sniper::Free()
 {
 	__super::Free();
 }

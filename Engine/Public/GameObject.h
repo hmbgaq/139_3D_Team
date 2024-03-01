@@ -80,7 +80,9 @@ public:
 
 	_bool Is_PoolObject() { return m_bIsPoolObject; };
 
-
+public:
+	CGameObject* Get_Object_Owner();
+	void Set_Object_Owner(CGameObject* pOwner);
 	
 
 
@@ -105,6 +107,9 @@ protected:
 
 protected:
 	wstring						m_strPrototypeTag;
+
+protected:
+	CGameObject* m_pOwner = { nullptr };
 
 
 

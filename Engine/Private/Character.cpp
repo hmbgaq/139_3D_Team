@@ -128,6 +128,8 @@ HRESULT CCharacter::Add_PartObject(const wstring& strPrototypeTag, const wstring
 
 	m_PartObjects.emplace(strPartTag, pPartObject);
 
+	pPartObject->Set_Object_Owner(this);
+
 	return S_OK;
 }
 
@@ -303,6 +305,54 @@ void CCharacter::Set_Enable(_bool _Enable)
 
 
 }
+
+Hit_Type CCharacter::Set_Hitted(_uint iDamage, _float3 vForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower)
+{
+	Hit_Type eHitType = Hit_Type::None;
+
+	if (Power::Absolute == m_eStrength)
+	{
+		return Hit_Type::None;
+	}
+
+	//Get_Damaged(iDamage);
+	//Set_InvincibleTime(fInvincibleTime);
+
+	if (m_iHp <= 0)
+	{
+		//Add_Force(vForce);
+		Hitted_Dead();
+		eHitType = Hit_Type::Hit_Finish;
+	}
+	else if (eHitPower >= m_eStrength)
+	{
+		eHitType = Hit_Type::Hit;
+
+		//Add_Force(vForce);
+
+		switch (eHitDirection)
+		{
+		case Engine::Left:
+			Hitted_Right();
+			break;
+		case Engine::Right:
+			Hitted_Left();
+			break;
+		default:
+			Hitted_Front();
+			break;
+		}
+		//Set_StiffnessRate(fStiffnessRate);
+	}
+	else
+	{
+		return Hit_Type::Hit_Lightly;
+	}
+
+	return eHitType;
+}
+
+
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {

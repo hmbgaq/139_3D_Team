@@ -6,6 +6,7 @@
 BEGIN(Engine)
 
 class CPhysXCollider;
+class CCharacter;
 class CCollider;
 class CTexture;
 class CShader;
@@ -66,9 +67,11 @@ public:
 #ifdef _DEBUG
 public: //!For.Tool
 	virtual _bool Picking(_Out_ _float3* vPickedPos) override;
-
-
 #endif 
+
+public:
+	CCharacter* Get_Owner();
+	void Set_Owner(CCharacter* pOwner);
 
 
 	
@@ -89,6 +92,9 @@ protected:
 	CModel* m_pModelCom = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
 	//CTexture* m_pDissolveTexture = { nullptr };
+
+protected:
+	CCharacter* m_pOwner = { nullptr };
 
 protected:
 	class CTransform* m_pParentTransform = { nullptr };

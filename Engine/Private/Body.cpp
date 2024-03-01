@@ -192,6 +192,16 @@ _bool CBody::Picking(_float3* vPickedPos)
 
 }
 
+CCharacter* CBody::Get_Owner()
+{
+	return m_pOwner;
+}
+
+void CBody::Set_Owner(CCharacter* pOwner)
+{
+	m_pOwner = pOwner;
+}
+
 #endif
 
 HRESULT CBody::Bind_ShaderResources()

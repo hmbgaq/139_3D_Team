@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "Character.h"
+#include "Monster_Character.h"
 #include "Actor.h"
 
 BEGIN(Client)
 
-class CInfected : public CCharacter
+class CInfected : public CMonster_Character
 {
 private:
 	CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

@@ -2,6 +2,7 @@
 
 #include "GameInstance.h"
 #include "Body_Player.h"
+#include "Weapon_Player.h"
 
 #include "Player_IdleLoop.h"
 #include "Data_Manager.h"
@@ -84,6 +85,24 @@ HRESULT CPlayer::Ready_PartObjects()
 	CBody::BODY_DESC		BodyDesc = {};
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
 		return E_FAIL;
+
+	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
+	{
+		
+		CWeapon::WEAPON_DESC		WeaponDesc = {};
+		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, TEXT("Weapon_Punch_L"))))
+			return E_FAIL;
+
+		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch_R"))))
+			return E_FAIL;
+
+	}
+
+	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch_L"));
+
+	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_Punch_R"));
+
+
 
 
 	return S_OK;

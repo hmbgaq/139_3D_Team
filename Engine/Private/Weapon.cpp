@@ -1,6 +1,7 @@
 #include "..\Public\Weapon.h"
 
 #include "GameInstance.h"
+#include "Character.h"
 
 #include "Bone.h"
 
@@ -65,7 +66,8 @@ void CWeapon::Tick(_float fTimeDelta)
 	for (_uint i = 0; i < m_iColliderSize; ++i)
 		m_pColliders[i]->Update(m_WorldMatrix);
 
-	//Collision_Chcek();
+	//m_pCollider->Update(m_WorldMatrix);
+
 }
 
 void CWeapon::Late_Tick(_float fTimeDelta)
@@ -83,6 +85,16 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 	}
 
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * m_pParentTransform->Get_WorldMatrix());
+
+
+#ifdef _DEBUG
+	for (_uint i = 0; i < m_iColliderSize; ++i)
+		m_pGameInstance->Add_DebugRender(m_pColliders[i]);
+#endif
+
+	if (nullptr == m_pModelCom)
+		return;
+
 
 	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
 	{
@@ -152,6 +164,13 @@ HRESULT CWeapon::Render_Shadow()
 	return S_OK;
 }
 
+void CWeapon::Attack(CCharacter* pCharacter, _float3 vLocalPos)
+{
+	//_float3 vKnockbackPos = Calc_Knockback(pCharacter);
+	//pCharacter->Set_Hitted(m_iDamage, vKnockbackPos, m_fStiffnessRate, m_eHitDirection, m_eHitPower);
+
+}
+
 HRESULT CWeapon::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
@@ -176,4 +195,6 @@ void CWeapon::Free()
 	Safe_Release(m_pSocketBone);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);
+
+	//Safe_Release(m_pCollider);
 }

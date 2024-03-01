@@ -34,6 +34,7 @@
 #include "Player_Weapon_FlameBelcher.h"
 #include "Player_Weapon_Shotgun.h"
 #include "Player_Weapon_Winchester.h"
+#include "Player_Weapon_Punch.h"
 #pragma endregion
 
 #pragma region INFECTED
@@ -513,6 +514,8 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_FlameBelcher"), CPlayer_Weapon_FlameBelcher::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_FlameBelcher"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Shotgun"), CPlayer_Weapon_Shotgun::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Shotgun"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Winchester"), CPlayer_Weapon_Winchester::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Winchester"))));
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Punch"), CPlayer_Weapon_Punch::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Winchester"))));
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Player"), CWeapon_Player::Create(m_pDevice, m_pContext)));
 

@@ -148,6 +148,17 @@ CTransform* CGameObject::Get_Transform()
 	return m_pTransformCom;
 }
 
+CGameObject* CGameObject::Get_Object_Owner()
+{
+	return m_pOwner;
+}
+
+void CGameObject::Set_Object_Owner(CGameObject* pOwner)
+{
+	m_pOwner = pOwner;
+}
+
+
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComTag, _Inout_ CComponent** ppOut, void * pArg)
 {
 	if (nullptr != Find_Component(strComTag))

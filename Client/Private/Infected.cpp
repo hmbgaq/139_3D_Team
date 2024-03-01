@@ -8,12 +8,12 @@
 
 
 CInfected::CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CCharacter(pDevice, pContext, strPrototypeTag)
+	: CMonster_Character(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CInfected::CInfected(const CInfected& rhs)
-	: CCharacter(rhs)
+	: CMonster_Character(rhs)
 {
 }
 

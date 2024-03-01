@@ -100,6 +100,16 @@ public:
 public:
 	virtual void Set_Enable(_bool _Enable) override;
 
+public:
+	virtual void Set_Hitted() {};	//test
+	virtual Hit_Type Set_Hitted(_uint iDamage, _float3 vForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower);
+
+
+	virtual void Hitted_Left() {};
+	virtual void Hitted_Right() {};
+	virtual void Hitted_Front() {};
+	virtual void Hitted_Down() {};
+	virtual void Hitted_Dead() {};
 
 public:
 	_int Get_Hp() {
@@ -112,6 +122,8 @@ public:
 
 protected:
 	_int m_iHp = { 0 };
+	Power m_eStrength = { Power::Light };
+	_float m_fStiffnessRate = { 1.f };
 
 
 protected:
@@ -119,6 +131,10 @@ protected:
 	CBody* m_pBody = { nullptr };
 	vector<CWeapon*> m_Weapons;
 	CHARCTER_DESC CharAnimDesc = {};
+
+protected:
+	CCharacter* m_pTarget = { nullptr };
+
 protected:
 	//CPhysXController* m_pPhysXControllerCom = { nullptr };
 	PxControllerCollisionFlags m_LastCollisionFlags;

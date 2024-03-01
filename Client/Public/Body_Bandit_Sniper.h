@@ -8,13 +8,13 @@ END
 
 BEGIN(Client)
 
-class CBody_Assassin final : public CBody
+class CBody_Bandit_Sniper final : public CBody
 {
 
 private:
-	CBody_Assassin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CBody_Assassin(const CBody_Assassin& rhs);
-	virtual ~CBody_Assassin() = default;
+	CBody_Bandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CBody_Bandit_Sniper(const CBody_Bandit_Sniper& rhs);
+	virtual ~CBody_Bandit_Sniper() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -40,7 +40,7 @@ private:
 
 public:
 	/* 원형객체를 생성한다. */
-	static CBody_Assassin* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	static CBody_Bandit_Sniper* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
