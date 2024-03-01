@@ -51,6 +51,8 @@ public:
 		return m_bUse;
 	}
 
+public:
+
 
 
 

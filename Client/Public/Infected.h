@@ -8,7 +8,7 @@ BEGIN(Client)
 
 class CInfected : public CMonster_Character
 {
-private:
+protected:
 	CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CInfected(const CInfected& rhs);
 	virtual ~CInfected() = default;
@@ -22,9 +22,17 @@ public:
 	virtual HRESULT Render() override;
 
 
-private:
+protected:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
+
+protected:
+	virtual void Hitted_Left()	override;
+	virtual void Hitted_Right() override;
+	virtual void Hitted_Front() override;
+	virtual void Hitted_Down()	override;
+	virtual void Hitted_Dead()	override;
+
 
 private:
 	CActor<CInfected>* m_pActor = { nullptr };

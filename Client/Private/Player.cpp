@@ -99,8 +99,13 @@ HRESULT CPlayer::Ready_PartObjects()
 	}
 
 	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch_L"));
+	m_pWeapon_Punch_L->Set_Enable(false);
+	m_pWeapon_Punch_L->Set_Enable(true);
+
 
 	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_Punch_R"));
+	m_pWeapon_Punch_R->Set_Enable(false);
+	m_pWeapon_Punch_R->Set_Enable(true);
 
 
 

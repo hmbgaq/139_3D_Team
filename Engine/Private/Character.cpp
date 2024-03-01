@@ -34,6 +34,8 @@ HRESULT CCharacter::Initialize(void* pArg)
 	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;
 
+
+
 	return S_OK;
 }
 
@@ -322,7 +324,7 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _float3 vForce, _float fStiffness
 	{
 		//Add_Force(vForce);
 		Hitted_Dead();
-		eHitType = Hit_Type::Hit_Finish;
+		//eHitType = Hit_Type::Hit_Finish;
 	}
 	else if (eHitPower >= m_eStrength)
 	{
@@ -343,10 +345,6 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _float3 vForce, _float fStiffness
 			break;
 		}
 		//Set_StiffnessRate(fStiffnessRate);
-	}
-	else
-	{
-		return Hit_Type::Hit_Lightly;
 	}
 
 	return eHitType;

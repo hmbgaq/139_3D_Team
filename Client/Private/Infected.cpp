@@ -6,6 +6,15 @@
 #include "Infected_Idle.h"
 #include "Infected_SpawnGround.h"
 
+#include "Infected_HitNormal_F_01_NEW.h"
+#include "Infected_HitNormal_FL_01_NEW.h"
+#include "Infected_HitNormal_FR_01_NEW.h"
+#include "Infected_DeathHeavy_F_01_NEW.h"
+#include "Infected_KnockFrontLight_F_01_NEW.h"
+
+
+
+
 
 CInfected::CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -87,6 +96,32 @@ HRESULT CInfected::Ready_PartObjects()
 
 	return S_OK;
 }
+
+void CInfected::Hitted_Left()
+{
+	m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
+}
+
+void CInfected::Hitted_Right()
+{
+	m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
+}
+
+void CInfected::Hitted_Front()
+{
+	m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
+}
+
+void CInfected::Hitted_Down()
+{
+	m_pActor->Set_State(new CInfected_KnockFrontLight_F_01_NEW());
+}
+
+void CInfected::Hitted_Dead()
+{
+	m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
+}
+
 
 CInfected* CInfected::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {

@@ -101,9 +101,7 @@ public:
 	virtual void Set_Enable(_bool _Enable) override;
 
 public:
-	virtual void Set_Hitted() {};	//test
 	virtual Hit_Type Set_Hitted(_uint iDamage, _float3 vForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower);
-
 
 	virtual void Hitted_Left() {};
 	virtual void Hitted_Right() {};
@@ -121,7 +119,7 @@ public:
 	};
 
 protected:
-	_int m_iHp = { 0 };
+	_int m_iHp = { 1 };
 	Power m_eStrength = { Power::Light };
 	_float m_fStiffnessRate = { 1.f };
 
