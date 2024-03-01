@@ -917,7 +917,7 @@ void CWindow_EffectTool::Update_MeshTab()
 		{
 			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
 
-			if (CEffect_Void::INSTANCE == eType_Effect)
+			if (CEffect_Void::MESH == eType_Effect)
 			{
 				m_pInstanceDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_Desc();
 
@@ -1225,7 +1225,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vUV_MaxTileCount[1] = pSpriteDesc->vUV_MaxTileCount.y;
 		}
 
-		if (CEffect_Void::INSTANCE == eType_Effect)
+		if (CEffect_Void::MESH == eType_Effect)
 		{
 			m_pInstanceDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_Desc();
 
@@ -1245,10 +1245,6 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 		}
 
-		if (CEffect_Void::MESH == eType_Effect)
-		{
-
-		}
 
 		if (CEffect_Void::TRAIL == eType_Effect)
 		{
@@ -1533,14 +1529,9 @@ void CWindow_EffectTool::Update_EffectList()
 					m_pRectDesc->bActive_Tool = TRUE;
 				}
 
-				if (CEffect_Void::INSTANCE == eType_Effect)
-				{
-					m_pInstanceDesc->bActive_Tool = TRUE;
-				}
-
 				if (CEffect_Void::MESH == eType_Effect)
 				{
-
+					m_pInstanceDesc->bActive_Tool = TRUE;
 				}
 			}
 			ImGui::SameLine();
@@ -1560,15 +1551,9 @@ void CWindow_EffectTool::Update_EffectList()
 					m_pRectDesc->bActive_Tool = FALSE;
 				}
 
-				if (CEffect_Void::INSTANCE == eType_Effect)
-				{
-					m_pInstanceDesc->bActive_Tool = FALSE;
-
-				}
-
 				if (CEffect_Void::MESH == eType_Effect)
 				{
-
+					m_pInstanceDesc->bActive_Tool = FALSE;
 				}
 			}
 			ImGui::SameLine();
@@ -1587,14 +1572,9 @@ void CWindow_EffectTool::Update_EffectList()
 
 				}
 
-				if (CEffect_Void::INSTANCE == eType_Effect)
-				{
-					m_pCurPartEffect->ReSet_Effect();
-				}
-
 				if (CEffect_Void::MESH == eType_Effect)
 				{
-
+					m_pCurPartEffect->ReSet_Effect();
 				}
 			}
 		}
@@ -1659,10 +1639,6 @@ void CWindow_EffectTool::Update_EffectList()
 
 					}
 
-					if (CEffect_Void::INSTANCE == eType_Effect)
-					{
-
-					}
 
 					if (CEffect_Void::MESH == eType_Effect)
 					{
@@ -1862,7 +1838,6 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		tParticleDesc.fSpeedPerSec = { 5.f };
 		tParticleDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
-		tParticleDesc.bSpriteAnim = FALSE;
 		//tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
 		tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 		tParticleDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
@@ -2156,7 +2131,7 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
-		m_pCurPartEffect->Set_EffectType(CEffect_Void::INSTANCE);
+		m_pCurPartEffect->Set_EffectType(CEffect_Void::MESH);
 		dynamic_cast<CEffect_Void*>(m_pCurPartEffect)->Set_Owner(m_pCurEffect);
 
 
@@ -2206,7 +2181,6 @@ HRESULT CWindow_EffectTool::Add_Part_Trail()
 		tTrailDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
 
 		tTrailDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
-		//tTrailDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("");
 		tTrailDesc.iTextureIndex[CEffect_Particle::TEXTURE_MASK] = { 0 /*1*/ };
 
 		tTrailDesc.strTextureTag[CEffect_Particle::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
@@ -2492,6 +2466,7 @@ HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 	Update_CurParameters();
 
 	m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Get_FirstPartObject());
+	Update_CurParameters_Parts();
 
 	return S_OK;
 }

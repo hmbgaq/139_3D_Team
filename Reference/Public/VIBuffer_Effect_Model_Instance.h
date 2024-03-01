@@ -30,11 +30,16 @@ public:
 	virtual HRESULT		Bind_VIBuffers(_uint iMeshContainerIndex);
 	virtual void		Update(_float fTimeDelta) override;
 
-
-public:
-/*	void				Add_Mesh(_fmatrix vWorldMatrix);*/
 	void				Init_Instance(_int iNumInstance) override;
 	virtual				HRESULT	Render(_int iMeshIndex) override;
+
+public:
+	void ReSet();
+
+public:
+	virtual _bool Write_Json(json& Out_Json)		override;
+	virtual void Load_FromJson(const json& In_Json)	override;
+
 
 
 public:

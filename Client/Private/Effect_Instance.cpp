@@ -34,10 +34,6 @@ HRESULT CEffect_Instance::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	//m_pInstanceModelCom->Add_Mesh(m_pTransformCom->Get_WorldMatrix());
-
-
-
 	return S_OK;
 }
 

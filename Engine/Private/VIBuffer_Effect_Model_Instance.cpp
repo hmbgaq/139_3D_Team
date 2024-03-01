@@ -105,6 +105,19 @@ HRESULT CVIBuffer_Effect_Model_Instance::Render(_int iMeshIndex)
 	return S_OK;
 }
 
+void CVIBuffer_Effect_Model_Instance::ReSet()
+{
+}
+
+_bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
+{
+	return _bool();
+}
+
+void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
+{
+}
+
 CVIBuffer_Effect_Model_Instance* CVIBuffer_Effect_Model_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CVIBuffer_Effect_Model_Instance* pInstance = new CVIBuffer_Effect_Model_Instance(pDevice, pContext);
