@@ -55,6 +55,8 @@ public:
 		_bool		bLoop			= { TRUE };
 		_bool		bReverse		= { FALSE };
 		_bool		bRender			= { FALSE };
+		_bool		bUseSpriteAnim	= { FALSE };
+		_bool		bUseRigidBody	= { FALSE };
 
 		// Times
 		EASING_TYPE		eType_Easing = { LINEAR };

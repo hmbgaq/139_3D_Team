@@ -5,6 +5,7 @@
 #include "VIBuffer_Effect_Model_Instance.h"
 
 #include "Easing_Utillity.h"
+#include "SMath.h"
 
 CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
@@ -25,8 +26,7 @@ HRESULT CEffect_Instance::Initialize_Prototype()
 
 HRESULT CEffect_Instance::Initialize(void* pArg)
 {	
-	m_tInstanceDesc = *(EFFECT_INSTANCE_DESC*)pArg;
-	//*static_cast<EFFECTVOID_DESC*>(&m_tInstanceDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
+	*static_cast<EFFECTVOID_DESC*>(&m_tInstanceDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
@@ -72,6 +72,31 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 			m_fLifeTimeRatio = min(1.0f, m_fTimeAcc / m_fLifeTime);
 
 			/* ======================= 라이프 타임 동작 시작 ======================= */
+
+			//test
+			if (!m_tInstanceDesc.bAddForce)
+			{
+				for (_int i = 0; i < m_tInstanceDesc.iCurNumInstance; ++i)
+				{
+					_vector	vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+					vDir = XMVector3Normalize(vDir) * SMath::fRandom(0.1f, 3.f);
+
+					_float RotOffsetX = SMath::fRandom(0.f, 360.f);
+					_float RotOffsetY = SMath::fRandom(0.f, 360.f);
+					_float RotOffsetZ = SMath::fRandom(0.f, 360.f);
+
+					_float3 vRotationOffset = { RotOffsetX, RotOffsetY, RotOffsetZ };
+									
+					_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
+					_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
+
+				
+					_vector vForce = XMVector3TransformNormal(vDir, RotationMatrix) * m_tInstanceDesc.vMinMaxPower.y;
+					m_pVIBufferCom->Add_Force(i, vForce, m_tInstanceDesc.eForce_Mode);
+				}
+				
+				m_tInstanceDesc.bAddForce = TRUE;
+			}
 
 
 
@@ -159,6 +184,7 @@ void CEffect_Instance::ReSet_Effect()
 	m_tInstanceDesc.fDissolveAmount = 0.f;
 	m_tInstanceDesc.bDissolve = FALSE;
 	m_tInstanceDesc.bRender = FALSE;
+	m_tInstanceDesc.bAddForce = FALSE;
 
 	m_pVIBufferCom->ReSet();
 }
@@ -178,7 +204,9 @@ void* CEffect_Instance::Get_BufferDesc()
 	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferDesc = {};
 
 	tBufferDesc.pModel = m_pModelCom;
+
 	tBufferDesc.iCurNumInstance = m_tInstanceDesc.iCurNumInstance;
+	tBufferDesc.bUseRigidBody = m_tInstanceDesc.bUseRigidBody;
 
 
 
@@ -194,9 +222,8 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 
 	/* Mesh */
 	Out_Json["eType_Mesh"] = m_tInstanceDesc.eType_Mesh;
-
 	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
-
+	Out_Json["iCurNumInstance"] = m_tInstanceDesc.iCurNumInstance;
 
 	/* Bloom */
 	CJson_Utility::Write_Float4(Out_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);
@@ -214,14 +241,13 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-
 	*static_cast<EFFECTVOID_DESC*>(&m_tInstanceDesc) = *static_cast<EFFECTVOID_DESC*>(Load_VoidDesc(In_Json));
-
 
 	/* Mesh */
 	m_tInstanceDesc.eType_Mesh = In_Json["eType_Mesh"];
-
 	m_tInstanceDesc.bUseCustomTex = In_Json["bUseCustomTex"];
+	m_tInstanceDesc.iCurNumInstance	= In_Json["iCurNumInstance"];
+
 
 	/* Bloom */
 	CJson_Utility::Load_Float4(In_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);

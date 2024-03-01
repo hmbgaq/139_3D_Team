@@ -81,7 +81,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 
 			/* ======================= 라이프 타임 동작 시작 ======================= */
-			if (m_tParticleDesc.bSpriteAnim)
+			if (m_tParticleDesc.bUseSpriteAnim)
 			{
 				if (!m_tSpriteDesc.bSpriteFinish)
 				{
@@ -199,7 +199,7 @@ void CEffect_Particle::ReSet_Effect()
 	m_tParticleDesc.bDissolve = FALSE;
 	m_tParticleDesc.bRender = FALSE;
 
-	if (m_tParticleDesc.bSpriteAnim)
+	if (m_tParticleDesc.bUseSpriteAnim)
 	{
 		m_tSpriteDesc.bSpriteFinish = FALSE;
 		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
@@ -229,8 +229,6 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 
 
 	/* Particle */
-	Out_Json["bSpriteAnim"] = m_tParticleDesc.bSpriteAnim;
-
 	Out_Json["iCurNumInstance"] = m_tParticleDesc.iCurNumInstance;
 
 
@@ -254,8 +252,6 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 
 	*&m_tParticleDesc = *static_cast<PARTICLE_DESC*>(Load_VoidDesc(In_Json));
 
-	 /* Particle */
-	m_tParticleDesc.bSpriteAnim = In_Json["bSpriteAnim"];
 
 	m_tParticleDesc.iCurNumInstance = In_Json["iCurNumInstance"];
 
@@ -395,7 +391,7 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 	/* Texture ============================================================================================ */
 	/* ==================================================================================================== */
-	if (m_tParticleDesc.bSpriteAnim)
+	if (m_tParticleDesc.bUseSpriteAnim)
 	{
 		FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tParticleDesc.iTextureIndex[TEXTURE_SPRITE]));
 	}
@@ -425,8 +421,8 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tParticleDesc.fUV_RotDegree, sizeof(_float)));
 
 
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bSprite", &m_tParticleDesc.bSpriteAnim, sizeof(_bool)));
-	if (m_tParticleDesc.bSpriteAnim)
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bSprite", &m_tParticleDesc.bUseSpriteAnim, sizeof(_bool)));
+	if (m_tParticleDesc.bUseSpriteAnim)
 	{
 		m_tParticleDesc.vUV_Offset = { (_float)(m_tSpriteDesc.vUV_CurTileIndex.x * m_tSpriteDesc.vTileSize.x) / m_tSpriteDesc.vTextureSize.x
 									, (_float)(m_tSpriteDesc.vUV_CurTileIndex.y * m_tSpriteDesc.vTileSize.y) / m_tSpriteDesc.vTextureSize.y };

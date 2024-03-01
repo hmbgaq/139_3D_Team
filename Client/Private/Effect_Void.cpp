@@ -166,11 +166,14 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json, void* pArg)
 	Out_Json["fDissolveAmount"] = tVoidDesc.fDissolveAmount;
 	Out_Json["padding"] = tVoidDesc.padding;
 
+	/* States */
 	Out_Json["bActive_Tool"] = tVoidDesc.bActive_Tool;
 	Out_Json["bPlay"] = tVoidDesc.bPlay;
 	Out_Json["bLoop"] = tVoidDesc.bLoop;
 	Out_Json["bReverse"] = tVoidDesc.bReverse;
 	Out_Json["bRender"] = tVoidDesc.bRender;
+	Out_Json["bUseSpriteAnim"] = tVoidDesc.bUseSpriteAnim;
+	Out_Json["bUseRigidBody"] = tVoidDesc.bUseRigidBody;
 
 	Out_Json["eType_Easing"] = tVoidDesc.eType_Easing;
 	Out_Json["bParentPivot"] = tVoidDesc.bParentPivot;
@@ -257,11 +260,15 @@ void* CEffect_Void::Load_VoidDesc(const json& In_Json)
 	tVoidDesc.padding = In_Json["padding"];
 
 
+	/* States */
 	tVoidDesc.bActive_Tool = In_Json["bActive_Tool"];
 	tVoidDesc.bPlay = In_Json["bPlay"];
 	tVoidDesc.bLoop = In_Json["bLoop"];
 	tVoidDesc.bReverse = In_Json["bReverse"];
 	tVoidDesc.bRender = In_Json["bRender"];
+	tVoidDesc.bUseSpriteAnim = In_Json["bUseSpriteAnim"];
+	tVoidDesc.bUseRigidBody = In_Json["bUseRigidBody"];
+
 
 	tVoidDesc.eType_Easing = In_Json["eType_Easing"];
 

@@ -213,6 +213,8 @@ private:
 	_float	m_vBloomColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
 
+	_float	m_vMinMaxPower_Mesh[2] = { 0.1f, 500.f };
+
 #pragma endregion
 
 public:

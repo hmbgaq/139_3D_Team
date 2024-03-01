@@ -16,8 +16,6 @@ class CEffect_Particle final : public CEffect_Void
 public:
 	typedef struct tagParticleDesc : public CEffect_Void::EFFECTVOID_DESC
 	{
-		_bool		bSpriteAnim = { FALSE };
-
 		CVIBuffer_Particle_Point::TYPE_ACTION	eType_Action = { CVIBuffer_Particle_Point::SPHERE };
 		CVIBuffer_Particle_Point::TYPE_FADE		eType_Fade = { CVIBuffer_Particle_Point::FADE_NONE };
 		EASING_TYPE								eType_ColorLerp = { LINEAR };

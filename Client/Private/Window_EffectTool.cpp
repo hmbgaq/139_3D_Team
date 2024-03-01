@@ -287,7 +287,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pParticleDesc->strPartTag));
 
 				/* 텍스처 변경 */
-				if (m_pParticleDesc->bSpriteAnim)
+				if (m_pParticleDesc->bUseSpriteAnim)
 				{
 					if (ImGui::InputInt("Diffuse_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE], 1))
 					{
@@ -337,7 +337,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 
 				ImGui::SeparatorText("");
-				if (m_pParticleDesc->bSpriteAnim)
+				if (m_pParticleDesc->bUseSpriteAnim)
 				{
 					CEffect_Void::UVSPRITE_DESC* pSpriteDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Sprite_Desc();
 
@@ -438,9 +438,9 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::RadioButton("Off Sprite_Particle", &m_iSprite_Particle, 0); ImGui::SameLine();
 				ImGui::RadioButton("Sprite_Particle", &m_iSprite_Particle, 1);
 				if (0 == m_iSprite_Particle)
-					m_pParticleDesc->bSpriteAnim = FALSE;
+					m_pParticleDesc->bUseSpriteAnim = FALSE;
 				else if (1 == m_iSprite_Particle)
-					m_pParticleDesc->bSpriteAnim = TRUE;
+					m_pParticleDesc->bUseSpriteAnim = TRUE;
 
 
 				/* 파티클 업데이트 모양(타입) */
@@ -1064,6 +1064,33 @@ void CWindow_EffectTool::Update_MeshTab()
 				}
 
 
+				/* 메쉬 파티클 움직임 옵션 */
+				if (ImGui::Button(" FORCE "))
+				{
+					m_pInstanceDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::FORCE;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button(" IMPULSE "))
+				{
+					m_pInstanceDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::IMPULSE;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button(" ACCELERATION "))
+				{
+					m_pInstanceDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::ACCELERATION;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button(" VELOCITY_CHANGE "))
+				{
+					m_pInstanceDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::VELOCITY_CHANGE;
+				}
+
+				if (ImGui::DragFloat2("Power_Mesh", m_vMinMaxPower_Mesh, 10.f, 0.1f))
+				{
+					m_pInstanceDesc->vMinMaxPower.x = m_vMinMaxPower_Mesh[0];
+					m_pInstanceDesc->vMinMaxPower.y = m_vMinMaxPower_Mesh[1];
+				}
+
 			}
 		}
 	}
@@ -1107,7 +1134,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_pCurPartEffect->Set_RemainTime(m_vTimes_Part[2]);
 
-			if (m_pParticleDesc->bSpriteAnim)
+			if (m_pParticleDesc->bUseSpriteAnim)
 			{
 				m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE];
 			}
@@ -1135,7 +1162,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iSortZ = 1;
 
 
-			if (m_pParticleDesc->bSpriteAnim)
+			if (m_pParticleDesc->bUseSpriteAnim)
 				m_iSprite_Particle = 1;
 			else
 				m_iSprite_Particle = 0;
@@ -1861,7 +1888,7 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 
 		tParticleDesc.bPlay = { TRUE };
 
-		tParticleDesc.bSpriteAnim = { FALSE };
+		tParticleDesc.bUseSpriteAnim = { FALSE };
 		tParticleDesc.iCurNumInstance = { 200 };
 
 #pragma region 리스트 문자열 관련
@@ -2078,13 +2105,16 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tMeshDesc.iShaderPassIndex = { 0 };
 
 		tMeshDesc.iRenderGroup = { 9 };
+
 		tMeshDesc.iCurNumInstance = { 1 };	// 인스턴스 개수 설정 생성
+		tMeshDesc.bUseRigidBody = { TRUE };
 
 		tMeshDesc.bBillBoard = { FALSE };
 
 		tMeshDesc.strModelTag = strModelTag;
 
 		tMeshDesc.bPlay = { TRUE };
+		tMeshDesc.bUseRigidBody = { TRUE };
 
 		tMeshDesc.vRimColor = { 2.f, 10.f, 255.f, 255.f };
 		tMeshDesc.fRimPower = { 950.f };
@@ -2177,7 +2207,7 @@ HRESULT CWindow_EffectTool::Add_Part_Trail()
 		tTrailDesc.fSpeedPerSec = { 5.f };
 		tTrailDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
-		//tTrailDesc.bSpriteAnim = FALSE;
+
 		tTrailDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 		tTrailDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
 

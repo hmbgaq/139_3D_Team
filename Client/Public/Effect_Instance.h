@@ -19,12 +19,17 @@ public:
 
 
 public:
-	typedef struct tagEffect_Desc : public CEffect_Void::EFFECTVOID_DESC
+	typedef struct tagEffectInstanceDesc : public CEffect_Void::EFFECTVOID_DESC
 	{
 		TYPE_MESH		eType_Mesh = { MESH_PARTICLE };
+
 		_bool			bUseCustomTex = { TRUE };
 
-		_uint			iCurNumInstance = { 1 };
+		_uint			iCurNumInstance = { 30 };
+
+		CVIBuffer_Effect_Model_Instance::FORCE_MODE eForce_Mode = { CVIBuffer_Effect_Model_Instance::IMPULSE };
+		_bool			bAddForce = { FALSE };
+		_float2			vMinMaxPower = { 0.1f, 500.f };
 
 		_float4			vBloomColor = { 1.f, 1.f, 1.f, 1.f };
 		_float3			vBloomPower = { 1.f, 1.f, 1.f };
