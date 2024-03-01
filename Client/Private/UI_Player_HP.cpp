@@ -21,7 +21,6 @@ HRESULT CUI_Player_HP::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
-	
 
 	return S_OK;
 }

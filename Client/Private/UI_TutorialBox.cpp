@@ -28,7 +28,7 @@ HRESULT CUI_TutorialBox::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
-	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
+	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
 	if (FAILED(Ready_Components()))
@@ -77,17 +77,17 @@ HRESULT CUI_TutorialBox::Render()
 	//! 바인딩된 정점, 인덱스를 그려
 	m_pVIBufferCom->Render();
 
-	if (!m_bFreeMove)
-	{
-		m_fPosX = m_pTransformCom->Get_Position().x + (g_iWinsizeX / 2.f);
-		m_fPosY = -m_pTransformCom->Get_Position().y + (g_iWinsizeY / 2.f);
-	}
+	//if (!m_bFreeMove)
+	//{
+	//	m_fPosX = m_pTransformCom->Get_Position().x + (g_iWinsizeX / 2.f);
+	//	m_fPosY = -m_pTransformCom->Get_Position().y + (g_iWinsizeY / 2.f);
+	//}
 
-	if (m_pTextInfo != nullptr)
-	{
-		RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
-		m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
-	}
+	//if (m_pTextInfo != nullptr)
+	//{
+	//	RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
+	//	m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
+	//}
 
 	return S_OK;
 }

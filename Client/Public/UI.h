@@ -81,7 +81,7 @@ public:
 		/* 이동 */
 		_float		fPositionX = (_float)g_iWinSizeX / 2;
 		_float		fPositionY = (_float)g_iWinSizeY / 2;
-		_float		fPositionZ = 0.0f;
+		_float		fPositionZ = 0.5f;
 
 		/* 
 			(저장 순서)

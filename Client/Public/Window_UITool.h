@@ -118,11 +118,11 @@ private:						/* Member */
 	_int						m_iSelected_GroupObjectIndex = 0; // 선택된 Parent Object
 
 	CUI::UI_DESC				m_tParent_Desc;
-	CUI* m_pCurrParent = nullptr;
-	CUI* m_pCurrGroup = nullptr;
+	CUI*						m_pCurrParent = nullptr;
+	CUI*						m_pCurrGroup = nullptr;
 
 	vector<CGameObject*>		m_vecParentObject;
-	vector<CUI*>* m_vecParentGroup = nullptr;
+	vector<CUI*>*				m_vecParentGroup = nullptr;
 	std::vector<PATHINFO*>		m_vecParentObjectName;	// 추가된 Parent오브젝트들의 이름 (리스트 박스 출력용)
 #pragma endregion Parent End
 
@@ -149,7 +149,7 @@ private:						/* Member */
 	_int						m_iSelected_ChildObjectIndex = 0; // 선택된 Child Object
 
 	CUI::UI_DESC				m_tChild_Desc;
-	CUI* m_pCurrChild = nullptr;
+	CUI*						m_pCurrChild = nullptr;
 
 	vector<CGameObject*>		m_vecChildObject;
 	//std::vector<PATHINFO*>		m_vecChildObjectName;	// 추가된 오브젝트들의 이름 (리스트 박스 출력용)
@@ -196,7 +196,7 @@ public:
 	_float2						m_vOrigin = { 0.1f, 0.1f };
 	_vector						m_vColor = { 1.f, 1.f, 1.f, 1.f };
 	CUI::UI_DESC				m_tText_Desc;
-	CUI* m_pCurrText = nullptr;
+	CUI*						m_pCurrText = nullptr;
 	struct CUI_Text::TEXTINFO	m_tTextInfo;
 	vector<CUI*>				m_vecTextObject;
 	vector<string>				m_vecTextList =
@@ -248,9 +248,9 @@ public:
 private:
 	// 애니메이션 타임 라인
 	std::vector<CUI::UIKEYFRAME>	timeline[CUI::KEYTYPE_END];
-	float currentTime = 0.0f; // 현재 시간 값
-	float MaxTime = 20.f;
-	float fDisplayTime = 1.f;	// 눈금마다의 시간 값 표시
+	_float currentTime = 0.0f; // 현재 시간 값
+	_float MaxTime = 20.f;
+	_float fDisplayTime = 1.f;	// 눈금마다의 시간 값 표시
 	_bool isDraggingTimeline = false;
 	_bool m_bRendomValue = false; // 벨류 값 랜덤으로 주기
 
@@ -260,7 +260,7 @@ private:
 	ImVec2					timelineSize = { 800.f, 85.f }; // 애니메이션 타임 라인 크기
 
 #pragma region 최소, 최대 자동 생성 값
-	_bool	m_bIndividualTexture = false;
+	_bool  m_bIndividualTexture = false;
 
 	_float _v2Time[2] = { 0.f, 0.f };
 	_float _v2Value[2] = { 0.f, 0.f };
@@ -272,12 +272,14 @@ private:
 	_float maxPos[2] = { 0.f, 0.f };
 
 	// 텍스처 프레임
-	float	fMin_Texture = 0.f;	// 최소
-	float	fMax_Texture = 0.f;	// 최대
+	_float	fMin_Texture = 0.f;	// 최소
+	_float	fMax_Texture = 0.f;	// 최대
 
 	_float numKeyframes = 0.f;
 #pragma endregion
 
+	//Test
+	_bool	m_bCreateOK = false;
 #pragma endregion
 
 public: /* Save/Load */
@@ -371,7 +373,9 @@ private:
 	// 	// 클래스 목록을 저장하는 벡터
 	std::vector<std::string> m_vecParent =
 	{
-		"Player_Left_Interface"
+		"Player_Left_Interface",
+		"Player_Right_Interface",
+		"QuestBox"
 	};
 
 	// 클래스 목록을 저장하는 벡터
@@ -380,19 +384,22 @@ private:
 		"Anything",
 		"Player_HPBar",
 		"Player_HPFrame",
-		"Blood_Lights",
-		"Blood_Veins",
-		"Blood_Vignette",
 		"Player_Skill_Frame",
 		"Player_Skill_Guige",
 		"Player_Skill_Icon",
+		"Player_ExpBar",
+		"Blood_Lights",
+		"Blood_Veins",
+		"Blood_Vignette",
 		"TutorialBox",
-		"Player_ExpBar"
+		"QuestIcon"
 	};
+
 	// 클래스 목록을 저장하는 벡터
 	std::vector<std::string> m_vecTextBoxClass =
 	{
-		"TutorialBox"
+		"TutorialBox",
+		"QuestBox"
 	};
 
 private:

@@ -262,10 +262,13 @@
     <ClInclude Include="..\Public\UI_Player_HPBar.h" />
     <ClInclude Include="..\Public\UI_Player_HPFrame.h" />
     <ClInclude Include="..\Public\UI_Player_Left_Interface.h" />
+    <ClInclude Include="..\Public\UI_Player_Right_Interface.h" />
     <ClInclude Include="..\Public\UI_Player_Skill.h" />
     <ClInclude Include="..\Public\UI_Player_Skill_Frame.h" />
     <ClInclude Include="..\Public\UI_Player_Skill_Guige.h" />
     <ClInclude Include="..\Public\UI_Player_Skill_Icon.h" />
+    <ClInclude Include="..\Public\UI_QuestBox.h" />
+    <ClInclude Include="..\Public\UI_QuestIcon.h" />
     <ClInclude Include="..\Public\UI_Text.h" />
     <ClInclude Include="..\Public\UI_TextBox.h" />
     <ClInclude Include="..\Public\UI_TutorialBox.h" />
@@ -353,10 +356,13 @@
     <ClCompile Include="..\Private\UI_Player_HPBar.cpp" />
     <ClCompile Include="..\Private\UI_Player_HPFrame.cpp" />
     <ClCompile Include="..\Private\UI_Player_Left_Interface.cpp" />
+    <ClCompile Include="..\Private\UI_Player_Right_Interface.cpp" />
     <ClCompile Include="..\Private\UI_Player_Skill.cpp" />
     <ClCompile Include="..\Private\UI_Player_Skill_Frame.cpp" />
     <ClCompile Include="..\Private\UI_Player_Skill_Guige.cpp" />
     <ClCompile Include="..\Private\UI_Player_Skill_Icon.cpp" />
+    <ClCompile Include="..\Private\UI_QuestBox.cpp" />
+    <ClCompile Include="..\Private\UI_QuestIcon.cpp" />
     <ClCompile Include="..\Private\UI_Text.cpp" />
     <ClCompile Include="..\Private\UI_TextBox.cpp" />
     <ClCompile Include="..\Private\UI_TutorialBox.cpp" />

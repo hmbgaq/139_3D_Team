@@ -132,8 +132,14 @@ HRESULT CMainApp::Ready_UITexture()
 
 HRESULT CMainApp::UI_TargetTexture()
 {
-	// TargetTexture
+	// Target_LeftInterface
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Player_LeftInterface"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/TargetTexture/Player_LeftInterface.dds"))));
+	
+	//// Target_RightInterface
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("QuestBox"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/TargetTexture/QuestBox.dds"))));
+
+	// Target_QuestBox
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("QuestBox"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/TargetTexture/QuestBox.dds"))));
 
 	return S_OK;
 }

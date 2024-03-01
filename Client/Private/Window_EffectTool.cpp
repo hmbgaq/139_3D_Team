@@ -1144,7 +1144,6 @@ void CWindow_EffectTool::Update_Trnasform_Effect_Instance()
 		//	m_pCurEffectInstance->Get_Transform()->Set_Scaling(m_vScale_EffectInstance, m_vScale_EffectInstance, m_vScale_EffectInstance);
 		//}
 	}
-
 }
 
 void CWindow_EffectTool::Update_SaveLoad_Particle()

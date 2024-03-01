@@ -151,9 +151,6 @@
     <Filter Include="02.GameObjects\UI\02. System">
       <UniqueIdentifier>{47c53a2b-c542-4b2a-b07b-817b6be951a8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\02. System\00. Tip">
-      <UniqueIdentifier>{019c2a9a-4108-440b-98d2-078b8ccff9ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\02. System\01. Quest">
       <UniqueIdentifier>{2bdea739-4478-4ba8-9ea1-536b2f8fe484}</UniqueIdentifier>
     </Filter>
@@ -298,17 +295,20 @@
     <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp">
       <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\02. System\03. Tutorial">
-      <UniqueIdentifier>{750574f2-b386-48be-8045-c110f550205a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\00. Player\HpFrame">
       <UniqueIdentifier>{dd90327a-0190-4771-96f6-0f97d5f047fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\Left_Interface\HpBar">
-      <UniqueIdentifier>{009fd7cc-9024-4ccd-b651-e9b51bbb3038}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\00. Player\Left_Interface\ExpBar">
       <UniqueIdentifier>{cbfa7ad7-0805-44a8-888b-5cca9c54bda7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpBar">
+      <UniqueIdentifier>{009fd7cc-9024-4ccd-b651-e9b51bbb3038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\00. Tutorial">
+      <UniqueIdentifier>{750574f2-b386-48be-8045-c110f550205a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\01. Quest\Icon">
+      <UniqueIdentifier>{f07eb24a-50e1-47b9-b5b3-814a4a3de76b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -445,7 +445,7 @@
       <Filter>02.GameObjects\UI\00. Player\01. Hp</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_HPBar.h">
-      <Filter>02.GameObjects\UI\00. Player\Left_Interface\HpBar</Filter>
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_HPFrame.h">
       <Filter>02.GameObjects\UI\00. Player\HpFrame</Filter>
@@ -595,7 +595,7 @@
       <Filter>02.GameObjects\UI\02. System</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_TutorialBox.h">
-      <Filter>02.GameObjects\UI\02. System\03. Tutorial</Filter>
+      <Filter>02.GameObjects\UI\02. System\00. Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Reference\Public\AntTweakBar.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
@@ -611,6 +611,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_ExpBar.h">
       <Filter>02.GameObjects\UI\00. Player\Left_Interface\ExpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_Right_Interface.h">
+      <Filter>02.GameObjects\UI\00. Player\Right_Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_QuestBox.h">
+      <Filter>02.GameObjects\UI\02. System\01. Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_QuestIcon.h">
+      <Filter>02.GameObjects\UI\02. System\01. Quest\Icon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -950,7 +959,7 @@
       <Filter>02.GameObjects\UI\00. Player\01. Hp</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_HPBar.cpp">
-      <Filter>02.GameObjects\UI\00. Player\Left_Interface\HpBar</Filter>
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_HPFrame.cpp">
       <Filter>02.GameObjects\UI\00. Player\HpFrame</Filter>
@@ -1076,7 +1085,7 @@
       <Filter>02.GameObjects\UI\02. System</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_TutorialBox.cpp">
-      <Filter>02.GameObjects\UI\02. System\03. Tutorial</Filter>
+      <Filter>02.GameObjects\UI\02. System\00. Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\jAppSettings.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
@@ -1086,6 +1095,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_ExpBar.cpp">
       <Filter>02.GameObjects\UI\00. Player\Left_Interface\ExpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_Right_Interface.cpp">
+      <Filter>02.GameObjects\UI\00. Player\Right_Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_QuestBox.cpp">
+      <Filter>02.GameObjects\UI\02. System\01. Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_QuestIcon.cpp">
+      <Filter>02.GameObjects\UI\02. System\01. Quest\Icon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

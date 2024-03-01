@@ -158,7 +158,9 @@ HRESULT CUI_Player_Skill_Icon::Bind_ShaderResources()
 		}
 		case CUI_Player_Skill_Icon::ICON_ACTIVE:
 		{
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Third")))
+			//if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Third")))
+			//	return E_FAIL;
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
 			break;
 		}

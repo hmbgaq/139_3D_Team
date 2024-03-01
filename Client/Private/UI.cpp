@@ -26,6 +26,7 @@ HRESULT CUI::Initialize(void* pArg)
 
 #pragma region Transform
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext, 0.f, 0.f);
+
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
 
@@ -44,12 +45,14 @@ HRESULT CUI::Initialize(void* pArg)
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
 
+
 	m_fPositionX = m_tUIInfo.fPositionX;
 	m_fPositionY = m_tUIInfo.fPositionY;
 	m_fScaleX = m_tUIInfo.fScaleX;
 	m_fScaleY = m_tUIInfo.fScaleY;
 
 	SetUp_UIRect(m_fPositionX, m_fPositionY, m_fScaleX, m_fScaleY);
+
 	m_Origin_WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 #pragma endregion End
 
@@ -145,7 +148,7 @@ void CUI::Change_SizeX(_float MMX)
 	m_fScaleX += MMX;
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Change_SizeY(_float MMY)
@@ -154,7 +157,7 @@ void CUI::Change_SizeY(_float MMY)
 	m_fPositionY = m_fPositionY;
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Change_SizeRight(_float MMX)
@@ -164,7 +167,7 @@ void CUI::Change_SizeRight(_float MMX)
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Change_SizeLeft(_float MMX)
@@ -174,7 +177,7 @@ void CUI::Change_SizeLeft(_float MMX)
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Change_SizeTop(_float MMY)
@@ -184,7 +187,7 @@ void CUI::Change_SizeTop(_float MMY)
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Change_SizeBottom(_float MMY)
@@ -194,7 +197,7 @@ void CUI::Change_SizeBottom(_float MMY)
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Set_Size(_float fSizeX, _float fSizeY)
@@ -204,7 +207,7 @@ void CUI::Set_Size(_float fSizeX, _float fSizeY)
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 HRESULT CUI::Set_ParentTransform(CTransform* pParentTransformCom)
@@ -276,16 +279,16 @@ void CUI::Set_Pos(_float fPosX, _float fPosY)
 
 void CUI::Check_RectPos()
 {
-	_float fPosX = m_pTransformCom->Get_Position().x + g_iWinSizeX * 0.5f;
-	_float fPosY = -m_pTransformCom->Get_Position().y + g_iWinSizeY * 0.5f;
+	m_fPositionX = m_pTransformCom->Get_Position().x + g_iWinSizeX * 0.5f;
+	m_fPositionY = -m_pTransformCom->Get_Position().y + g_iWinSizeY * 0.5f;
 
 	m_fScaleX = m_pTransformCom->Get_Scaled().x;
 	m_fScaleY = m_pTransformCom->Get_Scaled().y;
 
-	m_rcUI.left = LONG(fPosX - (m_fScaleX / 2));
-	m_rcUI.top = LONG(fPosY - (m_fScaleY / 2));
-	m_rcUI.right = LONG(fPosX + (m_fScaleX / 2));
-	m_rcUI.bottom = LONG(fPosY + (m_fScaleY / 2));
+	m_rcUI.left = LONG(m_fPositionX - (m_fScaleX / 2));
+	m_rcUI.top = LONG(m_fPositionY - (m_fScaleY / 2));
+	m_rcUI.right = LONG(m_fPositionX + (m_fScaleX / 2));
+	m_rcUI.bottom = LONG(m_fPositionY + (m_fScaleY / 2));
 }
 
 void CUI::Moving_Picking_Point(POINT pt)

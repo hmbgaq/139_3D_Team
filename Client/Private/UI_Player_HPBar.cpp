@@ -31,6 +31,8 @@ HRESULT CUI_Player_HPBar::Initialize(void* pArg)
 	m_tUIInfo.fScaleX = 169.f;
 	m_tUIInfo.fScaleY = 17.f;
 
+	m_tUIInfo.fPositionZ = 0.0f;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 

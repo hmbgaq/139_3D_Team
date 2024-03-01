@@ -30,7 +30,7 @@ HRESULT CWindow_UITool::Initialize()
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩중."));
 
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
-	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD"))));
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Notifications")))); // 원하는 폴더로 변경해서 보기
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));
 	
 	/* 툴 들어갈때 오래걸리니까 따로 버튼눌러서 불러오자.. */
@@ -178,6 +178,14 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 
 				ImGui::Dummy(ImVec2(0.f, 10.f));
 
+				if (m_pGameInstance->Key_Down(DIK_HOME))
+				{
+					if (!m_bCreateOK)
+					{
+						m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky"));
+						m_bCreateOK = true;
+					}
+				}
 				/* List */
 				Child_List(fTimeDelta);
 
@@ -1668,11 +1676,13 @@ HRESULT CWindow_UITool::Menu_Info()
 		{
 			if (ImGui::MenuItem("Save"))
 			{
+				m_strDialogPath = "../Bin/DataFiles/Data_UI/";
 				m_eDialogType = CImgui_Window::SAVE_DIALOG;
 				OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
 			}
 			if (ImGui::MenuItem("Load"))
 			{
+				m_strDialogPath = "../Bin/DataFiles/Data_UI/";
 				m_eDialogType = CImgui_Window::LOAD_DIALOG;
 				OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
 			}

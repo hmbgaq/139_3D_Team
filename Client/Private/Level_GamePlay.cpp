@@ -296,7 +296,7 @@ HRESULT CLevel_GamePlay::Ready_UI()
 {
 	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
 
-	FAILED_CHECK(Ready_Layer_UI_Player(TEXT("Layer_UI_Player"), nullptr));
+	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
 
 	FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
 	
@@ -307,6 +307,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 {
 	/* 추 후 파싱해서 정보 받아오기 */
 	
+	/* MRT로 묶지 않으면 출력이안나옴. */
 	json json_in;
 
 	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
@@ -335,6 +336,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
 
 		pUI_Object->Get_Transform()->Load_FromJson(object);
+		
+		// Pos 잡아주기
 	}
 
 
@@ -344,16 +347,25 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_UI_Player(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_GamePlay::Ready_Layer_UI_Interface(const wstring& strLayerTag, void* pArg)
 {
+	// =>Left_Interface
+						Ready_LeftInterface(strLayerTag, pArg);
+	// =>Right_Interface
+						Ready_RightInterface(strLayerTag, pArg);
+	// =>Quest_Box
+						Ready_QuestBox(strLayerTag, pArg);
+	// =>Tutorial_Box
+						Ready_TutorialBox(strLayerTag, pArg);
+
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_GamePlay::Ready_LeftInterface(const wstring& strLayerTag, void* pArg)
 {
 	json json_in;
 
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/testtesttesttesttesttest.json";
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/PlayerInterface/Left_Interface.json";
 
 	_int		iPathNum = 0;
 	string		strFileName;
@@ -401,6 +413,230 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 
 		pUI_Object->Get_Transform()->Load_FromJson(object);		// 17. TransformCom
 	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_RightInterface(const wstring& strLayerTag, void* pArg)
+{
+	json json_in;
+
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/PlayerInterface/Right_Interface.json";
+
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
+
+	CJson_Utility::Load_Json(filePath, json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		tUI_Info.bParent = object["Parent"];					// 1. Parent
+		tUI_Info.bWorld = object["World"];						// 2. World
+		tUI_Info.bGroup = object["Group"];						// 3. Group
+		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+
+		wstring wstrLayer;
+		m_pGameInstance->String_To_WString(tUI_Info.strLayerTag, wstrLayer); //
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, wstrClonetag, &tUI_Info));
+
+		pUI_Object->Get_Transform()->Load_FromJson(object);		// 17. TransformCom
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_QuestBox(const wstring& strLayerTag, void* pArg)
+{
+	json json_in;
+
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/PlayerInterface/QuestBox.json";
+
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
+
+	CJson_Utility::Load_Json(filePath, json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		tUI_Info.bParent = object["Parent"];					// 1. Parent
+		tUI_Info.bWorld = object["World"];						// 2. World
+		tUI_Info.bGroup = object["Group"];						// 3. Group
+		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+
+		wstring wstrLayer;
+		m_pGameInstance->String_To_WString(tUI_Info.strLayerTag, wstrLayer); //
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, wstrClonetag, &tUI_Info));
+
+		pUI_Object->Get_Transform()->Load_FromJson(object);		// 17. TransformCom
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_TutorialBox(const wstring& strLayerTag, void* pArg)
+{
+	json json_in;
+
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/PlayerInterface/TutorialBox.json";
+
+	_int		iPathNum = 0;
+	string		strFileName;
+	string		strFilePath;
+
+	CJson_Utility::Load_Json(filePath, json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		tUI_Info.bParent = object["Parent"];					// 1. Parent
+		tUI_Info.bWorld = object["World"];						// 2. World
+		tUI_Info.bGroup = object["Group"];						// 3. Group
+		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+
+		wstring wstrLayer;
+		m_pGameInstance->String_To_WString(tUI_Info.strLayerTag, wstrLayer); //
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, wstrClonetag, &tUI_Info));
+
+		pUI_Object->Get_Transform()->Load_FromJson(object);		// 17. TransformCom
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
+{
+	//json json_in;
+
+	//char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/PlayerInterface/Left_Interface.json";
+
+	//_int		iPathNum = 0;
+	//string		strFileName;
+	//string		strFilePath;
+
+	//CJson_Utility::Load_Json(filePath, json_in);
+
+	//for (auto& item : json_in.items())
+	//{
+	//	json object = item.value();
+
+	//	CUI::UI_DESC tUI_Info;
+
+	//	/* 저장순서랑 맞는지 확인하기 */
+	//	tUI_Info.bParent = object["Parent"];					// 1. Parent
+	//	tUI_Info.bWorld = object["World"];						// 2. World
+	//	tUI_Info.bGroup = object["Group"];						// 3. Group
+	//	tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+	//	tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+	//	tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+	//	tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+	//	tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+	//	tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+	//	tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+	//	tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+	//	tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+	//	tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+	//	tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+	//	tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+	//	tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+
+	//	wstring wstrLayer;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strLayerTag, wstrLayer); //
+
+	//	wstring wstrClonetag;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+	//	wstring wstrPrototag;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+	//	wstring wstrFilePath;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+	//	CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, wstrClonetag, &tUI_Info));
+
+	//	pUI_Object->Get_Transform()->Load_FromJson(object);		// 17. TransformCom
+	//}
 
 	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_Left_Interface"));
 

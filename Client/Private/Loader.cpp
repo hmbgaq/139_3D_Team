@@ -45,6 +45,7 @@
 #include "UI_Player_HPBar.h"
 #include "UI_Player_ExpBar.h"
 #include "UI_Player_Left_Interface.h"
+#include "UI_Player_Right_Interface.h"
 #include "UI_Blood.h"
 #include "UI_Blood_Vignette.h"
 #include "UI_Blood_Veins.h"
@@ -55,6 +56,8 @@
 /* Text */
 #include "UI_TextBox.h"
 #include "UI_TutorialBox.h"
+#include "UI_QuestBox.h"
+#include "UI_QuestIcon.h"
 #pragma endregion
 
 #pragma region Test
@@ -478,13 +481,16 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_HPFrame"), CUI_Player_HPFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_HPFrame"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_ExpBar"), CUI_Player_ExpBar::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_ExpBar"))));
 	
-	/* Player_Left_Interface */
+	/* Player_Interface */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_Left_Interface"), CUI_Player_Left_Interface::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_Left_Interface"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_Right_Interface"), CUI_Player_Right_Interface::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_Right_Interface"))));
+	
 	/* Blood */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Blood"), CUI_Blood::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Blood"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Blood_Lights"), CUI_Blood_Lights::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Blood_Lights"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Blood_Veins"), CUI_Blood_Veins::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Blood_Veins"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Blood_Vignette"), CUI_Blood_Vignette::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Blood_Vignette"))));
+	
 	/* Skill */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_Skill"), CUI_Player_Skill::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_Skill"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_Skill_Frame"), CUI_Player_Skill_Frame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_Skill_Frame"))));
@@ -499,6 +505,8 @@ HRESULT CLoader::Ready_UI_Origin()
 
 #pragma region Text
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_TutorialBox"), CUI_TutorialBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_TutorialBox"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_QuestBox"), CUI_QuestBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_QuestBox"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_QuestIcon"), CUI_QuestBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_QuestIcon"))));
 #pragma endregion End
 
 	return S_OK;
