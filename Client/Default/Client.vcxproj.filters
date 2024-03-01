@@ -1357,6 +1357,69 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster\Bandit_Heavy\State\7. Death\Heavy">
       <UniqueIdentifier>{eeb3bfc7-bb50-4347-8b86-e8f19fd19013}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster">
+      <UniqueIdentifier>{d2cf80c9-5682-44d3-990a-9bb01685e8b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss">
+      <UniqueIdentifier>{5d8ff513-e836-4c47-bf49-dc8623b454a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss">
+      <UniqueIdentifier>{9478358a-bef3-4395-b56d-6d8fa9c36220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\LastBoss">
+      <UniqueIdentifier>{38750173-374c-4aaf-a1ab-eab234e467d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander">
+      <UniqueIdentifier>{832c2b76-6f3f-4fbd-9a6b-08ba3c2bccbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts">
+      <UniqueIdentifier>{9903d330-64d7-42ea-8433-e70bf57a1f2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State">
+      <UniqueIdentifier>{efd91669-e55f-44bd-9606-fabf23571db8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Body">
+      <UniqueIdentifier>{98dfbcac-dbed-4f31-9bd2-c2759f4f385e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon">
+      <UniqueIdentifier>{a8ab80ef-fbcd-440c-a7a2-882972aa67e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\0.Origin">
+      <UniqueIdentifier>{47993204-3254-4e31-8c15-f2b3b2bb1f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle">
+      <UniqueIdentifier>{9edab3ea-5ee4-4f8a-8681-afea61ad7983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk">
+      <UniqueIdentifier>{a7f89811-7895-4b29-8bbc-25f1e4e9e401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack">
+      <UniqueIdentifier>{de517e3f-1d83-4244-843f-be789dbbbe1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.HitLight">
+      <UniqueIdentifier>{54058c69-0e00-4a5f-bf82-95b26ce5dc61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal">
+      <UniqueIdentifier>{f2149600-ef20-4eeb-b2cd-ae072dbd1a02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun">
+      <UniqueIdentifier>{446384b3-867a-4e28-b4b0-3264348ad981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\7.Dead">
+      <UniqueIdentifier>{ec883b03-1f10-4906-a072-97ac48adae47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt">
+      <UniqueIdentifier>{224a7291-8aa4-4781-af49-cca4cae62f10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Leap">
+      <UniqueIdentifier>{b753ec9f-19f9-4c4a-926a-22febe1e2759}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Spawn">
+      <UniqueIdentifier>{73f1c6ed-6cc0-43a7-af0d-80fee6b36659}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\11.BloodRange">
+      <UniqueIdentifier>{05d01a57-b484-4353-a220-4c9c5b614700}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -2537,6 +2600,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\BanditHeavy_DeathLight_F_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster\Bandit_Heavy\State\7. Death\Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_VampireCommander.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Body</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3822,6 +3891,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\BanditHeavy_DeathLight_F_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster\Bandit_Heavy\State\7. Death\Heavy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_VampireCommander.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Body</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
