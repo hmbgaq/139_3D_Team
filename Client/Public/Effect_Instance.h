@@ -25,7 +25,7 @@ public:
 
 		_bool			bUseCustomTex = { TRUE };
 
-		_uint			iCurNumInstance = { 30 };
+		_uint			iCurNumInstance = { 100 };
 
 		CVIBuffer_Effect_Model_Instance::FORCE_MODE eForce_Mode = { CVIBuffer_Effect_Model_Instance::IMPULSE };
 		_bool			bAddForce = { FALSE };

@@ -74,29 +74,35 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 			/* ======================= 라이프 타임 동작 시작 ======================= */
 
 			//test
-			if (!m_tInstanceDesc.bAddForce)
+			if (m_tInstanceDesc.bUseRigidBody)
 			{
-				for (_int i = 0; i < m_tInstanceDesc.iCurNumInstance; ++i)
+				if (!m_tInstanceDesc.bAddForce)
 				{
-					_vector	vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-					vDir = XMVector3Normalize(vDir) * SMath::fRandom(0.1f, 3.f);
+					for (_int i = 0; i < m_tInstanceDesc.iCurNumInstance; ++i)
+					{
+						_vector	vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+						//vDir = XMVector3Normalize(vDir) * SMath::fRandom(0.1f, 3.f);
+						vDir = XMVector3Normalize(vDir) * 3.f;
 
-					_float RotOffsetX = SMath::fRandom(0.f, 360.f);
-					_float RotOffsetY = SMath::fRandom(0.f, 360.f);
-					_float RotOffsetZ = SMath::fRandom(0.f, 360.f);
+						_float RotOffsetX = SMath::fRandom(0.f, 360.f);
+						_float RotOffsetY = SMath::fRandom(0.f, 360.f);
+						_float RotOffsetZ = SMath::fRandom(0.f, 360.f);
 
-					_float3 vRotationOffset = { RotOffsetX, RotOffsetY, RotOffsetZ };
-									
-					_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
-					_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
 
-				
-					_vector vForce = XMVector3TransformNormal(vDir, RotationMatrix) * m_tInstanceDesc.vMinMaxPower.y;
-					m_pVIBufferCom->Add_Force(i, vForce, m_tInstanceDesc.eForce_Mode);
+						_float3 vRotationOffset = { RotOffsetX, RotOffsetY, RotOffsetZ };
+
+						_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
+						_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
+
+
+						_vector vForce = XMVector3TransformNormal(vDir, RotationMatrix) * m_tInstanceDesc.vMinMaxPower.y;
+						m_pVIBufferCom->Add_Force(i, vForce, m_tInstanceDesc.eForce_Mode);
+					}
+					m_tInstanceDesc.bAddForce = TRUE;
 				}
-				
-				m_tInstanceDesc.bAddForce = TRUE;
 			}
+
+
 
 
 

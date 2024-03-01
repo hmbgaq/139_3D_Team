@@ -2106,7 +2106,6 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 
 		tMeshDesc.iRenderGroup = { 9 };
 
-		tMeshDesc.iCurNumInstance = { 1 };	// 인스턴스 개수 설정 생성
 		tMeshDesc.bUseRigidBody = { TRUE };
 
 		tMeshDesc.bBillBoard = { FALSE };

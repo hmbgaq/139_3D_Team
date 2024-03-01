@@ -44,14 +44,14 @@ public:
 		_bool			bSleep = { FALSE };
 		_float			fSleepThreshold = { 0.05f };	// 슬립 한계점
 
-		_float			fGravity = { -9.8f };	// 중력 가속도
-		_float3			vAccel;					// 가속도
-		_float3			vVelocity;				// 속도
+		_float			fGravity = { -9.8f };			// 중력 가속도
+		_float3			vAccel;							// 가속도
+		_float3			vVelocity;						// 속도
 
-		_float			fMass = { 10.f };		// 질량
-		_float			fFriction = { 0.1f };	// 마찰 계수
+		_float			fMass = { 10.f };				// 질량
+		_float			fFriction = { 0.1f };			// 마찰 계수
 
-		_byte			byFreezeAxis = { 0 };	// 축 고정 확인용 바이트
+		_byte			byFreezeAxis = { 0 };			// 축 고정 확인용 바이트
 
 	} PARTICLE_RIGIDBODY_DESC;
 
