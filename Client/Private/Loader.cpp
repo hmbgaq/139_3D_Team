@@ -58,6 +58,16 @@
 #include "UI_TutorialBox.h"
 #include "UI_QuestBox.h"
 #include "UI_QuestIcon.h"
+#include "UI_ItemShowcase.h"
+
+#pragma region LevelUp
+#include "UI_LevelUp_MagicFrame.h"
+#include "UI_LevelUp_MagicTrack.h"
+#include "UI_LevelUp_Shards.h"
+#include "UI_LevelUp_MagicSide.h"
+#include "UI_LevelUp_SunBeacon.h"
+#include "UI_LevelUp_TextBox.h"
+#include "UI_LevelUp_ShieldFrame.h"
 #pragma endregion
 
 #pragma region Test
@@ -507,6 +517,17 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_TutorialBox"), CUI_TutorialBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_TutorialBox"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_QuestBox"), CUI_QuestBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_QuestBox"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_QuestIcon"), CUI_QuestBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_QuestIcon"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ItemShowcase"), CUI_ItemShowcase::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_ItemShowcase"))));
+#pragma endregion End
+
+#pragma region LevelUp
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_MagicFrame"), CUI_LevelUp_MagicFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_MagicFrame"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_MagicTrack"), CUI_LevelUp_MagicTrack::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_MagicTrack"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_Shards"), CUI_LevelUp_Shards::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_Shards"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_MagicSide"), CUI_LevelUp_MagicSide::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_MagicSide"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_SunBeacon"), CUI_LevelUp_SunBeacon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_SunBeacon"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_TextBox"), CUI_LevelUp_TextBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_TextBox"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_ShieldFrame"), CUI_LevelUp_ShieldFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_ShieldFrame"))));
 #pragma endregion End
 
 	return S_OK;

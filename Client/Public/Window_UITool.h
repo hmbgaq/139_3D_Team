@@ -392,7 +392,15 @@ private:
 		"Blood_Veins",
 		"Blood_Vignette",
 		"TutorialBox",
-		"QuestIcon"
+		"QuestIcon",
+		"ItemShowcase",
+		"LevelUp_MagicFrame",
+		"LevelUp_MagicTrack",
+		"LevelUp_Shards",
+		"LevelUp_MagicSide",
+		"LevelUp_SunBeacon",
+		"LevelUp_TextBox",
+		"LevelUp_ShieldFrame"
 	};
 
 	// 클래스 목록을 저장하는 벡터
