@@ -1,6 +1,8 @@
 #include "VIBuffer_Effect_Model_Instance.h"
 #include "Mesh.h"
 
+#include "SMath.h"
+
 CVIBuffer_Effect_Model_Instance::CVIBuffer_Effect_Model_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer_Model_Instance(pDevice,pContext)
 {
@@ -111,20 +113,41 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 
 	VTXMODELINSTANCE* pModelInstance = new VTXMODELINSTANCE[m_iNumInstance];
 
+
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
 		PARTICLE_RIGIDBODY_DESC ParticleRigidbody = {};
 		if (m_tBufferDesc.bUseRigidBody)
 			m_vecParticleRigidbodyDesc.push_back(ParticleRigidbody);
 
-		pModelInstance[i].vRight		= _float4(1.f, 0.f, 0.f, 0.f);
-		pModelInstance[i].vUp			= _float4(0.f, 1.f, 0.f, 0.f);
-		pModelInstance[i].vLook			= _float4(0.f, 0.f, 1.f, 0.f);
+		pModelInstance[i].vRight		= _float4(1.f, 0.f, 0.f, 0.f)	/* * 크기 */;
+		pModelInstance[i].vUp			= _float4(0.f, 1.f, 0.f, 0.f)	/* * 크기 */;
+		pModelInstance[i].vLook			= _float4(0.f, 0.f, 1.f, 0.f)	/* * 크기 */;
 		pModelInstance[i].vTranslation	= _float4(0.f, 0.f, 0.f, 1.f);
 
 
 		// 테스트용 원점 위치로 고정
 		XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
+
+		// 리지드 바디 사용이면
+		if (m_tBufferDesc.bUseRigidBody)
+		{
+			_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+			vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
+
+			m_tBufferDesc.vRotationOffset = { SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetX.x, m_tBufferDesc.vMinMaxRotationOffsetX.y)
+											, SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetY.x, m_tBufferDesc.vMinMaxRotationOffsetY.y)
+											, SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y) };
+
+
+			_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_tBufferDesc.vRotationOffset.x, m_tBufferDesc.vRotationOffset.y, m_tBufferDesc.vRotationOffset.z);
+			_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
+
+			_vector vForce = XMVector3TransformNormal(vDir, RotationMatrix) * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x , m_tBufferDesc.vMinMaxPower.y);
+
+			Add_Force(i, vForce, m_tBufferDesc.eForce_Mode);
+		}
+
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -162,6 +185,10 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 
 	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
+		// 원점 위치로
+		XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
+
+
 		// 리지드 바디 사용이면
 		if (m_tBufferDesc.bUseRigidBody)
 		{
@@ -169,11 +196,25 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 			{
 				// 힘 초기화
 				Clear_Power(i);
+
+				_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+				vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
+
+				m_tBufferDesc.vRotationOffset = { SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetX.x, m_tBufferDesc.vMinMaxRotationOffsetX.y)
+												, SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetY.x, m_tBufferDesc.vMinMaxRotationOffsetY.y)
+												, SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y) };
+
+
+				_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_tBufferDesc.vRotationOffset.x, m_tBufferDesc.vRotationOffset.y, m_tBufferDesc.vRotationOffset.z);
+				_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
+
+				_vector vForce = XMVector3TransformNormal(vDir, RotationMatrix) * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
+
+				Add_Force(i, vForce, m_tBufferDesc.eForce_Mode);
+
 			}
 		}
 
-		// 원점 위치로
-		XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);

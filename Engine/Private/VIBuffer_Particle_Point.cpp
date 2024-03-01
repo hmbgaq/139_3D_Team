@@ -156,8 +156,8 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 		_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_tBufferDesc.vRotationOffset.x, m_tBufferDesc.vRotationOffset.y, m_tBufferDesc.vRotationOffset.z);
 
 		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vCurrentScale.x;
-		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurrentScale.x;
-		pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
+		pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurrentScale.x;
+		pVertices[i].vLook	= _float4(0.f, 0.f, 1.0f, 0.f);
 
 
 		vDir = XMVector3Normalize(vDir) * RandomRange(m_RandomNumber);

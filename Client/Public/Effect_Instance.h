@@ -25,17 +25,31 @@ public:
 
 		_bool			bUseCustomTex = { TRUE };
 
+		CVIBuffer_Effect_Model_Instance::FORCE_MODE eForce_Mode = { CVIBuffer_Effect_Model_Instance::IMPULSE };
+
 		_uint			iCurNumInstance = { 100 };
 
-		CVIBuffer_Effect_Model_Instance::FORCE_MODE eForce_Mode = { CVIBuffer_Effect_Model_Instance::IMPULSE };
-		_bool			bAddForce = { FALSE };
-		_float2			vMinMaxPower = { 0.1f, 500.f };
+		/* For.Position */
+		_float4		vCenterPosition		= { 0.f, 0.f, 0.f, 1.f };
+		_float2		vMinMaxRange		= { 0.1f, 3.f };
 
-		_float4			vBloomColor = { 1.f, 1.f, 1.f, 1.f };
-		_float3			vBloomPower = { 1.f, 1.f, 1.f };
+		/* For.Rotation */
+		_float2		vMinMaxRotationOffsetX	= { 0.0f, 360.f };
+		_float2		vMinMaxRotationOffsetY	= { 0.0f, 360.f };
+		_float2		vMinMaxRotationOffsetZ	= { 0.0f, 360.f };
+		_float3		vRotationOffset			= { 0.f, 0.f, 0.f };
 
-		_float4			vRimColor = { 1.f, 1.f, 1.f, 1.f };
-		_float			fRimPower = { 1.f };
+		/* Power */
+		_float2		vMinMaxPower = { 0.1f, 250.f };
+
+
+		/* Bloom */
+		_float4		vBloomColor = { 1.f, 1.f, 1.f, 1.f };
+		_float3		vBloomPower = { 1.f, 1.f, 1.f };
+
+		/* Rim */
+		_float4		vRimColor = { 1.f, 1.f, 1.f, 1.f };
+		_float		fRimPower = { 1.f };
 
 	}EFFECT_INSTANCE_DESC;
 

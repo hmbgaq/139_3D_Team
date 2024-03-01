@@ -919,6 +919,8 @@ void CWindow_EffectTool::Update_MeshTab()
 			if (CEffect_Void::MESH == eType_Effect)
 			{
 				m_pInstanceDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_Desc();
+				CVIBuffer_Effect_Model_Instance* pVIBuffer = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_VIBufferCom();
+				m_pMeshBufferDesc = pVIBuffer->Get_Desc();
 
 
 				//// 이펙트 모델 리스트박스
@@ -1065,30 +1067,31 @@ void CWindow_EffectTool::Update_MeshTab()
 
 
 				/* 메쉬 파티클 움직임 옵션 */
+				ImGui::SeparatorText("");
 				if (ImGui::Button(" FORCE "))
 				{
-					m_pInstanceDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::FORCE;
+					m_pMeshBufferDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::FORCE;
 				}
 				ImGui::SameLine();
 				if (ImGui::Button(" IMPULSE "))
 				{
-					m_pInstanceDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::IMPULSE;
+					m_pMeshBufferDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::IMPULSE;
 				}
 				ImGui::SameLine();
 				if (ImGui::Button(" ACCELERATION "))
 				{
-					m_pInstanceDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::ACCELERATION;
+					m_pMeshBufferDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::ACCELERATION;
 				}
 				ImGui::SameLine();
 				if (ImGui::Button(" VELOCITY_CHANGE "))
 				{
-					m_pInstanceDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::VELOCITY_CHANGE;
+					m_pMeshBufferDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::VELOCITY_CHANGE;
 				}
 
 				if (ImGui::DragFloat2("Power_Mesh", m_vMinMaxPower_Mesh, 10.f, 0.1f))
 				{
-					m_pInstanceDesc->vMinMaxPower.x = m_vMinMaxPower_Mesh[0];
-					m_pInstanceDesc->vMinMaxPower.y = m_vMinMaxPower_Mesh[1];
+					m_pMeshBufferDesc->vMinMaxPower.x = m_vMinMaxPower_Mesh[0];
+					m_pMeshBufferDesc->vMinMaxPower.y = m_vMinMaxPower_Mesh[1];
 				}
 
 			}

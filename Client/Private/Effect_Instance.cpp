@@ -73,36 +73,6 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 
 			/* ======================= 라이프 타임 동작 시작 ======================= */
 
-			//test
-			if (m_tInstanceDesc.bUseRigidBody)
-			{
-				if (!m_tInstanceDesc.bAddForce)
-				{
-					for (_int i = 0; i < m_tInstanceDesc.iCurNumInstance; ++i)
-					{
-						_vector	vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-						//vDir = XMVector3Normalize(vDir) * SMath::fRandom(0.1f, 3.f);
-						vDir = XMVector3Normalize(vDir) * 3.f;
-
-						_float RotOffsetX = SMath::fRandom(0.f, 360.f);
-						_float RotOffsetY = SMath::fRandom(0.f, 360.f);
-						_float RotOffsetZ = SMath::fRandom(0.f, 360.f);
-
-
-						_float3 vRotationOffset = { RotOffsetX, RotOffsetY, RotOffsetZ };
-
-						_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
-						_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
-
-
-						_vector vForce = XMVector3TransformNormal(vDir, RotationMatrix) * m_tInstanceDesc.vMinMaxPower.y;
-						m_pVIBufferCom->Add_Force(i, vForce, m_tInstanceDesc.eForce_Mode);
-					}
-					m_tInstanceDesc.bAddForce = TRUE;
-				}
-			}
-
-
 
 
 
@@ -190,7 +160,6 @@ void CEffect_Instance::ReSet_Effect()
 	m_tInstanceDesc.fDissolveAmount = 0.f;
 	m_tInstanceDesc.bDissolve = FALSE;
 	m_tInstanceDesc.bRender = FALSE;
-	m_tInstanceDesc.bAddForce = FALSE;
 
 	m_pVIBufferCom->ReSet();
 }
@@ -207,13 +176,27 @@ void CEffect_Instance::End_Effect()
 
 void* CEffect_Instance::Get_BufferDesc()
 {
+	// 초기화용
+
 	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferDesc = {};
 
 	tBufferDesc.pModel = m_pModelCom;
 
-	tBufferDesc.iCurNumInstance = m_tInstanceDesc.iCurNumInstance;
 	tBufferDesc.bUseRigidBody = m_tInstanceDesc.bUseRigidBody;
+	tBufferDesc.eForce_Mode = m_tInstanceDesc.eForce_Mode;
 
+	tBufferDesc.iCurNumInstance = m_tInstanceDesc.iCurNumInstance;
+
+	tBufferDesc.vCenterPosition = m_tInstanceDesc.vCenterPosition;
+	tBufferDesc.vMinMaxRange = m_tInstanceDesc.vMinMaxRange;
+
+	tBufferDesc.vMinMaxRotationOffsetX = m_tInstanceDesc.vMinMaxRotationOffsetX;
+	tBufferDesc.vMinMaxRotationOffsetY = m_tInstanceDesc.vMinMaxRotationOffsetY;
+	tBufferDesc.vMinMaxRotationOffsetZ = m_tInstanceDesc.vMinMaxRotationOffsetZ;
+
+	tBufferDesc.vRotationOffset = m_tInstanceDesc.vRotationOffset;
+
+	tBufferDesc.vMinMaxPower = m_tInstanceDesc.vMinMaxPower;
 
 
 	return &tBufferDesc;

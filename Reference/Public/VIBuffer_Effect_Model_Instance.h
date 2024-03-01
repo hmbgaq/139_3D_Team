@@ -27,11 +27,24 @@ public:
 	{
 		class CModel*	  pModel	= { nullptr };
 
-		_bool			bUseRigidBody = { FALSE };
+		_bool			bUseRigidBody	= { FALSE };
+		FORCE_MODE		eForce_Mode		= { IMPULSE };
 
 		_int			iCurNumInstance = { 1 };
 
-		_float4			vCenterPosition = {0.f, 0.f, 0.f, 1.f};
+		/* For.Position */
+		_float4		vCenterPosition		= {0.f, 0.f, 0.f, 1.f};
+		_float2		vMinMaxRange		= { 0.1f, 3.f };
+
+		/* For.Rotation */
+		_float2		vMinMaxRotationOffsetX	= { 0.0f, 360.f };
+		_float2		vMinMaxRotationOffsetY	= { 0.0f, 360.f };
+		_float2		vMinMaxRotationOffsetZ	= { 0.0f, 360.f };
+		_float3		vRotationOffset			= { 0.f, 0.f, 0.f };
+
+		/* Power */
+		_float2		vMinMaxPower = { 0.1f, 250.f };
+
 
 	}EFFECT_MODEL_INSTANCE_DESC;
 
@@ -60,6 +73,9 @@ private:
     CVIBuffer_Effect_Model_Instance(const CVIBuffer_Effect_Model_Instance& rhs);
     virtual ~CVIBuffer_Effect_Model_Instance() = default;
 
+public:
+	virtual _bool Write_Json(json& Out_Json)		override;
+	virtual void Load_FromJson(const json& In_Json)	override;
 
 public:
 	virtual HRESULT		Initialize_Prototype() override;
@@ -73,6 +89,8 @@ public:
 public:
 	void ReSet();
 
+	/* For.RigidBody */
+public:
 	_float3 Update_Kinetic(_int iNum, _float fTimeDelta);
 	void	Update_Kinematic(_int iNum, _float fTimeDelta);
 
@@ -83,15 +101,12 @@ public:
 
 
 	const _bool	Check_Sleep(_int iNum);
-	void	Sleep(_int iNum) { Clear_Power(iNum); m_vecParticleRigidbodyDesc[iNum].bSleep = TRUE; }
-	void	Wake(_int iNum) { m_vecParticleRigidbodyDesc[iNum].bSleep = FALSE; }
+	void		Sleep(_int iNum) { Clear_Power(iNum); m_vecParticleRigidbodyDesc[iNum].bSleep = TRUE; }
+	void		Wake(_int iNum) { m_vecParticleRigidbodyDesc[iNum].bSleep = FALSE; }
 
-	void	Set_FreezeAxis(_int iNum, AXIS_TYPE eAxis) { m_vecParticleRigidbodyDesc[iNum].byFreezeAxis ^= 1 << (_int)eAxis; }
-	_bool	Is_FrozeAxis(_int iNum, AXIS_TYPE eAxis) { return m_vecParticleRigidbodyDesc[iNum].byFreezeAxis & 1 << (_int)eAxis; }
+	void		Set_FreezeAxis(_int iNum, AXIS_TYPE eAxis) { m_vecParticleRigidbodyDesc[iNum].byFreezeAxis ^= 1 << (_int)eAxis; }
+	_bool		Is_FrozeAxis(_int iNum, AXIS_TYPE eAxis) { return m_vecParticleRigidbodyDesc[iNum].byFreezeAxis & 1 << (_int)eAxis; }
 
-public:
-	virtual _bool Write_Json(json& Out_Json)		override;
-	virtual void Load_FromJson(const json& In_Json)	override;
 
 public:
 	EFFECT_MODEL_INSTANCE_DESC* Get_Desc() { return &m_tBufferDesc; }

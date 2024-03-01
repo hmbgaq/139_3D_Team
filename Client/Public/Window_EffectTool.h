@@ -89,7 +89,10 @@ private:
 	CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*	m_pParticlePointDesc = {};
 
 	CEffect_Rect::EFFECT_RECT_DESC*					m_pRectDesc			= {};
+
+
 	CEffect_Instance::EFFECT_INSTANCE_DESC*			m_pInstanceDesc		= {};
+	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC* m_pMeshBufferDesc = {};
 
 private:
 	_int m_iRenderGroup_Particle		= { 7 };
@@ -214,6 +217,14 @@ private:
 	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
 
 	_float	m_vMinMaxPower_Mesh[2] = { 0.1f, 500.f };
+
+	_float	m_vMinMaxRange_Mesh[2] = { 0.f, 0.f };
+
+	_float	m_vRotationOffsetX_Mesh[2] = { 0.f, 0.f };
+	_float	m_vRotationOffsetY_Mesh[2] = { 0.f, 0.f };
+	_float	m_vRotationOffsetZ_Mesh[2] = { 0.f, 0.f };
+
+
 
 #pragma endregion
 
