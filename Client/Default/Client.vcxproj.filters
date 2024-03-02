@@ -340,6 +340,9 @@
     <Filter Include="02.GameObjects\UI\02. System\03. LevelUp\04. SunBeacon">
       <UniqueIdentifier>{8c7ec1c7-30da-44eb-ab32-524c15b98591}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\02. Item_Showcase\Item_Icon">
+      <UniqueIdentifier>{64ee8d28-c550-4ecb-9b39-cdd478a6ae67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -630,9 +633,6 @@
     <ClInclude Include="..\Public\jAppSettings.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UI_Player_ExpBar.h">
       <Filter>02.GameObjects\UI\00. Player\Left_Interface\ExpBar</Filter>
     </ClInclude>
@@ -674,6 +674,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_LevelUp_TextBox.h">
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\05. TextBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_ItemIcon.h">
+      <Filter>02.GameObjects\UI\02. System\02. Item_Showcase\Item_Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1182,6 +1188,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_LevelUp_TextBox.cpp">
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\05. TextBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_ItemIcon.cpp">
+      <Filter>02.GameObjects\UI\02. System\02. Item_Showcase\Item_Icon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

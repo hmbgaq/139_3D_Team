@@ -394,6 +394,7 @@ private:
 		"TutorialBox",
 		"QuestIcon",
 		"ItemShowcase",
+		"ItemIcon",
 		"LevelUp_MagicFrame",
 		"LevelUp_MagicTrack",
 		"LevelUp_Shards",

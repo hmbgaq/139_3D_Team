@@ -59,6 +59,7 @@
 #include "UI_QuestBox.h"
 #include "UI_QuestIcon.h"
 #include "UI_ItemShowcase.h"
+#include "UI_ItemIcon.h"
 
 #pragma region LevelUp
 #include "UI_LevelUp_MagicFrame.h"
@@ -518,6 +519,7 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_QuestBox"), CUI_QuestBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_QuestBox"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_QuestIcon"), CUI_QuestBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_QuestIcon"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ItemShowcase"), CUI_ItemShowcase::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_ItemShowcase"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ItemIcon"), CUI_ItemIcon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_ItemIcon"))));
 #pragma endregion End
 
 #pragma region LevelUp

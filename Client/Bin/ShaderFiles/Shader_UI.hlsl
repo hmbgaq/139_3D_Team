@@ -14,6 +14,15 @@ texture2D		g_DiffuseTexture;
 texture2D		g_DiffuseTexture_Second;
 texture2D		g_DiffuseTexture_Third;
 texture2D		g_DiffuseTexture_Fourth;
+
+texture2D		g_HpBarWhite_Texture;
+texture2D		g_HpBarRed_Texture;
+texture2D		g_HpBarDecal_Texture;
+
+float			g_MaxHP;
+float			g_CurrentHP;
+float			g_LerpHP;
+
 texture2D		g_DepthTexture;
 
 
@@ -89,67 +98,97 @@ PS_OUT PS_MAIN(PS_IN In)
      return Out;
 }
 
-
-struct VS_OUT_EFFECT
+PS_OUT PS_HPBAR_GAUGE(PS_IN In)
 {
-	float4		vPosition : SV_POSITION;
-	float2		vTexcoord : TEXCOORD0;
-	float4		vProjPos : TEXCOORD1;
-};
+    PS_OUT Out = (PS_OUT) 0;
 
+    float4 vBackColor = g_HpBarRed_Texture.Sample(LinearSampler, In.vTexcoord);
 
-VS_OUT_EFFECT VS_MAIN_EFFECT(VS_IN In)
-{
-	VS_OUT_EFFECT		Out = (VS_OUT_EFFECT)0;
+    if (g_CurrentHP / g_MaxHP < In.vTexcoord.x) // 현재 체력과 최대 체력의 비에 따라 UV좌표가 잘린다.
+    {
+        Out.vColor = vBackColor;
+        return Out;
+    }
 
-	/* In.vPosition * 월드 * 뷰 * 투영 */
-	matrix		matWV, matWVP;
+    float4 vGaugeColor = g_HpBarWhite_Texture.Sample(LinearSampler, In.vTexcoord);
+    if (vGaugeColor.a < 0.3f)
+        discard;
 
-	matWV = mul(g_WorldMatrix, g_ViewMatrix);
-	matWVP = mul(matWV, g_ProjMatrix);
+    Out.vColor = lerp(vBackColor, vGaugeColor, vGaugeColor.a);
 
-	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-	Out.vTexcoord = In.vTexcoord;
-	Out.vProjPos = Out.vPosition;
-
-	return Out;
+    return Out;
 }
 
-struct PS_IN_EFFECT
+PS_OUT PS_HPBAR_GAUGE_LERP(PS_IN In)
 {
-	float4		vPosition : SV_POSITION;
-	float2		vTexcoord : TEXCOORD0;
-	float4		vProjPos : TEXCOORD1;
-};
+    PS_OUT Out = (PS_OUT) 0;
 
-/* 픽셀셰이더 : 픽셀의 색!!!! 을 결정한다. */
-PS_OUT PS_MAIN_EFFECT(PS_IN_EFFECT In)
-{
-	PS_OUT			Out = (PS_OUT)0;
+    float4 vLerpColor = g_HpBarWhite_Texture.Sample(LinearSampler, In.vTexcoord);   // Hp Pre
+    float4 vGaugeColor = g_HpBarRed_Texture.Sample(LinearSampler, In.vTexcoord);    // Hp Cur
+    float4 vDecalColor = g_HpBarDecal_Texture.Sample(LinearSampler, In.vTexcoord);  // Hp Decal
 
-	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    
+    Out.vColor = vDecalColor;
+    
+    if (vDecalColor.a == 0.f)
+    {
+        if (g_LerpHP / g_MaxHP < In.vTexcoord.x) // 현재 체력과 최대 체력의 비에 따라 UV좌표가 잘린다.
+            discard;
 
-	float2	vDepthTexcoord;
-	vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
-	vDepthTexcoord.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+        if (g_LerpHP / g_MaxHP >= In.vTexcoord.x && g_CurrentHP / g_MaxHP <= In.vTexcoord.x)
+            Out.vColor = vLerpColor;
 
-	float4	vDepthDesc = g_DepthTexture.Sample(PointSampler, vDepthTexcoord);
-	
-	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
+        if (g_CurrentHP / g_MaxHP > In.vTexcoord.x) 
+            Out.vColor = vGaugeColor;
+    }
+    
 
-	return Out;
+
+	//if (vGaugeColor.a < 0.3f)
+	//	discard;
+	//Out.vColor = lerp(vLerpColor, vGaugeColor, vGaugeColor.a);
+
+    return Out;
 }
 
+PS_OUT PS_INCREASING_PROGRESS(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    float4 vGaugeColor = g_HpBarRed_Texture.Sample(LinearSampler, In.vTexcoord); // 게이지 바 Texture
+    float4 vBackColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord); // Frame Texture
+
+    if (vGaugeColor.a < 0.3f)
+        discard;
+    if (vBackColor.a < 0.3f)
+        discard;
+
+    if (g_LerpHP / g_MaxHP > In.vTexcoord.x) // 현재 체력과 최대 체력의 비에 따라 UV좌표가 잘린다.
+    {
+        Out.vColor = vBackColor;
+        return Out;
+    }
+
+    if (g_CurrentHP / g_MaxHP <= In.vTexcoord.x)
+    {
+        Out.vColor = vGaugeColor;
+    }
+
+    Out.vColor = lerp(vBackColor, vGaugeColor, vGaugeColor.a);
+
+    return Out;
+}
 
 technique11 DefaultTechnique
 {
 	/* 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
-	pass UI
-	{
+    pass Default // 0
+    {
 		/* 셰이더(렌더스테이츠) 그리기전에 적용할것들 세팅해주고 */
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
 		
 		/* 렌더스테이츠 */
 		VertexShader = compile vs_5_0 VS_MAIN();	// 값 받고
@@ -158,6 +197,44 @@ technique11 DefaultTechnique
 		DomainShader = NULL;						
 		PixelShader = compile ps_5_0 PS_MAIN();		// 마지막으로 결정/세팅 한 후 출력한다. (ex : 색상)
 	}
+    
+    pass HPBarGauge // 1
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(1.f, 1.f, 1.f, 1.f), 0xffffffff);
 
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_HPBAR_GAUGE();
+    }
+
+    pass HPBarGauge_Lerp // 2
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(1.f, 1.f, 1.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_HPBAR_GAUGE_LERP();
+    }
+
+    pass IncreasingProgress // 3
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_INCREASING_PROGRESS();
+    }
 
 }

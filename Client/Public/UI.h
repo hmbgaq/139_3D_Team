@@ -263,7 +263,7 @@ protected: /* ========================= Component =========================== */
 	CShader*			m_pShaderCom = { nullptr };
 	//CTexture*			m_pTextureCom;
 	CTexture*			m_pMapTextureCom = { nullptr };	// 적용할 맵 텍스처
-	_int				iShaderNum;		// 적용할 셰이더 넘버
+	_int				m_iShaderNum;		// 적용할 셰이더 넘버
 	CVIBuffer_Rect*		m_pVIBufferCom = { nullptr };
 
 protected: /* =========================== Space ============================ */
@@ -279,6 +279,7 @@ protected: /* ============================= UI =============================== *
 	RECT				m_rcUI = {};
 	UISTATE				m_eState;
 	_float4x4			m_Origin_WorldMatrix = {};
+	_bool				m_bActive = false;
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f;

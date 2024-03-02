@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "UI_LevelUp_ShieldFrame.h"
+#include "UI_ItemIcon.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
-CUI_LevelUp_ShieldFrame::CUI_LevelUp_ShieldFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_ItemIcon::CUI_ItemIcon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
-CUI_LevelUp_ShieldFrame::CUI_LevelUp_ShieldFrame(const CUI_LevelUp_ShieldFrame& rhs)
+CUI_ItemIcon::CUI_ItemIcon(const CUI_ItemIcon& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CUI_LevelUp_ShieldFrame::Initialize_Prototype()
+HRESULT CUI_ItemIcon::Initialize_Prototype()
 {
 	//TODO 원형객체의 초기화과정을 수행한다.
 	/* 1.서버로부터 값을 받아와서 초기화한다 .*/
@@ -23,10 +23,13 @@ HRESULT CUI_LevelUp_ShieldFrame::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CUI_LevelUp_ShieldFrame::Initialize(void* pArg)
+HRESULT CUI_ItemIcon::Initialize(void* pArg)
 {
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
+
+	m_tUIInfo.fScaleX = 55.0f;
+	m_tUIInfo.fScaleY = 55.0f;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -37,17 +40,17 @@ HRESULT CUI_LevelUp_ShieldFrame::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CUI_LevelUp_ShieldFrame::Priority_Tick(_float fTimeDelta)
+void CUI_ItemIcon::Priority_Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_LevelUp_ShieldFrame::Tick(_float fTimeDelta)
+void CUI_ItemIcon::Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_LevelUp_ShieldFrame::Late_Tick(_float fTimeDelta)
+void CUI_ItemIcon::Late_Tick(_float fTimeDelta)
 {
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
@@ -58,7 +61,7 @@ void CUI_LevelUp_ShieldFrame::Late_Tick(_float fTimeDelta)
 		return;
 }
 
-HRESULT CUI_LevelUp_ShieldFrame::Render()
+HRESULT CUI_ItemIcon::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -75,7 +78,7 @@ HRESULT CUI_LevelUp_ShieldFrame::Render()
 	return S_OK;
 }
 
-HRESULT CUI_LevelUp_ShieldFrame::Ready_Components()
+HRESULT CUI_ItemIcon::Ready_Components()
 {
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -87,15 +90,25 @@ HRESULT CUI_LevelUp_ShieldFrame::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("level_shield"),
-		TEXT("Com_Texture_LevelUp_Shield"), reinterpret_cast<CComponent**>(&m_pTextureCom[SHIELD_FRAME]))))
+	//! For.Com_Texture_Sunbeacon
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("perk_element"),
+		TEXT("Com_Texture_Sunbeacon"), reinterpret_cast<CComponent**>(&m_pTextureCom[ITEM_SUNBEACON]))))
+		return E_FAIL;
+	
+	//! For.Com_Texture_ItemGold
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_icon_gold_reward"),
+		TEXT("Com_Texture_ItemGold"), reinterpret_cast<CComponent**>(&m_pTextureCom[ITEM_GOLD]))))
+		return E_FAIL;
+
+	//! For.Com_Texture_UnlockBlock
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_icons_projectile_block"),
+		TEXT("Com_Texture_UnlockBlock"), reinterpret_cast<CComponent**>(&m_pTextureCom[UNLOCKED_BLOCK]))))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CUI_LevelUp_ShieldFrame::Bind_ShaderResources()
+HRESULT CUI_ItemIcon::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -110,10 +123,24 @@ HRESULT CUI_LevelUp_ShieldFrame::Bind_ShaderResources()
 	{
 		switch (i)
 		{
-		case CUI_LevelUp_ShieldFrame::SHIELD_FRAME:
+		case CUI_ItemIcon::ITEM_SUNBEACON:
 		{
 			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
+			break;
+		}
+		case CUI_ItemIcon::ITEM_GOLD:
+		{
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Second")))
+				return E_FAIL;
+
+			break;
+		}
+		case CUI_ItemIcon::UNLOCKED_BLOCK:
+		{
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Third")))
+				return E_FAIL;
+
 			break;
 		}
 		default:
@@ -124,7 +151,7 @@ HRESULT CUI_LevelUp_ShieldFrame::Bind_ShaderResources()
 	return S_OK;
 }
 
-json CUI_LevelUp_ShieldFrame::Save_Desc(json& out_json)
+json CUI_ItemIcon::Save_Desc(json& out_json)
 {
 	/* 기본정보 저장 */
 	__super::Save_Desc(out_json);
@@ -132,43 +159,43 @@ json CUI_LevelUp_ShieldFrame::Save_Desc(json& out_json)
 	return out_json;
 }
 
-void CUI_LevelUp_ShieldFrame::Load_Desc()
+void CUI_ItemIcon::Load_Desc()
 {
 
 }
 
-CUI_LevelUp_ShieldFrame* CUI_LevelUp_ShieldFrame::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_ItemIcon* CUI_ItemIcon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_LevelUp_ShieldFrame* pInstance = new CUI_LevelUp_ShieldFrame(pDevice, pContext, strPrototypeTag);
+	CUI_ItemIcon* pInstance = new CUI_ItemIcon(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CUI_LevelUp_ShieldFrame");
+		MSG_BOX("Failed to Created : CUI_ItemIcon");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_LevelUp_ShieldFrame::Pool()
+CGameObject* CUI_ItemIcon::Pool()
 {
-	return new CUI_LevelUp_ShieldFrame(*this);
+	return new CUI_ItemIcon(*this);
 }
 
-CGameObject* CUI_LevelUp_ShieldFrame::Clone(void* pArg)
+CGameObject* CUI_ItemIcon::Clone(void* pArg)
 {
-	CUI_LevelUp_ShieldFrame* pInstance = new CUI_LevelUp_ShieldFrame(*this);
+	CUI_ItemIcon* pInstance = new CUI_ItemIcon(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CUI_LevelUp_ShieldFrame");
+		MSG_BOX("Failed to Cloned : CUI_ItemIcon");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CUI_LevelUp_ShieldFrame::Free()
+void CUI_ItemIcon::Free()
 {
 	__super::Free();
 

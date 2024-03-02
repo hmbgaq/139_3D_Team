@@ -255,6 +255,7 @@
     <ClInclude Include="..\Public\UI_Blood_Lights.h" />
     <ClInclude Include="..\Public\UI_Blood_Veins.h" />
     <ClInclude Include="..\Public\UI_Blood_Vignette.h" />
+    <ClInclude Include="..\Public\UI_ItemIcon.h" />
     <ClInclude Include="..\Public\UI_ItemShowcase.h" />
     <ClInclude Include="..\Public\UI_LevelUp_MagicFrame.h" />
     <ClInclude Include="..\Public\UI_LevelUp_MagicSide.h" />
@@ -357,6 +358,7 @@
     <ClCompile Include="..\Private\UI_Blood_Lights.cpp" />
     <ClCompile Include="..\Private\UI_Blood_Veins.cpp" />
     <ClCompile Include="..\Private\UI_Blood_Vignette.cpp" />
+    <ClCompile Include="..\Private\UI_ItemIcon.cpp" />
     <ClCompile Include="..\Private\UI_ItemShowcase.cpp" />
     <ClCompile Include="..\Private\UI_LevelUp_MagicFrame.cpp" />
     <ClCompile Include="..\Private\UI_LevelUp_MagicSide.cpp" />
