@@ -799,39 +799,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\0. Parent">
       <UniqueIdentifier>{a7f18676-799c-4a76-8843-16c6f6acc820}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light">
-      <UniqueIdentifier>{59870ea6-9152-44cf-abdc-dc847ba5cc28}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Back">
-      <UniqueIdentifier>{b04d9d70-23ae-43c5-a02f-7e56e2fffe2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Back\Left">
-      <UniqueIdentifier>{bac3372e-81e4-43b9-8893-9f6bff2e4641}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Back\Right">
-      <UniqueIdentifier>{9d0b561c-c56a-4861-8f86-44ba519f6a60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Front">
-      <UniqueIdentifier>{d5fb92aa-3397-4b69-9e5b-d15cb632205a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Front\Left">
-      <UniqueIdentifier>{3c7d3f23-42b7-46e5-ba02-8b58d87ce24c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Front\Right">
-      <UniqueIdentifier>{9781666c-e9a5-41f4-a6c4-8d4c814eb567}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Left">
-      <UniqueIdentifier>{685655a8-18e5-4e36-bd7d-5338068d3ea9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Left\Opened">
-      <UniqueIdentifier>{6059ee7b-127a-4717-9d15-992ee7b5fd1c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Right">
-      <UniqueIdentifier>{97d663a2-b818-4fd5-8e9a-ddc67beb69ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Right\Opened">
-      <UniqueIdentifier>{c46ff38a-faad-44c7-9257-968c5624468f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal">
       <UniqueIdentifier>{83be6db5-ac38-4366-9b3c-59f094070ce4}</UniqueIdentifier>
     </Filter>
@@ -1374,6 +1341,39 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\03%28미사용. Empowered 3 사용중%29">
       <UniqueIdentifier>{28c5f495-7aa0-4615-86fa-2ac901dba296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29">
+      <UniqueIdentifier>{59870ea6-9152-44cf-abdc-dc847ba5cc28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back">
+      <UniqueIdentifier>{b04d9d70-23ae-43c5-a02f-7e56e2fffe2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back\Left">
+      <UniqueIdentifier>{bac3372e-81e4-43b9-8893-9f6bff2e4641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back\Right">
+      <UniqueIdentifier>{9d0b561c-c56a-4861-8f86-44ba519f6a60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front">
+      <UniqueIdentifier>{d5fb92aa-3397-4b69-9e5b-d15cb632205a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front\Left">
+      <UniqueIdentifier>{3c7d3f23-42b7-46e5-ba02-8b58d87ce24c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front\Right">
+      <UniqueIdentifier>{9781666c-e9a5-41f4-a6c4-8d4c814eb567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Left">
+      <UniqueIdentifier>{685655a8-18e5-4e36-bd7d-5338068d3ea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Left\Opened">
+      <UniqueIdentifier>{6059ee7b-127a-4717-9d15-992ee7b5fd1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right">
+      <UniqueIdentifier>{97d663a2-b818-4fd5-8e9a-ddc67beb69ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right\Opened">
+      <UniqueIdentifier>{c46ff38a-faad-44c7-9257-968c5624468f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2029,7 +2029,7 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLightOpened_F_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal</Filter>
@@ -2038,16 +2038,16 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_B_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_F_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_L_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_R_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormal_B_01_NEW.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Back</Filter>
@@ -2074,22 +2074,22 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Back\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_BL_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Back\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_BR_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Back\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_FL_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_FR_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLightOpened_L_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Left\Opened</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Left\Opened</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLightOpened_R_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Right\Opened</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right\Opened</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormal_FL90_01_NEW.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Left\90</Filter>
@@ -3371,37 +3371,37 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_BL_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Back\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_BR_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Back\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_B_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_FL_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_FR_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_F_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLightOpened_L_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Left\Opened</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Left\Opened</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_L_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLightOpened_R_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Right\Opened</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right\Opened</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_R_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLightOpened_F_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitNormal_BL_01_NEW.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Back\Left</Filter>

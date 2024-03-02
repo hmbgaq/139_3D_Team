@@ -105,11 +105,11 @@ public:
 public:
 	virtual Hit_Type Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower);
 
-	virtual void Hitted_Left() {};
-	virtual void Hitted_Right() {};
-	virtual void Hitted_Front() {};
-	virtual void Hitted_Down() {};
-	virtual void Hitted_Dead() {};
+	virtual void Hitted_Left(Power ePower) {};
+	virtual void Hitted_Right(Power ePower) {};
+	virtual void Hitted_Front(Power ePower) {};
+	virtual void Hitted_Knock(_bool bIsCannonball = false) {};
+	virtual void Hitted_Dead(Power ePower) {};
 
 public:
 	void Add_Force(_vector In_vDir, _float In_fPower);

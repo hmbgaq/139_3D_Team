@@ -341,7 +341,7 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 
 	if (m_iHp <= 0)
 	{
-		Hitted_Dead();
+		Hitted_Dead(eHitPower);
 		//eHitType = Hit_Type::Hit_Finish;
 	}
 	else if (eHitPower >= m_eStrength)
@@ -351,13 +351,13 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 		switch (eHitDirection)
 		{
 		case Engine::Left:
-			Hitted_Left();
+			Hitted_Left(eHitPower);
 			break;
 		case Engine::Right:
-			Hitted_Right();
+			Hitted_Right(eHitPower);
 			break;
 		default:
-			Hitted_Front();
+			Hitted_Front(eHitPower);
 			break;
 		}
 		//Set_StiffnessRate(fStiffnessRate);

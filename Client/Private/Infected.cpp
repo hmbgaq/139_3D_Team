@@ -6,11 +6,36 @@
 #include "Infected_Idle.h"
 #include "Infected_SpawnGround.h"
 
+
+#include "Infected_HitLight_F_01_NEW.h"
+#include "Infected_HitLight_FL_01_NEW.h"
+#include "Infected_HitLight_FR_01_NEW.h"
+
 #include "Infected_HitNormal_F_01_NEW.h"
+#include "Infected_HitNormal_F_02_NEW.h"
+#include "Infected_HitNormal_F_03_NEW.h"
 #include "Infected_HitNormal_FL_01_NEW.h"
 #include "Infected_HitNormal_FR_01_NEW.h"
-#include "Infected_DeathHeavy_F_01_NEW.h"
+
+#include "Infected_HitHeavy_F_01_NEW.h"
+#include "Infected_HitHeavy_F_02_NEW.h"
+#include "Infected_HitHeavy_FL_01_NEW.h"
+#include "Infected_HitHeavy_FL_02_NEW.h"
+#include "Infected_HitHeavy_FR_01_NEW.h"
+#include "Infected_HitHeavy_FR_02_NEW.h"
+
+#include "Infected_KnockFrontLight_B_01_NEW.h"
 #include "Infected_KnockFrontLight_F_01_NEW.h"
+#include "Infected_KnockFrontCannonball_F_01_TEMP.h"
+
+#include "Infected_DeathLight_B_01_NEW.h"
+#include "Infected_DeathLight_F_01_NEW.h"
+#include "Infected_DeathHeavy_F_01_NEW.h"
+
+
+
+
+
 
 
 
@@ -97,30 +122,92 @@ HRESULT CInfected::Ready_PartObjects()
 	return S_OK;
 }
 
-void CInfected::Hitted_Left()
+void CInfected::Hitted_Left(Power ePower)
 {
-	m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
+	switch (ePower)
+	{
+	case Engine::Light:
+		m_pActor->Set_State(new CInfected_HitLight_FL_01_NEW());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
+		break;
+	case Engine::Heavy:
+		m_pActor->Set_State(new CInfected_HitHeavy_FL_01_NEW());
+		break;
+	default:
+		m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
+		break;
+	}
 }
 
-void CInfected::Hitted_Right()
+void CInfected::Hitted_Right(Power ePower)
 {
-	m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
+	switch (ePower)
+	{
+	case Engine::Light:
+		m_pActor->Set_State(new CInfected_HitLight_FR_01_NEW());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
+		break;
+	case Engine::Heavy:
+		m_pActor->Set_State(new CInfected_HitHeavy_FR_01_NEW());
+		break;
+	default:
+		m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
+		break;
+	}
 }
 
-void CInfected::Hitted_Front()
+void CInfected::Hitted_Front(Power ePower)
 {
-	m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
+	switch (ePower)
+	{
+	case Engine::Light:
+		m_pActor->Set_State(new CInfected_HitLight_F_01_NEW());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
+		break;
+	case Engine::Heavy:
+		m_pActor->Set_State(new CInfected_HitHeavy_F_01_NEW());
+		break;
+	default:
+		m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
+		break;
+	}
 }
 
-void CInfected::Hitted_Down()
+void CInfected::Hitted_Knock(_bool bIsCannonball)
 {
-	m_pActor->Set_State(new CInfected_KnockFrontLight_F_01_NEW());
+	if (bIsCannonball)
+	{
+		m_pActor->Set_State(new CInfected_KnockFrontCannonball_F_01_TEMP());
+	}
+	else 
+	{
+		m_pActor->Set_State(new CInfected_KnockFrontLight_F_01_NEW());
+	}
 }
 
-void CInfected::Hitted_Dead()
+void CInfected::Hitted_Dead(Power ePower)
 {
-	m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
+	switch (ePower)
+	{
+	case Engine::Light:
+		m_pActor->Set_State(new CInfected_DeathLight_F_01_NEW());
+		break;
+	case Engine::Heavy:
+		m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
+		break;
+
+	default:
+		break;
+	}
 }
+
+
 
 
 CInfected* CInfected::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

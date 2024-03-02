@@ -27,11 +27,11 @@ protected:
 	HRESULT Ready_PartObjects();
 
 protected:
-	virtual void Hitted_Left()	override;
-	virtual void Hitted_Right() override;
-	virtual void Hitted_Front() override;
-	virtual void Hitted_Down()	override;
-	virtual void Hitted_Dead()	override;
+	virtual void Hitted_Left(Power ePower)	override;
+	virtual void Hitted_Right(Power ePower) override;
+	virtual void Hitted_Front(Power ePower) override;
+	virtual void Hitted_Knock(_bool bIsCannonball) override;
+	virtual void Hitted_Dead(Power ePower)	override;
 
 
 private:
