@@ -35,6 +35,8 @@ public:
 	_float Get_fMass() { return m_fMass; }
 	void Set_fMass(_float _fMass) { m_fMass = _fMass; }
 
+	void Set_Transform(CTransform* pOwnerTransform);
+
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -43,7 +45,7 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 
 public:
-	void Add_Force(_vector In_vDir, const _float& In_fPower);
+	void Add_Force(_vector In_vDir, _float In_fPower);
 
 
 private:

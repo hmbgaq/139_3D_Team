@@ -116,7 +116,7 @@ HRESULT CBody_Player::Ready_Components()
 	/* For.Com_Collider */
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER);
-	BoundingDesc.vExtents = _float3(0.5f, 0.5f, 0.5f);
+	BoundingDesc.vExtents = _float3(0.2f, 0.2f, 0.2f);
 	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
 
 

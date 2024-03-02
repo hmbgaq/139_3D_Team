@@ -9,6 +9,10 @@ namespace Engine
 
 	/* Transform */
 	static const wchar_t* g_pTransformTag = TEXT("Com_Transform");
+	
+	/* RigidBody */
+	static const wchar_t* g_pRigidBodyTag = TEXT("Com_RigidBody");
+
 
 	/* Shader */
 	enum class DEFERRED_SHADER { 

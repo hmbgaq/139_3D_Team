@@ -66,7 +66,7 @@ HRESULT CPlayer_Weapon_Punch::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER_ATTACK);
-	BoundingDesc.fRadius = { 0.2f };
+	BoundingDesc.fRadius = { 0.15f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
@@ -83,7 +83,8 @@ void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(pTarget);
 	if (nullptr != pTarget_Character)
 	{
-		pTarget_Character->Set_Hitted(0, _float3(0.f, 0.f, 0.f), 1.f, Direction::Front, Power::Light);
+		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
+		pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos), 0.5f, 1.f, Direction::Front, Power::Light);
 	}
 }
 

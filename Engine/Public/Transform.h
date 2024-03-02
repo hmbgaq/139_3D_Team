@@ -126,6 +126,7 @@ public:
 	void	Look_At_Direction(_fvector _vLook);
 	void	Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta);
 
+	_vector Calc_Look_Dir(_fvector vTargetPos);
 
 
 public:

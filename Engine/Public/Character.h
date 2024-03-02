@@ -11,6 +11,8 @@
 BEGIN(Engine)
 
 class CNavigation;
+class CRigidBody;
+
 //class CPhysXCharacterController;
 
 class ENGINE_DLL CCharacter abstract : public CGameObject
@@ -101,13 +103,20 @@ public:
 	virtual void Set_Enable(_bool _Enable) override;
 
 public:
-	virtual Hit_Type Set_Hitted(_uint iDamage, _float3 vForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower);
+	virtual Hit_Type Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower);
 
 	virtual void Hitted_Left() {};
 	virtual void Hitted_Right() {};
 	virtual void Hitted_Front() {};
 	virtual void Hitted_Down() {};
 	virtual void Hitted_Dead() {};
+
+public:
+	void Add_Force(_vector In_vDir, _float In_fPower);
+
+
+
+
 
 public:
 	_int Get_Hp() {
@@ -126,6 +135,7 @@ protected:
 
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
+	CRigidBody* m_pRigidBody = { nullptr };
 	CBody* m_pBody = { nullptr };
 	vector<CWeapon*> m_Weapons;
 	CHARCTER_DESC CharAnimDesc = {};
@@ -135,7 +145,7 @@ protected:
 
 protected:
 	//CPhysXController* m_pPhysXControllerCom = { nullptr };
-	PxControllerCollisionFlags m_LastCollisionFlags;
+	//PxControllerCollisionFlags m_LastCollisionFlags;
 
 protected:
 	map<const wstring, class CGameObject*>		m_PartObjects;

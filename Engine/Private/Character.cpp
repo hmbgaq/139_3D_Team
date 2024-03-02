@@ -1,6 +1,8 @@
 #include "..\Public\Character.h"
 #include "GameInstance.h"
+#include "RigidBody.h"
 #include "PhysXCharacterController.h"
+
 
 
 CCharacter::CCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -34,6 +36,20 @@ HRESULT CCharacter::Initialize(void* pArg)
 	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;
 
+	m_pRigidBody = CRigidBody::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pRigidBody)
+		return E_FAIL;
+
+	if (nullptr != Find_Component(g_pRigidBodyTag))
+		return E_FAIL;
+
+	m_Components.emplace(g_pRigidBodyTag, m_pRigidBody);
+
+	Safe_AddRef(m_pRigidBody);
+
+	m_pRigidBody->Set_Owner(this);
+
+	m_pRigidBody->Set_Transform(m_pTransformCom);
 
 
 	return S_OK;
@@ -76,6 +92,7 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 
 	m_pTransformCom->Add_RootBone_Position(m_pBody->Get_MovePos(), m_pNavigationCom);
 
+	m_pRigidBody->Late_Tick(fTimeDelta);
 #ifdef _DEBUG
 	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
@@ -308,7 +325,7 @@ void CCharacter::Set_Enable(_bool _Enable)
 
 }
 
-Hit_Type CCharacter::Set_Hitted(_uint iDamage, _float3 vForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower)
+Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower)
 {
 	Hit_Type eHitType = Hit_Type::None;
 
@@ -319,18 +336,17 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _float3 vForce, _float fStiffness
 
 	//Get_Damaged(iDamage);
 	//Set_InvincibleTime(fInvincibleTime);
+	Add_Force(vDir, fForce);
+	m_pTransformCom->Look_At_Direction(vDir * -1);
 
 	if (m_iHp <= 0)
 	{
-		//Add_Force(vForce);
 		Hitted_Dead();
 		//eHitType = Hit_Type::Hit_Finish;
 	}
 	else if (eHitPower >= m_eStrength)
 	{
 		eHitType = Hit_Type::Hit;
-
-		//Add_Force(vForce);
 
 		switch (eHitDirection)
 		{
@@ -349,6 +365,55 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _float3 vForce, _float fStiffness
 
 	return eHitType;
 }
+
+//Hit_Type CCharacter::Set_Hitted(_uint iDamage, _float3 vForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower)
+//{
+//	Hit_Type eHitType = Hit_Type::None;
+//
+//	if (Power::Absolute == m_eStrength)
+//	{
+//		return Hit_Type::None;
+//	}
+//
+//	//Get_Damaged(iDamage);
+//	//Set_InvincibleTime(fInvincibleTime);
+//
+//	if (m_iHp <= 0)
+//	{
+//		Add_Force(,vForce);
+//		Hitted_Dead();
+//		//eHitType = Hit_Type::Hit_Finish;
+//	}
+//	else if (eHitPower >= m_eStrength)
+//	{
+//		eHitType = Hit_Type::Hit;
+//
+//		//Add_Force(vForce);
+//
+//		switch (eHitDirection)
+//		{
+//		case Engine::Left:
+//			Hitted_Right();
+//			break;
+//		case Engine::Right:
+//			Hitted_Left();
+//			break;
+//		default:
+//			Hitted_Front();
+//			break;
+//		}
+//		//Set_StiffnessRate(fStiffnessRate);
+//	}
+//
+//	return eHitType;
+//}
+
+
+void CCharacter::Add_Force(_vector In_vDir, _float In_fPower)
+{
+	m_pRigidBody->Add_Force(In_vDir, In_fPower);
+}
+
 
 
 
