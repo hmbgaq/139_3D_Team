@@ -8,6 +8,11 @@
 #include "Data_Manager.h"
 #include "Clone_Manager.h"
 
+//CUDA test
+#include <iostream>
+#include <cuda.h>
+#include "Test.cuh"
+
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
@@ -67,6 +72,18 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	m_fTimeAcc += fTimeDelta;
 	
+	int a, b, c;
+	int d;
+	a = 3; 
+	b = 4;
+	c = sum_int(a, b);
+	CGPUACC gpuacc;
+	gpuacc.sum_cuda(a, b, &d);
+
+	printf("CPU 를 통한 합: %d 와 %d의 합은 %d 입니다.\n", a, b, c);
+	printf("GPU 를 통한 합: %d 와 %d의 합은 %d 입니다.\n", a, b, d);
+
+
 	//m_pDevConsole->Tick();
 }
 
@@ -91,6 +108,14 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Present();
 
 	return S_OK;
+}
+
+int CMainApp::sum_int(int a, int b)
+{
+	int c; 
+	c = a + b;
+
+	return c;
 }
 
 HRESULT CMainApp::Ready_Font()

@@ -1459,6 +1459,9 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right\FR45">
       <UniqueIdentifier>{165e0797-5cca-44bf-a491-3b774e26cf68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CudaTest">
+      <UniqueIdentifier>{4b3e002c-c591-4176-a117-e7fb97f84851}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -4077,5 +4080,15 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="Test.cu">
+      <Filter>CudaTest</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Test.cuh">
+      <Filter>CudaTest</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
