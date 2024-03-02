@@ -308,6 +308,8 @@
     <ClInclude Include="..\Public\Bandit_Heavy_State_Run.h" />
     <ClInclude Include="..\Public\Bandit_Heavy_State_Walk.h" />
     <ClInclude Include="..\Public\Bandit_Sniper.h" />
+    <ClInclude Include="..\Public\Bandit_Sniper_State_Idle.h" />
+    <ClInclude Include="..\Public\Bandit_Sniper_State.h" />
     <ClInclude Include="..\Public\Body_Assassin.h" />
     <ClInclude Include="..\Public\Body_Bandit_Heavy.h" />
     <ClInclude Include="..\Public\Body_Bandit_Sniper.h" />
@@ -684,6 +686,8 @@
     <ClCompile Include="..\Private\Bandit_Heavy_State_Run.cpp" />
     <ClCompile Include="..\Private\Bandit_Heavy_State_Walk.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper.cpp" />
+    <ClCompile Include="..\Private\Bandit_Sniper_State_Idle.cpp" />
+    <ClCompile Include="..\Private\Bandit_Sniper_State.cpp" />
     <ClCompile Include="..\Private\Body_Assassin.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Heavy.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Sniper.cpp" />

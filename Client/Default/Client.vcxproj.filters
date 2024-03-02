@@ -643,354 +643,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected">
       <UniqueIdentifier>{7dfc20bb-061f-4770-864f-7f643de0d949}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\Parts">
-      <UniqueIdentifier>{a29b3434-3ea7-45bd-9b47-859196e35a8e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\Parts\Body">
-      <UniqueIdentifier>{d94f30bc-b9fa-4761-af07-cef9feb08fef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State">
-      <UniqueIdentifier>{93bf8f56-5d24-4cf3-8ec7-68d418711d0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\0. Origin">
-      <UniqueIdentifier>{6db23996-5815-46cb-8645-52a8f1f48027}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle">
-      <UniqueIdentifier>{f84e3d31-6a50-448e-bc44-ebb021b87461}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\0. Parent">
-      <UniqueIdentifier>{98a56c54-c997-4753-8026-a5e7a56d39f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\idle">
-      <UniqueIdentifier>{a4d4e8ae-f8c4-4afe-b2da-469be46bab0f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\IdlePose">
-      <UniqueIdentifier>{40351a09-305f-48ae-833b-42f32d3521bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Relaxed">
-      <UniqueIdentifier>{e9a1a0a1-28ee-4381-a735-c502e1357d91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Relaxed\01">
-      <UniqueIdentifier>{12a31d37-ad8e-4911-8177-1a014d61931c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Relaxed\02">
-      <UniqueIdentifier>{64279de9-821b-44df-9fb2-c5c84434c3dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Relaxed\03">
-      <UniqueIdentifier>{0a857300-9a8c-45a6-94c9-57e6e1174f4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Act">
-      <UniqueIdentifier>{69c1865b-d86a-4d0a-b40c-657e04f06b7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Act\01">
-      <UniqueIdentifier>{2aac0dac-0a12-4569-af59-6cbd006a724b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Act\02">
-      <UniqueIdentifier>{b8d65b95-474a-4d31-9aae-7529c033698a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Act\03">
-      <UniqueIdentifier>{bb16dc02-b1e7-4d3f-879a-b4f0f49cf729}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk">
-      <UniqueIdentifier>{e3a2e939-4580-447e-8841-66c6ddf3e3ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\0. Parent">
-      <UniqueIdentifier>{d77af25b-234c-4b05-a4de-b8c235761372}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Back">
-      <UniqueIdentifier>{30461afb-f717-4725-a475-2944a1976f60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front">
-      <UniqueIdentifier>{bcdb0ff0-6cc4-4f65-961d-b6c250fa0b89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front\Left">
-      <UniqueIdentifier>{4aa6776d-1867-4a41-a441-f910dc7ad7ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front\Left\45">
-      <UniqueIdentifier>{a9795c03-17a2-4d3a-955e-02f17f879064}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front\Right">
-      <UniqueIdentifier>{3aee0e6e-bec6-4be4-b768-a92a4be55395}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front\Right\45">
-      <UniqueIdentifier>{7e6b14ad-df57-4ba1-b18d-acf8bc16f0c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run">
-      <UniqueIdentifier>{fee479e1-097c-406d-bb94-52566d7286c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\0. Parent">
-      <UniqueIdentifier>{cb604ec0-b385-4242-991b-6c5c7c825db1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Back">
-      <UniqueIdentifier>{16c8398b-69aa-4d5d-bc3c-4c206f7ce510}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front">
-      <UniqueIdentifier>{eaba8593-d042-4512-a4d9-b3208c4a1308}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front\Left">
-      <UniqueIdentifier>{52ef412c-653d-46a3-b693-12cc91676d0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front\Left\45">
-      <UniqueIdentifier>{c215186e-8375-4778-a05d-9b4196cada9e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front\Right">
-      <UniqueIdentifier>{ae7c5019-c99f-4054-94c3-123c5665d5bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front\Right\45">
-      <UniqueIdentifier>{807ddfae-9c07-480b-bc54-3c20105b2865}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack">
-      <UniqueIdentifier>{b0db7662-2af1-48a8-882e-58d5cea9d63d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\0. Parent">
-      <UniqueIdentifier>{795cc4e0-53ba-442e-a9a8-ca32d21d65e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee">
-      <UniqueIdentifier>{07e82608-fbc8-4c8e-9e29-2c637d9f1359}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal">
-      <UniqueIdentifier>{ac90b602-88c4-4b96-bfaf-986ddad0e750}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\0. RD">
-      <UniqueIdentifier>{8ac96e9b-eeaf-48c8-a590-931e6b692aaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\1. RM">
-      <UniqueIdentifier>{deeb1480-9dcf-45e0-8bb8-4d9d2802f2d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\1. RM\01">
-      <UniqueIdentifier>{80e945a9-07be-45c3-b49e-e10dee56018d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\1. RM\02">
-      <UniqueIdentifier>{ae7ebbca-359e-4734-b027-91c0ec76619f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\2. RU">
-      <UniqueIdentifier>{a4d3492c-ac7b-4911-8c27-a3026dde9c3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\2. RU\01">
-      <UniqueIdentifier>{5f15d047-9ebf-4b33-a2b8-d9cbea902f3a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\2. RU\02">
-      <UniqueIdentifier>{7728cf00-bf7d-4f5f-aa54-878d556a6041}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\1. Dynamic">
-      <UniqueIdentifier>{2fe885ee-5b74-4fe8-9f54-f4ee4eedd00c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\1. Dynamic\1">
-      <UniqueIdentifier>{26da40be-b645-4ac7-af93-2585133486ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\1. Dynamic\2">
-      <UniqueIdentifier>{0297e36a-0c8b-42a0-9ac3-17789adeb2e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\1. Dynamic\3">
-      <UniqueIdentifier>{900af875-b318-4d8b-95e2-aa2dad1aa483}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\2. Sprint_Melee">
-      <UniqueIdentifier>{2213431a-2fae-476a-acd3-14cd90df41ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\2. Sprint_Melee\2">
-      <UniqueIdentifier>{01027048-dd2f-498b-b906-19a81e6d3570}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\2. Sprint_Melee\3">
-      <UniqueIdentifier>{19a0aea0-c11a-471e-ba56-78f603e5dce5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit">
-      <UniqueIdentifier>{845e5680-5a99-4f9a-a3c2-7cd202d1d432}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\0. Parent">
-      <UniqueIdentifier>{a7f18676-799c-4a76-8843-16c6f6acc820}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal">
-      <UniqueIdentifier>{83be6db5-ac38-4366-9b3c-59f094070ce4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Back">
-      <UniqueIdentifier>{59e1f0df-1ef7-4b05-9567-386900458bf0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Back\Left">
-      <UniqueIdentifier>{cfd087dc-30c0-46f1-a069-7be686a51740}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Back\Right">
-      <UniqueIdentifier>{f264e0dc-f666-4241-9edd-393f3318ef55}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front">
-      <UniqueIdentifier>{de70683f-1975-4905-b1dc-fd12902163f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\01">
-      <UniqueIdentifier>{62973851-8a1d-4263-ad65-2ed476987f72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\02">
-      <UniqueIdentifier>{f4c621d0-d668-4904-8993-774352f5c31f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\03">
-      <UniqueIdentifier>{a17a3b92-3529-4540-acc9-64dd3830712e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Left">
-      <UniqueIdentifier>{5a1e6c74-7486-4f99-a31a-952e8cc82dc5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Left\90">
-      <UniqueIdentifier>{4f9fd9da-1d01-4d39-b23c-931381ae3fd4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Right">
-      <UniqueIdentifier>{38b4dd99-3e6a-4c86-afec-4625f2a162be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Right\90">
-      <UniqueIdentifier>{8e205092-978b-44d6-beb4-d0d88e34a359}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy">
-      <UniqueIdentifier>{27952934-f000-451e-b5d4-70745184a315}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Back">
-      <UniqueIdentifier>{4bb3822f-7a00-4616-b4bc-399286839d5f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Back\Left">
-      <UniqueIdentifier>{42edbc54-3435-4f5d-84bb-3e96e7e6e67c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Back\Right">
-      <UniqueIdentifier>{af28c993-f844-47f1-b4a4-4c6ea643c604}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front">
-      <UniqueIdentifier>{59228d09-840d-4057-9bb0-cddb3c6e4c1b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\1">
-      <UniqueIdentifier>{d424ad24-df4b-47a1-8862-cac615fd7949}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\2">
-      <UniqueIdentifier>{27398b71-042e-49a5-8512-494d98ddff69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Left">
-      <UniqueIdentifier>{f150865e-fd98-470a-aefa-deb44d7ae7ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Left\1">
-      <UniqueIdentifier>{4db28348-9b06-4a68-a30f-063cfac38e79}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Left\2">
-      <UniqueIdentifier>{206f9754-ce37-4eec-af36-0f075b9f9936}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Left\90">
-      <UniqueIdentifier>{915b15c1-d5d0-4807-8e9e-34e11d6a3944}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Right">
-      <UniqueIdentifier>{f3bf2e29-2555-4a3a-8c1f-c9e331eaf15c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Right\1">
-      <UniqueIdentifier>{a691af23-855a-4279-9df8-1157de2f3878}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Right\2">
-      <UniqueIdentifier>{cca47bbc-40e1-4a9d-ae62-483ff3383428}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Right\90">
-      <UniqueIdentifier>{95f67bca-7aa8-46e1-84a2-38ed592e7c11}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock">
-      <UniqueIdentifier>{d9483893-16da-46e3-ba9d-b45e0e747093}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock\0. Parent">
-      <UniqueIdentifier>{d33f6cd1-d0f8-442d-a582-39d6e5e9c06c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock\1. Back">
-      <UniqueIdentifier>{58d868c0-5f1f-45ca-9a28-0c543ca3a221}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock\2. Front">
-      <UniqueIdentifier>{3ac81f8c-6ba9-417e-bc12-4fc721415ba7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock\3. Cannonball">
-      <UniqueIdentifier>{ccee7c02-e93c-43e1-b555-4e77419ac972}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge">
-      <UniqueIdentifier>{c13da2b7-30d8-4e5c-a698-6cc64add6bec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\0. Parent">
-      <UniqueIdentifier>{c9c6e80f-3064-4723-9578-94165bb893de}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\1. Front">
-      <UniqueIdentifier>{f24dc787-ae6f-4ae1-b361-3bac4dc0d89f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\2. Left">
-      <UniqueIdentifier>{4b741faa-9b4d-419e-b214-579cbb2eb962}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\3. Right">
-      <UniqueIdentifier>{e29fe672-c26d-4125-b951-68d7c75da51a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\4. MeleeDynamic">
-      <UniqueIdentifier>{3dca4890-54f8-445c-9932-341a18548309}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn">
-      <UniqueIdentifier>{27173154-1c2e-4568-b77b-c414331511a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\0. Parent">
-      <UniqueIdentifier>{4c9f632b-f3c1-463c-aec4-d431f75130c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\1. Climb">
-      <UniqueIdentifier>{faae4469-4b71-4961-b7fe-fc53bb4d9728}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\1. Climb\1">
-      <UniqueIdentifier>{70dad1a0-d6a6-445a-8aa8-c0e2f88eb035}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\1. Climb\2">
-      <UniqueIdentifier>{8977eca3-d964-49e0-b6a3-80b46209f50f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\2. Crawl">
-      <UniqueIdentifier>{9db304fc-5964-442c-af1a-e7d80c1183ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\2. Crawl\1">
-      <UniqueIdentifier>{bcf85083-14ba-4036-b6a2-9be7c88289b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\2. Crawl\2">
-      <UniqueIdentifier>{6f0f7e5a-85af-47cb-b754-09220d299a25}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\3. FromCoffin">
-      <UniqueIdentifier>{326f607d-9341-411a-be05-ce7d8498245d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\3. FromCoffin\0">
-      <UniqueIdentifier>{9ba96de0-ef50-4543-9437-fe5b34d1f2ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\3. FromCoffin\65">
-      <UniqueIdentifier>{12d1c024-57ee-4f6e-bd1d-897d6242d7c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\3. FromCoffin\90">
-      <UniqueIdentifier>{4ed2180f-64a9-4f05-ad04-63d0f8968bf9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\4. FromEgg">
-      <UniqueIdentifier>{0153fdfc-91b5-409b-9d91-eb374b7211ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\4. FromEgg\1">
-      <UniqueIdentifier>{2444668f-713d-4e03-8df0-70061fc8d129}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\4. FromEgg\2">
-      <UniqueIdentifier>{6e92fa0f-ea2b-4387-91b6-7960ee18f4da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\5. JumpDowm">
-      <UniqueIdentifier>{c5d30b15-0c47-4d14-bd29-75f908ace9d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\6. JumpOut">
-      <UniqueIdentifier>{0e11af89-b8d9-468f-a631-0f7d3b6caaaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\6. JumpOut\1">
-      <UniqueIdentifier>{01e17080-35c6-4ad1-aaa6-38185d69ddb0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\6. JumpOut\3">
-      <UniqueIdentifier>{b2e3bdae-9881-44d0-adc0-2257e3346b63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\7. Ground">
-      <UniqueIdentifier>{aa9c21be-47fd-4560-9595-3d2463432bd5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death">
-      <UniqueIdentifier>{59fe8e10-17b9-43e6-9ccd-c083e0cb1f23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\0. Parent">
-      <UniqueIdentifier>{7e77c24a-59ba-499f-913a-3d9e07676bc9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\Light">
-      <UniqueIdentifier>{d9cdee32-c963-478e-8863-e3eac130a4d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\Light\Back">
-      <UniqueIdentifier>{04eaf2b0-4561-401a-989e-17766b5b289a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\Light\Front">
-      <UniqueIdentifier>{649beddb-00a3-4c20-9376-2dd03f5c931d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\Heavy">
-      <UniqueIdentifier>{2aaf89a2-1b3d-41e5-a878-01bd402816e1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Assassin">
       <UniqueIdentifier>{3a33fd3e-fafd-4bf4-b186-3d1d06992cdf}</UniqueIdentifier>
     </Filter>
@@ -1342,47 +994,407 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\03%28미사용. Empowered 3 사용중%29">
       <UniqueIdentifier>{28c5f495-7aa0-4615-86fa-2ac901dba296}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29">
-      <UniqueIdentifier>{59870ea6-9152-44cf-abdc-dc847ba5cc28}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back">
-      <UniqueIdentifier>{b04d9d70-23ae-43c5-a02f-7e56e2fffe2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back\Left">
-      <UniqueIdentifier>{bac3372e-81e4-43b9-8893-9f6bff2e4641}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back\Right">
-      <UniqueIdentifier>{9d0b561c-c56a-4861-8f86-44ba519f6a60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front">
-      <UniqueIdentifier>{d5fb92aa-3397-4b69-9e5b-d15cb632205a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front\Left">
-      <UniqueIdentifier>{3c7d3f23-42b7-46e5-ba02-8b58d87ce24c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front\Right">
-      <UniqueIdentifier>{9781666c-e9a5-41f4-a6c4-8d4c814eb567}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Left">
-      <UniqueIdentifier>{685655a8-18e5-4e36-bd7d-5338068d3ea9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Left\Opened">
-      <UniqueIdentifier>{6059ee7b-127a-4717-9d15-992ee7b5fd1c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right">
-      <UniqueIdentifier>{97d663a2-b818-4fd5-8e9a-ddc67beb69ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right\Opened">
-      <UniqueIdentifier>{c46ff38a-faad-44c7-9257-968c5624468f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04. Projectile">
       <UniqueIdentifier>{969f7600-7071-4a12-871e-03a47d7032f7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\A">
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent">
+      <UniqueIdentifier>{c481ae45-2348-45b5-b74e-4cddcdb6b93c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent\Parts">
+      <UniqueIdentifier>{a29b3434-3ea7-45bd-9b47-859196e35a8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent\Parts\Body">
+      <UniqueIdentifier>{d94f30bc-b9fa-4761-af07-cef9feb08fef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child">
       <UniqueIdentifier>{a3a0437a-dce4-40f1-90ff-ec001d3bfcb0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\A\Body">
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. A">
+      <UniqueIdentifier>{d2cfffb2-ba20-41c0-bf90-0a53a840e06e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. A\Body">
       <UniqueIdentifier>{40a0d461-7df2-418b-b605-98eeda46db30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State">
+      <UniqueIdentifier>{93bf8f56-5d24-4cf3-8ec7-68d418711d0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\0. Origin">
+      <UniqueIdentifier>{6db23996-5815-46cb-8645-52a8f1f48027}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle">
+      <UniqueIdentifier>{f84e3d31-6a50-448e-bc44-ebb021b87461}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\0. Parent">
+      <UniqueIdentifier>{98a56c54-c997-4753-8026-a5e7a56d39f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\idle">
+      <UniqueIdentifier>{a4d4e8ae-f8c4-4afe-b2da-469be46bab0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\IdlePose">
+      <UniqueIdentifier>{40351a09-305f-48ae-833b-42f32d3521bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Relaxed">
+      <UniqueIdentifier>{e9a1a0a1-28ee-4381-a735-c502e1357d91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Relaxed\01">
+      <UniqueIdentifier>{12a31d37-ad8e-4911-8177-1a014d61931c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Relaxed\02">
+      <UniqueIdentifier>{64279de9-821b-44df-9fb2-c5c84434c3dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Relaxed\03">
+      <UniqueIdentifier>{0a857300-9a8c-45a6-94c9-57e6e1174f4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Act">
+      <UniqueIdentifier>{69c1865b-d86a-4d0a-b40c-657e04f06b7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Act\01">
+      <UniqueIdentifier>{2aac0dac-0a12-4569-af59-6cbd006a724b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Act\02">
+      <UniqueIdentifier>{b8d65b95-474a-4d31-9aae-7529c033698a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Act\03">
+      <UniqueIdentifier>{bb16dc02-b1e7-4d3f-879a-b4f0f49cf729}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk">
+      <UniqueIdentifier>{e3a2e939-4580-447e-8841-66c6ddf3e3ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\0. Parent">
+      <UniqueIdentifier>{d77af25b-234c-4b05-a4de-b8c235761372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Back">
+      <UniqueIdentifier>{30461afb-f717-4725-a475-2944a1976f60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front">
+      <UniqueIdentifier>{bcdb0ff0-6cc4-4f65-961d-b6c250fa0b89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front\Left">
+      <UniqueIdentifier>{4aa6776d-1867-4a41-a441-f910dc7ad7ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front\Left\45">
+      <UniqueIdentifier>{a9795c03-17a2-4d3a-955e-02f17f879064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front\Right">
+      <UniqueIdentifier>{3aee0e6e-bec6-4be4-b768-a92a4be55395}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front\Right\45">
+      <UniqueIdentifier>{7e6b14ad-df57-4ba1-b18d-acf8bc16f0c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run">
+      <UniqueIdentifier>{fee479e1-097c-406d-bb94-52566d7286c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\0. Parent">
+      <UniqueIdentifier>{cb604ec0-b385-4242-991b-6c5c7c825db1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Back">
+      <UniqueIdentifier>{16c8398b-69aa-4d5d-bc3c-4c206f7ce510}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front">
+      <UniqueIdentifier>{eaba8593-d042-4512-a4d9-b3208c4a1308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front\Left">
+      <UniqueIdentifier>{52ef412c-653d-46a3-b693-12cc91676d0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front\Left\45">
+      <UniqueIdentifier>{c215186e-8375-4778-a05d-9b4196cada9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front\Right">
+      <UniqueIdentifier>{ae7c5019-c99f-4054-94c3-123c5665d5bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front\Right\45">
+      <UniqueIdentifier>{807ddfae-9c07-480b-bc54-3c20105b2865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack">
+      <UniqueIdentifier>{b0db7662-2af1-48a8-882e-58d5cea9d63d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\0. Parent">
+      <UniqueIdentifier>{795cc4e0-53ba-442e-a9a8-ca32d21d65e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee">
+      <UniqueIdentifier>{07e82608-fbc8-4c8e-9e29-2c637d9f1359}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal">
+      <UniqueIdentifier>{ac90b602-88c4-4b96-bfaf-986ddad0e750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\0. RD">
+      <UniqueIdentifier>{8ac96e9b-eeaf-48c8-a590-931e6b692aaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\1. RM">
+      <UniqueIdentifier>{deeb1480-9dcf-45e0-8bb8-4d9d2802f2d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\1. RM\01">
+      <UniqueIdentifier>{80e945a9-07be-45c3-b49e-e10dee56018d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\1. RM\02">
+      <UniqueIdentifier>{ae7ebbca-359e-4734-b027-91c0ec76619f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\2. RU">
+      <UniqueIdentifier>{a4d3492c-ac7b-4911-8c27-a3026dde9c3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\2. RU\01">
+      <UniqueIdentifier>{5f15d047-9ebf-4b33-a2b8-d9cbea902f3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\2. RU\02">
+      <UniqueIdentifier>{7728cf00-bf7d-4f5f-aa54-878d556a6041}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\1. Dynamic">
+      <UniqueIdentifier>{2fe885ee-5b74-4fe8-9f54-f4ee4eedd00c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\1. Dynamic\1">
+      <UniqueIdentifier>{26da40be-b645-4ac7-af93-2585133486ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\1. Dynamic\2">
+      <UniqueIdentifier>{0297e36a-0c8b-42a0-9ac3-17789adeb2e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\1. Dynamic\3">
+      <UniqueIdentifier>{900af875-b318-4d8b-95e2-aa2dad1aa483}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\2. Sprint_Melee">
+      <UniqueIdentifier>{2213431a-2fae-476a-acd3-14cd90df41ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\2. Sprint_Melee\2">
+      <UniqueIdentifier>{01027048-dd2f-498b-b906-19a81e6d3570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\2. Sprint_Melee\3">
+      <UniqueIdentifier>{19a0aea0-c11a-471e-ba56-78f603e5dce5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit">
+      <UniqueIdentifier>{845e5680-5a99-4f9a-a3c2-7cd202d1d432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\0. Parent">
+      <UniqueIdentifier>{a7f18676-799c-4a76-8843-16c6f6acc820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal">
+      <UniqueIdentifier>{83be6db5-ac38-4366-9b3c-59f094070ce4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Back">
+      <UniqueIdentifier>{59e1f0df-1ef7-4b05-9567-386900458bf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Back\Left">
+      <UniqueIdentifier>{cfd087dc-30c0-46f1-a069-7be686a51740}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Back\Right">
+      <UniqueIdentifier>{f264e0dc-f666-4241-9edd-393f3318ef55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front">
+      <UniqueIdentifier>{de70683f-1975-4905-b1dc-fd12902163f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\01">
+      <UniqueIdentifier>{62973851-8a1d-4263-ad65-2ed476987f72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\02">
+      <UniqueIdentifier>{f4c621d0-d668-4904-8993-774352f5c31f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\03">
+      <UniqueIdentifier>{a17a3b92-3529-4540-acc9-64dd3830712e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\Left">
+      <UniqueIdentifier>{5a1e6c74-7486-4f99-a31a-952e8cc82dc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\Left\90">
+      <UniqueIdentifier>{4f9fd9da-1d01-4d39-b23c-931381ae3fd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\Right">
+      <UniqueIdentifier>{38b4dd99-3e6a-4c86-afec-4625f2a162be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\Right\90">
+      <UniqueIdentifier>{8e205092-978b-44d6-beb4-d0d88e34a359}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy">
+      <UniqueIdentifier>{27952934-f000-451e-b5d4-70745184a315}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Back">
+      <UniqueIdentifier>{4bb3822f-7a00-4616-b4bc-399286839d5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Back\Left">
+      <UniqueIdentifier>{42edbc54-3435-4f5d-84bb-3e96e7e6e67c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Back\Right">
+      <UniqueIdentifier>{af28c993-f844-47f1-b4a4-4c6ea643c604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front">
+      <UniqueIdentifier>{59228d09-840d-4057-9bb0-cddb3c6e4c1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\1">
+      <UniqueIdentifier>{d424ad24-df4b-47a1-8862-cac615fd7949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\2">
+      <UniqueIdentifier>{27398b71-042e-49a5-8512-494d98ddff69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Left">
+      <UniqueIdentifier>{f150865e-fd98-470a-aefa-deb44d7ae7ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Left\1">
+      <UniqueIdentifier>{4db28348-9b06-4a68-a30f-063cfac38e79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Left\2">
+      <UniqueIdentifier>{206f9754-ce37-4eec-af36-0f075b9f9936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Left\90">
+      <UniqueIdentifier>{915b15c1-d5d0-4807-8e9e-34e11d6a3944}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Right">
+      <UniqueIdentifier>{f3bf2e29-2555-4a3a-8c1f-c9e331eaf15c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Right\1">
+      <UniqueIdentifier>{a691af23-855a-4279-9df8-1157de2f3878}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Right\2">
+      <UniqueIdentifier>{cca47bbc-40e1-4a9d-ae62-483ff3383428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Right\90">
+      <UniqueIdentifier>{95f67bca-7aa8-46e1-84a2-38ed592e7c11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock">
+      <UniqueIdentifier>{d9483893-16da-46e3-ba9d-b45e0e747093}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock\0. Parent">
+      <UniqueIdentifier>{d33f6cd1-d0f8-442d-a582-39d6e5e9c06c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock\1. Back">
+      <UniqueIdentifier>{58d868c0-5f1f-45ca-9a28-0c543ca3a221}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock\2. Front">
+      <UniqueIdentifier>{3ac81f8c-6ba9-417e-bc12-4fc721415ba7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock\3. Cannonball">
+      <UniqueIdentifier>{ccee7c02-e93c-43e1-b555-4e77419ac972}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29">
+      <UniqueIdentifier>{59870ea6-9152-44cf-abdc-dc847ba5cc28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Back">
+      <UniqueIdentifier>{b04d9d70-23ae-43c5-a02f-7e56e2fffe2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Back\Left">
+      <UniqueIdentifier>{bac3372e-81e4-43b9-8893-9f6bff2e4641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Back\Right">
+      <UniqueIdentifier>{9d0b561c-c56a-4861-8f86-44ba519f6a60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Front">
+      <UniqueIdentifier>{d5fb92aa-3397-4b69-9e5b-d15cb632205a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Front\Left">
+      <UniqueIdentifier>{3c7d3f23-42b7-46e5-ba02-8b58d87ce24c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Front\Right">
+      <UniqueIdentifier>{9781666c-e9a5-41f4-a6c4-8d4c814eb567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Left">
+      <UniqueIdentifier>{685655a8-18e5-4e36-bd7d-5338068d3ea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Left\Opened">
+      <UniqueIdentifier>{6059ee7b-127a-4717-9d15-992ee7b5fd1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Right">
+      <UniqueIdentifier>{97d663a2-b818-4fd5-8e9a-ddc67beb69ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Right\Opened">
+      <UniqueIdentifier>{c46ff38a-faad-44c7-9257-968c5624468f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge">
+      <UniqueIdentifier>{c13da2b7-30d8-4e5c-a698-6cc64add6bec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\0. Parent">
+      <UniqueIdentifier>{c9c6e80f-3064-4723-9578-94165bb893de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\1. Front">
+      <UniqueIdentifier>{f24dc787-ae6f-4ae1-b361-3bac4dc0d89f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\2. Left">
+      <UniqueIdentifier>{4b741faa-9b4d-419e-b214-579cbb2eb962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\3. Right">
+      <UniqueIdentifier>{e29fe672-c26d-4125-b951-68d7c75da51a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\4. MeleeDynamic">
+      <UniqueIdentifier>{3dca4890-54f8-445c-9932-341a18548309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn">
+      <UniqueIdentifier>{27173154-1c2e-4568-b77b-c414331511a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\0. Parent">
+      <UniqueIdentifier>{4c9f632b-f3c1-463c-aec4-d431f75130c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\1. Climb">
+      <UniqueIdentifier>{faae4469-4b71-4961-b7fe-fc53bb4d9728}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\1. Climb\1">
+      <UniqueIdentifier>{70dad1a0-d6a6-445a-8aa8-c0e2f88eb035}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\1. Climb\2">
+      <UniqueIdentifier>{8977eca3-d964-49e0-b6a3-80b46209f50f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\2. Crawl">
+      <UniqueIdentifier>{9db304fc-5964-442c-af1a-e7d80c1183ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\2. Crawl\1">
+      <UniqueIdentifier>{bcf85083-14ba-4036-b6a2-9be7c88289b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\2. Crawl\2">
+      <UniqueIdentifier>{6f0f7e5a-85af-47cb-b754-09220d299a25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\3. FromCoffin">
+      <UniqueIdentifier>{326f607d-9341-411a-be05-ce7d8498245d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\3. FromCoffin\0">
+      <UniqueIdentifier>{9ba96de0-ef50-4543-9437-fe5b34d1f2ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\3. FromCoffin\65">
+      <UniqueIdentifier>{12d1c024-57ee-4f6e-bd1d-897d6242d7c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\3. FromCoffin\90">
+      <UniqueIdentifier>{4ed2180f-64a9-4f05-ad04-63d0f8968bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\4. FromEgg">
+      <UniqueIdentifier>{0153fdfc-91b5-409b-9d91-eb374b7211ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\4. FromEgg\1">
+      <UniqueIdentifier>{2444668f-713d-4e03-8df0-70061fc8d129}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\4. FromEgg\2">
+      <UniqueIdentifier>{6e92fa0f-ea2b-4387-91b6-7960ee18f4da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\5. JumpDowm">
+      <UniqueIdentifier>{c5d30b15-0c47-4d14-bd29-75f908ace9d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\6. JumpOut">
+      <UniqueIdentifier>{0e11af89-b8d9-468f-a631-0f7d3b6caaaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\6. JumpOut\1">
+      <UniqueIdentifier>{01e17080-35c6-4ad1-aaa6-38185d69ddb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\6. JumpOut\3">
+      <UniqueIdentifier>{b2e3bdae-9881-44d0-adc0-2257e3346b63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\7. Ground">
+      <UniqueIdentifier>{aa9c21be-47fd-4560-9595-3d2463432bd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death">
+      <UniqueIdentifier>{59fe8e10-17b9-43e6-9ccd-c083e0cb1f23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\0. Parent">
+      <UniqueIdentifier>{7e77c24a-59ba-499f-913a-3d9e07676bc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\Light">
+      <UniqueIdentifier>{d9cdee32-c963-478e-8863-e3eac130a4d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\Light\Back">
+      <UniqueIdentifier>{04eaf2b0-4561-401a-989e-17766b5b289a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\Light\Front">
+      <UniqueIdentifier>{649beddb-00a3-4c20-9376-2dd03f5c931d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\Heavy">
+      <UniqueIdentifier>{2aaf89a2-1b3d-41e5-a878-01bd402816e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle">
+      <UniqueIdentifier>{4a74c858-6559-4006-8c1e-59711375d508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\0. Parent">
+      <UniqueIdentifier>{4bf0ebbc-7b65-4222-9812-9923a1d0a846}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1929,80 +1941,74 @@
     <ClInclude Include="..\Public\Assassin_State_Normal.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\1. Idle\0. Parent</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Infected.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Body_Infected.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\Parts\Body</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Infected_State.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\0. Origin</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent\Parts\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Idle.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\idle</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\idle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_IdleAct_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Act\01</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Act\01</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_IdleAct_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Act\02</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Act\02</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_IdleAct_03.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Act\03</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Act\03</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_IdlePose.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\IdlePose</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\IdlePose</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_State_Idle.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_State_Run.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_RelaxedIdleAct_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Relaxed\01</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Relaxed\01</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_RelaxedIdleAct_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Relaxed\02</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Relaxed\02</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_RelaxedIdleAct_03.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Relaxed\03</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Relaxed\03</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Run_B.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Run_F.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Run_FL.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Run_FL45.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front\Left\45</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front\Left\45</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Run_FR.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Run_FR45.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front\Right\45</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front\Right\45</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_State_Attack.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Melee_RD_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\0. RD</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\0. RD</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Melee_RM_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\1. RM\01</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\1. RM\01</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Melee_RM_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\1. RM\02</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\1. RM\02</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Melee_RU_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\2. RU\01</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\2. RU\01</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Melee_RU_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\2. RU\02</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\2. RU\02</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Void.h">
       <Filter>02.GameObjects\03. Effect</Filter>
@@ -2017,229 +2023,229 @@
       <Filter>02.GameObjects\03. Effect\02.Effect_Rect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_MeleeDynamic_RU_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\1. Dynamic\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\1. Dynamic\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_MeleeDynamic_RU_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\1. Dynamic\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\1. Dynamic\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_MeleeDynamic_RU_03.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\1. Dynamic\3</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\1. Dynamic\3</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Sprint_F_Melee_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\2. Sprint_Melee\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\2. Sprint_Melee\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Sprint_F_Melee_03.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\2. Sprint_Melee\3</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\2. Sprint_Melee\3</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_State_Hit.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLightOpened_F_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Hit_whip_end_down.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_B_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_F_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Front</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_L_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_R_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormal_B_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavy_B_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormal_BL_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Back\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Back\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormal_BR_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Back\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Back\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormal_FL_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormal_FR_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavy_BL_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Back\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Back\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavy_BR_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Back\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Back\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_BL_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Back\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_BR_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Back\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_FL_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Front\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLight_FR_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Front\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLightOpened_L_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Left\Opened</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Left\Opened</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLightOpened_R_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right\Opened</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Right\Opened</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormal_FL90_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Left\90</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\Left\90</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormal_FR90_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Right\90</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\Right\90</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormal_F_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\01</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\01</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormal_F_02_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\02</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\02</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitNormal_F_03_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\03</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\03</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavy_FL_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Left\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Left\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavy_FL_02_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Left\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Left\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavy_FL90_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Left\90</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Left\90</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavy_FR_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Right\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Right\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavy_FR_02_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Right\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Right\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavy_FR90_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Right\90</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Right\90</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavy_F_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavy_F_02_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_KnockFrontCannonball_F_01_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock\3. Cannonball</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock\3. Cannonball</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_KnockFrontLight_B_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock\1. Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock\1. Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_KnockFrontLight_F_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock\2. Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock\2. Front</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_State_Walk.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Walk_B.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Walk_F.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Walk_FL.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Walk_FL45.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front\Left\45</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front\Left\45</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Walk_FR.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Walk_FR45.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front\Right\45</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front\Right\45</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_State_Knock.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_State_Dodge.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Dodge_F_01_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\1. Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\1. Front</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Dodge_L_01_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\2. Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\2. Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Dodge_R_01_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\3. Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\3. Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_MeleeDynamic_Dodge_B_4m.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\4. MeleeDynamic</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\4. MeleeDynamic</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_State_Spawn.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnClimb_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\1. Climb\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\1. Climb\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnClimb_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\1. Climb\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\1. Climb\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnCrawl_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\2. Crawl\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\2. Crawl\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnCrawl_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\2. Crawl\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\2. Crawl\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnFromCoffin0.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\3. FromCoffin\0</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\3. FromCoffin\0</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnFromCoffin65.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\3. FromCoffin\65</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\3. FromCoffin\65</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnFromCoffin90.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\3. FromCoffin\90</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\3. FromCoffin\90</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnFromEgg_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\4. FromEgg\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\4. FromEgg\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnFromEgg_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\4. FromEgg\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\4. FromEgg\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnGround.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\7. Ground</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\7. Ground</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnJumpDown_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\5. JumpDowm</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\5. JumpDowm</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnJumpOut_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\6. JumpOut\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\6. JumpOut\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_SpawnJumpOut_03.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\6. JumpOut\3</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\6. JumpOut\3</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_State_Death.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_DeathHeavy_F_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\Heavy</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\Heavy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_DeathLight_B_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\Light\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\Light\Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_DeathLight_F_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\Light\Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\Light\Front</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Assassin_State_Walk.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\2. Walk\0. Parent</Filter>
@@ -2574,11 +2580,23 @@
     <ClInclude Include="..\Public\Projectile.h">
       <Filter>02.GameObjects\04. Projectile</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Infected_A.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\A</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Body_Infected_A.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\A\Body</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. A\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_A.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. A</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_State.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\0. Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Sniper_State.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\0. Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Sniper_State_Idle.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\0. Parent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3280,32 +3298,26 @@
     <ClCompile Include="..\Private\Assassin_State_Normal.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\1. Idle\0. Parent</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Infected.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Body_Infected.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\Parts\Body</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Infected_State.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\0. Origin</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent\Parts\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_State_Idle.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Idle.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\idle</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\idle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_IdleAct_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Act\01</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Act\01</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_IdleAct_02.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Act\02</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Act\02</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_IdleAct_03.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Act\03</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Act\03</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_IdlePose.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\IdlePose</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\IdlePose</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_IdleLoop.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\1. Normal\1. Idle\IdleLoop</Filter>
@@ -3314,52 +3326,52 @@
       <Filter>02.GameObjects\00. Character\Player\State\2. Attack\3. TeleportPunch\Left\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_State_Run.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_RelaxedIdleAct_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Relaxed\01</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Relaxed\01</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_RelaxedIdleAct_02.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Relaxed\02</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Relaxed\02</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_RelaxedIdleAct_03.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\1. Idle\Relaxed\03</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Relaxed\03</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Run_B.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Run_FL45.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front\Left\45</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front\Left\45</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Run_FL.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Run_F.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Run_FR.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Run_FR45.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\3. Run\Front\Right\45</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Front\Right\45</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_State_Attack.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Melee_RD_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\0. RD</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\0. RD</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Melee_RM_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\1. RM\01</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\1. RM\01</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Melee_RM_02.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\1. RM\02</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\1. RM\02</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Melee_RU_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\2. RU\01</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\2. RU\01</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Melee_RU_02.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\0. Normal\2. RU\02</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\0. Normal\2. RU\02</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Window_ShaderTool.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow</Filter>
@@ -3371,229 +3383,229 @@
       <Filter>02.GameObjects\03. Effect\02.Effect_Rect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_MeleeDynamic_RU_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\1. Dynamic\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\1. Dynamic\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_MeleeDynamic_RU_02.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\1. Dynamic\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\1. Dynamic\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_MeleeDynamic_RU_03.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\1. Dynamic\3</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\1. Dynamic\3</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Sprint_F_Melee_02.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\2. Sprint_Melee\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\2. Sprint_Melee\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Sprint_F_Melee_03.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\4. Attack\Melee\2. Sprint_Melee\3</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\2. Sprint_Melee\3</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_State_Hit.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_BL_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Back\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_BR_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Back\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_B_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_FL_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Front\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_FR_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Front\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_F_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Front</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLightOpened_L_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Left\Opened</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Left\Opened</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_L_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLightOpened_R_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right\Opened</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Right\Opened</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLight_R_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitLightOpened_F_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitNormal_BL_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Back\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Back\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitNormal_BR_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Back\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Back\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitNormal_B_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitNormal_FL90_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Left\90</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\Left\90</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitNormal_FL_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitNormal_FR90_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Right\90</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\Right\90</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitNormal_FR_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitNormal_F_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\01</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\01</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitNormal_F_02_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\02</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\02</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitNormal_F_03_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal\Front\03</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\03</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitNormalToStun_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\2. Normal</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_BL_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Back\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Back\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_BR_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Back\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Back\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_B_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_FL_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Left\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Left\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_FL_02_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Left\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Left\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_FL90_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Left\90</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Left\90</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_FR_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Right\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Right\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_FR_02_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Right\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Right\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_FR90_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\Right\90</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Right\90</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavyToStun_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Hit_whip_end_down.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_KnockFrontCannonball_F_01_TEMP.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock\3. Cannonball</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock\3. Cannonball</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_KnockFrontLight_B_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock\1. Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock\1. Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_KnockFrontLight_F_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock\2. Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock\2. Front</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_State_Walk.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Walk_B.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Walk_F.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Walk_FL.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Walk_FL45.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front\Left\45</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front\Left\45</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Walk_FR.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Walk_FR45.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\2. Walk\Front\Right\45</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\2. Walk\Front\Right\45</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_F_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_F_02_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\3. Heavy\Front\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_State_Knock.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\Knock\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\Knock\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_State_Dodge.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Dodge_F_01_TEMP.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\1. Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\1. Front</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Dodge_L_01_TEMP.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\2. Left</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\2. Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Dodge_R_01_TEMP.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\3. Right</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\3. Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_MeleeDynamic_Dodge_B_4m.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\6. Dodge\4. MeleeDynamic</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\6. Dodge\4. MeleeDynamic</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_State_Spawn.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnClimb_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\1. Climb\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\1. Climb\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnClimb_02.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\1. Climb\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\1. Climb\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnCrawl_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\2. Crawl\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\2. Crawl\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnCrawl_02.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\2. Crawl\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\2. Crawl\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnFromCoffin0.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\3. FromCoffin\0</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\3. FromCoffin\0</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnFromCoffin65.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\3. FromCoffin\65</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\3. FromCoffin\65</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnFromCoffin90.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\3. FromCoffin\90</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\3. FromCoffin\90</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnFromEgg_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\4. FromEgg\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\4. FromEgg\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnFromEgg_02.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\4. FromEgg\2</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\4. FromEgg\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnGround.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\7. Ground</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\7. Ground</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnJumpDown_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\5. JumpDowm</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\5. JumpDowm</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnJumpOut_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\6. JumpOut\1</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\6. JumpOut\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_SpawnJumpOut_03.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\7. Spawn\6. JumpOut\3</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\7. Spawn\6. JumpOut\3</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_State_Death.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_DeathHeavy_F_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\Heavy</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\Heavy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_DeathLight_B_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\Light\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\Light\Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_DeathLight_F_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\8. Death\Light\Front</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\8. Death\Light\Front</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Assassin_State_Walk.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\2. Walk\0. Parent</Filter>
@@ -3874,11 +3886,23 @@
     <ClCompile Include="..\Private\Projectile.cpp">
       <Filter>02.GameObjects\04. Projectile</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Infected_A.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\A</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Body_Infected_A.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\A\Body</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. A\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_A.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. A</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_State.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\0. Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bandit_Sniper_State.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\0. Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bandit_Sniper_State_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\0. Parent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

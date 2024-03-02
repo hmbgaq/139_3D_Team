@@ -82,17 +82,6 @@ HRESULT CBody_Bandit_Sniper::Render_Shadow()
 	return S_OK;
 }
 
-void CBody_Bandit_Sniper::OnCollisionEnter(CCollider* other)
-{
-}
-
-void CBody_Bandit_Sniper::OnCollisionStay(CCollider* other)
-{
-}
-
-void CBody_Bandit_Sniper::OnCollisionExit(CCollider* other)
-{
-}
 
 HRESULT CBody_Bandit_Sniper::Ready_Components()
 {
