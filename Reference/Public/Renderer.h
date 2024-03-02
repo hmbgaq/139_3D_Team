@@ -19,6 +19,7 @@ public:
 		/* RenderGroup*/
 		RENDER_BLEND, RENDER_END
 	};
+	enum class POST_TYPE {HDR, RADIAL_BLUR, FXAA, HSV, FINAL, TYPE_END};
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -69,6 +70,8 @@ private:
 	HRESULT Render_ShadowBlur();
 	HRESULT Render_Alphablend(const wstring& Begin_MRT_Tag, const wstring& Blend_Target_Tag);
 
+	wstring Current_Target(POST_TYPE eType);
+	
 public:
 	/* È°¼ºÈ­ */
 	void Set_HBAO_Active(_bool _HBAO) { m_tHBAO_Option.bHBAO_Active = _HBAO; }

@@ -83,18 +83,25 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	/* --- Post Processing --- */
 
-	//FAILED_CHECK(Render_Alphablend(TEXT("MRT_Final"), TEXT("Target_Deferred"))); /*  MRT_Deferred -> Target_Deferred에 저장  */
 	//FAILED_CHECK(Render_Decal());	/* screen space decal  */                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 
 	//FAILED_CHECK(Render_OutLine()); 
-
-	//FAILED_CHECK(Render_RadialBlur());
+	//if (true == m_tHDR_Option.bHDR_Active)
+	//	FAILED_CHECK(Render_HDR()); /* HDR이 처리된 화면을 기반으로 효과를 주는게 더 좋다. */
+	//
+	//if(true == m_tRadial_Option.bRadial_Active)
+	//	FAILED_CHECK(Render_RadialBlur());
 	
 	//FAILED_CHECK(Render_SSR());
 	
-	//FAILED_CHECK(Render_HDR()); /* HDR - 톤맵핑 */
 	
+	//if(true == m_tAnti_Option.bFXAA_Active)
 	//FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
+	
+	//if(true == m_tHSV_Option.bScreen_Active)
+	//FAILED_CHECK(Render_HSV()); /* 안티앨리어싱 - 최종장면 */
+
+	
 	
 	/* 최종 합성 */
 	FAILED_CHECK(Render_Final());
@@ -109,6 +116,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 	//FAILED_CHECK(Render_UI()); /* 디버그에서 렌더타겟 한장으로 그린거 콜하는 그룹 여기 */
 	//FAILED_CHECK(Render_UI_Final());
 
+	/* Test Line */
+	//FAILED_CHECK(Render_Alphablend(TEXT("MRT_Final"), TEXT("Target_Deferred"))); /*  MRT_Deferred -> Target_Deferred에 저장  */
 
 #ifdef _DEBUG;
 	if (true == m_bDebugRenderTarget)
@@ -394,12 +403,45 @@ HRESULT CRenderer::Render_Deferred()
 
 HRESULT CRenderer::Render_RadialBlur()
 {
-	return E_NOTIMPL;
+	
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_RaidalBlur"))); /* Target SSAO 단독 */
+
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	FAILED_CHECK(m_pShader_PostProcess->Bind_RawValue("g_Radial_Blur", &m_tRadial_Option, sizeof(RADIAL_DESC)));
+	
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::RADIAL_BLUR), m_pShader_PostProcess, "g_ProcessingTarget"));
+
+	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_RADIAL)));
+
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
 }
 
 HRESULT CRenderer::Render_HDR()
 {
-	return E_NOTIMPL;
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_HDR"))); /* Target_FXAA*/
+
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	/* 값 컨트롤용도 */
+	FAILED_CHECK(m_pShader_PostProcess->Bind_RawValue("g_max_white", &m_tHDR_Option.fmax_white, sizeof(_float)));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::HDR), m_pShader_PostProcess, "g_ProcessingTarget"));
+
+	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_HDR)));
+	
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
 }
 
 HRESULT CRenderer::Render_FXAA()
@@ -413,7 +455,7 @@ HRESULT CRenderer::Render_Final()
 	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
 	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Deferred"), m_pShader_Final, "g_FinalTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::FINAL), m_pShader_Final, "g_FinalTarget"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Debug"), m_pShader_Final, "g_DebugTarget"));
 
 	FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL)));
@@ -584,6 +626,61 @@ HRESULT CRenderer::Render_Alphablend(const wstring& Begin_MRT_Tag, const wstring
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
+}
+
+wstring CRenderer::Current_Target(POST_TYPE eCurrType)
+{
+	/* 순서 : hdr, radial, fxaa, hsv */
+	wstring strCurrentTarget;
+
+	switch (eCurrType)
+	{
+	case POST_TYPE::HDR:
+		strCurrentTarget = TEXT("Target_Deferred");
+		break;
+
+	case POST_TYPE::RADIAL_BLUR:
+		if (m_tHDR_Option.bHDR_Active)
+			strCurrentTarget = TEXT("Target_HDR");
+		else
+			strCurrentTarget = TEXT("Target_Deferred");
+		break;
+
+	case POST_TYPE::FXAA:
+		if (m_tRadial_Option.bRadial_Active)
+			strCurrentTarget = TEXT("Target_RadialBlur");
+		else if (m_tHDR_Option.bHDR_Active)
+			strCurrentTarget = TEXT("Target_HDR");
+		else
+			strCurrentTarget = TEXT("Target_Deferred");
+		break;
+
+	case POST_TYPE::HSV:
+		if (m_tAnti_Option.bFXAA_Active)
+			strCurrentTarget = TEXT("Target_FXAA");
+		else if (m_tRadial_Option.bRadial_Active)
+			strCurrentTarget = TEXT("Target_RadialBlur");
+		else if (m_tHDR_Option.bHDR_Active)
+			strCurrentTarget = TEXT("Target_HDR");
+		else
+			strCurrentTarget = TEXT("Target_Deferred");
+		break;
+
+	case POST_TYPE::FINAL:
+		if(m_tHSV_Option.bScreen_Active)
+			strCurrentTarget = TEXT("Target_HSV");
+		else if (m_tAnti_Option.bFXAA_Active)
+			strCurrentTarget = TEXT("Target_FXAA");
+		else if (m_tRadial_Option.bRadial_Active)
+			strCurrentTarget = TEXT("Target_RadialBlur");
+		else if (m_tHDR_Option.bHDR_Active)
+			strCurrentTarget = TEXT("Target_HDR");
+		else
+			strCurrentTarget = TEXT("Target_Deferred");
+		break;
+	}
+
+	return strCurrentTarget;
 }
 
 #pragma endregion
