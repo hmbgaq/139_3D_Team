@@ -82,23 +82,6 @@ HRESULT CBody_Infected::Render_Shadow()
 	return S_OK;
 }
 
-void CBody_Infected::OnCollisionEnter(CCollider* other)
-{
-}
-
-void CBody_Infected::OnCollisionStay(CCollider* other)
-{
-}
-
-void CBody_Infected::OnCollisionExit(CCollider* other)
-{
-}
-
-void CBody_Infected::SetUp_Animation(_uint iAnimIndex)
-{
-	m_pModelCom->Set_Animation(iAnimIndex);
-}
-
 HRESULT CBody_Infected::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
@@ -108,10 +91,10 @@ HRESULT CBody_Infected::Ready_Components()
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Infected_A"),
-		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
+	///* For.Com_Model */
+	//if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Infected_A"),
+	//	TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+	//	return E_FAIL;
 
 	/* For.Com_Collider */
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
@@ -135,36 +118,36 @@ HRESULT CBody_Infected::Bind_ShaderResources()
 		return E_FAIL;
 }
 
-CBody_Infected* CBody_Infected::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-{
-	CBody_Infected* pInstance = new CBody_Infected(pDevice, pContext, strPrototypeTag);
-
-	/* 원형객체를 초기화한다.  */
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		MSG_BOX("Failed to Created : CBody_Infected");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-CGameObject* CBody_Infected::Clone(void* pArg)
-{
-	CBody_Infected* pInstance = new CBody_Infected(*this);
-
-	/* 원형객체를 초기화한다.  */
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		MSG_BOX("Failed to Cloned : CBody_Infected");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-CGameObject* CBody_Infected::Pool()
-{
-	return new CBody_Infected(*this);
-}
+//CBody_Infected* CBody_Infected::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+//{
+//	CBody_Infected* pInstance = new CBody_Infected(pDevice, pContext, strPrototypeTag);
+//
+//	/* 원형객체를 초기화한다.  */
+//	if (FAILED(pInstance->Initialize_Prototype()))
+//	{
+//		MSG_BOX("Failed to Created : CBody_Infected");
+//		Safe_Release(pInstance);
+//	}
+//	return pInstance;
+//}
+//
+//CGameObject* CBody_Infected::Clone(void* pArg)
+//{
+//	CBody_Infected* pInstance = new CBody_Infected(*this);
+//
+//	/* 원형객체를 초기화한다.  */
+//	if (FAILED(pInstance->Initialize(pArg)))
+//	{
+//		MSG_BOX("Failed to Cloned : CBody_Infected");
+//		Safe_Release(pInstance);
+//	}
+//	return pInstance;
+//}
+//
+//CGameObject* CBody_Infected::Pool()
+//{
+//	return new CBody_Infected(*this);
+//}
 
 void CBody_Infected::Free()
 {

@@ -312,6 +312,7 @@
     <ClInclude Include="..\Public\Body_Bandit_Heavy.h" />
     <ClInclude Include="..\Public\Body_Bandit_Sniper.h" />
     <ClInclude Include="..\Public\Body_Infected.h" />
+    <ClInclude Include="..\Public\Body_Infected_A.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -322,6 +323,7 @@
     <ClInclude Include="..\Public\Data_Manager.h" />
     <ClInclude Include="..\Public\DevConsole.h" />
     <ClInclude Include="..\Public\Infected.h" />
+    <ClInclude Include="..\Public\Infected_A.h" />
     <ClInclude Include="..\Public\Infected_DeathHeavy_F_01_NEW.h" />
     <ClInclude Include="..\Public\Infected_DeathLight_B_01_NEW.h" />
     <ClInclude Include="..\Public\Infected_DeathLight_F_01_NEW.h" />
@@ -686,6 +688,7 @@
     <ClCompile Include="..\Private\Body_Bandit_Heavy.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Sniper.cpp" />
     <ClCompile Include="..\Private\Body_Infected.cpp" />
+    <ClCompile Include="..\Private\Body_Infected_A.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\Private\Clone_Manager.cpp" />
@@ -693,6 +696,7 @@
     <ClCompile Include="..\Private\Data_Manager.cpp" />
     <ClCompile Include="..\Private\DevConsole.cpp" />
     <ClCompile Include="..\Private\Infected.cpp" />
+    <ClCompile Include="..\Private\Infected_A.cpp" />
     <ClCompile Include="..\Private\Infected_DeathHeavy_F_01_NEW.cpp" />
     <ClCompile Include="..\Private\Infected_DeathLight_B_01_NEW.cpp" />
     <ClCompile Include="..\Private\Infected_DeathLight_F_01_NEW.cpp" />

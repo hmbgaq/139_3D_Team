@@ -97,10 +97,6 @@ void CBody_Player::OnCollisionExit(CCollider* other)
 {
 }
 
-void CBody_Player::SetUp_Animation(_uint iAnimIndex)
-{
-	m_pModelCom->Set_Animation(iAnimIndex);
-}
 
 HRESULT CBody_Player::Ready_Components()
 {

@@ -38,8 +38,8 @@
 #pragma endregion
 
 #pragma region INFECTED
-#include "Infected.h"
-#include "Body_Infected.h"
+#include "Infected_A.h"
+#include "Body_Infected_A.h"
 #pragma endregion
 
 #pragma region ASSASSIN
@@ -526,8 +526,8 @@ HRESULT CLoader::Ready_Origin()
 
 
 	//! Infected
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Infected"), CInfected::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Infected"))));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Infected"), CBody_Infected::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Infected"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Infected_A"), CInfected_A::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Infected_A"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Infected_A"), CBody_Infected_A::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Infected_A"))));
 
 	//! Assassin
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Assassin"), CAssassin::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player"))));

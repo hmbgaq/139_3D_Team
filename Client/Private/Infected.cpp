@@ -33,14 +33,6 @@
 #include "Infected_DeathHeavy_F_01_NEW.h"
 
 
-
-
-
-
-
-
-
-
 CInfected::CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
 {
@@ -112,15 +104,14 @@ HRESULT CInfected::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CInfected::Ready_PartObjects()
-{
-	CBody::BODY_DESC		BodyDesc = {};
-	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Infected"), BodyDesc)))
-		return E_FAIL;
-
-
-	return S_OK;
-}
+//HRESULT CInfected::Ready_PartObjects()
+//{
+//	CBody::BODY_DESC		BodyDesc = {};
+//	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Infected"), BodyDesc)))
+//		return E_FAIL;
+//
+//	return S_OK;
+//}
 
 void CInfected::Hitted_Left(Power ePower)
 {
@@ -210,36 +201,36 @@ void CInfected::Hitted_Dead(Power ePower)
 
 
 
-CInfected* CInfected::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-{
-	CInfected* pInstance = new CInfected(pDevice, pContext, strPrototypeTag);
-
-	/* 원형객체를 초기화한다.  */
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		MSG_BOX("Failed to Created : CInfected");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-CGameObject* CInfected::Clone(void* pArg)
-{
-	CInfected* pInstance = new CInfected(*this);
-
-	/* 원형객체를 초기화한다.  */
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		MSG_BOX("Failed to Cloned : CInfected");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-CGameObject* CInfected::Pool()
-{
-	return new CInfected(*this);
-}
+//CInfected* CInfected::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+//{
+//	CInfected* pInstance = new CInfected(pDevice, pContext, strPrototypeTag);
+//
+//	/* 원형객체를 초기화한다.  */
+//	if (FAILED(pInstance->Initialize_Prototype()))
+//	{
+//		MSG_BOX("Failed to Created : CInfected");
+//		Safe_Release(pInstance);
+//	}
+//	return pInstance;
+//}
+//
+//CGameObject* CInfected::Clone(void* pArg)
+//{
+//	CInfected* pInstance = new CInfected(*this);
+//
+//	/* 원형객체를 초기화한다.  */
+//	if (FAILED(pInstance->Initialize(pArg)))
+//	{
+//		MSG_BOX("Failed to Cloned : CInfected");
+//		Safe_Release(pInstance);
+//	}
+//	return pInstance;
+//}
+//
+//CGameObject* CInfected::Pool()
+//{
+//	return new CInfected(*this);
+//}
 
 void CInfected::Free()
 {

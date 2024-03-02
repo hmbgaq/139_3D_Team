@@ -1378,6 +1378,12 @@
     <Filter Include="02.GameObjects\04. Projectile">
       <UniqueIdentifier>{969f7600-7071-4a12-871e-03a47d7032f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\A">
+      <UniqueIdentifier>{a3a0437a-dce4-40f1-90ff-ec001d3bfcb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\A\Body">
+      <UniqueIdentifier>{40a0d461-7df2-418b-b605-98eeda46db30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -2567,6 +2573,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Projectile.h">
       <Filter>02.GameObjects\04. Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_A.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\A</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Infected_A.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\A\Body</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3861,6 +3873,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Projectile.cpp">
       <Filter>02.GameObjects\04. Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_A.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\A</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Infected_A.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\A\Body</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

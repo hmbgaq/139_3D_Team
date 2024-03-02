@@ -6,7 +6,7 @@
 
 BEGIN(Client)
 
-class CInfected : public CMonster_Character
+class CInfected abstract : public CMonster_Character
 {
 protected:
 	CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -24,7 +24,7 @@ public:
 
 protected:
 	HRESULT Ready_Components();
-	HRESULT Ready_PartObjects();
+	//HRESULT Ready_PartObjects();
 
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
@@ -38,12 +38,9 @@ private:
 	CActor<CInfected>* m_pActor = { nullptr };
 
 public:
-	/* 원형객체를 생성한다. */
-	static CInfected* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-
-	/* 사본객체를 생성한다. */
-	virtual CGameObject* Clone(void* pArg) override;
-	virtual CGameObject* Pool() override;
+	//static CInfected* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	virtual CGameObject* Clone(void* pArg) PURE;
+	virtual CGameObject* Pool() PURE;
 
 	virtual void Free() override;
 
