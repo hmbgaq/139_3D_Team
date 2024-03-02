@@ -1094,6 +1094,68 @@ void CWindow_EffectTool::Update_MeshTab()
 					m_pMeshBufferDesc->vMinMaxPower.y = m_vMinMaxPower_Mesh[1];
 				}
 
+
+				/* 인스턴스 개수 변경 */
+				ImGui::SeparatorText("");
+				ImGui::Text("MaxInstance_Mesh : %d", m_iMaxNumInstance_Mesh);
+				if (ImGui::DragInt("Instance Count", &m_iNumInstance_Mesh, 1, 1, m_iMaxNumInstance_Mesh))
+				{
+					m_pInstanceDesc->iCurNumInstance = m_iNumInstance_Mesh;
+					m_pMeshBufferDesc->iCurNumInstance = m_iNumInstance_Mesh;
+				}
+
+
+				/* 퍼지는 범위 */
+				if (ImGui::DragFloat2("MinMaxRange_Mesh", m_vMinMaxRange_Mesh, 1.f, 0.1f, 360.f))
+				{
+					if (m_vMinMaxRange_Mesh[0] > m_vMinMaxRange_Mesh[1])
+						m_vMinMaxRange_Mesh[0] = m_vMinMaxRange_Mesh[1];
+
+					m_pMeshBufferDesc->vMinMaxRange.x = m_vMinMaxRange_Mesh[0];
+					m_pMeshBufferDesc->vMinMaxRange.y = m_vMinMaxRange_Mesh[1];
+				}
+
+				/* 회전 범위(오프셋) */
+				/* RotX */
+				if (ImGui::DragFloat2("RotationX_Mesh", m_vRotationOffsetX_Mesh, 1.f, 0.f, 360.f))
+				{
+					if (0 > m_vRotationOffsetX_Mesh[0])
+						m_vRotationOffsetX_Mesh[0] = 0.f;
+
+					if (m_vRotationOffsetX_Mesh[0] > m_vRotationOffsetX_Mesh[1])
+						m_vRotationOffsetX_Mesh[1] = m_vRotationOffsetX_Mesh[0];
+
+					m_pMeshBufferDesc->vMinMaxRotationOffsetX.x = m_vRotationOffsetX_Mesh[0];
+					m_pMeshBufferDesc->vMinMaxRotationOffsetX.y = m_vRotationOffsetX_Mesh[1];
+
+				}
+
+				/* RotY */
+				if (ImGui::DragFloat2("RotationY_Mesh", m_vRotationOffsetY_Mesh, 1.f, 0.f, 360.f))
+				{
+					if (0 > m_vRotationOffsetY_Mesh[0])
+						m_vRotationOffsetY_Mesh[0] = 0.f;
+
+					if (m_vRotationOffsetY_Mesh[0] > m_vRotationOffsetY_Mesh[1])
+						m_vRotationOffsetY_Mesh[1] = m_vRotationOffsetY_Mesh[0];
+
+					m_pMeshBufferDesc->vMinMaxRotationOffsetY.x = m_vRotationOffsetY_Mesh[0];
+					m_pMeshBufferDesc->vMinMaxRotationOffsetY.y = m_vRotationOffsetY_Mesh[1];
+				}
+
+				/* RotZ */
+				if (ImGui::DragFloat2("RotationZ_Mesh", m_vRotationOffsetZ_Mesh, 1.f, 0.f, 360.f))
+				{
+					if (0 > m_vRotationOffsetZ_Mesh[0])
+						m_vRotationOffsetZ_Mesh[0] = 0.f;
+
+					if (m_vRotationOffsetZ_Mesh[0] > m_vRotationOffsetZ_Mesh[1])
+						m_vRotationOffsetZ_Mesh[1] = m_vRotationOffsetZ_Mesh[0];
+
+					m_pMeshBufferDesc->vMinMaxRotationOffsetZ.x = m_vRotationOffsetZ_Mesh[0];
+					m_pMeshBufferDesc->vMinMaxRotationOffsetZ.y = m_vRotationOffsetZ_Mesh[1];
+				}
+
 			}
 		}
 	}

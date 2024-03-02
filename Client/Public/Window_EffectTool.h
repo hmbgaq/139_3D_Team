@@ -202,6 +202,9 @@ private:
 
 #pragma region Mesh_Option
 private:
+	_int m_iNumInstance_Mesh = { 50 };
+	_int m_iMaxNumInstance_Mesh = { 100 };
+
 	_float  m_fUV_Offset[2] = { 0.f, 0.f };
 	_float  m_vUV_Scale[2]	= { 1.f, 1.f };
 
@@ -219,12 +222,9 @@ private:
 	_float	m_vMinMaxPower_Mesh[2] = { 0.1f, 500.f };
 
 	_float	m_vMinMaxRange_Mesh[2] = { 0.f, 0.f };
-
 	_float	m_vRotationOffsetX_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetY_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetZ_Mesh[2] = { 0.f, 0.f };
-
-
 
 #pragma endregion
 

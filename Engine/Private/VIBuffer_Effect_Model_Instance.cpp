@@ -182,7 +182,7 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 
 	VTXMODELINSTANCE* pModelInstance = ((VTXMODELINSTANCE*)SubResource.pData);
 
-
+	m_iNumInstance = m_tBufferDesc.iCurNumInstance;
 	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
 		// 원점 위치로
@@ -253,11 +253,15 @@ void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 	m_tBufferDesc.iCurNumInstance = In_Json["Com_VIBuffer"]["iCurNumInstance"];
 
 	CJson_Utility::Load_Float4(In_Json["Com_VIBuffer"]["vCurrentPosition"], m_tBufferDesc.vCenterPosition);
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRange"], m_tBufferDesc.vMinMaxRange);
 
 
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetX"], m_tBufferDesc.vMinMaxRotationOffsetX);
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetY"], m_tBufferDesc.vMinMaxRotationOffsetY);
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetZ"], m_tBufferDesc.vMinMaxRotationOffsetZ);
+	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vRotationOffset"], m_tBufferDesc.vRotationOffset);
 
-
-
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxPower"], m_tBufferDesc.vMinMaxPower);
 
 }
 
