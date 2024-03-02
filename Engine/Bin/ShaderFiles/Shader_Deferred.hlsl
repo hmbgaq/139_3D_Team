@@ -41,9 +41,6 @@ Texture2D g_RimLightTarget;
 
 /* 활성 여부 */ 
 bool g_bSSAO_Active;
-bool g_bBloom_Active;
-bool g_Outline_Active;
-bool g_PBR_Active;
 bool g_bFog_Active;
 
 /* 안개 */

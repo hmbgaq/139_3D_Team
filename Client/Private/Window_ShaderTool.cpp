@@ -57,10 +57,14 @@ void CWindow_ShaderTool::Top_Setting()
 	/* ÃÖ»óÀ§ ¼ÂÆÃ - ·»´õÅ¸°Ù ²ô°í ÄÑ±â */
 	ImGui::SeparatorText("Priority Setting");
 
-	if (ImGui::Checkbox(u8"RenderTarget Active", &bRenderTarget_Active))
-	{
-		m_pGameInstance->Set_RenderDebug(bRenderTarget_Active);
-	}
+#ifdef _DEBUG
+	if (ImGui::Checkbox(u8"RenderTarget", &bRenderTarget_Active))
+		m_pGameInstance->Set_RenderDebugTarget(bRenderTarget_Active);
+
+	if (ImGui::Checkbox(u8"Component", &bRenderCom_Active))
+		m_pGameInstance->Set_RenderDebugCom(bRenderCom_Active);
+
+#endif // _DEBUG
 
 	ImGui::SameLine();
 	HelpMarker(u8"·»´õÅ¸°Ù ²ô°í ÄÑ±â");
@@ -84,11 +88,17 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 {
 	ImGui::SeparatorText("Pre-Post");
 
+	if (ImGui::TreeNode("Bloom / Rim Setting"))
+	{
+		Compress_BloomRim_Setting();
+	}
+
 	if (ImGui::TreeNode("HBAO+ Setting"))
 	{
 		Compress_HBAO_Plus_Setting();
 		ImGui::TreePop();
 	}
+
 	if (ImGui::TreeNode("Fog Setting"))
 	{
 		Compress_Fog_Setting();
@@ -112,7 +122,7 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_FXAA_Setting();
 		ImGui::TreePop();
 	}
-	if (ImGui::TreeNode("Screen HSV"))
+	if (ImGui::TreeNode("HSV Setting"))
 	{
 		Compress_HSV_Setting();
 		ImGui::TreePop();
@@ -135,7 +145,7 @@ void CWindow_ShaderTool::Compress_HBAO_Plus_Setting()
 
 	ImGui::SliderFloat("Blur Sharpness", &m_eHBAO_Desc.fBlur_Sharpness, 1.f, 20.0f, "Sharpness = %.3f");
 
-	m_pGameInstance->Get_Renderer()->Set_SSAO(m_eHBAO_Desc.bHBAO_Active);
+	m_pGameInstance->Get_Renderer()->Set_HBAO_Active(m_eHBAO_Desc.bHBAO_Active);
 
 	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(m_eHBAO_Desc);
 }
@@ -168,9 +178,20 @@ void CWindow_ShaderTool::Compress_Fog_Setting()
 
 	ImGui::SliderFloat("FogHeightDensity", &m_eFog_Desc.fFogHeightDensity, 0.001f, 1.0f, "HeightDensity = %.3f");
 
-	m_pGameInstance->Get_Renderer()->Set_Fog(m_eFog_Desc.bFog_Active);
+	m_pGameInstance->Get_Renderer()->Set_Fog_Active(m_eFog_Desc.bFog_Active);
 
 	m_pGameInstance->Get_Renderer()->Set_Fog_Option(m_eFog_Desc);
+}
+
+void CWindow_ShaderTool::Compress_BloomRim_Setting()
+{
+	ImGui::Checkbox("Bloom Active",		&m_eScreen_Desc.bBloom_Active);
+	ImGui::Checkbox("RimLight Active",	&m_eScreen_Desc.bRimLight_Active);
+	ImGui::Checkbox("Bloom Blur",		&m_eScreen_Desc.bBloomBlur_Active);
+	ImGui::Checkbox("RimLight Blur",	&m_eScreen_Desc.bRimBlur_Active);
+
+	m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(m_eScreen_Desc);
+
 }
 
 void CWindow_ShaderTool::Compress_Radial_Setting()
@@ -180,7 +201,7 @@ void CWindow_ShaderTool::Compress_Radial_Setting()
 	ImGui::SliderFloat("Power", &m_eRadial_Desc.fRadial_Power, 0.0f, 1.0f, "Power = %.3f");
 	ImGui::SliderFloat("Quality", &m_eRadial_Desc.fRadial_Quality, 0.0f, 20.0f, "Quality = %.3f");
 
-	m_pGameInstance->Get_Renderer()->Set_Radial_Blur(m_eRadial_Desc.bRadial_Active);
+	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(m_eRadial_Desc.bRadial_Active);
 
 	m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(m_eRadial_Desc);
 }
@@ -191,28 +212,29 @@ void CWindow_ShaderTool::Compress_HDR_Setting()
 
 	ImGui::SliderFloat("HDR_White", &m_eHDR_Desc.fmax_white, 0.0f, 1.0f, "HDR_White = %.3f");
 
-	m_pGameInstance->Get_Renderer()->Set_HDR(m_eHDR_Desc.bHDR_Active);
+	m_pGameInstance->Get_Renderer()->Set_HDR_Active(m_eHDR_Desc.bHDR_Active);
 
 	m_pGameInstance->Get_Renderer()->Set_HDR_Option(m_eHDR_Desc);
 }
 
 void CWindow_ShaderTool::Compress_FXAA_Setting()
 {
-	ImGui::Checkbox("FXAA Active", &m_eScreen_Desc.bFXAA_Active);
+	ImGui::Checkbox("FXAA Active", &m_eAnti_Desc.bFXAA_Active);
 
-	m_pGameInstance->Get_Renderer()->Set_FXAA(m_eScreen_Desc.bFXAA_Active);
-	m_pGameInstance->Get_Renderer()->Set_Screen_Option(m_eScreen_Desc);
+	m_pGameInstance->Get_Renderer()->Set_FXAA_Active(m_eAnti_Desc.bFXAA_Active);
+	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(m_eAnti_Desc);
 }
 
 void CWindow_ShaderTool::Compress_HSV_Setting()
 {
-	ImGui::SliderFloat("Brightness", &m_eScreen_Desc.fFinal_Brightness, 0.0f, 2.0f, "Brightness = %.3f");
+	ImGui::Checkbox("HSV Active", &m_eHSV_Desc.bScreen_Active);
 
-	ImGui::SliderFloat("Saturation", &m_eScreen_Desc.fFinal_Saturation, 0.0f, 2.0f, "Saturation = %.3f");
+	ImGui::SliderFloat("Brightness", &m_eHSV_Desc.fFinal_Brightness, 0.0f, 2.0f, "Brightness = %.3f");
 
-	m_pGameInstance->Get_Renderer()->Set_Screen_Option(m_eScreen_Desc);
+	ImGui::SliderFloat("Saturation", &m_eHSV_Desc.fFinal_Saturation, 0.0f, 2.0f, "Saturation = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_HSV_Option(m_eHSV_Desc);
 }
-
 
 #pragma region Level ºÒ·¯¿À±â 
 

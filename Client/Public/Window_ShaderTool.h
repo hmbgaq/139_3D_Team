@@ -21,6 +21,7 @@ public:
 private:
 	/* Top Setting */
 	_bool bRenderTarget_Active = true;
+	_bool bRenderCom_Active = true;
 
 	/* Level Load - stringµµ ¹Ù²ã¾ßÇÔ */
 	_int		m_iCurrLevel_Index = {};
@@ -56,11 +57,12 @@ private:
 	/* Compress */
 	void Compress_HBAO_Plus_Setting();
 	void Compress_Fog_Setting();
+	void Compress_BloomRim_Setting();
 
 	void Compress_Radial_Setting();
 	void Compress_HDR_Setting();
 	void Compress_FXAA_Setting();
-	void Compress_Screen_Setting();
+	void Compress_HSV_Setting();
 
 
 public:

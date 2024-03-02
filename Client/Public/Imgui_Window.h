@@ -93,6 +93,7 @@ protected: //TODO  À¯Æ¿
 protected:
 	_bool				m_bEnable = false;
 	_bool				m_bRenderTargetOnOff = true;
+	_bool				m_bRenderColliderOnOff = true;
 	_bool				m_bdialogCheck = false;
 
 	ImGuiDESC			m_tImGuiDESC;
