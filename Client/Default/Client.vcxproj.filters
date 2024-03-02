@@ -418,9 +418,6 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\02\L_New">
       <UniqueIdentifier>{ec894c4f-702e-473e-abe8-466211f51a7d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\03">
-      <UniqueIdentifier>{28c5f495-7aa0-4615-86fa-2ac901dba296}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\04">
       <UniqueIdentifier>{be03726b-b676-4ab8-98dd-3b83b0aa0439}</UniqueIdentifier>
     </Filter>
@@ -1375,6 +1372,9 @@
     <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Punch">
       <UniqueIdentifier>{d1cc7966-f5e8-4902-8e5e-a600970e32c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\03%28미사용. Empowered 3 사용중%29">
+      <UniqueIdentifier>{28c5f495-7aa0-4615-86fa-2ac901dba296}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1768,7 +1768,7 @@
       <Filter>02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\02\L_New</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_MeleeCombo_03_SlamAOEJump.h">
-      <Filter>02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\03</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\03%28미사용. Empowered 3 사용중%29</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_MeleeCombo_04.h">
       <Filter>02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\04</Filter>
@@ -3119,7 +3119,7 @@
       <Filter>02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\02</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_MeleeCombo_03_SlamAOEJump.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\03</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\03%28미사용. Empowered 3 사용중%29</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_MeleeCombo_04.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\2. Attack\1. Melee\Combo\04</Filter>

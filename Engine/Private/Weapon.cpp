@@ -171,6 +171,67 @@ void CWeapon::Attack(CCharacter* pCharacter, _float3 vLocalPos)
 
 }
 
+CCharacter* CWeapon::Get_Target_Character(CCollider* other)
+{
+	if (nullptr == other || nullptr == other->Get_Owner() || nullptr == other->Get_Owner()->Get_Object_Owner())
+		return nullptr;
+
+	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(other->Get_Owner()->Get_Object_Owner());
+	if (nullptr == pTarget_Character)
+		return nullptr;
+
+	return pTarget_Character;
+}
+
+CWeapon* CWeapon::Set_Damage(_int _iDamage)
+{
+	m_iDamage = _iDamage;
+
+	return this;
+}
+
+CWeapon* CWeapon::Set_Direction(Direction _eHitDirection)
+{
+	m_eHitDirection = _eHitDirection;
+
+	return this;
+}
+
+CWeapon* CWeapon::Set_Power(Power _eHitPower)
+{
+	m_eHitPower = _eHitPower;
+
+	return this;
+}
+
+CWeapon* CWeapon::Activate_Collisions(_bool _bActivate)
+{
+	for (CCollider* pCollider : m_pColliders)
+	{
+		pCollider->Set_Enable(_bActivate);
+	}
+
+	return this;
+}
+
+CWeapon* CWeapon::Set_Force(_float _fForce)
+{
+	m_fForce = _fForce;
+
+	return this;
+}
+
+CWeapon* CWeapon::Set_Dir(_float3 _vDir)
+{
+	m_vDir = _vDir;
+
+	return this;
+}
+
+
+
+
+
 HRESULT CWeapon::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))

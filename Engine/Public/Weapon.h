@@ -52,6 +52,15 @@ public:
 	}
 
 public:
+	CCharacter* Get_Target_Character(CCollider* other);
+
+	CWeapon* Set_Damage(_int _iDamage);
+	CWeapon* Set_Direction(Direction _eHitDirection);
+	CWeapon* Set_Power(Power _eHitPower);
+	CWeapon* Activate_Collisions(_bool _bActivate);
+	CWeapon* Set_Force(_float _fForce);
+	CWeapon* Set_Dir(_float3 _vDir);
+
 
 
 
@@ -79,14 +88,14 @@ protected:
 protected:
 	vector<CCollider*> m_pColliders = { nullptr };
 	_uint	m_iColliderSize = { 0 };
-	_bool	m_bIsAttack = { false };
 
 	Direction	m_eHitDirection = { Direction::Front };
 	Power		m_eHitPower = { Power::Light };
 	_float		m_fStiffnessRate = { 1.f };
 
 	_uint		m_iDamage = { 0 };
-	_float3		m_vForce = { 0.f, 0.f, 0.f };
+	_float		m_fForce = { 0.f };
+	_float3		m_vDir = { 0.f, 0.f, 0.f };
 
 	_bool		m_bUse = { true };
 

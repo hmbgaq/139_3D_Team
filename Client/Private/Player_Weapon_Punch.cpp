@@ -78,19 +78,20 @@ HRESULT CPlayer_Weapon_Punch::Ready_Components()
 
 void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 {
-	CGameObject* pTarget = other->Get_Owner()->Get_Object_Owner();
-
-	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(pTarget);
+	CCharacter* pTarget_Character = Get_Target_Character(other);
 	if (nullptr != pTarget_Character)
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
-		pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos), 0.5f, 1.f, Direction::Front, Power::Light);
+		pTarget_Character->Set_Hitted(m_iDamage, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1 , m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
+
 	}
+	Set_Enable(false);
 }
 
 void CPlayer_Weapon_Punch::OnCollisionStay(CCollider* other)
 {
-	_int a = 0;	
+	_int a = 0;		
 }
 
 void CPlayer_Weapon_Punch::OnCollisionExit(CCollider* other)

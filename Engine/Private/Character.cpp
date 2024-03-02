@@ -351,10 +351,10 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 		switch (eHitDirection)
 		{
 		case Engine::Left:
-			Hitted_Right();
+			Hitted_Left();
 			break;
 		case Engine::Right:
-			Hitted_Left();
+			Hitted_Right();
 			break;
 		default:
 			Hitted_Front();
