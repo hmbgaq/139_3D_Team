@@ -14,7 +14,6 @@
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_Particle.h"
 #include "VIBuffer_Particle_Rect.h"
-#include "VIBuffer_Particle_Point.h"
 #include "VIBuffer_AnimModel_Instance.h"
 #include "VIBuffer_Effect_Model_Instance.h"
 #include "VIBuffer_Environment_Model_Instance.h"

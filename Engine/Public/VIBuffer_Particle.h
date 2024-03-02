@@ -135,6 +135,8 @@ private:
 	vector<PARTICLE_INFO_DESC>			m_vecParticleInfoDesc;
 	vector<PARTICLE_RIGIDBODY_DESC>		m_vecParticleRigidbodyDesc;
 
+
+	/* 인스턴스 */
 private:
 	ID3D11Buffer*		m_pVBInstance = { nullptr };
 	_uint				m_iInstanceStride = { 0 };
