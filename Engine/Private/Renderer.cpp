@@ -305,6 +305,78 @@ HRESULT CRenderer::Render_RimBlur()
 
 HRESULT CRenderer::Render_Deferred()
 {
+
+	/* 디퍼드에 의한 최종장면 */
+	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	_float			CamFar = m_pGameInstance->Get_CamFar();
+	_float4x4		ViewMatrix, ProjMatrix;
+	_float4			CamPos = m_pGameInstance->Get_CamPosition();
+
+	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinsizeX / g_iWinsizeY, 0.1f, CamFar));
+
+	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_LightViewMatrix", &ViewMatrix));
+	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_LightProjMatrix", &ProjMatrix));
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_CamFar", &CamFar, sizeof(_float)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_vCamPosition", &CamPos, sizeof(_float4)));
+
+	/* 활성여부 */
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_bSSAO_Active", &m_tHBAO_Option.bHBAO_Active, sizeof(_bool)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_bFog_Active", &m_tFog_Option.bFog_Active, sizeof(_bool)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_BloomRim", &m_tBloomRim_Option, sizeof(BLOOMRIM_DESC)));
+
+	/* 타겟에 값올리기 */
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Priority"), m_pShader_Deferred, "g_PriorityTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse"), m_pShader_Deferred, "g_DiffuseTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader_Deferred, "g_DepthTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Shade"), m_pShader_Deferred, "g_ShadeTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader_Deferred, "g_SpecularTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader_Deferred, "g_Shadow_BlurTarget"));
+	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
+
+
+	/* 선택사항*/
+	if (true == m_tBloomRim_Option.bBloom_Active) //Bloom vs BloomBlur
+	{
+		if (true == m_tBloomRim_Option.bBloomBlur_Active)
+		{
+			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader_Deferred, "g_BloomTarget"));
+		}
+		else
+		{
+			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom"), m_pShader_Deferred, "g_BloomTarget"));
+		}
+	}
+
+	if (true == m_tBloomRim_Option.bRimLight_Active) // RimLight vs RimLight Blur
+	{
+		if (true == m_tBloomRim_Option.bRimBlur_Active)
+		{
+			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Rim_Blur"), m_pShader_Deferred, "g_RimLightTarget"));
+		}
+		else
+		{
+			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RimLight"), m_pShader_Deferred, "g_RimLightTarget"));
+		}
+	}
+
+	if (true == m_tHBAO_Option.bHBAO_Active)
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader_Deferred, "g_SSAOTexture")); /* ssao 추가 */
+
+	if (true == m_tFog_Option.bFog_Active)
+	{
+		FAILED_CHECK(m_pShader_Deferred->Bind_Struct("g_Fogdesc", &m_tFog_Option, sizeof(FOG_DESC)));
+		FAILED_CHECK(m_pPerlinNoiseTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_PerlinNoiseTexture"));
+	}
+
+	FAILED_CHECK(m_pShader_Deferred->Begin(ECast(DEFERRED_SHADER::DEFERRED)));
+
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
+
+	FAILED_CHECK(m_pVIBuffer->Render());
 	return E_NOTIMPL;
 }
 
