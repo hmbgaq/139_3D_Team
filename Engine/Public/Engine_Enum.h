@@ -44,11 +44,23 @@ namespace Engine
 		EFFECT_Default, EFFECT_Mask, EFFECT_END
 	};
 
-	enum MINMAX { MIN, MAX, MINMAX_END };
+	enum class MINMAX { MIN, MAX, MINMAX_END };
+	enum class AXIS { AXIS_X, AXIS_Y, AXIS_Z, AXIS_END };
+	/*
+	FORCE			:	질량 사용, 연속적인 힘을 가하는 경우 사용
+						주로 바람이나 자기력과 같이 연속적으로 주어지는 힘
 
-	enum AXIS { AXIS_X, AXIS_Y, AXIS_Z, AXIS_END };
+	IMPULSE			:	질량 사용, 타격이나 폭발과 같은 순간적인 힘
+	
+	ACCELERATION	:	질량 무시, 직접 연속적인 가속력 부여 (주로 지구의 중력 표현)
 
-	enum EASING_TYPE
+	VELOCITY_CHANGE :	질량 무시, 직접 순간적인 가속력 부여
+						ACCELERATION은 시간이 흘러가면서 변화를 일으키는데 비해 이 모드는 순간적으로 지정한 속도로 변화를 일으킨다.
+	*/
+	enum class FORCE_MODE { FORCE, IMPULSE, ACCELERATION, VELOCITY_CHANGE, FORCE_MODE_END }; 
+
+
+	enum class EASING_TYPE
 	{
 		LINEAR
 

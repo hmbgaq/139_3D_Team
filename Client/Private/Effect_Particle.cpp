@@ -46,15 +46,15 @@ void CEffect_Particle::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Particle::Tick(_float fTimeDelta)
 {
-	CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC* pDesc = m_pVIBufferCom->Get_Desc();
+	//CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC* pDesc = m_pVIBufferCom->Get_Desc();
+	CVIBuffer_Particle::PARTICLE_BUFFER_DESC* pDesc = m_pVIBufferCom->Get_Desc();
 
 	if (m_tParticleDesc.bActive_Tool)
 	{
 		m_fSequenceTime = m_fLifeTime + m_fRemainTime;
 
-		//pDesc->bActive_Tool = TRUE;
-		pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
-		pDesc->vMinMaxLifeTime.y = m_fLifeTime;
+		//pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
+		//pDesc->vMinMaxLifeTime.y = m_fLifeTime;
 
 		if (m_tParticleDesc.bPlay)
 		{
@@ -135,10 +135,10 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 			}
 		}
 	}
-	else
-	{
-		m_tParticleDesc.bActive_Tool = FALSE;
-	}
+	//else
+	//{
+	//	m_tParticleDesc.bActive_Tool = FALSE;
+	//}
 }
 
 void CEffect_Particle::Late_Tick(_float fTimeDelta)
@@ -158,9 +158,9 @@ void CEffect_Particle::Late_Tick(_float fTimeDelta)
 			
 			if (m_bSortZ)
 			{
-				m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
+				//m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
 			}
-			Compute_CamDistance();
+			//Compute_CamDistance();
 
 			// CRenderer::RENDER_BLEND
 			//if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tParticleDesc.iRenderGroup), this)))
@@ -228,10 +228,6 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 	Write_VoidDesc(Out_Json, &m_tParticleDesc);
 
 
-	/* Particle */
-	Out_Json["iCurNumInstance"] = m_tParticleDesc.iCurNumInstance;
-
-
 	/* Sprite */
 	Out_Json["fSequenceTerm"] = m_tSpriteDesc.fSequenceTerm;
 
@@ -253,8 +249,6 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 	*&m_tParticleDesc = *static_cast<PARTICLE_DESC*>(Load_VoidDesc(In_Json));
 
 
-	m_tParticleDesc.iCurNumInstance = In_Json["iCurNumInstance"];
-
 	 /* Sprite */
 	m_tSpriteDesc.fSequenceTerm = In_Json["fSequenceTerm"];
 
@@ -269,56 +263,46 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 
 void* CEffect_Particle::Get_BufferDesc()
 {
-	CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferDesc = {};
+	// 초기화용
 
-	tBufferDesc.bLoop = m_tParticleDesc.bLoop;
-	tBufferDesc.bReverse = m_tParticleDesc.bReverse;
-
-	tBufferDesc.eType_Action = m_tParticleDesc.eType_Action;
-	tBufferDesc.eType_Fade = m_tParticleDesc.eType_Fade;
-	tBufferDesc.eType_ColorLerp = m_tParticleDesc.eType_ColorLerp;
-
+	CVIBuffer_Particle::PARTICLE_BUFFER_DESC tBufferDesc = {};
 
 	tBufferDesc.iCurNumInstance = m_tParticleDesc.iCurNumInstance;
 
+	/* LifeTime */
 	tBufferDesc.vMinMaxLifeTime = m_tParticleDesc.vMinMaxLifeTime;
 
-	tBufferDesc.vMinMaxRange = m_tParticleDesc.vMinMaxRange;
-	tBufferDesc.vMinMaxRangeLength = m_tParticleDesc.vMinMaxRangeLength;
-	tBufferDesc.vCenterPosition = m_tParticleDesc.vCenterPosition;
-
-	tBufferDesc.vMinMaxSpeed = m_tParticleDesc.vMinMaxSpeed;
-
-	tBufferDesc.fSpeedAcc = m_tParticleDesc.fSpeedAcc;
-	tBufferDesc.fAccPosition = m_tParticleDesc.fAccPosition;
-
-
+	/* RigidBody */
+	tBufferDesc.bUseRigidBody = m_tParticleDesc.bUseRigidBody;
+	tBufferDesc.bKinetic = m_tParticleDesc.bKinetic;
 	tBufferDesc.bUseGravity = m_tParticleDesc.bUseGravity;
-	tBufferDesc.fGravityAcc = m_tParticleDesc.fGravityAcc;
-	tBufferDesc.fUseGravityPosition = m_tParticleDesc.fUseGravityPosition;
+	tBufferDesc.eForce_Mode = m_tParticleDesc.eForce_Mode;
+
+	tBufferDesc.fGravity = m_tParticleDesc.fGravity;
+	tBufferDesc.fFriction = m_tParticleDesc.fFriction;
+	tBufferDesc.fSleepThreshold = m_tParticleDesc.fSleepThreshold;
+	tBufferDesc.byFreezeAxis = m_tParticleDesc.byFreezeAxis;
+
+	tBufferDesc.vMinMaxPower = m_tParticleDesc.vMinMaxPower;
 
 
+	/* For.Position */
+	tBufferDesc.vCenterPosition = m_tParticleDesc.vCenterPosition;
+	tBufferDesc.vMinMaxRange = m_tParticleDesc.vMinMaxRange;
+
+	/* For.Rotation */
 	tBufferDesc.vMinMaxRotationOffsetX = m_tParticleDesc.vMinMaxRotationOffsetX;
 	tBufferDesc.vMinMaxRotationOffsetY = m_tParticleDesc.vMinMaxRotationOffsetY;
 	tBufferDesc.vMinMaxRotationOffsetZ = m_tParticleDesc.vMinMaxRotationOffsetZ;
-	tBufferDesc.vRotationOffset = m_tParticleDesc.vRotationOffset;
 
 
-	tBufferDesc.vCurrentRotation = m_tParticleDesc.vCurrentRotation;
-	tBufferDesc.vMinMaxRotationForce = m_tParticleDesc.vMinMaxRotationForce;
-
-
-	tBufferDesc.vMinMaxScale = m_tParticleDesc.vMinMaxScale;
-	tBufferDesc.vAddScale = m_tParticleDesc.vAddScale;
-	tBufferDesc.vCurrentScale = m_tParticleDesc.vCurrentScale;
-
-
+	/* For.Color */
+	tBufferDesc.eType_ColorLerp = m_tParticleDesc.eType_ColorLerp;
+	tBufferDesc.bDynamic_Color = m_tParticleDesc.bDynamic_Color;
 	tBufferDesc.vMinMaxRed = m_tParticleDesc.vMinMaxRed;
 	tBufferDesc.vMinMaxGreen = m_tParticleDesc.vMinMaxGreen;
 	tBufferDesc.vMinMaxBlue = m_tParticleDesc.vMinMaxBlue;
 	tBufferDesc.vMinMaxAlpha = m_tParticleDesc.vMinMaxAlpha;
-
-	tBufferDesc.vCurrentColor = m_tParticleDesc.vCurrentColor;
 
 
 	return &tBufferDesc;
@@ -335,11 +319,19 @@ HRESULT CEffect_Particle::Ready_Components()
 		return E_FAIL;
 
 
+	///* For.Com_VIBuffer */
+	//{
+	//	CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferInfo = *static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(Get_BufferDesc());
+	//	//CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferInfo = {};
+	//	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle_Point"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
+	//		return E_FAIL;
+	//}
+
 	/* For.Com_VIBuffer */
 	{
-		CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferInfo = *static_cast<CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC*>(Get_BufferDesc());
+		CVIBuffer_Particle::PARTICLE_BUFFER_DESC tBufferInfo = *static_cast<CVIBuffer_Particle::PARTICLE_BUFFER_DESC*>(Get_BufferDesc());
 		//CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC tBufferInfo = {};
-		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle_Point"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
+		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
 			return E_FAIL;
 	}
 

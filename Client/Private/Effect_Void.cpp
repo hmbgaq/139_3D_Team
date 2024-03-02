@@ -143,6 +143,8 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json, void* pArg)
 		Out_Json["iTextureIndex"][i] = tVoidDesc.iTextureIndex[i];
 	}
 
+	Out_Json["iCurNumInstance"] = tVoidDesc.iCurNumInstance;
+
 	Out_Json["iRenderGroup"] = tVoidDesc.iRenderGroup;
 	Out_Json["iShaderPassIndex"] = tVoidDesc.iShaderPassIndex;
 
@@ -232,6 +234,8 @@ void* CEffect_Void::Load_VoidDesc(const json& In_Json)
 		m_pGameInstance->Convert_WString_To_String(tVoidDesc.strTextureTag[i]) = In_Json["strTextureTag"][i];
 		tVoidDesc.iTextureIndex[i] = In_Json["iTextureIndex"][i];
 	}
+
+	tVoidDesc.iCurNumInstance = In_Json["iCurNumInstance"];
 
 	tVoidDesc.iRenderGroup = In_Json["iRenderGroup"];
 	tVoidDesc.iShaderPassIndex = In_Json["iShaderPassIndex"];

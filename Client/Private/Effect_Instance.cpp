@@ -208,11 +208,9 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 
 	Write_VoidDesc(Out_Json, &m_tInstanceDesc);
 
-
 	/* Mesh */
 	Out_Json["eType_Mesh"] = m_tInstanceDesc.eType_Mesh;
 	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
-	Out_Json["iCurNumInstance"] = m_tInstanceDesc.iCurNumInstance;
 
 	/* Bloom */
 	CJson_Utility::Write_Float4(Out_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);
@@ -235,7 +233,6 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 	/* Mesh */
 	m_tInstanceDesc.eType_Mesh = In_Json["eType_Mesh"];
 	m_tInstanceDesc.bUseCustomTex = In_Json["bUseCustomTex"];
-	m_tInstanceDesc.iCurNumInstance	= In_Json["iCurNumInstance"];
 
 
 	/* Bloom */

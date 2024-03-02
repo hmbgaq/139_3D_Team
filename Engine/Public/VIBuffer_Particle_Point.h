@@ -1,5 +1,4 @@
 #pragma once
-
 #include "VIBuffer_Instancing.h"
 
 BEGIN(Engine)
@@ -14,7 +13,7 @@ public:
 	{
 		TYPE_ACTION		eType_Action = { SPHERE };
 		TYPE_FADE		eType_Fade = { FADE_NONE };
-		EASING_TYPE		eType_ColorLerp = { LINEAR };
+		EASING_TYPE		eType_ColorLerp = { EASING_TYPE::LINEAR };
 
 		_bool		bLoop = { TRUE };
 		_bool		bReverse = { FALSE };

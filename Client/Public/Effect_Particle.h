@@ -18,52 +18,47 @@ public:
 	{
 		CVIBuffer_Particle_Point::TYPE_ACTION	eType_Action = { CVIBuffer_Particle_Point::SPHERE };
 		CVIBuffer_Particle_Point::TYPE_FADE		eType_Fade = { CVIBuffer_Particle_Point::FADE_NONE };
-		EASING_TYPE								eType_ColorLerp = { LINEAR };
 
-		_uint		iCurNumInstance = { 200 };
 
+
+#pragma region 버퍼 Desc초기화를 위한 값 (저장X)
 		/* LifeTime */
-		_float2		vMinMaxLifeTime = { 0.5f, 3.0f };
+		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
+
+		/* RigidBody */
+		_bool		bUseRigidBody = { TRUE };
+		_bool		bKinetic	  = { TRUE };	// 키네틱, 즉 TRUE면 속도 계산 함)
+		_bool		bUseGravity   = { TRUE };
+		FORCE_MODE	eForce_Mode   = { FORCE_MODE::IMPULSE };
+
+		_float		fGravity		= { -9.8f };	// 중력 가속도
+		_float		fFriction		= { 0.1f };		// 마찰 계수
+		_float		fSleepThreshold = { 0.05f };	// 슬립 한계점
+		_byte		byFreezeAxis	= { 0 };		// 축 고정 확인용 바이트
+
+		_float2		vMinMaxPower = { 0.1f, 250.f };
+
 
 		/* For.Position */
-		_float2		vMinMaxRange = { 0.1f, 3.f };
-		_float2		vMinMaxRangeLength = { 3.f, 3.f };
-
 		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
+		_float2		vMinMaxRange	= { 0.1f, 3.f };
 
-		/* For.Speed */
-		_float2		vMinMaxSpeed = { 0.1f, 5.0 };
-
-		/* 가속도 */
-		_float		fSpeedAcc = { 2.f };
-		_float		fAccPosition = { 0.1f };
-
-		/* For.Gravity */
-		_bool		bUseGravity = { FALSE };
-		_float		fGravityAcc = { -9.8 };
-		_float		fUseGravityPosition = { 0.1f };
 
 		/* For.Rotation */
 		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetY = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetZ = { 0.0f, 360.f };
-		_float3		vRotationOffset = { 0.f, 0.f, 0.f };
 
-		_float3     vCurrentRotation = { 0.f, 0.f, 0.f };
-		_float3		vMinMaxRotationForce = { 0.f, 0.f, 0.f };
-
-		/* For.Scale */
-		_float2     vMinMaxScale = { 0.2f, 0.5f };
-		_float2     vAddScale = { 0.f, 0.f };
-		_float2		vCurrentScale;
 
 		/* For.Color */
+		EASING_TYPE	eType_ColorLerp = { EASING_TYPE::LINEAR };
+		_bool		bDynamic_Color	= { TRUE };
 		_float2     vMinMaxRed		= { 1.f, 1.f };
 		_float2     vMinMaxGreen	= { 1.f, 1.f };
 		_float2     vMinMaxBlue		= { 1.f, 1.f };
 		_float2     vMinMaxAlpha	= { 1.f, 1.f };
+#pragma endregion
 
-		_float4     vCurrentColor = { 1.f, 1.f, 1.f, 1.f };
 
 	}PARTICLE_DESC;
 
@@ -99,7 +94,8 @@ public:
 	void* Get_BufferDesc();
 
 public:
-	CVIBuffer_Particle_Point* Get_VIBufferCom() { return m_pVIBufferCom; }
+	//CVIBuffer_Particle_Point* Get_VIBufferCom() { return m_pVIBufferCom; }
+	CVIBuffer_Particle* Get_VIBufferCom() { return m_pVIBufferCom; }
 	CTexture* Get_TextureCom(TEXTURE eTexture) { return m_pTextureCom[eTexture]; }
 
 private:
@@ -118,7 +114,8 @@ private:
 private:
 	CShader*					m_pShaderCom = { nullptr };
 	CTexture*					m_pTextureCom[TEXTURE_END] = { nullptr };
-	CVIBuffer_Particle_Point*	m_pVIBufferCom = { nullptr };
+	//CVIBuffer_Particle_Point*	m_pVIBufferCom = { nullptr };
+	CVIBuffer_Particle* m_pVIBufferCom = { nullptr };
 
 	_bool						m_bSortZ = { FALSE };
 

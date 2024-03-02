@@ -12,6 +12,7 @@
 #include "VIBuffer_Trail.h"
 #include "VIBuffer_Field.h"
 #include "VIBuffer_Terrain.h"
+#include "VIBuffer_Particle.h"
 #include "VIBuffer_Particle_Rect.h"
 #include "VIBuffer_Particle_Point.h"
 #include "VIBuffer_AnimModel_Instance.h"

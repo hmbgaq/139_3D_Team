@@ -24,6 +24,8 @@ public:
 		wstring		strTextureTag[TEXTURE_END];
 		_int		iTextureIndex[TEXTURE_END] = { 0 };
 
+		_uint		iCurNumInstance = { 500 };
+
 		// Render Group
 		_int		iRenderGroup = { 9 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 이펙트는 9번
 
@@ -59,7 +61,7 @@ public:
 		_bool		bUseRigidBody	= { FALSE };
 
 		// Times
-		EASING_TYPE		eType_Easing = { LINEAR };
+		EASING_TYPE		eType_Easing = { EASING_TYPE::LINEAR };
 
 		// 주인
 		_bool		 bParentPivot	 = { TRUE };

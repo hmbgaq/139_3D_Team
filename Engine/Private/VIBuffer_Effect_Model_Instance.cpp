@@ -265,37 +265,6 @@ void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 
 }
 
-CVIBuffer_Effect_Model_Instance* CVIBuffer_Effect_Model_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{
-	CVIBuffer_Effect_Model_Instance* pInstance = new CVIBuffer_Effect_Model_Instance(pDevice, pContext);
-
-	/* 원형객체를 초기화한다.  */
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		MSG_BOX("Failed to Created : CVIBuffer_Effect_Model_Instance");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-CComponent* CVIBuffer_Effect_Model_Instance::Clone(void* pArg)
-{
-	CVIBuffer_Effect_Model_Instance* pInstance = new CVIBuffer_Effect_Model_Instance(*this);
-
-	/* 원형객체를 초기화한다.  */
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		MSG_BOX("Failed to Cloned : CVIBuffer_Effect_Model_Instance");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-void CVIBuffer_Effect_Model_Instance::Free()
-{
-	__super::Free();
-	
-}
 
 _float3 CVIBuffer_Effect_Model_Instance::Update_Kinetic(_int iNum, _float fTimeDelta)
 {
@@ -416,4 +385,36 @@ const _bool CVIBuffer_Effect_Model_Instance::Check_Sleep(_int iNum)
 	}
 
 	return FALSE;
+}
+
+CVIBuffer_Effect_Model_Instance* CVIBuffer_Effect_Model_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CVIBuffer_Effect_Model_Instance* pInstance = new CVIBuffer_Effect_Model_Instance(pDevice, pContext);
+
+	/* 원형객체를 초기화한다.  */
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CVIBuffer_Effect_Model_Instance");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CComponent* CVIBuffer_Effect_Model_Instance::Clone(void* pArg)
+{
+	CVIBuffer_Effect_Model_Instance* pInstance = new CVIBuffer_Effect_Model_Instance(*this);
+
+	/* 원형객체를 초기화한다.  */
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CVIBuffer_Effect_Model_Instance");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void CVIBuffer_Effect_Model_Instance::Free()
+{
+	__super::Free();
+
 }

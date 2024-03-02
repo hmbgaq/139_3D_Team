@@ -20,7 +20,7 @@ public:
 		_int	iPartSize			= { 0 };
 
 		// Times
-		EASING_TYPE		eType_Easing = { LINEAR };
+		EASING_TYPE		eType_Easing = { EASING_TYPE::LINEAR };
 
 		_float	fTimeAcc			= { 0.f };	/* 시간 누적 */
 		_float	fWaitingAcc			= { 0.f };	/* 시작 딜레이 시간 누적 */

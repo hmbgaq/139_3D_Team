@@ -8,8 +8,6 @@ class CMesh;
 class ENGINE_DLL CVIBuffer_Effect_Model_Instance : public CVIBuffer_Model_Instance
 {
 public:
-	enum AXIS_TYPE { AXIS_X, AXIS_Y, AXIS_Z, AXIS_END };
-	enum FORCE_MODE { FORCE, IMPULSE, ACCELERATION, VELOCITY_CHANGE, MODE_END };
 	/*
 		FORCE			:	질량 사용, 연속적인 힘을 가하는 경우 사용
 							주로 바람이나 자기력과 같이 연속적으로 주어지는 힘
@@ -27,8 +25,8 @@ public:
 	{
 		class CModel*	  pModel	= { nullptr };
 
-		_bool			bUseRigidBody	= { FALSE };
-		FORCE_MODE		eForce_Mode		= { IMPULSE };
+		_bool			bUseRigidBody	= { FALSE };		
+		FORCE_MODE		eForce_Mode		= { FORCE_MODE::IMPULSE };
 
 		_int			iCurNumInstance = { 1 };
 
@@ -104,8 +102,8 @@ public:
 	void		Sleep(_int iNum) { Clear_Power(iNum); m_vecParticleRigidbodyDesc[iNum].bSleep = TRUE; }
 	void		Wake(_int iNum) { m_vecParticleRigidbodyDesc[iNum].bSleep = FALSE; }
 
-	void		Set_FreezeAxis(_int iNum, AXIS_TYPE eAxis) { m_vecParticleRigidbodyDesc[iNum].byFreezeAxis ^= 1 << (_int)eAxis; }
-	_bool		Is_FrozeAxis(_int iNum, AXIS_TYPE eAxis) { return m_vecParticleRigidbodyDesc[iNum].byFreezeAxis & 1 << (_int)eAxis; }
+	void		Set_FreezeAxis(_int iNum, AXIS eAxis) { m_vecParticleRigidbodyDesc[iNum].byFreezeAxis ^= 1 << (_int)eAxis; }
+	_bool		Is_FrozeAxis(_int iNum, AXIS eAxis) { return m_vecParticleRigidbodyDesc[iNum].byFreezeAxis & 1 << (_int)eAxis; }
 
 
 public:

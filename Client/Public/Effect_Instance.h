@@ -25,9 +25,7 @@ public:
 
 		_bool			bUseCustomTex = { TRUE };
 
-		CVIBuffer_Effect_Model_Instance::FORCE_MODE eForce_Mode = { CVIBuffer_Effect_Model_Instance::IMPULSE };
-
-		_uint			iCurNumInstance = { 100 };
+		FORCE_MODE eForce_Mode = { FORCE_MODE::IMPULSE };
 
 		/* For.Position */
 		_float4		vCenterPosition		= { 0.f, 0.f, 0.f, 1.f };

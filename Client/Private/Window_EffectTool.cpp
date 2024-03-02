@@ -279,7 +279,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 			if (CEffect_Void::PARTICLE == eType_Effect)
 			{
 				m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-				CVIBuffer_Particle_Point* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
+				CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 				m_pParticlePointDesc = pVIBuffer->Get_Desc();
 
 
@@ -412,7 +412,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 				{
 					m_pParticleDesc->iCurNumInstance = m_iNumInstance;
 					m_pParticlePointDesc->iCurNumInstance = m_iNumInstance;
-					pVIBuffer->Set_NumInstance(m_iNumInstance);
+					//pVIBuffer->Set_NumInstance(m_iNumInstance);
 				}
 
 				/* 빌보드 키고 끄기 */
@@ -443,80 +443,80 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticleDesc->bUseSpriteAnim = TRUE;
 
 
-				/* 파티클 업데이트 모양(타입) */
-				ImGui::SeparatorText(" Action Type ");
-				if (ImGui::Button(" Sphere "))
-				{
-					m_pParticlePointDesc->eType_Action = CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(" Spark "))
-				{
-					m_pParticlePointDesc->eType_Action = CVIBuffer_Particle_Point::TYPE_ACTION::SPARK;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(" Fall "))
-				{
-					m_pParticlePointDesc->eType_Action = CVIBuffer_Particle_Point::TYPE_ACTION::FALL;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(" Rise "))
-				{
-					m_pParticlePointDesc->eType_Action = CVIBuffer_Particle_Point::TYPE_ACTION::RISE;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(" Blink "))
-				{
-					m_pParticlePointDesc->eType_Action = CVIBuffer_Particle_Point::TYPE_ACTION::BLINK;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(" Tornado "))
-				{
-					m_pParticlePointDesc->eType_Action = CVIBuffer_Particle_Point::TYPE_ACTION::TORNADO;
-				}
+				///* 파티클 업데이트 모양(타입) */
+				//ImGui::SeparatorText(" Action Type ");
+				//if (ImGui::Button(" Sphere "))
+				//{
+				//	m_pParticlePointDesc->eType_Action = CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE;
+				//}
+				//ImGui::SameLine();
+				//if (ImGui::Button(" Spark "))
+				//{
+				//	m_pParticlePointDesc->eType_Action = CVIBuffer_Particle_Point::TYPE_ACTION::SPARK;
+				//}
+				//ImGui::SameLine();
+				//if (ImGui::Button(" Fall "))
+				//{
+				//	m_pParticlePointDesc->eType_Action = CVIBuffer_Particle_Point::TYPE_ACTION::FALL;
+				//}
+				//ImGui::SameLine();
+				//if (ImGui::Button(" Rise "))
+				//{
+				//	m_pParticlePointDesc->eType_Action = CVIBuffer_Particle_Point::TYPE_ACTION::RISE;
+				//}
+				//ImGui::SameLine();
+				//if (ImGui::Button(" Blink "))
+				//{
+				//	m_pParticlePointDesc->eType_Action = CVIBuffer_Particle_Point::TYPE_ACTION::BLINK;
+				//}
+				//ImGui::SameLine();
+				//if (ImGui::Button(" Tornado "))
+				//{
+				//	m_pParticlePointDesc->eType_Action = CVIBuffer_Particle_Point::TYPE_ACTION::TORNADO;
+				//}
 
 
-				if (CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE == m_pParticlePointDesc->eType_Action)
-				{
-					if (ImGui::DragFloat2("MinMaxLength", m_vMinMaxLengthPosition, 1.f, 0.1f, 360.f))
-					{
-						m_pParticlePointDesc->vMinMaxRangeLength.x = m_vMinMaxLengthPosition[0];
-						m_pParticlePointDesc->vMinMaxRangeLength.y = m_vMinMaxLengthPosition[1];
-					}		
-				}
+				//if (CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE == m_pParticlePointDesc->eType_Action)
+				//{
+				//	if (ImGui::DragFloat2("MinMaxLength", m_vMinMaxLengthPosition, 1.f, 0.1f, 360.f))
+				//	{
+				//		m_pParticlePointDesc->vMinMaxRangeLength.x = m_vMinMaxLengthPosition[0];
+				//		m_pParticlePointDesc->vMinMaxRangeLength.y = m_vMinMaxLengthPosition[1];
+				//	}		
+				//}
 
 
-				/* 재생, 역재생 */
-				ImGui::SeparatorText(" Play Type ");
-				if (ImGui::Button(" Normal "))
-				{
-					m_pParticlePointDesc->bReverse = FALSE;
-				}
+				///* 재생, 역재생 */
+				//ImGui::SeparatorText(" Play Type ");
+				//if (ImGui::Button(" Normal "))
+				//{
+				//	m_pParticlePointDesc->bReverse = FALSE;
+				//}
 
-				ImGui::SameLine();
-				if (ImGui::Button(" Reverse "))
-				{
-					m_pParticlePointDesc->bReverse = TRUE;
-				}
-				ImGui::SameLine(); HelpMarker(u8"재생, 역재생");
+				//ImGui::SameLine();
+				//if (ImGui::Button(" Reverse "))
+				//{
+				//	m_pParticlePointDesc->bReverse = TRUE;
+				//}
+				//ImGui::SameLine(); HelpMarker(u8"재생, 역재생");
 
 
-				/* 파티클 페이드 인아웃 사용 */
-				ImGui::SeparatorText(" Fade Type ");
-				if (ImGui::Button(" Fade_None "))
-				{
-					m_pParticlePointDesc->eType_Fade = CVIBuffer_Particle_Point::TYPE_FADE::FADE_NONE;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(" Fade_In "))
-				{
-					m_pParticlePointDesc->eType_Fade = CVIBuffer_Particle_Point::TYPE_FADE::FADE_IN;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(" Fade_Out "))
-				{
-					m_pParticlePointDesc->eType_Fade = CVIBuffer_Particle_Point::TYPE_FADE::FADE_OUT;
-				}
+				///* 파티클 페이드 인아웃 사용 */
+				//ImGui::SeparatorText(" Fade Type ");
+				//if (ImGui::Button(" Fade_None "))
+				//{
+				//	m_pParticlePointDesc->eType_Fade = CVIBuffer_Particle_Point::TYPE_FADE::FADE_NONE;
+				//}
+				//ImGui::SameLine();
+				//if (ImGui::Button(" Fade_In "))
+				//{
+				//	m_pParticlePointDesc->eType_Fade = CVIBuffer_Particle_Point::TYPE_FADE::FADE_IN;
+				//}
+				//ImGui::SameLine();
+				//if (ImGui::Button(" Fade_Out "))
+				//{
+				//	m_pParticlePointDesc->eType_Fade = CVIBuffer_Particle_Point::TYPE_FADE::FADE_OUT;
+				//}
 
 
 				/* 텍스처 UV회전 */
@@ -525,63 +525,63 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticleDesc->fUV_RotDegree = m_fUV_RotDegree;
 
 
-				/* 추가 크기 조절 */
-				ImGui::SeparatorText("");
-				if (ImGui::DragFloat("AddScale_1", &m_fAddScale, 1.f, 0.f, 360.f))
-				{
-					m_pParticlePointDesc->vAddScale.x = m_fAddScale;
-					m_pParticlePointDesc->vAddScale.y = m_fAddScale;
-				}
+				///* 추가 크기 조절 */
+				//ImGui::SeparatorText("");
+				//if (ImGui::DragFloat("AddScale_1", &m_fAddScale, 1.f, 0.f, 360.f))
+				//{
+				//	m_pParticlePointDesc->vAddScale.x = m_fAddScale;
+				//	m_pParticlePointDesc->vAddScale.y = m_fAddScale;
+				//}
 
-				if (ImGui::DragFloat2("AddScale_2", m_vAddScale, 1.f, 0.f, 360.f))
-				{
-					if (0 > m_vAddScale[0])
-						m_vAddScale[0] = 0.f;
+				//if (ImGui::DragFloat2("AddScale_2", m_vAddScale, 1.f, 0.f, 360.f))
+				//{
+				//	if (0 > m_vAddScale[0])
+				//		m_vAddScale[0] = 0.f;
 
-					if (0 > m_vAddScale[1])
-						m_vAddScale[1] = 0.f;
+				//	if (0 > m_vAddScale[1])
+				//		m_vAddScale[1] = 0.f;
 
-					m_pParticlePointDesc->vAddScale.x = m_vAddScale[0];
-					m_pParticlePointDesc->vAddScale.y = m_vAddScale[1];
-				}
+				//	m_pParticlePointDesc->vAddScale.x = m_vAddScale[0];
+				//	m_pParticlePointDesc->vAddScale.y = m_vAddScale[1];
+				//}
 
-				/* 색 변경 */
-				if (ImGui::ColorEdit4("Start_Color_Particle", m_fColor_Start_Particle, ImGuiColorEditFlags_None))
-				{
-					m_pParticlePointDesc->vMinMaxRed.x = m_fColor_Start_Particle[0];
-					m_pParticlePointDesc->vMinMaxGreen.x = m_fColor_Start_Particle[1];
-					m_pParticlePointDesc->vMinMaxBlue.x = m_fColor_Start_Particle[2];
-					m_pParticlePointDesc->vMinMaxAlpha.x = m_fColor_Start_Particle[3];
-				}
-				if (ImGui::ColorEdit4("End_Color_Particle", m_fColor_End_Particle, ImGuiColorEditFlags_None))
-				{
-					m_pParticlePointDesc->vMinMaxRed.y = m_fColor_End_Particle[0];
-					m_pParticlePointDesc->vMinMaxGreen.y = m_fColor_End_Particle[1];
-					m_pParticlePointDesc->vMinMaxBlue.y = m_fColor_End_Particle[2];
-					m_pParticlePointDesc->vMinMaxAlpha.y = m_fColor_End_Particle[3];
-				}
-
-
-				ImGui::ColorEdit4("Cur_Color_Particle", m_fColor_Cur_Particle, ImGuiColorEditFlags_None);
-				m_fColor_Cur_Particle[0] = m_pParticlePointDesc->vCurrentColor.x;
-				m_fColor_Cur_Particle[1] = m_pParticlePointDesc->vCurrentColor.y;
-				m_fColor_Cur_Particle[2] = m_pParticlePointDesc->vCurrentColor.z;
-				m_fColor_Cur_Particle[3] = m_pParticlePointDesc->vCurrentColor.w;
-				ImGui::SeparatorText("");
-
-				Select_EasingType(&m_pParticlePointDesc->eType_ColorLerp);
+				///* 색 변경 */
+				//if (ImGui::ColorEdit4("Start_Color_Particle", m_fColor_Start_Particle, ImGuiColorEditFlags_None))
+				//{
+				//	m_pParticlePointDesc->vMinMaxRed.x = m_fColor_Start_Particle[0];
+				//	m_pParticlePointDesc->vMinMaxGreen.x = m_fColor_Start_Particle[1];
+				//	m_pParticlePointDesc->vMinMaxBlue.x = m_fColor_Start_Particle[2];
+				//	m_pParticlePointDesc->vMinMaxAlpha.x = m_fColor_Start_Particle[3];
+				//}
+				//if (ImGui::ColorEdit4("End_Color_Particle", m_fColor_End_Particle, ImGuiColorEditFlags_None))
+				//{
+				//	m_pParticlePointDesc->vMinMaxRed.y = m_fColor_End_Particle[0];
+				//	m_pParticlePointDesc->vMinMaxGreen.y = m_fColor_End_Particle[1];
+				//	m_pParticlePointDesc->vMinMaxBlue.y = m_fColor_End_Particle[2];
+				//	m_pParticlePointDesc->vMinMaxAlpha.y = m_fColor_End_Particle[3];
+				//}
 
 
-				ImGui::SeparatorText("");
-				/* 라이프 타임 */
-				if (ImGui::DragFloat2("MinMaxLifeTime", m_vMinMaxLifeTime, 1.f, 0.f, 360.f))
-				{
-					if (m_vMinMaxLifeTime[0] > m_vMinMaxLifeTime[1])
-						m_vMinMaxLifeTime[0] = m_vMinMaxLifeTime[1];
+				//ImGui::ColorEdit4("Cur_Color_Particle", m_fColor_Cur_Particle, ImGuiColorEditFlags_None);
+				//m_fColor_Cur_Particle[0] = m_pParticlePointDesc->vCurrentColor.x;
+				//m_fColor_Cur_Particle[1] = m_pParticlePointDesc->vCurrentColor.y;
+				//m_fColor_Cur_Particle[2] = m_pParticlePointDesc->vCurrentColor.z;
+				//m_fColor_Cur_Particle[3] = m_pParticlePointDesc->vCurrentColor.w;
+				//ImGui::SeparatorText("");
 
-					m_pParticlePointDesc->vMinMaxLifeTime.x = m_vMinMaxLifeTime[0];
-					m_pParticlePointDesc->vMinMaxLifeTime.y = m_vMinMaxLifeTime[1];
-				}
+				//Select_EasingType(&m_pParticlePointDesc->eType_ColorLerp);
+
+
+				//ImGui::SeparatorText("");
+				///* 라이프 타임 */
+				//if (ImGui::DragFloat2("MinMaxLifeTime", m_vMinMaxLifeTime, 1.f, 0.f, 360.f))
+				//{
+				//	if (m_vMinMaxLifeTime[0] > m_vMinMaxLifeTime[1])
+				//		m_vMinMaxLifeTime[0] = m_vMinMaxLifeTime[1];
+
+				//	m_pParticlePointDesc->vMinMaxLifeTime.x = m_vMinMaxLifeTime[0];
+				//	m_pParticlePointDesc->vMinMaxLifeTime.y = m_vMinMaxLifeTime[1];
+				//}
 
 
 				/* 퍼지는 범위 */
@@ -636,31 +636,31 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticlePointDesc->vMinMaxRotationOffsetZ.y = m_vRotationOffsetZ[1];
 				}
 
-				/* 가속도 */
-				ImGui::SeparatorText("");
-				if (ImGui::DragFloat("AccPos_Particle", &m_fParticleAccPosition, 0.1f, 0.f, 1.f))
-					m_pParticlePointDesc->fAccPosition = m_fParticleAccPosition;
+				///* 가속도 */
+				//ImGui::SeparatorText("");
+				//if (ImGui::DragFloat("AccPos_Particle", &m_fParticleAccPosition, 0.1f, 0.f, 1.f))
+				//	m_pParticlePointDesc->fAccPosition = m_fParticleAccPosition;
 
-				if (ImGui::DragFloat("ACC_Particle", &m_fParticleAcceleration, 0.5f, 0.f, 100.f))
-					m_pParticlePointDesc->fSpeedAcc = m_fParticleAcceleration;
+				//if (ImGui::DragFloat("ACC_Particle", &m_fParticleAcceleration, 0.5f, 0.f, 100.f))
+				//	m_pParticlePointDesc->fSpeedAcc = m_fParticleAcceleration;
 
-				/* 중력 사용 여부 */
-				ImGui::SeparatorText("");
-				if (ImGui::Button("Gravity"))
-				{
-					m_pParticlePointDesc->bUseGravity = TRUE;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("NoGravity"))
-				{
-					m_pParticlePointDesc->bUseGravity = FALSE;
-				}
+				///* 중력 사용 여부 */
+				//ImGui::SeparatorText("");
+				//if (ImGui::Button("Gravity"))
+				//{
+				//	m_pParticlePointDesc->bUseGravity = TRUE;
+				//}
+				//ImGui::SameLine();
+				//if (ImGui::Button("NoGravity"))
+				//{
+				//	m_pParticlePointDesc->bUseGravity = FALSE;
+				//}
 
-				if (ImGui::DragFloat("UseGravityPosition", &m_fUseGravityPosition, 0.f, 0.f, 1.f))
-					m_pParticlePointDesc->fUseGravityPosition = m_fUseGravityPosition;
+				//if (ImGui::DragFloat("UseGravityPosition", &m_fUseGravityPosition, 0.f, 0.f, 1.f))
+				//	m_pParticlePointDesc->fUseGravityPosition = m_fUseGravityPosition;
 
-				if (ImGui::DragFloat("fGravityAcc", &m_fGravityAcc, -100.f, 0.f, 1.f))
-					m_pParticlePointDesc->fGravityAcc = m_fGravityAcc;
+				//if (ImGui::DragFloat("fGravityAcc", &m_fGravityAcc, -100.f, 0.f, 1.f))
+				//	m_pParticlePointDesc->fGravityAcc = m_fGravityAcc;
 
 
 			}
@@ -1070,22 +1070,22 @@ void CWindow_EffectTool::Update_MeshTab()
 				ImGui::SeparatorText("");
 				if (ImGui::Button(" FORCE "))
 				{
-					m_pMeshBufferDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::FORCE;
+					m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
 				}
 				ImGui::SameLine();
 				if (ImGui::Button(" IMPULSE "))
 				{
-					m_pMeshBufferDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::IMPULSE;
+					m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
 				}
 				ImGui::SameLine();
 				if (ImGui::Button(" ACCELERATION "))
 				{
-					m_pMeshBufferDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::ACCELERATION;
+					m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::ACCELERATION;
 				}
 				ImGui::SameLine();
 				if (ImGui::Button(" VELOCITY_CHANGE "))
 				{
-					m_pMeshBufferDesc->eForce_Mode = CVIBuffer_Effect_Model_Instance::VELOCITY_CHANGE;
+					m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::VELOCITY_CHANGE;
 				}
 
 				if (ImGui::DragFloat2("Power_Mesh", m_vMinMaxPower_Mesh, 10.f, 0.1f))
@@ -1194,7 +1194,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 		if (CEffect_Void::PARTICLE == eType_Effect)
 		{
 			m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-			CVIBuffer_Particle_Point* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
+			CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 			m_pParticlePointDesc = pVIBuffer->Get_Desc();
 
 			m_pCurPartEffect->Set_RemainTime(m_vTimes_Part[2]);
@@ -1213,7 +1213,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_iShaderPassIndex_Particle = m_pParticleDesc->iShaderPassIndex;
 			m_iRenderGroup_Particle = m_pParticleDesc->iRenderGroup;
 
-			m_iNumInstance = pVIBuffer->Get_NumInstance();
+			//m_iNumInstance = pVIBuffer->Get_NumInstance();
 
 			if (m_pParticleDesc->bBillBoard)
 				m_iBillBoard = 0;
@@ -1235,20 +1235,20 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_fUV_RotDegree = m_pParticleDesc->fUV_RotDegree;
 
-			if (m_pParticlePointDesc->vAddScale.x == m_pParticlePointDesc->vAddScale.y)
-				m_fAddScale = m_pParticlePointDesc->vAddScale.x;
-			m_vAddScale[0] = m_pParticlePointDesc->vAddScale.x;
-			m_vAddScale[1] = m_pParticlePointDesc->vAddScale.y;
+			//if (m_pParticlePointDesc->vAddScale.x == m_pParticlePointDesc->vAddScale.y)
+			//	m_fAddScale = m_pParticlePointDesc->vAddScale.x;
+			//m_vAddScale[0] = m_pParticlePointDesc->vAddScale.x;
+			//m_vAddScale[1] = m_pParticlePointDesc->vAddScale.y;
 
-			m_vMinMaxLifeTime[0] = m_pParticlePointDesc->vMinMaxLifeTime.x;
-			m_vMinMaxLifeTime[1] = m_pParticlePointDesc->vMinMaxLifeTime.y;
+			//m_vMinMaxLifeTime[0] = m_pParticlePointDesc->vMinMaxLifeTime.x;
+			//m_vMinMaxLifeTime[1] = m_pParticlePointDesc->vMinMaxLifeTime.y;
 
 			m_vMinMaxRange[0] = m_pParticlePointDesc->vMinMaxRange.x;
 			m_vMinMaxRange[1] = m_pParticlePointDesc->vMinMaxRange.y;
 
 
-			m_vMinMaxLengthPosition[0] = m_pParticlePointDesc->vMinMaxRangeLength.x;
-			m_vMinMaxLengthPosition[1] = m_pParticlePointDesc->vMinMaxRangeLength.y;
+			//m_vMinMaxLengthPosition[0] = m_pParticlePointDesc->vMinMaxRangeLength.x;
+			//m_vMinMaxLengthPosition[1] = m_pParticlePointDesc->vMinMaxRangeLength.y;
 
 			m_vRotationOffsetX[0] = m_pParticlePointDesc->vMinMaxRotationOffsetX.x;
 			m_vRotationOffsetX[1] = m_pParticlePointDesc->vMinMaxRotationOffsetX.y;
@@ -1259,21 +1259,21 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vRotationOffsetZ[0] = m_pParticlePointDesc->vMinMaxRotationOffsetZ.x;
 			m_vRotationOffsetZ[1] = m_pParticlePointDesc->vMinMaxRotationOffsetZ.y;
 
-			m_fParticleAcceleration = m_pParticlePointDesc->fSpeedAcc;
-			m_fParticleAccPosition = m_pParticlePointDesc->fAccPosition;
+			//m_fParticleAcceleration = m_pParticlePointDesc->fSpeedAcc;
+			//m_fParticleAccPosition = m_pParticlePointDesc->fAccPosition;
 
-			m_fUseGravityPosition = m_pParticlePointDesc->fUseGravityPosition;
-			m_fGravityAcc = m_pParticlePointDesc->fGravityAcc;
+			//m_fUseGravityPosition = m_pParticlePointDesc->fUseGravityPosition;
+			//m_fGravityAcc = m_pParticlePointDesc->fGravityAcc;
 
-			m_fColor_Start_Particle[0] = m_pParticlePointDesc->vMinMaxRed.x;
-			m_fColor_Start_Particle[1] = m_pParticlePointDesc->vMinMaxBlue.x;
-			m_fColor_Start_Particle[2] = m_pParticlePointDesc->vMinMaxGreen.x;
-			m_fColor_Start_Particle[3] = m_pParticlePointDesc->vMinMaxAlpha.x;
+			//m_fColor_Start_Particle[0] = m_pParticlePointDesc->vMinMaxRed.x;
+			//m_fColor_Start_Particle[1] = m_pParticlePointDesc->vMinMaxBlue.x;
+			//m_fColor_Start_Particle[2] = m_pParticlePointDesc->vMinMaxGreen.x;
+			//m_fColor_Start_Particle[3] = m_pParticlePointDesc->vMinMaxAlpha.x;
 
-			m_fColor_End_Particle[0] = m_pParticlePointDesc->vMinMaxRed.y;
-			m_fColor_End_Particle[1] = m_pParticlePointDesc->vMinMaxBlue.y;
-			m_fColor_End_Particle[2] = m_pParticlePointDesc->vMinMaxGreen.y;
-			m_fColor_End_Particle[3] = m_pParticlePointDesc->vMinMaxAlpha.y;
+			//m_fColor_End_Particle[0] = m_pParticlePointDesc->vMinMaxRed.y;
+			//m_fColor_End_Particle[1] = m_pParticlePointDesc->vMinMaxBlue.y;
+			//m_fColor_End_Particle[2] = m_pParticlePointDesc->vMinMaxGreen.y;
+			//m_fColor_End_Particle[3] = m_pParticlePointDesc->vMinMaxAlpha.y;
 
 		}
 
@@ -1368,133 +1368,133 @@ void CWindow_EffectTool::Select_EasingType(EASING_TYPE* eType)
 	{
 		if (ImGui::Button("LINEAR"))
 		{
-			*eType = LINEAR;
+			*eType = EASING_TYPE::LINEAR;
 		}
 		if (ImGui::Button("QUAD_IN"))
 		{
-			*eType = QUAD_IN;
+			*eType = EASING_TYPE::QUAD_IN;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("QUAD_OUT"))
 		{
-			*eType = QUAD_OUT;
+			*eType = EASING_TYPE::QUAD_OUT;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("QUAD_INOUT"))
 		{
-			*eType = QUAD_INOUT;
+			*eType = EASING_TYPE::QUAD_INOUT;
 		}
 		if (ImGui::Button("CUBIC_IN"))
 		{
-			*eType = CUBIC_IN;
+			*eType = EASING_TYPE::CUBIC_IN;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("CUBIC_OUT"))
 		{
-			*eType = CUBIC_OUT;
+			*eType = EASING_TYPE::CUBIC_OUT;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("CUBIC_INOUT"))
 		{
-			*eType = CUBIC_INOUT;
+			*eType = EASING_TYPE::CUBIC_INOUT;
 		}
 		if (ImGui::Button("QUART_IN"))
 		{
-			*eType = QUART_IN;
+			*eType = EASING_TYPE::QUART_IN;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("QUART_OUT"))
 		{
-			*eType = QUART_OUT;
+			*eType = EASING_TYPE::QUART_OUT;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("QUART_INOUT"))
 		{
-			*eType = QUART_INOUT;
+			*eType = EASING_TYPE::QUART_INOUT;
 		}
 		if (ImGui::Button("QUINT_IN"))
 		{
-			*eType = QUINT_IN;
+			*eType = EASING_TYPE::QUINT_IN;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("QUINT_OUT"))
 		{
-			*eType = QUINT_OUT;
+			*eType = EASING_TYPE::QUINT_OUT;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("QUINT_INOUT"))
 		{
-			*eType = QUINT_INOUT;
+			*eType = EASING_TYPE::QUINT_INOUT;
 		}
 		if (ImGui::Button("SINE_IN"))
 		{
-			*eType = SINE_IN;
+			*eType = EASING_TYPE::SINE_IN;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("SINE_OUT"))
 		{
-			*eType = SINE_OUT;
+			*eType = EASING_TYPE::SINE_OUT;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("SINE_INOUT"))
 		{
-			*eType = SINE_INOUT;
+			*eType = EASING_TYPE::SINE_INOUT;
 		}
 		if (ImGui::Button("EXPO_IN"))
 		{
-			*eType = EXPO_IN;
+			*eType = EASING_TYPE::EXPO_IN;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("EXPO_OUT"))
 		{
-			*eType = EXPO_OUT;
+			*eType = EASING_TYPE::EXPO_OUT;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("EXPO_INOUT"))
 		{
-			*eType = EXPO_INOUT;
+			*eType = EASING_TYPE::EXPO_INOUT;
 		}
 		if (ImGui::Button("CIRC_IN"))
 		{
-			*eType = CIRC_IN;
+			*eType = EASING_TYPE::CIRC_IN;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("CIRC_OUT"))
 		{
-			*eType = CIRC_OUT;
+			*eType = EASING_TYPE::CIRC_OUT;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("CIRC_INOUT"))
 		{
-			*eType = CIRC_INOUT;
+			*eType = EASING_TYPE::CIRC_INOUT;
 		}
 		if (ImGui::Button("ELASTIC_IN"))
 		{
-			*eType = ELASTIC_IN;
+			*eType = EASING_TYPE::ELASTIC_IN;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("ELASTIC_OUT"))
 		{
-			*eType = ELASTIC_OUT;
+			*eType = EASING_TYPE::ELASTIC_OUT;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("ELASTIC_INOUT"))
 		{
-			*eType = ELASTIC_INOUT;
+			*eType = EASING_TYPE::ELASTIC_INOUT;
 		}
 		if (ImGui::Button("BOUNCE_IN"))
 		{
-			*eType = BOUNCE_IN;
+			*eType = EASING_TYPE::BOUNCE_IN;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("BOUNCE_OUT"))
 		{
-			*eType = BOUNCE_OUT;
+			*eType = EASING_TYPE::BOUNCE_OUT;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("ELASTIC_INOUT"))
 		{
-			*eType = ELASTIC_INOUT;
+			*eType = EASING_TYPE::ELASTIC_INOUT;
 		}
 	}
 }
@@ -1624,7 +1624,7 @@ void CWindow_EffectTool::Update_EffectList()
 				if (CEffect_Void::PARTICLE == eType_Effect)
 				{
 					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-					CVIBuffer_Particle_Point* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
+					CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 					m_pParticlePointDesc = pVIBuffer->Get_Desc();
 
 					m_pParticleDesc->bActive_Tool = TRUE;
@@ -1647,7 +1647,7 @@ void CWindow_EffectTool::Update_EffectList()
 				if (CEffect_Void::PARTICLE == eType_Effect)
 				{
 					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-					CVIBuffer_Particle_Point* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
+					CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 					m_pParticlePointDesc = pVIBuffer->Get_Desc();
 
 					m_pParticleDesc->bActive_Tool = FALSE;
@@ -1668,7 +1668,7 @@ void CWindow_EffectTool::Update_EffectList()
 				if (CEffect_Void::PARTICLE == eType_Effect)
 				{
 					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-					CVIBuffer_Particle_Point* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
+					CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 					m_pParticlePointDesc = pVIBuffer->Get_Desc();
 
 					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom()->ReSet();
@@ -1735,7 +1735,7 @@ void CWindow_EffectTool::Update_EffectList()
 					if (CEffect_Void::PARTICLE == eType_Effect)
 					{
 						m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-						CVIBuffer_Particle_Point* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
+						CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 						m_pParticlePointDesc = pVIBuffer->Get_Desc();
 
 					}
@@ -1968,7 +1968,7 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		tParticleDesc.bPlay = { TRUE };
 
 		tParticleDesc.bUseSpriteAnim = { FALSE };
-		tParticleDesc.iCurNumInstance = { 200 };
+		tParticleDesc.bUseRigidBody = { TRUE };
 
 #pragma region 리스트 문자열 관련
 		wstring strName = TEXT("");
@@ -2184,8 +2184,6 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tMeshDesc.iShaderPassIndex = { 0 };
 
 		tMeshDesc.iRenderGroup = { 9 };
-
-		tMeshDesc.bUseRigidBody = { TRUE };
 
 		tMeshDesc.bBillBoard = { FALSE };
 

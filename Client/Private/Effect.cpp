@@ -246,6 +246,8 @@ void CEffect::Load_FromJson(const json& In_Json)
 				m_pGameInstance->String_To_WString(strTag, tVoidDesc.strTextureTag[j]);
 			}
 
+			tVoidDesc.iCurNumInstance = In_Json["Part"][i]["iCurNumInstance"];
+
 			tVoidDesc.bUseSpriteAnim = In_Json["Part"][i]["bUseSpriteAnim"];
 			tVoidDesc.bUseRigidBody = In_Json["Part"][i]["bUseRigidBody"];
 
