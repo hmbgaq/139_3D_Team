@@ -278,10 +278,12 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
+    // MRT_GameObject : Bloom or MRT_Bloom_Blur 
     vector vBloom = float4(0.f, 0.f, 0.f, 0.f);
     if (g_Bloom_Rim_Desc.bBloom_Active)
         vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
 	
+    // MRT_GameObject : RimLight or MRT_Rim_Blur 
     vector vRimLight = float4(0.f, 0.f, 0.f, 0.f);
     if (g_Bloom_Rim_Desc.bRimLight_Active)
         vRimLight = g_RimLightTarget.Sample(LinearSampler, In.vTexcoord);
@@ -313,7 +315,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
     if (g_bSSAO_Active)
         vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
-	
+    
     Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
     
     float fViewZ = vDepthDesc.y * g_CamFar;

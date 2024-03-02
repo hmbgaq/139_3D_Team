@@ -577,7 +577,7 @@ HRESULT CRenderer::Render_Alphablend(const wstring& Begin_MRT_Tag, const wstring
 
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Blend_Target_Tag, m_pShader_Final, "g_BlendMixTarget")); /* Nonblend 결과 - SV_3번 깊이값 */
 
-	FAILED_CHECK(m_pShader_Deferred->Begin(ECast(FINAL_SHADER::FINAL_MIX)));
+	FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL_MIX)));
 
 	FAILED_CHECK(m_pVIBuffer->Render());
 
@@ -759,6 +759,9 @@ HRESULT CRenderer::Create_RenderTarget()
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Debug"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)))
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Debug"), TEXT("Target_Debug")));
 
+	/* MRT_Blend */
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blend"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)))
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Blend"), TEXT("Target_Blend")));
 
 	/* MRT_Effect - clear color가 111의 흰색일경우 이펙트에 묻어나와서 무조건 000 으로 클리어해야함  */
 	//FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
