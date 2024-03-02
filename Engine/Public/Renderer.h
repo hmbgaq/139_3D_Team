@@ -42,7 +42,6 @@ private:
 
 	HRESULT Render_NonBlend();
 	HRESULT Render_Shadow();
-	HRESULT Render_Cascade();
 	HRESULT Render_LightAcc();
 	HRESULT Render_HBAO_PLUS();
 	HRESULT Render_BloomBlur();

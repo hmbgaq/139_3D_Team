@@ -31,9 +31,12 @@ private:
 	/* Level Shader Struct */
 	HBAO_PLUS_DESC	m_eHBAO_Desc = {};
 	FOG_DESC		m_eFog_Desc = {};
-	HDR_DESC		m_eHDR_Desc = {};
-	SCREEN_DESC		m_eScreen_Desc = {};
+	BLOOMRIM_DESC	m_eScreen_Desc = {};
+
 	RADIAL_DESC		m_eRadial_Desc = {};
+	HDR_DESC		m_eHDR_Desc = {};
+	ANTI_DESC		m_eAnti_Desc = {};
+	HSV_DESC		m_eHSV_Desc = {};
 	LEVEL_SHADER_DESC m_eTotalShader_Desc = {};
 
 private:
@@ -53,6 +56,7 @@ private:
 	/* Compress */
 	void Compress_HBAO_Plus_Setting();
 	void Compress_Fog_Setting();
+
 	void Compress_Radial_Setting();
 	void Compress_HDR_Setting();
 	void Compress_FXAA_Setting();

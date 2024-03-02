@@ -112,9 +112,9 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_FXAA_Setting();
 		ImGui::TreePop();
 	}
-	if (ImGui::TreeNode("Screen Setting"))
+	if (ImGui::TreeNode("Screen HSV"))
 	{
-		Compress_Screen_Setting();
+		Compress_HSV_Setting();
 		ImGui::TreePop();
 	}
 }
@@ -204,7 +204,7 @@ void CWindow_ShaderTool::Compress_FXAA_Setting()
 	m_pGameInstance->Get_Renderer()->Set_Screen_Option(m_eScreen_Desc);
 }
 
-void CWindow_ShaderTool::Compress_Screen_Setting()
+void CWindow_ShaderTool::Compress_HSV_Setting()
 {
 	ImGui::SliderFloat("Brightness", &m_eScreen_Desc.fFinal_Brightness, 0.0f, 2.0f, "Brightness = %.3f");
 

@@ -152,10 +152,7 @@ HRESULT CGameInstance::Render_Engine()
 		nullptr == m_pRenderer)
 		return E_FAIL;
 
-	m_pRenderer->Pre_Setting();
-
 	m_pRenderer->Draw_RenderGroup();
-
 
 #ifdef _DEBUG
 	m_pLevel_Manager->Render();
@@ -440,19 +437,19 @@ CRenderer* CGameInstance::Get_Renderer()
 	return m_pRenderer;
 }
 
-HRESULT CGameInstance::Add_CascadeObject(CGameObject* pGameObject)
+#ifdef _DEBUG
+void CGameInstance::Set_RenderDebugCom(_bool _bRenderDebug)
 {
-	if (nullptr == m_pRenderer)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pRenderer, );
 
-	return m_pRenderer->Add_CascadeObject(pGameObject);
+	m_pRenderer->Set_DebugCom(_bRenderDebug);
 }
 
-
-#ifdef _DEBUG
-void CGameInstance::Set_RenderDebug(_bool _bRenderDebug)
+void CGameInstance::Set_RenderDebugTarget(_bool _bRenderTarget)
 {
-	m_pRenderer->Set_RenderDebug(_bRenderDebug);
+	/* µğ¹ö±×¿ë ·»´õÅ¸°Ù */
+	NULL_CHECK_RETURN(m_pRenderer, );
+	m_pRenderer->Set_DebugRenderTarget(_bRenderTarget);
 }
 #endif
 

@@ -37,6 +37,7 @@ Texture2D g_SSAOTexture;
 Texture2D g_BloomTarget;
 Texture2D g_OutlineTarget;
 Texture2D g_PerlinNoiseTexture;
+Texture2D g_RimLightTarget;
 
 /* 활성 여부 */ 
 bool g_bSSAO_Active;
@@ -60,7 +61,17 @@ struct FOG_DESC
     float fFogHeightDensity;
 };
 
+struct BLOOMRIM_DESC
+{
+    bool bBloom_Active;
+    bool bBloomBlur_Active;
+
+    bool bRimLight_Active;
+    bool bRimBlur_Active;
+};
+
 FOG_DESC g_Fogdesc;
+BLOOMRIM_DESC g_Bloom_Rim_Desc;
 /* ------------------ Function ------------------ */ 
 
 float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise, FOG_DESC desc)
@@ -270,11 +281,13 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    FOG_DESC Fog = g_Fogdesc;
-    
     vector vBloom = float4(0.f, 0.f, 0.f, 0.f);
-    if (g_bBloom_Active)
+    if (g_Bloom_Rim_Desc.bBloom_Active)
         vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
+	
+    vector vRimLight = float4(0.f, 0.f, 0.f, 0.f);
+    if (g_Bloom_Rim_Desc.bRimLight_Active)
+        vRimLight = g_RimLightTarget.Sample(LinearSampler, In.vTexcoord);
 	
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
 
@@ -284,30 +297,28 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
         if (vPriority.a == 0.f)
             discard;
         
-        Out.vColor = vPriority + vBloom;
+        Out.vColor = vPriority + vBloom + vRimLight;
+        return Out;
     }
-    else
-    {
-        vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
-        vShade = saturate(vShade);
+    // MRT_LightAcc : Shade 
+    vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
+    vShade = saturate(vShade);
 	
-        vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-        vSpecular = saturate(vSpecular);
+    // MRT_GameObject : Specular 
+    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    vSpecular = saturate(vSpecular);
 	
-        vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
-        if (g_bSSAO_Active)
-            vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord); /* SSAO 적용 */
-	
-       // vector vOutline = float4(1.f, 1.f, 1.f, 1.f);
-       // if (g_Outline_Active)
-       //     vOutline = g_OutlineTarget.Sample(LinearSampler, In.vTexcoord);
-	
-    
-       // Out.vColor = ((vDiffuse * vShade * vSSAO) + vSpecular + vBloom) * vOutline;
-        Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
-        Out.vColor.a = 1.f;
-    }
+    // MRT_GameObject : Depth
     vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
+    if (vDepthDesc.w != 1.f) 
+        vSpecular = float4(0.f, 0.f, 0.f, 0.f);
+    
+    vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
+    if (g_bSSAO_Active)
+        vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
+	
+    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
+    
     float fViewZ = vDepthDesc.y * g_CamFar;
 	
     vector vWorldPos;
@@ -336,7 +347,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     
         float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
     
-        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, Fog);
+        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
     
         Out.vColor = vector(vFinalColor.rgb, 1.f);
     }
