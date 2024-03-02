@@ -36,12 +36,17 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_DebugRender());
 #endif
 
-	m_tBloomRim_Option.bBloom_Active = false;
+	m_tBloomRim_Option.bBloom_Active = true;
+	m_tBloomRim_Option.bBloomBlur_Active = true;
 	m_tBloomRim_Option.bRimLight_Active = false;
+	m_tBloomRim_Option.bRimBlur_Active = false;
 	m_tHBAO_Option.bHBAO_Active = false;
 	m_tFog_Option.bFog_Active = false;
 	m_tRadial_Option.bRadial_Active = false;
 	m_tHDR_Option.bHDR_Active = false;
+
+	m_bDebugRenderTarget = true;
+	m_bDebugCom = true;
 	return S_OK;
 }
 
@@ -71,7 +76,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (m_tBloomRim_Option.bRimBlur_Active)
 		FAILED_CHECK(Render_RimBlur());
 
-	FAILED_CHECK(Render_Deferred()); /*  -> 앞서그린 Priority랑 합침 */
+	FAILED_CHECK(Render_Deferred()); /*   */
 
 	/* --- Post Processing --- */
 
@@ -88,7 +93,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	//FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
 	
 	/* 최종 합성 */
-	//FAILED_CHECK(Render_Final());
+	FAILED_CHECK(Render_Final());
 
 	FAILED_CHECK(Render_Blend());  
 
@@ -514,6 +519,27 @@ HRESULT CRenderer::Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bCl
 	FAILED_CHECK(m_pShader_Blur->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
 	FAILED_CHECK(m_pShader_Blur->Begin(eBlendType));
+
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Alphablend(const wstring& Begin_MRT_Tag, const wstring& Blend_Target_Tag)
+{
+	// Render_Alphablend(TEXT("MRT_Final"), TEXT("Target_Deferred"));
+	// MRT의 타겟으로 BlendTarget과 섞는것 
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(Begin_MRT_Tag, m_pLightDepthDSV));
+
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Blend_Target_Tag, m_pShader_Final, "g_BlendMixTarget")); /* Nonblend 결과 - SV_3번 깊이값 */
+
+	FAILED_CHECK(m_pShader_Deferred->Begin(ECast(FINAL_SHADER::FINAL_MIX)));
 
 	FAILED_CHECK(m_pVIBuffer->Render());
 

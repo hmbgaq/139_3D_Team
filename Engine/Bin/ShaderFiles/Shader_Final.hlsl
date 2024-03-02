@@ -23,21 +23,6 @@ struct VS_OUT
     float2 vTexcoord : TEXCOORD0;
 };
 
-VS_OUT VS_MAIN_FINAL(VS_IN In)
-{
-    VS_OUT Out = (VS_OUT) 0;
-
-    matrix matWV, matWVP;
-
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
-
-    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-    Out.vTexcoord = In.vTexcoord;
-
-    return Out;
-}
-
 
 struct PS_IN
 {
@@ -60,6 +45,21 @@ float3 AdjustHue(float3 hsv, float hueShift)
     hsv.x = frac(hsv.x); // 0~1 범위로 유지
 
     return hsv;
+}
+
+VS_OUT VS_MAIN(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+
+    matrix matWV, matWVP;
+
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+
+    return Out;
 }
 
 PS_OUT PS_MAIN_FINAL(PS_IN In)
