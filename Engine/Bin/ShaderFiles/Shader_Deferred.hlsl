@@ -350,8 +350,8 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     
         Out.vColor = vector(vFinalColor.rgb, 1.f);
     }
-    else if (false == g_bFog_Active)
-    {
+    
+    
         vWorldPos = mul(vWorldPos, g_LightViewMatrix);
         vWorldPos = mul(vWorldPos, g_LightProjMatrix);
    
@@ -364,7 +364,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
    
         if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
             Out.vColor = Out.vColor * 0.8f;
-    }
+    
   
     return Out;
 }

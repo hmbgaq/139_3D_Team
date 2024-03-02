@@ -180,6 +180,9 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 	
     Out.vColor = vFinal + vDebug;
     
+    if(Out.vColor.a ==0)
+        discard;
+    
     return Out;
 }
 /* ------------------ Technique ------------------ */
