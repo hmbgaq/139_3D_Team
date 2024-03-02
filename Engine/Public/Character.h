@@ -13,7 +13,7 @@ BEGIN(Engine)
 class CNavigation;
 class CRigidBody;
 
-//class CPhysXCharacterController;
+class CPhysXController;
 
 class ENGINE_DLL CCharacter abstract : public CGameObject
 {
@@ -144,8 +144,8 @@ protected:
 	CCharacter* m_pTarget = { nullptr };
 
 protected:
-	//CPhysXController* m_pPhysXControllerCom = { nullptr };
-	//PxControllerCollisionFlags m_LastCollisionFlags;
+	CPhysXController* m_pPhysXControllerCom = { nullptr };
+	PxControllerCollisionFlags m_LastCollisionFlags;
 
 protected:
 	map<const wstring, class CGameObject*>		m_PartObjects;

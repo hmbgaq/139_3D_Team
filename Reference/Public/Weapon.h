@@ -36,20 +36,8 @@ public:
 	virtual HRESULT Render_Shadow() override;
 
 public:
-	void Attack(CCharacter* pCharacter, _float3 vLocalPos);
-
-public:
 	_float4x4	Get_WeaponWorldMatrix() { return m_WorldMatrix; }
 	void		Set_WeaponWorldMatrix(_float4x4 _WorldMatrix) { m_WorldMatrix = _WorldMatrix; }
-
-public:
-	void Set_Use(_bool _bUse) {
-		m_bUse = _bUse;
-	}
-
-	_bool Get_Use() {
-		return m_bUse;
-	}
 
 public:
 	CCharacter* Get_Target_Character(CCollider* other);
@@ -60,8 +48,6 @@ public:
 	CWeapon* Activate_Collisions(_bool _bActivate);
 	CWeapon* Set_Force(_float _fForce);
 	CWeapon* Set_Dir(_float3 _vDir);
-
-
 
 
 
@@ -96,8 +82,6 @@ protected:
 	_uint		m_iDamage = { 0 };
 	_float		m_fForce = { 0.f };
 	_float3		m_vDir = { 0.f, 0.f, 0.f };
-
-	_bool		m_bUse = { true };
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

@@ -41,6 +41,17 @@ HRESULT CPlayer::Initialize(void* pArg)
 		m_pActor->Set_State(new CPlayer_IdleLoop());
 	}
 
+
+	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"),
+		TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom))))
+		return E_FAIL;
+
+	m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
+
+
 	CData_Manager::GetInstance()->Set_Player(this);
 
 	return S_OK;

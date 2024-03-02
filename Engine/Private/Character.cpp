@@ -39,16 +39,11 @@ HRESULT CCharacter::Initialize(void* pArg)
 	m_pRigidBody = CRigidBody::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pRigidBody)
 		return E_FAIL;
-
 	if (nullptr != Find_Component(g_pRigidBodyTag))
 		return E_FAIL;
-
 	m_Components.emplace(g_pRigidBodyTag, m_pRigidBody);
-
 	Safe_AddRef(m_pRigidBody);
-
 	m_pRigidBody->Set_Owner(this);
-
 	m_pRigidBody->Set_Transform(m_pTransformCom);
 
 

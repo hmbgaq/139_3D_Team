@@ -1,23 +1,20 @@
-#include "..\Public\Weapon.h"
-
-#include "GameInstance.h"
+#include "..\Public\Projectile.h"
+#include "Collider.h"
+#include "Transform.h"
 #include "Character.h"
+#include "GameInstance.h"
 
-#include "Bone.h"
-
-CWeapon::CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CProjectile::CProjectile(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
-CWeapon::CWeapon(const CWeapon& rhs)
+CProjectile::CProjectile(const CProjectile& rhs)
 	: CGameObject(rhs)
-	, m_pColliders(rhs.m_pColliders)
-	, m_iColliderSize(rhs.m_iColliderSize)
 {
 }
 
-HRESULT CWeapon::Initialize_Prototype()
+HRESULT CProjectile::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -25,19 +22,8 @@ HRESULT CWeapon::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CWeapon::Initialize(void* pArg)
+HRESULT CProjectile::Initialize(void* pArg)
 {
-	m_pParentTransform = (reinterpret_cast<WEAPON_DESC*>(pArg))->m_pParentTransform;
-	if (nullptr == m_pParentTransform)
-		return E_FAIL;
-	Safe_AddRef(m_pParentTransform);
-
-	m_pSocketBone = (reinterpret_cast<WEAPON_DESC*>(pArg))->m_pSocketBone;
-	if (nullptr == m_pSocketBone)
-		return E_FAIL;
-	Safe_AddRef(m_pSocketBone);
-
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -48,46 +34,23 @@ HRESULT CWeapon::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CWeapon::Priority_Tick(_float fTimeDelta)
+void CProjectile::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 }
 
-void CWeapon::Tick(_float fTimeDelta)
+void CProjectile::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	for (_uint i = 0; i < m_iColliderSize; ++i)
-		m_pColliders[i]->Update(m_WorldMatrix);
-
-	//m_pCollider->Update(m_WorldMatrix);
-
+	m_pCollider->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
-void CWeapon::Late_Tick(_float fTimeDelta)
+void CProjectile::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	_matrix		SocketMatrix = m_pSocketBone->Get_CombinedTransformationMatrix();
-
-	for (size_t i = 0; i < 3; i++)
-	{
-		SocketMatrix.r[i] = XMVector3Normalize(SocketMatrix.r[i]);
-	}
-
-	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * m_pParentTransform->Get_WorldMatrix());
-
-
-#ifdef _DEBUG
-	for (_uint i = 0; i < m_iColliderSize; ++i)
-		m_pGameInstance->Add_DebugRender(m_pColliders[i]);
-#endif
-
-	if (nullptr == m_pModelCom)
-		return;
-
-
-	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
+	if (true == m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f))
 	{
 		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 			return;
@@ -97,7 +60,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 	}
 }
 
-HRESULT CWeapon::Render()
+HRESULT CProjectile::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
@@ -119,9 +82,9 @@ HRESULT CWeapon::Render()
 	return S_OK;
 }
 
-HRESULT CWeapon::Render_Shadow()
+HRESULT CProjectile::Render_Shadow()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldFloat4x4())))
 		return E_FAIL;
 
 	_float4x4		ViewMatrix, ProjMatrix;
@@ -152,8 +115,7 @@ HRESULT CWeapon::Render_Shadow()
 	return S_OK;
 }
 
-
-CCharacter* CWeapon::Get_Target_Character(CCollider* other)
+CCharacter* CProjectile::Get_Target_Character(CCollider* other)
 {
 	if (nullptr == other || nullptr == other->Get_Owner() || nullptr == other->Get_Owner()->Get_Object_Owner())
 		return nullptr;
@@ -165,58 +127,38 @@ CCharacter* CWeapon::Get_Target_Character(CCollider* other)
 	return pTarget_Character;
 }
 
-CWeapon* CWeapon::Set_Damage(_int _iDamage)
+CProjectile* CProjectile::Set_Damage(_int _iDamage)
 {
 	m_iDamage = _iDamage;
 
 	return this;
 }
 
-CWeapon* CWeapon::Set_Direction(Direction _eHitDirection)
+CProjectile* CProjectile::Set_Direction(Direction _eHitDirection)
 {
 	m_eHitDirection = _eHitDirection;
 
 	return this;
 }
 
-CWeapon* CWeapon::Set_Power(Power _eHitPower)
+CProjectile* CProjectile::Set_Power(Power _eHitPower)
 {
 	m_eHitPower = _eHitPower;
 
 	return this;
 }
 
-CWeapon* CWeapon::Activate_Collisions(_bool _bActivate)
-{
-	for (CCollider* pCollider : m_pColliders)
-	{
-		pCollider->Set_Enable(_bActivate);
-	}
 
-	return this;
-}
-
-CWeapon* CWeapon::Set_Force(_float _fForce)
+CProjectile* CProjectile::Set_Force(_float _fForce)
 {
 	m_fForce = _fForce;
 
 	return this;
 }
 
-CWeapon* CWeapon::Set_Dir(_float3 _vDir)
+HRESULT CProjectile::Bind_ShaderResources()
 {
-	m_vDir = _vDir;
-
-	return this;
-}
-
-
-
-
-
-HRESULT CWeapon::Bind_ShaderResources()
-{
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldFloat4x4())))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
 		return E_FAIL;
@@ -226,18 +168,11 @@ HRESULT CWeapon::Bind_ShaderResources()
 	return S_OK;
 }
 
-void CWeapon::Free()
+void CProjectile::Free()
 {
 	__super::Free();
-	for (_uint i = 0; i < m_iColliderSize; ++i) 
-	{
-	   Safe_Release(m_pColliders[i]);
-	}
-	m_pColliders.clear();
-	Safe_Release(m_pParentTransform);
-	Safe_Release(m_pSocketBone);
+
+	Safe_Release(m_pCollider);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);
-
-	//Safe_Release(m_pCollider);
 }

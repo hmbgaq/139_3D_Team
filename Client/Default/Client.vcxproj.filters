@@ -1375,6 +1375,9 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\State\5. Hit\1. Light%28이상함%29\Right\Opened">
       <UniqueIdentifier>{c46ff38a-faad-44c7-9257-968c5624468f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04. Projectile">
+      <UniqueIdentifier>{969f7600-7071-4a12-871e-03a47d7032f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -2561,6 +2564,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Player_Weapon_Punch.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Projectile.h">
+      <Filter>02.GameObjects\04. Projectile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3852,6 +3858,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_Weapon_Punch.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Projectile.cpp">
+      <Filter>02.GameObjects\04. Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
