@@ -356,6 +356,14 @@ namespace Engine
 
 	}HBAO_PLUS_DESC;
 
+	typedef struct ENGINE_DLL tagBloomRim_Desc
+	{
+		_bool	bBloom_Active		= { false };
+		_bool	bBloomBlur_Active	= { false };
+		_bool	bRimLight_Active	= { false };
+		_bool	bRimBlur_Active		= { false };
+	}BLOOMRIM_DESC;
+
 	typedef struct ENGINE_DLL tagFogDesc
 	{
 		bool  bFog_Active			= false;
@@ -374,13 +382,18 @@ namespace Engine
 
 	}HDR_DESC;
 
+	typedef struct ENGINE_DLL tagAnti_Aliasing
+	{
+		_bool  bFXAA_Active = false;
+	}ANTI_DESC;
+
 	typedef struct ENGINE_DLL tagScreenDesc
 	{
-		_bool  bFXAA_Active		= false;
-		_float fFinal_Saturation	= 1.f;
-		_float fFinal_Brightness	= 1.f;
+		_bool bScreen_Active = false;
+		_float fFinal_Saturation = 1.f;
+		_float fFinal_Brightness = 1.f;
 
-	}SCREEN_DESC;
+	}HSV_DESC;
 
 	typedef struct ENGINE_DLL tagRadialBlurDesc
 	{
