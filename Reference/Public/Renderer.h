@@ -47,10 +47,15 @@ private:
 	HRESULT Render_BloomBlur();
 	HRESULT Render_Deferred();
 	HRESULT Render_RimBlur();
+
+	HRESULT Render_RadialBlur();
+	HRESULT Render_HDR();
+	HRESULT Render_FXAA();
+	HRESULT Render_HSV();
 	HRESULT Render_Final();
 
-	HRESULT Render_HSV();
 	HRESULT Render_Blend();
+	HRESULT Render_Effect();
 	HRESULT Render_UI();
 
 	/* ETC */
@@ -132,8 +137,8 @@ private:
 	HRESULT Ready_DebugRender();
 	HRESULT Render_DebugCom();
 	HRESULT Render_DebugTarget();
-	_bool						m_bDebugRenderTarget = { false };
-	_bool						m_bDebugCom = { false };
+	_bool	m_bDebugRenderTarget = { false };
+	_bool	m_bDebugCom = { false };
 	list<class CComponent*>		m_DebugComponent;
 #endif	
 

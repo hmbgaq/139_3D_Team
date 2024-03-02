@@ -47,10 +47,15 @@ private:
 	HRESULT Render_BloomBlur();
 	HRESULT Render_Deferred();
 	HRESULT Render_RimBlur();
+
+	HRESULT Render_RadialBlur();
+	HRESULT Render_HDR();
+	HRESULT Render_FXAA();
+	HRESULT Render_HSV();
 	HRESULT Render_Final();
 
-	HRESULT Render_HSV();
 	HRESULT Render_Blend();
+	HRESULT Render_Effect();
 	HRESULT Render_UI();
 
 	/* ETC */

@@ -40,6 +40,10 @@ namespace Engine
 		POST_END
 	};
 
+	enum class FINAL_SHADER {
+		FINAL_DEFAULT, FINAL_HSV, FINAL_MIX, FINAL, FINAL_END
+	};
+
 	enum class EFFECT_SHADER {
 		EFFECT_Default, EFFECT_Mask, EFFECT_END
 	};

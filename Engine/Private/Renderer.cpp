@@ -54,6 +54,9 @@ HRESULT CRenderer::Draw_RenderGroup()
 {
 #ifdef _DEBUG
 	Control_HotKey();
+
+	if (true == m_bDebugCom)
+		FAILED_CHECK(Render_DebugCom())
 #endif // _DEBUG
 
 	FAILED_CHECK(Render_Priority());	/* MRT_Priority - Target_Priority 저장  */
@@ -76,10 +79,11 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (m_tBloomRim_Option.bRimBlur_Active)
 		FAILED_CHECK(Render_RimBlur());
 
-	FAILED_CHECK(Render_Deferred()); /*   */
+	FAILED_CHECK(Render_Deferred()); /*  MRT_Deferred -> Target_Deferred에 저장  */
 
 	/* --- Post Processing --- */
 
+	//FAILED_CHECK(Render_Alphablend(TEXT("MRT_Final"), TEXT("Target_Deferred"))); /*  MRT_Deferred -> Target_Deferred에 저장  */
 	//FAILED_CHECK(Render_Decal());	/* screen space decal  */                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 
 	//FAILED_CHECK(Render_OutLine()); 
@@ -106,9 +110,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	//FAILED_CHECK(Render_UI_Final());
 
 
-#ifdef _DEBUG
-	if (true == m_bDebugCom)
-		FAILED_CHECK(Render_DebugCom());
+#ifdef _DEBUG;
 	if (true == m_bDebugRenderTarget)
 		FAILED_CHECK(Render_DebugTarget());
 #endif // _DEBUG
@@ -310,6 +312,7 @@ HRESULT CRenderer::Render_RimBlur()
 
 HRESULT CRenderer::Render_Deferred()
 {
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Deferred")));
 
 	/* 디퍼드에 의한 최종장면 */
 	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
@@ -384,12 +387,42 @@ HRESULT CRenderer::Render_Deferred()
 
 	FAILED_CHECK(m_pVIBuffer->Render());
 
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
 	return S_OK;
+}
+
+HRESULT CRenderer::Render_RadialBlur()
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CRenderer::Render_HDR()
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CRenderer::Render_FXAA()
+{
+	return E_NOTIMPL;
 }
 
 HRESULT CRenderer::Render_Final()
 {
-	return E_NOTIMPL;
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Deferred"), m_pShader_Final, "g_FinalTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Debug"), m_pShader_Final, "g_DebugTarget"));
+
+	FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL)));
+
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
+
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	return S_OK;
 }
 
 #pragma endregion
@@ -412,6 +445,11 @@ HRESULT CRenderer::Render_Blend()
 	m_RenderObjects[RENDER_BLEND].clear();
 
 	return S_OK;
+}
+
+HRESULT CRenderer::Render_Effect()
+{
+	return E_NOTIMPL;
 }
 
 HRESULT CRenderer::Render_UI()
@@ -716,6 +754,11 @@ HRESULT CRenderer::Create_RenderTarget()
 	/* MRT_Final */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Final"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)))
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Final"), TEXT("Target_Final")));
+	
+	/* MRT_Debug */
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Debug"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)))
+		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Debug"), TEXT("Target_Debug")));
+
 
 	/* MRT_Effect - clear color가 111의 흰색일경우 이펙트에 묻어나와서 무조건 000 으로 클리어해야함  */
 	//FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
@@ -796,6 +839,8 @@ HRESULT CRenderer::Ready_DebugRender()
 
 HRESULT CRenderer::Render_DebugCom()
 {
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Debug")));
+
 	for (auto& pDebugCom : m_DebugComponent)
 	{
 		if (nullptr == pDebugCom)
@@ -805,6 +850,8 @@ HRESULT CRenderer::Render_DebugCom()
 		Safe_Release(pDebugCom);
 	}
 	m_DebugComponent.clear();
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
@@ -816,6 +863,7 @@ HRESULT CRenderer::Render_DebugTarget()
 
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_GameObjects"), m_pShader_Deferred, m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Bloom_Blur"), m_pShader_Deferred, m_pVIBuffer);
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Rim_Blur"), m_pShader_Deferred, m_pVIBuffer);
 
 	return S_OK;
 }
