@@ -450,6 +450,9 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::Text("MaxInstance : %d", m_iMaxNumInstance_Particle);
 				if (ImGui::DragInt("Instance Count", &m_iNumInstance_Particle, 1, 1, m_iNumInstance_Particle))
 				{
+					if (1 > m_iNumInstance_Particle)
+						m_iNumInstance_Particle = 1;
+
 					m_pParticleDesc->iCurNumInstance = m_iNumInstance_Particle;
 					m_pParticleBufferDesc->iCurNumInstance = m_iNumInstance_Particle;
 				}
@@ -628,11 +631,11 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (m_vRotationOffsetX_Particle[0] > m_vRotationOffsetX_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 						m_vRotationOffsetX_Particle[1] = m_vRotationOffsetX_Particle[0];
 
-					m_pParticleDesc->vMinMaxRotationOffsetX.x = m_vRotationOffsetX_Particle[0];
-					m_pParticleDesc->vMinMaxRotationOffsetX.y = m_vRotationOffsetX_Particle[1];
+					m_pParticleDesc->vMinMaxRotationOffsetX.x = XMConvertToRadians(m_vRotationOffsetX_Particle[0]);
+					m_pParticleDesc->vMinMaxRotationOffsetX.y = XMConvertToRadians(m_vRotationOffsetX_Particle[1]);
 
-					m_pParticleBufferDesc->vMinMaxRotationOffsetX.x = m_vRotationOffsetX_Particle[0];
-					m_pParticleBufferDesc->vMinMaxRotationOffsetX.y = m_vRotationOffsetX_Particle[1];
+					m_pParticleBufferDesc->vMinMaxRotationOffsetX.x = XMConvertToRadians(m_vRotationOffsetX_Particle[0]);
+					m_pParticleBufferDesc->vMinMaxRotationOffsetX.y = XMConvertToRadians(m_vRotationOffsetX_Particle[1]);
 
 				}
 
@@ -642,11 +645,11 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (m_vRotationOffsetY_Particle[0] > m_vRotationOffsetY_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 						m_vRotationOffsetY_Particle[1] = m_vRotationOffsetY_Particle[0];
 
-					m_pParticleDesc->vMinMaxRotationOffsetY.x = m_vRotationOffsetY_Particle[0];
-					m_pParticleDesc->vMinMaxRotationOffsetY.y = m_vRotationOffsetY_Particle[1];
+					m_pParticleDesc->vMinMaxRotationOffsetY.x = XMConvertToRadians(m_vRotationOffsetY_Particle[0]);
+					m_pParticleDesc->vMinMaxRotationOffsetY.y = XMConvertToRadians(m_vRotationOffsetY_Particle[1]);
 
-					m_pParticleBufferDesc->vMinMaxRotationOffsetY.x = m_vRotationOffsetY_Particle[0];
-					m_pParticleBufferDesc->vMinMaxRotationOffsetY.y = m_vRotationOffsetY_Particle[1];
+					m_pParticleBufferDesc->vMinMaxRotationOffsetY.x = XMConvertToRadians(m_vRotationOffsetY_Particle[0]);
+					m_pParticleBufferDesc->vMinMaxRotationOffsetY.y = XMConvertToRadians(m_vRotationOffsetY_Particle[1]);
 				}
 
 				/* RotZ */
@@ -655,11 +658,11 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (m_vRotationOffsetZ_Particle[0] > m_vRotationOffsetZ_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 						m_vRotationOffsetZ_Particle[1] = m_vRotationOffsetZ_Particle[0];
 
-					m_pParticleDesc->vMinMaxRotationOffsetZ.x = m_vRotationOffsetZ_Particle[0];
-					m_pParticleDesc->vMinMaxRotationOffsetZ.y = m_vRotationOffsetZ_Particle[1];
+					m_pParticleDesc->vMinMaxRotationOffsetZ.x = XMConvertToRadians(m_vRotationOffsetZ_Particle[0]);
+					m_pParticleDesc->vMinMaxRotationOffsetZ.y = XMConvertToRadians(m_vRotationOffsetZ_Particle[1]);
 
-					m_pParticleBufferDesc->vMinMaxRotationOffsetZ.x = m_vRotationOffsetZ_Particle[0];
-					m_pParticleBufferDesc->vMinMaxRotationOffsetZ.y = m_vRotationOffsetZ_Particle[1];
+					m_pParticleBufferDesc->vMinMaxRotationOffsetZ.x = XMConvertToRadians(m_vRotationOffsetZ_Particle[0]);
+					m_pParticleBufferDesc->vMinMaxRotationOffsetZ.y = XMConvertToRadians(m_vRotationOffsetZ_Particle[1]);
 				}
 
 #pragma region 색 변경_파티클

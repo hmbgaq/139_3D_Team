@@ -7,11 +7,11 @@ Texture2D	g_DiffuseTexture;
 Texture2D	g_MaskTexture;
 Texture2D	g_NoiseTexture;
 
-// Camera =========================
+// Camera ====================
 vector		g_vCamPosition;
-vector		g_vCamDirection;
+float3		g_vCamDirection;
 float		g_fCamFar;
-// ================================
+// ===========================
 
 bool        g_bBillBoard;
 float       g_fAlpha_Discard;
@@ -24,6 +24,15 @@ bool		g_bSprite;
 float2		g_UVOffset;
 float2		g_UVScale;
 // ===========================
+
+
+struct EffectDesc 
+{
+	float   g_fUV_RotDegree; 
+
+	float3	g_vDir;
+};
+EffectDesc g_EffectDesc[500]; 
 
 
 /* Custom Function */
@@ -43,6 +52,23 @@ float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
 	return vTexcoord;
 }
 
+// 두 벡터 사이의 각도 계산 (라디안)
+float Calculate_AngleBetweenVectors_Radian(float3 v1, float3 v2)
+{
+	float fDot = dot(normalize(v1), normalize(v2));
+	float fAngle = acos(fDot);
+
+	return fAngle;
+}
+
+// 두 벡터 사이의 각도 계산 (도 Degree)
+float Calculate_AngleBetweenVectors_Degree(float3 v1, float3 v2)
+{
+	float fRadians = Calculate_AngleBetweenVectors_Radian(v1, v2);
+	float fDegree = fRadians * (180.0f / 3.14159265358979323846);
+
+	return fDegree;
+}
 
 struct VS_IN
 {
@@ -51,6 +77,8 @@ struct VS_IN
 
 	row_major float4x4	TransformMatrix : WORLD;
 	float4		vColor : COLOR0;
+
+	uint	    iInstanceID : SV_INSTANCEID;
 };
 
 
@@ -59,6 +87,8 @@ struct VS_OUT
 	float4		vPosition : POSITION;
 	float2		vPSize : PSIZE;
 	float4		vColor : COLOR0;
+
+	uint	    iInstanceID : SV_INSTANCEID;
 };
 
 
@@ -73,6 +103,8 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vPSize = float2(In.vPSize.x * In.TransformMatrix._11, In.vPSize.y * In.TransformMatrix._22);
 	Out.vColor = In.vColor;
 
+	Out.iInstanceID = In.iInstanceID;
+
 	return Out;
 }
 
@@ -82,6 +114,8 @@ struct GS_IN
 	float4		vPosition : POSITION;
 	float2		vPSize : PSIZE;
 	float4		vColor : COLOR0;
+
+	uint	iInstanceID : SV_INSTANCEID;
 };
 
 struct GS_OUT
@@ -89,6 +123,8 @@ struct GS_OUT
 	float4		vPosition : SV_POSITION;
 	float2		vTexcoord : TEXCOORD0;
 	float4		vColor : COLOR0;
+
+	uint	iInstanceID : SV_INSTANCEID;
 };
 
 /* 지오메트리 쉐이더 : 셰이더안에서 정점을 추가적으로 생성해 준다. */
@@ -97,26 +133,52 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 {
 	GS_OUT		Out[4];
 
-	float4		vLook = g_vCamPosition - In[0].vPosition;
-	float3		vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook.xyz)) * In[0].vPSize.x * 0.5f;
-	float3		vUp = normalize(cross(vLook.xyz, vRight)) * In[0].vPSize.y * 0.5f;
+	float4		vLook;
+	float3		vRight, vUp;
+	if (g_bBillBoard)
+	{
+		vLook = g_vCamPosition - In[0].vPosition;
+		vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook.xyz)) * In[0].vPSize.x * 0.5f;
+		vUp = normalize(cross(vLook.xyz, vRight)) * In[0].vPSize.y * 0.5f;
+	}
+	else
+	{
+		float3 vDirection = normalize(g_EffectDesc[In[0].iInstanceID].g_vDir);
+
+		float3 vTempRight = float3(1.0f, 0.0f, 0.0f);
+		vRight	= normalize(cross(vDirection, vTempRight)) * In[0].vPSize.x * 0.5f;
+		vUp		= normalize(cross(vRight, vDirection)) * In[0].vPSize.y * 0.5f;
+	}
 
 	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
+
+	//float3 vCameraDir = normalize(g_vCamDirection);
+	//float3 vEffectDir = normalize(g_EffectDesc[In[0].iInstanceID].g_vDir);
+	//float fDegree = Calculate_AngleBetweenVectors_Degree(vCameraDir, vEffectDir);
+
 	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
+	//Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_EffectDesc[In[0].iInstanceID].g_fUV_RotDegree);
 	Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
+	//Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), fDegree);
 	Out[0].vColor = In[0].vColor;
 
 	Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
+	//Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_EffectDesc[In[0].iInstanceID].g_fUV_RotDegree);
 	Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_fDegree);
+	//Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), fDegree);
 	Out[1].vColor = In[0].vColor;
 
 	Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
+	//Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_EffectDesc[In[0].iInstanceID].g_fUV_RotDegree);
 	Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_fDegree);
+	//Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), fDegree);
 	Out[2].vColor = In[0].vColor;
 
 	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
+	//Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_EffectDesc[In[0].iInstanceID].g_fUV_RotDegree);
 	Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_fDegree);
+	//Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), fDegree);
 	Out[3].vColor = In[0].vColor;
 
 	OutStream.Append(Out[0]);
@@ -144,6 +206,8 @@ struct PS_IN
 	float4		vPosition : SV_POSITION;
 	float2		vTexcoord : TEXCOORD0;
 	float4		vColor : COLOR0;
+
+	uint	iInstanceID : SV_INSTANCEID;
 };
 
 struct PS_OUT

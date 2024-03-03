@@ -92,5 +92,9 @@ namespace Engine
 		const _bool		ENGINE_DLL Is_Equal(const XMFLOAT4 Left, const XMFLOAT4 Right);
 		const _bool		ENGINE_DLL Is_InRange(const XMFLOAT3 Left, const XMFLOAT3 Right, const _float fRange = DBL_EPSILON);
 		const _bool		ENGINE_DLL Is_InRange(const XMFLOAT4 Left, const XMFLOAT4 Right, const _float fRange = DBL_EPSILON);
+	
+		float			ENGINE_DLL Calculate_AngleBetweenVectors_Radian(const XMFLOAT3& _v1, const XMFLOAT3& _v2);	// 두 벡터 사이의 각도 계산 (라디안)
+		float			ENGINE_DLL Calculate_AngleBetweenVectors_Degree(const XMFLOAT3& _v1, const XMFLOAT3& _v2);	// 두 벡터 사이의 각도 계산 (도 Degree)
+	
 	}
 }

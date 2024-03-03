@@ -12,6 +12,8 @@ public:
 		// 저장해야 하는 고정 정보들
 		_int		iCurNumInstance = { 1 };
 
+		_bool		bBillBoard = { FALSE };
+
 		/* LifeTime */
 		_float		fTimeAcc = { 0.f };
 		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
@@ -69,7 +71,6 @@ public:
 		_float	fLifeTime		= { 1.f };
 		_float  fLifeTimeRatio	= { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
 
-
 		// 색
 		_float4     vCurrentColors = { 1.f, 1.f, 1.f, 1.f };
 
@@ -78,6 +79,15 @@ public:
 
 	} PARTICLE_INFO_DESC;
 
+	typedef struct tagParticleShaderDesc
+	{
+		// 업데이트 돌면서 변하는 정보들(저장X)
+		_float	fUV_RotDegree = { 0.f };
+
+		_float3	vDir = { 1.f, 0.f, 0.f };
+
+	} PARTICLE_SHADER_INFO_DESC;
+
 	typedef struct tagParticleRigidbodyDesc
 	{
 		// 업데이트 돌면서 변하는 정보들(저장X)
@@ -85,6 +95,10 @@ public:
 
 		_float3			vAccel		= {0.f, 0.f, 0.f};		// 가속도
 		_float3			vVelocity	= { 0.f, 0.f, 0.f };	// 속도
+
+		_float4 vRight	= { 1.f, 0.f, 0.f, 0.f };
+		_float4 vUp		= { 0.f, 1.f, 0.f, 0.f };
+		_float4 vLook	= { 0.f, 0.f, 1.f, 0.f };
 
 		_float			fMass	  = { 10.f };				// 질량
 
@@ -133,10 +147,12 @@ public:
 
 public:
 	PARTICLE_BUFFER_DESC* Get_Desc() { return &m_tBufferDesc; }
+	vector<PARTICLE_SHADER_INFO_DESC>& Get_ParticleShaderInfoDescs() { return m_vecParticleShaderInfoDesc; }
 
 private:
 	PARTICLE_BUFFER_DESC				m_tBufferDesc;
 	vector<PARTICLE_INFO_DESC>			m_vecParticleInfoDesc;
+	vector<PARTICLE_SHADER_INFO_DESC>	m_vecParticleShaderInfoDesc;
 	vector<PARTICLE_RIGIDBODY_DESC>		m_vecParticleRigidbodyDesc;
 
 

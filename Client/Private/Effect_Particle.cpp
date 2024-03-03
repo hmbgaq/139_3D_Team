@@ -412,6 +412,10 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	/* =============================================================================================== */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tParticleDesc.fUV_RotDegree, sizeof(_float)));
 
+	// ÀÌÆåÆ® Á¤º¸
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_EffectDesc", m_pVIBufferCom->Get_ParticleShaderInfoDescs().data(), sizeof(CVIBuffer_Particle::PARTICLE_SHADER_INFO_DESC) * m_pVIBufferCom->Get_ParticleShaderInfoDescs().size())))
+		return E_FAIL;
+
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bSprite", &m_tParticleDesc.bUseSpriteAnim, sizeof(_bool)));
 	if (m_tParticleDesc.bUseSpriteAnim)
@@ -432,11 +436,11 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	/* =================================================================================================== */
 	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
 	vCamDirection = XMVector4Normalize(vCamDirection);
-	_float4 vCamDirectionFloat4 = {};
-	XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
+	_float3 vCamDirectionFloat3 = {};
+	XMStoreFloat3(&vCamDirectionFloat3, vCamDirection);
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat4, sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat3, sizeof(_float3)));
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));

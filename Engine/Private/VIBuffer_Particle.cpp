@@ -3,6 +3,9 @@
 #include "SMath.h"
 #include "Easing_Utillity.h"
 
+#include "GameInstance.h"
+#include "PipeLine.h"
+
 CVIBuffer_Particle::CVIBuffer_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer(pDevice, pContext)
 {
@@ -85,6 +88,8 @@ HRESULT CVIBuffer_Particle::Initialize(void* pArg)
 
 	// 벡터 공간 예약
 	m_vecParticleInfoDesc.reserve(m_tBufferDesc.iCurNumInstance);
+	m_vecParticleShaderInfoDesc.reserve(m_tBufferDesc.iCurNumInstance);
+
 	if (m_tBufferDesc.bUseRigidBody)
 		m_vecParticleRigidbodyDesc.reserve(m_tBufferDesc.iCurNumInstance);
 
@@ -172,6 +177,9 @@ HRESULT CVIBuffer_Particle::Init_Instance(_int iNumInstance)
 		PARTICLE_INFO_DESC tParticleInfo = {};
 		m_vecParticleInfoDesc.push_back(tParticleInfo);
 
+		PARTICLE_SHADER_INFO_DESC tParticleShaderInfo = {};
+		m_vecParticleShaderInfoDesc.push_back(tParticleShaderInfo);
+
 
 		// 리지드바디 사용이면 입자 하나하나를 위한 초기화용 리지드바디정보 Push_back		
 		if (m_tBufferDesc.bUseRigidBody)
@@ -221,19 +229,26 @@ void CVIBuffer_Particle::ReSet()
 	for (_uint i = 0; i < m_iNumInstance; ++i)	// 반복문 시작
 	{
 
-		// 테스트용 원점 위치로 초기화
+		// 초기화
 		XMStoreFloat4(&pVertices[i].vPosition, m_tBufferDesc.vCenterPosition);
+		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f);
+		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f);
+		pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+		//pVertices[i].vColor = _float4(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxAlpha.x);
 
 
 		ReSet_Info(i);
 
+		if (!m_tBufferDesc.bBillBoard)
+		{
+			XMStoreFloat4(&pVertices[i].vRight, m_vecParticleRigidbodyDesc[i].vRight);
+			XMStoreFloat4(&pVertices[i].vUp, m_vecParticleRigidbodyDesc[i].vUp);
+			XMStoreFloat4(&pVertices[i].vLook, m_vecParticleRigidbodyDesc[i].vLook);
+		}
 
-		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f)	/* * 크기 */;
-		pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f)	/* * 크기 */;
-		pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f)	/* * 크기 */;
-		pVertices[i].vColor = _float4(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxAlpha.x);
 
 	} // 반복문 끝
+
 
 
 	m_pContext->Unmap(m_pVBInstance, 0);
@@ -250,7 +265,7 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	m_vecParticleInfoDesc[iNum].fLifeTimeRatio = 0.f;
 
 
-#pragma region 이동 : 리지드바디 시작
+#pragma region 리지드바디 시작.
 	// 리지드 바디 사용이면
 	if (m_tBufferDesc.bUseRigidBody)
 	{
@@ -268,11 +283,41 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 		_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
 		_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
 
-		_vector vForce = XMVector3TransformNormal(vDir, RotationMatrix) * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
 
+#pragma region 회전 시작
+		vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
+		m_vecParticleShaderInfoDesc[iNum].vDir = vDir;			// 쉐이더에 전달할 방향 저장
+
+		// TEST 시작 : 카메라가 바라보는 방향의 반대 벡터와 방향벡터 사이의 각도로 UV회전 시키기 =========================================================================
+		_vector vCamDirection = XMVector4Normalize(m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2]);
+		_float3 vCamDirectionFloat3 = {};
+		XMStoreFloat3(&vCamDirectionFloat3, vCamDirection);
+		vCamDirectionFloat3 = vCamDirectionFloat3 * -1.f;
+
+		m_vecParticleShaderInfoDesc[iNum].fUV_RotDegree = SMath::Calculate_AngleBetweenVectors_Degree(vCamDirectionFloat3, m_vecParticleShaderInfoDesc[iNum].vDir);
+		// TEST 끝 : 카메라가 바라보는 방향의 반대 벡터와 방향벡터 사이의 각도로 UV회전 시키기 ===========================================================================
+
+		// 진행방향벡터를 Look으로 한 새로운 Right, Up 정해주기
+		_vector		vRight = _float4(1.f, 0.f, 0.f, 0.f)		/* * 크기 */;
+		_vector		vUp = _float4(0.f, 1.f, 0.f, 0.f)			/* * 크기 */;
+		_vector		vLook = XMVector4Normalize(vDir);
+
+		vRight = XMVector4Normalize(XMVector3Cross(vUp, vDir));
+		vUp = XMVector4Normalize(XMVector3Cross(vDir, vRight));
+
+		XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vRight, vRight);
+		XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vUp, vUp);
+		XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vLook, vLook);
+
+		//XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vRight, XMVector3TransformNormal(vRight, RotationMatrix));
+		//XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vUp, XMVector3TransformNormal(vUp, RotationMatrix));
+		//XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vLook, XMVector3TransformNormal(vLook, RotationMatrix));
+#pragma endregion 회전 끝
+
+		_vector vForce = vDir * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
 		Add_Force(iNum, vForce, m_tBufferDesc.eForce_Mode);
 	}
-#pragma endregion 이동 : 리지드바디 끝
+#pragma endregion 리지드바디 끝
 
 
 

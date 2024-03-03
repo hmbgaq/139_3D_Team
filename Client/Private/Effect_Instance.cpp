@@ -181,7 +181,7 @@ void* CEffect_Instance::Get_BufferDesc()
 	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferDesc = {};
 
 	tBufferDesc.iCurNumInstance = m_tInstanceDesc.iCurNumInstance;
-
+	tBufferDesc.pModel = m_pModelCom;
 
 	/* RigidBody */
 	tBufferDesc.bUseRigidBody	= m_tInstanceDesc.bUseRigidBody;
