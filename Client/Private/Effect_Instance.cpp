@@ -180,23 +180,32 @@ void* CEffect_Instance::Get_BufferDesc()
 
 	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferDesc = {};
 
-	tBufferDesc.pModel = m_pModelCom;
-
-	tBufferDesc.bUseRigidBody = m_tInstanceDesc.bUseRigidBody;
-	tBufferDesc.eForce_Mode = m_tInstanceDesc.eForce_Mode;
-
 	tBufferDesc.iCurNumInstance = m_tInstanceDesc.iCurNumInstance;
 
-	tBufferDesc.vCenterPosition = m_tInstanceDesc.vCenterPosition;
-	tBufferDesc.vMinMaxRange = m_tInstanceDesc.vMinMaxRange;
 
+	/* RigidBody */
+	tBufferDesc.bUseRigidBody	= m_tInstanceDesc.bUseRigidBody;
+	tBufferDesc.bKinetic		= m_tInstanceDesc.bKinetic;
+	tBufferDesc.bUseGravity		= m_tInstanceDesc.bUseGravity;
+	tBufferDesc.eForce_Mode		= m_tInstanceDesc.eForce_Mode;
+
+	tBufferDesc.fGravity		= m_tInstanceDesc.fGravity;
+	tBufferDesc.fFriction		= m_tInstanceDesc.fFriction;
+	tBufferDesc.fSleepThreshold = m_tInstanceDesc.fSleepThreshold;
+	tBufferDesc.byFreezeAxis	= m_tInstanceDesc.byFreezeAxis;
+
+	tBufferDesc.vMinMaxPower	= m_tInstanceDesc.vMinMaxPower;
+
+
+	/* For.Position */
+	tBufferDesc.vCenterPosition = m_tInstanceDesc.vCenterPosition;
+	tBufferDesc.vMinMaxRange	= m_tInstanceDesc.vMinMaxRange;
+
+	/* For.Rotation */
 	tBufferDesc.vMinMaxRotationOffsetX = m_tInstanceDesc.vMinMaxRotationOffsetX;
 	tBufferDesc.vMinMaxRotationOffsetY = m_tInstanceDesc.vMinMaxRotationOffsetY;
 	tBufferDesc.vMinMaxRotationOffsetZ = m_tInstanceDesc.vMinMaxRotationOffsetZ;
 
-	tBufferDesc.vRotationOffset = m_tInstanceDesc.vRotationOffset;
-
-	tBufferDesc.vMinMaxPower = m_tInstanceDesc.vMinMaxPower;
 
 
 	return &tBufferDesc;

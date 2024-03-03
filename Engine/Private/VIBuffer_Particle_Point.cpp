@@ -3,6 +3,7 @@
 #include "Easing_Utillity.h"
 #include "SMath.h"
 
+// 안씀 -> CVIBuffer_Particle로 사용합니다.
 CVIBuffer_Particle_Point::CVIBuffer_Particle_Point(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer_Instancing(pDevice, pContext)
 {

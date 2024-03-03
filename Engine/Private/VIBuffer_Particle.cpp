@@ -244,7 +244,8 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 {
 
 	// 라이프타임
-	m_vecParticleInfoDesc[iNum].fTimeAcc = 0.f;
+	m_tBufferDesc.fTimeAcc = 0.f;
+	m_vecParticleInfoDesc[iNum].fTimeAccs = 0.f;
 	m_vecParticleInfoDesc[iNum].fLifeTime = SMath::fRandom(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
 	m_vecParticleInfoDesc[iNum].fLifeTimeRatio = 0.f;
 
@@ -253,6 +254,9 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	// 리지드 바디 사용이면
 	if (m_tBufferDesc.bUseRigidBody)
 	{
+		Clear_Power(iNum);	// 파워 리셋
+		m_vecParticleRigidbodyDesc[iNum].fMass = SMath::fRandom(m_tBufferDesc.vMinMaxMass.x, m_tBufferDesc.vMinMaxMass.y);	// 질량 리셋
+
 		_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
 		vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
 
@@ -291,8 +295,9 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 	for (_uint i = 0; i < m_iNumInstance; i++)	// 반복문 시작
 	{
 		// 시간 누적
-		m_vecParticleInfoDesc[i].fTimeAcc += fTimeDelta;
-		m_vecParticleInfoDesc[i].fLifeTimeRatio = min(1.0f, m_vecParticleInfoDesc[i].fTimeAcc / m_vecParticleInfoDesc[i].fLifeTime);
+		m_tBufferDesc.fTimeAcc += fTimeDelta;
+		m_vecParticleInfoDesc[i].fTimeAccs += fTimeDelta;
+		m_vecParticleInfoDesc[i].fLifeTimeRatio = min(1.0f, m_vecParticleInfoDesc[i].fTimeAccs / m_vecParticleInfoDesc[i].fLifeTime);
 		
 
 #pragma region 이동 : 리지드바디 시작
@@ -327,17 +332,21 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 #pragma region 색 변경 시작
 		if (m_tBufferDesc.bDynamic_Color)	// 입자마다 다른 주기로 색 변경
 		{
-			m_vecParticleInfoDesc[i].vCurrentColor.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y, m_vecParticleInfoDesc[i].fTimeAcc, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_ColorLerp));
-			m_vecParticleInfoDesc[i].vCurrentColor.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y, m_vecParticleInfoDesc[i].fTimeAcc, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_ColorLerp));
-			m_vecParticleInfoDesc[i].vCurrentColor.z = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y, m_vecParticleInfoDesc[i].fTimeAcc, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_ColorLerp));
+			m_vecParticleInfoDesc[i].vCurrentColors.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y, m_vecParticleInfoDesc[i].fTimeAccs, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_ColorLerp));
+			m_vecParticleInfoDesc[i].vCurrentColors.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y, m_vecParticleInfoDesc[i].fTimeAccs, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_ColorLerp));
+			m_vecParticleInfoDesc[i].vCurrentColors.z = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y, m_vecParticleInfoDesc[i].fTimeAccs, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_ColorLerp));
+		
+			pVertices[i].vColor = m_vecParticleInfoDesc[i].vCurrentColors;
 		}
 		else // 일괄 색 변경
 		{
-			m_vecParticleInfoDesc[i].vCurrentColor.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y, m_vecParticleInfoDesc[i].fTimeAcc,     m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_ColorLerp));
-			m_vecParticleInfoDesc[i].vCurrentColor.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y, m_vecParticleInfoDesc[i].fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_ColorLerp));
-			m_vecParticleInfoDesc[i].vCurrentColor.z = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y, m_vecParticleInfoDesc[i].fTimeAcc,	 m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_ColorLerp));
+			m_tBufferDesc.vCurrentColor.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y, m_tBufferDesc.fTimeAcc,     m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_ColorLerp));
+			m_tBufferDesc.vCurrentColor.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y, m_tBufferDesc.fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_ColorLerp));
+			m_tBufferDesc.vCurrentColor.z = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y, m_tBufferDesc.fTimeAcc,   m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_ColorLerp));
+
+			pVertices[i].vColor = m_tBufferDesc.vCurrentColor;
 		}
-		pVertices[i].vColor = m_vecParticleInfoDesc[i].vCurrentColor;
+
 #pragma region 색 변경 끝
 
 
@@ -373,7 +382,7 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 	Out_Json["Com_VIBuffer"]["byFreezeAxis"] = m_tBufferDesc.byFreezeAxis;
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxPower"], m_tBufferDesc.vMinMaxPower);
-
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxMass"], m_tBufferDesc.vMinMaxMass);
 
 	/* For.Position */
 	CJson_Utility::Write_Float4(Out_Json["Com_VIBuffer"]["vCurrentPosition"], m_tBufferDesc.vCenterPosition);
@@ -418,7 +427,7 @@ void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 	m_tBufferDesc.byFreezeAxis = In_Json["Com_VIBuffer"]["byFreezeAxis"];
 
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxPower"], m_tBufferDesc.vMinMaxPower);
-
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxMass"], m_tBufferDesc.vMinMaxMass);
 
 	/* For.Position */
 	CJson_Utility::Load_Float4(In_Json["Com_VIBuffer"]["vCurrentPosition"], m_tBufferDesc.vCenterPosition);

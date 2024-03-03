@@ -3,6 +3,7 @@
 
 BEGIN(Engine)
 
+// 안씀 -> CVIBuffer_Particle로 사용합니다.
 class ENGINE_DLL CVIBuffer_Particle_Point final : public CVIBuffer_Instancing
 {
 public:

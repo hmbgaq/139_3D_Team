@@ -5,6 +5,7 @@
 BEGIN(Client)
 class CEffect;
 class CEffect_Void;
+class CEffect_Particle;
 class CEffect_Rect;
 class CEffect_Instance;
 
@@ -72,10 +73,10 @@ private:
 	class CEffect*	m_pCurEffect = { nullptr };
 
 
-	char** m_szPartNames		= { nullptr };
-	char* m_cCurPartName		= { nullptr };
-	_int m_iCurPartIndex		= { 0 };
-	class CEffect_Void* m_pCurPartEffect = { nullptr };
+	char**	m_szPartNames		= { nullptr };
+	char*	m_cCurPartName		= { nullptr };
+	_int	m_iCurPartIndex		= { 0 };
+	CEffect_Void* m_pCurPartEffect = { nullptr };
 
 	/* Sky */
 private:
@@ -86,34 +87,36 @@ private:
 	CEffect::EFFECT_DESC* m_pCurEffectDesc = { nullptr };
 
 	CEffect_Particle::PARTICLE_DESC*				m_pParticleDesc = {};
-	CVIBuffer_Particle::PARTICLE_BUFFER_DESC*	m_pParticlePointDesc = {};
+	CVIBuffer_Particle::PARTICLE_BUFFER_DESC*		m_pParticleBufferDesc = {};
+	CEffect_Void::UVSPRITE_DESC*					m_pSpriteDesc_Particle = {};
 
 	CEffect_Rect::EFFECT_RECT_DESC*					m_pRectDesc			= {};
 
 
-	CEffect_Instance::EFFECT_INSTANCE_DESC*			m_pInstanceDesc		= {};
-	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC* m_pMeshBufferDesc = {};
+	CEffect_Instance::EFFECT_INSTANCE_DESC*							m_pInstanceDesc		= {};
+	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC*	m_pMeshBufferDesc = {};
 
 private:
-	_int m_iRenderGroup_Particle		= { 7 };
+	_int m_iRenderGroup_Particle		= { 9 };
 	_int m_iShaderPassIndex_Particle	= { 0 };
 	_int m_iMaxShaderPassIndex_Particle = { 2 };
-	_int  m_iTexIndex_Particle[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 15, 17, 5, 16 };
+	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END] = { };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 15, 17, 5, 16 };
 
 
-	_int m_iRenderGroup_Mesh			= { 7 };
+	_int m_iRenderGroup_Rect = { 9 };
+	_int m_iShaderPassIndex_Rect = { 0 };
+	_int m_iMaxShaderPassIndex_Rect = { 2 };
+	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END] = { };
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 4, 17, 5, 16 };
+
+
+	_int m_iRenderGroup_Mesh			= { 9 };
 	_int m_iShaderPassIndex_Mesh		= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
-	_int  m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 15, 17, 5, 16 };
+	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 15, 17, 5, 16 };
 
-
-	_int m_iRenderGroup_Rect			= { 7 };
-	_int m_iShaderPassIndex_Rect		= { 0 };
-	_int m_iMaxShaderPassIndex_Rect		= { 2 };
-	_int  m_iTexIndex_Rect[CEffect_Void::TEXTURE_END] = { };
-	_int  m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 4, 17, 5, 16 };
 
 	// Refactoring end   =====================================================================================================
 
@@ -122,10 +125,10 @@ private:
 	_float	m_vTimeAccs_Part[3]		= { 0.f, 0.f, 0.f };
 
 private:
-	_int m_iLoop = { 0 };
+	_int	m_iLoop = { 0 };
 
-	_int m_iNumInstance		= { 200 };
-	_int m_iMaxNumInstance	= { 500 };
+	//_int	m_iNumInstance		= { 200 };
+	//_int	m_iMaxNumInstance	= { 500 };
 
 	_float	m_vTimes_Effect[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
 	_float	m_vTimes_Part[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
@@ -142,40 +145,61 @@ private:
 	_float m_vColor_Clip_Part[4] = { 0.f, 0.f, 0.f, 0.f };
 	_float m_vColor_Clip_Rect[4] = { 0.f, 0.f, 0.f, 0.f };
 
-#pragma region Particle_Option
+
+#pragma region 파티클 옵션 시작
 private:
+	_int	m_iNumInstance_Particle		= { 200 };
+	_int	m_iMaxNumInstance_Particle	= { 500 };
+
 	_int	m_iBillBoard				= { 0 };
 
-	_float	m_fUV_RotDegree				= { 0.f };
+	_float	m_vMinMaxLifeTime_Particle[2] = { 0.f, 0.f };	// 라이프타임
+
+	/* RigidBody ============================================== */
+	_int	m_iUseRigidBody_Particle	= { 0 };
+	_int	m_iKinetic_Particle			= { 0 };
+	_int	m_iUseGravity_Particle		= { 0 };
+
+	_float	m_fGravity_Particle = { -9.8f };		// 중력 가속도
+	_float	m_fFriction_Particle = { 0.1f };		// 마찰 계수
+	_float	m_fSleepThreshold_Particle = { 0.05f };	// 슬립 한계점(1이하로)
+
+	_float	m_vMinMaxPower_Particle[2]	= { 0.1f, 250.f };
+	_float	m_vMinMaxMass_Particle[2]	= { 10.f, 10.f };
+	/* RigidBody ============================================== */
+
+
+	/* For.Position */
+	_float	m_vMinMaxRange_Particle[2] = { 0.f, 0.f };
+
+	/* For.Rotation */
+	_float	m_vRotationOffsetX_Particle[2] = { 0.f, 0.f };
+	_float	m_vRotationOffsetY_Particle[2] = { 0.f, 0.f };
+	_float	m_vRotationOffsetZ_Particle[2] = { 0.f, 0.f };
+
+
+	/* For.Color */
+	_int	m_iDynamic_Color_Particle = { 0 };
+	_float	m_fColor_Min_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fColor_Max_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fColor_Cur_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
+
+
+	_float	m_fUV_RotDegree				= { 0.f };	// UV회전
 
 	_float	m_fAddScale					= { 0.f };
 	_float	m_vAddScale[2]				= { 0.f, 0.f };
 
-	_float	m_vMinMaxLifeTime[2]		= { 0.f, 0.f };
-	_float	m_vMinMaxRange[2]			= { 0.f, 0.f };
-	_float	m_vMinMaxLengthPosition[2]	= { 0.f, 0.f };
-
-	_float	m_vRotationOffsetX[2]		= { 0.f, 0.f };
-	_float	m_vRotationOffsetY[2]		= { 0.f, 0.f };
-	_float	m_vRotationOffsetZ[2]		= { 0.f, 0.f };
-
-	_float	m_fParticleAcceleration		= { 1.f };
-	_float	m_fParticleAccPosition		= { 0.1f };
-
-	_float	m_fUseGravityPosition		= { 0.1f };
-	_float  m_fGravityAcc				= { -9.8f };
-
-	_float	m_fColor_Start_Particle[4]	= { 1.f, 1.f, 1.f, 1.f };
-	_float	m_fColor_End_Particle[4]	= { 1.f, 1.f, 1.f, 1.f };
-	_float	m_fColor_Cur_Particle[4]	= { 1.f, 1.f, 1.f, 1.f };
 
 	_int	m_iSortZ = { 0 };
-	_int	m_iSprite_Particle = { 0 };
 
-	_int	m_vUV_MaxTileCount_Particle[2] = { 7, 7 };
-	_float	m_fSequenceTerm_Particle = { 0.05f };
+	/* For.Sprite ======================================== */
+	_int	m_iSprite_Particle				= { 0 };	// 1이 True
+	_int	m_vUV_MaxTileCount_Particle[2]	= { 7, 7 };
+	_float	m_fSequenceTerm_Particle		= { 0.05f };
+	/* For.Sprite ======================================== */
 
-#pragma endregion
+#pragma endregion 파티클 옵션 끝
 
 
 

@@ -105,14 +105,14 @@ public:
 	typedef struct tagUvSpriteDesc
 	{
 		_bool	bSpriteFinish   = { FALSE };
-		_float	fSequenceTerm	= { 0.05f };
+		_float	fSequenceTerm	= { 0.05f };	// 历厘
 
-		_float2 vTextureSize	 = { 1792.f, 1792.f };  // fSpriteSizeX, fSpriteSizeY
-		_float2 vTileSize		 = { 256.f, 256.f };	// fAnimationSizeX, fAnimationSizeY
+		_float2 vTextureSize	 = { 1792.f, 1792.f };  // 历厘
+		_float2 vTileSize		 = { 256.f, 256.f };	// 历厘
 
-		_float2	vUV_CurTileIndex = { 0, 0 }; // iCurrentHor, iCurrentVer
-		_float2	vUV_MinTileCount = { 0, 0 }; // iMinHor, iMinVer
-		_float2	vUV_MaxTileCount = { 7, 7 }; // iMaxHor, iMaxVer
+		_float2	vUV_CurTileIndex = { 0, 0 }; 
+		_float2	vUV_MinTileCount = { 0, 0 }; // 历厘
+		_float2	vUV_MaxTileCount = { 7, 7 }; // 历厘
 
 	}UVSPRITE_DESC;
 

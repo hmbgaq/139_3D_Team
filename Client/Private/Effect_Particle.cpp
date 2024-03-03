@@ -284,7 +284,7 @@ void* CEffect_Particle::Get_BufferDesc()
 	tBufferDesc.byFreezeAxis = m_tParticleDesc.byFreezeAxis;
 
 	tBufferDesc.vMinMaxPower = m_tParticleDesc.vMinMaxPower;
-
+	tBufferDesc.vMinMaxMass = m_tParticleDesc.vMinMaxMass;
 
 	/* For.Position */
 	tBufferDesc.vCenterPosition = m_tParticleDesc.vCenterPosition;

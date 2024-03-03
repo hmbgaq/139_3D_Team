@@ -218,13 +218,13 @@ void* CEffect_Void::Load_VoidDesc(const json& In_Json)
 	/* Effect_Void */
 	m_eType_Effect = In_Json["eType_Effect"];
 
-	m_pGameInstance->Convert_WString_To_String(tVoidDesc.strProtoTag) = In_Json["strProtoTag"];
-	m_pGameInstance->Convert_WString_To_String(tVoidDesc.strPartTag) = In_Json["strPartTag"];
+	m_pGameInstance->Convert_WString_To_String(tVoidDesc.strProtoTag)	= In_Json["strProtoTag"];
+	m_pGameInstance->Convert_WString_To_String(tVoidDesc.strPartTag)	= In_Json["strPartTag"];
 
 
-	m_fWaitingTime = In_Json["m_fWaitingTime"];
-	m_fLifeTime = In_Json["m_fLifeTime"];
-	m_fRemainTime = In_Json["m_fRemainTime"];
+	m_fWaitingTime	= In_Json["m_fWaitingTime"];
+	m_fLifeTime		= In_Json["m_fLifeTime"];
+	m_fRemainTime	= In_Json["m_fRemainTime"];
 	m_fSequenceTime = In_Json["m_fSequenceTime"];
 
 
@@ -235,13 +235,13 @@ void* CEffect_Void::Load_VoidDesc(const json& In_Json)
 		tVoidDesc.iTextureIndex[i] = In_Json["iTextureIndex"][i];
 	}
 
-	tVoidDesc.iCurNumInstance = In_Json["iCurNumInstance"];
+	tVoidDesc.iCurNumInstance	= In_Json["iCurNumInstance"];
 
-	tVoidDesc.iRenderGroup = In_Json["iRenderGroup"];
-	tVoidDesc.iShaderPassIndex = In_Json["iShaderPassIndex"];
+	tVoidDesc.iRenderGroup		= In_Json["iRenderGroup"];
+	tVoidDesc.iShaderPassIndex	= In_Json["iShaderPassIndex"];
 
-	tVoidDesc.bBillBoard = In_Json["bBillBoard"];
-	tVoidDesc.bDissolve = In_Json["bDissolve"];
+	tVoidDesc.bBillBoard		= In_Json["bBillBoard"];
+	tVoidDesc.bDissolve			= In_Json["bDissolve"];
 
 
 	CJson_Utility::Load_Float2(In_Json["vUV_Offset"], tVoidDesc.vUV_Offset);
@@ -250,7 +250,7 @@ void* CEffect_Void::Load_VoidDesc(const json& In_Json)
 
 	tVoidDesc.fUV_RotDegree = In_Json["fUV_RotDegree"];
 
-	tVoidDesc.bUV_Wave = In_Json["bUV_Wave"];
+	tVoidDesc.bUV_Wave		= In_Json["bUV_Wave"];
 	tVoidDesc.fUV_WaveSpeed = In_Json["fUV_WaveSpeed"];
 
 
@@ -258,20 +258,20 @@ void* CEffect_Void::Load_VoidDesc(const json& In_Json)
 	CJson_Utility::Load_Float4(In_Json["vColor_Clip"], tVoidDesc.vColor_Clip);
 	CJson_Utility::Load_Float4(In_Json["vColor_Mul"], tVoidDesc.vColor_Mul);
 
-	tVoidDesc.fBloom = In_Json["fBloom"];
-	tVoidDesc.fRadial = In_Json["fRadial"];
+	tVoidDesc.fBloom	= In_Json["fBloom"];
+	tVoidDesc.fRadial	= In_Json["fRadial"];
 	tVoidDesc.fDissolveAmount = In_Json["fDissolveAmount"];
-	tVoidDesc.padding = In_Json["padding"];
+	tVoidDesc.padding	= In_Json["padding"];
 
 
 	/* States */
-	tVoidDesc.bActive_Tool = In_Json["bActive_Tool"];
-	tVoidDesc.bPlay = In_Json["bPlay"];
-	tVoidDesc.bLoop = In_Json["bLoop"];
-	tVoidDesc.bReverse = In_Json["bReverse"];
-	tVoidDesc.bRender = In_Json["bRender"];
-	tVoidDesc.bUseSpriteAnim = In_Json["bUseSpriteAnim"];
-	tVoidDesc.bUseRigidBody = In_Json["bUseRigidBody"];
+	tVoidDesc.bActive_Tool		= In_Json["bActive_Tool"];
+	tVoidDesc.bPlay				= In_Json["bPlay"];
+	tVoidDesc.bLoop				= In_Json["bLoop"];
+	tVoidDesc.bReverse			= In_Json["bReverse"];
+	tVoidDesc.bRender			= In_Json["bRender"];
+	tVoidDesc.bUseSpriteAnim	= In_Json["bUseSpriteAnim"];
+	tVoidDesc.bUseRigidBody		= In_Json["bUseRigidBody"];
 
 
 	tVoidDesc.eType_Easing = In_Json["eType_Easing"];

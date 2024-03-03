@@ -13,6 +13,7 @@ public:
 		_int		iCurNumInstance = { 1 };
 
 		/* LifeTime */
+		_float		fTimeAcc = { 0.f };
 		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
 
 		/* RigidBody */
@@ -27,7 +28,7 @@ public:
 		_byte		byFreezeAxis	= { 0 };		// 축 고정 확인용 바이트
 
 		_float2		vMinMaxPower = { 0.1f, 250.f };
-
+		_float2		vMinMaxMass  = { 10.f, 10.f };
 
 		/* For.Position */
 		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
@@ -49,6 +50,9 @@ public:
 		_float2     vMinMaxAlpha	= { 1.f, 1.f };
 
 
+		// 업데이트 돌면서 변하는 정보들(저장X)
+		_float4     vCurrentColor   = { 1.f, 1.f, 1.f, 1.f };
+
 		void Reset_Desc()
 		{
 			ZeroMemory(this, sizeof(PARTICLE_BUFFER_DESC));
@@ -61,13 +65,13 @@ public:
 		// 업데이트 돌면서 변하는 정보들(저장X)
 
 		// 시간
-		_float	fTimeAcc		= { 0.f };
+		_float	fTimeAccs		= { 0.f };
 		_float	fLifeTime		= { 1.f };
 		_float  fLifeTimeRatio	= { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
 
 
 		// 색
-		_float4     vCurrentColor = { 1.f, 1.f, 1.f, 1.f };
+		_float4     vCurrentColors = { 1.f, 1.f, 1.f, 1.f };
 
 
 		// 애니메이션
@@ -79,10 +83,10 @@ public:
 		// 업데이트 돌면서 변하는 정보들(저장X)
 		_bool			bSleep = { FALSE };
 
-		_float3			vAccel = {0.f, 0.f, 0.f};		// 가속도
-		_float3			vVelocity = { 0.f, 0.f, 0.f };	// 속도
+		_float3			vAccel		= {0.f, 0.f, 0.f};		// 가속도
+		_float3			vVelocity	= { 0.f, 0.f, 0.f };	// 속도
 
-		_float			fMass	  = { 10.f };			// 질량
+		_float			fMass	  = { 10.f };				// 질량
 
 	} PARTICLE_RIGIDBODY_DESC;
 
@@ -123,8 +127,8 @@ public:
 	void		Sleep(_uint iNum) { Clear_Power(iNum); m_vecParticleRigidbodyDesc[iNum].bSleep = TRUE; }
 	void		Wake(_uint iNum) { m_vecParticleRigidbodyDesc[iNum].bSleep = FALSE; }
 
-	void		Set_FreezeAxis(_uint iNum, AXIS eAxis) { m_tBufferDesc.byFreezeAxis ^= 1 << (_int)eAxis; }
-	_bool		Is_FrozeAxis(_uint iNum, AXIS eAxis) { return m_tBufferDesc.byFreezeAxis & 1 << (_int)eAxis; }
+	void		Set_FreezeAxis(AXIS eAxis) { m_tBufferDesc.byFreezeAxis ^= 1 << (_int)eAxis; }
+	_bool		Is_FrozeAxis(AXIS eAxis) { return m_tBufferDesc.byFreezeAxis & 1 << (_int)eAxis; }
 
 
 public:

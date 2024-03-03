@@ -225,7 +225,7 @@ technique11 DefaultTechnique
 	pass Masking  // 1 
 	{
 		SetRasterizerState(RS_Default);
-		SetDepthStencilState(DSS_Default, 0);
+		SetDepthStencilState(DSS_Enable, 0);
 		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 		/* ·»´õ½ºÅ×ÀÌÃ÷ */
 		VertexShader = compile vs_5_0 VS_MAIN();

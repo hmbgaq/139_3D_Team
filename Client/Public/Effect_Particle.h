@@ -6,7 +6,7 @@
 BEGIN(Engine)
 class CShader;
 class CTexture;
-class CVIBuffer_Particle_Point;
+class CVIBuffer_Particle;
 END
 
 BEGIN(Client)
@@ -16,8 +16,6 @@ class CEffect_Particle final : public CEffect_Void
 public:
 	typedef struct tagParticleDesc : public CEffect_Void::EFFECTVOID_DESC
 	{
-		CVIBuffer_Particle_Point::TYPE_ACTION	eType_Action = { CVIBuffer_Particle_Point::SPHERE };
-		CVIBuffer_Particle_Point::TYPE_FADE		eType_Fade = { CVIBuffer_Particle_Point::FADE_NONE };
 
 
 
@@ -26,7 +24,6 @@ public:
 		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
 
 		/* RigidBody */
-		_bool		bUseRigidBody = { TRUE };
 		_bool		bKinetic	  = { TRUE };	// 키네틱, 즉 TRUE면 속도 계산 함)
 		_bool		bUseGravity   = { TRUE };
 		FORCE_MODE	eForce_Mode   = { FORCE_MODE::IMPULSE };
@@ -37,7 +34,7 @@ public:
 		_byte		byFreezeAxis	= { 0 };		// 축 고정 확인용 바이트
 
 		_float2		vMinMaxPower = { 0.1f, 250.f };
-
+		_float2		vMinMaxMass = { 10.f, 10.f };
 
 		/* For.Position */
 		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
@@ -94,7 +91,6 @@ public:
 	void* Get_BufferDesc();
 
 public:
-	//CVIBuffer_Particle_Point* Get_VIBufferCom() { return m_pVIBufferCom; }
 	CVIBuffer_Particle* Get_VIBufferCom() { return m_pVIBufferCom; }
 	CTexture* Get_TextureCom(TEXTURE eTexture) { return m_pTextureCom[eTexture]; }
 
@@ -105,17 +101,12 @@ private:
 private:
 	PARTICLE_DESC				m_tParticleDesc = {};
 	UVSPRITE_DESC				m_tSpriteDesc = {};
-	//CVIBuffer_Particle_Point::PARTICLE_POINT_DESC 
-
-	//CModel*							 m_pModelCom = { nullptr };
-	//CVIBuffer_Effect_Model_Instance* m_pVIBufferCom_Model = { nullptr };
 
 
 private:
 	CShader*					m_pShaderCom = { nullptr };
 	CTexture*					m_pTextureCom[TEXTURE_END] = { nullptr };
-	//CVIBuffer_Particle_Point*	m_pVIBufferCom = { nullptr };
-	CVIBuffer_Particle* m_pVIBufferCom = { nullptr };
+	CVIBuffer_Particle*			m_pVIBufferCom = { nullptr };
 
 	_bool						m_bSortZ = { FALSE };
 
