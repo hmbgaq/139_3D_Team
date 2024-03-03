@@ -5,8 +5,6 @@
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
 
-
-
 #include "Client_Defines.h"
 #include "Base.h"
 
@@ -50,7 +48,7 @@ public:
 	HRESULT			SetUp_ImGuiDESC(string _strName, const ImVec2& _vWindowSize, ImGuiWindowFlags _eWindowFlags, const ImVec4& _vBackGroundColor);
 	HRESULT			Begin();
 	HRESULT			End();
-
+	void			Load_CustomStyle(); //! 유정추가 : ImGui 스타일 설정파일 불러오기
 
 public:
 	void HelpMarker(const char* desc)
@@ -76,6 +74,10 @@ public:	//TODO ImguiDialog #다이얼로그
 	virtual	HRESULT		Save_Function(string strPath, string strFileName); //! 각자 윈도우 특성에따라 override 시켜서 저장 함수 구현
 	virtual HRESULT		Load_Function(string strPath, string strFileName); //! 각자 윈도우 특성에따라 override 시켜서 불러오기 함수 구현
 
+protected://TODO Guizmo #기즈모 무기의 로테이션값들을 받아 오기 위해서 값저장용
+	_float3				Get_GuizmoTranslation() { return m_fmatrixTranslation; }
+	_float3				Get_GuizmoRotation() { return m_fmatrixRotation; }
+	_float3				Get_GuizmoScale() { return m_fmatrixScale; }
 
 protected: //TODO Guizmo #기즈모
 	void				Set_Guizmo(CGameObject* pGameObject);
@@ -84,12 +86,14 @@ protected: //TODO Guizmo #기즈모
 	void				Set_GuizmoCamProj();
 	void				Set_GuizmoOrthographicLH();
 
+
 protected: //TODO  유틸
 	_bool				ImGui_MouseInCheck();
 
 protected:
 	_bool				m_bEnable = false;
 	_bool				m_bRenderTargetOnOff = true;
+	_bool				m_bRenderColliderOnOff = true;
 	_bool				m_bdialogCheck = false;
 
 	ImGuiDESC			m_tImGuiDESC;
@@ -106,12 +110,17 @@ protected: //TODO ImguiDialog #다이얼로그
 	string				m_strDialogKey = {};
 
 protected: //TODO Guizmo #기즈모
+	
 	_float*				m_arrView = { nullptr };
 	_float*				m_arrProj = { nullptr };
 	_float*				m_arrOrthoProj = { nullptr };
 	_float				snap[3] = { 1.f, 1.f, 1.f };
 	_float				snap2D[3] = { 1.f, 1.f, 1.f };
-
+private:
+	_float3				m_fmatrixTranslation = {};
+	_float3				m_fmatrixRotation = {};
+	_float3				m_fmatrixScale = {};
+	
 public:
 	virtual void Free() override;
 };

@@ -1,13 +1,17 @@
 #include "..\Public\PhysX_Manager.h"
 
+#include "GameInstance.h"
 #include "PhysXCollider.h"
 #include "PhysXController.h"
+#include "CollisionSimulationEventCallBack.h"
 
 
 CPhysX_Manager::CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
+	, m_pGameInstance(CGameInstance::GetInstance())
 {
+	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
 }
@@ -55,28 +59,109 @@ HRESULT CPhysX_Manager::Initialize(const _uint In_iNumLayer)
 		m_arrCheck.emplace_back(0);
 	}
 
+
+
+	//// declare variables
+	//physx::PxDefaultAllocator      mDefaultAllocatorCallback;
+	//physx::PxDefaultErrorCallback  mDefaultErrorCallback;
+	//physx::PxDefaultCpuDispatcher* mDispatcher = NULL;
+	//physx::PxTolerancesScale       mToleranceScale;
+
+	//physx::PxFoundation* mFoundation = NULL;
+	//physx::PxPhysics* mPhysics = NULL;
+
+	//physx::PxScene* mScene = NULL;
+	//physx::PxMaterial* mMaterial = NULL;
+
+	//physx::PxPvd* mPvd = NULL;
+
+
+	//// init physx
+	//mFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, mDefaultAllocatorCallback, mDefaultErrorCallback);
+	//mPvd = PxCreatePvd(*mFoundation);
+	//physx::PxPvdTransport* transport = physx::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
+	//mPvd->connect(*transport, physx::PxPvdInstrumentationFlag::eALL);
+	////mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, PxTolerancesScale(),true, mPvd);
+	//mToleranceScale.length = 100;        // typical length of an object
+	//mToleranceScale.speed = 981;         // typical speed of an object, gravity*1s is a reasonable choice
+	//mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, mToleranceScale, true, mPvd);
+	////mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, mToleranceScale);
+
+	//physx::PxSceneDesc sceneDesc(mPhysics->getTolerancesScale());
+	//sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
+	//mDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
+	//sceneDesc.cpuDispatcher = mDispatcher;
+	//sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
+	//mScene = mPhysics->createScene(sceneDesc);
+
+	//physx::PxPvdSceneClient* pvdClient = mScene->getScenePvdClient();
+	//if (pvdClient)
+	//{
+	//	pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+	//	pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+	//	pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+	//}
+
+
+	//// create simulation
+	//mMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	//physx::PxRigidStatic* groundPlane = PxCreatePlane(*mPhysics, physx::PxPlane(0, 1, 0, 50), *mMaterial);
+	//mScene->addActor(*groundPlane);
+
+	//float halfExtent = .5f;
+	//physx::PxShape* shape = mPhysics->createShape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), *mMaterial);
+	//physx::PxU32 size = 30;
+	//physx::PxTransform t(physx::PxVec3(0));
+	//for (physx::PxU32 i = 0; i < size; i++) {
+	//	for (physx::PxU32 j = 0; j < size - i; j++) {
+	//		physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i), physx::PxReal(i * 2 + 1), 0) * halfExtent);
+	//		physx::PxRigidDynamic* body = mPhysics->createRigidDynamic(t.transform(localTm));
+	//		body->attachShape(*shape);
+	//		physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+	//		mScene->addActor(*body);
+	//	}
+	//}
+	//shape->release();
+
+
+	//return E_FAIL;
+
+
 	// Create Foundation
 	m_pFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
+	if (nullptr == m_pFoundation)
+		return E_FAIL;
+
 	//PxRevoluteJointCreate;
 	// Create PVD
 	char* strTransport = "127.0.0.1";
 	m_pPVD = PxCreatePvd(*m_pFoundation);
 	PxPvdTransport* Transport = PxDefaultPvdSocketTransportCreate(strTransport, 5425, 10);
 	_bool	bPVDConnectionResult = m_pPVD->connect(*Transport, PxPvdInstrumentationFlag::eALL);
+
 	if (!bPVDConnectionResult)
 	{
+		_int a = 0;
 		//MSG_BOX("Faiied to connect to PVD!");
 	}
 
 	// Create PhysX
 	m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, PxTolerancesScale(), true, m_pPVD);
+	if (!m_pPhysics)
+		return E_FAIL;
 
 	// Create Cooking
 	m_pCooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_pFoundation, PxCookingParams(PxTolerancesScale()));
-
+	if (!m_pCooking)
+		return E_FAIL;
 
 	m_pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, -10.f);
+	if (!m_pMaterial)
+		return E_FAIL;
 
+	m_pCollisionSimulationEventCallBack = new CollisionSimulationEventCallBack();
+
+	Create_Scene();
 
 	return S_OK;
 }
@@ -141,6 +226,69 @@ _uint CPhysX_Manager::Get_PhysXFilterGroup(const _uint In_iIndex)
 	return m_arrCheck[In_iIndex];
 }
 
+HRESULT CPhysX_Manager::Create_Scene(PxVec3 Gravity)
+{
+	// Set Scene
+	PxSceneDesc sceneDesc(m_pPhysics->getTolerancesScale());
+	sceneDesc.gravity = Gravity;
+
+	// Set Dispatcher
+	m_pDispatcher = PxDefaultCpuDispatcherCreate(2);
+	sceneDesc.cpuDispatcher = m_pDispatcher;
+	sceneDesc.filterShader = PxDefaultSimulationFilterShader;	// PxDefaultSimulationFilterShader ������ ����
+	//sceneDesc.cudaContextManager = m_pCudaContextManager;
+	sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
+	sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;	//Enable GPU dynamics - without this enabled, simulation (contact gen and solver) will run on the CPU.
+	sceneDesc.flags |= PxSceneFlag::eENABLE_PCM;			//Enable PCM. PCM NP is supported on GPU. Legacy contact gen will fall back to CPU
+	sceneDesc.flags |= PxSceneFlag::eENABLE_STABILIZATION;	//Improve solver stability by enabling post-stabilization.
+	sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;		//Enable GPU broad phase. Without this set, broad phase will run on the CPU.
+	sceneDesc.gpuMaxNumPartitions = 8;						//Defines the maximum number of partitions used by the solver. Only power-of-2 values are valid. 
+															//A value of 8 generally gives best balance between performance and stability.
+
+	m_pScene = m_pPhysics->createScene(sceneDesc);
+	if (!m_pScene)
+		return E_FAIL;
+
+	PxPvdSceneClient* pvdClient = m_pScene->getScenePvdClient();
+	if (pvdClient)
+	{
+		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+	}
+
+	if (nullptr == m_pCollisionSimulationEventCallBack)
+		return E_FAIL;
+
+	m_pScene->setSimulationEventCallback(m_pCollisionSimulationEventCallBack);
+
+
+	if (m_pControllerManager)
+		m_pControllerManager->release();
+
+	m_pControllerManager = PxCreateControllerManager(*m_pScene);
+
+	if (!m_pControllerManager)
+		return E_FAIL;
+
+
+	return S_OK;
+}
+
+HRESULT CPhysX_Manager::Delete_Scene()
+{
+	if (m_pScene)
+		m_pScene->release();
+	m_pScene = nullptr;
+
+	if (m_pDispatcher)
+		m_pDispatcher->release();
+
+	m_pDispatcher = nullptr;
+
+	return S_OK;
+}
+
 PxRigidDynamic* CPhysX_Manager::Create_DynamicActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial)
 {
 	return PxCreateDynamic(*m_pPhysics, transform, geometry, *pMaterial, 10.f);
@@ -159,6 +307,21 @@ PxRigidStatic* CPhysX_Manager::Create_StaticActor(const PxTransform& transform, 
 PxRigidStatic* CPhysX_Manager::Create_StaticActor(const PxTransform& transform)
 {
 	return m_pPhysics->createRigidStatic(transform);
+}
+
+void CPhysX_Manager::Add_DynamicActorAtCurrentScene(PxRigidDynamic& DynamicActor)
+{
+	m_pScene->addActor(DynamicActor);
+}
+
+void CPhysX_Manager::Add_StaticActorAtCurrentScene(PxRigidStatic& StaticActor)
+{
+	m_pScene->addActor(StaticActor);
+}
+
+void CPhysX_Manager::Create_Material(_float fStaticFriction, _float fDynamicFriction, _float fRestitution, PxMaterial** ppOut)
+{
+	*ppOut = m_pPhysics->createMaterial(fStaticFriction, fDynamicFriction, fRestitution);
 }
 
 void CPhysX_Manager::Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut)
@@ -300,6 +463,9 @@ void CPhysX_Manager::Free()
 	if (m_pFoundation)
 		m_pFoundation->release();
 
+	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+
+	m_pCollisionSimulationEventCallBack->Release();
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine_Defines.h"
+
 namespace Client
 {
 	/* 1600 x 900 가능할지도 ㄱㄷ */
@@ -65,9 +67,28 @@ namespace Client
 		ONLY_VIEW,
 		CHECK_DIR,
 		INTERIOR,
-
+		PICKING_INSTANCE,
+		PICKING_MESH,
 		LAYER_END
 	};
+
+	enum class PHYSX_COLLISION_LAYER
+	{
+		NONE,
+		PLAYER,
+		PLAYER_WEAPON,
+		MONSTER,
+		TERRAIN,
+		STATIC_PROP,
+		DYNAMIC_PROP,
+		DYNAMIC_PEICE,
+		GROUND,
+		CAMERA,
+		INTERIOR,
+		LAYER_END
+	};
+
+
 	
 }
 
@@ -77,3 +98,4 @@ extern HWND g_hWnd;
 extern HINSTANCE g_hInst;
 
 #include "Client_Enum.h"
+#include "Client_Preset.h"

@@ -19,6 +19,8 @@ public:
 private:
 	HRESULT Ready_Imgui();
 
+	HRESULT Ready_Layer_BackGround(const wstring& strLayerTag);
+
 private:
 	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
 	HRESULT Ready_LightDesc();

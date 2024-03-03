@@ -44,29 +44,32 @@ void CCamera_Dynamic::Priority_Tick(_float fTimeDelta)
 
 void CCamera_Dynamic::Tick(_float fTimeDelta)
 {
-	if (GetKeyState('A') & 0x8000)
-	{
-		m_pTransformCom->Go_Left(fTimeDelta); 
-	}
 
-	if (GetKeyState('D') & 0x8000)
+	if (m_bEnable == true)
 	{
-		m_pTransformCom->Go_Right(fTimeDelta);
-	}
+		if (GetKeyState('A') & 0x8000)
+		{
+			m_pTransformCom->Go_Left(fTimeDelta);
+		}
 
-	if (GetKeyState('W') & 0x8000)
-	{
-		m_pTransformCom->Go_Straight(fTimeDelta);
-	}
+		if (GetKeyState('D') & 0x8000)
+		{
+			m_pTransformCom->Go_Right(fTimeDelta);
+		}
 
-	if (GetKeyState('S') & 0x8000)
-	{
-		m_pTransformCom->Go_Backward(fTimeDelta);
-	}
+		if (GetKeyState('W') & 0x8000)
+		{
+			m_pTransformCom->Go_Straight(fTimeDelta);
+		}
 
-	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
-	{
-		_long	MouseMove = 0;
+		if (GetKeyState('S') & 0x8000)
+		{
+			m_pTransformCom->Go_Backward(fTimeDelta);
+		}
+
+		if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+		{
+			_long	MouseMove = 0;
 
 			if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_X))
 			{
@@ -77,11 +80,13 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 			{
 				m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), m_fMouseSensor * MouseMove * fTimeDelta);
 			}
+		}
+
+
+
+		__super::Tick(fTimeDelta);
 	}
 
-	
-
-	__super::Tick(fTimeDelta);
 }
 
 void CCamera_Dynamic::Late_Tick(_float fTimeDelta)

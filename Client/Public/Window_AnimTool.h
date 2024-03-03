@@ -10,6 +10,7 @@ class CBounding;
 class CBone;
 class CBody;
 class CCharacter;
+class CEffect_Particle;
 END
 
 BEGIN(Client)
@@ -36,16 +37,23 @@ public:
 public:
 	_float			Get_Speed() const { return m_fSpeed; }
 	_bool			Is_Stop() const { return m_bStop; }
+	_bool			Is_CreatePlayer() const { return m_bCreatePlayer;}
 
 public:
 	void			Call_UpdatePreViewModel();
 	void			Call_NextAnimationKey(const _uint& In_Key);
+
+	HRESULT Read_EffectPath(const _tchar* StartDirectoryPath);
 
 private:
 	void			Add_EffectKeyEvent();
 	void			Add_EnableWeaponEvent(const _bool In_bEnable);
 	void			Add_SoundKeyEvent();
 	void			Add_RandomSoundKeyEvent();
+
+	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
+	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
+	void Reset_AnimFunction();
 
 	void			Save_KeyEvent();
 	HRESULT			Load_KeyEvent();
@@ -80,29 +88,41 @@ private:
 	CCollider*				m_pCollider = { nullptr };
 	CCollider*				m_pWCollider = { nullptr };
 	CBody*					m_pBody = { nullptr };
+	CEffect_Particle*		m_TestEffect = { nullptr };
 
 	//애니메이션 재생
 	_float					m_fSpeed = 1.f;
 	_float					m_fDuration = 0.0f;
 	_float					m_fCurrentTrackPosition = 0.0f;
+	_float					m_TargetTrackPosition = 0.f;
 
 	_float					m_iColliderSize = 0.0f;
 	_float					m_iColliderOnTrackPosition = 0.0f;
 	_float					m_iColliderOffTrackPosition = 0.0f;
 
+	//! Effect
+	_float					m_fEffectOnTrackPosition = 0.0f;
+	_float					m_iSelectEffectIndex = 0;
+
 	_float					m_iColliderWeaponSize = 0.0f;
 	_float					m_iColliderWeaponOnTrackPosition = 0.0f;
 	_float					m_iColliderWeaponOffTrackPosition = 0.0f;
 
-	//! 콜라이더 위치값 조정임 
+	//! 콜라이더 위치값 조정 
 	_float					m_fBonePosition[3] = { 0.f,0.f,0.f };
 	_float					m_fWeaponPosition[3] = { 0.f,0.f,0.f };
 
 	_float3					m_fWeaponPos = { 0.f,0.f,0.f };
+	_float3					m_fGuizmoTranslation = {};
+	_float3					m_fGuizmoRotation = {};
+	_float3					m_fGuizmoScale = {};
+	//! Effect position
+	_float3					m_EffectPosition = {};
+	float					m_AddPositions[3] = { 0.0f };
 
 	_float4x4				m_fBoneMatrix = {};
 	_float4x4				m_fWeaponMatrix = {};
-	
+	_float4x4				m_fWeaponWorldMatrix = {};
 	_int					m_CurrentAnimationIndex = 0;
 	_int					m_iCreateObjectSize = 0;
 	_int					m_iCreateWeaponSize = 0;
@@ -119,8 +139,9 @@ private:
 	string					m_strKeyEventFileName = "";
 	string					m_strSoundFileName = "";
 	string					m_strTest = "";
-
+	string					m_strLayer = "";
 	vector<string>			m_vObjectTag;
+	vector<string>			m_vecEffectName;
 
 	vector<CGameObject*>	m_CreateList;
 	vector<CGameObject*>	m_CreateWeaponList;
@@ -157,6 +178,16 @@ public:
 	_bool					m_bCreatWeaponCollider = false;
 	_bool					m_bDeleteWeaponCollider = false;
 	_bool					m_bColliderWeaponSize = false;
+	//! Effect 제어
+	_bool					m_bCreateEffect = false;
+	_bool					m_bAddEffectposition = false;
+	_bool					m_bEffectLoad = false;
+private:
+	_bool					m_bCreatePlayer = false;
+
+
+	_bool bTest = true;
+	_bool bTest2 = true;
 public:
 	static CWindow_AnimTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

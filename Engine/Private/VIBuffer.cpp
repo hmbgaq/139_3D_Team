@@ -62,7 +62,6 @@ HRESULT CVIBuffer::Bind_VIBuffers()
 
 	};
 
-
 	/* 어떤 버텍스 버퍼들을 이용할거다. */
 	m_pContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pVertexBuffers, iStrides, iOffsets);
 

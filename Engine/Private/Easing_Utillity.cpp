@@ -243,13 +243,13 @@ _float ENGINE_DLL Engine::Easing::LerpToType(_float fStartPoint, _float fTargetP
 		return BounceOut(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
 		break;
 
-		//case EASING_TYPE::OUT_BACK:
-		//   return OutBack(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
-		//   break;
+	//case EASING_TYPE::OUT_BACK:
+	//	return OutBack(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+	//	break;
 
-		//case EASING_TYPE::INOUT_BACK:
-		//   return InOutBack(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
-		//   break;
+	//case EASING_TYPE::INOUT_BACK:
+	//	return InOutBack(fStartPoint, fTargetPoint, fPassedTime, fTotalTime);
+	//	break;
 
 	case EASING_TYPE::EASING_TYPE_END:
 		break;

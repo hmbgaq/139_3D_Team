@@ -7,8 +7,8 @@ namespace Engine
 {
 	namespace Easing
 	{
-		_vector ENGINE_DLL LerpToType(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime, EASING_TYPE eType);
-		_float  ENGINE_DLL LerpToType(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime, EASING_TYPE eType);
+		 _vector ENGINE_DLL LerpToType(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime, EASING_TYPE eType);
+		 _float	 ENGINE_DLL LerpToType(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime, EASING_TYPE eType);
 
 		_vector ENGINE_DLL Linear(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime);
 		_float  ENGINE_DLL Linear(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime);

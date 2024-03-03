@@ -9,6 +9,10 @@ namespace Engine
 
 	/* Transform */
 	static const wchar_t* g_pTransformTag = TEXT("Com_Transform");
+	
+	/* RigidBody */
+	static const wchar_t* g_pRigidBodyTag = TEXT("Com_RigidBody");
+
 
 	/* Shader */
 	enum class DEFERRED_SHADER { 
@@ -36,8 +40,16 @@ namespace Engine
 
 	enum class POST_SHADER {
 		POST_ORIGIN,
-		POST_HDR, POST_SSR,
+		POST_HDR, POST_RADIAL,
 		POST_END
+	};
+
+	enum class FINAL_SHADER {
+		FINAL_DEFAULT, FINAL_HSV, FINAL_MIX, FINAL, FINAL_MIXEFFECT, FINAL_END
+	};
+
+	enum class EFFECT_SHADER {
+		EFFECT_Default, EFFECT_Mask, EFFECT_END
 	};
 
 	enum MINMAX { MIN, MAX, MINMAX_END };
@@ -60,6 +72,34 @@ namespace Engine
 		, OUT_BACK, INOUT_BACK
 
 		, EASING_TYPE_END
+	};
+
+	/* Weapon */
+	enum Direction
+	{
+		Left,
+		Right,
+		Front,
+		Back,
+	};
+
+	enum Power
+	{
+		Light,
+		Medium,
+		Heavy,
+		Absolute,
+		Power_End
+	};
+
+	enum Hit_Type
+	{
+		None,
+		Hit_Lightly,
+		Hit,
+		Hit_Break,
+		Hit_Finish,
+
 	};
 
 
@@ -86,6 +126,13 @@ namespace Engine
 		TYPE_END
 	};
 
+	enum class ROOTNODE_FLAG
+	{
+		X = (1 << 0),
+		Y = (1 << 1),
+		Z = (1 << 2),
+		FLAG_END
+	};
 
 }
 

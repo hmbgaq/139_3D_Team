@@ -30,9 +30,13 @@ public:
 	vector<_float4x4>&			Get_OffsetMatrices() { return m_OffsetMatrices; }
 	vector<_uint>&				Get_BoneIndices() { return m_BoneIndices; }
 	_int						Get_NumBones() { return m_iNumBones;}
+	VTXMESH*					Get_Vertices() { return m_pVertices; };
+	VTXANIMMESH*				Get_AnimVertices() { return m_pAnimVertices; }
+
+	void						Calculate_AABB_Extents(_float3* pOutMin, _float3* pOutMax);
 
 	//! ¸ðµ¨ ÀÎ½ºÅÏ½Ì ¾Øµå
-
+	
 public:
     virtual HRESULT Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, _fmatrix PivotMatrix, const vector<class CBone*>& Bones);
     
@@ -41,7 +45,6 @@ public:
 
 public:
 	HRESULT			Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, const vector<CBone*>& Bones, _float4x4* BoneMatrix);
-	
 	
 
 #ifdef _DEBUG
@@ -61,6 +64,7 @@ private:
 
 	vector<_float4x4>	m_OffsetMatrices;
 
+	
 	VTXANIMMESH* m_pAnimVertices = { nullptr };
 	VTXMESH*	 m_pVertices = { nullptr };
 	_uint*		 m_pIndices = { nullptr };

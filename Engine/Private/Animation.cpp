@@ -1,6 +1,7 @@
 #include "..\Public\Animation.h"
 #include "Channel.h"
 
+
 CAnimation::CAnimation()
 {
 }
@@ -44,7 +45,7 @@ HRESULT CAnimation::Initialize(CMyAIAnimation pAIAnimation, const CModel::BONES&
 	return S_OK;
 }
 
-_bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones)
+_bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones, _bool _bIsSplitted)
 {
 	_bool _bPrevTransition = m_bIsTransition;
 	if (m_bIsTransition)
@@ -94,33 +95,144 @@ _bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState
 
 	}
 
+
+
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
-		if (m_bIsTransition)
-		{
-			KEYFRAME	_StartFrame = m_StartTransitionKeyFrame[i];
-			KEYFRAME	_EndFrame = m_EndTransitionKeyFrame[i];
+		//HERE
+		CChannel* pNowChannel = m_Channels[i];
+		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
 
-			m_Channels[i]->Invalidate_TransformationMatrix_Transition(_StartFrame, _EndFrame, m_fTrackPosition, Bones);
+		// RightShoulder : 301, LeftUpLeg : 475
+		if (true == _bIsSplitted && iChannelIndex < 475 && iChannelIndex >= 301)
+		{
+			continue;
 		}
-		else
+		else 
+		{
+			if (m_bIsTransition)
+			{
+				KEYFRAME	_StartFrame = m_StartTransitionKeyFrame[i];
+				KEYFRAME	_EndFrame = m_EndTransitionKeyFrame[i];
+
+				m_Channels[i]->Invalidate_TransformationMatrix_Transition(_StartFrame, _EndFrame, m_fTrackPosition, Bones);
+			}
+			else
+			{
+				switch (_eAnimState)
+				{
+				case Engine::CModel::ANIM_STATE_NORMAL:
+				case Engine::CModel::ANIM_STATE_LOOP:
+					m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+					break;
+				case Engine::CModel::ANIM_STATE_REVERSE:
+					m_Channels[i]->Invalidate_TransformationMatrix_Reverse(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+					break;
+				default:
+					break;
+				}
+			}
+		}	
+	}
+
+	m_bIsTransitionEnd_Now = _bPrevTransition != m_bIsTransition;
+
+	return m_isFinished;
+}
+
+_bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones)
+{
+	//_bool _bPrevTransition = m_bIsTransition;
+	//if (m_bIsTransition)
+	//{
+	//	m_fTrackPosition += m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+
+	//	if (m_fTransitionEnd <= m_fTrackPosition)
+	//	{
+	//		m_bIsTransition = false;
+	//		m_fTrackPosition = m_fTransitionEnd;
+	//	}
+	//}
+	//else
+	{
+		switch (_eAnimState)
+		{
+		case Engine::CModel::ANIM_STATE_NORMAL:
+			m_fTrackPosition += m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+			if (m_fTrackPosition >= m_fDuration)
+			{
+				m_isFinished = true;
+				m_fTrackPosition = m_fDuration;
+			}
+			break;
+		case Engine::CModel::ANIM_STATE_LOOP:
+			m_fTrackPosition += m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+			if (m_fTrackPosition >= m_fDuration)
+			{
+				m_fTrackPosition = 0.0f;
+				m_PrevPos = { 0.f, 0.f, 0.f };
+			}
+			break;
+		case Engine::CModel::ANIM_STATE_REVERSE:
+			m_fTrackPosition -= m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+			if (m_fTrackPosition <= 0)
+			{
+				m_isFinished = true;
+				m_fTrackPosition = 0.f;
+			}
+			break;
+		case Engine::CModel::ANIM_STATE_STOP:
+			m_isFinished = true;
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	for (size_t i = 0; i < m_iNumChannels; i++)
+	{
+		//HERE
+		CChannel* pNowChannel = m_Channels[i];
+		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
+
+		// RightShoulder : 301, LeftUpLeg : 475
+		if (iChannelIndex >= 475)
+		{
+
+		}
+		else if (iChannelIndex >= 301)
 		{
 			switch (_eAnimState)
 			{
 			case Engine::CModel::ANIM_STATE_NORMAL:
 			case Engine::CModel::ANIM_STATE_LOOP:
 				m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+				break;
 			case Engine::CModel::ANIM_STATE_REVERSE:
 				m_Channels[i]->Invalidate_TransformationMatrix_Reverse(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
 				break;
 			default:
 				break;
 			}
-		}
 
+		}
+		/*else
+		{
+			if (m_bIsTransition)
+			{
+				KEYFRAME	_StartFrame = m_StartTransitionKeyFrame[i];
+				KEYFRAME	_EndFrame = m_EndTransitionKeyFrame[i];
+
+				m_Channels[i]->Invalidate_TransformationMatrix_Transition(_StartFrame, _EndFrame, m_fTrackPosition, Bones);
+			}
+			else
+			{
+				
+			}
+		}*/
 	}
 
-	m_bIsTransitionEnd_Now = _bPrevTransition != m_bIsTransition;
 
 	return m_isFinished;
 }
@@ -140,7 +252,7 @@ CChannel* CAnimation::Get_Channel_By_BoneIndex(_uint _iBoneIndex, _uint& _iChann
 	return nullptr;
 }
 
-void CAnimation::Reset_Animation(const CModel::BONES& Bones)
+void CAnimation::Reset_Animation(const CModel::BONES& Bones, _bool _bIsSplitted)
 {
 	m_isFinished = false;
 	m_bIsTransition = false;
@@ -151,11 +263,44 @@ void CAnimation::Reset_Animation(const CModel::BONES& Bones)
 
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
+		//HERE
+		CChannel* pNowChannel = m_Channels[i];
+		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
+
+		// RightShoulder : 301, LeftUpLeg : 475
+		if (true == _bIsSplitted && iChannelIndex < 475 && iChannelIndex >= 301)
+		{
+			continue;
+		}
+
 		m_Channels[i]->Reset_Channel(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
 	}
 }
 
-void CAnimation::Set_Transition(CAnimation* prevAnimation, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
+void CAnimation::Reset_UpperAnimation(const CModel::BONES& Bones)
+{
+	m_isFinished = false;
+	m_bIsTransition = false;
+	m_fTrackPosition = 0.0f;
+	m_PrevPos = { 0.f, 0.f, 0.f };
+
+	Reset_TransitionKeyFrame();
+
+	for (size_t i = 0; i < m_iNumChannels; i++)
+	{
+		//HERE
+		CChannel* pNowChannel = m_Channels[i];
+		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
+
+		// RightShoulder : 301, LeftUpLeg : 475
+		if (iChannelIndex < 475 && iChannelIndex >= 301)
+		{
+			m_Channels[i]->Reset_Channel(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+		}
+	}
+}
+
+void CAnimation::Set_Transition(CAnimation* prevAnimation, _float _fTransitionDuration, _uint iTargetKeyFrameIndex, _bool _bIsSplitted)
 {
 	m_PrevPos = { 0.f, 0.f, 0.f };
 
@@ -255,6 +400,25 @@ _bool CAnimation::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_Channels[0]->Is_Inputable_Front(m_fTrackPosition, _iIndexFront);
 }
+
+_bool CAnimation::Is_Inputable_Front(_float _fTrackPosition,_uint _iIndexFront)
+{
+	return m_Channels[0]->Is_Inputable_Front(m_fTrackPosition, _iIndexFront);
+}
+
+_float4x4* CAnimation::Get_TransformationBoneMatrices(_float fTrackPosition, _float4x4* pMatrix)
+{
+	
+	for (_int i = 0; i < m_iNumChannels; ++i)
+	{
+		_uint iBoneIndex = m_Channels[i]->Get_BoneIndex();
+		pMatrix[iBoneIndex] = m_Channels[i]->Get_NowMatrix(fTrackPosition);
+	}
+
+	return pMatrix;
+}
+
+
 
 CAnimation * CAnimation::Create(CMyAIAnimation pAIAnimation, const CModel::BONES& Bones)
 {

@@ -159,7 +159,8 @@ HRESULT CUI_Player_HPBar::Render()
 
 HRESULT CUI_Player_HPBar::Ready_Components()
 {
-	if(FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+	//if(FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+	//	return E_FAIL;
 
 	//! For.Com_Texture1 // 흰색 바
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_damagel"),
@@ -170,11 +171,11 @@ HRESULT CUI_Player_HPBar::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_bg_full"),
 		TEXT("Com_Texture_RedBar"), reinterpret_cast<CComponent**>(&m_pTextureCom[HPBAR_RED]))))
 		return E_FAIL;
-
-	//! For.Com_Texture3 // 표시선
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("UI_PlayersHP_decal"),
-		TEXT("Com_Texture_Decal"), reinterpret_cast<CComponent**>(&m_pTextureCom[HP_DECAL]))))
-		return E_FAIL;
+	//
+	////! For.Com_Texture3 // 표시선
+	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("UI_PlayersHP_decal"),
+	//	TEXT("Com_Texture_Decal"), reinterpret_cast<CComponent**>(&m_pTextureCom[HP_DECAL]))))
+	//	return E_FAIL;
 
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -211,8 +212,8 @@ HRESULT CUI_Player_HPBar::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pTextureCom[HPBAR_RED]->Bind_ShaderResource(m_pShaderCom, "g_HpBarRed_Texture")))		// Hp Red
 		return E_FAIL;
-	if (FAILED(m_pTextureCom[HP_DECAL]->Bind_ShaderResource(m_pShaderCom, "g_HpBarDecal_Texture")))		// Hp Decal
-		return E_FAIL;
+	//if (FAILED(m_pTextureCom[HP_DECAL]->Bind_ShaderResource(m_pShaderCom, "g_HpBarDecal_Texture")))		// Hp Decal
+	//	return E_FAIL;
 
 	//string TestName = m_tUIInfo.strObjectName;
 	//for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)

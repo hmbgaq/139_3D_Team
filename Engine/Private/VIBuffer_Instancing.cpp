@@ -13,7 +13,6 @@ CVIBuffer_Instancing::CVIBuffer_Instancing(const CVIBuffer_Instancing& rhs)
 	, m_RandomNumber(rhs.m_RandomNumber)
 	, m_pSpeeds(rhs.m_pSpeeds)
 	, m_pLifeTimes(rhs.m_pLifeTimes)
-	, m_InstancingDesc(rhs.m_InstancingDesc)
 {
 }
 
@@ -122,6 +121,7 @@ HRESULT CVIBuffer_Instancing::Bind_VIBuffers()
 
 	return S_OK;
 }
+
 
 void CVIBuffer_Instancing::Update(_float fTimeDelta)
 {

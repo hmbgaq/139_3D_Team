@@ -91,6 +91,7 @@ HRESULT CWeapon_Player::Bind_ShaderResources()
 	return S_OK;
 }
 
+
 // CWeapon_Player * CWeapon_Player::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 // {
 // 	CWeapon_Player*		pInstance = new CWeapon_Player(pDevice, pContext);

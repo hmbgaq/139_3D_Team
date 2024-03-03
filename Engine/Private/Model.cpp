@@ -1,9 +1,10 @@
-#include "..\Public\Model.h"
+#include "Model.h"
 #include "Mesh.h"
 #include "Texture.h"
 #include "Bone.h"
 #include "Animation.h"
 #include "Channel.h"
+#include "Shader.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -39,6 +40,11 @@ CModel::CModel(const CModel & rhs)
 	}
 }
 
+_uint CModel::Get_MaterialIndex(_uint iMeshIndex)
+{
+	return m_Meshes[iMeshIndex]->Get_MaterialIndex();
+}
+
 _uint CModel::Get_NumMeshIndice(_int iMeshIndex)
 {
 	 return m_Meshes[iMeshIndex]->Get_NumIndices();
@@ -48,6 +54,148 @@ CMesh* CModel::Get_Mesh_For_Index(_int iMeshIndex)
 {
 	return m_Meshes[iMeshIndex];
 }
+
+CAnimation* CModel::Get_Animation_For_Index(_uint iAnimIndex)
+{
+	return m_Animations[iAnimIndex];
+}
+
+_float4x4* CModel::Get_Combined_For_AnimationIndex(_uint iAnimationIndex, _float fTrackPosition)
+{
+
+	return nullptr;
+	//return m_Animations[iAnimationIndex]->Get_TransformationBoneMatrices(fTrackPosition);
+}
+
+_float4x4* CModel::Calc_OffsetMatrice(_uint iAnimationIndex, _float fTrackPosition, _float4x4* pMatrix)
+{
+	
+	_float4x4* pCalcMatrix = pMatrix;
+	_uint iNumBones = m_Bones.size();
+
+
+	for (_int i = 0; i < iNumBones; ++i)
+	{
+		pCalcMatrix[i] = m_Bones[i]->Get_CombinedTransformationFloat4x4();
+	}
+
+
+	pMatrix = m_Animations[iAnimationIndex]->Get_TransformationBoneMatrices(fTrackPosition, pCalcMatrix);
+
+
+//_float4x4* pOffsetMatrices = Get_OffsetMatrices();
+//
+//for (_int i = 0; i < m_iNumMeshes; ++i)
+//{
+//	vector<_float4x4> m_OffsetMatrices = m_Meshes[i]->Get_OffsetMatrices();
+//	vector<_uint> vecIndices = m_Meshes[i]->Get_BoneIndices();
+//	_int iNumBones = m_Meshes[i]->Get_NumBones();
+//
+//	for (_int j = 0; j < iNumBones; ++j)
+//	{
+//		XMStoreFloat4x4(&pMatrix[vecIndices[j]], XMLoadFloat4x4(&pMatrix[vecIndices[j]]) * XMLoadFloat4x4(&m_OffsetMatrices[j]));
+//	}
+//}
+
+
+	return pMatrix;
+}
+
+_float4x4* CModel::Get_OffsetMatrices()
+{
+	_float4x4 BoneMatrices[800];
+	
+	for (_int i = 0; i < m_iNumMeshes; ++i)
+	{
+		vector<_float4x4> m_OffsetMatrices = m_Meshes[i]->Get_OffsetMatrices();
+		vector<_uint> vecIndices = m_Meshes[i]->Get_BoneIndices();
+		_int iNumBones = m_Meshes[i]->Get_NumBones();
+
+		for (_int j = 0; j < iNumBones; ++j)
+		{
+			BoneMatrices[vecIndices[j]] = m_OffsetMatrices[j];
+		}
+	}
+
+	return BoneMatrices;
+}
+
+_float3& CModel::Calculate_AABB_Extents_From_Model()
+{
+	_float3 vMin = XMFLOAT3(FLT_MAX, FLT_MAX, FLT_MAX);
+	_float3 vMax = XMFLOAT3(FLT_MIN, FLT_MIN, FLT_MIN);
+
+	// 모델의 모든 메쉬에 대해 AABB 계산
+
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
+	{
+			m_Meshes[i]->Calculate_AABB_Extents(&vMin, &vMax);
+	}
+
+	_float3 vExtents = (vMin - vMax) * 0.5f;
+
+	return vExtents;
+}
+
+void CModel::Calculate_Sphere_Radius(_float3* vOutCenter, _float* fOutRadius)
+{
+	_float fMaxRadius = 0.0f;
+	_float3 Min, Max;
+	
+	if (m_eModelType == CModel::TYPE_ANIM)
+	{
+		for (size_t i = 0; i < m_iNumMeshes; ++i)
+		{
+			m_Meshes[i]->Calculate_AABB_Extents(&Min, &Max);
+
+			// 중심점 계산
+			_float3 vCenter = (Min + Max) * 0.5f;
+
+
+			_uint iNumVertices = m_Meshes[i]->Get_NumVertices();
+			VTXANIMMESH* pAnimVertices = m_Meshes[i]->Get_AnimVertices();
+			// 중심점으로부터 각 정점까지의 거리 계산
+			for (_uint j = 0; j < iNumVertices; ++j)
+			{
+				_float3 VertexPos = pAnimVertices[j].vPosition;
+				fMaxRadius = max(fMaxRadius, XMVector3Length(XMLoadFloat3(&VertexPos) - XMLoadFloat3(&vCenter)).m128_f32[0]);
+			}
+		}
+
+	}
+	else if (m_eModelType == CModel::TYPE_NONANIM)
+	{
+		for (size_t i = 0; i < m_iNumMeshes; ++i)
+		{
+			m_Meshes[i]->Calculate_AABB_Extents(&Min, &Max);
+
+			// 중심점 계산
+			_float3 vCenter = (Min + Max) * 0.5f;
+
+
+			_uint iNumVertices = m_Meshes[i]->Get_NumVertices();
+			VTXMESH* pVertices = m_Meshes[i]->Get_Vertices();
+			// 중심점으로부터 각 정점까지의 거리 계산
+			for (_uint j = 0; j < iNumVertices; ++j)
+			{
+				_float3 VertexPos = pVertices[j].vPosition;
+				fMaxRadius = max(fMaxRadius, XMVector3Length(XMLoadFloat3(&VertexPos) - XMLoadFloat3(&vCenter)).m128_f32[0]);
+			}
+		}
+	}
+	
+
+	
+	
+	if (vOutCenter != nullptr)
+		*vOutCenter = (Min + Max) * 0.5f;
+
+	if(fOutRadius != nullptr)
+		*fOutRadius = fMaxRadius;
+}
+
+
+
 
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
@@ -118,17 +266,6 @@ HRESULT CModel::Initialize(void * pArg)
 	return S_OK;
 }
 
-HRESULT CModel::Render(_uint iMeshIndex)
-{
-	if (iMeshIndex >= m_iNumMeshes)
-		return E_FAIL;
-
-	m_Meshes[iMeshIndex]->Bind_VIBuffers();
-	m_Meshes[iMeshIndex]->Render();
-
-	return S_OK;
-}
-
 void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 {
 	if (m_iCurrentAnimIndex >= m_iNumAnimations)
@@ -139,7 +276,7 @@ void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 	else
 		m_eAnimState = ANIM_STATE::ANIM_STATE_NORMAL;
 
-	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones);
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones, m_bIsSplitted);
 
 
 	_float3 NowPos;
@@ -165,9 +302,13 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 	if (m_iCurrentAnimIndex >= m_iNumAnimations)
 		return;
 
-	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones);
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones, m_bIsSplitted);
+	if (true == m_bIsSplitted)
+	{
+		m_bIsUpperAnimEnd = m_Animations[m_iUpperAnimIndex]->Invalidate_TransformationMatrix_Upper(m_eUpperAnimState, fTimeDelta, m_Bones);
+	}
 
-
+		
 	_float3 NowPos;
 	for (auto& pBone : m_Bones)
 	{
@@ -184,7 +325,7 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 
 		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
 	}
-	min(1,2);
+	
 }
 
 HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices)
@@ -206,11 +347,19 @@ HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantNa
 	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Bind_ShaderResource(pShader, pConstantName);
 }
 
+HRESULT CModel::Bind_ShaderCascade(CShader* pShader)
+{
+	//if (FAILED(pShader->Bind_Matrices("g_BoneMatrices", m_matCurrTransforms.data(), (size_t)m_matCurrTransforms.size())))
+	//	return S_OK;
+
+	return S_OK;
+}
+
 void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
 {
 	m_eAnimState = _eAnimState;
 
-	//if (_iAnimationIndex != m_iCurrentAnimIndex)
+	if (_iAnimationIndex != m_iCurrentAnimIndex)
 	{
 		Reset_Animation(_iAnimationIndex);
 
@@ -221,7 +370,15 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 		else
 		{
 			m_iCurrentAnimIndex = _iAnimationIndex;
+			_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+			m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 		}
+	}
+	else 
+	{
+		m_iCurrentAnimIndex = _iAnimationIndex;
+		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 	}
 }
 
@@ -229,15 +386,16 @@ void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitio
 {
 	if (_iAnimationIndex == m_iCurrentAnimIndex)
 	{
-		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition((_float)iTargetKeyFrameIndex);
+		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 	}
 
 	CAnimation* currentAnimation = m_Animations[m_iCurrentAnimIndex];
 	CAnimation* targetAnimation = m_Animations[_iAnimationIndex];
 
-	targetAnimation->Reset_Animation(m_Bones);		// 임시
+	targetAnimation->Reset_Animation(m_Bones, m_bIsSplitted);		// 임시
 
-	targetAnimation->Set_Transition(currentAnimation, _fTransitionDuration, iTargetKeyFrameIndex);
+	targetAnimation->Set_Transition(currentAnimation, _fTransitionDuration, iTargetKeyFrameIndex, m_bIsSplitted);
 
 	m_iCurrentAnimIndex = _iAnimationIndex;
 }
@@ -245,9 +403,25 @@ void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitio
 void CModel::Reset_Animation(_int iAnimIndex)
 {
 	if (iAnimIndex == -1)
-		m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones);
+		m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
 	else
-		m_Animations[iAnimIndex]->Reset_Animation(m_Bones);
+		m_Animations[iAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
+}
+
+void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+{
+	m_iUpperAnimIndex = _iAnimationIndex;
+	m_eUpperAnimState = _eAnimState;
+	Reset_UpperAnimation(_iAnimationIndex);
+
+}
+
+void CModel::Reset_UpperAnimation(_int iAnimIndex)
+{
+	if (iAnimIndex == -1)
+		m_Animations[m_iCurrentAnimIndex]->Reset_UpperAnimation(m_Bones);
+	else
+		m_Animations[iAnimIndex]->Reset_UpperAnimation(m_Bones);
 }
 
 _float CModel::Get_TickPerSecond()
@@ -268,6 +442,11 @@ _bool CModel::Is_Transition()
 _bool CModel::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_Animations[m_iCurrentAnimIndex]->Is_Inputable_Front(_iIndexFront);
+}
+
+_float CModel::Get_TrackPosition()
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_TrackPosition();
 }
 
 void CModel::Write_Names(const string& strModelFilePath)
@@ -330,9 +509,22 @@ vector<CAnimation*>* CModel::Get_Animations()
 	return &m_Animations;
 }
 
+CMyAIScene* CModel::Get_AIScene()
+{
+	return &m_pAIScene;
+}
+
 vector<CBone*>* CModel::Get_Bones()
 {
 	return &m_Bones;
+}
+
+_uint CModel::Get_BoneNum(const _char* _szName)
+{
+	
+
+
+	return _uint();
 }
 
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
@@ -445,6 +637,43 @@ HRESULT CModel::Ready_Animations()
 	return S_OK;
 }
 
+HRESULT CModel::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* strConstantName)
+{
+	if (iMaterialIndex >= m_iNumMaterials)
+		return E_FAIL;
+
+	NULL_CHECK_RETURN(m_Materials[iMaterialIndex].pMtrlTextures[eTextureType], E_FAIL);
+
+	return m_Materials[iMaterialIndex].pMtrlTextures[eTextureType]->Set_SRV(pShader, strConstantName);
+}
+
+HRESULT CModel::Render(CShader*& pShader, const _uint& iMeshIndex, const _uint& strPassName)
+{
+	/* m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
+
+		m_pModelCom->Render(0);
+	*/
+
+	FAILED_CHECK(pShader->Begin(strPassName));
+
+	FAILED_CHECK(m_Meshes[iMeshIndex]->Bind_VIBuffers());
+
+	FAILED_CHECK(m_Meshes[iMeshIndex]->Render());
+
+	return S_OK;
+}
+
+HRESULT CModel::Render(_uint iMeshIndex)
+{
+	if (iMeshIndex >= m_iNumMeshes)
+		return E_FAIL;
+
+	m_Meshes[iMeshIndex]->Bind_VIBuffers();
+	m_Meshes[iMeshIndex]->Render();
+
+	return S_OK;
+}
+
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eType, const string & strModelFilePath, _fmatrix PivotMatrix)
 {
 	CModel*		pInstance = new CModel(pDevice, pContext);
@@ -496,6 +725,6 @@ void CModel::Free()
 	}
 	m_Meshes.clear();
 
-	if (false == m_isCloned)
-		m_MyAssimp.FreeScene();
+	//if (false == m_isCloned)
+	m_MyAssimp.FreeScene();
 }

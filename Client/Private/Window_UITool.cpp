@@ -248,15 +248,18 @@ void CWindow_UITool::Render()
 
 void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_1))
+		// 스페이스바가 눌렸을 때 실행할 코드
+	
+
+	if (ImGui::IsKeyPressed(ImGuiKey_1))
 	{
 		m_eToolType = CWindow_UITool::TOOL_UI;
 	}
-	if (m_pGameInstance->Key_Down(DIK_2))
+	if (ImGui::IsKeyPressed(ImGuiKey_2))
 	{
 		m_eToolType = CWindow_UITool::TOOL_ANIMATION;
 	}
-	if (m_pGameInstance->Key_Down(DIK_3))
+	if (ImGui::IsKeyPressed(ImGuiKey_3))
 	{
 		CUI::UIKEYFRAME tUIKeyframe;
 		tUIKeyframe.vPos.x = 1.f;
@@ -684,7 +687,10 @@ void CWindow_UITool::Parent_Object(_float fTimeDelta)
 				m_iSelected_ParentObjectIndex = i;
 				m_pCurrParent = dynamic_cast<CUI*>(m_vecParentObject[m_iSelected_ParentObjectIndex]);
 				m_pCurrSelectUI = m_pCurrParent;
+#ifdef _DEBUG
+				/* (컨테이너의 주소를 받아오는건 릴리즈 모드에서 터지는 버그가있음. 툴용) */
 				m_vecParentGroup = m_pCurrParent->Get_vecUIParts();
+#endif // DEBUG
 				m_iSelected_GroupObjectIndex = 0; // 새로 선택했으니까 초기화 해주자.
 				m_eUIType = PARENT;
 			}

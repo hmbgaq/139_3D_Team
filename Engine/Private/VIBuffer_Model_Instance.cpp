@@ -36,7 +36,6 @@ HRESULT CVIBuffer_Model_Instance::Initialize(void* pArg)
 		m_vecInstanceMesh.push_back(Meshes[i]);
 		Safe_AddRef(Meshes[i]);
 	}
-	
 
 	m_iNumMaterials = pModel->Get_NumMaterials();
 
@@ -92,7 +91,6 @@ void CVIBuffer_Model_Instance::Init_Instance(_int iNumInstance)
 HRESULT CVIBuffer_Model_Instance::Render(_int iMeshIndex)
 {
 	
-
 	CModel* pModel = m_tModelDesc.pModel;
 
 	if(nullptr == pModel)

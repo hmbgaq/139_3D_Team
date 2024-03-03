@@ -9,11 +9,10 @@
 /* 셰이더의 전역변수 == 상수테이블(Constant Table) */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-texture2D		g_DiffuseTexture;
-texture2D		g_MaskTexture;
-texture2D		g_NoiseTexture;
-
-texture2D		g_DepthTexture;
+Texture2D		g_DiffuseTexture;
+Texture2D		g_MaskTexture;
+Texture2D		g_NoiseTexture;
+Texture2D		g_DepthTexture;
 
 vector			g_vCamPosition;
 vector			g_vCamDirection;
@@ -22,6 +21,8 @@ float2			g_UVOffset;
 float2			g_UVScale;
 
 float			g_DiscardValue;
+
+float			g_fDegree;
 
 // ======= Noise
 float	g_fFrameTime;
@@ -37,6 +38,23 @@ float	g_fDistortionScale;
 float	g_fDistortionBias;
 
 
+
+/* Custom Function */
+float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
+{
+	float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
+	float fRotationRadian = fDegree * fDegree2Radian;
+	float cosA = cos(fRotationRadian);
+	float sinA = sin(fRotationRadian);
+
+	float2x2 RotateMatrix = float2x2(cosA, -sinA, sinA, cosA);
+
+	vTexcoord -= 0.5f;
+	vTexcoord = mul(vTexcoord, RotateMatrix);
+	vTexcoord += 0.5f;
+
+	return vTexcoord;
+}
 
 
 #pragma region STRUCT
@@ -65,7 +83,7 @@ struct VS_OUT_EFFECT
 	float4		vProjPos : TEXCOORD1;
 };
 
-struct VS_OUT_NOISE
+struct VS_OUT_DISTORTION
 {
 	float4		vPosition	: SV_POSITION;
 
@@ -93,7 +111,7 @@ struct PS_IN_EFFECT
 	float4		vProjPos : TEXCOORD1;
 };
 
-struct PS_IN_NOISE
+struct PS_IN_DISTORTION
 {
 	float4		vPosition	: SV_POSITION;
 
@@ -177,9 +195,9 @@ VS_OUT_EFFECT  VS_MAIN_SPRITE(VS_IN In)
 	return Out;
 }
 
-VS_OUT_NOISE VS_MAIN_NOISE(VS_IN In)
+VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
 {
-	VS_OUT_NOISE		Out = (VS_OUT_NOISE)0;
+	VS_OUT_DISTORTION		Out = (VS_OUT_DISTORTION)0;
 
 	/* In.vPosition * 월드 * 뷰 * 투영 */
 	matrix		matWV, matWVP;
@@ -192,19 +210,78 @@ VS_OUT_NOISE VS_MAIN_NOISE(VS_IN In)
 	Out.vProjPos = Out.vPosition;
 	
 
-	// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
-	Out.vTexcoord1 = (In.vTexcoord * g_vScales.x);
-	Out.vTexcoord1.y = Out.vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
+	//// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
+	//Out.vTexcoord1 = (In.vTexcoord * g_vScales.x);
+	//Out.vTexcoord1.y = Out.vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
 
-	Out.vTexcoord2 = (In.vTexcoord * g_vScales.y);
-	Out.vTexcoord2.y = Out.vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
+	//Out.vTexcoord2 = (In.vTexcoord * g_vScales.y);
+	//Out.vTexcoord2.y = Out.vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
 
-	Out.vTexcoord3 = (In.vTexcoord * g_vScales.z);
-	Out.vTexcoord3.y = Out.vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
+	//Out.vTexcoord3 = (In.vTexcoord * g_vScales.z);
+	//Out.vTexcoord3.y = Out.vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
 
 
 	return Out;
 }
+
+
+
+struct GS_IN
+{
+	float4		vPosition : POSITION;
+	float2		vPSize : PSIZE;
+	float4		vColor : COLOR0;
+};
+
+struct GS_OUT
+{
+	float4		vPosition : SV_POSITION;
+	float2		vTexcoord : TEXCOORD0;
+	float4		vColor : COLOR0;
+};
+
+///* 지오메트리 쉐이더 : 셰이더안에서 정점을 추가적으로 생성해 준다. */
+//[maxvertexcount(6)]
+//void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
+//{
+//	GS_OUT		Out[4];
+
+//	float4		vLook = g_vCamPosition - In[0].vPosition;
+//	float3		vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook.xyz)) * In[0].vPSize.x * 0.5f;
+//	float3		vUp = normalize(cross(vLook.xyz, vRight)) * In[0].vPSize.y * 0.5f;
+
+//	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
+
+//	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
+//	Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
+//	Out[0].vColor = In[0].vColor;
+
+//	Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
+//	Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_fDegree);
+//	Out[1].vColor = In[0].vColor;
+
+//	Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
+//	Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_fDegree);
+//	Out[2].vColor = In[0].vColor;
+
+//	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
+//	Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_fDegree);
+//	Out[3].vColor = In[0].vColor;
+
+//	OutStream.Append(Out[0]);
+//	OutStream.Append(Out[1]);
+//	OutStream.Append(Out[2]);
+//	OutStream.RestartStrip();
+
+//	OutStream.Append(Out[0]);
+//	OutStream.Append(Out[2]);
+//	OutStream.Append(Out[3]);
+//	OutStream.RestartStrip();
+//}
+
+
+
+
 
 /* ========================= PS_OUT ========================= */
 
@@ -232,7 +309,7 @@ PS_OUT PS_MAIN_EFFECT(PS_IN_EFFECT In)
 	vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
 	vDepthTexcoord.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
 
-	float4	vDepthDesc = g_DepthTexture.Sample(PointSampler, vDepthTexcoord);
+    float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
 	
 	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
 
@@ -265,7 +342,8 @@ PS_OUT PS_MAIN_SPRITE_ANIMATION(PS_IN_EFFECT In)
 	return Out;
 }
 
-PS_OUT PS_MAIN_NOISE(PS_IN_NOISE In)
+
+PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -362,16 +440,16 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_SPRITE_ANIMATION();
 	}
 
-	pass Noise // 2
+	pass Distortion // 2
 	{
 		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(DSS_DepthStencilEnable, 0);
 		SetRasterizerState(RS_Cull_None);
 
-		VertexShader = compile vs_5_0 VS_MAIN_NOISE();
+		VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
 		HullShader = NULL;
 		DomainShader = NULL;
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_NOISE();
+		PixelShader = compile ps_5_0 PS_MAIN_DISTORTION();
 	}
 }

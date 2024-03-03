@@ -8,7 +8,7 @@
 #pragma warning (disable : 4275) /* XMFLOAT에서 DLL EXPORT 하는 warning  */
 //#pragma warning (disable : 2532) /* 템플릿 인스턴스화 경고 무시  */
 //#pragma warning (disable : 4353) /* 비표준확장 */
-//#pragma warning (disable : 26495) /* initialize warning */
+#pragma warning (disable : 26495) /* initialize warning */
 
 /* DX */
 #include <d3d11.h>
@@ -57,6 +57,8 @@ using namespace DirectX;
 #include <filesystem>
 using namespace std;
 
+#include "Delegate.h"
+
 
 #include "Engine_Macro.h"
 #include "Engine_Typedef.h"
@@ -103,4 +105,4 @@ using namespace physx;
 
 #endif // _DEBUG
 
-
+#define MAX_CASCADES  3

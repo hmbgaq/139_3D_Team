@@ -26,7 +26,7 @@ CGameInstance::CGameInstance()
 {
 }
 
-HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
+HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumCollsionLayer, _uint iNumPhysXCollsionLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
 {
 	/* 그래픽 디바이스를 초기화 하자.*/
 	m_pGraphic_Device = CGraphic_Device::Create(GraphicDesc, ppDevice, ppContext);
@@ -78,7 +78,7 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 	if (nullptr == m_pFrustum)
 		return E_FAIL;
 
-	m_pCollision_Manager = CCollision_Manager::Create(iNumLayer);
+	m_pCollision_Manager = CCollision_Manager::Create(iNumCollsionLayer);
 	if (nullptr == m_pCollision_Manager)
 		return E_FAIL;
 
@@ -87,13 +87,14 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINS
 		return E_FAIL;
 
 	//TODO: 레벨 확인헤야
-	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, iNumLayer);
+	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, iNumPhysXCollsionLayer);
 	if (nullptr == m_pPhysX_Manager)
 		return E_FAIL;
 
 	m_pRandom_Manager = CRandom_Manager::Create();
 	if(nullptr == m_pRandom_Manager)
 		return E_FAIL;
+
 
 
 	return S_OK;
@@ -122,6 +123,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pCollision_Manager->Tick(fTimeDelta);
 
+	m_pPhysX_Manager->Tick(fTimeDelta);
+
 	m_pObject_Manager->Late_Tick(fTimeDelta);
 
 	m_pLevel_Manager->Tick(fTimeDelta);
@@ -149,10 +152,7 @@ HRESULT CGameInstance::Render_Engine()
 		nullptr == m_pRenderer)
 		return E_FAIL;
 
-	m_pRenderer->Pre_Setting();
-
 	m_pRenderer->Draw_RenderGroup();
-
 
 #ifdef _DEBUG
 	m_pLevel_Manager->Render();
@@ -432,11 +432,24 @@ HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
 
+CRenderer* CGameInstance::Get_Renderer()
+{
+	return m_pRenderer;
+}
 
 #ifdef _DEBUG
-void CGameInstance::Set_RenderDebug(_bool _bRenderDebug)
+void CGameInstance::Set_RenderDebugCom(_bool _bRenderDebug)
 {
-	m_pRenderer->Set_RenderDebug(_bRenderDebug);
+	NULL_CHECK_RETURN(m_pRenderer, );
+
+	m_pRenderer->Set_DebugCom(_bRenderDebug);
+}
+
+void CGameInstance::Set_RenderDebugTarget(_bool _bRenderTarget)
+{
+	/* 디버그용 렌더타겟 */
+	NULL_CHECK_RETURN(m_pRenderer, );
+	m_pRenderer->Set_DebugRenderTarget(_bRenderTarget);
 }
 #endif
 
@@ -507,7 +520,18 @@ _float4 CGameInstance::Get_CamSetting()
 
 _float CGameInstance::Get_CamFar()
 {
+	if (nullptr == m_pPipeLine)
+		return _float();
+
 	return m_pPipeLine->Get_CamFar();
+}
+
+_float4x4 CGameInstance::Get_Shadow_Proj()
+{
+	if (nullptr == m_pPipeLine)
+		return _float4x4();
+
+	return m_pPipeLine->Get_Shadow_Proj();
 }
 
 
@@ -655,32 +679,50 @@ _bool CGameInstance::Picking_Vertex(RAY ray, _float3* out, _uint triNum, VTXMESH
 
 HRESULT CGameInstance::Add_Font(const wstring & strFontTag, const wstring & strFontFilePath)
 {
+	NULL_CHECK_RETURN(m_pFont_Manager, E_FAIL);
 	return m_pFont_Manager->Add_Font(strFontTag, strFontFilePath);
 }
 
 HRESULT CGameInstance::Render_Font(const wstring & strFontTag, const wstring & strText, const _float2 & vPosition, _fvector vColor, _float fScale, _float2 vOrigin, _float fRotation)
 {
+	NULL_CHECK_RETURN(m_pFont_Manager, E_FAIL);
 	return m_pFont_Manager->Render(strFontTag, strText, vPosition, vColor, fScale, vOrigin, fRotation);
 }
 
 HRESULT CGameInstance::Add_RenderTarget(const wstring & strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4 & vClearColor)
 {
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
 	return m_pTarget_Manager->Add_RenderTarget(strTargetTag, iSizeX, iSizeY, ePixelFormat, vClearColor);
 }
 
 HRESULT CGameInstance::Add_MRT(const wstring & strMRTTag, const wstring & strTargetTag)
 {
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
 	return m_pTarget_Manager->Add_MRT(strMRTTag, strTargetTag);
 }
 
 HRESULT CGameInstance::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV, _bool bClear)
 {
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
 	return m_pTarget_Manager->Begin_MRT(strMRTTag, pDSV, bClear);
 }
 
 HRESULT CGameInstance::End_MRT()
 {
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
 	return m_pTarget_Manager->End_MRT();
+}
+
+HRESULT CGameInstance::Clear_MRT(const wstring& strMRTTag)
+{
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
+	return m_pTarget_Manager->Clear_MRT(strMRTTag);
+}
+
+HRESULT CGameInstance::Clear_Target(const wstring& strMRTTag, const wstring& strTargetTag)
+{
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
+	return m_pTarget_Manager->Clear_Target(strMRTTag, strTargetTag);
 }
 
 HRESULT CGameInstance::Bind_RenderTarget_ShaderResource(const wstring & strTargetTag, CShader * pShader, const _char * pConstantName)
@@ -699,6 +741,7 @@ void CGameInstance::Create_RenderTarget(const wstring& strTargetTag)
 }
 
 #ifdef _DEBUG
+
 HRESULT CGameInstance::Ready_RenderTarget_Debug(const wstring & strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {
 	return m_pTarget_Manager->Ready_Debug(strTargetTag, fX, fY, fSizeX, fSizeY);
@@ -745,6 +788,11 @@ _bool CGameInstance::isIn_LocalPlanes(_fvector vPoint, _float fRadius)
 void CGameInstance::Add_Collision(const _uint& In_iLayer, CCollider* _pCollider)
 {
 	m_pCollision_Manager->Add_Collision(In_iLayer, _pCollider);
+}
+
+void CGameInstance::Check_Group(const _uint& In_iLeftLayer, const _uint& In_iRightLayer)
+{
+	m_pCollision_Manager->Check_Group(In_iLeftLayer, In_iRightLayer);
 }
 
 void CGameInstance::Add_Event(IEvent* pEvent)
@@ -800,6 +848,21 @@ PxRigidStatic* CGameInstance::Create_StaticActor(const PxTransform& transform, c
 PxRigidStatic* CGameInstance::Create_StaticActor(const PxTransform& transform)
 {
 	return m_pPhysX_Manager->Create_StaticActor(transform);
+}
+
+void CGameInstance::Add_DynamicActorAtCurrentScene(PxRigidDynamic& DynamicActor)
+{
+	m_pPhysX_Manager->Add_DynamicActorAtCurrentScene(DynamicActor);
+}
+
+void CGameInstance::Add_StaticActorAtCurrentScene(PxRigidStatic& StaticActor)
+{
+	m_pPhysX_Manager->Add_StaticActorAtCurrentScene(StaticActor);
+}
+
+void CGameInstance::Create_Material(_float fStaticFriction, _float fDynamicFriction, _float fRestitution, PxMaterial** ppOut)
+{
+	m_pPhysX_Manager->Create_Material(fStaticFriction, fDynamicFriction, fRestitution, ppOut);
 }
 
 void CGameInstance::Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut)

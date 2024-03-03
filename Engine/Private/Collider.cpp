@@ -150,7 +150,8 @@ void CCollider::OnCollisionEnter(CCollider* other)
 	if (false == m_bEnable || nullptr == m_pOwner)
 		return;
 
-	m_pOwner->OnCollisionEnter(other);
+	if (true == m_pOwner->Get_Enable() && nullptr != m_pOwner)
+		m_pOwner->OnCollisionEnter(other);
 }
 
 void CCollider::OnCollisionStay(CCollider* other)
@@ -158,7 +159,8 @@ void CCollider::OnCollisionStay(CCollider* other)
 	if (false == m_bEnable || nullptr == m_pOwner)
 		return;
 
-	m_pOwner->OnCollisionStay(other);
+	if (true == m_pOwner->Get_Enable() && nullptr != m_pOwner)
+		m_pOwner->OnCollisionStay(other);
 }
 
 void CCollider::OnCollisionExit(CCollider* other)
@@ -166,7 +168,8 @@ void CCollider::OnCollisionExit(CCollider* other)
 	if (false == m_bEnable || nullptr == m_pOwner)
 		return;
 
-	m_pOwner->OnCollisionExit(other);
+	if (true == m_pOwner->Get_Enable() && nullptr != m_pOwner)
+		m_pOwner->OnCollisionExit(other);
 }
 
 void CCollider::Set_Enable(_bool _Enable)

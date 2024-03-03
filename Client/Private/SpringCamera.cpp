@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "Character.h"
+#include "Data_Manager.h"
+#include "Player.h"
 
 CSpringCamera::CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CCamera(pDevice, pContext, strPrototypeTag)
@@ -38,12 +40,17 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 		m_CameraOffsetY = 3.5f;
 		m_CameraOffsetZ = -7.0f;
 
-		m_pPlayer = m_pGameInstance->Get_Player();
-		m_ptarget = dynamic_cast<CTransform*>(m_pGameInstance->Get_Player()->Get_Transform());
+		m_pPlayer = CData_Manager::GetInstance()->Get_Player();
+		m_ptarget = m_pPlayer->Get_Transform();
 		ActualPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	}
-	ShowCursor(FALSE);
+
+	if (m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_TOOL)
+		ShowCursor(true);
+	else 
+		ShowCursor(false);
+
 	return S_OK;
 }
 
@@ -71,7 +78,7 @@ void CSpringCamera::Tick(_float fTimeDelta)
 
 	//}
 	//else 
-	{
+	//{
 
 		/*if (0.7 - fTimeDelta > hDist)
 		{
@@ -91,6 +98,18 @@ void CSpringCamera::Tick(_float fTimeDelta)
 			vDist = 0.7f;
 		}*/
 
+		//m_pTransformCom->Look_At(m_ptarget->Get_State(CTransform::STATE::STATE_POSITION));
+		//CameraRotation(fTimeDelta);
+		//
+		////Player가 앞키를 누르면 카메라 회전했던 방향쪽에서 회전값을 받아서 카메라가 바라보고 있는 방향으로 플레이어도 쳐다 보게 만듬 
+		//if (true == m_pPlayer->Is_Rotate_In_CameraDir())
+		//{
+		//	RotatePlayer();
+		//}
+	//}
+
+	if (true == m_bEnable)
+	{
 		m_pTransformCom->Look_At(m_ptarget->Get_State(CTransform::STATE::STATE_POSITION));
 		CameraRotation(fTimeDelta);
 
@@ -99,38 +118,38 @@ void CSpringCamera::Tick(_float fTimeDelta)
 		{
 			RotatePlayer();
 		}
-	}
 
-
-
-
-	if (m_pGameInstance->Key_Down(DIK_TAB))
-	{
-		if (m_bFix)
+		if (m_pGameInstance->Key_Down(DIK_TAB))
 		{
-			m_bFix = false;
-			m_bCheck = false;
+			if (m_bFix)
+			{
+				m_bFix = false;
+				m_bCheck = false;
+			}
+			else
+			{
+				m_bFix = true;
+				m_bCheck = true;
+			}
 		}
+		if (m_bCheck == false)
+			ShowCursor(FALSE);
 		else
+			ShowCursor(TRUE);
+
+
+		if (false == m_bFix)
+			return;
+		if (true == m_bFix)
 		{
-			m_bFix = true;
-			m_bCheck = true;
+			Mouse_Fix();
 		}
-	}
-	if (m_bCheck == false)
-		ShowCursor(FALSE);
-	else
-		ShowCursor(TRUE);
 
-
-	if (false == m_bFix)
-		return;
-	if (true == m_bFix)
-	{
-		Mouse_Fix();
+		__super::Tick(fTimeDelta);
 	}
 
-	__super::Tick(fTimeDelta);
+
+	
 }
 
 void CSpringCamera::Late_Tick(_float fTimeDelta)

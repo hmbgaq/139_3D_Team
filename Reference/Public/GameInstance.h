@@ -22,7 +22,7 @@ private:
 
 public: /* For.Engine */
 	/* 엔진라이브러리를 사용하기위한 준비를 모두 거친다. */
-	HRESULT		Initialize_Engine(_uint iNumLevels, _uint iNumLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
+	HRESULT		Initialize_Engine(_uint iNumLevels, _uint iNumCollsionLayer, _uint iNumPhysXCollsionLayer, HINSTANCE hInstance, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
 	void		Tick_Engine(_float fTimeDelta);
 	HRESULT		Render_Engine();
 	void		Clear(_uint iLevelIndex);
@@ -85,10 +85,11 @@ public: /* For.Component_Manager */
 public: /* For.Renderer */
 	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
+	CRenderer* Get_Renderer(); /* 툴용 */
 #ifdef _DEBUG
-	void Set_RenderDebug(_bool _bRenderDebug);
+	void Set_RenderDebugCom(_bool _bRenderDebug);
+	void Set_RenderDebugTarget(_bool _bRenderTarget);
 #endif
-
 
 public: /* For.PipeLine */
 	void		Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix);
@@ -100,6 +101,7 @@ public: /* For.PipeLine */
 	_float4		Get_CamPosition();
 	_float4		Get_CamSetting();
 	_float		Get_CamFar();
+	_float4x4	Get_Shadow_Proj();
 
 	//!			레이캐스트
 	RAY			Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
@@ -120,6 +122,8 @@ public: /* For.Target_Manager */
 	HRESULT		Add_MRT(const wstring& strMRTTag, const wstring& strTargetTag);
 	HRESULT		Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView * pDSV = nullptr, _bool bClear = true);
 	HRESULT		End_MRT();
+	HRESULT		Clear_MRT(const wstring& strMRTTag);
+	HRESULT		Clear_Target(const wstring& strMRTTag, const wstring& strTargetTag);
 	HRESULT		Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 	class CRenderTarget* Find_RenderTarget(const wstring& strTargetTag);
 	void		Create_RenderTarget(const wstring& strTargetTag);
@@ -141,6 +145,8 @@ public: /* For.Frustum */
 public: /* For.Collision_Manager */
 	void		Add_Collision(const _uint& In_iLayer, CCollider* _pCollider);
 
+	void		Check_Group(const _uint& In_iLeftLayer, const _uint& In_iRightLayer);
+
 
 public: /* For.Event_Manager */
 	void		Add_Event(class IEvent* pEvent);
@@ -160,6 +166,10 @@ public: /* For.PhysX_Manager */
 	PxRigidStatic*			Create_StaticActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial = nullptr);
 	PxRigidStatic*			Create_StaticActor(const PxTransform& transform);
 
+	void					Add_DynamicActorAtCurrentScene(PxRigidDynamic& DynamicActor);
+	void					Add_StaticActorAtCurrentScene(PxRigidStatic& StaticActor);
+
+	void					Create_Material(_float fStaticFriction, _float fDynamicFriction, _float fRestitution, PxMaterial** ppOut);
 	void					Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut);
 	void					Create_ConvexMesh(const PxConvexMeshDesc& In_MeshDesc, PxConvexMesh** ppOut);
 	void					Create_Shape(const PxGeometry& Geometry, PxMaterial* pMaterial, const _bool isExculsive, const PxShapeFlags In_ShapeFlags, PxShape** ppOut);
@@ -171,8 +181,6 @@ public: /* For.Random_Manager*/
 	const _int&				Random_Int(_int iMin, _int iMax);
 	const _bool&			Random_Coin(_float fProbality);
 	int64_t					GenerateUniqueID();
-
-
 
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
@@ -206,7 +214,7 @@ public: /* Common */
 	const wstring	Remove_LastNumChar(const wstring& str, const _uint& iNumCutCount);
 	const string	Remove_LastNumChar(const string& str, const _uint& iNumCutCount);
 	const wstring	Get_LastNumChar(const wstring& str, const _uint& iNumCutCount);
-
+#pragma endregion End
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };

@@ -3,6 +3,7 @@
 /* Base */
 matrix      g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix      g_BoneMatrices[800];
+
 float       g_fCamFar;
 float       g_TimeDelta;
 
@@ -21,13 +22,30 @@ float4      g_BloomColor;
 
 /* Reflection */
 matrix      g_ReflectionMatrix;
-
 float4      g_vRimColor = { 0.f, 0.f, 0.f, 0.f };
 
 Texture2D   g_InstanceTransform;
 
+struct KeyframeDesc
+{
+    int  iAnimIndex;
+    uint iStartFrame;
+    uint iEndFrame;
+    float fRatio;
+    
+    //SoundEventDesc tSoundEventDesc;
+};
 
-
+struct TweenFrameDesc
+{
+    KeyframeDesc StartKeyFrame;
+    KeyframeDesc EndKeyFrame;
+    
+    float fTweenDuration;
+    float fTweenRatio;
+    float fTweenAcc;
+    float fPadding;
+};
 
 float4x4 Get_AnimTexture_Transform(uint iIndex, uint iID)
 {
@@ -40,7 +58,6 @@ float4x4 Get_AnimTexture_Transform(uint iIndex, uint iID)
 
     return matrix(vRight, vUp, vLook, vPos);
 }
-
 
 
 struct VS_IN
@@ -68,8 +85,6 @@ struct VS_OUT
     float3 vPositionView : POSITION;
 };
 
-//(VS_to_PS ) CharacterAnimatedInstancedVS(A_to_VS)
-//(float4)CharacterPS(VS_to_PS)
 
 VS_OUT VS_MAIN(VS_IN In)
 {
@@ -91,9 +106,9 @@ VS_OUT VS_MAIN(VS_IN In)
     float4x4 vMatW = Get_AnimTexture_Transform(In.vBlendIndices.w, In.iID);
 
     float4x4 BoneMatrix = vMatX * In.vBlendWeights.x +
-		vMatY * In.vBlendWeights.y +
-		vMatZ * In.vBlendWeights.z +
-		vMatW * fWeightW;
+		                   vMatY * In.vBlendWeights.y +
+		                   vMatZ * In.vBlendWeights.z +
+		                   vMatW * fWeightW;
 
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
     vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);

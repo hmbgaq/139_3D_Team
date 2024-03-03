@@ -26,11 +26,40 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;	
 
+public:
+	void	Update_Cascade(const float3& vDirectionalDir);
+
+public:
+	void	Set_Enable(_bool _bEnable) { m_bEnable = _bEnable; }
+
+
 protected:
 	_float	m_fFovy			= { 0.f };
 	_float	m_fAspect		= { 0.0f };
 	_float	m_fNear			= { 0.0f };
 	_float	m_fFar			= { 0.0f };
+
+	_bool	m_bEnable = false; //! true일 경우에만 뷰 투영 셋팅하게~ 씅승용
+
+public:
+	/* Cascade */
+	const _float3* GetEyePt() const;
+	const _float3* GetWorldAhead() const;
+	const _float3* GetWorldUp() const;
+	const _float3* GetWorldRight() const;
+	void ExtractFrustumBoundSphere(_float fNear, _float fFar, _float3& vBoundCenter, _float& fBoundRadius);
+
+	static const int m_iTotalCascades = 3;
+	_float4x4 m_arrCameraWorld;
+
+	_float m_fShadowBoundRadius;
+	_float m_fCascadeTotalRange;
+	_float4x4 m_WorldToShadowSpace;
+	_float	m_arrCascadeRanges[4];
+
+	_float m_arrCascadeBoundRadius[m_iTotalCascades];
+	_float3 m_arrCascadeBoundCenter[m_iTotalCascades];
+	_float4x4 m_arrWorldToCascadeProj[m_iTotalCascades];
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

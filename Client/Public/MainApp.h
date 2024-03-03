@@ -9,6 +9,8 @@ END
 
 BEGIN(Client)
 
+class CDevConsole;
+
 class CMainApp final  : public CBase
 {
 private:
@@ -37,9 +39,13 @@ private:
 	CGameInstance*			m_pGameInstance = { nullptr };
 
 private:
+	CDevConsole*			m_pDevConsole = { nullptr };
+
+private:
 	_tchar					m_szFPS[MAX_PATH] = TEXT("");
 	_float					m_fTimeAcc = { 0.f };
 	_uint					m_iNumRender = { 0 };
+
 
 public:
 	static CMainApp* Create();

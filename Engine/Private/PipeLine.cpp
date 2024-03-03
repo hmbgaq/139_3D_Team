@@ -1,6 +1,6 @@
-#include "..\Public\PipeLine.h"
+#include "PipeLine.h"
 #include "GameInstance.h"
-
+#
 CPipeLine::CPipeLine()
 	: m_pGameInstace(CGameInstance::GetInstance())
 {
@@ -13,6 +13,10 @@ void CPipeLine::Set_Transform(D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix
 	{
 		m_PreViewMatrix = m_Transform[D3DTS_VIEW];
 	}
+	else if (D3DTS_PROJ == eState)
+	{
+		m_PreProjMatrix = m_Transform[D3DTS_PROJ];
+	}
 
 	XMStoreFloat4x4(&m_Transform[eState], TransformMatrix);
 }
@@ -22,6 +26,12 @@ void CPipeLine::Set_Transform(D3DTRANSFORMSTATE eState, _float4x4 TransformMatri
 	if (D3DTS_VIEW == eState)
 	{
 		m_PreViewMatrix = m_Transform[D3DTS_VIEW];
+		m_PreWorldMatrix = m_Transform[D3DTS_WORLD];
+
+	}
+	else if (D3DTS_PROJ == eState)
+	{
+		m_PreProjMatrix = m_Transform[D3DTS_PROJ];
 	}
 
 	m_Transform[eState] = TransformMatrix;
@@ -70,6 +80,7 @@ _float4 CPipeLine::Get_CamSetting()
 
 	return Result;
 }
+
 
 //RAY CPipeLine::Get_MouseRayWorld(HWND g_hWnd, const unsigned int g_iWinSizeX, const unsigned int g_iWinSizeY)
 //{
@@ -129,7 +140,7 @@ _float4x4 CPipeLine::Get_PreViewMatrix()
 
 HRESULT CPipeLine::Initialize()
 {
-	for (size_t i = 0; i < D3DTS_END; i++)
+	for (size_t i = 0; i < ECast(D3DTS_END); i++)
 	{
 		XMStoreFloat4x4(&m_Transform[i], XMMatrixIdentity());
 		XMStoreFloat4x4(&m_Transform_Inverse[i], XMMatrixIdentity());
@@ -140,7 +151,7 @@ HRESULT CPipeLine::Initialize()
 
 void CPipeLine::Tick()
 {
-	for (size_t i = 0; i < D3DTS_END; i++)
+	for (size_t i = 0; i < ECast(D3DTS_END); i++)
 	{
 		XMStoreFloat4x4(&m_Transform_Inverse[i], XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_Transform[i])));
 	}

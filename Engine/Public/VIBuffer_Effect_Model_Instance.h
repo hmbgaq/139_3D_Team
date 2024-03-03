@@ -10,8 +10,11 @@ class ENGINE_DLL CVIBuffer_Effect_Model_Instance : public CVIBuffer_Model_Instan
 public:
 	typedef struct tagVIBuffer_EffectModelInstanceDesc
 	{
-		class CModel*	  pModel = { nullptr };
-		_int			  iNumInstance = {0};
+		class CModel*	  pModel			= { nullptr };
+
+		_int			  iCurNumInstance	= { 1 };
+
+		_float4		vCurrentPosition	= {0.f, 0.f, 0.f, 1.f};
 
 	}EFFECT_MODEL_INSTANCE_DESC;
 
@@ -32,6 +35,13 @@ public:
 /*	void				Add_Mesh(_fmatrix vWorldMatrix);*/
 	void				Init_Instance(_int iNumInstance) override;
 	virtual				HRESULT	Render(_int iMeshIndex) override;
+
+
+public:
+	EFFECT_MODEL_INSTANCE_DESC* Get_Desc() { return &m_tBufferDesc; }
+
+private:
+	EFFECT_MODEL_INSTANCE_DESC			m_tBufferDesc;
 
 
 public:
