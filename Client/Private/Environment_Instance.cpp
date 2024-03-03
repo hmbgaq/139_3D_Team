@@ -270,7 +270,7 @@ HRESULT CEnvironment_Instance::Bind_ShaderResources()
 		return E_FAIL;
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &fCamFar, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
 		return E_FAIL;
 
 

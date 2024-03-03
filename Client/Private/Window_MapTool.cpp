@@ -18,6 +18,7 @@
 #include "../Imgui/ImGuizmo/ImZoomSlider.h"
 #include "Camera.h"
 #include "SpringCamera.h"
+#include "Data_Manager.h"
 
 static ImGuizmo::OPERATION InstanceCurrentGizmoOperation;
 static ImGuizmo::MODE	   InstanceCurrentGizmoMode;
@@ -1099,6 +1100,8 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 				
 					ImGui::SeparatorText(u8"메쉬 픽킹 인포");
 
+					_float fMaxHeight = FLT_MIN;
+
 
 					_int iCreateObjectSize = (_int)m_vecCreateObject.size();
 
@@ -1110,16 +1113,19 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 						{
 							m_tWorldRay = m_pGameInstance->Get_MouseRayWorld(g_hWnd, g_iWinSizeX, g_iWinSizeY);
 #ifdef _DEBUG
-							if (pTargetObject->Picking(&m_fRayPos))
-							{
-								m_fMeshPos = m_fRayPos;
-							}
-							//if (true == pTargetObject->Picking(&m_fRayPos))
+							//if (pTargetObject->Picking(&m_fRayPos))
 							//{
-							//
-							//	XMStoreFloat3(&m_fMeshPos, XMVector3TransformCoord(XMLoadFloat3(&m_fRayPos), m_vecCreateObject[i]->Get_Transform()->Get_WorldMatrix()));
+							//	m_fMeshPos = m_fRayPos;
 							//}
+							if (true == pTargetObject->Picking(&m_fRayPos))
+							{
+							
+								XMStoreFloat3(&m_fMeshPos, XMVector3TransformCoord(XMLoadFloat3(&m_fRayPos), m_vecCreateObject[i]->Get_Transform()->Get_WorldMatrix()));
+								
+								
+							}
 #endif
+	
 
 						}
 						else
@@ -1200,7 +1206,19 @@ void CWindow_MapTool::FieldWindowMenu()
 
 		m_bShowCreateField = !(_bool)iFieldShowType;
 
+		if (ImGui::Button(u8"리셋"))
+		{
+			Reset_Function();
+		}
 	}ImGui::NewLine();
+
+	ImGui::SeparatorText(u8"카메라");
+	{
+		if (ImGui::InputFloat(u8"카메라 속도", &m_fCamaraSpeed))
+		{
+			CData_Manager::GetInstance()->Get_Camera_Dynamic()->Get_Transform()->Set_Speed(m_fCamaraSpeed);
+		}
+	}
 
 
 	#ifdef _DEBUG
@@ -1595,7 +1613,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 	}
 	else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT && false == m_vecCreateObject.empty() && m_vecCreateObject[m_iSelectObjectIndex] != nullptr)
 	{
-		if (m_eTabType == CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT && m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
+		if (m_eTabType == CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT && m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM && false == m_vecPreViewInstance.empty())
 		{
 			Set_GuizmoCamView();
 			Set_GuizmoCamProj();
@@ -1724,6 +1742,7 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 
 			wstring strPrototypeTag;
 			//m_vecMonsterTag[m_iSelectCharacterTag];
+
 			switch (m_eTabType)
 			{
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER:
@@ -1905,35 +1924,46 @@ void CWindow_MapTool::Ground_CreateFunction()
 			return;
 		
 		_int iCreateObjectSize = (_int)m_vecCreateObject.size();
+		_float fMaxHeight = FLT_MIN;
 
 		for (_int i = 0; i < iCreateObjectSize; ++i)
 		{
 			//TODO 작성중. 메쉬 픽킹
-// 			_float3 vPickedPos = {};
-// 
-// 			if (true == m_vecCreateObject[i]->Picking(&vPickedPos))
-// 			{
-				CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-				Desc.bAnimModel = m_bAnimType;
-				Desc.iShaderPassIndex = m_iShaderPassIndex;
-				Desc.strModelTag = m_pPreviewObject->Get_ModelTag();
-				Desc.bPreview = false;
-				Desc.WorldMatrix = m_pPreviewObject->Get_Transform()->Get_WorldMatrix();
+ 			_float3 vPickedPos = {};
+ 
+ 			if (true == m_vecCreateObject[i]->Picking(&vPickedPos))
+ 			{
+				if (m_fMeshPos.y < vPickedPos.y)
+				{
+					m_fMeshPos = vPickedPos;
 
-				CEnvironment_Object* pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+				}
 
-				m_vecCreateObject.push_back(pObject);
-
-				wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pObject->Get_ModelTag() + L"@" + to_wstring(m_iCreateObjectIndex));
-				string strConvertTag;
-				m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
-				m_vecCreateObjectTag.push_back(strConvertTag);
-
-				m_iCreateObjectIndex++;
-//			}
+			}
 			
 		}
 
+		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+		Desc.bAnimModel = m_bAnimType;
+		Desc.iShaderPassIndex = m_iShaderPassIndex;
+		Desc.strModelTag = m_pPreviewObject->Get_ModelTag();
+		Desc.bPreview = false;
+
+		_float4 vSetPos = {m_fMeshPos.x, m_fMeshPos.y, m_fMeshPos.z, 1.f};
+		m_pPreviewObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vSetPos);
+
+		Desc.WorldMatrix = m_pPreviewObject->Get_Transform()->Get_WorldMatrix();
+
+		CEnvironment_Object* pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+
+		m_vecCreateObject.push_back(pObject);
+
+		wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pObject->Get_ModelTag() + L"@" + to_wstring(m_iCreateObjectIndex));
+		string strConvertTag;
+		m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
+		m_vecCreateObjectTag.push_back(strConvertTag);
+
+		m_iCreateObjectIndex++;
 	}
 
 	else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_INSTANCE)
@@ -2026,48 +2056,55 @@ void CWindow_MapTool::Preview_Environment_CreateFunction()
 			return;
 
 		_int iCreateObjectSize = (_int)m_vecCreateObject.size();
+		_float fMaxHeight = FLT_MIN;
 
 		for (_int i = 0; i < iCreateObjectSize; ++i)
 		{
 			//TODO 작성중. 메쉬 픽킹
-// 			_float3 vPickedPos = {};
-// 
-// 			if (true == m_vecCreateObject[i]->Picking(&vPickedPos))
-// 			{
-			CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-			Desc.bAnimModel = m_bAnimType;
-			Desc.iShaderPassIndex = m_iShaderPassIndex;
-			Desc.strModelTag = m_pPreviewObject->Get_ModelTag();
-			Desc.bPreview = false;
-			Desc.WorldMatrix = m_pPreviewObject->Get_Transform()->Get_WorldMatrix();
+ 			_float3 vPickedPos = {};
+ 
+ 			if (true == m_vecCreateObject[i]->Picking(&vPickedPos))
+ 			{
+				if (m_fMeshPos.y < vPickedPos.y)
+				{
+					m_fMeshPos = vPickedPos;
 
-			CEnvironment_Object* pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+				}
 
-			string strModelTag;
-			m_pGameInstance->WString_To_String(Desc.strModelTag, strModelTag);
-
-			auto iter = m_mapPreviewInstance.find(strModelTag);
-
-			if (iter == m_mapPreviewInstance.end())
-			{
-				MSG_BOX("인스턴스 추가 실패유");
 			}
-			else
-			{
-				iter->second.push_back(pObject);
-				m_pPickingObject = pObject;
-
-				string strModelTag = {};
-				m_pGameInstance->WString_To_String(Desc.strModelTag, strModelTag);
-
-				strModelTag = strModelTag + "@" + to_string(m_vecPreViewInstance.size());
-				m_vecPreViewInstance.push_back(pObject);
-				m_vecPreViewInstanceTag.push_back(strModelTag);
-				m_iCreatePreviewIndex++;
-			}
-			
 		}
 
+		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+		Desc.bAnimModel = m_bAnimType;
+		Desc.iShaderPassIndex = m_iShaderPassIndex;
+		Desc.strModelTag = m_pPreviewObject->Get_ModelTag();
+		Desc.bPreview = false;
+		Desc.WorldMatrix = m_pPreviewObject->Get_Transform()->Get_WorldMatrix();
+
+		CEnvironment_Object* pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+
+		string strModelTag;
+		m_pGameInstance->WString_To_String(Desc.strModelTag, strModelTag);
+
+		auto iter = m_mapPreviewInstance.find(strModelTag);
+
+		if (iter == m_mapPreviewInstance.end())
+		{
+			MSG_BOX("인스턴스 추가 실패유");
+		}
+		else
+		{
+			iter->second.push_back(pObject);
+			m_pPickingObject = pObject;
+
+			string strModelTag = {};
+			m_pGameInstance->WString_To_String(Desc.strModelTag, strModelTag);
+
+			strModelTag = strModelTag + "@" + to_string(m_vecPreViewInstance.size());
+			m_vecPreViewInstance.push_back(pObject);
+			m_vecPreViewInstanceTag.push_back(strModelTag);
+			m_iCreatePreviewIndex++;
+		}
 	}
 
 	else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_INSTANCE)
@@ -2308,7 +2345,7 @@ void CWindow_MapTool::Character_CreateFunction()
 
 	if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
 	{
-		if (nullptr != m_pField && true == m_pField->MouseOnTerrain())
+		if (nullptr != m_pField && true == m_pField->MouseOnTerrain() && true == ImGui_MouseInCheck())
 		{
 			
 			switch (m_eTabType)

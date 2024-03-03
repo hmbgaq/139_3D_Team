@@ -77,6 +77,7 @@ public:
 	void Set_WorldMatrix(_float4x4 matrix) { m_WorldMatrix = matrix; }
 	void Set_WorldMatrix(_fmatrix WorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix); }
 	void Set_Scaling(_float fScaleX, _float fScaleY, _float fScaleZ);
+	void Set_Speed(_float fSpeed) { m_fSpeedPerSec = fSpeed; }
 
 	void Set_Position(const _float3& vState)
 	{

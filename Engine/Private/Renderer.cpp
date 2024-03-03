@@ -44,8 +44,8 @@ HRESULT CRenderer::Initialize()
 
 	m_tHBAO_Option.bHBAO_Active = false; //m_bSSAO_Active;
 	m_tFog_Option.bFog_Active = false; //m_bFog_Active;
-	m_tHDR_Option.bHDR_Active = false; //m_bHDR_Active;
-	m_tScreen_Option.bFXAA_Active = false;//m_bFXAA_Active;
+	m_tHDR_Option.bHDR_Active = true; //m_bHDR_Active;
+	m_tScreen_Option.bFXAA_Active = true;//m_bFXAA_Active;
 
 	return S_OK;
 }

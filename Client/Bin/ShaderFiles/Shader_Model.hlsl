@@ -7,6 +7,7 @@ texture2D		g_OcclusionTexture;
 texture2D		g_RougnessTexture;
 texture2D		g_MetallicTexture;
 float           g_fTimeDelta;
+float           g_fCamFar;
 
 /* OutLine */
 float4	        g_vLineColor;
@@ -88,25 +89,20 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
-
-	vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-	vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
-
-	float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
-
-	float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
-
-	vNormal = mul(vNormal, WorldMatrix);
-
-
-	if (vMtrlDiffuse.a == 0.f)
-		discard;
+    PS_OUT Out = (PS_OUT) 0;
 
     
-	Out.vDiffuse = vMtrlDiffuse;	
-	Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(ClampSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a < 0.0f)
+        discard;
+	
+    
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
 
 	return Out;
 }

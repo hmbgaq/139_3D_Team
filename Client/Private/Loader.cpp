@@ -622,8 +622,8 @@ HRESULT CLoader::Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLeve
 	
 	//! C++ 17부터 지원하는 filesystem을 이용해서 특정 경로안에 하위경로들을 전부 탐색 하여 fbx확장자들을 찾아준다
 	//! 
-	namespace fs = std::filesystem; 
 
+	namespace fs = std::filesystem; 
 
 	_matrix PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	

@@ -54,7 +54,7 @@ private:
 	_float4				m_vPreCamPosition;
 	_float4				m_vPreCamQuaternion;
 	_float4x4			m_PreViewMatrix;
-	_float				m_fCamFar = 2000.f;
+	_float				m_fCamFar = 1000.f;
 
 	/* For. Cascade */
 public:

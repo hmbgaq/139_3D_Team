@@ -94,7 +94,8 @@ HRESULT CLevel_Tool::Ready_LightDesc()
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
 	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
 	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
 		return E_FAIL;
