@@ -4081,14 +4081,4 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
-  <ItemGroup>
-    <CudaCompile Include="Test.cu">
-      <Filter>CudaTest</Filter>
-    </CudaCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="Test.cuh">
-      <Filter>CudaTest</Filter>
-    </CustomBuild>
-  </ItemGroup>
 </Project>

@@ -304,6 +304,24 @@
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Trail">
       <UniqueIdentifier>{4c8e2f99-25d2-4a59-8011-a83065393cf6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager">
+      <UniqueIdentifier>{fbd038ba-8561-46a3-bcd0-5a3a6a0c97c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager\00.DxContextManagerCallback">
+      <UniqueIdentifier>{3744d207-17ec-4618-954d-39a25a7fa747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager\01.PxAllocatorCallback">
+      <UniqueIdentifier>{98b989ac-c813-4bf5-be1e-5d2e6ecd2b53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager\02.PxErrorCallback">
+      <UniqueIdentifier>{fb0c6308-d098-49d8-9e1c-d5e1daed20f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager\03.PxAssertHandler">
+      <UniqueIdentifier>{10aacbe8-218b-40be-a278-de1314b2b628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\02.Cuda">
+      <UniqueIdentifier>{49bb156e-c281-42a7-b4cf-f387c3376960}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -621,6 +639,24 @@
     <ClInclude Include="..\Public\VIBuffer_Trail.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Trail</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\NvCloth_Manager.h">
+      <Filter>01.Utility\95.NvCloth_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomContextManagerCallback.h">
+      <Filter>01.Utility\95.NvCloth_Manager\00.DxContextManagerCallback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomPxAllocatorCallback.h">
+      <Filter>01.Utility\95.NvCloth_Manager\01.PxAllocatorCallback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomPxErrorCallback.h">
+      <Filter>01.Utility\95.NvCloth_Manager\02.PxErrorCallback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomPxAssertHandler.h">
+      <Filter>01.Utility\95.NvCloth_Manager\03.PxAssertHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cuda_Device.h">
+      <Filter>00.System\02.Cuda</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -874,6 +910,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Trail.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NvCloth_Manager.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomContextManagerCallback.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager\00.DxContextManagerCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomPxAllocatorCallback.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager\01.PxAllocatorCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomPxErrorCallback.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager\02.PxErrorCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomPxAssertHandler.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager\03.PxAssertHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cuda_Device.cpp">
+      <Filter>00.System\02.Cuda</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
