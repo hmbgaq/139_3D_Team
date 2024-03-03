@@ -1396,6 +1396,69 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\0. Parent">
       <UniqueIdentifier>{4bf0ebbc-7b65-4222-9812-9923a1d0a846}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\1. Idle">
+      <UniqueIdentifier>{92a6c4f7-48b2-4eb4-8f28-e86ee81ef527}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk">
+      <UniqueIdentifier>{c2fb61f2-80fa-4ed4-85f2-2d271ce97265}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\0. Parent">
+      <UniqueIdentifier>{49834678-2fcc-477d-81e9-017211a76aa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk">
+      <UniqueIdentifier>{3cd0e3d8-1a56-4395-a597-cc9e01585cc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal">
+      <UniqueIdentifier>{16e1e46b-2094-4585-9449-bb5f5eccb78a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Back">
+      <UniqueIdentifier>{8a7824b0-fb3c-40fe-b533-3524af19f29b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Back\Left">
+      <UniqueIdentifier>{eb92b3f3-d1ee-4fca-bf77-fe0722085d68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Back\Right">
+      <UniqueIdentifier>{b08c2cee-56af-44d8-bde4-9b9cc2aec111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Front">
+      <UniqueIdentifier>{a71ef421-2c39-4a3c-860b-ebcbb2abd9c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Front\Left">
+      <UniqueIdentifier>{701dc1ee-701f-4dd2-aeae-6f9b9b1e31eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Front\Right">
+      <UniqueIdentifier>{1a5027fc-9a1f-44b8-813c-280612fd57ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim">
+      <UniqueIdentifier>{17dedd2f-0ee9-4331-bfb6-c35ab6127537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Back">
+      <UniqueIdentifier>{62889c91-72e4-4f9f-8044-cb0910548b42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Back\Left">
+      <UniqueIdentifier>{e9062a83-1a83-47e6-8140-b2d1b40f0d1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Back\Right">
+      <UniqueIdentifier>{289dc4a1-0b38-492e-9f49-e95aeb78c901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Front">
+      <UniqueIdentifier>{4c5b8f7b-43ab-4668-a5a8-79ba9b1b0153}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Front\Left">
+      <UniqueIdentifier>{8ee446d8-9888-4a85-9e64-2ae893e6e69c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Front\Right">
+      <UniqueIdentifier>{50388bf8-1ee6-4981-8dae-705729cd765d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover">
+      <UniqueIdentifier>{04fcef2f-181e-4fc7-a96c-7dc59bb9c21e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\0. Parent">
+      <UniqueIdentifier>{8f344f91-bd60-478a-a4bb-1fa22c6b6622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\1. Cover">
+      <UniqueIdentifier>{7eab31c6-a45e-4628-84ca-2b15ce2de96b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -2597,6 +2660,66 @@
     </ClInclude>
     <ClInclude Include="..\Public\Bandit_Sniper_State_Idle.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_IdlePose.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\1. Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Sniper_State_Walk.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Walk_BL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Walk_BR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Back\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Walk_B.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Walk_F.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Walk_FL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Walk_FR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_WalkAim_B.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_WalkAim_F.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_WalkAim_BL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_WalkAim_BR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Back\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_WalkAim_FL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_WalkAim_FR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Sniper_State_Cover.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_CoverHigh_Idle.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\1. Cover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_CoverHigh_Reload.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\1. Cover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_CoverHigh_Side_L_AimPose.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\1. Cover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_CoverHigh_Side_L_Start.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\1. Cover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_CoverHigh_Side_L_Stop.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\1. Cover</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3903,6 +4026,54 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bandit_Sniper_State_Idle.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_IdlePose.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\1. Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bandit_Sniper_State_Walk.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Walk_BL.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Back\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Walk_BR.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Back\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Walk_B.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Walk_F.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Walk_FL.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Front\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Walk_FR.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\0. Normal\Front\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_WalkAim_B.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_WalkAim_F.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_WalkAim_BL.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Back\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_WalkAim_BR.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Back\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_WalkAim_FL.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Front\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_WalkAim_FR.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Walk\1. Aim\Front\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bandit_Sniper_State_Cover.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_CoverHigh_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\1. Cover</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -49,18 +49,11 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Run_State(CBandit_Sniper* pActor, 
 	return nullptr;
 }
 
-CState<CBandit_Sniper>* CBandit_Sniper_State::Attack_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
+CState<CBandit_Sniper>* CBandit_Sniper_State::Cover_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	CState<CBandit_Sniper>* pState = { nullptr };
-
-	pState = Attack(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
-
-	//pState = Normal(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
-
 	return nullptr;
 }
+
 
 CState<CBandit_Sniper>* CBandit_Sniper_State::Hit_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
@@ -75,35 +68,6 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Hit_State(CBandit_Sniper* pActor, 
 	return nullptr;
 }
 
-CState<CBandit_Sniper>* CBandit_Sniper_State::Knock_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	if (pActor->Is_Animation_End())
-	{
-		//return new CBandit_Sniper_Idle();
-	}
-
-	return nullptr;
-}
-
-CState<CBandit_Sniper>* CBandit_Sniper_State::Dodge_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	if (pActor->Is_Animation_End())
-	{
-		//return new CBandit_Sniper_Idle();
-	}
-
-	return nullptr;
-}
-
-CState<CBandit_Sniper>* CBandit_Sniper_State::Spawn_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	if (pActor->Is_Animation_End())
-	{
-		//return new CBandit_Sniper_Idle();
-	}
-
-	return nullptr;
-}
 
 CState<CBandit_Sniper>* CBandit_Sniper_State::Death_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
@@ -143,16 +107,4 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Run(CBandit_Sniper* pActor, _float
 	return nullptr;
 }
 
-CState<CBandit_Sniper>* CBandit_Sniper_State::Attack(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-
-	return nullptr;
-}
-
-
-CState<CBandit_Sniper>* CBandit_Sniper_State::Dodge(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-
-	return nullptr;
-}
 
