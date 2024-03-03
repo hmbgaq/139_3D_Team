@@ -319,21 +319,15 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     float fViewZ = vDepthDesc.y * g_CamFar;
 	
     vector vWorldPos;
-
-	/* 투영스페이스 상의 위치. */
-	/* 로컬위치 * 월드행렬 * 뷰행렬* 투영행렬 / View.z */
+    
     vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
     vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
     vWorldPos.z = vDepthDesc.x;
     vWorldPos.w = 1.f;
-
-	/* 뷰스페이스 상의 위치를 구하자. */
-	/* 로컬위치 * 월드행렬 * 뷰행렬 */
+    
     vWorldPos = vWorldPos * fViewZ;
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
 
-	/* 월드 상의 위치를 구하자. */
-	/* 로컬위치 * 월드행렬 */
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
         
     if (true == g_bFog_Active )

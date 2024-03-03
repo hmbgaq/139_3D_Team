@@ -140,9 +140,9 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
  
-    Out.vBloomBlur = g_BloomColor;
-    float4 vRimColor = Calculation_Brightness(Out.vDiffuse) + Calculation_RimColor(In.vNormal, In.vPosition); /* g_vRimPowerm ,g_vRimColor , g_vCamPosition 사용 */
-    Out.vRimBlur = vRimColor; /* g_vRimPower 사용 */
+    Out.vBloomBlur = Calculation_Brightness(Out.vDiffuse);
+   // float4 vRimColor = Calculation_Brightness(Out.vDiffuse) + Calculation_RimColor(In.vNormal, In.vPosition); /* g_vRimPowerm ,g_vRimColor , g_vCamPosition 사용 */
+   // Out.vRimBlur = vRimColor; /* g_vRimPower 사용 */
 	
     return Out;
 }   

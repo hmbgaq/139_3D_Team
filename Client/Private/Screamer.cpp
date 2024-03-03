@@ -25,7 +25,7 @@ HRESULT CScreamer::Initialize(void* pArg)
 
 	
 	m_pTransformCom->Set_Position(_float3(15.f, 0.f, 10.f));
-	m_vBloomColor = { 0.5f, 0.f, 0.5f, 1.f };
+	m_vBloomColor = { 0.5f, 0.5f, 0.5f, 1.f };
 	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
 
 	return S_OK;
@@ -240,7 +240,7 @@ HRESULT CScreamer::Bind_ShaderResources()
 	m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
 
 	m_vRimColor = { 0.0f, 1.f, 0.f, 1.f };
-	m_vRimPower = _float3(0.1f, 0.1f, 0.1f);
+	m_vRimPower = _float3(1.0f, 1.0f, 1.0f);
 
 
 	/* RimLight */

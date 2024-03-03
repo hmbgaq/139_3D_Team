@@ -99,10 +99,12 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if(true == m_tHSV_Option.bScreen_Active)
 		FAILED_CHECK(Render_HSV()); /* 안티앨리어싱 - 최종장면 */
 
-	FAILED_CHECK(Deferred_UI());
+	//FAILED_CHECK(Deferred_UI());
 
 	/* 최종 합성 */
 	FAILED_CHECK(Render_Final());
+
+	FAILED_CHECK(Deferred_UI()); /* MRT 사용X시 */
 
 	FAILED_CHECK(Render_Blend());  
 
@@ -307,11 +309,14 @@ HRESULT CRenderer::Render_BloomBlur()
 								ECast(BLUR_SHADER::BLUR_UP_ADD), true));
 		m_bBloomBlur_Clear = false;
 	}
-	else if (false == m_bBloomBlur_Clear)
+	else
 	{
-		m_pGameInstance->Clear_MRT(TEXT("MRT_Bloom_Blur"));
-	
-		m_bBloomBlur_Clear = true;
+		if (false == m_bBloomBlur_Clear)
+		{
+			m_pGameInstance->Clear_MRT(TEXT("MRT_Bloom_Blur"));
+
+			m_bBloomBlur_Clear = true;
+		}
 	}
 	return S_OK;
 }
@@ -326,12 +331,14 @@ HRESULT CRenderer::Render_RimBlur()
 								ECast(BLUR_SHADER::BLUR_UP_ADD), true));
 		m_bRimBlur_Clear = false;
 	}
-	else if (false == m_bRimBlur_Clear)
+	else
 	{
-		m_pGameInstance->Clear_MRT(TEXT("MRT_Rim_Blur"));
-		m_bRimBlur_Clear = true;
+		if (false == m_bRimBlur_Clear)
+		{
+			m_pGameInstance->Clear_MRT(TEXT("MRT_Rim_Blur"));
+			m_bRimBlur_Clear = true;
+		}
 	}
-
 	return S_OK;
 }
 
@@ -594,7 +601,7 @@ HRESULT CRenderer::Deferred_UI()
 
 HRESULT CRenderer::Render_UI()
 {
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_UI")));
+	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_UI")));
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
@@ -606,7 +613,7 @@ HRESULT CRenderer::Render_UI()
 
 	m_RenderObjects[RENDER_UI].clear();
 
-	FAILED_CHECK(m_pGameInstance->End_MRT());
+	//FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
