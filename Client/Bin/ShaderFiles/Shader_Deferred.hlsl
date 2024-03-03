@@ -38,6 +38,7 @@ Texture2D g_BloomTarget;
 Texture2D g_OutlineTarget;
 Texture2D g_PerlinNoiseTexture;
 Texture2D g_RimLightTarget;
+Texture2D g_Effect_DiffuseTarget;
 
 /* 활성 여부 */ 
 bool g_bSSAO_Active;
@@ -288,15 +289,17 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     if (g_Bloom_Rim_Desc.bRimLight_Active)
         vRimLight = g_RimLightTarget.Sample(LinearSampler, In.vTexcoord);
 	
+    vector vEffect = g_Effect_DiffuseTarget.Sample(LinearSampler, In.vTexcoord);
+    
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-
+    
     if (vDiffuse.a == 0.f)
     {
         float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
         if (vPriority.a == 0.f)
             discard;
         
-        Out.vColor = vPriority + vBloom + vRimLight;
+        Out.vColor = vPriority + vEffect+ vBloom + vRimLight;
         return Out;
     }
     // MRT_LightAcc : Shade 
@@ -351,21 +354,20 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
         Out.vColor = vector(vFinalColor.rgb, 1.f);
     }
     
+    vWorldPos = mul(vWorldPos, g_LightViewMatrix);
+    vWorldPos = mul(vWorldPos, g_LightProjMatrix);
+   
+    float2 vUV = (float2) 0.0f;
+   
+    vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
+    vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
+   
+    float4 vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
+   
+    if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
+        Out.vColor = Out.vColor * 0.8f;
+    Out.vColor.a = 1.f;
     
-        vWorldPos = mul(vWorldPos, g_LightViewMatrix);
-        vWorldPos = mul(vWorldPos, g_LightProjMatrix);
-   
-        float2 vUV = (float2) 0.0f;
-   
-        vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
-        vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
-   
-        float4 vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
-   
-        if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
-            Out.vColor = Out.vColor * 0.8f;
-    
-  
     return Out;
 }
 

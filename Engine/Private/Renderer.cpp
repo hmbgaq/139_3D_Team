@@ -71,6 +71,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
 	
+	FAILED_CHECK(Deferred_Effect());
+	
 	if (m_tHBAO_Option.bHBAO_Active)
 		FAILED_CHECK(Render_HBAO_PLUS());
 
@@ -101,14 +103,15 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if(true == m_tHSV_Option.bScreen_Active)
 		FAILED_CHECK(Render_HSV()); /* 안티앨리어싱 - 최종장면 */
 
+	FAILED_CHECK(Deferred_UI());
+
 	/* 최종 합성 */
 	FAILED_CHECK(Render_Final());
 
 	FAILED_CHECK(Render_Blend());  
 
 	/* Effect */
-	FAILED_CHECK(Render_Effect()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
-	FAILED_CHECK(Render_Effect_Deferred()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
+	//FAILED_CHECK(Render_Effect_Deferred()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
 
 	/* UI */
 	//FAILED_CHECK(Render_UI()); /* 디버그에서 렌더타겟 한장으로 그린거 콜하는 그룹 여기 */
@@ -350,9 +353,11 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Shade"), m_pShader_Deferred, "g_ShadeTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader_Deferred, "g_SpecularTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader_Deferred, "g_LightDepthTexture"));
+
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Diffuse"), m_pShader_Deferred, "g_Effect_DiffuseTarget")); /* Effect */
+	
 	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader_Deferred, "g_Shadow_BlurTarget"));
 	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
-
 
 	/* 선택사항*/
 	if (true == m_tBloomRim_Option.bBloom_Active) //Bloom vs BloomBlur
@@ -492,6 +497,7 @@ HRESULT CRenderer::Render_Final()
 	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::FINAL), m_pShader_Final, "g_FinalTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_UI_Diffuse"), m_pShader_Final, "g_UI_Target"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Debug"), m_pShader_Final, "g_DebugTarget"));
 
 	FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL)));
@@ -533,6 +539,8 @@ HRESULT CRenderer::Render_Effect()
 
 HRESULT CRenderer::Render_Blend()
 {
+	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Effect"))); /* Target_FXAA*/
+
 	m_RenderObjects[RENDER_BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
 		{
 			return ((CAlphaObject*)pSour)->Get_CamDistance() > ((CAlphaObject*)pDest)->Get_CamDistance();
@@ -548,12 +556,41 @@ HRESULT CRenderer::Render_Blend()
 
 	m_RenderObjects[RENDER_BLEND].clear();
 
+	//FAILED_CHECK(m_pGameInstance->End_MRT());
+
 	return S_OK;
+}
+
+HRESULT CRenderer::Deferred_Effect()
+{
+	/* Effect 추가해서 사용할거면 추가가능합니다~ */
+	FAILED_CHECK(Render_Effect()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
+
+}
+
+HRESULT CRenderer::Deferred_UI()
+{
+	/* UI 추가해서 사용할거면 추가가능합니다~ */
+	FAILED_CHECK(Render_UI()); 
 }
 
 HRESULT CRenderer::Render_UI()
 {
-	return E_NOTIMPL;
+	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_UI")));
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_UI].clear();
+
+	//FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
 }
 
 
@@ -914,10 +951,11 @@ HRESULT CRenderer::Create_RenderTarget()
 		FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Blend"), TEXT("Target_Blend")));
 
 	/* MRT_Effect - clear color가 111의 흰색일경우 이펙트에 묻어나와서 무조건 000 으로 클리어해야함  */
-	//FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-	//FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Diffuse")));
-	//FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Final"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-	//FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect_Deferred"), TEXT("Target_Effect_Final")));
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Diffuse")));
+	
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_UI_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_UI"), TEXT("Target_UI_Diffuse")));
 
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(Viewport.Width, Viewport.Height, 1.f));
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
@@ -976,7 +1014,9 @@ HRESULT CRenderer::Ready_DebugRender()
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RimLight"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 13.f), fSizeX, fSizeY));
 
 	/* MRT_Effect - Tool에서 가리지않으려면 7 이상으로 곱해야함  */
-//	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Diffuse"), (fSizeX / 2.f * 7.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Diffuse"), (fSizeX / 2.f * 7.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_UI_Diffuse"), (fSizeX / 2.f * 7.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+	
 	{
 		/* !성희 : 우상단 - UI Debug */
 		//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse_UI"), (g_iWinsizeX - fSizeX * 0.5f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
@@ -1017,6 +1057,9 @@ HRESULT CRenderer::Render_DebugTarget()
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_GameObjects"), m_pShader_Deferred, m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Bloom_Blur"), m_pShader_Deferred, m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Rim_Blur"), m_pShader_Deferred, m_pVIBuffer);
+
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Effect"), m_pShader_Deferred, m_pVIBuffer);
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_UI"), m_pShader_Deferred, m_pVIBuffer);
 
 	return S_OK;
 }

@@ -54,9 +54,15 @@ private:
 	HRESULT Render_FXAA();
 	HRESULT Render_HSV();
 	HRESULT Render_Final();
-
 	HRESULT Render_Blend();
+
+	HRESULT Deferred_Effect();
+	HRESULT Deferred_UI();
+
+	/* Effect */
 	HRESULT Render_Effect();
+
+	/* UI */
 	HRESULT Render_UI();
 
 	/* ETC */

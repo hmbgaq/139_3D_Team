@@ -10,6 +10,7 @@ Texture2D g_Final_UI_Target;
 Texture2D g_FinalTarget;
 Texture2D g_BlendMixTarget;
 Texture2D g_DebugTarget;
+Texture2D g_UI_Target;
 
 /* ------------------ Struct  ------------------ */ 
 
@@ -177,15 +178,23 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 
     vector vDebug = g_DebugTarget.Sample(LinearSampler, In.vTexcoord);;
     vector vFinal = g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
-	
-    Out.vColor = vFinal + vDebug;
+    vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
     
+    Out.vColor = vUI;
+    
+    if (Out.vColor.a == 0)
+    {
+        Out.vColor = vFinal + vDebug;
+        
+        if(Out.vColor.a == 0)
+           discard;
+    }
     // 여기서 날리면 hdr off 일때 다 잘릴거임 
     //if(Out.vColor.a ==0)
     //    discard;
     
-    return Out;
-}
+        return Out;
+    }
 /* ------------------ Technique ------------------ */
 
 technique11 DefaultTechnique
