@@ -87,8 +87,8 @@ PS_OUT PS_MAIN(PS_IN In)
 	/* 이 셰이더를 사용하는 객체의 색상을 g_DiffuseTexture의 색상으로 적용시키겠다. */
     Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
 	
-    //if (Out.vColor.a == 0.f)
-    //    discard;
+    if (Out.vColor.a == 0.f)
+        discard;
     
 	return Out;
 }

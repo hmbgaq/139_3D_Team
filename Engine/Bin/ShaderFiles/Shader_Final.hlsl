@@ -191,11 +191,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
         if(Out.vColor.a == 0)
            discard;
     }
-    // 여기서 날리면 hdr off 일때 다 잘릴거임 
-    //if(Out.vColor.a ==0)
-    //    discard;
-    
-        return Out;
+    return Out;
 }
 /* ------------------ 4 - Effect Blend ------------------ */
 PS_OUT PS_MAIN_BLENDEFFECT(PS_IN In)

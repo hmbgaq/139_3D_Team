@@ -289,7 +289,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     if (g_Bloom_Rim_Desc.bRimLight_Active)
         vRimLight = g_RimLightTarget.Sample(LinearSampler, In.vTexcoord);
 	
-    vector vEffect = g_Effect_DiffuseTarget.Sample(LinearSampler, In.vTexcoord);
+  //  vector vEffect = g_Effect_DiffuseTarget.Sample(LinearSampler, In.vTexcoord);
     
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     
@@ -299,7 +299,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
         if (vPriority.a == 0.f)
             discard;
         
-        Out.vColor = vPriority + vEffect+ vBloom + vRimLight;
+        Out.vColor = vPriority + vBloom + vRimLight;
         return Out;
     }
     // MRT_LightAcc : Shade 
@@ -368,7 +368,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
         Out.vColor = Out.vColor * 0.8f;
     
     
-    Out.vColor += vEffect;
+   // Out.vColor += vEffect;
     Out.vColor.a = 1.f;
     
     return Out;

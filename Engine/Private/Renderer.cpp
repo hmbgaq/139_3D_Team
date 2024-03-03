@@ -36,10 +36,10 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_DebugRender());
 #endif
 
-	m_tBloomRim_Option.bBloom_Active = true;
+	m_tBloomRim_Option.bBloom_Active = false;
 	m_tBloomRim_Option.bBloomBlur_Active = true;
 	m_tBloomRim_Option.bRimLight_Active = false;
-	m_tBloomRim_Option.bRimBlur_Active = false;
+	m_tBloomRim_Option.bRimBlur_Active = true;
 
 	m_tHBAO_Option.bHBAO_Active = false;
 	m_tFog_Option.bFog_Active = false;
@@ -354,7 +354,7 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader_Deferred, "g_SpecularTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader_Deferred, "g_LightDepthTexture"));
 
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Diffuse"), m_pShader_Deferred, "g_Effect_DiffuseTarget")); /* Effect */
+	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Diffuse"), m_pShader_Deferred, "g_Effect_DiffuseTarget")); /* Effect */
 	
 	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_LightDepth"), m_pShader_Deferred, "g_Shadow_BlurTarget"));
 	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
@@ -599,7 +599,7 @@ HRESULT CRenderer::Deferred_UI()
 
 HRESULT CRenderer::Render_UI()
 {
-	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_UI")));
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_UI")));
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
@@ -611,7 +611,7 @@ HRESULT CRenderer::Render_UI()
 
 	m_RenderObjects[RENDER_UI].clear();
 
-	//FAILED_CHECK(m_pGameInstance->End_MRT());
+	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
@@ -1038,6 +1038,7 @@ HRESULT CRenderer::Ready_DebugRender()
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Bloom"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Bloom_Blur"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RimLight"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 13.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Rim_Blur"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 15.f), fSizeX, fSizeY));
 
 	/* MRT_Effect - Tool에서 가리지않으려면 7 이상으로 곱해야함  */
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Diffuse"), (fSizeX / 2.f * 7.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
