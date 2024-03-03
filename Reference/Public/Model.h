@@ -86,6 +86,9 @@ public:
 	void					Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _bool _bIsTransition = true, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Reset_Animation(_int iAnimIndex = -1);
+	void					Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END);
+
+
 
 	_float					Get_TickPerSecond();
 	void					Set_TickPerSecond(_float _TickPerSecond);
@@ -133,9 +136,10 @@ private:
 
 	// 상 하체 분리
 	_bool					m_bIsSplitted			= { true };
-	_uint					m_iUpperAnimIndex		= { 0 };
+	_uint					m_iUpperAnimIndex		= { 193 };
 	//_uint					m_iLowerAnimIndex		= { 0 };
 	_bool					m_bIsUpperAnimEnd		= { false };
+	ANIM_STATE				m_eUpperAnimState = { CModel::ANIM_STATE::ANIM_STATE_LOOP };
 
 
 	/* Cascade */

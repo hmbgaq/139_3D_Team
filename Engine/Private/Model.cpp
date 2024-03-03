@@ -303,6 +303,10 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 		return;
 
 	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones, m_bIsSplitted);
+	if (true == m_bIsSplitted)
+	{
+		m_bIsUpperAnimEnd = m_Animations[m_iUpperAnimIndex]->Invalidate_TransformationMatrix_Upper(m_eUpperAnimState, fTimeDelta, m_Bones);
+	}
 
 		
 	_float3 NowPos;
@@ -402,6 +406,13 @@ void CModel::Reset_Animation(_int iAnimIndex)
 		m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
 	else
 		m_Animations[iAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
+}
+
+void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+{
+	m_iUpperAnimIndex = _iAnimationIndex;
+	m_eUpperAnimState = _eAnimState;
+
 }
 
 _float CModel::Get_TickPerSecond()
