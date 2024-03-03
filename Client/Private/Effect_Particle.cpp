@@ -288,6 +288,10 @@ void* CEffect_Particle::Get_BufferDesc()
 
 	/* For.Position */
 	tBufferDesc.vCenterPosition = m_tParticleDesc.vCenterPosition;
+	tBufferDesc.vMinMaxCenterX = m_tParticleDesc.vMinMaxCenterX;
+	tBufferDesc.vMinMaxCenterY = m_tParticleDesc.vMinMaxCenterY;
+	tBufferDesc.vMinMaxCenterZ = m_tParticleDesc.vMinMaxCenterZ;
+
 	tBufferDesc.vMinMaxRange = m_tParticleDesc.vMinMaxRange;
 
 	/* For.Rotation */

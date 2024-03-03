@@ -34,6 +34,10 @@ public:
 
 		/* For.Position */
 		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
+		_float2		vMinMaxCenterX = { 0.f, 0.f };
+		_float2		vMinMaxCenterY = { 0.f, 0.f };
+		_float2		vMinMaxCenterZ = { 0.f, 0.f };
+
 		_float2		vMinMaxRange = { 0.1f, 3.f };
 
 

@@ -229,6 +229,12 @@ void CVIBuffer_Particle::ReSet()
 	for (_uint i = 0; i < m_iNumInstance; ++i)	// 반복문 시작
 	{
 
+		// 랜덤 시작위치 Offset
+		m_tBufferDesc.vCenterPosition.x = SMath::fRandom(m_tBufferDesc.vMinMaxCenterX.x, m_tBufferDesc.vMinMaxCenterX.y);
+		m_tBufferDesc.vCenterPosition.y = SMath::fRandom(m_tBufferDesc.vMinMaxCenterY.x, m_tBufferDesc.vMinMaxCenterY.y);
+		m_tBufferDesc.vCenterPosition.z = SMath::fRandom(m_tBufferDesc.vMinMaxCenterZ.x, m_tBufferDesc.vMinMaxCenterZ.y);
+		m_tBufferDesc.vCenterPosition.w = 1.f;
+
 		// 초기화
 		XMStoreFloat4(&pVertices[i].vPosition, m_tBufferDesc.vCenterPosition);
 		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f);
@@ -288,6 +294,14 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 		vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
 		m_vecParticleShaderInfoDesc[iNum].vDir = vDir;			// 쉐이더에 전달할 방향 저장
 
+		//// vDir의 라이트를 구하고 얘를 축으로 90도 회전
+		//_vector		vDirUp = _float4(0.f, 1.f, 0.f, 0.f);
+		//_vector		vDirRight = XMVector4Normalize(XMVector3Cross(vDirUp, XMVector3Normalize(vDir)));
+
+		//_matrix RotMat = XMMatrixIdentity();
+		//RotMat = XMMatrixRotationAxis(vDirRight, XMConvertToRadians(90.f));
+
+
 		// TEST 시작 : 카메라가 바라보는 방향의 반대 벡터와 방향벡터 사이의 각도로 UV회전 시키기 =========================================================================
 		_vector vCamDirection = XMVector4Normalize(m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2]);
 		_float3 vCamDirectionFloat3 = {};
@@ -297,23 +311,40 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 		m_vecParticleShaderInfoDesc[iNum].fUV_RotDegree = SMath::Calculate_AngleBetweenVectors_Degree(vCamDirectionFloat3, m_vecParticleShaderInfoDesc[iNum].vDir);
 		// TEST 끝 : 카메라가 바라보는 방향의 반대 벡터와 방향벡터 사이의 각도로 UV회전 시키기 ===========================================================================
 
-		// 진행방향벡터를 Look으로 한 새로운 Right, Up 정해주기
+
+		// 진행방향벡터를 Look으로 한 새로운 Right, Up 정해주기 시작 ===================================================================================================
 		_vector		vRight = _float4(1.f, 0.f, 0.f, 0.f)		/* * 크기 */;
 		_vector		vUp = _float4(0.f, 1.f, 0.f, 0.f)			/* * 크기 */;
 		_vector		vLook = XMVector4Normalize(vDir);
+		//_vector		vLook = _float4(0.f, 0.f, 1.f, 0.f);
 
 		vRight = XMVector4Normalize(XMVector3Cross(vUp, vDir));
 		vUp = XMVector4Normalize(XMVector3Cross(vDir, vRight));
 
-		XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vRight, vRight);
-		XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vUp, vUp);
-		XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vLook, vLook);
 
-		//XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vRight, XMVector3TransformNormal(vRight, RotationMatrix));
-		//XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vUp, XMVector3TransformNormal(vUp, RotationMatrix));
-		//XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vLook, XMVector3TransformNormal(vLook, RotationMatrix));
+		//_vector		vNewLook = XMVector4Normalize(vUp);
+		//_vector		vNewRight = XMVector4Normalize(XMVector3Cross(_float3(0.f, 1.f, 0.f), vNewLook));
+		//_vector		vNewUp = XMVector4Normalize(XMVector3Cross(vNewLook, vNewRight));
+
+		_vector		vNewUp = XMVector4Normalize(vDir);
+		_vector		vNewLook = XMVector4Normalize(XMVector3Cross(_float3(0.f, 1.f, 0.f), vNewUp));
+		_vector		vNewRight = XMVector4Normalize(XMVector3Cross(vNewUp, vNewLook));
+		vNewLook = XMVector4Normalize(XMVector3Cross(vNewRight, vNewUp));
+
+
+		XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vRight, vNewRight);
+		XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vUp, vNewUp);
+		XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vLook, vNewLook);
+
+
+
+		//XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vRight, XMVector3TransformNormal(vRight, RotMat));
+		//XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vUp, XMVector3TransformNormal(vUp, RotMat));
+		//XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vLook, XMVector3TransformNormal(vLook, RotMat));
 #pragma endregion 회전 끝
 
+
+		// 힘주기..
 		_vector vForce = vDir * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
 		Add_Force(iNum, vForce, m_tBufferDesc.eForce_Mode);
 	}
@@ -431,6 +462,10 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 
 	/* For.Position */
 	CJson_Utility::Write_Float4(Out_Json["Com_VIBuffer"]["vCurrentPosition"], m_tBufferDesc.vCenterPosition);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxCenterX"], m_tBufferDesc.vMinMaxCenterX);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxCenterY"], m_tBufferDesc.vMinMaxCenterY);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxCenterZ"], m_tBufferDesc.vMinMaxCenterZ);
+
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRange"], m_tBufferDesc.vMinMaxRange);
 
 
@@ -476,6 +511,10 @@ void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 
 	/* For.Position */
 	CJson_Utility::Load_Float4(In_Json["Com_VIBuffer"]["vCurrentPosition"], m_tBufferDesc.vCenterPosition);
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxCenterX"], m_tBufferDesc.vMinMaxCenterX);
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxCenterY"], m_tBufferDesc.vMinMaxCenterY);
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxCenterZ"], m_tBufferDesc.vMinMaxCenterZ);
+
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRange"], m_tBufferDesc.vMinMaxRange);
 
 

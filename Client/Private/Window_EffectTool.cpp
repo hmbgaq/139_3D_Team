@@ -109,7 +109,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 		CGameObject* pCamera = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_Camera"));
 		if (nullptr != pCamera)
 		{
-			pCamera->Set_Position(_float3(0.f, 20.f, -15.f));
+			pCamera->Set_Position(_float3(0.f, -1.f, -10.f));
 		}
 	}
 
@@ -609,6 +609,46 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 
 
+				/* 센터위치 오프셋(000 에서 어느정도 떨어진 지점에서 스폰 될건지) */
+				ImGui::SeparatorText("Center Offset_Particle");
+				if (ImGui::DragFloat2("MinMaxCenterX_Particle", m_vMinMaxCenterX_Particle, 1.f, 0.f, 500.f))
+				{
+					if (m_vMinMaxCenterX_Particle[0] > m_vMinMaxCenterX_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+						m_vMinMaxCenterX_Particle[1] = m_vMinMaxCenterX_Particle[0];
+
+					m_pParticleDesc->vMinMaxCenterX.x = m_vMinMaxCenterX_Particle[0];
+					m_pParticleDesc->vMinMaxCenterX.y = m_vMinMaxCenterX_Particle[1];
+
+					m_pParticleBufferDesc->vMinMaxCenterX.x = m_vMinMaxCenterX_Particle[0];
+					m_pParticleBufferDesc->vMinMaxCenterX.y = m_vMinMaxCenterX_Particle[1];
+				}
+
+				if (ImGui::DragFloat2("MinMaxCenterY_Particle", m_vMinMaxCenterY_Particle, 1.f, 0.f, 500.f))
+				{
+					if (m_vMinMaxCenterY_Particle[0] > m_vMinMaxCenterY_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+						m_vMinMaxCenterY_Particle[1] = m_vMinMaxCenterY_Particle[0];
+
+					m_pParticleDesc->vMinMaxCenterY.x = m_vMinMaxCenterY_Particle[0];
+					m_pParticleDesc->vMinMaxCenterY.y = m_vMinMaxCenterY_Particle[1];
+
+					m_pParticleBufferDesc->vMinMaxCenterY.x = m_vMinMaxCenterY_Particle[0];
+					m_pParticleBufferDesc->vMinMaxCenterY.y = m_vMinMaxCenterY_Particle[1];
+				}
+
+				if (ImGui::DragFloat2("MinMaxCenterZ_Particle", m_vMinMaxCenterZ_Particle, 1.f, 0.f, 500.f))
+				{
+					if (m_vMinMaxCenterZ_Particle[0] > m_vMinMaxCenterZ_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+						m_vMinMaxCenterZ_Particle[1] = m_vMinMaxCenterZ_Particle[0];
+
+					m_pParticleDesc->vMinMaxCenterZ.x = m_vMinMaxCenterZ_Particle[0];
+					m_pParticleDesc->vMinMaxCenterZ.y = m_vMinMaxCenterZ_Particle[1];
+
+					m_pParticleBufferDesc->vMinMaxCenterZ.x = m_vMinMaxCenterZ_Particle[0];
+					m_pParticleBufferDesc->vMinMaxCenterZ.y = m_vMinMaxCenterZ_Particle[1];
+				}
+
+
+
 				/* 퍼지는 범위(분포 범위) */
 				ImGui::SeparatorText("");
 				if (ImGui::DragFloat2("MinMaxRange_Particle", m_vMinMaxRange_Particle, 1.f, 0.1f, 360.f))
@@ -624,8 +664,10 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 				}
 
+
 				/* 회전 범위(오프셋) */
 				/* RotX */
+				ImGui::SeparatorText("");
 				if (ImGui::DragFloat2("RotationX", m_vRotationOffsetX_Particle, 1.f, 0.f, 360.f))
 				{
 					if (m_vRotationOffsetX_Particle[0] > m_vRotationOffsetX_Particle[1])	// Min이 Max보다 크면 Max를 Min으로

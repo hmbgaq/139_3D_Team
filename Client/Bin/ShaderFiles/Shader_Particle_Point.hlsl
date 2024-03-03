@@ -135,6 +135,7 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
 	float4		vLook;
 	float3		vRight, vUp;
+	float3		vBeforeRight, vNewUp;
 	if (g_bBillBoard)
 	{
 		vLook = g_vCamPosition - In[0].vPosition;
@@ -148,6 +149,10 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 		float3 vTempRight = float3(1.0f, 0.0f, 0.0f);
 		vRight	= normalize(cross(vDirection, vTempRight)) * In[0].vPSize.x * 0.5f;
 		vUp		= normalize(cross(vRight, vDirection)) * In[0].vPSize.y * 0.5f;
+
+
+
+
 	}
 
 	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);

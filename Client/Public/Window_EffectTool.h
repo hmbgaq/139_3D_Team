@@ -101,7 +101,7 @@ private:
 	_int m_iShaderPassIndex_Particle	= { 0 };
 	_int m_iMaxShaderPassIndex_Particle = { 2 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 15, 17, 5, 16 };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 14, 17, 5, 16 };
 
 
 	_int m_iRenderGroup_Rect = { 9 };
@@ -115,7 +115,7 @@ private:
 	_int m_iShaderPassIndex_Mesh		= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 15, 17, 5, 16 };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 14, 17, 5, 16 };
 
 
 	// Refactoring end   =====================================================================================================
@@ -170,6 +170,9 @@ private:
 
 
 	/* For.Position */
+	_float	m_vMinMaxCenterX_Particle[2] = { 0.f, 0.f };
+	_float	m_vMinMaxCenterY_Particle[2] = { 0.f, 0.f };
+	_float	m_vMinMaxCenterZ_Particle[2] = { 0.f, 0.f };
 	_float	m_vMinMaxRange_Particle[2] = { 0.f, 0.f };
 
 	/* For.Rotation */
