@@ -366,6 +366,9 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
    
     if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
         Out.vColor = Out.vColor * 0.8f;
+    
+    
+    Out.vColor += vEffect;
     Out.vColor.a = 1.f;
     
     return Out;

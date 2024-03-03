@@ -71,8 +71,6 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
 	
-	FAILED_CHECK(Deferred_Effect());
-	
 	if (m_tHBAO_Option.bHBAO_Active)
 		FAILED_CHECK(Render_HBAO_PLUS());
 
@@ -83,6 +81,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 		FAILED_CHECK(Render_RimBlur());
 
 	FAILED_CHECK(Render_Deferred()); /*  MRT_Deferred -> Target_Deferred에 저장  */
+
+	FAILED_CHECK(Deferred_Effect());
 
 	/* --- Post Processing --- */
 
@@ -565,7 +565,30 @@ HRESULT CRenderer::Deferred_Effect()
 {
 	/* Effect 추가해서 사용할거면 추가가능합니다~ */
 	FAILED_CHECK(Render_Effect()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
+	
+	FAILED_CHECK(Render_Effect_Final()); /* Deferred + Effect */
+}
 
+HRESULT CRenderer::Render_Effect_Final()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Effect_Final")));
+
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Deferred"), m_pShader_Final, "g_FinalTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Diffuse"), m_pShader_Final, "g_Effect_Target"));
+
+	FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL_MIXEFFECT)));
+
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
+
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
 }
 
 HRESULT CRenderer::Deferred_UI()
@@ -726,14 +749,14 @@ wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 	switch (eCurrType)
 	{
 	case POST_TYPE::HDR:
-		strCurrentTarget = TEXT("Target_Deferred");
+		strCurrentTarget = TEXT("Target_Effect_Final");
 		break;
 
 	case POST_TYPE::RADIAL_BLUR:
 		if (m_tHDR_Option.bHDR_Active)
 			strCurrentTarget = TEXT("Target_HDR");
 		else
-			strCurrentTarget = TEXT("Target_Deferred");
+			strCurrentTarget = TEXT("Target_Effect_Final");
 		break;
 
 	case POST_TYPE::FXAA:
@@ -742,7 +765,7 @@ wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 		else if (m_tHDR_Option.bHDR_Active)
 			strCurrentTarget = TEXT("Target_HDR");
 		else
-			strCurrentTarget = TEXT("Target_Deferred");
+			strCurrentTarget = TEXT("Target_Effect_Final");
 		break;
 
 	case POST_TYPE::HSV:
@@ -753,7 +776,7 @@ wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 		else if (m_tHDR_Option.bHDR_Active)
 			strCurrentTarget = TEXT("Target_HDR");
 		else
-			strCurrentTarget = TEXT("Target_Deferred");
+			strCurrentTarget = TEXT("Target_Effect_Final");
 		break;
 
 	case POST_TYPE::FINAL:
@@ -766,7 +789,7 @@ wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 		else if (m_tHDR_Option.bHDR_Active)
 			strCurrentTarget = TEXT("Target_HDR");
 		else
-			strCurrentTarget = TEXT("Target_Deferred");
+			strCurrentTarget = TEXT("Target_Effect_Final");
 		break;
 	}
 
@@ -953,7 +976,10 @@ HRESULT CRenderer::Create_RenderTarget()
 	/* MRT_Effect - clear color가 111의 흰색일경우 이펙트에 묻어나와서 무조건 000 으로 클리어해야함  */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Diffuse")));
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Final"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect_Final"), TEXT("Target_Effect_Final")));
 	
+
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_UI_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_UI"), TEXT("Target_UI_Diffuse")));
 

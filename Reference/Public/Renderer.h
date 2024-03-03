@@ -57,6 +57,7 @@ private:
 	HRESULT Render_Blend();
 
 	HRESULT Deferred_Effect();
+	HRESULT Render_Effect_Final();
 	HRESULT Deferred_UI();
 
 	/* Effect */
