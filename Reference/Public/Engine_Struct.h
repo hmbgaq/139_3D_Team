@@ -376,6 +376,12 @@ namespace Engine
 
 	}HBAO_PLUS_DESC;
 
+	typedef struct ENGINE_DLL tagBloomRim_Desc
+	{
+		_bool	bBloomBlur_Active	= { false };
+		_bool	bRimBlur_Active		= { false };
+	}BLOOMRIM_DESC;
+
 	typedef struct ENGINE_DLL tagFogDesc
 	{
 		bool  bFog_Active			= false;
@@ -394,13 +400,26 @@ namespace Engine
 
 	}HDR_DESC;
 
+	typedef struct ENGINE_DLL tagAnti_Aliasing
+	{
+		_bool  bFXAA_Active = false;
+	}ANTI_DESC;
+
 	typedef struct ENGINE_DLL tagScreenDesc
 	{
-		_bool  bFXAA_Active		= false;
-		_float fFinal_Saturation	= 1.f;
-		_float fFinal_Brightness	= 1.f;
+		_bool bScreen_Active = false;
+		_float fFinal_Saturation = 1.f;
+		_float fFinal_Brightness = 1.f;
 
-	}SCREEN_DESC;
+	}HSV_DESC;
+
+	typedef struct ENGINE_DLL tagRadialBlurDesc
+	{
+		_bool	bRadial_Active = false;
+		_float	fRadial_Quality = 16.f;
+		_float	fRadial_Power = 0.1f;
+	}RADIAL_DESC;
+
 
 	/* 전체 컨트롤 - 레벨시작할때 초기 컨트롤용도 */
 	typedef struct ENGINE_DLL tagLevelShader

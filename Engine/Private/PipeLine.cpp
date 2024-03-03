@@ -1,6 +1,6 @@
 #include "PipeLine.h"
 #include "GameInstance.h"
-
+#
 CPipeLine::CPipeLine()
 	: m_pGameInstace(CGameInstance::GetInstance())
 {
@@ -13,6 +13,10 @@ void CPipeLine::Set_Transform(D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix
 	{
 		m_PreViewMatrix = m_Transform[D3DTS_VIEW];
 	}
+	else if (D3DTS_PROJ == eState)
+	{
+		m_PreProjMatrix = m_Transform[D3DTS_PROJ];
+	}
 
 	XMStoreFloat4x4(&m_Transform[eState], TransformMatrix);
 }
@@ -22,6 +26,12 @@ void CPipeLine::Set_Transform(D3DTRANSFORMSTATE eState, _float4x4 TransformMatri
 	if (D3DTS_VIEW == eState)
 	{
 		m_PreViewMatrix = m_Transform[D3DTS_VIEW];
+		m_PreWorldMatrix = m_Transform[D3DTS_WORLD];
+
+	}
+	else if (D3DTS_PROJ == eState)
+	{
+		m_PreProjMatrix = m_Transform[D3DTS_PROJ];
 	}
 
 	m_Transform[eState] = TransformMatrix;

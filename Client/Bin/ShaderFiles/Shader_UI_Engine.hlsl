@@ -1,14 +1,11 @@
 #include "Shader_Defines.hlsli"
 
-matrix  g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-matrix  g_ProjMatrixInv, g_ViewMatrixInv;
-matrix  g_LightViewMatrix, g_LightProjMatrix;
-matrix  g_CamProjMatrix, g_CamViewMatrix; /* ssr에서 사용 */
-float   g_CamFar;
+matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float g_CamFar;
 
 vector g_vCamPosition;
 
-Texture2D g_Diffuse_Target;
+Texture2D gDiffuseTarget;
 Texture2D g_BloomTarget;
 
 struct VS_IN
@@ -40,7 +37,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
     return Out;
 }
-/* ------------------- Base Pixel Shader ------------------- */
+
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
@@ -52,27 +49,29 @@ struct PS_OUT
     float4 vColor : SV_TARGET0;
 };
 
+/* ------------------- Base Pixel Shader (0) -------------------*/
 
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
+
+    Out.vColor = gDiffuseTarget.Sample(LinearSampler, In.vTexcoord);
     
-    Out.vColor = g_Diffuse_Target.Sample(LinearSampler, In.vTexcoord);
-    
-    if(Out.vColor.a == 0)
+    if (Out.vColor.a == 0.f)
         discard;
 
     return Out;
 }
+
 /* ------------------- Technique -------------------*/ 
 
 technique11 DefaultTechnique
 {
     pass Default // 0
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
