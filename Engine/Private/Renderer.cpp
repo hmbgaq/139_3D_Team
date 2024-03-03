@@ -55,7 +55,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	Control_HotKey();
 
 	if (true == m_bDebugCom)
-		FAILED_CHECK(Render_DebugCom())
+		FAILED_CHECK(Render_DebugCom()) /* Debug Component -> MRT 타겟에 저장해서 Finaml 에서 추가연산한다. */
 #endif // _DEBUG
 
 	FAILED_CHECK(Render_Priority());	/* MRT_Priority - Target_Priority 저장  */
@@ -155,7 +155,7 @@ HRESULT CRenderer::Render_NonLight()
 	{
 		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
 			pGameObject->Render();
-
+		
 		Safe_Release(pGameObject);
 	}
 
