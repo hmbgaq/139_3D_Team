@@ -30,6 +30,7 @@ public:
 	
 	class CBone*			Get_BonePtr(const _char* pBoneName) const;
 
+
 	void					Set_StiffnessRate(_float fStiffnessRate);
 	//void					Set_Animation(_uint iAnimIndex) { m_iCurrentAnimIndex = iAnimIndex; }
 
@@ -98,13 +99,12 @@ public:
 	vector<CAnimation*>*	 Get_Animations();
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
 	
-	
 public:
 	CMyAIScene*				Get_AIScene();
 
 public:
 	vector<CBone*>*			Get_Bones();
-	/*_uint&					Get_BoneNum() {return }*/
+	_uint					Get_BoneNum(const _char* szName);
 private:
 	CMyAssimp				m_MyAssimp;
 	CMyAIScene				m_pAIScene;
@@ -129,6 +129,14 @@ private:
 	_bool					m_bIsAnimEnd			= { false };
 	ANIM_STATE				m_eAnimState			= { CModel::ANIM_STATE::ANIM_STATE_END };
 	_bool					m_bUseAnimationPos		= { false };
+
+
+	// 상 하체 분리
+	_bool					m_bIsSplitted			= { true };
+	_uint					m_iUpperAnimIndex		= { 0 };
+	//_uint					m_iLowerAnimIndex		= { 0 };
+	_bool					m_bIsUpperAnimEnd		= { false };
+
 
 	/* Cascade */
 	vector<_matrix>			m_matCurrTransforms;

@@ -2,7 +2,7 @@
 #include "GameInstance.h"
 #include "RigidBody.h"
 #include "PhysXCharacterController.h"
-
+#include "Bone.h"
 
 
 CCharacter::CCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

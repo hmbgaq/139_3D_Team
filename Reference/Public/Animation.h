@@ -16,17 +16,17 @@ private:
 
 public:
 	HRESULT Initialize(CMyAIAnimation pAIAnimation, const CModel::BONES& Bones);
-	_bool	Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones);
+	_bool	Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones, _bool _bIsSplitted = false);
 
 public:
 	vector<class CChannel*>* Get_Channels() { return &m_Channels; };
-	CChannel*	Get_Channel_By_BoneIndex(_uint _iBoneIndex, _uint& _iChannelIndex);
-	void	Reset_Animation(const CModel::BONES& Bones);
+	CChannel* Get_Channel_By_BoneIndex(_uint _iBoneIndex, _uint& _iChannelIndex);
+	void	Reset_Animation(const CModel::BONES& Bones, _bool _bIsSplitted = false);
 
 	_float	Get_TrackPosition() { return m_fTrackPosition; };
 	void	Set_TrackPosition(_float _fTrackPosition) { m_fTrackPosition = _fTrackPosition; };
 
-	void	Set_Transition(CAnimation* prevAnimation, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
+	void	Set_Transition(CAnimation* prevAnimation, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0, _bool _bIsSplitted = false);
 	_bool	Is_Transition_End() { return m_fTransitionEnd <= m_fTrackPosition; }
 	_bool	Is_Transition() { return m_bIsTransition; }
 
