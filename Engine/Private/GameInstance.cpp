@@ -804,6 +804,18 @@ _float4x4 CGameInstance::Get_ShadowLightProjMatrix(_uint iLevelIndex)
 	return m_pLight_Manager->Get_ShadowLightProjMatrix(iLevelIndex);
 }
 
+_float CGameInstance::Get_ShadowLightFar(_uint iLevelIndex)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, _float());
+	return m_pLight_Manager->Get_ShadowLightFar(iLevelIndex);
+}
+
+_float4 CGameInstance::Get_ShadowLightPos(_uint iLevelIndex)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, _float4());
+	return m_pLight_Manager->Get_ShadowLightPos(iLevelIndex);
+}
+
 void CGameInstance::Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix)
 {
 	return m_pFrustum->Transform_ToLocalSpace(WorldMatrix);

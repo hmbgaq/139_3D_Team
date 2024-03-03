@@ -92,6 +92,7 @@ HRESULT CLight_Manager::Add_ShadowLight_View(_uint iLevelIndex, _vector vEye, _v
 	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(vEye, vAt, vUp));
 
 	m_ShadowLight_ViewMatrix.emplace(iLevelIndex, ViewMatrix);
+	m_ShadowLight_Pos.emplace(iLevelIndex, vEye);
 
 	return S_OK;
 }
@@ -108,6 +109,7 @@ HRESULT CLight_Manager::Add_ShadowLight_Proj(_uint iLevelIndex, _float fFovAngle
 	//XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f,LightFar));
 
 	m_ShadowLight_ProjMatrix.emplace(iLevelIndex, ProjMatrix);
+	m_ShadowLight_Far.emplace(iLevelIndex, fFarZ);
 
 	return S_OK;
 }
@@ -141,6 +143,26 @@ _float4x4 CLight_Manager::Get_ShadowLightProjMatrix(_uint iLevelIndex)
 
 	if (iter == m_ShadowLight_ProjMatrix.end())
 		return Identity_Matrix;
+	else
+		return iter->second;
+}
+
+_float CLight_Manager::Get_ShadowLightFar(_uint iLevelIndex)
+{
+	auto iter = m_ShadowLight_Far.find(iLevelIndex);
+
+	if (iter == m_ShadowLight_Far.end())
+		return 0.f;
+	else
+		return iter->second;
+}
+
+_float4 CLight_Manager::Get_ShadowLightPos(_uint iLevelIndex)
+{
+	auto iter = m_ShadowLight_Pos.find(iLevelIndex);
+
+	if (iter == m_ShadowLight_Pos.end())
+		return _float4();
 	else
 		return iter->second;
 }

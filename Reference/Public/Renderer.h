@@ -115,6 +115,7 @@ private:
 private:
 	_bool						m_bBloomBlur_Clear = false;
 	_bool						m_bRimBlur_Clear = false;
+	_int						m_iCurrentLevel = {};
 
 private:
 	ID3D11Device*				m_pDevice = { nullptr };

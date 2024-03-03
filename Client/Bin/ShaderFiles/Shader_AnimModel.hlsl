@@ -9,6 +9,7 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_BoneMatrices[800];
 float g_fCamFar;
+float g_fLightFar;
 float g_TimeDelta;
 
 Texture2D g_DiffuseTexture;
@@ -137,7 +138,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f); 
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
  
     Out.vBloomBlur = Calculation_Brightness(Out.vDiffuse);
@@ -158,7 +159,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 
-    Out.vLightDepth = In.vProjPos.w / g_fCamFar;
+    Out.vLightDepth = In.vProjPos.w / g_fLightFar;
 	
     return Out;
 }

@@ -74,8 +74,6 @@ public: /* For.Object_Manager */
 	void Set_Player(class CCharacter* _pPlayer);
 	HRESULT Create_PoolObjects(const wstring & strPrototypeTag, _uint iSize = 10);
 
-
-
 	void Fill_PrototypeTags(vector<string>*_vector);
 
 public: /* For.Component_Manager */
@@ -141,6 +139,8 @@ public: /* For.Light_Manager */
 	_float4x4	Get_ShadowLightViewMatrix(_uint iLevelIndex);
 	_float4x4	Get_ShadowLightViewMatrix_Inverse(_uint iLevelIndex);
 	_float4x4	Get_ShadowLightProjMatrix(_uint iLevelIndex);
+	_float		Get_ShadowLightFar(_uint iLevelIndex);
+	_float4		Get_ShadowLightPos(_uint iLevelIndex);
 
 public: /* For.Frustum */
 	void		Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix);

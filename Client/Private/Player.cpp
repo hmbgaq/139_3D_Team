@@ -1,11 +1,10 @@
-#include "..\Public\Player.h"
-
+#include "Player.h"
 #include "GameInstance.h"
 #include "Body_Player.h"
 #include "Weapon_Player.h"
-
 #include "Player_IdleLoop.h"
 #include "Data_Manager.h"
+#include "PhysXController.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
@@ -45,14 +44,14 @@ HRESULT CPlayer::Initialize(void* pArg)
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"),
-		TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom))))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"), TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom)));
 
 	m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
 
 
 	CData_Manager::GetInstance()->Set_Player(this);
+
+	m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, XMVectorSet(0.f, 3.f, 0.f, 1.f));
 
 	return S_OK;
 }

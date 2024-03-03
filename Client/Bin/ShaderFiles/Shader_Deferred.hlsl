@@ -7,6 +7,7 @@ matrix g_ProjMatrixInv, g_ViewMatrixInv;
 matrix g_LightViewMatrix, g_LightProjMatrix;
 matrix g_CamProjMatrix, g_CamViewMatrix; /* ssr에서 사용 */
 float g_CamFar;
+float g_LightFar;
 
 vector g_vLightDir;
 vector g_vLightPos;
@@ -218,7 +219,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float4 vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
     vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
-    float fViewZ = vDepthDesc.y * 1000.f;
+    float fViewZ = vDepthDesc.y * g_CamFar;
 
     vector vWorldPos;
 
@@ -353,7 +354,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
    
     float4 vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
    
-    if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
+    if (vWorldPos.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
         Out.vColor = Out.vColor * 0.8f;
     
     
