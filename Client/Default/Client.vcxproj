@@ -491,6 +491,9 @@
     <ClInclude Include="..\Public\Player_MeleeCombo_02_L_NEW.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_03_SlamAOEJump.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_04.h" />
+    <ClInclude Include="..\Public\Player_Rifle_IdleWeaponHolster.h" />
+    <ClInclude Include="..\Public\Player_Rifle_Ironsights_Fire.h" />
+    <ClInclude Include="..\Public\Player_Rifle_Ironsights_Reload.h" />
     <ClInclude Include="..\Public\Player_Roll_B.h" />
     <ClInclude Include="..\Public\Player_Roll_F.h" />
     <ClInclude Include="..\Public\Player_Roll_L.h" />
@@ -513,6 +516,7 @@
     <ClInclude Include="..\Public\Player_State_Dodge.h" />
     <ClInclude Include="..\Public\Player_State_Hit.h" />
     <ClInclude Include="..\Public\Player_State_Normal.h" />
+    <ClInclude Include="..\Public\Player_State_Rifle.h" />
     <ClInclude Include="..\Public\Player_State_Roll.h" />
     <ClInclude Include="..\Public\Player_State_Run.h" />
     <ClInclude Include="..\Public\Player_State_Walk.h" />
@@ -883,6 +887,9 @@
     <ClCompile Include="..\Private\Player_MeleeCombo_02_L_NEW.cpp" />
     <ClCompile Include="..\Private\Player_MeleeCombo_03_SlamAOEJump.cpp" />
     <ClCompile Include="..\Private\Player_MeleeCombo_04.cpp" />
+    <ClCompile Include="..\Private\Player_Rifle_IdleWeaponHolster.cpp" />
+    <ClCompile Include="..\Private\Player_Rifle_Ironsights_Fire.cpp" />
+    <ClCompile Include="..\Private\Player_Rifle_Ironsights_Reload.cpp" />
     <ClCompile Include="..\Private\Player_Roll_B.cpp" />
     <ClCompile Include="..\Private\Player_Roll_F.cpp" />
     <ClCompile Include="..\Private\Player_Roll_L.cpp" />
@@ -905,6 +912,7 @@
     <ClCompile Include="..\Private\Player_State_Dodge.cpp" />
     <ClCompile Include="..\Private\Player_State_Hit.cpp" />
     <ClCompile Include="..\Private\Player_State_Normal.cpp" />
+    <ClCompile Include="..\Private\Player_State_Rifle.cpp" />
     <ClCompile Include="..\Private\Player_State_Roll.cpp" />
     <ClCompile Include="..\Private\Player_State_Run.cpp" />
     <ClCompile Include="..\Private\Player_State_Walk.cpp" />

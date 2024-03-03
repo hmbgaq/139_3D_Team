@@ -142,7 +142,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState
 
 _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones)
 {
-	_bool _bPrevTransition = m_bIsTransition;
+	//_bool _bPrevTransition = m_bIsTransition;
 	//if (m_bIsTransition)
 	//{
 	//	m_fTrackPosition += m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
@@ -189,8 +189,6 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 		}
 
 	}
-
-
 
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
@@ -276,6 +274,29 @@ void CAnimation::Reset_Animation(const CModel::BONES& Bones, _bool _bIsSplitted)
 		}
 
 		m_Channels[i]->Reset_Channel(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+	}
+}
+
+void CAnimation::Reset_UpperAnimation(const CModel::BONES& Bones)
+{
+	m_isFinished = false;
+	m_bIsTransition = false;
+	m_fTrackPosition = 0.0f;
+	m_PrevPos = { 0.f, 0.f, 0.f };
+
+	Reset_TransitionKeyFrame();
+
+	for (size_t i = 0; i < m_iNumChannels; i++)
+	{
+		//HERE
+		CChannel* pNowChannel = m_Channels[i];
+		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
+
+		// RightShoulder : 301, LeftUpLeg : 475
+		if (iChannelIndex < 475 && iChannelIndex >= 301)
+		{
+			m_Channels[i]->Reset_Channel(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+		}
 	}
 }
 

@@ -158,6 +158,11 @@ HRESULT CBody::Render_Shadow()
 	return S_OK;
 }
 
+_int CBody::Get_CurrentAnimIndex()
+{
+	return m_pModelCom->Get_CurrentAnimIndex();
+}
+
 void CBody::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _bool _bUseAnimationPos, _uint iTargetKeyFrameIndex)
 {
 	m_pModelCom->Set_Animation(_iNextAnimation, _eAnimState, _bIsTransition, m_pModelCom->Get_TickPerSecond() / 10.f, iTargetKeyFrameIndex);
@@ -167,6 +172,11 @@ void CBody::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimState,
 _bool CBody::Is_Animation_End()
 {
 	return m_pModelCom->Is_AnimEnd();
+}
+
+_bool CBody::Is_UpperAnimation_End()
+{
+	return m_pModelCom->Is_UpperAnimEnd();
 }
 
 _bool CBody::Is_Inputable_Front(_uint _iIndexFront)
@@ -203,6 +213,12 @@ CCharacter* CBody::Get_Owner()
 void CBody::Set_Owner(CCharacter* pOwner)
 {
 	m_pOwner = pOwner;
+}
+
+void CBody::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+{
+	m_pModelCom->Set_Animation_Upper(_iAnimationIndex, _eAnimState);
+	m_pModelCom->Set_Splitted(true);
 }
 
 #endif

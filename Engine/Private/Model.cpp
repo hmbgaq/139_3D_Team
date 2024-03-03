@@ -412,7 +412,16 @@ void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAn
 {
 	m_iUpperAnimIndex = _iAnimationIndex;
 	m_eUpperAnimState = _eAnimState;
+	Reset_UpperAnimation(_iAnimationIndex);
 
+}
+
+void CModel::Reset_UpperAnimation(_int iAnimIndex)
+{
+	if (iAnimIndex == -1)
+		m_Animations[m_iCurrentAnimIndex]->Reset_UpperAnimation(m_Bones);
+	else
+		m_Animations[iAnimIndex]->Reset_UpperAnimation(m_Bones);
 }
 
 _float CModel::Get_TickPerSecond()

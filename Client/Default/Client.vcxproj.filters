@@ -1459,6 +1459,24 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\1. Cover">
       <UniqueIdentifier>{7eab31c6-a45e-4628-84ca-2b15ce2de96b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\7. Aim">
+      <UniqueIdentifier>{eae54ae4-0ced-4dd5-9a83-5a72882568b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\7. Aim\Rifle">
+      <UniqueIdentifier>{f669680c-43a6-46ea-ac58-3719ea9d2858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\7. Aim\Rifle\0. Parent">
+      <UniqueIdentifier>{e91f0153-a31f-4466-a127-fede0b13f1d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\7. Aim\Rifle\1. Holster">
+      <UniqueIdentifier>{e909fbaa-9cde-44c2-88f0-e59d664caf27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\7. Aim\Rifle\2. Fire">
+      <UniqueIdentifier>{3065db52-5555-4727-a5c4-47c0664238c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\7. Aim\Rifle\3. Reload">
+      <UniqueIdentifier>{0320d6e0-38b3-492a-bc7d-1fd3b10cd4b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -2720,6 +2738,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_CoverHigh_Side_L_Stop.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\1. Cover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Rifle.h">
+      <Filter>02.GameObjects\00. Character\Player\State\7. Aim\Rifle\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Rifle_IdleWeaponHolster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\7. Aim\Rifle\1. Holster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Rifle_Ironsights_Fire.h">
+      <Filter>02.GameObjects\00. Character\Player\State\7. Aim\Rifle\2. Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Rifle_Ironsights_Reload.h">
+      <Filter>02.GameObjects\00. Character\Player\State\7. Aim\Rifle\3. Reload</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4074,6 +4104,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Sniper_CoverHigh_Idle.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\2. Cover\1. Cover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Rifle.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\7. Aim\Rifle\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Rifle_IdleWeaponHolster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\7. Aim\Rifle\1. Holster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Rifle_Ironsights_Fire.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\7. Aim\Rifle\2. Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Rifle_Ironsights_Reload.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\7. Aim\Rifle\3. Reload</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -24,6 +24,8 @@ public:
 	vector<class CChannel*>* Get_Channels() { return &m_Channels; };
 	CChannel* Get_Channel_By_BoneIndex(_uint _iBoneIndex, _uint& _iChannelIndex);
 	void	Reset_Animation(const CModel::BONES& Bones, _bool _bIsSplitted = false);
+	void	Reset_UpperAnimation(const CModel::BONES& Bones);
+
 
 	_float	Get_TrackPosition() { return m_fTrackPosition; };
 	void	Set_TrackPosition(_float _fTrackPosition) { m_fTrackPosition = _fTrackPosition; };

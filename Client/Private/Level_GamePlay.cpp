@@ -44,10 +44,10 @@ HRESULT CLevel_GamePlay::Initialize()
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
 
 	FAILED_CHECK(Ready_LightDesc());
-	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
-	//FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
+	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 	FAILED_CHECK(Ready_LandObjects());
-	//FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
 	if (FAILED(Ready_UI()))
@@ -390,9 +390,9 @@ HRESULT CLevel_GamePlay::Ready_LandObjects()
 	LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
 
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
-	//FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
+	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
 
-	//FAILED_CHECK(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc));
+	FAILED_CHECK(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc));
 
 	return S_OK;
 }

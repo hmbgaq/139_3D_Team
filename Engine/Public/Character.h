@@ -80,6 +80,7 @@ public:
 	void	Set_EventNotify(string strPath, string JsonFileName);
 	HRESULT	LoadAnimJson(string strPath, string strFileName);
 public:
+	_int Get_CurrentAnimIndex();
 	void	Set_Animation(
 		_uint _iNextAnimation
 		, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_NORMAL
@@ -88,6 +89,8 @@ public:
 		, _uint iTargetKeyFrameIndex = 0);
 
 	_bool	Is_Animation_End();
+	_bool	Is_UpperAnimation_End();
+
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 	_float	Get_TrackPosition();
 	CHARCTER_DESC Get_CharcterDesc() { return CharAnimDesc; }
@@ -116,10 +119,6 @@ public:
 public:
 	void Add_Force(_vector In_vDir, _float In_fPower);
 
-
-
-
-
 public:
 	_int Get_Hp() {
 		return m_iHp;
@@ -128,6 +127,11 @@ public:
 	void Set_Hp(_uint _iHp) {
 		m_iHp = _iHp;
 	};
+
+public:	//!For Animation Split
+	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END);
+	_bool Is_Splitted() { return m_pBody->Is_Splitted(); }
+	void Set_Splitted(_bool _bIsSplitted) { m_pBody->Set_Splitted(_bIsSplitted); };
 
 protected:
 	_int m_iHp = { 1 };
