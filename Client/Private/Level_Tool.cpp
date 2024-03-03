@@ -61,6 +61,8 @@ HRESULT CLevel_Tool::Ready_Imgui()
 HRESULT CLevel_Tool::Ready_Layer_BackGround(const wstring& strLayerTag)
 {
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky")));
+
+	return S_OK;
 }
 
 HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)

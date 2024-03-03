@@ -7,6 +7,9 @@ CLight_Manager::CLight_Manager()
 
 HRESULT CLight_Manager::Initialize()
 {
+	XMMATRIX identityMatrix = XMMatrixIdentity();
+	XMStoreFloat4x4(&Identity_Matrix, identityMatrix);
+
 	return S_OK;
 }
 
@@ -63,6 +66,83 @@ HRESULT CLight_Manager::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 		pLight->Render(pShader, pVIBuffer);	
 
 	return S_OK;
+}
+
+HRESULT CLight_Manager::Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp)
+{
+	return S_OK;
+}
+
+HRESULT CLight_Manager::Add_ShadowLight_View(_uint iLevelIndex, _vector vEye, _vector vAt, _vector vUp)
+{
+	/* _float4x4		ViewMatrix, ProjMatrix;
+
+	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, m_pGameInstance->Get_CamFar()));
+
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix));*/
+
+	auto iter = m_ShadowLight_ViewMatrix.find(iLevelIndex);
+
+	if (iter != m_ShadowLight_ViewMatrix.end())
+		return E_FAIL;
+
+	_float4x4 ViewMatrix;
+	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(vEye, vAt, vUp));
+
+	m_ShadowLight_ViewMatrix.emplace(iLevelIndex, ViewMatrix);
+
+	return S_OK;
+}
+
+HRESULT CLight_Manager::Add_ShadowLight_Proj(_uint iLevelIndex, _float fFovAngleY, _float fAspectRatio, _float fNearZ, _float fFarZ)
+{
+	auto iter = m_ShadowLight_ProjMatrix.find(iLevelIndex);
+
+	if (iter != m_ShadowLight_ProjMatrix.end())
+		return E_FAIL;
+
+	_float4x4 ProjMatrix;
+	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(fFovAngleY), fAspectRatio, fNearZ, fFarZ));
+	//XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f,LightFar));
+
+	m_ShadowLight_ProjMatrix.emplace(iLevelIndex, ProjMatrix);
+
+	return S_OK;
+}
+
+_float4x4 CLight_Manager::Get_ShadowLightViewMatrix(_uint iLevelIndex)
+{
+	auto iter = m_ShadowLight_ViewMatrix.find(iLevelIndex);
+
+	if (iter == m_ShadowLight_ViewMatrix.end())
+		return Identity_Matrix;
+	else
+		return iter->second;
+}
+
+_float4x4 CLight_Manager::Get_ShadowLightViewMatrix_Inverse(_uint iLevelIndex)
+{
+	auto iter = m_ShadowLight_ViewMatrix.find(iLevelIndex);
+
+	if (iter == m_ShadowLight_ViewMatrix.end())
+		return Identity_Matrix;
+
+	_float4x4 Result = {};
+	XMStoreFloat4x4(&Result, XMMatrixInverse(nullptr, XMLoadFloat4x4(&iter->second)));
+
+	return Result;
+}
+
+_float4x4 CLight_Manager::Get_ShadowLightProjMatrix(_uint iLevelIndex)
+{
+	auto iter = m_ShadowLight_ProjMatrix.find(iLevelIndex);
+
+	if (iter == m_ShadowLight_ProjMatrix.end())
+		return Identity_Matrix;
+	else
+		return iter->second;
 }
 
 CLight_Manager * CLight_Manager::Create()

@@ -763,10 +763,45 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc, _int& outLightInde
 
 HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 {
-	if (nullptr == m_pLight_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
 
 	return m_pLight_Manager->Render(pShader, pVIBuffer);
+}
+
+HRESULT CGameInstance::Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+	return m_pLight_Manager->Set_ShadowLight(iLevelIndex, vEye, vAt, vUp);
+}
+
+HRESULT CGameInstance::Add_ShadowLight_View(_uint iLevelIndex, _vector vEye, _vector vAt, _vector vUp)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+	return m_pLight_Manager->Add_ShadowLight_View(iLevelIndex, vEye, vAt, vUp);
+}
+
+HRESULT CGameInstance::Add_ShadowLight_Proj(_uint iLevelIndex, _float fFovAngleY, _float fAspectRatio, _float fNearZ, _float fFarZ)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+	return m_pLight_Manager->Add_ShadowLight_Proj(iLevelIndex, fFovAngleY, fAspectRatio, fNearZ, fFarZ);
+}
+
+_float4x4 CGameInstance::Get_ShadowLightViewMatrix(_uint iLevelIndex)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, _float4x4());
+	return m_pLight_Manager->Get_ShadowLightViewMatrix(iLevelIndex);
+}
+
+_float4x4 CGameInstance::Get_ShadowLightViewMatrix_Inverse(_uint iLevelIndex)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, _float4x4());
+	return m_pLight_Manager->Get_ShadowLightViewMatrix_Inverse(iLevelIndex);
+}
+
+_float4x4 CGameInstance::Get_ShadowLightProjMatrix(_uint iLevelIndex)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, _float4x4());
+	return m_pLight_Manager->Get_ShadowLightProjMatrix(iLevelIndex);
 }
 
 void CGameInstance::Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix)

@@ -198,7 +198,7 @@ HRESULT CRenderer::Render_Shadow()
 	ViewPortDesc.Height = (_float)g_iSizeY;
 	ViewPortDesc.MinDepth = 0.f;
 	ViewPortDesc.MaxDepth = 1.f;
-
+	
 	m_pContext->RSSetViewports(1, &ViewPortDesc);
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_SHADOW])
@@ -213,6 +213,7 @@ HRESULT CRenderer::Render_Shadow()
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
+	
 	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
 	ViewPortDesc.TopLeftX = 0;
 	ViewPortDesc.TopLeftY = 0;
@@ -220,8 +221,12 @@ HRESULT CRenderer::Render_Shadow()
 	ViewPortDesc.Height = g_iWinsizeY;
 	ViewPortDesc.MinDepth = 0.f;
 	ViewPortDesc.MaxDepth = 1.f;
-
+	
 	m_pContext->RSSetViewports(1, &ViewPortDesc);
+
+	//FAILED_CHECK(Deferred_Shadow());
+	//
+	//FAILED_CHECK(Render_ShadowBlur());
 
 	return S_OK;
 }
@@ -719,6 +724,16 @@ HRESULT CRenderer::Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bCl
 
 	//FAILED_CHECK(m_pGameInstance->End_MRT());
 
+	return S_OK;
+}
+
+HRESULT CRenderer::Deferred_Shadow()
+{
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_ShadowBlur()
+{
 	return S_OK;
 }
 

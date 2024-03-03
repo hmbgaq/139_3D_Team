@@ -394,8 +394,8 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 	{
 		if (m_pGameInstance->Mouse_Down(DIM_LB))
 		{
-			m_tUI_Desc.fPositionX = m_pt.x;
-			m_tUI_Desc.fPositionY = m_pt.y;
+			m_tUI_Desc.fPositionX = (_float)m_pt.x;
+			m_tUI_Desc.fPositionY = (_float)m_pt.y;
 			UI2D_Create(fTimeDelta);
 			
 		}

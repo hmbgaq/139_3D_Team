@@ -133,17 +133,18 @@ HRESULT CBody_Player::Ready_Components()
 	Preset::PhysXColliderDesc::DynamicPieceSetting(tPhysXColliderDesc, m_pTransformCom);
 	m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
 	m_pPhysXCollider->Add_PhysXActorAtScene();
-
+	
+	return S_OK;
 }
 
 HRESULT CBody_Player::Bind_ShaderResources()
 {
-	if (FAILED(__super::Bind_ShaderResources()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Bind_ShaderResources());
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
-		return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
+	return S_OK;
 }
 
 CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

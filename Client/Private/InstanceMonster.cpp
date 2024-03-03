@@ -345,7 +345,7 @@ HRESULT CInstanceMonster::Ready_Instance()
 
 HRESULT CInstanceMonster::Create_AnimationTexture()
 {
-	_uint iMaxBoneSize = m_pModelCom->Get_Bones()->size();
+	_uint iMaxBoneSize = (_uint)m_pModelCom->Get_Bones()->size();
 	_uint iTexelsPerBone = 4;
 
 	_uint iPixelCount = iMaxBoneSize * iTexelsPerBone;

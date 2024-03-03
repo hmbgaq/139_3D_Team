@@ -40,7 +40,7 @@ HRESULT CWindow_MapTool::Initialize()
 	FAILED_CHECK(Ready_PrototypeTags());
 	
 
-	_int iEnvironModelTagSize = m_vecEnviroModelTag.size();
+	_int iEnvironModelTagSize = (_int)m_vecEnviroModelTag.size();
 	for (int i = 0; i < iEnvironModelTagSize; ++i) //! 인스턴싱용 깡통맵
 	{
 		vector<CEnvironment_Object*> EmptyVector;
@@ -409,7 +409,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 
 	json InteractJson = LoadJson["Interact_Json"];
-	_int InteractJsonSize = InteractJson.size();
+	_int InteractJsonSize = (_int)InteractJson.size();
 
 	for(_int i = 0; i < InteractJsonSize; ++i)
 	{
@@ -997,7 +997,7 @@ void CWindow_MapTool::CameraWindow_Function()
 				
 				if (ImGui::RadioButton(CameraType[i], &iCameraType, i))
 				{
-					_int iCameraCount = m_vecCameras.size();
+					_int iCameraCount = (_int)m_vecCameras.size();
 
 					for (_int i = 0; i < iCameraCount; ++i)
 					{
@@ -1021,7 +1021,7 @@ void CWindow_MapTool::CameraWindow_Function()
 					else
 						iCameraType = 0;
 
-					_int iCameraCount = m_vecCameras.size();
+					_int iCameraCount = (_int)m_vecCameras.size();
 
 					for (_int i = 0; i < iCameraCount; ++i)
 					{
@@ -1132,7 +1132,7 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 					ImGui::End();
 					return;
 				}
-					_int iCreateInstanceSize = m_vecCreateInstance.size();
+					_int iCreateInstanceSize = (_int)m_vecCreateInstance.size();
 		
 					for (_int i = 0; i < iCreateInstanceSize; ++i)
 					{
@@ -1444,10 +1444,10 @@ void CWindow_MapTool::Create_Tab(TAP_TYPE eTabType)
 		{
 			if (ImGui::BeginListBox(u8"미리보기인스턴스 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 			{
-				_int iPreviewInstanceSize = m_vecPreViewInstance.size();
+				_int iPreviewInstanceSize = (_int)m_vecPreViewInstance.size();
 
 
-				for (_uint i = 0; i < iPreviewInstanceSize; ++i)
+				for (_int i = 0; i < iPreviewInstanceSize; ++i)
 				{
 					const _bool isSelected = (m_iSelectPreviewIndex == i);
 
@@ -1513,7 +1513,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 
 	if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER)
 	{
-		iTagSize = m_vecCreateMonster.size();
+		iTagSize = (_uint)m_vecCreateMonster.size();
 		vecCreateTag = m_vecCreateMonsterTag;
 		strListBoxName = u8"삭제할 캐릭터 객체 리스트";
 		iSelectTag = m_iSelectCharacterTag;
@@ -1524,7 +1524,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 		{
 			if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
 			{
-				iTagSize = m_vecPreViewInstance.size();
+				iTagSize = (_uint)m_vecPreViewInstance.size();
 				vecCreateTag = m_vecPreViewInstanceTag;
 				strListBoxName = u8"삭제할 미리보기 인스턴스 객체 리스트";
 				iSelectTag = m_iSelectPreviewIndex;
@@ -1532,7 +1532,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 			}
 			else
 			{
-				iTagSize = m_vecCreateObject.size();
+				iTagSize = (_uint)m_vecCreateObject.size();
 				vecCreateTag = m_vecCreateObjectTag;
 				strListBoxName = u8"삭제할 환경 객체 리스트";
 				iSelectTag = m_iSelectObjectIndex;
@@ -1540,7 +1540,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 		}
 		else
 		{
-			iTagSize = m_vecCreateObject.size();
+			iTagSize = (_uint)m_vecCreateObject.size();
 			vecCreateTag = m_vecCreateObjectTag;
 			strListBoxName = u8"삭제할 환경 객체 리스트";
 			iSelectTag = m_iSelectObjectIndex;
@@ -2158,7 +2158,7 @@ void CWindow_MapTool::Create_Instance()
 
 	m_mapPreviewInstance.clear();
 
-	_int iEnvironModelTagSize = m_vecEnviroModelTag.size();
+	_int iEnvironModelTagSize = (_int)m_vecEnviroModelTag.size();
 	for (int i = 0; i < iEnvironModelTagSize; ++i) //! 인스턴싱용 깡통맵
 	{
 		vector<CEnvironment_Object*> EmptyVector;
@@ -2166,7 +2166,7 @@ void CWindow_MapTool::Create_Instance()
 		m_mapPreviewInstance.emplace(m_vecEnviroModelTag[i], EmptyVector);
 	}
 
-	_int iPreviewVectorSize = m_vecPreViewInstance.size();
+	_int iPreviewVectorSize = (_int)m_vecPreViewInstance.size();
 
 	for (_int i = 0; i < iPreviewVectorSize; ++i)
 	{

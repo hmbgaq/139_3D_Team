@@ -347,7 +347,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 
 	json InteractJson = Stage1MapJson["Interact_Json"];
-	_int InteractJsonSize = InteractJson.size();
+	_int InteractJsonSize = (_int)InteractJson.size();
 
 	for (_int i = 0; i < InteractJsonSize; ++i)
 	{
@@ -357,7 +357,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 	}
 
 	json InstanceJson = Stage1MapJson["Instance_Json"];
-	_int InstanceJsonSize = InstanceJson.size();
+	_int InstanceJsonSize = (_int)InstanceJson.size();
 
 	for (_int i = 0; i < InstanceJsonSize; ++i)
 	{
@@ -375,9 +375,9 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
 
 		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
+		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
 
-		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
+		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
 		{
 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
 

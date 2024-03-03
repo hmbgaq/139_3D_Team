@@ -100,14 +100,10 @@ HRESULT CBody_Assassin::Ready_Components()
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Assassin"), 
-		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Assassin"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 
 	/* For.Com_Collider */
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
@@ -116,19 +112,19 @@ HRESULT CBody_Assassin::Ready_Components()
 	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
 
 
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
+
+	return S_OK;
 }
 
 HRESULT CBody_Assassin::Bind_ShaderResources()
 {
-	if (FAILED(__super::Bind_ShaderResources()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Bind_ShaderResources());
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
-		return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
+	return S_OK;
 }
 
 CBody_Assassin* CBody_Assassin::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

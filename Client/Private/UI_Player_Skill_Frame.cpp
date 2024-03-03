@@ -77,13 +77,10 @@ HRESULT CUI_Player_Skill_Frame::Render()
 
 HRESULT CUI_Player_Skill_Frame::Ready_Components()
 {
-	if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
-		return E_FAIL;
+	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture
 
 	//! For.Com_Shader
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 
 	////! For.Com_Texture_1
 	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_left"), // HP_Bar_Red
@@ -95,17 +92,13 @@ HRESULT CUI_Player_Skill_Frame::Ready_Components()
 
 HRESULT CUI_Player_Skill_Frame::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-		return E_FAIL;
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
 	for (auto& iter : m_pTextureCom)
 	{
-		if (FAILED(iter->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
+		FAILED_CHECK(iter->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture"));
 	}
 
 	return S_OK;
