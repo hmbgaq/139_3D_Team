@@ -2,6 +2,7 @@
 
 #include "GameInstance.h"
 #include "Body_Player.h"
+#include "Weapon_Player.h"
 
 #include "Player_IdleLoop.h"
 #include "Data_Manager.h"
@@ -39,6 +40,17 @@ HRESULT CPlayer::Initialize(void* pArg)
 		m_pActor = new CActor<CPlayer>(this);
 		m_pActor->Set_State(new CPlayer_IdleLoop());
 	}
+
+
+	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"),
+		TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom))))
+		return E_FAIL;
+
+	m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
+
 
 	CData_Manager::GetInstance()->Set_Player(this);
 
@@ -84,6 +96,29 @@ HRESULT CPlayer::Ready_PartObjects()
 	CBody::BODY_DESC		BodyDesc = {};
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
 		return E_FAIL;
+
+	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
+	{
+		
+		CWeapon::WEAPON_DESC		WeaponDesc = {};
+		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, TEXT("Weapon_Punch_L"))))
+			return E_FAIL;
+
+		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch_R"))))
+			return E_FAIL;
+
+	}
+
+	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch_L"));
+	m_pWeapon_Punch_L->Set_Enable(false);
+	
+
+
+	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_Punch_R"));
+	m_pWeapon_Punch_R->Set_Enable(false);
+	
+
+
 
 
 	return S_OK;

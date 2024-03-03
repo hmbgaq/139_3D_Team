@@ -11,7 +11,9 @@
 BEGIN(Engine)
 
 class CNavigation;
-//class CPhysXCharacterController;
+class CRigidBody;
+
+class CPhysXController;
 
 class ENGINE_DLL CCharacter abstract : public CGameObject
 {
@@ -87,6 +89,8 @@ public:
 
 	_bool	Is_Animation_End();
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
+	_float	Get_TrackPosition();
+	CHARCTER_DESC Get_CharcterDesc() { return CharAnimDesc; }
 
 	void Go_Straight(_float fTimeDelta);
 	void Go_Straight_L45(_float fTimeDelta);
@@ -100,6 +104,21 @@ public:
 public:
 	virtual void Set_Enable(_bool _Enable) override;
 
+public:
+	virtual Hit_Type Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower);
+
+	virtual void Hitted_Left(Power ePower) {};
+	virtual void Hitted_Right(Power ePower) {};
+	virtual void Hitted_Front(Power ePower) {};
+	virtual void Hitted_Knock(_bool bIsCannonball = false) {};
+	virtual void Hitted_Dead(Power ePower) {};
+
+public:
+	void Add_Force(_vector In_vDir, _float In_fPower);
+
+
+
+
 
 public:
 	_int Get_Hp() {
@@ -111,16 +130,24 @@ public:
 	};
 
 protected:
-	_int m_iHp = { 0 };
+	_int m_iHp = { 1 };
+	Power m_eStrength = { Power::Light };
+	_float m_fStiffnessRate = { 1.f };
 
-
+public:
+	_float m_fCurrentTrackPosition = {0.f};
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
+	CRigidBody* m_pRigidBody = { nullptr };
 	CBody* m_pBody = { nullptr };
 	vector<CWeapon*> m_Weapons;
 	CHARCTER_DESC CharAnimDesc = {};
+
 protected:
-	//CPhysXController* m_pPhysXControllerCom = { nullptr };
+	CCharacter* m_pTarget = { nullptr };
+
+protected:
+	CPhysXController* m_pPhysXControllerCom = { nullptr };
 	PxControllerCollisionFlags m_LastCollisionFlags;
 
 protected:

@@ -148,6 +148,27 @@ CTransform* CGameObject::Get_Transform()
 	return m_pTransformCom;
 }
 
+_vector CGameObject::Get_Position_Vector()
+{
+	return m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
+}
+
+_vector CGameObject::Calc_Look_Dir(_vector vTargetPos)
+{
+	return m_pTransformCom->Calc_Look_Dir(vTargetPos);
+}
+
+CGameObject* CGameObject::Get_Object_Owner()
+{
+	return m_pOwner;
+}
+
+void CGameObject::Set_Object_Owner(CGameObject* pOwner)
+{
+	m_pOwner = pOwner;
+}
+
+
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComTag, _Inout_ CComponent** ppOut, void * pArg)
 {
 	if (nullptr != Find_Component(strComTag))

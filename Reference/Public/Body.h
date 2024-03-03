@@ -6,6 +6,7 @@
 BEGIN(Engine)
 
 class CPhysXCollider;
+class CCharacter;
 class CCollider;
 class CTexture;
 class CShader;
@@ -51,6 +52,7 @@ public:
 
 	_bool	Is_Animation_End();
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
+	_float	Get_TrackPosition();
 
 	_float3 Get_MovePos() {
 		return m_vMovePos;
@@ -66,9 +68,11 @@ public:
 #ifdef _DEBUG
 public: //!For.Tool
 	virtual _bool Picking(_Out_ _float3* vPickedPos) override;
-
-
 #endif 
+
+public:
+	CCharacter* Get_Owner();
+	void Set_Owner(CCharacter* pOwner);
 
 
 	
@@ -89,6 +93,9 @@ protected:
 	CModel* m_pModelCom = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
 	//CTexture* m_pDissolveTexture = { nullptr };
+
+protected:
+	CCharacter* m_pOwner = { nullptr };
 
 protected:
 	class CTransform* m_pParentTransform = { nullptr };

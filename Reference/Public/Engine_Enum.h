@@ -9,6 +9,10 @@ namespace Engine
 
 	/* Transform */
 	static const wchar_t* g_pTransformTag = TEXT("Com_Transform");
+	
+	/* RigidBody */
+	static const wchar_t* g_pRigidBodyTag = TEXT("Com_RigidBody");
+
 
 	/* Shader */
 	enum class DEFERRED_SHADER { 
@@ -66,6 +70,33 @@ namespace Engine
 		, EASING_TYPE_END
 	};
 
+	/* Weapon */
+	enum Direction
+	{
+		Left,
+		Right,
+		Front,
+		Back,
+	};
+
+	enum Power
+	{
+		Light,
+		Medium,
+		Heavy,
+		Absolute,
+		Power_End
+	};
+
+	enum Hit_Type
+	{
+		None,
+		Hit_Lightly,
+		Hit,
+		Hit_Break,
+		Hit_Finish,
+
+	};
 
 
 	/* PhysX */

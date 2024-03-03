@@ -173,7 +173,10 @@ _bool CBody::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_pModelCom->Is_Inputable_Front(_iIndexFront);
 }
-
+_float CBody::Get_TrackPosition()
+{
+	return m_pModelCom->Get_TrackPosition();
+}
 #ifdef _DEBUG
 
 _bool CBody::Picking(_float3* vPickedPos)
@@ -190,6 +193,16 @@ _bool CBody::Picking(_float3* vPickedPos)
 
 	return m_pGameInstance->Picking_Mesh(ray, vPickedPos, meshes);
 
+}
+
+CCharacter* CBody::Get_Owner()
+{
+	return m_pOwner;
+}
+
+void CBody::Set_Owner(CCharacter* pOwner)
+{
+	m_pOwner = pOwner;
 }
 
 #endif

@@ -40,7 +40,9 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_DebugRender()); 
 #endif
 
+#ifdef _DEBUG
 	FAILED_CHECK(Ready_CascadeShadow());
+#endif
 
 	m_tHBAO_Option.bHBAO_Active = false; //m_bSSAO_Active;
 	m_tFog_Option.bFog_Active = false; //m_bFog_Active;
@@ -295,6 +297,7 @@ HRESULT CRenderer::Create_DepthStencil()
 	return S_OK;
 }
 
+#ifdef _DEBUG
 HRESULT CRenderer::Ready_CascadeShadow()
 {
 	D3D11_VIEWPORT		ViewportDesc;
@@ -331,6 +334,8 @@ HRESULT CRenderer::Ready_CascadeShadow()
 
 	return S_OK;
 }
+#endif
+
 #ifdef _DEBUG
 
 HRESULT CRenderer::Ready_DebugRender()
@@ -942,12 +947,13 @@ HRESULT CRenderer::Render_Deferred()
 	return S_OK;
 }
 
+
 HRESULT CRenderer::Render_Cascade_Shadow()
 {
-	/* Directional Light 로 그림자 맵핑을 하지만 장면이 커지게될경우 장면을 모두 담가 힘듬 + 똑같은 그림자가 만들어져야 하므로 고정적인 광원의 위치를 가지면 안된다. 
-	 현재 시야에 보이는 장면에 그림자를 만들기위해 단계를 나누어서 그림자맵을 만든다. + 그림자맵을 나누는 기준은 시야절두체가 되며 나눠진 시야절두체 안에 들어오는 오브젝트에 대해서만 그림자맵을 만든다. 
+	/* Directional Light 로 그림자 맵핑을 하지만 장면이 커지게될경우 장면을 모두 담가 힘듬 + 똑같은 그림자가 만들어져야 하므로 고정적인 광원의 위치를 가지면 안된다.
+	 현재 시야에 보이는 장면에 그림자를 만들기위해 단계를 나누어서 그림자맵을 만든다. + 그림자맵을 나누는 기준은 시야절두체가 되며 나눠진 시야절두체 안에 들어오는 오브젝트에 대해서만 그림자맵을 만든다.
 	 -> 가까운거리에있는 물체에대한 그림자맵은 높은 정확도를 보여주게된다.*/
-	// Viewport -> RSSet -> OM DepthStencilSet -> Clear -> Matrix Tick -> Shader bind 
+	 // Viewport -> RSSet -> OM DepthStencilSet -> Clear -> Matrix Tick -> Shader bind 
 
 	for (_uint i = 0; i < MAX_CASCADES; ++i)
 	{
@@ -971,6 +977,8 @@ HRESULT CRenderer::Render_Cascade_Shadow()
 
 	return S_OK;
 }
+
+
 
 HRESULT CRenderer::Render_Decal()
 {

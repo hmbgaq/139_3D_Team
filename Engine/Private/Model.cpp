@@ -424,6 +424,11 @@ _bool CModel::Is_Inputable_Front(_uint _iIndexFront)
 	return m_Animations[m_iCurrentAnimIndex]->Is_Inputable_Front(_iIndexFront);
 }
 
+_float CModel::Get_TrackPosition()
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_TrackPosition();
+}
+
 void CModel::Write_Names(const string& strModelFilePath)
 {
 	ofstream osTxt(strModelFilePath + ".txt");

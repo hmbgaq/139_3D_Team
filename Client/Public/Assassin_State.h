@@ -22,6 +22,14 @@ public:
 
 public:		//상태 그룹 별 업데이트 
 	CState<CAssassin>* Normal_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CAssassin>* Walk_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CAssassin>* Run_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CAssassin>* Attack_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CAssassin>* DodgeRun_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CAssassin>* Scared_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CAssassin>* Spawn_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+
 
 
 

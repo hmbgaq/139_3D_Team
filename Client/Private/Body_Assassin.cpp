@@ -94,10 +94,6 @@ void CBody_Assassin::OnCollisionExit(CCollider* other)
 {
 }
 
-void CBody_Assassin::SetUp_Animation(_uint iAnimIndex)
-{
-	m_pModelCom->Set_Animation(iAnimIndex);
-}
 
 HRESULT CBody_Assassin::Ready_Components()
 {

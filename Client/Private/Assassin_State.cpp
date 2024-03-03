@@ -31,6 +31,36 @@ CState<CAssassin>* CAssassin_State::Normal_State(CAssassin* pActor, _float fTime
 	return Normal(pActor, fTimeDelta, _iAnimIndex);
 }
 
+CState<CAssassin>* CAssassin_State::Walk_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CAssassin>* CAssassin_State::Run_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CAssassin>* CAssassin_State::Attack_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CAssassin>* CAssassin_State::DodgeRun_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CAssassin>* CAssassin_State::Scared_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CAssassin>* CAssassin_State::Spawn_State(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
 CState<CAssassin>* CAssassin_State::Normal(CAssassin* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	CState<CAssassin>* pState = { nullptr };
