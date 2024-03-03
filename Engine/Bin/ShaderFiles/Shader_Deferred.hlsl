@@ -61,10 +61,7 @@ struct FOG_DESC
 
 struct BLOOMRIM_DESC
 {
-    bool bBloom_Active;
     bool bBloomBlur_Active;
-
-    bool bRimLight_Active;
     bool bRimBlur_Active;
 };
 
@@ -279,18 +276,16 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    // MRT_GameObject : Bloom or MRT_Bloom_Blur 
+    // MRT_GameObject : Bloom -> Blur 利侩 
     vector vBloom = float4(0.f, 0.f, 0.f, 0.f);
-    if (g_Bloom_Rim_Desc.bBloom_Active)
+    if (g_Bloom_Rim_Desc.bBloomBlur_Active)
         vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
 	
-    // MRT_GameObject : RimLight or MRT_Rim_Blur 
+    // MRT_GameObject : RimLight -> Blur 利侩 
     vector vRimLight = float4(0.f, 0.f, 0.f, 0.f);
-    if (g_Bloom_Rim_Desc.bRimLight_Active)
-        vRimLight = g_RimLightTarget.Sample(LinearSampler, In.vTexcoord);
+    if (g_Bloom_Rim_Desc.bRimBlur_Active)
+        vRimLight = g_RimLightTarget.Sample(LinearSampler, In.vTexcoord); /* blur 利侩等 RimLight */ 
 	
-  //  vector vEffect = g_Effect_DiffuseTarget.Sample(LinearSampler, In.vTexcoord);
-    
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     
     if (vDiffuse.a == 0.f)

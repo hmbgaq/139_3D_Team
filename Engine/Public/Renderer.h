@@ -82,9 +82,8 @@ private:
 public:
 	/* È°¼ºÈ­ */
 	void Set_HBAO_Active(_bool _HBAO) { m_tHBAO_Option.bHBAO_Active = _HBAO; }
-	void Set_Bloom_Active(_bool _bloom_active) { m_tBloomRim_Option.bBloom_Active = _bloom_active; }
-	void Set_RimLight_Active(_bool _RimLight) { m_tBloomRim_Option.bRimLight_Active = _RimLight; }
-	void Set_BloomBlur_Active(_bool _bloom_active) { m_tBloomRim_Option.bBloom_Active = _bloom_active; }
+	void Set_BloomBlur_Active(_bool _bloom_active) { m_tBloomRim_Option.bBloomBlur_Active = _bloom_active; }
+	void Set_RimBlur_Active(_bool _bloom_active) { m_tBloomRim_Option.bRimBlur_Active = _bloom_active; }
 	void Set_Fog_Active(_bool _Fog) { m_tFog_Option.bFog_Active = _Fog; }
 
 	void Set_Radial_Blur_Active(_bool _Radial) { m_tRadial_Option.bRadial_Active = _Radial; }

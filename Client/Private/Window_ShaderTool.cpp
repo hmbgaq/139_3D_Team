@@ -186,8 +186,6 @@ void CWindow_ShaderTool::Compress_Fog_Setting()
 
 void CWindow_ShaderTool::Compress_BloomRim_Setting()
 {
-	ImGui::Checkbox("Bloom Active",		&m_eScreen_Desc.bBloom_Active);
-	ImGui::Checkbox("RimLight Active",	&m_eScreen_Desc.bRimLight_Active);
 	ImGui::Checkbox("Bloom Blur",		&m_eScreen_Desc.bBloomBlur_Active);
 	ImGui::Checkbox("RimLight Blur",	&m_eScreen_Desc.bRimBlur_Active);
 

@@ -139,10 +139,12 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+ 
     Out.vBloomBlur = g_BloomColor;
     float4 vRimColor = Calculation_Brightness(Out.vDiffuse) + Calculation_RimColor(In.vNormal, In.vPosition); /* g_vRimPowerm ,g_vRimColor , g_vCamPosition 사용 */
     Out.vRimBlur = vRimColor; /* g_vRimPower 사용 */
 	
+    return Out;
 }   
 
 /* ------------------- Shadow Pixel Shader(2) -------------------*/
@@ -178,7 +180,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    pass Model_Wireframe // 1
+    pass Blend // 1
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);

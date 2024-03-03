@@ -36,9 +36,7 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_DebugRender());
 #endif
 
-	m_tBloomRim_Option.bBloom_Active = false;
 	m_tBloomRim_Option.bBloomBlur_Active = true;
-	m_tBloomRim_Option.bRimLight_Active = false;
 	m_tBloomRim_Option.bRimBlur_Active = true;
 
 	m_tHBAO_Option.bHBAO_Active = false;
@@ -303,7 +301,7 @@ HRESULT CRenderer::Render_BloomBlur()
 {
 	if (m_tBloomRim_Option.bBloomBlur_Active)
 	{
-		FAILED_CHECK(Render_Blur(TEXT("Target_Bloom"), TEXT("MRT_Bloom_Blur"),
+		FAILED_CHECK(Render_Blur(TEXT("Target_BloomBlur"), TEXT("MRT_Bloom_Blur"),
 								ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER),
 								ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER),
 								ECast(BLUR_SHADER::BLUR_UP_ADD), true));
@@ -322,7 +320,7 @@ HRESULT CRenderer::Render_RimBlur()
 {
 	if (m_tBloomRim_Option.bRimBlur_Active)
 	{
-		FAILED_CHECK(Render_Blur(TEXT("Target_RimLight"), TEXT("MRT_Rim_Blur"),
+		FAILED_CHECK(Render_Blur(TEXT("Target_RimBlur"), TEXT("MRT_Rim_Blur"),
 								ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER),
 								ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER),
 								ECast(BLUR_SHADER::BLUR_UP_ADD), true));
@@ -377,34 +375,14 @@ HRESULT CRenderer::Render_Deferred()
 	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader[SHADER_TYPE::SHADER_DEFERRED], "g_BloomTarget"));
 
 	/* 선택사항*/
-	if (true == m_tBloomRim_Option.bBloom_Active) //Bloom vs BloomBlur
-	{
-		if (true == m_tBloomRim_Option.bBloomBlur_Active)
-		{
-			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom_Blur"), m_pShader_Deferred, "g_BloomTarget"));
-		}
-		else
-		{
-			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Bloom"), m_pShader_Deferred, "g_BloomTarget"));
-		}
-	}
-
-	if (true == m_tBloomRim_Option.bRimLight_Active) // RimLight vs RimLight Blur
-	{
-		if (true == m_tBloomRim_Option.bRimBlur_Active)
-		{
-			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Rim_Blur"), m_pShader_Deferred, "g_RimLightTarget"));
-		}
-		else
-		{
-			FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RimLight"), m_pShader_Deferred, "g_RimLightTarget"));
-		}
-	}
+	if (true == m_tBloomRim_Option.bBloomBlur_Active)
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_BloomBlur_Active"), m_pShader_Deferred, "g_BloomTarget"));
+	
+	if (true == m_tBloomRim_Option.bRimBlur_Active)
+		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Rim_Blur_Active"), m_pShader_Deferred, "g_RimLightTarget"));
 
 	if (true == m_tHBAO_Option.bHBAO_Active)
-	{
 		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader_Deferred, "g_SSAOTexture")); /* ssao 추가 */
-	}
 
 	if (true == m_tFog_Option.bFog_Active)
 	{
@@ -899,24 +877,22 @@ HRESULT CRenderer::Create_RenderTarget()
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Normal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Depth"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 0.f))); /* 깊이버퍼 그 깊이 */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_ORM"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))); /* 넣은거 알아서 블러되도록 처리함 */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_BloomBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))); /* 넣은거 알아서 블러되도록 처리함 */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_RimBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse")));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Normal")));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Depth")));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_ORM")));
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Bloom")));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_BloomBlur"))); 
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_RimBlur")));
 
 	/* MRT_Bloom_Blur*/
-	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom_Blur"), TEXT("Target_Bloom_Blur")));
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_BloomBlur_Active"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom_Blur"), TEXT("Target_BloomBlur_Active")));
 
 	/* MRT_Rim_Blur*/
-	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Rim_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Rim_Blur"), TEXT("Target_Rim_Blur")));
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Rim_Blur_Active"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Rim_Blur"), TEXT("Target_Rim_Blur_Active")));
 
 	/* MRT_LightAcc -> Directional , Spotlight, 등 받아온것 */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shade"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
@@ -924,20 +900,11 @@ HRESULT CRenderer::Create_RenderTarget()
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade")));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular")));
 
-	/* MRT_Cascade Shadow */
-	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Cascade1"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Cascade1"), TEXT("Target_Cascade1")));
-	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Cascade2"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Cascade2"), TEXT("Target_Cascade2")));
-	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Cascade3"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Cascade3"), TEXT("Target_Cascade3")));
-
 	/* MRT_Deferred_Shadow */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Deferred"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_Deferred"), TEXT("Target_Shadow_Deferred")));
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_Blur"), TEXT("Target_Shadow_Blur")));
-
 
 	/* MRT_Shadow -> Render_Shadow 로 받아온값 */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_LightDepth"), g_iSizeX, g_iSizeY, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
@@ -1054,10 +1021,11 @@ HRESULT CRenderer::Ready_DebugRender()
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Depth"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ORM"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Bloom"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Bloom_Blur"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RimLight"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 13.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Rim_Blur"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 15.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_BloomBlur"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RimBlur"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
+	
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_BloomBlur_Active"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 13.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Rim_Blur_Active"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 15.f), fSizeX, fSizeY));
 
 	/* MRT_Effect - Tool에서 가리지않으려면 7 이상으로 곱해야함  */
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Diffuse"), (fSizeX / 2.f * 7.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
@@ -1115,9 +1083,9 @@ HRESULT CRenderer::Control_HotKey()
 	if (m_pGameInstance->Key_Down(DIK_GRAVE))
 	{
 		cout << " ----------------------------- " << endl;
-		cout << " DIK_1 : (Pre) BloomON/OFF " << endl;
+		cout << " DIK_1 : (Pre) Bloom Blur ON/OFF " << endl;
+		cout << " DIK_3 : (Pre) RimLight Blur ON/OFF" << endl;
 		cout << " DIK_2 : (Pre) HBAO+ ON/OFF " << endl;
-		cout << " DIK_3 : (Pre) RimLight ON/OFF" << endl;
 		cout << " DIK_4 : (Pre) Fog ON/OFF " << endl;
 
 		cout << " DIK_5 : (Post) Radial Blur ON/OFF " << endl;
@@ -1128,18 +1096,11 @@ HRESULT CRenderer::Control_HotKey()
 		cout << " DIK_9 : (Blur) RadialBlur " << endl;
 
 		cout << " --                         -- " << endl;
-		if (true == m_tBloomRim_Option.bBloom_Active)
-			cout << "Bloom : true " << endl;
-		else
-			cout << "Bloom : false " << endl;
+
 		if (true == m_tBloomRim_Option.bBloomBlur_Active)
 			cout << "BloomBlur : true " << endl;
 		else
 			cout << "BloomBlur : false " << endl;
-		if (true == m_tBloomRim_Option.bRimLight_Active)
-			cout << "RimLight : true " << endl;
-		else
-			cout << "RimLight : false " << endl;
 		if (true == m_tBloomRim_Option.bRimBlur_Active)
 			cout << "RimBlur : true " << endl;
 		else
@@ -1170,11 +1131,11 @@ HRESULT CRenderer::Control_HotKey()
 		cout << " ----------------------------- " << endl;
 	}
 	if (m_pGameInstance->Key_Down(DIK_1))
-		m_tBloomRim_Option.bBloom_Active = !m_tBloomRim_Option.bBloom_Active;
+		m_tBloomRim_Option.bBloomBlur_Active = !m_tBloomRim_Option.bBloomBlur_Active;
 	if (m_pGameInstance->Key_Down(DIK_2))
-		m_tHBAO_Option.bHBAO_Active = !m_tHBAO_Option.bHBAO_Active;
+		m_tBloomRim_Option.bRimBlur_Active = !m_tBloomRim_Option.bRimBlur_Active;
 	if (m_pGameInstance->Key_Down(DIK_3))
-		m_tBloomRim_Option.bRimLight_Active = !m_tBloomRim_Option.bRimLight_Active;
+		m_tHBAO_Option.bHBAO_Active = !m_tHBAO_Option.bHBAO_Active;
 	if (m_pGameInstance->Key_Down(DIK_4))
 		m_tFog_Option.bFog_Active = !m_tFog_Option.bFog_Active;
 	if (m_pGameInstance->Key_Down(DIK_5))
@@ -1183,10 +1144,8 @@ HRESULT CRenderer::Control_HotKey()
 		m_tHDR_Option.bHDR_Active = !m_tHDR_Option.bHDR_Active;
 	if (m_pGameInstance->Key_Down(DIK_7))
 		m_tAnti_Option.bFXAA_Active = !m_tAnti_Option.bFXAA_Active;
-	if (m_pGameInstance->Key_Down(DIK_8))
-		m_tBloomRim_Option.bBloomBlur_Active = !m_tBloomRim_Option.bBloomBlur_Active;
-	if (m_pGameInstance->Key_Down(DIK_9))
-		m_tBloomRim_Option.bRimBlur_Active = !m_tBloomRim_Option.bRimBlur_Active;
+	//if (m_pGameInstance->Key_Down(DIK_8))
+	//if (m_pGameInstance->Key_Down(DIK_9))
 
 	return S_OK;
 }
