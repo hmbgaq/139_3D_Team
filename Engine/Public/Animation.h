@@ -34,6 +34,9 @@ public:
 	_bool	Is_Transition_End() { return m_fTransitionEnd <= m_fTrackPosition; }
 	_bool	Is_Transition() { return m_bIsTransition; }
 
+	void	Set_Transition_Upper(CAnimation* prevAnimation, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
+
+
 	KEYFRAME Make_NowFrame(_uint m_iChannelIndex);
 
 	void	Reset_TransitionKeyFrame() {

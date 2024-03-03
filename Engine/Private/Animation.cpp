@@ -142,18 +142,18 @@ _bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState
 
 _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones)
 {
-	//_bool _bPrevTransition = m_bIsTransition;
-	//if (m_bIsTransition)
-	//{
-	//	m_fTrackPosition += m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+	_bool _bPrevTransition = m_bIsTransition;
+	if (m_bIsTransition)
+	{
+		m_fTrackPosition += m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
 
-	//	if (m_fTransitionEnd <= m_fTrackPosition)
-	//	{
-	//		m_bIsTransition = false;
-	//		m_fTrackPosition = m_fTransitionEnd;
-	//	}
-	//}
-	//else
+		if (m_fTransitionEnd <= m_fTrackPosition)
+		{
+			m_bIsTransition = false;
+			m_fTrackPosition = m_fTransitionEnd;
+		}
+	}
+	else
 	{
 		switch (_eAnimState)
 		{
@@ -199,25 +199,9 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 		// RightShoulder : 301, LeftUpLeg : 475
 		if (iChannelIndex >= 475)
 		{
-
+			continue;
 		}
 		else if (iChannelIndex >= 301)
-		{
-			switch (_eAnimState)
-			{
-			case Engine::CModel::ANIM_STATE_NORMAL:
-			case Engine::CModel::ANIM_STATE_LOOP:
-				m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
-				break;
-			case Engine::CModel::ANIM_STATE_REVERSE:
-				m_Channels[i]->Invalidate_TransformationMatrix_Reverse(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
-				break;
-			default:
-				break;
-			}
-
-		}
-		/*else
 		{
 			if (m_bIsTransition)
 			{
@@ -228,11 +212,21 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 			}
 			else
 			{
-				
+				switch (_eAnimState)
+				{
+				case Engine::CModel::ANIM_STATE_NORMAL:
+				case Engine::CModel::ANIM_STATE_LOOP:
+					m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+					break;
+				case Engine::CModel::ANIM_STATE_REVERSE:
+					m_Channels[i]->Invalidate_TransformationMatrix_Reverse(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+					break;
+				default:
+					break;
+				}
 			}
-		}*/
+		}
 	}
-
 
 	return m_isFinished;
 }
@@ -347,6 +341,71 @@ void CAnimation::Set_Transition(CAnimation* prevAnimation, _float _fTransitionDu
 		m_StartTransitionKeyFrame.push_back(_StartFrame);
 		m_EndTransitionKeyFrame.push_back(_EndFrame);
 	}
+	m_bIsTransition = true;
+}
+
+void CAnimation::Set_Transition_Upper(CAnimation* prevAnimation, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
+{
+	_float fTransitionDuration = (_fTransitionDuration > 0.f ? _fTransitionDuration : 0.3f);
+	m_fTransitionEnd = m_Channels[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+	m_fTrackPosition = m_fTransitionEnd - fTransitionDuration;
+
+	m_StartTransitionKeyFrame.clear();
+	m_EndTransitionKeyFrame.clear();
+
+
+	for (size_t i = 0; i < m_iNumChannels; i++)
+	{
+		//HERE
+		CChannel* pNowChannel = m_Channels[i];
+		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
+
+		// RightShoulder : 301, LeftUpLeg : 475
+		if (iChannelIndex < 475 && iChannelIndex >= 301)
+		{
+			CChannel* pChannel = m_Channels[i];
+			_uint		targetBoneIndex = pChannel->Get_BoneIndex();
+
+			_uint		pPrevChannelIndex;
+			CChannel* pPrevChannel = prevAnimation->Get_Channel_By_BoneIndex(targetBoneIndex, pPrevChannelIndex);
+
+			KEYFRAME	_StartFrame;
+			KEYFRAME	_EndFrame;
+
+			if (pPrevChannel)
+			{
+				if (prevAnimation->Is_Transition())
+				{
+					_StartFrame = prevAnimation->Make_NowFrame(pPrevChannelIndex);
+				}
+				else
+				{
+					_float fPrevAnimTrackPosition = prevAnimation->Get_TrackPosition();
+					_StartFrame = pPrevChannel->Make_NowFrame(fPrevAnimTrackPosition, &m_CurrentKeyFrames[i]);
+				}
+			}
+			else
+			{
+				_StartFrame = pChannel->Get_KeyFrame(iTargetKeyFrameIndex);
+			}
+
+			_EndFrame = pChannel->Get_KeyFrame(iTargetKeyFrameIndex);
+
+			_StartFrame.fTrackPosition = m_fTrackPosition;
+
+			m_StartTransitionKeyFrame.push_back(_StartFrame);
+			m_EndTransitionKeyFrame.push_back(_EndFrame);
+
+		}
+		else
+		{
+			KEYFRAME	_StartFrame;
+			KEYFRAME	_EndFrame;
+			m_StartTransitionKeyFrame.push_back(_StartFrame);
+			m_EndTransitionKeyFrame.push_back(_EndFrame);
+		}
+	}
+		
 	m_bIsTransition = true;
 }
 
