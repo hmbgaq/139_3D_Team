@@ -181,11 +181,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* 
 		pMonster->Set_Position(_float3(0.f, 0.f, 2.f));
 	}
 
-	{
-		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-		if (nullptr == pMonster)	return E_FAIL;
-		pMonster->Set_Position(_float3(1.f, 0.f, 2.f));
-	}
+	//{
+	//	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+	//	if (nullptr == pMonster)	return E_FAIL;
+	//	pMonster->Set_Position(_float3(1.f, 0.f, 2.f));
+	//}
 
 
 
