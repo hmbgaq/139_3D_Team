@@ -630,12 +630,6 @@
     <ClInclude Include="..\Public\UI_TutorialBox.h">
       <Filter>02.GameObjects\UI\02. System\00. Text\00. Tutorial</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Reference\Public\AntTweakBar.h">
-      <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\jAppSettings.h">
-      <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UI_Player_ExpBar.h">
       <Filter>02.GameObjects\UI\00. Player\Left_Interface\ExpBar</Filter>
     </ClInclude>
@@ -1146,9 +1140,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_TutorialBox.cpp">
       <Filter>02.GameObjects\UI\02. System\00. Text\00. Tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\jAppSettings.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_ExpBar.cpp">
       <Filter>02.GameObjects\UI\00. Player\Left_Interface\ExpBar</Filter>

@@ -8,7 +8,6 @@
 #include "Target_Manager.h"
 #include "RenderTarget.h"
 #include "UI_Anything.h"
-#include "jAppSettings.h"
 #include "UI_Text.h"
 #include "Easing_Utillity.h"
 
@@ -119,8 +118,6 @@ HRESULT CWindow_UITool::Initialize()
 
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩이 완료되었습니다."));
 
-	//TwInit(TW_DIRECT3D11, m_pDevice);
-	//TwWindowSize(500, 500);
 
 	return S_OK;
 }
@@ -136,10 +133,6 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 	Shortcut_Key(fTimeDelta);
 	ShowDialog();
 
-	//TwBar* myBar;
-	//myBar = TwNewBar("NameOfMyTweakBar");
-	//TwAddVarRW(myBar, "NameOfMyVariable", TW_TYPE_DIR3D, nullptr, "Test");
-	//TwDraw();
 
 	__super::Tick(fTimeDelta);
 
