@@ -48,9 +48,14 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
 #ifdef _DEBUG
-		m_pGameInstance->Set_RenderDebug(m_bRenderTargetOnOff);
-#endif
-		
+		m_pGameInstance->Set_RenderDebugTarget(m_bRenderTargetOnOff);
+#endif					
+	}
+	if (ImGui::Checkbox("RenderColliderOFF", &m_bRenderTargetOnOff))
+	{
+#ifdef _DEBUG
+		m_pGameInstance->Set_RenderDebugCom(m_bRenderColliderOnOff);
+#endif					
 	}
 	//dialog========================================================================
 	

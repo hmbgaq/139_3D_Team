@@ -907,7 +907,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Effect_Engine.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Effect_Deferred.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_UI_Engine.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

@@ -21,21 +21,24 @@ public:
 private:
 	/* Top Setting */
 	_bool bRenderTarget_Active = true;
+	_bool bRenderCom_Active = true;
 
 	/* Level Load - string도 바꿔야함 */
 	_int		m_iCurrLevel_Index = {};
 	LEVEL		m_eCurrLevel_Enum = {};
 	wstring		m_wstrLayerTag = {};
-	string		m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/TestMapData_MapData.json";
+	string		m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/IntroMap.json";
 
 	/* Level Shader Struct */
 	HBAO_PLUS_DESC	m_eHBAO_Desc = {};
 	FOG_DESC		m_eFog_Desc = {};
+	BLOOMRIM_DESC	m_eScreen_Desc = {};
+
+	RADIAL_DESC		m_eRadial_Desc = {};
 	HDR_DESC		m_eHDR_Desc = {};
-	SCREEN_DESC		m_eScreen_Desc = {};
-
+	ANTI_DESC		m_eAnti_Desc = {};
+	HSV_DESC		m_eHSV_Desc = {};
 	LEVEL_SHADER_DESC m_eTotalShader_Desc = {};
-
 
 private:
 	/* 최상위 셋팅 */
@@ -54,10 +57,12 @@ private:
 	/* Compress */
 	void Compress_HBAO_Plus_Setting();
 	void Compress_Fog_Setting();
+	void Compress_BloomRim_Setting();
+
+	void Compress_Radial_Setting();
 	void Compress_HDR_Setting();
 	void Compress_FXAA_Setting();
-	void Compress_Screen_Setting();
-
+	void Compress_HSV_Setting();
 
 public:
 	static CWindow_ShaderTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

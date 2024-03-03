@@ -85,12 +85,11 @@ public: /* For.Component_Manager */
 public: /* For.Renderer */
 	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
-	HRESULT Add_CascadeObject(class CGameObject* pGameObject);
 	CRenderer* Get_Renderer(); /* Åø¿ë */
 #ifdef _DEBUG
-	void Set_RenderDebug(_bool _bRenderDebug);
+	void Set_RenderDebugCom(_bool _bRenderDebug);
+	void Set_RenderDebugTarget(_bool _bRenderTarget);
 #endif
-
 
 public: /* For.PipeLine */
 	void		Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix);
@@ -122,6 +121,8 @@ public: /* For.Target_Manager */
 	HRESULT		Add_MRT(const wstring& strMRTTag, const wstring& strTargetTag);
 	HRESULT		Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView * pDSV = nullptr, _bool bClear = true);
 	HRESULT		End_MRT();
+	HRESULT		Clear_MRT(const wstring& strMRTTag);
+	HRESULT		Clear_Target(const wstring& strMRTTag, const wstring& strTargetTag);
 	HRESULT		Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 	class CRenderTarget* Find_RenderTarget(const wstring& strTargetTag);
 	void		Create_RenderTarget(const wstring& strTargetTag);
