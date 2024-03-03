@@ -91,6 +91,7 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 	if (ImGui::TreeNode("Bloom / Rim Setting"))
 	{
 		Compress_BloomRim_Setting();
+		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("HBAO+ Setting"))

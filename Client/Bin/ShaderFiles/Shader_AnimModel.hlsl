@@ -136,7 +136,7 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
 	
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition); /* g_vCamPosition 사용 */
-    Out.vRimLight = Calculation_Brightness(Out.vDiffuse) + vRimColor; /* g_vBloomPower 사용 */
+    Out.vRimLight = Calculation_Brightness(Out.vDiffuse) + vRimColor; /* g_vRimPower 사용 */
 	
     return Out;
 }

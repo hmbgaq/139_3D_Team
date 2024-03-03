@@ -55,17 +55,6 @@ void CScreamer::Tick(_float fTimeDelta)
 	//	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_REVERSE, false); /* 문제있음 쓰지마셈 */
 	//}
 
-	if (m_pGameInstance->Key_Down(DIK_9))
-	{
-		if (m_iRenderPass == ECast(ANIM_SHADER::ANIM_ORIGIN))
-			m_iRenderPass = ECast(ANIM_SHADER::ANIM_BLOOM);
-		else if (m_iRenderPass == ECast(ANIM_SHADER::ANIM_BLOOM))
-			m_iRenderPass = ECast(ANIM_SHADER::ANIM_ORIGIN);
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_6))
-		m_bRim = !m_bRim;
-
 	m_fTimeDelta += fTimeDelta;
 	m_fDissolveWeight += fTimeDelta * 0.5f;
 
@@ -250,19 +239,10 @@ HRESULT CScreamer::Bind_ShaderResources()
 	m_pBreakTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture");
 	m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
 
-	/* RimLight */
-	if(true == m_bRim)
-	{
-		m_vRimColor = { 1.0f, 1.f, 1.f, 0.3f };
-		m_vBloomPower = _float3(0.1f, 0.1f, 0.1f);
-	}
-	else
-	{
-		m_vRimColor = { 0.0f, 0.0f, 0.0f, 0.0f };
-		m_vBloomPower = { 0.0f, 0.0f, 0.0f };
-	}
+	m_vRimColor = { 1.0f, 1.f, 1.f, 0.3f };
+	m_vRimPower = _float3(0.1f, 0.1f, 0.1f);
 
-	m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
+	m_pShaderCom->Bind_RawValue("g_vRimPower", &m_vRimPower, sizeof(_float3));
 
 	/* RimLight */
 	m_vCamPos = m_pGameInstance->Get_CamPosition();

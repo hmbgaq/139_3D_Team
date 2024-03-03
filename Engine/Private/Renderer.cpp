@@ -40,6 +40,7 @@ HRESULT CRenderer::Initialize()
 	m_tBloomRim_Option.bBloomBlur_Active = true;
 	m_tBloomRim_Option.bRimLight_Active = false;
 	m_tBloomRim_Option.bRimBlur_Active = false;
+
 	m_tHBAO_Option.bHBAO_Active = false;
 	m_tFog_Option.bFog_Active = false;
 	m_tRadial_Option.bRadial_Active = false;
@@ -86,31 +87,28 @@ HRESULT CRenderer::Draw_RenderGroup()
 	//FAILED_CHECK(Render_Decal());	/* screen space decal  */                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 
 	//FAILED_CHECK(Render_OutLine()); 
-	//if (true == m_tHDR_Option.bHDR_Active)
-	//	FAILED_CHECK(Render_HDR()); /* HDR이 처리된 화면을 기반으로 효과를 주는게 더 좋다. */
-	//
-	//if(true == m_tRadial_Option.bRadial_Active)
-	//	FAILED_CHECK(Render_RadialBlur());
+	if (true == m_tHDR_Option.bHDR_Active)
+		FAILED_CHECK(Render_HDR()); /* HDR이 처리된 화면을 기반으로 효과를 주는게 더 좋다. */
+	
+	if(true == m_tRadial_Option.bRadial_Active)
+		FAILED_CHECK(Render_RadialBlur());
 	
 	//FAILED_CHECK(Render_SSR());
 	
+	if(true == m_tAnti_Option.bFXAA_Active)
+		FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
 	
-	//if(true == m_tAnti_Option.bFXAA_Active)
-	//FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
-	
-	//if(true == m_tHSV_Option.bScreen_Active)
-	//FAILED_CHECK(Render_HSV()); /* 안티앨리어싱 - 최종장면 */
+	if(true == m_tHSV_Option.bScreen_Active)
+		FAILED_CHECK(Render_HSV()); /* 안티앨리어싱 - 최종장면 */
 
-	
-	
 	/* 최종 합성 */
 	FAILED_CHECK(Render_Final());
 
 	FAILED_CHECK(Render_Blend());  
 
 	/* Effect */
-	//FAILED_CHECK(Render_Effect()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
-	//FAILED_CHECK(Render_Effect_Deferred()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
+	FAILED_CHECK(Render_Effect()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
+	FAILED_CHECK(Render_Effect_Deferred()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
 
 	/* UI */
 	//FAILED_CHECK(Render_UI()); /* 디버그에서 렌더타겟 한장으로 그린거 콜하는 그룹 여기 */
@@ -382,7 +380,9 @@ HRESULT CRenderer::Render_Deferred()
 	}
 
 	if (true == m_tHBAO_Option.bHBAO_Active)
+	{
 		FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader_Deferred, "g_SSAOTexture")); /* ssao 추가 */
+	}
 
 	if (true == m_tFog_Option.bFog_Active)
 	{
@@ -393,28 +393,6 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pShader_Deferred->Begin(ECast(DEFERRED_SHADER::DEFERRED)));
 
 	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
-
-	FAILED_CHECK(m_pVIBuffer->Render());
-
-	FAILED_CHECK(m_pGameInstance->End_MRT());
-
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_RadialBlur()
-{
-	
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_RaidalBlur"))); /* Target SSAO 단독 */
-
-	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
-
-	FAILED_CHECK(m_pShader_PostProcess->Bind_RawValue("g_Radial_Blur", &m_tRadial_Option, sizeof(RADIAL_DESC)));
-	
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::RADIAL_BLUR), m_pShader_PostProcess, "g_ProcessingTarget"));
-
-	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_RADIAL)));
 
 	FAILED_CHECK(m_pVIBuffer->Render());
 
@@ -436,7 +414,28 @@ HRESULT CRenderer::Render_HDR()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::HDR), m_pShader_PostProcess, "g_ProcessingTarget"));
 
 	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_HDR)));
+
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_RadialBlur()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_RaidalBlur"))); /* Target SSAO 단독 */
+
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	FAILED_CHECK(m_pShader_PostProcess->Bind_RawValue("g_Radial_Blur", &m_tRadial_Option, sizeof(RADIAL_DESC)));
 	
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::RADIAL_BLUR), m_pShader_PostProcess, "g_ProcessingTarget"));
+
+	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_RADIAL)));
+
 	FAILED_CHECK(m_pVIBuffer->Render());
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
@@ -446,7 +445,44 @@ HRESULT CRenderer::Render_HDR()
 
 HRESULT CRenderer::Render_FXAA()
 {
-	return E_NOTIMPL;
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_FXAA"))); /* Target_FXAA*/
+
+	FAILED_CHECK(m_pShader_Fxaa->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_Fxaa->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_Fxaa->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	FAILED_CHECK(m_pShader_Fxaa->Bind_RawValue("g_bFxaa", &m_tAnti_Option.bFXAA_Active, sizeof(ANTI_DESC)));
+
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::FXAA), m_pShader_Fxaa, "g_FinalTarget"));
+	
+	FAILED_CHECK(m_pShader_Fxaa->Begin(0));
+
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_HSV()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_HSV"))); /* Target_FXAA*/
+
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	FAILED_CHECK(m_pShader_Final->Bind_RawValue("g_HSV_DESC", &m_tHSV_Option, sizeof(HSV_DESC)));
+
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::FXAA), m_pShader_Final, "g_FinalTarget"));
+
+	FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL_HSV)));
+
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
 }
 
 HRESULT CRenderer::Render_Final()
@@ -469,6 +505,32 @@ HRESULT CRenderer::Render_Final()
 
 #pragma endregion
 
+HRESULT CRenderer::Render_Effect()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Effect")));
+
+	/* CEffect_Void - CAlphaObject 자식클래스 확인 */
+	m_RenderObjects[RENDER_EFFECT].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
+		{
+			return ((CAlphaObject*)pSour)->Get_CamDistance() > ((CAlphaObject*)pDest)->Get_CamDistance();
+		});
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_EFFECT])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_EFFECT].clear();
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
+
 HRESULT CRenderer::Render_Blend()
 {
 	m_RenderObjects[RENDER_BLEND].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
@@ -489,20 +551,11 @@ HRESULT CRenderer::Render_Blend()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_Effect()
-{
-	return E_NOTIMPL;
-}
-
 HRESULT CRenderer::Render_UI()
 {
 	return E_NOTIMPL;
 }
 
-HRESULT CRenderer::Render_HSV()
-{
-	return E_NOTIMPL;
-}
 
 HRESULT CRenderer::Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear)
 {

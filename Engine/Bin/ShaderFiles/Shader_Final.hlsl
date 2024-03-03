@@ -180,8 +180,9 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 	
     Out.vColor = vFinal + vDebug;
     
-    if(Out.vColor.a ==0)
-        discard;
+    // 여기서 날리면 hdr off 일때 다 잘릴거임 
+    //if(Out.vColor.a ==0)
+    //    discard;
     
     return Out;
 }
@@ -201,7 +202,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_DEFAULT();
     }
 
-    pass HSV
+    pass HSV // 1
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -213,7 +214,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_HSV();
     }
 
-    pass MIX
+    pass MIX // 2
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -226,7 +227,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_MIX();
     }
 
-    pass Final
+    pass Final // 3
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
