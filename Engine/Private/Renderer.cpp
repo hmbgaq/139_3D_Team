@@ -74,11 +74,9 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (m_tHBAO_Option.bHBAO_Active)
 		FAILED_CHECK(Render_HBAO_PLUS());
 
-	if (m_tBloomRim_Option.bBloomBlur_Active)
-		FAILED_CHECK(Render_BloomBlur());
+	FAILED_CHECK(Render_BloomBlur());
 
-	if (m_tBloomRim_Option.bRimBlur_Active)
-		FAILED_CHECK(Render_RimBlur());
+	FAILED_CHECK(Render_RimBlur());
 
 	FAILED_CHECK(Render_Deferred()); /*  MRT_Deferred -> Target_Deferred에 저장  */
 
@@ -303,19 +301,38 @@ HRESULT CRenderer::Render_HBAO_PLUS()
 
 HRESULT CRenderer::Render_BloomBlur()
 {
-	FAILED_CHECK(Render_Blur(TEXT("Target_Bloom"), TEXT("MRT_Bloom_Blur"),
-		ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER),
-		ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER),
-		ECast(BLUR_SHADER::BLUR_UP_ADD), true));
+	if (m_tBloomRim_Option.bBloomBlur_Active)
+	{
+		FAILED_CHECK(Render_Blur(TEXT("Target_Bloom"), TEXT("MRT_Bloom_Blur"),
+								ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER),
+								ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER),
+								ECast(BLUR_SHADER::BLUR_UP_ADD), true));
+		m_bBloomBlur_Clear = false;
+	}
+	else if (false == m_bBloomBlur_Clear)
+	{
+		m_pGameInstance->Clear_MRT(TEXT("MRT_Bloom_Blur"));
+	
+		m_bBloomBlur_Clear = true;
+	}
 	return S_OK;
 }
 
 HRESULT CRenderer::Render_RimBlur()
 {
-	FAILED_CHECK(Render_Blur(TEXT("Target_RimLight"), TEXT("MRT_Rim_Blur"),
-		ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER),
-		ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER),
-		ECast(BLUR_SHADER::BLUR_UP_ADD), true));
+	if (m_tBloomRim_Option.bRimBlur_Active)
+	{
+		FAILED_CHECK(Render_Blur(TEXT("Target_RimLight"), TEXT("MRT_Rim_Blur"),
+								ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER),
+								ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER),
+								ECast(BLUR_SHADER::BLUR_UP_ADD), true));
+		m_bRimBlur_Clear = false;
+	}
+	else if (false == m_bRimBlur_Clear)
+	{
+		m_pGameInstance->Clear_MRT(TEXT("MRT_Rim_Blur"));
+		m_bRimBlur_Clear = true;
+	}
 
 	return S_OK;
 }
@@ -1104,24 +1121,34 @@ HRESULT CRenderer::Control_HotKey()
 		cout << " DIK_5 : (Post) Radial Blur ON/OFF " << endl;
 		cout << " DIK_6 : (Post) HDR ON/OFF " << endl;
 		cout << " DIK_7 : (Post) FXAA ON/OFF " << endl;
-		cout << " DIK_8 : (Post) Test - Radial Blur " << endl;
-		cout << " DIK_9 : Dont use !! Test Number " << endl;
+
+		cout << " DIK_8 : (Blur) BloomBlur " << endl;
+		cout << " DIK_9 : (Blur) RadialBlur " << endl;
 
 		cout << " --                         -- " << endl;
 		if (true == m_tBloomRim_Option.bBloom_Active)
 			cout << "Bloom : true " << endl;
 		else
 			cout << "Bloom : false " << endl;
+		if (true == m_tBloomRim_Option.bBloomBlur_Active)
+			cout << "BloomBlur : true " << endl;
+		else
+			cout << "BloomBlur : false " << endl;
+		if (true == m_tBloomRim_Option.bRimLight_Active)
+			cout << "RimLight : true " << endl;
+		else
+			cout << "RimLight : false " << endl;
+		if (true == m_tBloomRim_Option.bRimBlur_Active)
+			cout << "RimBlur : true " << endl;
+		else
+			cout << "RimBlur : false " << endl;
+
 
 		if (true == m_tHBAO_Option.bHBAO_Active)
 			cout << "HBAO+ : true " << endl;
 		else
 			cout << "HBAO+ : false " << endl;
 
-		if (true == m_tBloomRim_Option.bRimLight_Active)
-			cout << "RimLight : true " << endl;
-		else
-			cout << "RimLight : false " << endl;
 
 		if (true == m_tFog_Option.bFog_Active)
 			cout << "Fog : true " << endl;
@@ -1137,12 +1164,6 @@ HRESULT CRenderer::Control_HotKey()
 			cout << "HDR : true " << endl;
 		else
 			cout << "HDR : false " << endl;
-
-		//if (true == m_tScreen_Option.bFXAA_Active)
-		//	cout << "FXAA : true " << endl;
-		//else
-		//	cout << "FXAA : false " << endl;
-
 
 		cout << " ----------------------------- " << endl;
 	}
@@ -1160,7 +1181,10 @@ HRESULT CRenderer::Control_HotKey()
 		m_tHDR_Option.bHDR_Active = !m_tHDR_Option.bHDR_Active;
 	if (m_pGameInstance->Key_Down(DIK_7))
 		m_tAnti_Option.bFXAA_Active = !m_tAnti_Option.bFXAA_Active;
-	//if (m_pGameInstance->Key_Down(DIK_8))
+	if (m_pGameInstance->Key_Down(DIK_8))
+		m_tBloomRim_Option.bBloomBlur_Active = !m_tBloomRim_Option.bBloomBlur_Active;
+	if (m_pGameInstance->Key_Down(DIK_9))
+		m_tBloomRim_Option.bRimBlur_Active = !m_tBloomRim_Option.bRimBlur_Active;
 
 	return S_OK;
 }

@@ -239,14 +239,14 @@ HRESULT CScreamer::Bind_ShaderResources()
 	m_pBreakTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture");
 	m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
 
-	m_vRimColor = { 1.0f, 1.f, 1.f, 0.3f };
+	m_vRimColor = { 0.0f, 1.f, 0.f, 1.f };
 	m_vRimPower = _float3(0.1f, 0.1f, 0.1f);
 
-	m_pShaderCom->Bind_RawValue("g_vRimPower", &m_vRimPower, sizeof(_float3));
 
 	/* RimLight */
 	m_vCamPos = m_pGameInstance->Get_CamPosition();
 	m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+	m_pShaderCom->Bind_RawValue("g_vRimPower", &m_vRimPower, sizeof(_float3));
 	m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
 
 	return S_OK;

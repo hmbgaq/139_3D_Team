@@ -262,19 +262,22 @@ void CWindow_UITool::UI_List(_float fTimeDelta)
 
 void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_1))
+		// 스페이스바가 눌렸을 때 실행할 코드
+	
+
+	if (ImGui::IsKeyPressed(ImGuiKey_1))
 	{
 		m_bOpenTexture = true;
 		m_bOpenSetting = false;
 		m_bOpenUI = false;
 	}
-	if (m_pGameInstance->Key_Down(DIK_2))
+	if (ImGui::IsKeyPressed(ImGuiKey_2))
 	{
 		m_bOpenTexture = false;
 		m_bOpenSetting = true;
 		m_bOpenUI = false;
 	}
-	if (m_pGameInstance->Key_Down(DIK_3))
+	if (ImGui::IsKeyPressed(ImGuiKey_3))
 	{
 		m_bOpenTexture = false;
 		m_bOpenSetting = false;

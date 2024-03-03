@@ -115,11 +115,14 @@ private:
 	ANTI_DESC					m_tAnti_Option = {};
 
 private:
+	_bool						m_bBloomBlur_Clear = false;
+	_bool						m_bRimBlur_Clear = false;
+
+private:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 	class CGameInstance*		m_pGameInstance = { nullptr };
 	list<class CGameObject*>	m_RenderObjects[RENDER_END];
-
 	//ID3D11DepthStencilView*		m_pCascadeShadowDSV[3];
 	//vector<class CGameObject*>	m_CascadeObjects[3];
 
@@ -133,10 +136,10 @@ private:
 	class CShader* m_pShader_Effect = { nullptr };
 	class CVIBuffer_Rect* m_pVIBuffer = { nullptr };
 
-	class CTexture* m_pPerlinNoiseTextureCom = { nullptr };
+	class CTexture*			m_pPerlinNoiseTextureCom = { nullptr };
 	ID3D11DepthStencilView* m_pLightDepthDSV = { nullptr };
-	_float4x4								m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
-	HRESULT	Control_HotKey();
+	_float4x4				m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
+	HRESULT					Control_HotKey();
 
 #ifdef _DEBUG
 public:

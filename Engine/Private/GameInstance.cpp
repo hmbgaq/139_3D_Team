@@ -679,32 +679,50 @@ _bool CGameInstance::Picking_Vertex(RAY ray, _float3* out, _uint triNum, VTXMESH
 
 HRESULT CGameInstance::Add_Font(const wstring & strFontTag, const wstring & strFontFilePath)
 {
+	NULL_CHECK_RETURN(m_pFont_Manager, E_FAIL);
 	return m_pFont_Manager->Add_Font(strFontTag, strFontFilePath);
 }
 
 HRESULT CGameInstance::Render_Font(const wstring & strFontTag, const wstring & strText, const _float2 & vPosition, _fvector vColor, _float fScale, _float2 vOrigin, _float fRotation)
 {
+	NULL_CHECK_RETURN(m_pFont_Manager, E_FAIL);
 	return m_pFont_Manager->Render(strFontTag, strText, vPosition, vColor, fScale, vOrigin, fRotation);
 }
 
 HRESULT CGameInstance::Add_RenderTarget(const wstring & strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4 & vClearColor)
 {
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
 	return m_pTarget_Manager->Add_RenderTarget(strTargetTag, iSizeX, iSizeY, ePixelFormat, vClearColor);
 }
 
 HRESULT CGameInstance::Add_MRT(const wstring & strMRTTag, const wstring & strTargetTag)
 {
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
 	return m_pTarget_Manager->Add_MRT(strMRTTag, strTargetTag);
 }
 
 HRESULT CGameInstance::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV, _bool bClear)
 {
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
 	return m_pTarget_Manager->Begin_MRT(strMRTTag, pDSV, bClear);
 }
 
 HRESULT CGameInstance::End_MRT()
 {
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
 	return m_pTarget_Manager->End_MRT();
+}
+
+HRESULT CGameInstance::Clear_MRT(const wstring& strMRTTag)
+{
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
+	return m_pTarget_Manager->Clear_MRT(strMRTTag);
+}
+
+HRESULT CGameInstance::Clear_Target(const wstring& strMRTTag, const wstring& strTargetTag)
+{
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
+	return m_pTarget_Manager->Clear_Target(strMRTTag, strTargetTag);
 }
 
 HRESULT CGameInstance::Bind_RenderTarget_ShaderResource(const wstring & strTargetTag, CShader * pShader, const _char * pConstantName)
@@ -723,6 +741,7 @@ void CGameInstance::Create_RenderTarget(const wstring& strTargetTag)
 }
 
 #ifdef _DEBUG
+
 HRESULT CGameInstance::Ready_RenderTarget_Debug(const wstring & strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {
 	return m_pTarget_Manager->Ready_Debug(strTargetTag, fX, fY, fSizeX, fSizeY);
