@@ -41,6 +41,11 @@ private:
 	_float					m_fTimeAcc = 0.f;
 	_float					m_fVariationSpeed = 1.5f;
 
+	/* Decal */
+	_bool					m_bChangeType = false;
+	_float2					m_vDecal_Scale = { 1.f, 1.f };
+	_float2					m_vDecal_Offset = { 0.f, 0.f };
+
 	_bool					m_bLerp = false;
 public:
 	virtual json			Save_Desc(json& out_json);

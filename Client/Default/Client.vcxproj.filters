@@ -343,6 +343,9 @@
     <Filter Include="02.GameObjects\UI\02. System\02. Item_Showcase\Item_Icon">
       <UniqueIdentifier>{64ee8d28-c550-4ecb-9b39-cdd478a6ae67}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpDecal">
+      <UniqueIdentifier>{7482375d-a55a-465c-a845-dbb3ec0858e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">

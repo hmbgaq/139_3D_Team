@@ -40,6 +40,10 @@ HRESULT CUI_Player_ExpBar::Initialize(void* pArg)
 	Check_RectPos();
 	m_fOrigin_Right = m_rcUI.right;
 
+	Set_OwnerExp();
+
+	m_iShaderNum = 2;
+
 	return S_OK;
 }
 
@@ -51,21 +55,99 @@ void CUI_Player_ExpBar::Priority_Tick(_float fTimeDelta)
 void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
-	if (m_pGameInstance->Key_Down(DIK_5))
+	
+	if (m_pGameInstance->Key_Down(DIK_P))
 	{
-		Change_SizeRight(-5.f);
+		m_fCurEXP += 10.f;
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_6))
+	if (m_pGameInstance->Key_Down(DIK_O))
 	{
-		Change_SizeRight(5.f);
+		m_fCurEXP += 100.f;
 	}
 
-	/* 기존 최대치를 넘었을 경우 최대치로 고정 */
-	if (m_fOrigin_Right > m_rcUI.right)
+	if (m_pGameInstance->Key_Down(DIK_PGDN))
 	{
-		m_rcUI.right = m_fOrigin_Right;
+		//Change_SizeRight(-5.f);
+		--m_iShaderNum;
+		if (m_iShaderNum <= 0)
+			m_iShaderNum = 0;
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_PGUP))
+	{
+		//Change_SizeRight(5.f);
+		++m_iShaderNum;
+		if (m_iShaderNum >= 3)
+			m_iShaderNum = 2;																	// 셰이더 패스 최대 번호 제한 (나중에 수정)
+	}
+
+	if (m_fPreEXP > m_fMaxEXP)
+	{
+		++m_iCurLevel;
+		m_fPreEXP = m_fCurEXP;
+	}
+
+	// Level변동이 없을 경우
+	if (m_iPreLevel == m_iCurLevel/*m_pPlayer->Get_Stat().iLevel*/)
+	{
+		// 시간 중첩
+		m_fTimeAcc += fTimeDelta * 0.5f;
+		// 현재 Exp를 받아온다. (키입력으로 Test중)
+		//m_fCurEXP = m_fTestPlusEXP/*_float(m_pPlayer->Get_Stat().iExp)*/;
+
+		// 현재 EXP가 PreEXP보다 높아지면
+		if (m_fCurEXP > m_fPreEXP)
+			m_bLerp = false;	// 러프 중지
+
+		// CurEXP가 PreEXP보다 커져서 러프까지 중지됐을 경우
+		if (false == m_bLerp && m_fPreEXP < m_fCurEXP)
+		{
+			// 바 길이를 Ratio로 계산 (0~1)
+			_float m_fRatio = m_fCurEXP / m_fMaxEXP;
+
+			// PreEXP에 중첩된 시간을 더해준다.
+			m_fPreEXP += m_fTimeAcc;
+
+			// 바 길이를 PreEXP로 계산 (0~1)
+			m_fProgress = m_fPreEXP / m_fMaxEXP;
+
+			// =>PreEXP가 Cur랑 같거나 커졌다면 통과해서, 현재 EXP로 바 길이를 측정 후 출력. =>PreEXP가 Cur보다 아직 낮다면 PreEXP로 바 길이를 출력
+			if (m_fPreEXP >= m_fCurEXP)
+			{
+				m_fTimeAcc = 0.f; // 누적 시간값 초기화 (PreEXP가 CurEXP값과 같아질때까지 보간되는 값)
+				m_fPreEXP = m_fCurEXP;	// PreEXP를 CurEXP로 맞춰준다.
+				m_fProgress = m_fRatio; // 바 길이를 CurEXP로 맞춰준다.
+				m_bLerp = true;	// Lerp를 다시 켜준다.
+			}
+		}
+	}
+	else if (m_iPreLevel < m_iCurLevel/*m_pPlayer->Get_Stat().iLevel*/)
+	{
+		// EXPBar가 저장했던 Level이 Player의 현재 레벨과 다를 때 (작을 때)
+		m_fTimeAcc += fTimeDelta * 0.5f;
+		m_fPreEXP += m_fTimeAcc;
+
+		if (m_fPreEXP >= m_fMaxEXP)
+		{
+			m_fRemainEXP = m_fPreEXP - m_fMaxEXP; // 레벨업시 초과된 값 저장
+			m_fPreEXP = m_fMaxEXP;
+		}
+
+		m_fProgress = m_fPreEXP / m_fMaxEXP;
+
+		if (m_fProgress >= 1.f) // 바가 다 차면 정보를 갱신
+		{
+			m_iPreLevel = m_iCurLevel/*m_pPlayer->Get_Stat().iLevel*/;
+			m_fMaxEXP = m_fMaxEXP + (m_fMaxEXP / 3)/*m_pPlayer->Get_Stat().iMaxExp*/;
+			m_fCurEXP = m_fRemainEXP/*m_pPlayer->Get_Stat().iExp*/; // 레벨업하고 남은 값
+			m_fPreEXP = 0.f; // PreEXP는 초기화
+
+			m_fTimeAcc = 0.f;
+			//m_fPreEXP = m_fCurEXP;
+			//m_fProgress = m_fCurEXP / m_fMaxEXP;
+			m_bLerp = true;
+		}
 	}
 }
 
@@ -85,7 +167,7 @@ HRESULT CUI_Player_ExpBar::Render()
 		return E_FAIL;
 
 	//! 이 셰이더에 0번째 패스로 그린다.
-	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+	m_pShaderCom->Begin(m_iShaderNum); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
 	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
 	m_pVIBufferCom->Bind_VIBuffers();
@@ -128,23 +210,10 @@ HRESULT CUI_Player_ExpBar::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	string TestName = m_tUIInfo.strObjectName;
-	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
-	{
-		switch (i)
-		{
-		case CUI_Player_ExpBar::EXPBAR:
-		{
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-				return E_FAIL;
-			break;
-		}
-		case CUI_Player_ExpBar::TEXTURE_END:
-			break;
-		default:
-			break;
-		}
-	}
+	if (FAILED(m_pTextureCom[EXPBAR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_LoadingProgress", &m_fProgress, sizeof(_float))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -161,6 +230,14 @@ _bool CUI_Player_ExpBar::In_Frustum()
 {
 	return false;
 	//return m_pGameInstance->isIn_WorldPlanes(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
+}
+
+void CUI_Player_ExpBar::Set_OwnerExp()
+{
+	m_fMaxEXP = 100.f;
+	m_fCurEXP = 10.f;
+	m_fPreEXP = m_fCurEXP;
+	m_fProgress = 0.f;
 }
 
 json CUI_Player_ExpBar::Save_Desc(json& out_json)

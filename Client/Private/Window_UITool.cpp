@@ -104,8 +104,8 @@ HRESULT CWindow_UITool::Initialize()
 	m_tChild_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
 	m_tChild_Desc.fPositionX = g_iWinSizeX / 2;
 	m_tChild_Desc.fPositionY = g_iWinSizeY / 2;
-	m_tChild_Desc.fScaleX = 100;
-	m_tChild_Desc.fScaleY = 100;
+	m_tChild_Desc.fScaleX = 100.f;
+	m_tChild_Desc.fScaleY = 100.f;
 
 	m_tParent_Desc.strLayerTag = "Layer_UI_Player";
 	m_tParent_Desc.strCloneTag = "Prototype_GameObject_UI_Player_Left_Interface";
@@ -113,8 +113,8 @@ HRESULT CWindow_UITool::Initialize()
 	m_tParent_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
 	m_tParent_Desc.fPositionX = g_iWinSizeX / 2;
 	m_tParent_Desc.fPositionY = g_iWinSizeY / 2;
-	m_tParent_Desc.fScaleX = 100;
-	m_tParent_Desc.fScaleY = 100;
+	m_tParent_Desc.fScaleX = 100.f;
+	m_tParent_Desc.fScaleY = 100.f;
 #pragma endregion End
 
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩이 완료되었습니다."));

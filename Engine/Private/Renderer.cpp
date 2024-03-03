@@ -536,8 +536,8 @@ HRESULT CRenderer::Add_MRT_UI()
 
 HRESULT CRenderer::Render_UI()
 {
-	//if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects_UI"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects_UI"))))
+		return E_FAIL;
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
 		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
@@ -547,8 +547,9 @@ HRESULT CRenderer::Render_UI()
 	}
 
 	m_RenderObjects[RENDER_UI].clear();
-	//if (FAILED(m_pGameInstance->End_MRT()))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
