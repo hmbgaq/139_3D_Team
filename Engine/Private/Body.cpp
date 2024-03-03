@@ -173,7 +173,10 @@ _bool CBody::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_pModelCom->Is_Inputable_Front(_iIndexFront);
 }
-
+_float CBody::Get_TrackPosition()
+{
+	return m_pModelCom->Get_TrackPosition();
+}
 #ifdef _DEBUG
 
 _bool CBody::Picking(_float3* vPickedPos)

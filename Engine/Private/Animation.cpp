@@ -257,6 +257,11 @@ _bool CAnimation::Is_Inputable_Front(_uint _iIndexFront)
 	return m_Channels[0]->Is_Inputable_Front(m_fTrackPosition, _iIndexFront);
 }
 
+_bool CAnimation::Is_Inputable_Front(_float _fTrackPosition,_uint _iIndexFront)
+{
+	return m_Channels[0]->Is_Inputable_Front(m_fTrackPosition, _iIndexFront);
+}
+
 _float4x4* CAnimation::Get_TransformationBoneMatrices(_float fTrackPosition, _float4x4* pMatrix)
 {
 	

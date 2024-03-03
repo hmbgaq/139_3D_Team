@@ -52,6 +52,7 @@ public:
 
 	_bool	Is_Animation_End();
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
+	_float	Get_TrackPosition();
 
 	_float3 Get_MovePos() {
 		return m_vMovePos;

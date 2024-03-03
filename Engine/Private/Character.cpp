@@ -186,8 +186,8 @@ HRESULT CCharacter::Add_Weapon(const wstring& strPrototypeTag, string strBoneNam
 
 void CCharacter::Set_EventNotify(string strPath, string JsonFileName)
 {
-	/*string strPath = "../Bin/DataFiles/Data_Animation/";*/
-	LoadAnimJson(strPath, JsonFileName);
+	string strpath = "../../Client/Bin/DataFiles/"+strPath;
+	LoadAnimJson(strpath, JsonFileName);
 }
 
 HRESULT CCharacter::LoadAnimJson(string strPath, string strFileName)
@@ -206,8 +206,7 @@ HRESULT CCharacter::LoadAnimJson(string strPath, string strFileName)
 	json WeaponJson = LoadJson["Weapon"];
 	json EffectJson = LoadJson["Effect"];
 	
-	CharAnimDesc.Body = LoadJson["Body"];
-	CharAnimDesc.BoneName = WeaponJson["BoneName"];
+	//CharAnimDesc.Body = LoadJson["Body"];
 	CharAnimDesc.AnimationIndex = BodyJson["AnimIndex"];
 	CharAnimDesc.Duration = BodyJson["AnimDuration"];
 	CharAnimDesc.EventTrackposition = BodyJson["CurrentTrackPosition"];
@@ -220,6 +219,7 @@ HRESULT CCharacter::LoadAnimJson(string strPath, string strFileName)
 
 	if (WeaponJson != nullptr)
 	{
+		CharAnimDesc.BoneName = WeaponJson["BoneName"];
 		CharAnimDesc.EventWeaponTrackPosition = BodyJson["CurrentTrackPosition"];
 		CharAnimDesc.ColliderWeaponSize = WeaponJson["WeaponColliderSize"];
 		CharAnimDesc.ColliderWeaponTrackPositionOn = WeaponJson["WeaponColliderTrackPositionOn"];
@@ -256,6 +256,11 @@ _bool CCharacter::Is_Animation_End()
 _bool CCharacter::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_pBody->Is_Inputable_Front(_iIndexFront);
+}
+
+_float CCharacter::Get_TrackPosition()
+{
+	return m_pBody->Get_TrackPosition();
 }
 
 void CCharacter::Go_Straight(_float fTimeDelta)
