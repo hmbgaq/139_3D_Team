@@ -1,4 +1,9 @@
 #include "Shader_Defines.hlsli"
+/* -------------- 필 독 사 항 ------------------- */
+// 
+// Bloom , Blur, RimLight 사용법 : 노션 - 개인페이지 Shader사용법 */ 
+//
+/* ----------------------------------------- */
 
 /* Base */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -80,12 +85,13 @@ struct PS_IN
 
 struct PS_OUT
 {
-    float4 vDiffuse : SV_TARGET0;
-    float4 vNormal : SV_TARGET1;
-    float4 vDepth : SV_TARGET2;
-    float4 vORM : SV_TARGET3;
-    float4 vBloom : SV_TARGET4;
-    float4 vRimLight : SV_TARGET5;
+    float4 vDiffuse     : SV_TARGET0;
+    float4 vNormal      : SV_TARGET1;
+    float4 vDepth       : SV_TARGET2;
+    float4 vORM         : SV_TARGET3;
+    float4 vBloomBlur   : SV_TARGET4;
+    float4 vRimBlur     : SV_TARGET5;
+  
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -97,9 +103,9 @@ VS_OUT VS_MAIN(VS_IN In)
     float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
 
     matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
-		                     g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
-		                     g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
-		                     g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+		                g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		                g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		                g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
 
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
     vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
@@ -132,15 +138,12 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vBloom = g_BloomColor;
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vBloomBlur = g_BloomColor;
+    float4 vRimColor = Calculation_Brightness(Out.vDiffuse) + Calculation_RimColor(In.vNormal, In.vPosition); /* g_vRimPowerm ,g_vRimColor , g_vCamPosition 사용 */
+    Out.vRimBlur = vRimColor; /* g_vRimPower 사용 */
 	
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition); /* g_vCamPosition 사용 */
-    Out.vRimLight = Calculation_Brightness(Out.vDiffuse) + vRimColor; /* g_vRimPower 사용 */
-	
-   // Out.vDiffuse += Out.vRimLight;
-    return Out;
-}
+}   
 
 /* ------------------- Shadow Pixel Shader(2) -------------------*/
 
