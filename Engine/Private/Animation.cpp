@@ -140,7 +140,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState
 	return m_isFinished;
 }
 
-_bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones, _float4x4 UpperSpineMatrix)
+_bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones, _float2 vMouseMove)
 {
 	_bool _bPrevTransition = m_bIsTransition;
 	if (m_bIsTransition)
@@ -223,16 +223,42 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 			//HERE
 			if (m_Channels[i]->Get_BoneIndex() == 10)
 			{
+				vMouseMove.x = 0;
+				vMouseMove.y = 0;
+
+				_float fSpeed = 2.f;
+
 				if (CGameInstance::GetInstance()->Key_Pressing(DIK_V))
-				{
-					CBone* pBone = Bones[m_Channels[i]->Get_BoneIndex()];
+					vMouseMove.x += fSpeed;
+				
+				if (CGameInstance::GetInstance()->Key_Pressing(DIK_B))
+					vMouseMove.x -= fSpeed;
 
-					_float4x4 Transform = pBone->Get_TransformationMatrix();
 
-					_float4x4 ResultMatrix = XMMatrixMultiply(Transform, UpperSpineMatrix);
+				if (CGameInstance::GetInstance()->Key_Pressing(DIK_F))
+					vMouseMove.y -= fSpeed;
 
-					pBone->Set_TransformationMatrix(ResultMatrix);
-				}
+				if (CGameInstance::GetInstance()->Key_Pressing(DIK_G))
+					vMouseMove.y += fSpeed;
+
+
+				CBone* pBone = Bones[m_Channels[i]->Get_BoneIndex()];
+
+				_float4x4 Transform = pBone->Get_TransformationMatrix();
+
+				_float4x4	UpperSpineMatrix;
+
+				//Y - Right
+				//X - Up
+				//Z - Look
+
+				XMStoreFloat4x4(&UpperSpineMatrix, XMMatrixRotationX(XMConvertToRadians(vMouseMove.x)));
+				XMStoreFloat4x4(&UpperSpineMatrix, XMMatrixMultiply(UpperSpineMatrix, XMMatrixRotationY(XMConvertToRadians(vMouseMove.y))));
+
+
+				_float4x4 ResultMatrix = XMMatrixMultiply(Transform, UpperSpineMatrix);
+
+				pBone->Set_TransformationMatrix(ResultMatrix);
 			}
 		}
 	}

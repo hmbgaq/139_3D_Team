@@ -150,8 +150,6 @@ private:
 	_bool					m_bIsUpperAnimEnd		= { false };
 	ANIM_STATE				m_eUpperAnimState		= { CModel::ANIM_STATE::ANIM_STATE_LOOP };
 
-	_float4x4				m_UpperSpineMatrix;
-
 	
 
 

@@ -39,7 +39,7 @@ CModel::CModel(const CModel & rhs)
 		Safe_AddRef(pMesh);
 	}
 
-	XMStoreFloat4x4(&m_UpperSpineMatrix, XMMatrixRotationX(XMConvertToRadians(5.0f))); 
+	//XMStoreFloat4x4(&m_UpperSpineMatrix, XMMatrixRotationX(XMConvertToRadians(5.0f))); 
 	//XMStoreFloat4x4(&m_UpperSpineMatrix, XMMatrixIdentity()); // 	
 
 	//Y - Right
@@ -312,7 +312,8 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones, m_bIsSplitted);
 	if (true == m_bIsSplitted)
 	{
-		m_bIsUpperAnimEnd = m_Animations[m_iUpperAnimIndex]->Invalidate_TransformationMatrix_Upper(m_eUpperAnimState, fTimeDelta, m_Bones, m_UpperSpineMatrix);
+		//HERE
+		m_bIsUpperAnimEnd = m_Animations[m_iUpperAnimIndex]->Invalidate_TransformationMatrix_Upper(m_eUpperAnimState, fTimeDelta, m_Bones, _float2(0.f, 0.f));
 	}
 
 		
