@@ -135,7 +135,6 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
 	float4		vLook;
 	float3		vRight, vUp;
-	float3		vBeforeRight, vNewUp;
 	if (g_bBillBoard)
 	{
 		vLook = g_vCamPosition - In[0].vPosition;
@@ -144,23 +143,15 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 	}
 	else
 	{
-		float3 vDirection = normalize(g_EffectDesc[In[0].iInstanceID].g_vDir);
-
-		float3 vTempRight = float3(1.0f, 0.0f, 0.0f);
-		vRight	= normalize(cross(vDirection, vTempRight)) * In[0].vPSize.x * 0.5f;
-		vUp		= normalize(cross(vRight, vDirection)) * In[0].vPSize.y * 0.5f;
-
-
-
-
+		// 이동 진행 방향벡터를 Up으로 한 새로운 Right, Look 정해주기 ===================================
+		vUp = normalize(g_EffectDesc[In[0].iInstanceID].g_vDir).rgb * In[0].vPSize.y * 0.5f;
+		vLook.rgb = normalize(cross(float3(0.f, 1.f, 0.f), vUp));
+		vRight = normalize(cross(vUp, vLook.rgb)) * In[0].vPSize.x * 0.5f;
+		vLook.rgb = normalize(cross(vRight, vUp)); vLook.a = 0.f;
 	}
 
 	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-
-	//float3 vCameraDir = normalize(g_vCamDirection);
-	//float3 vEffectDir = normalize(g_EffectDesc[In[0].iInstanceID].g_vDir);
-	//float fDegree = Calculate_AngleBetweenVectors_Degree(vCameraDir, vEffectDir);
 
 	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
 	//Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_EffectDesc[In[0].iInstanceID].g_fUV_RotDegree);
@@ -293,7 +284,7 @@ technique11 DefaultTechnique
 	
 	pass Masking  // 1 
 	{
-		SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_Cull_None);
 		SetDepthStencilState(DSS_Enable, 0);
 		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 		/* 렌더스테이츠 */

@@ -189,13 +189,12 @@ HRESULT CVIBuffer_Particle::Init_Instance(_int iNumInstance)
 		}
 		
 
-		// 테스트용 원점 위치로 초기화
-		XMStoreFloat4(&pVertices[i].vPosition, m_tBufferDesc.vCenterPosition);
-
 
 		ReSet_Info(i);
 
 
+		// 테스트용 원점 위치로 초기화
+		XMStoreFloat4(&pVertices[i].vPosition, m_tBufferDesc.vCenterPosition);
 		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f)	/* * 크기 */;
 		pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f)	/* * 크기 */;
 		pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f)	/* * 크기 */;
@@ -229,28 +228,23 @@ void CVIBuffer_Particle::ReSet()
 	for (_uint i = 0; i < m_iNumInstance; ++i)	// 반복문 시작
 	{
 
-		// 랜덤 시작위치 Offset
-		m_tBufferDesc.vCenterPosition.x = SMath::fRandom(m_tBufferDesc.vMinMaxCenterX.x, m_tBufferDesc.vMinMaxCenterX.y);
-		m_tBufferDesc.vCenterPosition.y = SMath::fRandom(m_tBufferDesc.vMinMaxCenterY.x, m_tBufferDesc.vMinMaxCenterY.y);
-		m_tBufferDesc.vCenterPosition.z = SMath::fRandom(m_tBufferDesc.vMinMaxCenterZ.x, m_tBufferDesc.vMinMaxCenterZ.y);
-		m_tBufferDesc.vCenterPosition.w = 1.f;
+		ReSet_Info(i);
+
 
 		// 초기화
 		XMStoreFloat4(&pVertices[i].vPosition, m_tBufferDesc.vCenterPosition);
-		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f);
-		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f);
-		pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f)	/* * 크기 */;
+		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f)		/* * 크기 */;
+		pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f)	/* * 크기 */;
 		//pVertices[i].vColor = _float4(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxAlpha.x);
 
 
-		ReSet_Info(i);
-
-		if (!m_tBufferDesc.bBillBoard)
-		{
-			XMStoreFloat4(&pVertices[i].vRight, m_vecParticleRigidbodyDesc[i].vRight);
-			XMStoreFloat4(&pVertices[i].vUp, m_vecParticleRigidbodyDesc[i].vUp);
-			XMStoreFloat4(&pVertices[i].vLook, m_vecParticleRigidbodyDesc[i].vLook);
-		}
+		//if (!m_tBufferDesc.bBillBoard)
+		//{
+		//	XMStoreFloat4(&pVertices[i].vRight, m_vecParticleRigidbodyDesc[i].vRight);
+		//	XMStoreFloat4(&pVertices[i].vUp, m_vecParticleRigidbodyDesc[i].vUp);
+		//	XMStoreFloat4(&pVertices[i].vLook, m_vecParticleRigidbodyDesc[i].vLook);
+		//}
 
 
 	} // 반복문 끝
@@ -270,6 +264,13 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	m_vecParticleInfoDesc[iNum].fLifeTime = SMath::fRandom(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
 	m_vecParticleInfoDesc[iNum].fLifeTimeRatio = 0.f;
 
+
+	// 랜덤 시작위치 Offset
+	m_tBufferDesc.vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
+	m_tBufferDesc.vCenterPosition.x = SMath::fRandom(m_tBufferDesc.vMinMaxCenterX.x, m_tBufferDesc.vMinMaxCenterX.y);
+	m_tBufferDesc.vCenterPosition.y = SMath::fRandom(m_tBufferDesc.vMinMaxCenterY.x, m_tBufferDesc.vMinMaxCenterY.y);
+	m_tBufferDesc.vCenterPosition.z = SMath::fRandom(m_tBufferDesc.vMinMaxCenterZ.x, m_tBufferDesc.vMinMaxCenterZ.y);
+	m_tBufferDesc.vCenterPosition.w = 1.f;
 
 #pragma region 리지드바디 시작.
 	// 리지드 바디 사용이면
@@ -294,21 +295,15 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 		vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
 		m_vecParticleShaderInfoDesc[iNum].vDir = vDir;			// 쉐이더에 전달할 방향 저장
 
-		//// vDir의 라이트를 구하고 얘를 축으로 90도 회전
-		//_vector		vDirUp = _float4(0.f, 1.f, 0.f, 0.f);
-		//_vector		vDirRight = XMVector4Normalize(XMVector3Cross(vDirUp, XMVector3Normalize(vDir)));
-
-		//_matrix RotMat = XMMatrixIdentity();
-		//RotMat = XMMatrixRotationAxis(vDirRight, XMConvertToRadians(90.f));
 
 
 		// TEST 시작 : 카메라가 바라보는 방향의 반대 벡터와 방향벡터 사이의 각도로 UV회전 시키기 =========================================================================
-		_vector vCamDirection = XMVector4Normalize(m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2]);
-		_float3 vCamDirectionFloat3 = {};
-		XMStoreFloat3(&vCamDirectionFloat3, vCamDirection);
-		vCamDirectionFloat3 = vCamDirectionFloat3 * -1.f;
+		//_vector vCamDirection = XMVector4Normalize(m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2]);
+		//_float3 vCamDirectionFloat3 = {};
+		//XMStoreFloat3(&vCamDirectionFloat3, vCamDirection);
+		//vCamDirectionFloat3 = vCamDirectionFloat3 * -1.f;
 
-		m_vecParticleShaderInfoDesc[iNum].fUV_RotDegree = SMath::Calculate_AngleBetweenVectors_Degree(vCamDirectionFloat3, m_vecParticleShaderInfoDesc[iNum].vDir);
+		//m_vecParticleShaderInfoDesc[iNum].fUV_RotDegree = SMath::Calculate_AngleBetweenVectors_Degree(vCamDirectionFloat3, m_vecParticleShaderInfoDesc[iNum].vDir);
 		// TEST 끝 : 카메라가 바라보는 방향의 반대 벡터와 방향벡터 사이의 각도로 UV회전 시키기 ===========================================================================
 
 
@@ -322,10 +317,6 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 		vUp = XMVector4Normalize(XMVector3Cross(vDir, vRight));
 
 
-		//_vector		vNewLook = XMVector4Normalize(vUp);
-		//_vector		vNewRight = XMVector4Normalize(XMVector3Cross(_float3(0.f, 1.f, 0.f), vNewLook));
-		//_vector		vNewUp = XMVector4Normalize(XMVector3Cross(vNewLook, vNewRight));
-
 		_vector		vNewUp = XMVector4Normalize(vDir);
 		_vector		vNewLook = XMVector4Normalize(XMVector3Cross(_float3(0.f, 1.f, 0.f), vNewUp));
 		_vector		vNewRight = XMVector4Normalize(XMVector3Cross(vNewUp, vNewLook));
@@ -338,9 +329,6 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 
 
 
-		//XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vRight, XMVector3TransformNormal(vRight, RotMat));
-		//XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vUp, XMVector3TransformNormal(vUp, RotMat));
-		//XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vLook, XMVector3TransformNormal(vLook, RotMat));
 #pragma endregion 회전 끝
 
 
