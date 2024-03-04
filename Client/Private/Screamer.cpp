@@ -103,19 +103,13 @@ HRESULT CScreamer::Render()
 
 HRESULT CScreamer::Render_Shadow()
 {
+	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_pGameInstance->Get_NextLevel());
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldFloat4x4()));
-
-	//_float4x4		ViewMatrix, ProjMatrix;
-	//
-	//XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	//XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, m_pGameInstance->Get_CamFar()));
-
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(ECast(LEVEL::LEVEL_GAMEPLAY))));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(ECast(LEVEL::LEVEL_GAMEPLAY))));
-	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(ECast(LEVEL::LEVEL_GAMEPLAY));
-	m_pShaderCom->Bind_RawValue("g_LightFar", &lightFarValue, sizeof(_float));
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_pGameInstance->Get_NextLevel())));
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{

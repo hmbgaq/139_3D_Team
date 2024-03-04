@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\Public\Body_Assassin.h"
+#include "Body_Assassin.h"
 #include "GameInstance.h"
 
 CBody_Assassin::CBody_Assassin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -14,16 +14,14 @@ CBody_Assassin::CBody_Assassin(const CBody_Assassin& rhs)
 
 HRESULT CBody_Assassin::Initialize_Prototype()
 {
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize_Prototype());
 
 	return S_OK;
 }
 
 HRESULT CBody_Assassin::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize(pArg));
 
 	return S_OK;
 }
@@ -45,28 +43,20 @@ void CBody_Assassin::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Assassin::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Render());
 
 	return S_OK;
 }
 
 HRESULT CBody_Assassin::Render_Shadow()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
-		return E_FAIL;
+	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_pGameInstance->Get_NextLevel());
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	_float4x4		ViewMatrix, ProjMatrix;
-
-	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, m_pGameInstance->Get_CamFar()));
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix)))
-		return E_FAIL;
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_pGameInstance->Get_NextLevel())));
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
@@ -131,7 +121,6 @@ CBody_Assassin* CBody_Assassin::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 {
 	CBody_Assassin* pInstance = new CBody_Assassin(pDevice, pContext, strPrototypeTag);
 
-	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CBody_Assassin");
@@ -144,7 +133,6 @@ CGameObject* CBody_Assassin::Clone(void* pArg)
 {
 	CBody_Assassin* pInstance = new CBody_Assassin(*this);
 
-	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CBody_Assassin");

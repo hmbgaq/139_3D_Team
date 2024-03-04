@@ -19,7 +19,7 @@ public:
 		/* RenderGroup*/
 		RENDER_BLEND, RENDER_END
 	};
-	enum class POST_TYPE {HDR, RADIAL_BLUR, FXAA, HSV, FINAL, TYPE_END};
+	enum class POST_TYPE { DEFERRED, RADIAL_BLUR, HDR, DOF, FXAA, HSV, FINAL, TYPE_END};
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -48,8 +48,9 @@ private:
 	HRESULT Render_Deferred();
 	HRESULT Render_RimBlur();
 
-	HRESULT Render_RadialBlur();
+	HRESULT Render_RadialBlur(); 
 	HRESULT Render_HDR();
+	HRESULT Render_DOF(); // 일반적으로 HDR적용이후에 적용됨 
 	HRESULT Render_FXAA();
 	HRESULT Render_HSV();
 	HRESULT Render_Final();
@@ -86,6 +87,7 @@ public:
 	void Set_Fog_Active(_bool _Fog) { m_tFog_Option.bFog_Active = _Fog; }
 
 	void Set_Radial_Blur_Active(_bool _Radial) { m_tRadial_Option.bRadial_Active = _Radial; }
+	void Set_DOF_Active(_bool _DOF) { m_tDOF_Option.bDOF_Active = _DOF; }
 	void Set_HDR_Active(_bool _HDR_active) { m_tHDR_Option.bHDR_Active = _HDR_active; }
 	void Set_FXAA_Active(_bool _FXAA_active) { m_tAnti_Option.bFXAA_Active = _FXAA_active; }
 	void Set_HSV_Active(_bool _HSV_active) { m_tHSV_Option.bScreen_Active = _HSV_active; }
@@ -99,7 +101,7 @@ public:
 	void Set_HDR_Option(HDR_DESC desc) { m_tHDR_Option = desc; }
 	void Set_HSV_Option(HSV_DESC desc) { m_tHSV_Option = desc; }
 	void Set_FXAA_Option(ANTI_DESC desc) { m_tAnti_Option = desc; }
-
+	void Set_DOF_Option(DOF_DESC desc) { m_tDOF_Option = desc; }
 private:
 	_bool						m_bInit = { true }; /* 없으면 터짐 건들지마세요 */
 
@@ -108,14 +110,17 @@ private:
 	FOG_DESC					m_tFog_Option = {};
 
 	RADIAL_DESC					m_tRadial_Option = {};
+	DOF_DESC					m_tDOF_Option = {};
 	HDR_DESC					m_tHDR_Option = {};
 	HSV_DESC					m_tHSV_Option = {};
 	ANTI_DESC					m_tAnti_Option = {};
 
 private:
+	POST_TYPE					m_ePrevTarget = POST_TYPE::FINAL;
 	_bool						m_bBloomBlur_Clear = false;
 	_bool						m_bRimBlur_Clear = false;
 	_int						m_iCurrentLevel = {};
+	wstring						strCurrentTarget = TEXT("Target_Effect_Final");
 
 private:
 	ID3D11Device*				m_pDevice = { nullptr };

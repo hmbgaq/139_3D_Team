@@ -113,6 +113,13 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_Radial_Setting();
 		ImGui::TreePop();
 	}
+
+	if (ImGui::TreeNode("DOF Setting"))
+	{
+		Compress_DOF_Setting();
+		ImGui::TreePop();
+	}
+
 	if (ImGui::TreeNode("HDR Setting"))
 	{
 		Compress_HDR_Setting();
@@ -203,6 +210,16 @@ void CWindow_ShaderTool::Compress_Radial_Setting()
 	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(m_eRadial_Desc.bRadial_Active);
 
 	m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(m_eRadial_Desc);
+}
+
+void CWindow_ShaderTool::Compress_DOF_Setting()
+{
+	ImGui::Checkbox("DOF Active", &m_eDOF_Desc.bDOF_Active);
+
+	ImGui::SliderFloat("Focus Distance", &m_eDOF_Desc.g_fFocusDistance, 0.0f, 100.0f, "Distance = %.3f");
+	ImGui::SliderFloat("Focus Range", &m_eDOF_Desc.g_fFocusRange, 0.0f, 100.0f, "Range = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_DOF_Option(m_eDOF_Desc);
 }
 
 void CWindow_ShaderTool::Compress_HDR_Setting()

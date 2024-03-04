@@ -35,6 +35,7 @@ private:
 	BLOOMRIM_DESC	m_eScreen_Desc = {};
 
 	RADIAL_DESC		m_eRadial_Desc = {};
+	DOF_DESC		m_eDOF_Desc = {};
 	HDR_DESC		m_eHDR_Desc = {};
 	ANTI_DESC		m_eAnti_Desc = {};
 	HSV_DESC		m_eHSV_Desc = {};
@@ -60,6 +61,7 @@ private:
 	void Compress_BloomRim_Setting();
 
 	void Compress_Radial_Setting();
+	void Compress_DOF_Setting();
 	void Compress_HDR_Setting();
 	void Compress_FXAA_Setting();
 	void Compress_HSV_Setting();

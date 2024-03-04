@@ -36,7 +36,7 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_DebugRender());
 #endif
 
-	m_tBloomRim_Option.bBloomBlur_Active = true;
+	m_tBloomRim_Option.bBloomBlur_Active = false;
 	m_tBloomRim_Option.bRimBlur_Active = true;
 
 	m_tHBAO_Option.bHBAO_Active = false;
@@ -82,42 +82,34 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Render_Deferred()); /*  MRT_Deferred -> Target_Deferred에 저장  */
 
-	FAILED_CHECK(Deferred_Effect());
+	FAILED_CHECK(Deferred_Effect()); // 
 
 	/* --- Post Processing --- */
 
-	//FAILED_CHECK(Render_Decal());	/* screen space decal  */                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-
-	//FAILED_CHECK(Render_OutLine()); 
-	if (true == m_tHDR_Option.bHDR_Active)
-		FAILED_CHECK(Render_HDR()); /* HDR이 처리된 화면을 기반으로 효과를 주는게 더 좋다. */
-	
-	if(true == m_tRadial_Option.bRadial_Active)
+	if (true == m_tRadial_Option.bRadial_Active) /* 이미지 블러효과를 추가하는것 */
 		FAILED_CHECK(Render_RadialBlur());
-	
-	//FAILED_CHECK(Render_SSR());
-	
-	if(true == m_tAnti_Option.bFXAA_Active)
-		FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 - 최종장면 */
-	
+
+	if(true == m_tDOF_Option.bDOF_Active)
+		FAILED_CHECK(Render_DOF());
+
+	if (true == m_tHDR_Option.bHDR_Active)
+		FAILED_CHECK(Render_HDR()); /* 톤매핑 - 렌더링 파이프라인의 초기단계에서 적용됨  */
+
+	if (true == m_tAnti_Option.bFXAA_Active)
+		FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 */
+
 	if(true == m_tHSV_Option.bScreen_Active)
-		FAILED_CHECK(Render_HSV()); /* 안티앨리어싱 - 최종장면 */
+		FAILED_CHECK(Render_HSV()); /* 컬러 그레이딩 - 최종장면 */
 
 	//FAILED_CHECK(Deferred_UI());
 
 	/* 최종 합성 */
+	
 	FAILED_CHECK(Render_Final());
 
 	FAILED_CHECK(Deferred_UI()); /* MRT 사용X시 */
 
 	FAILED_CHECK(Render_Blend());  
-
-	/* Effect */
-	//FAILED_CHECK(Render_Effect_Deferred()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
-
-	/* UI */
-	//FAILED_CHECK(Render_UI()); /* 디버그에서 렌더타겟 한장으로 그린거 콜하는 그룹 여기 */
-	//FAILED_CHECK(Render_UI_Final());
 
 	/* Test Line */
 	//FAILED_CHECK(Render_Alphablend(TEXT("MRT_Final"), TEXT("Target_Deferred"))); /*  MRT_Deferred -> Target_Deferred에 저장  */
@@ -442,9 +434,32 @@ HRESULT CRenderer::Render_HDR()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_DOF()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_DOF"))); 
+
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	_float		CamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_CamFar", &CamFar, sizeof(_float)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_DOF", &m_tDOF_Option, sizeof(DOF_DESC)));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader_PostProcess, "g_DepthTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::DOF), m_pShader_PostProcess, "g_ProcessingTarget"));
+	
+	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_DOF)));
+	
+	FAILED_CHECK(m_pVIBuffer->Render());
+	
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_RadialBlur()
 {
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_RaidalBlur"))); /* Target SSAO 단독 */
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_RaidalBlur")));
 
 	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
@@ -494,7 +509,7 @@ HRESULT CRenderer::Render_HSV()
 
 	FAILED_CHECK(m_pShader_Final->Bind_RawValue("g_HSV_DESC", &m_tHSV_Option, sizeof(HSV_DESC)));
 
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::FXAA), m_pShader_Final, "g_FinalTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::HSV), m_pShader_Final, "g_FinalTarget"));
 
 	FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL_HSV)));
 
@@ -582,6 +597,11 @@ HRESULT CRenderer::Deferred_Effect()
 	FAILED_CHECK(Render_Effect()); // 현재 effect, particle 그려지는 RenderPass -> MRT 편입전까지 여기서 상위에서 홀로 그려지도록 해놓음 
 	
 	FAILED_CHECK(Render_Effect_Final()); /* Deferred + Effect */
+
+	//Current_Target(POST_TYPE::DEFERRED);
+	m_ePrevTarget = POST_TYPE::DEFERRED;
+
+	return S_OK;
 }
 
 HRESULT CRenderer::Render_Effect_Final()
@@ -768,56 +788,50 @@ HRESULT CRenderer::Render_Alphablend(const wstring& Begin_MRT_Tag, const wstring
 
 wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 {
-	/* 순서 : hdr, radial, fxaa, hsv */
-	wstring strCurrentTarget;
+	/* 순서 : Radial, dof, hdr, fxaa, hsv */
 
-	switch (eCurrType)
+	if (eCurrType == POST_TYPE::RADIAL_BLUR)
 	{
-	case POST_TYPE::HDR:
 		strCurrentTarget = TEXT("Target_Effect_Final");
-		break;
-
-	case POST_TYPE::RADIAL_BLUR:
-		if (m_tHDR_Option.bHDR_Active)
-			strCurrentTarget = TEXT("Target_HDR");
-		else
-			strCurrentTarget = TEXT("Target_Effect_Final");
-		break;
-
-	case POST_TYPE::FXAA:
-		if (m_tRadial_Option.bRadial_Active)
-			strCurrentTarget = TEXT("Target_RadialBlur");
-		else if (m_tHDR_Option.bHDR_Active)
-			strCurrentTarget = TEXT("Target_HDR");
-		else
-			strCurrentTarget = TEXT("Target_Effect_Final");
-		break;
-
-	case POST_TYPE::HSV:
-		if (m_tAnti_Option.bFXAA_Active)
-			strCurrentTarget = TEXT("Target_FXAA");
-		else if (m_tRadial_Option.bRadial_Active)
-			strCurrentTarget = TEXT("Target_RadialBlur");
-		else if (m_tHDR_Option.bHDR_Active)
-			strCurrentTarget = TEXT("Target_HDR");
-		else
-			strCurrentTarget = TEXT("Target_Effect_Final");
-		break;
-
-	case POST_TYPE::FINAL:
-		if(m_tHSV_Option.bScreen_Active)
-			strCurrentTarget = TEXT("Target_HSV");
-		else if (m_tAnti_Option.bFXAA_Active)
-			strCurrentTarget = TEXT("Target_FXAA");
-		else if (m_tRadial_Option.bRadial_Active)
-			strCurrentTarget = TEXT("Target_RadialBlur");
-		else if (m_tHDR_Option.bHDR_Active)
-			strCurrentTarget = TEXT("Target_HDR");
-		else
-			strCurrentTarget = TEXT("Target_Effect_Final");
-		break;
+		m_ePrevTarget = POST_TYPE::RADIAL_BLUR;
 	}
+	else 
+	{
+		switch (m_ePrevTarget)
+		{
+		case POST_TYPE::DEFERRED:
+			strCurrentTarget = TEXT("Target_Effect_Final");
+			m_ePrevTarget = eCurrType;
+			break;
+		
+		case POST_TYPE::RADIAL_BLUR:
+			strCurrentTarget = TEXT("Target_RadialBlur");
+			m_ePrevTarget = eCurrType;
+			break;
 
+		case POST_TYPE::DOF:
+			strCurrentTarget = TEXT("Target_DOF");
+			m_ePrevTarget = eCurrType;
+			break;
+
+		case POST_TYPE::HDR:
+			strCurrentTarget = TEXT("Target_HDR");
+			m_ePrevTarget = eCurrType;
+			break;
+
+		case POST_TYPE::FXAA:
+			strCurrentTarget = TEXT("Target_FXAA");
+			m_ePrevTarget = eCurrType;
+			break;
+
+		case POST_TYPE::HSV:
+			strCurrentTarget = TEXT("Target_HSV");
+			m_ePrevTarget = eCurrType;
+			break;
+
+
+		}
+	}
 	return strCurrentTarget;
 }
 
@@ -911,7 +925,7 @@ HRESULT CRenderer::Create_RenderTarget()
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_RimBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse")));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Normal")));
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Depth")));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Depth"))); /* 카메라에서 본 깊이버퍼 */
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_ORM")));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_BloomBlur"))); 
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_RimBlur")));
@@ -927,7 +941,7 @@ HRESULT CRenderer::Create_RenderTarget()
 	/* MRT_LightAcc -> Directional , Spotlight, 등 받아온것 */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shade"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Specular"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
-	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade")));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade"))); /* 빛에서 본 깊이버퍼 */
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular")));
 
 	/* MRT_Deferred_Shadow */
@@ -953,8 +967,8 @@ HRESULT CRenderer::Create_RenderTarget()
 	/* MRT_HBAO+ */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_HBAO"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 1.f)))
 
-		/* MRT_Deferred */
-		FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Deferred"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+	/* MRT_Deferred */
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Deferred"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Deferred"), TEXT("Target_Deferred")));
 
 	/* MRT_HDR */
@@ -964,6 +978,10 @@ HRESULT CRenderer::Create_RenderTarget()
 	/* MRT_RadialBlur */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_RadialBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_RaidalBlur"), TEXT("Target_RadialBlur")));
+
+	/* MRT_DOF */
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_DOF"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_DOF"), TEXT("Target_DOF")));
 
 	/* MRT_FXAA */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_FXAA"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));

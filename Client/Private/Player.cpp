@@ -18,8 +18,7 @@ CPlayer::CPlayer(const CPlayer& rhs)
 
 HRESULT CPlayer::Initialize_Prototype()
 {
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize_Prototype());
 
 	return S_OK;
 }
@@ -31,8 +30,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	GameObjectDesc.fSpeedPerSec = 10.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-	if (FAILED(__super::Initialize(&GameObjectDesc)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -40,18 +38,16 @@ HRESULT CPlayer::Initialize(void* pArg)
 		m_pActor->Set_State(new CPlayer_IdleLoop());
 	}
 
-
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
-	/* For.Com_Shader */
+	/* For.Com_PhysXController */
 	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"), TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom)));
-
 	m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
-
 
 	CData_Manager::GetInstance()->Set_Player(this);
 
-	m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, XMVectorSet(0.f, 3.f, 0.f, 1.f));
+	/* Temp - 맵에 맞게 위치 조정한값*/
+	m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, XMVectorSet(-26.f, 3.f, -6.f, 1.f));
 
 	return S_OK;
 }
@@ -76,7 +72,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 }
-
+	
 HRESULT CPlayer::Render()
 {
 	if (FAILED(__super::Render()))
@@ -93,33 +89,22 @@ HRESULT CPlayer::Ready_Components()
 HRESULT CPlayer::Ready_PartObjects()
 {
 	CBody::BODY_DESC		BodyDesc = {};
-	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
-		return E_FAIL;
+	FAILED_CHECK(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc));
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
 	{
-		
 		CWeapon::WEAPON_DESC		WeaponDesc = {};
-		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, TEXT("Weapon_Punch_L"))))
-			return E_FAIL;
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, TEXT("Weapon_Punch_L")));
 
-		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch_R"))))
-			return E_FAIL;
-
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch_R")));
 	}
 
 	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch_L"));
 	m_pWeapon_Punch_L->Set_Enable(false);
 	
-
-
 	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_Punch_R"));
 	m_pWeapon_Punch_R->Set_Enable(false);
 	
-
-
-
-
 	return S_OK;
 }
 

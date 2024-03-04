@@ -420,6 +420,12 @@ namespace Engine
 		_float	fRadial_Power = 0.1f;
 	}RADIAL_DESC;
 
+	typedef struct ENGINE_DLL tagDOF
+	{
+		_bool  bDOF_Active = false;
+		_float g_fFocusDistance = 1.f;
+		_float g_fFocusRange = 0.1f;
+	}DOF_DESC;
 
 	/* 전체 컨트롤 - 레벨시작할때 초기 컨트롤용도 */
 	typedef struct ENGINE_DLL tagLevelShader
@@ -452,6 +458,8 @@ namespace Engine
 		_float fFinal_Brightness	= 1.f;
 
 	}LEVEL_SHADER_DESC;
+
+
 #pragma endregion
 
 #pragma region Shader Control Struct - Object
