@@ -299,7 +299,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 		ImGui::Text("wrong choice");
 		break;
 	case 1: /* Test */
-		m_eCurrLevel_Enum = LEVEL::LEVEL_GAMEPLAY;
+		m_eCurrLevel_Enum = LEVEL::LEVEL_TOOL;
 		break;
 	case 2: /* SnowMountain */
 		m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAIN;
@@ -360,7 +360,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 		CEnvironment_Object* pObject = { nullptr };
 
-		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_BACKGROUND, L"Prototype_GameObject_Environment_Object", &Desc));
+		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 	}
 
 
@@ -400,7 +400,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
 
 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
-			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Rotation"], (_float3)InstanceInfoDesc.vRotation);
+			CJson_Utility::Load_Float4(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
 
@@ -410,44 +410,43 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 		CEnvironment_Instance* pInstanceObject = { nullptr };
 
-		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_BACKGROUND, L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
 
 	}
 
-	//json MonsterJson = Stage1MapJson["Monster_Json"];
-	//_int iMonsterJsonSize = (_int)MonsterJson.size();
-	//
-	//for (_int i = 0; i < iMonsterJsonSize; ++i)
-	//{
-	//	CMonster::MONSTER_DESC MonsterDesc = {};
-	//
-	//	string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
-	//
-	//	m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
-	//	MonsterDesc.bPreview = false;
-	//
-	//
-	//	const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-	//	_float4x4 WorldMatrix;
-	//
-	//	for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-	//	{
-	//		for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-	//		{
-	//			WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-	//		}
-	//	}
-	//
-	//	MonsterDesc.WorldMatrix = WorldMatrix;
-	//
-	//	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
-	//		return E_FAIL;
-	//
-	//}
+	json MonsterJson = Stage1MapJson["Monster_Json"];
+	_int iMonsterJsonSize = (_int)MonsterJson.size();
+
+	for (_int i = 0; i < iMonsterJsonSize; ++i)
+	{
+		CMonster::MONSTER_DESC MonsterDesc = {};
+
+		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
+
+		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
+		MonsterDesc.bPreview = false;
 
 
+		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		MonsterDesc.WorldMatrix = WorldMatrix;
+
+		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+			return E_FAIL;
+
+	}
 
 	return S_OK;
+
 }
 
 #pragma endregion
