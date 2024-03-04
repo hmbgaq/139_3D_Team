@@ -214,28 +214,31 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 	if (g_bSprite)
 	{
 		float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
+		float4 vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, clippedTexCoord);
 
-		Out.vColor = g_DiffuseTexture.Sample(PointSampler, clippedTexCoord);
+		vDiffuseColor.rgb *= In.vColor.rgb;
 
-		Out.vColor.rgb *= In.vColor.rgb;
-		Out.vColor.a = In.vColor.a;
-
-
-		if (Out.vColor.a < g_fAlpha_Discard)
+		if (vDiffuseColor.a < g_fAlpha_Discard	// 알파 잘라내기
+		|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 			discard;
+
+		Out.vColor = vDiffuseColor;
 	}
 	else
 	{
 		/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
-		Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+		float4 vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
 		float4 vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
 
-		Out.vColor.rgb *= In.vColor.rgb;
-		Out.vColor.a = In.vColor.a * vAlphaColor;
+		vDiffuseColor.rgb *= In.vColor.rgb;
+		vDiffuseColor.a = In.vColor.a * vAlphaColor;
 
 
-		if (Out.vColor.a < g_fAlpha_Discard)
+		if (vDiffuseColor.a < g_fAlpha_Discard	// 알파 잘라내기
+			|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 			discard;
+
+		Out.vColor = vDiffuseColor;
 	}
 
 

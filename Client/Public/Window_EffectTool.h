@@ -101,21 +101,21 @@ private:
 	_int m_iShaderPassIndex_Particle	= { 0 };
 	_int m_iMaxShaderPassIndex_Particle = { 1 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 14, 17, 5, 16 };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 7, 30, 9, 16 };
 
 
 	_int m_iRenderGroup_Rect = { 9 };
 	_int m_iShaderPassIndex_Rect = { 0 };
 	_int m_iMaxShaderPassIndex_Rect = { 2 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 4, 17, 5, 16 };
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 7, 30, 9, 16 };
 
 
 	_int m_iRenderGroup_Mesh			= { 9 };
 	_int m_iShaderPassIndex_Mesh		= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 14, 17, 5, 16 };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 7, 30, 9, 16 };
 
 
 	// Refactoring end   =====================================================================================================
