@@ -39,11 +39,6 @@ CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommand
 	return nullptr;
 }
 
-CState<CVampireCommander>* CVampireCommander_State::HitLight_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	return nullptr;
-}
-
 CState<CVampireCommander>* CVampireCommander_State::HitNormal_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	return nullptr;
@@ -59,17 +54,7 @@ CState<CVampireCommander>* CVampireCommander_State::Taunt_State(CVampireCommande
 	return nullptr;
 }
 
-CState<CVampireCommander>* CVampireCommander_State::Leap_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	return nullptr;
-}
-
 CState<CVampireCommander>* CVampireCommander_State::Spawn_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	return nullptr;
-}
-
-CState<CVampireCommander>* CVampireCommander_State::BloodRange_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	return nullptr;
 }

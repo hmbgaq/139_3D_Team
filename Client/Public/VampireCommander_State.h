@@ -24,13 +24,10 @@ public:		//상태 그룹 별 업데이트
 	CState<CVampireCommander>* Normal_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CVampireCommander>* Walk_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CVampireCommander>* Attack_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex);
-	CState<CVampireCommander>* HitLight_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CVampireCommander>* HitNormal_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CVampireCommander>* Stun_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CVampireCommander>* Taunt_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex);
-	CState<CVampireCommander>* Leap_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CVampireCommander>* Spawn_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex);
-	CState<CVampireCommander>* BloodRange_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CVampireCommander>* Dead_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 
