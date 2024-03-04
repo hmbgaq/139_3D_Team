@@ -4,6 +4,7 @@
 #include "Body_VampireCommander.h"
 
 #include "VampireCommander_Idle.h"
+#include "VampireCommander_Spawn1.h"
 
 CVampireCommander::CVampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
@@ -36,7 +37,7 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CVampireCommander>(this);
-		m_pActor->Set_State(new CVampireCommander_Idle());
+		m_pActor->Set_State(new CVampireCommander_Spawn1);
 	}
 
 	return S_OK;

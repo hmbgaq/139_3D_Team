@@ -1525,9 +1525,6 @@
     <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpDecal">
       <UniqueIdentifier>{7482375d-a55a-465c-a845-dbb3ec0858e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster\Bandit_Heavy\State\7. Death\Heavy">
-      <UniqueIdentifier>{eeb3bfc7-bb50-4347-8b86-e8f19fd19013}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster">
       <UniqueIdentifier>{d2cf80c9-5682-44d3-990a-9bb01685e8b7}</UniqueIdentifier>
     </Filter>
@@ -1654,9 +1651,6 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn">
       <UniqueIdentifier>{73f1c6ed-6cc0-43a7-af0d-80fee6b36659}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\IntroSpawn">
-      <UniqueIdentifier>{c5d09ec1-a9b3-4134-b00c-8f5a4e71a4df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\Spawn1">
       <UniqueIdentifier>{ce6356ae-bd8e-4561-ad07-c48e454eefc5}</UniqueIdentifier>
     </Filter>
@@ -1713,6 +1707,21 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Stun_Start">
       <UniqueIdentifier>{af956beb-3daf-40b4-af08-c139a9981a37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene\0.Parent">
+      <UniqueIdentifier>{585a2b0f-087a-4355-a97a-d646a9de37ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene\1">
+      <UniqueIdentifier>{7c2234da-52a3-4831-977d-466c0602c6af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Success">
+      <UniqueIdentifier>{0e2b7d1a-ad18-4ab9-87bb-0710609c53e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure">
+      <UniqueIdentifier>{9b74c7e6-12c1-4b11-9131-63c6ea60b4f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\IntroSpawn">
+      <UniqueIdentifier>{c5d09ec1-a9b3-4134-b00c-8f5a4e71a4df}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -3105,9 +3114,6 @@
     <ClInclude Include="..\Public\VampireCommander_HitRight.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal\HitRight</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_SyncedAttack.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_Ranged1.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Ranged01</Filter>
     </ClInclude>
@@ -3119,9 +3125,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_Dead.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\7.Dead</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_CutScene.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_IntroSpawn.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\IntroSpawn</Filter>
@@ -3176,6 +3179,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_BloodRange_Stop.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_State_CutScene.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene\0.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_CutScene.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_SyncedAttack.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Success</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_SyncedAttack_Fail.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4660,9 +4675,6 @@
     <ClCompile Include="..\Private\VampireCommander_HitRight.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal\HitRight</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VampireCommander_SyncedAttack.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_Ranged1.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Ranged01</Filter>
     </ClCompile>
@@ -4674,9 +4686,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_Dead.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\7.Dead</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\VampireCommander_CutScene.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_IntroSpawn.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\IntroSpawn</Filter>
@@ -4731,6 +4740,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_BloodRange_Stop.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_State_CutScene.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_CutScene.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_SyncedAttack.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Success</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_SyncedAttack_Fail.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

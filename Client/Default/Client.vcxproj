@@ -603,9 +603,11 @@
     <ClInclude Include="..\Public\VampireCommander_Spawn1.h" />
     <ClInclude Include="..\Public\VampireCommander_Spawn2.h" />
     <ClInclude Include="..\Public\VampireCommander_State.h" />
+    <ClInclude Include="..\Public\VampireCommander_State_CutScene.h" />
     <ClInclude Include="..\Public\VampireCommander_State_Normal.h" />
     <ClInclude Include="..\Public\VampireCommander_State_Walk.h" />
     <ClInclude Include="..\Public\VampireCommander_SyncedAttack.h" />
+    <ClInclude Include="..\Public\VampireCommander_SyncedAttack_Fail.h" />
     <ClInclude Include="..\Public\VampireCommander_Taunt.h" />
     <ClInclude Include="..\Public\VampireCommander_Taunt1.h" />
     <ClInclude Include="..\Public\VampireCommander_Taunt2.h" />
@@ -1056,9 +1058,11 @@
     <ClCompile Include="..\Private\VampireCommander_Spawn1.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Spawn2.cpp" />
     <ClCompile Include="..\Private\VampireCommander_State.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_State_CutScene.cpp" />
     <ClCompile Include="..\Private\VampireCommander_State_Normal.cpp" />
     <ClCompile Include="..\Private\VampireCommander_State_Walk.cpp" />
     <ClCompile Include="..\Private\VampireCommander_SyncedAttack.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_SyncedAttack_Fail.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Taunt.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Taunt1.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Taunt2.cpp" />
