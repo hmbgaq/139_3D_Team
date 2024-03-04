@@ -483,12 +483,10 @@ void CWindow_EffectTool::Update_ParticleTab()
 						ImGui::RadioButton(" Kinematic_Particle ", &m_iKinetic_Particle, 1);
 						if (0 == m_iKinetic_Particle)
 						{
-							m_pParticleDesc->bKinetic = TRUE;
 							m_pParticleBufferDesc->bKinetic = TRUE;
 						}
 						else if (1 == m_iKinetic_Particle)
 						{
-							m_pParticleDesc->bKinetic = FALSE;
 							m_pParticleBufferDesc->bKinetic = FALSE;
 						}
 
@@ -497,12 +495,10 @@ void CWindow_EffectTool::Update_ParticleTab()
 						ImGui::RadioButton(" OFF  Gravity_Particle ", &m_iUseGravity_Particle, 1);
 						if (0 == m_iUseGravity_Particle)
 						{
-							m_pParticleDesc->bUseGravity = TRUE;
 							m_pParticleBufferDesc->bUseGravity = TRUE;
 						}
 						else if (1 == m_iUseGravity_Particle)
 						{
-							m_pParticleDesc->bUseGravity = FALSE;
 							m_pParticleBufferDesc->bUseGravity = FALSE;
 						}
 
@@ -511,7 +507,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 						{
 							if (ImGui::DragFloat("Gravity_Particle", &m_fGravity_Particle, 0.5f, -100.f, 1000.f))
 							{
-								m_pParticleDesc->fGravity = m_fGravity_Particle;
 								m_pParticleBufferDesc->fGravity = m_fGravity_Particle;
 							}
 						}
@@ -521,25 +516,21 @@ void CWindow_EffectTool::Update_ParticleTab()
 						ImGui::SeparatorText(" Force Mode_Particle ");
 						if (ImGui::Button(" FORCE "))
 						{
-							m_pParticleDesc->eForce_Mode = FORCE_MODE::FORCE;
 							m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
 						}
 						ImGui::SameLine();
 						if (ImGui::Button(" IMPULSE "))
 						{
-							m_pParticleDesc->eForce_Mode = FORCE_MODE::IMPULSE;
 							m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
 						}
 						ImGui::SameLine();
 						if (ImGui::Button(" ACCELERATION "))
 						{
-							m_pParticleDesc->eForce_Mode = FORCE_MODE::ACCELERATION;
 							m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::ACCELERATION;
 						}
 						ImGui::SameLine();
 						if (ImGui::Button(" VELOCITY_CHANGE "))
 						{
-							m_pParticleDesc->eForce_Mode = FORCE_MODE::VELOCITY_CHANGE;
 							m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::VELOCITY_CHANGE;
 						}
 
@@ -550,10 +541,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 							if (m_vMinMaxPower_Particle[0] > m_vMinMaxPower_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 								m_vMinMaxPower_Particle[1] = m_vMinMaxPower_Particle[0];
 
-							m_pParticleDesc->vMinMaxPower.x = m_vMinMaxPower_Particle[0];
 							m_pParticleBufferDesc->vMinMaxPower.x = m_vMinMaxPower_Particle[0];
 
-							m_pParticleDesc->vMinMaxPower.y = m_vMinMaxPower_Particle[1];
 							m_pParticleBufferDesc->vMinMaxPower.y = m_vMinMaxPower_Particle[1];
 						}
 
@@ -563,10 +552,10 @@ void CWindow_EffectTool::Update_ParticleTab()
 							if (m_vMinMaxMass_Particle[0] > m_vMinMaxMass_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 								m_vMinMaxMass_Particle[1] = m_vMinMaxMass_Particle[0];
 
-							m_pParticleDesc->vMinMaxMass.x = m_vMinMaxMass_Particle[0];
+
 							m_pParticleBufferDesc->vMinMaxMass.x = m_vMinMaxMass_Particle[0];
 
-							m_pParticleDesc->vMinMaxMass.y = m_vMinMaxMass_Particle[1];
+
 							m_pParticleBufferDesc->vMinMaxMass.y = m_vMinMaxMass_Particle[1];
 						}
 
@@ -575,14 +564,14 @@ void CWindow_EffectTool::Update_ParticleTab()
 						ImGui::SeparatorText("");
 						if (ImGui::DragFloat("Friction_Particle", &m_fFriction_Particle, 0.1f, 0.1f, 100.f))
 						{
-							m_pParticleDesc->fFriction = m_fFriction_Particle;
+
 							m_pParticleBufferDesc->fFriction = m_fFriction_Particle;
 						}
 
 						/* 슬립 한계점 조절(1이하여야 함) */
 						if (ImGui::DragFloat("SleepThreshold_Particle", &m_fSleepThreshold_Particle, 0.01f, 0.f, 1.f))
 						{
-							m_pParticleDesc->fSleepThreshold = m_fSleepThreshold_Particle;
+
 							m_pParticleBufferDesc->fSleepThreshold = m_fSleepThreshold_Particle;
 						}
 
@@ -601,8 +590,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (m_vMinMaxLifeTime_Particle[0] > m_vMinMaxLifeTime_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 						m_vMinMaxLifeTime_Particle[1] = m_vMinMaxLifeTime_Particle[0];
 
-					m_pParticleDesc->vMinMaxLifeTime.x = m_vMinMaxLifeTime_Particle[0];
-					m_pParticleDesc->vMinMaxLifeTime.y = m_vMinMaxLifeTime_Particle[1];
 
 					m_pParticleBufferDesc->vMinMaxLifeTime.x = m_vMinMaxLifeTime_Particle[0];
 					m_pParticleBufferDesc->vMinMaxLifeTime.y = m_vMinMaxLifeTime_Particle[1];
@@ -616,8 +603,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (m_vMinMaxCenterX_Particle[0] > m_vMinMaxCenterX_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 						m_vMinMaxCenterX_Particle[1] = m_vMinMaxCenterX_Particle[0];
 
-					m_pParticleDesc->vMinMaxCenterX.x = m_vMinMaxCenterX_Particle[0];
-					m_pParticleDesc->vMinMaxCenterX.y = m_vMinMaxCenterX_Particle[1];
 
 					m_pParticleBufferDesc->vMinMaxCenterX.x = m_vMinMaxCenterX_Particle[0];
 					m_pParticleBufferDesc->vMinMaxCenterX.y = m_vMinMaxCenterX_Particle[1];
@@ -628,8 +613,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (m_vMinMaxCenterY_Particle[0] > m_vMinMaxCenterY_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 						m_vMinMaxCenterY_Particle[1] = m_vMinMaxCenterY_Particle[0];
 
-					m_pParticleDesc->vMinMaxCenterY.x = m_vMinMaxCenterY_Particle[0];
-					m_pParticleDesc->vMinMaxCenterY.y = m_vMinMaxCenterY_Particle[1];
 
 					m_pParticleBufferDesc->vMinMaxCenterY.x = m_vMinMaxCenterY_Particle[0];
 					m_pParticleBufferDesc->vMinMaxCenterY.y = m_vMinMaxCenterY_Particle[1];
@@ -640,8 +623,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (m_vMinMaxCenterZ_Particle[0] > m_vMinMaxCenterZ_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 						m_vMinMaxCenterZ_Particle[1] = m_vMinMaxCenterZ_Particle[0];
 
-					m_pParticleDesc->vMinMaxCenterZ.x = m_vMinMaxCenterZ_Particle[0];
-					m_pParticleDesc->vMinMaxCenterZ.y = m_vMinMaxCenterZ_Particle[1];
 
 					m_pParticleBufferDesc->vMinMaxCenterZ.x = m_vMinMaxCenterZ_Particle[0];
 					m_pParticleBufferDesc->vMinMaxCenterZ.y = m_vMinMaxCenterZ_Particle[1];
@@ -656,8 +637,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (m_vMinMaxRange_Particle[0] > m_vMinMaxRange_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 						m_vMinMaxRange_Particle[1] = m_vMinMaxRange_Particle[0];
 
-					m_pParticleDesc->vMinMaxRange.x = m_vMinMaxRange_Particle[0];
-					m_pParticleDesc->vMinMaxRange.y = m_vMinMaxRange_Particle[1];
 
 					m_pParticleBufferDesc->vMinMaxRange.x = m_vMinMaxRange_Particle[0];
 					m_pParticleBufferDesc->vMinMaxRange.y = m_vMinMaxRange_Particle[1];
@@ -673,8 +652,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (m_vRotationOffsetX_Particle[0] > m_vRotationOffsetX_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 						m_vRotationOffsetX_Particle[1] = m_vRotationOffsetX_Particle[0];
 
-					m_pParticleDesc->vMinMaxRotationOffsetX.x = XMConvertToRadians(m_vRotationOffsetX_Particle[0]);
-					m_pParticleDesc->vMinMaxRotationOffsetX.y = XMConvertToRadians(m_vRotationOffsetX_Particle[1]);
 
 					m_pParticleBufferDesc->vMinMaxRotationOffsetX.x = XMConvertToRadians(m_vRotationOffsetX_Particle[0]);
 					m_pParticleBufferDesc->vMinMaxRotationOffsetX.y = XMConvertToRadians(m_vRotationOffsetX_Particle[1]);
@@ -687,8 +664,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (m_vRotationOffsetY_Particle[0] > m_vRotationOffsetY_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 						m_vRotationOffsetY_Particle[1] = m_vRotationOffsetY_Particle[0];
 
-					m_pParticleDesc->vMinMaxRotationOffsetY.x = XMConvertToRadians(m_vRotationOffsetY_Particle[0]);
-					m_pParticleDesc->vMinMaxRotationOffsetY.y = XMConvertToRadians(m_vRotationOffsetY_Particle[1]);
 
 					m_pParticleBufferDesc->vMinMaxRotationOffsetY.x = XMConvertToRadians(m_vRotationOffsetY_Particle[0]);
 					m_pParticleBufferDesc->vMinMaxRotationOffsetY.y = XMConvertToRadians(m_vRotationOffsetY_Particle[1]);
@@ -699,9 +674,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 				{
 					if (m_vRotationOffsetZ_Particle[0] > m_vRotationOffsetZ_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 						m_vRotationOffsetZ_Particle[1] = m_vRotationOffsetZ_Particle[0];
-
-					m_pParticleDesc->vMinMaxRotationOffsetZ.x = XMConvertToRadians(m_vRotationOffsetZ_Particle[0]);
-					m_pParticleDesc->vMinMaxRotationOffsetZ.y = XMConvertToRadians(m_vRotationOffsetZ_Particle[1]);
 
 					m_pParticleBufferDesc->vMinMaxRotationOffsetZ.x = XMConvertToRadians(m_vRotationOffsetZ_Particle[0]);
 					m_pParticleBufferDesc->vMinMaxRotationOffsetZ.y = XMConvertToRadians(m_vRotationOffsetZ_Particle[1]);
@@ -717,22 +689,17 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::RadioButton(" OFF  Dynamic_Color_Particle ", &m_iDynamic_Color_Particle, 1);
 				if (0 == m_iDynamic_Color_Particle)
 				{
-					m_pParticleDesc->bDynamic_Color = TRUE;
 					m_pParticleBufferDesc->bDynamic_Color = TRUE;
 				}
 				else if (1 == m_iDynamic_Color_Particle)
 				{
-					m_pParticleDesc->bDynamic_Color = FALSE;
+
 					m_pParticleBufferDesc->bDynamic_Color = FALSE;
 				}
 
 				/* Min 색 설정_파티클 */
 				if (ImGui::ColorEdit4("Min_Color_Particle", m_fColor_Min_Particle, ImGuiColorEditFlags_None))
 				{
-					m_pParticleDesc->vMinMaxRed.x = m_fColor_Min_Particle[0];
-					m_pParticleDesc->vMinMaxGreen.x = m_fColor_Min_Particle[1];
-					m_pParticleDesc->vMinMaxBlue.x = m_fColor_Min_Particle[2];
-					m_pParticleDesc->vMinMaxAlpha.x = m_fColor_Min_Particle[3];
 
 					m_pParticleBufferDesc->vMinMaxRed.x = m_fColor_Min_Particle[0];
 					m_pParticleBufferDesc->vMinMaxGreen.x = m_fColor_Min_Particle[1];
@@ -743,10 +710,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 				/* Max 색 설정_파티클 */
 				if (ImGui::ColorEdit4("Max_Color_Particle", m_fColor_Max_Particle, ImGuiColorEditFlags_None))
 				{
-					m_pParticleDesc->vMinMaxRed.y	= m_fColor_Max_Particle[0];
-					m_pParticleDesc->vMinMaxGreen.y = m_fColor_Max_Particle[1];
-					m_pParticleDesc->vMinMaxBlue.y	= m_fColor_Max_Particle[2];
-					m_pParticleDesc->vMinMaxAlpha.y = m_fColor_Max_Particle[3];
 
 					m_pParticleBufferDesc->vMinMaxRed.y = m_fColor_Max_Particle[0];
 					m_pParticleBufferDesc->vMinMaxGreen.y = m_fColor_Max_Particle[1];
@@ -1438,31 +1401,31 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			if (0 == m_iUseRigidBody_Particle)	// 리지드바디 사용이면
 			{
 				/* 키네틱 여부 */
-				if (m_pParticleDesc->bKinetic)
+				if (m_pParticleBufferDesc->bKinetic)
 					m_iKinetic_Particle = 0;
 				else
 					m_iKinetic_Particle = 1;
 
 				/* 중력 사용 여부 */
-				if (m_pParticleDesc->bUseGravity)
+				if (m_pParticleBufferDesc->bUseGravity)
 					m_iUseGravity_Particle = 0;
 				else
 					m_iUseGravity_Particle = 1;
 
 
-				m_fGravity_Particle = m_pParticleDesc->fGravity;	// 중력 가속도
-				m_fFriction_Particle = m_pParticleDesc->fFriction;	// 마찰 계수
-				m_fSleepThreshold_Particle = m_pParticleDesc->fSleepThreshold;	// 슬립 한계점
+				m_fGravity_Particle = m_pParticleBufferDesc->fGravity;	// 중력 가속도
+				m_fFriction_Particle = m_pParticleBufferDesc->fFriction;	// 마찰 계수
+				m_fSleepThreshold_Particle = m_pParticleBufferDesc->fSleepThreshold;	// 슬립 한계점
 
 
 				/* 파워 */
-				m_vMinMaxPower_Particle[0] = m_pParticleDesc->vMinMaxPower.x;
-				m_vMinMaxPower_Particle[1] = m_pParticleDesc->vMinMaxPower.y;
+				m_vMinMaxPower_Particle[0] = m_pParticleBufferDesc->vMinMaxPower.x;
+				m_vMinMaxPower_Particle[1] = m_pParticleBufferDesc->vMinMaxPower.y;
 
 
 				/* 질량(Mass) */
-				m_vMinMaxMass_Particle[0] = m_pParticleDesc->vMinMaxMass.x;
-				m_vMinMaxMass_Particle[1] = m_pParticleDesc->vMinMaxMass.y;
+				m_vMinMaxMass_Particle[0] = m_pParticleBufferDesc->vMinMaxMass.x;
+				m_vMinMaxMass_Particle[1] = m_pParticleBufferDesc->vMinMaxMass.y;
 
 			}
 
@@ -1490,7 +1453,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			/* 색상 */
 			/* 입자별 색상 변경 여부 */
-			if (m_pParticleDesc->bDynamic_Color)
+			if (m_pParticleBufferDesc->bDynamic_Color)
 				m_iDynamic_Color_Particle = 0;
 			else
 				m_iDynamic_Color_Particle = 1;
@@ -2198,7 +2161,7 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 
 		tParticleDesc.iRenderGroup = { 9 };
 
-		tParticleDesc.iShaderPassIndex = { 1 };
+		tParticleDesc.iShaderPassIndex = { 0 };
 
 		tParticleDesc.bBillBoard = { TRUE };
 

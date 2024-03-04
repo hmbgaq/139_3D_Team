@@ -19,48 +19,6 @@ public:
 
 
 
-#pragma region 버퍼 Desc초기화를 위한 값 (저장X)
-		/* LifeTime */
-		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
-
-		/* RigidBody */
-		_bool		bKinetic	  = { TRUE };	// 키네틱, 즉 TRUE면 속도 계산 함)
-		_bool		bUseGravity   = { TRUE };
-		FORCE_MODE	eForce_Mode   = { FORCE_MODE::IMPULSE };
-
-		_float		fGravity		= { -9.8f };	// 중력 가속도
-		_float		fFriction		= { 0.1f };		// 마찰 계수
-		_float		fSleepThreshold = { 0.05f };	// 슬립 한계점
-		_byte		byFreezeAxis	= { 0 };		// 축 고정 확인용 바이트
-
-		_float2		vMinMaxPower = { 0.1f, 250.f };
-		_float2		vMinMaxMass = { 10.f, 10.f };
-
-		/* For.Position */
-		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
-		_float2		vMinMaxCenterX = { 0.f, 0.f };
-		_float2		vMinMaxCenterY = { 0.f, 0.f };
-		_float2		vMinMaxCenterZ = { 0.f, 0.f };
-
-		_float2		vMinMaxRange	= { 0.1f, 3.f };
-
-
-		/* For.Rotation */
-		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
-		_float2		vMinMaxRotationOffsetY = { 0.0f, 360.f };
-		_float2		vMinMaxRotationOffsetZ = { 0.0f, 360.f };
-
-
-		/* For.Color */
-		EASING_TYPE	eType_ColorLerp = { EASING_TYPE::LINEAR };
-		_bool		bDynamic_Color	= { TRUE };
-		_float2     vMinMaxRed		= { 1.f, 1.f };
-		_float2     vMinMaxGreen	= { 1.f, 1.f };
-		_float2     vMinMaxBlue		= { 1.f, 1.f };
-		_float2     vMinMaxAlpha	= { 1.f, 1.f };
-#pragma endregion
-
-
 	}PARTICLE_DESC;
 
 
@@ -90,9 +48,8 @@ public:
 
 	/* For.Desc */
 public:
-	PARTICLE_DESC*	Get_Desc() { return &m_tParticleDesc; }
-	UVSPRITE_DESC*	Get_Sprite_Desc() { return &m_tSpriteDesc; }
-	void* Get_BufferDesc();
+	PARTICLE_DESC* Get_Desc() { return &m_tParticleDesc; }
+	UVSPRITE_DESC* Get_Sprite_Desc() { return &m_tSpriteDesc; }
 
 public:
 	CVIBuffer_Particle* Get_VIBufferCom() { return m_pVIBufferCom; }
@@ -108,9 +65,9 @@ private:
 
 
 private:
-	CShader*					m_pShaderCom = { nullptr };
-	CTexture*					m_pTextureCom[TEXTURE_END] = { nullptr };
-	CVIBuffer_Particle*			m_pVIBufferCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
+	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
+	CVIBuffer_Particle* m_pVIBufferCom = { nullptr };
 
 	_bool						m_bSortZ = { FALSE };
 

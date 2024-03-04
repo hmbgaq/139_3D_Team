@@ -26,13 +26,12 @@ float2		g_UVScale;
 // ===========================
 
 
-struct EffectDesc //16 배수로 나눠떨어져야함.
+struct EffectDesc
 {
 	float3	g_vDir;
 	float	g_Padding;
-
 };
-EffectDesc g_EffectDesc[500]; 
+EffectDesc g_EffectDesc[500];
 
 
 /* Custom Function */
@@ -70,17 +69,17 @@ float Calculate_AngleBetweenVectors_Degree(float3 v1, float3 v2)
 	return fDegree;
 }
 
+
 struct VS_IN
 {
-	float3		vPosition : POSITION;
-	float2		vPSize : PSIZE;
+	float3				vPosition : POSITION;
+	float2				vPSize : PSIZE;
 
 	row_major float4x4	TransformMatrix : WORLD;
-	float4		vColor : COLOR0;
+	float4				vColor : COLOR0;
 
-	uint	    iInstanceID : SV_INSTANCEID;
+	uint				iInstanceID : SV_INSTANCEID;
 };
-
 
 struct VS_OUT
 {
@@ -93,7 +92,7 @@ struct VS_OUT
 
 
 
-VS_OUT VS_MAIN(VS_IN In)
+VS_OUT VS_MAIN_PARTICLE(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
 
@@ -152,7 +151,6 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
 	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-
 	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
 	Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
 	Out[0].vColor = In[0].vColor;
@@ -168,6 +166,7 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
 	Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_fDegree);
 	Out[3].vColor = In[0].vColor;
+
 
 	OutStream.Append(Out[0]);
 	OutStream.Append(Out[1]);
@@ -187,8 +186,6 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 /* 래스터라이즈 : 정점정보에 기반하여 픽셀의 정보를 만든다. */
 
 
-
-
 struct PS_IN
 {
 	float4		vPosition : SV_POSITION;
@@ -203,26 +200,9 @@ struct PS_OUT
 	float4		vColor : SV_TARGET0;
 };
 
+
 /* 픽셀셰이더 : 픽셀의 색!!!! 을 결정한다. */
-PS_OUT PS_MAIN(PS_IN In)
-{
-	PS_OUT		Out = (PS_OUT)0;
-
-	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
-    Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-
-    if (Out.vColor.a < g_fAlpha_Discard)
-        discard;
-
-    Out.vColor.rgb *= In.vColor.rgb;
-
-    Out.vColor.a = In.vColor.a /** vAlphaColor*/;
-
-	return Out;
-}
-
-
-PS_OUT PS_MAIN_MASKING(PS_IN In)
+PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
@@ -245,59 +225,47 @@ PS_OUT PS_MAIN_MASKING(PS_IN In)
 
 		Out.vColor.rgb *= In.vColor.rgb;
 
-		Out.vColor.a = In.vColor.a * vAlphaColor;
+		Out.vColor.a = vAlphaColor;
 
 		if (Out.vColor.a < g_fAlpha_Discard)
 			discard;
 
-		//Out.vColor.a = vAlphaColor;
 	}
 
-	
+
 	return Out;
 }
-
 
 technique11 DefaultTechnique
 {
 	/* 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
 	pass Particle  // 0
 	{
-        SetRasterizerState(RS_Cull_None);
+		SetRasterizerState(RS_Cull_None);
 		SetDepthStencilState(DSS_Default, 0);
 		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
 		/* 렌더스테이츠 */
-		VertexShader = compile vs_5_0 VS_MAIN();
+		VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
 		GeometryShader = compile gs_5_0 GS_MAIN();
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN();
-	}
-	
-	pass Masking  // 1 
-	{
-		SetRasterizerState(RS_Cull_None);
-		SetDepthStencilState(DSS_Enable, 0);
-		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-		/* 렌더스테이츠 */
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = compile gs_5_0 GS_MAIN();
-		HullShader = NULL;
-		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_MASKING();
+		PixelShader = compile ps_5_0 PS_MAIN_PARTICLE();
 	}
 
-	pass Bloom  // 2
+
+	pass Bloom  // 1
 	{
-		SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_Cull_None);
 		SetDepthStencilState(DSS_Default, 0);
 		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
 		/* 렌더스테이츠 */
-		VertexShader = compile vs_5_0 VS_MAIN();
+		VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
 		GeometryShader = compile gs_5_0 GS_MAIN();
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN_PARTICLE();
 	}
 
 }
