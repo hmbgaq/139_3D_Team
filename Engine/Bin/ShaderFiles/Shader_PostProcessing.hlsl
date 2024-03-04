@@ -9,8 +9,13 @@ struct radial
 struct DOF
 {
     bool    bDOF_Active;
+    //float   fNearBlur_Depth;
+    //float   fFocalPalne_Depth;
+    //float   FarBlur_Depth;
+    
     float   fFocusDistance;
     float   fFocusRange;
+    float   fMaxAtt;
 };
 
 /* ====================================== */
@@ -35,8 +40,26 @@ radial g_Radial_Blur;
 /* DOF */
 Texture2D   g_DepthTarget;
 DOF         g_DOF;
-/* ====================================== */
+///* ====================================== */
+//float ComputeDepthBlur(float depth) /* 뷰 공간 기준의 입력된 깊이 */
+//{
+//    float f;
 
+//    if (depth < g_DOF.fFocalPalne_Depth)
+//    {
+//        // Focal plane 앞의 영역인 경우
+//        f = (depth - g_DOF.fFocalPalne_Depth) / (g_DOF.fFocalPalne_Depth - g_DOF.fNearBlur_Depth);
+//    }
+//    else
+//    {
+//        // Focal plane 뒤의 영역인 경우
+//        f = (depth - g_DOF.fFocalPalne_Depth) / (g_DOF.fFarBlur_Depth - g_DOF.fFocalPalne_Depth);
+//        f = clamp(f, 0, g_DOF.fCutOff);
+//    }
+
+//    // 최종 결과에 스케일과 바이어스를 적용
+//    return f * 0.5f + 0.5f;
+//}
 struct VS_IN
 {
 
@@ -253,31 +276,29 @@ PS_OUT PS_MAIN_DOF (PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord); /* 카메라 Depth 로 가져옴 */
-    if (0.f == vDepth.r)
-        discard;
+   vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord); /* 카메라 Depth 로 가져옴 */
+   if (0.f == vDepth.r)
+       discard;
+   
+   vector vTarget = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord); /* 현재 그려진 장면 */ 
+   Out.vColor = vTarget * 0.5f;
+   
+   float fViewZ = vDepth.y * g_fCamFar;
+   
+   if (g_DOF.fFocusDistance - g_DOF.fFocusRange > fViewZ)
+   {
+       Out.vColor.a = saturate(1.f - (fViewZ / (g_DOF.fFocusDistance - g_DOF.fFocusRange)));
+   }
+   else if (g_DOF.fFocusDistance + g_DOF.fFocusRange < fViewZ)
+   {
+       float fMaxDistance = g_DOF.fFocusDistance + g_DOF.fFocusRange + g_DOF.fMaxAtt;
+     //  Out.vColor = vTarget * 0.5f;
+   
+       Out.vColor.a = saturate((fViewZ - (g_DOF.fFocusDistance + g_DOF.fFocusRange)) / (fMaxDistance - (g_DOF.fFocusDistance + g_DOF.fFocusRange))); // f + R ~ 100.f(특정 Z) 까지를 0~1로 정규화
+   }
+   else 
+       Out.vColor = float4(0.f, 0.f, 0.f, 0.f); /* 뚜렷하게 보일부분 */
     
-    vector vTarget = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
-    
-    float fViewZ = vDepth.y * g_fCamFar;
-    
-    if (g_DOF.fFocusDistance - g_DOF.fFocusRange > fViewZ)
-    {
-        Out.vColor = vTarget * 0.5f;
-        Out.vColor.a = saturate(1.f - (fViewZ / (g_DOF.fFocusDistance - g_DOF.fFocusRange)));
-    }
-    else if (g_DOF.fFocusDistance + g_DOF.fFocusRange < fViewZ)
-    {
-        float fMaxAtt = 30.f;
-        float fMaxDistance = g_DOF.fFocusDistance + g_DOF.fFocusRange + fMaxAtt;
-        Out.vColor = vTarget * 0.5f;
-        // f + R ~ 100.f(특정 Z) 까지를 0~1로 정규화
-        // ViewZ - (F+R) / (100.f - (f+R)) // 100.f 는 CamFar가 정석인거같은데, "사실상 보이는 위치" 로 설정하는게 맞는듯.
-        Out.vColor.a = saturate((fViewZ - (g_DOF.fFocusDistance + g_DOF.fFocusRange)) / (fMaxDistance - (g_DOF.fFocusDistance + g_DOF.fFocusRange)));
-    }
-    else
-        Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
-
     return Out;
 }
 

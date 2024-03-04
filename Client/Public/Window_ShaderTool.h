@@ -28,7 +28,7 @@ private:
 	LEVEL		m_eCurrLevel_Enum = {};
 	wstring		m_wstrLayerTag = {};
 	//string		m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/IntroMap.json";
-	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Test1Map_MapData.json";
+	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/FighthingTeam_MapData_MapData.json";
 
 	/* Level Shader Struct */
 	HBAO_PLUS_DESC	m_eHBAO_Desc = {};
