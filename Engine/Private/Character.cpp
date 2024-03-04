@@ -2,7 +2,7 @@
 #include "GameInstance.h"
 #include "RigidBody.h"
 #include "PhysXCharacterController.h"
-
+#include "Bone.h"
 
 
 CCharacter::CCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -243,6 +243,11 @@ HRESULT CCharacter::LoadAnimJson(string strPath, string strFileName)
 	return S_OK;
 }
 
+_int CCharacter::Get_CurrentAnimIndex()
+{
+	return m_pBody->Get_CurrentAnimIndex();
+}
+
 void CCharacter::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _bool _bUseAnimationPos, _uint iTargetKeyFrameIndex)
 {
 	m_pBody->Set_Animation(_iNextAnimation, _eAnimState, _bIsTransition, _bUseAnimationPos, iTargetKeyFrameIndex);
@@ -251,6 +256,11 @@ void CCharacter::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimS
 _bool CCharacter::Is_Animation_End()
 {
 	return m_pBody->Is_Animation_End();
+}
+
+_bool CCharacter::Is_UpperAnimation_End()
+{
+	return m_pBody->Is_UpperAnimation_End();
 }
 
 _bool CCharacter::Is_Inputable_Front(_uint _iIndexFront)
@@ -412,6 +422,11 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 void CCharacter::Add_Force(_vector In_vDir, _float In_fPower)
 {
 	m_pRigidBody->Add_Force(In_vDir, In_fPower);
+}
+
+void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+{
+	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState);
 }
 
 

@@ -8,6 +8,11 @@
 #include "Data_Manager.h"
 #include "Clone_Manager.h"
 
+//CUDA test
+#include <iostream>
+#include <cuda.h>
+
+
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
 {
@@ -67,6 +72,7 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	m_fTimeAcc += fTimeDelta;
 	
+
 	//m_pDevConsole->Tick();
 }
 
@@ -91,6 +97,14 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Present();
 
 	return S_OK;
+}
+
+int CMainApp::sum_int(int a, int b)
+{
+	int c; 
+	c = a + b;
+
+	return c;
 }
 
 HRESULT CMainApp::Ready_Font()
@@ -130,6 +144,22 @@ HRESULT CMainApp::Ready_UITexture()
 		FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, wstrPrototag, CTexture::Create(m_pDevice, m_pContext, wstrFilePath)));
 	}
 
+	UI_TargetTexture();
+
+	return S_OK;
+}
+
+HRESULT CMainApp::UI_TargetTexture()
+{
+	// Target_LeftInterface
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Player_LeftInterface"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/TargetTexture/Player_LeftInterface.dds"))));
+	
+	//// Target_RightInterface
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("QuestBox"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/TargetTexture/QuestBox.dds"))));
+
+	// Target_QuestBox
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("QuestBox"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/TargetTexture/QuestBox.dds"))));
+
 	return S_OK;
 }
 
@@ -168,10 +198,10 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 
 HRESULT CMainApp::Ready_Gara()
 {
-	//D3D11_BLEND_DESC				BlendDesc;
+	// D3D11_BLEND_DESC				BlendDesc;
 	// D3D11_DEPTH_STENCIL_DESC		DepthStencilDesc;
 	// D3D11_RASTERIZER_DESC		RasterizerDesc;
-	// D3D11_SAMPLER_DESC
+	D3D11_SAMPLER_DESC;
 
 	//ID3D11RasterizerState*		pRSState;
 	//m_pDevice->CreateRasterizerState(RasterizerDesc, &pRSState);

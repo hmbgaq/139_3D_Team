@@ -55,6 +55,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.0.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -107,16 +108,17 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../Reference/Public/;../Public/;../Default/;../../Reference/Imgui/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CUDA_PATH)\include;../../Reference/Public/;../Public/;../Default/;../../Reference/Imgui/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/bigobj /Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../Reference/Librarys/;../../Reference/Imgui/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;DirectXTKd.lib;imguizmod.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(CUDA_PATH)\lib\x64;../../Reference/Librarys/;../../Reference/Imgui/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cuda.lib;cudart.lib;cublas.lib;cufft.lib
+;Engine.lib;DirectXTKd.lib;imguizmod.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <FxCompile>
@@ -152,18 +154,19 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../Reference/Public/;../Public/;../Default/;../../Reference/Imgui/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CUDA_PATH)\include;../../Reference/Public/;../Public/;../Default/;../../Reference/Imgui/;</AdditionalIncludeDirectories>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/bigobj /Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../Reference/Librarys/;../../Reference/Imgui/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;DirectXTK.lib;imguizmo.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(CUDA_PATH)\lib\x64;../../Reference/Librarys/;../../Reference/Imgui/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cuda.lib;cudart.lib;cublas.lib;cufft.lib
+;Engine.lib;DirectXTK.lib;imguizmo.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <FxCompile>
@@ -308,14 +311,17 @@
     <ClInclude Include="..\Public\Bandit_Heavy_State_Run.h" />
     <ClInclude Include="..\Public\Bandit_Heavy_State_Walk.h" />
     <ClInclude Include="..\Public\Bandit_Sniper.h" />
+    <ClInclude Include="..\Public\Bandit_Sniper_State_Cover.h" />
     <ClInclude Include="..\Public\Bandit_Sniper_State_Idle.h" />
     <ClInclude Include="..\Public\Bandit_Sniper_State.h" />
+    <ClInclude Include="..\Public\Bandit_Sniper_State_Walk.h" />
     <ClInclude Include="..\Public\Body_Assassin.h" />
     <ClInclude Include="..\Public\Body_Bandit_Heavy.h" />
     <ClInclude Include="..\Public\Body_Bandit_Sniper.h" />
     <ClInclude Include="..\Public\Body_Infected.h" />
     <ClInclude Include="..\Public\Body_Infected_A.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
+    <ClInclude Include="..\Public\Body_VampireCommander.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
@@ -489,6 +495,9 @@
     <ClInclude Include="..\Public\Player_MeleeCombo_02_L_NEW.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_03_SlamAOEJump.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_04.h" />
+    <ClInclude Include="..\Public\Player_Rifle_IdleWeaponHolster.h" />
+    <ClInclude Include="..\Public\Player_Rifle_Ironsights_Fire.h" />
+    <ClInclude Include="..\Public\Player_Rifle_Ironsights_Reload.h" />
     <ClInclude Include="..\Public\Player_Roll_B.h" />
     <ClInclude Include="..\Public\Player_Roll_F.h" />
     <ClInclude Include="..\Public\Player_Roll_L.h" />
@@ -511,6 +520,7 @@
     <ClInclude Include="..\Public\Player_State_Dodge.h" />
     <ClInclude Include="..\Public\Player_State_Hit.h" />
     <ClInclude Include="..\Public\Player_State_Normal.h" />
+    <ClInclude Include="..\Public\Player_State_Rifle.h" />
     <ClInclude Include="..\Public\Player_State_Roll.h" />
     <ClInclude Include="..\Public\Player_State_Run.h" />
     <ClInclude Include="..\Public\Player_State_Walk.h" />
@@ -546,9 +556,72 @@
     <ClInclude Include="..\Public\Screamer.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\SkyDome.h" />
+    <ClInclude Include="..\Public\Sniper_CoverHigh_Idle.h" />
+    <ClInclude Include="..\Public\Sniper_CoverHigh_Reload.h" />
+    <ClInclude Include="..\Public\Sniper_CoverHigh_Side_L_AimPose.h" />
+    <ClInclude Include="..\Public\Sniper_CoverHigh_Side_L_Start.h" />
+    <ClInclude Include="..\Public\Sniper_CoverHigh_Side_L_Stop.h" />
+    <ClInclude Include="..\Public\Sniper_IdlePose.h" />
+    <ClInclude Include="..\Public\Sniper_WalkAim_B.h" />
+    <ClInclude Include="..\Public\Sniper_WalkAim_BL.h" />
+    <ClInclude Include="..\Public\Sniper_WalkAim_BR.h" />
+    <ClInclude Include="..\Public\Sniper_WalkAim_F.h" />
+    <ClInclude Include="..\Public\Sniper_WalkAim_FL.h" />
+    <ClInclude Include="..\Public\Sniper_WalkAim_FR.h" />
+    <ClInclude Include="..\Public\Sniper_Walk_B.h" />
+    <ClInclude Include="..\Public\Sniper_Walk_BL.h" />
+    <ClInclude Include="..\Public\Sniper_Walk_BR.h" />
+    <ClInclude Include="..\Public\Sniper_Walk_F.h" />
+    <ClInclude Include="..\Public\Sniper_Walk_FL.h" />
+    <ClInclude Include="..\Public\Sniper_Walk_FR.h" />
     <ClInclude Include="..\Public\SpringCamera.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\stb_image.h" />
+    <ClInclude Include="..\Public\VampireCommander.h" />
+    <ClInclude Include="..\Public\VampireCommander_Attack.h" />
+    <ClInclude Include="..\Public\VampireCommander_BloodRange_Loop.h" />
+    <ClInclude Include="..\Public\VampireCommander_BloodRange_Start.h" />
+    <ClInclude Include="..\Public\VampireCommander_BloodRange_Stop.h" />
+    <ClInclude Include="..\Public\VampireCommander_BloodRange_Stun_Start.h" />
+    <ClInclude Include="..\Public\VampireCommander_CutScene.h" />
+    <ClInclude Include="..\Public\VampireCommander_Dead.h" />
+    <ClInclude Include="..\Public\VampireCommander_Hit.h" />
+    <ClInclude Include="..\Public\VampireCommander_HitCenter.h" />
+    <ClInclude Include="..\Public\VampireCommander_HitLeft.h" />
+    <ClInclude Include="..\Public\VampireCommander_HitRight.h" />
+    <ClInclude Include="..\Public\VampireCommander_Idle.h" />
+    <ClInclude Include="..\Public\VampireCommander_IntroSpawn.h" />
+    <ClInclude Include="..\Public\VampireCommander_Leap_Loop.h" />
+    <ClInclude Include="..\Public\VampireCommander_Leap_Stop.h" />
+    <ClInclude Include="..\Public\VampireCommander_Leap_Strat.h" />
+    <ClInclude Include="..\Public\VampireCommander_Melee1.h" />
+    <ClInclude Include="..\Public\VampireCommander_Melee2.h" />
+    <ClInclude Include="..\Public\VampireCommander_Ranged1.h" />
+    <ClInclude Include="..\Public\VampireCommander_Ranged2.h" />
+    <ClInclude Include="..\Public\VampireCommander_Ranged3.h" />
+    <ClInclude Include="..\Public\VampireCommander_Spawn.h" />
+    <ClInclude Include="..\Public\VampireCommander_Spawn1.h" />
+    <ClInclude Include="..\Public\VampireCommander_Spawn2.h" />
+    <ClInclude Include="..\Public\VampireCommander_State.h" />
+    <ClInclude Include="..\Public\VampireCommander_State_Normal.h" />
+    <ClInclude Include="..\Public\VampireCommander_State_Walk.h" />
+    <ClInclude Include="..\Public\VampireCommander_SyncedAttack.h" />
+    <ClInclude Include="..\Public\VampireCommander_Taunt.h" />
+    <ClInclude Include="..\Public\VampireCommander_Taunt1.h" />
+    <ClInclude Include="..\Public\VampireCommander_Taunt2.h" />
+    <ClInclude Include="..\Public\VampireCommander_Taunt3.h" />
+    <ClInclude Include="..\Public\VampireCommander_Taunt4.h" />
+    <ClInclude Include="..\Public\VampireCommander_Taunt5.h" />
+    <ClInclude Include="..\Public\VampireCommander_Walk_B.h" />
+    <ClInclude Include="..\Public\VampireCommander_Walk_BL.h" />
+    <ClInclude Include="..\Public\VampireCommander_Walk_BL135.h" />
+    <ClInclude Include="..\Public\VampireCommander_Walk_BR.h" />
+    <ClInclude Include="..\Public\VampireCommander_Walk_BR135.h" />
+    <ClInclude Include="..\Public\VampireCommander_Walk_F.h" />
+    <ClInclude Include="..\Public\VampireCommander_Walk_FL.h" />
+    <ClInclude Include="..\Public\VampireCommander_Walk_FL45.h" />
+    <ClInclude Include="..\Public\VampireCommander_Walk_FR.h" />
+    <ClInclude Include="..\Public\VampireCommander_Walk_FR45.h" />
     <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h" />
     <ClInclude Include="..\Public\Window_Style.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -561,15 +634,32 @@
     <ClInclude Include="..\Public\UI_Blood_Lights.h" />
     <ClInclude Include="..\Public\UI_Blood_Veins.h" />
     <ClInclude Include="..\Public\UI_Blood_Vignette.h" />
+    <ClInclude Include="..\Public\UI_ItemIcon.h" />
+    <ClInclude Include="..\Public\UI_ItemShowcase.h" />
+    <ClInclude Include="..\Public\UI_LevelUp_MagicFrame.h" />
+    <ClInclude Include="..\Public\UI_LevelUp_MagicSide.h" />
+    <ClInclude Include="..\Public\UI_LevelUp_MagicTrack.h" />
+    <ClInclude Include="..\Public\UI_LevelUp_Shards.h" />
+    <ClInclude Include="..\Public\UI_LevelUp_ShieldFrame.h" />
+    <ClInclude Include="..\Public\UI_LevelUp_SunBeacon.h" />
+    <ClInclude Include="..\Public\UI_LevelUp_TextBox.h" />
     <ClInclude Include="..\Public\UI_MonsterHp.h" />
     <ClInclude Include="..\Public\UI_MonsterHpFrame.h" />
+    <ClInclude Include="..\Public\UI_Player_ExpBar.h" />
     <ClInclude Include="..\Public\UI_Player_HP.h" />
     <ClInclude Include="..\Public\UI_Player_HPBar.h" />
     <ClInclude Include="..\Public\UI_Player_HPFrame.h" />
+    <ClInclude Include="..\Public\UI_Player_Left_Interface.h" />
+    <ClInclude Include="..\Public\UI_Player_Right_Interface.h" />
     <ClInclude Include="..\Public\UI_Player_Skill.h" />
     <ClInclude Include="..\Public\UI_Player_Skill_Frame.h" />
     <ClInclude Include="..\Public\UI_Player_Skill_Guige.h" />
     <ClInclude Include="..\Public\UI_Player_Skill_Icon.h" />
+    <ClInclude Include="..\Public\UI_QuestBox.h" />
+    <ClInclude Include="..\Public\UI_QuestIcon.h" />
+    <ClInclude Include="..\Public\UI_Text.h" />
+    <ClInclude Include="..\Public\UI_TextBox.h" />
+    <ClInclude Include="..\Public\UI_TutorialBox.h" />
     <ClInclude Include="..\Public\Weapon_Player.h" />
     <ClInclude Include="..\Public\Window_AnimTool.h" />
     <ClInclude Include="..\Public\Window_EffectTool.h" />
@@ -686,14 +776,17 @@
     <ClCompile Include="..\Private\Bandit_Heavy_State_Run.cpp" />
     <ClCompile Include="..\Private\Bandit_Heavy_State_Walk.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper.cpp" />
+    <ClCompile Include="..\Private\Bandit_Sniper_State_Cover.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper_State_Idle.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper_State.cpp" />
+    <ClCompile Include="..\Private\Bandit_Sniper_State_Walk.cpp" />
     <ClCompile Include="..\Private\Body_Assassin.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Heavy.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Sniper.cpp" />
     <ClCompile Include="..\Private\Body_Infected.cpp" />
     <ClCompile Include="..\Private\Body_Infected_A.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
+    <ClCompile Include="..\Private\Body_VampireCommander.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\Private\Clone_Manager.cpp" />
     <ClCompile Include="..\Private\CustomDialogFont.cpp" />
@@ -861,6 +954,9 @@
     <ClCompile Include="..\Private\Player_MeleeCombo_02_L_NEW.cpp" />
     <ClCompile Include="..\Private\Player_MeleeCombo_03_SlamAOEJump.cpp" />
     <ClCompile Include="..\Private\Player_MeleeCombo_04.cpp" />
+    <ClCompile Include="..\Private\Player_Rifle_IdleWeaponHolster.cpp" />
+    <ClCompile Include="..\Private\Player_Rifle_Ironsights_Fire.cpp" />
+    <ClCompile Include="..\Private\Player_Rifle_Ironsights_Reload.cpp" />
     <ClCompile Include="..\Private\Player_Roll_B.cpp" />
     <ClCompile Include="..\Private\Player_Roll_F.cpp" />
     <ClCompile Include="..\Private\Player_Roll_L.cpp" />
@@ -883,6 +979,7 @@
     <ClCompile Include="..\Private\Player_State_Dodge.cpp" />
     <ClCompile Include="..\Private\Player_State_Hit.cpp" />
     <ClCompile Include="..\Private\Player_State_Normal.cpp" />
+    <ClCompile Include="..\Private\Player_State_Rifle.cpp" />
     <ClCompile Include="..\Private\Player_State_Roll.cpp" />
     <ClCompile Include="..\Private\Player_State_Run.cpp" />
     <ClCompile Include="..\Private\Player_State_Walk.cpp" />
@@ -918,7 +1015,66 @@
     <ClCompile Include="..\Private\Screamer.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\SkyDome.cpp" />
+    <ClCompile Include="..\Private\Sniper_CoverHigh_Idle.cpp" />
+    <ClCompile Include="..\Private\Sniper_IdlePose.cpp" />
+    <ClCompile Include="..\Private\Sniper_WalkAim_B.cpp" />
+    <ClCompile Include="..\Private\Sniper_WalkAim_BL.cpp" />
+    <ClCompile Include="..\Private\Sniper_WalkAim_BR.cpp" />
+    <ClCompile Include="..\Private\Sniper_WalkAim_F.cpp" />
+    <ClCompile Include="..\Private\Sniper_WalkAim_FL.cpp" />
+    <ClCompile Include="..\Private\Sniper_WalkAim_FR.cpp" />
+    <ClCompile Include="..\Private\Sniper_Walk_B.cpp" />
+    <ClCompile Include="..\Private\Sniper_Walk_BL.cpp" />
+    <ClCompile Include="..\Private\Sniper_Walk_BR.cpp" />
+    <ClCompile Include="..\Private\Sniper_Walk_F.cpp" />
+    <ClCompile Include="..\Private\Sniper_Walk_FL.cpp" />
+    <ClCompile Include="..\Private\Sniper_Walk_FR.cpp" />
     <ClCompile Include="..\Private\SpringCamera.cpp" />
+    <ClCompile Include="..\Private\VampireCommander.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Attack.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_BloodRange_Loop.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_BloodRange_Start.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_BloodRange_Stop.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_BloodRange_Stun_Start.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_CutScene.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Dead.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Hit.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_HitCenter.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_HitLeft.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_HitRight.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Idle.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_IntroSpawn.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Leap_Loop.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Leap_Stop.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Leap_Strat.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Melee1.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Melee2.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Ranged1.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Ranged2.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Ranged3.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Spawn.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Spawn1.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Spawn2.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_State.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_State_Normal.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_State_Walk.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_SyncedAttack.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Taunt.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Taunt1.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Taunt2.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Taunt3.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Taunt4.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Taunt5.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Walk_B.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Walk_BL.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Walk_BL135.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Walk_BR.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Walk_BR135.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Walk_F.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Walk_FL.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Walk_FL45.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Walk_FR.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Walk_FR45.cpp" />
     <ClCompile Include="..\Private\VampireTank_KnockFrontLight_F_01.cpp" />
     <ClCompile Include="..\Private\Window_Style.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
@@ -931,15 +1087,32 @@
     <ClCompile Include="..\Private\UI_Blood_Lights.cpp" />
     <ClCompile Include="..\Private\UI_Blood_Veins.cpp" />
     <ClCompile Include="..\Private\UI_Blood_Vignette.cpp" />
+    <ClCompile Include="..\Private\UI_ItemIcon.cpp" />
+    <ClCompile Include="..\Private\UI_ItemShowcase.cpp" />
+    <ClCompile Include="..\Private\UI_LevelUp_MagicFrame.cpp" />
+    <ClCompile Include="..\Private\UI_LevelUp_MagicSide.cpp" />
+    <ClCompile Include="..\Private\UI_LevelUp_MagicTrack.cpp" />
+    <ClCompile Include="..\Private\UI_LevelUp_Shards.cpp" />
+    <ClCompile Include="..\Private\UI_LevelUp_ShieldFrame.cpp" />
+    <ClCompile Include="..\Private\UI_LevelUp_SunBeacon.cpp" />
+    <ClCompile Include="..\Private\UI_LevelUp_TextBox.cpp" />
     <ClCompile Include="..\Private\UI_MonsterHp.cpp" />
     <ClCompile Include="..\Private\UI_MonsterHpFrame.cpp" />
+    <ClCompile Include="..\Private\UI_Player_ExpBar.cpp" />
     <ClCompile Include="..\Private\UI_Player_HP.cpp" />
     <ClCompile Include="..\Private\UI_Player_HPBar.cpp" />
     <ClCompile Include="..\Private\UI_Player_HPFrame.cpp" />
+    <ClCompile Include="..\Private\UI_Player_Left_Interface.cpp" />
+    <ClCompile Include="..\Private\UI_Player_Right_Interface.cpp" />
     <ClCompile Include="..\Private\UI_Player_Skill.cpp" />
     <ClCompile Include="..\Private\UI_Player_Skill_Frame.cpp" />
     <ClCompile Include="..\Private\UI_Player_Skill_Guige.cpp" />
     <ClCompile Include="..\Private\UI_Player_Skill_Icon.cpp" />
+    <ClCompile Include="..\Private\UI_QuestBox.cpp" />
+    <ClCompile Include="..\Private\UI_QuestIcon.cpp" />
+    <ClCompile Include="..\Private\UI_Text.cpp" />
+    <ClCompile Include="..\Private\UI_TextBox.cpp" />
+    <ClCompile Include="..\Private\UI_TutorialBox.cpp" />
     <ClCompile Include="..\Private\Weapon_Player.cpp" />
     <ClCompile Include="..\Private\Window_AnimTool.cpp" />
     <ClCompile Include="..\Private\Window_EffectTool.cpp" />
@@ -978,5 +1151,6 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.0.targets" />
   </ImportGroup>
 </Project>

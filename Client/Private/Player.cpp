@@ -86,6 +86,98 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
+void CPlayer::Aim_Walk(_float fTimeDelta)
+{
+	_uint AnimIndex;
+
+	if (m_pGameInstance->Key_Pressing(DIK_W))
+	{
+		if (m_pGameInstance->Key_Pressing(DIK_A))
+		{
+			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FL45);
+			if (Get_CurrentAnimIndex() != AnimIndex)
+			{
+				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			}
+			Go_Straight_L45(fTimeDelta * 0.5f);
+		}
+		else if (m_pGameInstance->Key_Pressing(DIK_D))
+		{
+			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FR45);
+			if (Get_CurrentAnimIndex() != AnimIndex)
+			{
+				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			}
+			Go_Straight_R45(fTimeDelta * 0.5f);
+		}
+		else
+		{
+			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_F);
+			if (Get_CurrentAnimIndex() != AnimIndex)
+			{
+				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			}
+			Go_Straight(fTimeDelta * 0.5f);
+		}
+	}
+	else if (m_pGameInstance->Key_Pressing(DIK_S))
+	{
+		if (m_pGameInstance->Key_Pressing(DIK_A))
+		{
+			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_BL135);
+			if (Get_CurrentAnimIndex() != AnimIndex)
+			{
+				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			}
+			Go_Backward_L45(fTimeDelta * 0.5f);
+		}
+		else if (m_pGameInstance->Key_Pressing(DIK_D))
+		{
+			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_BR135);
+			if (Get_CurrentAnimIndex() != AnimIndex)
+			{
+				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			}
+			Go_Backward_R45(fTimeDelta * 0.5f);
+		}
+		else
+		{
+			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_B);
+			if (Get_CurrentAnimIndex() != AnimIndex)
+			{
+				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			}
+			Go_Backward(fTimeDelta * 0.5f);
+		}
+	}
+	else if (m_pGameInstance->Key_Pressing(DIK_A))
+	{
+		AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FL);
+		if (Get_CurrentAnimIndex() != AnimIndex)
+		{
+			Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+		}
+		Go_Left(fTimeDelta * 0.5f);
+	}
+	else if (m_pGameInstance->Key_Pressing(DIK_D))
+	{
+		AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FR);
+		if (Get_CurrentAnimIndex() != AnimIndex)
+		{
+			Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+		}
+		Go_Right(fTimeDelta * 0.5f);
+	}
+	else
+	{
+		AnimIndex = ECast(CPlayer::Player_State::Player_IdleLoop);
+		if (Get_CurrentAnimIndex() != AnimIndex)
+		{
+			Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+		}
+	}
+}
+
 HRESULT CPlayer::Ready_Components()
 {
 	return S_OK;

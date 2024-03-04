@@ -6,7 +6,7 @@
 class CUI_Player_Skill_Frame final : public CUI
 {
 public: /* 각 UI파츠마다 어떤걸 얼마나 가질지 설정해주자. */
-	enum TEXTUREKIND { FRAME, TEXTURE_END };
+	enum TEXTUREKIND { ENERGY_EMPTY, ENERGY_GRAY, ENERGY_YELLOW, ENERGY_BLUE, TEXTURE_END };
 
 private:
 	CUI_Player_Skill_Frame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -26,11 +26,12 @@ private:
 	virtual HRESULT			Bind_ShaderResources() override;
 
 public:
-	json				 Save_Desc(json& out_json);
-	void				 Load_Desc();
+	json					Save_Desc(json& out_json);
+	void					Load_Desc();
 
 private:
-	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
+	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };
+	TEXTUREKIND				m_eTexture_Kind = TEXTURE_END;
 
 public:
 	static CUI_Player_Skill_Frame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성

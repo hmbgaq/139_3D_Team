@@ -42,6 +42,7 @@ public:
 	virtual HRESULT Render_Shadow() override;
 
 public:
+	_int Get_CurrentAnimIndex();
 	void Set_Animation(
 		_uint _iNextAnimation
 		, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_NORMAL
@@ -51,6 +52,8 @@ public:
 	);
 
 	_bool	Is_Animation_End();
+	_bool	Is_UpperAnimation_End();
+
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 	_float	Get_TrackPosition();
 
@@ -75,16 +78,10 @@ public:
 	void Set_Owner(CCharacter* pOwner);
 
 
-	
-
-//public:
-//	void Activate_Dissolve() {
-//		m_bDissolve = true;
-//	}
-
-
-//public:
-//	virtual _bool Collision_Chcek() PURE;
+public:	//!For Animation Split
+	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END);
+	_bool Is_Splitted() { return m_pModelCom->Is_Splitted(); }
+	void Set_Splitted(_bool _bIsSplitted) { m_pModelCom->Set_Splitted(_bIsSplitted); };
 
 
 

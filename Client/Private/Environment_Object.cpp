@@ -223,11 +223,11 @@ HRESULT CEnvironment_Object::Ready_Components()
 	//m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
 	//Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
 
-	//!CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
-	//!
-	//!Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_MESH;
-	//!Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
-	//Desc_AABB.vCenter = _float3(0.f, 0.f, 0.f);
+		//!CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
+		//!
+		//!Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_MESH;
+		//!Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
+		//Desc_AABB.vCenter = _float3(0.f, 0.f, 0.f);
 
 	//if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Test)))
 	//{

@@ -9,11 +9,10 @@
 /* 셰이더의 전역변수 == 상수테이블(Constant Table) */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-texture2D		g_DiffuseTexture;
-texture2D		g_MaskTexture;
-texture2D		g_NoiseTexture;
-
-texture2D		g_DepthTexture;
+Texture2D		g_DiffuseTexture;
+Texture2D		g_MaskTexture;
+Texture2D		g_NoiseTexture;
+Texture2D		g_DepthTexture;
 
 vector			g_vCamPosition;
 vector			g_vCamDirection;
@@ -241,44 +240,44 @@ struct GS_OUT
 	float4		vColor : COLOR0;
 };
 
-/* 지오메트리 쉐이더 : 셰이더안에서 정점을 추가적으로 생성해 준다. */
-[maxvertexcount(6)]
-void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
-{
-	GS_OUT		Out[4];
+///* 지오메트리 쉐이더 : 셰이더안에서 정점을 추가적으로 생성해 준다. */
+//[maxvertexcount(6)]
+//void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
+//{
+//	GS_OUT		Out[4];
 
-	float4		vLook = g_vCamPosition - In[0].vPosition;
-	float3		vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook.xyz)) * In[0].vPSize.x * 0.5f;
-	float3		vUp = normalize(cross(vLook.xyz, vRight)) * In[0].vPSize.y * 0.5f;
+//	float4		vLook = g_vCamPosition - In[0].vPosition;
+//	float3		vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook.xyz)) * In[0].vPSize.x * 0.5f;
+//	float3		vUp = normalize(cross(vLook.xyz, vRight)) * In[0].vPSize.y * 0.5f;
 
-	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
+//	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
-	Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
-	Out[0].vColor = In[0].vColor;
+//	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
+//	Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
+//	Out[0].vColor = In[0].vColor;
 
-	Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
-	Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_fDegree);
-	Out[1].vColor = In[0].vColor;
+//	Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
+//	Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_fDegree);
+//	Out[1].vColor = In[0].vColor;
 
-	Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
-	Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_fDegree);
-	Out[2].vColor = In[0].vColor;
+//	Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
+//	Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_fDegree);
+//	Out[2].vColor = In[0].vColor;
 
-	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
-	Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_fDegree);
-	Out[3].vColor = In[0].vColor;
+//	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
+//	Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_fDegree);
+//	Out[3].vColor = In[0].vColor;
 
-	OutStream.Append(Out[0]);
-	OutStream.Append(Out[1]);
-	OutStream.Append(Out[2]);
-	OutStream.RestartStrip();
+//	OutStream.Append(Out[0]);
+//	OutStream.Append(Out[1]);
+//	OutStream.Append(Out[2]);
+//	OutStream.RestartStrip();
 
-	OutStream.Append(Out[0]);
-	OutStream.Append(Out[2]);
-	OutStream.Append(Out[3]);
-	OutStream.RestartStrip();
-}
+//	OutStream.Append(Out[0]);
+//	OutStream.Append(Out[2]);
+//	OutStream.Append(Out[3]);
+//	OutStream.RestartStrip();
+//}
 
 
 

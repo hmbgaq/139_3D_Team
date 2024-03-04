@@ -22,6 +22,9 @@ private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
 
+public:
+	virtual HRESULT			Set_ParentTransform(CTransform* pParentTransformCom) override;
+
 private:
 	void					Compute_OwnerCamDistance();
 	_bool					In_Frustum();

@@ -28,6 +28,9 @@ public:		//상태 그룹 별 업데이트
 	CState<CPlayer>* Dodge_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Roll_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Hit_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Rifle_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+	
 
 
 
@@ -39,6 +42,8 @@ public:		//개별 동작 상태 집합
 	CState<CPlayer>* MeleeCombo(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Dodge(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Roll(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Rifle(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
 
 
 	CState<CPlayer>* TeleportPunch(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);

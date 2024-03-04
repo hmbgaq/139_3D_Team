@@ -6,6 +6,38 @@
 class CUI abstract : public CGameObject
 {
 public:
+	enum UI_KIND { NORMAL, TEXT, KIND_END };
+
+	enum KEYTYPE
+	{
+		KEYTYPE_NONE,
+		KEYTYPE_NORMAL,
+		KEYTYPE_END
+	};
+
+	// 키프레임 구조체
+	typedef struct tagUIKeyframe
+	{
+		_float	fTime = 0.f;					// 키프레임의 시간 (0.0f ~ MaxTime 범위)
+		_float	fValue = 0.f;					// 애니메이션 값 (크기, 회전, 이동 등)
+		_float	fAnimSpeed = 0.f;				// 애니메이션 재생 속도
+
+		_int	iType = 0;						// 애니메이션 타입 (0: 크기, 1: 회전, 2: 이동)
+
+		_bool	isEaseIn = false;				// Ease In 설정 (True 또는 False)
+		_bool	isEaseOut = false;				// Ease Out 설정 (True 또는 False)
+
+		_int	iTexureframe = 0;				// 텍스처 변경 값
+
+		_float2	vScale = { 0.f, 0.f };			// 크기를 담을 그릇
+		_float	fRot = 0.f;						// 회전을 담을 그릇
+		_float2	vPos = { 0.f, 0.f };			// 위치를 담을 그릇
+
+		_float2	vKeyFramePos = { 0.00000000f, 0.00000000f };	// 툴에서의 해당 키프레임 위치
+
+	}UIKEYFRAME;
+
+
 	// 애니메이션 생성시 최소 및 최대 값을 입력 받는 구조체 (키프레임)
 	typedef struct tagUI_AnimKeyframe 
 	{
@@ -19,55 +51,88 @@ public:
 		_float3		vmaxRotation = { 360.f, 360.f, 360.f };
 		_float3		vminPosition = { 0.f, 0.f, 0.f };
 		_float3		vmaxPosition = { 300.f, 300.f, 300.f };
+
+		_int		iKeyframeNum = 0;
+
 	}UI_ANIMKEYFRAME;
 
 	typedef struct tagUIDesc /* 저장/불러오기 할때 순서 잘 맞추기 */
 	{
 		_bool		bParent = false;
 		_bool		bWorld = false;
+		_bool		bGroup = false;
+
+		_float		fOrigin_ScaleX = 100.f;
+		_float		fOrigin_ScaleY = 100.f;
+
+		_float		fOrigin_fRotationZ = 0.f;
+
+		_float		fOrigin_fPositionX = 0.f;
+		_float		fOrigin_fPositionY = 0.f;
+
 
 		/* 크기 */
 		_float		fScaleX = 100.f;
 		_float		fScaleY = 100.f;
 
 		/* 회전 */
-		_float		fRotationX = 0.0f;
-		_float		fRotationY = 0.0f;
+		_float		fRotationZ = 0.0f;
 
 		/* 이동 */
 		_float		fPositionX = (_float)g_iWinSizeX / 2;
 		_float		fPositionY = (_float)g_iWinSizeY / 2;
-		_float		fPositionZ = 0.0f;
+		_float		fPositionZ = 0.5f;
+
+		/* 
+			(저장 순서)
+			=부모 여부=
+			bParent
+			=월드 여부=
+			bWorld
+			=크기 조절=
+			fScaleX = 1
+			fScaleY = 1
+			=회전 조절=
+			fRotationX
+			fRotationY
+			=위치 조절=
+			fPositionX
+			fPositionY
+			fPositionZ
+			=투명도 조절=
+			fAlpha
+			=오브젝트 넘버=
+			iObjectNum
+			=셰이더 패스 선택=
+			iShaderNum
+			=테그 값=
+			strObjectName
+			strLayerTag
+			strCloneTag
+			strProtoTag
+			strFilePath
+			strMapTextureTag
+			=색상=
+			vColor
+		*/
 
 		/* 알파 */
 		_float		fAlpha = 1.f;
 
+		_int		iObjectNum = 0;			// 몇번째 녀석인지
+		_int		iShaderNum = 0;			// 적용할 셰이더 넘버
+
+		string		strObjectName = "";
+		string		strLayerTag = "";
+		string		strCloneTag = "";
+		string		strProtoTag = "";
+		string		strFilePath = "";
+		string		strMapTextureTag = "";	// 적용할 맵 텍스처
+
 		/* 색상 */
 		_vector		vColor = { 1.f, 1.f, 1.f, 1.f };
 
-		/* 
-			=텍스처 여러장을 갖게 만들자=
-			Texture를 몇장을 줄지 모르니, vector 컨테이너로 갖고, 넘겨준 사이즈만큼 돌려서 텍스처를 만들어주자. 
-			CTexture도 벡터컨테이너로 선언하여 가져온 텍스처 테그 수 만큼 텍스처를 만들어서 push_back 해주자.
-			mapTexture도 마찬가지. (파싱정보 바뀌어야함) (클래스/객체 대폭 축소됨)
-			구조체 하나 파서 셰이더 패스도 같이 저장하면 좋을거같다.
-			
-			=UV좌표로 텍스처를 조절하자=
-
-			=UI용 랜더타겟을 따로 만들고, 적용하고싶은 효과들을 적용시키자=
-
-			=UI용 렌더타겟에 그려진 UI들을 텍스처로 저장할 수 있게 만들어주자 (틀 저장하기)=
-
-			=>변경 : 클래스마다 기능과 어떤 녀석인지 정해져있으니 텍스처를 굳이 툴에서 받을 필요없이 완성된 클래스를 만들고, 툴에선 완성본을 생성하여 배치하자.
-
-		*/
-
-		string		strCloneTag; 
-		string		strProtoTag;
-		string		strFilePath;
-		string		strMapTextureTag;	// 적용할 맵 텍스처
-		_int		iShaderNum;			// 적용할 셰이더 넘버
-
+		class CTransform* pParentTransformCom = nullptr;
 	}UI_DESC;
 
 	enum UI_BUTTON_STATE
@@ -77,7 +142,7 @@ public:
 
 protected:
 	CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CUI(const CGameObject& rhs);
+	CUI(const CUI& rhs);
 	virtual ~CUI() = default;
 
 public: /* ============================== Get / Set =============================== */
@@ -97,6 +162,22 @@ public: /* ============================== Get / Set ============================
 	// =>Position
 	void			Set_Pos(_float fPosX, _float fPosY);
 	void			Set_PosZ(_float fZ);
+	// =>Kind
+	void			Set_Kind(UI_KIND eUI_King) { m_eKind = eUI_King; }
+	UI_KIND			Get_Kind() { return m_eKind; }
+
+
+//protected:
+public:
+	virtual HRESULT	Set_ParentTransform(CTransform* pParentTransformCom);
+
+	
+protected:
+	void			SetUp_WorldToScreen(_fvector vWorldPos);
+
+public: /* ============================== Add ============================== */
+	void			Add_Create_Parts(void* pArg);
+	void			Add_Parts(CUI* pArg);
 
 public: /* ========================== Change_Size ========================== */
 	void			Set_Size(_float fSizeX, _float fSizeY);
@@ -121,26 +202,68 @@ public: /* ============================= Function ============================= 
 	virtual void	Picking_UI();	// Pick
 	virtual void	Check_RectPos();	// Moving
 	void			Moving_Picking_Point(POINT pt); // Picking Moving
+	virtual void	Parts_Delete();
 
 public: /* ============================== SetUp ============================== */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
+	HRESULT			SetUp_Transform(_float fPosX, _float fPosY, _float fScaleX, _float fScaleY);
 	HRESULT			SetUp_BillBoarding();
-	HRESULT			SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
-	HRESULT			Ready_UI(UI_DESC tUI_Desc);
+	HRESULT			Ready_UI(const char* cFilePath);
 	HRESULT			Create_UIParts(UI_DESC tUI_Desc);
+	HRESULT			Update_Child_Transform();
+
+public:
+#ifdef _DEBUG
+	/* (컨테이너의 주소를 받아오는건 릴리즈 모드에서 터지는 버그가있음. 툴용) */
+	vector<CUI*>*	Get_vecUIParts() { return &m_vecUIParts; }
+#endif // DEBUG
+	string			Get_FilePathTag() { return m_tUIInfo.strFilePath; }
+	string			Get_ObjectNameTag() { return m_tUIInfo.strObjectName; }
+	_int			Get_ObjectNum() { return m_tUIInfo.iObjectNum; }
 
 protected: /* =========================== Ready ============================= */
 	virtual HRESULT Ready_Components();
 	virtual HRESULT Bind_ShaderResources();
 
-protected: /* =========================== Load ============================== */
+public: /* =========================== Save/Load ============================== */
 	void			Load_UIData(const char* _FilePath);
+	virtual json	Save_Desc(json& out_json);
+
+public: /* =========================== Animation ============================== */
+	void			Play_Animation();
+	// 애니메이션 값
+	std::vector<UIKEYFRAME>* m_vecAnimation[KEYTYPE_END] = {};
+	KEYTYPE				m_eKeyframe = KEYTYPE_NORMAL;
+	_int				m_iTextureNum[KEYTYPE_END];
+
+	void				Set_AnimPlay(_bool bPlay) { m_bPlayAnim = bPlay; }
+	_bool				Get_AnimPlay() { return m_bPlayAnim; }
+	_bool				m_bPlayAnim = false;
+
+	void				Set_CurrTime(_float fCurrTime) { m_fCurrTime = fCurrTime; }
+	_float				Get_CurrTime() { return m_fCurrTime; }
+	_float				m_fCurrTime = 0.f;
+
+	void				Set_Repetition(_bool bRepetition) { m_bRepetition = bRepetition; }
+	_bool				Get_Repetition() { return m_bRepetition; }
+	_bool				m_bRepetition = false;
+	// dt 값
+	_float fFrameTimeDelta, fCurFrameTimeDelta;
+
+	// 크기
+	_float fSizeX_Delta, fSizeY_Delta;
+
+	// 회전
+	_float fRotX_Delta, fRotY_Delta, fRotZ_Delta;
+
+	// 이동
+	_float fPosX_Delta, fPosY_Delta;
 
 protected: /* ========================= Component =========================== */
 	CShader*			m_pShaderCom = { nullptr };
 	//CTexture*			m_pTextureCom;
 	CTexture*			m_pMapTextureCom = { nullptr };	// 적용할 맵 텍스처
-	_int				iShaderNum;		// 적용할 셰이더 넘버
+	_int				m_iShaderNum;		// 적용할 셰이더 넘버
 	CVIBuffer_Rect*		m_pVIBufferCom = { nullptr };
 
 protected: /* =========================== Space ============================ */
@@ -155,17 +278,18 @@ protected: /* ============================= UI =============================== *
 	UI_DESC				m_tUIInfo;
 	RECT				m_rcUI = {};
 	UISTATE				m_eState;
-	
+	_float4x4			m_Origin_WorldMatrix = {};
+	_bool				m_bActive = false;
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f;
+	UI_KIND				m_eKind = NORMAL;
 
 protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;
 	_uint				m_iButtonState = {};
 
 public:
-	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void		 Free() override;
 
 };

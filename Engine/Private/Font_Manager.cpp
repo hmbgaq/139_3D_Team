@@ -11,6 +11,7 @@ CFont_Manager::CFont_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * pCont
 
 HRESULT CFont_Manager::Initialize()
 {
+	/* Add Font */
 	Add_Font(TEXT("Font_Gulim"), TEXT("../Bin/Resources/Fonts/Gulim.spritefont"));
 
 	return S_OK;
