@@ -8,10 +8,10 @@ END
 
 BEGIN(Client)
 
-class CBody_Infected : public CBody
+class CBody_Infected abstract : public CBody
 {
 
-private:
+protected:
 	CBody_Infected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CBody_Infected(const CBody_Infected& rhs);
 	virtual ~CBody_Infected() = default;
@@ -25,30 +25,16 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
 
-public:
-	virtual void	OnCollisionEnter(CCollider* other)	override;
-	virtual void	OnCollisionStay(CCollider* other)	override;
-	virtual void	OnCollisionExit(CCollider* other)	override;
 
-public:
-	void SetUp_Animation(_uint iAnimIndex);
-
-
-private:
+protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
 
-
-
 public:
-	/* 원형객체를 생성한다. */
-	static CBody_Infected* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-
-	/* 사본객체를 생성한다. */
-	virtual CGameObject* Clone(void* pArg) override;
-	virtual CGameObject* Pool() override;
-
+	//static CBody_Infected* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	virtual CGameObject* Clone(void* pArg) PURE;
+	virtual CGameObject* Pool() PURE;
 	virtual void Free() override;
 
 };

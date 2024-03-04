@@ -6,12 +6,12 @@
 #include "BanditHeavy_Idle.h"
 
 CBandit_Heavy::CBandit_Heavy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CCharacter(pDevice, pContext, strPrototypeTag)
+	: CMonster_Character(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CBandit_Heavy::CBandit_Heavy(const CBandit_Heavy& rhs)
-	: CCharacter(rhs)
+	: CMonster_Character(rhs)
 {
 }
 

@@ -1,17 +1,17 @@
 #include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D		g_DiffuseTexture;
-texture2D		g_NormalTexture;
-texture2D		g_OcclusionTexture;
-texture2D		g_RougnessTexture;
-texture2D		g_MetallicTexture;
+Texture2D		g_DiffuseTexture;
+Texture2D		g_NormalTexture;
+Texture2D		g_OcclusionTexture;
+Texture2D		g_RougnessTexture;
+Texture2D		g_MetallicTexture;
 float           g_fTimeDelta;
 
 /* OutLine */
 float4	        g_vLineColor;
 float           g_LineThick;
-texture2D       g_LineMaskTexture;
+Texture2D       g_LineMaskTexture;
 
 cbuffer VS_CONSTANT_BUFFER
 {

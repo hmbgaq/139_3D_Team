@@ -276,7 +276,7 @@ void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 	else
 		m_eAnimState = ANIM_STATE::ANIM_STATE_NORMAL;
 
-	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones);
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones, m_bIsSplitted);
 
 
 	_float3 NowPos;
@@ -302,9 +302,13 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 	if (m_iCurrentAnimIndex >= m_iNumAnimations)
 		return;
 
-	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones);
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones, m_bIsSplitted);
+	if (true == m_bIsSplitted)
+	{
+		m_bIsUpperAnimEnd = m_Animations[m_iUpperAnimIndex]->Invalidate_TransformationMatrix_Upper(m_eUpperAnimState, fTimeDelta, m_Bones);
+	}
 
-
+		
 	_float3 NowPos;
 	for (auto& pBone : m_Bones)
 	{
@@ -389,9 +393,9 @@ void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitio
 	CAnimation* currentAnimation = m_Animations[m_iCurrentAnimIndex];
 	CAnimation* targetAnimation = m_Animations[_iAnimationIndex];
 
-	targetAnimation->Reset_Animation(m_Bones);		// 임시
+	targetAnimation->Reset_Animation(m_Bones, m_bIsSplitted);		// 임시
 
-	targetAnimation->Set_Transition(currentAnimation, _fTransitionDuration, iTargetKeyFrameIndex);
+	targetAnimation->Set_Transition(currentAnimation, _fTransitionDuration, iTargetKeyFrameIndex, m_bIsSplitted);
 
 	m_iCurrentAnimIndex = _iAnimationIndex;
 }
@@ -399,9 +403,25 @@ void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitio
 void CModel::Reset_Animation(_int iAnimIndex)
 {
 	if (iAnimIndex == -1)
-		m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones);
+		m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
 	else
-		m_Animations[iAnimIndex]->Reset_Animation(m_Bones);
+		m_Animations[iAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
+}
+
+void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+{
+	m_iUpperAnimIndex = _iAnimationIndex;
+	m_eUpperAnimState = _eAnimState;
+	Reset_UpperAnimation(_iAnimationIndex);
+
+}
+
+void CModel::Reset_UpperAnimation(_int iAnimIndex)
+{
+	if (iAnimIndex == -1)
+		m_Animations[m_iCurrentAnimIndex]->Reset_UpperAnimation(m_Bones);
+	else
+		m_Animations[iAnimIndex]->Reset_UpperAnimation(m_Bones);
 }
 
 _float CModel::Get_TickPerSecond()
@@ -497,6 +517,14 @@ CMyAIScene* CModel::Get_AIScene()
 vector<CBone*>* CModel::Get_Bones()
 {
 	return &m_Bones;
+}
+
+_uint CModel::Get_BoneNum(const _char* _szName)
+{
+	
+
+
+	return _uint();
 }
 
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)

@@ -2,6 +2,9 @@
 #include "..\Public\Body_Player.h"
 #include "GameInstance.h"
 
+#include "PhysXCollider.h"
+#include "Preset_PhysXColliderDesc.h"
+
 CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CBody(pDevice, pContext, strPrototypeTag)
 {
@@ -94,10 +97,6 @@ void CBody_Player::OnCollisionExit(CCollider* other)
 {
 }
 
-void CBody_Player::SetUp_Animation(_uint iAnimIndex)
-{
-	m_pModelCom->Set_Animation(iAnimIndex);
-}
 
 HRESULT CBody_Player::Ready_Components()
 {
@@ -116,13 +115,25 @@ HRESULT CBody_Player::Ready_Components()
 	/* For.Com_Collider */
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER);
-	BoundingDesc.vExtents = _float3(0.5f, 0.5f, 0.5f);
+	BoundingDesc.vExtents = _float3(0.2f, 0.2f, 0.2f);
 	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
 
 
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_PhysXCollider"),
+		TEXT("Com_PhysXCollider"), reinterpret_cast<CComponent**>(&m_pPhysXCollider))))
+		return E_FAIL;
+
+	//m_pPhysXCollider->ini
+
+	CPhysXCollider::PhysXColliderDesc tPhysXColliderDesc;
+	Preset::PhysXColliderDesc::DynamicPieceSetting(tPhysXColliderDesc, m_pTransformCom);
+	m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
+	m_pPhysXCollider->Add_PhysXActorAtScene();
+
 }
 
 HRESULT CBody_Player::Bind_ShaderResources()

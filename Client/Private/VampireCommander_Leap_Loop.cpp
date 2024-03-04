@@ -8,7 +8,7 @@ void CVampireCommander_Leap_Loop::Initialize(CVampireCommander* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
 	CData_Manager::GetInstance()->Get_Player();
 }
-
+a
 CState<CVampireCommander>* CVampireCommander_Leap_Loop::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
 	if (pActor->Is_Animation_End())

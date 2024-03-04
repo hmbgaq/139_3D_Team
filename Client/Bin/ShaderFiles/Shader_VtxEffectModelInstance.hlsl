@@ -3,15 +3,12 @@
 matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float       g_TimeDelta;
 
-texture2D	g_DiffuseTexture;
-texture2D	g_MaskTexture;
-texture2D	g_NoiseTexture;
-
-texture2D	g_NormalTexture;
-texture2D   g_SpecularTexture;
-
-texture2D	g_DepthTexture;
-
+Texture2D	g_DiffuseTexture;
+Texture2D	g_MaskTexture;
+Texture2D	g_NoiseTexture;
+Texture2D	g_NormalTexture;
+Texture2D   g_SpecularTexture;
+Texture2D	g_DepthTexture;
 
 vector      g_vCamDirection;
 
@@ -27,8 +24,8 @@ float		g_DiscardValue;
 float3		g_fBlack_Discard;
 
 /* Dissolve  */
-texture2D	g_DissolveTexture;
-texture2D	g_DissolveDiffTexture;
+Texture2D	g_DissolveTexture;
+Texture2D	g_DissolveDiffTexture;
 float		g_fDissolveWeight;
 
 

@@ -94,11 +94,6 @@ void CBody_Bandit_Heavy::OnCollisionExit(CCollider* other)
 {
 }
 
-void CBody_Bandit_Heavy::SetUp_Animation(_uint iAnimIndex)
-{
-	m_pModelCom->Set_Animation(iAnimIndex);
-}
-
 HRESULT CBody_Bandit_Heavy::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();

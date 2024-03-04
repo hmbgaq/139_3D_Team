@@ -55,6 +55,20 @@ void CUI_Anything::Late_Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
+	//if (m_tUIInfo.pParentTransformCom != nullptr &&
+	//	m_tUIInfo.bParent == false)
+	//{
+	//	/* Parent */
+	//	_vector vPosition = m_tUIInfo.pParentTransformCom->Get_State(CTransform::STATE_POSITION);
+	//	XMMATRIX ParentMat = m_tUIInfo.pParentTransformCom->Get_WorldMatrix();
+	//	/* Child */
+	//	XMMATRIX ChildMat = m_pTransformCom->Get_WorldMatrix();
+
+	//	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_tUIInfo.pParentTransformCom->Get_WorldMatrix());
+
+	//	m_pTransformCom->Set_WorldMatrix(m_WorldMatrix);
+	//}
+
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
 }
@@ -147,6 +161,12 @@ HRESULT CUI_Anything::Bind_ShaderResources()
 	return S_OK;
 }
 
+HRESULT CUI_Anything::Set_ParentTransform(CTransform* pParentTransformCom)
+{
+	m_tUIInfo.pParentTransformCom = pParentTransformCom;
+	return S_OK;
+}
+
 void CUI_Anything::Compute_OwnerCamDistance()
 {
 	//_vector		vPosition = m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION);
@@ -163,24 +183,27 @@ _bool CUI_Anything::In_Frustum()
 
 json CUI_Anything::Save_Desc(json& out_json)
 {
-	_float fSizeX = 0.f;
-	_float fSizeY = 0.f;
-	_float fPositionX = 0.f;
-	_float fPositionY = 0.f;
+	// Save error : 저장을 상위 부모에서 바꿨는데 이 클래스에는 적용안했음.
+	__super::Save_Desc(out_json);
 
-	_float fCurPosX = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
-	_float fCurPosY = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
+	//_float fSizeX = 0.f;
+	//_float fSizeY = 0.f;
+	//_float fPositionX = 0.f;
+	//_float fPositionY = 0.f;
 
-	fCurPosX = fCurPosX + (_float)g_iWinSizeX * 0.5f;
-	fCurPosY = (_float)g_iWinSizeY * 0.5f - fCurPosY;
+	//_float fCurPosX = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
+	//_float fCurPosY = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
 
-	out_json["CloneTag"] = m_tUIInfo.strCloneTag;
+	//fCurPosX = fCurPosX + (_float)g_iWinSizeX * 0.5f;
+	//fCurPosY = (_float)g_iWinSizeY * 0.5f - fCurPosY;
 
-	out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
+	//out_json["CloneTag"] = m_tUIInfo.strCloneTag;
 
-	out_json["FilePath"] = m_tUIInfo.strFilePath;
+	//out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
 
-	m_pTransformCom->Write_Json(out_json);
+	//out_json["FilePath"] = m_tUIInfo.strFilePath;
+
+	//m_pTransformCom->Write_Json(out_json);
 
 	return out_json;
 }

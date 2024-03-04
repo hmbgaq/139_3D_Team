@@ -34,6 +34,7 @@
 #include "Player_Weapon_FlameBelcher.h"
 #include "Player_Weapon_Shotgun.h"
 #include "Player_Weapon_Winchester.h"
+#include "Player_Weapon_Punch.h"
 #pragma endregion
 
 #pragma region VampireCommander
@@ -42,8 +43,8 @@
 #pragma endregion
 
 #pragma region INFECTED
-#include "Infected.h"
-#include "Body_Infected.h"
+#include "Infected_A.h"
+#include "Body_Infected_A.h"
 #pragma endregion
 
 #pragma region ASSASSIN
@@ -54,6 +55,11 @@
 #pragma region BANDIT_HEAVY
 #include "Bandit_Heavy.h"
 #include "Body_Bandit_Heavy.h"
+#pragma endregion
+
+#pragma region BANDIT_SNIPER
+#include "Bandit_Sniper.h"
+#include "Body_Bandit_Sniper.h"
 #pragma endregion
 
 
@@ -68,6 +74,9 @@
 #include "UI_Player_HP.h"
 #include "UI_Player_HPFrame.h"
 #include "UI_Player_HPBar.h"
+#include "UI_Player_ExpBar.h"
+#include "UI_Player_Left_Interface.h"
+#include "UI_Player_Right_Interface.h"
 #include "UI_Blood.h"
 #include "UI_Blood_Vignette.h"
 #include "UI_Blood_Veins.h"
@@ -75,6 +84,22 @@
 /* Monster */
 #include "UI_MonsterHpFrame.h"
 #include "UI_MonsterHp.h"
+/* Text */
+#include "UI_TextBox.h"
+#include "UI_TutorialBox.h"
+#include "UI_QuestBox.h"
+#include "UI_QuestIcon.h"
+#include "UI_ItemShowcase.h"
+#include "UI_ItemIcon.h"
+
+#pragma region LevelUp
+#include "UI_LevelUp_MagicFrame.h"
+#include "UI_LevelUp_MagicTrack.h"
+#include "UI_LevelUp_Shards.h"
+#include "UI_LevelUp_MagicSide.h"
+#include "UI_LevelUp_SunBeacon.h"
+#include "UI_LevelUp_TextBox.h"
+#include "UI_LevelUp_ShieldFrame.h"
 #pragma endregion
 
 #pragma region Test
@@ -272,7 +297,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Bandit_Heavy"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Heavy/ManHeavyBase_Skeleton", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Bandit_Heavy_Vampiric"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Heavy/Bandit_Heavy_Vampiric/ManHeavyBase_Skeleton", PivotMatrix)));
 	
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Bandit_Sniper"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/CharacterBase_Skeleton", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Bandit_Sniper"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/CharacterBase_Skeleton", PivotMatrix)));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_BooHag"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/BooHag/ReverseFootBase_Skeleton", PivotMatrix)));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Digger"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Digger/ReverseFootBase_Skeleton", PivotMatrix)));
 	//
@@ -333,6 +358,8 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Navigation2"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Navigation2.dat"))));
 
 	lstrcpy(m_szLoadingText, TEXT("콜라이더를(을) 로드하는 중입니다."));
+
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_RigidBody"), CRigidBody::Create(m_pDevice, m_pContext)));
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Collider_AABB"), CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_AABB)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Collider_OBB"), CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_OBB)));
@@ -490,6 +517,9 @@ HRESULT CLoader::Loading_For_Tool_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Navigation2"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Navigation2.dat"))));
 	
 	//!콜라이더
+	
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_RigidBody"), CRigidBody::Create(m_pDevice, m_pContext)));
+
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Collider_AABB"), CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_AABB)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Collider_OBB"), CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_OBB)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Collider_Sphere"), CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE)));
@@ -525,6 +555,8 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Shotgun"), CPlayer_Weapon_Shotgun::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Shotgun"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Winchester"), CPlayer_Weapon_Winchester::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Winchester"))));
 
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Punch"), CPlayer_Weapon_Punch::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Winchester"))));
+
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Player"), CWeapon_Player::Create(m_pDevice, m_pContext)));
 	//! =====================================Boss Line=========================================
 	//TODO VampireCommander
@@ -534,16 +566,20 @@ HRESULT CLoader::Ready_Origin()
 	//! =====================================Boss Line=========================================
 
 	//! Infected
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Infected"), CInfected::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Infected"))));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Infected"), CBody_Infected::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Infected"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Infected_A"), CInfected_A::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Infected_A"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Infected_A"), CBody_Infected_A::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Infected_A"))));
 
 	//! Assassin
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Assassin"), CAssassin::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Assassin"), CAssassin::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Assassin"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Assassin"), CBody_Assassin::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Assassin"))));
 
 	//! Bandit_Heavy
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bandit_Heavy"), CBandit_Heavy::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player"))));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Bandit_Heavy"), CBody_Bandit_Heavy::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Assassin"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bandit_Heavy"), CBandit_Heavy::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bandit_Heavy"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Bandit_Heavy"), CBody_Bandit_Heavy::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Bandit_Heavy"))));
+
+	//! Bandit_Sniper
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bandit_Sniper"), CBandit_Sniper::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bandit_Sniper"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Bandit_Sniper"), CBody_Bandit_Sniper::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Bandit_Sniper"))));
 
 
 
@@ -600,11 +636,18 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_Hp"), CUI_Player_HP::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_Hp"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_HPBar"), CUI_Player_HPBar::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_HPBar"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_HPFrame"), CUI_Player_HPFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_HPFrame"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_ExpBar"), CUI_Player_ExpBar::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_ExpBar"))));
+	
+	/* Player_Interface */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_Left_Interface"), CUI_Player_Left_Interface::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_Left_Interface"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_Right_Interface"), CUI_Player_Right_Interface::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_Right_Interface"))));
+	
 	/* Blood */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Blood"), CUI_Blood::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Blood"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Blood_Lights"), CUI_Blood_Lights::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Blood_Lights"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Blood_Veins"), CUI_Blood_Veins::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Blood_Veins"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Blood_Vignette"), CUI_Blood_Vignette::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Blood_Vignette"))));
+	
 	/* Skill */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_Skill"), CUI_Player_Skill::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_Skill"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_Skill_Frame"), CUI_Player_Skill_Frame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_Skill_Frame"))));
@@ -615,6 +658,24 @@ HRESULT CLoader::Ready_UI_Origin()
 #pragma region Monster
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHpFrame"), CUI_MonsterHpFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MonsterHpFrame"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHp"), CUI_MonsterHp::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MonsterHp"))));
+#pragma endregion End
+
+#pragma region Text
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_TutorialBox"), CUI_TutorialBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_TutorialBox"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_QuestBox"), CUI_QuestBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_QuestBox"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_QuestIcon"), CUI_QuestBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_QuestIcon"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ItemShowcase"), CUI_ItemShowcase::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_ItemShowcase"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ItemIcon"), CUI_ItemIcon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_ItemIcon"))));
+#pragma endregion End
+
+#pragma region LevelUp
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_MagicFrame"), CUI_LevelUp_MagicFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_MagicFrame"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_MagicTrack"), CUI_LevelUp_MagicTrack::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_MagicTrack"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_Shards"), CUI_LevelUp_Shards::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_Shards"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_MagicSide"), CUI_LevelUp_MagicSide::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_MagicSide"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_SunBeacon"), CUI_LevelUp_SunBeacon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_SunBeacon"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_TextBox"), CUI_LevelUp_TextBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_TextBox"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_ShieldFrame"), CUI_LevelUp_ShieldFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_ShieldFrame"))));
 #pragma endregion End
 
 	return S_OK;

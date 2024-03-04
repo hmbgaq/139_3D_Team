@@ -172,9 +172,6 @@
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing">
       <UniqueIdentifier>{3033c523-d7b7-42fc-8e91-1a12021165a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect">
-      <UniqueIdentifier>{5a2d3fa4-2baf-4041-a7b7-8e66ffc41c72}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Point">
       <UniqueIdentifier>{af1d67e4-c372-4d14-97cc-c9ea53ae80f3}</UniqueIdentifier>
     </Filter>
@@ -252,9 +249,6 @@
     </Filter>
     <Filter Include="01.Utility\98.Renderer\Util">
       <UniqueIdentifier>{97ab11a5-ce3a-4739-8633-9c3898280a3b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03.Components\01.VIBuffer\SSAO">
-      <UniqueIdentifier>{45142160-3e8f-4c21-b613-06aecc2af5e7}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\97.PhysX\Controller">
       <UniqueIdentifier>{b184fe74-7ccc-437d-9500-7b10d7847d59}</UniqueIdentifier>
@@ -453,9 +447,6 @@
     <ClInclude Include="..\public\VIBuffer_Instancing.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\VIBuffer_Particle_Rect.h">
-      <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Particle_Point.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Point</Filter>
     </ClInclude>
@@ -599,9 +590,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\MurmurHash3.h">
       <Filter>01.Utility\03.Components\02.Shader\Hash</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\VIBuffer_SSAO.h">
-      <Filter>01.Utility\03.Components\01.VIBuffer\SSAO</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PhysXCollider.h">
       <Filter>01.Utility\97.PhysX\Collider</Filter>
@@ -773,9 +761,6 @@
     <ClCompile Include="..\private\VIBuffer_Instancing.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\VIBuffer_Particle_Rect.cpp">
-      <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Particle_Point.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Point</Filter>
     </ClCompile>
@@ -872,9 +857,6 @@
     <ClCompile Include="..\Private\MurmurHash3.cpp">
       <Filter>01.Utility\03.Components\02.Shader\Hash</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VIBuffer_SSAO.cpp">
-      <Filter>01.Utility\03.Components\01.VIBuffer\SSAO</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\PhysXCollider.cpp">
       <Filter>01.Utility\97.PhysX\Collider</Filter>
     </ClCompile>
@@ -961,7 +943,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Effect_Engine.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Effect_Deferred.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_UI_Engine.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

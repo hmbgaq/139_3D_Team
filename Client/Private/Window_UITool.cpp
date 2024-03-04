@@ -2,10 +2,14 @@
 #include "Window_UITool.h"
 #include "UI_Anything.h"
 #include "GameInstance.h"
+#include "imgui_internal.h"
 
 #include "Json_Utility.h"
 #include "Target_Manager.h"
 #include "RenderTarget.h"
+#include "UI_Anything.h"
+#include "UI_Text.h"
+#include "Easing_Utillity.h"
 
 /* error 외부참조 기호 : define 걸어줘야함 */
 #define STB_IMAGE_IMPLEMENTATION
@@ -25,7 +29,7 @@ HRESULT CWindow_UITool::Initialize()
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩중."));
 
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
-	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD"))));
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD")))); // 원하는 폴더로 변경해서 보기
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));
 	
 	/* 툴 들어갈때 오래걸리니까 따로 버튼눌러서 불러오자.. */
@@ -33,12 +37,12 @@ HRESULT CWindow_UITool::Initialize()
 	// Load_Paths();
 
 	// 이미지 로드
-	_int iSize = (_int)m_vecPaths.size();
+	_int iSize = (_int)m_vecInitialPaths.size();
 	for (_int i = 0; i < iSize; i++)
 	{
 		IMAGEINFO* tTexture = new IMAGEINFO;
 
-		_bool bRet = LoadTextureFromFile(ConverWStringtoC(ConvertToWideString(m_vecPaths[i]->strFilePath)), &tTexture->SRV_Texture, &tTexture->iImage_Width, &tTexture->iImage_Height);
+		_bool bRet = LoadTextureFromFile(ConverWStringtoC(ConvertToWideString(m_vecInitialPaths[i]->strFilePath)), &tTexture->SRV_Texture, &tTexture->iImage_Width, &tTexture->iImage_Height);
 		IM_ASSERT(bRet);
 
 		/* Texture 크기를 임의로 조절하고 싶다면, 여기서 강제로 덮어씌우자. 값을 안주면 원래 텍스처 크기대로 나온다. 추 후 원본 크기를 이용해 비율만 줄여서 출력해도 좋을 것 같다. */
@@ -51,17 +55,17 @@ HRESULT CWindow_UITool::Initialize()
 		delete[] tTexture;
 	}
 
-	_int iPathSize = (_int)m_vecPaths.size();
-	//for (auto& iter : m_vecPaths)
+	_int iPathSize = (_int)m_vecInitialPaths.size();
+	//for (auto& iter : m_vecInitialPaths)
 	for(_int i = 0; i < iPathSize; i++)
 	{
-		string strFileNameWithoutExtension = GetFileName(m_vecPaths[i]->strFilePath);
+		string strFileNameWithoutExtension = GetFileName(m_vecInitialPaths[i]->strFilePath);
 		string strFileName = RemoveExtension(strFileNameWithoutExtension);
 
 		PATHINFO* pPathInfo = new PATHINFO;
 
 		pPathInfo->strFileName = strFileName;
-		pPathInfo->strFilePath = m_vecPaths[i]->strFilePath;
+		pPathInfo->strFilePath = m_vecInitialPaths[i]->strFilePath;
 
 		/* 경로 잘라서 넣기 */
 		m_vecImagePaths.push_back(pPathInfo);
@@ -76,7 +80,7 @@ HRESULT CWindow_UITool::Initialize()
 	//json Out_Json;
 	//_ushort iIndex = 0;
 
-	//for (PATHINFO* iter : m_vecPaths)
+	//for (PATHINFO* iter : m_vecInitialPaths)
 	//{
 	//	json object;
 	//	object["PathNum"] = iter->iPathNum;
@@ -93,16 +97,27 @@ HRESULT CWindow_UITool::Initialize()
 
 #pragma region Start Setting
 	// 시작하자마자 아무것도 안눌렀을 때 기본 테그 값 주고 시작하기.
-	m_tUI_Desc.strCloneTag = "Prototype_GameObject_UI_Anything";
-	m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
-	m_tUI_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
-	m_tUI_Desc.fPositionX = g_iWinSizeX / 2;
-	m_tUI_Desc.fPositionY = g_iWinSizeY / 2;
-	m_tUI_Desc.fScaleX = 100;
-	m_tUI_Desc.fScaleY = 100;
+	m_tChild_Desc.strLayerTag = "Layer_UI_Player";
+	m_tChild_Desc.strCloneTag = "Prototype_GameObject_UI_Anything";
+	m_tChild_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
+	m_tChild_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
+	m_tChild_Desc.fPositionX = g_iWinSizeX / 2;
+	m_tChild_Desc.fPositionY = g_iWinSizeY / 2;
+	m_tChild_Desc.fScaleX = 100.f;
+	m_tChild_Desc.fScaleY = 100.f;
+
+	m_tParent_Desc.strLayerTag = "Layer_UI_Player";
+	m_tParent_Desc.strCloneTag = "Prototype_GameObject_UI_Player_Left_Interface";
+	m_tParent_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
+	m_tParent_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
+	m_tParent_Desc.fPositionX = g_iWinSizeX / 2;
+	m_tParent_Desc.fPositionY = g_iWinSizeY / 2;
+	m_tParent_Desc.fScaleX = 100.f;
+	m_tParent_Desc.fScaleY = 100.f;
 #pragma endregion End
 
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩이 완료되었습니다."));
+
 
 	return S_OK;
 }
@@ -118,67 +133,112 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 	Shortcut_Key(fTimeDelta);
 	ShowDialog();
 
+
 	__super::Tick(fTimeDelta);
 
-	SetUp_ImGuiDESC("Anim", { 600.f, 300.f }, 0, { 0.f, 0.f, 0.f, 0.f });
-
-	__super::Begin();
-
-	ImGui::Text("Mouse Pos : %d, %d", m_pt.x, m_pt.y);
-
-	/* 미리보기 */
-	ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2((_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Width, (_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
-
-	__super::End();
-
-	SetUp_ImGuiDESC("Anim2", { 600.f, 300.f }, 0, { 0.f, 0.f, 0.f, 0.f });
-
-	__super::Begin();
-
-	if (ImGui::BeginTabBar("MyTabBar", m_Tab_bar_flags))
+	switch (m_eToolType)
 	{
+	case Client::CWindow_UITool::TOOL_UI:
+	{
+		SetUp_ImGuiDESC("Parent", { 600.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+		__super::Begin();
 
-		if (ImGui::BeginTabItem("Texture", &m_bOpenTexture))
+		// Parent
+		Parent_List(fTimeDelta);
+		ImGui::Spacing();
+
+		__super::End();
+
+
+		SetUp_ImGuiDESC("Info", { 600.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+		__super::Begin();
+		UI_Info();
+		__super::End();
+
+		//SetUp_ImGuiDESC("Text", { 600.f, 300.f }, 0, { 0.f, 0.f, 0.f, 0.f });
+		//__super::Begin();
+		//__super::End();
+
+
+		SetUp_ImGuiDESC("Child", { 600.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+		__super::Begin();
+		Menu_Info();
+		if (ImGui::BeginTabBar("MyTabBar", m_Tab_bar_flags))
 		{
 
-			ImGui::Dummy(ImVec2(0.f, 10.f));
+			if (ImGui::BeginTabItem("Texture"))
+			{
 
-			/* List */
-			UI_List(fTimeDelta);
+				ImGui::Dummy(ImVec2(0.f, 10.f));
 
-			ImGui::Dummy(ImVec2(0.f, 10.f));
+				if (m_pGameInstance->Key_Down(DIK_HOME))
+				{
+					if (!m_bCreateOK)
+					{
+						m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky"));
+						m_bCreateOK = true;
+					}
+				}
+				/* List */
+				Child_List(fTimeDelta);
 
-			/* UI_2D 세팅 */
-			UI2D_Setting(fTimeDelta);
+				ImGui::Dummy(ImVec2(0.f, 10.f));
 
-			ImGui::EndTabItem();
+				/* UI_2D 세팅 */
+
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Text"))
+			{
+				ImGui::Text("Tab");
+
+				Text_List();
+
+				ImGui::EndTabItem();
+			}
+
+			ImGui::EndTabBar();
 		}
-		if (ImGui::BeginTabItem("Setting", &m_bOpenSetting))
+		__super::End();
+		break;
+	}
+	case Client::CWindow_UITool::TOOL_ANIMATION:
+	{
+		SetUp_ImGuiDESC("UI_Animation", { 600.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+		__super::Begin();
+		if (ImGui::BeginTabBar("UI_AnimTab", m_Tab_bar_flags))
 		{
-			/* 이미지 선택 및 미리보기 */
-			ImagePreview(fTimeDelta);
-
-			ImGui::Dummy(ImVec2(0, 5.f)); // 공백
-
-			ImGui::EndTabItem();
+			if (ImGui::BeginTabItem("UI_Anim"))
+			{
+				//PlayAnimation(fTimeDelta);
+				//AnimationTimeLineBar();
+				KeyframeAutomaticGeneration();
+				KeyframeRender_ValueChange();
+				ImGui::EndTabItem();
+			}
+			ImGui::EndTabBar();
 		}
-		if (ImGui::BeginTabItem("Text", &m_bOpenUI))
+		__super::End();
+
+		SetUp_ImGuiDESC("UI_TimeLine", { 1000.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+		__super::Begin();
+		if (ImGui::BeginTabBar("TimeLineTab", m_Tab_bar_flags))
 		{
-			ImGui::Text("Tab");
-
-
-
-			ImGui::EndTabItem();
+			PlayAnimation(fTimeDelta);
+			AnimationTimeLineBar();
+			ImGui::EndTabBar();
 		}
-
-		ImGui::EndTabBar();
+		__super::End();
+		break;
+	}
+	case Client::CWindow_UITool::TOOL_END:
+		break;
+	default:
+		break;
 	}
 
 	/* Default : LastNumber */
 	UI_ToolTip(fTimeDelta); // Tip : 툴팁은 오버레이시 모든 출력중 가장 마지막에 호출되어야한다. (안그러면 다른 녀석들이 툴팁에 밀려서 출력됨)
-
-	__super::End();
-
 }
 
 void CWindow_UITool::Render()
@@ -186,99 +246,26 @@ void CWindow_UITool::Render()
 
 }
 
-void CWindow_UITool::UI_List(_float fTimeDelta)
-{
-	if (m_vecImagePaths.empty() ||
-		m_vecTexture.empty())
-		return;
-
-	ImGui::RadioButton("UI", &m_iRenderGroup, (_int)CRenderer::RENDERGROUP::RENDER_UI); ImGui::SameLine();
-
-	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyMask_;
-	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
-
-	ImGui::BeginChild("Layer List", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 150), ImGuiChildFlags_Border, WindowFlag);
-	// Layer
-	Layer_List();
-	ImGui::Spacing();
-	ImGui::EndChild();
-
-	ImGui::SameLine();
-
-	ImGui::BeginChild("Texture List", ImVec2(ImGui::GetContentRegionAvail().x, 150), ImGuiChildFlags_Border, WindowFlag);
-	// Textuer
-	Texture_List();
-	ImGui::Spacing();
-	ImGui::EndChild();
-
-	ImGui::BeginChild("Parent2 List", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 150), ImGuiChildFlags_Border, WindowFlag);
-	// Parent
-	Parent_List();
-	ImGui::Spacing();
-	ImGui::EndChild();
-
-	ImGui::SameLine();
-
-	ImGui::BeginChild("Class List", ImVec2(ImGui::GetContentRegionAvail().x, 150), ImGuiChildFlags_Border, WindowFlag);
-	// Class
-	Class_List();
-	ImGui::Spacing();
-	ImGui::EndChild();
-
-	// Object
-	Object_List();
-
-
-#pragma region Create/Delete
-	if (ImGui::Button("Create"))
-	{
-		UI2D_Create(fTimeDelta);
-	}
-
-	ImGui::SameLine(70.f);
-
-	if (ImGui::Button("Delete"))
-	{
-		UI2D_Delete(fTimeDelta);
-	}
-#pragma endregion End
-
-#pragma region Save/Load
-	if (ImGui::Button("Save"))
-	{
-		m_eDialogType = CImgui_Window::SAVE_DIALOG;
-		OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
-	}
-
-	ImGui::SameLine(70.f);
-
-	if (ImGui::Button("Load"))
-	{
-		m_eDialogType = CImgui_Window::LOAD_DIALOG;
-		OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
-	}
-#pragma endregion End
-}
-
 void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_1))
+		// 스페이스바가 눌렸을 때 실행할 코드
+	
+
+	if (ImGui::IsKeyPressed(ImGuiKey_1))
 	{
-		m_bOpenTexture = true;
-		m_bOpenSetting = false;
-		m_bOpenUI = false;
+		m_eToolType = CWindow_UITool::TOOL_UI;
 	}
-	if (m_pGameInstance->Key_Down(DIK_2))
+	if (ImGui::IsKeyPressed(ImGuiKey_2))
 	{
-		m_bOpenTexture = false;
-		m_bOpenSetting = true;
-		m_bOpenUI = false;
+		m_eToolType = CWindow_UITool::TOOL_ANIMATION;
 	}
-	if (m_pGameInstance->Key_Down(DIK_3))
+	if (ImGui::IsKeyPressed(ImGuiKey_3))
 	{
-		m_bOpenTexture = false;
-		m_bOpenSetting = false;
-		m_bOpenUI = true;
+		CUI::UIKEYFRAME tUIKeyframe;
+		tUIKeyframe.vPos.x = 1.f;
+		tUIKeyframe.vPos.y = 33.f;
+
+		timeline[m_eKeyType].push_back(tUIKeyframe);
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_Q))
@@ -300,74 +287,74 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_DELETE))
 	{
-		++m_iSelectedObjectIndex;
+		++m_iSelected_ChildObjectIndex;
 
-		if (!m_vecUIObject.empty())
+		if (!m_vecChildObject.empty())
 		{
-			_int iSize = (_int)m_vecUIObject.size();
-			if (m_iSelectedObjectIndex >= iSize)
-				m_iSelectedObjectIndex = iSize - 1;
+			_int iSize = (_int)m_vecChildObject.size();
+			if (m_iSelected_ChildObjectIndex >= iSize)
+				m_iSelected_ChildObjectIndex = iSize - 1;
 		}
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_X))
 	{
-		--m_iSelectedObjectIndex;
+		--m_iSelected_ChildObjectIndex;
 
-		if (m_iSelectedObjectIndex <= 0)
-			m_iSelectedObjectIndex = 0;
+		if (m_iSelected_ChildObjectIndex <= 0)
+			m_iSelected_ChildObjectIndex = 0;
 	}
 
 	if (m_pGameInstance->Key_Pressing(DIK_UP))
 	{
 		if(m_iChangeType == (_int)SCALE)
-			m_CurrObject->Change_SizeTop(m_fChangeValue);
+			m_pCurrChild->Change_SizeTop(m_fChangeValue);
 		if (m_iChangeType == (_int)ROTATION)
-			m_CurrObject->Get_Transform()->Turn(_vector({ 1.f, 0.f, 0.f, 0.f }), m_fChangeValue);
+			m_pCurrChild->Get_Transform()->Turn(_vector({ 1.f, 0.f, 0.f, 0.f }), m_fChangeValue);
 		if (m_iChangeType == (_int)POSITION)
 		{
-			_vector vPos = m_CurrObject->Get_Transform()->Get_Position();
+			_vector vPos = m_pCurrChild->Get_Transform()->Get_Position();
 			vPos.m128_f32[1] += m_fChangeValue;
-			m_CurrObject->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
+			m_pCurrChild->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
 		}
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_DOWN))
 	{
 		if (m_iChangeType == (_int)SCALE)
-			m_CurrObject->Change_SizeBottom(m_fChangeValue);
+			m_pCurrChild->Change_SizeBottom(m_fChangeValue);
 		if (m_iChangeType == (_int)ROTATION)
-			m_CurrObject->Get_Transform()->Turn(_vector({ 1.f, 0.f, 0.f, 0.f }), -m_fChangeValue);
+			m_pCurrChild->Get_Transform()->Turn(_vector({ 1.f, 0.f, 0.f, 0.f }), -m_fChangeValue);
 		if (m_iChangeType == (_int)POSITION)
 		{
-			_vector vPos = m_CurrObject->Get_Transform()->Get_Position();
+			_vector vPos = m_pCurrChild->Get_Transform()->Get_Position();
 			vPos.m128_f32[1] += -m_fChangeValue;
-			m_CurrObject->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
+			m_pCurrChild->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
 		}
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_LEFT))
 	{
 		if (m_iChangeType == (_int)SCALE)
-			m_CurrObject->Change_SizeLeft(m_fChangeValue);
+			m_pCurrChild->Change_SizeLeft(m_fChangeValue);
 		if (m_iChangeType == (_int)ROTATION)
-			m_CurrObject->Get_Transform()->Turn(_vector({ 0.f, 0.f, 1.f, 0.f }), -m_fChangeValue);
+			m_pCurrChild->Get_Transform()->Turn(_vector({ 0.f, 0.f, 1.f, 0.f }), -m_fChangeValue);
 		if (m_iChangeType == (_int)POSITION)
 		{
-			_vector vPos = m_CurrObject->Get_Transform()->Get_Position();
+			_vector vPos = m_pCurrChild->Get_Transform()->Get_Position();
 			vPos.m128_f32[0] += -m_fChangeValue;
-			m_CurrObject->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
+			m_pCurrChild->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
 		}
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_RIGHT))
 	{
 		if (m_iChangeType == (_int)SCALE)
-			m_CurrObject->Change_SizeRight(m_fChangeValue);
+			m_pCurrChild->Change_SizeRight(m_fChangeValue);
 		if (m_iChangeType == (_int)ROTATION)
-			m_CurrObject->Get_Transform()->Turn(_vector({ 0.f, 0.f, 1.f, 0.f }), m_fChangeValue);
+			m_pCurrChild->Get_Transform()->Turn(_vector({ 0.f, 0.f, 1.f, 0.f }), m_fChangeValue);
 		if (m_iChangeType == (_int)POSITION)
 		{
-			_vector vPos = m_CurrObject->Get_Transform()->Get_Position();
+			_vector vPos = m_pCurrChild->Get_Transform()->Get_Position();
 			vPos.m128_f32[0] += m_fChangeValue;
-			m_CurrObject->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
+			m_pCurrChild->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
 		}
 	}
 
@@ -391,9 +378,9 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 	{
 		if (m_pGameInstance->Mouse_Down(DIM_LB))
 		{
-			m_tUI_Desc.fPositionX = m_pt.x;
-			m_tUI_Desc.fPositionY = m_pt.y;
-			UI2D_Create(fTimeDelta);
+			m_tChild_Desc.fPositionX = m_pt.x;
+			m_tChild_Desc.fPositionY = m_pt.y;
+			Create_Child(m_tChild_Desc);
 			
 		}
 	}
@@ -403,8 +390,8 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 	{
 		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
 		{
-			if (m_CurrObject != nullptr)
-				m_CurrObject->Moving_Picking_Point(m_pt);
+			if (m_pCurrSelectUI != nullptr)
+				m_pCurrSelectUI->Moving_Picking_Point(m_pt);
 		}
 
 		if (m_pGameInstance->Key_Down(DIK_S))
@@ -415,7 +402,7 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 
 		if (m_pGameInstance->Key_Down(DIK_D))
 		{
-			UI2D_Create(fTimeDelta);
+			Create_Child(m_tChild_Desc);
 		}
 
 		if (m_pGameInstance->Key_Down(DIK_L))
@@ -430,36 +417,64 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 		}
 	}
 
-}
-
-void CWindow_UITool::UI_Set()
-{
-	_int iSize = (_int)m_vecUIObject.size();
-	for (_int i = 0; i < iSize; i++)
+	/* 키입력하고 클릭하는 기능보다 아래 존재하게 해야한다. */
+	if (m_pGameInstance->Mouse_Down(DIM_RB))
 	{
-		if (dynamic_cast<CUI*>(m_vecUIObject[i])->Get_Pick() == true)
+		if (!m_vecParentObject.empty())
 		{
-			if (m_pGameInstance->Mouse_Down(DIM_LB))
+			_int iParentSize = m_vecParentObject.size();
+			for (_int i = 0; i < iParentSize; ++i)
 			{
-				m_CurrObject = nullptr;
-				m_CurrObject = dynamic_cast<CUI*>(m_vecUIObject[i]);
-				m_iSelectedObjectIndex = i;
+				if (dynamic_cast<CUI*>(m_vecParentObject[i])->Get_Pick())
+				{
+					m_iSelected_ParentObjectIndex = i;
+					m_pCurrParent = dynamic_cast<CUI*>(m_vecParentObject[i]);
+					m_pCurrSelectUI = m_pCurrParent;
+					m_eUIType = PARENT;
+					return;
+				}
 			}
 		}
-	}
+		if (!m_vecChildObject.empty())
+		{
+			_int iChildSize = m_vecChildObject.size();
+			for (_int i = 0; i < iChildSize; ++i)
+			{
+				if (dynamic_cast<CUI*>(m_vecChildObject[i])->Get_Pick())
+				{
+					if (dynamic_cast<CUI*>(m_vecChildObject[i])->Get_Kind() == CUI::TEXT)
+					{
+						m_iSelected_ChildObjectIndex = i;
+						m_pCurrChild = dynamic_cast<CUI*>(m_vecChildObject[i]);
+						m_pCurrSelectUI = dynamic_cast<CUI_Text*>(m_pCurrChild);
+						m_eUIType = TEXT;
+						return;
+					}
 
-	if (m_CurrObject != nullptr)
-	{
-		_vector vPosition = dynamic_cast<CUI*>(m_CurrObject)->Get_Transform()->Get_State(CTransform::STATE_POSITION);
-		_vector vOrthoPos = m_pGameInstance->Convert_Orthogonal(vPosition);
-
-		ImGui::InputFloat("PositionX", &vOrthoPos.m128_f32[0]);
-		ImGui::InputFloat("PositionY", &vOrthoPos.m128_f32[1]);
-		ImGui::InputFloat("PositionZ", &vOrthoPos.m128_f32[2]);
-
-		Set_GuizmoCamView();
-		Set_GuizmoCamProj();
-		Set_GuizmoUI(m_CurrObject);
+					m_iSelected_ChildObjectIndex = i;
+					m_pCurrChild = dynamic_cast<CUI*>(m_vecChildObject[i]);
+					m_pCurrSelectUI = m_pCurrChild;
+					m_eUIType = CHILD;
+					return;
+				}
+			}
+		}
+		if (m_vecParentGroup != nullptr)
+		{
+			_int iGroupSize = (*m_vecParentGroup).size();
+			for (_int i = 0; i < iGroupSize; ++i)
+			{
+				if (dynamic_cast<CUI*>((*m_vecParentGroup)[i])->Get_Pick())
+				{
+					m_iSelected_GroupObjectIndex = i;
+					m_pCurrGroup = dynamic_cast<CUI*>((*m_vecParentGroup)[i]);
+					m_pCurrSelectUI = m_pCurrGroup;
+					m_eUIType = GROUP;
+					return;
+				}
+			}
+		}
+		m_pCurrSelectUI = nullptr;
 	}
 }
 
@@ -470,14 +485,16 @@ void CWindow_UITool::Layer_List()
 	{
 		for (_int i = 0; i < 3; i++)
 		{
-			const bool is_selected = (m_iLayerNum == i);
+			const bool is_selected = (m_iCurrLayerNum == i);
 			if (ImGui::Selectable(m_strLayer[i].c_str(), is_selected))
-				m_iLayerNum = i;
+				m_iCurrLayerNum = i;
 
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
 			{
 				ImGui::SetItemDefaultFocus();
+				m_tChild_Desc.strLayerTag = m_strLayer[is_selected].c_str();
+				m_tParent_Desc.strLayerTag = m_strLayer[is_selected].c_str();
 			}
 		}
 
@@ -502,7 +519,8 @@ void CWindow_UITool::Texture_List()
 				//// 문자열 중복 비교
 				//AddIndexNumber(*m_vecImagePaths[m_iSelectedPathIndex]); // 오브젝트 테그 결정
 				/* 프로토 테그 설정 */
-				m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
+				m_tChild_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
+				m_tParent_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -512,29 +530,126 @@ void CWindow_UITool::Texture_List()
 	}
 	///* 미리보기 */
 	//ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2((_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Width, (_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
-	//m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName; // 리스트 박스 밖으로 뺀 이유 : 리스트에서 선택안했을 때도 생성 가능하도록 계속 갱신하게함
+	//m_tChild_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName; // 리스트 박스 밖으로 뺀 이유 : 리스트에서 선택안했을 때도 생성 가능하도록 계속 갱신하게함
 }
 
-void CWindow_UITool::Parent_List()
+void CWindow_UITool::Setting_Parent()
+{
+	ImGui::CollapsingHeader("Setting_Parent");
+
+	///* Mod */
+	//ImGui::SeparatorText(u8"변경 모드 설정");
+	//ImGui::RadioButton("Scale", &m_iChangeType, 1);
+	//ImGui::RadioButton("Rotation", &m_iChangeType, 2);
+	//ImGui::RadioButton("Position", &m_iChangeType, 3);
+
+	///* Scale */
+	//ImGui::SeparatorText(u8"크기 변경");
+	//ImGui::InputFloat("ScaleX", &m_fParent_Scale.x);
+	//ImGui::InputFloat("ScaleY", &m_fParent_Scale.y);
+	//m_tParent_Desc.fScaleX = m_fParent_Scale.x;
+	//m_tParent_Desc.fScaleY = m_fParent_Scale.y;
+
+	///* Rotation */
+	//ImGui::SeparatorText(u8"회전 변경");
+	//ImGui::InputFloat("RotationZ", &m_fParent_Rotation.z);
+	//m_tParent_Desc.fRotationZ = m_fParent_Rotation.z;
+
+	///* Position*/
+	//ImGui::SeparatorText(u8"위치 변경");
+	//ImGui::InputFloat("PositionX", &m_fParent_Position.x);
+	//ImGui::InputFloat("PositionY", &m_fParent_Position.y);
+	//m_tParent_Desc.fPositionX = m_fParent_Position.x;
+	//m_tParent_Desc.fPositionY = m_fParent_Position.y;
+
+
+	ImGui::Separator();
+
+
+	if (m_pCurrParent != nullptr)
+	{
+		_vector vPosition = dynamic_cast<CUI*>(m_pCurrParent)->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+		_vector vOrthoPos = m_pGameInstance->Convert_Orthogonal(vPosition);
+
+		Set_GuizmoCamView();
+		Set_GuizmoCamProj();
+		Set_GuizmoUI(m_pCurrParent);
+	}
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+
+	ImGui::Separator();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+}
+
+HRESULT CWindow_UITool::Create_Parent(CUI::UI_DESC pUIDesc)
+{
+	wstring strCloneProto = TEXT("");
+	m_pGameInstance->String_To_WString(m_tParent_Desc.strCloneTag, strCloneProto);
+
+	PATHINFO* tChild_Desc = new PATHINFO;
+
+	// 문자열 중복 비교
+	m_tParent_Desc.strObjectName;
+	m_tParent_Desc.bParent = true;
+	CUI* m_pCurrObject = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iCurrLayerNum]), strCloneProto, &m_tParent_Desc));
+	Add_ParentList(m_tParent_Desc);
+	m_vecParentObject.push_back(m_pCurrObject);
+	m_pCurrParent = m_pCurrObject;
+
+	return S_OK;
+}
+
+void CWindow_UITool::Delete_Parent()
+{
+	if (m_vecParentObject.empty())
+		return;
+	if (m_vecParentObjectName.empty())
+		return;
+
+	dynamic_cast<CUI*>(m_vecParentObject[m_iSelected_ParentObjectIndex])->Set_Dead(true);
+	m_vecParentObject.erase(m_vecParentObject.begin() + m_iSelected_ParentObjectIndex);
+
+	if (!m_vecParentObjectName.empty())
+		m_vecParentObjectName.erase(m_vecParentObjectName.begin() + m_iSelected_ParentObjectIndex); // 오브젝트 목록 이름 삭제
+
+	if (m_iSelected_ParentObjectIndex > 0 &&
+		m_iSelected_ParentObjectIndex <= m_vecParentObject.size())
+		--m_iSelected_ParentObjectIndex;
+
+	if (m_vecParentObject.empty())
+	{
+		m_pCurrParent = nullptr;
+	}
+	else
+	{
+		m_pCurrParent = dynamic_cast<CUI*>(m_vecParentObject[m_iSelected_ParentObjectIndex]);
+	}
+
+	if (m_pCurrSelectUI)
+		m_pCurrSelectUI = nullptr; // 현재 선택돼있는 녀석이 죽었으니 주소 비워주자.
+}
+
+void CWindow_UITool::Parent_Class(_float fTimeDelta)
 {
 	if (m_vecParent.empty())
 		return;
 
-	_int		ParentTagSize = (_int)m_vecParent.size();
+	_int iParentClassTagSize = (_int)m_vecParent.size();
 
-	if (ImGui::BeginListBox("Parent"))
+	if (ImGui::BeginListBox("Parent Class"))
 	{
-		for (_int i = 0; i < ParentTagSize; i++)
+		for (_int i = 0; i < iParentClassTagSize; i++)
 		{
-			const bool is_selected = (m_iSelectedParentIndex == i);
+			const bool is_selected = (m_iSelected_ParentClassIndex == i);
 			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecParent[i].c_str())), is_selected))
 			{
-				m_iSelectedParentIndex = i;
+				m_iSelected_ParentClassIndex = i;
 
 				/* 클래스 테그 설정 */
-				m_tUI_Desc.strCloneTag = "Prototype_GameObject_UI_";
-				m_tUI_Desc.strCloneTag += m_vecParent[m_iSelectedParentIndex].c_str();
-				m_tUI_Desc.bParent = true;
+				m_tParent_Desc.strCloneTag = "Prototype_GameObject_UI_";
+				m_tParent_Desc.strCloneTag += m_vecParent[m_iSelected_ParentClassIndex].c_str();
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -544,22 +659,191 @@ void CWindow_UITool::Parent_List()
 	}
 }
 
-void CWindow_UITool::Class_List()
+void CWindow_UITool::Parent_Object(_float fTimeDelta)
+{
+
+	if (ImGui::Button("Parent_Create"))
+	{
+		Create_Parent(m_tParent_Desc);	// 부모생성
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Parent_Delete"))
+	{
+		Delete_Parent();
+	}
+
+	/* 지워지고 갱신 */
+	_int		iParentObjectTagSize = (_int)m_vecParentObjectName.size();
+
+	if (ImGui::BeginListBox("Parent Object"))
+	{
+		for (_int i = 0; i < iParentObjectTagSize; i++)
+		{
+			const bool is_selected = (m_iSelected_ParentObjectIndex == i);
+			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecParentObjectName[i]->strFileName)), is_selected))
+			{
+				m_iSelected_ParentObjectIndex = i;
+				m_pCurrParent = dynamic_cast<CUI*>(m_vecParentObject[m_iSelected_ParentObjectIndex]);
+				m_pCurrSelectUI = m_pCurrParent;
+#ifdef _DEBUG
+				/* (컨테이너의 주소를 받아오는건 릴리즈 모드에서 터지는 버그가있음. 툴용) */
+				m_vecParentGroup = m_pCurrParent->Get_vecUIParts();
+#endif // DEBUG
+				m_iSelected_GroupObjectIndex = 0; // 새로 선택했으니까 초기화 해주자.
+				m_eUIType = PARENT;
+			}
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+	ImGui::Spacing();
+
+	if (ImGui::Button("Group_Delete"))
+	{
+		Delete_Group();
+	}
+	
+	if (m_vecParentGroup != nullptr)
+	{
+		/* 지워지고 갱신 */
+		if (!m_vecParentGroup->empty())
+		{
+			_int		iGroupTagSize = (_int)m_vecParentGroup->size();
+
+			if (ImGui::BeginListBox("Group Object"))
+			{
+				for (_int i = 0; i < iGroupTagSize; i++)
+				{
+					string Name = (*m_vecParentGroup)[i]->Get_ObjectNameTag();
+					const bool is_selected = (m_iSelected_GroupObjectIndex == i);
+					if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString((*m_vecParentGroup)[i]->Get_ObjectNameTag())), is_selected))
+					{
+						//m_iSelected_GroupObjectIndex = is_selected; // bug : is_selected는 bool인데 인덱스로 주고있었네..
+						m_iSelected_GroupObjectIndex = i;
+						m_pCurrGroup = (*m_vecParentGroup)[m_iSelected_GroupObjectIndex];
+						m_pCurrSelectUI = m_pCurrGroup;
+						m_eUIType = GROUP;
+					}
+					// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndListBox();
+			}
+		}
+	}
+	else
+	{
+		ImGui::Text("Not Group");
+	}
+	ImGui::Spacing();
+}
+
+void CWindow_UITool::Setting_Child()
+{
+	ImGui::CollapsingHeader("2D_Setting");
+
+	///* Mod */
+	//ImGui::SeparatorText(u8"변경 모드 설정");
+	//ImGui::RadioButton("Scale", &m_iChangeType, 1);
+	//ImGui::RadioButton("Rotation", &m_iChangeType, 2);
+	//ImGui::RadioButton("Position", &m_iChangeType, 3);
+
+	///* Rotation */
+	//ImGui::SeparatorText(u8"회전 변경");
+	//ImGui::InputFloat("ScaleX", &m_fParent_Scale.x);
+	//ImGui::InputFloat("ScaleY", &m_fParent_Scale.y);
+
+	///* Scale */
+	//ImGui::SeparatorText(u8"크기 변경");
+	//ImGui::InputFloat("ScaleX", &m_fChild_Scale.x);
+	//ImGui::InputFloat("ScaleY", &m_fChild_Scale.y);
+
+	///* Position*/
+	//ImGui::SeparatorText(u8"위치 변경");
+	//ImGui::InputFloat("PositionX", &m_fChild_Possition.x);
+	//ImGui::InputFloat("PositionY", &m_fChild_Possition.y);
+
+	ImGui::Separator();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+
+	if (m_pCurrChild != nullptr)
+	{
+		Set_GuizmoCamView();
+		Set_GuizmoCamProj();
+		Set_GuizmoUI(m_pCurrChild);
+	}
+
+	ImGui::Separator();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+}
+
+void CWindow_UITool::Current_Info()
+{
+	ImGui::CollapsingHeader("2D_Setting");
+
+	ImGui::Separator();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+
+	ImGui::Separator();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+}
+
+void CWindow_UITool::Parent_List(_float fTimeDelta)
+{
+	Parent_Class(fTimeDelta);
+	Parent_Object(fTimeDelta);
+	Setting_Parent();
+}
+
+void CWindow_UITool::Child_List(_float fTimeDelta)
+{
+	if (m_vecImagePaths.empty() ||
+		m_vecTexture.empty())
+		return;
+
+	//ImGui::RadioButton("UI", &m_iRenderGroup, (_int)CRenderer::RENDERGROUP::RENDER_UI); ImGui::SameLine();
+
+	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyMask_;
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+	// Layer
+	Layer_List();
+	ImGui::Spacing();
+
+	// Textuer
+	Texture_List();
+	ImGui::Spacing();
+
+	// Child
+	Child_Class(fTimeDelta);
+	Child_Object(fTimeDelta);
+	Setting_Child();
+}
+
+void CWindow_UITool::Child_Class(_float fTimeDelta)
 {
 	_int		ClassTagSize = (_int)m_vecClass.size();
 
-	if (ImGui::BeginListBox("Class"))
+	if (ImGui::BeginListBox("Child Class"))
 	{
 		for (_int i = 0; i < ClassTagSize; i++)
 		{
-			const bool is_selected = (m_iSelectedClassIndex == i);
+			const bool is_selected = (m_iSelected_ChildClassIndex == i);
 			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecClass[i].c_str())), is_selected))
 			{
-				m_iSelectedClassIndex = i;
+				m_iSelected_ChildClassIndex = i;
 				/* 클래스 테그 설정 */
-				m_tUI_Desc.strCloneTag = "Prototype_GameObject_UI_";
-				m_tUI_Desc.strCloneTag += m_vecClass[m_iSelectedClassIndex].c_str();
-				m_tUI_Desc.bParent = false;
+				m_tChild_Desc.strCloneTag = "Prototype_GameObject_UI_";
+				m_tChild_Desc.strCloneTag += m_vecClass[m_iSelected_ChildClassIndex].c_str();
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -569,19 +853,45 @@ void CWindow_UITool::Class_List()
 	}
 }
 
-void CWindow_UITool::Object_List()
+void CWindow_UITool::Child_Object(_float fTimeDelta)
 {
-	_int		ObjectTagSize = (_int)m_vecObjectName.size();
 
-	if (ImGui::BeginListBox("Object"))
+#pragma region Create/Delete
+	if (ImGui::Button("Create_Child"))
+	{
+		Create_Child(m_tChild_Desc);
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Delete_Child"))
+	{
+		Delete_Child(fTimeDelta);
+	}
+#pragma endregion End
+
+	/* 삭제후 인덱스 갱신 */
+	_int		ObjectTagSize = (_int)m_vecChildObject.size();
+	if (ImGui::BeginListBox("Child Object"))
 	{
 		for (_int i = 0; i < ObjectTagSize; i++)
 		{
-			const bool is_selected = (m_iSelectedObjectIndex == i);
-			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecObjectName[i]->strFileName)), is_selected))
+			const bool is_selected = (m_iSelected_ChildObjectIndex == i);
+			if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(dynamic_cast<CUI*>(m_vecChildObject[i])->Get_ObjectNameTag())), is_selected))
 			{
-				m_iSelectedObjectIndex = i;
-				m_CurrObject = dynamic_cast<CUI*>(m_vecUIObject[m_iSelectedObjectIndex]);
+				m_iSelected_ChildObjectIndex = i;
+				m_pCurrChild = dynamic_cast<CUI*>(m_vecChildObject[m_iSelected_ChildObjectIndex]);
+				if (m_pCurrChild->Get_Kind() == CUI::TEXT)
+				{
+					m_pCurrSelectUI = dynamic_cast<CUI_Text*>(m_pCurrChild);
+					m_eUIType = TEXT;
+				}
+				else
+				{
+					m_pCurrSelectUI = m_pCurrChild;
+					m_eUIType = CHILD;
+				}
+				
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -589,7 +899,7 @@ void CWindow_UITool::Object_List()
 		}
 		ImGui::EndListBox();
 	}
-
+	ImGui::Spacing();
 }
 
 void CWindow_UITool::UI_ToolTip(_float fTimeDelta)
@@ -885,7 +1195,7 @@ void CWindow_UITool::LoadImgPath(const _tchar* folderPath)
 					pPathInfo->strFileName = RemoveExtension(WStringToString(findData.cFileName));
 					pPathInfo->strFilePath = WStringToString(filePath);
 					pPathInfo->iPathNum = m_iTextureNum;
-					m_vecPaths.push_back(pPathInfo);
+					m_vecInitialPaths.push_back(pPathInfo);
 
 					pPathInfo = nullptr;
 					delete[] pPathInfo;
@@ -906,272 +1216,606 @@ void CWindow_UITool::ImagePreview(_float fTimeDelta)
 
 void CWindow_UITool::IndexCheck()
 {
-	if (m_iSelectedObjectIndex <= 0)
-		m_iSelectedObjectIndex = 0;
+	if (m_iSelected_ChildObjectIndex <= 0)
+		m_iSelected_ChildObjectIndex = 0;
 
 	if (m_iSelectedPathIndex <= 0)
 		m_iSelectedPathIndex = 0;
 }
 
-/* 공통 로딩시간을 줄이기 위해 따로 빼서 실행시키자. */
-void CWindow_UITool::SetUp_Initialize()
+#pragma region Parent
+void CWindow_UITool::Add_Create_Parts(CUI::UI_DESC tUIDesc)
 {
-	if (ImGui::IsKeyDown(ImGuiKey_F1))
+	if (m_vecParentObject.empty())
+		return;
+
+		dynamic_cast<CUI*>(m_vecParentObject[m_iSelected_ParentObjectIndex])->Add_Create_Parts(&tUIDesc);
+}
+
+void CWindow_UITool::Add_Parts(CUI* pUI)
+{
+	if (m_vecParentObject.empty())
+		return;
+
+	CUI* pParent = dynamic_cast<CUI*>(m_vecParentObject[m_iSelected_ParentObjectIndex]);
+	CUI* pChild = dynamic_cast<CUI*>(m_vecChildObject[m_iSelected_ChildObjectIndex]);
+
+	if (pParent == nullptr ||
+		pChild == nullptr)
+		return;
+
+	CTransform* pParentTransform = pParent->Get_Transform();
+	pChild->Set_ParentTransform(pParentTransform);
+
+	pParent->Add_Parts(pChild);
+	//m_vecParentGroup.push_back(pChild);
+	//if (!m_vecChildObjectName.empty())
+	//	m_vecChildObjectName.erase(m_vecChildObjectName.begin() + m_iSelected_ChildObjectIndex); // 오브젝트 목록 이름 삭제
+	if (!m_vecChildObject.empty())
+		m_vecChildObject.erase(m_vecChildObject.begin() + m_iSelected_ChildObjectIndex); // 오브젝트 삭제
+
+	if (m_iSelected_ChildObjectIndex > 0 &&
+		m_iSelected_ChildObjectIndex <= m_vecChildObject.size())
+		--m_iSelected_ChildObjectIndex;
+}
+
+void CWindow_UITool::Delete_Group()
+{
+	if (m_vecParentGroup == nullptr)
+		return;
+
+	if (m_vecParentGroup->empty())
+		return;
+
+	//m_vecChildObjectName.push_back(tChild_Desc); // 이름 중복 검사 후 처리된 테그값으로 넣어주자.
+	if((*m_vecParentGroup)[m_iSelected_GroupObjectIndex] != nullptr)
+		m_vecChildObject.push_back((*m_vecParentGroup)[m_iSelected_GroupObjectIndex]); //
+
+
+	if (!(*m_vecParentGroup).empty())
 	{
-		bSetUpComplete = false;
+		(*m_vecParentGroup).erase((*m_vecParentGroup).begin() + m_iSelected_GroupObjectIndex); // 오브젝트 그룹에서 제외
+
+		if (m_iSelected_GroupObjectIndex > 0 &&
+			m_iSelected_GroupObjectIndex <= m_vecParentGroup->size())
+		{
+			--m_iSelected_GroupObjectIndex;
+		}
 	}
 
-	if (!bSetUpComplete)
-	{
-		
-		/* 저장해둔 이미지 경로들을 불러온다. */
-		Load_Paths();
-
-		// 이미지 로드
-		_int iSize = (_int)m_vecPaths.size();
-
-		for (_int i = 0; i < iSize; i++)
-		{
-			IMAGEINFO* tTexture = new IMAGEINFO;
-
-			_bool bRet = LoadTextureFromFile(ConverWStringtoC(ConvertToWideString(m_vecPaths[i]->strFilePath)), &tTexture->SRV_Texture, &tTexture->iImage_Width, &tTexture->iImage_Height);
-			IM_ASSERT(bRet);
-
-			/* Texture 크기를 임의로 조절하고 싶다면, 여기서 강제로 덮어씌우자. 값을 안주면 원래 텍스처 크기대로 나온다. 추 후 원본 크기를 이용해 비율만 줄여서 출력해도 좋을 것 같다. */
-			//tTexture->iImage_Width = 100;
-			//tTexture->iImage_Height = 100;
-			tTexture->iTextureNum = i;
-			m_vecTexture.push_back(tTexture);
-
-			tTexture = nullptr;
-			delete[] tTexture;
-		}
-
-		_int iPathSize = (_int)m_vecPaths.size();
-
-		//for (auto& iter : m_vecPaths)
-		for (_int i = 0; i < iPathSize; i++)
-		{
-			string strFileNameWithoutExtension = GetFileName(m_vecPaths[i]->strFilePath);
-			string strFileName = RemoveExtension(strFileNameWithoutExtension);
-
-			PATHINFO* pPathInfo = new PATHINFO;
-
-			pPathInfo->strFileName = strFileName;
-			pPathInfo->strFilePath = m_vecPaths[i]->strFilePath;
-
-			/* 경로 잘라서 넣기 */
-			m_vecImagePaths.push_back(pPathInfo);
-
-			pPathInfo = nullptr;
-			delete[] pPathInfo;
-		}
-
-#pragma region 경로저장
-		//char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Texture_Info/Texture_Info";
-
-		//json Out_Json;
-		//_ushort iIndex = 0;
-
-		//for (PATHINFO* iter : m_vecPaths)
-		//{
-		//	json object;
-		//	object["PathNum"] = iter->iPathNum;
-		//	object["FileName"] = iter->strFileName;
-		//	object["FilePath"] = iter->strFilePath;
-		//	Out_Json.emplace(to_string(iIndex++), object);
-		//}
-
-		//CJson_Utility::Save_Json(filePath, Out_Json);
-
-		//CJson_Utility::Load_Json(filePath, Out_Json);
-#pragma endregion 
+	if (m_pCurrSelectUI)
+		m_pCurrSelectUI = nullptr; // 현재 선택돼있는 녀석이 죽었으니 주소 비워주자.
 
 
-#pragma region Start Setting
-	// 시작하자마자 아무것도 안눌렀을 때 기본 테그 값 주고 시작하기.
-		m_tUI_Desc.strProtoTag = m_vecImagePaths[m_iSelectedPathIndex]->strFileName;
-		m_tUI_Desc.strFilePath = m_vecImagePaths[m_iSelectedPathIndex]->strFilePath;
-		m_tUI_Desc.fPositionX = g_iWinSizeX / 2;
-		m_tUI_Desc.fPositionY = g_iWinSizeY / 2;
-		m_tUI_Desc.fScaleX = 100;
-		m_tUI_Desc.fScaleY = 100;
-#pragma endregion End
-
-		bSetUpComplete = true;
-	}	
+	//(*m_vecParentGroup)[m_iSelected_GroupObjectIndex]->Set_Dead(true);
 }
+#pragma endregion
 
-void CWindow_UITool::UI2D_Setting(_float fTimeDelta)
-{
-	ImGui::CollapsingHeader("2D_Setting");
-
-	/* Mod */
-	ImGui::SeparatorText(u8"변경 모드 설정");
-	ImGui::RadioButton("Scale", &m_iChangeType, 1);
-	ImGui::RadioButton("Rotation", &m_iChangeType, 2);
-	ImGui::RadioButton("Position", &m_iChangeType, 3);
-
-	/* Scale */
-	ImGui::SeparatorText(u8"크기 변경");
-	ImGui::InputFloat("ScaleX", &m_tUI_Desc.fScaleX);
-	ImGui::InputFloat("ScaleY", &m_tUI_Desc.fScaleY);
-
-	/* Position*/
-	ImGui::SeparatorText(u8"위치 변경");
-	ImGui::InputFloat("PositionX", &m_tUI_Desc.fPositionX);
-	ImGui::InputFloat("PositionY", &m_tUI_Desc.fPositionY);
-
-	ImGui::Separator();
-	ImGui::InputTextWithHint(u8"입력 ", u8"텍스트를 입력하세요.", cInputText, IM_ARRAYSIZE(cInputText));
-	ImGui::Text(cInputText);
-
-	ImGui::Dummy(ImVec2(0, 5)); // 공백
-
-	UI_Set();
-
-	ImGui::Separator();
-
-	ImGui::Dummy(ImVec2(0, 5)); // 공백
-
-
-}
-
-HRESULT CWindow_UITool::UI2D_Create(_float fTimeDelta)
+HRESULT CWindow_UITool::Create_Child(CUI::UI_DESC pUIDesc)
 {
 	CGameObject* pGameObject = nullptr;
 	CUI* pUI = nullptr;
 	wstring strCloneProto = TEXT("");
-	m_pGameInstance->String_To_WString(m_tUI_Desc.strCloneTag, strCloneProto);
+	m_pGameInstance->String_To_WString(m_tChild_Desc.strCloneTag, strCloneProto);
 
-	if (m_tUI_Desc.bParent == true)
-	{
-		pGameObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &m_tUI_Desc);
-		pUI = dynamic_cast<CUI*>(pGameObject);
-		Add_ParentList(m_tUI_Desc);
-		m_vecUIParentObject.push_back(pUI);
-	}
-	else
-	{
-		if (m_pCurrParent == nullptr)
-			return E_FAIL;
+	Add_ChildList(pUIDesc); // 먼저 중복검사 후 이름 지정해주기
+	pUIDesc.iObjectNum = m_tChild_Desc.iObjectNum;
+	pUIDesc.iShaderNum = m_tChild_Desc.iShaderNum;
+	pUIDesc.strObjectName = m_tChild_Desc.strObjectName;
+	pUIDesc.strCloneTag = m_tChild_Desc.strCloneTag;
+	pUIDesc.strFilePath = m_tChild_Desc.strFilePath;
+	pUIDesc.strLayerTag = m_strLayer[m_iCurrLayerNum];
+	pUIDesc.strProtoTag = m_tChild_Desc.strProtoTag;
+	pUIDesc.strMapTextureTag = m_tChild_Desc.strMapTextureTag;
+	pUIDesc.bParent = false;
+	pUIDesc.bWorld = m_tChild_Desc.bWorld;
+	CUI* pCurrObject = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iCurrLayerNum]), strCloneProto, &pUIDesc));
+	m_vecChildObject.push_back(pCurrObject);
+	m_pCurrChild = pCurrObject;
 
-		m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iLayerNum]), strCloneProto, &m_tUI_Desc);
-		m_pCurrParent->Create_UIParts(m_tUI_Desc);
-		Add_ObjectList(m_tUI_Desc);
-	}
+	if(m_pCurrChild->Get_Kind() == CUI::TEXT)
+		m_tTextInfo = dynamic_cast<CUI_Text*>(m_pCurrChild)->Get_TextInfo();
 
 	return S_OK;
 }
 
-void CWindow_UITool::UI2D_Delete(_float fTimeDelta)
+void CWindow_UITool::Delete_Child(_float fTimeDelta)
 {
-	if (m_vecUIObject.empty())
+	if (m_vecChildObject.empty())
 		return;
 
 	// 오브젝트 삭제
-	m_vecUIObject[m_iSelectedObjectIndex]->Set_Dead(true); // Set_Dead로 이녀석을 없애줘야 Layer에 담겨있는 Object가 죽는다.
+	m_vecChildObject[m_iSelected_ChildObjectIndex]->Set_Dead(true); // Set_Dead로 이녀석을 없애줘야 Layer에 담겨있는 Object가 죽는다.
 
 	/* Set_Dead를 요청하면 매니저에게 알아서 해당 객체를 지워달라고 한거니까 그 객체에 대한 삭제처리는 내가 따로 또 하면 안된다. (근데 왜 됐지?) */
-	//Safe_Release(m_vecUIObject[m_iSelectedObjectIndex]);
-	m_vecUIObject.erase(m_vecUIObject.begin() + m_iSelectedObjectIndex);
+	//Safe_Release(m_vecChildObject[m_iSelected_ChildObjectIndex]);
+	m_vecChildObject.erase(m_vecChildObject.begin() + m_iSelected_ChildObjectIndex);
 
-	if(!m_vecObjectName.empty())
-		m_vecObjectName.erase(m_vecObjectName.begin() + m_iSelectedObjectIndex); // 오브젝트 목록 이름 삭제
+	/* 부모의 컨테이너에 담겨있는 녀석중 Dead가 true인 녀석은 지워준다. */
+	//if (!m_vecParentObject.empty())
+	//	dynamic_cast<CUI*>(m_vecParentObject[m_iSelected_ChildObjectIndex])->Parts_Delete();
 
-	if(m_CurrObject)
-		m_CurrObject = nullptr; // 현재 선택돼있는 녀석이 죽었으니 주소 비워주자.
+	//if(!m_vecChildObjectName.empty())
+	//	m_vecChildObjectName.erase(m_vecChildObjectName.begin() + m_iSelected_ChildObjectIndex); // 오브젝트 목록 이름 삭제
 
-	m_iSelectedObjectIndex = m_iSelectedObjectIndex - 1; // 현재 선택한 인덱스번째의 오브젝트를 삭제했으니, 선택된 인덱스도 뒤로 한칸 돌려주자.
+	if(m_pCurrChild)
+		m_pCurrChild = nullptr; // 현재 선택돼있는 녀석이 죽었으니 주소 비워주자.
+
+	if (m_pCurrSelectUI)
+		m_pCurrSelectUI = nullptr; // 현재 선택돼있는 녀석이 죽었으니 주소 비워주자.
+
+	m_iSelected_ChildObjectIndex = m_iSelected_ChildObjectIndex - 1; // 현재 선택한 인덱스번째의 오브젝트를 삭제했으니, 선택된 인덱스도 뒤로 한칸 돌려주자.
 }
 
-//										현재 선택한 녀석의 전체 경로를 받아온다.
-void CWindow_UITool::AddIndexNumber(PATHINFO& UI_Info)
+void CWindow_UITool::Add_ParentIndexNumber(PATHINFO& UI_Info)
 {
 	int		index = 0;
 	_bool	isPath = false;
-	//size_t underscorePos = str.find_last_of('_');
-	//auto it = std::find(m_vecObjectName.begin(), m_vecObjectName.end(), UI_Info.strFilePath); // 경로를 비교한다.
-	if (m_vecObjectName.empty())
-		return;
 
-	for (auto& iter : m_vecObjectName)
+	if (!m_vecParentObjectName.empty())
 	{
-		if (iter->strFilePath == UI_Info.strFilePath)
+		for (auto& iter : m_vecParentObjectName)
 		{
-			isPath = true;
-			break;
-		}
-	}
-
-	// 문자열이 이미 존재하는 경우
-	if (isPath)
-	{
-		for (auto& strFilePath : m_vecObjectName)
-		{
-			if (strFilePath->strFilePath == UI_Info.strFilePath)
+			if (iter->strFilePath == UI_Info.strFilePath)
 			{
-				/* 모두 순회하고 */
-				if (strFilePath->iPathNum >= UI_Info.iPathNum) // 기존 컨테이너에 있는 마지막으로 비교한 녀석의 숫자보다 작거나 같을 경우
-				{
-					index = strFilePath->iPathNum + 1; // 마지막 녀석의 번호 + 1로 저장
-				}
-
+				isPath = true;
+				break;
 			}
 		}
-		
-		//std::cout << "Name: " << str << ", Index: " << index << std::endl;
+
+		// 문자열이 이미 존재하는 경우
+		if (isPath)
+		{
+			for (auto& strFilePath : m_vecParentObjectName)
+			{
+				if (strFilePath->strFilePath == UI_Info.strFilePath)
+				{
+					/* 모두 순회하고 */
+					if (strFilePath->iPathNum >= UI_Info.iPathNum) // 기존 컨테이너에 있는 마지막으로 비교한 녀석의 숫자보다 작거나 같을 경우
+					{
+						index = strFilePath->iPathNum + 1; // 마지막 녀석의 번호 + 1로 저장
+					}
+
+				}
+			}
+		}
+	}
+	else
+	{
+		// 새로운 문자열인 경우
+		index = 0;
+	}
+
+
+	/* 테그 */
+	UI_Info.strFileName = m_vecParent[m_iSelected_ParentClassIndex].c_str() + to_string(index);
+	UI_Info.strObjectName = m_vecParent[m_iSelected_ParentClassIndex].c_str() + to_string(index);
+	m_tParent_Desc.strObjectName = UI_Info.strObjectName;
+	UI_Info.iPathNum = index;
+}
+
+//										현재 선택한 녀석의 전체 경로를 받아온다.
+void CWindow_UITool::Add_ChildIndexNumber(PATHINFO& UI_Info)
+{
+	int		index = 0;
+	_bool	isPath = false;
+
+	if (!m_vecChildObject.empty())
+	{
+		for (auto& iter : m_vecChildObject)
+		{
+			if (dynamic_cast<CUI*>(iter)->Get_FilePathTag() == UI_Info.strFilePath)
+			{
+				isPath = true;
+				break;
+			}
+		}
+		// 문자열이 이미 존재하는 경우
+		if (isPath)
+		{
+			for (auto& strFilePath : m_vecChildObject)
+			{
+				if (dynamic_cast<CUI*>(strFilePath)->Get_FilePathTag() == UI_Info.strFilePath)
+				{
+					/* 모두 순회하고 */
+					if (dynamic_cast<CUI*>(strFilePath)->Get_ObjectNum() >= UI_Info.iPathNum) // 기존 컨테이너에 있는 마지막으로 비교한 녀석의 숫자보다 작거나 같을 경우
+					{
+						index = dynamic_cast<CUI*>(strFilePath)->Get_ObjectNum() + 1; // 마지막 녀석의 번호 + 1로 저장
+					}
+
+				}
+			}
+		}
 	}
 	else 
 	{
 		// 새로운 문자열인 경우
 		index = 0;
-		//std::cout << "Name: " << str << ", Index: " << m_vecObjectName.size() - 1 << std::endl;
+		m_tChild_Desc.iObjectNum = 0;
 	}
 
-	/* 테그 */
-	UI_Info.strFileName = UI_Info.strFileName + to_string(index);
-	UI_Info.iPathNum = index;
+	{
+		m_tChild_Desc.iObjectNum = index;
+		UI_Info.strFileName = m_vecClass[m_iSelected_ChildClassIndex] + to_string(index);
+		UI_Info.strObjectName = m_vecClass[m_iSelected_ChildClassIndex] + to_string(index);
+		m_tChild_Desc.strObjectName = UI_Info.strObjectName;
+		UI_Info.iPathNum = index;
+	}
 }
 
 void CWindow_UITool::Add_ParentList(CUI::UI_DESC tIn_UI_Desc)
 {
-	// error : 아래 Get_CloneGameObjects로 오브젝트를 가져올때 기존 오브젝트까지 모두 다시들고 오기 때문에, 함수를 따로 만들거나 클리어하고 담아주자
-	if (!m_vecUIObject.empty())
-		m_vecUIObject.clear();
-
 	PATHINFO* tUI_Desc = new PATHINFO;
 
 	// 문자열 중복 비교
-	tUI_Desc->strFileName = tIn_UI_Desc.strProtoTag;
+	tUI_Desc->strFileName = m_vecParent[m_iSelected_ParentClassIndex];
 	tUI_Desc->strFilePath = tIn_UI_Desc.strFilePath;
-	AddIndexNumber(*tUI_Desc); // 오브젝트 테그 결정
+	Add_ParentIndexNumber(*tUI_Desc); // 오브젝트 테그 결정
 
 	m_vecParentObjectName.push_back(tUI_Desc); // 이름 중복 검사 후 처리된 테그값으로 넣어주자.
-	m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecUIParentObject);
 
 	tUI_Desc = nullptr;
 	delete[] tUI_Desc;
 }
 
-void CWindow_UITool::Add_ObjectList(CUI::UI_DESC tIn_UI_Desc)
+void CWindow_UITool::Add_ChildList(CUI::UI_DESC tIn_UI_Desc)
 {
 	// error : 아래 Get_CloneGameObjects로 오브젝트를 가져올때 기존 오브젝트까지 모두 다시들고 오기 때문에, 함수를 따로 만들거나 클리어하고 담아주자
-	if (!m_vecUIObject.empty())
-		m_vecUIObject.clear();
+	//if (!m_vecChildObject.empty())
+	//	m_vecChildObject.clear();
 
-	PATHINFO* tUI_Desc = new PATHINFO;
+	PATHINFO* tChild_Desc = new PATHINFO;
 
 	// 문자열 중복 비교
-	tUI_Desc->strFileName = tIn_UI_Desc.strProtoTag;
-	tUI_Desc->strFilePath = tIn_UI_Desc.strFilePath;
-	AddIndexNumber(*tUI_Desc); // 오브젝트 테그 결정
+	tChild_Desc->strFileName = m_vecClass[m_iSelected_ChildClassIndex];
+	tChild_Desc->strFilePath = tIn_UI_Desc.strFilePath;
+	Add_ChildIndexNumber(*tChild_Desc); // 오브젝트 테그 결정
 
-	m_vecObjectName.push_back(tUI_Desc); // 이름 중복 검사 후 처리된 테그값으로 넣어주자.
-	m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecUIObject);
+	//m_vecChildObjectName.push_back(tChild_Desc); // 이름 중복 검사 후 처리된 테그값으로 넣어주자.
+	//m_pGameInstance->Get_CloneGameObjects(LEVEL_STATIC, &m_vecChildObject);
 
-	tUI_Desc = nullptr;
-	delete[] tUI_Desc;
+	tChild_Desc = nullptr;
+	delete[] tChild_Desc;
+}
+
+void CWindow_UITool::Text_List()
+{
+	/* bug : Label 이름 중복되면 다 묶여버리니까 확인해주기 */
+
+	if (ImGui::InputTextWithHint(u8"키값", u8"키값을 입력하세요.", ConverWStringtoC(ConvertToWideString(m_tTextInfo.strTextKey)), IM_ARRAYSIZE(ConverWStringtoC(ConvertToWideString(m_tTextInfo.strTextKey)))))
+		m_tTextInfo.strTextKey = m_tTextInfo.strTextKey;
+
+	//ImGui::Text(m_tTextInfo.strTextKey);
+
+	if (ImGui::InputTextWithHint(u8"폰트", u8"폰트를 입력하세요.", ConverWStringtoC(ConvertToWideString(m_tTextInfo.strFontTag)), IM_ARRAYSIZE(ConverWStringtoC(ConvertToWideString(m_tTextInfo.strFontTag)))))
+		m_tTextInfo.strFontTag = m_tTextInfo.strFontTag;
+	//ImGui::Text(m_cTextFont);
+
+	if(ImGui::InputTextWithHint(u8"텍스트", u8"텍스트를 입력하세요.", ConverWStringtoC(ConvertToWideString(m_tTextInfo.strText)), IM_ARRAYSIZE(ConverWStringtoC(ConvertToWideString(m_tTextInfo.strText)))))
+		m_tTextInfo.strText = m_tTextInfo.strText;
+	//ImGui::Text(m_cText);
+
+	if (ImGui::Checkbox("Free Move", &m_bFreeMove))
+	{
+		dynamic_cast<CUI_Text*>(m_pCurrSelectUI)->Set_FreeMove(m_bFreeMove);
+	}
+
+	if (ImGui::DragFloat("Text PositionX", &m_tTextInfo.fPosX))
+	{
+		m_tTextInfo.fPosX = m_tTextInfo.fPosX;
+	}
+
+	if (ImGui::DragFloat("Text PositionY", &m_tTextInfo.fPosY))
+	{
+		m_tTextInfo.fPosY = m_tTextInfo.fPosY;
+	}
+	if (ImGui::DragFloat("Text Scale", &m_tTextInfo.fScale))
+	{
+		m_tTextInfo.fScale = m_tTextInfo.fScale;
+	}
+	if (ImGui::DragFloat("Text OriginX", &m_tTextInfo.vOrigin.x))
+		m_tTextInfo.vOrigin.x = m_tTextInfo.vOrigin.x;
+	if (ImGui::DragFloat("Text OriginY", &m_tTextInfo.vOrigin.y))
+		m_tTextInfo.vOrigin.y = m_tTextInfo.vOrigin.y;
+	if (ImGui::DragFloat("Text Rotation", &m_tTextInfo.fRotation))
+		m_tTextInfo.fRotation = m_tTextInfo.fRotation;
+
+	if (ImGui::DragFloat("Text ColorR", &m_tTextInfo.vColor.m128_f32[0]))
+		m_tTextInfo.vColor.m128_f32[0] = m_tTextInfo.vColor.m128_f32[0];
+	if (ImGui::DragFloat("Text ColorG", &m_tTextInfo.vColor.m128_f32[1]))
+		m_tTextInfo.vColor.m128_f32[1] = m_tTextInfo.vColor.m128_f32[1];
+	if (ImGui::DragFloat("Text ColorB", &m_tTextInfo.vColor.m128_f32[2]))
+		m_tTextInfo.vColor.m128_f32[2] = m_tTextInfo.vColor.m128_f32[2];
+	if (ImGui::DragFloat("Text ColorA", &m_tTextInfo.vColor.m128_f32[3]))
+		m_tTextInfo.vColor.m128_f32[3] = m_tTextInfo.vColor.m128_f32[3];
+
+	/* 갱신 */
+	Change_Text(m_tTextInfo.strTextKey, m_tTextInfo.strFontTag, m_tTextInfo.strText, m_tTextInfo.fPosX, m_tTextInfo.fPosY, m_tTextInfo.vColor, m_tTextInfo.fScale, m_tTextInfo.vOrigin, m_tTextInfo.fRotation);
+
+	if (ImGui::Button("Text Add"))
+	{
+		Text_Add();
+	}
+
+	ImGui::Spacing();
+
+	if (!m_vecTextList.empty())
+	{
+		/* 삭제후 인덱스 갱신 */
+		_int		iTextListSize = (_int)m_vecTextList.size();
+
+		if (ImGui::BeginListBox("Text List"))
+		{
+			for (_int i = 0; i < iTextListSize; i++)
+			{
+				const bool is_selected = (m_iSelected_TextListIndex == i);
+				if (ImGui::Selectable(ConverWStringtoC(ConvertToWideString(m_vecTextList[i].c_str())), is_selected))
+				{
+					m_iSelected_TextListIndex = i;
+				}
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndListBox();
+		}
+		ImGui::Spacing();
+	}
+
+	if (ImGui::InputTextWithHint(u8"텍스트 테그 : ", u8"변경하고싶은 텍스트 테그 값을 입력하세요.", m_cChangeTextTag, IM_ARRAYSIZE(m_cChangeTextTag)))
+		ImGui::Text(m_cChangeTextTag);
+
+	if (ImGui::Button("Find Change"))
+	{
+		Find_Change(m_cChangeTextTag);
+	}
+}
+
+void CWindow_UITool::Text_Add()
+{
+	if (m_pCurrSelectUI == nullptr)
+		return;
+
+	dynamic_cast<CUI_Text*>(m_pCurrSelectUI)->Add_Text(m_tTextInfo.strTextKey, m_tTextInfo.strFontTag, m_tTextInfo.strText,
+														m_tTextInfo.fPosX, m_tTextInfo.fPosY, m_tTextInfo.vColor,
+														m_tTextInfo.fScale, m_tTextInfo.vOrigin, m_tTextInfo.fRotation);
+	m_vecTextList.push_back(m_tTextInfo.strTextKey); // 테그 목록
+}
+
+void CWindow_UITool::Find_Change(string strTextTag)
+{
+	if (m_pCurrSelectUI == nullptr)
+		return;
+
+	dynamic_cast<CUI_Text*>(m_pCurrSelectUI)->Find_Change(strTextTag);
+	m_tTextInfo = *dynamic_cast<CUI_Text*>(m_pCurrSelectUI)->Find_Text(strTextTag);
+
+	*m_cTextFont = *ConverWStringtoC(ConvertToWideString(m_tTextInfo.strFontTag));
+	*m_cText = *ConverWStringtoC(ConvertToWideString(m_tTextInfo.strText));
+	*m_cTextKey = *ConverWStringtoC(ConvertToWideString(m_tTextInfo.strTextKey));
+
+	m_fPosX = m_tTextInfo.fPosX;
+	m_fPosY = m_tTextInfo.fPosY;
+	m_fScale = m_tTextInfo.fScale;
+	m_vOrigin.x = m_tTextInfo.vOrigin.x;
+	m_vOrigin.y = m_tTextInfo.vOrigin.y;
+	m_fRotation = m_tTextInfo.fRotation;
+
+	m_vColor.m128_f32[0] = m_tTextInfo.vColor.m128_f32[0];
+	m_vColor.m128_f32[1] = m_tTextInfo.vColor.m128_f32[1];
+	m_vColor.m128_f32[2] = m_tTextInfo.vColor.m128_f32[2];
+	m_vColor.m128_f32[3] = m_tTextInfo.vColor.m128_f32[3];
+}
+
+void CWindow_UITool::Add_TextList(CUI::UI_DESC tUIDesc)
+{
+
+	// 문자열 중복 비교
+	int		index = 0;
+	_bool	isPath = false;
+
+	if (!m_vecChildObject.empty())
+	{
+		for (auto& iter : m_vecChildObject)
+		{
+			if (dynamic_cast<CUI*>(iter)->Get_FilePathTag() == tUIDesc.strFilePath)
+			{
+				isPath = true;
+				break;
+			}
+		}
+		// 문자열이 이미 존재하는 경우
+		if (isPath)
+		{
+			for (auto& strFilePath : m_vecChildObject)
+			{
+				if (dynamic_cast<CUI*>(strFilePath)->Get_FilePathTag() == tUIDesc.strFilePath)
+				{
+					index = dynamic_cast<CUI*>(strFilePath)->Get_ObjectNum() + 1; // 마지막 녀석의 번호 + 1로 저장
+				}
+			}
+		}
+	}
+	else
+	{
+		// 새로운 문자열인 경우
+		index = 0;
+		m_tChild_Desc.iObjectNum = 0;
+	}
+
+	{
+		tUIDesc.iObjectNum = index;
+		tUIDesc.strObjectName = m_vecClass[m_iSelected_ChildClassIndex] + to_string(index);
+	}
+
+}
+
+void CWindow_UITool::Change_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation)
+{
+	if (!m_pCurrSelectUI)
+		return;
+
+	if (m_eUIType == CWindow_UITool::TEXT)
+	{
+		dynamic_cast<CUI_Text*>(m_pCurrSelectUI)->Change_Text(strTextKey, strFontTag, strText, fPosX, fPosY, vColor, fScale, vOrigin, fRotation);
+	}
+}
+
+void CWindow_UITool::UI_Info()
+{
+	Menu_Info();
+	Curr_Info();
+}
+
+HRESULT CWindow_UITool::Menu_Info()
+{
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("Menu"))
+		{
+			if (ImGui::MenuItem("Save"))
+			{
+				m_strDialogPath = "../Bin/DataFiles/Data_UI/";
+				m_eDialogType = CImgui_Window::SAVE_DIALOG;
+				OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
+			}
+			if (ImGui::MenuItem("Load"))
+			{
+				m_strDialogPath = "../Bin/DataFiles/Data_UI/";
+				m_eDialogType = CImgui_Window::LOAD_DIALOG;
+				OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
+			}
+			if (ImGui::MenuItem("Target_Save"))
+			{
+				Create_TargetTexture();
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+	return S_OK;
+}
+
+void CWindow_UITool::Curr_Info()
+{
+	ImGui::Text("Mouse Pos : %d, %d", m_pt.x, m_pt.y);
+
+	CTransform* pTransformCom = nullptr;
+
+	switch (m_eUIType)
+	{
+	case Client::CWindow_UITool::CHILD:
+	{
+		if (m_pCurrSelectUI != nullptr)
+		{
+			if (!m_vecChildObject.empty())
+			{
+				pTransformCom = dynamic_cast<CUI*>(m_pCurrSelectUI)->Get_Transform();
+				ImGui::Text("Selected Child : ");
+				ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f }, dynamic_cast<CUI*>(m_vecChildObject[m_iSelected_ChildObjectIndex])->Get_ObjectNameTag().c_str());
+				ImGui::SameLine();
+				if (ImGui::Button("Parts_Add"))
+				{
+					Add_Parts(m_pCurrSelectUI); // 부모  <- 자식포함
+				}
+			}
+		}
+		break;
+	}
+	case Client::CWindow_UITool::PARENT:
+	{
+		if (m_pCurrSelectUI != nullptr)
+		{
+			if (!m_vecParentObjectName.empty())
+			{
+				pTransformCom = dynamic_cast<CUI*>(m_pCurrSelectUI)->Get_Transform();
+				ImGui::Text("Selected Parent : ");
+				ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f }, m_vecParentObjectName[m_iSelected_ParentObjectIndex]->strFileName.c_str());
+			}
+		}
+		break;
+	}
+	case Client::CWindow_UITool::GROUP:
+	{
+		if (m_pCurrSelectUI != nullptr)
+		{
+			if (m_vecParentGroup == nullptr)
+				break;
+
+			if (!m_vecParentGroup->empty())
+			{
+				pTransformCom = dynamic_cast<CUI*>(m_pCurrSelectUI)->Get_Transform();
+				ImGui::Text("Group Child : ");
+				if (m_iSelected_GroupObjectIndex < (*m_vecParentGroup).size() &&
+					m_iSelected_GroupObjectIndex >= 0)
+				{
+					if (m_iSelected_GroupObjectIndex >= (*m_vecParentGroup).size())
+						m_iSelected_GroupObjectIndex = (*m_vecParentGroup).size() - 1;
+					if (m_iSelected_GroupObjectIndex < 0)
+						m_iSelected_GroupObjectIndex = 0;
+
+					ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f }, ConverWStringtoC(ConvertToWideString((*m_vecParentGroup)[m_iSelected_GroupObjectIndex]->Get_ObjectNameTag())));
+
+				}
+				else
+				{
+					ImGui::Text("Not Selected");
+				}
+				ImGui::SameLine();
+			}
+		}
+		break;
+	}
+	case Client::CWindow_UITool::TEXT:
+	{
+		if (m_pCurrSelectUI != nullptr)
+		{
+			string strName = dynamic_cast<CUI_Text*>(m_pCurrSelectUI)->Get_ObjectNameTag();
+
+			ImGui::Text(ConverWStringtoC(ConvertToWideString(strName)));
+
+			Text_List();
+		}
+		else
+		{
+		ImGui::Text("Not Selected");
+		}
+		break;
+	}
+	case Client::CWindow_UITool::TYPE_END:
+	{
+		if (m_pCurrSelectUI == nullptr)
+			ImGui::Text("Not Selected");
+		break;
+	}
+	default:
+		break;
+	}
+
+	if (pTransformCom != nullptr)
+	{
+		_vector vPosition = pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_vector vRotation = pTransformCom->Get_Rotated();
+		_vector vScale = pTransformCom->Get_Scaled();
+
+		_vector vOrthoPos = m_pGameInstance->Convert_Orthogonal(vPosition);
+
+		ImGui::InputFloat("PositionX", &vPosition.m128_f32[0]);
+		ImGui::InputFloat("PositionY", &vPosition.m128_f32[1]);
+		ImGui::InputFloat("PositionZ", &vPosition.m128_f32[2]);
+
+		ImGui::InputFloat("RotationX", &vRotation.m128_f32[0]);
+		ImGui::InputFloat("RotationY", &vRotation.m128_f32[1]);
+		ImGui::InputFloat("RotationZ", &vRotation.m128_f32[2]);
+
+		ImGui::InputFloat("ScaleX", &vScale.m128_f32[0]);
+		ImGui::InputFloat("ScaleY", &vScale.m128_f32[1]);
+		ImGui::InputFloat("ScaleZ", &vScale.m128_f32[2]);
+	}
+
+	/* 미리보기 */
+	if(!m_vecTexture.empty())
+		ImGui::Image((void*)m_vecTexture[m_iSelectedPathIndex]->SRV_Texture, ImVec2((_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Width, (_float)m_vecTexture[m_iSelectedPathIndex]->iImage_Height));
 }
 
 void CWindow_UITool::Create_TargetTexture()
@@ -1180,78 +1824,584 @@ void CWindow_UITool::Create_TargetTexture()
 	m_pGameInstance->Create_RenderTarget(TEXT("Target_Diffuse_UI"));
 }
 
-/* ex : Save */
-void CWindow_UITool::Save_Desc()
+void CWindow_UITool::KeyframeList()
 {
 
 }
 
-/* ex : Load */
-HRESULT CWindow_UITool::Load_Desc()
+void CWindow_UITool::KeyframeChangeWindow()
 {
-	json json_in;
 
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+}
 
-	_int		iPathNum = 0;
-	string		strFileName;
-	string		strFilePath;
+void CWindow_UITool::KeyframeRender_ValueChange()
+{
+	ImDrawList* draw_list = ImGui::GetWindowDrawList(); // 그리기
 
+	if (timeline[m_eKeyType].empty())
+		return;
 
-	CJson_Utility::Load_Json(filePath, json_in);
-
-	for (auto& item : json_in.items())
+	// 키프레임 렌더링 및 편집
+	for (int i = 0; i < timeline[m_eKeyType].size(); ++i)
 	{
-		json object = item.value(); 
+		//CUI::UIKEYFRAME& keyframe = timeline[m_eKeyType][i];
 
-		CUI::UI_DESC tUI_Info;
+		// 타임 라인 상의 위치를 계산
+		float xPos = timelinePos.x + (timeline[m_eKeyType][i].fTime / 20.0f) * timelineSize.x;
+		float yPos = timelinePos.y + timelineSize.y - timelineSize.y * timeline[m_eKeyType][i].fValue;
 
-		//tUI_Info.fPositionX = object["PostionX"];
-		//tUI_Info.fPositionY = object["PostionY"];
-		//tUI_Info.fScaleX = object["SizeX"];
-		//tUI_Info.fScaleY = object["SizeY"];
+		// 키프레임 위치 값이 0(초기값)일 경우
+		if (timeline[m_eKeyType][i].vKeyFramePos.x <= 1 &&
+			timeline[m_eKeyType][i].vKeyFramePos.y <= 1)
+		{
+			// 현재 선택된 키프레임 위치를 넣어준다.
+			timeline[m_eKeyType][i].vKeyFramePos.x = xPos;
+			timeline[m_eKeyType][i].vKeyFramePos.y = yPos;
+		}
 
-		tUI_Info.strCloneTag = object["CloneTag"];
-		tUI_Info.strProtoTag = object["ProtoTag"];
-		tUI_Info.strFilePath = object["FilePath"];
+		// 현재 시간에 해당하는 키프레임 표시 (빨간색 원)
+		if (timeline[m_eKeyType][i].fTime >= currentTime - 0.1 &&
+			timeline[m_eKeyType][i].fTime <= currentTime + 0.1) {
+			draw_list->AddCircleFilled(
+				ImVec2(xPos, yPos),
+				5.0f,
+				IM_COL32(255, 0, 0, 255) // 빨간색으로 표시
+			);
+		}
+		else {
+			// 다른 시간의 키프레임 표시 (노란색 원)
+			draw_list->AddCircleFilled(
+				ImVec2(xPos, yPos),
+				5.0f,
+				IM_COL32(255, 255, 0, 255) // 노란색으로 표시
+			);
+		}
 
-		wstring wstrPrototag;
-		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+		// 마우스가 키프레임 위에 있는 경우에만 툴팁 표시 (마우스 오버)
+		if (ImGui::IsMouseHoveringRect(
+			ImVec2(xPos - 5.0f, yPos - 5.0f),
+			ImVec2(xPos + 5.0f, yPos + 5.0f)))
+		{
 
-		wstring wstrFilePath;
-		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+			// 키프레임 정보 표시
+			ImGui::SetCursorScreenPos(ImVec2(xPos + 10.0f, yPos - 20.0f));
+			ImGui::BeginTooltip();
+			ImGui::Text(u8"키프레임 %d", i);
+			ImGui::Separator();
+			ImGui::Text(u8"시간 : %.2f", timeline[m_eKeyType][i].fTime);
+			ImGui::Text(u8"값 : %.2f", timeline[m_eKeyType][i].fValue);
+			ImGui::Text(u8"크기 X, Y : (%.2f, %.2f, %.2f)", timeline[m_eKeyType][i].vScale.x, timeline[m_eKeyType][i].vScale.y);
+			ImGui::Text(u8"회전 Z :(%.2f)", timeline[m_eKeyType][i].fRot);
+			ImGui::Text(u8"이동 X, Y : (%.2f, %.2f, %.2f)", timeline[m_eKeyType][i].vPos.x, timeline[m_eKeyType][i].vPos.y);
 
-		wstring wstrLayer;
-		m_pGameInstance->String_To_WString(m_strLayer[m_iLayerNum], wstrLayer);
+			if (timeline[m_eKeyType][i].isEaseIn)
+				ImGui::Text(u8"이징 In: 켜짐");
+			else
+				ImGui::Text(u8"이징 In: 꺼짐");
+			if (timeline[m_eKeyType][i].isEaseOut)
+				ImGui::Text(u8"이징 Out: 켜짐");
+			else
+				ImGui::Text(u8"이징 Out: 꺼짐");
+			ImGui::EndTooltip();
+		}
 
-		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayer, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
-		
-		pUI_Object->Get_Transform()->Load_FromJson(object);
+		// 마우스 릴리즈 시 드래그 종료
+		if (ImGui::IsMouseReleased(0))
+		{
+			isDraggingTimeline = false;
+		}
 
-		Add_ObjectList(tUI_Info);
+		if (!isDraggingTimeline) // 드래그를 하지 않을 경우만 삭제 가능
+		{
+			// 오른쪽 마우스 클릭으로 키프레임 삭제
+			if (ImGui::IsMouseHoveringRect(
+				ImVec2(xPos - 5.0f, yPos - 5.0f),
+				ImVec2(xPos + 5.0f, yPos + 5.0f))
+				&& ImGui::IsMouseClicked(1))
+			{
+				timeline[m_eKeyType].erase(timeline[m_eKeyType].begin() + i);
+				break; // 삭제한 후에 루프를 빠져나갑니다.
+			}
+		}
+
 	}
-	return S_OK;
+}
+
+// 최소, 최대 값 및 크기, 회전, 이동 값을 기반으로 선형 보간된 키프레임을 자동으로 생성하는 함수
+void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
+	_float minTime, _float maxTime,
+	_float minValue, _float maxValue,
+	_float2 minScaleValue, _float2 maxScaleValue,
+	_float minRotationValue, _float maxRotationValue,
+	_float2 minTranslationValue, _float2 maxTranslationValue,
+	_float _minTexture, _float _maxTexture,
+	_int numKeyframes)
+{
+	if (numKeyframes < 2) {
+		// 최소 2개 이상의 키프레임이 필요합니다.
+		return;
+	}
+
+	// 키프레임 간의 시간 간격을 계산
+	float timeStep = 1.0f / static_cast<float>(numKeyframes - 1);
+
+	// 첫 번째와 마지막 키프레임을 수동으로 추가
+	CUI::UIKEYFRAME firstKeyframe;
+
+	// 최소 값 보간
+	firstKeyframe.fTime = minTime;
+	firstKeyframe.fValue = minValue;
+	firstKeyframe.vScale = minScaleValue; // Check CheckCheckCheckCheckCheckCheck
+	firstKeyframe.fRot = minRotationValue;
+	firstKeyframe.vPos = minTranslationValue;
+	firstKeyframe.iTexureframe = _minTexture;
+
+	timeline[m_eKeyType].push_back(firstKeyframe);
+
+	CUI::UIKEYFRAME lastKeyframe;
+
+	// 최대 값 보간
+	lastKeyframe.fTime = maxTime;
+	lastKeyframe.fValue = maxValue;
+	lastKeyframe.vScale = maxScaleValue;
+	lastKeyframe.fRot = maxRotationValue;
+	lastKeyframe.vPos = maxTranslationValue;
+	lastKeyframe.iTexureframe = _maxTexture;
+
+	timeline[m_eKeyType].push_back(lastKeyframe);
+
+
+	int num_decimal_places = 2; // 소수점 단위 설정
+
+	// 소수점 단위 표현
+	int multiplier = static_cast<int>(pow(10, num_decimal_places));
+
+
+	// 중간 키프레임 생성 및 보간
+	for (int i = 1; i < numKeyframes - 1; ++i)
+	{
+		float time = i * timeStep;
+		float t = time;  // 시간을 보간 계수로 사용
+
+		int itextureRange = _maxTexture - _minTexture + 1; // 텍스처 범위 계산
+		int iTextureNum = _minTexture + (i % itextureRange); // 현재 인덱스에 따라 텍스처 값 설정
+
+		// 매 키프레임마다 순차적으로 증가 및 감소한 값을 생성하여 추가
+		float step = (maxValue - minValue) / (numKeyframes - 1); // 증가/감소 단계
+
+
+		// 각각의 속성에 대해 보간값을 계산
+		_float2 scale = Lerp_float2(minScaleValue, maxScaleValue, t);
+
+		_float rotation = Lerp_float(minRotationValue, maxRotationValue, t);
+
+		_float2 translation = Lerp_float2(minTranslationValue, maxTranslationValue, t);
+
+		_float ftime = Lerp_float(minTime, maxTime, t);
+
+		_float value = Lerp_float(minValue, maxValue, t);
+		 
+		_int iTexture = (_int)Lerp_float(_minTexture, _maxTexture, t);
+
+		CUI::UIKEYFRAME keyframe;
+
+		// 값 보간
+		keyframe.fTime = ftime;
+
+		if (m_bRendomValue)
+		{
+			// 순차적으로 증가 및 감소한 소수점 값 생성
+			if (i < numKeyframes / 2)
+			{
+				keyframe.fValue = minValue + i * step; // 최소값에서 증가
+			}
+			else
+			{
+				keyframe.fValue = maxValue - (i - numKeyframes / 2) * step; // 최대값에서 감소
+			}
+		}
+		else
+		{
+			keyframe.fValue = value;
+		}
+
+
+		keyframe.vScale = scale;
+		keyframe.fRot = rotation;
+		keyframe.vPos = translation;
+
+		//if (m_bIndividualTexture)
+		//{
+		//	keyframe.texureframe = iTextureNum;
+		//}
+		//else
+		{
+			keyframe.iTexureframe = iTexture;
+		}
+
+		// 기존 timeline 벡터에 키프레임을 이어서 추가
+		timeline[m_eKeyType].emplace_back(keyframe);
+	}
+
+	// 시간에 따라 키프레임 정렬
+	std::sort(timeline[m_eKeyType].begin(), timeline[m_eKeyType].end(), [](const CUI::UIKEYFRAME& a, const CUI::UIKEYFRAME& b)
+		{
+			return a.fTime < b.fTime;
+		});
+}
+
+void CWindow_UITool::KeyframeAutomaticGeneration()
+{
+	//ImGui::Begin(u8"키프레임 자동 생성");
+
+	ImGui::Text(u8"키프레임 자동 생성 세팅");
+
+	// 입력값을 받는 UI 요소 생성
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::SeparatorText(u8"시간 설정");
+	ImGui::InputFloat2(u8"시작/끝 시간 입력", _v2Time);
+	ImGui::Separator();
+
+	//ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::SeparatorText(u8"벨류 설정");
+	ImGui::InputFloat2(u8"시작/끝 벨류 입력", _v2Value);
+	ImGui::Separator();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::SeparatorText(u8"크기 설정");
+	ImGui::InputFloat2(u8"시작 프레임 크기 입력", minScale);
+
+	//ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::InputFloat2(u8"끝 프레임 크기 입력", maxScale);
+	ImGui::Separator();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::SeparatorText(u8"회전 설정");
+	ImGui::InputFloat(u8"시작 프레임 회전 입력", &minRot);
+
+	//ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::InputFloat(u8"끝 프레임 회전 입력", &maxRot);
+	ImGui::Separator();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::SeparatorText(u8"이동 설정");
+	ImGui::InputFloat2(u8"시작 프레임 이동 입력", minPos);
+
+	//ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::InputFloat2(u8"끝 프레임 이동 입력", maxPos);
+	ImGui::Separator();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::SeparatorText(u8"텍스처 설정");
+	ImGui::InputFloat(u8"시작 프레임 텍스처 입력", &fMin_Texture);
+
+	//ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::InputFloat(u8"끝 프레임 텍스처 입력", &fMax_Texture);
+	ImGui::Separator();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::SeparatorText(u8"원하는 키프레임 수 설정");
+	ImGui::InputFloat(u8"키프레임 수 입력", &numKeyframes);
+	ImGui::Separator();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::SeparatorText(u8"개별 텍스처 설정");
+	ImGui::Checkbox(u8"개별 텍스처", &m_bIndividualTexture);
+	ImGui::Separator();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::SeparatorText(u8"랜덤 벨류 설정");
+	ImGui::Checkbox(u8"랜덤 벨류", &m_bRendomValue);
+	ImGui::Separator();
+	
+	if (ImGui::Button(u8"자동 생성")) {
+		// 버튼이 클릭되면 timeline 벡터를 비우고 CreateKeyframesWithLinearInterpolation 함수 호출
+		//timeline[m_eKeyType].clear();
+
+		/* float2로 변환해서 넘겨주기 */
+		_float2 fminScale = { minScale[0], minScale[1] };
+		_float2 fmaxScale = { maxScale[0], maxScale[1] };
+		_float2 fminPos = { minPos[0], minPos[1] };
+		_float2 fmaxPos = { maxPos[0], maxPos[1] };
+
+		CreateKeyframesWithLinearInterpolation(
+			_v2Time[0], _v2Time[1],
+			_v2Value[0], _v2Value[1],
+			fminScale, fmaxScale,
+			minRot, maxRot,
+			fminPos, fmaxPos,
+			fMin_Texture, fMax_Texture,
+			numKeyframes);
+	}
+
+	if (ImGui::Button("clear"))
+	{
+		// 버튼이 클릭되면 timeline 벡터를 비우고 CreateKeyframesWithLinearInterpolation 함수 호출
+		timeline[m_eKeyType].clear();
+	}
+}
+
+void CWindow_UITool::PlayAnimation(_float fTimeDelta)
+{
+	// 애니메이션 재생/일시 정지 버튼
+	if (m_isPlayAnim) 
+	{
+		if (ImGui::Button(u8"정지"))
+		{
+			m_isPlayAnim = false;
+		}
+	}
+	else 
+	{
+		if (ImGui::Button(u8"재생"))
+		{
+			m_isPlayAnim = true;
+		}
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button(u8"초기화"))
+	{
+		m_fPlayTime = 0.0f;
+		currentTime = 0.0f;
+	}
+
+	// 애니메이션 시간 설정
+	if (m_isPlayAnim)
+	{
+		m_fPlayTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
+		currentTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
+		if (m_fPlayTime > MaxTime) // 현재 시간이 최대 시간 값 보다 클 경우
+		{
+			m_fPlayTime = MaxTime; // 현재 시간을 최대 시간 값으로 고정
+			currentTime = MaxTime; // 현재 시간을 최대 시간 값으로 고정
+			m_isPlayAnim = false;  // 플레이 중지
+		}
+	}
+}
+
+void CWindow_UITool::AnimationTimeLineBar()
+{
+#pragma region 애니메이션 타임 라인
+	// 타임 라인 렌더링
+
+	//ImDrawList* draw_list = ImGui::GetWindowDrawList(); // 그리기
+	timelinePos = ImGui::GetCursorScreenPos();
+	ImDrawList* draw_list = ImGui::GetWindowDrawList(); // 그리기
+	// 애니메이션 타임 라인 위치 설정
+	timelinePos.x += 0.f;
+	timelinePos.y += 30.f;
+
+	// 애니메이션 타임 라인 그리기
+	draw_list->AddRectFilled(
+		timelinePos,
+		ImVec2(timelinePos.x + timelineSize.x, timelinePos.y + timelineSize.y),
+		IM_COL32(50, 50, 50, 255) // 타임라인 배경 색상
+	);
+
+	// 시간
+	ImGui::Text(u8"시간 : %.2f", currentTime);
+	ImGui::SameLine(80.f);
+
+	ImGui::PushItemWidth(150);
+	// 시간 그래프
+	for (int n = 0; n < 100; n++)
+		m_fFrame[n] = sinf(n * 0.2f + (_float)ImGui::GetTime() * m_fPlaybackSpeed);
+	ImGui::PlotLines(u8"시간 그래프", m_fFrame, 100);
+	ImGui::PopItemWidth();
+	ImGui::SameLine();
+
+	// 현재 시간을 최소와 최대 시간 비율로 변환
+	float minTime = 0.0f; // 최소 시간
+	//float maxTime = 100.0f; // 최대 시간
+
+	// 애니메이션 타임 라인 눈금 그리기 (1단위 표시 기준 : 최대 시간 값 만큼)
+	for (int i = 0; i <= MaxTime; ++i)
+	{
+		// 눈금 시간의 간격                                최대 시간값으로 나눠 간격 설정
+		float xPos = timelinePos.x + i * (timelineSize.x / MaxTime);
+
+		float relativeStartTimeXPos = timelinePos.x;    //애니메이션 타임 라인 그래프의 시작
+		float relativeEndTimeXPos = timelinePos.x + timelineSize.x; // 애니메이션 타임 라인 그래프의 끝
+
+		// 그래프 데이터 배열을 현재 시간에 맞게 업데이트
+		for (int n = 0; n < 100; n++) 
+		{
+			float time = n / 100.0f * MaxTime;
+			m_fFrame[n] = EvaluateAnimationAtTime(time);
+		}
+
+		// 현재 시간을 최대 시간 범위 내로 클램핑
+		currentTime = ImClamp(currentTime, 0.0f, MaxTime);
+
+		// 현재 시간을 최소와 최대 시간 비율로 변환
+		float relativeCurrentTime = (currentTime - minTime) / (MaxTime - minTime);
+
+		// 현재 시간 값으로 애니메이션 타임 라인에 맞는 위치값을 계산
+		float relativeCurrentTimeXPos = ImLerp(relativeStartTimeXPos, relativeEndTimeXPos, relativeCurrentTime);
+
+		// 빨간 선(현재 시간 위치) 그리기
+		draw_list->AddLine(
+			ImVec2(relativeCurrentTimeXPos, timelinePos.y), // 라인 시작점
+			ImVec2(relativeCurrentTimeXPos, timelinePos.y + timelineSize.y), // 라인 끝점
+			IM_COL32(255, 0, 0, 255) // 빨간 선으로 현재 시간 표시
+		);
+
+		// 눈금 아래에 숫자로 시간 표시
+		float timeLabel = i * fDisplayTime * (MaxTime / MaxTime); // 0.1 간격으로 0부터 MaxTime까지 표시
+		char timeLabelStr[16];
+		snprintf(timeLabelStr, sizeof(timeLabelStr), "%.1f", timeLabel);
+		ImVec2 textPos(xPos - 10, timelinePos.y + timelineSize.y + 5.f);
+		draw_list->AddText(textPos, IM_COL32(255, 255, 255, 255), timeLabelStr);
+	}
+
+	// graphPos : 애니메이션 타임 라인 그래프를 그리기 위해 계산된 위치를 나타냄
+	//  graphPos = ImVec2(왼쪽 위 모서리 화면상의 위치x, y, 타임라인의 크기)
+	ImVec2 graphPos = ImVec2(timelinePos.x, timelinePos.y + timelineSize.y + 10);
+
+
+#pragma endregion
+}
+
+_float CWindow_UITool::EvaluateAnimationAtTime(float time)
+{
+	if (timeline == nullptr) // error
+		return 0.0f;
+
+	if (timeline[m_eKeyType].empty()) 
+	{
+		// 만약 키프레임이 없다면 기본값 0.0을 반환하거나,
+		// 다른 처리를 수행.
+		return 0.0f;
+	}
+
+	// 키프레임을 시간에 따라 정렬.
+	std::sort(timeline[m_eKeyType].begin(), timeline[m_eKeyType].end(), [](const CUI::UIKEYFRAME& tFirst_UI, const CUI::UIKEYFRAME& tSecond_UI)
+		{
+			return tFirst_UI.fTime < tSecond_UI.fTime;
+		});
+
+	// 현재 시간과 가장 가까운 이전과 이후의 키프레임을 찾기
+	CUI::UIKEYFRAME* prevKeyframe = nullptr;
+	CUI::UIKEYFRAME* nextKeyframe = nullptr;
+
+	for (int i = 0; i < timeline[m_eKeyType].size(); ++i) 
+	{
+		if (timeline[m_eKeyType][i].fTime <= time) 
+		{
+			prevKeyframe = &timeline[m_eKeyType][i];
+		}
+		if (timeline[m_eKeyType][i].fTime >= time) 
+		{
+			nextKeyframe = &timeline[m_eKeyType][i];
+			break;
+		}
+	}
+
+	// 이전과 다음 키프레임을 찾지 못하면 첫 번째 키프레임을 사용.
+	if (!prevKeyframe) {
+		prevKeyframe = &timeline[m_eKeyType][0];
+	}
+
+	// 다음 키프레임을 찾지 못하면 마지막 키프레임을 사용.
+	if (!nextKeyframe) {
+		nextKeyframe = &timeline[m_eKeyType].back();
+	}
+
+	// 이전과 다음 키프레임 사이에서 시간을 보간하여 값을 계산.
+	float t = (time - prevKeyframe->fTime) / (nextKeyframe->fTime - prevKeyframe->fTime);
+	float value = Lerp_float(prevKeyframe->fValue, nextKeyframe->fValue, t);
+
+	// 이징(Easing)을 적용합니다.
+	if (t < 0.5f) {
+		if (prevKeyframe->isEaseIn) 
+		{
+			float easedT = t / 0.5f;
+			value = ImEaseInQuad(prevKeyframe->fValue, nextKeyframe->fValue, easedT);
+		}
+	}
+	else {
+		if (nextKeyframe->isEaseOut) 
+		{
+			float easedT = (t - 0.5f) / 0.5f;
+			value = ImEaseOutQuad(prevKeyframe->fValue, nextKeyframe->fValue, easedT);
+		}
+	}
+
+	return value;
+}
+
+_float2 CWindow_UITool::Lerp_float2(const _float2& a, const _float2& b, float t)
+{
+	_float2 result;
+	result.x = a.x + t * (b.x - a.x);
+	result.y = a.y + t * (b.y - a.y);
+	return result;
+}
+
+_float CWindow_UITool::Lerp_float(const _float& a, const _float& b, float t)
+{
+	_float result;
+	result = a + t * (b - a);
+	return result;
+}
+
+// 쿼드라틱 이징(InQuad) 함수 (시작)
+_float CWindow_UITool::ImEaseInQuad(float start, float end, float t)
+{
+	return start + (end - start) * t * t;
+}
+
+// 쿼드라틱 이징(OutQuad) 함수 (끝)
+_float CWindow_UITool::ImEaseOutQuad(float start, float end, float t)
+{
+	return start + (end - start) * (-t * (t - 2));
 }
 
 HRESULT CWindow_UITool::Save_Function(string strPath, string strFileName)
 {
-	if (m_vecUIObject.empty())
-		return E_FAIL;
-
 	_ushort iIndex = 0;
 
 	strPath = strPath + "\\" + strFileName;
 
 	json Out_Json;
 
-	for (auto& UI : m_vecUIObject)
+	if (!m_vecParentObject.empty())
 	{
-		json Out_Object;
+		for (auto& Parent : m_vecParentObject)
+		{
+			json Out_Object;
 
-		dynamic_cast<CUI_Anything*>(UI)->Save_Desc(Out_Object);
-		Out_Json.emplace(to_string(iIndex++), Out_Object);
+			dynamic_cast<CUI*>(Parent)->Save_Desc(Out_Object);
+			Out_Json.emplace(to_string(iIndex++), Out_Object);
+		}
 	}
 
+	if (m_vecParentGroup != nullptr)
+	{
+		if (!m_vecParentGroup->empty())
+		{
+			for (auto& Group : m_vecParentObject)
+			{
+				json Out_Object;
+
+				dynamic_cast<CUI*>(Group)->Save_Desc(Out_Object);
+				Out_Json.emplace(to_string(iIndex++), Out_Object);
+			}
+		}
+	}
+
+	if (!m_vecChildObject.empty())
+	{
+		for (auto& Child : m_vecChildObject)
+		{
+			json Out_Object;
+
+			dynamic_cast<CUI*>(Child)->Save_Desc(Out_Object);
+			Out_Json.emplace(to_string(iIndex++), Out_Object);
+		}
+	}
 	CJson_Utility::Save_Json(ConverWStringtoC(ConvertToWideString(strPath)), Out_Json);
 
 	return S_OK;
@@ -1261,9 +2411,13 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 {
 	json json_in;
 
-	strPath = strPath + "\\" + strFileName;
+	char filePath[MAX_PATH];
 
-	CJson_Utility::Load_Json(ConverWStringtoC(ConvertToWideString(strPath)), json_in);
+	string strFile;
+
+	strFile = strPath + "\\" + strFileName;
+	
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
 
 	for (auto& item : json_in.items())
 	{
@@ -1271,9 +2425,29 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 
 		CUI::UI_DESC tUI_Info;
 
-		tUI_Info.strCloneTag = object["CloneTag"];
-		tUI_Info.strProtoTag = object["ProtoTag"];
-		tUI_Info.strFilePath = object["FilePath"];
+		/* 저장순서랑 맞는지 확인하기 */
+		tUI_Info.bParent = object["Parent"];					// 1. Parent
+		tUI_Info.bWorld = object["World"];						// 2. World
+		tUI_Info.bGroup = object["Group"];						// 3. Group
+		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+
+		wstring wstrLayer;
+		m_pGameInstance->String_To_WString(m_strLayer[m_iCurrLayerNum], wstrLayer);
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
 
 		wstring wstrPrototag;
 		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
@@ -1281,14 +2455,26 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 		wstring wstrFilePath;
 		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
 
-		wstring wstrLayer;
-		m_pGameInstance->String_To_WString(m_strLayer[m_iLayerNum], wstrLayer);
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayer, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
 
-		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayer, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
 
-		pUI_Object->Get_Transform()->Load_FromJson(object);
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
 
-		Add_ObjectList(tUI_Info);
+		if (tUI_Info.bParent == true)
+		{
+			m_vecParentObject.push_back(pUI_Object);
+			Add_ParentList(tUI_Info);
+		}
+		else
+		{
+			m_vecChildObject.push_back(pUI_Object);
+			Add_ChildList(tUI_Info);
+		}
 	}
 
 	return S_OK;
@@ -1312,7 +2498,7 @@ void CWindow_UITool::Load_Paths()
 		tPath->strFilePath = object["FilePath"];
 		tPath->iPathNum = object["PathNum"];
 
-		m_vecPaths.push_back(tPath);
+		m_vecInitialPaths.push_back(tPath);
 
 		tPath = nullptr;
 		delete[] tPath;
@@ -1342,27 +2528,35 @@ void CWindow_UITool::Free()
 {
 	__super::Free();
 
-	//if (!m_vecObjectName.empty())
-	//	Safe_Delete(m_vecObjectName);
+	//if (!m_vecChildObjectName.empty())
+	//	Safe_Delete(m_vecChildObjectName);
 	//if (!m_vecImagePaths.empty())
 	//	Safe_Delete(m_vecImagePaths);
-	//if (!m_vecPaths.empty())
-	//	Safe_Delete(m_vecPaths);
+	//if (!m_vecInitialPaths.empty())
+	//	Safe_Delete(m_vecInitialPaths);
 	//if (!m_vecTexture.empty())
 	//	Safe_Delete(m_vecTexture);
-	//if (!m_vecUIObject.empty())
-	//	Safe_Delete(m_vecUIObject);
+	//if (!m_vecChildObject.empty())
+	//	Safe_Delete(m_vecChildObject);
 	
-	m_CurrObject = nullptr;
+	// Safe_Delete(m_pCurrChild);
+	// Safe_Delete(m_pCurrParent);
+
+	m_pCurrChild = nullptr;
 	m_pCurrParent = nullptr;
 
-	if (!m_vecObjectName.empty())
+	//if (!m_vecChildObjectName.empty())
+	//{
+	//	for (auto& path : m_vecChildObjectName)
+	//	{
+	//		delete path;
+	//	}
+	//	m_vecChildObjectName.clear();
+	//}
+	if (m_vecParentGroup != nullptr)
 	{
-		for (auto& path : m_vecObjectName)
-		{
-			delete path;
-		}
-		m_vecObjectName.clear();
+		//Safe_Delete(m_vecParentGroup);
+		//m_vecParentGroup = nullptr;
 	}
 	if (!m_vecImagePaths.empty())
 	{
@@ -1372,13 +2566,13 @@ void CWindow_UITool::Free()
 		}
 		m_vecImagePaths.clear();
 	}
-	if (!m_vecPaths.empty())
+	if (!m_vecInitialPaths.empty())
 	{
-		for (auto& path : m_vecPaths)
+		for (auto& path : m_vecInitialPaths)
 		{
 			delete path;
 		}
-		m_vecPaths.clear();
+		m_vecInitialPaths.clear();
 	}
 	if (!m_vecTexture.empty())
 	{
@@ -1388,12 +2582,12 @@ void CWindow_UITool::Free()
 		}
 		m_vecTexture.clear();
 	}
-	//if (!m_vecUIObject.empty())
+	//if (!m_vecChildObject.empty())
 	//{
-	//	for (auto& path : m_vecUIObject) {
+	//	for (auto& path : m_vecChildObject) {
 	//		delete path;
 	//	}
-	//	m_vecUIObject.clear();
+	//	m_vecChildObject.clear();
 	//}
 
 

@@ -37,12 +37,11 @@ Texture2D g_SSAOTexture;
 Texture2D g_BloomTarget;
 Texture2D g_OutlineTarget;
 Texture2D g_PerlinNoiseTexture;
+Texture2D g_RimLightTarget;
+Texture2D g_Effect_DiffuseTarget;
 
 /* 활성 여부 */ 
 bool g_bSSAO_Active;
-bool g_bBloom_Active;
-bool g_Outline_Active;
-bool g_PBR_Active;
 bool g_bFog_Active;
 
 /* 안개 */
@@ -60,7 +59,14 @@ struct FOG_DESC
     float fFogHeightDensity;
 };
 
+struct BLOOMRIM_DESC
+{
+    bool bBloomBlur_Active;
+    bool bRimBlur_Active;
+};
+
 FOG_DESC g_Fogdesc;
+BLOOMRIM_DESC g_Bloom_Rim_Desc;
 /* ------------------ Function ------------------ */ 
 
 float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise, FOG_DESC desc)
@@ -270,62 +276,58 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    FOG_DESC Fog = g_Fogdesc;
-    
+    // MRT_GameObject : Bloom -> Blur 적용 
     vector vBloom = float4(0.f, 0.f, 0.f, 0.f);
-    if (g_bBloom_Active)
+    if (g_Bloom_Rim_Desc.bBloomBlur_Active)
         vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
 	
+    // MRT_GameObject : RimLight -> Blur 적용 
+    vector vRimLight = float4(0.f, 0.f, 0.f, 0.f);
+    if (g_Bloom_Rim_Desc.bRimBlur_Active)
+        vRimLight = g_RimLightTarget.Sample(LinearSampler, In.vTexcoord); /* blur 적용된 RimLight */ 
+	
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-
+    
     if (vDiffuse.a == 0.f)
     {
         float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
         if (vPriority.a == 0.f)
             discard;
         
-        Out.vColor = vPriority + vBloom;
+        Out.vColor = vPriority + vBloom + vRimLight;
+        return Out;
     }
-    else
-    {
-        vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
-        vShade = saturate(vShade);
+    // MRT_LightAcc : Shade 
+    vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
+    vShade = saturate(vShade);
 	
-        vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-        vSpecular = saturate(vSpecular);
+    // MRT_GameObject : Specular 
+    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    vSpecular = saturate(vSpecular);
 	
-        vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
-        if (g_bSSAO_Active)
-            vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord); /* SSAO 적용 */
-	
-       // vector vOutline = float4(1.f, 1.f, 1.f, 1.f);
-       // if (g_Outline_Active)
-       //     vOutline = g_OutlineTarget.Sample(LinearSampler, In.vTexcoord);
-	
-    
-       // Out.vColor = ((vDiffuse * vShade * vSSAO) + vSpecular + vBloom) * vOutline;
-        Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
-        Out.vColor.a = 1.f;
-    }
+    // MRT_GameObject : Depth
     vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
+    if (vDepthDesc.w != 1.f) 
+        vSpecular = float4(0.f, 0.f, 0.f, 0.f);
+    
+    vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
+    if (g_bSSAO_Active)
+        vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
+    
     float fViewZ = vDepthDesc.y * g_CamFar;
 	
     vector vWorldPos;
-
-	/* 투영스페이스 상의 위치. */
-	/* 로컬위치 * 월드행렬 * 뷰행렬* 투영행렬 / View.z */
+    
     vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
     vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
     vWorldPos.z = vDepthDesc.x;
     vWorldPos.w = 1.f;
-
-	/* 뷰스페이스 상의 위치를 구하자. */
-	/* 로컬위치 * 월드행렬 * 뷰행렬 */
+    
     vWorldPos = vWorldPos * fViewZ;
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
 
-	/* 월드 상의 위치를 구하자. */
-	/* 로컬위치 * 월드행렬 */
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
         
     if (true == g_bFog_Active )
@@ -336,26 +338,28 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     
         float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
     
-        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, Fog);
+        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
     
         Out.vColor = vector(vFinalColor.rgb, 1.f);
     }
-    else if (false == g_bFog_Active)
-    {
-        vWorldPos = mul(vWorldPos, g_LightViewMatrix);
-        vWorldPos = mul(vWorldPos, g_LightProjMatrix);
+    
+    vWorldPos = mul(vWorldPos, g_LightViewMatrix);
+    vWorldPos = mul(vWorldPos, g_LightProjMatrix);
    
-        float2 vUV = (float2) 0.0f;
+    float2 vUV = (float2) 0.0f;
    
-        vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
-        vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
+    vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
+    vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
    
-        float4 vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
+    float4 vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
    
-        if (vWorldPos.w - 0.1f > vLightDepth.x * 1000.f)
-            Out.vColor = Out.vColor * 0.8f;
-    }
-  
+    if (vWorldPos.w - 0.1f > vLightDepth.x * 300.f)
+        Out.vColor = Out.vColor * 0.8f;
+    
+    
+   // Out.vColor += vEffect;
+    Out.vColor.a = 1.f;
+    
     return Out;
 }
 

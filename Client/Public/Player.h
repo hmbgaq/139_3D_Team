@@ -29,11 +29,15 @@ public:
 		m_bRotate_In_CameraDir = _bRotate_In_CameraDir;
 	}
 
+public:
+	void Aim_Walk(_float fTimeDelta);
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
-public:
+
+
+public: //AnimTool Test
 	_bool	bTest = true;
 private:
 	CActor<CPlayer>* m_pActor = { nullptr };

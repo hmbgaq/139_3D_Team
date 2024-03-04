@@ -31,7 +31,7 @@ HRESULT CUI_Player_Skill_Frame::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
+	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
 	return S_OK;
@@ -77,7 +77,27 @@ HRESULT CUI_Player_Skill_Frame::Render()
 
 HRESULT CUI_Player_Skill_Frame::Ready_Components()
 {
-	if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+	//if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+	//	return E_FAIL;
+
+	//! For.Com_Texture1
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_energy_empty"),
+		TEXT("Com_Texture_EnergyEmpty"), reinterpret_cast<CComponent**>(&m_pTextureCom[ENERGY_EMPTY]))))
+		return E_FAIL;
+
+	//! For.Com_Texture2
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_energy_powering_up"),
+		TEXT("Com_Texture_EnergyGray"), reinterpret_cast<CComponent**>(&m_pTextureCom[ENERGY_GRAY]))))
+		return E_FAIL;
+
+	//! For.Com_Texture3
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_energy_ready"),
+		TEXT("Com_Texture_EnergyYellow"), reinterpret_cast<CComponent**>(&m_pTextureCom[ENERGY_YELLOW]))))
+		return E_FAIL;
+	
+	//! For.Com_Texture4
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_energy_blue"),
+		TEXT("Com_Texture_EnergyBlue"), reinterpret_cast<CComponent**>(&m_pTextureCom[ENERGY_BLUE]))))
 		return E_FAIL;
 
 	//! For.Com_Shader
@@ -85,10 +105,9 @@ HRESULT CUI_Player_Skill_Frame::Ready_Components()
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	////! For.Com_Texture_1
-	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_left"), // HP_Bar_Red
-	//	TEXT("Com_Texture1"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
-	//	return E_FAIL;
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
+		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -102,10 +121,41 @@ HRESULT CUI_Player_Skill_Frame::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	for (auto& iter : m_pTextureCom)
+
+	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
 	{
-		if (FAILED(iter->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
+		switch (i)
+		{
+		case CUI_Player_Skill_Frame::ENERGY_EMPTY:
+		{
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+			break;
+		}
+		case CUI_Player_Skill_Frame::ENERGY_GRAY:
+		{
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Second")))
+				return E_FAIL;
+
+			break;
+		}
+		case CUI_Player_Skill_Frame::ENERGY_YELLOW:
+		{
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Third"))) // error : 던져줄 전역 그릇이 없어서 FAIL 탄것..
+				return E_FAIL;
+			break;
+		}
+		case CUI_Player_Skill_Frame::ENERGY_BLUE:
+		{
+			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Fourth")))
+				return E_FAIL;
+			break;
+		}
+		case CUI_Player_Skill_Frame::TEXTURE_END:
+			break;
+		default:
+			break;
+		}
 	}
 
 	return S_OK;
@@ -113,24 +163,7 @@ HRESULT CUI_Player_Skill_Frame::Bind_ShaderResources()
 
 json CUI_Player_Skill_Frame::Save_Desc(json& out_json)
 {
-	_float fSizeX = 0.f;
-	_float fSizeY = 0.f;
-	_float fPositionX = 0.f;
-	_float fPositionY = 0.f;
-
-	_float fCurPosX = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
-	_float fCurPosY = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
-
-	fCurPosX = fCurPosX + (_float)g_iWinSizeX * 0.5f;
-	fCurPosY = (_float)g_iWinSizeY * 0.5f - fCurPosY;
-
-	out_json["CloneTag"] = m_tUIInfo.strCloneTag;
-
-	out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
-
-	out_json["FilePath"] = m_tUIInfo.strFilePath;
-
-	m_pTransformCom->Write_Json(out_json);
+	__super::Save_Desc(out_json);
 
 	return out_json;
 }

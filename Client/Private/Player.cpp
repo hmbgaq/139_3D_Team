@@ -2,6 +2,7 @@
 
 #include "GameInstance.h"
 #include "Body_Player.h"
+#include "Weapon_Player.h"
 
 #include "Player_IdleLoop.h"
 #include "Data_Manager.h"
@@ -40,6 +41,17 @@ HRESULT CPlayer::Initialize(void* pArg)
 		m_pActor->Set_State(new CPlayer_IdleLoop());
 	}
 
+
+	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"),
+		TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom))))
+		return E_FAIL;
+
+	m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
+
+
 	CData_Manager::GetInstance()->Set_Player(this);
 
 	return S_OK;
@@ -74,6 +86,98 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
+void CPlayer::Aim_Walk(_float fTimeDelta)
+{
+	_uint AnimIndex;
+
+	if (m_pGameInstance->Key_Pressing(DIK_W))
+	{
+		if (m_pGameInstance->Key_Pressing(DIK_A))
+		{
+			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FL45);
+			if (Get_CurrentAnimIndex() != AnimIndex)
+			{
+				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			}
+			Go_Straight_L45(fTimeDelta * 0.5f);
+		}
+		else if (m_pGameInstance->Key_Pressing(DIK_D))
+		{
+			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FR45);
+			if (Get_CurrentAnimIndex() != AnimIndex)
+			{
+				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			}
+			Go_Straight_R45(fTimeDelta * 0.5f);
+		}
+		else
+		{
+			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_F);
+			if (Get_CurrentAnimIndex() != AnimIndex)
+			{
+				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			}
+			Go_Straight(fTimeDelta * 0.5f);
+		}
+	}
+	else if (m_pGameInstance->Key_Pressing(DIK_S))
+	{
+		if (m_pGameInstance->Key_Pressing(DIK_A))
+		{
+			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_BL135);
+			if (Get_CurrentAnimIndex() != AnimIndex)
+			{
+				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			}
+			Go_Backward_L45(fTimeDelta * 0.5f);
+		}
+		else if (m_pGameInstance->Key_Pressing(DIK_D))
+		{
+			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_BR135);
+			if (Get_CurrentAnimIndex() != AnimIndex)
+			{
+				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			}
+			Go_Backward_R45(fTimeDelta * 0.5f);
+		}
+		else
+		{
+			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_B);
+			if (Get_CurrentAnimIndex() != AnimIndex)
+			{
+				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			}
+			Go_Backward(fTimeDelta * 0.5f);
+		}
+	}
+	else if (m_pGameInstance->Key_Pressing(DIK_A))
+	{
+		AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FL);
+		if (Get_CurrentAnimIndex() != AnimIndex)
+		{
+			Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+		}
+		Go_Left(fTimeDelta * 0.5f);
+	}
+	else if (m_pGameInstance->Key_Pressing(DIK_D))
+	{
+		AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FR);
+		if (Get_CurrentAnimIndex() != AnimIndex)
+		{
+			Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+		}
+		Go_Right(fTimeDelta * 0.5f);
+	}
+	else
+	{
+		AnimIndex = ECast(CPlayer::Player_State::Player_IdleLoop);
+		if (Get_CurrentAnimIndex() != AnimIndex)
+		{
+			Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+		}
+	}
+}
+
 HRESULT CPlayer::Ready_Components()
 {
 	return S_OK;
@@ -84,6 +188,29 @@ HRESULT CPlayer::Ready_PartObjects()
 	CBody::BODY_DESC		BodyDesc = {};
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
 		return E_FAIL;
+
+	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
+	{
+		
+		CWeapon::WEAPON_DESC		WeaponDesc = {};
+		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, TEXT("Weapon_Punch_L"))))
+			return E_FAIL;
+
+		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch_R"))))
+			return E_FAIL;
+
+	}
+
+	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch_L"));
+	m_pWeapon_Punch_L->Set_Enable(false);
+	
+
+
+	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_Punch_R"));
+	m_pWeapon_Punch_R->Set_Enable(false);
+	
+
+
 
 
 	return S_OK;

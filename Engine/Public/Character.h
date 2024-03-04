@@ -11,7 +11,9 @@
 BEGIN(Engine)
 
 class CNavigation;
-//class CPhysXCharacterController;
+class CRigidBody;
+
+class CPhysXController;
 
 class ENGINE_DLL CCharacter abstract : public CGameObject
 {
@@ -78,6 +80,7 @@ public:
 	void	Set_EventNotify(string strPath, string JsonFileName);
 	HRESULT	LoadAnimJson(string strPath, string strFileName);
 public:
+	_int Get_CurrentAnimIndex();
 	void	Set_Animation(
 		_uint _iNextAnimation
 		, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_NORMAL
@@ -86,6 +89,8 @@ public:
 		, _uint iTargetKeyFrameIndex = 0);
 
 	_bool	Is_Animation_End();
+	_bool	Is_UpperAnimation_End();
+
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 	_float	Get_TrackPosition();
 	CHARCTER_DESC Get_CharcterDesc() { return CharAnimDesc; }
@@ -102,6 +107,17 @@ public:
 public:
 	virtual void Set_Enable(_bool _Enable) override;
 
+public:
+	virtual Hit_Type Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower);
+
+	virtual void Hitted_Left(Power ePower) {};
+	virtual void Hitted_Right(Power ePower) {};
+	virtual void Hitted_Front(Power ePower) {};
+	virtual void Hitted_Knock(_bool bIsCannonball = false) {};
+	virtual void Hitted_Dead(Power ePower) {};
+
+public:
+	void Add_Force(_vector In_vDir, _float In_fPower);
 
 public:
 	_int Get_Hp() {
@@ -112,18 +128,30 @@ public:
 		m_iHp = _iHp;
 	};
 
+public:	//!For Animation Split
+	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END);
+	_bool Is_Splitted() { return m_pBody->Is_Splitted(); }
+	void Set_Splitted(_bool _bIsSplitted) { m_pBody->Set_Splitted(_bIsSplitted); };
+
 protected:
-	_int m_iHp = { 0 };
+	_int m_iHp = { 1 };
+	Power m_eStrength = { Power::Light };
+	_float m_fStiffnessRate = { 1.f };
 
 public:
 	_float m_fCurrentTrackPosition = {0.f};
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
+	CRigidBody* m_pRigidBody = { nullptr };
 	CBody* m_pBody = { nullptr };
 	vector<CWeapon*> m_Weapons;
 	CHARCTER_DESC CharAnimDesc = {};
+
 protected:
-	//CPhysXController* m_pPhysXControllerCom = { nullptr };
+	CCharacter* m_pTarget = { nullptr };
+
+protected:
+	CPhysXController* m_pPhysXControllerCom = { nullptr };
 	PxControllerCollisionFlags m_LastCollisionFlags;
 
 protected:

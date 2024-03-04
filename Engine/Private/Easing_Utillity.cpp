@@ -281,8 +281,8 @@ _vector Engine::Easing::QuadIn(_vector vStartPoint, _vector vTargetPoint, _float
 _vector Engine::Easing::QuadIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime;
-	_vector	vStartPoint(XMVectorSet(fStartPoint, fStartPoint, fStartPoint, fStartPoint));
-	_vector	vTargetPoint(XMVectorSet(fTargetPoint, fTargetPoint, fTargetPoint, fTargetPoint));
+	_vector   vStartPoint(XMVectorSet(fStartPoint, fStartPoint, fStartPoint, fStartPoint));
+	_vector   vTargetPoint(XMVectorSet(fTargetPoint, fTargetPoint, fTargetPoint, fTargetPoint));
 
 	return QuadIn(vStartPoint, vTargetPoint, fPassedTime, fTotalTime);
 }
@@ -296,7 +296,7 @@ _float Engine::Easing::QuadIn_Float(_float fStartPoint, _float fTargetPoint, _fl
 _vector Engine::Easing::QuadOut(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime;
-	return _vector(-(vTargetPoint - vStartPoint) * fPassedTime*(fPassedTime - 2.f) + vStartPoint);
+	return _vector(-(vTargetPoint - vStartPoint) * fPassedTime * (fPassedTime - 2.f) + vStartPoint);
 }
 
 _float Engine::Easing::QuadOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -309,10 +309,10 @@ _vector Engine::Easing::QuadInOut(_vector vStartPoint, _vector vTargetPoint, _fl
 {
 	fPassedTime /= fTotalTime / 2.f;
 	if (fPassedTime < 1.f)
-		return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime*fPassedTime + vStartPoint);
+		return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime * fPassedTime + vStartPoint);
 
 	fPassedTime--;
-	return _vector(-(vTargetPoint - vStartPoint) / 2.f * (fPassedTime*(fPassedTime - 2.f) - 1.f) + vStartPoint);
+	return _vector(-(vTargetPoint - vStartPoint) / 2.f * (fPassedTime * (fPassedTime - 2.f) - 1.f) + vStartPoint);
 }
 
 _float Engine::Easing::QuadInOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -328,7 +328,7 @@ _float Engine::Easing::QuadInOut(_float fStartPoint, _float fTargetPoint, _float
 _vector Engine::Easing::CubicIn(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime;
-	return _vector((vTargetPoint - vStartPoint) * fPassedTime*fPassedTime*fPassedTime + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) * fPassedTime * fPassedTime * fPassedTime + vStartPoint);
 }
 
 _float Engine::Easing::CubicIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -341,7 +341,7 @@ _vector Engine::Easing::CubicOut(_vector vStartPoint, _vector vTargetPoint, _flo
 {
 	fPassedTime /= fTotalTime;
 	fPassedTime--;
-	return _vector((vTargetPoint - vStartPoint) * (fPassedTime*fPassedTime*fPassedTime + 1.f) + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) * (fPassedTime * fPassedTime * fPassedTime + 1.f) + vStartPoint);
 }
 
 _float Engine::Easing::CubicOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -354,9 +354,9 @@ _float Engine::Easing::CubicOut(_float fStartPoint, _float fTargetPoint, _float 
 _vector Engine::Easing::CubicInOut(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime / 2.f;
-	if (fPassedTime < 1.f) return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime*fPassedTime*fPassedTime + vStartPoint);
+	if (fPassedTime < 1.f) return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime * fPassedTime * fPassedTime + vStartPoint);
 	fPassedTime -= 2.f;
-	return _vector((vTargetPoint - vStartPoint) / 2.f * (fPassedTime*fPassedTime*fPassedTime + 2.f) + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) / 2.f * (fPassedTime * fPassedTime * fPassedTime + 2.f) + vStartPoint);
 }
 
 _float Engine::Easing::CubicInOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -370,7 +370,7 @@ _float Engine::Easing::CubicInOut(_float fStartPoint, _float fTargetPoint, _floa
 _vector Engine::Easing::QuartIn(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime;
-	return _vector((vTargetPoint - vStartPoint) * fPassedTime*fPassedTime*fPassedTime*fPassedTime + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) * fPassedTime * fPassedTime * fPassedTime * fPassedTime + vStartPoint);
 }
 
 _float Engine::Easing::QuartIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -383,7 +383,7 @@ _vector Engine::Easing::QuartOut(_vector vStartPoint, _vector vTargetPoint, _flo
 {
 	fPassedTime /= fTotalTime;
 	fPassedTime--;
-	return _vector(-(vTargetPoint - vStartPoint) * (fPassedTime*fPassedTime*fPassedTime*fPassedTime - 1.f) + vStartPoint);
+	return _vector(-(vTargetPoint - vStartPoint) * (fPassedTime * fPassedTime * fPassedTime * fPassedTime - 1.f) + vStartPoint);
 }
 
 _float Engine::Easing::QuartOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -396,9 +396,9 @@ _float Engine::Easing::QuartOut(_float fStartPoint, _float fTargetPoint, _float 
 _vector Engine::Easing::QuartInOut(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime / 2.f;
-	if (fPassedTime < 1.f) return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime*fPassedTime*fPassedTime*fPassedTime + vStartPoint);
+	if (fPassedTime < 1.f) return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime * fPassedTime * fPassedTime * fPassedTime + vStartPoint);
 	fPassedTime -= 2.f;
-	return _vector(-(vTargetPoint - vStartPoint) / 2.f * (fPassedTime*fPassedTime*fPassedTime*fPassedTime - 2.f) + vStartPoint);
+	return _vector(-(vTargetPoint - vStartPoint) / 2.f * (fPassedTime * fPassedTime * fPassedTime * fPassedTime - 2.f) + vStartPoint);
 }
 
 _float Engine::Easing::QuartInOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -412,7 +412,7 @@ _float Engine::Easing::QuartInOut(_float fStartPoint, _float fTargetPoint, _floa
 _vector Engine::Easing::QuintIn(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime;
-	return _vector((vTargetPoint - vStartPoint) * fPassedTime*fPassedTime*fPassedTime*fPassedTime*fPassedTime + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) * fPassedTime * fPassedTime * fPassedTime * fPassedTime * fPassedTime + vStartPoint);
 }
 
 _float Engine::Easing::QuintIn(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -425,7 +425,7 @@ _vector Engine::Easing::QuintOut(_vector vStartPoint, _vector vTargetPoint, _flo
 {
 	fPassedTime /= fTotalTime;
 	fPassedTime--;
-	return _vector((vTargetPoint - vStartPoint) * (fPassedTime*fPassedTime*fPassedTime*fPassedTime*fPassedTime + 1.f) + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) * (fPassedTime * fPassedTime * fPassedTime * fPassedTime * fPassedTime + 1.f) + vStartPoint);
 }
 
 _float Engine::Easing::QuintOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -438,9 +438,9 @@ _float Engine::Easing::QuintOut(_float fStartPoint, _float fTargetPoint, _float 
 _vector Engine::Easing::QuintInOut(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
 	fPassedTime /= fTotalTime / 2.f;
-	if (fPassedTime < 1.f) return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime*fPassedTime*fPassedTime*fPassedTime*fPassedTime + vStartPoint);
+	if (fPassedTime < 1.f) return _vector((vTargetPoint - vStartPoint) / 2.f * fPassedTime * fPassedTime * fPassedTime * fPassedTime * fPassedTime + vStartPoint);
 	fPassedTime -= 2.f;
-	return _vector((vTargetPoint - vStartPoint) / 2.f * (fPassedTime*fPassedTime*fPassedTime*fPassedTime*fPassedTime + 2.f) + vStartPoint);
+	return _vector((vTargetPoint - vStartPoint) / 2.f * (fPassedTime * fPassedTime * fPassedTime * fPassedTime * fPassedTime + 2.f) + vStartPoint);
 }
 
 _float Engine::Easing::QuintInOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -473,7 +473,7 @@ _float Engine::Easing::SineOut(_float fStartPoint, _float fTargetPoint, _float f
 
 _vector Engine::Easing::SineInOut(_vector vStartPoint, _vector vTargetPoint, _float fPassedTime, _float fTotalTime)
 {
-	return _vector(-(vTargetPoint - vStartPoint) / 2.f * (cosf(PI*fPassedTime / fTotalTime) - 1.f) + vStartPoint);
+	return _vector(-(vTargetPoint - vStartPoint) / 2.f * (cosf(PI * fPassedTime / fTotalTime) - 1.f) + vStartPoint);
 }
 
 _float Engine::Easing::SineInOut(_float fStartPoint, _float fTargetPoint, _float fPassedTime, _float fTotalTime)
@@ -671,7 +671,7 @@ _vector Engine::Easing::InOutBack(_vector vStartPoint, _vector vTargetPoint, _fl
 	return x < 0.5f
 		? (vTargetPoint - vStartPoint) * ((pow(2.f * x, 2.f) * ((c2 + 1.f) * 2.f * x - c2)) / 2.f) + vStartPoint
 		: (vTargetPoint - vStartPoint) * ((pow(2.f * x - 2.f, 2.f) * ((c2 + 1.f) * (x * 2.f - 2.f) + c2) + 2.f) / 2.f) + vStartPoint;
-	
+
 }
 
 

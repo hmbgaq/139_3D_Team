@@ -1,9 +1,6 @@
 #include "..\Public\Player_MeleeCombo_01.h"
 
-#include "Player_Empowered_Idle.h"
-#include "Effect.h"
-#include "Clone_Manager.h"
-#include "Bone.h"
+#include "Weapon.h"
 
 void CPlayer_MeleeCombo_01::Initialize(CPlayer* pActor)
 {
@@ -11,6 +8,17 @@ void CPlayer_MeleeCombo_01::Initialize(CPlayer* pActor)
 	string Test = "Data_Animation/";
 	pActor->Set_EventNotify(Test, "Test2_AnimationData.json");
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
+	
+	pWeapon
+		->Set_Damage(0.f)
+		->Set_Direction(Direction::Right)
+		->Set_Power(Power::Medium)
+		->Set_Force(0.5f);
+
+	pWeapon->Set_Enable(true);
+
 }
 
 CState<CPlayer>* CPlayer_MeleeCombo_01::Update(CPlayer* pActor, _float fTimeDelta)
@@ -35,6 +43,7 @@ CState<CPlayer>* CPlayer_MeleeCombo_01::Update(CPlayer* pActor, _float fTimeDelt
 			}
 		}
 
+
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	//콜라이더 제어 예시
 // 	if (m_fCurrentTrackPosition >= m_iColliderOnTrackPosition && m_fCurrentTrackPosition < m_iColliderOffTrackPosition)
@@ -50,4 +59,7 @@ CState<CPlayer>* CPlayer_MeleeCombo_01::Update(CPlayer* pActor, _float fTimeDelt
 void CPlayer_MeleeCombo_01::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+
+	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
+	pWeapon->Set_Enable(false);
 }

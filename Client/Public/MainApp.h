@@ -32,6 +32,7 @@ private:
 	// SH_Add
 private: /* ===================== UI ===================== */
 	HRESULT	Ready_UITexture();
+	HRESULT UI_TargetTexture();
 
 private:
 	ID3D11Device*			m_pDevice = { nullptr };

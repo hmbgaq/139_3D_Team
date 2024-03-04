@@ -48,7 +48,6 @@
 #include "Player_Walk_FL45.h"
 #include "Player_Walk_FR.h"
 #include "Player_Walk_FR45.h"
-
 #include "Player_TeleportPunch_L01_Alt.h"
 #include "Player_TeleportPunch_L01_VeryFar.h"
 #include "Player_TeleportPunch_L02_Alt.h"
@@ -57,8 +56,6 @@
 #include "Player_TeleportPunch_R02_Alt.h"
 #include "Player_TeleportPunch_R02_VeryFar.h"
 #include "Player_TeleportPunch_R03_Alt.h"
-
-
 #include "Player_HitNormal_B.h"
 #include "Player_HitNormal_B_Gatling.h"
 #include "Player_HitNormal_F.h"
@@ -68,6 +65,10 @@
 #include "Player_HitNormal_L_Gatling.h"
 #include "Player_HitNormal_R.h"
 #include "Player_HitNormal_R_Gatling.h"
+
+#include "Player_Rifle_IdleWeaponHolster.h"
+#include "Player_Rifle_Ironsights_Fire.h"
+
 
 
 
@@ -171,10 +172,29 @@ CState<CPlayer>* CPlayer_State::Hit_State(CPlayer* pActor, _float fTimeDelta, _u
 	return nullptr;
 }
 
+CState<CPlayer>* CPlayer_State::Rifle_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	CState<CPlayer>* pState = { nullptr };
+
+	pState = Rifle(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
+
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Rifle_IdleWeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Rifle_IdleWeaponHolster();
+	}
+
+	return nullptr;
+}
+
 
 CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	CState<CPlayer>* pState = { nullptr };
+
+	pState = Rifle(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
 
 	pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
@@ -488,6 +508,17 @@ CState<CPlayer>* CPlayer_State::Roll(CPlayer* pActor, _float fTimeDelta, _uint _
 	if (pActor->Is_Animation_End())
 	{
 		return new CPlayer_IdleLoop();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Rifle(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_Rifle_Ironsights_Fire::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Rifle_Ironsights_Fire();
 	}
 
 	return nullptr;

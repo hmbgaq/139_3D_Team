@@ -30,10 +30,6 @@ public:
 	virtual void	OnCollisionStay(CCollider* other)	override;
 	virtual void	OnCollisionExit(CCollider* other)	override;
 
-public:
-	void SetUp_Animation(_uint iAnimIndex);
-
-
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

@@ -26,12 +26,17 @@ private:
 	virtual ~CModel() = default;
 
 public:
+	_bool Is_Splitted() { return m_bIsSplitted; }
+	void Set_Splitted(_bool _bIsSplitted) { m_bIsSplitted = _bIsSplitted; };
+
+	_int Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; };
+
+
 	_uint					Get_NumMeshes() const {return m_iNumMeshes; }
-	
 	class CBone*			Get_BonePtr(const _char* pBoneName) const;
 
+
 	void					Set_StiffnessRate(_float fStiffnessRate);
-	//void					Set_Animation(_uint iAnimIndex) { m_iCurrentAnimIndex = iAnimIndex; }
 
 	_matrix					Get_PivotMatrix() { return m_PivotMatrix; }
 	_matrix					Get_CombinedMatrix(_uint iBoneIndex);
@@ -62,6 +67,8 @@ public:
 
 public:
 	_bool					Is_AnimEnd() { return m_bIsAnimEnd; };
+	_bool					Is_UpperAnimEnd() { return m_bIsUpperAnimEnd; };
+
 
 public:
 	virtual HRESULT			Initialize_Prototype(TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);
@@ -86,6 +93,11 @@ public:
 	void					Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Reset_Animation(_int iAnimIndex = -1);
 
+	void					Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END);
+	void					Reset_UpperAnimation(_int iAnimIndex = -1);
+
+
+
 	_float					Get_TickPerSecond();
 	void					Set_TickPerSecond(_float _TickPerSecond);
 	_bool					Is_Transition();
@@ -98,13 +110,12 @@ public:
 	vector<CAnimation*>*	 Get_Animations();
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
 	
-	
 public:
 	CMyAIScene*				Get_AIScene();
 
 public:
 	vector<CBone*>*			Get_Bones();
-	/*_uint&					Get_BoneNum() {return }*/
+	_uint					Get_BoneNum(const _char* szName);
 private:
 	CMyAssimp				m_MyAssimp;
 	CMyAIScene				m_pAIScene;
@@ -129,6 +140,14 @@ private:
 	_bool					m_bIsAnimEnd			= { false };
 	ANIM_STATE				m_eAnimState			= { CModel::ANIM_STATE::ANIM_STATE_END };
 	_bool					m_bUseAnimationPos		= { false };
+
+
+	// 상 하체 분리
+	_bool					m_bIsSplitted			= { false };
+	_uint					m_iUpperAnimIndex		= { 0 };	//193
+	_bool					m_bIsUpperAnimEnd		= { false };
+	ANIM_STATE				m_eUpperAnimState		= { CModel::ANIM_STATE::ANIM_STATE_LOOP };
+
 
 	/* Cascade */
 	vector<_matrix>			m_matCurrTransforms;
