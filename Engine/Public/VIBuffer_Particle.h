@@ -86,9 +86,8 @@ public:
 	typedef struct tagParticleShaderDesc
 	{
 		// 업데이트 돌면서 변하는 정보들(저장X)
-		_float	fUV_RotDegree = { 0.f };
-
-		_float3	vDir = { 1.f, 0.f, 0.f };
+		_float3		vDir = { 1.f, 0.f, 0.f };
+		_float		padding = { 0.f };
 
 	} PARTICLE_SHADER_INFO_DESC;
 

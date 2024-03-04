@@ -26,11 +26,11 @@ float2		g_UVScale;
 // ===========================
 
 
-struct EffectDesc 
+struct EffectDesc //16 ¹è¼ö·Î ³ª´²¶³¾îÁ®¾ßÇÔ.
 {
-	float   g_fUV_RotDegree; 
-
 	float3	g_vDir;
+	float	g_Padding;
+
 };
 EffectDesc g_EffectDesc[500]; 
 
@@ -154,27 +154,19 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
 
 	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
-	//Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_EffectDesc[In[0].iInstanceID].g_fUV_RotDegree);
 	Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
-	//Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), fDegree);
 	Out[0].vColor = In[0].vColor;
 
 	Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
-	//Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_EffectDesc[In[0].iInstanceID].g_fUV_RotDegree);
 	Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_fDegree);
-	//Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), fDegree);
 	Out[1].vColor = In[0].vColor;
 
 	Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
-	//Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_EffectDesc[In[0].iInstanceID].g_fUV_RotDegree);
 	Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_fDegree);
-	//Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), fDegree);
 	Out[2].vColor = In[0].vColor;
 
 	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
-	//Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_EffectDesc[In[0].iInstanceID].g_fUV_RotDegree);
 	Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_fDegree);
-	//Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), fDegree);
 	Out[3].vColor = In[0].vColor;
 
 	OutStream.Append(Out[0]);

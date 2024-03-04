@@ -295,40 +295,6 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 		vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
 		m_vecParticleShaderInfoDesc[iNum].vDir = vDir;			// 쉐이더에 전달할 방향 저장
 
-
-
-		// TEST 시작 : 카메라가 바라보는 방향의 반대 벡터와 방향벡터 사이의 각도로 UV회전 시키기 =========================================================================
-		//_vector vCamDirection = XMVector4Normalize(m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2]);
-		//_float3 vCamDirectionFloat3 = {};
-		//XMStoreFloat3(&vCamDirectionFloat3, vCamDirection);
-		//vCamDirectionFloat3 = vCamDirectionFloat3 * -1.f;
-
-		//m_vecParticleShaderInfoDesc[iNum].fUV_RotDegree = SMath::Calculate_AngleBetweenVectors_Degree(vCamDirectionFloat3, m_vecParticleShaderInfoDesc[iNum].vDir);
-		// TEST 끝 : 카메라가 바라보는 방향의 반대 벡터와 방향벡터 사이의 각도로 UV회전 시키기 ===========================================================================
-
-
-		// 진행방향벡터를 Look으로 한 새로운 Right, Up 정해주기 시작 ===================================================================================================
-		_vector		vRight = _float4(1.f, 0.f, 0.f, 0.f)		/* * 크기 */;
-		_vector		vUp = _float4(0.f, 1.f, 0.f, 0.f)			/* * 크기 */;
-		_vector		vLook = XMVector4Normalize(vDir);
-		//_vector		vLook = _float4(0.f, 0.f, 1.f, 0.f);
-
-		vRight = XMVector4Normalize(XMVector3Cross(vUp, vDir));
-		vUp = XMVector4Normalize(XMVector3Cross(vDir, vRight));
-
-
-		_vector		vNewUp = XMVector4Normalize(vDir);
-		_vector		vNewLook = XMVector4Normalize(XMVector3Cross(_float3(0.f, 1.f, 0.f), vNewUp));
-		_vector		vNewRight = XMVector4Normalize(XMVector3Cross(vNewUp, vNewLook));
-		vNewLook = XMVector4Normalize(XMVector3Cross(vNewRight, vNewUp));
-
-
-		XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vRight, vNewRight);
-		XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vUp, vNewUp);
-		XMStoreFloat4(&m_vecParticleRigidbodyDesc[iNum].vLook, vNewLook);
-
-
-
 #pragma endregion 회전 끝
 
 
