@@ -1525,6 +1525,21 @@
     <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpDecal">
       <UniqueIdentifier>{7482375d-a55a-465c-a845-dbb3ec0858e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\04. Cursor">
+      <UniqueIdentifier>{6e109132-a401-4f34-b94f-7cdc6a9a3265}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\05. MainMenu">
+      <UniqueIdentifier>{8607cc1a-9253-4bba-840f-796a70854084}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option">
+      <UniqueIdentifier>{e650d872-16b1-4e5a-b066-c065efe79803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\SelectBox">
+      <UniqueIdentifier>{bf05b6e6-c273-40c0-bee4-eb2b8c3d8866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\04. Cursor\00. AimCrosshair">
+      <UniqueIdentifier>{ac7ceea2-842e-4d3b-a44c-3d48c4a52487}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -2849,6 +2864,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\Player_Rifle_Ironsights_Reload.h">
       <Filter>02.GameObjects\00. Character\Player\State\7. Aim\Rifle\3. Reload</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_MouseCursor.h">
+      <Filter>02.GameObjects\UI\02. System\04. Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Option_Window.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Option_SelectBox.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\SelectBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_AimCrosshair.h">
+      <Filter>02.GameObjects\UI\02. System\04. Cursor\00. AimCrosshair</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4266,6 +4293,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_ItemIcon.cpp">
       <Filter>02.GameObjects\UI\02. System\02. Item_Showcase\Item_Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MouseCursor.cpp">
+      <Filter>02.GameObjects\UI\02. System\04. Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Option_Window.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Option_SelectBox.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\SelectBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_AimCrosshair.cpp">
+      <Filter>02.GameObjects\UI\02. System\04. Cursor\00. AimCrosshair</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

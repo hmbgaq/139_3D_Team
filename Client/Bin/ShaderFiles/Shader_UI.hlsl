@@ -15,6 +15,7 @@ texture2D g_DiffuseTexture_Second;
 texture2D g_DiffuseTexture_Third;
 texture2D g_DiffuseTexture_Fourth;
 
+
 /* Loading */
 float g_LoadingProgress;
 
@@ -26,7 +27,18 @@ float g_MaxHP;
 float g_CurrentHP;
 float g_LerpHP;
 
+/* Aim */
+float2 g_Recoil;
+float2 g_Offset;
+texture2D g_AimTop_Texture;
+texture2D g_AimBottom_Texture;
+texture2D g_AimLeft_Texture;
+texture2D g_AimRight_Texture;
+
+
 texture2D g_DepthTexture;
+texture2D g_DissolveTexture;
+texture2D g_AlphaTexture;
 
 
 /* 정점의 변환(월드변환, 뷰변환, 투영변환.)을 수행한다. */
@@ -88,7 +100,7 @@ struct PS_OUT
 };
 
 /* 픽셀셰이더 : 픽셀의 색!!!! 을 결정한다. */
-PS_OUT PS_MAIN(PS_IN In)
+PS_OUT PS_MAIN(PS_IN In) // 0
 {
     PS_OUT Out = (PS_OUT) 0;
 
@@ -101,7 +113,7 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_HPBAR_GAUGE_LERP(PS_IN In)
+PS_OUT PS_HPBAR_GAUGE_LERP(PS_IN In) // 1
 {
     PS_OUT Out = (PS_OUT) 0;
 
@@ -126,7 +138,7 @@ PS_OUT PS_HPBAR_GAUGE_LERP(PS_IN In)
 }
 
 /* Loading */
-PS_OUT PS_MAIN_LOADING(PS_IN In)
+PS_OUT PS_MAIN_LOADING(PS_IN In) // 2
 {
     PS_OUT Out = (PS_OUT) 0;
 
@@ -141,6 +153,51 @@ PS_OUT PS_MAIN_LOADING(PS_IN In)
         discard;
 		//Out.vColor = float4(0.0, 0.0, 0.0, 0.0);
     }
+
+    return Out;
+}
+
+/* Loading */
+PS_OUT PS_MAIN_OPTION_BACKGROUND(PS_IN In) // 3
+{
+    PS_OUT Out = (PS_OUT) 0;
+    //
+    //float fLoadingPer = 1.f;
+    //
+    //g_DiffuseTexture;   // Background Texture
+    //g_DissolveTexture;  // Fog Texture
+    //g_AlphaTexture;     // AlphaTexture
+    //
+    Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    return Out;
+}
+
+/* AIM_CROSSHAIR */
+PS_OUT PS_MAIN_AIM_CROSSHAIR(PS_IN In) // 4
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    // 이미지 간격을 결정하는 값으로 g_Recoil을 사용
+    float2 vOffset = g_Offset * g_Recoil;
+
+    // 각 이미지의 샘플링 위치를 살짝 이동하여 겹치지 않도록 조정
+    float2 vTopTexCoord = In.vTexcoord + float2(0, vOffset.y);
+    float2 vBottomTexCoord = In.vTexcoord + float2(0, -vOffset.y);
+    float2 vLeftTexCoord = In.vTexcoord + float2(-vOffset.x, 0);
+    float2 vRightTexCoord = In.vTexcoord + float2(vOffset.x, 0);
+
+    // 각 텍스처 샘플링
+    float4 vTopColor = g_AimTop_Texture.Sample(LinearSampler, vTopTexCoord);
+    float4 vBottomColor = g_AimBottom_Texture.Sample(LinearSampler, vBottomTexCoord);
+    float4 vLeftColor = g_AimLeft_Texture.Sample(LinearSampler, vLeftTexCoord);
+    float4 vRightColor = g_AimRight_Texture.Sample(LinearSampler, vRightTexCoord);
+
+    // 상하좌우 이미지를 십자 형태로 조합
+    float4 vCombinedColor = vTopColor + vBottomColor + vLeftColor + vRightColor;
+
+    // 조합된 결과를 출력
+    Out.vColor = vCombinedColor;
 
     return Out;
 }
@@ -187,5 +244,31 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_LOADING();
+    }
+
+    pass Option_Background // 3
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(1.f, 1.f, 1.f, 1.f), 0xffffffff);
+   
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OPTION_BACKGROUND();
+    }
+
+    pass PS_MAIN_AIM_CROSSHAIR // 4
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(1.f, 1.f, 1.f, 1.f), 0xffffffff);
+   
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_AIM_CROSSHAIR();
     }
 }

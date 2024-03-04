@@ -573,6 +573,10 @@
     <ClInclude Include="..\Public\SpringCamera.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\stb_image.h" />
+    <ClInclude Include="..\Public\UI_AimCrosshair.h" />
+    <ClInclude Include="..\Public\UI_MouseCursor.h" />
+    <ClInclude Include="..\Public\UI_Option_SelectBox.h" />
+    <ClInclude Include="..\Public\UI_Option_Window.h" />
     <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h" />
     <ClInclude Include="..\Public\Window_Style.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -980,6 +984,10 @@
     <ClCompile Include="..\Private\Sniper_Walk_FL.cpp" />
     <ClCompile Include="..\Private\Sniper_Walk_FR.cpp" />
     <ClCompile Include="..\Private\SpringCamera.cpp" />
+    <ClCompile Include="..\Private\UI_AimCrosshair.cpp" />
+    <ClCompile Include="..\Private\UI_MouseCursor.cpp" />
+    <ClCompile Include="..\Private\UI_Option_SelectBox.cpp" />
+    <ClCompile Include="..\Private\UI_Option_Window.cpp" />
     <ClCompile Include="..\Private\VampireTank_KnockFrontLight_F_01.cpp" />
     <ClCompile Include="..\Private\Window_Style.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />

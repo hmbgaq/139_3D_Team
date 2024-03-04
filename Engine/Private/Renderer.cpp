@@ -120,6 +120,9 @@ HRESULT CRenderer::Draw_RenderGroup()
 	//FAILED_CHECK(Render_Alphablend(TEXT("MRT_Final"), TEXT("Target_Deferred"))); /*  MRT_Deferred -> Target_Deferred에 저장  */
 
 #ifdef _DEBUG;
+	if (m_pGameInstance->Key_Down(DIK_SLASH))
+		m_bDebugRenderTarget = !m_bDebugRenderTarget;
+
 	if (true == m_bDebugRenderTarget)
 		FAILED_CHECK(Render_DebugTarget());
 #endif // _DEBUG

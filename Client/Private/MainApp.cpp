@@ -132,6 +132,13 @@ HRESULT CMainApp::Ready_UITexture()
 
 	UI_TargetTexture();
 
+	/* Add */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Inventory_Background"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/WorldMap/backgrounds/Inventory_Background.dds"))));
+	
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_crosshair_pick_bottom"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Crosshairs/ui_crosshair_pick_bottom.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_crosshair_pick_left"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Crosshairs/ui_crosshair_pick_left.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_crosshair_pick_right"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Crosshairs/ui_crosshair_pick_right.dds"))));
+	
 	return S_OK;
 }
 
