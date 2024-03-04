@@ -195,6 +195,21 @@ void CEnvironment_Instance::Update(INSTANCE_INFO_DESC InstanceDesc, _int iIndex)
 	m_pInstanceModelCom->Update(InstanceDesc, iIndex);
 }
 
+HRESULT CEnvironment_Instance::Remove_Instance(_uint iIndex)
+{
+	if(FAILED(m_pInstanceModelCom->Remove_Instance(iIndex)))
+		return E_FAIL;
+	
+	m_tInstanceDesc.vecInstanceInfoDesc.erase(m_tInstanceDesc.vecInstanceInfoDesc.begin() + iIndex);
+	m_tInstanceDesc.iNumInstance--;
+
+	CCollider* pCollider = m_vecColliders[iIndex];
+
+	m_vecColliders.erase(m_vecColliders.begin() + iIndex);
+
+	Safe_Release(pCollider);
+}
+
 HRESULT CEnvironment_Instance::Ready_Components()
 {
 	/* For.Com_Shader */

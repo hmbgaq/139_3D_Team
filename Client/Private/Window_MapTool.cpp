@@ -2605,13 +2605,47 @@ void CWindow_MapTool::Instance_SelectFunction()
 			ImGui::EndListBox();
 		}
 
+		if (ImGui::Button(u8"인스턴스삭제"))
+		{
+			if (FAILED(m_vecCreateInstance[m_iSelectEnvironmentIndex]->Remove_Instance(m_iSelectInstanceIndex)))
+			{
+				MSG_BOX("삭제 실패");
+			}
+			else
+			{
+				if (m_iSelectInstanceIndex != 0)
+					m_iSelectInstanceIndex--;
+
+				
+				//m_vecCreateInstance[m_iSelectInstanceIndex]->
+			}
+		}
+
 		ImGui::EndChild();
 
+		if (m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_NumInstance() > 0)
+		{
 
-		Set_GuizmoCamView();
-		Set_GuizmoCamProj();
-		m_pPickingInstanceInfo = m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_InstanceInfo(m_iSelectInstanceIndex);
-		Instance_GuizmoTick(m_iSelectEnvironmentIndex, m_pPickingInstanceInfo);
+			Set_GuizmoCamView();
+			Set_GuizmoCamProj();
+
+			m_pPickingInstanceInfo = m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_InstanceInfo(m_iSelectInstanceIndex);
+			Instance_GuizmoTick(m_iSelectEnvironmentIndex, m_pPickingInstanceInfo);
+		}
+		else
+		{
+			CEnvironment_Instance* pInstance = m_vecCreateInstance[m_iSelectEnvironmentIndex];
+
+			m_vecCreateInstance.erase(m_vecCreateInstance.begin() + m_iSelectEnvironmentIndex);
+			m_vecCreateInstanceTag.erase(m_vecCreateInstanceTag.begin() + m_iSelectEnvironmentIndex);
+			m_vecInstanceInfoTag.clear();
+			m_iSelectInstanceIndex = 0;
+			m_iSelectEnvironmentIndex--;
+			Safe_Release(pInstance);
+
+			
+		}
+
 	}
 
 	
@@ -2677,6 +2711,76 @@ void CWindow_MapTool::Instance_GuizmoTick(_int iIndex, INSTANCE_INFO_DESC* pInst
 		if (ImGui::RadioButton("Scale", InstanceCurrentGizmoOperation == ImGuizmo::SCALE))
 			InstanceCurrentGizmoOperation = ImGuizmo::SCALE;
 
+		static _bool bAllInstanceMove = false;
+		
+		ImGui::Checkbox(u8"모든 인스턴싱 이동", &bAllInstanceMove); //ImGui::SameLine(); ImGui::Checkbox(u8"이동값 기록모드")
+
+		if (bAllInstanceMove == true)
+		{
+			static _int iInstanceMode = 0;
+
+			const char* InstanceModeType[3] = { u8"X 좌표 전부이동", u8"Y 좌표 전부이동", u8"Z 좌표 전부이동"};
+
+			for (_int i = 0; i < IM_ARRAYSIZE(InstanceModeType); ++i)
+			{
+				if (i > 0) { ImGui::SameLine(); }
+
+				if (ImGui::RadioButton(InstanceModeType[i], &iInstanceMode, i))
+				{
+					m_eInstanceAllMoveMode = ECast<INSTANCE_ALLMOVETYPE>(iInstanceMode);
+				}
+				
+			}
+
+			if (ImGui::Button(u8"인스턴스 전부 이동"))
+			{
+				switch (m_eInstanceAllMoveMode)
+				{
+				case Client::CWindow_MapTool::INSTANCE_ALLMOVETYPE::ALLMOVE_X:
+					{
+						MAPTOOL_INSTANCE_DESC InstanceDesc = m_vecCreateInstance[iIndex]->Get_InstanceDesc();
+
+						_uint iNumInstance = InstanceDesc.iNumInstance;
+
+						for (_uint i = 0; i < iNumInstance; ++i)
+						{
+							InstanceDesc.vecInstanceInfoDesc[i].vTranslation.x = pInstance->vTranslation.x;						
+							m_vecCreateInstance[iIndex]->Update(InstanceDesc.vecInstanceInfoDesc[i], i);
+						}
+
+						break;
+					}
+				case Client::CWindow_MapTool::INSTANCE_ALLMOVETYPE::ALLMOVE_Y:
+					{
+						MAPTOOL_INSTANCE_DESC InstanceDesc = m_vecCreateInstance[iIndex]->Get_InstanceDesc();
+
+						_uint iNumInstance = InstanceDesc.iNumInstance;
+
+						for (_uint i = 0; i < iNumInstance; ++i)
+						{
+							InstanceDesc.vecInstanceInfoDesc[i].vTranslation.y = pInstance->vTranslation.y;
+							m_vecCreateInstance[iIndex]->Update(InstanceDesc.vecInstanceInfoDesc[i], i);
+						}
+						break;
+					}
+				case Client::CWindow_MapTool::INSTANCE_ALLMOVETYPE::ALLMOVE_Z:
+					{
+						MAPTOOL_INSTANCE_DESC InstanceDesc = m_vecCreateInstance[iIndex]->Get_InstanceDesc();
+
+						_uint iNumInstance = InstanceDesc.iNumInstance;
+
+						for (_uint i = 0; i < iNumInstance; ++i)
+						{
+							InstanceDesc.vecInstanceInfoDesc[i].vTranslation.z = pInstance->vTranslation.z;
+							m_vecCreateInstance[iIndex]->Update(InstanceDesc.vecInstanceInfoDesc[i], i);
+						}
+						break;
+					}
+				
+				}
+				
+			}
+		}
 
 		_float* arrView = m_arrView;
 		_float* arrProj = m_arrProj;

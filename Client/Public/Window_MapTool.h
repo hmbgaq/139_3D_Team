@@ -24,7 +24,8 @@ private:
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
 	enum class OBJECTMODE_TYPE { OBJECTMODE_ENVIRONMENT, OBJECTMODE_CHARACTER};
 	enum class ANIM_TYPE { TYPE_NONANIM, TYPE_ANIM };
-	
+	enum class INSTANCE_ALLMOVETYPE { ALLMOVE_X, ALLMOVE_Y, ALLMOVE_Z };
+
 	enum class MAP_KEY_TYPE //! 맵컨테이너 키
 	{
 		MODEL_SINGLE, MODEL_INSTANCE, MODEL_INTERACT, MODEL_END
@@ -250,6 +251,9 @@ private: //! For. CreateInstance
 	
 	vector<string>					m_vecInstanceInfoTag = {}; //! m_vecPreViewInstance를 픽킹해서 인스턴싱 디스크립션을 채워 준후 m_vecCreateInstance를 만들어주자
 	_int							m_iInstanceInfoTagIndex = 0;
+
+	INSTANCE_ALLMOVETYPE			m_eInstanceAllMoveMode = INSTANCE_ALLMOVETYPE::ALLMOVE_X;
+	
 
 private:
 	vector<CCamera*>				m_vecCameras;
