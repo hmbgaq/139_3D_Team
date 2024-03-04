@@ -27,7 +27,10 @@ private:
 
 public:
 	_bool Is_Splitted() { return m_bIsSplitted; }
-	void Set_Splitted(_bool _bIsSplitted) { m_bIsSplitted = _bIsSplitted; };
+	void Set_Splitted(_bool _bIsSplitted) { 
+		m_bIsSplitted = _bIsSplitted; 
+		//Reset_Animation();
+	};
 
 	_int Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; };
 
@@ -97,7 +100,6 @@ public:
 	void					Reset_UpperAnimation(_int iAnimIndex = -1);
 
 
-
 	_float					Get_TickPerSecond();
 	void					Set_TickPerSecond(_float _TickPerSecond);
 	_bool					Is_Transition();
@@ -144,9 +146,14 @@ private:
 
 	// 상 하체 분리
 	_bool					m_bIsSplitted			= { false };
-	_uint					m_iUpperAnimIndex		= { 0 };	//193
+	_uint					m_iUpperAnimIndex		= { 0 };
 	_bool					m_bIsUpperAnimEnd		= { false };
 	ANIM_STATE				m_eUpperAnimState		= { CModel::ANIM_STATE::ANIM_STATE_LOOP };
+
+	_float4x4				m_UpperSpineMatrix;
+
+	
+
 
 
 	/* Cascade */

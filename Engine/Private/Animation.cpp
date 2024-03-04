@@ -1,6 +1,8 @@
 #include "..\Public\Animation.h"
 #include "Channel.h"
+#include "Bone.h"
 
+#include "GameInstance.h"
 
 CAnimation::CAnimation()
 {
@@ -99,12 +101,10 @@ _bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState
 
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
-		//HERE
 		CChannel* pNowChannel = m_Channels[i];
 		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
 
-		// RightShoulder : 301, LeftUpLeg : 475
-		if (true == _bIsSplitted && iChannelIndex < 475 && iChannelIndex >= 301)
+		if (true == _bIsSplitted && Is_UpperBody(iChannelIndex))
 		{
 			continue;
 		}
@@ -140,7 +140,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState
 	return m_isFinished;
 }
 
-_bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones)
+_bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones, _float4x4 UpperSpineMatrix)
 {
 	_bool _bPrevTransition = m_bIsTransition;
 	if (m_bIsTransition)
@@ -192,16 +192,10 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
-		//HERE
 		CChannel* pNowChannel = m_Channels[i];
 		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
 
-		// RightShoulder : 301, LeftUpLeg : 475
-		if (iChannelIndex >= 475)
-		{
-			continue;
-		}
-		else if (iChannelIndex >= 301)
+		if (Is_UpperBody(iChannelIndex))
 		{
 			if (m_bIsTransition)
 			{
@@ -223,6 +217,21 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 					break;
 				default:
 					break;
+				}
+			}
+
+			//HERE
+			if (m_Channels[i]->Get_BoneIndex() == 10)
+			{
+				if (CGameInstance::GetInstance()->Key_Pressing(DIK_V))
+				{
+					CBone* pBone = Bones[m_Channels[i]->Get_BoneIndex()];
+
+					_float4x4 Transform = pBone->Get_TransformationMatrix();
+
+					_float4x4 ResultMatrix = XMMatrixMultiply(Transform, UpperSpineMatrix);
+
+					pBone->Set_TransformationMatrix(ResultMatrix);
 				}
 			}
 		}
@@ -257,12 +266,10 @@ void CAnimation::Reset_Animation(const CModel::BONES& Bones, _bool _bIsSplitted)
 
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
-		//HERE
 		CChannel* pNowChannel = m_Channels[i];
 		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
 
-		// RightShoulder : 301, LeftUpLeg : 475
-		if (true == _bIsSplitted && iChannelIndex < 475 && iChannelIndex >= 301)
+		if (true == _bIsSplitted && Is_UpperBody(iChannelIndex))
 		{
 			continue;
 		}
@@ -282,12 +289,10 @@ void CAnimation::Reset_UpperAnimation(const CModel::BONES& Bones)
 
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
-		//HERE
 		CChannel* pNowChannel = m_Channels[i];
 		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
 
-		// RightShoulder : 301, LeftUpLeg : 475
-		if (iChannelIndex < 475 && iChannelIndex >= 301)
+		if (Is_UpperBody(iChannelIndex))
 		{
 			m_Channels[i]->Reset_Channel(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
 		}
@@ -356,12 +361,10 @@ void CAnimation::Set_Transition_Upper(CAnimation* prevAnimation, _float _fTransi
 
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
-		//HERE
 		CChannel* pNowChannel = m_Channels[i];
 		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
 
-		// RightShoulder : 301, LeftUpLeg : 475
-		if (iChannelIndex < 475 && iChannelIndex >= 301)
+		if (Is_UpperBody(iChannelIndex))
 		{
 			CChannel* pChannel = m_Channels[i];
 			_uint		targetBoneIndex = pChannel->Get_BoneIndex();
@@ -463,6 +466,11 @@ _bool CAnimation::Is_Inputable_Front(_uint _iIndexFront)
 _bool CAnimation::Is_Inputable_Front(_float _fTrackPosition,_uint _iIndexFront)
 {
 	return m_Channels[0]->Is_Inputable_Front(m_fTrackPosition, _iIndexFront);
+}
+
+_bool CAnimation::Is_UpperBody(_int iBoneIndex)
+{
+	return (iBoneIndex < 475 && iBoneIndex >= 301) || (iBoneIndex <= 10 && iBoneIndex >= 8);
 }
 
 _float4x4* CAnimation::Get_TransformationBoneMatrices(_float fTrackPosition, _float4x4* pMatrix)

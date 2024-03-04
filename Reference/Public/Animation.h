@@ -17,7 +17,7 @@ private:
 public:
 	HRESULT Initialize(CMyAIAnimation pAIAnimation, const CModel::BONES& Bones);
 	_bool	Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones, _bool _bIsSplitted = false);
-	_bool	Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones);
+	_bool	Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones, _float4x4 UpperSpineMatrix);
 
 
 public:
@@ -77,6 +77,10 @@ public:
 
 	_float Get_Duration() { return m_fDuration; }
 
+
+	_bool Is_UpperBody(_int iBoneIndex);
+
+
 public: //!For. AnimInstance
 	_float4x4*				Get_TransformationBoneMatrices(_float fTrackPosition, _float4x4* pMatrix);
 
@@ -102,6 +106,8 @@ private:
 	_float					m_fStiffnessRate = { 1.f };
 
 	/*! "Stiffness Rate"은 물리학이나 엔지니어링 분야에서 사용되는 용어로, 물체가 변형될 때 얼마나 강하게 반발하는지를 나타내는 지표입니다. 일반적으로 강도와 관련이 있으며, 변형된 물체의 탄성을 측정하는 데 사용	*/
+
+
 
 public:
 	static CAnimation* Create(CMyAIAnimation pAIAnimation, const CModel::BONES& Bones);
