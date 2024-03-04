@@ -118,7 +118,9 @@ void CEffect_Void::Load_FromJson(const json& In_Json)
 
 void CEffect_Void::Write_VoidDesc(json& Out_Json, void* pArg)
 {
-	EFFECTVOID_DESC tVoidDesc = *(EFFECTVOID_DESC*)pArg;
+	EFFECTVOID_DESC tVoidDesc = {};
+	*static_cast<EFFECTVOID_DESC*>(&tVoidDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
+
 
 	Out_Json["eType_Effect"] = m_eType_Effect;
 

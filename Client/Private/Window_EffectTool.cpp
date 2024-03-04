@@ -1798,7 +1798,7 @@ void CWindow_EffectTool::Update_EffectList()
 	ImGui::SeparatorText("");
 	if (ImGui::Button("         Create Test        "))
 	{
-		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "save_test.json");
+		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Hit_3_NoLoop.json");
 	}
 
 
@@ -2843,6 +2843,14 @@ HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 	json In_Json;
 	string strLoadPath = strPath + "\\" + strFileName;
 	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
+
+	if (nullptr != m_pCurPartEffect)
+	{
+		m_pCurPartEffect->Load_FromJson(In_Json);
+
+		Update_CurParameters_Parts();
+		return S_OK;
+	}
 
 	if (nullptr == m_pCurEffect)
 	{
