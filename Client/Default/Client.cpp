@@ -266,8 +266,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     case WM_KEYDOWN:
-        if (wParam == VK_ESCAPE)
-            ::DestroyWindow(hWnd);
+        //if (wParam == VK_ESCAPE)
+        //    ::DestroyWindow(hWnd);
         break;
     case WM_DESTROY:
         PostQuitMessage(0);

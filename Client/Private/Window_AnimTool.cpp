@@ -60,8 +60,10 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 	if (ImGui::Button(u8"½Â¿ëÀÌÀü¿ë"))
 	{
-		m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Player"), TEXT("Prototype_GameObject_Player"));
+		CCharacter* pPlayer = dynamic_cast<CCharacter*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Player"), TEXT("Prototype_GameObject_Player")));
+		m_pGameInstance->Set_Player(pPlayer);
 		m_pGameInstance->Get_CloneGameObjects(LEVEL_TOOL, &m_CreateList);
+		
 	}
 	//disPlay
 	ShowDialog();

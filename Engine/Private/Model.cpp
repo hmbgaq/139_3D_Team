@@ -5,6 +5,7 @@
 #include "Animation.h"
 #include "Channel.h"
 #include "Shader.h"
+#include "GameObject.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -20,6 +21,8 @@ CModel::CModel(const CModel & rhs)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_Materials(rhs.m_Materials)
 	, m_iNumAnimations(rhs.m_iNumAnimations)
+	, m_fModelWidth(rhs.m_fModelWidth)
+	, m_fModelHeight(rhs.m_fModelHeight)
 
 {
 	for (auto& pPrototypeAnimation : rhs.m_Animations)
@@ -194,6 +197,25 @@ void CModel::Calculate_Sphere_Radius(_float3* vOutCenter, _float* fOutRadius)
 		*fOutRadius = fMaxRadius;
 }
 
+void CModel::Calculate_ModelSize(_float* fOutWidth, _float* fOutHeight)
+{
+	float3 vMin = XMFLOAT3(FLT_MAX, FLT_MAX, FLT_MAX);
+	_float3 vMax = XMFLOAT3(FLT_MIN, FLT_MIN, FLT_MIN);
+
+	// 모델의 모든 메쉬에 대해 AABB 계산
+
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
+	{
+		m_Meshes[i]->Calculate_AABB_Extents(&vMin, &vMax);
+	}
+
+	// 가로 및 세로 크기 계산
+	*fOutWidth = vMax.x - vMin.x;
+	*fOutHeight = vMax.y - vMin.y;
+}
+
+
+
 
 
 
@@ -257,14 +279,20 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath
 
 	Write_Names(strModelFilePath);
 
+
+	Calculate_ModelSize(&m_fModelWidth, &m_fModelHeight);
+
+	
+
 	return S_OK;
 }
 
 HRESULT CModel::Initialize(void * pArg)
 {
 
+	
 	return S_OK;
-}
+}          
 
 void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 {
@@ -353,6 +381,9 @@ HRESULT CModel::Bind_ShaderCascade(CShader* pShader)
 
 void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
 {
+	if (m_Animations.size() <= 0)
+		return;
+
 	m_eAnimState = _eAnimState;
 
 	if (_iAnimationIndex != m_iCurrentAnimIndex)
@@ -372,6 +403,8 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 	}
 	else 
 	{
+		
+
 		m_iCurrentAnimIndex = _iAnimationIndex;
 		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
 		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);

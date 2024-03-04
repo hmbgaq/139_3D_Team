@@ -35,11 +35,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
 		return E_FAIL;
 
-	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
-	{
+// 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
+// 	{
 		m_pActor = new CActor<CPlayer>(this);
 		m_pActor->Set_State(new CPlayer_IdleLoop());
-	}
+// 	}
 
 
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
@@ -97,8 +97,8 @@ HRESULT CPlayer::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Player"), BodyDesc)))
 		return E_FAIL;
 
-	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
-	{
+	//if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
+	//{
 		
 		CWeapon::WEAPON_DESC		WeaponDesc = {};
 		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, TEXT("Weapon_Punch_L"))))
@@ -107,7 +107,7 @@ HRESULT CPlayer::Ready_PartObjects()
 		if (FAILED(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch_R"))))
 			return E_FAIL;
 
-	}
+	//}
 
 	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch_L"));
 	m_pWeapon_Punch_L->Set_Enable(false);

@@ -13,7 +13,7 @@ texture2D	g_DissolveDiffTexture;
 vector      g_vCamPosition;
 vector      g_vCamLook;
 vector      g_vPlayerPosition;
-float		g_fFar;
+float		g_fCamFar;
 float		g_fDissolveRatio;
 
 
@@ -90,13 +90,13 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    //clip(Out.vDiffuse.a - 0.1f);
+    clip(Out.vDiffuse.a - 0.1f);
 	
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 
-    if (Out.vDiffuse.a == 0)
-        discard;
+    //if (Out.vDiffuse.a == 0)
+    //    discard;
 	
 	
         return Out;
@@ -172,7 +172,7 @@ PS_OUT PS_MAIN_NORMAL(PS_IN_NORMAL In)
 	vPixelNormal = mul(vPixelNormal, WorldMatrix);
 
 	Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 	
 	return Out;
 }
@@ -257,7 +257,7 @@ PS_OUT PS_MAIN_Dissove(PS_IN_NORMAL In)
 
 	
 	Out.vNormal    = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 
 	return Out;
 }
@@ -266,7 +266,7 @@ technique11 DefaultTechnique
 {
 	pass Default //0
 	{
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_Default, 0);
 		SetRasterizerState(RS_Default);
 

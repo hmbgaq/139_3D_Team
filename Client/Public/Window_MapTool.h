@@ -12,6 +12,7 @@ class CEnvironment_Instance;
 class CEnvironment_Object;
 class CPlayer;
 class CMonster;
+class CCamera_Dynamic;
 //TODO 추후 추가 class CNPC;
 
 class CWindow_MapTool final : public CImgui_Window
@@ -253,6 +254,8 @@ private: //! For. CreateInstance
 private:
 	vector<CCamera*>				m_vecCameras;
 	_bool							m_bCreateCamera = false;
+	CCamera_Dynamic*				m_pToolCamera = { nullptr };
+	
 
 public:
 	static CWindow_MapTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

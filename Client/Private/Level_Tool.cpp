@@ -18,14 +18,16 @@ HRESULT CLevel_Tool::Initialize()
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 
+	FAILED_CHECK(Ready_LightDesc());
+	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
+
 	if (FAILED(Ready_Imgui()))
 	{
 		Safe_Release(m_pDevice);
 		Safe_Release(m_pContext);
 		return E_FAIL;
 	}
-	FAILED_CHECK(Ready_LightDesc());
-	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
+	
 
 	return S_OK;
 

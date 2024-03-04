@@ -57,6 +57,10 @@ public:
 	//! 맵툴 전용 콜라이더 사이즈 계산 추가
 	_float3&				Calculate_AABB_Extents_From_Model(); //! 모델 사이즈에 맞게 AABB 사이즈 잡아줌. 
 	void					Calculate_Sphere_Radius(_float3* vOutCenter, _float* fOutRadius); //! 모델 사이즈게 맞게 SPHERE 사이즈잡아줌.  
+	void					Calculate_ModelSize(_float* fOutWidth, _float* fOutHeight);
+
+	_float					Get_ModelWidth_WithModel() { return m_fModelWidth; }
+	_float					Get_ModelHeight_WithModel() { return m_fModelHeight; }
 	//! 맵툴 전용 콜라이더 사이즈 계산 앤드
 
 
@@ -134,6 +138,9 @@ private:
 	vector<_matrix>			m_matCurrTransforms;
 	vector<KEYFRAME>		m_CurrKeyFrameDatas;
 	vector<KEYFRAME>		m_PrevKeyFrameDatas;
+
+	_float					m_fModelWidth = 0.f;
+	_float					m_fModelHeight = 0.f;
 
 public:
 	typedef vector<CBone*>	BONES;
