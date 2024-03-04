@@ -40,6 +40,8 @@ HRESULT CBody::Initialize(void* pArg)
 void CBody::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
+
+	Set_MouseMove(fTimeDelta);
 }
 
 void CBody::Tick(_float fTimeDelta)
@@ -188,6 +190,38 @@ _float CBody::Get_TrackPosition()
 	return m_pModelCom->Get_TrackPosition();
 }
 #ifdef _DEBUG
+
+void CBody::Set_MouseMove(_float fTimeDelta)
+{
+	_float2 vMouseMove = { 0.f, 0.f };
+
+
+	_long	MouseMove = 0;
+
+	_float fSpeed = 10.f;
+
+	vMouseMove.x = m_pGameInstance->Get_DIMouseMove(DIMS_X);
+	vMouseMove.y = m_pGameInstance->Get_DIMouseMove(DIMS_Y);
+
+	vMouseMove *= fSpeed * fTimeDelta;
+
+
+	//if (CGameInstance::GetInstance()->Key_Pressing(DIK_V))
+	//	vMouseMove.x += fSpeed;
+
+	//if (CGameInstance::GetInstance()->Key_Pressing(DIK_B))
+	//	vMouseMove.x -= fSpeed;
+
+
+	//if (CGameInstance::GetInstance()->Key_Pressing(DIK_F))
+	//	vMouseMove.y -= fSpeed;
+
+	//if (CGameInstance::GetInstance()->Key_Pressing(DIK_G))
+	//	vMouseMove.y += fSpeed;
+
+	m_pModelCom->Set_MouseMove(vMouseMove);
+
+}
 
 _bool CBody::Picking(_float3* vPickedPos)
 {

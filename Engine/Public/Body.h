@@ -64,6 +64,10 @@ public:
 	void Set_StiffnessRate(_float fStiffnessRate) {
 		m_pModelCom->Set_StiffnessRate(fStiffnessRate);
 	}
+
+public:
+	void Set_MouseMove(_float fTimeDelta);
+
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	

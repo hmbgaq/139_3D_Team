@@ -204,6 +204,11 @@ void CModel::Calculate_Sphere_Radius(_float3* vOutCenter, _float* fOutRadius)
 
 
 
+void CModel::Set_MouseMove(_float2 vMouseMove)
+{
+	m_vMouseMove = vMouseMove;
+}
+
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)
@@ -313,7 +318,7 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 	if (true == m_bIsSplitted)
 	{
 		//HERE
-		m_bIsUpperAnimEnd = m_Animations[m_iUpperAnimIndex]->Invalidate_TransformationMatrix_Upper(m_eUpperAnimState, fTimeDelta, m_Bones, _float2(0.f, 0.f));
+		m_bIsUpperAnimEnd = m_Animations[m_iUpperAnimIndex]->Invalidate_TransformationMatrix_Upper(m_eUpperAnimState, fTimeDelta, m_Bones, m_vMouseMove);
 	}
 
 		

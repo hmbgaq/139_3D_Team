@@ -26,13 +26,12 @@ private:
 	virtual ~CModel() = default;
 
 public:
-	_bool Is_Splitted() { return m_bIsSplitted; }
-	void Set_Splitted(_bool _bIsSplitted) { 
-		m_bIsSplitted = _bIsSplitted; 
-		//Reset_Animation();
-	};
+	_bool	Is_Splitted() { return m_bIsSplitted; }
+	void	Set_Splitted(_bool _bIsSplitted) { m_bIsSplitted = _bIsSplitted; };
 
-	_int Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; };
+	void	Set_MouseMove(_float2 vMouseMove);
+
+	_int	Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; };
 
 
 	_uint					Get_NumMeshes() const {return m_iNumMeshes; }
@@ -150,7 +149,7 @@ private:
 	_bool					m_bIsUpperAnimEnd		= { false };
 	ANIM_STATE				m_eUpperAnimState		= { CModel::ANIM_STATE::ANIM_STATE_LOOP };
 
-	
+	_float2					m_vMouseMove			= { 0.f, 0.f };
 
 
 

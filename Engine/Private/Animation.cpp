@@ -223,25 +223,6 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 			//HERE
 			if (m_Channels[i]->Get_BoneIndex() == 10)
 			{
-				vMouseMove.x = 0;
-				vMouseMove.y = 0;
-
-				_float fSpeed = 2.f;
-
-				if (CGameInstance::GetInstance()->Key_Pressing(DIK_V))
-					vMouseMove.x += fSpeed;
-				
-				if (CGameInstance::GetInstance()->Key_Pressing(DIK_B))
-					vMouseMove.x -= fSpeed;
-
-
-				if (CGameInstance::GetInstance()->Key_Pressing(DIK_F))
-					vMouseMove.y -= fSpeed;
-
-				if (CGameInstance::GetInstance()->Key_Pressing(DIK_G))
-					vMouseMove.y += fSpeed;
-
-
 				CBone* pBone = Bones[m_Channels[i]->Get_BoneIndex()];
 
 				_float4x4 Transform = pBone->Get_TransformationMatrix();
