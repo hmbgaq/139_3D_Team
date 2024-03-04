@@ -340,9 +340,19 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 #pragma endregion
 
+				/* 빌보드 키고 끄기 */
+				ImGui::SeparatorText("BillBoard");
+				ImGui::RadioButton("BillBoard", &m_iBillBoard, 0);  ImGui::SameLine();
+				ImGui::RadioButton("Off BillBoard", &m_iBillBoard, 1);
+				if (0 == m_iBillBoard)
+					m_pParticleDesc->bBillBoard = TRUE;
+				else if (1 == m_iBillBoard)
+					m_pParticleDesc->bBillBoard = FALSE;
+
+
 #pragma region 스프라이트 설정_파티클
 				/* 스프라이트 키고 끄기 */
-				ImGui::SeparatorText("");
+				ImGui::SeparatorText("Sprite");
 				ImGui::RadioButton("Off Sprite_Particle", &m_iSprite_Particle, 0); ImGui::SameLine();
 				ImGui::RadioButton("Sprite_Particle", &m_iSprite_Particle, 1);
 				if (0 == m_iSprite_Particle)
@@ -389,6 +399,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 #pragma endregion
 
+				ImGui::CollapsingHeader(" General Setting_Particle ");
+
 				/* 렌더그룹 변경_파티클(현재는 Effect그룹으로 고정(9번) */
 				ImGui::SeparatorText(" Render Group_Particle ");
 				if (ImGui::InputInt(" Render Group_Particle ", &m_iRenderGroup_Particle, 1))
@@ -415,6 +427,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 
 				/* 쉐이더에 던질 디스카드 값 변경_파티클 */
+				ImGui::SeparatorText("Discard_Value");
 				if (ImGui::DragFloat4("Discard_Particle", m_vColor_Clip_Part, 0.1f, 0.f, 1.f))
 				{
 					m_pParticleDesc->vColor_Clip.x = m_vColor_Clip_Part[0];
@@ -424,19 +437,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 
 
-				/* 빌보드 키고 끄기 */
-				ImGui::SeparatorText("");
-				ImGui::CollapsingHeader(" General Setting_Particle ");
-				ImGui::RadioButton("BillBoard", &m_iBillBoard, 0);  ImGui::SameLine();
-				ImGui::RadioButton("Off BillBoard", &m_iBillBoard, 1);
-				if (0 == m_iBillBoard)
-					m_pParticleDesc->bBillBoard = TRUE;
-				else if (1 == m_iBillBoard)
-					m_pParticleDesc->bBillBoard = FALSE;
-
-
 				/* Z소트 키고 끄기 */
-				ImGui::SeparatorText("");
+				ImGui::SeparatorText("SortZ");
 				ImGui::RadioButton("SortZ", &m_iSortZ, 0);  ImGui::SameLine();
 				ImGui::RadioButton("Off SortZ", &m_iSortZ, 1);
 				if (0 == m_iSortZ)
@@ -446,7 +448,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 				/* 인스턴스 개수 변경 */
-				ImGui::SeparatorText("");
+				ImGui::SeparatorText("Instance");
 				ImGui::Text("MaxInstance : %d", m_iMaxNumInstance_Particle);
 				if (ImGui::DragInt("Instance Count", &m_iNumInstance_Particle, 1, 1, m_iNumInstance_Particle))
 				{
@@ -458,7 +460,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 
 				/* 리지드바디 키고 끄기 */
-				ImGui::SeparatorText("");
+				ImGui::SeparatorText("RigidBody");
 				ImGui::RadioButton(" ON  RigidBody_Particle ", &m_iUseRigidBody_Particle, 0);  ImGui::SameLine();
 				ImGui::RadioButton(" OFF RigidBody_Particle ", &m_iUseRigidBody_Particle, 1);
 				if (0 == m_iUseRigidBody_Particle)
@@ -512,8 +514,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						}
 
 						/* 리지드바디 : Force Mode */
-						ImGui::SeparatorText("");
-						ImGui::SeparatorText(" Force Mode_Particle ");
+						ImGui::SeparatorText("Force Mode");
 						if (ImGui::Button(" FORCE "))
 						{
 							m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
@@ -535,18 +536,18 @@ void CWindow_EffectTool::Update_ParticleTab()
 						}
 
 						/* 파워 조절 */
-						ImGui::SeparatorText("");
+						ImGui::SeparatorText("Power");
 						if (ImGui::DragFloat2("MinMaxPower_Particle", m_vMinMaxPower_Particle, 10.f, 0.1f, 5000.f))
 						{
 							if (m_vMinMaxPower_Particle[0] > m_vMinMaxPower_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 								m_vMinMaxPower_Particle[1] = m_vMinMaxPower_Particle[0];
 
 							m_pParticleBufferDesc->vMinMaxPower.x = m_vMinMaxPower_Particle[0];
-
 							m_pParticleBufferDesc->vMinMaxPower.y = m_vMinMaxPower_Particle[1];
 						}
 
-						/* Mass(질량) 조절(러프속도와 관련됨) */
+						/* Mass(질량) 조절 */
+						ImGui::SeparatorText("Mass");
 						if (ImGui::DragFloat2("vMinMaxMass_Particle", m_vMinMaxMass_Particle, 1.f, 0.f, 1000.f))
 						{
 							if (m_vMinMaxMass_Particle[0] > m_vMinMaxMass_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
@@ -554,24 +555,40 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 							m_pParticleBufferDesc->vMinMaxMass.x = m_vMinMaxMass_Particle[0];
-
-
 							m_pParticleBufferDesc->vMinMaxMass.y = m_vMinMaxMass_Particle[1];
 						}
 
 
+						/* 스피드 조절(러프 관련) */
+						ImGui::SeparatorText("Speed");
+						if (ImGui::DragFloat2("vMinMaxSpeed_Particle", m_vMinMaxSpeed_Particle, 0.f, 1.f, 1000.f))
+						{
+							if (0.f > m_vMinMaxSpeed_Particle[0])	// Min이 0보다 작아지면 0으로 고정
+								m_vMinMaxSpeed_Particle[0] = 0.f;
+
+							if (m_vMinMaxSpeed_Particle[0] > m_vMinMaxSpeed_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+								m_vMinMaxSpeed_Particle[1] = m_vMinMaxSpeed_Particle[0];
+
+
+							m_pParticleBufferDesc->vMinMaxSpeed.x = m_vMinMaxSpeed_Particle[0];
+							m_pParticleBufferDesc->vMinMaxSpeed.y = m_vMinMaxSpeed_Particle[1];
+						}
+
+						ImGui::SeparatorText("Speed_Easing");
+						Select_EasingType(&m_pParticleBufferDesc->eType_SpeedLerp);
+
+
 						/* 마찰계수 조절 */
-						ImGui::SeparatorText("");
+						ImGui::SeparatorText("Friction");
 						if (ImGui::DragFloat("Friction_Particle", &m_fFriction_Particle, 0.1f, 0.1f, 100.f))
 						{
-
 							m_pParticleBufferDesc->fFriction = m_fFriction_Particle;
 						}
 
 						/* 슬립 한계점 조절(1이하여야 함) */
+						ImGui::SeparatorText("SleepThreshold");
 						if (ImGui::DragFloat("SleepThreshold_Particle", &m_fSleepThreshold_Particle, 0.01f, 0.f, 1.f))
 						{
-
 							m_pParticleBufferDesc->fSleepThreshold = m_fSleepThreshold_Particle;
 						}
 
@@ -584,7 +601,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 				/* 라이프 타임 */
-				ImGui::SeparatorText("");
+				ImGui::SeparatorText("LifeTimes");
 				if (ImGui::DragFloat2("MinMaxLifeTime_Particle", m_vMinMaxLifeTime_Particle, 1.f, 0.f, 360.f))
 				{
 					if (m_vMinMaxLifeTime_Particle[0] > m_vMinMaxLifeTime_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
@@ -679,7 +696,71 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticleBufferDesc->vMinMaxRotationOffsetZ.y = XMConvertToRadians(m_vRotationOffsetZ_Particle[1]);
 				}
 
+#pragma region 크기 변경_파티클 시작
+				ImGui::CollapsingHeader(" Scale_Particle ");
+
+				ImGui::SeparatorText("Scale_Lerp Pos");
+				if (ImGui::DragFloat2("Scale Lerp Pos_Particle", m_vLerpScale_Pos_Particle, 0.1f, 0.f, 1.f))
+				{
+					if (m_vLerpScale_Pos_Particle[0] > m_vLerpScale_Pos_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+						m_vLerpScale_Pos_Particle[1] = m_vLerpScale_Pos_Particle[0];
+
+					m_pParticleBufferDesc->vLerpScale_Pos.x = m_vLerpScale_Pos_Particle[0];
+					m_pParticleBufferDesc->vLerpScale_Pos.y = m_vLerpScale_Pos_Particle[1];
+				}
+
+				ImGui::SeparatorText("Scale_Speed");
+				if (ImGui::DragFloat2("Scale Speed_Particle", m_vScaleSpeed_Particle, 0.001f, 0.f, 1.f))
+				{
+					m_pParticleBufferDesc->vScaleSpeed.x = m_vScaleSpeed_Particle[0];
+					m_pParticleBufferDesc->vScaleSpeed.y = m_vScaleSpeed_Particle[1];
+				}
+
+
+				ImGui::SeparatorText("Scale_Easing");
+				Select_EasingType(&m_pParticleBufferDesc->eType_ScaleLerp);
+
+				ImGui::SeparatorText("MinMax Width");
+				if (ImGui::DragFloat2("MinMax Width_Particle", m_vMinMaxWidth_Particle, 0.5f, 0.f, 5000.f))
+				{
+					if (m_vMinMaxWidth_Particle[0] > m_vMinMaxWidth_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+						m_vMinMaxWidth_Particle[1] = m_vMinMaxWidth_Particle[0];
+
+					m_pParticleBufferDesc->vMinMaxWidth.x = m_vMinMaxWidth_Particle[0];
+					m_pParticleBufferDesc->vMinMaxWidth.y = m_vMinMaxWidth_Particle[1];
+				}
+
+
+				ImGui::SeparatorText("MinMax Height");
+				if (ImGui::DragFloat2("MinMax Height_Particle", m_vMinMaxHeight_Particle, 0.5f, 0.f, 5000.f))
+				{
+					if (m_vMinMaxHeight_Particle[0] > m_vMinMaxHeight_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+						m_vMinMaxHeight_Particle[1] = m_vMinMaxHeight_Particle[0];
+
+					m_pParticleBufferDesc->vMinMaxHeight.x = m_vMinMaxHeight_Particle[0];
+					m_pParticleBufferDesc->vMinMaxHeight.y = m_vMinMaxHeight_Particle[1];
+				}
+
+
+#pragma endregion 크기_파티클 끝
+
 #pragma region 색 변경_파티클
+				/* 파티클 페이드 인아웃 사용 */
+				ImGui::SeparatorText(" Fade Type ");
+				if (ImGui::Button(" Fade_None "))
+				{
+					m_pParticleBufferDesc->eType_Fade = CVIBuffer_Particle::TYPE_FADE::FADE_NONE;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button(" Fade_In "))
+				{
+					m_pParticleBufferDesc->eType_Fade = CVIBuffer_Particle::TYPE_FADE::FADE_IN;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button(" Fade_Out "))
+				{
+					m_pParticleBufferDesc->eType_Fade = CVIBuffer_Particle::TYPE_FADE::FADE_OUT;
+				}
 
 				/* 색 변경 */
 				ImGui::CollapsingHeader(" Color_Particle ");
@@ -726,8 +807,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_fColor_Cur_Particle[3] = m_pParticleBufferDesc->vCurrentColor.w;
 				}
 
-				ImGui::SeparatorText("");
-
+				ImGui::SeparatorText("Color_Easing");
 				Select_EasingType(&m_pParticleBufferDesc->eType_ColorLerp);
 
 #pragma endregion 색 변경_파티클 끝
@@ -757,22 +837,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 				//ImGui::SameLine(); HelpMarker(u8"재생, 역재생");
 
 
-				///* 파티클 페이드 인아웃 사용 */
-				//ImGui::SeparatorText(" Fade Type ");
-				//if (ImGui::Button(" Fade_None "))
-				//{
-				//	m_pParticlePointDesc->eType_Fade = CVIBuffer_Particle_Point::TYPE_FADE::FADE_NONE;
-				//}
-				//ImGui::SameLine();
-				//if (ImGui::Button(" Fade_In "))
-				//{
-				//	m_pParticlePointDesc->eType_Fade = CVIBuffer_Particle_Point::TYPE_FADE::FADE_IN;
-				//}
-				//ImGui::SameLine();
-				//if (ImGui::Button(" Fade_Out "))
-				//{
-				//	m_pParticlePointDesc->eType_Fade = CVIBuffer_Particle_Point::TYPE_FADE::FADE_OUT;
-				//}
+
 
 
 				/* 텍스처 UV회전 */
@@ -1427,6 +1492,10 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_vMinMaxMass_Particle[0] = m_pParticleBufferDesc->vMinMaxMass.x;
 				m_vMinMaxMass_Particle[1] = m_pParticleBufferDesc->vMinMaxMass.y;
 
+				/* 스피드 */
+				m_vMinMaxSpeed_Particle[0] = m_pParticleBufferDesc->vMinMaxSpeed.x;
+				m_vMinMaxSpeed_Particle[1] = m_pParticleBufferDesc->vMinMaxSpeed.y;
+
 			}
 
 
@@ -1449,6 +1518,19 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_vRotationOffsetZ_Particle[0] = m_pParticleBufferDesc->vMinMaxRotationOffsetZ.x;
 			m_vRotationOffsetZ_Particle[1] = m_pParticleBufferDesc->vMinMaxRotationOffsetZ.y;
+
+			/* 스케일 */
+			m_vLerpScale_Pos_Particle[0] = m_pParticleBufferDesc->vLerpScale_Pos.x;
+			m_vLerpScale_Pos_Particle[1] = m_pParticleBufferDesc->vLerpScale_Pos.y;
+
+			m_vMinMaxWidth_Particle[0] = m_pParticleBufferDesc->vMinMaxWidth.x;
+			m_vMinMaxWidth_Particle[1] = m_pParticleBufferDesc->vMinMaxWidth.y;
+
+			m_vMinMaxHeight_Particle[0] = m_pParticleBufferDesc->vMinMaxHeight.x;
+			m_vMinMaxHeight_Particle[1] = m_pParticleBufferDesc->vMinMaxHeight.y;
+
+			m_vScaleSpeed_Particle[0] = m_pParticleBufferDesc->vScaleSpeed.x;
+			m_vScaleSpeed_Particle[1] = m_pParticleBufferDesc->vScaleSpeed.y;
 
 
 			/* 색상 */

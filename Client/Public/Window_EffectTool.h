@@ -166,6 +166,7 @@ private:
 
 	_float	m_vMinMaxPower_Particle[2]	= { 0.1f, 250.f };
 	_float	m_vMinMaxMass_Particle[2]	= { 10.f, 10.f };
+	_float	m_vMinMaxSpeed_Particle[2] = { 1.f, 1.f };
 	/* RigidBody ============================================== */
 
 
@@ -180,6 +181,12 @@ private:
 	_float	m_vRotationOffsetY_Particle[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetZ_Particle[2] = { 0.f, 0.f };
 
+
+	/* For.Scale */
+	_float		m_vLerpScale_Pos_Particle[2] = { 0.f, 1.f };
+	_float		m_vMinMaxWidth_Particle[2] = { 0.f, 1.f };
+	_float		m_vMinMaxHeight_Particle[2] = { 0.f, 1.f };
+	_float		m_vScaleSpeed_Particle[2] = { 0.005f, 0.05f };
 
 	/* For.Color */
 	_int	m_iDynamic_Color_Particle = { 0 };

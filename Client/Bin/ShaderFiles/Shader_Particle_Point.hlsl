@@ -151,19 +151,24 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
 	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
+	// Áß¾Ó ¿øÁ¡ÀÌ ¾Æ´Ô! (Áß¾Ó À§·Î ¿øÁ¡ ¹Ù²ã¼­ Âï¾úÀ½!!)
+	//Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
+	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight, 1.f), matVP);
 	Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
 	Out[0].vColor = In[0].vColor;
 
-	Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
+	//Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
+	Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight, 1.f), matVP);
 	Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_fDegree);
 	Out[1].vColor = In[0].vColor;
 
-	Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
+	//Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
+	Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - (vUp * 2), 1.f), matVP);
 	Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_fDegree);
 	Out[2].vColor = In[0].vColor;
 
-	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
+	//Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
+	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - (vUp * 2), 1.f), matVP);
 	Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_fDegree);
 	Out[3].vColor = In[0].vColor;
 
@@ -213,6 +218,8 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		Out.vColor = g_DiffuseTexture.Sample(PointSampler, clippedTexCoord);
 
 		Out.vColor.rgb *= In.vColor.rgb;
+		Out.vColor.a = In.vColor.a;
+
 
 		if (Out.vColor.a < g_fAlpha_Discard)
 			discard;
@@ -224,12 +231,11 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		float4 vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
 
 		Out.vColor.rgb *= In.vColor.rgb;
+		Out.vColor.a = In.vColor.a * vAlphaColor;
 
-		Out.vColor.a = vAlphaColor;
 
 		if (Out.vColor.a < g_fAlpha_Discard)
 			discard;
-
 	}
 
 

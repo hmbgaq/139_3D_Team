@@ -95,8 +95,7 @@ HRESULT CVIBuffer_Particle::Initialize(void* pArg)
 
 
 	// 시간 초기화
-	m_tBufferDesc.fTimeAcc = 0.f;
-	m_tBufferDesc.fLifeTimeRatio = 0.f;
+	m_tBufferDesc.Reset_Times();
 
 	// ==============================================================================================
 
@@ -200,9 +199,9 @@ HRESULT CVIBuffer_Particle::Init_Instance(_int iNumInstance)
 
 		// 초기화
 		XMStoreFloat4(&pVertices[i].vPosition, m_tBufferDesc.vCenterPosition);
-		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f)	/* * 크기 */;
-		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f)	/* * 크기 */;
-		pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f)	/* * 크기 */;
+		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
+		pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
+		pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f);
 
 
 
@@ -223,8 +222,7 @@ HRESULT CVIBuffer_Particle::Init_Instance(_int iNumInstance)
 void CVIBuffer_Particle::ReSet()
 {
 	// 시간 초기화
-	m_tBufferDesc.fTimeAcc = 0.f;
-	m_tBufferDesc.fLifeTimeRatio = 0.f;
+	m_tBufferDesc.Reset_Times();
 
 	// ==============================================================================================
 
@@ -243,10 +241,10 @@ void CVIBuffer_Particle::ReSet()
 
 		// 초기화
 		XMStoreFloat4(&pVertices[i].vPosition, m_tBufferDesc.vCenterPosition);
-		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f)	/* * 크기 */;
-		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f)		/* * 크기 */;
-		pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f)	/* * 크기 */;
-
+		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
+		pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
+		pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f);
+		pVertices[i].vColor.w = 1.f;
 
 	} // 반복문 끝
 
@@ -272,13 +270,23 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	m_tBufferDesc.vCenterPosition.w = 1.f;
 
 
+	// 크기
+	m_vecParticleInfoDesc[iNum].vMaxScales.x = SMath::fRandom(m_tBufferDesc.vMinMaxWidth.x, m_tBufferDesc.vMinMaxWidth.y);
+	m_vecParticleInfoDesc[iNum].vMaxScales.y = SMath::fRandom(m_tBufferDesc.vMinMaxHeight.x, m_tBufferDesc.vMinMaxHeight.y);
+
+
+
 #pragma region 리지드바디 시작
 	// 리지드 바디 사용이면
 	if (m_tBufferDesc.bUseRigidBody)
 	{
 		Clear_Power(iNum);	// 파워 리셋
-		m_vecParticleRigidbodyDesc[iNum].fSpeed = SMath::fRandom(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);	// 스피드 리셋
-		m_vecParticleRigidbodyDesc[iNum].fMass = SMath::fRandom(m_tBufferDesc.vMinMaxMass.x, m_tBufferDesc.vMinMaxMass.y);		// 질량 리셋
+		
+		// 스피드 리셋
+		m_vecParticleRigidbodyDesc[iNum].fCurSpeed = 1.f;
+		m_vecParticleRigidbodyDesc[iNum].fMaxSpeed = SMath::fRandom(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);
+
+		m_vecParticleRigidbodyDesc[iNum].fMass = SMath::fRandom(m_tBufferDesc.vMinMaxMass.x, m_tBufferDesc.vMinMaxMass.y);			// 질량 리셋
 
 
 #pragma region 이동 진행방향 회전 시작
@@ -367,13 +375,17 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 				{
 					if (m_tBufferDesc.bKinetic)
 					{
-
+						// 스피드 러프
+						m_vecParticleRigidbodyDesc[i].fCurSpeed = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y, m_vecParticleInfoDesc[i].fTimeAccs, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_SpeedLerp));
 
 						Update_Kinetic(i, fTimeDelta);	// 이동 속력 계산 업데이트
 
 						// 계산된 속력으로 이동할 위치 계산 / Translate : vMovePos = vPos + Get_State(CTransform::STATE_POSITION);
-						_vector vMovePos = (XMLoadFloat3(&m_vecParticleRigidbodyDesc[i].vVelocity) * (m_vecParticleRigidbodyDesc[i].fSpeed * fTimeDelta)) + XMLoadFloat4(&pVertices[i].vPosition); XMVectorSetW(vMovePos, 1.f);
+						_vector vMovePos = (XMLoadFloat3(&m_vecParticleRigidbodyDesc[i].vVelocity) * (m_vecParticleRigidbodyDesc[i].fCurSpeed * fTimeDelta)) + XMLoadFloat4(&pVertices[i].vPosition); XMVectorSetW(vMovePos, 1.f);
 						XMStoreFloat4(&pVertices[i].vPosition, vMovePos);	// 최종 위치 이동 적용
+
+
+						m_vecParticleShaderInfoDesc[i].vDir = m_vecParticleRigidbodyDesc[i].vVelocity;			// 쉐이더에 전달할 방향 저장
 					}
 					else
 					{
@@ -384,6 +396,54 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 		}
 #pragma endregion 이동 : 리지드바디 끝
 
+
+#pragma region 크기 변경 시작
+		if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.x)		// 0~1로 보간한 라이프타임이 크기 증가를 시작할 타임 포지션을 넘어가면
+		{
+			if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.y) // 0~1로 보간한 라이프타임이 크기 감소를 시작할 타임 포지션도 넘어가면 감소 시작
+			{
+				// 크기 감소를 시작할 타임 포지션 (크기 0이 목표)
+
+				_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * (1.f - m_tBufferDesc.vLerpScale_Pos.y);	// 라이프 타임 중, 감소에만 필요한 토탈시간 계산
+				if (m_tBufferDesc.fDownScaleTimeAcc >= fTotalTime)
+				{
+					m_tBufferDesc.fDownScaleTimeAcc = fTotalTime;
+					m_tBufferDesc.vCurScale.x = 0.f;
+					m_tBufferDesc.vCurScale.y = 0.f;
+				}
+				else
+				{
+					m_tBufferDesc.fDownScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.y);	// 시간 누적	
+					m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.x, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+					m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.y, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+				}
+			}
+			else
+			{		
+				// Max크기가 목표
+
+				_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * ((1.f - m_tBufferDesc.vLerpScale_Pos.x) + (1.f - m_tBufferDesc.vLerpScale_Pos.y));	// 라이프 타임 중, 증가에만 필요한 토탈시간 계산
+				if (m_tBufferDesc.fUpScaleTimeAcc >= fTotalTime)
+				{
+					m_tBufferDesc.fUpScaleTimeAcc = fTotalTime;
+					m_tBufferDesc.vCurScale.x = m_vecParticleInfoDesc[i].vMaxScales.x;
+					m_tBufferDesc.vCurScale.y = m_vecParticleInfoDesc[i].vMaxScales.y;
+				}
+				else
+				{
+					m_tBufferDesc.fUpScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.x);	// 시간 누적		
+					m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxWidth.x, m_vecParticleInfoDesc[i].vMaxScales.x, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+					m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxHeight.x, m_vecParticleInfoDesc[i].vMaxScales.y, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+				}
+			
+			}
+
+			// 크기변경 적용
+			pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.x;
+			pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.y;
+		}
+
+#pragma region 크기 변경 끝
 
 #pragma region 색 변경 시작
 		if (m_tBufferDesc.bDynamic_Color)	// 입자마다 다른 주기로 색 변경
@@ -402,6 +462,22 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 			pVertices[i].vColor = m_tBufferDesc.vCurrentColor;
 		}
+
+		// 알파
+		_float		fAlpha;
+		if (FADE_NONE == m_tBufferDesc.eType_Fade)
+		{
+			fAlpha = 1.f;
+		}
+		else if (FADE_OUT == m_tBufferDesc.eType_Fade)
+		{
+			fAlpha = max((m_vecParticleInfoDesc[i].fLifeTime) - m_tBufferDesc.fTimeAcc, 0.f);	
+		}
+		else if (FADE_IN == m_tBufferDesc.eType_Fade)
+		{
+			fAlpha = min((m_vecParticleInfoDesc[i].fLifeTime) + m_tBufferDesc.fTimeAcc, 1.f);
+		}
+		pVertices[i].vColor.w = fAlpha;
 
 #pragma region 색 변경 끝
 
@@ -540,6 +616,8 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 {
 	Out_Json["Com_VIBuffer"]["iCurNumInstance"] = m_tBufferDesc.iCurNumInstance;
 
+	Out_Json["Com_VIBuffer"]["eType_Fade"] = m_tBufferDesc.eType_Fade;
+	
 	/* LifeTime */
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
 
@@ -572,6 +650,15 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRotationOffsetZ"], m_tBufferDesc.vMinMaxRotationOffsetZ);
 
 
+	/* For.Scale */
+	Out_Json["Com_VIBuffer"]["eType_ScaleLerp"] = m_tBufferDesc.eType_ScaleLerp;
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vLerpScale_Pos"], m_tBufferDesc.vLerpScale_Pos);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vScaleSpeed"], m_tBufferDesc.vScaleSpeed);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxWidth"], m_tBufferDesc.vMinMaxWidth);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxHeight"], m_tBufferDesc.vMinMaxHeight);
+
+
+
 	/* For.Color */
 	Out_Json["Com_VIBuffer"]["eType_ColorLerp"] = m_tBufferDesc.eType_ColorLerp;
 	Out_Json["Com_VIBuffer"]["bDynamic_Color"] = m_tBufferDesc.bDynamic_Color;
@@ -587,6 +674,9 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 {
 	m_tBufferDesc.iCurNumInstance = In_Json["Com_VIBuffer"]["iCurNumInstance"];
+
+	m_tBufferDesc.eType_Fade = In_Json["Com_VIBuffer"]["eType_Fade"];
+
 
 	/* LifeTime */
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
@@ -619,6 +709,15 @@ void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetX"], m_tBufferDesc.vMinMaxRotationOffsetX);
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetY"], m_tBufferDesc.vMinMaxRotationOffsetY);
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetZ"], m_tBufferDesc.vMinMaxRotationOffsetZ);
+
+
+	/* For.Scale */
+	m_tBufferDesc.eType_ScaleLerp = In_Json["Com_VIBuffer"]["eType_ScaleLerp"];
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vLerpScale_Pos"], m_tBufferDesc.vLerpScale_Pos);
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vScaleSpeed"], m_tBufferDesc.vScaleSpeed);
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxWidth"], m_tBufferDesc.vMinMaxWidth);
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxHeight"], m_tBufferDesc.vMinMaxHeight);
+
 
 	/* For.Color */
 	m_tBufferDesc.eType_ColorLerp = In_Json["Com_VIBuffer"]["eType_ColorLerp"];
