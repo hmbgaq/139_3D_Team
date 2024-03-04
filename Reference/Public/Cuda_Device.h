@@ -11,9 +11,11 @@ public:
 
 public:
 	HRESULT	Ready_Cuda_Device();
-private:
+public:
 	CUcontext m_pCudaContext = nullptr;
-private:
+public:
+	static CCuda_Device* Create(const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice,
+		_Inout_ ID3D11DeviceContext** ppDeviceContextOut);
 	virtual void Free() override;
 };
 

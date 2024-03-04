@@ -84,20 +84,20 @@ namespace Engine
 using namespace Engine;
 
 // NvCloth
-#include <NvCloth/Factory.h>
-#include <NvCloth/Cloth.h>
-#include <NvCloth/Callbacks.h>
-#include <NvCloth/DxContextManagerCallback.h>
-#include <NvCloth/Fabric.h>
-#include <NvCloth/Solver.h>
-#include <NvCloth/Allocator.h>
-#include <NvCloth/Callbacks.h>
-#include <NvClothExt/ClothFabricCooker.h>
-#include <NvClothExt/ClothMeshDesc.h>
-#include <NvClothExt/ClothMeshQuadifier.h>
-#include <NvClothExt/ClothTetherCooker.h>
-
-using namespace nv::cloth;
+// #include <NvCloth/Factory.h>
+// #include <NvCloth/Cloth.h>
+// #include <NvCloth/Callbacks.h>
+// #include <NvCloth/DxContextManagerCallback.h>
+// #include <NvCloth/Fabric.h>
+// #include <NvCloth/Solver.h>
+// #include <NvCloth/Allocator.h>
+// #include <NvCloth/Callbacks.h>
+// #include <NvClothExt/ClothFabricCooker.h>
+// #include <NvClothExt/ClothMeshDesc.h>
+// #include <NvClothExt/ClothMeshQuadifier.h>
+// #include <NvClothExt/ClothTetherCooker.h>
+// 
+// using namespace nv::cloth;
 /* for PhysX */
 #include "PhysX/PxPhysics.h"
 #include "PhysX/PxPhysicsAPI.h"

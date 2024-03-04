@@ -37,6 +37,11 @@
 
 using namespace DirectX;
 
+// CUDA 12.0
+#include <cuda.h>
+#include <cuda_runtime.h>
+#include <device_launch_parameters.h>
+
 /* Basic*/
 #include <unordered_map>
 #include <algorithm>
@@ -50,6 +55,7 @@ using namespace DirectX;
 #include <string>
 #include <cstring>
 #include <ctime>
+#include <mutex>
 #include <random>
 #include <locale>
 #include <codecvt>
@@ -77,6 +83,21 @@ namespace Engine
 
 using namespace Engine;
 
+// NvCloth
+// #include <NvCloth/Factory.h>
+// #include <NvCloth/Cloth.h>
+// #include <NvCloth/Callbacks.h>
+// #include <NvCloth/DxContextManagerCallback.h>
+// #include <NvCloth/Fabric.h>
+// #include <NvCloth/Solver.h>
+// #include <NvCloth/Allocator.h>
+// #include <NvCloth/Callbacks.h>
+// #include <NvClothExt/ClothFabricCooker.h>
+// #include <NvClothExt/ClothMeshDesc.h>
+// #include <NvClothExt/ClothMeshQuadifier.h>
+// #include <NvClothExt/ClothTetherCooker.h>
+// 
+// using namespace nv::cloth;
 /* for PhysX */
 #include "PhysX/PxPhysics.h"
 #include "PhysX/PxPhysicsAPI.h"

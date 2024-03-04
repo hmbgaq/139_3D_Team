@@ -44,7 +44,7 @@ HRESULT CRenderer::Initialize()
 	m_tRadial_Option.bRadial_Active = false;
 	m_tHDR_Option.bHDR_Active = false;
 #ifdef _DEBUG
-	m_bDebugRenderTarget = true;
+	m_bDebugRenderTarget = false;
 	m_bDebugCom = true;
 #endif	
 	return S_OK;
