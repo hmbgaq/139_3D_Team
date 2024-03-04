@@ -57,10 +57,14 @@ void CWindow_ShaderTool::Top_Setting()
 	/* 최상위 셋팅 - 렌더타겟 끄고 켜기 */
 	ImGui::SeparatorText("Priority Setting");
 
-	if (ImGui::Checkbox(u8"RenderTarget Active", &bRenderTarget_Active))
-	{
-		m_pGameInstance->Set_RenderDebug(bRenderTarget_Active);
-	}
+#ifdef _DEBUG
+	if (ImGui::Checkbox(u8"RenderTarget", &bRenderTarget_Active))
+		m_pGameInstance->Set_RenderDebugTarget(bRenderTarget_Active);
+
+	if (ImGui::Checkbox(u8"Component", &bRenderCom_Active))
+		m_pGameInstance->Set_RenderDebugCom(bRenderCom_Active);
+
+#endif // _DEBUG
 
 	ImGui::SameLine();
 	HelpMarker(u8"렌더타겟 끄고 켜기");
@@ -84,11 +88,18 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 {
 	ImGui::SeparatorText("Pre-Post");
 
+	if (ImGui::TreeNode("Bloom / Rim Setting"))
+	{
+		Compress_BloomRim_Setting();
+		ImGui::TreePop();
+	}
+
 	if (ImGui::TreeNode("HBAO+ Setting"))
 	{
 		Compress_HBAO_Plus_Setting();
 		ImGui::TreePop();
 	}
+
 	if (ImGui::TreeNode("Fog Setting"))
 	{
 		Compress_Fog_Setting();
@@ -96,6 +107,18 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 	}
 
 	ImGui::SeparatorText("Post");
+
+	if (ImGui::TreeNode("Radial Blur Setting"))
+	{
+		Compress_Radial_Setting();
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("DOF Setting"))
+	{
+		Compress_DOF_Setting();
+		ImGui::TreePop();
+	}
 
 	if (ImGui::TreeNode("HDR Setting"))
 	{
@@ -107,9 +130,9 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_FXAA_Setting();
 		ImGui::TreePop();
 	}
-	if (ImGui::TreeNode("Screen Setting"))
+	if (ImGui::TreeNode("HSV Setting"))
 	{
-		Compress_Screen_Setting();
+		Compress_HSV_Setting();
 		ImGui::TreePop();
 	}
 }
@@ -130,7 +153,7 @@ void CWindow_ShaderTool::Compress_HBAO_Plus_Setting()
 
 	ImGui::SliderFloat("Blur Sharpness", &m_eHBAO_Desc.fBlur_Sharpness, 1.f, 20.0f, "Sharpness = %.3f");
 
-	m_pGameInstance->Get_Renderer()->Set_SSAO(m_eHBAO_Desc.bHBAO_Active);
+	m_pGameInstance->Get_Renderer()->Set_HBAO_Active(m_eHBAO_Desc.bHBAO_Active);
 
 	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(m_eHBAO_Desc);
 }
@@ -163,9 +186,41 @@ void CWindow_ShaderTool::Compress_Fog_Setting()
 
 	ImGui::SliderFloat("FogHeightDensity", &m_eFog_Desc.fFogHeightDensity, 0.001f, 1.0f, "HeightDensity = %.3f");
 
-	m_pGameInstance->Get_Renderer()->Set_Fog(m_eFog_Desc.bFog_Active);
+	m_pGameInstance->Get_Renderer()->Set_Fog_Active(m_eFog_Desc.bFog_Active);
 
 	m_pGameInstance->Get_Renderer()->Set_Fog_Option(m_eFog_Desc);
+}
+
+void CWindow_ShaderTool::Compress_BloomRim_Setting()
+{
+	ImGui::Checkbox("Bloom Blur",		&m_eScreen_Desc.bBloomBlur_Active);
+	ImGui::Checkbox("RimLight Blur",	&m_eScreen_Desc.bRimBlur_Active);
+
+	m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(m_eScreen_Desc);
+
+}
+
+void CWindow_ShaderTool::Compress_Radial_Setting()
+{
+	ImGui::Checkbox("Radial Active", &m_eRadial_Desc.bRadial_Active);
+
+	ImGui::SliderFloat("Power", &m_eRadial_Desc.fRadial_Power, 0.0f, 1.0f, "Power = %.3f");
+	ImGui::SliderFloat("Quality", &m_eRadial_Desc.fRadial_Quality, 0.0f, 20.0f, "Quality = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(m_eRadial_Desc.bRadial_Active);
+
+	m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(m_eRadial_Desc);
+}
+
+void CWindow_ShaderTool::Compress_DOF_Setting()
+{
+	ImGui::Checkbox("DOF Active", &m_eDOF_Desc.bDOF_Active);
+
+	ImGui::SliderFloat("Focus Distance", &m_eDOF_Desc.g_fFocusDistance, 0.0f, 100.0f, "DistFocalPlane = %.3f");
+	ImGui::SliderFloat("Focus Range", &m_eDOF_Desc.g_fFocusRange, 0.0f, 100.0f, "FocalLength/2 = %.3f");
+	ImGui::SliderFloat("Att", &m_eDOF_Desc.fMaxAtt, 0.0f, 100.0f, "MaxAtt = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_DOF_Option(m_eDOF_Desc);
 }
 
 void CWindow_ShaderTool::Compress_HDR_Setting()
@@ -174,28 +229,29 @@ void CWindow_ShaderTool::Compress_HDR_Setting()
 
 	ImGui::SliderFloat("HDR_White", &m_eHDR_Desc.fmax_white, 0.0f, 1.0f, "HDR_White = %.3f");
 
-	m_pGameInstance->Get_Renderer()->Set_HDR(m_eHDR_Desc.bHDR_Active);
+	m_pGameInstance->Get_Renderer()->Set_HDR_Active(m_eHDR_Desc.bHDR_Active);
 
 	m_pGameInstance->Get_Renderer()->Set_HDR_Option(m_eHDR_Desc);
 }
 
 void CWindow_ShaderTool::Compress_FXAA_Setting()
 {
-	ImGui::Checkbox("FXAA Active", &m_eScreen_Desc.bFXAA_Active);
+	ImGui::Checkbox("FXAA Active", &m_eAnti_Desc.bFXAA_Active);
 
-	m_pGameInstance->Get_Renderer()->Set_FXAA(m_eScreen_Desc.bFXAA_Active);
-	m_pGameInstance->Get_Renderer()->Set_Screen_Option(m_eScreen_Desc);
+	m_pGameInstance->Get_Renderer()->Set_FXAA_Active(m_eAnti_Desc.bFXAA_Active);
+	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(m_eAnti_Desc);
 }
 
-void CWindow_ShaderTool::Compress_Screen_Setting()
+void CWindow_ShaderTool::Compress_HSV_Setting()
 {
-	ImGui::SliderFloat("Brightness", &m_eScreen_Desc.fFinal_Brightness, 0.0f, 2.0f, "Brightness = %.3f");
+	ImGui::Checkbox("HSV Active", &m_eHSV_Desc.bScreen_Active);
 
-	ImGui::SliderFloat("Saturation", &m_eScreen_Desc.fFinal_Saturation, 0.0f, 2.0f, "Saturation = %.3f");
+	ImGui::SliderFloat("Brightness", &m_eHSV_Desc.fFinal_Brightness, 0.0f, 2.0f, "Brightness = %.3f");
 
-	m_pGameInstance->Get_Renderer()->Set_Screen_Option(m_eScreen_Desc);
+	ImGui::SliderFloat("Saturation", &m_eHSV_Desc.fFinal_Saturation, 0.0f, 2.0f, "Saturation = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_HSV_Option(m_eHSV_Desc);
 }
-
 
 #pragma region Level 불러오기 
 
@@ -243,7 +299,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 		ImGui::Text("wrong choice");
 		break;
 	case 1: /* Test */
-		m_eCurrLevel_Enum = LEVEL::LEVEL_GAMEPLAY;
+		m_eCurrLevel_Enum = LEVEL::LEVEL_TOOL;
 		break;
 	case 2: /* SnowMountain */
 		m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAIN;
@@ -304,12 +360,12 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 		CEnvironment_Object* pObject = { nullptr };
 
-		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_BACKGROUND, L"Prototype_GameObject_Environment_Object", &Desc));
+		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 	}
 
 
 	json InteractJson = Stage1MapJson["Interact_Json"];
-	_int InteractJsonSize = InteractJson.size();
+	_int InteractJsonSize = (_int)InteractJson.size();
 
 	for (_int i = 0; i < InteractJsonSize; ++i)
 	{
@@ -319,7 +375,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 	}
 
 	json InstanceJson = Stage1MapJson["Instance_Json"];
-	_int InstanceJsonSize = InstanceJson.size();
+	_int InstanceJsonSize = (_int)InstanceJson.size();
 
 	for (_int i = 0; i < InstanceJsonSize; ++i)
 	{
@@ -337,14 +393,14 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
 
 		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
+		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
 
-		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
+		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
 		{
 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
 
 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
-			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
+			CJson_Utility::Load_Float4(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
 
@@ -354,7 +410,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 		CEnvironment_Instance* pInstanceObject = { nullptr };
 
-		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_BACKGROUND, L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
 
 	}
 
@@ -389,9 +445,8 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 	}
 
-
-
 	return S_OK;
+
 }
 
 #pragma endregion
@@ -399,8 +454,11 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 void CWindow_ShaderTool::Imgui_Setting()
 {
 	/* 아임구이 셋팅 */
-	SetUp_ImGuiDESC("Shader", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+	ImGuiWindowFlags Flag = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | 
+							ImGuiWindowFlags_NoMove| ImGuiWindowFlags_NoResize |
+							ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus;
 
+	SetUp_ImGuiDESC("Shader", ImVec2{ 400.f, 300.f }, Flag, ImVec4(0.f, 0.f, 0.f, 0.8f));
 	auto& style = ImGui::GetStyle();
 	ImVec4* colors = style.Colors;
 	style.FrameRounding = 8.0f; /* 값이 클수록 모서리가 더 둥글게된다. */

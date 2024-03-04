@@ -148,11 +148,32 @@ CTransform* CGameObject::Get_Transform()
 	return m_pTransformCom;
 }
 
+_vector CGameObject::Get_Position_Vector()
+{
+	return m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
+}
+
+_vector CGameObject::Calc_Look_Dir(_vector vTargetPos)
+{
+	return m_pTransformCom->Calc_Look_Dir(vTargetPos);
+}
+
+CGameObject* CGameObject::Get_Object_Owner()
+{
+	return m_pOwner;
+}
+
+void CGameObject::Set_Object_Owner(CGameObject* pOwner)
+{
+	m_pOwner = pOwner;
+}
+
+
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComTag, _Inout_ CComponent** ppOut, void * pArg)
 {
 	if (nullptr != Find_Component(strComTag))
 		return E_FAIL;
-
+	      
 	CComponent*		pComponent = m_pGameInstance->Clone_Component(iLevelIndex, strPrototypeTag, pArg);
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -164,6 +185,15 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototy
 	Safe_AddRef(pComponent);
 
 	pComponent->Set_Owner(this);
+
+	if (typeid(*pComponent) == typeid(CModel))
+	{
+		CModel* pModel = dynamic_cast<CModel*>(pComponent);
+		
+		pModel->Get_Owner()->Set_ModelWidth(pModel->Get_ModelWidth_WithModel());
+		pModel->Get_Owner()->Set_ModelHeight(pModel->Get_ModelHeight_WithModel());
+
+	}
 
 	return S_OK;
 }

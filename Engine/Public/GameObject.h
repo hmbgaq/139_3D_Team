@@ -48,6 +48,7 @@ public:
 public:
 	void	Set_Position(const _float3 & vState);
 	void	Set_WorldMatrix(_float4x4 matrix);
+
 public:
 	_bool	Is_Dead() { return m_bDead; }
 	void	Set_Dead(_bool _bDead) { m_bDead = _bDead; }
@@ -56,11 +57,19 @@ public:
 	virtual void Set_Enable(_bool _Enable) override;
 
 public:
+	void	Set_ModelWidth(_float fWidth) { m_fModelWidth = fWidth;}
+	void	Set_ModelHeight(_float fHeight) { m_fModelHeight = fHeight; }
+	_float  Get_ModelWidth() { return m_fModelWidth;}
+	_float 	Get_ModelHeight() { return m_fModelHeight; }
+
+public:
 	virtual _bool Write_Json(json & Out_Json) override;
 	virtual void Load_FromJson(const json & In_Json) override;
 
 public:
 	class CTransform* Get_Transform();
+	_vector Get_Position_Vector();
+	_vector Calc_Look_Dir(_vector vTargetPos);
 
 
 public:
@@ -80,7 +89,9 @@ public:
 
 	_bool Is_PoolObject() { return m_bIsPoolObject; };
 
-
+public:
+	CGameObject* Get_Object_Owner();
+	void Set_Object_Owner(CGameObject* pOwner);
 	
 
 
@@ -106,6 +117,13 @@ protected:
 protected:
 	wstring						m_strPrototypeTag;
 
+protected:
+	CGameObject*				m_pOwner = { nullptr };
+
+
+protected: //! For.Tool
+	_float						m_fModelWidth = { 0.f };
+	_float						m_fModelHeight = { 0.f };
 
 
 public:

@@ -66,14 +66,14 @@ void CInteract_Chain::Late_Tick(_float fTimeDelta)
 	{
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 
-		if (m_pGameInstance->Key_Pressing(DIK_8))
-		{
-			/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
-			m_bInteractActive = true;
-			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
-		}
-		else
-			m_bInteractActive = false;
+		//if (m_pGameInstance->Key_Pressing(DIK_8))
+		//{
+		//	/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
+		//	m_bInteractActive = true;
+		//	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		//}
+		//else
+		//	m_bInteractActive = false;
 	}
 
 }

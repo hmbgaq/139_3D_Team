@@ -1,7 +1,30 @@
 #include "Shader_Defines.hlsli"
+struct radial
+{
+    bool    bRadial_Active;
+    float   fRadial_Quality;
+    float   fRadial_Power;
+};
+
+struct DOF
+{
+    bool    bDOF_Active;
+    //float   fNearBlur_Depth;
+    //float   fFocalPalne_Depth;
+    //float   FarBlur_Depth;
+    
+    float   fFocusDistance;
+    float   fFocusRange;
+    float   fMaxAtt;
+};
+
+/* ====================================== */
 
 /* Origin */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+matrix g_ViewMatrixInv, g_ProjMatrixInv;
+float4 g_vCamPosition;
+float g_fCamFar;
 
 Texture2D g_ProcessingTarget;
 
@@ -11,6 +34,32 @@ bool g_bHDR_Active;
 float g_max_white;
 float g_change_luminance;
 
+// Radial Blur 
+radial g_Radial_Blur;
+
+/* DOF */
+Texture2D   g_DepthTarget;
+DOF         g_DOF;
+///* ====================================== */
+//float ComputeDepthBlur(float depth) /* 뷰 공간 기준의 입력된 깊이 */
+//{
+//    float f;
+
+//    if (depth < g_DOF.fFocalPalne_Depth)
+//    {
+//        // Focal plane 앞의 영역인 경우
+//        f = (depth - g_DOF.fFocalPalne_Depth) / (g_DOF.fFocalPalne_Depth - g_DOF.fNearBlur_Depth);
+//    }
+//    else
+//    {
+//        // Focal plane 뒤의 영역인 경우
+//        f = (depth - g_DOF.fFocalPalne_Depth) / (g_DOF.fFarBlur_Depth - g_DOF.fFocalPalne_Depth);
+//        f = clamp(f, 0, g_DOF.fCutOff);
+//    }
+
+//    // 최종 결과에 스케일과 바이어스를 적용
+//    return f * 0.5f + 0.5f;
+//}
 struct VS_IN
 {
 
@@ -183,6 +232,78 @@ PS_OUT PS_MAIN_HDR(PS_IN In)
     return Out;
 }
 
+/* ------------------- 2 - Radial Blur Pixel Shader -------------------*/
+PS_OUT PS_MAIN_RADIAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    float4 colour = { 0.f, 0.f, 0.f, 0.f };
+    float v = 0.f;
+
+    for (float i = 0.0f; i < 1.0f; i += (1 / g_Radial_Blur.fRadial_Quality))
+    {
+        v = 0.9 + i * g_Radial_Blur.fRadial_Power;
+        colour += g_ProcessingTarget.Sample(PointSampler, In.vTexcoord * v + 0.5f - 0.5f * v);
+    }
+
+    colour /= g_Radial_Blur.fRadial_Quality;
+    colour.a = 1.f;
+    
+    Out.vColor = colour;
+    return Out;
+    
+}
+
+/* ------------------- 3 -DOF Shader -------------------*/
+VS_OUT VS_MAIN_DOF(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vPosition.xy = sign(Out.vPosition.xy);
+
+    Out.vTexcoord = In.vTexcoord;
+    
+    return Out;
+}
+
+PS_OUT PS_MAIN_DOF (PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+   vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord); /* 카메라 Depth 로 가져옴 */
+   if (0.f == vDepth.r)
+       discard;
+   
+   vector vTarget = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord); /* 현재 그려진 장면 */ 
+   Out.vColor = vTarget * 0.5f;
+   
+   float fViewZ = vDepth.y * g_fCamFar;
+   
+   if (g_DOF.fFocusDistance - g_DOF.fFocusRange > fViewZ)
+   {
+       Out.vColor.a = saturate(1.f - (fViewZ / (g_DOF.fFocusDistance - g_DOF.fFocusRange)));
+   }
+   else if (g_DOF.fFocusDistance + g_DOF.fFocusRange < fViewZ)
+   {
+       float fMaxDistance = g_DOF.fFocusDistance + g_DOF.fFocusRange + g_DOF.fMaxAtt;
+     //  Out.vColor = vTarget * 0.5f;
+   
+       Out.vColor.a = saturate((fViewZ - (g_DOF.fFocusDistance + g_DOF.fFocusRange)) / (fMaxDistance - (g_DOF.fFocusDistance + g_DOF.fFocusRange))); // f + R ~ 100.f(특정 Z) 까지를 0~1로 정규화
+   }
+   else 
+       Out.vColor = float4(0.f, 0.f, 0.f, 0.f); /* 뚜렷하게 보일부분 */
+    
+    return Out;
+}
+
+/* ------------------- Technique  -------------------*/
+
 technique11 DefaultTechnique
 {
     pass Origin // 0
@@ -209,5 +330,31 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_HDR();
+    }
+
+    pass RADIAL // 2
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_RADIAL();
+
+    }
+
+    pass DOF
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_DOF();
+        GeometryShader = NULL ;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DOF();
     }
 }

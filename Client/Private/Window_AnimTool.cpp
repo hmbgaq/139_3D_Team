@@ -11,7 +11,12 @@
 #include "Weapon_Player.h"
 #include "Character.h"
 #include "Weapon.h"
+#pragma region Effect_Test
+#include "Clone_Manager.h"
+#include "Effect.h"
 #include "Effect_Particle.h"
+#pragma endregion
+
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
 {
@@ -43,9 +48,14 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
 #ifdef _DEBUG
-		m_pGameInstance->Set_RenderDebug(m_bRenderTargetOnOff);
-#endif
-		
+		m_pGameInstance->Set_RenderDebugTarget(m_bRenderTargetOnOff);
+#endif					
+	}
+	if (ImGui::Checkbox("RenderColliderOFF", &m_bRenderTargetOnOff))
+	{
+#ifdef _DEBUG
+		m_pGameInstance->Set_RenderDebugCom(m_bRenderColliderOnOff);
+#endif					
 	}
 	//dialog========================================================================
 	
@@ -55,8 +65,10 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 	if (ImGui::Button(u8"승용이전용"))
 	{
-		m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Player"), TEXT("Prototype_GameObject_Player"));
+		CCharacter* pPlayer = dynamic_cast<CCharacter*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Player"), TEXT("Prototype_GameObject_Player")));
+		m_pGameInstance->Set_Player(pPlayer);
 		m_pGameInstance->Get_CloneGameObjects(LEVEL_TOOL, &m_CreateList);
+		
 	}
 	//disPlay
 	ShowDialog();
@@ -88,7 +100,7 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 		if (ImGui::BeginTabItem("Event Editer"))
 		{
-			Draw_KeyEventEditer();
+			
 
 			ImGui::EndTabItem();
 		}
@@ -116,6 +128,22 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 		ImGui::EndTabBar();
 	}
 	ImGui::End();
+
+	ImGui::Begin("Effect_Add");
+	if (ImGui::BeginTabBar("Effect_Add View", tab_bar_flags))
+	{
+		if (m_CreateList.size() > 0)
+		{
+			if (ImGui::BeginTabItem("Effect_Add"))
+			{
+				Draw_KeyEventEditer();
+
+				ImGui::EndTabItem();
+			}
+		}
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
 }
 
 void CWindow_AnimTool::Render()
@@ -134,8 +162,115 @@ void CWindow_AnimTool::Call_NextAnimationKey(const _uint& In_Key)
 {
 }
 
+HRESULT CWindow_AnimTool::Read_EffectPath(const _tchar* StartDirectoryPath) //! 준호
+{
+
+	//! C++ 17부터 지원하는 filesystem을 이용해서 특정 경로안에 하위경로들을 전부 탐색 하여 fbx확장자들을 찾아준다
+	//! 
+	namespace fs = std::filesystem;
+
+	//! 폴더명으로 타입을 분류하기위해
+	wstring strDirName = {};
+	
+	for (const auto& entry : fs::recursive_directory_iterator(StartDirectoryPath))
+	{
+		
+		if (fs::is_regular_file(entry.path()) && entry.path().extension() == ".json")
+		{
+			wstring strSearchPath = entry.path().wstring();
+
+			fs::path PathObj(strSearchPath);
+
+			wstring wstrFileName = PathObj.stem().wstring();
+			//wstring wstrFBXPath = PathObj.parent_path() / wstrFileName;
+
+			string strConvertEffectName;
+			m_pGameInstance->WString_To_String(wstrFileName, strConvertEffectName);
+			m_vecEffectName.push_back(strConvertEffectName);
+		}
+	}
+
+	return S_OK;
+}
+
 void CWindow_AnimTool::Add_EffectKeyEvent()
 {
+	if (m_bEffectLoad == false)
+	{
+		Read_EffectPath(L"../Bin/DataFiles/Data_Effect/");
+		m_bEffectLoad = true;
+	}
+	if (ImGui::BeginListBox("EffectList"))
+	{
+		static int Effect_idx = 0;
+		for (int n = 0; n < m_vecEffectName.size(); n++)
+		{
+			const bool is_selected = (Effect_idx == n);
+			if (ImGui::Selectable(m_vecEffectName[n].c_str(), is_selected))
+				Effect_idx = n;
+				m_iSelectEffectIndex = (_float)Effect_idx;
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+			{
+				ImGui::SetItemDefaultFocus();
+				if (m_bCreateEffect)
+				{
+					CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, m_vecEffectName[n]+".json");
+					if (m_pBones.size() > 0)// 본이 존재한다면 
+					{
+						_float4x4 BoneMatrix = {};
+						BoneMatrix = m_pBones[m_iSelectBoneIndex]->Get_CombinedTransformationFloat4x4();
+						m_EffectPosition.x = BoneMatrix._41 + m_AddPositions[0];
+						m_EffectPosition.y = BoneMatrix._42 + m_AddPositions[1];
+						m_EffectPosition.z = BoneMatrix._43 + m_AddPositions[2];
+
+						pEffect->Set_Position(m_EffectPosition);
+						m_bCreateEffect = false;
+					}
+					else // 만약 본이 선택되지 않고 없다라면 0값으로 초기화
+					{
+						pEffect->Set_Position({ 0.0f, 0.0f, 0.0f });
+					}
+					if (m_bAddEffectposition) // 값을 넣어서 위치를 수정하고 싶다면 조절하고 조절 값을 여기에 다시 늘린다.
+					{
+						m_EffectPosition.x = m_EffectPosition.x + m_AddPositions[0];
+						m_EffectPosition.y = m_EffectPosition.y + m_AddPositions[1];
+						m_EffectPosition.z = m_EffectPosition.z + m_AddPositions[2];
+						pEffect->Set_Position(m_EffectPosition);
+					}
+				}
+				
+			}
+
+		}
+		ImGui::EndListBox();
+	}
+	if (ImGui::Button(" EffectCreate "))
+	{
+		m_bCreateEffect = true;
+	}
+	ImGui::DragFloat3("Add_Trans", m_AddPositions);
+	{
+		m_bAddEffectposition = true;
+	}
+	ImGui::SeparatorText("EffectOn");
+	if (ImGui::InputFloat("EffectOn", &m_fEffectOnTrackPosition, 0.01f, 1.f));
+	
+	if (m_pBones.size() > 0)
+	{
+		if (m_fCurrentTrackPosition <= m_fEffectOnTrackPosition)
+			bTest = true;
+		
+		if (bTest == true)
+		{
+			if (m_fCurrentTrackPosition >= m_fEffectOnTrackPosition)
+			{
+				m_bCreateEffect = true;
+				bTest = false;
+			}
+		
+		}
+	}
 }
 
 void CWindow_AnimTool::Add_EnableWeaponEvent(const _bool In_bEnable)
@@ -154,10 +289,12 @@ HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
 {
 	string strBody = "TypeBody";
 	string strWeapon = "TypeWeapon";
+	string strEffect = "TypeEffect";
 
 	json SaveJson = {};
 	json BodyJson = {};
 	json WeaponJson = {};
+	json EffectJson = {};
 
 	if (m_CreateList.size() > 0)
 	{
@@ -213,9 +350,17 @@ HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
 			WeaponJson.emplace("WeaponColliderTrackPositionOff", m_iColliderWeaponOffTrackPosition);
 		}
 	}
+	//Effect
+	{
+		EffectJson.emplace("TypeEffect", strEffect);
+		EffectJson.emplace("EffectFileName", m_vecEffectName[m_iSelectEffectIndex]);
+		CJson_Utility::Write_Float3(EffectJson["EffectPosition"], m_EffectPosition);
+		EffectJson.emplace("EffectTrackPosition", m_fEffectOnTrackPosition);
+	}
 
 	SaveJson.emplace("Body", BodyJson);
 	SaveJson.emplace("Weapon", WeaponJson);
+	SaveJson.emplace("Effect", EffectJson);
 
 	string strSavePath = strPath + "/" +strFileName+  "_AnimationData.json";
 	if (FAILED(CJson_Utility::Save_Json(strSavePath.c_str(), SaveJson)))
@@ -248,7 +393,7 @@ HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
 
 	json BodyJson = LoadJson["Body"];
 	json WeaponJson = LoadJson["Weapon"];
-
+	json EffectJson = LoadJson["Effect"];
 	//Body
 	{
 		
@@ -265,10 +410,11 @@ HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
 
 		m_pGameInstance->Get_CloneGameObjects(LEVEL_TOOL, &m_CreateList);
 		m_bCloneCount = true;
+		m_bListCheck = true;
+		m_bCreateCheck = false;
 		m_PickingObject = m_CreateList.back();
 		if (m_CreateList.size() > 0)
 		{
-		
 			CCharacter* pcharacters = dynamic_cast<CCharacter*>(m_PickingObject);
 			if (pcharacters != nullptr)
 			{
@@ -276,8 +422,6 @@ HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
 				m_pAnimation = *(pcharacters->Get_Body()->Get_Model()->Get_Animations());
 				m_iAnimationNum = pcharacters->Get_Body()->Get_Model()->Get_AnimationNum();
 			}
-		
-		
 		}
 		m_iSelectCreateListIndex = BodyJson["SelectCreateIndex"];
 
@@ -335,7 +479,7 @@ HRESULT CWindow_AnimTool::Load_Function(string strPath, string strFileName)
 		m_iColliderWeaponOnTrackPosition = WeaponJson["WeaponColliderTrackPositionOn"];
 		m_iColliderWeaponOffTrackPosition = WeaponJson["WeaponColliderTrackPositionOff"];
 	}
-
+	//Effect
 	return S_OK;
 }
 
@@ -345,11 +489,11 @@ void CWindow_AnimTool::Reset_AnimFunction()
 
 	if (m_CreateWeaponList.size() > 0)
 	{
-		for (int i = 0; i < m_CreateWeaponList.size(); ++i)
+		for (_uint i = 0; i < m_CreateWeaponList.size(); ++i)
 		{
 			
 			m_CreateWeaponList[i]->Set_Dead(true);
-			for (int j = 0; j < m_iCreateWeaponColliderNum; ++j)
+			for (_uint j = 0; j < m_iCreateWeaponColliderNum; ++j)
 			{
 				if (m_pWeaponCollider[j] == nullptr)
 					m_pWeaponCollider.erase(m_pWeaponCollider.begin() + j);
@@ -360,11 +504,11 @@ void CWindow_AnimTool::Reset_AnimFunction()
 	
 	if (m_CreateList.size() > 0)
 	{
-		for (int i = 1; i < m_CreateList.size(); ++i)
+		for (_uint i = 1; i < m_CreateList.size(); ++i)
 		{
 		
 			m_CreateList[i]->Set_Dead(true);
-			for (int j = 0; j < m_iCreateColliderNum; ++j)
+			for (_uint j = 0; j < m_iCreateColliderNum; ++j)
 			{
 				if(m_pBoneCollider[j] == nullptr)
 					m_pBoneCollider.erase(m_pBoneCollider.begin() + j);
@@ -477,8 +621,7 @@ void CWindow_AnimTool::Create_Weapon(CCharacter* ParentObject, string strBonenam
 
 void CWindow_AnimTool::Draw_KeyEventEditer()
 {
-
-
+	Add_EffectKeyEvent();
 }
 
 void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
@@ -593,7 +736,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 		{
 			if (nullptr == m_PickingObject)
 				return;
-			/*	ImGuizmo_Initialize();*/
+		
 			Set_GuizmoCamProj();
 			Set_GuizmoCamView();
 			Set_Guizmo(m_PickingObject);
@@ -666,7 +809,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 	{
 		if (nullptr != m_pBody)
 			{
-				m_pBody->Get_Model()->Set_Animation(m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition(),CModel::ANIM_STATE_LOOP);
+				m_pBody->Get_Model()->Set_Animation((_uint)m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition(),CModel::ANIM_STATE_LOOP);
 			}
 	}
 	
@@ -674,52 +817,7 @@ void CWindow_AnimTool::Draw_AnimationList(_float fTimeDelta)
 	{
 		m_fCurrentTrackPosition = m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition();
 
-// 		test particle
-// 				_float Temp = m_pAnimation[m_CurrentAnimationIndex]->Get_TrackPosition();
-// 		
-// 				
-// 				if (m_TargetTrackPosition <= Temp && bTest2 == true)
-// 					bTest = false;
-// 				if (Temp <= 0)
-// 					bTest2 = true;
-// 				if (m_pGameInstance->Key_Down(DIK_G) || bTest ==false)
-// 				{
-// 		
-// 					CEffect_Particle::EFFECT_PARTICLE_DESC   tDesc = {};
-// 					tDesc.fSpeedPerSec = { 5.f };
-// 					tDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
-// 		
-// 					tDesc.eType = CEffect_Particle::SINGLE;
-// 					tDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
-// 					//tDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
-// 					tDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
-// 		
-// 					//tDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
-// 					tDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("");
-// 					tDesc.iTextureIndex[CEffect_Particle::TEXTURE_MASK] = { 0 /*1*/ };
-// 		
-// 					tDesc.strTextureTag[CEffect_Particle::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
-// 					tDesc.iTextureIndex[CEffect_Particle::TEXTURE_NOISE] = { 0 };
-// 		
-// 					tDesc.strShaderTag = TEXT("Prototype_Component_Shader_Particle_Point");
-// 					tDesc.iShaderPassIndex = { 0 };
-// 					tDesc.iRenderGroup = { 7 };
-// 		
-// 					tDesc.iNumInstance = { (_uint)100 };
-// 					tDesc.iMaxNumInstance = { (_uint)500 };
-// 		
-// 					tDesc.fRotateUvDegree = { 0.f };
-// 		
-// 					//CEffect_Particle* pParticle = dynamic_cast<CEffect_Particle*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Effect_Particle"), &tDesc));
-// 					m_TestEffect = dynamic_cast<CEffect_Particle*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_EFFECT, TEXT("Prototype_GameObject_Effect_Particle"), &tDesc));
-// 					json In_Json;
-// 					char filePath[MAX_PATH] = "../Bin/DataFiles/Data_Effect/Particle_Info/Particle_TestSphere_Info";
-// 					CJson_Utility::Load_Json(filePath, In_Json);
-// 		
-// 					m_TestEffect->Load_FromJson(In_Json);
-// 					bTest = true;
-// 					bTest2 = false;
-// 				}
+
 	}
 	
 	
@@ -812,9 +910,6 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 						m_vBoneColliderIndex.push_back(m_pBones[BoneIndex]);
 						m_bCreatCollider = false;
 
-						
-						
-						
 					}
 				}    
 					
@@ -937,12 +1032,12 @@ void CWindow_AnimTool::Draw_BoneList(_float fTimeDelta)
 
 	}
 
-	if (ImGui::DragFloat3("ColliderPosition", m_fBonePosition, 0.01, -100.f, 100.f));
+	ImGui::DragFloat3("ColliderPosition", m_fBonePosition, 0.01f, -100.f, 100.f);
 
 	ImGui::SeparatorText("ColliderOn");
-	if (ImGui::InputFloat("ColliderOn", &m_iColliderOnTrackPosition, 0.01f, 1.f));
+	ImGui::InputFloat("ColliderOn", &m_iColliderOnTrackPosition, 0.01f, 1.f);
 	ImGui::SeparatorText("ColliderOff");
-	if (ImGui::InputFloat("ColliderOff", &m_iColliderOffTrackPosition, 0.01f, 1.f));
+	ImGui::InputFloat("ColliderOff", &m_iColliderOffTrackPosition, 0.01f, 1.f);
 
 }
 
@@ -1202,7 +1297,7 @@ void CWindow_AnimTool::Draw_Weapon(_float fTimeDelta)
 
 	}
 
-	if (ImGui::DragFloat3("ColliderPosition", m_fWeaponPosition, 0.01, -100.f, 100.f));
+	if (ImGui::DragFloat3("ColliderPosition", m_fWeaponPosition, 0.01f, -100.f, 100.f));
 
 	ImGui::SeparatorText("ColliderWeaponOn");
 	if (ImGui::InputFloat("ColliderWeaponOn", &m_iColliderWeaponOnTrackPosition, 0.01f, 1.f));

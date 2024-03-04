@@ -122,8 +122,6 @@ struct GS_OUT
 	float4		vPosition : SV_POSITION;
 	float2		vTexcoord : TEXCOORD0;
 	float4		vColor : COLOR0;
-
-	uint	iInstanceID : SV_INSTANCEID;
 };
 
 /* 지오메트리 쉐이더 : 셰이더안에서 정점을 추가적으로 생성해 준다. */
@@ -197,7 +195,6 @@ struct PS_IN
 	float2		vTexcoord : TEXCOORD0;
 	float4		vColor : COLOR0;
 
-	uint	iInstanceID : SV_INSTANCEID;
 };
 
 struct PS_OUT
@@ -242,7 +239,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 	}
 
 
-	return Out;
+    return Out;
 }
 
 technique11 DefaultTechnique

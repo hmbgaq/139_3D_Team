@@ -43,6 +43,8 @@ public:
 	void			Call_UpdatePreViewModel();
 	void			Call_NextAnimationKey(const _uint& In_Key);
 
+	HRESULT Read_EffectPath(const _tchar* StartDirectoryPath);
+
 private:
 	void			Add_EffectKeyEvent();
 	void			Add_EnableWeaponEvent(const _bool In_bEnable);
@@ -98,6 +100,10 @@ private:
 	_float					m_iColliderOnTrackPosition = 0.0f;
 	_float					m_iColliderOffTrackPosition = 0.0f;
 
+	//! Effect
+	_float					m_fEffectOnTrackPosition = 0.0f;
+	_float					m_iSelectEffectIndex = 0;
+
 	_float					m_iColliderWeaponSize = 0.0f;
 	_float					m_iColliderWeaponOnTrackPosition = 0.0f;
 	_float					m_iColliderWeaponOffTrackPosition = 0.0f;
@@ -110,7 +116,10 @@ private:
 	_float3					m_fGuizmoTranslation = {};
 	_float3					m_fGuizmoRotation = {};
 	_float3					m_fGuizmoScale = {};
-	
+	//! Effect position
+	_float3					m_EffectPosition = {};
+	float					m_AddPositions[3] = { 0.0f };
+
 	_float4x4				m_fBoneMatrix = {};
 	_float4x4				m_fWeaponMatrix = {};
 	_float4x4				m_fWeaponWorldMatrix = {};
@@ -132,6 +141,7 @@ private:
 	string					m_strTest = "";
 	string					m_strLayer = "";
 	vector<string>			m_vObjectTag;
+	vector<string>			m_vecEffectName;
 
 	vector<CGameObject*>	m_CreateList;
 	vector<CGameObject*>	m_CreateWeaponList;
@@ -168,7 +178,10 @@ public:
 	_bool					m_bCreatWeaponCollider = false;
 	_bool					m_bDeleteWeaponCollider = false;
 	_bool					m_bColliderWeaponSize = false;
-
+	//! Effect Á¦¾î
+	_bool					m_bCreateEffect = false;
+	_bool					m_bAddEffectposition = false;
+	_bool					m_bEffectLoad = false;
 private:
 	_bool					m_bCreatePlayer = false;
 

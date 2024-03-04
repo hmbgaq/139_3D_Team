@@ -4,16 +4,18 @@ matrix      g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4      g_vLineColor;
 
 Texture2D   g_NormalTarget;
+Texture2D   g_DiffuseTarget;
 
-float       g_fMask[9] = {
+float       g_LaplacianMask[9] = {
             	-1, -1, -1,
             	-1,  8, -1,
             	-1, -1, -1
             };
 float       g_fCoord[3] = { -1, 0, +1 };
 float       g_fDivier = 1;
-
 float       g_fBias = 0.5f;
+float       g_WinCX;
+float       g_WinCY;
 
 struct VS_IN
 {
@@ -62,19 +64,15 @@ PS_OUT PS_OUTLINE(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    float4 Color = 0;
-	
     for (int i = 0; i < 9; i++)
     {
-        vector vNormalDesc = g_NormalTarget.Sample(PointSampler, In.vTexcoord + float2(g_fCoord[i % 3] / 1920.f, g_fCoord[i % 3] / 1080.f) * g_fBias);
-        vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
-        Color += g_fMask[i] * vNormal;
+        float2 vUV = In.vTexcoord + float2(g_fCoord[i % 3] / g_WinCX, g_fCoord[i / 3] / g_WinCY);
+        Out.vColor += g_LaplacianMask[i] * g_DiffuseTarget.Sample(LinearSampler, vUV);
     }
-	
-    float gray = 1 - (Color.r * 0.3 + Color.g * 0.59 + Color.b * 0.11);
-	
-    float4 lineColor = g_vLineColor;
-    Out.vColor = float4(lerp(lineColor.rgb, float3(gray, gray, gray), saturate(gray)), 1.0) / g_fDivier;
+    
+    // Èæ¹éÃ³¸® 
+    float fBlack = 1 - (Out.vColor.r * 0.3f + Out.vColor.g * 0.59f + Out.vColor.b * 0.11f);
+    Out.vColor = vector(fBlack, fBlack, fBlack, 1);
 
     return Out;
 }
@@ -87,7 +85,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        SetBlendState(BS_Blend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;

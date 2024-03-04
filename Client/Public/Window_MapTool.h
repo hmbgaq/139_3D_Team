@@ -12,12 +12,13 @@ class CEnvironment_Instance;
 class CEnvironment_Object;
 class CPlayer;
 class CMonster;
+class CCamera_Dynamic;
 //TODO 추후 추가 class CNPC;
 
 class CWindow_MapTool final : public CImgui_Window
 {
 private:
-	enum class TAP_TYPE { TAB_GROUND, TAB_INTERACT, TAB_ENVIRONMENT, TAB_NORMALMONSTER, TAB_BOSSMONSTER, TAB_NPC, TAB_END };
+	enum class TAP_TYPE { TAB_SINGLE, TAB_INTERACT, TAB_ENVIRONMENT, TAB_NORMALMONSTER, TAB_BOSSMONSTER, TAB_NPC, TAB_END };
 	enum class MODE_TYPE { MODE_CREATE, MODE_SELECT, MODE_DELETE, MODE_END };
 	enum class PICKING_TYPE { PICKING_FIELD, PICKING_MESH, PICKING_INSTANCE, PICKING_NONE, PICKING_END };
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
@@ -26,7 +27,7 @@ private:
 	
 	enum class MAP_KEY_TYPE //! 맵컨테이너 키
 	{
-		MODEL_GROUND, MODEL_ENVIRONMENT, MODEL_INTERACT, MODEL_END
+		MODEL_SINGLE, MODEL_INSTANCE, MODEL_INTERACT, MODEL_END
 	};
 
 	
@@ -74,7 +75,9 @@ private:
 
 
 private:
-	void			MouseInfo_Window(_float fTimeDelta);
+	#ifdef _DEBUG
+void			MouseInfo_Window(_float fTimeDelta);
+#endif // _DEBUG
 	void			FieldWindowMenu();
 	void			CameraWindow_Function();
 	void			IsCreatePlayer_ReadyCamara();
@@ -86,7 +89,9 @@ private:
 	//!For.Character
 	void			Select_CharacterModeType();
 	
+	//!For. Public
 	void			Create_Tab(TAP_TYPE eTabType);
+	void			Delete_Tab(TAP_TYPE eTabType);
 
 	
 private: //! For. Create_Function
@@ -135,10 +140,20 @@ private:
 	ANIM_TYPE		m_eAnimType = ANIM_TYPE::TYPE_NONANIM;
 
 	_bool			m_bChangeObjectMode = false;
+	
 
 	CPlayer*		m_pPlayer = nullptr;
 	
 	_bool			m_bOnTheInstance = false;
+	_float4x4		m_matInstanceMatrix = {};
+	_float3			m_vRotation = {};
+	_bool			m_bRotateMode = { false};
+
+	_float			m_fCamaraSpeed = { 60.f };
+
+//!  맵찍기 저장용 변수
+	string			m_strLoadFilePath = {}; //! 만약 불러오기로 맵을 불러왔다면 불러온 맵의 저장경로를 저장한다. 이상태에서 Ctrl S를 누를시 해당 경로에 덮어쓰기하는 식으로 해줘야할거같다.
+
 private: //!For. Character
 	vector<string>			  m_vecMonsterTag;
 	vector<string>			  m_vecBossTag;
@@ -151,7 +166,7 @@ private: //!For. Environment
 	map<string, MAP_KEY_TYPE> m_mapNonAnimModelTag;
 	map<string, MAP_KEY_TYPE> m_mapAnimModelTag;
 	
-	vector<string>  m_vecGroundModelTag;
+	vector<string>  m_vecSingleModelTag;
 
 	vector<string>  m_vecEnviroModelTag;
 	vector<string>	m_vecAnimEnviroModelTag;
@@ -212,6 +227,8 @@ private:
 	//!_int							m_iCreateNPCIndex = {};
 
 	
+
+	
 	_int							m_iCreateMonsterIndex = {};
 	_int							m_iSelectCharacterIndex = {};
 
@@ -220,8 +237,10 @@ private: //! For. CreateInstance
 	_uint							m_iSelectEnvironmentIndex = 0;
 
 	_int							m_iCreatePreviewIndex = 0;
+	_int							m_iSelectPreviewIndex = 0;
 	vector<CEnvironment_Instance*>	m_vecCreateInstance = {};
 	vector<CEnvironment_Object*>	m_vecPreViewInstance = {}; //! 인스턴싱 디스크립션 만들기 위해.
+	vector<string>					m_vecPreViewInstanceTag = {};
 	
 	map<string, vector<CEnvironment_Object*>> m_mapPreviewInstance; //! 선택한 모델태그마다 각기 다른 벡터에 저장해서 생성하게하자.
 
@@ -235,6 +254,8 @@ private: //! For. CreateInstance
 private:
 	vector<CCamera*>				m_vecCameras;
 	_bool							m_bCreateCamera = false;
+	CCamera_Dynamic*				m_pToolCamera = { nullptr };
+	
 
 public:
 	static CWindow_MapTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

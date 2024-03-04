@@ -16,7 +16,10 @@ HRESULT CLevel_Tool::Initialize()
 {
 	//Level_Tool 레벨 조정 
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 
+	FAILED_CHECK(Ready_LightDesc());
+	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
 	if (FAILED(Ready_Imgui()))
 	{
@@ -24,8 +27,7 @@ HRESULT CLevel_Tool::Initialize()
 		Safe_Release(m_pContext);
 		return E_FAIL;
 	}
-	FAILED_CHECK(Ready_LightDesc());
-	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
+	
 
 	return S_OK;
 
@@ -58,6 +60,13 @@ HRESULT CLevel_Tool::Ready_Imgui()
 	return S_OK;
 }
 
+HRESULT CLevel_Tool::Ready_Layer_BackGround(const wstring& strLayerTag)
+{
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky")));
+
+	return S_OK;
+}
+
 HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 {
 	CCamera_Dynamic::DYNAMIC_CAMERA_DESC		tDesc = {};
@@ -68,7 +77,7 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 	tDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	tDesc.fNear = 0.1f;
 	tDesc.fFar = m_pGameInstance->Get_CamFar();
-	tDesc.fSpeedPerSec = 15.f;
+	tDesc.fSpeedPerSec = 60.f;
 	tDesc.fRotationPerSec = XMConvertToRadians(180.0f);
 
 	CCamera* pDynamicCam = dynamic_cast<CCamera*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &tDesc));
@@ -89,7 +98,8 @@ HRESULT CLevel_Tool::Ready_LightDesc()
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
 	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
 	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
 		return E_FAIL;

@@ -18,7 +18,9 @@ CPhysXCollider::CPhysXCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 CPhysXCollider::CPhysXCollider(const CPhysXCollider& rhs)
 	: CComponent(rhs)
+	, m_pGameInstance(rhs.m_pGameInstance)
 {
+	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CPhysXCollider::Initialize_Prototype()
@@ -108,7 +110,7 @@ void CPhysXCollider::Add_PhysXActorAtSceneWithOption(const PxVec3& In_MassSpaceI
 	if (m_pRigidDynamic && m_pRigidStatic)
 	{
 		// 둘 다 존재하면 안된다.
-		DEBUG_ASSERT;
+		//DEBUG_ASSERT;
 	}
 
 	else if (m_pRigidDynamic)
@@ -136,6 +138,39 @@ void CPhysXCollider::Add_PhysXActorAtSceneWithOption(const PxVec3& In_MassSpaceI
 #ifdef _DEBUG
 		cout << "No Actor was created." << endl;
 #endif // _DEBUG
+	}
+
+	for (auto& elem : m_pGeometry)
+	{
+		Safe_Delete(elem);
+	}
+}
+
+void CPhysXCollider::Add_PhysXActorAtScene()
+{
+	if (m_pRigidDynamic && m_pRigidStatic)
+	{
+		// 둘 다 존재하면 안된다.
+		//DEBUG_ASSERT;
+	}
+
+	else if (m_pRigidDynamic)
+	{
+		m_pGameInstance->Add_DynamicActorAtCurrentScene(*m_pRigidDynamic);
+	}
+
+	else if (m_pRigidStatic)
+	{
+		m_pGameInstance->Add_StaticActorAtCurrentScene(*m_pRigidStatic);
+	}
+
+	else
+	{
+		// 생성된 PhysXActor가 없음. Create부터 할 것.
+#ifdef _DEBUG
+		cout << "No Actor was created." << endl;
+#endif // _DEBUG
+
 	}
 
 	for (auto& elem : m_pGeometry)
@@ -487,7 +522,9 @@ void CPhysXCollider::Init_ModelInstanceCollider(CMyAIScene* pModelData, const ve
 {
 	if (nullptr == pModelData)
 	{
+#ifdef _DEBUG
 		DEBUG_ASSERT;
+#endif
 	}
 
 	for (_uint i = 0; i < pModelData->Get_NumMeshes(); ++i)
@@ -510,6 +547,18 @@ void CPhysXCollider::Synchronize_Collider(CTransform* pTransform, _fvector In_vO
 	vPos.m128_f32[3] = 1.f;
 	_vector vQuaternion = XMQuaternionRotationMatrix(SMath::Get_RotationMatrix(pTransform->Get_WorldMatrix()));
 	Set_Position(vPos, vQuaternion);
+}
+
+void CPhysXCollider::PutToSleep()
+{
+	if (m_pRigidDynamic)
+		m_pRigidDynamic->putToSleep();
+}
+
+void CPhysXCollider::WakeUp()
+{
+	if (m_pRigidDynamic)
+		m_pRigidDynamic->wakeUp();
 }
 
 HRESULT CPhysXCollider::Set_Position(_vector _vPos, _vector _vQuaternion)
@@ -554,12 +603,23 @@ HRESULT CPhysXCollider::Set_Position(_vector _vPos)
 
 CPhysXCollider* CPhysXCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	return new CPhysXCollider(pDevice, pContext);
+	CPhysXCollider* pInstance = new CPhysXCollider(pDevice, pContext);
+
+	return pInstance;
 }
 
 CComponent* CPhysXCollider::Clone(void* pArg)
 {
-	return new CPhysXCollider(*this);
+
+	CPhysXCollider* pInstance = new CPhysXCollider(*this);
+
+	/* 원형객체를 초기화한다.  */
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CPhysXCollider");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
 }
 
 void CPhysXCollider::Free()

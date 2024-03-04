@@ -74,8 +74,6 @@ public: /* For.Object_Manager */
 	void Set_Player(class CCharacter* _pPlayer);
 	HRESULT Create_PoolObjects(const wstring & strPrototypeTag, _uint iSize = 10);
 
-
-
 	void Fill_PrototypeTags(vector<string>*_vector);
 
 public: /* For.Component_Manager */
@@ -85,12 +83,11 @@ public: /* For.Component_Manager */
 public: /* For.Renderer */
 	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
-	HRESULT Add_CascadeObject(class CGameObject* pGameObject);
 	CRenderer* Get_Renderer(); /* 툴용 */
 #ifdef _DEBUG
-	void Set_RenderDebug(_bool _bRenderDebug);
+	void Set_RenderDebugCom(_bool _bRenderDebug);
+	void Set_RenderDebugTarget(_bool _bRenderTarget);
 #endif
-
 
 public: /* For.PipeLine */
 	void		Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix);
@@ -115,6 +112,7 @@ public: /* For.PipeLine */
 
 public: /* For.Font_Manager */
 	HRESULT		Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
+	// 매개변수 : ->폰트테그, 내용, 위치, 색상, 크기, 내용이 나올 원점(0~1 : UV좌표와 비슷함), 회전<-
 	HRESULT		Render_Font(const wstring& strFontTag, const wstring& strText, const _float2 & vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f ,1.f), _float fScale = 1.f, _float2 vOrigin = _float2(0.f, 0.f), _float fRotation = 0.f);
 
 public: /* For.Target_Manager */
@@ -122,6 +120,8 @@ public: /* For.Target_Manager */
 	HRESULT		Add_MRT(const wstring& strMRTTag, const wstring& strTargetTag);
 	HRESULT		Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView * pDSV = nullptr, _bool bClear = true);
 	HRESULT		End_MRT();
+	HRESULT		Clear_MRT(const wstring& strMRTTag);
+	HRESULT		Clear_Target(const wstring& strMRTTag, const wstring& strTargetTag);
 	HRESULT		Bind_RenderTarget_ShaderResource(const wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 	class CRenderTarget* Find_RenderTarget(const wstring& strTargetTag);
 	void		Create_RenderTarget(const wstring& strTargetTag);
@@ -134,6 +134,14 @@ public: /* For.Target_Manager */
 public: /* For.Light_Manager */
 	HRESULT		Add_Light(const LIGHT_DESC& LightDesc, _int & outLightIndex);
 	HRESULT		Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	HRESULT		Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp);
+	HRESULT		Add_ShadowLight_View(_uint iLevelIndex, _vector vEye, _vector vAt, _vector vUp);
+	HRESULT		Add_ShadowLight_Proj(_uint iLevelIndex, _float fFovAngleY, _float fAspectRatio, _float fNearZ, _float fFarZ);
+	_float4x4	Get_ShadowLightViewMatrix(_uint iLevelIndex);
+	_float4x4	Get_ShadowLightViewMatrix_Inverse(_uint iLevelIndex);
+	_float4x4	Get_ShadowLightProjMatrix(_uint iLevelIndex);
+	_float		Get_ShadowLightFar(_uint iLevelIndex);
+	_float4		Get_ShadowLightPos(_uint iLevelIndex);
 
 public: /* For.Frustum */
 	void		Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix);

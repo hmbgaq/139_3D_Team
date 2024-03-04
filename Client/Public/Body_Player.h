@@ -26,13 +26,13 @@ public:
 	virtual HRESULT Render_Shadow() override;
 
 public:
-	void SetUp_Animation(_uint iAnimIndex);
-
+	virtual void	OnCollisionEnter(CCollider* other)	override;
+	virtual void	OnCollisionStay(CCollider* other)	override;
+	virtual void	OnCollisionExit(CCollider* other)	override;
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
-
 
 public:
 	/* 원형객체를 생성한다. */
@@ -44,8 +44,6 @@ public:
 
 	virtual void Free() override;
 
-	// CBody을(를) 통해 상속됨
-	
 };
 
 END

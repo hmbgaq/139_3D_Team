@@ -60,6 +60,7 @@ void CTransform::Move_On_Navigation(_vector vMove, CNavigation* pNavigation)
 			return; /* 슬라이딩들어갈자리 */
 	}
 	Set_State(STATE_POSITION, vPosition);
+	
 }
 
 void CTransform::Go_Straight(_float fTimeDelta, CNavigation* pNavigation)
@@ -272,6 +273,17 @@ void CTransform::Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta)
 	_float fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(matrixLook).y;
 
 	Rotation_Lerp(fRadian, fTimeDelta);
+}
+
+
+_vector CTransform::Calc_Look_Dir(_fvector vTargetPos)
+{
+	return XMVector3Normalize(Get_State(STATE::STATE_POSITION) - vTargetPos);
+}
+
+_float3 CTransform::Calc_Look_Dir(_float3 vTargetPos)
+{
+	return Get_Position() - vTargetPos;
 }
 
 void CTransform::Add_RootBone_Position(const _float3& vPos, CNavigation* pNavigation)

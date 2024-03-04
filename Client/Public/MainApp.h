@@ -9,6 +9,8 @@ END
 
 BEGIN(Client)
 
+class CDevConsole;
+
 class CMainApp final  : public CBase
 {
 private:
@@ -19,7 +21,8 @@ public:
 	HRESULT Initialize();
 	void	Tick(_float fTimeDelta);
 	HRESULT Render();
-
+	//CUDATEST
+	int sum_int(int a, int b);
 private:
 	HRESULT Open_Level(LEVEL eStartLevelID);
 	HRESULT Ready_Prototype_Component_ForStaticLevel();
@@ -29,6 +32,7 @@ private:
 	// SH_Add
 private: /* ===================== UI ===================== */
 	HRESULT	Ready_UITexture();
+	HRESULT UI_TargetTexture();
 
 private:
 	ID3D11Device*			m_pDevice = { nullptr };
@@ -36,9 +40,13 @@ private:
 	CGameInstance*			m_pGameInstance = { nullptr };
 
 private:
+	CDevConsole*			m_pDevConsole = { nullptr };
+
+private:
 	_tchar					m_szFPS[MAX_PATH] = TEXT("");
 	_float					m_fTimeAcc = { 0.f };
 	_uint					m_iNumRender = { 0 };
+
 
 public:
 	static CMainApp* Create();

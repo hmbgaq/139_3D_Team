@@ -25,7 +25,7 @@ HRESULT CScreamer::Initialize(void* pArg)
 
 	
 	m_pTransformCom->Set_Position(_float3(15.f, 0.f, 10.f));
-	m_vBloomColor = { 0.5f, 0.f, 0.5f, 1.f };
+	m_vBloomColor = { 0.5f, 0.5f, 0.5f, 1.f };
 	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
 
 	return S_OK;
@@ -55,17 +55,6 @@ void CScreamer::Tick(_float fTimeDelta)
 	//	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_REVERSE, false); /* 문제있음 쓰지마셈 */
 	//}
 
-	if (m_pGameInstance->Key_Down(DIK_9))
-	{
-		if (m_iRenderPass == ECast(ANIM_SHADER::ANIM_ORIGIN))
-			m_iRenderPass = ECast(ANIM_SHADER::ANIM_BLOOM);
-		else if (m_iRenderPass == ECast(ANIM_SHADER::ANIM_BLOOM))
-			m_iRenderPass = ECast(ANIM_SHADER::ANIM_ORIGIN);
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_6))
-		m_bRim = !m_bRim;
-
 	m_fTimeDelta += fTimeDelta;
 	m_fDissolveWeight += fTimeDelta * 0.5f;
 
@@ -82,13 +71,12 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 		m_pModelCom->Play_Animation(fTimeDelta, vPos);
 
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
-		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
 		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
-		//m_pGameInstance->Add_CascadeObject(this);
-		
+
+		m_pGameInstance->Add_DebugRender(m_pColliderCom);
 	}
 
-	m_pGameInstance->Add_DebugRender(m_pColliderCom);
 }
 
 HRESULT CScreamer::Render()
@@ -115,17 +103,13 @@ HRESULT CScreamer::Render()
 
 HRESULT CScreamer::Render_Shadow()
 {
+	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_pGameInstance->Get_NextLevel());
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldFloat4x4()));
-
-	_float4x4		ViewMatrix, ProjMatrix;
-
-	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, m_pGameInstance->Get_CamFar()));
-
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix));
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_pGameInstance->Get_NextLevel())));
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
@@ -217,7 +201,7 @@ HRESULT CScreamer::Ready_Components()
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
 	{
-		BoundingDesc.fRadius = 200.f;
+		BoundingDesc.fRadius = 1.5f;
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
 		
 		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
@@ -250,23 +234,14 @@ HRESULT CScreamer::Bind_ShaderResources()
 	m_pBreakTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture");
 	m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
 
-	/* RimLight */
-	if(true == m_bRim)
-	{
-		m_vRimColor = { 1.0f, 1.f, 1.f, 0.3f };
-		m_vBloomPower = _float3(0.1f, 0.1f, 0.1f);
-	}
-	else
-	{
-		m_vRimColor = { 0.0f, 0.0f, 0.0f, 0.0f };
-		m_vBloomPower = { 0.0f, 0.0f, 0.0f };
-	}
+	m_vRimColor = { 0.0f, 1.f, 0.f, 1.f };
+	m_vRimPower = _float3(1.0f, 1.0f, 1.0f);
 
-	m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
 
 	/* RimLight */
 	m_vCamPos = m_pGameInstance->Get_CamPosition();
 	m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+	m_pShaderCom->Bind_RawValue("g_vRimPower", &m_vRimPower, sizeof(_float3));
 	m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
 
 	return S_OK;

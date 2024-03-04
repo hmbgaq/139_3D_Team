@@ -12,6 +12,7 @@ END
 
 BEGIN(Client)
 
+
 class CEnvironment_Instance final : public CGameObject
 {
 private:
@@ -29,6 +30,7 @@ public:
 
 public:
 	_bool			Picking_Instance(RAY* pRay, _float3* vOutPoint); 
+	//_bool			Picking_InstanceVertex();
 
 public:
 	virtual _bool	Write_Json(json& Out_Json) override;
@@ -54,6 +56,10 @@ private:
 
 	MAPTOOL_INSTANCE_DESC					m_tInstanceDesc;
 	vector<CCollider*>						m_vecColliders;
+
+
+	
+
 
 private:
 	HRESULT Ready_Components();

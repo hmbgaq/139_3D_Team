@@ -5,6 +5,7 @@
 #include "Animation.h"
 #include "Channel.h"
 #include "Shader.h"
+#include "GameObject.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -20,6 +21,8 @@ CModel::CModel(const CModel & rhs)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_Materials(rhs.m_Materials)
 	, m_iNumAnimations(rhs.m_iNumAnimations)
+	, m_fModelWidth(rhs.m_fModelWidth)
+	, m_fModelHeight(rhs.m_fModelHeight)
 
 {
 	for (auto& pPrototypeAnimation : rhs.m_Animations)
@@ -137,6 +140,85 @@ _float3& CModel::Calculate_AABB_Extents_From_Model()
 	return vExtents;
 }
 
+void CModel::Calculate_Sphere_Radius(_float3* vOutCenter, _float* fOutRadius)
+{
+	_float fMaxRadius = 0.0f;
+	_float3 Min, Max;
+	
+	if (m_eModelType == CModel::TYPE_ANIM)
+	{
+		for (size_t i = 0; i < m_iNumMeshes; ++i)
+		{
+			m_Meshes[i]->Calculate_AABB_Extents(&Min, &Max);
+
+			// 중심점 계산
+			_float3 vCenter = (Min + Max) * 0.5f;
+
+
+			_uint iNumVertices = m_Meshes[i]->Get_NumVertices();
+			VTXANIMMESH* pAnimVertices = m_Meshes[i]->Get_AnimVertices();
+			// 중심점으로부터 각 정점까지의 거리 계산
+			for (_uint j = 0; j < iNumVertices; ++j)
+			{
+				_float3 VertexPos = pAnimVertices[j].vPosition;
+				fMaxRadius = max(fMaxRadius, XMVector3Length(XMLoadFloat3(&VertexPos) - XMLoadFloat3(&vCenter)).m128_f32[0]);
+			}
+		}
+
+	}
+	else if (m_eModelType == CModel::TYPE_NONANIM)
+	{
+		for (size_t i = 0; i < m_iNumMeshes; ++i)
+		{
+			m_Meshes[i]->Calculate_AABB_Extents(&Min, &Max);
+
+			// 중심점 계산
+			_float3 vCenter = (Min + Max) * 0.5f;
+
+
+			_uint iNumVertices = m_Meshes[i]->Get_NumVertices();
+			VTXMESH* pVertices = m_Meshes[i]->Get_Vertices();
+			// 중심점으로부터 각 정점까지의 거리 계산
+			for (_uint j = 0; j < iNumVertices; ++j)
+			{
+				_float3 VertexPos = pVertices[j].vPosition;
+				fMaxRadius = max(fMaxRadius, XMVector3Length(XMLoadFloat3(&VertexPos) - XMLoadFloat3(&vCenter)).m128_f32[0]);
+			}
+		}
+	}
+	
+
+	
+	
+	if (vOutCenter != nullptr)
+		*vOutCenter = (Min + Max) * 0.5f;
+
+	if(fOutRadius != nullptr)
+		*fOutRadius = fMaxRadius;
+}
+
+void CModel::Calculate_ModelSize(_float* fOutWidth, _float* fOutHeight)
+{
+	float3 vMin = XMFLOAT3(FLT_MAX, FLT_MAX, FLT_MAX);
+	_float3 vMax = XMFLOAT3(FLT_MIN, FLT_MIN, FLT_MIN);
+
+	// 모델의 모든 메쉬에 대해 AABB 계산
+
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
+	{
+		m_Meshes[i]->Calculate_AABB_Extents(&vMin, &vMax);
+	}
+
+	// 가로 및 세로 크기 계산
+	*fOutWidth = vMax.x - vMin.x;
+	*fOutHeight = vMax.y - vMin.y;
+}
+
+
+
+
+
+
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)
@@ -197,14 +279,20 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath
 
 	Write_Names(strModelFilePath);
 
+
+	Calculate_ModelSize(&m_fModelWidth, &m_fModelHeight);
+
+	
+
 	return S_OK;
 }
 
 HRESULT CModel::Initialize(void * pArg)
 {
 
+	
 	return S_OK;
-}
+}          
 
 void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 {
@@ -216,7 +304,7 @@ void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 	else
 		m_eAnimState = ANIM_STATE::ANIM_STATE_NORMAL;
 
-	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones);
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones, m_bIsSplitted);
 
 
 	_float3 NowPos;
@@ -242,9 +330,13 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 	if (m_iCurrentAnimIndex >= m_iNumAnimations)
 		return;
 
-	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones);
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones, m_bIsSplitted);
+	if (true == m_bIsSplitted)
+	{
+		m_bIsUpperAnimEnd = m_Animations[m_iUpperAnimIndex]->Invalidate_TransformationMatrix_Upper(m_eUpperAnimState, fTimeDelta, m_Bones);
+	}
 
-
+		
 	_float3 NowPos;
 	for (auto& pBone : m_Bones)
 	{
@@ -261,7 +353,7 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 
 		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
 	}
-	min(1,2);
+	
 }
 
 HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices)
@@ -293,9 +385,12 @@ HRESULT CModel::Bind_ShaderCascade(CShader* pShader)
 
 void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
 {
+	if (m_Animations.size() <= 0)
+		return;
+
 	m_eAnimState = _eAnimState;
 
-	//if (_iAnimationIndex != m_iCurrentAnimIndex)
+	if (_iAnimationIndex != m_iCurrentAnimIndex)
 	{
 		Reset_Animation(_iAnimationIndex);
 
@@ -306,7 +401,17 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 		else
 		{
 			m_iCurrentAnimIndex = _iAnimationIndex;
+			_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+			m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 		}
+	}
+	else 
+	{
+		
+
+		m_iCurrentAnimIndex = _iAnimationIndex;
+		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 	}
 }
 
@@ -314,15 +419,16 @@ void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitio
 {
 	if (_iAnimationIndex == m_iCurrentAnimIndex)
 	{
-		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition((_float)iTargetKeyFrameIndex);
+		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 	}
 
 	CAnimation* currentAnimation = m_Animations[m_iCurrentAnimIndex];
 	CAnimation* targetAnimation = m_Animations[_iAnimationIndex];
 
-	targetAnimation->Reset_Animation(m_Bones);		// 임시
+	targetAnimation->Reset_Animation(m_Bones, m_bIsSplitted);		// 임시
 
-	targetAnimation->Set_Transition(currentAnimation, _fTransitionDuration, iTargetKeyFrameIndex);
+	targetAnimation->Set_Transition(currentAnimation, _fTransitionDuration, iTargetKeyFrameIndex, m_bIsSplitted);
 
 	m_iCurrentAnimIndex = _iAnimationIndex;
 }
@@ -330,9 +436,25 @@ void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitio
 void CModel::Reset_Animation(_int iAnimIndex)
 {
 	if (iAnimIndex == -1)
-		m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones);
+		m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
 	else
-		m_Animations[iAnimIndex]->Reset_Animation(m_Bones);
+		m_Animations[iAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
+}
+
+void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+{
+	m_iUpperAnimIndex = _iAnimationIndex;
+	m_eUpperAnimState = _eAnimState;
+	Reset_UpperAnimation(_iAnimationIndex);
+
+}
+
+void CModel::Reset_UpperAnimation(_int iAnimIndex)
+{
+	if (iAnimIndex == -1)
+		m_Animations[m_iCurrentAnimIndex]->Reset_UpperAnimation(m_Bones);
+	else
+		m_Animations[iAnimIndex]->Reset_UpperAnimation(m_Bones);
 }
 
 _float CModel::Get_TickPerSecond()
@@ -353,6 +475,11 @@ _bool CModel::Is_Transition()
 _bool CModel::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_Animations[m_iCurrentAnimIndex]->Is_Inputable_Front(_iIndexFront);
+}
+
+_float CModel::Get_TrackPosition()
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_TrackPosition();
 }
 
 void CModel::Write_Names(const string& strModelFilePath)
@@ -415,9 +542,22 @@ vector<CAnimation*>* CModel::Get_Animations()
 	return &m_Animations;
 }
 
+CMyAIScene* CModel::Get_AIScene()
+{
+	return &m_pAIScene;
+}
+
 vector<CBone*>* CModel::Get_Bones()
 {
 	return &m_Bones;
+}
+
+_uint CModel::Get_BoneNum(const _char* _szName)
+{
+	
+
+
+	return _uint();
 }
 
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
@@ -477,6 +617,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 			strcat_s(szTmp, szFileName);
 			strcat_s(szTmp, szEXT);
 
+
 			//_char szTest[MAX_PATH] = ".dds";
 			//strcat_s(szTmp, szTest);
 
@@ -486,6 +627,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 
 			MaterialDesc.pMtrlTextures[j] = CTexture::Create(m_pDevice, m_pContext, szFullPath, 1);
+
 			if (nullptr == MaterialDesc.pMtrlTextures[j])
 				return E_FAIL;
 		}
@@ -618,6 +760,6 @@ void CModel::Free()
 	}
 	m_Meshes.clear();
 
-	if (false == m_isCloned)
-		m_MyAssimp.FreeScene();
+	//if (false == m_isCloned)
+	m_MyAssimp.FreeScene();
 }

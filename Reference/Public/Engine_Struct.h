@@ -256,29 +256,49 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tag_InstanceDesc
 	{
-		_float3         vRotation;
 		_float3         vScale;
+		_float4         vRotation;
 		_float3			vTranslation;
 		_float			fMaxRange;
 		_float3			vCenter;
+
+		_float3 Get_Position() { return vTranslation; }
 
 		_matrix Get_Matrix() const
 		{
 			_matrix TransformationMatrix;
 			_matrix RotationMatrix, ScaleMatrix;
 
-			_vector vPitchYawRoll;
+			_vector vQuarternion;
 			_vector vPosition;
 
-			vPitchYawRoll = XMLoadFloat3(&vRotation);
+			
+			vQuarternion = XMLoadFloat4(&vRotation);
 			vPosition = XMVectorSetW(XMLoadFloat3(&vTranslation), 1.f);
 
-			RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
+			//vPitchYawRoll = XMQuaternionRotationRollPitchYawFromVector(vPitchYawRoll);
+
+			RotationMatrix = XMMatrixRotationQuaternion(vQuarternion);
+//			RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
 			ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
 			TransformationMatrix = ScaleMatrix * RotationMatrix;
 			TransformationMatrix.r[3] = vPosition;
 
 			return TransformationMatrix;
+		}
+
+
+		void Set_Matrix(const _fmatrix& matrix)
+		{
+
+			_vector vTempScale, vTempRotation, vTempTranslation;
+
+		
+			XMMatrixDecompose(&vTempScale, &vTempRotation, &vTempTranslation, matrix);
+
+			XMStoreFloat3(&vScale, vTempScale);
+			XMStoreFloat4(&vRotation, vTempRotation);
+			XMStoreFloat3(&vTranslation, vTempTranslation);
 		}
 
 		void	Bake_CenterWithMatrix()
@@ -357,6 +377,12 @@ namespace Engine
 
 	}HBAO_PLUS_DESC;
 
+	typedef struct ENGINE_DLL tagBloomRim_Desc
+	{
+		_bool	bBloomBlur_Active	= { false };
+		_bool	bRimBlur_Active		= { false };
+	}BLOOMRIM_DESC;
+
 	typedef struct ENGINE_DLL tagFogDesc
 	{
 		bool  bFog_Active			= false;
@@ -375,13 +401,38 @@ namespace Engine
 
 	}HDR_DESC;
 
+	typedef struct ENGINE_DLL tagAnti_Aliasing
+	{
+		_bool  bFXAA_Active = false;
+	}ANTI_DESC;
+
 	typedef struct ENGINE_DLL tagScreenDesc
 	{
-		_bool  bFXAA_Active		= false;
-		_float fFinal_Saturation	= 1.f;
-		_float fFinal_Brightness	= 1.f;
+		_bool bScreen_Active = false;
+		_float fFinal_Saturation = 1.f;
+		_float fFinal_Brightness = 1.f;
 
-	}SCREEN_DESC;
+	}HSV_DESC;
+
+	typedef struct ENGINE_DLL tagRadialBlurDesc
+	{
+		_bool	bRadial_Active	= false;
+		_float	fRadial_Quality = 16.f;
+		_float	fRadial_Power	= 0.1f;
+	}RADIAL_DESC;
+
+	typedef struct ENGINE_DLL tagDOF
+	{
+		_bool  bDOF_Active		= false;
+		//_float   fNearBlur_Depth = 0.f;
+		//_float   fFocalPalne_Depth = 0.f;
+		//_float   fFarBlur_Depth = 0.f;
+		//_float   fCutOff = 0.f;
+		
+		_float g_fFocusDistance = 32.5f;
+		_float g_fFocusRange	= 12.5f;  
+		_float fMaxAtt			= 30.f;
+	}DOF_DESC;
 
 	/* 전체 컨트롤 - 레벨시작할때 초기 컨트롤용도 */
 	typedef struct ENGINE_DLL tagLevelShader
@@ -414,6 +465,8 @@ namespace Engine
 		_float fFinal_Brightness	= 1.f;
 
 	}LEVEL_SHADER_DESC;
+
+
 #pragma endregion
 
 #pragma region Shader Control Struct - Object

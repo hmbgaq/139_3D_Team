@@ -31,7 +31,7 @@ void CBone::Invalidate_CombinedTransformationMatrix(CModel::BONES& Bones, _fmatr
 			XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&Bones[m_iParentIndex]->m_CombinedTransformationMatrix));
 	}
 
-	if (!strcmp(m_szName, "root"))
+	if (!strcmp(m_szName, "Root_$AssimpFbx$_Translation"))
 	{
 		_Pos.x = m_CombinedTransformationMatrix._41;
 		_Pos.y = m_CombinedTransformationMatrix._42;

@@ -15,6 +15,7 @@ HRESULT CChannel::Initialize(CMyAINodeAnimation pChannel, const CModel::BONES& B
 		{
 			if (false == strcmp(m_szName, pBone->Get_Name()))
 			{
+				pBone->Set_Index(iBoneIndex);
 				return true;
 			}
 

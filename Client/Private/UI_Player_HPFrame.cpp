@@ -74,23 +74,16 @@ HRESULT CUI_Player_HPFrame::Render()
 
 HRESULT CUI_Player_HPFrame::Ready_Components()
 {
-	if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
-		return E_FAIL;
+	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture
 
-	//! For.Com_Texture_1
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_bg"), // HP_Bar_Red
-		TEXT("Com_Texture1"), reinterpret_cast<CComponent**>(&m_pTextureCom[FRAME]))))
-		return E_FAIL;
+	//! For.Com_Texture_1 - HP_Bar_Red
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_bg"), TEXT("Com_Texture1"), reinterpret_cast<CComponent**>(&m_pTextureCom[FRAME])));
 
 	//! For.Com_Shader
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 
 	//! For.Com_VIBuffer
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom)));
 
 	return S_OK;
 }
@@ -130,24 +123,12 @@ _bool CUI_Player_HPFrame::In_Frustum()
 
 json CUI_Player_HPFrame::Save_Desc(json& out_json)
 {
-	_float fSizeX = 0.f;
-	_float fSizeY = 0.f;
-	_float fPositionX = 0.f;
-	_float fPositionY = 0.f;
+	/* 기본정보 저장 */
+	__super::Save_Desc(out_json);
 
-	_float fCurPosX = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
-	_float fCurPosY = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
 
-	fCurPosX = fCurPosX + (_float)g_iWinSizeX * 0.5f;
-	fCurPosY = (_float)g_iWinSizeY * 0.5f - fCurPosY;
+	/* 추가정보 저장 */
 
-	out_json["CloneTag"] = m_tUIInfo.strCloneTag;
-
-	out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
-
-	out_json["FilePath"] = m_tUIInfo.strFilePath;
-
-	m_pTransformCom->Write_Json(out_json);
 
 	return out_json;
 }

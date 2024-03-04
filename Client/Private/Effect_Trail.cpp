@@ -110,7 +110,6 @@ void* CEffect_Trail::Get_BufferDesc()
 	tBufferDesc.iLerpPointNum		= m_tTrailDesc.iLerpPointNum;
 	tBufferDesc.iCatMullRomIndex[4] = m_tTrailDesc.iCatMullRomIndex[4];
 
-
 	return &tBufferDesc;
 }
 

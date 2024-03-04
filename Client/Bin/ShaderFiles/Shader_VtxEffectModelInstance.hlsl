@@ -3,14 +3,15 @@
 matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float       g_fTimeDelta;
 
-texture2D	g_DiffuseTexture;
-texture2D	g_MaskTexture;
-texture2D	g_NoiseTexture;
+Texture2D	g_DiffuseTexture;
+Texture2D	g_MaskTexture;
+Texture2D	g_NoiseTexture;
 
-texture2D	g_NormalTexture;
-texture2D   g_SpecularTexture;
+Texture2D	g_NormalTexture;
+Texture2D   g_SpecularTexture;
 
-texture2D	g_DepthTexture;
+Texture2D	g_DepthTexture;
+
 
 /* Camera */
 vector      g_vCamPosition;

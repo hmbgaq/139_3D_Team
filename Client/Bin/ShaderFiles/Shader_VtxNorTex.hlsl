@@ -1,12 +1,10 @@
 #include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D		g_DiffuseTexture_Array[2];
-
-
-texture2D		g_DiffuseTexture;
-texture2D		g_MaskTexture;
-texture2D		g_BrushTexture;
+Texture2D		g_DiffuseTexture_Array[2];
+Texture2D		g_DiffuseTexture;
+Texture2D		g_MaskTexture;
+Texture2D		g_BrushTexture;
 
 vector			g_vColor = vector(1.f, 1.f, 1.f, 1.f);
 vector			g_vBrushPos = vector(50.f, 0.f, 20.f, 1.f);
