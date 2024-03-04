@@ -423,8 +423,8 @@ namespace Engine
 	typedef struct ENGINE_DLL tagDOF
 	{
 		_bool  bDOF_Active = false;
-		_float g_fFocusDistance = 1.f;
-		_float g_fFocusRange = 0.1f;
+		_float g_fFocusDistance = 32.5f;
+		_float g_fFocusRange = 12.5f;
 	}DOF_DESC;
 
 	/* 전체 컨트롤 - 레벨시작할때 초기 컨트롤용도 */

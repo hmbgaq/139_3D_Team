@@ -105,15 +105,15 @@ public:
 private:
 	_bool						m_bInit = { true }; /* 없으면 터짐 건들지마세요 */
 
-	HBAO_PLUS_DESC				m_tHBAO_Option = {};
-	BLOOMRIM_DESC				m_tBloomRim_Option = {};
-	FOG_DESC					m_tFog_Option = {};
+	HBAO_PLUS_DESC				m_tHBAO_Option		= {};
+	BLOOMRIM_DESC				m_tBloomRim_Option	= {};
+	FOG_DESC					m_tFog_Option		= {};
 
-	RADIAL_DESC					m_tRadial_Option = {};
-	DOF_DESC					m_tDOF_Option = {};
-	HDR_DESC					m_tHDR_Option = {};
-	HSV_DESC					m_tHSV_Option = {};
-	ANTI_DESC					m_tAnti_Option = {};
+	RADIAL_DESC					m_tRadial_Option	= {};
+	DOF_DESC					m_tDOF_Option		= {};
+	HDR_DESC					m_tHDR_Option		= {};
+	HSV_DESC					m_tHSV_Option		= {};
+	ANTI_DESC					m_tAnti_Option		= {};
 
 private:
 	POST_TYPE					m_ePrevTarget = POST_TYPE::FINAL;
@@ -154,9 +154,9 @@ private:
 	HRESULT Ready_DebugRender();
 	HRESULT Render_DebugCom();
 	HRESULT Render_DebugTarget();
-	_bool	m_bDebugRenderTarget = { false };
-	_bool	m_bDebugCom = { false };
-	list<class CComponent*>		m_DebugComponent;
+	_bool	m_bDebugRenderTarget	= { false };
+	_bool	m_bDebugCom				= { false };
+	list<class CComponent*>			m_DebugComponent;
 #endif	
 
 public:
