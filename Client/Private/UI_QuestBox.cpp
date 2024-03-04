@@ -109,7 +109,7 @@ HRESULT CUI_QuestBox::Find_Change(const string& strTextTag)
 
 HRESULT CUI_QuestBox::Ready_Components()
 {
-	if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture
 
 	//! For.Com_Texture_Quest_Background
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("QuestBox"),

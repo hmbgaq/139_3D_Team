@@ -180,7 +180,7 @@ HRESULT CUI_Player_ExpBar::Render()
 
 HRESULT CUI_Player_ExpBar::Ready_Components()
 {
-	if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture
 
 	//! For.Com_Texture1 // 경험치 바
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_exp_bar"),

@@ -306,7 +306,7 @@ void CUI::Parts_Delete()
 	if (m_vecUIParts.empty())
 		return;
 
-	_int iSize = m_vecUIParts.size();
+	_int iSize = (_int)m_vecUIParts.size();
 
 	for (_int i = 0; i < iSize; ++i)
 	{

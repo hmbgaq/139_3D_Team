@@ -113,6 +113,13 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_Radial_Setting();
 		ImGui::TreePop();
 	}
+
+	if (ImGui::TreeNode("DOF Setting"))
+	{
+		Compress_DOF_Setting();
+		ImGui::TreePop();
+	}
+
 	if (ImGui::TreeNode("HDR Setting"))
 	{
 		Compress_HDR_Setting();
@@ -203,6 +210,16 @@ void CWindow_ShaderTool::Compress_Radial_Setting()
 	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(m_eRadial_Desc.bRadial_Active);
 
 	m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(m_eRadial_Desc);
+}
+
+void CWindow_ShaderTool::Compress_DOF_Setting()
+{
+	ImGui::Checkbox("DOF Active", &m_eDOF_Desc.bDOF_Active);
+
+	ImGui::SliderFloat("Focus Distance", &m_eDOF_Desc.g_fFocusDistance, 0.0f, 100.0f, "Distance = %.3f");
+	ImGui::SliderFloat("Focus Range", &m_eDOF_Desc.g_fFocusRange, 0.0f, 100.0f, "Range = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_DOF_Option(m_eDOF_Desc);
 }
 
 void CWindow_ShaderTool::Compress_HDR_Setting()
@@ -347,7 +364,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 
 	json InteractJson = Stage1MapJson["Interact_Json"];
-	_int InteractJsonSize = InteractJson.size();
+	_int InteractJsonSize = (_int)InteractJson.size();
 
 	for (_int i = 0; i < InteractJsonSize; ++i)
 	{
@@ -357,7 +374,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 	}
 
 	json InstanceJson = Stage1MapJson["Instance_Json"];
-	_int InstanceJsonSize = InstanceJson.size();
+	_int InstanceJsonSize = (_int)InstanceJson.size();
 
 	for (_int i = 0; i < InstanceJsonSize; ++i)
 	{
@@ -375,9 +392,9 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
 
 		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
+		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
 
-		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
+		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
 		{
 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
 
@@ -437,8 +454,11 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 void CWindow_ShaderTool::Imgui_Setting()
 {
 	/* 아임구이 셋팅 */
-	SetUp_ImGuiDESC("Shader", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+	ImGuiWindowFlags Flag = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | 
+							ImGuiWindowFlags_NoMove| ImGuiWindowFlags_NoResize |
+							ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus;
 
+	SetUp_ImGuiDESC("Shader", ImVec2{ 400.f, 300.f }, Flag, ImVec4(0.f, 0.f, 0.f, 0.8f));
 	auto& style = ImGui::GetStyle();
 	ImVec4* colors = style.Colors;
 	style.FrameRounding = 8.0f; /* 값이 클수록 모서리가 더 둥글게된다. */

@@ -74,23 +74,16 @@ HRESULT CUI_Player_HPFrame::Render()
 
 HRESULT CUI_Player_HPFrame::Ready_Components()
 {
-	if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
-		return E_FAIL;
+	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture
 
-	//! For.Com_Texture_1
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_bg"), // HP_Bar_Red
-		TEXT("Com_Texture1"), reinterpret_cast<CComponent**>(&m_pTextureCom[FRAME]))))
-		return E_FAIL;
+	//! For.Com_Texture_1 - HP_Bar_Red
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_bg"), TEXT("Com_Texture1"), reinterpret_cast<CComponent**>(&m_pTextureCom[FRAME])));
 
 	//! For.Com_Shader
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 
 	//! For.Com_VIBuffer
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom)));
 
 	return S_OK;
 }

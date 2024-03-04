@@ -707,8 +707,8 @@ void CWindow_EffectTool::Update_RectTab()
 					{
 						_uint iX, iY;
 						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_TextureCom(CEffect_Void::TEXTURE_DIFFUSE)->Get_TextureSize(&iX, &iY, m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE]);
-						pSpriteDesc->vTextureSize.x = iX;
-						pSpriteDesc->vTextureSize.y = iY;
+						pSpriteDesc->vTextureSize.x = (_float)iX;
+						pSpriteDesc->vTextureSize.y = (_float)iY;
 
 						_float fTileX, fTileY;
 						fTileX = (_float)iX / m_vUV_MaxTileCount[0];
@@ -717,8 +717,8 @@ void CWindow_EffectTool::Update_RectTab()
 						pSpriteDesc->vTileSize.x = fTileX;
 						pSpriteDesc->vTileSize.y = fTileY;
 
-						pSpriteDesc->vUV_MaxTileCount.x = m_vUV_MaxTileCount[0];
-						pSpriteDesc->vUV_MaxTileCount.y = m_vUV_MaxTileCount[1];
+						pSpriteDesc->vUV_MaxTileCount.x = (_float)m_vUV_MaxTileCount[0];
+						pSpriteDesc->vUV_MaxTileCount.y = (_float)m_vUV_MaxTileCount[1];
 
 
 						m_pCurPartEffect->ReSet_Effect();
@@ -1035,8 +1035,8 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_fSequenceTerm_RectSprite = pSpriteDesc->fSequenceTerm;
 
-			m_vUV_MaxTileCount[0] = pSpriteDesc->vUV_MaxTileCount.x;
-			m_vUV_MaxTileCount[1] = pSpriteDesc->vUV_MaxTileCount.y;
+			m_vUV_MaxTileCount[0] = (_int)pSpriteDesc->vUV_MaxTileCount.x;
+			m_vUV_MaxTileCount[1] = (_int)pSpriteDesc->vUV_MaxTileCount.y;
 		}
 
 		if (CEffect_Void::INSTANCE == eType_Effect)
@@ -1226,13 +1226,13 @@ void CWindow_EffectTool::Update_EffectList()
 
 
 	/* 이펙트 리스트 & 현재 이펙트 선택 */
-	if (ImGui::ListBox(" Effects ", &m_iCurEffectIndex, m_szEffectNames, m_pEffects.size(), (_int)6))
+	if (ImGui::ListBox(" Effects ", &m_iCurEffectIndex, m_szEffectNames, (_int)m_pEffects.size(), (_int)6))
 	{
 		wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szEffectNames[m_iCurEffectIndex]);
 		m_pCurEffect = m_pEffects.find(strCurName)->second;
 
 		/* 문자열 초기화 */
-		m_iCurPartIndex = m_CurPartObjects.size();
+		m_iCurPartIndex = (_int)m_CurPartObjects.size();
 		if (nullptr != m_szPartNames)
 		{
 			for (_int i = 0; i < m_iCurPartIndex; ++i)
@@ -1244,7 +1244,7 @@ void CWindow_EffectTool::Update_EffectList()
 
 		Update_CurMembers(strCurName);
 
-		m_iCurPartIndex = m_CurPartObjects.size();
+		m_iCurPartIndex = (_int)m_CurPartObjects.size();
 		m_szPartNames = new char* [m_iCurPartIndex];
 
 		_int iCount = 0;
@@ -1311,7 +1311,7 @@ void CWindow_EffectTool::Update_EffectList()
 		// =========================================
 
 		/* 이펙트 파트오브젝트 리스트 & 현재 파트오브젝트 선택 */
-		if (ImGui::ListBox(" Parts ", &m_iCurPartIndex, m_szPartNames, m_CurPartObjects.size(), (_int)6))
+		if (ImGui::ListBox(" Parts ", &m_iCurPartIndex, m_szPartNames, (_int)m_CurPartObjects.size(), (_int)6))
 		{
 			wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szPartNames[m_iCurPartIndex]);
 			m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.find(strCurName)->second);
@@ -1621,7 +1621,8 @@ HRESULT CWindow_EffectTool::Create_EffectObject(const wstring& strLayerTag, CGam
 
 
 #pragma region 이름 리스트 초기화&업데이트
-	m_iCurEffectIndex = m_pEffects.size();
+
+	m_iCurEffectIndex = (_int)m_pEffects.size();
 	/* 문자열 초기화 */
 	if (nullptr != m_szEffectNames)
 	{
@@ -1728,7 +1729,7 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		m_pCurPartEffect->Set_EffectType(CEffect_Void::PARTICLE);
 		dynamic_cast<CEffect_Void*>(m_pCurPartEffect)->Set_Owner(m_pCurEffect);
 
-		m_iCurPartIndex = m_CurPartObjects.size();
+		m_iCurPartIndex = (_int)m_CurPartObjects.size();
 		/* 문자열 초기화 */
 		if (nullptr != m_szPartNames)
 		{
@@ -1843,7 +1844,7 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 		m_pCurPartEffect->Set_EffectType(CEffect_Void::RECT);
 		m_pCurPartEffect->Set_Owner(m_pCurEffect);
 
-		m_iCurPartIndex = m_CurPartObjects.size();
+		m_iCurPartIndex = (_int)m_CurPartObjects.size();
 		/* 문자열 초기화 */
 		if (nullptr != m_szPartNames)
 		{
@@ -1952,7 +1953,7 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		dynamic_cast<CEffect_Void*>(m_pCurPartEffect)->Set_Owner(m_pCurEffect);
 
 
-		m_iCurPartIndex = m_CurPartObjects.size();
+		m_iCurPartIndex = (_int)m_CurPartObjects.size();
 		/* 문자열 초기화 */
 		if (nullptr != m_szPartNames)
 		{

@@ -45,7 +45,7 @@ public:
 
 		/* For.Gravity */
 		_bool		bUseGravity = { FALSE };
-		_float		fGravityAcc = { -9.8 };
+		_float		fGravityAcc = { -9.8f };
 		_float		fUseGravityPosition = { 0.1f };
 
 		/* For.Rotation */

@@ -111,7 +111,7 @@ HRESULT CUI_Player_Right_Interface::Render()
 
 HRESULT CUI_Player_Right_Interface::Ready_Components()
 {
-	if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture
 
 	//! For.Com_Texture1 // 플레이어 왼쪽 인터페이스 프레임
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_right"),

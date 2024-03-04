@@ -5,10 +5,21 @@ struct radial
     float   fRadial_Quality;
     float   fRadial_Power;
 };
+
+struct DOF
+{
+    bool    bDOF_Active;
+    float   fFocusDistance;
+    float   fFocusRange;
+};
+
 /* ====================================== */
 
 /* Origin */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+matrix g_ViewMatrixInv, g_ProjMatrixInv;
+float4 g_vCamPosition;
+float g_fCamFar;
 
 Texture2D g_ProcessingTarget;
 
@@ -21,7 +32,11 @@ float g_change_luminance;
 // Radial Blur 
 radial g_Radial_Blur;
 
+/* DOF */
+Texture2D   g_DepthTarget;
+DOF         g_DOF;
 /* ====================================== */
+
 struct VS_IN
 {
 
@@ -215,6 +230,59 @@ PS_OUT PS_MAIN_RADIAL(PS_IN In)
     return Out;
     
 }
+
+/* ------------------- 3 -DOF Shader -------------------*/
+VS_OUT VS_MAIN_DOF(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vPosition.xy = sign(Out.vPosition.xy);
+
+    Out.vTexcoord = In.vTexcoord;
+    
+    return Out;
+}
+
+PS_OUT PS_MAIN_DOF (PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord); /* 카메라 Depth 로 가져옴 */
+    if (0.f == vDepth.r)
+        discard;
+    
+    vector vTarget = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    float fViewZ = vDepth.y * g_fCamFar;
+    
+    if (g_DOF.fFocusDistance - g_DOF.fFocusRange > fViewZ)
+    {
+        Out.vColor = vTarget * 0.5f;
+        Out.vColor.a = saturate(1.f - (fViewZ / (g_DOF.fFocusDistance - g_DOF.fFocusRange)));
+    }
+    else if (g_DOF.fFocusDistance + g_DOF.fFocusRange < fViewZ)
+    {
+        float fMaxAtt = 30.f;
+        float fMaxDistance = g_DOF.fFocusDistance + g_DOF.fFocusRange + fMaxAtt;
+        Out.vColor = vTarget * 0.5f;
+        // f + R ~ 100.f(특정 Z) 까지를 0~1로 정규화
+        // ViewZ - (F+R) / (100.f - (f+R)) // 100.f 는 CamFar가 정석인거같은데, "사실상 보이는 위치" 로 설정하는게 맞는듯.
+        Out.vColor.a = saturate((fViewZ - (g_DOF.fFocusDistance + g_DOF.fFocusRange)) / (fMaxDistance - (g_DOF.fFocusDistance + g_DOF.fFocusRange)));
+    }
+    else
+        Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
+
+    return Out;
+}
+
+/* ------------------- Technique  -------------------*/
+
 technique11 DefaultTechnique
 {
     pass Origin // 0
@@ -255,5 +323,17 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_RADIAL();
 
+    }
+
+    pass DOF
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_DOF();
+        GeometryShader = NULL ;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DOF();
     }
 }

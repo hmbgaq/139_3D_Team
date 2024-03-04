@@ -62,25 +62,24 @@ HRESULT CBody_Infected_A::Render_Shadow()
 
 HRESULT CBody_Infected_A::Ready_Components()
 {	
-	if (FAILED(__super::Ready_Components()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Ready_Components());
 
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Infected_A"),
-		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Infected_A"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+
+	return S_OK;
 }
 
 HRESULT CBody_Infected_A::Bind_ShaderResources()
 {
-	if (FAILED(__super::Bind_ShaderResources()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Bind_ShaderResources());
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
-		return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
+	return S_OK;
 }
 
 CBody_Infected_A* CBody_Infected_A::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
