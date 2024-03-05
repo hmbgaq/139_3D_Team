@@ -17,7 +17,9 @@
 #include "../Imgui/ImGuizmo/ImSequencer.h"
 #include "../Imgui/ImGuizmo/ImZoomSlider.h"
 #include "Camera.h"
+#include "Camera_Dynamic.h"
 #include "SpringCamera.h"
+#include "Data_Manager.h"
 
 static ImGuizmo::OPERATION InstanceCurrentGizmoOperation;
 static ImGuizmo::MODE	   InstanceCurrentGizmoMode;
@@ -40,7 +42,7 @@ HRESULT CWindow_MapTool::Initialize()
 	FAILED_CHECK(Ready_PrototypeTags());
 	
 
-	_int iEnvironModelTagSize = m_vecEnviroModelTag.size();
+	_int iEnvironModelTagSize = (_int)m_vecEnviroModelTag.size();
 	for (int i = 0; i < iEnvironModelTagSize; ++i) //! 인스턴싱용 깡통맵
 	{
 		vector<CEnvironment_Object*> EmptyVector;
@@ -49,7 +51,11 @@ HRESULT CWindow_MapTool::Initialize()
 	}
 	
 	XMStoreFloat4x4(&m_matInstanceMatrix, XMMatrixIdentity());
+	
+	m_pToolCamera = CData_Manager::GetInstance()->Get_Camera_Dynamic();
 
+	if(m_pToolCamera == nullptr)
+		return E_FAIL;
 	//m_mapPreviewInstance
 	
 	return S_OK;
@@ -62,7 +68,6 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	__super::Begin();
-
 	
 
 	//TODO ImGuiTabBarFlags_
@@ -82,14 +87,12 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	
 	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
 	
-
-
-
 	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 80), ImGuiChildFlags_Border, WindowFlag);
 	
 	ImGui::SeparatorText(u8"세이브 / 로드");
 	{
-		if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
+		
+		if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; m_strDialogPath = "../Bin/DafaFiles/Data_Map/"; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DafaFiles/Data_Map/";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
 	}ImGui::Separator(); 
 
 	ImGui::EndChild();
@@ -122,7 +125,7 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 				ObjectMode_Change_For_Reset();
 			}
 		}
-		ObjectMode_Change_For_Reset();
+//		ObjectMode_Change_For_Reset();
 	}
 	ImGui::Separator();
 
@@ -151,10 +154,9 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 
 	__super::End();
 
-	if (false == m_bCreateCamera)
-	{
+	if(m_bCreateCamera == false)
 		IsCreatePlayer_ReadyCamara();
-	}
+	
 
 	
 }
@@ -336,9 +338,20 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 			SaveJson.emplace("Interact_Json", InteractJson);
 			SaveJson.emplace("Instance_Json", InstanceJson);
 			SaveJson.emplace("Monster_Json", MonsterJson);
-			//! 추후 작성 npc SaveJson.emplace("NPC_Json", NPCJson);
+
+
+			string strSavePath = strPath + "/" + strNoExtFileName + "_MapData.json";
+			if (FAILED(CJson_Utility::Save_Json(strSavePath.c_str(), SaveJson)))
+			{
+				MSG_BOX("맵툴 저장 실패");
+			}
+			else
+			{
+				MSG_BOX("맵툴 저장 성공");
+			}
 
 			return S_OK;
+
 }
 
 HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
@@ -409,7 +422,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 
 	json InteractJson = LoadJson["Interact_Json"];
-	_int InteractJsonSize = InteractJson.size();
+	_int InteractJsonSize = (_int)InteractJson.size();
 
 	for(_int i = 0; i < InteractJsonSize; ++i)
 	{
@@ -963,7 +976,7 @@ void CWindow_MapTool::MonsterTab_Function()
 
 		case Client::CWindow_MapTool::MODE_TYPE::MODE_DELETE:
 		{
-
+			Delete_Tab(CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER);
 			break;
 		}
 	}
@@ -997,7 +1010,7 @@ void CWindow_MapTool::CameraWindow_Function()
 				
 				if (ImGui::RadioButton(CameraType[i], &iCameraType, i))
 				{
-					_int iCameraCount = m_vecCameras.size();
+					_int iCameraCount = (_int)m_vecCameras.size();
 
 					for (_int i = 0; i < iCameraCount; ++i)
 					{
@@ -1021,7 +1034,7 @@ void CWindow_MapTool::CameraWindow_Function()
 					else
 						iCameraType = 0;
 
-					_int iCameraCount = m_vecCameras.size();
+					_int iCameraCount = (_int)m_vecCameras.size();
 
 					for (_int i = 0; i < iCameraCount; ++i)
 					{
@@ -1074,55 +1087,6 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 				}
 			}
 
-			else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH && true == ImGui_MouseInCheck())
-			{
-				if (true == m_vecCreateObject.empty())
-				{
-					ImGui::Text(u8"생성된 환경 오브젝트가 없습니다.");
-					ImGui::End();
-					return;
-				}
-				
-					ImGui::SeparatorText(u8"메쉬 픽킹 인포");
-
-
-					_int iCreateObjectSize = (_int)m_vecCreateObject.size();
-
-					for (_int i = 0; i < iCreateObjectSize; ++i)
-					{
-						CEnvironment_Object* pTargetObject = m_vecCreateObject[i];
-
-						if (false == pTargetObject->Get_EnvironmentDesc()->bAnimModel)
-						{
-							m_tWorldRay = m_pGameInstance->Get_MouseRayWorld(g_hWnd, g_iWinSizeX, g_iWinSizeY);
-
-						#ifdef DEBUG
-							if (pTargetObject->Picking_VerJSY(&m_tWorldRay, &m_fRayPos))
-							{
-								m_fMeshPos = m_fRayPos;
-							}
-						#endif // DEBUG
-
-
-							//if (true == pTargetObject->Picking(&m_fRayPos))
-							//{
-							//
-							//	XMStoreFloat3(&m_fMeshPos, XMVector3TransformCoord(XMLoadFloat3(&m_fRayPos), m_vecCreateObject[i]->Get_Transform()->Get_WorldMatrix()));
-							//}
-						}
-						else
-							continue;
-
-						
-					}	
-					
-					ImGui::Text(u8"마우스 X: %.2f", m_fMeshPos.x); ImGui::SameLine();	ImGui::Text(u8"마우스 Y: %.2f", m_fMeshPos.y); ImGui::SameLine();	ImGui::Text(u8"마우스 Z: %.2f", m_fMeshPos.z);
-
-					ImGui::Separator();
-
-					ImGui::NewLine();
-			}
-
 			else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_INSTANCE && true == ImGui_MouseInCheck())
 			{
 
@@ -1132,7 +1096,7 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 					ImGui::End();
 					return;
 				}
-					_int iCreateInstanceSize = m_vecCreateInstance.size();
+					_int iCreateInstanceSize = (_int)m_vecCreateInstance.size();
 		
 					for (_int i = 0; i < iCreateInstanceSize; ++i)
 					{
@@ -1188,12 +1152,25 @@ void CWindow_MapTool::FieldWindowMenu()
 
 		m_bShowCreateField = !(_bool)iFieldShowType;
 
+		if (ImGui::Button(u8"리셋"))
+		{
+			Reset_Function();
+		}
 	}ImGui::NewLine();
+
+	ImGui::SeparatorText(u8"카메라");
+	{
+		if (ImGui::InputFloat(u8"카메라 속도", &m_fCamaraSpeed))
+		{
+			//CData_Manager::GetInstance()->Get_Camera_Dynamic()->Get_Transform()->Set_Speed(m_fCamaraSpeed);
+			m_pToolCamera->Get_Transform()->Set_Speed(m_fCamaraSpeed);
+		}
+	}
 
 
 	#ifdef _DEBUG
-MouseInfo_Window(m_fTimeDelta);
-#endif // _DEBUG
+	MouseInfo_Window(m_fTimeDelta);
+	#endif // _DEBUG
 
 }
 
@@ -1334,8 +1311,17 @@ void CWindow_MapTool::Create_Tab(TAP_TYPE eTabType)
 
 		if (eTabType == CWindow_MapTool::TAP_TYPE::TAB_SINGLE)
 		{
-			iModelTagSize = (_uint)m_vecSingleModelTag.size();
-			vecModelTag = m_vecSingleModelTag;
+			if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_ANIM)
+			{
+				iModelTagSize = (_uint)m_vecAnimEnviroModelTag.size();
+				vecModelTag = m_vecAnimEnviroModelTag;
+			}
+			else
+			{
+				iModelTagSize = (_uint)m_vecSingleModelTag.size();
+				vecModelTag = m_vecSingleModelTag;
+			}
+			
 		}
 		else if (eTabType == CWindow_MapTool::TAP_TYPE::TAB_INTERACT)
 		{
@@ -1382,6 +1368,9 @@ void CWindow_MapTool::Create_Tab(TAP_TYPE eTabType)
 		}
 	}
 
+		ImGui::InputInt(u8"셰이더패스", &m_iShaderPassIndex);
+		
+	
 
 		if (ImGui::BeginListBox(strListBoxName.c_str(), ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
@@ -1444,10 +1433,10 @@ void CWindow_MapTool::Create_Tab(TAP_TYPE eTabType)
 		{
 			if (ImGui::BeginListBox(u8"미리보기인스턴스 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 			{
-				_int iPreviewInstanceSize = m_vecPreViewInstance.size();
+				_int iPreviewInstanceSize = (_int)m_vecPreViewInstance.size();
 
 
-				for (_uint i = 0; i < iPreviewInstanceSize; ++i)
+				for (_int i = 0; i < iPreviewInstanceSize; ++i)
 				{
 					const _bool isSelected = (m_iSelectPreviewIndex == i);
 
@@ -1513,7 +1502,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 
 	if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER)
 	{
-		iTagSize = m_vecCreateMonster.size();
+		iTagSize = (_uint)m_vecCreateMonster.size();
 		vecCreateTag = m_vecCreateMonsterTag;
 		strListBoxName = u8"삭제할 캐릭터 객체 리스트";
 		iSelectTag = m_iSelectCharacterTag;
@@ -1524,7 +1513,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 		{
 			if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
 			{
-				iTagSize = m_vecPreViewInstance.size();
+				iTagSize = (_uint)m_vecPreViewInstance.size();
 				vecCreateTag = m_vecPreViewInstanceTag;
 				strListBoxName = u8"삭제할 미리보기 인스턴스 객체 리스트";
 				iSelectTag = m_iSelectPreviewIndex;
@@ -1532,7 +1521,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 			}
 			else
 			{
-				iTagSize = m_vecCreateObject.size();
+				iTagSize = (_uint)m_vecCreateObject.size();
 				vecCreateTag = m_vecCreateObjectTag;
 				strListBoxName = u8"삭제할 환경 객체 리스트";
 				iSelectTag = m_iSelectObjectIndex;
@@ -1540,15 +1529,11 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 		}
 		else
 		{
-			iTagSize = m_vecCreateObject.size();
+			iTagSize = (_uint)m_vecCreateObject.size();
 			vecCreateTag = m_vecCreateObjectTag;
 			strListBoxName = u8"삭제할 환경 객체 리스트";
 			iSelectTag = m_iSelectObjectIndex;
 		}
-		
-
-		
-
 
 	}
 
@@ -1579,6 +1564,10 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 		ImGui::EndListBox();
 	}
 
+
+	if(m_vecCreateObject.size() < m_iSelectObjectIndex || m_vecCreateMonster.size() < m_iSelectCharacterTag)
+		return;
+
 	if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER && false == m_vecCreateMonster.empty() && m_vecCreateMonster[m_iSelectCharacterTag] != nullptr)
 	{
 		Set_GuizmoCamView();
@@ -1587,7 +1576,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 	}
 	else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT && false == m_vecCreateObject.empty() && m_vecCreateObject[m_iSelectObjectIndex] != nullptr)
 	{
-		if (m_eTabType == CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT && m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
+		if (m_eTabType == CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT && m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM && false == m_vecPreViewInstance.empty())
 		{
 			Set_GuizmoCamView();
 			Set_GuizmoCamProj();
@@ -1636,7 +1625,14 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 					auto iter = m_mapPreviewInstance.find(m_vecPreViewInstanceTag[m_iSelectPreviewIndex]);
 
 					
-					iter->second.erase(iter->second.begin() + m_iSelectPreviewIndex);
+					if (iter->second.size() != 0)
+					{
+						iter->second.erase(iter->second.begin() + iter->second.size() - 1);
+					}
+					else
+					{
+						iter->second.clear();
+					}
 					
 
 					m_vecPreViewInstance[m_iSelectPreviewIndex]->Set_Dead(true);
@@ -1648,15 +1644,19 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 				else
 				{
 					m_vecCreateObject[m_iSelectObjectIndex]->Set_Dead(true);
+					m_pPickingObject = nullptr;
 					m_vecCreateObject[m_iSelectObjectIndex] = nullptr;
 					m_vecCreateObject.erase(m_vecCreateObject.begin() + m_iSelectObjectIndex);
+					m_iSelectObjectIndex = 0;
 				}
 			}
 			else
 			{
 				m_vecCreateObject[m_iSelectObjectIndex]->Set_Dead(true);
 				m_vecCreateObject[m_iSelectObjectIndex] = nullptr;
+				m_pPickingObject = nullptr;
 				m_vecCreateObject.erase(m_vecCreateObject.begin() + m_iSelectObjectIndex);
+				m_iSelectObjectIndex = 0;
 			}
 			
 			
@@ -1681,12 +1681,66 @@ void CWindow_MapTool::Preview_Function()
 
 		if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
 			vPos = { m_fRayPos.x, m_fRayPos.y, m_fRayPos.z, 1.f};
-		else if(m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
-			vPos = { m_fMeshPos.x, m_fMeshPos.y, m_fMeshPos.z, 1.f };
+
+		else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
+		{
+			
+			_vector vCamPos = m_pToolCamera->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+			_vector vPreviewOffset = XMVectorSet(20.f, 0.f, -5.f, 0.f);
+			
+			if (m_pPreviewCharacter == nullptr)
+			{
+				m_pPreviewObject->Get_Transform()->Look_At(vCamPos);
+			}
+			else
+			{
+				m_pPreviewCharacter->Get_Transform()->Look_At(vCamPos);
+			}
+
+			//if (m_pPreviewCharacter == nullptr)
+			//{
+			//	vPreviewOffset = XMVectorSet(10.f * m_pPreviewObject->Get_ModelWidth(), 0.f, -5.f, 0.f);
+			//}
+			//else
+			//{
+			//	vPreviewOffset = XMVectorSet(10.f * m_pPreviewCharacter->Get_ModelWidth(), 0.f, -5.f, 0.f);
+			//}
+
+			
+
+			vPos = vCamPos + vPreviewOffset;
+			//
+			//
+			//// 오브젝트의 크기 (가로, 세로)
+			//_float ModelWidth;
+			//_float ModelHeight; // 예시 값: 50.0f
+			//
+			//if (m_pPreviewCharacter == nullptr)
+			//{
+			//	ModelWidth = m_pPreviewObject->Get_ModelWidth();
+			//	ModelHeight = m_pPreviewObject->Get_ModelHeight();
+			//}
+			//else
+			//{
+			//	ModelWidth = m_pPreviewCharacter->Get_ModelWidth();
+			//	ModelHeight = m_pPreviewCharacter->Get_ModelHeight();
+			//}
+			//			// 화면 상 좌측 상단이 (0, 0)인 스크린 좌표계에서의 오브젝트의 스크린 좌표를 계산합니다.
+			//_float screenX = (0 + (ModelWidth * 0.5f)) / g_iWinSizeX;
+			//_float screenY = 1.0f - ((0 + (ModelHeight * 0.5f)) / g_iWinSizeY);
+			//
+			//// 오브젝트를 우측 아래에 위치시키기 위해 스크린 좌표를 조정합니다.
+			//screenX = screenX * 2.0f - 1.0f; // 화면 좌측 상단을 (-1, 1)로, 우측 하단을 (1, -1)로 매핑
+			//
+			//// 스크린 좌표를 월드 좌표로 변환합니다.
+			//vPos.m128_f32[0] = screenX * g_iWinSizeX - (ModelWidth * 0.5f);
+			//vPos.m128_f32[1] = (1.0f - screenY) * g_iWinSizeY - (ModelHeight * 0.5f);
+
+		}
 		else if(m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_INSTANCE)
 			vPos = { m_fInstanceMeshPos.x, m_fInstanceMeshPos.y, m_fInstanceMeshPos.z, 1.f };
 
-		if(m_pPreviewCharacter == nullptr)
+		if (m_pPreviewCharacter == nullptr)
 			m_pPreviewObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
 		else
 			m_pPreviewCharacter->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
@@ -1712,6 +1766,7 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 
 			wstring strPrototypeTag;
 			//m_vecMonsterTag[m_iSelectCharacterTag];
+
 			switch (m_eTabType)
 			{
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER:
@@ -1889,39 +1944,53 @@ void CWindow_MapTool::Ground_CreateFunction()
 
 	else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
 	{
+
 		if(m_vecCreateObject.empty())
 			return;
 		
 		_int iCreateObjectSize = (_int)m_vecCreateObject.size();
+		_float fMaxHeight = FLT_MIN;
 
 		for (_int i = 0; i < iCreateObjectSize; ++i)
 		{
 			//TODO 작성중. 메쉬 픽킹
-// 			_float3 vPickedPos = {};
-// 
-// 			if (true == m_vecCreateObject[i]->Picking(&vPickedPos))
-// 			{
-				CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-				Desc.bAnimModel = m_bAnimType;
-				Desc.iShaderPassIndex = m_iShaderPassIndex;
-				Desc.strModelTag = m_pPreviewObject->Get_ModelTag();
-				Desc.bPreview = false;
-				Desc.WorldMatrix = m_pPreviewObject->Get_Transform()->Get_WorldMatrix();
+ 			_float3 vPickedPos = {};
+	
+			CEnvironment_Object* pTargetObject = m_vecCreateObject[i];
 
-				CEnvironment_Object* pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+ 			if (true == pTargetObject->Picking(&vPickedPos))
+ 			{
+				if (m_fMeshPos.y < vPickedPos.y)
+				{
+					m_fMeshPos = vPickedPos;
 
-				m_vecCreateObject.push_back(pObject);
+				}
 
-				wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pObject->Get_ModelTag() + L"@" + to_wstring(m_iCreateObjectIndex));
-				string strConvertTag;
-				m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
-				m_vecCreateObjectTag.push_back(strConvertTag);
-
-				m_iCreateObjectIndex++;
-//			}
+			}
 			
 		}
 
+		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+		Desc.bAnimModel = m_bAnimType;
+		Desc.iShaderPassIndex = m_iShaderPassIndex;
+		Desc.strModelTag = m_pPreviewObject->Get_ModelTag();
+		Desc.bPreview = false;
+
+		_float4 vSetPos = {m_fMeshPos.x, m_fMeshPos.y, m_fMeshPos.z, 1.f};
+		m_pPreviewObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vSetPos);
+
+		Desc.WorldMatrix = m_pPreviewObject->Get_Transform()->Get_WorldMatrix();
+
+		CEnvironment_Object* pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+
+		m_vecCreateObject.push_back(pObject);
+
+		wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pObject->Get_ModelTag() + L"@" + to_wstring(m_iCreateObjectIndex));
+		string strConvertTag;
+		m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
+		m_vecCreateObjectTag.push_back(strConvertTag);
+
+		m_iCreateObjectIndex++;
 	}
 
 	else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_INSTANCE)
@@ -2014,48 +2083,55 @@ void CWindow_MapTool::Preview_Environment_CreateFunction()
 			return;
 
 		_int iCreateObjectSize = (_int)m_vecCreateObject.size();
+		_float fMaxHeight = FLT_MIN;
 
 		for (_int i = 0; i < iCreateObjectSize; ++i)
 		{
 			//TODO 작성중. 메쉬 픽킹
-// 			_float3 vPickedPos = {};
-// 
-// 			if (true == m_vecCreateObject[i]->Picking(&vPickedPos))
-// 			{
-			CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-			Desc.bAnimModel = m_bAnimType;
-			Desc.iShaderPassIndex = m_iShaderPassIndex;
-			Desc.strModelTag = m_pPreviewObject->Get_ModelTag();
-			Desc.bPreview = false;
-			Desc.WorldMatrix = m_pPreviewObject->Get_Transform()->Get_WorldMatrix();
+ 			_float3 vPickedPos = {};
+ 
+ 			if (true == m_vecCreateObject[i]->Picking(&vPickedPos))
+ 			{
+				if (m_fMeshPos.y < vPickedPos.y)
+				{
+					m_fMeshPos = vPickedPos;
 
-			CEnvironment_Object* pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+				}
 
-			string strModelTag;
-			m_pGameInstance->WString_To_String(Desc.strModelTag, strModelTag);
-
-			auto iter = m_mapPreviewInstance.find(strModelTag);
-
-			if (iter == m_mapPreviewInstance.end())
-			{
-				MSG_BOX("인스턴스 추가 실패유");
 			}
-			else
-			{
-				iter->second.push_back(pObject);
-				m_pPickingObject = pObject;
-
-				string strModelTag = {};
-				m_pGameInstance->WString_To_String(Desc.strModelTag, strModelTag);
-
-				strModelTag = strModelTag + "@" + to_string(m_vecPreViewInstance.size());
-				m_vecPreViewInstance.push_back(pObject);
-				m_vecPreViewInstanceTag.push_back(strModelTag);
-				m_iCreatePreviewIndex++;
-			}
-			
 		}
 
+		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+		Desc.bAnimModel = m_bAnimType;
+		Desc.iShaderPassIndex = m_iShaderPassIndex;
+		Desc.strModelTag = m_pPreviewObject->Get_ModelTag();
+		Desc.bPreview = false;
+		Desc.WorldMatrix = m_pPreviewObject->Get_Transform()->Get_WorldMatrix();
+
+		CEnvironment_Object* pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+
+		string strModelTag;
+		m_pGameInstance->WString_To_String(Desc.strModelTag, strModelTag);
+
+		auto iter = m_mapPreviewInstance.find(strModelTag);
+
+		if (iter == m_mapPreviewInstance.end())
+		{
+			MSG_BOX("인스턴스 추가 실패유");
+		}
+		else
+		{
+			iter->second.push_back(pObject);
+			m_pPickingObject = pObject;
+
+			string strModelTag = {};
+			m_pGameInstance->WString_To_String(Desc.strModelTag, strModelTag);
+
+			strModelTag = strModelTag + "@" + to_string(m_vecPreViewInstance.size());
+			m_vecPreViewInstance.push_back(pObject);
+			m_vecPreViewInstanceTag.push_back(strModelTag);
+			m_iCreatePreviewIndex++;
+		}
 	}
 
 	else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_INSTANCE)
@@ -2158,7 +2234,7 @@ void CWindow_MapTool::Create_Instance()
 
 	m_mapPreviewInstance.clear();
 
-	_int iEnvironModelTagSize = m_vecEnviroModelTag.size();
+	_int iEnvironModelTagSize = (_int)m_vecEnviroModelTag.size();
 	for (int i = 0; i < iEnvironModelTagSize; ++i) //! 인스턴싱용 깡통맵
 	{
 		vector<CEnvironment_Object*> EmptyVector;
@@ -2166,7 +2242,7 @@ void CWindow_MapTool::Create_Instance()
 		m_mapPreviewInstance.emplace(m_vecEnviroModelTag[i], EmptyVector);
 	}
 
-	_int iPreviewVectorSize = m_vecPreViewInstance.size();
+	_int iPreviewVectorSize = (_int)m_vecPreViewInstance.size();
 
 	for (_int i = 0; i < iPreviewVectorSize; ++i)
 	{
@@ -2296,7 +2372,7 @@ void CWindow_MapTool::Character_CreateFunction()
 
 	if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
 	{
-		if (nullptr != m_pField && true == m_pField->MouseOnTerrain())
+		if (nullptr != m_pField && true == m_pField->MouseOnTerrain() && true == ImGui_MouseInCheck())
 		{
 			
 			switch (m_eTabType)
@@ -2670,6 +2746,13 @@ void CWindow_MapTool::Instance_GuizmoTick(_int iIndex, INSTANCE_INFO_DESC* pInst
 
 void CWindow_MapTool::Character_SelectFunction()
 {
+	if (m_pPreviewCharacter != nullptr)
+	{
+		m_pPreviewCharacter->Set_Dead(true);
+		m_pPreviewCharacter = nullptr;
+	}
+
+
 	switch (m_eTabType)
 	{
 		case Client::CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER:
@@ -2696,6 +2779,7 @@ void CWindow_MapTool::Character_SelectFunction()
 
 void CWindow_MapTool::Monster_SelectFunction()
 {
+	
 	_uint iCreateMonsterTagSize = (_uint)m_vecCreateMonsterTag.size();
 
 	if (true == m_vecCreateMonster.empty())

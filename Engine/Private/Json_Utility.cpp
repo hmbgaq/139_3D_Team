@@ -3,7 +3,7 @@
 //#define	JSONFOLDER_PATH	L"../Json/"
 
 HRESULT CJson_Utility::Load_Json(const char* _strPath, json& pOut)
-{
+	{
 	json JsonTemp;
 
 	ifstream fin;

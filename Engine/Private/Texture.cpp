@@ -70,7 +70,25 @@ HRESULT CTexture::Initialize_Prototype(const wstring & strTextureFilePath, _uint
 		}
 
 		if (FAILED(hr))
+		{
+			if (lstrcmp(szExt, TEXT(".dds")) != 0)
+			{
+				
+				wstring newExt = L".dds";
+				wstring newPath = std::filesystem::path(szFullPath).replace_extension(newExt).wstring();
+
+				hr = CreateDDSTextureFromFile(m_pDevice, newPath.c_str(), nullptr, &pSRV);
+
+				if (SUCCEEDED(hr))
+				{
+					m_SRVs.push_back(pSRV);
+					return S_OK;
+				}
+			}
+
+
 			return E_FAIL;
+		}
 
 		m_SRVs.push_back(pSRV);
 	}

@@ -1,4 +1,4 @@
-#include "..\Public\Monster_Character.h"
+#include "Monster_Character.h"
 
 CMonster_Character::CMonster_Character(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
@@ -12,16 +12,14 @@ CMonster_Character::CMonster_Character(const CMonster_Character& rhs)
 
 HRESULT CMonster_Character::Initialize_Prototype()
 {
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize_Prototype());
 
 	return S_OK;
 }
 
 HRESULT CMonster_Character::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize(pArg));
 
 	return S_OK;
 }
@@ -43,8 +41,7 @@ void CMonster_Character::Late_Tick(_float fTimeDelta)
 
 HRESULT CMonster_Character::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Render());
 
 	return S_OK;
 }

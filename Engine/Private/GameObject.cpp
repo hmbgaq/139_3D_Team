@@ -186,6 +186,15 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototy
 
 	pComponent->Set_Owner(this);
 
+	if (typeid(*pComponent) == typeid(CModel))
+	{
+		CModel* pModel = dynamic_cast<CModel*>(pComponent);
+		
+		pModel->Get_Owner()->Set_ModelWidth(pModel->Get_ModelWidth_WithModel());
+		pModel->Get_Owner()->Set_ModelHeight(pModel->Get_ModelHeight_WithModel());
+
+	}
+
 	return S_OK;
 }
 

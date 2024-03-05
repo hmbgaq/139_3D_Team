@@ -113,6 +113,13 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_Radial_Setting();
 		ImGui::TreePop();
 	}
+
+	if (ImGui::TreeNode("DOF Setting"))
+	{
+		Compress_DOF_Setting();
+		ImGui::TreePop();
+	}
+
 	if (ImGui::TreeNode("HDR Setting"))
 	{
 		Compress_HDR_Setting();
@@ -205,6 +212,17 @@ void CWindow_ShaderTool::Compress_Radial_Setting()
 	m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(m_eRadial_Desc);
 }
 
+void CWindow_ShaderTool::Compress_DOF_Setting()
+{
+	ImGui::Checkbox("DOF Active", &m_eDOF_Desc.bDOF_Active);
+
+	ImGui::SliderFloat("Focus Distance", &m_eDOF_Desc.g_fFocusDistance, 0.0f, 100.0f, "DistFocalPlane = %.3f");
+	ImGui::SliderFloat("Focus Range", &m_eDOF_Desc.g_fFocusRange, 0.0f, 100.0f, "FocalLength/2 = %.3f");
+	ImGui::SliderFloat("Att", &m_eDOF_Desc.fMaxAtt, 0.0f, 100.0f, "MaxAtt = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_DOF_Option(m_eDOF_Desc);
+}
+
 void CWindow_ShaderTool::Compress_HDR_Setting()
 {
 	ImGui::Checkbox("HDR Active", &m_eHDR_Desc.bHDR_Active);
@@ -281,7 +299,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 		ImGui::Text("wrong choice");
 		break;
 	case 1: /* Test */
-		m_eCurrLevel_Enum = LEVEL::LEVEL_GAMEPLAY;
+		m_eCurrLevel_Enum = LEVEL::LEVEL_TOOL;
 		break;
 	case 2: /* SnowMountain */
 		m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAIN;
@@ -342,12 +360,12 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 		CEnvironment_Object* pObject = { nullptr };
 
-		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_BACKGROUND, L"Prototype_GameObject_Environment_Object", &Desc));
+		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 	}
 
 
 	json InteractJson = Stage1MapJson["Interact_Json"];
-	_int InteractJsonSize = InteractJson.size();
+	_int InteractJsonSize = (_int)InteractJson.size();
 
 	for (_int i = 0; i < InteractJsonSize; ++i)
 	{
@@ -357,7 +375,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 	}
 
 	json InstanceJson = Stage1MapJson["Instance_Json"];
-	_int InstanceJsonSize = InstanceJson.size();
+	_int InstanceJsonSize = (_int)InstanceJson.size();
 
 	for (_int i = 0; i < InstanceJsonSize; ++i)
 	{
@@ -375,14 +393,14 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
 
 		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
+		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
 
-		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
+		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
 		{
 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
 
 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
-			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Rotation"], (_float3)InstanceInfoDesc.vRotation);
+			CJson_Utility::Load_Float4(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
 
@@ -392,44 +410,43 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 		CEnvironment_Instance* pInstanceObject = { nullptr };
 
-		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_BACKGROUND, L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
 
 	}
 
-	//json MonsterJson = Stage1MapJson["Monster_Json"];
-	//_int iMonsterJsonSize = (_int)MonsterJson.size();
-	//
-	//for (_int i = 0; i < iMonsterJsonSize; ++i)
-	//{
-	//	CMonster::MONSTER_DESC MonsterDesc = {};
-	//
-	//	string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
-	//
-	//	m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
-	//	MonsterDesc.bPreview = false;
-	//
-	//
-	//	const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-	//	_float4x4 WorldMatrix;
-	//
-	//	for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-	//	{
-	//		for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-	//		{
-	//			WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-	//		}
-	//	}
-	//
-	//	MonsterDesc.WorldMatrix = WorldMatrix;
-	//
-	//	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
-	//		return E_FAIL;
-	//
-	//}
+	json MonsterJson = Stage1MapJson["Monster_Json"];
+	_int iMonsterJsonSize = (_int)MonsterJson.size();
+
+	for (_int i = 0; i < iMonsterJsonSize; ++i)
+	{
+		CMonster::MONSTER_DESC MonsterDesc = {};
+
+		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
+
+		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
+		MonsterDesc.bPreview = false;
 
 
+		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		MonsterDesc.WorldMatrix = WorldMatrix;
+
+		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+			return E_FAIL;
+
+	}
 
 	return S_OK;
+
 }
 
 #pragma endregion
@@ -437,8 +454,11 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 void CWindow_ShaderTool::Imgui_Setting()
 {
 	/* 아임구이 셋팅 */
-	SetUp_ImGuiDESC("Shader", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.8f));
+	ImGuiWindowFlags Flag = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | 
+							ImGuiWindowFlags_NoMove| ImGuiWindowFlags_NoResize |
+							ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus;
 
+	SetUp_ImGuiDESC("Shader", ImVec2{ 400.f, 300.f }, Flag, ImVec4(0.f, 0.f, 0.f, 0.8f));
 	auto& style = ImGui::GetStyle();
 	ImVec4* colors = style.Colors;
 	style.FrameRounding = 8.0f; /* 값이 클수록 모서리가 더 둥글게된다. */

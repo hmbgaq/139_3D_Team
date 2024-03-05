@@ -64,12 +64,28 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 #pragma region Effect_Test	
 
-// 	if (m_pGameInstance->Key_Down(DIK_TAB))
-// 	{
-// 		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Test_Effect.json");
-// 		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
-// 	}
+	 if (m_pGameInstance->Key_Down(DIK_GRAVE))
+ 	{
+ 		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Hit_3.json");
+ 		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
+ 	}
 
+
+	//if (m_pGameInstance->Key_Down(DIK_TAB))
+	//{
+	//	CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Hit_3.json");
+	//	if (nullptr != m_pGameInstance->Get_Player())
+	//	{
+	//		CTransform* pTransform = m_pGameInstance->Get_Player()->Get_Transform();
+	//		_float3 vPos = pTransform->Get_Position();
+	//		vPos.y += 1.f;
+	//		pEffect->Set_Position(vPos);
+	//	}
+	//	else
+	//	{
+	//		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
+	//	}
+	//}
 #pragma endregion
 
 
@@ -84,6 +100,12 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_LightDesc()
 {
+	/* For. Shadow */
+	//XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	//XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, lightfar юс ));
+	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_GAMEPLAY), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
+	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_GAMEPLAY),  60.f,  (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear,  Engine::g_fLightFar);
+
 	LIGHT_DESC			LightDesc{};
 	{
 		LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
@@ -157,7 +179,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag, void* p
 	//if (nullptr == pPlayer)
 	//	return E_FAIL;
 
-	//m_pGameInstance->Set_Player(pPlayer);
+	//m_pGameInstance->Set_Player(dynamic_cast<CCharacter*>(pPlayer));
 
 	return S_OK;
 }
@@ -302,7 +324,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
  
  
  	json InteractJson = Stage1MapJson["Interact_Json"];
- 	_int InteractJsonSize = InteractJson.size();
+ 	_int InteractJsonSize = (_int)InteractJson.size();
  
  	for (_int i = 0; i < InteractJsonSize; ++i)
  	{
@@ -312,7 +334,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
  	}
  
  	json InstanceJson = Stage1MapJson["Instance_Json"];
- 	_int InstanceJsonSize = InstanceJson.size();
+ 	_int InstanceJsonSize = (_int)InstanceJson.size();
  
  	for (_int i = 0; i < InstanceJsonSize; ++i)
  	{
@@ -330,9 +352,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
  		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
  
  		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
- 		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
+ 		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
  
- 		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
+ 		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
  		{
  			INSTANCE_INFO_DESC InstanceInfoDesc = {};
  

@@ -78,7 +78,7 @@ HRESULT CUI_QuestIcon::Render()
 
 HRESULT CUI_QuestIcon::Ready_Components()
 {
-	if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture
 	
 	wstring strPrototag;
 	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);

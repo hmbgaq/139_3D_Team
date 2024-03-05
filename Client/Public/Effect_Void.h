@@ -10,7 +10,7 @@ BEGIN(Client)
 class CEffect_Void abstract : public CAlphaObject
 {
 public:
-	enum TYPE_EFFECT { PARTICLE, RECT, INSTANCE, MESH, TRAIL, TYPE_EFFECT_END };
+	enum TYPE_EFFECT { PARTICLE, RECT, MESH, TRAIL, TYPE_EFFECT_END };
 	enum TEXTURE	 { TEXTURE_DIFFUSE, TEXTURE_MASK, TEXTURE_NOISE, TEXTURE_SPRITE, TEXTURE_END };
 
 
@@ -20,11 +20,14 @@ public:
 		wstring		strPartTag = { TEXT("") };
 
 		// Texture
+		wstring		strModelTag = TEXT("");
 		wstring		strTextureTag[TEXTURE_END];
 		_int		iTextureIndex[TEXTURE_END] = { 0 };
 
+		_uint		iCurNumInstance = { 500 };
+
 		// Render Group
-		_int		iRenderGroup = { 7 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 현재 작성기준 CRENDERER::RENDERGROUP::RENDER_END가 8임
+		_int		iRenderGroup = { 9 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 이펙트는 9번
 
 		// Shader
 		_uint		iShaderPassIndex = { 0 };
@@ -40,7 +43,7 @@ public:
 		_float		fUV_WaveSpeed	= { 1.f };
 
 		_float4		vColor_Offset	= { 0.f, 0.f, 0.f, 0.f };
-		_float4		vColor_Clip		= { 0.f, 0.f, 0.f, 0.8f };
+		_float4		vColor_Clip		= { 0.f, 0.f, 0.f, 0.f };
 		_float4		vColor_Mul		= { 1.f, 1.f, 1.f, 1.f };
 
 		_float		fBloom			= { 0.f };
@@ -54,9 +57,11 @@ public:
 		_bool		bLoop			= { TRUE };
 		_bool		bReverse		= { FALSE };
 		_bool		bRender			= { FALSE };
+		_bool		bUseSpriteAnim	= { FALSE };
+		_bool		bUseRigidBody	= { FALSE };
 
 		// Times
-		EASING_TYPE		eType_Easing = { LINEAR };
+		EASING_TYPE		eType_Easing = { EASING_TYPE::LINEAR };
 
 		// 주인
 		_bool		 bParentPivot	 = { TRUE };
@@ -99,14 +104,15 @@ public:
 
 	typedef struct tagUvSpriteDesc
 	{
-		_float	fSequenceTerm	= { 0.05f };
+		_bool	bSpriteFinish   = { FALSE };
+		_float	fSequenceTerm	= { 0.05f };	// 저장
 
-		_float2 vTextureSize	 = { 1792.f, 1792.f };  // fSpriteSizeX, fSpriteSizeY
-		_float2 vTileSize		 = { 256.f, 256.f };	// fAnimationSizeX, fAnimationSizeY
+		_float2 vTextureSize	 = { 1792.f, 1792.f };  // 저장
+		_float2 vTileSize		 = { 256.f, 256.f };	// 저장
 
-		_float2	vUV_CurTileIndex = { 0, 0 }; // iCurrentHor, iCurrentVer
-		_float2	vUV_MinTileCount = { 0, 0 }; // iMinHor, iMinVer
-		_float2	vUV_MaxTileCount = { 7, 7 }; // iMaxHor, iMaxVer
+		_float2	vUV_CurTileIndex = { 0, 0 }; 
+		_float2	vUV_MinTileCount = { 0, 0 }; // 저장
+		_float2	vUV_MaxTileCount = { 7, 7 }; // 저장
 
 	}UVSPRITE_DESC;
 
@@ -146,6 +152,8 @@ public:
 	virtual _bool Write_Json(json& Out_Json)		override;
 	virtual void Load_FromJson(const json& In_Json)	override;
 
+	void	Write_VoidDesc(json& Out_Json, void* pArg);
+	void*	Load_VoidDesc(const json& In_Json);
 
 public:
 	virtual void	ReSet_Effect();
@@ -170,6 +178,9 @@ public:
 	_float		Get_SequenceAcc() { return m_fSequenceAcc; }
 	void		Set_SequenceAcc(_float fTime) { m_fSequenceAcc = fTime; }
 
+	_float		Get_SpriteTimeAcc() { return m_fSpriteTimeAcc; }
+	void		Set_SpriteTimeAcc(_float fTime) { m_fSpriteTimeAcc = fTime; }
+
 	_float		Get_LifeTimeRatio() { return m_fLifeTimeRatio; }
 
 	_float		Get_WaitingTime() { return m_fWaitingTime; }
@@ -188,9 +199,10 @@ protected:
 	TYPE_EFFECT	m_eType_Effect = { TYPE_EFFECT_END };
 
 	_float		m_fWaitingAcc    = { 0.f };	/* 시작 딜레이 시간 누적 */
-	_float		m_fTimeAcc	    = { 0.f };		/* 시간 누적 */
+	_float		m_fTimeAcc	    = { 0.f };	/* 시간 누적 */
 	_float		m_fRemainAcc    = { 0.f };
 	_float		m_fSequenceAcc  = { 0.f };	/* 시퀀스 시간 누적 */
+	_float		m_fSpriteTimeAcc = { 0.f };	/* 스프라이트 시간 누적 */
 
 	_float		m_fLifeTimeRatio = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
 

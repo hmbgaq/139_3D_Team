@@ -35,7 +35,7 @@ HRESULT CEnvironment_Instance::Initialize(void* pArg)
 	{
 		m_vecColliders.reserve(m_tInstanceDesc.iNumInstance);
 
-		for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
+		for (_uint i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 		{
 			m_vecColliders.push_back(nullptr);
 		}
@@ -62,7 +62,7 @@ void CEnvironment_Instance::Tick(_float fTimeDelta)
 	//m_pInstanceModelCom->Update(m_tInstanceDesc.vecInstanceInfoDesc);
 	if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
 	{
-		for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
+		for (_uint i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 		{
 			_matrix WorldMatrix = m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix();
 			
@@ -86,13 +86,13 @@ void CEnvironment_Instance::Late_Tick(_float fTimeDelta)
 			return;
 /*	}*/
 
-		if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
-		{
-			for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
-			{
-				m_pGameInstance->Add_DebugRender(m_vecColliders[i]);
-			}
-		}
+		//if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
+		//{
+		//	for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
+		//	{
+		//		m_pGameInstance->Add_DebugRender(m_vecColliders[i]);
+		//	}
+		//}
 	
 
 }
@@ -136,7 +136,7 @@ _bool CEnvironment_Instance::Picking_Instance(RAY* pRay, _float3* vOutPoint)
 	_bool bResult = false;
 
 	//nm_pGameInstance->iSIS
-	for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
+	for (_uint i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 	{
 		
 		if (true == m_pGameInstance->isIn_WorldPlanes(m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Position()))
@@ -225,7 +225,7 @@ HRESULT CEnvironment_Instance::Ready_Components()
 			Test.vCenter = {0.f, 0.f, 0.f};
 			Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
 
-			wstring strColliderComTag = L"Com_Collider" + i;
+			wstring strColliderComTag = L"Com_Collider" + to_wstring(i);
 			
 			if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Test)))
 			{
@@ -270,7 +270,7 @@ HRESULT CEnvironment_Instance::Bind_ShaderResources()
 		return E_FAIL;
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &fCamFar, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
 		return E_FAIL;
 
 

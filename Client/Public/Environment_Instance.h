@@ -30,6 +30,7 @@ public:
 
 public:
 	_bool			Picking_Instance(RAY* pRay, _float3* vOutPoint); 
+	//_bool			Picking_InstanceVertex();
 
 public:
 	virtual _bool	Write_Json(json& Out_Json) override;

@@ -64,8 +64,6 @@ using namespace DirectX;
 using namespace std;
 
 #include "Delegate.h"
-
-
 #include "Engine_Macro.h"
 #include "Engine_Typedef.h"
 #include "Engine_Struct.h"
@@ -77,6 +75,7 @@ namespace Engine
 	static float					g_iWinsizeX = 1600;
 	static float					g_iWinsizeY = 900.f;
 
+	static float					g_fLightNear = 0.1f;
 	static float					g_fLightFar = 3000.f;
 	static DirectX::XMFLOAT4		g_vLightPos = { 0.f, 120.f, -105.f, 1.f };
 }

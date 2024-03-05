@@ -9,6 +9,7 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_BoneMatrices[800];
 float g_fCamFar;
+float g_fLightFar;
 float g_TimeDelta;
 
 Texture2D g_DiffuseTexture;
@@ -158,7 +159,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 
-    Out.vLightDepth = In.vProjPos.w / g_fCamFar;
+    Out.vLightDepth = In.vProjPos.w / g_fLightFar;
 	
     return Out;
 }
@@ -170,7 +171,7 @@ technique11 DefaultTechnique
 {
     pass Model // 0
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();

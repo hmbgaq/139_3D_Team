@@ -30,7 +30,7 @@ HRESULT CMainApp::Initialize()
 
 #ifdef _DEBUG
 #pragma region Imgui용 Rect 설정
-	// 주석 걸고 병합하기 : imGui때문에.. imgui는 제목표시줄 크기를 인식 못해서 이렇게 안해주면 마우스 오차가 생긴다.
+	//// 주석 걸고 병합하기 : imGui때문에.. imgui는 제목표시줄 크기를 인식 못해서 이렇게 안해주면 마우스 오차가 생긴다.
 	//RECT rect = { 0 };
 	//GetClientRect(GraphicDesc.hWnd, &rect);
 	//_int iClientSizeX = rect.right - rect.left;
@@ -201,7 +201,7 @@ HRESULT CMainApp::Ready_Gara()
 	// D3D11_BLEND_DESC				BlendDesc;
 	// D3D11_DEPTH_STENCIL_DESC		DepthStencilDesc;
 	// D3D11_RASTERIZER_DESC		RasterizerDesc;
-	D3D11_SAMPLER_DESC;
+	//D3D11_SAMPLER_DESC;
 
 	//ID3D11RasterizerState*		pRSState;
 	//m_pDevice->CreateRasterizerState(RasterizerDesc, &pRSState);

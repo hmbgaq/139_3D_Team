@@ -12,6 +12,7 @@ class CEnvironment_Instance;
 class CEnvironment_Object;
 class CPlayer;
 class CMonster;
+class CCamera_Dynamic;
 //TODO 추후 추가 class CNPC;
 
 class CWindow_MapTool final : public CImgui_Window
@@ -139,6 +140,7 @@ private:
 	ANIM_TYPE		m_eAnimType = ANIM_TYPE::TYPE_NONANIM;
 
 	_bool			m_bChangeObjectMode = false;
+	
 
 	CPlayer*		m_pPlayer = nullptr;
 	
@@ -146,6 +148,8 @@ private:
 	_float4x4		m_matInstanceMatrix = {};
 	_float3			m_vRotation = {};
 	_bool			m_bRotateMode = { false};
+
+	_float			m_fCamaraSpeed = { 60.f };
 
 //!  맵찍기 저장용 변수
 	string			m_strLoadFilePath = {}; //! 만약 불러오기로 맵을 불러왔다면 불러온 맵의 저장경로를 저장한다. 이상태에서 Ctrl S를 누를시 해당 경로에 덮어쓰기하는 식으로 해줘야할거같다.
@@ -250,6 +254,8 @@ private: //! For. CreateInstance
 private:
 	vector<CCamera*>				m_vecCameras;
 	_bool							m_bCreateCamera = false;
+	CCamera_Dynamic*				m_pToolCamera = { nullptr };
+	
 
 public:
 	static CWindow_MapTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

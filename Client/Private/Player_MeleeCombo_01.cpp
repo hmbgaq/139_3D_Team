@@ -1,6 +1,9 @@
-#include "..\Public\Player_MeleeCombo_01.h"
-
+#include "Player_MeleeCombo_01.h"
 #include "Weapon.h"
+#include "GameInstance.h"
+#include "Clone_Manager.h"
+#include "Effect.h"
+#include "Bone.h"
 
 void CPlayer_MeleeCombo_01::Initialize(CPlayer* pActor)
 {

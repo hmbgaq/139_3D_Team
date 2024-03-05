@@ -378,8 +378,8 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 	{
 		if (m_pGameInstance->Mouse_Down(DIM_LB))
 		{
-			m_tChild_Desc.fPositionX = m_pt.x;
-			m_tChild_Desc.fPositionY = m_pt.y;
+			m_tChild_Desc.fPositionX = (_float)m_pt.x;
+			m_tChild_Desc.fPositionY = (_float)m_pt.y;
 			Create_Child(m_tChild_Desc);
 			
 		}
