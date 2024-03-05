@@ -102,12 +102,13 @@ HRESULT CVampireCommander::Ready_PartObjects()
 
 void CVampireCommander::Hitted_Left(Power ePower)
 {
-	m_pActor->Set_State(new CVampireCommander_HitLeft);
+	m_pActor->Set_State(new CVampireCommander_HitRight);
 }
 
 void CVampireCommander::Hitted_Right(Power ePower)
 {
-	m_pActor->Set_State(new CVampireCommander_HitRight);
+	m_pActor->Set_State(new CVampireCommander_HitLeft);
+
 }
 
 
