@@ -1933,6 +1933,9 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\2. Normal\Front">
       <UniqueIdentifier>{6cf933f3-ad37-47e2-aa61-52d2fc4ae50b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon\Hand">
+      <UniqueIdentifier>{15f1d66d-de8b-4aa2-b70b-ddf57520516d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3533,6 +3536,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_Weakspot_Death_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\3. Weakspot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Weapon.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Weapon_Hand.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon\Hand</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -5238,6 +5247,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Sniper_Weakspot_Death_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\3. Weakspot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Weapon.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Weapon_Hand.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon\Hand</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

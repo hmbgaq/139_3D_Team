@@ -5,6 +5,9 @@
 
 #include "VampireCommander_Idle.h"
 #include "VampireCommander_Spawn1.h"
+#include "VampireCommander_HitCenter.h"
+#include "VampireCommander_HitLeft.h"
+#include "VampireCommander_HitRight.h"
 
 CVampireCommander::CVampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
@@ -83,9 +86,40 @@ HRESULT CVampireCommander::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_VampireCommander"), BodyDesc)))
 		return E_FAIL;
 
+	CWeapon::WEAPON_DESC		WeaponDesc = {};
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_VampireCommander_Weapon_Hand"), "LeftHandIK", WeaponDesc, TEXT("Weapon_hand_L")));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_VampireCommander_Weapon_Hand"), "RightHandIK", WeaponDesc, TEXT("Weapon_hand_R")));
+
+	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_hand_L"));
+	m_pWeapon_Punch_L->Set_Enable(false);
+
+	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_hand_R"));
+	m_pWeapon_Punch_R->Set_Enable(false);
 
 
 	return S_OK;
+}
+
+void CVampireCommander::Hitted_Left(Power ePower)
+{
+	m_pActor->Set_State(new CVampireCommander_HitRight);
+}
+
+void CVampireCommander::Hitted_Right(Power ePower)
+{
+	m_pActor->Set_State(new CVampireCommander_HitLeft);
+
+}
+
+
+void CVampireCommander::Hitted_Front(Power ePower)
+{
+	m_pActor->Set_State(new CVampireCommander_HitCenter);
+}
+
+void CVampireCommander::Hitted_Dead(Power ePower)
+{
+	//stun이 걸리고 그다음에 처형이 있기 때문에 그냥 때려서는 죽일수 없다.
 }
 
 CVampireCommander* CVampireCommander::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

@@ -145,6 +145,7 @@ public:	//!For Animation Split
 	_bool Is_Splitted() { return m_pBody->Is_Splitted(); }
 	void Set_Splitted(_bool _bIsSplitted) { m_pBody->Set_Splitted(_bIsSplitted); };
 
+
 protected:
 	_int m_iHp = { 1 };
 	Power m_eStrength = { Power::Light };
