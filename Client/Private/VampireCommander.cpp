@@ -84,6 +84,7 @@ HRESULT CVampireCommander::Ready_PartObjects()
 		return E_FAIL;
 
 
+
 	return S_OK;
 }
 

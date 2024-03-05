@@ -74,8 +74,8 @@ using namespace std;
 
 namespace Engine 
 {
-	static float					g_iWinsizeX = 1920.f;
-	static float					g_iWinsizeY = 1080.f;
+	static float					g_iWinsizeX = 1600;
+	static float					g_iWinsizeY = 900.f;
 
 	static float					g_fLightFar = 3000.f;
 	static DirectX::XMFLOAT4		g_vLightPos = { 0.f, 120.f, -105.f, 1.f };

@@ -12,7 +12,7 @@ CState<CVampireCommander>* CVampireCommander_HitCenter::Update(CVampireCommander
 {
 	if (pActor->Is_Animation_End())
 	{
-		return new CVampireCommander_Idle
+		return new CVampireCommander_Idle;
 	}
 
 	return nullptr;
