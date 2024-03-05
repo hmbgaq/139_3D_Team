@@ -49,6 +49,8 @@ public:
 	CWeapon* Set_Force(_float _fForce);
 	CWeapon* Set_Dir(_float3 _vDir);
 
+	_float3	Get_WorldPosition();
+
 
 public:
 	void	Set_Synced(_bool _bSynced) { m_bSynced = _bSynced; }

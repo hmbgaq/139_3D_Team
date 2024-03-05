@@ -1,6 +1,8 @@
 #include "..\Public\Bandit_Sniper_State.h"
 #include "GameInstance.h"
 
+#include "Sniper_IdlePose.h"
+
 
 
 void CBandit_Sniper_State::Initialize(CBandit_Sniper* pActor)
@@ -39,17 +41,13 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Walk_State(CBandit_Sniper* pActor,
 	return nullptr;
 }
 
-CState<CBandit_Sniper>* CBandit_Sniper_State::Run_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
+
+CState<CBandit_Sniper>* CBandit_Sniper_State::Cover_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	CState<CBandit_Sniper>* pState = { nullptr };
-
-	pState = Normal(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
-
 	return nullptr;
 }
 
-CState<CBandit_Sniper>* CBandit_Sniper_State::Cover_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
+CState<CBandit_Sniper>* CBandit_Sniper_State::Crouch_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	return nullptr;
 }
@@ -79,6 +77,11 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Death_State(CBandit_Sniper* pActor
 	return nullptr;
 }
 
+CState<CBandit_Sniper>* CBandit_Sniper_State::Melee_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
 CState<CBandit_Sniper>* CBandit_Sniper_State::Normal(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	CState<CBandit_Sniper>* pState = { nullptr };
@@ -89,7 +92,7 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Normal(CBandit_Sniper* pActor, _fl
 
 	if (pActor->Is_Animation_End())
 	{
-		//return new CBandit_Sniper_Idle();
+		return new CSniper_IdlePose();
 	}
 
 	return nullptr;

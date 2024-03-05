@@ -40,9 +40,6 @@ private: /* UI */
 	HRESULT Ready_Reward_Item(const wstring& strLayerTag, void* pArg);
 #pragma endregion End
 	HRESULT Ready_Layer_UI(const wstring& strLayerTag, void* pArg);
-
-private:
-	void Set_Filter();
 	
 private:
 	_int			TempLightNumber = 0;

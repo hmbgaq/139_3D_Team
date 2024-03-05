@@ -26,10 +26,12 @@ private:
 	virtual ~CModel() = default;
 
 public:
-	_bool Is_Splitted() { return m_bIsSplitted; }
-	void Set_Splitted(_bool _bIsSplitted) { m_bIsSplitted = _bIsSplitted; };
+	_bool	Is_Splitted() { return m_bIsSplitted; }
+	void	Set_Splitted(_bool _bIsSplitted) { m_bIsSplitted = _bIsSplitted; };
 
-	_int Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; };
+	void	Set_MouseMove(_float2 vMouseMove);
+
+	_int	Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; };
 
 
 	_uint					Get_NumMeshes() const {return m_iNumMeshes; }
@@ -97,9 +99,8 @@ public:
 	void					Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Reset_Animation(_int iAnimIndex = -1);
 
-	void					Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END);
+	void					Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Reset_UpperAnimation(_int iAnimIndex = -1);
-
 
 
 	_float					Get_TickPerSecond();
@@ -148,9 +149,12 @@ private:
 
 	// 상 하체 분리
 	_bool					m_bIsSplitted			= { false };
-	_uint					m_iUpperAnimIndex		= { 0 };	//193
+	_uint					m_iUpperAnimIndex		= { 0 };
 	_bool					m_bIsUpperAnimEnd		= { false };
 	ANIM_STATE				m_eUpperAnimState		= { CModel::ANIM_STATE::ANIM_STATE_LOOP };
+
+	_float2					m_vMouseMove			= { 0.f, 0.f };
+
 
 
 	/* Cascade */

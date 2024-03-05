@@ -62,6 +62,8 @@ public:
 
 	void				SetPower(_float fPower) { m_fPower = fPower; }
 	void				SetRadious(_float fRadious) { m_fDrawRadious = fRadious; }
+	void				Update(_fvector vMousePos, _bool bMode);
+	void				Move_Field(_float3 vAddPos);
 
 private:
 	CShader*			m_pShaderCom = { nullptr };

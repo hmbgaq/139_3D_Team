@@ -137,7 +137,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		//if (true) /* 프레임제한없음 */
 		if (fTimeAcc >= 1.f / 60.0f ) /* 1초에 60번만 true = 60프레임 제한 */
-		{
+        {
 			pMainApp->Tick(pGameInstance->Compute_TimeDelta(TEXT("Timer_60")));
 			pMainApp->Render();
 

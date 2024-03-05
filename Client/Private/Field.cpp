@@ -134,6 +134,16 @@ _bool CField::MouseOnTerrain()
 	return m_bOnMouse;	
 }
 
+void CField::Update(_fvector vMousePos, _bool bMode)
+{
+	return m_pVIBufferCom->Update(vMousePos, bMode);
+}
+
+void CField::Move_Field(_float3 vAddPos)
+{
+	return m_pVIBufferCom->Move_Field(vAddPos);
+}
+
 
 HRESULT CField::Ready_Components()
 {

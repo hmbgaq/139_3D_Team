@@ -18,7 +18,7 @@ CState<CPlayer>* CPlayer_Rifle_IdleWeaponHolster::Update(CPlayer* pActor, _float
 	
 	if (pActor->Is_UpperAnimation_End())
 	{
-		return new CPlayer_IdleLoop();
+		return Normal_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
 
 	return nullptr;

@@ -53,8 +53,6 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_UI()))
 		return E_FAIL;
 
-	Set_Filter();
-
 	return S_OK;
 }
 
@@ -208,11 +206,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* 
 		//pMonster->Set_Position(_float3(0.f, 0.f, 2.f));
 	}
 
-	//{
-	//	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-	//	if (nullptr == pMonster)	return E_FAIL;
-	//	pMonster->Set_Position(_float3(1.f, 0.f, 2.f));
-	//}
+	{
+		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+		if (nullptr == pMonster)	return E_FAIL;
+		pMonster->Set_Position(_float3(1.f, 0.f, 2.f));
+	}
 
 
 
@@ -859,94 +857,8 @@ HRESULT CLevel_GamePlay::Ready_Reward_Item(const wstring& strLayerTag, void* pAr
 	return S_OK;
 }
 
-void CLevel_GamePlay::Set_Filter()
-{
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::MONSTER, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::MONSTER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::MONSTER);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::INTERIOR);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER_WEAPON, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::CAMERA, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::CAMERA, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::DYNAMIC_PROP);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::BOSS_DYNAMIC_PROP);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::TRIGGER, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::LADDER_DOWN, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::LADDER_UP, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::ELEVATOR, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::DOOR, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::CHECKPOINT, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER, (_uint)COLLISION_LAYER::PLAYER_BATCOL);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::CHECK_DIR, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::INTERIOR, (_uint)COLLISION_LAYER::INTERIOR);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
-}
-
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 {
-	//json json_in;
-
-	//char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/PlayerInterface/Left_Interface.json";
-
-	//_int		iPathNum = 0;
-	//string		strFileName;
-	//string		strFilePath;
-
-	//CJson_Utility::Load_Json(filePath, json_in);
-
-	//for (auto& item : json_in.items())
-	//{
-	//	json object = item.value();
-
-	//	CUI::UI_DESC tUI_Info;
-
-	//	/* 저장순서랑 맞는지 확인하기 */
-	//	tUI_Info.bParent = object["Parent"];					// 1. Parent
-	//	tUI_Info.bWorld = object["World"];						// 2. World
-	//	tUI_Info.bGroup = object["Group"];						// 3. Group
-	//	tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-	//	tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-	//	tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-	//	tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
-	//	tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-	//	tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-	//	tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-	//	tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-	//	tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-	//	tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-	//	tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-	//	tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-	//	tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
-	//	wstring wstrLayer;
-	//	m_pGameInstance->String_To_WString(tUI_Info.strLayerTag, wstrLayer); //
-
-	//	wstring wstrClonetag;
-	//	m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
-
-	//	wstring wstrPrototag;
-	//	m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
-
-	//	wstring wstrFilePath;
-	//	m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
-
-	//	CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, wstrClonetag, &tUI_Info));
-
-	//	pUI_Object->Get_Transform()->Load_FromJson(object);		// 17. TransformCom
-	//}
-
-	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_Left_Interface"));
-
 	return S_OK;
 }
 

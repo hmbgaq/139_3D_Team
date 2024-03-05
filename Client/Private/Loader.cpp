@@ -191,8 +191,8 @@ HRESULT CLoader::Loading()
 		hr = Loading_For_Logo_Level();
 		break;
 
-	case LEVEL_GAMEPLAY:
-		hr = Loading_For_GamePlay_Level();
+	case LEVEL_INTRO:
+		hr = Loading_For_Intro_Level();
 		break;
 
 	case LEVEL_SNOWMOUNTAIN:
@@ -205,6 +205,10 @@ HRESULT CLoader::Loading()
 
 	case LEVEL_TOOL:
 		hr = Loading_For_Tool_Level();
+		break;
+
+	case LEVEL_GAMEPLAY:
+		hr = Loading_For_GamePlay_Level();
 		break;
 
 	}
@@ -384,6 +388,13 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 HRESULT CLoader::Loading_For_GamePlay_Level()
 {
 	FAILED_CHECK(Loading_For_GamePlay_Level_Origin(LEVEL_GAMEPLAY));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Intro_Level()
+{
+	FAILED_CHECK(Loading_For_GamePlay_Level_Origin(LEVEL_INTRO));
 
 	return S_OK;
 }
@@ -685,10 +696,7 @@ HRESULT CLoader::Ready_UI_Origin()
 
 HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
 {
-
-
-
-	if (eLevel == LEVEL_GAMEPLAY)
+	if (eLevel == LEVEL_GAMEPLAY || eLevel == LEVEL_INTRO)
 	{
 		wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/NonAnim/");
 		wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/Anim/");
