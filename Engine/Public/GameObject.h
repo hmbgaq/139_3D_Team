@@ -37,6 +37,7 @@ public:
 	/* Ãß°¡ RenderGroup¿ë*/
 	virtual HRESULT Render_Shadow() { return S_OK; }
 	virtual HRESULT Render_OutLine() { return S_OK; }
+	virtual HRESULT Render_Cascade_Shadow(_uint iIndex) { return S_OK; }
 
 	virtual _bool	Picking(_Out_ _float3 * vPickedPos);
 
@@ -60,6 +61,8 @@ public:
 
 public:
 	class CTransform* Get_Transform();
+	_vector Get_Position_Vector();
+	_vector Calc_Look_Dir(_vector vTargetPos);
 
 
 public:
@@ -79,7 +82,9 @@ public:
 
 	_bool Is_PoolObject() { return m_bIsPoolObject; };
 
-
+public:
+	CGameObject* Get_Object_Owner();
+	void Set_Object_Owner(CGameObject* pOwner);
 	
 
 
@@ -105,9 +110,12 @@ protected:
 protected:
 	wstring						m_strPrototypeTag;
 
-
-
 protected:
+	CGameObject* m_pOwner = { nullptr };
+
+
+
+public:
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& strPrototypeTag,
 		const wstring& strComTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
 	HRESULT Remove_Component(const wstring& strComTag, _Inout_ CComponent** ppOut = nullptr);

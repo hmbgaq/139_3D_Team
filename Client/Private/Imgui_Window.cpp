@@ -89,7 +89,6 @@ void CImgui_Window::Tick(_float fTimeDelta)
 	Set_GuizmoCamProj();
 	Set_Guizmo(기즈모를 달고싶은 대상 오브젝트를 넣어주세요.);
 	*/
-	ImGuizmo::BeginFrame();
 }
 
 void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
@@ -212,19 +211,24 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 
 	_float* arrView = m_arrView;
 	_float* arrProj = m_arrProj;
-
+	float matrixTranslation[3], matrixRotation[3], matrixScale[3];
 	XMFLOAT4X4 matWorld = pGameObject->Get_Transform()->Get_WorldFloat4x4();
 	_float arrWorld[] = { matWorld._11,matWorld._12,matWorld._13,matWorld._14,
 						  matWorld._21,matWorld._22,matWorld._23,matWorld._24,
 						  matWorld._31,matWorld._32,matWorld._33,matWorld._34,
 						  matWorld._41,matWorld._42,matWorld._43,matWorld._44 };
 
-	float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+	
 	ImGuizmo::DecomposeMatrixToComponents(arrWorld, matrixTranslation, matrixRotation, matrixScale);
 	ImGui::DragFloat3("Tr", matrixTranslation);
 	ImGui::DragFloat3("Rt", matrixRotation);
 	ImGui::DragFloat3("Sc", matrixScale);
 	ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, arrWorld);
+
+	//무기 위치 회전 크기 조절하기위한 변수 저장
+	m_fmatrixTranslation = { matrixTranslation[0],matrixTranslation[1] ,matrixTranslation[2] };
+	m_fmatrixRotation = { matrixRotation[0],matrixRotation[1] ,matrixRotation[2] };
+	m_fmatrixScale = { matrixScale[0],matrixScale[1] ,matrixScale[2] };
 
 	ImGui::Checkbox("UseSnap", &useSnap);
 	ImGui::SameLine();
@@ -254,6 +258,11 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 				arrWorld[8],arrWorld[9],arrWorld[10],arrWorld[11],
 				arrWorld[12],arrWorld[13],arrWorld[14],arrWorld[15] };
 		
+
+	if (matrixRotation[0] > 0)
+	{
+		_int i = 0;
+	}
 
 	pGameObject->Get_Transform()->Set_WorldMatrix(matW);
 
@@ -439,6 +448,52 @@ HRESULT CImgui_Window::End()
 	ImGui::End();
 
 	return S_OK;
+}
+
+void CImgui_Window::Load_CustomStyle()
+{
+	json json_in = { nullptr };
+	char filePath[MAX_PATH] = "../Bin/DataFiles/ImGui_Style_Custom.json";
+
+	if (FAILED(CJson_Utility::Load_Json(filePath, json_in)))
+		return;
+
+	_float		vBgColor[4] = { 0.f, 0.f, 0.f, 1.f };
+
+	_float fWindowRounding = { 0.f };
+	_float fFrameRounding = { 0.f };
+	_float fPopupRounding = { 0.f };
+	_float fGrabRounding = { 0.f };
+	_float fTabRounding = { 0.f };
+
+	fTabRounding = json_in["TabRounding"];
+	fGrabRounding = json_in["GrabRounding"];
+	fPopupRounding = json_in["PopupRounding"];
+	fFrameRounding = json_in["FrameRounding"];
+	fWindowRounding = json_in["WindowRounding"];
+
+	vBgColor[0] = json_in["vBgColor.x"];
+	vBgColor[1] = json_in["vBgColor.y"];
+	vBgColor[2] = json_in["vBgColor.z"];
+	vBgColor[3] = json_in["vBgColor.w"];
+
+	auto& style = ImGui::GetStyle();
+	ImVec4* colors = style.Colors;
+	ImVec4 bgColor = ImVec4(vBgColor[0], vBgColor[1], vBgColor[2], vBgColor[3]);
+
+	colors[ImGuiCol_WindowBg] = bgColor;
+	colors[ImGuiCol_TitleBg] = bgColor;
+	colors[ImGuiCol_MenuBarBg] = bgColor;
+	colors[ImGuiCol_Tab] = bgColor;
+	colors[ImGuiCol_ChildBg] = bgColor;
+	colors[ImGuiCol_ScrollbarBg] = bgColor;
+
+	style.WindowRounding = fWindowRounding;
+	style.FrameRounding = fFrameRounding;
+	style.PopupRounding = fPopupRounding;
+	style.GrabRounding = fGrabRounding;
+	style.TabRounding = fTabRounding;
+
 }
 
 void CImgui_Window::Free()

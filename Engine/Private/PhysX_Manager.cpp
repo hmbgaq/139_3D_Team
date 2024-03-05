@@ -61,83 +61,107 @@ HRESULT CPhysX_Manager::Initialize(const _uint In_iNumLayer)
 
 
 
+	//// declare variables
+	//physx::PxDefaultAllocator      mDefaultAllocatorCallback;
+	//physx::PxDefaultErrorCallback  mDefaultErrorCallback;
+	//physx::PxDefaultCpuDispatcher* mDispatcher = NULL;
+	//physx::PxTolerancesScale       mToleranceScale;
+
+	//physx::PxFoundation* mFoundation = NULL;
+	//physx::PxPhysics* mPhysics = NULL;
+
+	//physx::PxScene* mScene = NULL;
+	//physx::PxMaterial* mMaterial = NULL;
+
+	//physx::PxPvd* mPvd = NULL;
+
+
+	//// init physx
+	//mFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, mDefaultAllocatorCallback, mDefaultErrorCallback);
+	//mPvd = PxCreatePvd(*mFoundation);
+	//physx::PxPvdTransport* transport = physx::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
+	//mPvd->connect(*transport, physx::PxPvdInstrumentationFlag::eALL);
+	////mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, PxTolerancesScale(),true, mPvd);
+	//mToleranceScale.length = 100;        // typical length of an object
+	//mToleranceScale.speed = 981;         // typical speed of an object, gravity*1s is a reasonable choice
+	//mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, mToleranceScale, true, mPvd);
+	////mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, mToleranceScale);
+
+	//physx::PxSceneDesc sceneDesc(mPhysics->getTolerancesScale());
+	//sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
+	//mDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
+	//sceneDesc.cpuDispatcher = mDispatcher;
+	//sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
+	//mScene = mPhysics->createScene(sceneDesc);
+
+	//physx::PxPvdSceneClient* pvdClient = mScene->getScenePvdClient();
+	//if (pvdClient)
+	//{
+	//	pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+	//	pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+	//	pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+	//}
+
+
+	//// create simulation
+	//mMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	//physx::PxRigidStatic* groundPlane = PxCreatePlane(*mPhysics, physx::PxPlane(0, 1, 0, 50), *mMaterial);
+	//mScene->addActor(*groundPlane);
+
+	//float halfExtent = .5f;
+	//physx::PxShape* shape = mPhysics->createShape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), *mMaterial);
+	//physx::PxU32 size = 30;
+	//physx::PxTransform t(physx::PxVec3(0));
+	//for (physx::PxU32 i = 0; i < size; i++) {
+	//	for (physx::PxU32 j = 0; j < size - i; j++) {
+	//		physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i), physx::PxReal(i * 2 + 1), 0) * halfExtent);
+	//		physx::PxRigidDynamic* body = mPhysics->createRigidDynamic(t.transform(localTm));
+	//		body->attachShape(*shape);
+	//		physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+	//		mScene->addActor(*body);
+	//	}
+	//}
+	//shape->release();
+
+
+	//return E_FAIL;
+
+
 	// Create Foundation
 	m_pFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
+	if (nullptr == m_pFoundation)
+		return E_FAIL;
+
 	//PxRevoluteJointCreate;
 	// Create PVD
 	char* strTransport = "127.0.0.1";
 	m_pPVD = PxCreatePvd(*m_pFoundation);
 	PxPvdTransport* Transport = PxDefaultPvdSocketTransportCreate(strTransport, 5425, 10);
 	_bool	bPVDConnectionResult = m_pPVD->connect(*Transport, PxPvdInstrumentationFlag::eALL);
+
 	if (!bPVDConnectionResult)
 	{
+		_int a = 0;
 		//MSG_BOX("Faiied to connect to PVD!");
 	}
 
 	// Create PhysX
 	m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, PxTolerancesScale(), true, m_pPVD);
+	if (!m_pPhysics)
+		return E_FAIL;
 
 	// Create Cooking
 	m_pCooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_pFoundation, PxCookingParams(PxTolerancesScale()));
-
+	if (!m_pCooking)
+		return E_FAIL;
 
 	m_pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, -10.f);
-
-
-
-	//PxCudaContextManagerDesc tCudaDesc;
-	//tCudaDesc.graphicsDevice = m_pDevice;
-	//tCudaDesc.interopMode = PxCudaInteropMode::Enum::D3D11_INTEROP;
-	//tCudaDesc.ctx = GET_SINGLE(CCuda_Device)->Get_CudaContext();
-
-	//m_pCudaContextManager = PxCreateCudaContextManager(*m_pFoundation, tCudaDesc, PxGetProfilerCallback());
-
-	//if (m_pCudaContextManager)
-	//{
-	//	if (!m_pCudaContextManager->contextIsValid())
-	//	{
-	//		if (m_pCudaContextManager)
-	//			m_pCudaContextManager->release();
-	//		m_pCudaContextManager = nullptr;
-	//	}
-	//}
-
+	if (!m_pMaterial)
+		return E_FAIL;
 
 	m_pCollisionSimulationEventCallBack = new CollisionSimulationEventCallBack();
 
 	Create_Scene();
-
-
-
-	////PxMaterial* mMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-	//PxMaterial* mMaterial = { nullptr };
-	//Create_Material(0.5f, 0.5f, 0.6f, &mMaterial);
-
-	//float halfExtent = .5f;
-	//physx::PxShape* shape;
-	////shape = m_pPhysics->createShape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), *mMaterial);
-	//Create_Shape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), mMaterial, false, PxShapeFlag::eSIMULATION_SHAPE, &shape);
-	//
-
-	//physx::PxRigidStatic* groundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 50), *mMaterial);
-	//m_pScene->addActor(*groundPlane);
-
-
-	//physx::PxU32 size = 30;
-	//physx::PxTransform t(physx::PxVec3(0));
-	//for (physx::PxU32 i = 0; i < size; i++) {
-	//	for (physx::PxU32 j = 0; j < size - i; j++) {
-	//		physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i), physx::PxReal(i * 2 + 1), 0) * halfExtent);
-	//		physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(t.transform(localTm));
-	//		body->attachShape(*shape);
-	//		physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-	//		m_pScene->addActor(*body);
-	//	}
-	//}
-
-	//shape->release();
-
-
 
 	return S_OK;
 }
@@ -222,6 +246,8 @@ HRESULT CPhysX_Manager::Create_Scene(PxVec3 Gravity)
 															//A value of 8 generally gives best balance between performance and stability.
 
 	m_pScene = m_pPhysics->createScene(sceneDesc);
+	if (!m_pScene)
+		return E_FAIL;
 
 	PxPvdSceneClient* pvdClient = m_pScene->getScenePvdClient();
 	if (pvdClient)
@@ -242,6 +268,9 @@ HRESULT CPhysX_Manager::Create_Scene(PxVec3 Gravity)
 
 	m_pControllerManager = PxCreateControllerManager(*m_pScene);
 
+	if (!m_pControllerManager)
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -252,9 +281,11 @@ HRESULT CPhysX_Manager::Delete_Scene()
 		m_pScene->release();
 	m_pScene = nullptr;
 
-	//if (m_pDispatcher)
-	//	m_pDispatcher->release();
-	//m_pDispatcher = nullptr;
+	if (m_pDispatcher)
+		m_pDispatcher->release();
+
+	m_pDispatcher = nullptr;
+
 	return S_OK;
 }
 
@@ -412,8 +443,8 @@ void CPhysX_Manager::Free()
 	if (m_pControllerManager)
 		m_pControllerManager->release();
 
-	//if (m_pScene)
-	//	m_pScene->release();
+	if (m_pScene)
+		m_pScene->release();
 
 	if (m_pPhysics)
 		m_pPhysics->release();

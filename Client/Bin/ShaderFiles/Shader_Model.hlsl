@@ -1,17 +1,27 @@
 #include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D		g_DiffuseTexture;
-texture2D		g_NormalTexture;
-texture2D		g_OcclusionTexture;
-texture2D		g_RougnessTexture;
-texture2D		g_MetallicTexture;
+Texture2D		g_DiffuseTexture;
+Texture2D		g_NormalTexture;
+Texture2D		g_OcclusionTexture;
+Texture2D		g_RougnessTexture;
+Texture2D		g_MetallicTexture;
 float           g_fTimeDelta;
 
 /* OutLine */
 float4	        g_vLineColor;
 float           g_LineThick;
-texture2D       g_LineMaskTexture;
+Texture2D       g_LineMaskTexture;
+
+cbuffer VS_CONSTANT_BUFFER
+{
+    matrix  mWorldViewProj;
+    float4  vSomeVectorThatMayBeNeededByASpecificShader;
+    float   fSomeFloatThatMayBeNeededByASpecificShader;
+    float   fTime;
+    float   fSomeFloatThatMayBeNeededByASpecificShader2;
+    float   fSomeFloatThatMayBeNeededByASpecificShader3;
+};
 
 struct VS_IN
 {
@@ -41,7 +51,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 
 	matrix		matWV, matWVP;
-
+    
 	matWV = mul(g_WorldMatrix, g_ViewMatrix);
 	matWVP = mul(matWV, g_ProjMatrix);
 
@@ -92,7 +102,8 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	//if (vMtrlDiffuse.a == 0.f)
 	//	discard;
-	
+
+    
 	Out.vDiffuse = vMtrlDiffuse;	
 	Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);

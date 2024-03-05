@@ -26,12 +26,19 @@ private:
 	virtual ~CModel() = default;
 
 public:
+	_bool	Is_Splitted() { return m_bIsSplitted; }
+	void	Set_Splitted(_bool _bIsSplitted) { m_bIsSplitted = _bIsSplitted; };
+
+	void	Set_MouseMove(_float2 vMouseMove);
+
+	_int	Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; };
+
+
 	_uint					Get_NumMeshes() const {return m_iNumMeshes; }
-	
 	class CBone*			Get_BonePtr(const _char* pBoneName) const;
 
+
 	void					Set_StiffnessRate(_float fStiffnessRate);
-	//void					Set_Animation(_uint iAnimIndex) { m_iCurrentAnimIndex = iAnimIndex; }
 
 	_matrix					Get_PivotMatrix() { return m_PivotMatrix; }
 	_matrix					Get_CombinedMatrix(_uint iBoneIndex);
@@ -40,6 +47,7 @@ public:
 public:						
 	//! 모델 인스턴싱 추가
 	_uint					Get_NumMaterials() const { return m_iNumMaterials; }
+	_uint					Get_MaterialIndex(_uint iMeshIndex);
 	_uint					Get_NumMeshIndice(_int iMeshIndex);//! 모델 인스턴싱 전용
 	vector<class CMesh*>&	Get_Meshes() { return m_Meshes; }
 	class CMesh*			Get_Mesh_For_Index(_int iMeshIndex);
@@ -50,12 +58,19 @@ public:
 
 	_float4x4*				Calc_OffsetMatrice(_uint iAnimationIndex, _float fTrackPosition, _float4x4* pMatrix);
 	_float4x4*				Get_OffsetMatrices();
-	
+
 	//! 모델 인스턴싱 앤드
+	
+	//! 맵툴 전용 콜라이더 사이즈 계산 추가
+	_float3&				Calculate_AABB_Extents_From_Model(); //! 모델 사이즈에 맞게 AABB 사이즈 잡아줌. 
+	void					Calculate_Sphere_Radius(_float3* vOutCenter, _float* fOutRadius); //! 모델 사이즈게 맞게 SPHERE 사이즈잡아줌.  
+	//! 맵툴 전용 콜라이더 사이즈 계산 앤드
 
 
 public:
 	_bool					Is_AnimEnd() { return m_bIsAnimEnd; };
+	_bool					Is_UpperAnimEnd() { return m_bIsUpperAnimEnd; };
+
 
 public:
 	virtual HRESULT			Initialize_Prototype(TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);
@@ -72,30 +87,36 @@ public:
 
 public:
 	HRESULT					Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices = nullptr);
-	
 	HRESULT					Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
+	HRESULT					Bind_ShaderCascade(CShader* pShader);
 
 public:
 	void					Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _bool _bIsTransition = true, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Reset_Animation(_int iAnimIndex = -1);
 
+	void					Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
+	void					Reset_UpperAnimation(_int iAnimIndex = -1);
+
+
 	_float					Get_TickPerSecond();
 	void					Set_TickPerSecond(_float _TickPerSecond);
 	_bool					Is_Transition();
 	void					Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
 	_bool					Is_Inputable_Front(_uint _iIndexFront);
-
+	_float					Get_TrackPosition();
 	void					Write_Names(const string& strModelFilePath);
+
 public:
 	vector<CAnimation*>*	 Get_Animations();
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }
 	
-	
+public:
+	CMyAIScene*				Get_AIScene();
 
 public:
 	vector<CBone*>*			Get_Bones();
-	/*_uint&					Get_BoneNum() {return }*/
+	_uint					Get_BoneNum(const _char* szName);
 private:
 	CMyAssimp				m_MyAssimp;
 	CMyAIScene				m_pAIScene;
@@ -121,6 +142,22 @@ private:
 	ANIM_STATE				m_eAnimState			= { CModel::ANIM_STATE::ANIM_STATE_END };
 	_bool					m_bUseAnimationPos		= { false };
 
+
+	// 상 하체 분리
+	_bool					m_bIsSplitted			= { false };
+	_uint					m_iUpperAnimIndex		= { 0 };
+	_bool					m_bIsUpperAnimEnd		= { false };
+	ANIM_STATE				m_eUpperAnimState		= { CModel::ANIM_STATE::ANIM_STATE_LOOP };
+
+	_float2					m_vMouseMove			= { 0.f, 0.f };
+
+
+
+	/* Cascade */
+	vector<_matrix>			m_matCurrTransforms;
+	vector<KEYFRAME>		m_CurrKeyFrameDatas;
+	vector<KEYFRAME>		m_PrevKeyFrameDatas;
+
 public:
 	typedef vector<CBone*>	BONES;
 
@@ -129,6 +166,11 @@ private:
 	HRESULT Ready_Materials(const string& strModelFilePath);
 	HRESULT Ready_Bones(CMyAINode pAINode, _int iParentIndex);
 	HRESULT Ready_Animations();
+
+	/* Cascade */
+public:
+	HRESULT SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* strConstantName);
+	HRESULT Render(CShader*& pShader, const _uint& iMeshIndex, const _uint& strPassName);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);

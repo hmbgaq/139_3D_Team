@@ -63,13 +63,17 @@ PS_OUT PS_BLUR_DOWN(PS_IN In)
 }
 
 /* ------------------- 1 - Pixel Shader / BLUR_HORIZON_LOW -------------------*/
-PS_OUT PS_BLUR_HOR_LOW(PS_IN In)
+PS_OUT PS_BLUR_H_LOW(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
     float4 vColor = float4(0.f, 0.f, 0.f, 0.f);
     float fTotal = 0.f;
 
+    // 텍셀의 크기 -> 인접한 픽셀의 UV좌표를 계산할 수 있다. 
+    float texelsize = 1.f / (g_WinSize.x);
+    
+    /* -4 ~ 0 ~ 4 까지 구하듯이 인접한 픽셀의 UV좌표를 구한다. : low : -1 0 1  */ 
     for (int i = -1; 2 > i; i++)
     {
         vColor += g_fWeight_low[i + 1] * g_BlurTarget.Sample(LinearSampler, In.vTexcoord + float2(1.f / (g_WinSize.x / 2.f) * i, 0.f));
@@ -89,7 +93,7 @@ PS_OUT PS_BLUR_H_QUARTER(PS_IN In)
     float4 vColor = float4(0.f, 0.f, 0.f, 0.f);
     float fTotal = 0.f;
 
-    for (int i = -3; 4 > i; i++)
+    for (int i = -3; i < 4; i++)
     {
         vColor += g_fWeight_quarter[i + 3] * g_BlurTarget.Sample(LinearSampler, In.vTexcoord + float2(1.f / (g_WinSize.x / 2.f) * i, 0.f));
         fTotal += g_fWeight_quarter[i + 3];
@@ -108,7 +112,7 @@ PS_OUT PS_BLUR_H_MIDDLE(PS_IN In)
     float4 vColor = float4(0.f, 0.f, 0.f, 1.f);
     float fTotal = 0.f;
 
-    for (int i = -5; 6 > i; i++)
+    for (int i = -5; i < 6 ; i++)
     {
         vColor += g_fWeight_middle[i + 5] * g_BlurTarget.Sample(LinearSampler, In.vTexcoord + float2(1.f / (g_WinSize.x / 2.f) * i, 0.f));
         fTotal += g_fWeight_middle[i + 5];
@@ -203,7 +207,7 @@ PS_OUT PS_BLUR_V_HIGH(PS_IN In)
     float4 vColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
     float fTotal = 0.f;
 
-    for (int i = -9; 10 > i; i++)
+    for (int i = -9; i < 10 ; i++)
     {
         vColor += g_fWeight_high[i + 9] * g_BlurTarget.Sample(LinearSampler, In.vTexcoord + float2(0, 1.f / (g_WinSize.y / 2.f) * i));
         fTotal += g_fWeight_high[i + 9];
@@ -219,6 +223,7 @@ PS_OUT PS_BLUR_UP(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     Out.vColor = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
+    
     return Out;
 }
 
@@ -253,7 +258,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_BLUR_HOR_LOW();
+        PixelShader = compile ps_5_0 PS_BLUR_H_LOW();
     }
 
     pass Horizon_Quarter // 2 BLUR_HORIZON_QUARTER

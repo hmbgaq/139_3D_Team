@@ -1,6 +1,7 @@
 #include "..\Public\Weapon.h"
 
 #include "GameInstance.h"
+#include "Character.h"
 
 #include "Bone.h"
 
@@ -49,30 +50,22 @@ HRESULT CWeapon::Initialize(void* pArg)
 
 void CWeapon::Priority_Tick(_float fTimeDelta)
 {
-	if (!m_bUse)
-		return;
-
 	__super::Priority_Tick(fTimeDelta);
 }
 
 void CWeapon::Tick(_float fTimeDelta)
 {
-	if (!m_bUse)
-		return;
-
 	__super::Tick(fTimeDelta);
 
 	for (_uint i = 0; i < m_iColliderSize; ++i)
 		m_pColliders[i]->Update(m_WorldMatrix);
 
-	//Collision_Chcek();
+	//m_pCollider->Update(m_WorldMatrix);
+
 }
 
 void CWeapon::Late_Tick(_float fTimeDelta)
 {
-	if (!m_bUse)
-		return;
-
 	__super::Late_Tick(fTimeDelta);
 
 	_matrix		SocketMatrix = m_pSocketBone->Get_CombinedTransformationMatrix();
@@ -83,6 +76,16 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 	}
 
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * m_pParentTransform->Get_WorldMatrix());
+
+
+#ifdef _DEBUG
+	for (_uint i = 0; i < m_iColliderSize; ++i)
+		m_pGameInstance->Add_DebugRender(m_pColliders[i]);
+#endif
+
+	if (nullptr == m_pModelCom)
+		return;
+
 
 	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
 	{
@@ -96,9 +99,6 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 
 HRESULT CWeapon::Render()
 {
-	if (!m_bUse)
-		return S_OK;
-
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
@@ -152,6 +152,68 @@ HRESULT CWeapon::Render_Shadow()
 	return S_OK;
 }
 
+
+CCharacter* CWeapon::Get_Target_Character(CCollider* other)
+{
+	if (nullptr == other || nullptr == other->Get_Owner() || nullptr == other->Get_Owner()->Get_Object_Owner())
+		return nullptr;
+
+	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(other->Get_Owner()->Get_Object_Owner());
+	if (nullptr == pTarget_Character)
+		return nullptr;
+
+	return pTarget_Character;
+}
+
+CWeapon* CWeapon::Set_Damage(_int _iDamage)
+{
+	m_iDamage = _iDamage;
+
+	return this;
+}
+
+CWeapon* CWeapon::Set_Direction(Direction _eHitDirection)
+{
+	m_eHitDirection = _eHitDirection;
+
+	return this;
+}
+
+CWeapon* CWeapon::Set_Power(Power _eHitPower)
+{
+	m_eHitPower = _eHitPower;
+
+	return this;
+}
+
+CWeapon* CWeapon::Activate_Collisions(_bool _bActivate)
+{
+	for (CCollider* pCollider : m_pColliders)
+	{
+		pCollider->Set_Enable(_bActivate);
+	}
+
+	return this;
+}
+
+CWeapon* CWeapon::Set_Force(_float _fForce)
+{
+	m_fForce = _fForce;
+
+	return this;
+}
+
+CWeapon* CWeapon::Set_Dir(_float3 _vDir)
+{
+	m_vDir = _vDir;
+
+	return this;
+}
+
+
+
+
+
 HRESULT CWeapon::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
@@ -176,4 +238,6 @@ void CWeapon::Free()
 	Safe_Release(m_pSocketBone);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);
+
+	//Safe_Release(m_pCollider);
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine_Defines.h"
+
 namespace Client
 {
 	/* 1600 x 900 가능할지도 ㄱㄷ */
@@ -10,12 +12,15 @@ namespace Client
 		LEVEL_STATIC, 
 		LEVEL_LOGO, 
 
-		LEVEL_GAMEPLAY, 		
+		LEVEL_INTRO,
 		LEVEL_SNOWMOUNTAIN,
 		LEVEL_LAVA,
 	
 		LEVEL_TOOL,
 		LEVEL_LOADING,
+
+		LEVEL_GAMEPLAY,
+
 		LEVEL_END };
 
 	enum class OBJECT_LAYER 
@@ -65,7 +70,8 @@ namespace Client
 		ONLY_VIEW,
 		CHECK_DIR,
 		INTERIOR,
-
+		PICKING_INSTANCE,
+		PICKING_MESH,
 		LAYER_END
 	};
 

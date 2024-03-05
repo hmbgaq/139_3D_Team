@@ -69,7 +69,7 @@ void CUI::Tick(_float fTimeDelta)
 		UI_DisappearTick(fTimeDelta);
 		break;
 	}
-
+	
 	Check_RectPos();
 	Picking_UI();
 }
@@ -376,6 +376,8 @@ void CUI::Load_UIData(const char* _FilePath)
 
 void CUI::Free()
 {
+	__super::Free();
+
 	if (m_pVIBufferCom)
 		Safe_Release(m_pVIBufferCom);
 	if (m_pShaderCom)

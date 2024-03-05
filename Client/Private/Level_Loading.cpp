@@ -4,6 +4,7 @@
 
 #include "GameInstance.h"
 #include "Level_Logo.h"
+#include "Level_Intro.h"
 #include "Level_GamePlay.h"
 #include "Level_Tool.h"
 
@@ -46,6 +47,9 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 			{
 			case LEVEL_LOGO:
 				pNewLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
+				break;
+			case LEVEL_INTRO:
+				pNewLevel = CLevel_Intro::Create(m_pDevice, m_pContext);
 				break;
 			case LEVEL_GAMEPLAY:
 				pNewLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);

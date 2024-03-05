@@ -25,7 +25,7 @@ HRESULT CScreamer::Initialize(void* pArg)
 
 	
 	m_pTransformCom->Set_Position(_float3(15.f, 0.f, 10.f));
-	m_vBloomColor = { 0.5f, 0.f, 0.5f, 1.f };
+	m_vBloomColor = { 0.5f, 0.5f, 0.5f, 1.f };
 	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
 
 	return S_OK;
@@ -55,20 +55,6 @@ void CScreamer::Tick(_float fTimeDelta)
 	//	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_REVERSE, false); /* 문제있음 쓰지마셈 */
 	//}
 
-	if (m_pGameInstance->Key_Down(DIK_9))
-	{
-		m_iRenderPass += 1;
-		if (m_iRenderPass >= ECast(ANIM_SHADER::ANIM_SHADER_END))
-			m_iRenderPass = 0;
-
-		cout << "Render Pass : " << m_iRenderPass << endl;
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_8))
-	{
-		m_vBloomColor += _float4(fTimeDelta, 0.f, 0.f, 0.f);
-	}
-
 	m_fTimeDelta += fTimeDelta;
 	m_fDissolveWeight += fTimeDelta * 0.5f;
 
@@ -86,12 +72,11 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
 
+		m_pGameInstance->Add_DebugRender(m_pColliderCom);
 	}
 
-
-	m_pGameInstance->Add_DebugRender(m_pColliderCom);
 }
 
 HRESULT CScreamer::Render()
@@ -167,6 +152,31 @@ HRESULT CScreamer::Render_OutLine()
 	return S_OK;
 }
 
+HRESULT CScreamer::Render_Cascade_Shadow(_uint i)
+{
+	if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
+		return S_OK;
+	
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+	
+	FAILED_CHECK(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i));
+	
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_CascadeProj", &m_pGameInstance->Get_Shadow_Proj()));
+	
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		FAILED_CHECK(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture"));
+	
+		FAILED_CHECK(m_pModelCom->Render(m_pShaderCom, i,ECast(ANIM_SHADER::ANIM_CASCADE_SHADOW)));
+	}
+	
+	return S_OK;
+}
+
 HRESULT CScreamer::Ready_Components()
 {
 	/* For. Transform */
@@ -195,7 +205,7 @@ HRESULT CScreamer::Ready_Components()
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
 	{
-		BoundingDesc.fRadius = 200.f;
+		BoundingDesc.fRadius = 1.5f;
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
 		
 		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
@@ -208,7 +218,6 @@ HRESULT CScreamer::Ready_Components()
 	}
 
 	return S_OK;
-
 }
 
 HRESULT CScreamer::Bind_ShaderResources()
@@ -228,6 +237,16 @@ HRESULT CScreamer::Bind_ShaderResources()
 	/* Texture */
 	m_pBreakTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture");
 	m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
+
+	m_vRimColor = { 0.0f, 1.f, 0.f, 1.f };
+	m_vRimPower = _float3(1.0f, 1.0f, 1.0f);
+
+
+	/* RimLight */
+	m_vCamPos = m_pGameInstance->Get_CamPosition();
+	m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+	m_pShaderCom->Bind_RawValue("g_vRimPower", &m_vRimPower, sizeof(_float3));
+	m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
 
 	return S_OK;
 }

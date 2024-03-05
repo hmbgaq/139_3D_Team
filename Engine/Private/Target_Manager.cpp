@@ -99,6 +99,48 @@ HRESULT CTarget_Manager::End_MRT()
 	return S_OK;
 }
 
+HRESULT CTarget_Manager::Clear_MRT(const wstring& strMRTTag)
+{
+	list<CRenderTarget*>* pMRTList = Find_MRT(strMRTTag);
+	if (nullptr == pMRTList)
+		return E_FAIL;
+
+	// Clear render targets associated with the specified MRT tag
+	for (auto& pRenderTarget : *pMRTList)
+	{
+		pRenderTarget->Clear();
+	}
+
+	// Set the render targets back to the default state (back buffer)
+	ID3D11RenderTargetView* pRTVs[] = {
+		m_pGameInstance->Get_BackBufferRTV()
+	};
+	m_pContext->OMSetRenderTargets(1, pRTVs, m_pGameInstance->Get_DSV());
+
+	return S_OK;
+}
+
+HRESULT CTarget_Manager::Clear_Target(const wstring& strMRTTag, const wstring& strTargetTag)
+{
+	list<CRenderTarget*>* pMRTList = Find_MRT(strMRTTag);
+	if (nullptr == pMRTList)
+		return E_FAIL;
+
+	// 특정MRT안의 특정Target을 Clear한다. -> nonactive임에도 target에 값이 남아있어서 연산이 유지됨을 방지함 
+	for (auto& pRenderTarget : *pMRTList)
+	{
+		if (pRenderTarget->Get_TargetTag() == strTargetTag)  
+		{
+			pRenderTarget->Clear();
+			break;  
+		}
+	}
+	ID3D11RenderTargetView* pRTVs[] = { m_pGameInstance->Get_BackBufferRTV() };
+	m_pContext->OMSetRenderTargets(1, pRTVs, m_pGameInstance->Get_DSV());
+
+	return S_OK;
+}
+
 HRESULT CTarget_Manager::Bind_ShaderResource(const wstring & strTargetTag, CShader * pShader, const _char * pConstantName)
 {
 	CRenderTarget*		pRenderTarget = Find_RenderTarget(strTargetTag);

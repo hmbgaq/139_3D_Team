@@ -13,6 +13,11 @@ CRigidBody::CRigidBody(const CRigidBody& rhs)
 {
 }
 
+void CRigidBody::Set_Transform(CTransform* pOwnerTransform)
+{
+	m_pOwnerTransform = pOwnerTransform;
+}
+
 HRESULT CRigidBody::Initialize_Prototype()
 {
 	return S_OK;
@@ -25,18 +30,18 @@ HRESULT CRigidBody::Initialize(void* pArg)
 
 void CRigidBody::Tick(_float fTimeDelta)
 {
-	if (m_pOwnerTransform)
-		return;
+	//if (m_pOwnerTransform)
+	//	return;
 
-	if (nullptr == m_pOwner || nullptr == m_pOwner->Get_Transform())
-	{
-		return;
-	}
-	else 
-	{
-		m_pOwnerTransform = m_pOwner->Get_Transform();
-		Safe_AddRef(m_pOwnerTransform);
-	}
+	//if (nullptr == m_pOwner || nullptr == m_pOwner->Get_Transform())
+	//{
+	//	return;
+	//}
+	//else 
+	//{
+	//	m_pOwnerTransform = m_pOwner->Get_Transform();
+	//	Safe_AddRef(m_pOwnerTransform);
+	//}
 
 }
 
@@ -64,11 +69,12 @@ void CRigidBody::Late_Tick(_float fTimeDelta)
 		}
 	}
 
-	m_pOwnerTransform->Move_On_Navigation(vMoveValue);
+	if (true == m_pOwnerTransform->Get_Enable() && nullptr != m_pOwnerTransform)
+		m_pOwnerTransform->Move_On_Navigation(vMoveValue);
 
 }
 
-void CRigidBody::Add_Force(_vector In_vDir, const _float& In_fPower)
+void CRigidBody::Add_Force(_vector In_vDir, _float In_fPower)
 {
 	_float3 vDirFloat3;
 	XMStoreFloat3(&vDirFloat3, In_vDir);

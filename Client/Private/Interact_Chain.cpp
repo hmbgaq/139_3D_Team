@@ -66,14 +66,14 @@ void CInteract_Chain::Late_Tick(_float fTimeDelta)
 	{
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 
-		if (m_pGameInstance->Key_Pressing(DIK_8))
-		{
-			/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
-			m_bInteractActive = true;
-			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
-		}
-		else
-			m_bInteractActive = false;
+		//if (m_pGameInstance->Key_Pressing(DIK_8))
+		//{
+		//	/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
+		//	m_bInteractActive = true;
+		//	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		//}
+		//else
+		//	m_bInteractActive = false;
 	}
 
 }
@@ -151,14 +151,16 @@ HRESULT CInteract_Chain::Ready_Components()
 		FAILED_CHECK(__super::Initialize(nullptr));
 	}
 
+	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+
 	/* For.Com_Shader */
 	{
-		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 
 	/* For.Com_Model */
 	{
-		FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Chain"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Chain"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 	}
 
 	return S_OK;

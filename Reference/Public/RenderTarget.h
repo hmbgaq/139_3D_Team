@@ -17,6 +17,7 @@ public:
 	HRESULT Initialize(const wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, _float4 vClearColor);
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
 	HRESULT Clear();
+	void	Create_TargetTexture();
 
 #ifdef _DEBUG
 public:
@@ -28,7 +29,6 @@ public:
 	_float Get_PosY() { return m_WorldMatrix._42; }
 	wstring Get_TargetTag() { return m_wstrTag; }
 	_float4 Get_FontColor() { return m_vFontColor; }
-	void	Create_TargetTexture();
 #endif
 
 private:

@@ -5,6 +5,8 @@
 
 BEGIN(Engine)
 
+class CPhysXCollider;
+class CCharacter;
 class CCollider;
 class CTexture;
 class CShader;
@@ -17,6 +19,7 @@ public:
 	typedef struct tagBodyDesc
 	{
 		class CTransform* m_pParentTransform = { nullptr };
+
 	}BODY_DESC;
 protected:
 	CBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -39,6 +42,7 @@ public:
 	virtual HRESULT Render_Shadow() override;
 
 public:
+	_int Get_CurrentAnimIndex();
 	void Set_Animation(
 		_uint _iNextAnimation
 		, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_NORMAL
@@ -48,7 +52,10 @@ public:
 	);
 
 	_bool	Is_Animation_End();
+	_bool	Is_UpperAnimation_End();
+
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
+	_float	Get_TrackPosition();
 
 	_float3 Get_MovePos() {
 		return m_vMovePos;
@@ -57,6 +64,10 @@ public:
 	void Set_StiffnessRate(_float fStiffnessRate) {
 		m_pModelCom->Set_StiffnessRate(fStiffnessRate);
 	}
+
+public:
+	void Set_MouseMove(_float fTimeDelta);
+
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	
@@ -64,21 +75,19 @@ public:
 #ifdef _DEBUG
 public: //!For.Tool
 	virtual _bool Picking(_Out_ _float3* vPickedPos) override;
-
-
 #endif 
 
-
-	
-
-//public:
-//	void Activate_Dissolve() {
-//		m_bDissolve = true;
-//	}
+public:
+	CCharacter* Get_Owner();
+	void Set_Owner(CCharacter* pOwner);
 
 
-//public:
-//	virtual _bool Collision_Chcek() PURE;
+public:	//!For Animation Split
+	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END);
+	_bool Is_Splitted() { return m_pModelCom->Is_Splitted(); }
+	void Set_Splitted(_bool _bIsSplitted) { m_pModelCom->Set_Splitted(_bIsSplitted); };
+
+
 
 protected:
 	CShader* m_pShaderCom = { nullptr };
@@ -87,12 +96,18 @@ protected:
 	//CTexture* m_pDissolveTexture = { nullptr };
 
 protected:
+	CCharacter* m_pOwner = { nullptr };
+
+protected:
 	class CTransform* m_pParentTransform = { nullptr };
 	_float4x4	m_WorldMatrix = {};
 	_float3		m_vMovePos = { 0.f, 0.f, 0.f };
 
 	//_bool		m_bDissolve = { false };
 	//_float		m_fDissolveWeight = { 0.f };
+
+protected:
+	CPhysXCollider* m_pPhysXCollider = { nullptr };
 
 protected:
 	virtual HRESULT Ready_Components() PURE;

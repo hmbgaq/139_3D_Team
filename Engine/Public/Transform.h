@@ -93,6 +93,12 @@ public:
 		return vPos;
 	}
 
+	_float3 Get_Position_Float4()
+	{
+		_float4 vPos;
+		XMStoreFloat4(&vPos, Get_State(CTransform::STATE::STATE_POSITION));
+		return vPos;
+	}
 
 public:
 	virtual HRESULT Initialize_Prototype(_float fSpeedPerSec, _float fRotationPerSec);	
@@ -119,6 +125,9 @@ public:
 	void	Look_At_OnLand(_fvector vTargetPos);
 	void	Look_At_Direction(_fvector _vLook);
 	void	Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta);
+
+	_vector Calc_Look_Dir(_fvector vTargetPos);
+	_float3 Calc_Look_Dir(_float3 vTargetPos);
 
 
 

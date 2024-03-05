@@ -179,7 +179,7 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTX_PARTICLE_POINT;
 
-	typedef struct 
+	typedef struct
 	{
 		XMFLOAT4		vRight, vUp, vLook, vPosition;
 		XMFLOAT4		vColor;
@@ -232,7 +232,7 @@ namespace Engine
 	}VTXFIELD;
 
 	template <typename T>
-	constexpr const T& clamp(const T& value, const T& start, const T& end) 
+	constexpr const T& clamp(const T& value, const T& start, const T& end)
 	{
 		return (value < start) ? start : (value > end) ? end : value;
 	}
@@ -250,35 +250,55 @@ namespace Engine
 	}
 
 #pragma endregion
-	
+
 
 #pragma region 구조체
 
 	typedef struct ENGINE_DLL tag_InstanceDesc
 	{
-		_float3         vRotation;
 		_float3         vScale;
+		_float4         vRotation;
 		_float3			vTranslation;
 		_float			fMaxRange;
 		_float3			vCenter;
+
+		_float3 Get_Position() { return vTranslation; }
 
 		_matrix Get_Matrix() const
 		{
 			_matrix TransformationMatrix;
 			_matrix RotationMatrix, ScaleMatrix;
 
-			_vector vPitchYawRoll;
+			_vector vQuarternion;
 			_vector vPosition;
 
-			vPitchYawRoll = XMLoadFloat3(&vRotation);
+			
+			vQuarternion = XMLoadFloat4(&vRotation);
 			vPosition = XMVectorSetW(XMLoadFloat3(&vTranslation), 1.f);
 
-			RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
+			//vPitchYawRoll = XMQuaternionRotationRollPitchYawFromVector(vPitchYawRoll);
+
+			RotationMatrix = XMMatrixRotationQuaternion(vQuarternion);
+//			RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vPitchYawRoll);
 			ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
 			TransformationMatrix = ScaleMatrix * RotationMatrix;
 			TransformationMatrix.r[3] = vPosition;
 
 			return TransformationMatrix;
+		}
+
+
+		void Set_Matrix(const _fmatrix& matrix)
+		{
+
+			_vector vTempScale, vTempRotation, vTempTranslation;
+
+		
+			XMMatrixDecompose(&vTempScale, &vTempRotation, &vTempTranslation, matrix);
+
+			XMStoreFloat3(&vScale, vTempScale);
+			XMStoreFloat4(&vRotation, vTempRotation);
+			XMStoreFloat3(&vTranslation, vTempTranslation);
 		}
 
 		void	Bake_CenterWithMatrix()
@@ -293,7 +313,7 @@ namespace Engine
 	{
 		const _uint			iMaxInstanceCount = 100;
 		_uint				iNumInstance = { 0 };
-		ID3D11Texture2D*	pAnimInstanceTexture = { nullptr };
+		ID3D11Texture2D* pAnimInstanceTexture = { nullptr };
 		//ID3D11ShaderResourceView* pAnimSRV = nullptr;
 	}ANIM_INSTANCE_INFO_DESC;
 
@@ -318,12 +338,12 @@ namespace Engine
 		_uint						iSizePerSecond = 0;
 		//class CShader*				pInstanceShader =	{ nullptr };
 
-		ID3D11ShaderResourceView*	pInstanceSRV = {nullptr};
-		ID3D11Texture2D*			pInstanceTexture =	{ nullptr };
-		BYTE*						pByte = { nullptr };
-		_float4x4*					pMatrix = { nullptr };
+		ID3D11ShaderResourceView* pInstanceSRV = { nullptr };
+		ID3D11Texture2D* pInstanceTexture = { nullptr };
+		BYTE* pByte = { nullptr };
+		_float4x4* pMatrix = { nullptr };
 
-		 AnimInstanceDesc() {};
+		AnimInstanceDesc() {};
 		~AnimInstanceDesc();
 
 	}ANIMMODEL_INSTANCE_DESC;
@@ -341,8 +361,113 @@ namespace Engine
 		UINT lerpValue;            // lerp between frames
 	};
 
+
 #pragma endregion 구조체
 
+#pragma region Shader Control Struct - Screen 
+	/* 각자 구분용 */
+	typedef struct ENGINE_DLL tagHBAO_Plus_Desc
+	{
+		_bool  bHBAO_Active			= false;
+		_float fRadius				= 1.f;
+		_float fBias				= 0.1f;
+		_float fPowerExponent		= 2.f;
+		_float fBlur_Sharpness		= 16.f;
+
+	}HBAO_PLUS_DESC;
+
+	typedef struct ENGINE_DLL tagBloomRim_Desc
+	{
+		_bool	bBloomBlur_Active	= { false };
+		_bool	bRimBlur_Active		= { false };
+	}BLOOMRIM_DESC;
+
+	typedef struct ENGINE_DLL tagFogDesc
+	{
+		bool  bFog_Active			= false;
+		float fFogStartDepth		= 55.f;
+		float fFogStartDistance		= 0.1f;
+		float fFogDistanceValue		= 30.f;
+		float fFogHeightValue		= 50.f;
+		float fFogDistanceDensity	= 0.05f;
+		float fFogHeightDensity		= 0.05f;
+	} FOG_DESC;
+
+	typedef struct ENGINE_DLL tagHDRDesc
+	{
+		_bool  bHDR_Active			= false;
+		_float fmax_white			= 0.4f;
+
+	}HDR_DESC;
+
+	typedef struct ENGINE_DLL tagAnti_Aliasing
+	{
+		_bool  bFXAA_Active = false;
+	}ANTI_DESC;
+
+	typedef struct ENGINE_DLL tagScreenDesc
+	{
+		_bool bScreen_Active = false;
+		_float fFinal_Saturation = 1.f;
+		_float fFinal_Brightness = 1.f;
+
+	}HSV_DESC;
+
+	typedef struct ENGINE_DLL tagRadialBlurDesc
+	{
+		_bool	bRadial_Active = false;
+		_float	fRadial_Quality = 16.f;
+		_float	fRadial_Power = 0.1f;
+	}RADIAL_DESC;
+
+
+	/* 전체 컨트롤 - 레벨시작할때 초기 컨트롤용도 */
+	typedef struct ENGINE_DLL tagLevelShader
+	{
+		/* 활성여부 */
+		_bool bHBAO_Plus_Active		= { false };
+		_bool bFog_Active			= { false };
+		_bool bHDR_Active			= { false };
+		_bool bFXAA_Active			= { false };
+
+		/* HBAO+ */
+		_float fRadius				= 1.f;
+		_float fBias				= 0.1f;
+		_float fPowerExponent		= 2.f;
+		_float fBlur_Sharpness		= 16.f;
+
+		/* Fog */
+		_float fFogStartDepth		= 100.f;
+		_float fFogStartDistance	= 10.f;
+		_float fFogDistanceValue	= 30.f;
+		_float fFogHeightValue		= 50.f;
+		_float fFogDistanceDensity	= 0.04f;
+		_float fFogHeightDensity	= 0.04f;
+		
+		/* HDR */
+		_float fmax_white			= 0.4f;
+
+		/* Screen */
+		_float fFinal_Saturation	= 1.f;
+		_float fFinal_Brightness	= 1.f;
+
+	}LEVEL_SHADER_DESC;
+#pragma endregion
+
+#pragma region Shader Control Struct - Object
+
+	typedef struct ENGINE_DLL tagObject_Shader_Desc
+	{
+		_bool bRimLight; 
+		_bool bBloom;
+		
+		_float4 vBloom_Color = {};
+		_float3 vBloomPoser = {};
+		_float4 vRimColor = {};
+
+	}OBJECT_SHADER_DESC;
+
+#pragma endregion
 }
 
 #endif // Engine_Struct_h__

@@ -22,6 +22,7 @@ public:
 public:
 	ID3D11Buffer*				Get_VertexBuffer() { return m_pVB; }
 	ID3D11Buffer*				Get_IndexBuffer() { return m_pIB; }
+	_uint						Get_NumVertices() { return m_iNumVertices; }
 
 
 	virtual HRESULT Bind_VIBuffers();
@@ -32,19 +33,20 @@ protected:
 	ID3D11Buffer*				m_pVB = { nullptr };
 	ID3D11Buffer*				m_pIB = { nullptr };
 
-	/* 지금 내가 만들려고 하는 버퍼의 속성을 설정하낟. */
+	/* 지금 내가 만들려고 하는 버퍼의 속성을 설정한다. */
 	D3D11_BUFFER_DESC			m_BufferDesc;
 	D3D11_SUBRESOURCE_DATA		m_SubResourceData;
 
 protected:
-	_uint						m_iNumVertices = { 0 };
-	_uint						m_iStride = { 0 };
-	_uint						m_iNumVertexBuffers = { 0 };
+	_uint						m_iNumVertices		= { 0 };	// 버텍스 개수
+	_uint						m_iStride			= { 0 };	// 버텍스 하나의 크기
+	_uint						m_iNumVertexBuffers = { 0 };	// 버텍스 버퍼 개수
 
-	_uint						m_iNumIndices = { 0 }; //m_iIndexSizeofPrimitive
-	_uint						m_iIndexStride = { 0 }; // m_iNumPrimitives
-	DXGI_FORMAT					m_eIndexFormat = {  };
-	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology = { };
+	_uint						m_iNumPrimitive		= { 0 };	// 삼각형 개수
+	_uint						m_iNumIndices		= { 0 };	// 인덱스 버퍼 개수	// m_iIndexSizeofPrimitive	
+	_uint						m_iIndexStride		= { 0 };	// 인덱스 하나의 크기
+	DXGI_FORMAT					m_eIndexFormat		= {  };
+	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology			= { };
 
 	_float3*					m_pVerticesPos = { nullptr };
 
