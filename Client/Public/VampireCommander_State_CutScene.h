@@ -1,10 +1,9 @@
-
 #pragma once
-#include "VampireCommander_Spawn.h"
+#include "VampireCommander_State.h"
 
 BEGIN(Client)
 
-class CVampireCommander_IntroSpawn : public CVampireCommander_Spawn
+class CVampireCommander_State_CutScene : public CVampireCommander_State
 {
 public:
 	virtual void Initialize(CVampireCommander* pActor) override;
@@ -12,7 +11,7 @@ public:
 	virtual void Release(CVampireCommander* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CVampireCommander::VampireCommander_State::VampireCommander_Spawn_02;
+	virtual CState<CVampireCommander>* Update_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
 
 };
 

@@ -683,13 +683,10 @@ HRESULT CLoader::Ready_UI_Origin()
 
 HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
 {
-
-
-
 	if (eLevel == LEVEL_GAMEPLAY)
 	{
-		wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage2/NonAnim/");
-		wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage2/Anim/");
+		wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/NonAnim/");
+		wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/Anim/");
 
 		//! 로더에 원형
 		FAILED_CHECK(Read_FBXModelPath(strNonAnimModelPath.c_str(), eLevel, CModel::TYPE_NONANIM));
@@ -697,8 +694,8 @@ HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
 	}
 	else if (eLevel == LEVEL_TOOL)
 	{
-		wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage2/NonAnim/");
-		wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage2/Anim/");
+		wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/NonAnim/");
+		wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/Anim/");
 
 		//! 로더에 원형
 		FAILED_CHECK(Read_FBXModelPath(strNonAnimModelPath.c_str(), eLevel, CModel::TYPE_NONANIM));
