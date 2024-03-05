@@ -310,6 +310,7 @@
     <ClInclude Include="..\Public\Bandit_Sniper.h" />
     <ClInclude Include="..\Public\Bandit_Sniper_State_Cover.h" />
     <ClInclude Include="..\Public\Bandit_Sniper_State_Crouch.h" />
+    <ClInclude Include="..\Public\Bandit_Sniper_State_Hit.h" />
     <ClInclude Include="..\Public\Bandit_Sniper_State_Idle.h" />
     <ClInclude Include="..\Public\Bandit_Sniper_State.h" />
     <ClInclude Include="..\Public\Bandit_Sniper_State_Melee.h" />
@@ -428,6 +429,7 @@
     <ClInclude Include="..\Public\Infected_Walk_FL45.h" />
     <ClInclude Include="..\Public\Infected_Walk_FR.h" />
     <ClInclude Include="..\Public\Infected_Walk_FR45.h" />
+    <ClInclude Include="..\Public\Level_Intro.h" />
     <ClInclude Include="..\Public\ManHeavy_KnockFrontCannonball_F_02.h" />
     <ClInclude Include="..\Public\MasterCamera.h" />
     <ClInclude Include="..\Public\Monster_Character.h" />
@@ -850,6 +852,7 @@
     <ClCompile Include="..\Private\Infected_Walk_FL45.cpp" />
     <ClCompile Include="..\Private\Infected_Walk_FR.cpp" />
     <ClCompile Include="..\Private\Infected_Walk_FR45.cpp" />
+    <ClCompile Include="..\Private\Level_Intro.cpp" />
     <ClCompile Include="..\Private\ManHeavy_KnockFrontCannonball_F_02.cpp" />
     <ClCompile Include="..\Private\MasterCamera.cpp" />
     <ClCompile Include="..\Private\Monster_Character.cpp" />

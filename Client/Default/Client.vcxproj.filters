@@ -208,15 +208,6 @@
     <Filter Include="02.GameObjects\02. Environment\Environment_Interact">
       <UniqueIdentifier>{d89d3dad-c81a-4fcb-af12-1b4c2e69c84f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\01.GamePlay\0.GamePlay">
-      <UniqueIdentifier>{a77245cb-d30e-4b58-bfd9-80c8fcbf1470}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Levels\01.GamePlay\1.SnowMountain">
-      <UniqueIdentifier>{ad32fc85-6a06-4d75-b487-d1fa8a80dd90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Levels\01.GamePlay\2.Lava">
-      <UniqueIdentifier>{04902ce0-48d3-4de2-bf84-596e0d009ea7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\97. Camera\SpringCamera">
       <UniqueIdentifier>{a58de907-7028-46f8-95f0-3c03d6f5d3c5}</UniqueIdentifier>
     </Filter>
@@ -1597,6 +1588,21 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\4. Crouch\0. Parent">
       <UniqueIdentifier>{3287944c-246b-49d4-9781-1cee1d2eefd1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\0. Parent">
+      <UniqueIdentifier>{7dab8760-3273-4514-b511-695eb5c654bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\01.GamePlay\0.GamePlay">
+      <UniqueIdentifier>{a77245cb-d30e-4b58-bfd9-80c8fcbf1470}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\01.GamePlay\1. Intro">
+      <UniqueIdentifier>{dec9d180-3814-40c0-ac08-d85ab872f73e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\01.GamePlay\2.SnowMountain">
+      <UniqueIdentifier>{ad32fc85-6a06-4d75-b487-d1fa8a80dd90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\01.GamePlay\3.Lava">
+      <UniqueIdentifier>{04902ce0-48d3-4de2-bf84-596e0d009ea7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1792,10 +1798,10 @@
       <Filter>02.GameObjects\00. Character\Monster\0. Screamer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_SnowMountain.h">
-      <Filter>01.Levels\01.GamePlay\1.SnowMountain</Filter>
+      <Filter>01.Levels\01.GamePlay\2.SnowMountain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Lava.h">
-      <Filter>01.Levels\01.GamePlay\2.Lava</Filter>
+      <Filter>01.Levels\01.GamePlay\3.Lava</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SpringCamera.h">
       <Filter>02.GameObjects\97. Camera\SpringCamera</Filter>
@@ -2940,6 +2946,12 @@
     <ClInclude Include="..\Public\Bandit_Sniper_State_Crouch.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\4. Crouch\0. Parent</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Sniper_State_Hit.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Intro.h">
+      <Filter>01.Levels\01.GamePlay\1. Intro</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -3311,10 +3323,10 @@
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_SnowMountain.cpp">
-      <Filter>01.Levels\01.GamePlay\1.SnowMountain</Filter>
+      <Filter>01.Levels\01.GamePlay\2.SnowMountain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Lava.cpp">
-      <Filter>01.Levels\01.GamePlay\2.Lava</Filter>
+      <Filter>01.Levels\01.GamePlay\3.Lava</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SpringCamera.cpp">
       <Filter>02.GameObjects\97. Camera\SpringCamera</Filter>
@@ -4383,6 +4395,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bandit_Sniper_State_Crouch.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\4. Crouch\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Intro.cpp">
+      <Filter>01.Levels\01.GamePlay\1. Intro</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
