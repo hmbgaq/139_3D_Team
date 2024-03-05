@@ -738,7 +738,7 @@ HRESULT CRenderer::Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bCl
 
 	FAILED_CHECK(m_pVIBuffer->Render());
 
-	//FAILED_CHECK(m_pGameInstance->End_MRT());
+	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
