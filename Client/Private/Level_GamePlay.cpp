@@ -857,6 +857,11 @@ HRESULT CLevel_GamePlay::Ready_Reward_Item(const wstring& strLayerTag, void* pAr
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
+{
+	return S_OK;
+}
+
 CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 
 {
