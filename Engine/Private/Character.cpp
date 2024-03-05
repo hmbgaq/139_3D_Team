@@ -424,13 +424,76 @@ void CCharacter::Add_Force(_vector In_vDir, _float In_fPower)
 	m_pRigidBody->Add_Force(In_vDir, In_fPower);
 }
 
-void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+void CCharacter::Look_At_Target()
 {
-	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState);
+	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
+		return;
+
+	_fvector vTargetPos = m_pTarget->Get_Position_Vector();
+	m_pTransformCom->Look_At_OnLand(vTargetPos);
+}
+
+void CCharacter::Search_Target(const wstring& strLayerTag)
+{
+	
+}
+
+CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag)
+{
+	CGameObject* pResult = { nullptr };
+
+	_float fMinDistance = 10000.f;
+
+	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+	list<CGameObject*>* pTargetLayer = m_pGameInstance->Get_GameObjects(iCurrentLevel, strLayerTag);
+
+	if (nullptr == pTargetLayer)
+		return nullptr;
+
+	for (CGameObject* pTarget : *pTargetLayer) 
+	{
+		_float fDistance = Calc_Distance(pTarget);
+		if (fMinDistance > fDistance) 
+		{
+			fMinDistance = fDistance;
+			pResult = pTarget;
+		}
+	}
+
+	return dynamic_cast<CCharacter*>(pResult);
+}
+
+
+_float CCharacter::Calc_Distance(_float3 vTargetPos)
+{
+	_float3 vPos = Get_Position();
+
+	_float3 vDiff = vTargetPos - vPos;
+
+	return sqrt(vDiff.x * vDiff.x + vDiff.y * vDiff.y + vDiff.z * vDiff.z);
+}
+
+_float CCharacter::Calc_Distance(CGameObject* pTarget)
+{
+	if (nullptr == pTarget || false == pTarget->Get_Enable())
+		return 1000000.f;
+
+	return Calc_Distance(pTarget->Get_Position());
+}
+
+_float CCharacter::Calc_Distance()
+{
+	return Calc_Distance(m_pTarget);
 }
 
 
 
+
+void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+{
+	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState);
+}
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {
