@@ -24,7 +24,7 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 {	
 	m_tEnvironmentDesc = *(ENVIRONMENT_OBJECT_DESC*)pArg;
 
-	
+	m_iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
@@ -43,6 +43,7 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 
 	
 
+
 	return S_OK;
 }
 
@@ -52,10 +53,9 @@ void CEnvironment_Object::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Object::Tick(_float fTimeDelta)
 {
-	//f (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
-	//
-	//	m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
-	//
+	if (m_iCurrentLevel == (_uint)LEVEL_TOOL)
+		m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
+	
 }
 
 void CEnvironment_Object::Late_Tick(_float fTimeDelta)
@@ -70,13 +70,17 @@ void CEnvironment_Object::Late_Tick(_float fTimeDelta)
 		m_pTransformCom->Add_RootBone_Position(vRootAnimPos);
 	}
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-		return ;
 
-	//if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
-	//{
-	//	m_pGameInstance->Add_DebugRender(m_pPickingCollider);
-	//}
+	
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
+		return;
+	
+
+	if (m_bColliderRender == true && m_iCurrentLevel == (_uint)LEVEL_TOOL)
+	{
+		m_pGameInstance->Add_DebugRender(m_pPickingCollider);
+	}
+	
 }
 
 HRESULT CEnvironment_Object::Render()
@@ -188,8 +192,25 @@ _bool CEnvironment_Object::Picking_VerJSY(RAY* pRay, _float3* vPickedPos)
 
 		if (true == pBoundingSphereBox->Intersects(vOrigin, vDir, fDist))
 		{
-			*vPickedPos = vOrigin + fDist * vDir;
-			return true;
+			//*vPickedPos = vOrigin + fDist * vDir;
+			//return true;
+
+			// Calculate intersection point
+			_vector vIntersection = vOrigin + fDist * vDir;
+
+			// Calculate distance between intersection point and sphere center
+			_vector vCenter = XMLoadFloat3(&pBoundingSphereBox->Center);
+			_vector vDiff = vIntersection - vCenter;
+			_float fDistanceSq = XMVectorGetX(XMVector3LengthSq(vDiff));
+
+			_float fRadiusSq = pBoundingSphereBox->Radius * pBoundingSphereBox->Radius;
+
+			if (fDistanceSq <= fRadiusSq)
+			{
+				// Intersection point is inside or on the sphere, return it
+				XMStoreFloat3(vPickedPos, vIntersection);
+				return true;
+			}
 		}
 	}
 	else
@@ -206,22 +227,22 @@ HRESULT CEnvironment_Object::Ready_Components()
 
 	if (true == m_tEnvironmentDesc.bAnimModel)
 	{
-		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrentLevel, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 	else
 	{
-		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrentLevel, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 	
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), m_tEnvironmentDesc.strModelTag,
+	if (FAILED(__super::Add_Component(m_iCurrentLevel, m_tEnvironmentDesc.strModelTag,
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	//CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
-	//
-	//m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
-	//Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
+	CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
+	
+	m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
+	Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
 
 		//!CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
 		//!
@@ -229,11 +250,15 @@ HRESULT CEnvironment_Object::Ready_Components()
 		//!Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
 		//Desc_AABB.vCenter = _float3(0.f, 0.f, 0.f);
 
-	//if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Test)))
-	//{
-	//	MSG_BOX("¤¸´ï");
-	//	return E_FAIL;
-	//}
+	if (m_iCurrentLevel == (_uint)LEVEL_TOOL)
+	{
+		if (FAILED(__super::Add_Component(m_iCurrentLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Test)))
+		{
+			MSG_BOX("¤¸´ï");
+			return E_FAIL;
+		}
+	}
+	
 
 	//!if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Desc_AABB)))
 	//!{

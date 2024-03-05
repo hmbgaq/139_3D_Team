@@ -149,7 +149,7 @@ private:
 	_float4x4		m_matInstanceMatrix = {};
 	_float3			m_vRotation = {};
 	_bool			m_bRotateMode = { false};
-
+	_bool			m_bColliderPickingMode = false;
 	_float			m_fCamaraSpeed = { 60.f };
 
 //!  맵찍기 저장용 변수
@@ -176,6 +176,7 @@ private: //!For. Environment
 	vector<string>	m_vecAnimInteractModelTag;
 
 	_bool			m_bShowCreateField = false;
+	
 
 private:
 	_uint			m_iSelectModelTag = 0;
@@ -205,6 +206,7 @@ private: //! 레이캐스트
 
 	_float			m_fRayUpdateTime = { 0.1f };
 	_float			m_fRayUpdateTimeAcc = { 0.f };
+	_uint			m_iSelectMeshObjectIndex = 0;
 
 
 private:
