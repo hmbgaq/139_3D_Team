@@ -72,8 +72,8 @@ using namespace std;
 
 namespace Engine 
 {
-	static float					g_iWinsizeX = 1920.f;
-	static float					g_iWinsizeY = 1080.f;
+	static float					g_iWinsizeX = 1280;
+	static float					g_iWinsizeY = 720.f;
 
 	static float					g_fLightNear = 0.1f;
 	static float					g_fLightFar = 3000.f;
