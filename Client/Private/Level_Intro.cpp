@@ -193,17 +193,15 @@ HRESULT CLevel_Intro::Ready_Layer_Effect(const wstring& strLayerTag)
 
 HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg)
 {
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Assassin")));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected")));
 // 	for (int i = 0; i < 100; ++i)
 // 	{
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
 	/*	}*/
 
 	{
-		//CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-		//if (nullptr == pMonster)	return E_FAIL;
-		//pMonster->Set_Position(_float3(0.f, 0.f, 2.f));
+		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+		if (nullptr == pMonster)	return E_FAIL;
+		pMonster->Set_Position(_float3(-2.f, 0.f, 2.f));
 	}
 
 	{
