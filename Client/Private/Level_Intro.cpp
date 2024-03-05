@@ -33,6 +33,7 @@
 #include "Effect.h"
 #pragma endregion
 
+#include "Data_Manager.h"
 
 CLevel_Intro::CLevel_Intro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -49,6 +50,9 @@ HRESULT CLevel_Intro::Initialize()
 	FAILED_CHECK(Ready_LandObjects());
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
+
+	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
+
 
 	if (FAILED(Ready_UI()))
 		return E_FAIL;
