@@ -1,8 +1,7 @@
-#include "..\Public\Bandit_Heavy.h"
-
+#include "stdafx.h"
+#include "Bandit_Heavy.h"
 #include "GameInstance.h"
 #include "Body_Bandit_Heavy.h"
-
 #include "BanditHeavy_Idle.h"
 
 CBandit_Heavy::CBandit_Heavy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -17,8 +16,7 @@ CBandit_Heavy::CBandit_Heavy(const CBandit_Heavy& rhs)
 
 HRESULT CBandit_Heavy::Initialize_Prototype()
 {
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize_Prototype());
 
 	return S_OK;
 }
@@ -30,8 +28,7 @@ HRESULT CBandit_Heavy::Initialize(void* pArg)
 	GameObjectDesc.fSpeedPerSec = 10.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-	if (FAILED(__super::Initialize(&GameObjectDesc)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -65,8 +62,7 @@ void CBandit_Heavy::Late_Tick(_float fTimeDelta)
 
 HRESULT CBandit_Heavy::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Render());
 
 	return S_OK;
 }
@@ -79,9 +75,7 @@ HRESULT CBandit_Heavy::Ready_Components()
 HRESULT CBandit_Heavy::Ready_PartObjects()
 {
 	CBody::BODY_DESC		BodyDesc = {};
-	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Bandit_Heavy"), BodyDesc)))
-		return E_FAIL;
-
+	FAILED_CHECK(Add_Body(TEXT("Prototype_GameObject_Body_Bandit_Heavy"), BodyDesc));
 
 	return S_OK;
 }
@@ -90,7 +84,6 @@ CBandit_Heavy* CBandit_Heavy::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 {
 	CBandit_Heavy* pInstance = new CBandit_Heavy(pDevice, pContext, strPrototypeTag);
 
-	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CBandit_Heavy");
@@ -103,7 +96,6 @@ CGameObject* CBandit_Heavy::Clone(void* pArg)
 {
 	CBandit_Heavy* pInstance = new CBandit_Heavy(*this);
 
-	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CBandit_Heavy");

@@ -57,8 +57,10 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 	}
 
 
+	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+
 	{
-		CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CSpringCamera>(LEVEL_GAMEPLAY, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Spring"), &Desc);
+		CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CSpringCamera>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Spring"), &Desc);
 		if (pCamera)	m_Cameras.push_back(pCamera);
 	}
 

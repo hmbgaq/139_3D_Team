@@ -20,12 +20,13 @@ public:
 		_int	iPartSize			= { 0 };
 
 		// Times
-		EASING_TYPE		eType_Easing = { LINEAR };
+		EASING_TYPE		eType_Easing = { EASING_TYPE::LINEAR };
 
 		_float	fTimeAcc			= { 0.f };	/* 시간 누적 */
 		_float	fWaitingAcc			= { 0.f };	/* 시작 딜레이 시간 누적 */
 		_float  fRemainAcc			= { 0.f };
 		_float	fSequenceAcc		= { 0.f };	/* 시퀀스 시간 누적 */
+		_float  fLerpTimeAcc		= { 0.f };	/* 러프 중인 시간누적 */
 
 		_float	fLifeTime			= { 5.f };
 		_float	fWaitingTime		= { 0.f };	/* 이 값이 넘어가야 m_fTimeAcc가 누적되기 시작한다. */

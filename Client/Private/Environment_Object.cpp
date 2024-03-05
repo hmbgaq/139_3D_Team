@@ -239,10 +239,9 @@ HRESULT CEnvironment_Object::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
 	
-	m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
-	Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
+
+	
 
 		//!CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
 		//!
@@ -252,6 +251,11 @@ HRESULT CEnvironment_Object::Ready_Components()
 
 	if (m_iCurrentLevel == (_uint)LEVEL_TOOL)
 	{
+		CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
+
+		m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
+		Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
+
 		if (FAILED(__super::Add_Component(m_iCurrentLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Test)))
 		{
 			MSG_BOX("¤¸´ï");

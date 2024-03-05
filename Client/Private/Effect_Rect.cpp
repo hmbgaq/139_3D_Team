@@ -29,7 +29,9 @@ HRESULT CEffect_Rect::Initialize_Prototype()
 
 HRESULT CEffect_Rect::Initialize(void* pArg)
 {	
-	m_tRectDesc = *(EFFECT_RECT_DESC*)pArg;
+	//m_tRectDesc = *(EFFECT_RECT_DESC*)pArg;
+
+	*static_cast<EFFECTVOID_DESC*>(&m_tRectDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -167,7 +169,7 @@ void CEffect_Rect::ReSet_Effect()
 	if (SPRITE == m_tRectDesc.eType)
 	{
 		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
-		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.y;
+		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 	else
 	{

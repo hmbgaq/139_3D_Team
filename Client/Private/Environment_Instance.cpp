@@ -35,7 +35,7 @@ HRESULT CEnvironment_Instance::Initialize(void* pArg)
 	{
 		m_vecColliders.reserve(m_tInstanceDesc.iNumInstance);
 
-		for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
+		for (_uint i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 		{
 			m_vecColliders.push_back(nullptr);
 		}
@@ -62,7 +62,7 @@ void CEnvironment_Instance::Tick(_float fTimeDelta)
 	//m_pInstanceModelCom->Update(m_tInstanceDesc.vecInstanceInfoDesc);
 	if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
 	{
-		for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
+		for (_uint i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 		{
 			_matrix WorldMatrix = m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix();
 			
@@ -136,7 +136,7 @@ _bool CEnvironment_Instance::Picking_Instance(RAY* pRay, _float3* vOutPoint)
 	_bool bResult = false;
 
 	//nm_pGameInstance->iSIS
-	for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
+	for (_uint i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 	{
 		
 		if (true == m_pGameInstance->isIn_WorldPlanes(m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Position()))
@@ -212,13 +212,15 @@ HRESULT CEnvironment_Instance::Remove_Instance(_uint iIndex)
 
 HRESULT CEnvironment_Instance::Ready_Components()
 {
+	_int iNextLevel = m_pGameInstance->Get_NextLevel();
+
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_Model_Instance"),
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Model_Instance"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	//* For.Com_Model */
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), m_tInstanceDesc.strModelTag,
+	if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strModelTag,
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 	

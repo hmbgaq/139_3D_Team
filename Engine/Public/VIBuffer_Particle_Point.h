@@ -1,9 +1,9 @@
 #pragma once
-
 #include "VIBuffer_Instancing.h"
 
 BEGIN(Engine)
 
+// 안씀 -> CVIBuffer_Particle로 사용합니다.
 class ENGINE_DLL CVIBuffer_Particle_Point final : public CVIBuffer_Instancing
 {
 public:
@@ -14,16 +14,13 @@ public:
 	{
 		TYPE_ACTION		eType_Action = { SPHERE };
 		TYPE_FADE		eType_Fade = { FADE_NONE };
-		EASING_TYPE		eType_ColorLerp = { LINEAR };
-
+		EASING_TYPE		eType_ColorLerp = { EASING_TYPE::LINEAR };
 
 		_bool		bLoop = { TRUE };
 		_bool		bReverse = { FALSE };
-		_bool		bSpriteAnim = { FALSE };
 
-
-		/* 파티클 개수 */
-		_uint		iCurNumInstance = { 100 };
+		/* 파티클 입자 개수 */
+		_int			  iCurNumInstance = { 200 };
 
 		/* LifeTime */
 		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
@@ -61,22 +58,13 @@ public:
 		_float2		vCurrentScale;
 
 		/* For.Color */
-		_float2     vMinMaxRed = { 0.f, 1.f };
-		_float2     vMinMaxGreen = { 0.f, 1.f };
-		_float2     vMinMaxBlue = { 0.f, 1.f };
-		_float2     vMinMaxAlpha = { 0.f, 1.f };
+		_float2     vMinMaxRed		= { 1.f, 1.f };
+		_float2     vMinMaxGreen	= { 1.f, 1.f };
+		_float2     vMinMaxBlue		= { 1.f, 1.f };
+		_float2     vMinMaxAlpha	= { 1.f, 1.f };
 
-		_float4     vCurrentColor;
+		_float4     vCurrentColor = { 1.f, 1.f, 1.f, 1.f };
 
-		/* For.Sprite */
-		_float	fSequenceTerm = { 0.05f };
-
-		_float2 vTextureSize = { 1792.f, 1792.f };  // fSpriteSizeX, fSpriteSizeY
-		_float2 vTileSize	 = { 256.f, 256.f };	// fAnimationSizeX, fAnimationSizeY
-
-		_float2	vUV_CurTileIndex = { 0, 0 }; // iCurrentHor, iCurrentVer
-		_float2	vUV_MinTileCount = { 0, 0 }; // iMinHor, iMinVer
-		_float2	vUV_MaxTileCount = { 7, 7 }; // iMaxHor, iMaxVer
 
 		void Reset_Desc()
 		{
@@ -105,14 +93,17 @@ public:
 	virtual _bool Write_Json(json& Out_Json)		override;
 	virtual void Load_FromJson(const json& In_Json)	override;
 
+public:
+	void	Sort_Z(_uint iCount);
 
 	/* For.Desc */
 public:
 	PARTICLE_BUFFER_DESC* Get_Desc() { return &m_tBufferDesc; }
 
 public:
+	// 파티클 입자 개수
 	_uint			Get_NumInstance() { return m_iNumInstance; }
-	void			Set_NumInstance(_uint iNum) { m_iNumInstance = iNum; m_tBufferDesc.iCurNumInstance = iNum; }
+	void			Set_NumInstance(_uint iNum) { m_iNumInstance = iNum; }
 
 	_float			Get_TimePosition() { return m_fTimeAcc; }
 	void			Set_TimePosition(_float fTimePosition) { m_fTimeAcc = fTimePosition; }

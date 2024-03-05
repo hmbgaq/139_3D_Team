@@ -37,9 +37,9 @@ CEffect* CClone_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLaye
 
 	json In_Json;
 
-	string strPath = "../Bin/DataFiles/Data_Effect/";
+	string strPath = "../Bin/DataFiles/Data_Effect";
 
-	string strLoadPath = strPath + "\\" + strFileName;
+	string strLoadPath = strPath + "/" + strFileName;
 	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
 
 	pEffect->Load_FromJson(In_Json);

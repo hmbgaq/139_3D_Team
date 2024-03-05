@@ -168,7 +168,7 @@ technique11 DefaultTechnique
 	/* 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
 	pass Terrain
 	{
-		SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_Cull_None);
 		SetDepthStencilState(DSS_Default, 0);
 		SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
