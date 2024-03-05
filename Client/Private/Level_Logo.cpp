@@ -4,6 +4,9 @@
 #include "BackGround.h"
 #include "Level_Loading.h"
 
+//#include <mfapi.h>
+//#include <mfreadwrite.h>
+
 CLevel_Logo::CLevel_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -12,6 +15,35 @@ CLevel_Logo::CLevel_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 HRESULT CLevel_Logo::Initialize()
 {
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
+
+	//{
+
+	//	IMFSourceReader* pSourceReader = NULL;
+	//	IMFMediaType* pMediaType = NULL;
+
+	//	HRESULT hr = MFCreateSourceReaderFromURL(TEXT("C:\\Users\\hmbga\\OneDrive\\3D_Personal\\Client\\Bin\\Resources\\Video\\starcraft.mp4"), NULL, &pSourceReader);
+	//	
+	//	FAILED_CHECK(hr);
+
+	//	hr = pSourceReader->GetCurrentMediaType(0, &pMediaType);
+	//	FAILED_CHECK(hr);
+
+	//	// 비디오 텍스처 생성
+	//	ID3D11Texture2D* pVideoTexture = NULL;
+
+	//	D3D11_TEXTURE2D_DESC textureDesc;
+	//	textureDesc.Width = MF_MT_FRAME_SIZE.Data1;
+	//	textureDesc.Height = MF_MT_FRAME_SIZE.Data2;
+	//	textureDesc.MipLevels = 1;
+	//	textureDesc.ArraySize = 1;
+	//	textureDesc.Format = DXGI_FORMAT_NV12;
+
+	//	//pSourceReader->Release();
+	//}
+
+
+
+	
 
 	return S_OK;
 }

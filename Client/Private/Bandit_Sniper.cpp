@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "Body_Bandit_Sniper.h"
 
-#include "BanditHeavy_Idle.h"
+#include "Sniper_IdlePose.h"
 
 CBandit_Sniper::CBandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -36,7 +36,7 @@ HRESULT CBandit_Sniper::Initialize(void* pArg)
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CBandit_Sniper>(this);
-		//m_pActor->Set_State(new CBanditHeavy_Idle());
+		m_pActor->Set_State(new CSniper_IdlePose());
 	}
 
 	return S_OK;

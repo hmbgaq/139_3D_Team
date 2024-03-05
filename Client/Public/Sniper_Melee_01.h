@@ -1,10 +1,10 @@
 #pragma once
-#include "Bandit_Sniper_State_Cover.h"
+#include "Bandit_Sniper_State_Melee.h"
 
 
 BEGIN(Client)
 
-class CSniper_CoverHigh_Reload : public CBandit_Sniper_State_Cover
+class CSniper_Melee_01 : public CBandit_Sniper_State_Melee
 {
 public:
 	virtual void Initialize(CBandit_Sniper* pActor) override;
@@ -12,7 +12,7 @@ public:
 	virtual void Release(CBandit_Sniper* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CBandit_Sniper::Bandit_Sniper_State::Sniper_CoverHigh_Reload;
+	static const _uint g_iAnimIndex = CBandit_Sniper::Bandit_Sniper_State::Sniper_Melee_01;
 
 };
 
