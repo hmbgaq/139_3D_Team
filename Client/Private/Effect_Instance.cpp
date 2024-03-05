@@ -237,7 +237,8 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-	*static_cast<EFFECTVOID_DESC*>(&m_tInstanceDesc) = *static_cast<EFFECTVOID_DESC*>(Load_VoidDesc(In_Json));
+	//*static_cast<EFFECTVOID_DESC*>(&m_tInstanceDesc) = *static_cast<EFFECTVOID_DESC*>(Load_VoidDesc(In_Json));
+	static_cast<EFFECTVOID_DESC>(m_tInstanceDesc) = Load_VoidDesc(In_Json);
 
 	/* Mesh */
 	m_tInstanceDesc.eType_Mesh = In_Json["eType_Mesh"];

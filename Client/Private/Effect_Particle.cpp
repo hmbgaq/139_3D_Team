@@ -246,7 +246,9 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-	*&m_tParticleDesc = *static_cast<PARTICLE_DESC*>(Load_VoidDesc(In_Json));
+	//*&m_tParticleDesc = *static_cast<PARTICLE_DESC*>(Load_VoidDesc(In_Json));
+	//*static_cast<EFFECTVOID_DESC*>(&m_tParticleDesc) = *static_cast<EFFECTVOID_DESC*>(Load_VoidDesc(In_Json));
+	static_cast<EFFECTVOID_DESC>(m_tParticleDesc) = Load_VoidDesc(In_Json);
 
 
 	/* Sprite */

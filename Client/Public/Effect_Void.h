@@ -153,7 +153,7 @@ public:
 	virtual void Load_FromJson(const json& In_Json)	override;
 
 	void	Write_VoidDesc(json& Out_Json, void* pArg);
-	void*	Load_VoidDesc(const json& In_Json);
+	EFFECTVOID_DESC	Load_VoidDesc(const json& In_Json);
 
 public:
 	virtual void	ReSet_Effect();

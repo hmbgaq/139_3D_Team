@@ -124,8 +124,16 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json, void* pArg)
 
 	Out_Json["eType_Effect"] = m_eType_Effect;
 
-	Out_Json["strProtoTag"] = m_pGameInstance->Convert_WString_To_String(tVoidDesc.strProtoTag);
-	Out_Json["strPartTag"] = m_pGameInstance->Convert_WString_To_String(tVoidDesc.strPartTag);
+	string strTag = "";
+	m_pGameInstance->WString_To_String(tVoidDesc.strProtoTag, strTag);
+	Out_Json["strProtoTag"] = strTag;
+
+	m_pGameInstance->WString_To_String(tVoidDesc.strPartTag, strTag);
+	Out_Json["strPartTag"] = strTag;
+
+
+	//Out_Json["strProtoTag"] = m_pGameInstance->Convert_WString_To_String(tVoidDesc.strProtoTag);
+	//Out_Json["strPartTag"] = m_pGameInstance->Convert_WString_To_String(tVoidDesc.strPartTag);
 
 
 	Out_Json["m_fWaitingTime"] = m_fWaitingTime;
@@ -213,15 +221,23 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json, void* pArg)
 
 }
 
-void* CEffect_Void::Load_VoidDesc(const json& In_Json)
+CEffect_Void::EFFECTVOID_DESC CEffect_Void::Load_VoidDesc(const json& In_Json)
 {
 	EFFECTVOID_DESC tVoidDesc = {};
 
 	/* Effect_Void */
 	m_eType_Effect = In_Json["eType_Effect"];
 
-	m_pGameInstance->Convert_WString_To_String(tVoidDesc.strProtoTag)	= In_Json["strProtoTag"];
-	m_pGameInstance->Convert_WString_To_String(tVoidDesc.strPartTag)	= In_Json["strPartTag"];
+	string strTag = "";
+	strTag = static_cast<string>(In_Json["strProtoTag"]);
+	m_pGameInstance->String_To_WString(strTag, tVoidDesc.strProtoTag);
+
+	strTag = static_cast<string>(In_Json["strPartTag"]);
+	m_pGameInstance->String_To_WString(strTag, tVoidDesc.strPartTag);
+
+	
+	//m_pGameInstance->Convert_WString_To_String(tVoidDesc.strProtoTag)	= In_Json["strProtoTag"];
+	//m_pGameInstance->Convert_WString_To_String(tVoidDesc.strPartTag)	= In_Json["strPartTag"];
 
 
 	m_fWaitingTime	= In_Json["m_fWaitingTime"];
@@ -317,7 +333,7 @@ void* CEffect_Void::Load_VoidDesc(const json& In_Json)
 	tVoidDesc.bColor_Lerp = In_Json["bColor_Lerp"];
 
 
-	return &tVoidDesc;
+	return tVoidDesc;
 }
 
 void CEffect_Void::ReSet_Effect()
