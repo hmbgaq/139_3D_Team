@@ -237,13 +237,12 @@ void CWindow_EffectTool::Update_PlayBarArea()
 		if (nullptr != m_pCurPartEffect)
 		{
 			if (ImGui::CollapsingHeader("TimeAccs_Part"))
-			{
-				_float fSequenceTimePos = m_pCurPartEffect->Get_SequenceAcc();
-				ImGui::SliderFloat("SequenceTimeAcc_Part", &fSequenceTimePos, 0.f, m_pCurEffectDesc->fSequenceTime);
+			{			
+				ImGui::SliderFloat("SequenceTimeAcc_Part", &m_pCurVoidDesc->fSequenceAcc, 0.f, m_pCurEffectDesc->fSequenceTime);
 
-				m_vTimeAccs_Part[0] = (m_pCurPartEffect->Get_WaitingTime() != 0.0f) ? min(1.0f, m_pCurPartEffect->Get_WaitingAcc() / m_pCurPartEffect->Get_WaitingTime()) : 1.0f;
-				m_vTimeAccs_Part[1] = m_pCurPartEffect->Get_LifeTimeRatio();
-				m_vTimeAccs_Part[2] = (m_pCurPartEffect->Get_RemainTime() != 0.0f) ? min(1.0f, m_pCurPartEffect->Get_RemainAcc() / m_pCurPartEffect->Get_RemainTime()) : 1.0f;
+				m_vTimeAccs_Part[0] = (m_pCurVoidDesc->fWaitingTime != 0.0f) ? min(1.0f, m_pCurVoidDesc->fWaitingAcc / m_pCurVoidDesc->fWaitingTime) : 1.0f;
+				m_vTimeAccs_Part[1] = m_pCurVoidDesc->fLifeTimeRatio;
+				m_vTimeAccs_Part[2] = (m_pCurVoidDesc->fRemainTime != 0.0f) ? min(1.0f, m_pCurVoidDesc->fRemainAcc / m_pCurVoidDesc->fRemainTime) : 1.0f;
 				ImGui::SliderFloat3("TimeAccs_Part", m_vTimeAccs_Part, 0.f, 1.f);
 			}
 		}
@@ -274,23 +273,23 @@ void CWindow_EffectTool::Update_ParticleTab()
 	{
 		if (nullptr != m_pCurPartEffect)
 		{
-			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
+			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
 
 			if (CEffect_Void::PARTICLE == eType_Effect)
 			{
 #pragma region Desc 얻어오기 업데이트_파티클
-				m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
+				m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
 				CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 				m_pParticleBufferDesc = pVIBuffer->Get_Desc();
 #pragma endregion 
 
 				/* 이름_파티클 */
-				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pParticleDesc->strPartTag));
+				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
 
 #pragma region 텍스처 설정_파티클
 				/* 텍스처 변경_파티클 */
 				ImGui::CollapsingHeader(" Texture_Particle ");
-				if (m_pParticleDesc->bUseSpriteAnim)
+				if (m_pCurVoidDesc->bUseSpriteAnim)
 				{
 					if (ImGui::InputInt("Diffuse_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE], 1))
 					{
@@ -300,7 +299,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (0 > m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE])
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
 
-						m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE];
+						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE];
 					}
 				}
 				else
@@ -313,7 +312,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (0 > m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE])
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 
-						m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE];
+						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE];
 					}
 				}
 
@@ -325,7 +324,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (0 > m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK])
 						m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 
-					m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK];
+					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK];
 				}
 
 				if (ImGui::InputInt("Noise_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE], 1))
@@ -336,7 +335,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (0 > m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE])
 						m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = 0;
 
-					m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE];
+					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE];
 				}
 #pragma endregion
 
@@ -345,9 +344,9 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::RadioButton("BillBoard", &m_iBillBoard, 0);  ImGui::SameLine();
 				ImGui::RadioButton("Off BillBoard", &m_iBillBoard, 1);
 				if (0 == m_iBillBoard)
-					m_pParticleDesc->bBillBoard = TRUE;
+					m_pCurVoidDesc->bBillBoard = TRUE;
 				else if (1 == m_iBillBoard)
-					m_pParticleDesc->bBillBoard = FALSE;
+					m_pCurVoidDesc->bBillBoard = FALSE;
 
 
 #pragma region 스프라이트 설정_파티클
@@ -356,13 +355,13 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::RadioButton("Off Sprite_Particle", &m_iSprite_Particle, 0); ImGui::SameLine();
 				ImGui::RadioButton("Sprite_Particle", &m_iSprite_Particle, 1);
 				if (0 == m_iSprite_Particle)
-					m_pParticleDesc->bUseSpriteAnim = FALSE;
+					m_pCurVoidDesc->bUseSpriteAnim = FALSE;
 				else if (1 == m_iSprite_Particle)
-					m_pParticleDesc->bUseSpriteAnim = TRUE;
+					m_pCurVoidDesc->bUseSpriteAnim = TRUE;
 
 
 				ImGui::SeparatorText(" Sprite Setting_Particle ");
-				if (m_pParticleDesc->bUseSpriteAnim)
+				if (m_pCurVoidDesc->bUseSpriteAnim)
 				{
 					m_pSpriteDesc_Particle = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Sprite_Desc();
 
@@ -409,7 +408,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					{
 						m_iRenderGroup_Particle = (_int)CRenderer::RENDER_END - 1;
 					}
-					m_pParticleDesc->iRenderGroup = m_iRenderGroup_Particle;
+					m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Particle;
 				}
 
 
@@ -423,17 +422,17 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (0 > m_iShaderPassIndex_Particle)
 						m_iShaderPassIndex_Particle = 0;
 
-					m_pParticleDesc->iShaderPassIndex = m_iShaderPassIndex_Particle;
+					m_pCurVoidDesc->iShaderPassIndex = m_iShaderPassIndex_Particle;
 				}
 
 				/* 쉐이더에 던질 디스카드 값 변경_파티클 */
 				ImGui::SeparatorText("Discard_Value");
 				if (ImGui::DragFloat4("Discard_Particle", m_vColor_Clip_Part, 0.1f, 0.f, 1.f))
 				{
-					m_pParticleDesc->vColor_Clip.x = m_vColor_Clip_Part[0];
-					m_pParticleDesc->vColor_Clip.y = m_vColor_Clip_Part[1];
-					m_pParticleDesc->vColor_Clip.z = m_vColor_Clip_Part[2];
-					m_pParticleDesc->vColor_Clip.w = m_vColor_Clip_Part[3];
+					m_pCurVoidDesc->vColor_Clip.x = m_vColor_Clip_Part[0];
+					m_pCurVoidDesc->vColor_Clip.y = m_vColor_Clip_Part[1];
+					m_pCurVoidDesc->vColor_Clip.z = m_vColor_Clip_Part[2];
+					m_pCurVoidDesc->vColor_Clip.w = m_vColor_Clip_Part[3];
 				}
 
 
@@ -455,7 +454,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (1 > m_iNumInstance_Particle)
 						m_iNumInstance_Particle = 1;
 
-					m_pParticleDesc->iCurNumInstance = m_iNumInstance_Particle;
+					m_pCurVoidDesc->iCurNumInstance = m_iNumInstance_Particle;
 					m_pParticleBufferDesc->iCurNumInstance = m_iNumInstance_Particle;
 				}
 
@@ -465,12 +464,12 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::RadioButton(" OFF RigidBody_Particle ", &m_iUseRigidBody_Particle, 1);
 				if (0 == m_iUseRigidBody_Particle)
 				{
-					m_pParticleDesc->bUseRigidBody = TRUE;
+					m_pCurVoidDesc->bUseRigidBody = TRUE;
 					m_pParticleBufferDesc->bUseRigidBody = TRUE;
 				}				
 				else if (1 == m_iUseRigidBody_Particle)
 				{
-					m_pParticleDesc->bUseRigidBody = FALSE;
+					m_pCurVoidDesc->bUseRigidBody = FALSE;
 					m_pParticleBufferDesc->bUseRigidBody = FALSE;
 				}
 
@@ -843,7 +842,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 				/* 텍스처 UV회전 */
 				ImGui::SeparatorText("");
 				if (ImGui::DragFloat(" Uv Degree ", &m_fUV_RotDegree, 1.f, 0.f, 360.f))
-					m_pParticleDesc->fUV_RotDegree = m_fUV_RotDegree;
+					m_pCurVoidDesc->fUV_RotDegree = m_fUV_RotDegree;
 
 
 				///* 추가 크기 조절 */
@@ -882,7 +881,7 @@ void CWindow_EffectTool::Update_RectTab()
 	{
 		if (nullptr != m_pCurPartEffect)
 		{
-			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
+			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
 
 			if (CEffect_Void::RECT == eType_Effect)
 			{
@@ -890,7 +889,7 @@ void CWindow_EffectTool::Update_RectTab()
 				CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Distortion_Desc();
 
 				/* 이름 */
-				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pRectDesc->strPartTag));
+				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
 
 				/* 텍스처 변경 */
 				if (CEffect_Rect::SINGLE == m_pRectDesc->eType)
@@ -903,7 +902,7 @@ void CWindow_EffectTool::Update_RectTab()
 						if (0 > m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE])
 							m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 
-						m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE];
+						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE];
 					}
 				}
 				else
@@ -916,7 +915,7 @@ void CWindow_EffectTool::Update_RectTab()
 						if (0 > m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE])
 							m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 0;
 
-						m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE];
+						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE];
 					}
 				}
 
@@ -929,7 +928,7 @@ void CWindow_EffectTool::Update_RectTab()
 					if (0 > m_iTexIndex_Rect[CEffect_Void::TEXTURE_MASK])
 						m_iTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 0;
 
-					m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Rect[CEffect_Void::TEXTURE_MASK];
+					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Rect[CEffect_Void::TEXTURE_MASK];
 				}
 
 				if (ImGui::InputInt("Noise_Rect", &m_iTexIndex_Rect[CEffect_Void::TEXTURE_NOISE], 1))
@@ -940,7 +939,7 @@ void CWindow_EffectTool::Update_RectTab()
 					if (0 > m_iTexIndex_Rect[CEffect_Void::TEXTURE_NOISE])
 						m_iTexIndex_Rect[CEffect_Void::TEXTURE_NOISE] = 0;
 
-					m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Rect[CEffect_Void::TEXTURE_NOISE];
+					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Rect[CEffect_Void::TEXTURE_NOISE];
 				}
 
 				/* 쉐이더 패스 인덱스 변경 */
@@ -952,16 +951,16 @@ void CWindow_EffectTool::Update_RectTab()
 					if (0 > m_iShaderPassIndex_Rect)
 						m_iShaderPassIndex_Rect = 0;
 
-					m_pRectDesc->iShaderPassIndex = m_iShaderPassIndex_Rect;
+					m_pCurVoidDesc->iShaderPassIndex = m_iShaderPassIndex_Rect;
 				}
 				/* 쉐이더에 던질 디스카드 값 변경 */
 				//vColor_Clip
 				if (ImGui::DragFloat4("Discard_Rect", m_vColor_Clip_Rect, 0.1f, 0.f, 1.f))
 				{
-					m_pRectDesc->vColor_Clip.x = m_vColor_Clip_Rect[0];
-					m_pRectDesc->vColor_Clip.y = m_vColor_Clip_Rect[1];
-					m_pRectDesc->vColor_Clip.z = m_vColor_Clip_Rect[2];
-					m_pRectDesc->vColor_Clip.w = m_vColor_Clip_Rect[3];
+					m_pCurVoidDesc->vColor_Clip.x = m_vColor_Clip_Rect[0];
+					m_pCurVoidDesc->vColor_Clip.y = m_vColor_Clip_Rect[1];
+					m_pCurVoidDesc->vColor_Clip.z = m_vColor_Clip_Rect[2];
+					m_pCurVoidDesc->vColor_Clip.w = m_vColor_Clip_Rect[3];
 				}
 
 				/* 렌더그룹 변경 */
@@ -972,7 +971,7 @@ void CWindow_EffectTool::Update_RectTab()
 					{
 						m_iRenderGroup_Rect = (_int)CRenderer::RENDER_END - 1;
 					}
-					m_pRectDesc->iRenderGroup = m_iRenderGroup_Rect;
+					m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Rect;
 				}
 
 				ImGui::SeparatorText("RECT_TYPE");
@@ -995,10 +994,10 @@ void CWindow_EffectTool::Update_RectTab()
 					{
 						if (ImGui::Button("FIRE"))
 						{
-							m_pRectDesc->iShaderPassIndex = { 2 };
-							m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 1 };
-							m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 17 };
-							m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 1 };
+							m_pCurVoidDesc->iShaderPassIndex = { 2 };
+							m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 1 };
+							m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 17 };
+							m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 1 };
 
 							pDistortionDesc->fSequenceTerm = 1.f;
 							pDistortionDesc->vScrollSpeeds = { 1.f, 1.f, 1.f };
@@ -1090,12 +1089,12 @@ void CWindow_EffectTool::Update_RectTab()
 					ImGui::SeparatorText("");
 					if (ImGui::Button("Play_Sprite"))
 					{
-						m_pRectDesc->bPlay = TRUE;
+						m_pCurVoidDesc->bPlay = TRUE;
 					}
 					ImGui::SameLine();
 					if (ImGui::Button("Stop_Sprite"))
 					{
-						m_pRectDesc->bPlay = FALSE;
+						m_pCurVoidDesc->bPlay = FALSE;
 					}
 					ImGui::Text("Current Index : %d, %d", pSpriteDesc->vUV_CurTileIndex.x, pSpriteDesc->vUV_CurTileIndex.y);
 				}
@@ -1122,11 +1121,11 @@ void CWindow_EffectTool::Update_MeshTab()
 
 		if (nullptr != m_pCurPartEffect)
 		{
-			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
+			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
 
 			if (CEffect_Void::MESH == eType_Effect)
 			{
-				m_pInstanceDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_Desc();
+				m_pInstanceDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_InstanceDesc();
 				CVIBuffer_Effect_Model_Instance* pVIBuffer = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_VIBufferCom();
 				m_pMeshBufferDesc = pVIBuffer->Get_Desc();
 
@@ -1139,7 +1138,7 @@ void CWindow_EffectTool::Update_MeshTab()
 
 
 				/* 이름 */
-				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pInstanceDesc->strPartTag));
+				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
 
 				/* 텍스처 변경 */
 				if (ImGui::InputInt("Diffuse_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE], 1))
@@ -1150,7 +1149,7 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (0 > m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE])
 						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 
-					m_pInstanceDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE];
+					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE];
 				}
 
 				if (ImGui::InputInt("Mask_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK], 1))
@@ -1161,7 +1160,7 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (0 > m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK])
 						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
 
-					m_pInstanceDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK];
+					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK];
 				}
 
 				if (ImGui::InputInt("Noise_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE], 1))
@@ -1172,7 +1171,7 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (0 > m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE])
 						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = 0;
 
-					m_pInstanceDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE];
+					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE];
 				}
 
 				/* 쉐이더 패스 인덱스 변경 */
@@ -1184,16 +1183,16 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (0 > m_iShaderPassIndex_Mesh)
 						m_iShaderPassIndex_Mesh = 0;
 
-					m_pInstanceDesc->iShaderPassIndex = m_iShaderPassIndex_Mesh;
+					m_pCurVoidDesc->iShaderPassIndex = m_iShaderPassIndex_Mesh;
 				}
 				/* 쉐이더에 던질 디스카드 값 변경 */
 				//vColor_Clip
 				if (ImGui::DragFloat4("Discard_Mesh", m_vColor_Clip_Part, 0.1f, 0.f, 1.f))
 				{
-					m_pInstanceDesc->vColor_Clip.x = m_vColor_Clip_Part[0];
-					m_pInstanceDesc->vColor_Clip.y = m_vColor_Clip_Part[1];
-					m_pInstanceDesc->vColor_Clip.z = m_vColor_Clip_Part[2];
-					m_pInstanceDesc->vColor_Clip.w = m_vColor_Clip_Part[3];
+					m_pCurVoidDesc->vColor_Clip.x = m_vColor_Clip_Part[0];
+					m_pCurVoidDesc->vColor_Clip.y = m_vColor_Clip_Part[1];
+					m_pCurVoidDesc->vColor_Clip.z = m_vColor_Clip_Part[2];
+					m_pCurVoidDesc->vColor_Clip.w = m_vColor_Clip_Part[3];
 				}
 
 				/* 렌더그룹 변경 */
@@ -1204,38 +1203,38 @@ void CWindow_EffectTool::Update_MeshTab()
 					{
 						m_iRenderGroup_Mesh = (_int)CRenderer::RENDER_END - 1;
 					}
-					m_pInstanceDesc->iRenderGroup = m_iRenderGroup_Mesh;
+					m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Mesh;
 				}
 
 				/* UV 값 조절 */
 				ImGui::SeparatorText("");
 				if (ImGui::DragFloat2(" UV_Offset ", m_fUV_Offset, 1.f, 0.f, 100.f))
 				{
-					m_pInstanceDesc->vUV_Offset.x = m_fUV_Offset[0];
-					m_pInstanceDesc->vUV_Offset.y = m_fUV_Offset[1];
+					m_pCurVoidDesc->vUV_Offset.x = m_fUV_Offset[0];
+					m_pCurVoidDesc->vUV_Offset.y = m_fUV_Offset[1];
 				}
 
 				if (ImGui::DragFloat2(" UV_Scale ", m_vUV_Scale, 1.f, 0.f, 100.f))
 				{
-					m_pInstanceDesc->vUV_Scale.x = m_vUV_Scale[0];
-					m_pInstanceDesc->vUV_Scale.y = m_vUV_Scale[1];
+					m_pCurVoidDesc->vUV_Scale.x = m_vUV_Scale[0];
+					m_pCurVoidDesc->vUV_Scale.y = m_vUV_Scale[1];
 				}
 
 
 				if (ImGui::DragFloat(" RotDegree_Mesh ", &m_fUV_RotDegree_Mesh, 1.f, 0.f, 360.f))
 				{
-					m_pInstanceDesc->fUV_RotDegree = m_fUV_RotDegree_Mesh;
+					m_pCurVoidDesc->fUV_RotDegree = m_fUV_RotDegree_Mesh;
 				}
 
 
 				/* 디졸브 값 확인 */
 				ImGui::SeparatorText("");
-				ImGui::SliderFloat(" DissolveAmount ", &m_pInstanceDesc->fDissolveAmount, 0.f, 1.f);
+				ImGui::SliderFloat(" DissolveAmount ", &m_pCurVoidDesc->fDissolveAmount, 0.f, 1.f);
 				ImGui::SameLine();
 				HelpMarker(u8"마스크:1/노이즈:5/쉐이더패스:6/렌더그룹:7");
 
 
-				Select_EasingType(&m_pInstanceDesc->eType_Easing);
+				Select_EasingType(&m_pCurVoidDesc->eType_Easing);
 
 				/* RimRight */
 				/* 림라이트 색 변경 */
@@ -1308,7 +1307,7 @@ void CWindow_EffectTool::Update_MeshTab()
 				ImGui::Text("MaxInstance_Mesh : %d", m_iMaxNumInstance_Mesh);
 				if (ImGui::DragInt("Instance Count", &m_iNumInstance_Mesh, 1, 1, m_iMaxNumInstance_Mesh))
 				{
-					m_pInstanceDesc->iCurNumInstance = m_iNumInstance_Mesh;
+					m_pCurVoidDesc->iCurNumInstance = m_iNumInstance_Mesh;
 					m_pMeshBufferDesc->iCurNumInstance = m_iNumInstance_Mesh;
 				}
 
@@ -1377,12 +1376,14 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 {
 	if (nullptr != m_pCurPartEffect)
 	{
-		CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
+		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
+
+		CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
 		CTransform* pPartTransform = m_pCurPartEffect->Get_Transform();
 
-		m_vTimes_Part[0] = m_pCurPartEffect->Get_WaitingTime();
-		m_vTimes_Part[1] = m_pCurPartEffect->Get_LifeTime();
-		m_vTimes_Part[2] = m_pCurPartEffect->Get_RemainTime();
+		m_vTimes_Part[0] = m_pCurVoidDesc->fWaitingTime;
+		m_vTimes_Part[1] = m_pCurVoidDesc->fLifeTime;
+		m_vTimes_Part[2] = m_pCurVoidDesc->fRemainTime;
 
 		_float4 vPos = pPartTransform->Get_State(CTransform::STATE_POSITION);
 		m_vWorldPosition_Part[0] = vPos.x;
@@ -1401,32 +1402,32 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 		if (CEffect_Void::PARTICLE == eType_Effect)
 		{
-			m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
+			m_pCurVoidDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
 			CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 			m_pParticleBufferDesc = pVIBuffer->Get_Desc();
 
-			m_pCurPartEffect->Set_RemainTime(m_vTimes_Part[2]);
+			m_pCurVoidDesc->fRemainTime = m_vTimes_Part[2];
 
-			if (m_pParticleDesc->bUseSpriteAnim)
+			if (m_pCurVoidDesc->bUseSpriteAnim)
 			{
-				m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE];
+				m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE];
 			}
 			else
 			{
-				m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE];
+				m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE];
 			}
 
-			m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK];
-			m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = m_pParticleDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE];
-			m_iShaderPassIndex_Particle = m_pParticleDesc->iShaderPassIndex;
-			m_iRenderGroup_Particle = m_pParticleDesc->iRenderGroup;
+			m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK];
+			m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE];
+			m_iShaderPassIndex_Particle = m_pCurVoidDesc->iShaderPassIndex;
+			m_iRenderGroup_Particle = m_pCurVoidDesc->iRenderGroup;
 
 			//m_iNumInstance = pVIBuffer->Get_NumInstance();
 			m_iNumInstance_Particle = m_pParticleBufferDesc->iCurNumInstance; // 인스턴스 개수
 
 
 			/* 빌보드 여부 */
-			if (m_pParticleDesc->bBillBoard)
+			if (m_pCurVoidDesc->bBillBoard)
 				m_iBillBoard = 0;
 			else
 				m_iBillBoard = 1;
@@ -1438,7 +1439,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iSortZ = 1;
 
 			/* 스프라이트 애니메이션 사용여부 */
-			if (m_pParticleDesc->bUseSpriteAnim)
+			if (m_pCurVoidDesc->bUseSpriteAnim)
 				m_iSprite_Particle = 1;
 			else
 				m_iSprite_Particle = 0;
@@ -1454,11 +1455,11 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			}
 
 			/* UV회전 */
-			m_fUV_RotDegree = m_pParticleDesc->fUV_RotDegree;
+			m_fUV_RotDegree = m_pCurVoidDesc->fUV_RotDegree;
 
 			/* 리지드바디 */
 			/* 리지드바디 사용 여부 */
-			if (m_pParticleDesc->bUseRigidBody)
+			if (m_pCurVoidDesc->bUseRigidBody)
 				m_iUseRigidBody_Particle = 0;
 			else
 				m_iUseRigidBody_Particle = 1;
@@ -1567,10 +1568,10 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Distortion_Desc();
 			CEffect_Void::UVSPRITE_DESC* pSpriteDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Sprite_Desc();
 
-			m_pRectDesc->iShaderPassIndex = { 2 };
-			m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 1 };
-			m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 17 };
-			m_pRectDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 1 };
+			m_pCurVoidDesc->iShaderPassIndex = { 2 };
+			m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 1 };
+			m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 17 };
+			m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 1 };
 
 
 			m_fSequenceTerm_Distortion = pDistortionDesc->fSequenceTerm;
@@ -1602,21 +1603,21 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 		if (CEffect_Void::MESH == eType_Effect)
 		{
-			m_pInstanceDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_Desc();
+			m_pInstanceDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_InstanceDesc();
 			CVIBuffer_Effect_Model_Instance* pVIBuffer = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_VIBufferCom();
 			m_pMeshBufferDesc = pVIBuffer->Get_Desc();
 
-			m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = m_pInstanceDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE];
-			m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = m_pInstanceDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK];
-			m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = m_pInstanceDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE];
+			m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE];
+			m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK];
+			m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE];
 
-			m_iShaderPassIndex_Mesh = m_pInstanceDesc->iShaderPassIndex;
-			m_iRenderGroup_Mesh = m_pInstanceDesc->iRenderGroup;
+			m_iShaderPassIndex_Mesh = m_pCurVoidDesc->iShaderPassIndex;
+			m_iRenderGroup_Mesh = m_pCurVoidDesc->iRenderGroup;
 
-			m_vColor_Clip_Part[0] = m_pInstanceDesc->vColor_Clip.x;
-			m_vColor_Clip_Part[1] = m_pInstanceDesc->vColor_Clip.y;
-			m_vColor_Clip_Part[2] = m_pInstanceDesc->vColor_Clip.z;
-			m_vColor_Clip_Part[3] = m_pInstanceDesc->vColor_Clip.w;
+			m_vColor_Clip_Part[0] = m_pCurVoidDesc->vColor_Clip.x;
+			m_vColor_Clip_Part[1] = m_pCurVoidDesc->vColor_Clip.y;
+			m_vColor_Clip_Part[2] = m_pCurVoidDesc->vColor_Clip.z;
+			m_vColor_Clip_Part[3] = m_pCurVoidDesc->vColor_Clip.w;
 
 			m_vMinMaxPower_Mesh[0] = m_pMeshBufferDesc->vMinMaxPower.x;
 			m_vMinMaxPower_Mesh[1] = m_pMeshBufferDesc->vMinMaxPower.y;
@@ -1900,28 +1901,28 @@ void CWindow_EffectTool::Update_EffectList()
 
 		if (nullptr != m_pCurPartEffect)
 		{
-			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
+			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
 
 			/* 선택 파티클 활성화 */
 			if (ImGui::Button(" Active Part "))
 			{
 				if (CEffect_Void::PARTICLE == eType_Effect)
 				{
-					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
+					m_pCurVoidDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
 					CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 					m_pParticleBufferDesc = pVIBuffer->Get_Desc();
 
-					m_pParticleDesc->bActive_Tool = TRUE;
+					m_pCurVoidDesc->bActive_Tool = TRUE;
 				}
 
 				if (CEffect_Void::RECT == eType_Effect)
 				{
-					m_pRectDesc->bActive_Tool = TRUE;
+					m_pCurVoidDesc->bActive_Tool = TRUE;
 				}
 
 				if (CEffect_Void::MESH == eType_Effect)
 				{
-					m_pInstanceDesc->bActive_Tool = TRUE;
+					m_pCurVoidDesc->bActive_Tool = TRUE;
 				}
 			}
 			ImGui::SameLine();
@@ -1930,20 +1931,20 @@ void CWindow_EffectTool::Update_EffectList()
 			{
 				if (CEffect_Void::PARTICLE == eType_Effect)
 				{
-					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
+					m_pCurVoidDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
 					CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 					m_pParticleBufferDesc = pVIBuffer->Get_Desc();
 
-					m_pParticleDesc->bActive_Tool = FALSE;
+					m_pCurVoidDesc->bActive_Tool = FALSE;
 				}
 				if (CEffect_Void::RECT == eType_Effect)
 				{
-					m_pRectDesc->bActive_Tool = FALSE;
+					m_pCurVoidDesc->bActive_Tool = FALSE;
 				}
 
 				if (CEffect_Void::MESH == eType_Effect)
 				{
-					m_pInstanceDesc->bActive_Tool = FALSE;
+					m_pCurVoidDesc->bActive_Tool = FALSE;
 				}
 			}
 			ImGui::SameLine();
@@ -1951,7 +1952,7 @@ void CWindow_EffectTool::Update_EffectList()
 			{
 				if (CEffect_Void::PARTICLE == eType_Effect)
 				{
-					m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
+					m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
 					CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 					m_pParticleBufferDesc = pVIBuffer->Get_Desc();
 
@@ -2007,18 +2008,19 @@ void CWindow_EffectTool::Update_EffectList()
 			ImGui::CollapsingHeader("Part_Times");
 			//if (ImGui::CollapsingHeader("Part_Times"))
 			{
-				CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_EffectType();
+				CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_Desc()->eType_Effect;
 
 				ImGui::Text("    Waiting   |   LifeTime   |   SequenceTime ");
 				if (ImGui::DragFloat3("Times_Part", m_vTimes_Part, 0.2f, 0.f))
 				{
-					m_pCurPartEffect->Set_WaitingTime(m_vTimes_Part[0]);
-					m_pCurPartEffect->Set_LifeTime(m_vTimes_Part[1]);
-					m_pCurPartEffect->Set_RemainTime(m_vTimes_Part[2]);
+					m_pCurVoidDesc->fWaitingTime		= m_vTimes_Part[0];
+					m_pCurVoidDesc->fLifeTime			= m_vTimes_Part[1];
+					m_pCurVoidDesc->fRemainTime		= m_vTimes_Part[2];
+
 
 					if (CEffect_Void::PARTICLE == eType_Effect)
 					{
-						m_pParticleDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
+						m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
 						CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 						m_pParticleBufferDesc = pVIBuffer->Get_Desc();
 
@@ -2225,34 +2227,34 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 {
 	if (nullptr != m_pCurEffect)
 	{
-		CEffect_Particle::PARTICLE_DESC	tParticleDesc = {};
-		tParticleDesc.fSpeedPerSec = { 5.f };
-		tParticleDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
+		CEffect_Void::EFFECTVOID_DESC	tVoidDesc = {};
+		tVoidDesc.fSpeedPerSec = { 5.f };
+		tVoidDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
 		//tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
-		tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
-		tParticleDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
+		tVoidDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
+		tVoidDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
 
-		tParticleDesc.strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
-		tParticleDesc.iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = { 0 };
+		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
+		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = { 0 };
 
-		tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
-		tParticleDesc.iTextureIndex[CEffect_Particle::TEXTURE_MASK] = { 0 /*1*/ };
+		tVoidDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
+		tVoidDesc.iTextureIndex[CEffect_Particle::TEXTURE_MASK] = { 0 /*1*/ };
 
-		tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
-		tParticleDesc.iTextureIndex[CEffect_Particle::TEXTURE_NOISE] = { 0 };
+		tVoidDesc.strTextureTag[CEffect_Particle::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
+		tVoidDesc.iTextureIndex[CEffect_Particle::TEXTURE_NOISE] = { 0 };
 
-		tParticleDesc.iRenderGroup = { 9 };
+		tVoidDesc.iRenderGroup = { CRenderer::RENDER_EFFECT };
 
-		tParticleDesc.iShaderPassIndex = { 0 };
+		tVoidDesc.iShaderPassIndex = { 0 };
 
-		tParticleDesc.bBillBoard = { TRUE };
+		tVoidDesc.bBillBoard = { TRUE };
 
-		tParticleDesc.fUV_RotDegree = { 0.f };
+		tVoidDesc.fUV_RotDegree = { 0.f };
 
-		tParticleDesc.bPlay				= { TRUE };
-		tParticleDesc.bUseSpriteAnim	= { FALSE };
-		tParticleDesc.bUseRigidBody		= { TRUE };
+		tVoidDesc.bPlay				= { TRUE };
+		tVoidDesc.bUseSpriteAnim	= { FALSE };
+		tVoidDesc.bUseRigidBody		= { TRUE };
 
 
 #pragma region 리스트 문자열 관련 시작
@@ -2292,14 +2294,16 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 			strName = strFrontName + strPin;
 		}
 
-		tParticleDesc.strPartTag = strName;
-		tParticleDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Particle");
-		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Particle"), strName, &tParticleDesc));
+		tVoidDesc.strPartTag = strName;
+		tVoidDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Particle");
+		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Particle"), strName, &tVoidDesc));
 
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
-		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
-		m_pCurPartEffect->Set_EffectType(CEffect_Void::PARTICLE);
-		dynamic_cast<CEffect_Void*>(m_pCurPartEffect)->Set_Owner(m_pCurEffect);
+		m_pCurPartEffect = dynamic_cast<CEffect_Particle*>(m_pCurEffect->Find_PartObject(strName));
+
+		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
+		m_pCurVoidDesc->eType_Effect = CEffect_Void::PARTICLE;
+		m_pCurPartEffect->Set_Parent(m_pCurEffect);
 
 		m_iCurPartIndex = (_int)m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -2337,37 +2341,27 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 {
 	if (nullptr != m_pCurEffect)
 	{
-		CEffect_Rect::EFFECT_RECT_DESC tRectDesc = {};
-		tRectDesc.fSpeedPerSec = { 5.f };
-		tRectDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
+		CEffect_Void::EFFECTVOID_DESC tVoidDesc = {};
+		tVoidDesc.fSpeedPerSec = { 5.f };
+		tVoidDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
-		tRectDesc.eType = CEffect_Rect::SINGLE;
-		tRectDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
-		tRectDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
+		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
+		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
 
-		tRectDesc.strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
-		tRectDesc.iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = { 0 };
+		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
+		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = { 0 };
 
-		tRectDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
-		tRectDesc.iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 0 };
+		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
+		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 0 };
 
-		tRectDesc.strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
-		tRectDesc.iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 0 };
-
-
-		if (CEffect_Rect::TYPE::SINGLE == tRectDesc.eType)
-		{
-			tRectDesc.iShaderPassIndex = { 2 };
-		}
-		else
-		{
-			tRectDesc.iShaderPassIndex = { 1 };
-		}
-
-		tRectDesc.iRenderGroup = { 9 };
+		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
+		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 0 };
 
 
-		tRectDesc.bPlay = { TRUE };
+		tVoidDesc.iRenderGroup = { CRenderer::RENDER_EFFECT };
+
+
+		tVoidDesc.bPlay = { TRUE };
 
 
 #pragma region 리스트 문자열 관련
@@ -2407,14 +2401,16 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 			strName = strFrontName + strPin;
 		}
 
-		tRectDesc.strPartTag = strName;
-		tRectDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Rect");
-		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Rect"), strName, &tRectDesc));
+		tVoidDesc.strPartTag = strName;
+		tVoidDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Rect");
+		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Rect"), strName, &tVoidDesc));
 
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
-		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
-		m_pCurPartEffect->Set_EffectType(CEffect_Void::RECT);
-		m_pCurPartEffect->Set_Owner(m_pCurEffect);
+		m_pCurPartEffect = dynamic_cast<CEffect_Rect*>(m_pCurEffect->Find_PartObject(strName));
+
+		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
+		m_pCurVoidDesc->eType_Effect = CEffect_Void::RECT;
+		m_pCurPartEffect->Set_Parent(m_pCurEffect);
 
 		m_iCurPartIndex = (_int)m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -2452,33 +2448,34 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 {
 	if (nullptr != m_pCurEffect)
 	{
-		CEffect_Instance::EFFECT_INSTANCE_DESC tMeshDesc = {};
-		tMeshDesc.fSpeedPerSec = { 5.f };
-		tMeshDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
+		CEffect_Void::EFFECTVOID_DESC tVoidDesc = {};
+		tVoidDesc.fSpeedPerSec = { 5.f };
+		tVoidDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
-		tMeshDesc.eType_Mesh = CEffect_Instance::MESH_PARTICLE;
-		tMeshDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
-		tMeshDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 11 };
+		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
+		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 11 };
 
-		tMeshDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
-		tMeshDesc.iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 0 };
+		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
+		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 0 };
 
-		tMeshDesc.strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
-		tMeshDesc.iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 0 };
+		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
+		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 0 };
 
-		tMeshDesc.iShaderPassIndex = { 0 };
+		tVoidDesc.iShaderPassIndex = { 0 };
 
-		tMeshDesc.iRenderGroup = { 9 };
+		tVoidDesc.iRenderGroup = { CRenderer::RENDER_EFFECT };
 
-		tMeshDesc.bBillBoard = { FALSE };
+		tVoidDesc.bBillBoard = { FALSE };
 
-		tMeshDesc.strModelTag = strModelTag;
+		tVoidDesc.strModelTag = strModelTag;
 
-		tMeshDesc.bPlay = { TRUE };
-		tMeshDesc.bUseRigidBody = { TRUE };
+		tVoidDesc.bPlay = { TRUE };
+		tVoidDesc.bUseRigidBody = { TRUE };
 
-		tMeshDesc.vRimColor = { 2.f, 10.f, 255.f, 255.f };
-		tMeshDesc.fRimPower = { 950.f };
+		CEffect_Instance::EFFECT_INSTANCE_DESC tInstanceDesc = {};
+		tInstanceDesc.eType_Mesh = CEffect_Instance::MESH_PARTICLE;
+		tInstanceDesc.vRimColor = { 2.f, 10.f, 255.f, 255.f };
+		tInstanceDesc.fRimPower = { 950.f };
 
 #pragma region 리스트 문자열 관련
 		wstring strName = TEXT("");
@@ -2517,14 +2514,16 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 			strName = strFrontName + strPin;
 		}
 
-		tMeshDesc.strPartTag = strName;
-		tMeshDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Instance");
-		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Instance"), strName, &tMeshDesc));
+		tVoidDesc.strPartTag = strName;
+		tVoidDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Instance");
+		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Instance"), strName, &tVoidDesc));
 
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
-		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
-		m_pCurPartEffect->Set_EffectType(CEffect_Void::MESH);
-		dynamic_cast<CEffect_Void*>(m_pCurPartEffect)->Set_Owner(m_pCurEffect);
+		m_pCurPartEffect = dynamic_cast<CEffect_Instance*>(m_pCurEffect->Find_PartObject(strName));
+
+		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
+		m_pCurVoidDesc->eType_Effect = CEffect_Void::MESH;
+		m_pCurPartEffect->Set_Parent(m_pCurEffect);
 
 
 		m_iCurPartIndex = (_int)m_CurPartObjects.size();
@@ -2641,8 +2640,10 @@ HRESULT CWindow_EffectTool::Add_Part_Trail()
 
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
-		m_pCurPartEffect->Set_EffectType(CEffect_Void::TRAIL);
-		dynamic_cast<CEffect_Void*>(m_pCurPartEffect)->Set_Owner(m_pCurEffect);
+
+		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
+		m_pCurVoidDesc->eType_Effect = CEffect_Void::TRAIL;
+		m_pCurPartEffect->Set_Parent(m_pCurEffect);
 
 		m_iCurPartIndex = m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -2756,9 +2757,9 @@ void CWindow_EffectTool::Update_Demo_Sequencer()
 							keys.clear();
 
 						CEffect_Void* pPartObj = dynamic_cast<CEffect_Void*>(iter.second);
-						_float fWaitingTime = pPartObj->Get_WaitingTime();
-						_float fPartLifeTime = pPartObj->Get_LifeTime();
-						_float fSequenceTime = pPartObj->Get_SequenceTime();
+						_float fWaitingTime = pPartObj->Get_Desc()->fWaitingTime;
+						_float fPartLifeTime = pPartObj->Get_Desc()->fLifeTime;
+						_float fSequenceTime = pPartObj->Get_Desc()->fSequenceTime;
 
 						keys.push_back((_int)fWaitingTime);
 						keys.push_back((_int)fPartLifeTime);

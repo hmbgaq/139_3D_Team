@@ -57,20 +57,23 @@ void CEffect_Trail::Tick(_float fTimeDelta)
 
 void CEffect_Trail::Late_Tick(_float fTimeDelta)
 {
-
-	if (nullptr != m_pOwner)
+	if (m_tVoidDesc.bActive_Tool)
 	{
-		if (m_tTrailDesc.bParentPivot)
+		if (m_tVoidDesc.bRender)
 		{
-			m_tTrailDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
-			XMStoreFloat4x4(&m_tTrailDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tTrailDesc.matPivot);
+			if (nullptr != m_tVoidDesc.pParentObj)
+			{
+				if (m_tVoidDesc.bParentPivot)
+				{
+					m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
+					XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+				}
+			}
+
+			if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this)))
+				return;
 		}
 	}
-
-	Compute_CamDistance();
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_EFFECT, this)))
-		return;
 }
 
 HRESULT CEffect_Trail::Render()

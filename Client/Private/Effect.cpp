@@ -261,7 +261,7 @@ void CEffect::Load_FromJson(const json& In_Json)
 		if (nullptr != Pair.second)
 		{
 			Pair.second->Load_FromJson(In_Json["Part"][iCount]);
-			dynamic_cast<CEffect_Void*>(Pair.second)->Set_Owner(this);
+			dynamic_cast<CEffect_Void*>(Pair.second)->Set_Parent(this);
 			iCount += 1;
 		}
 	}

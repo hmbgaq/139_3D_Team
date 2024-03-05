@@ -73,10 +73,11 @@ private:
 	class CEffect*	m_pCurEffect = { nullptr };
 
 
-	char**	m_szPartNames		= { nullptr };
-	char*	m_cCurPartName		= { nullptr };
-	_int	m_iCurPartIndex		= { 0 };
-	CEffect_Void* m_pCurPartEffect = { nullptr };
+	char**		  m_szPartNames			= { nullptr };
+	char*		  m_cCurPartName		= { nullptr };
+	_int		  m_iCurPartIndex		= { 0 };
+	CEffect_Void* m_pCurPartEffect	    = { nullptr };
+	CEffect_Void::EFFECTVOID_DESC*	m_pCurVoidDesc = {};
 
 	/* Sky */
 private:
@@ -86,7 +87,8 @@ private:
 private:
 	CEffect::EFFECT_DESC* m_pCurEffectDesc = { nullptr };
 
-	CEffect_Particle::PARTICLE_DESC*				m_pParticleDesc = {};
+	//CEffect_Particle::PARTICLE_DESC*				m_pParticleDesc = {};
+	//CEffect_Void::EFFECTVOID_DESC*					m_pVoidDesc_Particle = {};
 	CVIBuffer_Particle::PARTICLE_BUFFER_DESC*		m_pParticleBufferDesc = {};
 	CEffect_Void::UVSPRITE_DESC*					m_pSpriteDesc_Particle = {};
 

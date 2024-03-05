@@ -14,12 +14,12 @@ BEGIN(Client)
 class CEffect_Particle final : public CEffect_Void
 {
 public:
-	typedef struct tagParticleDesc : public CEffect_Void::EFFECTVOID_DESC
-	{
+	//typedef struct tagParticleDesc
+	//{
 
 
 
-	}PARTICLE_DESC;
+	//}PARTICLE_DESC;
 
 
 private:
@@ -48,7 +48,7 @@ public:
 
 	/* For.Desc */
 public:
-	PARTICLE_DESC* Get_Desc() { return &m_tParticleDesc; }
+	//PARTICLE_DESC* Get_Desc() { return &m_tParticleDesc; }
 	UVSPRITE_DESC* Get_Sprite_Desc() { return &m_tSpriteDesc; }
 
 public:
@@ -60,7 +60,7 @@ private:
 	HRESULT Bind_ShaderResources();
 
 private:
-	PARTICLE_DESC				m_tParticleDesc = {};
+	//PARTICLE_DESC				m_tParticleDesc = {};
 	UVSPRITE_DESC				m_tSpriteDesc = {};
 
 

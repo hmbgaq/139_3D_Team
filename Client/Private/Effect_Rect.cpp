@@ -30,8 +30,7 @@ HRESULT CEffect_Rect::Initialize_Prototype()
 HRESULT CEffect_Rect::Initialize(void* pArg)
 {	
 	//m_tRectDesc = *(EFFECT_RECT_DESC*)pArg;
-
-	*static_cast<EFFECTVOID_DESC*>(&m_tRectDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
+	//*static_cast<EFFECTVOID_DESC*>(&m_tRectDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -54,36 +53,36 @@ void CEffect_Rect::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Rect::Tick(_float fTimeDelta)
 {
-	if (m_tRectDesc.bActive_Tool)
-	{
-		m_fSequenceTime = m_fLifeTime + m_fRemainTime;
+	if (m_tVoidDesc.bActive_Tool)
+	{	
+		m_tVoidDesc.fSequenceTime = m_tVoidDesc.fLifeTime + m_tVoidDesc.fRemainTime;
 
-		if (m_tRectDesc.bPlay)
+		if (m_tVoidDesc.bPlay)
 		{
-			m_fSequenceAcc += fTimeDelta;
+			m_tVoidDesc.fSequenceAcc += fTimeDelta;
 
 			// 시작지연 누적시간이 지나면 렌더 시작(이 이펙트 시작)
-			if (m_fWaitingAcc <= m_fWaitingTime)
+			if (m_tVoidDesc.fWaitingAcc <= m_tVoidDesc.fWaitingTime)
 			{
-				m_fWaitingAcc += fTimeDelta;
+				m_tVoidDesc.fWaitingAcc += fTimeDelta;
 
-				if (m_fWaitingAcc >= m_fWaitingTime)
+				if (m_tVoidDesc.fWaitingAcc >= m_tVoidDesc.fWaitingTime)
 				{
-					m_tRectDesc.bRender = TRUE;
+					m_tVoidDesc.bRender = TRUE;
 				}
 				else
 					return;
 			}
 
 			// 라이프타임 누적 시작
-			m_fTimeAcc += fTimeDelta;
-			m_fLifeTimeRatio = min(1.0f, m_fTimeAcc / m_fLifeTime);
+			m_tVoidDesc.fTimeAcc += fTimeDelta;
+			m_tVoidDesc.fLifeTimeRatio = min(1.0f, m_tVoidDesc.fTimeAcc / m_tVoidDesc.fLifeTime);
 
 			/* ======================= 라이프 타임 동작 시작 ======================= */
 
 			if (SPRITE == m_tRectDesc.eType)
 			{
-				if (m_fTimeAcc > m_tSpriteDesc.fSequenceTerm)
+				if (m_tVoidDesc.fTimeAcc > m_tSpriteDesc.fSequenceTerm)
 				{
 					(m_tSpriteDesc.vUV_CurTileIndex.x)++;
 
@@ -97,7 +96,7 @@ void CEffect_Rect::Tick(_float fTimeDelta)
 							m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
 						}
 					}
-					m_fTimeAcc = 0.f;
+					m_tVoidDesc.fTimeAcc = 0.f;
 					
 				}
 				return;
@@ -105,25 +104,25 @@ void CEffect_Rect::Tick(_float fTimeDelta)
 
 			/* ======================= 라이프 타임 동작 끝  ======================= */
 
-			if (m_fTimeAcc >= m_fLifeTime)
+			if (m_tVoidDesc.fTimeAcc >= m_tVoidDesc.fLifeTime)
 			{
 				// 삭제 대기시간 누적 시작
-				m_fRemainAcc += fTimeDelta;
+				m_tVoidDesc.fRemainAcc += fTimeDelta;
 
 				// 디졸브 시작
-				m_tRectDesc.bDissolve = TRUE;
-				if (m_tRectDesc.bDissolve)
+				m_tVoidDesc.bDissolve = TRUE;
+				if (m_tVoidDesc.bDissolve)
 				{
-					m_tRectDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_fRemainAcc, m_fRemainTime, m_tRectDesc.eType_Easing);
+					m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
 				}
 				// 디졸브 끝
 
 
 				// 이 이펙트의 타임라인 종료
-				if (m_fRemainAcc >= m_fRemainTime)
+				if (m_tVoidDesc.fRemainAcc >= m_tVoidDesc.fRemainTime)
 				{
-					m_tRectDesc.fDissolveAmount = 1.f;
-					m_tRectDesc.bRender = TRUE;
+					m_tVoidDesc.fDissolveAmount = 1.f;
+					m_tVoidDesc.bRender = TRUE;
 					return;
 				}
 			}
@@ -136,11 +135,21 @@ void CEffect_Rect::Late_Tick(_float fTimeDelta)
 {
 	Compute_CamDistance();
 
-	if (m_tRectDesc.bActive_Tool)
+	if (m_tVoidDesc.bActive_Tool)
 	{
-		if (m_tRectDesc.bRender)
+		if (m_tVoidDesc.bRender)
 		{
-			if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_BLEND, this)))
+			if (nullptr != m_tVoidDesc.pParentObj)
+			{
+				if (m_tVoidDesc.bParentPivot)
+				{
+					m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
+					XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+				}
+			}
+
+
+			if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this)))
 				return;
 		}
 	}
@@ -153,7 +162,7 @@ HRESULT CEffect_Rect::Render()
 		return E_FAIL;
 
 	/* 이 쉐이더에 0번째 패스로 그릴거야. */
-	m_pShaderCom->Begin(m_tRectDesc.iShaderPassIndex);
+	m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
 
 	/* 내가 그릴려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
 	m_pVIBufferCom->Bind_VIBuffers();
@@ -175,8 +184,8 @@ void CEffect_Rect::ReSet_Effect()
 	{
 		__super::ReSet_Effect();
 
-		m_tRectDesc.fDissolveAmount = 0.f;
-		m_tRectDesc.bDissolve		= FALSE;
+		m_tVoidDesc.fDissolveAmount = 0.f;
+		m_tVoidDesc.bDissolve		= FALSE;
 		//m_tRectDesc.bRender			= FALSE;
 	}
 
@@ -186,7 +195,7 @@ void CEffect_Rect::End_Effect()
 {
 	__super::End_Effect();
 
-	if (m_tRectDesc.bLoop)
+	if (m_tVoidDesc.bLoop)
 	{
 		ReSet_Effect();
 	}
@@ -222,18 +231,18 @@ HRESULT CEffect_Rect::Ready_Components()
 				return E_FAIL;
 		}
 
-		if (TEXT("") != m_tRectDesc.strTextureTag[TEXTURE_MASK])
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
 		{
 			/* For.Com_Mask */
-			if (FAILED(__super::Add_Component(iNextLevel, m_tRectDesc.strTextureTag[TEXTURE_MASK],
+			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
 				TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
 				return E_FAIL;
 		}
 
-		if (TEXT("") != m_tRectDesc.strTextureTag[TEXTURE_NOISE])
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
 		{
 			/* For.Com_Noise */
-			if (FAILED(__super::Add_Component(iNextLevel, m_tRectDesc.strTextureTag[TEXTURE_NOISE],
+			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
 				TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
 				return E_FAIL;
 		}
@@ -247,8 +256,16 @@ HRESULT CEffect_Rect::Ready_Components()
 HRESULT CEffect_Rect::Bind_ShaderResources()
 {
 	
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
+	/* Matrix ============================================================================================ */
+	if (m_tVoidDesc.bParentPivot)
+	{
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matOffset));
+	}
+	else
+	{
+		FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	}
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
@@ -256,22 +273,22 @@ HRESULT CEffect_Rect::Bind_ShaderResources()
 
 	if (SINGLE == m_tRectDesc.eType)
 	{
-		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tRectDesc.iTextureIndex[TEXTURE_DIFFUSE]));
+		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_DIFFUSE]));
 	}
 	else
 	{
-		FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tRectDesc.iTextureIndex[TEXTURE_SPRITE]));
+		FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_SPRITE]));
 	}
 
 
 	if (nullptr != m_pTextureCom[TEXTURE_MASK])
 	{
-		if (FAILED(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tRectDesc.iTextureIndex[TEXTURE_MASK])))
+		if (FAILED(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tVoidDesc.iTextureIndex[TEXTURE_MASK])))
 			return E_FAIL;
 	}
 	if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 	{
-		if (FAILED(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tRectDesc.iTextureIndex[TEXTURE_NOISE])))
+		if (FAILED(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NOISE])))
 			return E_FAIL;
 	}
 
@@ -291,7 +308,7 @@ HRESULT CEffect_Rect::Bind_ShaderResources()
 
 	if (SINGLE == m_tRectDesc.eType)
 	{
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_fTimeAcc, sizeof(_float))))
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float))))
 			return E_FAIL;
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3))))
 			return E_FAIL;
@@ -310,22 +327,22 @@ HRESULT CEffect_Rect::Bind_ShaderResources()
 	}
 	else
 	{
-		m_tRectDesc.vUV_Offset = { (_float)(m_tSpriteDesc.vUV_CurTileIndex.x * m_tSpriteDesc.vTileSize.x) / m_tSpriteDesc.vTextureSize.x
+		m_tVoidDesc.vUV_Offset = { (_float)(m_tSpriteDesc.vUV_CurTileIndex.x * m_tSpriteDesc.vTileSize.x) / m_tSpriteDesc.vTextureSize.x
 								, (_float)(m_tSpriteDesc.vUV_CurTileIndex.y * m_tSpriteDesc.vTileSize.y) / m_tSpriteDesc.vTextureSize.y };
 
-		m_tRectDesc.vUV_Scale = { (_float)m_tSpriteDesc.vTileSize.x / m_tSpriteDesc.vTextureSize.x
+		m_tVoidDesc.vUV_Scale = { (_float)m_tSpriteDesc.vTileSize.x / m_tSpriteDesc.vTextureSize.x
 								, (_float)m_tSpriteDesc.vTileSize.y / m_tSpriteDesc.vTextureSize.y };
 
 
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tRectDesc.vUV_Offset, sizeof(_float2))))
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2))))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tRectDesc.vUV_Scale, sizeof(_float2))))
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2))))
 			return E_FAIL;
 	}
 
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tRectDesc.vColor_Clip.w, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tVoidDesc.vColor_Clip.w, sizeof(_float))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
