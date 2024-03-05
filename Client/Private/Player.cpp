@@ -53,7 +53,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
 
-
 	CData_Manager::GetInstance()->Set_Player(this);
 
 	return S_OK;

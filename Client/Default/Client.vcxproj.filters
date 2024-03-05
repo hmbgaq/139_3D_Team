@@ -124,12 +124,6 @@
     <Filter Include="02.GameObjects\UI\00. Player\01. Hp">
       <UniqueIdentifier>{fc5b542d-a7bf-4b5e-a9ee-85c458609df1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\02. Info">
-      <UniqueIdentifier>{d124210c-f729-4c2b-b76f-6cebbbb71024}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\03. Skill">
-      <UniqueIdentifier>{eed3b339-fea4-4170-a09e-fa3e4ce89df1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\01. Monster">
       <UniqueIdentifier>{4fbd45e8-23c6-4ff2-916d-b5b6ec906d8b}</UniqueIdentifier>
     </Filter>
@@ -225,15 +219,6 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster">
       <UniqueIdentifier>{9087e9de-c65a-4eb8-aff0-d8af60e30b78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\03. Skill\Skill_Icon">
-      <UniqueIdentifier>{37a9a55a-4bfb-4dec-bcab-509c3b5f20a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\03. Skill\Skill_Frame">
-      <UniqueIdentifier>{982c3195-ca22-43de-8427-e513b86cda70}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\03. Skill\Skill_Guige">
-      <UniqueIdentifier>{d54823ed-6d7e-4ef6-9922-4bbd0dec5ef2}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Lights">
       <UniqueIdentifier>{a475bd59-f8b2-4e6a-961b-31b5b1e0bdf8}</UniqueIdentifier>
@@ -1459,20 +1444,8 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\7. Aim\Rifle\3. Reload">
       <UniqueIdentifier>{0320d6e0-38b3-492a-bc7d-1fd3b10cd4b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\Left_Interface">
-      <UniqueIdentifier>{e214bb53-14ac-4db7-97f6-b3b24eb46415}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\Right_Interface">
-      <UniqueIdentifier>{52b0b806-bb9d-40cc-a902-d719e9dff60b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp">
       <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\HpFrame">
-      <UniqueIdentifier>{dd90327a-0190-4771-96f6-0f97d5f047fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\Left_Interface\ExpBar">
-      <UniqueIdentifier>{cbfa7ad7-0805-44a8-888b-5cca9c54bda7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpBar">
       <UniqueIdentifier>{009fd7cc-9024-4ccd-b651-e9b51bbb3038}</UniqueIdentifier>
@@ -1539,6 +1512,33 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\02. System\04. Cursor\00. AimCrosshair">
       <UniqueIdentifier>{ac7ceea2-842e-4d3b-a44c-3d48c4a52487}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\02. Skill">
+      <UniqueIdentifier>{eed3b339-fea4-4170-a09e-fa3e4ce89df1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\02. Skill\Skill_Icon">
+      <UniqueIdentifier>{37a9a55a-4bfb-4dec-bcab-509c3b5f20a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\02. Skill\Skill_Frame">
+      <UniqueIdentifier>{982c3195-ca22-43de-8427-e513b86cda70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\02. Skill\Skill_Guige">
+      <UniqueIdentifier>{d54823ed-6d7e-4ef6-9922-4bbd0dec5ef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\03. Exp">
+      <UniqueIdentifier>{dae31f87-7939-44fa-9f9c-803b3ba8a494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\03. Exp\ExpBar">
+      <UniqueIdentifier>{cbfa7ad7-0805-44a8-888b-5cca9c54bda7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpFrame">
+      <UniqueIdentifier>{dd90327a-0190-4771-96f6-0f97d5f047fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\99. Left_Interface">
+      <UniqueIdentifier>{e214bb53-14ac-4db7-97f6-b3b24eb46415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\98. Right_Interface">
+      <UniqueIdentifier>{52b0b806-bb9d-40cc-a902-d719e9dff60b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1678,7 +1678,7 @@
       <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_HPFrame.h">
-      <Filter>02.GameObjects\UI\00. Player\HpFrame</Filter>
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpFrame</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Field.h">
       <Filter>02.GameObjects\98. Terrain\Tool_Field</Filter>
@@ -1792,16 +1792,16 @@
       <Filter>02.GameObjects\00. Character\Monster\20. InstanceMonster</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_Skill.h">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_Skill_Frame.h">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Frame</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill\Skill_Frame</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_Skill_Guige.h">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Guige</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill\Skill_Guige</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_Skill_Icon.h">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Icon</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill\Skill_Icon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Blood_Lights.h">
       <Filter>02.GameObjects\UI\00. Player\00. Blood\Lights</Filter>
@@ -1816,16 +1816,16 @@
       <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_Left_Interface.h">
-      <Filter>02.GameObjects\UI\00. Player\Left_Interface</Filter>
+      <Filter>02.GameObjects\UI\00. Player\99. Left_Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_TutorialBox.h">
       <Filter>02.GameObjects\UI\02. System\00. Text\00. Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_ExpBar.h">
-      <Filter>02.GameObjects\UI\00. Player\Left_Interface\ExpBar</Filter>
+      <Filter>02.GameObjects\UI\00. Player\03. Exp\ExpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_Right_Interface.h">
-      <Filter>02.GameObjects\UI\00. Player\Right_Interface</Filter>
+      <Filter>02.GameObjects\UI\00. Player\98. Right_Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_QuestBox.h">
       <Filter>02.GameObjects\UI\02. System\00. Text\01. Quest</Filter>
@@ -1853,9 +1853,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_LevelUp_Shards.h">
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\02. Shards</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\UI_LevelUp_ShieldFrame.h">
-      <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_LevelUp_SunBeacon.h">
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\04. SunBeacon</Filter>
@@ -2877,6 +2874,9 @@
     <ClInclude Include="..\Public\UI_AimCrosshair.h">
       <Filter>02.GameObjects\UI\02. System\04. Cursor\00. AimCrosshair</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_LevelUp_ShieldFrame.h">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -3212,7 +3212,7 @@
       <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_HPFrame.cpp">
-      <Filter>02.GameObjects\UI\00. Player\HpFrame</Filter>
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpFrame</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Field.cpp">
       <Filter>02.GameObjects\98. Terrain\Tool_Field</Filter>
@@ -3305,16 +3305,16 @@
       <Filter>02.GameObjects\00. Character\Monster\20. InstanceMonster</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Skill.cpp">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Skill_Frame.cpp">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Frame</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill\Skill_Frame</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Skill_Guige.cpp">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Guige</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill\Skill_Guige</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Skill_Icon.cpp">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Icon</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill\Skill_Icon</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Blood_Lights.cpp">
       <Filter>02.GameObjects\UI\00. Player\00. Blood\Lights</Filter>
@@ -4244,16 +4244,16 @@
       <Filter>02.GameObjects\00. Character\Player\State\7. Aim\Rifle\3. Reload</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Left_Interface.cpp">
-      <Filter>02.GameObjects\UI\00. Player\Left_Interface</Filter>
+      <Filter>02.GameObjects\UI\00. Player\99. Left_Interface</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_TutorialBox.cpp">
       <Filter>02.GameObjects\UI\02. System\00. Text\00. Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_ExpBar.cpp">
-      <Filter>02.GameObjects\UI\00. Player\Left_Interface\ExpBar</Filter>
+      <Filter>02.GameObjects\UI\00. Player\03. Exp\ExpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Right_Interface.cpp">
-      <Filter>02.GameObjects\UI\00. Player\Right_Interface</Filter>
+      <Filter>02.GameObjects\UI\00. Player\98. Right_Interface</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_QuestBox.cpp">
       <Filter>02.GameObjects\UI\02. System\00. Text\01. Quest</Filter>
@@ -4282,9 +4282,6 @@
     <ClCompile Include="..\Private\UI_LevelUp_Shards.cpp">
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\02. Shards</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UI_LevelUp_ShieldFrame.cpp">
-      <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UI_LevelUp_SunBeacon.cpp">
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\04. SunBeacon</Filter>
     </ClCompile>
@@ -4305,6 +4302,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_AimCrosshair.cpp">
       <Filter>02.GameObjects\UI\02. System\04. Cursor\00. AimCrosshair</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LevelUp_ShieldFrame.cpp">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

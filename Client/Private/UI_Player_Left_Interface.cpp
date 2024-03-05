@@ -50,7 +50,6 @@ void CUI_Player_Left_Interface::Priority_Tick(_float fTimeDelta)
 	//		pUIParts->Priority_Tick(fTimeDelta);
 	//	}
 	//}
-
 }
 
 void CUI_Player_Left_Interface::Tick(_float fTimeDelta)
@@ -139,6 +138,9 @@ HRESULT CUI_Player_Left_Interface::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
 	for (_int i = (_int)0; i < (_int)m_eTexture_Kind; ++i)

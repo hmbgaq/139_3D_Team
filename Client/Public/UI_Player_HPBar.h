@@ -34,12 +34,13 @@ private:
 
 private:
 	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };
+	CData_Manager*			m_pDataManager = { nullptr };
 	TEXTUREKIND				m_eTexture_Kind = TEXTURE_END;
 	_float					m_fPreHP = 0.f;
 	_float					m_fCurHP = 0.f;
 	_float					m_fMaxHP = 0.f;
 	_float					m_fTimeAcc = 0.f;
-	_float					m_fVariationSpeed = 1.5f;
+	_float					m_fVariationSpeed = 2.0f;
 
 	/* Decal */
 	_bool					m_bChangeType = false;

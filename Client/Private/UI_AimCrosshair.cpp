@@ -154,7 +154,8 @@ HRESULT CUI_AimCrosshair::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;	
 
-
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Recoil", &m_vRecoil, sizeof(_float2))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Offset", &m_vOffset, sizeof(_float2))))

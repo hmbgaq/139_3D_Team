@@ -98,6 +98,9 @@ HRESULT CMainApp::Ready_Font()
 	FAILED_CHECK(m_pGameInstance->Add_Font(TEXT("Font_Default"), TEXT("../Bin/Resources/Fonts/139ex.spritefont")));
 	FAILED_CHECK(m_pGameInstance->Add_Font(TEXT("Font_Arial"), TEXT("../Bin/Resources/Fonts/Arial.spritefont")));
 
+	// SH_ADD
+	FAILED_CHECK(m_pGameInstance->Add_Font(TEXT("Font_EvilWest"), TEXT("../Bin/Resources/Fonts/EvilWest.spritefont")));
+
 	return S_OK;
 }
 

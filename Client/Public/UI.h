@@ -212,6 +212,9 @@ public: /* ============================== SetUp ============================== *
 	HRESULT			Create_UIParts(UI_DESC tUI_Desc);
 	HRESULT			Update_Child_Transform();
 
+	// error : 새 코드 요소를 반환하지 못했습니다. 구문 오류일 수 있습니다. -> 해결방법 : 프로젝트 폴더 내에 vs폴더 삭제 후 실행
+	void			Tick_LevelUp(_float fTimeDelta);
+
 public:
 #ifdef _DEBUG
 	/* (컨테이너의 주소를 받아오는건 릴리즈 모드에서 터지는 버그가있음. 툴용) */
@@ -259,12 +262,22 @@ public: /* =========================== Animation ============================== 
 	// 이동
 	_float fPosX_Delta, fPosY_Delta;
 
+protected: /* Data */
+	class CData_Manager* m_pData_Manager = { nullptr };
+
+protected: /* LifeTime */
+	void				LifeTime_LevelUp(_float fTimeDelta);
+	_bool				m_bEventOn = false;
+	_float				m_fLifeTime = 5000.f;
+	_float				m_fTime = GetTickCount64();
+
 protected: /* ========================= Component =========================== */
 	CShader*			m_pShaderCom = { nullptr };
 	//CTexture*			m_pTextureCom;
 	CTexture*			m_pMapTextureCom = { nullptr };	// 적용할 맵 텍스처
 	_int				m_iShaderNum;		// 적용할 셰이더 넘버
 	CVIBuffer_Rect*		m_pVIBufferCom = { nullptr };
+	_vector				m_vAxis = { 0.f, 0.f, 0.f, 0.f };
 
 protected: /* =========================== Space ============================ */
 	_float4x4			m_ViewMatrix, m_ProjMatrix;
@@ -284,6 +297,9 @@ protected: /* ============================= UI =============================== *
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f;
 	UI_KIND				m_eKind = NORMAL;
+
+	// 투명도
+	_float				m_fAlpha = 0.f;
 
 protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;

@@ -1,9 +1,10 @@
 #pragma once
 #include "Client_Defines.h"
-#include "UI.h"
+#include "UI_Text.h"
+#include "Data_Manager.h"
 
 /* 체력 프레임 */
-class CUI_LevelUp_ShieldFrame final : public CUI
+class CUI_LevelUp_ShieldFrame final : public CUI_Text
 {
 	enum TEXTUREKIND { SHIELD_FRAME, TEXTURE_END };
 
@@ -27,6 +28,9 @@ private:
 public:
 	json				 Save_Desc(json& out_json);
 	void				 Load_Desc();
+	HRESULT				 Ready_Text();
+	void				 Add_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation);
+	HRESULT				 Find_Change(const string& strTextTag);
 
 private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };

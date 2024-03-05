@@ -132,6 +132,9 @@ HRESULT CUI_Option_SelectBox::Bind_ShaderResources()
 	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
+
 	string TestName = m_tUIInfo.strObjectName;
 	for (_int i = (_int)0; i < (_int)m_eTexture_Kind; ++i)
 	{

@@ -141,6 +141,9 @@ HRESULT CUI_Player_Right_Interface::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
+
 	for (_int i = (_int)0; i < (_int)m_eTexture_Kind; ++i)
 	{
 		switch (i)

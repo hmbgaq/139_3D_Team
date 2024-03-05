@@ -1,15 +1,18 @@
 #include "..\Public\UI.h"
 #include "GameInstance.h"
 #include "SMath.h"
+#include "Data_Manager.h"
 
 CUI::CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CGameObject(pDevice, pContext, strPrototypeTag)
+	, m_pData_Manager(CData_Manager::GetInstance())
 {
 }
 
 CUI::CUI(const CUI& rhs)
 	: CGameObject(rhs)
 	, m_ProjMatrix(rhs.m_ProjMatrix)
+	, m_pData_Manager(rhs.m_pData_Manager)
 {
 }
 
@@ -25,7 +28,7 @@ HRESULT CUI::Initialize(void* pArg)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
 #pragma region Transform
-	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext, 0.f, 0.f);
+	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext, 1.f, 1.f);
 
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
@@ -70,11 +73,22 @@ void CUI::Tick(_float fTimeDelta)
 {
 	switch (m_eState)
 	{
-	case UISTATE::APPEAR:
+	case Client::UISTATE::READY:
+		break;
+	case Client::UISTATE::APPEAR:
 		UI_AppearTick(fTimeDelta);
 		break;
-	case UISTATE::DISAPPEAR:
+	case Client::UISTATE::TICK:
+		break;
+	case Client::UISTATE::DISAPPEAR:
 		UI_DisappearTick(fTimeDelta);
+		break;
+	case Client::UISTATE::LEVEL_UP:
+		//Tick_LevelUp(fTimeDelta);
+		break;
+	case Client::UISTATE::STATE_END:
+		break;
+	default:
 		break;
 	}
 
@@ -490,6 +504,11 @@ HRESULT CUI::Update_Child_Transform()
 	return S_OK;
 }
 
+void CUI::Tick_LevelUp(_float fTimeDelta)
+{
+	LifeTime_LevelUp(fTimeDelta);
+}
+
 /* @@@보류@@@ */
 void CUI::Load_UIData(const char* _FilePath)
 {
@@ -704,10 +723,40 @@ void CUI::Play_Animation()
 	}
 }
 
+void CUI::LifeTime_LevelUp(_float fTimeDelta)
+{
+	/* 레벨 변동이 있을 경우 */
+	if (m_pData_Manager->Get_ShowLevelBox()/*m_pData_Manager->Limit_EXP()*/)
+	{
+		m_pData_Manager->Set_ShowLevelBox(false);
+		m_bActive = true;
+		m_fAlpha = 0.f;
+	}
+
+	if (m_fTime + m_fLifeTime < GetTickCount64())
+	{
+		m_bEventOn = true;
+		m_fTime = GetTickCount64();
+	}
+
+	if (m_bEventOn)
+	{
+		m_fAlpha += fTimeDelta;
+	}
+
+	if (m_fAlpha >= 1.f)
+	{
+		m_bActive = false;
+		m_bEventOn = false;
+	}
+}
+
 void CUI::Free()
 {
 	__super::Free();
 
+	if (m_pData_Manager)
+		Safe_Release(m_pData_Manager);
 	if (m_pVIBufferCom)
 		Safe_Release(m_pVIBufferCom);
 	if (m_pShaderCom)

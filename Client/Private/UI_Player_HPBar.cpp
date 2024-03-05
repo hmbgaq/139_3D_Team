@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
+#include "Data_Manager.h"
+
 CUI_Player_HPBar::CUI_Player_HPBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
 {
@@ -41,6 +43,15 @@ HRESULT CUI_Player_HPBar::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
+	/*
+	#include "Data_Manager.h" 인클루드 해주고,
+	CData_Manager::GetInstance()->Get_Player(); 로 받아주고
+	함수 그대로 사용하거나, 변수에 담아서 사용하기.
+	해당 객체에 원하는 함수나 변수 만들어서 불러오기.
+	*/
+
+	m_pDataManager = CData_Manager::GetInstance();
+
 	Set_OwnerHp();
 
 	return S_OK;
@@ -60,68 +71,35 @@ void CUI_Player_HPBar::Tick(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_Q)) // 피격
 	{
-		m_fCurHP -= 10.f;
-
-		if (m_fCurHP <= 0.f)
-		{
-			/* Dead */
-			m_fCurHP = 0.f;
-		}
+		m_pDataManager->Add_CurHP(-10.f);
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_E)) // 회복
 	{
-		m_fCurHP += 10.f;
+		m_pDataManager->Add_CurHP(10.f);
 		m_fPreHP += 10.f;
-
-		if (m_fCurHP >= m_fMaxHP)
-		{
-			m_fCurHP = m_fMaxHP;
-			m_fPreHP = m_fCurHP;
-		}
 	}
 
-#pragma region Decal
-	if (m_pGameInstance->Key_Down(DIK_J)) // -크기
-	{
-		m_vDecal_Scale.x -= 0.1f;
-	}
-	if (m_pGameInstance->Key_Down(DIK_K)) // +크기
-	{
-		m_vDecal_Scale.x += 0.1f;
-	}
-#pragma endregion
+	// 회복
+	if (m_fPreHP < m_pDataManager->Get_CurHP())
+		m_fPreHP = m_pDataManager->Get_CurHP();
 
-	if (m_pGameInstance->Key_Down(DIK_PGDN))
-	{
-		//Change_SizeRight(-5.f);
-		--m_iShaderNum;
-		if (m_iShaderNum <= 0)
-			m_iShaderNum = 0;
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_PGUP))
-	{
-		//Change_SizeRight(5.f);
-		++m_iShaderNum;
-		if (m_iShaderNum >= 3)
-			m_iShaderNum = 2;																	// 셰이더 패스 최대 번호 제한 (나중에 수정)
-	}
+	m_pDataManager->Limit_HP();
 
 	if (m_bActive)
 	{
 		m_fTimeAcc += fTimeDelta * 0.1f;
 
-		if (m_fCurHP < m_fPreHP)
+		if (m_pDataManager->Get_CurHP() < m_fPreHP)
 			m_bLerp = false;
 
-		if (!m_bLerp && m_fPreHP > m_fCurHP)
+		if (!m_bLerp && m_fPreHP > m_pDataManager->Get_CurHP())
 		{
 			m_fPreHP -= fTimeDelta * m_fVariationSpeed * (m_fMaxHP / 6.f);
 
-			if (m_fPreHP <= m_fCurHP)
+			if (m_fPreHP <= m_pDataManager->Get_CurHP())
 			{
-				m_fPreHP = m_fCurHP;
+				m_fPreHP = m_pDataManager->Get_CurHP();
 				m_bLerp = true;
 			}
 		}
@@ -200,6 +178,8 @@ HRESULT CUI_Player_HPBar::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_LerpHP", &m_fPreHP, sizeof(_float))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_CurrentHP", &m_fCurHP, sizeof(_float))))
@@ -294,8 +274,8 @@ void CUI_Player_HPBar::Set_OwnerHp(/*CPlayer pPlayer*/)
 	//m_fCurHP = StatDesc.fHp;
 	//m_fPreHP = m_fCurHP;
 
-
-	m_fMaxHP = 100.0f;
+	
+	m_fMaxHP = m_pDataManager->Get_CurHP();
 	m_fCurHP = m_fMaxHP;
 	m_fPreHP = m_fCurHP;
 }
