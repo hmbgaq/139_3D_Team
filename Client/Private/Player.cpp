@@ -173,6 +173,11 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 	}
 }
 
+void CPlayer::Search_Target()
+{
+	__super::Search_Target(LAYER_MONSTER);
+}
+
 HRESULT CPlayer::Ready_Components()
 {
 	return S_OK;

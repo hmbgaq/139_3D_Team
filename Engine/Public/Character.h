@@ -136,6 +136,7 @@ public:
 	_float Calc_Distance(_float3 vTargetPos);
 	_float Calc_Distance(CGameObject* pTarget);
 	_float Calc_Distance();
+	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
 
 

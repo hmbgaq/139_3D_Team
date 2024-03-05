@@ -88,9 +88,11 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	m_pTransformCom->Add_RootBone_Position(m_pBody->Get_MovePos(), m_pNavigationCom);
 
 	m_pRigidBody->Late_Tick(fTimeDelta);
+
 #ifdef _DEBUG
 	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
+
 }
 
 HRESULT CCharacter::Render()
@@ -331,8 +333,6 @@ void CCharacter::Set_Enable(_bool _Enable)
 
 		m_PartObjects.clear();
 	}
-
-
 }
 
 Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower)
@@ -376,49 +376,6 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 	return eHitType;
 }
 
-//Hit_Type CCharacter::Set_Hitted(_uint iDamage, _float3 vForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower)
-//{
-//	Hit_Type eHitType = Hit_Type::None;
-//
-//	if (Power::Absolute == m_eStrength)
-//	{
-//		return Hit_Type::None;
-//	}
-//
-//	//Get_Damaged(iDamage);
-//	//Set_InvincibleTime(fInvincibleTime);
-//
-//	if (m_iHp <= 0)
-//	{
-//		Add_Force(,vForce);
-//		Hitted_Dead();
-//		//eHitType = Hit_Type::Hit_Finish;
-//	}
-//	else if (eHitPower >= m_eStrength)
-//	{
-//		eHitType = Hit_Type::Hit;
-//
-//		//Add_Force(vForce);
-//
-//		switch (eHitDirection)
-//		{
-//		case Engine::Left:
-//			Hitted_Right();
-//			break;
-//		case Engine::Right:
-//			Hitted_Left();
-//			break;
-//		default:
-//			Hitted_Front();
-//			break;
-//		}
-//		//Set_StiffnessRate(fStiffnessRate);
-//	}
-//
-//	return eHitType;
-//}
-
-
 void CCharacter::Add_Force(_vector In_vDir, _float In_fPower)
 {
 	m_pRigidBody->Add_Force(In_vDir, In_fPower);
@@ -435,12 +392,15 @@ void CCharacter::Look_At_Target()
 
 void CCharacter::Search_Target(const wstring& strLayerTag)
 {
-	
+	if (nullptr != m_pTarget)
+		return;
+
+	Select_The_Nearest_Enemy(strLayerTag);
 }
 
 CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag)
 {
-	CGameObject* pResult = { nullptr };
+	CCharacter* pResult = { nullptr };
 
 	_float fMinDistance = 10000.f;
 
@@ -453,15 +413,24 @@ CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag)
 
 	for (CGameObject* pTarget : *pTargetLayer) 
 	{
+
+		if (nullptr == pTarget || false == pTarget->Get_Enable())
+			continue;
+
+		CCharacter* pTargetCharacter = dynamic_cast<CCharacter*>(pTarget);
+
+		if (nullptr == pTargetCharacter)
+			continue;
+
 		_float fDistance = Calc_Distance(pTarget);
 		if (fMinDistance > fDistance) 
 		{
 			fMinDistance = fDistance;
-			pResult = pTarget;
+			pResult = pTargetCharacter;
 		}
 	}
 
-	return dynamic_cast<CCharacter*>(pResult);
+	return pResult;
 }
 
 
@@ -487,7 +456,15 @@ _float CCharacter::Calc_Distance()
 	return Calc_Distance(m_pTarget);
 }
 
+_float CCharacter::Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag)
+{
+	CCharacter* pCharacter = Select_The_Nearest_Enemy(strLayerTag);
 
+	if (nullptr == pCharacter)
+		return 1000000.f;
+
+	return Calc_Distance(pCharacter);
+}
 
 
 void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)

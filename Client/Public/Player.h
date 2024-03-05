@@ -32,9 +32,14 @@ public:
 public:
 	void Aim_Walk(_float fTimeDelta);
 
+public:
+	void Search_Target();
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
+
+
 
 
 public: //AnimTool Test
