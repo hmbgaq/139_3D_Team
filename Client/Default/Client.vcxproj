@@ -562,6 +562,7 @@
     <ClInclude Include="..\Public\SkyDome.h" />
     <ClInclude Include="..\Public\Sniper_CoverHigh_Idle.h" />
     <ClInclude Include="..\Public\Sniper_CoverHigh_LeanLeft_HitHeavy_01_TEMP.h" />
+    <ClInclude Include="..\Public\Sniper_CoverHigh_LeanRight_HitHeavy_01_TEMP.h" />
     <ClInclude Include="..\Public\Sniper_CoverHigh_Reload.h" />
     <ClInclude Include="..\Public\Sniper_CoverHigh_Side_L_AimPose.h" />
     <ClInclude Include="..\Public\Sniper_CoverHigh_Side_L_Start.h" />
@@ -570,6 +571,9 @@
     <ClInclude Include="..\Public\Sniper_CoverHigh_Side_R_Start.h" />
     <ClInclude Include="..\Public\Sniper_CoverHigh_Side_R_Stop.h" />
     <ClInclude Include="..\Public\Sniper_CoverLow_Idle.h" />
+    <ClInclude Include="..\Public\Sniper_CoverLow_LeanLeft_HitHeavy_01_TEMP.h" />
+    <ClInclude Include="..\Public\Sniper_CoverLow_LeanOver_HitHeavy_01_TEMP.h" />
+    <ClInclude Include="..\Public\Sniper_CoverLow_LeanRight_HitHeavy_01_TEMP.h" />
     <ClInclude Include="..\Public\Sniper_CoverLow_Over_AimPose.h" />
     <ClInclude Include="..\Public\Sniper_CoverLow_Over_Start.h" />
     <ClInclude Include="..\Public\Sniper_CoverLow_Over_Stop.h" />
@@ -580,7 +584,16 @@
     <ClInclude Include="..\Public\Sniper_CoverLow_Side_R_AimPose.h" />
     <ClInclude Include="..\Public\Sniper_CoverLow_Side_R_Start.h" />
     <ClInclude Include="..\Public\Sniper_CoverLow_Side_R_Stop.h" />
+    <ClInclude Include="..\Public\Sniper_HitHeavy_BL_01.h" />
+    <ClInclude Include="..\Public\Sniper_HitHeavy_BR_01.h" />
+    <ClInclude Include="..\Public\Sniper_HitHeavy_B_01.h" />
+    <ClInclude Include="..\Public\Sniper_HitHeavy_FL_01.h" />
+    <ClInclude Include="..\Public\Sniper_HitHeavy_FR_01.h" />
+    <ClInclude Include="..\Public\Sniper_HitHeavy_F_01.h" />
     <ClInclude Include="..\Public\Sniper_IdlePose.h" />
+    <ClInclude Include="..\Public\Sniper_KnockFrontLight_B_01.h" />
+    <ClInclude Include="..\Public\Sniper_KnockFrontLight_F_01.h" />
+    <ClInclude Include="..\Public\Sniper_KnockFrontLight_F_02.h" />
     <ClInclude Include="..\Public\Sniper_MeleeDynamic_01.h" />
     <ClInclude Include="..\Public\Sniper_MeleeDynamic_02.h" />
     <ClInclude Include="..\Public\Sniper_MeleeDynamic_03.h" />
@@ -805,6 +818,7 @@
     <ClCompile Include="..\Private\Bandit_Sniper.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper_State_Cover.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper_State_Crouch.cpp" />
+    <ClCompile Include="..\Private\Bandit_Sniper_State_Hit.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper_State_Idle.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper_State.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper_State_Melee.cpp" />

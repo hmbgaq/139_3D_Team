@@ -1576,9 +1576,6 @@
     <Filter Include="01.Levels\01.GamePlay\0.GamePlay">
       <UniqueIdentifier>{a77245cb-d30e-4b58-bfd9-80c8fcbf1470}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\01.GamePlay\1. Intro">
-      <UniqueIdentifier>{dec9d180-3814-40c0-ac08-d85ab872f73e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\01.GamePlay\2.SnowMountain">
       <UniqueIdentifier>{ad32fc85-6a06-4d75-b487-d1fa8a80dd90}</UniqueIdentifier>
     </Filter>
@@ -1848,6 +1845,24 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\IntroSpawn">
       <UniqueIdentifier>{c5d09ec1-a9b3-4134-b00c-8f5a4e71a4df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy">
+      <UniqueIdentifier>{4eeeee6a-94ef-4ea8-8f1b-3aa8f3e0fcb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock">
+      <UniqueIdentifier>{19c3e105-d561-4aef-aa3d-496efeb23d37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover">
+      <UniqueIdentifier>{a32e6960-29c5-4fb6-baa1-77baa4b0d597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\0. High">
+      <UniqueIdentifier>{61ce3d0e-3d07-4b73-b780-19846258fdf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low">
+      <UniqueIdentifier>{71b41e91-6fb4-4b43-925f-463c86e1ba34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\01.GamePlay\1.Intro">
+      <UniqueIdentifier>{dec9d180-3814-40c0-ac08-d85ab872f73e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -3159,9 +3174,6 @@
     <ClInclude Include="..\Public\Player_Rifle_Ironsights_Reload.h">
       <Filter>02.GameObjects\00. Character\Player\State\7. Aim\Rifle\3. Reload</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Sniper_CoverHigh_LeanLeft_HitHeavy_01_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Sniper_CoverHigh_Idle.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Cover\1. Cover\0. High\1. Idle</Filter>
     </ClInclude>
@@ -3247,7 +3259,7 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Intro.h">
-      <Filter>01.Levels\01.GamePlay\1. Intro</Filter>
+      <Filter>01.Levels\01.GamePlay\1.Intro</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VampireCommander.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander</Filter>
@@ -3392,6 +3404,48 @@
     </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_SyncedAttack_Fail.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_HitHeavy_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_HitHeavy_BL_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_HitHeavy_BR_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_HitHeavy_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_HitHeavy_FL_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_HitHeavy_FR_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_KnockFrontLight_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_KnockFrontLight_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_KnockFrontLight_F_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_CoverHigh_LeanLeft_HitHeavy_01_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\0. High</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_CoverHigh_LeanRight_HitHeavy_01_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\0. High</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_CoverLow_LeanLeft_HitHeavy_01_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_CoverLow_LeanOver_HitHeavy_01_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_CoverLow_LeanRight_HitHeavy_01_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4838,7 +4892,7 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\4. Crouch\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Intro.cpp">
-      <Filter>01.Levels\01.GamePlay\1. Intro</Filter>
+      <Filter>01.Levels\01.GamePlay\1.Intro</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Left_Interface.cpp">
       <Filter>02.GameObjects\UI\00. Player\Left_Interface</Filter>
@@ -5034,6 +5088,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_SyncedAttack_Fail.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bandit_Sniper_State_Hit.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\0. Parent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
