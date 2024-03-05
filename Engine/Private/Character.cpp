@@ -395,14 +395,14 @@ void CCharacter::Search_Target(const wstring& strLayerTag)
 	if (nullptr != m_pTarget)
 		return;
 
-	Select_The_Nearest_Enemy(strLayerTag);
+	m_pTarget = Select_The_Nearest_Enemy(strLayerTag);
 }
 
-CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag)
+CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance)
 {
 	CCharacter* pResult = { nullptr };
 
-	_float fMinDistance = 10000.f;
+	_float fMinDistance = fMaxDistance;
 
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
