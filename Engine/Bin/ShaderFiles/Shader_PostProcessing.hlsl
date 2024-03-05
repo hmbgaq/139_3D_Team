@@ -5,10 +5,24 @@ struct radial
     float   fRadial_Quality;
     float   fRadial_Power;
 };
+
+struct DOF
+{
+    bool bDOF_Active;
+    float focus;
+    float range;
+    //float   fFocusDistance;
+    //float   fFocusRange;
+    //float   fMaxAtt;
+};
+
 /* ====================================== */
 
 /* Origin */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+matrix g_ViewMatrixInv, g_ProjMatrixInv;
+float4 g_vCamPosition;
+float  g_fCamFar;
 
 Texture2D g_ProcessingTarget;
 
@@ -21,7 +35,30 @@ float g_change_luminance;
 // Radial Blur 
 radial g_Radial_Blur;
 
-/* ====================================== */
+/* DOF */
+Texture2D   g_DepthTarget;
+Texture2D   g_BlurTarget;
+DOF         g_DOF;
+///* ====================================== */
+//float ComputeDepthBlur(float depth) /* 뷰 공간 기준의 입력된 깊이 */
+//{
+//    float f;
+
+//    if (depth < g_DOF.fFocalPalne_Depth)
+//    {
+//        // Focal plane 앞의 영역인 경우
+//        f = (depth - g_DOF.fFocalPalne_Depth) / (g_DOF.fFocalPalne_Depth - g_DOF.fNearBlur_Depth);
+//    }
+//    else
+//    {
+//        // Focal plane 뒤의 영역인 경우
+//        f = (depth - g_DOF.fFocalPalne_Depth) / (g_DOF.fFarBlur_Depth - g_DOF.fFocalPalne_Depth);
+//        f = clamp(f, 0, g_DOF.fCutOff);
+//    }
+
+//    // 최종 결과에 스케일과 바이어스를 적용
+//    return f * 0.5f + 0.5f;
+//}
 struct VS_IN
 {
 
@@ -215,6 +252,40 @@ PS_OUT PS_MAIN_RADIAL(PS_IN In)
     return Out;
     
 }
+
+/* ------------------- 3 -DOF Shader -------------------*/
+VS_OUT VS_MAIN_DOF(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP); /* 투영상 공간 */ 
+   // Out.vPosition.xy = sign(Out.vPosition.xy);
+
+    Out.vTexcoord = In.vTexcoord;
+    
+    return Out;
+}
+
+PS_OUT PS_MAIN_DOF (PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vOrigin = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vBlur = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    Out.vColor = lerp(vOrigin, vBlur, saturate(g_DOF.range * abs(g_DOF.focus - vOrigin.a)));
+    
+    return Out;
+}
+
+/* ------------------- Technique  -------------------*/
+
 technique11 DefaultTechnique
 {
     pass Origin // 0
@@ -255,5 +326,17 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_RADIAL();
 
+    }
+
+    pass DOF
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_DOF();
+        GeometryShader = NULL ;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DOF();
     }
 }

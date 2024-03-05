@@ -3,6 +3,7 @@
 #include "Easing_Utillity.h"
 #include "SMath.h"
 
+// 안씀 -> CVIBuffer_Particle로 사용합니다.
 CVIBuffer_Particle_Point::CVIBuffer_Particle_Point(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer_Instancing(pDevice, pContext)
 {
@@ -135,8 +136,6 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 	uniform_real_distribution<float>	RandomBlue(min(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y), max(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y));
 	uniform_real_distribution<float>	RandomAlpha(min(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y), max(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y));
 
-	
-
 	m_iNumInstance = m_tBufferDesc.iCurNumInstance;
 	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
@@ -158,8 +157,8 @@ HRESULT CVIBuffer_Particle_Point::Initialize(void* pArg)
 		_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_tBufferDesc.vRotationOffset.x, m_tBufferDesc.vRotationOffset.y, m_tBufferDesc.vRotationOffset.z);
 
 		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vCurrentScale.x;
-		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurrentScale.x;
-		pVertices[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
+		pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurrentScale.x;
+		pVertices[i].vLook	= _float4(0.f, 0.f, 1.0f, 0.f);
 
 
 		vDir = XMVector3Normalize(vDir) * RandomRange(m_RandomNumber);
@@ -233,6 +232,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 		m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 
 		VTXINSTANCE* pVertices = ((VTXINSTANCE*)SubResource.pData);
+
 
 		for (_uint i = 0; i < m_iNumInstance; i++)
 		{
@@ -383,6 +383,7 @@ void CVIBuffer_Particle_Point::Update(_float fTimeDelta)
 
 			}
 
+
 		}
 
 		m_pContext->Unmap(m_pVBInstance, 0);
@@ -419,6 +420,7 @@ void CVIBuffer_Particle_Point::ReSet()
 	uniform_real_distribution<float>	RandomBlue(min(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y), max(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y));
 	uniform_real_distribution<float>	RandomAlpha(min(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y), max(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y));
 
+	m_iNumInstance = m_tBufferDesc.iCurNumInstance;
 	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
 		if (FADE_IN == m_tBufferDesc.eType_Fade)
@@ -475,19 +477,59 @@ void CVIBuffer_Particle_Point::ReSet()
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
+void CVIBuffer_Particle_Point::Sort_Z(_uint iCount)
+{
+	D3D11_MAPPED_SUBRESOURCE SubResource;
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	vector<VTXINSTANCE> instanceData;
+	instanceData.resize(iCount);
+	memcpy(instanceData.data(), SubResource.pData, iCount * sizeof(VTXINSTANCE));
+
+
+	_float4 fCamPos = m_pGameInstance->Get_CamPosition();
+	_vector vCampos = XMVectorSet(fCamPos.x, fCamPos.y, fCamPos.z, fCamPos.w);
+
+	// 현재 순서 그대로 해당 위치의 값 뷰Z를 구함.
+	vector<_float> vecViewZ;
+	for (size_t i = 0; i < iCount; i++) {
+		_vector vPosition = XMVectorSet(instanceData[i].vPosition.x, instanceData[i].vPosition.y, instanceData[i].vPosition.z, instanceData[i].vPosition.w);
+		vecViewZ.push_back(XMVectorGetX(XMVector3Length(vCampos - vPosition)));
+	}
+
+	// m_vecViewZ를 기준으로 정렬된 인덱스 구함.
+	vector<size_t> sortedIndices(vecViewZ.size());
+	iota(sortedIndices.begin(), sortedIndices.end(), 0);
+	sort(sortedIndices.begin(), sortedIndices.end(), [&](size_t a, size_t b) {
+		return vecViewZ[a] > vecViewZ[b]; }
+	);
+
+	// 정렬된 인덱스를 기반으로 다른 컨테이너들도 정렬
+	vector<VTXINSTANCE>          sortedInstanceData(instanceData.size());
+
+	for (size_t i = 0; i < sortedIndices.size(); ++i) {
+		size_t index = sortedIndices[i];
+		sortedInstanceData[i] = instanceData[index];
+	}
+
+	// 정렬된 결과 다시 할당
+	memcpy(SubResource.pData, sortedInstanceData.data(), iCount * sizeof(VTXINSTANCE));
+
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
 
 
 _bool CVIBuffer_Particle_Point::Write_Json(json& Out_Json)
 {
+	Out_Json["Com_VIBuffer"]["iCurNumInstance"] = m_tBufferDesc.iCurNumInstance;
+
 	Out_Json["Com_VIBuffer"]["eType_Action"] = m_tBufferDesc.eType_Action;
 	Out_Json["Com_VIBuffer"]["eType_Fade"] = m_tBufferDesc.eType_Fade;
 	Out_Json["Com_VIBuffer"]["eType_ColorLerp"] = m_tBufferDesc.eType_ColorLerp;
 
 	Out_Json["Com_VIBuffer"]["bLoop"] = m_tBufferDesc.bLoop;
 	Out_Json["Com_VIBuffer"]["bReverse"] = m_tBufferDesc.bReverse;
-	Out_Json["Com_VIBuffer"]["bSpriteAnim"] = m_tBufferDesc.bSpriteAnim;
-
-	Out_Json["Com_VIBuffer"]["iCurNumInstance"] = m_tBufferDesc.iCurNumInstance;
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
 
@@ -525,35 +567,22 @@ _bool CVIBuffer_Particle_Point::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxBlue"], m_tBufferDesc.vMinMaxBlue);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxAlpha"], m_tBufferDesc.vMinMaxAlpha);
 
-
 	CJson_Utility::Write_Float4(Out_Json["Com_VIBuffer"]["vCurrentColor"], m_tBufferDesc.vCurrentColor);
 
-
-	/* For.Sprite */
-	Out_Json["Com_VIBuffer"]["fSequenceTerm"] = m_tBufferDesc.fSequenceTerm;
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vTextureSize"], m_tBufferDesc.vTextureSize);
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vTileSize"], m_tBufferDesc.vTileSize);
-
-
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vUV_CurTileIndex"], m_tBufferDesc.vUV_CurTileIndex);
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vUV_MinTileCount"], m_tBufferDesc.vUV_MinTileCount);
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vUV_MaxTileCount"], m_tBufferDesc.vUV_MaxTileCount);
 
 	return true;
 }
 
 void CVIBuffer_Particle_Point::Load_FromJson(const json& In_Json)
 {
+	m_tBufferDesc.iCurNumInstance = In_Json["Com_VIBuffer"]["iCurNumInstance"];
+
 	m_tBufferDesc.eType_Action = In_Json["Com_VIBuffer"]["eType_Action"];
 	m_tBufferDesc.eType_Fade = In_Json["Com_VIBuffer"]["eType_Fade"];
 	m_tBufferDesc.eType_ColorLerp = In_Json["Com_VIBuffer"]["eType_ColorLerp"];
 
 	m_tBufferDesc.bLoop = In_Json["Com_VIBuffer"]["bLoop"];
 	m_tBufferDesc.bReverse = In_Json["Com_VIBuffer"]["bReverse"];
-	m_tBufferDesc.bSpriteAnim = In_Json["Com_VIBuffer"]["bSpriteAnim"];
-
-	m_tBufferDesc.iCurNumInstance = In_Json["Com_VIBuffer"]["iCurNumInstance"];
-
 
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
 
@@ -565,7 +594,6 @@ void CVIBuffer_Particle_Point::Load_FromJson(const json& In_Json)
 
 
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxSpeed"], m_tBufferDesc.vMinMaxSpeed);
-
 
 
 	m_tBufferDesc.fSpeedAcc = In_Json["Com_VIBuffer"]["fSpeedAcc"];
@@ -598,17 +626,6 @@ void CVIBuffer_Particle_Point::Load_FromJson(const json& In_Json)
 
 
 	CJson_Utility::Load_Float4(In_Json["Com_VIBuffer"]["vCurrentColor"], m_tBufferDesc.vCurrentColor);
-
-
-	/* For.Sprite */
-	m_tBufferDesc.fSequenceTerm = In_Json["Com_VIBuffer"]["fSequenceTerm"];
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vTextureSize"], m_tBufferDesc.vTextureSize);
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vTileSize"], m_tBufferDesc.vTileSize);
-
-
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vUV_CurTileIndex"], m_tBufferDesc.vUV_CurTileIndex);
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vUV_MinTileCount"], m_tBufferDesc.vUV_MinTileCount);
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vUV_MaxTileCount"], m_tBufferDesc.vUV_MaxTileCount);
 
 }
 

@@ -172,9 +172,6 @@
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing">
       <UniqueIdentifier>{3033c523-d7b7-42fc-8e91-1a12021165a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect">
-      <UniqueIdentifier>{5a2d3fa4-2baf-4041-a7b7-8e66ffc41c72}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Point">
       <UniqueIdentifier>{af1d67e4-c372-4d14-97cc-c9ea53ae80f3}</UniqueIdentifier>
     </Filter>
@@ -253,9 +250,6 @@
     <Filter Include="01.Utility\98.Renderer\Util">
       <UniqueIdentifier>{97ab11a5-ce3a-4739-8633-9c3898280a3b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03.Components\01.VIBuffer\SSAO">
-      <UniqueIdentifier>{45142160-3e8f-4c21-b613-06aecc2af5e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\97.PhysX\Controller">
       <UniqueIdentifier>{b184fe74-7ccc-437d-9500-7b10d7847d59}</UniqueIdentifier>
     </Filter>
@@ -303,6 +297,27 @@
     </Filter>
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Trail">
       <UniqueIdentifier>{4c8e2f99-25d2-4a59-8011-a83065393cf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager">
+      <UniqueIdentifier>{fbd038ba-8561-46a3-bcd0-5a3a6a0c97c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager\00.DxContextManagerCallback">
+      <UniqueIdentifier>{3744d207-17ec-4618-954d-39a25a7fa747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager\01.PxAllocatorCallback">
+      <UniqueIdentifier>{98b989ac-c813-4bf5-be1e-5d2e6ecd2b53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager\02.PxErrorCallback">
+      <UniqueIdentifier>{fb0c6308-d098-49d8-9e1c-d5e1daed20f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager\03.PxAssertHandler">
+      <UniqueIdentifier>{10aacbe8-218b-40be-a278-de1314b2b628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\02.Cuda">
+      <UniqueIdentifier>{49bb156e-c281-42a7-b4cf-f387c3376960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect">
+      <UniqueIdentifier>{ae7c86fb-0565-4354-ac4e-2234d682b71f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -434,9 +449,6 @@
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Instancing.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\VIBuffer_Particle_Rect.h">
-      <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Particle_Point.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Point</Filter>
@@ -582,9 +594,6 @@
     <ClInclude Include="..\Public\MurmurHash3.h">
       <Filter>01.Utility\03.Components\02.Shader\Hash</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VIBuffer_SSAO.h">
-      <Filter>01.Utility\03.Components\01.VIBuffer\SSAO</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\PhysXCollider.h">
       <Filter>01.Utility\97.PhysX\Collider</Filter>
     </ClInclude>
@@ -620,6 +629,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Trail.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NvCloth_Manager.h">
+      <Filter>01.Utility\95.NvCloth_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomContextManagerCallback.h">
+      <Filter>01.Utility\95.NvCloth_Manager\00.DxContextManagerCallback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomPxAllocatorCallback.h">
+      <Filter>01.Utility\95.NvCloth_Manager\01.PxAllocatorCallback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomPxErrorCallback.h">
+      <Filter>01.Utility\95.NvCloth_Manager\02.PxErrorCallback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomPxAssertHandler.h">
+      <Filter>01.Utility\95.NvCloth_Manager\03.PxAssertHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cuda_Device.h">
+      <Filter>00.System\02.Cuda</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Particle_Rect.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -737,9 +767,6 @@
     <ClCompile Include="..\private\VIBuffer_Instancing.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\VIBuffer_Particle_Rect.cpp">
-      <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Particle_Point.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Point</Filter>
     </ClCompile>
@@ -836,9 +863,6 @@
     <ClCompile Include="..\Private\MurmurHash3.cpp">
       <Filter>01.Utility\03.Components\02.Shader\Hash</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VIBuffer_SSAO.cpp">
-      <Filter>01.Utility\03.Components\01.VIBuffer\SSAO</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\PhysXCollider.cpp">
       <Filter>01.Utility\97.PhysX\Collider</Filter>
     </ClCompile>
@@ -874,6 +898,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Trail.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NvCloth_Manager.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomContextManagerCallback.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager\00.DxContextManagerCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomPxAllocatorCallback.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager\01.PxAllocatorCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomPxErrorCallback.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager\02.PxErrorCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomPxAssertHandler.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager\03.PxAssertHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cuda_Device.cpp">
+      <Filter>00.System\02.Cuda</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Particle_Rect.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

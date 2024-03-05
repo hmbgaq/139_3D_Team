@@ -1,13 +1,15 @@
 #include "..\Public\UI.h"
 #include "GameInstance.h"
+#include "SMath.h"
 
 CUI::CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CGameObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
-CUI::CUI(const CGameObject& rhs)
+CUI::CUI(const CUI& rhs)
 	: CGameObject(rhs)
+	, m_ProjMatrix(rhs.m_ProjMatrix)
 {
 }
 
@@ -24,6 +26,7 @@ HRESULT CUI::Initialize(void* pArg)
 
 #pragma region Transform
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext, 0.f, 0.f);
+
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
 
@@ -42,13 +45,18 @@ HRESULT CUI::Initialize(void* pArg)
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
 
+
 	m_fPositionX = m_tUIInfo.fPositionX;
 	m_fPositionY = m_tUIInfo.fPositionY;
 	m_fScaleX = m_tUIInfo.fScaleX;
 	m_fScaleY = m_tUIInfo.fScaleY;
 
 	SetUp_UIRect(m_fPositionX, m_fPositionY, m_fScaleX, m_fScaleY);
+
+	m_Origin_WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 #pragma endregion End
+
+	//FAILED_CHECK(Ready_UI("../Bin/DataFiles/Data_UI/UI_Info"));
 
 	return S_OK;
 }
@@ -69,7 +77,9 @@ void CUI::Tick(_float fTimeDelta)
 		UI_DisappearTick(fTimeDelta);
 		break;
 	}
-	
+
+	Play_Animation(); // 애니메이션 재생 m_eState를 통해 애니메이션 UI 타입일때만 탈 수 있게 해줘도 될듯하다.
+	Update_Child_Transform();
 	Check_RectPos();
 	Picking_UI();
 }
@@ -138,7 +148,7 @@ void CUI::Change_SizeX(_float MMX)
 	m_fScaleX += MMX;
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Change_SizeY(_float MMY)
@@ -147,7 +157,7 @@ void CUI::Change_SizeY(_float MMY)
 	m_fPositionY = m_fPositionY;
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Change_SizeRight(_float MMX)
@@ -157,7 +167,7 @@ void CUI::Change_SizeRight(_float MMX)
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Change_SizeLeft(_float MMX)
@@ -167,7 +177,7 @@ void CUI::Change_SizeLeft(_float MMX)
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Change_SizeTop(_float MMY)
@@ -177,7 +187,7 @@ void CUI::Change_SizeTop(_float MMY)
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Change_SizeBottom(_float MMY)
@@ -187,7 +197,7 @@ void CUI::Change_SizeBottom(_float MMY)
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Set_Size(_float fSizeX, _float fSizeY)
@@ -197,7 +207,40 @@ void CUI::Set_Size(_float fSizeX, _float fSizeY)
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
+}
+
+HRESULT CUI::Set_ParentTransform(CTransform* pParentTransformCom)
+{
+	m_tUIInfo.pParentTransformCom = pParentTransformCom;
+
+	return S_OK;
+}
+
+void CUI::Add_Create_Parts(void* pArg)
+{
+	if (pArg == nullptr)
+		return;
+
+	CUI::UI_DESC* pUIDesc = (CUI::UI_DESC*)pArg;
+
+	wstring wstrLayerTag = TEXT("");
+	m_pGameInstance->String_To_WString(pUIDesc->strLayerTag, wstrLayerTag);
+	wstring wstrPartsTag = TEXT("");
+	m_pGameInstance->String_To_WString(pUIDesc->strCloneTag, wstrPartsTag);
+	CUI* pUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayerTag, wstrPartsTag, &pArg));
+	m_vecUIParts.push_back(pUI);
+}
+
+void CUI::Add_Parts(CUI* pUI)
+{
+	if (pUI == nullptr)
+		return;
+	//pUI->Set_ParentTransform(m_pTransformCom);
+
+	m_Origin_WorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+	m_vecUIParts.push_back(pUI);
 }
 
 CUI* CUI::Get_UIPart(const wstring& strPartTag)
@@ -236,16 +279,16 @@ void CUI::Set_Pos(_float fPosX, _float fPosY)
 
 void CUI::Check_RectPos()
 {
-	_float fPosX = m_pTransformCom->Get_Position().x + g_iWinSizeX * 0.5f;
-	_float fPosY = -m_pTransformCom->Get_Position().y + g_iWinSizeY * 0.5f;
+	m_fPositionX = m_pTransformCom->Get_Position().x + g_iWinSizeX * 0.5f;
+	m_fPositionY = -m_pTransformCom->Get_Position().y + g_iWinSizeY * 0.5f;
 
 	m_fScaleX = m_pTransformCom->Get_Scaled().x;
 	m_fScaleY = m_pTransformCom->Get_Scaled().y;
 
-	m_rcUI.left = LONG(fPosX - (m_fScaleX / 2));
-	m_rcUI.top = LONG(fPosY - (m_fScaleY / 2));
-	m_rcUI.right = LONG(fPosX + (m_fScaleX / 2));
-	m_rcUI.bottom = LONG(fPosY + (m_fScaleY / 2));
+	m_rcUI.left = LONG(m_fPositionX - (m_fScaleX / 2));
+	m_rcUI.top = LONG(m_fPositionY - (m_fScaleY / 2));
+	m_rcUI.right = LONG(m_fPositionX + (m_fScaleX / 2));
+	m_rcUI.bottom = LONG(m_fPositionY + (m_fScaleY / 2));
 }
 
 void CUI::Moving_Picking_Point(POINT pt)
@@ -256,6 +299,22 @@ void CUI::Moving_Picking_Point(POINT pt)
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+}
+
+void CUI::Parts_Delete()
+{
+	if (m_vecUIParts.empty())
+		return;
+
+	_int iSize = (_int)m_vecUIParts.size();
+
+	for (_int i = 0; i < iSize; ++i)
+	{
+		if (m_vecUIParts[i]->m_bDead == true)
+		{
+			m_vecUIParts.erase(m_vecUIParts.begin() + i);
+		}
+	}
 }
 
 HRESULT CUI::SetUp_BillBoarding()
@@ -297,18 +356,14 @@ HRESULT CUI::SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX, _float f
 	return S_OK;
 }
 
-HRESULT CUI::Ready_UI(UI_DESC tUI_Desc)
+HRESULT CUI::Ready_UI(const char* cFilePath) // 컨테이너에 담을 UI 파츠들 불러오기
 {
 	json json_in;
 
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
-
 	_int		iPathNum = 0;
-	string		strFileName;
-	string		strFilePath;
 
 
-	CJson_Utility::Load_Json(filePath, json_in);
+	CJson_Utility::Load_Json(cFilePath, json_in);
 
 	for (auto& item : json_in.items())
 	{
@@ -316,9 +371,20 @@ HRESULT CUI::Ready_UI(UI_DESC tUI_Desc)
 
 		CUI::UI_DESC tUI_Info;
 
+		tUI_Info.strLayerTag = object["LayerTag"];
 		tUI_Info.strCloneTag = object["CloneTag"];
 		tUI_Info.strProtoTag = object["ProtoTag"];
 		tUI_Info.strFilePath = object["FilePath"];
+
+		tUI_Info.strMapTextureTag = object["FilePath"];
+
+		tUI_Info.iShaderNum = object["ShaderNum"];
+
+		wstring wstrLayertag;
+		m_pGameInstance->String_To_WString(tUI_Info.strLayerTag, wstrLayertag);
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
 
 		wstring wstrPrototag;
 		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
@@ -326,12 +392,9 @@ HRESULT CUI::Ready_UI(UI_DESC tUI_Desc)
 		wstring wstrFilePath;
 		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
 
-		//wstring wstrLayer;
-		//m_pGameInstance->String_To_WString(tUI_Info.Layer, wstrLayer);
+		CUI* pUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayertag, wstrClonetag, &tUI_Info));
 
-		CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_CurrentLevel(), TEXT("Layer_UI"), wstrPrototag, &tUI_Info));
-
-		pUI_Object->Get_Transform()->Load_FromJson(object);
+		pUI->Get_Transform()->Load_FromJson(object);
 
 	}
 
@@ -346,8 +409,83 @@ HRESULT CUI::Create_UIParts(UI_DESC tUI_Desc)
 	wstring wstrFilePath;
 	m_pGameInstance->String_To_WString(tUI_Desc.strFilePath, wstrFilePath);
 
-	CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_CurrentLevel(), TEXT("Layer_UI"), wstrPrototag, &tUI_Desc));
+	CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), wstrPrototag, &tUI_Desc));
 	m_vecUIParts.push_back(pUI_Object);
+
+	return S_OK;
+}
+
+HRESULT CUI::Update_Child_Transform()
+{
+	if (m_vecUIParts.empty())
+		return S_OK;
+
+	if (m_tUIInfo.bParent)
+	{
+		if (m_Origin_WorldMatrix != m_pTransformCom->Get_WorldFloat4x4())
+		{
+			_vector Origin_scale;
+			_vector Curr_scale;
+			_float3 Origin_rotation;
+			_float3 Curr_rotation;
+			_vector Origin_translation;
+			_vector Curr_translation;
+
+			/* 회전 */
+			Origin_rotation = SMath::Extract_PitchYawRollFromRotationMatrix(m_Origin_WorldMatrix);
+			Curr_rotation = SMath::Extract_PitchYawRollFromRotationMatrix(m_pTransformCom->Get_WorldFloat4x4());
+
+			_float RotX = Curr_rotation.x - Origin_rotation.x;
+			_float RotY = Curr_rotation.y - Origin_rotation.y;
+			_float RotZ = Curr_rotation.z - Origin_rotation.z;
+
+			/* 크기 */
+			Origin_scale = SMath::Get_Scale(m_Origin_WorldMatrix);
+			Curr_scale = SMath::Get_Scale(m_pTransformCom->Get_WorldFloat4x4());
+
+			_vector vOrigin_rotation;
+			_vector vCurr_rotation;
+			
+			XMMATRIX RotMat;
+			RotMat = XMMatrixRotationRollPitchYaw(RotX, RotY, RotZ);
+
+			XMMatrixDecompose(&Origin_scale, &vOrigin_rotation, &Origin_translation, m_Origin_WorldMatrix);
+			XMMatrixDecompose(&Curr_scale, &vCurr_rotation, &Curr_translation, m_pTransformCom->Get_WorldFloat4x4());
+
+			_float3 Result_Scale = Curr_scale / Origin_scale;
+			_float3 Result_Rotation = vCurr_rotation - vOrigin_rotation;
+			_float3 Result_Position = Curr_translation - Origin_translation;
+
+
+			for (auto& iter : m_vecUIParts)
+			{
+				_vector Child_Scale = iter->Get_Transform()->Get_Scaled();
+				_vector Child_Rot = iter->Get_Transform()->Get_Rotated();
+				_vector Child_Pos = iter->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+
+				_float3 Finish_Scale;
+				_float3 Finish_Rot;
+				_float3 Finish_Pos;
+
+				Finish_Scale.x = Result_Scale.x * Child_Scale.m128_f32[0];
+				Finish_Scale.y = Result_Scale.y * Child_Scale.m128_f32[1];
+				Finish_Scale.z = Result_Scale.z * Child_Scale.m128_f32[2];
+
+				Finish_Rot.x = Result_Rotation.x + Child_Rot.m128_f32[0];
+				Finish_Rot.y = Result_Rotation.y + Child_Rot.m128_f32[1];
+				Finish_Rot.z = Result_Rotation.z + Child_Rot.m128_f32[2];
+
+				Finish_Pos.x = Result_Position.x + Child_Pos.m128_f32[0];
+				Finish_Pos.y = Result_Position.y + Child_Pos.m128_f32[1];
+				Finish_Pos.z = Result_Position.z + Child_Pos.m128_f32[2];
+
+				iter->Get_Transform()->Set_Scaling(Finish_Scale.x, Finish_Scale.y, Finish_Scale.z); // Scale
+				iter->Get_Transform()->Set_State(CTransform::STATE_POSITION, Finish_Pos);			// Pos
+				iter->Set_WorldMatrix(iter->Get_Transform()->Get_WorldMatrix() * RotMat);			// Rot
+			}
+			m_Origin_WorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
+		}
+	}
 
 	return S_OK;
 }
@@ -371,6 +509,198 @@ void CUI::Load_UIData(const char* _FilePath)
 
 		//tUI_Info.strProtoTag = object["ProtoTag"];
 		tUI_Info.strFilePath = object["FilePath"];
+	}
+}
+
+json CUI::Save_Desc(json& out_json)
+{
+	out_json["Parent"] = m_tUIInfo.bParent;
+
+	out_json["World"] = m_tUIInfo.bWorld;
+	
+	out_json["Group"] = m_tUIInfo.bGroup;
+
+	//out_json["ScaleX"] = m_tUIInfo.fScaleX;
+
+	//out_json["ScaleY"] = m_tUIInfo.fScaleY;
+
+	//out_json["PositionX"] = m_tUIInfo.fPositionX;
+
+	//out_json["PositionY"] = m_tUIInfo.fPositionY;
+
+	//out_json["PositionZ"] = m_tUIInfo.fPositionZ;
+
+	out_json["Alpha"] = m_tUIInfo.fAlpha;
+
+	out_json["ObjectNum"] = m_tUIInfo.iObjectNum;
+
+	out_json["ShaderNum"] = m_tUIInfo.iShaderNum;
+
+	out_json["ObjectName"] = m_tUIInfo.strObjectName;
+
+	out_json["LayerTag"] = m_tUIInfo.strLayerTag;
+
+	out_json["CloneTag"] = m_tUIInfo.strCloneTag;
+
+	out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
+
+	out_json["FilePath"] = m_tUIInfo.strFilePath;
+
+	out_json["MapTextureTag"] = m_tUIInfo.strMapTextureTag;
+	
+	out_json["ColorR"] = m_tUIInfo.vColor.m128_f32[0];
+	out_json["ColorG"] = m_tUIInfo.vColor.m128_f32[1];
+	out_json["ColorB"] = m_tUIInfo.vColor.m128_f32[2];
+	out_json["ColorA"] = m_tUIInfo.vColor.m128_f32[3];
+
+	/* TransformCom */
+	m_pTransformCom->Write_Json(out_json);
+
+	///* Group Save */
+	//if (!m_vecUIParts.empty())
+	//{
+	//	_int iSize = m_vecUIParts.size();
+
+	//	for (_int i = 0; i < iSize; ++i)
+	//	{
+
+	//	}
+	//}
+
+	return out_json;
+}
+
+void CUI::Play_Animation()
+{
+	if (m_vecAnimation[m_eKeyframe] == nullptr)
+		return;
+
+	// 비었는지 검사
+	if (!m_vecAnimation[m_eKeyframe]->empty())
+	{
+		// 프레임 재생 여부
+		if (m_bPlayAnim)
+		{
+			// 현재 프레임을 시간(프레임)마다 증가시키기
+
+
+			// 현재 프레임이 최대 프레임에 도달한 경우
+			if (m_fCurrTime > (*m_vecAnimation[m_eKeyframe])[m_vecAnimation[m_eKeyframe]->size() - 1].fTime)
+			{
+				// 현재 프레임 초기화
+				//m_pAnimationTool->Get_currentTime() = 0.f;
+
+				// 반복 On/Off
+				if (m_bRepetition)
+				{
+					m_bPlayAnim = false;
+				}
+
+				// 시간 초기화
+				m_fCurrTime = 0.f;
+			}
+		}
+	}
+
+	if (!m_vecAnimation[m_eKeyframe]->empty()) // 비었는지 체크
+	{
+		//if (m_pAnimationTool->Get_FramePlaying()) // 재생 버튼을 눌렀을 경우만
+		//{
+		if (m_fCurrTime >= 0.f &&
+			m_fCurrTime <= m_vecAnimation[m_eKeyframe]->back().fTime)
+		{
+			//m_eAnimationInfo = m_vecAnimation[(int)m_iFrameCount].front();
+			_uint iFrameIndex = 0U;
+			for (_uint i = m_vecAnimation[m_eKeyframe]->size() - (_uint)1; i >= 0; i--)
+			{
+				if ((*m_vecAnimation[m_eKeyframe])[i].fTime <= m_fCurrTime)
+				{
+					iFrameIndex = i;
+					break;
+				}
+			}
+
+			// Constant
+			//m_fSizeX = (*m_vecAnimation[*m_eKeyframe])[iFrameIndex].vScale.x;
+			//m_fSizeY = (*m_vecAnimation[*m_eKeyframe])[iFrameIndex].vScale.y;
+
+			//m_fX = m_fSizeX * 0.5f; // 중점위치 
+			//m_fY = m_fSizeY * 0.5f;
+
+			//m_pTransformComp->Set_Pos({ (*m_vecAnimation[*m_eKeyframe])[iFrameIndex].vPos.x,
+			//							(*m_vecAnimation[*m_eKeyframe])[iFrameIndex].vPos.y,
+			//							0.f });	// 이미지 위치
+
+			//m_pTransformComp->Set_Scale({ m_fSizeX, m_fSizeY, 1.f });	// 이미지 크기
+
+
+			// Linear
+			if (iFrameIndex + 1U < m_vecAnimation[m_eKeyframe]->size())
+			{
+				// 키 프레임간 시간 변화율
+				fFrameTimeDelta = (*m_vecAnimation[m_eKeyframe])[iFrameIndex + 1U].fTime - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].fTime;
+				// 현재 키 프레임시간부터 현재 시간 변화율
+				fCurFrameTimeDelta = (m_fCurrTime - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].fTime);
+
+				fSizeX_Delta = (*m_vecAnimation[m_eKeyframe])[iFrameIndex + 1U].vScale.x - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vScale.x;
+				fSizeX_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				fSizeY_Delta = (*m_vecAnimation[m_eKeyframe])[iFrameIndex + 1U].vScale.y - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vScale.y;
+				fSizeY_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+
+				fRotZ_Delta = (*m_vecAnimation[m_eKeyframe])[iFrameIndex + 1U].fRot - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].fRot;
+				fRotZ_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+
+				fPosX_Delta = (*m_vecAnimation[m_eKeyframe])[iFrameIndex + 1U].vPos.x - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vPos.x;
+				fPosX_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				fPosY_Delta = (*m_vecAnimation[m_eKeyframe])[iFrameIndex + 1U].vPos.y - (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vPos.y;
+				fPosY_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+
+				m_pTransformCom->Set_Position({ (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vPos.x + fPosX_Delta,
+											(*m_vecAnimation[m_eKeyframe])[iFrameIndex].vPos.y + fPosY_Delta,
+											0.f });	// 이미지 위치
+
+				m_pTransformCom->Set_Scaling((*m_vecAnimation[m_eKeyframe])[iFrameIndex].vScale.x + fSizeX_Delta, 	// 이미지 크기
+											  (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vScale.y + fSizeY_Delta,
+											  1.f);
+
+				m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, (*m_vecAnimation[m_eKeyframe])[iFrameIndex].fRot + fRotZ_Delta);// 이미지 회전
+
+				// 현재 키타입
+				switch (m_eKeyframe)
+				{
+					case KEYTYPE::KEYTYPE_NORMAL:
+					{
+						m_iTextureNum[KEYTYPE_NORMAL] = (*m_vecAnimation[m_eKeyframe])[iFrameIndex].iTexureframe;
+						break;
+					}
+				}
+
+			}
+			else
+			{
+				m_pTransformCom->Set_Scaling((*m_vecAnimation[m_eKeyframe])[iFrameIndex].vScale.x, 	// 이미지 크기
+											 (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vScale.y,
+											  1.f );
+
+				m_pTransformCom->Set_Position({ (*m_vecAnimation[m_eKeyframe])[iFrameIndex].vPos.x,
+												(*m_vecAnimation[m_eKeyframe])[iFrameIndex].vPos.y,
+												0.f });	// 이미지 위치
+
+				// 현재 키타입
+				switch (m_eKeyframe)
+				{
+					case KEYTYPE::KEYTYPE_NORMAL:
+					{
+						m_iTextureNum[KEYTYPE_NORMAL] = (*m_vecAnimation[m_eKeyframe])[iFrameIndex].iTexureframe;
+						break;
+					}
+				}
+
+			}
+
+		}
+		//}
+
 	}
 }
 

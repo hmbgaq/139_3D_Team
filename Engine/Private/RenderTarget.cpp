@@ -100,8 +100,6 @@ HRESULT CRenderTarget::Render_Debug(CShader * pShader, CVIBuffer * pVIBuffer)
 
 	return pVIBuffer->Render();
 }
-
-
 #endif
 
 void CRenderTarget::Create_TargetTexture()

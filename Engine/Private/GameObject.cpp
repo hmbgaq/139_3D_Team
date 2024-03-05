@@ -173,7 +173,7 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototy
 {
 	if (nullptr != Find_Component(strComTag))
 		return E_FAIL;
-
+	      
 	CComponent*		pComponent = m_pGameInstance->Clone_Component(iLevelIndex, strPrototypeTag, pArg);
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -185,6 +185,15 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototy
 	Safe_AddRef(pComponent);
 
 	pComponent->Set_Owner(this);
+
+	if (typeid(*pComponent) == typeid(CModel))
+	{
+		CModel* pModel = dynamic_cast<CModel*>(pComponent);
+		
+		pModel->Get_Owner()->Set_ModelWidth(pModel->Get_ModelWidth_WithModel());
+		pModel->Get_Owner()->Set_ModelHeight(pModel->Get_ModelHeight_WithModel());
+
+	}
 
 	return S_OK;
 }

@@ -139,20 +139,8 @@
     <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Frame">
       <UniqueIdentifier>{91ed537f-e3b8-4c30-8935-be704bc3fae7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Hp">
-      <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\02. System">
       <UniqueIdentifier>{47c53a2b-c542-4b2a-b07b-817b6be951a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\02. System\00. Tip">
-      <UniqueIdentifier>{019c2a9a-4108-440b-98d2-078b8ccff9ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\02. System\01. Quest">
-      <UniqueIdentifier>{2bdea739-4478-4ba8-9ea1-536b2f8fe484}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\02. System\02. Obtain">
-      <UniqueIdentifier>{c89fbdd3-1a4f-4c79-8b04-56dd8eb82098}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\99. Anything">
       <UniqueIdentifier>{2f1fe2e2-39d2-4a2b-9ddf-bebbdab26f5a}</UniqueIdentifier>
@@ -195,12 +183,6 @@
     </Filter>
     <Filter Include="03.Event\Test\With_Actor">
       <UniqueIdentifier>{945e673b-ae20-4a44-9ab5-8074d7590ee2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpFrame">
-      <UniqueIdentifier>{dd90327a-0190-4771-96f6-0f97d5f047fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpBar">
-      <UniqueIdentifier>{009fd7cc-9024-4ccd-b651-e9b51bbb3038}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\98. Terrain\Tool_Field">
       <UniqueIdentifier>{cac8625e-3883-4637-b916-f23057d9a854}</UniqueIdentifier>
@@ -1603,6 +1585,270 @@
     <Filter Include="01.Levels\01.GamePlay\3.Lava">
       <UniqueIdentifier>{04902ce0-48d3-4de2-bf84-596e0d009ea7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\Left_Interface">
+      <UniqueIdentifier>{e214bb53-14ac-4db7-97f6-b3b24eb46415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\Right_Interface">
+      <UniqueIdentifier>{52b0b806-bb9d-40cc-a902-d719e9dff60b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp">
+      <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\HpFrame">
+      <UniqueIdentifier>{dd90327a-0190-4771-96f6-0f97d5f047fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\Left_Interface\ExpBar">
+      <UniqueIdentifier>{cbfa7ad7-0805-44a8-888b-5cca9c54bda7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpBar">
+      <UniqueIdentifier>{009fd7cc-9024-4ccd-b651-e9b51bbb3038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\00. Text">
+      <UniqueIdentifier>{d3a3d9a9-c0d8-4fa0-8e3d-52748f4ced8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\00. Text\01. Quest">
+      <UniqueIdentifier>{2bdea739-4478-4ba8-9ea1-536b2f8fe484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\00. Text\01. Quest\Icon">
+      <UniqueIdentifier>{f07eb24a-50e1-47b9-b5b3-814a4a3de76b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\00. Text\00. Tutorial">
+      <UniqueIdentifier>{750574f2-b386-48be-8045-c110f550205a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\01. Obtain">
+      <UniqueIdentifier>{c89fbdd3-1a4f-4c79-8b04-56dd8eb82098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\02. Item_Showcase">
+      <UniqueIdentifier>{af832edd-5df1-4aa9-bcc2-6139cd863438}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\03. LevelUp">
+      <UniqueIdentifier>{e1f7f04c-3d30-421d-91e2-61bccc8e0f4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\03. LevelUp\00. MagicFrame">
+      <UniqueIdentifier>{df45be32-68fc-4e5a-9ef5-2a7a6630409a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\03. LevelUp\01. MagicTrack">
+      <UniqueIdentifier>{d0904df2-30d6-4429-9fc6-0f50f0905151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\03. LevelUp\02. Shards">
+      <UniqueIdentifier>{cd3f1fcb-7687-44c4-87eb-5f1ef16a5639}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\03. LevelUp\03. MagicSide">
+      <UniqueIdentifier>{3e3179d8-efb1-460e-a434-623608cb597d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\03. LevelUp\05. TextBox">
+      <UniqueIdentifier>{0339e334-c8e4-42f9-907a-7d3e555d4798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame">
+      <UniqueIdentifier>{c5ab709c-6440-450f-a900-0028d3da1cce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\03. LevelUp\04. SunBeacon">
+      <UniqueIdentifier>{8c7ec1c7-30da-44eb-ab32-524c15b98591}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\02. Item_Showcase\Item_Icon">
+      <UniqueIdentifier>{64ee8d28-c550-4ecb-9b39-cdd478a6ae67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpDecal">
+      <UniqueIdentifier>{7482375d-a55a-465c-a845-dbb3ec0858e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster">
+      <UniqueIdentifier>{d2cf80c9-5682-44d3-990a-9bb01685e8b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss">
+      <UniqueIdentifier>{5d8ff513-e836-4c47-bf49-dc8623b454a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss">
+      <UniqueIdentifier>{9478358a-bef3-4395-b56d-6d8fa9c36220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\LastBoss">
+      <UniqueIdentifier>{38750173-374c-4aaf-a1ab-eab234e467d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander">
+      <UniqueIdentifier>{832c2b76-6f3f-4fbd-9a6b-08ba3c2bccbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts">
+      <UniqueIdentifier>{9903d330-64d7-42ea-8433-e70bf57a1f2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State">
+      <UniqueIdentifier>{efd91669-e55f-44bd-9606-fabf23571db8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Body">
+      <UniqueIdentifier>{98dfbcac-dbed-4f31-9bd2-c2759f4f385e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon">
+      <UniqueIdentifier>{a8ab80ef-fbcd-440c-a7a2-882972aa67e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\0.Origin">
+      <UniqueIdentifier>{47993204-3254-4e31-8c15-f2b3b2bb1f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle">
+      <UniqueIdentifier>{9edab3ea-5ee4-4f8a-8681-afea61ad7983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk">
+      <UniqueIdentifier>{a7f89811-7895-4b29-8bbc-25f1e4e9e401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack">
+      <UniqueIdentifier>{de517e3f-1d83-4244-843f-be789dbbbe1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal">
+      <UniqueIdentifier>{f2149600-ef20-4eeb-b2cd-ae072dbd1a02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun">
+      <UniqueIdentifier>{446384b3-867a-4e28-b4b0-3264348ad981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\7.Dead">
+      <UniqueIdentifier>{ec883b03-1f10-4906-a072-97ac48adae47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt">
+      <UniqueIdentifier>{224a7291-8aa4-4781-af49-cca4cae62f10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle\0.Parent">
+      <UniqueIdentifier>{ed4561e5-0377-4dc7-8a60-0e76a53594d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle\1">
+      <UniqueIdentifier>{016990b8-7b51-45c7-9787-94db112d75e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\0.Parent">
+      <UniqueIdentifier>{5fab60c5-0f4b-4c8e-bd4b-6ebd83c7bc86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front">
+      <UniqueIdentifier>{1c028d9a-9de2-4bc7-b2d6-6950e054377f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back">
+      <UniqueIdentifier>{8dbdaa13-4db1-4524-92f1-9120be228fc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Left">
+      <UniqueIdentifier>{35db95b3-5606-49c8-88a0-bb371368b93b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right">
+      <UniqueIdentifier>{da5821a3-296b-4e6b-a042-a9727e2a361a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Left">
+      <UniqueIdentifier>{54315387-d66d-49d1-a8a6-14696414c2cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Right">
+      <UniqueIdentifier>{037feeba-aebd-4348-b85f-ff3e6bde644a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Left\BL135">
+      <UniqueIdentifier>{be56d168-1ff4-4033-beca-b5df944ec1fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Right\BR135">
+      <UniqueIdentifier>{8312a5b6-28bb-4e1f-a1cd-88342d2c99f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Left\FL45">
+      <UniqueIdentifier>{f7b7ff1a-2753-4e64-aee3-4118024af097}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right\FR45">
+      <UniqueIdentifier>{165e0797-5cca-44bf-a491-3b774e26cf68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Melee01">
+      <UniqueIdentifier>{0823cb90-bf7b-40f4-9b20-59675b2f7cfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Melee02">
+      <UniqueIdentifier>{f18a2168-b9a1-4835-af7f-027ee1959913}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal\HitLeft">
+      <UniqueIdentifier>{412dd53b-5732-43c2-88f2-8f9e8a6bdfe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal\HitRight">
+      <UniqueIdentifier>{bf392702-3dd3-4e6b-a0dc-301f29264138}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal\HitCenter">
+      <UniqueIdentifier>{fcf36d76-cd26-44bd-990e-0e73a4a5450f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack">
+      <UniqueIdentifier>{08b7d891-905c-4ee5-9333-e0841c313831}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange">
+      <UniqueIdentifier>{05d01a57-b484-4353-a220-4c9c5b614700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Ranged01">
+      <UniqueIdentifier>{ead66dc5-d242-42d5-9951-6297a95c02c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Ranged02">
+      <UniqueIdentifier>{e85f1c71-5f71-4f77-82e1-077323a98fd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Ranged03">
+      <UniqueIdentifier>{1b0661e5-465e-42e8-89ba-4e5129d8a762}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap">
+      <UniqueIdentifier>{b753ec9f-19f9-4c4a-926a-22febe1e2759}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn">
+      <UniqueIdentifier>{73f1c6ed-6cc0-43a7-af0d-80fee6b36659}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\Spawn1">
+      <UniqueIdentifier>{ce6356ae-bd8e-4561-ad07-c48e454eefc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\Spawn2">
+      <UniqueIdentifier>{8390fc2a-e660-496c-a46d-b8942d3938dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt1">
+      <UniqueIdentifier>{d0653371-ef6a-45fc-a585-47f4f9cdbb93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt2">
+      <UniqueIdentifier>{b28bdd03-733c-4d47-9b4c-5715b37b2acd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt3">
+      <UniqueIdentifier>{845eac6e-8133-43c4-a8cd-f212bec152a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt4">
+      <UniqueIdentifier>{a6d4ce84-1ad0-457f-9b8c-8143d01d314b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt5">
+      <UniqueIdentifier>{225f9c76-209b-49c9-bb08-dd1c6c767ec1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Start">
+      <UniqueIdentifier>{7e0075d7-0697-4dbf-bc9c-50eff3e831d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Loop">
+      <UniqueIdentifier>{edce82e6-a286-42fe-aa67-526c700587e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Stop">
+      <UniqueIdentifier>{f6495e21-9261-43b8-9546-116147e37b30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\0.Parent">
+      <UniqueIdentifier>{f6f0d66f-4492-4434-a432-b81bbe8d7554}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene">
+      <UniqueIdentifier>{b727fff8-4ba8-4e13-8a9f-84a2ab73a1a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Loop">
+      <UniqueIdentifier>{29f6a53e-4e8b-4dfb-ab6b-462972d40f6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Start">
+      <UniqueIdentifier>{83c6808c-a9bb-4269-a172-430484dd93fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Stop">
+      <UniqueIdentifier>{804ea364-4561-4ded-9020-a982122a9634}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Start">
+      <UniqueIdentifier>{9af60c5e-3a9d-4730-96ec-6ad10ac20d6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Loop">
+      <UniqueIdentifier>{a7c87297-5474-4697-9767-8f7704fb73ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Stop">
+      <UniqueIdentifier>{cee463ea-1b18-408b-a957-e8bc100de5e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Stun_Start">
+      <UniqueIdentifier>{af956beb-3daf-40b4-af08-c139a9981a37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene\0.Parent">
+      <UniqueIdentifier>{585a2b0f-087a-4355-a97a-d646a9de37ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene\1">
+      <UniqueIdentifier>{7c2234da-52a3-4831-977d-466c0602c6af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Success">
+      <UniqueIdentifier>{0e2b7d1a-ad18-4ab9-87bb-0710609c53e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure">
+      <UniqueIdentifier>{9b74c7e6-12c1-4b11-9131-63c6ea60b4f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\IntroSpawn">
+      <UniqueIdentifier>{c5d09ec1-a9b3-4134-b00c-8f5a4e71a4df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1741,7 +1987,7 @@
       <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_HPFrame.h">
-      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpFrame</Filter>
+      <Filter>02.GameObjects\UI\00. Player\HpFrame</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Field.h">
       <Filter>02.GameObjects\98. Terrain\Tool_Field</Filter>
@@ -1877,6 +2123,57 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_Blood.h">
       <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_Left_Interface.h">
+      <Filter>02.GameObjects\UI\00. Player\Left_Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_TutorialBox.h">
+      <Filter>02.GameObjects\UI\02. System\00. Text\00. Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_ExpBar.h">
+      <Filter>02.GameObjects\UI\00. Player\Left_Interface\ExpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Player_Right_Interface.h">
+      <Filter>02.GameObjects\UI\00. Player\Right_Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_QuestBox.h">
+      <Filter>02.GameObjects\UI\02. System\00. Text\01. Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_QuestIcon.h">
+      <Filter>02.GameObjects\UI\02. System\00. Text\01. Quest\Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_ItemShowcase.h">
+      <Filter>02.GameObjects\UI\02. System\02. Item_Showcase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Text.h">
+      <Filter>02.GameObjects\UI\02. System\00. Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_TextBox.h">
+      <Filter>02.GameObjects\UI\02. System\00. Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LevelUp_MagicFrame.h">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\00. MagicFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LevelUp_MagicSide.h">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\03. MagicSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LevelUp_MagicTrack.h">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\01. MagicTrack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LevelUp_Shards.h">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\02. Shards</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LevelUp_ShieldFrame.h">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LevelUp_SunBeacon.h">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\04. SunBeacon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LevelUp_TextBox.h">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\05. TextBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_ItemIcon.h">
+      <Filter>02.GameObjects\UI\02. System\02. Item_Showcase\Item_Icon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Preset.h">
       <Filter>99.Defines</Filter>
@@ -2952,6 +3249,150 @@
     <ClInclude Include="..\Public\Level_Intro.h">
       <Filter>01.Levels\01.GamePlay\1. Intro</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_VampireCommander.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_State.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\0.Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle\0.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Idle.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_State_Walk.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\0.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_B.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_F.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_FL45.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Left\FL45</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_FR45.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right\FR45</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_FL.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_FR.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_BL135.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Left\BL135</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_BR135.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Right\BR135</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_BL.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Walk_BR.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Melee1.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Melee01</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Melee2.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Melee02</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Hit.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_HitCenter.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal\HitCenter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_HitLeft.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal\HitLeft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_HitRight.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal\HitRight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Ranged1.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Ranged01</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Ranged3.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Ranged03</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Ranged2.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Ranged02</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Dead.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\7.Dead</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_IntroSpawn.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\IntroSpawn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Spawn1.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\Spawn1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Spawn2.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\Spawn2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Spawn.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Taunt.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Taunt1.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Taunt2.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Taunt3.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Taunt4.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Taunt5.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Attack.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\0.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Leap_Loop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Leap_Strat.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Leap_Stop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_BloodRange_Start.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_BloodRange_Loop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_BloodRange_Stun_Start.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Stun_Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_BloodRange_Stop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_State_CutScene.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene\0.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_CutScene.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_SyncedAttack.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Success</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_SyncedAttack_Fail.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -3144,7 +3585,7 @@
       <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_MonsterHp.h">
-      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Hp</Filter>
+      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_MonsterHpFrame.h">
       <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame</Filter>
@@ -3251,7 +3692,7 @@
       <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_MonsterHp.cpp">
-      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Hp</Filter>
+      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_MonsterHpFrame.cpp">
       <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame</Filter>
@@ -3287,7 +3728,7 @@
       <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_HPFrame.cpp">
-      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpFrame</Filter>
+      <Filter>02.GameObjects\UI\00. Player\HpFrame</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Field.cpp">
       <Filter>02.GameObjects\98. Terrain\Tool_Field</Filter>
@@ -4398,6 +4839,201 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Intro.cpp">
       <Filter>01.Levels\01.GamePlay\1. Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_Left_Interface.cpp">
+      <Filter>02.GameObjects\UI\00. Player\Left_Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_TutorialBox.cpp">
+      <Filter>02.GameObjects\UI\02. System\00. Text\00. Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_ExpBar.cpp">
+      <Filter>02.GameObjects\UI\00. Player\Left_Interface\ExpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Player_Right_Interface.cpp">
+      <Filter>02.GameObjects\UI\00. Player\Right_Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_QuestBox.cpp">
+      <Filter>02.GameObjects\UI\02. System\00. Text\01. Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_QuestIcon.cpp">
+      <Filter>02.GameObjects\UI\02. System\00. Text\01. Quest\Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_ItemShowcase.cpp">
+      <Filter>02.GameObjects\UI\02. System\02. Item_Showcase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Text.cpp">
+      <Filter>02.GameObjects\UI\02. System\00. Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_TextBox.cpp">
+      <Filter>02.GameObjects\UI\02. System\00. Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LevelUp_MagicFrame.cpp">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\00. MagicFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LevelUp_MagicSide.cpp">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\03. MagicSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LevelUp_MagicTrack.cpp">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\01. MagicTrack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LevelUp_Shards.cpp">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\02. Shards</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LevelUp_ShieldFrame.cpp">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LevelUp_SunBeacon.cpp">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\04. SunBeacon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LevelUp_TextBox.cpp">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\05. TextBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_ItemIcon.cpp">
+      <Filter>02.GameObjects\UI\02. System\02. Item_Showcase\Item_Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_VampireCommander.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_State.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\0.Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_State_Normal.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\1.Idle\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_State_Walk.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_B.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_F.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_FR.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_FL45.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Left\FL45</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_FL.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_FR45.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Front\Right\FR45</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_BL.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_BL135.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Left\BL135</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_BR.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Walk_BR135.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\2.Walk\Back\Right\BR135</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Melee1.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Melee01</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Melee2.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Melee02</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Hit.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_HitCenter.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal\HitCenter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_HitLeft.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal\HitLeft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_HitRight.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\5.HitNormal\HitRight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Ranged1.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Ranged01</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Ranged3.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Ranged03</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Ranged2.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Ranged02</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Dead.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\7.Dead</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_IntroSpawn.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\IntroSpawn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Spawn1.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\Spawn1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Spawn2.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\Spawn2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Spawn.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Taunt.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Taunt1.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Taunt2.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Taunt3.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Taunt4.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Taunt5.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\8.Taunt\Taunt5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Attack.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Leap_Loop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Leap_Strat.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Leap_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_BloodRange_Start.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_BloodRange_Loop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_BloodRange_Stun_Start.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Stun_Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_BloodRange_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_State_CutScene.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_CutScene.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\4.CutScene\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_SyncedAttack.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Success</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_SyncedAttack_Fail.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

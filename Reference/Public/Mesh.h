@@ -49,6 +49,7 @@ public:
 
 #ifdef _DEBUG
 	_bool			Picking(RAY ray, _float3* out);
+
 #endif // _DEBUG
 
 	_char* Get_Name() {

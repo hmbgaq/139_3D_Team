@@ -135,9 +135,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		fTimeAcc += pGameInstance->Compute_TimeDelta(TEXT("Timer_Default"));
 
-		//if (fTimeAcc >= 1.f / 60.0f ) /* 1초에 60번만 true = 60프레임 제한 */
 		if (true) /* 프레임제한없음 */
-		{
+		//if (fTimeAcc >= 1.f / 60.0f ) /* 1초에 60번만 true = 60프레임 제한 */
+        {
 			pMainApp->Tick(pGameInstance->Compute_TimeDelta(TEXT("Timer_60")));
 			pMainApp->Render();
 
@@ -267,8 +267,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     case WM_KEYDOWN:
-        if (wParam == VK_ESCAPE)
-            ::DestroyWindow(hWnd);
+        //if (wParam == VK_ESCAPE)
+        //    ::DestroyWindow(hWnd);
         break;
     case WM_DESTROY:
         PostQuitMessage(0);

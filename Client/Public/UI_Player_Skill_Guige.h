@@ -6,7 +6,7 @@
 class CUI_Player_Skill_Guige final : public CUI
 {
 public:
-	enum TEXTUREKIND { FRAME, TEXTURE_END };
+	enum TEXTUREKIND { ACTIVE, INACTIVE, TEXTURE_END };
 
 private:
 	CUI_Player_Skill_Guige(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

@@ -21,7 +21,8 @@ public:
 	HRESULT Initialize();
 	void	Tick(_float fTimeDelta);
 	HRESULT Render();
-
+	//CUDATEST
+	int sum_int(int a, int b);
 private:
 	HRESULT Open_Level(LEVEL eStartLevelID);
 	HRESULT Ready_Prototype_Component_ForStaticLevel();
@@ -31,6 +32,7 @@ private:
 	// SH_Add
 private: /* ===================== UI ===================== */
 	HRESULT	Ready_UITexture();
+	HRESULT UI_TargetTexture();
 
 private:
 	ID3D11Device*			m_pDevice = { nullptr };

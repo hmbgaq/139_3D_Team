@@ -52,10 +52,10 @@ void CEnvironment_Object::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Object::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
-	{
-		m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
-	}
+	//f (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
+	//
+	//	m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
+	//
 }
 
 void CEnvironment_Object::Late_Tick(_float fTimeDelta)
@@ -73,10 +73,10 @@ void CEnvironment_Object::Late_Tick(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 		return ;
 
-	if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
-	{
-		m_pGameInstance->Add_DebugRender(m_pPickingCollider);
-	}
+	//if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
+	//{
+	//	m_pGameInstance->Add_DebugRender(m_pPickingCollider);
+	//}
 }
 
 HRESULT CEnvironment_Object::Render()
@@ -94,8 +94,8 @@ HRESULT CEnvironment_Object::Render()
 		}
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		
 		m_pShaderCom->Begin(0);
 
 		m_pModelCom->Render((_uint)i);
@@ -218,22 +218,22 @@ HRESULT CEnvironment_Object::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
+	//CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
+	//
+	//m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
+	//Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
 
-	m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
-	Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
+		//!CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
+		//!
+		//!Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_MESH;
+		//!Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
+		//Desc_AABB.vCenter = _float3(0.f, 0.f, 0.f);
 
-	//!CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
-	//!
-	//!Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_MESH;
-	//!Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
-	//Desc_AABB.vCenter = _float3(0.f, 0.f, 0.f);
-
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Test)))
-	{
-		MSG_BOX("¤¸´ï");
-		return E_FAIL;
-	}
+	//if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Test)))
+	//{
+	//	MSG_BOX("¤¸´ï");
+	//	return E_FAIL;
+	//}
 
 	//!if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Desc_AABB)))
 	//!{
@@ -253,6 +253,10 @@ HRESULT CEnvironment_Object::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+		_float fCamFar = m_pGameInstance->Get_CamFar();
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
 		return E_FAIL;
 	
 	return S_OK;

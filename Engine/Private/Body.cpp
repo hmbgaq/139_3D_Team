@@ -248,14 +248,13 @@ void CBody::Set_Owner(CCharacter* pOwner)
 {
 	m_pOwner = pOwner;
 }
+#endif
 
 void CBody::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
 {
 	m_pModelCom->Set_Animation_Upper(_iAnimationIndex, _eAnimState, m_pModelCom->Get_TickPerSecond() / 10.f);
 	m_pModelCom->Set_Splitted(true);
 }
-
-#endif
 
 HRESULT CBody::Bind_ShaderResources()
 {
