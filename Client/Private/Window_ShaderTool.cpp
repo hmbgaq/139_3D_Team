@@ -216,9 +216,9 @@ void CWindow_ShaderTool::Compress_DOF_Setting()
 {
 	ImGui::Checkbox("DOF Active", &m_eDOF_Desc.bDOF_Active);
 
-	ImGui::SliderFloat("Focus Distance", &m_eDOF_Desc.g_fFocusDistance, 0.0f, 100.0f, "DistFocalPlane = %.3f");
-	ImGui::SliderFloat("Focus Range", &m_eDOF_Desc.g_fFocusRange, 0.0f, 100.0f, "FocalLength/2 = %.3f");
-	ImGui::SliderFloat("Att", &m_eDOF_Desc.fMaxAtt, 0.0f, 100.0f, "MaxAtt = %.3f");
+	ImGui::SliderFloat("Focus", &m_eDOF_Desc.focus, 0.0f, 50.0f, "Focus = %.3f");
+	ImGui::SliderFloat("Range", &m_eDOF_Desc.range, 0.0f, 50.0f, "Range = %.3f");
+	//ImGui::SliderFloat("Att", &m_eDOF_Desc.fMaxAtt, 0.0f, 100.0f, "MaxAtt = %.3f");
 
 	m_pGameInstance->Get_Renderer()->Set_DOF_Option(m_eDOF_Desc);
 }

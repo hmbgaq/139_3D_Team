@@ -67,7 +67,7 @@ private:
 	HRESULT Render_UI();
 
 	/* ETC */
-	HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalTragetTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
+	HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalMRTTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
 	HRESULT	Render_Blur_DownSample(const wstring& strStartTargetTag);
 	HRESULT	Render_Blur_Horizontal(_int eHorizontalPass);
 	HRESULT	Render_Blur_Vertical(_int eVerticalPass);

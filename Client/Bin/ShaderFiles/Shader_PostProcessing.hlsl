@@ -8,14 +8,12 @@ struct radial
 
 struct DOF
 {
-    bool    bDOF_Active;
-    //float   fNearBlur_Depth;
-    //float   fFocalPalne_Depth;
-    //float   FarBlur_Depth;
-    
-    float   fFocusDistance;
-    float   fFocusRange;
-    float   fMaxAtt;
+    bool bDOF_Active;
+    float focus;
+    float range;
+    //float   fFocusDistance;
+    //float   fFocusRange;
+    //float   fMaxAtt;
 };
 
 /* ====================================== */
@@ -24,7 +22,7 @@ struct DOF
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_ViewMatrixInv, g_ProjMatrixInv;
 float4 g_vCamPosition;
-float g_fCamFar;
+float  g_fCamFar;
 
 Texture2D g_ProcessingTarget;
 
@@ -39,6 +37,7 @@ radial g_Radial_Blur;
 
 /* DOF */
 Texture2D   g_DepthTarget;
+Texture2D   g_BlurTarget;
 DOF         g_DOF;
 ///* ====================================== */
 //float ComputeDepthBlur(float depth) /* 뷰 공간 기준의 입력된 깊이 */
@@ -264,8 +263,8 @@ VS_OUT VS_MAIN_DOF(VS_IN In)
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
 
-    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-    Out.vPosition.xy = sign(Out.vPosition.xy);
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP); /* 투영상 공간 */ 
+   // Out.vPosition.xy = sign(Out.vPosition.xy);
 
     Out.vTexcoord = In.vTexcoord;
     
@@ -276,28 +275,11 @@ PS_OUT PS_MAIN_DOF (PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-   vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord); /* 카메라 Depth 로 가져옴 */
-   if (0.f == vDepth.r)
-       discard;
-   
-   vector vTarget = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord); /* 현재 그려진 장면 */ 
-   Out.vColor = vTarget * 0.5f;
-   
-   float fViewZ = vDepth.y * g_fCamFar;
-   
-   if (g_DOF.fFocusDistance - g_DOF.fFocusRange > fViewZ)
-   {
-       Out.vColor.a = saturate(1.f - (fViewZ / (g_DOF.fFocusDistance - g_DOF.fFocusRange)));
-   }
-   else if (g_DOF.fFocusDistance + g_DOF.fFocusRange < fViewZ)
-   {
-       float fMaxDistance = g_DOF.fFocusDistance + g_DOF.fFocusRange + g_DOF.fMaxAtt;
-     //  Out.vColor = vTarget * 0.5f;
-   
-       Out.vColor.a = saturate((fViewZ - (g_DOF.fFocusDistance + g_DOF.fFocusRange)) / (fMaxDistance - (g_DOF.fFocusDistance + g_DOF.fFocusRange))); // f + R ~ 100.f(특정 Z) 까지를 0~1로 정규화
-   }
-   else 
-       Out.vColor = float4(0.f, 0.f, 0.f, 0.f); /* 뚜렷하게 보일부분 */
+    vector vOrigin = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vBlur = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    Out.vColor = lerp(vOrigin, vBlur, saturate(g_DOF.range * abs(g_DOF.focus - vOrigin.a)));
     
     return Out;
 }

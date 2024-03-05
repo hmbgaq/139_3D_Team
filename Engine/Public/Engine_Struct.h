@@ -428,9 +428,12 @@ namespace Engine
 		//_float   fFarBlur_Depth = 0.f;
 		//_float   fCutOff = 0.f;
 		
-		_float g_fFocusDistance = 32.5f;
-		_float g_fFocusRange	= 12.5f;  
-		_float fMaxAtt			= 30.f;
+		//_float g_fFocusDistance = 32.5f;
+		//_float g_fFocusRange	= 12.5f;  
+		//_float fMaxAtt			= 30.f;
+		_float focus = 1.f;
+		_float range = 1.f;
+
 	}DOF_DESC;
 
 	/* 전체 컨트롤 - 레벨시작할때 초기 컨트롤용도 */
