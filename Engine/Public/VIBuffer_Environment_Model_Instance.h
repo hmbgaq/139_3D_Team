@@ -26,6 +26,7 @@ public:
 	virtual HRESULT		Bind_VIBuffers(_uint iMeshContainerIndex);
 	virtual void		Update(vector<INSTANCE_INFO_DESC>& vecInstanceDesc);
 			void		Update(INSTANCE_INFO_DESC InstanceDesc, _int iIndex);
+			HRESULT		Remove_Instance(_uint iIndex);
 
 			HRESULT		Bind_ShaderResources(class CShader* pShader, _int iIndex);
 public:

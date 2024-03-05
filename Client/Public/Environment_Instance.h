@@ -38,7 +38,10 @@ public:
 
 public:
 	void			Update(INSTANCE_INFO_DESC InstanceDesc, _int iIndex);
+	HRESULT			Remove_Instance(_uint iIndex);
 
+public:
+	_uint			Get_NumInstance() { return m_tInstanceDesc.iNumInstance;}
 	
 
 public:
