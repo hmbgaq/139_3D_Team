@@ -8,11 +8,9 @@ struct radial
 
 struct DOF
 {
-    bool bDOF_Active;
-    float focus;
-    float range;
-    //float   fFocusDistance;
-    //float   fFocusRange;
+    bool    bDOF_Active;
+    float   fFocusDistance;
+    float   fFocusRange;
     //float   fMaxAtt;
 };
 
@@ -236,6 +234,7 @@ PS_OUT PS_MAIN_RADIAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
+
     float4 colour = { 0.f, 0.f, 0.f, 0.f };
     float v = 0.f;
 
@@ -254,33 +253,43 @@ PS_OUT PS_MAIN_RADIAL(PS_IN In)
 }
 
 /* ------------------- 3 -DOF Shader -------------------*/
-VS_OUT VS_MAIN_DOF(VS_IN In)
-{
-    VS_OUT Out = (VS_OUT) 0;
+//VS_OUT VS_MAIN_DOF(VS_IN In)
+//{
+//    VS_OUT Out = (VS_OUT) 0;
 
-    matrix matWV, matWVP;
+//    matrix matWV, matWVP;
     
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
+//    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+//    matWVP = mul(matWV, g_ProjMatrix);
 
-    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP); /* 투영상 공간 */ 
-   // Out.vPosition.xy = sign(Out.vPosition.xy);
+//    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
 
-    Out.vTexcoord = In.vTexcoord;
+//    Out.vTexcoord = In.vTexcoord;
     
-    return Out;
-}
+//    return Out;
+//}
 
 PS_OUT PS_MAIN_DOF (PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    vector vOrigin = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
-    vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);    
+    vector vTarget = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
     vector vBlur = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
     
-    Out.vColor = lerp(vOrigin, vBlur, saturate(g_DOF.range * abs(g_DOF.focus - vOrigin.a)));
+    float fViewZ = vDepth.y * g_fCamFar;
     
+    if (g_DOF.fFocusDistance - g_DOF.fFocusRange > fViewZ) /* 초점거리 앞 */ 
+    {
+        Out.vColor = vBlur;
+    }
+    else if (g_DOF.fFocusDistance + g_DOF.fFocusRange < fViewZ) /* 초첨거리 뒤 */
+    {
+        Out.vColor = vBlur;
+    }
+    else /* 정상출력할곳 */ 
+        Out.vColor = vTarget;
+
     return Out;
 }
 
@@ -333,7 +342,7 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN_DOF();
+        VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL ;
         HullShader = NULL;
         DomainShader = NULL;
