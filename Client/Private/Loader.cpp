@@ -40,6 +40,7 @@
 #pragma region VampireCommander
 #include "VampireCommander.h"
 #include "Body_VampireCommander.h"
+#include "VampireCommander_Weapon_Hand.h"
 #pragma endregion
 
 #pragma region INFECTED
@@ -562,7 +563,8 @@ HRESULT CLoader::Ready_Origin()
 	//TODO VampireCommander
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_VampireCommander"), CVampireCommander::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_VampireCommander"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_VampireCommander"), CBody_VampireCommander::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_VampireCommander"))));
-	
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_VampireCommander_Weapon_Hand"), CVampireCommander_Weapon_Hand::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_VampireCommander_Weapon_Hand"))));
+
 	//! =====================================Boss Line=========================================
 
 	//! Infected

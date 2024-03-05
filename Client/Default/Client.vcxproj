@@ -624,6 +624,8 @@
     <ClInclude Include="..\Public\VampireCommander_Walk_FL45.h" />
     <ClInclude Include="..\Public\VampireCommander_Walk_FR.h" />
     <ClInclude Include="..\Public\VampireCommander_Walk_FR45.h" />
+    <ClInclude Include="..\Public\VampireCommander_Weapon.h" />
+    <ClInclude Include="..\Public\VampireCommander_Weapon_Hand.h" />
     <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h" />
     <ClInclude Include="..\Public\Window_Style.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -1079,6 +1081,8 @@
     <ClCompile Include="..\Private\VampireCommander_Walk_FL45.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Walk_FR.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Walk_FR45.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Weapon.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Weapon_Hand.cpp" />
     <ClCompile Include="..\Private\VampireTank_KnockFrontLight_F_01.cpp" />
     <ClCompile Include="..\Private\Window_Style.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
