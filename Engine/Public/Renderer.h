@@ -15,7 +15,7 @@ public:
 		/* EFFECT */
 		RENDER_EFFECT, RENDER_EFFECT_PARTICLE, RENDER_EFFECT_MESH,
 		/* UI */
-		RENDER_UI, RENDER_CURSOR,
+		RENDER_UI, RENDER_CURSOR, RENDER_UI_TOOL,
 		/* RenderGroup*/
 		RENDER_BLEND, RENDER_END
 	};
@@ -65,6 +65,7 @@ private:
 
 	/* UI */
 	HRESULT Render_UI();
+	HRESULT Render_UI_Tool();
 
 	/* ETC */
 	HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalMRTTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
@@ -154,7 +155,7 @@ private:
 	HRESULT Ready_DebugRender();
 	HRESULT Render_DebugCom();
 	HRESULT Render_DebugTarget();
-	_bool	m_bDebugRenderTarget	= { false };
+	_bool	m_bDebugRenderTarget	= { true };
 	_bool	m_bDebugCom				= { true };
 	list<class CComponent*>			m_DebugComponent;
 #endif	

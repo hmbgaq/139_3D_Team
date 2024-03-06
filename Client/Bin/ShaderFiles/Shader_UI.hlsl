@@ -10,18 +10,18 @@
 /* 셰이더의 전역변수 == 상수테이블(Constant Table) */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-texture2D g_DiffuseTexture;
-texture2D g_DiffuseTexture_Second;
-texture2D g_DiffuseTexture_Third;
-texture2D g_DiffuseTexture_Fourth;
+Texture2D g_DiffuseTexture;
+Texture2D g_DiffuseTexture_Second;
+Texture2D g_DiffuseTexture_Third;
+Texture2D g_DiffuseTexture_Fourth;
 
 /* Loading */
 float g_LoadingProgress;
 
 /* Hp */
-texture2D g_HpBarWhite_Texture;
-texture2D g_HpBarRed_Texture;
-texture2D g_HpBarDecal_Texture;
+Texture2D g_HpBarWhite_Texture;
+Texture2D g_HpBarRed_Texture;
+Texture2D g_HpBarDecal_Texture;
 float g_MaxHP;
 float g_CurrentHP;
 float g_LerpHP;
@@ -93,9 +93,9 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
 	/* 이 셰이더를 사용하는 객체의 색상을 g_DiffuseTexture의 색상으로 적용시키겠다. */
-    Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vColor = g_DiffuseTexture.Sample(ClampSampler, In.vTexcoord);
 		
-    if (Out.vColor.a < 0.1f)
+    if (Out.vColor.a == 0.0f)
         discard;
 	
     return Out;
@@ -153,7 +153,7 @@ technique11 DefaultTechnique
 		/* 셰이더(렌더스테이츠) 그리기전에 적용할것들 세팅해주고 */
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 		
 		/* 렌더스테이츠 */
         VertexShader = compile vs_5_0 VS_MAIN(); // 값 받고

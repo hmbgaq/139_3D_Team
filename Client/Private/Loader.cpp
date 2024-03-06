@@ -749,7 +749,7 @@ HRESULT CLoader::Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLeve
 				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_SINGLE;
 		}
 
-		 if (fs::is_regular_file(entry.path()) && entry.path().extension() == ".fbx")
+		 if (fs::is_regular_file(entry.path()) && entry.path().extension().string() == ".fbx")
 		{
 			wstring strSearchPath = entry.path().wstring();
 			

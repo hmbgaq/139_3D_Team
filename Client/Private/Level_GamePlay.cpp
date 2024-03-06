@@ -440,7 +440,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 	///* ui test */
 	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
-
+	//
 	//CUI_Player_HPBar::UI_DESC desc = {};
 	//desc.fPositionX = (_float)g_iWinSizeX / 2 + 20.f;
 	//desc.fPositionY = (_float)g_iWinSizeY / 2 + 20.f;
@@ -453,11 +453,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_UI()
 {
-	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
-
-	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
-
-	FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
+	 FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
+	 
+	//FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr)); /* 렌더타ㄱ*/
+	//FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
 	
 	return S_OK;
 }
@@ -469,7 +468,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 	/* MRT로 묶지 않으면 출력이안나옴. */
 	json json_in;
 
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+	char filePath[MAX_PATH] = "../Bin/DataFiles/TestData/Test_3.json";
 
 	_int		iPathNum = 0;
 	string		strFileName;
@@ -509,17 +508,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 HRESULT CLevel_GamePlay::Ready_Layer_UI_Interface(const wstring& strLayerTag, void* pArg)
 {
 	// =>Left_Interface
-						Ready_LeftInterface(strLayerTag, pArg);
+					//	Ready_LeftInterface(strLayerTag, pArg);
 	// =>Right_Interface
 						Ready_RightInterface(strLayerTag, pArg);
 	// =>Quest_Box
-						Ready_QuestBox(strLayerTag, pArg);
+					//	Ready_QuestBox(strLayerTag, pArg); // 우상단
 	// =>Tutorial_Box
-						Ready_TutorialBox(strLayerTag, pArg);
+						Ready_TutorialBox(strLayerTag, pArg); //좌상단
 	// =>LevelUp
-						Ready_LevelUp(strLayerTag, pArg);
+						Ready_LevelUp(strLayerTag, pArg); // 가운데
 	// =>Reward_Item
-						Ready_Reward_Item(strLayerTag, pArg);
+						Ready_Reward_Item(strLayerTag, pArg); // 가운데 하단 
 	return S_OK;
 }
 
