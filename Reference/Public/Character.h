@@ -138,6 +138,8 @@ public:
 	_float Calc_Distance();
 	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
+	void Move_In_Proportion_To_Enemy(_float fSpeedCap = 0.5f);
+
 
 
 public:	//!For Animation Split

@@ -466,6 +466,19 @@ _float CCharacter::Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag)
 	return Calc_Distance(pCharacter);
 }
 
+void CCharacter::Move_In_Proportion_To_Enemy(_float fSpeedCap)
+{
+	if (nullptr == m_pTarget)
+		return;
+
+	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	_float fDistance = Calc_Distance();
+	_float3 vPos = { 0.f, 0.f, min(fDistance / 100.f, fSpeedCap) };
+
+	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
+	m_pTransformCom->Move_On_Navigation(vResult);
+}
+
 
 void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
 {
