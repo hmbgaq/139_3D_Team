@@ -179,10 +179,9 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
 
-	//Write_VoidDesc(Out_Json, &m_tInstanceDesc);
 
 	/* Mesh */
-	Out_Json["eType_Mesh"] = m_tInstanceDesc.eType_Mesh;
+	Out_Json["eType_MeshEffect"] = m_tInstanceDesc.eType_MeshEffect;
 	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
 
 	/* Bloom */
@@ -201,13 +200,10 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-	//*static_cast<EFFECTVOID_DESC*>(&m_tInstanceDesc) = *static_cast<EFFECTVOID_DESC*>(Load_VoidDesc(In_Json));
-	//static_cast<EFFECTVOID_DESC>(m_tInstanceDesc) = Load_VoidDesc(In_Json);
-	//(EFFECTVOID_DESC)m_tInstanceDesc = Load_VoidDesc(In_Json);
 
 	/* Mesh */
-	m_tInstanceDesc.eType_Mesh = In_Json["eType_Mesh"];
-	m_tInstanceDesc.bUseCustomTex = In_Json["bUseCustomTex"];
+	m_tInstanceDesc.eType_MeshEffect = In_Json["eType_MeshEffect"];
+	m_tInstanceDesc.bUseCustomTex	= In_Json["bUseCustomTex"];
 
 
 	/* Bloom */
@@ -239,8 +235,8 @@ HRESULT CEffect_Instance::Ready_Components()
 
 	/* For.Com_VIBuffer */
 	{
-		//CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferInfo = *static_cast<CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC*>(Get_BufferDesc());
 		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferInfo = {};
+		tBufferInfo.pModel = m_pModelCom;
 		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
 			return E_FAIL;
 	}
@@ -305,6 +301,7 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	/* UV ============================================================================================ */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
 
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &m_tVoidDesc.vColor_Mul, sizeof(_float4)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tVoidDesc.vColor_Clip.w, sizeof(_float)));
 
 	_float3 vBlack_Discard = _float3(m_tVoidDesc.vColor_Clip.x, m_tVoidDesc.vColor_Clip.y, m_tVoidDesc.vColor_Clip.z);

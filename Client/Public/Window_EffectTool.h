@@ -99,21 +99,21 @@ private:
 	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC*	m_pMeshBufferDesc = {};
 
 private:
-	_int m_iRenderGroup_Particle		= { 9 };
+	_int m_iRenderGroup_Particle		= { 5 };
 	_int m_iShaderPassIndex_Particle	= { 0 };
 	_int m_iMaxShaderPassIndex_Particle = { 1 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END] = { };
 	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 7, 30, 9, 16 };
 
 
-	_int m_iRenderGroup_Rect = { 9 };
+	_int m_iRenderGroup_Rect = { 5 };
 	_int m_iShaderPassIndex_Rect = { 0 };
 	_int m_iMaxShaderPassIndex_Rect = { 2 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END] = { };
 	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 7, 30, 9, 16 };
 
 
-	_int m_iRenderGroup_Mesh			= { 9 };
+	_int m_iRenderGroup_Mesh			= { 5 };
 	_int m_iShaderPassIndex_Mesh		= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
@@ -248,9 +248,12 @@ private:
 
 	_float	m_fUV_RotDegree_Mesh = { 0.f };
 
+
+	_float	m_fColor_Mul_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
+
+
 	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_fRimPower_Mesh = { 1.f };
-
 
 	_float	m_vBloomColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };

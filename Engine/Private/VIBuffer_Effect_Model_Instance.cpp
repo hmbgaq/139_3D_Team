@@ -119,8 +119,6 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 		pModelInstance[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f)	/* * 크기 */;
 		pModelInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f)	/* * 크기 */;
 
-
-
 	} // 반복문 끝
 
 	m_pContext->Unmap(m_pVBInstance, 0);

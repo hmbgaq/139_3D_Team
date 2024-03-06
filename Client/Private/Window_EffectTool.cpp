@@ -780,7 +780,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 				/* Min 색 설정_파티클 */
 				if (ImGui::ColorEdit4("Min_Color_Particle", m_fColor_Min_Particle, ImGuiColorEditFlags_None))
 				{
-
 					m_pParticleBufferDesc->vMinMaxRed.x = m_fColor_Min_Particle[0];
 					m_pParticleBufferDesc->vMinMaxGreen.x = m_fColor_Min_Particle[1];
 					m_pParticleBufferDesc->vMinMaxBlue.x = m_fColor_Min_Particle[2];
@@ -790,7 +789,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 				/* Max 색 설정_파티클 */
 				if (ImGui::ColorEdit4("Max_Color_Particle", m_fColor_Max_Particle, ImGuiColorEditFlags_None))
 				{
-
 					m_pParticleBufferDesc->vMinMaxRed.y = m_fColor_Max_Particle[0];
 					m_pParticleBufferDesc->vMinMaxGreen.y = m_fColor_Max_Particle[1];
 					m_pParticleBufferDesc->vMinMaxBlue.y = m_fColor_Max_Particle[2];
@@ -1128,7 +1126,7 @@ void CWindow_EffectTool::Update_MeshTab()
 				m_pInstanceDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_InstanceDesc();
 				CVIBuffer_Effect_Model_Instance* pVIBuffer = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_VIBufferCom();
 				m_pMeshBufferDesc = pVIBuffer->Get_Desc();
-
+				m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
 
 				//// 이펙트 모델 리스트박스
 				//if (ImGui::ListBox(" Meshes ", &m_iCurEffectIndex, m_szEffectNames, m_pEffects.size(), (_int)6))
@@ -1362,6 +1360,18 @@ void CWindow_EffectTool::Update_MeshTab()
 					m_pMeshBufferDesc->vMinMaxRotationOffsetZ.x = m_vRotationOffsetZ_Mesh[0];
 					m_pMeshBufferDesc->vMinMaxRotationOffsetZ.y = m_vRotationOffsetZ_Mesh[1];
 				}
+
+
+
+				// 디퓨즈에 곱할 색 (색 변경)
+				if (ImGui::ColorEdit4("Color_Mul_Mesh", m_fColor_Mul_Mesh, ImGuiColorEditFlags_None))
+				{
+					m_pCurVoidDesc->vColor_Mul.x = m_fColor_Mul_Mesh[0];
+					m_pCurVoidDesc->vColor_Mul.y = m_fColor_Mul_Mesh[1];
+					m_pCurVoidDesc->vColor_Mul.z = m_fColor_Mul_Mesh[2];
+					m_pCurVoidDesc->vColor_Mul.w = m_fColor_Mul_Mesh[3];
+				}
+
 
 			}
 		}
@@ -2453,7 +2463,7 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tVoidDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
 		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
-		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 11 };
+		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
 
 		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
 		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 0 };
@@ -2473,7 +2483,7 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tVoidDesc.bUseRigidBody = { TRUE };
 
 		CEffect_Instance::EFFECT_INSTANCE_DESC tInstanceDesc = {};
-		tInstanceDesc.eType_Mesh = CEffect_Instance::MESH_PARTICLE;
+		tInstanceDesc.eType_MeshEffect = CEffect_Instance::MESH_PARTICLE;
 		tInstanceDesc.vRimColor = { 2.f, 10.f, 255.f, 255.f };
 		tInstanceDesc.fRimPower = { 950.f };
 

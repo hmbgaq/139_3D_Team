@@ -17,12 +17,11 @@ class CEffect_Instance final : public CEffect_Void
 public:
 	enum TYPE_MESH	{ MESH_PARTICLE, MESH_STATIC, TYPE_MESH_END };
 
-
 public:
 	typedef struct tagEffectInstanceDesc
 	{
-		TYPE_MESH		eType_Mesh = { MESH_PARTICLE };
-		_bool			bUseCustomTex = { TRUE };
+		TYPE_MESH		eType_MeshEffect = { MESH_PARTICLE };
+		_bool			bUseCustomTex	 = { TRUE };
 
 
 		/* Bloom */
