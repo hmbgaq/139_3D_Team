@@ -61,8 +61,13 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		// 확인 버튼을 눌렀을 때
 		if (iCheckPoint == IDOK)
 		{
-			if (FAILED(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO))))
+			//if (FAILED(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO))))
+			//	return;
+
+			if (FAILED(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY))))
 				return;
+
+			
 		}
 		else if (iCheckPoint == IDCANCEL)
 		{

@@ -1,28 +1,28 @@
 #include "stdafx.h"
-#include "..\Public\Environment_Object.h"
+#include "..\Public\Environment_LightObject.h"
 
 #include "GameInstance.h"
 
-CEnvironment_Object::CEnvironment_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CEnvironment_LightObject::CEnvironment_LightObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
 	
 }
 
-CEnvironment_Object::CEnvironment_Object(const CEnvironment_Object & rhs)
+CEnvironment_LightObject::CEnvironment_LightObject(const CEnvironment_LightObject & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CEnvironment_Object::Initialize_Prototype()
+HRESULT CEnvironment_LightObject::Initialize_Prototype()
 {	
 
 	return S_OK;
 }
 
-HRESULT CEnvironment_Object::Initialize(void* pArg)
+HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 {	
-	m_tEnvironmentDesc = *(ENVIRONMENT_OBJECT_DESC*)pArg;
+	m_tEnvironmentDesc = *(ENVIRONMENT_LIGHTOBJECT_DESC*)pArg;
 
 	
 
@@ -41,16 +41,17 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 		m_pModelCom->Set_Animation(m_tEnvironmentDesc.iPlayAnimationIndex);
 	}
 
-	
+	if(FAILED(m_pGameInstance->Add_Light(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.iLightIndex)))
+		return E_FAIL;
 
 	return S_OK;
 }
 
-void CEnvironment_Object::Priority_Tick(_float fTimeDelta)
+void CEnvironment_LightObject::Priority_Tick(_float fTimeDelta)
 {
 }
 
-void CEnvironment_Object::Tick(_float fTimeDelta)
+void CEnvironment_LightObject::Tick(_float fTimeDelta)
 {
 	//f (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
 	//
@@ -58,7 +59,7 @@ void CEnvironment_Object::Tick(_float fTimeDelta)
 	//
 }
 
-void CEnvironment_Object::Late_Tick(_float fTimeDelta)
+void CEnvironment_LightObject::Late_Tick(_float fTimeDelta)
 {
 	if (true == m_tEnvironmentDesc.bAnimModel)
 	{
@@ -79,7 +80,7 @@ void CEnvironment_Object::Late_Tick(_float fTimeDelta)
 	//}
 }
 
-HRESULT CEnvironment_Object::Render()
+HRESULT CEnvironment_LightObject::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -104,7 +105,7 @@ HRESULT CEnvironment_Object::Render()
 	return S_OK;
 }
 
-HRESULT CEnvironment_Object::Render_Shadow()
+HRESULT CEnvironment_LightObject::Render_Shadow()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -138,19 +139,19 @@ HRESULT CEnvironment_Object::Render_Shadow()
 	return S_OK;
 }
 
-_bool CEnvironment_Object::Write_Json(json& Out_Json)
+_bool CEnvironment_LightObject::Write_Json(json& Out_Json)
 {
 	return __super::Write_Json(Out_Json);
 }
 
-void CEnvironment_Object::Load_FromJson(const json& In_Json)
+void CEnvironment_LightObject::Load_FromJson(const json& In_Json)
 {
 	return __super::Load_FromJson(In_Json);
 }
 
 #ifdef _DEBUG
 
-_bool CEnvironment_Object::Picking(_float3* vPickedPos)
+_bool CEnvironment_LightObject::Picking(_float3* vPickedPos)
 {
 	GRAPHIC_DESC GraphicDesc = *m_pGameInstance->Get_GraphicDesc();
 
@@ -165,7 +166,7 @@ _bool CEnvironment_Object::Picking(_float3* vPickedPos)
 	return m_pGameInstance->Picking_Mesh(ray, vPickedPos, meshes);
 }
 
-_bool CEnvironment_Object::Picking_VerJSY(RAY* pRay, _float3* vPickedPos)
+_bool CEnvironment_LightObject::Picking_VerJSY(RAY* pRay, _float3* vPickedPos)
 {
 	_vector vOrigin = XMLoadFloat4(&pRay->vPosition);
 	_vector vDir = XMLoadFloat3(&pRay->vDirection);
@@ -201,7 +202,7 @@ _bool CEnvironment_Object::Picking_VerJSY(RAY* pRay, _float3* vPickedPos)
 
 #endif
 
-HRESULT CEnvironment_Object::Ready_Components()
+HRESULT CEnvironment_LightObject::Ready_Components()
 {
 
 	if (true == m_tEnvironmentDesc.bAnimModel)
@@ -246,7 +247,7 @@ HRESULT CEnvironment_Object::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CEnvironment_Object::Bind_ShaderResources()
+HRESULT CEnvironment_LightObject::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -262,38 +263,38 @@ HRESULT CEnvironment_Object::Bind_ShaderResources()
 	return S_OK;
 }
 
-CEnvironment_Object * CEnvironment_Object::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
+CEnvironment_LightObject * CEnvironment_LightObject::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
-	CEnvironment_Object*		pInstance = new CEnvironment_Object(pDevice, pContext, strPrototypeTag);
+	CEnvironment_LightObject*		pInstance = new CEnvironment_LightObject(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CEnvironment_Object");
+		MSG_BOX("Failed to Created : CEnvironment_LightObject");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject * CEnvironment_Object::Clone(void* pArg)
+CGameObject * CEnvironment_LightObject::Clone(void* pArg)
 {
-	CEnvironment_Object*		pInstance = new CEnvironment_Object(*this);
+	CEnvironment_LightObject*		pInstance = new CEnvironment_LightObject(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CEnvironment_Object");
+		MSG_BOX("Failed to Cloned : CEnvironment_LightObject");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CEnvironment_Object::Pool()
+CGameObject* CEnvironment_LightObject::Pool()
 {
-	return new CEnvironment_Object(*this);
+	return new CEnvironment_LightObject(*this);
 }
 
-void CEnvironment_Object::Free()
+void CEnvironment_LightObject::Free()
 {
 	__super::Free();
 

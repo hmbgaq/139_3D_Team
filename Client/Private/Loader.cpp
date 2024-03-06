@@ -209,7 +209,7 @@ HRESULT CLoader::Loading()
 	case LEVEL_GAMEPLAY:
 		hr = Loading_For_GamePlay_Level();
 		break;
-
+			
 	}
 
 	if (FAILED(hr))
@@ -332,7 +332,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 	//!환경 모델
 	//!		
 
-	Ready_Environment_Model(eLEVEL);
+
 
 
 	//!버퍼 
@@ -380,13 +380,16 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
 	m_isFinished = true;
-
+		
 	return S_OK;
 }
 
 HRESULT CLoader::Loading_For_GamePlay_Level()
 {
+	Ready_Environment_Model(LEVEL_GAMEPLAY);
+
 	FAILED_CHECK(Loading_For_GamePlay_Level_Origin(LEVEL_GAMEPLAY));
+
 
 	return S_OK;
 }

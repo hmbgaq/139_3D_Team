@@ -51,7 +51,8 @@ void CData_Manager::Reset_Player(LEVEL eLEVEL)
 	switch (eLEVEL)
 	{
 	case Client::LEVEL_GAMEPLAY:
-		//vPos = { 0.f, 0.f, 0.f };
+		
+		vPos = _float3(250.66f, 0.f, 2.38f);
 		break;
 	case Client::LEVEL_SNOWMOUNTAIN:
 		//vPos = { 0.f, 0.f, 0.f };
@@ -66,7 +67,7 @@ void CData_Manager::Reset_Player(LEVEL eLEVEL)
 		break;
 	}
 
-	m_pPlayer->Initialize(&GameObjectDesc);
+	//m_pPlayer->Initialize(&GameObjectDesc);
 	m_pPlayer->Set_Position(vPos);
 
 }

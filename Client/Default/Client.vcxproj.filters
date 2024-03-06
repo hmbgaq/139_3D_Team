@@ -1864,6 +1864,9 @@
     <Filter Include="01.Levels\01.GamePlay\1.Intro">
       <UniqueIdentifier>{dec9d180-3814-40c0-ac08-d85ab872f73e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\02. Environment\Environment_LightObject">
+      <UniqueIdentifier>{06678cb6-3952-4c50-8c08-d9911c4aba61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3446,6 +3449,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_CoverLow_LeanRight_HitHeavy_01_TEMP.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Environment_LightObject.h">
+      <Filter>02.GameObjects\02. Environment\Environment_LightObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -5091,6 +5097,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bandit_Sniper_State_Hit.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Environment_LightObject.cpp">
+      <Filter>02.GameObjects\02. Environment\Environment_LightObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

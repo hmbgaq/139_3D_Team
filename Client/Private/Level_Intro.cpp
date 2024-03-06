@@ -33,6 +33,8 @@
 #include "Effect.h"
 #pragma endregion
 
+#include "Data_Manager.h"
+
 
 CLevel_Intro::CLevel_Intro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -52,6 +54,8 @@ HRESULT CLevel_Intro::Initialize()
 
 	if (FAILED(Ready_UI()))
 		return E_FAIL;
+
+	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
 
 	return S_OK;
 }
@@ -193,23 +197,37 @@ HRESULT CLevel_Intro::Ready_Layer_Effect(const wstring& strLayerTag)
 
 HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg)
 {
+	CGameObject* pMonster = { nullptr };
+
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Assassin")));
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected")));
 // 	for (int i = 0; i < 100; ++i)
 // 	{
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
+
+//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
 	/*	}*/
 
 	{
-		//CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-		//if (nullptr == pMonster)	return E_FAIL;
-		//pMonster->Set_Position(_float3(0.f, 0.f, 2.f));
+		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_VampireCommander"));
+
+		if (nullptr == pMonster)	return E_FAIL;
+		pMonster->Set_Position(_float3(250.66f, 0.f, 7.38f));
 	}
 
 	{
-		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+
 		if (nullptr == pMonster)	return E_FAIL;
-		pMonster->Set_Position(_float3(1.f, 0.f, 2.f));
+
+		pMonster->Set_Position(_float3(250.66f, 0.f, 9.38f));
+	}
+
+	{
+		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+
+		if (nullptr == pMonster)	return E_FAIL;
+		
+		pMonster->Set_Position(_float3(250.66f, 0.f, 11.38f));
 	}
 
 

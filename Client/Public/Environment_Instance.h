@@ -42,7 +42,9 @@ public:
 
 public:
 	_uint			Get_NumInstance() { return m_tInstanceDesc.iNumInstance;}
-	
+
+//public:
+//	void				Set_ColliderRender(_bool bColliderRender) { m_bColliderRender = bColliderRender; }
 
 public:
 	MAPTOOL_INSTANCE_DESC&					Get_InstanceDesc() { return m_tInstanceDesc; }
@@ -59,8 +61,9 @@ private:
 
 	MAPTOOL_INSTANCE_DESC					m_tInstanceDesc;
 	vector<CCollider*>						m_vecColliders;
+	//_bool									m_bColliderRender = false;
 
-
+	_uint									m_iCurrentLevel = (_uint)LEVEL_TOOL;
 	
 
 

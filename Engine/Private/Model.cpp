@@ -648,10 +648,10 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			MultiByteToWideChar((_uint)CP_ACP, 0, szTmp, (_int)strlen(szTmp), szFullPath, (_int)MAX_PATH);
 
-
+			
 			MaterialDesc.pMtrlTextures[j] = CTexture::Create(m_pDevice, m_pContext, szFullPath, 1);
 
-			if (nullptr == MaterialDesc.pMtrlTextures[j])
+			if (nullptr == MaterialDesc.pMtrlTextures[j])	
 				return E_FAIL;
 		}
 
