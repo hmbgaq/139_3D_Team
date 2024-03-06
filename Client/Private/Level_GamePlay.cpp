@@ -55,6 +55,8 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	Set_Filter();
 
+	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
+
 	return S_OK;
 }
 
@@ -468,7 +470,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 	/* MRT로 묶지 않으면 출력이안나옴. */
 	json json_in;
 
-	char filePath[MAX_PATH] = "../Bin/DataFiles/TestData/Test_3.json";
+	char filePath[MAX_PATH] = "../Bin/DataFiles/TestData/Test_5.json";
 
 	_int		iPathNum = 0;
 	string		strFileName;

@@ -56,7 +56,8 @@ void CUI_Anything::Late_Tick(_float fTimeDelta)
 
 	//if (m_tUIInfo.pParentTransformCom != nullptr &&
 	//	m_tUIInfo.bParent == false)
-	//{
+	//}Render_UI_MRT
+
 	//	/* Parent */
 	//	_vector vPosition = m_tUIInfo.pParentTransformCom->Get_State(CTransform::STATE_POSITION);
 	//	XMMATRIX ParentMat = m_tUIInfo.pParentTransformCom->Get_WorldMatrix();
@@ -68,21 +69,7 @@ void CUI_Anything::Late_Tick(_float fTimeDelta)
 	//	m_pTransformCom->Set_WorldMatrix(m_WorldMatrix);
 	//}
 
-	if (ECast(LEVEL::LEVEL_TOOL) == m_pGameInstance->Get_NextLevel())
-	{
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI_TOOL, this), );
-	}
-	else
-	{
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this), );
-	}
-	/* ----------- 설명 -----------*/ 
-	// 툴에서 사용할때는 RENDER_UI_TOOL 로 그려서 찍기 
-	// 클리어색이 묻어나오는건 어쩔수없는듯? 
-	// 
-	// 
-	/* ----------------------------*/ 
-
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this), );
 }
 
 HRESULT CUI_Anything::Render()

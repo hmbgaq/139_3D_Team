@@ -15,7 +15,7 @@ public:
 		/* EFFECT */
 		RENDER_EFFECT, RENDER_EFFECT_PARTICLE, RENDER_EFFECT_MESH,
 		/* UI */
-		RENDER_UI, RENDER_CURSOR, RENDER_UI_TOOL,
+		RENDER_UI, RENDER_CURSOR,
 		/* RenderGroup*/
 		RENDER_BLEND, RENDER_END
 	};
@@ -145,6 +145,9 @@ private:
 	ID3D11DepthStencilView* m_pLightDepthDSV = { nullptr };
 	_float4x4				m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT					Control_HotKey();
+public:
+	_bool			m_bUI_MRT = false;
+	void			Render_UI_MRT(_bool bMRT) { m_bUI_MRT = bMRT;}
 
 #ifdef _DEBUG
 public:

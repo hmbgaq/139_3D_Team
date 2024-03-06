@@ -27,8 +27,8 @@ HRESULT CLevel_Tool::Initialize()
 		Safe_Release(m_pContext);
 		return E_FAIL;
 	}
-	
 
+	m_pGameInstance->Get_Renderer()->Render_UI_MRT(true);
 	return S_OK;
 
 }

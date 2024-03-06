@@ -100,22 +100,18 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if(true == m_tHSV_Option.bScreen_Active)
 		FAILED_CHECK(Render_HSV()); /* 컬러 그레이딩 - 최종장면 */
 
-	FAILED_CHECK(Render_UI_Tool()); /* */
+	if (true == m_bUI_MRT)
+		FAILED_CHECK(Render_UI_Tool()); /* Tool에서 체크할 때  */
 
-	/* 최종 합성 */
+	/* 최종 합성 */ 
 	FAILED_CHECK(Render_Final());
 
 	FAILED_CHECK(Render_Blend());  
 
-	FAILED_CHECK(Render_UI());
-	
-	/* Test Line */
-	//FAILED_CHECK(Render_Alphablend(TEXT("MRT_Final"), TEXT("Target_Deferred"))); /*  MRT_Deferred -> Target_Deferred에 저장  */
+	FAILED_CHECK(Render_UI()); /* GamePlay에서 확인할때 여기활성화 */
 
-#ifdef _DEBUG;
-	if (true == m_bDebugRenderTarget)
+	if (false == m_bUI_MRT)
 		FAILED_CHECK(Render_DebugTarget());
-#endif // _DEBUG
 
 	return S_OK;
 }
@@ -609,8 +605,6 @@ HRESULT CRenderer::Deferred_UI()
 
 HRESULT CRenderer::Render_UI()
 {
-	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_UI")));
-
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
 		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
@@ -621,8 +615,6 @@ HRESULT CRenderer::Render_UI()
 
 	m_RenderObjects[RENDER_UI].clear();
 
-	//FAILED_CHECK(m_pGameInstance->End_MRT());
-
 	return S_OK;
 }
 
@@ -630,7 +622,7 @@ HRESULT CRenderer::Render_UI_Tool()
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_UI")));
 
-	for (auto& pGameObject : m_RenderObjects[RENDER_UI_TOOL])
+	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
 		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
 			pGameObject->Render();
@@ -1013,6 +1005,22 @@ HRESULT CRenderer::Create_RenderTarget()
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Blend"), TEXT("Target_Blend")));
 
 	/* MRT_Effect - clear color가 111의 흰색일경우 이펙트에 묻어나와서 무조건 000 으로 클리어해야함  */
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Normal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Depth"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 0.f))); /* 깊이버퍼 그 깊이 */
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_ORM"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_BloomBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))); /* 넣은거 알아서 블러되도록 처리함 */
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_RimBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse")));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Normal")));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Depth"))); /* 카메라에서 본 깊이버퍼 */
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_ORM")));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_BloomBlur")));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_RimBlur")));
+
+
+
+
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Diffuse")));
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Final"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
