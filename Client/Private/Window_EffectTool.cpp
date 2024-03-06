@@ -5,6 +5,7 @@
 
 #include "GameInstance.h"
 #include "Easing_Utillity.h"
+#include "Clone_Manager.h"
 
 #include "Effect.h"
 #include "Effect_Rect.h"
@@ -14,8 +15,8 @@
 //#include "Mesh.h"
 
 #include "Sky.h"
+#include "Model_Preview.h"
 
-#include "Clone_Manager.h"
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -34,7 +35,7 @@ HRESULT CWindow_EffectTool::Initialize()
 	Load_CustomStyle();
 
 
-	Ready_Sky();
+	FAILED_CHECK(Ready_Sky());	// 스카이박스 준비(얻어오기)
 	
 
 	return S_OK;
@@ -47,170 +48,130 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	ShowDialog();
 
 #pragma region 환경(레벨) 세팅 창 (스카이박스, 크기비교용 모델 등)
-	SetUp_ImGuiDESC(" Level Setting ", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	SetUp_ImGuiDESC(u8"환경 세팅", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	
 	__super::Begin();
 
+	Update_LevelSetting_Window();	// 레벨(환경) 세팅 창(카메라, 스카이박스, 크기비교용 모델 등...) 업데이트
 
-
-	__super::End();
-
-#pragma endregion 환경(레벨) 세팅 창 (스카이박스, 크기비교용 모델 등)
-
-
-#pragma region 리스트 창
-	SetUp_ImGuiDESC(" Object Lists ", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
-	__super::Begin();
-
-	Update_SaveLoad();
-
+	// ImGui창 사이즈
+	ImGui::SeparatorText("");
 	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
-
-	Update_EffectList();
+	ImGui::Spacing();
 
 	__super::End();
-#pragma endregion 리스트 창
+#pragma endregion
 
 
-#pragma region 시퀀서 창
-	SetUp_ImGuiDESC(" Sequencer ", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+#pragma region 오브젝트 리스트 창
+	SetUp_ImGuiDESC(u8"오브젝트 리스트", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	
 	__super::Begin();
 
+	Update_SaveLoad_Menu();		// 저장 불러오기 메뉴 업데이트
+	Update_EffectList_Window();	// 이펙트 리스트박스 창 업데이트
+
+	// ImGui창 사이즈
+	ImGui::SeparatorText("");
 	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
-	Update_NeoSequencer();
+	ImGui::Spacing();
 
-	__super::End();
-#pragma endregion 시퀀서 창
+	__super::End();	
+#pragma endregion
 
 
-
-#pragma region 재생바 창
-	SetUp_ImGuiDESC(" Play ", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+#pragma region 네오 시퀀서 창
+	SetUp_ImGuiDESC(u8"네오 시퀀서", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	
 	__super::Begin();
 
+	Update_NeoSequencer_Window();	// 시퀀서 창 업데이트
+
+	// ImGui창 사이즈
+	ImGui::SeparatorText("");
 	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
-	Update_PlayBarArea();
+	ImGui::Spacing();
 
 	__super::End();
-#pragma endregion 재생바 창
+#pragma endregion
 
 
 
-#pragma region 이미지 선택 창
-	SetUp_ImGuiDESC(" ImageList ", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+#pragma region 타임라인 창
+	SetUp_ImGuiDESC(u8"타임라인", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	__super::Begin();
 
-	Update_ImageList();
+	Update_Timeline_Window();	// 타임라인 창 (재생, 멈춤, 리셋) 업데이트
+
+	// ImGui창 사이즈
+	ImGui::SeparatorText("");
+	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
+	ImGui::Spacing();
 
 	__super::End();
+#pragma endregion
 
-#pragma endregion 이미지 선택 창
+
+
+#pragma region 이미지 리스트 창
+	SetUp_ImGuiDESC(u8"이미지 리스트", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	__super::Begin();
+
+	Update_ImageList_Window();	// 텍스처 이미지 미리보기, 리스트 업데이트
+
+	// ImGui창 사이즈
+	ImGui::SeparatorText("");
+	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
+	ImGui::Spacing();
+
+	__super::End();
+#pragma endregion
 
 
 #pragma region 이펙트 툴
-
-	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 800.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | */ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 700.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | */ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	
 	__super::Begin();
 
-	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
-	POINT	pt;
-	GetCursorPos(&pt);
-	ScreenToClient(g_hWnd, &pt);
-	ImGui::Text("Mouse Pos : %d, %d", pt.x, pt.y);
-
-	ImGui::SeparatorText("");
-	_float4 vCamPos = m_pGameInstance->Get_CamPosition();
-	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
-	vCamDirection = XMVector4Normalize(vCamDirection);
-	_float4 vCamDirectionFloat4 = {};
-	XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
-
-	ImGui::Text("Cam Pos  : %.2f %.2f %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
-	ImGui::Text("Cam Look : %.2f %.2f %.2f", vCamDirectionFloat4.x, vCamDirectionFloat4.y, vCamDirectionFloat4.z);
-
-	if (ImGui::Button("CamPos Reset"))
-	{
-		CGameObject* pCamera = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_Camera"));
-		if (nullptr != pCamera)
-		{
-			pCamera->Set_Position(_float3(0.f, -1.f, -10.f));
-		}
-	}
-
-
-	ImGui::SeparatorText("");
-	if (ImGui::Button("Create Sky"))
-	{
-		Ready_Sky();
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Delete Sky"))
-	{
-		CGameObject* pSky = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_BackGround"));
-		if(nullptr != pSky)
-			pSky->Set_Dead(TRUE);
-	}
-
-	//if (ImGui::Button("On Sky"))
-	//{
-	//	CGameObject* pSky = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_BackGround"));
-	//	if (nullptr != pSky)
-	//		pSky->Set_Enable(TRUE);
-	//}
-	//ImGui::SameLine();
-	//if (ImGui::Button("Off Sky"))
-	//{
-	//	CGameObject* pSky = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_BackGround"));
-	//	if (nullptr != pSky)
-	//		pSky->Set_Enable(FALSE);
-	//}
-
-	if (ImGui::InputInt(" Sky box Texture ", &m_iSkyTextureIndex, 1))
-	{
-		if (5 < m_iSkyTextureIndex)
-			m_iSkyTextureIndex = 5;
-
-		if (0 > m_iSkyTextureIndex)
-			m_iSkyTextureIndex = 0;
-
-		Set_SkyTexture();
-	}
-
-
-	ImGui::SeparatorText("");
 	if (ImGui::BeginTabBar("Tab_Effect", ImGuiTabBarFlags_None))
 	{
 		if (ImGui::BeginTabItem(" Particle "))
 		{
-			Update_ParticleTab();
+			Update_ParticleTab();	// 파티클 탭 업데이트
 			ImGui::EndTabItem();
 		}
 
 		if (ImGui::BeginTabItem(" Rect "))
 		{
-			//ImGui::Text(" Texture Effect ");
-			Update_RectTab();
+			Update_RectTab();		// 렉트 탭 업데이트
 			ImGui::EndTabItem();
 		}
 
 		if (ImGui::BeginTabItem(" Mesh "))
 		{
-			//ImGui::Text(" Mesh Effect ");
-			Update_MeshTab();
+			Update_MeshTab();		// 메쉬 탭 업데이트
 			ImGui::EndTabItem();
 		}
 
 		if (ImGui::BeginTabItem(" Trail "))
 		{
-			//ImGui::Text(" Mesh Effect ");
-			//Update_TrailTab();
+			Update_TrailTab();		// 트레일 탭 업데이트
 			ImGui::EndTabItem();
 		}
 
 	}
 	ImGui::EndTabBar();
 
+
+	// ImGui창 사이즈
+	ImGui::SeparatorText("");
+	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
+	ImGui::Spacing();
+
 	__super::End();
-#pragma endregion 이펙트 툴
+#pragma endregion
+
+
 
 }
 
@@ -219,21 +180,46 @@ void CWindow_EffectTool::Render()
 
 }
 
+void CWindow_EffectTool::Show_MousePos()
+{
+	POINT	pt;
+	GetCursorPos(&pt);
+	ScreenToClient(g_hWnd, &pt);
+	ImGui::Text("Mouse Pos : %d, %d", pt.x, pt.y);
+}
+
+void CWindow_EffectTool::Show_CameraInfo()
+{
+	_float4 vCamPos = m_pGameInstance->Get_CamPosition();
+	_float4 vCamDir = m_pGameInstance->Get_CamDirection();
+
+	//_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
+	//vCamDirection = XMVector4Normalize(vCamDirection);
+	//_float4 vCamDirectionFloat4 = {};
+	//XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
+
+	ImGui::Text("Cam Pos  : %.2f %.2f %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
+	ImGui::Text("Cam Look : %.2f %.2f %.2f", vCamDir.x, vCamDir.y, vCamDir.z);
+}
+
 HRESULT CWindow_EffectTool::Ready_Sky()
 {
-
 	// 스카이박스 얻어오기
 	CGameObject* pObj = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_BackGround"));
 	if (nullptr != pObj)
 	{
 		m_pSky = pObj;
 	}
-
-	//CGameObject* pSky = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky"));
-	//if (nullptr != pSky)
-	//{
-	//	dynamic_cast<CSky*>(pSky)->Set_TextureIndex(3);
-	//}
+	else
+	{	
+		// 이미 만들어져있는 스카이박스가 없으면 생성
+		CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky"));
+		if (nullptr != pObj)
+		{
+			m_pSky = pObj;
+			dynamic_cast<CSky*>(m_pSky)->Set_TextureIndex(3);
+		}
+	}
 
 	return S_OK;
 }
@@ -249,9 +235,23 @@ void CWindow_EffectTool::Set_SkyTexture()
 
 }
 
-void CWindow_EffectTool::Update_PlayBarArea()
+HRESULT CWindow_EffectTool::Ready_Model_Preview(wstring strModelTag)
 {
-	/* 재생바 */
+	CModel_Preview::MODEL_PREVIEW_DESC	tDesc = {};
+	tDesc.strProtoTag = { TEXT("Prototype_GameObject_Model_Preview") };
+	tDesc.strModelTag = { strModelTag };
+
+	CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Model_Preview"), TEXT("Prototype_GameObject_Model_Preview"), &tDesc);
+	if (nullptr != pObj)
+		m_pModel_Preview = pObj;
+
+	return S_OK;
+}
+
+
+void CWindow_EffectTool::Update_Timeline_Window()
+{
+	/* 타임라인 */
 	if (nullptr != m_pCurEffect)
 	{
 		auto& style = ImGui::GetStyle();
@@ -1826,7 +1826,7 @@ void CWindow_EffectTool::Select_EasingType(EASING_TYPE* eType)
 }
 
 
-void CWindow_EffectTool::Update_ImageList()
+void CWindow_EffectTool::Update_ImageList_Window()
 {
 	//const int ObjCount = m_CubeFile.size();
 
@@ -1943,11 +1943,73 @@ void CWindow_EffectTool::Update_ImageList()
 
 }
 
-void CWindow_EffectTool::Update_LevelSetting()
+void CWindow_EffectTool::Update_LevelSetting_Window()
 {
+	// 마우스 위치 표시
+	ImGui::SeparatorText("Mouse");
+	Show_MousePos();
+
+	// 카메라 위치 표시
+	ImGui::SeparatorText("Camera");
+	Show_CameraInfo();
+
+	// 카메라 위치 리셋
+	if (ImGui::Button("CamPos Reset"))
+	{
+		CGameObject* pCamera = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_Camera"));
+		if (nullptr != pCamera)
+		{
+			pCamera->Set_Position(_float3(0.f, -1.f, -10.f));
+		}
+	}
+
+	// 스카이박스
+	ImGui::SeparatorText("SkyBox");
+	if (ImGui::Button("Create Sky"))	// 스카이박스 생성
+	{
+		Ready_Sky();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Delete Sky"))	// 스카이박스 삭제
+	{
+		if (nullptr != m_pSky)
+		{
+			m_pSky->Set_Dead(TRUE);
+		}
+	}
+
+	// 스카이박스 텍스처 변경
+	if (ImGui::InputInt(" Sky box Texture ", &m_iSkyTextureIndex, 1))
+	{
+		if (5 < m_iSkyTextureIndex)
+			m_iSkyTextureIndex = 5;
+
+		if (0 > m_iSkyTextureIndex)
+			m_iSkyTextureIndex = 0;
+
+		Set_SkyTexture();
+	}
+
+
+	// 크기비교용 모델
+	ImGui::SeparatorText("Model_Preview");
+	if (ImGui::Button("Create Model"))	// 모델 생성
+	{
+		Ready_Model_Preview(TEXT("Prototype_Component_Model_Rentier"));
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Delete Model"))	// 모델 삭제
+	{
+		if (nullptr != m_pModel_Preview)
+		{
+			m_pModel_Preview->Set_Dead(TRUE);
+		}
+	}
+
+
 }
 
-void CWindow_EffectTool::Update_EffectList()
+void CWindow_EffectTool::Update_EffectList_Window()
 {
 	auto& style = ImGui::GetStyle();
 
@@ -2887,7 +2949,7 @@ void CWindow_EffectTool::Update_CurParameters()
 
 }
 
-void CWindow_EffectTool::Update_NeoSequencer()
+void CWindow_EffectTool::Update_NeoSequencer_Window()
 {
 
 	if (nullptr != m_pCurEffect)
@@ -2953,7 +3015,7 @@ void CWindow_EffectTool::Update_NeoSequencer()
 
 
 
-void CWindow_EffectTool::Update_SaveLoad()
+void CWindow_EffectTool::Update_SaveLoad_Menu()
 {
 	if (ImGui::BeginMenuBar())
 	{

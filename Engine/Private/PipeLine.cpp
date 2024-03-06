@@ -62,6 +62,11 @@ _float4 CPipeLine::Get_CamPosition()
 	return m_vCamPosition;
 }
 
+_float4 CPipeLine::Get_CamDirection()
+{
+	return 	XMVector4Normalize(m_Transform_Inverse->row(2));
+}
+
 _float4 CPipeLine::Get_CamSetting()
 {
 	_float4 Result = {};

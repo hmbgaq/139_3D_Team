@@ -1723,7 +1723,7 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\IntroSpawn">
       <UniqueIdentifier>{c5d09ec1-a9b3-4134-b00c-8f5a4e71a4df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\Model_Tool">
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\Model_Preview">
       <UniqueIdentifier>{4e581434-6a53-484b-964f-ac3c78373ab1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -3194,6 +3194,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_SyncedAttack_Fail.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model_Preview.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\Model_Preview</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4755,6 +4758,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_SyncedAttack_Fail.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model_Preview.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\Model_Preview</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

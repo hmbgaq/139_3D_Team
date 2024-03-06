@@ -28,32 +28,37 @@ public:
 
 /* For.Save&Load */
 public:
-	void	Update_SaveLoad();
+	void	Update_SaveLoad_Menu();	// 저장 불러오기 메뉴 업데이트
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
 
 
 /* For.Level Setting (환경 세팅) */
 public:
-	HRESULT Ready_Sky();
-	void	Set_SkyTexture();
+	void	Show_MousePos();	// 마우스 위치 표시
+	void	Show_CameraInfo();	// 카메라 정보 표시
+
+	HRESULT Ready_Sky();		// 스카이박스 얻어오기
+	void	Set_SkyTexture();	// 스카이박스 텍스처 변경
+
+	HRESULT Ready_Model_Preview(wstring strModelTag);	// 크기비교용 모델 생성
 
 
 /* For.Window Update (창 업데이트) */
 public:
-	void	Update_LevelSetting();		// 레벨(환경) 세팅 창
+	void	Update_LevelSetting_Window();	// 레벨(환경) 세팅 창(카메라, 스카이박스, 크기비교용 모델 등...)
 
-	void	Update_EffectList();		// 이펙트 리스트박스 창
+	void	Update_EffectList_Window();		// 이펙트 리스트박스 창
 
-	void	Update_PlayBarArea();		// 재생 관련 창
-	void	Update_NeoSequencer();		// 시퀀서 창
+	void	Update_Timeline_Window();		// 타임라인 창
+	void	Update_NeoSequencer_Window();	// 시퀀서 창
 
-	void	Update_ImageList();			// 텍스처 이미지 미리보기, 리스트
+	void	Update_ImageList_Window();		// 텍스처 이미지 미리보기, 리스트
 
-	void	Update_ParticleTab();		// 파티클 탭
-	void	Update_RectTab();			// 렉트 탭
-	void	Update_MeshTab();			// 메쉬 탭
-	void	Update_TrailTab();			// 트레일 탭
+	void	Update_ParticleTab();			// 파티클 탭
+	void	Update_RectTab();				// 렉트 탭
+	void	Update_MeshTab();				// 메쉬 탭
+	void	Update_TrailTab();				// 트레일 탭
 
 
 /* For.Create & Add (이펙트 생성 관련) */
@@ -72,6 +77,7 @@ public:
 
 public:
 	void	Select_EasingType(EASING_TYPE* eType);	// 이징 타입(러프관련) 선택
+
 
 private:
 	map<const wstring, class CEffect*>		m_pEffects;
@@ -282,8 +288,8 @@ private:
 
 
 #pragma region Level Setting
-	CGameObject* m_pSky			= { nullptr };
-	CGameObject* m_pScaleModel	= { nullptr };	// 크기 비교용 보기 모델
+	CGameObject* m_pSky				= { nullptr };
+	CGameObject* m_pModel_Preview	= { nullptr };	// 크기 비교용 보기 모델
 #pragma endregion
 
 
