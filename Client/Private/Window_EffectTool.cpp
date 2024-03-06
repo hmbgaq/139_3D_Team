@@ -33,8 +33,9 @@ HRESULT CWindow_EffectTool::Initialize()
 
 	Load_CustomStyle();
 
-	//if (FAILED(Ready_Layer_Greed(TEXT("Layer_Greed"))))
-	//	return E_FAIL;
+
+	Ready_Sky();
+	
 
 	return S_OK;
 }
@@ -44,6 +45,17 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	ShowDialog();
+
+#pragma region 환경(레벨) 세팅 창 (스카이박스, 크기비교용 모델 등)
+	SetUp_ImGuiDESC(" Level Setting ", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	__super::Begin();
+
+
+
+	__super::End();
+
+#pragma endregion 환경(레벨) 세팅 창 (스카이박스, 크기비교용 모델 등)
+
 
 #pragma region 리스트 창
 	SetUp_ImGuiDESC(" Object Lists ", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
@@ -64,7 +76,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	__super::Begin();
 
 	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
-	Update_Demo_Sequencer();
+	Update_NeoSequencer();
 
 	__super::End();
 #pragma endregion 시퀀서 창
@@ -81,6 +93,17 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	__super::End();
 #pragma endregion 재생바 창
 
+
+
+#pragma region 이미지 선택 창
+	SetUp_ImGuiDESC(" ImageList ", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	__super::Begin();
+
+	Update_ImageList();
+
+	__super::End();
+
+#pragma endregion 이미지 선택 창
 
 
 #pragma region 이펙트 툴
@@ -198,11 +221,19 @@ void CWindow_EffectTool::Render()
 
 HRESULT CWindow_EffectTool::Ready_Sky()
 {
-	CGameObject* pSky = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky"));
-	if (nullptr != pSky)
+
+	// 스카이박스 얻어오기
+	CGameObject* pObj = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_BackGround"));
+	if (nullptr != pObj)
 	{
-		dynamic_cast<CSky*>(pSky)->Set_TextureIndex(3);
+		m_pSky = pObj;
 	}
+
+	//CGameObject* pSky = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky"));
+	//if (nullptr != pSky)
+	//{
+	//	dynamic_cast<CSky*>(pSky)->Set_TextureIndex(3);
+	//}
 
 	return S_OK;
 }
@@ -1795,6 +1826,127 @@ void CWindow_EffectTool::Select_EasingType(EASING_TYPE* eType)
 }
 
 
+void CWindow_EffectTool::Update_ImageList()
+{
+	//const int ObjCount = m_CubeFile.size();
+
+	//char** cObj = new char* [ObjCount];
+	//int ObjIndex = 0;
+
+	//for (auto& iter : m_CubeFile)
+	//{
+	//	vector<wstring>& stateKetyvec = iter.second;
+	//	sort(stateKetyvec.begin(), stateKetyvec.end());
+	//}
+	//for (const auto& iter : m_CubeFile)
+	//{
+	//	const wstring& folder = iter.first;
+	//	const string utf8Str = WstringToUTF8(folder);
+
+	//	cObj[ObjIndex] = new char[utf8Str.length() + 1];
+	//	strcpy(cObj[ObjIndex], utf8Str.c_str());
+
+	//	ObjIndex++;
+	//}
+
+	////ImGui::Combo(u8"폴더명", &m_iObjChoice, cObj, ObjCount);
+
+	//char* str = cObj[m_iObjChoice];
+	//wstring selectedObj = ConverCtoWC2(str);
+
+	//if (m_CubeFile.find(selectedObj) != m_CubeFile.end())
+	//{
+	//	const vector<wstring>& fileNames = m_CubeFile[selectedObj];
+
+	//	const int StateCount = fileNames.size();
+	//	char** cState = new char* [StateCount];
+	//	int stateIndex = 0;
+
+	//	for (const wstring& fileName : fileNames)
+	//	{
+	//		const string utf8Str = WstringToUTF8(fileName);
+	//		cState[stateIndex] = new char[utf8Str.length() + 1];
+	//		strcpy(cState[stateIndex], utf8Str.c_str());
+
+	//		stateIndex++;
+	//	}
+
+	//	//ImGui::Combo(u8"파일명", &m_iStateChoice, cState, StateCount);
+
+
+	//	if (m_pSelectedImage != nullptr)
+	//	{
+	//		ImGui::Text(u8"선택된 이미지");
+	//		ImGui::SameLine();
+	//		ImGui::Image(m_pSelectedImage, ImVec2(80.f, 80.f));
+	//	}
+
+	//	char* StrObj = cObj[m_iObjChoice];
+	//	char* StrState = cState[m_iStateChoice];
+	//	wstring selectObj = ConverCtoWC2(StrObj);
+	//	wstring selectState = ConverCtoWC2(StrState);
+
+	//	int imagesPerRow = 7;
+	//	int currentImageCount = 0;
+
+	//	for (const wstring& fileName : fileNames)
+	//	{
+	//		LPDIRECT3DTEXTURE9 selecteTexture = FindTextureKey(selectedObj, fileName);
+
+	//		if (selecteTexture != nullptr)
+	//		{
+	//			if (currentImageCount > 0 && currentImageCount % imagesPerRow == 0)
+	//			{
+	//				ImGui::NewLine();
+	//			}
+
+	//			ImVec4 backupButtonHoveredColor = ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered);
+	//			ImVec4 backupButtonActiveColor = ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive);
+
+	//			ImVec4 clickedColor(0.8f, 0.5f, 0.3f, 1.0f);
+
+	//			if (ImGui::ImageButton(selecteTexture, ImVec2(60.f, 60.f)))
+	//			{
+	//				m_pSelectedImage = selecteTexture;
+	//				m_iTextureIndex = 0;
+	//				for (wchar_t c : fileName)
+	//				{
+	//					if (iswdigit(c))
+	//					{
+	//						m_iTextureIndex = m_iTextureIndex * 10 + (c - L'0');
+	//					}
+	//				}
+
+	//				ImGui::GetStyle().Colors[ImGuiCol_ButtonHovered] = clickedColor;
+	//				ImGui::GetStyle().Colors[ImGuiCol_ButtonActive] = clickedColor;
+	//			}
+
+	//			ImGui::SameLine();
+
+	//			currentImageCount++;
+	//		}
+	//	}
+	//	for (int i = 0; i < ObjIndex; ++i)
+	//	{
+	//		Safe_Delete_Array(cObj[i]);
+	//	}
+	//	for (int i = 0; i < stateIndex; ++i)
+	//	{
+	//		Safe_Delete_Array(cState[i]);
+	//	}
+	//	Safe_Delete_Array(cObj);
+	//	Safe_Delete_Array(cState);
+	//}
+
+
+
+
+}
+
+void CWindow_EffectTool::Update_LevelSetting()
+{
+}
+
 void CWindow_EffectTool::Update_EffectList()
 {
 	auto& style = ImGui::GetStyle();
@@ -1809,12 +1961,12 @@ void CWindow_EffectTool::Update_EffectList()
 	ImGui::SeparatorText("");
 	if (ImGui::Button("         Create Test        "))
 	{
-		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Hit_3_NoLoop.json");
+		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Effect.json");
 	}
 
-
 	/* 이펙트 리스트 & 현재 이펙트 선택 */
-	if (ImGui::ListBox(" Effects ", &m_iCurEffectIndex, m_szEffectNames, (_int)m_pEffects.size(), (_int)6))
+	ImGui::SeparatorText(" EFFECT LIST ");
+	if (ImGui::ListBox(" Effect List ", &m_iCurEffectIndex, m_szEffectNames, (_int)m_pEffects.size(), (_int)6))
 	{
 		wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szEffectNames[m_iCurEffectIndex]);
 		m_pCurEffect = m_pEffects.find(strCurName)->second;
@@ -1869,10 +2021,9 @@ void CWindow_EffectTool::Update_EffectList()
 			m_pCurEffectDesc->bActive_Tool = FALSE;
 		}
 
-
 		// =========================================
 
-		ImGui::SeparatorText(" Add Part Effect ");
+		ImGui::SeparatorText(" ADD PART EFFECT ");
 		if (ImGui::Button(" Add Particle "))
 		{
 			Add_Part_Particle();
@@ -1901,7 +2052,7 @@ void CWindow_EffectTool::Update_EffectList()
 		// =========================================
 
 		/* 이펙트 파트오브젝트 리스트 & 현재 파트오브젝트 선택 */
-		if (ImGui::ListBox(" Parts ", &m_iCurPartIndex, m_szPartNames, (_int)m_CurPartObjects.size(), (_int)6))
+		if (ImGui::ListBox(" Part List ", &m_iCurPartIndex, m_szPartNames, (_int)m_CurPartObjects.size(), (_int)6))
 		{
 			wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szPartNames[m_iCurPartIndex]);
 			m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.find(strCurName)->second);
@@ -2736,7 +2887,7 @@ void CWindow_EffectTool::Update_CurParameters()
 
 }
 
-void CWindow_EffectTool::Update_Demo_Sequencer()
+void CWindow_EffectTool::Update_NeoSequencer()
 {
 
 	if (nullptr != m_pCurEffect)
@@ -2881,17 +3032,6 @@ HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 	return S_OK;
 }
 
-HRESULT CWindow_EffectTool::Ready_Layer_Greed(const wstring& strLayerTag)
-{
-	CGameObject::GAMEOBJECT_DESC	tDesc = {};
-	tDesc.fSpeedPerSec = { 0.f };
-	tDesc.fRotationPerSec = { XMConvertToRadians(0.0f) };
-
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Greed"), &tDesc));
-
-	return S_OK;
-}
-
 
 CWindow_EffectTool* CWindow_EffectTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -2949,5 +3089,7 @@ void CWindow_EffectTool::Free()
 		}
 		m_szPartNames = nullptr;
 	}
+
+
 
 }

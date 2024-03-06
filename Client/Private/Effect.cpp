@@ -304,7 +304,13 @@ void CEffect::End_Effect()
 	}
 	else
 	{
-		Set_Dead(TRUE);
+#ifdef _DEBUG
+		if (LEVEL_TOOL != static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+#endif // _DEBUG
+		{		
+			Set_Dead(TRUE);
+		}
+
 	}
 
 }

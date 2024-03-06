@@ -25,9 +25,6 @@ public:
 	virtual	void	Tick(_float fTimeDelta) override;
 	virtual void	Render()				override;
 
-public:
-	HRESULT Ready_Sky();
-	void	Set_SkyTexture();
 
 /* For.Save&Load */
 public:
@@ -36,32 +33,45 @@ public:
 	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
 
 
-// Refactoring Start =====================================================================================================
-
+/* For.Level Setting (환경 세팅) */
 public:
-	void	Update_EffectList();
-
-	void	Update_PlayBarArea();
-
-	void	Update_ParticleTab();
-	void	Update_RectTab();
-	void	Update_MeshTab();
-	void	Update_TrailTab();
+	HRESULT Ready_Sky();
+	void	Set_SkyTexture();
 
 
-	HRESULT Create_EffectObject(const wstring& strLayerTag, CGameObject* pOwner = nullptr);
-	HRESULT Add_Part_Particle();
-	HRESULT Add_Part_Rect();
-	HRESULT Add_Part_Mesh(wstring strModelTag);
-	HRESULT Add_Part_Trail();
+/* For.Window Update (창 업데이트) */
+public:
+	void	Update_LevelSetting();		// 레벨(환경) 세팅 창
 
-	void	Update_CurMembers(wstring strName);
+	void	Update_EffectList();		// 이펙트 리스트박스 창
 
+	void	Update_PlayBarArea();		// 재생 관련 창
+	void	Update_NeoSequencer();		// 시퀀서 창
+
+	void	Update_ImageList();			// 텍스처 이미지 미리보기, 리스트
+
+	void	Update_ParticleTab();		// 파티클 탭
+	void	Update_RectTab();			// 렉트 탭
+	void	Update_MeshTab();			// 메쉬 탭
+	void	Update_TrailTab();			// 트레일 탭
+
+
+/* For.Create & Add (이펙트 생성 관련) */
+	HRESULT Create_EffectObject(const wstring& strLayerTag, CGameObject* pOwner = nullptr);		// 파트 이펙트를 담을 이펙트 오브젝트 생성 함수
+	HRESULT Add_Part_Particle();				// 파트:2D파티클 추가
+	HRESULT Add_Part_Rect();					// 파트:Rect 추가
+	HRESULT Add_Part_Mesh(wstring strModelTag);	// 파트:메시 이펙트 추가
+	HRESULT Add_Part_Trail();					// 파트:트레일 추가
+
+
+/* For.CurObject (현재 선택된 이펙트 관련 정보 업데이트) */
+	void	Update_CurMembers(wstring strName);		// 현재 이펙트의 정보 업데이트
 	void	Update_CurParameters();
-	void	Update_CurParameters_Parts();
+
+	void	Update_CurParameters_Parts();			// 현재 파트 이펙트의 정보 업데이트
 
 public:
-	void	Select_EasingType(EASING_TYPE* eType);
+	void	Select_EasingType(EASING_TYPE* eType);	// 이징 타입(러프관련) 선택
 
 private:
 	map<const wstring, class CEffect*>		m_pEffects;
@@ -79,16 +89,16 @@ private:
 	CEffect_Void* m_pCurPartEffect	    = { nullptr };
 	CEffect_Void::EFFECTVOID_DESC*	m_pCurVoidDesc = {};
 
-	/* Sky */
+
+/* Sky */
 private:
 	_int m_iSkyTextureIndex = { 3 };
 
+
 /* Desc */
 private:
-	CEffect::EFFECT_DESC* m_pCurEffectDesc = { nullptr };
+	CEffect::EFFECT_DESC*							m_pCurEffectDesc = { nullptr };
 
-	//CEffect_Particle::PARTICLE_DESC*				m_pParticleDesc = {};
-	//CEffect_Void::EFFECTVOID_DESC*					m_pVoidDesc_Particle = {};
 	CVIBuffer_Particle::PARTICLE_BUFFER_DESC*		m_pParticleBufferDesc = {};
 	CEffect_Void::UVSPRITE_DESC*					m_pSpriteDesc_Particle = {};
 
@@ -96,31 +106,29 @@ private:
 
 
 	CEffect_Instance::EFFECT_INSTANCE_DESC*							m_pInstanceDesc		= {};
-	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC*	m_pMeshBufferDesc = {};
+	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC*	m_pMeshBufferDesc	= {};
 
 private:
 	_int m_iRenderGroup_Particle		= { 5 };
 	_int m_iShaderPassIndex_Particle	= { 0 };
 	_int m_iMaxShaderPassIndex_Particle = { 1 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 7, 30, 9, 16 };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 7, 0, 44, 15, 16 };
 
 
 	_int m_iRenderGroup_Rect = { 5 };
 	_int m_iShaderPassIndex_Rect = { 0 };
 	_int m_iMaxShaderPassIndex_Rect = { 2 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 7, 30, 9, 16 };
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 7, 0, 44, 15, 16 };
 
 
 	_int m_iRenderGroup_Mesh			= { 5 };
 	_int m_iShaderPassIndex_Mesh		= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 7, 30, 9, 16 };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 7, 0, 44, 15, 16 };
 
-
-	// Refactoring end   =====================================================================================================
 
 private:
 	_float	m_vTimeAccs_Effect[3]	= { 0.f, 0.f, 0.f };
@@ -128,9 +136,6 @@ private:
 
 private:
 	_int	m_iLoop = { 0 };
-
-	//_int	m_iNumInstance		= { 200 };
-	//_int	m_iMaxNumInstance	= { 500 };
 
 	_float	m_vTimes_Effect[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
 	_float	m_vTimes_Part[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
@@ -267,17 +272,20 @@ private:
 
 #pragma endregion
 
-public:
-	HRESULT Ready_Layer_Greed(const wstring& strLayerTag);
 
 
-public:
-	void	Update_Demo_Sequencer();
-
-#pragma region Sequencer
+#pragma region 시퀀서
 private:
 	int32_t m_iCurSequenceTimePos = { 0 };
 #pragma endregion
+
+
+
+#pragma region Level Setting
+	CGameObject* m_pSky			= { nullptr };
+	CGameObject* m_pScaleModel	= { nullptr };	// 크기 비교용 보기 모델
+#pragma endregion
+
 
 
 public:
