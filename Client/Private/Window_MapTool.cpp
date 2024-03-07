@@ -692,6 +692,7 @@ HRESULT CWindow_MapTool::Ready_ModelTags()
 			case MAP_KEY_TYPE::MODEL_SINGLE:
 			{
 				m_vecSingleModelTag.push_back(strNonAnimTag);
+				m_vecEnviroModelTag.push_back(strNonAnimTag);
 				break;
 			}
 
