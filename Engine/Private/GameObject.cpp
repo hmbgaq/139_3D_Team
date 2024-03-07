@@ -153,6 +153,11 @@ _vector CGameObject::Get_Position_Vector()
 	return m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
 }
 
+_float3 CGameObject::Get_Position()
+{
+	return m_pTransformCom->Get_Position();
+}
+
 _vector CGameObject::Calc_Look_Dir(_vector vTargetPos)
 {
 	return m_pTransformCom->Calc_Look_Dir(vTargetPos);
@@ -185,6 +190,15 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototy
 	Safe_AddRef(pComponent);
 
 	pComponent->Set_Owner(this);
+
+	if (typeid(*pComponent) == typeid(CModel))
+	{
+		CModel* pModel = dynamic_cast<CModel*>(pComponent);
+		
+		pModel->Get_Owner()->Set_ModelWidth(pModel->Get_ModelWidth_WithModel());
+		pModel->Get_Owner()->Set_ModelHeight(pModel->Get_ModelHeight_WithModel());
+
+	}
 
 	return S_OK;
 }

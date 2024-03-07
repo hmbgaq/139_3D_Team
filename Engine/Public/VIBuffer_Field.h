@@ -34,6 +34,8 @@ public:
 
 public:
 	void					Update(_vector _vMousePos, _float _fRadious, _float _fPower, _uint _iMode);
+	void					Update(_fvector vMousePos, _bool bMode);
+	void					Move_Field(_float3 vAddPos);
 
 private:
 	_uint					m_iNumVerticesX = 0, m_iNumVerticesZ = 0;

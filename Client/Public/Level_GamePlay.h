@@ -44,12 +44,9 @@ private:
 #pragma endregion End
 
 private:
-	void Set_Filter();
-	
-private:
 	_int			TempLightNumber = 0;
 
-	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/IntroMap.json";
+	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/FighthingTeam_MapData_MapData.json";
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

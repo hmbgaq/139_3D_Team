@@ -21,6 +21,8 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void Search_Target();
 
 protected:
 	HRESULT Ready_Components() PURE;

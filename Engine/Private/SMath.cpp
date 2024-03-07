@@ -550,3 +550,29 @@ const _bool ENGINE_DLL Engine::SMath::Is_InRange(const XMFLOAT4 Left, const XMFL
 
 	return fDistance < fRange ? true : false;
 }
+
+float ENGINE_DLL Engine::SMath::Calculate_AngleBetweenVectors_Radian(const XMFLOAT3& _v1, const XMFLOAT3& _v2)
+{
+	// 두 벡터 사이의 각도 계산 (라디안)
+
+	XMVECTOR  v1 = { _v1.x, _v1.y, _v1.z, 0.f };
+	XMVECTOR  v2 = { _v2.x, _v2.y, _v2.z, 0.f };
+
+	v1 = XMVector4Normalize(v1);
+	v2 = XMVector4Normalize(v2);
+
+	_float fDot = XMVectorGetX(XMVector3Dot(v1, v2));
+	_float fAngle = acos(fDot);
+
+	return fAngle;
+}
+
+float ENGINE_DLL Engine::SMath::Calculate_AngleBetweenVectors_Degree(const XMFLOAT3& _v1, const XMFLOAT3& _v2)
+{
+	// 두 벡터 사이의 각도 계산 (도 Degree)
+
+	_float fRadians = Calculate_AngleBetweenVectors_Radian(_v1, _v2) * 2.f;
+	_float fDegree = fRadians * (360.0f / (M_PI * 2.f));
+
+	return fDegree;
+}

@@ -49,6 +49,12 @@ public:
 	CWeapon* Set_Force(_float _fForce);
 	CWeapon* Set_Dir(_float3 _vDir);
 
+	_float3	Get_WorldPosition();
+
+
+public:
+	void	Set_Synced(_bool _bSynced) { m_bSynced = _bSynced; }
+	_bool	Get_Synced() { return m_bSynced; }
 
 
 protected:
@@ -83,6 +89,8 @@ protected:
 	_float		m_fForce = { 0.f };
 	_float3		m_vDir = { 0.f, 0.f, 0.f };
 
+protected://몬스터가 Player 잡아서 던지는거 쓸때 쓰는거
+	_bool	m_bSynced = false;
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual void Free() override;

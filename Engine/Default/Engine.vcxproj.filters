@@ -226,23 +226,8 @@
     <Filter Include="01.Utility\03.Components\08.RigidBody">
       <UniqueIdentifier>{a6b04bd9-746e-4674-ac7d-c50214fc9b95}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\09.Event">
-      <UniqueIdentifier>{0ede5438-29c2-491e-83db-695fc4798824}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\09.Event\Manager">
-      <UniqueIdentifier>{115626f4-e0e8-4b9b-a81b-d0cf6ea1dfd1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\97.PhysX">
       <UniqueIdentifier>{619f889e-6947-4fcb-98d7-0c03f0861054}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\09.Event\Object">
-      <UniqueIdentifier>{5fdcee39-a4df-4216-8176-26aaeca1e37f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\09.Event\Object\Actor">
-      <UniqueIdentifier>{50c088af-72bd-4889-af18-f382993c1195}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\09.Event\Object\Trigger">
-      <UniqueIdentifier>{1a1ce231-05d5-4e8d-a27b-b268738b25d7}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Field">
       <UniqueIdentifier>{ddda392a-0cf7-4a8b-a999-313814db4543}</UniqueIdentifier>
@@ -298,8 +283,41 @@
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Trail">
       <UniqueIdentifier>{4c8e2f99-25d2-4a59-8011-a83065393cf6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager">
+      <UniqueIdentifier>{fbd038ba-8561-46a3-bcd0-5a3a6a0c97c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager\00.DxContextManagerCallback">
+      <UniqueIdentifier>{3744d207-17ec-4618-954d-39a25a7fa747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager\01.PxAllocatorCallback">
+      <UniqueIdentifier>{98b989ac-c813-4bf5-be1e-5d2e6ecd2b53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager\02.PxErrorCallback">
+      <UniqueIdentifier>{fb0c6308-d098-49d8-9e1c-d5e1daed20f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\95.NvCloth_Manager\03.PxAssertHandler">
+      <UniqueIdentifier>{10aacbe8-218b-40be-a278-de1314b2b628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\02.Cuda">
+      <UniqueIdentifier>{49bb156e-c281-42a7-b4cf-f387c3376960}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect">
-      <UniqueIdentifier>{8f53fa33-7786-4beb-afbd-cda9133f701e}</UniqueIdentifier>
+      <UniqueIdentifier>{ae7c86fb-0565-4354-ac4e-2234d682b71f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Utility\09.Event">
+      <UniqueIdentifier>{0ede5438-29c2-491e-83db-695fc4798824}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Utility\09.Event\Manager">
+      <UniqueIdentifier>{115626f4-e0e8-4b9b-a81b-d0cf6ea1dfd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Utility\09.Event\Object">
+      <UniqueIdentifier>{5fdcee39-a4df-4216-8176-26aaeca1e37f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Utility\09.Event\Object\Actor">
+      <UniqueIdentifier>{50c088af-72bd-4889-af18-f382993c1195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Utility\09.Event\Object\Trigger">
+      <UniqueIdentifier>{1a1ce231-05d5-4e8d-a27b-b268738b25d7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -550,19 +568,19 @@
       <Filter>01.Utility\03.Components\08.RigidBody</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Event_Manager.h">
-      <Filter>01.Utility\09.Event\Manager</Filter>
+      <Filter>01.Utility\96.Utility\09.Event\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ConstantBuffer.h">
       <Filter>01.Utility\03.Components\02.Shader\ConstantBuffer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Trigger.h">
-      <Filter>01.Utility\09.Event\Object\Trigger</Filter>
+      <Filter>01.Utility\96.Utility\09.Event\Object\Trigger</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EventActor.h">
-      <Filter>01.Utility\09.Event\Object\Actor</Filter>
+      <Filter>01.Utility\96.Utility\09.Event\Object\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Event.h">
-      <Filter>01.Utility\09.Event</Filter>
+      <Filter>01.Utility\96.Utility\09.Event</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Field.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Field</Filter>
@@ -612,7 +630,25 @@
     <ClInclude Include="..\Public\VIBuffer_Trail.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Trail</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\VIBuffer_Particle_Rect.h">
+    <ClInclude Include="..\Public\NvCloth_Manager.h">
+      <Filter>01.Utility\95.NvCloth_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomContextManagerCallback.h">
+      <Filter>01.Utility\95.NvCloth_Manager\00.DxContextManagerCallback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomPxAllocatorCallback.h">
+      <Filter>01.Utility\95.NvCloth_Manager\01.PxAllocatorCallback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomPxErrorCallback.h">
+      <Filter>01.Utility\95.NvCloth_Manager\02.PxErrorCallback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomPxAssertHandler.h">
+      <Filter>01.Utility\95.NvCloth_Manager\03.PxAssertHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cuda_Device.h">
+      <Filter>00.System\02.Cuda</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Particle_Rect.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect</Filter>
     </ClInclude>
   </ItemGroup>
@@ -810,16 +846,16 @@
       <Filter>01.Utility\03.Components\08.RigidBody</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Event_Manager.cpp">
-      <Filter>01.Utility\09.Event\Manager</Filter>
+      <Filter>01.Utility\96.Utility\09.Event\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ConstantBuffer.cpp">
       <Filter>01.Utility\03.Components\02.Shader\ConstantBuffer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EventActor.cpp">
-      <Filter>01.Utility\09.Event\Object\Actor</Filter>
+      <Filter>01.Utility\96.Utility\09.Event\Object\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Trigger.cpp">
-      <Filter>01.Utility\09.Event\Object\Trigger</Filter>
+      <Filter>01.Utility\96.Utility\09.Event\Object\Trigger</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Field.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Field</Filter>
@@ -863,7 +899,25 @@
     <ClCompile Include="..\Private\VIBuffer_Trail.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Trail</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\VIBuffer_Particle_Rect.cpp">
+    <ClCompile Include="..\Private\NvCloth_Manager.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomContextManagerCallback.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager\00.DxContextManagerCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomPxAllocatorCallback.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager\01.PxAllocatorCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomPxErrorCallback.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager\02.PxErrorCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomPxAssertHandler.cpp">
+      <Filter>01.Utility\95.NvCloth_Manager\03.PxAssertHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cuda_Device.cpp">
+      <Filter>00.System\02.Cuda</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Particle_Rect.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect</Filter>
     </ClCompile>
   </ItemGroup>

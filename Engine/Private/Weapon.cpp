@@ -210,6 +210,16 @@ CWeapon* CWeapon::Set_Dir(_float3 _vDir)
 	return this;
 }
 
+_float3 CWeapon::Get_WorldPosition()
+{
+	_float3 result = { 0.f, 0.f, 0.f };
+	result.x = m_WorldMatrix._41;
+	result.y = m_WorldMatrix._42;
+	result.z = m_WorldMatrix._43;
+
+	return result;
+}
+
 
 
 

@@ -1,32 +1,40 @@
 #include "Shader_Defines.hlsli"
 
 matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-float       g_TimeDelta;
+float       g_fTimeDelta;
 
 Texture2D	g_DiffuseTexture;
 Texture2D	g_MaskTexture;
 Texture2D	g_NoiseTexture;
+
 Texture2D	g_NormalTexture;
 Texture2D   g_SpecularTexture;
+
 Texture2D	g_DepthTexture;
 
+
+/* Camera */
+vector      g_vCamPosition;
 vector      g_vCamDirection;
+float		g_fCamFar;
 
 vector      g_vPlayerPosition;
-float		g_fFar;
-float		g_fDissolveRatio;
 
+/* UV */
 float2      g_UVOffset;
 float2      g_UVScale;
 float		g_fDegree;
 
-float		g_DiscardValue;
-float3		g_fBlack_Discard;
 
-/* Dissolve  */
-Texture2D	g_DissolveTexture;
-Texture2D	g_DissolveDiffTexture;
+/* Discard */
+float		g_fAlpha_Discard;
+float3		g_vBlack_Discard;
+
+
+/* Dissolve */
+texture2D	g_DissolveDiffTexture;
 float		g_fDissolveWeight;
+float		g_fDissolveRatio;
 
 
 /* Bloom */
@@ -37,7 +45,7 @@ float3      g_vBloomPower;
 /* RimLight */
 float4		g_vRimColor;
 float		g_fRimPower;
-vector      g_vCamPosition;
+
 
 
 /* Custom Function */
@@ -197,7 +205,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	//Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	//float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
 
-	////clip(Out.vDiffuse.a - g_DiscardValue);
+	////clip(Out.vDiffuse.a - g_fAlpha_Discard);
 	//Out.vDiffuse.a *= vAlphaMask.a;
 	//
 	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
@@ -211,7 +219,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	Out.vDiffuse = vMtrlDiffuse;
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 0.0f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
 
 	/* 림라이트 -> 프레넬 공식 사용 */
 	/* 노말 (내적) 정점이 카메라를 바라보는방향 -> 카메라가 조명처럼 인식된다. */
@@ -236,7 +244,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 
 	// 검은색 잘라내기
-	if (Out.vDiffuse.r < g_fBlack_Discard.r && Out.vDiffuse.g < g_fBlack_Discard.g && Out.vDiffuse.b < g_fBlack_Discard.b)
+	if (Out.vDiffuse.r < g_vBlack_Discard.r && Out.vDiffuse.g < g_vBlack_Discard.g && Out.vDiffuse.b < g_vBlack_Discard.b)
 		discard;
 
 	return Out;
@@ -300,7 +308,7 @@ PS_OUT PS_MAIN_NORMAL(PS_IN_NORMAL In)
 	PS_OUT Out = (PS_OUT)0;
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    clip(Out.vDiffuse.a - g_DiscardValue);
+    clip(Out.vDiffuse.a - g_fAlpha_Discard);
     Out.vDiffuse.a = 1.f;
 	/* 0 ~ 1 */
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
@@ -313,7 +321,7 @@ PS_OUT PS_MAIN_NORMAL(PS_IN_NORMAL In)
 	vPixelNormal = mul(vPixelNormal, WorldMatrix);
 
 	Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 	
 	return Out;
 }
@@ -372,7 +380,7 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
-	vector TexDissolve = g_DissolveTexture.Sample(LinearSampler, In.vTexUV);
+	vector TexDissolve = g_NoiseTexture.Sample(LinearSampler, In.vTexUV);
 
     clip(TexDissolve - g_fDissolveRatio);
 
@@ -386,7 +394,7 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In)
 
     Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue * g_DissolveDiffTexture.Sample(LinearSampler, In.vTexUV);
 	
-    clip(Out.vDiffuse.a - g_DiscardValue);
+    clip(Out.vDiffuse.a - g_fAlpha_Discard);
     //Out.vDiffuse.a = 1.f;
 
 	float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
@@ -401,7 +409,7 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In)
 
 	
 	Out.vNormal    = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 
 	return Out;
 }

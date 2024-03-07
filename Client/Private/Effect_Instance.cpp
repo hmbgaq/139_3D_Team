@@ -5,6 +5,7 @@
 #include "VIBuffer_Effect_Model_Instance.h"
 
 #include "Easing_Utillity.h"
+#include "SMath.h"
 
 CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
@@ -25,17 +26,13 @@ HRESULT CEffect_Instance::Initialize_Prototype()
 
 HRESULT CEffect_Instance::Initialize(void* pArg)
 {	
-	m_tInstanceDesc = *(EFFECT_INSTANCE_DESC*)pArg;
+	*static_cast<EFFECTVOID_DESC*>(&m_tInstanceDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
-
-
-	//m_pInstanceModelCom->Add_Mesh(m_pTransformCom->Get_WorldMatrix());
-
 
 
 	return S_OK;
@@ -78,6 +75,7 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 
 
 
+
 			/* ======================= 라이프 타임 동작 끝  ======================= */
 
 
@@ -101,6 +99,10 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 				}
 			}
 
+			if (m_tInstanceDesc.bRender)
+			{
+				m_pVIBufferCom->Update(fTimeDelta);
+			}
 		}
 	}
 
@@ -113,10 +115,18 @@ void CEffect_Instance::Late_Tick(_float fTimeDelta)
 	{
 		if (m_tInstanceDesc.bRender)
 		{
+			if (nullptr != m_pOwner)
+			{
+				if (m_tInstanceDesc.bParentPivot)
+				{
+					m_tInstanceDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+					XMStoreFloat4x4(&m_tInstanceDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tInstanceDesc.matPivot);
+				}
+			}
 			//Compute_CamDistance();
 
-			if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tInstanceDesc.iRenderGroup, this)))
-				return;
+			//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_EFFECT, this));
+			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tInstanceDesc.iRenderGroup, this), );
 		}
 	}
 }
@@ -130,12 +140,11 @@ HRESULT CEffect_Instance::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		if(FIGURE == m_tInstanceDesc.eType_Mesh)
+		if(FALSE == m_tInstanceDesc.bUseCustomTex)
 			m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 
 		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		//m_pInstanceModelCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		//Prototype_Component_Texture_Effect_Sprite
+
 
 		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
 		m_pVIBufferCom->Render((_uint)i);
@@ -152,6 +161,7 @@ void CEffect_Instance::ReSet_Effect()
 	m_tInstanceDesc.bDissolve = FALSE;
 	m_tInstanceDesc.bRender = FALSE;
 
+	m_pVIBufferCom->ReSet();
 }
 
 void CEffect_Instance::End_Effect()
@@ -164,11 +174,60 @@ void CEffect_Instance::End_Effect()
 	}
 }
 
+void* CEffect_Instance::Get_BufferDesc()
+{
+	// 초기화용
+
+	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferDesc = {};
+
+	tBufferDesc.iCurNumInstance = m_tInstanceDesc.iCurNumInstance;
+	tBufferDesc.pModel = m_pModelCom;
+
+	/* RigidBody */
+	tBufferDesc.bUseRigidBody	= m_tInstanceDesc.bUseRigidBody;
+	tBufferDesc.bKinetic		= m_tInstanceDesc.bKinetic;
+	tBufferDesc.bUseGravity		= m_tInstanceDesc.bUseGravity;
+	tBufferDesc.eForce_Mode		= m_tInstanceDesc.eForce_Mode;
+
+	tBufferDesc.fGravity		= m_tInstanceDesc.fGravity;
+	tBufferDesc.fFriction		= m_tInstanceDesc.fFriction;
+	tBufferDesc.fSleepThreshold = m_tInstanceDesc.fSleepThreshold;
+	tBufferDesc.byFreezeAxis	= m_tInstanceDesc.byFreezeAxis;
+
+	tBufferDesc.vMinMaxPower	= m_tInstanceDesc.vMinMaxPower;
+
+
+	/* For.Position */
+	tBufferDesc.vCenterPosition = m_tInstanceDesc.vCenterPosition;
+	tBufferDesc.vMinMaxRange	= m_tInstanceDesc.vMinMaxRange;
+
+	/* For.Rotation */
+	tBufferDesc.vMinMaxRotationOffsetX = m_tInstanceDesc.vMinMaxRotationOffsetX;
+	tBufferDesc.vMinMaxRotationOffsetY = m_tInstanceDesc.vMinMaxRotationOffsetY;
+	tBufferDesc.vMinMaxRotationOffsetZ = m_tInstanceDesc.vMinMaxRotationOffsetZ;
+
+
+
+	return &tBufferDesc;
+}
+
 _bool CEffect_Instance::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
 
+	Write_VoidDesc(Out_Json, &m_tInstanceDesc);
 
+	/* Mesh */
+	Out_Json["eType_Mesh"] = m_tInstanceDesc.eType_Mesh;
+	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
+
+	/* Bloom */
+	CJson_Utility::Write_Float4(Out_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);
+	CJson_Utility::Write_Float3(Out_Json["vBloomPower"], m_tInstanceDesc.vBloomPower);
+
+	/* Rim */
+	CJson_Utility::Write_Float4(Out_Json["vRimColor"], m_tInstanceDesc.vRimColor);
+	Out_Json["fRimPower"] = m_tInstanceDesc.fRimPower;
 
 
 	return true;
@@ -178,7 +237,20 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
+	*static_cast<EFFECTVOID_DESC*>(&m_tInstanceDesc) = *static_cast<EFFECTVOID_DESC*>(Load_VoidDesc(In_Json));
 
+	/* Mesh */
+	m_tInstanceDesc.eType_Mesh = In_Json["eType_Mesh"];
+	m_tInstanceDesc.bUseCustomTex = In_Json["bUseCustomTex"];
+
+
+	/* Bloom */
+	CJson_Utility::Load_Float4(In_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);
+	CJson_Utility::Load_Float3(In_Json["vBloomPower"], m_tInstanceDesc.vBloomPower);
+
+	/* Rim */
+	CJson_Utility::Load_Float4(In_Json["vRimColor"], m_tInstanceDesc.vRimColor);
+	m_tInstanceDesc.fRimPower = In_Json["fRimPower"];
 
 }
 
@@ -198,14 +270,13 @@ HRESULT CEffect_Instance::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC Desc;
-	Desc.pModel = m_pModelCom;
-	Desc.iCurNumInstance = m_tInstanceDesc.iCurNumInstance; // 5만개 해보니 내 컴기준 프레임 45까지 떨어짐
-	
+
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &Desc)))
-		return E_FAIL;
+	{
+		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferInfo = *static_cast<CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC*>(Get_BufferDesc());
+		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
+			return E_FAIL;
+	}
 
 
 	/* For.Com_Texture */
@@ -235,18 +306,21 @@ HRESULT CEffect_Instance::Ready_Components()
 
 HRESULT CEffect_Instance::Bind_ShaderResources()
 {
-	//if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	//	return E_FAIL;
-	//_float4x4 WorldMatrix;
-	//XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
-	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix));
-
-	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	/* Matrix ============================================================================================ */
+	if (m_tInstanceDesc.bParentPivot)
+	{
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tInstanceDesc.matOffset));
+	}
+	else
+	{
+		FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	}
 
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
-	if (FLAT == m_tInstanceDesc.eType_Mesh)
+
+	if (TRUE == m_tInstanceDesc.bUseCustomTex)
 	{
 		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_DIFFUSE]));
 
@@ -258,30 +332,36 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 		{
 			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_NOISE]));
-			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_NOISE]));
 		}
 	}
 
-	
+	/* UV ============================================================================================ */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tInstanceDesc.fUV_RotDegree, sizeof(_float)));
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tInstanceDesc.fUV_RotDegree, sizeof(_float))))
-		return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tInstanceDesc.vColor_Clip.w, sizeof(_float)));
 
+	_float3 vBlack_Discard = _float3(m_tInstanceDesc.vColor_Clip.x, m_tInstanceDesc.vColor_Clip.y, m_tInstanceDesc.vColor_Clip.z);
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
+
+
+	/* Camera ============================================================================================ */
+	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
+	vCamDirection = XMVector4Normalize(vCamDirection);
+	_float4 vCamDirectionFloat4 = {};
+	XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
+
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat4, sizeof(_float4)));
+
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
+
+	/* Dissolve */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tInstanceDesc.vUV_Offset, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tInstanceDesc.vUV_Scale, sizeof(_float2)));
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tInstanceDesc.fDissolveAmount, sizeof(_float)));
-
-
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_DiscardValue", &m_tInstanceDesc.vColor_Clip.w, sizeof(_float)));
-
-
-	_float3 vBlack_Discard = { m_tInstanceDesc.vColor_Clip.x, m_tInstanceDesc.vColor_Clip.y, m_tInstanceDesc.vColor_Clip.z};
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fBlack_Discard", &vBlack_Discard, sizeof(_float3)));
-
-
-	_float fCamFar = m_pGameInstance->Get_CamFar();
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFar", &fCamFar, sizeof(_float)));
 
 
 	return S_OK;

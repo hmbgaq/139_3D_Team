@@ -380,8 +380,8 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 	{
 		if (m_pGameInstance->Mouse_Down(DIM_LB))
 		{
-			m_tChild_Desc.fPositionX = m_pt.x;
-			m_tChild_Desc.fPositionY = m_pt.y;
+			m_tChild_Desc.fPositionX = (_float)m_pt.x;
+			m_tChild_Desc.fPositionY = (_float)m_pt.y;
 			Create_Child(m_tChild_Desc);
 			
 		}
@@ -1823,7 +1823,7 @@ void CWindow_UITool::Curr_Info()
 void CWindow_UITool::Create_TargetTexture()
 {
 	/* error : Find함수로 랜더타겟을 찾아온 뒤, 그녀석으로 Create함수를 호출하면 외부참조기호 에러가 발생함.. 직접 게임인스턴스로 Create까지 직결되는 함수를 새로 만들어서 사용하며 해결 */
-	m_pGameInstance->Create_RenderTarget(TEXT("Target_Diffuse_UI"));
+	m_pGameInstance->Create_RenderTarget(TEXT("Target_UI_Diffuse"));
 }
 
 void CWindow_UITool::KeyframeList()

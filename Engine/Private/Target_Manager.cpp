@@ -194,8 +194,18 @@ void CTarget_Manager::Create_RenderTarget(const wstring& strTargetTag)
 {
 	auto	iter = m_RenderTargets.find(strTargetTag);
 
-	iter->second->Create_TargetTexture();
+	if (iter != m_RenderTargets.end())
+	{
+		// 키를 찾았을 때의 처리
+		MSG_BOX("이미지파일 생성 완료 ");
+	}
+	else 
+	{
+		MSG_BOX("렌더타겟을 찾지못했습니다. ");
+		return;
+	}
 
+	iter->second->Create_TargetTexture();	
 }
 
 list<class CRenderTarget*>* CTarget_Manager::Find_MRT(const wstring & strMRTTag)

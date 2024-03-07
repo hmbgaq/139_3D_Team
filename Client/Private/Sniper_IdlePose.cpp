@@ -4,7 +4,7 @@ void CSniper_IdlePose::Initialize(CBandit_Sniper* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 }
 
 CState<CBandit_Sniper>* CSniper_IdlePose::Update(CBandit_Sniper* pActor, _float fTimeDelta)

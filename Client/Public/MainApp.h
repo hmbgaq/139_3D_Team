@@ -21,7 +21,8 @@ public:
 	HRESULT Initialize();
 	void	Tick(_float fTimeDelta);
 	HRESULT Render();
-
+	//CUDATEST
+	int sum_int(int a, int b);
 private:
 	HRESULT Open_Level(LEVEL eStartLevelID);
 	HRESULT Ready_Prototype_Component_ForStaticLevel();

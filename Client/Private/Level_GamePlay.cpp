@@ -33,6 +33,7 @@
 #include "Effect.h"
 #pragma endregion
 
+#include "Data_Manager.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -41,6 +42,7 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * p
 
 HRESULT CLevel_GamePlay::Initialize()
 {
+	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
 
 	FAILED_CHECK(Ready_LightDesc());
@@ -50,10 +52,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
-	if (FAILED(Ready_UI()))
-		return E_FAIL;
+	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
 
-	Set_Filter();
+	FAILED_CHECK(Ready_UI());
 
 	return S_OK;
 }
@@ -64,12 +65,28 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 #pragma region Effect_Test	
 
-	if (m_pGameInstance->Key_Down(DIK_TAB))
-	{
-		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Test_Effect.json");
-		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
-	}
+	 if (m_pGameInstance->Key_Down(DIK_GRAVE))
+ 	{
+ 		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Hit_3.json");
+ 		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
+ 	}
 
+
+	//if (m_pGameInstance->Key_Down(DIK_TAB))
+	//{
+	//	CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Hit_3.json");
+	//	if (nullptr != m_pGameInstance->Get_Player())
+	//	{
+	//		CTransform* pTransform = m_pGameInstance->Get_Player()->Get_Transform();
+	//		_float3 vPos = pTransform->Get_Position();
+	//		vPos.y += 1.f;
+	//		pEffect->Set_Position(vPos);
+	//	}
+	//	else
+	//	{
+	//		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
+	//	}
+	//}
 #pragma endregion
 
 
@@ -84,6 +101,12 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_LightDesc()
 {
+	/* For. Shadow */
+	//XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	//XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, lightfar 임 ));
+	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_GAMEPLAY), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
+	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_GAMEPLAY),  60.f,  (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear,  Engine::g_fLightFar);
+
 	LIGHT_DESC			LightDesc{};
 	{
 		LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
@@ -157,7 +180,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag, void* p
 	//if (nullptr == pPlayer)
 	//	return E_FAIL;
 
-	//m_pGameInstance->Set_Player(pPlayer);
+	//m_pGameInstance->Set_Player(dynamic_cast<CCharacter*>(pPlayer));
 
 	return S_OK;
 }
@@ -174,18 +197,23 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* pArg)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Assassin")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected")));
+// 	for (int i = 0; i < 100; ++i)
+// 	{
+		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
+/*	}*/
 
 	{
-		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-		if (nullptr == pMonster)	return E_FAIL;
-		pMonster->Set_Position(_float3(0.f, 0.f, 2.f));
+		//CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+		//if (nullptr == pMonster)	return E_FAIL;
+		//pMonster->Set_Position(_float3(0.f, 0.f, 2.f));
 	}
 
-	//{
-	//	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-	//	if (nullptr == pMonster)	return E_FAIL;
-	//	pMonster->Set_Position(_float3(1.f, 0.f, 2.f));
-	//}
+	{
+		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+		if (nullptr == pMonster)	return E_FAIL;
+		pMonster->Set_Position(_float3(1.f, 0.f, 2.f));
+	}
 
 
 
@@ -297,7 +325,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
  
  
  	json InteractJson = Stage1MapJson["Interact_Json"];
- 	_int InteractJsonSize = InteractJson.size();
+ 	_int InteractJsonSize = (_int)InteractJson.size();
  
  	for (_int i = 0; i < InteractJsonSize; ++i)
  	{
@@ -307,7 +335,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
  	}
  
  	json InstanceJson = Stage1MapJson["Instance_Json"];
- 	_int InstanceJsonSize = InstanceJson.size();
+ 	_int InstanceJsonSize = (_int)InstanceJson.size();
  
  	for (_int i = 0; i < InstanceJsonSize; ++i)
  	{
@@ -325,9 +353,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
  		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
  
  		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
- 		_uint InstanceInfoJsonSize = InstanceInfoJson.size();
+ 		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
  
- 		for (_int j = 0; j < InstanceInfoJsonSize; ++j)
+ 		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
  		{
  			INSTANCE_INFO_DESC InstanceInfoDesc = {};
  
@@ -409,11 +437,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
 	//! 애님인스턴싱이 할필요없어짐. ㅎㅎㅎㅎㅎㅎFAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
 
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
 
 	///* ui test */
 	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
-
+	//
 	//CUI_Player_HPBar::UI_DESC desc = {};
 	//desc.fPositionX = (_float)g_iWinSizeX / 2 + 20.f;
 	//desc.fPositionY = (_float)g_iWinSizeY / 2 + 20.f;
@@ -426,10 +454,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_UI()
 {
+	/* Test용도 */
 	//FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
-
-	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
-
+	 
+	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr)); /* 렌더타ㄱ*/
+	//FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
+	
 	return S_OK;
 }
 
@@ -438,41 +468,42 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 	/* 추 후 파싱해서 정보 받아오기 */
 	
 	/* MRT로 묶지 않으면 출력이안나옴. */
-	json json_in;
+	//json json_in;
 
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Test_Final.json";
+	//char filePath[MAX_PATH] = "../Bin/DataFiles/TestData/Test_5.json";
 
-	_int		iPathNum = 0;
-	string		strFileName;
-	string		strFilePath;
-	
-	CJson_Utility::Load_Json(filePath, json_in);
+	//_int		iPathNum = 0;
+	//string		strFileName;
+	//string		strFilePath;
+	//
+	//CJson_Utility::Load_Json(filePath, json_in);
 
-	for (auto& item : json_in.items())
-	{
-		json object = item.value();
+	//for (auto& item : json_in.items())
+	//{
+	//	json object = item.value();
 
-		CUI::UI_DESC tUI_Info;
+	//	CUI::UI_DESC tUI_Info;
 
-		tUI_Info.strProtoTag = object["ProtoTag"];
-		tUI_Info.strFilePath = object["FilePath"];
+	//	tUI_Info.strProtoTag = object["ProtoTag"];
+	//	tUI_Info.strFilePath = object["FilePath"];
 
-		wstring wstrPrototag;
-		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+	//	wstring wstrPrototag;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
 
-		wstring wstrFilePath;
-		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+	//	wstring wstrFilePath;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
 
-		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
+	//	CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
 
-		pUI_Object->Get_Transform()->Load_FromJson(object);
-		
-		// Pos 잡아주기
-	}
+	//	pUI_Object->Get_Transform()->Load_FromJson(object);
+	//	
+	//	// Pos 잡아주기
+	//}
 
 
 	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &json_in)))
 	//	return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything")));
 
 	return S_OK;
 }
@@ -484,7 +515,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Interface(const wstring& strLayerTag, vo
 	// =>Right_Interface
 						Ready_RightInterface(strLayerTag, pArg);
 	// =>Quest_Box
-						Ready_QuestBox(strLayerTag, pArg);
+						Ready_QuestBox(strLayerTag, pArg); 
 	// =>Tutorial_Box
 						Ready_TutorialBox(strLayerTag, pArg);
 	// =>LevelUp
@@ -835,42 +866,60 @@ HRESULT CLevel_GamePlay::Ready_Reward_Item(const wstring& strLayerTag, void* pAr
 
 HRESULT CLevel_GamePlay::Ready_Cursor(const wstring& strLayerTag, void* pArg)
 {
-	CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_MouseCursor")));
+	//json json_in;
+
+	//char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/PlayerInterface/RewardItem.json";
+
+	//_int		iPathNum = 0;
+	//string		strFileName;
+	//string		strFilePath;
+
+	//CJson_Utility::Load_Json(filePath, json_in);
+
+	//for (auto& item : json_in.items())
+	//{
+	//	json object = item.value();
+
+	//	CUI::UI_DESC tUI_Info;
+
+	//	/* 저장순서랑 맞는지 확인하기 */
+	//	tUI_Info.bParent = object["Parent"];					// 1. Parent
+	//	tUI_Info.bWorld = object["World"];						// 2. World
+	//	tUI_Info.bGroup = object["Group"];						// 3. Group
+	//	tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+	//	tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+	//	tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+	//	tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+	//	tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+	//	tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+	//	tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+	//	tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+	//	tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+	//	tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+	//	tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+	//	tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+	//	tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+
+	//	wstring wstrLayer;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strLayerTag, wstrLayer); //
+
+	//	wstring wstrClonetag;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+	//	wstring wstrPrototag;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+	//	wstring wstrFilePath;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+	//	CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, wstrClonetag, &tUI_Info));
+
+	//	pUI_Object->Get_Transform()->Load_FromJson(object);		// 17. TransformCom
+	//}
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_MouseCursor")));
 
 	return S_OK;
-}
-
-void CLevel_GamePlay::Set_Filter()
-{
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::MONSTER, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::MONSTER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::MONSTER);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::INTERIOR);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER_WEAPON, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::CAMERA, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::CAMERA, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::DYNAMIC_PROP);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::BOSS_DYNAMIC_PROP);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::TRIGGER, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::LADDER_DOWN, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::LADDER_UP, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::ELEVATOR, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::DOOR, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::CHECKPOINT, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER, (_uint)COLLISION_LAYER::PLAYER_BATCOL);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::CHECK_DIR, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::INTERIOR, (_uint)COLLISION_LAYER::INTERIOR);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
 }
 
 CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
