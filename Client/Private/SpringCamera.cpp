@@ -37,8 +37,11 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 
 		hDist = 0.7f; //Z 축 카메라와 플레이어 거리
 		vDist = 0.7f; //Y 축 카메라와 플레이어 거리
-		m_CameraOffsetY = 3.5f;
-		m_CameraOffsetZ = -7.0f;
+		//인게임에서 이제 최적의 포지션값인거같음 
+		m_CameraOffset.x = 1.f;
+		m_CameraOffset.y = 2.5f;
+		m_CameraOffset.z = -3.0f;
+		
 
 		m_pPlayer = CData_Manager::GetInstance()->Get_Player();
 		m_ptarget = m_pPlayer->Get_Transform();
@@ -183,7 +186,6 @@ _bool CSpringCamera::Write_Json(json& Out_Json)
 	return false;
 }
 
-
 void CSpringCamera::CameraRotation(_float fTimeDelta)
 {
 	//카메라 움직임은 Late_Tick에 있다!
@@ -211,7 +213,7 @@ void CSpringCamera::CameraRotation(_float fTimeDelta)
 	currentCameraPosition.z = XMVectorGetZ(XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta)));
 
 	// 캐릭터 주위를 중심으로 하는 카메라 위치 계산
-	XMVECTOR cameraOffset = XMVectorSet(m_CameraOffsetX, m_CameraOffsetY, m_CameraOffsetZ, 0.0f);  // 카메라의 초기 위치
+	XMVECTOR cameraOffset = XMVectorSet(m_CameraOffset.x, m_CameraOffset.y, m_CameraOffset.z, 0.0f);  // 카메라의 초기 위치
 	cameraOffset = XMVector3TransformCoord(cameraOffset, rotationMatrix);
 
 	// 캐릭터의 위치 및 회전 적용
@@ -241,7 +243,7 @@ void CSpringCamera::Lock_On(_float fTimeDelta)
 	currentCameraPosition.z = XMVectorGetZ(XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta)));
 
 	// 캐릭터 주위를 중심으로 하는 카메라 위치 계산
-	XMVECTOR cameraOffset = XMVectorSet(m_CameraOffsetX, m_CameraOffsetY, m_CameraOffsetZ, 0.0f);  // 카메라의 초기 위치
+	XMVECTOR cameraOffset = XMVectorSet(m_CameraOffset.x, m_CameraOffset.y, m_CameraOffset.z, 0.0f);  // 카메라의 초기 위치
 	cameraOffset = XMVector3TransformCoord(cameraOffset, rotationMatrix);
 
 	// 캐릭터의 위치 및 회전 적용

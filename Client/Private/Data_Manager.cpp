@@ -5,6 +5,7 @@
 
 #include "Player.h"
 #include "Camera_Dynamic.h"
+#include "MasterCamera.h"
 
 IMPLEMENT_SINGLETON(CData_Manager);
 
@@ -73,17 +74,17 @@ void CData_Manager::Reset_Player(LEVEL eLEVEL)
 
 }
 
-void CData_Manager::Set_Camera_Dynamic(CCamera_Dynamic* _pCamera_Dynamic)
+void CData_Manager::Set_MasterCamera(CMasterCamera* _pMasterCamera)
 {
-	m_pCamera_Dynamic = _pCamera_Dynamic;
+	m_pMasterCamera = _pMasterCamera;
 }
 
-CCamera_Dynamic* CData_Manager::Get_Camera_Dynamic()
+CMasterCamera* CData_Manager::Get_MasterCamera()
 {
-	return m_pCamera_Dynamic;
+	return m_pMasterCamera;
 }
 
-void CData_Manager::Reset_Camera_Dynamic(LEVEL eLEVEL)
+void CData_Manager::Reset_MasterCamera(LEVEL eLEVEL)
 {
 	CCamera_Dynamic::DYNAMIC_CAMERA_DESC tDesc = {};
 	tDesc.fMouseSensor = 0.05f;
@@ -116,8 +117,8 @@ void CData_Manager::Reset_Camera_Dynamic(LEVEL eLEVEL)
 		break;
 	}
 
-	m_pCamera_Dynamic->Initialize(&tDesc);
-	m_pCamera_Dynamic->Set_Position(vPos);
+	m_pMasterCamera->Initialize(&tDesc);
+	m_pMasterCamera->Set_Position(vPos);
 }
 
 #pragma region SH_ADD

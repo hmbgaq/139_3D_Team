@@ -89,13 +89,11 @@ void CLevel_Intro::Tick(_float fTimeDelta)
 	//	}
 	//}
 #pragma endregion
-
-
 }
 
 HRESULT CLevel_Intro::Render()
 {
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
+	SetWindowText(g_hWnd, TEXT("Level Intro 입니다."));
 
 	return S_OK;
 }
