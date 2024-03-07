@@ -426,7 +426,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_UI()
 {
-	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
+	//FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
 
 	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
 
@@ -440,7 +440,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 	/* MRT로 묶지 않으면 출력이안나옴. */
 	json json_in;
 
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/Test_Final.json";
 
 	_int		iPathNum = 0;
 	string		strFileName;

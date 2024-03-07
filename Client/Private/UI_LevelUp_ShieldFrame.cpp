@@ -49,6 +49,10 @@ HRESULT CUI_LevelUp_ShieldFrame::Initialize(void* pArg)
 	
 	//m_strText = m_pData_Manager->Get_CurLevel();
 
+	m_fChangeScale = 4.f;
+	m_fLifeTime = 1000.f;
+	m_fTime = GetTickCount64();
+
 	return S_OK;
 }
 
@@ -59,29 +63,33 @@ void CUI_LevelUp_ShieldFrame::Priority_Tick(_float fTimeDelta)
 
 void CUI_LevelUp_ShieldFrame::Tick(_float fTimeDelta)
 {
-
-	/* !!!!!!!!!!! 여기 테스트 값 주고 있었음 !!!!!!!!!!!!!! */
+	// Test
 	if (m_pGameInstance->Key_Down(DIK_0))
 		m_pTransformCom->Set_Scaling(180.f, 225.f, 1.f);
 
 	if (m_pGameInstance->Key_Down(DIK_9))
-		m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+		++m_fChangeScale;
 
 	if (m_pGameInstance->Key_Down(DIK_8))
-		m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+		--m_fChangeScale;
 
 	//if (m_bActive)
 	{
-		if (m_fScaleX > 130)
+		if (m_fTime + m_fLifeTime < GetTickCount64())
 		{
-			Change_SizeX((-5.f));
-		}
+			if (m_fScaleX > 130.f)
+			{
+				Change_SizeX((-m_fChangeScale));
+			}
 
-		if (m_fScaleY > 180)
-		{
-			Change_SizeY((-5.f));
-		}
+			if (m_fScaleY > 180.f)
+			{
+				Change_SizeY((-m_fChangeScale));
+			}
 
+			if(m_fScaleX < 130.f && m_fScaleY < 180.f)
+				m_fTime = GetTickCount64();
+		}
 		__super::Tick(fTimeDelta);
 	}
 }

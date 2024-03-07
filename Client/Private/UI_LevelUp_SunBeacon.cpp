@@ -35,7 +35,9 @@ HRESULT CUI_LevelUp_SunBeacon::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_eState = UISTATE::LEVEL_UP;
+	m_fLifeTime = 1500.f;
 	m_bActive = true;
+	m_fTime = GetTickCount64();
 
 	return S_OK;
 }
@@ -55,7 +57,67 @@ void CUI_LevelUp_SunBeacon::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	__super::Tick(fTimeDelta);
+		// Test
+	if (m_pGameInstance->Key_Down(DIK_7))
+	{
+		m_fTime = GetTickCount64();
+		m_fScaleX = 350.f;
+		m_fScaleY = 350.f;
+		m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+		m_bSecondOK = true;
+		m_bFirstOK = false;
+	}
+		
+
+	if (m_pGameInstance->Key_Down(DIK_6))
+		++m_fChangeScale;
+
+	if (m_pGameInstance->Key_Down(DIK_5))
+		--m_fChangeScale;
+
+	//if (m_bActive)
+	{
+		if (m_fTime + m_fLifeTime < GetTickCount64() && m_bFirstOK == false)
+		{
+			if (m_fScaleX > 295.f)
+			{
+				Change_SizeX((-m_fChangeScale));
+			}
+
+			if (m_fScaleY > 295.f)
+			{
+				Change_SizeY((-m_fChangeScale));
+			}
+
+			if (m_fScaleX <= 295.f && m_fScaleY <= 295.f)
+			{
+				m_bFirstOK = true;
+				m_bSecondOK = false;
+				m_fTime = GetTickCount64();
+			}
+		}
+
+		if (m_bSecondOK == false)
+		{
+			if (m_fScaleX < 310.f)
+			{
+				Change_SizeX((m_fChangeScale));
+			}
+
+			if (m_fScaleY < 310.f)
+			{
+				Change_SizeY((m_fChangeScale));
+			}
+
+			if (m_fScaleX >= 310.f && m_fScaleY >= 310.f)
+			{
+				m_bSecondOK = true;
+				m_fTime = GetTickCount64();
+			}
+		}
+
+		__super::Tick(fTimeDelta);
+	}
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
