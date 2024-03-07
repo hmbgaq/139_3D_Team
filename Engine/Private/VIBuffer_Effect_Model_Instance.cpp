@@ -22,25 +22,41 @@ HRESULT CVIBuffer_Effect_Model_Instance::Initialize(void* pArg)
 {
 	m_tBufferDesc = *(EFFECT_MODEL_INSTANCE_DESC*)pArg;
 
-	Safe_AddRef(m_tBufferDesc.pModel);
 
-	CModel* pModel = m_tBufferDesc.pModel;
-
-	vector<CMesh*> Meshes = pModel->Get_Meshes();
-	m_iNumMeshes = (_int)Meshes.size();
-
-	for (_int i = 0; i < m_iNumMeshes; ++i)
+	CModel* pModel[MORPH_END] = { nullptr };
+	for (_uint i = 0; i < ECast(MORPH_END); ++i)
+	{	
+		Safe_AddRef(m_tBufferDesc.pModel[i]);
+		pModel[i] = m_tBufferDesc.pModel[i];
+	}
+	
+	vector<CMesh*> Meshes[MORPH_END];
+	for (_uint i = 0; i < ECast(MORPH_END); ++i)
 	{
-		m_vecInstanceMesh.push_back(Meshes[i]);
-		Safe_AddRef(Meshes[i]);
+		Meshes[i] = pModel[i]->Get_Meshes();
+		m_iNumMeshes = (_int)Meshes[i].size();
+
+		for (_int j = 0; j < m_iNumMeshes; ++j)
+		{
+			m_vecInstanceMesh.push_back(Meshes[i][j]);
+			Safe_AddRef(Meshes[i][j]);
+		}
+
+		m_iNumMaterials = pModel[i]->Get_NumMaterials();
 	}
 
-	m_iNumMaterials = pModel->Get_NumMaterials();
 
+	// 벡터 공간 예약(파티클모드일때만)
+	if (MODE_PARTICLE == m_tBufferDesc.eType_Mode)
+	{
+		m_vecParticleInfoDesc.reserve(m_tBufferDesc.iCurNumInstance);
+		m_vecParticleShaderInfoDesc.reserve(m_tBufferDesc.iCurNumInstance);
 
 	if (m_tBufferDesc.bUseRigidBody)
 		m_vecParticleRigidbodyDesc.reserve(m_tBufferDesc.iCurNumInstance);
+	}
 
+	//
 	Init_Instance(m_tBufferDesc.iCurNumInstance);
 
 
@@ -69,21 +85,30 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 	for (_uint i = 0; i < m_iNumInstance; ++i) // 반복문 시작
 	{
 
-		// 리지드바디 사용이면 입자 하나하나를 위한 초기화용 리지드바디정보 Push_back		
-		if (m_tBufferDesc.bUseRigidBody)
+		// 파티클 모드일때만
+		if (MODE_PARTICLE == m_tBufferDesc.eType_Mode)
 		{
-			PARTICLE_RIGIDBODY_DESC tParticleRigidbody = {};
-			m_vecParticleRigidbodyDesc.push_back(tParticleRigidbody);
+			// 초기화용 파티클 입자 하나하나의 정보 Push_back
+			PARTICLE_INFO_DESC tParticleInfo = {};
+			m_vecParticleInfoDesc.push_back(tParticleInfo);
+
+			PARTICLE_SHADER_INFO_DESC tParticleShaderInfo = {};
+			m_vecParticleShaderInfoDesc.push_back(tParticleShaderInfo);
+
+			// 리지드바디 사용이면 입자 하나하나를 위한 초기화용 리지드바디정보 Push_back		
+			if (m_tBufferDesc.bUseRigidBody)
+			{
+				PARTICLE_RIGIDBODY_DESC tParticleRigidbody = {};
+				m_vecParticleRigidbodyDesc.push_back(tParticleRigidbody);
+			}
+
+			ReSet_ParticleInfo(i);
 		}
 
 
-		// 테스트용 원점 위치로 고정
+
+		// 원점 위치로 고정
 		XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
-
-
-		ReSet_Info(i);
-
-
 		pModelInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f)	/* * 크기 */;
 		pModelInstance[i].vUp	 = _float4(0.f, 1.f, 0.f, 0.f)	/* * 크기 */;
 		pModelInstance[i].vLook	 = _float4(0.f, 0.f, 1.f, 0.f)	/* * 크기 */;
@@ -112,13 +137,16 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 	for (_uint i = 0; i < m_iNumInstance; i++)	// 반복문 시작
 	{
 
-		// 테스트용 원점 위치로 고정
+
+		// 파티클 모드일때만
+		if (MODE_PARTICLE == m_tBufferDesc.eType_Mode)
+		{
+			ReSet_ParticleInfo(i);
+		}
+
+
+		// 원점 위치로 고정
 		XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
-
-
-		ReSet_Info(i);
-
-
 		pModelInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f)	/* * 크기 */;
 		pModelInstance[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f)	/* * 크기 */;
 		pModelInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f)	/* * 크기 */;
@@ -130,14 +158,22 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 
 
 
-void CVIBuffer_Effect_Model_Instance::ReSet_Info(_uint iNum)
+void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 {
+
+	// 라이프타임
+	m_vecParticleInfoDesc[iNum].fTimeAccs = 0.f;
+	m_vecParticleInfoDesc[iNum].fLifeTime = SMath::fRandom(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
+	m_vecParticleInfoDesc[iNum].fLifeTimeRatios = 0.f;
 
 
 #pragma region 이동 : 리지드바디 시작
 	// 리지드 바디 사용이면
 	if (m_tBufferDesc.bUseRigidBody)
 	{
+		Clear_Power(iNum);	// 파워 리셋
+
+#pragma region 이동 진행방향 회전 시작
 		_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
 		vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
 
@@ -146,11 +182,16 @@ void CVIBuffer_Effect_Model_Instance::ReSet_Info(_uint iNum)
 								  , SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y) };
 
 
-		_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
-		_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
+		_vector		vRotation		= XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
+		_matrix		RotationMatrix	= XMMatrixRotationQuaternion(vRotation);
 
-		_vector vForce = XMVector3TransformNormal(vDir, RotationMatrix) * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
+		vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
+		//m_vecParticleShaderInfoDesc[iNum].vDir = vDir;			// 쉐이더에 전달할 방향 저장
+#pragma endregion 이동 진행방향 회전 끝
 
+
+		// 이동 방향으로 힘 줘서 이동
+		_vector vForce = vDir * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
 		Add_Force(iNum, vForce, m_tBufferDesc.eForce_Mode);
 	}
 #pragma endregion 이동 : 리지드바디 끝
@@ -162,48 +203,135 @@ void CVIBuffer_Effect_Model_Instance::ReSet_Info(_uint iNum)
 
 void CVIBuffer_Effect_Model_Instance::Update(_float fTimeDelta)
 {
+
 	D3D11_MAPPED_SUBRESOURCE			SubResource = {};
 
 	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 
 	VTXMODELINSTANCE* pModelInstance = ((VTXMODELINSTANCE*)SubResource.pData);
 
-	for (_uint i = 0; i < m_iNumInstance; i++)
+	for (_uint i = 0; i < m_iNumInstance; i++)	// 반복문 시작
 	{
-		// 리지드 바디 사용이면
-		if (m_tBufferDesc.bUseRigidBody)
+
+
+	}	// 반복문 끝
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
+{
+
+	// 파티클 모드일때만
+	if (MODE_PARTICLE == m_tBufferDesc.eType_Mode)
+	{
+#pragma region Map UnMap 전 조건 체크 시작
+		if (0 >= m_iNumInstance)	// 인스턴스 개수가 0개 이하면 탈출
+			return;
+
+		// 누적 시간이 최대 라이프타임보다 커지면 시간 누적 안함 & 탈출
+		if (m_tBufferDesc.fTimeAcc > m_tBufferDesc.vMinMaxLifeTime.y)
 		{
-			if (!m_vecParticleRigidbodyDesc.empty())
+			m_tBufferDesc.fTimeAcc = m_tBufferDesc.vMinMaxLifeTime.y;
+			m_tBufferDesc.fLifeTimeRatio = 1.f;
+			return;
+		}
+
+		// 시간 누적(전체)
+		m_tBufferDesc.fTimeAcc += fTimeDelta;
+		m_tBufferDesc.fLifeTimeRatio = min(1.0f, m_tBufferDesc.fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y);
+#pragma region Map UnMap 전 조건 체크 끝
+
+		D3D11_MAPPED_SUBRESOURCE			SubResource = {};
+
+		m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+		VTXMODELINSTANCE* pModelInstance = ((VTXMODELINSTANCE*)SubResource.pData);
+
+		for (_uint i = 0; i < m_iNumInstance; i++)	// 반복문 시작
+		{
+#pragma region 입자들 시간 시작
+			// 입자들의 시간 누적이 (입자들의)라이프타임보다 커지면 시간 누적 안함 & 다음 반복으로
+			if (m_vecParticleInfoDesc[i].fTimeAccs > m_vecParticleInfoDesc[i].fLifeTime)
 			{
-				if (!Check_Sleep(i))	// 슬립이 아니면 리지드바디 업데이트
-				{
-					if (m_tBufferDesc.bKinetic)
+				m_vecParticleInfoDesc[i].fTimeAccs = m_vecParticleInfoDesc[i].fLifeTime;
+				m_vecParticleInfoDesc[i].fLifeTimeRatios = 1.f;
+				//continue;
+			}
+			else
+			{
+				// 시간 누적(개별)
+				m_vecParticleInfoDesc[i].fTimeAccs += fTimeDelta;
+				m_vecParticleInfoDesc[i].fLifeTimeRatios = min(1.0f, m_vecParticleInfoDesc[i].fTimeAccs / m_vecParticleInfoDesc[i].fLifeTime);
+			}
+
+#pragma region 입자들 시간 끝
+
+
+#pragma region 모델 바꿔끼기 시작
+			// 모프가 True이면 
+			if (m_tBufferDesc.bMorph)
+			{
+				m_tBufferDesc.fMorphTimeAcc += fTimeDelta;
+
+				_int iNum = ECast(m_tBufferDesc.eCurModelNum);
+	
+				if (m_tBufferDesc.fMorphTimeAcc >= m_tBufferDesc.fMorphTimeTerm)
+				{			
+					iNum += 1;
+					m_tBufferDesc.eCurModelNum = (MODEL_MORPH)iNum;
+
+					if (m_tBufferDesc.eCurModelNum >= MORPH_END)
 					{
-						Update_Kinetic(i, fTimeDelta);
-
-						// Translate : vMovePos = vPos + Get_State(CTransform::STATE_POSITION);
-						_vector vMovePos = (XMLoadFloat3(&m_vecParticleRigidbodyDesc[i].vVelocity) * fTimeDelta) + XMLoadFloat4(&pModelInstance[i].vTranslation);
-						XMVectorSetW(vMovePos, 1.f);
-
-						// 최종 위치 이동
-						XMStoreFloat4(&pModelInstance[i].vTranslation, vMovePos);
+						m_tBufferDesc.eCurModelNum = MORPH_01;
 					}
-					else
+
+					m_tBufferDesc.fMorphTimeAcc = 0.f;
+				}
+			}
+#pragma region 모델 바꿔끼기 끝
+
+
+#pragma region 이동 : 리지드바디 시작
+			// 리지드 바디 사용이면
+			if (m_tBufferDesc.bUseRigidBody)
+			{
+				if (!m_vecParticleRigidbodyDesc.empty())
+				{
+					if (!Check_Sleep(i))	// 슬립이 아니면 리지드바디 업데이트
 					{
-						Update_Kinematic(i);
+						if (m_tBufferDesc.bKinetic)
+						{
+							Update_Kinetic(i, fTimeDelta);	// 이동 속력 계산 업데이트
+
+							// Translate : vMovePos = vPos + Get_State(CTransform::STATE_POSITION);
+							_vector vMovePos = (XMLoadFloat3(&m_vecParticleRigidbodyDesc[i].vVelocity) * fTimeDelta) + XMLoadFloat4(&pModelInstance[i].vTranslation);
+							XMVectorSetW(vMovePos, 1.f);
+
+							// 최종 위치 이동
+							XMStoreFloat4(&pModelInstance[i].vTranslation, vMovePos);
+
+							//m_vecParticleShaderInfoDesc[i].vDir = m_vecParticleRigidbodyDesc[i].vVelocity;
+						}
+						else
+						{
+							Update_Kinematic(i);
+						}
 					}
 				}
 			}
-		}
-		else // 리지드 바디 사용이 아니면
-		{
-			// 테스트용 원점 위치로 고정
-			XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
-		}
+			else // 리지드 바디 사용이 아니면
+			{
+				// 원점 위치로 고정
+				XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
+			}
+#pragma endregion 이동 : 리지드바디 끝
 
+
+		}	// 반복문 끝
+
+		m_pContext->Unmap(m_pVBInstance, 0);
 	}
-
-	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
 
@@ -218,15 +346,16 @@ HRESULT CVIBuffer_Effect_Model_Instance::Bind_VIBuffers(_uint iMeshContainerInde
 
 HRESULT CVIBuffer_Effect_Model_Instance::Render(_int iMeshIndex)
 {
-	CModel* pModel = m_tBufferDesc.pModel;
+	CModel* pModel = m_tBufferDesc.pModel[m_tBufferDesc.eCurModelNum];
 
 	if (nullptr == pModel)
 		return E_FAIL;
 
+	//Bind_VIBuffers(iMeshIndex);
+	Bind_VIBuffers(m_tBufferDesc.eCurModelNum);
 
-	Bind_VIBuffers(iMeshIndex);
-
-	m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[iMeshIndex]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
+	//m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[iMeshIndex]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
+	m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[m_tBufferDesc.eCurModelNum]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
 
 	return S_OK;
 }
@@ -234,7 +363,15 @@ HRESULT CVIBuffer_Effect_Model_Instance::Render(_int iMeshIndex)
 
 _bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
 {
-	Out_Json["Com_VIBuffer"]["iCurNumInstance"] = m_tBufferDesc.iCurNumInstance;
+	/* 인스턴스 개수 */
+	Out_Json["Com_VIBuffer"]["iCurNumInstance"] = m_tBufferDesc.iCurNumInstance;	
+
+	/* States */
+	Out_Json["Com_VIBuffer"]["eType_Mode"] = m_tBufferDesc.eType_Mode;
+
+
+	/* LifeTime */
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
 
 
 	/* RigidBody */
@@ -268,7 +405,15 @@ _bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
 
 void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 {
+	/* 인스턴스 개수 */
 	m_tBufferDesc.iCurNumInstance = In_Json["Com_VIBuffer"]["iCurNumInstance"];
+
+	/* States */
+	m_tBufferDesc.eType_Mode = In_Json["Com_VIBuffer"]["eType_Mode"];
+
+
+	/* LifeTime */
+	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
 
 
 	/* RigidBody */

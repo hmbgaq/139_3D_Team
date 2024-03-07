@@ -8,11 +8,27 @@ class CMesh;
 class ENGINE_DLL CVIBuffer_Effect_Model_Instance : public CVIBuffer_Model_Instance
 {
 public:
+	enum TYPE_MODE	 { MODE_STATIC, MODE_PARTICLE, MODE_END };
+	enum MODEL_MORPH { MORPH_01, MORPH_02, MORPH_END };
+
 	typedef struct tagVIBuffer_EffectModelInstanceDesc
 	{
 		// 저장해야 하는 고정 정보들
-		_int			iCurNumInstance = { 1000 };		// 초기화 값이 최대 개수가 됨	
-		class CModel*	pModel	= { nullptr };
+		_int			iCurNumInstance		= { 1000 };		// 초기화 값이 최대 개수가 됨	
+
+		class CModel*	pModel[MORPH_END]	= { nullptr };	// 저장 X
+		MODEL_MORPH		eCurModelNum		= { MORPH_01 };	// 저장 X
+
+
+		/* States */
+		TYPE_MODE	eType_Mode = { MODE_PARTICLE };		// 파티클로 사용할건지
+
+		/* Times */
+		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
+
+		/* Morph */
+		_bool		bMorph			= { FALSE };
+		_float		fMorphTimeTerm	= { 0.05f };
 
 		/* RigidBody */
 		_bool		bUseRigidBody = { TRUE };
@@ -32,11 +48,24 @@ public:
 		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
 		_float2		vMinMaxRange	= { 0.1f, 3.f };
 
+
 		/* For.Rotation */
 		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetY = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetZ = { 0.0f, 360.f };
 
+
+		// 업데이트 돌면서 변하는 정보들(저장X)
+		_float		fTimeAcc = { 0.f };			// 시간 누적
+		_float		fMorphTimeAcc = { 0.f };
+		_float		fLifeTimeRatio = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
+
+
+		void Reset_Times()
+		{
+			fTimeAcc = { 0.f };
+			fLifeTimeRatio = { 0.f };
+		}
 
 		void Reset_Desc()
 		{
@@ -45,6 +74,29 @@ public:
 
 	}EFFECT_MODEL_INSTANCE_DESC;
 
+
+	typedef struct tagParticleDesc
+	{
+		// 업데이트 돌면서 변하는 정보들(저장X)
+
+		// 시간
+		_float	fTimeAccs = { 0.f };
+		_float	fLifeTime = { 1.f };
+		_float  fLifeTimeRatios = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
+
+
+	} PARTICLE_INFO_DESC;
+
+	typedef struct tagParticleShaderDesc
+	{
+		// 16 배수여야함
+
+		// 업데이트 돌면서 변하는 정보들(저장X)
+		_float3	vDir = { 1.f, 0.f, 0.f };
+		_float	Padding = { 0.f };
+
+
+	} PARTICLE_SHADER_INFO_DESC;
 
 	typedef struct tagParticleRigidbodyDesc
 	{
@@ -71,14 +123,16 @@ public:
 	virtual HRESULT		Initialize_Prototype() override;
 	virtual HRESULT		Initialize(void* pArg) override;
 	virtual HRESULT		Bind_VIBuffers(_uint iMeshContainerIndex);
+
 	virtual void		Update(_float fTimeDelta) override;
+	virtual void		Update_Particle(_float fTimeDelta);
 
 	void				Init_Instance(_int iNumInstance) override;
-	virtual				HRESULT	Render(_int iMeshIndex) override;
+	virtual	HRESULT		Render(_int iMeshIndex) override;
 
 public:
 	void ReSet();
-	void ReSet_Info(_uint iNum);
+	void ReSet_ParticleInfo(_uint iNum);
 
 	/* For.RigidBody */
 public:
@@ -101,10 +155,17 @@ public:
 
 public:
 	EFFECT_MODEL_INSTANCE_DESC* Get_Desc() { return &m_tBufferDesc; }
+	vector<PARTICLE_SHADER_INFO_DESC>& Get_ParticleShaderInfoDescs() { return m_vecParticleShaderInfoDesc; }
 
 private:
 	EFFECT_MODEL_INSTANCE_DESC			m_tBufferDesc;
+	vector<PARTICLE_INFO_DESC>			m_vecParticleInfoDesc;
+	vector<PARTICLE_SHADER_INFO_DESC>	m_vecParticleShaderInfoDesc;
 	vector<PARTICLE_RIGIDBODY_DESC>		m_vecParticleRigidbodyDesc;
+
+
+
+	vector<CMesh*>		m_vecInstanceMeshs[MORPH_END] = {};
 
 public:
 	static CVIBuffer_Effect_Model_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

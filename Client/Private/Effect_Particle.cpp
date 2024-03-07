@@ -152,6 +152,9 @@ void CEffect_Particle::Late_Tick(_float fTimeDelta)
 				{
 					m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
 					XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+
+					//_float3 vParentScale = m_tVoidDesc.pParentObj->Get_Transform()->Get_Scaled();
+					//m_pTransformCom->Set_Scaling(vParentScale.x, vParentScale.y, vParentScale.z);
 				}
 			}
 
@@ -159,11 +162,9 @@ void CEffect_Particle::Late_Tick(_float fTimeDelta)
 			{
 				//m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
 			}
-			//Compute_CamDistance();
+			Compute_CamDistance();
 
 			// CRenderer::RENDER_BLEND
-			//if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tParticleDesc.iRenderGroup), this)))
-			//	return;
 			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this));
 		}
 	}

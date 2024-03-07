@@ -40,7 +40,6 @@ public:
 	void	Show_CameraInfo();	// 카메라 정보 표시
 	void	ReSet_Camera();		// 카메라 위치 리셋
 
-
 	HRESULT Ready_Grid();		// 그리드 생성
 
 	HRESULT Load_Sky();			// 스카이박스 얻어오기
@@ -69,12 +68,13 @@ public:
 
 /* For.Create & Add (이펙트 생성 관련) */
 	HRESULT Create_EffectObject(const wstring& strLayerTag, CGameObject* pOwner = nullptr);		// 파트 이펙트를 담을 이펙트 오브젝트 생성 함수
-	HRESULT Add_Part_Particle();				// 파트:2D파티클 추가
-	HRESULT Add_Part_Rect();					// 파트:Rect 추가
-	HRESULT Add_Part_Mesh(wstring strModelTag);	// 파트:메시 이펙트 추가
-	HRESULT Add_Part_Trail();					// 파트:트레일 추가
+	HRESULT Add_Part_Particle();						// 파트:2D파티클 추가
+	HRESULT Add_Part_Rect();							// 파트:Rect 추가
+	HRESULT Add_Part_Mesh(wstring strModelTag);			// 파트:메시 이펙트 추가
+	HRESULT Add_Part_Mesh_Morph(wstring strModelTag1, wstring strModelTag2);	// 파트:메시(모프) 이펙트 추가
+	HRESULT Add_Part_Trail();							// 파트:트레일 추가
 
-	void	Delete_CurPart();					// 현재 선택된 파트 이펙트 삭제		
+	void	Delete_CurPart();							// 현재 선택된 파트 이펙트 삭제		
 
 
 /* For.CurObject (현재 선택된 이펙트 관련 정보 업데이트) */
@@ -130,21 +130,21 @@ private:
 	_int m_iShaderPassIndex_Particle	= { 0 };
 	_int m_iMaxShaderPassIndex_Particle = { 1 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 7, 0, 44, 15, 16 };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 9, 0, 44, 15, 16 };
 
 
 	_int m_iRenderGroup_Rect = { 5 };
 	_int m_iShaderPassIndex_Rect = { 0 };
 	_int m_iMaxShaderPassIndex_Rect = { 2 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 7, 0, 44, 15, 16 };
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 9, 0, 44, 15, 16 };
 
 
 	_int m_iRenderGroup_Mesh			= { 5 };
 	_int m_iShaderPassIndex_Mesh		= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 7, 0, 44, 15, 16 };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 9, 0, 44, 15, 16 };
 
 
 private:
@@ -263,6 +263,25 @@ private:
 	_int m_iNumInstance_Mesh = { 1000 };
 	_int m_iMaxNumInstance_Mesh = { 1000 };
 
+	_float	m_vMinMaxLifeTime_Mesh[2] = { 0.f, 0.f };	// 라이프타임
+
+	/* Morph */
+	_float m_fMorphTimeTerm = { 0.005f };
+
+
+	/* RigidBody ============================================== */
+	_int	m_iUseRigidBody_Mesh	= { 0 };
+	_int	m_iKinetic_Mesh			= { 0 };
+	_int	m_iUseGravity_Mesh		= { 0 };
+
+	_float	m_fGravity_Mesh			= { -9.8f };	// 중력 가속도
+	_float	m_fFriction_Mesh		= { 0.1f };		// 마찰 계수
+	_float	m_fSleepThreshold_Mesh	= { 0.05f };	// 슬립 한계점(1이하로)
+
+	_float	m_vMinMaxPower_Mesh[2]	= { 0.1f, 250.f };
+	/* RigidBody ============================================== */
+
+
 	_float  m_fUV_Offset[2] = { 0.f, 0.f };
 	_float  m_vUV_Scale[2]	= { 1.f, 1.f };
 
@@ -279,8 +298,6 @@ private:
 
 	_float	m_vBloomColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
-
-	_float	m_vMinMaxPower_Mesh[2] = { 0.1f, 500.f };
 
 	_float	m_vMinMaxRange_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetX_Mesh[2] = { 0.f, 0.f };
@@ -299,7 +316,7 @@ private:
 
 
 #pragma region Level Setting
-	_float3		m_Camera_ResetPos = { 0.f, 0.f, -10.f };		// 카메라 리셋 위치
+	_float3		m_Camera_ResetPos = { 0.f, 1.8f, -5.f };		// 카메라 리셋 위치
 	//_float4		m_Camera_ResetLookAt = { 0.f, 0.f, 0.f, 1.f };	// 카메라 리셋 LookAt
 
 	CGameObject* m_pGrid = { nullptr };

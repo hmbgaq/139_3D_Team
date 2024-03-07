@@ -24,7 +24,7 @@ public:
 		wstring		strPartTag = { TEXT("") };
 
 		// Texture
-		wstring		strModelTag = TEXT("");
+		wstring		strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_END] = { TEXT(""), TEXT("") };
 		wstring		strTextureTag[TEXTURE_END];
 		_int		iTextureIndex[TEXTURE_END] = { 0 };
 

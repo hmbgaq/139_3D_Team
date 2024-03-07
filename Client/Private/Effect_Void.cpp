@@ -139,10 +139,15 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 	m_pGameInstance->WString_To_String(m_tVoidDesc.strPartTag, strTag);
 	Out_Json["strPartTag"] = strTag;
 
-	/* Texture */
-	m_pGameInstance->WString_To_String(m_tVoidDesc.strModelTag, strTag);
-	Out_Json["strModelTag"] = strTag;
 
+	/* Model */
+	for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MORPH_END); i++)
+	{
+		m_pGameInstance->WString_To_String(m_tVoidDesc.strModelTag[i], strTag);
+		Out_Json["strModelTag"][i] = strTag;
+	}
+
+	/* Texture */
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 	{
 		m_pGameInstance->WString_To_String(m_tVoidDesc.strTextureTag[i], strTag);
@@ -215,10 +220,15 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 	m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strPartTag);
 
 
-	/* Texture */
-	strTag = static_cast<string>(In_Json["strModelTag"]);
-	m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strModelTag);
+	/* Model */
+	for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MORPH_END); i++)
+	{
+		strTag = static_cast<string>(In_Json["strModelTag"][i]);
+		m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strModelTag[i]);
+	}
 
+
+	/* Texture */
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 	{
 		strTag = static_cast<string>(In_Json["strTextureTag"][i]);

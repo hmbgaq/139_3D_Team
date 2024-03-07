@@ -15,13 +15,9 @@ BEGIN(Client)
 class CEffect_Instance final : public CEffect_Void
 {
 public:
-	enum TYPE_MESH	{ MESH_PARTICLE, MESH_STATIC, TYPE_MESH_END };
-
-public:
 	typedef struct tagEffectInstanceDesc
 	{
-		TYPE_MESH		eType_MeshEffect = { MESH_PARTICLE };
-		_bool			bUseCustomTex	 = { TRUE };
+		_bool		bUseCustomTex	 = { TRUE };
 
 
 		/* Bloom */
@@ -67,7 +63,7 @@ public:
 
 private:
 	CShader*							m_pShaderCom				= { nullptr };	
-	CModel*								m_pModelCom					= { nullptr };
+	CModel*								m_pModelCom[CVIBuffer_Effect_Model_Instance::MORPH_END]	= { nullptr };
 	CTexture*							m_pTextureCom[TEXTURE_END]	= { nullptr };
 	CVIBuffer_Effect_Model_Instance*	m_pVIBufferCom				= { nullptr };
 

@@ -102,7 +102,15 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 
 			if (m_tVoidDesc.bRender)
 			{
-				m_pVIBufferCom->Update(fTimeDelta);
+				if (CVIBuffer_Effect_Model_Instance::MODE_PARTICLE == m_pVIBufferCom->Get_Desc()->eType_Mode)
+				{
+					m_pVIBufferCom->Update_Particle(fTimeDelta);
+				}
+				else
+				{
+					m_pVIBufferCom->Update(fTimeDelta);
+				}
+				
 			}
 		}
 	}
@@ -137,18 +145,20 @@ HRESULT CEffect_Instance::Render()
 	if(FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	_uint	iCurModelNum = m_pVIBufferCom->Get_Desc()->eCurModelNum;
 
-	for (size_t i = 0; i < iNumMeshes; i++)
+	_uint	iNumMeshes = m_pModelCom[iCurModelNum]->Get_NumMeshes();
+
+	//for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		if(FALSE == m_tInstanceDesc.bUseCustomTex)
-			m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+			m_pModelCom[iCurModelNum]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
 
 		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 
 
 		m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
-		m_pVIBufferCom->Render((_uint)i);
+		m_pVIBufferCom->Render((_uint)iCurModelNum);
 	}	
 
 	return S_OK;
@@ -181,7 +191,6 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 
 
 	/* Mesh */
-	Out_Json["eType_MeshEffect"] = m_tInstanceDesc.eType_MeshEffect;
 	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
 
 	/* Bloom */
@@ -202,7 +211,6 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 
 
 	/* Mesh */
-	m_tInstanceDesc.eType_MeshEffect = In_Json["eType_MeshEffect"];
 	m_tInstanceDesc.bUseCustomTex	= In_Json["bUseCustomTex"];
 
 
@@ -227,41 +235,62 @@ HRESULT CEffect_Instance::Ready_Components()
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
+
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strModelTag,
-		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
+	{
+		if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_01],
+			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[CVIBuffer_Effect_Model_Instance::MORPH_01]))))
+			return E_FAIL;
+
+		if (TEXT("") != m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02])
+		{
+			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02],
+				TEXT("Com_Model_Morph"), reinterpret_cast<CComponent**>(&m_pModelCom[CVIBuffer_Effect_Model_Instance::MORPH_02]))))
+				return E_FAIL;
+		}
+	}
 
 
 	/* For.Com_VIBuffer */
 	{
 		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferInfo = {};
-		tBufferInfo.pModel = m_pModelCom;
+
+		for (_uint i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MODE_END); ++i)
+		{
+			if (nullptr != m_pModelCom[i])
+			{
+				tBufferInfo.pModel[i] = m_pModelCom[i];
+			}		
+		}
+
 		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
 			return E_FAIL;
 	}
 
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE],
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
-		return E_FAIL;
-
-	if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
 	{
-		/* For.Com_Mask */
-		if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
-			TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
+		if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE],
+			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
 			return E_FAIL;
+
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
+		{
+			/* For.Com_Mask */
+			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
+				TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
+				return E_FAIL;
+		}
+
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
+		{
+			/* For.Com_Noise */
+			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
+				TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
+				return E_FAIL;
+		}
 	}
 
-	if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
-	{
-		/* For.Com_Noise */
-		if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
-			TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
-			return E_FAIL;
-	}
 
 
 	return S_OK;
@@ -365,8 +394,15 @@ CGameObject* CEffect_Instance::Pool()
 void CEffect_Instance::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pModelCom);	
+	
+	for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MORPH_END); i++)
+	{
+		if (nullptr != m_pModelCom[i])
+		{
+			Safe_Release(m_pModelCom[i]);
+		}	
+	}
+		
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pVIBufferCom);
 

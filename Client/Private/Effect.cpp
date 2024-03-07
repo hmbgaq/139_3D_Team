@@ -238,8 +238,12 @@ void CEffect::Load_FromJson(const json& In_Json)
 			m_pGameInstance->String_To_WString(strTag, tVoidDesc.strPartTag);
 		
 
-			strTag = In_Json["Part"][i]["strModelTag"];
-			m_pGameInstance->String_To_WString(strTag, tVoidDesc.strModelTag);
+			for (_int k = 0; k < ECast(CVIBuffer_Effect_Model_Instance::MORPH_END); ++k)
+			{
+				strTag = In_Json["Part"][i]["strModelTag"][k];
+				m_pGameInstance->String_To_WString(strTag, tVoidDesc.strModelTag[k]);
+			}
+
 			for (_int j = 0; j < (_int)CEffect_Void::TEXTURE_END; ++j)
 			{
 				strTag = In_Json["Part"][i]["strTextureTag"][j];
