@@ -480,29 +480,26 @@ CState<CPlayer>* CPlayer_State::Roll(CPlayer* pActor, _float fTimeDelta, _uint _
 
 	if (m_pGameInstance->Key_Down(DIK_SPACE))
 	{
-		switch (eState)
+		if (m_pGameInstance->Key_Pressing(iKeyDown))
 		{
-		case CPlayer_DodgeBlink_B_03::g_iAnimIndex:
-		case CPlayer_Dodge_B::g_iAnimIndex:
-			return new CPlayer_Roll_B();
-			break;
-
-		case CPlayer_DodgeBlink_L_03::g_iAnimIndex:
-		case CPlayer_Dodge_L::g_iAnimIndex:
-			return new CPlayer_Roll_L();
-			break;
-
-		case CPlayer_DodgeBlink_R_03::g_iAnimIndex:
-		case CPlayer_Dodge_R::g_iAnimIndex:
-			return new CPlayer_Roll_R();
-			break;
-
-		default:
-			return new CPlayer_Roll_F();
-			break;
-
+			if (CPlayer_Roll_B::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_Roll_B();
 		}
-
+		else if (m_pGameInstance->Key_Pressing(iKeyLeft))
+		{
+			if (CPlayer_Roll_L::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_Roll_L();
+		}
+		else if (m_pGameInstance->Key_Pressing(iKeyRight))
+		{
+			if (CPlayer_Roll_R::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_Roll_R();
+		}
+		else if (m_pGameInstance->Key_Pressing(iKeyUp))
+		{
+			if (CPlayer_Roll_F::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_Roll_F();
+		}
 	}
 
 	if (pActor->Is_Animation_End())
