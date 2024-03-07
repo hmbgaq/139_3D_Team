@@ -6,6 +6,7 @@
 BEGIN(Engine)
 class CGameObject;
 class CCamera;
+
 END
 
 
@@ -13,6 +14,7 @@ BEGIN(Client)
 
 class CPlayer;
 class CCamera_Dynamic;
+class CMasterCamera;
 
 class CData_Manager : public CBase
 {
@@ -32,9 +34,9 @@ public:
 	void Reset_Player(LEVEL eLEVEL);
 
 public:
-	void Set_Camera_Dynamic(CCamera_Dynamic* m_pCamera_Dynamic);
-	CCamera_Dynamic* Get_Camera_Dynamic();
-	void Reset_Camera_Dynamic(LEVEL eLEVEL);
+	void Set_MasterCamera(CMasterCamera* _pMasterCamera);
+	CMasterCamera* Get_MasterCamera();
+	void Reset_MasterCamera(LEVEL eLEVEL);
 
 
 
@@ -42,7 +44,7 @@ public:
 
 private:
 	CPlayer* m_pPlayer = { nullptr };
-	CCamera_Dynamic* m_pCamera_Dynamic = { nullptr };
+	CMasterCamera* m_pMasterCamera = { nullptr };
 
 private:
 	CCamera* m_pCamera = { nullptr };

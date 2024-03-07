@@ -32,7 +32,7 @@ HRESULT CCamera_Dynamic::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pDesc)))
 		return E_FAIL;
 
-	CData_Manager::GetInstance()->Set_Camera_Dynamic(this);
+	//CData_Manager::GetInstance()->Set_MasterCamera();
 	
 	return S_OK;
 }
