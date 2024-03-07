@@ -32,7 +32,8 @@ HRESULT CScreamer::Initialize(void* pArg)
 
 	///* Test UI */
 	m_pWeakneesUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
-	m_pWeakneesUI->Set_TargetPosition(m_pTransformCom->Get_Position());
+	//m_pWeakneesUI->SetUp_PositionToScreen(m_pTransformCom->Get_Position());
+	m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());
 
 	return S_OK;
 }
@@ -66,7 +67,8 @@ void CScreamer::Tick(_float fTimeDelta)
 
 	if (m_bTestUI)
 	{
-		m_pWeakneesUI->Set_TargetPosition(m_pTransformCom->Get_Position());
+		//m_pWeakneesUI->SetUp_PositionToScreen(m_pTransformCom->Get_Position());
+		m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());
 	}
 		
 

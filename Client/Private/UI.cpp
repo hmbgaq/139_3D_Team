@@ -41,7 +41,7 @@ HRESULT CUI::Initialize(void* pArg)
 #pragma endregion End
 
 #pragma region 2D
-	//if (m_tUIInfo.bWorld == false)
+	if (m_tUIInfo.bWorld == false)
 	{
 		m_pTransformCom->Set_Scaling(m_tUIInfo.fScaleX, m_tUIInfo.fScaleY, m_fScaleZ);
 
@@ -99,7 +99,10 @@ void CUI::Tick(_float fTimeDelta)
 		UI_DisappearTick(fTimeDelta);
 		break;
 	case Client::UISTATE::LEVEL_UP:
-		//Tick_LevelUp(fTimeDelta);
+		Tick_LevelUp(fTimeDelta);
+		break;
+	case Client::UISTATE::PLAYER_HUD:
+		Player_HUD(fTimeDelta);
 		break;
 	case Client::UISTATE::STATE_END:
 		break;
@@ -109,8 +112,8 @@ void CUI::Tick(_float fTimeDelta)
 
 	Play_Animation(); // 애니메이션 재생 m_eState를 통해 애니메이션 UI 타입일때만 탈 수 있게 해줘도 될듯하다.
 	Update_Child_Transform();
-	//if(m_tUIInfo.bWorld == false)
-	Check_RectPos();
+	if(m_tUIInfo.bWorld == false)
+		Check_RectPos();
 	Picking_UI();
 }
 
@@ -346,22 +349,6 @@ void CUI::Parts_Delete()
 	}
 }
 
-HRESULT CUI::SetUp_BillBoarding()
-{
-	_matrix CamWorldMatrix;
-
-	CamWorldMatrix = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW);
-
-	_float3 vScale = m_pTransformCom->Get_Scaled();
-
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, CamWorldMatrix.r[0]);
-	m_pTransformCom->Set_State(CTransform::STATE_UP, CamWorldMatrix.r[1]);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, CamWorldMatrix.r[2]);
-	m_pTransformCom->Set_Scaling(vScale.x, vScale.y, vScale.z);
-
-	return S_OK;
-}
-
 HRESULT CUI::SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX, _float fSizeY)
 {
 	if (nullptr == m_pTransformCom)
@@ -518,10 +505,130 @@ HRESULT CUI::Update_Child_Transform()
 
 	return S_OK;
 }
+//				TargetPosition => Screen
+void CUI::SetUp_PositionToScreen(_fvector vWorldPos)
+{
+	_vector vTargetPos = {};
+	_float4 vViewPort = {};
+
+	vTargetPos = vWorldPos;
+	//vTargetPos.m128_f32[1] += 2.f;
+	vTargetPos = XMVector3Transform(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
+	vTargetPos = XMVector3TransformCoord(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
+
+	XMStoreFloat4(&vViewPort, vTargetPos);
+
+	m_fWorldToScreenX = (vViewPort.x) * (g_iWinSizeX >> 1);
+	m_fWorldToScreenY = /*abs*/((vViewPort.y) * (g_iWinSizeY >> 1));
+
+	if (g_iWinSizeX < -(g_iWinSizeX * 0.5f))
+	{
+		m_fWorldToScreenY = -(g_iWinSizeX * 0.5f);
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+	if (m_fWorldToScreenX > (g_iWinSizeX * 0.5f))
+	{
+		m_fWorldToScreenY = (g_iWinSizeX * 0.5f);
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+	if (m_fWorldToScreenY < -(g_iWinSizeY * 0.5f))
+	{
+		m_fWorldToScreenY = -(g_iWinSizeY * 0.5f);
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+	if(m_fWorldToScreenY > (g_iWinSizeY * 0.5f))
+	{
+		m_fWorldToScreenY = (g_iWinSizeY * 0.5f);
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+
+	m_pTransformCom->Set_Position({ m_fWorldToScreenX, m_fWorldToScreenY, 1.f });
+
+	return;
+}
+//				TargetWorld => Screen
+void CUI::SetUp_WorldToScreen(_matrix matWorld)
+{
+	_vector vTargetPos = {};
+	_float4 vViewPort = {};
+
+	_matrix matTargetWorld = XMMatrixIdentity();
+	matTargetWorld = matWorld;
+
+	//matTargetWorld.r[3][0];
+	
+	vTargetPos = XMVectorSet(matTargetWorld.r[3].m128_f32[0], matTargetWorld.r[3].m128_f32[1], matTargetWorld.r[3].m128_f32[2], 1.0f);
+	//vTargetPos.m128_f32[1] += 2.f;
+	vTargetPos = XMVector3Transform(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
+	vTargetPos = XMVector3TransformCoord(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
+
+	XMStoreFloat4(&vViewPort, vTargetPos);
+
+	m_fWorldToScreenX = (vViewPort.x) * (g_iWinSizeX >> 1);
+	m_fWorldToScreenY = /*abs*/((vViewPort.y) * (g_iWinSizeY >> 1));
+
+	_int iWinHalfX = (g_iWinSizeX >> 1);
+	_int iWinHalfY = (g_iWinSizeY >> 1);
+
+	if (m_fWorldToScreenX < -iWinHalfX)
+	{
+		m_fWorldToScreenX = -iWinHalfX;
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+	if (m_fWorldToScreenX > iWinHalfX)
+	{
+		m_fWorldToScreenX = iWinHalfX;
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+	if (m_fWorldToScreenY < -iWinHalfY)
+	{
+		m_fWorldToScreenY = -iWinHalfY;
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+	if (m_fWorldToScreenY > iWinHalfY)
+	{
+		m_fWorldToScreenY = iWinHalfY;
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+
+	m_pTransformCom->Set_Position({ m_fWorldToScreenX, m_fWorldToScreenY, 1.f });
+
+	return;
+}
+
+HRESULT CUI::SetUp_BillBoarding()
+{
+	_matrix CamWorldMatrix;
+
+	CamWorldMatrix = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW);
+
+	_float3 vScale = m_pTransformCom->Get_Scaled();
+
+	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, CamWorldMatrix.r[0]);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, CamWorldMatrix.r[1]);
+	m_pTransformCom->Set_State(CTransform::STATE_LOOK, CamWorldMatrix.r[2]);
+	m_pTransformCom->Set_Scaling(vScale.x, vScale.y, vScale.z);
+
+
+	return S_OK;
+}
 
 void CUI::Tick_LevelUp(_float fTimeDelta)
 {
 	LifeTime_LevelUp(fTimeDelta);
+}
+
+void CUI::Player_HUD(_float fTimeDelta)
+{
+
 }
 
 /* @@@보류@@@ */

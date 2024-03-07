@@ -65,7 +65,8 @@ void CUI_Weakness::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	Check_TargetWorld();
+	//Check_TargetWorld();
+	//SetUp_BillBoarding();
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;

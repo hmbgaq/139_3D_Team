@@ -244,7 +244,7 @@ technique11 DefaultTechnique
     pass Default // 0
     {
 		/* 셰이더(렌더스테이츠) 그리기전에 적용할것들 세팅해주고 */
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
 		
@@ -258,7 +258,7 @@ technique11 DefaultTechnique
     
     pass HPBarGauge_Lerp // 1
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
 
@@ -271,7 +271,7 @@ technique11 DefaultTechnique
 
     pass LoadingBar_Gauge // 2
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
 
@@ -284,7 +284,7 @@ technique11 DefaultTechnique
 
     pass Option_Background // 3
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
    
@@ -297,7 +297,7 @@ technique11 DefaultTechnique
 
     pass Aim_Crosshair // 4
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
    
@@ -310,7 +310,7 @@ technique11 DefaultTechnique
 
     pass CoolDown // 5
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
    
