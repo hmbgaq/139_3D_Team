@@ -41,7 +41,6 @@ HRESULT CLevel_Logo::Initialize()
 	//	//pSourceReader->Release();
 	//}
 
-
 	Set_Filter();
 	
 

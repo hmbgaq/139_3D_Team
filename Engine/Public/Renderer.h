@@ -11,7 +11,7 @@ public:
 	{	/* Priority */
 		RENDER_PRIORITY, RENDER_NONLIGHT,
 		/* Post Processing  */
-		RENDER_NONBLEND, RENDER_SHADOW, RENDER_DECAL,
+		RENDER_NONBLEND, RENDER_SHADOW, RENDER_DECAL, RENDER_OUTLINE,
 		/* EFFECT */
 		RENDER_EFFECT, RENDER_EFFECT_PARTICLE, RENDER_EFFECT_MESH,
 		/* UI */
@@ -103,6 +103,7 @@ public:
 	void Set_HSV_Option(HSV_DESC desc) { m_tHSV_Option = desc; }
 	void Set_FXAA_Option(ANTI_DESC desc) { m_tAnti_Option = desc; }
 	void Set_DOF_Option(DOF_DESC desc) { m_tDOF_Option = desc; }
+
 private:
 	_bool						m_bInit = { true }; /* 없으면 터짐 건들지마세요 */
 
@@ -128,8 +129,6 @@ private:
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 	class CGameInstance*		m_pGameInstance = { nullptr };
 	list<class CGameObject*>	m_RenderObjects[RENDER_END];
-	//ID3D11DepthStencilView*		m_pCascadeShadowDSV[3];
-	//vector<class CGameObject*>	m_CascadeObjects[3];
 
 private:
 	class CShader* m_pShader_Deferred = { nullptr };
@@ -158,8 +157,8 @@ private:
 	HRESULT Ready_DebugRender();
 	HRESULT Render_DebugCom();
 	HRESULT Render_DebugTarget();
-	_bool	m_bDebugRenderTarget	= { false };
-	_bool	m_bDebugCom				= { false };
+	_bool	m_bDebugRenderTarget	= { true };
+	_bool	m_bDebugCom				= { true };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
 

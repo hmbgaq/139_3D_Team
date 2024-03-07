@@ -91,8 +91,6 @@ struct PS_OUT
     float4 vDepth       : SV_TARGET2;
     float4 vORM         : SV_TARGET3;
     float4 vBloomBlur   : SV_TARGET4;
-    float4 vRimBlur     : SV_TARGET5;
-  
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
