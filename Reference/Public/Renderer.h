@@ -65,6 +65,7 @@ private:
 
 	/* UI */
 	HRESULT Render_UI();
+	HRESULT Render_UI_Tool();
 
 	/* ETC */
 	HRESULT Render_Blur(const wstring& strStartTargetTag, const wstring& strFinalMRTTag, _int eHorizontalPass, _int eVerticalPass, _int eBlendType, _bool bClear);
@@ -144,6 +145,9 @@ private:
 	ID3D11DepthStencilView* m_pLightDepthDSV = { nullptr };
 	_float4x4				m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT					Control_HotKey();
+public:
+	_bool			m_bUI_MRT = false;
+	void			Render_UI_MRT(_bool bMRT) { m_bUI_MRT = bMRT;}
 
 #ifdef _DEBUG
 public:
@@ -154,7 +158,7 @@ private:
 	HRESULT Ready_DebugRender();
 	HRESULT Render_DebugCom();
 	HRESULT Render_DebugTarget();
-	_bool	m_bDebugRenderTarget	= { false };
+	_bool	m_bDebugRenderTarget	= { true };
 	_bool	m_bDebugCom				= { true };
 	list<class CComponent*>			m_DebugComponent;
 #endif	

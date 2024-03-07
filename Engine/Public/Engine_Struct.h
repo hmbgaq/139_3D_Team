@@ -424,16 +424,8 @@ namespace Engine
 	typedef struct ENGINE_DLL tagDOF
 	{
 		_bool  bDOF_Active		= false;
-		//_float   fNearBlur_Depth = 0.f;
-		//_float   fFocalPalne_Depth = 0.f;
-		//_float   fFarBlur_Depth = 0.f;
-		//_float   fCutOff = 0.f;
-		
-		//_float g_fFocusDistance = 32.5f;
-		//_float g_fFocusRange	= 12.5f;  
-		//_float fMaxAtt			= 30.f;
-		_float focus = 1.f;
-		_float range = 1.f;
+		float  fFocusDistance = 10.f;
+		float  fFocusRange = 3.f;
 
 	}DOF_DESC;
 
