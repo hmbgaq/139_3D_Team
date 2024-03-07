@@ -37,8 +37,10 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 
 		hDist = 0.7f; //Z 축 카메라와 플레이어 거리
 		vDist = 0.7f; //Y 축 카메라와 플레이어 거리
-		m_CameraOffset.y = 3.5f;
-		m_CameraOffset.z = -7.0f;
+		//인게임에서 이제 최적의 포지션값인거같음 
+		m_CameraOffset.x = 1.f;
+		m_CameraOffset.y = 2.5f;
+		m_CameraOffset.z = -3.0f;
 		
 
 		m_pPlayer = CData_Manager::GetInstance()->Get_Player();

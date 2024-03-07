@@ -51,7 +51,7 @@ private:
 	// 	수평 , 수직 수행거리
 	_float hDist = 0.f;
 	_float vDist = 0.f;
-	_float SpringConstant = 100.f; //용수철 상수(spring constant)가 커지면 스프링의 탄력이 줄어든다.	//시작값은 카메라를 움직이고 싶은 범위에 따라 달라진다.
+	_float SpringConstant = 1000.f; //용수철 상수(spring constant)가 커지면 스프링의 탄력이 줄어든다.	//시작값은 카메라를 움직이고 싶은 범위에 따라 달라진다.
 	_float DampConstant = 0.f;//용수철 상수를 바탕으로 한 감쇠(dampening)상수
 	_float3 Velocity = {};
 	_float3 ActualPosition = {};//속도벡터와 카메라의 실제 위치를 나타내는 벡터

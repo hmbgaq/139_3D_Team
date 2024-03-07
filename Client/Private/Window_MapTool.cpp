@@ -20,6 +20,7 @@
 #include "Camera_Dynamic.h"
 #include "SpringCamera.h"
 #include "Data_Manager.h"
+#include "MasterCamera.h"
 
 static ImGuizmo::OPERATION InstanceCurrentGizmoOperation;
 static ImGuizmo::MODE	   InstanceCurrentGizmoMode;
