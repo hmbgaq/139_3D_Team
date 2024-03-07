@@ -83,10 +83,10 @@ _float4x4* CModel::Calc_OffsetMatrice(_uint iAnimationIndex, _float fTrackPositi
 {
 	
 	_float4x4* pCalcMatrix = pMatrix;
-	_uint iNumBones = m_Bones.size();
+	_uint iNumBones = (_uint)m_Bones.size();
 
 
-	for (_int i = 0; i < iNumBones; ++i)
+	for (_uint i = 0; i < iNumBones; ++i)
 	{
 		pCalcMatrix[i] = m_Bones[i]->Get_CombinedTransformationFloat4x4();
 	}
@@ -117,7 +117,7 @@ _float4x4* CModel::Get_OffsetMatrices()
 {
 	_float4x4 BoneMatrices[800];
 	
-	for (_int i = 0; i < m_iNumMeshes; ++i)
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
 	{
 		vector<_float4x4> m_OffsetMatrices = m_Meshes[i]->Get_OffsetMatrices();
 		vector<_uint> vecIndices = m_Meshes[i]->Get_BoneIndices();

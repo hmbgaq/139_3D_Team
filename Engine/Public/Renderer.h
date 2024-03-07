@@ -44,9 +44,9 @@ private:
 	HRESULT Render_Shadow();
 	HRESULT Render_LightAcc();
 	HRESULT Render_HBAO_PLUS();
-	HRESULT Render_BloomBlur();
+	HRESULT Render_RimBloom();
 	HRESULT Render_Deferred();
-	HRESULT Render_RimBlur();
+	HRESULT Render_EffectBloomBlur();
 
 	HRESULT Render_RadialBlur(); 
 	HRESULT Render_HDR();
@@ -83,8 +83,7 @@ private:
 public:
 	/* È°¼ºÈ­ */
 	void Set_HBAO_Active(_bool _HBAO) { m_tHBAO_Option.bHBAO_Active = _HBAO; }
-	void Set_BloomBlur_Active(_bool _bloom_active) { m_tBloomRim_Option.bBloomBlur_Active = _bloom_active; }
-	void Set_RimBlur_Active(_bool _bloom_active) { m_tBloomRim_Option.bRimBlur_Active = _bloom_active; }
+	void Set_BloomBlur_Active(_bool _bloom_active) { m_tBloomRim_Option.bRimBloom_Blur_Active = _bloom_active; }
 	void Set_Fog_Active(_bool _Fog) { m_tFog_Option.bFog_Active = _Fog; }
 
 	void Set_Radial_Blur_Active(_bool _Radial) { m_tRadial_Option.bRadial_Active = _Radial; }
@@ -144,6 +143,7 @@ private:
 	ID3D11DepthStencilView* m_pLightDepthDSV = { nullptr };
 	_float4x4				m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT					Control_HotKey();
+
 public:
 	_bool			m_bUI_MRT = false;
 	void			Render_UI_MRT(_bool bMRT) { m_bUI_MRT = bMRT;}

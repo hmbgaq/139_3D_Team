@@ -199,7 +199,10 @@ struct PS_IN
 
 struct PS_OUT
 {
-	float4		vColor : SV_TARGET0;
+	float4		vColor		: SV_TARGET0; // Diffuse
+	float4		vNormal		: SV_TARGET1; // Normal
+	float4		vDepth		: SV_TARGET2; // Depth
+	float4		vRimBloom	: SV_TARGET3; // RimBloom
 };
 
 
@@ -220,7 +223,10 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 			discard;
 
 		Out.vColor = vDiffuseColor;
-	}
+		/* 소영 - Test용도 */ 
+        Out.vRimBloom = Out.vColor;
+
+    }
 	else
 	{
 		/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
@@ -235,8 +241,10 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 			|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 			discard;
 
-		Out.vColor = vDiffuseColor;
-	}
+        Out.vColor = vDiffuseColor;
+		/* 소영 - Test용도 */ 
+        Out.vRimBloom = Out.vColor;
+    }
 
 
     return Out;

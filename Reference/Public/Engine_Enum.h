@@ -41,6 +41,7 @@ namespace Engine
 	enum class POST_SHADER {
 		POST_ORIGIN,
 		POST_HDR, POST_RADIAL, POST_DOF, 
+		POST_EFFECTMIX,
 		POST_END
 	};
 

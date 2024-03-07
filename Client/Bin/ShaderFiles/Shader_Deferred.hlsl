@@ -19,29 +19,27 @@ vector g_vLightSpecular;
 float g_fLightIntensity;
 vector g_vLightFlag;
 
-Texture2D g_DiffuseTexture;
 vector g_vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
 vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 vector g_vCamPosition;
 
-Texture2D g_PriorityTarget;
-Texture2D g_ShadeTexture;
-Texture2D g_EmissiveTarget;
-Texture2D g_NormalTexture;
-Texture2D g_NormalDepthTarget;
-Texture2D g_DepthTexture;
-Texture2D g_SpecularTexture;
-Texture2D g_LightDepthTexture;
-Texture2D g_ORMTexture;
-Texture2D g_SSAOTexture;
-Texture2D g_BloomTarget;
-Texture2D g_OutlineTarget;
-Texture2D g_PerlinNoiseTexture;
-Texture2D g_RimLightTarget;
-Texture2D g_Effect_DiffuseTarget;
+Texture2D g_PriorityTarget;         /* Skybox - Priority */
+Texture2D g_DiffuseTexture;         /* Out.Diffuse */ 
+Texture2D g_NormalTexture;          /* Out.Normal */
+Texture2D g_DepthTarget;            /* Out.Depth 카메라가 본 깊이 */ 
+Texture2D g_ORMTexture;             /* Out.ORM */ 
+Texture2D g_ShadeTexture;           /* LightAcc - 빛이본 깊이 */ 
+Texture2D g_EmissiveTarget;         /* Emissive - For. PBR */
+Texture2D g_SpecularTexture;        /* LightAcc - 빛이 본 Spec */
+Texture2D g_ShadowDepthTexture;     /* Render_Shadow 결과 */
+Texture2D g_SSAOTexture;            /* Pre - HBAO+ */
+Texture2D g_BloomRimTarget;         /* BloomRim Blur */ 
+Texture2D g_PerlinNoiseTexture;     /* Shor Fog - Noise Texture */
+Texture2D g_Effect_DiffuseTarget;   /* Effect - Diffuse */
+Texture2D g_OutlineTarget;          /* RenderGroup - Outline */
 
-/* 활성 여부 */ 
+/* 활성 여부 */
 bool g_bSSAO_Active;
 bool g_bFog_Active;
 
@@ -168,7 +166,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 
     vector vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
     vector vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
-    vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     vector vORMDesc = g_ORMTexture.Sample(PointSampler, In.vTexcoord); /* Occlusion , Roughness, Metalic */
 	//vector		
 	
@@ -218,7 +216,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	/* 0, 1 -> -1, 1 */
     float4 vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
-    vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     float fViewZ = vDepthDesc.y * g_CamFar;
 
     vector vWorldPos;
@@ -265,7 +263,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
 	/* 방향성광원의 정보와 노멀 타겟에 담겨있는 노멀과의 빛연산을 수행한다. */
     vector vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
     vector vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
-    vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     vector vORMDesc = g_ORMTexture.Sample(PointSampler, In.vTexcoord);
 
     return Out;
@@ -277,16 +275,6 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    // MRT_GameObject : Bloom -> Blur 적용 
-    vector vBloom = float4(0.f, 0.f, 0.f, 0.f);
-    if (g_Bloom_Rim_Desc.bBloomBlur_Active)
-        vBloom = g_BloomTarget.Sample(LinearSampler, In.vTexcoord);
-	
-    // MRT_GameObject : RimLight -> Blur 적용 
-    vector vRimLight = float4(0.f, 0.f, 0.f, 0.f);
-    if (g_Bloom_Rim_Desc.bRimBlur_Active)
-        vRimLight = g_RimLightTarget.Sample(LinearSampler, In.vTexcoord); /* blur 적용된 RimLight */ 
-	
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     
     if (vDiffuse.a == 0.f)
@@ -295,7 +283,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
         if (vPriority.a == 0.f)
             discard;
         
-        Out.vColor = vPriority + vBloom + vRimLight;
+        Out.vColor = vPriority;
         return Out;
     }
     // MRT_LightAcc : Shade 
@@ -307,15 +295,16 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vSpecular = saturate(vSpecular);
 	
     // MRT_GameObject : Depth
-    vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     if (vDepthDesc.w != 1.f) 
         vSpecular = float4(0.f, 0.f, 0.f, 0.f);
     
+    // Target_HBAO
     vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
     if (g_bSSAO_Active)
         vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
     
-    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vBloom;
+    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular;
     
     float fViewZ = vDepthDesc.y * g_CamFar;
 	
@@ -352,7 +341,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
     vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
    
-    float4 vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vUV);
+    float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
    
     if (vWorldPos.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
         Out.vColor = Out.vColor * 0.8f;

@@ -572,7 +572,7 @@ float ENGINE_DLL Engine::SMath::Calculate_AngleBetweenVectors_Degree(const XMFLO
 	// 두 벡터 사이의 각도 계산 (도 Degree)
 
 	_float fRadians = Calculate_AngleBetweenVectors_Radian(_v1, _v2) * 2.f;
-	_float fDegree = fRadians * (360.0f / (M_PI * 2.f));
+	_float fDegree = _float(fRadians * (360.f / (M_PI * 2.f)));
 
 	return fDegree;
 }

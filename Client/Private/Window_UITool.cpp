@@ -1971,8 +1971,7 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 
 	timeline[m_eKeyType].push_back(lastKeyframe);
 
-
-	int num_decimal_places = 2; // 소수점 단위 설정
+	int num_decimal_places = 2; // 소수점 단위 설
 
 	// 소수점 단위 표현
 	int multiplier = static_cast<int>(pow(10, num_decimal_places));

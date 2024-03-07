@@ -11,7 +11,7 @@ public:
 	{	/* Priority */
 		RENDER_PRIORITY, RENDER_NONLIGHT,
 		/* Post Processing  */
-		RENDER_NONBLEND, RENDER_SHADOW, RENDER_DECAL,
+		RENDER_NONBLEND, RENDER_SHADOW, RENDER_DECAL, RENDER_OUTLINE,
 		/* EFFECT */
 		RENDER_EFFECT, RENDER_EFFECT_PARTICLE, RENDER_EFFECT_MESH,
 		/* UI */
@@ -44,9 +44,9 @@ private:
 	HRESULT Render_Shadow();
 	HRESULT Render_LightAcc();
 	HRESULT Render_HBAO_PLUS();
-	HRESULT Render_BloomBlur();
+	HRESULT Render_RimBloom();
 	HRESULT Render_Deferred();
-	HRESULT Render_RimBlur();
+	HRESULT Render_EffectBloomBlur();
 
 	HRESULT Render_RadialBlur(); 
 	HRESULT Render_HDR();
@@ -83,8 +83,7 @@ private:
 public:
 	/* 활성화 */
 	void Set_HBAO_Active(_bool _HBAO) { m_tHBAO_Option.bHBAO_Active = _HBAO; }
-	void Set_BloomBlur_Active(_bool _bloom_active) { m_tBloomRim_Option.bBloomBlur_Active = _bloom_active; }
-	void Set_RimBlur_Active(_bool _bloom_active) { m_tBloomRim_Option.bRimBlur_Active = _bloom_active; }
+	void Set_BloomBlur_Active(_bool _bloom_active) { m_tBloomRim_Option.bRimBloom_Blur_Active = _bloom_active; }
 	void Set_Fog_Active(_bool _Fog) { m_tFog_Option.bFog_Active = _Fog; }
 
 	void Set_Radial_Blur_Active(_bool _Radial) { m_tRadial_Option.bRadial_Active = _Radial; }
@@ -103,6 +102,7 @@ public:
 	void Set_HSV_Option(HSV_DESC desc) { m_tHSV_Option = desc; }
 	void Set_FXAA_Option(ANTI_DESC desc) { m_tAnti_Option = desc; }
 	void Set_DOF_Option(DOF_DESC desc) { m_tDOF_Option = desc; }
+
 private:
 	_bool						m_bInit = { true }; /* 없으면 터짐 건들지마세요 */
 
@@ -128,8 +128,6 @@ private:
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 	class CGameInstance*		m_pGameInstance = { nullptr };
 	list<class CGameObject*>	m_RenderObjects[RENDER_END];
-	//ID3D11DepthStencilView*		m_pCascadeShadowDSV[3];
-	//vector<class CGameObject*>	m_CascadeObjects[3];
 
 private:
 	class CShader* m_pShader_Deferred = { nullptr };
@@ -145,6 +143,7 @@ private:
 	ID3D11DepthStencilView* m_pLightDepthDSV = { nullptr };
 	_float4x4				m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT					Control_HotKey();
+
 public:
 	_bool			m_bUI_MRT = false;
 	void			Render_UI_MRT(_bool bMRT) { m_bUI_MRT = bMRT;}
@@ -158,8 +157,8 @@ private:
 	HRESULT Ready_DebugRender();
 	HRESULT Render_DebugCom();
 	HRESULT Render_DebugTarget();
-	_bool	m_bDebugRenderTarget	= { false };
-	_bool	m_bDebugCom				= { false };
+	_bool	m_bDebugRenderTarget	= { true };
+	_bool	m_bDebugCom				= { true };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
 

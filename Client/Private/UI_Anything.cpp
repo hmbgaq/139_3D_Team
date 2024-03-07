@@ -132,14 +132,15 @@ HRESULT CUI_Anything::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-	//wstring strPrototag;
-	//m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
+	wstring strPrototag;
+	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
 
-	////! For.Com_Texture
-	//if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
-	//	TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
-	//	return E_FAIL;
-	FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Test"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom)));
+	//! For.Com_Texture
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		return E_FAIL;
+
+	//FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Test"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom)));
 
 	return S_OK;
 }
