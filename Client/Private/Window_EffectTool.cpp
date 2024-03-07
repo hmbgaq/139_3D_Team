@@ -15,6 +15,7 @@
 //#include "Mesh.h"
 
 #include "Sky.h"
+#include "Grid.h"
 #include "Model_Preview.h"
 
 
@@ -35,7 +36,9 @@ HRESULT CWindow_EffectTool::Initialize()
 	Load_CustomStyle();	// 스타일 저장 정보 로드
 	
 
+	ReSet_Camera();				// 카메라 위치, 보는방향 리셋
 	FAILED_CHECK(Load_Sky());	// 스카이박스 얻어오기
+
 
 
 	return S_OK;
@@ -195,6 +198,48 @@ void CWindow_EffectTool::Show_CameraInfo()
 
 	ImGui::Text("Cam Pos  : %.2f %.2f %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
 	ImGui::Text("Cam Dir : %.2f %.2f %.2f", vCamDir.x, vCamDir.y, vCamDir.z);
+}
+
+
+void CWindow_EffectTool::ReSet_Camera()
+{
+	CGameObject* pCamera = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_Camera"));
+	if (nullptr != pCamera)
+	{
+		pCamera->Set_Position(m_Camera_ResetPos);
+
+		if (nullptr != m_pCurEffect)	// 현재 이펙트가 존재하면
+		{
+			// 카메라가 이펙트를 바라보도록
+			pCamera->Get_Transform()->Look_At(m_pCurEffect->Get_Position_Vector());
+		}
+		else
+		{
+			//pCamera->Get_Transform()->Look_At_Direction(m_Camera_ResetLookAt);
+		}
+
+	}
+}
+
+HRESULT CWindow_EffectTool::Ready_Grid()
+{
+
+	CGrid::GRID_DESC	tDesc = {};
+	//tDesc.strTextureTag[CGrid::TEXTURE_DIFFUSE] = { TEXT("Prototype_Component_Texture_Effect_Diffuse") };
+	tDesc.strTextureTag[CGrid::TEXTURE_DIFFUSE] = { TEXT("") };
+	tDesc.iTextureIndex[CGrid::TEXTURE_DIFFUSE] = { 0 };
+
+	tDesc.strTextureTag[CGrid::TEXTURE_MASK] = { TEXT("") };
+	tDesc.iTextureIndex[CGrid::TEXTURE_MASK] = { 0 };
+
+
+	CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Grid"), TEXT("Prototype_GameObject_Grid"), &tDesc);
+	if (nullptr != pObj)
+	{
+		m_pGrid = pObj;
+	}
+		
+	return S_OK;
 }
 
 HRESULT CWindow_EffectTool::Load_Sky()
@@ -1954,20 +1999,62 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 	Show_CameraInfo();
 
 	// 카메라 위치 리셋
-	if (ImGui::Button("CamPos Reset"))
+	if (ImGui::Button("Camera ReSet"))
 	{
-		CGameObject* pCamera = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_Camera"));
-		if (nullptr != pCamera)
+		ReSet_Camera();
+	}
+
+	// 그리드
+	ImGui::SeparatorText("Grid");
+	if (nullptr == m_pGrid)
+	{
+		if (ImGui::Button("Create Grid"))	// 그리드 생성
 		{
-			pCamera->Set_Position(_float3(0.f, -1.f, -10.f));
+			Ready_Grid();
 		}
 	}
+	else
+	{
+		// 그리드가 존재하면
+		CGrid::GRID_DESC* pGridDesc = dynamic_cast<CGrid*>(m_pGrid)->Get_Desc();	// 그리드 Desc 얻어오기
+
+		if (ImGui::Button("ON Grid"))	// 그리드 켜기
+		{
+			pGridDesc->bRender = TRUE;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("OFF Grid"))	// 그리드 끄기
+		{
+			pGridDesc->bRender = FALSE;
+		}
+
+
+		// 그리드 색 변경
+		if (ImGui::ColorEdit4("Grid Color", m_fColor_Grid, ImGuiColorEditFlags_None))
+		{
+			pGridDesc->vGridColor.x = m_fColor_Grid[0];
+			pGridDesc->vGridColor.y = m_fColor_Grid[1];
+			pGridDesc->vGridColor.z = m_fColor_Grid[2];
+			pGridDesc->vGridColor.w = m_fColor_Grid[3];
+		}
+
+
+		if (ImGui::Button("Delete Grid"))	// 그리드 삭제
+		{
+			if (nullptr != m_pGrid)
+			{
+				m_pGrid->Set_Dead(TRUE);
+				m_pGrid = nullptr;
+			}
+		}
+	}
+
 
 	// 스카이박스
 	ImGui::SeparatorText("SkyBox");
 	if (nullptr == m_pSky)
 	{
-		if (ImGui::Button("Create Sky"))	// 스카이박스 얻어오기 또는 생성
+		if (ImGui::Button("Create Sky"))	// 스카이박스 생성
 		{
 			Ready_Sky();
 		}
@@ -1997,8 +2084,6 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			Set_SkyTexture();
 		}
 	}
-
-
 
 
 	// 크기비교용 모델
@@ -2037,7 +2122,6 @@ void CWindow_EffectTool::Update_EffectList_Window()
 	auto& style = ImGui::GetStyle();
 
 	/* 비어있는 이펙트 객체 생성 */
-	ImGui::SeparatorText("");
 	if (ImGui::Button("         Create         ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
 	{
 		Create_EffectObject(TEXT("Layer_Effect"));
@@ -2137,6 +2221,7 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		// =========================================
 
 		/* 이펙트 파트오브젝트 리스트 & 현재 파트오브젝트 선택 */
+		ImGui::SeparatorText(" PART LIST ");
 		if (ImGui::ListBox(" Part List ", &m_iCurPartIndex, m_szPartNames, (_int)m_CurPartObjects.size(), (_int)6))
 		{
 			wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szPartNames[m_iCurPartIndex]);
@@ -2214,6 +2299,13 @@ void CWindow_EffectTool::Update_EffectList_Window()
 					m_pCurPartEffect->ReSet_Effect();
 				}
 			}
+
+			/* 선택 파트 이펙트 삭제 */
+			if (ImGui::Button(" Delete Part "))
+			{
+				Delete_CurPart();
+			}
+
 		}
 
 
@@ -2922,6 +3014,11 @@ HRESULT CWindow_EffectTool::Add_Part_Trail()
 
 	return S_OK;
 
+}
+
+void CWindow_EffectTool::Delete_CurPart()
+{
+	m_pCurEffect->Delete_PartObject(m_pCurPartEffect->Get_Desc()->strPartTag);		
 }
 
 void CWindow_EffectTool::Update_CurMembers(wstring strName)

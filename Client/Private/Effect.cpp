@@ -12,7 +12,7 @@
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
-
+	m_bIsPoolObject = TRUE;
 }
 
 CEffect::CEffect(const CEffect & rhs)
@@ -339,6 +339,19 @@ HRESULT CEffect::Add_PartObject(const wstring& strPrototypeTag, const wstring& s
 	m_tEffectDesc.iPartSize += 1;
 
 	return S_OK;
+}
+
+void CEffect::Delete_PartObject(const wstring& strPartTag)
+{
+	auto	iter = m_PartObjects.find(strPartTag);
+
+	if (iter == m_PartObjects.end())
+		return;
+
+	iter->second->Set_Dead(TRUE);		// 객체 삭제
+
+	m_PartObjects.erase(strPartTag);	// 맵컨테이너에서 삭제
+
 }
 
 void CEffect::Set_Owner(CGameObject* pOwner)

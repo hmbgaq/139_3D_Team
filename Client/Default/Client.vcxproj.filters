@@ -1726,11 +1726,11 @@
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects">
       <UniqueIdentifier>{6a4e5f4a-7555-4c9b-b7e7-d07684d1935b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Greed_Tool">
-      <UniqueIdentifier>{84424594-e511-4a33-8a23-891bc3ac3cef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview">
       <UniqueIdentifier>{4e581434-6a53-484b-964f-ac3c78373ab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid">
+      <UniqueIdentifier>{84424594-e511-4a33-8a23-891bc3ac3cef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -3203,6 +3203,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Model_Preview.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Grid.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4767,6 +4770,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Model_Preview.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Grid.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

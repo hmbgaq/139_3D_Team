@@ -14,6 +14,7 @@ class CWindow_EffectTool final : public CImgui_Window
 public:
 	struct Window_EffectTool_DESC : public ImGuiDESC
 	{
+
 	};
 
 protected:
@@ -37,6 +38,10 @@ public:
 public:
 	void	Show_MousePos();	// 마우스 위치 표시
 	void	Show_CameraInfo();	// 카메라 정보 표시
+	void	ReSet_Camera();		// 카메라 위치 리셋
+
+
+	HRESULT Ready_Grid();		// 그리드 생성
 
 	HRESULT Load_Sky();			// 스카이박스 얻어오기
 	HRESULT Ready_Sky();		// 스카이박스 생성
@@ -68,6 +73,8 @@ public:
 	HRESULT Add_Part_Rect();					// 파트:Rect 추가
 	HRESULT Add_Part_Mesh(wstring strModelTag);	// 파트:메시 이펙트 추가
 	HRESULT Add_Part_Trail();					// 파트:트레일 추가
+
+	void	Delete_CurPart();					// 현재 선택된 파트 이펙트 삭제		
 
 
 /* For.CurObject (현재 선택된 이펙트 관련 정보 업데이트) */
@@ -101,6 +108,9 @@ private:
 private:
 	_int m_iSkyTextureIndex = { 3 };
 
+/* Grid */
+private:
+	_float m_fColor_Grid[4] = { 0.f, 1.f, 0.f, 1.f };
 
 /* Desc */
 private:
@@ -250,8 +260,8 @@ private:
 
 #pragma region Mesh_Option
 private:
-	_int m_iNumInstance_Mesh = { 50 };
-	_int m_iMaxNumInstance_Mesh = { 100 };
+	_int m_iNumInstance_Mesh = { 1000 };
+	_int m_iMaxNumInstance_Mesh = { 1000 };
 
 	_float  m_fUV_Offset[2] = { 0.f, 0.f };
 	_float  m_vUV_Scale[2]	= { 1.f, 1.f };
@@ -289,6 +299,10 @@ private:
 
 
 #pragma region Level Setting
+	_float3		m_Camera_ResetPos = { 0.f, 0.f, -10.f };		// 카메라 리셋 위치
+	//_float4		m_Camera_ResetLookAt = { 0.f, 0.f, 0.f, 1.f };	// 카메라 리셋 LookAt
+
+	CGameObject* m_pGrid = { nullptr };
 	CGameObject* m_pSky				= { nullptr };
 	CGameObject* m_pModel_Preview	= { nullptr };	// 크기 비교용 보기 모델
 #pragma endregion

@@ -7,7 +7,7 @@
 CModel_Preview::CModel_Preview(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
-
+	m_bIsPoolObject = FALSE;
 }
 
 CModel_Preview::CModel_Preview(const CModel_Preview& rhs)

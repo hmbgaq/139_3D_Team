@@ -6,7 +6,7 @@
 CEffect_Void::CEffect_Void(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CAlphaObject(pDevice, pContext, strPrototypeTag)
 {
-
+	m_bIsPoolObject = FALSE;
 }
 
 CEffect_Void::CEffect_Void(const CEffect_Void & rhs)
@@ -203,7 +203,7 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 void CEffect_Void::Load_VoidDesc(const json& In_Json)
 {
 	/* Effect_Void */
-	m_tVoidDesc.eType_Effect = (TYPE_EFFECT)In_Json["eType_Effect"];
+	m_tVoidDesc.eType_Effect = (TYPE_EFFECT)In_Json["eType_Effect"];	
 	m_tVoidDesc.eType_Easing = (EASING_TYPE)In_Json["eType_Easing"];
 
 

@@ -37,6 +37,10 @@ HRESULT CVIBuffer_Effect_Model_Instance::Initialize(void* pArg)
 
 	m_iNumMaterials = pModel->Get_NumMaterials();
 
+
+	if (m_tBufferDesc.bUseRigidBody)
+		m_vecParticleRigidbodyDesc.reserve(m_tBufferDesc.iCurNumInstance);
+
 	Init_Instance(m_tBufferDesc.iCurNumInstance);
 
 

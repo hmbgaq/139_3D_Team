@@ -11,8 +11,8 @@ public:
 	typedef struct tagVIBuffer_EffectModelInstanceDesc
 	{
 		// 저장해야 하는 고정 정보들
-		_int			iCurNumInstance = { 1 };
-		class CModel*	  pModel	= { nullptr };
+		_int			iCurNumInstance = { 1000 };		// 초기화 값이 최대 개수가 됨	
+		class CModel*	pModel	= { nullptr };
 
 		/* RigidBody */
 		_bool		bUseRigidBody = { TRUE };

@@ -8,7 +8,7 @@
 CEffect_Particle::CEffect_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-
+	m_bIsPoolObject = FALSE;
 }
 
 CEffect_Particle::CEffect_Particle(const CEffect_Particle& rhs)

@@ -12,6 +12,7 @@ matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 Texture2D		g_DiffuseTexture;
 Texture2D		g_MaskTexture;
 Texture2D		g_NoiseTexture;
+
 Texture2D		g_DepthTexture;
 
 vector			g_vCamPosition;
