@@ -19,15 +19,15 @@ Texture2D g_DissolveTexture;
 Texture2D g_MaskingTexture;
 
 /* =========== Value =========== */
-float g_fDissolveWeight; /* Dissolve  */
+float     g_fDissolveWeight;                       /* Dissolve  */
 
 float4 g_BloomColor = { 0.f, 0.f, 0.f, 0.f }; /* Bloom */
 float3 g_vBloomPower; /* Bloom */
 
-matrix g_ReflectionMatrix; /* Reflection */
+matrix    g_ReflectionMatrix;                      /* Reflection */
 
-float4 g_vLineColor; /* OutLine */
-float g_LineThick; /* OutLine */
+float4    g_vLineColor;                            /* OutLine */
+float     g_LineThick;                             /* OutLine */
 
 float4 g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
 float4 g_vCamPosition; /* RimLight */
@@ -90,7 +90,7 @@ struct PS_OUT
     float4 vNormal      : SV_TARGET1;
     float4 vDepth       : SV_TARGET2;
     float4 vORM         : SV_TARGET3;
-    float4 vRimBloom   : SV_TARGET4; /* Rim + Bloom */ 
+    float4 vRimBloom    : SV_TARGET4; /* Rim + Bloom */ 
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -145,7 +145,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
     // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
     return Out;
-}   
+}
 
 /* ------------------- Shadow Pixel Shader(2) -------------------*/
 

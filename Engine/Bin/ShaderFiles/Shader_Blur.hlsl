@@ -65,6 +65,10 @@ PS_OUT PS_BLUR_DOWN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     Out.vColor = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -87,7 +91,10 @@ PS_OUT PS_BLUR_H_LOW(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -106,7 +113,10 @@ PS_OUT PS_BLUR_H_QUARTER(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -125,7 +135,10 @@ PS_OUT PS_BLUR_H_MIDDLE(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -144,7 +157,10 @@ PS_OUT PS_BLUR_H_HIGH(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -163,7 +179,10 @@ PS_OUT PS_BLUR_V_LOW(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -182,7 +201,10 @@ PS_OUT PS_BLUR_V_QUARTER(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -201,7 +223,10 @@ PS_OUT PS_BLUR_V_MIDDLE(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -220,7 +245,10 @@ PS_OUT PS_BLUR_V_HIGH(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -229,6 +257,9 @@ PS_OUT PS_BLUR_UP(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     Out.vColor = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    if (Out.vColor.a == 0)
+        discard;
     
     return Out;
 }

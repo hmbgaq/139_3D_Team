@@ -94,7 +94,7 @@ public:
 		return vPos;
 	}
 
-	_float3 Get_Position_Float4()
+	_float4 Get_Position_Float4()
 	{
 		_float4 vPos;
 		XMStoreFloat4(&vPos, Get_State(CTransform::STATE::STATE_POSITION));

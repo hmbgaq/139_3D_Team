@@ -202,8 +202,8 @@ void CBody::Set_MouseMove(_float fTimeDelta)
 
 	_float fSpeed = 10.f;
 
-	vMouseMove.x = m_pGameInstance->Get_DIMouseMove(DIMS_X);
-	vMouseMove.y = m_pGameInstance->Get_DIMouseMove(DIMS_Y);
+	vMouseMove.x = (_float)m_pGameInstance->Get_DIMouseMove(DIMS_X);
+	vMouseMove.y = (_float)m_pGameInstance->Get_DIMouseMove(DIMS_Y);
 
 	vMouseMove *= fSpeed * fTimeDelta;
 
