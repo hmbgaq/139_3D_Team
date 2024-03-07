@@ -1723,7 +1723,13 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\9.Spawn\IntroSpawn">
       <UniqueIdentifier>{c5d09ec1-a9b3-4134-b00c-8f5a4e71a4df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\Model_Preview">
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects">
+      <UniqueIdentifier>{6a4e5f4a-7555-4c9b-b7e7-d07684d1935b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Greed_Tool">
+      <UniqueIdentifier>{84424594-e511-4a33-8a23-891bc3ac3cef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview">
       <UniqueIdentifier>{4e581434-6a53-484b-964f-ac3c78373ab1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -3196,7 +3202,7 @@
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Model_Preview.h">
-      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\Model_Preview</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4760,7 +4766,7 @@
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Model_Preview.cpp">
-      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\Model_Preview</Filter>
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

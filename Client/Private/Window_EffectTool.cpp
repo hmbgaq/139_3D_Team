@@ -33,10 +33,9 @@ HRESULT CWindow_EffectTool::Initialize()
 
 
 	Load_CustomStyle();
-
-
-	FAILED_CHECK(Ready_Sky());	// 스카이박스 준비(얻어오기)
 	
+	FAILED_CHECK(Ready_Sky());	// 스카이박스 얻어오기
+
 
 	return S_OK;
 }
@@ -193,13 +192,8 @@ void CWindow_EffectTool::Show_CameraInfo()
 	_float4 vCamPos = m_pGameInstance->Get_CamPosition();
 	_float4 vCamDir = m_pGameInstance->Get_CamDirection();
 
-	//_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
-	//vCamDirection = XMVector4Normalize(vCamDirection);
-	//_float4 vCamDirectionFloat4 = {};
-	//XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
-
 	ImGui::Text("Cam Pos  : %.2f %.2f %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
-	ImGui::Text("Cam Look : %.2f %.2f %.2f", vCamDir.x, vCamDir.y, vCamDir.z);
+	ImGui::Text("Cam Dir : %.2f %.2f %.2f", vCamDir.x, vCamDir.y, vCamDir.z);
 }
 
 HRESULT CWindow_EffectTool::Ready_Sky()
@@ -240,6 +234,11 @@ HRESULT CWindow_EffectTool::Ready_Model_Preview(wstring strModelTag)
 	CModel_Preview::MODEL_PREVIEW_DESC	tDesc = {};
 	tDesc.strProtoTag = { TEXT("Prototype_GameObject_Model_Preview") };
 	tDesc.strModelTag = { strModelTag };
+
+	if (strModelTag == TEXT("Prototype_Component_Model_Rentier"))
+	{
+		tDesc.iAnimIndex = { 8 };	// 플레이어 Idle애니메이션은 8번
+	}
 
 	CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Model_Preview"), TEXT("Prototype_GameObject_Model_Preview"), &tDesc);
 	if (nullptr != pObj)
@@ -1965,7 +1964,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 	// 스카이박스
 	ImGui::SeparatorText("SkyBox");
-	if (ImGui::Button("Create Sky"))	// 스카이박스 생성
+	if (ImGui::Button("Ready Sky"))	// 스카이박스 얻어오기 또는 생성
 	{
 		Ready_Sky();
 	}

@@ -72,10 +72,11 @@ void CModel_Preview::Late_Tick(_float fTimeDelta)
 	if (m_tDesc.bRender)
 	{
 		__super::Late_Tick(fTimeDelta);
-
-		//if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
+	
+		if (TRUE == m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_Position(), 2.f))
 		{
 			//m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos);
+			m_pModelCom->Play_Animation(fTimeDelta, TRUE);
 
 			if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tDesc.iRenderGroup), this)))
 				return;
