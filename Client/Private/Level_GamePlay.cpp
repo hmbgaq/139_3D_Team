@@ -42,6 +42,7 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * p
 
 HRESULT CLevel_GamePlay::Initialize()
 {
+	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
 
 	FAILED_CHECK(Ready_LightDesc());
@@ -53,8 +54,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
 
-	if (FAILED(Ready_UI()))
-		return E_FAIL;
+	FAILED_CHECK(Ready_UI());
 
 	return S_OK;
 }
@@ -441,7 +441,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 	///* ui test */
 	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
-
+	//
 	//CUI_Player_HPBar::UI_DESC desc = {};
 	//desc.fPositionX = (_float)g_iWinSizeX / 2 + 20.f;
 	//desc.fPositionY = (_float)g_iWinSizeY / 2 + 20.f;
@@ -454,11 +454,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_UI()
 {
-	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
-
-	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
-
-	FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
+	/* Test용도 */
+	 FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
+	 
+	//FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr)); /* 렌더타ㄱ*/
+	//FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
 	
 	return S_OK;
 }
@@ -468,41 +468,42 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 	/* 추 후 파싱해서 정보 받아오기 */
 	
 	/* MRT로 묶지 않으면 출력이안나옴. */
-	json json_in;
+	//json json_in;
 
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+	//char filePath[MAX_PATH] = "../Bin/DataFiles/TestData/Test_5.json";
 
-	_int		iPathNum = 0;
-	string		strFileName;
-	string		strFilePath;
-	
-	CJson_Utility::Load_Json(filePath, json_in);
+	//_int		iPathNum = 0;
+	//string		strFileName;
+	//string		strFilePath;
+	//
+	//CJson_Utility::Load_Json(filePath, json_in);
 
-	for (auto& item : json_in.items())
-	{
-		json object = item.value();
+	//for (auto& item : json_in.items())
+	//{
+	//	json object = item.value();
 
-		CUI::UI_DESC tUI_Info;
+	//	CUI::UI_DESC tUI_Info;
 
-		tUI_Info.strProtoTag = object["ProtoTag"];
-		tUI_Info.strFilePath = object["FilePath"];
+	//	tUI_Info.strProtoTag = object["ProtoTag"];
+	//	tUI_Info.strFilePath = object["FilePath"];
 
-		wstring wstrPrototag;
-		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+	//	wstring wstrPrototag;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
 
-		wstring wstrFilePath;
-		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+	//	wstring wstrFilePath;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
 
-		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
+	//	CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
 
-		pUI_Object->Get_Transform()->Load_FromJson(object);
-		
-		// Pos 잡아주기
-	}
+	//	pUI_Object->Get_Transform()->Load_FromJson(object);
+	//	
+	//	// Pos 잡아주기
+	//}
 
 
 	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &json_in)))
 	//	return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything")));
 
 	return S_OK;
 }
@@ -514,13 +515,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Interface(const wstring& strLayerTag, vo
 	// =>Right_Interface
 						Ready_RightInterface(strLayerTag, pArg);
 	// =>Quest_Box
-						Ready_QuestBox(strLayerTag, pArg);
+						Ready_QuestBox(strLayerTag, pArg); 
 	// =>Tutorial_Box
 						Ready_TutorialBox(strLayerTag, pArg);
 	// =>LevelUp
 						Ready_LevelUp(strLayerTag, pArg);
 	// =>Reward_Item
-						Ready_Reward_Item(strLayerTag, pArg);
+						Ready_Reward_Item(strLayerTag, pArg);  
 	return S_OK;
 }
 

@@ -1,5 +1,11 @@
 #include "Shader_Defines.hlsli"
 
+/* ------------------- Common Vertex Shader  -------------------*/
+// 분리형 가우시안블러
+// 아래의 fWeight가 가우시안블러의 가중치인데 밖에서 값던지나 여기서 적용하나 그게그거라 걍넣음 
+// 순서는 다운샘플링 -> 수평블러 -> 수직블러 -> 원래해상도로 업샘플링이 순서임. 
+/* -------------------------------------------------------------*/
+
 matrix      g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 Texture2D   g_BlurTarget;

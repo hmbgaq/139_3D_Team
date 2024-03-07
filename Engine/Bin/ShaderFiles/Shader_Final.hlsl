@@ -181,7 +181,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vector vDebug = g_DebugTarget.Sample(LinearSampler, In.vTexcoord);;
     vector vFinal = g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
-    
+   
     Out.vColor = vUI;
     
     if (Out.vColor.a == 0)
