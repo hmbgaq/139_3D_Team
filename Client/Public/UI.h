@@ -181,12 +181,13 @@ public: /* ============================== Add ============================== */
 
 public: /* ========================== Change_Size ========================== */
 	void			Set_Size(_float fSizeX, _float fSizeY);
+	void			Change_SizeX(_float MMX);
+	void			Change_SizeY(_float MMY);
+	void			Change_SizeRight(_float MMX);
 	void			Change_SizeBottom(_float MMY);
 	void			Change_SizeTop(_float MMY);
 	void			Change_SizeLeft(_float MMX);
-	void			Change_SizeRight(_float MMX);
-	void			Change_SizeY(_float MMY);
-	void			Change_SizeX(_float MMX);
+
 
 public: /* ============================== Basic =============================== */
 	virtual HRESULT Initialize_Prototype();
@@ -264,6 +265,10 @@ public: /* =========================== Animation ============================== 
 
 protected: /* Data */
 	class CData_Manager* m_pData_Manager = { nullptr };
+
+protected:
+	void				Compute_CamDistance();
+	_float				m_fCamDistance = { 0.0f };
 
 protected: /* LifeTime */
 	void				LifeTime_LevelUp(_float fTimeDelta);

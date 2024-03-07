@@ -1957,6 +1957,9 @@
     <Filter Include="02.GameObjects\UI\00. Player\98. Right_Interface">
       <UniqueIdentifier>{52b0b806-bb9d-40cc-a902-d719e9dff60b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\01. Monster\01. Weakness">
+      <UniqueIdentifier>{ce1391d2-0f61-42d6-aa55-e19415c437e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3575,6 +3578,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_LevelUp_ShieldFrame.h">
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Weakness.h">
+      <Filter>02.GameObjects\UI\01. Monster\01. Weakness</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -5298,6 +5304,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_LevelUp_ShieldFrame.cpp">
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Weakness.cpp">
+      <Filter>02.GameObjects\UI\01. Monster\01. Weakness</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

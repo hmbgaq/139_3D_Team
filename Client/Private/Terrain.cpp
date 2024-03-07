@@ -29,6 +29,8 @@ HRESULT CTerrain::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	m_pTransformCom->Set_Position({ -25.f, 0.f, -25.f });
+
 	return S_OK;
 }
 
@@ -62,7 +64,7 @@ HRESULT CTerrain::Render()
 		return E_FAIL;
 
 	/* 이 셰ㅒ이더에 0번째 패스로 그릴꺼야. */
-	m_pShaderCom->Begin(0);
+	m_pShaderCom->Begin(1);
 
 	/* 내가 그릴려고하는 정점, 인덷ㄱ스버퍼를 장치에 바인딩해. */
 	m_pVIBufferCom->Bind_VIBuffers();
@@ -98,14 +100,14 @@ HRESULT CTerrain::Ready_Components()
 	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Terrain"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_DIFFUSE]))))
 		return E_FAIL;
-	/* For.Com_Mask */
-	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Terrain_Mask"),
-		TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_MASK]))))
-		return E_FAIL;
-	/* For.Com_Brush */
-	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Terrain_Brush"),
-		TEXT("Com_Brush"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_BRUSH]))))
-		return E_FAIL;
+	///* For.Com_Mask */
+	//if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Terrain_Mask"),
+	//	TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_MASK]))))
+	//	return E_FAIL;
+	///* For.Com_Brush */
+	//if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Terrain_Brush"),
+	//	TEXT("Com_Brush"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_BRUSH]))))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -120,10 +122,10 @@ HRESULT CTerrain::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pTextureCom[TYPE_DIFFUSE]->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTexture_Array")))
 		return E_FAIL;
-	if (FAILED(m_pTextureCom[TYPE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", 0)))
-		return E_FAIL;
-	if (FAILED(m_pTextureCom[TYPE_BRUSH]->Bind_ShaderResource(m_pShaderCom, "g_BrushTexture", 0)))
-		return E_FAIL;
+	//if (FAILED(m_pTextureCom[TYPE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", 0)))
+	//	return E_FAIL;
+	//if (FAILED(m_pTextureCom[TYPE_BRUSH]->Bind_ShaderResource(m_pShaderCom, "g_BrushTexture", 0)))
+	//	return E_FAIL;
 
 	return S_OK;
 }

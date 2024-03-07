@@ -147,6 +147,13 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 
 		// Parent
 		Parent_List(fTimeDelta);
+
+		if (ImGui::Button("Create_Terrain"))
+			m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Terrain"));
+
+		if(ImGui::Button("Create_Monster"))
+			m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_Monster"), TEXT("Prototype_GameObject_Screamer"));
+
 		ImGui::Spacing();
 
 		__super::End();
