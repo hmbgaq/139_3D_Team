@@ -29,6 +29,8 @@ HRESULT CUI_LevelUp_ShieldFrame::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
+	m_tUIInfo.fPositionZ = 0.1f;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
@@ -65,7 +67,7 @@ void CUI_LevelUp_ShieldFrame::Tick(_float fTimeDelta)
 {
 	// Test
 	if (m_pGameInstance->Key_Down(DIK_0))
-		m_pTransformCom->Set_Scaling(180.f, 225.f, 1.f);
+		m_pTransformCom->Set_Scaling(180.f, 225.f, m_fScaleZ);
 
 	if (m_pGameInstance->Key_Down(DIK_9))
 		++m_fChangeScale;

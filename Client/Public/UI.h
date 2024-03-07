@@ -295,7 +295,7 @@ protected: /* ============================= UI =============================== *
 	_bool				m_bActive = false;
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
-	_float				m_fScaleX = 0.f, m_fScaleY = 0.f;
+	_float				m_fScaleX = 0.f, m_fScaleY = 0.f, m_fScaleZ = 0.1f;
 	UI_KIND				m_eKind = NORMAL;
 
 	// ≈ı∏Ìµµ
