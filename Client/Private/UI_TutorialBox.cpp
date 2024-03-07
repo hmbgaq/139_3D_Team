@@ -83,11 +83,11 @@ HRESULT CUI_TutorialBox::Render()
 	//	m_fPosY = -m_pTransformCom->Get_Position().y + (g_iWinsizeY / 2.f);
 	//}
 
-	//if (m_pTextInfo != nullptr)
-	//{
-	//	RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
-	//	m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
-	//}
+	if (m_pTextInfo != nullptr)
+	{
+		RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
+		m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
+	}
 
 	return S_OK;
 }
@@ -163,7 +163,7 @@ HRESULT CUI_TutorialBox::Ready_Text()
 	LoadInfo->vOrigin.y = 0.f;
 	LoadInfo->fRotation = 0.f;
 	LoadInfo->strTextKey = "Default";
-	LoadInfo->strFontTag = "Font_Arial";
+	LoadInfo->strFontTag = "Font_EvilWest";
 	LoadInfo->strText = "Default Test OK";
 	LoadInfo->vColor.m128_f32[0] = 1.f;
 	LoadInfo->vColor.m128_f32[1] = 1.f;

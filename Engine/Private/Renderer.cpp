@@ -110,8 +110,12 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (false == m_bUI_MRT)
 	FAILED_CHECK(Render_UI()); /* GamePlay에서 확인할때 여기활성화 */
 
-	if(true == m_bDebugRenderTarget)
-	FAILED_CHECK(Render_DebugTarget());
+
+#ifdef _DEBUG
+	if (true == m_bDebugRenderTarget)
+		FAILED_CHECK(Render_DebugTarget());
+#endif	
+
 
 	return S_OK;
 }

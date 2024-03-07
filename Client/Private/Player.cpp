@@ -6,6 +6,8 @@
 #include "Data_Manager.h"
 #include "PhysXController.h"
 
+#include "PhysXController.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
 {

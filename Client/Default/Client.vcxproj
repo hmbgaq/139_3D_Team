@@ -670,6 +670,10 @@
     <ClInclude Include="..\Public\VampireCommander_Walk_FR45.h" />
     <ClInclude Include="..\Public\VampireCommander_Weapon.h" />
     <ClInclude Include="..\Public\VampireCommander_Weapon_Hand.h" />
+    <ClInclude Include="..\Public\UI_AimCrosshair.h" />
+    <ClInclude Include="..\Public\UI_MouseCursor.h" />
+    <ClInclude Include="..\Public\UI_Option_SelectBox.h" />
+    <ClInclude Include="..\Public\UI_Option_Window.h" />
     <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h" />
     <ClInclude Include="..\Public\Window_Style.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -1175,6 +1179,10 @@
     <ClCompile Include="..\Private\VampireCommander_Walk_FR45.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Weapon.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Weapon_Hand.cpp" />
+    <ClCompile Include="..\Private\UI_AimCrosshair.cpp" />
+    <ClCompile Include="..\Private\UI_MouseCursor.cpp" />
+    <ClCompile Include="..\Private\UI_Option_SelectBox.cpp" />
+    <ClCompile Include="..\Private\UI_Option_Window.cpp" />
     <ClCompile Include="..\Private\VampireTank_KnockFrontLight_F_01.cpp" />
     <ClCompile Include="..\Private\Window_Style.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
