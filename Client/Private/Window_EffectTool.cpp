@@ -32,9 +32,10 @@ HRESULT CWindow_EffectTool::Initialize()
 		return E_FAIL;
 
 
-	Load_CustomStyle();
+	Load_CustomStyle();	// 스타일 저장 정보 로드
 	
-	FAILED_CHECK(Ready_Sky());	// 스카이박스 얻어오기
+
+	FAILED_CHECK(Load_Sky());	// 스카이박스 얻어오기
 
 
 	return S_OK;
@@ -196,7 +197,7 @@ void CWindow_EffectTool::Show_CameraInfo()
 	ImGui::Text("Cam Dir : %.2f %.2f %.2f", vCamDir.x, vCamDir.y, vCamDir.z);
 }
 
-HRESULT CWindow_EffectTool::Ready_Sky()
+HRESULT CWindow_EffectTool::Load_Sky()
 {
 	// 스카이박스 얻어오기
 	CGameObject* pObj = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_BackGround"));
@@ -204,15 +205,18 @@ HRESULT CWindow_EffectTool::Ready_Sky()
 	{
 		m_pSky = pObj;
 	}
-	else
-	{	
-		// 이미 만들어져있는 스카이박스가 없으면 생성
-		CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky"));
-		if (nullptr != pObj)
-		{
-			m_pSky = pObj;
-			dynamic_cast<CSky*>(m_pSky)->Set_TextureIndex(3);
-		}
+
+	return S_OK;
+}
+
+HRESULT CWindow_EffectTool::Ready_Sky()
+{
+	// 이미 만들어져있는 스카이박스가 없으면 생성
+	CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky"));
+	if (nullptr != pObj)
+	{
+		m_pSky = pObj;
+		dynamic_cast<CSky*>(m_pSky)->Set_TextureIndex(3);
 	}
 
 	return S_OK;
@@ -1944,9 +1948,6 @@ void CWindow_EffectTool::Update_ImageList_Window()
 
 void CWindow_EffectTool::Update_LevelSetting_Window()
 {
-	// 마우스 위치 표시
-	ImGui::SeparatorText("Mouse");
-	Show_MousePos();
 
 	// 카메라 위치 표시
 	ImGui::SeparatorText("Camera");
@@ -1964,46 +1965,69 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 	// 스카이박스
 	ImGui::SeparatorText("SkyBox");
-	if (ImGui::Button("Ready Sky"))	// 스카이박스 얻어오기 또는 생성
+	if (nullptr == m_pSky)
 	{
-		Ready_Sky();
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Delete Sky"))	// 스카이박스 삭제
-	{
-		if (nullptr != m_pSky)
+		if (ImGui::Button("Create Sky"))	// 스카이박스 얻어오기 또는 생성
 		{
-			m_pSky->Set_Dead(TRUE);
+			Ready_Sky();
+		}
+	}
+	else
+	{
+		// 스카이박스가 존재하면
+
+		if (ImGui::Button("Delete Sky"))	// 스카이박스 삭제
+		{
+			if (nullptr != m_pSky)
+			{
+				m_pSky->Set_Dead(TRUE);
+				m_pSky = nullptr;
+			}
+		}
+
+		// 스카이박스 텍스처 변경
+		if (ImGui::InputInt(" Sky box Texture ", &m_iSkyTextureIndex, 1))
+		{
+			if (5 < m_iSkyTextureIndex)
+				m_iSkyTextureIndex = 5;
+
+			if (0 > m_iSkyTextureIndex)
+				m_iSkyTextureIndex = 0;
+
+			Set_SkyTexture();
 		}
 	}
 
-	// 스카이박스 텍스처 변경
-	if (ImGui::InputInt(" Sky box Texture ", &m_iSkyTextureIndex, 1))
-	{
-		if (5 < m_iSkyTextureIndex)
-			m_iSkyTextureIndex = 5;
 
-		if (0 > m_iSkyTextureIndex)
-			m_iSkyTextureIndex = 0;
-
-		Set_SkyTexture();
-	}
 
 
 	// 크기비교용 모델
 	ImGui::SeparatorText("Model_Preview");
-	if (ImGui::Button("Create Model"))	// 모델 생성
+	if (nullptr == m_pModel_Preview)
 	{
-		Ready_Model_Preview(TEXT("Prototype_Component_Model_Rentier"));
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Delete Model"))	// 모델 삭제
-	{
-		if (nullptr != m_pModel_Preview)
+		if (ImGui::Button("Create Model"))	// 모델 생성
 		{
-			m_pModel_Preview->Set_Dead(TRUE);
+			Ready_Model_Preview(TEXT("Prototype_Component_Model_Rentier"));
 		}
 	}
+	else
+	{
+		// 모델_프리뷰가 존재하면 삭제버튼
+
+		if (ImGui::Button("Delete Model"))	// 모델 삭제
+		{
+			if (nullptr != m_pModel_Preview)
+			{
+				m_pModel_Preview->Set_Dead(TRUE);
+				m_pModel_Preview = nullptr;
+			}
+		}
+	}
+
+
+	// 마우스 위치 표시
+	ImGui::SeparatorText("Mouse");
+	Show_MousePos();
 
 
 }

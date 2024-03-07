@@ -65,9 +65,7 @@ _float4 CPipeLine::Get_CamPosition()
 _float4 CPipeLine::Get_CamDirection()
 {
 	// 카메라가 바라보는 방향(Look) = 뷰 행렬의 역행렬의 3행(Look)
-	_float4x4 ViewInverseMat = m_Transform_Inverse[D3DTS_VIEW];
-
-	_float4 CamDir = XMVector4Normalize(_float4(ViewInverseMat.m[2][0], ViewInverseMat.m[2][1], ViewInverseMat.m[2][2], ViewInverseMat.m[2][3]));
+	_float4 CamDir = XMVector4Normalize(_float4(m_Transform_Inverse[D3DTS_VIEW].m[2][0], m_Transform_Inverse[D3DTS_VIEW].m[2][1], m_Transform_Inverse[D3DTS_VIEW].m[2][2], m_Transform_Inverse[D3DTS_VIEW].m[2][3]));
 
 	return CamDir;
 }

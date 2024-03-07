@@ -38,7 +38,8 @@ public:
 	void	Show_MousePos();	// 마우스 위치 표시
 	void	Show_CameraInfo();	// 카메라 정보 표시
 
-	HRESULT Ready_Sky();		// 스카이박스 얻어오기
+	HRESULT Load_Sky();			// 스카이박스 얻어오기
+	HRESULT Ready_Sky();		// 스카이박스 생성
 	void	Set_SkyTexture();	// 스카이박스 텍스처 변경
 
 	HRESULT Ready_Model_Preview(wstring strModelTag);	// 크기비교용 모델 생성
