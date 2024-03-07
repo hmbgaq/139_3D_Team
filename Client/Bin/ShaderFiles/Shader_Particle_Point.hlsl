@@ -223,6 +223,8 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 			discard;
 
 		Out.vColor = vDiffuseColor;
+		/* 소영 - Test용도 */ 
+        Out.vRimBloom = vector(1.0f, 1.f, 1.f, 0.3f);
 
     }
 	else
@@ -239,6 +241,8 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 			discard;
 
         Out.vColor = vDiffuseColor;
+		/* 소영 - Test용도 */ 
+        Out.vRimBloom = vector(1.0f, 1.f, 1.f, 0.3f);
     }
 
 

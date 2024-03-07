@@ -386,6 +386,7 @@ HRESULT CRenderer::Render_HDR()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::HDR), m_pShader_PostProcess, "g_ProcessingTarget"));
 
 	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_HDR)));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
 	FAILED_CHECK(m_pVIBuffer->Render());
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
@@ -417,6 +418,7 @@ HRESULT CRenderer::Render_DOF()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Before, m_pShader_PostProcess, "g_ProcessingTarget")); /* 일반 화면 */
 	
 	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_DOF)));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
 	FAILED_CHECK(m_pVIBuffer->Render());
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
@@ -436,6 +438,7 @@ HRESULT CRenderer::Render_RadialBlur()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::RADIAL_BLUR), m_pShader_PostProcess, "g_ProcessingTarget"));
 
 	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_RADIAL)));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
 	FAILED_CHECK(m_pVIBuffer->Render());
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
@@ -455,6 +458,7 @@ HRESULT CRenderer::Render_FXAA()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::FXAA), m_pShader_Fxaa, "g_FinalTarget"));
 	
 	FAILED_CHECK(m_pShader_Fxaa->Begin(0));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
 	FAILED_CHECK(m_pVIBuffer->Render());
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
@@ -474,6 +478,7 @@ HRESULT CRenderer::Render_HSV()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::HSV), m_pShader_Final, "g_FinalTarget"));
 
 	FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL_HSV)));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
 	FAILED_CHECK(m_pVIBuffer->Render());
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
@@ -550,7 +555,7 @@ HRESULT CRenderer::Deferred_Effect()
 	/* Effect 추가해서 사용할거면 추가가능합니다~ */
 	FAILED_CHECK(Render_Effect());	/* MRT_Effect : Target_Effect_Diffuse, Target_Effect_Normal, Target_Effect_Depth, Target_Effect_RimBloom */
 	
-	FAILED_CHECK(Render_EffectBloomBlur());	/* Render에 블룸블러 효과 MRT_Effect_Blur -> Target_Effect_RR_Blur에 저장됨 */
+	//FAILED_CHECK(Render_EffectBloomBlur());	/* Render에 블룸블러 효과 MRT_Effect_Blur -> Target_Effect_RR_Blur에 저장됨 */
 
 	FAILED_CHECK(Render_Effect_Final()); /* Deferred + Effect + EffectBloomBlur */
 
@@ -656,6 +661,7 @@ HRESULT CRenderer::Render_Blur_DownSample(const wstring& strStartTargetTag)
 	FAILED_CHECK(m_pShader_Blur->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
 	FAILED_CHECK(m_pShader_Blur->Begin(ECast(BLUR_SHADER::BLUR_DOWN)));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
 	FAILED_CHECK(m_pVIBuffer->Render());
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
@@ -674,6 +680,7 @@ HRESULT CRenderer::Render_Blur_Horizontal(_int eHorizontalPass)
 	FAILED_CHECK(m_pShader_Blur->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
 	FAILED_CHECK(m_pShader_Blur->Begin(eHorizontalPass));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
 	FAILED_CHECK(m_pVIBuffer->Render());
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
@@ -692,6 +699,7 @@ HRESULT CRenderer::Render_Blur_Vertical(_int eVerticalPass)
 	FAILED_CHECK(m_pShader_Blur->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
 	FAILED_CHECK(m_pShader_Blur->Begin(eVerticalPass));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
 	FAILED_CHECK(m_pVIBuffer->Render());
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
@@ -714,6 +722,7 @@ HRESULT CRenderer::Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bCl
 	FAILED_CHECK(m_pShader_Blur->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
 	FAILED_CHECK(m_pShader_Blur->Begin(eBlendType));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
 	FAILED_CHECK(m_pVIBuffer->Render());
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 

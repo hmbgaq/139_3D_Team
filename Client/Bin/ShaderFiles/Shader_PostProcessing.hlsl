@@ -269,21 +269,21 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     vector Object_Blur = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     
     vector Effect = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
-    vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
+  //  vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
     
-    Out.vColor = Deferred + Object_Blur + Effect + Effect_Blur;
+    // Out.vColor = Deferred + Object_Blur + Effect + Effect_Blur;
     
-    if(Out.vColor.a ==0)
-        discard;
+    
+    /* 여기 건들면 될거같은데 왜지 뭐지 왜안되지 ! */
     
     Out.vColor = Effect;
+    // +Effect_Blur;
     
     if(Out.vColor.a == 0)
-    {
-        Out.vColor = Deferred + Object_Blur; 
-
-    }
-   // Out.vColor = Deferred + Object_Blur + vector(Effect.rgb, 1.f) + vector(Effect_Blur.rgb, 1.f);
+        Out.vColor =  Deferred + Object_Blur;
+  
+    if (Out.vColor.a == 0)
+        discard;
     
     return Out;
 }
