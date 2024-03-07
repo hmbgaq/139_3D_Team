@@ -54,7 +54,6 @@ HRESULT CRenderer::Draw_RenderGroup()
 {
 #ifdef _DEBUG
 	Control_HotKey();
-
 	if (true == m_bDebugCom)
 		FAILED_CHECK(Render_DebugCom()) /* Debug Component -> MRT 타겟에 저장해서 Finaml 에서 추가연산한다. */
 #endif // _DEBUG
@@ -111,6 +110,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (false == m_bUI_MRT)
 	FAILED_CHECK(Render_UI()); /* GamePlay에서 확인할때 여기활성화 */
 
+	if(true == m_bDebugRenderTarget)
 	FAILED_CHECK(Render_DebugTarget());
 
 	return S_OK;
