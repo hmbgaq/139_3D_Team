@@ -120,13 +120,27 @@ public:
 	void Add_Force(_vector In_vDir, _float In_fPower);
 
 public:
-	_int Get_Hp() {
-		return m_iHp;
-	};
+	_int Get_Hp() { return m_iHp; };
+	void Set_Hp(_uint _iHp) { m_iHp = _iHp; };
 
-	void Set_Hp(_uint _iHp) {
-		m_iHp = _iHp;
-	};
+public:
+	CCharacter* Get_Target() { return m_pTarget; };
+	void Set_Target(CCharacter* pTarget) { m_pTarget = pTarget; };
+
+public:
+	void Look_At_Target();
+	void Search_Target(const wstring& strLayerTag);
+	CCharacter* Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance = 20.f);
+
+public:
+	_float Calc_Distance(_float3 vTargetPos);
+	_float Calc_Distance(CGameObject* pTarget);
+	_float Calc_Distance();
+	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
+
+	void Move_In_Proportion_To_Enemy(_float fSpeedCap = 0.5f);
+
+
 
 public:	//!For Animation Split
 	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END);

@@ -6,6 +6,8 @@
 #include "Data_Manager.h"
 #include "PhysXController.h"
 
+#include "PhysXController.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
 {
@@ -171,6 +173,11 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 			Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 		}
 	}
+}
+
+void CPlayer::Search_Target()
+{
+	__super::Search_Target(LAYER_MONSTER);
 }
 
 HRESULT CPlayer::Ready_Components()

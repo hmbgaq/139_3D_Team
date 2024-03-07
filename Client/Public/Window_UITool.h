@@ -400,7 +400,10 @@ private:
 		"LevelUp_MagicSide",
 		"LevelUp_SunBeacon",
 		"LevelUp_TextBox",
-		"LevelUp_ShieldFrame"
+		"LevelUp_ShieldFrame",
+		"MouseCursor",
+		"Option_Window",
+		"AimCrosshair"
 	};
 
 	// 클래스 목록을 저장하는 벡터

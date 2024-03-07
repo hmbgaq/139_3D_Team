@@ -28,11 +28,19 @@ HRESULT CUI_LevelUp_SunBeacon::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
+	m_tUIInfo.fPositionZ = 0.3f;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
+
+	m_eState = UISTATE::LEVEL_UP;
+	m_fChangeScale = 3.f;
+	m_fLifeTime = 1500.f;
+	m_bActive = true;
+	m_fTime = GetTickCount64();
 
 	return S_OK;
 }
@@ -52,7 +60,66 @@ void CUI_LevelUp_SunBeacon::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	__super::Tick(fTimeDelta);
+		// Test
+	if (m_pGameInstance->Key_Down(DIK_7))
+	{
+		m_fTime = GetTickCount64();
+		m_fScaleX = 350.f;
+		m_fScaleY = 350.f;
+		m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, m_fScaleZ);
+		m_bSecondOK = true;
+		m_bFirstOK = false;
+	}
+		
+
+	if (m_pGameInstance->Key_Down(DIK_6))
+		++m_fChangeScale;
+
+	if (m_pGameInstance->Key_Down(DIK_5))
+		--m_fChangeScale;
+
+	//if (m_bActive)
+	{
+		if (m_fTime + m_fLifeTime < GetTickCount64() && m_bFirstOK == false)
+		{
+			if (m_fScaleX > 295.f)
+			{
+				Change_SizeX((-m_fChangeScale));
+			}
+
+			if (m_fScaleY > 295.f)
+			{
+				Change_SizeY((-m_fChangeScale));
+			}
+
+			if (m_fScaleX <= 295.f && m_fScaleY <= 295.f)
+			{
+				m_bFirstOK = true;
+				m_bSecondOK = false;
+				m_fTime = GetTickCount64();
+			}
+		}
+
+		if (m_bSecondOK == false)
+		{
+			if (m_fScaleX < 310.f)
+			{
+				Change_SizeX((m_fChangeScale));
+			}
+
+			if (m_fScaleY < 310.f)
+			{
+				Change_SizeY((m_fChangeScale));
+			}
+
+			if (m_fScaleX >= 310.f && m_fScaleY >= 310.f)
+			{
+				m_bSecondOK = true;
+				m_fTime = GetTickCount64();
+			}
+		}
+	}
+		__super::Tick(fTimeDelta);
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
@@ -104,6 +171,8 @@ HRESULT CUI_LevelUp_SunBeacon::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
 
 	string TestName = m_tUIInfo.strObjectName;
 	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)

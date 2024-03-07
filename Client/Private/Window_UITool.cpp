@@ -29,8 +29,10 @@ HRESULT CWindow_UITool::Initialize()
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩중."));
 
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
-	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD")))); // 원하는 폴더로 변경해서 보기
-	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));		// Option
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD")))); // PlayerHUD
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));			// Image
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));			// All
 	
 	/* 툴 들어갈때 오래걸리니까 따로 버튼눌러서 불러오자.. */
 	/* 저장해둔 이미지 경로들을 불러온다. */
@@ -1821,7 +1823,7 @@ void CWindow_UITool::Curr_Info()
 void CWindow_UITool::Create_TargetTexture()
 {
 	/* error : Find함수로 랜더타겟을 찾아온 뒤, 그녀석으로 Create함수를 호출하면 외부참조기호 에러가 발생함.. 직접 게임인스턴스로 Create까지 직결되는 함수를 새로 만들어서 사용하며 해결 */
-	m_pGameInstance->Create_RenderTarget(TEXT("Target_Diffuse_UI"));
+	m_pGameInstance->Create_RenderTarget(TEXT("Target_UI_Diffuse"));
 }
 
 void CWindow_UITool::KeyframeList()

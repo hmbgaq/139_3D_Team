@@ -42,6 +42,7 @@ namespace Client
 		APPEAR,
 		TICK,
 		DISAPPEAR,
+		LEVEL_UP,
 		STATE_END
 	};
 #pragma endregion End

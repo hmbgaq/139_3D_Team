@@ -29,7 +29,10 @@ public:
 	void				 Load_Desc();
 
 private:
-	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
+	CTexture*			 m_pTextureCom[TEXTURE_END] = { nullptr };
+	_float				 m_fChangeScale = 1.f;
+	_bool				 m_bFirstOK = false;
+	_bool				 m_bSecondOK = true;
 
 public:
 	static CUI_LevelUp_SunBeacon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성

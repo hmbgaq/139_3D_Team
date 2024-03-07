@@ -32,6 +32,9 @@ public:
 public:
 	void Aim_Walk(_float fTimeDelta);
 
+public:
+	void Search_Target();
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
@@ -39,6 +42,8 @@ private:
 public:
 	CActor<CPlayer>* Get_Actor() { return m_pActor; }
 	void Set_Actor(CActor<CPlayer>* _pActor) { m_pActor = _pActor; }
+
+
 
 public: //AnimTool Test
 	_bool	bTest = true;

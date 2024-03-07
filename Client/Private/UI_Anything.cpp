@@ -45,7 +45,7 @@ void CUI_Anything::Priority_Tick(_float fTimeDelta)
 
 void CUI_Anything::Tick(_float fTimeDelta)
 {
-
+	__super::Tick(fTimeDelta);
 }
 
 void CUI_Anything::Late_Tick(_float fTimeDelta)
@@ -53,11 +53,11 @@ void CUI_Anything::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	__super::Tick(fTimeDelta);
 
 	//if (m_tUIInfo.pParentTransformCom != nullptr &&
 	//	m_tUIInfo.bParent == false)
-	//{
+	//}Render_UI_MRT
+
 	//	/* Parent */
 	//	_vector vPosition = m_tUIInfo.pParentTransformCom->Get_State(CTransform::STATE_POSITION);
 	//	XMMATRIX ParentMat = m_tUIInfo.pParentTransformCom->Get_WorldMatrix();
@@ -69,15 +69,14 @@ void CUI_Anything::Late_Tick(_float fTimeDelta)
 	//	m_pTransformCom->Set_WorldMatrix(m_WorldMatrix);
 	//}
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
-		return;
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this), );
 }
 
 HRESULT CUI_Anything::Render()
 {
 	//TODO 셰이더에게 행렬을 던져주는 행위는 반드시 셰이더의 비긴함수를 호출하기 이전에 해야한다.
 	//! 그 이유는, 셰이더의 비긴함수 내에서 pPass->Apply(0, m_prContext); 코드를 수행한다.
-	//! Apply 호출 후에 행렬을 던져줘도 에러는 나지 않지만, 안정성이 떨어진다.
+	//! Apply 호출 후X 행렬을 던져줘도 에러는 나지 않지만, 안정성이 떨어진다.
 	//! Apply 호출 후에 행렬을 던져주면, 어떤 때에는 정상적으로 수행되고, 어떤 때에는 값이 제대로 안 넘어가는 경우가 있다.
 
 	//switch (m_tUIInfo.eUIType)
@@ -101,8 +100,6 @@ HRESULT CUI_Anything::Render()
 	//	//__super::SetUp_BillBoarding();
 	//	break;
 	//}
-	//case CUI_Anything::BOSS:
-	//case CUI_Anything::NONE:
 	//	break;
 	//default:
 	//	break;
@@ -142,7 +139,8 @@ HRESULT CUI_Anything::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
-	
+	//FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Test"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom)));
+
 	return S_OK;
 }
 
@@ -155,6 +153,8 @@ HRESULT CUI_Anything::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 		return E_FAIL;
 

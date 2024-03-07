@@ -22,6 +22,7 @@ Texture2D g_MaskingTexture;
 float g_fDissolveWeight; /* Dissolve  */
 
 float4 g_BloomColor = { 0.f, 0.f, 0.f, 0.f }; /* Bloom */
+float3 g_vBloomPower; /* Bloom */
 
 matrix g_ReflectionMatrix; /* Reflection */
 
@@ -29,7 +30,6 @@ float4 g_vLineColor; /* OutLine */
 float g_LineThick; /* OutLine */
 
 float4 g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
-float3 g_vRimPower; /* RimLight */
 float4 g_vCamPosition; /* RimLight */
 
 /* ------------------- function ------------------- */ 
@@ -46,7 +46,7 @@ float4 Calculation_Brightness(float4 Out_Diffuse)
 {
     float4 vBrightnessColor = float4(0.f, 0.f, 0.f, 0.f);
 
-    float fPixelBrightness = dot(Out_Diffuse.rgb, g_vRimPower.rgb);
+    float fPixelBrightness = dot(Out_Diffuse.rgb, g_vBloomPower.rgb);
     
     if (fPixelBrightness > 0.99f)
         vBrightnessColor = float4(Out_Diffuse.rgb, 1.0f);
@@ -90,9 +90,7 @@ struct PS_OUT
     float4 vNormal      : SV_TARGET1;
     float4 vDepth       : SV_TARGET2;
     float4 vORM         : SV_TARGET3;
-    float4 vBloomBlur   : SV_TARGET4;
-    float4 vRimBlur     : SV_TARGET5;
-  
+    float4 vRimBloom   : SV_TARGET4; /* Rim + Bloom */ 
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -141,10 +139,11 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
  
-    Out.vBloomBlur = Calculation_Brightness(Out.vDiffuse);
-   // float4 vRimColor = Calculation_Brightness(Out.vDiffuse) + Calculation_RimColor(In.vNormal, In.vPosition); /* g_vRimPowerm ,g_vRimColor , g_vCamPosition 사용 */
-   // Out.vRimBlur = vRimColor; /* g_vRimPower 사용 */
-	
+    float4 vRimColor =  + Calculation_RimColor(In.vNormal, In.vPosition); /* g_vRimColor , g_vCamPosition 사용 */
+    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+	                /* g_vBloomPower */ 
+    
+    // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
     return Out;
 }   
 

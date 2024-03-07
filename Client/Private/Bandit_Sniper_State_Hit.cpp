@@ -19,5 +19,5 @@ void CBandit_Sniper_State_Hit::Release(CBandit_Sniper* pActor)
 
 CState<CBandit_Sniper>* CBandit_Sniper_State_Hit::Update_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	return Normal_State(pActor, fTimeDelta, _iAnimIndex);
+	return Hit_State(pActor, fTimeDelta, _iAnimIndex);
 }
