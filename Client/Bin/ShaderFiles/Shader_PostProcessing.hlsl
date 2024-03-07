@@ -267,10 +267,23 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
     vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
     vector Object_Blur = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
+    
     vector Effect = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
     
     Out.vColor = Deferred + Object_Blur + Effect + Effect_Blur;
+    
+    if(Out.vColor.a ==0)
+        discard;
+    
+    Out.vColor = Effect;
+    
+    if(Out.vColor.a == 0)
+    {
+        Out.vColor = Deferred + Object_Blur; 
+
+    }
+   // Out.vColor = Deferred + Object_Blur + vector(Effect.rgb, 1.f) + vector(Effect_Blur.rgb, 1.f);
     
     return Out;
 }

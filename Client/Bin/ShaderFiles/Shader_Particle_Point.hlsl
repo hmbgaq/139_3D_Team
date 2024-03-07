@@ -223,8 +223,6 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 			discard;
 
 		Out.vColor = vDiffuseColor;
-		/* 소영 - Test용도 */ 
-        Out.vRimBloom = Out.vColor;
 
     }
 	else
@@ -236,14 +234,11 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		vDiffuseColor.rgb *= In.vColor.rgb;
 		vDiffuseColor.a = In.vColor.a * vAlphaColor;
 
-
 		if (vDiffuseColor.a < g_fAlpha_Discard	// 알파 잘라내기
 			|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 			discard;
 
         Out.vColor = vDiffuseColor;
-		/* 소영 - Test용도 */ 
-        Out.vRimBloom = Out.vColor;
     }
 
 
