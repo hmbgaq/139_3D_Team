@@ -52,7 +52,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
-	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 10.f, 2.38f));
+	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
 
 	//FAILED_CHECK(Ready_UI());
 

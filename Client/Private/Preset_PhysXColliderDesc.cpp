@@ -19,7 +19,7 @@ void Preset::PhysXColliderDesc::GroundSetting(CPhysXCollider::PHYSXCOLLIDERDESC&
     Out_Desc.pMaterial = pMaterial;
     Out_Desc.vAngles = { 0.f, 0.f, 0.f, 0.f };
     Out_Desc.vPosition = { 0.f, 0.f, 0.f, 1.f };
-    Out_Desc.vScale = { 1.f, 1.f, 1.f };
+    Out_Desc.vScale = { 10000.f, 10000.f, 10000.f };
     Out_Desc.bTrigger = bTrigger;
 };
 
