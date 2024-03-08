@@ -54,18 +54,16 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 	__super::Begin();
 
+#ifdef _DEBUG
 	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
-#ifdef _DEBUG
 		m_pGameInstance->Set_RenderDebugTarget(m_bRenderTargetOnOff);
-#endif					
 	}
 	if (ImGui::Checkbox("RenderColliderOFF", &m_bRenderTargetOnOff))
 	{
-#ifdef _DEBUG
 		m_pGameInstance->Set_RenderDebugCom(m_bRenderColliderOnOff);
-#endif					
 	}
+#endif					
 	//dialog========================================================================
 	
 	if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; OpenDialog(CImgui_Window::IMGUI_ANIMATIONTOOL_WINDOW); } 
@@ -231,7 +229,7 @@ HRESULT CWindow_AnimTool::Read_EffectPath(const _tchar* StartDirectoryPath) //! 
 	for (const auto& entry : fs::recursive_directory_iterator(StartDirectoryPath))
 	{
 		
-		if (fs::is_regular_file(entry.path()) && entry.path().extension() == ".json")
+		if (fs::is_regular_file(entry.path()) && entry.path().extension().string() == ".json")
 		{
 			wstring strSearchPath = entry.path().wstring();
 

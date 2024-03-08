@@ -54,7 +54,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
 
-	//FAILED_CHECK(Ready_UI());
+	FAILED_CHECK(Ready_UI());
 
 	return S_OK;
 }
