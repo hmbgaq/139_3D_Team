@@ -1377,7 +1377,7 @@ void CWindow_EffectTool::Update_MeshTab()
 				{
 					m_pMeshBufferDesc->eCurModelNum = CVIBuffer_Effect_Model_Instance::MORPH_02;
 				}
-
+				
 
 				/* RimRight */
 				/* 림라이트 색 변경 */
