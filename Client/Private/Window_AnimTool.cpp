@@ -11,11 +11,19 @@
 #include "Weapon_Player.h"
 #include "Character.h"
 #include "Weapon.h"
+#include "Data_Manager.h"
+#include "Player.h"
 #pragma region Effect_Test
 #include "Clone_Manager.h"
 #include "Effect.h"
 #include "Effect_Particle.h"
 #pragma endregion
+
+#pragma region Camera
+#include "MasterCamera.h"
+#include "SpringCamera.h"
+#pragma endregion
+
 
 CWindow_AnimTool::CWindow_AnimTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -36,6 +44,7 @@ HRESULT CWindow_AnimTool::Initialize()
 
 	m_pSphere = new BoundingSphere();
 	//ID3D11Device::GetFeatureLevel();
+	m_pMasterCamera = CData_Manager::GetInstance()->Get_MasterCamera();
 	return S_OK;
 }
 
@@ -144,6 +153,22 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 		ImGui::EndTabBar();
 	}
 	ImGui::End();
+	//Camera
+	ImGui::Begin("Camera");
+	if (ImGui::BeginTabBar("Camera View", tab_bar_flags))
+	{
+		if (m_CreateList.size() > 0)
+		{
+			if (ImGui::BeginTabItem("Camera"))
+			{
+				Set_SpringCamera();
+				SpringCutScene();
+				ImGui::EndTabItem();
+			}
+		}
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
 }
 
 void CWindow_AnimTool::Render()
@@ -154,13 +179,44 @@ void CWindow_AnimTool::Render()
 	
 }
 
-void CWindow_AnimTool::Call_UpdatePreViewModel()
+void CWindow_AnimTool::Set_SpringCamera()
 {
+	if (ImGui::Checkbox("DynamicCamera", &m_bDynamicCamera))
+	{
+		if(m_bDynamicCamera == false)
+			m_pMasterCamera->Set_CameraType(CMasterCamera::DynamicCamera);
+		//플레이어를 만들어야지만 활성화 가능하게 만들어놨음 잘못 건드리면 터진다.
+		else if(CData_Manager::GetInstance()->Get_Player() != nullptr && m_bDynamicCamera == true)
+			m_pMasterCamera->Set_CameraType(CMasterCamera::SpringCamera);
+		
+	}
+	
 }
 
-void CWindow_AnimTool::Call_NextAnimationKey(const _uint& In_Key)
+void CWindow_AnimTool::SpringCutScene()
 {
+	if (CData_Manager::GetInstance()->Get_Player() != nullptr)
+	{
+		CCamera* pCam;
+		pCam = m_pMasterCamera->Get_vectorCamera()[1];
+		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
+		
+		if (ImGui::DragFloat3("CameraOffset", m_fCameraOffset, 0.01f, -20.f, 20.f))
+		{
+			pSpringCam->Set_CameraOffset(_float3(m_fCameraOffset[0], m_fCameraOffset[1], m_fCameraOffset[2]));
+		}
+
+		//if (ImGui::DragFloat3("CameraTargetPosition", m_fCameraAddTargetposition, 0.01f, -20.f, 20.f))
+		//{
+		//	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+		//
+		//	pSpringCam->Get_Transform()->Look_At_Lerp()
+		//	
+		//}
+	}
 }
+
+
 
 HRESULT CWindow_AnimTool::Read_EffectPath(const _tchar* StartDirectoryPath) //! 준호
 {
@@ -319,8 +375,6 @@ HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
 			BodyJson.emplace("ColliderTrackPositionOff", m_iColliderOffTrackPosition);
 		}
 		
-		
-
 	}
 
 	if (m_CreateWeaponList.size() > 0)

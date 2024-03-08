@@ -27,10 +27,11 @@ private:
 	HRESULT Ready_Layer_Building(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_Test(const wstring& strLayerTag);
 	
-private: /* UI */
+#pragma region UI
+private:
 	HRESULT Ready_UI();
 	HRESULT Ready_Layer_UI_Monster(const wstring& strLayerTag, void* pArg);
-#pragma region Interface
+	/* Interface */
 	HRESULT Ready_Layer_UI_Interface(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_LeftInterface(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_RightInterface(const wstring& strLayerTag, void* pArg);
@@ -38,12 +39,10 @@ private: /* UI */
 	HRESULT Ready_TutorialBox(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_LevelUp(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Reward_Item(const wstring& strLayerTag, void* pArg);
+	/* Cursor */
+	HRESULT Ready_Cursor(const wstring& strLayerTag, void* pArg);
 #pragma endregion End
-	HRESULT Ready_Layer_UI(const wstring& strLayerTag, void* pArg);
 
-private:
-	void Set_Filter();
-	
 private:
 	_int			TempLightNumber = 0;
 

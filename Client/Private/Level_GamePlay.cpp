@@ -33,6 +33,7 @@
 #include "Effect.h"
 #pragma endregion
 
+#include "Data_Manager.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -41,6 +42,7 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * p
 
 HRESULT CLevel_GamePlay::Initialize()
 {
+	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
 
 	FAILED_CHECK(Ready_LightDesc());
@@ -50,25 +52,22 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
-	if (FAILED(Ready_UI()))
-		return E_FAIL;
+	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
 
-	Set_Filter();
+	//FAILED_CHECK(Ready_UI());
 
 	return S_OK;
 }
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
-
-
 #pragma region Effect_Test	
 
-	 if (m_pGameInstance->Key_Down(DIK_GRAVE))
- 	{
- 		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Hit_3.json");
- 		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
- 	}
+	//if (m_pGameInstance->Key_Down(DIK_GRAVE))
+ 	//{
+ 	//	CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Hit_3.json");
+ 	//	pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
+ 	//}
 
 
 	//if (m_pGameInstance->Key_Down(DIK_TAB))
@@ -208,11 +207,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* 
 		//pMonster->Set_Position(_float3(0.f, 0.f, 2.f));
 	}
 
-	//{
-	//	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-	//	if (nullptr == pMonster)	return E_FAIL;
-	//	pMonster->Set_Position(_float3(1.f, 0.f, 2.f));
-	//}
+	{
+		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+		if (nullptr == pMonster)	return E_FAIL;
+		pMonster->Set_Position(_float3(1.f, 0.f, 2.f));
+	}
 
 
 
@@ -440,7 +439,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 	///* ui test */
 	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
-
+	//
 	//CUI_Player_HPBar::UI_DESC desc = {};
 	//desc.fPositionX = (_float)g_iWinSizeX / 2 + 20.f;
 	//desc.fPositionY = (_float)g_iWinSizeY / 2 + 20.f;
@@ -453,11 +452,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_UI()
 {
-	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
-
-	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
-
-	FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
+	/* Test용도 */
+	//FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
+	 
+	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr)); /* 렌더타ㄱ*/
+	//FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
 	
 	return S_OK;
 }
@@ -467,41 +466,42 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 	/* 추 후 파싱해서 정보 받아오기 */
 	
 	/* MRT로 묶지 않으면 출력이안나옴. */
-	json json_in;
+	//json json_in;
 
-	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
+	//char filePath[MAX_PATH] = "../Bin/DataFiles/TestData/Test_5.json";
 
-	_int		iPathNum = 0;
-	string		strFileName;
-	string		strFilePath;
-	
-	CJson_Utility::Load_Json(filePath, json_in);
+	//_int		iPathNum = 0;
+	//string		strFileName;
+	//string		strFilePath;
+	//
+	//CJson_Utility::Load_Json(filePath, json_in);
 
-	for (auto& item : json_in.items())
-	{
-		json object = item.value();
+	//for (auto& item : json_in.items())
+	//{
+	//	json object = item.value();
 
-		CUI::UI_DESC tUI_Info;
+	//	CUI::UI_DESC tUI_Info;
 
-		tUI_Info.strProtoTag = object["ProtoTag"];
-		tUI_Info.strFilePath = object["FilePath"];
+	//	tUI_Info.strProtoTag = object["ProtoTag"];
+	//	tUI_Info.strFilePath = object["FilePath"];
 
-		wstring wstrPrototag;
-		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+	//	wstring wstrPrototag;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
 
-		wstring wstrFilePath;
-		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+	//	wstring wstrFilePath;
+	//	m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
 
-		CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
+	//	CUI_Anything* pUI_Object = dynamic_cast<CUI_Anything*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
 
-		pUI_Object->Get_Transform()->Load_FromJson(object);
-		
-		// Pos 잡아주기
-	}
+	//	pUI_Object->Get_Transform()->Load_FromJson(object);
+	//	
+	//	// Pos 잡아주기
+	//}
 
 
 	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &json_in)))
 	//	return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything")));
 
 	return S_OK;
 }
@@ -513,13 +513,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Interface(const wstring& strLayerTag, vo
 	// =>Right_Interface
 						Ready_RightInterface(strLayerTag, pArg);
 	// =>Quest_Box
-						Ready_QuestBox(strLayerTag, pArg);
+						Ready_QuestBox(strLayerTag, pArg); 
 	// =>Tutorial_Box
 						Ready_TutorialBox(strLayerTag, pArg);
 	// =>LevelUp
 						Ready_LevelUp(strLayerTag, pArg);
 	// =>Reward_Item
 						Ready_Reward_Item(strLayerTag, pArg);
+	// =>Cursor
+						Ready_Cursor(strLayerTag, pArg);
+
 	return S_OK;
 }
 
@@ -859,44 +862,11 @@ HRESULT CLevel_GamePlay::Ready_Reward_Item(const wstring& strLayerTag, void* pAr
 	return S_OK;
 }
 
-void CLevel_GamePlay::Set_Filter()
-{
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PEICE, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::MONSTER, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::MONSTER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::MONSTER);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::INTERIOR);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER_WEAPON, (_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::CAMERA, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::CAMERA, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::DYNAMIC_PROP, (_uint)PHYSX_COLLISION_LAYER::STATIC_PROP);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::DYNAMIC_PROP);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::BOSS_DYNAMIC_PROP);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::TRIGGER, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::LADDER_DOWN, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::LADDER_UP, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::ELEVATOR, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::DOOR, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::CHECKPOINT, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER, (_uint)COLLISION_LAYER::PLAYER_BATCOL);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::CHECK_DIR, (_uint)COLLISION_LAYER::PLAYER);
-	//m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::INTERIOR, (_uint)COLLISION_LAYER::INTERIOR);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_GamePlay::Ready_Cursor(const wstring& strLayerTag, void* pArg)
 {
 	//json json_in;
 
-	//char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/PlayerInterface/Left_Interface.json";
+	//char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/PlayerInterface/RewardItem.json";
 
 	//_int		iPathNum = 0;
 	//string		strFileName;
@@ -945,7 +915,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 	//	pUI_Object->Get_Transform()->Load_FromJson(object);		// 17. TransformCom
 	//}
 
-	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_Left_Interface"));
+		CUI* pUI_Object = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_MouseCursor")));
 
 	return S_OK;
 }

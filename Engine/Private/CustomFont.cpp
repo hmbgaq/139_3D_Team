@@ -13,7 +13,7 @@ HRESULT CCustomFont::Initialize(const wstring & strFontFilePath)
 	m_pBatch = new SpriteBatch(m_pContext);
 
 	m_pFont = new SpriteFont(m_pDevice, strFontFilePath.c_str());
-
+	
 	return S_OK;
 }
 

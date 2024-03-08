@@ -195,15 +195,34 @@ void CEnvironment_Instance::Update(INSTANCE_INFO_DESC InstanceDesc, _int iIndex)
 	m_pInstanceModelCom->Update(InstanceDesc, iIndex);
 }
 
+HRESULT CEnvironment_Instance::Remove_Instance(_uint iIndex)
+{
+	if(FAILED(m_pInstanceModelCom->Remove_Instance(iIndex)))
+		return E_FAIL;
+	
+	m_tInstanceDesc.vecInstanceInfoDesc.erase(m_tInstanceDesc.vecInstanceInfoDesc.begin() + iIndex);
+	m_tInstanceDesc.iNumInstance--;
+
+	CCollider* pCollider = m_vecColliders[iIndex];
+
+	m_vecColliders.erase(m_vecColliders.begin() + iIndex);
+
+	Safe_Release(pCollider);
+
+	return S_OK;
+}
+
 HRESULT CEnvironment_Instance::Ready_Components()
 {
+	_int iNextLevel = m_pGameInstance->Get_NextLevel();
+
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_Model_Instance"),
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Model_Instance"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	//* For.Com_Model */
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), m_tInstanceDesc.strModelTag,
+	if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strModelTag,
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 	

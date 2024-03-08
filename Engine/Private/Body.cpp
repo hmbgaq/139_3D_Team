@@ -40,6 +40,10 @@ HRESULT CBody::Initialize(void* pArg)
 void CBody::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
+
+	#ifdef _DEBUG
+Set_MouseMove(fTimeDelta);
+#endif // _DEBUG
 }
 
 void CBody::Tick(_float fTimeDelta)
@@ -189,6 +193,38 @@ _float CBody::Get_TrackPosition()
 }
 #ifdef _DEBUG
 
+void CBody::Set_MouseMove(_float fTimeDelta)
+{
+	_float2 vMouseMove = { 0.f, 0.f };
+
+
+	_long	MouseMove = 0;
+
+	_float fSpeed = 10.f;
+
+	vMouseMove.x = (_float)m_pGameInstance->Get_DIMouseMove(DIMS_X);
+	vMouseMove.y = (_float)m_pGameInstance->Get_DIMouseMove(DIMS_Y);
+
+	vMouseMove *= fSpeed * fTimeDelta;
+
+
+	//if (CGameInstance::GetInstance()->Key_Pressing(DIK_V))
+	//	vMouseMove.x += fSpeed;
+
+	//if (CGameInstance::GetInstance()->Key_Pressing(DIK_B))
+	//	vMouseMove.x -= fSpeed;
+
+
+	//if (CGameInstance::GetInstance()->Key_Pressing(DIK_F))
+	//	vMouseMove.y -= fSpeed;
+
+	//if (CGameInstance::GetInstance()->Key_Pressing(DIK_G))
+	//	vMouseMove.y += fSpeed;
+
+	m_pModelCom->Set_MouseMove(vMouseMove);
+
+}
+
 _bool CBody::Picking(_float3* vPickedPos)
 {
 	GRAPHIC_DESC GraphicDesc = *m_pGameInstance->Get_GraphicDesc();
@@ -218,7 +254,7 @@ void CBody::Set_Owner(CCharacter* pOwner)
 
 void CBody::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
 {
-	m_pModelCom->Set_Animation_Upper(_iAnimationIndex, _eAnimState);
+	m_pModelCom->Set_Animation_Upper(_iAnimationIndex, _eAnimState, m_pModelCom->Get_TickPerSecond() / 10.f);
 	m_pModelCom->Set_Splitted(true);
 }
 

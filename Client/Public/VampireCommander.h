@@ -26,6 +26,15 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
 
+protected:
+	virtual void Hitted_Left(Power ePower)	override;
+	virtual void Hitted_Right(Power ePower) override;
+	virtual void Hitted_Front(Power ePower) override;
+	virtual void Hitted_Dead(Power ePower)	override;
+
+public:
+	CActor<CVampireCommander>* Get_Actor() {return m_pActor;}
+	void Set_Actor(CActor<CVampireCommander>* _pActor) { m_pActor = _pActor; }
 private:
 	CActor<CVampireCommander>* m_pActor = { nullptr };
 

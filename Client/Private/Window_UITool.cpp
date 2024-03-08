@@ -29,8 +29,10 @@ HRESULT CWindow_UITool::Initialize()
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩중."));
 
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
-	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD")))); // 원하는 폴더로 변경해서 보기
-	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));		// Option
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD")))); // PlayerHUD
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));			// Image
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));			// All
 	
 	/* 툴 들어갈때 오래걸리니까 따로 버튼눌러서 불러오자.. */
 	/* 저장해둔 이미지 경로들을 불러온다. */
@@ -145,6 +147,13 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 
 		// Parent
 		Parent_List(fTimeDelta);
+
+		if (ImGui::Button("Create_Terrain"))
+			m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Terrain"));
+
+		if(ImGui::Button("Create_Monster"))
+			m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_Monster"), TEXT("Prototype_GameObject_Screamer"));
+
 		ImGui::Spacing();
 
 		__super::End();
@@ -1821,7 +1830,7 @@ void CWindow_UITool::Curr_Info()
 void CWindow_UITool::Create_TargetTexture()
 {
 	/* error : Find함수로 랜더타겟을 찾아온 뒤, 그녀석으로 Create함수를 호출하면 외부참조기호 에러가 발생함.. 직접 게임인스턴스로 Create까지 직결되는 함수를 새로 만들어서 사용하며 해결 */
-	m_pGameInstance->Create_RenderTarget(TEXT("Target_Diffuse_UI"));
+	m_pGameInstance->Create_RenderTarget(TEXT("Target_UI_Diffuse"));
 }
 
 void CWindow_UITool::KeyframeList()
@@ -1970,8 +1979,7 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 
 	timeline[m_eKeyType].push_back(lastKeyframe);
 
-
-	int num_decimal_places = 2; // 소수점 단위 설정
+	int num_decimal_places = 2; // 소수점 단위 설
 
 	// 소수점 단위 표현
 	int multiplier = static_cast<int>(pow(10, num_decimal_places));
@@ -2411,7 +2419,7 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 {
 	json json_in;
 
-	char filePath[MAX_PATH];
+	//char filePath[MAX_PATH];
 
 	string strFile;
 

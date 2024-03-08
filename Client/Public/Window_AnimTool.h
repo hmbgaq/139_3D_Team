@@ -11,6 +11,7 @@ class CBone;
 class CBody;
 class CCharacter;
 class CEffect_Particle;
+class CMasterCamera;
 END
 
 BEGIN(Client)
@@ -39,10 +40,10 @@ public:
 	_bool			Is_Stop() const { return m_bStop; }
 	_bool			Is_CreatePlayer() const { return m_bCreatePlayer;}
 
+public: //카메라 기능 함수 
+	void			Set_SpringCamera();
+	void			SpringCutScene();
 public:
-	void			Call_UpdatePreViewModel();
-	void			Call_NextAnimationKey(const _uint& In_Key);
-
 	HRESULT Read_EffectPath(const _tchar* StartDirectoryPath);
 
 private:
@@ -89,6 +90,7 @@ private:
 	CCollider*				m_pWCollider = { nullptr };
 	CBody*					m_pBody = { nullptr };
 	CEffect_Particle*		m_TestEffect = { nullptr };
+	CMasterCamera*			m_pMasterCamera = { nullptr };
 
 	//애니메이션 재생
 	_float					m_fSpeed = 1.f;
@@ -102,11 +104,15 @@ private:
 
 	//! Effect
 	_float					m_fEffectOnTrackPosition = 0.0f;
-	_float					m_iSelectEffectIndex = 0;
+	_float					m_iSelectEffectIndex = 0.f;
 
 	_float					m_iColliderWeaponSize = 0.0f;
 	_float					m_iColliderWeaponOnTrackPosition = 0.0f;
 	_float					m_iColliderWeaponOffTrackPosition = 0.0f;
+
+	//! Camera
+	_float					m_fCameraOffset[3] = {};
+	_float					m_fCameraAddTargetposition[3] = {};
 
 	//! 콜라이더 위치값 조정 
 	_float					m_fBonePosition[3] = { 0.f,0.f,0.f };
@@ -182,6 +188,9 @@ public:
 	_bool					m_bCreateEffect = false;
 	_bool					m_bAddEffectposition = false;
 	_bool					m_bEffectLoad = false;
+
+	//! 카메라 
+	_bool					m_bDynamicCamera = false;
 private:
 	_bool					m_bCreatePlayer = false;
 

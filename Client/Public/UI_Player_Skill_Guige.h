@@ -6,7 +6,7 @@
 class CUI_Player_Skill_Guige final : public CUI
 {
 public:
-	enum TEXTUREKIND { ACTIVE, INACTIVE, TEXTURE_END };
+	enum TEXTUREKIND { INACTIVE, ACTIVE, TEXTURE_END };
 
 private:
 	CUI_Player_Skill_Guige(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -31,6 +31,8 @@ public:
 
 private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
+	_float2				m_vCenter = { 0.f, 0.f };
+	_float				m_fRadius = 0.f;
 
 public:
 	static CUI_Player_Skill_Guige* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성

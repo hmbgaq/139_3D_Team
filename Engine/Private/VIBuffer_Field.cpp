@@ -337,6 +337,67 @@ void CVIBuffer_Field::Update(_vector _vMousePos, _float _fRadious, _float _fPowe
 	
 }
 
+void CVIBuffer_Field::Update(_fvector vMousePos, _bool bMode)
+{
+	// 마우스의 X, Y, Z 좌표
+	float mouseX = vMousePos.m128_f32[0];
+	float mouseY = vMousePos.m128_f32[1];
+	float mouseZ = vMousePos.m128_f32[2];
+
+	// 각 정점의 위치를 마우스의 좌표만큼 이동
+	for (size_t i = 0; i < m_iNumVerticesZ; ++i)
+	{
+		for (size_t j = 0; j < m_iNumVerticesX; ++j)
+		{
+			_uint iIndex = _uint(i * m_iNumVerticesX + j);
+
+			if (bMode == true)
+			{
+				m_VertexInfo[iIndex].vPosition.x += mouseX;
+				m_VertexInfo[iIndex].vPosition.y += mouseY;
+				m_VertexInfo[iIndex].vPosition.z += mouseZ;
+			}
+			else
+			{
+				m_VertexInfo[iIndex].vPosition.x -= mouseX;
+				m_VertexInfo[iIndex].vPosition.y -= mouseY;
+				m_VertexInfo[iIndex].vPosition.z -= mouseZ;
+			}
+			
+
+		}
+	}
+
+	// 이동된 지형을 정점 버퍼에 업데이트
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	memcpy(mappedResource.pData, m_VertexInfo.data(), sizeof(VTXFIELD) * m_iNumVertices);
+	m_pContext->Unmap(m_pVB, 0);
+}
+
+void CVIBuffer_Field::Move_Field(_float3 vAddPos)
+{
+
+	// 각 정점의 위치를 마우스의 좌표만큼 이동
+	for (size_t i = 0; i < m_iNumVerticesZ; ++i)
+	{
+		for (size_t j = 0; j < m_iNumVerticesX; ++j)
+		{
+			_uint iIndex = _uint(i * m_iNumVerticesX + j);
+
+			m_VertexInfo[iIndex].vPosition.x += vAddPos.x;
+			m_VertexInfo[iIndex].vPosition.y += vAddPos.y;
+			m_VertexInfo[iIndex].vPosition.z += vAddPos.z;
+		}
+	}
+
+	// 이동된 지형을 정점 버퍼에 업데이트
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	memcpy(mappedResource.pData, m_VertexInfo.data(), sizeof(VTXFIELD) * m_iNumVertices);
+	m_pContext->Unmap(m_pVB, 0);
+}
+
 
 CVIBuffer_Field* CVIBuffer_Field::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

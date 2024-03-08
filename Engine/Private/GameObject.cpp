@@ -153,6 +153,11 @@ _vector CGameObject::Get_Position_Vector()
 	return m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
 }
 
+_float3 CGameObject::Get_Position()
+{
+	return m_pTransformCom->Get_Position();
+}
+
 _vector CGameObject::Calc_Look_Dir(_vector vTargetPos)
 {
 	return m_pTransformCom->Calc_Look_Dir(vTargetPos);

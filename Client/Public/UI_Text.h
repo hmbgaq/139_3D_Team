@@ -51,6 +51,7 @@ public:
 public:
 	void						Set_FreeMove(_bool bFreeMove) { m_bFreeMove = bFreeMove; }
 	TEXTINFO					Get_TextInfo() { return *m_pTextInfo; }
+
 protected:
 	map<string, TEXTINFO*>		m_mapText;
 	CTexture*					m_pTextureCom[TEXTURE_END] = { nullptr };

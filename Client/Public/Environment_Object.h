@@ -53,6 +53,9 @@ public:
 	
 	CModel*				Get_ModelCom() { return m_pModelCom; }
 	
+public:
+	void				Set_ColliderRender(_bool bColliderRender) { m_bColliderRender = bColliderRender;}
+
 #ifdef _DEBUG
 public: //! For.Tool
 	virtual _bool		Picking(_Out_ _float3* vPickedPos) override;
@@ -71,6 +74,10 @@ private:
 private:
 	ENVIRONMENT_OBJECT_DESC m_tEnvironmentDesc = {};
 	_bool					m_bPlay = false;
+	_bool					m_bColliderRender = false;
+
+
+	_uint					m_iCurrentLevel = LEVEL_TOOL;
 
 private:
 	HRESULT				Ready_Components();

@@ -1,5 +1,11 @@
 #include "Shader_Defines.hlsli"
 
+/* ------------------- Common Vertex Shader  -------------------*/
+// 분리형 가우시안블러
+// 아래의 fWeight가 가우시안블러의 가중치인데 밖에서 값던지나 여기서 적용하나 그게그거라 걍넣음 
+// 순서는 다운샘플링 -> 수평블러 -> 수직블러 -> 원래해상도로 업샘플링이 순서임. 
+/* -------------------------------------------------------------*/
+
 matrix      g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 Texture2D   g_BlurTarget;
@@ -59,6 +65,10 @@ PS_OUT PS_BLUR_DOWN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     Out.vColor = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -81,7 +91,10 @@ PS_OUT PS_BLUR_H_LOW(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -100,7 +113,10 @@ PS_OUT PS_BLUR_H_QUARTER(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -119,7 +135,10 @@ PS_OUT PS_BLUR_H_MIDDLE(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -138,7 +157,10 @@ PS_OUT PS_BLUR_H_HIGH(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -157,7 +179,10 @@ PS_OUT PS_BLUR_V_LOW(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -176,7 +201,10 @@ PS_OUT PS_BLUR_V_QUARTER(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -195,7 +223,10 @@ PS_OUT PS_BLUR_V_MIDDLE(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -214,7 +245,10 @@ PS_OUT PS_BLUR_V_HIGH(PS_IN In)
     }
 
     Out.vColor = vColor / fTotal;
-
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 
@@ -223,6 +257,9 @@ PS_OUT PS_BLUR_UP(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     Out.vColor = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    if (Out.vColor.a == 0)
+        discard;
     
     return Out;
 }

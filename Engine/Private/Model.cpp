@@ -41,6 +41,15 @@ CModel::CModel(const CModel & rhs)
 	{
 		Safe_AddRef(pMesh);
 	}
+
+	//XMStoreFloat4x4(&m_UpperSpineMatrix, XMMatrixRotationX(XMConvertToRadians(5.0f))); 
+	//XMStoreFloat4x4(&m_UpperSpineMatrix, XMMatrixIdentity()); // 	
+
+	//Y - Right
+	//X - Up
+	//Z - Look
+
+
 }
 
 _uint CModel::Get_MaterialIndex(_uint iMeshIndex)
@@ -74,10 +83,10 @@ _float4x4* CModel::Calc_OffsetMatrice(_uint iAnimationIndex, _float fTrackPositi
 {
 	
 	_float4x4* pCalcMatrix = pMatrix;
-	_uint iNumBones = m_Bones.size();
+	_uint iNumBones = (_uint)m_Bones.size();
 
 
-	for (_int i = 0; i < iNumBones; ++i)
+	for (_uint i = 0; i < iNumBones; ++i)
 	{
 		pCalcMatrix[i] = m_Bones[i]->Get_CombinedTransformationFloat4x4();
 	}
@@ -108,7 +117,7 @@ _float4x4* CModel::Get_OffsetMatrices()
 {
 	_float4x4 BoneMatrices[800];
 	
-	for (_int i = 0; i < m_iNumMeshes; ++i)
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
 	{
 		vector<_float4x4> m_OffsetMatrices = m_Meshes[i]->Get_OffsetMatrices();
 		vector<_uint> vecIndices = m_Meshes[i]->Get_BoneIndices();
@@ -187,8 +196,6 @@ void CModel::Calculate_Sphere_Radius(_float3* vOutCenter, _float* fOutRadius)
 		}
 	}
 	
-
-	
 	
 	if (vOutCenter != nullptr)
 		*vOutCenter = (Min + Max) * 0.5f;
@@ -218,6 +225,11 @@ void CModel::Calculate_ModelSize(_float* fOutWidth, _float* fOutHeight)
 
 
 
+
+void CModel::Set_MouseMove(_float2 vMouseMove)
+{
+	m_vMouseMove = vMouseMove;
+}
 
 CBone * CModel::Get_BonePtr(const _char * pBoneName) const
 {
@@ -333,7 +345,8 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones, m_bIsSplitted);
 	if (true == m_bIsSplitted)
 	{
-		m_bIsUpperAnimEnd = m_Animations[m_iUpperAnimIndex]->Invalidate_TransformationMatrix_Upper(m_eUpperAnimState, fTimeDelta, m_Bones);
+		//HERE
+		m_bIsUpperAnimEnd = m_Animations[m_iUpperAnimIndex]->Invalidate_TransformationMatrix_Upper(m_eUpperAnimState, fTimeDelta, m_Bones, m_vMouseMove);
 	}
 
 		
@@ -405,14 +418,12 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 			m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 		}
 	}
-	else 
-	{
-		
-
-		m_iCurrentAnimIndex = _iAnimationIndex;
-		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
-		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
-	}
+	//else 
+	//{
+	//	m_iCurrentAnimIndex = _iAnimationIndex;
+	//	_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+	//	m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
+	//}
 }
 
 void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
@@ -441,11 +452,23 @@ void CModel::Reset_Animation(_int iAnimIndex)
 		m_Animations[iAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
 }
 
-void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
 {
 	m_iUpperAnimIndex = _iAnimationIndex;
 	m_eUpperAnimState = _eAnimState;
 	Reset_UpperAnimation(_iAnimationIndex);
+
+	if (false == m_bIsSplitted)
+	{
+		m_bIsSplitted = true;
+
+		CAnimation* currentAnimation = m_Animations[m_iCurrentAnimIndex];
+		CAnimation* targetAnimation = m_Animations[_iAnimationIndex];
+
+		targetAnimation->Set_Transition_Upper(currentAnimation, _fTransitionDuration, iTargetKeyFrameIndex);
+	}
+
+	
 
 }
 

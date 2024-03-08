@@ -6,6 +6,9 @@
 #include "GameInstance.h"
 #include "Easing_Utillity.h"
 #include "Clone_Manager.h"
+#include "Data_Manager.h"
+
+#include "MasterCamera.h"
 
 #include "Effect.h"
 #include "Effect_Rect.h"
@@ -35,6 +38,10 @@ HRESULT CWindow_EffectTool::Initialize()
 
 	Load_CustomStyle();	// 스타일 저장 정보 로드
 	
+
+
+	m_pMasterCamera = CData_Manager::GetInstance()->Get_MasterCamera();
+	m_pMasterCamera->Set_CameraType(CMasterCamera::DynamicCamera);
 
 	ReSet_Camera();				// 카메라 위치, 보는방향 리셋
 	FAILED_CHECK(Load_Sky());	// 스카이박스 얻어오기
@@ -203,22 +210,19 @@ void CWindow_EffectTool::Show_CameraInfo()
 
 void CWindow_EffectTool::ReSet_Camera()
 {
-	CGameObject* pCamera = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_Camera"));
-	if (nullptr != pCamera)
-	{
-		pCamera->Set_Position(m_Camera_ResetPos);
+	// 안됨ㅠㅠ
+	//m_pMasterCamera[CMasterCamera::DynamicCamera].Set_Position(m_Camera_ResetPos);
 
-		if (nullptr != m_pCurEffect)	// 현재 이펙트가 존재하면
-		{
-			// 카메라가 이펙트를 바라보도록
-			pCamera->Get_Transform()->Look_At(m_pCurEffect->Get_Position_Vector());
-		}
-		else
-		{
-			//pCamera->Get_Transform()->Look_At_Direction(m_Camera_ResetLookAt);
-		}
+	//if (nullptr != m_pCurEffect)	// 현재 이펙트가 존재하면
+	//{
+	//	// 카메라가 이펙트를 바라보도록
+	//	m_pMasterCamera[CMasterCamera::DynamicCamera].Get_Transform()->Look_At(m_pCurEffect->Get_Position_Vector());
+	//}
+	//else
+	//{
+	//	//m_pMasterCamera[CMasterCamera::DynamicCamera]->Get_Transform()->Look_At_Direction(m_Camera_ResetLookAt);
+	//}
 
-	}
 }
 
 HRESULT CWindow_EffectTool::Ready_Grid()

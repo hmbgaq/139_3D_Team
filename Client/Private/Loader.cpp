@@ -40,6 +40,7 @@
 #pragma region VampireCommander
 #include "VampireCommander.h"
 #include "Body_VampireCommander.h"
+#include "VampireCommander_Weapon_Hand.h"
 #pragma endregion
 
 #pragma region INFECTED
@@ -84,15 +85,19 @@
 /* Monster */
 #include "UI_MonsterHpFrame.h"
 #include "UI_MonsterHp.h"
-/* Text */
+#include "UI_Weakness.h"
+/* TextBox */
 #include "UI_TextBox.h"
 #include "UI_TutorialBox.h"
 #include "UI_QuestBox.h"
 #include "UI_QuestIcon.h"
 #include "UI_ItemShowcase.h"
 #include "UI_ItemIcon.h"
-
-#pragma region LevelUp
+/* Cursor */
+#include "UI_MouseCursor.h"
+/* Option */
+#include "UI_Option_Window.h"
+/* LevelUp */
 #include "UI_LevelUp_MagicFrame.h"
 #include "UI_LevelUp_MagicTrack.h"
 #include "UI_LevelUp_Shards.h"
@@ -100,7 +105,9 @@
 #include "UI_LevelUp_SunBeacon.h"
 #include "UI_LevelUp_TextBox.h"
 #include "UI_LevelUp_ShieldFrame.h"
-#pragma endregion
+/* Aim */
+#include "UI_AimCrosshair.h"
+#pragma endregion UI_END
 
 #pragma region Test
 #include "Interact_Chain.h"
@@ -193,8 +200,8 @@ HRESULT CLoader::Loading()
 		hr = Loading_For_Logo_Level();
 		break;
 
-	case LEVEL_GAMEPLAY:
-		hr = Loading_For_GamePlay_Level();
+	case LEVEL_INTRO:
+		hr = Loading_For_Intro_Level();
 		break;
 
 	case LEVEL_SNOWMOUNTAIN:
@@ -207,6 +214,10 @@ HRESULT CLoader::Loading()
 
 	case LEVEL_TOOL:
 		hr = Loading_For_Tool_Level();
+		break;
+
+	case LEVEL_GAMEPLAY:
+		hr = Loading_For_GamePlay_Level();
 		break;
 
 	}
@@ -395,6 +406,13 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	return S_OK;
 }
 
+HRESULT CLoader::Loading_For_Intro_Level()
+{
+	FAILED_CHECK(Loading_For_GamePlay_Level_Origin(LEVEL_INTRO));
+
+	return S_OK;
+}
+
 HRESULT CLoader::Loading_For_SnowMountain_Level()
 {
 	FAILED_CHECK(Loading_For_GamePlay_Level_Origin(LEVEL_SNOWMOUNTAIN));
@@ -574,7 +592,8 @@ HRESULT CLoader::Ready_Origin()
 	//TODO VampireCommander
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_VampireCommander"), CVampireCommander::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_VampireCommander"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_VampireCommander"), CBody_VampireCommander::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_VampireCommander"))));
-	
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_VampireCommander_Weapon_Hand"), CVampireCommander_Weapon_Hand::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_VampireCommander_Weapon_Hand"))));
+
 	//! =====================================Boss Line=========================================
 
 	//! Infected
@@ -673,6 +692,7 @@ HRESULT CLoader::Ready_UI_Origin()
 #pragma region Monster
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHpFrame"), CUI_MonsterHpFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MonsterHpFrame"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHp"), CUI_MonsterHp::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MonsterHp"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Weakness"), CUI_Weakness::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Weakness"))));
 #pragma endregion End
 
 #pragma region Text
@@ -691,14 +711,20 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_SunBeacon"), CUI_LevelUp_SunBeacon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_SunBeacon"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_TextBox"), CUI_LevelUp_TextBox::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_TextBox"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LevelUp_ShieldFrame"), CUI_LevelUp_ShieldFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_LevelUp_ShieldFrame"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MouseCursor"), CUI_MouseCursor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MouseCursor"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Option_Window"), CUI_Option_Window::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Option_Window"))));
 #pragma endregion End
 
+#pragma region Crosshair
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_AimCrosshair"), CUI_AimCrosshair::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_AimCrosshair"))));
+#pragma endregion End
+	
 	return S_OK;
 }
 
 HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
 {
-	if (eLevel == LEVEL_GAMEPLAY)
+	if (eLevel == LEVEL_GAMEPLAY || eLevel == LEVEL_INTRO)
 	{
 		wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/NonAnim/");
 		wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/Anim/");
@@ -764,7 +790,7 @@ HRESULT CLoader::Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLeve
 				eModelType = CImgui_Manager::JSY_MODEL_TYPE::MODEL_SINGLE;
 		}
 
-		 if (fs::is_regular_file(entry.path()) && entry.path().extension() == ".fbx")
+		 if (fs::is_regular_file(entry.path()) && entry.path().extension().string() == ".fbx")
 		{
 			wstring strSearchPath = entry.path().wstring();
 			

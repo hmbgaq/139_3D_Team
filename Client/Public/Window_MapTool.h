@@ -13,6 +13,7 @@ class CEnvironment_Object;
 class CPlayer;
 class CMonster;
 class CCamera_Dynamic;
+class CMasterCamera;
 //TODO 추후 추가 class CNPC;
 
 class CWindow_MapTool final : public CImgui_Window
@@ -24,7 +25,8 @@ private:
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
 	enum class OBJECTMODE_TYPE { OBJECTMODE_ENVIRONMENT, OBJECTMODE_CHARACTER};
 	enum class ANIM_TYPE { TYPE_NONANIM, TYPE_ANIM };
-	
+	enum class INSTANCE_ALLMOVETYPE { ALLMOVE_X, ALLMOVE_Y, ALLMOVE_Z };
+
 	enum class MAP_KEY_TYPE //! 맵컨테이너 키
 	{
 		MODEL_SINGLE, MODEL_INSTANCE, MODEL_INTERACT, MODEL_END
@@ -148,7 +150,7 @@ private:
 	_float4x4		m_matInstanceMatrix = {};
 	_float3			m_vRotation = {};
 	_bool			m_bRotateMode = { false};
-
+	_bool			m_bColliderPickingMode = false;
 	_float			m_fCamaraSpeed = { 60.f };
 
 //!  맵찍기 저장용 변수
@@ -175,6 +177,7 @@ private: //!For. Environment
 	vector<string>	m_vecAnimInteractModelTag;
 
 	_bool			m_bShowCreateField = false;
+	
 
 private:
 	_uint			m_iSelectModelTag = 0;
@@ -204,6 +207,7 @@ private: //! 레이캐스트
 
 	_float			m_fRayUpdateTime = { 0.1f };
 	_float			m_fRayUpdateTimeAcc = { 0.f };
+	_uint			m_iSelectMeshObjectIndex = 0;
 
 
 private:
@@ -251,10 +255,13 @@ private: //! For. CreateInstance
 	vector<string>					m_vecInstanceInfoTag = {}; //! m_vecPreViewInstance를 픽킹해서 인스턴싱 디스크립션을 채워 준후 m_vecCreateInstance를 만들어주자
 	_int							m_iInstanceInfoTagIndex = 0;
 
+	INSTANCE_ALLMOVETYPE			m_eInstanceAllMoveMode = INSTANCE_ALLMOVETYPE::ALLMOVE_X;
+	
+
 private:
 	vector<CCamera*>				m_vecCameras;
 	_bool							m_bCreateCamera = false;
-	CCamera_Dynamic*				m_pToolCamera = { nullptr };
+	CMasterCamera*					m_pToolCamera = { nullptr };
 	
 
 public:
