@@ -145,21 +145,40 @@ HRESULT CEffect_Instance::Render()
 	if(FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	_uint	iCurModelNum = m_pVIBufferCom->Get_Desc()->eCurModelNum;
 
-	_uint	iNumMeshes = m_pModelCom[iCurModelNum]->Get_NumMeshes();
 
-	//for (size_t i = 0; i < iNumMeshes; i++)
+	if (m_pVIBufferCom->Get_Desc()->bMorph)	// ¸ğÇÁ°¡ trueÀÌ¸é (¹ÚÁã ¸ğµ¨)
 	{
-		if(FALSE == m_tInstanceDesc.bUseCustomTex)
+		_uint	iCurModelNum = m_pVIBufferCom->Get_Desc()->eCurModelNum;
+
+		if (FALSE == m_tInstanceDesc.bUseCustomTex)
+		{
 			m_pModelCom[iCurModelNum]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
-
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-
-
+		}
+	
 		m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
-		m_pVIBufferCom->Render((_uint)iCurModelNum);
-	}	
+		m_pVIBufferCom->Render((_uint)0);
+
+		return S_OK;
+	}
+	else
+	{
+		_uint	iNumMeshes = m_pModelCom[0]->Get_NumMeshes();
+
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			if (FALSE == m_tInstanceDesc.bUseCustomTex)
+			{
+				m_pModelCom[0]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
+				//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+			}
+
+			m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
+			m_pVIBufferCom->Render((_uint)iNumMeshes);
+		}
+	}
+
+
 
 	return S_OK;
 }

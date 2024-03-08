@@ -111,6 +111,12 @@ HRESULT CModel_Preview::Render()
 	return S_OK;
 }
 
+void CModel_Preview::Set_AnimIndex(_uint iAnimIndex)
+{
+	m_tDesc.iAnimIndex = iAnimIndex;
+	m_pModelCom->Set_Animation(m_tDesc.iAnimIndex);
+}
+
 HRESULT CModel_Preview::Ready_Components()
 {
 	/* For.Com_Model */

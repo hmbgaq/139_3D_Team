@@ -352,11 +352,19 @@ HRESULT CVIBuffer_Effect_Model_Instance::Bind_VIBuffers(_uint iMeshContainerInde
 HRESULT CVIBuffer_Effect_Model_Instance::Render(_int iMeshIndex)
 {
 
-	//Bind_VIBuffers(iMeshIndex);
-	Bind_VIBuffers(m_tBufferDesc.eCurModelNum);
+	if (m_tBufferDesc.bMorph)	// ¸ðÇÁ°¡ TrueÀÌ¸é (¹ÚÁã ¸ðµ¨)
+	{
+		Bind_VIBuffers(m_tBufferDesc.eCurModelNum);
+		m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[m_tBufferDesc.eCurModelNum]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
 
-	//m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[iMeshIndex]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
-	m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[m_tBufferDesc.eCurModelNum]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
+		return S_OK;
+	}
+	else
+	{
+		Bind_VIBuffers(iMeshIndex);
+		m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[iMeshIndex]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
+	}
+
 
 	return S_OK;
 }

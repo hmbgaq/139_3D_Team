@@ -52,7 +52,6 @@ public:
 /* For.Desc */
 public:
 	TRAIL_DESC* Get_Desc() { return &m_tTrailDesc; }
-	void* Get_BufferDesc();
 
 
 private:

@@ -2,9 +2,6 @@
 
 #include "Engine_Defines.h"
 
-//#include "GameInstance.h"
-//#include "Transform.h"
-//#include "Bone.h"
 
 CVIBuffer_Trail::CVIBuffer_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CVIBuffer(pDevice, pContext)

@@ -5,7 +5,6 @@ BEGIN(Engine)
 
 class CGameObject;
 class CTransform;
-class CBone;
 
 
 class ENGINE_DLL CVIBuffer_Trail : public CVIBuffer

@@ -50,7 +50,7 @@ CEffect* CClone_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLaye
 	return	pEffect;
 
 	/* 사용 예시 */
-	//CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "test2.json");
+	//CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Effect.json");
 }
 
 void CClone_Manager::Free()

@@ -39,10 +39,6 @@ HRESULT CWindow_EffectTool::Initialize()
 	Load_CustomStyle();	// 스타일 저장 정보 로드
 	
 
-	// 카메라 받아오기
-	m_pMasterCamera = CData_Manager::GetInstance()->Get_MasterCamera();
-	m_pMasterCamera->Set_CameraType(CMasterCamera::DynamicCamera);
-
 	ReSet_Camera();				// 카메라 위치, 보는방향 리셋
 	FAILED_CHECK(Load_Sky());	// 스카이박스 얻어오기
 
@@ -210,18 +206,25 @@ void CWindow_EffectTool::Show_CameraInfo()
 
 void CWindow_EffectTool::ReSet_Camera()
 {
-	// 안됨ㅠㅠ
-	//m_pMasterCamera[CMasterCamera::DynamicCamera].Set_Position(m_Camera_ResetPos);
+	if (nullptr == m_pCamera)
+	{
+		// 카메라 받아오기
+		m_pCamera = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[CMasterCamera::DynamicCamera];
+	}
+	else
+	{
+		m_pCamera->Set_Position(m_Camera_ResetPos);	// 카메라 위치 리셋
 
-	//if (nullptr != m_pCurEffect)	// 현재 이펙트가 존재하면
-	//{
-	//	// 카메라가 이펙트를 바라보도록
-	//	m_pMasterCamera[CMasterCamera::DynamicCamera].Get_Transform()->Look_At(m_pCurEffect->Get_Position_Vector());
-	//}
-	//else
-	//{
-	//	//m_pMasterCamera[CMasterCamera::DynamicCamera]->Get_Transform()->Look_At_Direction(m_Camera_ResetLookAt);
-	//}
+		if (nullptr != m_pCurEffect)	// 현재 이펙트가 존재하면
+		{
+			// 카메라가 이펙트를 바라보도록
+			m_pCamera->Get_Transform()->Look_At(m_pCurEffect->Get_Position_Vector());
+		}
+		else
+		{
+			//m_pMasterCamera[CMasterCamera::DynamicCamera]->Get_Transform()->Look_At_Direction(m_Camera_ResetLookAt);
+		}
+	}
 
 }
 
@@ -2286,9 +2289,13 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 	}
 	else
 	{
-		// 모델_프리뷰가 존재하면 삭제버튼
+		// 모델_프리뷰가 존재하면	
 
-		if (ImGui::Button("Delete Model"))	// 모델 삭제
+		// 애니메이션 변경 테스트 Player_MeleeCombo_01
+		//m_pModel_Preview->Set
+
+
+		if (ImGui::Button("Delete Model"))	// 모델 삭제 버튼
 		{
 			if (nullptr != m_pModel_Preview)
 			{

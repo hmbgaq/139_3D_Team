@@ -93,28 +93,6 @@ HRESULT CEffect_Trail::Render()
 	return S_OK;
 }
 
-void* CEffect_Trail::Get_BufferDesc()
-{
-	CVIBuffer_Trail::TRAIL_BUFFER_DESC tBufferDesc = {};
-
-	tBufferDesc.bTrailOn = m_tTrailDesc.bTrailOn;
-
-	tBufferDesc.vPos_0	= m_tTrailDesc.vPos_0;
-	tBufferDesc.vPos_1	= m_tTrailDesc.vPos_1;
-	tBufferDesc.iPass	= m_tTrailDesc.iPass;
-
-	tBufferDesc.iNumVertices = m_tTrailDesc.iNumVertices;
-	tBufferDesc.iMaxCnt		= m_tTrailDesc.iMaxCnt;
-	tBufferDesc.iVtxCnt		= m_tTrailDesc.iVtxCnt;
-
-	tBufferDesc.vLocalSwordLow	= m_tTrailDesc.vLocalSwordLow;
-	tBufferDesc.vLocalSwordHigh = m_tTrailDesc.vLocalSwordHigh;
-
-	tBufferDesc.iLerpPointNum		= m_tTrailDesc.iLerpPointNum;
-	tBufferDesc.iCatMullRomIndex[4] = m_tTrailDesc.iCatMullRomIndex[4];
-
-	return &tBufferDesc;
-}
 
 HRESULT CEffect_Trail::Ready_Components()
 {
@@ -125,7 +103,7 @@ HRESULT CEffect_Trail::Ready_Components()
 
 
 	/* For.Com_VIBuffer */
-	CVIBuffer_Trail::TRAIL_BUFFER_DESC tBufferInfo = *static_cast<CVIBuffer_Trail::TRAIL_BUFFER_DESC*>(Get_BufferDesc());
+	CVIBuffer_Trail::TRAIL_BUFFER_DESC tBufferInfo = {};
 	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Trail"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo));
 
 

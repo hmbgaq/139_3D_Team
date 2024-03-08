@@ -66,11 +66,11 @@ void CLevel_Intro::Tick(_float fTimeDelta)
 
 #pragma region Effect_Test	
 
-	if (m_pGameInstance->Key_Down(DIK_GRAVE))
-	{
-		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_INTRO, LAYER_EFFECT, "Hit_3.json");
-		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
-	}
+	//if (m_pGameInstance->Key_Down(DIK_GRAVE))
+	//{
+	//	CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_INTRO, LAYER_EFFECT, "Hit_3.json");
+	//	pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
+	//}
 
 
 	//if (m_pGameInstance->Key_Down(DIK_TAB))

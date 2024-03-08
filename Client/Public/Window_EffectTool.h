@@ -318,7 +318,7 @@ private:
 
 
 #pragma region Level Setting
-	CMasterCamera*  m_pMasterCamera = { nullptr };
+	CCamera*		m_pCamera = { nullptr };
 	_float3			m_Camera_ResetPos = { 0.f, 1.8f, -5.f };		// 카메라 리셋 위치
 	//_float4		m_Camera_ResetLookAt = { 0.f, 0.f, 0.f, 1.f };	// 카메라 리셋 LookAt
 
