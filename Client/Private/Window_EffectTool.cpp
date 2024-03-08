@@ -39,7 +39,7 @@ HRESULT CWindow_EffectTool::Initialize()
 	Load_CustomStyle();	// 스타일 저장 정보 로드
 	
 
-
+	// 카메라 받아오기
 	m_pMasterCamera = CData_Manager::GetInstance()->Get_MasterCamera();
 	m_pMasterCamera->Set_CameraType(CMasterCamera::DynamicCamera);
 
@@ -227,7 +227,6 @@ void CWindow_EffectTool::ReSet_Camera()
 
 HRESULT CWindow_EffectTool::Ready_Grid()
 {
-
 	CGrid::GRID_DESC	tDesc = {};
 	//tDesc.strTextureTag[CGrid::TEXTURE_DIFFUSE] = { TEXT("Prototype_Component_Texture_Effect_Diffuse") };
 	tDesc.strTextureTag[CGrid::TEXTURE_DIFFUSE] = { TEXT("") };
@@ -1366,10 +1365,11 @@ void CWindow_EffectTool::Update_MeshTab()
 				/* 모델 바꿔끼는 시간 텀 조정*/
 				if (ImGui::DragFloat("MorphTimeTerm", &m_fMorphTimeTerm, 0.01f, 0.f, 360.f))
 				{
-					if (0 > m_fMorphTimeTerm)
+					if (0.f > m_fMorphTimeTerm)
 						m_fMorphTimeTerm = 0.f;
 
 					m_pMeshBufferDesc->fMorphTimeTerm = m_fMorphTimeTerm;
+
 				}
 
 				if (ImGui::Button("Morph_01"))
@@ -1556,10 +1556,11 @@ void CWindow_EffectTool::Update_TrailTab()
 
 void CWindow_EffectTool::Update_CurParameters_Parts()
 {
+	//! 객체의 실제 정보를 툴에서 확인할수 있도록
+	//! 즉 툴의 멤버 = 객체의 멤버정보 대입
+
 	if (nullptr != m_pCurPartEffect)
 	{
-		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
-
 		CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
 		CTransform* pPartTransform = m_pCurPartEffect->Get_Transform();
 
@@ -1582,14 +1583,18 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 		m_vRotate_Part[1] = vRotated.y;
 		m_vRotate_Part[2] = vRotated.z;
 
+
 		if (CEffect_Void::PARTICLE == eType_Effect)
 		{
-			m_pCurVoidDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Desc();
-			CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
-			m_pParticleBufferDesc = pVIBuffer->Get_Desc();
+#pragma region 파티클(+버퍼) 디스크립션 얻어오기 시작
+			m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();	// 이펙트_보이드 Desc
+			CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();	// 파티클 버퍼 얻어오기
+			m_pParticleBufferDesc = pVIBuffer->Get_Desc(); // 버퍼의 Desc 얻어오기
+#pragma endregion
 
-			m_pCurVoidDesc->fRemainTime = m_vTimes_Part[2];
+			m_pCurVoidDesc->fRemainTime = m_vTimes_Part[2]; // 리메인 타임??
 
+			// 텍스처 업데이트 =============================================================================================================
 			if (m_pCurVoidDesc->bUseSpriteAnim)
 			{
 				m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE];
@@ -1601,11 +1606,13 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK];
 			m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE];
-			m_iShaderPassIndex_Particle = m_pCurVoidDesc->iShaderPassIndex;
-			m_iRenderGroup_Particle = m_pCurVoidDesc->iRenderGroup;
+			// 텍스처 업데이트 =============================================================================================================
 
-			//m_iNumInstance = pVIBuffer->Get_NumInstance();
-			m_iNumInstance_Particle = m_pParticleBufferDesc->iCurNumInstance; // 인스턴스 개수
+			m_iShaderPassIndex_Particle = m_pCurVoidDesc->iShaderPassIndex;	// 쉐이더 패스 인덱스 업데이트
+
+			m_iRenderGroup_Particle = m_pCurVoidDesc->iRenderGroup;			// 렌더그룹 업데이트
+
+			m_iNumInstance_Particle = m_pParticleBufferDesc->iCurNumInstance; // 인스턴스 개수 업데이트
 
 
 			/* 빌보드 여부 */
@@ -1639,13 +1646,16 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			/* UV회전 */
 			m_fUV_RotDegree = m_pCurVoidDesc->fUV_RotDegree;
 
-			/* 리지드바디 */
+
+			// 리지드바디 업데이트 =============================================================================================================
+			
 			/* 리지드바디 사용 여부 */
 			if (m_pCurVoidDesc->bUseRigidBody)
 				m_iUseRigidBody_Particle = 0;
 			else
 				m_iUseRigidBody_Particle = 1;
-
+			
+		
 			if (0 == m_iUseRigidBody_Particle)	// 리지드바디 사용이면
 			{
 				/* 키네틱 여부 */
@@ -1680,6 +1690,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_vMinMaxSpeed_Particle[1] = m_pParticleBufferDesc->vMinMaxSpeed.y;
 
 			}
+			// 리지드바디 업데이트 =============================================================================================================
 
 
 			/* 라이프타임_파티클 */
@@ -1701,6 +1712,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_vRotationOffsetZ_Particle[0] = m_pParticleBufferDesc->vMinMaxRotationOffsetZ.x;
 			m_vRotationOffsetZ_Particle[1] = m_pParticleBufferDesc->vMinMaxRotationOffsetZ.y;
+
 
 			/* 스케일 */
 			m_vLerpScale_Pos_Particle[0] = m_pParticleBufferDesc->vLerpScale_Pos.x;
@@ -1746,7 +1758,8 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 		if (CEffect_Void::RECT == eType_Effect)
 		{
-			m_pRectDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Desc();
+			m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();								// 이펙트_보이드 Desc (부모)
+			m_pRectDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Desc();	// 렉트의 Desc (자식)
 			CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Distortion_Desc();
 			CEffect_Void::UVSPRITE_DESC* pSpriteDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Sprite_Desc();
 
@@ -1785,15 +1798,23 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 		if (CEffect_Void::MESH == eType_Effect)
 		{
-			m_pInstanceDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_InstanceDesc();
-			CVIBuffer_Effect_Model_Instance* pVIBuffer = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_VIBufferCom();
-			m_pMeshBufferDesc = pVIBuffer->Get_Desc();
+#pragma region 메쉬(+버퍼) 디스크립션 얻어오기 시작
+			m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();	// 이펙트_보이드 Desc
+			CVIBuffer_Effect_Model_Instance* pVIBuffer = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_VIBufferCom();	// 메쉬(인스턴스)버퍼 얻어오기
+			m_pMeshBufferDesc = pVIBuffer->Get_Desc(); // 버퍼의 Desc 얻어오기
+#pragma endregion
 
+			// 텍스처 업데이트 =============================================================================================================
 			m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE];
 			m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK];
 			m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE];
+			// 텍스처 업데이트 =============================================================================================================
+
+			/* 모프 */
+			m_fMorphTimeTerm = m_pMeshBufferDesc->fMorphTimeTerm;
 
 			m_iShaderPassIndex_Mesh = m_pCurVoidDesc->iShaderPassIndex;
+
 			m_iRenderGroup_Mesh = m_pCurVoidDesc->iRenderGroup;
 
 			m_vColor_Clip_Part[0] = m_pCurVoidDesc->vColor_Clip.x;
@@ -1801,12 +1822,62 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vColor_Clip_Part[2] = m_pCurVoidDesc->vColor_Clip.z;
 			m_vColor_Clip_Part[3] = m_pCurVoidDesc->vColor_Clip.w;
 
-			m_vMinMaxPower_Mesh[0] = m_pMeshBufferDesc->vMinMaxPower.x;
-			m_vMinMaxPower_Mesh[1] = m_pMeshBufferDesc->vMinMaxPower.y;
 
+			// 리지드바디 업데이트 =============================================================================================================
+			
+			/* 리지드바디 사용 여부 */
+			if (m_pCurVoidDesc->bUseRigidBody)
+				m_iUseRigidBody_Mesh = 0;
+			else
+				m_iUseRigidBody_Mesh = 1;	
+			
+			if (0 == m_iUseRigidBody_Mesh)	// 리지드바디 사용이면
+			{
+				/* 키네틱 여부 */
+				if (m_pMeshBufferDesc->bKinetic)
+					m_iKinetic_Mesh = 0;
+				else
+					m_iKinetic_Mesh = 1;
+
+				/* 중력 사용 여부 */
+				if (m_pMeshBufferDesc->bUseGravity)
+					m_iUseGravity_Mesh = 0;
+				else
+					m_iUseGravity_Mesh = 1;
+
+
+				m_fGravity_Mesh			= m_pMeshBufferDesc->fGravity;			// 중력 가속도
+				m_fFriction_Mesh		= m_pMeshBufferDesc->fFriction;			// 마찰 계수
+				m_fSleepThreshold_Mesh	= m_pMeshBufferDesc->fSleepThreshold;	// 슬립 한계점
+
+
+				/* 파워 */
+				m_vMinMaxPower_Mesh[0] = m_pMeshBufferDesc->vMinMaxPower.x;
+				m_vMinMaxPower_Mesh[1] = m_pMeshBufferDesc->vMinMaxPower.y;
+
+
+				///* 질량(Mass) */
+				//m_vMinMaxMass_Mesh[0] = m_pMeshBufferDesc->vMinMaxMass.x;
+				//m_vMinMaxMass_Mesh[1] = m_pMeshBufferDesc->vMinMaxMass.y;
+
+				///* 스피드 */
+				//m_vMinMaxSpeed_Mesh[0] = m_pMeshBufferDesc->vMinMaxSpeed.x;
+				//m_vMinMaxSpeed_Mesh[1] = m_pMeshBufferDesc->vMinMaxSpeed.y;
+
+			}
+			// 리지드바디 업데이트 =============================================================================================================
+
+
+			/* 라이프타임_메쉬 파티클 */
+			m_vMinMaxLifeTime_Mesh[0] = m_pMeshBufferDesc->vMinMaxLifeTime.x;
+			m_vMinMaxLifeTime_Mesh[1] = m_pMeshBufferDesc->vMinMaxLifeTime.y;
+
+
+			/* 분포 범위(Range) */
 			m_vMinMaxRange_Mesh[0] = m_pMeshBufferDesc->vMinMaxRange.x;
 			m_vMinMaxRange_Mesh[1] = m_pMeshBufferDesc->vMinMaxRange.y;
 
+			/* 회전 범위 */
 			m_vRotationOffsetX_Mesh[0] = m_pMeshBufferDesc->vMinMaxRotationOffsetX.x;
 			m_vRotationOffsetX_Mesh[1] = m_pMeshBufferDesc->vMinMaxRotationOffsetX.y;
 
@@ -1815,6 +1886,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_vRotationOffsetZ_Mesh[0] = m_pMeshBufferDesc->vMinMaxRotationOffsetZ.x;
 			m_vRotationOffsetZ_Mesh[1] = m_pMeshBufferDesc->vMinMaxRotationOffsetZ.y;
+
 		}
 
 

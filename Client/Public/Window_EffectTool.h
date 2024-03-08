@@ -266,7 +266,7 @@ private:
 	_float	m_vMinMaxLifeTime_Mesh[2] = { 0.f, 0.f };	// 라이프타임
 
 	/* Morph */
-	_float m_fMorphTimeTerm = { 0.005f };
+	_float m_fMorphTimeTerm = { 0.05f };
 
 
 	/* RigidBody ============================================== */

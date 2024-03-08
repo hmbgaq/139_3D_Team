@@ -167,6 +167,7 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 	m_vecParticleInfoDesc[iNum].fLifeTimeRatios = 0.f;
 
 
+
 #pragma region 이동 : 리지드바디 시작
 	// 리지드 바디 사용이면
 	if (m_tBufferDesc.bUseRigidBody)
@@ -177,9 +178,9 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 		_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
 		vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
 
-		_float3 vRotationOffset = { SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetX.x, m_tBufferDesc.vMinMaxRotationOffsetX.y)
-								  , SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetY.x, m_tBufferDesc.vMinMaxRotationOffsetY.y)
-								  , SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y) };
+		_float3 vRotationOffset = { XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetX.x, m_tBufferDesc.vMinMaxRotationOffsetX.y))
+								  , XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetY.x, m_tBufferDesc.vMinMaxRotationOffsetY.y))
+								  , XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y)) };
 
 
 		_vector		vRotation		= XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
@@ -240,6 +241,33 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 		// 시간 누적(전체)
 		m_tBufferDesc.fTimeAcc += fTimeDelta;
 		m_tBufferDesc.fLifeTimeRatio = min(1.0f, m_tBufferDesc.fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y);
+
+
+
+#pragma region 모델 바꿔끼기 시작
+		// 모프가 True이면 
+		if (m_tBufferDesc.bMorph)
+		{
+			m_tBufferDesc.fMorphTimeAcc += fTimeDelta;
+
+			_int iNum = ECast(m_tBufferDesc.eCurModelNum);
+
+			if (m_tBufferDesc.fMorphTimeAcc >= m_tBufferDesc.fMorphTimeTerm)
+			{
+				iNum += 1;
+				m_tBufferDesc.eCurModelNum = (MODEL_MORPH)iNum;
+
+				if (m_tBufferDesc.eCurModelNum >= MORPH_END)
+				{
+					m_tBufferDesc.eCurModelNum = MORPH_01;
+				}
+
+				m_tBufferDesc.fMorphTimeAcc = 0.f;
+			}
+		}
+#pragma region 모델 바꿔끼기 끝
+
+
 #pragma region Map UnMap 전 조건 체크 끝
 
 		D3D11_MAPPED_SUBRESOURCE			SubResource = {};
@@ -267,29 +295,6 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 
 #pragma region 입자들 시간 끝
 
-
-#pragma region 모델 바꿔끼기 시작
-			// 모프가 True이면 
-			if (m_tBufferDesc.bMorph)
-			{
-				m_tBufferDesc.fMorphTimeAcc += fTimeDelta;
-
-				_int iNum = ECast(m_tBufferDesc.eCurModelNum);
-	
-				if (m_tBufferDesc.fMorphTimeAcc >= m_tBufferDesc.fMorphTimeTerm)
-				{			
-					iNum += 1;
-					m_tBufferDesc.eCurModelNum = (MODEL_MORPH)iNum;
-
-					if (m_tBufferDesc.eCurModelNum >= MORPH_END)
-					{
-						m_tBufferDesc.eCurModelNum = MORPH_01;
-					}
-
-					m_tBufferDesc.fMorphTimeAcc = 0.f;
-				}
-			}
-#pragma region 모델 바꿔끼기 끝
 
 
 #pragma region 이동 : 리지드바디 시작
@@ -346,10 +351,6 @@ HRESULT CVIBuffer_Effect_Model_Instance::Bind_VIBuffers(_uint iMeshContainerInde
 
 HRESULT CVIBuffer_Effect_Model_Instance::Render(_int iMeshIndex)
 {
-	CModel* pModel = m_tBufferDesc.pModel[m_tBufferDesc.eCurModelNum];
-
-	if (nullptr == pModel)
-		return E_FAIL;
 
 	//Bind_VIBuffers(iMeshIndex);
 	Bind_VIBuffers(m_tBufferDesc.eCurModelNum);
@@ -372,6 +373,11 @@ _bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
 
 	/* LifeTime */
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
+
+
+	/* Morph */
+	Out_Json["Com_VIBuffer"]["bMorph"] = m_tBufferDesc.bMorph;
+	Out_Json["Com_VIBuffer"]["fMorphTimeTerm"] = m_tBufferDesc.fMorphTimeTerm;
 
 
 	/* RigidBody */
@@ -414,6 +420,11 @@ void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 
 	/* LifeTime */
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
+
+
+	/* Morph */
+	m_tBufferDesc.bMorph = In_Json["Com_VIBuffer"]["bMorph"];
+	m_tBufferDesc.fMorphTimeTerm = In_Json["Com_VIBuffer"]["fMorphTimeTerm"];
 
 
 	/* RigidBody */
