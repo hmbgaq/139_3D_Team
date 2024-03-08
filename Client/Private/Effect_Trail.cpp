@@ -44,51 +44,92 @@ void CEffect_Trail::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Trail::Tick(_float fTimeDelta)
 {
-
-	if (FALSE == m_tTrailDesc.bTrailOn)
+	//CVIBuffer_Trail::TRAIL_BUFFER_DESC* pDesc = m_pVIBufferCom->Get_Desc();
+#ifdef _DEBUG
+	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		m_pVIBufferCom->Reset_Points(m_tTrailDesc.matPivot);
-		return;
+		if (m_tVoidDesc.bActive_Tool)
+		{
+#endif // _DEBUG
+
+			if (FALSE == m_tVoidDesc.bPlay)
+			{
+				m_pVIBufferCom->Reset_Points(m_tVoidDesc.matOffset);
+				return;
+			}
+
+			m_pVIBufferCom->Update(fTimeDelta, m_tVoidDesc.matOffset);
+
+#ifdef _DEBUG
+		}
 	}
-
-	m_pVIBufferCom->Update(fTimeDelta, m_tTrailDesc.matPivot);
-
+#endif // _DEBUG
 };
 
 void CEffect_Trail::Late_Tick(_float fTimeDelta)
 {
-	if (m_tVoidDesc.bActive_Tool)
+#ifdef _DEBUG
+	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		if (m_tVoidDesc.bRender)
+		if (m_tVoidDesc.bActive_Tool)
 		{
-			if (nullptr != m_tVoidDesc.pParentObj)
+#endif // _DEBUG
+			if (m_tVoidDesc.bRender)
 			{
-				if (m_tVoidDesc.bParentPivot)
+				if (nullptr != m_tVoidDesc.pParentObj)	// 부모 이펙트가 있고
 				{
-					m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
-					XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+					if (m_tVoidDesc.bParentPivot)		//부모의 매트릭스를 사용할거고
+					{
+						CGameObject* PParentOwner = m_tVoidDesc.pParentObj->Get_Object_Owner();
+						if (nullptr != PParentOwner)	// 부모의 오너가 있으면
+						{
+							m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4() * PParentOwner->Get_Transform()->Get_WorldFloat4x4();
+							XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+						}
+						else
+						{
+							// 부모의 오너가 없으면 부모의 매트릭스만 사용
+							m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
+							XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+					}
+
 				}
 			}
 
-			if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this)))
-				return;
+				if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this)))
+					return;
+		}
+#ifdef _DEBUG
 		}
 	}
+#endif // _DEBUG
 }
 
 HRESULT CEffect_Trail::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+#ifdef _DEBUG
+	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	{
+		if (m_tVoidDesc.bActive_Tool)
+		{
+#endif // _DEBUG
 
-	/* 이 쉐이더에 n번째 패스로 그릴거야. */
-	m_pShaderCom->Begin(0);
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	/* 내가 그릴려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
-	m_pVIBufferCom->Bind_VIBuffers();
+		/* 이 쉐이더에 n번째 패스로 그릴거야. */
+		m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
 
-	/* 바인딩된 정점, 인덱스를 그려. */
-	m_pVIBufferCom->Render();
+		/* 내가 그릴려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
+		m_pVIBufferCom->Bind_VIBuffers();
+
+		/* 바인딩된 정점, 인덱스를 그려. */
+		m_pVIBufferCom->Render();
+
+#ifdef _DEBUG
+		}
+	}
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -113,18 +154,18 @@ HRESULT CEffect_Trail::Ready_Components()
 			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
 			return E_FAIL;
 
-		if (TEXT("") != m_tTrailDesc.strTextureTag[TEXTURE_MASK])
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
 		{
 			/* For.Com_Mask */
-			if (FAILED(__super::Add_Component(iNextLevel, m_tTrailDesc.strTextureTag[TEXTURE_MASK],
+			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
 				TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
 				return E_FAIL;
 		}
 
-		if (TEXT("") != m_tTrailDesc.strTextureTag[TEXTURE_NOISE])
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
 		{
 			/* For.Com_Noise */
-			if (FAILED(__super::Add_Component(iNextLevel, m_tTrailDesc.strTextureTag[TEXTURE_NOISE],
+			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
 				TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
 				return E_FAIL;
 		}
@@ -137,33 +178,61 @@ HRESULT CEffect_Trail::Ready_Components()
 HRESULT CEffect_Trail::Bind_ShaderResources()
 {
 
-	if (m_tTrailDesc.bParentPivot)
+	/* Matrix ============================================================================================ */
+	if (m_tVoidDesc.bParentPivot)
 	{
-		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tTrailDesc.matOffset));
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matOffset));
 	}
 	else
 	{
 		FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
 	}
 
-
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
 
-	FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tTrailDesc.iTextureIndex[TEXTURE_DIFFUSE]));
+	/* Texture ============================================================================================ */
+	if (m_tVoidDesc.bUseSpriteAnim)
+	{
+		FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_SPRITE]));
+	}
+	else
+	{
+		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_DIFFUSE]));
+	}
 
 	if (nullptr != m_pTextureCom[TEXTURE_MASK])
 	{
-		FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tTrailDesc.iTextureIndex[TEXTURE_MASK]));
+		FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tVoidDesc.iTextureIndex[TEXTURE_MASK]));
 	}
 	if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 	{
-		FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tTrailDesc.iTextureIndex[TEXTURE_NOISE]));
+		FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NOISE]));
 	}
 
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
 
+	/* Discard ============================================================================================ */
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tVoidDesc.vColor_Clip.w, sizeof(_float)));
+
+	//_float3 vBlack_Discard = _float3(m_tVoidDesc.vColor_Clip.x, m_tVoidDesc.vColor_Clip.y, m_tVoidDesc.vColor_Clip.z);
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
+
+	/* UV ============================================================================================ */
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
+
+
+
+	/* Camera ============================================================================================ */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
+	//_float3 vCamDirectionFloat3 = m_pGameInstance->Get_CamDirection();
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat3, sizeof(_float3)));
+
+	//_float fCamFar = m_pGameInstance->Get_CamFar();
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
+
+	/* ETC ============================================================================================ */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"));
 
 	return S_OK;

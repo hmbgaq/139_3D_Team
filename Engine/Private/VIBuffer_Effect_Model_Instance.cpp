@@ -251,7 +251,6 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 			m_tBufferDesc.fMorphTimeAcc += fTimeDelta;
 
 			_int iNum = ECast(m_tBufferDesc.eCurModelNum);
-
 			if (m_tBufferDesc.fMorphTimeAcc >= m_tBufferDesc.fMorphTimeTerm)
 			{
 				iNum += 1;

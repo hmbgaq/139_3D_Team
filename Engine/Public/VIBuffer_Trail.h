@@ -3,8 +3,8 @@
 
 BEGIN(Engine)
 
-class CGameObject;
-class CTransform;
+//class CGameObject;
+//class CTransform;
 
 
 class ENGINE_DLL CVIBuffer_Trail : public CVIBuffer
@@ -12,18 +12,12 @@ class ENGINE_DLL CVIBuffer_Trail : public CVIBuffer
 public:
 	typedef struct tagTrailBufferDesc
 	{
-		_bool		bTrailOn = { FALSE };
-
 		_float3		vPos_0;
 		_float3		vPos_1;
-		_uint		iPass;
+		_uint		iMaxCnt;
 
 		_uint		iNumVertices;
-		_uint		iMaxCnt;
 		_uint		iVtxCnt;
-
-		_float4		vLocalSwordLow;
-		_float4		vLocalSwordHigh;
 
 		_uint		iLerpPointNum = { 12 };
 		_int		iCatMullRomIndex[4];

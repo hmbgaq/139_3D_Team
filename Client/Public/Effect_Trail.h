@@ -13,23 +13,12 @@ BEGIN(Client)
 class CEffect_Trail final : public CEffect_Void
 {
 public:
-	typedef struct tagTextureEffectDesc : public CEffect_Void::EFFECTVOID_DESC
+	typedef struct tagTextureEffectDesc
 	{
-		_bool		bTrailOn = { FALSE };
+		//_bool		bTrailOn; // EFFECTVOID_DESCÀÇ bPlay
 
-		_float3		vPos_0;
-		_float3		vPos_1;
-		_uint		iPass;
-
-		_uint		iNumVertices;
-		_uint		iMaxCnt;
-		_uint		iVtxCnt;
-
-		_float4		vLocalSwordLow;
 		_float4		vLocalSwordHigh;
-
-		_uint		iLerpPointNum = { 12 };
-		_int		iCatMullRomIndex[4];
+		_float4		vLocalSwordLow;
 
 	}TRAIL_DESC;
 
@@ -48,11 +37,12 @@ public:
 	virtual HRESULT Render() override;
 
 
-
 /* For.Desc */
 public:
-	TRAIL_DESC* Get_Desc() { return &m_tTrailDesc; }
+	TRAIL_DESC* Get_TrailDesc() { return &m_tTrailDesc; }
 
+public:
+	CVIBuffer_Trail* Get_VIBufferCom() { return m_pVIBufferCom; }
 
 private:
 	CShader*				m_pShaderCom				= { nullptr };

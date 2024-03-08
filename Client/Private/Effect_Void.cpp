@@ -178,7 +178,6 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 
 
 	/* States */
-	Out_Json["bActive_Tool"]	= m_tVoidDesc.bActive_Tool;
 	Out_Json["bPlay"]			= m_tVoidDesc.bPlay;
 	Out_Json["bLoop"]			= m_tVoidDesc.bLoop;
 	Out_Json["bReverse"]		= m_tVoidDesc.bReverse;
@@ -196,11 +195,6 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 
 	/* 주인 */
 	Out_Json["bParentPivot"] = m_tVoidDesc.bParentPivot;
-	for (_int i = 0; i < 4; ++i)
-		CJson_Utility::Write_Float4(Out_Json["matPivot"][i], XMLoadFloat4x4(&m_tVoidDesc.matPivot).r[i]);
-
-	for (_int i = 0; i < 4; ++i)
-		CJson_Utility::Write_Float4(Out_Json["matOffset"][i], XMLoadFloat4x4(&m_tVoidDesc.matOffset).r[i]);
 
 
 }
@@ -261,7 +255,6 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 
 
 	/* States */
-	m_tVoidDesc.bActive_Tool = (_bool)In_Json["bActive_Tool"];
 	m_tVoidDesc.bPlay = (_bool)In_Json["bPlay"];
 	m_tVoidDesc.bLoop = (_bool)In_Json["bLoop"];
 	m_tVoidDesc.bReverse = (_bool)In_Json["bReverse"];
@@ -278,16 +271,6 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 
 	/* 주인 */
 	m_tVoidDesc.bParentPivot = (_bool)In_Json["bParentPivot"];
-
-	_float4x4 matPivot;
-	ZeroMemory(&matPivot, sizeof(_float4x4));
-	CJson_Utility::Load_JsonFloat4x4(In_Json["matPivot"], matPivot);
-	m_tVoidDesc.matPivot = matPivot;
-
-	_float4x4 matOffset;
-	ZeroMemory(&matOffset, sizeof(_float4x4));
-	CJson_Utility::Load_JsonFloat4x4(In_Json["matOffset"], matOffset);
-	m_tVoidDesc.matOffset = matOffset;
 
 }
 

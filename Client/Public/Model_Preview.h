@@ -20,7 +20,7 @@ public:
 
 		_bool		bRender				= { TRUE };
 
-		_uint		iAnimIndex			= { 0 };	// 플레이어 Idle애니메이션은 8번 / 공격 1번은 Player_MeleeCombo_01 193번
+		_uint		iAnimIndex			= { 0 };	// 플레이어 Idle애니메이션은 Player_IdlePose 8번 / 공격 1번은 Player_MeleeCombo_01 193번
 		_int		iRenderGroup		= { CRenderer::RENDER_NONBLEND };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자
 		_uint		iShaderPassIndex	= { 0 };	 // false == m_bDissolve ? 0 : 3;
 

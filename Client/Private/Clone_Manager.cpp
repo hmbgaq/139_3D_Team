@@ -35,18 +35,17 @@ CEffect* CClone_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLaye
 	CEffect::EFFECT_DESC	tEffectDesc = {};
 	CEffect* pEffect = dynamic_cast<CEffect*>(m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, TEXT("Prototype_GameObject_Effect"), &tEffectDesc));
 
-	json In_Json;
-
 	string strPath = "../Bin/DataFiles/Data_Effect";
-
 	string strLoadPath = strPath + "/" + strFileName;
+
+	json In_Json;
 	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
+
+	if (nullptr != pOwner)
+		pEffect->Set_Object_Owner(pOwner);
 
 	pEffect->Load_FromJson(In_Json);
 	
-	//if (nullptr != pOwner)
-	//	pEffect->Set_Owner(pOwner);
-
 	return	pEffect;
 
 	/* 사용 예시 */
