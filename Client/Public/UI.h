@@ -8,12 +8,6 @@ class CUI abstract : public CGameObject
 public:
 	enum UI_KIND { NORMAL, TEXT, KIND_END };
 
-	enum KEYTYPE
-	{
-		KEYTYPE_NONE,
-		KEYTYPE_NORMAL,
-		KEYTYPE_END
-	};
 
 	// 키프레임 구조체
 	typedef struct tagUIKeyframe
@@ -240,9 +234,8 @@ public: /* =========================== Save/Load ============================== 
 public: /* =========================== Animation ============================== */
 	void			Play_Animation();
 	// 애니메이션 값
-	std::vector<UIKEYFRAME>* m_vecAnimation[KEYTYPE_END] = {};
-	KEYTYPE				m_eKeyframe = KEYTYPE_NORMAL;
-	_int				m_iTextureNum[KEYTYPE_END];
+	std::vector<UIKEYFRAME>* m_vecAnimation = {};
+	_int				m_iTextureNum = 0;
 
 	void				Set_AnimPlay(_bool bPlay) { m_bPlayAnim = bPlay; }
 	_bool				Get_AnimPlay() { return m_bPlayAnim; }
@@ -278,6 +271,7 @@ protected: /* LifeTime */
 	void				LifeTime_LevelUp(_float fTimeDelta);
 	_bool				m_bEventOn = false;
 	_float				m_fLifeTime = 5000.f;
+	_float				m_fActiveTime = 1000.f;
 	_float				m_fTime = GetTickCount64();
 
 protected: /* ========================= Component =========================== */
@@ -302,10 +296,12 @@ protected: /* ============================= UI =============================== *
 	UISTATE				m_eState;
 	_float4x4			m_Origin_WorldMatrix = {};
 	_bool				m_bActive = false;
+	_bool				m_bReset = false;
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f, m_fScaleZ = 0.1f;
 	UI_KIND				m_eKind = NORMAL;
+	_float				m_fOffsetX = 0.f, m_fOffsetY = 0.f;
 
 	// 투명도
 	_float				m_fAlpha = 0.f;

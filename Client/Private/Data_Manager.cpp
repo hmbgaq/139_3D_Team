@@ -155,7 +155,7 @@ void CData_Manager::Limit_HP()
 	}
 }
 
-// Player_EXP
+// Player_EXP(Limit)
 _bool CData_Manager::Limit_EXP()
 {
 	/* 1. 경험치 하한선 방지 */
