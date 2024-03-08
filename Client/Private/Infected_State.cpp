@@ -166,7 +166,7 @@ CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta,
 		return new CInfected_Idle();
 	}
 
-	return nullptr;
+	return nullptr; /* 현상태 유지 */
 }
 
 CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
@@ -204,7 +204,7 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 	//	if (CInfected_Idle::g_iAnimIndex != _iAnimIndex)
 	//		return new CInfected_Idle();
 	//}
-
+	
 
 	return nullptr;
 }
