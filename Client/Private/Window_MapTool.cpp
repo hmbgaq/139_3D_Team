@@ -1785,7 +1785,7 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 	{
 		if (m_bChange == true && m_pPreviewCharacter != nullptr)
 		{
-			m_pPreviewCharacter->Set_Dead(false);
+			m_pPreviewCharacter->Set_Dead(true);
 
 			m_bChange = false;
 			m_pPreviewCharacter = nullptr;
