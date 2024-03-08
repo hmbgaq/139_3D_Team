@@ -171,22 +171,19 @@ public: /* ============================== Get / Set ============================
 public:
 	virtual HRESULT	Set_ParentTransform(CTransform* pParentTransformCom);
 
-	
-protected:
-	void			SetUp_WorldToScreen(_fvector vWorldPos);
-
 public: /* ============================== Add ============================== */
 	void			Add_Create_Parts(void* pArg);
 	void			Add_Parts(CUI* pArg);
 
 public: /* ========================== Change_Size ========================== */
 	void			Set_Size(_float fSizeX, _float fSizeY);
+	void			Change_SizeX(_float MMX);
+	void			Change_SizeY(_float MMY);
+	void			Change_SizeRight(_float MMX);
 	void			Change_SizeBottom(_float MMY);
 	void			Change_SizeTop(_float MMY);
 	void			Change_SizeLeft(_float MMX);
-	void			Change_SizeRight(_float MMX);
-	void			Change_SizeY(_float MMY);
-	void			Change_SizeX(_float MMX);
+
 
 public: /* ============================== Basic =============================== */
 	virtual HRESULT Initialize_Prototype();
@@ -207,13 +204,21 @@ public: /* ============================= Function ============================= 
 public: /* ============================== SetUp ============================== */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
 	HRESULT			SetUp_Transform(_float fPosX, _float fPosY, _float fScaleX, _float fScaleY);
-	HRESULT			SetUp_BillBoarding();
 	HRESULT			Ready_UI(const char* cFilePath);
 	HRESULT			Create_UIParts(UI_DESC tUI_Desc);
 	HRESULT			Update_Child_Transform();
 
+	//				TargetPosition => Screen
+	void			SetUp_PositionToScreen(_fvector vWorldPos);
+
+	//				TargetWorld => Screen
+	void			SetUp_WorldToScreen(_matrix vWorldPos);
+	HRESULT			SetUp_BillBoarding();
+
+
 	// error : 새 코드 요소를 반환하지 못했습니다. 구문 오류일 수 있습니다. -> 해결방법 : 프로젝트 폴더 내에 vs폴더 삭제 후 실행
 	void			Tick_LevelUp(_float fTimeDelta);
+	void			Player_HUD(_float fTimeDelta);
 
 public:
 #ifdef _DEBUG
@@ -264,6 +269,10 @@ public: /* =========================== Animation ============================== 
 
 protected: /* Data */
 	class CData_Manager* m_pData_Manager = { nullptr };
+
+protected:
+	void				Compute_CamDistance();
+	_float				m_fCamDistance = { 0.0f };
 
 protected: /* LifeTime */
 	void				LifeTime_LevelUp(_float fTimeDelta);

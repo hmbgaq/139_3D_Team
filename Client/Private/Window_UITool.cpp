@@ -147,6 +147,13 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 
 		// Parent
 		Parent_List(fTimeDelta);
+
+		if (ImGui::Button("Create_Terrain"))
+			m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Terrain"));
+
+		if(ImGui::Button("Create_Monster"))
+			m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_Monster"), TEXT("Prototype_GameObject_Screamer"));
+
 		ImGui::Spacing();
 
 		__super::End();
@@ -1972,8 +1979,7 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 
 	timeline[m_eKeyType].push_back(lastKeyframe);
 
-
-	int num_decimal_places = 2; // 소수점 단위 설정
+	int num_decimal_places = 2; // 소수점 단위 설
 
 	// 소수점 단위 표현
 	int multiplier = static_cast<int>(pow(10, num_decimal_places));
@@ -2413,7 +2419,7 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 {
 	json json_in;
 
-	char filePath[MAX_PATH];
+	//char filePath[MAX_PATH];
 
 	string strFile;
 

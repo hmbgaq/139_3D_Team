@@ -8,7 +8,7 @@
 CEffect_Particle::CEffect_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-
+	m_bIsPoolObject = FALSE;
 }
 
 CEffect_Particle::CEffect_Particle(const CEffect_Particle& rhs)
@@ -25,9 +25,8 @@ HRESULT CEffect_Particle::Initialize_Prototype()
 
 HRESULT CEffect_Particle::Initialize(void* pArg)
 {
-
-	*static_cast<EFFECTVOID_DESC*>(&m_tParticleDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
-
+	//m_tVoidDesc = *static_cast<EFFECTVOID_DESC*>(pArg);
+	//*static_cast<EFFECTVOID_DESC*>(&m_tParticleDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -49,25 +48,25 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 	//CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC* pDesc = m_pVIBufferCom->Get_Desc();
 	CVIBuffer_Particle::PARTICLE_BUFFER_DESC* pDesc = m_pVIBufferCom->Get_Desc();
 
-	if (m_tParticleDesc.bActive_Tool)
+	if (m_tVoidDesc.bActive_Tool)
 	{
-		m_fSequenceTime = m_fLifeTime + m_fRemainTime;
+		m_tVoidDesc.fSequenceTime = m_tVoidDesc.fLifeTime + m_tVoidDesc.fRemainTime;
 
 		//pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
 		//pDesc->vMinMaxLifeTime.y = m_fLifeTime;
 
-		if (m_tParticleDesc.bPlay)
+		if (m_tVoidDesc.bPlay)
 		{
-			m_fSequenceAcc += fTimeDelta;
+			m_tVoidDesc.fSequenceAcc += fTimeDelta;
 
 			// 시작지연 누적시간이 지나면 렌더 시작(파티클 시작)
-			if (m_fWaitingAcc <= m_fWaitingTime)
+			if (m_tVoidDesc.fWaitingAcc <= m_tVoidDesc.fWaitingTime)
 			{
-				m_fWaitingAcc += fTimeDelta;
+				m_tVoidDesc.fWaitingAcc += fTimeDelta;
 
-				if (m_fWaitingAcc >= m_fWaitingTime)
+				if (m_tVoidDesc.fWaitingAcc >= m_tVoidDesc.fWaitingTime)
 				{
-					m_tParticleDesc.bRender = TRUE;
+					m_tVoidDesc.bRender = TRUE;
 					//pDesc->bPlay	= TRUE;
 				}
 				else
@@ -75,17 +74,17 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 			}
 
 			// 시간 누적 시작
-			m_fTimeAcc += fTimeDelta;
-			m_fSpriteTimeAcc += fTimeDelta;
-			m_fLifeTimeRatio = min(1.0f, m_fTimeAcc / m_fLifeTime);
+			m_tVoidDesc.fTimeAcc += fTimeDelta;
+			m_tVoidDesc.fSpriteTimeAcc += fTimeDelta;
+			m_tVoidDesc.fLifeTimeRatio = min(1.0f, m_tVoidDesc.fTimeAcc / m_tVoidDesc.fLifeTime);
 
 
 			/* ======================= 라이프 타임 동작 시작 ======================= */
-			if (m_tParticleDesc.bUseSpriteAnim)
+			if (m_tVoidDesc.bUseSpriteAnim)
 			{
 				if (!m_tSpriteDesc.bSpriteFinish)
 				{
-					if (m_fSpriteTimeAcc > m_tSpriteDesc.fSequenceTerm)
+					if (m_tVoidDesc.fSpriteTimeAcc > m_tSpriteDesc.fSequenceTerm)
 					{
 						(m_tSpriteDesc.vUV_CurTileIndex.x)++;	// 가로 인덱스 증가
 
@@ -99,37 +98,37 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 								m_tSpriteDesc.bSpriteFinish = TRUE;										// 스프라이트 애님 끝	
 							}
 						}
-						m_fSpriteTimeAcc = 0.f;
+						m_tVoidDesc.fSpriteTimeAcc = 0.f;
 					}
 				}
 
 				if (m_tSpriteDesc.bSpriteFinish)
-					m_tParticleDesc.bRender = FALSE;
+					m_tVoidDesc.bRender = FALSE;
 			}
 
 			/* ======================= 라이프 타임 동작 끝  ======================= */
 
-			if (m_fTimeAcc >= m_fLifeTime)
+			if (m_tVoidDesc.fTimeAcc >= m_tVoidDesc.fLifeTime)
 			{
 				// 삭제 대기시간 누적 시작
-				m_fRemainAcc += fTimeDelta;
+				m_tVoidDesc.fRemainAcc += fTimeDelta;
 
 				// 디졸브 시작
-				m_tParticleDesc.bDissolve = TRUE;
-				if (m_tParticleDesc.bDissolve)
+				m_tVoidDesc.bDissolve = TRUE;
+				if (m_tVoidDesc.bDissolve)
 				{
-					m_tParticleDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_fRemainAcc, m_fRemainTime, m_tParticleDesc.eType_Easing);
+					m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
 				}
 
-				if (m_fRemainAcc >= m_fRemainTime)
+				if (m_tVoidDesc.fRemainAcc >= m_tVoidDesc.fRemainTime)
 				{
-					m_tParticleDesc.fDissolveAmount = 1.f;
-					m_tParticleDesc.bRender = TRUE;
+					m_tVoidDesc.fDissolveAmount = 1.f;
+					m_tVoidDesc.bRender = TRUE;
 					return;
 				}
 			}
 
-			if (m_tParticleDesc.bRender)
+			if (m_tVoidDesc.bRender)
 			{
 				m_pVIBufferCom->Update(fTimeDelta);
 			}
@@ -143,16 +142,19 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 void CEffect_Particle::Late_Tick(_float fTimeDelta)
 {
-	if (m_tParticleDesc.bActive_Tool)
+	if (m_tVoidDesc.bActive_Tool)
 	{
-		if (m_tParticleDesc.bRender)
+		if (m_tVoidDesc.bRender)
 		{
-			if (nullptr != m_pOwner)
+			if (nullptr != m_tVoidDesc.pParentObj)
 			{
-				if (m_tParticleDesc.bParentPivot)
+				if (m_tVoidDesc.bParentPivot)
 				{
-					m_tParticleDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
-					XMStoreFloat4x4(&m_tParticleDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tParticleDesc.matPivot);
+					m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
+					XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+
+					//_float3 vParentScale = m_tVoidDesc.pParentObj->Get_Transform()->Get_Scaled();
+					//m_pTransformCom->Set_Scaling(vParentScale.x, vParentScale.y, vParentScale.z);
 				}
 			}
 
@@ -160,25 +162,23 @@ void CEffect_Particle::Late_Tick(_float fTimeDelta)
 			{
 				//m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
 			}
-			//Compute_CamDistance();
+			Compute_CamDistance();
 
 			// CRenderer::RENDER_BLEND
-			//if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tParticleDesc.iRenderGroup), this)))
-			//	return;
-			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_EFFECT, this), );
+			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this));
 		}
 	}
 }
 
 HRESULT CEffect_Particle::Render()
 {
-	if (m_tParticleDesc.bActive_Tool)
+	if (m_tVoidDesc.bActive_Tool)
 	{
 		if (FAILED(Bind_ShaderResources()))
 			return E_FAIL;
 
 		/* 이 쉐이더에 0번째 패스로 그릴거야. */
-		m_pShaderCom->Begin(m_tParticleDesc.iShaderPassIndex);
+		m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
 
 		/* 내가 그리려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
 		m_pVIBufferCom->Bind_VIBuffers();
@@ -195,11 +195,11 @@ void CEffect_Particle::ReSet_Effect()
 {
 	__super::ReSet_Effect();
 
-	m_tParticleDesc.fDissolveAmount = 0.f;
-	m_tParticleDesc.bDissolve = FALSE;
-	m_tParticleDesc.bRender = FALSE;
+	m_tVoidDesc.fDissolveAmount = 0.f;
+	m_tVoidDesc.bDissolve = FALSE;
+	m_tVoidDesc.bRender = FALSE;
 
-	if (m_tParticleDesc.bUseSpriteAnim)
+	if (m_tVoidDesc.bUseSpriteAnim)
 	{
 		m_tSpriteDesc.bSpriteFinish = FALSE;
 		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
@@ -214,7 +214,7 @@ void CEffect_Particle::End_Effect()
 {
 	__super::End_Effect();
 
-	if (m_tParticleDesc.bLoop)
+	if (m_tVoidDesc.bLoop)
 	{
 		ReSet_Effect();
 	}
@@ -225,12 +225,13 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
 
-	Write_VoidDesc(Out_Json, &m_tParticleDesc);
+	//Write_VoidDesc(Out_Json, &m_tParticleDesc);
+
+	// m_tParticleDesc
 
 
 	/* Sprite */
 	Out_Json["fSequenceTerm"] = m_tSpriteDesc.fSequenceTerm;
-
 
 	CJson_Utility::Write_Float2(Out_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
 	CJson_Utility::Write_Float2(Out_Json["vTileSize"], m_tSpriteDesc.vTileSize);
@@ -246,7 +247,13 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-	*&m_tParticleDesc = *static_cast<PARTICLE_DESC*>(Load_VoidDesc(In_Json));
+
+	//*&m_tParticleDesc = *static_cast<PARTICLE_DESC*>(Load_VoidDesc(In_Json));
+	//*static_cast<EFFECTVOID_DESC*>(&m_tParticleDesc) = *static_cast<EFFECTVOID_DESC*>(Load_VoidDesc(In_Json));
+	//static_cast<EFFECTVOID_DESC>(m_tParticleDesc) = Load_VoidDesc(In_Json); // 왜???????????????????????????
+
+
+	// m_tParticleDesc
 
 
 	/* Sprite */
@@ -280,22 +287,22 @@ HRESULT CEffect_Particle::Ready_Components()
 
 
 	/* For.Com_Texture */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
-	FAILED_CHECK(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+	FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
+	FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 
 
-	if (TEXT("") != m_tParticleDesc.strTextureTag[TEXTURE_MASK])
+	if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
 	{
 		/* For.Com_Mask */
-		if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TEXTURE_MASK],
+		if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
 			TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
 			return E_FAIL;
 	}
 
-	if (TEXT("") != m_tParticleDesc.strTextureTag[TEXTURE_NOISE])
+	if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
 	{
 		/* For.Com_Noise */
-		if (FAILED(__super::Add_Component(iNextLevel, m_tParticleDesc.strTextureTag[TEXTURE_NOISE],
+		if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
 			TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
 			return E_FAIL;
 	}
@@ -308,9 +315,9 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 {
 
 	/* Matrix ============================================================================================ */
-	if (m_tParticleDesc.bParentPivot)
+	if (m_tVoidDesc.bParentPivot)
 	{
-		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tParticleDesc.matOffset));
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matOffset));
 	}
 	else
 	{
@@ -322,49 +329,49 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 
 	/* Texture ============================================================================================ */
-	if (m_tParticleDesc.bUseSpriteAnim)
+	if (m_tVoidDesc.bUseSpriteAnim)
 	{
-		FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tParticleDesc.iTextureIndex[TEXTURE_SPRITE]));
+		FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_SPRITE]));
 	}
 	else
 	{
-		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tParticleDesc.iTextureIndex[TEXTURE_DIFFUSE]));
+		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_DIFFUSE]));
 	}
 
 	if (nullptr != m_pTextureCom[TEXTURE_MASK])
 	{
-		FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tParticleDesc.iTextureIndex[TEXTURE_MASK]));
+		FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tVoidDesc.iTextureIndex[TEXTURE_MASK]));
 	}
 	if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 	{
-		FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tParticleDesc.iTextureIndex[TEXTURE_NOISE]));
+		FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NOISE]));
 	}
 
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tParticleDesc.bBillBoard, sizeof(_bool)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tParticleDesc.vColor_Clip.w, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tVoidDesc.vColor_Clip.w, sizeof(_float)));
 
-	_float3 vBlack_Discard = _float3(m_tParticleDesc.vColor_Clip.x, m_tParticleDesc.vColor_Clip.y, m_tParticleDesc.vColor_Clip.z);
+	_float3 vBlack_Discard = _float3(m_tVoidDesc.vColor_Clip.x, m_tVoidDesc.vColor_Clip.y, m_tVoidDesc.vColor_Clip.z);
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
 
 	/* UV ============================================================================================ */
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tParticleDesc.fUV_RotDegree, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
 
 	// 이펙트 정보
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_EffectDesc", m_pVIBufferCom->Get_ParticleShaderInfoDescs().data(), sizeof(CVIBuffer_Particle::PARTICLE_SHADER_INFO_DESC) * m_pVIBufferCom->Get_ParticleShaderInfoDescs().size()));
 
 
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bSprite", &m_tParticleDesc.bUseSpriteAnim, sizeof(_bool)));
-	if (m_tParticleDesc.bUseSpriteAnim)
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bSprite", &m_tVoidDesc.bUseSpriteAnim, sizeof(_bool)));
+	if (m_tVoidDesc.bUseSpriteAnim)
 	{
-		m_tParticleDesc.vUV_Offset = { (_float)(m_tSpriteDesc.vUV_CurTileIndex.x * m_tSpriteDesc.vTileSize.x) / m_tSpriteDesc.vTextureSize.x
+		m_tVoidDesc.vUV_Offset = { (_float)(m_tSpriteDesc.vUV_CurTileIndex.x * m_tSpriteDesc.vTileSize.x) / m_tSpriteDesc.vTextureSize.x
 									, (_float)(m_tSpriteDesc.vUV_CurTileIndex.y * m_tSpriteDesc.vTileSize.y) / m_tSpriteDesc.vTextureSize.y };
 
-		m_tParticleDesc.vUV_Scale = { (_float)m_tSpriteDesc.vTileSize.x / m_tSpriteDesc.vTextureSize.x
-									, (_float)m_tSpriteDesc.vTileSize.y / m_tSpriteDesc.vTextureSize.y };
+		m_tVoidDesc.vUV_Scale = { (_float)m_tSpriteDesc.vTileSize.x / m_tSpriteDesc.vTextureSize.x
+								, (_float)m_tSpriteDesc.vTileSize.y / m_tSpriteDesc.vTextureSize.y };
 
 
-		FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tParticleDesc.vUV_Offset, sizeof(_float2)));
-		FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tParticleDesc.vUV_Scale, sizeof(_float2)));
+		FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));
+		FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
 	}
 
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "UI_Weakness.h"
 
 BEGIN(Engine)
 class CShader;
@@ -55,6 +56,10 @@ private:
 	/* Test Texture */
 	CTexture*			m_pBreakTextureCom		= { nullptr };
 	CTexture*			m_pDissolveTexCom		= { nullptr };
+
+	/* Test UI */
+	CUI_Weakness*		m_pWeakneesUI = { nullptr };
+	_bool				m_bTestUI = false;
 
 public:
 	static CScreamer*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

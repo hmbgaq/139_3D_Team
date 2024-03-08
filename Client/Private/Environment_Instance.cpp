@@ -208,6 +208,8 @@ HRESULT CEnvironment_Instance::Remove_Instance(_uint iIndex)
 	m_vecColliders.erase(m_vecColliders.begin() + iIndex);
 
 	Safe_Release(pCollider);
+
+	return S_OK;
 }
 
 HRESULT CEnvironment_Instance::Ready_Components()

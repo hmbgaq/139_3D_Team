@@ -334,6 +334,7 @@
     <ClInclude Include="..\Public\CustomDialogFont.h" />
     <ClInclude Include="..\Public\Data_Manager.h" />
     <ClInclude Include="..\Public\DevConsole.h" />
+    <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\Infected.h" />
     <ClInclude Include="..\Public\Infected_A.h" />
     <ClInclude Include="..\Public\Infected_DeathHeavy_F_01_NEW.h" />
@@ -437,6 +438,7 @@
     <ClInclude Include="..\Public\Level_Intro.h" />
     <ClInclude Include="..\Public\ManHeavy_KnockFrontCannonball_F_02.h" />
     <ClInclude Include="..\Public\MasterCamera.h" />
+    <ClInclude Include="..\Public\Model_Preview.h" />
     <ClInclude Include="..\Public\Monster_Character.h" />
     <ClInclude Include="..\Public\Player_DeathLight_F_01.h" />
     <ClInclude Include="..\Public\Player_DeathLight_F_02.h" />
@@ -621,6 +623,7 @@
     <ClInclude Include="..\Public\SpringCamera.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\stb_image.h" />
+    <ClInclude Include="..\Public\UI_Weakness.h" />
     <ClInclude Include="..\Public\VampireCommander.h" />
     <ClInclude Include="..\Public\VampireCommander_Attack.h" />
     <ClInclude Include="..\Public\VampireCommander_BloodRange_Loop.h" />
@@ -848,6 +851,7 @@
     <ClCompile Include="..\Private\CustomDialogFont.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
     <ClCompile Include="..\Private\DevConsole.cpp" />
+    <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\Infected.cpp" />
     <ClCompile Include="..\Private\Infected_A.cpp" />
     <ClCompile Include="..\Private\Infected_DeathHeavy_F_01_NEW.cpp" />
@@ -951,6 +955,7 @@
     <ClCompile Include="..\Private\Level_Intro.cpp" />
     <ClCompile Include="..\Private\ManHeavy_KnockFrontCannonball_F_02.cpp" />
     <ClCompile Include="..\Private\MasterCamera.cpp" />
+    <ClCompile Include="..\Private\Model_Preview.cpp" />
     <ClCompile Include="..\Private\Monster_Character.cpp" />
     <ClCompile Include="..\Private\Player_DodgeBlink_L_03.cpp" />
     <ClCompile Include="..\Private\Player_DodgeBlink_R_03.cpp" />
@@ -1130,6 +1135,7 @@
     <ClCompile Include="..\Private\Sniper_Walk_FR.cpp" />
     <ClCompile Include="..\Private\Sniper_Weakspot_Death_01.cpp" />
     <ClCompile Include="..\Private\SpringCamera.cpp" />
+    <ClCompile Include="..\Private\UI_Weakness.cpp" />
     <ClCompile Include="..\Private\VampireCommander.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Attack.cpp" />
     <ClCompile Include="..\Private\VampireCommander_BloodRange_Loop.cpp" />

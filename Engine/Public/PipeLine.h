@@ -25,6 +25,7 @@ public:
 
 public: /* 카메라 관련 */
 	_float4 Get_CamPosition();
+	_float4 Get_CamDirection();
 	_float4 Get_CamSetting();
 
 	_float	Get_CamFar() { return m_fCamFar; };
