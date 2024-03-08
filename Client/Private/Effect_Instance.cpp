@@ -10,7 +10,7 @@
 CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-
+	m_bIsPoolObject = FALSE;
 }
 
 CEffect_Instance::CEffect_Instance(const CEffect_Instance & rhs)
@@ -26,7 +26,7 @@ HRESULT CEffect_Instance::Initialize_Prototype()
 
 HRESULT CEffect_Instance::Initialize(void* pArg)
 {	
-	*static_cast<EFFECTVOID_DESC*>(&m_tInstanceDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
+	//*static_cast<EFFECTVOID_DESC*>(&m_tInstanceDesc) = *static_cast<EFFECTVOID_DESC*>(pArg);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
@@ -46,30 +46,30 @@ void CEffect_Instance::Priority_Tick(_float fTimeDelta)
 void CEffect_Instance::Tick(_float fTimeDelta)
 {
 
-	if (m_tInstanceDesc.bActive_Tool)
+	if (m_tVoidDesc.bActive_Tool)
 	{
-		m_fSequenceTime = m_fLifeTime + m_fRemainTime;
+		m_tVoidDesc.fSequenceTime = m_tVoidDesc.fLifeTime + m_tVoidDesc.fRemainTime;
 
-		if (m_tInstanceDesc.bPlay)
+		if (m_tVoidDesc.bPlay)
 		{
-			m_fSequenceAcc += fTimeDelta;
+			m_tVoidDesc.fSequenceAcc += fTimeDelta;
 
-			// 시작지연 누적시간이 지나면 렌더 시작
-			if (m_fWaitingAcc <= m_fWaitingTime)
+			// 시작지연 누적시간이 지나면 렌더 시작(이 이펙트 시작)
+			if (m_tVoidDesc.fWaitingAcc <= m_tVoidDesc.fWaitingTime)
 			{
-				m_fWaitingAcc += fTimeDelta;
+				m_tVoidDesc.fWaitingAcc += fTimeDelta;
 
-				if (m_fWaitingAcc >= m_fWaitingTime)
+				if (m_tVoidDesc.fWaitingAcc >= m_tVoidDesc.fWaitingTime)
 				{
-					m_tInstanceDesc.bRender = TRUE;
+					m_tVoidDesc.bRender = TRUE;
 				}
 				else
 					return;
 			}
 
 			// 라이프타임 누적 시작
-			m_fTimeAcc += fTimeDelta;
-			m_fLifeTimeRatio = min(1.0f, m_fTimeAcc / m_fLifeTime);
+			m_tVoidDesc.fTimeAcc += fTimeDelta;
+			m_tVoidDesc.fLifeTimeRatio = min(1.0f, m_tVoidDesc.fTimeAcc / m_tVoidDesc.fLifeTime);
 
 			/* ======================= 라이프 타임 동작 시작 ======================= */
 
@@ -79,29 +79,38 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 			/* ======================= 라이프 타임 동작 끝  ======================= */
 
 
-			if (m_fTimeAcc >= m_fLifeTime)
+			if (m_tVoidDesc.fTimeAcc >= m_tVoidDesc.fLifeTime)
 			{
 				// 삭제 대기시간 누적 시작
-				m_fRemainAcc += fTimeDelta;
+				m_tVoidDesc.fRemainAcc += fTimeDelta;
 
 				// 디졸브 시작
-				m_tInstanceDesc.bDissolve = TRUE;
-				if (m_tInstanceDesc.bDissolve)
+				m_tVoidDesc.bDissolve = TRUE;
+				if (m_tVoidDesc.bDissolve)
 				{
-					m_tInstanceDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_fRemainAcc, m_fRemainTime, m_tInstanceDesc.eType_Easing);
+					m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
 				}
 
-				if (m_fRemainAcc >= m_fRemainTime)
+				// 이 이펙트의 타임라인 종료
+				if (m_tVoidDesc.fRemainAcc >= m_tVoidDesc.fRemainTime)
 				{
-					m_tInstanceDesc.fDissolveAmount = 1.f;
-					m_tInstanceDesc.bRender = TRUE;
+					m_tVoidDesc.fDissolveAmount = 1.f;
+					m_tVoidDesc.bRender = TRUE;
 					return;
 				}
 			}
 
-			if (m_tInstanceDesc.bRender)
+			if (m_tVoidDesc.bRender)
 			{
-				m_pVIBufferCom->Update(fTimeDelta);
+				if (CVIBuffer_Effect_Model_Instance::MODE_PARTICLE == m_pVIBufferCom->Get_Desc()->eType_Mode)
+				{
+					m_pVIBufferCom->Update_Particle(fTimeDelta);
+				}
+				else
+				{
+					m_pVIBufferCom->Update(fTimeDelta);
+				}
+				
 			}
 		}
 	}
@@ -111,22 +120,22 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 
 void CEffect_Instance::Late_Tick(_float fTimeDelta)
 {
-	if (m_tInstanceDesc.bActive_Tool)
+	if (m_tVoidDesc.bActive_Tool)
 	{
-		if (m_tInstanceDesc.bRender)
+		if (m_tVoidDesc.bRender)
 		{
-			if (nullptr != m_pOwner)
+			if (nullptr != m_tVoidDesc.pParentObj)
 			{
-				if (m_tInstanceDesc.bParentPivot)
+				if (m_tVoidDesc.bParentPivot)
 				{
-					m_tInstanceDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
-					XMStoreFloat4x4(&m_tInstanceDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tInstanceDesc.matPivot);
+					m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
+					XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
 				}
 			}
 			//Compute_CamDistance();
 
 			//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_EFFECT, this));
-			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tInstanceDesc.iRenderGroup, this));
+			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this));
 		}
 	}
 }
@@ -136,18 +145,20 @@ HRESULT CEffect_Instance::Render()
 	if(FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	_uint	iCurModelNum = m_pVIBufferCom->Get_Desc()->eCurModelNum;
 
-	for (size_t i = 0; i < iNumMeshes; i++)
+	_uint	iNumMeshes = m_pModelCom[iCurModelNum]->Get_NumMeshes();
+
+	//for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		if(FALSE == m_tInstanceDesc.bUseCustomTex)
-			m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+			m_pModelCom[iCurModelNum]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
 
 		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 
 
-		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
-		m_pVIBufferCom->Render((_uint)i);
+		m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
+		m_pVIBufferCom->Render((_uint)iCurModelNum);
 	}	
 
 	return S_OK;
@@ -157,9 +168,9 @@ void CEffect_Instance::ReSet_Effect()
 {
 	__super::ReSet_Effect();
 
-	m_tInstanceDesc.fDissolveAmount = 0.f;
-	m_tInstanceDesc.bDissolve = FALSE;
-	m_tInstanceDesc.bRender = FALSE;
+	m_tVoidDesc.fDissolveAmount = 0.f;
+	m_tVoidDesc.bDissolve = FALSE;
+	m_tVoidDesc.bRender = FALSE;
 
 	m_pVIBufferCom->ReSet();
 }
@@ -168,57 +179,18 @@ void CEffect_Instance::End_Effect()
 {
 	__super::End_Effect();
 
-	if (m_tInstanceDesc.bLoop)
+	if (m_tVoidDesc.bLoop)
 	{
 		ReSet_Effect();
 	}
-}
-
-void* CEffect_Instance::Get_BufferDesc()
-{
-	// 초기화용
-
-	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferDesc = {};
-
-	tBufferDesc.iCurNumInstance = m_tInstanceDesc.iCurNumInstance;
-	tBufferDesc.pModel = m_pModelCom;
-
-	/* RigidBody */
-	tBufferDesc.bUseRigidBody	= m_tInstanceDesc.bUseRigidBody;
-	tBufferDesc.bKinetic		= m_tInstanceDesc.bKinetic;
-	tBufferDesc.bUseGravity		= m_tInstanceDesc.bUseGravity;
-	tBufferDesc.eForce_Mode		= m_tInstanceDesc.eForce_Mode;
-
-	tBufferDesc.fGravity		= m_tInstanceDesc.fGravity;
-	tBufferDesc.fFriction		= m_tInstanceDesc.fFriction;
-	tBufferDesc.fSleepThreshold = m_tInstanceDesc.fSleepThreshold;
-	tBufferDesc.byFreezeAxis	= m_tInstanceDesc.byFreezeAxis;
-
-	tBufferDesc.vMinMaxPower	= m_tInstanceDesc.vMinMaxPower;
-
-
-	/* For.Position */
-	tBufferDesc.vCenterPosition = m_tInstanceDesc.vCenterPosition;
-	tBufferDesc.vMinMaxRange	= m_tInstanceDesc.vMinMaxRange;
-
-	/* For.Rotation */
-	tBufferDesc.vMinMaxRotationOffsetX = m_tInstanceDesc.vMinMaxRotationOffsetX;
-	tBufferDesc.vMinMaxRotationOffsetY = m_tInstanceDesc.vMinMaxRotationOffsetY;
-	tBufferDesc.vMinMaxRotationOffsetZ = m_tInstanceDesc.vMinMaxRotationOffsetZ;
-
-
-
-	return &tBufferDesc;
 }
 
 _bool CEffect_Instance::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
 
-	Write_VoidDesc(Out_Json, &m_tInstanceDesc);
 
 	/* Mesh */
-	Out_Json["eType_Mesh"] = m_tInstanceDesc.eType_Mesh;
 	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
 
 	/* Bloom */
@@ -237,11 +209,9 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-	*static_cast<EFFECTVOID_DESC*>(&m_tInstanceDesc) = *static_cast<EFFECTVOID_DESC*>(Load_VoidDesc(In_Json));
 
 	/* Mesh */
-	m_tInstanceDesc.eType_Mesh = In_Json["eType_Mesh"];
-	m_tInstanceDesc.bUseCustomTex = In_Json["bUseCustomTex"];
+	m_tInstanceDesc.bUseCustomTex	= In_Json["bUseCustomTex"];
 
 
 	/* Bloom */
@@ -265,40 +235,62 @@ HRESULT CEffect_Instance::Ready_Components()
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
+
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strModelTag,
-		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
+	{
+		if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_01],
+			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[CVIBuffer_Effect_Model_Instance::MORPH_01]))))
+			return E_FAIL;
+
+		if (TEXT("") != m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02])
+		{
+			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02],
+				TEXT("Com_Model_Morph"), reinterpret_cast<CComponent**>(&m_pModelCom[CVIBuffer_Effect_Model_Instance::MORPH_02]))))
+				return E_FAIL;
+		}
+	}
 
 
 	/* For.Com_VIBuffer */
 	{
-		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferInfo = *static_cast<CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC*>(Get_BufferDesc());
+		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferInfo = {};
+
+		for (_uint i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MODE_END); ++i)
+		{
+			if (nullptr != m_pModelCom[i])
+			{
+				tBufferInfo.pModel[i] = m_pModelCom[i];
+			}		
+		}
+
 		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
 			return E_FAIL;
 	}
 
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strTextureTag[TEXTURE_DIFFUSE],
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
-		return E_FAIL;
-
-	if (TEXT("") != m_tInstanceDesc.strTextureTag[TEXTURE_MASK])
 	{
-		/* For.Com_Mask */
-		if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strTextureTag[TEXTURE_MASK],
-			TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
+		if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE],
+			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
 			return E_FAIL;
+
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
+		{
+			/* For.Com_Mask */
+			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
+				TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
+				return E_FAIL;
+		}
+
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
+		{
+			/* For.Com_Noise */
+			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
+				TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
+				return E_FAIL;
+		}
 	}
 
-	if (TEXT("") != m_tInstanceDesc.strTextureTag[TEXTURE_NOISE])
-	{
-		/* For.Com_Noise */
-		if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strTextureTag[TEXTURE_NOISE],
-			TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
-			return E_FAIL;
-	}
 
 
 	return S_OK;
@@ -307,9 +299,9 @@ HRESULT CEffect_Instance::Ready_Components()
 HRESULT CEffect_Instance::Bind_ShaderResources()
 {
 	/* Matrix ============================================================================================ */
-	if (m_tInstanceDesc.bParentPivot)
+	if (m_tVoidDesc.bParentPivot)
 	{
-		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tInstanceDesc.matOffset));
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matOffset));
 	}
 	else
 	{
@@ -322,25 +314,26 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 
 	if (TRUE == m_tInstanceDesc.bUseCustomTex)
 	{
-		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_DIFFUSE]));
+		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_DIFFUSE]));
 
 		if (nullptr != m_pTextureCom[TEXTURE_MASK])
 		{
-			FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_MASK]));
+			FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tVoidDesc.iTextureIndex[TEXTURE_MASK]));
 			//FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_MASK]));
 		}
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 		{
-			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_NOISE]));
+			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NOISE]));
 		}
 	}
 
 	/* UV ============================================================================================ */
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tInstanceDesc.fUV_RotDegree, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
 
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tInstanceDesc.vColor_Clip.w, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &m_tVoidDesc.vColor_Mul, sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tVoidDesc.vColor_Clip.w, sizeof(_float)));
 
-	_float3 vBlack_Discard = _float3(m_tInstanceDesc.vColor_Clip.x, m_tInstanceDesc.vColor_Clip.y, m_tInstanceDesc.vColor_Clip.z);
+	_float3 vBlack_Discard = _float3(m_tVoidDesc.vColor_Clip.x, m_tVoidDesc.vColor_Clip.y, m_tVoidDesc.vColor_Clip.z);
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
 
 
@@ -358,10 +351,10 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 
 
 	/* Dissolve */
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tInstanceDesc.vUV_Offset, sizeof(_float2)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tInstanceDesc.vUV_Scale, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
 
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tInstanceDesc.fDissolveAmount, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tVoidDesc.fDissolveAmount, sizeof(_float)));
 
 
 	return S_OK;
@@ -401,8 +394,15 @@ CGameObject* CEffect_Instance::Pool()
 void CEffect_Instance::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pModelCom);	
+	
+	for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MORPH_END); i++)
+	{
+		if (nullptr != m_pModelCom[i])
+		{
+			Safe_Release(m_pModelCom[i]);
+		}	
+	}
+		
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pVIBufferCom);
 

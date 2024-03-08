@@ -88,9 +88,11 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	m_pTransformCom->Add_RootBone_Position(m_pBody->Get_MovePos(), m_pNavigationCom);
 
 	m_pRigidBody->Late_Tick(fTimeDelta);
+
 #ifdef _DEBUG
 	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
+
 }
 
 HRESULT CCharacter::Render()
@@ -331,8 +333,6 @@ void CCharacter::Set_Enable(_bool _Enable)
 
 		m_PartObjects.clear();
 	}
-
-
 }
 
 Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower)
@@ -376,61 +376,114 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 	return eHitType;
 }
 
-//Hit_Type CCharacter::Set_Hitted(_uint iDamage, _float3 vForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower)
-//{
-//	Hit_Type eHitType = Hit_Type::None;
-//
-//	if (Power::Absolute == m_eStrength)
-//	{
-//		return Hit_Type::None;
-//	}
-//
-//	//Get_Damaged(iDamage);
-//	//Set_InvincibleTime(fInvincibleTime);
-//
-//	if (m_iHp <= 0)
-//	{
-//		Add_Force(,vForce);
-//		Hitted_Dead();
-//		//eHitType = Hit_Type::Hit_Finish;
-//	}
-//	else if (eHitPower >= m_eStrength)
-//	{
-//		eHitType = Hit_Type::Hit;
-//
-//		//Add_Force(vForce);
-//
-//		switch (eHitDirection)
-//		{
-//		case Engine::Left:
-//			Hitted_Right();
-//			break;
-//		case Engine::Right:
-//			Hitted_Left();
-//			break;
-//		default:
-//			Hitted_Front();
-//			break;
-//		}
-//		//Set_StiffnessRate(fStiffnessRate);
-//	}
-//
-//	return eHitType;
-//}
-
-
 void CCharacter::Add_Force(_vector In_vDir, _float In_fPower)
 {
 	m_pRigidBody->Add_Force(In_vDir, In_fPower);
 }
 
+void CCharacter::Look_At_Target()
+{
+	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
+		return;
+
+	_fvector vTargetPos = m_pTarget->Get_Position_Vector();
+	m_pTransformCom->Look_At_OnLand(vTargetPos);
+}
+
+void CCharacter::Search_Target(const wstring& strLayerTag)
+{
+	if (nullptr != m_pTarget)
+		return;
+
+	m_pTarget = Select_The_Nearest_Enemy(strLayerTag);
+}
+
+CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance)
+{
+	CCharacter* pResult = { nullptr };
+
+	_float fMinDistance = fMaxDistance;
+
+	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+	list<CGameObject*>* pTargetLayer = m_pGameInstance->Get_GameObjects(iCurrentLevel, strLayerTag);
+
+	if (nullptr == pTargetLayer)
+		return nullptr;
+
+	for (CGameObject* pTarget : *pTargetLayer) 
+	{
+
+		if (nullptr == pTarget || false == pTarget->Get_Enable())
+			continue;
+
+		CCharacter* pTargetCharacter = dynamic_cast<CCharacter*>(pTarget);
+
+		if (nullptr == pTargetCharacter)
+			continue;
+
+		_float fDistance = Calc_Distance(pTarget);
+		if (fMinDistance > fDistance) 
+		{
+			fMinDistance = fDistance;
+			pResult = pTargetCharacter;
+		}
+	}
+
+	return pResult;
+}
+
+
+_float CCharacter::Calc_Distance(_float3 vTargetPos)
+{
+	_float3 vPos = Get_Position();
+
+	_float3 vDiff = vTargetPos - vPos;
+
+	return sqrt(vDiff.x * vDiff.x + vDiff.y * vDiff.y + vDiff.z * vDiff.z);
+}
+
+_float CCharacter::Calc_Distance(CGameObject* pTarget)
+{
+	if (nullptr == pTarget || false == pTarget->Get_Enable())
+		return 1000000.f;
+
+	return Calc_Distance(pTarget->Get_Position());
+}
+
+_float CCharacter::Calc_Distance()
+{
+	return Calc_Distance(m_pTarget);
+}
+
+_float CCharacter::Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag)
+{
+	CCharacter* pCharacter = Select_The_Nearest_Enemy(strLayerTag);
+
+	if (nullptr == pCharacter)
+		return 1000000.f;
+
+	return Calc_Distance(pCharacter);
+}
+
+void CCharacter::Move_In_Proportion_To_Enemy(_float fSpeedCap)
+{
+	if (nullptr == m_pTarget)
+		return;
+
+	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	_float fDistance = Calc_Distance();
+	_float3 vPos = { 0.f, 0.f, min(fDistance / 100.f, fSpeedCap) };
+
+	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
+	m_pTransformCom->Move_On_Navigation(vResult);
+}
+
+
 void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
 {
 	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState);
 }
-
-
-
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {

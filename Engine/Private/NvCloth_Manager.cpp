@@ -1,7 +1,7 @@
 // #include "NvCloth_Manager.h"
 // #include "GameInstance.h"
 // #include <cuda.h>
-
+// 
 // IMPLEMENT_SINGLETON(CNvCloth_Manager)
 // 
 // Solver* CNvCloth_Manager::Get_Solver()

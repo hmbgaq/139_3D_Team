@@ -5,6 +5,7 @@
 
 #include "Player.h"
 #include "Camera_Dynamic.h"
+#include "MasterCamera.h"
 
 IMPLEMENT_SINGLETON(CData_Manager);
 
@@ -24,6 +25,8 @@ HRESULT CData_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pC
 
 	m_pContext = pContext;
 	Safe_AddRef(m_pContext);
+
+	PlayerInfo_Setting();
 
 	return S_OK;
 }
@@ -72,17 +75,17 @@ void CData_Manager::Reset_Player(LEVEL eLEVEL)
 
 }
 
-void CData_Manager::Set_Camera_Dynamic(CCamera_Dynamic* _pCamera_Dynamic)
+void CData_Manager::Set_MasterCamera(CMasterCamera* _pMasterCamera)
 {
-	m_pCamera_Dynamic = _pCamera_Dynamic;
+	m_pMasterCamera = _pMasterCamera;
 }
 
-CCamera_Dynamic* CData_Manager::Get_Camera_Dynamic()
+CMasterCamera* CData_Manager::Get_MasterCamera()
 {
-	return m_pCamera_Dynamic;
+	return m_pMasterCamera;
 }
 
-void CData_Manager::Reset_Camera_Dynamic(LEVEL eLEVEL)
+void CData_Manager::Reset_MasterCamera(LEVEL eLEVEL)
 {
 	CCamera_Dynamic::DYNAMIC_CAMERA_DESC tDesc = {};
 	tDesc.fMouseSensor = 0.05f;
@@ -115,11 +118,94 @@ void CData_Manager::Reset_Camera_Dynamic(LEVEL eLEVEL)
 		break;
 	}
 
-	m_pCamera_Dynamic->Initialize(&tDesc);
-	m_pCamera_Dynamic->Set_Position(vPos);
+	m_pMasterCamera->Initialize(&tDesc);
+	m_pMasterCamera->Set_Position(vPos);
 }
 
+#pragma region SH_ADD
+// Player_Setting
+void CData_Manager::PlayerInfo_Setting()
+{
+	/* HP */
+	m_fMaxHP = 100.0f;
+	m_fCurHP = m_fMaxHP;
 
+	/* EXP */
+	m_fMaxEXP = 100.0f;
+	m_fCurEXP = 0.0f;
+
+	/* SKILL_GUIGE */
+	m_fMaxSkillGuige = 100.0f;
+	m_fCurSkillGuige = /*0.0f*/m_fMaxSkillGuige;
+}
+
+// Player_HP
+void CData_Manager::Limit_HP()
+{
+	/* 1. 모든 체력 소진 */
+	if (m_fCurHP <= 0.f)
+	{
+		/* Dead */
+		m_fCurHP = 0.f;
+	}
+
+	/* 2. 현재 체력 -> 맥스 체력 초과 */
+	if (m_fCurHP >= m_fMaxHP)
+	{
+		m_fCurHP = m_fMaxHP;
+	}
+}
+
+// Player_EXP
+_bool CData_Manager::Limit_EXP()
+{
+	/* 1. 경험치 하한선 방지 */
+	if (m_fCurEXP <= 0.f)
+	{
+		m_fCurEXP = 0.f;
+	}
+
+	/* 2. 현재 경험치 최대치 도달 (레벨 업) */
+	if (m_fCurEXP >= m_fMaxEXP)
+	{
+		m_fCurHP = m_fMaxHP;
+		m_bLevelUp = true;
+
+		return true; // Level UP
+	}
+
+	return false; // Not Event
+}
+
+// Player_SkillGuige
+void CData_Manager::Limit_SkillGuige()
+{
+}
+
+// Player_Level
+void CData_Manager::Limit_Level()
+{
+	/* 1. 레벨 업 */
+	if (m_bLevelUp)
+	{
+		++m_iCurLevel; // Add Level
+		m_bLevelUp = false;
+	}
+}
+
+// Limit_Manager
+void CData_Manager::Limit_Manager()
+{
+	//=>HP
+						Limit_HP();
+	//=>EXP
+						Limit_EXP();
+	//=>SkillGuige
+						Limit_SkillGuige();
+	//=>Level
+						Limit_Level();
+}
+#pragma endregion SH_END
 
 void CData_Manager::Free()
 {

@@ -33,14 +33,14 @@ HRESULT CSky::Initialize(void* pArg)
 
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
-	if (iCurrentLevel == (_uint)LEVEL_TOOL)
-	{
-		m_iTextureIndex = 6;
-	}
-	else
-	{
+	//if (iCurrentLevel == (_uint)LEVEL_TOOL)
+	//{
+	//	m_iTextureIndex = 6;
+	//}
+	//else
+	//{
 		m_iTextureIndex = 5;
-	}
+	//}
 
 }
 

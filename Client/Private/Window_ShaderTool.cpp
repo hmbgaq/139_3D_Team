@@ -193,11 +193,9 @@ void CWindow_ShaderTool::Compress_Fog_Setting()
 
 void CWindow_ShaderTool::Compress_BloomRim_Setting()
 {
-	ImGui::Checkbox("Bloom Blur",		&m_eScreen_Desc.bBloomBlur_Active);
-	ImGui::Checkbox("RimLight Blur",	&m_eScreen_Desc.bRimBlur_Active);
+	ImGui::Checkbox("BloomRim Blur",	&m_eScreen_Desc.bRimBloom_Blur_Active);
 
 	m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(m_eScreen_Desc);
-
 }
 
 void CWindow_ShaderTool::Compress_Radial_Setting()
@@ -216,8 +214,8 @@ void CWindow_ShaderTool::Compress_DOF_Setting()
 {
 	ImGui::Checkbox("DOF Active", &m_eDOF_Desc.bDOF_Active);
 
-	ImGui::SliderFloat("Focus", &m_eDOF_Desc.focus, 0.0f, 50.0f, "Focus = %.3f");
-	ImGui::SliderFloat("Range", &m_eDOF_Desc.range, 0.0f, 50.0f, "Range = %.3f");
+	ImGui::SliderFloat("Distance", &m_eDOF_Desc.fFocusDistance, 0.0f, 100.0f, "Distance = %.3f");
+	ImGui::SliderFloat("Range", &m_eDOF_Desc.fFocusRange, 0.0f, 100.0f, "Range = %.3f");
 	//ImGui::SliderFloat("Att", &m_eDOF_Desc.fMaxAtt, 0.0f, 100.0f, "MaxAtt = %.3f");
 
 	m_pGameInstance->Get_Renderer()->Set_DOF_Option(m_eDOF_Desc);

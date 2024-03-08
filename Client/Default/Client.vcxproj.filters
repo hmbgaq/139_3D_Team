@@ -124,12 +124,6 @@
     <Filter Include="02.GameObjects\UI\00. Player\01. Hp">
       <UniqueIdentifier>{fc5b542d-a7bf-4b5e-a9ee-85c458609df1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\02. Info">
-      <UniqueIdentifier>{d124210c-f729-4c2b-b76f-6cebbbb71024}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\03. Skill">
-      <UniqueIdentifier>{eed3b339-fea4-4170-a09e-fa3e4ce89df1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\01. Monster">
       <UniqueIdentifier>{4fbd45e8-23c6-4ff2-916d-b5b6ec906d8b}</UniqueIdentifier>
     </Filter>
@@ -216,15 +210,6 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster">
       <UniqueIdentifier>{9087e9de-c65a-4eb8-aff0-d8af60e30b78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\03. Skill\Skill_Icon">
-      <UniqueIdentifier>{37a9a55a-4bfb-4dec-bcab-509c3b5f20a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\03. Skill\Skill_Frame">
-      <UniqueIdentifier>{982c3195-ca22-43de-8427-e513b86cda70}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\03. Skill\Skill_Guige">
-      <UniqueIdentifier>{d54823ed-6d7e-4ef6-9922-4bbd0dec5ef2}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Lights">
       <UniqueIdentifier>{a475bd59-f8b2-4e6a-961b-31b5b1e0bdf8}</UniqueIdentifier>
@@ -1591,12 +1576,6 @@
     <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp">
       <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\HpFrame">
-      <UniqueIdentifier>{dd90327a-0190-4771-96f6-0f97d5f047fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\Left_Interface\ExpBar">
-      <UniqueIdentifier>{cbfa7ad7-0805-44a8-888b-5cca9c54bda7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpBar">
       <UniqueIdentifier>{009fd7cc-9024-4ccd-b651-e9b51bbb3038}</UniqueIdentifier>
     </Filter>
@@ -1864,6 +1843,132 @@
     <Filter Include="01.Levels\01.GamePlay\1.Intro">
       <UniqueIdentifier>{dec9d180-3814-40c0-ac08-d85ab872f73e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Back">
+      <UniqueIdentifier>{8b33b68f-aec7-411c-b880-801b607e46b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Front">
+      <UniqueIdentifier>{483e2205-2b76-42f8-8e17-28e591c94202}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Back\Left">
+      <UniqueIdentifier>{ee0d22ca-0a18-4436-b288-5f8c1a67b546}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Back\Right">
+      <UniqueIdentifier>{2a4cf724-c78c-42e2-a116-bfd284cb2730}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Front\Left">
+      <UniqueIdentifier>{629847b3-3e05-44d1-99f4-1eff4573ec6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Front\Right">
+      <UniqueIdentifier>{06aa1dfa-07c2-4fb2-baa1-09239d3269cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock\Back">
+      <UniqueIdentifier>{decdb9a6-d067-4190-a13b-57c531ed0391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock\Front">
+      <UniqueIdentifier>{fdaf1203-031d-4bc9-a64f-218813086309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock\Front\1">
+      <UniqueIdentifier>{73fec703-6a60-40e3-8fe0-26565191b505}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock\Front\2">
+      <UniqueIdentifier>{9f4889ef-56ef-46bc-99d7-87b06345cbf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\0. High\Left">
+      <UniqueIdentifier>{cb34fc3c-5d79-47b7-8f4b-1f59d57da280}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\0. High\Right">
+      <UniqueIdentifier>{940768c6-fd52-480b-9873-7fa2ba377bd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low\Left">
+      <UniqueIdentifier>{36b332f9-9c67-49fb-b252-305e7857efdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low\Right">
+      <UniqueIdentifier>{6ae394d9-3e46-4b44-aae7-836f321ad38c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low\Over">
+      <UniqueIdentifier>{09ce4c57-31d6-4e10-a238-5ca1e557d90e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\0. Parent">
+      <UniqueIdentifier>{c4dc5bfa-6600-45b4-9a11-c27b6b931884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\1. Light">
+      <UniqueIdentifier>{5b52ffe3-eb6d-4056-ad57-6baa08217489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\2. Normal">
+      <UniqueIdentifier>{5b510ae0-3045-48c9-b9a9-689bc1912209}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\3. Weakspot">
+      <UniqueIdentifier>{6a6c32e2-e5c6-4eb2-8719-574eadd6d759}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\1. Light\Back">
+      <UniqueIdentifier>{af3ae0e4-0e55-4bb8-b22b-c1af4da1c505}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\1. Light\Front">
+      <UniqueIdentifier>{fdb76715-c0da-4abf-8ce1-bb8825bc944c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\2. Normal\Back">
+      <UniqueIdentifier>{293b03f1-bf07-488e-8b6d-f6a00e84f1b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\2. Normal\Front">
+      <UniqueIdentifier>{6cf933f3-ad37-47e2-aa61-52d2fc4ae50b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon\Hand">
+      <UniqueIdentifier>{15f1d66d-de8b-4aa2-b70b-ddf57520516d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\04. Cursor">
+      <UniqueIdentifier>{6e109132-a401-4f34-b94f-7cdc6a9a3265}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\05. MainMenu">
+      <UniqueIdentifier>{8607cc1a-9253-4bba-840f-796a70854084}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option">
+      <UniqueIdentifier>{e650d872-16b1-4e5a-b066-c065efe79803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\SelectBox">
+      <UniqueIdentifier>{bf05b6e6-c273-40c0-bee4-eb2b8c3d8866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\04. Cursor\00. AimCrosshair">
+      <UniqueIdentifier>{ac7ceea2-842e-4d3b-a44c-3d48c4a52487}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\02. Skill">
+      <UniqueIdentifier>{eed3b339-fea4-4170-a09e-fa3e4ce89df1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\02. Skill\Skill_Icon">
+      <UniqueIdentifier>{37a9a55a-4bfb-4dec-bcab-509c3b5f20a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\02. Skill\Skill_Frame">
+      <UniqueIdentifier>{982c3195-ca22-43de-8427-e513b86cda70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\02. Skill\Skill_Guige">
+      <UniqueIdentifier>{d54823ed-6d7e-4ef6-9922-4bbd0dec5ef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\03. Exp">
+      <UniqueIdentifier>{dae31f87-7939-44fa-9f9c-803b3ba8a494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\03. Exp\ExpBar">
+      <UniqueIdentifier>{cbfa7ad7-0805-44a8-888b-5cca9c54bda7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpFrame">
+      <UniqueIdentifier>{dd90327a-0190-4771-96f6-0f97d5f047fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\99. Left_Interface">
+      <UniqueIdentifier>{e214bb53-14ac-4db7-97f6-b3b24eb46415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\98. Right_Interface">
+      <UniqueIdentifier>{52b0b806-bb9d-40cc-a902-d719e9dff60b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Monster\01. Weakness">
+      <UniqueIdentifier>{ce1391d2-0f61-42d6-aa55-e19415c437e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects">
+      <UniqueIdentifier>{6a4e5f4a-7555-4c9b-b7e7-d07684d1935b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview">
+      <UniqueIdentifier>{4e581434-6a53-484b-964f-ac3c78373ab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid">
+      <UniqueIdentifier>{84424594-e511-4a33-8a23-891bc3ac3cef}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\02. Environment\Environment_LightObject">
       <UniqueIdentifier>{06678cb6-3952-4c50-8c08-d9911c4aba61}</UniqueIdentifier>
     </Filter>
@@ -2005,7 +2110,7 @@
       <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_HPFrame.h">
-      <Filter>02.GameObjects\UI\00. Player\HpFrame</Filter>
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpFrame</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Field.h">
       <Filter>02.GameObjects\98. Terrain\Tool_Field</Filter>
@@ -2119,16 +2224,16 @@
       <Filter>02.GameObjects\00. Character\Monster\20. InstanceMonster</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_Skill.h">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_Skill_Frame.h">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Frame</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill\Skill_Frame</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_Skill_Guige.h">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Guige</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill\Skill_Guige</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_Skill_Icon.h">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Icon</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill\Skill_Icon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Blood_Lights.h">
       <Filter>02.GameObjects\UI\00. Player\00. Blood\Lights</Filter>
@@ -2143,16 +2248,16 @@
       <Filter>02.GameObjects\UI\00. Player\00. Blood</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_Left_Interface.h">
-      <Filter>02.GameObjects\UI\00. Player\Left_Interface</Filter>
+      <Filter>02.GameObjects\UI\00. Player\99. Left_Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_TutorialBox.h">
       <Filter>02.GameObjects\UI\02. System\00. Text\00. Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_ExpBar.h">
-      <Filter>02.GameObjects\UI\00. Player\Left_Interface\ExpBar</Filter>
+      <Filter>02.GameObjects\UI\00. Player\03. Exp\ExpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Player_Right_Interface.h">
-      <Filter>02.GameObjects\UI\00. Player\Right_Interface</Filter>
+      <Filter>02.GameObjects\UI\00. Player\98. Right_Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_QuestBox.h">
       <Filter>02.GameObjects\UI\02. System\00. Text\01. Quest</Filter>
@@ -2180,9 +2285,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_LevelUp_Shards.h">
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\02. Shards</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\UI_LevelUp_ShieldFrame.h">
-      <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_LevelUp_SunBeacon.h">
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\04. SunBeacon</Filter>
@@ -3409,46 +3511,94 @@
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\SyncedAttack\Failure</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_HitHeavy_B_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Sniper_HitHeavy_BL_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Sniper_HitHeavy_BR_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_HitHeavy_F_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_HitHeavy_BL_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_HitHeavy_BR_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Back\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_HitHeavy_FL_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Front\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_HitHeavy_FR_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Front\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_KnockFrontLight_B_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock\Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_KnockFrontLight_F_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock\Front\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_KnockFrontLight_F_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock\Front\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_CoverHigh_LeanLeft_HitHeavy_01_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\0. High</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\0. High\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_CoverHigh_LeanRight_HitHeavy_01_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\0. High</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\0. High\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_CoverLow_LeanLeft_HitHeavy_01_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_CoverLow_LeanOver_HitHeavy_01_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low\Over</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_CoverLow_LeanRight_HitHeavy_01_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Sniper_State_Death.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_DeathLight_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\1. Light\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_DeathLight_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\1. Light\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_DeathNormal_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\2. Normal\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_DeathNormal_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\2. Normal\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Weakspot_Death_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\3. Weakspot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Weapon.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Weapon_Hand.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon\Hand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_MouseCursor.h">
+      <Filter>02.GameObjects\UI\02. System\04. Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Option_Window.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Option_SelectBox.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\SelectBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_AimCrosshair.h">
+      <Filter>02.GameObjects\UI\02. System\04. Cursor\00. AimCrosshair</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LevelUp_ShieldFrame.h">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Weakness.h">
+      <Filter>02.GameObjects\UI\01. Monster\01. Weakness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model_Preview.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Grid.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Environment_LightObject.h">
       <Filter>02.GameObjects\02. Environment\Environment_LightObject</Filter>
@@ -3788,7 +3938,7 @@
       <Filter>02.GameObjects\UI\00. Player\01. Hp\HpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_HPFrame.cpp">
-      <Filter>02.GameObjects\UI\00. Player\HpFrame</Filter>
+      <Filter>02.GameObjects\UI\00. Player\01. Hp\HpFrame</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Field.cpp">
       <Filter>02.GameObjects\98. Terrain\Tool_Field</Filter>
@@ -3881,16 +4031,16 @@
       <Filter>02.GameObjects\00. Character\Monster\20. InstanceMonster</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Skill.cpp">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Skill_Frame.cpp">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Frame</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill\Skill_Frame</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Skill_Guige.cpp">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Guige</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill\Skill_Guige</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Skill_Icon.cpp">
-      <Filter>02.GameObjects\UI\00. Player\03. Skill\Skill_Icon</Filter>
+      <Filter>02.GameObjects\UI\00. Player\02. Skill\Skill_Icon</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Blood_Lights.cpp">
       <Filter>02.GameObjects\UI\00. Player\00. Blood\Lights</Filter>
@@ -4901,16 +5051,16 @@
       <Filter>01.Levels\01.GamePlay\1.Intro</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Left_Interface.cpp">
-      <Filter>02.GameObjects\UI\00. Player\Left_Interface</Filter>
+      <Filter>02.GameObjects\UI\00. Player\99. Left_Interface</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_TutorialBox.cpp">
       <Filter>02.GameObjects\UI\02. System\00. Text\00. Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_ExpBar.cpp">
-      <Filter>02.GameObjects\UI\00. Player\Left_Interface\ExpBar</Filter>
+      <Filter>02.GameObjects\UI\00. Player\03. Exp\ExpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Player_Right_Interface.cpp">
-      <Filter>02.GameObjects\UI\00. Player\Right_Interface</Filter>
+      <Filter>02.GameObjects\UI\00. Player\98. Right_Interface</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_QuestBox.cpp">
       <Filter>02.GameObjects\UI\02. System\00. Text\01. Quest</Filter>
@@ -4938,9 +5088,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_LevelUp_Shards.cpp">
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\02. Shards</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UI_LevelUp_ShieldFrame.cpp">
-      <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_LevelUp_SunBeacon.cpp">
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\04. SunBeacon</Filter>
@@ -5098,8 +5245,95 @@
     <ClCompile Include="..\Private\Bandit_Sniper_State_Hit.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\0. Parent</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Environment_LightObject.cpp">
-      <Filter>02.GameObjects\02. Environment\Environment_LightObject</Filter>
+    <ClCompile Include="..\Private\Sniper_HitHeavy_B_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_HitHeavy_F_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_HitHeavy_BL_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Back\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_HitHeavy_BR_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Back\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_HitHeavy_FL_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Front\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_HitHeavy_FR_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\1. Heavy\Front\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_KnockFrontLight_B_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_KnockFrontLight_F_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock\Front\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_KnockFrontLight_F_02.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\2. Knock\Front\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_CoverHigh_LeanLeft_HitHeavy_01_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\0. High\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_CoverHigh_LeanRight_HitHeavy_01_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\0. High\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_CoverLow_LeanLeft_HitHeavy_01_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_CoverLow_LeanOver_HitHeavy_01_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low\Over</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_CoverLow_LeanRight_HitHeavy_01_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\6. Hit\3. Cover\1. Low\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bandit_Sniper_State_Death.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_DeathLight_B_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\1. Light\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_DeathLight_F_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\1. Light\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_DeathNormal_B_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\2. Normal\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_DeathNormal_F_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\2. Normal\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Weakspot_Death_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\7. Death\3. Weakspot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Weapon.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Weapon_Hand.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon\Hand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MouseCursor.cpp">
+      <Filter>02.GameObjects\UI\02. System\04. Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Option_Window.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Option_SelectBox.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\SelectBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_AimCrosshair.cpp">
+      <Filter>02.GameObjects\UI\02. System\04. Cursor\00. AimCrosshair</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LevelUp_ShieldFrame.cpp">
+      <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Weakness.cpp">
+      <Filter>02.GameObjects\UI\01. Monster\01. Weakness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model_Preview.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Grid.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

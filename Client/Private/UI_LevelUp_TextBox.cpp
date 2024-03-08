@@ -34,6 +34,9 @@ HRESULT CUI_LevelUp_TextBox::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
+	m_eState = UISTATE::LEVEL_UP;
+	m_bActive = true;
+
 	return S_OK;
 }
 
@@ -45,6 +48,7 @@ void CUI_LevelUp_TextBox::Priority_Tick(_float fTimeDelta)
 void CUI_LevelUp_TextBox::Tick(_float fTimeDelta)
 {
 
+	__super::Tick(fTimeDelta);
 }
 
 void CUI_LevelUp_TextBox::Late_Tick(_float fTimeDelta)
@@ -52,7 +56,6 @@ void CUI_LevelUp_TextBox::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	__super::Tick(fTimeDelta);
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
@@ -104,8 +107,9 @@ HRESULT CUI_LevelUp_TextBox::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
 
-	string TestName = m_tUIInfo.strObjectName;
 	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
 	{
 		switch (i)

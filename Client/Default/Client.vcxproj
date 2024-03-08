@@ -313,6 +313,7 @@
     <ClInclude Include="..\Public\Bandit_Sniper.h" />
     <ClInclude Include="..\Public\Bandit_Sniper_State_Cover.h" />
     <ClInclude Include="..\Public\Bandit_Sniper_State_Crouch.h" />
+    <ClInclude Include="..\Public\Bandit_Sniper_State_Death.h" />
     <ClInclude Include="..\Public\Bandit_Sniper_State_Hit.h" />
     <ClInclude Include="..\Public\Bandit_Sniper_State_Idle.h" />
     <ClInclude Include="..\Public\Bandit_Sniper_State.h" />
@@ -333,6 +334,7 @@
     <ClInclude Include="..\Public\CustomDialogFont.h" />
     <ClInclude Include="..\Public\Data_Manager.h" />
     <ClInclude Include="..\Public\DevConsole.h" />
+    <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\Environment_LightObject.h" />
     <ClInclude Include="..\Public\Infected.h" />
     <ClInclude Include="..\Public\Infected_A.h" />
@@ -437,6 +439,7 @@
     <ClInclude Include="..\Public\Level_Intro.h" />
     <ClInclude Include="..\Public\ManHeavy_KnockFrontCannonball_F_02.h" />
     <ClInclude Include="..\Public\MasterCamera.h" />
+    <ClInclude Include="..\Public\Model_Preview.h" />
     <ClInclude Include="..\Public\Monster_Character.h" />
     <ClInclude Include="..\Public\Player_DeathLight_F_01.h" />
     <ClInclude Include="..\Public\Player_DeathLight_F_02.h" />
@@ -585,6 +588,10 @@
     <ClInclude Include="..\Public\Sniper_CoverLow_Side_R_AimPose.h" />
     <ClInclude Include="..\Public\Sniper_CoverLow_Side_R_Start.h" />
     <ClInclude Include="..\Public\Sniper_CoverLow_Side_R_Stop.h" />
+    <ClInclude Include="..\Public\Sniper_DeathLight_B_01.h" />
+    <ClInclude Include="..\Public\Sniper_DeathLight_F_01.h" />
+    <ClInclude Include="..\Public\Sniper_DeathNormal_B_01.h" />
+    <ClInclude Include="..\Public\Sniper_DeathNormal_F_01.h" />
     <ClInclude Include="..\Public\Sniper_HitHeavy_BL_01.h" />
     <ClInclude Include="..\Public\Sniper_HitHeavy_BR_01.h" />
     <ClInclude Include="..\Public\Sniper_HitHeavy_B_01.h" />
@@ -613,9 +620,11 @@
     <ClInclude Include="..\Public\Sniper_Walk_F.h" />
     <ClInclude Include="..\Public\Sniper_Walk_FL.h" />
     <ClInclude Include="..\Public\Sniper_Walk_FR.h" />
+    <ClInclude Include="..\Public\Sniper_Weakspot_Death_01.h" />
     <ClInclude Include="..\Public\SpringCamera.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\stb_image.h" />
+    <ClInclude Include="..\Public\UI_Weakness.h" />
     <ClInclude Include="..\Public\VampireCommander.h" />
     <ClInclude Include="..\Public\VampireCommander_Attack.h" />
     <ClInclude Include="..\Public\VampireCommander_BloodRange_Loop.h" />
@@ -663,6 +672,12 @@
     <ClInclude Include="..\Public\VampireCommander_Walk_FL45.h" />
     <ClInclude Include="..\Public\VampireCommander_Walk_FR.h" />
     <ClInclude Include="..\Public\VampireCommander_Walk_FR45.h" />
+    <ClInclude Include="..\Public\VampireCommander_Weapon.h" />
+    <ClInclude Include="..\Public\VampireCommander_Weapon_Hand.h" />
+    <ClInclude Include="..\Public\UI_AimCrosshair.h" />
+    <ClInclude Include="..\Public\UI_MouseCursor.h" />
+    <ClInclude Include="..\Public\UI_Option_SelectBox.h" />
+    <ClInclude Include="..\Public\UI_Option_Window.h" />
     <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h" />
     <ClInclude Include="..\Public\Window_Style.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -819,6 +834,7 @@
     <ClCompile Include="..\Private\Bandit_Sniper.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper_State_Cover.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper_State_Crouch.cpp" />
+    <ClCompile Include="..\Private\Bandit_Sniper_State_Death.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper_State_Hit.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper_State_Idle.cpp" />
     <ClCompile Include="..\Private\Bandit_Sniper_State.cpp" />
@@ -836,7 +852,7 @@
     <ClCompile Include="..\Private\CustomDialogFont.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
     <ClCompile Include="..\Private\DevConsole.cpp" />
-    <ClCompile Include="..\Private\Environment_LightObject.cpp" />
+    <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\Infected.cpp" />
     <ClCompile Include="..\Private\Infected_A.cpp" />
     <ClCompile Include="..\Private\Infected_DeathHeavy_F_01_NEW.cpp" />
@@ -940,6 +956,7 @@
     <ClCompile Include="..\Private\Level_Intro.cpp" />
     <ClCompile Include="..\Private\ManHeavy_KnockFrontCannonball_F_02.cpp" />
     <ClCompile Include="..\Private\MasterCamera.cpp" />
+    <ClCompile Include="..\Private\Model_Preview.cpp" />
     <ClCompile Include="..\Private\Monster_Character.cpp" />
     <ClCompile Include="..\Private\Player_DodgeBlink_L_03.cpp" />
     <ClCompile Include="..\Private\Player_DodgeBlink_R_03.cpp" />
@@ -1062,6 +1079,8 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\SkyDome.cpp" />
     <ClCompile Include="..\Private\Sniper_CoverHigh_Idle.cpp" />
+    <ClCompile Include="..\Private\Sniper_CoverHigh_LeanLeft_HitHeavy_01_TEMP.cpp" />
+    <ClCompile Include="..\Private\Sniper_CoverHigh_LeanRight_HitHeavy_01_TEMP.cpp" />
     <ClCompile Include="..\Private\Sniper_CoverHigh_Reload.cpp" />
     <ClCompile Include="..\Private\Sniper_CoverHigh_Side_L_AimPose.cpp" />
     <ClCompile Include="..\Private\Sniper_CoverHigh_Side_L_Start.cpp" />
@@ -1070,6 +1089,9 @@
     <ClCompile Include="..\Private\Sniper_CoverHigh_Side_R_Start.cpp" />
     <ClCompile Include="..\Private\Sniper_CoverHigh_Side_R_Stop.cpp" />
     <ClCompile Include="..\Private\Sniper_CoverLow_Idle.cpp" />
+    <ClCompile Include="..\Private\Sniper_CoverLow_LeanLeft_HitHeavy_01_TEMP.cpp" />
+    <ClCompile Include="..\Private\Sniper_CoverLow_LeanOver_HitHeavy_01_TEMP.cpp" />
+    <ClCompile Include="..\Private\Sniper_CoverLow_LeanRight_HitHeavy_01_TEMP.cpp" />
     <ClCompile Include="..\Private\Sniper_CoverLow_Over_AimPose.cpp" />
     <ClCompile Include="..\Private\Sniper_CoverLow_Over_Start.cpp" />
     <ClCompile Include="..\Private\Sniper_CoverLow_Over_Stop.cpp" />
@@ -1080,7 +1102,20 @@
     <ClCompile Include="..\Private\Sniper_CoverLow_Side_R_AimPose.cpp" />
     <ClCompile Include="..\Private\Sniper_CoverLow_Side_R_Start.cpp" />
     <ClCompile Include="..\Private\Sniper_CoverLow_Side_R_Stop.cpp" />
+    <ClCompile Include="..\Private\Sniper_DeathLight_B_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_DeathLight_F_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_DeathNormal_B_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_DeathNormal_F_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_HitHeavy_BL_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_HitHeavy_BR_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_HitHeavy_B_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_HitHeavy_FL_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_HitHeavy_FR_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_HitHeavy_F_01.cpp" />
     <ClCompile Include="..\Private\Sniper_IdlePose.cpp" />
+    <ClCompile Include="..\Private\Sniper_KnockFrontLight_B_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_KnockFrontLight_F_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_KnockFrontLight_F_02.cpp" />
     <ClCompile Include="..\Private\Sniper_MeleeDynamic_01.cpp" />
     <ClCompile Include="..\Private\Sniper_MeleeDynamic_02.cpp" />
     <ClCompile Include="..\Private\Sniper_MeleeDynamic_03.cpp" />
@@ -1099,7 +1134,9 @@
     <ClCompile Include="..\Private\Sniper_Walk_F.cpp" />
     <ClCompile Include="..\Private\Sniper_Walk_FL.cpp" />
     <ClCompile Include="..\Private\Sniper_Walk_FR.cpp" />
+    <ClCompile Include="..\Private\Sniper_Weakspot_Death_01.cpp" />
     <ClCompile Include="..\Private\SpringCamera.cpp" />
+    <ClCompile Include="..\Private\UI_Weakness.cpp" />
     <ClCompile Include="..\Private\VampireCommander.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Attack.cpp" />
     <ClCompile Include="..\Private\VampireCommander_BloodRange_Loop.cpp" />
@@ -1147,6 +1184,12 @@
     <ClCompile Include="..\Private\VampireCommander_Walk_FL45.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Walk_FR.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Walk_FR45.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Weapon.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Weapon_Hand.cpp" />
+    <ClCompile Include="..\Private\UI_AimCrosshair.cpp" />
+    <ClCompile Include="..\Private\UI_MouseCursor.cpp" />
+    <ClCompile Include="..\Private\UI_Option_SelectBox.cpp" />
+    <ClCompile Include="..\Private\UI_Option_Window.cpp" />
     <ClCompile Include="..\Private\VampireTank_KnockFrontLight_F_01.cpp" />
     <ClCompile Include="..\Private\Window_Style.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />

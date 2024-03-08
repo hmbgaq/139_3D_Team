@@ -42,6 +42,8 @@ namespace Client
 		APPEAR,
 		TICK,
 		DISAPPEAR,
+		LEVEL_UP,
+		PLAYER_HUD,
 		STATE_END
 	};
 #pragma endregion End

@@ -52,6 +52,9 @@ HRESULT CLevel_Intro::Initialize()
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
+	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
+
+
 	if (FAILED(Ready_UI()))
 		return E_FAIL;
 
@@ -89,13 +92,11 @@ void CLevel_Intro::Tick(_float fTimeDelta)
 	//	}
 	//}
 #pragma endregion
-
-
 }
 
 HRESULT CLevel_Intro::Render()
 {
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
+	SetWindowText(g_hWnd, TEXT("Level Intro 입니다."));
 
 	return S_OK;
 }

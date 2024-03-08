@@ -22,6 +22,7 @@
 #include "Camera_Dynamic.h"
 #include "SpringCamera.h"
 #include "Data_Manager.h"
+#include "MasterCamera.h"
 
 static ImGuizmo::OPERATION InstanceCurrentGizmoOperation;
 static ImGuizmo::MODE	   InstanceCurrentGizmoMode;
@@ -54,7 +55,7 @@ HRESULT CWindow_MapTool::Initialize()
 	
 	XMStoreFloat4x4(&m_matInstanceMatrix, XMMatrixIdentity());
 	
-	m_pToolCamera = CData_Manager::GetInstance()->Get_Camera_Dynamic();
+	m_pToolCamera = CData_Manager::GetInstance()->Get_MasterCamera();
 
 	if(m_pToolCamera == nullptr)
 		return E_FAIL;
@@ -1844,7 +1845,7 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_SINGLE:
 				{
 					m_pGameInstance->String_To_WString(m_vecSingleModelTag[m_iSelectModelTag], Desc.strModelTag);
-
+					
 					break;
 				}
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_INTERACT:

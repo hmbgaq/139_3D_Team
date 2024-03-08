@@ -112,6 +112,9 @@ HRESULT CMainApp::Ready_Font()
 	FAILED_CHECK(m_pGameInstance->Add_Font(TEXT("Font_Default"), TEXT("../Bin/Resources/Fonts/139ex.spritefont")));
 	FAILED_CHECK(m_pGameInstance->Add_Font(TEXT("Font_Arial"), TEXT("../Bin/Resources/Fonts/Arial.spritefont")));
 
+	// SH_ADD
+	FAILED_CHECK(m_pGameInstance->Add_Font(TEXT("Font_EvilWest"), TEXT("../Bin/Resources/Fonts/EvilWest.spritefont")));
+
 	return S_OK;
 }
 
@@ -146,6 +149,13 @@ HRESULT CMainApp::Ready_UITexture()
 
 	UI_TargetTexture();
 
+	/* Add */
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Inventory_Background"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/WorldMap/backgrounds/Inventory_Background.dds"))));
+	
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_crosshair_pick_bottom"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Crosshairs/ui_crosshair_pick_bottom.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_crosshair_pick_left"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Crosshairs/ui_crosshair_pick_left.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_crosshair_pick_right"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Crosshairs/ui_crosshair_pick_right.dds"))));
+	
 	return S_OK;
 }
 

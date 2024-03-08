@@ -15,6 +15,9 @@ texture2D g_DiffuseTexture_Second;
 texture2D g_DiffuseTexture_Third;
 texture2D g_DiffuseTexture_Fourth;
 
+/* Alpha */
+float g_Alpha;
+
 /* Loading */
 float g_LoadingProgress;
 
@@ -26,7 +29,22 @@ float g_MaxHP;
 float g_CurrentHP;
 float g_LerpHP;
 
+/* Aim */
+float2 g_Recoil;
+float2 g_Offset;
+texture2D g_AimTop_Texture;
+texture2D g_AimBottom_Texture;
+texture2D g_AimLeft_Texture;
+texture2D g_AimRight_Texture;
+
+/* CoolDown */
+texture2D g_CoolDownTexture;
+float2      g_Center;
+float       g_Radius;
+
 texture2D g_DepthTexture;
+texture2D g_DissolveTexture;
+texture2D g_AlphaTexture;
 
 
 /* 정점의 변환(월드변환, 뷰변환, 투영변환.)을 수행한다. */
@@ -88,20 +106,23 @@ struct PS_OUT
 };
 
 /* 픽셀셰이더 : 픽셀의 색!!!! 을 결정한다. */
-PS_OUT PS_MAIN(PS_IN In)
+PS_OUT PS_MAIN(PS_IN In) // 0
 {
     PS_OUT Out = (PS_OUT) 0;
 
 	/* 이 셰이더를 사용하는 객체의 색상을 g_DiffuseTexture의 색상으로 적용시키겠다. */
     Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-		
+   
+    Out.vColor.a -= g_Alpha;
+    
     if (Out.vColor.a < 0.1f)
         discard;
 	
+    
     return Out;
 }
 
-PS_OUT PS_HPBAR_GAUGE_LERP(PS_IN In)
+PS_OUT PS_HPBAR_GAUGE_LERP(PS_IN In) // 1
 {
     PS_OUT Out = (PS_OUT) 0;
 
@@ -121,12 +142,12 @@ PS_OUT PS_HPBAR_GAUGE_LERP(PS_IN In)
 	//if (vGaugeColor.a < 0.3f)
 	//	discard;
 	//Out.vColor = lerp(vLerpColor, vGaugeColor, vGaugeColor.a);
-
+    //Out.vColor.a = g_Alpha;
     return Out;
 }
 
 /* Loading */
-PS_OUT PS_MAIN_LOADING(PS_IN In)
+PS_OUT PS_MAIN_LOADING(PS_IN In) // 2
 {
     PS_OUT Out = (PS_OUT) 0;
 
@@ -142,6 +163,78 @@ PS_OUT PS_MAIN_LOADING(PS_IN In)
 		//Out.vColor = float4(0.0, 0.0, 0.0, 0.0);
     }
 
+    //Out.vColor.a = g_Alpha;
+    
+    return Out;
+}
+
+/* Loading */
+PS_OUT PS_MAIN_OPTION_BACKGROUND(PS_IN In) // 3
+{
+    PS_OUT Out = (PS_OUT) 0;
+    //
+    //float fLoadingPer = 1.f;
+    //
+    //g_DiffuseTexture;   // Background Texture
+    //g_DissolveTexture;  // Fog Texture
+    //g_AlphaTexture;     // AlphaTexture
+    //
+    Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    //Out.vColor.a = g_Alpha;
+    return Out;
+}
+
+/* AIM_CROSSHAIR */ // 크기조절/위치변경 진행중
+PS_OUT PS_MAIN_AIM_CROSSHAIR(PS_IN In) // 4
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    // 이미지 간격을 결정하는 값으로 g_Recoil을 사용
+    float2 vOffset = g_Offset * g_Recoil;
+
+    // 각 이미지의 샘플링 위치를 살짝 이동하여 겹치지 않도록 조정
+    float2 vTopTexCoord = In.vTexcoord + float2(0, vOffset.y);
+    float2 vBottomTexCoord = In.vTexcoord + float2(0, -vOffset.y);
+    float2 vLeftTexCoord = In.vTexcoord + float2(-vOffset.x, 0);
+    float2 vRightTexCoord = In.vTexcoord + float2(vOffset.x, 0);
+
+    // 각 텍스처 샘플링
+    float4 vTopColor = g_AimTop_Texture.Sample(LinearSampler, vTopTexCoord);
+    float4 vBottomColor = g_AimBottom_Texture.Sample(LinearSampler, vBottomTexCoord);
+    float4 vLeftColor = g_AimLeft_Texture.Sample(LinearSampler, vLeftTexCoord);
+    float4 vRightColor = g_AimRight_Texture.Sample(LinearSampler, vRightTexCoord);
+
+    // 상하좌우 이미지를 십자 형태로 조합
+    float4 vCombinedColor = vTopColor + vBottomColor + vLeftColor + vRightColor;
+
+    // 조합된 결과를 출력
+    Out.vColor = vCombinedColor;
+
+    //Out.vColor.a = g_Alpha;
+    return Out;
+}
+
+
+// 원을 그리는 함수
+float Circle(float2 uv, float2 center, float radius)
+{
+    float2 diff = uv - center;
+    return saturate(1 - length(diff) / radius);
+}
+// 픽셀 셰이더 메인 함수
+PS_OUT PS_MAIN_COOLTIME(PS_IN In) // 5
+{
+    PS_OUT Out;
+
+    // 쿨타임 텍스처에서 샘플링하여 색상을 가져오고, 원형 이미지로 변환
+    float  fCircleValue = Circle(In.vTexcoord, g_Center, g_Radius);
+    float4 vTexColor = g_CoolDownTexture.Sample(LinearSampler, In.vTexcoord);
+
+    // 샘플된 색상을 원형 이미지에 맞게 조절하여 출력
+    Out.vColor = vTexColor * fCircleValue;
+
+    //Out.vColor.a = g_Alpha;
     return Out;
 }
 
@@ -151,7 +244,7 @@ technique11 DefaultTechnique
     pass Default // 0
     {
 		/* 셰이더(렌더스테이츠) 그리기전에 적용할것들 세팅해주고 */
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
 		
@@ -165,9 +258,9 @@ technique11 DefaultTechnique
     
     pass HPBarGauge_Lerp // 1
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_AlphaBlend_Add, float4(1.f, 1.f, 1.f, 1.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
@@ -178,14 +271,53 @@ technique11 DefaultTechnique
 
     pass LoadingBar_Gauge // 2
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_AlphaBlend_Add, float4(1.f, 1.f, 1.f, 1.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_LOADING();
+    }
+
+    pass Option_Background // 3
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+   
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OPTION_BACKGROUND();
+    }
+
+    pass Aim_Crosshair // 4
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+   
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_AIM_CROSSHAIR();
+    }
+
+    pass CoolDown // 5
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+   
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_COOLTIME();
     }
 }

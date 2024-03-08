@@ -1,4 +1,6 @@
 #include "Shader_Defines.hlsli"
+
+/* =================== Struct =================== */
 struct radial
 {
     bool    bRadial_Active;
@@ -8,114 +10,39 @@ struct radial
 
 struct DOF
 {
-    bool bDOF_Active;
-    float focus;
-    float range;
-    //float   fFocusDistance;
-    //float   fFocusRange;
-    //float   fMaxAtt;
+    bool    bDOF_Active;
+    float   fFocusDistance;
+    float   fFocusRange;
 };
 
-/* ====================================== */
-
-/* Origin */
+/* =================== Variable =================== */
+// Origin
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_ViewMatrixInv, g_ProjMatrixInv;
 float4 g_vCamPosition;
 float  g_fCamFar;
-
 Texture2D g_ProcessingTarget;
 
+// HDR 
 bool g_bHDR_Active;
-
-/* HDR - off일수 있으므로 초기값 줘야함 */ 
 float g_max_white;
 float g_change_luminance;
 
 // Radial Blur 
 radial g_Radial_Blur;
 
-/* DOF */
+// DOF
 Texture2D   g_DepthTarget;
 Texture2D   g_BlurTarget;
 DOF         g_DOF;
-///* ====================================== */
-//float ComputeDepthBlur(float depth) /* 뷰 공간 기준의 입력된 깊이 */
-//{
-//    float f;
 
-//    if (depth < g_DOF.fFocalPalne_Depth)
-//    {
-//        // Focal plane 앞의 영역인 경우
-//        f = (depth - g_DOF.fFocalPalne_Depth) / (g_DOF.fFocalPalne_Depth - g_DOF.fNearBlur_Depth);
-//    }
-//    else
-//    {
-//        // Focal plane 뒤의 영역인 경우
-//        f = (depth - g_DOF.fFocalPalne_Depth) / (g_DOF.fFarBlur_Depth - g_DOF.fFocalPalne_Depth);
-//        f = clamp(f, 0, g_DOF.fCutOff);
-//    }
+// EffectMix
+Texture2D g_Deferred_Target;
+Texture2D g_RimBlur_Target;
+Texture2D g_Effect_Target;
+Texture2D g_EffectBlur_Target;
 
-//    // 최종 결과에 스케일과 바이어스를 적용
-//    return f * 0.5f + 0.5f;
-//}
-struct VS_IN
-{
-
-    float3 vPosition : POSITION;
-    float2 vTexcoord : TEXCOORD0;
-};
-
-struct VS_OUT
-{
-    float4 vPosition : SV_POSITION;
-    float2 vTexcoord : TEXCOORD0;
-};
-
-/* =================== Base Vertex Shader =================== */
-VS_OUT VS_MAIN(VS_IN In)
-{
-    VS_OUT Out = (VS_OUT) 0;
-	
-    matrix matWV, matWVP;
-
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
-
-    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-    Out.vTexcoord = In.vTexcoord;
-    
-    return Out;
-}
-
-/* =================== Base Pixel Shader (0) =================== */
-
-struct PS_IN
-{
-    float4 vPosition : SV_POSITION;
-    float2 vTexcoord : TEXCOORD0;
-};
-
-struct PS_OUT
-{
-    float4 vColor : SV_TARGET0;
-};
-
-/* ------------------- 0 - Origin Pixel Shader -------------------*/
-
-PS_OUT PS_MAIN(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-    
-    float4 vProcess = g_ProcessingTarget.Sample(PointSampler, In.vTexcoord);
-    
-    Out.vColor = vProcess;
-    
-    return Out;
-}
-
-
-/* ------------------- 1 - HDR Pixel Shader -------------------*/
+/* =================== Function =================== */
 
 float3 reinhard_extended(float3 v, float max_white)
 {
@@ -203,8 +130,61 @@ float3 aces_fitted(float3 Color)
     return mul(aces_output_matrix, Color);
 }
 
+/* =================== VS / PS =================== */
 
+struct VS_IN
+{
+    float3 vPosition : POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
 
+struct VS_OUT
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+struct PS_IN
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+struct PS_OUT
+{
+    float4 vColor : SV_TARGET0;
+};
+
+/* =================== Base Vertex Shader =================== */
+VS_OUT VS_MAIN(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+	
+    matrix matWV, matWVP;
+
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    
+    return Out;
+}
+
+/* ------------------- 0 - Origin Pixel Shader -------------------*/
+
+PS_OUT PS_MAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    float4 vProcess = g_ProcessingTarget.Sample(PointSampler, In.vTexcoord);
+    
+    Out.vColor = vProcess;
+    
+    return Out;
+}
+
+/* ------------------- 1 - HDR Pixel Shader -------------------*/
 PS_OUT PS_MAIN_HDR(PS_IN In)
 {
     /* Reinhard TMO */ 
@@ -236,6 +216,7 @@ PS_OUT PS_MAIN_RADIAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
+
     float4 colour = { 0.f, 0.f, 0.f, 0.f };
     float v = 0.f;
 
@@ -254,32 +235,55 @@ PS_OUT PS_MAIN_RADIAL(PS_IN In)
 }
 
 /* ------------------- 3 -DOF Shader -------------------*/
-VS_OUT VS_MAIN_DOF(VS_IN In)
-{
-    VS_OUT Out = (VS_OUT) 0;
-
-    matrix matWV, matWVP;
-    
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
-
-    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP); /* 투영상 공간 */ 
-   // Out.vPosition.xy = sign(Out.vPosition.xy);
-
-    Out.vTexcoord = In.vTexcoord;
-    
-    return Out;
-}
 
 PS_OUT PS_MAIN_DOF (PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    vector vOrigin = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
-    vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);    
+    vector vTarget = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
     vector vBlur = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
     
-    Out.vColor = lerp(vOrigin, vBlur, saturate(g_DOF.range * abs(g_DOF.focus - vOrigin.a)));
+    float fViewZ = vDepth.y * g_fCamFar;
+    
+    if (g_DOF.fFocusDistance - g_DOF.fFocusRange > fViewZ) /* 초점거리 앞 */ 
+    {
+        Out.vColor = vBlur;
+    }
+    else if (g_DOF.fFocusDistance + g_DOF.fFocusRange < fViewZ) /* 초첨거리 뒤 */
+    {
+        Out.vColor = vBlur;
+    }
+    else /* 정상출력할곳 */ 
+        Out.vColor = vTarget;
+
+    return Out;
+}
+
+/* ------------------- 4 -EffectMix Shader -------------------*/
+
+PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
+    vector Object_Blur = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
+    
+    vector Effect = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
+  //  vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
+    
+    // Out.vColor = Deferred + Object_Blur + Effect + Effect_Blur;
+    
+    
+    /* 여기 건들면 될거같은데 왜지 뭐지 왜안되지 ! */
+    
+    Out.vColor = Effect;
+    // +Effect_Blur;
+    
+    if(Out.vColor.a == 0)
+        Out.vColor =  Deferred + Object_Blur;
+  
+    if (Out.vColor.a == 0)
+        discard;
     
     return Out;
 }
@@ -328,15 +332,27 @@ technique11 DefaultTechnique
 
     }
 
-    pass DOF
+    pass DOF // 3
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN_DOF();
+        VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL ;
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DOF();
+    }
+
+    pass EffectMix // 4
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_EFFECTMIX();
     }
 }

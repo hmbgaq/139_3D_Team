@@ -3,14 +3,15 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
+
 CUI_LevelUp_ShieldFrame::CUI_LevelUp_ShieldFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	:CUI(pDevice, pContext, strPrototypeTag)
+	: CUI_Text(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
 CUI_LevelUp_ShieldFrame::CUI_LevelUp_ShieldFrame(const CUI_LevelUp_ShieldFrame& rhs)
-	: CUI(rhs)
+	: CUI_Text(rhs)
 {
 }
 
@@ -28,11 +29,31 @@ HRESULT CUI_LevelUp_ShieldFrame::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
+	m_tUIInfo.fPositionZ = 0.1f;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
+
+	if (FAILED(Ready_Text())) //! 텍스트 세팅
+		return E_FAIL;
+
+	if (FAILED(Find_Change("Level"))) //! 텍스트 세팅
+		return E_FAIL;
+
+	m_fScaleX = m_tUIInfo.fScaleX;
+	m_fScaleY = m_tUIInfo.fScaleY;
+
+	m_eState = UISTATE::LEVEL_UP;
+	m_bActive = true;
+	
+	//m_strText = m_pData_Manager->Get_CurLevel();
+
+	m_fChangeScale = 4.f;
+	m_fLifeTime = 1000.f;
+	m_fTime = GetTickCount64();
 
 	return S_OK;
 }
@@ -44,7 +65,35 @@ void CUI_LevelUp_ShieldFrame::Priority_Tick(_float fTimeDelta)
 
 void CUI_LevelUp_ShieldFrame::Tick(_float fTimeDelta)
 {
+	// Test
+	if (m_pGameInstance->Key_Down(DIK_0))
+		m_pTransformCom->Set_Scaling(180.f, 225.f, m_fScaleZ);
 
+	if (m_pGameInstance->Key_Down(DIK_9))
+		++m_fChangeScale;
+
+	if (m_pGameInstance->Key_Down(DIK_8))
+		--m_fChangeScale;
+
+	//if (m_bActive)
+	{
+		if (m_fTime + m_fLifeTime < GetTickCount64())
+		{
+			if (m_fScaleX > 130.f)
+			{
+				Change_SizeX((-m_fChangeScale));
+			}
+
+			if (m_fScaleY > 180.f)
+			{
+				Change_SizeY((-m_fChangeScale));
+			}
+
+			if(m_fScaleX < 130.f && m_fScaleY < 180.f)
+				m_fTime = GetTickCount64();
+		}
+		__super::Tick(fTimeDelta);
+	}
 }
 
 void CUI_LevelUp_ShieldFrame::Late_Tick(_float fTimeDelta)
@@ -52,25 +101,34 @@ void CUI_LevelUp_ShieldFrame::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	__super::Tick(fTimeDelta);
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
-		return;
+	//if (m_bActive)
+	{
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+			return;
+	}
 }
 
 HRESULT CUI_LevelUp_ShieldFrame::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	
+	//if (m_bActive)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그릴거야.
-	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		//! 이 셰이더에 0번째 패스로 그릴거야.
+		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+
+		m_strText = to_wstring(m_pData_Manager->Get_CurLevel());
+		//RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
+		m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
+	}
 
 	return S_OK;
 }
@@ -104,22 +162,11 @@ HRESULT CUI_LevelUp_ShieldFrame::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
 
-	string TestName = m_tUIInfo.strObjectName;
-	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
-	{
-		switch (i)
-		{
-		case CUI_LevelUp_ShieldFrame::SHIELD_FRAME:
-		{
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-				return E_FAIL;
-			break;
-		}
-		default:
-			break;
-		}
-	}
+	if (FAILED(m_pTextureCom[SHIELD_FRAME]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -135,6 +182,44 @@ json CUI_LevelUp_ShieldFrame::Save_Desc(json& out_json)
 void CUI_LevelUp_ShieldFrame::Load_Desc()
 {
 
+}
+
+void CUI_LevelUp_ShieldFrame::Add_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation)
+{
+	__super::Add_Text(strTextKey, strFontTag, strText, fPosX, fPosY, vColor, fScale, vOrigin, fRotation);
+}
+
+HRESULT CUI_LevelUp_ShieldFrame::Find_Change(const string& strTextTag)
+{
+	__super::Find_Change(strTextTag);
+	return S_OK;
+}
+
+HRESULT CUI_LevelUp_ShieldFrame::Ready_Text()
+{
+	/* 파싱 정보 받기 */
+	TEXTINFO* LoadInfo = new TEXTINFO;
+
+	/* 임의 값 (추 후 로드해서 받기) */
+	LoadInfo->fPosX = 958.f;
+	LoadInfo->fPosY = 247.f;
+	LoadInfo->fScale = 1.f;
+	LoadInfo->vOrigin.x = 0.f;
+	LoadInfo->vOrigin.y = 0.f;
+	LoadInfo->fRotation = 0.f;
+	LoadInfo->strTextKey = "Level";
+	LoadInfo->strFontTag = "Font_EvilWest";
+	LoadInfo->strText = to_string(1);
+	LoadInfo->vColor.m128_f32[0] = 1.f;
+	LoadInfo->vColor.m128_f32[1] = 1.f;
+	LoadInfo->vColor.m128_f32[2] = 1.f;
+	LoadInfo->vColor.m128_f32[3] = 1.f;
+
+	m_mapText.emplace(LoadInfo->strTextKey, LoadInfo);
+
+	TEXTINFO* pTextInfo = nullptr;
+
+	return S_OK;
 }
 
 CUI_LevelUp_ShieldFrame* CUI_LevelUp_ShieldFrame::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

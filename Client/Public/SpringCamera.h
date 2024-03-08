@@ -40,11 +40,18 @@ public:
 public:
 	void RotatePlayer();
 	void Mouse_Fix();
+public:
+	void Set_CameraOffset(_float3 _CameraOffset) { m_CameraOffset = _CameraOffset; }
+	_float3 Get_CameraOffset() { return m_CameraOffset; }
+
+	void Set_pTarget(CTransform* _pTarget) { m_ptarget = _pTarget; }
+	CTransform* Get_pTarget() { return m_ptarget; }
+
 private:
 	// 	수평 , 수직 수행거리
 	_float hDist = 0.f;
 	_float vDist = 0.f;
-	_float SpringConstant = 100.f; //용수철 상수(spring constant)가 커지면 스프링의 탄력이 줄어든다.	//시작값은 카메라를 움직이고 싶은 범위에 따라 달라진다.
+	_float SpringConstant = 1000.f; //용수철 상수(spring constant)가 커지면 스프링의 탄력이 줄어든다.	//시작값은 카메라를 움직이고 싶은 범위에 따라 달라진다.
 	_float DampConstant = 0.f;//용수철 상수를 바탕으로 한 감쇠(dampening)상수
 	_float3 Velocity = {};
 	_float3 ActualPosition = {};//속도벡터와 카메라의 실제 위치를 나타내는 벡터
@@ -59,9 +66,10 @@ private:
 	_bool m_bFix = true;//마우스 가운데 모으기 
 private:
 	//카메라 X,Y,Z
-	_float m_CameraOffsetX = 0.f;
-	_float m_CameraOffsetY = 0.f;
-	_float m_CameraOffsetZ = 0.f;
+// 	_float m_CameraOffsetX = 0.f;
+// 	_float m_CameraOffsetY = 0.f;
+// 	_float m_CameraOffsetZ = 0.f;
+	_float3 m_CameraOffset = {};
 	_float CameraMoveSpeed = 3.f;//카메라 보간용 이동속도
 private:
 	_float				m_fMouseSensor = { 0.0f };

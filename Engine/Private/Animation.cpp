@@ -483,7 +483,7 @@ _bool CAnimation::Is_UpperBody(_int iBoneIndex)
 _float4x4* CAnimation::Get_TransformationBoneMatrices(_float fTrackPosition, _float4x4* pMatrix)
 {
 	
-	for (_int i = 0; i < m_iNumChannels; ++i)
+	for (_uint i = 0; i < m_iNumChannels; ++i)
 	{
 		_uint iBoneIndex = m_Channels[i]->Get_BoneIndex();
 		pMatrix[iBoneIndex] = m_Channels[i]->Get_NowMatrix(fTrackPosition);

@@ -171,22 +171,19 @@ public: /* ============================== Get / Set ============================
 public:
 	virtual HRESULT	Set_ParentTransform(CTransform* pParentTransformCom);
 
-	
-protected:
-	void			SetUp_WorldToScreen(_fvector vWorldPos);
-
 public: /* ============================== Add ============================== */
 	void			Add_Create_Parts(void* pArg);
 	void			Add_Parts(CUI* pArg);
 
 public: /* ========================== Change_Size ========================== */
 	void			Set_Size(_float fSizeX, _float fSizeY);
+	void			Change_SizeX(_float MMX);
+	void			Change_SizeY(_float MMY);
+	void			Change_SizeRight(_float MMX);
 	void			Change_SizeBottom(_float MMY);
 	void			Change_SizeTop(_float MMY);
 	void			Change_SizeLeft(_float MMX);
-	void			Change_SizeRight(_float MMX);
-	void			Change_SizeY(_float MMY);
-	void			Change_SizeX(_float MMX);
+
 
 public: /* ============================== Basic =============================== */
 	virtual HRESULT Initialize_Prototype();
@@ -207,10 +204,21 @@ public: /* ============================= Function ============================= 
 public: /* ============================== SetUp ============================== */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
 	HRESULT			SetUp_Transform(_float fPosX, _float fPosY, _float fScaleX, _float fScaleY);
-	HRESULT			SetUp_BillBoarding();
 	HRESULT			Ready_UI(const char* cFilePath);
 	HRESULT			Create_UIParts(UI_DESC tUI_Desc);
 	HRESULT			Update_Child_Transform();
+
+	//				TargetPosition => Screen
+	void			SetUp_PositionToScreen(_fvector vWorldPos);
+
+	//				TargetWorld => Screen
+	void			SetUp_WorldToScreen(_matrix vWorldPos);
+	HRESULT			SetUp_BillBoarding();
+
+
+	// error : 새 코드 요소를 반환하지 못했습니다. 구문 오류일 수 있습니다. -> 해결방법 : 프로젝트 폴더 내에 vs폴더 삭제 후 실행
+	void			Tick_LevelUp(_float fTimeDelta);
+	void			Player_HUD(_float fTimeDelta);
 
 public:
 #ifdef _DEBUG
@@ -259,12 +267,26 @@ public: /* =========================== Animation ============================== 
 	// 이동
 	_float fPosX_Delta, fPosY_Delta;
 
+protected: /* Data */
+	class CData_Manager* m_pData_Manager = { nullptr };
+
+protected:
+	void				Compute_CamDistance();
+	_float				m_fCamDistance = { 0.0f };
+
+protected: /* LifeTime */
+	void				LifeTime_LevelUp(_float fTimeDelta);
+	_bool				m_bEventOn = false;
+	_float				m_fLifeTime = 5000.f;
+	_float				m_fTime = GetTickCount64();
+
 protected: /* ========================= Component =========================== */
 	CShader*			m_pShaderCom = { nullptr };
 	//CTexture*			m_pTextureCom;
 	CTexture*			m_pMapTextureCom = { nullptr };	// 적용할 맵 텍스처
 	_int				m_iShaderNum;		// 적용할 셰이더 넘버
 	CVIBuffer_Rect*		m_pVIBufferCom = { nullptr };
+	_vector				m_vAxis = { 0.f, 0.f, 0.f, 0.f };
 
 protected: /* =========================== Space ============================ */
 	_float4x4			m_ViewMatrix, m_ProjMatrix;
@@ -282,8 +304,11 @@ protected: /* ============================= UI =============================== *
 	_bool				m_bActive = false;
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
-	_float				m_fScaleX = 0.f, m_fScaleY = 0.f;
+	_float				m_fScaleX = 0.f, m_fScaleY = 0.f, m_fScaleZ = 0.1f;
 	UI_KIND				m_eKind = NORMAL;
+
+	// 투명도
+	_float				m_fAlpha = 0.f;
 
 protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;

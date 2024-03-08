@@ -34,6 +34,9 @@ HRESULT CUI_LevelUp_Shards::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
+	m_eState = UISTATE::LEVEL_UP;
+	m_bActive = true;
+
 	return S_OK;
 }
 
@@ -104,6 +107,8 @@ HRESULT CUI_LevelUp_Shards::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
 
 	string TestName = m_tUIInfo.strObjectName;
 	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
