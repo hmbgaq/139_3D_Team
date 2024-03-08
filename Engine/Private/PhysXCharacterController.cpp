@@ -106,27 +106,27 @@ PxControllerCollisionFlags CPhysXCharacterController::MoveWithRotation(_fvector 
 	return __super::MoveWithRotation(disp, minDist, elapsedTime, filters, obstacles, pTransform);
 }
 
-//PxControllerCollisionFlags CPhysXCharacterController::Move(_fvector disp, PxF32 minDist, PxF32 elapsedTime, PxControllerFilters& filters, const PxObstacleContext* obstacles)
-//{
-//	filters.mFilterCallback = this;
-//
-//	return  __super::Move(disp, minDist, elapsedTime, filters, obstacles);
-//}
-//
-//PxControllerCollisionFlags CPhysXCharacterController::MoveGravity(const _float fDeltaTime, PxControllerFilters& filters)
-//{
-//	if (!Get_Enable())
-//		return PxControllerCollisionFlags();
-//
-//	if (!m_bEnableGravity)
-//		return PxControllerCollisionFlags();
-//
-//	filters.mFilterCallback = this;
-//
-//	PxControllerCollisionFlags ResultFlags = __super::MoveGravity(fDeltaTime, filters);
-//
-//	return ResultFlags;
-//}
+PxControllerCollisionFlags CPhysXCharacterController::Move(_fvector disp, PxF32 minDist, PxF32 elapsedTime, PxControllerFilters& filters, const PxObstacleContext* obstacles)
+{
+	filters.mFilterCallback = this;
+
+	return  __super::Move(disp, minDist, elapsedTime, filters, obstacles);
+}
+
+PxControllerCollisionFlags CPhysXCharacterController::MoveGravity(const _float fDeltaTime, PxControllerFilters& filters)
+{
+	if (!Get_Enable())
+		return PxControllerCollisionFlags();
+
+	if (!m_bEnableGravity)
+		return PxControllerCollisionFlags();
+
+	filters.mFilterCallback = this;
+
+	PxControllerCollisionFlags ResultFlags = __super::MoveGravity(fDeltaTime, filters);
+
+	return ResultFlags;
+}
 
 _bool CPhysXCharacterController::Move_FootOffset(const _float fTimeDelta)
 {

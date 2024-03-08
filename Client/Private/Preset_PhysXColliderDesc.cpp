@@ -9,7 +9,8 @@
 
 void Preset::PhysXColliderDesc::GroundSetting(CPhysXCollider::PHYSXCOLLIDERDESC& Out_Desc, const _bool bTrigger)
 {
-    Out_Desc.eShape = PHYSXCOLLIDER_TYPE::MESH;
+    Out_Desc.eShape = PHYSXCOLLIDER_TYPE::BOX;
+    //Out_Desc.eShape = PHYSXCOLLIDER_TYPE::MESH;
     Out_Desc.eActorType = PHYSXACTOR_TYPE::STATIC;
     Out_Desc.iFilterType = (_uint)PHYSX_COLLISION_LAYER::GROUND;
     Out_Desc.fDensity = 0.f;

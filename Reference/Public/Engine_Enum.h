@@ -115,7 +115,6 @@ namespace Engine
 	};
 
 
-	/* PhysX */
 	enum class PHYSXCOLLIDER_TYPE
 	{
 		SPHERE,

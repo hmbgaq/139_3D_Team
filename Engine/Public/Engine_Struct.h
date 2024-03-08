@@ -478,6 +478,8 @@ namespace Engine
 	}OBJECT_SHADER_DESC;
 
 #pragma endregion
+
+
 }
 
 #endif // Engine_Struct_h__

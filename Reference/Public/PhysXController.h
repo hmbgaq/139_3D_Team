@@ -15,12 +15,20 @@ protected:
 	virtual ~CPhysXController() = default;
 
 public:
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
+
+
+public:
 	_uint	Get_PControllerIndex() const { return m_iControllerIndex; }
 	_bool	Is_EnableSimulation() const { return m_EnableSimulation; }
 	void	Set_EnableSimulation(const _bool In_EnableSimulation);
 	void	Set_EnableColliderSimulation(const _bool In_EnableSimulation) { m_EnableColliderSimulation = In_EnableSimulation; }
 	void	Set_CurrentCameraController();
 	PxController* Get_Controller();
+	virtual _vector	Get_Position();
+
+
 
 public:
 	void	Enable_Gravity(const _bool In_bGravity);
@@ -44,6 +52,9 @@ public:
 	virtual PxControllerCollisionFlags	Synchronize_Controller(CTransform* pTransform, PxF32 elapsedTime, PxControllerFilters& filters, _fvector In_vOffset = { 0.f, 0.f, 0.f });
 	virtual PxControllerCollisionFlags	Set_Position(_fvector In_vPosition, PxF32 elapsedTime, PxControllerFilters& filters);
 	virtual PxControllerCollisionFlags	MoveWithRotation(_fvector disp, PxF32 minDist, PxF32 elapsedTime, PxControllerFilters& filters, const PxObstacleContext* obstacles, CTransform* pTransform, const _flag In_RootFlag = (_byte)ROOTNODE_FLAG::X + (_byte)ROOTNODE_FLAG::Y + (_byte)ROOTNODE_FLAG::Z);
+
+	virtual PxControllerCollisionFlags	Move(_fvector disp, PxF32 minDist, PxF32 elapsedTime, PxControllerFilters& filters, const PxObstacleContext* obstacles = nullptr);
+	virtual PxControllerCollisionFlags	MoveGravity(const _float fDeltaTime, PxControllerFilters& filters);
 
 
 public:
@@ -73,6 +84,8 @@ protected:
 	_bool									m_EnableSimulation = true;
 	_bool									m_EnableColliderSimulation = true;
 	_bool									m_bEnableGravity = { true };
+
+	_float									m_fGravityAcc = 0.f;
 
 
 protected:

@@ -4,6 +4,12 @@
 #include "Character.h"
 #include "Actor.h"
 
+BEGIN(Engine)
+
+class CPhysXCollider;
+
+END
+
 BEGIN(Client)
 
 class CPlayer final : public CCharacter
@@ -50,6 +56,10 @@ public: //AnimTool Test
 private:
 	CActor<CPlayer>* m_pActor = { nullptr };
 	_bool	m_bRotate_In_CameraDir = { false };
+
+private:
+	CPhysXCollider* m_pPhysXCollider = { nullptr };
+
 
 public:
 	/* 원형객체를 생성한다. */

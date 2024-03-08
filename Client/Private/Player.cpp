@@ -4,9 +4,11 @@
 #include "Weapon_Player.h"
 #include "Player_IdleLoop.h"
 #include "Data_Manager.h"
-#include "PhysXController.h"
 
-#include "PhysXController.h"
+#include "PhysXCharacterController.h"
+#include "PhysXCollider.h"
+#include "Preset_PhysXColliderDesc.h"
+
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
@@ -40,16 +42,26 @@ HRESULT CPlayer::Initialize(void* pArg)
 		m_pActor->Set_State(new CPlayer_IdleLoop());
 // 	}
 
+
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
-	///* For.Com_PhysXController */
-	//FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"), TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom)));
-	//m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
+	/* For.Com_PhysXController */
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"), TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom)));
+	m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
+	//m_pPhysXControllerCom->
+
+	/* For.Com_PhysXCollider */
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXCollider"), TEXT("Com_PhysXCollider"), reinterpret_cast<CComponent**>(&m_pPhysXCollider)));
+	
+
+	CPhysXCollider::PhysXColliderDesc tPhysXColliderDesc;
+	Preset::PhysXColliderDesc::GroundSetting(tPhysXColliderDesc, m_pTransformCom);
+	m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
+	m_pPhysXCollider->Add_PhysXActorAtScene();
+
+
 
 	CData_Manager::GetInstance()->Set_Player(this);
-
-	/* Temp - 맵에 맞게 위치 조정한값*/
-	m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, XMVectorSet(-26.f, 0.f, -6.f, 1.f));
 
 	return S_OK;
 }
@@ -67,6 +79,36 @@ void CPlayer::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
+
+
+	//_float3 vPos = Get_Position();
+
+	//PxControllerFilters Filters;
+	//
+	//m_pPhysXControllerCom->Synchronize_Controller(m_pTransformCom, fTimeDelta, Filters);
+
+	//m_LastCollisionFlags = m_pPhysXControllerCom->MoveGravity(fTimeDelta, Filters);
+
+	//_vector vPxPos = m_pPhysXControllerCom->Get_Position();
+	//_float3 vResult;
+	//XMStoreFloat3(&vResult, vPxPos);
+
+	//if (m_LastCollisionFlags & PxControllerCollisionFlag::eCOLLISION_DOWN)
+	//{
+	//	_int a = 0;
+	//	//m_pPhysXControllerCom->Reset_Gravity();
+	//}
+
+	//else if (vPos.y < 0)
+	//{
+	//	_int a = 0;
+	//}
+
+	//else 
+	//{
+	//	Set_Position(vResult);
+	//}
+	
 	
 }
 
