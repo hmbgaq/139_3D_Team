@@ -218,6 +218,8 @@ private:
 	_float	m_fColor_Max_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_fColor_Cur_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 
+	_float	m_fColor_Mul[4] = { 1.f, 1.f, 1.f, 1.f };
+
 
 	_float	m_fUV_RotDegree				= { 0.f };	// UVÈ¸Àü
 

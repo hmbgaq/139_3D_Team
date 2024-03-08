@@ -421,6 +421,17 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 #pragma endregion
 
+				/* 쉐이더에 던질 곱하기 컬러 값_파티클 */
+				// m_fColor_Mul
+				if (ImGui::ColorEdit4("Color_Mul_Particle", m_fColor_Mul, ImGuiColorEditFlags_None))
+				{
+					m_pCurVoidDesc->vColor_Mul.x = m_fColor_Mul[0];
+					m_pCurVoidDesc->vColor_Mul.y = m_fColor_Mul[1];
+					m_pCurVoidDesc->vColor_Mul.z = m_fColor_Mul[2];
+					m_pCurVoidDesc->vColor_Mul.w = m_fColor_Mul[3];
+				}
+
+
 				/* 빌보드 키고 끄기 */
 				ImGui::SeparatorText("BillBoard");
 				ImGui::RadioButton("BillBoard", &m_iBillBoard, 0);  ImGui::SameLine();
@@ -1561,6 +1572,8 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 	if (nullptr != m_pCurPartEffect)
 	{
+		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();	// 이펙트_보이드 Desc
+
 		CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
 		CTransform* pPartTransform = m_pCurPartEffect->Get_Transform();
 
@@ -1642,6 +1655,14 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 				m_fSequenceTerm_Particle = m_pSpriteDesc_Particle->fSequenceTerm;
 			}
+
+
+			/* 쉐이더에 던져져서 곱해질 색상 값_파티클  */
+			m_fColor_Mul[0] = m_pCurVoidDesc->vColor_Mul.x;
+			m_fColor_Mul[1] = m_pCurVoidDesc->vColor_Mul.y;
+			m_fColor_Mul[2] = m_pCurVoidDesc->vColor_Mul.z;
+			m_fColor_Mul[3] = m_pCurVoidDesc->vColor_Mul.w;
+
 
 			/* UV회전 */
 			m_fUV_RotDegree = m_pCurVoidDesc->fUV_RotDegree;
@@ -1809,6 +1830,9 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK];
 			m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE];
 			// 텍스처 업데이트 =============================================================================================================
+
+			/* 인스턴스 개수 */
+			m_iNumInstance_Mesh = m_pMeshBufferDesc->iCurNumInstance;
 
 			/* 모프 */
 			m_fMorphTimeTerm = m_pMeshBufferDesc->fMorphTimeTerm;
