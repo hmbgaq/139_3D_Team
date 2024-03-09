@@ -137,10 +137,9 @@ void CSpringCamera::Tick(_float fTimeDelta)
 			}
 		}
 
-		if (m_pGameInstance->Key_Down(DIK_P))
-		{
+		
+		if(m_pGameInstance->Key_Down(DIK_F2))
 			CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);
-		}
 
 		if (m_bCheck == false)
 			ShowCursor(FALSE);
