@@ -28,6 +28,9 @@ HRESULT CEffect::Initialize_Prototype()
 
 HRESULT CEffect::Initialize(void* pArg)
 {	
+	XMStoreFloat4x4(&m_tEffectDesc.matPivot, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_tEffectDesc.matOffset, XMMatrixIdentity());
+
 	m_tEffectDesc = *(EFFECT_DESC*)pArg;
 
 	if (FAILED(__super::Initialize(pArg)))

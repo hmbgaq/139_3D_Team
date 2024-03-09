@@ -22,6 +22,9 @@ HRESULT CEffect_Void::Initialize_Prototype()
 
 HRESULT CEffect_Void::Initialize(void* pArg)
 {	
+	XMStoreFloat4x4(&m_tVoidDesc.matPivot, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_tVoidDesc.matOffset, XMMatrixIdentity());
+	
 	m_tVoidDesc = *static_cast<EFFECTVOID_DESC*>(pArg);
 
 	if (FAILED(__super::Initialize(pArg)))

@@ -54,11 +54,15 @@ void CEffect_Trail::Tick(_float fTimeDelta)
 
 			if (FALSE == m_tVoidDesc.bPlay)
 			{
+				m_tVoidDesc.bRender = FALSE;
 				m_pVIBufferCom->Reset_Points(m_tVoidDesc.matOffset);
 				return;
 			}
-
-			m_pVIBufferCom->Update(fTimeDelta, m_tVoidDesc.matOffset);
+			else
+			{
+				m_tVoidDesc.bRender = TRUE;
+				m_pVIBufferCom->Update(fTimeDelta, m_tVoidDesc.matOffset);
+			}		
 
 #ifdef _DEBUG
 		}
@@ -91,14 +95,14 @@ void CEffect_Trail::Late_Tick(_float fTimeDelta)
 							// 부모의 오너가 없으면 부모의 매트릭스만 사용
 							m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
 							XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+						}
 					}
 
 				}
-			}
 
 				if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this)))
 					return;
-		}
+			}
 #ifdef _DEBUG
 		}
 	}
@@ -213,10 +217,10 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 
 
 	/* Discard ============================================================================================ */
-	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tVoidDesc.vColor_Clip.w, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tVoidDesc.vColor_Clip.w, sizeof(_float)));
 
-	//_float3 vBlack_Discard = _float3(m_tVoidDesc.vColor_Clip.x, m_tVoidDesc.vColor_Clip.y, m_tVoidDesc.vColor_Clip.z);
-	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
+	_float3 vBlack_Discard = _float3(m_tVoidDesc.vColor_Clip.x, m_tVoidDesc.vColor_Clip.y, m_tVoidDesc.vColor_Clip.z);
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
 
 	/* UV ============================================================================================ */
 	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));

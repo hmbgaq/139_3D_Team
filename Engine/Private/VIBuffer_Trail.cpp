@@ -41,8 +41,8 @@ HRESULT CVIBuffer_Trail::Initialize(void* pArg)
         pVertices[i].vPosition = m_tBufferDesc.vPos_0;
         pVertices[i + 1].vPosition = m_tBufferDesc.vPos_1;
 
-        pVertices[i].vTexcoord = _float2(1.f, 0.f);
-        pVertices[i + 1].vTexcoord = _float2(1.f, 1.f);
+        pVertices[i].vTexcoord      = _float2(1.f, 0.f);
+        pVertices[i + 1].vTexcoord  = _float2(1.f, 1.f);
     }
 
     pVertices[0].vTexcoord = _float2(0.f, 0.f);
@@ -270,7 +270,7 @@ CVIBuffer_Trail* CVIBuffer_Trail::Create(ID3D11Device* pDevice, ID3D11DeviceCont
     /* 원형객체를 초기화한다.  */
     if (FAILED(pInstance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Created : CVIBuffer_Rect");
+        MSG_BOX("Failed to Created : CVIBuffer_Trail");
         Safe_Release(pInstance);
     }
     return pInstance;
@@ -283,7 +283,7 @@ CComponent* CVIBuffer_Trail::Clone(void* pArg)
     /* 원형객체를 초기화한다.  */
     if (FAILED(pInstance->Initialize(pArg)))
     {
-        MSG_BOX("Failed to Cloned : CVIBuffer_Rect");
+        MSG_BOX("Failed to Cloned : CVIBuffer_Trail");
         Safe_Release(pInstance);
     }
     return pInstance;

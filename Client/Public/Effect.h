@@ -43,7 +43,7 @@ public:
 
 		// 주인
 		// 주인 객체는 게임오브젝트에 있는 것 사용
-		_float4x4	 matPivot		= {};	/* XMStoreFloat4x4(&m_matPivot, XMMatrixIdentity()) */
+		_float4x4	 matPivot		= {};	/* XMStoreFloat4x4(&m_tEffectDesc.matPivot, XMMatrixIdentity()); */
 		_float4x4	 matOffset		= {};
 
 	}EFFECT_DESC;

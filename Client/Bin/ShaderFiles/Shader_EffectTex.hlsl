@@ -8,28 +8,33 @@
 
 /* 셰이더의 전역변수 == 상수테이블(Constant Table) */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+Texture2D		g_DepthTexture;
 
 Texture2D		g_DiffuseTexture;
 Texture2D		g_MaskTexture;
 Texture2D		g_NoiseTexture;
 
-Texture2D		g_DepthTexture;
 
-vector			g_vCamPosition;
-vector			g_vCamDirection;
+// Camera ====================
+vector		g_vCamPosition;
+float3		g_vCamDirection;
+float		g_fCamFar;
+// ===========================
 
-float2			g_UVOffset;
-float2			g_UVScale;
+float2		g_UVOffset;
+float2		g_UVScale;
 
-float			g_DiscardValue;
+float       g_fAlpha_Discard;
+float3      g_vBlack_Discard;
 
-float			g_fDegree;
+float		g_fDegree;
 
-// ======= Noise
+
+// Noise ====================
 float	g_fFrameTime;
 float3	g_vScrollSpeeds;
 float3	g_vScales;
-// =======
+// ===========================
 
 
 float2	g_vDistortion1;
@@ -304,7 +309,14 @@ PS_OUT PS_MAIN_EFFECT(PS_IN_EFFECT In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+	float4 vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+	float4 vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
+
+	vDiffuseColor.a *= vAlphaColor;
+
+	if (vDiffuseColor.a < g_fAlpha_Discard	// 알파 잘라내기
+		|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
+		discard;
 
 	float2	vDepthTexcoord;
 	vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
@@ -312,6 +324,7 @@ PS_OUT PS_MAIN_EFFECT(PS_IN_EFFECT In)
 
     float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
 	
+	Out.vColor = vDiffuseColor;
 	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
 
 	return Out;
@@ -335,7 +348,7 @@ PS_OUT PS_MAIN_SPRITE_ANIMATION(PS_IN_EFFECT In)
 
 	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
 	// Alpha Test
-	if (Out.vColor.a < g_DiscardValue)
+	if (Out.vColor.a < g_fAlpha_Discard)
 	{
 		discard;
 	}
