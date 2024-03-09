@@ -6,6 +6,7 @@
 #include "Data_Manager.h"
 #include "Player.h"
 #include "MasterCamera.h"
+#include "Bone.h"
 
 CSpringCamera::CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CCamera(pDevice, pContext, strPrototypeTag)
@@ -41,7 +42,7 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 		vDist = 0.7f; //Y 축 카메라와 플레이어 거리
 		//인게임에서 이제 최적의 포지션값인거같음 
 		m_CameraOffset.x = 1.f;
-		m_CameraOffset.y = 2.5f;
+		m_CameraOffset.y = 0.5f;
 		m_CameraOffset.z = -3.0f;
 		
 // 		_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
@@ -55,6 +56,17 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 		ActualPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	}
+	_float4x4 BoneMatrix = {};
+	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+
+	BoneMatrix = pPlayer->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
+	_float4x4 pPlayerPos = pPlayer->Get_Transform()->Get_WorldMatrix();
+	_float4x4 temp = {};
+	XMStoreFloat4x4(&temp, BoneMatrix * pPlayerPos);
+	m_TargetPosition.x = temp._41;
+	m_TargetPosition.y = temp._42;
+	m_TargetPosition.z = temp._43;
+	
 
 	if (m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_TOOL)
 		ShowCursor(true);
@@ -117,7 +129,19 @@ void CSpringCamera::Tick(_float fTimeDelta)
 		//	RotatePlayer();
 		//}
 	//}
+		{// 뼈에 붙인 카메라 
+			_float4x4 BoneMatrix = {};
+			CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
+			BoneMatrix = pPlayer->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
+			_float4x4 pPlayerPos = pPlayer->Get_Transform()->Get_WorldMatrix();
+			_float4x4 temp = {};
+			XMStoreFloat4x4(&temp, BoneMatrix * pPlayerPos);
+			m_TargetPosition.x = temp._41;
+			m_TargetPosition.y = temp._42;
+			m_TargetPosition.z = temp._43;
+		}
+		
 
 		m_pTransformCom->Look_At(m_ptarget->Get_State(CTransform::STATE::STATE_POSITION));
 		CameraRotation(fTimeDelta);
