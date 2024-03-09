@@ -443,6 +443,8 @@
     <ClInclude Include="..\Public\Monster_Character.h" />
     <ClInclude Include="..\Public\Player_DeathLight_F_01.h" />
     <ClInclude Include="..\Public\Player_DeathLight_F_02.h" />
+    <ClInclude Include="..\Public\Player_DeathNormal_F_01.h" />
+    <ClInclude Include="..\Public\Player_DeathNormal_F_02.h" />
     <ClInclude Include="..\Public\Player_DodgeBlink_L_03.h" />
     <ClInclude Include="..\Public\Player_DodgeBlink_R_03.h" />
     <ClInclude Include="..\Public\Effect.h" />
@@ -488,6 +490,7 @@
     <ClInclude Include="..\Public\Player_Empowered_MeleeCombo_03.h" />
     <ClInclude Include="..\Public\Player_Empowered_Shot.h" />
     <ClInclude Include="..\Public\Player_Empowered_SlamGround.h" />
+    <ClInclude Include="..\Public\Player_HitHeavy_F_5m.h" />
     <ClInclude Include="..\Public\Player_HitNormal_B.h" />
     <ClInclude Include="..\Public\Player_HitNormal_B_Gatling.h" />
     <ClInclude Include="..\Public\Player_HitNormal_F.h" />
@@ -497,6 +500,9 @@
     <ClInclude Include="..\Public\Player_HitNormal_L_Gatling.h" />
     <ClInclude Include="..\Public\Player_HitNormal_R.h" />
     <ClInclude Include="..\Public\Player_HitNormal_R_Gatling.h" />
+    <ClInclude Include="..\Public\Player_HitPeriodic_01.h" />
+    <ClInclude Include="..\Public\Player_HitPeriodic_03.h" />
+    <ClInclude Include="..\Public\Player_HitPeriodic_04.h" />
     <ClInclude Include="..\Public\Player_IdleLoop.h" />
     <ClInclude Include="..\Public\Player_InteractionBattery.h" />
     <ClInclude Include="..\Public\Player_InteractionClimb100.h" />
@@ -556,6 +562,7 @@
     <ClInclude Include="..\Public\Player_Interaction_Glamour.h" />
     <ClInclude Include="..\Public\Player_Interaction_Slide_Sequence.h" />
     <ClInclude Include="..\Public\Player_Interaction_SmallLever.h" />
+    <ClInclude Include="..\Public\Player_KnockFrontLight_F_02.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_01.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_02.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_02_L_NEW.h" />
@@ -1062,6 +1069,7 @@
     <ClCompile Include="..\Private\Player_Empowered_MeleeCombo_03.cpp" />
     <ClCompile Include="..\Private\Player_Empowered_Shot.cpp" />
     <ClCompile Include="..\Private\Player_Empowered_SlamGround.cpp" />
+    <ClCompile Include="..\Private\Player_HitHeavy_F_5m.cpp" />
     <ClCompile Include="..\Private\Player_HitNormal_B.cpp" />
     <ClCompile Include="..\Private\Player_HitNormal_B_Gatling.cpp" />
     <ClCompile Include="..\Private\Player_HitNormal_F.cpp" />
@@ -1071,6 +1079,9 @@
     <ClCompile Include="..\Private\Player_HitNormal_L_Gatling.cpp" />
     <ClCompile Include="..\Private\Player_HitNormal_R.cpp" />
     <ClCompile Include="..\Private\Player_HitNormal_R_Gatling.cpp" />
+    <ClCompile Include="..\Private\Player_HitPeriodic_01.cpp" />
+    <ClCompile Include="..\Private\Player_HitPeriodic_03.cpp" />
+    <ClCompile Include="..\Private\Player_HitPeriodic_04.cpp" />
     <ClCompile Include="..\Private\Player_IdleLoop.cpp" />
     <ClCompile Include="..\Private\Player_InteractionBattery.cpp" />
     <ClCompile Include="..\Private\Player_InteractionClimb100.cpp" />
@@ -1130,6 +1141,7 @@
     <ClCompile Include="..\Private\Player_Interaction_Glamour.cpp" />
     <ClCompile Include="..\Private\Player_Interaction_Slide_Sequence.cpp" />
     <ClCompile Include="..\Private\Player_Interaction_SmallLever.cpp" />
+    <ClCompile Include="..\Private\Player_KnockFrontLight_F_02.cpp" />
     <ClCompile Include="..\Private\Player_MeleeCombo_01.cpp" />
     <ClCompile Include="..\Private\Player_MeleeCombo_02.cpp" />
     <ClCompile Include="..\Private\Player_MeleeCombo_02_L_NEW.cpp" />

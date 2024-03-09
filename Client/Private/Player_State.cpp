@@ -190,6 +190,11 @@ CState<CPlayer>* CPlayer_State::Rifle_State(CPlayer* pActor, _float fTimeDelta, 
 
 CState<CPlayer>* CPlayer_State::Interaction_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (pActor->Is_Animation_End())
+	{
+		return new CPlayer_IdleLoop();
+	}
+
 	return nullptr;
 }
 
