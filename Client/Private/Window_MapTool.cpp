@@ -892,23 +892,23 @@ void CWindow_MapTool::InteractTab_Function()
 
 	switch (m_eModeType)
 	{
-	case Client::CWindow_MapTool::MODE_TYPE::MODE_CREATE:
-	{
-		Create_Tab(CWindow_MapTool::TAP_TYPE::TAB_INTERACT);
-		break;
-	}
+		case Client::CWindow_MapTool::MODE_TYPE::MODE_CREATE:
+		{
+			Create_Tab(CWindow_MapTool::TAP_TYPE::TAB_INTERACT);
+			break;
+		}
 
-	case Client::CWindow_MapTool::MODE_TYPE::MODE_SELECT:
-	{
-		Basic_SelectFunction();
-		break;
-	}
+		case Client::CWindow_MapTool::MODE_TYPE::MODE_SELECT:
+		{
+			Basic_SelectFunction();
+			break;
+		}
 
-	case Client::CWindow_MapTool::MODE_TYPE::MODE_DELETE:
-	{
-		Delete_Tab(CWindow_MapTool::TAP_TYPE::TAB_INTERACT);
-		break;
-	}
+		case Client::CWindow_MapTool::MODE_TYPE::MODE_DELETE:
+		{
+			Delete_Tab(CWindow_MapTool::TAP_TYPE::TAB_INTERACT);
+			break;
+		}
 	}
 }
 
