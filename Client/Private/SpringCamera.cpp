@@ -135,10 +135,10 @@ void CSpringCamera::Tick(_float fTimeDelta)
 				m_bCheck = true;
 			}
 		}
-		if (m_bCheck == false)
-			ShowCursor(FALSE);
-		else
-			ShowCursor(TRUE);
+		//if (m_bCheck == false)
+		//	ShowCursor(FALSE);
+		//else
+		//	ShowCursor(TRUE);
 
 
 		if (false == m_bFix)
@@ -150,9 +150,6 @@ void CSpringCamera::Tick(_float fTimeDelta)
 
 		__super::Tick(fTimeDelta);
 	}
-
-
-	
 }
 
 void CSpringCamera::Late_Tick(_float fTimeDelta)

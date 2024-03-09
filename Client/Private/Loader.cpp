@@ -411,6 +411,8 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 
 HRESULT CLoader::Loading_For_Intro_Level()
 {
+	Ready_Environment_Model(LEVEL_INTRO);
+
 	FAILED_CHECK(Loading_For_GamePlay_Level_Origin(LEVEL_INTRO));
 
 	return S_OK;
