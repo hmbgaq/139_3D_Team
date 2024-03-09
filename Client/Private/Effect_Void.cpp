@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 
+#include "Effect.h"
+
 CEffect_Void::CEffect_Void(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CAlphaObject(pDevice, pContext, strPrototypeTag)
 {
@@ -23,7 +25,7 @@ HRESULT CEffect_Void::Initialize_Prototype()
 HRESULT CEffect_Void::Initialize(void* pArg)
 {	
 	XMStoreFloat4x4(&m_tVoidDesc.matPivot, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_tVoidDesc.matOffset, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_tVoidDesc.matCombined, XMMatrixIdentity());
 	
 	m_tVoidDesc = *static_cast<EFFECTVOID_DESC*>(pArg);
 
@@ -107,7 +109,32 @@ void CEffect_Void::Late_Tick(_float fTimeDelta)
 
 HRESULT CEffect_Void::Render()
 {
+
+
 	return S_OK;
+}
+
+void CEffect_Void::Update_PivotMat()
+{
+	if (nullptr != m_pOwner)	// 주인 이펙트가 있고
+	{
+		if (m_tVoidDesc.bParentPivot)		//주인의 매트릭스를 사용할거고
+		{
+			CGameObject* pParentOwner = m_pOwner->Get_Object_Owner();
+			if (nullptr != pParentOwner)
+			{
+				// 부모의 오너가 있으면 부모의 컴바인 매트릭스 사용
+				m_tVoidDesc.matPivot = dynamic_cast<CEffect*>(m_pOwner)->Get_Desc()->matCombined;
+				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+			}
+			else
+			{
+				// 부모의 오너가 없으면 부모의 월드만 사용
+				m_tVoidDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+			}
+		}
+	}
 }
 
 _bool CEffect_Void::Write_Json(json& Out_Json)

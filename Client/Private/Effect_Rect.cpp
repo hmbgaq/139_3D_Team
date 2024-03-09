@@ -139,14 +139,8 @@ void CEffect_Rect::Late_Tick(_float fTimeDelta)
 	{
 		if (m_tVoidDesc.bRender)
 		{
-			if (nullptr != m_tVoidDesc.pParentObj)
-			{
-				if (m_tVoidDesc.bParentPivot)
-				{
-					m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
-					XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
-				}
-			}
+
+			__super::Update_PivotMat();
 
 
 			if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this)))
@@ -259,7 +253,7 @@ HRESULT CEffect_Rect::Bind_ShaderResources()
 	/* Matrix ============================================================================================ */
 	if (m_tVoidDesc.bParentPivot)
 	{
-		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matOffset));
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matCombined));
 	}
 	else
 	{

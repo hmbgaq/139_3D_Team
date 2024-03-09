@@ -78,6 +78,7 @@ public:
 	HRESULT Add_Part_Mesh_Morph(wstring strModelTag1, wstring strModelTag2);	// 파트:메시(모프) 이펙트 추가
 	HRESULT Add_Part_Trail();							// 파트:트레일 추가
 
+	void	Delete_CurEffectObject();					// 현재 선택된 이펙트 삭제
 	void	Delete_CurPart();							// 현재 선택된 파트 이펙트 삭제		
 
 

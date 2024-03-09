@@ -44,7 +44,7 @@ public:
 		// 주인
 		// 주인 객체는 게임오브젝트에 있는 것 사용
 		_float4x4	 matPivot		= {};	/* XMStoreFloat4x4(&m_tEffectDesc.matPivot, XMMatrixIdentity()); */
-		_float4x4	 matOffset		= {};
+		_float4x4	 matCombined	= {};
 
 	}EFFECT_DESC;
 
@@ -65,6 +65,9 @@ public:
 public:
 	virtual _bool Write_Json(json& Out_Json)		override;
 	virtual void Load_FromJson(const json& In_Json)	override;
+
+public:
+	void	Update_PivotMat();
 
 public:
 	void	ReSet_Effect();

@@ -40,6 +40,9 @@ public:
 	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	virtual void	Update_PivotMat() override;
+
 
 /* For.Desc */
 public:

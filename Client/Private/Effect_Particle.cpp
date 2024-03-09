@@ -148,25 +148,7 @@ void CEffect_Particle::Late_Tick(_float fTimeDelta)
 #endif // _DEBUG
 			if (m_tVoidDesc.bRender)
 			{
-				if (nullptr != m_tVoidDesc.pParentObj)	// 부모 이펙트가 있고
-				{
-					if (m_tVoidDesc.bParentPivot)	//부모의 매트릭스를 사용할거고
-					{
-						CGameObject* PParentOwner = m_tVoidDesc.pParentObj->Get_Object_Owner();
-						if (nullptr != PParentOwner) // 부모의 오너가 있으면
-						{
-							m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4() * PParentOwner->Get_Transform()->Get_WorldFloat4x4();
-							XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
-						}
-						else
-						{
-							// 부모의 오너가 없으면 부모의 매트릭스만 사용
-							m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
-							XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
-						}
-
-					}
-				}
+				__super::Update_PivotMat();
 
 				if (m_bSortZ)
 				{
@@ -340,7 +322,7 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	/* Matrix ============================================================================================ */
 	if (m_tVoidDesc.bParentPivot)
 	{
-		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matOffset));
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matCombined));
 	}
 	else
 	{

@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 
+#include "Effect.h"
+
 #include "Model_Preview.h"
 #include "Part_Preview.h"
 
@@ -60,13 +62,13 @@ void CEffect_Trail::Tick(_float fTimeDelta)
 			if (FALSE == m_tVoidDesc.bPlay)
 			{
 				m_tVoidDesc.bRender = FALSE;
-				m_pVIBufferCom->Reset_Points(m_tVoidDesc.matOffset);
+				m_pVIBufferCom->Reset_Points(m_tVoidDesc.matCombined);
 				return;
 			}
 			else
 			{
 				m_tVoidDesc.bRender = TRUE;
-				m_pVIBufferCom->Update(fTimeDelta, m_tVoidDesc.matOffset);
+				m_pVIBufferCom->Update(fTimeDelta, m_tVoidDesc.matCombined);
 			}		
 
 #ifdef _DEBUG
@@ -84,7 +86,7 @@ void CEffect_Trail::Late_Tick(_float fTimeDelta)
 		{
 			if (OWNER_PREVIEW == m_tTrailDesc.eType_Owner)
 			{
-				CGameObject* pParentOwner = m_tVoidDesc.pParentObj->Get_Object_Owner();
+				CGameObject* pParentOwner = m_pOwner->Get_Object_Owner();
 				m_tTrailDesc.matSocketWorld = dynamic_cast<CPart_Preview*>(pParentOwner)->Get_WorldMatrix_Socket();
 			}
 #endif // _DEBUG
@@ -95,31 +97,13 @@ void CEffect_Trail::Late_Tick(_float fTimeDelta)
 			}
 			else if (OWNER_OBJECT == m_tTrailDesc.eType_Owner)
 			{
-				m_tTrailDesc.matSocketWorld = m_tVoidDesc.pParentObj->Get_Object_Owner()->Get_Transform()->Get_WorldFloat4x4();
+				m_tTrailDesc.matSocketWorld = m_pOwner->Get_Object_Owner()->Get_Transform()->Get_WorldFloat4x4();
 			}
 
 
 			if (m_tVoidDesc.bRender)
 			{
-				if (nullptr != m_tVoidDesc.pParentObj)	// 부모 이펙트가 있고
-				{
-					if (m_tVoidDesc.bParentPivot)		//부모의 매트릭스를 사용할거고
-					{
-						CGameObject* pParentOwner = m_tVoidDesc.pParentObj->Get_Object_Owner();
-						if (nullptr != pParentOwner)	// 부모의 오너가 있으면
-						{
-							m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4() * m_tTrailDesc.matSocketWorld;
-							XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
-						}
-						else
-						{
-							// 부모의 오너가 없으면 부모의 매트릭스만 사용
-							m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
-							XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
-						}
-					}
-
-				}
+				CEffect_Trail::Update_PivotMat();
 
 				if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this)))
 					return;
@@ -139,17 +123,17 @@ HRESULT CEffect_Trail::Render()
 		{
 #endif // _DEBUG
 
-		if (FAILED(Bind_ShaderResources()))
-			return E_FAIL;
+			if (FAILED(Bind_ShaderResources()))
+				return E_FAIL;
 
-		/* 이 쉐이더에 n번째 패스로 그릴거야. */
-		m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
+			/* 이 쉐이더에 n번째 패스로 그릴거야. */
+			m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
 
-		/* 내가 그릴려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
-		m_pVIBufferCom->Bind_VIBuffers();
+			/* 내가 그릴려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
+			m_pVIBufferCom->Bind_VIBuffers();
 
-		/* 바인딩된 정점, 인덱스를 그려. */
-		m_pVIBufferCom->Render();
+			/* 바인딩된 정점, 인덱스를 그려. */
+			m_pVIBufferCom->Render();
 
 #ifdef _DEBUG
 		}
@@ -157,6 +141,30 @@ HRESULT CEffect_Trail::Render()
 #endif // _DEBUG
 
 	return S_OK;
+}
+
+
+void CEffect_Trail::Update_PivotMat()
+{
+	if (nullptr != m_pOwner)	// 부모 이펙트가 있고
+	{
+		if (m_tVoidDesc.bParentPivot)		//부모의 매트릭스를 사용할거고
+		{
+			CGameObject* pParentOwner = m_pOwner->Get_Object_Owner();
+			if (nullptr != pParentOwner)	// 부모의 오너가 있으면
+			{
+				m_tVoidDesc.matPivot = dynamic_cast<CEffect*>(m_pOwner)->Get_Desc()->matCombined * m_tTrailDesc.matSocketWorld;
+				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+			}
+			else
+			{
+				// 부모의 오너가 없으면 부모의 매트릭스만 사용
+				m_tVoidDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+			}
+		}
+
+	}
 }
 
 
@@ -206,7 +214,7 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 	/* Matrix ============================================================================================ */
 	if (m_tVoidDesc.bParentPivot)
 	{
-		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matOffset));
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matCombined));
 	}
 	else
 	{

@@ -87,9 +87,9 @@ public:
 		_float		fDissolveAmount = { 0.f };
 
 		// 주인 
-		CGameObject* pParentObj = { nullptr };	// 저장 X
+		// 주인 객체는 게임오브젝트에 있는 것 사용
 		_float4x4	 matPivot	= {}; /* XMStoreFloat4x4(&m_matPivot, XMMatrixIdentity()) */
-		_float4x4	 matOffset	= {};
+		_float4x4	 matCombined = {};
 
 
 		void Reset_Times()
@@ -157,6 +157,10 @@ public:
 
 
 public:
+	virtual void	Update_PivotMat();
+
+
+public:
 	virtual void	ReSet_Effect();
 	virtual void	End_Effect();
 
@@ -171,8 +175,6 @@ public:
 
 public:
 	EFFECTVOID_DESC* Get_Desc() { return &m_tVoidDesc; }
-
-	void	Set_Parent(CGameObject* pParentObj) { m_tVoidDesc.pParentObj = pParentObj; }
 
 
 protected:

@@ -1581,6 +1581,7 @@ void CWindow_EffectTool::Update_TrailTab()
 					if (ImGui::Button("Set Owner_Model"))
 					{
 						m_pCurEffect->Set_Object_Owner(m_pModel_Preview);
+						m_pCurEffect->Get_Desc()->bParentPivot = TRUE;
 						m_pTrailDesc->eType_Owner = CEffect_Trail::OWNER_OBJECT;
 						//m_pTrailDesc->matSocketWorld = m_pModel_Preview->Get_Transform()->Get_WorldFloat4x4();
 					}
@@ -1589,6 +1590,7 @@ void CWindow_EffectTool::Update_TrailTab()
 					{
 						CGameObject* pPart = dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Find_PartObject(TEXT("Part_Preview"));
 						m_pCurEffect->Set_Object_Owner(pPart);
+						m_pCurEffect->Get_Desc()->bParentPivot = TRUE;
 						m_pTrailDesc->eType_Owner = CEffect_Trail::OWNER_PREVIEW;
 						//m_pTrailDesc->matSocketWorld = dynamic_cast<CPart_Preview*>(pPart)->Get_WorldMatrix_Socket();
 
@@ -2457,11 +2459,11 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 	ImGui::SeparatorText("Model_Preview");
 	if (nullptr == m_pModel_Preview)
 	{
-		if (ImGui::Button("Create Model_Player"))	// 모델 생성
-		{
-			Ready_Model_Preview(TEXT("Prototype_Component_Model_Rentier")); 
-		}
-		ImGui::SameLine();
+		//if (ImGui::Button("Create Model_Player"))	// 모델 생성
+		//{
+		//	Ready_Model_Preview(TEXT("Prototype_Component_Model_Rentier")); 
+		//}
+		//ImGui::SameLine();
 		if (ImGui::Button("Create Model_Boss"))	// 모델 생성
 		{
 			Ready_Model_Preview(TEXT("Prototype_Component_Model_VampireCommander"));
@@ -2480,9 +2482,25 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			m_pModel_Preview->Set_Position(_float3(m_vWorldPosition_Model[0], m_vWorldPosition_Model[1], m_vWorldPosition_Model[2]));
 		}
 
+		if (nullptr != m_pCurEffect)
+		{
+			// 이펙트의주인 정해주기 테스트
+			if (ImGui::Button("ON  Pivot"))
+			{
+				m_pCurEffect->Set_Object_Owner(m_pModel_Preview);
+				m_pCurEffect->Get_Desc()->bParentPivot = TRUE;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("OFF Pivot"))
+			{
+				m_pCurEffect->Get_Desc()->bParentPivot = FALSE;
+				m_pCurEffect->Delete_Object_Owner();
+			}
+		}
+
 
 		// 애니메이션 변경 테스트 
-		if (ImGui::Button("IdlePose"))	
+		if (ImGui::Button("Idle"))	
 		{
 		
 			if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
@@ -2498,7 +2516,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			}
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("MeleeCombo_01"))	
+		if (ImGui::Button("Attack"))	
 		{
 			if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 			{
@@ -2519,11 +2537,12 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 		{
 			if (nullptr != m_pModel_Preview)
 			{
-				if(nullptr != m_pCurEffect->Get_Object_Owner())
-				{
-					// 현재 이펙트의 오너가 nullptr이 아니면 오너부터 해제 해주고 모델 삭제
-					m_pCurEffect->Delete_Object_Owner();
-				}
+				//if(nullptr != m_pCurEffect->Get_Object_Owner())
+				//{
+				//	// 현재 이펙트의 오너가 nullptr이 아니면 오너부터 해제 해주고 모델 삭제
+				//	m_pCurEffect->Get_Desc()->bParentPivot = FALSE;
+				//	m_pCurEffect->Delete_Object_Owner();
+				//}
 
 				m_pModel_Preview->Set_Dead(TRUE);
 				m_pModel_Preview = nullptr;
@@ -2610,6 +2629,12 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		if (ImGui::Button(" UnActive_Effect "))
 		{
 			m_pCurEffectDesc->bActive_Tool = FALSE;
+		}
+
+		if (ImGui::Button(" Delete_Effect "))
+		{
+			Delete_CurEffectObject();
+			return;
 		}
 
 		// =========================================
@@ -2904,13 +2929,13 @@ HRESULT CWindow_EffectTool::Create_EffectObject(const wstring& strLayerTag, CGam
 	{
 		tEffectDesc.bParentPivot = TRUE;
 		tEffectDesc.matPivot = pOwner->Get_Transform()->Get_WorldFloat4x4();
-		XMStoreFloat4x4(&tEffectDesc.matOffset, XMMatrixIdentity());
+		XMStoreFloat4x4(&tEffectDesc.matCombined, XMMatrixIdentity());
 	}
 	else
 	{
 		tEffectDesc.bParentPivot = FALSE;
 		XMStoreFloat4x4(&tEffectDesc.matPivot, XMMatrixIdentity());
-		XMStoreFloat4x4(&tEffectDesc.matOffset, XMMatrixIdentity());
+		XMStoreFloat4x4(&tEffectDesc.matCombined, XMMatrixIdentity());
 	}
 
 	CEffect* pEffect = dynamic_cast<CEffect*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Effect"), &tEffectDesc));
@@ -3549,6 +3574,42 @@ HRESULT CWindow_EffectTool::Add_Part_Trail()
 	}
 
 	return S_OK;
+
+}
+
+void CWindow_EffectTool::Delete_CurEffectObject()
+{
+	m_pCurEffect->Set_Dead(TRUE);
+	m_pCurEffect = nullptr;
+	m_pCurPartEffect = nullptr;
+
+	wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szEffectNames[m_iCurEffectIndex]);
+	m_pEffects.erase(strCurName);
+
+
+
+	m_iCurEffectIndex = (_int)m_pEffects.size();
+	/* 문자열 초기화 */
+	if (nullptr != m_szEffectNames)
+	{
+		for (_int i = 0; i < m_iCurEffectIndex; ++i)
+		{
+			m_szEffectNames[i] = nullptr;
+		}
+		m_szEffectNames = nullptr;
+	}
+	m_szEffectNames = new char* [m_iCurEffectIndex];
+	_int iCount = 0;
+	for (auto& Pair : m_pEffects)
+	{
+		const string utf8Str = m_pGameInstance->Wstring_To_UTF8(Pair.first);
+		m_szEffectNames[iCount] = new char[utf8Str.length() + 1];
+		strcpy(m_szEffectNames[iCount], utf8Str.c_str());
+
+		iCount++;
+	}
+	m_iCurEffectIndex -= 1;
+#pragma endregion
 
 }
 

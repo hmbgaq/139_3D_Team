@@ -29,7 +29,7 @@ HRESULT CEffect::Initialize_Prototype()
 HRESULT CEffect::Initialize(void* pArg)
 {	
 	XMStoreFloat4x4(&m_tEffectDesc.matPivot, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_tEffectDesc.matOffset, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_tEffectDesc.matCombined, XMMatrixIdentity());
 
 	m_tEffectDesc = *(EFFECT_DESC*)pArg;
 
@@ -130,14 +130,8 @@ void CEffect::Late_Tick(_float fTimeDelta)
 		if (m_tEffectDesc.bActive_Tool)
 		{
 #endif // _DEBUG
-			if (nullptr != m_pOwner)	// 오너가 존재하고, 오너의 매트릭스를 사용할거면 받아오기
-			{
-				if (m_tEffectDesc.bParentPivot)
-				{
-					m_tEffectDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
-					XMStoreFloat4x4(&m_tEffectDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);
-				}
-			}
+
+			Update_PivotMat();
 
 			for (auto& Pair : m_PartObjects)
 			{
@@ -266,12 +260,32 @@ void CEffect::Load_FromJson(const json& In_Json)
 		if (nullptr != Pair.second)
 		{
 			Pair.second->Load_FromJson(In_Json["Part"][iCount]);
-			dynamic_cast<CEffect_Void*>(Pair.second)->Set_Parent(this);
+			dynamic_cast<CEffect_Void*>(Pair.second)->Set_Object_Owner(this);
 			iCount += 1;
 		}
 	}
 
 	ReSet_Effect();
+}
+
+void CEffect::Update_PivotMat()
+{
+	if (nullptr != m_pOwner)	// 주인이 존재하고,
+	{
+		if (m_pOwner->Is_Dead())
+		{
+			// 이펙트의 주인이 죽었으면 이펙트 삭제
+			Set_Dead(TRUE);
+			return;
+		}
+
+		if (m_tEffectDesc.bParentPivot)
+		{
+			// 주인의 매트릭스를 사용할거면 받아오기
+			m_tEffectDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+			XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);
+		}
+	}
 }
 
 void CEffect::ReSet_Effect()
@@ -345,7 +359,7 @@ HRESULT CEffect::Add_PartObject(const wstring& strPrototypeTag, const wstring& s
 	if (nullptr == pPartObject)
 		return E_FAIL;
 	
-	dynamic_cast<CEffect_Void*>(pPartObject)->Set_Parent(this);	// 부모 설정
+	dynamic_cast<CEffect_Void*>(pPartObject)->Set_Object_Owner(this);	// 부모 설정
 	m_PartObjects.emplace(strPartTag, pPartObject);
 	m_tEffectDesc.iPartSize += 1;
 
@@ -380,7 +394,7 @@ HRESULT CEffect::Ready_PartObjects(const wstring& strPrototypeTag, const wstring
 	if (nullptr == pPartObject)
 		return E_FAIL;
 
-	dynamic_cast<CEffect_Void*>(pPartObject)->Set_Parent(this);	// 부모 설정
+	dynamic_cast<CEffect_Void*>(pPartObject)->Set_Object_Owner(this);	// 부모 설정
 	m_PartObjects.emplace(strPartTag, pPartObject);
 
 	return S_OK;

@@ -8,7 +8,7 @@
 
 BEGIN(Client)
 class CEffect;
-
+class CEffect_Trail;
 
 //! EFFECT_MANAGER 매크로 : GetInstance()안해도 됨. (EFFECT_MANAGER->Create_Effect(~~);)
 
@@ -26,6 +26,8 @@ public:
 public:	
 	//! 유정 : strFileName은 json파일 이름. ("../Bin/DataFiles/Data_Effect/" 경로에 저장해 놓은 json파일 중 원하는거 골라쓰기!)
 	CEffect* Create_Effect(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner = nullptr);
+
+	CEffect_Trail*	Ready_Trail(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner = nullptr);
 
 
 private:
