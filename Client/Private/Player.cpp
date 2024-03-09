@@ -5,9 +5,21 @@
 #include "Player_IdleLoop.h"
 #include "Data_Manager.h"
 
+#include "Player_HitNormal_B.h"
+#include "Player_HitNormal_F.h"
+#include "Player_HitNormal_L.h"
+#include "Player_HitNormal_R.h"
+
+#include "Player_DeathLight_F_01.h"
+#include "Player_DeathLight_F_02.h"
+
+
+
 #include "PhysXCharacterController.h"
 #include "PhysXCollider.h"
 #include "Preset_PhysXColliderDesc.h"
+
+
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -251,6 +263,100 @@ HRESULT CPlayer::Ready_PartObjects()
 	m_pWeapon_Punch_R->Set_Enable(false);
 	
 	return S_OK;
+}
+
+void CPlayer::Hitted_Left(Power ePower)
+{
+	m_pActor->Set_State(new CPlayer_HitNormal_L());
+
+	//switch (ePower)
+	//{
+	//case Engine::Light:
+	//	m_pActor->Set_State(new CInfected_HitLight_FL_01_NEW());
+	//	break;
+	//case Engine::Medium:
+	//	m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
+	//	break;
+	//case Engine::Heavy:
+	//	m_pActor->Set_State(new CInfected_HitHeavy_FL_01_NEW());
+	//	break;
+	//default:
+	//	m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
+	//	break;
+	//}
+}
+
+void CPlayer::Hitted_Right(Power ePower)
+{
+	m_pActor->Set_State(new CPlayer_HitNormal_R());
+
+	//switch (ePower)
+	//{
+	//case Engine::Light:
+	//	m_pActor->Set_State(new CInfected_HitLight_FR_01_NEW());
+	//	break;
+	//case Engine::Medium:
+	//	m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
+	//	break;
+	//case Engine::Heavy:
+	//	m_pActor->Set_State(new CInfected_HitHeavy_FR_01_NEW());
+	//	break;
+	//default:
+	//	m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
+	//	break;
+	//}
+}
+
+void CPlayer::Hitted_Front(Power ePower)
+{
+	m_pActor->Set_State(new CPlayer_HitNormal_F());
+
+	//switch (ePower)
+	//{
+	//case Engine::Light:
+	//	m_pActor->Set_State(new CInfected_HitLight_F_01_NEW());
+	//	break;
+	//case Engine::Medium:
+	//	m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
+	//	break;
+	//case Engine::Heavy:
+	//	m_pActor->Set_State(new CInfected_HitHeavy_F_01_NEW());
+	//	break;
+	//default:
+	//	m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
+	//	break;
+	//}
+}
+
+void CPlayer::Hitted_Knock(_bool bIsCannonball)
+{
+	//if (bIsCannonball)
+	//{
+	//	m_pActor->Set_State(new CInfected_KnockFrontCannonball_F_01_TEMP());
+	//}
+	//else
+	//{
+	//	m_pActor->Set_State(new CInfected_KnockFrontLight_F_01_NEW());
+	//}
+}
+
+void CPlayer::Hitted_Dead(Power ePower)
+{
+	//m_pActor->Set_State(new CPlayer_DeathLight_F_01());
+
+
+	//switch (ePower)
+	//{
+	//case Engine::Light:
+	//	m_pActor->Set_State(new CInfected_DeathLight_F_01_NEW());
+	//	break;
+	//case Engine::Heavy:
+	//	m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
+	//	break;
+
+	//default:
+	//	break;
+	//}
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
