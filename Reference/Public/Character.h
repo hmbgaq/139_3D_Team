@@ -172,6 +172,9 @@ protected:
 protected:
 	map<const wstring, class CGameObject*>		m_PartObjects;
 
+public:
+	_bool		m_bLookAt = true;
+
 protected:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual CGameObject* Pool() PURE;

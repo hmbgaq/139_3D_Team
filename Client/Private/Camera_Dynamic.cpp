@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 
 #include "Data_Manager.h"
+#include "MasterCamera.h"
 
 CCamera_Dynamic::CCamera_Dynamic(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 	: CCamera(pDevice, pContext, strPrototypeTag)
@@ -45,24 +46,23 @@ void CCamera_Dynamic::Priority_Tick(_float fTimeDelta)
 void CCamera_Dynamic::Tick(_float fTimeDelta)
 {
 
-	if (m_bEnable == true)
-	{
-		if (GetKeyState('A') & 0x8000)
+
+		if (m_pGameInstance->Key_Pressing(DIK_LEFTARROW))
 		{
 			m_pTransformCom->Go_Left(fTimeDelta);
 		}
 
-		if (GetKeyState('D') & 0x8000)
+		if (m_pGameInstance->Key_Pressing(DIK_RIGHTARROW))
 		{
 			m_pTransformCom->Go_Right(fTimeDelta);
 		}
 
-		if (GetKeyState('W') & 0x8000)
+		if (m_pGameInstance->Key_Pressing(DIK_UPARROW))
 		{
 			m_pTransformCom->Go_Straight(fTimeDelta);
 		}
 
-		if (GetKeyState('S') & 0x8000)
+		if (m_pGameInstance->Key_Pressing(DIK_DOWNARROW))
 		{
 			m_pTransformCom->Go_Backward(fTimeDelta);
 		}
@@ -82,10 +82,14 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 			}
 		}
 
+		if (m_pGameInstance->Key_Down(DIK_F2))
+		{
+			CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::SpringCamera);
+		}
 
 
 		__super::Tick(fTimeDelta);
-	}
+
 
 }
 

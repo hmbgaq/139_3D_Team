@@ -64,6 +64,9 @@ void CUI_Player_HPBar::Priority_Tick(_float fTimeDelta)
 
 void CUI_Player_HPBar::Tick(_float fTimeDelta)
 {
+	m_fCurHP = m_pDataManager->Get_CurHP();
+	m_fMaxHP = m_pDataManager->Get_MaxHP();
+
 	if (m_pGameInstance->Key_Down(DIK_Z))
 	{
 		m_bActive = true;
@@ -81,8 +84,8 @@ void CUI_Player_HPBar::Tick(_float fTimeDelta)
 	}
 
 	// È¸º¹
-	if (m_fPreHP < m_pDataManager->Get_CurHP())
-		m_fPreHP = m_pDataManager->Get_CurHP();
+	if (m_fPreHP < m_fCurHP)
+		m_fPreHP = m_fCurHP;
 
 	m_pDataManager->Limit_HP();
 
@@ -90,16 +93,16 @@ void CUI_Player_HPBar::Tick(_float fTimeDelta)
 	{
 		m_fTimeAcc += fTimeDelta * 0.1f;
 
-		if (m_pDataManager->Get_CurHP() < m_fPreHP)
+		if (m_fCurHP < m_fPreHP)
 			m_bLerp = false;
 
-		if (!m_bLerp && m_fPreHP > m_pDataManager->Get_CurHP())
+		if (!m_bLerp && m_fPreHP > m_fCurHP)
 		{
 			m_fPreHP -= fTimeDelta * m_fVariationSpeed * (m_fMaxHP / 6.f);
 
-			if (m_fPreHP <= m_pDataManager->Get_CurHP())
+			if (m_fPreHP <= m_fCurHP)
 			{
-				m_fPreHP = m_pDataManager->Get_CurHP();
+				m_fPreHP = m_fCurHP;
 				m_bLerp = true;
 			}
 		}
@@ -194,37 +197,6 @@ HRESULT CUI_Player_HPBar::Bind_ShaderResources()
 		return E_FAIL;
 	//if (FAILED(m_pTextureCom[HP_DECAL]->Bind_ShaderResource(m_pShaderCom, "g_HpBarDecal_Texture")))		// Hp Decal
 	//	return E_FAIL;
-
-	//string TestName = m_tUIInfo.strObjectName;
-	//for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
-	//{
-	//	switch (i)
-	//	{
-	//	case CUI_Player_HPBar::HPBAR_WHITE:
-	//	{
-	//		if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-	//			return E_FAIL;
-	//		break;
-	//	}
-	//	case CUI_Player_HPBar::HPBAR_RED:
-	//	{
-	//		if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Second")))
-	//			return E_FAIL;
-
-	//		break;
-	//	}
-	//	case CUI_Player_HPBar::HP_DECAL:
-	//	{
-	//		if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Third")))
-	//			return E_FAIL;
-	//		break;
-	//	}
-	//	case CUI_Player_HPBar::TEXTURE_END:
-	//		break;
-	//	default:
-	//		break;
-	//	}
-	//}
 
 	return S_OK;
 }

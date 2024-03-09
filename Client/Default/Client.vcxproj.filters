@@ -1534,12 +1534,6 @@
     <Filter Include="01.Levels\01.GamePlay\3.Lava">
       <UniqueIdentifier>{04902ce0-48d3-4de2-bf84-596e0d009ea7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\Left_Interface">
-      <UniqueIdentifier>{e214bb53-14ac-4db7-97f6-b3b24eb46415}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\Right_Interface">
-      <UniqueIdentifier>{52b0b806-bb9d-40cc-a902-d719e9dff60b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp">
       <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
     </Filter>
@@ -2223,6 +2217,9 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\02. Glamour\3. End">
       <UniqueIdentifier>{fec06ccf-fe4a-4d30-8e20-1ecaead9777d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\HUD">
+      <UniqueIdentifier>{5681727c-afb0-4534-9296-d95d804be038}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -4031,6 +4028,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Player_InteractionGlamour_End.h">
       <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\02. Glamour\3. End</Filter>
+    </ClInclude>
+    <ClInclude Include="CUI_HUD.h">
+      <Filter>02.GameObjects\UI\00. Player\HUD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -5940,6 +5940,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_InteractionPushButton.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\PushButton</Filter>
+    </ClCompile>
+    <ClCompile Include="CUI_HUD.cpp">
+      <Filter>02.GameObjects\UI\00. Player\HUD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

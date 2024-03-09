@@ -204,13 +204,13 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected")));
 // 	for (int i = 0; i < 100; ++i)
 // 	{
+	
 
-//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
 	/*	}*/
 
 	{
 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_VampireCommander"));
-
+	
 		if (nullptr == pMonster)	return E_FAIL;
 		pMonster->Set_Position(_float3(250.66f, 0.f, 7.38f));
 	}

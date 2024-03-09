@@ -29,19 +29,29 @@ HRESULT CSky::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	return S_OK;
-
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
-	//if (iCurrentLevel == (_uint)LEVEL_TOOL)
-	//{
-	//	m_iTextureIndex = 6;
-	//}
-	//else
-	//{
-		m_iTextureIndex = 5;
-	//}
-
+	switch ((LEVEL)iCurrentLevel)
+	{
+		case LEVEL_INTRO:
+		{
+			m_eSkyType = CSky::SKY_STAGE1;
+			break;
+		}
+		case LEVEL_GAMEPLAY:
+		{
+			m_eSkyType = CSky::SKY_STAGE1BOSS;
+			break;
+		}
+		case LEVEL_TOOL:
+		{
+			m_eSkyType = CSky::SKY_STAGE1;
+			break;
+		}
+	}
+	
+	
+	return S_OK;
 }
 
 void CSky::Priority_Tick(_float fTimeDelta)
@@ -91,6 +101,8 @@ HRESULT CSky::Ready_Components()
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
+	
+
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_VIBuffer_Cube"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
@@ -110,7 +122,7 @@ HRESULT CSky::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;	
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_iTextureIndex)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", (_uint)m_eSkyType)))
 		return E_FAIL;
 	
 	return S_OK;

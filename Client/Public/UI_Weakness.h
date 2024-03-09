@@ -30,7 +30,7 @@ private:
 	CGameObject*			m_pTarget = nullptr;
 	_vector					m_vTargetPosition = { 0.f, 0.f, 0.f, 0.f };
 	_matrix					m_World = XMMatrixIdentity();
-	_float					m_fOffset = 0.f;
+	_float					m_fChangeScale = 1.f;
 
 public:
 	json					Save_Desc(json& out_json);

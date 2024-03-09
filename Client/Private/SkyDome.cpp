@@ -20,11 +20,16 @@ HRESULT CSkyDome::Initialize_Prototype()
 
 HRESULT CSkyDome::Initialize(void* pArg)
 {
+
+	m_iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
+
+
 
 	return S_OK;
 }
@@ -59,7 +64,6 @@ HRESULT CSkyDome::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 
 		m_pShaderCom->Begin((_uint)1);
-
 		m_pModelCom->Render((_uint)i);
 	}
 	
@@ -69,13 +73,14 @@ HRESULT CSkyDome::Render()
 HRESULT CSkyDome::Ready_Components()
 {
 	
+
 	//! For. Com_Shader
-	if(FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_Model"),
+	if(FAILED(__super::Add_Component(m_iCurrentLevel, TEXT("Prototype_Component_Shader_Model"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	//! For.Com_Model 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_SkyDome"),
+	if (FAILED(__super::Add_Component(m_iCurrentLevel, TEXT("Prototype_Component_Model_SkyDome"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
@@ -94,6 +99,10 @@ HRESULT CSkyDome::Bind_ShaderResources()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
 		return E_FAIL;
 	
 	

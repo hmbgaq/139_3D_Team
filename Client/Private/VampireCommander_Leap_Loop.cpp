@@ -1,5 +1,6 @@
 #include "VampireCommander_Leap_Loop.h"
 #include "Data_Manager.h"
+#include "VampireCommander_Leap_Stop.h"
 
 void CVampireCommander_Leap_Loop::Initialize(CVampireCommander* pActor)
 {
@@ -11,11 +12,15 @@ void CVampireCommander_Leap_Loop::Initialize(CVampireCommander* pActor)
 
 CState<CVampireCommander>* CVampireCommander_Leap_Loop::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
-	if (pActor->Is_Animation_End())
-	{
-		return new CVampireCommander_Leap_Loop();
-	}
-
+	//if (0.5f < pActor->Calc_Distance())
+	//{
+	//	pActor->Go_Straight(fTimeDelta);
+	//}
+	//else
+	//{
+	//	return new CVampireCommander_Leap_Stop();
+	//}
+	//
 	return nullptr;
 }
 

@@ -2,7 +2,7 @@
 #include "UI_LevelUp_ShieldFrame.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
-
+#include "Data_Manager.h"
 
 CUI_LevelUp_ShieldFrame::CUI_LevelUp_ShieldFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CUI_Text(pDevice, pContext, strPrototypeTag)
@@ -47,12 +47,13 @@ HRESULT CUI_LevelUp_ShieldFrame::Initialize(void* pArg)
 	m_fScaleY = m_tUIInfo.fScaleY;
 
 	m_eState = UISTATE::LEVEL_UP;
-	m_bActive = true;
+	m_bActive = false;
 	
 	//m_strText = m_pData_Manager->Get_CurLevel();
 
 	m_fChangeScale = 4.f;
-	m_fLifeTime = 1000.f;
+	m_fAlpha = 0.f;
+	m_fLifeTime = 8000.f;
 	m_fTime = GetTickCount64();
 
 	return S_OK;
@@ -75,9 +76,28 @@ void CUI_LevelUp_ShieldFrame::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_8))
 		--m_fChangeScale;
 
-	//if (m_bActive)
+		__super::Tick(fTimeDelta);
+}
+
+void CUI_LevelUp_ShieldFrame::Late_Tick(_float fTimeDelta)
+{
+	//if (m_tUIInfo.bWorldUI == true)
+	//	Compute_OwnerCamDistance();
+
+	if (m_bReset)
 	{
-		if (m_fTime + m_fLifeTime < GetTickCount64())
+		//m_fAlpha = 0.f;
+		m_fScaleX = 180.f;
+		m_fScaleY = 225.f;
+		//m_fTime = GetTickCount64();
+	}
+
+	if (m_bActive == false)
+		m_fTime = GetTickCount64();
+
+	if (m_bActive)
+	{
+		if (m_fTime + m_fActiveTime < GetTickCount64())
 		{
 			if (m_fScaleX > 130.f)
 			{
@@ -89,46 +109,36 @@ void CUI_LevelUp_ShieldFrame::Tick(_float fTimeDelta)
 				Change_SizeY((-m_fChangeScale));
 			}
 
-			if(m_fScaleX < 130.f && m_fScaleY < 180.f)
+			if (m_fScaleX < 130.f && m_fScaleY < 180.f)
 				m_fTime = GetTickCount64();
 		}
-		__super::Tick(fTimeDelta);
 	}
-}
 
-void CUI_LevelUp_ShieldFrame::Late_Tick(_float fTimeDelta)
-{
-	//if (m_tUIInfo.bWorldUI == true)
-	//	Compute_OwnerCamDistance();
 
-	//if (m_bActive)
-	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
-			return;
-	}
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+		return;
+
 }
 
 HRESULT CUI_LevelUp_ShieldFrame::Render()
 {
-	
-	//if (m_bActive)
-	{
-		if (FAILED(Bind_ShaderResources()))
-			return E_FAIL;
 
-		//! 이 셰이더에 0번째 패스로 그릴거야.
-		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+	if (FAILED(Bind_ShaderResources()))
+		return E_FAIL;
 
-		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-		m_pVIBufferCom->Bind_VIBuffers();
+	//! 이 셰이더에 0번째 패스로 그릴거야.
+	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-		//! 바인딩된 정점, 인덱스를 그려
-		m_pVIBufferCom->Render();
+	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+	m_pVIBufferCom->Bind_VIBuffers();
 
-		m_strText = to_wstring(m_pData_Manager->Get_CurLevel());
-		//RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
-		m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
-	}
+	//! 바인딩된 정점, 인덱스를 그려
+	m_pVIBufferCom->Render();
+
+	m_strText = to_wstring(m_pData_Manager->Get_CurLevel());
+	//RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
+	m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
+
 
 	return S_OK;
 }
@@ -161,6 +171,7 @@ HRESULT CUI_LevelUp_ShieldFrame::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
+
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
@@ -201,8 +212,8 @@ HRESULT CUI_LevelUp_ShieldFrame::Ready_Text()
 	TEXTINFO* LoadInfo = new TEXTINFO;
 
 	/* 임의 값 (추 후 로드해서 받기) */
-	LoadInfo->fPosX = 958.f;
-	LoadInfo->fPosY = 247.f;
+	LoadInfo->fPosX = 636.f;
+	LoadInfo->fPosY = 256.f;
 	LoadInfo->fScale = 1.f;
 	LoadInfo->vOrigin.x = 0.f;
 	LoadInfo->vOrigin.y = 0.f;
