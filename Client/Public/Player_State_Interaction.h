@@ -1,10 +1,9 @@
 #pragma once
-#include "Player_State_Rifle.h"
-
+#include "Player_State.h"
 
 BEGIN(Client)
 
-class CPlayer_Rifle_Ironsights_Fire : public CPlayer_State_Rifle
+class CPlayer_State_Interaction : public CPlayer_State
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;
@@ -12,9 +11,8 @@ public:
 	virtual void Release(CPlayer* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_Empowered_Winchester_IdleFire;
+	virtual CState<CPlayer>* Update_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
 
-	
 
 };
 

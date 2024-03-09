@@ -544,39 +544,6 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\Finisher\ParasiteMaster">
       <UniqueIdentifier>{8c32c143-e087-46a0-9295-f5048aab0841}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\Hit">
-      <UniqueIdentifier>{8a7cd3ed-555d-4ffc-9c82-ecaff164b032}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\Hit\0. Parent">
-      <UniqueIdentifier>{b7a2b2e5-4e77-4bec-b677-5c07b85a266e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\Hit\Back">
-      <UniqueIdentifier>{b6611ada-2705-48c0-8b9d-5c96b0fa6b99}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\Hit\Back\Gatling">
-      <UniqueIdentifier>{df72c4bc-071a-44c7-bb4a-7f7cfc52a31b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\Hit\Front">
-      <UniqueIdentifier>{a205f73a-4808-47c3-ae6b-d471870af7ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\Hit\Front\Gatling">
-      <UniqueIdentifier>{8b9a0fe3-d7d0-4a3e-88a0-1d16ddabe460}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\Hit\Front\New">
-      <UniqueIdentifier>{7c3aed51-b1ed-4a8c-9620-513011e60763}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\Hit\Left">
-      <UniqueIdentifier>{5d56e5ed-55af-416e-ba04-05404db3184e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\Hit\Left\Gatling">
-      <UniqueIdentifier>{ce7e1fda-d4a5-48d4-a5f2-7bba09486faf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\Hit\Right">
-      <UniqueIdentifier>{3b18e978-0639-4a84-824d-5fb2389a219f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\Hit\Right\Gatling">
-      <UniqueIdentifier>{ab76df5d-7cdb-4e22-88c3-60c5263edc75}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\0. Screamer">
       <UniqueIdentifier>{6ab1225a-12f3-4ff6-9880-7a7c7881548c}</UniqueIdentifier>
     </Filter>
@@ -1972,6 +1939,291 @@
     <Filter Include="02.GameObjects\02. Environment\Environment_LightObject">
       <UniqueIdentifier>{06678cb6-3952-4c50-8c08-d9911c4aba61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit">
+      <UniqueIdentifier>{8a7cd3ed-555d-4ffc-9c82-ecaff164b032}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\0. Parent">
+      <UniqueIdentifier>{b7a2b2e5-4e77-4bec-b677-5c07b85a266e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\Back">
+      <UniqueIdentifier>{b6611ada-2705-48c0-8b9d-5c96b0fa6b99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\Back\Gatling">
+      <UniqueIdentifier>{df72c4bc-071a-44c7-bb4a-7f7cfc52a31b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\Front">
+      <UniqueIdentifier>{a205f73a-4808-47c3-ae6b-d471870af7ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\Front\Gatling">
+      <UniqueIdentifier>{8b9a0fe3-d7d0-4a3e-88a0-1d16ddabe460}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\Front\New">
+      <UniqueIdentifier>{7c3aed51-b1ed-4a8c-9620-513011e60763}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\Left">
+      <UniqueIdentifier>{5d56e5ed-55af-416e-ba04-05404db3184e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\Left\Gatling">
+      <UniqueIdentifier>{ce7e1fda-d4a5-48d4-a5f2-7bba09486faf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\Right">
+      <UniqueIdentifier>{3b18e978-0639-4a84-824d-5fb2389a219f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\Right\Gatling">
+      <UniqueIdentifier>{ab76df5d-7cdb-4e22-88c3-60c5263edc75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction">
+      <UniqueIdentifier>{811919c5-dc42-4012-afe3-1c0a14e74ad9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Death">
+      <UniqueIdentifier>{f83ae205-3d9c-4a70-bf70-42b8c5a49066}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Unused">
+      <UniqueIdentifier>{caaab548-aa40-4fa5-abb0-adfb6c88aa70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use">
+      <UniqueIdentifier>{cd055b7e-4187-4f44-8f96-861c64b65ef5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\01. Destroy">
+      <UniqueIdentifier>{68d02f81-4a61-48fc-8f5b-2d8c8a959a3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\02. Glamour">
+      <UniqueIdentifier>{e0516e4d-ab07-440c-ad25-dac30a12d585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\03. Slide">
+      <UniqueIdentifier>{6446eea8-1d68-48f4-8403-329f7b3725d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\04. SmallLever">
+      <UniqueIdentifier>{e50ae302-a5c9-4d24-a538-f73dcf798134}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\05. Battery">
+      <UniqueIdentifier>{4deccfd2-aaab-402f-bf61-14caa491fbcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb">
+      <UniqueIdentifier>{c53c7d5d-5c4e-4eef-bba8-090c1ba4696e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal">
+      <UniqueIdentifier>{b9332dcd-8df6-4c90-a2e6-34e8939748b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\100">
+      <UniqueIdentifier>{b1c6cc82-c784-4f8d-956c-d87a445159f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\100\1">
+      <UniqueIdentifier>{c53124ec-f0f9-43d4-8fcd-036d0196c0c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\100\2">
+      <UniqueIdentifier>{4ade154a-08ae-436c-86fb-ea2edc8a81bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\200">
+      <UniqueIdentifier>{1abdefa2-b372-458e-bdc9-406a31c62193}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\300">
+      <UniqueIdentifier>{3aeb85f2-c790-455a-8ed8-b505c52a2f87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\450">
+      <UniqueIdentifier>{a67d66b0-5224-45bb-adc7-6fe9f6085667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\07. Door">
+      <UniqueIdentifier>{d13c2947-7f4b-4aea-8d0a-302ae8cce6fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\07. Door\1. Open">
+      <UniqueIdentifier>{2c1aaf45-c95f-4941-b060-f26187da7dc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\07. Door\2. Push">
+      <UniqueIdentifier>{a81cee1f-9af4-474c-aa6d-dbc98a952f54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown">
+      <UniqueIdentifier>{12f6ff2b-1a99-43ee-8803-5c13e64bd6b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown\100">
+      <UniqueIdentifier>{1b088be7-dd6f-4092-9599-fe47f7f9b0f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown\200">
+      <UniqueIdentifier>{b384d74a-bc92-4cb0-9428-e7efc56bfda0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown\300">
+      <UniqueIdentifier>{79f5c662-7e43-4c1b-bf52-17b5bd08a9da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown\300\Alt">
+      <UniqueIdentifier>{d5cd2b16-6b63-435f-bd80-1d389b9c6125}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder">
+      <UniqueIdentifier>{4e479d7f-48ee-46e8-9241-f951e536b4e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder\1. IdlePose">
+      <UniqueIdentifier>{4bea1d9d-6520-4462-bde0-3e44ad837db3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder\2. Start">
+      <UniqueIdentifier>{f6934e36-43bb-4c6c-ba73-b4a5bfb1c777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder\3. Loop">
+      <UniqueIdentifier>{7f8bc052-d92e-4965-b4bf-25c59ee4be99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder\4. Stop">
+      <UniqueIdentifier>{f5ec406d-0ec3-464a-80c5-60ddfd64e624}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank">
+      <UniqueIdentifier>{9b4f0d40-83e7-419f-a274-110322a8820e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\1. IdlePose">
+      <UniqueIdentifier>{ad27c0b6-9f51-4505-a3d4-5dd7b0f6dbe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\1. IdlePose\1">
+      <UniqueIdentifier>{5e2ffc73-ca7c-4c36-95d9-bd46545067e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\1. IdlePose\2">
+      <UniqueIdentifier>{eb4abae8-23cb-4a7b-a3e4-23f8ac958515}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up">
+      <UniqueIdentifier>{5f26e638-ef34-4ab9-a97a-552664b96892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\1. Start">
+      <UniqueIdentifier>{6ff095e9-fd99-4d03-9fb5-fb077746bb28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\2. Loop">
+      <UniqueIdentifier>{ee9f37d2-fe1c-4b91-b240-08cd086b4177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\3. Stop">
+      <UniqueIdentifier>{0adc6b86-eafc-400f-87d1-320b34357e27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\2. Loop\1">
+      <UniqueIdentifier>{11b1c738-c68b-444a-a0d9-cac90202fbf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\2. Loop\2">
+      <UniqueIdentifier>{6f38a505-ad5a-4c55-855b-e013f25946e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\3. DodgeR">
+      <UniqueIdentifier>{3f1e6525-8f3c-414d-b0ce-bde2037e1f4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull">
+      <UniqueIdentifier>{e6fbba5b-b8ce-43d5-9a58-83f965f7ccd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push">
+      <UniqueIdentifier>{a0b19ac8-2580-44ba-acad-10c69e487b6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\1. Pull">
+      <UniqueIdentifier>{ce39f395-328d-4f32-bdee-234c840c2add}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\2. Rock">
+      <UniqueIdentifier>{a0b3b8b1-2c1d-4c80-8a48-72633be36493}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\2. Rock\1. Idle">
+      <UniqueIdentifier>{8df34418-589d-4674-9df4-13376a06e355}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\2. Rock\2. Loop">
+      <UniqueIdentifier>{bb279ae7-dffe-4e8e-bd22-8064e2693a02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\2. Rock\3. End">
+      <UniqueIdentifier>{14925db7-8bcc-4e5a-afc5-4c81945d8dac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\3. Unable">
+      <UniqueIdentifier>{f493c38c-e012-4e1a-828f-c34ced710848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\4. WindUp">
+      <UniqueIdentifier>{9bc3fdab-eacb-42ef-ac1a-dccacd5c123b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\1. Idle">
+      <UniqueIdentifier>{12d750ed-6423-4f34-bbbc-3ce5c650c5d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\2. Start">
+      <UniqueIdentifier>{d062aeff-fb9b-4401-b484-523bf8e54761}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\3. Loop">
+      <UniqueIdentifier>{a97cfdce-9365-4b5c-ac07-8b6417fc3af3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\4. End">
+      <UniqueIdentifier>{83d701b2-c969-46f4-b5ae-4446158ca491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\6. Push_to_Pull">
+      <UniqueIdentifier>{8a1a542e-28e2-4ca7-9771-1acedb9759bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\5. Pull_to_Push">
+      <UniqueIdentifier>{cb9a207c-d03b-47ca-a79c-07266b11a39d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\7. Unable">
+      <UniqueIdentifier>{f3bd54a7-ea6f-4146-a2d6-cc8c1cf09396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\8. WindUp">
+      <UniqueIdentifier>{9d39d497-1c55-443d-9844-51ee75e6272e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\PushButton">
+      <UniqueIdentifier>{550cee78-090e-4d8b-88ec-d9be7273ef54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope">
+      <UniqueIdentifier>{f4111a8a-573c-43e4-8624-f316285a5735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb">
+      <UniqueIdentifier>{3b9d30bd-9ffd-4077-aa2c-ec31f9e70673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\2. Down">
+      <UniqueIdentifier>{0fd943b4-e969-47b0-b8d5-d754fb7b5722}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\1. IdlePose">
+      <UniqueIdentifier>{c1db2256-78dc-4260-8b6e-87cd9ab164db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\1. IdlePose\1">
+      <UniqueIdentifier>{bd364aa2-dfae-498d-af3e-b67d6ab9440b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\1. IdlePose\2">
+      <UniqueIdentifier>{d6140bb3-9c64-40e3-b164-74a14b3ad16f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\2. Start">
+      <UniqueIdentifier>{75c0b809-f95f-4664-97ce-edd2ca15748c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\3. Loop">
+      <UniqueIdentifier>{cf7547cc-69c7-47bc-a767-e61ad4abdfbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\3. Loop\1">
+      <UniqueIdentifier>{2e261413-38f4-4923-8938-0954e91e18d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\3. Loop\2">
+      <UniqueIdentifier>{6cd8fc55-4e98-4ebb-838e-f6475bf0067b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\4. Stop">
+      <UniqueIdentifier>{9aac3e9b-85fc-45bc-ae8f-3a7f77c7460d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\2. Down\1. Start">
+      <UniqueIdentifier>{83dcb204-2d24-408f-a663-ace5412862e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\2. Down\2. Loop">
+      <UniqueIdentifier>{6c1e09c9-de3b-4d9e-a297-2ba50abc3484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\2. Down\3. Stop">
+      <UniqueIdentifier>{286fcfe7-6ba8-4747-80de-ea2cd136200c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\14. RotateValve">
+      <UniqueIdentifier>{a464ed74-9ef3-4663-ba34-728b17240bc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\15. Vault">
+      <UniqueIdentifier>{fdf12f19-a719-41d3-941d-4190c76cc8a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\15. Vault\100">
+      <UniqueIdentifier>{db0a0884-1e92-464d-8907-20017e462fd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\15. Vault\200">
+      <UniqueIdentifier>{74e22c20-42fd-4d13-bc26-623293deecb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\Wipe">
+      <UniqueIdentifier>{e0d70e0d-2c3a-4109-9d2b-40c07c5f5eab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\Wipe\1. Pull">
+      <UniqueIdentifier>{2aff4469-ffe2-402a-8b4b-6a76a1c35b2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\Wipe\2. Swing">
+      <UniqueIdentifier>{783facf2-0955-4e09-9b84-578ca8adc459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\0. Parent">
+      <UniqueIdentifier>{0c826060-61ce-4ecc-a439-970c44519970}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\02. Glamour\1. Glamour">
+      <UniqueIdentifier>{f73e29ca-1c0b-4c55-80ec-8af5a5612c80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\02. Glamour\2. Activate">
+      <UniqueIdentifier>{1bd7c30b-df56-49dd-b444-5b1634ce2dae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\Interaction\Use\02. Glamour\3. End">
+      <UniqueIdentifier>{fec06ccf-fe4a-4d30-8e20-1ecaead9777d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -2506,46 +2758,40 @@
       <Filter>02.GameObjects\00. Character\Player\State\2. Attack\3. TeleportPunch\Right\2\VeryFar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_State_Hit.h">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_HitNormal_B.h">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_HitNormal_F.h">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Front</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Front</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_HitNormal_L.h">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_HitNormal_R.h">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_HitNormal_B_Gatling.h">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Back\Gatling</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Back\Gatling</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_HitNormal_F_Gatling.h">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Front\Gatling</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Front\Gatling</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_HitNormal_F_02_NEW.h">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Front\New</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Front\New</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_HitNormal_L_Gatling.h">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Left\Gatling</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Left\Gatling</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_HitNormal_R_Gatling.h">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Right\Gatling</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Right\Gatling</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Assassin.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Assassin.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\Parts\Body</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_DeathLight_F_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_DeathLight_F_02.h">
-      <Filter>02.GameObjects\00. Character\Player\State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Assassin_State.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\0. Origin</Filter>
@@ -3603,6 +3849,189 @@
     <ClInclude Include="..\Public\Environment_LightObject.h">
       <Filter>02.GameObjects\02. Environment\Environment_LightObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_DeathLight_F_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_DeathLight_F_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Interaction_Destroy.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\01. Destroy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Interaction_Slide_Sequence.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\03. Slide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Interaction_SmallLever.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\04. SmallLever</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionBattery.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\05. Battery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionClimb100.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\100\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionClimb100_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\100\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionClimb200.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionClimb300.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\300</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionClimb450.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\450</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionClimbRope_IdlePose.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\1. IdlePose\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionClimbRope_IdlePose_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\1. IdlePose\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionClimbRope_Loop_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\3. Loop\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionClimbRope_Loop_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\3. Loop\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionClimbRope_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\2. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionClimbRope_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\4. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionDoor_Open.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\07. Door\1. Open</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionDoorPush.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\07. Door\2. Push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionJumpDown300_Alt.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown\300\Alt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionJumpDown100.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown\100</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionJumpDown200.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown\200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionJumpDown300.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown\300</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionLadder_Up_IdlePose.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder\1. IdlePose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionLadder_Up_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder\3. Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionLadder_Up_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder\2. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionLadder_Up_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder\4. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPlank_Up_IdlePose_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\1. IdlePose\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPlank_Up_IdlePose_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\1. IdlePose\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPlank_Up_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPlank_Up_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\3. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPlank_Up_Loop_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\2. Loop\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPlank_Up_Loop_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\2. Loop\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPlank_DodgeR_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\3. DodgeR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPull_Unable.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\3. Unable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPull_WindUp.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\4. WindUp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPull_Rock_End.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\2. Rock\3. End</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPull_Rock_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\2. Rock\2. Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPull_Rock_Idle.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\2. Rock\1. Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPull.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\1. Pull</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPush_Rock_Idle.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\1. Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPush_Rock_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\2. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPush_Rock_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\3. Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPush_Rock_End.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\4. End</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPush_Rock_Pull_to_Push.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\5. Pull_to_Push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPush_Rock_Push_to_Pull.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\6. Push_to_Pull</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPush_Unable.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\7. Unable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPush_WindUp.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\8. WindUp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionPushButton.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\PushButton</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionRope_Down_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\2. Down\2. Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionRope_Down_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\2. Down\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionRope_Down_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\2. Down\3. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionRotateValve_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\14. RotateValve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionVault100.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\15. Vault\100</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionVault200.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\15. Vault\200</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionWhipPull.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\Wipe\1. Pull</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionWhipSwing.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\Wipe\2. Swing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Interaction.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Interaction_Glamour.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\02. Glamour\1. Glamour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionGlamour_Activate.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\02. Glamour\2. Activate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InteractionGlamour_End.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\02. Glamour\3. End</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -4250,34 +4679,34 @@
       <Filter>02.GameObjects\00. Character\Player\State\2. Attack\3. TeleportPunch\Right\2\VeryFar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_State_Hit.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_HitNormal_B.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Back</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_HitNormal_F.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Front</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Front</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_HitNormal_L.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_HitNormal_R.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_HitNormal_B_Gatling.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Back\Gatling</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Back\Gatling</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_HitNormal_F_Gatling.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Front\Gatling</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Front\Gatling</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_HitNormal_F_02_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Front\New</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Front\New</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_HitNormal_L_Gatling.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Left\Gatling</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Left\Gatling</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_HitNormal_R_Gatling.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\Hit\Right\Gatling</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\Right\Gatling</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Assassin.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\Parts\Body</Filter>
@@ -5334,6 +5763,183 @@
     </ClCompile>
     <ClCompile Include="..\Private\Grid.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Interaction_Destroy.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\01. Destroy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionClimb100.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\100\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionClimb100_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\100\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionClimb200.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionClimb300.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\300</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionClimb450.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\06. Climb\1. Normal\450</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionClimbRope_IdlePose.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\1. IdlePose\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionClimbRope_IdlePose_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\1. IdlePose\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionClimbRope_Start.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\2. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionClimbRope_Loop_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\3. Loop\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionClimbRope_Loop_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\3. Loop\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionClimbRope_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\1. Climb\4. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Interaction_Slide_Sequence.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\03. Slide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Interaction_SmallLever.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\04. SmallLever</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionBattery.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\05. Battery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionDoor_Open.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\07. Door\1. Open</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionDoorPush.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\07. Door\2. Push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionJumpDown300_Alt.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown\300\Alt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionJumpDown100.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown\100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionJumpDown200.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown\200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionJumpDown300.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\08. JumpDown\300</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionLadder_Up_IdlePose.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder\1. IdlePose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionLadder_Up_Loop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder\3. Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionLadder_Up_Start.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder\2. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionLadder_Up_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\09. Ladder\4. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPlank_Up_IdlePose_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\1. IdlePose\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPlank_Up_IdlePose_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\1. IdlePose\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPlank_Up_Start.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPlank_Up_Loop_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\2. Loop\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPlank_Up_Loop_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\2. Loop\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPlank_Up_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\2. Up\3. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPlank_DodgeR_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\10. Plank\3. DodgeR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPull_Unable.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\3. Unable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPull_WindUp.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\4. WindUp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPull_Rock_End.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\2. Rock\3. End</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPull_Rock_Loop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\2. Rock\2. Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPull_Rock_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\2. Rock\1. Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPull.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\11. Pull\1. Pull</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPush_Rock_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\1. Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPush_Rock_Start.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\2. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPush_Rock_Loop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\3. Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPush_Rock_End.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\4. End</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPush_Rock_Pull_to_Push.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\5. Pull_to_Push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPush_Rock_Push_to_Pull.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\6. Push_to_Pull</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionRope_Down_Loop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\2. Down\2. Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionRope_Down_Start.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\2. Down\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionRope_Down_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\13. Rope\2. Down\3. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionRotateValve_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\14. RotateValve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionVault100.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\15. Vault\100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionVault200.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\15. Vault\200</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionWhipPull.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\Wipe\1. Pull</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionWhipSwing.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\Wipe\2. Swing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Interaction.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Interaction_Glamour.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\02. Glamour\1. Glamour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionGlamour_Activate.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\02. Glamour\2. Activate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionGlamour_End.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\02. Glamour\3. End</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPush_Unable.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\7. Unable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPush_WindUp.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\8. WindUp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_InteractionPushButton.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\Use\12. Push\PushButton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

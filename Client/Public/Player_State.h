@@ -29,6 +29,7 @@ public:		//상태 그룹 별 업데이트
 	CState<CPlayer>* Roll_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Hit_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Rifle_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Interaction_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 	
 
