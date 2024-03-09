@@ -206,13 +206,13 @@ void CWindow_AnimTool::SpringCutScene()
 			pSpringCam->Set_CameraOffset(_float3(m_fCameraOffset[0], m_fCameraOffset[1], m_fCameraOffset[2]));
 		}
 
-		//if (ImGui::DragFloat3("CameraTargetPosition", m_fCameraAddTargetposition, 0.01f, -20.f, 20.f))
-		//{
-		//	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-		//
-		//	pSpringCam->Get_Transform()->Look_At_Lerp()
-		//	
-		//}
+		if (ImGui::DragFloat3("CameraTargetPosition", m_fCameraAddTargetposition, 0.01f, -20.f, 20.f))
+		{
+			/*CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();*/
+
+			
+
+		}
 	}
 }
 

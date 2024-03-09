@@ -52,7 +52,6 @@ namespace Client
 	#define LAYER_PARTICLE					TEXT("Layer_Particle")
 
 
-
 	enum class COLLISION_LAYER
 	{
 		NONE,
