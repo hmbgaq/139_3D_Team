@@ -202,6 +202,7 @@ void CSpringCamera::CameraRotation(_float fTimeDelta)
 	//카메라 움직임은 Late_Tick에 있다!
 	_float3 currentCameraPosition = ActualPosition;
 	_float3 idealPosition = m_ptarget->Get_State(CTransform::STATE_POSITION);
+	idealPosition = m_TargetPosition;
 	_float3 displacement = ActualPosition - idealPosition;
 	_float3 SpringAccel = (-SpringConstant * displacement) - (DampConstant * Velocity);
 	Velocity += SpringAccel * fTimeDelta;
