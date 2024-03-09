@@ -41,6 +41,10 @@ HRESULT CEnvironment_Instance::Initialize(void* pArg)
 		}
 	}
 
+
+	m_iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
@@ -60,7 +64,7 @@ void CEnvironment_Instance::Priority_Tick(_float fTimeDelta)
 void CEnvironment_Instance::Tick(_float fTimeDelta)
 {
 	//m_pInstanceModelCom->Update(m_tInstanceDesc.vecInstanceInfoDesc);
-	if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
+	if (m_iCurrentLevel == (UINT)LEVEL_TOOL/* && m_bColliderRender == true*/)
 	{
 		for (_uint i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 		{
@@ -86,7 +90,7 @@ void CEnvironment_Instance::Late_Tick(_float fTimeDelta)
 			return;
 /*	}*/
 
-		//if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
+		//if (m_iCurrentLevel == (UINT)LEVEL_TOOL/* && m_bColliderRender == true*/)
 		//{
 		//	for (_int i = 0; i < m_tInstanceDesc.iNumInstance; ++i)
 		//	{
@@ -214,26 +218,29 @@ HRESULT CEnvironment_Instance::Remove_Instance(_uint iIndex)
 
 HRESULT CEnvironment_Instance::Ready_Components()
 {
-	_int iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Model_Instance"),
+	if (FAILED(__super::Add_Component(m_iCurrentLevel, TEXT("Prototype_Component_Shader_Model_Instance"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	//* For.Com_Model */
-	if (FAILED(__super::Add_Component(iNextLevel, m_tInstanceDesc.strModelTag,
+	if (FAILED(__super::Add_Component(m_iCurrentLevel, m_tInstanceDesc.strModelTag,
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 	
+
 	CVIBuffer_Environment_Model_Instance::ENVIRONMENT_MODEL_INSTANCE_DESC Desc;
 	
 	Desc.pModel = m_pModelCom;
 	Desc.iNumInstance = m_tInstanceDesc.iNumInstance; // 5¸¸°³ ÇØº¸´Ï ³» ÄÄ±âÁØ ÇÁ·¹ÀÓ 45±îÁö ¶³¾îÁü
 	Desc.vecBufferInstanceInfo = m_tInstanceDesc.vecInstanceInfoDesc;
 
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"),
+		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pInstanceModelCom), &Desc)))
+		return E_FAIL;
 	
-	if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
+	if (m_iCurrentLevel == (UINT)LEVEL_TOOL)
 	{
 		for (_int i = 0; i < Desc.iNumInstance; ++i)
 		{
@@ -246,29 +253,14 @@ HRESULT CEnvironment_Instance::Ready_Components()
 
 			wstring strColliderComTag = L"Com_Collider" + to_wstring(i);
 			
-			if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Test)))
+			if (FAILED(__super::Add_Component(m_iCurrentLevel, TEXT("Prototype_Component_Collider_Sphere"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Test)))
 			{
 				MSG_BOX("¤¸´ï");
 				return E_FAIL;
 			}
 			
-
-
-			//wstring strColliderComTag = L"Com_Collider" + i;
-			//
-			//if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), strColliderComTag, reinterpret_cast<CComponent**>(&m_vecColliders[i]), &Desc_AABB)))
-			//{
-			//	MSG_BOX("¤¸´ï");
-			//	return E_FAIL;
-			//}
 		}
 	}
-	
-	// For.Com_Model */
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pInstanceModelCom), &Desc)))
-		return E_FAIL;
-	
 	
 
 	return S_OK;
@@ -328,6 +320,19 @@ void CEnvironment_Instance::Free()
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
+
+
+	if (m_iCurrentLevel == (_uint)LEVEL_TOOL)
+	{
+		_uint iColliderSize = m_vecColliders.size();
+
+		for (_uint i = 0; i < iColliderSize; ++i)
+		{
+			Safe_Release(m_vecColliders[i]);
+		}
+	}
+	
+
 	Safe_Release(m_pInstanceModelCom);
 }
 

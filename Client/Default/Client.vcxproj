@@ -335,6 +335,7 @@
     <ClInclude Include="..\Public\Data_Manager.h" />
     <ClInclude Include="..\Public\DevConsole.h" />
     <ClInclude Include="..\Public\Grid.h" />
+    <ClInclude Include="..\Public\Environment_LightObject.h" />
     <ClInclude Include="..\Public\Infected.h" />
     <ClInclude Include="..\Public\Infected_A.h" />
     <ClInclude Include="..\Public\Infected_DeathHeavy_F_01_NEW.h" />

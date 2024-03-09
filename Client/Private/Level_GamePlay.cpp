@@ -142,6 +142,7 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 		LightDesc.vSpecular = LightDesc.vDiffuse;
 		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
 	}
+
 	return S_OK;
 }
 

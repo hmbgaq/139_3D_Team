@@ -36,7 +36,7 @@ private:
 	CVIBuffer_Cube*		m_pVIBufferCom = { nullptr };
 	
 private:
-	_int				m_iTextureIndex = { 5 };
+	_int				m_iTextureIndex = { 6 };
 
 private:
 	HRESULT Ready_Components();

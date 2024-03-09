@@ -97,10 +97,10 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 HRESULT CLevel_Tool::Ready_LightDesc()
 {
 	LIGHT_DESC			LightDesc{};
-
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	//LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
 	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 1.f);
