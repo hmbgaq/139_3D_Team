@@ -18,8 +18,10 @@
 #include "../Imgui/ImGuizmo/GraphEditor.h"
 #include "../Imgui/ImGuizmo/ImSequencer.h"
 #include "../Imgui/ImGuizmo/ImZoomSlider.h"
+#include "Camera_Dynamic.h"
+#include "SpringCamera.h"
 #include "Camera.h"
-
+#include "Sky.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 
@@ -57,6 +59,11 @@ HRESULT CWindow_MapTool::Initialize()
 	m_pToolCamera = CData_Manager::GetInstance()->Get_MasterCamera();
 
 	if(m_pToolCamera == nullptr)
+		return E_FAIL;
+
+	m_pSkybox = CData_Manager::GetInstance()->Get_pSkyBox();
+
+	if(m_pSkybox == nullptr)
 		return E_FAIL;
 	//m_mapPreviewInstance
 	
@@ -1228,9 +1235,32 @@ void CWindow_MapTool::FieldWindowMenu()
 		if (ImGui::InputFloat(u8"카메라 속도", &m_fCamaraSpeed))
 		{
 			//CData_Manager::GetInstance()->Get_Camera_Dynamic()->Get_Transform()->Set_Speed(m_fCamaraSpeed);
-			m_pToolCamera->Get_Transform()->Set_Speed(m_fCamaraSpeed);
+			m_pToolCamera->Get_DynamicCamera()->Get_Transform()->Set_Speed(m_fCamaraSpeed);
+			//m_pToolCamera->Get_Transform()->Set_Speed(m_fCamaraSpeed);
 		}
 	}
+
+	ImGui::SeparatorText(u8"스카이 박스");
+	{
+		// 스카이박스 텍스처 변경
+		if (ImGui::InputInt(u8"스카이박스 텍스처", &m_iSkyTextureIndex, 1))
+		{
+			_uint iSkyTextureCount = m_pSkybox->Get_SkyTextureCount();
+
+			if (iSkyTextureCount - 1 < m_iSkyTextureIndex)
+				m_iSkyTextureIndex = iSkyTextureCount - 1;
+
+			if (0 > m_iSkyTextureIndex)
+				m_iSkyTextureIndex = 0;
+
+			if (nullptr == m_pSkybox)
+				return;
+
+			m_pSkybox->Set_SkyType((CSky::SKYTYPE)m_iSkyTextureIndex);
+		}
+	}
+
+
 
 
 	#ifdef _DEBUG

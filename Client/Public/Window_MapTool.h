@@ -15,6 +15,7 @@ class CPlayer;
 class CMonster;
 class CCamera_Dynamic;
 class CMasterCamera;
+class CSky;
 //TODO 추후 추가 class CNPC;
 
 class CWindow_MapTool final : public CImgui_Window
@@ -259,9 +260,10 @@ private: //! For. CreateInstance
 	
 
 private:
-	vector<CCamera*>				m_vecCameras;
 	_bool							m_bCreateCamera = false;
 	CMasterCamera*					m_pToolCamera = { nullptr };
+	CSky*							m_pSkybox = { nullptr };
+	_int							m_iSkyTextureIndex = { 0 };
 	
 
 public:

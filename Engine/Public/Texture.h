@@ -33,6 +33,8 @@ public:
 	HRESULT Get_TextureSize(_uint * iWidth, _uint * iHeight, _uint iTextureIndex = 0);
 	HRESULT	Set_SRV(CShader * pShader, const char* strConstantName, _uint iTextureIndex = 0);
 
+	_uint	Get_TextureCount() { return m_SRVs.size(); }
+
 private:
 	_uint										m_iNumTextures = { 0 };
 	vector<ID3D11ShaderResourceView*>			m_SRVs;	

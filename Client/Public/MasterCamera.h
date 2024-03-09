@@ -35,6 +35,10 @@ public:
 	void Set_CameraType(CameraType _eCameraType) { m_eCameraType = _eCameraType; }
 	CameraType Get_CameraType() { return m_eCameraType; }
 	vector<CCamera*> Get_vectorCamera() { return m_Cameras; }
+
+	class CCamera_Dynamic* Get_DynamicCamera();
+	class CSpringCamera* Get_SpringCamera();
+
 private:
 	vector<CCamera*>	m_Cameras;
 	CameraType			m_eCameraType = { CameraType::CameraType_End };

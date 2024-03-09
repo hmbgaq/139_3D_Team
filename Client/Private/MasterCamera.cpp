@@ -185,6 +185,17 @@ void CMasterCamera::Late_Tick(_float fTimeDelta)
 		m_Cameras[m_eCameraType]->Late_Tick(fTimeDelta);
 }
 
+CCamera_Dynamic* CMasterCamera::Get_DynamicCamera()
+{
+	return dynamic_cast<CCamera_Dynamic*>(m_Cameras[CMasterCamera::DynamicCamera]);
+	
+}
+
+CSpringCamera* CMasterCamera::Get_SpringCamera()
+{
+	return dynamic_cast<CSpringCamera*>(m_Cameras[CMasterCamera::SpringCamera]);
+}
+
 CMasterCamera* CMasterCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
 	CMasterCamera* pInstance = new CMasterCamera(pDevice, pContext, strPrototypeTag);

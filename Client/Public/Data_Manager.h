@@ -15,6 +15,7 @@ BEGIN(Client)
 class CPlayer;
 class CCamera_Dynamic;
 class CMasterCamera;
+class CSky;
 
 class CData_Manager : public CBase
 {
@@ -38,6 +39,17 @@ public:
 	CMasterCamera* Get_MasterCamera();
 	void Reset_MasterCamera(LEVEL eLEVEL);
 
+public:
+	CSky*	Get_pSkyBox() { return m_pSky; }
+	void	Set_pSkybox(CSky* _pSkybox);
+
+	_uint	Get_SkyTextureCount();
+	_uint	Get_SkyCurrentTextureIndex();
+
+	_uint   Get_CurrentSkyType();
+	void	Set_SkyType(_uint iCastSkyType);
+
+	void    Set_SkyTextureIndex(_uint iSkyTextureIndex);
 
 
 // ! SH_Add
@@ -102,6 +114,8 @@ public: /* Player Info Get/Set */
 private:
 	CMasterCamera* m_pMasterCamera = { nullptr };
 	CPlayer* m_pPlayer = { nullptr };
+
+	CSky* m_pSky = { nullptr };
 
 private:
 	CCamera* m_pCamera = { nullptr };
