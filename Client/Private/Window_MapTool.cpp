@@ -19,8 +19,7 @@
 #include "../Imgui/ImGuizmo/ImSequencer.h"
 #include "../Imgui/ImGuizmo/ImZoomSlider.h"
 #include "Camera.h"
-#include "Camera_Dynamic.h"
-#include "SpringCamera.h"
+
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 
@@ -1010,17 +1009,7 @@ void CWindow_MapTool::CameraWindow_Function()
 				
 				if (ImGui::RadioButton(CameraType[i], &iCameraType, i))
 				{
-					_int iCameraCount = (_int)m_vecCameras.size();
-
-					for (_int i = 0; i < iCameraCount; ++i)
-					{
-						if (i == iCameraType)
-							m_vecCameras[i]->Set_Enable(true);
-						else
-							m_vecCameras[i]->Set_Enable(false);
-						
-					}
-					
+					m_pToolCamera->Set_CameraType((CMasterCamera::CameraType)i);
 				}
 			}
 			
@@ -1028,22 +1017,15 @@ void CWindow_MapTool::CameraWindow_Function()
 			
 			if (m_pGameInstance->Key_Down(DIK_PGUP))
 			{
-				
+					//DynamicCamera,//툴 및 테스트용 카메라 
+					//SpringCamera,//플레이어 에 붙어 있는 카메라 
+
 					if(IM_ARRAYSIZE(CameraType) > iCameraType + 1)
 						iCameraType = iCameraType + 1;
 					else
 						iCameraType = 0;
 
-					_int iCameraCount = (_int)m_vecCameras.size();
-
-					for (_int i = 0; i < iCameraCount; ++i)
-					{
-						if (i == iCameraType)
-							m_vecCameras[i]->Set_Enable(true);
-						else
-							m_vecCameras[i]->Set_Enable(false);
-
-					}
+					m_pToolCamera->Set_CameraType((CMasterCamera::CameraType)iCameraType);
 			}
 
 		}ImGui::NewLine();
@@ -1260,33 +1242,7 @@ void CWindow_MapTool::FieldWindowMenu()
 void CWindow_MapTool::IsCreatePlayer_ReadyCamara()
 {
 	if (nullptr != m_pGameInstance->Get_Player())
-	{
-		CCamera* pFreeCamera = dynamic_cast<CCamera*>(m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, L"Layer_Camera"));
-
-		m_vecCameras.push_back(pFreeCamera);
-
-		CSpringCamera::SPRING_CAMERA_DESC SpringDesc = {};
-
-		SpringDesc.fMouseSensor = 0.05f;
-		SpringDesc.fFovy = XMConvertToRadians(60.f);
-		SpringDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-		SpringDesc.fNear = 0.1f;
-		SpringDesc.fFar = m_pGameInstance->Get_CamFar();
-		SpringDesc.fSpeedPerSec = 20.f;
-		SpringDesc.fRotationPerSec = XMConvertToRadians(180.f);
-		SpringDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
-		SpringDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-
-		CCamera* pSpringCamera = dynamic_cast<CCamera*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Camera", L"Prototype_GameObject_Camera_Spring", &SpringDesc));
-		pSpringCamera->Set_Enable(false);
-
-		m_vecCameras.push_back(pSpringCamera);
-
-		
-
-
-		m_bCreateCamera = true;
-	}
+			m_bCreateCamera = true;
 
 	return;
 }
