@@ -4146,6 +4146,189 @@
     <ClInclude Include="..\Public\Player_VampireCommander_SyncedAttack.h">
       <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\6. VampireCommand</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_L06_Wagon_Jump.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_GS01_Remover_Jesse_gmp.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_GetUp.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_KneelsDown_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_KneelsDown_Blood.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Jesse_Turns_back.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LS_Cutscene_Gatling_Player.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Flail.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_N_FallLoop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_N_Jump.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_N_Land.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CoOp_Fallen_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CoOp_Fallen_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CoOp_Fallen_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_WhipPull.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_IdlePose.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_IdlePose_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_JumpOver.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Loop_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Loop_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Unbalance.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Cargo_LedgeStrafe_R_Custom_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CartRide_JumpOff_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CartRide_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CartRide_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CrouchUnder_End.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CrouchUnder_Gate.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CrouchUnder_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CrouchUnder_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CrouchUseCables.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InspectFlameBelcher.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LongJump_2m.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LongJump_4m.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LongJump_4m_down.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LongJumpStill_2m.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LongJumpStill_4m.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LongJumpStill_4m_down.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_OpenLootCrate.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_OpenLootCrate_NEW.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_OpenLootCrate_Small.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Workbench_WeaponUpgrade_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_Start_to_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_BJ_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Cargo_01_Idle_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Cargo_01_Idle_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Cargo_01_Idle_03.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Cargo_01_Idle_04.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Cargo_01_Loop_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Cargo_01_Loop_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Cargo_01_Loop_03.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Cargo_01_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Cargo_01_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Forest_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_BeamWalk_Tesla_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LongJump_Canyon_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\Interaction\2. Unused</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">

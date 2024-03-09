@@ -339,12 +339,12 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 {
 	Hit_Type eHitType = Hit_Type::None;
 
-	if (Power::Absolute == m_eStrength)
-	{
-		return Hit_Type::None;
-	}
+	//if (Power::Absolute == m_eStrength)
+	//{
+	//	return Hit_Type::None;
+	//}
 
-	//Get_Damaged(iDamage);
+	//Get_Damaged(iDamage);	
 	//Set_InvincibleTime(fInvincibleTime);
 	Add_Force(vDir, fForce);
 	m_pTransformCom->Look_At_Direction(vDir * -1);
