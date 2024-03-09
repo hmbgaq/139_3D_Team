@@ -35,6 +35,6 @@ void CVampireCommander_SyncedAttack::Release(CVampireCommander* pActor)
 {
 	__super::Release(pActor);
 
-	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
+	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 	pWeapon->Set_Enable(false);
 }

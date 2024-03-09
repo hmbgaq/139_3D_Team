@@ -69,7 +69,7 @@ CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommand
 	_int iRandom =  SMath::Random(0,3); // 근접용 랜덤 
 	_int iRandomRange = SMath::Random(0, 2);//원거리용 랜덤 
 	//근접 공격!! 
-	if (5.f > pActor->Calc_Distance() && 0.1f < pActor->Calc_Distance())
+	if (7.f > pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
 	{
 		switch (iRandom)
 		{
@@ -87,7 +87,7 @@ CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommand
 			return new CVampireCommander_SyncedAttack_Fail;
 		}
 	}
-	else if (30.f > pActor->Calc_Distance() && 5.f < pActor->Calc_Distance())
+	else if (50.f > pActor->Calc_Distance() && 7.f < pActor->Calc_Distance())
 	{
 		switch (iRandomRange)
 		{
@@ -134,21 +134,21 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 {
 	CState<CVampireCommander>* pState = { nullptr };
 
-	if (50.f < pActor->Calc_Distance())
+	if (70.f < pActor->Calc_Distance())
 	{
 		pActor->m_bLookAt = true;
 		pState = Idle(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 	}
 
-	else if (50.f > pActor->Calc_Distance() && 30.f < pActor->Calc_Distance())
+	else if (70.f > pActor->Calc_Distance() && 50.f < pActor->Calc_Distance())
 	{
 		pActor->m_bLookAt = true;
 		pState = Walk_State(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 	}
 
- 	if (30.f > pActor->Calc_Distance() && 0.1f < pActor->Calc_Distance())
+ 	if (30.f > pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
  	{
  
  		pState = Attack_State(pActor, fTimeDelta, _iAnimIndex);

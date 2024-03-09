@@ -13,7 +13,7 @@ void CVampireCommander_Melee1::Initialize(CVampireCommander* pActor)
 		->Set_Damage(0.f)
 		->Set_Direction(Direction::Right)
 		->Set_Power(Power::Medium)
-		->Set_Force(0.f);
+		->Set_Force(0.5f);
 
 	pWeapon->Set_Enable(true);
 }
