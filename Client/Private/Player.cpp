@@ -9,6 +9,14 @@
 #include "Player_HitNormal_F.h"
 #include "Player_HitNormal_L.h"
 #include "Player_HitNormal_R.h"
+#include "Player_HitPeriodic_01.h"
+#include "Player_HitPeriodic_03.h"
+#include "Player_HitPeriodic_04.h"
+
+#include "Player_KnockFrontLight_F_02.h"
+#include "Player_HitHeavy_F_5m.h"
+
+
 
 #include "Player_DeathLight_F_01.h"
 #include "Player_DeathLight_F_02.h"
@@ -267,65 +275,59 @@ HRESULT CPlayer::Ready_PartObjects()
 
 void CPlayer::Hitted_Left(Power ePower)
 {
-	m_pActor->Set_State(new CPlayer_HitNormal_L());
-
-	//switch (ePower)
-	//{
-	//case Engine::Light:
-	//	m_pActor->Set_State(new CInfected_HitLight_FL_01_NEW());
-	//	break;
-	//case Engine::Medium:
-	//	m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
-	//	break;
-	//case Engine::Heavy:
-	//	m_pActor->Set_State(new CInfected_HitHeavy_FL_01_NEW());
-	//	break;
-	//default:
-	//	m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
-	//	break;
-	//}
+	switch (ePower)
+	{
+	case Engine::Light:
+		m_pActor->Set_State(new CPlayer_HitNormal_L());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CPlayer_HitNormal_L());
+		break;
+	case Engine::Heavy:
+		m_pActor->Set_State(new CPlayer_HitHeavy_F_5m());
+		break;
+	default:
+		m_pActor->Set_State(new CPlayer_HitNormal_L());
+		break;
+	}
 }
 
 void CPlayer::Hitted_Right(Power ePower)
 {
-	m_pActor->Set_State(new CPlayer_HitNormal_R());
-
-	//switch (ePower)
-	//{
-	//case Engine::Light:
-	//	m_pActor->Set_State(new CInfected_HitLight_FR_01_NEW());
-	//	break;
-	//case Engine::Medium:
-	//	m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
-	//	break;
-	//case Engine::Heavy:
-	//	m_pActor->Set_State(new CInfected_HitHeavy_FR_01_NEW());
-	//	break;
-	//default:
-	//	m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
-	//	break;
-	//}
+	switch (ePower)
+	{
+	case Engine::Light:
+		m_pActor->Set_State(new CPlayer_HitNormal_R());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CPlayer_HitNormal_R());
+		break;
+	case Engine::Heavy:
+		m_pActor->Set_State(new CPlayer_HitHeavy_F_5m());
+		break;
+	default:
+		m_pActor->Set_State(new CPlayer_HitNormal_R());
+		break;
+	}
 }
 
 void CPlayer::Hitted_Front(Power ePower)
 {
-	m_pActor->Set_State(new CPlayer_HitNormal_F());
-
-	//switch (ePower)
-	//{
-	//case Engine::Light:
-	//	m_pActor->Set_State(new CInfected_HitLight_F_01_NEW());
-	//	break;
-	//case Engine::Medium:
-	//	m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
-	//	break;
-	//case Engine::Heavy:
-	//	m_pActor->Set_State(new CInfected_HitHeavy_F_01_NEW());
-	//	break;
-	//default:
-	//	m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
-	//	break;
-	//}
+	switch (ePower)
+	{
+	case Engine::Light:
+		m_pActor->Set_State(new CPlayer_HitNormal_F());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CPlayer_HitNormal_F());
+		break;
+	case Engine::Heavy:
+		m_pActor->Set_State(new CPlayer_HitHeavy_F_5m());
+		break;
+	default:
+		m_pActor->Set_State(new CPlayer_HitNormal_F());
+		break;
+	}
 }
 
 void CPlayer::Hitted_Knock(_bool bIsCannonball)
@@ -338,6 +340,8 @@ void CPlayer::Hitted_Knock(_bool bIsCannonball)
 	//{
 	//	m_pActor->Set_State(new CInfected_KnockFrontLight_F_01_NEW());
 	//}
+
+	m_pActor->Set_State(new CPlayer_KnockFrontLight_F_02());
 }
 
 void CPlayer::Hitted_Dead(Power ePower)

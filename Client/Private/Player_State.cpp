@@ -198,6 +198,11 @@ CState<CPlayer>* CPlayer_State::Interaction_State(CPlayer* pActor, _float fTimeD
 	return nullptr;
 }
 
+CState<CPlayer>* CPlayer_State::Death_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
 
 CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {

@@ -590,6 +590,7 @@
     <ClInclude Include="..\Public\Player_SlamDown_v3.h" />
     <ClInclude Include="..\Public\Player_State.h" />
     <ClInclude Include="..\Public\Player_State_Attack.h" />
+    <ClInclude Include="..\Public\Player_State_Death.h" />
     <ClInclude Include="..\Public\Player_State_Dodge.h" />
     <ClInclude Include="..\Public\Player_State_Hit.h" />
     <ClInclude Include="..\Public\Player_State_Interaction.h" />
@@ -1025,6 +1026,10 @@
     <ClCompile Include="..\Private\MasterCamera.cpp" />
     <ClCompile Include="..\Private\Model_Preview.cpp" />
     <ClCompile Include="..\Private\Monster_Character.cpp" />
+    <ClCompile Include="..\Private\Player_DeathLight_F_01.cpp" />
+    <ClCompile Include="..\Private\Player_DeathLight_F_02.cpp" />
+    <ClCompile Include="..\Private\Player_DeathNormal_F_01.cpp" />
+    <ClCompile Include="..\Private\Player_DeathNormal_F_02.cpp" />
     <ClCompile Include="..\Private\Player_DodgeBlink_L_03.cpp" />
     <ClCompile Include="..\Private\Player_DodgeBlink_R_03.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
@@ -1169,6 +1174,7 @@
     <ClCompile Include="..\Private\Player_SlamDown_v3.cpp" />
     <ClCompile Include="..\Private\Player_State.cpp" />
     <ClCompile Include="..\Private\Player_State_Attack.cpp" />
+    <ClCompile Include="..\Private\Player_State_Death.cpp" />
     <ClCompile Include="..\Private\Player_State_Dodge.cpp" />
     <ClCompile Include="..\Private\Player_State_Hit.cpp" />
     <ClCompile Include="..\Private\Player_State_Interaction.cpp" />

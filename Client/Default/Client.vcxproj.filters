@@ -2242,6 +2242,27 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\9. Death">
       <UniqueIdentifier>{f83ae205-3d9c-4a70-bf70-42b8c5a49066}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\9. Death\0. Parent">
+      <UniqueIdentifier>{f9116f31-5b11-4ba0-a1e7-f51f048a8f05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\9. Death\1. Light">
+      <UniqueIdentifier>{17415453-86d9-4a98-95ba-aad436b4290b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\9. Death\1. Light\1">
+      <UniqueIdentifier>{e83e1b68-fb07-40f9-b20b-f7e9f4601b21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\9. Death\1. Light\2">
+      <UniqueIdentifier>{8a2bb80c-31bf-4cb8-98b5-29aa6a4cf3e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\9. Death\2. Normal">
+      <UniqueIdentifier>{ba002148-6ccb-4e69-bf21-698329cd3248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\9. Death\2. Normal\1">
+      <UniqueIdentifier>{595b41ed-5e4f-44b4-acd5-569040b3284d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\9. Death\2. Normal\2">
+      <UniqueIdentifier>{67b9f361-e8d8-44bb-8bbf-33f38119ca89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3867,12 +3888,6 @@
     <ClInclude Include="..\Public\Environment_LightObject.h">
       <Filter>02.GameObjects\02. Environment\Environment_LightObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_DeathLight_F_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State\9. Death</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_DeathLight_F_02.h">
-      <Filter>02.GameObjects\00. Character\Player\State\9. Death</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player_Interaction_Destroy.h">
       <Filter>02.GameObjects\00. Character\Player\State\Interaction\1. Use\01. Destroy</Filter>
     </ClInclude>
@@ -4068,11 +4083,20 @@
     <ClInclude Include="..\Public\Player_HitPeriodic_04.h">
       <Filter>02.GameObjects\00. Character\Player\State\8. Hit\2. Periodic\4</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Death.h">
+      <Filter>02.GameObjects\00. Character\Player\State\9. Death\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_DeathLight_F_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\9. Death\1. Light\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_DeathLight_F_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\9. Death\1. Light\2</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Player_DeathNormal_F_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State\9. Death</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\9. Death\2. Normal\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_DeathNormal_F_02.h">
-      <Filter>02.GameObjects\00. Character\Player\State\9. Death</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\9. Death\2. Normal\2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -6000,6 +6024,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_KnockFrontLight_F_02.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\8. Hit\4. Knock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Death.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\9. Death\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_DeathLight_F_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\9. Death\1. Light\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_DeathLight_F_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\9. Death\1. Light\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_DeathNormal_F_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\9. Death\2. Normal\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_DeathNormal_F_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\9. Death\2. Normal\2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
