@@ -15,6 +15,8 @@ class CSky;
 class CWindow_EffectTool final : public CImgui_Window
 {
 public:
+	enum TYPE_FILE { FILE_EFFECT, FILE_TRAIL, TYPE_FILE_END };
+
 	struct Window_EffectTool_DESC : public ImGuiDESC
 	{
 
@@ -76,7 +78,9 @@ public:
 	HRESULT Add_Part_Rect();							// 파트:Rect 추가
 	HRESULT Add_Part_Mesh(wstring strModelTag);			// 파트:메시 이펙트 추가
 	HRESULT Add_Part_Mesh_Morph(wstring strModelTag1, wstring strModelTag2);	// 파트:메시(모프) 이펙트 추가
-	HRESULT Add_Part_Trail();							// 파트:트레일 추가
+	
+	HRESULT Create_Trail();								// 트레일 생성
+	HRESULT Delete_Trail();								// 트레일 삭제
 
 	void	Delete_CurEffectObject();					// 현재 선택된 이펙트 삭제
 	void	Delete_CurPart();							// 현재 선택된 파트 이펙트 삭제		
@@ -90,6 +94,9 @@ public:
 
 public:
 	void	Select_EasingType(EASING_TYPE* eType);	// 이징 타입(러프관련) 선택
+
+private:
+	TYPE_FILE	m_eFile = { TYPE_FILE_END };
 
 
 private:
@@ -128,7 +135,12 @@ private:
 	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC*	m_pMeshBufferDesc	= {};	// Instance(Mesh) 버퍼 Desc
 
 
+/* Trail */
+private:
+	CEffect_Trail* m_pTrail = { nullptr };
+
 	/* Trail Desc */
+	CEffect_Void::EFFECTVOID_DESC*		m_pVoidTrailDesc = {};		// Effect_Void Desc (트레일 전용)
 	CEffect_Trail::TRAIL_DESC*			m_pTrailDesc = {};			// Trail만의 Desc
 	CVIBuffer_Trail::TRAIL_BUFFER_DESC* m_pTrailBufferDesc = {};	// Trail 버퍼 Desc
 

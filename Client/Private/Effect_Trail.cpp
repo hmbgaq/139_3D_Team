@@ -5,9 +5,6 @@
 
 #include "Effect.h"
 
-#include "Model_Preview.h"
-#include "Part_Preview.h"
-
 
 CEffect_Trail::CEffect_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
@@ -28,7 +25,6 @@ HRESULT CEffect_Trail::Initialize_Prototype()
 
 HRESULT CEffect_Trail::Initialize(void* pArg)
 {
-	XMStoreFloat4x4(&m_tTrailDesc.matSocketWorld, XMMatrixIdentity());
 
 	//m_tTrailDesc = *(TRAIL_DESC*)pArg;
 
@@ -143,6 +139,36 @@ HRESULT CEffect_Trail::Render()
 	return S_OK;
 }
 
+
+void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
+{
+
+#ifdef _DEBUG
+	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	{
+		if (m_tVoidDesc.bActive_Tool)
+		{
+#endif // _DEBUG
+
+			if (FALSE == m_tVoidDesc.bPlay)
+			{
+				m_tVoidDesc.bRender = FALSE;
+				m_pVIBufferCom->Reset_Points(_ParentMatrix);
+				return;
+			}
+			else
+			{
+				m_tVoidDesc.bRender = TRUE;
+				m_pVIBufferCom->Update(_fTimeDelta, _ParentMatrix);
+			}
+
+#ifdef _DEBUG
+		}
+	}
+#endif // _DEBUG
+
+
+}
 
 void CEffect_Trail::Update_PivotMat()
 {

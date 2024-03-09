@@ -1556,145 +1556,167 @@ void CWindow_EffectTool::Update_MeshTab()
 
 void CWindow_EffectTool::Update_TrailTab()
 {
-
-	if (nullptr != m_pCurEffect)
+	// 트레일 추가
+	if (nullptr == m_pTrail)
 	{
-
-
-		if (nullptr != m_pCurPartEffect)
+		// 트레일 객체가 nullptr이면 트레일 생성 가능
+		if (ImGui::Button(" Create Trail "))
 		{
-			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
-
-			if (CEffect_Void::TRAIL == eType_Effect)
-			{
-#pragma region Desc 얻어오기 업데이트_트레일
-				m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();														// 이펙트_보이드 Desc
-				m_pTrailDesc = dynamic_cast<CEffect_Trail*>(m_pCurPartEffect)->Get_TrailDesc();						// 이펙트_트레일만의 Desc 
-				CVIBuffer_Trail* pVIBuffer = dynamic_cast<CEffect_Trail*>(m_pCurPartEffect)->Get_VIBufferCom();		// 트레일 버퍼 얻어오기
-				m_pTrailBufferDesc = pVIBuffer->Get_Desc();															// 버퍼의 Desc 얻어오기
-#pragma endregion
-
-				if (nullptr != m_pModel_Preview)
-				{
-					//! 모델_프리뷰가 nullptr이 아니면 이펙트에게 오너를 설정해 줄 수 있음(트레일의 오너가 아닌 이펙트의 오너임 주의)
-					//! Owner겜오브젝트(있을수도 없을수도) - 이펙트(Parent) - 트레일(이펙트의 Part)
-					if (ImGui::Button("Set Owner_Model"))
-					{
-						m_pCurEffect->Set_Object_Owner(m_pModel_Preview);
-						m_pCurEffect->Get_Desc()->bParentPivot = TRUE;
-						m_pTrailDesc->eType_Owner = CEffect_Trail::OWNER_OBJECT;
-						//m_pTrailDesc->matSocketWorld = m_pModel_Preview->Get_Transform()->Get_WorldFloat4x4();
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("Set Owner_Part"))
-					{
-						CGameObject* pPart = dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Find_PartObject(TEXT("Part_Preview"));
-						m_pCurEffect->Set_Object_Owner(pPart);
-						m_pCurEffect->Get_Desc()->bParentPivot = TRUE;
-						m_pTrailDesc->eType_Owner = CEffect_Trail::OWNER_PREVIEW;
-						//m_pTrailDesc->matSocketWorld = dynamic_cast<CPart_Preview*>(pPart)->Get_WorldMatrix_Socket();
-
-					}
-
-				}
-
-
-				/* 이름 */
-				ImGui::SeparatorText("");
-				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
-
-				/* 텍스처 변경 */
-				ImGui::SeparatorText("TEXTURE_TRAIL");
-				if (m_pCurVoidDesc->bUseSpriteAnim)
-				{
-					if (ImGui::InputInt("Diffuse_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE], 1))
-					{
-						if (m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] <= m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE])
-							m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] = m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE];
-
-						if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE])
-							m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] = 0;
-
-						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE];
-					}
-				}
-				else
-				{
-					if (ImGui::InputInt("Diffuse_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE], 1))
-					{
-						if (m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE] <= m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE])
-							m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE] = m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE];
-
-						if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE])
-							m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE] = 0;
-
-						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE];
-					}
-				}
-
-
-
-
-				if (ImGui::InputInt("Mask_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK], 1))
-				{
-					if (m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_MASK] <= m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK])
-						m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK] = m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_MASK];
-
-					if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK])
-						m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK] = 0;
-
-					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK];
-				}
-
-				if (ImGui::InputInt("Noise_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE], 1))
-				{
-					if (m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_NOISE] <= m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE])
-						m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE] = m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_NOISE];
-
-					if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE])
-						m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE] = 0;
-
-					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE];
-				}
-
-
-				/* 쉐이더 패스 인덱스 변경 */
-				if (ImGui::InputInt("Shader Pass_Trail", &m_iShaderPassIndex_Trail, 1))
-				{
-					if (m_iMaxShaderPassIndex_Trail < m_iShaderPassIndex_Trail)
-						m_iShaderPassIndex_Trail = m_iMaxShaderPassIndex_Trail;
-
-					if (0 > m_iShaderPassIndex_Trail)
-						m_iShaderPassIndex_Trail = 0;
-
-					m_pCurVoidDesc->iShaderPassIndex = m_iShaderPassIndex_Trail;
-				}
-
-				/* 쉐이더에 던질 디스카드 값 변경 */
-				if (ImGui::DragFloat4("Discard_Trail", m_vColor_Clip_Part, 0.1f, 0.f, 1.f))
-				{
-					m_pCurVoidDesc->vColor_Clip.x = m_vColor_Clip_Part[0];
-					m_pCurVoidDesc->vColor_Clip.y = m_vColor_Clip_Part[1];
-					m_pCurVoidDesc->vColor_Clip.z = m_vColor_Clip_Part[2];
-					m_pCurVoidDesc->vColor_Clip.w = m_vColor_Clip_Part[3];
-				}
-
-				/* 렌더그룹 변경 */
-				ImGui::SeparatorText("");
-				if (ImGui::InputInt("Render Group_Trail", &m_iRenderGroup_Trail, 1))
-				{
-					if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Trail)
-					{
-						m_iRenderGroup_Trail = (_int)CRenderer::RENDER_END - 1;
-					}
-					m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Trail;
-				}
-
-
-
-			}
+			Create_Trail();
 		}
 	}
+	else
+	{	
+		// 트레일 객체가 nullptr이 아니면
+
+		ImGui::SeparatorText("Save & Load Trail");
+		if (ImGui::Button(" Save Trail "))
+		{
+			m_eFile = FILE_TRAIL;
+			m_eDialogType = DIALOG_TYPE::SAVE_DIALOG;
+			m_strDialogPath = "../Bin/DataFiles/Data_Effect/Data_Trail/";
+
+			OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(" Load Trail "))
+		{
+			m_eFile = FILE_TRAIL;
+			m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
+			m_strDialogPath = "../Bin/DataFiles/Data_Effect/Data_Trail/";
+
+			OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
+		}
+
+
+		ImGui::SeparatorText(" Delete ");
+		if (ImGui::Button(" Delete Trail "))
+		{
+			Delete_Trail();
+		}
+
+		// =============================================================================================================================================================
+		if (nullptr != m_pModel_Preview)
+		{
+			//! 모델_프리뷰가 nullptr이 아니면 이펙트에게 오너를 설정해 줄 수 있음(트레일의 오너가 아닌 이펙트의 오너임 주의)
+			//! Owner겜오브젝트(있을수도 없을수도) - 이펙트(Parent) - 트레일(이펙트의 Part)
+			if (ImGui::Button("Set Owner_Model"))
+			{
+				m_pCurEffect->Set_Object_Owner(m_pModel_Preview);
+				m_pCurEffect->Get_Desc()->bParentPivot = TRUE;
+				//m_pTrailDesc->eType_Owner = CEffect_Trail::OWNER_OBJECT;
+				//m_pTrailDesc->matSocketWorld = m_pModel_Preview->Get_Transform()->Get_WorldFloat4x4();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Set Owner_Part"))
+			{
+				CGameObject* pPart = dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Find_PartObject(TEXT("Part_Preview"));
+				m_pCurEffect->Set_Object_Owner(pPart);
+				m_pCurEffect->Get_Desc()->bParentPivot = TRUE;
+				//m_pTrailDesc->eType_Owner = CEffect_Trail::OWNER_PREVIEW;
+				//m_pTrailDesc->matSocketWorld = dynamic_cast<CPart_Preview*>(pPart)->Get_WorldMatrix_Socket();
+
+			}
+
+		}
+
+
+		/* 이름 */
+		ImGui::SeparatorText("");
+		ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
+
+		/* 텍스처 변경 */
+		ImGui::SeparatorText("TEXTURE_TRAIL");
+		if (m_pCurVoidDesc->bUseSpriteAnim)
+		{
+			if (ImGui::InputInt("Diffuse_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE], 1))
+			{
+				if (m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] <= m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE])
+					m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] = m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE];
+
+				if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE])
+					m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] = 0;
+
+				m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE];
+			}
+		}
+		else
+		{
+			if (ImGui::InputInt("Diffuse_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE], 1))
+			{
+				if (m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE] <= m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE])
+					m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE] = m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE];
+
+				if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE])
+					m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE] = 0;
+
+				m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE];
+			}
+		}
+
+
+
+
+		if (ImGui::InputInt("Mask_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK], 1))
+		{
+			if (m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_MASK] <= m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK])
+				m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK] = m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_MASK];
+
+			if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK])
+				m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK] = 0;
+
+			m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK];
+		}
+
+		if (ImGui::InputInt("Noise_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE], 1))
+		{
+			if (m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_NOISE] <= m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE])
+				m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE] = m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_NOISE];
+
+			if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE])
+				m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE] = 0;
+
+			m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE];
+		}
+
+
+		/* 쉐이더 패스 인덱스 변경 */
+		if (ImGui::InputInt("Shader Pass_Trail", &m_iShaderPassIndex_Trail, 1))
+		{
+			if (m_iMaxShaderPassIndex_Trail < m_iShaderPassIndex_Trail)
+				m_iShaderPassIndex_Trail = m_iMaxShaderPassIndex_Trail;
+
+			if (0 > m_iShaderPassIndex_Trail)
+				m_iShaderPassIndex_Trail = 0;
+
+			m_pCurVoidDesc->iShaderPassIndex = m_iShaderPassIndex_Trail;
+		}
+
+		/* 쉐이더에 던질 디스카드 값 변경 */
+		if (ImGui::DragFloat4("Discard_Trail", m_vColor_Clip_Part, 0.1f, 0.f, 1.f))
+		{
+			m_pCurVoidDesc->vColor_Clip.x = m_vColor_Clip_Part[0];
+			m_pCurVoidDesc->vColor_Clip.y = m_vColor_Clip_Part[1];
+			m_pCurVoidDesc->vColor_Clip.z = m_vColor_Clip_Part[2];
+			m_pCurVoidDesc->vColor_Clip.w = m_vColor_Clip_Part[3];
+		}
+
+		/* 렌더그룹 변경 */
+		ImGui::SeparatorText("");
+		if (ImGui::InputInt("Render Group_Trail", &m_iRenderGroup_Trail, 1))
+		{
+			if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Trail)
+			{
+				m_iRenderGroup_Trail = (_int)CRenderer::RENDER_END - 1;
+			}
+			m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Trail;
+		}
+
+
+	}
+
+
+
 
 
 }
@@ -2044,37 +2066,6 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_vRotationOffsetZ_Mesh[0] = m_pMeshBufferDesc->vMinMaxRotationOffsetZ.x;
 			m_vRotationOffsetZ_Mesh[1] = m_pMeshBufferDesc->vMinMaxRotationOffsetZ.y;
-
-		}
-
-
-		if (CEffect_Void::TRAIL == eType_Effect)
-		{
-#pragma region 트레일(+버퍼) 디스크립션 얻어오기 시작
-			m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();														// 이펙트_보이드 Desc
-			m_pTrailDesc = dynamic_cast<CEffect_Trail*>(m_pCurPartEffect)->Get_TrailDesc();						// 이펙트_트레일만의 Desc 
-			CVIBuffer_Trail* pVIBuffer = dynamic_cast<CEffect_Trail*>(m_pCurPartEffect)->Get_VIBufferCom();		// 트레일 버퍼 얻어오기
-			m_pTrailBufferDesc = pVIBuffer->Get_Desc();															// 버퍼의 Desc 얻어오기
-#pragma endregion
-
-			// 텍스처 업데이트 =============================================================================================================
-			if (m_pCurVoidDesc->bUseSpriteAnim)
-			{
-				m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE];
-			}
-			else
-			{
-				m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE];
-			}
-
-			m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK];
-			m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE];
-			// 텍스처 업데이트 =============================================================================================================
-
-			m_iShaderPassIndex_Trail = m_pCurVoidDesc->iShaderPassIndex;	// 쉐이더 패스 인덱스 업데이트
-
-			m_iRenderGroup_Trail = m_pCurVoidDesc->iRenderGroup;			// 렌더그룹 업데이트
-
 
 		}
 
@@ -2658,16 +2649,11 @@ void CWindow_EffectTool::Update_EffectList_Window()
 			Add_Part_Mesh(TEXT("Prototype_Component_Model_Particle_Test"));
 		}
 		ImGui::SameLine();
-		if (ImGui::Button(" Add Trail "))
-		{
-			Add_Part_Trail();
-		}
 
 		if (ImGui::Button(" Add Bat Test "))
 		{
 			Add_Part_Mesh_Morph(TEXT("Prototype_Component_Model_BatStorm_01"), TEXT("Prototype_Component_Model_BatStorm_02"));
 		}
-	
 
 		ImGui::SeparatorText("");
 
@@ -3461,120 +3447,57 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh_Morph(wstring strModelTag1, wstring st
 	return S_OK;
 }
 
-HRESULT CWindow_EffectTool::Add_Part_Trail()
+HRESULT CWindow_EffectTool::Create_Trail()
 {
 
-	if (nullptr != m_pCurEffect)
-	{
-		// 보이드 Desc 초기화
-		CEffect_Void::EFFECTVOID_DESC tVoidDesc = {};
-		tVoidDesc.fSpeedPerSec = { 5.f };
-		tVoidDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
+	// 보이드 Desc 초기화
+	CEffect_Void::EFFECTVOID_DESC tVoidDesc = {};
+	tVoidDesc.fSpeedPerSec = { 0.f };
+	tVoidDesc.fRotationPerSec = { XMConvertToRadians(0.0f) };
 
-		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
-		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
+	tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
+	tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
 
-		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
-		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 0 };
+	tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
+	tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 0 };
 
-		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
-		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 0 };
+	tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
+	tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 0 };
 
-		tVoidDesc.iShaderPassIndex = { 0 };
+	tVoidDesc.iShaderPassIndex = { 0 };
 
-		tVoidDesc.iRenderGroup = { CRenderer::RENDER_EFFECT };
+	tVoidDesc.iRenderGroup = { CRenderer::RENDER_EFFECT };
 
-		tVoidDesc.bBillBoard = { FALSE };
+	tVoidDesc.bBillBoard = { FALSE };
 
-		tVoidDesc.bPlay = { TRUE };
+	tVoidDesc.bPlay = { TRUE };
 
 
-		// 트레일 객체 Desc 초기화
-		//CEffect_Trail::TRAIL_DESC	tTrailDesc = {};
-		//tTrailDesc.bTrailOn = { TRUE };
-		//tTrailDesc.vLocalSwordLow = {};
-		//tTrailDesc.vLocalSwordHigh = {};
+	// 트레일 객체 Desc 초기화
+	//CEffect_Trail::TRAIL_DESC	tTrailDesc = {};
+	//tTrailDesc.bTrailOn = { TRUE };
+	//tTrailDesc.vLocalSwordLow = {};
+	//tTrailDesc.vLocalSwordHigh = {};
 
 
-#pragma region 리스트 문자열 관련
-		wstring strName = TEXT("");
-		wstring strFrontName = TEXT("Part_Trail");
+	wstring strName = TEXT("Effect_Trail");
 
-		_int iMaxNum = -1;
-		wstring strPin = TEXT("");
+	tVoidDesc.strPartTag = strName;
+	tVoidDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Trail");
+	
+	m_pTrail = dynamic_cast<CEffect_Trail*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_EFFECT, TEXT("Prototype_GameObject_Effect"), &tVoidDesc));
 
-		for (auto& iter : m_CurPartObjects)
-		{
-			if (nullptr == iter.second)
-				continue;
-
-			if (strFrontName == m_pGameInstance->Remove_LastNumChar(iter.first, 4))
-			{
-				_int iPinNum = stoi(m_pGameInstance->Get_LastNumChar(iter.first, 3));
-
-				if (iMaxNum < iPinNum)
-					iMaxNum = iPinNum;
-			}
-		}
-		/* 최댓값이 -1이라는 것은 해당 이름과 같은게 없으므로 고유번호를 000으로 세팅한다. */
-		if (-1 == iMaxNum)
-			strName = strFrontName + L"_000";
-		else /* 아니라면 최댓값에 + 1을 하여 고유 번호로 세팅한다. */
-		{
-			_int iPinNum = iMaxNum + 1;
-
-			if (0 == iPinNum / 10)
-				strPin = L"_00" + to_wstring(iPinNum);
-			else if (0 == iPinNum / 100)
-				strPin = L"_0" + to_wstring(iPinNum);
-			else
-				strPin = L"_" + to_wstring(iPinNum);
-
-			strName = strFrontName + strPin;
-		}
-
-		tVoidDesc.strPartTag = strName;
-		tVoidDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Trail");
-		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Trail"), strName, &tVoidDesc));
-
-		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
-		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strName));
-
-		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
-		m_pCurVoidDesc->eType_Effect = CEffect_Void::TRAIL;
-
-
-		m_iCurPartIndex = m_CurPartObjects.size();
-		/* 문자열 초기화 */
-		if (nullptr != m_szPartNames)
-		{
-			for (_int i = 0; i < m_iCurPartIndex; ++i)
-			{
-				m_szPartNames[i] = nullptr;
-			}
-			m_szPartNames = nullptr;
-		}
-
-		m_szPartNames = new char* [m_iCurPartIndex];
-
-		_int iCount = 0;
-		for (auto& Pair : m_CurPartObjects)
-		{
-			const string utf8Str = m_pGameInstance->Wstring_To_UTF8(Pair.first);
-			m_szPartNames[iCount] = new char[utf8Str.length() + 1];
-			strcpy(m_szPartNames[iCount], utf8Str.c_str());
-
-			iCount++;
-		}
-		m_iCurPartIndex -= 1;
-
-
-		Update_CurParameters_Parts();
-#pragma endregion
-	}
 
 	return S_OK;
 
+}
+
+HRESULT CWindow_EffectTool::Delete_Trail()
+{
+
+
+
+	return S_OK;
 }
 
 void CWindow_EffectTool::Delete_CurEffectObject()
@@ -3776,6 +3699,7 @@ void CWindow_EffectTool::Update_SaveLoad_Menu()
 		{
 			if (ImGui::MenuItem("Save"))
 			{
+				m_eFile = FILE_EFFECT;
 				m_eDialogType = DIALOG_TYPE::SAVE_DIALOG;
 				m_strDialogPath = "../Bin/DataFiles/Data_Effect/";
 
@@ -3784,6 +3708,7 @@ void CWindow_EffectTool::Update_SaveLoad_Menu()
 			}
 			if (ImGui::MenuItem("Load"))
 			{
+				m_eFile = FILE_EFFECT;
 				m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
 				m_strDialogPath = "../Bin/DataFiles/Data_Effect/";
 
@@ -3798,19 +3723,24 @@ void CWindow_EffectTool::Update_SaveLoad_Menu()
 
 HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 {
-	if (nullptr != m_pCurEffect)
+	if (FILE_EFFECT == m_eFile)
 	{
-		json Out_Json;
-		m_pCurEffect->Write_Json(Out_Json);
+		if (nullptr != m_pCurEffect)
+		{
+			json Out_Json;
+			m_pCurEffect->Write_Json(Out_Json);
 
-		string strSavePath = strPath + "\\" + strFileName;
-		CJson_Utility::Save_Json(strSavePath.c_str(), Out_Json);
+			string strSavePath = strPath + "\\" + strFileName;
+			CJson_Utility::Save_Json(strSavePath.c_str(), Out_Json);
+		}
 	}
-	else
+
+	if (FILE_TRAIL == m_eFile)
 	{
 
 
 	}
+
 
 
 	return S_OK;
@@ -3822,27 +3752,36 @@ HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 	string strLoadPath = strPath + "\\" + strFileName;
 	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
 
-	if (nullptr != m_pCurPartEffect)
+	if (FILE_EFFECT == m_eFile)
 	{
-		m_pCurPartEffect->Load_FromJson(In_Json);
+		if (nullptr != m_pCurPartEffect)
+		{
+			m_pCurPartEffect->Load_FromJson(In_Json);
 
+			Update_CurParameters_Parts();
+			return S_OK;
+		}
+
+		if (nullptr == m_pCurEffect)
+		{
+			Create_EffectObject(TEXT("Layer_Effect"));
+		}
+
+		m_pCurEffect->Load_FromJson(In_Json);
+		m_pCurEffectDesc = m_pCurEffect->Get_Desc();
+		m_pCurEffectDesc->bLoop = TRUE;
+
+		Update_CurParameters();
+
+		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Get_FirstPartObject());
 		Update_CurParameters_Parts();
-		return S_OK;
 	}
 
-	if (nullptr == m_pCurEffect)
+	if (FILE_TRAIL == m_eFile)
 	{
-		Create_EffectObject(TEXT("Layer_Effect"));
+
+
 	}
-
-	m_pCurEffect->Load_FromJson(In_Json);
-	m_pCurEffectDesc = m_pCurEffect->Get_Desc();
-	m_pCurEffectDesc->bLoop = TRUE;
-
-	Update_CurParameters();
-
-	m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Get_FirstPartObject());
-	Update_CurParameters_Parts();
 
 	return S_OK;
 }

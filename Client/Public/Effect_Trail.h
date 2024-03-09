@@ -13,15 +13,11 @@ BEGIN(Client)
 class CEffect_Trail final : public CEffect_Void
 {
 public:
-	enum TYPE_OWNER { OWNER_OBJECT, OWNER_WEAPON, OWNER_PREVIEW, OWNER_END };
 
-	typedef struct tagTextureEffectDesc
+	typedef struct tagTrailDesc
 	{
 		//_bool		bTrailOn; // EFFECTVOID_DESCÀÇ bPlay
-		TYPE_OWNER	eType_Owner = { OWNER_END };
 		wstring		strWeaponTag = { TEXT("") };
-
-		_float4x4	matSocketWorld = {};
 
 
 	}TRAIL_DESC;
@@ -39,6 +35,10 @@ public:
 	virtual void	Tick(_float fTimeDelta) override;
 	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+
+
+public:
+	void Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix);
 
 public:
 	virtual void	Update_PivotMat() override;
