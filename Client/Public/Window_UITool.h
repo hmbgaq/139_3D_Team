@@ -202,9 +202,9 @@ public:
 	{
 		"Defaul"
 	};
-#pragma endregion Text End
+#pragma endregion											Text End
 
-#pragma region Animation
+#pragma region												Animation
 	// 키프레임 목록
 	void						KeyframeList();
 	// 키프레임 수정 창
@@ -213,24 +213,41 @@ public:
 	void						KeyframeRender_ValueChange();
 	// 키프레임 자동 생성 함수(선형 보간)
 	void CreateKeyframesWithLinearInterpolation(
-		_float minTime, _float maxTime,
-		_float minValue, _float maxValue,
-		_float2 minScaleValue, _float2 maxScaleValue,
-		_float minRotationValue, _float maxRotationValue,
-		_float2 minTranslationValue, _float2 maxTranslationValue,
-		_float _minTexture, _float _maxTexture,
-		_int numKeyframes);
+												_float minTime, _float maxTime,
+												_float minValue, _float maxValue,
+												_float2 minScaleValue, _float2 maxScaleValue,
+												_float minRotationValue, _float maxRotationValue,
+												_float2 minTranslationValue, _float2 maxTranslationValue,
+												_float _minTexture, _float _maxTexture,
+												_int numKeyframes);
 	// 키프레임 자동생성 세팅 함수
 	void	KeyframeAutomaticGeneration();
-#pragma region PlayAnim
+#pragma region												PlayAnim
 	void	PlayAnimation(_float fTimeDelta);
 	_bool	m_isPlayAnim = false;
 	_float  m_fPlayTime = 0.f;
-#pragma region TimeLineBar
-	void	AnimationTimeLineBar();					// 애니메이션 타임라임 바
+#pragma region												TimeLineBar
+	void	AnimationTimeLineBar(_float fTimeDelta);// 애니메이션 타임라임 바
 	_float	EvaluateAnimationAtTime(float time);	// 애니메이션에 따른 현재 시간 계산
 	void	KeyframeValueChange(_float fTimeDelta); // 애니메이션 키프레임 조절
 	void	ImGuiKeyInput();
+	void	CurKeyframe_ValueChange();
+	// 선택한 키프레임 값을 변경하는 함수
+	void	DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyframe);
+	void	SelectKeyframeMouse();
+	// 변경할 속성 값 모드
+	enum EDITMODE
+	{
+		EDITMODE_NONE,
+		EDITMODE_SCALE,
+		EDITMODE_ROTATION,
+		EDITMODE_TRANSLATION,
+		EDITMODE_TIME_VALUE,
+		EDITMODE_TEXTURE
+	};
+	EDITMODE eEditMode = EDITMODE_NONE; // 변경할 모드 변수
+	float vValueSize = 1.f;	// 변경을 줄 값의 크기
+	_float originalIndex;
 	// 키프레임 드래그
 	_bool	isDraggingKeyframe = false;
 	_int	draggingKeyframeIndex = 0;
@@ -263,7 +280,30 @@ private:
 	ImVec2					timelinePos = { 0.f, 0.f };
 	ImVec2					timelineSize = { 800.f, 85.f }; // 애니메이션 타임 라인 크기
 
-#pragma region 최소, 최대 자동 생성 값
+	_int m_iOldIndex = -1;
+#pragma region											최소, 최대 값
+// 크기
+	_float	fMin_Scale = -5000.1f;	// 최소
+	_float	fMax_Scale = 5000.1f;	// 최대
+
+	// 회전
+	_float	fMin_Rot = -180.f;		// 최소
+	_float	fMax_Rot = 180.f;	// 최대
+
+	// 이동
+	_float	fMin_Pos = -5000.1f;		// 최소
+	_float	fMax_Pos = 5000.1f;	// 최대
+
+	// 시간
+	_float	fMin_Time = 0.f;	// 최소
+	_float	fMax_Time = MaxTime;// 최대
+
+	// 벨류
+	_float	fMin_Value = 0.f;	// 최소
+	_float	fMax_Value = 1.f;	// 최대
+#pragma endregion
+
+#pragma region											최소, 최대 자동 생성 값
 	_bool  m_bIndividualTexture = false;
 
 	_float _v2Time[2] = { 0.f, 0.f };

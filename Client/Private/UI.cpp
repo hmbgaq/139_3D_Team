@@ -7,6 +7,7 @@ CUI::CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& st
 	:CGameObject(pDevice, pContext, strPrototypeTag)
 	, m_pData_Manager(CData_Manager::GetInstance())
 {
+	Safe_AddRef(m_pData_Manager);
 }
 
 CUI::CUI(const CUI& rhs)
@@ -14,6 +15,7 @@ CUI::CUI(const CUI& rhs)
 	, m_ProjMatrix(rhs.m_ProjMatrix)
 	, m_pData_Manager(rhs.m_pData_Manager)
 {
+	Safe_AddRef(m_pData_Manager);
 }
 
 HRESULT CUI::Initialize_Prototype()
@@ -723,6 +725,33 @@ json CUI::Save_Desc(json& out_json)
 	/* TransformCom */
 	m_pTransformCom->Write_Json(out_json);
 
+
+	/* Keyframe*/
+	if (!m_vecAnimation.empty())
+	{
+		_int iSize = m_vecAnimation.size();
+		out_json["KeyframeNum"] = iSize;
+
+		for (_int i = 0; i < iSize; ++i)
+		{
+			// 키프레임 세이브 작업중
+			out_json["Time"] = m_vecAnimation[i].fTime;
+			out_json["Value"] = m_vecAnimation[i].fValue;
+			out_json["AnimSpeed"] = m_vecAnimation[i].fAnimSpeed;
+			out_json["Type"] = m_vecAnimation[i].iType;
+			out_json["EaseIn"] = m_vecAnimation[i].isEaseIn;
+			out_json["EaseOut"] = m_vecAnimation[i].isEaseOut;
+			out_json["Texureframe"] = m_vecAnimation[i].iTexureframe;
+			out_json["ScaleX"] = m_vecAnimation[i].vScale.x;
+			out_json["ScaleY"] = m_vecAnimation[i].vScale.y;
+			out_json["PosX"] = m_vecAnimation[i].vPos.x;
+			out_json["PosY"] = m_vecAnimation[i].vPos.y;
+			out_json["Rot"] = m_vecAnimation[i].fRot;
+			out_json["KeyFramePosX"] = m_vecAnimation[i].vKeyFramePos.x;
+			out_json["KeyFramePosY"] = m_vecAnimation[i].vKeyFramePos.y;
+		}
+	}
+
 	///* Group Save */
 	//if (!m_vecUIParts.empty())
 	//{
@@ -755,7 +784,7 @@ void CUI::Play_Animation()
 				//m_pAnimationTool->Get_currentTime() = 0.f;
 
 				// 반복 On/Off
-				if (m_bRepetition)
+				if (!m_bRepetition)
 				{
 					m_bPlayAnim = false;
 				}
@@ -774,10 +803,11 @@ void CUI::Play_Animation()
 			m_fCurrTime <= m_vecAnimation.back().fTime)
 		{
 			//m_eAnimationInfo = m_vecAnimation[(int)m_iFrameCount].front();
-			_uint iFrameIndex = 0U;
-			for (_uint i = m_vecAnimation.size() - (_uint)1; i >= 0; i--)
+			_uint iFrameIndex = 0;
+			_uint iSize = m_vecAnimation.size() - (_uint)1;
+			for (_uint i = iSize; i >= 0; i--)
 			{
-				if (m_vecAnimation[i].fTime <= m_fCurrTime)
+				if (m_vecAnimation[i].fTime <= m_fCurrTime) // !!!!!!!!!로드시 i가 쓰레기값으로 되면서 터짐!!!!!!!!
 				{
 					iFrameIndex = i;
 					break;
@@ -850,6 +880,11 @@ void CUI::Play_Animation()
 		//}
 
 	}
+}
+
+void CUI::Set_AnimationKeyframe(UIKEYFRAME tKeyframe)
+{
+	
 }
 
 void CUI::Compute_CamDistance()

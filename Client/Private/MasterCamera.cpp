@@ -117,6 +117,10 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 
 void CMasterCamera::Priority_Tick(_float fTimeDelta)
 {
+	// error : UI(다른객체는 모름)Set_Dead로 삭제시 플레이어가 null값에서 이상한 값으로 들어가있음
+	//return;
+	// error
+
 	if(m_pPlayer == nullptr)
 		m_pPlayer = CData_Manager::GetInstance()->Get_Player();
 

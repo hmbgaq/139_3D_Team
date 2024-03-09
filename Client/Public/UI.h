@@ -127,6 +127,9 @@ public:
 		_vector		vColor = { 1.f, 1.f, 1.f, 1.f };
 
 		class CTransform* pParentTransformCom = nullptr;
+
+		_int		iKeyframeNum = 0;
+		UIKEYFRAME	tKeyframe;
 	}UI_DESC;
 
 	enum UI_BUTTON_STATE
@@ -236,22 +239,22 @@ public: /* =========================== Animation ============================== 
 	void			Play_Animation();
 	void			Add_Keyframe(UIKEYFRAME tKeyframe) { m_vecAnimation.push_back(tKeyframe); }
 	void			Emplaceback_Keyframe(UIKEYFRAME tKeyframe) { m_vecAnimation.emplace_back(tKeyframe); }
-
+	void			Set_AnimationKeyframe(UIKEYFRAME tKeyframe);
 	// 애니메이션 값
 	std::vector<UIKEYFRAME> m_vecAnimation = {};
-	_int				m_iTextureNum = 0;
+	_int			m_iTextureNum = 0;
 
-	void				Set_AnimPlay(_bool bPlay) { m_bPlayAnim = bPlay; }
-	_bool				Get_AnimPlay() { return m_bPlayAnim; }
-	_bool				m_bPlayAnim = false;
+	void			Set_AnimPlay(_bool bPlay) { m_bPlayAnim = bPlay; }
+	_bool			Get_AnimPlay() { return m_bPlayAnim; }
+	_bool			m_bPlayAnim = false;
 
-	void				Set_CurrTime(_float fCurrTime) { m_fCurrTime = fCurrTime; }
-	_float				Get_CurrTime() { return m_fCurrTime; }
-	_float				m_fCurrTime = 0.f;
+	void			Set_CurrTime(_float fCurrTime) { m_fCurrTime = fCurrTime; }
+	_float			Get_CurrTime() { return m_fCurrTime; }
+	_float			m_fCurrTime = 0.f;
 
-	void				Set_Repetition(_bool bRepetition) { m_bRepetition = bRepetition; }
-	_bool				Get_Repetition() { return m_bRepetition; }
-	_bool				m_bRepetition = false;
+	void			Set_Repetition(_bool bRepetition) { m_bRepetition = bRepetition; }
+	_bool			Get_Repetition() { return m_bRepetition; }
+	_bool			m_bRepetition = false;
 	// dt 값
 	_float fFrameTimeDelta, fCurFrameTimeDelta;
 
