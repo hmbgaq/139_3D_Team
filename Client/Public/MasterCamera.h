@@ -46,7 +46,7 @@ private:
 	class CPlayer*		m_pPlayer = { nullptr };
 private:
 	_bool				m_bfirstCheck = true;
-
+	_bool				m_bTickCamera = true;
 public:
 	static CMasterCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

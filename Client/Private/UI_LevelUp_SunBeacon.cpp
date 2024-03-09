@@ -37,9 +37,13 @@ HRESULT CUI_LevelUp_SunBeacon::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_eState = UISTATE::LEVEL_UP;
-	m_fChangeScale = 3.f;
-	m_fLifeTime = 1500.f;
-	m_bActive = true;
+	m_fChangeScale = 4.f;
+	//m_fLifeTime = 5000.f;
+
+	m_fActiveTime = 1500.f;
+	m_bActive = false;
+	m_fAlpha = 0.f;
+	m_fLifeTime = 8000.f;
 	m_fTime = GetTickCount64();
 
 	return S_OK;
@@ -52,7 +56,7 @@ void CUI_LevelUp_SunBeacon::Priority_Tick(_float fTimeDelta)
 
 void CUI_LevelUp_SunBeacon::Tick(_float fTimeDelta)
 {
-
+	__super::Tick(fTimeDelta);
 }
 
 void CUI_LevelUp_SunBeacon::Late_Tick(_float fTimeDelta)
@@ -78,9 +82,17 @@ void CUI_LevelUp_SunBeacon::Late_Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_5))
 		--m_fChangeScale;
 
-	//if (m_bActive)
+	if (m_bReset)
 	{
-		if (m_fTime + m_fLifeTime < GetTickCount64() && m_bFirstOK == false)
+		m_fScaleX = 350.f;
+		m_fScaleY = 350.f;
+		m_fAlpha = 0.f;
+		m_fTime = GetTickCount64();
+	}
+
+	if (m_bActive)
+	{
+		if (m_fTime + m_fActiveTime < GetTickCount64() && m_bFirstOK == false)
 		{
 			if (m_fScaleX > 295.f)
 			{
@@ -96,7 +108,7 @@ void CUI_LevelUp_SunBeacon::Late_Tick(_float fTimeDelta)
 			{
 				m_bFirstOK = true;
 				m_bSecondOK = false;
-				m_fTime = GetTickCount64();
+				//m_fTime = GetTickCount64();
 			}
 		}
 
@@ -119,7 +131,7 @@ void CUI_LevelUp_SunBeacon::Late_Tick(_float fTimeDelta)
 			}
 		}
 	}
-		__super::Tick(fTimeDelta);
+
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
@@ -127,6 +139,7 @@ void CUI_LevelUp_SunBeacon::Late_Tick(_float fTimeDelta)
 
 HRESULT CUI_LevelUp_SunBeacon::Render()
 {
+
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
