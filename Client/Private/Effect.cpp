@@ -365,7 +365,6 @@ void CEffect::Delete_PartObject(const wstring& strPartTag)
 }
 
 
-
 HRESULT CEffect::Ready_Components()
 {
 

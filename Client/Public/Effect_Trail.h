@@ -13,12 +13,16 @@ BEGIN(Client)
 class CEffect_Trail final : public CEffect_Void
 {
 public:
+	enum TYPE_OWNER { OWNER_OBJECT, OWNER_WEAPON, OWNER_PREVIEW, OWNER_END };
+
 	typedef struct tagTextureEffectDesc
 	{
 		//_bool		bTrailOn; // EFFECTVOID_DESCÀÇ bPlay
+		TYPE_OWNER	eType_Owner = { OWNER_END };
+		wstring		strWeaponTag = { TEXT("") };
 
-		_float4		vLocalSwordHigh;
-		_float4		vLocalSwordLow;
+		_float4x4	matSocketWorld = {};
+
 
 	}TRAIL_DESC;
 

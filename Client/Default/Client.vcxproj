@@ -440,6 +440,7 @@
     <ClInclude Include="..\Public\MasterCamera.h" />
     <ClInclude Include="..\Public\Model_Preview.h" />
     <ClInclude Include="..\Public\Monster_Character.h" />
+    <ClInclude Include="..\Public\Part_Preview.h" />
     <ClInclude Include="..\Public\Player_DeathLight_F_01.h" />
     <ClInclude Include="..\Public\Player_DeathLight_F_02.h" />
     <ClInclude Include="..\Public\Player_DodgeBlink_L_03.h" />
@@ -957,6 +958,7 @@
     <ClCompile Include="..\Private\MasterCamera.cpp" />
     <ClCompile Include="..\Private\Model_Preview.cpp" />
     <ClCompile Include="..\Private\Monster_Character.cpp" />
+    <ClCompile Include="..\Private\Part_Preview.cpp" />
     <ClCompile Include="..\Private\Player_DodgeBlink_L_03.cpp" />
     <ClCompile Include="..\Private\Player_DodgeBlink_R_03.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />

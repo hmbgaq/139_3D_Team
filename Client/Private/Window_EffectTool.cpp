@@ -23,6 +23,7 @@
 #include "Sky.h"
 #include "Grid.h"
 #include "Model_Preview.h"
+#include "Part_Preview.h"
 
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -56,23 +57,21 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	ShowDialog();
 
 #pragma region 환경(레벨) 세팅 창 (스카이박스, 크기비교용 모델 등)
-	SetUp_ImGuiDESC(u8"환경 세팅", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	SetUp_ImGuiDESC(u8"환경 세팅", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	
 	__super::Begin();
 
 	Update_LevelSetting_Window();	// 레벨(환경) 세팅 창(카메라, 스카이박스, 크기비교용 모델 등...) 업데이트
 
 	// ImGui창 사이즈
-	ImGui::SeparatorText("");
-	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
-	ImGui::Spacing();
+	Show_ImGui_WindowSize();
 
 	__super::End();
 #pragma endregion
 
 
 #pragma region 오브젝트 리스트 창
-	SetUp_ImGuiDESC(u8"오브젝트 리스트", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	SetUp_ImGuiDESC(u8"오브젝트 리스트", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	
 	__super::Begin();
 
@@ -80,25 +79,22 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	Update_EffectList_Window();	// 이펙트 리스트박스 창 업데이트
 
 	// ImGui창 사이즈
-	ImGui::SeparatorText("");
-	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
-	ImGui::Spacing();
+	Show_ImGui_WindowSize();
+
 
 	__super::End();	
 #pragma endregion
 
 
 #pragma region 네오 시퀀서 창
-	SetUp_ImGuiDESC(u8"네오 시퀀서", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	SetUp_ImGuiDESC(u8"네오 시퀀서", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	
 	__super::Begin();
 
 	Update_NeoSequencer_Window();	// 시퀀서 창 업데이트
 
 	// ImGui창 사이즈
-	ImGui::SeparatorText("");
-	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
-	ImGui::Spacing();
+	Show_ImGui_WindowSize();
 
 	__super::End();
 #pragma endregion
@@ -106,15 +102,13 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 
 #pragma region 타임라인 창
-	SetUp_ImGuiDESC(u8"타임라인", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	SetUp_ImGuiDESC(u8"타임라인", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	__super::Begin();
 
 	Update_Timeline_Window();	// 타임라인 창 (재생, 멈춤, 리셋) 업데이트
 
 	// ImGui창 사이즈
-	ImGui::SeparatorText("");
-	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
-	ImGui::Spacing();
+	Show_ImGui_WindowSize();
 
 	__super::End();
 #pragma endregion
@@ -122,22 +116,20 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 
 #pragma region 이미지 리스트 창
-	SetUp_ImGuiDESC(u8"이미지 리스트", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	SetUp_ImGuiDESC(u8"이미지 리스트", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	__super::Begin();
 
 	Update_ImageList_Window();	// 텍스처 이미지 미리보기, 리스트 업데이트
 
 	// ImGui창 사이즈
-	ImGui::SeparatorText("");
-	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
-	ImGui::Spacing();
+	Show_ImGui_WindowSize();
 
 	__super::End();
 #pragma endregion
 
 
 #pragma region 이펙트 툴
-	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 700.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | /*ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | */ ImGuiWindowFlags_NoBringToFrontOnFocus, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 700.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	
 	__super::Begin();
 
@@ -172,9 +164,7 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 
 	// ImGui창 사이즈
-	ImGui::SeparatorText("");
-	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
-	ImGui::Spacing();
+	Show_ImGui_WindowSize();
 
 	__super::End();
 #pragma endregion
@@ -186,6 +176,13 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 void CWindow_EffectTool::Render()
 {
 
+}
+
+void CWindow_EffectTool::Show_ImGui_WindowSize()
+{
+	ImGui::SeparatorText("");
+	ImGui::Text("ImGui Window Size : %d, %d", (_int)ImGui::GetWindowContentRegionMax().x, (_int)ImGui::GetWindowContentRegionMax().y);
+	ImGui::Spacing();
 }
 
 void CWindow_EffectTool::Show_MousePos()
@@ -287,6 +284,12 @@ HRESULT CWindow_EffectTool::Ready_Model_Preview(wstring strModelTag)
 		tDesc.iAnimIndex = { 8 };	// 플레이어 Idle애니메이션은 8번
 	}
 
+	if (strModelTag == TEXT("Prototype_Component_Model_VampireCommander"))
+	{
+		tDesc.iAnimIndex = { 9 };	// 보스 Idle애니메이션은 9번 VampireCommander_Idle
+	}
+
+
 	CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Model_Preview"), TEXT("Prototype_GameObject_Model_Preview"), &tDesc);
 	if (nullptr != pObj)
 		m_pModel_Preview = pObj;
@@ -328,11 +331,20 @@ void CWindow_EffectTool::Update_Timeline_Window()
 		if (ImGui::Button("   Play   ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
 		{
 			m_pCurEffectDesc->bPlay = TRUE;
+			if (nullptr != m_pModel_Preview)
+			{
+				dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Get_Desc()->bPlay = TRUE;
+			}
 		}
 		//ImGui::SameLine();
 		if (ImGui::Button("   Stop   ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
 		{
 			m_pCurEffectDesc->bPlay = FALSE;
+			if (nullptr != m_pModel_Preview)
+			{
+				dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Get_Desc()->bPlay = FALSE;
+			}
+
 		}
 		//ImGui::SameLine();
 		if (ImGui::Button("   Reset   ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
@@ -1580,10 +1592,22 @@ void CWindow_EffectTool::Update_TrailTab()
 				{
 					//! 모델_프리뷰가 nullptr이 아니면 이펙트에게 오너를 설정해 줄 수 있음(트레일의 오너가 아닌 이펙트의 오너임 주의)
 					//! Owner겜오브젝트(있을수도 없을수도) - 이펙트(Parent) - 트레일(이펙트의 Part)
-					if (ImGui::Button("Set Owner"))
+					if (ImGui::Button("Set Owner_Model"))
 					{
 						m_pCurEffect->Set_Object_Owner(m_pModel_Preview);
+						m_pTrailDesc->eType_Owner = CEffect_Trail::OWNER_OBJECT;
+						//m_pTrailDesc->matSocketWorld = m_pModel_Preview->Get_Transform()->Get_WorldFloat4x4();
 					}
+					ImGui::SameLine();
+					if (ImGui::Button("Set Owner_Part"))
+					{
+						CGameObject* pPart = dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Find_PartObject(TEXT("Part_Preview"));
+						m_pCurEffect->Set_Object_Owner(pPart);
+						m_pTrailDesc->eType_Owner = CEffect_Trail::OWNER_PREVIEW;
+						//m_pTrailDesc->matSocketWorld = dynamic_cast<CPart_Preview*>(pPart)->Get_WorldMatrix_Socket();
+
+					}
+
 				}
 
 
@@ -2451,27 +2475,61 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 	ImGui::SeparatorText("Model_Preview");
 	if (nullptr == m_pModel_Preview)
 	{
-		if (ImGui::Button("Create Model"))	// 모델 생성
+		if (ImGui::Button("Create Model_Player"))	// 모델 생성
 		{
-			Ready_Model_Preview(TEXT("Prototype_Component_Model_Rentier"));
+			Ready_Model_Preview(TEXT("Prototype_Component_Model_Rentier")); 
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Create Model_Boss"))	// 모델 생성
+		{
+			Ready_Model_Preview(TEXT("Prototype_Component_Model_VampireCommander"));
+		}
+
 	}
 	else
 	{
 		// 모델_프리뷰가 존재하면	
-
-		// 애니메이션 변경 테스트 Player_MeleeCombo_01
-		if (ImGui::Button("Player_IdlePose"))	// 플레이어 아이들
+		CModel_Preview::MODEL_PREVIEW_DESC* pDesc = dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Get_Desc();
+		
+		// 모델 월드 이동
+		CTransform* pTransform = m_pModel_Preview->Get_Transform();
+		if (ImGui::DragFloat3("Model_Pos", m_vWorldPosition_Model, 0.2f))
 		{
-			// Index 8
-			dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Set_AnimIndex(8);
+			m_pModel_Preview->Set_Position(_float3(m_vWorldPosition_Model[0], m_vWorldPosition_Model[1], m_vWorldPosition_Model[2]));
+		}
 
+
+		// 애니메이션 변경 테스트 
+		if (ImGui::Button("IdlePose"))	
+		{
+		
+			if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+			{
+				// 플레이어 아이들 // Index 8
+				dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Set_AnimIndex(8);
+			}
+
+			if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+			{
+				// 보스 아이들 // Index 9
+				dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Set_AnimIndex(9);
+			}
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("MeleeCombo_01"))	// 플레이어 콤보1
+		if (ImGui::Button("MeleeCombo_01"))	
 		{
-			// Index 193
-			dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Set_AnimIndex(193);
+			if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+			{
+				// 플레이어 콤보1 	// Index 193
+				dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Set_AnimIndex(193);
+			}
+
+			if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+			{
+				// 보스 VampireCommander_AttackMelee_02 // Index 55
+				dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Set_AnimIndex(55);
+			}
+
 		}
 
 
@@ -2479,6 +2537,12 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 		{
 			if (nullptr != m_pModel_Preview)
 			{
+				if(nullptr != m_pCurEffect->Get_Object_Owner())
+				{
+					// 현재 이펙트의 오너가 nullptr이 아니면 오너부터 해제 해주고 모델 삭제
+					m_pCurEffect->Delete_Object_Owner();
+				}
+
 				m_pModel_Preview->Set_Dead(TRUE);
 				m_pModel_Preview = nullptr;
 			}
@@ -3419,7 +3483,7 @@ HRESULT CWindow_EffectTool::Add_Part_Trail()
 
 
 		// 트레일 객체 Desc 초기화
-		CEffect_Trail::TRAIL_DESC	tTrailDesc = {};
+		//CEffect_Trail::TRAIL_DESC	tTrailDesc = {};
 		//tTrailDesc.bTrailOn = { TRUE };
 		//tTrailDesc.vLocalSwordLow = {};
 		//tTrailDesc.vLocalSwordHigh = {};

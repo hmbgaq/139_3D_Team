@@ -172,7 +172,7 @@ void CVIBuffer_Trail::Update(_float _fTimeDelta, _matrix _ParentMatrix)
         XMStoreFloat3(&((VTXPOSTEX*)tSubResource.pData)[iEndIndex].vPosition, vPos[0]);
         XMStoreFloat3(&((VTXPOSTEX*)tSubResource.pData)[iEndIndex + 1].vPosition, vPos[1]);
 
-        for (_uint i(0); i < m_tBufferDesc.iLerpPointNum; ++i)
+        for (_uint i = 0; i < m_tBufferDesc.iLerpPointNum; ++i)
         {
             _uint iIndex(i * 2 + m_tBufferDesc.iVtxCnt - 2);
             _float fWeight(_float(i + 1) / (m_tBufferDesc.iLerpPointNum + 1));
@@ -201,7 +201,7 @@ void CVIBuffer_Trail::Update(_float _fTimeDelta, _matrix _ParentMatrix)
         m_tBufferDesc.iCatMullRomIndex[1] = m_tBufferDesc.iCatMullRomIndex[2];
     }
 #pragma endregion CatMullRom
-    for (_uint i(0); i < m_tBufferDesc.iVtxCnt; i += 2)
+    for (_uint i = 0; i < m_tBufferDesc.iVtxCnt; i += 2)
     {
         ((VTXPOSTEX*)tSubResource.pData)[i].vTexcoord = _float2(_float(i) / _float(m_tBufferDesc.iVtxCnt - 2.f), 1.f);
         ((VTXPOSTEX*)tSubResource.pData)[i + 1].vTexcoord = _float2(_float(i) / _float(m_tBufferDesc.iVtxCnt - 2.f), 0.f);

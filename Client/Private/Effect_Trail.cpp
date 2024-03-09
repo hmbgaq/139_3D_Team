@@ -3,6 +3,9 @@
 
 #include "GameInstance.h"
 
+#include "Model_Preview.h"
+#include "Part_Preview.h"
+
 
 CEffect_Trail::CEffect_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
@@ -23,7 +26,9 @@ HRESULT CEffect_Trail::Initialize_Prototype()
 
 HRESULT CEffect_Trail::Initialize(void* pArg)
 {
-	m_tTrailDesc = *(TRAIL_DESC*)pArg;
+	XMStoreFloat4x4(&m_tTrailDesc.matSocketWorld, XMMatrixIdentity());
+
+	//m_tTrailDesc = *(TRAIL_DESC*)pArg;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -77,17 +82,33 @@ void CEffect_Trail::Late_Tick(_float fTimeDelta)
 	{
 		if (m_tVoidDesc.bActive_Tool)
 		{
+			if (OWNER_PREVIEW == m_tTrailDesc.eType_Owner)
+			{
+				CGameObject* pParentOwner = m_tVoidDesc.pParentObj->Get_Object_Owner();
+				m_tTrailDesc.matSocketWorld = dynamic_cast<CPart_Preview*>(pParentOwner)->Get_WorldMatrix_Socket();
+			}
 #endif // _DEBUG
+
+			if (OWNER_WEAPON == m_tTrailDesc.eType_Owner)
+			{
+
+			}
+			else if (OWNER_OBJECT == m_tTrailDesc.eType_Owner)
+			{
+				m_tTrailDesc.matSocketWorld = m_tVoidDesc.pParentObj->Get_Object_Owner()->Get_Transform()->Get_WorldFloat4x4();
+			}
+
+
 			if (m_tVoidDesc.bRender)
 			{
 				if (nullptr != m_tVoidDesc.pParentObj)	// 부모 이펙트가 있고
 				{
 					if (m_tVoidDesc.bParentPivot)		//부모의 매트릭스를 사용할거고
 					{
-						CGameObject* PParentOwner = m_tVoidDesc.pParentObj->Get_Object_Owner();
-						if (nullptr != PParentOwner)	// 부모의 오너가 있으면
+						CGameObject* pParentOwner = m_tVoidDesc.pParentObj->Get_Object_Owner();
+						if (nullptr != pParentOwner)	// 부모의 오너가 있으면
 						{
-							m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4() * PParentOwner->Get_Transform()->Get_WorldFloat4x4();
+							m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4() * m_tTrailDesc.matSocketWorld;
 							XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
 						}
 						else

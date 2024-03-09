@@ -3,8 +3,6 @@
 
 BEGIN(Engine)
 
-//class CGameObject;
-//class CTransform;
 
 
 class ENGINE_DLL CVIBuffer_Trail : public CVIBuffer
@@ -16,7 +14,7 @@ public:
 		_float3		vPos_1	= { 0.f, 0.f, 1.f };
 		_uint		iMaxCnt = { 16 };
 
-		_uint		iNumVertices	= { 0 };
+		//_uint		iNumVertices	= { 0 };
 		_uint		iVtxCnt			= { 0 };
 
 		_uint		iLerpPointNum = { 12 };

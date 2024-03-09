@@ -37,7 +37,9 @@ public:
 
 /* For.Level Setting (환경 세팅) */
 public:
-	void	Show_MousePos();	// 마우스 위치 표시
+	void	Show_ImGui_WindowSize();	// ImGui 윈도우 창 크기 표시
+	void	Show_MousePos();			// 마우스 위치 표시
+
 	void	Show_CameraInfo();	// 카메라 정보 표시
 	void	ReSet_CameraPos();	// 카메라 위치 리셋
 
@@ -347,8 +349,8 @@ private:
 
 
 	/* Model_Preview */
-	CGameObject* m_pModel_Preview = { nullptr };	// 크기 비교용 보기 모델
-
+	CGameObject* m_pModel_Preview = { nullptr };				// 크기 비교용 보기 모델
+	_float		 m_vWorldPosition_Model[3] = { 0.f, 0.f, 0.f };	// 크기 비교용 모델 월드 이동
 #pragma endregion
 
 

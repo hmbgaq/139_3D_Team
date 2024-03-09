@@ -91,8 +91,9 @@ public:
 	_bool Is_PoolObject() { return m_bIsPoolObject; };
 
 public:
-	CGameObject* Get_Object_Owner();
-	void Set_Object_Owner(CGameObject* pOwner);
+	CGameObject*	Get_Object_Owner();
+	void			Set_Object_Owner(CGameObject* pOwner);
+	void			Delete_Object_Owner();
 	
 
 
