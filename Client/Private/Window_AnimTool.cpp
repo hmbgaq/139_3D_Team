@@ -14,7 +14,7 @@
 #include "Data_Manager.h"
 #include "Player.h"
 #pragma region Effect_Test
-#include "Clone_Manager.h"
+#include "Effect_Manager.h"
 #include "Effect.h"
 #include "Effect_Particle.h"
 #pragma endregion
@@ -271,7 +271,7 @@ void CWindow_AnimTool::Add_EffectKeyEvent()
 				ImGui::SetItemDefaultFocus();
 				if (m_bCreateEffect)
 				{
-					CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, m_vecEffectName[n]+".json");
+					CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, m_vecEffectName[n]+".json");
 					if (m_pBones.size() > 0)// 본이 존재한다면 
 					{
 						_float4x4 BoneMatrix = {};

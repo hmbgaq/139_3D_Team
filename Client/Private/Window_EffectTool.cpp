@@ -7,7 +7,7 @@
 /* Util */
 #include "GameInstance.h"
 #include "Easing_Utillity.h"
-#include "Clone_Manager.h"
+#include "Effect_Manager.h"
 #include "Data_Manager.h"
 
 /* Effect */
@@ -2552,7 +2552,7 @@ void CWindow_EffectTool::Update_EffectList_Window()
 	ImGui::SeparatorText("");
 	if (ImGui::Button("         Create Test        "))
 	{
-		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Effect.json");
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Effect.json");
 	}
 
 	/* 이펙트 리스트 & 현재 이펙트 선택 */

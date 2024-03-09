@@ -3,7 +3,6 @@
 
 #include "GameInstance.h"
 
-#include "Effect.h"
 
 IMPLEMENT_SINGLETON(CClone_Manager);
 
@@ -30,27 +29,6 @@ HRESULT CClone_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* p
 }
 
 
-CEffect* CClone_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner)
-{
-	CEffect::EFFECT_DESC	tEffectDesc = {};
-	CEffect* pEffect = dynamic_cast<CEffect*>(m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, TEXT("Prototype_GameObject_Effect"), &tEffectDesc));
-
-	string strPath = "../Bin/DataFiles/Data_Effect";
-	string strLoadPath = strPath + "/" + strFileName;
-
-	json In_Json;
-	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
-
-	if (nullptr != pOwner)
-		pEffect->Set_Object_Owner(pOwner);
-
-	pEffect->Load_FromJson(In_Json);
-	
-	return	pEffect;
-
-	/* 사용 예시 */
-	//CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Effect.json");
-}
 
 void CClone_Manager::Free()
 {
