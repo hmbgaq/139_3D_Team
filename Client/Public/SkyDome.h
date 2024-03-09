@@ -32,6 +32,7 @@ private:
 private:
 	CModel*			m_pModelCom = { nullptr };
 	CShader*		m_pShaderCom = { nullptr };
+	_uint			m_iCurrentLevel = 0;
 
 public:
 	static	CSkyDome*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

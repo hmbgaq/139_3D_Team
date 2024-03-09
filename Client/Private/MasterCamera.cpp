@@ -61,14 +61,24 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 
 	if(m_pPlayer != nullptr)
 	{
-		CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CSpringCamera>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Spring"), &Desc);
+		CCamera* pCamera = CCamera_Dynamic::Create(m_pDevice,m_pContext, L"FakeCameraDynamic");
+		pCamera->Initialize(&Desc);
 		if (pCamera)	m_Cameras.push_back(pCamera);
+
+		//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Dynamic"), CCamera_Dynamic::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Camera_Dynamic"))));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Spring"), CSpringCamera::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Camera_Spring"))));
+
+		//CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CSpringCamera>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Spring"), &Desc);
+		//if (pCamera)	m_Cameras.push_back(pCamera);
 		
 	}
 
 	{
-		CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CCamera_Dynamic>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc);
+		CCamera* pCamera = CSpringCamera::Create(m_pDevice, m_pContext, L"FakeCameraSpring");
+		pCamera->Initialize(&Desc);
 		if (pCamera)	m_Cameras.push_back(pCamera);
+		//CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CCamera_Dynamic>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc);
+		//if (pCamera)	m_Cameras.push_back(pCamera);
 
 	}
 
@@ -87,7 +97,8 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 
 void CMasterCamera::Priority_Tick(_float fTimeDelta)
 {
-	m_pPlayer = CData_Manager::GetInstance()->Get_Player();
+	if(m_pPlayer == nullptr)
+		m_pPlayer = CData_Manager::GetInstance()->Get_Player();
 
 	if (m_pPlayer != nullptr && m_bfirstCheck == true)
 	{
@@ -170,6 +181,12 @@ CGameObject* CMasterCamera::Clone(void* pArg)
 void CMasterCamera::Free()
 {
 	__super::Free();
+
+	for (_uint i = 0; i < (_uint)CameraType_End; ++i)
+	{
+		if (nullptr != m_Cameras[i])
+			Safe_Release(m_Cameras[i]);
+	}
 }
 
 CGameObject* CMasterCamera::Pool()
