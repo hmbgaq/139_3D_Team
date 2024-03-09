@@ -4,7 +4,7 @@
 
 BEGIN(Client)
 
-class CPlayer_HitNormal_B : public CPlayer_State_Hit
+class CPlayer_VampireCommander_SyncedAttack : public CPlayer_State_Hit
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;
@@ -12,7 +12,7 @@ public:
 	virtual void Release(CPlayer* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_HitNormal_B;
+	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_VampireCommander_SyncedAttack;
 
 };
 

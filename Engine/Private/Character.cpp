@@ -354,7 +354,7 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 		Hitted_Dead(eHitPower);
 		//eHitType = Hit_Type::Hit_Finish;
 	}
-	else if (eHitPower >= m_eStrength)
+	else //if (eHitPower >= m_eStrength)
 	{
 		eHitType = Hit_Type::Hit;
 

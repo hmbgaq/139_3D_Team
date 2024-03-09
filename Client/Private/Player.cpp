@@ -12,15 +12,13 @@
 #include "Player_HitPeriodic_01.h"
 #include "Player_HitPeriodic_03.h"
 #include "Player_HitPeriodic_04.h"
-
 #include "Player_KnockFrontLight_F_02.h"
 #include "Player_HitHeavy_F_5m.h"
 
-
-
 #include "Player_DeathLight_F_01.h"
 #include "Player_DeathLight_F_02.h"
-
+#include "Player_DeathNormal_F_01.h"
+#include "Player_DeathNormal_F_02.h"
 
 
 #include "PhysXCharacterController.h"
@@ -346,21 +344,19 @@ void CPlayer::Hitted_Knock(_bool bIsCannonball)
 
 void CPlayer::Hitted_Dead(Power ePower)
 {
-	//m_pActor->Set_State(new CPlayer_DeathLight_F_01());
 
+	switch (ePower)
+	{
+	case Engine::Light:
+		m_pActor->Set_State(new CPlayer_DeathLight_F_01());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CPlayer_DeathNormal_F_01());
+		break;
 
-	//switch (ePower)
-	//{
-	//case Engine::Light:
-	//	m_pActor->Set_State(new CInfected_DeathLight_F_01_NEW());
-	//	break;
-	//case Engine::Heavy:
-	//	m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
-	//	break;
-
-	//default:
-	//	break;
-	//}
+	default:
+		break;
+	}
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

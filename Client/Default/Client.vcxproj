@@ -441,10 +441,13 @@
     <ClInclude Include="..\Public\MasterCamera.h" />
     <ClInclude Include="..\Public\Model_Preview.h" />
     <ClInclude Include="..\Public\Monster_Character.h" />
+    <ClInclude Include="..\Public\Player_Beast_SyncedAttack_Phase1_Reaction_01.h" />
+    <ClInclude Include="..\Public\Player_Beast_SyncedAttack_Phase2_Reaction_01.h" />
     <ClInclude Include="..\Public\Player_DeathLight_F_01.h" />
     <ClInclude Include="..\Public\Player_DeathLight_F_02.h" />
     <ClInclude Include="..\Public\Player_DeathNormal_F_01.h" />
     <ClInclude Include="..\Public\Player_DeathNormal_F_02.h" />
+    <ClInclude Include="..\Public\Player_Digger_StuffAttack.h" />
     <ClInclude Include="..\Public\Player_DodgeBlink_L_03.h" />
     <ClInclude Include="..\Public\Player_DodgeBlink_R_03.h" />
     <ClInclude Include="..\Public\Effect.h" />
@@ -568,6 +571,7 @@
     <ClInclude Include="..\Public\Player_MeleeCombo_02_L_NEW.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_03_SlamAOEJump.h" />
     <ClInclude Include="..\Public\Player_MeleeCombo_04.h" />
+    <ClInclude Include="..\Public\Player_ParasiteMaster_SyncedAttack.h" />
     <ClInclude Include="..\Public\Player_Rifle_IdleWeaponHolster.h" />
     <ClInclude Include="..\Public\Player_Rifle_Ironsights_Fire.h" />
     <ClInclude Include="..\Public\Player_Rifle_Ironsights_Reload.h" />
@@ -588,6 +592,7 @@
     <ClInclude Include="..\Public\Player_SlamDown_ManHero.h" />
     <ClInclude Include="..\Public\Player_SlamDown_v2.h" />
     <ClInclude Include="..\Public\Player_SlamDown_v3.h" />
+    <ClInclude Include="..\Public\Player_Stalker_GrabAttack.h" />
     <ClInclude Include="..\Public\Player_State.h" />
     <ClInclude Include="..\Public\Player_State_Attack.h" />
     <ClInclude Include="..\Public\Player_State_Death.h" />
@@ -599,6 +604,7 @@
     <ClInclude Include="..\Public\Player_State_Roll.h" />
     <ClInclude Include="..\Public\Player_State_Run.h" />
     <ClInclude Include="..\Public\Player_State_Walk.h" />
+    <ClInclude Include="..\Public\Player_Tank_ImpaleAttack.h" />
     <ClInclude Include="..\Public\Player_TeleportPunch_L01_Alt.h" />
     <ClInclude Include="..\Public\Player_TeleportPunch_L01_VeryFar.h" />
     <ClInclude Include="..\Public\Player_TeleportPunch_L02_Alt.h" />
@@ -607,6 +613,7 @@
     <ClInclude Include="..\Public\Player_TeleportPunch_R02_Alt.h" />
     <ClInclude Include="..\Public\Player_TeleportPunch_R02_VeryFar.h" />
     <ClInclude Include="..\Public\Player_TeleportPunch_R03_Alt.h" />
+    <ClInclude Include="..\Public\Player_VampireCommander_SyncedAttack.h" />
     <ClInclude Include="..\Public\Player_Walk_B.h" />
     <ClInclude Include="..\Public\Player_Walk_BL.h" />
     <ClInclude Include="..\Public\Player_Walk_BL135.h" />
@@ -1026,10 +1033,13 @@
     <ClCompile Include="..\Private\MasterCamera.cpp" />
     <ClCompile Include="..\Private\Model_Preview.cpp" />
     <ClCompile Include="..\Private\Monster_Character.cpp" />
+    <ClCompile Include="..\Private\Player_Beast_SyncedAttack_Phase1_Reaction_01.cpp" />
+    <ClCompile Include="..\Private\Player_Beast_SyncedAttack_Phase2_Reaction_01.cpp" />
     <ClCompile Include="..\Private\Player_DeathLight_F_01.cpp" />
     <ClCompile Include="..\Private\Player_DeathLight_F_02.cpp" />
     <ClCompile Include="..\Private\Player_DeathNormal_F_01.cpp" />
     <ClCompile Include="..\Private\Player_DeathNormal_F_02.cpp" />
+    <ClCompile Include="..\Private\Player_Digger_StuffAttack.cpp" />
     <ClCompile Include="..\Private\Player_DodgeBlink_L_03.cpp" />
     <ClCompile Include="..\Private\Player_DodgeBlink_R_03.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
@@ -1152,6 +1162,7 @@
     <ClCompile Include="..\Private\Player_MeleeCombo_02_L_NEW.cpp" />
     <ClCompile Include="..\Private\Player_MeleeCombo_03_SlamAOEJump.cpp" />
     <ClCompile Include="..\Private\Player_MeleeCombo_04.cpp" />
+    <ClCompile Include="..\Private\Player_ParasiteMaster_SyncedAttack.cpp" />
     <ClCompile Include="..\Private\Player_Rifle_IdleWeaponHolster.cpp" />
     <ClCompile Include="..\Private\Player_Rifle_Ironsights_Fire.cpp" />
     <ClCompile Include="..\Private\Player_Rifle_Ironsights_Reload.cpp" />
@@ -1172,6 +1183,7 @@
     <ClCompile Include="..\Private\Player_SlamDown_ManHero.cpp" />
     <ClCompile Include="..\Private\Player_SlamDown_v2.cpp" />
     <ClCompile Include="..\Private\Player_SlamDown_v3.cpp" />
+    <ClCompile Include="..\Private\Player_Stalker_GrabAttack.cpp" />
     <ClCompile Include="..\Private\Player_State.cpp" />
     <ClCompile Include="..\Private\Player_State_Attack.cpp" />
     <ClCompile Include="..\Private\Player_State_Death.cpp" />
@@ -1183,6 +1195,7 @@
     <ClCompile Include="..\Private\Player_State_Roll.cpp" />
     <ClCompile Include="..\Private\Player_State_Run.cpp" />
     <ClCompile Include="..\Private\Player_State_Walk.cpp" />
+    <ClCompile Include="..\Private\Player_Tank_ImpaleAttack.cpp" />
     <ClCompile Include="..\Private\Player_TeleportPunch_L01_Alt.cpp" />
     <ClCompile Include="..\Private\Player_TeleportPunch_L01_VeryFar.cpp" />
     <ClCompile Include="..\Private\Player_TeleportPunch_L02_Alt.cpp" />
@@ -1191,6 +1204,7 @@
     <ClCompile Include="..\Private\Player_TeleportPunch_R02_Alt.cpp" />
     <ClCompile Include="..\Private\Player_TeleportPunch_R02_VeryFar.cpp" />
     <ClCompile Include="..\Private\Player_TeleportPunch_R03_Alt.cpp" />
+    <ClCompile Include="..\Private\Player_VampireCommander_SyncedAttack.cpp" />
     <ClCompile Include="..\Private\Player_Walk_B.cpp" />
     <ClCompile Include="..\Private\Player_Walk_BL.cpp" />
     <ClCompile Include="..\Private\Player_Walk_BL135.cpp" />

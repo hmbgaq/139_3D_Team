@@ -150,7 +150,7 @@ public:	//!For Animation Split
 
 protected:
 	_int m_iHp = { 1 };
-	Power m_eStrength = { Power::Light };
+	//Power m_eStrength = { Power::Light };
 	_float m_fStiffnessRate = { 1.f };
 
 public:

@@ -2263,6 +2263,33 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\9. Death\2. Normal\2">
       <UniqueIdentifier>{67b9f361-e8d8-44bb-8bbf-33f38119ca89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction">
+      <UniqueIdentifier>{8fc2e93d-6bce-4a4e-9612-a95dcc892c16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\1. Beast">
+      <UniqueIdentifier>{bd0b5f37-ec29-4e0c-8580-d4ebf7603cee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\1. Beast\1">
+      <UniqueIdentifier>{ab35c4cf-282e-4cb8-9a61-e7d15c0f539e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\1. Beast\2">
+      <UniqueIdentifier>{ec862448-2d24-4ca3-89cf-167dfa1cd0f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\2. Digger">
+      <UniqueIdentifier>{7837c2d4-f668-4a35-be7e-d9558da5c210}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\3. ParasiteMaster">
+      <UniqueIdentifier>{010248f8-6e81-43f7-945a-c1af6d17c029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\4. Stalker">
+      <UniqueIdentifier>{67dd2716-41e2-4797-9d0c-c24b0db5ffe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\5. Tank">
+      <UniqueIdentifier>{7b814e6c-5935-469d-b59d-61f978bc0ae3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\6. VampireCommand">
+      <UniqueIdentifier>{5d41683e-871b-4ae1-95d5-d05383df8666}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -4097,6 +4124,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\Player_DeathNormal_F_02.h">
       <Filter>02.GameObjects\00. Character\Player\State\9. Death\2. Normal\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Beast_SyncedAttack_Phase1_Reaction_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\1. Beast\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Beast_SyncedAttack_Phase2_Reaction_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\1. Beast\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Digger_StuffAttack.h">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\2. Digger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ParasiteMaster_SyncedAttack.h">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\3. ParasiteMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Stalker_GrabAttack.h">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\4. Stalker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Tank_ImpaleAttack.h">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\5. Tank</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_VampireCommander_SyncedAttack.h">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\6. VampireCommand</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -6039,6 +6087,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_DeathNormal_F_02.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\9. Death\2. Normal\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Beast_SyncedAttack_Phase1_Reaction_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\1. Beast\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Beast_SyncedAttack_Phase2_Reaction_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\1. Beast\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Digger_StuffAttack.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\2. Digger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_ParasiteMaster_SyncedAttack.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\3. ParasiteMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Stalker_GrabAttack.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\4. Stalker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Tank_ImpaleAttack.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\5. Tank</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_VampireCommander_SyncedAttack.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\8. Hit\5. Reaction\6. VampireCommand</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
