@@ -44,6 +44,7 @@ public:
 	void Set_CameraOffset(_float3 _CameraOffset) { m_CameraOffset = _CameraOffset; }
 	_float3 Get_CameraOffset() { return m_CameraOffset; }
 
+	void Set_pPlayer(CPlayer* pPlayer) { m_pPlayer = pPlayer;} 
 	void Set_pTarget(CTransform* _pTarget) { m_ptarget = _pTarget; }
 	CTransform* Get_pTarget() { return m_ptarget; }
 
