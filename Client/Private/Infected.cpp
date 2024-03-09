@@ -45,8 +45,7 @@ CInfected::CInfected(const CInfected& rhs)
 
 HRESULT CInfected::Initialize_Prototype()
 {
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize_Prototype());
 
 	return S_OK;
 }
@@ -58,8 +57,7 @@ HRESULT CInfected::Initialize(void* pArg)
 	GameObjectDesc.fSpeedPerSec = 10.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-	if (FAILED(__super::Initialize(&GameObjectDesc)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -83,7 +81,6 @@ void CInfected::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
-
 }
 
 void CInfected::Late_Tick(_float fTimeDelta)
@@ -93,8 +90,7 @@ void CInfected::Late_Tick(_float fTimeDelta)
 
 HRESULT CInfected::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Render());
 
 	return S_OK;
 }

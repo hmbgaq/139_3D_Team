@@ -1,4 +1,4 @@
-#include "..\Public\Infected_State_Idle.h"
+#include "Infected_State_Idle.h"
 
 void CInfected_State_Idle::Initialize(CInfected* pActor)
 {

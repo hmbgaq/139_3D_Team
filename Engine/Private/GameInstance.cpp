@@ -372,68 +372,72 @@ CGameObject* CGameInstance::Get_GameObect_Last(_uint iLevelIndex, const wstring&
 
 CGameObject* CGameInstance::Add_CloneObject_And_Get(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg)
 {
-	if (FAILED(Add_CloneObject(iLevelIndex, strLayerTag, strPrototypeTag, pArg)))
-		return nullptr;
+	FAILED_CHECK_RETURN(Add_CloneObject(iLevelIndex, strLayerTag, strPrototypeTag, pArg), nullptr);
 
 	return Get_GameObect_Last(iLevelIndex, strLayerTag);
 }
 
 CCharacter* CGameInstance::Get_Player()
 {
+	NULL_CHECK_RETURN(m_pObject_Manager, nullptr);
+
 	return m_pObject_Manager->Get_Player();
 }
 
 void CGameInstance::Set_Player(CCharacter* _pPlayer)
 {
+	NULL_CHECK_RETURN(m_pObject_Manager, );
+
 	m_pObject_Manager->Set_Player(_pPlayer);
 }
 
 HRESULT CGameInstance::Create_PoolObjects(const wstring& strPrototypeTag, _uint iSize)
 {
+	NULL_CHECK_RETURN(m_pObject_Manager, E_FAIL);
+
 	return m_pObject_Manager->Create_PoolObjects(strPrototypeTag, iSize);
 }
 
 void CGameInstance::Fill_PrototypeTags(vector<string>* _vector)
 {
+	NULL_CHECK_RETURN(m_pObject_Manager, );
+
 	m_pObject_Manager->Fill_PrototypeTags(_vector);
 }
 
 
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, CComponent * pPrototype)
 {
-	if (nullptr == m_pComponent_Manager)
-		return E_FAIL;
-
+	NULL_CHECK_RETURN(m_pComponent_Manager, E_FAIL);
 
 	return m_pComponent_Manager->Add_Prototype(iLevelIndex, strPrototypeTag, pPrototype);
 }
 
 CComponent * CGameInstance::Clone_Component(_uint iLevelIndex, const wstring & strPrototypeTag, void * pArg)
 {
-	if (nullptr == m_pComponent_Manager)
-		return nullptr;
+	NULL_CHECK_RETURN(m_pComponent_Manager, nullptr);
 
 	return m_pComponent_Manager->Clone_Component(iLevelIndex, strPrototypeTag, pArg);
 }
 
 HRESULT CGameInstance::Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, CGameObject * pGameObject)
 {
-	if (nullptr == m_pRenderer)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pRenderer, E_FAIL);
 
 	return m_pRenderer->Add_RenderGroup(eGroupID, pGameObject);
 }
 
 HRESULT CGameInstance::Add_DebugRender(CComponent * pDebugCom)
 {
-	if (nullptr == m_pRenderer)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pRenderer, E_FAIL);
 
 	return m_pRenderer->Add_DebugRender(pDebugCom);
 }
 
 CRenderer* CGameInstance::Get_Renderer()
 {
+	NULL_CHECK_RETURN(m_pRenderer, nullptr);
+
 	return m_pRenderer;
 }
 
@@ -456,48 +460,42 @@ void CGameInstance::Set_RenderDebugTarget(_bool _bRenderTarget)
 
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _fmatrix TransformMatrix)
 {
-	if (nullptr == m_pPipeLine)
-		return;
+	NULL_CHECK_RETURN(m_pPipeLine, );
 
 	m_pPipeLine->Set_Transform(eState, TransformMatrix);
 }
 
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eState, _float4x4 TransformMatrix)
 {
-	if (nullptr == m_pPipeLine)
-		return;
+	NULL_CHECK_RETURN(m_pPipeLine, );
 
 	m_pPipeLine->Set_Transform(eState, TransformMatrix);
 }
 
 _matrix CGameInstance::Get_TransformMatrix(CPipeLine::D3DTRANSFORMSTATE eState)
 {
-	if (nullptr == m_pPipeLine)
-		return XMMatrixIdentity();
+	NULL_CHECK_RETURN(m_pPipeLine, XMMatrixIdentity());
 
 	return m_pPipeLine->Get_TransformMatrix(eState);
 }
 
 _float4x4 CGameInstance::Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE eState)
 {
-	if (nullptr == m_pPipeLine)
-		return _float4x4();
+	NULL_CHECK_RETURN(m_pPipeLine, _float4x4());
 
 	return m_pPipeLine->Get_TransformFloat4x4(eState);
 }
 
 _matrix CGameInstance::Get_TransformMatrixInverse(CPipeLine::D3DTRANSFORMSTATE eState)
 {
-	if (nullptr == m_pPipeLine)
-		return XMMatrixIdentity();
+	NULL_CHECK_RETURN(m_pPipeLine, XMMatrixIdentity());
 
 	return m_pPipeLine->Get_TransformMatrixInverse(eState);
 }
 
 _float4x4 CGameInstance::Get_TransformFloat4x4Inverse(CPipeLine::D3DTRANSFORMSTATE eState)
 {
-	if (nullptr == m_pPipeLine)
-		return _float4x4();
+	NULL_CHECK_RETURN(m_pPipeLine, _float4x4());
 
 	return m_pPipeLine->Get_TransformFloat4x4Inverse(eState);
 }

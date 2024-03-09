@@ -1,9 +1,15 @@
-#include "..\Public\Infected_State.h"
+#include "SMath.h"
+#include "stdafx.h"
 #include "GameInstance.h"
+#include "Infected_State.h"
 
 #include "Infected_Idle.h"
-#include "Infected_IdlePose.h"
+#include "Infected_IdleAct_01.h"
+#include "Infected_IdleAct_02.h"
+#include "Infected_IdleAct_03.h"
 #include "Infected_RelaxedIdleAct_01.h"
+#include "Infected_RelaxedIdleAct_02.h"
+#include "Infected_RelaxedIdleAct_03.h"
 
 #include "Infected_Walk_B.h"
 #include "Infected_Walk_F.h"
@@ -28,9 +34,6 @@
 #include "Infected_Dodge_F_01_TEMP.h"
 #include "Infected_Dodge_L_01_TEMP.h"
 #include "Infected_Dodge_R_01_TEMP.h"
-
-
-
 
 void CInfected_State::Initialize(CInfected* pActor)
 {
@@ -85,8 +88,6 @@ CState<CInfected>* CInfected_State::Attack_State(CInfected* pActor, _float fTime
 	pState = Attack(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
-	//pState = Normal(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
 
 	return nullptr;
 }
@@ -126,9 +127,39 @@ CState<CInfected>* CInfected_State::Dodge_State(CInfected* pActor, _float fTimeD
 
 CState<CInfected>* CInfected_State::Spawn_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (pActor->Is_Animation_End())
+	/* 몬스터 Init에서 셋팅한 Spawn Animation이 끝나면 도달하는곳 */
+	if (pActor->Is_Animation_End()) 
 	{
-		return new CInfected_Idle();
+		/* 랜덤함수가 오히려 더 프레임이 좋음.. 뭐지 */
+		_int iRandom = SMath::Random(1, 6);
+
+		//_int iRandom = pActor->Get_MyRandom() >> 1;
+
+		switch (iRandom)
+		{
+		case 1:
+			return new CInfected_RelaxedIdleAct_03();
+			break;
+		case 2:
+			return new CInfected_IdleAct_01();
+			break;
+		case 3:
+			return new CInfected_IdleAct_02();
+			break;
+		case 4:
+			return new CInfected_IdleAct_03();
+			break;
+		case 5:
+			return new CInfected_RelaxedIdleAct_01();
+			break;
+		case 6:
+			return new CInfected_RelaxedIdleAct_02();
+			break;
+		default:
+			return new CInfected_IdleAct_01();
+			break;
+		}
+	
 	}
 
 	return nullptr;
@@ -144,6 +175,7 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 	return nullptr;
 }
 
+/* 중앙제어 */
 CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	CState<CInfected>* pState = { nullptr };
@@ -290,7 +322,12 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 
 CState<CInfected>* CInfected_State::Dodge(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-
+	if (CInfected::INFECTED_TYPE::INFECTED_PROTEUS == pActor->Get_MyType())
+	{
+		return nullptr; /* 클래스 갑시다 ㅇㅋ 난자러감 */
+	}
+	else
+		return nullptr;
 	//if (m_pGameInstance->Key_Pressing(DIK_SPACE))
 	//{
 	//	if (m_pGameInstance->Key_Pressing(iKeyUp))

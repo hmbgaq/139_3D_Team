@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\Public\Body_Infected_A.h"
+#include "Body_Infected_A.h"
 #include "GameInstance.h"
 
 CBody_Infected_A::CBody_Infected_A(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

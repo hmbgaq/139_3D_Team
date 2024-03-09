@@ -424,7 +424,7 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 	{
 		if (!m_vecParentObject.empty())
 		{
-			_int iParentSize = m_vecParentObject.size();
+			_int iParentSize = _int(m_vecParentObject.size());
 			for (_int i = 0; i < iParentSize; ++i)
 			{
 				if (dynamic_cast<CUI*>(m_vecParentObject[i])->Get_Pick())
@@ -439,7 +439,7 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 		}
 		if (!m_vecChildObject.empty())
 		{
-			_int iChildSize = m_vecChildObject.size();
+			_int iChildSize = _int(m_vecChildObject.size());
 			for (_int i = 0; i < iChildSize; ++i)
 			{
 				if (dynamic_cast<CUI*>(m_vecChildObject[i])->Get_Pick())
@@ -463,7 +463,7 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 		}
 		if (m_vecParentGroup != nullptr)
 		{
-			_int iGroupSize = (*m_vecParentGroup).size();
+			_int iGroupSize = (_int)(*m_vecParentGroup).size();
 			for (_int i = 0; i < iGroupSize; ++i)
 			{
 				if (dynamic_cast<CUI*>((*m_vecParentGroup)[i])->Get_Pick())
@@ -1752,7 +1752,7 @@ void CWindow_UITool::Curr_Info()
 					m_iSelected_GroupObjectIndex >= 0)
 				{
 					if (m_iSelected_GroupObjectIndex >= (*m_vecParentGroup).size())
-						m_iSelected_GroupObjectIndex = (*m_vecParentGroup).size() - 1;
+						m_iSelected_GroupObjectIndex = _int((*m_vecParentGroup).size() - 1);
 					if (m_iSelected_GroupObjectIndex < 0)
 						m_iSelected_GroupObjectIndex = 0;
 
@@ -1956,7 +1956,7 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 	firstKeyframe.vScale = minScaleValue; // Check CheckCheckCheckCheckCheckCheck
 	firstKeyframe.fRot = minRotationValue;
 	firstKeyframe.vPos = minTranslationValue;
-	firstKeyframe.iTexureframe = _minTexture;
+	firstKeyframe.iTexureframe = (_int)_minTexture;
 
 	timeline[m_eKeyType].push_back(firstKeyframe);
 
@@ -1968,7 +1968,7 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 	lastKeyframe.vScale = maxScaleValue;
 	lastKeyframe.fRot = maxRotationValue;
 	lastKeyframe.vPos = maxTranslationValue;
-	lastKeyframe.iTexureframe = _maxTexture;
+	lastKeyframe.iTexureframe = (_int)_maxTexture;
 
 	timeline[m_eKeyType].push_back(lastKeyframe);
 
@@ -2132,7 +2132,7 @@ void CWindow_UITool::KeyframeAutomaticGeneration()
 			minRot, maxRot,
 			fminPos, fmaxPos,
 			fMin_Texture, fMax_Texture,
-			numKeyframes);
+			(_int)numKeyframes);
 	}
 
 	if (ImGui::Button("clear"))

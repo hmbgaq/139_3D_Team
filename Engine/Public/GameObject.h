@@ -37,7 +37,7 @@ public:
 	/* 추가 RenderGroup용*/
 	virtual HRESULT Render_Shadow() { return S_OK; }
 	virtual HRESULT Render_OutLine() { return S_OK; }
-	virtual HRESULT Render_Cascade_Shadow(_uint iIndex) { return S_OK; }
+	virtual HRESULT Render_Cascade_Shadow(_uint iIndex) { return S_OK; } /* 대기 */
 
 	virtual _bool	Picking(_Out_ _float3 * vPickedPos);
 

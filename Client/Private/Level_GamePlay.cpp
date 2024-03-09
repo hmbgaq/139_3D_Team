@@ -54,7 +54,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
 
-	FAILED_CHECK(Ready_UI());
+	//FAILED_CHECK(Ready_UI());
 
 	return S_OK;
 }
@@ -196,25 +196,24 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* 
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Assassin")));
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected")));
-// 	for (int i = 0; i < 100; ++i)
-// 	{
+
 		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
-/*	}*/
 
+	/* Test - InfectedA - 소영*/
 	{
-		//CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-		//if (nullptr == pMonster)	return E_FAIL;
-		//pMonster->Set_Position(_float3(0.f, 0.f, 2.f));
+		for (int i = 0; i < 10; ++i)
+		{
+			CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+			NULL_CHECK_RETURN(pMonster, E_FAIL);
+			pMonster->Set_Position(_float3(250.5 + i* 2.f, 0.f, 10.f + i * 2.f));
+		}
 	}
-
+	/* Test - Sniper - 소영*/
 	{
 		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-		if (nullptr == pMonster)	return E_FAIL;
-		pMonster->Set_Position(_float3(1.f, 0.f, 2.f));
+		NULL_CHECK_RETURN(pMonster, E_FAIL);
+		pMonster->Set_Position(_float3(250.5, 0.f, 15.f));
 	}
-
-
-
 
 	//CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
 
@@ -226,11 +225,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* 
 
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), &Desc));
 
-	
-
-
-
-	//!
 	//!for (_int i = 0; i < iMonsterJsonSize; ++i)
 	//!{
 	//!	string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + "@" + to_string(i);
@@ -264,7 +258,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* 
 	//!	m_vecCreateMonster.push_back(pMonster);
 	//!	m_iCreateMonsterIndex++;
 	//!}
-
 
 	return S_OK;
 }

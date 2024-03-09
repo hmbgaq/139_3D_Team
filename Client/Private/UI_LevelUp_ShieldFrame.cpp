@@ -53,7 +53,7 @@ HRESULT CUI_LevelUp_ShieldFrame::Initialize(void* pArg)
 
 	m_fChangeScale = 4.f;
 	m_fLifeTime = 1000.f;
-	m_fTime = GetTickCount64();
+	m_fTime = (_float)GetTickCount64();
 
 	return S_OK;
 }
@@ -90,7 +90,7 @@ void CUI_LevelUp_ShieldFrame::Tick(_float fTimeDelta)
 			}
 
 			if(m_fScaleX < 130.f && m_fScaleY < 180.f)
-				m_fTime = GetTickCount64();
+				m_fTime = (_float)GetTickCount64();
 		}
 		__super::Tick(fTimeDelta);
 	}

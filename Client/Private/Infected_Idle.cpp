@@ -9,7 +9,16 @@ void CInfected_Idle::Initialize(CInfected* pActor)
 
 CState<CInfected>* CInfected_Idle::Update(CInfected* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	
+
+	if (pActor->Calc_Distance())
+	{
+		
+	}
+
+	return nullptr;
+
+	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CInfected_Idle::Release(CInfected* pActor)
