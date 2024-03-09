@@ -335,6 +335,7 @@
     <ClInclude Include="..\Public\Data_Manager.h" />
     <ClInclude Include="..\Public\DevConsole.h" />
     <ClInclude Include="..\Public\Grid.h" />
+    <ClInclude Include="..\Public\Environment_LightObject.h" />
     <ClInclude Include="..\Public\Infected.h" />
     <ClInclude Include="..\Public\Infected_A.h" />
     <ClInclude Include="..\Public\Infected_DeathHeavy_F_01_NEW.h" />
@@ -723,6 +724,7 @@
     <ClInclude Include="..\Public\Window_ShaderTool.h" />
     <ClInclude Include="..\Public\Window_UITool.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="CUI_HUD.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -1237,6 +1239,7 @@
     <ClCompile Include="..\Private\Window_UITool.cpp" />
     <ClCompile Include="..\Private\Actor.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="CUI_HUD.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

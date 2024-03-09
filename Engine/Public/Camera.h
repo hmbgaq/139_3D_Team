@@ -39,8 +39,6 @@ protected:
 	_float	m_fNear			= { 0.0f };
 	_float	m_fFar			= { 0.0f };
 
-	_bool	m_bEnable = false; //! true일 경우에만 뷰 투영 셋팅하게~ 씅승용
-
 public:
 	/* Cascade */
 	const _float3* GetEyePt() const;

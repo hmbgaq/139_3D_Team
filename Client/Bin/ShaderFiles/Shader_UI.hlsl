@@ -139,10 +139,11 @@ PS_OUT PS_HPBAR_GAUGE_LERP(PS_IN In) // 1
         Out.vColor = vGaugeColor;
 
 
-	//if (vGaugeColor.a < 0.3f)
-	//	discard;
-	//Out.vColor = lerp(vLerpColor, vGaugeColor, vGaugeColor.a);
-    //Out.vColor.a = g_Alpha;
+    //if (vGaugeColor.a < 0.1f)
+    //    discard;
+    //
+    //Out.vColor = lerp(vLerpColor, vGaugeColor, vGaugeColor.a);
+    
     return Out;
 }
 

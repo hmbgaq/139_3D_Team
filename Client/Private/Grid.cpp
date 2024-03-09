@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Grid.h"
-
+#include "Shader.h"
+#include "VIBuffer_Grid.h"
 #include "GameInstance.h"
 
 
@@ -17,7 +18,6 @@ CGrid::CGrid(const CGrid& rhs)
 
 HRESULT CGrid::Initialize_Prototype()
 {
-
 
 	return S_OK;
 }

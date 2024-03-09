@@ -6,6 +6,7 @@
 
 #include "Camera_Dynamic.h"
 #include "MasterCamera.h"
+#include "Sky.h"
 
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -29,7 +30,7 @@ HRESULT CLevel_Tool::Initialize()
 		return E_FAIL;
 	}
 
-	m_pGameInstance->Get_Renderer()->Render_UI_MRT(true);
+	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 
 	return S_OK;
 
@@ -64,7 +65,17 @@ HRESULT CLevel_Tool::Ready_Imgui()
 
 HRESULT CLevel_Tool::Ready_Layer_BackGround(const wstring& strLayerTag)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Sky")));
+
+	CGameObject* pSkybox = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Sky"));
+
+	if(nullptr == pSkybox)
+		return E_FAIL;
+
+	CData_Manager::GetInstance()->Set_pSkybox(dynamic_cast<CSky*>(pSkybox));
+
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Sky")));
+
+
 
 	return S_OK;
 }
@@ -97,10 +108,10 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 HRESULT CLevel_Tool::Ready_LightDesc()
 {
 	LIGHT_DESC			LightDesc{};
-
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	//LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
 	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 1.f);

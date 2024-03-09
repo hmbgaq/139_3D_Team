@@ -44,8 +44,7 @@ HRESULT CWindow_EffectTool::Initialize()
 	
 
 	ReSet_CameraPos();			// 카메라 얻어오기, 위치 리셋
-	FAILED_CHECK(Load_Sky());	// 스카이박스 얻어오기
-
+	FAILED_CHECK(Ready_Sky());	// 스카이박스 얻어오기
 
 	return S_OK;
 }
@@ -237,39 +236,26 @@ HRESULT CWindow_EffectTool::Ready_Grid()
 	return S_OK;
 }
 
-HRESULT CWindow_EffectTool::Load_Sky()
-{
-	// 스카이박스 얻어오기
-	CGameObject* pObj = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_BackGround"));
-	if (nullptr != pObj)
-	{
-		m_pSky = pObj;
-	}
-
-	return S_OK;
-}
 
 HRESULT CWindow_EffectTool::Ready_Sky()
 {
-	// 이미 만들어져있는 스카이박스가 없으면 생성
-	CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky"));
-	if (nullptr != pObj)
-	{
-		m_pSky = pObj;
-		dynamic_cast<CSky*>(m_pSky)->Set_TextureIndex(3);
-	}
+	// 스카이박스 얻어오기
+	m_pSky = CData_Manager::GetInstance()->Get_pSkyBox();
+
+	if (m_pSky == nullptr)
+		return E_FAIL;
+
+	m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_TEMP1);
 
 	return S_OK;
 }
 
 void CWindow_EffectTool::Set_SkyTexture()
 {
-	CGameObject* pSky = m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, TEXT("Layer_BackGround"));
+	if(nullptr == m_pSky)
+		return;
 
-	if (nullptr != pSky)
-	{
-		dynamic_cast<CSky*>(pSky)->Set_TextureIndex(m_iSkyTextureIndex);
-	}
+	m_pSky->Set_SkyType((CSky::SKYTYPE)m_iSkyTextureIndex);
 
 }
 
@@ -2437,31 +2423,27 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 	// 스카이박스
 	ImGui::SeparatorText("SkyBox");
-	if (nullptr == m_pSky)
-	{
-		if (ImGui::Button("Create Sky"))	// 스카이박스 생성
-		{
-			Ready_Sky();
-		}
-	}
-	else
+	if (nullptr != m_pSky)
 	{
 		// 스카이박스가 존재하면
 
-		if (ImGui::Button("Delete Sky"))	// 스카이박스 삭제
+		if (ImGui::Button("ON Sky"))	// 스카이박스 렌더 킴
 		{
-			if (nullptr != m_pSky)
-			{
-				m_pSky->Set_Dead(TRUE);
-				m_pSky = nullptr;
-			}
+			m_pSky->Set_Render_Tool(TRUE);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("OFF Sky"))	// 스카이박스 렌더 끔
+		{
+			m_pSky->Set_Render_Tool(FALSE);
 		}
 
 		// 스카이박스 텍스처 변경
 		if (ImGui::InputInt(" Sky box Texture ", &m_iSkyTextureIndex, 1))
 		{
-			if (5 < m_iSkyTextureIndex)
-				m_iSkyTextureIndex = 5;
+			_uint iSkyTextureCount = m_pSky->Get_SkyTextureCount();
+
+			if (iSkyTextureCount - 1 < m_iSkyTextureIndex)
+				m_iSkyTextureIndex = iSkyTextureCount - 1;
 
 			if (0 > m_iSkyTextureIndex)
 				m_iSkyTextureIndex = 0;

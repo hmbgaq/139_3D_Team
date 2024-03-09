@@ -10,6 +10,8 @@ class CEffect_Rect;
 class CEffect_Instance;
 class CEffect_Trail;
 
+class CSky;
+
 class CWindow_EffectTool final : public CImgui_Window
 {
 public:
@@ -45,8 +47,7 @@ public:
 
 	HRESULT Ready_Grid();		// 그리드 생성
 
-	HRESULT Load_Sky();			// 스카이박스 얻어오기
-	HRESULT Ready_Sky();		// 스카이박스 생성
+	HRESULT Ready_Sky();		// 스카이박스 준비
 	void	Set_SkyTexture();	// 스카이박스 텍스처 변경
 
 	HRESULT Ready_Model_Preview(wstring strModelTag);	// 크기비교용 모델 생성
@@ -340,7 +341,7 @@ private:
 	_float4		m_Camera_ResetLookAt = { 0.f, 0.f, 0.f, 1.f };	// 카메라 리셋 LookAt
 
 	/* Sky */
-	CGameObject* m_pSky		= { nullptr };
+	CSky* m_pSky = { nullptr };
 	_int m_iSkyTextureIndex = { 3 };		// 스카이박스 텍스처 인덱스
 
 	/* Grid */

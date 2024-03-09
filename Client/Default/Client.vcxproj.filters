@@ -1567,12 +1567,6 @@
     <Filter Include="01.Levels\01.GamePlay\3.Lava">
       <UniqueIdentifier>{04902ce0-48d3-4de2-bf84-596e0d009ea7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\Left_Interface">
-      <UniqueIdentifier>{e214bb53-14ac-4db7-97f6-b3b24eb46415}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\00. Player\Right_Interface">
-      <UniqueIdentifier>{52b0b806-bb9d-40cc-a902-d719e9dff60b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp">
       <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
     </Filter>
@@ -1968,6 +1962,12 @@
     </Filter>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid">
       <UniqueIdentifier>{84424594-e511-4a33-8a23-891bc3ac3cef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\02. Environment\Environment_LightObject">
+      <UniqueIdentifier>{06678cb6-3952-4c50-8c08-d9911c4aba61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\00. Player\HUD">
+      <UniqueIdentifier>{5681727c-afb0-4534-9296-d95d804be038}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview\01.Parts">
       <UniqueIdentifier>{58174eea-7b50-429f-a26e-9ae4a46eb0b2}</UniqueIdentifier>
@@ -3599,6 +3599,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Grid.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Environment_LightObject.h">
+      <Filter>02.GameObjects\02. Environment\Environment_LightObject</Filter>
+    </ClInclude>
+    <ClInclude Include="CUI_HUD.h">
+      <Filter>02.GameObjects\UI\00. Player\HUD</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Part_Preview.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview\01.Parts</Filter>
@@ -5334,6 +5340,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Grid.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="CUI_HUD.cpp">
+      <Filter>02.GameObjects\UI\00. Player\HUD</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Part_Preview.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview\01.Parts</Filter>

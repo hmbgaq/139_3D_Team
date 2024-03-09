@@ -102,7 +102,7 @@ void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
 	else if (m_eDialogType == DIALOG_TYPE::LOAD_DIALOG)
 		strAdd = u8" 불러오기";
 
-	const _char* szFilters = "Binary (*.dat, *.vfx,){.dat,.vfx},Instance (*.dat){.dat},Json (*.json){.json},All files{.*}";
+	const _char* szFilters = "Json (*.json){.json}, Binary (*.dat, *.vfx,){.dat,.vfx}, Instance (*.dat){.dat}, All files{.*}";
 
 	switch (eWindowType)
 	{

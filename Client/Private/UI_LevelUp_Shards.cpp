@@ -35,7 +35,10 @@ HRESULT CUI_LevelUp_Shards::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_eState = UISTATE::LEVEL_UP;
-	m_bActive = true;
+	m_bActive = false;
+	m_fAlpha = 0.f;
+	m_fLifeTime = 8000.f;
+	m_fTime = GetTickCount64();
 
 	return S_OK;
 }
@@ -47,7 +50,7 @@ void CUI_LevelUp_Shards::Priority_Tick(_float fTimeDelta)
 
 void CUI_LevelUp_Shards::Tick(_float fTimeDelta)
 {
-
+	__super::Tick(fTimeDelta);
 }
 
 void CUI_LevelUp_Shards::Late_Tick(_float fTimeDelta)
@@ -55,7 +58,12 @@ void CUI_LevelUp_Shards::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	__super::Tick(fTimeDelta);
+
+	if (m_bReset)
+	{
+		m_fAlpha = 0.f;
+		m_fTime = GetTickCount64();
+	}
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
@@ -63,6 +71,7 @@ void CUI_LevelUp_Shards::Late_Tick(_float fTimeDelta)
 
 HRESULT CUI_LevelUp_Shards::Render()
 {
+
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
@@ -110,7 +119,6 @@ HRESULT CUI_LevelUp_Shards::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	string TestName = m_tUIInfo.strObjectName;
 	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
 	{
 		switch (i)

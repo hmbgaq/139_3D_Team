@@ -10,6 +10,8 @@ void CAssassin_Walk_F::Initialize(CAssassin* pActor)
 
 CState<CAssassin>* CAssassin_Walk_F::Update(CAssassin* pActor, _float fTimeDelta)
 {
+	pActor->Go_Straight(fTimeDelta * 0.5);
+
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 

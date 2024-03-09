@@ -5,6 +5,7 @@
 #include "Character.h"
 #include "Data_Manager.h"
 #include "Player.h"
+#include "MasterCamera.h"
 
 CSpringCamera::CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CCamera(pDevice, pContext, strPrototypeTag)
@@ -32,6 +33,7 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 
 	if (FAILED(__super::Initialize(pDesc)))
 		return E_FAIL;
+
 	{
 		DampConstant = 2.f * sqrt(SpringConstant);
 
@@ -42,9 +44,14 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 		m_CameraOffset.y = 2.5f;
 		m_CameraOffset.z = -3.0f;
 		
+// 		_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+// 		
+// 		if (iCurrentLevel != (_uint)LEVEL_TOOL)
+// 		{
+// 			m_pPlayer = CData_Manager::GetInstance()->Get_Player();
+// 			m_ptarget = m_pPlayer->Get_Transform();
+// 		}
 
-		m_pPlayer = CData_Manager::GetInstance()->Get_Player();
-		m_ptarget = m_pPlayer->Get_Transform();
 		ActualPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	}
@@ -111,8 +118,7 @@ void CSpringCamera::Tick(_float fTimeDelta)
 		//}
 	//}
 
-	if (true == m_bEnable)
-	{
+
 		m_pTransformCom->Look_At(m_ptarget->Get_State(CTransform::STATE::STATE_POSITION));
 		CameraRotation(fTimeDelta);
 
@@ -135,6 +141,11 @@ void CSpringCamera::Tick(_float fTimeDelta)
 				m_bCheck = true;
 			}
 		}
+
+		
+		if(m_pGameInstance->Key_Down(DIK_F2))
+			CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);
+
 		if (m_bCheck == false)
 			ShowCursor(FALSE);
 		else
@@ -149,7 +160,7 @@ void CSpringCamera::Tick(_float fTimeDelta)
 		}
 
 		__super::Tick(fTimeDelta);
-	}
+	
 
 
 	

@@ -39,6 +39,7 @@ HRESULT CUI_Weakness::Initialize(void* pArg)
 
 	m_bActive = false;
 	m_tUIInfo.bWorld = true;
+	m_vAxis = { 0.f, 0.f, 1.f, 0.f };
 
 	return S_OK;
 }
@@ -51,11 +52,9 @@ void CUI_Weakness::Priority_Tick(_float fTimeDelta)
 void CUI_Weakness::Tick(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_V))
-		m_fOffset -= 0.1f;
+		m_fOffsetY -= 0.1f;
 	if (m_pGameInstance->Key_Down(DIK_B))
-		m_fOffset += 0.1f;
-	if (m_pGameInstance->Key_Down(DIK_C))
-		m_bActive = !m_bActive;
+		m_fOffsetY += 0.1f;
 	
 	__super::Tick(fTimeDelta);
 }
@@ -65,8 +64,27 @@ void CUI_Weakness::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	//Check_TargetWorld();
-	//SetUp_BillBoarding();
+	m_pTransformCom->Turn(m_vAxis, -fTimeDelta * 1.5f);
+
+	//if (m_fTime + m_fActiveTime < GetTickCount64())
+	{
+		if (m_fScaleX > 30.f)
+		{
+			Change_SizeX((-m_fChangeScale));
+		}
+
+		if (m_fScaleY > 30.f)
+		{
+			Change_SizeY((-m_fChangeScale));
+		}
+
+		if (m_fScaleX <= 30.f && m_fScaleY <= 30.f)
+		{
+			m_fScaleX = 60.f;
+			m_fScaleY = 60.f;
+			m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+		}
+	}
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
@@ -126,7 +144,7 @@ void CUI_Weakness::Check_TargetWorld()
 			m_World.r[CTransform::STATE_UP] = XMVectorScale(vUp, vTemp.y);
 			m_World.r[CTransform::STATE_LOOK] = XMVectorScale(vLook, vTemp.z);
 
-			vTargetTemp.y += m_fOffset;
+			//vTargetTemp.y += m_fOffset;
 			m_World.r[CTransform::STATE_POSITION] = XMLoadFloat4(&vTargetTemp);
 
 			m_pTransformCom->Set_WorldMatrix(m_World);

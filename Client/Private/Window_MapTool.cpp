@@ -3,8 +3,10 @@
 #include "Imgui_Manager.h"
 #include "GameInstance.h"
 
-#include "Environment_Instance.h"
 #include "Environment_Object.h"
+#include "Environment_Instance.h"
+#include "Environment_LightObject.h"
+
 #include "Field.h"
 
 #include "LandObject.h"
@@ -16,9 +18,10 @@
 #include "../Imgui/ImGuizmo/GraphEditor.h"
 #include "../Imgui/ImGuizmo/ImSequencer.h"
 #include "../Imgui/ImGuizmo/ImZoomSlider.h"
-#include "Camera.h"
 #include "Camera_Dynamic.h"
 #include "SpringCamera.h"
+#include "Camera.h"
+#include "Sky.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 
@@ -56,6 +59,11 @@ HRESULT CWindow_MapTool::Initialize()
 	m_pToolCamera = CData_Manager::GetInstance()->Get_MasterCamera();
 
 	if(m_pToolCamera == nullptr)
+		return E_FAIL;
+
+	m_pSkybox = CData_Manager::GetInstance()->Get_pSkyBox();
+
+	if(m_pSkybox == nullptr)
 		return E_FAIL;
 	//m_mapPreviewInstance
 	
@@ -691,6 +699,7 @@ HRESULT CWindow_MapTool::Ready_ModelTags()
 			case MAP_KEY_TYPE::MODEL_SINGLE:
 			{
 				m_vecSingleModelTag.push_back(strNonAnimTag);
+				m_vecEnviroModelTag.push_back(strNonAnimTag);
 				break;
 			}
 
@@ -714,15 +723,11 @@ HRESULT CWindow_MapTool::Ready_ModelTags()
 
 HRESULT CWindow_MapTool::Ready_PrototypeTags()
 {
-
 	m_vecMonsterTag.push_back("Prototype_GameObject_Monster");
 	m_vecMonsterTag.push_back("Prototype_GameObject_Player");
-	
-	//!m_vecBossTag.push_back("Prototype_GameObject_~!~!~!~");
-	//!m_vecNpcTag.push_back("Prototype_GameObject_NPC~!~!~");
-
-	//TODO 지금은 테스트용으로 직접 때려넣지만, 로더에서 원형 객체 추가할 때 매개인자 이넘 타입을 넣어서 타입에따라 오브젝트매니저에서 툴에서 불러오기용 컨테이너의 태그값만 추가로 보관한다면 불러오기 편할 것 같긴 하다.
-	//! 예시 m_mapMonsterProtoTag  // map<string, OBJECT_TYPE> 
+	m_vecMonsterTag.push_back("Prototype_GameObject_VampireCommander");
+	m_vecMonsterTag.push_back("Prototype_GameObject_Infected_A");
+	m_vecMonsterTag.push_back("Prototype_GameObject_Bandit_Sniper");
 
 	return S_OK;
 }
@@ -893,23 +898,23 @@ void CWindow_MapTool::InteractTab_Function()
 
 	switch (m_eModeType)
 	{
-	case Client::CWindow_MapTool::MODE_TYPE::MODE_CREATE:
-	{
-		Create_Tab(CWindow_MapTool::TAP_TYPE::TAB_INTERACT);
-		break;
-	}
+		case Client::CWindow_MapTool::MODE_TYPE::MODE_CREATE:
+		{
+			Create_Tab(CWindow_MapTool::TAP_TYPE::TAB_INTERACT);
+			break;
+		}
 
-	case Client::CWindow_MapTool::MODE_TYPE::MODE_SELECT:
-	{
-		Basic_SelectFunction();
-		break;
-	}
+		case Client::CWindow_MapTool::MODE_TYPE::MODE_SELECT:
+		{
+			Basic_SelectFunction();
+			break;
+		}
 
-	case Client::CWindow_MapTool::MODE_TYPE::MODE_DELETE:
-	{
-		Delete_Tab(CWindow_MapTool::TAP_TYPE::TAB_INTERACT);
-		break;
-	}
+		case Client::CWindow_MapTool::MODE_TYPE::MODE_DELETE:
+		{
+			Delete_Tab(CWindow_MapTool::TAP_TYPE::TAB_INTERACT);
+			break;
+		}
 	}
 }
 
@@ -1011,17 +1016,7 @@ void CWindow_MapTool::CameraWindow_Function()
 				
 				if (ImGui::RadioButton(CameraType[i], &iCameraType, i))
 				{
-					_int iCameraCount = (_int)m_vecCameras.size();
-
-					for (_int i = 0; i < iCameraCount; ++i)
-					{
-						if (i == iCameraType)
-							m_vecCameras[i]->Set_Enable(true);
-						else
-							m_vecCameras[i]->Set_Enable(false);
-						
-					}
-					
+					m_pToolCamera->Set_CameraType((CMasterCamera::CameraType)i);
 				}
 			}
 			
@@ -1029,22 +1024,15 @@ void CWindow_MapTool::CameraWindow_Function()
 			
 			if (m_pGameInstance->Key_Down(DIK_PGUP))
 			{
-				
+					//DynamicCamera,//툴 및 테스트용 카메라 
+					//SpringCamera,//플레이어 에 붙어 있는 카메라 
+
 					if(IM_ARRAYSIZE(CameraType) > iCameraType + 1)
 						iCameraType = iCameraType + 1;
 					else
 						iCameraType = 0;
 
-					_int iCameraCount = (_int)m_vecCameras.size();
-
-					for (_int i = 0; i < iCameraCount; ++i)
-					{
-						if (i == iCameraType)
-							m_vecCameras[i]->Set_Enable(true);
-						else
-							m_vecCameras[i]->Set_Enable(false);
-
-					}
+					m_pToolCamera->Set_CameraType((CMasterCamera::CameraType)iCameraType);
 			}
 
 		}ImGui::NewLine();
@@ -1247,9 +1235,32 @@ void CWindow_MapTool::FieldWindowMenu()
 		if (ImGui::InputFloat(u8"카메라 속도", &m_fCamaraSpeed))
 		{
 			//CData_Manager::GetInstance()->Get_Camera_Dynamic()->Get_Transform()->Set_Speed(m_fCamaraSpeed);
-			m_pToolCamera->Get_Transform()->Set_Speed(m_fCamaraSpeed);
+			m_pToolCamera->Get_DynamicCamera()->Get_Transform()->Set_Speed(m_fCamaraSpeed);
+			//m_pToolCamera->Get_Transform()->Set_Speed(m_fCamaraSpeed);
 		}
 	}
+
+	ImGui::SeparatorText(u8"스카이 박스");
+	{
+		// 스카이박스 텍스처 변경
+		if (ImGui::InputInt(u8"스카이박스 텍스처", &m_iSkyTextureIndex, 1))
+		{
+			_uint iSkyTextureCount = m_pSkybox->Get_SkyTextureCount();
+
+			if (iSkyTextureCount - 1 < m_iSkyTextureIndex)
+				m_iSkyTextureIndex = iSkyTextureCount - 1;
+
+			if (0 > m_iSkyTextureIndex)
+				m_iSkyTextureIndex = 0;
+
+			if (nullptr == m_pSkybox)
+				return;
+
+			m_pSkybox->Set_SkyType((CSky::SKYTYPE)m_iSkyTextureIndex);
+		}
+	}
+
+
 
 
 	#ifdef _DEBUG
@@ -1261,33 +1272,7 @@ void CWindow_MapTool::FieldWindowMenu()
 void CWindow_MapTool::IsCreatePlayer_ReadyCamara()
 {
 	if (nullptr != m_pGameInstance->Get_Player())
-	{
-		CCamera* pFreeCamera = dynamic_cast<CCamera*>(m_pGameInstance->Get_GameObect_Last(LEVEL_TOOL, L"Layer_Camera"));
-
-		m_vecCameras.push_back(pFreeCamera);
-
-		CSpringCamera::SPRING_CAMERA_DESC SpringDesc = {};
-
-		SpringDesc.fMouseSensor = 0.05f;
-		SpringDesc.fFovy = XMConvertToRadians(60.f);
-		SpringDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-		SpringDesc.fNear = 0.1f;
-		SpringDesc.fFar = m_pGameInstance->Get_CamFar();
-		SpringDesc.fSpeedPerSec = 20.f;
-		SpringDesc.fRotationPerSec = XMConvertToRadians(180.f);
-		SpringDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
-		SpringDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-
-		CCamera* pSpringCamera = dynamic_cast<CCamera*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Camera", L"Prototype_GameObject_Camera_Spring", &SpringDesc));
-		pSpringCamera->Set_Enable(false);
-
-		m_vecCameras.push_back(pSpringCamera);
-
-		
-
-
-		m_bCreateCamera = true;
-	}
+			m_bCreateCamera = true;
 
 	return;
 }
@@ -1721,7 +1706,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 					m_vecPreViewInstance[m_iSelectPreviewIndex] = nullptr;
 					m_pPickingObject = nullptr;
 					m_vecPreViewInstance.erase(m_vecPreViewInstance.begin() + m_iSelectPreviewIndex);
-					m_iSelectPreviewIndex--;
+					m_iSelectPreviewIndex = 0;
 				}
 				else
 				{
@@ -1787,7 +1772,7 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 	{
 		if (m_bChange == true && m_pPreviewCharacter != nullptr)
 		{
-			m_pPreviewCharacter->Set_Dead(false);
+			m_pPreviewCharacter->Set_Dead(true);
 
 			m_bChange = false;
 			m_pPreviewCharacter = nullptr;
@@ -1846,7 +1831,7 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_SINGLE:
 				{
 					m_pGameInstance->String_To_WString(m_vecSingleModelTag[m_iSelectModelTag], Desc.strModelTag);
-
+					
 					break;
 				}
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_INTERACT:

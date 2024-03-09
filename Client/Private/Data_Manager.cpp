@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Camera_Dynamic.h"
 #include "MasterCamera.h"
+#include "Sky.h"
 
 IMPLEMENT_SINGLETON(CData_Manager);
 
@@ -54,7 +55,8 @@ void CData_Manager::Reset_Player(LEVEL eLEVEL)
 	switch (eLEVEL)
 	{
 	case Client::LEVEL_GAMEPLAY:
-		//vPos = { 0.f, 0.f, 0.f };
+		
+		vPos = _float3(250.66f, 0.f, 2.38f);
 		break;
 	case Client::LEVEL_SNOWMOUNTAIN:
 		//vPos = { 0.f, 0.f, 0.f };
@@ -69,7 +71,7 @@ void CData_Manager::Reset_Player(LEVEL eLEVEL)
 		break;
 	}
 
-	m_pPlayer->Initialize(&GameObjectDesc);
+	//m_pPlayer->Initialize(&GameObjectDesc);
 	m_pPlayer->Set_Position(vPos);
 
 }
@@ -121,6 +123,36 @@ void CData_Manager::Reset_MasterCamera(LEVEL eLEVEL)
 	m_pMasterCamera->Set_Position(vPos);
 }
 
+void CData_Manager::Set_pSkybox(CSky* _pSkybox)
+{
+	m_pSky = _pSkybox;
+}
+
+_uint CData_Manager::Get_SkyTextureCount()
+{
+	return m_pSky->Get_SkyTextureCount();
+}
+
+_uint CData_Manager::Get_SkyCurrentTextureIndex()
+{
+	return m_pSky->Get_TextureIndex();
+}
+
+_uint CData_Manager::Get_CurrentSkyType()
+{
+	return (_uint)m_pSky->Get_CurrentSkyType();
+}
+
+void CData_Manager::Set_SkyType(_uint iCastSkyType)
+{
+	m_pSky->Set_SkyType((CSky::SKYTYPE)iCastSkyType);
+}
+
+void CData_Manager::Set_SkyTextureIndex(_uint iSkyTextureIndex)
+{
+	m_pSky->Set_TextureIndex(iSkyTextureIndex);
+}
+
 #pragma region SH_ADD
 // Player_Setting
 void CData_Manager::PlayerInfo_Setting()
@@ -155,7 +187,7 @@ void CData_Manager::Limit_HP()
 	}
 }
 
-// Player_EXP
+// Player_EXP(Limit)
 _bool CData_Manager::Limit_EXP()
 {
 	/* 1. 경험치 하한선 방지 */
