@@ -140,15 +140,15 @@ void CMasterCamera::Priority_Tick(_float fTimeDelta)
 			_float4 vPlayerPos = m_pPlayer->Get_Transform()->Get_Position_Float4();
 			_float pPlayerPosW = vPlayerPos.w;
 
-			_float4 targetPos = { 0.f, 2.f, -5.f, pPlayerPosW };
+			//	_float4 targetPos = { 0.f, 2.f, -5.f, pPlayerPosW };
 
-			XMStoreFloat4(&targetPos, XMVector3TransformCoord(XMLoadFloat4(&targetPos), m_pPlayer->Get_Transform()->Get_WorldMatrix()));
+			//	XMStoreFloat4(&targetPos, XMVector3TransformCoord(XMLoadFloat4(&targetPos), m_pPlayer->Get_Transform()->Get_WorldMatrix()));
 
-			Desc.vEye = targetPos;
-			Desc.vAt = vPlayerPos;
+			//	Desc.vEye = targetPos;
+			//	Desc.vAt = vPlayerPos;
+			//}
+
 		}
-
-
 		{
 			CCamera* pCamera = CSpringCamera::Create(m_pDevice, m_pContext, L"FakeCameraSpring");
 			pCamera->Initialize(&Desc);

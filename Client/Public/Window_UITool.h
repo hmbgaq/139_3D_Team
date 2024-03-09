@@ -229,6 +229,12 @@ public:
 #pragma region TimeLineBar
 	void	AnimationTimeLineBar();					// 애니메이션 타임라임 바
 	_float	EvaluateAnimationAtTime(float time);	// 애니메이션에 따른 현재 시간 계산
+	void	KeyframeValueChange(_float fTimeDelta); // 애니메이션 키프레임 조절
+	void	ImGuiKeyInput();
+	// 키프레임 드래그
+	_bool	isDraggingKeyframe = false;
+	_int	draggingKeyframeIndex = 0;
+	_float  initialKeyframeX = 0.f;					// 마우스 드래그 시작 위치
 	_float	m_fFrame[100];							// 시간
 	_float	m_fPlaybackSpeed = 1.0f;				// 재생 속도
 #pragma endregion
@@ -246,15 +252,14 @@ public:
 
 private:
 	// 애니메이션 타임 라인
-	std::vector<CUI::UIKEYFRAME>	timeline[CUI::KEYTYPE_END];
+	std::vector<CUI::UIKEYFRAME>*	m_vecTimeline = nullptr;
 	_float currentTime = 0.0f; // 현재 시간 값
 	_float MaxTime = 20.f;
 	_float fDisplayTime = 1.f;	// 눈금마다의 시간 값 표시
 	_bool isDraggingTimeline = false;
 	_bool m_bRendomValue = false; // 벨류 값 랜덤으로 주기
-
+	_int  closestKeyframeIndex = -1; // # 현재 마우스로 선택한 키프레임 인덱스
 	// 애니메이션의 타입
-	CUI::KEYTYPE			m_eKeyType = CUI::KEYTYPE_NORMAL;
 	ImVec2					timelinePos = { 0.f, 0.f };
 	ImVec2					timelineSize = { 800.f, 85.f }; // 애니메이션 타임 라인 크기
 
@@ -276,9 +281,9 @@ private:
 
 	_float numKeyframes = 0.f;
 #pragma endregion
-
-	//Test
+	// Test
 	_bool	m_bCreateOK = false;
+	_bool	m_bRepetition = false;
 #pragma endregion
 
 public: /* Save/Load */

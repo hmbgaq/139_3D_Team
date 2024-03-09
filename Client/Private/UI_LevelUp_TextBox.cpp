@@ -2,6 +2,7 @@
 #include "UI_LevelUp_TextBox.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
+#include "Data_Manager.h"
 
 CUI_LevelUp_TextBox::CUI_LevelUp_TextBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -35,7 +36,11 @@ HRESULT CUI_LevelUp_TextBox::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_eState = UISTATE::LEVEL_UP;
-	m_bActive = true;
+
+	m_bActive = false;
+	m_fAlpha = 0.f;
+	m_fLifeTime = 8000.f;
+	m_fTime = GetTickCount64();
 
 	return S_OK;
 }
@@ -56,6 +61,11 @@ void CUI_LevelUp_TextBox::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
+	if (m_bReset)
+	{
+		m_fAlpha = 0.f;
+		m_fTime = GetTickCount64();
+	}
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
@@ -63,6 +73,7 @@ void CUI_LevelUp_TextBox::Late_Tick(_float fTimeDelta)
 
 HRESULT CUI_LevelUp_TextBox::Render()
 {
+
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 

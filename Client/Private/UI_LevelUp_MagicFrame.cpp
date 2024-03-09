@@ -35,8 +35,11 @@ HRESULT CUI_LevelUp_MagicFrame::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_eState = UISTATE::LEVEL_UP;
-	m_bActive = true;
+	m_bActive = false;
+	m_fAlpha = 0.f;
+	m_fLifeTime = 8000.f;
 	m_vAxis = { 0.f, 0.f, 1.f, 0.f };
+	m_fTime = GetTickCount64();
 
 	return S_OK;
 }
@@ -48,9 +51,6 @@ void CUI_LevelUp_MagicFrame::Priority_Tick(_float fTimeDelta)
 
 void CUI_LevelUp_MagicFrame::Tick(_float fTimeDelta)
 {
-	if (m_bActive)
-		m_pTransformCom->Turn(m_vAxis, -fTimeDelta);
-
 	__super::Tick(fTimeDelta);
 }
 
@@ -59,7 +59,14 @@ void CUI_LevelUp_MagicFrame::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
+	if (m_bReset)
+	{
+		m_fAlpha = 0.f;
+		m_fTime = GetTickCount64();
+	}
 
+	if (m_bActive)
+		m_pTransformCom->Turn(m_vAxis, -fTimeDelta * 0.5f);
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;

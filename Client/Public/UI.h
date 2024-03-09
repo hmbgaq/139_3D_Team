@@ -8,19 +8,13 @@ class CUI abstract : public CGameObject
 public:
 	enum UI_KIND { NORMAL, TEXT, KIND_END };
 
-	enum KEYTYPE
-	{
-		KEYTYPE_NONE,
-		KEYTYPE_NORMAL,
-		KEYTYPE_END
-	};
 
 	// 키프레임 구조체
 	typedef struct tagUIKeyframe
 	{
 		_float	fTime = 0.f;					// 키프레임의 시간 (0.0f ~ MaxTime 범위)
 		_float	fValue = 0.f;					// 애니메이션 값 (크기, 회전, 이동 등)
-		_float	fAnimSpeed = 0.f;				// 애니메이션 재생 속도
+		_float	fAnimSpeed = 1.f;				// 애니메이션 재생 속도
 
 		_int	iType = 0;						// 애니메이션 타입 (0: 크기, 1: 회전, 2: 이동)
 
@@ -224,6 +218,7 @@ public:
 #ifdef _DEBUG
 	/* (컨테이너의 주소를 받아오는건 릴리즈 모드에서 터지는 버그가있음. 툴용) */
 	vector<CUI*>*	Get_vecUIParts() { return &m_vecUIParts; }
+	vector<UIKEYFRAME>*	Get_vecAnimation() { return &m_vecAnimation; }
 #endif // DEBUG
 	string			Get_FilePathTag() { return m_tUIInfo.strFilePath; }
 	string			Get_ObjectNameTag() { return m_tUIInfo.strObjectName; }
@@ -239,10 +234,12 @@ public: /* =========================== Save/Load ============================== 
 
 public: /* =========================== Animation ============================== */
 	void			Play_Animation();
+	void			Add_Keyframe(UIKEYFRAME tKeyframe) { m_vecAnimation.push_back(tKeyframe); }
+	void			Emplaceback_Keyframe(UIKEYFRAME tKeyframe) { m_vecAnimation.emplace_back(tKeyframe); }
+
 	// 애니메이션 값
-	std::vector<UIKEYFRAME>* m_vecAnimation[KEYTYPE_END] = {};
-	KEYTYPE				m_eKeyframe = KEYTYPE_NORMAL;
-	_int				m_iTextureNum[KEYTYPE_END];
+	std::vector<UIKEYFRAME> m_vecAnimation = {};
+	_int				m_iTextureNum = 0;
 
 	void				Set_AnimPlay(_bool bPlay) { m_bPlayAnim = bPlay; }
 	_bool				Get_AnimPlay() { return m_bPlayAnim; }
@@ -278,6 +275,7 @@ protected: /* LifeTime */
 	void				LifeTime_LevelUp(_float fTimeDelta);
 	_bool				m_bEventOn = false;
 	_float				m_fLifeTime = 5000.f;
+	_float				m_fActiveTime = 1000.f;
 	_float				m_fTime = GetTickCount64();
 
 protected: /* ========================= Component =========================== */
@@ -302,10 +300,12 @@ protected: /* ============================= UI =============================== *
 	UISTATE				m_eState;
 	_float4x4			m_Origin_WorldMatrix = {};
 	_bool				m_bActive = false;
+	_bool				m_bReset = false;
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f, m_fScaleZ = 0.1f;
 	UI_KIND				m_eKind = NORMAL;
+	_float				m_fOffsetX = 0.f, m_fOffsetY = 0.f;
 
 	// 투명도
 	_float				m_fAlpha = 0.f;
