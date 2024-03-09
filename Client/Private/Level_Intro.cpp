@@ -55,8 +55,8 @@ HRESULT CLevel_Intro::Initialize()
 	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
 
 
-	if (FAILED(Ready_UI()))
-		return E_FAIL;
+	//if (FAILED(Ready_UI()))
+	//	return E_FAIL;
 
 	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
 

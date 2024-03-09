@@ -11,7 +11,7 @@ void CVampireCommander_Ranged2::Initialize(CVampireCommander* pActor)
 
 	pWeapon
 		->Set_Damage(0.f)
-		->Set_Direction(Direction::Right)
+		->Set_Direction(Direction::Left)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.f);
 
