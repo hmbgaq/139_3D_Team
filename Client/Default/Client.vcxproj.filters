@@ -1954,6 +1954,18 @@
     <Filter Include="02.GameObjects\UI\01. Monster\01. Weakness">
       <UniqueIdentifier>{ce1391d2-0f61-42d6-aa55-e19415c437e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects">
+      <UniqueIdentifier>{6a4e5f4a-7555-4c9b-b7e7-d07684d1935b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview">
+      <UniqueIdentifier>{4e581434-6a53-484b-964f-ac3c78373ab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid">
+      <UniqueIdentifier>{84424594-e511-4a33-8a23-891bc3ac3cef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\02. Environment\Environment_LightObject">
+      <UniqueIdentifier>{06678cb6-3952-4c50-8c08-d9911c4aba61}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\UI\00. Player\HUD">
       <UniqueIdentifier>{5681727c-afb0-4534-9296-d95d804be038}</UniqueIdentifier>
     </Filter>
@@ -3578,6 +3590,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_Weakness.h">
       <Filter>02.GameObjects\UI\01. Monster\01. Weakness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model_Preview.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Grid.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Environment_LightObject.h">
+      <Filter>02.GameObjects\02. Environment\Environment_LightObject</Filter>
     </ClInclude>
     <ClInclude Include="CUI_HUD.h">
       <Filter>02.GameObjects\UI\00. Player\HUD</Filter>
@@ -5307,6 +5328,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Weakness.cpp">
       <Filter>02.GameObjects\UI\01. Monster\01. Weakness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model_Preview.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Grid.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\01.Grid</Filter>
     </ClCompile>
     <ClCompile Include="CUI_HUD.cpp">
       <Filter>02.GameObjects\UI\00. Player\HUD</Filter>

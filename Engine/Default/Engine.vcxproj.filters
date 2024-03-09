@@ -319,6 +319,9 @@
     <Filter Include="01.Utility\96.Utility\09.Event\Object\Trigger">
       <UniqueIdentifier>{1a1ce231-05d5-4e8d-a27b-b268738b25d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Components\01.VIBuffer\Grid">
+      <UniqueIdentifier>{aa14986c-9e0e-41f0-b3cd-2270e11226a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -651,6 +654,9 @@
     <ClInclude Include="..\Public\VIBuffer_Particle_Rect.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Grid.h">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Grid</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -919,6 +925,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Particle_Rect.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Paricles\Instancing\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Grid.cpp">
+      <Filter>01.Utility\03.Components\01.VIBuffer\Grid</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -59,7 +59,12 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
-
+	Search_Target(L"Layer_Player");
+	if (m_bLookAt == true)
+	{
+		Look_At_Target();
+		m_bLookAt = false;
+	}
 }
 
 void CVampireCommander::Late_Tick(_float fTimeDelta)

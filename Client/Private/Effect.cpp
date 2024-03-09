@@ -12,7 +12,7 @@
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
-
+	m_bIsPoolObject = TRUE;
 }
 
 CEffect::CEffect(const CEffect & rhs)
@@ -238,8 +238,12 @@ void CEffect::Load_FromJson(const json& In_Json)
 			m_pGameInstance->String_To_WString(strTag, tVoidDesc.strPartTag);
 		
 
-			strTag = In_Json["Part"][i]["strModelTag"];
-			m_pGameInstance->String_To_WString(strTag, tVoidDesc.strModelTag);
+			for (_int k = 0; k < ECast(CVIBuffer_Effect_Model_Instance::MORPH_END); ++k)
+			{
+				strTag = In_Json["Part"][i]["strModelTag"][k];
+				m_pGameInstance->String_To_WString(strTag, tVoidDesc.strModelTag[k]);
+			}
+
 			for (_int j = 0; j < (_int)CEffect_Void::TEXTURE_END; ++j)
 			{
 				strTag = In_Json["Part"][i]["strTextureTag"][j];
@@ -261,7 +265,7 @@ void CEffect::Load_FromJson(const json& In_Json)
 		if (nullptr != Pair.second)
 		{
 			Pair.second->Load_FromJson(In_Json["Part"][iCount]);
-			dynamic_cast<CEffect_Void*>(Pair.second)->Set_Owner(this);
+			dynamic_cast<CEffect_Void*>(Pair.second)->Set_Parent(this);
 			iCount += 1;
 		}
 	}
@@ -304,7 +308,13 @@ void CEffect::End_Effect()
 	}
 	else
 	{
-		Set_Dead(TRUE);
+#ifdef _DEBUG
+		if (LEVEL_TOOL != static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+#endif // _DEBUG
+		{		
+			Set_Dead(TRUE);
+		}
+
 	}
 
 }
@@ -333,6 +343,19 @@ HRESULT CEffect::Add_PartObject(const wstring& strPrototypeTag, const wstring& s
 	m_tEffectDesc.iPartSize += 1;
 
 	return S_OK;
+}
+
+void CEffect::Delete_PartObject(const wstring& strPartTag)
+{
+	auto	iter = m_PartObjects.find(strPartTag);
+
+	if (iter == m_PartObjects.end())
+		return;
+
+	iter->second->Set_Dead(TRUE);		// 객체 삭제
+
+	m_PartObjects.erase(strPartTag);	// 맵컨테이너에서 삭제
+
 }
 
 void CEffect::Set_Owner(CGameObject* pOwner)

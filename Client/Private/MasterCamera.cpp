@@ -57,20 +57,29 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 	}
 
 
-	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
-
-	if(m_pPlayer != nullptr)
+	
 	{
-		CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CSpringCamera>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Spring"), &Desc);
+		CCamera* pCamera = CCamera_Dynamic::Create(m_pDevice,m_pContext, L"FakeCameraDynamic");
+		pCamera->Initialize(&Desc);
 		if (pCamera)	m_Cameras.push_back(pCamera);
+
+		//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Dynamic"), CCamera_Dynamic::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Camera_Dynamic"))));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Spring"), CSpringCamera::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Camera_Spring"))));
+
+		//CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CSpringCamera>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Spring"), &Desc);
+		//if (pCamera)	m_Cameras.push_back(pCamera);
 		
 	}
 
-	{
-		CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CCamera_Dynamic>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc);
-		if (pCamera)	m_Cameras.push_back(pCamera);
-
-	}
+// 	if (m_pPlayer != nullptr)
+// 	{
+// 		CCamera* pCamera = CSpringCamera::Create(m_pDevice, m_pContext, L"FakeCameraSpring");
+// 		pCamera->Initialize(&Desc);
+// 		if (pCamera)	m_Cameras.push_back(pCamera);
+// 		//CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CCamera_Dynamic>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc);
+// 		//if (pCamera)	m_Cameras.push_back(pCamera);
+// 
+// 	}
 
 	{//추가 적으로 나중에 컷신 카메라 나오면 여기에 생성 하셈 
 		//CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CSpringCamera>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Spring"), &Desc);
@@ -78,7 +87,28 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 		////m_eCameraType = CameraType::SpringCamera;
 	}
 		
-	m_eCameraType = CameraType::SpringCamera;
+	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+
+
+	switch (iCurrentLevel)
+	{
+		case (_uint)LEVEL_INTRO:
+		{
+			m_eCameraType = CameraType::SpringCamera;
+			break;
+		}
+		case (_uint)LEVEL_GAMEPLAY:
+		{
+			m_eCameraType = CameraType::SpringCamera;
+			break;
+		}
+		case (_uint)LEVEL_TOOL:
+		{
+			m_eCameraType = CameraType::DynamicCamera;
+			break;
+		}
+	}
 
 	CData_Manager::GetInstance()->Set_MasterCamera(this);
 
@@ -87,10 +117,8 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 
 void CMasterCamera::Priority_Tick(_float fTimeDelta)
 {
-	// Test
-	//return;
-
-	m_pPlayer = CData_Manager::GetInstance()->Get_Player();
+	if(m_pPlayer == nullptr)
+		m_pPlayer = CData_Manager::GetInstance()->Get_Player();
 
 	if (m_pPlayer != nullptr && m_bfirstCheck == true)
 	{
@@ -108,23 +136,31 @@ void CMasterCamera::Priority_Tick(_float fTimeDelta)
 		Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 
 
-		//if (m_pPlayer)
-		//{
-		//	_float4 vPlayerPos = m_pPlayer->Get_Transform()->Get_Position_Float4();
-		//	_float pPlayerPosW = vPlayerPos.w;
-
-		//	_float4 targetPos = { 0.f, 2.f, -5.f, pPlayerPosW };
-
-		//	XMStoreFloat4(&targetPos, XMVector3TransformCoord(XMLoadFloat4(&targetPos), m_pPlayer->Get_Transform()->Get_WorldMatrix()));
-
-		//	Desc.vEye = targetPos;
-		//	Desc.vAt = vPlayerPos;
-		//}
-
-
 		{
-			CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CSpringCamera>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Spring"), &Desc);
+			_float4 vPlayerPos = m_pPlayer->Get_Transform()->Get_Position_Float4();
+			_float pPlayerPosW = vPlayerPos.w;
+
+			//	_float4 targetPos = { 0.f, 2.f, -5.f, pPlayerPosW };
+
+			//	XMStoreFloat4(&targetPos, XMVector3TransformCoord(XMLoadFloat4(&targetPos), m_pPlayer->Get_Transform()->Get_WorldMatrix()));
+
+			//	Desc.vEye = targetPos;
+			//	Desc.vAt = vPlayerPos;
+			//}
+
+		}
+		{
+			CCamera* pCamera = CSpringCamera::Create(m_pDevice, m_pContext, L"FakeCameraSpring");
+			pCamera->Initialize(&Desc);
 			if (pCamera)	m_Cameras.push_back(pCamera);
+
+			CSpringCamera* pSpringCamera = dynamic_cast<CSpringCamera*>(pCamera);
+			pSpringCamera->Set_pTarget(m_pPlayer->Get_Transform());
+			pSpringCamera->Set_pPlayer(m_pPlayer);
+			
+			//pCamera->Set_T
+			//CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CSpringCamera>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Spring"), &Desc);
+			//if (pCamera)	m_Cameras.push_back(pCamera);
 			m_bfirstCheck = false;
 		}
 	}
@@ -135,6 +171,10 @@ void CMasterCamera::Priority_Tick(_float fTimeDelta)
 
 void CMasterCamera::Tick(_float fTimeDelta)
 {
+	if (m_eCameraType == CMasterCamera::SpringCamera && m_pPlayer == nullptr)
+		return;
+
+
 	if (m_Cameras[m_eCameraType])
 		m_Cameras[m_eCameraType]->Tick(fTimeDelta);
 }
@@ -173,6 +213,12 @@ CGameObject* CMasterCamera::Clone(void* pArg)
 void CMasterCamera::Free()
 {
 	__super::Free();
+
+	for (_uint i = 0; i < (_uint)CameraType_End; ++i)
+	{
+		if (nullptr != m_Cameras[i])
+			Safe_Release(m_Cameras[i]);
+	}
 }
 
 CGameObject* CMasterCamera::Pool()

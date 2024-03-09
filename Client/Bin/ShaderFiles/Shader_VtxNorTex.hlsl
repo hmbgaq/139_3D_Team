@@ -24,6 +24,13 @@ struct VS_FIELD_IN
     float2 vTexcoord : TEXCOORD0;
 };
 
+struct VS_GRID_IN
+{
+	float3 vPosition : POSITION;
+	float3 vNormal : NORMAL;
+	float2 vTexcoord : TEXCOORD0;
+};
+
 struct VS_OUT
 {
     float4 vPosition : SV_POSITION;
@@ -69,6 +76,25 @@ VS_OUT VS_MAIN_FIELD(VS_FIELD_IN In)
     Out.vProjPos = Out.vPosition;
 
     return Out;
+}
+
+VS_OUT VS_MAIN_GRID(VS_GRID_IN In)
+{
+	VS_OUT Out = (VS_OUT)0;
+
+	/* In.vPosition * 월드 * 뷰 * 투영 */
+	matrix matWV, matWVP;
+
+	matWV = mul(g_WorldMatrix, g_ViewMatrix);
+	matWVP = mul(matWV, g_ProjMatrix);
+
+	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+	Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
+	Out.vTexcoord = In.vTexcoord;
+	Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+	Out.vProjPos = Out.vPosition;
+
+	return Out;
 }
 
 /* 통과된 정점을 대기 .*/
@@ -162,6 +188,41 @@ PS_OUT PS_MAIN_FIELD(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_GRID(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
+	vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+	//vector vMask = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
+	//vector vBrush = vector(0.f, 0.f, 0.f, 0.f);
+
+
+
+	//if (g_vBrushPos.x - g_fBrushRange < In.vWorldPos.x && In.vWorldPos.x <= g_vBrushPos.x + g_fBrushRange &&
+	//	g_vBrushPos.z - g_fBrushRange < In.vWorldPos.z && In.vWorldPos.z <= g_vBrushPos.z + g_fBrushRange)
+	//{
+	//	float2 vUV;
+
+	//	vUV.x = (In.vWorldPos.x - (g_vBrushPos.x - g_fBrushRange)) / (2.f * g_fBrushRange);
+	//	vUV.y = ((g_vBrushPos.z + g_fBrushRange) - In.vWorldPos.z) / (2.f * g_fBrushRange);
+
+	//	vBrush = g_BrushTexture.Sample(LinearSampler, vUV);
+	//}
+
+	//vector vMask = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
+	//vector vMtrlDiffuse = vMask * vDestDiffuse + (1.f - vMask) * vSourDiffuse + vBrush;
+	//Out.vDiffuse = vector(vMtrlDiffuse.rgb, 1.f);
+
+	// Out.vDiffuse = (vector)1.f;
+	Out.vDiffuse = g_vColor;
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+
+
+	return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -193,4 +254,18 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_FIELD();
     }
+
+	pass Grid
+	{
+		SetRasterizerState(RS_Fill_Wireframe);
+		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* 렌더스테이츠 */
+		VertexShader = compile vs_5_0 VS_MAIN_GRID();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_GRID();
+	}
 }

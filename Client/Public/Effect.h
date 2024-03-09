@@ -70,9 +70,10 @@ public:
 	map<const wstring, class CGameObject*>* Get_PartObjects() { return &m_PartObjects; }
 	CGameObject* Get_FirstPartObject() { return m_PartObjects.begin()->second; }
 
+
 	CGameObject*	Find_PartObject(const wstring& strPartTag);
 	HRESULT			Add_PartObject(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg);
-
+	void			Delete_PartObject(const wstring& strPartTag);
 
 	void			Set_Owner(CGameObject* pOwner);
 	CGameObject*	Get_Owner() {return m_tEffectDesc.pOwner; }

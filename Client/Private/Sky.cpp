@@ -29,7 +29,21 @@ HRESULT CSky::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+	if (iCurrentLevel == (_uint)LEVEL_TOOL)
+	{
+		m_iTextureIndex = 8;
+	}
+	else
+	{
+		m_iTextureIndex = 7;
+	}
+
 	return S_OK;
+
+	
+
 }
 
 void CSky::Priority_Tick(_float fTimeDelta)

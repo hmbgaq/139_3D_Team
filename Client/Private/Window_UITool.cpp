@@ -2162,7 +2162,9 @@ void CWindow_UITool::KeyframeAutomaticGeneration()
 	if (m_pCurrSelectUI == nullptr)
 		return;
 
+#ifdef _DEBUG
 	m_vecTimeline = m_pCurrSelectUI->Get_vecAnimation();
+#endif // DEBUG
 
 	if (ImGui::Button(u8"자동 생성")) 
 	{
