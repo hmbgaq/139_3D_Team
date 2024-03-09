@@ -33,6 +33,7 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 
 	if (FAILED(__super::Initialize(pDesc)))
 		return E_FAIL;
+
 	{
 		DampConstant = 2.f * sqrt(SpringConstant);
 
@@ -43,9 +44,14 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 		m_CameraOffset.y = 2.5f;
 		m_CameraOffset.z = -3.0f;
 		
+		_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+		
+		if (iCurrentLevel != (_uint)LEVEL_TOOL)
+		{
+			m_pPlayer = CData_Manager::GetInstance()->Get_Player();
+			m_ptarget = m_pPlayer->Get_Transform();
+		}
 
-		m_pPlayer = CData_Manager::GetInstance()->Get_Player();
-		m_ptarget = m_pPlayer->Get_Transform();
 		ActualPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	}

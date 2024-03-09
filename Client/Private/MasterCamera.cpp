@@ -57,9 +57,7 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 	}
 
 
-	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
-
-	if(m_pPlayer != nullptr)
+	
 	{
 		CCamera* pCamera = CCamera_Dynamic::Create(m_pDevice,m_pContext, L"FakeCameraDynamic");
 		pCamera->Initialize(&Desc);
@@ -73,6 +71,7 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 		
 	}
 
+	if (m_pPlayer != nullptr)
 	{
 		CCamera* pCamera = CSpringCamera::Create(m_pDevice, m_pContext, L"FakeCameraSpring");
 		pCamera->Initialize(&Desc);
@@ -88,7 +87,28 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 		////m_eCameraType = CameraType::SpringCamera;
 	}
 		
-	m_eCameraType = CameraType::SpringCamera;
+	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+
+
+	switch (iCurrentLevel)
+	{
+		case (_uint)LEVEL_INTRO:
+		{
+			m_eCameraType = CameraType::SpringCamera;
+			break;
+		}
+		case (_uint)LEVEL_GAMEPLAY:
+		{
+			m_eCameraType = CameraType::SpringCamera;
+			break;
+		}
+		case (_uint)LEVEL_TOOL:
+		{
+			m_eCameraType = CameraType::DynamicCamera;
+			break;
+		}
+	}
 
 	CData_Manager::GetInstance()->Set_MasterCamera(this);
 
