@@ -116,6 +116,8 @@ HRESULT CBody_VampireCommander::Ready_Components()
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CBody_VampireCommander::Bind_ShaderResources()

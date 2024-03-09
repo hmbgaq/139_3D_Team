@@ -16,7 +16,7 @@ class CEffect_Rect final : public CEffect_Void
 public:
 	enum TYPE { SINGLE, SPRITE, TYPE_END };
 
-	typedef struct tagTextureEffectDesc : public CEffect_Void::EFFECTVOID_DESC
+	typedef struct tagTextureEffectDesc
 	{
 		TYPE		eType = { SINGLE };
 

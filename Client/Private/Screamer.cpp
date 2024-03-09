@@ -1,6 +1,8 @@
 #include "Screamer.h"
 #include "GameInstance.h"
 #include "Model.h"
+//#include "UI.h"
+//#include "UI_Weakness.h"
 
 CScreamer::CScreamer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -28,6 +30,11 @@ HRESULT CScreamer::Initialize(void* pArg)
 	m_vBloomColor = { 0.5f, 0.5f, 0.5f, 1.f };
 	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
 
+	///* Test UI */
+	m_pWeakneesUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
+	//m_pWeakneesUI->SetUp_PositionToScreen(m_pTransformCom->Get_Position());
+	m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());
+
 	return S_OK;
 }
 
@@ -54,6 +61,16 @@ void CScreamer::Tick(_float fTimeDelta)
 	//{
 	//	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_REVERSE, false); /* 문제있음 쓰지마셈 */
 	//}
+
+	if (m_pGameInstance->Key_Down(DIK_G))
+		m_bTestUI = !m_bTestUI;
+
+	if (m_bTestUI)
+	{
+		//m_pWeakneesUI->SetUp_PositionToScreen(m_pTransformCom->Get_Position());
+		m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());
+	}
+		
 
 	m_fTimeDelta += fTimeDelta;
 	m_fDissolveWeight += fTimeDelta * 0.5f;

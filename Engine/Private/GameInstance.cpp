@@ -510,6 +510,14 @@ _float4 CGameInstance::Get_CamPosition()
 	return m_pPipeLine->Get_CamPosition();
 }
 
+_float4 CGameInstance::Get_CamDirection()
+{
+	if (nullptr == m_pPipeLine)
+		return _float4();
+
+	return m_pPipeLine->Get_CamDirection();
+}
+
 _float4 CGameInstance::Get_CamSetting()
 {
 	if (nullptr == m_pPipeLine)

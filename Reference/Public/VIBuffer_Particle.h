@@ -12,7 +12,7 @@ public:
 	typedef struct tagParticleBufferDESC
 	{
 		// 저장해야 하는 고정 정보들
-		_int		iCurNumInstance = { 500 };	// 초기 값이 MAx인스턴스 개수가 됨
+		_int		iCurNumInstance = { 500 };	// 초기화 값이 MAx인스턴스 개수가 됨
 
 		TYPE_FADE	eType_Fade = { FADE_NONE };
 
@@ -60,11 +60,11 @@ public:
 
 		/* For.Color */
 		EASING_TYPE	eType_ColorLerp = { EASING_TYPE::LINEAR };
-		_bool		bDynamic_Color = { TRUE };
-		_float2     vMinMaxRed = { 1.f, 1.f };
-		_float2     vMinMaxGreen = { 1.f, 1.f };
-		_float2     vMinMaxBlue = { 1.f, 1.f };
-		_float2     vMinMaxAlpha = { 1.f, 1.f };
+		_bool		bDynamic_Color	= { TRUE };
+		_float2     vMinMaxRed		= { 1.f, 1.f };
+		_float2     vMinMaxGreen	= { 1.f, 1.f };
+		_float2     vMinMaxBlue		= { 1.f, 1.f };
+		_float2     vMinMaxAlpha	= { 1.f, 1.f };
 
 
 		// 업데이트 돌면서 변하는 정보들(저장X)

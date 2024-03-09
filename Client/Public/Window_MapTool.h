@@ -10,6 +10,7 @@ END
 BEGIN(Client)
 class CEnvironment_Instance;
 class CEnvironment_Object;
+class CEnvironment_LightObject;
 class CPlayer;
 class CMonster;
 class CCamera_Dynamic;
@@ -26,7 +27,6 @@ private:
 	enum class OBJECTMODE_TYPE { OBJECTMODE_ENVIRONMENT, OBJECTMODE_CHARACTER};
 	enum class ANIM_TYPE { TYPE_NONANIM, TYPE_ANIM };
 	enum class INSTANCE_ALLMOVETYPE { ALLMOVE_X, ALLMOVE_Y, ALLMOVE_Z };
-
 	enum class MAP_KEY_TYPE //! 맵컨테이너 키
 	{
 		MODEL_SINGLE, MODEL_INSTANCE, MODEL_INTERACT, MODEL_END
@@ -50,10 +50,10 @@ public:
 	virtual void	Render() override;
 
 private:
-	virtual	HRESULT Save_Function(string strPath, string strFileName) override;
-	virtual HRESULT Load_Function(string strPath, string strFileName) override;
-				void	Reset_Function();
-				void	ObjectMode_Change_For_Reset();
+	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
+	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
+			void		Reset_Function();
+			void		ObjectMode_Change_For_Reset();
 private:
 	//!For. Environment
 	HRESULT			Ready_ModelTags();

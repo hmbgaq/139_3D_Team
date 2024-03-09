@@ -3,8 +3,10 @@
 #include "Imgui_Manager.h"
 #include "GameInstance.h"
 
-#include "Environment_Instance.h"
 #include "Environment_Object.h"
+#include "Environment_Instance.h"
+#include "Environment_LightObject.h"
+
 #include "Field.h"
 
 #include "LandObject.h"
@@ -691,6 +693,7 @@ HRESULT CWindow_MapTool::Ready_ModelTags()
 			case MAP_KEY_TYPE::MODEL_SINGLE:
 			{
 				m_vecSingleModelTag.push_back(strNonAnimTag);
+				m_vecEnviroModelTag.push_back(strNonAnimTag);
 				break;
 			}
 
@@ -714,15 +717,11 @@ HRESULT CWindow_MapTool::Ready_ModelTags()
 
 HRESULT CWindow_MapTool::Ready_PrototypeTags()
 {
-
 	m_vecMonsterTag.push_back("Prototype_GameObject_Monster");
 	m_vecMonsterTag.push_back("Prototype_GameObject_Player");
-	
-	//!m_vecBossTag.push_back("Prototype_GameObject_~!~!~!~");
-	//!m_vecNpcTag.push_back("Prototype_GameObject_NPC~!~!~");
-
-	//TODO 지금은 테스트용으로 직접 때려넣지만, 로더에서 원형 객체 추가할 때 매개인자 이넘 타입을 넣어서 타입에따라 오브젝트매니저에서 툴에서 불러오기용 컨테이너의 태그값만 추가로 보관한다면 불러오기 편할 것 같긴 하다.
-	//! 예시 m_mapMonsterProtoTag  // map<string, OBJECT_TYPE> 
+	m_vecMonsterTag.push_back("Prototype_GameObject_VampireCommander");
+	m_vecMonsterTag.push_back("Prototype_GameObject_Infected_A");
+	m_vecMonsterTag.push_back("Prototype_GameObject_Bandit_Sniper");
 
 	return S_OK;
 }
@@ -1721,7 +1720,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 					m_vecPreViewInstance[m_iSelectPreviewIndex] = nullptr;
 					m_pPickingObject = nullptr;
 					m_vecPreViewInstance.erase(m_vecPreViewInstance.begin() + m_iSelectPreviewIndex);
-					m_iSelectPreviewIndex--;
+					m_iSelectPreviewIndex = 0;
 				}
 				else
 				{
@@ -1787,7 +1786,7 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 	{
 		if (m_bChange == true && m_pPreviewCharacter != nullptr)
 		{
-			m_pPreviewCharacter->Set_Dead(false);
+			m_pPreviewCharacter->Set_Dead(true);
 
 			m_bChange = false;
 			m_pPreviewCharacter = nullptr;
@@ -1846,7 +1845,7 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_SINGLE:
 				{
 					m_pGameInstance->String_To_WString(m_vecSingleModelTag[m_iSelectModelTag], Desc.strModelTag);
-
+					
 					break;
 				}
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_INTERACT:

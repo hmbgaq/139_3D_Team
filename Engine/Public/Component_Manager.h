@@ -11,6 +11,7 @@
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Point.h"
 #include "VIBuffer_Trail.h"
+#include "VIBuffer_Grid.h"
 #include "VIBuffer_Field.h"
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_Particle.h"

@@ -403,7 +403,8 @@ private:
 		"LevelUp_ShieldFrame",
 		"MouseCursor",
 		"Option_Window",
-		"AimCrosshair"
+		"AimCrosshair",
+		"Weakness"
 	};
 
 	// 클래스 목록을 저장하는 벡터

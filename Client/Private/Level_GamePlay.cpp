@@ -54,22 +54,20 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
 
-	FAILED_CHECK(Ready_UI());
+	//FAILED_CHECK(Ready_UI());
 
 	return S_OK;
 }
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
-
-
 #pragma region Effect_Test	
 
-	 if (m_pGameInstance->Key_Down(DIK_GRAVE))
- 	{
- 		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Hit_3.json");
- 		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
- 	}
+	//if (m_pGameInstance->Key_Down(DIK_GRAVE))
+ 	//{
+ 	//	CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Hit_3.json");
+ 	//	pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
+ 	//}
 
 
 	//if (m_pGameInstance->Key_Down(DIK_TAB))
@@ -144,6 +142,7 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 		LightDesc.vSpecular = LightDesc.vDiffuse;
 		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
 	}
+
 	return S_OK;
 }
 

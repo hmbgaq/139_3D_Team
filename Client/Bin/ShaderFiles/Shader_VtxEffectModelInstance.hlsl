@@ -26,6 +26,10 @@ float2      g_UVScale;
 float		g_fDegree;
 
 
+/* Color */
+float4		g_vColor_Mul;
+
+
 /* Discard */
 float		g_fAlpha_Discard;
 float3		g_vBlack_Discard;
@@ -217,7 +221,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	if (vMtrlDiffuse.a < 0.1f)
 		discard;
 
-	Out.vDiffuse = vMtrlDiffuse;
+	Out.vDiffuse = vMtrlDiffuse * g_vColor_Mul;	// »ö °öÇÏ±â
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
 
