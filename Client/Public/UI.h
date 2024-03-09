@@ -14,7 +14,7 @@ public:
 	{
 		_float	fTime = 0.f;					// 키프레임의 시간 (0.0f ~ MaxTime 범위)
 		_float	fValue = 0.f;					// 애니메이션 값 (크기, 회전, 이동 등)
-		_float	fAnimSpeed = 0.f;				// 애니메이션 재생 속도
+		_float	fAnimSpeed = 1.f;				// 애니메이션 재생 속도
 
 		_int	iType = 0;						// 애니메이션 타입 (0: 크기, 1: 회전, 2: 이동)
 
@@ -218,6 +218,7 @@ public:
 #ifdef _DEBUG
 	/* (컨테이너의 주소를 받아오는건 릴리즈 모드에서 터지는 버그가있음. 툴용) */
 	vector<CUI*>*	Get_vecUIParts() { return &m_vecUIParts; }
+	vector<UIKEYFRAME>*	Get_vecAnimation() { return &m_vecAnimation; }
 #endif // DEBUG
 	string			Get_FilePathTag() { return m_tUIInfo.strFilePath; }
 	string			Get_ObjectNameTag() { return m_tUIInfo.strObjectName; }
@@ -233,8 +234,11 @@ public: /* =========================== Save/Load ============================== 
 
 public: /* =========================== Animation ============================== */
 	void			Play_Animation();
+	void			Add_Keyframe(UIKEYFRAME tKeyframe) { m_vecAnimation.push_back(tKeyframe); }
+	void			Emplaceback_Keyframe(UIKEYFRAME tKeyframe) { m_vecAnimation.emplace_back(tKeyframe); }
+
 	// 애니메이션 값
-	std::vector<UIKEYFRAME>* m_vecAnimation = {};
+	std::vector<UIKEYFRAME> m_vecAnimation = {};
 	_int				m_iTextureNum = 0;
 
 	void				Set_AnimPlay(_bool bPlay) { m_bPlayAnim = bPlay; }

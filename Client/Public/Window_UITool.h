@@ -252,13 +252,13 @@ public:
 
 private:
 	// 애니메이션 타임 라인
-	std::vector<CUI::UIKEYFRAME>	m_vecTimeline;
+	std::vector<CUI::UIKEYFRAME>*	m_vecTimeline = nullptr;
 	_float currentTime = 0.0f; // 현재 시간 값
 	_float MaxTime = 20.f;
 	_float fDisplayTime = 1.f;	// 눈금마다의 시간 값 표시
 	_bool isDraggingTimeline = false;
 	_bool m_bRendomValue = false; // 벨류 값 랜덤으로 주기
-	int closestKeyframeIndex = -1; // # 현재 마우스로 선택한 키프레임 인덱스
+	_int  closestKeyframeIndex = -1; // # 현재 마우스로 선택한 키프레임 인덱스
 	// 애니메이션의 타입
 	ImVec2					timelinePos = { 0.f, 0.f };
 	ImVec2					timelineSize = { 800.f, 85.f }; // 애니메이션 타임 라인 크기
@@ -281,9 +281,9 @@ private:
 
 	_float numKeyframes = 0.f;
 #pragma endregion
-
-	//Test
+	// Test
 	_bool	m_bCreateOK = false;
+	_bool	m_bRepetition = false;
 #pragma endregion
 
 public: /* Save/Load */

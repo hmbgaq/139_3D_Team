@@ -87,6 +87,9 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 
 void CMasterCamera::Priority_Tick(_float fTimeDelta)
 {
+	// Test
+	//return;
+
 	m_pPlayer = CData_Manager::GetInstance()->Get_Player();
 
 	if (m_pPlayer != nullptr && m_bfirstCheck == true)
@@ -105,18 +108,18 @@ void CMasterCamera::Priority_Tick(_float fTimeDelta)
 		Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 
 
-		if (m_pPlayer)
-		{
-			_float4 vPlayerPos = m_pPlayer->Get_Transform()->Get_Position_Float4();
-			_float pPlayerPosW = vPlayerPos.w;
+		//if (m_pPlayer)
+		//{
+		//	_float4 vPlayerPos = m_pPlayer->Get_Transform()->Get_Position_Float4();
+		//	_float pPlayerPosW = vPlayerPos.w;
 
-			_float4 targetPos = { 0.f, 2.f, -5.f, pPlayerPosW };
+		//	_float4 targetPos = { 0.f, 2.f, -5.f, pPlayerPosW };
 
-			XMStoreFloat4(&targetPos, XMVector3TransformCoord(XMLoadFloat4(&targetPos), m_pPlayer->Get_Transform()->Get_WorldMatrix()));
+		//	XMStoreFloat4(&targetPos, XMVector3TransformCoord(XMLoadFloat4(&targetPos), m_pPlayer->Get_Transform()->Get_WorldMatrix()));
 
-			Desc.vEye = targetPos;
-			Desc.vAt = vPlayerPos;
-		}
+		//	Desc.vEye = targetPos;
+		//	Desc.vAt = vPlayerPos;
+		//}
 
 
 		{
