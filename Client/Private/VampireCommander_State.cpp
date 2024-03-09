@@ -56,7 +56,7 @@ CState<CVampireCommander>* CVampireCommander_State::Normal_State(CVampireCommand
 
 CState<CVampireCommander>* CVampireCommander_State::Walk_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (50.f < pActor->Calc_Distance())
+	if (70.f < pActor->Calc_Distance())
 	{
 		return new CVampireCommander_Idle;
 	}
@@ -66,43 +66,55 @@ CState<CVampireCommander>* CVampireCommander_State::Walk_State(CVampireCommander
 
 CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	
+	_int iAttackRandom = SMath::Random(0, 1); // 공격과 체력 회복 
 	_int iRandom =  SMath::Random(0,3); // 근접용 랜덤 
 	_int iRandomRange = SMath::Random(0, 2);//원거리용 랜덤 
+	
 	//근접 공격!! 
-	if (7.f > pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
+	if (iAttackRandom == 0)
 	{
-		switch (iRandom)
+		if (7.f > pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
 		{
-		case 0 :
-			pActor->m_bLookAt = true;
-			return new CVampireCommander_Melee1;
-		case 1:
-			pActor->m_bLookAt = true;
-			return new CVampireCommander_Melee2;
-		case 2:
-			pActor->m_bLookAt = true;
-			return new CVampireCommander_Ranged2;
-		case 3:
-			pActor->m_bLookAt = true;
-			return new CVampireCommander_SyncedAttack_Fail;
+			switch (iRandom)
+			{
+			case 0:
+				pActor->m_bLookAt = true;
+				return new CVampireCommander_Melee1;
+			case 1:
+				pActor->m_bLookAt = true;
+				return new CVampireCommander_Melee2;
+			case 2:
+				pActor->m_bLookAt = true;
+				return new CVampireCommander_Ranged2;
+			case 3:
+				pActor->m_bLookAt = true;
+				return new CVampireCommander_SyncedAttack_Fail;
+			}
+		}
+		else if (50.f > pActor->Calc_Distance() && 7.f < pActor->Calc_Distance())
+		{
+			switch (iRandomRange)
+			{
+			case 0:
+				pActor->m_bLookAt = true;
+				return new CVampireCommander_Ranged1;
+			case 1:
+				pActor->m_bLookAt = true;
+				return new CVampireCommander_Ranged3;
+			case 2:
+				pActor->m_bLookAt = true;
+				return new CVampireCommander_Leap_Strat;
+			}
 		}
 	}
-	else if (50.f > pActor->Calc_Distance() && 7.f < pActor->Calc_Distance())
+	else if (iAttackRandom ==1)//체력이 75% 이하가 된다면! 조건을 걸어야 함 
 	{
-		switch (iRandomRange)
-		{
-		case 0:
-			pActor->m_bLookAt = true;
-			return new CVampireCommander_Ranged1;
-		case 1:
-			pActor->m_bLookAt = true;
-			return new CVampireCommander_Ranged3;
-		case 2:
-			pActor->m_bLookAt = true;
-			return new CVampireCommander_Leap_Strat;
-		}
+		return new CVampireCommander_BloodRange_Start;
 	}
 	
+
+	return nullptr;
 }
 
 CState<CVampireCommander>* CVampireCommander_State::HitNormal_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
@@ -117,6 +129,27 @@ CState<CVampireCommander>* CVampireCommander_State::Stun_State(CVampireCommander
 
 CState<CVampireCommander>* CVampireCommander_State::Taunt_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	_int iRandomTaunt = SMath::Random(0, 4);
+	switch (iRandomTaunt)
+	{
+	case 0:
+		return new CVampireCommander_Taunt1;
+		break;
+	case 1:
+		return new CVampireCommander_Taunt2;
+		break;
+	case 2:
+		return new CVampireCommander_Taunt3;
+		break;
+	case 3:
+		return new CVampireCommander_Taunt4;
+		break;
+	case 4:
+		return new CVampireCommander_Taunt5;
+		break;
+	}
+	
+
 	return nullptr;
 }
 
@@ -134,6 +167,14 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 {
 	CState<CVampireCommander>* pState = { nullptr };
 
+	_int iRandomTaunt = SMath::Random(0, 9); // 근접용 랜덤 
+	if (pActor->Is_Animation_End())
+	{
+		if (7 < iRandomTaunt)
+			return Taunt_State(pActor, fTimeDelta, _iAnimIndex);
+		
+	}
+	
 	if (70.f < pActor->Calc_Distance())
 	{
 		pActor->m_bLookAt = true;
@@ -141,14 +182,14 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 		if (pState)	return pState;
 	}
 
-	else if (70.f > pActor->Calc_Distance() && 50.f < pActor->Calc_Distance())
+	if (70.f > pActor->Calc_Distance() && 50.f < pActor->Calc_Distance())
 	{
 		pActor->m_bLookAt = true;
 		pState = Walk_State(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 	}
 
- 	if (30.f > pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
+ 	if (50.f > pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
  	{
  
  		pState = Attack_State(pActor, fTimeDelta, _iAnimIndex);

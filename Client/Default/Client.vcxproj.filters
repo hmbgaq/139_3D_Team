@@ -1969,6 +1969,9 @@
     <Filter Include="02.GameObjects\UI\00. Player\HUD">
       <UniqueIdentifier>{5681727c-afb0-4534-9296-d95d804be038}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\0.Parent">
+      <UniqueIdentifier>{d77b0e52-9a74-4c42-8b30-a1e5804530b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3602,6 +3605,18 @@
     </ClInclude>
     <ClInclude Include="CUI_HUD.h">
       <Filter>02.GameObjects\UI\00. Player\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Stun_Loop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Stun_Start.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Stun_Stop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Stun.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\0.Parent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -5337,6 +5352,18 @@
     </ClCompile>
     <ClCompile Include="CUI_HUD.cpp">
       <Filter>02.GameObjects\UI\00. Player\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Stun_Loop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Stun_Start.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Stun_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Stun.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\0.Parent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

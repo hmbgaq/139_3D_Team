@@ -15,7 +15,7 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 	{
 		return new CVampireCommander_BloodRange_Stop();
 	}
-	else if (m_iLoopescape <= 1000 && m_bSuccessShooting == true)
+	else if (m_iLoopescape <= 1000 || m_bSuccessShooting == true)
 	{
 		return new CVampireCommander_BloodRange_Stun_Start();
 	}

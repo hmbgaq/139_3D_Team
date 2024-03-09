@@ -18,7 +18,7 @@ void CPlayer_MeleeCombo_01::Initialize(CPlayer* pActor)
 		->Set_Damage(0.f)
 		->Set_Direction(Direction::Right)
 		->Set_Power(Power::Medium)
-		->Set_Force(0.3f);
+		->Set_Force(0.0f);
 
 	pWeapon->Set_Enable(true);
 
