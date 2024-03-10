@@ -8,15 +8,16 @@ class CBone;
 END
 
 BEGIN(Client)
+class CEffect_Trail;
 
 class CPart_Preview final : public CGameObject
 {
 public:
 	typedef struct tagPartPreviewDesc : public CGameObject::GAMEOBJECT_DESC
 	{
-		class CBone*			pSocketBone			= { nullptr };
-		class CTransform*		pParentTransform	= { nullptr };
-		class CGameObject*		pOwner				= { nullptr };
+		 CBone*			pSocketBone			= { nullptr };
+		 CTransform*		pParentTransform	= { nullptr };
+		 CGameObject*		pOwner				= { nullptr };
 	}PART_PREVIEW_DESC;
 
 private:
@@ -33,12 +34,22 @@ public:
 	virtual HRESULT Render()							override;
 
 public:
-	_float4x4 Get_WorldMatrix_Socket() { return m_WorldMatrix; }
+	HRESULT			Ready_Trail(_uint iLevelIndex, string strFileName);
+	void			Set_Trail(CEffect_Trail* pTrail) { m_pTrail = pTrail; };
+	CEffect_Trail*	Get_Trail() { return m_pTrail; }
 
+
+public:
+	_float4x4	Get_PartWorldMatrix() { return m_WorldMatrix; }
+	void		Set_PartWorldMatrix(_float4x4 _WorldMatrix) { m_WorldMatrix = _WorldMatrix; }
 
 private:
-	class CTransform*	m_pParentTransform	= { nullptr };
-	class CBone*		m_pSocketBone		= { nullptr };
+	CEffect_Trail*		m_pTrail = { nullptr };
+	_bool				m_bTrailPlay = { TRUE };
+
+private:
+	CTransform*			m_pParentTransform	= { nullptr };
+	CBone*				m_pSocketBone		= { nullptr };
 	_float4x4			m_WorldMatrix		= {};
 
 

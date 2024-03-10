@@ -17,7 +17,6 @@ public:
 	typedef struct tagTrailDesc
 	{
 		//_bool		bTrailOn; // EFFECTVOID_DESCÀÇ bPlay
-		wstring		strWeaponTag = { TEXT("") };
 
 
 	}TRAIL_DESC;
@@ -27,6 +26,10 @@ private:
 	CEffect_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CEffect_Trail(const CEffect_Trail& rhs);
 	virtual ~CEffect_Trail() = default;
+
+public:
+	virtual _bool Write_Json(json& Out_Json)		 override;
+	virtual void  Load_FromJson(const json& In_Json) override;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -41,7 +44,14 @@ public:
 	void Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix);
 
 public:
-	virtual void	Update_PivotMat() override;
+	void	Set_Play(_bool bPlay) { m_tVoidDesc.bPlay = bPlay; }
+	_bool	Get_Play() { m_tVoidDesc.bPlay; }
+
+	void	Set_Pause(_bool bPause) { m_bPause = bPause; }
+	_bool	Get_Pause() { m_bPause; }
+
+//public:
+//	virtual void	Update_PivotMat() override;
 
 
 /* For.Desc */
@@ -59,6 +69,7 @@ private:
 private:
 	TRAIL_DESC				m_tTrailDesc = {};
 
+	_bool					m_bPause = { FALSE };
 
 private:
 	HRESULT Ready_Components();

@@ -149,29 +149,29 @@ private:
 	_int m_iRenderGroup_Particle							= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Particle						= { 0 };
 	_int m_iMaxShaderPassIndex_Particle						= { 1 };
-	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= { };
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 9, 0, 44, 15, 16 };
+	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 11, 0, 44, 22, 16 };
 
 
 	_int m_iRenderGroup_Rect								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Rect							= { 0 };
 	_int m_iMaxShaderPassIndex_Rect							= { 2 };
-	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { };
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 9, 0, 44, 15, 16 };
+	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END]		= {};
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 16 };
 
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
-	_int m_iMaxShaderPassIndex_Mesh							= { 8 };
-	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { };
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 9, 0, 44, 15, 16 };
+	_int m_iMaxShaderPassIndex_Mesh							= { 9 };
+	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 16 };
 
 
 	_int m_iRenderGroup_Trail								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Trail							= { 0 };
-	_int m_iMaxShaderPassIndex_Trail						= { 2 };
-	_int m_iTexIndex_Trail[CEffect_Void::TEXTURE_END]		= { };
-	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 9, 0, 44, 15, 16 };
+	_int m_iMaxShaderPassIndex_Trail						= { 3 };
+	_int m_iTexIndex_Trail[CEffect_Void::TEXTURE_END]		= {};
+	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 11, 0, 44, 22, 16 };
 
 
 private:
@@ -245,7 +245,7 @@ private:
 	_float	m_fColor_Max_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_fColor_Cur_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 
-	_float	m_fColor_Mul[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fColor_Mul_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 
 
 	_float	m_fUV_RotDegree				= { 0.f };	// UV회전
@@ -330,12 +330,34 @@ private:
 	_float	m_vRotationOffsetX_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetY_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetZ_Mesh[2] = { 0.f, 0.f };
+
+
+	/* Distortion ============================================== */
+	_float m_fSequenceTerm_Distortion_Mesh = { 1.f };
+
+	_float	m_vScrollSpeeds_Mesh[3] = { 1.f, 1.f, 0.f };
+	_float	m_vScales_Distortion_Mesh[3] = { 1.f, 1.f, 1.f };
+
+	_float	m_vDistortion1_Mesh[2] = { 0.1f, 0.1f };
+	_float	m_vDistortion2_Mesh[2] = { 0.0f, 0.0f };
+	_float	m_vDistortion3_Mesh[2] = { 0.0f, 0.1f };
+
+	_float	m_fDistortionScale_Mesh = { 1.f };
+	_float	m_fDistortionBias_Mesh = { 1.f };
+	/* Distortion ============================================== */
 #pragma endregion Instance(Mesh) 옵션 끝
 
 
 #pragma region Trail 옵션 시작
 private:
+	_float	m_vColor_Clip_Trail[4] = { 0.f, 0.f, 0.f, 0.f };	// 쉐이더에서 discard할 값
+	_float	m_fColor_Mul_Trail[4] = { 1.f, 1.f, 1.f, 1.f };	// 쉐이더에서 추가로 곱해줄 색 값
+	
+	_float m_vPos_0[3] = { 0.f, 0.f, 0.f };	
+	_float m_vPos_1[3] = { 0.f, 0.f, 0.f };
 
+	_int	m_iMaxCnt_Trail = { 16 };
+	_int	m_iLerpPointNum = { 12 };
 
 #pragma endregion Trail 옵션 끝
 
@@ -363,7 +385,8 @@ private:
 
 
 	/* Model_Preview */
-	CGameObject* m_pModel_Preview = { nullptr };				// 크기 비교용 보기 모델
+	CModel_Preview*	m_pModel_Preview = { nullptr };				// 크기 비교용 보기 모델
+	CPart_Preview*	m_pPart_Preview = { nullptr };				// 모델의 파트(트레일 확인용)
 	_float		 m_vWorldPosition_Model[3] = { 0.f, 0.f, 0.f };	// 크기 비교용 모델 월드 이동
 #pragma endregion
 

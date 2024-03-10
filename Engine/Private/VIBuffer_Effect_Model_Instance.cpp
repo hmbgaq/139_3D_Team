@@ -26,23 +26,29 @@ HRESULT CVIBuffer_Effect_Model_Instance::Initialize(void* pArg)
 	CModel* pModel[MORPH_END] = { nullptr };
 	for (_uint i = 0; i < ECast(MORPH_END); ++i)
 	{	
-		Safe_AddRef(m_tBufferDesc.pModel[i]);
-		pModel[i] = m_tBufferDesc.pModel[i];
+		if (nullptr != m_tBufferDesc.pModel[i])
+		{
+			Safe_AddRef(m_tBufferDesc.pModel[i]);
+			pModel[i] = m_tBufferDesc.pModel[i];
+		}
 	}
 	
 	vector<CMesh*> Meshes[MORPH_END];
 	for (_uint i = 0; i < ECast(MORPH_END); ++i)
 	{
-		Meshes[i] = pModel[i]->Get_Meshes();
-		m_iNumMeshes = (_int)Meshes[i].size();
-
-		for (_int j = 0; j < m_iNumMeshes; ++j)
+		if (nullptr != pModel[i])
 		{
-			m_vecInstanceMesh.push_back(Meshes[i][j]);
-			Safe_AddRef(Meshes[i][j]);
-		}
+			Meshes[i] = pModel[i]->Get_Meshes();
+			m_iNumMeshes = (_int)Meshes[i].size();
 
-		m_iNumMaterials = pModel[i]->Get_NumMaterials();
+			for (_int j = 0; j < m_iNumMeshes; ++j)
+			{
+				m_vecInstanceMesh.push_back(Meshes[i][j]);
+				Safe_AddRef(Meshes[i][j]);
+			}
+
+			m_iNumMaterials = pModel[i]->Get_NumMaterials();
+		}
 	}
 
 

@@ -46,33 +46,36 @@ HRESULT CVIBuffer_Model_Instance::Initialize(void* pArg)
 
 HRESULT CVIBuffer_Model_Instance::Bind_VIBuffers(_uint iMeshContainerIndex)
 {
-	
-	CMesh* pMesh = m_vecInstanceMesh[iMeshContainerIndex];
+	if (nullptr != m_vecInstanceMesh[iMeshContainerIndex])
+	{
+		CMesh* pMesh = m_vecInstanceMesh[iMeshContainerIndex];
 
-	ID3D11Buffer* pVertexBuffers[] = {
-		pMesh->Get_VertexBuffer(),
-		m_pVBInstance,
-	};
+		ID3D11Buffer* pVertexBuffers[] = {
+			pMesh->Get_VertexBuffer(),
+			m_pVBInstance,
+		};
 
-	_uint				iStrides[] = {
-		pMesh->Get_Stride(),
-		m_iInstanceStride
+		_uint				iStrides[] = {
+			pMesh->Get_Stride(),
+			m_iInstanceStride
 
-	};
+		};
 
-	_uint				iOffsets[] = {
-		0,
-		0,
-	};
+		_uint				iOffsets[] = {
+			0,
+			0,
+		};
 
-	/* 어떤 버텍스 버퍼들을 이용할거다. */
-	m_pContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pVertexBuffers, iStrides, iOffsets);
+		/* 어떤 버텍스 버퍼들을 이용할거다. */
+		m_pContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pVertexBuffers, iStrides, iOffsets);
 
-	/* 어떤 인덱스 버퍼를 이용할거다. */
-	m_pContext->IASetIndexBuffer(pMesh->Get_IndexBuffer(), pMesh->Get_IndexFormat(), 0);
+		/* 어떤 인덱스 버퍼를 이용할거다. */
+		m_pContext->IASetIndexBuffer(pMesh->Get_IndexBuffer(), pMesh->Get_IndexFormat(), 0);
 
-	/* 정점을 어떤식으로 이어서 그릴거다. */
-	m_pContext->IASetPrimitiveTopology(pMesh->Get_Topology());
+		/* 정점을 어떤식으로 이어서 그릴거다. */
+		m_pContext->IASetPrimitiveTopology(pMesh->Get_Topology());
+	}
+
 
 	return S_OK;
 }

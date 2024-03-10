@@ -53,8 +53,8 @@ CEffect* CEffect_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLay
 
 CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner)
 {
-	CEffect_Trail::TRAIL_DESC tTrailDesc = {};
-	CEffect_Trail* pTrail = dynamic_cast<CEffect_Trail*>(m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, TEXT("Prototype_GameObject_Effect"), &tTrailDesc));
+	CEffect_Void::EFFECTVOID_DESC	tVoidDesc = {};
+	CEffect_Trail* pTrail = dynamic_cast<CEffect_Trail*>(m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, TEXT("Prototype_GameObject_Effect_Trail"), &tVoidDesc));
 
 	string strPath = "../Bin/DataFiles/Data_Effect/Data_Trail";
 	string strLoadPath = strPath + "/" + strFileName;

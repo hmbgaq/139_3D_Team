@@ -10,14 +10,17 @@ class ENGINE_DLL CVIBuffer_Trail : public CVIBuffer
 public:
 	typedef struct tagTrailBufferDesc
 	{
+		// 저장해야하는 고정 정보
 		_float3		vPos_0	= { 0.f, 0.f, 0.f };
 		_float3		vPos_1	= { 0.f, 0.f, 1.f };
-		_uint		iMaxCnt = { 16 };
 
-		//_uint		iNumVertices	= { 0 };
-		_uint		iVtxCnt			= { 0 };
+		_uint		iMaxCnt = { 32 };
 
 		_uint		iLerpPointNum = { 12 };
+
+
+		// 업데이트 돌면서 바뀌는 정보 (저장X)
+		_uint		iVtxCnt = { 0 };
 		_int		iCatMullRomIndex[4];
 
 	}TRAIL_BUFFER_DESC;

@@ -17,6 +17,8 @@ CEffect_Trail::CEffect_Trail(const CEffect_Trail& rhs)
 {
 }
 
+
+
 HRESULT CEffect_Trail::Initialize_Prototype()
 {
 
@@ -41,108 +43,16 @@ HRESULT CEffect_Trail::Initialize(void* pArg)
 void CEffect_Trail::Priority_Tick(_float fTimeDelta)
 {
 
-
-
 }
 
 void CEffect_Trail::Tick(_float fTimeDelta)
 {
-	//CVIBuffer_Trail::TRAIL_BUFFER_DESC* pDesc = m_pVIBufferCom->Get_Desc();
-#ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
-	{
-		if (m_tVoidDesc.bActive_Tool)
-		{
-#endif // _DEBUG
-
-			if (FALSE == m_tVoidDesc.bPlay)
-			{
-				m_tVoidDesc.bRender = FALSE;
-				m_pVIBufferCom->Reset_Points(m_tVoidDesc.matCombined);
-				return;
-			}
-			else
-			{
-				m_tVoidDesc.bRender = TRUE;
-				m_pVIBufferCom->Update(fTimeDelta, m_tVoidDesc.matCombined);
-			}		
-
-#ifdef _DEBUG
-		}
-	}
-#endif // _DEBUG
+	// 안씀. Tick_Trail()사용
 };
-
-void CEffect_Trail::Late_Tick(_float fTimeDelta)
-{
-#ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
-	{
-		if (m_tVoidDesc.bActive_Tool)
-		{
-			if (OWNER_PREVIEW == m_tTrailDesc.eType_Owner)
-			{
-				CGameObject* pParentOwner = m_pOwner->Get_Object_Owner();
-				m_tTrailDesc.matSocketWorld = dynamic_cast<CPart_Preview*>(pParentOwner)->Get_WorldMatrix_Socket();
-			}
-#endif // _DEBUG
-
-			if (OWNER_WEAPON == m_tTrailDesc.eType_Owner)
-			{
-
-			}
-			else if (OWNER_OBJECT == m_tTrailDesc.eType_Owner)
-			{
-				m_tTrailDesc.matSocketWorld = m_pOwner->Get_Object_Owner()->Get_Transform()->Get_WorldFloat4x4();
-			}
-
-
-			if (m_tVoidDesc.bRender)
-			{
-				CEffect_Trail::Update_PivotMat();
-
-				if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this)))
-					return;
-			}
-#ifdef _DEBUG
-		}
-	}
-#endif // _DEBUG
-}
-
-HRESULT CEffect_Trail::Render()
-{
-#ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
-	{
-		if (m_tVoidDesc.bActive_Tool)
-		{
-#endif // _DEBUG
-
-			if (FAILED(Bind_ShaderResources()))
-				return E_FAIL;
-
-			/* 이 쉐이더에 n번째 패스로 그릴거야. */
-			m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
-
-			/* 내가 그릴려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
-			m_pVIBufferCom->Bind_VIBuffers();
-
-			/* 바인딩된 정점, 인덱스를 그려. */
-			m_pVIBufferCom->Render();
-
-#ifdef _DEBUG
-		}
-	}
-#endif // _DEBUG
-
-	return S_OK;
-}
 
 
 void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 {
-
 #ifdef _DEBUG
 	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
@@ -159,7 +69,66 @@ void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 			else
 			{
 				m_tVoidDesc.bRender = TRUE;
-				m_pVIBufferCom->Update(_fTimeDelta, _ParentMatrix);
+
+				if (!m_bPause)
+				{
+					m_pVIBufferCom->Update(_fTimeDelta, _ParentMatrix);
+				}
+				
+			}
+
+
+#ifdef _DEBUG
+		}
+	}
+#endif // _DEBUG
+}
+
+
+void CEffect_Trail::Late_Tick(_float fTimeDelta)
+{
+#ifdef _DEBUG
+	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	{
+		if (m_tVoidDesc.bActive_Tool)
+		{
+#endif // _DEBUG
+
+			if (m_tVoidDesc.bRender)
+			{
+				if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this)))
+					return;
+			}
+
+#ifdef _DEBUG
+		}
+	}
+#endif // _DEBUG
+}
+
+
+HRESULT CEffect_Trail::Render()
+{
+#ifdef _DEBUG
+	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	{
+		if (m_tVoidDesc.bActive_Tool)
+		{
+#endif // _DEBUG
+
+			if (m_tVoidDesc.bRender)
+			{
+				if (FAILED(Bind_ShaderResources()))
+					return E_FAIL;
+
+				/* 이 쉐이더에 n번째 패스로 그릴거야. */
+				m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
+
+				/* 내가 그릴려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
+				m_pVIBufferCom->Bind_VIBuffers();
+
+				/* 바인딩된 정점, 인덱스를 그려. */
+				m_pVIBufferCom->Render();
 			}
 
 #ifdef _DEBUG
@@ -167,31 +136,9 @@ void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 	}
 #endif // _DEBUG
 
-
+	return S_OK;
 }
 
-void CEffect_Trail::Update_PivotMat()
-{
-	if (nullptr != m_pOwner)	// 부모 이펙트가 있고
-	{
-		if (m_tVoidDesc.bParentPivot)		//부모의 매트릭스를 사용할거고
-		{
-			CGameObject* pParentOwner = m_pOwner->Get_Object_Owner();
-			if (nullptr != pParentOwner)	// 부모의 오너가 있으면
-			{
-				m_tVoidDesc.matPivot = dynamic_cast<CEffect*>(m_pOwner)->Get_Desc()->matCombined * m_tTrailDesc.matSocketWorld;
-				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
-			}
-			else
-			{
-				// 부모의 오너가 없으면 부모의 매트릭스만 사용
-				m_tVoidDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
-				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
-			}
-		}
-
-	}
-}
 
 
 HRESULT CEffect_Trail::Ready_Components()
@@ -238,15 +185,7 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 {
 
 	/* Matrix ============================================================================================ */
-	if (m_tVoidDesc.bParentPivot)
-	{
-		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matCombined));
-	}
-	else
-	{
-		FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
-	}
-
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
@@ -277,6 +216,8 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 	_float3 vBlack_Discard = _float3(m_tVoidDesc.vColor_Clip.x, m_tVoidDesc.vColor_Clip.y, m_tVoidDesc.vColor_Clip.z);
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
 
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &m_tVoidDesc.vColor_Mul, sizeof(_float4)));
+
 	/* UV ============================================================================================ */
 	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
 
@@ -296,6 +237,116 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 
 	return S_OK;
 }
+
+
+_bool CEffect_Trail::Write_Json(json& Out_Json)
+{
+	CGameObject::Write_Json(Out_Json);
+
+
+	Out_Json["eType_Effect"] = m_tVoidDesc.eType_Effect;
+	Out_Json["eType_Easing"] = m_tVoidDesc.eType_Easing;
+
+	string strTag = "";
+	m_pGameInstance->WString_To_String(m_tVoidDesc.strProtoTag, strTag);
+	Out_Json["strProtoTag"] = strTag;
+
+	m_pGameInstance->WString_To_String(m_tVoidDesc.strPartTag, strTag);
+	Out_Json["strPartTag"] = strTag;
+
+	/* Texture */
+	for (_int i = 0; i < (_int)TEXTURE_END; i++)
+	{
+		m_pGameInstance->WString_To_String(m_tVoidDesc.strTextureTag[i], strTag);
+		Out_Json["strTextureTag"][i] = strTag;
+
+		Out_Json["iTextureIndex"][i] = m_tVoidDesc.iTextureIndex[i];
+	}
+
+
+	Out_Json["iRenderGroup"] = m_tVoidDesc.iRenderGroup;
+	Out_Json["iShaderPassIndex"] = m_tVoidDesc.iShaderPassIndex;
+
+	CJson_Utility::Write_Float2(Out_Json["vUV_Offset"], m_tVoidDesc.vUV_Offset);
+	CJson_Utility::Write_Float2(Out_Json["vUV_Scale"], m_tVoidDesc.vUV_Scale);
+
+
+	Out_Json["fUV_RotDegree"] = m_tVoidDesc.fUV_RotDegree;
+
+	Out_Json["bUV_Wave"] = m_tVoidDesc.bUV_Wave;
+	Out_Json["fUV_WaveSpeed"] = m_tVoidDesc.fUV_WaveSpeed;
+
+
+	CJson_Utility::Write_Float4(Out_Json["vColor_Offset"], m_tVoidDesc.vColor_Offset);
+	CJson_Utility::Write_Float4(Out_Json["vColor_Clip"], m_tVoidDesc.vColor_Clip);
+	CJson_Utility::Write_Float4(Out_Json["vColor_Mul"], m_tVoidDesc.vColor_Mul);
+
+
+	/* State */
+	Out_Json["bUseSpriteAnim"] = m_tVoidDesc.bUseSpriteAnim;
+
+
+	/* 주인 */
+	Out_Json["bParentPivot"] = m_tVoidDesc.bParentPivot;	// false여야함 
+
+
+	return true;
+}
+
+void CEffect_Trail::Load_FromJson(const json& In_Json)
+{
+	CGameObject::Load_FromJson(In_Json);
+
+
+	/* Effect_Void */
+	m_tVoidDesc.eType_Effect = In_Json["eType_Effect"];
+	m_tVoidDesc.eType_Easing = In_Json["eType_Easing"];
+
+	string strTag = "";
+	strTag = static_cast<string>(In_Json["strProtoTag"]);
+	m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strProtoTag);
+
+	strTag = static_cast<string>(In_Json["strPartTag"]);
+	m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strPartTag);
+
+
+	/* Texture */
+	for (_int i = 0; i < (_int)TEXTURE_END; i++)
+	{
+		strTag = static_cast<string>(In_Json["strTextureTag"][i]);
+		m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strTextureTag[i]);
+
+		m_tVoidDesc.iTextureIndex[i] = (_int)In_Json["iTextureIndex"][i];
+	}
+
+
+	m_tVoidDesc.iRenderGroup = (_int)In_Json["iRenderGroup"];
+	m_tVoidDesc.iShaderPassIndex = (_int)In_Json["iShaderPassIndex"];
+
+
+	CJson_Utility::Load_Float2(In_Json["vUV_Offset"], m_tVoidDesc.vUV_Offset);
+	CJson_Utility::Load_Float2(In_Json["vUV_Scale"], m_tVoidDesc.vUV_Scale);
+
+	m_tVoidDesc.fUV_RotDegree = (_float)In_Json["fUV_RotDegree"];
+
+	m_tVoidDesc.bUV_Wave = (_bool)In_Json["bUV_Wave"];
+	m_tVoidDesc.fUV_WaveSpeed = (_float)In_Json["fUV_WaveSpeed"];
+
+
+	CJson_Utility::Load_Float4(In_Json["vColor_Offset"], m_tVoidDesc.vColor_Offset);
+	CJson_Utility::Load_Float4(In_Json["vColor_Clip"], m_tVoidDesc.vColor_Clip);
+	CJson_Utility::Load_Float4(In_Json["vColor_Mul"], m_tVoidDesc.vColor_Mul);
+
+
+	/* State */
+	m_tVoidDesc.bUseSpriteAnim = (_bool)In_Json["bUseSpriteAnim"];
+
+
+	/* 주인 */
+	m_tVoidDesc.bParentPivot = (_bool)In_Json["bParentPivot"];	// false여야함 
+
+}
+
 
 CEffect_Trail* CEffect_Trail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {

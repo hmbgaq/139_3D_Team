@@ -278,7 +278,9 @@ HRESULT CWindow_EffectTool::Ready_Model_Preview(wstring strModelTag)
 
 	CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Model_Preview"), TEXT("Prototype_GameObject_Model_Preview"), &tDesc);
 	if (nullptr != pObj)
-		m_pModel_Preview = pObj;
+		m_pModel_Preview = dynamic_cast<CModel_Preview*>(pObj);
+
+	m_pPart_Preview = dynamic_cast<CPart_Preview*>(dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Find_PartObject(TEXT("Part_Preview")));
 
 	return S_OK;
 }
@@ -415,13 +417,12 @@ void CWindow_EffectTool::Update_ParticleTab()
 #pragma endregion
 
 				/* 쉐이더에 던질 곱하기 컬러 값_파티클 */
-				// m_fColor_Mul
-				if (ImGui::ColorEdit4("Color_Mul_Particle", m_fColor_Mul, ImGuiColorEditFlags_None))
+				if (ImGui::ColorEdit4("Color_Mul_Particle", m_fColor_Mul_Particle, ImGuiColorEditFlags_None))
 				{
-					m_pCurVoidDesc->vColor_Mul.x = m_fColor_Mul[0];
-					m_pCurVoidDesc->vColor_Mul.y = m_fColor_Mul[1];
-					m_pCurVoidDesc->vColor_Mul.z = m_fColor_Mul[2];
-					m_pCurVoidDesc->vColor_Mul.w = m_fColor_Mul[3];
+					m_pCurVoidDesc->vColor_Mul.x = m_fColor_Mul_Particle[0];
+					m_pCurVoidDesc->vColor_Mul.y = m_fColor_Mul_Particle[1];
+					m_pCurVoidDesc->vColor_Mul.z = m_fColor_Mul_Particle[2];
+					m_pCurVoidDesc->vColor_Mul.w = m_fColor_Mul_Particle[3];
 				}
 
 
@@ -921,8 +922,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 
-
-
 				/* 텍스처 UV회전 */
 				ImGui::SeparatorText("");
 				if (ImGui::DragFloat(" Uv Degree ", &m_fUV_RotDegree, 1.f, 0.f, 360.f))
@@ -948,9 +947,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 				//	m_pParticlePointDesc->vAddScale.x = m_vAddScale[0];
 				//	m_pParticlePointDesc->vAddScale.y = m_vAddScale[1];
 				//}
-
-
-
 
 
 
@@ -1201,6 +1197,12 @@ void CWindow_EffectTool::Update_MeshTab()
 		{
 			Add_Part_Mesh(TEXT("Prototype_Component_Model_ShieldDome"));
 		}
+
+		if (ImGui::Button("Demo_BloodPoolsRaid"))
+		{
+			Add_Part_Mesh(TEXT("Prototype_Component_Model_BloodPoolsRaid"));
+		}
+
 		ImGui::SeparatorText("");
 
 		if (nullptr != m_pCurPartEffect)
@@ -1268,7 +1270,6 @@ void CWindow_EffectTool::Update_MeshTab()
 				{
 					m_pInstanceDesc->bUseCustomTex = FALSE;
 				}
-
 
 
 				/* 쉐이더 패스 인덱스 변경 */
@@ -1538,6 +1539,76 @@ void CWindow_EffectTool::Update_MeshTab()
 				}
 
 
+				// 디스토션 값 변경
+				ImGui::SeparatorText(" Distortion ");
+				CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_Distortion_Desc();
+				if (ImGui::CollapsingHeader(" Distortion Preset "))
+				{
+					if (ImGui::Button("FIRE"))
+					{
+						//m_pCurVoidDesc->iShaderPassIndex = { 2 };
+						//m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 1 };
+						//m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 17 };
+						//m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 1 };
+
+						pDistortionDesc->fSequenceTerm = { 1.f };
+						pDistortionDesc->vScrollSpeeds = { 1.f, 1.f, 1.f };
+						pDistortionDesc->vScales = { 1.f, 1.f, 1.f };
+
+						pDistortionDesc->vDistortion1 = { 0.1f, 0.1f };
+						pDistortionDesc->vDistortion2 = { 0.f, 0.f };
+						pDistortionDesc->vDistortion3 = { 0.f, 0.1f };
+
+						pDistortionDesc->fDistortionScale = { 1.f };
+						pDistortionDesc->fDistortionBias = { 1.f };
+
+						Update_CurParameters_Parts();
+					}
+				}
+				ImGui::SeparatorText("");
+
+				if (ImGui::DragFloat("Distortion_Term_Mesh", &m_fSequenceTerm_Distortion_Mesh, 1.f, 0.f))
+				{
+					pDistortionDesc->fSequenceTerm = m_fSequenceTerm_Distortion_Mesh;
+				}
+				if (ImGui::DragFloat3("ScrollSpeeds", m_vScrollSpeeds_Mesh, 1.f, 0.f))
+				{
+					pDistortionDesc->vScrollSpeeds.x = m_vScrollSpeeds_Mesh[0];
+					pDistortionDesc->vScrollSpeeds.y = m_vScrollSpeeds_Mesh[1];
+					pDistortionDesc->vScrollSpeeds.z = m_vScrollSpeeds_Mesh[2];
+				}
+				if (ImGui::DragFloat3("Distortion_Scales", m_vScales_Distortion_Mesh, 1.f, 0.f))
+				{
+					pDistortionDesc->vScales.x = m_vScales_Distortion_Mesh[0];
+					pDistortionDesc->vScales.y = m_vScales_Distortion_Mesh[1];
+					pDistortionDesc->vScales.z = m_vScales_Distortion_Mesh[2];
+				}
+				if (ImGui::DragFloat2("Distortion1", m_vDistortion1_Mesh, 1.f, 0.f))
+				{
+					pDistortionDesc->vDistortion1.x = m_vDistortion1_Mesh[0];
+					pDistortionDesc->vDistortion1.y = m_vDistortion1_Mesh[1];
+				}
+				if (ImGui::DragFloat2("Distortion2", m_vDistortion2_Mesh, 1.f, 0.f))
+				{
+					pDistortionDesc->vDistortion2.x = m_vDistortion2_Mesh[0];
+					pDistortionDesc->vDistortion2.y = m_vDistortion2_Mesh[1];
+				}
+				if (ImGui::DragFloat2("Distortion3", m_vDistortion3_Mesh, 1.f, 0.f))
+				{
+					pDistortionDesc->vDistortion3.x = m_vDistortion3_Mesh[0];
+					pDistortionDesc->vDistortion3.y = m_vDistortion3_Mesh[1];
+				}
+				if (ImGui::DragFloat("Distortion_Scale", &m_fDistortionScale_Mesh, 1.f, 0.f))
+				{
+					pDistortionDesc->fDistortionScale = m_fDistortionScale_Mesh;
+				}
+				if (ImGui::DragFloat("DistortionBias", &m_fDistortionBias_Mesh, 1.f, 0.f))
+				{
+					pDistortionDesc->fDistortionBias = m_fDistortionBias_Mesh;
+				}
+
+
+
 
 				// 디퓨즈에 곱할 색 (색 변경)
 				if (ImGui::ColorEdit4("Color_Mul_Mesh", m_fColor_Mul_Mesh, ImGuiColorEditFlags_None))
@@ -1556,6 +1627,20 @@ void CWindow_EffectTool::Update_MeshTab()
 
 void CWindow_EffectTool::Update_TrailTab()
 {
+	if (nullptr != m_pModel_Preview)
+	{
+		if (ImGui::CollapsingHeader(u8"로드 테스트 주의!!"))
+		{
+			if (ImGui::Button("Test Ready Trail"))
+			{
+				m_pPart_Preview->Ready_Trail(LEVEL_TOOL, "Test_Trail");
+			}
+			ImGui::SeparatorText("");
+		}
+	}
+
+
+
 	// 트레일 추가
 	if (nullptr == m_pTrail)
 	{
@@ -1588,46 +1673,94 @@ void CWindow_EffectTool::Update_TrailTab()
 			OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
 		}
 
+		//m_pTrail->Tick_Trail()
 
 		ImGui::SeparatorText(" Delete ");
 		if (ImGui::Button(" Delete Trail "))
 		{
 			Delete_Trail();
+			return;
 		}
 
 		// =============================================================================================================================================================
 		if (nullptr != m_pModel_Preview)
 		{
-			//! 모델_프리뷰가 nullptr이 아니면 이펙트에게 오너를 설정해 줄 수 있음(트레일의 오너가 아닌 이펙트의 오너임 주의)
-			//! Owner겜오브젝트(있을수도 없을수도) - 이펙트(Parent) - 트레일(이펙트의 Part)
-			if (ImGui::Button("Set Owner_Model"))
+			// Model_Preview 디스크립션 얻어오기
+			CModel_Preview::MODEL_PREVIEW_DESC* pDesc = dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Get_Desc();
+
+			// 애니메이션 변경 테스트 
+			ImGui::SeparatorText("Model Animation");
+			if (ImGui::Button("Idle"))
 			{
-				m_pCurEffect->Set_Object_Owner(m_pModel_Preview);
-				m_pCurEffect->Get_Desc()->bParentPivot = TRUE;
-				//m_pTrailDesc->eType_Owner = CEffect_Trail::OWNER_OBJECT;
-				//m_pTrailDesc->matSocketWorld = m_pModel_Preview->Get_Transform()->Get_WorldFloat4x4();
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					// 플레이어 아이들 // Index 8
+					m_pModel_Preview->Set_AnimIndex(8);
+				}
+
+				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+				{
+					// 보스 아이들 // Index 9
+					m_pModel_Preview->Set_AnimIndex(9);
+				}
 			}
 			ImGui::SameLine();
-			if (ImGui::Button("Set Owner_Part"))
+			if (ImGui::Button("Attack"))
 			{
-				CGameObject* pPart = dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Find_PartObject(TEXT("Part_Preview"));
-				m_pCurEffect->Set_Object_Owner(pPart);
-				m_pCurEffect->Get_Desc()->bParentPivot = TRUE;
-				//m_pTrailDesc->eType_Owner = CEffect_Trail::OWNER_PREVIEW;
-				//m_pTrailDesc->matSocketWorld = dynamic_cast<CPart_Preview*>(pPart)->Get_WorldMatrix_Socket();
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					// 플레이어 콤보1 	// Index 193
+					m_pModel_Preview->Set_AnimIndex(193);
+				}
 
+				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+				{
+					// 보스 VampireCommander_AttackMelee_02 // Index 55
+					m_pModel_Preview->Set_AnimIndex(55);
+				}
 			}
 
-		}
+			/* 재생, 정지, 리셋 */
+			if (ImGui::Button("   Play   "))
+			{
+				m_pModel_Preview->Get_Desc()->bPlay = TRUE;
+				m_pTrail->Set_Pause(FALSE);
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("   Stop   "))
+			{
+				m_pModel_Preview->Get_Desc()->bPlay = FALSE;
+				m_pTrail->Set_Pause(TRUE);
+			}
 
+
+			// 현재 모델의 파트에 트레일 달아주기
+			if (ImGui::Button("Set Trail_Part"))
+			{
+				m_pPart_Preview->Set_Trail(m_pTrail);
+			}
+
+
+		} // nullptr != m_pModel_Preview
+
+
+#pragma region Desc 얻어오기 업데이트_트레일
+		// 트레일이 nullptr이 아닐 때 트레일 전용 Desc들 얻어오기
+		m_pVoidTrailDesc = m_pTrail->Get_Desc();
+		m_pTrailDesc = m_pTrail->Get_TrailDesc();
+		CVIBuffer_Trail* pVIBuffer = m_pTrail->Get_VIBufferCom();
+		m_pTrailBufferDesc = pVIBuffer->Get_Desc();
+#pragma endregion 
 
 		/* 이름 */
 		ImGui::SeparatorText("");
-		ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
+		ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pVoidTrailDesc->strPartTag));
 
+
+#pragma region 텍스처 번경_트레일
 		/* 텍스처 변경 */
 		ImGui::SeparatorText("TEXTURE_TRAIL");
-		if (m_pCurVoidDesc->bUseSpriteAnim)
+		if (m_pVoidTrailDesc->bUseSpriteAnim)
 		{
 			if (ImGui::InputInt("Diffuse_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE], 1))
 			{
@@ -1637,7 +1770,7 @@ void CWindow_EffectTool::Update_TrailTab()
 				if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE])
 					m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] = 0;
 
-				m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE];
+				m_pVoidTrailDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE];
 			}
 		}
 		else
@@ -1650,12 +1783,9 @@ void CWindow_EffectTool::Update_TrailTab()
 				if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE])
 					m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 
-				m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE];
+				m_pVoidTrailDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE];
 			}
 		}
-
-
-
 
 		if (ImGui::InputInt("Mask_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK], 1))
 		{
@@ -1665,7 +1795,7 @@ void CWindow_EffectTool::Update_TrailTab()
 			if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK])
 				m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK] = 0;
 
-			m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK];
+			m_pVoidTrailDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK];
 		}
 
 		if (ImGui::InputInt("Noise_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE], 1))
@@ -1676,8 +1806,10 @@ void CWindow_EffectTool::Update_TrailTab()
 			if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE])
 				m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE] = 0;
 
-			m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE];
+			m_pVoidTrailDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE];
 		}
+
+#pragma endregion 텍스처 번경_트레일 끝
 
 
 		/* 쉐이더 패스 인덱스 변경 */
@@ -1689,16 +1821,16 @@ void CWindow_EffectTool::Update_TrailTab()
 			if (0 > m_iShaderPassIndex_Trail)
 				m_iShaderPassIndex_Trail = 0;
 
-			m_pCurVoidDesc->iShaderPassIndex = m_iShaderPassIndex_Trail;
+			m_pVoidTrailDesc->iShaderPassIndex = m_iShaderPassIndex_Trail;
 		}
 
 		/* 쉐이더에 던질 디스카드 값 변경 */
-		if (ImGui::DragFloat4("Discard_Trail", m_vColor_Clip_Part, 0.1f, 0.f, 1.f))
+		if (ImGui::DragFloat4("Discard_Trail", m_vColor_Clip_Trail, 0.1f, 0.f, 1.f))
 		{
-			m_pCurVoidDesc->vColor_Clip.x = m_vColor_Clip_Part[0];
-			m_pCurVoidDesc->vColor_Clip.y = m_vColor_Clip_Part[1];
-			m_pCurVoidDesc->vColor_Clip.z = m_vColor_Clip_Part[2];
-			m_pCurVoidDesc->vColor_Clip.w = m_vColor_Clip_Part[3];
+			m_pVoidTrailDesc->vColor_Clip.x = m_vColor_Clip_Trail[0];
+			m_pVoidTrailDesc->vColor_Clip.y = m_vColor_Clip_Trail[1];
+			m_pVoidTrailDesc->vColor_Clip.z = m_vColor_Clip_Trail[2];
+			m_pVoidTrailDesc->vColor_Clip.w = m_vColor_Clip_Trail[3];
 		}
 
 		/* 렌더그룹 변경 */
@@ -1709,11 +1841,58 @@ void CWindow_EffectTool::Update_TrailTab()
 			{
 				m_iRenderGroup_Trail = (_int)CRenderer::RENDER_END - 1;
 			}
-			m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Trail;
+			m_pVoidTrailDesc->iRenderGroup = m_iRenderGroup_Trail;
+		}
+
+		/* 쉐이더에 던질 곱하기 컬러 값_트레일 */
+		if (ImGui::ColorEdit4("Color_Mul_Trail", m_fColor_Mul_Trail, ImGuiColorEditFlags_None))
+		{
+			m_pVoidTrailDesc->vColor_Mul.x = m_fColor_Mul_Trail[0];
+			m_pVoidTrailDesc->vColor_Mul.y = m_fColor_Mul_Trail[1];
+			m_pVoidTrailDesc->vColor_Mul.z = m_fColor_Mul_Trail[2];
+			m_pVoidTrailDesc->vColor_Mul.w = m_fColor_Mul_Trail[3];
 		}
 
 
-	}
+#pragma region 버퍼 Desc 값 조절_트레일
+		ImGui::SeparatorText("Trail_Buffer");
+
+		if (ImGui::DragFloat3("Pos_0", m_vPos_0, 0.1f, -100.f, 100.f))
+		{
+			m_pTrailBufferDesc->vPos_0.x = m_vPos_0[0];
+			m_pTrailBufferDesc->vPos_0.y = m_vPos_0[1];
+			m_pTrailBufferDesc->vPos_0.z = m_vPos_0[2];
+		}
+
+		if (ImGui::DragFloat3("Pos_1", m_vPos_1, 0.1f, -100.f, 100.f))
+		{
+			m_pTrailBufferDesc->vPos_1.x = m_vPos_1[0];
+			m_pTrailBufferDesc->vPos_1.y = m_vPos_1[1];
+			m_pTrailBufferDesc->vPos_1.z = m_vPos_1[2];
+		}
+
+		//if (ImGui::DragInt("iMaxCnt_Trail", &m_iMaxCnt_Trail, 1, 2.f, 100.f))
+		//{
+		//	m_pTrailBufferDesc->iMaxCnt = m_iMaxCnt_Trail;
+		//}
+
+		if (ImGui::DragInt("iLerpPointNum_Trail", &m_iLerpPointNum, 1, 2.f, 100.f))
+		{
+			m_pTrailBufferDesc->iLerpPointNum = m_iLerpPointNum;
+		}
+
+		ImGui::SeparatorText("Trail_Buffer_Preset");
+		if (ImGui::Button("Boss_Trail_Preset"))
+		{
+			m_pTrailBufferDesc->vPos_0 = { 0.f, 0.f, -0.5f };
+			m_pTrailBufferDesc->vPos_0 = { 0.f, 0.f, 0.5f };
+			m_pTrailBufferDesc->iLerpPointNum = { 12 };
+		}
+
+#pragma endregion 버퍼 Desc 값 조절_트레일 끝
+
+
+	} // nullptr != m_pTrail
 
 
 
@@ -1814,10 +1993,10 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 
 			/* 쉐이더에 던져져서 곱해질 색상 값_파티클  */
-			m_fColor_Mul[0] = m_pCurVoidDesc->vColor_Mul.x;
-			m_fColor_Mul[1] = m_pCurVoidDesc->vColor_Mul.y;
-			m_fColor_Mul[2] = m_pCurVoidDesc->vColor_Mul.z;
-			m_fColor_Mul[3] = m_pCurVoidDesc->vColor_Mul.w;
+			m_fColor_Mul_Particle[0] = m_pCurVoidDesc->vColor_Mul.x;
+			m_fColor_Mul_Particle[1] = m_pCurVoidDesc->vColor_Mul.y;
+			m_fColor_Mul_Particle[2] = m_pCurVoidDesc->vColor_Mul.z;
+			m_fColor_Mul_Particle[3] = m_pCurVoidDesc->vColor_Mul.w;
 
 
 			/* UV회전 */
@@ -2489,41 +2668,6 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			}
 		}
 
-
-		// 애니메이션 변경 테스트 
-		if (ImGui::Button("Idle"))	
-		{
-		
-			if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
-			{
-				// 플레이어 아이들 // Index 8
-				dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Set_AnimIndex(8);
-			}
-
-			if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
-			{
-				// 보스 아이들 // Index 9
-				dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Set_AnimIndex(9);
-			}
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Attack"))	
-		{
-			if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
-			{
-				// 플레이어 콤보1 	// Index 193
-				dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Set_AnimIndex(193);
-			}
-
-			if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
-			{
-				// 보스 VampireCommander_AttackMelee_02 // Index 55
-				dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Set_AnimIndex(55);
-			}
-
-		}
-
-
 		if (ImGui::Button("Delete Model"))	// 모델 삭제 버튼
 		{
 			if (nullptr != m_pModel_Preview)
@@ -2537,6 +2681,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 				m_pModel_Preview->Set_Dead(TRUE);
 				m_pModel_Preview = nullptr;
+				m_pPart_Preview = nullptr;
 			}
 		}
 	}
@@ -3008,6 +3153,8 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		tVoidDesc.fSpeedPerSec = { 5.f };
 		tVoidDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
 
+		tVoidDesc.eType_Effect = CEffect_Void::PARTICLE;
+
 		//tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
 		tVoidDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 		tVoidDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
@@ -3079,7 +3226,7 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		m_pCurPartEffect = dynamic_cast<CEffect_Particle*>(m_pCurEffect->Find_PartObject(strName));
 
 		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
-		m_pCurVoidDesc->eType_Effect = CEffect_Void::PARTICLE;
+
 
 		m_iCurPartIndex = (_int)m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -3120,6 +3267,8 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 		CEffect_Void::EFFECTVOID_DESC tVoidDesc = {};
 		tVoidDesc.fSpeedPerSec = { 5.f };
 		tVoidDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
+
+		tVoidDesc.eType_Effect = CEffect_Void::RECT;
 
 		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
@@ -3185,7 +3334,6 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 		m_pCurPartEffect = dynamic_cast<CEffect_Rect*>(m_pCurEffect->Find_PartObject(strName));
 
 		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
-		m_pCurVoidDesc->eType_Effect = CEffect_Void::RECT;
 
 		m_iCurPartIndex = (_int)m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -3226,6 +3374,8 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		CEffect_Void::EFFECTVOID_DESC tVoidDesc = {};
 		tVoidDesc.fSpeedPerSec = { 5.f };
 		tVoidDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
+
+		tVoidDesc.eType_Effect = { CEffect_Void::MESH };
 
 		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
@@ -3299,8 +3449,6 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		m_pCurPartEffect = dynamic_cast<CEffect_Instance*>(m_pCurEffect->Find_PartObject(strName));
 
 		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
-		m_pCurVoidDesc->eType_Effect = CEffect_Void::MESH;
-
 
 		m_iCurPartIndex = (_int)m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -3341,6 +3489,8 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh_Morph(wstring strModelTag1, wstring st
 		CEffect_Void::EFFECTVOID_DESC tVoidDesc = {};
 		tVoidDesc.fSpeedPerSec = { 5.f };
 		tVoidDesc.fRotationPerSec = { XMConvertToRadians(50.0f) };
+
+		tVoidDesc.eType_Effect = { CEffect_Void::MESH };
 
 		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
@@ -3412,8 +3562,6 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh_Morph(wstring strModelTag1, wstring st
 		m_pCurPartEffect = dynamic_cast<CEffect_Instance*>(m_pCurEffect->Find_PartObject(strName));
 
 		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
-		m_pCurVoidDesc->eType_Effect = CEffect_Void::MESH;
-
 
 		m_iCurPartIndex = (_int)m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -3455,6 +3603,8 @@ HRESULT CWindow_EffectTool::Create_Trail()
 	tVoidDesc.fSpeedPerSec = { 0.f };
 	tVoidDesc.fRotationPerSec = { XMConvertToRadians(0.0f) };
 
+	tVoidDesc.eType_Effect = { CEffect_Void::TRAIL };
+
 	tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 	tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
 
@@ -3473,6 +3623,11 @@ HRESULT CWindow_EffectTool::Create_Trail()
 	tVoidDesc.bPlay = { TRUE };
 
 
+	tVoidDesc.bParentPivot = { FALSE };
+	XMStoreFloat4x4(&tVoidDesc.matPivot, XMMatrixIdentity());
+	XMStoreFloat4x4(&tVoidDesc.matCombined, XMMatrixIdentity());
+
+
 	// 트레일 객체 Desc 초기화
 	//CEffect_Trail::TRAIL_DESC	tTrailDesc = {};
 	//tTrailDesc.bTrailOn = { TRUE };
@@ -3485,7 +3640,7 @@ HRESULT CWindow_EffectTool::Create_Trail()
 	tVoidDesc.strPartTag = strName;
 	tVoidDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Trail");
 	
-	m_pTrail = dynamic_cast<CEffect_Trail*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_EFFECT, TEXT("Prototype_GameObject_Effect"), &tVoidDesc));
+	m_pTrail = dynamic_cast<CEffect_Trail*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_EFFECT, tVoidDesc.strProtoTag, &tVoidDesc));
 
 
 	return S_OK;
@@ -3494,8 +3649,11 @@ HRESULT CWindow_EffectTool::Create_Trail()
 
 HRESULT CWindow_EffectTool::Delete_Trail()
 {
-
-
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Set_Dead(TRUE);
+		m_pTrail = nullptr;
+	}
 
 	return S_OK;
 }
@@ -3723,25 +3881,27 @@ void CWindow_EffectTool::Update_SaveLoad_Menu()
 
 HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 {
+
+	json Out_Json;
+
 	if (FILE_EFFECT == m_eFile)
 	{
 		if (nullptr != m_pCurEffect)
 		{
-			json Out_Json;
 			m_pCurEffect->Write_Json(Out_Json);
-
-			string strSavePath = strPath + "\\" + strFileName;
-			CJson_Utility::Save_Json(strSavePath.c_str(), Out_Json);
 		}
 	}
 
 	if (FILE_TRAIL == m_eFile)
 	{
-
-
+		if (nullptr != m_pTrail)
+		{
+			m_pTrail->Write_Json(Out_Json);
+		}
 	}
 
-
+	string strSavePath = strPath + "\\" + strFileName;
+	CJson_Utility::Save_Json(strSavePath.c_str(), Out_Json);
 
 	return S_OK;
 }
@@ -3777,9 +3937,26 @@ HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 		Update_CurParameters_Parts();
 	}
 
+
 	if (FILE_TRAIL == m_eFile)
 	{
+		if (nullptr != m_pTrail)
+		{
+			m_pTrail->Load_FromJson(In_Json);
 
+			return S_OK;
+		}
+
+		if (nullptr == m_pTrail)
+		{
+			Create_Trail();
+			m_pTrail->Load_FromJson(In_Json);
+
+			if (nullptr != m_pPart_Preview)
+			{
+				m_pPart_Preview->Set_Trail(m_pTrail);
+			}
+		}
 
 	}
 

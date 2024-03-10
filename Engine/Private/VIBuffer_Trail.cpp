@@ -121,6 +121,7 @@ void CVIBuffer_Trail::Update(_float _fTimeDelta, _matrix _ParentMatrix)
 
     m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &tSubResource);
 
+
     if (m_tBufferDesc.iVtxCnt >= m_iNumVertices)
     {
         _uint iRemoveCnt(m_tBufferDesc.iLerpPointNum * 2);
@@ -253,12 +254,25 @@ void CVIBuffer_Trail::Reset_Points(_matrix _ParentMatrix)
 _bool CVIBuffer_Trail::Write_Json(json& Out_Json)
 {
 
+    CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vPos_0"], m_tBufferDesc.vPos_0);
+    CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vPos_1"], m_tBufferDesc.vPos_1);
+
+
+    Out_Json["Com_VIBuffer"]["iMaxCnt"] = m_tBufferDesc.iMaxCnt;
+    Out_Json["Com_VIBuffer"]["iLerpPointNum"] = m_tBufferDesc.iLerpPointNum;
+
 
     return true;
 }
 
 void CVIBuffer_Trail::Load_FromJson(const json& In_Json)
 {
+
+	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vPos_0"], m_tBufferDesc.vPos_0);
+	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vPos_1"], m_tBufferDesc.vPos_1);
+
+    m_tBufferDesc.iMaxCnt = (_uint)In_Json["Com_VIBuffer"]["iMaxCnt"];
+    m_tBufferDesc.iLerpPointNum = (_uint)In_Json["Com_VIBuffer"]["iLerpPointNum"];
 
 }
 

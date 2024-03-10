@@ -157,9 +157,9 @@ HRESULT CEffect_Instance::Render()
 	}
 	else
 	{
-		_uint	iNumMeshes = m_pModelCom[0]->Get_NumMeshes();
+		//_uint	iNumMeshes = m_pModelCom[0]->Get_NumMeshes();
 
-		for (size_t i = 0; i < iNumMeshes; i++)
+		//for (size_t i = 0; i < iNumMeshes; i++)
 		{
 			if (FALSE == m_tInstanceDesc.bUseCustomTex)
 			{
@@ -168,7 +168,7 @@ HRESULT CEffect_Instance::Render()
 			}
 
 			m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
-			m_pVIBufferCom->Render((_uint)iNumMeshes);
+			m_pVIBufferCom->Render((_uint)0);
 		}
 	}
 
@@ -368,6 +368,26 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tVoidDesc.fDissolveAmount, sizeof(_float)));
+
+
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScales", &m_tDistortionDesc.vScales, sizeof(_float3))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tDistortionDesc.vDistortion1, sizeof(_float2))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion2", &m_tDistortionDesc.vDistortion2, sizeof(_float2))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion3", &m_tDistortionDesc.vDistortion3, sizeof(_float2))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionScale", &m_tDistortionDesc.fDistortionScale, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tDistortionDesc.fDistortionBias, sizeof(_float))))
+		return E_FAIL;
+
 
 
 	return S_OK;

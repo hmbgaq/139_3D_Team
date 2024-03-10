@@ -70,7 +70,6 @@ public:
 		_bool		 bParentPivot	 = { TRUE };
 
 
-
 		/* 업데이트 되면서 바뀌는 정보들(저장x) */
 		_bool		bActive_Tool = { TRUE };
 

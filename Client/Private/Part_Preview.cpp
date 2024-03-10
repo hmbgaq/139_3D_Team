@@ -2,7 +2,10 @@
 #include "..\Public\Part_Preview.h"
 
 #include "GameInstance.h"
+#include "Effect_Manager.h"
+
 #include "Bone.h"
+#include "Effect_Trail.h"
 
 CPart_Preview::CPart_Preview(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -27,7 +30,6 @@ HRESULT CPart_Preview::Initialize(void* pArg)
 {	
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 
-
 	m_pParentTransform = ((PART_PREVIEW_DESC*)pArg)->pParentTransform;
 	m_pOwner = ((PART_PREVIEW_DESC*)pArg)->pOwner;
 	if (nullptr == m_pParentTransform)
@@ -42,11 +44,13 @@ HRESULT CPart_Preview::Initialize(void* pArg)
 	Safe_AddRef(m_pSocketBone);
 
 
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;	
+	FAILED_CHECK(__super::Initialize(pArg));
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
+
+	FAILED_CHECK(Ready_Components());
+
+
+	//FAILED_CHECK(Ready_Trail(LEVEL_TOOL));	// 트레일 로드 테스트
 
 
 	return S_OK;
@@ -61,6 +65,8 @@ void CPart_Preview::Priority_Tick(_float fTimeDelta)
 void CPart_Preview::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+
 }
 
 void CPart_Preview::Late_Tick(_float fTimeDelta)
@@ -78,16 +84,30 @@ void CPart_Preview::Late_Tick(_float fTimeDelta)
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * m_pParentTransform->Get_WorldMatrix());
 
 
-
 	///* For.Render */
 	//if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 	//	return;
 
+
+
+	if (nullptr != m_pTrail)
+	{
+		//m_pTrail->Set_Play(m_bTrailPlay);
+		m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
+	}
 }
 
 HRESULT CPart_Preview::Render()
 {
 	__super::Render();
+
+
+	return S_OK;
+}
+
+HRESULT CPart_Preview::Ready_Trail(_uint iLevelIndex, string strFileName)
+{
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iLevelIndex, LAYER_EFFECT, strFileName);
 
 	return S_OK;
 }
@@ -144,7 +164,8 @@ void CPart_Preview::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pParentTransform);
-	
-}
+	Safe_Release(m_pParentTransform);	
 
+	if(nullptr != m_pTrail)
+		Safe_Release(m_pTrail);
+}
