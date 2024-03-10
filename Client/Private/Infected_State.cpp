@@ -100,7 +100,7 @@ CState<CInfected>* CInfected_State::Hit_State(CInfected* pActor, _float fTimeDel
 { 
 	if (pActor->Is_Animation_End())
 	{
-		cout << "Hit_State end " << endl;
+		//cout << "Hit_State end " << endl;
 
 		return Normal_State(pActor, fTimeDelta, _iAnimIndex);
 	}
@@ -112,7 +112,7 @@ CState<CInfected>* CInfected_State::Knock_State(CInfected* pActor, _float fTimeD
 {
 	if (pActor->Is_Animation_End())
 	{
-		cout << "Knock_State end " << endl;
+		//cout << "Knock_State end " << endl;
 
 		return Normal_State(pActor, fTimeDelta, _iAnimIndex);
 	}
@@ -124,7 +124,7 @@ CState<CInfected>* CInfected_State::Dodge_State(CInfected* pActor, _float fTimeD
 {
 	if (pActor->Is_Animation_End())
 	{
-		cout << "Dodge_State end " << endl;
+		//cout << "Dodge_State end " << endl;
 
 		return Normal_State(pActor, fTimeDelta, _iAnimIndex);
 	}
@@ -137,7 +137,7 @@ CState<CInfected>* CInfected_State::Spawn_State(CInfected* pActor, _float fTimeD
 	/* 몬스터 Init에서 셋팅한 Spawn Animation이 끝나면 도달하는곳 */
 	if (pActor->Is_Animation_End()) 
 	{
-		cout << "spawn end " << endl;
+		//cout << "spawn end " << endl;
 
 		_int iRandom = SMath::Random(1, 6);
 
@@ -174,7 +174,7 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 {
 	if (pActor->Is_Animation_End())
 	{
-		cout << "death end " << endl;
+		//cout << "death end " << endl;
 		return new CInfected_Idle();
 	}
 
@@ -219,7 +219,7 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 		if (fDist <= pActor->Get_Info().fWalk_Distance && fDist >= pActor->Get_Info().fAttack_Distance) // Attack ~ Wak 사이 
 		{
-			cout << "Chase - Walk " << endl;
+			//cout << "Chase - Walk " << endl;
 			return new CInfected_Walk_F();
 		}
 		break;
@@ -254,7 +254,7 @@ CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _u
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 		if (fDist > pActor->Get_Info().fWalk_Distance) // Attack ~ Wak 사이 
 		{
-			cout << "Chase - Run " << endl;
+			//cout << "Chase - Run " << endl;
 			return new CInfected_Run_F();
 		}
 		break;
@@ -330,7 +330,7 @@ CState<CInfected>* CInfected_State::Dodge(CInfected* pActor, _float fTimeDelta, 
 	
 	if (CInfected::INFECTED_TYPE::INFECTED_PROTEUS == pActor->Get_Info().Get_Type())
 	{
-		cout << "infected_proteus" << endl;
+		//cout << "infected_proteus" << endl;
 		return nullptr; /* 클래스 갑시다 ㅇㅋ 난자러감 */
 	}
 	else

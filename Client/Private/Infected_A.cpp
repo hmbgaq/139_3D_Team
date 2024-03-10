@@ -97,27 +97,27 @@ HRESULT CInfected_A::Ready_Option()
 		switch (m_eInfo.RandomNumber >> 1)
 		{
 		case 1:
-			cout << " CInfected_SpawnClimb_01 " << endl;
+			//cout << " CInfected_SpawnClimb_01 " << endl;
 			m_pActor->Set_State(new CInfected_SpawnClimb_01());
 			break;
 		case 2:
-			cout << " CInfected_SpawnClimb_02 " << endl;
+			//cout << " CInfected_SpawnClimb_02 " << endl;
 			m_pActor->Set_State(new CInfected_SpawnClimb_02());
 			break;
 		case 3:
-			cout << " CInfected_SpawnCrawl_01 " << endl;
+			//cout << " CInfected_SpawnCrawl_01 " << endl;
 			m_pActor->Set_State(new CInfected_SpawnCrawl_01());
 			break;
 		case 4:
-			cout << " CInfected_SpawnCrawl_02 " << endl;
+			//cout << " CInfected_SpawnCrawl_02 " << endl;
 			m_pActor->Set_State(new CInfected_SpawnCrawl_02());
 			break;
 		case 5:
-			cout << " CInfected_SpawnFromCoffin0 " << endl;
+			//cout << " CInfected_SpawnFromCoffin0 " << endl;
 			m_pActor->Set_State(new CInfected_SpawnFromCoffin0());
 			break;
 		default:
-			cout << " CInfected_SpawnGround " << endl;
+			//cout << " CInfected_SpawnGround " << endl;
 			m_pActor->Set_State(new CInfected_SpawnGround());
 			break;
 		}

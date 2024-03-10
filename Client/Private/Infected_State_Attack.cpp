@@ -23,7 +23,7 @@ CState<CInfected>* CInfected_State_Attack::Update_State(CInfected* pActor, _floa
 {
 	if (pActor->Is_Animation_End()) /* 공격이 끝나면 무조건 뒷걸음질침 */
 	{
-		cout << "공격이후 뒷걸음질 " << endl;
+		//cout << "공격이후 뒷걸음질 " << endl;
 		return new CInfected_Walk_B();
 	}
 
