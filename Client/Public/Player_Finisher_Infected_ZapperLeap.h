@@ -4,7 +4,8 @@
 
 BEGIN(Client)
 
-class CPlayer_Finisher_BanditHeavy_ZapperLeap : public CPlayer_State_Finisher
+
+class CPlayer_Finisher_Infected_ZapperLeap : public CPlayer_State_Finisher
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;
