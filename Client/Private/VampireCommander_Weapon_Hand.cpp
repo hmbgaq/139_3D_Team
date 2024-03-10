@@ -4,6 +4,10 @@
 #include "Character.h"
 #include "VampireCommander_SyncedAttack.h"
 #include "Player.h"
+#include "Player_VampireCommander_SyncedAttack.h"
+#include "Data_Manager.h"
+#include "MasterCamera.h"
+#include "Transform.h"
 
 CVampireCommander_Weapon_Hand::CVampireCommander_Weapon_Hand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CVampireCommander_Weapon(pDevice, pContext, strPrototypeTag)
@@ -92,8 +96,19 @@ void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 	{
 		CVampireCommander* parent = dynamic_cast<CVampireCommander*>(Get_Object_Owner());
 		parent->Get_Actor()->Set_State(new CVampireCommander_SyncedAttack);
-		CPlayer* pPlayer = dynamic_cast<CPlayer*>(Get_Object_Owner());
-		//pPlayer->Get_Actor()->Set_State(new)
+		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+		pPlayer->Get_Actor()->Set_State(new CPlayer_VampireCommander_SyncedAttack);
+		
+		CCamera* pCam;
+		pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
+		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
+		pSpringCam->Set_CameraOffset(_float3(2, 1, -5));
+
+		//CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[0]->Set_Position(pPlayer->Get_Position() + _float3(-1.f, 1.5f, 2.f));
+		//CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[0]->Get_Transform()->Look_At(pPlayer->Get_Transform()->Get_State(CTransform::STATE_POSITION));
+		//CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);	
+
+
 	}
 	Set_Enable(false);
 }

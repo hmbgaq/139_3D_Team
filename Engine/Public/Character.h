@@ -175,7 +175,7 @@ protected:
 
 public:
 	_bool		m_bLookAt = true;
-
+	_bool		m_bTrigger = false;
 protected:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual CGameObject* Pool() PURE;
