@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Level_Intro.h"
+#include "Level_IntroBoss.h"
 #include "GameInstance.h"
 #include "Player.h"
 #include "Camera_Dynamic.h"
@@ -34,14 +34,15 @@
 #pragma endregion
 
 #include "Data_Manager.h"
+#include "MasterCamera.h"
+#include "SpringCamera.h"
 
-
-CLevel_Intro::CLevel_Intro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLevel_IntroBoss::CLevel_IntroBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
 }
 
-HRESULT CLevel_Intro::Initialize()
+HRESULT CLevel_IntroBoss::Initialize()
 {
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
 
@@ -52,30 +53,43 @@ HRESULT CLevel_Intro::Initialize()
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
-	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
-
-
 	//if (FAILED(Ready_UI()))
 	//	return E_FAIL;
 
-	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
 
 	return S_OK;
 }
 
-void CLevel_Intro::Tick(_float fTimeDelta)
+void CLevel_IntroBoss::Tick(_float fTimeDelta)
 {
+	if (false == m_bPlayerStartRotate)
+	{
+		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
+		pPlayer->Set_Position(_float3(60.0f, 0.f, 76.67f));
+		pPlayer->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+
+		CSpringCamera* pSpringCamera = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+
+		_matrix RotationMatrix = XMMatrixRotationRollPitchYaw(XMConvertToRadians(0.f), XMConvertToRadians(180.f), XMConvertToRadians(0.f));
+
+		pSpringCamera->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+		//pSpringCamera->StartCameraRotation(RotationMatrix);
+
+		m_bPlayerStartRotate = true;
+	}
 
 #pragma region Effect_Test	
 
 	if (m_pGameInstance->Key_Down(DIK_GRAVE))
 	{
-		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_INTRO, LAYER_EFFECT, "Hit_3.json");
+		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Hit_3.json");
 		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
 	}
 
+	
 
+	
 	//if (m_pGameInstance->Key_Down(DIK_TAB))
 	//{
 	//	CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Hit_3.json");
@@ -94,20 +108,20 @@ void CLevel_Intro::Tick(_float fTimeDelta)
 #pragma endregion
 }
 
-HRESULT CLevel_Intro::Render()
+HRESULT CLevel_IntroBoss::Render()
 {
 	SetWindowText(g_hWnd, TEXT("Level Intro 입니다."));
 
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_LightDesc()
+HRESULT CLevel_IntroBoss::Ready_LightDesc()
 {
 	/* For. Shadow */
 	//XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 	//XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, lightfar 임 ));
-	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
-	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
+	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO_BOSS), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
+	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO_BOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
 	LIGHT_DESC			LightDesc{};
 	{
@@ -149,7 +163,7 @@ HRESULT CLevel_Intro::Ready_LightDesc()
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Layer_Camera(const wstring& strLayerTag)
+HRESULT CLevel_IntroBoss::Ready_Layer_Camera(const wstring& strLayerTag)
 {
 	//CCamera_Dynamic::DYNAMIC_CAMERA_DESC		Desc = {};
 
@@ -163,22 +177,22 @@ HRESULT CLevel_Intro::Ready_Layer_Camera(const wstring& strLayerTag)
 	//Desc.fSpeedPerSec = 15.f;
 	//Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc));
 
 
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Layer_Player(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_IntroBoss::Ready_Layer_Player(const wstring& strLayerTag, void* pArg)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Rentier"), pArg));
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Rentier"), pArg));
 
 
-	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
+	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
 	//if (nullptr == pPlayer)
 	//	return E_FAIL;
 
@@ -187,21 +201,21 @@ HRESULT CLevel_Intro::Ready_Layer_Player(const wstring& strLayerTag, void* pArg)
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Layer_Effect(const wstring& strLayerTag)
+HRESULT CLevel_IntroBoss::Ready_Layer_Effect(const wstring& strLayerTag)
 {
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion")));
 
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_IntroBoss::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg)
 {
 	CGameObject* pMonster = { nullptr };
 
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Assassin")));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Assassin")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Infected")));
 // 	for (int i = 0; i < 100; ++i)
 // 	{
 	
@@ -209,88 +223,19 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg
 	/*	}*/
 
 	{
-		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_VampireCommander"));
+		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_VampireCommander"));
 	
 		if (nullptr == pMonster)	return E_FAIL;
-		pMonster->Set_Position(_float3(250.66f, 0.f, 7.38f));
+		pMonster->Set_Position(_float3(60.0f, 0.f, 29.84f));
 	}
-
-	{
-		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-
-		if (nullptr == pMonster)	return E_FAIL;
-
-		pMonster->Set_Position(_float3(250.66f, 0.f, 9.38f));
-	}
-
-	{
-		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-
-		if (nullptr == pMonster)	return E_FAIL;
-		
-		pMonster->Set_Position(_float3(250.66f, 0.f, 11.38f));
-	}
-
-
-
-
-	//CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
-
-	//CMonster::MONSTER_DESC Desc = {};
-	//Desc.fRotationPerSec = GameObjectDesc.fRotationPerSec;
-	//Desc.fSpeedPerSec = GameObjectDesc.fSpeedPerSec;
-	//Desc.bPreview = false;
-	//Desc.WorldMatrix = XMMatrixIdentity();
-
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Monster"), &Desc));
-
-
-
-
-
-	//!
-	//!for (_int i = 0; i < iMonsterJsonSize; ++i)
-	//!{
-	//!	string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + "@" + to_string(i);
-	//!
-	//!	m_vecCreateMonsterTag.push_back(pushMonsterTag);
-	//!
-	//!	CMonster::MONSTER_DESC MonsterDesc;
-	//!	MonsterDesc.bPreview = false;
-	//!
-	//!
-	//!	const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-	//!	_float4x4 WorldMatrix;
-	//!
-	//!	for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-	//!	{
-	//!		for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-	//!		{
-	//!			WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-	//!		}
-	//!	}
-	//!
-	//!	MonsterDesc.WorldMatrix = WorldMatrix;
-	//!
-	//!	CMonster* pMonster = { nullptr };
-	//!
-	//!	wstring strProtoTypeTag;
-	//!	m_pGameInstance->String_To_WString((string)MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
-	//!
-	//!	pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
-	//!
-	//!	m_vecCreateMonster.push_back(pMonster);
-	//!	m_iCreateMonsterIndex++;
-	//!}
-
 
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
+HRESULT CLevel_IntroBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
 {
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Terrain")));
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Sky")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Terrain")));
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Sky")));
 
 
 	json Stage1MapJson = {};
@@ -336,7 +281,7 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 		CEnvironment_Object* pObject = { nullptr };
 
-		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 	}
 
 
@@ -386,7 +331,7 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 		CEnvironment_Instance* pInstanceObject = { nullptr };
 
-		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
 
 	}
 
@@ -416,7 +361,7 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 		MonsterDesc.WorldMatrix = WorldMatrix;
 
-		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
 			return E_FAIL;
 
 	}
@@ -426,12 +371,12 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 }
 
-HRESULT CLevel_Intro::Ready_LandObjects()
+HRESULT CLevel_IntroBoss::Ready_LandObjects()
 {
 	CLandObject::LANDOBJECT_DESC	LandObjectDesc{};
 
-	LandObjectDesc.pTerrainBuffer = dynamic_cast<CVIBuffer_Terrain*>(m_pGameInstance->Get_Component(LEVEL_INTRO, TEXT("Layer_BackGround"), TEXT("Com_VIBuffer")));
-	LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_INTRO, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
+	LandObjectDesc.pTerrainBuffer = dynamic_cast<CVIBuffer_Terrain*>(m_pGameInstance->Get_Component(LEVEL_INTRO_BOSS, TEXT("Layer_BackGround"), TEXT("Com_VIBuffer")));
+	LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_INTRO_BOSS, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
 
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
@@ -441,19 +386,19 @@ HRESULT CLevel_Intro::Ready_LandObjects()
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Layer_Building(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_IntroBoss::Ready_Layer_Building(const wstring& strLayerTag, void* pArg)
 {
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg));
 
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Layer_Test(const wstring& strLayerTag)
+HRESULT CLevel_IntroBoss::Ready_Layer_Test(const wstring& strLayerTag)
 {
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
-	//! 애님인스턴싱이 할필요없어짐. ㅎㅎㅎㅎㅎㅎFAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
+	//! 애님인스턴싱이 할필요없어짐. ㅎㅎㅎㅎㅎㅎFAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
 
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
 
 	///* ui test */
 	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
@@ -468,7 +413,7 @@ HRESULT CLevel_Intro::Ready_Layer_Test(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_UI()
+HRESULT CLevel_IntroBoss::Ready_UI()
 {
 	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
 
@@ -479,7 +424,7 @@ HRESULT CLevel_Intro::Ready_UI()
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Layer_UI_Monster(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_IntroBoss::Ready_Layer_UI_Monster(const wstring& strLayerTag, void* pArg)
 {
 	/* 추 후 파싱해서 정보 받아오기 */
 
@@ -523,7 +468,7 @@ HRESULT CLevel_Intro::Ready_Layer_UI_Monster(const wstring& strLayerTag, void* p
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Layer_UI_Interface(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_IntroBoss::Ready_Layer_UI_Interface(const wstring& strLayerTag, void* pArg)
 {
 	// =>Left_Interface
 	Ready_LeftInterface(strLayerTag, pArg);
@@ -540,7 +485,7 @@ HRESULT CLevel_Intro::Ready_Layer_UI_Interface(const wstring& strLayerTag, void*
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_LeftInterface(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_IntroBoss::Ready_LeftInterface(const wstring& strLayerTag, void* pArg)
 {
 	json json_in;
 
@@ -596,7 +541,7 @@ HRESULT CLevel_Intro::Ready_LeftInterface(const wstring& strLayerTag, void* pArg
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_RightInterface(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_IntroBoss::Ready_RightInterface(const wstring& strLayerTag, void* pArg)
 {
 	json json_in;
 
@@ -652,7 +597,7 @@ HRESULT CLevel_Intro::Ready_RightInterface(const wstring& strLayerTag, void* pAr
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_QuestBox(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_IntroBoss::Ready_QuestBox(const wstring& strLayerTag, void* pArg)
 {
 	json json_in;
 
@@ -708,7 +653,7 @@ HRESULT CLevel_Intro::Ready_QuestBox(const wstring& strLayerTag, void* pArg)
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_TutorialBox(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_IntroBoss::Ready_TutorialBox(const wstring& strLayerTag, void* pArg)
 {
 	json json_in;
 
@@ -764,7 +709,7 @@ HRESULT CLevel_Intro::Ready_TutorialBox(const wstring& strLayerTag, void* pArg)
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_LevelUp(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_IntroBoss::Ready_LevelUp(const wstring& strLayerTag, void* pArg)
 {
 	json json_in;
 
@@ -820,7 +765,7 @@ HRESULT CLevel_Intro::Ready_LevelUp(const wstring& strLayerTag, void* pArg)
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Reward_Item(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_IntroBoss::Ready_Reward_Item(const wstring& strLayerTag, void* pArg)
 {
 	json json_in;
 
@@ -876,25 +821,25 @@ HRESULT CLevel_Intro::Ready_Reward_Item(const wstring& strLayerTag, void* pArg)
 	return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_IntroBoss::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 {
 	return S_OK;
 }
 
-CLevel_Intro* CLevel_Intro::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLevel_IntroBoss* CLevel_IntroBoss::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 {
-	CLevel_Intro* pInstance = new CLevel_Intro(pDevice, pContext);
+	CLevel_IntroBoss* pInstance = new CLevel_IntroBoss(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX("Failed to Created : CLevel_Intro");
+		MSG_BOX("Failed to Created : CLEVEL_INTRO_BOSSBoss");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CLevel_Intro::Free()
+void CLevel_IntroBoss::Free()
 {
 	__super::Free();
 

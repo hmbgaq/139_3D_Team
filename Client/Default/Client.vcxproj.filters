@@ -2425,6 +2425,12 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\2. Leap\2. Infected">
       <UniqueIdentifier>{6adbf768-9095-4733-924c-f25b5df5c288}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\01.GamePlay\1.Intro\IntroBoss">
+      <UniqueIdentifier>{ed6857b9-1a0d-497d-b86d-ca1d44dc8353}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\0.Parent">
+      <UniqueIdentifier>{d77b0e52-9a74-4c42-8b30-a1e5804530b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -4593,6 +4599,21 @@
     <ClInclude Include="..\Public\Player_Screamer_Finisher_ZapperPull_03.h">
       <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\5. Screamer\3</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_IntroBoss.h">
+      <Filter>01.Levels\01.GamePlay\1.Intro\IntroBoss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Stun_Loop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Stun_Start.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Stun_Stop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Stun.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\0.Parent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -6684,6 +6705,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_Screamer_Finisher_ZapperPull_03.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\5. Screamer\3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_IntroBoss.cpp">
+      <Filter>01.Levels\01.GamePlay\1.Intro\IntroBoss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Stun_Loop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Stun_Start.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Stun_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Stun.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\0.Parent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

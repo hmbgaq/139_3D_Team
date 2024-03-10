@@ -11,11 +11,11 @@ class CBone;
 class CBody;
 class CCharacter;
 class CEffect_Particle;
-class CMasterCamera;
 END
 
 BEGIN(Client)
 class CPreviewAnimationModel;
+class CMasterCamera;
 
 class CWindow_AnimTool final : public CImgui_Window
 {
@@ -91,6 +91,7 @@ private:
 	CBody*					m_pBody = { nullptr };
 	CEffect_Particle*		m_TestEffect = { nullptr };
 	CMasterCamera*			m_pMasterCamera = { nullptr };
+	CTransform*				m_pBoneTransform = { nullptr };
 
 	//애니메이션 재생
 	_float					m_fSpeed = 1.f;
@@ -112,7 +113,7 @@ private:
 
 	//! Camera
 	_float					m_fCameraOffset[3] = {};
-	_float					m_fCameraAddTargetposition[3] = {};
+	_float3					m_fCameraTargetposition = {};
 
 	//! 콜라이더 위치값 조정 
 	_float					m_fBonePosition[3] = { 0.f,0.f,0.f };
@@ -193,7 +194,6 @@ public:
 	_bool					m_bDynamicCamera = false;
 private:
 	_bool					m_bCreatePlayer = false;
-
 
 	_bool bTest = true;
 	_bool bTest2 = true;

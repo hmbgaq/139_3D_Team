@@ -2554,8 +2554,6 @@ void CWindow_MapTool::Instance_SelectFunction()
 		if (ImGui::BeginListBox(u8"인스턴스 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
 
-
-
 			vector<INSTANCE_INFO_DESC> Desc = *m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_InstanceInfoDesc();
 
 			_int iNumInstance = (_int)Desc.size();
@@ -2596,6 +2594,41 @@ void CWindow_MapTool::Instance_SelectFunction()
 		}
 
 		ImGui::EndChild();
+
+		ImGui::SameLine();
+
+
+		vector<INSTANCE_INFO_DESC> Desc = *m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_InstanceInfoDesc();
+
+		_int iNumInstance = (_int)Desc.size();
+
+		if (ImGui::Button(u8"인스턴스 흔들림잡기용"))
+		{
+
+			for (_uint i = 0; i < iNumInstance; ++i)
+			{
+				m_pPickingInstanceInfo = m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_InstanceInfo(i);
+				Instance_GuizmoTick(m_iSelectEnvironmentIndex, m_pPickingInstanceInfo);
+			}
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_HOME))
+		{
+			if(iNumInstance - 1 > m_iSelectInstanceIndex)
+				m_iSelectInstanceIndex++;
+			else
+				m_iSelectInstanceIndex = 0;
+		
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_END))
+		{
+			if (0 < m_iSelectInstanceIndex)
+				m_iSelectInstanceIndex--;
+			else
+				m_iSelectInstanceIndex = iNumInstance - 1;
+		}
+
 
 		if (m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_NumInstance() > 0)
 		{

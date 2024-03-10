@@ -35,6 +35,7 @@ public:
 
 public:
 	void CameraRotation(_float fTimeDelta);
+	void StartCameraRotation(_fmatrix StartRotationMatrix);
 	void Lock_On(_float fTimeDelta);
 
 public:
@@ -47,6 +48,11 @@ public:
 	void Set_pPlayer(CPlayer* pPlayer) { m_pPlayer = pPlayer;} 
 	void Set_pTarget(CTransform* _pTarget) { m_ptarget = _pTarget; }
 	CTransform* Get_pTarget() { return m_ptarget; }
+
+	//카메라 타겟 포지션 ! 
+	void Set_TargetPosition(_float3 _TargetPosition) { m_TargetPosition = _TargetPosition; }
+	_float3 Get_TargetPosition() { return m_TargetPosition; }
+
 
 private:
 	// 	수평 , 수직 수행거리
@@ -71,6 +77,7 @@ private:
 // 	_float m_CameraOffsetY = 0.f;
 // 	_float m_CameraOffsetZ = 0.f;
 	_float3 m_CameraOffset = {};
+	_float3 m_TargetPosition = {};
 	_float CameraMoveSpeed = 3.f;//카메라 보간용 이동속도
 private:
 	_float				m_fMouseSensor = { 0.0f };

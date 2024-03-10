@@ -441,7 +441,9 @@ void CPhysXCollider::OnCollision(CPhysXCollider* pOtherCollider)
 		{
 			if (!pOtherCollider || !pPreOtherCollider)
 			{
-				DEBUG_ASSERT;
+				#ifdef _DEBUG
+                   DEBUG_ASSERT;
+                #endif // _DEBUG
 				return false;
 			}
 
