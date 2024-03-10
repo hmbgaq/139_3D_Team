@@ -12,7 +12,7 @@ public:
 	virtual void Release(CPlayer* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_Rifle_Ironsights_Fire;
+	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_Empowered_Winchester_IdleFire;
 
 	
 

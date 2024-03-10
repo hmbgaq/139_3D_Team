@@ -4,9 +4,29 @@
 #include "Weapon_Player.h"
 #include "Player_IdleLoop.h"
 #include "Data_Manager.h"
-#include "PhysXController.h"
 
-#include "PhysXController.h"
+#include "Player_HitNormal_B.h"
+#include "Player_HitNormal_F.h"
+#include "Player_HitNormal_L.h"
+#include "Player_HitNormal_R.h"
+#include "Player_HitPeriodic_01.h"
+#include "Player_HitPeriodic_03.h"
+#include "Player_HitPeriodic_04.h"
+#include "Player_KnockFrontLight_F_02.h"
+#include "Player_HitHeavy_F_5m.h"
+
+#include "Player_DeathLight_F_01.h"
+#include "Player_DeathLight_F_02.h"
+#include "Player_DeathNormal_F_01.h"
+#include "Player_DeathNormal_F_02.h"
+
+
+#include "PhysXCharacterController.h"
+#include "PhysXCollider.h"
+#include "Preset_PhysXColliderDesc.h"
+
+
+
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
@@ -40,11 +60,24 @@ HRESULT CPlayer::Initialize(void* pArg)
 		m_pActor->Set_State(new CPlayer_IdleLoop());
 // 	}
 
+
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_PhysXController */
 	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"), TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom)));
 	m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
+	//m_pPhysXControllerCom->
+
+	/* For.Com_PhysXCollider */
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXCollider"), TEXT("Com_PhysXCollider"), reinterpret_cast<CComponent**>(&m_pPhysXCollider)));
+	
+
+	CPhysXCollider::PhysXColliderDesc tPhysXColliderDesc;
+	Preset::PhysXColliderDesc::GroundSetting(tPhysXColliderDesc, m_pTransformCom);
+	m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
+	m_pPhysXCollider->Add_PhysXActorAtScene();
+
+
 
 	CData_Manager::GetInstance()->Set_Player(this);
 
@@ -67,6 +100,36 @@ void CPlayer::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
+
+
+	//_float3 vPos = Get_Position();
+
+	//PxControllerFilters Filters;
+	//
+	//m_pPhysXControllerCom->Synchronize_Controller(m_pTransformCom, fTimeDelta, Filters);
+
+	//m_LastCollisionFlags = m_pPhysXControllerCom->MoveGravity(fTimeDelta, Filters);
+
+	//_vector vPxPos = m_pPhysXControllerCom->Get_Position();
+	//_float3 vResult;
+	//XMStoreFloat3(&vResult, vPxPos);
+
+	//if (m_LastCollisionFlags & PxControllerCollisionFlag::eCOLLISION_DOWN)
+	//{
+	//	_int a = 0;
+	//	//m_pPhysXControllerCom->Reset_Gravity();
+	//}
+
+	//else if (vPos.y < 0)
+	//{
+	//	_int a = 0;
+	//}
+
+	//else 
+	//{
+	//	Set_Position(vResult);
+	//}
+	
 	
 }
 
@@ -206,6 +269,94 @@ HRESULT CPlayer::Ready_PartObjects()
 	m_pWeapon_Punch_R->Set_Enable(false);
 	
 	return S_OK;
+}
+
+void CPlayer::Hitted_Left(Power ePower)
+{
+	switch (ePower)
+	{
+	case Engine::Light:
+		m_pActor->Set_State(new CPlayer_HitNormal_L());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CPlayer_HitNormal_L());
+		break;
+	case Engine::Heavy:
+		m_pActor->Set_State(new CPlayer_HitHeavy_F_5m());
+		break;
+	default:
+		m_pActor->Set_State(new CPlayer_HitNormal_L());
+		break;
+	}
+}
+
+void CPlayer::Hitted_Right(Power ePower)
+{
+	switch (ePower)
+	{
+	case Engine::Light:
+		m_pActor->Set_State(new CPlayer_HitNormal_R());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CPlayer_HitNormal_R());
+		break;
+	case Engine::Heavy:
+		m_pActor->Set_State(new CPlayer_HitHeavy_F_5m());
+		break;
+	default:
+		m_pActor->Set_State(new CPlayer_HitNormal_R());
+		break;
+	}
+}
+
+void CPlayer::Hitted_Front(Power ePower)
+{
+	switch (ePower)
+	{
+	case Engine::Light:
+		m_pActor->Set_State(new CPlayer_HitNormal_F());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CPlayer_HitNormal_F());
+		break;
+	case Engine::Heavy:
+		m_pActor->Set_State(new CPlayer_HitHeavy_F_5m());
+		break;
+	default:
+		m_pActor->Set_State(new CPlayer_HitNormal_F());
+		break;
+	}
+}
+
+void CPlayer::Hitted_Knock(_bool bIsCannonball)
+{
+	//if (bIsCannonball)
+	//{
+	//	m_pActor->Set_State(new CInfected_KnockFrontCannonball_F_01_TEMP());
+	//}
+	//else
+	//{
+	//	m_pActor->Set_State(new CInfected_KnockFrontLight_F_01_NEW());
+	//}
+
+	m_pActor->Set_State(new CPlayer_KnockFrontLight_F_02());
+}
+
+void CPlayer::Hitted_Dead(Power ePower)
+{
+
+	switch (ePower)
+	{
+	case Engine::Light:
+		m_pActor->Set_State(new CPlayer_DeathLight_F_01());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CPlayer_DeathNormal_F_01());
+		break;
+
+	default:
+		break;
+	}
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

@@ -212,7 +212,7 @@ void CMasterCamera::Free()
 {
 	__super::Free();
 
-	for (_uint i = 0; i < (_uint)CameraType_End; ++i)
+	for (_uint i = 0; i < m_Cameras.size(); ++i)
 	{
 		if (nullptr != m_Cameras[i])
 			Safe_Release(m_Cameras[i]);
