@@ -8,6 +8,7 @@
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "Transform.h"
+#include "Bone.h"
 
 CVampireCommander_Weapon_Hand::CVampireCommander_Weapon_Hand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CVampireCommander_Weapon(pDevice, pContext, strPrototypeTag)
@@ -98,16 +99,24 @@ void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 		parent->Get_Actor()->Set_State(new CVampireCommander_SyncedAttack);
 		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 		pPlayer->Get_Actor()->Set_State(new CPlayer_VampireCommander_SyncedAttack);
-		
+		pPlayer->Set_Rotate_In_CameraDir(false);
+		pPlayer->m_bPlayerCheck =false;
 		CCamera* pCam;
 		pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
 		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
-		pSpringCam->Set_CameraOffset(_float3(2, 1, -5));
-
-		//CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[0]->Set_Position(pPlayer->Get_Position() + _float3(-1.f, 1.5f, 2.f));
-		//CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[0]->Get_Transform()->Look_At(pPlayer->Get_Transform()->Get_State(CTransform::STATE_POSITION));
-		//CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);	
-
+		_float4x4 BoneMatrix = {};
+		BoneMatrix = parent->Get_Body()->Get_BonePtr("Neck")->Get_CombinedTransformationMatrix();
+		_float4x4 pMonsterPos = parent->Get_Transform()->Get_WorldMatrix();
+		_float4x4 temp = {};
+		XMStoreFloat4x4(&temp, BoneMatrix * pMonsterPos);
+		_float3 TargetPosition = {};
+		TargetPosition.x = temp._41;
+		TargetPosition.y = temp._42;
+		TargetPosition.z = temp._43;
+		pSpringCam->Set_pTarget(parent->Get_Transform());
+		pSpringCam->Set_TargetPosition(TargetPosition);
+		pSpringCam->Set_pTargetCharacter(parent);
+		pSpringCam->Set_CameraOffset(_float3(1.2f, -2.f, -7.5f));
 
 	}
 	Set_Enable(false);

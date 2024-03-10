@@ -20,9 +20,12 @@ CState<CPlayer>* CPlayer_VampireCommander_SyncedAttack::Update(CPlayer* pActor, 
 void CPlayer_VampireCommander_SyncedAttack::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+	pActor->Set_Rotate_In_CameraDir(true);
+	pActor->m_bPlayerCheck = true;
 	CCamera* pCam;
 	pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
 	CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
+	pSpringCam->Set_pTarget(pActor->Get_Transform());
 	pSpringCam->Set_CameraOffset(_float3(1, 0.5f, -3.0f));
 	//CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::SpringCamera);
 }
