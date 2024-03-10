@@ -6,6 +6,7 @@
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
 #include "Environment_LightObject.h"
+#include "Environment_SpecialObject.h"
 
 #include "Field.h"
 
@@ -806,9 +807,6 @@ void CWindow_MapTool::EnvironmentMode_Function()
 
 			ImGui::EndTabItem();
 		}
-	
-		
-
 	
 
 		ImGui::EndTabBar();

@@ -41,6 +41,8 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 		m_pModelCom->Set_Animation(m_tEnvironmentDesc.iPlayAnimationIndex);
 	}
 
+	
+
 	if(FAILED(m_pGameInstance->Add_Light(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.iLightIndex)))
 		return E_FAIL;
 

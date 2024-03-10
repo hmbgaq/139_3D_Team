@@ -41,7 +41,14 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 		m_pModelCom->Set_Animation(m_tEnvironmentDesc.iPlayAnimationIndex);
 	}
 
+	if (true == m_tEnvironmentDesc.bLightObject)
+	{
+		if (FAILED(m_pGameInstance->Add_Light(m_tEnvironmentDesc.tLightDesc, m_tEnvironmentDesc.iLightIndex)))
+			return E_FAIL;
+	}
+
 	
+
 
 	return S_OK;
 }
@@ -300,6 +307,8 @@ void CEnvironment_Object::Free()
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
 
+
+	//m_pGameInstance->Add_Light()
 
 	if(m_iCurrentLevel == (_uint)LEVEL_TOOL)
 		Safe_Release(m_pPickingCollider);

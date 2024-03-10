@@ -226,13 +226,11 @@ PS_OUT PS_BloodPool(PS_IN In)
     vector vMtrlMask = g_MaskTexture.Sample(LinearSampler, newUV);
     vector vMtrlNoise = g_NoiseTexture.Sample(LinearSampler, newUV);
     
-    
 
     if (vMtrlMask.r <= 0.6f)
         Out.vDiffuse = vector(0.275f, 1.f, 0.f, 1.f);
     else
         Out.vDiffuse = vector(1.f, 0.039f, 0.f, 1.f);
-    
     
     //if (vMtrlDiffuse.a < 0.0f)
     //    discard;
