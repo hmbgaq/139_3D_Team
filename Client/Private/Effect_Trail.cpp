@@ -244,50 +244,50 @@ _bool CEffect_Trail::Write_Json(json& Out_Json)
 	CGameObject::Write_Json(Out_Json);
 
 
-	Out_Json["eType_Effect"] = m_tVoidDesc.eType_Effect;
-	Out_Json["eType_Easing"] = m_tVoidDesc.eType_Easing;
+	Out_Json["Trail"]["eType_Effect"] = m_tVoidDesc.eType_Effect;
+	Out_Json["Trail"]["eType_Easing"] = m_tVoidDesc.eType_Easing;
 
 	string strTag = "";
 	m_pGameInstance->WString_To_String(m_tVoidDesc.strProtoTag, strTag);
-	Out_Json["strProtoTag"] = strTag;
+	Out_Json["Trail"]["strProtoTag"] = strTag;
 
 	m_pGameInstance->WString_To_String(m_tVoidDesc.strPartTag, strTag);
-	Out_Json["strPartTag"] = strTag;
+	Out_Json["Trail"]["strPartTag"] = strTag;
 
 	/* Texture */
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 	{
 		m_pGameInstance->WString_To_String(m_tVoidDesc.strTextureTag[i], strTag);
-		Out_Json["strTextureTag"][i] = strTag;
+		Out_Json["Trail"]["strTextureTag"][i] = strTag;
 
-		Out_Json["iTextureIndex"][i] = m_tVoidDesc.iTextureIndex[i];
+		Out_Json["Trail"]["iTextureIndex"][i] = m_tVoidDesc.iTextureIndex[i];
 	}
 
 
-	Out_Json["iRenderGroup"] = m_tVoidDesc.iRenderGroup;
-	Out_Json["iShaderPassIndex"] = m_tVoidDesc.iShaderPassIndex;
+	Out_Json["Trail"]["iRenderGroup"] = m_tVoidDesc.iRenderGroup;
+	Out_Json["Trail"]["iShaderPassIndex"] = m_tVoidDesc.iShaderPassIndex;
 
-	CJson_Utility::Write_Float2(Out_Json["vUV_Offset"], m_tVoidDesc.vUV_Offset);
-	CJson_Utility::Write_Float2(Out_Json["vUV_Scale"], m_tVoidDesc.vUV_Scale);
-
-
-	Out_Json["fUV_RotDegree"] = m_tVoidDesc.fUV_RotDegree;
-
-	Out_Json["bUV_Wave"] = m_tVoidDesc.bUV_Wave;
-	Out_Json["fUV_WaveSpeed"] = m_tVoidDesc.fUV_WaveSpeed;
+	CJson_Utility::Write_Float2(Out_Json["Trail"]["vUV_Offset"], m_tVoidDesc.vUV_Offset);
+	CJson_Utility::Write_Float2(Out_Json["Trail"]["vUV_Scale"], m_tVoidDesc.vUV_Scale);
 
 
-	CJson_Utility::Write_Float4(Out_Json["vColor_Offset"], m_tVoidDesc.vColor_Offset);
-	CJson_Utility::Write_Float4(Out_Json["vColor_Clip"], m_tVoidDesc.vColor_Clip);
-	CJson_Utility::Write_Float4(Out_Json["vColor_Mul"], m_tVoidDesc.vColor_Mul);
+	Out_Json["Trail"]["fUV_RotDegree"] = m_tVoidDesc.fUV_RotDegree;
+
+	Out_Json["Trail"]["bUV_Wave"] = m_tVoidDesc.bUV_Wave;
+	Out_Json["Trail"]["fUV_WaveSpeed"] = m_tVoidDesc.fUV_WaveSpeed;
+
+
+	CJson_Utility::Write_Float4(Out_Json["Trail"]["vColor_Offset"], m_tVoidDesc.vColor_Offset);
+	CJson_Utility::Write_Float4(Out_Json["Trail"]["vColor_Clip"], m_tVoidDesc.vColor_Clip);
+	CJson_Utility::Write_Float4(Out_Json["Trail"]["vColor_Mul"], m_tVoidDesc.vColor_Mul);
 
 
 	/* State */
-	Out_Json["bUseSpriteAnim"] = m_tVoidDesc.bUseSpriteAnim;
+	Out_Json["Trail"]["bUseSpriteAnim"] = m_tVoidDesc.bUseSpriteAnim;
 
 
 	/* 주인 */
-	Out_Json["bParentPivot"] = m_tVoidDesc.bParentPivot;	// false여야함 
+	Out_Json["Trail"]["bParentPivot"] = m_tVoidDesc.bParentPivot;	// false여야함 
 
 
 	return true;
@@ -299,51 +299,51 @@ void CEffect_Trail::Load_FromJson(const json& In_Json)
 
 
 	/* Effect_Void */
-	m_tVoidDesc.eType_Effect = In_Json["eType_Effect"];
-	m_tVoidDesc.eType_Easing = In_Json["eType_Easing"];
+	m_tVoidDesc.eType_Effect = In_Json["Trail"]["eType_Effect"];
+	m_tVoidDesc.eType_Easing = In_Json["Trail"]["eType_Easing"];
 
 	string strTag = "";
-	strTag = static_cast<string>(In_Json["strProtoTag"]);
+	strTag = static_cast<string>(In_Json["Trail"]["strProtoTag"]);
 	m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strProtoTag);
 
-	strTag = static_cast<string>(In_Json["strPartTag"]);
+	strTag = static_cast<string>(In_Json["Trail"]["strPartTag"]);
 	m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strPartTag);
 
 
 	/* Texture */
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 	{
-		strTag = static_cast<string>(In_Json["strTextureTag"][i]);
+		strTag = static_cast<string>(In_Json["Trail"]["strTextureTag"][i]);
 		m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strTextureTag[i]);
 
-		m_tVoidDesc.iTextureIndex[i] = (_int)In_Json["iTextureIndex"][i];
+		m_tVoidDesc.iTextureIndex[i] = (_int)In_Json["Trail"]["iTextureIndex"][i];
 	}
 
 
-	m_tVoidDesc.iRenderGroup = (_int)In_Json["iRenderGroup"];
-	m_tVoidDesc.iShaderPassIndex = (_int)In_Json["iShaderPassIndex"];
+	m_tVoidDesc.iRenderGroup = (_int)In_Json["Trail"]["iRenderGroup"];
+	m_tVoidDesc.iShaderPassIndex = (_int)In_Json["Trail"]["iShaderPassIndex"];
 
 
-	CJson_Utility::Load_Float2(In_Json["vUV_Offset"], m_tVoidDesc.vUV_Offset);
-	CJson_Utility::Load_Float2(In_Json["vUV_Scale"], m_tVoidDesc.vUV_Scale);
+	CJson_Utility::Load_Float2(In_Json["Trail"]["vUV_Offset"], m_tVoidDesc.vUV_Offset);
+	CJson_Utility::Load_Float2(In_Json["Trail"]["vUV_Scale"], m_tVoidDesc.vUV_Scale);
 
-	m_tVoidDesc.fUV_RotDegree = (_float)In_Json["fUV_RotDegree"];
+	m_tVoidDesc.fUV_RotDegree = (_float)In_Json["Trail"]["fUV_RotDegree"];
 
-	m_tVoidDesc.bUV_Wave = (_bool)In_Json["bUV_Wave"];
-	m_tVoidDesc.fUV_WaveSpeed = (_float)In_Json["fUV_WaveSpeed"];
+	m_tVoidDesc.bUV_Wave = (_bool)In_Json["Trail"]["bUV_Wave"];
+	m_tVoidDesc.fUV_WaveSpeed = (_float)In_Json["Trail"]["fUV_WaveSpeed"];
 
 
-	CJson_Utility::Load_Float4(In_Json["vColor_Offset"], m_tVoidDesc.vColor_Offset);
-	CJson_Utility::Load_Float4(In_Json["vColor_Clip"], m_tVoidDesc.vColor_Clip);
-	CJson_Utility::Load_Float4(In_Json["vColor_Mul"], m_tVoidDesc.vColor_Mul);
+	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Offset"], m_tVoidDesc.vColor_Offset);
+	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Clip"], m_tVoidDesc.vColor_Clip);
+	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Mul"], m_tVoidDesc.vColor_Mul);
 
 
 	/* State */
-	m_tVoidDesc.bUseSpriteAnim = (_bool)In_Json["bUseSpriteAnim"];
+	m_tVoidDesc.bUseSpriteAnim = (_bool)In_Json["Trail"]["bUseSpriteAnim"];
 
 
 	/* 주인 */
-	m_tVoidDesc.bParentPivot = (_bool)In_Json["bParentPivot"];	// false여야함 
+	m_tVoidDesc.bParentPivot = (_bool)In_Json["Trail"]["bParentPivot"];	// false여야함 
 
 }
 

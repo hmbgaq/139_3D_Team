@@ -89,7 +89,6 @@ void CPart_Preview::Late_Tick(_float fTimeDelta)
 	//	return;
 
 
-
 	if (nullptr != m_pTrail)
 	{
 		//m_pTrail->Set_Play(m_bTrailPlay);

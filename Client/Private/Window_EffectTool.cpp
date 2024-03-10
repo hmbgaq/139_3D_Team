@@ -1633,7 +1633,7 @@ void CWindow_EffectTool::Update_TrailTab()
 		{
 			if (ImGui::Button("Test Ready Trail"))
 			{
-				m_pPart_Preview->Ready_Trail(LEVEL_TOOL, "Test_Trail");
+				m_pPart_Preview->Ready_Trail(LEVEL_TOOL, "Test_Trail.json");
 			}
 			ImGui::SeparatorText("");
 		}
@@ -2546,7 +2546,6 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 
 
-
 	// 그리드
 	ImGui::SeparatorText("Grid");
 	if (nullptr == m_pGrid)
@@ -2667,6 +2666,39 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				m_pCurEffect->Delete_Object_Owner();
 			}
 		}
+
+
+		ImGui::SeparatorText("Model Animation");
+		if (ImGui::Button("Idle_"))
+		{
+			if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+			{
+				// 플레이어 아이들 // Index 8
+				m_pModel_Preview->Set_AnimIndex(8);
+			}
+
+			if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+			{
+				// 보스 아이들 // Index 9
+				m_pModel_Preview->Set_AnimIndex(9);
+			}
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Attack_"))
+		{
+			if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+			{
+				// 플레이어 콤보1 	// Index 193
+				m_pModel_Preview->Set_AnimIndex(193);
+			}
+
+			if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+			{
+				// 보스 VampireCommander_AttackMelee_02 // Index 55
+				m_pModel_Preview->Set_AnimIndex(55);
+			}
+		}
+
 
 		if (ImGui::Button("Delete Model"))	// 모델 삭제 버튼
 		{

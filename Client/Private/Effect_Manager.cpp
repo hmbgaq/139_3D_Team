@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 
 #include "Effect.h"
+#include "Effect_Void.h"
 #include "Effect_Trail.h"
 
 IMPLEMENT_SINGLETON(CEffect_Manager);
@@ -54,6 +55,18 @@ CEffect* CEffect_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLay
 CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner)
 {
 	CEffect_Void::EFFECTVOID_DESC	tVoidDesc = {};
+
+	tVoidDesc.eType_Effect = { CEffect_Void::TRAIL };
+
+	tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
+	tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
+
+	tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
+	tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 0 };
+
+	tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
+	tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 0 };
+
 	CEffect_Trail* pTrail = dynamic_cast<CEffect_Trail*>(m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, TEXT("Prototype_GameObject_Effect_Trail"), &tVoidDesc));
 
 	string strPath = "../Bin/DataFiles/Data_Effect/Data_Trail";
@@ -68,6 +81,10 @@ CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& st
 	pTrail->Load_FromJson(In_Json);
 
 	return pTrail;
+
+
+	/* 사용 예시 */
+	// m_pTrail = EFFECT_MANAGER->Ready_Trail(LEVEL_TOOL, LAYER_EFFECT, "Test_Trail.json"); // 또는 Part_Preview클래스 참고
 }
 
 void CEffect_Manager::Free()
