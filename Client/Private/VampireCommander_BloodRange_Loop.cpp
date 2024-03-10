@@ -11,11 +11,11 @@ void CVampireCommander_BloodRange_Loop::Initialize(CVampireCommander* pActor)
 
 CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
-	if (m_iLoopescape <= 1000 && m_bSuccessShooting ==false)
+	if (m_iLoopescape <= 10000 && m_bSuccessShooting ==false)
 	{
 		return new CVampireCommander_BloodRange_Stop();
 	}
-	else if (m_iLoopescape <= 1000 || m_bSuccessShooting == true)
+	else if (m_bSuccessShooting == true)
 	{
 		return new CVampireCommander_BloodRange_Stun_Start();
 	}

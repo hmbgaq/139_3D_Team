@@ -74,7 +74,7 @@ CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommand
 	//근접 공격!! 
 	if (iAttackRandom == 0)
 	{
-		if (7.f > pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
+		if (10.f > pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
 		{
 			switch (iRandom)
 			{
@@ -92,7 +92,7 @@ CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommand
 				return new CVampireCommander_SyncedAttack_Fail;
 			}
 		}
-		else if (50.f > pActor->Calc_Distance() && 7.f < pActor->Calc_Distance())
+		else if (50.f > pActor->Calc_Distance() && 10.f < pActor->Calc_Distance())
 		{
 			switch (iRandomRange)
 			{
@@ -103,13 +103,18 @@ CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommand
 				pActor->m_bLookAt = true;
 				return new CVampireCommander_Ranged3;
 			case 2:
-				pActor->m_bLookAt = true;
-				return new CVampireCommander_Leap_Strat;
+				if (50.f > pActor->Calc_Distance() && 20.f < pActor->Calc_Distance())
+				{
+					pActor->m_bLookAt = true;
+					return new CVampireCommander_Leap_Strat;
+				}
+				break;
 			}
 		}
 	}
-	else if (iAttackRandom ==1)//체력이 75% 이하가 된다면! 조건을 걸어야 함 
+	else if (iAttackRandom ==1 && 750 > pActor->Get_Hp())//체력이 75% 이하가 된다면! 조건을 걸어야 함 
 	{
+		pActor->m_bLookAt = true;
 		return new CVampireCommander_BloodRange_Start;
 	}
 	

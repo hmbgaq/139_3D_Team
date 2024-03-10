@@ -43,6 +43,10 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 		m_pActor->Set_State(new CVampireCommander_Spawn1);
 	}
 
+	//HP , Attack
+	m_iHp = 1000;
+	m_iAttack = 30;
+
 	return S_OK;
 }
 
