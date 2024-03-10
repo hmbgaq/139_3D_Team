@@ -2368,68 +2368,68 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\1. Normal\14. Tricster">
       <UniqueIdentifier>{5cfeb7d5-a175-4534-8c11-76b934b0e4a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29">
-      <UniqueIdentifier>{73b9afa4-aaf1-455d-81b1-b7e3ad4d07c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull">
-      <UniqueIdentifier>{4eff25da-0300-4631-abab-30fd4b6aeeae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\0. Bandit">
-      <UniqueIdentifier>{9c7b6645-39ca-4df6-a21b-129c64f81f2a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\0. Bandit\1">
-      <UniqueIdentifier>{df46c1ca-77ff-461b-a143-1701b58052bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\0. Bandit\2">
-      <UniqueIdentifier>{b323267d-5978-4c14-a1e6-c02125e6a7f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\0. Bandit\3">
-      <UniqueIdentifier>{9771b7ae-d8c5-429d-ad1c-054b2f73f73c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\1. Bandit_Heavy">
-      <UniqueIdentifier>{1ab2f98b-8dd9-45ae-a023-a3a76c95f9c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\1. Bandit_Heavy\1">
-      <UniqueIdentifier>{07472bca-659e-49fd-bfdd-eb4208edadc9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\1. Bandit_Heavy\2">
-      <UniqueIdentifier>{1170f404-2dc0-4e91-9b1d-62a724543ac2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\2. Gambit">
-      <UniqueIdentifier>{2f99314c-fe2c-4e06-8781-7c7555773110}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\3. Infected">
-      <UniqueIdentifier>{cb208293-524d-4634-a733-b8e0807d4f4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\4. ReverseFoot">
-      <UniqueIdentifier>{9e1b14fb-67e3-4355-b7f3-9a5273a274ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\5. Screamer">
-      <UniqueIdentifier>{44236f35-03f2-4468-8b44-822c9522f926}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\5. Screamer\1">
-      <UniqueIdentifier>{538da97e-3785-4c80-a04c-e631861c58c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\5. Screamer\2">
-      <UniqueIdentifier>{8fcdc06c-7ceb-48e4-be71-83c1f598fb3b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\5. Screamer\3">
-      <UniqueIdentifier>{7decfe8e-6c0a-443f-9c15-8f25695e17a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\2. Leap">
-      <UniqueIdentifier>{d6927f74-84d0-4203-aaa4-11f7f77c374c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\2. Leap\1. Bandit_Heavy">
-      <UniqueIdentifier>{2b879098-dba4-49ce-b898-44632a962a43}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\2. Leap\2. Infected">
-      <UniqueIdentifier>{6adbf768-9095-4733-924c-f25b5df5c288}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\01.GamePlay\1.Intro\IntroBoss">
       <UniqueIdentifier>{ed6857b9-1a0d-497d-b86d-ca1d44dc8353}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\0.Parent">
       <UniqueIdentifier>{d77b0e52-9a74-4c42-8b30-a1e5804530b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper">
+      <UniqueIdentifier>{73b9afa4-aaf1-455d-81b1-b7e3ad4d07c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull">
+      <UniqueIdentifier>{4eff25da-0300-4631-abab-30fd4b6aeeae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\0. Bandit">
+      <UniqueIdentifier>{9c7b6645-39ca-4df6-a21b-129c64f81f2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\0. Bandit\1">
+      <UniqueIdentifier>{df46c1ca-77ff-461b-a143-1701b58052bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\0. Bandit\2">
+      <UniqueIdentifier>{b323267d-5978-4c14-a1e6-c02125e6a7f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\0. Bandit\3">
+      <UniqueIdentifier>{9771b7ae-d8c5-429d-ad1c-054b2f73f73c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\1. Bandit_Heavy">
+      <UniqueIdentifier>{1ab2f98b-8dd9-45ae-a023-a3a76c95f9c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\1. Bandit_Heavy\1">
+      <UniqueIdentifier>{07472bca-659e-49fd-bfdd-eb4208edadc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\1. Bandit_Heavy\2">
+      <UniqueIdentifier>{1170f404-2dc0-4e91-9b1d-62a724543ac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\2. Gambit">
+      <UniqueIdentifier>{2f99314c-fe2c-4e06-8781-7c7555773110}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\3. Infected">
+      <UniqueIdentifier>{cb208293-524d-4634-a733-b8e0807d4f4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\4. ReverseFoot">
+      <UniqueIdentifier>{9e1b14fb-67e3-4355-b7f3-9a5273a274ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\5. Screamer">
+      <UniqueIdentifier>{44236f35-03f2-4468-8b44-822c9522f926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\5. Screamer\1">
+      <UniqueIdentifier>{538da97e-3785-4c80-a04c-e631861c58c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\5. Screamer\2">
+      <UniqueIdentifier>{8fcdc06c-7ceb-48e4-be71-83c1f598fb3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\5. Screamer\3">
+      <UniqueIdentifier>{7decfe8e-6c0a-443f-9c15-8f25695e17a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\2. Leap">
+      <UniqueIdentifier>{d6927f74-84d0-4203-aaa4-11f7f77c374c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\2. Leap\1. Bandit_Heavy">
+      <UniqueIdentifier>{2b879098-dba4-49ce-b898-44632a962a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\2. Leap\2. Infected">
+      <UniqueIdentifier>{6adbf768-9095-4733-924c-f25b5df5c288}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -4504,19 +4504,19 @@
       <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\1. Normal\14. Tricster</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Finisher_Gambit_ZapperPull.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\2. Gambit</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\2. Gambit</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Finisher_Infected_ZapperPull.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\3. Infected</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\3. Infected</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Finisher_ReverseFoot_ZapperPull.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\4. ReverseFoot</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\4. ReverseFoot</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Finisher_BanditHeavy_ZapperLeap.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\2. Leap\1. Bandit_Heavy</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\2. Leap\1. Bandit_Heavy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Finisher_Infected_ZapperLeap.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\2. Leap\2. Infected</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\2. Leap\2. Infected</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Finisher_Bandit_01.h">
       <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\1. Normal\01. Bandit\1</Filter>
@@ -4576,28 +4576,28 @@
       <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\1. Normal\09. ReverseFoot\5</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Finisher_Bandit_ZapperPull.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\0. Bandit\1</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\0. Bandit\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Finisher_Bandit_ZapperPull_02.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\0. Bandit\2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\0. Bandit\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Finisher_Bandit_ZapperPull_03.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\0. Bandit\3</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\0. Bandit\3</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Finisher_BanditHeavy_ZapperPull_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\1. Bandit_Heavy\1</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\1. Bandit_Heavy\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Finisher_BanditHeavy_ZapperPull_02.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\1. Bandit_Heavy\2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\1. Bandit_Heavy\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Screamer_Finisher_ZapperPull_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\5. Screamer\1</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\5. Screamer\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Screamer_Finisher_ZapperPull_02.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\5. Screamer\2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\5. Screamer\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Screamer_Finisher_ZapperPull_03.h">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\5. Screamer\3</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\5. Screamer\3</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_IntroBoss.h">
       <Filter>01.Levels\01.GamePlay\1.Intro\IntroBoss</Filter>
@@ -6611,19 +6611,19 @@
       <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\1. Normal\14. Tricster</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Finisher_Gambit_ZapperPull.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\2. Gambit</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\2. Gambit</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Finisher_Infected_ZapperPull.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\3. Infected</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\3. Infected</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Finisher_ReverseFoot_ZapperPull.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\4. ReverseFoot</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\4. ReverseFoot</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Finisher_BanditHeavy_ZapperLeap.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\2. Leap\1. Bandit_Heavy</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\2. Leap\1. Bandit_Heavy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Finisher_Infected_ZapperLeap.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\2. Leap\2. Infected</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\2. Leap\2. Infected</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Finisher_Bandit_01.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\1. Normal\01. Bandit\1</Filter>
@@ -6683,28 +6683,28 @@
       <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\1. Normal\09. ReverseFoot\5</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Finisher_Bandit_ZapperPull.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\0. Bandit\1</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\0. Bandit\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Finisher_Bandit_ZapperPull_02.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\0. Bandit\2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\0. Bandit\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Finisher_Bandit_ZapperPull_03.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\0. Bandit\3</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\0. Bandit\3</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Finisher_BanditHeavy_ZapperPull_01.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\1. Bandit_Heavy\1</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\1. Bandit_Heavy\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Finisher_BanditHeavy_ZapperPull_02.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\1. Bandit_Heavy\2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\1. Bandit_Heavy\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Screamer_Finisher_ZapperPull_01.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\5. Screamer\1</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\5. Screamer\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Screamer_Finisher_ZapperPull_02.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\5. Screamer\2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\5. Screamer\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Screamer_Finisher_ZapperPull_03.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper%28작업 안함%29\1. Pull\5. Screamer\3</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\1. Pull\5. Screamer\3</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_IntroBoss.cpp">
       <Filter>01.Levels\01.GamePlay\1.Intro\IntroBoss</Filter>
