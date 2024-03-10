@@ -1735,95 +1735,17 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee">
       <UniqueIdentifier>{166e3330-b419-4cb0-b748-6d52760110a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo">
-      <UniqueIdentifier>{f6edd8c7-4888-4e70-8671-c24794d7ee30}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\01">
-      <UniqueIdentifier>{692c4f52-5f66-452a-a4b2-60f6abe875a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\02">
-      <UniqueIdentifier>{f203c6aa-ab1d-4537-a59a-12a9ab9b73cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\02\L_New">
-      <UniqueIdentifier>{ec894c4f-702e-473e-abe8-466211f51a7d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\04">
-      <UniqueIdentifier>{be03726b-b676-4ab8-98dd-3b83b0aa0439}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\03%28미사용. Empowered 3 사용중%29">
-      <UniqueIdentifier>{28c5f495-7aa0-4615-86fa-2ac901dba296}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk">
       <UniqueIdentifier>{0027214f-b2a1-4562-bbd1-654bc332c6d7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\0. Parent">
       <UniqueIdentifier>{e0c6135a-d6b1-4b58-bd55-4ca129fb1bb6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Front">
-      <UniqueIdentifier>{609b8141-4661-4f8c-8c9e-36524c7f928b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Front\Left">
-      <UniqueIdentifier>{a44ed9a7-d02f-4562-a6d7-d92da4983d44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Front\Left\45">
-      <UniqueIdentifier>{402f1eec-e1cf-43fb-880a-502bc32deae3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Front\Right">
-      <UniqueIdentifier>{f2f4e76f-38d8-4095-a233-2110098023eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Front\Right\45">
-      <UniqueIdentifier>{716ba9fd-2252-4b53-a7f7-656c7640d0fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Back">
-      <UniqueIdentifier>{caed585f-0b40-4f6e-98b2-b736a30eed60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Back\Left">
-      <UniqueIdentifier>{c4bd1047-e548-4182-8604-4fe8f2e581a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Back\Left\135">
-      <UniqueIdentifier>{3ac31b7d-e0cb-434c-8ba9-8f04bdf971c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Back\Right">
-      <UniqueIdentifier>{01723f41-d087-4921-ac8d-517cf16edd88}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Back\Right\135">
-      <UniqueIdentifier>{387e7579-d1de-4420-bbf3-209ce508c40f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\04. Run">
       <UniqueIdentifier>{37f753f8-1900-4e45-89e2-8bbed3caac9d}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\0. Parent">
       <UniqueIdentifier>{4f2474a5-48f3-4710-89f6-64316593612c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Front">
-      <UniqueIdentifier>{8d1be346-5a29-4526-be5b-f53c2ed9c5d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Front\Left">
-      <UniqueIdentifier>{35c06441-c941-4b4d-a641-c256518e6fc7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Front\Left\45">
-      <UniqueIdentifier>{d6815c91-0b65-4287-b5cc-a76bc9e72ff7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Front\Right">
-      <UniqueIdentifier>{11be868b-cea2-4aa4-b642-eac7e29f56b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Front\Right\45">
-      <UniqueIdentifier>{72df19ea-5532-4b0c-b310-bf640ee671c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Back">
-      <UniqueIdentifier>{8a9e2223-3434-49e3-a71e-5a81fd9aac67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Back\Left">
-      <UniqueIdentifier>{5f3b9bb7-36c2-485b-a32a-515aa0070da3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Back\Left\135">
-      <UniqueIdentifier>{7385b9c9-bda6-4357-a1c7-d1908b32c021}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Back\Right">
-      <UniqueIdentifier>{11c0541d-43ef-4ff8-871c-793864c059d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Back\Right\135">
-      <UniqueIdentifier>{ea5a1d63-95f3-4849-ae8d-0fd231a500cc}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\05. Dodge">
       <UniqueIdentifier>{9ebe664d-6a8e-40aa-ad68-add2ed0bcec3}</UniqueIdentifier>
@@ -1884,21 +1806,6 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim">
       <UniqueIdentifier>{eae54ae4-0ced-4dd5-9a83-5a72882568b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\Rifle">
-      <UniqueIdentifier>{f669680c-43a6-46ea-ac58-3719ea9d2858}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\Rifle\0. Parent">
-      <UniqueIdentifier>{e91f0153-a31f-4466-a127-fede0b13f1d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\Rifle\1. Holster">
-      <UniqueIdentifier>{e909fbaa-9cde-44c2-88f0-e59d664caf27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\Rifle\2. Fire">
-      <UniqueIdentifier>{3065db52-5555-4727-a5c4-47c0664238c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\Rifle\3. Reload">
-      <UniqueIdentifier>{0320d6e0-38b3-492a-bc7d-1fd3b10cd4b6}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\08. Hit">
       <UniqueIdentifier>{8a7cd3ed-555d-4ffc-9c82-ecaff164b032}</UniqueIdentifier>
@@ -2434,6 +2341,411 @@
     <Filter Include="02.GameObjects\02. Environment\Environment_SpecialObject">
       <UniqueIdentifier>{5d93e205-bdb8-4a4b-99aa-796ef3f97a1b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\99. ETC">
+      <UniqueIdentifier>{7911c2ae-5e65-44f0-90ba-fa531833b0aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Player">
+      <UniqueIdentifier>{fc11b013-2883-4ca7-b47f-15f9ace2fd50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front">
+      <UniqueIdentifier>{609b8141-4661-4f8c-8c9e-36524c7f928b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front\Left">
+      <UniqueIdentifier>{a44ed9a7-d02f-4562-a6d7-d92da4983d44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front\Left\45">
+      <UniqueIdentifier>{402f1eec-e1cf-43fb-880a-502bc32deae3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front\Right">
+      <UniqueIdentifier>{f2f4e76f-38d8-4095-a233-2110098023eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front\Right\45">
+      <UniqueIdentifier>{716ba9fd-2252-4b53-a7f7-656c7640d0fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back">
+      <UniqueIdentifier>{caed585f-0b40-4f6e-98b2-b736a30eed60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Left">
+      <UniqueIdentifier>{c4bd1047-e548-4182-8604-4fe8f2e581a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Left\135">
+      <UniqueIdentifier>{3ac31b7d-e0cb-434c-8ba9-8f04bdf971c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Right">
+      <UniqueIdentifier>{01723f41-d087-4921-ac8d-517cf16edd88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Right\135">
+      <UniqueIdentifier>{387e7579-d1de-4420-bbf3-209ce508c40f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim">
+      <UniqueIdentifier>{3b038689-ceb0-4615-8153-dc88a0037643}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\1. Front">
+      <UniqueIdentifier>{32765b5b-fa9b-4900-9a6a-d51b4c4928dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\2. Back">
+      <UniqueIdentifier>{a7659533-5211-43f8-ad63-c86c85172a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Player">
+      <UniqueIdentifier>{bf6fa3e9-3571-472f-9a59-135e695382c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front">
+      <UniqueIdentifier>{8d1be346-5a29-4526-be5b-f53c2ed9c5d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front\Left">
+      <UniqueIdentifier>{35c06441-c941-4b4d-a641-c256518e6fc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front\Left\45">
+      <UniqueIdentifier>{d6815c91-0b65-4287-b5cc-a76bc9e72ff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front\Right">
+      <UniqueIdentifier>{11be868b-cea2-4aa4-b642-eac7e29f56b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front\Right\45">
+      <UniqueIdentifier>{72df19ea-5532-4b0c-b310-bf640ee671c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back">
+      <UniqueIdentifier>{8a9e2223-3434-49e3-a71e-5a81fd9aac67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back\Left">
+      <UniqueIdentifier>{5f3b9bb7-36c2-485b-a32a-515aa0070da3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back\Left\135">
+      <UniqueIdentifier>{7385b9c9-bda6-4357-a1c7-d1908b32c021}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back\Right">
+      <UniqueIdentifier>{11c0541d-43ef-4ff8-871c-793864c059d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back\Right\135">
+      <UniqueIdentifier>{ea5a1d63-95f3-4849-ae8d-0fd231a500cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim">
+      <UniqueIdentifier>{8aec677d-c340-41cc-bf53-ffe2d7b794c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\1. Front">
+      <UniqueIdentifier>{5e87cfbf-e528-43f0-b00e-cf71dff34e9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\2. Back">
+      <UniqueIdentifier>{74dc86b5-a174-4273-af38-5c3183bd34a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle">
+      <UniqueIdentifier>{f669680c-43a6-46ea-ac58-3719ea9d2858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\0. Parent">
+      <UniqueIdentifier>{e91f0153-a31f-4466-a127-fede0b13f1d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\1. Holster">
+      <UniqueIdentifier>{e909fbaa-9cde-44c2-88f0-e59d664caf27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\2. Fire">
+      <UniqueIdentifier>{3065db52-5555-4727-a5c4-47c0664238c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\3. Reload">
+      <UniqueIdentifier>{0320d6e0-38b3-492a-bc7d-1fd3b10cd4b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester">
+      <UniqueIdentifier>{8588fe93-5370-4bb7-a39d-6a81e0c88c6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\1. Front\1. Left">
+      <UniqueIdentifier>{b805ef3a-33aa-45b4-bf1f-d88cf2635dde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\1. Front\2. Right">
+      <UniqueIdentifier>{9d3975ae-1585-4da3-98f1-857f1ded794b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\2. Back\1. Left">
+      <UniqueIdentifier>{2b27c998-09fe-4cce-aa29-6f06fb2e3c90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\2. Back\2. Right">
+      <UniqueIdentifier>{eca50f28-2538-4326-a57f-1e8ff628edf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\1. Front\1. Left">
+      <UniqueIdentifier>{d8ecb7e5-023b-4b5b-b73d-58362b286053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\1. Front\2. Right">
+      <UniqueIdentifier>{22eeb2c8-5d95-48d4-b174-cd808bab47c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\2. Back\1. Left">
+      <UniqueIdentifier>{2c06db9f-2376-41f7-b804-6d282b5d38fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\2. Back\2. Right">
+      <UniqueIdentifier>{98c83e38-94d3-4eb0-b3cd-5b2368bca7b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim">
+      <UniqueIdentifier>{ac9bfd66-26ca-4e3e-b37b-9b3c27b2942f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\1. Front">
+      <UniqueIdentifier>{c061fe8f-b9b9-42d8-8639-4b30c48087c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\2. Back">
+      <UniqueIdentifier>{4f396545-82ed-4d79-b930-82c76cc541ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\1. Front\Right">
+      <UniqueIdentifier>{0946e666-9731-4ab3-bcf4-e482c24522a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\1. Front\Left">
+      <UniqueIdentifier>{300f8ad9-4443-4473-afe2-4fd115eb3be5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\2. Back\Left">
+      <UniqueIdentifier>{7251779a-0de4-4228-8a60-346f5e463e9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\2. Back\Right">
+      <UniqueIdentifier>{21bb728a-f7b8-4e94-972c-751b01a3d217}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow">
+      <UniqueIdentifier>{2bafa049-c99d-4cd7-bdd1-dec2361f2634}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver">
+      <UniqueIdentifier>{2c1d8e57-6e31-48a0-a539-e018842b1637}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun">
+      <UniqueIdentifier>{57f634ad-373c-4e56-8ee5-c66d37cc2952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng">
+      <UniqueIdentifier>{291b3ed2-81cc-4b96-86b3-0799687e5af1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher">
+      <UniqueIdentifier>{a52ce59b-50ae-4a4a-be12-fff4f96879cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade">
+      <UniqueIdentifier>{d347eb3f-28b1-4149-8f63-ce206b855f09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight">
+      <UniqueIdentifier>{4d871476-a20f-4c8d-a903-a16278a15c4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster">
+      <UniqueIdentifier>{2b8f393d-d1e9-4e71-9432-b3f764d9b508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\1. AimPose">
+      <UniqueIdentifier>{49df4610-f8fa-4979-b7de-cd32e27a90dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\2. AO">
+      <UniqueIdentifier>{c2a7a69b-b269-4726-b26f-c8c73152518f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\3. Idle">
+      <UniqueIdentifier>{4709e3f9-90be-4b47-8628-7d3ae9f829db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\4. Reload">
+      <UniqueIdentifier>{7c24e960-e5fb-4b72-b412-967ab2462375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster\1. Lower">
+      <UniqueIdentifier>{859bad48-9df9-4220-a86a-87ca5e5988e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster\2. Unholster">
+      <UniqueIdentifier>{40d3cca4-9751-4560-9e82-0ab4d324b062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player">
+      <UniqueIdentifier>{bf530a0b-71c8-498f-9995-ef9ae8ac87f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit">
+      <UniqueIdentifier>{ecef95d7-7a80-40bf-912b-b05cd4731f31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William">
+      <UniqueIdentifier>{a7dde377-47ed-4cc3-ad53-250da69438e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\1. HandCannonHold">
+      <UniqueIdentifier>{d1c29cd8-99c8-44ad-9eac-c84d574ce5ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\2. Hip_ReloadFast">
+      <UniqueIdentifier>{d8f28f3a-7207-4ba2-ad71-d853df61b87c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\3. Ironsights_ReloadFast">
+      <UniqueIdentifier>{5840bc72-4b44-454a-af65-80f600572ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\4. Holster">
+      <UniqueIdentifier>{efd7f1da-4888-4d2e-a6e0-0ffc234458e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\5. Unholster">
+      <UniqueIdentifier>{33a34814-7576-4d30-ad97-91b1310be432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\1. Ironsights_Reload">
+      <UniqueIdentifier>{e034983d-88ea-45d2-a505-472a53423446}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\2. Reload">
+      <UniqueIdentifier>{5bab2288-95e2-478c-b8c4-9751df5d7c63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\3. Special">
+      <UniqueIdentifier>{3d602dd7-4840-451e-81c4-a390c21e7f5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\4. SprintAim">
+      <UniqueIdentifier>{65270339-a1d1-4495-acd6-90f228d99c3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1">
+      <UniqueIdentifier>{143156af-b6e7-43f0-a0a6-66efa88b6656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2">
+      <UniqueIdentifier>{7be535b3-ea64-4180-a0af-b373963dabae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\1. Start">
+      <UniqueIdentifier>{72581e87-6f5f-42a2-8cd8-0f2caf848be5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\2. Loop">
+      <UniqueIdentifier>{63c1cdcd-31ad-4dbb-82a4-e37643e98f61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\3. Stop">
+      <UniqueIdentifier>{a033facf-fa62-43e5-9710-e9fdd9e09ce1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\1. Start">
+      <UniqueIdentifier>{7b806ebb-f497-4875-8cfd-878811938dc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\2. Loop">
+      <UniqueIdentifier>{8b3eaf42-7305-4793-8243-b49cf1c9a2f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\3. Stop">
+      <UniqueIdentifier>{568012a5-f14a-4315-9774-2f03872a547f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire">
+      <UniqueIdentifier>{59a697e2-a022-491e-8cd3-1b72bf78e795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire\Long">
+      <UniqueIdentifier>{b782802e-1ede-4bdd-bfd0-28cd70da75f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire\Short">
+      <UniqueIdentifier>{fb429591-5c0e-4cfb-8316-3fe80f742c6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\2. Holster">
+      <UniqueIdentifier>{641cc0cf-1781-4f90-9520-af27ccece51a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\3. Electric_Fire">
+      <UniqueIdentifier>{93f0bcf2-49e4-4934-b41d-21a1e560718f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\4. Wiliam_Shot">
+      <UniqueIdentifier>{740f6788-fa07-4f35-ad78-fd3ccec32130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\1. Gatling">
+      <UniqueIdentifier>{87701281-6003-4acd-9c9b-a41dbe539930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\2. Step_L">
+      <UniqueIdentifier>{08f09260-82bb-43d4-91cf-e9856b9fe144}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\3. Holster">
+      <UniqueIdentifier>{9d777207-2e1f-4e0e-aebb-86433c3b7813}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\4. Unholster">
+      <UniqueIdentifier>{0d032a74-e0d9-4a5b-a30c-c0159a405a0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Holster">
+      <UniqueIdentifier>{e9fc9ed4-dfa3-4a04-b742-cf9f45109620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster">
+      <UniqueIdentifier>{33c3d83e-54b0-4a06-be8b-c47bacb7fbcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster\1">
+      <UniqueIdentifier>{f1c94bd6-da48-4f4b-b4aa-980530c243d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster\2">
+      <UniqueIdentifier>{88ea4340-019e-40d9-b16b-6e10b9e76de0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\1. Throw">
+      <UniqueIdentifier>{fcf507a6-8fc8-4a38-88ef-b076b0efb7ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\2. Holster">
+      <UniqueIdentifier>{e10cb186-c58a-4774-a6c6-e8c0fc5e5c0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\3. Unholster">
+      <UniqueIdentifier>{b73b01b6-eee7-4e9e-bedc-dfced2ea2c61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo">
+      <UniqueIdentifier>{f6edd8c7-4888-4e70-8671-c24794d7ee30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\01">
+      <UniqueIdentifier>{692c4f52-5f66-452a-a4b2-60f6abe875a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\02">
+      <UniqueIdentifier>{f203c6aa-ab1d-4537-a59a-12a9ab9b73cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\02\L_New">
+      <UniqueIdentifier>{ec894c4f-702e-473e-abe8-466211f51a7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\04">
+      <UniqueIdentifier>{be03726b-b676-4ab8-98dd-3b83b0aa0439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\03%28미사용. Empowered 3 사용중%29">
+      <UniqueIdentifier>{28c5f495-7aa0-4615-86fa-2ac901dba296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic">
+      <UniqueIdentifier>{3c431157-d606-4458-938d-4031fd4f1486}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\03. FollowUp">
+      <UniqueIdentifier>{27776e52-14af-4a5f-bd21-416aedc19f06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\04. InPlace_9Hit">
+      <UniqueIdentifier>{1f4b61da-f25e-45b7-8ceb-7404e8261df0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\05. Kick">
+      <UniqueIdentifier>{57fdbabb-6ba6-4395-9fb1-3c4b0762e9a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\06. SlashAlt">
+      <UniqueIdentifier>{9dbb5f9b-81e6-4436-81ce-f11e35df13a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\07. Swap">
+      <UniqueIdentifier>{afdc464f-9ae5-4607-835c-64522a6201e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\07. Swap\1">
+      <UniqueIdentifier>{0b30f9da-2e58-472c-be71-0759eeb74582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\07. Swap\2">
+      <UniqueIdentifier>{d18b07c4-1d42-45a2-96cc-855524234b59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut">
+      <UniqueIdentifier>{0348b1da-7dc5-4c73-91a3-95de56efbdd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\09. OpenStateCombo_8hit">
+      <UniqueIdentifier>{9e457286-8fab-4d5b-98a4-3ab9213cbdc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam">
+      <UniqueIdentifier>{b347c982-d1d9-4a18-9420-87568bec256c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\TwoHand">
+      <UniqueIdentifier>{4a15b262-48ae-498d-ab83-f77c6052e9b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Spin">
+      <UniqueIdentifier>{a1c27d07-f7f9-4c74-8767-7a87112824d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Whip">
+      <UniqueIdentifier>{50cc14bb-ea67-4a6b-9fbe-3d0a1f5e9fee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\0. Parent">
+      <UniqueIdentifier>{50dcd8bf-4d2e-4364-a32b-81dadab17fc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\4. MeleeDynamic">
+      <UniqueIdentifier>{9bc772e9-30ed-43e4-a974-38f909e6f78c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\1. Empowered">
+      <UniqueIdentifier>{cb1ab177-5cf9-48ea-bb0b-5e0fc99ad109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\1. Empowered\1. IdleFire">
+      <UniqueIdentifier>{629f12c1-d057-4f0b-8b79-63766caf0760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\1. Empowered\2. Start">
+      <UniqueIdentifier>{e4e79868-25c2-426c-9e8b-0a772dfb3ecb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\1. Empowered\3. Stop">
+      <UniqueIdentifier>{66aaf2c9-8aa0-45d8-9b4a-d9190b004b91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\2. Ironsight">
+      <UniqueIdentifier>{783d7ba2-8e44-4b15-88d3-2b4475e89b0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\2. Ironsight\1. AimPose">
+      <UniqueIdentifier>{926fae8b-9627-4c7e-955f-59bf3c2a0cb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\2. Ironsight\2. Reload">
+      <UniqueIdentifier>{f8cb9ea6-4610-4749-9e9a-f483376e76a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\2. Ironsight\2. Reload\1">
+      <UniqueIdentifier>{3b9d837b-5693-4a85-bc68-9448506289bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\2. Ironsight\2. Reload\2">
+      <UniqueIdentifier>{97e0bbff-3d91-4946-9f15-427ef801a614}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\3. Holster">
+      <UniqueIdentifier>{feb6bae4-9ee5-476e-b686-c078690eeca3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\3. Holster\Lower">
+      <UniqueIdentifier>{633b12cf-84d6-437e-95fb-f713f18e1fd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\3. Holster\Unholster">
+      <UniqueIdentifier>{b4b4c5a5-b72a-4643-b7a7-28d1536977e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -2830,34 +3142,34 @@
       <Filter>02.GameObjects\00. Character\Player\State\05. Dodge\2. DodgeBlink\R_03</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Run_B.h">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Back</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Run_F.h">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Front</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Run_BL.h">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Back\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Run_BR.h">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Back\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Run_BR135.h">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Back\Right\135</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back\Right\135</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Run_BL135.h">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Back\Left\135</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back\Left\135</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Run_FL45.h">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Front\Left\45</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front\Left\45</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Run_FR45.h">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Front\Right\45</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front\Right\45</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Run_FL.h">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Run_FR.h">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_State_Run.h">
       <Filter>02.GameObjects\00. Character\Player\State\04. Run\0. Parent</Filter>
@@ -2866,19 +3178,19 @@
       <Filter>02.GameObjects\00. Character\Player\State\01. Normal\1. Idle\IdleLoop</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_MeleeCombo_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\01</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\01</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_MeleeCombo_02.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\02</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\02</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_MeleeCombo_02_L_NEW.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\02\L_New</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\02\L_New</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_MeleeCombo_03_SlamAOEJump.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\03%28미사용. Empowered 3 사용중%29</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\03%28미사용. Empowered 3 사용중%29</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_MeleeCombo_04.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\04</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\04</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_State_Dodge.h">
       <Filter>02.GameObjects\00. Character\Player\State\05. Dodge\0. Parent</Filter>
@@ -2914,34 +3226,34 @@
       <Filter>02.GameObjects\00. Character\Player\State\03. Walk\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Walk_B.h">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Back</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Walk_F.h">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Front</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Walk_FL.h">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Walk_FR.h">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Walk_BL.h">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Back\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Left</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Walk_BR.h">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Back\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Right</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Walk_FL45.h">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Front\Left\45</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front\Left\45</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Walk_FR45.h">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Front\Right\45</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front\Right\45</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Walk_BL135.h">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Back\Left\135</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Left\135</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Walk_BR135.h">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Back\Right\135</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Right\135</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_TeleportPunch_L01_Alt.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\1</Filter>
@@ -3724,16 +4036,16 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Cover\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_State_Rifle.h">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\Rifle\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Rifle_IdleWeaponHolster.h">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\Rifle\1. Holster</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\1. Holster</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Rifle_Ironsights_Fire.h">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\Rifle\2. Fire</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\2. Fire</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Rifle_Ironsights_Reload.h">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\Rifle\3. Reload</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\3. Reload</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_CoverHigh_Idle.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Cover\1. Cover\0. High\1. Idle</Filter>
@@ -4620,6 +4932,597 @@
     <ClInclude Include="..\public\Environment_SpecialObject.h">
       <Filter>02.GameObjects\02. Environment\Environment_SpecialObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_InteractionVault100.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_JumpDown_3m.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_TakedownRevolver_ManHero_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_HunterTool_BlindingRod.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_HunterTool_Heal_05.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_HunterTool_RingOfProtection.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Pivot_B.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Pivot_BL.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Pivot_F.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Pivot_FR.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Inventory_DefaultPose.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Inventory_Empowered_Blast.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Inventory_Empowered_DefaultPose.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Inventory_Empowered_Nova.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Inventory_Empowered_RailGun.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Inventory_Gauntlet.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Inventory_Lamp.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Inventory_Revolver.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Inventory_Shotgun.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Inventory_Whip.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Inventory_Winchester.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InventoryRevolver.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InventoryRevolverHolster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InventoryRevolverUnholster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InventoryShotgunHolster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InventoryShotgunUnholster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InventoryWinchesterHolster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_InventoryWinchesterUnholster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Sprint_F.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Sprint_F_NEW.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Sprint_F_StartLong_NEW.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Sprint_F_Transition.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Turn_L180.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Turn_R180.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_PushFromBlock_Strong.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Crippler_Use.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Empowered_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Empowered_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Leap_01_Higher.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Leap_01_Lower.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Leap_05.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Leap_Long_Recovery.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Leap_Shorter_Recovery.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_Alt_L_IdlePose.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_Alt_L_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_Alt_L_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_Alt_L_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_Alt_L_WalkOver.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_Alt_L_WalkUnder.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_Alt_R_IdlePose.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_Alt_R_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_Alt_R_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_Alt_R_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_L_Idle.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_L_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_L_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_L_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_R_Idle.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_R_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_R_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_R_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_LedgeStrafe_StepSlip_L.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ResetMachine.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_L_Idle.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_L_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_L_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_L_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_R_Idle.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_R_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_R_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_R_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MoF_LedgeStrafe_L_RockFall.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Dick_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_IdlePose_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_IdlePose_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_IdlePose_03.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_IdlePose_04.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_IdlePose_05.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_IdlePose_06.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_Loop_L_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_Loop_L_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_Loop_R_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_Loop_R_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_Loop_R_03.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_Shift_L_R.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Raid_01_Stuck_R_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeTrough_Tesla_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Tesla_LedgeStrafe_L.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Tesla_LedgeStrafe_L_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_OF_01_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_OF_01_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_OF_01_Start_to_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_OF_01_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CrowdThrough_L_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CrowdThrough_L_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CrowdThrough_L_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_CloseRange_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_Leap.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_LeapShort.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_LongRange.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_Pull.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_GlamourAdditive.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_Alt_L_IdlePose.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_Alt_L_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_Alt_L_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_Alt_L_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_Alt_R_IdlePose.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_Alt_R_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_Alt_R_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SqueezeThrough_Alt_R_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Turn_L90.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Turn_R90.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Inventory_Idle.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Jesse_SniperIntro.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_PushFromBlock.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_WalkAim_B.h">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\2. Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Sniper_WalkAim_B.h">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\2. Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Sniper_WalkAim_F.h">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\1. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_WalkAim_F.h">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\1. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_WalkAim_FL.h">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\1. Front\1. Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_WalkAim_FR.h">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\1. Front\2. Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_WalkAim_BL.h">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\2. Back\1. Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_WalkAim_BR.h">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\2. Back\2. Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Sniper_WalkAim_FL.h">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\1. Front\1. Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Sniper_WalkAim_FR.h">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\1. Front\2. Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Sniper_WalkAim_BL.h">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\2. Back\1. Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Sniper_WalkAim_BR.h">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\2. Back\2. Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_RunAim_B.h">
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\2. Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_RunAim_F.h">
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\1. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_RunAim_FL.h">
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\1. Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_RunAim_FR.h">
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\1. Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_RunAim_BL.h">
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\2. Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_RunAim_BR.h">
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\2. Back\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Empowered_Winchester_IdleFire.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\1. Empowered\1. IdleFire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Empowered_Winchester_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\1. Empowered\2. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Empowered_Winchester_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\1. Empowered\3. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Winchester_Ironsights_AimPose.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\2. Ironsight\1. AimPose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Winchester_Ironsights_Reload_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\2. Ironsight\2. Reload\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Winchester_Ironsights_Reload_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\2. Ironsight\2. Reload\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Winchester_LowerHolster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\3. Holster\Lower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Winchester_WeaponUnholster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\3. Holster\Unholster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Winchester_MeleeDynamic.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\4. MeleeDynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Crossbow_Ironsights_AimPose.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\1. AimPose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Crossbow_Ironsights_AO.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\2. AO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Crossbow_Ironsights_Idle.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\3. Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Crossbow_Ironsights_Reload.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\4. Reload</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Crossbow_LowerHolster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster\1. Lower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Crossbow_WeaponUnholster_Fast.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster\2. Unholster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Revolver_HandCannonHold.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\1. HandCannonHold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Revolver_Hip_ReloadFast_Alt03.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\2. Hip_ReloadFast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Revolver_Ironsights_ReloadFast.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\3. Ironsights_ReloadFast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Revolver_WeaponHolster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\4. Holster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Revolver_WeaponUnholster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\5. Unholster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_Ironsights_Reload_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\1. Ironsights_Reload</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_Reload_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\2. Reload</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_Special_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\3. Special</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_SprintAim_F.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\4. SprintAim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_William_RevolverFanningStart_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_William_RevolverFanningLoop_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\2. Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_William_RevolverFanningStop_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\3. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_William_RevolverFanningStart_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_William_RevolverFanningLoop_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\2. Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_William_RevolverFanningStop_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\3. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Shotgun_Fire_LongRange.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire\Long</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Shotgun_Fire_ShortRange.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire\Short</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Shotgun_WeaponHolster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\2. Holster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ShotgunElectric_Fire_ShortRange.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\3. Electric_Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_William_ShotgunShot_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\4. Wiliam_Shot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_GatlingGun_WeaponUnholster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\4. Unholster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_GatlingGun_WeaponHolster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\3. Holster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_Gatling_Step_L.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\2. Step_L</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Bandit_Gatling.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\1. Gatling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_FlameBelcher_WeaponHolster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Holster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_FlameBelcher_WeaponUnholster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_FlameBelcher_WeaponUnholster_v2.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Grenade_Throw_v2.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\1. Throw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Grenade_WeaponHolster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\2. Holster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Grenade_WeaponUnholster.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\3. Unholster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeDynamic_04.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeFollowUp.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\03. FollowUp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeInPlace_9Hit.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\04. InPlace_9Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeKick.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\05. Kick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeSlashAlt_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\06. SlashAlt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeSwap_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\07. Swap\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeSwap_02.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\07. Swap\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeUppercut_01v2.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_OpenStateCombo_8hit.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\09. OpenStateCombo_8hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Uppercut_03_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Uppercut_04_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Uppercut_05v3_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_UppercutAOE.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_WhipSlam.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Whip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SpinSlam_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Spin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SlamTwoHand_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\TwoHand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Winchester.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\0. Parent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -5138,49 +6041,49 @@
       <Filter>02.GameObjects\00. Character\Player\State\04. Run\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Run_F.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Front</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Run_FR.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Run_FR45.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Front\Right\45</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front\Right\45</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Run_FL.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Run_FL45.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Front\Left\45</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\1. Front\Left\45</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Run_BL135.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Back\Left\135</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back\Left\135</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Run_BR135.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Back\Right\135</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back\Right\135</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Run_BR.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Back\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Run_BL.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Back\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Run_B.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Back</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\1. Player\2. Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_MeleeCombo_01.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\01</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\01</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_MeleeCombo_02_L_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\02\L_New</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\02\L_New</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_MeleeCombo_02.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\02</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\02</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_MeleeCombo_03_SlamAOEJump.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\03%28미사용. Empowered 3 사용중%29</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\03%28미사용. Empowered 3 사용중%29</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_MeleeCombo_04.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\Combo\04</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo\04</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_State_Dodge.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\05. Dodge\0. Parent</Filter>
@@ -5216,34 +6119,34 @@
       <Filter>02.GameObjects\00. Character\Player\State\03. Walk\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Walk_F.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Front</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Walk_FL.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Front\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Walk_FL45.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Front\Left\45</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front\Left\45</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Walk_FR.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Front\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Walk_FR45.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Front\Right\45</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\1. Front\Right\45</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Walk_BL.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Back\Left</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Left</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Walk_BL135.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Back\Left\135</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Left\135</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Walk_BR.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Back\Right</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Right</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Walk_BR135.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Back\Right\135</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Right\135</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Walk_B.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Back</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_TeleportPunch_L02_Alt.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\2</Filter>
@@ -5972,16 +6875,16 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Cover\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_State_Rifle.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\Rifle\0. Parent</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Rifle_IdleWeaponHolster.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\Rifle\1. Holster</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\1. Holster</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Rifle_Ironsights_Fire.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\Rifle\2. Fire</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\2. Fire</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Rifle_Ironsights_Reload.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\Rifle\3. Reload</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\3. Reload</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sniper_CoverHigh_Idle.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Cover\1. Cover\0. High\1. Idle</Filter>
@@ -6732,6 +7635,246 @@
     </ClCompile>
     <ClCompile Include="..\Private\Environment_LightObject.cpp">
       <Filter>02.GameObjects\02. Environment\Environment_LightObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_WalkAim_FL.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\1. Front\1. Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_WalkAim_FR.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\1. Front\2. Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_WalkAim_B.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\2. Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Sniper_WalkAim_F.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\1. Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Sniper_WalkAim_B.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\2. Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_WalkAim_BL.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\2. Back\1. Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_WalkAim_BR.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\2. Back\2. Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Sniper_WalkAim_FL.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\1. Front\1. Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Sniper_WalkAim_FR.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\1. Front\2. Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Sniper_WalkAim_BL.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\2. Back\1. Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Sniper_WalkAim_BR.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\2. Back\2. Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_WalkAim_F.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\1. Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_RunAim_B.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\2. Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_RunAim_F.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\1. Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_RunAim_FL.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\1. Front\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_RunAim_FR.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\1. Front\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_RunAim_BL.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\2. Back\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_RunAim_BR.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\2. Back\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Empowered_Winchester_IdleFire.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\1. Empowered\1. IdleFire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Empowered_Winchester_Start.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\1. Empowered\2. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Empowered_Winchester_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\1. Empowered\3. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Winchester_Ironsights_AimPose.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\2. Ironsight\1. AimPose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Winchester_Ironsights_Reload_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\2. Ironsight\2. Reload\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Winchester_Ironsights_Reload_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\2. Ironsight\2. Reload\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Winchester_LowerHolster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\3. Holster\Lower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Winchester_WeaponUnholster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\3. Holster\Unholster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Winchester_MeleeDynamic.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\4. MeleeDynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Crossbow_Ironsights_AimPose.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\1. AimPose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Crossbow_Ironsights_AO.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\2. AO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Crossbow_Ironsights_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\3. Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Crossbow_Ironsights_Reload.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\4. Reload</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Crossbow_LowerHolster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster\1. Lower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Crossbow_WeaponUnholster_Fast.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster\2. Unholster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Revolver_HandCannonHold.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\1. HandCannonHold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Revolver_Hip_ReloadFast_Alt03.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\2. Hip_ReloadFast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Revolver_Ironsights_ReloadFast.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\3. Ironsights_ReloadFast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Revolver_WeaponHolster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\4. Holster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Revolver_WeaponUnholster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\5. Unholster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_Ironsights_Reload_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\1. Ironsights_Reload</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_Reload_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\2. Reload</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_Special_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\3. Special</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_SprintAim_F.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\4. SprintAim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_William_RevolverFanningStart_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_William_RevolverFanningLoop_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\2. Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_William_RevolverFanningStop_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\3. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_William_RevolverFanningStart_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_William_RevolverFanningLoop_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\2. Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_William_RevolverFanningStop_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\3. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Shotgun_Fire_LongRange.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire\Long</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Shotgun_Fire_ShortRange.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire\Short</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Shotgun_WeaponHolster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\2. Holster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_ShotgunElectric_Fire_ShortRange.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\3. Electric_Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_William_ShotgunShot_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\4. Wiliam_Shot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_GatlingGun_WeaponUnholster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\4. Unholster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_GatlingGun_WeaponHolster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\3. Holster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_Gatling_Step_L.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\2. Step_L</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Bandit_Gatling.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\1. Gatling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_FlameBelcher_WeaponHolster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Holster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_FlameBelcher_WeaponUnholster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_FlameBelcher_WeaponUnholster_v2.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Grenade_Throw_v2.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\1. Throw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Grenade_WeaponHolster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\2. Holster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Grenade_WeaponUnholster.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\3. Unholster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeDynamic_04.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeFollowUp.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\03. FollowUp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeInPlace_9Hit.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\04. InPlace_9Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeKick.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\05. Kick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeSlashAlt_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\06. SlashAlt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeSwap_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\07. Swap\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeSwap_02.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\07. Swap\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeUppercut_01v2.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_OpenStateCombo_8hit.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\09. OpenStateCombo_8hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Uppercut_03_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Uppercut_04_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Uppercut_05v3_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_UppercutAOE.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_WhipSlam.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Whip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_SpinSlam_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Spin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_SlamTwoHand_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\TwoHand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Winchester.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\0. Parent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

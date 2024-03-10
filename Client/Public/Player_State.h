@@ -29,10 +29,15 @@ public:		//상태 그룹 별 업데이트
 	CState<CPlayer>* Roll_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Hit_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Rifle_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Winchester_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+	
 	CState<CPlayer>* Interaction_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Death_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Finisher_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	
 
+	
 	
 
 
