@@ -437,6 +437,7 @@
     <ClInclude Include="..\Public\Infected_Walk_FR.h" />
     <ClInclude Include="..\Public\Infected_Walk_FR45.h" />
     <ClInclude Include="..\Public\Level_Intro.h" />
+    <ClInclude Include="..\Public\Level_IntroBoss.h" />
     <ClInclude Include="..\Public\ManHeavy_KnockFrontCannonball_F_02.h" />
     <ClInclude Include="..\Public\MasterCamera.h" />
     <ClInclude Include="..\Public\Model_Preview.h" />
@@ -955,6 +956,7 @@
     <ClCompile Include="..\Private\Infected_Walk_FR.cpp" />
     <ClCompile Include="..\Private\Infected_Walk_FR45.cpp" />
     <ClCompile Include="..\Private\Level_Intro.cpp" />
+    <ClCompile Include="..\Private\Level_IntroBoss.cpp" />
     <ClCompile Include="..\Private\ManHeavy_KnockFrontCannonball_F_02.cpp" />
     <ClCompile Include="..\Private\MasterCamera.cpp" />
     <ClCompile Include="..\Private\Model_Preview.cpp" />

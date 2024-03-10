@@ -232,6 +232,11 @@ void CSpringCamera::CameraRotation(_float fTimeDelta)
 	m_pTransformCom->Set_Position(currentCameraPosition + cameraOffset * hDist);
 }
 
+void CSpringCamera::StartCameraRotation(_fmatrix StartRotationMatrix)
+{
+	m_pTransformCom->Set_WorldMatrix(StartRotationMatrix * XMMatrixTranslationFromVector(ActualPosition));
+}
+
 void CSpringCamera::Lock_On(_float fTimeDelta)
 {
 	//카메라 움직임은 Late_Tick에 있다!

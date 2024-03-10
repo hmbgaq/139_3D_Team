@@ -1969,6 +1969,9 @@
     <Filter Include="02.GameObjects\UI\00. Player\HUD">
       <UniqueIdentifier>{5681727c-afb0-4534-9296-d95d804be038}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\01.GamePlay\1.Intro\IntroBoss">
+      <UniqueIdentifier>{ed6857b9-1a0d-497d-b86d-ca1d44dc8353}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3602,6 +3605,9 @@
     </ClInclude>
     <ClInclude Include="CUI_HUD.h">
       <Filter>02.GameObjects\UI\00. Player\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_IntroBoss.h">
+      <Filter>01.Levels\01.GamePlay\1.Intro\IntroBoss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -5337,6 +5343,9 @@
     </ClCompile>
     <ClCompile Include="CUI_HUD.cpp">
       <Filter>02.GameObjects\UI\00. Player\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_IntroBoss.cpp">
+      <Filter>01.Levels\01.GamePlay\1.Intro\IntroBoss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

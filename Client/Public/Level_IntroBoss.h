@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CLevel_Intro final : public CLevel
+class CLevel_IntroBoss final : public CLevel
 {
 private:
-	CLevel_Intro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CLevel_Intro() = default;
+	CLevel_IntroBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLevel_IntroBoss() = default;
 
 public:
 	virtual HRESULT Initialize() override;
@@ -43,11 +43,12 @@ private: /* UI */
 
 private:
 	_int			TempLightNumber = 0;
+	_bool			m_bPlayerStartRotate = false;
 
-	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
+	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData.json";
 
 public:
-	static CLevel_Intro* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLevel_IntroBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 };
 
