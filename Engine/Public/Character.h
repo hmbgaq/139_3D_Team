@@ -123,8 +123,6 @@ public:
 	_int Get_Hp() { return m_iHp; };
 	void Set_Hp(_uint _iHp) { m_iHp = _iHp; };
 
-	_int Get_Attack() { return m_iAttack; }
-	void Set_Attack(_uint _iAttack) { m_iHp = _iAttack; }
 
 public:
 	CCharacter* Get_Target() { return m_pTarget; };
@@ -153,7 +151,6 @@ public:	//!For Animation Split
 
 protected:
 	_int m_iHp = { 1 };
-	_int m_iAttack = { 1 };
 	Power m_eStrength = { Power::Light };
 	_float m_fStiffnessRate = { 1.f };
 
