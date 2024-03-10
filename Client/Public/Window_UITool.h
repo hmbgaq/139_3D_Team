@@ -304,16 +304,16 @@ private:
 	_int m_iOldIndex = -1;
 #pragma region											최소, 최대 값
 // 크기
-	_float	fMin_Scale = -5000.1f;	// 최소
-	_float	fMax_Scale = 5000.1f;	// 최대
+	_float	fMin_Scale = 0.f;	// 최소
+	_float	fMax_Scale = 2000.f;	// 최대
 
 	// 회전
 	_float	fMin_Rot = -180.f;		// 최소
 	_float	fMax_Rot = 180.f;	// 최대
 
 	// 이동
-	_float	fMin_Pos = -5000.1f;		// 최소
-	_float	fMax_Pos = 5000.1f;	// 최대
+	_float	fMin_Pos = -5000.f;		// 최소
+	_float	fMax_Pos = 5000.f;	// 최대
 
 	// 시간
 	_float	fMin_Time = 0.f;	// 최소

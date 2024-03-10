@@ -23,9 +23,9 @@ public:
 
 		_int	iTexureframe = 0;				// 텍스처 변경 값
 
-		_float2	vScale = { 0.f, 0.f };			// 크기를 담을 그릇
+		_float2	vScale = { 50.f, 50.f };			// 크기를 담을 그릇
 		_float	fRot = 0.f;						// 회전을 담을 그릇
-		_float2	vPos = { 0.f, 0.f };			// 위치를 담을 그릇
+		_float2	vPos = { 10.f, 10.f };			// 위치를 담을 그릇
 
 		_float2	vKeyFramePos = { 0.00000000f, 0.00000000f };	// 툴에서의 해당 키프레임 위치
 

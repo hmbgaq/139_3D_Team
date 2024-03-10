@@ -1377,11 +1377,6 @@ void CWindow_UITool::Delete_Child(_float fTimeDelta)
 	if (m_pCurrSelectUI)
 		m_pCurrSelectUI = nullptr; // 현재 선택돼있는 녀석이 죽었으니 주소 비워주자.
 
-	if (m_vecTimeline != nullptr);
-	{
-		Safe_Delete(m_vecTimeline);
-	}
-
 
 	m_iSelected_ChildObjectIndex = m_iSelected_ChildObjectIndex - 1; // 현재 선택한 인덱스번째의 오브젝트를 삭제했으니, 선택된 인덱스도 뒤로 한칸 돌려주자.
 }
@@ -3009,7 +3004,10 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	if (selectedKeyframe.iType == 0) // 크기 애니메이션
 	{
 		// 크기 값 입력
-		ImGui::DragFloat(u8"크기(입력) X", &selectedKeyframe.vScale.x);
+		if (ImGui::DragFloat(u8"크기(입력) X", &selectedKeyframe.vScale.x))
+		{
+			selectedKeyframe.vScale.x = selectedKeyframe.vScale.x;
+		}
 		ImGui::DragFloat(u8"크기(입력) Y", &selectedKeyframe.vScale.y);
 		// 입력된 값의 범위를 제한(수동)
 		selectedKeyframe.vScale.x = (selectedKeyframe.vScale.x < fMin_Scale) ? fMin_Scale : ((selectedKeyframe.vScale.x > fMax_Scale) ? fMax_Scale : selectedKeyframe.vScale.x);

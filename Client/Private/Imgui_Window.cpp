@@ -284,12 +284,12 @@ void CImgui_Window::Set_GuizmoUI(CGameObject* pGameObject)
 	ImGuizmo::SetRect(0, 0, g_iWinSizeX, g_iWinSizeY);
 
 
-	if (ImGui::IsKeyPressed(ImGuiKey_T))
-		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-	if (ImGui::IsKeyPressed(ImGuiKey_R))
-		mCurrentGizmoOperation = ImGuizmo::ROTATE;
-	if (ImGui::IsKeyPressed(ImGuiKey_E))
-		mCurrentGizmoOperation = ImGuizmo::SCALE;
+	//if (ImGui::IsKeyPressed(ImGuiKey_T))
+	//	mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	//if (ImGui::IsKeyPressed(ImGuiKey_R))
+	//	mCurrentGizmoOperation = ImGuizmo::ROTATE;
+	//if (ImGui::IsKeyPressed(ImGuiKey_E))
+	//	mCurrentGizmoOperation = ImGuizmo::SCALE;
 
 	if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
