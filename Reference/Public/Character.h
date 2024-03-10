@@ -123,6 +123,7 @@ public:
 	_int Get_Hp() { return m_iHp; };
 	void Set_Hp(_uint _iHp) { m_iHp = _iHp; };
 
+
 public:
 	CCharacter* Get_Target() { return m_pTarget; };
 	void Set_Target(CCharacter* pTarget) { m_pTarget = pTarget; };

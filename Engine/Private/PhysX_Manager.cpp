@@ -158,6 +158,32 @@ _uint CPhysX_Manager::Get_PhysXFilterGroup(const _uint In_iIndex)
 	return m_arrCheck[In_iIndex];
 }
 
+PxFilterFlags CollisionFilterShader(
+	PxFilterObjectAttributes attributes0, PxFilterData filterData0,
+	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
+{
+	if (filterData0.word2 != 1 || filterData1.word2 != 1)
+	{
+		return PxFilterFlag::eKILL;
+	}
+
+	if ((filterData0.word0 & filterData1.word1) && (filterData1.word0 & filterData0.word1))
+	{
+
+		pairFlags |= PxPairFlag::eDETECT_DISCRETE_CONTACT;
+		pairFlags |= PxPairFlag::eCONTACT_DEFAULT;
+		pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND;
+		return PxFilterFlag::eDEFAULT;
+	}
+	else
+	{
+		return PxFilterFlag::eKILL;
+	}
+
+	return PxFilterFlag::eDEFAULT;
+}
+
 HRESULT CPhysX_Manager::Create_Scene(PxVec3 Gravity)
 {
 	// Set Scene
@@ -167,7 +193,7 @@ HRESULT CPhysX_Manager::Create_Scene(PxVec3 Gravity)
 	// Set Dispatcher
 	m_pDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = m_pDispatcher;
-	sceneDesc.filterShader = PxDefaultSimulationFilterShader;	// PxDefaultSimulationFilterShader ������ ����
+	sceneDesc.filterShader = CollisionFilterShader;	
 	//sceneDesc.cudaContextManager = m_pCudaContextManager;
 	sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
 	sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;	//Enable GPU dynamics - without this enabled, simulation (contact gen and solver) will run on the CPU.

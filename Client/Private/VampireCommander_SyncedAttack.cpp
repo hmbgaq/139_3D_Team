@@ -5,7 +5,7 @@ void CVampireCommander_SyncedAttack::Initialize(CVampireCommander* pActor)
 {
 	__super::Initialize(pActor);
 	//여기서 Fail과의 분기점인 Trackposition 받아서 가져와야 함 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true,true,0);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true,true,48);
 
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 
