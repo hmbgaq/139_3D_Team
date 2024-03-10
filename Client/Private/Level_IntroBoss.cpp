@@ -53,8 +53,8 @@ HRESULT CLevel_IntroBoss::Initialize()
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
-	if (FAILED(Ready_UI()))
-		return E_FAIL;
+	//if (FAILED(Ready_UI()))
+	//	return E_FAIL;
 
 
 	return S_OK;
