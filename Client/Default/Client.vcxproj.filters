@@ -781,12 +781,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child">
       <UniqueIdentifier>{a3a0437a-dce4-40f1-90ff-ec001d3bfcb0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. A">
-      <UniqueIdentifier>{d2cfffb2-ba20-41c0-bf90-0a53a840e06e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. A\Body">
-      <UniqueIdentifier>{40a0d461-7df2-418b-b605-98eeda46db30}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State">
       <UniqueIdentifier>{93bf8f56-5d24-4cf3-8ec7-68d418711d0d}</UniqueIdentifier>
     </Filter>
@@ -1972,6 +1966,45 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Heavy">
       <UniqueIdentifier>{eeb3bfc7-bb50-4347-8b86-e8f19fd19013}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A">
+      <UniqueIdentifier>{d2cfffb2-ba20-41c0-bf90-0a53a840e06e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Body">
+      <UniqueIdentifier>{40a0d461-7df2-418b-b605-98eeda46db30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B">
+      <UniqueIdentifier>{9e4fbf4c-6ddb-4ab7-ace0-b979bb7d1d64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C">
+      <UniqueIdentifier>{e72a5052-eaeb-40b1-bd8f-832d14139dc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Proteus">
+      <UniqueIdentifier>{0cd381d9-63f0-4246-86cf-fac36ffd3924}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\4. Waster">
+      <UniqueIdentifier>{a468a97f-999c-452d-9f16-8c922afadcfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\4. Scared">
+      <UniqueIdentifier>{221db0ad-424f-4298-804d-afb016e1e69a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Stun">
+      <UniqueIdentifier>{780f62d1-e0bb-4145-89dd-e36a8fddfdf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Stun">
+      <UniqueIdentifier>{827e2210-a0e8-41a7-9ef0-53d6698a0f70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\4. Scared\Left">
+      <UniqueIdentifier>{6b6b1861-0b16-4287-99ed-420d81e34d2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\4. Scared\Right">
+      <UniqueIdentifier>{decd0366-72fd-4f93-8ecf-682aba1238b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B\Body">
+      <UniqueIdentifier>{929df66a-7a17-496d-8fa1-9552f8acfece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Body">
+      <UniqueIdentifier>{0998690f-94ba-4e14-8a39-2da0d7c5dc65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -2664,14 +2697,8 @@
     <ClInclude Include="..\Public\Infected_State_Hit.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\0. Parent</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLightOpened_F_01_NEW.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Hit_whip_end_down.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit</Filter>
@@ -3202,13 +3229,13 @@
       <Filter>02.GameObjects\04. Projectile</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Infected_A.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. A\Body</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_A.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. A</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_State.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\0. Origin</Filter>
@@ -3590,6 +3617,30 @@
     </ClInclude>
     <ClInclude Include="..\Public\Bandit_Heavy.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_Scared_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\4. Scared\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_Scared_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\4. Scared\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Stun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Stun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_B.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Infected_B.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_C.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Infected_C.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Body</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4456,9 +4507,6 @@
     <ClCompile Include="..\Private\Infected_HitNormal_F_03_NEW.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Front\03</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Infected_HitNormalToStun_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_BL_01_NEW.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Back\Left</Filter>
     </ClCompile>
@@ -4485,9 +4533,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Infected_HitHeavy_FR90_01_NEW.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Front\Right\90</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Infected_HitHeavyToStun_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Hit_whip_end_down.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit</Filter>
@@ -4877,13 +4922,13 @@
       <Filter>02.GameObjects\04. Projectile</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Infected_A.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. A\Body</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_A.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. A</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_State.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\0. Origin</Filter>
@@ -5313,6 +5358,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bandit_Heavy.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_Scared_03.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\4. Scared\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_Scared_02.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\4. Scared\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_HitNormalToStun_01_NEW.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Stun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_HitHeavyToStun_01_NEW.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Stun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_B.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Infected_B.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_C.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Infected_C.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Body</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

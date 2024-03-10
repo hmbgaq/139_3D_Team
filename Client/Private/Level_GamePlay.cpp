@@ -5,6 +5,7 @@
 #include "Camera_Dynamic.h"
 #include "Environment_Instance.h"
 #include "Effect_Instance.h"
+#include "Data_Manager.h"
 
 #pragma region UI
 #include "UI_Player_HPBar.h"
@@ -18,7 +19,6 @@
 #pragma region MAP
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
-
 #pragma endregion
 
 
@@ -33,7 +33,6 @@
 #include "Effect.h"
 #pragma endregion
 
-#include "Data_Manager.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -201,18 +200,27 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* 
 
 	/* Test - InfectedA - 소영*/
 	{
-		for (int i = 0; i < 10; ++i)
-		{
+		//for (int i = 0; i < 10; ++i)
+		//{
 			CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
 			NULL_CHECK_RETURN(pMonster, E_FAIL);
-			pMonster->Set_Position(_float3(250.5 + i* 2.f, 0.f, 10.f + i * 2.f));
-		}
+			pMonster->Set_Position(_float3(250.5, 0.f, 10.f ));
+
+			//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+			//NULL_CHECK_RETURN(pMonster, E_FAIL);
+			//pMonster->Set_Position(_float3(252.f, 0.f, 12.f ));
+			//
+			//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+			//NULL_CHECK_RETURN(pMonster, E_FAIL);
+			//pMonster->Set_Position(_float3(255.5f, 0.f, 15.f ));
+			//pMonster->Set_Position(_float3(250.5 + i* 2.f, 0.f, 10.f + i * 2.f));
+		//}
 	}
 	/* Test - Sniper - 소영*/
 	{
-		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-		NULL_CHECK_RETURN(pMonster, E_FAIL);
-		pMonster->Set_Position(_float3(250.5, 0.f, 15.f));
+		//CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+		//NULL_CHECK_RETURN(pMonster, E_FAIL);
+		//pMonster->Set_Position(_float3(250.5, 0.f, 15.f));
 	}
 
 	//CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;

@@ -269,7 +269,7 @@ protected: /* LifeTime */
 	void				LifeTime_LevelUp(_float fTimeDelta);
 	_bool				m_bEventOn = false;
 	_float				m_fLifeTime = 5000.f;
-	_float				m_fTime = GetTickCount64();
+	_float				m_fTime = (_float)GetTickCount64();
 
 protected: /* ========================= Component =========================== */
 	CShader*			m_pShaderCom = { nullptr };

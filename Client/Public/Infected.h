@@ -15,6 +15,25 @@ public:
 	INFECTED_VESSEL_A, INFECTED_VESSEL_B, INFECTED_VESSEL_C, 
 	INFECTED_PROTEUS, INFECTED_WASTER, INFECTED_END };
 
+	typedef struct tagDesc
+	{
+		INFECTED_TYPE eType = INFECTED_TYPE::INFECTED_END;
+			
+		_float fAttack_Distance = 0.f; // 0 ~ Attack = 공격사거리 
+		_float fWalk_Distance = 0.f;   // Attack ~ Walk = walk Animation으로 접근 
+								 // Walk Dist < 보다 값이 클경우 Run -> Attack 도달하면 공격    
+		_float WalkSpeed = 0.f;
+		_float RunSpeed = 0.f;
+
+		_int RandomNumber = 0;
+	public:
+		tagDesc()
+		{
+			ZeroMemory(this, sizeof(tagDesc));
+		}
+		INFECTED_TYPE Get_Type() { return eType; }
+	}INFECTED_DESC;
+
 protected:
 	CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CInfected(const CInfected& rhs);
@@ -29,8 +48,7 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	_int Get_MyRandom() { return m_iRandomNumber; }
-	INFECTED_TYPE Get_MyType() { return m_eType; }
+	INFECTED_DESC Get_Info() { return m_eInfo; }
 
 protected:
 	HRESULT Ready_Components();
@@ -43,14 +61,12 @@ protected:
 	virtual void Hitted_Dead(Power ePower)	override;
 
 protected:
-	_int m_iRandomNumber = {};
-	INFECTED_TYPE m_eType = INFECTED_TYPE::INFECTED_END;
+	INFECTED_DESC m_eInfo = {};
 
 private:
 	CActor<CInfected>* m_pActor = { nullptr };
 
 public:
-	//static CInfected* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual CGameObject* Pool() PURE;
 
@@ -69,7 +85,7 @@ public:
 		Infected_MeleeDynamic_RU_03				 , // (7) 이동공격 / 짧은 거리 - 양손 내려찍기 
 		Infected_Sprint_F_Melee_02				 , // (8) 이동공격 / 긴 거리 - 한손 내려찍기 
 		Infected_Sprint_F_Melee_03				 , // (9) 이동공격 / 긴 거리 - 한손 수평공격
-		Infected_Idle							 , // (10) Idle / 그냥 서있기만함 - x
+		Infected_Idle							 , // (10) Idle / 그냥 서있기만함 
 		Infected_IdleAct_01						 , // (11) Idle / 반쯤 엎드리기까지 하는 Idle 비틀거림
 		Infected_IdleAct_02						 , // (12) Idle / 술취해서 약간 비틀거리는정도 
 		Infected_IdleAct_03						 , // (13) Idle / 제자리에서 주변 둘러보기 
@@ -99,7 +115,7 @@ public:
 		Infected_SpawnJumpOut_03				 , // (37) Spawn / 뭔가 짚으면서 나타남 
 		Infected_SpecialIdle					 , // (38) Idle / 바닥에 앉아있음
 		Infected_SpecialIdle_to_Idle			 , // (39) Idle / 바닥에 앉아있다가 일어남 
-		Infected_Sprint_F_01					 , // (40) Move / 두손들고 달려옴 
+		Infected_Sprint_F_01					 , // (40) Move / 빠르게 두손들고 달려옴 
 		Infected_Taunt_01						 , // (41) Move / 두손들고 좀비처럼 다가옴 
 		Infected_Taunt_02						 , // (42) Move / 왼쪽 180도 회전 
 		Infected_Turn_L180						 , // (43) Move / 왼쪽 180도 회전 
@@ -137,13 +153,13 @@ public:
 		Infected_HitLightOpened_F_01_NEW		 , // (75) Hit / 사용x 메시 뭉쳐있음 
 		Infected_HitNormal_B_01_NEW				 , // (76) Hit / 사용x 메시 뭉쳐있음 
 		Infected_HitNormal_BL_01_NEW			 , // (77) Hit / 사용x 메시 뭉쳐있음 
-		Infected_HitNormal_BR_01_NEW			 , // (78) Hit / 아이고 그러시구나 하고 앞으로 좀만 가더니 뒤돌아봄
+		Infected_HitNormal_BR_01_NEW			 , // (78) Attack / 아이고 그러시구나 하고 앞으로 좀만 가더니 뒤돌아봄
 		Infected_HitNormal_F_01_NEW				 , // (79) Hit / 살짝 왼뺨 맞은것처럼 하고 앞으로 이동해서 뒤돌아봄
 		Infected_HitNormal_F_02_NEW				 , // (80) Hit / 턱주가리 두걸음 뒤로 
 		Infected_HitNormal_FL90_01_NEW			 , // (81) Hit / 아예 하고 허리굽혀서 오른쪽으로 이동 
-		Infected_HitNormal_FL_01_NEW			 , // (82) Hit / 살짝 오른뺨 맞은것처럼 하고 뒤로 이동
+		Infected_HitNormal_FL_01_NEW			 , // (82) Hit / 살짝 왼뺨 맞은것처럼 하고 뒤로 이동
 		Infected_HitNormal_FR90_01_NEW			 , // (83) Hit / 살짝 오른뺨 맞은것처럼 하고 왼쪽로 이동
-		Infected_HitNormal_FR_01_NEW			 , // (84) Hit / 왼쪽 뺨 맞고 뒤로 이동 
+		Infected_HitNormal_FR_01_NEW			 , // (84) Hit / 오른쪽 뺨 맞고 뒤로 이동 
 		Infected_KnockFrontLight_B_01_NEW		 , // (85) KnockDown / 제자리에서 앞으로 쓰러지고 일어나기까지 
 		Infected_KnockFrontLight_F_01_NEW		 , // (86) KnockDown / 왼쪽 뺨맞고 뒤로 자빠지고 일어나기까지 
 		Infected_Scared_01						 , // (87) KnockDown / 복부 가격당해서 엎드리면서 뒤로 물러서기

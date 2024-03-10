@@ -96,7 +96,7 @@ void CUI_LevelUp_SunBeacon::Late_Tick(_float fTimeDelta)
 			{
 				m_bFirstOK = true;
 				m_bSecondOK = false;
-				m_fTime = GetTickCount64();
+				m_fTime = (_float)GetTickCount64();
 			}
 		}
 

@@ -6,10 +6,15 @@
 #include "Infected_Idle.h"
 #include "Infected_SpawnGround.h"
 
-
-#include "Infected_HitLight_F_01_NEW.h"
-#include "Infected_HitLight_FL_01_NEW.h"
-#include "Infected_HitLight_FR_01_NEW.h"
+//
+//#include "Infected_HitLight_F_01_NEW.h"
+//#include "Infected_HitLight_FL_01_NEW.h"
+//#include "Infected_HitLight_FR_01_NEW.h"
+#include "Infected_HitNormal_FR90_01_NEW.h"
+#include "Infected_Scared_02.h"
+#include "Infected_Scared_03.h"
+#include "Infected_HitNormalToStun_01_NEW.h"
+#include "Infected_HitHeavyToStun_01_NEW.h"
 
 #include "Infected_HitNormal_F_01_NEW.h"
 #include "Infected_HitNormal_F_02_NEW.h"
@@ -100,21 +105,13 @@ HRESULT CInfected::Ready_Components()
 	return S_OK;
 }
 
-//HRESULT CInfected::Ready_PartObjects()
-//{
-//	CBody::BODY_DESC		BodyDesc = {};
-//	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Infected"), BodyDesc)))
-//		return E_FAIL;
-//
-//	return S_OK;
-//}
-
 void CInfected::Hitted_Left(Power ePower)
 {
+	/* 무기 강도 */
 	switch (ePower)
 	{
 	case Engine::Light:
-		m_pActor->Set_State(new CInfected_HitLight_FL_01_NEW());
+		m_pActor->Set_State(new CInfected_Scared_03());
 		break;
 	case Engine::Medium:
 		m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
@@ -133,7 +130,7 @@ void CInfected::Hitted_Right(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		m_pActor->Set_State(new CInfected_HitLight_FR_01_NEW());
+		m_pActor->Set_State(new CInfected_Scared_02());
 		break;
 	case Engine::Medium:
 		m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
@@ -152,7 +149,7 @@ void CInfected::Hitted_Front(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		m_pActor->Set_State(new CInfected_HitLight_F_01_NEW());
+		m_pActor->Set_State(new CInfected_HitNormalToStun_01_NEW());
 		break;
 	case Engine::Medium:
 		m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
@@ -184,6 +181,9 @@ void CInfected::Hitted_Dead(Power ePower)
 	{
 	case Engine::Light:
 		m_pActor->Set_State(new CInfected_DeathLight_F_01_NEW());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CInfected_DeathLight_B_01_NEW());
 		break;
 	case Engine::Heavy:
 		m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());

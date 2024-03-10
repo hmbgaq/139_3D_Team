@@ -630,7 +630,7 @@ void CUI::Play_Animation()
 		{
 			//m_eAnimationInfo = m_vecAnimation[(int)m_iFrameCount].front();
 			_uint iFrameIndex = 0U;
-			for (_uint i = m_vecAnimation[m_eKeyframe]->size() - (_uint)1; i >= 0; i--)
+			for (_uint i = (_uint)m_vecAnimation[m_eKeyframe]->size() - (_uint)1; i >= 0; i--)
 			{
 				if ((*m_vecAnimation[m_eKeyframe])[i].fTime <= m_fCurrTime)
 				{
@@ -736,7 +736,7 @@ void CUI::LifeTime_LevelUp(_float fTimeDelta)
 	if (m_fTime + m_fLifeTime < GetTickCount64())
 	{
 		m_bEventOn = true;
-		m_fTime = GetTickCount64();
+		m_fTime = (_float)GetTickCount64();
 	}
 
 	if (m_bEventOn)

@@ -35,6 +35,10 @@
 #include "Infected_Dodge_L_01_TEMP.h"
 #include "Infected_Dodge_R_01_TEMP.h"
 
+#include "Infected_MeleeDynamic_RU_01.h"
+#include "Infected_MeleeDynamic_RU_02.h"
+#include "Infected_MeleeDynamic_RU_03.h"
+
 void CInfected_State::Initialize(CInfected* pActor)
 {
 	m_pGameInstance = CGameInstance::GetInstance();
@@ -93,14 +97,13 @@ CState<CInfected>* CInfected_State::Attack_State(CInfected* pActor, _float fTime
 }
 
 CState<CInfected>* CInfected_State::Hit_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	//CState<CInfected>* pState = { nullptr };
-
+{ 
 	if (pActor->Is_Animation_End())
 	{
-		return new CInfected_Idle();
-	}
+		cout << "Hit_State end " << endl;
 
+		return Normal_State(pActor, fTimeDelta, _iAnimIndex);
+	}
 
 	return nullptr;
 }
@@ -109,7 +112,9 @@ CState<CInfected>* CInfected_State::Knock_State(CInfected* pActor, _float fTimeD
 {
 	if (pActor->Is_Animation_End())
 	{
-		return new CInfected_Idle();
+		cout << "Knock_State end " << endl;
+
+		return Normal_State(pActor, fTimeDelta, _iAnimIndex);
 	}
 
 	return nullptr;
@@ -119,7 +124,9 @@ CState<CInfected>* CInfected_State::Dodge_State(CInfected* pActor, _float fTimeD
 {
 	if (pActor->Is_Animation_End())
 	{
-		return new CInfected_Idle();
+		cout << "Dodge_State end " << endl;
+
+		return Normal_State(pActor, fTimeDelta, _iAnimIndex);
 	}
 
 	return nullptr;
@@ -130,10 +137,9 @@ CState<CInfected>* CInfected_State::Spawn_State(CInfected* pActor, _float fTimeD
 	/* 몬스터 Init에서 셋팅한 Spawn Animation이 끝나면 도달하는곳 */
 	if (pActor->Is_Animation_End()) 
 	{
-		/* 랜덤함수가 오히려 더 프레임이 좋음.. 뭐지 */
-		_int iRandom = SMath::Random(1, 6);
+		cout << "spawn end " << endl;
 
-		//_int iRandom = pActor->Get_MyRandom() >> 1;
+		_int iRandom = SMath::Random(1, 6);
 
 		switch (iRandom)
 		{
@@ -159,7 +165,6 @@ CState<CInfected>* CInfected_State::Spawn_State(CInfected* pActor, _float fTimeD
 			return new CInfected_IdleAct_01();
 			break;
 		}
-	
 	}
 
 	return nullptr;
@@ -169,6 +174,7 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 {
 	if (pActor->Is_Animation_End())
 	{
+		cout << "death end " << endl;
 		return new CInfected_Idle();
 	}
 
@@ -192,7 +198,6 @@ CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta,
 	pState = Walk(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
-
 	if (pActor->Is_Animation_End())
 	{
 		return new CInfected_Idle();
@@ -203,36 +208,31 @@ CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta,
 
 CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	_float fDist = pActor->Calc_Distance(m_pGameInstance->Get_Player());
 
-	//if (true == m_pGameInstance->Key_Pressing(DIK_LSHIFT))
-	//	return nullptr;
+	CInfected::INFECTED_TYPE Type = pActor->Get_Info().Get_Type();
 
-	//if (m_pGameInstance->Key_Pressing(iKeyUp))
-	//{
-	//	if (m_pGameInstance->Key_Pressing(iKeyLeft))
-	//	{
-	//		if (CInfected_Walk_FL45::g_iAnimIndex != _iAnimIndex)
-	//			return new CInfected_Walk_FL45();
-	//	}
-	//	else if (m_pGameInstance->Key_Pressing(iKeyRight))
-	//	{
-	//		if (CInfected_Walk_FR45::g_iAnimIndex != _iAnimIndex)
-	//			return new CInfected_Walk_FR45();
-	//	}
-	//	else
-	//	{
-	//		if (CInfected_Walk_F::g_iAnimIndex != _iAnimIndex)
-	//			return new CInfected_Walk_F();
-	//	}
-	//}
-	//else if (m_pGameInstance->Key_Pressing(iKeyDown))
-	//{
-	//	if (CInfected_Walk_B::g_iAnimIndex != _iAnimIndex)
-	//		return new CInfected_Walk_B();
-	//	
-	//}
-	//else
-	//{
+	switch (Type)
+	{
+	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
+	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
+	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
+		if (fDist <= pActor->Get_Info().fWalk_Distance && fDist >= pActor->Get_Info().fAttack_Distance) // Attack ~ Wak 사이 
+		{
+			cout << "Chase - Walk " << endl;
+			return new CInfected_Walk_F();
+		}
+		break;
+	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
+		break;
+	case Client::CInfected::INFECTED_TYPE::INFECTED_WASTER:
+		break;
+	case Client::CInfected::INFECTED_TYPE::INFECTED_END:
+		break;
+	default:
+		break;
+	}
+	
 	//	if (CInfected_Idle::g_iAnimIndex != _iAnimIndex)
 	//		return new CInfected_Idle();
 	//}
@@ -243,34 +243,26 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 
 CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	//if (m_pGameInstance->Key_Pressing(DIK_LSHIFT))
-	//{
-	//	if (m_pGameInstance->Key_Pressing(iKeyUp))
-	//	{
-	//		if (m_pGameInstance->Key_Pressing(iKeyLeft))
-	//		{
-	//			if (CInfected_Run_FL45::g_iAnimIndex != _iAnimIndex)
-	//				return new CInfected_Run_FL45();
-	//		}
-	//		else if (m_pGameInstance->Key_Pressing(iKeyRight))
-	//		{
-	//			if (CInfected_Run_FR45::g_iAnimIndex != _iAnimIndex)
-	//				return new CInfected_Run_FR45();
-	//		}
-	//		else
-	//		{
-	//			if (CInfected_Run_F::g_iAnimIndex != _iAnimIndex)
-	//				return new CInfected_Run_F();
-	//		}
-	//	}
-	//	else if (m_pGameInstance->Key_Pressing(iKeyDown))
-	//	{
-	//		if (CInfected_Run_B::g_iAnimIndex != _iAnimIndex)
-	//			return new CInfected_Run_B();
+	_float fDist = pActor->Calc_Distance(m_pGameInstance->Get_Player());
 
-	//	}
-	//	else
-	//	{
+	CInfected::INFECTED_TYPE Type = pActor->Get_Info().Get_Type();
+
+	switch (Type)
+	{
+	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
+	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
+	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
+		if (fDist > pActor->Get_Info().fWalk_Distance) // Attack ~ Wak 사이 
+		{
+			cout << "Chase - Run " << endl;
+			return new CInfected_Run_F();
+		}
+		break;
+	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
+		break;
+	case Client::CInfected::INFECTED_TYPE::INFECTED_WASTER:
+		break;
+	}
 	//		if (CInfected_Idle::g_iAnimIndex != _iAnimIndex)
 	//			return new CInfected_Idle();
 	//	}
@@ -281,36 +273,49 @@ CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _u
 
 CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	//if (m_pGameInstance->Mouse_Down(DIM_LB))
-	//{
-	//	CInfected::Infected_State eState = (CInfected::Infected_State)_iAnimIndex;
-	//	switch (eState)
-	//	{
+	/* 현재 플레이어와의 거리 */
+	_float fDist = pActor->Calc_Distance(m_pGameInstance->Get_Player());
 
-	//	case Client::CInfected::Infected_Melee_RD_01:
-	//		return new CInfected_Melee_RM_01();
-	//		break;
-	//	case Client::CInfected::Infected_Melee_RM_01:
-	//		return new CInfected_Melee_RM_02();
-	//		break;
-	//	case Client::CInfected::Infected_Melee_RM_02:
-	//		return new CInfected_Melee_RU_01();
-	//		break;
-	//	case Client::CInfected::Infected_Melee_RU_01:
-	//		return new CInfected_Melee_RU_02();
-	//		break;
-	//	case Client::CInfected::Infected_Melee_RU_02:
-	//		return new CInfected_Melee_RD_01();
-	//		break;
+	/* 몬스터의 Info Desc */
+	CInfected::INFECTED_DESC Info = pActor->Get_Info();
+	_int iActNumber = Info.RandomNumber % 4;
 
+	/* 타입별, 거리별 조절해야함 */
+	switch (Info.eType)
+	{
+	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
+	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
+	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
+			
+		pActor->Look_At_Target();
 
-	//	default:
-	//		return new CInfected_Melee_RD_01();
-	//		break;
+		if (fDist <= Info.fAttack_Distance )
+		{
+			switch (iActNumber)
+			{
+			case 1:
+				return new CInfected_MeleeDynamic_RU_01();
+				break;
+			case 2:
+				return new CInfected_MeleeDynamic_RU_02();
+				break;
+			case 3:
+				return new CInfected_MeleeDynamic_RU_03();
+				break;
+			default:
+				return new CInfected_MeleeDynamic_RU_01();
+				break;
+			}
+		}
+		break;
 
-	//	}
-	//}
+	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
+		break;
+	case Client::CInfected::INFECTED_TYPE::INFECTED_WASTER:
+		break;
+	}
 
+	///* 공격 끝나면 뒤로 물러나가야함 */
 	//if (pActor->Is_Animation_End())
 	//{
 	//	return new CInfected_Idle();
@@ -322,31 +327,14 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 
 CState<CInfected>* CInfected_State::Dodge(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (CInfected::INFECTED_TYPE::INFECTED_PROTEUS == pActor->Get_MyType())
+	
+	if (CInfected::INFECTED_TYPE::INFECTED_PROTEUS == pActor->Get_Info().Get_Type())
 	{
+		cout << "infected_proteus" << endl;
 		return nullptr; /* 클래스 갑시다 ㅇㅋ 난자러감 */
 	}
 	else
 		return nullptr;
-	//if (m_pGameInstance->Key_Pressing(DIK_SPACE))
-	//{
-	//	if (m_pGameInstance->Key_Pressing(iKeyUp))
-	//	{
-	//		if (CInfected_Dodge_F_01_TEMP::g_iAnimIndex != _iAnimIndex)
-	//			return new CInfected_Dodge_F_01_TEMP();
-	//	}
-	//	else if (m_pGameInstance->Key_Pressing(iKeyLeft))
-	//	{
-	//		if (CInfected_Dodge_L_01_TEMP::g_iAnimIndex != _iAnimIndex)
-	//			return new CInfected_Dodge_L_01_TEMP();
-	//	}
-	//	else if (m_pGameInstance->Key_Pressing(iKeyRight))
-	//	{
-	//		if (CInfected_Dodge_R_01_TEMP::g_iAnimIndex != _iAnimIndex)
-	//			return new CInfected_Dodge_R_01_TEMP();
-	//	}
-
-	//}
 
 	//if (pActor->Is_Animation_End())
 	//{

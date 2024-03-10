@@ -206,8 +206,6 @@ void* CEffect_Instance::Get_BufferDesc()
 	tBufferDesc.vMinMaxRotationOffsetY = m_tInstanceDesc.vMinMaxRotationOffsetY;
 	tBufferDesc.vMinMaxRotationOffsetZ = m_tInstanceDesc.vMinMaxRotationOffsetZ;
 
-
-
 	return &tBufferDesc;
 }
 

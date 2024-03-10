@@ -117,7 +117,7 @@ void CMasterCamera::Priority_Tick(_float fTimeDelta)
 			Desc.vEye = targetPos;
 			Desc.vAt = vPlayerPos;
 		}
-
+		
 
 		{
 			CCamera* pCamera = CClone_Manager::GetInstance()->Clone_Object<CSpringCamera>(iNextLevel, LAYER_CAMERA, TEXT("Prototype_GameObject_Camera_Spring"), &Desc);

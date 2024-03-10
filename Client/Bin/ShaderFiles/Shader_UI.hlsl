@@ -38,7 +38,7 @@ Texture2D g_AimLeft_Texture;
 Texture2D g_AimRight_Texture;
 
 /* CoolDown */
-texture2D g_CoolDownTexture;
+Texture2D g_CoolDownTexture;
 float2 g_Center;
 float g_Radius;
 

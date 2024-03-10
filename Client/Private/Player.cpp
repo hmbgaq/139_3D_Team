@@ -56,6 +56,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Priority_Tick(_float fTimeDelta)
 {
+	m_pGameInstance->Set_Player(this);
+
 	__super::Priority_Tick(fTimeDelta);
 }
 

@@ -15,7 +15,7 @@ void CPlayer_MeleeCombo_01::Initialize(CPlayer* pActor)
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
 	
 	pWeapon
-		->Set_Damage(0.f)
+		->Set_Damage(0)
 		->Set_Direction(Direction::Right)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.3f);

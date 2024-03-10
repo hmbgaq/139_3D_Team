@@ -209,8 +209,8 @@ HRESULT CScreamer::Ready_Components()
 
 	/* For. Com_Texture*/
 	{
-		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Texture_BreakMask"), TEXT("Com_BreakMask"), reinterpret_cast<CComponent**>(&m_pBreakTextureCom)));
-		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Texture_Dissolve"), TEXT("Com_DissolveTex"), reinterpret_cast<CComponent**>(&m_pDissolveTexCom)));
+		//FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Texture_BreakMask"), TEXT("Com_BreakMask"), reinterpret_cast<CComponent**>(&m_pBreakTextureCom)));
+		//FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Texture_Dissolve"), TEXT("Com_DissolveTex"), reinterpret_cast<CComponent**>(&m_pDissolveTexCom)));
 	}
 
 	return S_OK;

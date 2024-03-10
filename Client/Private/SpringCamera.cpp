@@ -122,31 +122,31 @@ void CSpringCamera::Tick(_float fTimeDelta)
 			RotatePlayer();
 		}
 
-		if (m_pGameInstance->Key_Down(DIK_TAB))
-		{
-			if (m_bFix)
-			{
-				m_bFix = false;
-				m_bCheck = false;
-			}
-			else
-			{
-				m_bFix = true;
-				m_bCheck = true;
-			}
-		}
-		if (m_bCheck == false)
-			ShowCursor(FALSE);
-		else
-			ShowCursor(TRUE);
-
-
-		if (false == m_bFix)
-			return;
-		if (true == m_bFix)
-		{
-			Mouse_Fix();
-		}
+		//if (m_pGameInstance->Key_Down(DIK_TAB))
+		//{
+		//	if (m_bFix)
+		//	{
+		//		m_bFix = false;
+		//		m_bCheck = false;
+		//	}
+		//	else
+		//	{
+		//		m_bFix = true;
+		//		m_bCheck = true;
+		//	}
+		//}
+		//if (m_bCheck == false)
+		//	ShowCursor(FALSE);
+		//else
+		//	ShowCursor(TRUE);
+		//
+		//
+		//if (false == m_bFix)
+		//	return;
+		//if (true == m_bFix)
+		//{
+		//	Mouse_Fix();
+		//}
 
 		__super::Tick(fTimeDelta);
 	}

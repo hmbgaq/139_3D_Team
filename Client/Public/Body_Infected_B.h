@@ -3,18 +3,17 @@
 #include "Body_Infected.h"
 
 BEGIN(Engine)
-
 END
 
 BEGIN(Client)
 
-class CBody_Infected_A : public CBody_Infected
+class CBody_Infected_B : public CBody_Infected
 {
 
 private:
-	CBody_Infected_A(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CBody_Infected_A(const CBody_Infected_A& rhs);
-	virtual ~CBody_Infected_A() = default;
+	CBody_Infected_B(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CBody_Infected_B(const CBody_Infected_B& rhs);
+	virtual ~CBody_Infected_B() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -30,7 +29,7 @@ private:
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CBody_Infected_A* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	static CBody_Infected_B* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual CGameObject* Pool() override;
 	virtual void Free() override;
