@@ -35,6 +35,7 @@ public:
 
 public:
 	void CameraRotation(_float fTimeDelta);
+	void StartCameraRotation(_fmatrix StartRotationMatrix);
 	void Lock_On(_float fTimeDelta);
 
 public:

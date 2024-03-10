@@ -18,8 +18,10 @@
 #include "../Imgui/ImGuizmo/GraphEditor.h"
 #include "../Imgui/ImGuizmo/ImSequencer.h"
 #include "../Imgui/ImGuizmo/ImZoomSlider.h"
+#include "Camera_Dynamic.h"
+#include "SpringCamera.h"
 #include "Camera.h"
-
+#include "Sky.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 
@@ -57,6 +59,11 @@ HRESULT CWindow_MapTool::Initialize()
 	m_pToolCamera = CData_Manager::GetInstance()->Get_MasterCamera();
 
 	if(m_pToolCamera == nullptr)
+		return E_FAIL;
+
+	m_pSkybox = CData_Manager::GetInstance()->Get_pSkyBox();
+
+	if(m_pSkybox == nullptr)
 		return E_FAIL;
 	//m_mapPreviewInstance
 	
@@ -1228,9 +1235,32 @@ void CWindow_MapTool::FieldWindowMenu()
 		if (ImGui::InputFloat(u8"카메라 속도", &m_fCamaraSpeed))
 		{
 			//CData_Manager::GetInstance()->Get_Camera_Dynamic()->Get_Transform()->Set_Speed(m_fCamaraSpeed);
-			m_pToolCamera->Get_Transform()->Set_Speed(m_fCamaraSpeed);
+			m_pToolCamera->Get_DynamicCamera()->Get_Transform()->Set_Speed(m_fCamaraSpeed);
+			//m_pToolCamera->Get_Transform()->Set_Speed(m_fCamaraSpeed);
 		}
 	}
+
+	ImGui::SeparatorText(u8"스카이 박스");
+	{
+		// 스카이박스 텍스처 변경
+		if (ImGui::InputInt(u8"스카이박스 텍스처", &m_iSkyTextureIndex, 1))
+		{
+			_uint iSkyTextureCount = m_pSkybox->Get_SkyTextureCount();
+
+			if (iSkyTextureCount - 1 < m_iSkyTextureIndex)
+				m_iSkyTextureIndex = iSkyTextureCount - 1;
+
+			if (0 > m_iSkyTextureIndex)
+				m_iSkyTextureIndex = 0;
+
+			if (nullptr == m_pSkybox)
+				return;
+
+			m_pSkybox->Set_SkyType((CSky::SKYTYPE)m_iSkyTextureIndex);
+		}
+	}
+
+
 
 
 	#ifdef _DEBUG
@@ -2524,8 +2554,6 @@ void CWindow_MapTool::Instance_SelectFunction()
 		if (ImGui::BeginListBox(u8"인스턴스 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
 
-
-
 			vector<INSTANCE_INFO_DESC> Desc = *m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_InstanceInfoDesc();
 
 			_int iNumInstance = (_int)Desc.size();
@@ -2566,6 +2594,41 @@ void CWindow_MapTool::Instance_SelectFunction()
 		}
 
 		ImGui::EndChild();
+
+		ImGui::SameLine();
+
+
+		vector<INSTANCE_INFO_DESC> Desc = *m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_InstanceInfoDesc();
+
+		_int iNumInstance = (_int)Desc.size();
+
+		if (ImGui::Button(u8"인스턴스 흔들림잡기용"))
+		{
+
+			for (_uint i = 0; i < iNumInstance; ++i)
+			{
+				m_pPickingInstanceInfo = m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_InstanceInfo(i);
+				Instance_GuizmoTick(m_iSelectEnvironmentIndex, m_pPickingInstanceInfo);
+			}
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_HOME))
+		{
+			if(iNumInstance - 1 > m_iSelectInstanceIndex)
+				m_iSelectInstanceIndex++;
+			else
+				m_iSelectInstanceIndex = 0;
+		
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_END))
+		{
+			if (0 < m_iSelectInstanceIndex)
+				m_iSelectInstanceIndex--;
+			else
+				m_iSelectInstanceIndex = iNumInstance - 1;
+		}
+
 
 		if (m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_NumInstance() > 0)
 		{

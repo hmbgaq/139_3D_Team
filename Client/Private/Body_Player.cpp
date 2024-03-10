@@ -116,16 +116,16 @@ HRESULT CBody_Player::Ready_Components()
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_PhysXCollider"),
-		TEXT("Com_PhysXCollider"), reinterpret_cast<CComponent**>(&m_pPhysXCollider))))
-		return E_FAIL;
+	//if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_PhysXCollider"),
+	//	TEXT("Com_PhysXCollider"), reinterpret_cast<CComponent**>(&m_pPhysXCollider))))
+	//	return E_FAIL;
 
-	//m_pPhysXCollider->ini
+	////m_pPhysXCollider->ini
 
-	CPhysXCollider::PhysXColliderDesc tPhysXColliderDesc;
-	Preset::PhysXColliderDesc::DynamicPieceSetting(tPhysXColliderDesc, m_pTransformCom);
-	m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
-	m_pPhysXCollider->Add_PhysXActorAtScene();
+	//CPhysXCollider::PhysXColliderDesc tPhysXColliderDesc;
+	//Preset::PhysXColliderDesc::DynamicPieceSetting(tPhysXColliderDesc, m_pTransformCom);
+	//m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
+	//m_pPhysXCollider->Add_PhysXActorAtScene();
 	
 	return S_OK;
 }

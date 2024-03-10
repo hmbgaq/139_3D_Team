@@ -8,6 +8,7 @@ class CEffect_Void;
 class CEffect_Particle;
 class CEffect_Rect;
 class CEffect_Instance;
+class CSky;
 
 class CWindow_EffectTool final : public CImgui_Window
 {
@@ -42,8 +43,7 @@ public:
 
 	HRESULT Ready_Grid();		// 그리드 생성
 
-	HRESULT Load_Sky();			// 스카이박스 얻어오기
-	HRESULT Ready_Sky();		// 스카이박스 생성
+	HRESULT Ready_Sky();		// 스카이박스 얻어오기
 	void	Set_SkyTexture();	// 스카이박스 텍스처 변경
 
 	HRESULT Ready_Model_Preview(wstring strModelTag);	// 크기비교용 모델 생성
@@ -107,6 +107,7 @@ private:
 /* Sky */
 private:
 	_int m_iSkyTextureIndex = { 3 };
+	
 
 /* Grid */
 private:
@@ -321,7 +322,7 @@ private:
 	//_float4		m_Camera_ResetLookAt = { 0.f, 0.f, 0.f, 1.f };	// 카메라 리셋 LookAt
 
 	CGameObject* m_pGrid = { nullptr };
-	CGameObject* m_pSky				= { nullptr };
+	CSky*		 m_pSky	 = { nullptr };
 	CGameObject* m_pModel_Preview	= { nullptr };	// 크기 비교용 보기 모델
 #pragma endregion
 

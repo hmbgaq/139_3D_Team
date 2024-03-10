@@ -13,7 +13,7 @@ BEGIN(Engine)
 class CNavigation;
 class CRigidBody;
 
-class CPhysXController;
+class CPhysXCharacterController;
 
 class ENGINE_DLL CCharacter abstract : public CGameObject
 {
@@ -151,7 +151,7 @@ public:	//!For Animation Split
 
 protected:
 	_int m_iHp = { 1 };
-	Power m_eStrength = { Power::Light };
+	//Power m_eStrength = { Power::Light };
 	_float m_fStiffnessRate = { 1.f };
 
 public:
@@ -167,7 +167,7 @@ protected:
 	CCharacter* m_pTarget = { nullptr };
 
 protected:
-	CPhysXController* m_pPhysXControllerCom = { nullptr };
+	CPhysXCharacterController* m_pPhysXControllerCom = { nullptr };
 	PxControllerCollisionFlags m_LastCollisionFlags;
 
 protected:

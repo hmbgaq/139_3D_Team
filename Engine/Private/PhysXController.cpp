@@ -2,6 +2,8 @@
 #include "GameInstance.h"
 #include "SMath.h"
 
+_uint CPhysXController::m_iClonedControllerIndex = 0;
+
 CPhysXController::CPhysXController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 {
@@ -10,6 +12,23 @@ CPhysXController::CPhysXController(ID3D11Device* pDevice, ID3D11DeviceContext* p
 CPhysXController::CPhysXController(const CPhysXController& rhs)
 	: CComponent(rhs)
 {
+}
+
+HRESULT CPhysXController::Initialize_Prototype()
+{
+	return S_OK;
+}
+
+HRESULT CPhysXController::Initialize(void* pArg)
+{
+	__super::Initialize(pArg);
+
+	m_iControllerIndex = m_iClonedControllerIndex++;
+
+	m_pGameInstance->Register_PhysXController(this);
+
+
+	return S_OK;
 }
 
 void CPhysXController::Set_EnableSimulation(const _bool In_EnableSimulation)
@@ -22,7 +41,14 @@ void CPhysXController::Set_CurrentCameraController()
 
 PxController* CPhysXController::Get_Controller()
 {
-	return nullptr;
+	return m_pController;
+}
+
+_vector CPhysXController::Get_Position()
+{
+	PxExtendedVec3 vPosFromPx = m_pController->getFootPosition();
+
+	return { (_float)vPosFromPx.x, (_float)vPosFromPx.y, (_float)vPosFromPx.z, (_float)1.f };
 }
 
 void CPhysXController::Enable_Gravity(const _bool In_bGravity)
@@ -46,15 +72,18 @@ bool CPhysXController::filter(const PxController& a, const PxController& b)
 
 void CPhysXController::onShapeHit(const PxControllerShapeHit& hit)
 {
+	_int a = 0;
 }
 
 void CPhysXController::onControllerHit(const PxControllersHit& hit)
 {
+	_int a = 0;
 	Callback_ControllerHit(hit);
 }
 
 void CPhysXController::onObstacleHit(const PxControllerObstacleHit& hit)
 {
+	_int a = 0;
 }
 
 PxQueryHitType::Enum CPhysXController::preFilter(const PxFilterData& filterData, const PxShape* shape, const PxRigidActor* actor, PxHitFlags& queryFlags)
@@ -112,7 +141,11 @@ PxControllerCollisionFlags CPhysXController::Synchronize_Controller(CTransform* 
 
 PxControllerCollisionFlags CPhysXController::Set_Position(_fvector In_vPosition, PxF32 elapsedTime, PxControllerFilters& filters)
 {
-	return PxControllerCollisionFlags();
+	m_pController->setFootPosition(SMath::Convert_PxExtendedVec3(In_vPosition));
+
+	Bind_FilterOptions(filters);
+
+	return m_pController->move({ 0.f, 0.f, 0.f }, 0.f, elapsedTime, filters);
 }
 
 PxControllerCollisionFlags CPhysXController::MoveWithRotation(_fvector disp, PxF32 minDist, PxF32 elapsedTime, PxControllerFilters& filters, const PxObstacleContext* obstacles, CTransform* pTransform, const _flag In_RootFlag)
@@ -153,6 +186,44 @@ PxControllerCollisionFlags CPhysXController::MoveWithRotation(_fvector disp, PxF
 	return Result;
 }
 
+PxControllerCollisionFlags CPhysXController::Move(_fvector disp, PxF32 minDist, PxF32 elapsedTime, PxControllerFilters& filters, const PxObstacleContext* obstacles)
+{
+	if (!Get_Enable())
+		return PxControllerCollisionFlags();
+
+	PxVec3 vPositionFromPx = SMath::Convert_PxVec3(disp);
+
+	Bind_FilterOptions(filters);
+
+	return m_pController->move(vPositionFromPx, minDist, elapsedTime, filters, obstacles);
+}
+
+PxControllerCollisionFlags CPhysXController::MoveGravity(const _float fDeltaTime, PxControllerFilters& filters)
+{
+	if (!Get_Enable())
+		return PxControllerCollisionFlags();
+
+	if (!m_bEnableGravity)
+		return PxControllerCollisionFlags();
+
+
+	Bind_FilterOptions(filters);
+
+	_float fDeltaHeight = -0.5f * 9.81f * fDeltaTime * (m_fGravityAcc * 2.f + fDeltaTime);
+	fDeltaHeight += 0.0001f;
+	m_fGravityAcc += fDeltaTime;
+
+	m_fGravityAcc = min(0.5f, m_fGravityAcc);
+
+	PxExtendedVec3 PrePosition = m_pController->getPosition();
+
+	auto Result = m_pController->move({ 0.f, fDeltaHeight, 0.f }, 0.f, fDeltaTime, filters);
+
+	PxExtendedVec3 CurPosition = m_pController->getPosition();
+
+	return Result;
+}
+
 void CPhysXController::Init_Controller(const PxCapsuleControllerDesc& In_ControllerDesc, const _uint In_CollisionLayer)
 {
 	m_pControllerDesc = In_ControllerDesc;
@@ -177,12 +248,22 @@ void CPhysXController::Bind_FilterOptions(PxControllerFilters& Out_Filters)
 
 CPhysXController* CPhysXController::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	return new CPhysXController(pDevice, pContext);
+	CPhysXController* pInstance = new CPhysXController(pDevice, pContext);
+
+	return pInstance;
 }
 
 CComponent* CPhysXController::Clone(void* pArg)
 {
-	return new CPhysXController(*this);
+	CPhysXController* pInstance = new CPhysXController(*this);
+
+	/* 원형객체를 초기화한다.  */
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CPhysXController");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
 }
 
 void CPhysXController::Free()

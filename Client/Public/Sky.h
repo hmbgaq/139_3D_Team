@@ -13,6 +13,9 @@ BEGIN(Client)
 
 class CSky final : public CGameObject
 {
+public:
+	enum SKYTYPE { SKY_STAGE1, SKY_STAGE1BOSS, SKY_TEMP1, SKY_TEMP2 };
+
 private:
 	CSky(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CSky(const CSky& rhs);
@@ -27,8 +30,15 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void	Set_TextureIndex(_int iIndex) { m_iTextureIndex = iIndex; }
-	_int	Get_TextureIndex() { return m_iTextureIndex; }
+	void	Set_TextureIndex(_int iIndex) { (_uint)m_eSkyType;}
+	_int	Get_TextureIndex() { return (_uint)m_eSkyType; }
+	
+	SKYTYPE Get_CurrentSkyType() { return m_eSkyType;}
+	void	Set_SkyType(SKYTYPE eType) { m_eSkyType = eType; }
+
+
+public:
+	_uint	Get_SkyTextureCount() { return m_pTextureCom->Get_TextureCount();}
 
 private:
 	CShader*			m_pShaderCom = { nullptr };	
@@ -36,7 +46,7 @@ private:
 	CVIBuffer_Cube*		m_pVIBufferCom = { nullptr };
 	
 private:
-	_int				m_iTextureIndex = { 6 };
+	SKYTYPE				m_eSkyType = SKY_STAGE1;
 
 private:
 	HRESULT Ready_Components();

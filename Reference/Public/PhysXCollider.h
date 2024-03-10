@@ -82,6 +82,14 @@ private:
 	HRESULT Initialize(void* pArg) override;
 
 public:
+	_vector	Get_Position();
+	_vector	Get_Quaternion();
+	_vector	Get_Velocity();
+	_float	Get_Mess();
+	_vector	Get_AngularVelocity();
+	_vector	Get_LinearVelocity();
+	_matrix Get_WorldMatrix();
+
 	_uint	Get_PColliderIndex() const { return m_iColliderIndex; }
 	PHYSXCOLLIDERDESC Get_ColliderDesc() const { return m_PhysXColliderDesc; }
 
@@ -100,11 +108,18 @@ public:
 
 
 public:
+	void	OnCollision(CPhysXCollider* pOtherCollider);
+	void	End_CollisionCheck();
 	void	PhysXCollisionEnter(CPhysXCollider* pOtherCollider);
 	void	PhysXCollisionStay(CPhysXCollider* pOtherCollider);
 	void	PhysXCollisionExit(CPhysXCollider* pOtherCollider);
 
+	virtual void Set_Enable(_bool _Enable) override;
+
+
 public:
+
+
 	void	Init_MeshCollider(CMyAIMesh* pMeshData, const vector<INSTANCE_MESH_DESC>* In_ParticleDescs = nullptr);
 	void	Init_ConvexMeshCollider(CMyAIMesh* pMeshData, const vector<INSTANCE_MESH_DESC>* In_ParticleDescs = nullptr);
 	void	Init_ModelCollider(CMyAIScene* pModelData, const _bool In_isConvex);
@@ -144,6 +159,12 @@ private:
 
 	vector<PxConvexMesh*>	m_ConvexMeshes;
 	vector<PxTriangleMesh*>	m_TriangleMesh;
+
+
+private: /* For. Collision */
+	_bool								m_isColl = false;
+	list<CPhysXCollider*>				m_pPreOtherColliders;
+	list<CPhysXCollider*>				m_pOtherColliders;
 
 	
 

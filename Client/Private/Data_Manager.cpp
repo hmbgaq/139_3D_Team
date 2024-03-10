@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Camera_Dynamic.h"
 #include "MasterCamera.h"
+#include "Sky.h"
 
 IMPLEMENT_SINGLETON(CData_Manager);
 
@@ -120,6 +121,36 @@ void CData_Manager::Reset_MasterCamera(LEVEL eLEVEL)
 
 	m_pMasterCamera->Initialize(&tDesc);
 	m_pMasterCamera->Set_Position(vPos);
+}
+
+void CData_Manager::Set_pSkybox(CSky* _pSkybox)
+{
+	m_pSky = _pSkybox;
+}
+
+_uint CData_Manager::Get_SkyTextureCount()
+{
+	return m_pSky->Get_SkyTextureCount();
+}
+
+_uint CData_Manager::Get_SkyCurrentTextureIndex()
+{
+	return m_pSky->Get_TextureIndex();
+}
+
+_uint CData_Manager::Get_CurrentSkyType()
+{
+	return (_uint)m_pSky->Get_CurrentSkyType();
+}
+
+void CData_Manager::Set_SkyType(_uint iCastSkyType)
+{
+	m_pSky->Set_SkyType((CSky::SKYTYPE)iCastSkyType);
+}
+
+void CData_Manager::Set_SkyTextureIndex(_uint iSkyTextureIndex)
+{
+	m_pSky->Set_TextureIndex(iSkyTextureIndex);
 }
 
 #pragma region SH_ADD
