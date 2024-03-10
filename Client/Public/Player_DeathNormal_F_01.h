@@ -1,10 +1,10 @@
 #pragma once
-#include "Player_State_Attack.h"
+#include "Player_State_Death.h"
 
 
 BEGIN(Client)
 
-class CPlayer_DeathNormal_F_01 : public CPlayer_State_Attack
+class CPlayer_DeathNormal_F_01 : public CPlayer_State_Death
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;
