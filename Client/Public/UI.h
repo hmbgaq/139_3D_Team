@@ -29,6 +29,12 @@ public:
 
 		_float2	vKeyFramePos = { 0.00000000f, 0.00000000f };	// 툴에서의 해당 키프레임 위치
 
+		_float	fAlpha = 1.f;
+
+		/* 동작 추가 */
+		_bool	bActive = false;
+		_bool	bAppear = false;
+		_bool	bTrigger = false;
 	}UIKEYFRAME;
 
 
@@ -130,6 +136,19 @@ public:
 
 		_int		iKeyframeNum = 0;
 		UIKEYFRAME	tKeyframe;
+
+		/* Distortion */
+		_bool		bDistortionUI = false;
+		_float		fTimeAcc = 0.f;
+		_float		fSequenceTerm = 0.f;
+		_float3		vScrollSpeeds = { 0.f, 0.f, 0.f };
+		_float3		vScales = { 0.f, 0.f, 0.f };
+		_float2		vDistortion1 = { 0.f, 0.f };
+		_float2		vDistortion2 = { 0.f, 0.f };
+		_float2		vDistortion3 = { 0.f, 0.f };
+		_float		fDistortionScale = 0.f;
+		_float		fDistortionBias = 0.f;
+
 	}UI_DESC;
 
 	enum UI_BUTTON_STATE
@@ -146,6 +165,16 @@ public: /* ============================== Get / Set ============================
 	// =>UIDesc
 	UI_DESC			Get_UIDesc() { return m_tUIInfo; }
 	void			Set_UIDesc(UI_DESC UIDesc) { m_tUIInfo = UIDesc; }
+	// =>Distortion
+	_bool			Get_DistortionUI() { return m_tUIInfo.bDistortionUI; }
+	void			Set_ScrollSpeeds(_float3 vScrollSpeeds) { m_tUIInfo.vScrollSpeeds = vScrollSpeeds; }
+	void			Set_SequenceTerm(_float fSequenceTerm) { m_tUIInfo.fSequenceTerm = fSequenceTerm; }
+	void			Set_DistortionScales(_float3 vScales) { m_tUIInfo.vScales = vScales; }
+	void			Set_Distortion1(_float2 vDistortion1) { m_tUIInfo.vDistortion1 = vDistortion1; }
+	void			Set_Distortion2(_float2 vDistortion2) { m_tUIInfo.vDistortion2 = vDistortion2; }
+	void			Set_Distortion3(_float2 vDistortion3) { m_tUIInfo.vDistortion3 = vDistortion3; }
+	void			Set_DistortionScale(_float fDistortionScale) { m_tUIInfo.fDistortionScale = fDistortionScale; }
+	void			Set_DistortionBias(_float fDistortionBias) { m_tUIInfo.fDistortionBias = fDistortionBias; }
 	// =>Pickup
 	_bool			Get_Pick() { return m_bPick; }
 	_bool			Set_Pick(_bool Pick) { m_bPick = Pick; }
@@ -266,6 +295,9 @@ public: /* =========================== Animation ============================== 
 
 	// 이동
 	_float fPosX_Delta, fPosY_Delta;
+
+	// 알파
+	_float fAlpha_Delta;
 
 protected: /* Data */
 	class CData_Manager* m_pData_Manager = { nullptr };

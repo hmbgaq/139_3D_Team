@@ -624,6 +624,7 @@
     <ClInclude Include="..\Public\SpringCamera.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\stb_image.h" />
+    <ClInclude Include="..\Public\UI_Distortion.h" />
     <ClInclude Include="..\Public\UI_Weakness.h" />
     <ClInclude Include="..\Public\VampireCommander.h" />
     <ClInclude Include="..\Public\VampireCommander_Attack.h" />
@@ -1137,6 +1138,7 @@
     <ClCompile Include="..\Private\Sniper_Walk_FR.cpp" />
     <ClCompile Include="..\Private\Sniper_Weakspot_Death_01.cpp" />
     <ClCompile Include="..\Private\SpringCamera.cpp" />
+    <ClCompile Include="..\Private\UI_Distortion.cpp" />
     <ClCompile Include="..\Private\UI_Weakness.cpp" />
     <ClCompile Include="..\Private\VampireCommander.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Attack.cpp" />

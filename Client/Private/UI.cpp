@@ -722,6 +722,17 @@ json CUI::Save_Desc(json& out_json)
 	out_json["ColorB"] = m_tUIInfo.vColor.m128_f32[2];
 	out_json["ColorA"] = m_tUIInfo.vColor.m128_f32[3];
 
+	//if (m_tUIInfo.bDistortionUI)
+	//{
+	//	out_json["Keyframe"] = m_tUIInfo.fTimeAcc;
+	//	out_json["Keyframe"] = m_tUIInfo.vScrollSpeeds;
+	//	out_json["Keyframe"] = m_tUIInfo.vScales;
+	//	out_json["Keyframe"] = m_tUIInfo.vDistortion1;
+	//	out_json["Keyframe"] = m_tUIInfo.vDistortion2;
+	//	out_json["Keyframe"] = m_tUIInfo.vDistortion3;
+	//	out_json["Keyframe"] = m_tUIInfo.fDistortionScale;
+	//}
+
 	/* TransformCom */
 	m_pTransformCom->Write_Json(out_json);
 
@@ -735,22 +746,28 @@ json CUI::Save_Desc(json& out_json)
 		for (_int i = 0; i < iSize; ++i)
 		{
 			// 키프레임 세이브 작업중
-			out_json["Time"] = m_vecAnimation[i].fTime;
-			out_json["Value"] = m_vecAnimation[i].fValue;
-			out_json["AnimSpeed"] = m_vecAnimation[i].fAnimSpeed;
-			out_json["Type"] = m_vecAnimation[i].iType;
-			out_json["EaseIn"] = m_vecAnimation[i].isEaseIn;
-			out_json["EaseOut"] = m_vecAnimation[i].isEaseOut;
-			out_json["Texureframe"] = m_vecAnimation[i].iTexureframe;
-			out_json["ScaleX"] = m_vecAnimation[i].vScale.x;
-			out_json["ScaleY"] = m_vecAnimation[i].vScale.y;
-			out_json["PosX"] = m_vecAnimation[i].vPos.x;
-			out_json["PosY"] = m_vecAnimation[i].vPos.y;
-			out_json["Rot"] = m_vecAnimation[i].fRot;
-			out_json["KeyFramePosX"] = m_vecAnimation[i].vKeyFramePos.x;
-			out_json["KeyFramePosY"] = m_vecAnimation[i].vKeyFramePos.y;
+			out_json["Keyframe"][i]["Time"] = m_vecAnimation[i].fTime;
+			out_json["Keyframe"][i]["Value"] = m_vecAnimation[i].fValue;
+			out_json["Keyframe"][i]["AnimSpeed"] = m_vecAnimation[i].fAnimSpeed;
+			out_json["Keyframe"][i]["Type"] = m_vecAnimation[i].iType;
+			out_json["Keyframe"][i]["EaseIn"] = m_vecAnimation[i].isEaseIn;
+			out_json["Keyframe"][i]["EaseOut"] = m_vecAnimation[i].isEaseOut;
+			out_json["Keyframe"][i]["Texureframe"] = m_vecAnimation[i].iTexureframe;
+			out_json["Keyframe"][i]["ScaleX"] = m_vecAnimation[i].vScale.x;
+			out_json["Keyframe"][i]["ScaleY"] = m_vecAnimation[i].vScale.y;
+			out_json["Keyframe"][i]["PosX"] = m_vecAnimation[i].vPos.x;
+			out_json["Keyframe"][i]["PosY"] = m_vecAnimation[i].vPos.y;
+			out_json["Keyframe"][i]["Rot"] = m_vecAnimation[i].fRot;
+			out_json["Keyframe"][i]["KeyFramePosX"] = m_vecAnimation[i].vKeyFramePos.x;
+			out_json["Keyframe"][i]["KeyFramePosY"] = m_vecAnimation[i].vKeyFramePos.y;
+
+			out_json["Keyframe"][i]["Alpha"] = m_vecAnimation[i].fAlpha;
+			out_json["Keyframe"][i]["Active"] = m_vecAnimation[i].bActive;
+			out_json["Keyframe"][i]["Appear"] = m_vecAnimation[i].bAppear;
+			out_json["Keyframe"][i]["Trigger"] = m_vecAnimation[i].bTrigger;
 		}
 	}
+
 
 	///* Group Save */
 	//if (!m_vecUIParts.empty())
@@ -807,9 +824,15 @@ void CUI::Play_Animation()
 			_uint iSize = m_vecAnimation.size() - (_uint)1;
 			for (_uint i = iSize; i >= 0; i--)
 			{
-				if (m_vecAnimation[i].fTime <= m_fCurrTime) // !!!!!!!!!로드시 i가 쓰레기값으로 되면서 터짐!!!!!!!!
+				if (m_vecAnimation[i].fTime <= m_fCurrTime) //	error : i가 쓰레기값이 되면서 iSize값이 대입되지 않고, 터지는 버그 => 시간값이 이상하게 들어가서 조건을 타지않았음. break를 타고 나가지 않아서 -까지 내려갔기 때문.
 				{
 					iFrameIndex = i;
+					break;
+				}
+				// bug 예외 처리 해줘야함 : (0번째 키프레임의 시간보다 현재 시간이 작을 경우 현재 인덱스를 0번으로 지정해주자. (ex : 애니메이션을 일정 시간 이후에 동작하게 설계했을 경우)
+				if (m_vecAnimation[0].fTime > m_fCurrTime)
+				{
+					iFrameIndex = 0;
 					break;
 				}
 			}
@@ -849,18 +872,27 @@ void CUI::Play_Animation()
 				fPosY_Delta = m_vecAnimation[iFrameIndex + 1U].vPos.y - m_vecAnimation[iFrameIndex].vPos.y;
 				fPosY_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
 
+				fAlpha_Delta = m_vecAnimation[iFrameIndex + 1U].fAlpha - m_vecAnimation[iFrameIndex].fAlpha;
+				fAlpha_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+
+				/* 포지션 보간 */
 				m_pTransformCom->Set_Position({ m_vecAnimation[iFrameIndex].vPos.x + fPosX_Delta,
 											m_vecAnimation[iFrameIndex].vPos.y + fPosY_Delta,
 											0.f });	// 이미지 위치
 
+				/* 스케일 보간 */
 				m_pTransformCom->Set_Scaling(m_vecAnimation[iFrameIndex].vScale.x + fSizeX_Delta, 	// 이미지 크기
 					m_vecAnimation[iFrameIndex].vScale.y + fSizeY_Delta,
 					1.f);
 
+				/* 로테이션 보간 */
 				m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_vecAnimation[iFrameIndex].fRot + fRotZ_Delta);// 이미지 회전
 
+				/* 알파 보간 */
+				m_tUIInfo.fAlpha = fAlpha_Delta;
 
-					m_iTextureNum = m_vecAnimation[iFrameIndex].iTexureframe;
+				/* 텍스처 */
+				m_iTextureNum = m_vecAnimation[iFrameIndex].iTexureframe;
 
 			}
 			else
@@ -872,6 +904,9 @@ void CUI::Play_Animation()
 				m_pTransformCom->Set_Position({ m_vecAnimation[iFrameIndex].vPos.x,
 												m_vecAnimation[iFrameIndex].vPos.y,
 												0.f });	// 이미지 위치
+
+								/* 알파 보간 */
+				m_tUIInfo.fAlpha = m_vecAnimation[iFrameIndex].fAlpha;
 
 				m_iTextureNum = m_vecAnimation[iFrameIndex].iTexureframe;
 			}
@@ -938,4 +973,5 @@ void CUI::Free()
 	//Safe_Release(m_pTextureCom);
 	if (m_pMapTextureCom)
 		Safe_Release(m_pMapTextureCom);
+	
 }

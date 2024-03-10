@@ -235,6 +235,27 @@ public:
 	// 선택한 키프레임 값을 변경하는 함수
 	void	DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyframe);
 	void	SelectKeyframeMouse();
+#pragma region Rect_Option
+	// UV 변경
+	void	Setting_Distortion(_float fTimeDelta);
+	_int	m_vUV_MaxTileCount[2] = { 7, 7 };
+	_float	m_fSequenceTerm_RectSprite = { 0.05f };
+
+	/* Distortion */
+	_float m_fSequenceTerm_Distortion = { 1.f };
+
+	_float	m_vScrollSpeeds[3] = { 1.f, 1.f, 0.f };
+	_float	m_vScales_Distortion[3] = { 1.f, 1.f, 1.f };
+
+	_float	m_vDistortion1[2] = { 0.1f, 0.1f };
+	_float	m_vDistortion2[2] = { 0.0f, 0.0f };
+	_float	m_vDistortion3[2] = { 0.0f, 0.1f };
+
+	_float	m_fDistortionScale = { 1.f };
+	_float	m_fDistortionBias = { 1.f };
+
+#pragma endregion
+
 	// 변경할 속성 값 모드
 	enum EDITMODE
 	{
@@ -396,6 +417,16 @@ private: /* bool */
 	_bool						m_bGroupObject = false;
 
 private:
+	_bool						m_bCheckImguiRect_Child = false;
+	_bool						m_bCheckImguiRect_Parent = false;
+	_bool						m_bCheckImguiRect_UI_Animation = false;
+	_bool						m_bCheckImguiRect_ValueChange = false;
+	_bool						m_bCheckImguiRect_UI_TimeLine = false;
+	_bool						m_bCheckImguiRect_Info = false;
+	_bool						m_bCheckImguiRect_UI_Info = false;
+	_bool						Check_ImGui_Rect();
+
+private:
 	//// ==============폴더 경로==============
 	//// 이미지 경로 목록을 저장하는 벡터
 	//std::vector<std::string> m_vecImgPs =
@@ -449,7 +480,8 @@ private:
 		"MouseCursor",
 		"Option_Window",
 		"AimCrosshair",
-		"Weakness"
+		"Weakness",
+		"Distortion"
 	};
 
 	// 클래스 목록을 저장하는 벡터
