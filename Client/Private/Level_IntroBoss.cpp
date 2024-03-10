@@ -18,6 +18,8 @@
 #pragma region MAP
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
+#include "Environment_LightObject.h"
+#include "Environment_SpecialObject.h"
 
 #pragma endregion
 
@@ -366,6 +368,19 @@ HRESULT CLevel_IntroBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 	}
 
+	CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC Desc;
+
+	Desc.bAnimModel = false;
+	Desc.bPreview = false;
+	
+	Desc.strModelTag = L"Prototype_Component_Model_BloodPoolsRaid";
+	//Desc.iShaderPassIndex = 6;
+	XMStoreFloat4x4(&Desc.WorldMatrix, XMMatrixIdentity());
+	
+
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &Desc)))
+		return E_FAIL;
+
 
 	return S_OK;
 
@@ -417,9 +432,9 @@ HRESULT CLevel_IntroBoss::Ready_UI()
 {
 	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
 
-	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
-
-	FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
+	//FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
+	//
+	//FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
 
 	return S_OK;
 }

@@ -4,6 +4,7 @@
 
 BEGIN(Client)
 
+
 class CPlayer_Finisher_Infected_ZapperLeap : public CPlayer_State_Finisher
 {
 public:
@@ -12,7 +13,7 @@ public:
 	virtual void Release(CPlayer* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_Finisher_Infected_ZapperLeap;
+	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_Finisher_BanditHeavy_ZapperLeap;
 
 };
 

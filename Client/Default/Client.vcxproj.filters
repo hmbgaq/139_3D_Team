@@ -2431,6 +2431,9 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\10. Finisher\2. Zapper\2. Leap\2. Infected">
       <UniqueIdentifier>{6adbf768-9095-4733-924c-f25b5df5c288}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\02. Environment\Environment_SpecialObject">
+      <UniqueIdentifier>{5d93e205-bdb8-4a4b-99aa-796ef3f97a1b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -4614,6 +4617,9 @@
     <ClInclude Include="..\Public\VampireCommander_Stun.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\0.Parent</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Environment_SpecialObject.h">
+      <Filter>02.GameObjects\02. Environment\Environment_SpecialObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -6720,6 +6726,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_Stun.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\6.Stun\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Environment_SpecialObject.cpp">
+      <Filter>02.GameObjects\02. Environment\Environment_SpecialObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Environment_LightObject.cpp">
+      <Filter>02.GameObjects\02. Environment\Environment_LightObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
