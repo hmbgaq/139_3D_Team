@@ -40,7 +40,7 @@ HRESULT CUI_LevelUp_TextBox::Initialize(void* pArg)
 	m_bActive = false;
 	m_fAlpha = 0.f;
 	m_fLifeTime = 8000.f;
-	m_fTime = GetTickCount64();
+	m_fTime = (_float)GetTickCount64();
 
 	return S_OK;
 }
@@ -64,7 +64,7 @@ void CUI_LevelUp_TextBox::Late_Tick(_float fTimeDelta)
 	if (m_bReset)
 	{
 		m_fAlpha = 0.f;
-		m_fTime = GetTickCount64();
+		m_fTime = (_float)GetTickCount64();
 	}
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))

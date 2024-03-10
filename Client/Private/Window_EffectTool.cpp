@@ -2157,7 +2157,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 		{
 			_uint iSkyTextureCount = m_pSky->Get_SkyTextureCount();
 
-			if (iSkyTextureCount - 1 < m_iSkyTextureIndex)
+			if ((_int)iSkyTextureCount - 1 < m_iSkyTextureIndex)
 				m_iSkyTextureIndex = iSkyTextureCount-1;
 
 			if (0 > m_iSkyTextureIndex)

@@ -165,7 +165,7 @@ void CEffect_Particle::Late_Tick(_float fTimeDelta)
 			Compute_CamDistance();
 
 			// CRenderer::RENDER_BLEND
-			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this));
+			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this), );
 		}
 	}
 }

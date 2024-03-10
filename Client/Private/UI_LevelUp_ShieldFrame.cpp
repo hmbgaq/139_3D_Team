@@ -54,7 +54,7 @@ HRESULT CUI_LevelUp_ShieldFrame::Initialize(void* pArg)
 	m_fChangeScale = 4.f;
 	m_fAlpha = 0.f;
 	m_fLifeTime = 8000.f;
-	m_fTime = GetTickCount64();
+	m_fTime = (_float)GetTickCount64();
 
 	return S_OK;
 }
@@ -93,11 +93,11 @@ void CUI_LevelUp_ShieldFrame::Late_Tick(_float fTimeDelta)
 	}
 
 	if (m_bActive == false)
-		m_fTime = GetTickCount64();
+		m_fTime = (_float)GetTickCount64();
 
 	if (m_bActive)
 	{
-		if (m_fTime + m_fActiveTime < GetTickCount64())
+		if (m_fTime + m_fActiveTime < (_float)GetTickCount64())
 		{
 			if (m_fScaleX > 130.f)
 			{
@@ -110,7 +110,7 @@ void CUI_LevelUp_ShieldFrame::Late_Tick(_float fTimeDelta)
 			}
 
 			if (m_fScaleX < 130.f && m_fScaleY < 180.f)
-				m_fTime = GetTickCount64();
+				m_fTime = (_float)GetTickCount64();
 		}
 	}
 

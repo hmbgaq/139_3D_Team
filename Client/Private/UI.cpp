@@ -577,27 +577,27 @@ void CUI::SetUp_WorldToScreen(_matrix matWorld)
 	_int iWinHalfX = (g_iWinSizeX >> 1);
 	_int iWinHalfY = (g_iWinSizeY >> 1);
 
-	if (m_fWorldToScreenX < -iWinHalfX)
+	if (m_fWorldToScreenX < -(_float)iWinHalfX)
 	{
-		m_fWorldToScreenX = -iWinHalfX;
+		m_fWorldToScreenX = -(_float)iWinHalfX;
 		//m_fWorldToScreenX = -300.f;
 		//m_fWorldToScreenY = -300.f;
 	}
-	if (m_fWorldToScreenX > iWinHalfX)
+	if (m_fWorldToScreenX > (_float)iWinHalfX)
 	{
-		m_fWorldToScreenX = iWinHalfX;
+		m_fWorldToScreenX = (_float)iWinHalfX;
 		//m_fWorldToScreenX = -300.f;
 		//m_fWorldToScreenY = -300.f;
 	}
-	if (m_fWorldToScreenY < -iWinHalfY)
+	if (m_fWorldToScreenY < -(_float)iWinHalfY)
 	{
-		m_fWorldToScreenY = -iWinHalfY;
+		m_fWorldToScreenY = -(_float)iWinHalfY;
 		//m_fWorldToScreenX = -300.f;
 		//m_fWorldToScreenY = -300.f;
 	}
-	if (m_fWorldToScreenY > iWinHalfY)
+	if (m_fWorldToScreenY > (_float)iWinHalfY)
 	{
-		m_fWorldToScreenY = iWinHalfY;
+		m_fWorldToScreenY = (_float)iWinHalfY;
 		//m_fWorldToScreenX = -300.f;
 		//m_fWorldToScreenY = -300.f;
 	}
@@ -642,7 +642,7 @@ void CUI::Player_HUD(_float fTimeDelta)
 	if (m_fTime + m_fLifeTime < GetTickCount64())
 	{
 		m_bEventOn = true;
-		m_fTime = GetTickCount64();
+		m_fTime = (_float)GetTickCount64();
 	}
 
 	if (m_bEventOn)
@@ -775,7 +775,7 @@ void CUI::Play_Animation()
 		{
 			//m_eAnimationInfo = m_vecAnimation[(int)m_iFrameCount].front();
 			_uint iFrameIndex = 0U;
-			for (_uint i = m_vecAnimation.size() - (_uint)1; i >= 0; i--)
+			for (_uint i = (_uint)m_vecAnimation.size() - (_uint)1; i >= 0; i--)
 			{
 				if (m_vecAnimation[i].fTime <= m_fCurrTime)
 				{

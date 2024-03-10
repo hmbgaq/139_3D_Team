@@ -135,7 +135,7 @@ void CEffect_Instance::Late_Tick(_float fTimeDelta)
 			//Compute_CamDistance();
 
 			//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_EFFECT, this));
-			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this));
+			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this), );
 		}
 	}
 }
@@ -255,7 +255,7 @@ HRESULT CEffect_Instance::Ready_Components()
 	{
 		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferInfo = {};
 
-		for (_uint i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MODE_END); ++i)
+		for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MODE_END); ++i)
 		{
 			if (nullptr != m_pModelCom[i])
 			{
