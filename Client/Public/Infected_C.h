@@ -1,15 +1,17 @@
 #pragma once
 
+#include "Client_Defines.h"
 #include "Infected.h"
+#include "Actor.h"
 
 BEGIN(Client)
 
-class CInfected_A final : public CInfected
+class CInfected_C final : public CInfected
 {
 protected:
-	CInfected_A(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CInfected_A(const CInfected_A& rhs);
-	virtual ~CInfected_A() = default;
+	CInfected_C(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CInfected_C(const CInfected_C& rhs);
+	virtual ~CInfected_C() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -24,16 +26,19 @@ protected:
 	HRESULT Ready_PartObjects();
 	HRESULT Ready_Option();
 
+public:
+	void Attack();
+
 private:
 	CActor<CInfected>* m_pActor = { nullptr };
 
 public:
-	static CInfected_A* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	static CInfected_C* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual CGameObject* Pool() override;
 	virtual void Free() override;
 
-	
+
 };
 
 END

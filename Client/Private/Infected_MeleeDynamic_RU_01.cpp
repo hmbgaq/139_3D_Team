@@ -1,4 +1,4 @@
-#include "..\Public\Infected_MeleeDynamic_RU_01.h"
+#include "Infected_MeleeDynamic_RU_01.h"
 
 void CInfected_MeleeDynamic_RU_01::Initialize(CInfected* pActor)
 {

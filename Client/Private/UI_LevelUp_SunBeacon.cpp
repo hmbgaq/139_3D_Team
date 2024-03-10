@@ -67,7 +67,7 @@ void CUI_LevelUp_SunBeacon::Late_Tick(_float fTimeDelta)
 		// Test
 	if (m_pGameInstance->Key_Down(DIK_7))
 	{
-		m_fTime = GetTickCount64();
+		m_fTime = (_float)GetTickCount64();
 		m_fScaleX = 350.f;
 		m_fScaleY = 350.f;
 		m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, m_fScaleZ);
@@ -127,7 +127,7 @@ void CUI_LevelUp_SunBeacon::Late_Tick(_float fTimeDelta)
 			if (m_fScaleX >= 310.f && m_fScaleY >= 310.f)
 			{
 				m_bSecondOK = true;
-				m_fTime = GetTickCount64();
+				m_fTime = (_float)GetTickCount64();
 			}
 		}
 	}

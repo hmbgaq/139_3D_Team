@@ -1084,7 +1084,7 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 					return;
 				}
 
-				_uint iCreateObjectSize = m_vecCreateObject.size();
+				_uint iCreateObjectSize = (_uint)m_vecCreateObject.size();
 
 				
 					if (ImGui::BeginListBox(u8"메쉬픽킹리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))

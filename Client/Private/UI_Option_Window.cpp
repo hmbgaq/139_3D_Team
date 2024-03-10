@@ -30,7 +30,7 @@ HRESULT CUI_Option_Window::Initialize(void* pArg)
 
 	m_tUIInfo.fScaleX = g_iWinsizeX;
 	m_tUIInfo.fScaleY = g_iWinsizeY;
-	m_tUIInfo.fPositionZ = 0.9;
+	m_tUIInfo.fPositionZ = 0.9f;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;

@@ -1,15 +1,57 @@
-#include "..\Public\Infected_Walk_B.h"
+#include "SMath.h"
+#include "stdafx.h"
+#include "Infected_Walk_B.h"
+
+#include "Infected_Idle.h"
+#include "Infected_IdleAct_01.h"
+#include "Infected_IdleAct_02.h"
+#include "Infected_IdleAct_03.h"
+#include "Infected_RelaxedIdleAct_01.h"
+#include "Infected_RelaxedIdleAct_02.h"
+#include "Infected_RelaxedIdleAct_03.h"
 
 void CInfected_Walk_B::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 }
 
 CState<CInfected>* CInfected_Walk_B::Update(CInfected* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	pActor->Look_At_Target();
+
+	if (pActor->Is_Animation_End()) /* 공격이 끝나면 무조건 뒷걸음질침 -> Idle -> 공격 -> 뒷걸음질 무한반복  */
+	{
+		_int iRandom = SMath::Random(1, 6);
+
+		switch (iRandom)
+		{
+		case 1:
+			return new CInfected_RelaxedIdleAct_03();
+			break;
+		case 2:
+			return new CInfected_IdleAct_01();
+			break;
+		case 3:
+			return new CInfected_IdleAct_02();
+			break;
+		case 4:
+			return new CInfected_IdleAct_03();
+			break;
+		case 5:
+			return new CInfected_RelaxedIdleAct_01();
+			break;
+		case 6:
+			return new CInfected_RelaxedIdleAct_02();
+			break;
+		default:
+			return new CInfected_IdleAct_01();
+			break;
+		}
+	}
+
+	return nullptr;
 }
 
 void CInfected_Walk_B::Release(CInfected* pActor)
