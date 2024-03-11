@@ -1,10 +1,10 @@
 #pragma once
-#include "Player_State_Rifle.h"
+#include "Player_State_Winchester.h"
 
 
 BEGIN(Client)
 
-class CPlayer_Winchester_LowerHolster : public CPlayer_State_Rifle
+class CPlayer_Winchester_LowerHolster : public CPlayer_State_Winchester
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;

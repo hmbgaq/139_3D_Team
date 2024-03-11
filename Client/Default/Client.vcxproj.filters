@@ -2428,24 +2428,6 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\3. Sniper_Aim\2. Back">
       <UniqueIdentifier>{74dc86b5-a174-4273-af38-5c3183bd34a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle">
-      <UniqueIdentifier>{f669680c-43a6-46ea-ac58-3719ea9d2858}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\0. Parent">
-      <UniqueIdentifier>{e91f0153-a31f-4466-a127-fede0b13f1d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\1. Holster">
-      <UniqueIdentifier>{e909fbaa-9cde-44c2-88f0-e59d664caf27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\2. Fire">
-      <UniqueIdentifier>{3065db52-5555-4727-a5c4-47c0664238c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\3. Reload">
-      <UniqueIdentifier>{0320d6e0-38b3-492a-bc7d-1fd3b10cd4b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester">
-      <UniqueIdentifier>{8588fe93-5370-4bb7-a39d-6a81e0c88c6c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk\2. Bandit_Aim\1. Front\1. Left">
       <UniqueIdentifier>{b805ef3a-33aa-45b4-bf1f-d88cf2635dde}</UniqueIdentifier>
     </Filter>
@@ -2490,159 +2472,6 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\04. Run\2. Bandit_Aim\2. Back\Right">
       <UniqueIdentifier>{21bb728a-f7b8-4e94-972c-751b01a3d217}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow">
-      <UniqueIdentifier>{2bafa049-c99d-4cd7-bdd1-dec2361f2634}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver">
-      <UniqueIdentifier>{2c1d8e57-6e31-48a0-a539-e018842b1637}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun">
-      <UniqueIdentifier>{57f634ad-373c-4e56-8ee5-c66d37cc2952}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng">
-      <UniqueIdentifier>{291b3ed2-81cc-4b96-86b3-0799687e5af1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher">
-      <UniqueIdentifier>{a52ce59b-50ae-4a4a-be12-fff4f96879cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade">
-      <UniqueIdentifier>{d347eb3f-28b1-4149-8f63-ce206b855f09}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight">
-      <UniqueIdentifier>{4d871476-a20f-4c8d-a903-a16278a15c4e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster">
-      <UniqueIdentifier>{2b8f393d-d1e9-4e71-9432-b3f764d9b508}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\1. AimPose">
-      <UniqueIdentifier>{49df4610-f8fa-4979-b7de-cd32e27a90dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\2. AO">
-      <UniqueIdentifier>{c2a7a69b-b269-4726-b26f-c8c73152518f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\3. Idle">
-      <UniqueIdentifier>{4709e3f9-90be-4b47-8628-7d3ae9f829db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\4. Reload">
-      <UniqueIdentifier>{7c24e960-e5fb-4b72-b412-967ab2462375}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster\1. Lower">
-      <UniqueIdentifier>{859bad48-9df9-4220-a86a-87ca5e5988e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster\2. Unholster">
-      <UniqueIdentifier>{40d3cca4-9751-4560-9e82-0ab4d324b062}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player">
-      <UniqueIdentifier>{bf530a0b-71c8-498f-9995-ef9ae8ac87f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit">
-      <UniqueIdentifier>{ecef95d7-7a80-40bf-912b-b05cd4731f31}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William">
-      <UniqueIdentifier>{a7dde377-47ed-4cc3-ad53-250da69438e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\1. HandCannonHold">
-      <UniqueIdentifier>{d1c29cd8-99c8-44ad-9eac-c84d574ce5ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\2. Hip_ReloadFast">
-      <UniqueIdentifier>{d8f28f3a-7207-4ba2-ad71-d853df61b87c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\3. Ironsights_ReloadFast">
-      <UniqueIdentifier>{5840bc72-4b44-454a-af65-80f600572ee7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\4. Holster">
-      <UniqueIdentifier>{efd7f1da-4888-4d2e-a6e0-0ffc234458e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\5. Unholster">
-      <UniqueIdentifier>{33a34814-7576-4d30-ad97-91b1310be432}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\1. Ironsights_Reload">
-      <UniqueIdentifier>{e034983d-88ea-45d2-a505-472a53423446}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\2. Reload">
-      <UniqueIdentifier>{5bab2288-95e2-478c-b8c4-9751df5d7c63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\3. Special">
-      <UniqueIdentifier>{3d602dd7-4840-451e-81c4-a390c21e7f5e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\4. SprintAim">
-      <UniqueIdentifier>{65270339-a1d1-4495-acd6-90f228d99c3c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1">
-      <UniqueIdentifier>{143156af-b6e7-43f0-a0a6-66efa88b6656}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2">
-      <UniqueIdentifier>{7be535b3-ea64-4180-a0af-b373963dabae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\1. Start">
-      <UniqueIdentifier>{72581e87-6f5f-42a2-8cd8-0f2caf848be5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\2. Loop">
-      <UniqueIdentifier>{63c1cdcd-31ad-4dbb-82a4-e37643e98f61}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\3. Stop">
-      <UniqueIdentifier>{a033facf-fa62-43e5-9710-e9fdd9e09ce1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\1. Start">
-      <UniqueIdentifier>{7b806ebb-f497-4875-8cfd-878811938dc3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\2. Loop">
-      <UniqueIdentifier>{8b3eaf42-7305-4793-8243-b49cf1c9a2f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\3. Stop">
-      <UniqueIdentifier>{568012a5-f14a-4315-9774-2f03872a547f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire">
-      <UniqueIdentifier>{59a697e2-a022-491e-8cd3-1b72bf78e795}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire\Long">
-      <UniqueIdentifier>{b782802e-1ede-4bdd-bfd0-28cd70da75f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire\Short">
-      <UniqueIdentifier>{fb429591-5c0e-4cfb-8316-3fe80f742c6a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\2. Holster">
-      <UniqueIdentifier>{641cc0cf-1781-4f90-9520-af27ccece51a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\3. Electric_Fire">
-      <UniqueIdentifier>{93f0bcf2-49e4-4934-b41d-21a1e560718f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\4. Wiliam_Shot">
-      <UniqueIdentifier>{740f6788-fa07-4f35-ad78-fd3ccec32130}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\1. Gatling">
-      <UniqueIdentifier>{87701281-6003-4acd-9c9b-a41dbe539930}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\2. Step_L">
-      <UniqueIdentifier>{08f09260-82bb-43d4-91cf-e9856b9fe144}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\3. Holster">
-      <UniqueIdentifier>{9d777207-2e1f-4e0e-aebb-86433c3b7813}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\4. Unholster">
-      <UniqueIdentifier>{0d032a74-e0d9-4a5b-a30c-c0159a405a0b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Holster">
-      <UniqueIdentifier>{e9fc9ed4-dfa3-4a04-b742-cf9f45109620}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster">
-      <UniqueIdentifier>{33c3d83e-54b0-4a06-be8b-c47bacb7fbcf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster\1">
-      <UniqueIdentifier>{f1c94bd6-da48-4f4b-b4aa-980530c243d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster\2">
-      <UniqueIdentifier>{88ea4340-019e-40d9-b16b-6e10b9e76de0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\1. Throw">
-      <UniqueIdentifier>{fcf507a6-8fc8-4a38-88ef-b076b0efb7ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\2. Holster">
-      <UniqueIdentifier>{e10cb186-c58a-4774-a6c6-e8c0fc5e5c0b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\3. Unholster">
-      <UniqueIdentifier>{b73b01b6-eee7-4e9e-bedc-dfced2ea2c61}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\01. Combo">
       <UniqueIdentifier>{f6edd8c7-4888-4e70-8671-c24794d7ee30}</UniqueIdentifier>
@@ -2704,6 +2533,27 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Whip">
       <UniqueIdentifier>{50cc14bb-ea67-4a6b-9fbe-3d0a1f5e9fee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\0. Parent">
+      <UniqueIdentifier>{1c84234f-da71-43ab-ab60-6b4cfb606f36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle">
+      <UniqueIdentifier>{f669680c-43a6-46ea-ac58-3719ea9d2858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\0. Parent">
+      <UniqueIdentifier>{e91f0153-a31f-4466-a127-fede0b13f1d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\1. Holster">
+      <UniqueIdentifier>{e909fbaa-9cde-44c2-88f0-e59d664caf27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\2. Fire">
+      <UniqueIdentifier>{3065db52-5555-4727-a5c4-47c0664238c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\1. Rifle\3. Reload">
+      <UniqueIdentifier>{0320d6e0-38b3-492a-bc7d-1fd3b10cd4b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester">
+      <UniqueIdentifier>{8588fe93-5370-4bb7-a39d-6a81e0c88c6c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\0. Parent">
       <UniqueIdentifier>{50dcd8bf-4d2e-4364-a32b-81dadab17fc3}</UniqueIdentifier>
     </Filter>
@@ -2745,6 +2595,177 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\3. Holster\Unholster">
       <UniqueIdentifier>{b4b4c5a5-b72a-4643-b7a7-28d1536977e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow">
+      <UniqueIdentifier>{2bafa049-c99d-4cd7-bdd1-dec2361f2634}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\0. Parent">
+      <UniqueIdentifier>{6423c9c2-0949-4ccf-9a92-965d0802d805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight">
+      <UniqueIdentifier>{4d871476-a20f-4c8d-a903-a16278a15c4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\1. AimPose">
+      <UniqueIdentifier>{49df4610-f8fa-4979-b7de-cd32e27a90dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\2. AO">
+      <UniqueIdentifier>{c2a7a69b-b269-4726-b26f-c8c73152518f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\3. Idle">
+      <UniqueIdentifier>{4709e3f9-90be-4b47-8628-7d3ae9f829db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\1. Ironsight\4. Reload">
+      <UniqueIdentifier>{7c24e960-e5fb-4b72-b412-967ab2462375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster">
+      <UniqueIdentifier>{2b8f393d-d1e9-4e71-9432-b3f764d9b508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster\1. Lower">
+      <UniqueIdentifier>{859bad48-9df9-4220-a86a-87ca5e5988e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\2. Holster\2. Unholster">
+      <UniqueIdentifier>{40d3cca4-9751-4560-9e82-0ab4d324b062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver">
+      <UniqueIdentifier>{2c1d8e57-6e31-48a0-a539-e018842b1637}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun">
+      <UniqueIdentifier>{57f634ad-373c-4e56-8ee5-c66d37cc2952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng">
+      <UniqueIdentifier>{291b3ed2-81cc-4b96-86b3-0799687e5af1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher">
+      <UniqueIdentifier>{a52ce59b-50ae-4a4a-be12-fff4f96879cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade">
+      <UniqueIdentifier>{d347eb3f-28b1-4149-8f63-ce206b855f09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\0. Parent">
+      <UniqueIdentifier>{8f9464bf-8fe5-4a4b-a61d-1d31fae9655d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player">
+      <UniqueIdentifier>{bf530a0b-71c8-498f-9995-ef9ae8ac87f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\1. HandCannonHold">
+      <UniqueIdentifier>{d1c29cd8-99c8-44ad-9eac-c84d574ce5ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\2. Hip_ReloadFast">
+      <UniqueIdentifier>{d8f28f3a-7207-4ba2-ad71-d853df61b87c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\3. Ironsights_ReloadFast">
+      <UniqueIdentifier>{5840bc72-4b44-454a-af65-80f600572ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\4. Holster">
+      <UniqueIdentifier>{efd7f1da-4888-4d2e-a6e0-0ffc234458e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\1. Player\5. Unholster">
+      <UniqueIdentifier>{33a34814-7576-4d30-ad97-91b1310be432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit">
+      <UniqueIdentifier>{ecef95d7-7a80-40bf-912b-b05cd4731f31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\1. Ironsights_Reload">
+      <UniqueIdentifier>{e034983d-88ea-45d2-a505-472a53423446}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\2. Reload">
+      <UniqueIdentifier>{5bab2288-95e2-478c-b8c4-9751df5d7c63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\3. Special">
+      <UniqueIdentifier>{3d602dd7-4840-451e-81c4-a390c21e7f5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\2. Bandit\4. SprintAim">
+      <UniqueIdentifier>{65270339-a1d1-4495-acd6-90f228d99c3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William">
+      <UniqueIdentifier>{a7dde377-47ed-4cc3-ad53-250da69438e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1">
+      <UniqueIdentifier>{143156af-b6e7-43f0-a0a6-66efa88b6656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\1. Start">
+      <UniqueIdentifier>{72581e87-6f5f-42a2-8cd8-0f2caf848be5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\2. Loop">
+      <UniqueIdentifier>{63c1cdcd-31ad-4dbb-82a4-e37643e98f61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\1\3. Stop">
+      <UniqueIdentifier>{a033facf-fa62-43e5-9710-e9fdd9e09ce1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2">
+      <UniqueIdentifier>{7be535b3-ea64-4180-a0af-b373963dabae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\1. Start">
+      <UniqueIdentifier>{7b806ebb-f497-4875-8cfd-878811938dc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\2. Loop">
+      <UniqueIdentifier>{8b3eaf42-7305-4793-8243-b49cf1c9a2f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\3. William\2\3. Stop">
+      <UniqueIdentifier>{568012a5-f14a-4315-9774-2f03872a547f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\0. Parent">
+      <UniqueIdentifier>{f113f359-6cb6-41eb-baa7-c3bcf8780507}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\4. Wiliam_Shot">
+      <UniqueIdentifier>{740f6788-fa07-4f35-ad78-fd3ccec32130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire">
+      <UniqueIdentifier>{59a697e2-a022-491e-8cd3-1b72bf78e795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire\Long">
+      <UniqueIdentifier>{b782802e-1ede-4bdd-bfd0-28cd70da75f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\1. Fire\Short">
+      <UniqueIdentifier>{fb429591-5c0e-4cfb-8316-3fe80f742c6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\2. Holster">
+      <UniqueIdentifier>{641cc0cf-1781-4f90-9520-af27ccece51a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\3. Electric_Fire">
+      <UniqueIdentifier>{93f0bcf2-49e4-4934-b41d-21a1e560718f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\0. Parent">
+      <UniqueIdentifier>{406b6cdd-9b94-493d-9cee-76afbaf328d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\4. Unholster">
+      <UniqueIdentifier>{0d032a74-e0d9-4a5b-a30c-c0159a405a0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\1. Gatling">
+      <UniqueIdentifier>{87701281-6003-4acd-9c9b-a41dbe539930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\2. Step_L">
+      <UniqueIdentifier>{08f09260-82bb-43d4-91cf-e9856b9fe144}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\3. Holster">
+      <UniqueIdentifier>{9d777207-2e1f-4e0e-aebb-86433c3b7813}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\0. Parent">
+      <UniqueIdentifier>{ca9a9386-56f7-49be-80b6-e7d35dad4785}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\0. Parent">
+      <UniqueIdentifier>{f6189ce6-31cd-4e03-b25e-0a94fee3309f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\3. Unholster">
+      <UniqueIdentifier>{b73b01b6-eee7-4e9e-bedc-dfced2ea2c61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\1. Throw">
+      <UniqueIdentifier>{fcf507a6-8fc8-4a38-88ef-b076b0efb7ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\2. Holster">
+      <UniqueIdentifier>{e10cb186-c58a-4774-a6c6-e8c0fc5e5c0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\1. Holster">
+      <UniqueIdentifier>{e9fc9ed4-dfa3-4a04-b742-cf9f45109620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\2. Unholster">
+      <UniqueIdentifier>{33c3d83e-54b0-4a06-be8b-c47bacb7fbcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\2. Unholster\1">
+      <UniqueIdentifier>{f1c94bd6-da48-4f4b-b4aa-980530c243d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\2. Unholster\2">
+      <UniqueIdentifier>{88ea4340-019e-40d9-b16b-6e10b9e76de0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -5455,13 +5476,13 @@
       <Filter>02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\1. Gatling</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_FlameBelcher_WeaponHolster.h">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Holster</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\1. Holster</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_FlameBelcher_WeaponUnholster.h">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster\1</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\2. Unholster\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_FlameBelcher_WeaponUnholster_v2.h">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster\2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\2. Unholster\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Grenade_Throw_v2.h">
       <Filter>02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\1. Throw</Filter>
@@ -5522,6 +5543,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\Player_State_Winchester.h">
       <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Aim.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Crossbow.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Revolver.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Shotgun.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Gatling.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_FlameBelcher.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Grenade.h">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\0. Parent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -7808,13 +7850,13 @@
       <Filter>02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\1. Gatling</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_FlameBelcher_WeaponHolster.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Holster</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\1. Holster</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_FlameBelcher_WeaponUnholster.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster\1</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\2. Unholster\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_FlameBelcher_WeaponUnholster_v2.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\Unholster\2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\2. Unholster\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Grenade_Throw_v2.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\1. Throw</Filter>
@@ -7875,6 +7917,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_State_Winchester.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Aim.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Crossbow.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\3. Crossbow\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Revolver.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\4. Revolver\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Shotgun.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\5. Shotgun\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Gatling.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\6. Gatilng\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_FlameBelcher.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Grenade.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\0. Parent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
