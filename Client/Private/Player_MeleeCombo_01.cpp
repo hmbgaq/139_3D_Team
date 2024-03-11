@@ -15,10 +15,10 @@ void CPlayer_MeleeCombo_01::Initialize(CPlayer* pActor)
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
 	
 	pWeapon
-		->Set_Damage(0.f)
+		->Set_Damage(0)
 		->Set_Direction(Direction::Right)
 		->Set_Power(Power::Medium)
-		->Set_Force(0.3f);
+		->Set_Force(0.0f);
 
 	pWeapon->Set_Enable(true);
 
@@ -37,11 +37,7 @@ CState<CPlayer>* CPlayer_MeleeCombo_01::Update(CPlayer* pActor, _float fTimeDelt
 			{
 				//왼손 오른손 무기화 시켜서 그 무기의 좌표를 여기에 있는 셋 포지션안에 집어 넣으면 그위치에서 터질거임 지금 로컬 값으로 되어 있어서 0점 근처에서만터짐
 				CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, pActor->Get_CharcterDesc().EffectFileName + ".json");
-				//_float3 EffectBonePosition = {};
-				//EffectBonePosition.x = pActor->Get_Body()->Get_BonePtr("RightHandIK")->Get_CombinedTransformationFloat4x4()._41;
-				//EffectBonePosition.y = pActor->Get_Body()->Get_BonePtr("RightHandIK")->Get_CombinedTransformationFloat4x4()._42;
-				//EffectBonePosition.z = pActor->Get_Body()->Get_BonePtr("RightHandIK")->Get_CombinedTransformationFloat4x4()._43;
-				//pEffect->Set_Position(EffectBonePosition);
+
 
 				CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
 				_float3 vPos = pWeapon->Get_WorldPosition();

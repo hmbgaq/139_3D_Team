@@ -35,10 +35,15 @@ HRESULT CSky::Initialize(void* pArg)
 	{
 		case LEVEL_INTRO:
 		{
-			m_eSkyType = CSky::SKY_STAGE1;
+			m_eSkyType = CSky::SKY_TEMP1;
 			break;
 		}
 		case LEVEL_GAMEPLAY:
+		{
+			m_eSkyType = CSky::SKY_TEMP1;
+			break;
+		}
+		case LEVEL_INTRO_BOSS:
 		{
 			m_eSkyType = CSky::SKY_STAGE1BOSS;
 			break;

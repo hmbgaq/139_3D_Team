@@ -10,8 +10,8 @@ void CVampireCommander_Ranged2::Initialize(CVampireCommander* pActor)
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
 
 	pWeapon
-		->Set_Damage(0.f)
-		->Set_Direction(Direction::Right)
+		->Set_Damage(0)
+		->Set_Direction(Direction::Left)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.f);
 

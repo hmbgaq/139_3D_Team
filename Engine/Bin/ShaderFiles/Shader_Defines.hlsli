@@ -25,6 +25,13 @@ sampler ClampSampler = sampler_state
     AddressV = CLAMP;
 };
 
+sampler SpecialSampler = sampler_state
+{
+    filter = min_mag_mip_Point;
+    AddressU = CLAMP;
+    AddressV = CLAMP;
+};
+
 sampler SSAONormalDepth = sampler_state
 {
     filter = min_mag_linear_mip_point; // D3D11_FILTER 0x14

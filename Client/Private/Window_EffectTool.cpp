@@ -464,8 +464,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 					{
 						_uint iX, iY;
 						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_TextureCom(CEffect_Void::TEXTURE_SPRITE)->Get_TextureSize(&iX, &iY, m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE]);
-						m_pSpriteDesc_Particle->vTextureSize.x = iX;
-						m_pSpriteDesc_Particle->vTextureSize.y = iY;
+						m_pSpriteDesc_Particle->vTextureSize.x = (_float)iX;
+						m_pSpriteDesc_Particle->vTextureSize.y = (_float)iY;
 
 						_float fTileX, fTileY;
 						fTileX = (_float)iX / m_vUV_MaxTileCount_Particle[0];
@@ -474,8 +474,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_pSpriteDesc_Particle->vTileSize.x = fTileX;
 						m_pSpriteDesc_Particle->vTileSize.y = fTileY;
 
-						m_pSpriteDesc_Particle->vUV_MaxTileCount.x = m_vUV_MaxTileCount_Particle[0];
-						m_pSpriteDesc_Particle->vUV_MaxTileCount.y = m_vUV_MaxTileCount_Particle[1];
+						m_pSpriteDesc_Particle->vUV_MaxTileCount.x = (_float)m_vUV_MaxTileCount_Particle[0];
+						m_pSpriteDesc_Particle->vUV_MaxTileCount.y = (_float)m_vUV_MaxTileCount_Particle[1];
 
 
 						m_pCurPartEffect->ReSet_Effect();
@@ -1985,8 +1985,8 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			{
 				m_pSpriteDesc_Particle = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Sprite_Desc();
 
-				m_vUV_MaxTileCount_Particle[0] = m_pSpriteDesc_Particle->vUV_MaxTileCount.x;
-				m_vUV_MaxTileCount_Particle[1] = m_pSpriteDesc_Particle->vUV_MaxTileCount.y;
+				m_vUV_MaxTileCount_Particle[0] = (_int)m_pSpriteDesc_Particle->vUV_MaxTileCount.x;
+				m_vUV_MaxTileCount_Particle[1] = (_int)m_pSpriteDesc_Particle->vUV_MaxTileCount.y;
 
 				m_fSequenceTerm_Particle = m_pSpriteDesc_Particle->fSequenceTerm;
 			}
@@ -2613,8 +2613,8 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 		{
 			_uint iSkyTextureCount = m_pSky->Get_SkyTextureCount();
 
-			if (iSkyTextureCount - 1 < m_iSkyTextureIndex)
-				m_iSkyTextureIndex = iSkyTextureCount - 1;
+			if ((_int)iSkyTextureCount - 1 < m_iSkyTextureIndex)
+				m_iSkyTextureIndex = iSkyTextureCount-1;
 
 			if (0 > m_iSkyTextureIndex)
 				m_iSkyTextureIndex = 0;

@@ -1,9 +1,8 @@
-#include "..\Public\Character.h"
+#include "Character.h"
 #include "GameInstance.h"
 #include "RigidBody.h"
 #include "PhysXCharacterController.h"
 #include "Bone.h"
-
 
 CCharacter::CCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -27,25 +26,23 @@ HRESULT CCharacter::Initialize_Prototype()
 
 HRESULT CCharacter::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize(pArg));
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
+	FAILED_CHECK(Ready_Components());
 
-	if (FAILED(Ready_PartObjects()))
-		return E_FAIL;
+	FAILED_CHECK(Ready_PartObjects());
 
 	m_pRigidBody = CRigidBody::Create(m_pDevice, m_pContext);
-	if (nullptr == m_pRigidBody)
-		return E_FAIL;
+
+	NULL_CHECK_RETURN(m_pRigidBody, E_FAIL);
+
 	if (nullptr != Find_Component(g_pRigidBodyTag))
 		return E_FAIL;
+
 	m_Components.emplace(g_pRigidBodyTag, m_pRigidBody);
 	Safe_AddRef(m_pRigidBody);
 	m_pRigidBody->Set_Owner(this);
 	m_pRigidBody->Set_Transform(m_pTransformCom);
-
 
 	return S_OK;
 }
@@ -97,8 +94,7 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 
 HRESULT CCharacter::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Render());
 
 	return S_OK;
 }
@@ -339,12 +335,12 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 {
 	Hit_Type eHitType = Hit_Type::None;
 
-	if (Power::Absolute == m_eStrength)
-	{
-		return Hit_Type::None;
-	}
+	//if (Power::Absolute == m_eStrength)
+	//{
+	//	return Hit_Type::None;
+	//}
 
-	//Get_Damaged(iDamage);
+	//Get_Damaged(iDamage);	
 	//Set_InvincibleTime(fInvincibleTime);
 	Add_Force(vDir, fForce);
 	m_pTransformCom->Look_At_Direction(vDir * -1);
@@ -354,7 +350,7 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 		Hitted_Dead(eHitPower);
 		//eHitType = Hit_Type::Hit_Finish;
 	}
-	else if (eHitPower >= m_eStrength)
+	else //if (eHitPower >= m_eStrength)
 	{
 		eHitType = Hit_Type::Hit;
 

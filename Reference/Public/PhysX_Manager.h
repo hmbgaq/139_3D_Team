@@ -80,7 +80,8 @@ private:
 
 	physx::PxCooking* m_pCooking = { nullptr };
 	physx::PxDefaultCpuDispatcher* m_pDispatcher = nullptr;
-	//PxCudaContextManager* m_pCudaContextManager = nullptr;
+	//PxCudaContextManager* m_pCudaContextManager = nullptr;\
+
 
 private:
 	map<_uint, CPhysXCollider*>		m_pPhysXCollders;

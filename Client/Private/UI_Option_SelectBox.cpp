@@ -105,7 +105,7 @@ HRESULT CUI_Option_SelectBox::Find_Change(const string& strTextTag)
 
 HRESULT CUI_Option_SelectBox::Ready_Components()
 {
-	if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
+	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture
 
 	//! For.Com_Texture
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_devider"),

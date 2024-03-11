@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Client_Defines.h"
 #include "Body_Infected.h"
 
 BEGIN(Engine)
+
 END
 
 BEGIN(Client)
@@ -25,11 +25,9 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
 
-
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
-
 
 public:
 	static CBody_Infected_A* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

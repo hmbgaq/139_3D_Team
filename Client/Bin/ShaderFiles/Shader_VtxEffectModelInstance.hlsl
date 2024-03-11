@@ -37,7 +37,7 @@ float3		g_vBlack_Discard;
 
 
 /* Dissolve */
-texture2D	g_DissolveDiffTexture;
+Texture2D	g_DissolveDiffTexture;
 float		g_fDissolveWeight;
 float		g_fDissolveRatio;
 

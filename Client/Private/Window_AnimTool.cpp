@@ -54,18 +54,16 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 	__super::Begin();
 
+#ifdef _DEBUG
 	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
-#ifdef _DEBUG
 		m_pGameInstance->Set_RenderDebugTarget(m_bRenderTargetOnOff);
-#endif					
 	}
 	if (ImGui::Checkbox("RenderColliderOFF", &m_bRenderTargetOnOff))
 	{
-#ifdef _DEBUG
 		m_pGameInstance->Set_RenderDebugCom(m_bRenderColliderOnOff);
-#endif					
 	}
+#endif					
 	//dialog========================================================================
 	
 	if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; OpenDialog(CImgui_Window::IMGUI_ANIMATIONTOOL_WINDOW); } 
@@ -206,17 +204,26 @@ void CWindow_AnimTool::SpringCutScene()
 			pSpringCam->Set_CameraOffset(_float3(m_fCameraOffset[0], m_fCameraOffset[1], m_fCameraOffset[2]));
 		}
 
-		if (ImGui::DragFloat3("CameraTargetPosition", m_fCameraAddTargetposition, 0.01f, -20.f, 20.f))
+		if (ImGui::Button("CameraTargetBonePosition"))
 		{
-			/*CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();*/
-
+			_float4x4 BoneMatrix = {};
+			CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 			
+			BoneMatrix = pPlayer->Get_Body()->Get_BonePtr(m_pBones[m_iSelectBoneIndex]->Get_Name())->Get_TransformationMatrix();
+			BoneMatrix = m_pBones[m_iSelectBoneIndex]->Get_CombinedTransformationMatrix();
+			_float4x4 pPlayerPos = pPlayer->Get_Transform()->Get_WorldMatrix();
+			_float4x4 temp = {};
+			XMStoreFloat4x4(&temp, BoneMatrix * pPlayerPos);
+			m_fCameraTargetposition.x = temp._41;
+			m_fCameraTargetposition.y = temp._42;
+			m_fCameraTargetposition.z = temp._43;
+			pSpringCam->Set_TargetPosition(m_fCameraTargetposition);
 
 		}
+		pSpringCam->Set_TargetPosition(m_fCameraTargetposition);
 	}
+
 }
-
-
 
 HRESULT CWindow_AnimTool::Read_EffectPath(const _tchar* StartDirectoryPath) //! 준호
 {
@@ -231,7 +238,7 @@ HRESULT CWindow_AnimTool::Read_EffectPath(const _tchar* StartDirectoryPath) //! 
 	for (const auto& entry : fs::recursive_directory_iterator(StartDirectoryPath))
 	{
 		
-		if (fs::is_regular_file(entry.path()) && entry.path().extension() == ".json")
+		if (fs::is_regular_file(entry.path()) && entry.path().extension().string() == ".json")
 		{
 			wstring strSearchPath = entry.path().wstring();
 
@@ -312,21 +319,25 @@ void CWindow_AnimTool::Add_EffectKeyEvent()
 	ImGui::SeparatorText("EffectOn");
 	if (ImGui::InputFloat("EffectOn", &m_fEffectOnTrackPosition, 0.01f, 1.f));
 	
-	if (m_pBones.size() > 0)
+	if (m_bCreateEffect == true)
 	{
-		if (m_fCurrentTrackPosition <= m_fEffectOnTrackPosition)
-			bTest = true;
-		
-		if (bTest == true)
+		if (m_pBones.size() > 0)
 		{
-			if (m_fCurrentTrackPosition >= m_fEffectOnTrackPosition)
+			if (m_fCurrentTrackPosition <= m_fEffectOnTrackPosition)
+				bTest = true;
+
+			if (bTest == true)
 			{
-				m_bCreateEffect = true;
-				bTest = false;
+				if (m_fCurrentTrackPosition >= m_fEffectOnTrackPosition)
+				{
+					m_bCreateEffect = true;
+					bTest = false;
+				}
+
 			}
-		
 		}
 	}
+	
 }
 
 void CWindow_AnimTool::Add_EnableWeaponEvent(const _bool In_bEnable)

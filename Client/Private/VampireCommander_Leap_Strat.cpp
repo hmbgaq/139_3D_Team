@@ -10,7 +10,7 @@ void CVampireCommander_Leap_Strat::Initialize(CVampireCommander* pActor)
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 
 	pWeapon
-		->Set_Damage(0.f)
+		->Set_Damage(0)
 		->Set_Direction(Direction::Right)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.f);
@@ -20,7 +20,14 @@ void CVampireCommander_Leap_Strat::Initialize(CVampireCommander* pActor)
 
 CState<CVampireCommander>* CVampireCommander_Leap_Strat::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
-	pActor->Move_In_Proportion_To_Enemy(fTimeDelta);
+	if (pActor->Is_Inputable_Front(34))
+	{
+		pActor->Move_In_Proportion_To_Enemy();
+	}
+	else if (pActor->Is_Inputable_Front(60))
+	{
+		pActor->Move_In_Proportion_To_Enemy(0);
+	}
 
 	if (pActor->Is_Animation_End())
 	{

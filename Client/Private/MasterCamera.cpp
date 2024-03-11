@@ -90,25 +90,12 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
 
+	if(iCurrentLevel == (_uint)LEVEL_TOOL)
+		m_eCameraType = CMasterCamera::DynamicCamera;
+	else
+		m_eCameraType = CameraType::SpringCamera;
 
-	switch (iCurrentLevel)
-	{
-		case (_uint)LEVEL_INTRO:
-		{
-			m_eCameraType = CameraType::SpringCamera;
-			break;
-		}
-		case (_uint)LEVEL_GAMEPLAY:
-		{
-			m_eCameraType = CameraType::SpringCamera;
-			break;
-		}
-		case (_uint)LEVEL_TOOL:
-		{
-			m_eCameraType = CameraType::DynamicCamera;
-			break;
-		}
-	}
+
 
 	CData_Manager::GetInstance()->Set_MasterCamera(this);
 
@@ -225,7 +212,7 @@ void CMasterCamera::Free()
 {
 	__super::Free();
 
-	for (_uint i = 0; i < (_uint)CameraType_End; ++i)
+	for (_uint i = 0; i < m_Cameras.size(); ++i)
 	{
 		if (nullptr != m_Cameras[i])
 			Safe_Release(m_Cameras[i]);
