@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "Renderer.h"
 
+BEGIN(Client)
+
 class CUI abstract : public CGameObject
 {
 public:
@@ -33,7 +35,9 @@ public:
 
 		/* 동작 추가 */
 		_bool	bActive = false;
-		_bool	bAppear = false;
+		_bool	bAppear = true;
+		_bool	bDisappear = false; // Disappear
+		_bool	bLoopSection = false; // Disappear
 		_bool	bTrigger = false;
 	}UIKEYFRAME;
 
@@ -192,6 +196,9 @@ public: /* ============================== Get / Set ============================
 	void			Set_Kind(UI_KIND eUI_King) { m_eKind = eUI_King; }
 	UI_KIND			Get_Kind() { return m_eKind; }
 
+	// =>Active
+	void			Set_Active(_bool bActive) { m_bActive = bActive; }
+	_bool			Get_Active() { return m_bActive; }
 
 //protected:
 public:
@@ -261,21 +268,26 @@ protected: /* =========================== Ready ============================= */
 	virtual HRESULT Bind_ShaderResources();
 
 public: /* =========================== Save/Load ============================== */
-	void			Load_UIData(const char* _FilePath);
+	virtual void	Load_FromJson(const json& In_Json);
 	virtual json	Save_Desc(json& out_json);
 
 public: /* =========================== Animation ============================== */
-	void			Play_Animation();
+	void			Play_Animation(_float fTimeDelta);
 	void			Add_Keyframe(UIKEYFRAME tKeyframe) { m_vecAnimation.push_back(tKeyframe); }
 	void			Emplaceback_Keyframe(UIKEYFRAME tKeyframe) { m_vecAnimation.emplace_back(tKeyframe); }
 	void			Set_AnimationKeyframe(UIKEYFRAME tKeyframe);
 	// 애니메이션 값
 	std::vector<UIKEYFRAME> m_vecAnimation = {};
 	_int			m_iTextureNum = 0;
+	_int			m_iLoopAnimIndex = 0;
 
 	void			Set_AnimPlay(_bool bPlay) { m_bPlayAnim = bPlay; }
 	_bool			Get_AnimPlay() { return m_bPlayAnim; }
 	_bool			m_bPlayAnim = false;
+
+	void			Set_Disappear(_bool bDisappear) { m_bDisappear = bDisappear; }
+	_bool			Get_Disappear() { return m_bDisappear; }
+	_bool			m_bDisappear = false;
 
 	void			Set_CurrTime(_float fCurrTime) { m_fCurrTime = fCurrTime; }
 	_float			Get_CurrTime() { return m_fCurrTime; }
@@ -301,6 +313,12 @@ public: /* =========================== Animation ============================== 
 
 protected: /* Data */
 	class CData_Manager* m_pData_Manager = { nullptr };
+
+protected:
+	class CUI_Manager* m_pUI_Manager = { nullptr };
+
+protected:
+	_bool				Alpha_Minus(_float fTimeDelta);
 
 protected:
 	void				Compute_CamDistance();
@@ -333,6 +351,7 @@ protected: /* ============================= UI =============================== *
 	UI_DESC				m_tUIInfo;
 	RECT				m_rcUI = {};
 	UISTATE				m_eState;
+	UITYPE				m_eType = UITYPE::NONE;
 	_float4x4			m_Origin_WorldMatrix = {};
 	_bool				m_bActive = false;
 	_bool				m_bReset = false;
@@ -353,3 +372,5 @@ public:
 	virtual void		 Free() override;
 
 };
+
+END

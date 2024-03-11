@@ -83,7 +83,6 @@ public: /* ====================== UI ========================= */
 public: /* ==================== Shortcut_Key ================= */
 	void						Shortcut_Key(_float fTimeDelta);
 
-
 public: /* ==================== List List List List List List List List List List List List List List List List List List List List List List List List List List List List List List List ===================== */
 	void						Layer_List();
 	void						Texture_List();
@@ -304,11 +303,11 @@ private:
 	_int m_iOldIndex = -1;
 #pragma region											최소, 최대 값
 // 크기
-	_float	fMin_Scale = 0.f;	// 최소
+	_float	fMin_Scale = 0.0001f;	// 최소
 	_float	fMax_Scale = 2000.f;	// 최대
 
 	// 회전
-	_float	fMin_Rot = -180.f;		// 최소
+	_float	fMin_Rot = 0.0f;		// 최소
 	_float	fMax_Rot = 180.f;	// 최대
 
 	// 이동
@@ -490,6 +489,11 @@ private:
 		"TutorialBox",
 		"QuestBox"
 	};
+
+private:
+	void	UI_Preset();
+	class CUI_Manager*	m_pUI_Manager = nullptr;
+	_bool				m_bDisappear = false;
 
 private:
 	ImGuiTabBarFlags m_Tab_bar_flags = ImGuiTabBarFlags_None;

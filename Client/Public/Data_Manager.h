@@ -62,6 +62,7 @@ private: /* _bool */
 	_bool	m_bShowQuestBox = false;
 	_bool	m_bShowRewardBox = false;
 
+
 // ! SH_Add
 public: /* ========================== Player Info ========================== */
 	void	PlayerInfo_Setting();	// Player Setting

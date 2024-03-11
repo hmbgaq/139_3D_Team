@@ -2,20 +2,26 @@
 #include "GameInstance.h"
 #include "SMath.h"
 #include "Data_Manager.h"
+#include "UI_Manager.h"
+
 
 CUI::CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CGameObject(pDevice, pContext, strPrototypeTag)
 	, m_pData_Manager(CData_Manager::GetInstance())
+	, m_pUI_Manager(CUI_Manager::GetInstance())
 {
 	Safe_AddRef(m_pData_Manager);
+	Safe_AddRef(m_pUI_Manager);
 }
 
 CUI::CUI(const CUI& rhs)
 	: CGameObject(rhs)
 	, m_ProjMatrix(rhs.m_ProjMatrix)
 	, m_pData_Manager(rhs.m_pData_Manager)
+	, m_pUI_Manager(rhs.m_pUI_Manager)
 {
 	Safe_AddRef(m_pData_Manager);
+	Safe_AddRef(m_pUI_Manager);
 }
 
 HRESULT CUI::Initialize_Prototype()
@@ -88,6 +94,9 @@ void CUI::Priority_Tick(_float fTimeDelta)
 
 void CUI::Tick(_float fTimeDelta)
 {
+	if (m_bActive == false)	// ==================== Active ====================
+		return;
+
 	switch (m_eState)
 	{
 	case Client::UISTATE::READY:
@@ -100,9 +109,6 @@ void CUI::Tick(_float fTimeDelta)
 	case Client::UISTATE::DISAPPEAR:
 		UI_DisappearTick(fTimeDelta);
 		break;
-	case Client::UISTATE::LEVEL_UP:
-		Tick_LevelUp(fTimeDelta);
-		break;
 	case Client::UISTATE::PLAYER_HUD:
 		Player_HUD(fTimeDelta);
 		break;
@@ -112,7 +118,7 @@ void CUI::Tick(_float fTimeDelta)
 		break;
 	}
 
-	Play_Animation(); // 애니메이션 재생 m_eState를 통해 애니메이션 UI 타입일때만 탈 수 있게 해줘도 될듯하다.
+	Play_Animation(fTimeDelta);
 	Update_Child_Transform();
 	if(m_tUIInfo.bWorld == false)
 		Check_RectPos();
@@ -131,6 +137,7 @@ void CUI::UI_DisappearTick(_float fTimeDelta)
 
 void CUI::Late_Tick(_float fTimeDelta)
 {
+
 }
 
 HRESULT CUI::Render()
@@ -659,26 +666,60 @@ void CUI::Player_HUD(_float fTimeDelta)
 	}
 }
 
-/* @@@보류@@@ */
-void CUI::Load_UIData(const char* _FilePath)
+void CUI::Load_FromJson(const json& In_Json)
 {
-	_int		iPathNum = 0;
-	string		strFileName;
-	string		strFilePath;
-
-	json json_in;
-
-	CJson_Utility::Load_Json(_FilePath, json_in);
-
-	for (auto& item : json_in.items())
+	// "KeyframeNum" 키가 없으면 기본값 사용
+	_bool bKeyframeNum = In_Json.contains("KeyframeNum");
+	m_tUIInfo.iKeyframeNum = bKeyframeNum ? In_Json["KeyframeNum"] : 0;
+	
+	for (_int i = 0; i < m_tUIInfo.iKeyframeNum; ++i) // 19. Keyframe
 	{
-		json object = item.value();
+		/* Keyframe */
+		m_tUIInfo.tKeyframe.fTime = In_Json["Keyframe"][i]["Time"];
+		m_tUIInfo.tKeyframe.fValue = In_Json["Keyframe"][i]["Value"];
+		m_tUIInfo.tKeyframe.fAnimSpeed = In_Json["Keyframe"][i]["AnimSpeed"];
+		m_tUIInfo.tKeyframe.iType = In_Json["Keyframe"][i]["Type"];
+		m_tUIInfo.tKeyframe.isEaseIn = In_Json["Keyframe"][i]["EaseIn"];
+		m_tUIInfo.tKeyframe.isEaseOut = In_Json["Keyframe"][i]["EaseOut"];
+		m_tUIInfo.tKeyframe.iTexureframe = In_Json["Keyframe"][i]["Texureframe"];
+		m_tUIInfo.tKeyframe.vScale.x = In_Json["Keyframe"][i]["ScaleX"];
+		m_tUIInfo.tKeyframe.vScale.y = In_Json["Keyframe"][i]["ScaleY"];
+		m_tUIInfo.tKeyframe.vPos.x = In_Json["Keyframe"][i]["PosX"];
+		m_tUIInfo.tKeyframe.vPos.y = In_Json["Keyframe"][i]["PosY"];
+		m_tUIInfo.tKeyframe.fRot = In_Json["Keyframe"][i]["Rot"];
+		m_tUIInfo.tKeyframe.vKeyFramePos.x = In_Json["Keyframe"][i]["KeyFramePosX"];
+		m_tUIInfo.tKeyframe.vKeyFramePos.y = In_Json["Keyframe"][i]["KeyFramePosY"];
 
-		CUI::UI_DESC tUI_Info;
+		m_tUIInfo.tKeyframe.fAlpha = In_Json["Keyframe"][i]["Alpha"];
+		m_tUIInfo.tKeyframe.bActive = In_Json["Keyframe"][i]["Active"];
+		m_tUIInfo.tKeyframe.bAppear = In_Json["Keyframe"][i]["Appear"];
+		m_tUIInfo.tKeyframe.bTrigger = In_Json["Keyframe"][i]["Trigger"];
+		if (In_Json["Keyframe"][i].contains("Disappear")) // "Disappear" 키가 있으면
+			m_tUIInfo.tKeyframe.bDisappear = In_Json["Keyframe"][i]["Disappear"];
 
-		//tUI_Info.strProtoTag = object["ProtoTag"];
-		tUI_Info.strFilePath = object["FilePath"];
+		if (In_Json["Keyframe"][i].contains("LoopSection"))// "LoopSection" 키가 있으면
+			m_tUIInfo.tKeyframe.bLoopSection = In_Json["Keyframe"][i]["LoopSection"];
+
+		m_vecAnimation.push_back(m_tUIInfo.tKeyframe);
 	}
+
+	if (m_tUIInfo.bDistortionUI)
+	{
+		m_tUIInfo.vScrollSpeeds.x = In_Json["Distortion"]["ScrollSpeedsX"];
+		m_tUIInfo.vScrollSpeeds.y = In_Json["Distortion"]["ScrollSpeedsY"];
+		m_tUIInfo.vScrollSpeeds.z = In_Json["Distortion"]["ScrollSpeedsZ"];
+		m_tUIInfo.vScales.x = In_Json["Distortion"]["ScalesX"];
+		m_tUIInfo.vScales.y = In_Json["Distortion"]["ScalesY"];
+		m_tUIInfo.vScales.z = In_Json["Distortion"]["ScalesZ"];
+		m_tUIInfo.vDistortion1.x = In_Json["Distortion"]["Distortion1X"];
+		m_tUIInfo.vDistortion1.y = In_Json["Distortion"]["Distortion1Y"];
+		m_tUIInfo.vDistortion2.x = In_Json["Distortion"]["Distortion2X"];
+		m_tUIInfo.vDistortion2.y = In_Json["Distortion"]["Distortion2Y"];
+		m_tUIInfo.vDistortion3.x = In_Json["Distortion"]["Distortion3X"];
+		m_tUIInfo.vDistortion3.y = In_Json["Distortion"]["Distortion3Y"];
+		m_tUIInfo.fDistortionScale = In_Json["Distortion"]["DistortionScale"];
+	}
+
 }
 
 json CUI::Save_Desc(json& out_json)
@@ -722,17 +763,6 @@ json CUI::Save_Desc(json& out_json)
 	out_json["ColorB"] = m_tUIInfo.vColor.m128_f32[2];
 	out_json["ColorA"] = m_tUIInfo.vColor.m128_f32[3];
 
-	//if (m_tUIInfo.bDistortionUI)
-	//{
-	//	out_json["Keyframe"] = m_tUIInfo.fTimeAcc;
-	//	out_json["Keyframe"] = m_tUIInfo.vScrollSpeeds;
-	//	out_json["Keyframe"] = m_tUIInfo.vScales;
-	//	out_json["Keyframe"] = m_tUIInfo.vDistortion1;
-	//	out_json["Keyframe"] = m_tUIInfo.vDistortion2;
-	//	out_json["Keyframe"] = m_tUIInfo.vDistortion3;
-	//	out_json["Keyframe"] = m_tUIInfo.fDistortionScale;
-	//}
-
 	/* TransformCom */
 	m_pTransformCom->Write_Json(out_json);
 
@@ -765,9 +795,27 @@ json CUI::Save_Desc(json& out_json)
 			out_json["Keyframe"][i]["Active"] = m_vecAnimation[i].bActive;
 			out_json["Keyframe"][i]["Appear"] = m_vecAnimation[i].bAppear;
 			out_json["Keyframe"][i]["Trigger"] = m_vecAnimation[i].bTrigger;
+			out_json["Keyframe"][i]["Disappear"] = m_vecAnimation[i].bDisappear;
+			out_json["Keyframe"][i]["LoopSection"] = m_vecAnimation[i].bLoopSection;
 		}
 	}
 
+	if (m_tUIInfo.bDistortionUI)
+	{
+		out_json["Distortion"]["ScrollSpeedsX"] = m_tUIInfo.vScrollSpeeds.x;
+		out_json["Distortion"]["ScrollSpeedsY"] = m_tUIInfo.vScrollSpeeds.y;
+		out_json["Distortion"]["ScrollSpeedsZ"] = m_tUIInfo.vScrollSpeeds.z;
+		out_json["Distortion"]["ScalesX"] = m_tUIInfo.vScales.x;
+		out_json["Distortion"]["ScalesY"] = m_tUIInfo.vScales.y;
+		out_json["Distortion"]["ScalesZ"] = m_tUIInfo.vScales.z;
+		out_json["Distortion"]["Distortion1X"] = m_tUIInfo.vDistortion1.x;
+		out_json["Distortion"]["Distortion1Y"] = m_tUIInfo.vDistortion1.y;
+		out_json["Distortion"]["Distortion2X"] = m_tUIInfo.vDistortion2.x;
+		out_json["Distortion"]["Distortion2Y"] = m_tUIInfo.vDistortion2.y;
+		out_json["Distortion"]["Distortion3X"] = m_tUIInfo.vDistortion3.x;
+		out_json["Distortion"]["Distortion3Y"] = m_tUIInfo.vDistortion3.y;
+		out_json["Distortion"]["DistortionScale"] = m_tUIInfo.fDistortionScale;
+	}
 
 	///* Group Save */
 	//if (!m_vecUIParts.empty())
@@ -783,7 +831,7 @@ json CUI::Save_Desc(json& out_json)
 	return out_json;
 }
 
-void CUI::Play_Animation()
+void CUI::Play_Animation(_float fTimeDelta)
 {
 	// 비었는지 검사
 	if (!m_vecAnimation.empty())
@@ -792,7 +840,7 @@ void CUI::Play_Animation()
 		if (m_bPlayAnim)
 		{
 			// 현재 프레임을 시간(프레임)마다 증가시키기
-
+			m_fCurrTime += /*m_tUIInfo.tKeyframe.fAnimSpeed +*/ fTimeDelta;
 
 			// 현재 프레임이 최대 프레임에 도달한 경우
 			if (m_fCurrTime > (m_vecAnimation)[m_vecAnimation.size() - 1].fTime)
@@ -800,14 +848,19 @@ void CUI::Play_Animation()
 				// 현재 프레임 초기화
 				//m_pAnimationTool->Get_currentTime() = 0.f;
 
-				// 반복 On/Off
-				if (!m_bRepetition)
+				if (m_vecAnimation[m_iLoopAnimIndex].bLoopSection == true)
 				{
-					m_bPlayAnim = false;
+					m_fCurrTime = m_vecAnimation[m_iLoopAnimIndex].fTime;
 				}
+				else
+				{
+					// 반복 On/Off
+					if (!m_bRepetition)
+						m_bPlayAnim = false;
 
-				// 시간 초기화
-				m_fCurrTime = 0.f;
+					// 시간 초기화
+					m_fCurrTime = 0.f;
+				}
 			}
 		}
 	}
@@ -889,7 +942,18 @@ void CUI::Play_Animation()
 				m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_vecAnimation[iFrameIndex].fRot + fRotZ_Delta);// 이미지 회전
 
 				/* 알파 보간 */
-				m_tUIInfo.fAlpha = fAlpha_Delta;
+				//m_tUIInfo.fAlpha = fAlpha_Delta;
+
+				/* Disappear */
+				if (m_vecAnimation[iFrameIndex].bDisappear == true)
+				{
+					m_bDisappear = true;
+				}
+				/* LoopSection */
+				if (m_vecAnimation[iFrameIndex].bLoopSection == true)
+				{
+					m_iLoopAnimIndex = iFrameIndex;
+				}
 
 				/* 텍스처 */
 				m_iTextureNum = m_vecAnimation[iFrameIndex].iTexureframe;
@@ -905,8 +969,20 @@ void CUI::Play_Animation()
 												m_vecAnimation[iFrameIndex].vPos.y,
 												0.f });	// 이미지 위치
 
-								/* 알파 보간 */
-				m_tUIInfo.fAlpha = m_vecAnimation[iFrameIndex].fAlpha;
+				/* 알파 보간 */
+				//m_tUIInfo.fAlpha = m_vecAnimation[iFrameIndex].fAlpha;
+
+				/* Disappear */
+				if (m_vecAnimation[iFrameIndex].bDisappear == true)
+				{
+					m_bDisappear = true;
+				}
+
+				/* LoopSection */
+				if (m_vecAnimation[iFrameIndex].bLoopSection == true)
+				{
+					m_iLoopAnimIndex = iFrameIndex;
+				}
 
 				m_iTextureNum = m_vecAnimation[iFrameIndex].iTexureframe;
 			}
@@ -922,6 +998,20 @@ void CUI::Set_AnimationKeyframe(UIKEYFRAME tKeyframe)
 	
 }
 
+_bool CUI::Alpha_Minus(_float fTimeDelta)
+{
+	if (m_fAlpha >= 1.f)
+	{
+		return false;
+	}
+	else
+	{
+		m_fAlpha += fTimeDelta;
+	}
+
+	return true;
+}
+
 void CUI::Compute_CamDistance()
 {
 	_vector		vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -932,31 +1022,44 @@ void CUI::Compute_CamDistance()
 
 void CUI::LifeTime_LevelUp(_float fTimeDelta)
 {
-	/* 레벨 변동이 있을 경우 */
-	if (m_pData_Manager->Get_ShowLevelBox()/*m_pData_Manager->Limit_EXP()*/)
+
+	/* 애니메이션이 끝났는지를 먼저 판단해준다. */
+	if (true == m_pData_Manager->Get_ShowLevelBox() && m_bPlayAnim == false)
 	{
-		m_fAlpha = 0.f;
+		m_bActive = false;
+		m_bEventOn = true;
+		m_pData_Manager->Set_ShowLevelBox(false);
+	}
+	/* 레벨 변동이 있을 경우 */
+	else if (m_pData_Manager->Get_ShowLevelBox()/*m_pData_Manager->Limit_EXP()*/)
+	{
+		//m_fAlpha = 0.f;
 		//m_fTime = GetTickCount64();
-		m_bReset = false;
-		m_bActive = true;
+		//m_bReset = false;
+		m_bPlayAnim = true;		// 애니메이션 재생
+		m_bRepetition = false;	// 반복 재생
+		m_bActive = true;		// 활성화
 	}
 
-	if (m_fTime + m_fLifeTime < GetTickCount64())
-	{
-		m_bEventOn = true;
-	}
+	//if (m_fTime + m_fLifeTime < GetTickCount64())
+	//{
+	//	m_bEventOn = true;
+	//}
 
 	if (m_bEventOn)
 	{
 		m_fAlpha += fTimeDelta;
 	}
 
+
+
 	if (m_fAlpha >= 1.f)
 	{
-		m_pData_Manager->Set_ShowLevelBox(false);
-		m_bActive = false;
 		m_bEventOn = false;
-		m_bReset = true;
+		//m_pData_Manager->Set_ShowLevelBox(false);
+		//m_bActive = false;
+		//m_bEventOn = false;
+		//m_bReset = true;
 	}
 }
 
@@ -966,10 +1069,16 @@ void CUI::Free()
 
 	if (m_pData_Manager)
 		Safe_Release(m_pData_Manager);
+
+	if (m_pUI_Manager)
+		Safe_Release(m_pUI_Manager);
+
 	if (m_pVIBufferCom)
 		Safe_Release(m_pVIBufferCom);
+
 	if (m_pShaderCom)
 		Safe_Release(m_pShaderCom);
+
 	//Safe_Release(m_pTextureCom);
 	if (m_pMapTextureCom)
 		Safe_Release(m_pMapTextureCom);

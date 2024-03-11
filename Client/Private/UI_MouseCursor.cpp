@@ -39,6 +39,7 @@ HRESULT CUI_MouseCursor::Initialize(void* pArg)
 
 	m_ptOffset = { 0, 0 };
 
+	m_eType = UITYPE::CROSSHAIR;
 	m_bActive = true;
 
 	return S_OK;

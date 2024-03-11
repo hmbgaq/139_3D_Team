@@ -37,6 +37,8 @@ HRESULT CUI_ItemIcon::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
+	m_eType = UITYPE::REWARD;
+
 	return S_OK;
 }
 

@@ -42,9 +42,21 @@ namespace Client
 		APPEAR,
 		TICK,
 		DISAPPEAR,
-		LEVEL_UP,
 		PLAYER_HUD,
 		STATE_END
+	};
+	enum class UITYPE
+	{
+		NONE,
+		LEFT_HUD,
+		RIGHT_HUD,
+		LEVEL_UP,
+		REWARD,
+		QUESTBOX,
+		TUTORIALBOX,
+		CROSSHAIR,
+		WEAKNESS,
+		TYPE_END
 	};
 #pragma endregion End
 }

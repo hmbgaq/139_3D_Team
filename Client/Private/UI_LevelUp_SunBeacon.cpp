@@ -36,7 +36,7 @@ HRESULT CUI_LevelUp_SunBeacon::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
-	m_eState = UISTATE::LEVEL_UP;
+	m_eType = UITYPE::LEVEL_UP;
 	m_fChangeScale = 4.f;
 	//m_fLifeTime = 5000.f;
 
@@ -57,6 +57,13 @@ void CUI_LevelUp_SunBeacon::Priority_Tick(_float fTimeDelta)
 void CUI_LevelUp_SunBeacon::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	Check_Disappear(fTimeDelta);
+
+	if (m_bActive == true)
+	{
+
+	}
 }
 
 void CUI_LevelUp_SunBeacon::Late_Tick(_float fTimeDelta)
@@ -64,93 +71,29 @@ void CUI_LevelUp_SunBeacon::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-		// Test
-	if (m_pGameInstance->Key_Down(DIK_7))
+	if (m_bActive == true)
 	{
-		m_fTime = GetTickCount64();
-		m_fScaleX = 350.f;
-		m_fScaleY = 350.f;
-		m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, m_fScaleZ);
-		m_bSecondOK = true;
-		m_bFirstOK = false;
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+			return;
 	}
-		
-
-	if (m_pGameInstance->Key_Down(DIK_6))
-		++m_fChangeScale;
-
-	if (m_pGameInstance->Key_Down(DIK_5))
-		--m_fChangeScale;
-
-	if (m_bReset)
-	{
-		m_fScaleX = 350.f;
-		m_fScaleY = 350.f;
-		m_fAlpha = 0.f;
-		m_fTime = GetTickCount64();
-	}
-
-	if (m_bActive)
-	{
-		if (m_fTime + m_fActiveTime < GetTickCount64() && m_bFirstOK == false)
-		{
-			if (m_fScaleX > 295.f)
-			{
-				Change_SizeX((-m_fChangeScale));
-			}
-
-			if (m_fScaleY > 295.f)
-			{
-				Change_SizeY((-m_fChangeScale));
-			}
-
-			if (m_fScaleX <= 295.f && m_fScaleY <= 295.f)
-			{
-				m_bFirstOK = true;
-				m_bSecondOK = false;
-				//m_fTime = GetTickCount64();
-			}
-		}
-
-		if (m_bSecondOK == false)
-		{
-			if (m_fScaleX < 310.f)
-			{
-				Change_SizeX((m_fChangeScale));
-			}
-
-			if (m_fScaleY < 310.f)
-			{
-				Change_SizeY((m_fChangeScale));
-			}
-
-			if (m_fScaleX >= 310.f && m_fScaleY >= 310.f)
-			{
-				m_bSecondOK = true;
-				m_fTime = GetTickCount64();
-			}
-		}
-	}
-
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
-		return;
 }
 
 HRESULT CUI_LevelUp_SunBeacon::Render()
 {
+	if (m_bActive == true)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+		//! 이 셰이더에 0번째 패스로 그릴거야.
+		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-	//! 이 셰이더에 0번째 패스로 그릴거야.
-	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
-
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+	}
 
 	return S_OK;
 }
@@ -204,6 +147,14 @@ HRESULT CUI_LevelUp_SunBeacon::Bind_ShaderResources()
 	}
 
 	return S_OK;
+}
+
+void CUI_LevelUp_SunBeacon::Check_Disappear(_float fTimeDelta)
+{
+	if (m_bDisappear == true)
+	{
+		m_bActive = Alpha_Minus(fTimeDelta);
+	}
 }
 
 json CUI_LevelUp_SunBeacon::Save_Desc(json& out_json)

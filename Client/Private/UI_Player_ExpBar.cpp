@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "Data_Manager.h"
+#include "UI_Manager.h"
 
 CUI_Player_ExpBar::CUI_Player_ExpBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -144,8 +145,9 @@ void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 			m_pData_Manager->NextLevl_MaxEXP(); /*m_pPlayer->Get_Stat().iMaxExp*/;
 			m_pData_Manager->Set_CurEXP(m_fRemainEXP);/*m_pPlayer->Get_Stat().iExp*/; // 레벨업하고 남은 값
 			m_fPreEXP = 0.f; // PreEXP는 초기화
-			m_pData_Manager->Set_ShowLevelBox(true);
 
+			//m_pData_Manager->Set_ShowLevelBox(true);
+			m_pUI_Manager->Set_Active(UITYPE::LEVEL_UP);
 			m_fTimeAcc = 0.f;
 			m_bLerp = true;
 		}

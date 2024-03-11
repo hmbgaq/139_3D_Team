@@ -163,7 +163,8 @@ void CImgui_Window::ShowDialog()
 			else
 				MSG_BOX("m_eDialogType 셋팅 하자");
 		}
-
+		// SH_Add : Save Load시 키 입력 방지용 bool변수 추가...
+		m_bShortOff = false;
 		g_pFileDialog->Close();
 	}
 }

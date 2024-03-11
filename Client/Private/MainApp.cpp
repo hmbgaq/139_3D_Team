@@ -7,6 +7,7 @@
 #include "DevConsole.h"
 #include "Data_Manager.h"
 #include "Clone_Manager.h"
+#include "UI_Manager.h"
 
 //CUDA test
 #include <iostream>
@@ -46,7 +47,9 @@ HRESULT CMainApp::Initialize()
 	//Client Managers
 	CClone_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 	CData_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
-
+	m_pUI_Manager = CUI_Manager::GetInstance();
+	Safe_AddRef(m_pUI_Manager);
+	m_pUI_Manager->Initialize(m_pDevice, m_pContext);
 
 	FAILED_CHECK(Ready_Font());
 
@@ -69,6 +72,7 @@ HRESULT CMainApp::Initialize()
 void CMainApp::Tick(_float fTimeDelta)
 {
 	m_pGameInstance->Tick_Engine(fTimeDelta);
+	m_pUI_Manager->Tick(fTimeDelta);
 
 	m_fTimeAcc += fTimeDelta;
 	
@@ -353,6 +357,10 @@ void CMainApp::Free()
 	
 	CClone_Manager::DestroyInstance();
 	CData_Manager::DestroyInstance();
+
+	/* Add UI Manager */
+	Safe_Release(m_pUI_Manager);
+	CUI_Manager::DestroyInstance();
 
 	CGameInstance::Release_Engine();
 }

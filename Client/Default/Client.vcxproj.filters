@@ -1972,6 +1972,9 @@
     <Filter Include="02.GameObjects\UI\98. Distortion">
       <UniqueIdentifier>{6411bd98-b0dd-4e40-8a9c-4ffeb7265097}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.Manager\UI">
+      <UniqueIdentifier>{d7757ce9-a1f9-4694-aebd-8973f281a226}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3608,6 +3611,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_Distortion.h">
       <Filter>02.GameObjects\UI\98. Distortion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Manager.h">
+      <Filter>96.Manager\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -5346,6 +5352,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Distortion.cpp">
       <Filter>02.GameObjects\UI\98. Distortion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Manager.cpp">
+      <Filter>96.Manager\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

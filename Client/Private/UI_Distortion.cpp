@@ -38,6 +38,7 @@ HRESULT CUI_Distortion::Initialize(void* pArg)
 
 	/* Distortion이 있는 UI */
 	m_tUIInfo.bDistortionUI = true;
+	m_tUIInfo.fPositionZ = 0.0f;
 
 	/*
 	#include "Data_Manager.h" 인클루드 해주고,

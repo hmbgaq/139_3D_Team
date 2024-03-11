@@ -82,9 +82,10 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 			}
 		}
 
-		if (m_pGameInstance->Key_Down(DIK_F2))
+		if (m_pGameInstance->Key_Down(DIK_LSHIFT))
 		{
-			CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::SpringCamera);
+			if (m_pGameInstance->Key_Down(DIK_F2))
+				CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::SpringCamera);
 		}
 
 

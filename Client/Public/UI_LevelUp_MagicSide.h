@@ -24,6 +24,9 @@ private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
 
+private:
+	void					Check_Disappear(_float fTimeDelta);
+
 public:
 	json					Save_Desc(json& out_json);
 	void					Load_Desc();
