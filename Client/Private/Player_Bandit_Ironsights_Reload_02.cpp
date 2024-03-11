@@ -5,7 +5,7 @@ void CPlayer_Bandit_Ironsights_Reload_02::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_LOOP);
+	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
 	pActor->Set_Splitted(true);
 }
 
