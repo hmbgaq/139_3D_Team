@@ -78,9 +78,6 @@ private:
 	_bool m_bPlayerCheck = false; // 카메라 타겟이 플레이어 인지 아닌지  확인 하기 위 한 용도  
 private:
 	//카메라 X,Y,Z
-// 	_float m_CameraOffsetX = 0.f;
-// 	_float m_CameraOffsetY = 0.f;
-// 	_float m_CameraOffsetZ = 0.f;
 	_float3 m_CameraOffset = {};
 	_float3 m_TargetPosition = {};
 	_float CameraMoveSpeed = 3.f;//카메라 보간용 이동속도

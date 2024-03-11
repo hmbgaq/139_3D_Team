@@ -9,6 +9,8 @@
 #include "MasterCamera.h"
 #include "Transform.h"
 #include "Bone.h"
+#include "Effect.h"
+#include "Clone_Manager.h"
 
 CVampireCommander_Weapon_Hand::CVampireCommander_Weapon_Hand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CVampireCommander_Weapon(pDevice, pContext, strPrototypeTag)
@@ -86,16 +88,21 @@ HRESULT CVampireCommander_Weapon_Hand::Ready_Components()
 void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 {
 	CCharacter* pTarget_Character = Get_Target_Character(other);
+	CVampireCommander* parent = dynamic_cast<CVampireCommander*>(Get_Object_Owner());
 	if (nullptr != pTarget_Character && m_bSynced == false)
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
 		pTarget_Character->Set_Hitted(m_iDamage, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
+ 		string Test = "Data_Animation/";
+		parent->Set_EventNotify(Test, "Test2_AnimationData.json");
+		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, parent->Get_CharcterDesc().EffectFileName + ".json");
+		
+		pEffect->Set_Position(this->Get_Position());
 
 	}
 	else if(nullptr != pTarget_Character && m_bSynced == true)
 	{
-		CVampireCommander* parent = dynamic_cast<CVampireCommander*>(Get_Object_Owner());
 		parent->Get_Actor()->Set_State(new CVampireCommander_SyncedAttack);
 		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 		pPlayer->Get_Actor()->Set_State(new CPlayer_VampireCommander_SyncedAttack);
@@ -116,7 +123,7 @@ void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 		pSpringCam->Set_pTarget(parent->Get_Transform());
 		pSpringCam->Set_TargetPosition(TargetPosition);
 		pSpringCam->Set_pTargetCharacter(parent);
-		pSpringCam->Set_CameraOffset(_float3(1.2f, -2.f, -7.5f));
+		pSpringCam->Set_CameraOffset(_float3(1.7f, -3.f, -8.5f));
 		pPlayer->Get_Transform()->Set_State(CTransform::STATE_POSITION, parent->Get_Transform()->Get_State(CTransform::STATE_POSITION) +2*parent->Get_Transform()->Get_State(CTransform::STATE_LOOK));
 
 	}
