@@ -2488,6 +2488,12 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent\Parts\Weapon">
       <UniqueIdentifier>{5313ca6d-7bde-4fe9-b7c7-9c1f48cd5d4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B\Weapon">
+      <UniqueIdentifier>{0d3f046f-71ee-4c1d-bbe3-813cdc13fe2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Weapon">
+      <UniqueIdentifier>{f032ab0a-68d4-4147-aba0-7eb64c75a2a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -4698,6 +4704,12 @@
     <ClInclude Include="..\Public\Monster_Character.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Infected_B.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Infected_C.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Weapon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -6834,6 +6846,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Weapon_Infected.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent\Parts\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Infected_B.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Infected_C.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

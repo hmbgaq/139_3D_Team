@@ -9,6 +9,8 @@ void CInfected_Melee_RU_01::Initialize(CInfected* pActor)
 	switch (m_eType)
 	{
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
+	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
+	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 	{
 		m_pWeapon
 			->Set_Damage(3)
@@ -17,10 +19,7 @@ void CInfected_Melee_RU_01::Initialize(CInfected* pActor)
 			->Set_Force(0.f);
 	}
 	break;
-	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
-		break;
-	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-		break;
+
 	case CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
 		break;
 	case CInfected::INFECTED_TYPE::INFECTED_WASTER:
@@ -34,6 +33,8 @@ CState<CInfected>* CInfected_Melee_RU_01::Update(CInfected* pActor, _float fTime
 	switch (pActor->Get_Info().eType)
 	{
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
+	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
+	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 	{
 		if (pActor->Is_Inputable_Front(27))
 			m_pWeapon->Set_Enable(true);
@@ -42,10 +43,7 @@ CState<CInfected>* CInfected_Melee_RU_01::Update(CInfected* pActor, _float fTime
 			m_pWeapon->Set_Enable(false);
 	}
 	break;
-	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
-		break;
-	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-		break;
+
 	case CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
 		break;
 	case CInfected::INFECTED_TYPE::INFECTED_WASTER:

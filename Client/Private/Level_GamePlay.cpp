@@ -194,13 +194,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 	NULL_CHECK_RETURN(pMonster, E_FAIL);
 	pMonster->Set_Position(_float3(250.5, 0.f, 10.f ));
 
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
-	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_Position(_float3(252.f, 0.f, 12.f ));
-	
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
-	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_Position(_float3(255.5f, 0.f, 15.f ));
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//pMonster->Set_Position(_float3(252.f, 0.f, 12.f ));
+	//
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//pMonster->Set_Position(_float3(255.5f, 0.f, 15.f ));
 	
 
 	return S_OK;
