@@ -19,5 +19,6 @@ void CInfected_State_Walk::Release(CInfected* pActor)
 
 CState<CInfected>* CInfected_State_Walk::Update_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	//return nullptr;
 	return Walk_State(pActor, fTimeDelta, _iAnimIndex);
 }

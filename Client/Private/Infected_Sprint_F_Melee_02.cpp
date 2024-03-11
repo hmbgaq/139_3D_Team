@@ -20,7 +20,7 @@ CState<CInfected>* CInfected_Sprint_F_Melee_02::Update(CInfected* pActor, _float
 		return new CInfected_Walk_B();
 	}
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	return nullptr;
 }
 
 void CInfected_Sprint_F_Melee_02::Release(CInfected* pActor)

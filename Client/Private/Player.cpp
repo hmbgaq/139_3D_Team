@@ -77,8 +77,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
 	m_pPhysXCollider->Add_PhysXActorAtScene();
 
-
-
 	CData_Manager::GetInstance()->Set_Player(this);
 
 	/* Temp - 맵에 맞게 위치 조정한값*/

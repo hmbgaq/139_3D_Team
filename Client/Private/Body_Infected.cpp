@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "..\Public\Body_Infected.h"
 #include "GameInstance.h"
+#include "Body_Infected.h"
 
 CBody_Infected::CBody_Infected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CBody(pDevice, pContext, strPrototypeTag)
@@ -14,16 +14,14 @@ CBody_Infected::CBody_Infected(const CBody_Infected& rhs)
 
 HRESULT CBody_Infected::Initialize_Prototype()
 {
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize_Prototype());
 
 	return S_OK;
 }
 
 HRESULT CBody_Infected::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize(pArg));
 
 	return S_OK;
 }
@@ -45,8 +43,7 @@ void CBody_Infected::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Infected::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Render());
 
 	return S_OK;
 }
@@ -60,7 +57,6 @@ HRESULT CBody_Infected::Render_Shadow()
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_pGameInstance->Get_NextLevel())));
-
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
@@ -81,16 +77,20 @@ HRESULT CBody_Infected::Ready_Components()
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
-
-	/* For.Com_Collider */
-	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
-	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-	BoundingDesc.vExtents = _float3(0.5f, 0.7f, 0.5f);
-	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
-
-	FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
+	{
+		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+	}
 	
+	/* For.Com_Collider */
+	{
+		CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
+		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
+		BoundingDesc.vExtents = _float3(0.5f, 0.7f, 0.5f);
+		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
+
+		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
+	}
+
 	return S_OK;
 }
 
@@ -103,37 +103,6 @@ HRESULT CBody_Infected::Bind_ShaderResources()
 
 	return S_OK;
 }
-
-//CBody_Infected* CBody_Infected::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-//{
-//	CBody_Infected* pInstance = new CBody_Infected(pDevice, pContext, strPrototypeTag);
-//
-//	/* 원형객체를 초기화한다.  */
-//	if (FAILED(pInstance->Initialize_Prototype()))
-//	{
-//		MSG_BOX("Failed to Created : CBody_Infected");
-//		Safe_Release(pInstance);
-//	}
-//	return pInstance;
-//}
-//
-//CGameObject* CBody_Infected::Clone(void* pArg)
-//{
-//	CBody_Infected* pInstance = new CBody_Infected(*this);
-//
-//	/* 원형객체를 초기화한다.  */
-//	if (FAILED(pInstance->Initialize(pArg)))
-//	{
-//		MSG_BOX("Failed to Cloned : CBody_Infected");
-//		Safe_Release(pInstance);
-//	}
-//	return pInstance;
-//}
-//
-//CGameObject* CBody_Infected::Pool()
-//{
-//	return new CBody_Infected(*this);
-//}
 
 void CBody_Infected::Free()
 {

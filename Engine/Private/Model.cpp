@@ -505,6 +505,11 @@ _float CModel::Get_TrackPosition()
 	return m_Animations[m_iCurrentAnimIndex]->Get_TrackPosition();
 }
 
+void CModel::Set_TrackPosition(_int iNewTrackPosition)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(iNewTrackPosition);
+}
+
 void CModel::Write_Names(const string& strModelFilePath)
 {
 	ofstream osTxt(strModelFilePath + ".txt");

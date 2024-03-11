@@ -28,5 +28,4 @@ CState<CInfected>* CInfected_State_Attack::Update_State(CInfected* pActor, _floa
 	}
 
 	return nullptr;
-//	return Attack_State(pActor, fTimeDelta, _iAnimIndex);
 }

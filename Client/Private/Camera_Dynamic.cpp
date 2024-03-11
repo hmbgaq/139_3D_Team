@@ -1,8 +1,6 @@
 #include "stdafx.h"
-#include "..\Public\Camera_Dynamic.h"
-
+#include "Camera_Dynamic.h"
 #include "GameInstance.h"
-
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 
@@ -23,15 +21,13 @@ HRESULT CCamera_Dynamic::Initialize_Prototype()
 
 HRESULT CCamera_Dynamic::Initialize(void * pArg)
 {
-	if (nullptr == pArg)
-		return E_FAIL;
+	NULL_CHECK_RETURN(pArg, E_FAIL);
 
 	DYNAMIC_CAMERA_DESC*	pDesc = (DYNAMIC_CAMERA_DESC*)pArg;
 
 	m_fMouseSensor = pDesc->fMouseSensor;
 
-	if (FAILED(__super::Initialize(pDesc)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize(pDesc));
 
 	//CData_Manager::GetInstance()->Set_MasterCamera();
 	
@@ -45,52 +41,47 @@ void CCamera_Dynamic::Priority_Tick(_float fTimeDelta)
 
 void CCamera_Dynamic::Tick(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Pressing(DIK_LEFTARROW))
+	{
+		m_pTransformCom->Go_Left(fTimeDelta);
+	}
 
+	if (m_pGameInstance->Key_Pressing(DIK_RIGHTARROW))
+	{
+		m_pTransformCom->Go_Right(fTimeDelta);
+	}
 
-		if (m_pGameInstance->Key_Pressing(DIK_LEFTARROW))
+	if (m_pGameInstance->Key_Pressing(DIK_UPARROW))
+	{
+		m_pTransformCom->Go_Straight(fTimeDelta);
+	}
+
+	if (m_pGameInstance->Key_Pressing(DIK_DOWNARROW))
+	{
+		m_pTransformCom->Go_Backward(fTimeDelta);
+	}
+
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		_long	MouseMove = 0;
+
+		if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_X))
 		{
-			m_pTransformCom->Go_Left(fTimeDelta);
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fMouseSensor * MouseMove * fTimeDelta);
 		}
 
-		if (m_pGameInstance->Key_Pressing(DIK_RIGHTARROW))
+		if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_Y))
 		{
-			m_pTransformCom->Go_Right(fTimeDelta);
+			m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), m_fMouseSensor * MouseMove * fTimeDelta);
 		}
+	}
 
-		if (m_pGameInstance->Key_Pressing(DIK_UPARROW))
-		{
-			m_pTransformCom->Go_Straight(fTimeDelta);
-		}
+	if (m_pGameInstance->Key_Down(DIK_F2))
+	{
+		CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::SpringCamera);
+	}
 
-		if (m_pGameInstance->Key_Pressing(DIK_DOWNARROW))
-		{
-			m_pTransformCom->Go_Backward(fTimeDelta);
-		}
-
-		if (m_pGameInstance->Mouse_Pressing(DIM_RB))
-		{
-			_long	MouseMove = 0;
-
-			if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_X))
-			{
-				m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fMouseSensor * MouseMove * fTimeDelta);
-			}
-
-			if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_Y))
-			{
-				m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), m_fMouseSensor * MouseMove * fTimeDelta);
-			}
-		}
-
-		if (m_pGameInstance->Key_Down(DIK_F2))
-		{
-			CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::SpringCamera);
-		}
-
-
-		__super::Tick(fTimeDelta);
-
-
+	__super::Tick(fTimeDelta);
 }
 
 void CCamera_Dynamic::Late_Tick(_float fTimeDelta)
@@ -132,6 +123,5 @@ CGameObject* CCamera_Dynamic::Pool()
 void CCamera_Dynamic::Free()
 {
 	__super::Free();
-
 }
 

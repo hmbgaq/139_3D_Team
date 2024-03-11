@@ -84,7 +84,7 @@ HRESULT CInfected_A::Ready_Option()
 	// fWalk	~			: 뛰어오는거리 -> 일반공격에 도달할때까지 뛰어옴 -> 뛰면서 공격하는 이동공격으로 감 
 	m_eInfo.eType = INFECTED_TYPE::INFECTED_VESSEL_A;
 	m_eInfo.RandomNumber = SMath::Random(1, 10);
-	m_eInfo.fAttack_Distance = 4.f;
+	m_eInfo.fAttack_Distance = 3.5f;
 	m_eInfo.fWalk_Distance = 10.f;
 
 	m_pTarget = m_pGameInstance->Get_Player();
@@ -128,9 +128,20 @@ HRESULT CInfected_A::Ready_Option()
 
 HRESULT CInfected_A::Ready_PartObjects()
 {
-	CBody::BODY_DESC		BodyDesc = {};
-	FAILED_CHECK(Add_Body(TEXT("Prototype_GameObject_Body_Infected_A"), BodyDesc));
+	/* For. Body */
+	{
+		CBody::BODY_DESC		BodyDesc = {};
+		FAILED_CHECK(Add_Body(TEXT("Prototype_GameObject_Body_Infected_A"), BodyDesc));
+	}
 
+	/* For. Weapon */
+	{
+		CWeapon::WEAPON_DESC		WeaponDesc = {};
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Infected_A"), "Hand_Leech_01", WeaponDesc, TEXT("Weapon_Punch")));
+
+		CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch"));
+		m_pWeapon_Punch_L->Set_Enable(true);
+	}
 	return S_OK;
 }
 

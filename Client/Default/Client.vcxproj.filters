@@ -2482,6 +2482,12 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Body">
       <UniqueIdentifier>{0998690f-94ba-4e14-8a39-2da0d7c5dc65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Weapon">
+      <UniqueIdentifier>{a64204be-152c-4c7b-a3f0-a7aa5eea731e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent\Parts\Weapon">
+      <UniqueIdentifier>{5313ca6d-7bde-4fe9-b7c7-9c1f48cd5d4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3053,9 +3059,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Assassin_State.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\0. Origin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Monster_Character.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Assassin_IdleAct_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\1. Idle\1</Filter>
@@ -4686,6 +4689,15 @@
     <ClInclude Include="..\Public\Body_Infected_C.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Body</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Infected_A.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Infected.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster_Character.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -5370,9 +5382,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Assassin_State.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\0. Origin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Monster_Character.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Assassin_IdleAct_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\1. Idle\1</Filter>
@@ -6816,6 +6825,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body_Infected_C.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Infected_A.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_Character.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Infected.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent\Parts\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -217,9 +217,8 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-		if (fDist <= pActor->Get_Info().fWalk_Distance && fDist >= pActor->Get_Info().fAttack_Distance) // Attack ~ Wak 사이 
+		if (pActor->Get_Info().fAttack_Distance + 0.5 <= fDist && fDist <= pActor->Get_Info().fWalk_Distance ) // Attack ~ Wak 사이 
 		{
-			//cout << "Chase - Walk " << endl;
 			return new CInfected_Walk_F();
 		}
 		break;
@@ -252,9 +251,8 @@ CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _u
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-		if (fDist > pActor->Get_Info().fWalk_Distance) // Attack ~ Wak 사이 
+		if (fDist > pActor->Get_Info().fWalk_Distance) // Walk ~ 이상으로 넘어가면 무조건 달리기상태로 지정 
 		{
-			//cout << "Chase - Run " << endl;
 			return new CInfected_Run_F();
 		}
 		break;
@@ -279,6 +277,7 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 	/* 몬스터의 Info Desc */
 	CInfected::INFECTED_DESC Info = pActor->Get_Info();
 	_int iActNumber = Info.RandomNumber % 4;
+	pActor->Look_At_Target();
 
 	/* 타입별, 거리별 조절해야함 */
 	switch (Info.eType)
@@ -286,10 +285,26 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-			
-		pActor->Look_At_Target();
 
-		if (fDist <= Info.fAttack_Distance )
+		if (0.f <= fDist && fDist < Info.fAttack_Distance - 0.5f) // 0 ~ 공격사거리 - 0.5
+		{
+			switch (iActNumber)
+			{
+			case 1:
+				return new CInfected_Melee_RD_01();
+				break;
+			case 2:
+				return new CInfected_Melee_RM_01();
+				break;
+			case 3:
+				return new CInfected_Melee_RM_02();
+				break;
+			default:
+				return new CInfected_Melee_RU_02();
+				break;
+			}
+		}
+		else if ( Info.fAttack_Distance - 0.5f <= fDist && fDist <= Info.fAttack_Distance + 0.5f ) // 공격사거리 - 0.5 ~ 공격사거리 + 0.5 
 		{
 			switch (iActNumber)
 			{
@@ -307,6 +322,7 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 				break;
 			}
 		}
+
 		break;
 
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:

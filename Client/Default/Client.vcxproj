@@ -869,6 +869,8 @@
     <ClInclude Include="..\Public\UI_Option_SelectBox.h" />
     <ClInclude Include="..\Public\UI_Option_Window.h" />
     <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h" />
+    <ClInclude Include="..\Public\Weapon_Infected.h" />
+    <ClInclude Include="..\Public\Weapon_Infected_A.h" />
     <ClInclude Include="..\Public\Window_Style.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\TestEvent.h" />
@@ -1514,6 +1516,8 @@
     <ClCompile Include="..\Private\UI_Option_SelectBox.cpp" />
     <ClCompile Include="..\Private\UI_Option_Window.cpp" />
     <ClCompile Include="..\Private\VampireTank_KnockFrontLight_F_01.cpp" />
+    <ClCompile Include="..\Private\Weapon_Infected.cpp" />
+    <ClCompile Include="..\Private\Weapon_Infected_A.cpp" />
     <ClCompile Include="..\Private\Window_Style.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\TestEvent.cpp" />

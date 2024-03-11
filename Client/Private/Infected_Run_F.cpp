@@ -2,17 +2,20 @@
 #include "GameInstance.h"
 #include "Infected_Run_F.h"
 #include "Infected_Sprint_F_Melee_02.h"
+#include "Infected_Sprint_F_Melee_03.h"
 
 void CInfected_Run_F::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	//pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true,false, 30); // 루트애니메이션 사용 false, 30의 키프레임부터 애니메이션 시작 
 }
 
 CState<CInfected>* CInfected_Run_F::Update(CInfected* pActor, _float fTimeDelta)
 {
 	pActor->Look_At_Target();
+	pActor->Get_Transform()->Set_Speed(15.f);
 
 	switch (pActor->Get_Info().eType)
 	{
@@ -22,11 +25,14 @@ CState<CInfected>* CInfected_Run_F::Update(CInfected* pActor, _float fTimeDelta)
 	{
 		_float fDist = pActor->Calc_Distance(m_pGameInstance->Get_Player());
 
-		pActor->Get_Transform()->Set_Speed(15.f);
-
 		if (fDist <= pActor->Get_Info().fAttack_Distance + 2.f)
 		{
-			return new CInfected_Sprint_F_Melee_02();
+			_int iRemain = pActor->Get_Info().RandomNumber % 2;
+
+			if ( iRemain == 0 )
+				return new CInfected_Sprint_F_Melee_02();
+			else 
+				return new CInfected_Sprint_F_Melee_03();
 		}
 	}
 	break;
@@ -37,8 +43,10 @@ CState<CInfected>* CInfected_Run_F::Update(CInfected* pActor, _float fTimeDelta)
 		break;
 	}
 
+	if (pActor->Is_Inputable_Front(20))
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+
 	return nullptr;
-	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CInfected_Run_F::Release(CInfected* pActor)

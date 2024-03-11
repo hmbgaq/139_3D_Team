@@ -191,6 +191,11 @@ _float CBody::Get_TrackPosition()
 {
 	return m_pModelCom->Get_TrackPosition();
 }
+void CBody::Set_TrackPosition(_int iNewTrackPosition)
+{
+	return m_pModelCom->Set_TrackPosition(iNewTrackPosition);
+}
+
 #ifdef _DEBUG
 
 void CBody::Set_MouseMove(_float fTimeDelta)
