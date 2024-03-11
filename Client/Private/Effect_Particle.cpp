@@ -46,7 +46,7 @@ void CEffect_Particle::Priority_Tick(_float fTimeDelta)
 void CEffect_Particle::Tick(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
 		if (m_tVoidDesc.bActive_Tool)
 		{
@@ -141,7 +141,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 void CEffect_Particle::Late_Tick(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
 		if (m_tVoidDesc.bActive_Tool)
 		{
@@ -168,7 +168,7 @@ void CEffect_Particle::Late_Tick(_float fTimeDelta)
 HRESULT CEffect_Particle::Render()
 {
 #ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
 		if (m_tVoidDesc.bActive_Tool)
 		{

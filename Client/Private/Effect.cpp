@@ -42,7 +42,7 @@ HRESULT CEffect::Initialize(void* pArg)
 void CEffect::Priority_Tick(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
 		if (m_tEffectDesc.bActive_Tool)
 		{
@@ -63,7 +63,7 @@ void CEffect::Tick(_float fTimeDelta)
 {
 
 #ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
 		if (m_tEffectDesc.bActive_Tool)
 		{
@@ -125,7 +125,7 @@ void CEffect::Tick(_float fTimeDelta)
 void CEffect::Late_Tick(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
 		if (m_tEffectDesc.bActive_Tool)
 		{
@@ -147,7 +147,7 @@ void CEffect::Late_Tick(_float fTimeDelta)
 HRESULT CEffect::Render()
 {
 #ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
 		if (m_tEffectDesc.bActive_Tool)
 		{

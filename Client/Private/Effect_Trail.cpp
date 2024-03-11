@@ -54,7 +54,7 @@ void CEffect_Trail::Tick(_float fTimeDelta)
 void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 {
 #ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
 		if (m_tVoidDesc.bActive_Tool)
 		{
@@ -70,7 +70,7 @@ void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 			{
 				m_tVoidDesc.bRender = TRUE;
 
-				if (!m_bPause)
+				if (!m_bPause)	// 일시정지
 				{
 					m_pVIBufferCom->Update(_fTimeDelta, _ParentMatrix);
 				}
@@ -88,7 +88,7 @@ void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 void CEffect_Trail::Late_Tick(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
 		if (m_tVoidDesc.bActive_Tool)
 		{
@@ -110,7 +110,7 @@ void CEffect_Trail::Late_Tick(_float fTimeDelta)
 HRESULT CEffect_Trail::Render()
 {
 #ifdef _DEBUG
-	if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
 		if (m_tVoidDesc.bActive_Tool)
 		{

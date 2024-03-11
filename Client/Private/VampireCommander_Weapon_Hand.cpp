@@ -5,6 +5,9 @@
 #include "VampireCommander_SyncedAttack.h"
 #include "Player.h"
 
+#include "Effect_Manager.h"
+#include "Effect_Trail.h"
+
 CVampireCommander_Weapon_Hand::CVampireCommander_Weapon_Hand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CVampireCommander_Weapon(pDevice, pContext, strPrototypeTag)
 {
@@ -29,6 +32,7 @@ HRESULT CVampireCommander_Weapon_Hand::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+
 	return S_OK;
 }
 
@@ -45,6 +49,17 @@ void CVampireCommander_Weapon_Hand::Tick(_float fTimeDelta)
 void CVampireCommander_Weapon_Hand::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+
+
+	//! 유정: 트레일 테스트
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
+	}
+	
+	// m_pTrail->Set_Play(TRUE /*FALSE*/); //! 유정: 트레일 온오프
+
 }
 
 HRESULT CVampireCommander_Weapon_Hand::Render()
@@ -74,6 +89,11 @@ HRESULT CVampireCommander_Weapon_Hand::Ready_Components()
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders[0]), &BoundingDesc)))
 		return E_FAIL;
+
+
+	//! 유정: 트레일 테스트
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json");
+
 
 	return S_OK;
 }
