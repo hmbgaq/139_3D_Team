@@ -2488,6 +2488,15 @@
     <Filter Include="96.Manager\Effect_Manager">
       <UniqueIdentifier>{06d51669-1614-402e-9433-f9d301c5c62f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile">
+      <UniqueIdentifier>{e09b72df-dd52-4d32-aa86-a48dd3aee55d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range1">
+      <UniqueIdentifier>{3631bb27-8a49-4b63-97bc-5a121abbfadd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range3">
+      <UniqueIdentifier>{6239b706-fbbe-48a5-9ba9-9f73c26fa947}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -4698,6 +4707,12 @@
     <ClInclude Include="..\Public\Effect_Manager.h">
       <Filter>96.Manager\Effect_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Projectile_Range3.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Projectile_Range1.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -6834,6 +6849,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Manager.cpp">
       <Filter>96.Manager\Effect_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Projectile_Range3.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Projectile_Range1.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

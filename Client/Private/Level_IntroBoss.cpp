@@ -197,8 +197,8 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Monster(const wstring& strLayerTag, void* 
 
 	/*	}*/
 
-	{
-		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_VampireCommander"));
+	{//Layer_Boss
+		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_Boss", TEXT("Prototype_GameObject_VampireCommander"));
 	
 		if (nullptr == pMonster)	return E_FAIL;
 		pMonster->Set_Position(_float3(60.0f, 0.f, 29.84f));
