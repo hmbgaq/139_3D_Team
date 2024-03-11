@@ -24,7 +24,8 @@ public:
 	virtual void	Tick(_float fTimeDelta) override;
 	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	
+	virtual	HRESULT Render_Shadow() override { return S_OK; };
+
 protected:
 	virtual HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

@@ -137,10 +137,12 @@ HRESULT CInfected_A::Ready_PartObjects()
 	/* For. Weapon */
 	{
 		CWeapon::WEAPON_DESC		WeaponDesc = {};
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Infected_A"), "Hand_Leech_01", WeaponDesc, TEXT("Weapon_Punch")));
+		WeaponDesc.m_pSocketBone = m_pBody->Get_BonePtr("RightHandIK");
+		WeaponDesc.m_pParentTransform = m_pTransformCom;
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Infected_A"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch")));
 
-		CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch"));
-		m_pWeapon_Punch_L->Set_Enable(true);
+		CWeapon* m_pWeapon = Get_Weapon(TEXT("Weapon_Punch"));
+		m_pWeapon->Set_Enable(false);
 	}
 	return S_OK;
 }
