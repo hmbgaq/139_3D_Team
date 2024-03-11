@@ -2287,10 +2287,11 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		ImGui::SameLine();
 		if (ImGui::Button(" Add Mesh "))
 		{
-			//Add_Part_Mesh(TEXT("Prototype_Component_Model_Xray_ManHeavy"));
+			Add_Part_Mesh(TEXT("Prototype_Component_Model_Xray_ManHeavy"));
 			//Add_Part_Mesh(TEXT("Prototype_Component_Model_splineMesh_tornado"));
 			//Add_Part_Mesh(TEXT("Prototype_Component_Model_ShieldDome"));
-			Add_Part_Mesh(TEXT("Prototype_Component_Model_Particle_Test"));
+			//Add_Part_Mesh(TEXT("Prototype_Component_Model_Particle_Test"));
+			
 		}
 		ImGui::SameLine();
 		if (ImGui::Button(" Add Trail "))

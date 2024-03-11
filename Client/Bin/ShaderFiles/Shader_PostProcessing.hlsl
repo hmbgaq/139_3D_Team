@@ -269,19 +269,14 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     vector Object_Blur = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     
     vector Effect = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
-  //  vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
-    
-    // Out.vColor = Deferred + Object_Blur + Effect + Effect_Blur;
-    
-    
-    /* 여기 건들면 될거같은데 왜지 뭐지 왜안되지 ! */
+    vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
     
     Out.vColor = Effect;
-    // +Effect_Blur;
     
-    if(Out.vColor.a == 0)
-        Out.vColor =  Deferred + Object_Blur;
+    if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
+        Out.vColor = Deferred + Object_Blur + Effect_Blur;
   
+    
     if (Out.vColor.a == 0)
         discard;
     
@@ -348,7 +343,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;

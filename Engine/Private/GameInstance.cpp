@@ -382,7 +382,7 @@ HRESULT CGameInstance::Create_PoolObjects(const wstring& strPrototypeTag, _uint 
 
 void CGameInstance::Fill_PrototypeTags(vector<string>* _vector)
 {
-	NULL_CHECK_RETURN(m_pObject_Manager, );
+	NULL_CHECK_RETURN(m_pObject_Manager, );	
 
 	m_pObject_Manager->Fill_PrototypeTags(_vector);
 }

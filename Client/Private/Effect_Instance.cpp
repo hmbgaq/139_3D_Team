@@ -356,6 +356,10 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tVoidDesc.fDissolveAmount, sizeof(_float)));
 
+	/* 소영 추가사항 - Bloom , Rim 용도 ====== */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_tInstanceDesc.vBloomPower, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tInstanceDesc.vRimColor, sizeof(_float4)));
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_tInstanceDesc.fRimPower, sizeof(_float))); /* 이걸 셰이더에서 ★표시 해둔곳에 값으로 던져도 되는부분임*/
 
 	return S_OK;
 }
