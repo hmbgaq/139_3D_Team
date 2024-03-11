@@ -117,6 +117,7 @@ void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 		pSpringCam->Set_TargetPosition(TargetPosition);
 		pSpringCam->Set_pTargetCharacter(parent);
 		pSpringCam->Set_CameraOffset(_float3(1.2f, -2.f, -7.5f));
+		pPlayer->Get_Transform()->Set_State(CTransform::STATE_POSITION, parent->Get_Transform()->Get_State(CTransform::STATE_POSITION) +2*parent->Get_Transform()->Get_State(CTransform::STATE_LOOK));
 
 	}
 	Set_Enable(false);
