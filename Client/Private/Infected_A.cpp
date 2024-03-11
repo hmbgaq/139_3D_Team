@@ -88,7 +88,8 @@ HRESULT CInfected_A::Ready_Option()
 	m_eInfo.fWalk_Distance = 10.f;
 
 	m_pTarget = m_pGameInstance->Get_Player();
-
+	_float3 vPos = m_pTransformCom->Get_Position();
+	
 	/* 액터 할당 & 리스폰 애니메이션 지정 */
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -97,27 +98,23 @@ HRESULT CInfected_A::Ready_Option()
 		switch (m_eInfo.RandomNumber >> 1)
 		{
 		case 1:
-			//cout << " CInfected_SpawnClimb_01 " << endl;
+			m_pTransformCom->Set_Position(_float3(vPos.x, vPos.y - 1.f, vPos.z));
 			m_pActor->Set_State(new CInfected_SpawnClimb_01());
 			break;
 		case 2:
-			//cout << " CInfected_SpawnClimb_02 " << endl;
+			m_pTransformCom->Set_Position(_float3(vPos.x, vPos.y - 1.f, vPos.z));
 			m_pActor->Set_State(new CInfected_SpawnClimb_02());
 			break;
 		case 3:
-			//cout << " CInfected_SpawnCrawl_01 " << endl;
 			m_pActor->Set_State(new CInfected_SpawnCrawl_01());
 			break;
 		case 4:
-			//cout << " CInfected_SpawnCrawl_02 " << endl;
 			m_pActor->Set_State(new CInfected_SpawnCrawl_02());
 			break;
 		case 5:
-			//cout << " CInfected_SpawnFromCoffin0 " << endl;
 			m_pActor->Set_State(new CInfected_SpawnFromCoffin0());
 			break;
 		default:
-			//cout << " CInfected_SpawnGround " << endl;
 			m_pActor->Set_State(new CInfected_SpawnGround());
 			break;
 		}

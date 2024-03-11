@@ -103,7 +103,7 @@ public:
 		Infected_Run_B							 , // (20) Move / 빠르게 뒤로 움직임
 		Infected_Run_F							 , // (21) Move / 빠르게 앞으로 움직임
 		Infected_Run_FL							 , // (22) Move / 빠르게 왼쪽로 움직임(몬스터기준) + 바라보기 
-		Infected_Run_FL45						 , // (23) Move / 빠르게 왼쪽 대각선 움직임(몬스터기준)
+		Infected_Run_FL45						 , // (23) Move / 빠르게 왼쪽 대각선 움직임(몬스터기준)	
 		Infected_Run_FR							 , // (24) Move / 빠르게 오른쪽로 움직임(몬스터기준) + 바라보기 
 		Infected_Run_FR45						 , // (25) Move / 빠르게 오른쪽 대각선 움직임(몬스터기준)
 		Infected_SpawnClimb_01					 , // (26) Spawn / 일반적으로 올라옴

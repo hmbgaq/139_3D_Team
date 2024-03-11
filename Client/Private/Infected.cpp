@@ -194,40 +194,6 @@ void CInfected::Hitted_Dead(Power ePower)
 	}
 }
 
-
-
-
-//CInfected* CInfected::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-//{
-//	CInfected* pInstance = new CInfected(pDevice, pContext, strPrototypeTag);
-//
-//	/* 원형객체를 초기화한다.  */
-//	if (FAILED(pInstance->Initialize_Prototype()))
-//	{
-//		MSG_BOX("Failed to Created : CInfected");
-//		Safe_Release(pInstance);
-//	}
-//	return pInstance;
-//}
-//
-//CGameObject* CInfected::Clone(void* pArg)
-//{
-//	CInfected* pInstance = new CInfected(*this);
-//
-//	/* 원형객체를 초기화한다.  */
-//	if (FAILED(pInstance->Initialize(pArg)))
-//	{
-//		MSG_BOX("Failed to Cloned : CInfected");
-//		Safe_Release(pInstance);
-//	}
-//	return pInstance;
-//}
-//
-//CGameObject* CInfected::Pool()
-//{
-//	return new CInfected(*this);
-//}
-
 void CInfected::Free()
 {
 	__super::Free();

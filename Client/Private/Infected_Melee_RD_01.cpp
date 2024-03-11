@@ -6,13 +6,12 @@ void CInfected_Melee_RD_01::Initialize(CInfected* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
-	switch (pActor->Get_Info().eType)
+	switch (m_eType)
 	{
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	{
-		m_pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch"));
 		m_pWeapon
-			->Set_Damage(0)
+			->Set_Damage(3)
 			->Set_Direction(Direction::Left)
 			->Set_Power(Power::Light)
 			->Set_Force(0.f);
@@ -27,15 +26,11 @@ void CInfected_Melee_RD_01::Initialize(CInfected* pActor)
 	case CInfected::INFECTED_TYPE::INFECTED_WASTER:
 		break;
 	}
-//	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
-
-
-	//30~40
 }
 
 CState<CInfected>* CInfected_Melee_RD_01::Update(CInfected* pActor, _float fTimeDelta)
 {
-	switch (pActor->Get_Info().eType)
+	switch (m_eType)
 	{
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	{

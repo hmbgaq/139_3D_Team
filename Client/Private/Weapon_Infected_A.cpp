@@ -39,8 +39,6 @@ void CWeapon_Infected_A::Tick(_float fTimeDelta)
 
 void CWeapon_Infected_A::Late_Tick(_float fTimeDelta)
 {
-	//m_pGameInstance->Add_DebugRender(m_pColliders[0]);
-
 	__super::Late_Tick(fTimeDelta);
 }
 
@@ -53,13 +51,13 @@ HRESULT CWeapon_Infected_A::Render()
 
 HRESULT CWeapon_Infected_A::Ready_Components()
 {
-	m_iColliderSize = 1;
-	m_pColliders.resize(m_iColliderSize);
-
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Collider */
 	{
+		m_iColliderSize = 1;
+		m_pColliders.resize(m_iColliderSize);
+
 		CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
 		BoundingDesc.fRadius = { 0.15f };

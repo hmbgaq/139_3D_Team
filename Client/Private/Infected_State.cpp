@@ -295,16 +295,13 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 				return new CInfected_Melee_RD_01();
 				break;
 			case 2:
-				//return new CInfected_Melee_RM_01();
-				return new CInfected_Melee_RD_01();
+				return new CInfected_Melee_RM_01();
 				break;
 			case 3:
-				return new CInfected_Melee_RD_01();
-				//return new CInfected_Melee_RM_02();
+				return new CInfected_Melee_RM_02();
 				break;
 			default:
-				return new CInfected_Melee_RD_01();
-				//return new CInfected_Melee_RU_02();
+				return new CInfected_Melee_RU_02();
 				break;
 			}
 		}
