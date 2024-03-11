@@ -27,8 +27,8 @@ public:
 		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
 
 		/* Morph */
-		_bool		bMorph			= { FALSE };
-		_float		fMorphTimeTerm	= { 0.05f };
+		_bool		bMorph					= { FALSE };
+		_float		fMorphTimeTerm = { 0.05f };
 
 		/* RigidBody */
 		_bool		bUseRigidBody = { TRUE };
@@ -57,8 +57,9 @@ public:
 
 		// 업데이트 돌면서 변하는 정보들(저장X)
 		_float		fTimeAcc = { 0.f };			// 시간 누적
-		_float		fMorphTimeAcc = { 0.f };
 		_float		fLifeTimeRatio = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
+
+		_float		fMorphTimeAcc = { 0.f };
 
 
 		void Reset_Times()

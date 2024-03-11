@@ -50,9 +50,7 @@ public:
 		_float4		vColor_Clip		= { 0.f, 0.f, 0.f, 0.f };
 		_float4		vColor_Mul		= { 1.f, 1.f, 1.f, 1.f };
 
-
 		// States
-		_bool		bActive_Tool	= { TRUE };
 		_bool		bPlay			= { TRUE };
 		_bool		bLoop			= { TRUE };
 		_bool		bReverse		= { FALSE };
@@ -69,13 +67,12 @@ public:
 
 
 		// 주인
-		CGameObject* pParentObj		 = { nullptr };	// 저장 X
 		_bool		 bParentPivot	 = { TRUE };
-		_float4x4	 matPivot		 = {}; /* XMStoreFloat4x4(&m_matPivot, XMMatrixIdentity()) */
-		_float4x4	 matOffset		 = {};
 
 
 		/* 업데이트 되면서 바뀌는 정보들(저장x) */
+		_bool		bActive_Tool = { TRUE };
+
 		// Times 
 		_float		fWaitingAcc		= { 0.f };	/* 시작 딜레이 시간 누적 */
 		_float		fTimeAcc		= { 0.f };	/* 시간 누적 */
@@ -85,9 +82,13 @@ public:
 
 		_float		fLifeTimeRatio	= { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
 
-
 		// Values
 		_float		fDissolveAmount = { 0.f };
+
+		// 주인 
+		// 주인 객체는 게임오브젝트에 있는 것 사용
+		_float4x4	 matPivot	= {}; /* XMStoreFloat4x4(&m_matPivot, XMMatrixIdentity()) */
+		_float4x4	 matCombined = {};
 
 
 		void Reset_Times()
@@ -155,6 +156,10 @@ public:
 
 
 public:
+	virtual void	Update_PivotMat();
+
+
+public:
 	virtual void	ReSet_Effect();
 	virtual void	End_Effect();
 
@@ -169,8 +174,6 @@ public:
 
 public:
 	EFFECTVOID_DESC* Get_Desc() { return &m_tVoidDesc; }
-
-	void	Set_Parent(CGameObject* pParentObj) { m_tVoidDesc.pParentObj = pParentObj; }
 
 
 protected:

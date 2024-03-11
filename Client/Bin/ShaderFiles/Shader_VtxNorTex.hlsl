@@ -194,27 +194,7 @@ PS_OUT PS_MAIN_GRID(PS_IN In)
 
 	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
 	vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-	//vector vMask = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
-	//vector vBrush = vector(0.f, 0.f, 0.f, 0.f);
 
-
-
-	//if (g_vBrushPos.x - g_fBrushRange < In.vWorldPos.x && In.vWorldPos.x <= g_vBrushPos.x + g_fBrushRange &&
-	//	g_vBrushPos.z - g_fBrushRange < In.vWorldPos.z && In.vWorldPos.z <= g_vBrushPos.z + g_fBrushRange)
-	//{
-	//	float2 vUV;
-
-	//	vUV.x = (In.vWorldPos.x - (g_vBrushPos.x - g_fBrushRange)) / (2.f * g_fBrushRange);
-	//	vUV.y = ((g_vBrushPos.z + g_fBrushRange) - In.vWorldPos.z) / (2.f * g_fBrushRange);
-
-	//	vBrush = g_BrushTexture.Sample(LinearSampler, vUV);
-	//}
-
-	//vector vMask = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
-	//vector vMtrlDiffuse = vMask * vDestDiffuse + (1.f - vMask) * vSourDiffuse + vBrush;
-	//Out.vDiffuse = vector(vMtrlDiffuse.rgb, 1.f);
-
-	// Out.vDiffuse = (vector)1.f;
 	Out.vDiffuse = g_vColor;
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
@@ -257,7 +237,7 @@ technique11 DefaultTechnique
 
 	pass Grid
 	{
-		SetRasterizerState(RS_Fill_Wireframe);
+		SetRasterizerState(RS_NoneCull_Wireframe);
 		SetDepthStencilState(DSS_Default, 0);
 		SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 

@@ -7,12 +7,13 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Particle final : public CVIBuffer
 {
 public:
+	enum TYPE_ACTION { SPHERE, FALL, RISE, RECYCLE, TYPE_ACTION_END };
 	enum TYPE_FADE { FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
 
 	typedef struct tagParticleBufferDESC
 	{
 		// 저장해야 하는 고정 정보들
-		_int		iCurNumInstance = { 500 };	// 초기화 값이 MAx인스턴스 개수가 됨
+		_int		iCurNumInstance = { 500 };	// 초기화 값이 Max인스턴스 개수가 됨
 
 		TYPE_FADE	eType_Fade = { FADE_NONE };
 

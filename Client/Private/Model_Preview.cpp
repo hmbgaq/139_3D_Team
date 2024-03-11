@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 
+#include "Part_Preview.h"
 
 CModel_Preview::CModel_Preview(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -40,6 +41,8 @@ HRESULT CModel_Preview::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	if (FAILED(Ready_PartObjects()))
+		return E_FAIL;
 	
 	m_pModelCom->Set_Animation(m_tDesc.iAnimIndex);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
@@ -53,6 +56,14 @@ void CModel_Preview::Priority_Tick(_float fTimeDelta)
 	if (m_tDesc.bRender)
 	{
 		__super::Priority_Tick(fTimeDelta);
+
+
+		for (auto& Pair : m_PartObjects)
+		{
+			if (nullptr != Pair.second)
+				Pair.second->Priority_Tick(fTimeDelta);
+		}
+
 	}
 
 }
@@ -64,6 +75,12 @@ void CModel_Preview::Tick(_float fTimeDelta)
 	{
 		__super::Tick(fTimeDelta);
 
+		for (auto& Pair : m_PartObjects)
+		{
+			if (nullptr != Pair.second)
+				Pair.second->Tick(fTimeDelta);
+		}
+
 	}
 }
 
@@ -73,10 +90,19 @@ void CModel_Preview::Late_Tick(_float fTimeDelta)
 	{
 		__super::Late_Tick(fTimeDelta);
 	
+		for (auto& Pair : m_PartObjects)
+		{
+			if (nullptr != Pair.second)
+				Pair.second->Late_Tick(fTimeDelta);
+		}
+
 		if (TRUE == m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_Position(), 2.f))
 		{
-			//m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos);
-			m_pModelCom->Play_Animation(fTimeDelta, TRUE);
+			if (m_tDesc.bPlay)
+			{
+				m_pModelCom->Play_Animation(fTimeDelta, TRUE);
+			}
+			
 
 			if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tDesc.iRenderGroup), this)))
 				return;
@@ -111,6 +137,36 @@ HRESULT CModel_Preview::Render()
 	return S_OK;
 }
 
+void CModel_Preview::Set_AnimIndex(_uint iAnimIndex)
+{
+	m_tDesc.iAnimIndex = iAnimIndex;
+	m_pModelCom->Set_Animation(m_tDesc.iAnimIndex);
+}
+
+CGameObject* CModel_Preview::Find_PartObject(const wstring& strPartTag)
+{
+	auto	iter = m_PartObjects.find(strPartTag);
+
+	if (iter == m_PartObjects.end())
+		return nullptr;
+
+	return iter->second;
+}
+
+HRESULT CModel_Preview::Add_PartObject(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg)
+{
+	//if (nullptr != Find_PartObject(strPrototypeTag))
+	//	return E_FAIL;
+
+	CGameObject* pPartObject = m_pGameInstance->Clone_Prototype(strPrototypeTag, pArg);
+	if (nullptr == pPartObject)
+		return E_FAIL;
+
+	m_PartObjects.emplace(strPartTag, pPartObject);
+
+	return S_OK;
+}
+
 HRESULT CModel_Preview::Ready_Components()
 {
 	/* For.Com_Model */
@@ -124,6 +180,32 @@ HRESULT CModel_Preview::Ready_Components()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+HRESULT CModel_Preview::Ready_PartObjects()
+{
+	CPart_Preview::PART_PREVIEW_DESC	tPartDesc = {};
+
+	tPartDesc.fSpeedPerSec		= { 0.f };
+	tPartDesc.fRotationPerSec	= { 0.f };
+	
+	if (TEXT("Prototype_Component_Model_Rentier") == m_tDesc.strModelTag)
+	{
+		tPartDesc.pSocketBone = m_pModelCom->Get_BonePtr("RightHandIK");	// "LeftHandIK" , "RightHandIK"
+	}
+
+	if (TEXT("Prototype_Component_Model_VampireCommander") == m_tDesc.strModelTag)
+	{
+		tPartDesc.pSocketBone = m_pModelCom->Get_BonePtr("RightHandIK");	// "LeftHandIK" , "RightHandIK"
+	}
+
+	tPartDesc.pParentTransform = { m_pTransformCom };
+	tPartDesc.pOwner = { this };
+
+	/* For.Part_Preview*/
+	if (FAILED(Add_PartObject(TEXT("Prototype_GameObject_Part_Preview"), TEXT("Part_Preview"), &tPartDesc)))
+		return E_FAIL;
+
 }
 
 HRESULT CModel_Preview::Bind_ShaderResources()

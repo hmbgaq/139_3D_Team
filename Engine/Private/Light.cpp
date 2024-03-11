@@ -15,7 +15,10 @@ HRESULT CLight::Initialize(const LIGHT_DESC & LightDesc)
 {
 	m_LightDesc = LightDesc;
 
+	m_LightDesc.iLightIndex = g_iLightIndex++;
+
 	g_fCamFar = m_pGameInstance->Get_CamFar();
+
 	return S_OK;
 }
 

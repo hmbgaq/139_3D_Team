@@ -16,11 +16,12 @@ public:
 	typedef struct tagModelPreviewDesc : public CGameObject::GAMEOBJECT_DESC
 	{
 		wstring		strProtoTag = { TEXT("") };
-		wstring		strModelTag = TEXT("");
+		wstring		strModelTag = { TEXT("") };
 
 		_bool		bRender				= { TRUE };
+		_bool		bPlay			    = { TRUE };
 
-		_uint		iAnimIndex			= { 0 };	// 플레이어 Idle애니메이션은 8번
+		_uint		iAnimIndex			= { 0 };	// 플레이어 Idle애니메이션은 Player_IdlePose 8번 / 공격 1번은 Player_MeleeCombo_01 193번
 		_int		iRenderGroup		= { CRenderer::RENDER_NONBLEND };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자
 		_uint		iShaderPassIndex	= { 0 };	 // false == m_bDissolve ? 0 : 3;
 
@@ -39,6 +40,15 @@ public:
 	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+
+public:
+	void	Set_AnimIndex(_uint iAnimIndex);
+
+/* For.PartObject */
+public:
+	CGameObject* Find_PartObject(const wstring& strPartTag);
+	HRESULT		 Add_PartObject(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg);
+
 public:
 	MODEL_PREVIEW_DESC* Get_Desc() { return &m_tDesc; }
 
@@ -51,8 +61,12 @@ private:
 	CShader*	m_pShaderCom	= { nullptr };
 	CModel*		m_pModelCom		= { nullptr };
 
+	map<const wstring, class CGameObject*>			m_PartObjects;
+
 private:
 	HRESULT Ready_Components();
+	HRESULT	Ready_PartObjects();
+
 	HRESULT Bind_ShaderResources();
 
 

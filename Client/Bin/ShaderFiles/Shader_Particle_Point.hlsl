@@ -1,7 +1,7 @@
 #include "Shader_Defines.hlsli"
 
 matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D	g_DepthTexture;
+Texture2D	g_DepthTexture;
 
 Texture2D	g_DiffuseTexture;
 Texture2D	g_MaskTexture;
@@ -16,6 +16,7 @@ float		g_fCamFar;
 bool        g_bBillBoard;
 float       g_fAlpha_Discard;
 float3      g_vBlack_Discard;
+//float4	g_vColor_Mul;
 
 float		g_fDegree;
 
@@ -240,7 +241,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 			|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 			discard;
 
-        Out.vColor = vDiffuseColor;
+        Out.vColor = vDiffuseColor /** g_vColor_Mul*/;
 		/* 소영 - Test용도 */ 
         Out.vRimBloom = vector(1.0f, 1.f, 1.f, 0.3f);
     }

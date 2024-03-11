@@ -7,6 +7,7 @@
 #include "DevConsole.h"
 #include "Data_Manager.h"
 #include "Clone_Manager.h"
+#include "Effect_Manager.h"
 
 //CUDA test
 #include <iostream>
@@ -46,7 +47,7 @@ HRESULT CMainApp::Initialize()
 	//Client Managers
 	CClone_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 	CData_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
-
+	CEffect_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 
 	FAILED_CHECK(Ready_Font());
 
@@ -193,8 +194,6 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 	//
 	/* For.Prototype_Component_Shader_UI */ // + SH_Add
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_UI.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)));
-
-
 
 
 
@@ -353,6 +352,7 @@ void CMainApp::Free()
 	
 	CClone_Manager::DestroyInstance();
 	CData_Manager::DestroyInstance();
+	CEffect_Manager::DestroyInstance();
 
 	CGameInstance::Release_Engine();
 }

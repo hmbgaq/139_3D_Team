@@ -36,6 +36,7 @@ public:
 	SKYTYPE Get_CurrentSkyType() { return m_eSkyType;}
 	void	Set_SkyType(SKYTYPE eType) { m_eSkyType = eType; }
 
+	void	Set_Render_Tool(_bool bRender) { m_bRender_Tool = bRender; }
 
 public:
 	_uint	Get_SkyTextureCount() { return m_pTextureCom->Get_TextureCount();}
@@ -47,6 +48,8 @@ private:
 	
 private:
 	SKYTYPE				m_eSkyType = SKY_STAGE1;
+
+	_bool				m_bRender_Tool = { TRUE };
 
 private:
 	HRESULT Ready_Components();

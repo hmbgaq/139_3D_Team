@@ -1,7 +1,6 @@
 #pragma once
 #include "Infected_State_Walk.h"
 
-
 BEGIN(Client)
 
 class CInfected_Walk_B : public CInfected_State_Walk

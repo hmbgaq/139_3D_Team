@@ -18,8 +18,6 @@ public:
 public:
 	virtual CState<CInfected>* Update_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex) PURE;
 
-
-
 public:		//상태 그룹 별 업데이트 
 	CState<CInfected>* Normal_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CInfected>* Walk_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
@@ -31,7 +29,6 @@ public:		//상태 그룹 별 업데이트
 	CState<CInfected>* Spawn_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CInfected>* Death_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
-
 public:		//개별 동작 상태 집합
 	CState<CInfected>* Normal(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CInfected>* Walk(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
@@ -39,17 +36,9 @@ public:		//개별 동작 상태 집합
 	CState<CInfected>* Attack(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CInfected>* Dodge(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
-
-
-public:
-	_int iKeyUp = DIK_W;	//DIK_UP;
-	_int iKeyDown = DIK_S;	//DIK_DOWN;
-	_int iKeyLeft = DIK_A;	//DIK_LEFT;
-	_int iKeyRight = DIK_D;	//DIK_RIGHT;
-
-
 protected:
 	CGameInstance* m_pGameInstance = { nullptr };
 };
 
 END
+
