@@ -41,9 +41,8 @@ void CBody::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 
-	#ifdef _DEBUG
-Set_MouseMove(fTimeDelta);
-#endif // _DEBUG
+	Set_MouseMove(fTimeDelta);
+
 }
 
 void CBody::Tick(_float fTimeDelta)
@@ -195,6 +194,10 @@ _float CBody::Get_TrackPosition()
 {
 	return m_pModelCom->Get_TrackPosition();
 }
+_bool CBody::Compare_TrackPosition_Is_Over(_float fTrackPosition)
+{
+	return m_pModelCom->Compare_TrackPosition_Is_Over(fTrackPosition);
+}
 #ifdef _DEBUG
 
 void CBody::Set_MouseMove(_float fTimeDelta)
@@ -236,15 +239,15 @@ _bool CBody::Picking(_float3* vPickedPos)
 
 }
 
-CCharacter* CBody::Get_Owner()
-{
-	return m_pOwner;
-}
-
-void CBody::Set_Owner(CCharacter* pOwner)
-{
-	m_pOwner = pOwner;
-}
+//CCharacter* CBody::Get_Owner()
+//{
+//	return m_pOwner;
+//}
+//
+//void CBody::Set_Owner(CCharacter* pOwner)
+//{
+//	m_pOwner = pOwner;
+//}
 #endif
 
 void CBody::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)

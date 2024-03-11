@@ -29,12 +29,12 @@
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CCharacter(pDevice, pContext, strPrototypeTag)
+	: CCharacter_Client(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
-	: CCharacter(rhs)
+	: CCharacter_Client(rhs)
 {
 }
 

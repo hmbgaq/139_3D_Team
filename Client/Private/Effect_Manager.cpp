@@ -52,6 +52,11 @@ CEffect* CEffect_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLay
 	//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Effect.json");
 }
 
+CEffect* CEffect_Manager::Create_Effect(string strFileName, CGameObject* pOwner)
+{
+	return Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, strFileName, pOwner);
+}
+
 CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner)
 {
 	CEffect_Void::EFFECTVOID_DESC	tVoidDesc = {};

@@ -329,6 +329,7 @@
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_VampireCommander.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
+    <ClInclude Include="..\Public\Character_Client.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Preset.h" />
@@ -1247,6 +1248,7 @@
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Body_VampireCommander.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
+    <ClCompile Include="..\Private\Character_Client.cpp" />
     <ClCompile Include="..\Private\Clone_Manager.cpp" />
     <ClCompile Include="..\Private\CustomDialogFont.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />

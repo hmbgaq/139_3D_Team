@@ -109,6 +109,7 @@ public:
 	_bool					Is_Transition();
 	void					Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
 	_bool					Is_Inputable_Front(_uint _iIndexFront);
+	_bool					Compare_TrackPosition_Is_Over(_float fTrackPosition);
 	_float					Get_TrackPosition();
 	void					Write_Names(const string& strModelFilePath);
 

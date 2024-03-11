@@ -16,7 +16,7 @@ class CBone;
 class ENGINE_DLL CBody abstract : public CGameObject
 {
 public:
-	typedef struct tagBodyDesc
+	typedef struct tagBodyDesc 
 	{
 		class CTransform* m_pParentTransform = { nullptr };
 
@@ -56,6 +56,7 @@ public:
 
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 	_float	Get_TrackPosition();
+	_bool	Compare_TrackPosition_Is_Over(_float fTrackPosition);
 
 	_float3 Get_MovePos() {
 		return m_vMovePos;
@@ -68,6 +69,8 @@ public:
 	void Set_StiffnessRate_Upper(_float fStiffnessRate) {
 		m_pModelCom->Set_StiffnessRate_Upper(fStiffnessRate);
 	}
+
+	
 
 
 
@@ -109,7 +112,7 @@ protected:
 	//CTexture* m_pDissolveTexture = { nullptr };
 
 protected:
-	CCharacter* m_pOwner = { nullptr };
+	//CCharacter* m_pOwner = { nullptr };
 
 protected:
 	class CTransform* m_pParentTransform = { nullptr };

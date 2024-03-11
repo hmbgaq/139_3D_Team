@@ -79,6 +79,9 @@ public:
 	_int iKeyLeft	= DIK_A;	//DIK_LEFT;
 	_int iKeyRight	= DIK_D;	//DIK_RIGHT;
 
+public:
+	_bool	m_bFlags[10];
+
 
 protected:
 	CGameInstance* m_pGameInstance = { nullptr };

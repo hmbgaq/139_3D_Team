@@ -93,6 +93,8 @@ public:
 
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 	_float	Get_TrackPosition();
+	_bool	Compare_TrackPosition_Is_Over(_float fTrackPosition);
+
 	CHARCTER_DESC Get_CharcterDesc() { return CharAnimDesc; }
 
 	void Go_Straight(_float fTimeDelta);
@@ -139,7 +141,7 @@ public:
 	_float Calc_Distance();
 	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
-	void Move_In_Proportion_To_Enemy(_float fSpeedCap = 0.5f);
+	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 0.5f);
 
 
 

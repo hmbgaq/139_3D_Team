@@ -505,6 +505,11 @@ _bool CModel::Is_Inputable_Front(_uint _iIndexFront)
 	return m_Animations[m_iCurrentAnimIndex]->Is_Inputable_Front(_iIndexFront);
 }
 
+_bool CModel::Compare_TrackPosition_Is_Over(_float fTrackPosition)
+{
+	return Get_TrackPosition() > fTrackPosition;
+}
+
 _float CModel::Get_TrackPosition()
 {
 	return m_Animations[m_iCurrentAnimIndex]->Get_TrackPosition();
