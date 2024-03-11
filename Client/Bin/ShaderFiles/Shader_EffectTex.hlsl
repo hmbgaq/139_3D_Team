@@ -8,28 +8,34 @@
 
 /* 셰이더의 전역변수 == 상수테이블(Constant Table) */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+Texture2D		g_DepthTexture;
 
 Texture2D		g_DiffuseTexture;
 Texture2D		g_MaskTexture;
 Texture2D		g_NoiseTexture;
 
-Texture2D		g_DepthTexture;
 
-vector			g_vCamPosition;
-vector			g_vCamDirection;
+// Camera ====================
+vector		g_vCamPosition;
+float3		g_vCamDirection;
+float		g_fCamFar;
+// ===========================
 
-float2			g_UVOffset;
-float2			g_UVScale;
+float2		g_UVOffset;
+float2		g_UVScale;
 
-float			g_DiscardValue;
+float       g_fAlpha_Discard;
+float3      g_vBlack_Discard;
+float4		g_vColor_Mul;
 
-float			g_fDegree;
+float		g_fDegree;
 
-// ======= Noise
+
+// Noise ====================
 float	g_fFrameTime;
 float3	g_vScrollSpeeds;
 float3	g_vScales;
-// =======
+// ===========================
 
 
 float2	g_vDistortion1;
@@ -79,9 +85,9 @@ struct VS_OUT
 
 struct VS_OUT_EFFECT
 {
-	float4		vPosition : SV_POSITION;
-	float2		vTexcoord : TEXCOORD0;
-	float4		vProjPos : TEXCOORD1;
+	float4		vPosition	: SV_POSITION;
+	float2		vTexcoord	: TEXCOORD0;
+	float4		vProjPos	: TEXCOORD1;
 };
 
 struct VS_OUT_DISTORTION
@@ -107,9 +113,9 @@ struct PS_IN
 
 struct PS_IN_EFFECT
 {
-	float4		vPosition : SV_POSITION;
-	float2		vTexcoord : TEXCOORD0;
-	float4		vProjPos : TEXCOORD1;
+	float4		vPosition	: SV_POSITION;
+	float2		vTexcoord	: TEXCOORD0;
+	float4		vProjPos	: TEXCOORD1;
 };
 
 struct PS_IN_DISTORTION
@@ -121,7 +127,7 @@ struct PS_IN_DISTORTION
 	float2		vTexcoord2	: TEXCOORD2;
 	float2		vTexcoord3	: TEXCOORD3;
 
-	float4		vProjPos : TEXCOORD4;
+	float4		vProjPos	: TEXCOORD4;
 };
 
 /* ========================= PS_OUT ========================= */
@@ -210,21 +216,8 @@ VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
 	Out.vTexcoord = In.vTexcoord;
 	Out.vProjPos = Out.vPosition;
 	
-
-	//// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
-	//Out.vTexcoord1 = (In.vTexcoord * g_vScales.x);
-	//Out.vTexcoord1.y = Out.vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
-
-	//Out.vTexcoord2 = (In.vTexcoord * g_vScales.y);
-	//Out.vTexcoord2.y = Out.vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
-
-	//Out.vTexcoord3 = (In.vTexcoord * g_vScales.z);
-	//Out.vTexcoord3.y = Out.vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
-
-
 	return Out;
 }
-
 
 
 struct GS_IN
@@ -304,7 +297,14 @@ PS_OUT PS_MAIN_EFFECT(PS_IN_EFFECT In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+	float4 vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+	float4 vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
+
+	vDiffuseColor.a *= vAlphaColor;
+
+	if (vDiffuseColor.a < g_fAlpha_Discard	// 알파 잘라내기
+		|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
+		discard;
 
 	float2	vDepthTexcoord;
 	vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
@@ -312,7 +312,25 @@ PS_OUT PS_MAIN_EFFECT(PS_IN_EFFECT In)
 
     float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
 	
+
+	vDiffuseColor.rgb *= g_vColor_Mul.rgb;
+	Out.vColor = vDiffuseColor;
 	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
+
+	return Out;
+}
+
+
+PS_OUT PS_MAIN_WIREFRAME(PS_IN_EFFECT In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+	vDiffuseColor.rgb *= g_vColor_Mul.rgb;
+
+	Out.vColor = vDiffuseColor;
+
 
 	return Out;
 }
@@ -335,7 +353,7 @@ PS_OUT PS_MAIN_SPRITE_ANIMATION(PS_IN_EFFECT In)
 
 	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
 	// Alpha Test
-	if (Out.vColor.a < g_DiscardValue)
+	if (Out.vColor.a < g_fAlpha_Discard)
 	{
 		discard;
 	}
@@ -405,7 +423,14 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 	// wrap를 사용하는 스테이트 대신 clamp를 사용하는 스테이트를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
 	vAlphaColor = g_MaskTexture.Sample(ClampSampler, vNoiseCoords.xy);
 
+
 	vFireColor.a = vAlphaColor;
+	vFireColor.rgb *= g_vColor_Mul.rgb;
+
+
+	if (vFireColor.a < g_fAlpha_Discard	// 알파 잘라내기
+		|| vFireColor.r < g_vBlack_Discard.r && vFireColor.g < g_vBlack_Discard.g && vFireColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
+		discard;
 
 	Out.vColor = vFireColor;
 
@@ -453,4 +478,18 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_DISTORTION();
 	}
+
+	pass Effect_Wireframe // 3
+	{
+		SetRasterizerState(RS_NoneCull_Wireframe);
+		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_EFFECT();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_WIREFRAME();
+	}
+
 }

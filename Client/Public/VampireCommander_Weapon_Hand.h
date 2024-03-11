@@ -4,6 +4,7 @@
 #include "VampireCommander_Weapon.h"
 
 BEGIN(Client)
+class CEffect_Trail;
 
 class CVampireCommander_Weapon_Hand : public CVampireCommander_Weapon
 {
@@ -23,6 +24,8 @@ public:
 protected:
 	virtual HRESULT Ready_Components();
 
+private:
+	CEffect_Trail*	m_pTrail = { nullptr };
 
 public:
 	virtual void	OnCollisionEnter(CCollider* other)	override;

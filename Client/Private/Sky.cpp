@@ -80,6 +80,11 @@ void CSky::Late_Tick(_float fTimeDelta)
 
 HRESULT CSky::Render()
 {
+#ifdef _DEBUG
+	if (m_bRender_Tool)
+	{
+#endif // _DEBUG
+
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
@@ -88,6 +93,10 @@ HRESULT CSky::Render()
 	m_pVIBufferCom->Bind_VIBuffers();
 
 	m_pVIBufferCom->Render();
+
+#ifdef _DEBUG
+}
+#endif // _DEBUG
 
 	return S_OK;
 }

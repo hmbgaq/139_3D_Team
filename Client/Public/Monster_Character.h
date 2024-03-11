@@ -16,9 +16,9 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void Priority_Tick(_float fTimeDelta) override;
-	virtual void Tick(_float fTimeDelta) override;
-	virtual void Late_Tick(_float fTimeDelta) override;
+	virtual void	Priority_Tick(_float fTimeDelta) override;
+	virtual void	Tick(_float fTimeDelta) override;
+	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
 public:
@@ -28,15 +28,10 @@ protected:
 	HRESULT Ready_Components() PURE;
 	HRESULT Ready_PartObjects() PURE;
 
-
 public:
-	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual CGameObject* Pool() PURE;
-
 	virtual void Free() override;
-
-
 };
 
 END

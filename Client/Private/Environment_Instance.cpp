@@ -324,7 +324,7 @@ void CEnvironment_Instance::Free()
 
 	if (m_iCurrentLevel == (_uint)LEVEL_TOOL)
 	{
-		_uint iColliderSize = m_vecColliders.size();
+		_uint iColliderSize = (_uint)m_vecColliders.size();
 
 		for (_uint i = 0; i < iColliderSize; ++i)
 		{

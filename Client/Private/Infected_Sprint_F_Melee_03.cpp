@@ -1,4 +1,4 @@
-#include "..\Public\Infected_Sprint_F_Melee_03.h"
+#include "Infected_Sprint_F_Melee_03.h"
 
 void CInfected_Sprint_F_Melee_03::Initialize(CInfected* pActor)
 {

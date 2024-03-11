@@ -28,6 +28,9 @@ HRESULT CEffect::Initialize_Prototype()
 
 HRESULT CEffect::Initialize(void* pArg)
 {	
+	XMStoreFloat4x4(&m_tEffectDesc.matPivot, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_tEffectDesc.matCombined, XMMatrixIdentity());
+
 	m_tEffectDesc = *(EFFECT_DESC*)pArg;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -38,97 +41,129 @@ HRESULT CEffect::Initialize(void* pArg)
 
 void CEffect::Priority_Tick(_float fTimeDelta)
 {
-	if (m_tEffectDesc.bActive_Tool)
+#ifdef _DEBUG
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		for (auto& Pair : m_PartObjects)
+		if (m_tEffectDesc.bActive_Tool)
 		{
-			if (nullptr != Pair.second)
-				Pair.second->Priority_Tick(fTimeDelta);
+#endif // _DEBUG
+			for (auto& Pair : m_PartObjects)
+			{
+				if (nullptr != Pair.second)
+					Pair.second->Priority_Tick(fTimeDelta);
+			}
+#ifdef _DEBUG
 		}
 	}
+#endif // _DEBUG
 
 }
 
 void CEffect::Tick(_float fTimeDelta)
 {
 
-	if (m_tEffectDesc.bActive_Tool)
+#ifdef _DEBUG
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		m_tEffectDesc.fSequenceTime = m_tEffectDesc.fWaitingTime + m_tEffectDesc.fLifeTime + m_tEffectDesc.fRemainTime;
-		//m_fEasingTimeAcc = Easing::LerpToType(0.f, m_tEffectDesc.fSequenceTime, m_tEffectDesc.fSequenceAcc, m_tEffectDesc.fSequenceTime, m_tEffectDesc.eType_Easing);
-
-		if (m_tEffectDesc.bPlay)
+		if (m_tEffectDesc.bActive_Tool)
 		{
-			m_tEffectDesc.fSequenceAcc += fTimeDelta;
+#endif // _DEBUG
+			m_tEffectDesc.fSequenceTime = m_tEffectDesc.fWaitingTime + m_tEffectDesc.fLifeTime + m_tEffectDesc.fRemainTime;
+			//m_fEasingTimeAcc = Easing::LerpToType(0.f, m_tEffectDesc.fSequenceTime, m_tEffectDesc.fSequenceAcc, m_tEffectDesc.fSequenceTime, m_tEffectDesc.eType_Easing);
 
-			// 시작지연 누적시간이 지나면 렌더 시작(이펙트 시작)
-			if (m_tEffectDesc.fWaitingAcc < m_tEffectDesc.fWaitingTime)
+			if (m_tEffectDesc.bPlay)
 			{
-				m_tEffectDesc.fWaitingAcc += fTimeDelta;
+				m_tEffectDesc.fSequenceAcc += fTimeDelta;
 
-				if (m_tEffectDesc.fWaitingAcc >= m_tEffectDesc.fWaitingTime)
-					m_tEffectDesc.bRender = true;
-				else
-					return;
-			}
-
-			// 시간 누적 시작
-			m_tEffectDesc.fTimeAcc += fTimeDelta;
-			m_tEffectDesc.fLifeTimeRatio = min(1.0f, m_tEffectDesc.fTimeAcc / m_tEffectDesc.fLifeTime);
-			
-			if (m_tEffectDesc.fTimeAcc >= m_tEffectDesc.fLifeTime)
-			{
-				// 삭제 대기시간 누적 시작
-				m_tEffectDesc.fRemainAcc += fTimeDelta;
-
-				if (m_tEffectDesc.fRemainAcc >= m_tEffectDesc.fRemainTime)
+				// 시작지연 누적시간이 지나면 렌더 시작(이펙트 시작)
+				if (m_tEffectDesc.fWaitingAcc < m_tEffectDesc.fWaitingTime)
 				{
-					End_Effect();
-					return;
+					m_tEffectDesc.fWaitingAcc += fTimeDelta;
+
+					if (m_tEffectDesc.fWaitingAcc >= m_tEffectDesc.fWaitingTime)
+						m_tEffectDesc.bRender = true;
+					else
+						return;
 				}
-			}
 
+				// 시간 누적 시작
+				m_tEffectDesc.fTimeAcc += fTimeDelta;
+				m_tEffectDesc.fLifeTimeRatio = min(1.0f, m_tEffectDesc.fTimeAcc / m_tEffectDesc.fLifeTime);
 
-			/* 파트 이펙트들 Tick */
-			for (auto& Pair : m_PartObjects)
-			{
-				if (nullptr != Pair.second)
+				if (m_tEffectDesc.fTimeAcc >= m_tEffectDesc.fLifeTime)
 				{
-					//dynamic_cast<CEffect_Void*>(Pair.second)->Set_TimeAcc(m_fEasingTimeAcc);
-					Pair.second->Tick(fTimeDelta);
-				}
-					
-			}
+					// 삭제 대기시간 누적 시작
+					m_tEffectDesc.fRemainAcc += fTimeDelta;
 
+					if (m_tEffectDesc.fRemainAcc >= m_tEffectDesc.fRemainTime)
+					{
+						End_Effect();
+						return;
+					}
+				}
+
+
+				/* 파트 이펙트들 Tick */
+				for (auto& Pair : m_PartObjects)
+				{
+					if (nullptr != Pair.second)
+					{
+						//dynamic_cast<CEffect_Void*>(Pair.second)->Set_TimeAcc(m_fEasingTimeAcc);
+						Pair.second->Tick(fTimeDelta);
+					}
+
+				}
+
+			}
+#ifdef _DEBUG
 		}
 	}
+#endif // _DEBUG
 }
+
 
 void CEffect::Late_Tick(_float fTimeDelta)
 {
-	if (m_tEffectDesc.bActive_Tool)
+#ifdef _DEBUG
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		for (auto& Pair : m_PartObjects)
+		if (m_tEffectDesc.bActive_Tool)
 		{
-			if (nullptr != Pair.second)
-				Pair.second->Late_Tick(fTimeDelta);
+#endif // _DEBUG
+
+			Update_PivotMat();
+
+			for (auto& Pair : m_PartObjects)
+			{
+				if (nullptr != Pair.second)
+					Pair.second->Late_Tick(fTimeDelta);
+			}
+#ifdef _DEBUG
 		}
 	}
+#endif // _DEBUG
 }
 
 HRESULT CEffect::Render()
 {
-	if (m_tEffectDesc.bActive_Tool)
+#ifdef _DEBUG
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		if (m_tEffectDesc.bRender)
+		if (m_tEffectDesc.bActive_Tool)
 		{
-			for (auto& Pair : m_PartObjects)
+#endif // _DEBUG
+			if (m_tEffectDesc.bRender)
 			{
-				if (nullptr != Pair.second)
-					Pair.second->Render();
+				for (auto& Pair : m_PartObjects)
+				{
+					if (nullptr != Pair.second)
+						Pair.second->Render();
+				}
 			}
+#ifdef _DEBUG
 		}
 	}
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -137,7 +172,6 @@ _bool CEffect::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
 
-	Out_Json["Effect"]["bActive_Tool"] = m_tEffectDesc.bActive_Tool;
 	Out_Json["Effect"]["bPlay"] = m_tEffectDesc.bPlay;
 	Out_Json["Effect"]["bLoop"] = m_tEffectDesc.bLoop;
 	Out_Json["Effect"]["bFinished"] = m_tEffectDesc.bFinished;
@@ -146,29 +180,12 @@ _bool CEffect::Write_Json(json& Out_Json)
 
 	Out_Json["Effect"]["iPartSize"] = m_tEffectDesc.iPartSize;
 
-	Out_Json["Effect"]["eType_Easing"] = m_tEffectDesc.eType_Easing;
-
-	Out_Json["Effect"]["fTimeAcc"] = m_tEffectDesc.fTimeAcc;
-	Out_Json["Effect"]["fWaitingAcc"] = m_tEffectDesc.fWaitingAcc;
-	Out_Json["Effect"]["fRemainAcc"] = m_tEffectDesc.fRemainAcc;
-	Out_Json["Effect"]["fSequenceAcc"] = m_tEffectDesc.fSequenceAcc;
-
 	Out_Json["Effect"]["fLifeTime"] = m_tEffectDesc.fLifeTime;
 	Out_Json["Effect"]["fWaitingTime"] = m_tEffectDesc.fWaitingTime;
 	Out_Json["Effect"]["fRemainTime"] = m_tEffectDesc.fRemainTime;
 	Out_Json["Effect"]["fSequenceTime"] = m_tEffectDesc.fSequenceTime;
 
-	Out_Json["Effect"]["fLifeTimeRatio"] = m_tEffectDesc.fLifeTimeRatio;
-
-
-	Out_Json["Effect"]["strOwnerTag"] = m_pGameInstance->Convert_WString_To_String(m_tEffectDesc.strOwnerTag);
-	
-	for (_int i = 0; i < 4; ++i)
-		CJson_Utility::Write_Float4(Out_Json["Effect"]["matPivot"][i], XMLoadFloat4x4(&m_tEffectDesc.matPivot).r[i]);
-
-	for (_int i = 0; i < 4; ++i)
-		CJson_Utility::Write_Float4(Out_Json["Effect"]["matOffset"][i], XMLoadFloat4x4(&m_tEffectDesc.matOffset).r[i]);
-
+	Out_Json["Effect"]["bParentPivot"] = m_tEffectDesc.bParentPivot;
 
 	_int iCount = 0;
 	for (auto& Pair : m_PartObjects)
@@ -187,42 +204,20 @@ void CEffect::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-	m_tEffectDesc.bActive_Tool = In_Json["Effect"]["bActive_Tool"];
-	m_tEffectDesc.bPlay = In_Json["Effect"]["bPlay"];
-	m_tEffectDesc.bLoop = In_Json["Effect"]["bLoop"];
-	m_tEffectDesc.bFinished = In_Json["Effect"]["bFinished"];
-	m_tEffectDesc.bReverse = In_Json["Effect"]["bReverse"];
-	m_tEffectDesc.bRender = In_Json["Effect"]["bRender"];
+	m_tEffectDesc.bPlay			= In_Json["Effect"]["bPlay"];
+	m_tEffectDesc.bLoop			= In_Json["Effect"]["bLoop"];
+	m_tEffectDesc.bFinished		= In_Json["Effect"]["bFinished"];
+	m_tEffectDesc.bReverse		= In_Json["Effect"]["bReverse"];
+	m_tEffectDesc.bRender		= In_Json["Effect"]["bRender"];
 
-	m_tEffectDesc.iPartSize = In_Json["Effect"]["iPartSize"];
+	m_tEffectDesc.iPartSize		= In_Json["Effect"]["iPartSize"];
 
-	m_tEffectDesc.eType_Easing = In_Json["Effect"]["eType_Easing"];
-
-	m_tEffectDesc.fTimeAcc = In_Json["Effect"]["fTimeAcc"];
-	m_tEffectDesc.fWaitingAcc = In_Json["Effect"]["fWaitingAcc"];
-	m_tEffectDesc.fRemainAcc = In_Json["Effect"]["fRemainAcc"];
-	m_tEffectDesc.fSequenceAcc = In_Json["Effect"]["fSequenceAcc"];
-
-	m_tEffectDesc.fLifeTime = In_Json["Effect"]["fLifeTime"];
-	m_tEffectDesc.fWaitingTime = In_Json["Effect"]["fWaitingTime"];
-	m_tEffectDesc.fRemainTime = In_Json["Effect"]["fRemainTime"];
+	m_tEffectDesc.fLifeTime		= In_Json["Effect"]["fLifeTime"];
+	m_tEffectDesc.fWaitingTime	= In_Json["Effect"]["fWaitingTime"];
+	m_tEffectDesc.fRemainTime	= In_Json["Effect"]["fRemainTime"];
 	m_tEffectDesc.fSequenceTime = In_Json["Effect"]["fSequenceTime"];
 
-	m_tEffectDesc.fLifeTimeRatio = In_Json["Effect"]["fLifeTimeRatio"];
-
-	m_pGameInstance->Convert_WString_To_String(m_tEffectDesc.strOwnerTag) = In_Json["Effect"]["strOwnerTag"];
-
-	_float4x4 matPivot;
-	ZeroMemory(&matPivot, sizeof(_float4x4));
-	CJson_Utility::Load_JsonFloat4x4(In_Json["Effect"]["matPivot"], matPivot);
-	m_tEffectDesc.matPivot = matPivot;
-
-
-	_float4x4 matOffset;
-	ZeroMemory(&matOffset, sizeof(_float4x4));
-	CJson_Utility::Load_JsonFloat4x4(In_Json["Effect"]["matOffset"], matOffset);
-	m_tEffectDesc.matOffset = matOffset;
-
+	m_tEffectDesc.bParentPivot = In_Json["Effect"]["bParentPivot"];
 
 	if (m_PartObjects.empty() && 0 < m_tEffectDesc.iPartSize)
 	{
@@ -265,7 +260,7 @@ void CEffect::Load_FromJson(const json& In_Json)
 		if (nullptr != Pair.second)
 		{
 			Pair.second->Load_FromJson(In_Json["Part"][iCount]);
-			dynamic_cast<CEffect_Void*>(Pair.second)->Set_Parent(this);
+			dynamic_cast<CEffect_Void*>(Pair.second)->Set_Object_Owner(this);
 			iCount += 1;
 		}
 	}
@@ -273,16 +268,36 @@ void CEffect::Load_FromJson(const json& In_Json)
 	ReSet_Effect();
 }
 
+void CEffect::Update_PivotMat()
+{
+	if (nullptr != m_pOwner)	// 주인이 존재하고,
+	{
+		if (m_pOwner->Is_Dead())
+		{
+			// 이펙트의 주인이 죽었으면 이펙트 삭제
+			Set_Dead(TRUE);
+			return;
+		}
+
+		if (m_tEffectDesc.bParentPivot)
+		{
+			// 주인의 매트릭스를 사용할거면 받아오기
+			m_tEffectDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+			XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);
+		}
+	}
+}
+
 void CEffect::ReSet_Effect()
 {
+	m_tEffectDesc.bFinished = FALSE;
+	//m_tEffectDesc.bRender	= FALSE;
+
 	m_tEffectDesc.fSequenceAcc	 = 0.f;
 	m_tEffectDesc.fTimeAcc		 = 0.f;
 	m_tEffectDesc.fWaitingAcc	 = 0.f;
 	m_tEffectDesc.fRemainAcc	 = 0.f;
 	m_tEffectDesc.fLifeTimeRatio = 0.f;
-
-	m_tEffectDesc.bFinished = FALSE;
-	//m_tEffectDesc.bRender	= FALSE;
 
 	for (auto& Pair : m_PartObjects)
 	{
@@ -309,7 +324,12 @@ void CEffect::End_Effect()
 	else
 	{
 #ifdef _DEBUG
-		if (LEVEL_TOOL != static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+		if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+		{
+			m_tEffectDesc.bActive_Tool = FALSE;
+			ReSet_Effect();	//bLoop가 False일 때, 툴 레벨이면 리셋, 아니면 죽이기
+		}
+		else
 #endif // _DEBUG
 		{		
 			Set_Dead(TRUE);
@@ -338,7 +358,8 @@ HRESULT CEffect::Add_PartObject(const wstring& strPrototypeTag, const wstring& s
 	CGameObject* pPartObject = m_pGameInstance->Clone_Prototype(strPrototypeTag, pArg);
 	if (nullptr == pPartObject)
 		return E_FAIL;
-
+	
+	dynamic_cast<CEffect_Void*>(pPartObject)->Set_Object_Owner(this);	// 부모 설정
 	m_PartObjects.emplace(strPartTag, pPartObject);
 	m_tEffectDesc.iPartSize += 1;
 
@@ -353,16 +374,10 @@ void CEffect::Delete_PartObject(const wstring& strPartTag)
 		return;
 
 	iter->second->Set_Dead(TRUE);		// 객체 삭제
-
 	m_PartObjects.erase(strPartTag);	// 맵컨테이너에서 삭제
 
 }
 
-void CEffect::Set_Owner(CGameObject* pOwner)
-{
-	m_tEffectDesc.pOwner = pOwner;
-
-}
 
 HRESULT CEffect::Ready_Components()
 {
@@ -379,6 +394,7 @@ HRESULT CEffect::Ready_PartObjects(const wstring& strPrototypeTag, const wstring
 	if (nullptr == pPartObject)
 		return E_FAIL;
 
+	dynamic_cast<CEffect_Void*>(pPartObject)->Set_Object_Owner(this);	// 부모 설정
 	m_PartObjects.emplace(strPartTag, pPartObject);
 
 	return S_OK;

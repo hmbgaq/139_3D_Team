@@ -203,6 +203,11 @@ CState<CPlayer>* CPlayer_State::Death_State(CPlayer* pActor, _float fTimeDelta, 
 	return nullptr;
 }
 
+CState<CPlayer>* CPlayer_State::Finisher_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
 
 CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {

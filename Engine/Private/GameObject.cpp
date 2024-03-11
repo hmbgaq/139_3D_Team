@@ -173,6 +173,15 @@ void CGameObject::Set_Object_Owner(CGameObject* pOwner)
 	m_pOwner = pOwner;
 }
 
+void CGameObject::Delete_Object_Owner()
+{
+	if (nullptr != m_pOwner)	// 오너가 nullptr이 아니면 삭제 가능
+	{
+		//Safe_Release(m_pOwner);
+		m_pOwner = nullptr;
+	}
+}
+
 
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComTag, _Inout_ CComponent** ppOut, void * pArg)
 {

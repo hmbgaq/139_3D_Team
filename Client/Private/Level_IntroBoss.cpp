@@ -18,6 +18,8 @@
 #pragma region MAP
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
+#include "Environment_LightObject.h"
+#include "Environment_SpecialObject.h"
 
 #pragma endregion
 
@@ -29,7 +31,7 @@
 #pragma endregion
 
 #pragma region Effect_Test
-#include "Clone_Manager.h"
+#include "Effect_Manager.h"
 #include "Effect.h"
 #pragma endregion
 
@@ -79,33 +81,6 @@ void CLevel_IntroBoss::Tick(_float fTimeDelta)
 		m_bPlayerStartRotate = true;
 	}
 
-#pragma region Effect_Test	
-
-	if (m_pGameInstance->Key_Down(DIK_GRAVE))
-	{
-		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Hit_3.json");
-		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
-	}
-
-	
-
-	
-	//if (m_pGameInstance->Key_Down(DIK_TAB))
-	//{
-	//	CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Hit_3.json");
-	//	if (nullptr != m_pGameInstance->Get_Player())
-	//	{
-	//		CTransform* pTransform = m_pGameInstance->Get_Player()->Get_Transform();
-	//		_float3 vPos = pTransform->Get_Position();
-	//		vPos.y += 1.f;
-	//		pEffect->Set_Position(vPos);
-	//	}
-	//	else
-	//	{
-	//		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
-	//	}
-	//}
-#pragma endregion
 }
 
 HRESULT CLevel_IntroBoss::Render()
@@ -366,6 +341,19 @@ HRESULT CLevel_IntroBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 	}
 
+	CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC Desc;
+
+	Desc.bAnimModel = false;
+	Desc.bPreview = false;
+	
+	Desc.strModelTag = L"Prototype_Component_Model_BloodPoolsRaid";
+	//Desc.iShaderPassIndex = 6;
+	XMStoreFloat4x4(&Desc.WorldMatrix, XMMatrixIdentity());
+	
+
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &Desc)))
+		return E_FAIL;
+
 
 	return S_OK;
 
@@ -417,9 +405,9 @@ HRESULT CLevel_IntroBoss::Ready_UI()
 {
 	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
 
-	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
-
-	FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
+	//FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
+	//
+	//FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
 
 	return S_OK;
 }

@@ -25,7 +25,7 @@ public:
 		_bool		bRender = { TRUE };
 
 		// Shader
-		_uint		iShaderPassIndex = { 2 };	// Grid는 2번
+		_uint		iShaderPassIndex = { 2 };	// Grid는 2번(와이어프레임)
 
 	}GRID_DESC;
 

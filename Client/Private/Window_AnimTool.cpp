@@ -14,7 +14,7 @@
 #include "Data_Manager.h"
 #include "Player.h"
 #pragma region Effect_Test
-#include "Clone_Manager.h"
+#include "Effect_Manager.h"
 #include "Effect.h"
 #include "Effect_Particle.h"
 #pragma endregion
@@ -54,18 +54,16 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 
 	__super::Begin();
 
+#ifdef _DEBUG
 	if (ImGui::Checkbox("RenderTargetOFF", &m_bRenderTargetOnOff))
 	{
-#ifdef _DEBUG
 		m_pGameInstance->Set_RenderDebugTarget(m_bRenderTargetOnOff);
-#endif					
 	}
 	if (ImGui::Checkbox("RenderColliderOFF", &m_bRenderTargetOnOff))
 	{
-#ifdef _DEBUG
 		m_pGameInstance->Set_RenderDebugCom(m_bRenderColliderOnOff);
-#endif					
 	}
+#endif					
 	//dialog========================================================================
 	
 	if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; OpenDialog(CImgui_Window::IMGUI_ANIMATIONTOOL_WINDOW); } 
@@ -240,7 +238,7 @@ HRESULT CWindow_AnimTool::Read_EffectPath(const _tchar* StartDirectoryPath) //! 
 	for (const auto& entry : fs::recursive_directory_iterator(StartDirectoryPath))
 	{
 		
-		if (fs::is_regular_file(entry.path()) && entry.path().extension() == ".json")
+		if (fs::is_regular_file(entry.path()) && entry.path().extension().string() == ".json")
 		{
 			wstring strSearchPath = entry.path().wstring();
 
@@ -280,7 +278,7 @@ void CWindow_AnimTool::Add_EffectKeyEvent()
 				ImGui::SetItemDefaultFocus();
 				if (m_bCreateEffect)
 				{
-					CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, m_vecEffectName[n]+".json");
+					CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, m_vecEffectName[n]+".json");
 					if (m_pBones.size() > 0)// 본이 존재한다면 
 					{
 						_float4x4 BoneMatrix = {};

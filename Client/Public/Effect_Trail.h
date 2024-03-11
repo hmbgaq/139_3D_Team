@@ -13,23 +13,11 @@ BEGIN(Client)
 class CEffect_Trail final : public CEffect_Void
 {
 public:
-	typedef struct tagTextureEffectDesc : public CEffect_Void::EFFECTVOID_DESC
+
+	typedef struct tagTrailDesc
 	{
-		_bool		bTrailOn = { FALSE };
+		//_bool		bTrailOn; // EFFECTVOID_DESCÀÇ bPlay
 
-		_float3		vPos_0;
-		_float3		vPos_1;
-		_uint		iPass;
-
-		_uint		iNumVertices;
-		_uint		iMaxCnt;
-		_uint		iVtxCnt;
-
-		_float4		vLocalSwordLow;
-		_float4		vLocalSwordHigh;
-
-		_uint		iLerpPointNum = { 12 };
-		_int		iCatMullRomIndex[4];
 
 	}TRAIL_DESC;
 
@@ -40,6 +28,10 @@ private:
 	virtual ~CEffect_Trail() = default;
 
 public:
+	virtual _bool Write_Json(json& Out_Json)		 override;
+	virtual void  Load_FromJson(const json& In_Json) override;
+
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	Priority_Tick(_float fTimeDelta) override;
@@ -48,12 +40,26 @@ public:
 	virtual HRESULT Render() override;
 
 
+public:
+	void Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix);
+
+public:
+	void	Set_Play(_bool bPlay) { m_tVoidDesc.bPlay = bPlay; }
+	_bool	Get_Play() { m_tVoidDesc.bPlay; }
+
+	void	Set_Pause(_bool bPause) { m_bPause = bPause; }
+	_bool	Get_Pause() { m_bPause; }
+
+//public:
+//	virtual void	Update_PivotMat() override;
+
 
 /* For.Desc */
 public:
-	TRAIL_DESC* Get_Desc() { return &m_tTrailDesc; }
-	void* Get_BufferDesc();
+	TRAIL_DESC* Get_TrailDesc() { return &m_tTrailDesc; }
 
+public:
+	CVIBuffer_Trail* Get_VIBufferCom() { return m_pVIBufferCom; }
 
 private:
 	CShader*				m_pShaderCom				= { nullptr };
@@ -63,6 +69,7 @@ private:
 private:
 	TRAIL_DESC				m_tTrailDesc = {};
 
+	_bool					m_bPause = { FALSE };
 
 private:
 	HRESULT Ready_Components();
