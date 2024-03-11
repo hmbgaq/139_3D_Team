@@ -27,6 +27,7 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;	
 
 public:
+	void	Set_Pos(float4x4 vPos);
 	void	Update_Cascade(const float3& vDirectionalDir);
 
 public:

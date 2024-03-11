@@ -77,8 +77,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
 	//m_pPhysXCollider->Add_PhysXActorAtScene();
 
-
-
 	CData_Manager::GetInstance()->Set_Player(this);
 
 	/* Temp - 맵에 맞게 위치 조정한값*/
@@ -173,7 +171,7 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 		//	if (Get_CurrentAnimIndex() != AnimIndex)
 		//	{
 		//		m_pBody->Set_RotateUpperX(MoveDirection::FrontRight);
-		//		Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+		//		Set_Animation(AnimwwwddwIndex, CModel::ANIM_STATE_LOOP, true, false);
 		//	}
 		//	Go_Straight_R45(fTimeDelta * 0.5f);
 		//	

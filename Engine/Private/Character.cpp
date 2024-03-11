@@ -271,6 +271,11 @@ _float CCharacter::Get_TrackPosition()
 	return m_pBody->Get_TrackPosition();
 }
 
+void CCharacter::Set_TrackPosition(_int iNewTrackPostion)
+{
+	return m_pBody->Set_TrackPosition(iNewTrackPostion);
+}
+
 void CCharacter::Go_Straight(_float fTimeDelta)
 {
 	m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);

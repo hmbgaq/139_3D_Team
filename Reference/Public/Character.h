@@ -93,6 +93,7 @@ public:
 
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 	_float	Get_TrackPosition();
+	void	Set_TrackPosition(_int iNewTrackPostion);
 	CHARCTER_DESC Get_CharcterDesc() { return CharAnimDesc; }
 
 	void Go_Straight(_float fTimeDelta);

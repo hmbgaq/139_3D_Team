@@ -108,8 +108,8 @@ HRESULT CBody_Player::Ready_Components()
 	/* For.Com_Collider */
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER);
-	BoundingDesc.vExtents = _float3(0.2f, 0.2f, 0.2f);
-	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
+	BoundingDesc.vExtents = _float3(0.2f, 1.f, 0.2f);
+	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 
 
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"),

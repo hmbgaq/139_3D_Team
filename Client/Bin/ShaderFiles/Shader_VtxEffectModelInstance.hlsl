@@ -42,14 +42,14 @@ float		g_fDissolveWeight;
 float		g_fDissolveRatio;
 
 
-/* Bloom */
+/* Bloom - 없애도됨 안씀 (구)버전에 쓰던거 */
 float4      g_BloomColor = { 0.f, 0.f, 0.f, 0.f };
-float3      g_vBloomPower;
-
-
-/* RimLight */
-float4		g_vRimColor;
 float		g_fRimPower;
+
+
+/* RimLight - 필요한거 두개뿐임 */
+float4		g_vRimColor;
+float3      g_vBloomPower;
 
 
 // Noise ====================
@@ -100,6 +100,27 @@ float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
 	return vTexcoord;
 }
 
+float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
+{
+    float fRimPower = 1.f - saturate(dot(In_Normal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
+    fRimPower = pow(fRimPower, 5.f);
+    float4 vRimColor = g_vRimColor * fRimPower;
+    
+    return vRimColor;
+}
+
+float4 Calculation_Brightness(float4 Out_Diffuse)
+{
+    float4 vBrightnessColor = float4(0.f, 0.f, 0.f, 0.f);
+
+    float fPixelBrightness = dot(Out_Diffuse.rgb, g_vBloomPower.rgb);
+    
+    if (fPixelBrightness > 0.99f)
+        vBrightnessColor = float4(Out_Diffuse.rgb, 1.0f);
+
+    return vBrightnessColor;
+}
+
 struct VS_IN
 {
 	float3		vPosition	: POSITION;
@@ -121,9 +142,6 @@ struct VS_OUT
 	float2		vTexUV		: TEXCOORD0;
 	float4		vWorldPos	: TEXCOORD1;
 	float4		vProjPos	: TEXCOORD2;
-
-	float3		vViewNormal		: NORMAL1;		/* ssao */
-	float3		vPositionView	: POSITION;
 };
 
 
@@ -137,15 +155,9 @@ struct VS_OUT_DISTORTION
 	float3 vTangent		: TANGENT;
 	float3 vBinormal	: BINORMAL;
 
-
 	float2		vTexcoord1	: TEXCOORD3;
 	float2		vTexcoord2	: TEXCOORD4;
 	float2		vTexcoord3	: TEXCOORD5;
-
-
-	float3		vViewNormal		: NORMAL1;		/* ssao */
-	float3		vPositionView	: POSITION;
-
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -167,11 +179,6 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
 	Out.vTexUV = In.vTexUV;
 	Out.vProjPos = Out.vPosition;
-
-
-	// SSAO
-	Out.vViewNormal = mul(Out.vNormal.xyz, (float3x3) g_ViewMatrix);
-	Out.vPositionView = mul(float4(In.vPosition, 1.0f), matWV);
 
 	return Out;	
 }
@@ -224,11 +231,6 @@ VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
 	Out.vTexUV = In.vTexUV;
 	Out.vProjPos = Out.vPosition;
 
-
-	// SSAO
-	Out.vViewNormal = mul(Out.vNormal.xyz, (float3x3) g_ViewMatrix);
-	Out.vPositionView = mul(float4(In.vPosition, 1.0f), matWV);
-
 	return Out;
 }
 
@@ -239,15 +241,11 @@ VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
 
 struct PS_IN
 {
-	float4		vPosition : SV_POSITION;
-	float4		vNormal : NORMAL;
-	float2		vTexUV : TEXCOORD0;
-	float4		vWorldPos : TEXCOORD1;
-	float4		vProjPos : TEXCOORD2;
-
-	/* ssao */
-	float3	vViewNormal		: NORMAL1;
-	float3	vPositionView	: POSITION;
+	float4		vPosition	: SV_POSITION;
+	float4		vNormal		: NORMAL;
+	float2		vTexUV		: TEXCOORD0;
+	float4		vWorldPos	: TEXCOORD1;
+	float4		vProjPos	: TEXCOORD2;
 };
 
 
@@ -256,38 +254,30 @@ struct PS_OUT
 	float4	vDiffuse        : SV_TARGET0;
 	float4	vNormal         : SV_TARGET1;
 	float4  vDepth          : SV_TARGET2;
-	float4  vORM            : SV_TARGET3;
-	float4  vViewNormal     : SV_TARGET4;
-	float4  vBloom          : SV_TARGET5;
+    float4	vRimBloom		: SV_TARGET3;
   
 };
 
 struct PS_IN_DISTORTION
 {
-
-	float4 vPosition	: SV_POSITION;
-	float3 vNormal		: NORMAL;
-	float2 vTexUV		: TEXCOORD0;
-	float4 vWorldPos	: TEXCOORD1;
-	float4 vProjPos		: TEXCOORD2;
-	float3 vTangent		: TANGENT;
-	float3 vBinormal	: BINORMAL;
-
-
+	float4 vPosition		: SV_POSITION;
+	float3 vNormal			: NORMAL;
+	float2 vTexUV			: TEXCOORD0;
+	float4 vWorldPos		: TEXCOORD1;
+	float4 vProjPos			: TEXCOORD2;
+	float3 vTangent			: TANGENT;
+	float3 vBinormal		: BINORMAL;
+	
 	float2		vTexcoord1	: TEXCOORD3;
 	float2		vTexcoord2	: TEXCOORD4;
 	float2		vTexcoord3	: TEXCOORD5;
-
-
-	/* ssao */
-	float3	vViewNormal		: NORMAL1;
-	float3	vPositionView	: POSITION;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
+	// 뭔지 몰라서 그대로둠 - 소영 
 	////* g_UVScale + g_UVOffset
 	//In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
 
@@ -300,7 +290,6 @@ PS_OUT PS_MAIN(PS_IN In)
 	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
 	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
 	
-
 	vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
 	if (vMtrlDiffuse.a < 0.1f)
@@ -308,29 +297,21 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	Out.vDiffuse = vMtrlDiffuse * g_vColor_Mul;	// 색 곱하기
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-
-	/* 림라이트 -> 프레넬 공식 사용 */
-	/* 노말 (내적) 정점이 카메라를 바라보는방향 -> 카메라가 조명처럼 인식된다. */
-	//float fRim = saturate(dot(In.vNormal, (g_vCamPosition - In.vWorldPos)));
-	//int iRimPower = 5.f;
-	///* 일정이상보다 작으면 Rim을 없앤다. */
-	//if(fRim > 0.3)
-	//    fRim = 1;
-	//else
-	//    fRim = -1;
-
-	//Out.vEmissive = Out.vORM + float4(pow(1 - fRim, iRimPower) * g_vRimColor.xyz, 1.f);
-
-	float fRimPower = 1.f - saturate(dot(In.vNormal, normalize((-1.f * (In.vWorldPos - g_vCamPosition)))));
-	fRimPower = pow(fRimPower, 5.f) * g_fRimPower;
-	vector vRimColor = g_vRimColor * fRimPower;
-
-	Out.vBloom = Caculation_Brightness(Out.vDiffuse, g_vBloomPower) + vRimColor;
-	Out.vDiffuse += vRimColor;
-	Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
-	Out.vViewNormal = float4(normalize(In.vViewNormal), In.vPositionView.z);
-
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+   
+	// 사이에있던 RimLight공식 애님쪽에서 가져온거같아서 그거 안쓰는거라 없앰 - 소영 
+	
+	// 기존 코드 
+	//float fRimPower = 1.f - saturate(dot(In.vNormal, normalize((-1.f * (In.vWorldPos - g_vCamPosition)))));
+	//fRimPower = pow(fRimPower, 5.f) * g_fRimPower;
+	//vector vRimColor = g_vRimColor * fRimPower;
+	
+	//Out.vDiffuse += vRimColor;
+	
+    /* ---------------- New ---------------- :  */
+    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
+    Out.vDiffuse += vRimColor;
+    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
 
 	// 검은색 잘라내기
 	if (Out.vDiffuse.r < g_vBlack_Discard.r && Out.vDiffuse.g < g_vBlack_Discard.g && Out.vDiffuse.b < g_vBlack_Discard.b)
@@ -353,7 +334,6 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 	float2	vNoiseCoords;
 	float4	vFireColor;
 	float4	vAlphaColor;
-
 
 	// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
 	In.vTexcoord1 = (In.vTexUV * g_vScales.x);
@@ -436,9 +416,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 
 	Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
-
-
-
+	
 	return Out;
 }
 
@@ -597,7 +575,6 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In)
 	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
 
 	vPixelNormal = mul(vPixelNormal, WorldMatrix);
-
 	
 	Out.vNormal    = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
