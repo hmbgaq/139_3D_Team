@@ -21,5 +21,5 @@ CState<CPlayer>* CPlayer_Crossbow_Ironsights_AimPose::Update(CPlayer* pActor, _f
 void CPlayer_Crossbow_Ironsights_AimPose::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
-	pActor->Set_Splitted(false);
+	//pActor->Set_Splitted(false);
 }

@@ -184,9 +184,6 @@
     <Filter Include="02.GameObjects\02. Environment\Environment_Interact">
       <UniqueIdentifier>{d89d3dad-c81a-4fcb-af12-1b4c2e69c84f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\97. Camera\SpringCamera">
-      <UniqueIdentifier>{a58de907-7028-46f8-95f0-3c03d6f5d3c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.StatePattern">
       <UniqueIdentifier>{0e13856d-2978-4224-881c-2c07d37e7584}</UniqueIdentifier>
     </Filter>
@@ -267,9 +264,6 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Winchester">
       <UniqueIdentifier>{d057b74f-8d65-4329-abbb-e66eface2c8a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\97. Camera\0. MasterCamera">
-      <UniqueIdentifier>{1d8d03b0-7a2a-421c-8e13-2f1d1b28089c}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\0. Screamer">
       <UniqueIdentifier>{6ab1225a-12f3-4ff6-9880-7a7c7881548c}</UniqueIdentifier>
@@ -2785,6 +2779,12 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\2. v3">
       <UniqueIdentifier>{6a8d00f5-1362-458c-9ada-eee2801118a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\97. Camera\0. MasterCamera">
+      <UniqueIdentifier>{1d8d03b0-7a2a-421c-8e13-2f1d1b28089c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\97. Camera\1. SpringCamera">
+      <UniqueIdentifier>{a58de907-7028-46f8-95f0-3c03d6f5d3c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -2986,7 +2986,7 @@
       <Filter>01.Levels\01.GamePlay\3.Lava</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SpringCamera.h">
-      <Filter>02.GameObjects\97. Camera\SpringCamera</Filter>
+      <Filter>02.GameObjects\97. Camera\1. SpringCamera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Actor.h">
       <Filter>95.StatePattern</Filter>
@@ -5960,7 +5960,7 @@
       <Filter>01.Levels\01.GamePlay\3.Lava</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SpringCamera.cpp">
-      <Filter>02.GameObjects\97. Camera\SpringCamera</Filter>
+      <Filter>02.GameObjects\97. Camera\1. SpringCamera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Actor.cpp">
       <Filter>95.StatePattern</Filter>

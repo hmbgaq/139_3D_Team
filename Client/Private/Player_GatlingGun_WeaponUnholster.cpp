@@ -1,6 +1,8 @@
 #include "..\Public\Player_GatlingGun_WeaponUnholster.h"
 #include "GameInstance.h"
 
+#include "Player_Bandit_Gatling.h"
+
 void CPlayer_GatlingGun_WeaponUnholster::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -13,9 +15,16 @@ CState<CPlayer>* CPlayer_GatlingGun_WeaponUnholster::Update(CPlayer* pActor, _fl
 {
 	__super::Update(pActor, fTimeDelta);
 
-	pActor->Aim_Walk(fTimeDelta);
+	//pActor->Aim_Walk(fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+
+	if (pActor->Is_UpperAnimation_End())
+	{
+		return new CPlayer_Bandit_Gatling();
+	}
+
+	return nullptr;
 }
 
 void CPlayer_GatlingGun_WeaponUnholster::Release(CPlayer* pActor)

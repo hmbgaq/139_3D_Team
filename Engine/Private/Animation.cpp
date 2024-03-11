@@ -242,8 +242,12 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 				//X - Up
 				//Z - Look
 
-				XMStoreFloat4x4(&UpperSpineMatrix, XMMatrixRotationX(XMConvertToRadians(vMouseMove.x)));
-				XMStoreFloat4x4(&UpperSpineMatrix, XMMatrixMultiply(UpperSpineMatrix, XMMatrixRotationY(XMConvertToRadians(vMouseMove.y))));
+				_matrix RotateX = XMMatrixRotationX(XMConvertToRadians(vMouseMove.x));
+				_matrix RotateY = XMMatrixRotationY(XMConvertToRadians(vMouseMove.y));
+
+
+				//XMStoreFloat4x4(&UpperSpineMatrix, RotateX);
+				XMStoreFloat4x4(&UpperSpineMatrix, XMMatrixMultiply(RotateX, RotateY));
 
 
 				_float4x4 ResultMatrix = XMMatrixMultiply(Transform, UpperSpineMatrix);

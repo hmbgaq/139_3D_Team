@@ -226,10 +226,16 @@ CState<CPlayer>* CPlayer_State::Aim_State(CPlayer* pActor, _float fTimeDelta, _u
 
 CState<CPlayer>* CPlayer_State::Rifle_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	CState<CPlayer>* pState = { nullptr };
+	//CState<CPlayer>* pState = { nullptr };
 
-	pState = Rifle(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	//pState = Rifle(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Rifle_IdleWeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Rifle_IdleWeaponHolster();
+	}
 
 	return nullptr;
 }
@@ -254,31 +260,67 @@ CState<CPlayer>* CPlayer_State::Winchester_State(CPlayer* pActor, _float fTimeDe
 
 CState<CPlayer>* CPlayer_State::Crossbow_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Crossbow_LowerHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Crossbow_LowerHolster();
+	}
+
 	return nullptr;
 }
 
 CState<CPlayer>* CPlayer_State::Revolver_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Revolver_WeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Revolver_WeaponHolster();
+	}
+
 	return nullptr;
 }
 
 CState<CPlayer>* CPlayer_State::Shotgun_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Shotgun_WeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Shotgun_WeaponHolster();
+	}
+
 	return nullptr;
 }
 
 CState<CPlayer>* CPlayer_State::Gatling_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_GatlingGun_WeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_GatlingGun_WeaponHolster();
+	}
+
 	return nullptr;
 }
 
 CState<CPlayer>* CPlayer_State::FlameBelcher_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_FlameBelcher_WeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_FlameBelcher_WeaponHolster();
+	}
+
 	return nullptr;
 }
 
 CState<CPlayer>* CPlayer_State::Grenade_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Grenade_WeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Grenade_WeaponHolster();
+	}
+
 	return nullptr;
 }
 
@@ -312,6 +354,25 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 
 	pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
+
+	//pState = Crossbow(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	//pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	//pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	//pState = Gatilng(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	//pState = FlameBelcher(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	//pState = Grenade(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
 
 	pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
@@ -635,12 +696,6 @@ CState<CPlayer>* CPlayer_State::Rifle(CPlayer* pActor, _float fTimeDelta, _uint 
 			return new CPlayer_Rifle_Ironsights_Fire();
 	}
 
-	if (m_pGameInstance->Mouse_Up(DIM_RB))
-	{
-		if (CPlayer_Rifle_IdleWeaponHolster::g_iAnimIndex != _iAnimIndex)
-			return new CPlayer_Rifle_IdleWeaponHolster();
-	}
-
 	return nullptr;
 }
 
@@ -648,11 +703,11 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 {
 	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
 	{
-		//if (CPlayer_Winchester_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
-		//	return new CPlayer_Winchester_WeaponUnholster();
+		if (CPlayer_Winchester_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Winchester_WeaponUnholster();
 
-		if (CPlayer_Winchester_Ironsights_AimPose::g_iAnimIndex != _iAnimIndex)
-			return new CPlayer_Winchester_Ironsights_AimPose();
+		//if (CPlayer_Winchester_Ironsights_AimPose::g_iAnimIndex != _iAnimIndex)
+		//	return new CPlayer_Winchester_Ironsights_AimPose();
 
 		/*CPlayer::Player_State eAnimIndex = (CPlayer::Player_State)_iAnimIndex;
 
@@ -691,31 +746,67 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 
 CState<CPlayer>* CPlayer_State::Crossbow(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_Crossbow_WeaponUnholster_Fast::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Crossbow_WeaponUnholster_Fast();
+	}
+
 	return nullptr;
 }
 
 CState<CPlayer>* CPlayer_State::Revolver(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_Revolver_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Revolver_WeaponUnholster();
+	}
+
 	return nullptr;
 }
 
 CState<CPlayer>* CPlayer_State::Shotgun(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_Shotgun_Fire_LongRange::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Shotgun_Fire_LongRange();
+	}
+
 	return nullptr;
 }
 
 CState<CPlayer>* CPlayer_State::Gatilng(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_GatlingGun_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_GatlingGun_WeaponUnholster();
+	}
+
 	return nullptr;
 }
 
 CState<CPlayer>* CPlayer_State::FlameBelcher(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_FlameBelcher_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_FlameBelcher_WeaponUnholster();
+	}
+
 	return nullptr;
 }
 
 CState<CPlayer>* CPlayer_State::Grenade(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_Grenade_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Grenade_WeaponUnholster();
+	}
+
 	return nullptr;
 }
 

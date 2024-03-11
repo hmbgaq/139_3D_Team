@@ -15,7 +15,7 @@ CState<CPlayer>* CPlayer_Winchester_WeaponUnholster::Update(CPlayer* pActor, _fl
 {
 	__super::Update(pActor, fTimeDelta);
 
-	//pActor->Aim_Walk(fTimeDelta);
+	pActor->Aim_Walk(fTimeDelta);
 
 	if (pActor->Is_UpperAnimation_End())
 	{
@@ -28,5 +28,5 @@ CState<CPlayer>* CPlayer_Winchester_WeaponUnholster::Update(CPlayer* pActor, _fl
 void CPlayer_Winchester_WeaponUnholster::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
-	pActor->Set_Splitted(false);
+	//pActor->Set_Splitted(false);
 }

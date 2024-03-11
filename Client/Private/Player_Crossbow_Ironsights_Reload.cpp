@@ -21,5 +21,5 @@ CState<CPlayer>* CPlayer_Crossbow_Ironsights_Reload::Update(CPlayer* pActor, _fl
 void CPlayer_Crossbow_Ironsights_Reload::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
-	pActor->Set_Splitted(false);
+	//pActor->Set_Splitted(false);
 }

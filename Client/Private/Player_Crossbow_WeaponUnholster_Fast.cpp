@@ -1,5 +1,6 @@
 #include "..\Public\Player_Crossbow_WeaponUnholster_Fast.h"
 #include "GameInstance.h"
+#include "Player_Crossbow_Ironsights_AimPose.h"
 
 void CPlayer_Crossbow_WeaponUnholster_Fast::Initialize(CPlayer* pActor)
 {
@@ -13,9 +14,17 @@ CState<CPlayer>* CPlayer_Crossbow_WeaponUnholster_Fast::Update(CPlayer* pActor, 
 {
 	__super::Update(pActor, fTimeDelta);
 
-	pActor->Aim_Walk(fTimeDelta);
+	//pActor->Aim_Walk(fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+
+	if (pActor->Is_UpperAnimation_End())
+	{
+		return new CPlayer_Crossbow_Ironsights_AimPose();
+	}
+
+	return nullptr;
+	
 }
 
 void CPlayer_Crossbow_WeaponUnholster_Fast::Release(CPlayer* pActor)

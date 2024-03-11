@@ -37,6 +37,7 @@ public:
 
 public:
 	void Aim_Walk(_float fTimeDelta);
+	void Activate_ShootingReaction();
 
 public:
 	void Search_Target();

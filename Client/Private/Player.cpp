@@ -159,18 +159,22 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 		//	AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FL45);
 		//	if (Get_CurrentAnimIndex() != AnimIndex)
 		//	{
+		//		m_pBody->Set_RotateUpperX(MoveDirection::FrontLeft);
 		//		Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 		//	}
 		//	Go_Straight_L45(fTimeDelta * 0.5f);
+		//	
 		//}
 		//else if (m_pGameInstance->Key_Pressing(DIK_D))
 		//{
 		//	AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FR45);
 		//	if (Get_CurrentAnimIndex() != AnimIndex)
 		//	{
+		//		m_pBody->Set_RotateUpperX(MoveDirection::FrontRight);
 		//		Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 		//	}
 		//	Go_Straight_R45(fTimeDelta * 0.5f);
+		//	
 		//}
 		//else
 		{
@@ -179,9 +183,11 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 
 			if (Get_CurrentAnimIndex() != AnimIndex)
 			{
+				m_pBody->Set_RotateUpperX(MoveDirection::Front);
 				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 			}
 			Go_Straight(fTimeDelta * 0.5f);
+			
 		}
 	}
 	else if (m_pGameInstance->Key_Pressing(DIK_S))
@@ -191,18 +197,22 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 		//	AnimIndex = ECast(CPlayer::Player_State::Player_Walk_BL135);
 		//	if (Get_CurrentAnimIndex() != AnimIndex)
 		//	{
+		//		m_pBody->Set_RotateUpperX(MoveDirection::BackLeft);
 		//		Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 		//	}
 		//	Go_Backward_L45(fTimeDelta * 0.5f);
+		//	
 		//}
 		//else if (m_pGameInstance->Key_Pressing(DIK_D))
 		//{
 		//	AnimIndex = ECast(CPlayer::Player_State::Player_Walk_BR135);
 		//	if (Get_CurrentAnimIndex() != AnimIndex)
 		//	{
+		//		m_pBody->Set_RotateUpperX(MoveDirection::BackRight);
 		//		Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 		//	}
 		//	Go_Backward_R45(fTimeDelta * 0.5f);
+		//	
 		//}
 		//else
 		{
@@ -210,9 +220,11 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 			//AnimIndex = ECast(CPlayer::Player_State::Player_Bandit_WalkAim_B);
 			if (Get_CurrentAnimIndex() != AnimIndex)
 			{
+				m_pBody->Set_RotateUpperX(MoveDirection::Back);
 				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 			}
 			Go_Backward(fTimeDelta * 0.5f);
+			
 		}
 	}
 	else if (m_pGameInstance->Key_Pressing(DIK_A))
@@ -226,9 +238,11 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 		//}
 		if (Get_CurrentAnimIndex() != AnimIndex)
 		{
+			m_pBody->Set_RotateUpperX(MoveDirection::Left);
 			Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 		}
 		Go_Left(fTimeDelta * 0.5f);
+		
 	}
 	else if (m_pGameInstance->Key_Pressing(DIK_D))
 	{
@@ -241,18 +255,27 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 		//}
 		if (Get_CurrentAnimIndex() != AnimIndex)
 		{
+			m_pBody->Set_RotateUpperX(MoveDirection::Right);
 			Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 		}
 		Go_Right(fTimeDelta * 0.5f);
+		
 	}
 	else
 	{
 		AnimIndex = ECast(CPlayer::Player_State::Player_IdleLoop);
 		if (Get_CurrentAnimIndex() != AnimIndex)
 		{
+			m_pBody->Set_RotateUpperX(MoveDirection::Front);
 			Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			
 		}
 	}
+}
+
+void CPlayer::Activate_ShootingReaction()
+{
+	m_pBody->Activate_ShootingReaction();
 }
 
 void CPlayer::Search_Target()

@@ -15,7 +15,13 @@ CState<CPlayer>* CPlayer_FlameBelcher_WeaponHolster::Update(CPlayer* pActor, _fl
 
 	pActor->Aim_Walk(fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_UpperAnimation_End())
+	{
+		return Normal(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
+	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CPlayer_FlameBelcher_WeaponHolster::Release(CPlayer* pActor)
