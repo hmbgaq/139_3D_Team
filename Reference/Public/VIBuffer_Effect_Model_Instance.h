@@ -9,6 +9,7 @@ class ENGINE_DLL CVIBuffer_Effect_Model_Instance : public CVIBuffer_Model_Instan
 {
 public:
 	enum TYPE_MODE	 { MODE_STATIC, MODE_PARTICLE, MODE_END };
+	enum TYPE_ACTION { SPARK, BLINK, FALL, RISE, RECYCLE, TYPE_ACTION_END };
 	enum MODEL_MORPH { MORPH_01, MORPH_02, MORPH_END };
 
 	typedef struct tagVIBuffer_EffectModelInstanceDesc
@@ -22,6 +23,7 @@ public:
 
 		/* States */
 		TYPE_MODE	eType_Mode = { MODE_PARTICLE };		// 파티클로 사용할건지
+		TYPE_ACTION eType_Action = { SPARK };			// 파티클의 액션 타입
 
 		/* Times */
 		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
@@ -45,7 +47,9 @@ public:
 
 
 		/* For.Position */
-		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
+		//_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
+		_float3		vMinCenterOffsetPos = { 0.f, 0.f, 0.f };
+		_float3		vMaxCenterOffsetPos = { 0.f, 0.f, 0.f };
 		_float2		vMinMaxRange	= { 0.1f, 3.f };
 
 
@@ -85,6 +89,7 @@ public:
 		_float	fLifeTime = { 1.f };
 		_float  fLifeTimeRatios = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
 
+		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
 
 	} PARTICLE_INFO_DESC;
 

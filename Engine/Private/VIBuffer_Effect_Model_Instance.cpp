@@ -112,9 +112,10 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 		}
 
 
-
+		
 		// 원점 위치로 고정
-		XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
+		//XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
+		XMStoreFloat4(&pModelInstance[i].vTranslation, m_vecParticleInfoDesc[i].vCenterPositions);
 		pModelInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f)	/* * 크기 */;
 		pModelInstance[i].vUp	 = _float4(0.f, 1.f, 0.f, 0.f)	/* * 크기 */;
 		pModelInstance[i].vLook	 = _float4(0.f, 0.f, 1.f, 0.f)	/* * 크기 */;
@@ -152,7 +153,8 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 
 
 		// 원점 위치로 고정
-		XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
+		//XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
+		XMStoreFloat4(&pModelInstance[i].vTranslation, m_vecParticleInfoDesc[i].vCenterPositions);
 		pModelInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f)	/* * 크기 */;
 		pModelInstance[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f)	/* * 크기 */;
 		pModelInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f)	/* * 크기 */;
@@ -172,6 +174,12 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 	m_vecParticleInfoDesc[iNum].fLifeTime = SMath::fRandom(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
 	m_vecParticleInfoDesc[iNum].fLifeTimeRatios = 0.f;
 
+
+	// 센터 포지션 Offset
+	m_vecParticleInfoDesc[iNum].vCenterPositions.x = SMath::fRandom(m_tBufferDesc.vMinCenterOffsetPos.x, m_tBufferDesc.vMaxCenterOffsetPos.x);
+	m_vecParticleInfoDesc[iNum].vCenterPositions.y = SMath::fRandom(m_tBufferDesc.vMinCenterOffsetPos.y, m_tBufferDesc.vMaxCenterOffsetPos.y);
+	m_vecParticleInfoDesc[iNum].vCenterPositions.z = SMath::fRandom(m_tBufferDesc.vMinCenterOffsetPos.z, m_tBufferDesc.vMaxCenterOffsetPos.z);
+	m_vecParticleInfoDesc[iNum].vCenterPositions.w = 1.f;
 
 
 #pragma region 이동 : 리지드바디 시작
@@ -224,7 +232,9 @@ void CVIBuffer_Effect_Model_Instance::Update(_float fTimeDelta)
 	}	// 반복문 끝
 
 	m_pContext->Unmap(m_pVBInstance, 0);
+
 }
+
 
 void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 {
@@ -333,7 +343,7 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 			else // 리지드 바디 사용이 아니면
 			{
 				// 원점 위치로 고정
-				XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
+				XMStoreFloat4(&pModelInstance[i].vTranslation, m_vecParticleInfoDesc[i].vCenterPositions);
 			}
 #pragma endregion 이동 : 리지드바디 끝
 
@@ -382,6 +392,7 @@ _bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
 
 	/* States */
 	Out_Json["Com_VIBuffer"]["eType_Mode"] = m_tBufferDesc.eType_Mode;
+	Out_Json["Com_VIBuffer"]["eType_Action"] = m_tBufferDesc.eType_Action;
 
 
 	/* LifeTime */
@@ -408,7 +419,9 @@ _bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
 
 
 	/* For.Position */
-	CJson_Utility::Write_Float4(Out_Json["Com_VIBuffer"]["vCurrentPosition"], m_tBufferDesc.vCenterPosition);
+	//CJson_Utility::Write_Float4(Out_Json["Com_VIBuffer"]["vCurrentPosition"], m_tBufferDesc.vCenterPosition);
+	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vMinCenterOffsetPos"], m_tBufferDesc.vMinCenterOffsetPos);
+	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vMaxCenterOffsetPos"], m_tBufferDesc.vMaxCenterOffsetPos);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRange"], m_tBufferDesc.vMinMaxRange);
 
 
@@ -429,7 +442,8 @@ void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 
 	/* States */
 	m_tBufferDesc.eType_Mode = In_Json["Com_VIBuffer"]["eType_Mode"];
-
+	if(In_Json.contains("eType_Action"))
+		m_tBufferDesc.eType_Mode = In_Json["Com_VIBuffer"]["eType_Action"];
 
 	/* LifeTime */
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxLifeTime"], m_tBufferDesc.vMinMaxLifeTime);
@@ -455,7 +469,11 @@ void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 
 
 	/* For.Position */
-	CJson_Utility::Load_Float4(In_Json["Com_VIBuffer"]["vCurrentPosition"], m_tBufferDesc.vCenterPosition);
+	//CJson_Utility::Load_Float4(In_Json["Com_VIBuffer"]["vCurrentPosition"], m_tBufferDesc.vCenterPosition);
+	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vMinCenterOffsetPos"], m_tBufferDesc.vMinCenterOffsetPos);
+	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vMaxCenterOffsetPos"], m_tBufferDesc.vMaxCenterOffsetPos);
+
+
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRange"], m_tBufferDesc.vMinMaxRange);
 
 

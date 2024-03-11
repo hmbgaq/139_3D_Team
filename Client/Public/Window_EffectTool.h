@@ -180,6 +180,7 @@ private:
 
 private:
 	_int	m_iLoop = { 0 };
+	_int	m_iType_Dead = { 0 };
 
 	_float	m_vTimes_Effect[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
 	_float	m_vTimes_Part[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
@@ -326,7 +327,14 @@ private:
 	_float	m_vBloomColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
 
+
+	/* Position */
+	_float	m_vMinCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMaxCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
+
 	_float	m_vMinMaxRange_Mesh[2] = { 0.f, 0.f };
+
+
 	_float	m_vRotationOffsetX_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetY_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetZ_Mesh[2] = { 0.f, 0.f };

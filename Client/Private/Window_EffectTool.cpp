@@ -1188,20 +1188,34 @@ void CWindow_EffectTool::Update_MeshTab()
 {
 	if (nullptr != m_pCurEffect)
 	{
-		if (ImGui::Button("Demo_Xray"))
+		if (ImGui::CollapsingHeader("Demo Meshs"))
 		{
-			Add_Part_Mesh(TEXT("Prototype_Component_Model_Xray_ManHeavy"));
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Demo_Dome"))
-		{
-			Add_Part_Mesh(TEXT("Prototype_Component_Model_ShieldDome"));
+			if (ImGui::Button("Demo_Xray"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Xray_ManHeavy"));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Demo_Dome"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_ShieldDome"));
+			}
+
+			if (ImGui::Button("Demo_BloodPoolsRaid"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_BloodPoolsRaid"));
+			}
 		}
 
-		if (ImGui::Button("Demo_BloodPoolsRaid"))
+		ImGui::SeparatorText("VampireCommander");
+		if (ImGui::Button("Demo_BeastSkull"))
 		{
-			Add_Part_Mesh(TEXT("Prototype_Component_Model_BloodPoolsRaid"));
+			Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_BeastSkull"));
+		}ImGui::SameLine();
+		if (ImGui::Button("Demo_Impact"))
+		{
+			Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Impact"));
 		}
+
 
 		ImGui::SeparatorText("");
 
@@ -1486,6 +1500,24 @@ void CWindow_EffectTool::Update_MeshTab()
 					m_pMeshBufferDesc->vMinMaxPower.y = m_vMinMaxPower_Mesh[1];
 				}
 #pragma endregion 리지드바디 옵션 조정_메쉬 파티클 끝
+
+				/* 센터 포지션 오프셋 */
+				/* MinCenterOffsetPos */
+				if (ImGui::DragFloat3("MinCenterOffsetPos_Mesh", m_vMinCenterOffsetPos_Mesh, 0.1f, -500.f, 500.f))
+				{
+					m_pMeshBufferDesc->vMinCenterOffsetPos.x = m_vMinCenterOffsetPos_Mesh[0];
+					m_pMeshBufferDesc->vMinCenterOffsetPos.y = m_vMinCenterOffsetPos_Mesh[1];
+					m_pMeshBufferDesc->vMinCenterOffsetPos.z = m_vMinCenterOffsetPos_Mesh[2];
+				}
+				/* MaxCenterOffsetPos */
+				if (ImGui::DragFloat3("MaxCenterOffsetPos_Mesh", m_vMaxCenterOffsetPos_Mesh, 0.1f, -500.f, 500.f))
+				{
+					m_pMeshBufferDesc->vMaxCenterOffsetPos.x = m_vMaxCenterOffsetPos_Mesh[0];
+					m_pMeshBufferDesc->vMaxCenterOffsetPos.y = m_vMaxCenterOffsetPos_Mesh[1];
+					m_pMeshBufferDesc->vMaxCenterOffsetPos.z = m_vMaxCenterOffsetPos_Mesh[2];
+				}
+
+
 
 				/* 퍼지는 범위 */
 				if (ImGui::DragFloat2("MinMaxRange_Mesh", m_vMinMaxRange_Mesh, 1.f, 0.1f, 360.f))
@@ -2152,6 +2184,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vUV_MaxTileCount[1] = (_int)pSpriteDesc->vUV_MaxTileCount.y;
 		}
 
+
 		if (CEffect_Void::MESH == eType_Effect)
 		{
 #pragma region 메쉬(+버퍼) 디스크립션 얻어오기 시작
@@ -2230,6 +2263,17 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			/* 라이프타임_메쉬 파티클 */
 			m_vMinMaxLifeTime_Mesh[0] = m_pMeshBufferDesc->vMinMaxLifeTime.x;
 			m_vMinMaxLifeTime_Mesh[1] = m_pMeshBufferDesc->vMinMaxLifeTime.y;
+
+
+			/* 센터 오프셋 위치_메쉬 */
+			m_vMinCenterOffsetPos_Mesh[0] = m_pMeshBufferDesc->vMinCenterOffsetPos.x;
+			m_vMinCenterOffsetPos_Mesh[1] = m_pMeshBufferDesc->vMinCenterOffsetPos.y;
+			m_vMinCenterOffsetPos_Mesh[2] = m_pMeshBufferDesc->vMinCenterOffsetPos.z;
+
+			m_vMaxCenterOffsetPos_Mesh[0] = m_pMeshBufferDesc->vMaxCenterOffsetPos.x;
+			m_vMaxCenterOffsetPos_Mesh[1] = m_pMeshBufferDesc->vMaxCenterOffsetPos.y;
+			m_vMaxCenterOffsetPos_Mesh[2] = m_pMeshBufferDesc->vMaxCenterOffsetPos.z;
+
 
 
 			/* 분포 범위(Range) */
@@ -2825,7 +2869,6 @@ void CWindow_EffectTool::Update_EffectList_Window()
 			//Add_Part_Mesh(TEXT("Prototype_Component_Model_ShieldDome"));
 			Add_Part_Mesh(TEXT("Prototype_Component_Model_Particle_Test"));
 		}
-		ImGui::SameLine();
 
 		if (ImGui::Button(" Add Bat Test "))
 		{
@@ -2953,6 +2996,20 @@ void CWindow_EffectTool::Update_EffectList_Window()
 			m_pCurEffectDesc->bLoop = TRUE;
 		else if (1 == m_iLoop)
 			m_pCurEffectDesc->bLoop = FALSE;
+
+
+		/* 죽음 타입 정하기 */
+		// m_iType_Dead
+		ImGui::SeparatorText("");
+		ImGui::RadioButton(" DEAD_AUTO ", &m_iType_Dead, 0);  ImGui::SameLine();
+		ImGui::RadioButton("DEAD_OWNER", &m_iType_Dead, 1);	  ImGui::SameLine();
+		ImGui::RadioButton("DEAD_NONE", &m_iType_Dead, 2);
+		if (0 == m_iType_Dead)
+			m_pCurEffectDesc->eType_Dead = CEffect::DEAD_AUTO;
+		else if (1 == m_iType_Dead)
+			m_pCurEffectDesc->eType_Dead = CEffect::DEAD_OWNER;
+		else if (2 == m_iType_Dead)
+			m_pCurEffectDesc->eType_Dead = CEffect::DEAD_NONE;
 
 
 

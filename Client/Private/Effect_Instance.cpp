@@ -140,7 +140,6 @@ HRESULT CEffect_Instance::Render()
 		return E_FAIL;
 
 
-
 	if (m_pVIBufferCom->Get_Desc()->bMorph)	// 모프가 true이면 (박쥐 모델)
 	{
 		_uint	iCurModelNum = m_pVIBufferCom->Get_Desc()->eCurModelNum;
@@ -179,11 +178,10 @@ HRESULT CEffect_Instance::Render()
 
 void CEffect_Instance::ReSet_Effect()
 {
-	__super::ReSet_Effect();
+	__super::ReSet_Effect();	// 시간 초기화
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
 	m_tVoidDesc.bDissolve = FALSE;
-	m_tVoidDesc.bRender = FALSE;
 
 	m_pVIBufferCom->ReSet();
 }

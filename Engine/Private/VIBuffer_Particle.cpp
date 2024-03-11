@@ -728,6 +728,10 @@ void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxAlpha"], m_tBufferDesc.vMinMaxAlpha);
 
 
+	//// vTest가 있으면 로드하기
+	//if (In_Json.contains("vTest"))
+	//	m_tBufferDesc.vTest = In_Json["Com_VIBuffer"]["vTest"];
+
 }
 
 CVIBuffer_Particle* CVIBuffer_Particle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
