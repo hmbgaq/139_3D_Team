@@ -88,6 +88,14 @@ _bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState
 				m_fTrackPosition = 0.f;
 			}
 			break;
+		case Engine::CModel::ANIM_STATE_LOOP_REVERSE:
+			m_fTrackPosition -= m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+			if (m_fTrackPosition <= 0)
+			{
+				m_fTrackPosition = m_fDuration;
+				m_PrevPos = { 0.f, 0.f, 0.f };
+			}
+			break;
 		case Engine::CModel::ANIM_STATE_STOP:
 			m_isFinished = true;
 			break;
@@ -126,6 +134,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState
 					m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
 					break;
 				case Engine::CModel::ANIM_STATE_REVERSE:
+				case Engine::CModel::ANIM_STATE_LOOP_REVERSE:
 					m_Channels[i]->Invalidate_TransformationMatrix_Reverse(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
 					break;
 				default:

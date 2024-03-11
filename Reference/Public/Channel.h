@@ -30,6 +30,7 @@ public:
 		return m_KeyFrames[_iKeyFrameIndex];
 	};
 
+
 	_bool		Is_Inputable(_float fCurrentTrackPosition, _uint _iIndex);
 	_bool		Is_Inputable_Front(_float fCurrentTrackPosition, _uint _iIndexFront);
 

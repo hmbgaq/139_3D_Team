@@ -1669,18 +1669,6 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered">
       <UniqueIdentifier>{a64a50db-3e5c-49c1-a65a-01529862c468}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\3. SlamDown">
-      <UniqueIdentifier>{7a350570-a566-45c6-8c4d-bdd0f93098ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\3. SlamDown\3. ManHero">
-      <UniqueIdentifier>{e47d8ed8-c936-4880-974d-1c2b0c635ab7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\3. SlamDown\1. v2">
-      <UniqueIdentifier>{2fa2f9cb-0584-4ec7-8c15-8012de51ea51}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\3. SlamDown\2. v3">
-      <UniqueIdentifier>{6a8d00f5-1362-458c-9ada-eee2801118a3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\0. MeleeCombo">
       <UniqueIdentifier>{94f5efea-dced-482a-8f83-1ca010e54559}</UniqueIdentifier>
     </Filter>
@@ -2767,6 +2755,36 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\7. FlameBelcher\2. Unholster\2">
       <UniqueIdentifier>{88ea4340-019e-40d9-b16b-6e10b9e76de0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\0. Parent">
+      <UniqueIdentifier>{0308912e-1e82-47cd-aa90-4ea7c9f8e57d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\5. AOE">
+      <UniqueIdentifier>{36c022bf-5e4f-42b2-be88-82c5dfd292e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\1. 01v2">
+      <UniqueIdentifier>{ed08288a-6713-4000-9da3-c41d17e7294e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\2. 03">
+      <UniqueIdentifier>{d801862e-b7a8-4862-810e-68ba742f6300}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\3. 04">
+      <UniqueIdentifier>{3cafb62d-d11f-498f-bf5f-d09ac0de79d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\4. 05v3">
+      <UniqueIdentifier>{2af264b6-2306-4a04-a69f-b4554fb19aef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown">
+      <UniqueIdentifier>{7a350570-a566-45c6-8c4d-bdd0f93098ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. ManHero">
+      <UniqueIdentifier>{e47d8ed8-c936-4880-974d-1c2b0c635ab7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\1. v2">
+      <UniqueIdentifier>{2fa2f9cb-0584-4ec7-8c15-8012de51ea51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\2. v3">
+      <UniqueIdentifier>{6a8d00f5-1362-458c-9ada-eee2801118a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3136,13 +3154,13 @@
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\2. SlamGround</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_SlamDown_v2.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\3. SlamDown\1. v2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\1. v2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_SlamDown_v3.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\3. SlamDown\2. v3</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\2. v3</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_SlamDown_ManHero.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\3. SlamDown\3. ManHero</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. ManHero</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Empowered_Idle.h">
       <Filter>02.GameObjects\00. Character\Player\State\01. Normal\1. Idle\Empowered</Filter>
@@ -5514,23 +5532,8 @@
     <ClInclude Include="..\Public\Player_MeleeSwap_02.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\07. Swap\2</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_MeleeUppercut_01v2.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player_OpenStateCombo_8hit.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\09. OpenStateCombo_8hit</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_Uppercut_03_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_Uppercut_04_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_Uppercut_05v3_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_UppercutAOE.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_WhipSlam.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Whip</Filter>
@@ -5564,6 +5567,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\Player_State_Grenade.h">
       <Filter>02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_MeleeUppercut_01v2.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\1. 01v2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Uppercut_03_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\2. 03</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Uppercut_04_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\3. 04</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Uppercut_05v3_TEMP.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\4. 05v3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_UppercutAOE.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\5. AOE</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -6053,13 +6071,13 @@
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\2. SlamGround</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_SlamDown_v2.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\3. SlamDown\1. v2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\1. v2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_SlamDown_v3.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\3. SlamDown\2. v3</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\2. v3</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_SlamDown_ManHero.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\2. Empowered\3. SlamDown\3. ManHero</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. ManHero</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Empowered_Idle.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\01. Normal\1. Idle\Empowered</Filter>
@@ -7888,23 +7906,8 @@
     <ClCompile Include="..\Private\Player_MeleeSwap_02.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\07. Swap\2</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Player_MeleeUppercut_01v2.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Player_OpenStateCombo_8hit.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\09. OpenStateCombo_8hit</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_Uppercut_03_TEMP.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_Uppercut_04_TEMP.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_Uppercut_05v3_TEMP.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_UppercutAOE.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_WhipSlam.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Whip</Filter>
@@ -7938,6 +7941,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_State_Grenade.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\07. Aim\8. Grenade\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_MeleeUppercut_01v2.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\1. 01v2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Uppercut_03_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\2. 03</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Uppercut_04_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\3. 04</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Uppercut_05v3_TEMP.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\4. 05v3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_UppercutAOE.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\08. Uppercut\5. AOE</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

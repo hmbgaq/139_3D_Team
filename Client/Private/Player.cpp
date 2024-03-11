@@ -63,19 +63,19 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
-	/* For.Com_PhysXController */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"), TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom)));
-	m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
-	//m_pPhysXControllerCom->
+	///* For.Com_PhysXController */
+	//FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"), TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom)));
+	//m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
+	////m_pPhysXControllerCom->
 
-	/* For.Com_PhysXCollider */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXCollider"), TEXT("Com_PhysXCollider"), reinterpret_cast<CComponent**>(&m_pPhysXCollider)));
-	
+	///* For.Com_PhysXCollider */
+	//FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXCollider"), TEXT("Com_PhysXCollider"), reinterpret_cast<CComponent**>(&m_pPhysXCollider)));
+	//
 
-	CPhysXCollider::PhysXColliderDesc tPhysXColliderDesc;
-	Preset::PhysXColliderDesc::GroundSetting(tPhysXColliderDesc, m_pTransformCom);
-	m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
-	m_pPhysXCollider->Add_PhysXActorAtScene();
+	//CPhysXCollider::PhysXColliderDesc tPhysXColliderDesc;
+	//Preset::PhysXColliderDesc::GroundSetting(tPhysXColliderDesc, m_pTransformCom);
+	//m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
+	//m_pPhysXCollider->Add_PhysXActorAtScene();
 
 
 
@@ -149,30 +149,34 @@ HRESULT CPlayer::Render()
 void CPlayer::Aim_Walk(_float fTimeDelta)
 {
 	_uint AnimIndex;
+	_uint ReversedAnimIndex;
+
 
 	if (m_pGameInstance->Key_Pressing(DIK_W))
 	{
-		if (m_pGameInstance->Key_Pressing(DIK_A))
+		//if (m_pGameInstance->Key_Pressing(DIK_A))
+		//{
+		//	AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FL45);
+		//	if (Get_CurrentAnimIndex() != AnimIndex)
+		//	{
+		//		Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+		//	}
+		//	Go_Straight_L45(fTimeDelta * 0.5f);
+		//}
+		//else if (m_pGameInstance->Key_Pressing(DIK_D))
+		//{
+		//	AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FR45);
+		//	if (Get_CurrentAnimIndex() != AnimIndex)
+		//	{
+		//		Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+		//	}
+		//	Go_Straight_R45(fTimeDelta * 0.5f);
+		//}
+		//else
 		{
-			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FL45);
-			if (Get_CurrentAnimIndex() != AnimIndex)
-			{
-				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
-			}
-			Go_Straight_L45(fTimeDelta * 0.5f);
-		}
-		else if (m_pGameInstance->Key_Pressing(DIK_D))
-		{
-			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FR45);
-			if (Get_CurrentAnimIndex() != AnimIndex)
-			{
-				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
-			}
-			Go_Straight_R45(fTimeDelta * 0.5f);
-		}
-		else
-		{
-			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_F);
+			//AnimIndex = ECast(CPlayer::Player_State::Player_Walk_F);
+			AnimIndex = ECast(CPlayer::Player_State::Player_Bandit_WalkAim_F);
+
 			if (Get_CurrentAnimIndex() != AnimIndex)
 			{
 				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
@@ -182,27 +186,28 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 	}
 	else if (m_pGameInstance->Key_Pressing(DIK_S))
 	{
-		if (m_pGameInstance->Key_Pressing(DIK_A))
+		//if (m_pGameInstance->Key_Pressing(DIK_A))
+		//{
+		//	AnimIndex = ECast(CPlayer::Player_State::Player_Walk_BL135);
+		//	if (Get_CurrentAnimIndex() != AnimIndex)
+		//	{
+		//		Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+		//	}
+		//	Go_Backward_L45(fTimeDelta * 0.5f);
+		//}
+		//else if (m_pGameInstance->Key_Pressing(DIK_D))
+		//{
+		//	AnimIndex = ECast(CPlayer::Player_State::Player_Walk_BR135);
+		//	if (Get_CurrentAnimIndex() != AnimIndex)
+		//	{
+		//		Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+		//	}
+		//	Go_Backward_R45(fTimeDelta * 0.5f);
+		//}
+		//else
 		{
-			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_BL135);
-			if (Get_CurrentAnimIndex() != AnimIndex)
-			{
-				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
-			}
-			Go_Backward_L45(fTimeDelta * 0.5f);
-		}
-		else if (m_pGameInstance->Key_Pressing(DIK_D))
-		{
-			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_BR135);
-			if (Get_CurrentAnimIndex() != AnimIndex)
-			{
-				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
-			}
-			Go_Backward_R45(fTimeDelta * 0.5f);
-		}
-		else
-		{
-			AnimIndex = ECast(CPlayer::Player_State::Player_Walk_B);
+			//AnimIndex = ECast(CPlayer::Player_State::Player_Walk_B);
+			AnimIndex = ECast(CPlayer::Player_State::Player_Bandit_WalkAim_B);
 			if (Get_CurrentAnimIndex() != AnimIndex)
 			{
 				Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
@@ -212,16 +217,28 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 	}
 	else if (m_pGameInstance->Key_Pressing(DIK_A))
 	{
-		AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FL);
-		if (Get_CurrentAnimIndex() != AnimIndex)
+		//AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FL);
+		AnimIndex = ECast(CPlayer::Player_State::Player_Bandit_WalkAim_FL);
+		ReversedAnimIndex = ECast(CPlayer::Player_State::Player_Bandit_WalkAim_FR);
+		if (Get_CurrentAnimIndex() != AnimIndex || ReversedAnimIndex == AnimIndex)
 		{
-			Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+			Set_Animation(ReversedAnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 		}
+		//if (Get_CurrentAnimIndex() != AnimIndex)
+		//{
+		//	Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
+		//}
 		Go_Left(fTimeDelta * 0.5f);
 	}
 	else if (m_pGameInstance->Key_Pressing(DIK_D))
 	{
-		AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FR);
+		//AnimIndex = ECast(CPlayer::Player_State::Player_Walk_FR);
+		AnimIndex = ECast(CPlayer::Player_State::Player_Bandit_WalkAim_FR);
+		//ReversedAnimIndex = ECast(CPlayer::Player_State::Player_Bandit_WalkAim_FL);
+		//if (Get_CurrentAnimIndex() != AnimIndex || ReversedAnimIndex == AnimIndex)
+		//{
+		//	Set_Animation(ReversedAnimIndex, CModel::ANIM_STATE_LOOP_REVERSE, true, false);
+		//}
 		if (Get_CurrentAnimIndex() != AnimIndex)
 		{
 			Set_Animation(AnimIndex, CModel::ANIM_STATE_LOOP, true, false);
