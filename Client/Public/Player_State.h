@@ -58,7 +58,16 @@ public:		//개별 동작 상태 집합
 	CState<CPlayer>* MeleeCombo(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Dodge(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Roll(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
 	CState<CPlayer>* Rifle(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Winchester(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Crossbow(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Revolver(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Shotgun(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Gatilng(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* FlameBelcher(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Grenade(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
 
 
 

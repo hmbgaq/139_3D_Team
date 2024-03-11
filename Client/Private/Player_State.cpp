@@ -1,6 +1,8 @@
 #include "..\Public\Player_State.h"
 #include "GameInstance.h"
 
+#pragma region 플레이어 상태 헤더
+
 #include "Player_Empowered_MeleeCombo_01.h"
 #include "Player_Empowered_MeleeCombo_02.h"
 #include "Player_Empowered_MeleeCombo_03.h"
@@ -68,8 +70,53 @@
 
 #include "Player_Rifle_IdleWeaponHolster.h"
 #include "Player_Rifle_Ironsights_Fire.h"
+#include "Player_Empowered_Winchester_IdleFire.h"
+#include "Player_Empowered_Winchester_Start.h"
+#include "Player_Empowered_Winchester_Stop.h"
+#include "Player_Winchester_Ironsights_AimPose.h"
+#include "Player_Winchester_Ironsights_Reload_01.h"
+#include "Player_Winchester_Ironsights_Reload_02.h"
+#include "Player_Winchester_LowerHolster.h"
+#include "Player_Winchester_WeaponUnholster.h"
+#include "Player_Winchester_MeleeDynamic.h"
+#include "Player_Crossbow_Ironsights_AimPose.h"
+#include "Player_Crossbow_Ironsights_AO.h"
+#include "Player_Crossbow_Ironsights_Idle.h"
+#include "Player_Crossbow_Ironsights_Reload.h"
+#include "Player_Crossbow_LowerHolster.h"
+#include "Player_Crossbow_WeaponUnholster_Fast.h"
+#include "Player_Revolver_HandCannonHold.h"
+#include "Player_Revolver_Hip_ReloadFast_Alt03.h"
+#include "Player_Revolver_Ironsights_ReloadFast.h"
+#include "Player_Revolver_WeaponHolster.h"
+#include "Player_Revolver_WeaponUnholster.h"
+#include "Player_Bandit_Ironsights_Reload_02.h"
+#include "Player_Bandit_Reload_02.h"
+#include "Player_Bandit_Special_01.h"
+#include "Player_Bandit_SprintAim_F.h"
+#include "Player_William_RevolverFanningStart_01.h"
+#include "Player_William_RevolverFanningLoop_01.h"
+#include "Player_William_RevolverFanningStop_01.h"
+#include "Player_William_RevolverFanningStart_02.h"
+#include "Player_William_RevolverFanningLoop_02.h"
+#include "Player_William_RevolverFanningStop_02.h"
+#include "Player_Shotgun_Fire_LongRange.h"
+#include "Player_Shotgun_Fire_ShortRange.h"
+#include "Player_Shotgun_WeaponHolster.h"
+#include "Player_ShotgunElectric_Fire_ShortRange.h"
+#include "Player_William_ShotgunShot_01.h"
+#include "Player_Bandit_Gatling.h"
+#include "Player_Bandit_Gatling_Step_L.h"
+#include "Player_GatlingGun_WeaponHolster.h"
+#include "Player_GatlingGun_WeaponUnholster.h"
+#include "Player_FlameBelcher_WeaponHolster.h"
+#include "Player_FlameBelcher_WeaponUnholster.h"
+#include "Player_FlameBelcher_WeaponUnholster_v2.h"
+#include "Player_Grenade_Throw_v2.h"
+#include "Player_Grenade_WeaponHolster.h"
+#include "Player_Grenade_WeaponUnholster.h"
 
-
+#pragma endregion
 
 
 
@@ -195,6 +242,17 @@ CState<CPlayer>* CPlayer_State::Rifle_State(CPlayer* pActor, _float fTimeDelta, 
 
 CState<CPlayer>* CPlayer_State::Winchester_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	CState<CPlayer>* pState = { nullptr };
+
+	pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
+
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Rifle_IdleWeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Rifle_IdleWeaponHolster();
+	}
+
 	return nullptr;
 }
 
@@ -578,6 +636,47 @@ CState<CPlayer>* CPlayer_State::Rifle(CPlayer* pActor, _float fTimeDelta, _uint 
 			return new CPlayer_Rifle_Ironsights_Fire();
 	}
 
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_Winchester_Ironsights_AimPose::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Winchester_Ironsights_AimPose();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Crossbow(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Revolver(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Shotgun(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Gatilng(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::FlameBelcher(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Grenade(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
 	return nullptr;
 }
 
