@@ -15,15 +15,16 @@ public:
 	typedef struct tagVIBuffer_EffectModelInstanceDesc
 	{
 		// 저장해야 하는 고정 정보들
-		_int			iCurNumInstance		= { 1000 };		// 초기화 값이 최대 개수가 됨	
+		_int			iCurNumInstance		= { 20 };		// 초기화 값이 최대 개수가 됨	
 
 		class CModel*	pModel[MORPH_END]	= { nullptr };	// 저장 X
 		MODEL_MORPH		eCurModelNum		= { MORPH_01 };	// 저장 X
 
 
 		/* States */
-		TYPE_MODE	eType_Mode = { MODE_PARTICLE };		// 파티클로 사용할건지
+		TYPE_MODE	eType_Mode	 = { MODE_PARTICLE };	// 파티클로 사용할건지
 		TYPE_ACTION eType_Action = { SPARK };			// 파티클의 액션 타입
+		_bool		bRecycle	 = { TRUE };			// 입자를 재사용 할건지
 
 		/* Times */
 		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
@@ -90,6 +91,7 @@ public:
 		_float  fLifeTimeRatios = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
 
 		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
+		_float  fRanges			 = { 0.f };
 
 	} PARTICLE_INFO_DESC;
 

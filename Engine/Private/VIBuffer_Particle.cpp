@@ -197,12 +197,30 @@ HRESULT CVIBuffer_Particle::Init_Instance(_int iNumInstance)
 		ReSet_Info(i);
 
 
-		// 초기화
-		XMStoreFloat4(&pVertices[i].vPosition, m_tBufferDesc.vCenterPosition);
-		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
-		pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
-		pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f);
+		//// 초기화
+		////XMStoreFloat4(&pVertices[i].vPosition, m_tBufferDesc.vCenterPosition);
+		//XMStoreFloat4(&pVertices[i].vPosition, m_vecParticleInfoDesc[i].vCenterPositions);
+		//pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
+		//pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
+		//pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f);
 
+
+		// 원점 위치로 고정
+		//XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
+		XMStoreFloat4(&pVertices[i].vPosition, m_vecParticleInfoDesc[i].vCenterPositions);
+		if (m_tBufferDesc.bRecycle)
+		{
+			// 시작에 안보이게
+			pVertices[i].vRight = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
+			pVertices[i].vUp	= _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
+			pVertices[i].vLook	= _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
+		}
+		else
+		{
+			pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
+			pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
+			pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f);
+		}
 
 
 	} // 반복문 끝
@@ -239,12 +257,35 @@ void CVIBuffer_Particle::ReSet()
 		ReSet_Info(i);
 
 
-		// 초기화
-		XMStoreFloat4(&pVertices[i].vPosition, m_tBufferDesc.vCenterPosition);
-		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
-		pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
-		pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f);
-		pVertices[i].vColor.w = 1.f;
+		//// 초기화
+		////XMStoreFloat4(&pVertices[i].vPosition, m_tBufferDesc.vCenterPosition);
+		//XMStoreFloat4(&pVertices[i].vPosition, m_vecParticleInfoDesc[i].vCenterPositions);
+		//pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
+		//pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
+		//pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f);
+		//pVertices[i].vColor.w = 1.f;
+
+
+
+		// 원점 위치로 고정
+		//XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
+		XMStoreFloat4(&pVertices[i].vPosition, m_vecParticleInfoDesc[i].vCenterPositions);
+		if (m_tBufferDesc.bRecycle)
+		{
+			// 시작에 안보이게
+			pVertices[i].vRight = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
+			pVertices[i].vUp = _float4(0.f, 0.f, 0.f, 0.f)			/* * 크기 */;
+			pVertices[i].vLook = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
+			pVertices[i].vColor.w = 0.f;
+		}
+		else
+		{
+			pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
+			pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
+			pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+		}
+
+
 
 	} // 반복문 끝
 
@@ -262,12 +303,11 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	m_vecParticleInfoDesc[iNum].fLifeTimeRatios = 0.f;
 
 
-	// 시작 위치(CenterPosition) Offset
-	m_tBufferDesc.vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
-	m_tBufferDesc.vCenterPosition.x = SMath::fRandom(m_tBufferDesc.vMinMaxCenterX.x, m_tBufferDesc.vMinMaxCenterX.y);
-	m_tBufferDesc.vCenterPosition.y = SMath::fRandom(m_tBufferDesc.vMinMaxCenterY.x, m_tBufferDesc.vMinMaxCenterY.y);
-	m_tBufferDesc.vCenterPosition.z = SMath::fRandom(m_tBufferDesc.vMinMaxCenterZ.x, m_tBufferDesc.vMinMaxCenterZ.y);
-	m_tBufferDesc.vCenterPosition.w = 1.f;
+	// 센터 포지션 Offset
+	m_vecParticleInfoDesc[iNum].vCenterPositions.x = SMath::fRandom(m_tBufferDesc.vMinCenterOffsetPos.x, m_tBufferDesc.vMaxCenterOffsetPos.x);
+	m_vecParticleInfoDesc[iNum].vCenterPositions.y = SMath::fRandom(m_tBufferDesc.vMinCenterOffsetPos.y, m_tBufferDesc.vMaxCenterOffsetPos.y);
+	m_vecParticleInfoDesc[iNum].vCenterPositions.z = SMath::fRandom(m_tBufferDesc.vMinCenterOffsetPos.z, m_tBufferDesc.vMaxCenterOffsetPos.z);
+	m_vecParticleInfoDesc[iNum].vCenterPositions.w = 1.f;
 
 
 	// 크기
@@ -303,6 +343,7 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 
 		vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
 		m_vecParticleShaderInfoDesc[iNum].vDir = vDir;			// 쉐이더에 전달할 방향 저장
+		m_vecParticleRigidbodyDesc[iNum].vDir = vDir;
 #pragma endregion 이동 진행방향 회전 끝
 
 
@@ -345,6 +386,10 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 	VTXINSTANCE* pVertices = ((VTXINSTANCE*)SubResource.pData);
 
+
+#ifdef _DEBUG
+	m_iNumInstance = m_tBufferDesc.iCurNumInstance;
+#endif // _DEBUG
 	for (_uint i = 0; i < m_iNumInstance; i++)	// 반복문 시작
 	{
 #pragma region 입자들 시간 시작
@@ -353,7 +398,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 		{
 			m_vecParticleInfoDesc[i].fTimeAccs = m_vecParticleInfoDesc[i].fLifeTime;
 			m_vecParticleInfoDesc[i].fLifeTimeRatios = 1.f;
-			//continue;
+
 		}
 		else
 		{
@@ -392,56 +437,74 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						Update_Kinematic(i);
 					}
 				}
+				else
+				{
+					if (m_tBufferDesc.bRecycle)
+					{
+						// 리사이클 모드면 슬립이 됐을 때 초기화 후 힘 다시주기
+						m_vecParticleInfoDesc[i].Reset_ParticleTimes();
+
+						XMStoreFloat4(&pVertices[i].vPosition, m_vecParticleInfoDesc[i].vCenterPositions);
+						pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
+						pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
+						pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+						pVertices[i].vColor.w = 1.f;
+						_vector vForce = XMVector3Normalize(m_vecParticleRigidbodyDesc[i].vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
+						Add_Force(i, vForce, m_tBufferDesc.eForce_Mode);
+					}
+
+				}
 			}
+			
 		}
 #pragma endregion 이동 : 리지드바디 끝
 
 
 #pragma region 크기 변경 시작
-		if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.x)		// 0~1로 보간한 라이프타임이 크기 증가를 시작할 타임 포지션을 넘어가면
-		{
-			if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.y) // 0~1로 보간한 라이프타임이 크기 감소를 시작할 타임 포지션도 넘어가면 감소 시작
-			{
-				// 크기 감소를 시작할 타임 포지션 (크기 0이 목표)
+		//if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.x)		// 0~1로 보간한 라이프타임이 크기 증가를 시작할 타임 포지션을 넘어가면
+		//{
+		//	if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.y) // 0~1로 보간한 라이프타임이 크기 감소를 시작할 타임 포지션도 넘어가면 감소 시작
+		//	{
+		//		// 크기 감소를 시작할 타임 포지션 (크기 0이 목표)
 
-				_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * (1.f - m_tBufferDesc.vLerpScale_Pos.y);	// 라이프 타임 중, 감소에만 필요한 토탈시간 계산
-				if (m_tBufferDesc.fDownScaleTimeAcc >= fTotalTime)
-				{
-					m_tBufferDesc.fDownScaleTimeAcc = fTotalTime;
-					m_tBufferDesc.vCurScale.x = 0.f;
-					m_tBufferDesc.vCurScale.y = 0.f;
-				}
-				else
-				{
-					m_tBufferDesc.fDownScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.y);	// 시간 누적	
-					m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.x, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-					m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.y, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-				}
-			}
-			else
-			{		
-				// Max크기가 목표
+		//		_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * (1.f - m_tBufferDesc.vLerpScale_Pos.y);	// 라이프 타임 중, 감소에만 필요한 토탈시간 계산
+		//		if (m_tBufferDesc.fDownScaleTimeAcc >= fTotalTime)
+		//		{
+		//			m_tBufferDesc.fDownScaleTimeAcc = fTotalTime;
+		//			m_tBufferDesc.vCurScale.x = 0.f;
+		//			m_tBufferDesc.vCurScale.y = 0.f;
+		//		}
+		//		else
+		//		{
+		//			m_tBufferDesc.fDownScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.y);	// 시간 누적	
+		//			m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.x, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+		//			m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.y, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+		//		}
+		//	}
+		//	else
+		//	{		
+		//		// Max크기가 목표
 
-				_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * ((1.f - m_tBufferDesc.vLerpScale_Pos.x) + (1.f - m_tBufferDesc.vLerpScale_Pos.y));	// 라이프 타임 중, 증가에만 필요한 토탈시간 계산
-				if (m_tBufferDesc.fUpScaleTimeAcc >= fTotalTime)
-				{
-					m_tBufferDesc.fUpScaleTimeAcc = fTotalTime;
-					m_tBufferDesc.vCurScale.x = m_vecParticleInfoDesc[i].vMaxScales.x;
-					m_tBufferDesc.vCurScale.y = m_vecParticleInfoDesc[i].vMaxScales.y;
-				}
-				else
-				{
-					m_tBufferDesc.fUpScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.x);	// 시간 누적		
-					m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxWidth.x, m_vecParticleInfoDesc[i].vMaxScales.x, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-					m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxHeight.x, m_vecParticleInfoDesc[i].vMaxScales.y, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-				}
-			
-			}
+		//		_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * ((1.f - m_tBufferDesc.vLerpScale_Pos.x) + (1.f - m_tBufferDesc.vLerpScale_Pos.y));	// 라이프 타임 중, 증가에만 필요한 토탈시간 계산
+		//		if (m_tBufferDesc.fUpScaleTimeAcc >= fTotalTime)
+		//		{
+		//			m_tBufferDesc.fUpScaleTimeAcc = fTotalTime;
+		//			m_tBufferDesc.vCurScale.x = m_vecParticleInfoDesc[i].vMaxScales.x;
+		//			m_tBufferDesc.vCurScale.y = m_vecParticleInfoDesc[i].vMaxScales.y;
+		//		}
+		//		else
+		//		{
+		//			m_tBufferDesc.fUpScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.x);	// 시간 누적		
+		//			m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxWidth.x, m_vecParticleInfoDesc[i].vMaxScales.x, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+		//			m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxHeight.x, m_vecParticleInfoDesc[i].vMaxScales.y, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+		//		}
+		//	
+		//	}
 
-			// 크기변경 적용
-			pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.x;
-			pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.y;
-		}
+		//	// 크기변경 적용
+		//	pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.x;
+		//	pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.y;
+		//}
 
 #pragma region 크기 변경 끝
 
@@ -600,13 +663,40 @@ const _bool CVIBuffer_Particle::Check_Sleep(_uint iNum)
 	if (m_vecParticleRigidbodyDesc[iNum].bSleep)
 		return TRUE;
 
-	/* 선형 속도의 크기가 m_fSleepThreshold보다 작으면 슬립(연산안함) */
-	_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity)));
-	if (!m_tBufferDesc.bUseGravity && m_tBufferDesc.fSleepThreshold > fLength)
+	if (m_tBufferDesc.bUseGravity)
 	{
-		Sleep(iNum);
-		return TRUE;
+		if (m_tBufferDesc.bRecycle)
+		{
+			_float2 vVelocityXZ = { m_vecParticleRigidbodyDesc[iNum].vVelocity.x, m_vecParticleRigidbodyDesc[iNum].vVelocity.z };
+			_float fLengthXZ = XMVectorGetX(XMVector2Length(XMLoadFloat2(&vVelocityXZ)));
+
+			if (m_tBufferDesc.fSleepThreshold > fLengthXZ)
+			{
+				Sleep(iNum);
+				return TRUE;
+			}
+		}
+
 	}
+	else
+	{
+		_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity)));
+
+		if (m_tBufferDesc.fSleepThreshold > fLength)
+		{
+			Sleep(iNum);
+			return TRUE;
+		}
+	}
+
+
+	///* 선형 속도의 크기가 m_fSleepThreshold보다 작으면 슬립(연산안함) */
+	//_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity)));
+	//if (!m_tBufferDesc.bUseGravity && m_tBufferDesc.fSleepThreshold > fLength)
+	//{
+	//	Sleep(iNum);
+	//	return TRUE;
+	//}
 
 	return FALSE;
 }
@@ -637,9 +727,8 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxMass"], m_tBufferDesc.vMinMaxMass);
 
 	/* For.Position */
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxCenterX"], m_tBufferDesc.vMinMaxCenterX);
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxCenterY"], m_tBufferDesc.vMinMaxCenterY);
-	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxCenterZ"], m_tBufferDesc.vMinMaxCenterZ);
+	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vMinCenterOffsetPos"], m_tBufferDesc.vMinCenterOffsetPos);
+	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vMaxCenterOffsetPos"], m_tBufferDesc.vMaxCenterOffsetPos);
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRange"], m_tBufferDesc.vMinMaxRange);
 
@@ -698,9 +787,8 @@ void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxMass"], m_tBufferDesc.vMinMaxMass);
 
 	/* For.Position */
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxCenterX"], m_tBufferDesc.vMinMaxCenterX);
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxCenterY"], m_tBufferDesc.vMinMaxCenterY);
-	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxCenterZ"], m_tBufferDesc.vMinMaxCenterZ);
+	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vMinCenterOffsetPos"], m_tBufferDesc.vMinCenterOffsetPos);
+	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vMaxCenterOffsetPos"], m_tBufferDesc.vMaxCenterOffsetPos);
 
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRange"], m_tBufferDesc.vMinMaxRange);
 

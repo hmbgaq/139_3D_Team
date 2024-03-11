@@ -208,7 +208,10 @@ void CEffect_Particle::ReSet_Effect()
 		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 
-	m_pVIBufferCom->ReSet();
+	if (!m_pVIBufferCom->Get_Desc()->bRecycle)
+	{
+		m_pVIBufferCom->ReSet();
+	}
 
 }
 

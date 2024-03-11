@@ -205,6 +205,14 @@ private:
 
 	_int	m_iBillBoard				= { 0 };
 
+	/* 파티클만의 속성 */
+	_int	m_iRecycle_Particle = { 0 };
+	_int	m_iReverse_Particle = { 0 };
+	_int	m_iType_Emit_Particle = { 0 };
+	_int	m_iType_Action_Particle = { 0 };
+	_int	m_iType_Fade_Particle = { 0 };
+
+
 	_float	m_vMinMaxLifeTime_Particle[2] = { 0.f, 0.f };	// 라이프타임
 
 	/* RigidBody ============================================== */
@@ -223,9 +231,8 @@ private:
 
 
 	/* For.Position */
-	_float	m_vMinMaxCenterX_Particle[2] = { 0.f, 0.f };
-	_float	m_vMinMaxCenterY_Particle[2] = { 0.f, 0.f };
-	_float	m_vMinMaxCenterZ_Particle[2] = { 0.f, 0.f };
+	_float	m_vMinCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMaxCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
 	_float	m_vMinMaxRange_Particle[2] = { 0.f, 0.f };
 
 	/* For.Rotation */
@@ -288,8 +295,11 @@ private:
 
 #pragma region Instance(Mesh) 옵션 시작
 private:
-	_int m_iNumInstance_Mesh	= { 1000 };
-	_int m_iMaxNumInstance_Mesh = { 1000 };
+	_int m_iNumInstance_Mesh	= { 20 };
+	_int m_iMaxNumInstance_Mesh = { 20 };
+
+
+	_int	m_iRecycle_Mesh = { 0 };
 
 	_float	m_vMinMaxLifeTime_Mesh[2] = { 0.f, 0.f };	// 라이프타임
 

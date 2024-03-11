@@ -42,7 +42,7 @@ CEffect* CEffect_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLay
 	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
 
 	if (nullptr != pOwner)
-		pEffect->Set_Object_Owner(pOwner);	// 부모 설정 (부모가 있고, 이펙트의 bParentPivot가 True이면 오너객체를 따라다님)
+		pEffect->Set_Object_Owner(pOwner);	// 부모 설정 (부모가 있고, 이펙트의 bParentPivot이 True이면 오너객체를 따라다님)
 
 	pEffect->Load_FromJson(In_Json);
 	

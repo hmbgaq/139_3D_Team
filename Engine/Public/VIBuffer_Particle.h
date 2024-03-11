@@ -15,16 +15,24 @@ public:
 		// 저장해야 하는 고정 정보들
 		_int		iCurNumInstance = { 500 };	// 초기화 값이 Max인스턴스 개수가 됨
 
+
+		/* Types */
+		_bool		bRecycle = { TRUE };			// 입자를 재사용 할건지
+		_bool		bReverse = { FALSE };			// 진행방향 리버스
+		TYPE_ACTION eType_Action = { SPARK };		// 움직이는 모양
 		TYPE_FADE	eType_Fade = { FADE_NONE };
+
 
 		/* LifeTime */
 		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
+
 
 		/* RigidBody */
 		_bool		bUseRigidBody = { TRUE };
 		_bool		bKinetic = { TRUE };	// 키네틱, 즉 TRUE면 속도 계산 함)
 		_bool		bUseGravity = { TRUE };
 		FORCE_MODE	eForce_Mode = { FORCE_MODE::IMPULSE };
+
 
 		_float		fGravity = { -9.8f };			// 중력 가속도
 		_float		fFriction = { 0.1f };			// 마찰 계수
@@ -38,9 +46,8 @@ public:
 		_float2		vMinMaxSpeed = { 1.f, 1.f };
 
 		/* For.Position */
-		_float2		vMinMaxCenterX = { 0.f, 0.f };
-		_float2		vMinMaxCenterY = { 0.f, 0.f };
-		_float2		vMinMaxCenterZ = { 0.f, 0.f };
+		_float3		vMinCenterOffsetPos = { 0.f, 0.f, 0.f };
+		_float3		vMaxCenterOffsetPos = { 0.f, 0.f, 0.f };
 
 		_float2		vMinMaxRange = { 0.1f, 3.f };
 
@@ -72,7 +79,6 @@ public:
 		_float		fTimeAcc = { 0.f };			// 시간 누적
 		_float		fLifeTimeRatio = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
 
-		_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };	// 센터 위치
 
 		// 크기
 		_float		fUpScaleTimeAcc = { 0.f };
@@ -108,12 +114,23 @@ public:
 		_float	fLifeTime = { 1.f };
 		_float  fLifeTimeRatios = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
 
+
+		// 위치
+		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
+
 		// 크기
 		_float2	vCurScales	= { 1.f, 1.f };
 		_float2	vMaxScales = { 1.f, 1.f };
 
 		// 색
 		_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f };
+
+		void Reset_ParticleTimes()
+		{
+			fTimeAccs = { 0.f };
+			fLifeTimeRatios = { 0.f };
+		}
+
 
 	} PARTICLE_INFO_DESC;
 
@@ -135,6 +152,8 @@ public:
 
 		_float3			vAccel = {0.f, 0.f, 0.f};		// 가속도
 		_float3			vVelocity = { 0.f, 0.f, 0.f };	// 속도
+
+		_float3			vDir = { 1.f, 0.f, 0.f };
 
 		_float			fMaxSpeed = { 1.f };
 		_float			fCurSpeed = { 1.f };

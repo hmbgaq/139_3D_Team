@@ -88,6 +88,7 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 				m_tVoidDesc.bDissolve = TRUE;
 				if (m_tVoidDesc.bDissolve)
 				{
+					
 					m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
 				}
 
@@ -183,7 +184,11 @@ void CEffect_Instance::ReSet_Effect()
 	m_tVoidDesc.fDissolveAmount = 0.f;
 	m_tVoidDesc.bDissolve = FALSE;
 
-	m_pVIBufferCom->ReSet();
+	if (!m_pVIBufferCom->Get_Desc()->bRecycle)
+	{
+		m_pVIBufferCom->ReSet();
+	}
+
 }
 
 void CEffect_Instance::End_Effect()
@@ -368,7 +373,7 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tVoidDesc.fDissolveAmount, sizeof(_float)));
 
 
-
+	/* Distortion */
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3))))
@@ -385,6 +390,11 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tDistortionDesc.fDistortionBias, sizeof(_float))))
 		return E_FAIL;
+
+
+	/* RimLight */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tInstanceDesc.vRimColor, sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_tInstanceDesc.fRimPower, sizeof(_float)));
 
 
 
