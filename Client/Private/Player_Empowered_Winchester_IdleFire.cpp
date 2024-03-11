@@ -17,10 +17,8 @@ CState<CPlayer>* CPlayer_Empowered_Winchester_IdleFire::Update(CPlayer* pActor, 
 
 	if (pActor->Is_UpperAnimation_End())
 	{
-		return Normal_State(pActor, fTimeDelta, g_iAnimIndex);
+		//return Normal_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
-
-	//return nullptr;
 
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }

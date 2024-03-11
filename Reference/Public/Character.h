@@ -149,10 +149,17 @@ public:	//!For Animation Split
 	void Set_Splitted(_bool _bIsSplitted) { m_pBody->Set_Splitted(_bIsSplitted); };
 
 
+public:
+	void Set_StiffnessRate(_float fStiffnessRate);
+	void Set_StiffnessRate_Upper(_float fStiffnessRate);
+
+
+
 protected:
 	_int m_iHp = { 1 };
 	//Power m_eStrength = { Power::Light };
 	_float m_fStiffnessRate = { 1.f };
+
 
 public:
 	_float m_fCurrentTrackPosition = {0.f};

@@ -236,10 +236,18 @@ CState<CPlayer>* CPlayer_State::Rifle_State(CPlayer* pActor, _float fTimeDelta, 
 
 CState<CPlayer>* CPlayer_State::Winchester_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	CState<CPlayer>* pState = { nullptr };
+	//CState<CPlayer>* pState = { nullptr };
 
-	pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	//pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Winchester_LowerHolster::g_iAnimIndex != _iAnimIndex)
+		{
+			return new CPlayer_Winchester_LowerHolster();
+		}
+	}
 
 	return nullptr;
 }
@@ -640,7 +648,13 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 {
 	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
 	{
-		CPlayer::Player_State eAnimIndex = (CPlayer::Player_State)_iAnimIndex;
+		//if (CPlayer_Winchester_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+		//	return new CPlayer_Winchester_WeaponUnholster();
+
+		if (CPlayer_Winchester_Ironsights_AimPose::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Winchester_Ironsights_AimPose();
+
+		/*CPlayer::Player_State eAnimIndex = (CPlayer::Player_State)_iAnimIndex;
 
 		if (false == pActor->Is_Splitted())
 		{
@@ -668,20 +682,8 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 		if (m_pGameInstance->Mouse_Down(DIM_LB) && eAnimIndex == CPlayer::Player_State::Player_Winchester_Ironsights_AimPose)
 		{
 			return new CPlayer_Winchester_Ironsights_Reload_01();
-		}
+		}*/
 
-	}
-
-	if (m_pGameInstance->Mouse_Up(DIM_RB))
-	{
-		if (CPlayer_Winchester_LowerHolster::g_iAnimIndex != _iAnimIndex)
-		{
-			return new CPlayer_Winchester_LowerHolster();
-		}
-		else if (pActor->Is_UpperAnimation_End())
-		{
-			return Normal_State(pActor, fTimeDelta, _iAnimIndex);
-		}
 	}
 
 	return nullptr;

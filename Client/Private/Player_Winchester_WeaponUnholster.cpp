@@ -17,7 +17,10 @@ CState<CPlayer>* CPlayer_Winchester_WeaponUnholster::Update(CPlayer* pActor, _fl
 
 	//pActor->Aim_Walk(fTimeDelta);
 
-
+	if (pActor->Is_UpperAnimation_End())
+	{
+		return new CPlayer_Winchester_Ironsights_AimPose();
+	}
 
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }

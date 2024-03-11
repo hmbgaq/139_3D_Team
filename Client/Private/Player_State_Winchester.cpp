@@ -15,6 +15,7 @@ CState<CPlayer>* CPlayer_State_Winchester::Update(CPlayer* pActor, _float fTimeD
 void CPlayer_State_Winchester::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+	pActor->Set_StiffnessRate_Upper(1.f);
 }
 
 CState<CPlayer>* CPlayer_State_Winchester::Update_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)

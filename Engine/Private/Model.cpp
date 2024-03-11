@@ -251,6 +251,11 @@ void CModel::Set_StiffnessRate(_float fStiffnessRate)
 	m_Animations[m_iCurrentAnimIndex]->Set_StiffnessRate(fStiffnessRate);
 }
 
+void CModel::Set_StiffnessRate_Upper(_float fStiffnessRate)
+{
+	m_Animations[m_iUpperAnimIndex]->Set_StiffnessRate(fStiffnessRate);
+}
+
 _matrix CModel::Get_CombinedMatrix(_uint iBoneIndex)
 {
 	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();

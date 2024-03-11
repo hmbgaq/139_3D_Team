@@ -39,6 +39,7 @@ public:
 
 
 	void					Set_StiffnessRate(_float fStiffnessRate);
+	void					Set_StiffnessRate_Upper(_float fStiffnessRate);
 
 	_matrix					Get_PivotMatrix() { return m_PivotMatrix; }
 	_matrix					Get_CombinedMatrix(_uint iBoneIndex);

@@ -65,6 +65,11 @@ public:
 		m_pModelCom->Set_StiffnessRate(fStiffnessRate);
 	}
 
+	void Set_StiffnessRate_Upper(_float fStiffnessRate) {
+		m_pModelCom->Set_StiffnessRate_Upper(fStiffnessRate);
+	}
+
+
 
 #ifdef _DEBUG
 public:

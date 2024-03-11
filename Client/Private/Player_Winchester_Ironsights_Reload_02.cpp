@@ -21,5 +21,5 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_Reload_02::Update(CPlayer* pActor
 void CPlayer_Winchester_Ironsights_Reload_02::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
-	pActor->Set_Splitted(false);
+	//pActor->Set_Splitted(false);
 }

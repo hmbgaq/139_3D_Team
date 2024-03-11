@@ -1,6 +1,8 @@
 #include "..\Public\Player_Winchester_Ironsights_Reload_01.h"
 #include "GameInstance.h"
 
+#include "Player_Winchester_Ironsights_AimPose.h"
+
 void CPlayer_Winchester_Ironsights_Reload_01::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -15,11 +17,16 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_Reload_01::Update(CPlayer* pActor
 
 	pActor->Aim_Walk(fTimeDelta);
 
+	if (pActor->Is_UpperAnimation_End())
+	{
+		return new CPlayer_Winchester_Ironsights_AimPose();
+	}
+
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CPlayer_Winchester_Ironsights_Reload_01::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
-	pActor->Set_Splitted(false);
+	//pActor->Set_Splitted(false);
 }

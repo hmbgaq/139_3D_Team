@@ -485,6 +485,16 @@ void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE 
 	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState);
 }
 
+void CCharacter::Set_StiffnessRate(_float fStiffnessRate)
+{
+	m_pBody->Set_StiffnessRate(fStiffnessRate);
+}
+
+void CCharacter::Set_StiffnessRate_Upper(_float fStiffnessRate)
+{
+	m_pBody->Set_StiffnessRate_Upper(fStiffnessRate);
+}
+
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {
 	return m_pBody->Picking(vPickedPos);
