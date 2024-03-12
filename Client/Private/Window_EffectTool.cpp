@@ -571,6 +571,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						ImGui::RadioButton(" Kinematic_Particle ", &m_iKinetic_Particle, 1);
 						if (0 == m_iKinetic_Particle)
 						{
+
 							m_pParticleBufferDesc->bKinetic = TRUE;
 						}
 						else if (1 == m_iKinetic_Particle)
@@ -2935,10 +2936,19 @@ void CWindow_EffectTool::Update_EffectList_Window()
 	if (nullptr != m_pModel_Preview)
 	{
 		ImGui::SameLine();
-		if (ImGui::Button("         Skull Test        "))
+		if (nullptr == m_pTestEffect)
 		{
-			CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Skull.json", m_pModel_Preview);
+			if (ImGui::Button("         Skull Test        "))
+			{
+				m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Skull.json", m_pModel_Preview);
+			}
 		}
+		else
+		{
+			m_pTestEffect->Set_Dead(TRUE);
+			m_pTestEffect = nullptr;
+		}
+
 	}
 
 
