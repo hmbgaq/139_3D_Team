@@ -111,6 +111,7 @@ public:
 	_bool					Is_Inputable_Front(_uint _iIndexFront);
 	_bool					Compare_TrackPosition_Is_Over(_float fTrackPosition);
 	_float					Get_TrackPosition();
+	void					Set_TrackPosition(_int iNewTrackPosition);
 	void					Write_Names(const string& strModelFilePath);
 
 public:

@@ -107,16 +107,20 @@ HRESULT CInfected::Ready_Components()
 
 void CInfected::Hitted_Left(Power ePower)
 {
+	cout << "Hitted_Left" << endl;
 	/* 무기 강도 */
 	switch (ePower)
 	{
 	case Engine::Light:
+		cout << "Light " << endl;
 		m_pActor->Set_State(new CInfected_Scared_03());
 		break;
 	case Engine::Medium:
+		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
 		break;
 	case Engine::Heavy:
+		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_FL_01_NEW());
 		break;
 	default:
@@ -127,15 +131,19 @@ void CInfected::Hitted_Left(Power ePower)
 
 void CInfected::Hitted_Right(Power ePower)
 {
+	cout << "Hitted_Right" << endl;
 	switch (ePower)
 	{
 	case Engine::Light:
+		cout << "Light " << endl;
 		m_pActor->Set_State(new CInfected_Scared_02());
 		break;
 	case Engine::Medium:
+		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
 		break;
 	case Engine::Heavy:
+		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_FR_01_NEW());
 		break;
 	default:
@@ -146,15 +154,19 @@ void CInfected::Hitted_Right(Power ePower)
 
 void CInfected::Hitted_Front(Power ePower)
 {
+	cout << "Hitted_Front" << endl;
 	switch (ePower)
 	{
 	case Engine::Light:
+		cout << "Light " << endl;
 		m_pActor->Set_State(new CInfected_HitNormalToStun_01_NEW());
 		break;
 	case Engine::Medium:
+		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
 		break;
 	case Engine::Heavy:
+		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_F_01_NEW());
 		break;
 	default:
@@ -165,6 +177,7 @@ void CInfected::Hitted_Front(Power ePower)
 
 void CInfected::Hitted_Knock(_bool bIsCannonball)
 {
+	cout << "Hitted_Knock" << endl;
 	if (bIsCannonball)
 	{
 		m_pActor->Set_State(new CInfected_KnockFrontCannonball_F_01_TEMP());
@@ -177,6 +190,7 @@ void CInfected::Hitted_Knock(_bool bIsCannonball)
 
 void CInfected::Hitted_Dead(Power ePower)
 {
+	cout << "Hitted_Dead" << endl;
 	switch (ePower)
 	{
 	case Engine::Light:
@@ -193,40 +207,6 @@ void CInfected::Hitted_Dead(Power ePower)
 		break;
 	}
 }
-
-
-
-
-//CInfected* CInfected::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-//{
-//	CInfected* pInstance = new CInfected(pDevice, pContext, strPrototypeTag);
-//
-//	/* 원형객체를 초기화한다.  */
-//	if (FAILED(pInstance->Initialize_Prototype()))
-//	{
-//		MSG_BOX("Failed to Created : CInfected");
-//		Safe_Release(pInstance);
-//	}
-//	return pInstance;
-//}
-//
-//CGameObject* CInfected::Clone(void* pArg)
-//{
-//	CInfected* pInstance = new CInfected(*this);
-//
-//	/* 원형객체를 초기화한다.  */
-//	if (FAILED(pInstance->Initialize(pArg)))
-//	{
-//		MSG_BOX("Failed to Cloned : CInfected");
-//		Safe_Release(pInstance);
-//	}
-//	return pInstance;
-//}
-//
-//CGameObject* CInfected::Pool()
-//{
-//	return new CInfected(*this);
-//}
 
 void CInfected::Free()
 {

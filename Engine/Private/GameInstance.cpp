@@ -30,72 +30,54 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumCollsionLay
 {
 	/* 그래픽 디바이스를 초기화 하자.*/
 	m_pGraphic_Device = CGraphic_Device::Create(GraphicDesc, ppDevice, ppContext);
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pGraphic_Device, E_FAIL);
 
 	m_pInput_Device = CInput_Device::Create(hInstance, GraphicDesc.hWnd);
-	if (nullptr == m_pInput_Device)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pInput_Device, E_FAIL);
 
 	/* 타이머를 사용할 준비를 하자. */
 	m_pTimer_Manager = CTimer_Manager::Create();
-	if (nullptr == m_pTimer_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pTimer_Manager, E_FAIL);
 
 	m_pLevel_Manager = CLevel_Manager::Create();
-	if (nullptr == m_pLevel_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pLevel_Manager, E_FAIL);
 
 	m_pObject_Manager = CObject_Manager::Create(iNumLevels);
-	if (nullptr == m_pObject_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pObject_Manager, E_FAIL);
 
 	m_pComponent_Manager = CComponent_Manager::Create(iNumLevels);
-	if (nullptr == m_pComponent_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pComponent_Manager, E_FAIL);
 
 	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
-	if (nullptr == m_pFont_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pFont_Manager, E_FAIL);
 
 	m_pTarget_Manager = CTarget_Manager::Create(*ppDevice, *ppContext);
-	if (nullptr == m_pTarget_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
 
 	m_pRenderer = CRenderer::Create(*ppDevice, *ppContext);
-	if (nullptr == m_pRenderer)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pRenderer, E_FAIL);
 
 	m_pPipeLine = CPipeLine::Create();
-	if (nullptr == m_pPipeLine)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pPipeLine, E_FAIL);
 
 	m_pLight_Manager = CLight_Manager::Create();
-	if (nullptr == m_pLight_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
 
 	m_pFrustum = CFrustum::Create();
-	if (nullptr == m_pFrustum)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pFrustum, E_FAIL);
 
 	m_pCollision_Manager = CCollision_Manager::Create(iNumCollsionLayer);
-	if (nullptr == m_pCollision_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pCollision_Manager, E_FAIL);
 
 	m_pEvent_Manager = CEvent_Manager::Create();
-	if (nullptr == m_pEvent_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pEvent_Manager, E_FAIL);
 
 	//TODO: 레벨 확인헤야
 	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, iNumPhysXCollsionLayer);
-	if (nullptr == m_pPhysX_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pPhysX_Manager, E_FAIL);
 
 	m_pRandom_Manager = CRandom_Manager::Create();
-	if(nullptr == m_pRandom_Manager)
-		return E_FAIL;
-
-
+	NULL_CHECK_RETURN(m_pRandom_Manager, E_FAIL);
 
 	return S_OK;
 }
@@ -400,7 +382,7 @@ HRESULT CGameInstance::Create_PoolObjects(const wstring& strPrototypeTag, _uint 
 
 void CGameInstance::Fill_PrototypeTags(vector<string>* _vector)
 {
-	NULL_CHECK_RETURN(m_pObject_Manager, );
+	NULL_CHECK_RETURN(m_pObject_Manager, );	
 
 	m_pObject_Manager->Fill_PrototypeTags(_vector);
 }
@@ -772,6 +754,13 @@ HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuff
 	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
 
 	return m_pLight_Manager->Render(pShader, pVIBuffer);
+}
+
+_bool CGameInstance::Remove_Light(const _uint& iIndex)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+
+	return m_pLight_Manager->Remove_Light(iIndex);
 }
 
 HRESULT CGameInstance::Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp)

@@ -6,6 +6,7 @@
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
 #include "Environment_LightObject.h"
+#include "Environment_SpecialObject.h"
 
 #include "Field.h"
 
@@ -24,6 +25,7 @@
 #include "Sky.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
+#include "Navigation.h"
 
 static ImGuizmo::OPERATION InstanceCurrentGizmoOperation;
 static ImGuizmo::MODE	   InstanceCurrentGizmoMode;
@@ -65,7 +67,11 @@ HRESULT CWindow_MapTool::Initialize()
 
 	if(m_pSkybox == nullptr)
 		return E_FAIL;
-	//m_mapPreviewInstance
+
+	m_pNavigation = CData_Manager::GetInstance()->Get_Navigation();
+
+	if (m_pNavigation == nullptr)
+		return E_FAIL;
 	
 	return S_OK;
 }
@@ -100,7 +106,6 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	
 	ImGui::SeparatorText(u8"세이브 / 로드");
 	{
-		
 		if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; m_strDialogPath = "../Bin/DafaFiles/Data_Map/"; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DafaFiles/Data_Map/";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
 	}ImGui::Separator(); 
 
@@ -806,9 +811,6 @@ void CWindow_MapTool::EnvironmentMode_Function()
 
 			ImGui::EndTabItem();
 		}
-	
-		
-
 	
 
 		ImGui::EndTabBar();

@@ -42,17 +42,18 @@ HRESULT CCamera::Initialize(void * pArg)
 	m_fFar = pCameraDesc->fFar;
 
 	/* Cascade */
-	// Set the range values
-	m_arrCascadeRanges[0] = m_fNear; /*  { Cam_near, Cam_far, Cam_fovY, Cam_aspectRatio };*/
-	m_arrCascadeRanges[1] = 10.0f;
-	m_arrCascadeRanges[2] = 25.0f;
-	m_arrCascadeRanges[3] = m_fCascadeTotalRange;
+	//// Set the range values
+	//m_arrCascadeRanges[0] = m_fNear; /*  { Cam_near, Cam_far, Cam_fovY, Cam_aspectRatio };*/
+	//m_arrCascadeRanges[1] = 10.0f;
+	//m_arrCascadeRanges[2] = 25.0f;
+	//m_arrCascadeRanges[3] = m_fCascadeTotalRange;
+	//
+	//for (int i = 0; i < m_iTotalCascades; i++)
+	//{
+	//	m_arrCascadeBoundCenter[i] = _float3(0.0f, 0.0f, 0.0f);
+	//	m_arrCascadeBoundRadius[i] = 0.0f;
+	//}
 
-	for (int i = 0; i < m_iTotalCascades; i++)
-	{
-		m_arrCascadeBoundCenter[i] = _float3(0.0f, 0.0f, 0.0f);
-		m_arrCascadeBoundRadius[i] = 0.0f;
-	}
 	return S_OK;
 }
 
@@ -73,6 +74,11 @@ void CCamera::Late_Tick(_float fTimeDelta)
 {
 }
 
+
+void CCamera::Set_Pos(float4x4 vPos)
+{
+	m_arrCameraWorld = vPos;
+}
 
 void CCamera::Update_Cascade(const float3& vDirectionalDir)
 {

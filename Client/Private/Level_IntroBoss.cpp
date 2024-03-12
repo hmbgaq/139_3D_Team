@@ -67,9 +67,9 @@ void CLevel_IntroBoss::Tick(_float fTimeDelta)
 	if (false == m_bPlayerStartRotate)
 	{
 		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-
-		pPlayer->Set_Position(_float3(60.0f, 0.f, 76.67f));
-		pPlayer->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+		
+		pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
+		
 
 		CSpringCamera* pSpringCamera = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 
@@ -108,33 +108,33 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
 
 		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
 	}
-	{
-		ZeroMemory(&LightDesc, sizeof LightDesc);
-
-		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-		LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
-		LightDesc.fRange = 20.f;
-		LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
-		LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
-		LightDesc.vSpecular = LightDesc.vDiffuse;
-		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-
-		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-		LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
-		LightDesc.fRange = 20.f;
-		LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
-		LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
-		LightDesc.vSpecular = LightDesc.vDiffuse;
-		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-
-		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-		LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
-		LightDesc.fRange = 20.f;
-		LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
-		LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
-		LightDesc.vSpecular = LightDesc.vDiffuse;
-		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-	}
+// 	{
+// 		ZeroMemory(&LightDesc, sizeof LightDesc);
+// 
+// 		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+// 		LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
+// 		LightDesc.fRange = 20.f;
+// 		LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
+// 		LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
+// 		LightDesc.vSpecular = LightDesc.vDiffuse;
+// 		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+// 
+// 		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+// 		LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
+// 		LightDesc.fRange = 20.f;
+// 		LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
+// 		LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
+// 		LightDesc.vSpecular = LightDesc.vDiffuse;
+// 		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+// 
+// 		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+// 		LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
+// 		LightDesc.fRange = 20.f;
+// 		LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
+// 		LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
+// 		LightDesc.vSpecular = LightDesc.vDiffuse;
+// 		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+// 	}
 	return S_OK;
 }
 
@@ -197,11 +197,12 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Monster(const wstring& strLayerTag, void* 
 
 	/*	}*/
 
-	{
-		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_VampireCommander"));
+	{//Layer_Boss
+		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_Boss", TEXT("Prototype_GameObject_VampireCommander"));
 	
 		if (nullptr == pMonster)	return E_FAIL;
-		pMonster->Set_Position(_float3(60.0f, 0.f, 29.84f));
+		pMonster->Set_Position(_float3(60.0f, 0.f, 53.26f));
+		pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
 	}
 
 	return S_OK;
@@ -341,19 +342,45 @@ HRESULT CLevel_IntroBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 	}
 
-	CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC Desc;
+	//CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc;
+	//
+	//SpecialDesc.bAnimModel = false;
+	//SpecialDesc.bPreview = false;
+	//
+	//SpecialDesc.strModelTag = L"Prototype_Component_Model_BloodPoolsRaid";
+	////Desc.iShaderPassIndex = 6;
+	//XMStoreFloat4x4(&SpecialDesc.WorldMatrix, XMMatrixIdentity());
+	//
+	//
+	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &SpecialDesc)))
+	//	return E_FAIL;
 
-	Desc.bAnimModel = false;
-	Desc.bPreview = false;
-	
-	Desc.strModelTag = L"Prototype_Component_Model_BloodPoolsRaid";
-	//Desc.iShaderPassIndex = 6;
-	XMStoreFloat4x4(&Desc.WorldMatrix, XMMatrixIdentity());
+
+	CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
+
+	LightObjectDesc.bAnimModel = false;
+	LightObjectDesc.bPreview = false;
+	LightObjectDesc.strModelTag = L"Prototype_Component_Model_SecretTempleStatue1";
+	XMStoreFloat4x4(&LightObjectDesc.WorldMatrix, XMMatrixIdentity());
+
+	LightObjectDesc.iLightIndex = 4;
+
+
+	LIGHT_DESC LightDesc;
+
 	
 
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &Desc)))
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	XMStoreFloat4(&LightDesc.vPosition, XMLoadFloat4x4(&LightObjectDesc.WorldMatrix).r[3]);
+	LightDesc.fRange = 100.f;
+	LightDesc.vDiffuse = _float4(0.f, 1.0f, 0.0f, 1.f);
+	LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	LightObjectDesc.LightDesc = LightDesc;
+
+	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc)))
 		return E_FAIL;
-
 
 	return S_OK;
 

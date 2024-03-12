@@ -12,7 +12,8 @@ public:
 
 public:
 	static const _uint g_iAnimIndex = CVampireCommander::VampireCommander_State::VampireCommander_AttackRanged_01;
-
+public:
+	_bool	m_bfirstCheck = true;
 };
 
 END

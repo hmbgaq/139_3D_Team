@@ -275,6 +275,10 @@ _bool CCharacter::Compare_TrackPosition_Is_Over(_float fTrackPosition)
 {
 	return m_pBody->Compare_TrackPosition_Is_Over(fTrackPosition);
 }
+void CCharacter::Set_TrackPosition(_int iNewTrackPostion)
+{
+	return m_pBody->Set_TrackPosition(iNewTrackPostion);
+}
 
 void CCharacter::Go_Straight(_float fTimeDelta)
 {

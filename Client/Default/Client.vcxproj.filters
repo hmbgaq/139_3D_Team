@@ -2875,6 +2875,78 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light\Back">
       <UniqueIdentifier>{2692945d-b41c-4775-895d-4287484c7e26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Weapon">
+      <UniqueIdentifier>{a64204be-152c-4c7b-a3f0-a7aa5eea731e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent\Parts\Weapon">
+      <UniqueIdentifier>{5313ca6d-7bde-4fe9-b7c7-9c1f48cd5d4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B\Weapon">
+      <UniqueIdentifier>{0d3f046f-71ee-4c1d-bbe3-813cdc13fe2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Weapon">
+      <UniqueIdentifier>{f032ab0a-68d4-4147-aba0-7eb64c75a2a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit">
+      <UniqueIdentifier>{b864eb9d-6c1d-4612-8cd1-9e453ebb5ead}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit\0. Parent">
+      <UniqueIdentifier>{16cfa1c0-935b-4d4f-b801-1368eb2b70b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit\1. Child">
+      <UniqueIdentifier>{fdba7f41-e226-4bc5-84b2-c820bd85a0e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit\2. State">
+      <UniqueIdentifier>{8ad1b621-2db4-4b93-8b8c-a70f45e023c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit\1. Child\A">
+      <UniqueIdentifier>{1b8e73aa-67c2-48f7-b6b1-c35fe6ffb20c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit\1. Child\B">
+      <UniqueIdentifier>{a4803c91-aac2-492e-954c-fe77834f102c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit\1. Child\C">
+      <UniqueIdentifier>{a18679bf-047a-4f5a-a22d-32bf8cdaabb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit\1. Child\D">
+      <UniqueIdentifier>{19c617f1-8f9b-424f-8516-dd8143d35820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit\0. Parent\Parts">
+      <UniqueIdentifier>{ef8cf770-2c54-4ea1-bfea-4d0c69765f7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit\0. Parent\Parts\Body">
+      <UniqueIdentifier>{52aac7cb-b868-4f60-be16-f2039c63d9ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit\0. Parent\Parts\Weapon">
+      <UniqueIdentifier>{3f5373c3-5642-4cd4-9444-5d9b25b550a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile">
+      <UniqueIdentifier>{e09b72df-dd52-4d32-aa86-a48dd3aee55d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range1">
+      <UniqueIdentifier>{3631bb27-8a49-4b63-97bc-5a121abbfadd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range3">
+      <UniqueIdentifier>{6239b706-fbbe-48a5-9ba9-9f73c26fa947}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn">
+      <UniqueIdentifier>{ecb572c2-9e8e-4eba-ba6a-e9915bfbb79e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\0.parent">
+      <UniqueIdentifier>{dab2d1d3-9913-4f9b-9274-46b3ab1284f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL180">
+      <UniqueIdentifier>{dcae3962-b9ef-43a8-86c3-cd3d22c6b50d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL90">
+      <UniqueIdentifier>{88c46a99-ddba-4638-bd37-5111f291a1cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR90">
+      <UniqueIdentifier>{661a0d12-3815-4a51-8e88-92abc7d8f25b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR180">
+      <UniqueIdentifier>{73b3ecdc-e232-4990-88da-8c3636a1130a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3446,9 +3518,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Assassin_State.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\0. Origin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Monster_Character.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Assassin_IdleAct_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\1. Idle\1</Filter>
@@ -5694,7 +5763,6 @@
     <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\6. Knock\Front</Filter>
     </ClInclude>
-
     <ClInclude Include="..\Public\Player_WhipSlam.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Slam</Filter>
     </ClInclude>
@@ -5955,6 +6023,42 @@
     </ClInclude>
     <ClInclude Include="..\Public\Character_Client.h">
       <Filter>02.GameObjects\00. Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Infected_A.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Infected.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster_Character.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Infected_B.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Infected_C.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Projectile_Range3.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Projectile_Range1.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Trun.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\0.parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_TrunR180.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR180</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_TurnR90.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR90</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_TrunL90.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL90</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_TrunL180.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL180</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -6640,9 +6744,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Assassin_State.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\0. Origin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Monster_Character.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Assassin_IdleAct_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Assassin\State\1. Idle\1</Filter>
@@ -8377,6 +8478,42 @@
     </ClCompile>
     <ClCompile Include="..\Private\Character_Client.cpp">
       <Filter>02.GameObjects\00. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Infected_A.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_Character.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Infected.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\0. Parent\Parts\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Infected_B.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Infected_C.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Projectile_Range3.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Projectile_Range1.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Trun.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\0.parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_TrunR180.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR180</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_TurnR90.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR90</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_TrunL90.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL90</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_TrunL180.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL180</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

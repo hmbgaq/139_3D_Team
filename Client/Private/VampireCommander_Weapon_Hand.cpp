@@ -109,7 +109,7 @@ void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 {
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 	CVampireCommander* parent = dynamic_cast<CVampireCommander*>(Get_Object_Owner());
-	if (nullptr != pTarget_Character && m_bSynced == false)
+	if (nullptr != pTarget_Character && m_bSynced == false)// 일반 타격 
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
 		pTarget_Character->Set_Hitted(m_iDamage, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
@@ -121,7 +121,7 @@ void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 		pEffect->Set_Position(vPos);
 
 	}
-	else if(nullptr != pTarget_Character && m_bSynced == true)
+	else if(nullptr != pTarget_Character && m_bSynced == true)//잡기 걸렸을때 
 	{
 		parent->Get_Actor()->Set_State(new CVampireCommander_SyncedAttack);
 		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();

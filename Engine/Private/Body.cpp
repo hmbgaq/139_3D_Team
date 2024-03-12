@@ -93,7 +93,7 @@ HRESULT CBody::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	_uint iPass = 0; // false == m_bDissolve ? 0 : 3;
+	_uint iPass = m_iShaderPass; // false == m_bDissolve ? 0 : 3;
 
 	//if (FAILED(m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
 	//	return E_FAIL;
@@ -198,6 +198,11 @@ _bool CBody::Compare_TrackPosition_Is_Over(_float fTrackPosition)
 {
 	return m_pModelCom->Compare_TrackPosition_Is_Over(fTrackPosition);
 }
+void CBody::Set_TrackPosition(_int iNewTrackPosition)
+{
+	return m_pModelCom->Set_TrackPosition(iNewTrackPosition);
+}
+
 #ifdef _DEBUG
 
 void CBody::Set_MouseMove(_float fTimeDelta)

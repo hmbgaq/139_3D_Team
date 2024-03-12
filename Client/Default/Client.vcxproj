@@ -1038,6 +1038,8 @@
     <ClInclude Include="..\Public\VampireCommander_Leap_Strat.h" />
     <ClInclude Include="..\Public\VampireCommander_Melee1.h" />
     <ClInclude Include="..\Public\VampireCommander_Melee2.h" />
+    <ClInclude Include="..\Public\VampireCommander_Projectile_Range1.h" />
+    <ClInclude Include="..\Public\VampireCommander_Projectile_Range3.h" />
     <ClInclude Include="..\Public\VampireCommander_Ranged1.h" />
     <ClInclude Include="..\Public\VampireCommander_Ranged2.h" />
     <ClInclude Include="..\Public\VampireCommander_Ranged3.h" />
@@ -1060,6 +1062,11 @@
     <ClInclude Include="..\Public\VampireCommander_Taunt3.h" />
     <ClInclude Include="..\Public\VampireCommander_Taunt4.h" />
     <ClInclude Include="..\Public\VampireCommander_Taunt5.h" />
+    <ClInclude Include="..\Public\VampireCommander_Trun.h" />
+    <ClInclude Include="..\Public\VampireCommander_TrunL180.h" />
+    <ClInclude Include="..\Public\VampireCommander_TrunL90.h" />
+    <ClInclude Include="..\Public\VampireCommander_TrunR180.h" />
+    <ClInclude Include="..\Public\VampireCommander_TurnR90.h" />
     <ClInclude Include="..\Public\VampireCommander_Walk_B.h" />
     <ClInclude Include="..\Public\VampireCommander_Walk_BL.h" />
     <ClInclude Include="..\Public\VampireCommander_Walk_BL135.h" />
@@ -1077,6 +1084,10 @@
     <ClInclude Include="..\Public\UI_Option_SelectBox.h" />
     <ClInclude Include="..\Public\UI_Option_Window.h" />
     <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h" />
+    <ClInclude Include="..\Public\Weapon_Infected.h" />
+    <ClInclude Include="..\Public\Weapon_Infected_A.h" />
+    <ClInclude Include="..\Public\Weapon_Infected_B.h" />
+    <ClInclude Include="..\Public\Weapon_Infected_C.h" />
     <ClInclude Include="..\Public\Window_Style.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\TestEvent.h" />
@@ -1780,6 +1791,8 @@
     <ClCompile Include="..\Private\VampireCommander_Leap_Strat.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Melee1.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Melee2.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Projectile_Range1.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Projectile_Range3.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Ranged1.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Ranged2.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Ranged3.cpp" />
@@ -1802,6 +1815,11 @@
     <ClCompile Include="..\Private\VampireCommander_Taunt3.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Taunt4.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Taunt5.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Trun.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_TrunL180.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_TrunL90.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_TrunR180.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_TurnR90.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Walk_B.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Walk_BL.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Walk_BL135.cpp" />
@@ -1819,6 +1837,10 @@
     <ClCompile Include="..\Private\UI_Option_SelectBox.cpp" />
     <ClCompile Include="..\Private\UI_Option_Window.cpp" />
     <ClCompile Include="..\Private\VampireTank_KnockFrontLight_F_01.cpp" />
+    <ClCompile Include="..\Private\Weapon_Infected.cpp" />
+    <ClCompile Include="..\Private\Weapon_Infected_A.cpp" />
+    <ClCompile Include="..\Private\Weapon_Infected_B.cpp" />
+    <ClCompile Include="..\Private\Weapon_Infected_C.cpp" />
     <ClCompile Include="..\Private\Window_Style.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\TestEvent.cpp" />
