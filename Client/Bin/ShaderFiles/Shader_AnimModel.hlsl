@@ -1,14 +1,14 @@
 #include "Shader_Defines.hlsli"
-/* -------------- 필 독 사 항 ------------------- */
+/* -------------- 공 지 사 항 ------------------- */
 // 
-// Bloom , Blur, RimLight 사용법 : 노션 - 개인페이지 Shader사용법 */ 
+//
 //
 /* ----------------------------------------- */
 
 /* Base */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_BoneMatrices[800];
-float4 g_vCamPosition; 
+float4 g_vCamPosition;
 float g_fCamFar;
 float g_fLightFar;
 float g_TimeDelta;
@@ -20,24 +20,21 @@ Texture2D g_DissolveTexture;
 Texture2D g_MaskingTexture;
 
 /* =========== Value =========== */
-float     g_fDissolveWeight;                       /* Dissolve  */
+float g_fDissolveWeight; /* Dissolve  */
 
-matrix    g_ReflectionMatrix;                      /* Reflection */
+float4 g_vLineColor; /* OutLine */
+float g_LineThick; /* OutLine */
 
-float4    g_vLineColor;                            /* OutLine */
-float     g_LineThick;                             /* OutLine */
-
-float3    g_vBloomPower = { 0.f, 0.f, 0.f };        /* Bloom */
-float4    g_vRimColor = { 0.f, 0.f, 0.f, 0.f };     /* RimLight */
-float     g_fRimPower = 5.f;
-
+float3 g_vBloomPower = { 0.f, 0.f, 0.f }; /* Bloom */
+float4 g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
+float g_fRimPower = 5.f;
 /* ------------------- function ------------------- */ 
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
 {
     float fRimPower = 1.f - saturate(dot(In_Normal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
     fRimPower = pow(fRimPower, g_fRimPower); // 여기서 강도를 조정한다. 
     
-    float4 vRimColor = g_vRimColor * g_fRimPower;
+    float4 vRimColor = g_vRimColor * fRimPower;
     
     return vRimColor;
 }
@@ -86,11 +83,11 @@ struct PS_IN
 
 struct PS_OUT
 {
-    float4 vDiffuse     : SV_TARGET0;
-    float4 vNormal      : SV_TARGET1;
-    float4 vDepth       : SV_TARGET2;
-    float4 vORM         : SV_TARGET3;
-    float4 vRimBloom    : SV_TARGET4; /* Rim + Bloom */ 
+    float4 vDiffuse : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
+    float4 vORM : SV_TARGET3;
+    float4 vRimBloom : SV_TARGET4; /* Rim + Bloom */
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -123,7 +120,7 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
-/* ------------------- 1 -- Pixel Shader ------------------- */
+/* ------------------- Base Pixel Shader (0) -------------------*/
 
 PS_OUT PS_MAIN(PS_IN In)
 {
@@ -138,11 +135,16 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-  
+ 
+    /* ---------------- New ---------------- */
+    // float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
+    // Out.vDiffuse += vRimColor;
+    // Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    
     return Out;
 }
 
-/* ------------------- 2 -- Pixel Shader ------------------- */
+/* ------------------- Shadow Pixel Shader(2) -------------------*/
 
 struct PS_OUT_SHADOW
 {
@@ -158,10 +160,10 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
     return Out;
 }
 
-/* ------------------- 3 -- Pixel Shader ------------------- */
+/* ------------------- Pixel Shader(3) -------------------*/
 PS_OUT PS_BOSS(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
 
@@ -182,9 +184,8 @@ PS_OUT PS_BOSS(PS_IN In)
     // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
     return Out;
 }
-
-/* ------------------- 4 -- Pixel Shader ------------------- */
-PS_OUT PS_MAIN_EXAMPLE(PS_IN In)
+/* ------------------- Pixel Shader(4) -------------------*/
+PS_OUT PS_MAIN_RIMBLOOM(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
@@ -197,15 +198,15 @@ PS_OUT PS_MAIN_EXAMPLE(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-  
+ 
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
-    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse); // +vRimColor; /* g_vBloomPower */
+    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    
    
     // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
     return Out;
-    
 }
 
 /* ------------------- Technique -------------------*/ 
@@ -259,16 +260,15 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_BOSS();
     }
-
-    pass Example
+    pass RimBloom // 4
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_EXAMPLE();
+        PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM();
     }
 }
