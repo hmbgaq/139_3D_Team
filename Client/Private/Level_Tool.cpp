@@ -23,6 +23,19 @@ HRESULT CLevel_Tool::Initialize()
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
+
+
+	{	//!내비게이션 
+		CNavigation* pNavi = { nullptr };
+
+		pNavi = dynamic_cast<CNavigation*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Navigation2")));
+
+		if (nullptr == pNavi)
+			return E_FAIL;
+
+		CData_Manager::GetInstance()->Set_Navigation(pNavi);
+	}
+
 	if (FAILED(Ready_Imgui()))
 	{
 		Safe_Release(m_pDevice);
@@ -33,16 +46,6 @@ HRESULT CLevel_Tool::Initialize()
 	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 
 
-	{	//!내비게이션 
-		CNavigation* pNavi = { nullptr };
-
-		pNavi = dynamic_cast<CNavigation*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Navigation2")));
-
-		if(nullptr == pNavi)
-			return E_FAIL;
-
-		CData_Manager::GetInstance()->Set_Navigation(pNavi);
-	}
 	
 	return S_OK;
 
