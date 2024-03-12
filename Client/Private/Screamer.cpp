@@ -70,7 +70,6 @@ void CScreamer::Tick(_float fTimeDelta)
 		m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());
 	}
 		
-
 	m_fTimeDelta += fTimeDelta;
 	m_fDissolveWeight += fTimeDelta * 0.5f;
 
@@ -191,16 +190,15 @@ HRESULT CScreamer::Render_Cascade_Shadow(_uint i)
 
 HRESULT CScreamer::Ready_Components()
 {
+	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
 	/* For. Transform */
 	{
 		CGameObject::GAMEOBJECT_DESC tTransformDESC = {};
 		tTransformDESC.fRotationPerSec = 10.f;
 		tTransformDESC.fSpeedPerSec = 10.f;
-
 		FAILED_CHECK(__super::Initialize(&tTransformDESC));
 	}
-
-	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
 	{
@@ -209,9 +207,7 @@ HRESULT CScreamer::Ready_Components()
 
 	/* For.Com_Model */
 	{
-
 		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Screamer"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
-	
 	}
 
 	/* For.Com_Collider */
@@ -219,7 +215,6 @@ HRESULT CScreamer::Ready_Components()
 	{
 		BoundingDesc.fRadius = 1.5f;
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
-		
 		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 	}
 
@@ -242,21 +237,22 @@ HRESULT CScreamer::Bind_ShaderResources()
 	/* Variable */
 	_float gCamFar = m_pGameInstance->Get_CamFar();
 	m_pShaderCom->Bind_RawValue("g_fCamFar", &gCamFar, sizeof(_float));
-	m_pShaderCom->Bind_RawValue("g_TimeDelta", &m_fTimeDelta, sizeof(_float));
-	m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float));
+	//m_pShaderCom->Bind_RawValue("g_TimeDelta", &m_fTimeDelta, sizeof(_float));
+	//m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float));
 
 	/* Texture */
-	m_pBreakTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture");
-	m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
+	//m_pBreakTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture");
+	//m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
 
 	/* Camera */
 	m_vCamPos = m_pGameInstance->Get_CamPosition();
 	m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
 
 	/* RimLight */
-	m_vRimColor = { 0.0f, 1.f, 0.f, 1.f };
-	m_vBloomPower = _float3(1.0f, 1.0f, 1.0f);
+	m_vRimColor = { 0.0f, 0.6f, 0.f, 1.f };
+	m_vBloomPower = _float3(0.7f, 0.7f, 0.7f);
 	m_fRimPower = 5.f;
+
 	m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
 	m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
 	m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
