@@ -27,12 +27,13 @@ float     g_LineThick;                             /* OutLine */
 
 float3    g_vBloomPower = { 0.f, 0.f, 0.f };        /* Bloom */
 float4    g_vRimColor = { 0.f, 0.f, 0.f, 0.f };     /* RimLight */
-
+float     g_fRimPower = 5.f;
 /* ------------------- function ------------------- */ 
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
 {
     float fRimPower = 1.f - saturate(dot(In_Normal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
-    fRimPower = pow(fRimPower, 5.f);
+    fRimPower = pow(fRimPower, g_fRimPower); // 여기서 강도를 조정한다. 
+    
     float4 vRimColor = g_vRimColor * fRimPower;
     
     return vRimColor;
@@ -175,7 +176,7 @@ PS_OUT PS_MAIN_RIMBLOOM(PS_IN In)
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
+    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     

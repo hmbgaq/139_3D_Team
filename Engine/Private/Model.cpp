@@ -658,7 +658,9 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			MultiByteToWideChar((_uint)CP_ACP, 0, szTmp, (_int)strlen(szTmp), szFullPath, (_int)MAX_PATH);
 
-			
+			if (szFileName == "M_Invisible") /* 현재 게임에서 이 텍스쳐를 가지면 투명한 텍스쳐라 가상으로 만들어줘도 터짐 */
+				continue;
+
 			MaterialDesc.pMtrlTextures[j] = CTexture::Create(m_pDevice, m_pContext, szFullPath, 1);
 
 			if (nullptr == MaterialDesc.pMtrlTextures[j])	

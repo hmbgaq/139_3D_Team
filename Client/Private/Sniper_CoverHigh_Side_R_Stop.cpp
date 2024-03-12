@@ -9,7 +9,13 @@ void CSniper_CoverHigh_Side_R_Stop::Initialize(CBandit_Sniper* pActor)
 
 CState<CBandit_Sniper>* CSniper_CoverHigh_Side_R_Stop::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End()) /* 리스폰 하는 애니메이션이 끝난다면 */
+	{
+		cout << "Side Stop end  " << endl;
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
 }
 
 void CSniper_CoverHigh_Side_R_Stop::Release(CBandit_Sniper* pActor)
