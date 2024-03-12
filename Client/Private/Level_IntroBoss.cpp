@@ -68,8 +68,7 @@ void CLevel_IntroBoss::Tick(_float fTimeDelta)
 	{
 		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
-		pPlayer->Set_Position(_float3(60.0f, 0.f, 76.67f));
-		pPlayer->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+		pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
 
 		CSpringCamera* pSpringCamera = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 
@@ -201,7 +200,9 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Monster(const wstring& strLayerTag, void* 
 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_Boss", TEXT("Prototype_GameObject_VampireCommander"));
 	
 		if (nullptr == pMonster)	return E_FAIL;
-		pMonster->Set_Position(_float3(60.0f, 0.f, 29.84f));
+		pMonster->Set_Position(_float3(60.0f, 0.f, 55.f));
+		pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+
 	}
 
 	return S_OK;
