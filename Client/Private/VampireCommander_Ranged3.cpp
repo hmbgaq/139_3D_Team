@@ -12,7 +12,7 @@ void CVampireCommander_Ranged3::Initialize(CVampireCommander* pActor)
 
 CState<CVampireCommander>* CVampireCommander_Ranged3::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
-	if (pActor->Is_Inputable_Front(66))//임시 값 수정 해야 함 
+	if (pActor->Is_Inputable_Front(66))
 	{
 		if (m_bfirstCheck)
 		{

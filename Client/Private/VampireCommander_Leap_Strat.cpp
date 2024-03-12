@@ -17,9 +17,9 @@ void CVampireCommander_Leap_Strat::Initialize(CVampireCommander* pActor)
 		->Set_Force(0.f);
 
 	_float4x4	Temp = XMMatrixIdentity();
-	Temp.m[0][0] = 2.f;
-	Temp.m[1][1] = 2.f;
-	Temp.m[2][2] = 2.f;
+	Temp.m[0][0] = 1.5f;
+	Temp.m[1][1] = 1.5f;
+	Temp.m[2][2] = 1.5f;
 
 	pWeapon->Get_Colliders().back()->Get_Bounding()->Set_matScale(Temp);
 	
@@ -42,7 +42,7 @@ CState<CVampireCommander>* CVampireCommander_Leap_Strat::Update(CVampireCommande
 	{
 		pWeapon->Set_Enable(true);
 	}
-	else if (pActor->Is_Inputable_Front(78))
+	else if (pActor->Is_Inputable_Front(75))
 	{
 		pWeapon->Set_Enable(false);
 	}

@@ -90,7 +90,7 @@ HRESULT CBody::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	_uint iPass = 0; // false == m_bDissolve ? 0 : 3;
+	_uint iPass = m_iShaderPass; // false == m_bDissolve ? 0 : 3;
 
 	//if (FAILED(m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
 	//	return E_FAIL;

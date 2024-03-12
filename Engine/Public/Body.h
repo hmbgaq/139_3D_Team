@@ -108,6 +108,7 @@ protected:
 
 	//_bool		m_bDissolve = { false };
 	//_float		m_fDissolveWeight = { 0.f };
+	_uint		m_iShaderPass = 0;
 
 protected:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };
