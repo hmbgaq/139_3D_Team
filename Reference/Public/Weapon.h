@@ -49,6 +49,9 @@ public:
 	CWeapon* Set_Force(_float _fForce);
 	CWeapon* Set_Dir(_float3 _vDir);
 
+public:
+	void	Set_Enable_Collisions(_bool bEnable);
+
 	_float3	Get_WorldPosition();
 
 

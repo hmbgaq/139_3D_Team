@@ -210,6 +210,14 @@ CWeapon* CWeapon::Set_Dir(_float3 _vDir)
 	return this;
 }
 
+void CWeapon::Set_Enable_Collisions(_bool bEnable)
+{
+	for (CCollider* pCollider : m_pColliders)
+	{
+		pCollider->Set_Enable(bEnable);
+	}
+}
+
 _float3 CWeapon::Get_WorldPosition()
 {
 	_float3 result = { 0.f, 0.f, 0.f };

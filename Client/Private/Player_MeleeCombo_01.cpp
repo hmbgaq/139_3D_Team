@@ -22,6 +22,7 @@ void CPlayer_MeleeCombo_01::Initialize(CPlayer* pActor)
 		->Set_Force(0.0f);
 
 	pWeapon->Set_Enable(true);
+	pWeapon->Set_Enable_Collisions(true);
 
 }
 
@@ -63,5 +64,6 @@ void CPlayer_MeleeCombo_01::Release(CPlayer* pActor)
 	__super::Release(pActor);
 
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
-	pWeapon->Set_Enable(false);
+	pWeapon->Set_Enable_Collisions(false);
+	//pWeapon->Set_Enable(false);
 }
