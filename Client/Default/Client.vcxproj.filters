@@ -2896,9 +2896,6 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn">
       <UniqueIdentifier>{ecb572c2-9e8e-4eba-ba6a-e9915bfbb79e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\0.parent">
-      <UniqueIdentifier>{dab2d1d3-9913-4f9b-9274-46b3ab1284f0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL180">
       <UniqueIdentifier>{dcae3962-b9ef-43a8-86c3-cd3d22c6b50d}</UniqueIdentifier>
     </Filter>
@@ -5847,19 +5844,16 @@
     <ClInclude Include="..\Public\Infected_A.h" />
     <ClInclude Include="..\Public\ManHeavy_KnockFrontCannonball_F_02.h" />
     <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h" />
-    <ClInclude Include="..\Public\VampireCommander_Trun.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\0.parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_TrunR180.h">
+    <ClInclude Include="..\Public\VampireCommander_TurnR180.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR180</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_TurnR90.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR90</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_TrunL90.h">
+    <ClInclude Include="..\Public\VampireCommander_TurnL90.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL90</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_TrunL180.h">
+    <ClInclude Include="..\Public\VampireCommander_TurnL180.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL180</Filter>
     </ClInclude>
   </ItemGroup>
@@ -8278,19 +8272,16 @@
     <ClCompile Include="..\Private\VampireCommander_Projectile_Range1.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range1</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VampireCommander_Trun.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\0.parent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\VampireCommander_TrunR180.cpp">
+    <ClCompile Include="..\Private\VampireCommander_TurnR180.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR180</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_TurnR90.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR90</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VampireCommander_TrunL90.cpp">
+    <ClCompile Include="..\Private\VampireCommander_TurnL90.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL90</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VampireCommander_TrunL180.cpp">
+    <ClCompile Include="..\Private\VampireCommander_TurnL180.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL180</Filter>
     </ClCompile>
   </ItemGroup>

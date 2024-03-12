@@ -3,7 +3,7 @@
 
 BEGIN(Client)
 
-class CVampireCommander_TurnR90 : public CVampireCommander_State_Normal
+class CVampireCommander_TurnL90 : public CVampireCommander_State_Normal
 {
 public:
 	virtual void Initialize(CVampireCommander* pActor) override;
@@ -11,10 +11,9 @@ public:
 	virtual void Release(CVampireCommander* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CVampireCommander::VampireCommander_State::VampireCommander_Turn_R90;
+	static const _uint g_iAnimIndex = CVampireCommander::VampireCommander_State::VampireCommander_Turn_L90;
 
 };
 
 END
-
 
