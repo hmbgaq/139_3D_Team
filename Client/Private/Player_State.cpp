@@ -352,8 +352,8 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 	//pState = Rifle(pActor, fTimeDelta, _iAnimIndex);
 	//if (pState)	return pState;
 
-	pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	//!pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
+	//!if (pState)	return pState;
 
 	//pState = Crossbow(pActor, fTimeDelta, _iAnimIndex);
 	//if (pState)	return pState;
@@ -377,8 +377,8 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 	pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
-	pState = Attack(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	//!pState = Attack(pActor, fTimeDelta, _iAnimIndex);
+	//!if (pState)	return pState;
 
 	pState = Run(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;

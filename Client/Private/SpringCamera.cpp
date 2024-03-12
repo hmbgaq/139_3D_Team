@@ -191,11 +191,14 @@ void CSpringCamera::Tick(_float fTimeDelta)
 		if(m_pGameInstance->Key_Down(DIK_F2))
 			CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);
 
-		if (m_bCheck == false)
-			ShowCursor(FALSE);
-		else
-			ShowCursor(TRUE);
-
+		_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+		if (iCurrentLevel != (_uint)LEVEL_TOOL)
+		{
+			if (m_bCheck == false)
+				ShowCursor(FALSE);
+			else
+				ShowCursor(TRUE);
+		}
 
 		if (false == m_bFix)
 			return;
