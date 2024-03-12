@@ -86,7 +86,7 @@ void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
 
 	}
-	Set_Enable(false);
+	Set_Enable_Collisions(false);
 }
 
 void CPlayer_Weapon_Punch::OnCollisionStay(CCollider* other)

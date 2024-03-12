@@ -42,8 +42,8 @@ float		g_fDissolveWeight;
 float		g_fDissolveRatio;
 
 
-/* Bloom - 없애도됨 안씀 (구)버전에 쓰던거 */
-float4      g_BloomColor = { 0.f, 0.f, 0.f, 0.f };
+///* Bloom - 없애도됨 안씀 (구)버전에 쓰던거 */
+//float4      g_BloomColor = { 0.f, 0.f, 0.f, 0.f };
 float		g_fRimPower;
 
 
@@ -103,7 +103,7 @@ float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
 {
     float fRimPower = 1.f - saturate(dot(In_Normal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
-    fRimPower = pow(fRimPower, 5.f);
+    fRimPower = pow(fRimPower, 5.f) * g_fRimPower;
     float4 vRimColor = g_vRimColor * fRimPower;
     
     return vRimColor;
@@ -276,19 +276,6 @@ struct PS_IN_DISTORTION
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
-
-	// 뭔지 몰라서 그대로둠 - 소영 
-	////* g_UVScale + g_UVOffset
-	//In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
-
-	//Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	//float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-
-	////clip(Out.vDiffuse.a - g_fAlpha_Discard);
-	//Out.vDiffuse.a *= vAlphaMask.a;
-	//
-	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
-	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.f);
 	
 	vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -299,19 +286,14 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
    
-	// 사이에있던 RimLight공식 애님쪽에서 가져온거같아서 그거 안쓰는거라 없앰 - 소영 
-	
-	// 기존 코드 
-	//float fRimPower = 1.f - saturate(dot(In.vNormal, normalize((-1.f * (In.vWorldPos - g_vCamPosition)))));
-	//fRimPower = pow(fRimPower, 5.f) * g_fRimPower;
-	//vector vRimColor = g_vRimColor * fRimPower;
-	
-	//Out.vDiffuse += vRimColor;
-	
+
     /* ---------------- New ---------------- :  */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
+    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
-    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/ ;
+
+	Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) * g_vColor_Mul;
+
 
 	// 검은색 잘라내기
 	if (Out.vDiffuse.r < g_vBlack_Discard.r && Out.vDiffuse.g < g_vBlack_Discard.g && Out.vDiffuse.b < g_vBlack_Discard.b)
@@ -613,7 +595,8 @@ technique11 DefaultTechnique
 	{
 		SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_DepthStencilEnable, 0);
-		SetRasterizerState(RS_Default);
+		//SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_Cull_None);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         HullShader = NULL;

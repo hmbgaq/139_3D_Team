@@ -33,7 +33,7 @@ HRESULT CBody::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
-
+	
 	return S_OK;
 }
 
@@ -41,8 +41,8 @@ void CBody::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 
-	#ifdef _DEBUG
-Set_MouseMove(fTimeDelta);
+#ifdef _DEBUG
+	Set_MouseMove(fTimeDelta);
 #endif // _DEBUG
 }
 
@@ -195,6 +195,10 @@ _float CBody::Get_TrackPosition()
 {
 	return m_pModelCom->Get_TrackPosition();
 }
+_bool CBody::Compare_TrackPosition_Is_Over(_float fTrackPosition)
+{
+	return m_pModelCom->Compare_TrackPosition_Is_Over(fTrackPosition);
+}
 void CBody::Set_TrackPosition(_int iNewTrackPosition)
 {
 	return m_pModelCom->Set_TrackPosition(iNewTrackPosition);
@@ -241,20 +245,20 @@ _bool CBody::Picking(_float3* vPickedPos)
 
 }
 
-CCharacter* CBody::Get_Owner()
-{
-	return m_pOwner;
-}
-
-void CBody::Set_Owner(CCharacter* pOwner)
-{
-	m_pOwner = pOwner;
-}
+//CCharacter* CBody::Get_Owner()
+//{
+//	return m_pOwner;
+//}
+//
+//void CBody::Set_Owner(CCharacter* pOwner)
+//{
+//	m_pOwner = pOwner;
+//}
 #endif
 
-void CBody::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+void CBody::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
 {
-	m_pModelCom->Set_Animation_Upper(_iAnimationIndex, _eAnimState, m_pModelCom->Get_TickPerSecond() / 10.f);
+	m_pModelCom->Set_Animation_Upper(_iAnimationIndex, _eAnimState, m_pModelCom->Get_TickPerSecond() / 10.f, iTargetKeyFrameIndex);
 	m_pModelCom->Set_Splitted(true);
 	
 }

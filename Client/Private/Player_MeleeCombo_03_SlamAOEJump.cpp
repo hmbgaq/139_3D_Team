@@ -13,7 +13,11 @@ CState<CPlayer>* CPlayer_MeleeCombo_03_SlamAOEJump::Update(CPlayer* pActor, _flo
 {
 	__super::Update(pActor, fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Inputable_Front(26))
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+	return nullptr;
 }
 
 void CPlayer_MeleeCombo_03_SlamAOEJump::Release(CPlayer* pActor)

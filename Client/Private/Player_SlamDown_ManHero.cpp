@@ -13,7 +13,10 @@ CState<CPlayer>* CPlayer_SlamDown_ManHero::Update(CPlayer* pActor, _float fTimeD
 {
 	__super::Update(pActor, fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
 }
 
 void CPlayer_SlamDown_ManHero::Release(CPlayer* pActor)

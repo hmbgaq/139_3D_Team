@@ -31,7 +31,7 @@ void CPlayer_MeleeCombo_04::Release(CPlayer* pActor)
 	__super::Release(pActor);
 
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
-	pWeapon->Set_Enable(false);
+	//pWeapon->Set_Enable(false);
 
 
 }

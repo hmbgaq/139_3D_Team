@@ -2320,9 +2320,6 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Spin">
       <UniqueIdentifier>{a1c27d07-f7f9-4c74-8767-7a87112824d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Whip">
-      <UniqueIdentifier>{50cc14bb-ea67-4a6b-9fbe-3d0a1f5e9fee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\0. Parent">
       <UniqueIdentifier>{1c84234f-da71-43ab-ab60-6b4cfb606f36}</UniqueIdentifier>
     </Filter>
@@ -2577,9 +2574,6 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown">
       <UniqueIdentifier>{7a350570-a566-45c6-8c4d-bdd0f93098ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. ManHero">
-      <UniqueIdentifier>{e47d8ed8-c936-4880-974d-1c2b0c635ab7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\1. v2">
       <UniqueIdentifier>{2fa2f9cb-0584-4ec7-8c15-8012de51ea51}</UniqueIdentifier>
@@ -2838,6 +2832,48 @@
     </Filter>
     <Filter Include="96.Manager\Effect_Manager">
       <UniqueIdentifier>{06d51669-1614-402e-9433-f9d301c5c62f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. ManHero %28x%29">
+      <UniqueIdentifier>{e47d8ed8-c936-4880-974d-1c2b0c635ab7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\12. EnergyWhip">
+      <UniqueIdentifier>{40e5589c-af82-4014-8cc3-824452c5f1d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\12. EnergyWhip\0. Parent">
+      <UniqueIdentifier>{e3152988-cde4-4d8d-a60f-73339fd2b907}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\12. EnergyWhip\1. CloseRange">
+      <UniqueIdentifier>{11904632-d2d8-46a2-b508-0b6222e703a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap">
+      <UniqueIdentifier>{18f68658-8801-4426-9b1b-afc3f6c93c94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\12. EnergyWhip\3. Pull">
+      <UniqueIdentifier>{40ce5633-6ae9-4b48-84e4-3fb53edb89fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\1. Normal">
+      <UniqueIdentifier>{280f21ad-930b-409d-ae87-0250b0e523a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\2. Short">
+      <UniqueIdentifier>{5b6f14e0-abd4-4f3f-aee3-5e1aa9cd0af2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\3. LongRange">
+      <UniqueIdentifier>{48e6c133-ac26-4736-b95c-1ef7c44fe864}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\4. Whip">
+      <UniqueIdentifier>{50cc14bb-ea67-4a6b-9fbe-3d0a1f5e9fee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Pull">
+      <UniqueIdentifier>{2000987b-bbf7-44d1-b6dd-c16f869205fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Slam">
+      <UniqueIdentifier>{8bb2b1c2-1397-4026-9688-607f80fc8cf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light\Front">
+      <UniqueIdentifier>{7227fb18-d0b6-450d-a8bf-4327a30bd520}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light\Back">
+      <UniqueIdentifier>{2692945d-b41c-4775-895d-4287484c7e26}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Weapon">
       <UniqueIdentifier>{a64204be-152c-4c7b-a3f0-a7aa5eea731e}</UniqueIdentifier>
@@ -3283,7 +3319,7 @@
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\2. v3</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_SlamDown_ManHero.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. ManHero</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. ManHero %28x%29</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Empowered_Idle.h">
       <Filter>02.GameObjects\00. Character\Player\State\01. Normal\1. Idle\Empowered</Filter>
@@ -3893,6 +3929,234 @@
     </ClInclude>
     <ClInclude Include="..\Public\Bandit_Sniper.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Bandit_Heavy.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\0. Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Idle.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdleAct_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdleAct_04.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdleAct_05.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdleAct_07.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdlePose.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_04.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_05.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_06.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_07.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_08.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_Special_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_Special_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_Special_Stop.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Walk.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\2. Walk\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_B.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\2. Walk\1. Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_F.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\2. Walk\2. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_BL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\2. Walk\1. Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_BR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\2. Walk\1. Back\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_FL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\2. Walk\2. Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_FR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\2. Walk\2. Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_B.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\3. Run\1. Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_F.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\3. Run\2. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Run.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\3. Run\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_BL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\3. Run\1. Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_BR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\3. Run\1. Back\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_FL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\3. Run\2. Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_FR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\3. Run\2. Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Attack.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamicHeavy.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\2. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeHeavy.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\2. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeHeavy_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\2. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_LD.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\1. Normal\Dynamic\Down</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_LM.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\1. Normal\Dynamic\Medium</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_LU.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\1. Normal\Dynamic\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_RD.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\1. Normal\Dynamic\Down</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Melee_LD.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\1. Normal\Down</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Melee_LM.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\1. Normal\Medium</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Melee_LU.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\1. Normal\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Hit.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormalToStun_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Heavy\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Heavy\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitLight_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Light\Front\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitLight_F_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Light\Front\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitLight_F_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Light\Front\3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitLight_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Light\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormal_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Normal\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormal_B180_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Normal\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormal_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Normal\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormal_F_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Normal\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormal_L_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Normal\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormal_R_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\5. Hit\Normal\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Knock.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\6. Knock\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockFrontCannonball_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\6. Knock\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockFrontHeavy_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\6. Knock\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockInAirDown.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\6. Knock\Air</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Down_End.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Down_Start.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Hit.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Hit_FixedMovement.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ManHeavy_KnockFrontCannonball_F_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\6. Knock\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\6. Knock\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_StrongKick.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\3. Strong</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_StrongSlamDouble.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\4. Attack\3. Strong</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Death.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\7. Death\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_DeathHeavy_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\7. Death\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_DeathLight_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\7. Death\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_DeathLight_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\State\7. Death\Heavy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Bandit_Sniper.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts\Body</Filter>
@@ -4506,234 +4770,6 @@
     <ClInclude Include="..\Public\Bandit_Sniper.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Body_Bandit_Heavy.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\0. Parent\Parts\Body</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Bandit_Heavy_State.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\0. Origin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Bandit_Heavy_State_Normal.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\0. Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Idle.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\Idle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_IdleAct_03.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_IdleAct_04.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_IdleAct_05.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_IdleAct_07.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_IdlePose.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_03.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_04.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_05.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_06.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_07.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_08.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_Special_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_Special_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_Special_Stop.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Bandit_Heavy_State_Walk.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\0. Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Walk_B.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\1. Back</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Walk_F.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\2. Front</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Walk_BL.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\1. Back\Left</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Walk_BR.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\1. Back\Right</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Walk_FL.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\2. Front\Left</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Walk_FR.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\2. Front\Right</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Run_B.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\1. Back</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Run_F.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\2. Front</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Bandit_Heavy_State_Run.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\0. Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Run_BL.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\1. Back\Left</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Run_BR.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\1. Back\Right</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Run_FL.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\2. Front\Left</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Run_FR.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\2. Front\Right</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Bandit_Heavy_State_Attack.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\0. Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamicHeavy.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\2. Heavy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_MeleeHeavy.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\2. Heavy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_MeleeHeavy_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\2. Heavy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_LD.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Dynamic\Down</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_LM.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Dynamic\Medium</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_LU.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Dynamic\Up</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_RD.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Dynamic\Down</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Melee_LD.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Down</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Melee_LM.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Medium</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_Melee_LU.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Up</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Bandit_Heavy_State_Hit.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\0. Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitNormalToStun_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Heavy\Back</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_F_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Heavy\Front</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitLight_F_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Front\1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitLight_F_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Front\2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitLight_F_03.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Front\3</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitLight_B_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Back</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitNormal_B_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal\Back</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitNormal_B180_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal\Back</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitNormal_F_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal\Front</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitNormal_F_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal\Front</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitNormal_L_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal\Left</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitNormal_R_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal\Right</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Bandit_Heavy_State_Knock.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\0. Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_KnockFrontCannonball_F_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Front</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_KnockFrontHeavy_F_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Front</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_KnockInAirDown.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Air</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_KnockUp.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Down_End.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Down_Start.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Hit.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Hit_FixedMovement.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ManHeavy_KnockFrontCannonball_F_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Front</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Front</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_StrongKick.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\3. Strong</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_StrongSlamDouble.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\3. Strong</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Bandit_Heavy_State_Death.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\0. Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_DeathHeavy_F_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_DeathLight_B_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_DeathLight_F_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Heavy</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player_DeathLight_F_02.h">
       <Filter>02.GameObjects\00. Character\Player\State\09. Death\1. Light\2</Filter>
     </ClInclude>
@@ -4746,17 +4782,11 @@
     <ClInclude Include="..\Public\Player_Beast_SyncedAttack_Phase1_Reaction_01.h">
       <Filter>02.GameObjects\00. Character\Player\State\08. Hit\5. Reaction\1. Beast\1</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Body_Infected_A.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Body</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player_Beast_SyncedAttack_Phase2_Reaction_01.h">
       <Filter>02.GameObjects\00. Character\Player\State\08. Hit\5. Reaction\1. Beast\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Digger_StuffAttack.h">
       <Filter>02.GameObjects\00. Character\Player\State\08. Hit\5. Reaction\2. Digger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Infected_A.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_ParasiteMaster_SyncedAttack.h">
       <Filter>02.GameObjects\00. Character\Player\State\08. Hit\5. Reaction\3. ParasiteMaster</Filter>
@@ -4810,9 +4840,6 @@
       <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_CoOp_Fallen_Stop.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_WhipPull.h">
       <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_BeamWalk_IdlePose.h">
@@ -5394,21 +5421,6 @@
     <ClInclude Include="..\Public\Player_CrowdThrough_L_Stop.h">
       <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_CloseRange_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_Leap.h">
-      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_LeapShort.h">
-      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_LongRange.h">
-      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_Pull.h">
-      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player_GlamourAdditive.h">
       <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
     </ClInclude>
@@ -5664,9 +5676,6 @@
     <ClInclude Include="..\Public\Player_OpenStateCombo_8hit.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\09. OpenStateCombo_8hit</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_WhipSlam.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Whip</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player_SpinSlam_TEMP.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Spin</Filter>
     </ClInclude>
@@ -5745,6 +5754,402 @@
     <ClInclude Include="..\Public\Effect_Manager.h">
       <Filter>96.Manager\Effect_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Heavy\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitLight_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Front\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitLight_F_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Front\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitLight_F_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Front\3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Idle.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdleAct_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdleAct_04.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdleAct_05.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdleAct_07.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdlePose.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockFrontCannonball_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockFrontHeavy_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockInAirDown.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Air</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Down_End.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Down_Start.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Hit.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Hit_FixedMovement.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeHeavy.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\2. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_04.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_05.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_06.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_07.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_08.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_Special_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_Special_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_Special_Stop.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_B.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\1. Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_BL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\1. Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_F.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\2. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_FL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\2. Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_FR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\2. Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_StrongKick.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\3. Strong</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_StrongSlamDouble.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\3. Strong</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_BL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\1. Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_F.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\2. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_FL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\2. Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_FR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\2. Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Hit.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Knock.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Walk.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ManHeavy_KnockFrontCannonball_F_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_WhipSlam.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_WhipPull.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Pull</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_EnergyWhip.h">
+      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_Pull.h">
+      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\3. Pull</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_CloseRange_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\1. CloseRange</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_LongRange.h">
+      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\3. LongRange</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_Leap.h">
+      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\1. Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_LeapShort.h">
+      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\2. Short</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\0. Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Attack.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Death.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Hit.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Knock.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Run.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bandit_Heavy_State_Walk.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_DeathHeavy_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_DeathLight_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_DeathLight_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Heavy\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Heavy\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitLight_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitLight_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Front\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitLight_F_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Front\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitLight_F_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Front\3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormal_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormal_B180_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormal_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormal_F_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormal_L_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormal_R_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitNormalToStun_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Idle.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdleAct_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdleAct_04.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdleAct_05.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdleAct_07.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_IdlePose.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockFrontCannonball_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockFrontHeavy_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockInAirDown.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Air</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Down_End.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Down_Start.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Hit.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_KnockUp_Hit_FixedMovement.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Melee_LD.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Down</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Melee_LM.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Medium</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Melee_LU.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_LM.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Dynamic\Medium</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_LU.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Dynamic\Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_LD.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Dynamic\Down</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_RD.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Dynamic\Down</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamicHeavy.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\2. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeHeavy.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\2. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_MeleeHeavy_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\2. Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_04.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_05.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_06.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_07.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_08.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_Special_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_Special_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_RelaxedIdleAct_Special_Stop.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\1. Idle\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_B.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\1. Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_BL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\1. Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_BR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\1. Back\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_F.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\2. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_FL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\2. Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Run_FR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\3. Run\2. Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_F.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\2. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_FR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\2. Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_FL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\2. Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_BR.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\1. Back\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_BL.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\1. Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Walk_B.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\2. Walk\1. Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_StrongKick.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\3. Strong</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_StrongSlamDouble.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\3. Strong</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Bandit_Heavy.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\0. Parent\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Infected_A.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_A.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ManHeavy_KnockFrontCannonball_F_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\6. Knock\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Character_Client.h">
+      <Filter>02.GameObjects\00. Character</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Weapon_Infected_A.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Weapon</Filter>
     </ClInclude>
@@ -5766,17 +6171,17 @@
     <ClInclude Include="..\Public\VampireCommander_Projectile_Range1.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range1</Filter>
     </ClInclude>
-   <ClInclude Include="..\Public\VampireCommander_TurnL90.h">
+    <ClInclude Include="..\Public\VampireCommander_TurnL90.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnL90</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_TurnL180.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnL180</Filter>
+    <ClInclude Include="..\Public\VampireCommander_TurnR180.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnR180</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_TurnR90.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnR90</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_TurnR180.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnR180</Filter>
+    <ClInclude Include="..\Public\VampireCommander_TurnL180.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnL180</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -6272,7 +6677,7 @@
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\2. v3</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_SlamDown_ManHero.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. ManHero</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. ManHero %28x%29</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Empowered_Idle.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\01. Normal\1. Idle\Empowered</Filter>
@@ -6955,9 +7360,6 @@
     <ClCompile Include="..\Private\BanditHeavy_Melee_LM.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Medium</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\BanditHeavy_Melee_LU.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Up</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Bandit_Heavy_State_Hit.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\0. Parent</Filter>
     </ClCompile>
@@ -7035,15 +7437,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bandit_Heavy_State_Death.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\0. Parent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\BanditHeavy_DeathHeavy_F_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\BanditHeavy_DeathLight_B_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\BanditHeavy_DeathLight_F_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Heavy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Bandit_Sniper.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts\Body</Filter>
@@ -8092,9 +8485,6 @@
     <ClCompile Include="..\Private\Player_OpenStateCombo_8hit.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\09. OpenStateCombo_8hit</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Player_WhipSlam.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Whip</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Player_SpinSlam_TEMP.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Spin</Filter>
     </ClCompile>
@@ -8172,6 +8562,45 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Manager.cpp">
       <Filter>96.Manager\Effect_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_WhipSlam.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Slam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_WhipPull.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Pull</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_EnergyWhip.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_EnergyWhip_Pull.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\3. Pull</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_EnergyWhip_CloseRange_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\1. CloseRange</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_EnergyWhip_LongRange.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\3. LongRange</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_EnergyWhip_Leap.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\1. Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_EnergyWhip_LeapShort.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\2. Short</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BanditHeavy_DeathHeavy_F_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Heavy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BanditHeavy_DeathLight_B_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BanditHeavy_DeathLight_F_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BanditHeavy_Melee_LU.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\1. Normal\Up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Character_Client.cpp">
+      <Filter>02.GameObjects\00. Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon_Infected_A.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\0. Vessel_A\Weapon</Filter>

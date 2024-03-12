@@ -271,6 +271,10 @@ _float CCharacter::Get_TrackPosition()
 	return m_pBody->Get_TrackPosition();
 }
 
+_bool CCharacter::Compare_TrackPosition_Is_Over(_float fTrackPosition)
+{
+	return m_pBody->Compare_TrackPosition_Is_Over(fTrackPosition);
+}
 void CCharacter::Set_TrackPosition(_int iNewTrackPostion)
 {
 	return m_pBody->Set_TrackPosition(iNewTrackPostion);
@@ -471,23 +475,23 @@ _float CCharacter::Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag)
 	return Calc_Distance(pCharacter);
 }
 
-void CCharacter::Move_In_Proportion_To_Enemy(_float fSpeedCap)
+void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap)
 {
 	if (nullptr == m_pTarget)
 		return;
 
 	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	_float fDistance = Calc_Distance();
-	_float3 vPos = { 0.f, 0.f, min(fDistance / 100.f, fSpeedCap) };
+	_float3 vPos = { 0.f, 0.f, min(fDistance * fTimeDelta, fSpeedCap) };
 
 	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
 	m_pTransformCom->Move_On_Navigation(vResult);
 }
 
 
-void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
 {
-	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState);
+	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState, iTargetKeyFrameIndex);
 }
 
 void CCharacter::Set_StiffnessRate(_float fStiffnessRate)

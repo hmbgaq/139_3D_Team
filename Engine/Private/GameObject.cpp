@@ -244,7 +244,11 @@ void CGameObject::Free()
 	Safe_Release(m_pTransformCom);
 
 	for (auto& Pair : m_Components)
+	{
+		Pair.second->Set_Enable(false);
 		Safe_Release(Pair.second);
+	}
+		
 
 	m_Components.clear();
 

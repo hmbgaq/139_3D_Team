@@ -30,11 +30,11 @@ CState<CVampireCommander>* CVampireCommander_Leap_Strat::Update(CVampireCommande
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 	if (pActor->Is_Inputable_Front(34))
 	{
-		pActor->Move_In_Proportion_To_Enemy();
+		pActor->Move_In_Proportion_To_Enemy(fTimeDelta);
 	}
 	else if (pActor->Is_Inputable_Front(60))
 	{
-		pActor->Move_In_Proportion_To_Enemy(0);
+		pActor->Move_In_Proportion_To_Enemy(fTimeDelta, 0);
 		
 	}
 
