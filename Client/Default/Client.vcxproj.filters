@@ -2894,19 +2894,19 @@
       <UniqueIdentifier>{6239b706-fbbe-48a5-9ba9-9f73c26fa947}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn">
-      <UniqueIdentifier>{ecb572c2-9e8e-4eba-ba6a-e9915bfbb79e}</UniqueIdentifier>
+      <UniqueIdentifier>{40e8a88d-2bf6-4b47-9ff2-8e3822a60118}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL180">
-      <UniqueIdentifier>{dcae3962-b9ef-43a8-86c3-cd3d22c6b50d}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnR90">
+      <UniqueIdentifier>{12b08067-2ad9-4be2-bdc8-5586d3b87e21}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL90">
-      <UniqueIdentifier>{88c46a99-ddba-4638-bd37-5111f291a1cc}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnR180">
+      <UniqueIdentifier>{10e11c3b-4397-4f4c-ae1b-7a6c9bb33bf5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR90">
-      <UniqueIdentifier>{661a0d12-3815-4a51-8e88-92abc7d8f25b}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnL90">
+      <UniqueIdentifier>{8e57fa0f-1b1d-4f1a-9c9f-f65c73f6b954}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR180">
-      <UniqueIdentifier>{73b3ecdc-e232-4990-88da-8c3636a1130a}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnL180">
+      <UniqueIdentifier>{c0bde70d-81a9-418c-b44d-5a29ce2ab8d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -5844,17 +5844,17 @@
     <ClInclude Include="..\Public\Infected_A.h" />
     <ClInclude Include="..\Public\ManHeavy_KnockFrontCannonball_F_02.h" />
     <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h" />
-    <ClInclude Include="..\Public\VampireCommander_TurnR180.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR180</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_TurnR90.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR90</Filter>
+    <ClInclude Include="..\Public\VampireCommander_TurnL180.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnL180</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_TurnL90.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL90</Filter>
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnL90</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_TurnL180.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL180</Filter>
+    <ClInclude Include="..\Public\VampireCommander_TurnR180.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnR180</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_TurnR90.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnR90</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -8272,17 +8272,17 @@
     <ClCompile Include="..\Private\VampireCommander_Projectile_Range1.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\Range1</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VampireCommander_TurnR180.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR180</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\VampireCommander_TurnR90.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunR90</Filter>
+    <ClCompile Include="..\Private\VampireCommander_TurnL180.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnL180</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_TurnL90.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL90</Filter>
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnL90</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VampireCommander_TurnL180.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TrunL180</Filter>
+    <ClCompile Include="..\Private\VampireCommander_TurnR180.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnR180</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_TurnR90.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnR90</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
