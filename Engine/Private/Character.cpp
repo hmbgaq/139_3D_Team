@@ -485,9 +485,9 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap
 }
 
 
-void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
 {
-	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState);
+	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState, iTargetKeyFrameIndex);
 }
 
 void CCharacter::Set_StiffnessRate(_float fStiffnessRate)

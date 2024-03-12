@@ -30,7 +30,11 @@ CState<CPlayer>* CPlayer_MeleeSlashAlt_01::Update(CPlayer* pActor, _float fTimeD
 {
 	__super::Update(pActor, fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Inputable_Front(28))
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+	return nullptr;
 }
 
 void CPlayer_MeleeSlashAlt_01::Release(CPlayer* pActor)

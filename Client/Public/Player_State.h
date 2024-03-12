@@ -43,6 +43,11 @@ public:		//상태 그룹 별 업데이트
 	CState<CPlayer>* Interaction_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Death_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Finisher_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+	CState<CPlayer>* EnergyWhip_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+
+	
 	
 
 	
@@ -66,10 +71,8 @@ public:		//개별 동작 상태 집합
 	CState<CPlayer>* FlameBelcher(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Grenade(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
-
-
-
 	CState<CPlayer>* TeleportPunch(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* EnergyWhip(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 
 
@@ -79,8 +82,7 @@ public:
 	_int iKeyLeft	= DIK_A;	//DIK_LEFT;
 	_int iKeyRight	= DIK_D;	//DIK_RIGHT;
 
-public:
-	_bool	m_bFlags[10];
+
 
 
 protected:

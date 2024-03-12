@@ -30,7 +30,11 @@ CState<CPlayer>* CPlayer_SpinSlam_TEMP::Update(CPlayer* pActor, _float fTimeDelt
 {
 	__super::Update(pActor, fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Inputable_Front(39))
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+	return nullptr;
 }
 
 void CPlayer_SpinSlam_TEMP::Release(CPlayer* pActor)

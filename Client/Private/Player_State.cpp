@@ -344,6 +344,11 @@ CState<CPlayer>* CPlayer_State::Finisher_State(CPlayer* pActor, _float fTimeDelt
 	return nullptr;
 }
 
+CState<CPlayer>* CPlayer_State::EnergyWhip_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
 
 CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
@@ -857,5 +862,10 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 
 	
 
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::EnergyWhip(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
 	return nullptr;
 }

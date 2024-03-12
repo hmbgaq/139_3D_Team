@@ -30,7 +30,11 @@ CState<CPlayer>* CPlayer_MeleeKick::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Inputable_Front(31))
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+	return nullptr;
 }
 
 void CPlayer_MeleeKick::Release(CPlayer* pActor)
