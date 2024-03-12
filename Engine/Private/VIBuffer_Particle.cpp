@@ -387,9 +387,9 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 	VTXINSTANCE* pVertices = ((VTXINSTANCE*)SubResource.pData);
 
 
-#ifdef _DEBUG
+
 	m_iNumInstance = m_tBufferDesc.iCurNumInstance;
-#endif // _DEBUG
+
 	for (_uint i = 0; i < m_iNumInstance; i++)	// 반복문 시작
 	{
 #pragma region 입자들 시간 시작
