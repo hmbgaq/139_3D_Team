@@ -10,16 +10,27 @@ void CVampireCommander_Ranged2::Initialize(CVampireCommander* pActor)
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
 
 	pWeapon
-		->Set_Damage(0)
+		->Set_Damage(30)
 		->Set_Direction(Direction::Left)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.f);
 
-	pWeapon->Set_Enable(true);
+	
 }
 
 CState<CVampireCommander>* CVampireCommander_Ranged2::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
+	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
+	if (pActor->Is_Inputable_Front(37))
+	{
+		pWeapon->Set_Enable(true);
+
+	}
+	else if (pActor->Is_Inputable_Front(39))
+	{
+		pWeapon->Set_Enable(false);
+	}
+
 	if (pActor->Is_Animation_End())
 	{
 		return new CVampireCommander_Idle();

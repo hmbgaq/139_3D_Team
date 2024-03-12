@@ -1,6 +1,8 @@
 #include "..\Public\Player_State.h"
 #include "GameInstance.h"
 
+#pragma region 플레이어 상태 헤더
+
 #include "Player_Empowered_MeleeCombo_01.h"
 #include "Player_Empowered_MeleeCombo_02.h"
 #include "Player_Empowered_MeleeCombo_03.h"
@@ -68,8 +70,53 @@
 
 #include "Player_Rifle_IdleWeaponHolster.h"
 #include "Player_Rifle_Ironsights_Fire.h"
+#include "Player_Empowered_Winchester_IdleFire.h"
+#include "Player_Empowered_Winchester_Start.h"
+#include "Player_Empowered_Winchester_Stop.h"
+#include "Player_Winchester_Ironsights_AimPose.h"
+#include "Player_Winchester_Ironsights_Reload_01.h"
+#include "Player_Winchester_Ironsights_Reload_02.h"
+#include "Player_Winchester_LowerHolster.h"
+#include "Player_Winchester_WeaponUnholster.h"
+#include "Player_Winchester_MeleeDynamic.h"
+#include "Player_Crossbow_Ironsights_AimPose.h"
+#include "Player_Crossbow_Ironsights_AO.h"
+#include "Player_Crossbow_Ironsights_Idle.h"
+#include "Player_Crossbow_Ironsights_Reload.h"
+#include "Player_Crossbow_LowerHolster.h"
+#include "Player_Crossbow_WeaponUnholster_Fast.h"
+#include "Player_Revolver_HandCannonHold.h"
+#include "Player_Revolver_Hip_ReloadFast_Alt03.h"
+#include "Player_Revolver_Ironsights_ReloadFast.h"
+#include "Player_Revolver_WeaponHolster.h"
+#include "Player_Revolver_WeaponUnholster.h"
+#include "Player_Bandit_Ironsights_Reload_02.h"
+#include "Player_Bandit_Reload_02.h"
+#include "Player_Bandit_Special_01.h"
+#include "Player_Bandit_SprintAim_F.h"
+#include "Player_William_RevolverFanningStart_01.h"
+#include "Player_William_RevolverFanningLoop_01.h"
+#include "Player_William_RevolverFanningStop_01.h"
+#include "Player_William_RevolverFanningStart_02.h"
+#include "Player_William_RevolverFanningLoop_02.h"
+#include "Player_William_RevolverFanningStop_02.h"
+#include "Player_Shotgun_Fire_LongRange.h"
+#include "Player_Shotgun_Fire_ShortRange.h"
+#include "Player_Shotgun_WeaponHolster.h"
+#include "Player_ShotgunElectric_Fire_ShortRange.h"
+#include "Player_William_ShotgunShot_01.h"
+#include "Player_Bandit_Gatling.h"
+#include "Player_Bandit_Gatling_Step_L.h"
+#include "Player_GatlingGun_WeaponHolster.h"
+#include "Player_GatlingGun_WeaponUnholster.h"
+#include "Player_FlameBelcher_WeaponHolster.h"
+#include "Player_FlameBelcher_WeaponUnholster.h"
+#include "Player_FlameBelcher_WeaponUnholster_v2.h"
+#include "Player_Grenade_Throw_v2.h"
+#include "Player_Grenade_WeaponHolster.h"
+#include "Player_Grenade_WeaponUnholster.h"
 
-
+#pragma endregion
 
 
 
@@ -172,17 +219,106 @@ CState<CPlayer>* CPlayer_State::Hit_State(CPlayer* pActor, _float fTimeDelta, _u
 	return nullptr;
 }
 
+CState<CPlayer>* CPlayer_State::Aim_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
 CState<CPlayer>* CPlayer_State::Rifle_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	CState<CPlayer>* pState = { nullptr };
+	//CState<CPlayer>* pState = { nullptr };
 
-	pState = Rifle(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	//pState = Rifle(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
 
 	if (m_pGameInstance->Mouse_Up(DIM_RB))
 	{
 		if (CPlayer_Rifle_IdleWeaponHolster::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Rifle_IdleWeaponHolster();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Winchester_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	//CState<CPlayer>* pState = { nullptr };
+
+	//pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Winchester_LowerHolster::g_iAnimIndex != _iAnimIndex)
+		{
+			return new CPlayer_Winchester_LowerHolster();
+		}
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Crossbow_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Crossbow_LowerHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Crossbow_LowerHolster();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Revolver_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Revolver_WeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Revolver_WeaponHolster();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Shotgun_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Shotgun_WeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Shotgun_WeaponHolster();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Gatling_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_GatlingGun_WeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_GatlingGun_WeaponHolster();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::FlameBelcher_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_FlameBelcher_WeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_FlameBelcher_WeaponHolster();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Grenade_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	{
+		if (CPlayer_Grenade_WeaponHolster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Grenade_WeaponHolster();
 	}
 
 	return nullptr;
@@ -213,8 +349,30 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 {
 	CState<CPlayer>* pState = { nullptr };
 
-	pState = Rifle(pActor, fTimeDelta, _iAnimIndex);
+	//pState = Rifle(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
+
+	//pState = Crossbow(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	//pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	//pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	//pState = Gatilng(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	//pState = FlameBelcher(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	//pState = Grenade(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
 
 	pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
@@ -536,6 +694,117 @@ CState<CPlayer>* CPlayer_State::Rifle(CPlayer* pActor, _float fTimeDelta, _uint 
 	{
 		if (CPlayer_Rifle_Ironsights_Fire::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Rifle_Ironsights_Fire();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_Winchester_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Winchester_WeaponUnholster();
+
+		//if (CPlayer_Winchester_Ironsights_AimPose::g_iAnimIndex != _iAnimIndex)
+		//	return new CPlayer_Winchester_Ironsights_AimPose();
+
+		/*CPlayer::Player_State eAnimIndex = (CPlayer::Player_State)_iAnimIndex;
+
+		if (false == pActor->Is_Splitted())
+		{
+			if (CPlayer_Winchester_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_Winchester_WeaponUnholster();
+		}
+		else if (pActor->Is_UpperAnimation_End())
+		{
+			switch (eAnimIndex)
+			{
+			case CPlayer::Player_State::Player_Winchester_WeaponUnholster:
+			case CPlayer::Player_State::Player_Winchester_Ironsights_Reload_01:
+			case CPlayer::Player_State::Player_Winchester_Ironsights_Reload_02:
+			case CPlayer::Player_State::Player_Winchester_MeleeDynamic:
+				return new CPlayer_Winchester_Ironsights_AimPose();
+
+			case CPlayer::Player_State::Player_Empowered_Winchester_IdleFire:
+				if (true)
+				{
+					return new CPlayer_Winchester_Ironsights_AimPose();
+				}
+			}
+		}
+
+		if (m_pGameInstance->Mouse_Down(DIM_LB) && eAnimIndex == CPlayer::Player_State::Player_Winchester_Ironsights_AimPose)
+		{
+			return new CPlayer_Winchester_Ironsights_Reload_01();
+		}*/
+
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Crossbow(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_Crossbow_WeaponUnholster_Fast::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Crossbow_WeaponUnholster_Fast();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Revolver(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_Revolver_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Revolver_WeaponUnholster();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Shotgun(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_Shotgun_Fire_LongRange::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Shotgun_Fire_LongRange();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Gatilng(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_GatlingGun_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_GatlingGun_WeaponUnholster();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::FlameBelcher(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_FlameBelcher_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_FlameBelcher_WeaponUnholster();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Grenade(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		if (CPlayer_Grenade_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_Grenade_WeaponUnholster();
 	}
 
 	return nullptr;

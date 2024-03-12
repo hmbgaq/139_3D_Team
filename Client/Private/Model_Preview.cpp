@@ -206,6 +206,7 @@ HRESULT CModel_Preview::Ready_PartObjects()
 	if (FAILED(Add_PartObject(TEXT("Prototype_GameObject_Part_Preview"), TEXT("Part_Preview"), &tPartDesc)))
 		return E_FAIL;
 
+	return S_OK;
 }
 
 HRESULT CModel_Preview::Bind_ShaderResources()

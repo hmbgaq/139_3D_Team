@@ -128,8 +128,23 @@ HRESULT CInfected_B::Ready_Option()
 
 HRESULT CInfected_B::Ready_PartObjects()
 {
-	CBody::BODY_DESC		BodyDesc = {};
-	FAILED_CHECK(Add_Body(TEXT("Prototype_GameObject_Body_Infected_B"), BodyDesc));
+	/* For. Body */
+	{
+		CBody::BODY_DESC		BodyDesc = {};
+		FAILED_CHECK(Add_Body(TEXT("Prototype_GameObject_Body_Infected_B"), BodyDesc));
+	}
+
+	/* For. Weapon */
+	{
+		CWeapon::WEAPON_DESC		WeaponDesc = {};
+		WeaponDesc.m_pSocketBone = m_pBody->Get_BonePtr("RightHandIK");
+		WeaponDesc.m_pParentTransform = m_pTransformCom;
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Infected_B"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch")));
+
+		CWeapon* m_pWeapon = Get_Weapon(TEXT("Weapon_Punch"));
+		m_pWeapon->Set_Enable(false);
+	}
+	return S_OK;
 
 	return S_OK;
 }

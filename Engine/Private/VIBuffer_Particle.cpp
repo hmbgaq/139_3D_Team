@@ -444,6 +444,8 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						// 리사이클 모드면 슬립이 됐을 때 초기화 후 힘 다시주기
 						m_vecParticleInfoDesc[i].Reset_ParticleTimes();
 
+
+
 						XMStoreFloat4(&pVertices[i].vPosition, m_vecParticleInfoDesc[i].vCenterPositions);
 						pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
 						pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
@@ -455,58 +457,62 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 				}
 			}
-			
+
 		}
 #pragma endregion 이동 : 리지드바디 끝
 
 
+
+		if (!m_tBufferDesc.bRecycle) // 재사용 모드가 아닐때만
+		{
 #pragma region 크기 변경 시작
-		//if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.x)		// 0~1로 보간한 라이프타임이 크기 증가를 시작할 타임 포지션을 넘어가면
-		//{
-		//	if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.y) // 0~1로 보간한 라이프타임이 크기 감소를 시작할 타임 포지션도 넘어가면 감소 시작
-		//	{
-		//		// 크기 감소를 시작할 타임 포지션 (크기 0이 목표)
+			if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.x)		// 0~1로 보간한 라이프타임이 크기 증가를 시작할 타임 포지션을 넘어가면
+			{
+				if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.y) // 0~1로 보간한 라이프타임이 크기 감소를 시작할 타임 포지션도 넘어가면 감소 시작
+				{
+					// 크기 감소를 시작할 타임 포지션 (크기 0이 목표)
 
-		//		_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * (1.f - m_tBufferDesc.vLerpScale_Pos.y);	// 라이프 타임 중, 감소에만 필요한 토탈시간 계산
-		//		if (m_tBufferDesc.fDownScaleTimeAcc >= fTotalTime)
-		//		{
-		//			m_tBufferDesc.fDownScaleTimeAcc = fTotalTime;
-		//			m_tBufferDesc.vCurScale.x = 0.f;
-		//			m_tBufferDesc.vCurScale.y = 0.f;
-		//		}
-		//		else
-		//		{
-		//			m_tBufferDesc.fDownScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.y);	// 시간 누적	
-		//			m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.x, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-		//			m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.y, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-		//		}
-		//	}
-		//	else
-		//	{		
-		//		// Max크기가 목표
+					_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * (1.f - m_tBufferDesc.vLerpScale_Pos.y);	// 라이프 타임 중, 감소에만 필요한 토탈시간 계산
+					if (m_tBufferDesc.fDownScaleTimeAcc >= fTotalTime)
+					{
+						m_tBufferDesc.fDownScaleTimeAcc = fTotalTime;
+						m_tBufferDesc.vCurScale.x = 0.f;
+						m_tBufferDesc.vCurScale.y = 0.f;
+					}
+					else
+					{
+						m_tBufferDesc.fDownScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.y);	// 시간 누적	
+						m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.x, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+						m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.y, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+					}
+				}
+				else
+				{
+					// Max크기가 목표
 
-		//		_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * ((1.f - m_tBufferDesc.vLerpScale_Pos.x) + (1.f - m_tBufferDesc.vLerpScale_Pos.y));	// 라이프 타임 중, 증가에만 필요한 토탈시간 계산
-		//		if (m_tBufferDesc.fUpScaleTimeAcc >= fTotalTime)
-		//		{
-		//			m_tBufferDesc.fUpScaleTimeAcc = fTotalTime;
-		//			m_tBufferDesc.vCurScale.x = m_vecParticleInfoDesc[i].vMaxScales.x;
-		//			m_tBufferDesc.vCurScale.y = m_vecParticleInfoDesc[i].vMaxScales.y;
-		//		}
-		//		else
-		//		{
-		//			m_tBufferDesc.fUpScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.x);	// 시간 누적		
-		//			m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxWidth.x, m_vecParticleInfoDesc[i].vMaxScales.x, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-		//			m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxHeight.x, m_vecParticleInfoDesc[i].vMaxScales.y, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-		//		}
-		//	
-		//	}
+					_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * ((1.f - m_tBufferDesc.vLerpScale_Pos.x) + (1.f - m_tBufferDesc.vLerpScale_Pos.y));	// 라이프 타임 중, 증가에만 필요한 토탈시간 계산
+					if (m_tBufferDesc.fUpScaleTimeAcc >= fTotalTime)
+					{
+						m_tBufferDesc.fUpScaleTimeAcc = fTotalTime;
+						m_tBufferDesc.vCurScale.x = m_vecParticleInfoDesc[i].vMaxScales.x;
+						m_tBufferDesc.vCurScale.y = m_vecParticleInfoDesc[i].vMaxScales.y;
+					}
+					else
+					{
+						m_tBufferDesc.fUpScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.x);	// 시간 누적		
+						m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxWidth.x, m_vecParticleInfoDesc[i].vMaxScales.x, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+						m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxHeight.x, m_vecParticleInfoDesc[i].vMaxScales.y, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+					}
 
-		//	// 크기변경 적용
-		//	pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.x;
-		//	pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.y;
-		//}
+				}
+
+				// 크기변경 적용
+				pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.x;
+				pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.y;
+			}
 
 #pragma region 크기 변경 끝
+	}
 
 #pragma region 색 변경 시작
 		if (m_tBufferDesc.bDynamic_Color)	// 입자마다 다른 주기로 색 변경

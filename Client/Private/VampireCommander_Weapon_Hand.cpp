@@ -4,6 +4,13 @@
 #include "Character.h"
 #include "VampireCommander_SyncedAttack.h"
 #include "Player.h"
+#include "Player_VampireCommander_SyncedAttack.h"
+#include "Data_Manager.h"
+#include "MasterCamera.h"
+#include "Transform.h"
+#include "Bone.h"
+#include "Effect.h"
+#include "Clone_Manager.h"
 
 #include "Effect_Manager.h"
 #include "Effect_Trail.h"
@@ -100,19 +107,44 @@ HRESULT CVampireCommander_Weapon_Hand::Ready_Components()
 void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 {
 	CCharacter* pTarget_Character = Get_Target_Character(other);
+	CVampireCommander* parent = dynamic_cast<CVampireCommander*>(Get_Object_Owner());
 	if (nullptr != pTarget_Character && m_bSynced == false)
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
 		pTarget_Character->Set_Hitted(m_iDamage, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
+ 		string Test = "Data_Animation/";
+		parent->Set_EventNotify(Test, "Test2_AnimationData.json");
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, parent->Get_CharcterDesc().EffectFileName + ".json");
+		_float3 vPos =this->Get_WorldPosition();
+		pEffect->Set_Position(vPos);
 
 	}
 	else if(nullptr != pTarget_Character && m_bSynced == true)
 	{
-		CVampireCommander* parent = dynamic_cast<CVampireCommander*>(Get_Object_Owner());
 		parent->Get_Actor()->Set_State(new CVampireCommander_SyncedAttack);
-		CPlayer* pPlayer = dynamic_cast<CPlayer*>(Get_Object_Owner());
-		//pPlayer->Get_Actor()->Set_State(new)
+		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+		pPlayer->Get_Actor()->Set_State(new CPlayer_VampireCommander_SyncedAttack);
+		pPlayer->Set_Rotate_In_CameraDir(false);
+		pPlayer->m_bPlayerCheck =false;
+		CCamera* pCam;
+		pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
+		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
+		_float4x4 BoneMatrix = {};
+		BoneMatrix = parent->Get_Body()->Get_BonePtr("Neck")->Get_CombinedTransformationMatrix();
+		_float4x4 pMonsterPos = parent->Get_Transform()->Get_WorldMatrix();
+		_float4x4 temp = {};
+		XMStoreFloat4x4(&temp, BoneMatrix * pMonsterPos);
+		_float3 TargetPosition = {};
+		TargetPosition.x = temp._41;
+		TargetPosition.y = temp._42;
+		TargetPosition.z = temp._43;
+		pSpringCam->Set_pTarget(parent->Get_Transform());
+		pSpringCam->Set_TargetPosition(TargetPosition);
+		pSpringCam->Set_pTargetCharacter(parent);
+		pSpringCam->Set_CameraOffset(_float3(1.7f, -3.f, -8.5f));
+		pPlayer->Get_Transform()->Set_State(CTransform::STATE_POSITION, parent->Get_Transform()->Get_State(CTransform::STATE_POSITION) +2*parent->Get_Transform()->Get_State(CTransform::STATE_LOOK));
+
 	}
 	Set_Enable(false);
 }

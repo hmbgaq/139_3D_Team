@@ -269,6 +269,11 @@ private:
 	_int	m_vUV_MaxTileCount_Particle[2]	= { 7, 7 };
 	_float	m_fSequenceTerm_Particle		= { 0.05f };
 	/* For.Sprite ======================================== */
+
+	/* 파티클 Rim & Bloom */
+	_float	m_fRimColor_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_vBloomPower_Particle[3] = { 1.f, 1.f, 1.f };
+
 #pragma endregion Particle 옵션 끝
 
 
@@ -332,9 +337,6 @@ private:
 
 
 	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
-	_float	m_fRimPower_Mesh = { 1.f };
-
-	_float	m_vBloomColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
 
 

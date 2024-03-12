@@ -20,13 +20,12 @@ public:
 		_bool		bUseCustomTex	 = { TRUE };
 
 
-		/* Bloom */
-		_float4		vBloomColor = { 1.f, 1.f, 1.f, 1.f };
-		_float3		vBloomPower = { 1.f, 1.f, 1.f };
+		//_float4		vRimColor = { 1.f, 1.f, 1.f, 1.f };		// 사용
+		//_float3		vBloomPower = { 1.f, 1.f, 1.f };		// 사용
 
-		/* Rim */
-		_float4		vRimColor = { 1.f, 1.f, 1.f, 1.f };
-		_float		fRimPower = { 1.f };
+
+		////_float4		vBloomColor = { 1.f, 1.f, 1.f, 1.f };
+		////_float		fRimPower = { 1.f };					
 
 
 	}EFFECT_INSTANCE_DESC;

@@ -106,6 +106,12 @@ PS_OUT PS_BLUR_H_QUARTER(PS_IN In)
     float4 vColor = float4(0.f, 0.f, 0.f, 0.f);
     float fTotal = 0.f;
 
+// Add padding to the image edges
+   //float2 texSize = g_BlurTarget.GetDimensions(0, texSize.x, texSize.y, 0); // 텍스처의 너비와 높이를 가져와 저장 
+   //float2 texelSize = 1.0 / texSize; // 텍셀의 크기 계산 
+   //float2 padding = texelSize * 0.5; // 이미지 가장자리에 추가할 패딩의 크기를 계산 
+   //In.vTexcoord = clamp(In.vTexcoord, padding, 1.0 - padding);
+    
     for (int i = -3; i < 4; i++)
     {
         vColor += g_fWeight_quarter[i + 3] * g_BlurTarget.Sample(LinearSampler, In.vTexcoord + float2(1.f / (g_WinSize.x / 2.f) * i, 0.f));
@@ -193,7 +199,13 @@ PS_OUT PS_BLUR_V_QUARTER(PS_IN In)
 
     float4 vColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
     float fTotal = 0.f;
-
+    
+    // Add padding to the image edges
+   // float2 texSize = g_BlurTarget.GetDimensions(0, texSize.x, texSize.y, 0 );
+   // float2 texelSize = 1.0 / texSize;
+   // float2 padding = texelSize * 0.5; // Half a texel
+   // In.vTexcoord = clamp(In.vTexcoord, padding, 1.0 - padding);
+    
     for (int i = -3; 4 > i; i++)
     {
         vColor += g_fWeight_quarter[i + 3] * g_BlurTarget.Sample(LinearSampler, In.vTexcoord + float2(0, 1.f / (g_WinSize.y / 2.f) * i));
@@ -268,12 +280,6 @@ PS_OUT PS_BLUR_UP(PS_IN In)
 
 technique11 DefaultTechnique
 {
-	//BLUR_DOWN, 
-	//BLUR_HORIZON_LOW,	    BLUR_HORIZON_QUARTER,	BLUR_HORIZON_MIDDLE,	BLUR_HORIZON_HIGH,
-	//BLUR_VERTICAL_LOW,	BLUR_VERTICAL_QUARTER,	BLUR_VERTICAL_MIDDLE,	BLUR_VERTICAL_HIGH,
-	//BLUR_UP_ADD, BLUR_UP_MAX,
-	//BLUR_END 
-
     pass Blur_Down // 0 BLUR_DOWN, 
     {
         SetRasterizerState(RS_Default);

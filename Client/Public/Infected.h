@@ -7,7 +7,9 @@
 BEGIN(Client)
 
 /* 모델 : Character/Gores/Blow_Up 에 있는 모델 : 몇번 맞아서 피부 메시 뜯겨나간 메시 -> 구현안하는게 좋을듯.. 얘가 하면 모든애들이 다 해야함. */
-
+/* Memo */
+// Body, Weapon 등의 클래스는 Monster가 따로 뺀거 아니라서 바로 CBody , CWeapon 상속받아서 만들기
+/*      */
 class CInfected abstract : public CMonster_Character
 {
 public:
@@ -25,7 +27,10 @@ public:
 		_float WalkSpeed = 0.f;
 		_float RunSpeed = 0.f;
 
-		_int RandomNumber = 0;
+		_int RandomNumber = 0; // SMath::Random(1, 10);
+
+		//m_eInfo.fAttack_Distance = 3.5f;
+		//m_eInfo.fWalk_Distance = 10.f;
 	public:
 		tagDesc()
 		{
@@ -98,7 +103,7 @@ public:
 		Infected_Run_B							 , // (20) Move / 빠르게 뒤로 움직임
 		Infected_Run_F							 , // (21) Move / 빠르게 앞으로 움직임
 		Infected_Run_FL							 , // (22) Move / 빠르게 왼쪽로 움직임(몬스터기준) + 바라보기 
-		Infected_Run_FL45						 , // (23) Move / 빠르게 왼쪽 대각선 움직임(몬스터기준)
+		Infected_Run_FL45						 , // (23) Move / 빠르게 왼쪽 대각선 움직임(몬스터기준)	
 		Infected_Run_FR							 , // (24) Move / 빠르게 오른쪽로 움직임(몬스터기준) + 바라보기 
 		Infected_Run_FR45						 , // (25) Move / 빠르게 오른쪽 대각선 움직임(몬스터기준)
 		Infected_SpawnClimb_01					 , // (26) Spawn / 일반적으로 올라옴
@@ -171,27 +176,22 @@ public:
 		Infected_HitHeavyToStun_01_NEW			 , // (93) KnockDown / 턱주가리 맞고 뒤로 이동 
 		Infected_HitNormalToStun_01_NEW			 , // (94) KnockDown / 왼뺨 복부 같이맞고 약간 물러섬 
 		Infected_Stun_Loop_NEW					 , // (95) Electric / Stun상태 거의 몸이 반으로 접힘  
-		Boohag_Electrocut_Additive_OpenState	 , // (96) 못씀 
-		BooHag_OpenStateHitNormal_F				 , // (97) Hit / 그냥 턱맞고 뒷걸음질하는 기본상태 
-		Infected_Dodge_F_01_TEMP				 , // (98) Dodge / 앞으로 갑자기 튀어나감 
-		Infected_Dodge_L_01_TEMP				 , // (99) Dodge / 왼쪽으로 갑자기 튀어나감 
-		Infected_Dodge_R_01_TEMP				 , // (100) Dodge / 오른쪽으로 갑자기 튀어나감 
-		Infected_Hit_whip_end_down				 , // (101) KnockDown / 대자로 공중에서 내려오다가 바닥에 닿아서 퍽 하고 일어남 
-		Infected_HitLightOpened_L_01			 , // (102) Hit / 왼쪽으로 렌티어 리볼버 첫무기 한타에 맞았을때 
-		Infected_HitLightOpened_R_01			 , // (103) Hit / 오른쪽으로 렌티어 리볼버 첫무기 한타에 맞았을때 
-		Infected_HitNormal_F_03_NEW				 , // (104) Hit / 턱맞고 뒤로 두걸음
-		Infected_KnockFrontCannonball_F_01_TEMP	 , // (105) Hit / 캐논볼 맞고 뒤로 날라감 
-		Infected_MeleeDynamic_Dodge_B_4m		 , // (106) Dodge / 뒤로 엄청 멀리 회피함 
-		Infected_OpenStatePull_F_01				 , // (107) Move / 물속? 에서 움직이는듯함 앞으로 
-		Infected_OpenStateTimeout				 , // (108) Hit / 오른뺨 잠깐 찌릿 
-		Infected_SpawnGround					 , // (109) Spawn / 땅속에서 기어나옴 
-		Infected_VortexGrenade_Loop				 , // (110) Hit / 소용돌이 폭탄 ??? 루프상태임 
-		Infected_VortexGrenade_Stop				   // (111) Hit / 소용돌이 폭탄이 끝나서 안으로 글려들어가는거인듯? 
+		Infected_Dodge_F_01_TEMP				 , // (96) Dodge / 앞으로 갑자기 튀어나감 
+		Infected_Dodge_L_01_TEMP				 , // (97) Dodge / 왼쪽으로 갑자기 튀어나감 
+		Infected_Dodge_R_01_TEMP				 , // (98) Dodge / 오른쪽으로 갑자기 튀어나감 
+		Infected_Hit_whip_end_down				 , // (99) KnockDown / 대자로 공중에서 내려오다가 바닥에 닿아서 퍽 하고 일어남 
+		Infected_HitLightOpened_L_01			 , // (100) Hit / 왼쪽으로 렌티어 리볼버 첫무기 한타에 맞았을때 
+		Infected_HitLightOpened_R_01			 , // (101) Hit / 오른쪽으로 렌티어 리볼버 첫무기 한타에 맞았을때 
+		Infected_HitNormal_F_03_NEW				 , // (102) Hit / 턱맞고 뒤로 두걸음
+		Infected_KnockFrontCannonball_F_01_TEMP	 , // (103) Hit / 캐논볼 맞고 뒤로 날라감 
+		Infected_MeleeDynamic_Dodge_B_4m		 , // (104) Dodge / 뒤로 엄청 멀리 회피함 
+		Infected_OpenStatePull_F_01				 , // (105) Move / 물속? 에서 움직이는듯함 앞으로 
+		Infected_OpenStateTimeout				 , // (106) Hit / 오른뺨 잠깐 찌릿 
+		Infected_SpawnGround					 , // (107) Spawn / 땅속에서 기어나옴 
+		Infected_VortexGrenade_Loop				 , // (108) Hit / 소용돌이 폭탄 ??? 루프상태임 
+		Infected_VortexGrenade_Stop				   // (109) Hit / 소용돌이 폭탄이 끝나서 안으로 글려들어가는거인듯? 
 	};
 };
 
 END
-
-
-
 

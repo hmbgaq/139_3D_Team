@@ -37,6 +37,7 @@ public:
 
 public:
 	void Aim_Walk(_float fTimeDelta);
+	void Activate_ShootingReaction();
 
 public:
 	void Search_Target();
@@ -63,6 +64,8 @@ public: //AnimTool Test
 private:
 	CActor<CPlayer>* m_pActor = { nullptr };
 	_bool	m_bRotate_In_CameraDir = { false };
+public:
+	_bool	m_bPlayerCheck = true;
 
 private:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };

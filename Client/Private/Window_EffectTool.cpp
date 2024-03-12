@@ -947,6 +947,24 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pCurVoidDesc->fUV_RotDegree = m_fUV_RotDegree;
 
 
+
+				/* 림라이트 색 변경_파티클 */
+				ImGui::SeparatorText("");
+				if (ImGui::ColorEdit4("RimColor_Particle", m_fRimColor_Particle, ImGuiColorEditFlags_None))
+				{
+					m_pCurVoidDesc->vRimColor.x = m_fRimColor_Particle[0];
+					m_pCurVoidDesc->vRimColor.y = m_fRimColor_Particle[1];
+					m_pCurVoidDesc->vRimColor.z = m_fRimColor_Particle[2];
+					m_pCurVoidDesc->vRimColor.w = m_fRimColor_Particle[3];
+				}
+
+				if (ImGui::DragFloat3(" BloomPower_Particle ", m_vBloomPower_Particle, 100.f, 0.f, 1000.f))
+				{
+					m_pCurVoidDesc->vBloomPower.x = m_vBloomPower_Particle[0];
+					m_pCurVoidDesc->vBloomPower.y = m_vBloomPower_Particle[1];
+					m_pCurVoidDesc->vBloomPower.z = m_vBloomPower_Particle[2];
+				}
+
 				///* 추가 크기 조절 */
 				//ImGui::SeparatorText("");
 				//if (ImGui::DragFloat("AddScale_1", &m_fAddScale, 1.f, 0.f, 360.f))
@@ -1441,40 +1459,24 @@ void CWindow_EffectTool::Update_MeshTab()
 				}
 				
 
-				/* RimRight */
-				/* 림라이트 색 변경 */
+				/* Rim & Bloom */
+				/* 림라이트 & 블룸 */
 				ImGui::SeparatorText("");
 				if (ImGui::ColorEdit4("RimColor", m_fRimColor_Mesh, ImGuiColorEditFlags_None))
 				{
-					m_pInstanceDesc->vRimColor.x = m_fRimColor_Mesh[0];
-					m_pInstanceDesc->vRimColor.y = m_fRimColor_Mesh[1];
-					m_pInstanceDesc->vRimColor.z = m_fRimColor_Mesh[2];
-					m_pInstanceDesc->vRimColor.w = m_fRimColor_Mesh[3];
+			
+					m_pCurVoidDesc->vRimColor.x = m_fRimColor_Mesh[0];
+					m_pCurVoidDesc->vRimColor.y = m_fRimColor_Mesh[1];
+					m_pCurVoidDesc->vRimColor.z = m_fRimColor_Mesh[2];
+					m_pCurVoidDesc->vRimColor.w = m_fRimColor_Mesh[3];
 				}
 
-				/* 림라이트 세기 */
-				if (ImGui::DragFloat(" RimPower ", &m_fRimPower_Mesh, 0.1f, 0.f, 1000.f))
-				{
-					m_pInstanceDesc->fRimPower = m_fRimPower_Mesh;
-				}
-				ImGui::SeparatorText("");
-
-
-				/* Bloom */
-				/* 색 변경 */
-				if (ImGui::ColorEdit4("BloomColor_Mesh", m_vBloomColor_Mesh, ImGuiColorEditFlags_None))
-				{
-					m_pInstanceDesc->vBloomColor.x = m_vBloomColor_Mesh[0];
-					m_pInstanceDesc->vBloomColor.y = m_vBloomColor_Mesh[1];
-					m_pInstanceDesc->vBloomColor.z = m_vBloomColor_Mesh[2];
-					m_pInstanceDesc->vBloomColor.w = m_vBloomColor_Mesh[3];
-				}
 
 				if (ImGui::DragFloat3(" BloomPower ", m_vBloomPower_Mesh, 100.f, 0.f, 1000.f))
 				{
-					m_pInstanceDesc->vBloomPower.x = m_vBloomPower_Mesh[0];
-					m_pInstanceDesc->vBloomPower.y = m_vBloomPower_Mesh[1];
-					m_pInstanceDesc->vBloomPower.z = m_vBloomPower_Mesh[2];
+					m_pCurVoidDesc->vBloomPower.x = m_vBloomPower_Mesh[0];
+					m_pCurVoidDesc->vBloomPower.y = m_vBloomPower_Mesh[1];
+					m_pCurVoidDesc->vBloomPower.z = m_vBloomPower_Mesh[2];
 				}
 
 
@@ -1947,7 +1949,7 @@ void CWindow_EffectTool::Update_TrailTab()
 		//	m_pTrailBufferDesc->iMaxCnt = m_iMaxCnt_Trail;
 		//}
 
-		if (ImGui::DragInt("iLerpPointNum_Trail", &m_iLerpPointNum, 1, 2.f, 100.f))
+		if (ImGui::DragInt("iLerpPointNum_Trail", &m_iLerpPointNum, 1, 2, 100))
 		{
 			m_pTrailBufferDesc->iLerpPointNum = m_iLerpPointNum;
 		}
@@ -3586,8 +3588,8 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tVoidDesc.bUseRigidBody = { TRUE };
 
 		CEffect_Instance::EFFECT_INSTANCE_DESC tInstanceDesc = {};
-		tInstanceDesc.vRimColor = { 2.f, 10.f, 255.f, 255.f };
-		tInstanceDesc.fRimPower = { 950.f };
+		//tInstanceDesc.vRimColor = { 2.f, 10.f, 255.f, 255.f };
+		//tInstanceDesc.fRimPower = { 950.f };
 
 #pragma region 리스트 문자열 관련
 		wstring strName = TEXT("");
@@ -3699,8 +3701,8 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh_Morph(wstring strModelTag1, wstring st
 		tVoidDesc.bUseRigidBody = { TRUE };
 
 		CEffect_Instance::EFFECT_INSTANCE_DESC tInstanceDesc = {};
-		tInstanceDesc.vRimColor = { 2.f, 10.f, 255.f, 255.f };
-		tInstanceDesc.fRimPower = { 950.f };
+		//tVoidDesc.vRimColor = { 2.f, 10.f, 255.f, 255.f };
+		//tVoidDesc.vBloomPower = { 950.f };
 
 #pragma region 리스트 문자열 관련
 		wstring strName = TEXT("");

@@ -137,8 +137,7 @@ void CEffect_Instance::Late_Tick(_float fTimeDelta)
 
 HRESULT CEffect_Instance::Render()
 {
-	if(FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	FAILED_CHECK(Bind_ShaderResources());
 
 
 	if (m_pVIBufferCom->Get_Desc()->bMorph)	// 모프가 true이면 (박쥐 모델)
@@ -209,34 +208,29 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 	/* Mesh */
 	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
 
-	/* Bloom */
-	CJson_Utility::Write_Float4(Out_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);
-	CJson_Utility::Write_Float3(Out_Json["vBloomPower"], m_tInstanceDesc.vBloomPower);
-
-	/* Rim */
-	CJson_Utility::Write_Float4(Out_Json["vRimColor"], m_tInstanceDesc.vRimColor);
-	Out_Json["fRimPower"] = m_tInstanceDesc.fRimPower;
-
 
 	return true;
 }
 
 void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
-	__super::Load_FromJson(In_Json);
 
+	_float4 vTempFloat4 = {};
+	_float fTemp = 0.f;
+
+	__super::Load_FromJson(In_Json);
 
 	/* Mesh */
 	m_tInstanceDesc.bUseCustomTex	= In_Json["bUseCustomTex"];
 
+	/* Bloom */ 
+	if (In_Json.contains("vBloomColor"))	// 새로 저장하고 지우기
+		CJson_Utility::Load_Float4(In_Json["vBloomColor"], vTempFloat4);
 
-	/* Bloom */
-	CJson_Utility::Load_Float4(In_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);
-	CJson_Utility::Load_Float3(In_Json["vBloomPower"], m_tInstanceDesc.vBloomPower);
 
-	/* Rim */
-	CJson_Utility::Load_Float4(In_Json["vRimColor"], m_tInstanceDesc.vRimColor);
-	m_tInstanceDesc.fRimPower = In_Json["fRimPower"];
+
+	if (In_Json.contains("vBloomColor"))	// 새로 저장하고 지우기
+		fTemp = In_Json["fRimPower"];
 
 }
 
@@ -308,7 +302,6 @@ HRESULT CEffect_Instance::Ready_Components()
 	}
 
 
-
 	return S_OK;
 }
 
@@ -352,7 +345,6 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	_float3 vBlack_Discard = _float3(m_tVoidDesc.vColor_Clip.x, m_tVoidDesc.vColor_Clip.y, m_tVoidDesc.vColor_Clip.z);
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
 
-
 	/* Camera ============================================================================================ */
 	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
 	vCamDirection = XMVector4Normalize(vCamDirection);
@@ -365,38 +357,24 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	_float fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 
-
 	/* Dissolve */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
-
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tVoidDesc.fDissolveAmount, sizeof(_float)));
 
-
 	/* Distortion */
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScales", &m_tDistortionDesc.vScales, sizeof(_float3))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tDistortionDesc.vDistortion1, sizeof(_float2))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion2", &m_tDistortionDesc.vDistortion2, sizeof(_float2))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion3", &m_tDistortionDesc.vDistortion3, sizeof(_float2))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionScale", &m_tDistortionDesc.fDistortionScale, sizeof(_float))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tDistortionDesc.fDistortionBias, sizeof(_float))))
-		return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vScales", &m_tDistortionDesc.vScales, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tDistortionDesc.vDistortion1, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion2", &m_tDistortionDesc.vDistortion2, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion3", &m_tDistortionDesc.vDistortion3, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDistortionScale", &m_tDistortionDesc.fDistortionScale, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tDistortionDesc.fDistortionBias, sizeof(_float)));
 
-
-	/* RimLight */
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tInstanceDesc.vRimColor, sizeof(_float4)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_tInstanceDesc.fRimPower, sizeof(_float)));
-
-
+	/* 소영 추가사항 - Bloom , Rim 용도 ====== */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_tVoidDesc.vBloomPower, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tVoidDesc.vRimColor, sizeof(_float4)));
 
 	return S_OK;
 }
