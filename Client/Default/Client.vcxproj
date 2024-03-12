@@ -1062,10 +1062,9 @@
     <ClInclude Include="..\Public\VampireCommander_Taunt3.h" />
     <ClInclude Include="..\Public\VampireCommander_Taunt4.h" />
     <ClInclude Include="..\Public\VampireCommander_Taunt5.h" />
-    <ClInclude Include="..\Public\VampireCommander_Trun.h" />
-    <ClInclude Include="..\Public\VampireCommander_TrunL180.h" />
-    <ClInclude Include="..\Public\VampireCommander_TrunL90.h" />
-    <ClInclude Include="..\Public\VampireCommander_TrunR180.h" />
+    <ClInclude Include="..\Public\VampireCommander_TurnL180.h" />
+    <ClInclude Include="..\Public\VampireCommander_TurnL90.h" />
+    <ClInclude Include="..\Public\VampireCommander_TurnR180.h" />
     <ClInclude Include="..\Public\VampireCommander_TurnR90.h" />
     <ClInclude Include="..\Public\VampireCommander_Walk_B.h" />
     <ClInclude Include="..\Public\VampireCommander_Walk_BL.h" />
@@ -1815,10 +1814,9 @@
     <ClCompile Include="..\Private\VampireCommander_Taunt3.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Taunt4.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Taunt5.cpp" />
-    <ClCompile Include="..\Private\VampireCommander_Trun.cpp" />
-    <ClCompile Include="..\Private\VampireCommander_TrunL180.cpp" />
-    <ClCompile Include="..\Private\VampireCommander_TrunL90.cpp" />
-    <ClCompile Include="..\Private\VampireCommander_TrunR180.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_TurnL180.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_TurnL90.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_TurnR180.cpp" />
     <ClCompile Include="..\Private\VampireCommander_TurnR90.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Walk_B.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Walk_BL.cpp" />
