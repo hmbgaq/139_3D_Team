@@ -463,14 +463,22 @@ void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAn
 	m_eUpperAnimState = _eAnimState;
 	Reset_UpperAnimation(_iAnimationIndex);
 
+	
+
 	if (false == m_bIsSplitted)
 	{
 		m_bIsSplitted = true;
-
 		CAnimation* currentAnimation = m_Animations[m_iCurrentAnimIndex];
 		CAnimation* targetAnimation = m_Animations[_iAnimationIndex];
 
 		targetAnimation->Set_Transition_Upper(currentAnimation, _fTransitionDuration, iTargetKeyFrameIndex);
+	}
+	else 
+	{
+		CAnimation* pTargetAnimation = m_Animations[m_iUpperAnimIndex];
+		CChannel* pChannel = (*pTargetAnimation->Get_Channels())[0];
+		_float fTargetTrackPosition = pChannel->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		pTargetAnimation->Set_TrackPosition(fTargetTrackPosition);
 	}
 
 	
@@ -503,6 +511,11 @@ _bool CModel::Is_Transition()
 _bool CModel::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_Animations[m_iCurrentAnimIndex]->Is_Inputable_Front(_iIndexFront);
+}
+
+_bool CModel::Compare_TrackPosition_Is_Over(_float fTrackPosition)
+{
+	return Get_TrackPosition() > fTrackPosition;
 }
 
 _float CModel::Get_TrackPosition()

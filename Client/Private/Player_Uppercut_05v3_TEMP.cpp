@@ -30,7 +30,11 @@ CState<CPlayer>* CPlayer_Uppercut_05v3_TEMP::Update(CPlayer* pActor, _float fTim
 {
 	__super::Update(pActor, fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Inputable_Front(30))
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+	return nullptr;
 }
 
 void CPlayer_Uppercut_05v3_TEMP::Release(CPlayer* pActor)

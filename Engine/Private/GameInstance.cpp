@@ -756,6 +756,13 @@ HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuff
 	return m_pLight_Manager->Render(pShader, pVIBuffer);
 }
 
+_bool CGameInstance::Remove_Light(const _uint& iIndex)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+
+	return m_pLight_Manager->Remove_Light(iIndex);
+}
+
 HRESULT CGameInstance::Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp)
 {
 	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);

@@ -7,7 +7,7 @@
 #include "Camera_Dynamic.h"
 #include "MasterCamera.h"
 #include "Sky.h"
-
+#include "Navigation.h"
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -23,6 +23,19 @@ HRESULT CLevel_Tool::Initialize()
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
+
+
+	{	//!내비게이션 
+		CNavigation* pNavi = { nullptr };
+
+		pNavi = dynamic_cast<CNavigation*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Navigation2")));
+
+		if (nullptr == pNavi)
+			return E_FAIL;
+
+		CData_Manager::GetInstance()->Set_Navigation(pNavi);
+	}
+
 	if (FAILED(Ready_Imgui()))
 	{
 		Safe_Release(m_pDevice);
@@ -32,6 +45,8 @@ HRESULT CLevel_Tool::Initialize()
 
 	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 
+
+	
 	return S_OK;
 
 }

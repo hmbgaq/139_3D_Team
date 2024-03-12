@@ -329,6 +329,7 @@
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_VampireCommander.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
+    <ClInclude Include="..\Public\Character_Client.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Preset.h" />
@@ -872,6 +873,7 @@
     <ClInclude Include="..\Public\Player_State_Crossbow.h" />
     <ClInclude Include="..\Public\Player_State_Death.h" />
     <ClInclude Include="..\Public\Player_State_Dodge.h" />
+    <ClInclude Include="..\Public\Player_State_EnergyWhip.h" />
     <ClInclude Include="..\Public\Player_State_Finisher.h" />
     <ClInclude Include="..\Public\Player_State_FlameBelcher.h" />
     <ClInclude Include="..\Public\Player_State_Gatling.h" />
@@ -1036,6 +1038,8 @@
     <ClInclude Include="..\Public\VampireCommander_Leap_Strat.h" />
     <ClInclude Include="..\Public\VampireCommander_Melee1.h" />
     <ClInclude Include="..\Public\VampireCommander_Melee2.h" />
+    <ClInclude Include="..\Public\VampireCommander_Projectile_Range1.h" />
+    <ClInclude Include="..\Public\VampireCommander_Projectile_Range3.h" />
     <ClInclude Include="..\Public\VampireCommander_Ranged1.h" />
     <ClInclude Include="..\Public\VampireCommander_Ranged2.h" />
     <ClInclude Include="..\Public\VampireCommander_Ranged3.h" />
@@ -1058,6 +1062,10 @@
     <ClInclude Include="..\Public\VampireCommander_Taunt3.h" />
     <ClInclude Include="..\Public\VampireCommander_Taunt4.h" />
     <ClInclude Include="..\Public\VampireCommander_Taunt5.h" />
+    <ClInclude Include="..\Public\VampireCommander_TurnL180.h" />
+    <ClInclude Include="..\Public\VampireCommander_TurnL90.h" />
+    <ClInclude Include="..\Public\VampireCommander_TurnR180.h" />
+    <ClInclude Include="..\Public\VampireCommander_TurnR90.h" />
     <ClInclude Include="..\Public\VampireCommander_Walk_B.h" />
     <ClInclude Include="..\Public\VampireCommander_Walk_BL.h" />
     <ClInclude Include="..\Public\VampireCommander_Walk_BL135.h" />
@@ -1251,6 +1259,7 @@
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Body_VampireCommander.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
+    <ClCompile Include="..\Private\Character_Client.cpp" />
     <ClCompile Include="..\Private\Clone_Manager.cpp" />
     <ClCompile Include="..\Private\CustomDialogFont.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
@@ -1448,6 +1457,11 @@
     <ClCompile Include="..\Private\Player_Empowered_Winchester_IdleFire.cpp" />
     <ClCompile Include="..\Private\Player_Empowered_Winchester_Start.cpp" />
     <ClCompile Include="..\Private\Player_Empowered_Winchester_Stop.cpp" />
+    <ClCompile Include="..\Private\Player_EnergyWhip_CloseRange_01.cpp" />
+    <ClCompile Include="..\Private\Player_EnergyWhip_Leap.cpp" />
+    <ClCompile Include="..\Private\Player_EnergyWhip_LeapShort.cpp" />
+    <ClCompile Include="..\Private\Player_EnergyWhip_LongRange.cpp" />
+    <ClCompile Include="..\Private\Player_EnergyWhip_Pull.cpp" />
     <ClCompile Include="..\Private\Player_Finisher_BanditHeavy.cpp" />
     <ClCompile Include="..\Private\Player_Finisher_BanditHeavy_02.cpp" />
     <ClCompile Include="..\Private\Player_Finisher_BanditHeavy_Vampiric_01.cpp" />
@@ -1629,6 +1643,7 @@
     <ClCompile Include="..\Private\Player_State_Crossbow.cpp" />
     <ClCompile Include="..\Private\Player_State_Death.cpp" />
     <ClCompile Include="..\Private\Player_State_Dodge.cpp" />
+    <ClCompile Include="..\Private\Player_State_EnergyWhip.cpp" />
     <ClCompile Include="..\Private\Player_State_Finisher.cpp" />
     <ClCompile Include="..\Private\Player_State_FlameBelcher.cpp" />
     <ClCompile Include="..\Private\Player_State_Gatling.cpp" />
@@ -1675,6 +1690,7 @@
     <ClCompile Include="..\Private\Player_Weapon_Revolver.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Shotgun.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Winchester.cpp" />
+    <ClCompile Include="..\Private\Player_WhipPull.cpp" />
     <ClCompile Include="..\Private\Player_WhipSlam.cpp" />
     <ClCompile Include="..\Private\Player_William_RevolverFanningLoop_01.cpp" />
     <ClCompile Include="..\Private\Player_William_RevolverFanningLoop_02.cpp" />
@@ -1774,6 +1790,8 @@
     <ClCompile Include="..\Private\VampireCommander_Leap_Strat.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Melee1.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Melee2.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Projectile_Range1.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Projectile_Range3.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Ranged1.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Ranged2.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Ranged3.cpp" />
@@ -1796,6 +1814,10 @@
     <ClCompile Include="..\Private\VampireCommander_Taunt3.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Taunt4.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Taunt5.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_TurnL180.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_TurnL90.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_TurnR180.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_TurnR90.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Walk_B.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Walk_BL.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Walk_BL135.cpp" />

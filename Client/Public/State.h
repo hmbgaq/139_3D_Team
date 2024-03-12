@@ -15,6 +15,9 @@ public:
 	virtual CState<T>* Update(T* pActor, _float fTimeDelta) = 0;
 	virtual void Release(T* pActor) = 0;
 
+protected:
+	_bool	m_bFlags[30];
+
 };
 
 //END;

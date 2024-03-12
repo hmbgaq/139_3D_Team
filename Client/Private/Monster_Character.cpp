@@ -1,12 +1,12 @@
 #include "Monster_Character.h"
 
 CMonster_Character::CMonster_Character(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CCharacter(pDevice, pContext, strPrototypeTag)
+	: CCharacter_Client(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CMonster_Character::CMonster_Character(const CMonster_Character& rhs)
-	: CCharacter(rhs)
+	: CCharacter_Client(rhs)
 {
 }
 

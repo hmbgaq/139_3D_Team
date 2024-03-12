@@ -29,12 +29,12 @@
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CCharacter(pDevice, pContext, strPrototypeTag)
+	: CCharacter_Client(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
-	: CCharacter(rhs)
+	: CCharacter_Client(rhs)
 {
 }
 
@@ -49,7 +49,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 10.f;
+	GameObjectDesc.fSpeedPerSec = 7.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
@@ -303,10 +303,13 @@ HRESULT CPlayer::Ready_PartObjects()
 	//}
 
 	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch_L"));
-	m_pWeapon_Punch_L->Set_Enable(false);
+	m_pWeapon_Punch_L->Set_Enable(true);
 	
 	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_Punch_R"));
-	m_pWeapon_Punch_R->Set_Enable(false);
+	m_pWeapon_Punch_R->Set_Enable(true);
+
+
+
 	
 	return S_OK;
 }

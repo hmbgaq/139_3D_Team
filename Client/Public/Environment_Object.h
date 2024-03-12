@@ -24,6 +24,10 @@ public:
 		_int		iPlayAnimationIndex = { 0 };
 		
 		_bool		bPreview = true; //! 미리보기용 오브젝트인지 확인
+
+		_bool		bLightObject = false;
+		LIGHT_DESC	tLightDesc = {};
+		_int		iLightIndex = -1;
 	}ENVIRONMENT_OBJECT_DESC;
 
 

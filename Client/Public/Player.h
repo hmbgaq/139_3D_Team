@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Client_Defines.h"
-#include "Character.h"
+#include "Character_Client.h"
 #include "Actor.h"
 
 BEGIN(Engine)
@@ -12,7 +11,7 @@ END
 
 BEGIN(Client)
 
-class CPlayer final : public CCharacter
+class CPlayer final : public CCharacter_Client
 {
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -58,9 +57,6 @@ protected:
 	virtual void Hitted_Dead(Power ePower)	override;
 
 
-
-public: //AnimTool Test
-	_bool	bTest = true;
 private:
 	CActor<CPlayer>* m_pActor = { nullptr };
 	_bool	m_bRotate_In_CameraDir = { false };
