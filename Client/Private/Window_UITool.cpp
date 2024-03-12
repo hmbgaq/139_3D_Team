@@ -32,8 +32,8 @@ HRESULT CWindow_UITool::Initialize()
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩중."));
 
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
-	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));		// Option
-	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD")))); // PlayerHUD
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));	// Option
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD"))));	// PlayerHUD
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));			// Image
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));			// All
 	
@@ -3423,8 +3423,6 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 
-
-
 		wstring wstrLayer;
 		m_pGameInstance->String_To_WString(m_strLayer[m_iCurrLayerNum], wstrLayer);
 
@@ -3449,7 +3447,7 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 
 		//tUI_Info.iKeyframeNum = object["KeyframeNum"];			// 18. KeyframeNum
 		
-		// "KeyframeNum" 키가 없으면 기본값 사용
+	// "KeyframeNum" 키가 없으면 기본값 사용
 		_bool bKeyframeNum = object.contains("KeyframeNum");
 		tUI_Info.iKeyframeNum = bKeyframeNum ? object["KeyframeNum"] : 0;
 
@@ -3477,29 +3475,39 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 			tUI_Info.tKeyframe.bTrigger = object["Keyframe"][i]["Trigger"];
 			if (object["Keyframe"][i].contains("Disappear")) // "Disappear" 키가 있으면
 				tUI_Info.tKeyframe.bDisappear = object["Keyframe"][i]["Disappear"];
-				
+
 			if (object["Keyframe"][i].contains("LoopSection"))// "LoopSection" 키가 있으면
 				tUI_Info.tKeyframe.bLoopSection = object["Keyframe"][i]["LoopSection"];
 
 			pUI_Object->Add_Keyframe(tUI_Info.tKeyframe);
 		}
 
-		if (tUI_Info.bDistortionUI)
-		{
+		if (object["Distortion"]["ScrollSpeedsX"].contains("ScrollSpeedsX")) // 키가 있으면
 			tUI_Info.vScrollSpeeds.x = object["Distortion"]["ScrollSpeedsX"];
+		if (object["Distortion"]["ScrollSpeedsY"].contains("ScrollSpeedsY")) // 키가 있으면
 			tUI_Info.vScrollSpeeds.y = object["Distortion"]["ScrollSpeedsY"];
+		if (object["Distortion"]["ScrollSpeedsZ"].contains("ScrollSpeedsZ")) // 키가 있으면
 			tUI_Info.vScrollSpeeds.z = object["Distortion"]["ScrollSpeedsZ"];
+		if (object["Distortion"]["ScalesX"].contains("ScalesX")) // 키가 있으면
 			tUI_Info.vScales.x = object["Distortion"]["ScalesX"];
+		if (object["Distortion"]["ScalesY"].contains("ScalesY")) // 키가 있으면
 			tUI_Info.vScales.y = object["Distortion"]["ScalesY"];
+		if (object["Distortion"]["ScalesZ"].contains("ScalesZ")) // 키가 있으면
 			tUI_Info.vScales.z = object["Distortion"]["ScalesZ"];
+		if (object["Distortion"]["Distortion1X"].contains("Distortion1X")) // 키가 있으면
 			tUI_Info.vDistortion1.x = object["Distortion"]["Distortion1X"];
+		if (object["Distortion"]["Distortion1Y"].contains("Distortion1Y")) // 키가 있으면
 			tUI_Info.vDistortion1.y = object["Distortion"]["Distortion1Y"];
+		if (object["Distortion"]["Distortion2X"].contains("Distortion2X")) // 키가 있으면
 			tUI_Info.vDistortion2.x = object["Distortion"]["Distortion2X"];
+		if (object["Distortion"]["Distortion2Y"].contains("Distortion2Y")) // 키가 있으면
 			tUI_Info.vDistortion2.y = object["Distortion"]["Distortion2Y"];
-			tUI_Info.vDistortion3.x = object["Distortion"]["Distortion3X"];
+		if (object["Distortion"]["Distortion3X"].contains("Distortion3X")) // 키가 있으면
+			tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3X"];
+		if (object["Distortion"]["Distortion3Y"].contains("Distortion3Y")) // 키가 있으면
 			tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3Y"];
+		if (object["Distortion"]["DistortionScale"].contains("DistortionScale")) // 키가 있으면
 			tUI_Info.fDistortionScale = object["Distortion"]["DistortionScale"];
-		}
 
 		if (tUI_Info.bParent == true)
 		{
