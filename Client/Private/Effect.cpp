@@ -198,8 +198,8 @@ void CEffect::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-	if (In_Json.contains("eType_Dead"))
-		m_tEffectDesc.eType_Dead = In_Json["Effect"]["eType_Dead"];
+
+	m_tEffectDesc.eType_Dead = In_Json["Effect"]["eType_Dead"];
 
 	m_tEffectDesc.bPlay			= In_Json["Effect"]["bPlay"];
 	m_tEffectDesc.bLoop			= In_Json["Effect"]["bLoop"];

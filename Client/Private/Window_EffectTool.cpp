@@ -1470,9 +1470,13 @@ void CWindow_EffectTool::Update_MeshTab()
 					m_pCurVoidDesc->vRimColor.z = m_fRimColor_Mesh[2];
 					m_pCurVoidDesc->vRimColor.w = m_fRimColor_Mesh[3];
 				}
+				if (ImGui::DragFloat("RimPower", &m_fRimPower_Mesh, 100.f, 0.f, 10000.f))
+				{
+					m_pCurVoidDesc->fRimPower = m_fRimPower_Mesh;
+				}
 
 
-				if (ImGui::DragFloat3(" BloomPower ", m_vBloomPower_Mesh, 100.f, 0.f, 1000.f))
+				if (ImGui::DragFloat3(" BloomPower ", m_vBloomPower_Mesh, 10.f, 0.f, 10000.f))
 				{
 					m_pCurVoidDesc->vBloomPower.x = m_vBloomPower_Mesh[0];
 					m_pCurVoidDesc->vBloomPower.y = m_vBloomPower_Mesh[1];
@@ -2384,6 +2388,20 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_vRotationOffsetZ_Mesh[0] = m_pMeshBufferDesc->vMinMaxRotationOffsetZ.x;
 			m_vRotationOffsetZ_Mesh[1] = m_pMeshBufferDesc->vMinMaxRotationOffsetZ.y;
+
+
+			/* ¸²ºí·ë °ü·Ã */
+			m_vBloomPower_Mesh[0] = m_pCurVoidDesc->vBloomPower.x;
+			m_vBloomPower_Mesh[1] = m_pCurVoidDesc->vBloomPower.y;
+			m_vBloomPower_Mesh[2] = m_pCurVoidDesc->vBloomPower.z;
+
+			m_fRimColor_Mesh[0] = m_pCurVoidDesc->vRimColor.x;
+			m_fRimColor_Mesh[1] = m_pCurVoidDesc->vRimColor.y;
+			m_fRimColor_Mesh[2] = m_pCurVoidDesc->vRimColor.z;
+			m_fRimColor_Mesh[3] = m_pCurVoidDesc->vRimColor.w;
+
+
+			m_fRimPower_Mesh = m_pCurVoidDesc->fRimPower;
 
 		}
 

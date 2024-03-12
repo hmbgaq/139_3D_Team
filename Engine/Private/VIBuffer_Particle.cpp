@@ -444,8 +444,21 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						// 리사이클 모드면 슬립이 됐을 때 초기화 후 힘 다시주기
 						m_vecParticleInfoDesc[i].Reset_ParticleTimes();
 
+						// 방향 만들기 (나중에 함수로 만들어주자)
+						_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+						vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
+
+						_float3 vRotationOffset = { SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetX.x, m_tBufferDesc.vMinMaxRotationOffsetX.y)
+												  , SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetY.x, m_tBufferDesc.vMinMaxRotationOffsetY.y)
+												  , SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y) };
 
 
+						_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
+						_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
+
+						vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
+						m_vecParticleRigidbodyDesc[i].vDir = vDir;
+					
 						XMStoreFloat4(&pVertices[i].vPosition, m_vecParticleInfoDesc[i].vCenterPositions);
 						pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
 						pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
@@ -712,6 +725,10 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 {
 	Out_Json["Com_VIBuffer"]["iCurNumInstance"] = m_tBufferDesc.iCurNumInstance;
 
+
+	Out_Json["Com_VIBuffer"]["bRecycle"] = m_tBufferDesc.bRecycle;
+	Out_Json["Com_VIBuffer"]["bReverse"] = m_tBufferDesc.bReverse;
+	Out_Json["Com_VIBuffer"]["eType_Action"] = m_tBufferDesc.eType_Action;
 	Out_Json["Com_VIBuffer"]["eType_Fade"] = m_tBufferDesc.eType_Fade;
 	
 	/* LifeTime */
@@ -770,6 +787,10 @@ void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 {
 	m_tBufferDesc.iCurNumInstance = In_Json["Com_VIBuffer"]["iCurNumInstance"];
 
+
+	m_tBufferDesc.bRecycle = In_Json["Com_VIBuffer"]["bRecycle"];
+	m_tBufferDesc.bReverse = In_Json["Com_VIBuffer"]["bReverse"];
+	m_tBufferDesc.eType_Action = In_Json["Com_VIBuffer"]["eType_Action"];
 	m_tBufferDesc.eType_Fade = In_Json["Com_VIBuffer"]["eType_Fade"];
 
 

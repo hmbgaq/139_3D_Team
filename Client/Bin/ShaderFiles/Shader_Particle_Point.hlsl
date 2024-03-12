@@ -261,7 +261,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		// Case1. 기존의 Diffuse로 블러를 먹여서 효과를 준다. 
         //Out.vRimBloom = Calculation_Brightness(Out.vColor);
 		// Case2. 색상을 아에 넣어버린다 : 이경우 g_RimBloom_Color 라던지 전역변수 받아서 그걸로 해도됨
-        Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
+        //Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
     }
 	else
 	{

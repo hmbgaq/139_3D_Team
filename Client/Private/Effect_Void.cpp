@@ -210,7 +210,7 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 	/* Rim & Bloom */
 	CJson_Utility::Write_Float3(Out_Json["vBloomPower"], m_tVoidDesc.vBloomPower);
 	CJson_Utility::Write_Float4(Out_Json["vRimColor"], m_tVoidDesc.vRimColor);
-
+	Out_Json["fRimPower"] = m_tVoidDesc.fRimPower;
 
 	/* States */
 	Out_Json["bPlay"]			= m_tVoidDesc.bPlay;
@@ -290,11 +290,9 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 
 
 	/* Rim & Bloom */
-	if(In_Json.contains("vBloomPower"))	// 저장하고 삭제
-		CJson_Utility::Load_Float3(In_Json["vBloomPower"], m_tVoidDesc.vBloomPower);	
-
-	if (In_Json.contains("vRimColor"))	// 저장하고 삭제
-		CJson_Utility::Load_Float4(In_Json["vRimColor"], m_tVoidDesc.vRimColor);
+	CJson_Utility::Load_Float3(In_Json["vBloomPower"], m_tVoidDesc.vBloomPower);	
+	CJson_Utility::Load_Float4(In_Json["vRimColor"], m_tVoidDesc.vRimColor);
+	m_tVoidDesc.fRimPower = (_float)In_Json["fRimPower"];
 
 
 	/* States */

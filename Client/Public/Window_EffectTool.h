@@ -336,9 +336,9 @@ private:
 	_float	m_fColor_Mul_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 
 
-	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
-
+	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fRimPower_Mesh = { 100.f };
 
 	/* Position */
 	_float	m_vMinCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };

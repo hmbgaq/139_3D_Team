@@ -375,6 +375,7 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	/* 소영 추가사항 - Bloom , Rim 용도 ====== */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_tVoidDesc.vBloomPower, sizeof(_float3)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tVoidDesc.vRimColor, sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_tVoidDesc.fRimPower, sizeof(_float)));
 
 	return S_OK;
 }
