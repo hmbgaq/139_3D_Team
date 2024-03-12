@@ -1016,7 +1016,9 @@
     <ClInclude Include="..\Public\SpringCamera.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\stb_image.h" />
+    <ClInclude Include="..\Public\UI_BackGround.h" />
     <ClInclude Include="..\Public\UI_Distortion.h" />
+    <ClInclude Include="..\Public\UI_Loading_Icon.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
     <ClInclude Include="..\Public\UI_Video.h" />
     <ClInclude Include="..\Public\UI_Weakness.h" />
@@ -1771,7 +1773,9 @@
     <ClCompile Include="..\Private\Sniper_Walk_FR.cpp" />
     <ClCompile Include="..\Private\Sniper_Weakspot_Death_01.cpp" />
     <ClCompile Include="..\Private\SpringCamera.cpp" />
+    <ClCompile Include="..\Private\UI_BackGround.cpp" />
     <ClCompile Include="..\Private\UI_Distortion.cpp" />
+    <ClCompile Include="..\Private\UI_Loading_Icon.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
     <ClCompile Include="..\Private\UI_Video.cpp" />
     <ClCompile Include="..\Private\UI_Weakness.cpp" />

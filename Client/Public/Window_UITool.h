@@ -456,6 +456,8 @@ private:
 	std::vector<std::string> m_vecClass =
 	{
 		"Anything",
+		"BackGround",
+		"Loading_Icon",
 		"Player_HPBar",
 		"Player_HPFrame",
 		"Player_Skill_Frame",

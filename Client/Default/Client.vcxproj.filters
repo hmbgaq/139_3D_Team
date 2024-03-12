@@ -2953,6 +2953,12 @@
     <Filter Include="02.GameObjects\UI\97. Video">
       <UniqueIdentifier>{3cb1d511-2556-458b-82a7-568cd584fe7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\07. BackGround">
+      <UniqueIdentifier>{4543f5cb-3424-4398-be4f-e4214dd81bba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\07. BackGround\Loading">
+      <UniqueIdentifier>{01c7a826-6075-4c6a-a9fd-a86a1e767a52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -5973,6 +5979,12 @@
     <ClInclude Include="..\Public\UI_Video.h">
       <Filter>02.GameObjects\UI\97. Video</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_BackGround.h">
+      <Filter>02.GameObjects\UI\02. System\07. BackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Loading_Icon.h">
+      <Filter>02.GameObjects\UI\02. System\07. BackGround\Loading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8433,6 +8445,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Video.cpp">
       <Filter>02.GameObjects\UI\97. Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_BackGround.cpp">
+      <Filter>02.GameObjects\UI\02. System\07. BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Loading_Icon.cpp">
+      <Filter>02.GameObjects\UI\02. System\07. BackGround\Loading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
