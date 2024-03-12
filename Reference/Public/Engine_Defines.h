@@ -16,6 +16,10 @@
 #include <DirectXCollision.h>
 #include <random>
 
+/* Windows SDK */
+//#include <mfapi.h>
+//#include <mfreadwrite.h>
+
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 

@@ -149,7 +149,7 @@ HRESULT CPlayer::Render()
 void CPlayer::Aim_Walk(_float fTimeDelta)
 {
 	_uint AnimIndex;
-	_uint ReversedAnimIndex;
+	//_uint ReversedAnimIndex;
 
 
 	if (m_pGameInstance->Key_Pressing(DIK_W))

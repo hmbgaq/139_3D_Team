@@ -23,11 +23,11 @@ HRESULT CScreamer::Initialize(void* pArg)
 {
 	FAILED_CHECK(Ready_Components());
 
-	m_iRenderPass = ECast(ANIM_SHADER::ANIM_ORIGIN);
+	//m_iRenderPass = ECast(ANIM_SHADER::ANIM_ORIGIN);
 
 	//m_pTransformCom->Set_Position(_float3(15.f, 0.f, 10.f));
-	//m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
-	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
+	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
+	//m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
 
 	///* Test UI */
 	//m_pWeakneesUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
@@ -70,7 +70,6 @@ void CScreamer::Tick(_float fTimeDelta)
 		m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());
 	}
 		
-
 	m_fTimeDelta += fTimeDelta;
 	m_fDissolveWeight += fTimeDelta * 0.5f;
 
@@ -109,7 +108,7 @@ HRESULT CScreamer::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 		
-		m_pShaderCom->Begin(3);
+		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_EXAMPLE));
 
 		m_pModelCom->Render(_uint(i));
 	}
@@ -143,64 +142,63 @@ HRESULT CScreamer::Render_Shadow()
 
 HRESULT CScreamer::Render_OutLine()
 {
-	FAILED_CHECK(Bind_ShaderResources());
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (size_t i = 0; i < iNumMeshes; i++)
-	{
-		_float m_fLineThick = 0.5f;
-		m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
-		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
-
-		m_pModelCom->Render(0);
-	}
+	//FAILED_CHECK(Bind_ShaderResources());
+	//
+	//_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	//
+	//for (size_t i = 0; i < iNumMeshes; i++)
+	//{
+	//	_float m_fLineThick = 0.5f;
+	//	m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
+	//
+	//	m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+	//	m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+	//	m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+	//
+	//	m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
+	//
+	//	m_pModelCom->Render(0);
+	//}
 
 	return S_OK;
 }
 
 HRESULT CScreamer::Render_Cascade_Shadow(_uint i)
 {
-	if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
-		return S_OK;
-	
-	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
-	
-	FAILED_CHECK(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i));
-	
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_CascadeProj", &m_pGameInstance->Get_Shadow_Proj()));
-	
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-	
-	for (_uint i = 0; i < iNumMeshes; ++i)
-	{
-		FAILED_CHECK(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture"));
-	
-		FAILED_CHECK(m_pModelCom->Render(m_pShaderCom, i,ECast(ANIM_SHADER::ANIM_CASCADE_SHADOW)));
-	}
-	
+	//if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
+	//	return S_OK;
+	//
+	//FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+	//
+	//FAILED_CHECK(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i));
+	//
+	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_CascadeProj", &m_pGameInstance->Get_Shadow_Proj()));
+	//
+	//_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	//
+	//for (_uint i = 0; i < iNumMeshes; ++i)
+	//{
+	//	FAILED_CHECK(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture"));
+	//
+	//	FAILED_CHECK(m_pModelCom->Render(m_pShaderCom, i,ECast(ANIM_SHADER::ANIM_CASCADE_SHADOW)));
+	//}
+	//
 	return S_OK;
 }
 
 HRESULT CScreamer::Ready_Components()
 {
+	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
 	/* For. Transform */
 	{
 		CGameObject::GAMEOBJECT_DESC tTransformDESC = {};
 		tTransformDESC.fRotationPerSec = 10.f;
 		tTransformDESC.fSpeedPerSec = 10.f;
-
 		FAILED_CHECK(__super::Initialize(&tTransformDESC));
 	}
-
-	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
 	{
@@ -209,9 +207,7 @@ HRESULT CScreamer::Ready_Components()
 
 	/* For.Com_Model */
 	{
-
 		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Screamer"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
-	
 	}
 
 	/* For.Com_Collider */
@@ -219,7 +215,6 @@ HRESULT CScreamer::Ready_Components()
 	{
 		BoundingDesc.fRadius = 1.5f;
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
-		
 		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 	}
 
@@ -242,22 +237,25 @@ HRESULT CScreamer::Bind_ShaderResources()
 	/* Variable */
 	_float gCamFar = m_pGameInstance->Get_CamFar();
 	m_pShaderCom->Bind_RawValue("g_fCamFar", &gCamFar, sizeof(_float));
-	m_pShaderCom->Bind_RawValue("g_TimeDelta", &m_fTimeDelta, sizeof(_float));
-	m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float));
+	//m_pShaderCom->Bind_RawValue("g_TimeDelta", &m_fTimeDelta, sizeof(_float));
+	//m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float));
 
 	/* Texture */
-	m_pBreakTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture");
-	m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
+	//m_pBreakTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture");
+	//m_pDissolveTexCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
 
 	/* Camera */
 	m_vCamPos = m_pGameInstance->Get_CamPosition();
 	m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
 
 	/* RimLight */
-	m_vRimColor = { 0.0f, 1.f, 0.f, 1.f };
-	m_vBloomPower = _float3(1.0f, 1.0f, 1.0f);
+	m_vRimColor = { 0.0f, 0.6f, 0.f, 1.f };
+	m_vBloomPower = _float3(0.7f, 0.7f, 0.7f);
+	m_fRimPower = 5.f;
+
 	m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
 	m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
+	m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
 
 	return S_OK;
 }

@@ -50,8 +50,6 @@ HRESULT CUI_Player_HPBar::Initialize(void* pArg)
 	해당 객체에 원하는 함수나 변수 만들어서 불러오기.
 	*/
 
-	m_pDataManager = CData_Manager::GetInstance();
-
 	Set_OwnerHp();
 
 	return S_OK;
@@ -64,8 +62,8 @@ void CUI_Player_HPBar::Priority_Tick(_float fTimeDelta)
 
 void CUI_Player_HPBar::Tick(_float fTimeDelta)
 {
-	m_fCurHP = m_pDataManager->Get_CurHP();
-	m_fMaxHP = m_pDataManager->Get_MaxHP();
+	m_fCurHP = m_pData_Manager->Get_CurHP();
+	m_fMaxHP = m_pData_Manager->Get_MaxHP();
 
 	if (m_pGameInstance->Key_Down(DIK_Z))
 	{
@@ -74,12 +72,12 @@ void CUI_Player_HPBar::Tick(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_Q)) // 피격
 	{
-		m_pDataManager->Add_CurHP(-10.f);
+		m_pData_Manager->Add_CurHP(-10.f);
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_E)) // 회복
 	{
-		m_pDataManager->Add_CurHP(10.f);
+		m_pData_Manager->Add_CurHP(10.f);
 		m_fPreHP += 10.f;
 	}
 
@@ -87,7 +85,7 @@ void CUI_Player_HPBar::Tick(_float fTimeDelta)
 	if (m_fPreHP < m_fCurHP)
 		m_fPreHP = m_fCurHP;
 
-	m_pDataManager->Limit_HP();
+	m_pData_Manager->Limit_HP();
 
 	if (m_bActive)
 	{
@@ -247,7 +245,7 @@ void CUI_Player_HPBar::Set_OwnerHp(/*CPlayer pPlayer*/)
 	//m_fPreHP = m_fCurHP;
 
 	
-	m_fMaxHP = m_pDataManager->Get_CurHP();
+	m_fMaxHP = m_pData_Manager->Get_CurHP();
 	m_fCurHP = m_fMaxHP;
 	m_fPreHP = m_fCurHP;
 }

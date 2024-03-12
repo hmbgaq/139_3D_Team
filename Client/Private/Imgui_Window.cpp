@@ -102,7 +102,7 @@ void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
 	else if (m_eDialogType == DIALOG_TYPE::LOAD_DIALOG)
 		strAdd = u8" 불러오기";
 
-	const _char* szFilters = "Json (*.json){.json}, Binary (*.dat, *.vfx,){.dat,.vfx}, Instance (*.dat){.dat}, All files{.*}";
+	const _char* szFilters = "Json (*.json){.json},Binary (*.dat, *.vfx,){.dat,.vfx},Instance (*.dat){.dat},All files{.*}";
 
 	switch (eWindowType)
 	{
@@ -163,7 +163,8 @@ void CImgui_Window::ShowDialog()
 			else
 				MSG_BOX("m_eDialogType 셋팅 하자");
 		}
-
+		// SH_Add : Save Load시 키 입력 방지용 bool변수 추가...
+		m_bShortOff = false;
 		g_pFileDialog->Close();
 	}
 }
@@ -284,12 +285,12 @@ void CImgui_Window::Set_GuizmoUI(CGameObject* pGameObject)
 	ImGuizmo::SetRect(0, 0, g_iWinSizeX, g_iWinSizeY);
 
 
-	if (ImGui::IsKeyPressed(ImGuiKey_T))
-		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-	if (ImGui::IsKeyPressed(ImGuiKey_R))
-		mCurrentGizmoOperation = ImGuizmo::ROTATE;
-	if (ImGui::IsKeyPressed(ImGuiKey_E))
-		mCurrentGizmoOperation = ImGuizmo::SCALE;
+	//if (ImGui::IsKeyPressed(ImGuiKey_T))
+	//	mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	//if (ImGui::IsKeyPressed(ImGuiKey_R))
+	//	mCurrentGizmoOperation = ImGuizmo::ROTATE;
+	//if (ImGui::IsKeyPressed(ImGuiKey_E))
+	//	mCurrentGizmoOperation = ImGuizmo::SCALE;
 
 	if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;

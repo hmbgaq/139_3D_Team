@@ -17,6 +17,8 @@ CState<CPlayer>* CPlayer_SlamDown_ManHero::Update(CPlayer* pActor, _float fTimeD
 	{
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
+
+	return nullptr;
 }
 
 void CPlayer_SlamDown_ManHero::Release(CPlayer* pActor)
