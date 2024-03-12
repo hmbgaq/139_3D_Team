@@ -9,6 +9,7 @@
 #include "VampireCommander_HitLeft.h"
 #include "VampireCommander_HitRight.h"
 #include "VampireCommander_CutScene.h"
+#include "VampireCommander_TurnL90.h"
 
 #include "Data_Manager.h"
 
@@ -69,6 +70,7 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	if (m_bLookAt == true)
 	{
 		Look_At_Target();
+		m_pActor->Set_State(new CVampireCommander_TurnL90);
 		m_bLookAt = false;
 	}
 }
