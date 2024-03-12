@@ -57,13 +57,14 @@ public:
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 	_float	Get_TrackPosition();
 
-	_float3 Get_MovePos() {
-		return m_vMovePos;
+	_float3 Get_MovePos() { return m_vMovePos; }
+	void Set_TrackPosition(_int iNewTrackPosition);
+	void Set_StiffnessRate(_float fStiffnessRate) { m_pModelCom->Set_StiffnessRate(fStiffnessRate); }
+
+	void Set_StiffnessRate_Upper(_float fStiffnessRate) {
+		m_pModelCom->Set_StiffnessRate_Upper(fStiffnessRate);
 	}
 
-	void Set_StiffnessRate(_float fStiffnessRate) {
-		m_pModelCom->Set_StiffnessRate(fStiffnessRate);
-	}
 
 
 #ifdef _DEBUG
@@ -90,6 +91,11 @@ public:	//!For Animation Split
 	_bool Is_Splitted() { return m_pModelCom->Is_Splitted(); }
 	void Set_Splitted(_bool _bIsSplitted) { m_pModelCom->Set_Splitted(_bIsSplitted); };
 
+	void Set_RotateUpperX(MoveDirection eDirection);
+
+	void Activate_ShootingReaction(_float fHeight = 20.f);
+	void Update_ShootingReaction(_float fTimeDelta);
+
 
 
 protected:
@@ -105,6 +111,14 @@ protected:
 	class CTransform* m_pParentTransform = { nullptr };
 	_float4x4	m_WorldMatrix = {};
 	_float3		m_vMovePos = { 0.f, 0.f, 0.f };
+
+
+	_float		m_fRotateUpperX = { 0.f };
+	_float		m_fRotateUpperY = { 0.f };
+
+	_float		m_fShootingReaction = { 0.f };
+	_float		m_fShootingReactionTarget = { 0.f };
+
 
 	//_bool		m_bDissolve = { false };
 	//_float		m_fDissolveWeight = { 0.f };

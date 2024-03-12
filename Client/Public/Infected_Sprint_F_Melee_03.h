@@ -1,7 +1,6 @@
 #pragma once
 #include "Infected_State_Attack.h"
 
-
 BEGIN(Client)
 
 class CInfected_Sprint_F_Melee_03 : public CInfected_State_Attack

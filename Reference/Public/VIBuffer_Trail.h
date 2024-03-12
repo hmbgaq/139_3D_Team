@@ -3,9 +3,6 @@
 
 BEGIN(Engine)
 
-class CGameObject;
-class CTransform;
-class CBone;
 
 
 class ENGINE_DLL CVIBuffer_Trail : public CVIBuffer
@@ -13,20 +10,17 @@ class ENGINE_DLL CVIBuffer_Trail : public CVIBuffer
 public:
 	typedef struct tagTrailBufferDesc
 	{
-		_bool		bTrailOn = { FALSE };
+		// 저장해야하는 고정 정보
+		_float3		vPos_0	= { 0.f, 0.f, 0.f };
+		_float3		vPos_1	= { 0.f, 0.f, 1.f };
 
-		_float3		vPos_0;
-		_float3		vPos_1;
-		_uint		iPass;
-
-		_uint		iNumVertices;
-		_uint		iMaxCnt;
-		_uint		iVtxCnt;
-
-		_float4		vLocalSwordLow;
-		_float4		vLocalSwordHigh;
+		_uint		iMaxCnt = { 32 };
 
 		_uint		iLerpPointNum = { 12 };
+
+
+		// 업데이트 돌면서 바뀌는 정보 (저장X)
+		_uint		iVtxCnt = { 0 };
 		_int		iCatMullRomIndex[4];
 
 	}TRAIL_BUFFER_DESC;

@@ -12,10 +12,9 @@ class CMasterCamera : public CGameObject
 public:
 	enum CameraType
 	{
-		DynamicCamera,//툴 및 테스트용 카메라 
-		SpringCamera,//플레이어 에 붙어 있는 카메라 
-		CutSceneCamera, // 맵및 보스 전에서 보일 카메라 
-
+		DynamicCamera,		//툴 및 테스트용 카메라 
+		SpringCamera,		//플레이어 에 붙어 있는 카메라 
+		CutSceneCamera,		// 맵및 보스 전에서 보일 카메라 
 		CameraType_End
 	};
 

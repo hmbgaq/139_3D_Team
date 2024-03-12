@@ -9,10 +9,9 @@
 
 /* 셰이더의 전역변수 == 상수테이블(Constant Table) */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D		g_Texture[2];
-
-texture2D		g_DiffuseTexture;
-texture2D		g_DepthTexture;
+Texture2D		g_Texture[2];
+Texture2D		g_DiffuseTexture;
+Texture2D		g_DepthTexture;
 
 vector			g_vCamDirection;
 

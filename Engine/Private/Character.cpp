@@ -1,9 +1,8 @@
-#include "..\Public\Character.h"
+#include "Character.h"
 #include "GameInstance.h"
 #include "RigidBody.h"
 #include "PhysXCharacterController.h"
 #include "Bone.h"
-
 
 CCharacter::CCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -27,25 +26,23 @@ HRESULT CCharacter::Initialize_Prototype()
 
 HRESULT CCharacter::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize(pArg));
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
+	FAILED_CHECK(Ready_Components());
 
-	if (FAILED(Ready_PartObjects()))
-		return E_FAIL;
+	FAILED_CHECK(Ready_PartObjects());
 
 	m_pRigidBody = CRigidBody::Create(m_pDevice, m_pContext);
-	if (nullptr == m_pRigidBody)
-		return E_FAIL;
+
+	NULL_CHECK_RETURN(m_pRigidBody, E_FAIL);
+
 	if (nullptr != Find_Component(g_pRigidBodyTag))
 		return E_FAIL;
+
 	m_Components.emplace(g_pRigidBodyTag, m_pRigidBody);
 	Safe_AddRef(m_pRigidBody);
 	m_pRigidBody->Set_Owner(this);
 	m_pRigidBody->Set_Transform(m_pTransformCom);
-
 
 	return S_OK;
 }
@@ -97,8 +94,7 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 
 HRESULT CCharacter::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Render());
 
 	return S_OK;
 }
@@ -275,6 +271,11 @@ _float CCharacter::Get_TrackPosition()
 	return m_pBody->Get_TrackPosition();
 }
 
+void CCharacter::Set_TrackPosition(_int iNewTrackPostion)
+{
+	return m_pBody->Set_TrackPosition(iNewTrackPostion);
+}
+
 void CCharacter::Go_Straight(_float fTimeDelta)
 {
 	m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
@@ -353,6 +354,10 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 	{
 		Hitted_Dead(eHitPower);
 		//eHitType = Hit_Type::Hit_Finish;
+	}
+	else if (m_bTrigger == true)
+	{
+
 	}
 	else //if (eHitPower >= m_eStrength)
 	{
@@ -483,6 +488,16 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fSpeedCap)
 void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
 {
 	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState);
+}
+
+void CCharacter::Set_StiffnessRate(_float fStiffnessRate)
+{
+	m_pBody->Set_StiffnessRate(fStiffnessRate);
+}
+
+void CCharacter::Set_StiffnessRate_Upper(_float fStiffnessRate)
+{
+	m_pBody->Set_StiffnessRate_Upper(fStiffnessRate);
 }
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)

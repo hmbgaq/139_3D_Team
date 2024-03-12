@@ -3,17 +3,13 @@
 #include "Engine_Macro.h"
 #include "Base.h"
 #include "GameInstance.h"
-#include "Client_Defines.h"
+
 
 BEGIN(Engine)
 class CGameObject;
 END
 
-
 BEGIN(Client)
-class CEffect;
-//class;
-
 
 class CClone_Manager : public CBase
 {
@@ -49,17 +45,11 @@ public:	// 생성 함수 작성
 	};
 
 
-	//! 유정 : strFileName은 json파일 이름. ("../Bin/DataFiles/Data_Effect/" 경로에 저장해 놓은 json파일 중 원하는거 골라쓰기!)
-	CEffect* Create_Effect(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner = nullptr);
-
-
 
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
-
-
 
 
 public:

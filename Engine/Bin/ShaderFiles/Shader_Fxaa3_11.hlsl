@@ -714,22 +714,32 @@ Position on span is used to compute sub-pixel filter offset using simple ramp,
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-struct TARGET_IN
+struct VS_IN
 {
     float3 vPosition : POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
 
-struct VS_OUT_TARGET
+struct VS_OUT
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
 
-
-VS_OUT_TARGET VS_MAIN_FXAA(TARGET_IN In)
+struct PS_IN
 {
-    VS_OUT_TARGET Out = (VS_OUT_TARGET) 0;
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+struct PS_OUT
+{
+    float4 vColor    : SV_TARGET0;
+};
+
+VS_OUT VS_MAIN_FXAA(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
 	
     matrix matWV, matWVP;
 
@@ -745,12 +755,19 @@ VS_OUT_TARGET VS_MAIN_FXAA(TARGET_IN In)
 
 bool g_bFxaa = true;
 
-float4 PS_MAIN_FXAA(VS_OUT_TARGET In) : SV_TARGET
+PS_OUT PS_MAIN_FXAA(PS_IN In) : SV_TARGET
 {
+    PS_OUT Out = (PS_OUT) 0;
+    
     if (g_bFxaa)
-        return float4(FxaaPixelShader(In.vTexcoord), 1.f);
+        Out.vColor = float4(FxaaPixelShader(In.vTexcoord), 1.f);
     else
-        return g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
+        Out.vColor =  g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    if(Out.vColor.a == 0)
+        discard;
+    
+    return Out;
 }
 
 technique11 DefaultTechnique

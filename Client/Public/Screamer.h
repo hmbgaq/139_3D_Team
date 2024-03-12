@@ -39,11 +39,10 @@ private:
 	_int				m_iRenderPass			= {};
 	_float				m_fTimeDelta			= {};
 	_float				m_fDissolveWeight		= {};
-	_float4				m_vBloomColor			= {};
 
-	_float4				m_vRimColor				= { 1.0f, 1.f, 1.f, 0.3f };
 	_float4				m_vCamPos				= {};
-	_float3				m_vRimPower				= _float3(0.1f, 0.1f, 0.1f);
+	_float4				m_vRimColor				= { 1.0f, 1.f, 1.f, 0.3f };
+	_float3				m_vBloomPower = _float3(0.1f, 0.1f, 0.1f);
 
 	/* test */
 	_bool				m_bRim					= { false };

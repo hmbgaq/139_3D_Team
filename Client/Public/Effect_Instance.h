@@ -56,8 +56,8 @@ public:
 
 /* For.Desc */
 public:
-	EFFECT_INSTANCE_DESC* Get_InstanceDesc() { return &m_tInstanceDesc; }
-
+	EFFECT_INSTANCE_DESC*	Get_InstanceDesc() { return &m_tInstanceDesc; }
+	DISTORTION_DESC*		Get_Distortion_Desc() { return &m_tDistortionDesc; }
 
 	CVIBuffer_Effect_Model_Instance* Get_VIBufferCom() { return m_pVIBufferCom; }
 
@@ -68,6 +68,7 @@ private:
 	CVIBuffer_Effect_Model_Instance*	m_pVIBufferCom				= { nullptr };
 
 	EFFECT_INSTANCE_DESC				m_tInstanceDesc = {};
+	DISTORTION_DESC						m_tDistortionDesc = {};
 
 private:
 	HRESULT Ready_Components();

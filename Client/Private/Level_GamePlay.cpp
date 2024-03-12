@@ -5,6 +5,7 @@
 #include "Camera_Dynamic.h"
 #include "Environment_Instance.h"
 #include "Effect_Instance.h"
+#include "Data_Manager.h"
 
 #pragma region UI
 #include "UI_Player_HPBar.h"
@@ -18,9 +19,7 @@
 #pragma region MAP
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
-
 #pragma endregion
-
 
 #pragma region Test
 #include "Monster.h"
@@ -33,7 +32,6 @@
 #include "Effect.h"
 #pragma endregion
 
-#include "Data_Manager.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -46,13 +44,12 @@ HRESULT CLevel_GamePlay::Initialize()
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
 
 	FAILED_CHECK(Ready_LightDesc());
-	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
+	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
+	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
-	FAILED_CHECK(Ready_LandObjects());
-	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
-
-	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
+	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 
 	//FAILED_CHECK(Ready_UI());
 
@@ -100,8 +97,6 @@ HRESULT CLevel_GamePlay::Render()
 HRESULT CLevel_GamePlay::Ready_LightDesc()
 {
 	/* For. Shadow */
-	//XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	//XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, lightfar ÀÓ ));
 	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_GAMEPLAY), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
 	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_GAMEPLAY),  60.f,  (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear,  Engine::g_fLightFar);
 
@@ -162,23 +157,20 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc));
 
-
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_MasterCamera")));
 
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag, void* pArg)
+HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Rentier"), pArg));
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
+	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Rentier"));
 
-	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
-	//if (nullptr == pPlayer)
-	//	return E_FAIL;
-
+	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"));
+	//NULL_CHECK_RETURN(pPlayer, E_FAIL);
 	//m_pGameInstance->Set_Player(dynamic_cast<CCharacter*>(pPlayer));
 
 	return S_OK;
@@ -193,79 +185,27 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag, void* pArg)
+HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 {
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Assassin")));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected")));
-// 	for (int i = 0; i < 100; ++i)
-// 	{
-		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
-/*	}*/
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
 
-	{
-		//CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-		//if (nullptr == pMonster)	return E_FAIL;
-		//pMonster->Set_Position(_float3(0.f, 0.f, 2.f));
-	}
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
+	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
 
-	{
-		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-		if (nullptr == pMonster)	return E_FAIL;
-		pMonster->Set_Position(_float3(1.f, 0.f, 2.f));
-	}
+	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_Position(_float3(250.5, 0.f, 10.f ));
 
-
-
-
-	//CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
-
-	//CMonster::MONSTER_DESC Desc = {};
-	//Desc.fRotationPerSec = GameObjectDesc.fRotationPerSec;
-	//Desc.fSpeedPerSec = GameObjectDesc.fSpeedPerSec;
-	//Desc.bPreview = false;
-	//Desc.WorldMatrix = XMMatrixIdentity();
-
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"), &Desc));
-
+	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_Position(_float3(252.f, 0.f, 12.f ));
 	
-
-
-
-	//!
-	//!for (_int i = 0; i < iMonsterJsonSize; ++i)
-	//!{
-	//!	string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + "@" + to_string(i);
-	//!
-	//!	m_vecCreateMonsterTag.push_back(pushMonsterTag);
-	//!
-	//!	CMonster::MONSTER_DESC MonsterDesc;
-	//!	MonsterDesc.bPreview = false;
-	//!
-	//!
-	//!	const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-	//!	_float4x4 WorldMatrix;
-	//!
-	//!	for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-	//!	{
-	//!		for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-	//!		{
-	//!			WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-	//!		}
-	//!	}
-	//!
-	//!	MonsterDesc.WorldMatrix = WorldMatrix;
-	//!
-	//!	CMonster* pMonster = { nullptr };
-	//!
-	//!	wstring strProtoTypeTag;
-	//!	m_pGameInstance->String_To_WString((string)MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
-	//!
-	//!	pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
-	//!
-	//!	m_vecCreateMonster.push_back(pMonster);
-	//!	m_iCreateMonsterIndex++;
-	//!}
-
+	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_Position(_float3(255.5f, 0.f, 15.f ));
+	
 
 	return S_OK;
 }
@@ -275,8 +215,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Terrain")));
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky")));
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_SkyDome")));
-
-	
 
  	json Stage1MapJson = {};
  
@@ -401,36 +339,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
  
  		MonsterDesc.WorldMatrix = WorldMatrix;
  
- 		if(FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
- 			return E_FAIL;
+		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc));
  		
  	}
 
-
 	return S_OK;
 
-}
-
-HRESULT CLevel_GamePlay::Ready_LandObjects()
-{
-	CLandObject::LANDOBJECT_DESC	LandObjectDesc{};
-
-	LandObjectDesc.pTerrainBuffer = dynamic_cast<CVIBuffer_Terrain*>(m_pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_BackGround"), TEXT("Com_VIBuffer")));
-	LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
-
-	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
-	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
-
-	FAILED_CHECK(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc));
-
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Building(const wstring & strLayerTag, void* pArg)
-{
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg));
-
-	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
@@ -438,7 +352,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
 	//! ¾Ö´ÔÀÎ½ºÅÏ½ÌÀÌ ÇÒÇÊ¿ä¾ø¾îÁü. ¤¾¤¾¤¾¤¾¤¾¤¾FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
 
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
 
 	///* ui test */
 	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
@@ -447,8 +360,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 	//desc.fPositionX = (_float)g_iWinSizeX / 2 + 20.f;
 	//desc.fPositionY = (_float)g_iWinSizeY / 2 + 20.f;
 	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"), &desc);
-
-		
 
 	return S_OK;
 }

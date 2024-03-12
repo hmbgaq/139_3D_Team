@@ -251,6 +251,11 @@ void CModel::Set_StiffnessRate(_float fStiffnessRate)
 	m_Animations[m_iCurrentAnimIndex]->Set_StiffnessRate(fStiffnessRate);
 }
 
+void CModel::Set_StiffnessRate_Upper(_float fStiffnessRate)
+{
+	m_Animations[m_iUpperAnimIndex]->Set_StiffnessRate(fStiffnessRate);
+}
+
 _matrix CModel::Get_CombinedMatrix(_uint iBoneIndex)
 {
 	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
@@ -503,6 +508,11 @@ _bool CModel::Is_Inputable_Front(_uint _iIndexFront)
 _float CModel::Get_TrackPosition()
 {
 	return m_Animations[m_iCurrentAnimIndex]->Get_TrackPosition();
+}
+
+void CModel::Set_TrackPosition(_int iNewTrackPosition)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(iNewTrackPosition);
 }
 
 void CModel::Write_Names(const string& strModelFilePath)

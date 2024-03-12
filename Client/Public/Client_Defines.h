@@ -96,6 +96,9 @@ namespace Client
 	};
 
 
+/* Yoojeong_Add */
+#define EFFECT_MANAGER CEffect_Manager::GetInstance()
+/* Yoojeong_End */
 	
 }
 

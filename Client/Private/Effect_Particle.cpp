@@ -45,147 +45,149 @@ void CEffect_Particle::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Particle::Tick(_float fTimeDelta)
 {
-	//CVIBuffer_Particle_Point::PARTICLE_BUFFER_DESC* pDesc = m_pVIBufferCom->Get_Desc();
-	CVIBuffer_Particle::PARTICLE_BUFFER_DESC* pDesc = m_pVIBufferCom->Get_Desc();
-
-	if (m_tVoidDesc.bActive_Tool)
+#ifdef _DEBUG
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		m_tVoidDesc.fSequenceTime = m_tVoidDesc.fLifeTime + m_tVoidDesc.fRemainTime;
-
-		//pDesc->vMinMaxLifeTime.x = m_fWaitingTime;
-		//pDesc->vMinMaxLifeTime.y = m_fLifeTime;
-
-		if (m_tVoidDesc.bPlay)
+		if (m_tVoidDesc.bActive_Tool)
 		{
-			m_tVoidDesc.fSequenceAcc += fTimeDelta;
+#endif // _DEBUG
+			m_tVoidDesc.fSequenceTime = m_tVoidDesc.fLifeTime + m_tVoidDesc.fRemainTime;
 
-			// 시작지연 누적시간이 지나면 렌더 시작(파티클 시작)
-			if (m_tVoidDesc.fWaitingAcc <= m_tVoidDesc.fWaitingTime)
+			if (m_tVoidDesc.bPlay)
 			{
-				m_tVoidDesc.fWaitingAcc += fTimeDelta;
+				m_tVoidDesc.fSequenceAcc += fTimeDelta;
 
-				if (m_tVoidDesc.fWaitingAcc >= m_tVoidDesc.fWaitingTime)
+				// 시작지연 누적시간이 지나면 렌더 시작(파티클 시작)
+				if (m_tVoidDesc.fWaitingAcc <= m_tVoidDesc.fWaitingTime)
 				{
-					m_tVoidDesc.bRender = TRUE;
-					//pDesc->bPlay	= TRUE;
-				}
-				else
-					return;
-			}
+					m_tVoidDesc.fWaitingAcc += fTimeDelta;
 
-			// 시간 누적 시작
-			m_tVoidDesc.fTimeAcc += fTimeDelta;
-			m_tVoidDesc.fSpriteTimeAcc += fTimeDelta;
-			m_tVoidDesc.fLifeTimeRatio = min(1.0f, m_tVoidDesc.fTimeAcc / m_tVoidDesc.fLifeTime);
-
-
-			/* ======================= 라이프 타임 동작 시작 ======================= */
-			if (m_tVoidDesc.bUseSpriteAnim)
-			{
-				if (!m_tSpriteDesc.bSpriteFinish)
-				{
-					if (m_tVoidDesc.fSpriteTimeAcc > m_tSpriteDesc.fSequenceTerm)
+					if (m_tVoidDesc.fWaitingAcc >= m_tVoidDesc.fWaitingTime)
 					{
-						(m_tSpriteDesc.vUV_CurTileIndex.x)++;	// 가로 인덱스 증가
+						m_tVoidDesc.bRender = TRUE;
+						//pDesc->bPlay	= TRUE;
+					}
+					else
+						return;
+				}
 
-						if (m_tSpriteDesc.vUV_CurTileIndex.x == m_tSpriteDesc.vUV_MaxTileCount.x)
+				// 시간 누적 시작
+				m_tVoidDesc.fTimeAcc += fTimeDelta;
+				m_tVoidDesc.fSpriteTimeAcc += fTimeDelta;
+				m_tVoidDesc.fLifeTimeRatio = min(1.0f, m_tVoidDesc.fTimeAcc / m_tVoidDesc.fLifeTime);
+
+
+				/* ======================= 라이프 타임 동작 시작 ======================= */
+				if (m_tVoidDesc.bUseSpriteAnim)
+				{
+					if (!m_tSpriteDesc.bSpriteFinish)
+					{
+						if (m_tVoidDesc.fSpriteTimeAcc > m_tSpriteDesc.fSequenceTerm)
 						{
-							(m_tSpriteDesc.vUV_CurTileIndex.y)++;									// 세로 인덱스 증가
-							m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;	// 가로 인덱스 초기화
+							(m_tSpriteDesc.vUV_CurTileIndex.x)++;	// 가로 인덱스 증가
 
-							if (m_tSpriteDesc.vUV_CurTileIndex.y == m_tSpriteDesc.vUV_MaxTileCount.y)	// 세로 인덱스도 끝까지 왔다면
+							if (m_tSpriteDesc.vUV_CurTileIndex.x == m_tSpriteDesc.vUV_MaxTileCount.x)
 							{
-								m_tSpriteDesc.bSpriteFinish = TRUE;										// 스프라이트 애님 끝	
+								(m_tSpriteDesc.vUV_CurTileIndex.y)++;									// 세로 인덱스 증가
+								m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;	// 가로 인덱스 초기화
+
+								if (m_tSpriteDesc.vUV_CurTileIndex.y == m_tSpriteDesc.vUV_MaxTileCount.y)	// 세로 인덱스도 끝까지 왔다면
+								{
+									m_tSpriteDesc.bSpriteFinish = TRUE;										// 스프라이트 애님 끝	
+								}
 							}
+							m_tVoidDesc.fSpriteTimeAcc = 0.f;
 						}
-						m_tVoidDesc.fSpriteTimeAcc = 0.f;
+					}
+
+					if (m_tSpriteDesc.bSpriteFinish)
+						m_tVoidDesc.bRender = FALSE;
+				}
+
+				/* ======================= 라이프 타임 동작 끝  ======================= */
+
+				if (m_tVoidDesc.fTimeAcc >= m_tVoidDesc.fLifeTime)
+				{
+					// 삭제 대기시간 누적 시작
+					m_tVoidDesc.fRemainAcc += fTimeDelta;
+
+					// 디졸브 시작
+					m_tVoidDesc.bDissolve = TRUE;
+					if (m_tVoidDesc.bDissolve)
+					{
+						m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
+					}
+
+					if (m_tVoidDesc.fRemainAcc >= m_tVoidDesc.fRemainTime)
+					{
+						m_tVoidDesc.fDissolveAmount = 1.f;
+						m_tVoidDesc.bRender = TRUE;
+						return;
 					}
 				}
 
-				if (m_tSpriteDesc.bSpriteFinish)
-					m_tVoidDesc.bRender = FALSE;
-			}
-
-			/* ======================= 라이프 타임 동작 끝  ======================= */
-
-			if (m_tVoidDesc.fTimeAcc >= m_tVoidDesc.fLifeTime)
-			{
-				// 삭제 대기시간 누적 시작
-				m_tVoidDesc.fRemainAcc += fTimeDelta;
-
-				// 디졸브 시작
-				m_tVoidDesc.bDissolve = TRUE;
-				if (m_tVoidDesc.bDissolve)
+				if (m_tVoidDesc.bRender)
 				{
-					m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
-				}
-
-				if (m_tVoidDesc.fRemainAcc >= m_tVoidDesc.fRemainTime)
-				{
-					m_tVoidDesc.fDissolveAmount = 1.f;
-					m_tVoidDesc.bRender = TRUE;
-					return;
+					m_pVIBufferCom->Update(fTimeDelta);
 				}
 			}
-
-			if (m_tVoidDesc.bRender)
-			{
-				m_pVIBufferCom->Update(fTimeDelta);
-			}
+#ifdef _DEBUG
 		}
 	}
-	//else
-	//{
-	//	m_tParticleDesc.bActive_Tool = FALSE;
-	//}
+#endif // _DEBUG
+
 }
 
 void CEffect_Particle::Late_Tick(_float fTimeDelta)
 {
-	if (m_tVoidDesc.bActive_Tool)
+#ifdef _DEBUG
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		if (m_tVoidDesc.bRender)
+		if (m_tVoidDesc.bActive_Tool)
 		{
-			if (nullptr != m_tVoidDesc.pParentObj)
+#endif // _DEBUG
+			if (m_tVoidDesc.bRender)
 			{
-				if (m_tVoidDesc.bParentPivot)
+				__super::Update_PivotMat();
+
+				if (m_bSortZ)
 				{
-					m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
-					XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
-
-					//_float3 vParentScale = m_tVoidDesc.pParentObj->Get_Transform()->Get_Scaled();
-					//m_pTransformCom->Set_Scaling(vParentScale.x, vParentScale.y, vParentScale.z);
+					//m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
 				}
-			}
+				Compute_CamDistance();
 
-			if (m_bSortZ)
-			{
-				//m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
+				// CRenderer::RENDER_BLEND
+				FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this), );
 			}
-			Compute_CamDistance();
-
-			// CRenderer::RENDER_BLEND
-			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this));
+#ifdef _DEBUG
 		}
 	}
+#endif // _DEBUG
 }
 
 HRESULT CEffect_Particle::Render()
 {
-	if (m_tVoidDesc.bActive_Tool)
+#ifdef _DEBUG
+	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		if (FAILED(Bind_ShaderResources()))
-			return E_FAIL;
+		if (m_tVoidDesc.bActive_Tool)
+		{
+#endif // _DEBUG
+			if (FAILED(Bind_ShaderResources()))
+				return E_FAIL;
 
-		/* 이 쉐이더에 0번째 패스로 그릴거야. */
-		m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
+			/* 이 쉐이더에 0번째 패스로 그릴거야. */
+			m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
 
-		/* 내가 그리려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
-		m_pVIBufferCom->Bind_VIBuffers();
+			/* 내가 그리려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
+			m_pVIBufferCom->Bind_VIBuffers();
 
-		/* 바인딩된 정점, 인덱스를 그려. */
-		m_pVIBufferCom->Render();
+			/* 바인딩된 정점, 인덱스를 그려. */
+			m_pVIBufferCom->Render();
+#ifdef _DEBUG
+		}
 	}
+#endif // _DEBUG
 
 
 	return S_OK;
@@ -287,25 +289,28 @@ HRESULT CEffect_Particle::Ready_Components()
 
 
 	/* For.Com_Texture */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
-	FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
-
-
-	if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
 	{
-		/* For.Com_Mask */
-		if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
-			TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
-			return E_FAIL;
+		FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
+		FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+
+
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
+		{
+			/* For.Com_Mask */
+			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
+				TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
+				return E_FAIL;
+		}
+
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
+		{
+			/* For.Com_Noise */
+			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
+				TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
+				return E_FAIL;
+		}
 	}
 
-	if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
-	{
-		/* For.Com_Noise */
-		if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
-			TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
-			return E_FAIL;
-	}
 
 	return S_OK;
 }
@@ -317,7 +322,7 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	/* Matrix ============================================================================================ */
 	if (m_tVoidDesc.bParentPivot)
 	{
-		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matOffset));
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matCombined));
 	}
 	else
 	{
@@ -353,11 +358,13 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	_float3 vBlack_Discard = _float3(m_tVoidDesc.vColor_Clip.x, m_tVoidDesc.vColor_Clip.y, m_tVoidDesc.vColor_Clip.z);
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
 
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &m_tVoidDesc.vColor_Mul, sizeof(_float4)));
+
 	/* UV ============================================================================================ */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
 
 	// 이펙트 정보
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_EffectDesc", m_pVIBufferCom->Get_ParticleShaderInfoDescs().data(), sizeof(CVIBuffer_Particle::PARTICLE_SHADER_INFO_DESC) * m_pVIBufferCom->Get_ParticleShaderInfoDescs().size()));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_EffectDesc", m_pVIBufferCom->Get_ParticleShaderInfoDescs().data(), _uint(sizeof(CVIBuffer_Particle::PARTICLE_SHADER_INFO_DESC) * m_pVIBufferCom->Get_ParticleShaderInfoDescs().size())));
 
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bSprite", &m_tVoidDesc.bUseSpriteAnim, sizeof(_bool)));
@@ -376,12 +383,8 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 
 	/* Camera ============================================================================================ */
-	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
-	vCamDirection = XMVector4Normalize(vCamDirection);
-	_float3 vCamDirectionFloat3 = {};
-	XMStoreFloat3(&vCamDirectionFloat3, vCamDirection);
-
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
+	_float3 vCamDirectionFloat3 = m_pGameInstance->Get_CamDirection();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat3, sizeof(_float3)));
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();

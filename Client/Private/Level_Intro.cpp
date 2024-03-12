@@ -69,11 +69,11 @@ void CLevel_Intro::Tick(_float fTimeDelta)
 
 #pragma region Effect_Test	
 
-	if (m_pGameInstance->Key_Down(DIK_GRAVE))
-	{
-		CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_INTRO, LAYER_EFFECT, "Hit_3.json");
-		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
-	}
+	//if (m_pGameInstance->Key_Down(DIK_GRAVE))
+	//{
+	//	CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_INTRO, LAYER_EFFECT, "Hit_3.json");
+	//	pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
+	//}
 
 
 	//if (m_pGameInstance->Key_Down(DIK_TAB))
@@ -123,7 +123,7 @@ HRESULT CLevel_Intro::Ready_LightDesc()
 		ZeroMemory(&LightDesc, sizeof LightDesc);
 
 		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-		LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
+		LightDesc.vPosition = _float4(30.f, 0.f, 30.f, 1.f);
 		LightDesc.fRange = 20.f;
 		LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
 		LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
@@ -131,7 +131,7 @@ HRESULT CLevel_Intro::Ready_LightDesc()
 		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
 
 		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-		LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
+		LightDesc.vPosition = _float4(50.f, 0.f, 30.f, 1.f);
 		LightDesc.fRange = 20.f;
 		LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
 		LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
@@ -139,7 +139,7 @@ HRESULT CLevel_Intro::Ready_LightDesc()
 		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
 
 		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-		LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
+		LightDesc.vPosition = _float4(70.f, 0.f, 30.f, 1.f);
 		LightDesc.fRange = 20.f;
 		LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
 		LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
@@ -165,9 +165,7 @@ HRESULT CLevel_Intro::Ready_Layer_Camera(const wstring& strLayerTag)
 
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc));
 
-
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_MasterCamera")));
 
 	return S_OK;
 }
@@ -231,9 +229,6 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg
 		pMonster->Set_Position(_float3(250.66f, 0.f, 11.38f));
 	}
 
-
-
-
 	//CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
 
 	//CMonster::MONSTER_DESC Desc = {};
@@ -244,11 +239,6 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg
 
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Monster"), &Desc));
 
-
-
-
-
-	//!
 	//!for (_int i = 0; i < iMonsterJsonSize; ++i)
 	//!{
 	//!	string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + "@" + to_string(i);
@@ -291,7 +281,6 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Terrain")));
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Sky")));
-
 
 	json Stage1MapJson = {};
 

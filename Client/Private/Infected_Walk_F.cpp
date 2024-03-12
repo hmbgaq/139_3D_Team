@@ -1,4 +1,7 @@
-#include "..\Public\Infected_Walk_F.h"
+#include "stdafx.h"
+#include "Transform.h"
+#include "GameInstance.h"
+#include "Infected_Walk_F.h"
 
 void CInfected_Walk_F::Initialize(CInfected* pActor)
 {
