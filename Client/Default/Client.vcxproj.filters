@@ -6180,39 +6180,6 @@
     <ClInclude Include="..\Public\VampireCommander_TurnR90.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnR90</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_DeathHeavy_F_01.h" />
-    <ClInclude Include="..\Public\BanditHeavy_DeathLight_B_01.h" />
-    <ClInclude Include="..\Public\BanditHeavy_DeathLight_F_01.h" />
-    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_F_01.h" />
-    <ClInclude Include="..\Public\BanditHeavy_HitLight_B_01.h" />
-    <ClInclude Include="..\Public\BanditHeavy_HitNormalToStun_01.h" />
-    <ClInclude Include="..\Public\BanditHeavy_HitNormal_B180_01.h" />
-    <ClInclude Include="..\Public\BanditHeavy_HitNormal_B_01.h" />
-    <ClInclude Include="..\Public\BanditHeavy_HitNormal_F_01.h" />
-    <ClInclude Include="..\Public\BanditHeavy_HitNormal_F_02.h" />
-    <ClInclude Include="..\Public\BanditHeavy_HitNormal_L_01.h" />
-    <ClInclude Include="..\Public\BanditHeavy_HitNormal_R_01.h" />
-    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamicHeavy.h" />
-    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_LD.h" />
-    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_LM.h" />
-    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_LU.h" />
-    <ClInclude Include="..\Public\BanditHeavy_MeleeDynamic_RD.h" />
-    <ClInclude Include="..\Public\BanditHeavy_MeleeHeavy_02.h" />
-    <ClInclude Include="..\Public\BanditHeavy_Melee_LD.h" />
-    <ClInclude Include="..\Public\BanditHeavy_Melee_LM.h" />
-    <ClInclude Include="..\Public\BanditHeavy_Melee_LU.h" />
-    <ClInclude Include="..\Public\BanditHeavy_Run_BR.h" />
-    <ClInclude Include="..\Public\BanditHeavy_Walk_B.h" />
-    <ClInclude Include="..\Public\BanditHeavy_Walk_BR.h" />
-    <ClInclude Include="..\Public\Bandit_Heavy_State.h" />
-    <ClInclude Include="..\Public\Bandit_Heavy_State_Attack.h" />
-    <ClInclude Include="..\Public\Bandit_Heavy_State_Death.h" />
-    <ClInclude Include="..\Public\Bandit_Heavy_State_Normal.h" />
-    <ClInclude Include="..\Public\Bandit_Heavy_State_Run.h" />
-    <ClInclude Include="..\Public\Body_Bandit_Heavy.h" />
-    <ClInclude Include="..\Public\Body_Infected_A.h" />
-    <ClInclude Include="..\Public\Infected_A.h" />
-    <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h" />
     <ClInclude Include="..\Public\VampireCommander_TurnL180.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\10.Turn\TurnL180</Filter>
     </ClInclude>
