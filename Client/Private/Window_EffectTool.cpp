@@ -958,6 +958,15 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pCurVoidDesc->vRimColor.w = m_fRimColor_Particle[3];
 				}
 
+				if (ImGui::DragFloat4(" BloomClip_Particle ", m_vBloom_Clip_Particle, 0.1f, 0.f, 1.f))
+				{
+					m_pCurVoidDesc->vBloom_Clip.x = m_vBloom_Clip_Particle[0];
+					m_pCurVoidDesc->vBloom_Clip.y = m_vBloom_Clip_Particle[1];
+					m_pCurVoidDesc->vBloom_Clip.z = m_vBloom_Clip_Particle[2];
+					m_pCurVoidDesc->vBloom_Clip.w = m_vBloom_Clip_Particle[3];
+				}
+
+
 				if (ImGui::DragFloat3(" BloomPower_Particle ", m_vBloomPower_Particle, 100.f, 0.f, 1000.f))
 				{
 					m_pCurVoidDesc->vBloomPower.x = m_vBloomPower_Particle[0];
@@ -2080,6 +2089,13 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_fUV_RotDegree = m_pCurVoidDesc->fUV_RotDegree;
 
 
+			/* 쉐이더에 던져서 자를 값 */
+			m_vColor_Clip_Part[0] = m_pCurVoidDesc->vColor_Clip.x;
+			m_vColor_Clip_Part[1] = m_pCurVoidDesc->vColor_Clip.y;
+			m_vColor_Clip_Part[2] = m_pCurVoidDesc->vColor_Clip.z;
+			m_vColor_Clip_Part[3] = m_pCurVoidDesc->vColor_Clip.w;
+
+
 			// 리지드바디 업데이트 =============================================================================================================
 			
 			/* 리지드바디 사용 여부 */
@@ -2233,6 +2249,24 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			else if (CVIBuffer_Particle::FADE_IN == m_pParticleBufferDesc->eType_Fade)
 				m_iType_Fade_Particle = 2;
 
+
+			/* 림 블룸 값 업데이트 */
+			m_vBloomPower_Particle[0] = m_pCurVoidDesc->vBloomPower.x;
+			m_vBloomPower_Particle[1] = m_pCurVoidDesc->vBloomPower.y;
+			m_vBloomPower_Particle[2] = m_pCurVoidDesc->vBloomPower.z;
+
+
+			m_vBloom_Clip_Particle[0] = m_pCurVoidDesc->vBloom_Clip.x;
+			m_vBloom_Clip_Particle[1] = m_pCurVoidDesc->vBloom_Clip.y;
+			m_vBloom_Clip_Particle[2] = m_pCurVoidDesc->vBloom_Clip.z;
+			m_vBloom_Clip_Particle[3] = m_pCurVoidDesc->vBloom_Clip.w;
+
+
+
+			m_fRimColor_Particle[0] = m_pCurVoidDesc->vRimColor.x;
+			m_fRimColor_Particle[1] = m_pCurVoidDesc->vRimColor.y;
+			m_fRimColor_Particle[2] = m_pCurVoidDesc->vRimColor.z;
+			m_fRimColor_Particle[3] = m_pCurVoidDesc->vRimColor.w;
 
 		}
 

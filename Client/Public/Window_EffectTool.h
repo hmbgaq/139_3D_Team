@@ -273,6 +273,7 @@ private:
 	/* 파티클 Rim & Bloom */
 	_float	m_fRimColor_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Particle[3] = { 1.f, 1.f, 1.f };
+	_float	m_vBloom_Clip_Particle[4] = { 0.f, 0.f, 0.f, 0.f };
 
 #pragma endregion Particle 옵션 끝
 

@@ -209,6 +209,8 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 
 	/* Rim & Bloom */
 	CJson_Utility::Write_Float3(Out_Json["vBloomPower"], m_tVoidDesc.vBloomPower);
+	CJson_Utility::Write_Float4(Out_Json["vBloom_Clip"], m_tVoidDesc.vBloom_Clip);
+
 	CJson_Utility::Write_Float4(Out_Json["vRimColor"], m_tVoidDesc.vRimColor);
 	Out_Json["fRimPower"] = m_tVoidDesc.fRimPower;
 
@@ -291,6 +293,8 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 
 	/* Rim & Bloom */
 	CJson_Utility::Load_Float3(In_Json["vBloomPower"], m_tVoidDesc.vBloomPower);	
+	//CJson_Utility::Load_Float4(In_Json["vBloom_Clip"], m_tVoidDesc.vBloom_Clip); 저장하고 주석 풀기
+
 	CJson_Utility::Load_Float4(In_Json["vRimColor"], m_tVoidDesc.vRimColor);
 	m_tVoidDesc.fRimPower = (_float)In_Json["fRimPower"];
 
