@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class CGameObject;
 class CCamera;
+class CNavigation;
 END
 
 BEGIN(Client)
@@ -262,6 +263,7 @@ private:
 	CMasterCamera*					m_pToolCamera = { nullptr };
 	CSky*							m_pSkybox = { nullptr };
 	_int							m_iSkyTextureIndex = { 0 };
+	CNavigation*					m_pNavigation = { nullptr };
 	
 
 public:
