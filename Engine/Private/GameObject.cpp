@@ -145,7 +145,10 @@ void CGameObject::Load_FromJson(const json& In_Json)
 
 CTransform* CGameObject::Get_Transform()
 {
-	return m_pTransformCom;
+	if (nullptr != m_pTransformCom)
+		return m_pTransformCom;
+	else
+		return nullptr;
 }
 
 _vector CGameObject::Get_Position_Vector()

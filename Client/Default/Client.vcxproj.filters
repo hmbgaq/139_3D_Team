@@ -6012,7 +6012,7 @@
     <ClInclude Include="..\Public\Sniper_Run_FR.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Movement\1. Run\Front\Right</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Sinper_Crouch_Start.h">
+    <ClInclude Include="..\Public\Sniper_Crouch_Start.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\2. Crouch\0. Start</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_Crouch_Idle.h">
@@ -8476,7 +8476,7 @@
     <ClCompile Include="..\Private\Sniper_Run_FR.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Walk\1. Movement\1. Run\Front\Right</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Sinper_Crouch_Start.cpp">
+    <ClCompile Include="..\Private\Sniper_Crouch_Start.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\2. Crouch\0. Start</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sniper_Crouch_Idle.cpp">

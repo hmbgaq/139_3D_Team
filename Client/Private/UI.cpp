@@ -802,7 +802,7 @@ json CUI::Save_Desc(json& out_json)
 	/* Keyframe*/
 	if (!m_vecAnimation.empty())
 	{
-		_int iSize = m_vecAnimation.size();
+		_int iSize = (_int)m_vecAnimation.size();
 		out_json["KeyframeNum"] = iSize;
 
 		for (_int i = 0; i < iSize; ++i)
@@ -909,7 +909,7 @@ void CUI::Play_Animation(_float fTimeDelta)
 		{
 			//m_eAnimationInfo = m_vecAnimation[(int)m_iFrameCount].front();
 			_uint iFrameIndex = 0;
-			_uint iSize = m_vecAnimation.size() - (_uint)1;
+			_uint iSize = (_uint)m_vecAnimation.size() - (_uint)1;
 			for (_uint i = iSize; i >= 0; i--)
 			{
 				if (m_vecAnimation[i].fTime <= m_fCurrTime) //	error : i가 쓰레기값이 되면서 iSize값이 대입되지 않고, 터지는 버그 => 시간값이 이상하게 들어가서 조건을 타지않았음. break를 타고 나가지 않아서 -까지 내려갔기 때문.

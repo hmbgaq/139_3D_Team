@@ -8,6 +8,7 @@ BEGIN(Client)
 
 class CBandit_Sniper final : public CMonster_Character
 {
+
 private:
 	CBandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CBandit_Sniper(const CBandit_Sniper& rhs);
@@ -22,15 +23,22 @@ public:
 	virtual HRESULT Render() override;
 	
 public:
+	_float4x4 Get_SniperInitWorld() { return m_bInitWorld; }
+	_float4 Get_SniperInitLook() { return m_bInitLook; }
 	_bool Get_ProtectExist() { return m_bProtectExist; }
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
+	HRESULT Ready_Option();
 
 private:
-	_bool m_bProtectExist = {};
-	CActor<CBandit_Sniper>* m_pActor = { nullptr };
+	_bool					m_bInit				= true;
+	_bool					m_bProtectExist		= {};
+	_float4					m_bInitLook			= {};
+	_float4x4				m_bInitWorld		= {};
+
+	CActor<CBandit_Sniper>* m_pActor			= { nullptr };
 
 public:
 	virtual void Hitted_Left(Power ePower)	override;

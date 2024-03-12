@@ -32,7 +32,7 @@ public:
 public:
 	vector<class CCell*>	GeT_Cells() { return m_Cells; }
 	class CCell*			Get_CurrentCell() { return m_Cells[m_iCurrentIndex]; }
-	_int					Get_CellSize() { return m_Cells.size(); };
+	_int					Get_CellSize() { return (_int)m_Cells.size(); };
 	void					Set_CurrentIndex(_int iIndex) { m_iCurrentIndex = iIndex; }
 
 	void					AddCell(class CCell* pCell);

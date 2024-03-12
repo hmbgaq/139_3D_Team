@@ -2,7 +2,6 @@
 #include "stdafx.h"
 #include "Infected_C.h"
 #include "GameInstance.h"
-
 /* Spawn */
 #include "Infected_SpawnClimb_01.h"
 #include "Infected_SpawnClimb_02.h"

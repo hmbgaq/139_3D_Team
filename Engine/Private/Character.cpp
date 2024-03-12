@@ -407,6 +407,46 @@ void CCharacter::Search_Target(const wstring& strLayerTag)
 	m_pTarget = Select_The_Nearest_Enemy(strLayerTag);
 }
 
+_float CCharacter::Target_Contained_Angle(_float4 vTargetPos)
+{
+	/* ---------- 소영 추가 ---------- */
+	// 함수설명 : Look 기준으로 우측에 있을경우 +사이각 , 좌측에 있을경우 - 사이각으로 값이 리턴된다. 
+	/* ------------------------------- */
+	_vector vLook = XMVector3Normalize(vTargetPos - m_pTransformCom->Get_Pos());
+
+	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
+
+	_float angle = std::acos(XMVectorGetX(XMVector3Dot(XMVectorSet(0.f, 0.f, 1.f, 0.f), vLook)));
+
+	if (XMVectorGetX(XMVector3Dot(XMVectorSet(1.f, 0.f, 0.f, 0.f), vLook)) < 0.f)
+	{
+		angle = -angle;
+	}
+
+	angle = XMConvertToDegrees(angle);
+
+	return angle;
+}
+
+_bool CCharacter::Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta)
+{
+	_vector currentLook = m_pTransformCom->Get_Look();
+	_vector originLook = XMLoadFloat4(&vOriginLook);
+
+	_float angle = acos(XMVectorGetX(XMVector3Dot(currentLook, originLook)));
+
+	if (angle < 0.01f)
+		return true;
+
+	_vector lerpedLook = XMVectorLerp(currentLook, originLook, fSpeed * fTimeDelta);
+
+	lerpedLook = XMVector3Normalize(lerpedLook);
+
+	m_pTransformCom->Set_Look(lerpedLook);
+
+	return false;
+}
+
 CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance)
 {
 	CCharacter* pResult = { nullptr };

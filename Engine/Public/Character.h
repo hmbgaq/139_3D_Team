@@ -76,6 +76,7 @@ public:
 	HRESULT Add_PartObject(const wstring & strPrototypeTag, const wstring & strPartTag, void* pArg);
 	HRESULT Add_Body(const wstring & strPrototypeTag, CBody::BODY_DESC pArg);
 	HRESULT Add_Weapon(const wstring & strPrototypeTag, string strBoneName, CWeapon::WEAPON_DESC pArg, const wstring & strWeaponTag = TEXT("Part_Weapon"));
+
 public:
 	void	Set_EventNotify(string strPath, string JsonFileName);
 	HRESULT	LoadAnimJson(string strPath, string strFileName);
@@ -126,7 +127,6 @@ public:
 	_int Get_Hp() { return m_iHp; };
 	void Set_Hp(_uint _iHp) { m_iHp = _iHp; };
 
-
 public:
 	CCharacter* Get_Target() { return m_pTarget; };
 	void Set_Target(CCharacter* pTarget) { m_pTarget = pTarget; };
@@ -134,6 +134,8 @@ public:
 public:
 	void Look_At_Target();
 	void Search_Target(const wstring& strLayerTag);
+	_float Target_Contained_Angle(_float4 vTargetPos); /* 내 Look과 타겟을 향하는 벡터 사이의 끼인각을 구하는함수 */
+	_bool Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta);
 	CCharacter* Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance = 20.f);
 
 public:

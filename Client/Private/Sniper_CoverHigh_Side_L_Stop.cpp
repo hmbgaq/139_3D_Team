@@ -1,4 +1,6 @@
-#include "..\Public\Sniper_CoverHigh_Side_L_Stop.h"
+#include "stdafx.h"
+#include "Sniper_Idle.h"
+#include "Sniper_CoverHigh_Side_L_Stop.h"
 
 void CSniper_CoverHigh_Side_L_Stop::Initialize(CBandit_Sniper* pActor)
 {
@@ -9,7 +11,12 @@ void CSniper_CoverHigh_Side_L_Stop::Initialize(CBandit_Sniper* pActor)
 
 CState<CBandit_Sniper>* CSniper_CoverHigh_Side_L_Stop::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return new CSniper_Idle();
+	}
+
+	return nullptr;
 }
 
 void CSniper_CoverHigh_Side_L_Stop::Release(CBandit_Sniper* pActor)
