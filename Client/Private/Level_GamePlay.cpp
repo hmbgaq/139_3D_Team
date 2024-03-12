@@ -51,8 +51,6 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 
-	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
-
 	//FAILED_CHECK(Ready_UI());
 
 	return S_OK;
@@ -167,6 +165,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag)
 {
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player")));
+
+	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Rentier"));
 
 	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"));
@@ -189,17 +189,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
 
-	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
+	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
+
+	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
 	NULL_CHECK_RETURN(pMonster, E_FAIL);
 	pMonster->Set_Position(_float3(250.5, 0.f, 10.f ));
 
-	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
-	//NULL_CHECK_RETURN(pMonster, E_FAIL);
-	//pMonster->Set_Position(_float3(252.f, 0.f, 12.f ));
-	//
-	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
-	//NULL_CHECK_RETURN(pMonster, E_FAIL);
-	//pMonster->Set_Position(_float3(255.5f, 0.f, 15.f ));
+	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_Position(_float3(252.f, 0.f, 12.f ));
+	
+	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_Position(_float3(255.5f, 0.f, 15.f ));
 	
 
 	return S_OK;
@@ -347,7 +352,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
 	//! ¾Ö´ÔÀÎ½ºÅÏ½ÌÀÌ ÇÒÇÊ¿ä¾ø¾îÁü. ¤¾¤¾¤¾¤¾¤¾¤¾FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
 
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
 
 	///* ui test */
 	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));

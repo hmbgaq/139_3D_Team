@@ -81,6 +81,7 @@ public:
 	_bool Is_UpperBody(_int iBoneIndex);
 
 
+
 public: //!For. AnimInstance
 	_float4x4*				Get_TransformationBoneMatrices(_float fTrackPosition, _float4x4* pMatrix);
 

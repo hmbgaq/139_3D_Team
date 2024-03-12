@@ -6,7 +6,7 @@
 BEGIN(Engine)
 class CGameObject;
 class CCamera;
-
+class CNavigation;
 END
 
 
@@ -51,6 +51,9 @@ public:
 
 	void    Set_SkyTextureIndex(_uint iSkyTextureIndex);
 
+public:
+	CNavigation* Get_Navigation() { return m_pNavigation; }
+	void		 Set_Navigation(CNavigation* pNavigation) { m_pNavigation = pNavigation; }
 
 // ! SH_Add
 private: /* _float */
@@ -167,6 +170,7 @@ private:
 	CPlayer* m_pPlayer = { nullptr };
 
 	CSky* m_pSky = { nullptr };
+	CNavigation* m_pNavigation = { nullptr };
 
 private:
 	CCamera* m_pCamera = { nullptr };

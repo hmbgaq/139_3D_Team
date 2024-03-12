@@ -1,9 +1,7 @@
 #include "stdafx.h"
-#include "..\Public\Weapon_Player.h"
-
+#include "Weapon_Player.h"
 #include "GameInstance.h"
 #include "Bone.h"
-
 
 CWeapon_Player::CWeapon_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)

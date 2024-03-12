@@ -271,6 +271,11 @@ _float CCharacter::Get_TrackPosition()
 	return m_pBody->Get_TrackPosition();
 }
 
+void CCharacter::Set_TrackPosition(_int iNewTrackPostion)
+{
+	return m_pBody->Set_TrackPosition(iNewTrackPostion);
+}
+
 void CCharacter::Go_Straight(_float fTimeDelta)
 {
 	m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
@@ -483,6 +488,16 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fSpeedCap)
 void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
 {
 	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState);
+}
+
+void CCharacter::Set_StiffnessRate(_float fStiffnessRate)
+{
+	m_pBody->Set_StiffnessRate(fStiffnessRate);
+}
+
+void CCharacter::Set_StiffnessRate_Upper(_float fStiffnessRate)
+{
+	m_pBody->Set_StiffnessRate_Upper(fStiffnessRate);
 }
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)

@@ -5,12 +5,14 @@
 BEGIN(Engine)
 class CGameObject;
 class CCamera;
+class CNavigation;
 END
 
 BEGIN(Client)
-class CEnvironment_Instance;
 class CEnvironment_Object;
+class CEnvironment_Instance;
 class CEnvironment_LightObject;
+class CEnvironment_SpecialObject;
 class CPlayer;
 class CMonster;
 class CCamera_Dynamic;
@@ -230,9 +232,6 @@ private:
 	//!vector<CNPC*>					m_vecCreateNPC;
 	//!vector<string>					m_vecCreateNPCTag ;
 	//!_int							m_iCreateNPCIndex = {};
-
-	
-
 	
 	_int							m_iCreateMonsterIndex = {};
 	_int							m_iSelectCharacterIndex = {};
@@ -264,6 +263,7 @@ private:
 	CMasterCamera*					m_pToolCamera = { nullptr };
 	CSky*							m_pSkybox = { nullptr };
 	_int							m_iSkyTextureIndex = { 0 };
+	CNavigation*					m_pNavigation = { nullptr };
 	
 
 public:

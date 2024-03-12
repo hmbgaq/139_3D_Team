@@ -36,8 +36,8 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_DebugRender());
 #endif
 
-	m_tBloomRim_Option.bRimBloom_Blur_Active = false;
-	m_tHBAO_Option.bHBAO_Active = false;
+	m_tBloomRim_Option.bRimBloom_Blur_Active = true;
+	m_tHBAO_Option.bHBAO_Active = true;
 	m_tFog_Option.bFog_Active = false;
 
 	m_tRadial_Option.bRadial_Active = false;
@@ -300,8 +300,8 @@ HRESULT CRenderer::Render_RimBloom()
 	if (m_tBloomRim_Option.bRimBloom_Blur_Active)
 	{
 		FAILED_CHECK(Render_Blur(TEXT("Target_RimBloom"), TEXT("MRT_RB_Blur"),
-								ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER),
-								ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER),
+								ECast(BLUR_SHADER::BLUR_HORIZON_LOW),
+								ECast(BLUR_SHADER::BLUR_VERTICAL_LOW),
 								ECast(BLUR_SHADER::BLUR_UP_ADD), true));
 		m_bBloomBlur_Clear = false;
 	}
@@ -369,10 +369,10 @@ HRESULT CRenderer::Render_Deferred()
 HRESULT CRenderer::Render_EffectBloomBlur()
 {
 	/* MRT_Effect_Blur -> Target_Effect_RR_Blur로 결과 나옴 */
-	Render_Blur(TEXT("Target_Effect_RimBloom"), TEXT("MRT_Effect_Blur"),
-					ECast(BLUR_SHADER::BLUR_HORIZON_LOW),
-					ECast(BLUR_SHADER::BLUR_VERTICAL_LOW),
-					ECast(BLUR_SHADER::BLUR_UP_ADD), true);
+	Render_Blur(TEXT("Target_Effect_RimBloom"), TEXT("MRT_Effect_Blur"), 
+				ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER),
+				ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER),
+				ECast(BLUR_SHADER::BLUR_UP_ADD), true);
 
 	return S_OK;
 }
@@ -559,7 +559,7 @@ HRESULT CRenderer::Deferred_Effect()
 	/* Effect 추가해서 사용할거면 추가가능합니다~ */
 	FAILED_CHECK(Render_Effect());	/* MRT_Effect : Target_Effect_Diffuse, Target_Effect_Normal, Target_Effect_Depth, Target_Effect_RimBloom */
 	
-	//FAILED_CHECK(Render_EffectBloomBlur());	/* Render에 블룸블러 효과 MRT_Effect_Blur -> Target_Effect_RR_Blur에 저장됨 */
+	FAILED_CHECK(Render_EffectBloomBlur());	/* Render에 블룸블러 효과 MRT_Effect_Blur -> Target_Effect_RR_Blur에 저장됨 */
 
 	FAILED_CHECK(Render_Effect_Final()); /* Deferred + Effect + EffectBloomBlur */
 
@@ -581,7 +581,7 @@ HRESULT CRenderer::Render_Effect_Final()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RB_BlurActive"), m_pShader_PostProcess, "g_RimBlur_Target"));
 
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Diffuse"), m_pShader_PostProcess, "g_Effect_Target"));
-	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_RR_Blur"), m_pShader_PostProcess, "g_EffectBlur_Target"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_RR_Blur"), m_pShader_PostProcess, "g_EffectBlur_Target"));
 
 	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_EFFECTMIX)));
 

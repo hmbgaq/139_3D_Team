@@ -418,7 +418,7 @@ HRESULT CWindow_AnimTool::Save_Function(string strPath, string strFileName)
 	//Effect
 	{
 		EffectJson.emplace("TypeEffect", strEffect);
-		EffectJson.emplace("EffectFileName", m_vecEffectName[m_iSelectEffectIndex]);
+		EffectJson.emplace("EffectFileName", m_vecEffectName[(const unsigned __int64)m_iSelectEffectIndex]);
 		CJson_Utility::Write_Float3(EffectJson["EffectPosition"], m_EffectPosition);
 		EffectJson.emplace("EffectTrackPosition", m_fEffectOnTrackPosition);
 	}

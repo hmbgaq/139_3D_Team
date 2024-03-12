@@ -135,6 +135,7 @@ public: /* For.Target_Manager */
 public: /* For.Light_Manager */
 	HRESULT		Add_Light(const LIGHT_DESC& LightDesc, _int & outLightIndex);
 	HRESULT		Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	_bool		Remove_Light(const _uint& iIndex);
 	HRESULT		Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp);
 	HRESULT		Add_ShadowLight_View(_uint iLevelIndex, _vector vEye, _vector vAt, _vector vUp);
 	HRESULT		Add_ShadowLight_Proj(_uint iLevelIndex, _float fFovAngleY, _float fAspectRatio, _float fNearZ, _float fFarZ);

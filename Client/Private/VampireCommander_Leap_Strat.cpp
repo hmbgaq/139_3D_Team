@@ -11,7 +11,7 @@ void CVampireCommander_Leap_Strat::Initialize(CVampireCommander* pActor)
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 
 	pWeapon
-		->Set_Damage(50.f)
+		->Set_Damage(50)
 		->Set_Direction(Direction::Right)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.f);
