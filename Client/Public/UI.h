@@ -200,6 +200,10 @@ public: /* ============================== Get / Set ============================
 	void			Set_Active(_bool bActive) { m_bActive = bActive; }
 	_bool			Get_Active() { return m_bActive; }
 
+	/* Debug */
+	void			Set_Tool(_bool bTool) { m_bTool = bTool; }
+	_bool			m_bTool = true;
+
 //protected:
 public:
 	virtual HRESULT	Set_ParentTransform(CTransform* pParentTransformCom);
@@ -254,6 +258,9 @@ public: /* ============================== SetUp ============================== *
 	void			Player_HUD(_float fTimeDelta);
 
 public:
+	void Check_Disappear(_float fTimeDelta);
+
+public:
 #ifdef _DEBUG
 	/* (컨테이너의 주소를 받아오는건 릴리즈 모드에서 터지는 버그가있음. 툴용) */
 	vector<CUI*>*	Get_vecUIParts() { return &m_vecUIParts; }
@@ -296,6 +303,10 @@ public: /* =========================== Animation ============================== 
 	void			Set_Repetition(_bool bRepetition) { m_bRepetition = bRepetition; }
 	_bool			Get_Repetition() { return m_bRepetition; }
 	_bool			m_bRepetition = false;
+
+	void			Set_Alpha(_float fAlpha) { m_fAlpha = fAlpha; }
+	_float			Get_Alpha() { return m_fAlpha; }
+
 	// dt 값
 	_float fFrameTimeDelta, fCurFrameTimeDelta;
 
@@ -363,6 +374,7 @@ protected: /* ============================= UI =============================== *
 
 	// 투명도
 	_float				m_fAlpha = 0.f;
+	_bool				m_bTrigger = false;
 
 protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;

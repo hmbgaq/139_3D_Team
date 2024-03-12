@@ -101,9 +101,12 @@ HRESULT CUI_LevelUp_ShieldFrame::Render()
 		//! 바인딩된 정점, 인덱스를 그려
 		m_pVIBufferCom->Render();
 
-		m_strText = to_wstring(m_pData_Manager->Get_CurLevel());
-		//RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
-		m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
+		if (m_bTrigger == true)
+		{
+			m_strText = to_wstring(m_pData_Manager->Get_CurLevel());
+			//RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
+			m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
+		}
 	}
 
 	return S_OK;
@@ -186,8 +189,8 @@ HRESULT CUI_LevelUp_ShieldFrame::Ready_Text()
 	TEXTINFO* LoadInfo = new TEXTINFO;
 
 	/* 임의 값 (추 후 로드해서 받기) */
-	LoadInfo->fPosX = 636.f;
-	LoadInfo->fPosY = 256.f;
+	LoadInfo->fPosX = 630.5f;
+	LoadInfo->fPosY = 176.f;
 	LoadInfo->fScale = 1.f;
 	LoadInfo->vOrigin.x = 0.f;
 	LoadInfo->vOrigin.y = 0.f;

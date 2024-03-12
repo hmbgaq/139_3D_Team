@@ -31,7 +31,7 @@ HRESULT CUI_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pCon
 }
 
 void CUI_Manager::Tick(_float fTimeDelta)
-{
+{ 
 	Check_Active(fTimeDelta);
 }
 
@@ -117,6 +117,7 @@ void CUI_Manager::Active_LeftHUD()
 
 	for (auto& iter : m_vecLeftHUD)
 	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
 		iter->Set_Active(true);		// UI 활성화
 		iter->Set_AnimPlay(true);	// UI Animation 재생
 		iter->Set_Disappear(false); // UI 사라짐 Off
@@ -193,6 +194,7 @@ void CUI_Manager::Active_RightHUD()
 
 	for (auto& iter : m_vecRightHUD)
 	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
 		iter->Set_Active(true);		// UI 활성화
 		iter->Set_AnimPlay(true);	// UI Animation 재생
 		iter->Set_Disappear(false); // UI 사라짐 Off
@@ -269,6 +271,7 @@ void CUI_Manager::Active_TutorialBox()
 
 	for (auto& iter : m_vecTutorialBox)
 	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
 		iter->Set_Active(true);		// UI 활성화
 		iter->Set_AnimPlay(true);	// UI Animation 재생
 		iter->Set_Disappear(false); // UI 사라짐 Off
@@ -345,6 +348,7 @@ void CUI_Manager::Active_LevelUp()
 
 	for (auto& iter : m_vecLevelUP)
 	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
 		iter->Set_Active(true);		// UI 활성화
 		iter->Set_AnimPlay(true);	// UI Animation 재생
 		iter->Set_Disappear(false); // UI 사라짐 Off
@@ -421,6 +425,7 @@ void CUI_Manager::Active_RewardBox()
 
 	for (auto& iter : m_vecRewardBox)
 	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
 		iter->Set_Active(true);		// UI 활성화
 		iter->Set_AnimPlay(true);	// UI Animation 재생
 		iter->Set_Disappear(false); // UI 사라짐 Off
@@ -497,14 +502,104 @@ void CUI_Manager::Active_QuestBox()
 
 	for (auto& iter : m_vecQuestBox)
 	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
 		iter->Set_Active(true);		// UI 활성화
 		iter->Set_AnimPlay(true);	// UI Animation 재생
 		iter->Set_Disappear(false); // UI 사라짐 Off
 	}
 }
 
-// Add_CloneUI == Add_CloneObject_And_Get
-CUI* CUI_Manager::Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg)
+HRESULT CUI_Manager::Add_Distortion(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	json json_in;
+
+	//char filePath[MAX_PATH];
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/PlayerInterface/DistortionTest.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		tUI_Info.bParent = object["Parent"];					// 1. Parent
+		tUI_Info.bWorld = object["World"];						// 2. World
+		tUI_Info.bGroup = object["Group"];						// 3. Group
+		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		tUI_Info.strObjectName = object["ObjectName"];		// 7. ObjectName
+		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		m_vecRewardBox.push_back(pUI_Object);
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_Distortion()
+{
+	if (m_vecDistortion.empty())
+		return;
+
+	for (auto& iter : m_vecDistortion)
+	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
+		iter->Set_Active(true);		// UI 활성화
+		iter->Set_AnimPlay(true);	// UI Animation 재생
+		iter->Set_Disappear(false); // UI 사라짐 Off
+	}
+}
+
+//// Add_CloneUI == Add_CloneObject_And_Get
+//CUI* CUI_Manager::Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg)
+//{
+//	/* UI 객체 생성 */
+//	CUI* pUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, strPrototypeTag, &pArg));
+//
+//	/* Manager에 UI 추가*/
+//	m_vecUI_Manager.push_back(pUI);
+//
+//	return	pUI;
+//}
+
+#ifdef _DEBUG
+CUI* CUI_Manager::Add_Tool(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg)
 {
 	/* UI 객체 생성 */
 	CUI* pUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, strPrototypeTag, &pArg));
@@ -514,6 +609,21 @@ CUI* CUI_Manager::Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, con
 
 	return	pUI;
 }
+
+void CUI_Manager::Active_Tool()
+{
+	if (m_vecUI_Manager.empty())
+		return;
+
+	for (auto& iter : m_vecUI_Manager)
+	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
+		iter->Set_Active(true);		// UI 활성화
+		iter->Set_AnimPlay(true);	// UI Animation 재생
+		iter->Set_Disappear(false); // UI 사라짐 Off
+	}
+}
+#endif // DEBUG
 
 void CUI_Manager::Check_Active(_float fTimeDelta)
 {

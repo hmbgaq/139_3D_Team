@@ -65,9 +65,16 @@ public: /* Interface */
 	HRESULT Add_QuestBox(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_QuestBox();
 	vector<CUI*>	m_vecQuestBox;
+	HRESULT Add_Distortion(_uint iLevelIndex, const wstring& strLayerTag);
+	void	Active_Distortion();
+	vector<CUI*>	m_vecDistortion;
+	//CUI* Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
 
-	CUI* Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
-	vector<CUI*> m_vecUI_Manager;
+#ifdef _DEBUG
+	CUI*			Add_Tool(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg);
+	void			Active_Tool();
+	vector<CUI*>	m_vecUI_Manager;
+#endif // DEBUG
 
 public:
 	void Set_Active(UITYPE eType) { m_eType = eType; }

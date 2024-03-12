@@ -94,6 +94,20 @@ void CUI::Priority_Tick(_float fTimeDelta)
 
 void CUI::Tick(_float fTimeDelta)
 {
+	if (m_bTool && m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL::LEVEL_TOOL)
+		m_bActive = m_bTool;
+
+	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+	{
+		if (m_pGameInstance->Key_Down(DIK_Q))
+			m_pUI_Manager->Set_Active(UITYPE::QUESTBOX);
+		if (m_pGameInstance->Key_Down(DIK_W))
+			m_pUI_Manager->Set_Active(UITYPE::REWARD);
+		if (m_pGameInstance->Key_Down(DIK_E))
+			m_pUI_Manager->Set_Active(UITYPE::TUTORIALBOX);
+	}
+
+
 	if (m_bActive == false)	// ==================== Active ====================
 		return;
 
@@ -666,6 +680,14 @@ void CUI::Player_HUD(_float fTimeDelta)
 	}
 }
 
+void CUI::Check_Disappear(_float fTimeDelta)
+{
+	if (m_bDisappear == true)
+	{
+		m_bActive = Alpha_Minus(fTimeDelta);
+	}
+}
+
 void CUI::Load_FromJson(const json& In_Json)
 {
 	// "KeyframeNum" 키가 없으면 기본값 사용
@@ -703,22 +725,32 @@ void CUI::Load_FromJson(const json& In_Json)
 		m_vecAnimation.push_back(m_tUIInfo.tKeyframe);
 	}
 
-	if (m_tUIInfo.bDistortionUI)
-	{
+	if (In_Json["Distortion"].contains("ScrollSpeedsX")) // 키가 있으면
 		m_tUIInfo.vScrollSpeeds.x = In_Json["Distortion"]["ScrollSpeedsX"];
+	if (In_Json["Distortion"].contains("ScrollSpeedsY")) // 키가 있으면
 		m_tUIInfo.vScrollSpeeds.y = In_Json["Distortion"]["ScrollSpeedsY"];
+	if (In_Json["Distortion"].contains("ScrollSpeedsZ")) // 키가 있으면
 		m_tUIInfo.vScrollSpeeds.z = In_Json["Distortion"]["ScrollSpeedsZ"];
+	if (In_Json["Distortion"].contains("ScalesX")) // 키가 있으면
 		m_tUIInfo.vScales.x = In_Json["Distortion"]["ScalesX"];
+	if (In_Json["Distortion"].contains("ScalesY")) // 키가 있으면
 		m_tUIInfo.vScales.y = In_Json["Distortion"]["ScalesY"];
+	if (In_Json["Distortion"].contains("ScalesZ")) // 키가 있으면
 		m_tUIInfo.vScales.z = In_Json["Distortion"]["ScalesZ"];
+	if (In_Json["Distortion"].contains("Distortion1X")) // 키가 있으면
 		m_tUIInfo.vDistortion1.x = In_Json["Distortion"]["Distortion1X"];
+	if (In_Json["Distortion"].contains("Distortion1Y")) // 키가 있으면
 		m_tUIInfo.vDistortion1.y = In_Json["Distortion"]["Distortion1Y"];
+	if (In_Json["Distortion"].contains("Distortion2X")) // 키가 있으면
 		m_tUIInfo.vDistortion2.x = In_Json["Distortion"]["Distortion2X"];
+	if (In_Json["Distortion"].contains("Distortion2Y")) // 키가 있으면
 		m_tUIInfo.vDistortion2.y = In_Json["Distortion"]["Distortion2Y"];
-		m_tUIInfo.vDistortion3.x = In_Json["Distortion"]["Distortion3X"];
+	if (In_Json["Distortion"].contains("Distortion3X")) // 키가 있으면
+		m_tUIInfo.vDistortion3.y = In_Json["Distortion"]["Distortion3X"];
+	if (In_Json["Distortion"].contains("Distortion3Y")) // 키가 있으면
 		m_tUIInfo.vDistortion3.y = In_Json["Distortion"]["Distortion3Y"];
+	if (In_Json["Distortion"].contains("DistortionScale")) // 키가 있으면
 		m_tUIInfo.fDistortionScale = In_Json["Distortion"]["DistortionScale"];
-	}
 
 }
 
@@ -848,6 +880,9 @@ void CUI::Play_Animation(_float fTimeDelta)
 				// 현재 프레임 초기화
 				//m_pAnimationTool->Get_currentTime() = 0.f;
 
+				// @@@ Trigger 초기화 @@@
+				m_bTrigger = false;
+
 				if (m_vecAnimation[m_iLoopAnimIndex].bLoopSection == true)
 				{
 					m_fCurrTime = m_vecAnimation[m_iLoopAnimIndex].fTime;
@@ -954,7 +989,12 @@ void CUI::Play_Animation(_float fTimeDelta)
 				{
 					m_iLoopAnimIndex = iFrameIndex;
 				}
-
+				/* Trigger */
+				if (m_vecAnimation[iFrameIndex].bTrigger == true)
+				{
+					m_bTrigger = true;
+				}
+				
 				/* 텍스처 */
 				m_iTextureNum = m_vecAnimation[iFrameIndex].iTexureframe;
 
@@ -982,6 +1022,12 @@ void CUI::Play_Animation(_float fTimeDelta)
 				if (m_vecAnimation[iFrameIndex].bLoopSection == true)
 				{
 					m_iLoopAnimIndex = iFrameIndex;
+				}
+
+				/* Trigger */
+				if (m_vecAnimation[iFrameIndex].bTrigger == true)
+				{
+					m_bTrigger = true;
 				}
 
 				m_iTextureNum = m_vecAnimation[iFrameIndex].iTexureframe;

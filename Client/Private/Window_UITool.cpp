@@ -1457,6 +1457,8 @@ HRESULT CWindow_UITool::Create_Child(CUI::UI_DESC pUIDesc)
 	pUIDesc.bParent = false;
 	pUIDesc.bWorld = m_tChild_Desc.bWorld;
 	CUI* pCurrObject = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iCurrLayerNum]), strCloneProto, &pUIDesc));
+
+
 	m_vecChildObject.push_back(pCurrObject);
 	m_pCurrChild = pCurrObject;
 
@@ -1857,6 +1859,10 @@ void CWindow_UITool::Curr_Info()
 		if (ImGui::Button("Active"))
 		{
 			m_pCurrSelectUI->Set_Active(!m_pCurrSelectUI->Get_Active());
+		}
+		if (ImGui::Button("Set_Tool"))
+		{
+			m_pCurrSelectUI->Set_Tool(!m_pCurrSelectUI->Get_Active());
 		}
 	}
 
@@ -2409,9 +2415,10 @@ void CWindow_UITool::PlayAnimation(_float fTimeDelta)
 	{
 		m_fPlayTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
 		//currentTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
-		// 
 		if (m_pCurrSelectUI)
 			currentTime = m_pCurrSelectUI->Get_CurrTime();
+		//else
+		//	currentTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
 
 		if (m_bRepetition)
 		{
@@ -3257,7 +3264,7 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 
 			m_pCurrSelectUI->Set_ScrollSpeeds(vScrollSpeeds);
 		}
-		if (ImGui::DragFloat3("Distortion_Scales", m_vScales_Distortion, 1.f, 0.f))
+		if (ImGui::DragFloat3("Distortion_Scales", m_vScales_Distortion))
 		{
 			_float3 vScales_Distortion = { 0.f, 0.f, 0.f };
 			vScales_Distortion.x = m_vScales_Distortion[0];
