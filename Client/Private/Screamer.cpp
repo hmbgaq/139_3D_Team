@@ -109,7 +109,7 @@ HRESULT CScreamer::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 		
-		m_pShaderCom->Begin(3);
+		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_EXAMPLE));
 
 		m_pModelCom->Render(_uint(i));
 	}
@@ -143,49 +143,49 @@ HRESULT CScreamer::Render_Shadow()
 
 HRESULT CScreamer::Render_OutLine()
 {
-	FAILED_CHECK(Bind_ShaderResources());
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (size_t i = 0; i < iNumMeshes; i++)
-	{
-		_float m_fLineThick = 0.5f;
-		m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
-		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
-
-		m_pModelCom->Render(0);
-	}
+	//FAILED_CHECK(Bind_ShaderResources());
+	//
+	//_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	//
+	//for (size_t i = 0; i < iNumMeshes; i++)
+	//{
+	//	_float m_fLineThick = 0.5f;
+	//	m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
+	//
+	//	m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+	//	m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+	//	m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+	//
+	//	m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
+	//
+	//	m_pModelCom->Render(0);
+	//}
 
 	return S_OK;
 }
 
 HRESULT CScreamer::Render_Cascade_Shadow(_uint i)
 {
-	if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
-		return S_OK;
-	
-	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
-	
-	FAILED_CHECK(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i));
-	
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_CascadeProj", &m_pGameInstance->Get_Shadow_Proj()));
-	
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-	
-	for (_uint i = 0; i < iNumMeshes; ++i)
-	{
-		FAILED_CHECK(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture"));
-	
-		FAILED_CHECK(m_pModelCom->Render(m_pShaderCom, i,ECast(ANIM_SHADER::ANIM_CASCADE_SHADOW)));
-	}
-	
+	//if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
+	//	return S_OK;
+	//
+	//FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+	//
+	//FAILED_CHECK(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i));
+	//
+	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_CascadeProj", &m_pGameInstance->Get_Shadow_Proj()));
+	//
+	//_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	//
+	//for (_uint i = 0; i < iNumMeshes; ++i)
+	//{
+	//	FAILED_CHECK(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture"));
+	//
+	//	FAILED_CHECK(m_pModelCom->Render(m_pShaderCom, i,ECast(ANIM_SHADER::ANIM_CASCADE_SHADOW)));
+	//}
+	//
 	return S_OK;
 }
 
@@ -256,8 +256,10 @@ HRESULT CScreamer::Bind_ShaderResources()
 	/* RimLight */
 	m_vRimColor = { 0.0f, 1.f, 0.f, 1.f };
 	m_vBloomPower = _float3(1.0f, 1.0f, 1.0f);
+	m_fRimPower = 5.f;
 	m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
 	m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
+	m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
 
 	return S_OK;
 }

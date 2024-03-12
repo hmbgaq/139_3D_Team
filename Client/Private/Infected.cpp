@@ -107,7 +107,6 @@ HRESULT CInfected::Ready_Components()
 
 void CInfected::Hitted_Left(Power ePower)
 {
-	cout << "Hitted_Left" << endl;
 	/* 무기 강도 */
 	switch (ePower)
 	{
@@ -131,7 +130,6 @@ void CInfected::Hitted_Left(Power ePower)
 
 void CInfected::Hitted_Right(Power ePower)
 {
-	cout << "Hitted_Right" << endl;
 	switch (ePower)
 	{
 	case Engine::Light:
@@ -154,7 +152,6 @@ void CInfected::Hitted_Right(Power ePower)
 
 void CInfected::Hitted_Front(Power ePower)
 {
-	cout << "Hitted_Front" << endl;
 	switch (ePower)
 	{
 	case Engine::Light:
@@ -190,7 +187,6 @@ void CInfected::Hitted_Knock(_bool bIsCannonball)
 
 void CInfected::Hitted_Dead(Power ePower)
 {
-	cout << "Hitted_Dead" << endl;
 	switch (ePower)
 	{
 	case Engine::Light:
