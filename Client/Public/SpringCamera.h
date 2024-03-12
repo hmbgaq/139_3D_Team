@@ -35,6 +35,7 @@ public:
 
 public:
 	void CameraRotation(_float fTimeDelta);
+	void StartCameraRotation(_fmatrix StartRotationMatrix);
 	void Lock_On(_float fTimeDelta);
 
 public:
@@ -48,6 +49,14 @@ public:
 	void Set_pTarget(CTransform* _pTarget) { m_ptarget = _pTarget; }
 	CTransform* Get_pTarget() { return m_ptarget; }
 
+	void Set_pTargetCharacter(CCharacter* _pCharacter);
+	CCharacter* Get_pTargetCharacter() { return m_pCharacter; }
+
+	//카메라 타겟 포지션 ! 
+	void Set_TargetPosition(_float3 _TargetPosition) { m_TargetPosition = _TargetPosition; }
+	_float3 Get_TargetPosition() { return m_TargetPosition; }
+
+
 private:
 	// 	수평 , 수직 수행거리
 	_float hDist = 0.f;
@@ -60,17 +69,17 @@ private:
 	_float3 CameraTickPos = {};// tick 에서 값이 자꾸 이상하게 초기화되서 이걸로 다시 값을 맞춰줘야함 
 	CTransform* m_ptarget = { nullptr };//카메라가 따라다닐 타깃 오브젝트 //타깃 오브젝트는 위치, 방향벡터 , 타깃의 위쪽을 가리키는 벡터를 지닌다.
 	CPlayer* m_pPlayer = { nullptr };
+	CCharacter* m_pCharacter = { nullptr };
 	_float	m_fAngle = 0.f;
 	_float  m_fPitch = 0.f;
 	_matrix cameraMatrix;//최종 카메라 행렬
 	_bool m_bCheck = false;//마우스 가운데 모으기 
 	_bool m_bFix = true;//마우스 가운데 모으기 
+	_bool m_bPlayerCheck = false; // 카메라 타겟이 플레이어 인지 아닌지  확인 하기 위 한 용도  
 private:
 	//카메라 X,Y,Z
-// 	_float m_CameraOffsetX = 0.f;
-// 	_float m_CameraOffsetY = 0.f;
-// 	_float m_CameraOffsetZ = 0.f;
 	_float3 m_CameraOffset = {};
+	_float3 m_TargetPosition = {};
 	_float CameraMoveSpeed = 3.f;//카메라 보간용 이동속도
 private:
 	_float				m_fMouseSensor = { 0.0f };

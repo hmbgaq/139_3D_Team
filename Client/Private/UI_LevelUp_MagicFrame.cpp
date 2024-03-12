@@ -39,7 +39,7 @@ HRESULT CUI_LevelUp_MagicFrame::Initialize(void* pArg)
 	m_fAlpha = 0.f;
 	m_fLifeTime = 8000.f;
 	m_vAxis = { 0.f, 0.f, 1.f, 0.f };
-	m_fTime = GetTickCount64();
+	m_fTime = (_float)GetTickCount64();
 
 	return S_OK;
 }

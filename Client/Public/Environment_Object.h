@@ -24,6 +24,10 @@ public:
 		_int		iPlayAnimationIndex = { 0 };
 		
 		_bool		bPreview = true; //! 미리보기용 오브젝트인지 확인
+
+		_bool		bLightObject = false;
+		LIGHT_DESC	tLightDesc = {};
+		_int		iLightIndex = -1;
 	}ENVIRONMENT_OBJECT_DESC;
 
 
@@ -64,20 +68,20 @@ public: //! For.Tool
 #endif 
 
 public:
-	void				Start_Environment_Animation() { m_bPlay = true; }
+	void					Start_Environment_Animation() { m_bPlay = true; }
 
 private:
-	CShader*			m_pShaderCom = { nullptr };	
-	CModel*				m_pModelCom = { nullptr };
-	CCollider*			m_pPickingCollider = nullptr;
+	CShader*					m_pShaderCom = { nullptr };	
+	CModel*						m_pModelCom = { nullptr };
+	CCollider*					m_pPickingCollider = nullptr;
 
 private:
-	ENVIRONMENT_OBJECT_DESC m_tEnvironmentDesc = {};
-	_bool					m_bPlay = false;
-	_bool					m_bColliderRender = false;
+	ENVIRONMENT_OBJECT_DESC		m_tEnvironmentDesc = {};
+	_bool						m_bPlay = false;
+	_bool						m_bColliderRender = false;
 
 
-	_uint					m_iCurrentLevel = LEVEL_TOOL;
+	_uint						m_iCurrentLevel = LEVEL_TOOL;
 
 private:
 	HRESULT				Ready_Components();

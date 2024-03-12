@@ -104,45 +104,45 @@ public:
 	void Set_DOF_Option(DOF_DESC desc) { m_tDOF_Option = desc; }
 
 private:
-	_bool						m_bInit = { true }; /* 없으면 터짐 건들지마세요 */
+	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
 
-	HBAO_PLUS_DESC				m_tHBAO_Option		= {};
-	BLOOMRIM_DESC				m_tBloomRim_Option	= {};
-	FOG_DESC					m_tFog_Option		= {};
+	HBAO_PLUS_DESC				m_tHBAO_Option				= {};
+	BLOOMRIM_DESC				m_tBloomRim_Option			= {};
+	FOG_DESC					m_tFog_Option				= {};
 
-	RADIAL_DESC					m_tRadial_Option	= {};
-	DOF_DESC					m_tDOF_Option		= {};
-	HDR_DESC					m_tHDR_Option		= {};
-	HSV_DESC					m_tHSV_Option		= {};
-	ANTI_DESC					m_tAnti_Option		= {};
-
-private:
-	POST_TYPE					m_ePrevTarget = POST_TYPE::FINAL;
-	_bool						m_bBloomBlur_Clear = false;
-	_bool						m_bRimBlur_Clear = false;
-	_int						m_iCurrentLevel = {};
-	wstring						strCurrentTarget = TEXT("Target_Effect_Final");
+	RADIAL_DESC					m_tRadial_Option			= {};
+	DOF_DESC					m_tDOF_Option				= {};
+	HDR_DESC					m_tHDR_Option				= {};
+	HSV_DESC					m_tHSV_Option				= {};
+	ANTI_DESC					m_tAnti_Option				= {};
 
 private:
-	ID3D11Device*				m_pDevice = { nullptr };
-	ID3D11DeviceContext*		m_pContext = { nullptr };
-	class CGameInstance*		m_pGameInstance = { nullptr };
+	POST_TYPE					m_ePrevTarget				= POST_TYPE::FINAL;
+	_bool						m_bBloomBlur_Clear			= false;
+	_bool						m_bRimBlur_Clear			= false;
+	_int						m_iCurrentLevel				= {};
+	wstring						strCurrentTarget			= TEXT("Target_Effect_Final");
+
+private:
+	ID3D11Device*				m_pDevice					= { nullptr };
+	ID3D11DeviceContext*		m_pContext					= { nullptr };
+	class CGameInstance*		m_pGameInstance				= { nullptr };
 	list<class CGameObject*>	m_RenderObjects[RENDER_END];
 
 private:
-	class CShader* m_pShader_Deferred = { nullptr };
-	class CShader* m_pShader_PostProcess = { nullptr };
-	class CShader* m_pShader_Blur = { nullptr };
-	class CShader* m_pShader_Fxaa = { nullptr };
-	class CShader* m_pShader_Final = { nullptr };
-	class CShader* m_pShader_UI = { nullptr };
-	class CShader* m_pShader_Effect = { nullptr };
-	class CVIBuffer_Rect* m_pVIBuffer = { nullptr };
+	class CShader*				m_pShader_Deferred			= { nullptr };
+	class CShader*				m_pShader_PostProcess		= { nullptr };
+	class CShader*				m_pShader_Blur				= { nullptr };
+	class CShader*				m_pShader_Fxaa				= { nullptr };
+	class CShader*				m_pShader_Final				= { nullptr };
+	class CShader*				m_pShader_UI				= { nullptr };
+	class CShader*				m_pShader_Effect			= { nullptr };
+	class CVIBuffer_Rect*		m_pVIBuffer					= { nullptr };
 
-	class CTexture*			m_pPerlinNoiseTextureCom = { nullptr };
-	ID3D11DepthStencilView* m_pLightDepthDSV = { nullptr };
-	_float4x4				m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
-	HRESULT					Control_HotKey();
+	class CTexture*				m_pPerlinNoiseTextureCom	= { nullptr };
+	ID3D11DepthStencilView*		m_pLightDepthDSV			= { nullptr };
+	_float4x4					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
+	HRESULT						Control_HotKey();
 
 public:
 	_bool			m_bUI_MRT = false;
@@ -158,7 +158,7 @@ private:
 	HRESULT Render_DebugCom();	
 	HRESULT Render_DebugTarget();
 	_bool	m_bDebugRenderTarget	= { false };
-	_bool	m_bDebugCom				= { false };
+	_bool	m_bDebugCom				= { true };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
 

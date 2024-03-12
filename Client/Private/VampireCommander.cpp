@@ -8,6 +8,9 @@
 #include "VampireCommander_HitCenter.h"
 #include "VampireCommander_HitLeft.h"
 #include "VampireCommander_HitRight.h"
+#include "VampireCommander_CutScene.h"
+
+#include "Data_Manager.h"
 
 CVampireCommander::CVampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
@@ -42,6 +45,9 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 		m_pActor = new CActor<CVampireCommander>(this);
 		m_pActor->Set_State(new CVampireCommander_Spawn1);
 	}
+
+	//HP
+	m_iHp = 1000;
 
 	return S_OK;
 }
@@ -107,24 +113,45 @@ HRESULT CVampireCommander::Ready_PartObjects()
 
 void CVampireCommander::Hitted_Left(Power ePower)
 {
-	m_pActor->Set_State(new CVampireCommander_HitRight);
+	switch (ePower)
+	{
+	case Engine::Heavy:
+	case Engine::Absolute:
+		m_pActor->Set_State(new CVampireCommander_HitRight);
+		break;
+	}
+	
 }
 
 void CVampireCommander::Hitted_Right(Power ePower)
 {
+	switch (ePower)
+	{
+	case Engine::Heavy:
+	case Engine::Absolute:
 	m_pActor->Set_State(new CVampireCommander_HitLeft);
-
+	break;
+	}
 }
 
 
 void CVampireCommander::Hitted_Front(Power ePower)
 {
+	switch (ePower)
+	{
+	case Engine::Heavy:
+	case Engine::Absolute:
 	m_pActor->Set_State(new CVampireCommander_HitCenter);
+	break;
+	}
 }
 
 void CVampireCommander::Hitted_Dead(Power ePower)
 {
 	//stun이 걸리고 그다음에 처형이 있기 때문에 그냥 때려서는 죽일수 없다.
+	m_pActor->Set_State(new CVampireCommander_CutScene);
+	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+	//pPlayer->Get_Actor()->Set_State(new CPlayer_) // 여기서 플레이어를 강제로 처형 애니메이션으로 돌려 버려야 함 ! 
 }
 
 CVampireCommander* CVampireCommander::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

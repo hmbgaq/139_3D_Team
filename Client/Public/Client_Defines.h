@@ -17,6 +17,7 @@ namespace Client
 		LEVEL_LOGO, 
 
 		LEVEL_INTRO,
+		LEVEL_INTRO_BOSS,
 		LEVEL_SNOWMOUNTAIN,
 		LEVEL_LAVA,
 	
@@ -50,7 +51,6 @@ namespace Client
 	#define LAYER_UI_MONSTER				TEXT("Layer_UI_Monster")
 	#define LAYER_UI_PLAYER					TEXT("Layer_UI_Player")
 	#define LAYER_PARTICLE					TEXT("Layer_Particle")
-
 
 
 	enum class COLLISION_LAYER
@@ -96,6 +96,9 @@ namespace Client
 	};
 
 
+/* Yoojeong_Add */
+#define EFFECT_MANAGER CEffect_Manager::GetInstance()
+/* Yoojeong_End */
 	
 }
 

@@ -40,7 +40,7 @@ HRESULT CUI_Player_ExpBar::Initialize(void* pArg)
 		return E_FAIL;
 
 	Check_RectPos();
-	m_fOrigin_Right = m_rcUI.right;
+	m_fOrigin_Right = (_float)m_rcUI.right;
 
 	Set_OwnerExp();
 

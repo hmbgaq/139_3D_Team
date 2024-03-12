@@ -1,4 +1,5 @@
-#include "..\Public\Infected_State_Run.h"
+#include "stdafx.h"
+#include "Infected_State_Run.h"
 
 void CInfected_State_Run::Initialize(CInfected* pActor)
 {

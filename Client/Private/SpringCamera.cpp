@@ -6,6 +6,7 @@
 #include "Data_Manager.h"
 #include "Player.h"
 #include "MasterCamera.h"
+#include "Bone.h"
 
 CSpringCamera::CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CCamera(pDevice, pContext, strPrototypeTag)
@@ -41,7 +42,7 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 		vDist = 0.7f; //Y 축 카메라와 플레이어 거리
 		//인게임에서 이제 최적의 포지션값인거같음 
 		m_CameraOffset.x = 1.f;
-		m_CameraOffset.y = 2.5f;
+		m_CameraOffset.y = 0.5f;
 		m_CameraOffset.z = -3.0f;
 		
 // 		_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
@@ -55,6 +56,19 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 		ActualPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	}
+	_float4x4 BoneMatrix = {};
+	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+
+	BoneMatrix = pPlayer->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
+	_float4x4 pPlayerPos = pPlayer->Get_Transform()->Get_WorldMatrix();
+	_float4x4 temp = {};
+	XMStoreFloat4x4(&temp, BoneMatrix * pPlayerPos);
+	m_TargetPosition.x = temp._41;
+	m_TargetPosition.y = temp._42;
+	m_TargetPosition.z = temp._43;
+	
+	//m_pCharacter = m_pGameInstance->Get
+
 
 	if (m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_TOOL)
 		ShowCursor(true);
@@ -66,7 +80,7 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 
 void CSpringCamera::Priority_Tick(_float fTimeDelta)
 {
-
+	
 }
 
 void CSpringCamera::Tick(_float fTimeDelta)
@@ -117,21 +131,52 @@ void CSpringCamera::Tick(_float fTimeDelta)
 		//	RotatePlayer();
 		//}
 	//}
+		if(true == m_pPlayer->m_bPlayerCheck)
+		{// 뼈에 붙인 카메라 
+			_float4x4 BoneMatrix = {};
+			CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
+			BoneMatrix = pPlayer->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
+			_float4x4 pPlayerPos = pPlayer->Get_Transform()->Get_WorldMatrix();
+			_float4x4 temp = {};
+			XMStoreFloat4x4(&temp, BoneMatrix * pPlayerPos);
+			m_TargetPosition.x = temp._41;
+			m_TargetPosition.y = temp._42;
+			m_TargetPosition.z = temp._43;
+		}
+		else
+		{
+			// 뼈에 붙인 카메라 TEST
+			_float4x4 BoneMatrix = {};
+			
+			BoneMatrix = m_pCharacter->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
+			_float4x4 pCharacterPos = m_pCharacter->Get_Transform()->Get_WorldMatrix();
+			_float4x4 temp = {};
+			XMStoreFloat4x4(&temp, BoneMatrix * pCharacterPos);
+			m_TargetPosition.x = temp._41;
+			m_TargetPosition.y = temp._42;
+			m_TargetPosition.z = temp._43;
+			
+		}
+		
 
 		m_pTransformCom->Look_At(m_ptarget->Get_State(CTransform::STATE::STATE_POSITION));
 		CameraRotation(fTimeDelta);
 
 		//Player가 앞키를 누르면 카메라 회전했던 방향쪽에서 회전값을 받아서 카메라가 바라보고 있는 방향으로 플레이어도 쳐다 보게 만듬 
-		if (true == m_pPlayer->Is_Rotate_In_CameraDir())
+		if (true == m_pPlayer->Is_Rotate_In_CameraDir() && true == m_pPlayer->m_bPlayerCheck)
 		{
 			RotatePlayer();
+		}
+		else
+		{
+			int i = 0;
 		}
 
 		if (m_pGameInstance->Key_Down(DIK_TAB))
 		{
 			if (m_bFix)
-			{
+			{	
 				m_bFix = false;
 				m_bCheck = false;
 			}
@@ -204,6 +249,7 @@ void CSpringCamera::CameraRotation(_float fTimeDelta)
 	//카메라 움직임은 Late_Tick에 있다!
 	_float3 currentCameraPosition = ActualPosition;
 	_float3 idealPosition = m_ptarget->Get_State(CTransform::STATE_POSITION);
+	idealPosition = m_TargetPosition;
 	_float3 displacement = ActualPosition - idealPosition;
 	_float3 SpringAccel = (-SpringConstant * displacement) - (DampConstant * Velocity);
 	Velocity += SpringAccel * fTimeDelta;
@@ -232,6 +278,11 @@ void CSpringCamera::CameraRotation(_float fTimeDelta)
 	// 캐릭터의 위치 및 회전 적용
 	m_pTransformCom->Set_WorldMatrix(rotationMatrix * XMMatrixTranslationFromVector(ActualPosition));
 	m_pTransformCom->Set_Position(currentCameraPosition + cameraOffset * hDist);
+}
+
+void CSpringCamera::StartCameraRotation(_fmatrix StartRotationMatrix)
+{
+	m_pTransformCom->Set_WorldMatrix(StartRotationMatrix * XMMatrixTranslationFromVector(ActualPosition));
 }
 
 void CSpringCamera::Lock_On(_float fTimeDelta)
@@ -283,6 +334,11 @@ void CSpringCamera::Mouse_Fix()
 
 	ClientToScreen(g_hWnd, &pt);
 	SetCursorPos(pt.x, pt.y);
+}
+
+void CSpringCamera::Set_pTargetCharacter(CCharacter* _pCharacter)
+{
+	m_pCharacter = _pCharacter;
 }
 
 

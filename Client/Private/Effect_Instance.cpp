@@ -88,6 +88,7 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 				m_tVoidDesc.bDissolve = TRUE;
 				if (m_tVoidDesc.bDissolve)
 				{
+					
 					m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
 				}
 
@@ -124,55 +125,69 @@ void CEffect_Instance::Late_Tick(_float fTimeDelta)
 	{
 		if (m_tVoidDesc.bRender)
 		{
-			if (nullptr != m_tVoidDesc.pParentObj)
-			{
-				if (m_tVoidDesc.bParentPivot)
-				{
-					m_tVoidDesc.matPivot = m_tVoidDesc.pParentObj->Get_Transform()->Get_WorldFloat4x4();
-					XMStoreFloat4x4(&m_tVoidDesc.matOffset, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
-				}
-			}
+			__super::Update_PivotMat();
+
 			//Compute_CamDistance();
 
 			//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_EFFECT, this));
-			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this));
+			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this), );
 		}
 	}
 }
 
 HRESULT CEffect_Instance::Render()
 {
-	if(FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	FAILED_CHECK(Bind_ShaderResources());
 
-	_uint	iCurModelNum = m_pVIBufferCom->Get_Desc()->eCurModelNum;
 
-	_uint	iNumMeshes = m_pModelCom[iCurModelNum]->Get_NumMeshes();
-
-	//for (size_t i = 0; i < iNumMeshes; i++)
+	if (m_pVIBufferCom->Get_Desc()->bMorph)	// 모프가 true이면 (박쥐 모델)
 	{
-		if(FALSE == m_tInstanceDesc.bUseCustomTex)
+		_uint	iCurModelNum = m_pVIBufferCom->Get_Desc()->eCurModelNum;
+
+		if (FALSE == m_tInstanceDesc.bUseCustomTex)
+		{
 			m_pModelCom[iCurModelNum]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
-
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-
-
+		}
+	
 		m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
-		m_pVIBufferCom->Render((_uint)iCurModelNum);
-	}	
+		m_pVIBufferCom->Render((_uint)0);
+
+		return S_OK;
+	}
+	else
+	{
+		//_uint	iNumMeshes = m_pModelCom[0]->Get_NumMeshes();
+
+		//for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			if (FALSE == m_tInstanceDesc.bUseCustomTex)
+			{
+				m_pModelCom[0]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
+				//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+			}
+
+			m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
+			m_pVIBufferCom->Render((_uint)0);
+		}
+	}
+
+
 
 	return S_OK;
 }
 
 void CEffect_Instance::ReSet_Effect()
 {
-	__super::ReSet_Effect();
+	__super::ReSet_Effect();	// 시간 초기화
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
 	m_tVoidDesc.bDissolve = FALSE;
-	m_tVoidDesc.bRender = FALSE;
 
-	m_pVIBufferCom->ReSet();
+	if (!m_pVIBufferCom->Get_Desc()->bRecycle)
+	{
+		m_pVIBufferCom->ReSet();
+	}
+
 }
 
 void CEffect_Instance::End_Effect()
@@ -193,34 +208,29 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 	/* Mesh */
 	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
 
-	/* Bloom */
-	CJson_Utility::Write_Float4(Out_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);
-	CJson_Utility::Write_Float3(Out_Json["vBloomPower"], m_tInstanceDesc.vBloomPower);
-
-	/* Rim */
-	CJson_Utility::Write_Float4(Out_Json["vRimColor"], m_tInstanceDesc.vRimColor);
-	Out_Json["fRimPower"] = m_tInstanceDesc.fRimPower;
-
 
 	return true;
 }
 
 void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
-	__super::Load_FromJson(In_Json);
 
+	_float4 vTempFloat4 = {};
+	_float fTemp = 0.f;
+
+	__super::Load_FromJson(In_Json);
 
 	/* Mesh */
 	m_tInstanceDesc.bUseCustomTex	= In_Json["bUseCustomTex"];
 
+	/* Bloom */ 
+	if (In_Json.contains("vBloomColor"))	// 새로 저장하고 지우기
+		CJson_Utility::Load_Float4(In_Json["vBloomColor"], vTempFloat4);
 
-	/* Bloom */
-	CJson_Utility::Load_Float4(In_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);
-	CJson_Utility::Load_Float3(In_Json["vBloomPower"], m_tInstanceDesc.vBloomPower);
 
-	/* Rim */
-	CJson_Utility::Load_Float4(In_Json["vRimColor"], m_tInstanceDesc.vRimColor);
-	m_tInstanceDesc.fRimPower = In_Json["fRimPower"];
+
+	if (In_Json.contains("vBloomColor"))	// 새로 저장하고 지우기
+		fTemp = In_Json["fRimPower"];
 
 }
 
@@ -255,7 +265,7 @@ HRESULT CEffect_Instance::Ready_Components()
 	{
 		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferInfo = {};
 
-		for (_uint i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MODE_END); ++i)
+		for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MODE_END); ++i)
 		{
 			if (nullptr != m_pModelCom[i])
 			{
@@ -292,7 +302,6 @@ HRESULT CEffect_Instance::Ready_Components()
 	}
 
 
-
 	return S_OK;
 }
 
@@ -301,7 +310,7 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	/* Matrix ============================================================================================ */
 	if (m_tVoidDesc.bParentPivot)
 	{
-		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matOffset));
+		FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_tVoidDesc.matCombined));
 	}
 	else
 	{
@@ -336,7 +345,6 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	_float3 vBlack_Discard = _float3(m_tVoidDesc.vColor_Clip.x, m_tVoidDesc.vColor_Clip.y, m_tVoidDesc.vColor_Clip.z);
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
 
-
 	/* Camera ============================================================================================ */
 	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
 	vCamDirection = XMVector4Normalize(vCamDirection);
@@ -349,13 +357,25 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	_float fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 
-
 	/* Dissolve */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
-
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tVoidDesc.fDissolveAmount, sizeof(_float)));
 
+	/* Distortion */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vScales", &m_tDistortionDesc.vScales, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tDistortionDesc.vDistortion1, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion2", &m_tDistortionDesc.vDistortion2, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion3", &m_tDistortionDesc.vDistortion3, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDistortionScale", &m_tDistortionDesc.fDistortionScale, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tDistortionDesc.fDistortionBias, sizeof(_float)));
+
+	/* 소영 추가사항 - Bloom , Rim 용도 ====== */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_tVoidDesc.vBloomPower, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tVoidDesc.vRimColor, sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_tVoidDesc.fRimPower, sizeof(_float)));
 
 	return S_OK;
 }

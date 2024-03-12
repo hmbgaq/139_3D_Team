@@ -33,7 +33,7 @@ HRESULT CBody::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
-
+	
 	return S_OK;
 }
 
@@ -41,8 +41,8 @@ void CBody::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 
-	#ifdef _DEBUG
-Set_MouseMove(fTimeDelta);
+#ifdef _DEBUG
+	Set_MouseMove(fTimeDelta);
 #endif // _DEBUG
 }
 
@@ -53,6 +53,10 @@ void CBody::Tick(_float fTimeDelta)
 	m_vMovePos = { 0.f, 0.f, 0.f };
 
 	m_pColliderCom->Update(m_WorldMatrix);
+
+	Update_ShootingReaction(fTimeDelta);
+
+
 
 	//if (m_bDissolve)
 	//	m_fDissolveWeight += fTimeDelta;
@@ -90,7 +94,7 @@ HRESULT CBody::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	_uint iPass = 0; // false == m_bDissolve ? 0 : 3;
+	_uint iPass = m_iShaderPass; // false == m_bDissolve ? 0 : 3;
 
 	//if (FAILED(m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
 	//	return E_FAIL;
@@ -191,14 +195,20 @@ _float CBody::Get_TrackPosition()
 {
 	return m_pModelCom->Get_TrackPosition();
 }
+_bool CBody::Compare_TrackPosition_Is_Over(_float fTrackPosition)
+{
+	return m_pModelCom->Compare_TrackPosition_Is_Over(fTrackPosition);
+}
+void CBody::Set_TrackPosition(_int iNewTrackPosition)
+{
+	return m_pModelCom->Set_TrackPosition(iNewTrackPosition);
+}
+
 #ifdef _DEBUG
 
 void CBody::Set_MouseMove(_float fTimeDelta)
 {
 	_float2 vMouseMove = { 0.f, 0.f };
-
-
-	_long	MouseMove = 0;
 
 	_float fSpeed = 10.f;
 
@@ -208,20 +218,14 @@ void CBody::Set_MouseMove(_float fTimeDelta)
 	vMouseMove *= fSpeed * fTimeDelta;
 
 
-	//if (CGameInstance::GetInstance()->Key_Pressing(DIK_V))
-	//	vMouseMove.x += fSpeed;
+	_float2 vResult = vMouseMove;
 
-	//if (CGameInstance::GetInstance()->Key_Pressing(DIK_B))
-	//	vMouseMove.x -= fSpeed;
+	m_fRotateUpperY += vMouseMove.y / (fSpeed / 2.5f);
+	vResult.y = m_fRotateUpperY - m_fShootingReaction;
 
-
-	//if (CGameInstance::GetInstance()->Key_Pressing(DIK_F))
-	//	vMouseMove.y -= fSpeed;
-
-	//if (CGameInstance::GetInstance()->Key_Pressing(DIK_G))
-	//	vMouseMove.y += fSpeed;
-
-	m_pModelCom->Set_MouseMove(vMouseMove);
+	vResult.x += m_fRotateUpperX;
+		
+	m_pModelCom->Set_MouseMove(vResult);
 
 }
 
@@ -241,21 +245,72 @@ _bool CBody::Picking(_float3* vPickedPos)
 
 }
 
-CCharacter* CBody::Get_Owner()
-{
-	return m_pOwner;
-}
-
-void CBody::Set_Owner(CCharacter* pOwner)
-{
-	m_pOwner = pOwner;
-}
+//CCharacter* CBody::Get_Owner()
+//{
+//	return m_pOwner;
+//}
+//
+//void CBody::Set_Owner(CCharacter* pOwner)
+//{
+//	m_pOwner = pOwner;
+//}
 #endif
 
-void CBody::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+void CBody::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
 {
-	m_pModelCom->Set_Animation_Upper(_iAnimationIndex, _eAnimState, m_pModelCom->Get_TickPerSecond() / 10.f);
+	m_pModelCom->Set_Animation_Upper(_iAnimationIndex, _eAnimState, m_pModelCom->Get_TickPerSecond() / 10.f, iTargetKeyFrameIndex);
 	m_pModelCom->Set_Splitted(true);
+	
+}
+
+void CBody::Set_RotateUpperX(MoveDirection eDirection)
+{
+	switch (eDirection)
+	{
+	case MoveDirection::FrontLeft:
+	case MoveDirection::BackRight:
+		m_fRotateUpperX = 45.f / 2.f;
+		break;
+	case MoveDirection::FrontRight:
+	case MoveDirection::BackLeft:
+		m_fRotateUpperX = -45.f / 2.f;
+		break;
+	case MoveDirection::Left:
+		m_fRotateUpperX = 45.f;
+		break;
+	case MoveDirection::Right:
+		m_fRotateUpperX = -45.f;
+		break;
+	default:
+		m_fRotateUpperX = 0;
+		break;
+	}
+
+	//switch (eDirection)
+	//{
+	//case Engine::Left:
+	//	m_fRotateUpperX = 45.f;
+	//	break;
+	//case Engine::Right:
+	//	m_fRotateUpperX = -45.f;
+	//	break;
+	//default:
+	//	m_fRotateUpperX = 0;
+	//	break;
+	//}
+}
+
+void CBody::Activate_ShootingReaction(_float fHeight)
+{
+	m_fShootingReactionTarget += fHeight;
+}
+
+void CBody::Update_ShootingReaction(_float fTimeDelta)
+{
+	_float fReactionValue = m_fShootingReactionTarget * min(m_fShootingReactionTarget, 1.f / fTimeDelta) * fTimeDelta;
+	m_fShootingReactionTarget -= fReactionValue;
+	m_fShootingReaction += fReactionValue;
+	m_fShootingReaction = max((1 - fTimeDelta * max(m_fShootingReaction / 2, 2)) * m_fShootingReaction, 0);
 }
 
 HRESULT CBody::Bind_ShaderResources()

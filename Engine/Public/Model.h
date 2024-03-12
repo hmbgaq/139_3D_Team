@@ -18,7 +18,7 @@ public:
 	enum TYPE { TYPE_NONANIM, TYPE_ANIM, TYPE_END };
 
 public:
-	enum ANIM_STATE { ANIM_STATE_NORMAL, ANIM_STATE_LOOP, ANIM_STATE_REVERSE, ANIM_STATE_STOP, ANIM_STATE_END };
+	enum ANIM_STATE { ANIM_STATE_NORMAL, ANIM_STATE_LOOP, ANIM_STATE_REVERSE, ANIM_STATE_LOOP_REVERSE, ANIM_STATE_STOP, ANIM_STATE_END };
 
 private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -39,6 +39,7 @@ public:
 
 
 	void					Set_StiffnessRate(_float fStiffnessRate);
+	void					Set_StiffnessRate_Upper(_float fStiffnessRate);
 
 	_matrix					Get_PivotMatrix() { return m_PivotMatrix; }
 	_matrix					Get_CombinedMatrix(_uint iBoneIndex);
@@ -108,7 +109,9 @@ public:
 	_bool					Is_Transition();
 	void					Set_UseAnimationPos(_bool _bUseAnimationPos) { m_bUseAnimationPos = _bUseAnimationPos; };
 	_bool					Is_Inputable_Front(_uint _iIndexFront);
+	_bool					Compare_TrackPosition_Is_Over(_float fTrackPosition);
 	_float					Get_TrackPosition();
+	void					Set_TrackPosition(_int iNewTrackPosition);
 	void					Write_Names(const string& strModelFilePath);
 
 public:

@@ -7,7 +7,7 @@ matrix      g_BoneMatrices[800];
 float       g_fCamFar;
 float       g_TimeDelta;
 
-texture2D   g_DiffuseTexture;
+Texture2D   g_DiffuseTexture;
 Texture2D   g_NormalTexture;
 
 /* Dissolve  */
@@ -143,7 +143,6 @@ struct PS_OUT
     float4 vDiffuse : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
-    float4 vViewNormal : SV_TARGET3;
     float4 vBloom : SV_TARGET4;
 };
 
@@ -163,7 +162,6 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
    // Out.vBloom = float4(1.0f, 0.f, 0.f, 1.0f);
-    Out.vViewNormal = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
     return Out;
 }

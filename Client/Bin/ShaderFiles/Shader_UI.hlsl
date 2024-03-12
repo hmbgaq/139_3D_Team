@@ -10,10 +10,10 @@
 /* 셰이더의 전역변수 == 상수테이블(Constant Table) */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-texture2D g_DiffuseTexture;
-texture2D g_DiffuseTexture_Second;
-texture2D g_DiffuseTexture_Third;
-texture2D g_DiffuseTexture_Fourth;
+Texture2D g_DiffuseTexture;
+Texture2D g_DiffuseTexture_Second;
+Texture2D g_DiffuseTexture_Third;
+Texture2D g_DiffuseTexture_Fourth;
 
 Texture2D g_MaskTexture;
 Texture2D g_NoiseTexture;
@@ -26,9 +26,9 @@ float g_Alpha;
 float g_LoadingProgress;
 
 /* Hp */
-texture2D g_HpBarWhite_Texture;
-texture2D g_HpBarRed_Texture;
-texture2D g_HpBarDecal_Texture;
+Texture2D g_HpBarWhite_Texture;
+Texture2D g_HpBarRed_Texture;
+Texture2D g_HpBarDecal_Texture;
 float g_MaxHP;
 float g_CurrentHP;
 float g_LerpHP;
@@ -36,15 +36,15 @@ float g_LerpHP;
 /* Aim */
 float2 g_Recoil;
 float2 g_Offset;
-texture2D g_AimTop_Texture;
-texture2D g_AimBottom_Texture;
-texture2D g_AimLeft_Texture;
-texture2D g_AimRight_Texture;
+Texture2D g_AimTop_Texture;
+Texture2D g_AimBottom_Texture;
+Texture2D g_AimLeft_Texture;
+Texture2D g_AimRight_Texture;
 
 /* CoolDown */
-texture2D g_CoolDownTexture;
-float2      g_Center;
-float       g_Radius;
+Texture2D g_CoolDownTexture;
+float2 g_Center;
+float g_Radius;
 
 texture2D g_DissolveTexture;
 texture2D g_AlphaTexture;

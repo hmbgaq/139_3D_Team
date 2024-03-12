@@ -5,11 +5,11 @@
 
 #include "Data_Manager.h"
 // #include <avformat.h>
-#include <libavformat/avformat.h>
-#include <libavcodec/avcodec.h>
-#include <libswresample/swresample.h>
-#include <libswscale/swscale.h>
-#include <libavutil/avutil.h>
+//#include <libavformat/avformat.h>
+//#include <libavcodec/avcodec.h>
+//#include <libswresample/swresample.h>
+//#include <libswscale/swscale.h>
+//#include <libavutil/avutil.h>
 
 CUI_Video::CUI_Video(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)

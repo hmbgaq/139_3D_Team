@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 
+#include "Effect.h"
+
 CEffect_Void::CEffect_Void(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CAlphaObject(pDevice, pContext, strPrototypeTag)
 {
@@ -22,6 +24,9 @@ HRESULT CEffect_Void::Initialize_Prototype()
 
 HRESULT CEffect_Void::Initialize(void* pArg)
 {	
+	XMStoreFloat4x4(&m_tVoidDesc.matPivot, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_tVoidDesc.matCombined, XMMatrixIdentity());
+	
 	m_tVoidDesc = *static_cast<EFFECTVOID_DESC*>(pArg);
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -104,7 +109,32 @@ void CEffect_Void::Late_Tick(_float fTimeDelta)
 
 HRESULT CEffect_Void::Render()
 {
+
+
 	return S_OK;
+}
+
+void CEffect_Void::Update_PivotMat()
+{
+	if (nullptr != m_pOwner)	// 주인 이펙트가 있고
+	{
+		if (m_tVoidDesc.bParentPivot)		//주인의 매트릭스를 사용할거고
+		{
+			CGameObject* pParentOwner = m_pOwner->Get_Object_Owner();
+			if (nullptr != pParentOwner)
+			{
+				// 부모의 오너가 있으면 부모의 컴바인 매트릭스 사용
+				m_tVoidDesc.matPivot = dynamic_cast<CEffect*>(m_pOwner)->Get_Desc()->matCombined;
+				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+			}
+			else
+			{
+				// 부모의 오너가 없으면 부모의 월드만 사용
+				m_tVoidDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+			}
+		}
+	}
 }
 
 _bool CEffect_Void::Write_Json(json& Out_Json)
@@ -177,8 +207,14 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 	CJson_Utility::Write_Float4(Out_Json["vColor_Mul"], m_tVoidDesc.vColor_Mul);
 
 
+	/* Rim & Bloom */
+	CJson_Utility::Write_Float3(Out_Json["vBloomPower"], m_tVoidDesc.vBloomPower);
+	CJson_Utility::Write_Float4(Out_Json["vBloom_Clip"], m_tVoidDesc.vBloom_Clip);
+
+	CJson_Utility::Write_Float4(Out_Json["vRimColor"], m_tVoidDesc.vRimColor);
+	Out_Json["fRimPower"] = m_tVoidDesc.fRimPower;
+
 	/* States */
-	Out_Json["bActive_Tool"]	= m_tVoidDesc.bActive_Tool;
 	Out_Json["bPlay"]			= m_tVoidDesc.bPlay;
 	Out_Json["bLoop"]			= m_tVoidDesc.bLoop;
 	Out_Json["bReverse"]		= m_tVoidDesc.bReverse;
@@ -196,11 +232,6 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 
 	/* 주인 */
 	Out_Json["bParentPivot"] = m_tVoidDesc.bParentPivot;
-	for (_int i = 0; i < 4; ++i)
-		CJson_Utility::Write_Float4(Out_Json["matPivot"][i], XMLoadFloat4x4(&m_tVoidDesc.matPivot).r[i]);
-
-	for (_int i = 0; i < 4; ++i)
-		CJson_Utility::Write_Float4(Out_Json["matOffset"][i], XMLoadFloat4x4(&m_tVoidDesc.matOffset).r[i]);
 
 
 }
@@ -260,8 +291,15 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 	CJson_Utility::Load_Float4(In_Json["vColor_Mul"], m_tVoidDesc.vColor_Mul);
 
 
+	/* Rim & Bloom */
+	CJson_Utility::Load_Float3(In_Json["vBloomPower"], m_tVoidDesc.vBloomPower);	
+	//CJson_Utility::Load_Float4(In_Json["vBloom_Clip"], m_tVoidDesc.vBloom_Clip); 저장하고 주석 풀기
+
+	CJson_Utility::Load_Float4(In_Json["vRimColor"], m_tVoidDesc.vRimColor);
+	m_tVoidDesc.fRimPower = (_float)In_Json["fRimPower"];
+
+
 	/* States */
-	m_tVoidDesc.bActive_Tool = (_bool)In_Json["bActive_Tool"];
 	m_tVoidDesc.bPlay = (_bool)In_Json["bPlay"];
 	m_tVoidDesc.bLoop = (_bool)In_Json["bLoop"];
 	m_tVoidDesc.bReverse = (_bool)In_Json["bReverse"];
@@ -278,16 +316,6 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 
 	/* 주인 */
 	m_tVoidDesc.bParentPivot = (_bool)In_Json["bParentPivot"];
-
-	_float4x4 matPivot;
-	ZeroMemory(&matPivot, sizeof(_float4x4));
-	CJson_Utility::Load_JsonFloat4x4(In_Json["matPivot"], matPivot);
-	m_tVoidDesc.matPivot = matPivot;
-
-	_float4x4 matOffset;
-	ZeroMemory(&matOffset, sizeof(_float4x4));
-	CJson_Utility::Load_JsonFloat4x4(In_Json["matOffset"], matOffset);
-	m_tVoidDesc.matOffset = matOffset;
 
 }
 

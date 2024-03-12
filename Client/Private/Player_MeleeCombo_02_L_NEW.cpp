@@ -11,7 +11,7 @@ void CPlayer_MeleeCombo_02_L_NEW::Initialize(CPlayer* pActor)
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
 
 	pWeapon
-		->Set_Damage(0.f)
+		->Set_Damage(0)
 		->Set_Direction(Direction::Right)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.3f);
@@ -23,7 +23,11 @@ CState<CPlayer>* CPlayer_MeleeCombo_02_L_NEW::Update(CPlayer* pActor, _float fTi
 {
 	__super::Update(pActor, fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Inputable_Front(28))
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+	return nullptr;
 }
 
 void CPlayer_MeleeCombo_02_L_NEW::Release(CPlayer* pActor)

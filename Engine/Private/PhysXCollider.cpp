@@ -46,6 +46,81 @@ HRESULT CPhysXCollider::Initialize(void* pArg)
 	return S_OK;
 }
 
+_vector CPhysXCollider::Get_Position()
+{
+	PxTransform	Transform;
+	if (m_pRigidDynamic)
+		Transform = m_pRigidDynamic->getGlobalPose();
+
+	if (m_pRigidStatic)
+		Transform = m_pRigidStatic->getGlobalPose();
+
+
+	return XMVectorSet(Transform.p.x, Transform.p.y, Transform.p.z, 1.f);
+}
+
+_vector CPhysXCollider::Get_Quaternion()
+{
+	PxTransform	Transform;
+	if (m_pRigidDynamic)
+		Transform = m_pRigidDynamic->getGlobalPose();
+
+	if (m_pRigidStatic)
+		Transform = m_pRigidStatic->getGlobalPose();
+
+	_vector vQuaternion = { Transform.q.x, Transform.q.y, Transform.q.z, Transform.q.w };
+
+	return vQuaternion;
+}
+
+_vector CPhysXCollider::Get_Velocity()
+{
+	if (m_pRigidDynamic)
+	{
+		PxVec3 Velocity = m_pRigidDynamic->getLinearVelocity();
+		return XMVectorSet(Velocity.x, Velocity.y, Velocity.z, 0.f);
+	}
+
+	return _vector{ 0.f, 0.f, 0.f, 0.f };
+}
+
+_float CPhysXCollider::Get_Mess()
+{
+	PxReal fMess = m_pRigidDynamic->getMass();
+	return fMess;
+}
+
+_vector CPhysXCollider::Get_AngularVelocity()
+{
+	PxVec3 vVelocity = m_pRigidDynamic->getAngularVelocity();
+	return XMVectorSet(vVelocity.x, vVelocity.y, vVelocity.z, 0.f);
+}
+
+_vector CPhysXCollider::Get_LinearVelocity()
+{
+	PxVec3 vVelocity = m_pRigidDynamic->getLinearVelocity();
+	return XMVectorSet(vVelocity.x, vVelocity.y, vVelocity.z, 0.f);
+}
+
+_matrix CPhysXCollider::Get_WorldMatrix()
+{
+	PxTransform	Transform;
+	if (m_pRigidDynamic)
+		Transform = m_pRigidDynamic->getGlobalPose();
+
+	if (m_pRigidStatic)
+		Transform = m_pRigidStatic->getGlobalPose();
+
+	_vector vPos = { Transform.p.x, Transform.p.y, Transform.p.z };
+	vPos.m128_f32[3] = 1.f;
+	_vector vQuaternion = { Transform.q.x, Transform.q.y, Transform.q.z, Transform.q.w };
+
+	_matrix ResultMatrix = XMMatrixRotationQuaternion(vQuaternion);
+	ResultMatrix.r[3] = vPos;
+
+	return ResultMatrix;
+}
+
 void CPhysXCollider::Create_Collider()
 {
 	if (!m_pRigidDynamic && !m_pRigidStatic)
@@ -356,6 +431,75 @@ void CPhysXCollider::Create_StaticActor(PHYSXCOLLIDERDESC& tPhysXColliderDesc, P
 	}
 }
 
+void CPhysXCollider::OnCollision(CPhysXCollider* pOtherCollider)
+{
+	m_isColl = true;
+
+	list<CPhysXCollider*>::iterator iter = find_if(m_pPreOtherColliders.begin(),
+		m_pPreOtherColliders.end(),
+		[&](CPhysXCollider* pPreOtherCollider)
+		{
+			if (!pOtherCollider || !pPreOtherCollider)
+			{
+				#ifdef _DEBUG
+                   DEBUG_ASSERT;
+                #endif // _DEBUG
+				return false;
+			}
+
+			return pPreOtherCollider->Get_PColliderIndex() == pOtherCollider->Get_PColliderIndex();
+		});
+
+	if (m_pPreOtherColliders.end() == iter)
+	{
+		PhysXCollisionEnter(pOtherCollider);
+	}
+	else
+	{
+		PhysXCollisionStay(pOtherCollider);
+	}
+
+	m_pOtherColliders.push_back(pOtherCollider);
+}
+
+void CPhysXCollider::End_CollisionCheck()
+{
+	if (m_pOtherColliders.empty())
+		m_isColl = false;
+
+
+
+	_bool isErase = false;
+
+	for (auto iter = m_pPreOtherColliders.begin(); iter != m_pPreOtherColliders.end();)
+	{
+		isErase = false;
+
+		for (auto& elem : m_pOtherColliders)
+		{
+			if ((*iter) == elem)
+			{
+				iter = m_pPreOtherColliders.erase(iter);
+				isErase = true;
+				break;
+			}
+		}
+
+		if (!isErase)
+			iter++;
+	}
+
+	// 이전에 들어왔지만, 이번 프레임에 안들어온 충돌체.
+	// Exit를 호출한다. 
+	for (auto& elem : m_pPreOtherColliders)
+	{
+		PhysXCollisionExit(elem);
+	}
+
+	m_pPreOtherColliders = m_pOtherColliders;
+	m_pOtherColliders.clear();
+}
+
 void CPhysXCollider::PhysXCollisionEnter(CPhysXCollider* pOtherCollider)
 {
 	m_pOwner->OnPhysXCollisionEnter(pOtherCollider);
@@ -370,6 +514,44 @@ void CPhysXCollider::PhysXCollisionExit(CPhysXCollider* pOtherCollider)
 {
 	m_pOwner->OnPhysXCollisionExit(pOtherCollider);
 }
+
+void CPhysXCollider::Set_Enable(_bool _Enable)
+{
+	if (false == m_bEnable && true == _Enable)
+	{
+		m_FilterData.word2 = 1;
+
+		for (auto& elem : m_pShape)
+		{
+			elem->setSimulationFilterData(m_FilterData);
+		}
+
+		if (m_pRigidDynamic)
+			m_pRigidDynamic->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, false);
+
+		if (m_pRigidStatic)
+			m_pRigidStatic->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, false);
+	}
+	else if (true == m_bEnable && false == _Enable)
+	{
+		m_FilterData.word2 = 0;
+
+		for (auto& elem : m_pShape)
+		{
+			elem->setSimulationFilterData(m_FilterData);
+		}
+
+		if (m_pRigidDynamic)
+			m_pRigidDynamic->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, true);
+
+		if (m_pRigidStatic)
+			m_pRigidStatic->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, true);
+	}
+
+	m_bEnable = _Enable;
+}
+
+
 
 void CPhysXCollider::Init_MeshCollider(CMyAIMesh* pMeshData, const vector<INSTANCE_MESH_DESC>* In_ParticleDescs)
 {
@@ -625,4 +807,9 @@ CComponent* CPhysXCollider::Clone(void* pArg)
 void CPhysXCollider::Free()
 {
 	Safe_Release(m_pGameInstance);
+
+	if (m_pRigidDynamic)
+		m_pRigidDynamic->release();
+	if (m_pRigidStatic)
+		m_pRigidStatic->release();
 }

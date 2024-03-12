@@ -2,9 +2,6 @@
 
 #include "Engine_Defines.h"
 
-//#include "GameInstance.h"
-//#include "Transform.h"
-//#include "Bone.h"
 
 CVIBuffer_Trail::CVIBuffer_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CVIBuffer(pDevice, pContext)
@@ -44,8 +41,8 @@ HRESULT CVIBuffer_Trail::Initialize(void* pArg)
         pVertices[i].vPosition = m_tBufferDesc.vPos_0;
         pVertices[i + 1].vPosition = m_tBufferDesc.vPos_1;
 
-        pVertices[i].vTexcoord = _float2(1.f, 0.f);
-        pVertices[i + 1].vTexcoord = _float2(1.f, 1.f);
+        pVertices[i].vTexcoord      = _float2(1.f, 0.f);
+        pVertices[i + 1].vTexcoord  = _float2(1.f, 1.f);
     }
 
     pVertices[0].vTexcoord = _float2(0.f, 0.f);
@@ -124,6 +121,7 @@ void CVIBuffer_Trail::Update(_float _fTimeDelta, _matrix _ParentMatrix)
 
     m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &tSubResource);
 
+
     if (m_tBufferDesc.iVtxCnt >= m_iNumVertices)
     {
         _uint iRemoveCnt(m_tBufferDesc.iLerpPointNum * 2);
@@ -175,7 +173,7 @@ void CVIBuffer_Trail::Update(_float _fTimeDelta, _matrix _ParentMatrix)
         XMStoreFloat3(&((VTXPOSTEX*)tSubResource.pData)[iEndIndex].vPosition, vPos[0]);
         XMStoreFloat3(&((VTXPOSTEX*)tSubResource.pData)[iEndIndex + 1].vPosition, vPos[1]);
 
-        for (_uint i(0); i < m_tBufferDesc.iLerpPointNum; ++i)
+        for (_uint i = 0; i < m_tBufferDesc.iLerpPointNum; ++i)
         {
             _uint iIndex(i * 2 + m_tBufferDesc.iVtxCnt - 2);
             _float fWeight(_float(i + 1) / (m_tBufferDesc.iLerpPointNum + 1));
@@ -204,7 +202,7 @@ void CVIBuffer_Trail::Update(_float _fTimeDelta, _matrix _ParentMatrix)
         m_tBufferDesc.iCatMullRomIndex[1] = m_tBufferDesc.iCatMullRomIndex[2];
     }
 #pragma endregion CatMullRom
-    for (_uint i(0); i < m_tBufferDesc.iVtxCnt; i += 2)
+    for (_uint i = 0; i < m_tBufferDesc.iVtxCnt; i += 2)
     {
         ((VTXPOSTEX*)tSubResource.pData)[i].vTexcoord = _float2(_float(i) / _float(m_tBufferDesc.iVtxCnt - 2.f), 1.f);
         ((VTXPOSTEX*)tSubResource.pData)[i + 1].vTexcoord = _float2(_float(i) / _float(m_tBufferDesc.iVtxCnt - 2.f), 0.f);
@@ -256,12 +254,25 @@ void CVIBuffer_Trail::Reset_Points(_matrix _ParentMatrix)
 _bool CVIBuffer_Trail::Write_Json(json& Out_Json)
 {
 
+    CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vPos_0"], m_tBufferDesc.vPos_0);
+    CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vPos_1"], m_tBufferDesc.vPos_1);
+
+
+    Out_Json["Com_VIBuffer"]["iMaxCnt"] = m_tBufferDesc.iMaxCnt;
+    Out_Json["Com_VIBuffer"]["iLerpPointNum"] = m_tBufferDesc.iLerpPointNum;
+
 
     return true;
 }
 
 void CVIBuffer_Trail::Load_FromJson(const json& In_Json)
 {
+
+	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vPos_0"], m_tBufferDesc.vPos_0);
+	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vPos_1"], m_tBufferDesc.vPos_1);
+
+    m_tBufferDesc.iMaxCnt = (_uint)In_Json["Com_VIBuffer"]["iMaxCnt"];
+    m_tBufferDesc.iLerpPointNum = (_uint)In_Json["Com_VIBuffer"]["iLerpPointNum"];
 
 }
 
@@ -273,7 +284,7 @@ CVIBuffer_Trail* CVIBuffer_Trail::Create(ID3D11Device* pDevice, ID3D11DeviceCont
     /* 원형객체를 초기화한다.  */
     if (FAILED(pInstance->Initialize_Prototype()))
     {
-        MSG_BOX("Failed to Created : CVIBuffer_Rect");
+        MSG_BOX("Failed to Created : CVIBuffer_Trail");
         Safe_Release(pInstance);
     }
     return pInstance;
@@ -286,7 +297,7 @@ CComponent* CVIBuffer_Trail::Clone(void* pArg)
     /* 원형객체를 초기화한다.  */
     if (FAILED(pInstance->Initialize(pArg)))
     {
-        MSG_BOX("Failed to Cloned : CVIBuffer_Rect");
+        MSG_BOX("Failed to Cloned : CVIBuffer_Trail");
         Safe_Release(pInstance);
     }
     return pInstance;

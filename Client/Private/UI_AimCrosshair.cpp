@@ -79,8 +79,8 @@ void CUI_AimCrosshair::Tick(_float fTimeDelta)
 		GetCursorPos(&m_ptMouse);
 		ScreenToClient(g_hWnd, &m_ptMouse);  // 클라이언트 내에 마우스 포인터 가져오기 
 
-		m_fPositionX = m_ptMouse.x + m_ptOffset.x;
-		m_fPositionY = m_ptMouse.y + m_ptOffset.y;
+		m_fPositionX =_float( m_ptMouse.x + m_ptOffset.x);
+		m_fPositionY =_float( m_ptMouse.y + m_ptOffset.y);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 			XMVectorSet(m_fPositionX - g_iWinSizeX * 0.5f, -(m_fPositionY - g_iWinSizeY * 0.5f), 0.f, 1.f));
 

@@ -88,6 +88,14 @@ _bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState
 				m_fTrackPosition = 0.f;
 			}
 			break;
+		case Engine::CModel::ANIM_STATE_LOOP_REVERSE:
+			m_fTrackPosition -= m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+			if (m_fTrackPosition <= 0)
+			{
+				m_fTrackPosition = m_fDuration;
+				m_PrevPos = { 0.f, 0.f, 0.f };
+			}
+			break;
 		case Engine::CModel::ANIM_STATE_STOP:
 			m_isFinished = true;
 			break;
@@ -126,6 +134,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState
 					m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
 					break;
 				case Engine::CModel::ANIM_STATE_REVERSE:
+				case Engine::CModel::ANIM_STATE_LOOP_REVERSE:
 					m_Channels[i]->Invalidate_TransformationMatrix_Reverse(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
 					break;
 				default:
@@ -233,8 +242,12 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 				//X - Up
 				//Z - Look
 
-				XMStoreFloat4x4(&UpperSpineMatrix, XMMatrixRotationX(XMConvertToRadians(vMouseMove.x)));
-				XMStoreFloat4x4(&UpperSpineMatrix, XMMatrixMultiply(UpperSpineMatrix, XMMatrixRotationY(XMConvertToRadians(vMouseMove.y))));
+				_matrix RotateX = XMMatrixRotationX(XMConvertToRadians(vMouseMove.x));
+				_matrix RotateY = XMMatrixRotationY(XMConvertToRadians(vMouseMove.y));
+
+
+				//XMStoreFloat4x4(&UpperSpineMatrix, RotateX);
+				XMStoreFloat4x4(&UpperSpineMatrix, XMMatrixMultiply(RotateX, RotateY));
 
 
 				_float4x4 ResultMatrix = XMMatrixMultiply(Transform, UpperSpineMatrix);

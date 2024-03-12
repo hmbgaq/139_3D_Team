@@ -1916,7 +1916,7 @@ void CWindow_UITool::Curr_Info()
 					m_iSelected_GroupObjectIndex >= 0)
 				{
 					if (m_iSelected_GroupObjectIndex >= (*m_vecParentGroup).size())
-						m_iSelected_GroupObjectIndex = (*m_vecParentGroup).size() - 1;
+						m_iSelected_GroupObjectIndex = _int((*m_vecParentGroup).size() - 1);
 					if (m_iSelected_GroupObjectIndex < 0)
 						m_iSelected_GroupObjectIndex = 0;
 
@@ -2157,7 +2157,7 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 	firstKeyframe.vScale = minScaleValue; // Check CheckCheckCheckCheckCheckCheck
 	firstKeyframe.fRot = minRotationValue;
 	firstKeyframe.vPos = minTranslationValue;
-	firstKeyframe.iTexureframe = _minTexture;
+	firstKeyframe.iTexureframe = (_int)_minTexture;
 
 	if (m_pCurrSelectUI)
 		m_pCurrSelectUI->Add_Keyframe(firstKeyframe);
@@ -2171,7 +2171,7 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 	lastKeyframe.vScale = maxScaleValue;
 	lastKeyframe.fRot = maxRotationValue;
 	lastKeyframe.vPos = maxTranslationValue;
-	lastKeyframe.iTexureframe = _maxTexture;
+	lastKeyframe.iTexureframe = (_int)_maxTexture;
 
 	if (m_pCurrSelectUI)
 		m_pCurrSelectUI->Add_Keyframe(lastKeyframe);
@@ -2189,8 +2189,8 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 		float time = i * timeStep;
 		float t = time;  // 시간을 보간 계수로 사용
 
-		int itextureRange = _maxTexture - _minTexture + 1; // 텍스처 범위 계산
-		int iTextureNum = _minTexture + (i % itextureRange); // 현재 인덱스에 따라 텍스처 값 설정
+		int itextureRange =int( _maxTexture - _minTexture + 1); // 텍스처 범위 계산
+		int iTextureNum =int(_minTexture + (i % itextureRange)); // 현재 인덱스에 따라 텍스처 값 설정
 
 		// 매 키프레임마다 순차적으로 증가 및 감소한 값을 생성하여 추가
 		float step = (maxValue - minValue) / (numKeyframes - 1); // 증가/감소 단계
@@ -2343,7 +2343,7 @@ void CWindow_UITool::KeyframeAutomaticGeneration()
 			minRot, maxRot,
 			fminPos, fmaxPos,
 			fMin_Texture, fMax_Texture,
-			numKeyframes);
+			(_int)numKeyframes);
 	}
 
 	if (ImGui::Button("clear"))

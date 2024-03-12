@@ -6,7 +6,7 @@
 
 BEGIN(Client)
 
-class CBandit_Heavy final : public CMonster_Character
+class CBandit_Heavy  : public CMonster_Character
 {
 private:
 	CBandit_Heavy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -30,10 +30,7 @@ private:
 	CActor<CBandit_Heavy>* m_pActor = { nullptr };
 
 public:
-	/* 원형객체를 생성한다. */
 	static CBandit_Heavy* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-
-	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual CGameObject* Pool() override;
 

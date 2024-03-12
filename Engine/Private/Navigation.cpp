@@ -1,6 +1,7 @@
 #include "..\Public\Navigation.h"
 #include "Cell.h"
-
+#include "GameObject.h"
+#include "Transform.h"
 #include "GameInstance.h"
 
 _float4x4 CNavigation::m_WorldMatrix = { };
@@ -146,8 +147,175 @@ _bool CNavigation::isMove(_fvector vPosition)
 	}
 }
 
+void CNavigation::SaveData(wstring strSavePath)
+{
+	HANDLE	hFile = CreateFile(strSavePath.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (0 == hFile)
+		return;
+
+	_ulong dwByte = 0;
+
+	_int iCellSize = m_Cells.size();
+
+	for (_int i = 0; i < iCellSize; ++i)
+	{
+		_float3 vPoints[3];
+
+		vPoints[0] = *m_Cells[i]->Get_Point(CCell::POINT_A);
+		vPoints[1] = *m_Cells[i]->Get_Point(CCell::POINT_B);
+		vPoints[2] = *m_Cells[i]->Get_Point(CCell::POINT_C);
+
+		WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
+
+
+	}
+
+	WriteFile(hFile, &m_iCurrentIndex, sizeof(_int), &dwByte, nullptr);
+
+	CloseHandle(hFile);
+
+}
+
+void CNavigation::AddCell(CCell* pCell)
+{
+	if (nullptr == pCell)
+		return;
+
+	m_Cells.push_back(pCell);
+
+	Make_Neighbors();
+}
+
+HRESULT CNavigation::Delete_Cell(const _uint iIndex)
+{
+	for (vector<CCell*>::iterator iter = m_Cells.begin(); iter != m_Cells.end();)
+	{
+		if ((*iter)->Get_Index() == iIndex)
+		{
+			Safe_Release(*iter);
+			iter = m_Cells.erase(iter);
+
+			Make_Neighbors();
+
+			return S_OK;
+		}
+		else
+			++iter;
+	}
+
+	return E_FAIL;
+}
+
+void CNavigation::InRangeCellChange(CCell* pCell, _int ePoint, _float3 vSearchPos)
+{
+	_int iCellSize = m_Cells.size();
+
+
+	_float3 vPosition = *pCell->Get_Point(CCell::POINT(ePoint));
+
+	vector<CCell::POINT> vecPoints;
+	vector<_int> vecIndexs;
+
+	for (_int i = 0; i < iCellSize; ++i)
+	{
+		_float3 vPointA = *m_Cells[i]->Get_Point(CCell::POINT_A);
+		_float3 vPointB = *m_Cells[i]->Get_Point(CCell::POINT_B);
+		_float3 vPointC = *m_Cells[i]->Get_Point(CCell::POINT_C);
+
+		CCell* pTargetCell = m_Cells[i];
+
+		_float3 vPointBool = pTargetCell->Get_Compare_Point(&vPosition);
+
+		if (vPointBool.x == 1.f)
+		{
+			vecPoints.push_back(CCell::POINT_A);
+			vecIndexs.push_back(i);
+
+		}
+		else if (vPointBool.y == 1.f)
+		{
+			vecPoints.push_back(CCell::POINT_B);
+			vecIndexs.push_back(i);
+		}
+		else if (vPointBool.z == 1.f)
+		{
+			vecPoints.push_back(CCell::POINT_C);
+			vecIndexs.push_back(i);
+		}
+	}
+
+	_int iVectorSize = vecPoints.size();
+
+
+	for (_int i = 0; i < iVectorSize; ++i)
+	{
+		m_Cells[vecIndexs[i]]->Set_Point(vecPoints[i], vSearchPos);
+	}
+
+
+	Make_Neighbors();
+}
+
+_int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
+{
+	_int iCellSize = m_Cells.size();
+
+	CTransform* pTransform = pTargetObject->Get_Transform();
+
+	_vector vPos = pTransform->Get_State(CTransform::STATE_POSITION);
+
+	for (_int i = 0; i < iCellSize; ++i)
+	{
+
+		if (true == m_Cells[i]->isInRange(vPos, XMLoadFloat4x4(&m_WorldMatrix)))
+			return m_Cells[i]->Get_Index();
+	}
+
+	return -1;
+}
+
+_float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
+{
+	_vector vPlane = {};
+
+	if (m_iCurrentIndex == -1)
+		return _float();
+
+	CCell* pCell = m_Cells[m_iCurrentIndex];
+
+	_vector vA = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_A)), 1.f);
+	_vector vB = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_B)), 1.f);
+	_vector vC = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_C)), 1.f);
+
+	vPlane = XMPlaneFromPoints(vA, vB, vC);
+
+
+	_float fA = XMVectorGetX(vPlane);
+	_float fB = XMVectorGetY(vPlane);
+	_float fC = XMVectorGetZ(vPlane);
+	_float fD = XMVectorGetW(vPlane);
+
+	_float fX = vPosition.x;
+	_float fY = vPosition.y;
+	_float fZ = vPosition.z;
+
+	_float height = (-fA * fX) - (fC * fZ) - fD;
+
+	if (pGround != nullptr)
+	{
+		// 플레이어의 Y값을 기준으로 땅에 있다고 판단
+		*pGround = (fY <= height);
+	}
+
+	return height;
+}
+
 HRESULT CNavigation::Make_Neighbors()
 {
+	_bool bAB = false, bBC = false, bCA = false;
+
+
 	for (auto& pSourCell : m_Cells)
 	{
 		for (auto& pDestCell : m_Cells)
@@ -158,15 +326,21 @@ HRESULT CNavigation::Make_Neighbors()
 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_A), pSourCell->Get_Point(CCell::POINT_B)))
 			{
 				pSourCell->SetUp_Neighbor(CCell::LINE_AB, pDestCell);
+				bAB = true;
 			}
 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_B), pSourCell->Get_Point(CCell::POINT_C)))
 			{
 				pSourCell->SetUp_Neighbor(CCell::LINE_BC, pDestCell);
+				bBC = true;
 			}
 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_C), pSourCell->Get_Point(CCell::POINT_A)))
 			{
 				pSourCell->SetUp_Neighbor(CCell::LINE_CA, pDestCell);
+				bCA = true;
 			}
+
+			if (false == bAB && false == bBC && false == bCA)
+				pSourCell->Reset_Line();
 
 		}
 	}

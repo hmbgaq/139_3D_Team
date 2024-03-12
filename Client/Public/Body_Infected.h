@@ -10,7 +10,6 @@ BEGIN(Client)
 
 class CBody_Infected abstract : public CBody
 {
-
 protected:
 	CBody_Infected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CBody_Infected(const CBody_Infected& rhs);
@@ -25,14 +24,11 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
 
-
 protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
-
 public:
-	//static CBody_Infected* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual CGameObject* Pool() PURE;
 	virtual void Free() override;

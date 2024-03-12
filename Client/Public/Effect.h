@@ -8,9 +8,13 @@ BEGIN(Client)
 class CEffect final : public CGameObject
 {
 public:
+	enum TYPE_DEAD { DEAD_AUTO, DEAD_OWNER, DEAD_NONE, TYPE_DEAD_END };
+
 	typedef struct tagEffectDesc : public CGameObject::GAMEOBJECT_DESC
 	{
-		_bool	bActive_Tool		= { TRUE };
+		/* 저장해야 하는 고정 정보들 */
+		TYPE_DEAD eType_Dead		= { DEAD_AUTO };
+
 		_bool	bPlay				= { TRUE };
 		_bool	bLoop				= { TRUE };
 		_bool	bFinished			= { FALSE };
@@ -20,27 +24,31 @@ public:
 		_int	iPartSize			= { 0 };
 
 		// Times
-		EASING_TYPE		eType_Easing = { EASING_TYPE::LINEAR };
-
-		_float	fTimeAcc			= { 0.f };	/* 시간 누적 */
-		_float	fWaitingAcc			= { 0.f };	/* 시작 딜레이 시간 누적 */
-		_float  fRemainAcc			= { 0.f };
-		_float	fSequenceAcc		= { 0.f };	/* 시퀀스 시간 누적 */
-		_float  fLerpTimeAcc		= { 0.f };	/* 러프 중인 시간누적 */
-
 		_float	fLifeTime			= { 5.f };
 		_float	fWaitingTime		= { 0.f };	/* 이 값이 넘어가야 m_fTimeAcc가 누적되기 시작한다. */
 		_float	fRemainTime			= { 0.f };	/* 라이프타임이 지나고, 이 시간이 넘어가야 이펙트 종료. */
 		_float	fSequenceTime		= { 0.f };	/* 총 시퀀스 시간(fWaitingTime + fLifeTime + fRemainTime) */
 
-		_float  fLifeTimeRatio		= { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
+		// 주인
+		_bool		 bParentPivot	= { FALSE };
+
+
+		/* 업데이트 되면서 바뀌는 정보들(저장x) */
+		_bool	bActive_Tool = { TRUE };
+
+		// 시간 누적
+		_float	fTimeAcc = { 0.f };			/* 시간 누적 */
+		_float	fWaitingAcc = { 0.f };		/* 시작 딜레이 시간 누적 */
+		_float  fRemainAcc = { 0.f };
+		_float	fSequenceAcc = { 0.f };		/* 시퀀스 시간 누적 */
+		_float  fLerpTimeAcc = { 0.f };		/* 러프 중인 시간누적 */
+
+		_float  fLifeTimeRatio = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
 
 		// 주인
-		CGameObject* pOwner			= { nullptr };
-		wstring		 strOwnerTag	= { TEXT("") };
-		_bool		 bParentPivot	= { FALSE };
-		_float4x4	 matPivot		= {};		/* XMStoreFloat4x4(&m_matPivot, XMMatrixIdentity()) */
-		_float4x4	 matOffset		= {};
+		// 주인 객체는 게임오브젝트에 있는 것 사용
+		_float4x4	 matPivot		= {};	/* XMStoreFloat4x4(&m_tEffectDesc.matPivot, XMMatrixIdentity()); */
+		_float4x4	 matCombined	= {};
 
 	}EFFECT_DESC;
 
@@ -63,6 +71,9 @@ public:
 	virtual void Load_FromJson(const json& In_Json)	override;
 
 public:
+	void	Update_PivotMat();
+
+public:
 	void	ReSet_Effect();
 	void	End_Effect();
 
@@ -75,12 +86,9 @@ public:
 	HRESULT			Add_PartObject(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg);
 	void			Delete_PartObject(const wstring& strPartTag);
 
-	void			Set_Owner(CGameObject* pOwner);
-	CGameObject*	Get_Owner() {return m_tEffectDesc.pOwner; }
 
 public:
 	EFFECT_DESC* Get_Desc() { return &m_tEffectDesc; }
-	_float	Get_EasingTimeAcc() { return m_fEasingTimeAcc; }
 
 private:
 	HRESULT Ready_Components();
@@ -88,10 +96,9 @@ private:
 
 private:
 	EFFECT_DESC		m_tEffectDesc = {};
-	_float4x4		m_matCombined = {};
+
 	map<const wstring, class CGameObject*>		m_PartObjects;
 
-	_float m_fEasingTimeAcc = { 0.f };
 
 public:
 	/* 원형객체를 생성한다. */

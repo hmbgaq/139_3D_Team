@@ -1,7 +1,7 @@
 #include "Shader_Defines.hlsli"
 
 matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D	g_DepthTexture;
+Texture2D	g_DepthTexture;
 
 Texture2D	g_DiffuseTexture;
 Texture2D	g_MaskTexture;
@@ -16,6 +16,9 @@ float		g_fCamFar;
 bool        g_bBillBoard;
 float       g_fAlpha_Discard;
 float3      g_vBlack_Discard;
+//float4	g_vColor_Mul;
+
+float4		g_vBloom_Discard;
 
 float		g_fDegree;
 
@@ -25,7 +28,17 @@ float2		g_UVOffset;
 float2		g_UVScale;
 // ===========================
 
+// 소영 Test ( + 참고 주석 )  ================= 
+// 일단 값 때려박은거. 수정해도됨. 
+// 생각못한게 있었는데, 림라이트 적용하려면 노말벡터가 필요함. 
+// 그래서 BloomPower만 적용해서 블룸을 얼마나 넣을것인지 정도는 넣을 수 있음. 
+// 참고로 BloomPower 가 0.3 0.3 0.3 을 넣었을때 Calculation_Brightness함수내에서 fPixelBrightness가 임계를 넘지못해서 안나오는경우도 있었음.. 
+// 여차하면 이 fPixelBrightness 도 전역으로 떄려서 조절해도됨. 함수만 제대로 작동하면 안에 어떤값이던 던져서 함수를 변형해서 써도 됨 
+//  어 ? 노말이 된다고 ?? ??? ?? ???????????? ??
+float3 g_vBloomPower; /*= { 0.7f, 0.7f, 0.7f }; /* Bloom */
+float4 g_vRimColor; /* = { 1.0f, 0.f, 0.f, 0.5f }; /* RimLight */
 
+// ===========================
 struct EffectDesc
 {
 	float3	g_vDir;
@@ -35,6 +48,28 @@ EffectDesc g_EffectDesc[500];
 
 
 /* Custom Function */
+float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
+{
+    float fRimPower = 1.f - saturate(dot(In_Normal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
+    fRimPower = pow(fRimPower, 5.f);
+    float4 vRimColor = g_vRimColor * fRimPower;
+    
+    return vRimColor;
+}
+
+float4 Calculation_Brightness(float4 Out_Diffuse)
+{
+    float4 vBrightnessColor = float4(0.f, 0.f, 0.f, 0.f);
+
+    float fPixelBrightness = dot(Out_Diffuse.rgb, g_vBloomPower.rgb);
+    
+    if (fPixelBrightness > 0.99f)
+        vBrightnessColor = float4(Out_Diffuse.rgb, 1.0f);
+
+    return vBrightnessColor;
+}
+
+
 float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
 {
 	float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
@@ -72,25 +107,23 @@ float Calculate_AngleBetweenVectors_Degree(float3 v1, float3 v2)
 
 struct VS_IN
 {
-	float3				vPosition : POSITION;
-	float2				vPSize : PSIZE;
+	float3				vPosition		: POSITION;
+	float2				vPSize			: PSIZE;
 
 	row_major float4x4	TransformMatrix : WORLD;
-	float4				vColor : COLOR0;
+	float4				vColor			: COLOR0;
 
-	uint				iInstanceID : SV_INSTANCEID;
+	uint				iInstanceID		: SV_INSTANCEID;
 };
 
 struct VS_OUT
 {
-	float4		vPosition : POSITION;
-	float2		vPSize : PSIZE;
-	float4		vColor : COLOR0;
+	float4		vPosition	: POSITION;
+	float2		vPSize		: PSIZE;
+	float4		vColor		: COLOR0;
 
 	uint	    iInstanceID : SV_INSTANCEID;
 };
-
-
 
 VS_OUT VS_MAIN_PARTICLE(VS_IN In)
 {
@@ -191,18 +224,17 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
 struct PS_IN
 {
-	float4		vPosition : SV_POSITION;
-	float2		vTexcoord : TEXCOORD0;
-	float4		vColor : COLOR0;
-
+	float4		vPosition	: SV_POSITION;
+	float2		vTexcoord	: TEXCOORD0;
+	float4		vColor		: COLOR0;
 };
 
 struct PS_OUT
 {
 	float4		vColor		: SV_TARGET0; // Diffuse
 	float4		vNormal		: SV_TARGET1; // Normal
-	float4		vDepth		: SV_TARGET2; // Depth
-	float4		vRimBloom	: SV_TARGET3; // RimBloom
+    float4		vDepth		: SV_TARGET2; // Depth
+    float4		vRimBloom	: SV_TARGET3; // RimBloom
 };
 
 
@@ -223,9 +255,15 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 			discard;
 
 		Out.vColor = vDiffuseColor;
-		/* 소영 - Test용도 */ 
-        Out.vRimBloom = vector(1.0f, 1.f, 1.f, 0.3f);
-
+		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
+		// 여기 두줄이 원래 림라이트인데, 노말벡터 없어서 림이 안들어감.. 그 해골 모델이나 이런애들처럼 노말있는애들만 가능할듯..?
+        //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
+        //Out.vDiffuse += vRimColor;
+		
+		// Case1. 기존의 Diffuse로 블러를 먹여서 효과를 준다. 
+        //Out.vRimBloom = Calculation_Brightness(Out.vColor);
+		// Case2. 색상을 아에 넣어버린다 : 이경우 g_RimBloom_Color 라던지 전역변수 받아서 그걸로 해도됨
+        //Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
     }
 	else
 	{
@@ -236,15 +274,23 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		vDiffuseColor.rgb *= In.vColor.rgb;
 		vDiffuseColor.a = In.vColor.a * vAlphaColor;
 
+		float4 vBloomColor = vDiffuseColor;
+
+		if (vBloomColor.a < g_vBloom_Discard.a	// 블룸 알파 잘라내기
+			|| vBloomColor.r < g_vBloom_Discard.r && vBloomColor.g < g_vBloom_Discard.g && vBloomColor.b < g_vBloom_Discard.b)	// 검정색 잘라내기
+			discard;
+
 		if (vDiffuseColor.a < g_fAlpha_Discard	// 알파 잘라내기
 			|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 			discard;
 
-        Out.vColor = vDiffuseColor;
-		/* 소영 - Test용도 */ 
-        Out.vRimBloom = vector(1.0f, 1.f, 1.f, 0.3f);
+        Out.vColor = vDiffuseColor /** g_vColor_Mul*/;
+		
+		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
+       // Out.vRimBloom = Calculation_Brightness(Out.vColor);
+	   Out.vRimBloom = Calculation_Brightness(vBloomColor);
+       // Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
     }
-
 
     return Out;
 }

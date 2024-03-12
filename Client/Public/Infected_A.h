@@ -1,12 +1,10 @@
 #pragma once
 
-#include "Client_Defines.h"
 #include "Infected.h"
-#include "Actor.h"
 
 BEGIN(Client)
 
-class CInfected_A  : public CInfected
+class CInfected_A final : public CInfected
 {
 protected:
 	CInfected_A(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -21,11 +19,10 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-
 protected:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
-
+	HRESULT Ready_Option();
 
 private:
 	CActor<CInfected>* m_pActor = { nullptr };
@@ -36,6 +33,7 @@ public:
 	virtual CGameObject* Pool() override;
 	virtual void Free() override;
 
+	
 };
 
 END

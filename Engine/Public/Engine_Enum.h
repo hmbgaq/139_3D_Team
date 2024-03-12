@@ -87,6 +87,21 @@ namespace Engine
 		, EASING_TYPE_END
 	};
 
+
+
+	/* Move */
+	enum class MoveDirection
+	{
+		Front,
+		FrontLeft,
+		FrontRight,
+		Back,
+		BackLeft,
+		BackRight,
+		Left,
+		Right,
+	};
+
 	/* Weapon */
 	enum Direction
 	{
@@ -116,7 +131,6 @@ namespace Engine
 	};
 
 
-	/* PhysX */
 	enum class PHYSXCOLLIDER_TYPE
 	{
 		SPHERE,

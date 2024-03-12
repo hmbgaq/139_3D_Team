@@ -8,6 +8,7 @@
 #include "Data_Manager.h"
 #include "Clone_Manager.h"
 #include "UI_Manager.h"
+#include "Effect_Manager.h"
 
 //CUDA test
 #include <iostream>
@@ -31,7 +32,7 @@ HRESULT CMainApp::Initialize()
 
 #ifdef _DEBUG
 #pragma region Imgui용 Rect 설정
-	//// 주석 걸고 병합하기 : imGui때문에.. imgui는 제목표시줄 크기를 인식 못해서 이렇게 안해주면 마우스 오차가 생긴다.
+	//주석 걸고 병합하기 : imGui때문에..imgui는 제목표시줄 크기를 인식 못해서 이렇게 안해주면 마우스 오차가 생긴다.
 	//RECT rect = { 0 };
 	//GetClientRect(GraphicDesc.hWnd, &rect);
 	//_int iClientSizeX = rect.right - rect.left;
@@ -50,6 +51,7 @@ HRESULT CMainApp::Initialize()
 	m_pUI_Manager = CUI_Manager::GetInstance();
 	Safe_AddRef(m_pUI_Manager);
 	m_pUI_Manager->Initialize(m_pDevice, m_pContext);
+	CEffect_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 
 	FAILED_CHECK(Ready_Font());
 
@@ -197,8 +199,6 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 	//
 	/* For.Prototype_Component_Shader_UI */ // + SH_Add
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_UI.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)));
-
-
 
 
 
@@ -357,6 +357,7 @@ void CMainApp::Free()
 	
 	CClone_Manager::DestroyInstance();
 	CData_Manager::DestroyInstance();
+	CEffect_Manager::DestroyInstance();
 
 	/* Add UI Manager */
 	Safe_Release(m_pUI_Manager);

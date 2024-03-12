@@ -2,10 +2,16 @@
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 Texture2D		g_DiffuseTexture;
+
 Texture2D		g_NormalTexture;
 Texture2D		g_OcclusionTexture;
 Texture2D		g_RougnessTexture;
 Texture2D		g_MetallicTexture;
+
+Texture2D       g_ColorDiffuse;
+Texture2D       g_MaskTexture;
+Texture2D       g_NoiseTexture;
+
 float           g_fTimeDelta;
 float           g_fCamFar;
 
@@ -13,6 +19,17 @@ float           g_fCamFar;
 float4	        g_vLineColor;
 float           g_LineThick;
 Texture2D       g_LineMaskTexture;
+
+
+float2 RotateTexture(float2 texCoord, float angle)
+{
+    float2 rotatedTexCoord;
+    rotatedTexCoord.x = texCoord.x * cos(angle) - texCoord.y * sin(angle);
+    rotatedTexCoord.y = texCoord.x * sin(angle) + texCoord.y * cos(angle);
+    
+    return rotatedTexCoord;
+    
+}
 
 cbuffer VS_CONSTANT_BUFFER
 {
@@ -195,6 +212,38 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_BloodPool(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+ 
+    
+    float fTime = g_fTimeDelta;
+    float2 newUV = RotateTexture(In.vTexcoord, fTime);
+    
+    
+    vector vMtrlDiffuse = g_ColorDiffuse.Sample(LinearSampler, newUV);
+    vector vMtrlMask = g_MaskTexture.Sample(LinearSampler, newUV);
+    vector vMtrlNoise = g_NoiseTexture.Sample(LinearSampler, newUV);
+    
+
+    if (vMtrlMask.r <= 0.6f)
+        Out.vDiffuse = vector(0.275f, 1.f, 0.f, 1.f);
+    else
+        Out.vDiffuse = vector(1.f, 0.039f, 0.f, 1.f);
+    
+    //if (vMtrlDiffuse.a < 0.0f)
+    //    discard;
+    
+    
+    
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+
+    return Out;
+}
+
+
 
 /* ------------------- Technique -------------------*/ 
 
@@ -275,4 +324,20 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
+
+    pass Model_BloodPool // 6¹ø ÆÐ½º º¸½º¸Ê ÇÇ¿õµ¢ÀÌ Àü¿ë
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_BloodPool();
+    }
+
+
+
+    
 }

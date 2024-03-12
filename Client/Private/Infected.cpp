@@ -6,10 +6,15 @@
 #include "Infected_Idle.h"
 #include "Infected_SpawnGround.h"
 
-
-#include "Infected_HitLight_F_01_NEW.h"
-#include "Infected_HitLight_FL_01_NEW.h"
-#include "Infected_HitLight_FR_01_NEW.h"
+//
+//#include "Infected_HitLight_F_01_NEW.h"
+//#include "Infected_HitLight_FL_01_NEW.h"
+//#include "Infected_HitLight_FR_01_NEW.h"
+#include "Infected_HitNormal_FR90_01_NEW.h"
+#include "Infected_Scared_02.h"
+#include "Infected_Scared_03.h"
+#include "Infected_HitNormalToStun_01_NEW.h"
+#include "Infected_HitHeavyToStun_01_NEW.h"
 
 #include "Infected_HitNormal_F_01_NEW.h"
 #include "Infected_HitNormal_F_02_NEW.h"
@@ -45,8 +50,7 @@ CInfected::CInfected(const CInfected& rhs)
 
 HRESULT CInfected::Initialize_Prototype()
 {
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize_Prototype());
 
 	return S_OK;
 }
@@ -58,8 +62,7 @@ HRESULT CInfected::Initialize(void* pArg)
 	GameObjectDesc.fSpeedPerSec = 10.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-	if (FAILED(__super::Initialize(&GameObjectDesc)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -83,7 +86,6 @@ void CInfected::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
-
 }
 
 void CInfected::Late_Tick(_float fTimeDelta)
@@ -93,8 +95,7 @@ void CInfected::Late_Tick(_float fTimeDelta)
 
 HRESULT CInfected::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Render());
 
 	return S_OK;
 }
@@ -104,26 +105,22 @@ HRESULT CInfected::Ready_Components()
 	return S_OK;
 }
 
-//HRESULT CInfected::Ready_PartObjects()
-//{
-//	CBody::BODY_DESC		BodyDesc = {};
-//	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Infected"), BodyDesc)))
-//		return E_FAIL;
-//
-//	return S_OK;
-//}
-
 void CInfected::Hitted_Left(Power ePower)
 {
+	cout << "Hitted_Left" << endl;
+	/* 무기 강도 */
 	switch (ePower)
 	{
 	case Engine::Light:
-		m_pActor->Set_State(new CInfected_HitLight_FL_01_NEW());
+		cout << "Light " << endl;
+		m_pActor->Set_State(new CInfected_Scared_03());
 		break;
 	case Engine::Medium:
+		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
 		break;
 	case Engine::Heavy:
+		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_FL_01_NEW());
 		break;
 	default:
@@ -134,15 +131,19 @@ void CInfected::Hitted_Left(Power ePower)
 
 void CInfected::Hitted_Right(Power ePower)
 {
+	cout << "Hitted_Right" << endl;
 	switch (ePower)
 	{
 	case Engine::Light:
-		m_pActor->Set_State(new CInfected_HitLight_FR_01_NEW());
+		cout << "Light " << endl;
+		m_pActor->Set_State(new CInfected_Scared_02());
 		break;
 	case Engine::Medium:
+		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
 		break;
 	case Engine::Heavy:
+		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_FR_01_NEW());
 		break;
 	default:
@@ -153,15 +154,19 @@ void CInfected::Hitted_Right(Power ePower)
 
 void CInfected::Hitted_Front(Power ePower)
 {
+	cout << "Hitted_Front" << endl;
 	switch (ePower)
 	{
 	case Engine::Light:
-		m_pActor->Set_State(new CInfected_HitLight_F_01_NEW());
+		cout << "Light " << endl;
+		m_pActor->Set_State(new CInfected_HitNormalToStun_01_NEW());
 		break;
 	case Engine::Medium:
+		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
 		break;
 	case Engine::Heavy:
+		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_F_01_NEW());
 		break;
 	default:
@@ -172,6 +177,7 @@ void CInfected::Hitted_Front(Power ePower)
 
 void CInfected::Hitted_Knock(_bool bIsCannonball)
 {
+	cout << "Hitted_Knock" << endl;
 	if (bIsCannonball)
 	{
 		m_pActor->Set_State(new CInfected_KnockFrontCannonball_F_01_TEMP());
@@ -184,10 +190,14 @@ void CInfected::Hitted_Knock(_bool bIsCannonball)
 
 void CInfected::Hitted_Dead(Power ePower)
 {
+	cout << "Hitted_Dead" << endl;
 	switch (ePower)
 	{
 	case Engine::Light:
 		m_pActor->Set_State(new CInfected_DeathLight_F_01_NEW());
+		break;
+	case Engine::Medium:
+		m_pActor->Set_State(new CInfected_DeathLight_B_01_NEW());
 		break;
 	case Engine::Heavy:
 		m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
@@ -197,40 +207,6 @@ void CInfected::Hitted_Dead(Power ePower)
 		break;
 	}
 }
-
-
-
-
-//CInfected* CInfected::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-//{
-//	CInfected* pInstance = new CInfected(pDevice, pContext, strPrototypeTag);
-//
-//	/* 원형객체를 초기화한다.  */
-//	if (FAILED(pInstance->Initialize_Prototype()))
-//	{
-//		MSG_BOX("Failed to Created : CInfected");
-//		Safe_Release(pInstance);
-//	}
-//	return pInstance;
-//}
-//
-//CGameObject* CInfected::Clone(void* pArg)
-//{
-//	CInfected* pInstance = new CInfected(*this);
-//
-//	/* 원형객체를 초기화한다.  */
-//	if (FAILED(pInstance->Initialize(pArg)))
-//	{
-//		MSG_BOX("Failed to Cloned : CInfected");
-//		Safe_Release(pInstance);
-//	}
-//	return pInstance;
-//}
-//
-//CGameObject* CInfected::Pool()
-//{
-//	return new CInfected(*this);
-//}
 
 void CInfected::Free()
 {

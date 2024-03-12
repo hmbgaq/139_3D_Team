@@ -1,4 +1,6 @@
-#include "..\Public\Infected_SpawnClimb_01.h"
+#include "stdafx.h"
+#include "Infected_SpawnClimb_01.h"
+#include "Infected_IdleAct_03.h"
 
 void CInfected_SpawnClimb_01::Initialize(CInfected* pActor)
 {
@@ -9,6 +11,11 @@ void CInfected_SpawnClimb_01::Initialize(CInfected* pActor)
 
 CState<CInfected>* CInfected_SpawnClimb_01::Update(CInfected* pActor, _float fTimeDelta)
 {
+	//if (pActor->Is_Animation_End()) /* 리스폰 하는 애니메이션이 끝난다면 */
+	//{
+	//	return new CInfected_IdleAct_03();
+	//}
+	//return nullptr;
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 

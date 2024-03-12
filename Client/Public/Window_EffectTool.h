@@ -8,10 +8,15 @@ class CEffect_Void;
 class CEffect_Particle;
 class CEffect_Rect;
 class CEffect_Instance;
+class CEffect_Trail;
+
+class CSky;
 
 class CWindow_EffectTool final : public CImgui_Window
 {
 public:
+	enum TYPE_FILE { FILE_EFFECT, FILE_TRAIL, TYPE_FILE_END };
+
 	struct Window_EffectTool_DESC : public ImGuiDESC
 	{
 
@@ -36,14 +41,15 @@ public:
 
 /* For.Level Setting (환경 세팅) */
 public:
-	void	Show_MousePos();	// 마우스 위치 표시
+	void	Show_ImGui_WindowSize();	// ImGui 윈도우 창 크기 표시
+	void	Show_MousePos();			// 마우스 위치 표시
+
 	void	Show_CameraInfo();	// 카메라 정보 표시
-	void	ReSet_Camera();		// 카메라 위치 리셋
+	void	ReSet_CameraPos();	// 카메라 위치 리셋
 
 	HRESULT Ready_Grid();		// 그리드 생성
 
-	HRESULT Load_Sky();			// 스카이박스 얻어오기
-	HRESULT Ready_Sky();		// 스카이박스 생성
+	HRESULT Ready_Sky();		// 스카이박스 준비
 	void	Set_SkyTexture();	// 스카이박스 텍스처 변경
 
 	HRESULT Ready_Model_Preview(wstring strModelTag);	// 크기비교용 모델 생성
@@ -72,8 +78,11 @@ public:
 	HRESULT Add_Part_Rect();							// 파트:Rect 추가
 	HRESULT Add_Part_Mesh(wstring strModelTag);			// 파트:메시 이펙트 추가
 	HRESULT Add_Part_Mesh_Morph(wstring strModelTag1, wstring strModelTag2);	// 파트:메시(모프) 이펙트 추가
-	HRESULT Add_Part_Trail();							// 파트:트레일 추가
+	
+	HRESULT Create_Trail();								// 트레일 생성
+	HRESULT Delete_Trail();								// 트레일 삭제
 
+	void	Delete_CurEffectObject();					// 현재 선택된 이펙트 삭제
 	void	Delete_CurPart();							// 현재 선택된 파트 이펙트 삭제		
 
 
@@ -85,6 +94,9 @@ public:
 
 public:
 	void	Select_EasingType(EASING_TYPE* eType);	// 이징 타입(러프관련) 선택
+
+private:
+	TYPE_FILE	m_eFile = { TYPE_FILE_END };
 
 
 private:
@@ -101,50 +113,65 @@ private:
 	char*		  m_cCurPartName		= { nullptr };
 	_int		  m_iCurPartIndex		= { 0 };
 	CEffect_Void* m_pCurPartEffect	    = { nullptr };
-	CEffect_Void::EFFECTVOID_DESC*	m_pCurVoidDesc = {};
 
 
-/* Sky */
-private:
-	_int m_iSkyTextureIndex = { 3 };
-
-/* Grid */
-private:
-	_float m_fColor_Grid[4] = { 0.f, 1.f, 0.f, 1.f };
 
 /* Desc */
 private:
-	CEffect::EFFECT_DESC*							m_pCurEffectDesc = { nullptr };
+	CEffect::EFFECT_DESC*							m_pCurEffectDesc = { nullptr };	// Effect Desc (공용)
 
-	CVIBuffer_Particle::PARTICLE_BUFFER_DESC*		m_pParticleBufferDesc = {};
-	CEffect_Void::UVSPRITE_DESC*					m_pSpriteDesc_Particle = {};
+	CEffect_Void::EFFECTVOID_DESC*					m_pCurVoidDesc = {}; // Effect_Void Desc (공용)
 
-	CEffect_Rect::EFFECT_RECT_DESC*					m_pRectDesc			= {};
+	/* Particle Desc */
+	CVIBuffer_Particle::PARTICLE_BUFFER_DESC*		m_pParticleBufferDesc	= {};	// 파티클 버퍼 Desc
+	CEffect_Void::UVSPRITE_DESC*					m_pSpriteDesc_Particle	= {};	// 파티클이 사용할 Void의 스프라이트 Desc
+
+	/* Rect Desc */
+	CEffect_Rect::EFFECT_RECT_DESC*					m_pRectDesc			= {};		// Rect만의 Desc
 
 
-	CEffect_Instance::EFFECT_INSTANCE_DESC*							m_pInstanceDesc		= {};
-	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC*	m_pMeshBufferDesc	= {};
+	/* Instance(Mesh) Desc */
+	CEffect_Instance::EFFECT_INSTANCE_DESC*							m_pInstanceDesc		= {};	// Instance(Mesh)만의 Desc
+	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC*	m_pMeshBufferDesc	= {};	// Instance(Mesh) 버퍼 Desc
+
+
+/* Trail */
+private:
+	CEffect_Trail* m_pTrail = { nullptr };
+
+	/* Trail Desc */
+	CEffect_Void::EFFECTVOID_DESC*		m_pVoidTrailDesc = {};		// Effect_Void Desc (트레일 전용)
+	CEffect_Trail::TRAIL_DESC*			m_pTrailDesc = {};			// Trail만의 Desc
+	CVIBuffer_Trail::TRAIL_BUFFER_DESC* m_pTrailBufferDesc = {};	// Trail 버퍼 Desc
+
 
 private:
-	_int m_iRenderGroup_Particle		= { 5 };
-	_int m_iShaderPassIndex_Particle	= { 0 };
-	_int m_iMaxShaderPassIndex_Particle = { 1 };
-	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 9, 0, 44, 15, 16 };
+	_int m_iRenderGroup_Particle							= { ECast(CRenderer::RENDER_EFFECT) };
+	_int m_iShaderPassIndex_Particle						= { 0 };
+	_int m_iMaxShaderPassIndex_Particle						= { 1 };
+	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 11, 0, 44, 22, 16 };
 
 
-	_int m_iRenderGroup_Rect = { 5 };
-	_int m_iShaderPassIndex_Rect = { 0 };
-	_int m_iMaxShaderPassIndex_Rect = { 2 };
-	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END] = { 9, 0, 44, 15, 16 };
+	_int m_iRenderGroup_Rect								= { ECast(CRenderer::RENDER_EFFECT) };
+	_int m_iShaderPassIndex_Rect							= { 0 };
+	_int m_iMaxShaderPassIndex_Rect							= { 2 };
+	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END]		= {};
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 16 };
 
 
-	_int m_iRenderGroup_Mesh			= { 5 };
-	_int m_iShaderPassIndex_Mesh		= { 0 };
-	_int m_iMaxShaderPassIndex_Mesh		= { 8 };
-	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { };
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END] = { 9, 0, 44, 15, 16 };
+	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
+	_int m_iShaderPassIndex_Mesh							= { 0 };
+	_int m_iMaxShaderPassIndex_Mesh							= { 9 };
+	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 16 };
+
+
+	_int m_iRenderGroup_Trail								= { ECast(CRenderer::RENDER_EFFECT) };
+	_int m_iShaderPassIndex_Trail							= { 0 };
+	_int m_iMaxShaderPassIndex_Trail						= { 3 };
+	_int m_iTexIndex_Trail[CEffect_Void::TEXTURE_END]		= {};
+	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 11, 0, 44, 22, 16 };
 
 
 private:
@@ -153,6 +180,7 @@ private:
 
 private:
 	_int	m_iLoop = { 0 };
+	_int	m_iType_Dead = { 0 };
 
 	_float	m_vTimes_Effect[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
 	_float	m_vTimes_Part[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
@@ -167,15 +195,23 @@ private:
 	_float	m_vRotate_Part[3] = { 0.f, 0.f, 0.f };
 
 	_float m_vColor_Clip_Part[4] = { 0.f, 0.f, 0.f, 0.f };
-	_float m_vColor_Clip_Rect[4] = { 0.f, 0.f, 0.f, 0.f };
+	_float m_vColor_Clip_Rect[4] = { 0.f, 0.f, 0.f, 0.f }; // ??
 
 
-#pragma region 파티클 옵션 시작
+#pragma region Particle 옵션 시작
 private:
 	_int	m_iNumInstance_Particle		= { 200 };
 	_int	m_iMaxNumInstance_Particle	= { 500 };
 
 	_int	m_iBillBoard				= { 0 };
+
+	/* 파티클만의 속성 */
+	_int	m_iRecycle_Particle = { 0 };
+	_int	m_iReverse_Particle = { 0 };
+	_int	m_iType_Emit_Particle = { 0 };
+	_int	m_iType_Action_Particle = { 0 };
+	_int	m_iType_Fade_Particle = { 0 };
+
 
 	_float	m_vMinMaxLifeTime_Particle[2] = { 0.f, 0.f };	// 라이프타임
 
@@ -195,9 +231,8 @@ private:
 
 
 	/* For.Position */
-	_float	m_vMinMaxCenterX_Particle[2] = { 0.f, 0.f };
-	_float	m_vMinMaxCenterY_Particle[2] = { 0.f, 0.f };
-	_float	m_vMinMaxCenterZ_Particle[2] = { 0.f, 0.f };
+	_float	m_vMinCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMaxCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
 	_float	m_vMinMaxRange_Particle[2] = { 0.f, 0.f };
 
 	/* For.Rotation */
@@ -218,6 +253,8 @@ private:
 	_float	m_fColor_Max_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_fColor_Cur_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 
+	_float	m_fColor_Mul_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
+
 
 	_float	m_fUV_RotDegree				= { 0.f };	// UV회전
 
@@ -233,11 +270,16 @@ private:
 	_float	m_fSequenceTerm_Particle		= { 0.05f };
 	/* For.Sprite ======================================== */
 
-#pragma endregion 파티클 옵션 끝
+	/* 파티클 Rim & Bloom */
+	_float	m_fRimColor_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_vBloomPower_Particle[3] = { 1.f, 1.f, 1.f };
+	_float	m_vBloom_Clip_Particle[4] = { 0.f, 0.f, 0.f, 0.f };
+
+#pragma endregion Particle 옵션 끝
 
 
 
-#pragma region Rect_Option
+#pragma region Rect 옵션 시작
 	_int	m_vUV_MaxTileCount[2] = { 7, 7 };
 	_float	m_fSequenceTerm_RectSprite = { 0.05f };
 
@@ -253,20 +295,22 @@ private:
 
 	_float	m_fDistortionScale = { 1.f };
 	_float	m_fDistortionBias = { 1.f };
-
-#pragma endregion
-
+#pragma endregion Rect 옵션 끝
 
 
-#pragma region Mesh_Option
+
+#pragma region Instance(Mesh) 옵션 시작
 private:
-	_int m_iNumInstance_Mesh = { 1000 };
-	_int m_iMaxNumInstance_Mesh = { 1000 };
+	_int m_iNumInstance_Mesh	= { 20 };
+	_int m_iMaxNumInstance_Mesh = { 20 };
+
+
+	_int	m_iRecycle_Mesh = { 0 };
 
 	_float	m_vMinMaxLifeTime_Mesh[2] = { 0.f, 0.f };	// 라이프타임
 
 	/* Morph */
-	_float m_fMorphTimeTerm = { 0.005f };
+	_float m_fMorphTimeTerm = { 0.05f };
 
 
 	/* RigidBody ============================================== */
@@ -293,19 +337,50 @@ private:
 	_float	m_fColor_Mul_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 
 
-	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
-	_float	m_fRimPower_Mesh = { 1.f };
-
-	_float	m_vBloomColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
+	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fRimPower_Mesh = { 100.f };
+
+	/* Position */
+	_float	m_vMinCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMaxCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
 
 	_float	m_vMinMaxRange_Mesh[2] = { 0.f, 0.f };
+
+
 	_float	m_vRotationOffsetX_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetY_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetZ_Mesh[2] = { 0.f, 0.f };
 
-#pragma endregion
 
+	/* Distortion ============================================== */
+	_float m_fSequenceTerm_Distortion_Mesh = { 1.f };
+
+	_float	m_vScrollSpeeds_Mesh[3] = { 1.f, 1.f, 0.f };
+	_float	m_vScales_Distortion_Mesh[3] = { 1.f, 1.f, 1.f };
+
+	_float	m_vDistortion1_Mesh[2] = { 0.1f, 0.1f };
+	_float	m_vDistortion2_Mesh[2] = { 0.0f, 0.0f };
+	_float	m_vDistortion3_Mesh[2] = { 0.0f, 0.1f };
+
+	_float	m_fDistortionScale_Mesh = { 1.f };
+	_float	m_fDistortionBias_Mesh = { 1.f };
+	/* Distortion ============================================== */
+#pragma endregion Instance(Mesh) 옵션 끝
+
+
+#pragma region Trail 옵션 시작
+private:
+	_float	m_vColor_Clip_Trail[4] = { 0.f, 0.f, 0.f, 0.f };	// 쉐이더에서 discard할 값
+	_float	m_fColor_Mul_Trail[4] = { 1.f, 1.f, 1.f, 1.f };	// 쉐이더에서 추가로 곱해줄 색 값
+	
+	_float m_vPos_0[3] = { 0.f, 0.f, 0.f };	
+	_float m_vPos_1[3] = { 0.f, 0.f, 0.f };
+
+	_int	m_iMaxCnt_Trail = { 16 };
+	_int	m_iLerpPointNum = { 12 };
+
+#pragma endregion Trail 옵션 끝
 
 
 #pragma region 시퀀서
@@ -314,15 +389,29 @@ private:
 #pragma endregion
 
 
-
 #pragma region Level Setting
-	CMasterCamera*  m_pMasterCamera = { nullptr };
-	_float3			m_Camera_ResetPos = { 0.f, 1.8f, -5.f };		// 카메라 리셋 위치
-	//_float4		m_Camera_ResetLookAt = { 0.f, 0.f, 0.f, 1.f };	// 카메라 리셋 LookAt
+private:
+	/* Camera */
+	CCamera*	m_pCamera = { nullptr };
+	_float3		m_Camera_ResetPos = { 0.f, 1.8f, -5.f };		// 카메라 리셋 위치
+	_float4		m_Camera_ResetLookAt = { 0.f, 0.f, 0.f, 1.f };	// 카메라 리셋 LookAt
 
-	CGameObject* m_pGrid = { nullptr };
-	CGameObject* m_pSky				= { nullptr };
-	CGameObject* m_pModel_Preview	= { nullptr };	// 크기 비교용 보기 모델
+	/* Sky */
+	CSky* m_pSky = { nullptr };
+	_int m_iSkyTextureIndex = { 3 };		// 스카이박스 텍스처 인덱스
+
+	/* Grid */
+	CGameObject* m_pGrid	= { nullptr };
+	_float m_fColor_Grid[4] = { 0.f, 1.f, 0.f, 1.f };	// 그리드(와이어프레임) 컬러
+
+
+	/* Model_Preview */
+	CModel_Preview*	m_pModel_Preview = { nullptr };				// 크기 비교용 보기 모델
+	CPart_Preview*	m_pPart_Preview = { nullptr };				// 모델의 파트(트레일 확인용)
+	_float		 m_vWorldPosition_Model[3] = { 0.f, 0.f, 0.f };	// 크기 비교용 모델 월드 이동
+	_float			m_fModelRot = { 0.f };
+
+	CEffect* m_pTestEffect = { nullptr };
 #pragma endregion
 
 

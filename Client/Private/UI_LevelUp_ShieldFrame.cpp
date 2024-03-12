@@ -54,7 +54,7 @@ HRESULT CUI_LevelUp_ShieldFrame::Initialize(void* pArg)
 	m_fChangeScale = 4.f;
 	m_fAlpha = 0.f;
 	m_fLifeTime = 8000.f;
-	m_fTime = GetTickCount64();
+	m_fTime = (_float)GetTickCount64();
 
 	return S_OK;
 }

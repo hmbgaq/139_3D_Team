@@ -6,7 +6,8 @@
 
 #include "Camera_Dynamic.h"
 #include "MasterCamera.h"
-
+#include "Sky.h"
+#include "Navigation.h"
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -22,6 +23,19 @@ HRESULT CLevel_Tool::Initialize()
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
+
+
+	{	//!내비게이션 
+		CNavigation* pNavi = { nullptr };
+
+		pNavi = dynamic_cast<CNavigation*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Navigation2")));
+
+		if (nullptr == pNavi)
+			return E_FAIL;
+
+		CData_Manager::GetInstance()->Set_Navigation(pNavi);
+	}
+
 	if (FAILED(Ready_Imgui()))
 	{
 		Safe_Release(m_pDevice);
@@ -31,6 +45,8 @@ HRESULT CLevel_Tool::Initialize()
 
 	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 
+
+	
 	return S_OK;
 
 }
@@ -64,7 +80,17 @@ HRESULT CLevel_Tool::Ready_Imgui()
 
 HRESULT CLevel_Tool::Ready_Layer_BackGround(const wstring& strLayerTag)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Sky")));
+
+	CGameObject* pSkybox = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Sky"));
+
+	if(nullptr == pSkybox)
+		return E_FAIL;
+
+	CData_Manager::GetInstance()->Set_pSkybox(dynamic_cast<CSky*>(pSkybox));
+
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Sky")));
+
+
 
 	return S_OK;
 }

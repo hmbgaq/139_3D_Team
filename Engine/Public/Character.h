@@ -13,7 +13,7 @@ BEGIN(Engine)
 class CNavigation;
 class CRigidBody;
 
-class CPhysXController;
+class CPhysXCharacterController;
 
 class ENGINE_DLL CCharacter abstract : public CGameObject
 {
@@ -93,6 +93,9 @@ public:
 
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 	_float	Get_TrackPosition();
+	_bool	Compare_TrackPosition_Is_Over(_float fTrackPosition);
+
+	void	Set_TrackPosition(_int iNewTrackPostion);
 	CHARCTER_DESC Get_CharcterDesc() { return CharAnimDesc; }
 
 	void Go_Straight(_float fTimeDelta);
@@ -123,6 +126,7 @@ public:
 	_int Get_Hp() { return m_iHp; };
 	void Set_Hp(_uint _iHp) { m_iHp = _iHp; };
 
+
 public:
 	CCharacter* Get_Target() { return m_pTarget; };
 	void Set_Target(CCharacter* pTarget) { m_pTarget = pTarget; };
@@ -138,20 +142,27 @@ public:
 	_float Calc_Distance();
 	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
-	void Move_In_Proportion_To_Enemy(_float fSpeedCap = 0.5f);
+	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 0.5f);
 
 
 
 public:	//!For Animation Split
-	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END);
+	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _uint iTargetKeyFrameIndex = 0);
 	_bool Is_Splitted() { return m_pBody->Is_Splitted(); }
 	void Set_Splitted(_bool _bIsSplitted) { m_pBody->Set_Splitted(_bIsSplitted); };
 
 
+public:
+	void Set_StiffnessRate(_float fStiffnessRate);
+	void Set_StiffnessRate_Upper(_float fStiffnessRate);
+
+
+
 protected:
 	_int m_iHp = { 1 };
-	Power m_eStrength = { Power::Light };
+	//Power m_eStrength = { Power::Light };
 	_float m_fStiffnessRate = { 1.f };
+
 
 public:
 	_float m_fCurrentTrackPosition = {0.f};
@@ -166,7 +177,7 @@ protected:
 	CCharacter* m_pTarget = { nullptr };
 
 protected:
-	CPhysXController* m_pPhysXControllerCom = { nullptr };
+	CPhysXCharacterController* m_pPhysXControllerCom = { nullptr };
 	PxControllerCollisionFlags m_LastCollisionFlags;
 
 protected:
@@ -174,7 +185,7 @@ protected:
 
 public:
 	_bool		m_bLookAt = true;
-
+	_bool		m_bTrigger = false;
 protected:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual CGameObject* Pool() PURE;

@@ -20,13 +20,12 @@ public:
 		_bool		bUseCustomTex	 = { TRUE };
 
 
-		/* Bloom */
-		_float4		vBloomColor = { 1.f, 1.f, 1.f, 1.f };
-		_float3		vBloomPower = { 1.f, 1.f, 1.f };
+		//_float4		vRimColor = { 1.f, 1.f, 1.f, 1.f };		// 사용
+		//_float3		vBloomPower = { 1.f, 1.f, 1.f };		// 사용
 
-		/* Rim */
-		_float4		vRimColor = { 1.f, 1.f, 1.f, 1.f };
-		_float		fRimPower = { 1.f };
+
+		////_float4		vBloomColor = { 1.f, 1.f, 1.f, 1.f };
+		////_float		fRimPower = { 1.f };					
 
 
 	}EFFECT_INSTANCE_DESC;
@@ -56,8 +55,8 @@ public:
 
 /* For.Desc */
 public:
-	EFFECT_INSTANCE_DESC* Get_InstanceDesc() { return &m_tInstanceDesc; }
-
+	EFFECT_INSTANCE_DESC*	Get_InstanceDesc() { return &m_tInstanceDesc; }
+	DISTORTION_DESC*		Get_Distortion_Desc() { return &m_tDistortionDesc; }
 
 	CVIBuffer_Effect_Model_Instance* Get_VIBufferCom() { return m_pVIBufferCom; }
 
@@ -68,6 +67,7 @@ private:
 	CVIBuffer_Effect_Model_Instance*	m_pVIBufferCom				= { nullptr };
 
 	EFFECT_INSTANCE_DESC				m_tInstanceDesc = {};
+	DISTORTION_DESC						m_tDistortionDesc = {};
 
 private:
 	HRESULT Ready_Components();
