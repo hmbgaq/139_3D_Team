@@ -33,7 +33,7 @@ HRESULT CBody::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
-
+	
 	return S_OK;
 }
 
@@ -41,8 +41,9 @@ void CBody::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 
+#ifdef _DEBUG
 	Set_MouseMove(fTimeDelta);
-
+#endif // _DEBUG
 }
 
 void CBody::Tick(_float fTimeDelta)
