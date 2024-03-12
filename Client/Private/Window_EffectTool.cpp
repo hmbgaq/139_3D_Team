@@ -959,21 +959,13 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pCurVoidDesc->vRimColor.w = m_fRimColor_Particle[3];
 				}
 
-				if (ImGui::DragFloat4(" BloomClip_Particle ", m_vBloom_Clip_Particle, 0.1f, 0.f, 1.f))
-				{
-					m_pCurVoidDesc->vBloom_Clip.x = m_vBloom_Clip_Particle[0];
-					m_pCurVoidDesc->vBloom_Clip.y = m_vBloom_Clip_Particle[1];
-					m_pCurVoidDesc->vBloom_Clip.z = m_vBloom_Clip_Particle[2];
-					m_pCurVoidDesc->vBloom_Clip.w = m_vBloom_Clip_Particle[3];
-				}
-
-
-				if (ImGui::DragFloat3(" BloomPower_Particle ", m_vBloomPower_Particle, 100.f, 0.f, 1000.f))
+				if (ImGui::ColorEdit3("BloomPower_Particle", m_vBloomPower_Particle, ImGuiColorEditFlags_None))
 				{
 					m_pCurVoidDesc->vBloomPower.x = m_vBloomPower_Particle[0];
 					m_pCurVoidDesc->vBloomPower.y = m_vBloomPower_Particle[1];
 					m_pCurVoidDesc->vBloomPower.z = m_vBloomPower_Particle[2];
 				}
+
 
 				///* 추가 크기 조절 */
 				//ImGui::SeparatorText("");
@@ -1473,20 +1465,18 @@ void CWindow_EffectTool::Update_MeshTab()
 				/* 림라이트 & 블룸 */
 				ImGui::SeparatorText("");
 				if (ImGui::ColorEdit4("RimColor", m_fRimColor_Mesh, ImGuiColorEditFlags_None))
-				{
-			
+				{	
 					m_pCurVoidDesc->vRimColor.x = m_fRimColor_Mesh[0];
 					m_pCurVoidDesc->vRimColor.y = m_fRimColor_Mesh[1];
 					m_pCurVoidDesc->vRimColor.z = m_fRimColor_Mesh[2];
 					m_pCurVoidDesc->vRimColor.w = m_fRimColor_Mesh[3];
 				}
-				if (ImGui::DragFloat("RimPower", &m_fRimPower_Mesh, 100.f, 0.f, 10000.f))
+				if (ImGui::DragFloat("RimPower", &m_fRimPower_Mesh, 1.f, 0.f, 5000.f))
 				{
 					m_pCurVoidDesc->fRimPower = m_fRimPower_Mesh;
 				}
 
-
-				if (ImGui::DragFloat3(" BloomPower ", m_vBloomPower_Mesh, 10.f, 0.f, 10000.f))
+				if (ImGui::ColorEdit3("BloomPower", m_vBloomPower_Mesh, ImGuiColorEditFlags_None))
 				{
 					m_pCurVoidDesc->vBloomPower.x = m_vBloomPower_Mesh[0];
 					m_pCurVoidDesc->vBloomPower.y = m_vBloomPower_Mesh[1];
@@ -1979,6 +1969,32 @@ void CWindow_EffectTool::Update_TrailTab()
 #pragma endregion 버퍼 Desc 값 조절_트레일 끝
 
 
+#pragma region Rim & Bloom 값 조절_트레일
+
+		/* 림라이트 & 블룸 */
+		ImGui::SeparatorText(" Rim Bloom_Trail");
+		if (ImGui::ColorEdit4(" RimColor_Trail ", m_fRimColor_Trail, ImGuiColorEditFlags_None))
+		{
+
+			m_pVoidTrailDesc->vRimColor.x = m_fRimColor_Trail[0];
+			m_pVoidTrailDesc->vRimColor.y = m_fRimColor_Trail[1];
+			m_pVoidTrailDesc->vRimColor.z = m_fRimColor_Trail[2];
+			m_pVoidTrailDesc->vRimColor.w = m_fRimColor_Trail[3];
+		}
+		if (ImGui::DragFloat(" RimPower_Trail ", &m_fRimPower_Trail, 1.f, 0.f, 5000.f))
+		{
+			m_pVoidTrailDesc->fRimPower = m_fRimPower_Trail;
+		}
+
+		if (ImGui::ColorEdit3("BloomPower_TrailPower", m_vBloomPower_Trail, ImGuiColorEditFlags_None))
+		{
+			m_pVoidTrailDesc->vBloomPower.x = m_vBloomPower_Trail[0];
+			m_pVoidTrailDesc->vBloomPower.y = m_vBloomPower_Trail[1];
+			m_pVoidTrailDesc->vBloomPower.z = m_vBloomPower_Trail[2];
+		}
+
+
+
 	} // nullptr != m_pTrail
 
 
@@ -2255,12 +2271,6 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vBloomPower_Particle[0] = m_pCurVoidDesc->vBloomPower.x;
 			m_vBloomPower_Particle[1] = m_pCurVoidDesc->vBloomPower.y;
 			m_vBloomPower_Particle[2] = m_pCurVoidDesc->vBloomPower.z;
-
-
-			m_vBloom_Clip_Particle[0] = m_pCurVoidDesc->vBloom_Clip.x;
-			m_vBloom_Clip_Particle[1] = m_pCurVoidDesc->vBloom_Clip.y;
-			m_vBloom_Clip_Particle[2] = m_pCurVoidDesc->vBloom_Clip.z;
-			m_vBloom_Clip_Particle[3] = m_pCurVoidDesc->vBloom_Clip.w;
 
 
 
@@ -2945,8 +2955,11 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		}
 		else
 		{
-			m_pTestEffect->Set_Dead(TRUE);
-			m_pTestEffect = nullptr;
+			if (ImGui::Button("         Skull Delete        "))
+			{
+				m_pTestEffect->Set_Dead(TRUE);
+				m_pTestEffect = nullptr;
+			}
 		}
 
 	}

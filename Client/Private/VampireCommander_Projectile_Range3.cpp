@@ -57,6 +57,10 @@ HRESULT CVampireCommander_Projectile_Range3::Initialize(void* pArg)
 
 	m_iDamage = 30;
 
+
+	// ÀÌÆåÆ® »ı¼º
+	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Skull.json", this);
+
 	return S_OK;
 }
 
@@ -108,6 +112,8 @@ void CVampireCommander_Projectile_Range3::OnCollisionEnter(CCollider* other)
 	}
 	m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
+	m_pEffect->Set_Dead(true);	// ÀÌÆåÆ® Á×ÀÌ±â
+
 }
 
 void CVampireCommander_Projectile_Range3::OnCollisionStay(CCollider* other)

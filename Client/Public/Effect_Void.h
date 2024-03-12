@@ -51,11 +51,9 @@ public:
 		_float4		vColor_Mul		= { 1.f, 1.f, 1.f, 1.f };
 
 		// Rim & Bloom
-		_float3		vBloomPower = { 1.f, 1.f, 1.f };		// 블룸 파워
-		_float4		vBloom_Clip = { 0.f, 0.f, 0.f, 0.f };
-
+		_float3		vBloomPower = { 1.f, 1.f, 1.f };		// 블룸 파워(rgb 색상값)
 		_float4		vRimColor	= { 1.f, 1.f, 1.f, 1.f };	// 림 컬러
-		_float		fRimPower = { 100.f };
+		_float		fRimPower = { 5.f };
 
 		// States
 		_bool		bPlay			= { TRUE };

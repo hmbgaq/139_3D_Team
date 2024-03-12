@@ -14,11 +14,11 @@ float		g_fCamFar;
 // ===========================
 
 bool        g_bBillBoard;
+
 float       g_fAlpha_Discard;
 float3      g_vBlack_Discard;
-//float4	g_vColor_Mul;
 
-float4		g_vBloom_Discard;
+float4		g_vColor_Mul;
 
 float		g_fDegree;
 
@@ -35,8 +35,9 @@ float2		g_UVScale;
 // 참고로 BloomPower 가 0.3 0.3 0.3 을 넣었을때 Calculation_Brightness함수내에서 fPixelBrightness가 임계를 넘지못해서 안나오는경우도 있었음.. 
 // 여차하면 이 fPixelBrightness 도 전역으로 떄려서 조절해도됨. 함수만 제대로 작동하면 안에 어떤값이던 던져서 함수를 변형해서 써도 됨 
 //  어 ? 노말이 된다고 ?? ??? ?? ???????????? ??
-float3 g_vBloomPower; /*= { 0.7f, 0.7f, 0.7f }; /* Bloom */
-float4 g_vRimColor; /* = { 1.0f, 0.f, 0.f, 0.5f }; /* RimLight */
+float4	g_vRimColor; /* = { 1.0f, 0.f, 0.f, 0.5f }; /* RimLight */
+float	g_fRimPower;
+float3	g_vBloomPower; /*= { 0.7f, 0.7f, 0.7f }; /* Bloom */
 
 // ===========================
 struct EffectDesc
@@ -47,11 +48,27 @@ struct EffectDesc
 EffectDesc g_EffectDesc[500];
 
 
-/* Custom Function */
+// Custom Function ==============================================================================================================
+float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
+{
+	float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
+	float fRotationRadian = fDegree * fDegree2Radian;
+	float cosA = cos(fRotationRadian);
+	float sinA = sin(fRotationRadian);
+
+	float2x2 RotateMatrix = float2x2(cosA, -sinA, sinA, cosA);
+
+	vTexcoord -= 0.5f;
+	vTexcoord = mul(vTexcoord, RotateMatrix);
+	vTexcoord += 0.5f;
+
+	return vTexcoord;
+}
+
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
 {
     float fRimPower = 1.f - saturate(dot(In_Normal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
-    fRimPower = pow(fRimPower, 5.f);
+	fRimPower = pow(fRimPower, 5.f) * g_fRimPower;
     float4 vRimColor = g_vRimColor * fRimPower;
     
     return vRimColor;
@@ -70,22 +87,6 @@ float4 Calculation_Brightness(float4 Out_Diffuse)
 }
 
 
-float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
-{
-	float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
-	float fRotationRadian = fDegree * fDegree2Radian;
-	float cosA = cos(fRotationRadian);
-	float sinA = sin(fRotationRadian);
-
-	float2x2 RotateMatrix = float2x2(cosA, -sinA, sinA, cosA);
-
-	vTexcoord -= 0.5f;
-	vTexcoord = mul(vTexcoord, RotateMatrix);
-	vTexcoord += 0.5f;
-
-	return vTexcoord;
-}
-
 // 두 벡터 사이의 각도 계산 (라디안)
 float Calculate_AngleBetweenVectors_Radian(float3 v1, float3 v2)
 {
@@ -103,8 +104,11 @@ float Calculate_AngleBetweenVectors_Degree(float3 v1, float3 v2)
 
 	return fDegree;
 }
+// Custom Function ==============================================================================================================
 
 
+
+// MAIN_PARTICLE ================================================================================================================
 struct VS_IN
 {
 	float3				vPosition		: POSITION;
@@ -140,21 +144,20 @@ VS_OUT VS_MAIN_PARTICLE(VS_IN In)
 	return Out;
 }
 
-
 struct GS_IN
 {
-	float4		vPosition : POSITION;
-	float2		vPSize : PSIZE;
-	float4		vColor : COLOR0;
+	float4		vPosition	: POSITION;
+	float2		vPSize		: PSIZE;
+	float4		vColor		: COLOR0;
 
-	uint	iInstanceID : SV_INSTANCEID;
+	uint	iInstanceID		: SV_INSTANCEID;
 };
 
 struct GS_OUT
 {
-	float4		vPosition : SV_POSITION;
-	float2		vTexcoord : TEXCOORD0;
-	float4		vColor : COLOR0;
+	float4		vPosition	: SV_POSITION;
+	float2		vTexcoord	: TEXCOORD0;
+	float4		vColor		: COLOR0;
 };
 
 /* 지오메트리 쉐이더 : 셰이더안에서 정점을 추가적으로 생성해 준다. */
@@ -165,6 +168,7 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
 	float4		vLook;
 	float3		vRight, vUp;
+	
 	if (g_bBillBoard)
 	{
 		vLook = g_vCamPosition - In[0].vPosition;
@@ -274,12 +278,6 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		vDiffuseColor.rgb *= In.vColor.rgb;
 		vDiffuseColor.a = In.vColor.a * vAlphaColor;
 
-		float4 vBloomColor = vDiffuseColor;
-
-		if (vBloomColor.a < g_vBloom_Discard.a	// 블룸 알파 잘라내기
-			|| vBloomColor.r < g_vBloom_Discard.r && vBloomColor.g < g_vBloom_Discard.g && vBloomColor.b < g_vBloom_Discard.b)	// 검정색 잘라내기
-			discard;
-
 		if (vDiffuseColor.a < g_fAlpha_Discard	// 알파 잘라내기
 			|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 			discard;
@@ -288,32 +286,18 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		
 		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
        // Out.vRimBloom = Calculation_Brightness(Out.vColor);
-	   Out.vRimBloom = Calculation_Brightness(vBloomColor);
-       // Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
+		Out.vRimBloom = float4(g_vBloomPower, 1.0f);
     }
 
     return Out;
 }
+// MAIN_PARTICLE ================================================================================================================
+
 
 technique11 DefaultTechnique
 {
 	/* 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
 	pass Particle  // 0
-	{
-		SetRasterizerState(RS_Cull_None);
-		SetDepthStencilState(DSS_Default, 0);
-		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-
-		/* 렌더스테이츠 */
-		VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
-		GeometryShader = compile gs_5_0 GS_MAIN();
-		HullShader = NULL;
-		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_PARTICLE();
-	}
-
-
-	pass Bloom  // 1
 	{
 		SetRasterizerState(RS_Cull_None);
 		SetDepthStencilState(DSS_Default, 0);

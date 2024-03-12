@@ -370,8 +370,8 @@ HRESULT CRenderer::Render_EffectBloomBlur()
 {
 	/* MRT_Effect_Blur -> Target_Effect_RR_Blur로 결과 나옴 */
 	Render_Blur(TEXT("Target_Effect_RimBloom"), TEXT("MRT_Effect_Blur"), 
-				ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER),
-				ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER),
+				ECast(BLUR_SHADER::BLUR_HORIZON_HIGH),
+				ECast(BLUR_SHADER::BLUR_VERTICAL_HIGH),
 				ECast(BLUR_SHADER::BLUR_UP_ADD), true);
 
 	return S_OK;

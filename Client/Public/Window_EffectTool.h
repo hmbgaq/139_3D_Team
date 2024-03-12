@@ -150,28 +150,28 @@ private:
 	_int m_iShaderPassIndex_Particle						= { 0 };
 	_int m_iMaxShaderPassIndex_Particle						= { 1 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 11, 0, 44, 22, 16 };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 11, 0, 44, 22, 20 };
 
 
 	_int m_iRenderGroup_Rect								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Rect							= { 0 };
-	_int m_iMaxShaderPassIndex_Rect							= { 2 };
+	_int m_iMaxShaderPassIndex_Rect							= { 3 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 16 };
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 20 };
 
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
-	_int m_iMaxShaderPassIndex_Mesh							= { 9 };
+	_int m_iMaxShaderPassIndex_Mesh							= { 3 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 16 };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 20 };
 
 
 	_int m_iRenderGroup_Trail								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Trail							= { 0 };
 	_int m_iMaxShaderPassIndex_Trail						= { 3 };
 	_int m_iTexIndex_Trail[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 11, 0, 44, 22, 16 };
+	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 11, 0, 44, 22, 20 };
 
 
 private:
@@ -273,7 +273,6 @@ private:
 	/* 파티클 Rim & Bloom */
 	_float	m_fRimColor_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Particle[3] = { 1.f, 1.f, 1.f };
-	_float	m_vBloom_Clip_Particle[4] = { 0.f, 0.f, 0.f, 0.f };
 
 #pragma endregion Particle 옵션 끝
 
@@ -339,7 +338,7 @@ private:
 
 	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
 	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
-	_float	m_fRimPower_Mesh = { 100.f };
+	_float	m_fRimPower_Mesh = { 5.f };
 
 	/* Position */
 	_float	m_vMinCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
@@ -372,14 +371,18 @@ private:
 #pragma region Trail 옵션 시작
 private:
 	_float	m_vColor_Clip_Trail[4] = { 0.f, 0.f, 0.f, 0.f };	// 쉐이더에서 discard할 값
-	_float	m_fColor_Mul_Trail[4] = { 1.f, 1.f, 1.f, 1.f };	// 쉐이더에서 추가로 곱해줄 색 값
+	_float	m_fColor_Mul_Trail[4] = { 1.f, 1.f, 1.f, 1.f };		// 쉐이더에서 추가로 곱해줄 색 값
 	
 	_float m_vPos_0[3] = { 0.f, 0.f, 0.f };	
 	_float m_vPos_1[3] = { 0.f, 0.f, 0.f };
 
-	_int	m_iMaxCnt_Trail = { 16 };
+	_int	m_iMaxCnt_Trail = { 32 };
 	_int	m_iLerpPointNum = { 12 };
 
+
+	_float	m_vBloomPower_Trail[3]	= { 1.f, 1.f, 1.f };
+	_float	m_fRimColor_Trail[4]	= { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fRimPower_Trail		= { 5.f };
 #pragma endregion Trail 옵션 끝
 
 

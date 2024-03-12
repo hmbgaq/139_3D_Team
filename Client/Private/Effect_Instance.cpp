@@ -215,22 +215,11 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
 
-	_float4 vTempFloat4 = {};
-	_float fTemp = 0.f;
-
 	__super::Load_FromJson(In_Json);
 
 	/* Mesh */
 	m_tInstanceDesc.bUseCustomTex	= In_Json["bUseCustomTex"];
 
-	/* Bloom */ 
-	if (In_Json.contains("vBloomColor"))	// 새로 저장하고 지우기
-		CJson_Utility::Load_Float4(In_Json["vBloomColor"], vTempFloat4);
-
-
-
-	if (In_Json.contains("vBloomColor"))	// 새로 저장하고 지우기
-		fTemp = In_Json["fRimPower"];
 
 }
 
@@ -346,21 +335,19 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
 
 	/* Camera ============================================================================================ */
-	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
-	vCamDirection = XMVector4Normalize(vCamDirection);
-	_float4 vCamDirectionFloat4 = {};
-	XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
-
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat4, sizeof(_float4)));
+	_float3 vCamDirectionFloat3 = m_pGameInstance->Get_CamDirection();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat3, sizeof(_float3)));
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
 
 	/* Dissolve */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tVoidDesc.fDissolveAmount, sizeof(_float)));
+
 
 	/* Distortion */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float)));

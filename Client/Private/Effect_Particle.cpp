@@ -400,8 +400,6 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_tVoidDesc.vBloomPower, sizeof(_float3)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloom_Discard", &m_tVoidDesc.vBloom_Clip, sizeof(_float4)));
-
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tVoidDesc.vRimColor, sizeof(_float4)));
 
 

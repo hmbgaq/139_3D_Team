@@ -287,17 +287,14 @@ HRESULT CEffect_Rect::Bind_ShaderResources()
 	}
 
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
-		return E_FAIL;
+	/* Camera ============================================================================================ */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
+	_float3 vCamDirectionFloat3 = m_pGameInstance->Get_CamDirection();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat3, sizeof(_float3)));
 
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 
-	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
-	vCamDirection = XMVector4Normalize(vCamDirection);
-	_float4 vCamDirectionFloat4 = {};
-	XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat4, sizeof(_float4))))
-		return E_FAIL;
 
 
 	if (SINGLE == m_tRectDesc.eType)
