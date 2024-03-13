@@ -169,7 +169,7 @@ private:
 
 	_int m_iRenderGroup_Trail								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Trail							= { 0 };
-	_int m_iMaxShaderPassIndex_Trail						= { 3 };
+	_int m_iMaxShaderPassIndex_Trail						= { 5 };
 	_int m_iTexIndex_Trail[CEffect_Void::TEXTURE_END]		= {};
 	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 11, 0, 44, 22, 20 };
 
