@@ -140,7 +140,7 @@ HRESULT CMesh::Initialize(void * pArg)
 
 HRESULT CMesh::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, const vector<CBone*>& Bones, _float4x4* BoneMatrix)
 {
-	_float4x4   _BoneMatrices[800];
+	_float4x4   _BoneMatrices[550];
 
 	for (_uint i = 0; i < m_iNumBones; i++)
 	{
@@ -150,12 +150,12 @@ HRESULT CMesh::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName,
 
 	if (nullptr != BoneMatrix)
 	{
-		memcpy(BoneMatrix, _BoneMatrices, sizeof(_float4x4) * 800);
+		memcpy(BoneMatrix, _BoneMatrices, sizeof(_float4x4) * 500);
 		//memcpy(BoneMatrix, _BoneMatrices, sizeof(_float4x4) * 800);
 		//BoneMatrix = _BoneMatrices;
 	}
 
-	return pShader->Bind_Matrices(pConstantName, _BoneMatrices, 800);
+	return pShader->Bind_Matrices(pConstantName, _BoneMatrices, 500);
 
 }
 

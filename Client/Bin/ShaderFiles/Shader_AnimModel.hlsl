@@ -7,7 +7,7 @@
 
 /* Base */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-matrix g_BoneMatrices[800];
+matrix g_BoneMatrices[550];
 float4 g_vCamPosition;
 float g_fCamFar;
 float g_fLightFar;
