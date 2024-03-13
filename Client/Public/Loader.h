@@ -35,7 +35,7 @@ public:
 	HRESULT Loading_For_GamePlay_Level();
 
 	HRESULT Loading_For_Intro_Level();
-		HRESULT Loading_For_IntroBoss_Level();
+	HRESULT Loading_For_IntroBoss_Level();
 
 	HRESULT Loading_For_SnowMountain_Level();
 	HRESULT Loading_For_Lava_Level();

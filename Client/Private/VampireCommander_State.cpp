@@ -173,33 +173,36 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 	CState<CVampireCommander>* pState = { nullptr };
 
 	_int iRandomTaunt = SMath::Random(0, 9); // ±ÙÁ¢¿ë ·£´ý 
-	if (pActor->Is_Animation_End())
-	{
-		if (7 < iRandomTaunt)
-			return Taunt_State(pActor, fTimeDelta, _iAnimIndex);
+
+	if (7 < iRandomTaunt)
+		return Taunt_State(pActor, fTimeDelta, _iAnimIndex);
 		
+	else
+	{
+		if (70.f < pActor->Calc_Distance())
+		{
+			pActor->m_bLookAt = true;
+			pState = Idle(pActor, fTimeDelta, _iAnimIndex);
+			if (pState)	return pState;
+		}
+
+		if (70.f > pActor->Calc_Distance() && 50.f < pActor->Calc_Distance())
+		{
+			pActor->m_bLookAt = true;
+			pState = Walk_State(pActor, fTimeDelta, _iAnimIndex);
+			if (pState)	return pState;
+		}
+
+		if (50.f > pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
+		{
+
+			pState = Attack_State(pActor, fTimeDelta, _iAnimIndex);
+			if (pState)	return pState;
+		}
 	}
 	
-	if (70.f < pActor->Calc_Distance())
-	{
-		pActor->m_bLookAt = true;
-		pState = Idle(pActor, fTimeDelta, _iAnimIndex);
-		if (pState)	return pState;
-	}
-
-	if (70.f > pActor->Calc_Distance() && 50.f < pActor->Calc_Distance())
-	{
-		pActor->m_bLookAt = true;
-		pState = Walk_State(pActor, fTimeDelta, _iAnimIndex);
-		if (pState)	return pState;
-	}
-
- 	if (50.f > pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
- 	{
- 
- 		pState = Attack_State(pActor, fTimeDelta, _iAnimIndex);
- 		if (pState)	return pState;
- 	}
+	
+	
 // 
 // 	if (7.f > pActor->Calc_Distance() && 0.5f < pActor->Calc_Distance())
 // 	{

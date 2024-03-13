@@ -463,14 +463,22 @@ void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAn
 	m_eUpperAnimState = _eAnimState;
 	Reset_UpperAnimation(_iAnimationIndex);
 
+	
+
 	if (false == m_bIsSplitted)
 	{
 		m_bIsSplitted = true;
-
 		CAnimation* currentAnimation = m_Animations[m_iCurrentAnimIndex];
 		CAnimation* targetAnimation = m_Animations[_iAnimationIndex];
 
 		targetAnimation->Set_Transition_Upper(currentAnimation, _fTransitionDuration, iTargetKeyFrameIndex);
+	}
+	else 
+	{
+		CAnimation* pTargetAnimation = m_Animations[m_iUpperAnimIndex];
+		CChannel* pChannel = (*pTargetAnimation->Get_Channels())[0];
+		_float fTargetTrackPosition = pChannel->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		pTargetAnimation->Set_TrackPosition(fTargetTrackPosition);
 	}
 
 	
@@ -505,6 +513,11 @@ _bool CModel::Is_Inputable_Front(_uint _iIndexFront)
 	return m_Animations[m_iCurrentAnimIndex]->Is_Inputable_Front(_iIndexFront);
 }
 
+_bool CModel::Compare_TrackPosition_Is_Over(_float fTrackPosition)
+{
+	return Get_TrackPosition() > fTrackPosition;
+}
+
 _float CModel::Get_TrackPosition()
 {
 	return m_Animations[m_iCurrentAnimIndex]->Get_TrackPosition();
@@ -512,7 +525,7 @@ _float CModel::Get_TrackPosition()
 
 void CModel::Set_TrackPosition(_int iNewTrackPosition)
 {
-	m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(iNewTrackPosition);
+	m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition((_float)iNewTrackPosition);
 }
 
 void CModel::Write_Names(const string& strModelFilePath)
@@ -568,6 +581,11 @@ void CModel::Write_Names(const string& strModelFilePath)
 	osTxt << endl;
 
 	osTxt.close();
+}
+
+void CModel::Set_Speed(_int iSpeed)
+{
+	//return m_Animations
 }
 
 vector<CAnimation*>* CModel::Get_Animations()
@@ -658,7 +676,9 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			MultiByteToWideChar((_uint)CP_ACP, 0, szTmp, (_int)strlen(szTmp), szFullPath, (_int)MAX_PATH);
 
-			
+			if (szFileName == "M_Invisible") /* 현재 게임에서 이 텍스쳐를 가지면 투명한 텍스쳐라 가상으로 만들어줘도 터짐 */
+				continue;
+
 			MaterialDesc.pMtrlTextures[j] = CTexture::Create(m_pDevice, m_pContext, szFullPath, 1);
 
 			if (nullptr == MaterialDesc.pMtrlTextures[j])	

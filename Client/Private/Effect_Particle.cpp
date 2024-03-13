@@ -208,7 +208,10 @@ void CEffect_Particle::ReSet_Effect()
 		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 
-	m_pVIBufferCom->ReSet();
+	if (!m_pVIBufferCom->Get_Desc()->bRecycle)
+	{
+		m_pVIBufferCom->ReSet();
+	}
 
 }
 
@@ -393,6 +396,13 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 	/* ETC ============================================================================================ */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"));
+
+
+
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_tVoidDesc.vBloomPower, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloom_Discard", &m_tVoidDesc.vBloom_Clip, sizeof(_float4)));
+
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tVoidDesc.vRimColor, sizeof(_float4)));
 
 
 	return S_OK;

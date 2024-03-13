@@ -35,9 +35,8 @@ HRESULT CUI_LevelUp_TextBox::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
-	m_eState = UISTATE::LEVEL_UP;
+	m_eType = UITYPE::LEVEL_UP;
 
-	m_bActive = false;
 	m_fAlpha = 0.f;
 	m_fLifeTime = 8000.f;
 	m_fTime = (_float)GetTickCount64();
@@ -52,8 +51,10 @@ void CUI_LevelUp_TextBox::Priority_Tick(_float fTimeDelta)
 
 void CUI_LevelUp_TextBox::Tick(_float fTimeDelta)
 {
-
-	__super::Tick(fTimeDelta);
+	if (m_bActive == true)
+	{
+		__super::Tick(fTimeDelta);
+	}
 }
 
 void CUI_LevelUp_TextBox::Late_Tick(_float fTimeDelta)
@@ -61,31 +62,29 @@ void CUI_LevelUp_TextBox::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	if (m_bReset)
+	if (m_bActive == true)
 	{
-		m_fAlpha = 0.f;
-		m_fTime = (_float)GetTickCount64();
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+			return;
 	}
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
-		return;
 }
 
 HRESULT CUI_LevelUp_TextBox::Render()
 {
+	if (m_bActive == true)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+		//! 이 셰이더에 0번째 패스로 그릴거야.
+		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-	//! 이 셰이더에 0번째 패스로 그릴거야.
-	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
-
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
-
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+	}
 	return S_OK;
 }
 
@@ -137,6 +136,14 @@ HRESULT CUI_LevelUp_TextBox::Bind_ShaderResources()
 	}
 
 	return S_OK;
+}
+
+void CUI_LevelUp_TextBox::Check_Disappear(_float fTimeDelta)
+{
+	if (m_bDisappear == true)
+	{
+		m_bActive = Alpha_Minus(fTimeDelta);
+	}
 }
 
 json CUI_LevelUp_TextBox::Save_Desc(json& out_json)

@@ -45,6 +45,8 @@ void CBody_VampireCommander::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_VampireCommander::Render()
 {
+	m_iShaderPass = 0;
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 

@@ -271,6 +271,10 @@ _float CCharacter::Get_TrackPosition()
 	return m_pBody->Get_TrackPosition();
 }
 
+_bool CCharacter::Compare_TrackPosition_Is_Over(_float fTrackPosition)
+{
+	return m_pBody->Compare_TrackPosition_Is_Over(fTrackPosition);
+}
 void CCharacter::Set_TrackPosition(_int iNewTrackPostion)
 {
 	return m_pBody->Set_TrackPosition(iNewTrackPostion);
@@ -403,6 +407,46 @@ void CCharacter::Search_Target(const wstring& strLayerTag)
 	m_pTarget = Select_The_Nearest_Enemy(strLayerTag);
 }
 
+_float CCharacter::Target_Contained_Angle(_float4 vTargetPos)
+{
+	/* ---------- 소영 추가 ---------- */
+	// 함수설명 : Look 기준으로 우측에 있을경우 +사이각 , 좌측에 있을경우 - 사이각으로 값이 리턴된다. 
+	/* ------------------------------- */
+	_vector vLook = XMVector3Normalize(vTargetPos - m_pTransformCom->Get_Pos());
+
+	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
+
+	_float angle = std::acos(XMVectorGetX(XMVector3Dot(XMVectorSet(0.f, 0.f, 1.f, 0.f), vLook)));
+
+	if (XMVectorGetX(XMVector3Dot(XMVectorSet(1.f, 0.f, 0.f, 0.f), vLook)) < 0.f)
+	{
+		angle = -angle;
+	}
+
+	angle = XMConvertToDegrees(angle);
+
+	return angle;
+}
+
+_bool CCharacter::Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta)
+{
+	_vector currentLook = m_pTransformCom->Get_Look();
+	_vector originLook = XMLoadFloat4(&vOriginLook);
+
+	_float angle = acos(XMVectorGetX(XMVector3Dot(currentLook, originLook)));
+
+	if (angle < 0.01f)
+		return true;
+
+	_vector lerpedLook = XMVectorLerp(currentLook, originLook, fSpeed * fTimeDelta);
+
+	lerpedLook = XMVector3Normalize(lerpedLook);
+
+	m_pTransformCom->Set_Look(lerpedLook);
+
+	return false;
+}
+
 CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance)
 {
 	CCharacter* pResult = { nullptr };
@@ -471,23 +515,23 @@ _float CCharacter::Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag)
 	return Calc_Distance(pCharacter);
 }
 
-void CCharacter::Move_In_Proportion_To_Enemy(_float fSpeedCap)
+void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap)
 {
 	if (nullptr == m_pTarget)
 		return;
 
 	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	_float fDistance = Calc_Distance();
-	_float3 vPos = { 0.f, 0.f, min(fDistance / 100.f, fSpeedCap) };
+	_float3 vPos = { 0.f, 0.f, min(fDistance * fTimeDelta, fSpeedCap) };
 
 	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
 	m_pTransformCom->Move_On_Navigation(vResult);
 }
 
 
-void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
 {
-	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState);
+	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState, iTargetKeyFrameIndex);
 }
 
 void CCharacter::Set_StiffnessRate(_float fStiffnessRate)

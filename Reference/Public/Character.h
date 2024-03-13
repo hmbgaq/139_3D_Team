@@ -76,6 +76,7 @@ public:
 	HRESULT Add_PartObject(const wstring & strPrototypeTag, const wstring & strPartTag, void* pArg);
 	HRESULT Add_Body(const wstring & strPrototypeTag, CBody::BODY_DESC pArg);
 	HRESULT Add_Weapon(const wstring & strPrototypeTag, string strBoneName, CWeapon::WEAPON_DESC pArg, const wstring & strWeaponTag = TEXT("Part_Weapon"));
+
 public:
 	void	Set_EventNotify(string strPath, string JsonFileName);
 	HRESULT	LoadAnimJson(string strPath, string strFileName);
@@ -93,6 +94,8 @@ public:
 
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
 	_float	Get_TrackPosition();
+	_bool	Compare_TrackPosition_Is_Over(_float fTrackPosition);
+
 	void	Set_TrackPosition(_int iNewTrackPostion);
 	CHARCTER_DESC Get_CharcterDesc() { return CharAnimDesc; }
 
@@ -124,7 +127,6 @@ public:
 	_int Get_Hp() { return m_iHp; };
 	void Set_Hp(_uint _iHp) { m_iHp = _iHp; };
 
-
 public:
 	CCharacter* Get_Target() { return m_pTarget; };
 	void Set_Target(CCharacter* pTarget) { m_pTarget = pTarget; };
@@ -132,6 +134,8 @@ public:
 public:
 	void Look_At_Target();
 	void Search_Target(const wstring& strLayerTag);
+	_float Target_Contained_Angle(_float4 vTargetPos); /* 내 Look과 타겟을 향하는 벡터 사이의 끼인각을 구하는함수 */
+	_bool Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta);
 	CCharacter* Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance = 20.f);
 
 public:
@@ -140,12 +144,12 @@ public:
 	_float Calc_Distance();
 	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
-	void Move_In_Proportion_To_Enemy(_float fSpeedCap = 0.5f);
+	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 0.5f);
 
 
 
 public:	//!For Animation Split
-	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END);
+	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _uint iTargetKeyFrameIndex = 0);
 	_bool Is_Splitted() { return m_pBody->Is_Splitted(); }
 	void Set_Splitted(_bool _bIsSplitted) { m_pBody->Set_Splitted(_bIsSplitted); };
 

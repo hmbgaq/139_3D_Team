@@ -1,5 +1,6 @@
 #include "VampireCommander_Leap_Strat.h"
 #include "VampireCommander_Leap_Stop.h"
+#include "Collider.h"
 
 void CVampireCommander_Leap_Strat::Initialize(CVampireCommander* pActor)
 {
@@ -14,6 +15,14 @@ void CVampireCommander_Leap_Strat::Initialize(CVampireCommander* pActor)
 		->Set_Direction(Direction::Right)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.f);
+
+	_float4x4	Temp = XMMatrixIdentity();
+	Temp.m[0][0] = 1.5f;
+	Temp.m[1][1] = 1.5f;
+	Temp.m[2][2] = 1.5f;
+
+	pWeapon->Get_Colliders().back()->Get_Bounding()->Set_matScale(Temp);
+	
 }
 
 CState<CVampireCommander>* CVampireCommander_Leap_Strat::Update(CVampireCommander* pActor, _float fTimeDelta)
@@ -21,11 +30,11 @@ CState<CVampireCommander>* CVampireCommander_Leap_Strat::Update(CVampireCommande
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 	if (pActor->Is_Inputable_Front(34))
 	{
-		pActor->Move_In_Proportion_To_Enemy();
+		pActor->Move_In_Proportion_To_Enemy(fTimeDelta);
 	}
 	else if (pActor->Is_Inputable_Front(60))
 	{
-		pActor->Move_In_Proportion_To_Enemy(0);
+		pActor->Move_In_Proportion_To_Enemy(fTimeDelta, 0);
 		
 	}
 
@@ -51,4 +60,11 @@ void CVampireCommander_Leap_Strat::Release(CVampireCommander* pActor)
 	__super::Release(pActor);
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 	pWeapon->Set_Enable(false);
+
+	_float4x4	Temp = XMMatrixIdentity();
+	Temp.m[0][0] = 0.8f;
+	Temp.m[1][1] = 0.8f;
+	Temp.m[2][2] = 0.8f;
+
+	pWeapon->Get_Colliders().back()->Get_Bounding()->Set_matScale(Temp);
 }

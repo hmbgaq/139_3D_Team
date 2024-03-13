@@ -33,7 +33,7 @@ HRESULT CBody::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
-
+	
 	return S_OK;
 }
 
@@ -41,8 +41,8 @@ void CBody::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 
-	#ifdef _DEBUG
-Set_MouseMove(fTimeDelta);
+#ifdef _DEBUG
+	Set_MouseMove(fTimeDelta);
 #endif // _DEBUG
 }
 
@@ -94,7 +94,7 @@ HRESULT CBody::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	_uint iPass = 0; // false == m_bDissolve ? 0 : 3;
+	_uint iPass = m_iShaderPass; // false == m_bDissolve ? 0 : 3;
 
 	//if (FAILED(m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
 	//	return E_FAIL;
@@ -119,38 +119,14 @@ HRESULT CBody::Render()
 
 HRESULT CBody::Render_Shadow()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
-		return E_FAIL;
+	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_pGameInstance->Get_NextLevel());
 
-	_float4x4		ViewMatrix, ProjMatrix;
-
-	_float			g_fLightFar = Engine::g_fLightFar;
-	_float4			vLightPos = Engine::g_vLightPos;
-
-
-
-	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(Engine::g_vLightPos.x, Engine::g_vLightPos.y, Engine::g_vLightPos.z, Engine::g_vLightPos.w), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinsizeX / g_iWinsizeY, 0.1f, Engine::g_fLightFar));
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix)))
-		return E_FAIL;
-
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fLightFar", &g_fLightFar, sizeof(_float))))
-	//	return E_FAIL;
-
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_pGameInstance->Get_NextLevel())));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-
-	_uint iPass = 2; // false == m_bDissolve ? 2 : 3;
-
-	//if (FAILED(m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
-	//	return E_FAIL;
-
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float))))
-	//	return E_FAIL;
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
@@ -158,7 +134,7 @@ HRESULT CBody::Render_Shadow()
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 
-		m_pShaderCom->Begin(iPass);
+		m_pShaderCom->Begin(2);
 
 		m_pModelCom->Render((_uint)i);
 	}
@@ -194,6 +170,10 @@ _bool CBody::Is_Inputable_Front(_uint _iIndexFront)
 _float CBody::Get_TrackPosition()
 {
 	return m_pModelCom->Get_TrackPosition();
+}
+_bool CBody::Compare_TrackPosition_Is_Over(_float fTrackPosition)
+{
+	return m_pModelCom->Compare_TrackPosition_Is_Over(fTrackPosition);
 }
 void CBody::Set_TrackPosition(_int iNewTrackPosition)
 {
@@ -241,20 +221,20 @@ _bool CBody::Picking(_float3* vPickedPos)
 
 }
 
-CCharacter* CBody::Get_Owner()
-{
-	return m_pOwner;
-}
-
-void CBody::Set_Owner(CCharacter* pOwner)
-{
-	m_pOwner = pOwner;
-}
+//CCharacter* CBody::Get_Owner()
+//{
+//	return m_pOwner;
+//}
+//
+//void CBody::Set_Owner(CCharacter* pOwner)
+//{
+//	m_pOwner = pOwner;
+//}
 #endif
 
-void CBody::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState)
+void CBody::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
 {
-	m_pModelCom->Set_Animation_Upper(_iAnimationIndex, _eAnimState, m_pModelCom->Get_TickPerSecond() / 10.f);
+	m_pModelCom->Set_Animation_Upper(_iAnimationIndex, _eAnimState, m_pModelCom->Get_TickPerSecond() / 10.f, iTargetKeyFrameIndex);
 	m_pModelCom->Set_Splitted(true);
 	
 }

@@ -49,8 +49,14 @@ public:
 	CWeapon* Set_Force(_float _fForce);
 	CWeapon* Set_Dir(_float3 _vDir);
 
+public:
+	void	Set_Enable_Collisions(_bool bEnable);
+
 	_float3	Get_WorldPosition();
 
+public:
+	void Set_Colliders(vector<CCollider*> _pColliders) { m_pColliders = _pColliders; }
+	vector<CCollider*> Get_Colliders() { return m_pColliders; }
 
 public:
 	void	Set_Synced(_bool _bSynced) { m_bSynced = _bSynced; }

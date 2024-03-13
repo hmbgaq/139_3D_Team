@@ -29,12 +29,12 @@
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CCharacter(pDevice, pContext, strPrototypeTag)
+	: CCharacter_Client(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
-	: CCharacter(rhs)
+	: CCharacter_Client(rhs)
 {
 }
 
@@ -49,7 +49,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 10.f;
+	GameObjectDesc.fSpeedPerSec = 7.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
@@ -78,6 +78,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pPhysXCollider->Add_PhysXActorAtScene();
 
 	CData_Manager::GetInstance()->Set_Player(this);
+	m_pGameInstance->Set_Player(this);
 
 	/* Temp - 맵에 맞게 위치 조정한값*/
 	//m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, XMVectorSet(-26.f, 0.f, -6.f, 1.f));
@@ -169,7 +170,7 @@ void CPlayer::Set_Navigation(CNavigation* pNavigation)
 void CPlayer::Aim_Walk(_float fTimeDelta)
 {
 	_uint AnimIndex;
-	_uint ReversedAnimIndex;
+	//_uint ReversedAnimIndex;
 
 
 	if (m_pGameInstance->Key_Pressing(DIK_W))
@@ -337,10 +338,13 @@ HRESULT CPlayer::Ready_PartObjects()
 	//}
 
 	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch_L"));
-	m_pWeapon_Punch_L->Set_Enable(false);
+	m_pWeapon_Punch_L->Set_Enable(true);
 	
 	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_Punch_R"));
-	m_pWeapon_Punch_R->Set_Enable(false);
+	m_pWeapon_Punch_R->Set_Enable(true);
+
+
+
 	
 	return S_OK;
 }

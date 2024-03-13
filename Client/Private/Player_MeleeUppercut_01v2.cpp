@@ -30,7 +30,11 @@ CState<CPlayer>* CPlayer_MeleeUppercut_01v2::Update(CPlayer* pActor, _float fTim
 {
 	__super::Update(pActor, fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Inputable_Front(30))
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+	return nullptr;
 }
 
 void CPlayer_MeleeUppercut_01v2::Release(CPlayer* pActor)

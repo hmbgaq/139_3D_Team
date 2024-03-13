@@ -22,13 +22,17 @@ _int CCell::Get_NeighborIndex(LINE eLine)
 void CCell::Set_Point(POINT ePoint, _float3 vPoint)
 {
 	m_vPoints[ePoint] = vPoint;
+#ifdef _DEBUG
 	m_pVIBuffer->Update(&m_vPoints[ePoint]);
+#endif // _DEBUG
 }
 
 void CCell::Set_PointY(POINT ePoint, _float fY)
 {
 	m_vPoints[ePoint].y = fY;
-	m_pVIBuffer->Update(&m_vPoints[ePoint]);
+	#ifdef _DEBUG
+m_pVIBuffer->Update(&m_vPoints[ePoint]);
+#endif // _DEBUG
 }
 
 _float CCell::Get_Height(const _float3& vPosition)

@@ -88,6 +88,7 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 				m_tVoidDesc.bDissolve = TRUE;
 				if (m_tVoidDesc.bDissolve)
 				{
+					
 					m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
 				}
 
@@ -138,6 +139,7 @@ HRESULT CEffect_Instance::Render()
 {
 	FAILED_CHECK(Bind_ShaderResources());
 
+
 	if (m_pVIBufferCom->Get_Desc()->bMorph)	// 모프가 true이면 (박쥐 모델)
 	{
 		_uint	iCurModelNum = m_pVIBufferCom->Get_Desc()->eCurModelNum;
@@ -176,13 +178,16 @@ HRESULT CEffect_Instance::Render()
 
 void CEffect_Instance::ReSet_Effect()
 {
-	__super::ReSet_Effect();
+	__super::ReSet_Effect();	// 시간 초기화
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
 	m_tVoidDesc.bDissolve = FALSE;
-	m_tVoidDesc.bRender = FALSE;
 
-	m_pVIBufferCom->ReSet();
+	if (!m_pVIBufferCom->Get_Desc()->bRecycle)
+	{
+		m_pVIBufferCom->ReSet();
+	}
+
 }
 
 void CEffect_Instance::End_Effect()
@@ -203,32 +208,29 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 	/* Mesh */
 	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
 
-	/* Bloom */
-	CJson_Utility::Write_Float4(Out_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);
-	CJson_Utility::Write_Float3(Out_Json["vBloomPower"], m_tInstanceDesc.vBloomPower);
-
-	/* Rim */
-	CJson_Utility::Write_Float4(Out_Json["vRimColor"], m_tInstanceDesc.vRimColor);
-	Out_Json["fRimPower"] = m_tInstanceDesc.fRimPower;
-
 
 	return true;
 }
 
 void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
+
+	_float4 vTempFloat4 = {};
+	_float fTemp = 0.f;
+
 	__super::Load_FromJson(In_Json);
 
 	/* Mesh */
 	m_tInstanceDesc.bUseCustomTex	= In_Json["bUseCustomTex"];
 
-	/* Bloom */
-	CJson_Utility::Load_Float4(In_Json["vBloomColor"], m_tInstanceDesc.vBloomColor);
-	CJson_Utility::Load_Float3(In_Json["vBloomPower"], m_tInstanceDesc.vBloomPower);
+	/* Bloom */ 
+	if (In_Json.contains("vBloomColor"))	// 새로 저장하고 지우기
+		CJson_Utility::Load_Float4(In_Json["vBloomColor"], vTempFloat4);
 
-	/* Rim */
-	CJson_Utility::Load_Float4(In_Json["vRimColor"], m_tInstanceDesc.vRimColor);
-	m_tInstanceDesc.fRimPower = In_Json["fRimPower"];
+
+
+	if (In_Json.contains("vBloomColor"))	// 새로 저장하고 지우기
+		fTemp = In_Json["fRimPower"];
 
 }
 
@@ -371,8 +373,9 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tDistortionDesc.fDistortionBias, sizeof(_float)));
 
 	/* 소영 추가사항 - Bloom , Rim 용도 ====== */
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_tInstanceDesc.vBloomPower, sizeof(_float3)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tInstanceDesc.vRimColor, sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_tVoidDesc.vBloomPower, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tVoidDesc.vRimColor, sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_tVoidDesc.fRimPower, sizeof(_float)));
 
 	return S_OK;
 }

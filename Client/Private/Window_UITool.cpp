@@ -10,6 +10,7 @@
 #include "UI_Anything.h"
 #include "UI_Text.h"
 #include "Easing_Utillity.h"
+#include "UI_Manager.h"
 
 /* error 외부참조 기호 : define 걸어줘야함 */
 #define STB_IMAGE_IMPLEMENTATION
@@ -17,7 +18,9 @@
 
 CWindow_UITool::CWindow_UITool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
+	, m_pUI_Manager(CUI_Manager::GetInstance())
 {
+	Safe_AddRef(m_pUI_Manager);
 }
 
 HRESULT CWindow_UITool::Initialize()
@@ -120,6 +123,7 @@ HRESULT CWindow_UITool::Initialize()
 
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩이 완료되었습니다."));
 
+	ImGui::GetIO().BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
 
 	return S_OK;
 }
@@ -137,29 +141,31 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
+	ImGui::GetIO().BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
+	// 프레임
+	ImGui::Text(u8"프레임 %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
 	switch (m_eToolType)
 	{
 	case Client::CWindow_UITool::TOOL_UI:
 	{
 		SetUp_ImGuiDESC("Parent", { 600.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse*/ /*| ImGuiWindowFlags_NoResize*/ /*| ImGuiWindowFlags_NoMove*/ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.8f));
 		__super::Begin();
-
+		m_bCheckImguiRect_Parent = Check_ImGui_Rect();
 		// Parent
 		Parent_List(fTimeDelta);
-
 		if (ImGui::Button("Create_Terrain"))
 			m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Terrain"));
 
 		if(ImGui::Button("Create_Monster"))
 			m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_Monster"), TEXT("Prototype_GameObject_Screamer"));
-
 		ImGui::Spacing();
-
 		__super::End();
 
 
 		SetUp_ImGuiDESC("Info", { 600.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse*/ /*| ImGuiWindowFlags_NoResize*/ /*| ImGuiWindowFlags_NoMove*/ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.8f));
 		__super::Begin();
+		m_bCheckImguiRect_UI_Info = Check_ImGui_Rect();
 		UI_Info();
 		__super::End();
 
@@ -170,6 +176,7 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 
 		SetUp_ImGuiDESC("Child", { 600.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse*/ /*| ImGuiWindowFlags_NoResize*/ /*| ImGuiWindowFlags_NoMove*/ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.8f));
 		__super::Begin();
+		m_bCheckImguiRect_Child = Check_ImGui_Rect();
 		Menu_Info();
 		if (ImGui::BeginTabBar("MyTabBar", m_Tab_bar_flags))
 		{
@@ -204,7 +211,11 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 
 				ImGui::EndTabItem();
 			}
-
+			if (ImGui::BeginTabItem("UI_Manager"))
+			{
+				UI_Preset();
+				ImGui::EndTabItem();
+			}
 			ImGui::EndTabBar();
 		}
 		__super::End();
@@ -212,51 +223,56 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 	}
 	case Client::CWindow_UITool::TOOL_ANIMATION:
 	{
-		SetUp_ImGuiDESC("UI_Animation", { 600.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse*/ /*| ImGuiWindowFlags_NoResize*/ /*| ImGuiWindowFlags_NoMove*/ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.8f));
+		SetUp_ImGuiDESC("UI_Animation", { 600.f, 300.f }, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_MenuBar /*| ImGuiWindowFlags_NoCollapse*/ /*| ImGuiWindowFlags_NoResize*/ /*| ImGuiWindowFlags_NoMove*/ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.8f));
+#ifdef _DEBUG
+		if (m_pCurrSelectUI)
+			m_vecTimeline = m_pCurrSelectUI->Get_vecAnimation();
+#endif // DEBUG
 		__super::Begin();
+		m_bCheckImguiRect_UI_Animation = Check_ImGui_Rect();
 		if (ImGui::BeginTabBar("UI_AnimTab", m_Tab_bar_flags))
 		{
-			if (ImGui::BeginTabItem("UI_Anim"))
+			ImGuiKeyInput();
+
+			if (ImGui::BeginTabItem("Keyframe"))
 			{
 				//PlayAnimation(fTimeDelta);
 				//AnimationTimeLineBar();
 				KeyframeAutomaticGeneration();
-				KeyframeRender_ValueChange();
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("AnimObject"))
 			{
-
-				ImGui::Dummy(ImVec2(0.f, 10.f));
-
-				ImGuiKeyInput();
-
-				if (!m_bCreateOK)
-				{
-					m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky"));
-					m_bCreateOK = true;
-				}
 				/* List */
 				Child_List(fTimeDelta);
-
-				ImGui::Dummy(ImVec2(0.f, 10.f));
-
-				/* UI_2D 세팅 */
-
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Distortion"))
+			{
+				Setting_Distortion(fTimeDelta);
 				ImGui::EndTabItem();
 			}
 			ImGui::EndTabBar();
 		}
 		__super::End();
 
-		SetUp_ImGuiDESC("UI_TimeLine", { 1000.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse*/ /*| ImGuiWindowFlags_NoResize*/ /*| ImGuiWindowFlags_NoMove*/ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.8f));
+		SetUp_ImGuiDESC("Info", { 600.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse*/ /*| ImGuiWindowFlags_NoResize*/ /*| ImGuiWindowFlags_NoMove*/ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.8f));
 		__super::Begin();
-		if (ImGui::BeginTabBar("TimeLine_Tab", m_Tab_bar_flags))
-		{
-			PlayAnimation(fTimeDelta);
-			AnimationTimeLineBar();
-			ImGui::EndTabBar();
-		}
+		m_bCheckImguiRect_Info = Check_ImGui_Rect();
+		UI_Info();
+		__super::End();
+
+		SetUp_ImGuiDESC("UI_TimeLine", { 1000.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse*/ /*| ImGuiWindowFlags_NoResize*/ | ImGuiWindowFlags_NoMove /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.8f));
+		__super::Begin();
+		m_bCheckImguiRect_UI_TimeLine = Check_ImGui_Rect();
+		PlayAnimation(fTimeDelta);
+		AnimationTimeLineBar(fTimeDelta);
+		__super::End();
+
+		SetUp_ImGuiDESC("ValueChange", { 1000.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse*/ /*| ImGuiWindowFlags_NoResize*/ /*| ImGuiWindowFlags_NoMove*/ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.8f));
+		__super::Begin();
+		m_bCheckImguiRect_ValueChange = Check_ImGui_Rect();
+			CurKeyframe_ValueChange();
 		__super::End();
 		break;
 	}
@@ -277,8 +293,8 @@ void CWindow_UITool::Render()
 
 void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 {
-		// 스페이스바가 눌렸을 때 실행할 코드
-	
+	if (m_bShortOff)
+		return;
 
 	if (ImGui::IsKeyPressed(ImGuiKey_1))
 	{
@@ -287,31 +303,6 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 	if (ImGui::IsKeyPressed(ImGuiKey_2))
 	{
 		m_eToolType = CWindow_UITool::TOOL_ANIMATION;
-	}
-	if (ImGui::IsKeyPressed(ImGuiKey_3))
-	{
-		CUI::UIKEYFRAME tUIKeyframe;
-		tUIKeyframe.vPos.x = 1.f;
-		tUIKeyframe.vPos.y = 33.f;
-
-		(*m_vecTimeline).push_back(tUIKeyframe);
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_Q))
-	{
-		m_iChangeType = SCALE;
-	}
-	if (m_pGameInstance->Key_Down(DIK_W))
-	{
-		m_iChangeType = ROTATION;
-	}
-	if (m_pGameInstance->Key_Down(DIK_E))
-	{
-		m_iChangeType = POSITION;
-	}
-	if (m_pGameInstance->Key_Down(DIK_R))
-	{
-		m_iChangeType = NONE;
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_DELETE))
@@ -323,18 +314,25 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 			_int iSize = (_int)m_vecChildObject.size();
 			if (m_iSelected_ChildObjectIndex >= iSize)
 				m_iSelected_ChildObjectIndex = iSize - 1;
+
+			m_vecTimeline = nullptr;
+			//delete m_vecTimeline;
+			//if (m_vecTimeline != nullptr);
+			//{
+			//	Safe_Delete(m_vecTimeline);
+			//}
 		}
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_X))
-	{
-		--m_iSelected_ChildObjectIndex;
+	//if (m_pGameInstance->Key_Down(DIK_X))
+	//{
+	//	--m_iSelected_ChildObjectIndex;
 
-		if (m_iSelected_ChildObjectIndex <= 0)
-			m_iSelected_ChildObjectIndex = 0;
-	}
+	//	if (m_iSelected_ChildObjectIndex <= 0)
+	//		m_iSelected_ChildObjectIndex = 0;
+	//}
 
-	if (m_pGameInstance->Key_Pressing(DIK_UP))
+	/*if (m_pGameInstance->Key_Pressing(DIK_UP))
 	{
 		if(m_iChangeType == (_int)SCALE)
 			m_pCurrChild->Change_SizeTop(m_fChangeValue);
@@ -385,22 +383,9 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 			vPos.m128_f32[0] += m_fChangeValue;
 			m_pCurrChild->Set_Pos(vPos.m128_f32[0], vPos.m128_f32[1]);
 		}
-	}
+	}*/
 
-	if (m_pGameInstance->Key_Pressing(DIK_0))
-	{
-		m_fChangeValue = 0.1f;
-	}
-	if (m_pGameInstance->Key_Pressing(DIK_MINUS))
-	{
-		m_fChangeValue += 0.1f;
-	}
-	if (m_pGameInstance->Key_Pressing(DIK_EQUALS))
-	{
-		m_fChangeValue -= 0.1f;
-		if (m_fChangeValue <= 0.f)
-			m_fChangeValue = 0.f;
-	}
+
 
 	/* SHIFT_L */
 	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT))
@@ -411,6 +396,20 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 			m_tChild_Desc.fPositionY = (_float)m_pt.y;
 			Create_Child(m_tChild_Desc);
 			
+		}
+		if (m_pGameInstance->Key_Pressing(DIK_0))
+		{
+			m_fChangeValue = 0.1f;
+		}
+		if (m_pGameInstance->Key_Pressing(DIK_MINUS))
+		{
+			m_fChangeValue += 0.1f;
+		}
+		if (m_pGameInstance->Key_Pressing(DIK_EQUALS))
+		{
+			m_fChangeValue -= 0.1f;
+			if (m_fChangeValue <= 0.f)
+				m_fChangeValue = 0.f;
 		}
 	}
 
@@ -425,6 +424,8 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 
 		if (m_pGameInstance->Key_Down(DIK_S))
 		{
+			m_bShortOff = true;
+			m_strDialogPath = "../Bin/DataFiles/Data_UI/";
 			m_eDialogType = CImgui_Window::SAVE_DIALOG;
 			OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
 		}
@@ -436,6 +437,7 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 
 		if (m_pGameInstance->Key_Down(DIK_L))
 		{
+			m_strDialogPath = "../Bin/DataFiles/Data_UI/";
 			m_eDialogType = CImgui_Window::LOAD_DIALOG;
 			OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
 		}
@@ -444,67 +446,183 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 		{
 			Create_TargetTexture();
 		}
-	}
 
-	/* 키입력하고 클릭하는 기능보다 아래 존재하게 해야한다. */
-	if (m_pGameInstance->Mouse_Down(DIM_RB))
-	{
-		if (!m_vecParentObject.empty())
+		/* 키입력하고 클릭하는 기능보다 아래 존재하게 해야한다. */
+		if (m_pGameInstance->Mouse_Down(DIM_RB))
 		{
-			_int iParentSize = _int(m_vecParentObject.size());
-			for (_int i = 0; i < iParentSize; ++i)
+			if (!m_vecParentObject.empty())
 			{
-				if (dynamic_cast<CUI*>(m_vecParentObject[i])->Get_Pick())
+				_int iParentSize = (_int)m_vecParentObject.size();
+				for (_int i = 0; i < iParentSize; ++i)
 				{
-					m_iSelected_ParentObjectIndex = i;
-					m_pCurrParent = dynamic_cast<CUI*>(m_vecParentObject[i]);
-					m_pCurrSelectUI = m_pCurrParent;
-					m_eUIType = PARENT;
-					return;
-				}
-			}
-		}
-		if (!m_vecChildObject.empty())
-		{
-			_int iChildSize = _int(m_vecChildObject.size());
-			for (_int i = 0; i < iChildSize; ++i)
-			{
-				if (dynamic_cast<CUI*>(m_vecChildObject[i])->Get_Pick())
-				{
-					if (dynamic_cast<CUI*>(m_vecChildObject[i])->Get_Kind() == CUI::TEXT)
+					if (dynamic_cast<CUI*>(m_vecParentObject[i])->Get_Pick())
 					{
-						m_iSelected_ChildObjectIndex = i;
-						m_pCurrChild = dynamic_cast<CUI*>(m_vecChildObject[i]);
-						m_pCurrSelectUI = dynamic_cast<CUI_Text*>(m_pCurrChild);
-						m_eUIType = TEXT;
+						m_iSelected_ParentObjectIndex = i;
+						m_pCurrParent = dynamic_cast<CUI*>(m_vecParentObject[i]);
+						m_pCurrSelectUI = m_pCurrParent;
+						m_eUIType = PARENT;
 						return;
 					}
-
-					m_iSelected_ChildObjectIndex = i;
-					m_pCurrChild = dynamic_cast<CUI*>(m_vecChildObject[i]);
-					m_pCurrSelectUI = m_pCurrChild;
-					m_eUIType = CHILD;
-					return;
 				}
 			}
-		}
-		if (m_vecParentGroup != nullptr)
-		{
-			_int iGroupSize = (_int)(*m_vecParentGroup).size();
-			for (_int i = 0; i < iGroupSize; ++i)
+			if (!m_vecChildObject.empty())
 			{
-				if (dynamic_cast<CUI*>((*m_vecParentGroup)[i])->Get_Pick())
+				_int iChildSize = (_int)m_vecChildObject.size();
+				for (_int i = 0; i < iChildSize; ++i)
 				{
-					m_iSelected_GroupObjectIndex = i;
-					m_pCurrGroup = dynamic_cast<CUI*>((*m_vecParentGroup)[i]);
-					m_pCurrSelectUI = m_pCurrGroup;
-					m_eUIType = GROUP;
-					return;
+					if (dynamic_cast<CUI*>(m_vecChildObject[i])->Get_Pick())
+					{
+						if (dynamic_cast<CUI*>(m_vecChildObject[i])->Get_Kind() == CUI::TEXT)
+						{
+							m_iSelected_ChildObjectIndex = i;
+							m_pCurrChild = dynamic_cast<CUI*>(m_vecChildObject[i]);
+							m_pCurrSelectUI = dynamic_cast<CUI_Text*>(m_pCurrChild);
+							m_eUIType = TEXT;
+							return;
+						}
+
+						m_iSelected_ChildObjectIndex = i;
+						m_pCurrChild = dynamic_cast<CUI*>(m_vecChildObject[i]);
+						m_pCurrSelectUI = m_pCurrChild;
+						m_eUIType = CHILD;
+						return;
+					}
+				}
+			}
+			if (m_vecParentGroup != nullptr)
+			{
+				_int iGroupSize = (_int)(*m_vecParentGroup).size();
+				for (_int i = 0; i < iGroupSize; ++i)
+				{
+					if (dynamic_cast<CUI*>((*m_vecParentGroup)[i])->Get_Pick())
+					{
+						m_iSelected_GroupObjectIndex = i;
+						m_pCurrGroup = dynamic_cast<CUI*>((*m_vecParentGroup)[i]);
+						m_pCurrSelectUI = m_pCurrGroup;
+						m_eUIType = GROUP;
+						return;
+					}
+				}
+			}
+			m_pCurrSelectUI = nullptr;
+		}
+
+		if (m_vecTimeline == nullptr)
+			return;
+
+		// "G" 키 : 현재 마우스 위치에 키프레임을 생성
+		if (m_pGameInstance->Key_Down(DIK_G))
+		{
+			// 새로운 키프레임을 추가할 때 현재 시간과 가장 가까운 키프레임을 찾는다.
+			float minDist = FLT_MAX;
+			int insertIndex = 0;
+
+			for (int i = 0; i < (*m_vecTimeline).size(); ++i)
+			{
+				float dist = fabsf(currentTime - (*m_vecTimeline)[i].fTime);
+
+				if (dist < minDist)
+				{
+					minDist = dist;
+					insertIndex = i;
+				}
+			}
+
+			// 현재 마우스 위치
+			ImVec2 mousePos = ImGui::GetMousePos();
+
+			// 애니메이션 타임 라인 위치
+			ImVec2 CurtimelinePos = ImGui::GetCursorScreenPos();
+			CurtimelinePos.x += 0.f;
+			CurtimelinePos.y += 30.f;
+
+			// 마우스 위치X를 애니메이션 타임 라인 상의 상대적인 위치로 변환
+			float relativeMouseX = (mousePos.x - CurtimelinePos.x) / timelineSize.x;
+
+			// 마우스 위치를 애니메이션 타임 라인 상의 상대적인 위치로 변환
+			float relativeMouseY = (mousePos.y - CurtimelinePos.y) / timelineSize.y;
+
+			// 벨류 값을 계산합니다. 예를 들어, 상대적인 마우스 위치를 벨류 값으로 사용할 수 있음
+			float newValue = 0.7f - ImClamp(relativeMouseY, 0.0f, 1.0f); // 벨류 값 범위를 0에서 1로 클램핑
+
+			// 시간 값을 계산하여 새로운 키프레임을 생성
+			float newTime = relativeMouseX * MaxTime; // MaxTime은 최대 시간 값
+
+			// 새로운 키프레임을 생성하고 삽입.
+			CUI::UIKEYFRAME newKeyframe = { newTime, newValue, 0, false, false };
+			newKeyframe.fTime = newTime;
+			newKeyframe.fValue = newValue;
+			newKeyframe.vKeyFramePos.x = relativeMouseX;
+			newKeyframe.vKeyFramePos.y = relativeMouseY;
+			(*m_vecTimeline).push_back(newKeyframe);
+
+			// 새로운 키프레임의 시간과 가장 가까운 키프레임을 찾는다. ( 끝 번호 인덱스로 선택됨 일단 보류)
+			float minDistNew = FLT_MAX;
+			int insertIndexNew = 0;
+
+			for (int i = 0; i < (*m_vecTimeline).size(); ++i)
+			{
+				float dist = fabsf(newTime - (*m_vecTimeline)[i].fTime);
+
+				if (dist < minDistNew)
+				{
+					minDistNew = dist;
+
+					insertIndexNew = i;
+					closestKeyframeIndex = insertIndexNew;
 				}
 			}
 		}
-		m_pCurrSelectUI = nullptr;
+
+		// "B" 키 : 현재 시간 위치에 키프레임을 생성
+		if (m_pGameInstance->Key_Down(DIK_B))
+		{
+			// 애니메이션 타임 라인 위치
+			ImVec2 CurtimelinePos = ImGui::GetCursorScreenPos();
+			CurtimelinePos.x += 0.f;
+			CurtimelinePos.y += 30.f;
+
+			// 마우스 위치X를 애니메이션 타임 라인 상의 상대적인 위치로 변환
+			float relativeMouseX = (CurtimelinePos.x) / timelineSize.x;
+
+			// 마우스 위치를 애니메이션 타임 라인 상의 상대적인 위치로 변환
+			float relativeMouseY = (CurtimelinePos.y) / timelineSize.y;
+
+			// 새로운 키프레임을 생성하고 삽입합니다.
+			CUI::UIKEYFRAME newKeyframe;
+			newKeyframe.fTime = currentTime;
+			newKeyframe.fValue = 0.f;
+			newKeyframe.vKeyFramePos.x = relativeMouseX;
+			newKeyframe.vKeyFramePos.y = relativeMouseY;
+			(*m_vecTimeline).push_back(newKeyframe);
+
+			float minDist = FLT_MAX;
+			int insertIndex = 0;
+
+			for (int i = 0; i < (*m_vecTimeline).size(); ++i)
+			{
+				float dist = fabsf(currentTime - (*m_vecTimeline)[i].fTime);
+
+				if (dist < minDist)
+				{
+					minDist = dist;
+					insertIndex = i;
+					closestKeyframeIndex = insertIndex;
+				}
+			}
+		}
 	}
+
+
+	//if (false == m_bCheckImguiRect_Child &&
+	//	false == m_bCheckImguiRect_UI_Animation &&
+	//	false == m_bCheckImguiRect_ValueChange &&
+	//	false == m_bCheckImguiRect_Info &&
+	//	false == m_bCheckImguiRect_UI_Info &&
+	//	false == m_bCheckImguiRect_UI_TimeLine)
+	//{
+
+	//}
 }
 
 void CWindow_UITool::Layer_List()
@@ -774,7 +892,7 @@ void CWindow_UITool::Parent_Object(_float fTimeDelta)
 
 void CWindow_UITool::Setting_Child()
 {
-	ImGui::CollapsingHeader("2D_Setting");
+	//ImGui::CollapsingHeader("2D_Setting");
 
 	///* Mod */
 	//ImGui::SeparatorText(u8"변경 모드 설정");
@@ -1339,6 +1457,8 @@ HRESULT CWindow_UITool::Create_Child(CUI::UI_DESC pUIDesc)
 	pUIDesc.bParent = false;
 	pUIDesc.bWorld = m_tChild_Desc.bWorld;
 	CUI* pCurrObject = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, ConvertToWideString(m_strLayer[m_iCurrLayerNum]), strCloneProto, &pUIDesc));
+
+
 	m_vecChildObject.push_back(pCurrObject);
 	m_pCurrChild = pCurrObject;
 
@@ -1367,11 +1487,15 @@ void CWindow_UITool::Delete_Child(_float fTimeDelta)
 	//if(!m_vecChildObjectName.empty())
 	//	m_vecChildObjectName.erase(m_vecChildObjectName.begin() + m_iSelected_ChildObjectIndex); // 오브젝트 목록 이름 삭제
 
-	if(m_pCurrChild)
+	if (m_vecTimeline)
+		m_vecTimeline = nullptr;
+
+	if (m_pCurrChild)
 		m_pCurrChild = nullptr; // 현재 선택돼있는 녀석이 죽었으니 주소 비워주자.
 
 	if (m_pCurrSelectUI)
 		m_pCurrSelectUI = nullptr; // 현재 선택돼있는 녀석이 죽었으니 주소 비워주자.
+
 
 	m_iSelected_ChildObjectIndex = m_iSelected_ChildObjectIndex - 1; // 현재 선택한 인덱스번째의 오브젝트를 삭제했으니, 선택된 인덱스도 뒤로 한칸 돌려주자.
 }
@@ -1526,7 +1650,8 @@ void CWindow_UITool::Text_List()
 
 	if (ImGui::Checkbox("Free Move", &m_bFreeMove))
 	{
-		dynamic_cast<CUI_Text*>(m_pCurrSelectUI)->Set_FreeMove(m_bFreeMove);
+		if (m_pCurrSelectUI)
+			dynamic_cast<CUI_Text*>(m_pCurrSelectUI)->Set_FreeMove(m_bFreeMove);
 	}
 
 	if (ImGui::DragFloat("Text PositionX", &m_tTextInfo.fPosX))
@@ -1681,7 +1806,7 @@ void CWindow_UITool::Add_TextList(CUI::UI_DESC tUIDesc)
 
 void CWindow_UITool::Change_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation)
 {
-	if (!m_pCurrSelectUI)
+	if (m_pCurrSelectUI == nullptr)
 		return;
 
 	if (m_eUIType == CWindow_UITool::TEXT)
@@ -1728,6 +1853,18 @@ HRESULT CWindow_UITool::Menu_Info()
 void CWindow_UITool::Curr_Info()
 {
 	ImGui::Text("Mouse Pos : %d, %d", m_pt.x, m_pt.y);
+
+	if (m_pCurrSelectUI != nullptr)
+	{
+		if (ImGui::Button("Active"))
+		{
+			m_pCurrSelectUI->Set_Active(!m_pCurrSelectUI->Get_Active());
+		}
+		if (ImGui::Button("Set_Tool"))
+		{
+			m_pCurrSelectUI->Set_Tool(!m_pCurrSelectUI->Get_Active());
+		}
+	}
 
 	CTransform* pTransformCom = nullptr;
 
@@ -1855,23 +1992,51 @@ void CWindow_UITool::Create_TargetTexture()
 
 void CWindow_UITool::KeyframeList()
 {
+	// 키프레임 목록 창
+	ImGui::Begin(u8"키프레임 정보");
 
+	for (int i = 0; i < m_vecTimeline->size(); ++i) {
+		CUI::UIKEYFRAME& keyframe = (*m_vecTimeline)[i];
+		char keyframeName[64];
+		snprintf(keyframeName, sizeof(keyframeName), u8"키프레임 %d", i);
+
+		// 키프레임 정보를 목록으로 표시
+		if (ImGui::TreeNode(keyframeName)) {
+			ImGui::Text(u8"값: %.2f", keyframe.fValue);
+			ImGui::Text(u8"시간: %.2f", keyframe.fTime);
+			ImGui::Text(u8"크기: (%.2f, %.2f)", keyframe.vScale.x, keyframe.vScale.y);
+			ImGui::Text(u8"회전:(%.2f)", keyframe.fRot);
+			ImGui::Text(u8"이동: (%.2f, %.2f)", keyframe.vPos.x, keyframe.vPos.y);
+			ImGui::Checkbox(u8"이징 In", &keyframe.isEaseIn);
+			ImGui::Checkbox(u8"이징 Out", &keyframe.isEaseOut);
+
+			// 키프레임 삭제 버튼
+			if (ImGui::Button(u8"삭제")) {
+				m_vecTimeline->erase(m_vecTimeline->begin() + i);
+			}
+
+			ImGui::TreePop();
+		}
+	}
+
+	ImGui::End();
 }
 
 void CWindow_UITool::KeyframeChangeWindow()
 {
 
+	
 }
 
 void CWindow_UITool::KeyframeRender_ValueChange()
 {
-	ImDrawList* draw_list = ImGui::GetWindowDrawList(); // 그리기
-
 	if (m_vecTimeline == nullptr)
 		return;
 
 	if ((*m_vecTimeline).empty())
 		return;
+
+	ImDrawList* draw_list = ImGui::GetWindowDrawList(); // 그리기
 
 	// 키프레임 렌더링 및 편집
 	for (int i = 0; i < (*m_vecTimeline).size(); ++i)
@@ -1893,14 +2058,16 @@ void CWindow_UITool::KeyframeRender_ValueChange()
 
 		// 현재 시간에 해당하는 키프레임 표시 (빨간색 원)
 		if ((*m_vecTimeline)[i].fTime >= currentTime - 0.1 &&
-			(*m_vecTimeline)[i].fTime <= currentTime + 0.1) {
+			(*m_vecTimeline)[i].fTime <= currentTime + 0.1) 
+		{
 			draw_list->AddCircleFilled(
 				ImVec2(xPos, yPos),
 				5.0f,
 				IM_COL32(255, 0, 0, 255) // 빨간색으로 표시
 			);
 		}
-		else {
+		else 
+		{
 			// 다른 시간의 키프레임 표시 (노란색 원)
 			draw_list->AddCircleFilled(
 				ImVec2(xPos, yPos),
@@ -1908,13 +2075,6 @@ void CWindow_UITool::KeyframeRender_ValueChange()
 				IM_COL32(255, 255, 0, 255) // 노란색으로 표시
 			);
 		}
-
-		// 다른 시간의 키프레임 표시 (노란색 원)
-		draw_list->AddCircleFilled(
-			ImVec2(100.f, 100.f),
-			5.0f,
-			IM_COL32(255, 255, 0, 255) // 노란색으로 표시
-		);
 
 		// 마우스가 키프레임 위에 있는 경우에만 툴팁 표시 (마우스 오버)
 		if (ImGui::IsMouseHoveringRect(
@@ -1999,7 +2159,8 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 	firstKeyframe.vPos = minTranslationValue;
 	firstKeyframe.iTexureframe = (_int)_minTexture;
 
-	m_pCurrSelectUI->Add_Keyframe(firstKeyframe);
+	if (m_pCurrSelectUI)
+		m_pCurrSelectUI->Add_Keyframe(firstKeyframe);
 	//(*m_vecTimeline).push_back(firstKeyframe);
 
 	CUI::UIKEYFRAME lastKeyframe;
@@ -2012,7 +2173,8 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 	lastKeyframe.vPos = maxTranslationValue;
 	lastKeyframe.iTexureframe = (_int)_maxTexture;
 
-	m_pCurrSelectUI->Add_Keyframe(lastKeyframe);
+	if (m_pCurrSelectUI)
+		m_pCurrSelectUI->Add_Keyframe(lastKeyframe);
 	//(*m_vecTimeline).push_back(lastKeyframe);
 
 	int num_decimal_places = 2; // 소수점 단위 설
@@ -2074,17 +2236,18 @@ void CWindow_UITool::CreateKeyframesWithLinearInterpolation(
 		keyframe.fRot = rotation;
 		keyframe.vPos = translation;
 
-		//if (m_bIndividualTexture)
-		//{
-		//	keyframe.texureframe = iTextureNum;
-		//}
-		//else
+		if (m_bIndividualTexture)
+		{
+			keyframe.iTexureframe = iTextureNum;
+		}
+		else
 		{
 			keyframe.iTexureframe = iTexture;
 		}
 
 		// 기존 timeline 벡터에 키프레임을 이어서 추가
-		m_pCurrSelectUI->Emplaceback_Keyframe(keyframe);
+		if (m_pCurrSelectUI)
+			m_pCurrSelectUI->Emplaceback_Keyframe(keyframe);
 		//(*m_vecTimeline).emplace_back(keyframe);
 	}
 
@@ -2162,10 +2325,6 @@ void CWindow_UITool::KeyframeAutomaticGeneration()
 	if (m_pCurrSelectUI == nullptr)
 		return;
 
-#ifdef _DEBUG
-	m_vecTimeline = m_pCurrSelectUI->Get_vecAnimation();
-#endif // DEBUG
-
 	if (ImGui::Button(u8"자동 생성")) 
 	{
 		// 버튼이 클릭되면 timeline 벡터를 비우고 CreateKeyframesWithLinearInterpolation 함수 호출
@@ -2196,8 +2355,9 @@ void CWindow_UITool::KeyframeAutomaticGeneration()
 
 void CWindow_UITool::PlayAnimation(_float fTimeDelta)
 {
-	if (m_pCurrSelectUI == nullptr)
-		return;
+	/* Set UI AnimTime */
+	//if (m_pCurrSelectUI)
+	//	m_pCurrSelectUI->Set_CurrTime(currentTime);
 
 	// 애니메이션 재생/일시 정지 버튼
 	if (m_isPlayAnim)
@@ -2205,7 +2365,8 @@ void CWindow_UITool::PlayAnimation(_float fTimeDelta)
 		if (ImGui::Button(u8"정지"))
 		{
 			m_isPlayAnim = false;
-			m_pCurrSelectUI->Set_AnimPlay(false);
+			if (m_pCurrSelectUI)
+				m_pCurrSelectUI->Set_AnimPlay(false);
 		}
 	}
 	else 
@@ -2213,42 +2374,113 @@ void CWindow_UITool::PlayAnimation(_float fTimeDelta)
 		if (ImGui::Button(u8"재생"))
 		{
 			m_isPlayAnim = true;
-			m_pCurrSelectUI->Set_AnimPlay(true);
+			if (m_pCurrSelectUI)
+				m_pCurrSelectUI->Set_AnimPlay(true);
 		}
 	}
-	if (ImGui::Button(u8"반복"))
+	ImGui::SameLine();
+
+	// 애니메이션 재생/일시 정지 버튼
+	if (m_bRepetition)
 	{
-		m_bRepetition = !m_bRepetition;
-		m_pCurrSelectUI->Set_Repetition(m_bRepetition);
+		if (ImGui::Button(u8"반복"))
+		{
+			m_bRepetition = !m_bRepetition;
+			if (m_pCurrSelectUI)
+				m_pCurrSelectUI->Set_Repetition(m_bRepetition);
+		}
+	}
+	else
+	{
+		if (ImGui::Button(u8"한번"))
+		{
+			m_bRepetition = !m_bRepetition;
+			if (m_pCurrSelectUI)
+				m_pCurrSelectUI->Set_Repetition(m_bRepetition);
+		}
 	}
 
 
+	ImGui::SameLine();
 	if (ImGui::Button(u8"초기화"))
 	{
 		m_fPlayTime = 0.0f;
 		currentTime = 0.0f;
-		m_pCurrSelectUI->Set_CurrTime(0.0f);
+		if (m_pCurrSelectUI)
+			m_pCurrSelectUI->Set_CurrTime(0.0f);
 	}
 
 	// 애니메이션 시간 설정
 	if (m_isPlayAnim)
 	{
 		m_fPlayTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
-		currentTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
+		//currentTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
+		if (m_pCurrSelectUI)
+			currentTime = m_pCurrSelectUI->Get_CurrTime();
+		//else
+		//	currentTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
 
-		if (m_fPlayTime > MaxTime) // 현재 시간이 최대 시간 값 보다 클 경우
+		if (m_bRepetition)
 		{
-			m_fPlayTime = MaxTime; // 현재 시간을 최대 시간 값으로 고정
-			currentTime = MaxTime; // 현재 시간을 최대 시간 값으로 고정
-			m_isPlayAnim = false;  // 플레이 중지
+			if (!m_vecTimeline->empty())
+			{
+				if (currentTime > m_vecTimeline->back().fTime)  // 현재 시간이 최대 시간 값 보다 클 경우
+				{
+					m_fPlayTime = 0.0f;		// 현재 시간을 최대 시간 값으로 고정
+					currentTime = 0.0f;		// 현재 시간을 최대 시간 값으로 고정
+					m_isPlayAnim = true;	// 플레이 계속
+					if (m_pCurrSelectUI)
+					{
+						m_pCurrSelectUI->Set_AnimPlay(true);
+						m_pCurrSelectUI->Set_Repetition(true);
+					}
+				}
+			}
+			else
+			{
+				if (currentTime > MaxTime)  // 현재 시간이 최대 시간 값 보다 클 경우
+				{
+					m_fPlayTime = 0.0f;		// 현재 시간을 최대 시간 값으로 고정
+					currentTime = 0.0f;		// 현재 시간을 최대 시간 값으로 고정
+					m_isPlayAnim = true;	// 플레이 중지
+					if (m_pCurrSelectUI)
+					{
+						m_pCurrSelectUI->Set_AnimPlay(true);
+						m_pCurrSelectUI->Set_Repetition(true);
+					}
+				}
+			}
+		}
+		else
+		{
+			if (!m_vecTimeline->empty())
+			{
+				if (currentTime > m_vecTimeline->back().fTime) // 현재 시간이 키프레임 최대 시간 값 보다 클 경우
+				{
+					m_fPlayTime = m_vecTimeline->back().fTime; // 현재 시간을 키프레임 최대 시간 값으로 고정
+					currentTime = m_vecTimeline->back().fTime; // 현재 시간을 키프레임 최대 시간 값으로 고정
+					if (m_pCurrSelectUI)
+						m_pCurrSelectUI->Set_AnimPlay(false);
+					m_isPlayAnim = false;  // 플레이 중지
+				}
+			}
+			else
+			{
+				if (currentTime > MaxTime) // 현재 시간이 최대 시간 값 보다 클 경우
+				{
+					m_fPlayTime = MaxTime; // 현재 시간을 최대 시간 값으로 고정
+					currentTime = MaxTime; // 현재 시간을 최대 시간 값으로 고정
+					if (m_pCurrSelectUI)
+						m_pCurrSelectUI->Set_AnimPlay(false);
+					m_isPlayAnim = false;  // 플레이 중지
+				}
+			}
 		}
 	}
-
-	/* Set UI AnimTime */
-	m_pCurrSelectUI->Set_CurrTime(currentTime);
 }
 
-void CWindow_UITool::AnimationTimeLineBar()
+// 애니메이션 타임라인 바
+void CWindow_UITool::AnimationTimeLineBar(_float fTimeDelta)
 {
 #pragma region 애니메이션 타임 라인
 	// 타임 라인 렌더링
@@ -2259,16 +2491,10 @@ void CWindow_UITool::AnimationTimeLineBar()
 	timelinePos.x += 0.f;
 	timelinePos.y += 0.f;
 
-	// 애니메이션 타임 라인 그리기
-	draw_list->AddRectFilled(
-		timelinePos,
-		ImVec2(timelinePos.x + timelineSize.x, timelinePos.y + timelineSize.y),
-		IM_COL32(50, 50, 50, 255) // 타임라인 배경 색상
-	);
-
+	ImGui::SameLine();
 	// 시간
 	ImGui::Text(u8"시간 : %.2f", currentTime);
-	ImGui::SameLine(80.f);
+	ImGui::SameLine();
 
 	ImGui::PushItemWidth(150);
 	// 시간 그래프
@@ -2277,6 +2503,20 @@ void CWindow_UITool::AnimationTimeLineBar()
 	ImGui::PlotLines(u8"시간 그래프", m_fFrame, 100);
 	ImGui::PopItemWidth();
 	ImGui::SameLine();
+
+	if (m_pCurrSelectUI)
+	{
+		char* Test = "Select UI : ";
+		strcmp(Test, m_pCurrSelectUI->Get_UIDesc().strObjectName.c_str());
+
+		ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f }, Test);
+	}
+	// 애니메이션 타임 라인 그리기
+	draw_list->AddRectFilled(
+		timelinePos,
+		ImVec2(timelinePos.x + timelineSize.x, timelinePos.y + timelineSize.y),
+		IM_COL32(50, 50, 50, 255) // 타임라인 배경 색상
+	);
 
 	// 현재 시간을 최소와 최대 시간 비율로 변환
 	float minTime = 0.0f; // 최소 시간
@@ -2326,6 +2566,10 @@ void CWindow_UITool::AnimationTimeLineBar()
 	//  graphPos = ImVec2(왼쪽 위 모서리 화면상의 위치x, y, 타임라인의 크기)
 	ImVec2 graphPos = ImVec2(timelinePos.x, timelinePos.y + timelineSize.y + 10);
 
+	/* 키프레임 랜더 */
+	KeyframeRender_ValueChange();
+	/* 키프레임 조절 */
+	KeyframeValueChange(fTimeDelta);
 #pragma endregion
 }
 
@@ -2334,7 +2578,7 @@ _float CWindow_UITool::EvaluateAnimationAtTime(float time)
 	if (m_vecTimeline == nullptr)
 		return 0.0f;
 
-	if ((*m_vecTimeline).empty())
+	if (m_vecTimeline->empty())
 	{
 		// 만약 키프레임이 없다면 기본값 0.0을 반환하거나,
 		// 다른 처리를 수행.
@@ -2342,7 +2586,7 @@ _float CWindow_UITool::EvaluateAnimationAtTime(float time)
 	}
 
 	// 키프레임을 시간에 따라 정렬.
-	std::sort((*m_vecTimeline).begin(), (*m_vecTimeline).end(), [](const CUI::UIKEYFRAME& tFirst_UI, const CUI::UIKEYFRAME& tSecond_UI)
+	std::sort(m_vecTimeline->begin(), m_vecTimeline->end(), [](const CUI::UIKEYFRAME& tFirst_UI, const CUI::UIKEYFRAME& tSecond_UI)
 		{
 			return tFirst_UI.fTime < tSecond_UI.fTime;
 		});
@@ -2401,6 +2645,10 @@ void CWindow_UITool::KeyframeValueChange(_float fTimeDelta)
 {
 #pragma region 타임라인 키프레임 조절
 
+	if (m_vecTimeline == nullptr)
+		return;
+	if (m_vecTimeline->empty())
+		return;
 	// 타임라인에서 키프레임을 드래그하여 순서 변경
 	for (int i = 0; i < (*m_vecTimeline).size(); ++i)
 	{
@@ -2409,7 +2657,7 @@ void CWindow_UITool::KeyframeValueChange(_float fTimeDelta)
 
 		// 타임 라인 상의 위치를 계산
 		float xPos = timelinePos.x + (keyframe.fTime / 20.0f) * timelineSize.x;
-		float yPos = timelinePos.y + timelineSize.y - timelineSize.y * keyframe.fValue;
+		float yPos = timelinePos.y + timelineSize.y - timelineSize.y * keyframe.fValue; // 벨류에 맞는 높이 위치값을 조절해야한다.
 
 		if (ImGui::IsMouseHoveringRect(
 			ImVec2(xPos - 5.0f, yPos - 5.0f), // 좌표 설정
@@ -2456,126 +2704,45 @@ void CWindow_UITool::KeyframeValueChange(_float fTimeDelta)
 			draggingKeyframeIndex++;
 		}
 	}
-
 #pragma endregion
+
+	// 마우스 릴리즈 시 드래그 종료
+	if (ImGui::IsMouseReleased(0))
+	{
+		isDraggingTimeline = false;
+		isDraggingKeyframe = false;
+	}
+
+	SelectKeyframeMouse();
+
+	ImGui::SameLine();
+
+	KeyframeList(); // 키프레임 목록
 }
 
 void CWindow_UITool::ImGuiKeyInput()
 {
+	if (m_bShortOff)
+		return;
+
 	if (m_vecTimeline == nullptr)
 		return;
 
-	// "G" 키 : 현재 마우스 위치에 키프레임을 생성
-	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_G)))
-	{
-		// 새로운 키프레임을 추가할 때 현재 시간과 가장 가까운 키프레임을 찾는다.
-		float minDist = FLT_MAX;
-		int insertIndex = 0;
+	//if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+	//{
 
-		for (int i = 0; i < (*m_vecTimeline).size(); ++i)
-		{
-			float dist = fabsf(currentTime - (*m_vecTimeline)[i].fTime);
-
-			if (dist < minDist)
-			{
-				minDist = dist;
-				insertIndex = i;
-			}
-		}
-
-		// 현재 마우스 위치
-		ImVec2 mousePos = ImGui::GetMousePos();
-
-		// 애니메이션 타임 라인 위치
-		ImVec2 CurtimelinePos = ImGui::GetCursorScreenPos();
-		CurtimelinePos.x += 0.f;
-		CurtimelinePos.y += 30.f;
-
-		// 마우스 위치X를 애니메이션 타임 라인 상의 상대적인 위치로 변환
-		float relativeMouseX = (mousePos.x - CurtimelinePos.x) / timelineSize.x;
-
-		// 마우스 위치를 애니메이션 타임 라인 상의 상대적인 위치로 변환
-		float relativeMouseY = (mousePos.y - CurtimelinePos.y) / timelineSize.y;
-
-		// 벨류 값을 계산합니다. 예를 들어, 상대적인 마우스 위치를 벨류 값으로 사용할 수 있음
-		float newValue = 0.7f - ImClamp(relativeMouseY, 0.0f, 1.0f); // 벨류 값 범위를 0에서 1로 클램핑
-
-		// 시간 값을 계산하여 새로운 키프레임을 생성
-		float newTime = relativeMouseX * MaxTime; // MaxTime은 최대 시간 값
-
-		// 새로운 키프레임을 생성하고 삽입.
-		CUI::UIKEYFRAME newKeyframe = { newTime, newValue, 0, false, false };
-		newKeyframe.fTime = newTime;
-		newKeyframe.fValue = newValue;
-		newKeyframe.vKeyFramePos.x = relativeMouseX;
-		newKeyframe.vKeyFramePos.y = relativeMouseY;
-		(*m_vecTimeline).push_back(newKeyframe);
-
-		// 새로운 키프레임의 시간과 가장 가까운 키프레임을 찾는다. ( 끝 번호 인덱스로 선택됨 일단 보류)
-		float minDistNew = FLT_MAX;
-		int insertIndexNew = 0;
-
-		for (int i = 0; i < (*m_vecTimeline).size(); ++i)
-		{
-			float dist = fabsf(newTime - (*m_vecTimeline)[i].fTime);
-
-			if (dist < minDistNew)
-			{
-				minDistNew = dist;
-
-				insertIndexNew = i;
-				closestKeyframeIndex = insertIndexNew;
-			}
-		}
-
-	}
-
-	// "B" 키 : 현재 시간 위치에 키프레임을 생성
-	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_B)))
-	{
-		// 애니메이션 타임 라인 위치
-		ImVec2 CurtimelinePos = ImGui::GetCursorScreenPos();
-		CurtimelinePos.x += 0.f;
-		CurtimelinePos.y += 30.f;
-
-		// 마우스 위치X를 애니메이션 타임 라인 상의 상대적인 위치로 변환
-		float relativeMouseX = (CurtimelinePos.x) / timelineSize.x;
-
-		// 마우스 위치를 애니메이션 타임 라인 상의 상대적인 위치로 변환
-		float relativeMouseY = (CurtimelinePos.y) / timelineSize.y;
-
-		// 새로운 키프레임을 생성하고 삽입합니다.
-		CUI::UIKEYFRAME newKeyframe = { currentTime, 0.f, 0, false, false };
-		newKeyframe.fTime = currentTime;
-		newKeyframe.fValue = 0.f;
-		newKeyframe.vKeyFramePos.x = relativeMouseX;
-		newKeyframe.vKeyFramePos.y = relativeMouseY;
-		(*m_vecTimeline).push_back(newKeyframe);
-
-		float minDist = FLT_MAX;
-		int insertIndex = 0;
-
-		for (int i = 0; i < (*m_vecTimeline).size(); ++i)
-		{
-			float dist = fabsf(currentTime - (*m_vecTimeline)[i].fTime);
-
-			if (dist < minDist)
-			{
-				minDist = dist;
-				insertIndex = i;
-				closestKeyframeIndex = insertIndex;
-			}
-		}
-	}
+	//}
 
 	// "R" 키 : 현재 시간(시간선)을 0으로 초기화 [처음으로 이동]
-	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_R)))
+	if (m_pGameInstance->Key_Down(DIK_R))
 	{
+		if (m_pCurrSelectUI)
+			m_pCurrSelectUI->Set_CurrTime(0.0f);
 		currentTime = 0.f;
 	}
 
 	// "T" 키 : 현재 시간(시간 선)을 마우스 위치로 변경
-	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_T)))
+	if (m_pGameInstance->Key_Pressing(DIK_T))
 	{
 		// 현재 마우스 위치
 		ImVec2 mousePos = ImGui::GetMousePos();
@@ -2591,124 +2758,554 @@ void CWindow_UITool::ImGuiKeyInput()
 	}
 
 	// "Space" 키 : 애니메이션 재생/정지
-	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Space)))
+	if (m_pGameInstance->Key_Down(DIK_SPACE))
 	{
 		m_isPlayAnim = !m_isPlayAnim;
+		if(m_pCurrSelectUI)
+			m_pCurrSelectUI->Set_AnimPlay(m_isPlayAnim);
 	}
 
 	// "0" 키 : 재생 속도 초기화
-	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_0)))
+	if (m_pGameInstance->Key_Down(DIK_0))
 	{
 		m_fPlaybackSpeed = 1.f;
 	}
 
 	// "-" 키 : 재생 속도 -
-	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Minus)))
+	if (m_pGameInstance->Key_Down(DIK_MINUS))
 	{
 		m_fPlaybackSpeed -= 1.f;
 	}
 
 	// "+" 키 : 재생 속도 +
-	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Equal)))
+	if (m_pGameInstance->Key_Down(DIK_EQUALS))
 	{
 		m_fPlaybackSpeed += 1.f;
 	}
 
-	//// " ` ~ " 키 : 변경 모드 초기화(없음)
-	//if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_GraveAccent)))
-	//{
-	//	eEditMode = EDITMODE_NONE;
+	// " ` ~ " 키 : 변경 모드 초기화(없음)
+	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_GraveAccent)))
+	{
+		eEditMode = EDITMODE_NONE;
+	}
+	
+	// "F1" 키 : 크기 변경 모드
+	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F1)))
+	{
+		eEditMode = EDITMODE_SCALE;
+	}
+	
+	// "F2" 키 : 회전 변경 모드
+	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F2)))
+	{
+		eEditMode = EDITMODE_ROTATION;
+	}
+	
+	// "F3" 키 : 이동 변경 모드
+	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F3)))
+	{
+		eEditMode = EDITMODE_TRANSLATION;
+	}
+	
+	// "F4" 키 : 시간 및 벨류 변경 모드
+	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F4)))
+	{
+		eEditMode = EDITMODE_TIME_VALUE;
+	}
+	
+	// "F5" 키 : 키프레임 초기화
+	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F5)))
+	{
+		(*m_vecTimeline).clear();
+	}
+	
+	// "F6" 키 : 속성 값 변경 사이즈 조절 초기화
+	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F6)))
+	{
+		vValueSize = 1.f;
+	}
+	
+	// "F7" 키 : 속성 값 변경 사이즈 조절 Minus
+	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F7)))
+	{
+		vValueSize -= 1.f;
+	}
+	
+	// "F8" 키 : 속성 값 변경 사이즈 조절 Plus
+	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F8)))
+	{
+		vValueSize += 1.f;
+	}
+	
+	// "P" 키 : 변경 모드 초기화(없음)
+	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_P)))
+	{
+		eEditMode = EDITMODE_TEXTURE;
+	}
+	
+	// "Z" 키 : 이전 키프레임 선택
+	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Z)))
+	{
+		// 현재 키프레임이 0보다 작지 않을 경우만
+		if (closestKeyframeIndex > 0)
+		{
+			closestKeyframeIndex -= 1;
+		}
+	
+		if (!m_vecTimeline->empty()) // 애니메이션이 있고
+		{
+			if (closestKeyframeIndex <= -1.f) // 아직 아무것도 선택하지 않았을 경우
+			{
+				closestKeyframeIndex = 0; // 0번째 선택
+			}
+		}
+	}
+	
+	// "X" 키 : 다음 키프레임 선택
+	if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_X)))
+	{
+		// 현재 키프레임이 최대 키프레임을 넘지 않았을 때만
+		if (closestKeyframeIndex < m_vecTimeline->size() - 1)
+		{
+			closestKeyframeIndex += 1;
+		}
+	
+		if (!m_vecTimeline->empty()) // 애니메이션이 있고
+		{
+			if (closestKeyframeIndex <= -1.f) // 아직 아무것도 선택하지 않았을 경우
+			{
+				closestKeyframeIndex = 0; // 0번째 선택
+			}
+		}
+	}
+}
+
+void CWindow_UITool::CurKeyframe_ValueChange()
+{
+	if (m_vecTimeline == nullptr)
+		return;
+
+	// 키프렘 목록을 보여주는 ImGui 윈도우를 만든다.
+	if (ImGui::Begin(u8"키프레임 수정"))
+	{
+		// 키프렘 목록을 루프를 돌며 표시.
+		for (int i = 0; i < m_vecTimeline->size(); ++i)
+		{
+			CUI::UIKEYFRAME& keyframe = (*m_vecTimeline)[i];
+
+			// 각 키프렘을 버튼 또는 다른 ImGui 위젯으로 표시.
+			// 여기에서는 버튼을 사용.
+			if (ImGui::Button((u8"키프레임" + std::to_string(i)).c_str()))
+			{
+				// 키프렘이 클릭되면 해당 인덱스를 선택된 키프렘 인덱스로 설정.
+				closestKeyframeIndex = i;
+			}
+		}
+	}
+	ImGui::End();
+
+#pragma region 선택한 키프레임 값 변경 (창)
+	// 선택된 키프렘의 인덱스를 사용하여 키프레임을 편집. (선택한 인덱스가 범위 내에 있을 경우)
+	if (!m_vecTimeline->empty() && closestKeyframeIndex >= 0 && closestKeyframeIndex < m_vecTimeline->size())
+	{
+		CUI::UIKEYFRAME& selectedKeyframe = (*m_vecTimeline)[closestKeyframeIndex];
+
+		// 선택된 키프렘의 애니메이션 속성 편집
+		DrawSelectedKeyframeEditor(selectedKeyframe);
+	}
+#pragma endregion
+}
+
+// 선택한 키프레임 값을 변경하는 함수
+void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyframe)
+{
+	if (m_vecTimeline == nullptr)
+		return;
+	if (m_vecTimeline->empty())
+		return;
+
+	// 타임라인 툴
+	ImGui::Begin(u8"선택한 키프레임 속성 편집");
+
+	//Keyframe& selectedKeyframe = timeline.back();
+	ImGui::Text(u8"현재 선택 : 키프레임%d", closestKeyframeIndex);
+
+	ImGuiStyle& style = ImGui::GetStyle(); // 스타일 불러오기
+	float originalItemWidth = style.ItemInnerSpacing.x; // 원래의 ItemInnerSpacing 값을 저장
+
+	// 원하는 크기로 ItemInnerSpacing을 설정
+	style.ItemInnerSpacing.x = 10.0f; // 수평 간격을 10.0f로 조절
+
+	ImGui::SeparatorText(u8"시간 및 벨류 설정");
+
+	// 시간 입력 필드의 가로 길이를 조절 (ex : 40 픽셀)
+	ImGui::PushItemWidth(40);
+
+	// 시간 입력 필드
+	if (ImGui::DragFloat(u8"시간", &selectedKeyframe.fTime, fMin_Time, fMax_Time))
+	{
+		// 원래 키프레임의 인덱스 찾기
+		for (int i = 0; i < m_vecTimeline->size(); ++i) 
+		{
+			if (&(*m_vecTimeline)[i] == &selectedKeyframe) 
+			{
+				originalIndex = (_float)i;
+				break;
+			}
+		}
+
+		// 키프레임을 시간에 따라 정렬
+		std::sort(m_vecTimeline->begin(), m_vecTimeline->end(), [](const CUI::UIKEYFRAME& tFirstKeyframe, const CUI::UIKEYFRAME& tSecondKeyframe) 
+			{
+				return tFirstKeyframe.fTime < tSecondKeyframe.fTime;
+			});
+
+		// 원래 키프레임의 인덱스 찾기
+		for (int i = 0; i < m_vecTimeline->size(); ++i) 
+		{
+			if (&(*m_vecTimeline)[i] == &selectedKeyframe) 
+			{
+				closestKeyframeIndex = i;
+				break;
+			}
+		}
+
+		// 키프레임 순서 변경
+		if (originalIndex != closestKeyframeIndex) 
+		{
+			// 키프레임이 원래 위치에서 이동한 경우
+			// 이동한 위치에 따라 인덱스 업데이트
+			draggingKeyframeIndex = closestKeyframeIndex;
+		}
+	}
+
+	ImGui::PopItemWidth();
+
+	ImGui::SameLine(); // 같은 라인
+
+	// 벨류 입력 필드의 가로 길이를 조절 (ex : 40 픽셀)
+	ImGui::PushItemWidth(40);
+	// 벨류 입력 필드
+	ImGui::DragFloat(u8"벨류", &selectedKeyframe.fValue, fMin_Value, fMax_Value);
+	ImGui::PopItemWidth();
+
+	ImGui::DragFloat(u8"알파", &selectedKeyframe.fAlpha);
+
+	//ImGui::SameLine(); // 같은 라인
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+
+	// 텍스처 입력 필드의 가로 길이를 조절 (ex : 40 픽셀)
+	ImGui::PushItemWidth(80);
+	//ImGui::Text("%d", selectedKeyframe.texureframe);
+	ImGui::InputInt(u8"텍스처 번호", &selectedKeyframe.iTexureframe);
+	ImGui::PopItemWidth();
+
+	// 원래의 ItemInnerSpacing 값으로 복원
+	style.ItemInnerSpacing.x = originalItemWidth;
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	// 애니메이션 타입 설정
+	ImGui::SeparatorText(u8"애니메이션 타입 설정");
+	ImGui::RadioButton(u8"크기", &selectedKeyframe.iType, 0); // 크기 애니메이션
+	ImGui::SameLine();
+	ImGui::RadioButton(u8"회전", &selectedKeyframe.iType, 1); // 회전 애니메이션
+	ImGui::SameLine();
+	ImGui::RadioButton(u8"이동", &selectedKeyframe.iType, 2); // 이동 애니메이션
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+
+	//style.ItemInnerSpacing.x = 10.0f; // 수평 간격을 10.0f로 조절
+	//// 키프레임 타입에 따른 추가 설정 (슬라이더)
+	//if (selectedKeyframe.iType == 0) { // 크기 애니메이션
+	//	ImGui::DragFloat(u8"크기(슬라이더) X", &selectedKeyframe.vScale.x, fMin_Scale, fMax_Scale);
+	//	ImGui::SameLine();
+	//	ImGui::DragFloat(u8"크기(슬라이더) Y", &selectedKeyframe.vScale.y, fMin_Scale, fMax_Scale);
 	//}
-	//
-	//// "F1" 키 : 크기 변경 모드
-	//if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F1)))
-	//{
-	//	eEditMode = EDITMODE_SCALE;
+	//else if (selectedKeyframe.iType == 1) { // 회전 애니메이션
+	//	ImGui::DragFloat(u8"회전(슬라이더) Z", &selectedKeyframe.fRot, fMin_Rot, fMax_Rot);
 	//}
-	//
-	//// "F2" 키 : 회전 변경 모드
-	//if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F2)))
-	//{
-	//	eEditMode = EDITMODE_ROTATION;
+	//else if (selectedKeyframe.iType == 2) { // 이동 애니메이션
+	//	ImGui::DragFloat(u8"이동(슬라이더) X", &selectedKeyframe.vPos.x, fMin_Pos, fMax_Pos);
+	//	ImGui::SameLine();
+	//	ImGui::DragFloat(u8"이동(슬라이더) Y", &selectedKeyframe.vPos.y, fMin_Pos, fMax_Pos);
 	//}
-	//
-	//// "F3" 키 : 이동 변경 모드
-	//if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F3)))
-	//{
-	//	eEditMode = EDITMODE_TRANSLATION;
-	//}
-	//
-	//// "F4" 키 : 시간 및 벨류 변경 모드
-	//if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F4)))
-	//{
-	//	eEditMode = EDITMODE_TIME_VALUE;
-	//}
-	//
-	//// "F5" 키 : 키프레임 초기화
-	//if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F5)))
-	//{
-	//	(*m_vecTimeline).clear();
-	//}
-	//
-	//// "F6" 키 : 속성 값 변경 사이즈 조절 초기화
-	//if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F6)))
-	//{
-	//	vValueSize = 1.f;
-	//}
-	//
-	//// "F7" 키 : 속성 값 변경 사이즈 조절 Minus
-	//if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F7)))
-	//{
-	//	vValueSize -= 1.f;
-	//}
-	//
-	//// "F8" 키 : 속성 값 변경 사이즈 조절 Plus
-	//if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_F8)))
-	//{
-	//	vValueSize += 1.f;
-	//}
-	//
-	//// "P" 키 : 변경 모드 초기화(없음)
-	//if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_P)))
-	//{
-	//	eEditMode = EDITMODE_TEXTURE;
-	//}
-	//
-	//// "Z" 키 : 이전 키프레임 선택
-	//if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Z)))
-	//{
-	//	// 현재 키프레임이 0보다 작지 않을 경우만
-	//	if (closestKeyframeIndex > 0)
-	//	{
-	//		closestKeyframeIndex -= (_int)1.f;
-	//	}
-	//
-	//	if (!timeline[m_iCurType].empty()) // 애니메이션이 있고
-	//	{
-	//		if (closestKeyframeIndex <= -1.f) // 아직 아무것도 선택하지 않았을 경우
-	//		{
-	//			closestKeyframeIndex = 0.f; // 0번째 선택
-	//		}
-	//	}
-	//}
-	//
-	//// "X" 키 : 다음 키프레임 선택
-	//if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_X)))
-	//{
-	//	// 현재 키프레임이 최대 키프레임을 넘지 않았을 때만
-	//	if (closestKeyframeIndex < timeline[m_iCurType].size() - 1)
-	//	{
-	//		closestKeyframeIndex += 1.f;
-	//	}
-	//
-	//	if (!timeline[m_iCurType].empty()) // 애니메이션이 있고
-	//	{
-	//		if (closestKeyframeIndex <= -1.f) // 아직 아무것도 선택하지 않았을 경우
-	//		{
-	//			closestKeyframeIndex = 0.f; // 0번째 선택
-	//		}
-	//	}
-	//}
+
+	style.ItemInnerSpacing.x = originalItemWidth;// 원래의 ItemInnerSpacing 값으로 복원
+
+	//ImGui::Dummy(ImVec2(0, 10));
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::Separator();
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+
+	style.ItemInnerSpacing.x = 10.0f; // 수평 간격을 10.0f로 조절
+	// 키프레임 타입에 따른 추가 설정 (입력)
+	if (selectedKeyframe.iType == 0) // 크기 애니메이션
+	{
+		// 크기 값 입력
+		if (ImGui::DragFloat(u8"크기 X", &selectedKeyframe.vScale.x))
+		{
+			selectedKeyframe.vScale.x = selectedKeyframe.vScale.x;
+		}
+		ImGui::DragFloat(u8"크기 Y", &selectedKeyframe.vScale.y);
+		// 입력된 값의 범위를 제한(수동)
+		selectedKeyframe.vScale.x = (selectedKeyframe.vScale.x < fMin_Scale) ? fMin_Scale : ((selectedKeyframe.vScale.x > fMax_Scale) ? fMax_Scale : selectedKeyframe.vScale.x);
+		selectedKeyframe.vScale.y = (selectedKeyframe.vScale.y < fMin_Scale) ? fMin_Scale : ((selectedKeyframe.vScale.y > fMax_Scale) ? fMax_Scale : selectedKeyframe.vScale.y);
+	}
+	else if (selectedKeyframe.iType == 1) // 회전 애니메이션
+	{
+		// 회전 값 입력
+		ImGui::DragFloat(u8"회전 Z", &selectedKeyframe.fRot);
+		// 입력된 값의 범위를 제한(함수)
+		selectedKeyframe.fRot = ImClamp(selectedKeyframe.fRot, fMin_Rot, fMax_Rot); // Z 값의 범위 제한
+	}
+	else if (selectedKeyframe.iType == 2) // 이동 애니메이션
+	{
+		// 이동 값 입력
+		ImGui::DragFloat(u8"이동 X", &selectedKeyframe.vPos.x);
+		ImGui::DragFloat(u8"이동 Y", &selectedKeyframe.vPos.y);
+
+		// 입력된 값의 범위를 제한(함수)
+		selectedKeyframe.vPos.x = ImClamp(selectedKeyframe.vPos.x, fMin_Pos, fMax_Pos); // X 값의 범위 제한
+		selectedKeyframe.vPos.y = ImClamp(selectedKeyframe.vPos.y, fMin_Pos, fMax_Pos); // Y 값의 범위 제한
+	}
+	style.ItemInnerSpacing.x = originalItemWidth;// 원래의 ItemInnerSpacing 값으로 복원
+
+#pragma region 설정
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::SeparatorText(u8"이징 설정");
+	// 이징 설정 (Ease In, Ease Out)
+	ImGui::Checkbox("Ease In", &selectedKeyframe.isEaseIn);
+	ImGui::SameLine();
+	ImGui::Checkbox("Ease Out", &selectedKeyframe.isEaseOut);
+	ImGui::SameLine();
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::SeparatorText(u8"Event 설정");
+
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	ImGui::Checkbox(u8"Active 설정", &selectedKeyframe.bActive);
+	ImGui::Dummy(ImVec2(0, 5)); // 공백
+
+	ImGui::Checkbox(u8"Appear 설정", &selectedKeyframe.bAppear);
+
+	ImGui::Checkbox(u8"Disappear 설정", &selectedKeyframe.bDisappear);
+
+	ImGui::Checkbox(u8"Trigger 설정", &selectedKeyframe.bTrigger);
+
+	ImGui::Checkbox(u8"LoopSection 설정", &selectedKeyframe.bLoopSection);
+	//ImGui::PopItemWidth(); error
+
+	//// 차징 입력 필드의 가로 길이를 조절
+	//ImGui::PushItemWidth(80);
+	//ImGui::Checkbox(u8"풀차징시 키프레임", &selectedKeyframe.bFullChargeKeyframe);
+	//ImGui::PopItemWidth();
+
+#pragma endregion
+
+	ImGui::End(); // 키프레임 수정 창 끝
+
+	// 선택된 키프레임만 업데이트
+	(*m_vecTimeline)[closestKeyframeIndex] = selectedKeyframe;
+
+	//timeline[m_iCurType][closestKeyframeIndex].time = selectedKeyframe.time;
+	//timeline[m_iCurType][closestKeyframeIndex].type = selectedKeyframe.type;
+	//timeline[m_iCurType][closestKeyframeIndex].value = selectedKeyframe.value;
+	//timeline[m_iCurType][closestKeyframeIndex].vPos = selectedKeyframe.vPos;
+	//timeline[m_iCurType][closestKeyframeIndex].vRot = selectedKeyframe.vRot;
+	//timeline[m_iCurType][closestKeyframeIndex].vScale = selectedKeyframe.vScale;
+
+	//timeline[m_iCurType][closestKeyframeIndex].bChargePossible = selectedKeyframe.bChargePossible;
+	//timeline[m_iCurType][closestKeyframeIndex].bFullChargeKeyframe = selectedKeyframe.bFullChargeKeyframe;
+	//timeline[m_iCurType][closestKeyframeIndex].bShieldKeyFrame = selectedKeyframe.bShieldKeyFrame;
+	//timeline[m_iCurType][closestKeyframeIndex].bShieldPossible = selectedKeyframe.bShieldPossible;
+	//timeline[m_iCurType][closestKeyframeIndex].texureframe = selectedKeyframe.texureframe;
+
+
+	m_iOldIndex = closestKeyframeIndex; // 현재 인덱스 번호를 저장
+}
+
+void CWindow_UITool::SelectKeyframeMouse()
+{
+	ImGuiIO& io = ImGui::GetIO(); // ImGui의 시스템 기본 제공 값들 (ex : 시간, 마우스 등)
+
+	float mouseX = io.MousePos.x; // 마우스 위치x
+	float mouseY = io.MousePos.y; // 마우스 위치y
+
+	if (mouseX >= timelinePos.x && mouseX <= timelinePos.x + timelineSize.x &&
+		mouseY >= timelinePos.y && mouseY <= timelinePos.y + timelineSize.y)
+	{
+		// 마우스 왼클릭 감지
+		if (io.MouseDown[0])
+		{
+			// 인덱스 값 초기화
+			closestKeyframeIndex = -1;
+
+			// 가장 가까운 키프레임을 찾을 때 초기 거리를 설정하고, 나중에 더 작은 거리를 발견하면 업데이트.
+			_float closestDistance = FLT_MAX; // 가장 큰 부동 소수점 (초기 최소 거리 값 성정)
+
+			for (int i = 0; i < m_vecTimeline->size(); ++i)
+			{
+				CUI::UIKEYFRAME& keyframe = (*m_vecTimeline)[i];
+
+				// 키프레임의 위치
+				float keyframeX = keyframe.vKeyFramePos.x;
+				float keyframeY = keyframe.vKeyFramePos.y;
+
+				// 마우스 좌표와 키프레임 위치 간의 거리 계산
+				float distance = std::sqrt((mouseX - keyframeX) * (mouseX - keyframeX) +
+					(mouseY - keyframeY) * (mouseY - keyframeY));
+
+				// 타임 라인 상의 키프레임 위치를 계산
+				float xPos = timelinePos.x + (keyframe.fTime / 20.0f) * timelineSize.x;
+				float yPos = timelinePos.y + timelineSize.y - timelineSize.y * keyframe.fValue;
+
+				// 가장 가까운 키프레임 찾기
+				if (distance < closestDistance)
+				{
+					// 해당 키프레임의 위치 안에 마우스가 있는지 판단
+					if (mouseX >= xPos - 5.0f && mouseY >= yPos - 5.0f &&
+						mouseX <= xPos + 5.0f && mouseY <= yPos + 5.0f)
+					{
+						closestDistance = distance;
+						closestKeyframeIndex = i; // 현재 선택한 인덱스를 마우스가 클릭한 인덱스로 설정
+					}
+				}
+			}
+
+		}
+
+		// 마우스 이벤트에서 얻은 마우스 좌표
+		float mouseRX = io.MousePos.x; // 마우스 위치x
+		float mouseRY = io.MousePos.y; // 마우스 위치y
+
+		// 마우스 우클릭 감지
+		if (ImGui::IsMouseClicked(1))
+		{
+			for (int i = 0; i < m_vecTimeline->size(); ++i)
+			{
+				CUI::UIKEYFRAME& keyframe = (*m_vecTimeline)[i];
+
+				// 키프레임의 위치
+				float keyframeX = keyframe.vKeyFramePos.x;
+				float keyframeY = keyframe.vKeyFramePos.y;
+
+				// 마우스 좌표와 키프레임 위치 간의 거리 계산
+				float distance = std::sqrt((mouseRX - keyframeX) * (mouseRX - keyframeX) +
+					(mouseRY - keyframeY) * (mouseRY - keyframeY));
+
+				// 타임 라인 상의 키프레임 위치를 계산
+				float xPos = timelinePos.x + (keyframe.fTime / 20.0f) * timelineSize.x;
+				float yPos = timelinePos.y + timelineSize.y - timelineSize.y * keyframe.fValue;
+
+
+				if (!isDraggingTimeline) // 드래그를 하지 않을 경우만 삭제 가능
+				{
+					// 오른쪽 마우스 클릭으로 키프레임 삭제
+					if (mouseRX >= xPos - 5.0f && mouseRY >= yPos - 5.0f &&
+						mouseRX <= xPos + 5.0f && mouseRY <= yPos + 5.0f &&
+						ImGui::IsMouseClicked(1))
+					{
+						// 현재 인덱스가 최대 사이즈 일 경우
+						if (i == m_vecTimeline->size() - 1)
+						{
+							m_vecTimeline->erase(m_vecTimeline->begin() + i); // 현재 클릭한 인덱스 삭제
+							closestKeyframeIndex = i - 1;
+
+							break; // 삭제한 후에 루프를 빠져나감.
+						}
+						else // 최대 사이즈가 아닐 경우
+						{
+							// 현재 인덱스가 0이거나 0보다 크고 사이즈보다 작을 경우
+							if (i < m_vecTimeline->size() - 2 && 0 <= i)
+							{
+								// 0보다 작거나 같을 경우
+								if (i <= 0)
+								{
+									m_vecTimeline->erase(m_vecTimeline->begin() + i); // 현재 클릭한 인덱스 삭제
+									closestKeyframeIndex = -1;
+
+									break; // 삭제한 후에 루프를 빠져나감.
+								}
+								else
+								{
+									m_vecTimeline->erase(m_vecTimeline->begin() + i); // 현재 클릭한 인덱스 삭제
+									closestKeyframeIndex = i;
+								}
+							}
+						}
+						break; // 삭제한 후에 루프를 빠져나감.
+					}
+				}
+			}
+		}
+	}
+}
+
+void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
+{
+	// 선택한 UI가 없을 경우
+	if (nullptr == m_pCurrSelectUI)
+		return;
+
+	// 선택한 UI가 Distortion이 있는 UI일 경우
+	if (m_pCurrSelectUI->Get_DistortionUI())
+	{
+		if (ImGui::DragFloat("Distortion_Term", &m_fSequenceTerm_Distortion, 1.f, 0.f)) // UV좌표 조절
+		{
+			m_pCurrSelectUI->Set_SequenceTerm(m_fSequenceTerm_Distortion);
+		}
+		if (ImGui::DragFloat3("ScrollSpeeds", m_vScrollSpeeds, 1.f, 0.f))
+		{
+			_float3 vScrollSpeeds = { 0.f, 0.f, 0.f };
+			vScrollSpeeds.x = m_vScrollSpeeds[0];
+			vScrollSpeeds.y = m_vScrollSpeeds[1];
+			vScrollSpeeds.z = m_vScrollSpeeds[2];
+
+			m_pCurrSelectUI->Set_ScrollSpeeds(vScrollSpeeds);
+		}
+		if (ImGui::DragFloat3("Distortion_Scales", m_vScales_Distortion))
+		{
+			_float3 vScales_Distortion = { 0.f, 0.f, 0.f };
+			vScales_Distortion.x = m_vScales_Distortion[0];
+			vScales_Distortion.y = m_vScales_Distortion[1];
+			vScales_Distortion.z = m_vScales_Distortion[2];
+
+			m_pCurrSelectUI->Set_DistortionScales(vScales_Distortion);
+		}
+		if (ImGui::DragFloat2("Distortion1", m_vDistortion1, 1.f, 0.f))
+		{
+			_float2 vDistortion1 = { 0.f, 0.f };
+			vDistortion1.x = m_vDistortion1[0];
+			vDistortion1.y = m_vDistortion1[1];
+
+			m_pCurrSelectUI->Set_Distortion1(vDistortion1);
+		}
+		if (ImGui::DragFloat2("Distortion2", m_vDistortion2, 1.f, 0.f))
+		{
+			_float2 vDistortion2 = { 0.f, 0.f };
+			vDistortion2.x = m_vDistortion2[0];
+			vDistortion2.y = m_vDistortion2[1];
+
+			m_pCurrSelectUI->Set_Distortion2(vDistortion2);
+		}
+		if (ImGui::DragFloat2("Distortion3", m_vDistortion3, 1.f, 0.f))
+		{
+			_float2 vDistortion3 = { 0.f, 0.f };
+			vDistortion3.x = m_vDistortion3[0];
+			vDistortion3.y = m_vDistortion3[1];
+
+			m_pCurrSelectUI->Set_Distortion3(vDistortion3);
+		}
+		if (ImGui::DragFloat("Distortion_Scale", &m_fDistortionScale, 1.f, 0.f))
+		{
+			m_pCurrSelectUI->Set_DistortionScale(m_fDistortionScale);
+		}
+		if (ImGui::DragFloat("DistortionBias", &m_fDistortionBias, 1.f, 0.f))
+		{
+			m_pCurrSelectUI->Set_DistortionBias(m_fDistortionBias);
+		}
+	}
 }
 
 _float2 CWindow_UITool::Lerp_float2(const _float2& a, const _float2& b, float t)
@@ -2783,6 +3380,8 @@ HRESULT CWindow_UITool::Save_Function(string strPath, string strFileName)
 	}
 	CJson_Utility::Save_Json(ConverWStringtoC(ConvertToWideString(strPath)), Out_Json);
 
+	m_bShortOff = false;
+
 	return S_OK;
 }
 
@@ -2811,7 +3410,8 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
 		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("ObjectName"))// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];		// 7. ObjectName
 		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
 		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
 		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
@@ -2821,6 +3421,9 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
 		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+
+
+
 
 		wstring wstrLayer;
 		m_pGameInstance->String_To_WString(m_strLayer[m_iCurrLayerNum], wstrLayer);
@@ -2844,6 +3447,60 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 
 		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
 
+		//tUI_Info.iKeyframeNum = object["KeyframeNum"];			// 18. KeyframeNum
+		
+		// "KeyframeNum" 키가 없으면 기본값 사용
+		_bool bKeyframeNum = object.contains("KeyframeNum");
+		tUI_Info.iKeyframeNum = bKeyframeNum ? object["KeyframeNum"] : 0;
+
+		for (_int i = 0; i < tUI_Info.iKeyframeNum; ++i) // 19. Keyframe
+		{
+			/* Keyframe */
+			tUI_Info.tKeyframe.fTime = object["Keyframe"][i]["Time"];
+			tUI_Info.tKeyframe.fValue = object["Keyframe"][i]["Value"];
+			tUI_Info.tKeyframe.fAnimSpeed = object["Keyframe"][i]["AnimSpeed"];
+			tUI_Info.tKeyframe.iType = object["Keyframe"][i]["Type"];
+			tUI_Info.tKeyframe.isEaseIn = object["Keyframe"][i]["EaseIn"];
+			tUI_Info.tKeyframe.isEaseOut = object["Keyframe"][i]["EaseOut"];
+			tUI_Info.tKeyframe.iTexureframe = object["Keyframe"][i]["Texureframe"];
+			tUI_Info.tKeyframe.vScale.x = object["Keyframe"][i]["ScaleX"];
+			tUI_Info.tKeyframe.vScale.y = object["Keyframe"][i]["ScaleY"];
+			tUI_Info.tKeyframe.vPos.x = object["Keyframe"][i]["PosX"];
+			tUI_Info.tKeyframe.vPos.y = object["Keyframe"][i]["PosY"];
+			tUI_Info.tKeyframe.fRot = object["Keyframe"][i]["Rot"];
+			tUI_Info.tKeyframe.vKeyFramePos.x = object["Keyframe"][i]["KeyFramePosX"];
+			tUI_Info.tKeyframe.vKeyFramePos.y = object["Keyframe"][i]["KeyFramePosY"];
+
+			tUI_Info.tKeyframe.fAlpha = object["Keyframe"][i]["Alpha"];
+			tUI_Info.tKeyframe.bActive = object["Keyframe"][i]["Active"];
+			tUI_Info.tKeyframe.bAppear = object["Keyframe"][i]["Appear"];
+			tUI_Info.tKeyframe.bTrigger = object["Keyframe"][i]["Trigger"];
+			if (object["Keyframe"][i].contains("Disappear")) // "Disappear" 키가 있으면
+				tUI_Info.tKeyframe.bDisappear = object["Keyframe"][i]["Disappear"];
+				
+			if (object["Keyframe"][i].contains("LoopSection"))// "LoopSection" 키가 있으면
+				tUI_Info.tKeyframe.bLoopSection = object["Keyframe"][i]["LoopSection"];
+
+			pUI_Object->Add_Keyframe(tUI_Info.tKeyframe);
+		}
+
+		if (tUI_Info.bDistortionUI)
+		{
+			tUI_Info.vScrollSpeeds.x = object["Distortion"]["ScrollSpeedsX"];
+			tUI_Info.vScrollSpeeds.y = object["Distortion"]["ScrollSpeedsY"];
+			tUI_Info.vScrollSpeeds.z = object["Distortion"]["ScrollSpeedsZ"];
+			tUI_Info.vScales.x = object["Distortion"]["ScalesX"];
+			tUI_Info.vScales.y = object["Distortion"]["ScalesY"];
+			tUI_Info.vScales.z = object["Distortion"]["ScalesZ"];
+			tUI_Info.vDistortion1.x = object["Distortion"]["Distortion1X"];
+			tUI_Info.vDistortion1.y = object["Distortion"]["Distortion1Y"];
+			tUI_Info.vDistortion2.x = object["Distortion"]["Distortion2X"];
+			tUI_Info.vDistortion2.y = object["Distortion"]["Distortion2Y"];
+			tUI_Info.vDistortion3.x = object["Distortion"]["Distortion3X"];
+			tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3Y"];
+			tUI_Info.fDistortionScale = object["Distortion"]["DistortionScale"];
+		}
+
 		if (tUI_Info.bParent == true)
 		{
 			m_vecParentObject.push_back(pUI_Object);
@@ -2857,6 +3514,25 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 	}
 
 	return S_OK;
+}
+
+_bool CWindow_UITool::Check_ImGui_Rect()
+{
+	/* Imgui창 내에 닿는지 확인용도 - 모든창마다 해야한다. */
+	POINT m_tMouse_Screen;
+	GetCursorPos(&m_tMouse_Screen);
+	ScreenToClient(g_hWnd, &m_tMouse_Screen);
+
+	ImVec2 windowPos = ImGui::GetWindowPos(); //왼쪽상단모서리점
+	ImVec2 windowSize = ImGui::GetWindowSize();
+
+	if (m_tMouse_Screen.x >= windowPos.x && m_tMouse_Screen.x <= windowPos.x + windowSize.x &&
+		m_tMouse_Screen.y >= windowPos.y && m_tMouse_Screen.y <= windowPos.y + windowSize.y)
+	{
+		return true; //ImGui 영역 내
+	}
+
+	return false; //ImGui 영역이랑 안 겹침!
 }
 
 void CWindow_UITool::Load_Paths()
@@ -2889,6 +3565,14 @@ void CWindow_UITool::ShowImagePreview(const std::vector<unsigned char>& imageDat
 {
 	ImVec2 imageSize((_float)width, (_float)height);
 	ImGui::Image(reinterpret_cast<void*>(const_cast<unsigned char*>(imageData.data())), imageSize);
+}
+
+void CWindow_UITool::UI_Preset()
+{
+	if (ImGui::Button("Interface"))
+	{
+		m_pUI_Manager->Ready_Interface(LEVEL_STATIC);
+	}
 }
 
 CWindow_UITool* CWindow_UITool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -2961,6 +3645,16 @@ void CWindow_UITool::Free()
 		}
 		m_vecTexture.clear();
 	}
+
+	if (m_pUI_Manager)
+	{
+		Safe_Release(m_pUI_Manager);
+	}
+	//if (!m_vecTimeline->empty())
+	//{
+	//	Safe_Release(m_vecTimeline);
+	//}
+	
 	//if (!m_vecChildObject.empty())
 	//{
 	//	for (auto& path : m_vecChildObject) {

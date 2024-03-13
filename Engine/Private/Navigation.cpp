@@ -196,7 +196,7 @@ void CNavigation::SaveData(wstring strSavePath)
 
 	_ulong dwByte = 0;
 
-	_int iCellSize = m_Cells.size();
+	_int iCellSize = (_int)m_Cells.size();
 
 	for (_int i = 0; i < iCellSize; ++i)
 	{
@@ -346,7 +346,7 @@ void CNavigation::AllSearchDelete_IsNan()
 
 void CNavigation::InRangeCellChange(CCell* pCell, _int ePoint, _float3 vSearchPos)
 {
-	_int iCellSize = m_Cells.size();
+	_int iCellSize = (_int)m_Cells.size();
 
 
 	_float3 vPosition = *pCell->Get_Point(CCell::POINT(ePoint));
@@ -382,7 +382,7 @@ void CNavigation::InRangeCellChange(CCell* pCell, _int ePoint, _float3 vSearchPo
 		}
 	}
 
-	_int iVectorSize = vecPoints.size();
+	_int iVectorSize = (_int)vecPoints.size();
 
 
 	for (_int i = 0; i < iVectorSize; ++i)
@@ -396,7 +396,7 @@ void CNavigation::InRangeCellChange(CCell* pCell, _int ePoint, _float3 vSearchPo
 
 _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
 {
-	_int iCellSize = m_Cells.size();
+	_int iCellSize = (_int)m_Cells.size();
 
 	CTransform* pTransform = pTargetObject->Get_Transform();
 
@@ -426,7 +426,6 @@ _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 	_vector vC = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_C)), 1.f);
 
 	vPlane = XMPlaneFromPoints(vA, vB, vC);
-
 
 	_float fA = XMVectorGetX(vPlane);
 	_float fB = XMVectorGetY(vPlane);

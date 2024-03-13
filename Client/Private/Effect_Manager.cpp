@@ -42,7 +42,7 @@ CEffect* CEffect_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLay
 	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
 
 	if (nullptr != pOwner)
-		pEffect->Set_Object_Owner(pOwner);	// 부모 설정 (부모가 있고, 이펙트의 bParentPivot가 True이면 오너객체를 따라다님)
+		pEffect->Set_Object_Owner(pOwner);	// 부모 설정 (부모가 있고, 이펙트의 bParentPivot이 True이면 오너객체를 따라다님)
 
 	pEffect->Load_FromJson(In_Json);
 	
@@ -50,6 +50,11 @@ CEffect* CEffect_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLay
 
 	/* 사용 예시 */
 	//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Effect.json");
+}
+
+CEffect* CEffect_Manager::Create_Effect(string strFileName, CGameObject* pOwner)
+{
+	return Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, strFileName, pOwner);
 }
 
 CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner)

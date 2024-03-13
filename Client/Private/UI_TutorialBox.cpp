@@ -40,6 +40,8 @@ HRESULT CUI_TutorialBox::Initialize(void* pArg)
 	if (FAILED(Find_Change("Default"))) //! 텍스트 세팅
 		return E_FAIL;
 
+	m_eType = UITYPE::CROSSHAIR;
+
 	return S_OK;
 }
 
@@ -51,6 +53,12 @@ void CUI_TutorialBox::Priority_Tick(_float fTimeDelta)
 void CUI_TutorialBox::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+	Check_Disappear(fTimeDelta);
+
+	if (m_bActive == true)
+	{
+
+	}
 }
 
 void CUI_TutorialBox::Late_Tick(_float fTimeDelta)
@@ -58,35 +66,40 @@ void CUI_TutorialBox::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
-		return;
+	if (m_bActive == true)
+	{
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+			return;
+	}
 }
 
 HRESULT CUI_TutorialBox::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
-
-	//! 이 셰이더에 0번째 패스로 그릴거야.
-	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
-
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
-
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
-
-	//if (!m_bFreeMove)
-	//{
-	//	m_fPosX = m_pTransformCom->Get_Position().x + (g_iWinsizeX / 2.f);
-	//	m_fPosY = -m_pTransformCom->Get_Position().y + (g_iWinsizeY / 2.f);
-	//}
-
-	if (m_pTextInfo != nullptr)
+	if (m_bActive == true)
 	{
-		RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
-		m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
+
+		//! 이 셰이더에 0번째 패스로 그릴거야.
+		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
+
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+
+		//if (!m_bFreeMove)
+		//{
+		//	m_fPosX = m_pTransformCom->Get_Position().x + (g_iWinsizeX / 2.f);
+		//	m_fPosY = -m_pTransformCom->Get_Position().y + (g_iWinsizeY / 2.f);
+		//}
+
+		if (m_pTextInfo != nullptr)
+		{
+			RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
+			m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
+		}
 	}
 
 	return S_OK;
@@ -156,15 +169,15 @@ HRESULT CUI_TutorialBox::Ready_Text()
 	TEXTINFO* LoadInfo = new TEXTINFO;
 
 	/* 임의 값 (추 후 로드해서 받기) */
-	LoadInfo->fPosX = g_iWinsizeX / 2.f;
-	LoadInfo->fPosY = g_iWinsizeY / 2.f;
-	LoadInfo->fScale = 1.f;
+	LoadInfo->fPosX = 72.f;
+	LoadInfo->fPosY = 103.f;
+	LoadInfo->fScale = 0.5f;
 	LoadInfo->vOrigin.x = 0.f;
 	LoadInfo->vOrigin.y = 0.f;
 	LoadInfo->fRotation = 0.f;
 	LoadInfo->strTextKey = "Default";
 	LoadInfo->strFontTag = "Font_EvilWest";
-	LoadInfo->strText = "Default Test OK";
+	LoadInfo->strText = "Hello Wordl";
 	LoadInfo->vColor.m128_f32[0] = 1.f;
 	LoadInfo->vColor.m128_f32[1] = 1.f;
 	LoadInfo->vColor.m128_f32[2] = 1.f;
