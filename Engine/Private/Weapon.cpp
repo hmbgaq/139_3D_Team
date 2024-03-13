@@ -232,6 +232,17 @@ _float3 CWeapon::Get_WorldPosition()
 
 
 
+_float3 CWeapon::Calc_Front_Pos(_float3 vDiff)
+{
+	_float3 vRealDiff = { -vDiff.z, -vDiff.x, vDiff.y };
+
+	_vector vFront = XMVector3TransformCoord(vRealDiff, m_WorldMatrix);
+	_float3 vResult;
+	XMStoreFloat3(&vResult, vFront);
+
+	return vResult;
+}
+
 HRESULT CWeapon::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))

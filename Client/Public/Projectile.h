@@ -63,6 +63,9 @@ protected:
 	_float		m_fForce = { 0.f };
 	_bool		m_bUse = { true };
 
+protected:
+	_float		m_fLifeTime = { 10.f };
+
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual void Free() override;

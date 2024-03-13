@@ -52,6 +52,15 @@ namespace Client
 	#define LAYER_UI_PLAYER					TEXT("Layer_UI_Player")
 	#define LAYER_PARTICLE					TEXT("Layer_Particle")
 
+	#define LAYER_PLAYER_BULLET				TEXT("Layer_Player_Bullet")
+
+
+	//Player_Weapon
+	#define WEAPON_PUNCH_L					TEXT("Weapon_Punch_L")
+	#define WEAPON_PUNCH_R					TEXT("Weapon_Punch_R")
+	#define WEAPON_WINCHESTER				TEXT("Weapon_Winchester")
+
+
 
 	enum class COLLISION_LAYER
 	{

@@ -327,6 +327,7 @@
     <ClInclude Include="..\Public\Body_Infected_C.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_VampireCommander.h" />
+    <ClInclude Include="..\Public\Bullet_Winchester.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
     <ClInclude Include="..\Public\Character_Client.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -1270,6 +1271,7 @@
     <ClCompile Include="..\Private\Body_Infected_C.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Body_VampireCommander.cpp" />
+    <ClCompile Include="..\Private\Bullet_Winchester.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\Private\Character_Client.cpp" />
     <ClCompile Include="..\Private\Clone_Manager.cpp" />

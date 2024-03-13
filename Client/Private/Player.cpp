@@ -54,6 +54,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
 
+	m_iHp = 100;
+
 // 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 // 	{
 		m_pActor = new CActor<CPlayer>(this);
@@ -306,20 +308,6 @@ void CPlayer::Search_Target()
 
 HRESULT CPlayer::Ready_Components()
 {
-	CNavigation::NAVI_DESC		NaviDesc = {};
-	NaviDesc.iCurrentIndex = 0;
-
-	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
-
-	if (iCurrentLevel != (_uint)LEVEL_TOOL)
-	{
-		if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Navigation"),
-			TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
-			return E_FAIL;
-
-		m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
-	}
-
 	return S_OK;
 }
 
@@ -331,20 +319,23 @@ HRESULT CPlayer::Ready_PartObjects()
 	//if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
 	//{
 		
-		CWeapon::WEAPON_DESC		WeaponDesc = {};
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, TEXT("Weapon_Punch_L")));
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch_R")));
+	CWeapon::WEAPON_DESC		WeaponDesc = {};
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, WEAPON_PUNCH_L));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, WEAPON_PUNCH_R));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELWinchester"), "RightHandIK", WeaponDesc, WEAPON_WINCHESTER));
 
 	//}
 
-	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch_L"));
+	CWeapon* m_pWeapon_Punch_L = Get_Weapon(WEAPON_PUNCH_L);
 	m_pWeapon_Punch_L->Set_Enable(false);
 	
-	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_Punch_R"));
+	CWeapon* m_pWeapon_Punch_R = Get_Weapon(WEAPON_PUNCH_R);
 	m_pWeapon_Punch_R->Set_Enable(false);
+	
+	CWeapon* m_pWeapon_Winchester = Get_Weapon(WEAPON_WINCHESTER);
+	m_pWeapon_Winchester->Set_Enable(false);
 
-
-
+	
 	
 	return S_OK;
 }

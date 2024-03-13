@@ -2968,13 +2968,16 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Bullet">
       <UniqueIdentifier>{f8057d5b-b5ad-479c-aeb1-74c482c9de0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\04. Projectile\01. Interact">
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester\Projectile">
+      <UniqueIdentifier>{5bb20850-dbd7-42a5-bd69-6884ee15412b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01. Interact">
       <UniqueIdentifier>{daed6591-e3f1-4e31-8a6a-3942dcf39622}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\04. Projectile\01. Interact\0. Chain">
+    <Filter Include="02.GameObjects\01. Interact\0. Chain">
       <UniqueIdentifier>{4640b070-669a-48d8-9c94-8bed528d2d18}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\04. Projectile\01. Interact\1. Door">
+    <Filter Include="02.GameObjects\01. Interact\1. Door">
       <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -3040,10 +3043,7 @@
       <Filter>98.Default\Useless</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Interact_Door.h">
-      <Filter>02.GameObjects\04. Projectile\01. Interact\1. Door</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Interact_Chain.h">
-      <Filter>02.GameObjects\04. Projectile\01. Interact\0. Chain</Filter>
+      <Filter>02.GameObjects\01. Interact\1. Door</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Window_AnimTool.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow</Filter>
@@ -6021,11 +6021,17 @@
     <ClInclude Include="..\Public\Sniper_Crouch_Turn_90_R.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\2. Crouch\Turn\Right</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bullet_Winchester.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester\Projectile</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_Leap_Strat.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Start</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_Leap_Stop.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Interact_Chain.h">
+      <Filter>02.GameObjects\01. Interact\0. Chain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -6302,10 +6308,10 @@
       <Filter>98.Default\Useless</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Interact_Door.cpp">
-      <Filter>02.GameObjects\04. Projectile\01. Interact\1. Door</Filter>
+      <Filter>02.GameObjects\01. Interact\1. Door</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Interact_Chain.cpp">
-      <Filter>02.GameObjects\04. Projectile\01. Interact\0. Chain</Filter>
+      <Filter>02.GameObjects\01. Interact\0. Chain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SkyDome.cpp">
       <Filter>02.GameObjects\99. Sky</Filter>
@@ -8511,6 +8517,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Video.cpp">
       <Filter>02.GameObjects\UI\97. Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bullet_Winchester.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester\Projectile</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_Leap_Strat.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Start</Filter>

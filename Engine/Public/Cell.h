@@ -36,6 +36,9 @@ public:
 
 	_float3			Get_Compare_Point(const _float3* pPoint);
 
+	//!For. SlidingVector
+	_bool			Is_Out(_fvector vWorldPos, _fvector vLook, _fmatrix WorldMatrix, _Inout_ _int* pNeighborIndex, _Inout_ _float4* pSliding);
+
 public:
 	HRESULT Initialize(const _float3* pPoints, _uint iIndex);
 	_bool Compare_Points(const _float3* pSourPoint, const _float3* pDestPoint);

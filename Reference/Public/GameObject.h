@@ -104,6 +104,7 @@ protected:
 
 protected:
 	class CGameInstance* m_pGameInstance = { nullptr };
+	_uint				m_iCurrnetLevel = { 0 };
 
 protected:
 	class CTransform* m_pTransformCom = { nullptr };

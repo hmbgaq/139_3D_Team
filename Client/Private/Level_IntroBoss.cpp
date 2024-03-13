@@ -29,6 +29,7 @@
 #include "Monster.h"
 #include "Screamer.h"  
 #include "InstanceMonster.h"
+#include "VampireCommander.h"
 #pragma endregion
 
 #pragma region Effect_Test
@@ -195,6 +196,9 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Monster(const wstring& strLayerTag, void* 
 		pMonster->Set_Position(_float3(60.0f, 0.f, 55.f));
 		pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
 
+		CNavigation* pVampireNavi = dynamic_cast<CVampireCommander*>(pMonster)->Get_Navigation();
+
+		pVampireNavi->Set_CurrentIndex(pVampireNavi->Get_SelectRangeCellIndex(pMonster));
 	}
 
 	return S_OK;

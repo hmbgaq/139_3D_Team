@@ -44,6 +44,19 @@ void CProjectile::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	m_pCollider->Update(m_pTransformCom->Get_WorldMatrix());
+
+	m_fLifeTime -= fTimeDelta;
+	if (0 >= m_fLifeTime) 
+	{
+		if (m_bIsPoolObject)
+		{
+			Set_Enable(false);
+		}
+		else 
+		{
+			Set_Dead(true);
+		}
+	}
 }
 
 void CProjectile::Late_Tick(_float fTimeDelta)
@@ -58,6 +71,11 @@ void CProjectile::Late_Tick(_float fTimeDelta)
 		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this)))
 			return;
 	}
+
+#ifdef _DEBUG
+	m_pGameInstance->Add_DebugRender(m_pCollider);
+#endif
+
 }
 
 HRESULT CProjectile::Render()
@@ -67,6 +85,9 @@ HRESULT CProjectile::Render()
 
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
+
+	if (nullptr == m_pModelCom)
+		return S_OK;
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 

@@ -101,11 +101,14 @@ public:
 		return vPos;
 	}
 
+	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
+
 public:
 	virtual HRESULT Initialize_Prototype(_float fSpeedPerSec, _float fRotationPerSec);	
 
 public:
 	void	Move_On_Navigation(_vector vMove, class CNavigation* pNavigation = nullptr);
+	void	Move_On_Navigation_ForSliding(_vector vMove, const _float fTimeDelta, class CNavigation* pNavigation = nullptr);
 
 	void	Go_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 	void	Go_Straight_L45(_float fTimeDelta, class CNavigation* pNavigation = nullptr);

@@ -66,7 +66,7 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	
-	Search_Target(L"Layer_Player");
+	Search_Target(L"Layer_Player",200.f);
 
 	if (m_pActor)
 	{

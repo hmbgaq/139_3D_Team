@@ -68,12 +68,8 @@ public:
 
 	
 
-
-
-#ifdef _DEBUG
 public:
 	void Set_MouseMove(_float fTimeDelta);
-#endif // _DEBUG
 
 public:
 	CModel* Get_Model() { return m_pModelCom; }
