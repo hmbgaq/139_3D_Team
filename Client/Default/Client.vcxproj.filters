@@ -4242,12 +4242,6 @@
     <ClInclude Include="..\Public\VampireCommander_Leap_Loop.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Loop</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_Leap_Strat.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Stop</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_Leap_Stop.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Start</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_BloodRange_Start.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Start</Filter>
     </ClInclude>
@@ -6027,6 +6021,12 @@
     <ClInclude Include="..\Public\Sniper_Crouch_Turn_90_R.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\2. Crouch\Turn\Right</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Leap_Strat.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Leap_Stop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Stop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -7606,12 +7606,6 @@
     <ClCompile Include="..\Private\VampireCommander_Leap_Loop.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Loop</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VampireCommander_Leap_Strat.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Stop</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\VampireCommander_Leap_Stop.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Start</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_BloodRange_Start.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\BloodRange\Start</Filter>
     </ClCompile>
@@ -8517,6 +8511,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Video.cpp">
       <Filter>02.GameObjects\UI\97. Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Leap_Strat.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VampireCommander_Leap_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\State\3.Attack\Leap\Stop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
