@@ -62,6 +62,9 @@ public:
 	void	Set_Synced(_bool _bSynced) { m_bSynced = _bSynced; }
 	_bool	Get_Synced() { return m_bSynced; }
 
+public:
+	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
+
 
 protected:
 	virtual HRESULT Ready_Components() PURE;

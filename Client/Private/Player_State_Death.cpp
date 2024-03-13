@@ -4,6 +4,7 @@ void CPlayer_State_Death::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 	pActor->Set_Splitted(false);
+	pActor->Set_Weapons_Enable_False();
 }
 
 CState<CPlayer>* CPlayer_State_Death::Update(CPlayer* pActor, _float fTimeDelta)

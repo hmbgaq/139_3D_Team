@@ -151,10 +151,15 @@ public:	//!For Animation Split
 	_bool Is_Splitted() { return m_pBody->Is_Splitted(); }
 	void Set_Splitted(_bool _bIsSplitted) { m_pBody->Set_Splitted(_bIsSplitted); };
 
-
 public:
 	void Set_StiffnessRate(_float fStiffnessRate);
 	void Set_StiffnessRate_Upper(_float fStiffnessRate);
+
+public:
+	void Set_Weapons_Enable_False();
+	CWeapon* Set_Weapon_Enable(const wstring& strWeaponTag, _bool bActivate);
+	CWeapon* Set_Weapon_Collisions_Enable(const wstring& strWeaponTag, _bool bActivate);
+
 
 
 

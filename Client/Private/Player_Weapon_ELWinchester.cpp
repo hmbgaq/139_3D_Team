@@ -26,6 +26,11 @@ HRESULT CPlayer_Weapon_ELWinchester::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	string path = "../Bin/DataFiles/Data_Weapon/Player/ELWinchester/Aim.json";
+	json In_Json;
+	CJson_Utility::Load_Json(path.c_str(), In_Json);
+	m_pTransformCom->Load_FromJson(In_Json);
+
 	return S_OK;
 }
 
@@ -37,6 +42,23 @@ void CPlayer_Weapon_ELWinchester::Priority_Tick(_float fTimeDelta)
 void CPlayer_Weapon_ELWinchester::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (m_pGameInstance->Key_Down(DIK_C))
+	{
+		CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Bullet_Winchester");
+		_float3 vSpawnPos = Get_WorldPosition();
+		_float3 vTargetPos = Calc_Front_Pos(_float3(0.f, 0.f, 1.f));
+		//_float3 vTargetPos = Calc_Front_Pos(_float3(-1.f, 0.f, 0.f));
+
+		_vector vTargetVector = XMLoadFloat3(&vTargetPos);
+
+		pBullet->Set_Position(vSpawnPos);
+		pBullet->Get_Transform()->Look_At(vTargetVector);
+	}
+
+	
+
+	
 }
 
 void CPlayer_Weapon_ELWinchester::Late_Tick(_float fTimeDelta)

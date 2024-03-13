@@ -17,14 +17,14 @@ CState<CPlayer>* CPlayer_Winchester_LowerHolster::Update(CPlayer* pActor, _float
 	pActor->Aim_Walk(fTimeDelta);
 
 
-	if (pActor->Is_UpperAnimation_End())
-	{
-		return Normal(pActor, fTimeDelta, g_iAnimIndex);
-	}
+	//if (pActor->Is_UpperAnimation_End())
+	//{
+	//	return Normal(pActor, fTimeDelta, g_iAnimIndex);
+	//}
 
-	return nullptr;
+	//return nullptr;
 
-	//return Normal(pActor, fTimeDelta, g_iAnimIndex);
+	return Normal(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CPlayer_Winchester_LowerHolster::Release(CPlayer* pActor)
@@ -32,4 +32,6 @@ void CPlayer_Winchester_LowerHolster::Release(CPlayer* pActor)
 	__super::Release(pActor);
 	pActor->Set_Splitted(false);
 	//pActor->Set_StiffnessRate_Upper(1.f);
+
+	pActor->Set_Weapon_Enable(WEAPON_WINCHESTER, false);
 }

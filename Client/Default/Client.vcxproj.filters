@@ -2977,6 +2977,9 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Bullet">
       <UniqueIdentifier>{f8057d5b-b5ad-479c-aeb1-74c482c9de0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester\Projectile">
+      <UniqueIdentifier>{5bb20850-dbd7-42a5-bd69-6884ee15412b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -6027,6 +6030,9 @@
     <ClInclude Include="..\Public\Sniper_Crouch_Turn_90_R.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\2. Crouch\Turn\Right</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bullet_Winchester.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester\Projectile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8517,6 +8523,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Video.cpp">
       <Filter>02.GameObjects\UI\97. Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bullet_Winchester.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

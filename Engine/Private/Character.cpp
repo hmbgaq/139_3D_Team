@@ -504,6 +504,33 @@ void CCharacter::Set_StiffnessRate_Upper(_float fStiffnessRate)
 	m_pBody->Set_StiffnessRate_Upper(fStiffnessRate);
 }
 
+void CCharacter::Set_Weapons_Enable_False()
+{
+	for (CWeapon* pWeapon : m_Weapons)
+	{
+		pWeapon->Set_Enable(false);
+	}
+
+}
+
+CWeapon* CCharacter::Set_Weapon_Enable(const wstring& strWeaponTag, _bool bActivate)
+{
+	CWeapon* pWeapon = Get_Weapon(strWeaponTag);
+	if (pWeapon)
+		pWeapon->Set_Enable(bActivate);
+
+	return pWeapon;
+}
+
+CWeapon* CCharacter::Set_Weapon_Collisions_Enable(const wstring& strWeaponTag, _bool bActivate)
+{
+	CWeapon* pWeapon = Get_Weapon(strWeaponTag);
+	if (pWeapon)
+		pWeapon->Set_Enable_Collisions(bActivate);
+
+	return pWeapon;
+}
+
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {
 	return m_pBody->Picking(vPickedPos);

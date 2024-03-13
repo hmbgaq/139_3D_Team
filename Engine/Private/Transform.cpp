@@ -38,6 +38,15 @@ void CTransform::Set_Scaling(_float fScaleX, _float fScaleY, _float fScaleZ)
 	Set_State(STATE_LOOK, XMVector3Normalize(Get_State(STATE_LOOK)) * fScaleZ);
 }
 
+_float3 CTransform::Calc_Front_Pos(_float3 vDiff)
+{
+	_vector vFront = XMVector3TransformCoord(vDiff, m_WorldMatrix);
+	_float3 vResult;
+	XMStoreFloat3(&vResult, vFront);
+
+	return vResult;
+}
+
 HRESULT CTransform::Initialize_Prototype(_float fSpeedPerSec, _float fRotationPerSec)
 {
 	m_fSpeedPerSec = fSpeedPerSec;

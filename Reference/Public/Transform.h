@@ -101,6 +101,8 @@ public:
 		return vPos;
 	}
 
+	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
+
 public:
 	virtual HRESULT Initialize_Prototype(_float fSpeedPerSec, _float fRotationPerSec);	
 

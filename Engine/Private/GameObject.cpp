@@ -37,6 +37,8 @@ HRESULT CGameObject::Initialize(void* pArg)
 {
 	m_bEnable = true;
 
+	m_iCurrnetLevel = m_pGameInstance->Get_NextLevel();
+
 	GAMEOBJECT_DESC		Desc = {};
 	
 	if(nullptr != pArg)

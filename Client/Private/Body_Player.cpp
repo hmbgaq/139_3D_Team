@@ -34,11 +34,30 @@ HRESULT CBody_Player::Initialize(void* pArg)
 void CBody_Player::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
+
+	if (Is_Splitted()) 
+	{
+		Set_MouseMove(fTimeDelta);
+	}
+	else 
+	{
+		m_fRotateUpperX = { 0.f };
+		m_fRotateUpperY = { 0.f };
+
+		m_fShootingReaction = { 0.f };
+		m_fShootingReactionTarget = { 0.f };
+	}
+	
 }
 
 void CBody_Player::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (Is_Splitted())
+	{
+		Update_ShootingReaction(fTimeDelta);
+	}
 }
 
 void CBody_Player::Late_Tick(_float fTimeDelta)
