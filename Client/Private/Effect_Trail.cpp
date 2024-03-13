@@ -289,6 +289,12 @@ _bool CEffect_Trail::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float4(Out_Json["Trail"]["vColor_Mul"], m_tVoidDesc.vColor_Mul);
 
 
+	/* Rim & Bloom */
+	CJson_Utility::Write_Float3(Out_Json["Trail"]["vBloomPower"], m_tVoidDesc.vBloomPower);
+	CJson_Utility::Write_Float4(Out_Json["Trail"]["vRimColor"], m_tVoidDesc.vRimColor);
+	Out_Json["Trail"]["fRimPower"] = m_tVoidDesc.fRimPower;
+
+
 	/* State */
 	Out_Json["Trail"]["bUseSpriteAnim"] = m_tVoidDesc.bUseSpriteAnim;
 
@@ -343,6 +349,12 @@ void CEffect_Trail::Load_FromJson(const json& In_Json)
 	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Offset"], m_tVoidDesc.vColor_Offset);
 	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Clip"], m_tVoidDesc.vColor_Clip);
 	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Mul"], m_tVoidDesc.vColor_Mul);
+
+
+	/* Rim & Bloom */ 
+	CJson_Utility::Load_Float3(In_Json["Trail"]["vBloomPower"], m_tVoidDesc.vBloomPower);
+	CJson_Utility::Load_Float4(In_Json["Trail"]["vRimColor"], m_tVoidDesc.vRimColor);
+	m_tVoidDesc.fRimPower = (_float)In_Json["Trail"]["fRimPower"];
 
 
 	/* State */

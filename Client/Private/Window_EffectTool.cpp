@@ -1914,65 +1914,98 @@ void CWindow_EffectTool::Update_TrailTab()
 		}
 
 		// =============================================================================================================================================================
-		if (nullptr != m_pModel_Preview)
+		
+		if (ImGui::CollapsingHeader("Trail For Model"))	// 모델에 트레일 달아주기
 		{
-			// Model_Preview 디스크립션 얻어오기
-			CModel_Preview::MODEL_PREVIEW_DESC* pDesc = dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Get_Desc();
-
-			// 애니메이션 변경 테스트 
-			ImGui::SeparatorText("Model Animation");
-			if (ImGui::Button("Idle"))
+			if (nullptr != m_pModel_Preview)
 			{
-				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				// Model_Preview 디스크립션 얻어오기
+				CModel_Preview::MODEL_PREVIEW_DESC* pDesc = dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Get_Desc();
+
+				// 애니메이션 변경 테스트 
+				ImGui::SeparatorText("Model Animation");
+				if (ImGui::Button("Idle"))
 				{
-					// 플레이어 아이들 // Index 8
-					m_pModel_Preview->Set_AnimIndex(8);
+					if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+					{
+						// 플레이어 아이들 // Index 8
+						m_pModel_Preview->Set_AnimIndex(8);
+					}
+
+					if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+					{
+						// 보스 아이들 // Index 9
+						m_pModel_Preview->Set_AnimIndex(9);
+					}
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Attack"))
+				{
+					if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+					{
+						// 플레이어 콤보1 	// Index 193
+						m_pModel_Preview->Set_AnimIndex(193);
+					}
+
+					if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+					{
+						// 보스 VampireCommander_AttackMelee_02 // Index 55
+						m_pModel_Preview->Set_AnimIndex(55);
+					}
 				}
 
-				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+				/* 재생, 정지 */
+				if (ImGui::Button("   Play   "))
 				{
-					// 보스 아이들 // Index 9
-					m_pModel_Preview->Set_AnimIndex(9);
+					m_pModel_Preview->Get_Desc()->bPlay = TRUE;
+					m_pTrail->Set_Pause(FALSE);
 				}
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Attack"))
-			{
-				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				ImGui::SameLine();
+				if (ImGui::Button("   Stop   "))
 				{
-					// 플레이어 콤보1 	// Index 193
-					m_pModel_Preview->Set_AnimIndex(193);
+					m_pModel_Preview->Get_Desc()->bPlay = FALSE;
+					m_pTrail->Set_Pause(TRUE);
 				}
 
-				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+
+				// 현재 모델의 파트에 트레일 달아주기
+				if (ImGui::Button("Set Trail_Part"))
 				{
-					// 보스 VampireCommander_AttackMelee_02 // Index 55
-					m_pModel_Preview->Set_AnimIndex(55);
+					m_pPart_Preview->Set_Trail(m_pTrail);
 				}
-			}
 
-			/* 재생, 정지, 리셋 */
-			if (ImGui::Button("   Play   "))
+
+			} // nullptr != m_pModel_Preview
+		}
+		
+
+		if (ImGui::CollapsingHeader("Trail For Effect"))	// 이펙트에 트레일 달아주기
+		{
+			if (nullptr != m_pCurEffect)
 			{
-				m_pModel_Preview->Get_Desc()->bPlay = TRUE;
-				m_pTrail->Set_Pause(FALSE);
+				// 이펙트에 트레일 달아주기
+				if (ImGui::Button("Set Trail_Effect"))
+				{
+					m_pCurEffect->Set_Trail(m_pTrail);
+				}
+
+
+				/* 재생, 정지 */
+				if (ImGui::Button("   Play   "))
+				{
+					m_pTrail->Set_Pause(FALSE);
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("   Stop   "))
+				{
+					m_pTrail->Set_Pause(TRUE);
+				}
+
+
+
 			}
-			ImGui::SameLine();
-			if (ImGui::Button("   Stop   "))
-			{
-				m_pModel_Preview->Get_Desc()->bPlay = FALSE;
-				m_pTrail->Set_Pause(TRUE);
-			}
 
-
-			// 현재 모델의 파트에 트레일 달아주기
-			if (ImGui::Button("Set Trail_Part"))
-			{
-				m_pPart_Preview->Set_Trail(m_pTrail);
-			}
-
-
-		} // nullptr != m_pModel_Preview
+		}
 
 
 #pragma region Desc 얻어오기 업데이트_트레일
@@ -3117,9 +3150,15 @@ void CWindow_EffectTool::Update_EffectList_Window()
 	{
 		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Effect.json");
 	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("   Create Test Effect Trail   "))
+	{
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect_With_Trail("Test_Impact.json", "Test_Effect_Trail.json");
+	}
+
 	if (nullptr != m_pModel_Preview)
 	{
-		ImGui::SameLine();
 		if (nullptr == m_pTestEffect)
 		{
 			if (ImGui::Button("         Skull Test        "))
