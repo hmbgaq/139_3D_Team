@@ -180,7 +180,7 @@ void CEffect_Rect::ReSet_Effect()
 
 		m_tVoidDesc.fDissolveAmount = 0.f;
 		m_tVoidDesc.bDissolve		= FALSE;
-		//m_tRectDesc.bRender			= FALSE;
+		//m_tRectDesc.bRender		= FALSE;
 	}
 
 }

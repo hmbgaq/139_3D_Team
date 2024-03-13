@@ -117,6 +117,8 @@ public:
 	typedef struct tagUvSpriteDesc
 	{
 		_bool	bSpriteFinish   = { FALSE };
+
+		_bool	bLoop = { TRUE };				// 저장
 		_float	fSequenceTerm	= { 0.05f };	// 저장
 
 		_float2 vTextureSize	 = { 1792.f, 1792.f };  // 저장

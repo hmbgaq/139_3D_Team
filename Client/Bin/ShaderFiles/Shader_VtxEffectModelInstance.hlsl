@@ -360,6 +360,18 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In)
 	Out.vNormal    = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 
+	
+	
+	 /* ---------------- New ---------------- :  */
+    float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
+    Out.vDiffuse += vRimColor;
+	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+
+    Out.vSolid = Out.vDiffuse;
+	
+	
+	
 	return Out;
 }
 //  Dissolve ====================================================================================================================
@@ -516,6 +528,16 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 
 	Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
+	
+	
+    Out.vDiffuse *= g_vColor_Mul;
+	
+	/* ---------------- New ---------------- :  */
+    float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
+    Out.vDiffuse += vRimColor;
+	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+	
 	
 	return Out;
 }

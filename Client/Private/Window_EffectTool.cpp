@@ -515,10 +515,30 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::RadioButton("Off Sprite_Particle", &m_iSprite_Particle, 0); ImGui::SameLine();
 				ImGui::RadioButton("Sprite_Particle", &m_iSprite_Particle, 1);
 				if (0 == m_iSprite_Particle)
+				{
 					m_pCurVoidDesc->bUseSpriteAnim = FALSE;
+				}				
 				else if (1 == m_iSprite_Particle)
+				{
+					// 1이 킨거.
 					m_pCurVoidDesc->bUseSpriteAnim = TRUE;
 
+					// 스프라이트의 루프를 키고 끄기_파티클
+					ImGui::RadioButton("Loop Sprite_Particle", &m_iSpriteLoop, 0); ImGui::SameLine();
+					ImGui::RadioButton("None Loop Sprite_Particle", &m_iSpriteLoop, 1);
+					if (0 == m_iSpriteLoop)
+					{
+						m_pSpriteDesc_Particle->bLoop = TRUE; 
+						m_pSpriteDesc_Particle->Reset_Sprite();
+					}
+					else if (1 == m_iSpriteLoop)
+					{
+						m_pSpriteDesc_Particle->bLoop = FALSE;
+						m_pSpriteDesc_Particle->Reset_Sprite();
+					}
+
+				}
+					
 
 				ImGui::SeparatorText(" Sprite Setting_Particle ");
 				if (m_pCurVoidDesc->bUseSpriteAnim)
@@ -530,6 +550,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (ImGui::DragFloat(" Sprite Term ", &m_fSequenceTerm_Particle, 1, 1))
 					{
 						m_pSpriteDesc_Particle->fSequenceTerm = m_fSequenceTerm_Particle;
+						m_pSpriteDesc_Particle->Reset_Sprite();
 					}
 
 					/* 스프라이트 최대 가로 세로 지정_파티클 */
@@ -550,7 +571,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_pSpriteDesc_Particle->vUV_MaxTileCount.x = (_float)m_vUV_MaxTileCount_Particle[0];
 						m_pSpriteDesc_Particle->vUV_MaxTileCount.y = (_float)m_vUV_MaxTileCount_Particle[1];
 
-
+						m_pSpriteDesc_Particle->Reset_Sprite();
 						m_pCurPartEffect->ReSet_Effect();
 					}
 

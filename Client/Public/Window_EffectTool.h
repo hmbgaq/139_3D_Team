@@ -266,6 +266,7 @@ private:
 
 	/* For.Sprite ======================================== */
 	_int	m_iSprite_Particle				= { 0 };	// 1ÀÌ True
+	_int	m_iSpriteLoop					= { 0 };
 	_int	m_vUV_MaxTileCount_Particle[2]	= { 7, 7 };
 	_float	m_fSequenceTerm_Particle		= { 0.05f };
 	/* For.Sprite ======================================== */
