@@ -24,6 +24,7 @@ public:
 	
 public:
 	_bool Get_ProtectExist() { return m_bProtectExist; }
+	_float3 Get_BonePos() { return m_pWeapon->Get_Position(); }
 
 	/* For. Bullet */
 	_int Get_BulletCnt() { return m_iBulletCnt; }
@@ -42,6 +43,7 @@ private:
 	_int					m_iBulletCnt = 0;
 
 	CActor<CBandit_Sniper>* m_pActor			= { nullptr };
+	CWeapon*				m_pWeapon			= { nullptr };
 
 public:
 	virtual void Hitted_Left(Power ePower)	override;

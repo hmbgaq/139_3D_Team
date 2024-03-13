@@ -1935,6 +1935,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_AnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_EffectTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Model.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Monster.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Point.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Rect.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl" />

@@ -41,6 +41,8 @@ _bool CBandit_Sniper_State::Calculation_Direcion(CBandit_Sniper* pActor, _float4
 	/* 패턴을 잘못짜서 기껏 각도계산하는거 만들었더니 거의 무용지물이네 하 .. */
 	_float fAngle = pActor->Target_Contained_Angle(vCurrentDir, pActor->Get_Target()->Get_Transform()->Get_Pos());
 
+	cout << fAngle << endl;
+
 	if (0 <= fAngle && fAngle <= 90)
 		return true;
 	else if (-90 <= fAngle && fAngle < 0)

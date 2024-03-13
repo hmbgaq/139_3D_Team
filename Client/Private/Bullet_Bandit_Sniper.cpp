@@ -22,16 +22,17 @@ HRESULT CBullet_Bandit_Sniper::Initialize_Prototype()
 
 HRESULT CBullet_Bandit_Sniper::Initialize(void* pArg)
 {
+	FAILED_CHECK(Ready_Components());
+
 	BULLET_DESC* desc = reinterpret_cast<BULLET_DESC*>(pArg);
 
 	if (nullptr != desc)
 	{
-		_float3 pPos = desc->fBullet_InitPos;
 		vMoveDir = desc->vBullet_MoveDir;
+
+		//pPos.y += 3.f;
+		m_pTransformCom->Set_Pos(desc->fBullet_InitPos);
 	}
-	FAILED_CHECK(Ready_Components());
-	pPos.y += 3.f;
-	m_pTransformCom->Set_Pos(pPos);
 
 	return S_OK;
 }
@@ -45,7 +46,12 @@ void CBullet_Bandit_Sniper::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	m_pTransformCom->Move_Position(vMoveDir, 1.f, fTimeDelta);
+	m_pTransformCom->Move_Position(vMoveDir, 5.f, fTimeDelta);
+
+	/* --- Debug --- */
+	_float3 vPos = m_pTransformCom->Get_Pos();
+
+	m_pCollider->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CBullet_Bandit_Sniper::Late_Tick(_float fTimeDelta)
@@ -70,19 +76,19 @@ HRESULT CBullet_Bandit_Sniper::Ready_Components()
 	{
 		CGameObject::GAMEOBJECT_DESC tTransformDESC = {};
 		tTransformDESC.fRotationPerSec = 0.f;
-		tTransformDESC.fSpeedPerSec = 20.f;
+		tTransformDESC.fSpeedPerSec = 10.f;
 		FAILED_CHECK(__super::Initialize(&tTransformDESC));
 
-		m_pTransformCom->Set_Pos(250.5f, 5.f, 5.f);
 	}
 
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
 	{
-		BoundingDesc.fRadius = 1.f;
+		BoundingDesc.fRadius = 0.5f;
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
 		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pCollider), &BoundingDesc));
-		
+
+		m_pCollider->Update(m_pTransformCom->Get_WorldMatrix());
 	}
 	
 	return S_OK;

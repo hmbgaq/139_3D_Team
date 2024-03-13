@@ -8597,6 +8597,9 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModelInstance.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Monster.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">

@@ -37,7 +37,7 @@ CState<CBandit_Sniper>* CSniper_CoverLow_Over_AimPose::Update(CBandit_Sniper* pA
 			
 			/* 위에서 만든 방향으로 총알 만들기 */
 			CBullet_Bandit_Sniper::BULLET_DESC desc = {};
-			desc.fBullet_InitPos = pActor->Get_Position();
+			desc.fBullet_InitPos = pActor->Get_BonePos();
 			desc.vBullet_MoveDir = vBulletDir;
 
 			m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, TEXT("Layer_Monster"), TEXT("Prototype_GameObject_Bullet_Bandit_Sniper"), &desc);
