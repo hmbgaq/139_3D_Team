@@ -72,14 +72,16 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	Search_Target(L"Layer_Player");
 	if (m_bLookAt == true)
 	{
-		if (90.f > Ratation_Target_Test())
+		_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(),Get_Target()->Get_Transform()->Get_Pos());
+		if (0 <= fAngle && fAngle <= 90)
 			Look_At_Target();
-		else if (90.f <= Ratation_Target_Test() && 180.f > Ratation_Target_Test())
+		else if (-90 <= fAngle && fAngle < 0)
+			Look_At_Target();
+		else if (fAngle > 90)
 			m_pActor->Set_State(new CVampireCommander_TurnL90);
-		else if (180.f <= Ratation_Target_Test() && 270.f > Ratation_Target_Test())
+		else if (fAngle < -90)
 			m_pActor->Set_State(new CVampireCommander_TurnR90);
-		else if (270.f <= Ratation_Target_Test() && 360.f > Ratation_Target_Test())
-			Look_At_Target();
+		
 
 		m_bLookAt = false;
 	}
