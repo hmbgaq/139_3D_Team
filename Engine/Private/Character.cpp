@@ -407,7 +407,7 @@ void CCharacter::Search_Target(const wstring& strLayerTag)
 	m_pTarget = Select_The_Nearest_Enemy(strLayerTag);
 }
 
-_float CCharacter::Target_Contained_Angle(_float4 vTargetPos)
+_float CCharacter::Target_Contained_Angle(_float4 vStandard, _float4 vTargetPos)
 {
 	/* ---------- 소영 추가 ---------- */
 	// 함수설명 : Look 기준으로 우측에 있을경우 +사이각 , 좌측에 있을경우 - 사이각으로 값이 리턴된다. 
@@ -416,7 +416,7 @@ _float CCharacter::Target_Contained_Angle(_float4 vTargetPos)
 
 	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
 
-	_float angle = std::acos(XMVectorGetX(XMVector3Dot(XMVectorSet(0.f, 0.f, 1.f, 0.f), vLook)));
+	_float angle = std::acos(XMVectorGetX(XMVector3Dot(vStandard, vLook)));
 
 	if (XMVectorGetX(XMVector3Dot(XMVectorSet(1.f, 0.f, 0.f, 0.f), vLook)) < 0.f)
 	{

@@ -955,6 +955,7 @@
     <ClInclude Include="..\Public\PreviewAnimationModel.h" />
     <ClInclude Include="..\Public\Projectile.h" />
     <ClInclude Include="..\Public\Screamer.h" />
+    <ClInclude Include="..\Public\Sniper_Bullet.h" />
     <ClInclude Include="..\Public\Sniper_Crouch_Start.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\SkyDome.h" />
@@ -1722,6 +1723,7 @@
     <ClCompile Include="..\Private\PreviewAnimationModel.cpp" />
     <ClCompile Include="..\Private\Projectile.cpp" />
     <ClCompile Include="..\Private\Screamer.cpp" />
+    <ClCompile Include="..\Private\Sniper_Bullet.cpp" />
     <ClCompile Include="..\Private\Sniper_Crouch_Start.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\SkyDome.cpp" />

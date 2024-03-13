@@ -37,7 +37,9 @@ _bool CBandit_Sniper_State::Calculation_Direcion(CBandit_Sniper* pActor, _float4
 {
 	/* 패턴을 잘못짜서 기껏 각도계산하는거 만들었더니 거의 무용지물이네 하 .. */
 
-	_float fAngle = pActor->Target_Contained_Angle(pActor->Get_Target()->Get_Transform()->Get_Pos());
+	_float fAngle = pActor->Target_Contained_Angle(vCurrentDir, pActor->Get_Target()->Get_Transform()->Get_Pos());
+
+	cout << fAngle << endl;
 
 	if (0 <= fAngle && fAngle <= 90)
 		return true;
@@ -77,25 +79,14 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Walk_State(CBandit_Sniper* pActor,
 
 CState<CBandit_Sniper>* CBandit_Sniper_State::Cover_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	cout << "IdlePose" << endl;
 	return new CSniper_IdlePose();
 }
 
 CState<CBandit_Sniper>* CBandit_Sniper_State::Hit_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	/* 애니메이션 혼동방지를 위해 2프레임짜리 Idle로 갔다가 돌아가도록하기 */
-	if (pActor->Get_ProtectExist())
-	{
-		return new CSniper_IdlePose();
-	}
-	else
-	{
-		return new CSniper_IdlePose();
-	}
-
-	return nullptr;
+	return new CSniper_IdlePose();
 }
-
 
 CState<CBandit_Sniper>* CBandit_Sniper_State::Death_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
@@ -154,6 +145,7 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Attack(CBandit_Sniper* pActor, _fl
 			iAttackCnt = 0;
 			return new CSniper_CoverLow_Reload();
 		}
+
 		iAttackCnt += 1;
 		return new CSniper_CoverLow_Over_Start(); // 앉아있다가 정면 공격
 	}

@@ -1,4 +1,5 @@
-#include "..\Public\Sniper_HitHeavy_FL_01.h"
+#include "stdafx.h"
+#include "Sniper_HitHeavy_FL_01.h"
 
 void CSniper_HitHeavy_FL_01::Initialize(CBandit_Sniper* pActor)
 {

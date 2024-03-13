@@ -1,4 +1,5 @@
-#include "..\Public\Sniper_KnockFrontLight_F_02.h"
+#include "stdafx.h"
+#include "Sniper_KnockFrontLight_F_02.h"
 
 void CSniper_KnockFrontLight_F_02::Initialize(CBandit_Sniper* pActor)
 {
@@ -9,7 +10,12 @@ void CSniper_KnockFrontLight_F_02::Initialize(CBandit_Sniper* pActor)
 
 CState<CBandit_Sniper>* CSniper_KnockFrontLight_F_02::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
 }
 
 void CSniper_KnockFrontLight_F_02::Release(CBandit_Sniper* pActor)

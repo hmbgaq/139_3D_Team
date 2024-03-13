@@ -11,7 +11,10 @@ void CSniper_CoverLow_Over_AimPose::Initialize(CBandit_Sniper* pActor)
 
 CState<CBandit_Sniper>* CSniper_CoverLow_Over_AimPose::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
+	/* 에임중에는 계속쳐다보는에 lookat처럼 처다봄 어.. 맞는듯 비슷하네 */
+
 	fTimeAcc += fTimeDelta;
+	pActor->Look_At_Target();
 
 	if (fTimeAcc >= 3.5f)
 	{
