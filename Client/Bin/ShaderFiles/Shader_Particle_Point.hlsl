@@ -18,6 +18,8 @@ float       g_fAlpha_Discard;
 float3      g_vBlack_Discard;
 //float4	g_vColor_Mul;
 
+float4		g_vBloom_Discard;
+
 float		g_fDegree;
 
 // Sprite ====================
@@ -33,8 +35,8 @@ float2		g_UVScale;
 // 참고로 BloomPower 가 0.3 0.3 0.3 을 넣었을때 Calculation_Brightness함수내에서 fPixelBrightness가 임계를 넘지못해서 안나오는경우도 있었음.. 
 // 여차하면 이 fPixelBrightness 도 전역으로 떄려서 조절해도됨. 함수만 제대로 작동하면 안에 어떤값이던 던져서 함수를 변형해서 써도 됨 
 //  어 ? 노말이 된다고 ?? ??? ?? ???????????? ??
-float3 g_vBloomPower = { 0.7f, 0.7f, 0.7f }; /* Bloom */
-float4 g_vRimColor = { 1.0f, 0.f, 0.f, 0.5f }; /* RimLight */
+float3 g_vBloomPower; /*= { 0.7f, 0.7f, 0.7f }; /* Bloom */
+float4 g_vRimColor; /* = { 1.0f, 0.f, 0.f, 0.5f }; /* RimLight */
 
 // ===========================
 struct EffectDesc
@@ -261,7 +263,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		// Case1. 기존의 Diffuse로 블러를 먹여서 효과를 준다. 
         //Out.vRimBloom = Calculation_Brightness(Out.vColor);
 		// Case2. 색상을 아에 넣어버린다 : 이경우 g_RimBloom_Color 라던지 전역변수 받아서 그걸로 해도됨
-        Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
+        //Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
     }
 	else
 	{
@@ -272,6 +274,12 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		vDiffuseColor.rgb *= In.vColor.rgb;
 		vDiffuseColor.a = In.vColor.a * vAlphaColor;
 
+		float4 vBloomColor = vDiffuseColor;
+
+		if (vBloomColor.a < g_vBloom_Discard.a	// 블룸 알파 잘라내기
+			|| vBloomColor.r < g_vBloom_Discard.r && vBloomColor.g < g_vBloom_Discard.g && vBloomColor.b < g_vBloom_Discard.b)	// 검정색 잘라내기
+			discard;
+
 		if (vDiffuseColor.a < g_fAlpha_Discard	// 알파 잘라내기
 			|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 			discard;
@@ -279,7 +287,8 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
         Out.vColor = vDiffuseColor /** g_vColor_Mul*/;
 		
 		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
-        Out.vRimBloom = Calculation_Brightness(Out.vColor);
+       // Out.vRimBloom = Calculation_Brightness(Out.vColor);
+	   Out.vRimBloom = Calculation_Brightness(vBloomColor);
        // Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
     }
 

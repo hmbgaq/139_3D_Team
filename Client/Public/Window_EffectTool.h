@@ -180,6 +180,7 @@ private:
 
 private:
 	_int	m_iLoop = { 0 };
+	_int	m_iType_Dead = { 0 };
 
 	_float	m_vTimes_Effect[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
 	_float	m_vTimes_Part[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
@@ -204,6 +205,14 @@ private:
 
 	_int	m_iBillBoard				= { 0 };
 
+	/* 파티클만의 속성 */
+	_int	m_iRecycle_Particle = { 0 };
+	_int	m_iReverse_Particle = { 0 };
+	_int	m_iType_Emit_Particle = { 0 };
+	_int	m_iType_Action_Particle = { 0 };
+	_int	m_iType_Fade_Particle = { 0 };
+
+
 	_float	m_vMinMaxLifeTime_Particle[2] = { 0.f, 0.f };	// 라이프타임
 
 	/* RigidBody ============================================== */
@@ -222,9 +231,8 @@ private:
 
 
 	/* For.Position */
-	_float	m_vMinMaxCenterX_Particle[2] = { 0.f, 0.f };
-	_float	m_vMinMaxCenterY_Particle[2] = { 0.f, 0.f };
-	_float	m_vMinMaxCenterZ_Particle[2] = { 0.f, 0.f };
+	_float	m_vMinCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMaxCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
 	_float	m_vMinMaxRange_Particle[2] = { 0.f, 0.f };
 
 	/* For.Rotation */
@@ -261,6 +269,12 @@ private:
 	_int	m_vUV_MaxTileCount_Particle[2]	= { 7, 7 };
 	_float	m_fSequenceTerm_Particle		= { 0.05f };
 	/* For.Sprite ======================================== */
+
+	/* 파티클 Rim & Bloom */
+	_float	m_fRimColor_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_vBloomPower_Particle[3] = { 1.f, 1.f, 1.f };
+	_float	m_vBloom_Clip_Particle[4] = { 0.f, 0.f, 0.f, 0.f };
+
 #pragma endregion Particle 옵션 끝
 
 
@@ -287,8 +301,11 @@ private:
 
 #pragma region Instance(Mesh) 옵션 시작
 private:
-	_int m_iNumInstance_Mesh	= { 1000 };
-	_int m_iMaxNumInstance_Mesh = { 1000 };
+	_int m_iNumInstance_Mesh	= { 20 };
+	_int m_iMaxNumInstance_Mesh = { 20 };
+
+
+	_int	m_iRecycle_Mesh = { 0 };
 
 	_float	m_vMinMaxLifeTime_Mesh[2] = { 0.f, 0.f };	// 라이프타임
 
@@ -320,13 +337,17 @@ private:
 	_float	m_fColor_Mul_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 
 
-	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
-	_float	m_fRimPower_Mesh = { 1.f };
-
-	_float	m_vBloomColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
+	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fRimPower_Mesh = { 100.f };
+
+	/* Position */
+	_float	m_vMinCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMaxCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
 
 	_float	m_vMinMaxRange_Mesh[2] = { 0.f, 0.f };
+
+
 	_float	m_vRotationOffsetX_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetY_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetZ_Mesh[2] = { 0.f, 0.f };
@@ -388,6 +409,9 @@ private:
 	CModel_Preview*	m_pModel_Preview = { nullptr };				// 크기 비교용 보기 모델
 	CPart_Preview*	m_pPart_Preview = { nullptr };				// 모델의 파트(트레일 확인용)
 	_float		 m_vWorldPosition_Model[3] = { 0.f, 0.f, 0.f };	// 크기 비교용 모델 월드 이동
+	_float			m_fModelRot = { 0.f };
+
+	CEffect* m_pTestEffect = { nullptr };
 #pragma endregion
 
 

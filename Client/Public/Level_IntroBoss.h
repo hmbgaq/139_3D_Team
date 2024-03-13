@@ -45,7 +45,7 @@ private:
 	_int			TempLightNumber = 0;
 	_bool			m_bPlayerStartRotate = false;
 
-	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData.json";
+	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData_MapData.json";
 
 public:
 	static CLevel_IntroBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

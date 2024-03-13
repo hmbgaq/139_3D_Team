@@ -37,6 +37,8 @@ HRESULT CUI_ItemIcon::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
+	m_eType = UITYPE::REWARD;
+
 	return S_OK;
 }
 
@@ -47,34 +49,39 @@ void CUI_ItemIcon::Priority_Tick(_float fTimeDelta)
 
 void CUI_ItemIcon::Tick(_float fTimeDelta)
 {
+	__super::Tick(fTimeDelta);
+	Check_Disappear(fTimeDelta);
 
+	if (m_bActive == true)
+	{
+	}
 }
 
 void CUI_ItemIcon::Late_Tick(_float fTimeDelta)
 {
-	//if (m_tUIInfo.bWorldUI == true)
-	//	Compute_OwnerCamDistance();
-
-	__super::Tick(fTimeDelta);
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
-		return;
+	if (m_bActive == true)
+	{
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+			return;
+	}
 }
 
 HRESULT CUI_ItemIcon::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	if (m_bActive == true)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그릴거야.
-	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		//! 이 셰이더에 0번째 패스로 그릴거야.
+		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
-
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+	}
 	return S_OK;
 }
 

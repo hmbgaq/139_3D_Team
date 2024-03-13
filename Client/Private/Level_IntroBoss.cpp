@@ -11,6 +11,7 @@
 #include "UI_Anything.h"
 #include "UI_MonsterHp.h"
 #include "UI_MonsterHpFrame.h"
+#include "UI_Manager.h"
 #pragma endregion
 
 #include "LandObject.h"
@@ -55,8 +56,8 @@ HRESULT CLevel_IntroBoss::Initialize()
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
-	//if (FAILED(Ready_UI()))
-	//	return E_FAIL;
+	if (FAILED(Ready_UI()))
+		return E_FAIL;
 
 
 	return S_OK;
@@ -68,8 +69,7 @@ void CLevel_IntroBoss::Tick(_float fTimeDelta)
 	{
 		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
-		pPlayer->Set_Position(_float3(60.0f, 0.f, 76.67f));
-		pPlayer->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+		pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
 
 		CSpringCamera* pSpringCamera = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 
@@ -201,7 +201,9 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Monster(const wstring& strLayerTag, void* 
 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_Boss", TEXT("Prototype_GameObject_VampireCommander"));
 	
 		if (nullptr == pMonster)	return E_FAIL;
-		pMonster->Set_Position(_float3(60.0f, 0.f, 29.84f));
+		pMonster->Set_Position(_float3(60.0f, 0.f, 55.f));
+		pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+
 	}
 
 	return S_OK;
@@ -431,7 +433,7 @@ HRESULT CLevel_IntroBoss::Ready_UI()
 {
 	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
 
-	//FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
+	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
 	//
 	//FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
 
@@ -484,18 +486,20 @@ HRESULT CLevel_IntroBoss::Ready_Layer_UI_Monster(const wstring& strLayerTag, voi
 
 HRESULT CLevel_IntroBoss::Ready_Layer_UI_Interface(const wstring& strLayerTag, void* pArg)
 {
-	// =>Left_Interface
-	Ready_LeftInterface(strLayerTag, pArg);
-	// =>Right_Interface
-	Ready_RightInterface(strLayerTag, pArg);
-	// =>Quest_Box
-	Ready_QuestBox(strLayerTag, pArg);
-	// =>Tutorial_Box
-	Ready_TutorialBox(strLayerTag, pArg);
-	// =>LevelUp
-	Ready_LevelUp(strLayerTag, pArg);
-	// =>Reward_Item
-	Ready_Reward_Item(strLayerTag, pArg);
+	// Ready Interface
+	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Interface(LEVEL_STATIC));
+	//// =>Left_Interface
+	//Ready_LeftInterface(strLayerTag, pArg);
+	//// =>Right_Interface
+	//Ready_RightInterface(strLayerTag, pArg);
+	//// =>Quest_Box
+	//Ready_QuestBox(strLayerTag, pArg);
+	//// =>Tutorial_Box
+	//Ready_TutorialBox(strLayerTag, pArg);
+	//// =>LevelUp
+	//Ready_LevelUp(strLayerTag, pArg);
+	//// =>Reward_Item
+	//Ready_Reward_Item(strLayerTag, pArg);
 	return S_OK;
 }
 

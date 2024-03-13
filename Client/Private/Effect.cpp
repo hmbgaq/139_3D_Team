@@ -42,8 +42,7 @@ HRESULT CEffect::Initialize(void* pArg)
 void CEffect::Priority_Tick(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
-	{
+
 		if (m_tEffectDesc.bActive_Tool)
 		{
 #endif // _DEBUG
@@ -54,7 +53,7 @@ void CEffect::Priority_Tick(_float fTimeDelta)
 			}
 #ifdef _DEBUG
 		}
-	}
+
 #endif // _DEBUG
 
 }
@@ -63,11 +62,10 @@ void CEffect::Tick(_float fTimeDelta)
 {
 
 #ifdef _DEBUG
-	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
-	{
 		if (m_tEffectDesc.bActive_Tool)
 		{
 #endif // _DEBUG
+
 			m_tEffectDesc.fSequenceTime = m_tEffectDesc.fWaitingTime + m_tEffectDesc.fLifeTime + m_tEffectDesc.fRemainTime;
 			//m_fEasingTimeAcc = Easing::LerpToType(0.f, m_tEffectDesc.fSequenceTime, m_tEffectDesc.fSequenceAcc, m_tEffectDesc.fSequenceTime, m_tEffectDesc.eType_Easing);
 
@@ -117,7 +115,6 @@ void CEffect::Tick(_float fTimeDelta)
 			}
 #ifdef _DEBUG
 		}
-	}
 #endif // _DEBUG
 }
 
@@ -125,8 +122,7 @@ void CEffect::Tick(_float fTimeDelta)
 void CEffect::Late_Tick(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
-	{
+
 		if (m_tEffectDesc.bActive_Tool)
 		{
 #endif // _DEBUG
@@ -140,15 +136,12 @@ void CEffect::Late_Tick(_float fTimeDelta)
 			}
 #ifdef _DEBUG
 		}
-	}
 #endif // _DEBUG
 }
 
 HRESULT CEffect::Render()
 {
 #ifdef _DEBUG
-	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
-	{
 		if (m_tEffectDesc.bActive_Tool)
 		{
 #endif // _DEBUG
@@ -162,7 +155,6 @@ HRESULT CEffect::Render()
 			}
 #ifdef _DEBUG
 		}
-	}
 #endif // _DEBUG
 
 	return S_OK;
@@ -171,6 +163,8 @@ HRESULT CEffect::Render()
 _bool CEffect::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
+
+	Out_Json["Effect"]["eType_Dead"] = m_tEffectDesc.eType_Dead;
 
 	Out_Json["Effect"]["bPlay"] = m_tEffectDesc.bPlay;
 	Out_Json["Effect"]["bLoop"] = m_tEffectDesc.bLoop;
@@ -203,6 +197,9 @@ _bool CEffect::Write_Json(json& Out_Json)
 void CEffect::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
+
+
+	m_tEffectDesc.eType_Dead = In_Json["Effect"]["eType_Dead"];
 
 	m_tEffectDesc.bPlay			= In_Json["Effect"]["bPlay"];
 	m_tEffectDesc.bLoop			= In_Json["Effect"]["bLoop"];
@@ -302,7 +299,11 @@ void CEffect::ReSet_Effect()
 	for (auto& Pair : m_PartObjects)
 	{
 		if (nullptr != Pair.second)
+		{
 			dynamic_cast<CEffect_Void*>(Pair.second)->ReSet_Effect();
+		}
+		
+		dynamic_cast<CEffect_Void*>(Pair.second)->Get_Desc()->bRender = { TRUE };
 	}
 }
 
@@ -319,7 +320,7 @@ void CEffect::End_Effect()
 				dynamic_cast<CEffect_Void*>(Pair.second)->End_Effect();
 			}				
 		}
-		ReSet_Effect();
+		ReSet_Effect();	// 루프면 리셋.
 	}
 	else
 	{
@@ -332,7 +333,15 @@ void CEffect::End_Effect()
 		else
 #endif // _DEBUG
 		{		
-			Set_Dead(TRUE);
+			if (DEAD_AUTO == m_tEffectDesc.eType_Dead)	// 루프가 아니고 자동으로 죽어야하는 이펙트면(파티클 등) 라이프 타임이 끝났을 때 죽이기.
+			{
+				Set_Dead(TRUE);
+			}
+			else if (DEAD_OWNER == m_tEffectDesc.eType_Dead)	// 루프가 아니라도 죽음이 외부에서 정해진다면 라이프 타임이 끝났을 때 리셋만.
+			{
+				ReSet_Effect();
+			}
+			
 		}
 
 	}

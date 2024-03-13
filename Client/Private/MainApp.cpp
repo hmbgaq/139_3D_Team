@@ -7,6 +7,7 @@
 #include "DevConsole.h"
 #include "Data_Manager.h"
 #include "Clone_Manager.h"
+#include "UI_Manager.h"
 #include "Effect_Manager.h"
 
 //CUDA test
@@ -31,7 +32,7 @@ HRESULT CMainApp::Initialize()
 
 #ifdef _DEBUG
 #pragma region Imgui용 Rect 설정
-	//// 주석 걸고 병합하기 : imGui때문에.. imgui는 제목표시줄 크기를 인식 못해서 이렇게 안해주면 마우스 오차가 생긴다.
+	//주석 걸고 병합하기 : imGui때문에..imgui는 제목표시줄 크기를 인식 못해서 이렇게 안해주면 마우스 오차가 생긴다.
 	//RECT rect = { 0 };
 	//GetClientRect(GraphicDesc.hWnd, &rect);
 	//_int iClientSizeX = rect.right - rect.left;
@@ -47,6 +48,9 @@ HRESULT CMainApp::Initialize()
 	//Client Managers
 	CClone_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 	CData_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
+	m_pUI_Manager = CUI_Manager::GetInstance();
+	Safe_AddRef(m_pUI_Manager);
+	m_pUI_Manager->Initialize(m_pDevice, m_pContext);
 	CEffect_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 
 	FAILED_CHECK(Ready_Font());
@@ -70,6 +74,7 @@ HRESULT CMainApp::Initialize()
 void CMainApp::Tick(_float fTimeDelta)
 {
 	m_pGameInstance->Tick_Engine(fTimeDelta);
+	m_pUI_Manager->Tick(fTimeDelta);
 
 	m_fTimeAcc += fTimeDelta;
 	
@@ -353,6 +358,10 @@ void CMainApp::Free()
 	CClone_Manager::DestroyInstance();
 	CData_Manager::DestroyInstance();
 	CEffect_Manager::DestroyInstance();
+
+	/* Add UI Manager */
+	Safe_Release(m_pUI_Manager);
+	CUI_Manager::DestroyInstance();
 
 	CGameInstance::Release_Engine();
 }

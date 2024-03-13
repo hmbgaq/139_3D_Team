@@ -8,9 +8,13 @@ BEGIN(Client)
 class CEffect final : public CGameObject
 {
 public:
+	enum TYPE_DEAD { DEAD_AUTO, DEAD_OWNER, DEAD_NONE, TYPE_DEAD_END };
+
 	typedef struct tagEffectDesc : public CGameObject::GAMEOBJECT_DESC
 	{
 		/* 저장해야 하는 고정 정보들 */
+		TYPE_DEAD eType_Dead		= { DEAD_AUTO };
+
 		_bool	bPlay				= { TRUE };
 		_bool	bLoop				= { TRUE };
 		_bool	bFinished			= { FALSE };
