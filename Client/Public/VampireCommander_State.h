@@ -18,7 +18,8 @@ public:
 public:
 	virtual CState<CVampireCommander>* Update_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex) PURE;
 
-
+private:
+	_bool Calculation_Direcion(CVampireCommander* pActor, _float4 vCurrentDir);
 
 public:		//상태 그룹 별 업데이트 
 	CState<CVampireCommander>* Normal_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex);

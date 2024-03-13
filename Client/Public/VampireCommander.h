@@ -39,6 +39,9 @@ private:
 	CActor<CVampireCommander>* m_pActor = { nullptr };
 
 public:
+	_bool m_bTurn = true;
+
+public:
 	/* 원형객체를 생성한다. */
 	static CVampireCommander* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strPrototypeTag);
 

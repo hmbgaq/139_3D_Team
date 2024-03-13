@@ -6,6 +6,9 @@ void CVampireCommander_Idle::Initialize(CVampireCommander* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
 	pActor->Get_Weapon(L"Weapon_hand_R")->Set_Synced(false);
+	pActor->m_bLookAt = true;
+	pActor->m_bTurn = true;
+
 }
 
 CState<CVampireCommander>* CVampireCommander_Idle::Update(CVampireCommander* pActor, _float fTimeDelta)

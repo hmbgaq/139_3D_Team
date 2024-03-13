@@ -14,6 +14,13 @@ CState<CPlayer>* CPlayer_VampireCommander_SyncedAttack::Update(CPlayer* pActor, 
 {
 	__super::Update(pActor, fTimeDelta);
 
+	if (m_bFlags[0] == false && pActor->Is_Inputable_Front(99) )
+	{
+		pActor->Get_Damaged(50);
+		m_bFlags[0] = true;
+	}
+
+
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 

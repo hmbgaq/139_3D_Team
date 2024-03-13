@@ -9,7 +9,12 @@ void CInfected_Scared_02::Initialize(CInfected* pActor)
 
 CState<CInfected>* CInfected_Scared_02::Update(CInfected* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
 }
 
 void CInfected_Scared_02::Release(CInfected* pActor)

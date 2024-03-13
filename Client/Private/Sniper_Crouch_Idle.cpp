@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "Sniper_Crouch_Idle.h"
+#include "Sniper_Crouch_Stop.h"
 
 void CSniper_Crouch_Idle::Initialize(CBandit_Sniper* pActor)
 {
@@ -9,7 +11,12 @@ void CSniper_Crouch_Idle::Initialize(CBandit_Sniper* pActor)
 
 CState<CBandit_Sniper>* CSniper_Crouch_Idle::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return new CSniper_Crouch_Stop();
+	}
+
+	return nullptr;
 }
 
 void CSniper_Crouch_Idle::Release(CBandit_Sniper* pActor)

@@ -65,10 +65,10 @@ void CUI_Player_HPBar::Tick(_float fTimeDelta)
 	m_fCurHP = m_pData_Manager->Get_CurHP();
 	m_fMaxHP = m_pData_Manager->Get_MaxHP();
 
-	if (m_pGameInstance->Key_Down(DIK_Z))
-	{
+	//if (m_pGameInstance->Key_Down(DIK_Z))
+	//{
 		m_bActive = true;
-	}
+	//}
 
 	if (m_pGameInstance->Key_Down(DIK_Q)) // ÇÇ°Ý
 	{

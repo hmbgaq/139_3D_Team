@@ -21,6 +21,7 @@ public:
 	const _float3*	Get_Points() { return m_vPoints; }
 	_int			Get_NeighborIndex(LINE eLine);
 
+	_int			Get_CurrentIndex() {return m_iIndex; }
 	void			Set_Point(POINT ePoint, _float3 vPoint);
 	void			Set_Index(_uint iIndex) { m_iIndex = iIndex; }
 	void			Set_PointY(POINT ePoint, _float fY);

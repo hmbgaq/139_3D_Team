@@ -13,6 +13,8 @@ public:
 
 private:
 	_float fTimeAcc = 0.f;
+	_float4 vBulletDir = {};
+	_bool bReady = false;
 
 public:
 	static const _uint g_iAnimIndex = CBandit_Sniper::Bandit_Sniper_State::Sniper_CoverLow_Over_AimPose;
