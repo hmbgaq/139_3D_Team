@@ -11,6 +11,14 @@ CCell::CCell(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	Safe_AddRef(m_pContext);
 }
 
+_int CCell::Get_NeighborIndex(LINE eLine)
+{
+	if (eLine < 0 || eLine >= LINE_END)
+		return -1;
+
+	return m_iNeighbors[eLine];
+}
+
 void CCell::Set_Point(POINT ePoint, _float3 vPoint)
 {
 	m_vPoints[ePoint] = vPoint;

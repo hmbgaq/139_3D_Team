@@ -83,7 +83,6 @@ public: /* ====================== UI ========================= */
 public: /* ==================== Shortcut_Key ================= */
 	void						Shortcut_Key(_float fTimeDelta);
 
-
 public: /* ==================== List List List List List List List List List List List List List List List List List List List List List List List List List List List List List List List ===================== */
 	void						Layer_List();
 	void						Texture_List();
@@ -202,9 +201,9 @@ public:
 	{
 		"Defaul"
 	};
-#pragma endregion Text End
+#pragma endregion											Text End
 
-#pragma region Animation
+#pragma region												Animation
 	// 키프레임 목록
 	void						KeyframeList();
 	// 키프레임 수정 창
@@ -213,24 +212,62 @@ public:
 	void						KeyframeRender_ValueChange();
 	// 키프레임 자동 생성 함수(선형 보간)
 	void CreateKeyframesWithLinearInterpolation(
-		_float minTime, _float maxTime,
-		_float minValue, _float maxValue,
-		_float2 minScaleValue, _float2 maxScaleValue,
-		_float minRotationValue, _float maxRotationValue,
-		_float2 minTranslationValue, _float2 maxTranslationValue,
-		_float _minTexture, _float _maxTexture,
-		_int numKeyframes);
+												_float minTime, _float maxTime,
+												_float minValue, _float maxValue,
+												_float2 minScaleValue, _float2 maxScaleValue,
+												_float minRotationValue, _float maxRotationValue,
+												_float2 minTranslationValue, _float2 maxTranslationValue,
+												_float _minTexture, _float _maxTexture,
+												_int numKeyframes);
 	// 키프레임 자동생성 세팅 함수
 	void	KeyframeAutomaticGeneration();
-#pragma region PlayAnim
+#pragma region												PlayAnim
 	void	PlayAnimation(_float fTimeDelta);
 	_bool	m_isPlayAnim = false;
 	_float  m_fPlayTime = 0.f;
-#pragma region TimeLineBar
-	void	AnimationTimeLineBar();					// 애니메이션 타임라임 바
+#pragma region												TimeLineBar
+	void	AnimationTimeLineBar(_float fTimeDelta);// 애니메이션 타임라임 바
 	_float	EvaluateAnimationAtTime(float time);	// 애니메이션에 따른 현재 시간 계산
 	void	KeyframeValueChange(_float fTimeDelta); // 애니메이션 키프레임 조절
 	void	ImGuiKeyInput();
+	void	CurKeyframe_ValueChange();
+	// 선택한 키프레임 값을 변경하는 함수
+	void	DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyframe);
+	void	SelectKeyframeMouse();
+#pragma region Rect_Option
+	// UV 변경
+	void	Setting_Distortion(_float fTimeDelta);
+	_int	m_vUV_MaxTileCount[2] = { 7, 7 };
+	_float	m_fSequenceTerm_RectSprite = { 0.05f };
+
+	/* Distortion */
+	_float m_fSequenceTerm_Distortion = { 1.f };
+
+	_float	m_vScrollSpeeds[3] = { 1.f, 1.f, 0.f };
+	_float	m_vScales_Distortion[3] = { 1.f, 1.f, 1.f };
+
+	_float	m_vDistortion1[2] = { 0.1f, 0.1f };
+	_float	m_vDistortion2[2] = { 0.0f, 0.0f };
+	_float	m_vDistortion3[2] = { 0.0f, 0.1f };
+
+	_float	m_fDistortionScale = { 1.f };
+	_float	m_fDistortionBias = { 1.f };
+
+#pragma endregion
+
+	// 변경할 속성 값 모드
+	enum EDITMODE
+	{
+		EDITMODE_NONE,
+		EDITMODE_SCALE,
+		EDITMODE_ROTATION,
+		EDITMODE_TRANSLATION,
+		EDITMODE_TIME_VALUE,
+		EDITMODE_TEXTURE
+	};
+	EDITMODE eEditMode = EDITMODE_NONE; // 변경할 모드 변수
+	float vValueSize = 1.f;	// 변경을 줄 값의 크기
+	_float originalIndex;
 	// 키프레임 드래그
 	_bool	isDraggingKeyframe = false;
 	_int	draggingKeyframeIndex = 0;
@@ -263,7 +300,30 @@ private:
 	ImVec2					timelinePos = { 0.f, 0.f };
 	ImVec2					timelineSize = { 800.f, 85.f }; // 애니메이션 타임 라인 크기
 
-#pragma region 최소, 최대 자동 생성 값
+	_int m_iOldIndex = -1;
+#pragma region											최소, 최대 값
+// 크기
+	_float	fMin_Scale = 0.0001f;	// 최소
+	_float	fMax_Scale = 2000.f;	// 최대
+
+	// 회전
+	_float	fMin_Rot = 0.0f;		// 최소
+	_float	fMax_Rot = 180.f;	// 최대
+
+	// 이동
+	_float	fMin_Pos = -5000.f;		// 최소
+	_float	fMax_Pos = 5000.f;	// 최대
+
+	// 시간
+	_float	fMin_Time = 0.f;	// 최소
+	_float	fMax_Time = MaxTime;// 최대
+
+	// 벨류
+	_float	fMin_Value = 0.f;	// 최소
+	_float	fMax_Value = 1.f;	// 최대
+#pragma endregion
+
+#pragma region											최소, 최대 자동 생성 값
 	_bool  m_bIndividualTexture = false;
 
 	_float _v2Time[2] = { 0.f, 0.f };
@@ -356,6 +416,16 @@ private: /* bool */
 	_bool						m_bGroupObject = false;
 
 private:
+	_bool						m_bCheckImguiRect_Child = false;
+	_bool						m_bCheckImguiRect_Parent = false;
+	_bool						m_bCheckImguiRect_UI_Animation = false;
+	_bool						m_bCheckImguiRect_ValueChange = false;
+	_bool						m_bCheckImguiRect_UI_TimeLine = false;
+	_bool						m_bCheckImguiRect_Info = false;
+	_bool						m_bCheckImguiRect_UI_Info = false;
+	_bool						Check_ImGui_Rect();
+
+private:
 	//// ==============폴더 경로==============
 	//// 이미지 경로 목록을 저장하는 벡터
 	//std::vector<std::string> m_vecImgPs =
@@ -409,7 +479,8 @@ private:
 		"MouseCursor",
 		"Option_Window",
 		"AimCrosshair",
-		"Weakness"
+		"Weakness",
+		"Distortion"
 	};
 
 	// 클래스 목록을 저장하는 벡터
@@ -418,6 +489,11 @@ private:
 		"TutorialBox",
 		"QuestBox"
 	};
+
+private:
+	void	UI_Preset();
+	class CUI_Manager*	m_pUI_Manager = nullptr;
+	_bool				m_bDisappear = false;
 
 private:
 	ImGuiTabBarFlags m_Tab_bar_flags = ImGuiTabBarFlags_None;

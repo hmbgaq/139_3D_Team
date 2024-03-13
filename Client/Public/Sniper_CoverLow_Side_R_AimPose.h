@@ -11,6 +11,9 @@ public:
 	virtual CState<CBandit_Sniper>* Update(CBandit_Sniper* pActor, _float fTimeDelta) override;
 	virtual void Release(CBandit_Sniper* pActor) override;
 
+private:
+	_float fTimeAcc = 0.f;
+
 public:
 	static const _uint g_iAnimIndex = CBandit_Sniper::Bandit_Sniper_State::Sniper_CoverLow_Side_R_AimPose;
 

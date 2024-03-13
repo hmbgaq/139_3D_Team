@@ -1,6 +1,7 @@
 #pragma once
 #include "Bandit_Sniper_State_Cover.h"
 
+/* 수그리고 숨고르는 아이들상태 */
 
 BEGIN(Client)
 

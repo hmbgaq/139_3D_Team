@@ -24,7 +24,7 @@ HRESULT CVIBuffer_Effect_Model_Instance::Initialize(void* pArg)
 
 
 	CModel* pModel[MORPH_END] = { nullptr };
-	for (_uint i = 0; i < ECast(MORPH_END); ++i)
+	for (_uint i = 0; i < ECast<_uint>(MORPH_END); ++i)
 	{	
 		if (nullptr != m_tBufferDesc.pModel[i])
 		{
@@ -34,7 +34,7 @@ HRESULT CVIBuffer_Effect_Model_Instance::Initialize(void* pArg)
 	}
 	
 	vector<CMesh*> Meshes[MORPH_END];
-	for (_uint i = 0; i < ECast(MORPH_END); ++i)
+	for (_uint i = 0; i < ECast<_uint>(MORPH_END); ++i)
 	{
 		if (nullptr != pModel[i])
 		{

@@ -12,6 +12,7 @@
 #include "UI_Anything.h"
 #include "UI_MonsterHp.h"
 #include "UI_MonsterHpFrame.h"
+#include "UI_Manager.h"
 #pragma endregion
 
 #include "LandObject.h"
@@ -166,7 +167,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag)
 {
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
-	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
+
+	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+
+	pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
+	
+	CNavigation* pNavigation = pPlayer->Get_Navigation();
+
+	pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
+
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Rentier"));
 
 	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"));
@@ -189,7 +198,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
 
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
+	/* -- Monster -----------------------------*/
 	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
 	NULL_CHECK_RETURN(pMonster, E_FAIL);
 	pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
@@ -205,6 +214,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
 	NULL_CHECK_RETURN(pMonster, E_FAIL);
 	pMonster->Set_Position(_float3(255.5f, 0.f, 15.f ));
+	
+	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_Position(_float3(250.5f, 0.f, 5.f ));
+	
 	
 
 	return S_OK;
@@ -415,27 +429,30 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Monster(const wstring& strLayerTag, void
 
 	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &json_in)))
 	//	return E_FAIL;
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything")));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything")));
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI_Interface(const wstring& strLayerTag, void* pArg)
 {
-	// =>Left_Interface
-						Ready_LeftInterface(strLayerTag, pArg);
-	// =>Right_Interface
-						Ready_RightInterface(strLayerTag, pArg);
-	// =>Quest_Box
-						Ready_QuestBox(strLayerTag, pArg); 
-	// =>Tutorial_Box
-						Ready_TutorialBox(strLayerTag, pArg);
-	// =>LevelUp
-						Ready_LevelUp(strLayerTag, pArg);
-	// =>Reward_Item
-						Ready_Reward_Item(strLayerTag, pArg);
-	// =>Cursor
-						Ready_Cursor(strLayerTag, pArg);
+	// Ready Interface
+	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Interface(LEVEL_STATIC));
+
+	//// =>Left_Interface
+	//					Ready_LeftInterface(strLayerTag, pArg);
+	//// =>Right_Interface
+	//					Ready_RightInterface(strLayerTag, pArg);
+	//// =>Quest_Box
+	//					Ready_QuestBox(strLayerTag, pArg); 
+	//// =>Tutorial_Box
+	//					Ready_TutorialBox(strLayerTag, pArg);
+	//// =>LevelUp
+	//					Ready_LevelUp(strLayerTag, pArg);
+	//// =>Reward_Item
+	//					Ready_Reward_Item(strLayerTag, pArg);
+	//// =>Cursor
+	//					Ready_Cursor(strLayerTag, pArg);
 
 	return S_OK;
 }
@@ -443,7 +460,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI_Interface(const wstring& strLayerTag, vo
 HRESULT CLevel_GamePlay::Ready_LeftInterface(const wstring& strLayerTag, void* pArg)
 {
 	json json_in;
-
+	
 	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/PlayerInterface/Left_Interface.json";
 
 	_int		iPathNum = 0;

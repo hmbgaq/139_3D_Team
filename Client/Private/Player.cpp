@@ -78,6 +78,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pPhysXCollider->Add_PhysXActorAtScene();
 
 	CData_Manager::GetInstance()->Set_Player(this);
+	m_pGameInstance->Set_Player(this);
 
 	/* Temp - 맵에 맞게 위치 조정한값*/
 	//m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, XMVectorSet(-26.f, 0.f, -6.f, 1.f));
@@ -101,7 +102,7 @@ void CPlayer::Tick(_float fTimeDelta)
 		m_pActor->Update_State(fTimeDelta);
 	}
 
-
+	
 	//_float3 vPos = Get_Position();
 
 	//PxControllerFilters Filters;
@@ -130,12 +131,20 @@ void CPlayer::Tick(_float fTimeDelta)
 	//	Set_Position(vResult);
 	//}
 	
+	if(m_pNavigationCom != nullptr)
+		m_pNavigationCom->Update(XMMatrixIdentity());
 	
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	#ifdef _DEBUG
+	
+		//if(m_pNavigationCom != nullptr)
+        //m_pGameInstance->Add_DebugRender(m_pNavigationCom);
+    #endif // _DEBUG
 }
 	
 HRESULT CPlayer::Render()
@@ -146,10 +155,22 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
+void CPlayer::Set_Navigation(CNavigation* pNavigation)
+{
+	if(m_pNavigationCom != nullptr)
+		Safe_Release(m_pNavigationCom);
+
+	m_pNavigationCom = pNavigation;
+	m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
+	Safe_AddRef(pNavigation);
+
+	
+}
+
 void CPlayer::Aim_Walk(_float fTimeDelta)
 {
 	_uint AnimIndex;
-	_uint ReversedAnimIndex;
+	//_uint ReversedAnimIndex;
 
 
 	if (m_pGameInstance->Key_Pressing(DIK_W))
@@ -285,6 +306,20 @@ void CPlayer::Search_Target()
 
 HRESULT CPlayer::Ready_Components()
 {
+	CNavigation::NAVI_DESC		NaviDesc = {};
+	NaviDesc.iCurrentIndex = 0;
+
+	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+	if (iCurrentLevel != (_uint)LEVEL_TOOL)
+	{
+		if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Navigation"),
+			TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+			return E_FAIL;
+
+		m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
+	}
+
 	return S_OK;
 }
 
@@ -441,5 +476,7 @@ void CPlayer::Free()
 	{
 		Safe_Delete(m_pActor);
 	}
+
+
 	
 }

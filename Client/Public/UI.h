@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "Renderer.h"
 
+BEGIN(Client)
+
 class CUI abstract : public CGameObject
 {
 public:
@@ -23,12 +25,20 @@ public:
 
 		_int	iTexureframe = 0;				// 텍스처 변경 값
 
-		_float2	vScale = { 0.f, 0.f };			// 크기를 담을 그릇
+		_float2	vScale = { 50.f, 50.f };			// 크기를 담을 그릇
 		_float	fRot = 0.f;						// 회전을 담을 그릇
-		_float2	vPos = { 0.f, 0.f };			// 위치를 담을 그릇
+		_float2	vPos = { 10.f, 10.f };			// 위치를 담을 그릇
 
 		_float2	vKeyFramePos = { 0.00000000f, 0.00000000f };	// 툴에서의 해당 키프레임 위치
 
+		_float	fAlpha = 1.f;
+
+		/* 동작 추가 */
+		_bool	bActive = false;
+		_bool	bAppear = true;
+		_bool	bDisappear = false; // Disappear
+		_bool	bLoopSection = false; // Disappear
+		_bool	bTrigger = false;
 	}UIKEYFRAME;
 
 
@@ -127,6 +137,22 @@ public:
 		_vector		vColor = { 1.f, 1.f, 1.f, 1.f };
 
 		class CTransform* pParentTransformCom = nullptr;
+
+		_int		iKeyframeNum = 0;
+		UIKEYFRAME	tKeyframe;
+
+		/* Distortion */
+		_bool		bDistortionUI = false;
+		_float		fTimeAcc = 0.f;
+		_float		fSequenceTerm = 0.f;
+		_float3		vScrollSpeeds = { 0.f, 0.f, 0.f };
+		_float3		vScales = { 0.f, 0.f, 0.f };
+		_float2		vDistortion1 = { 0.f, 0.f };
+		_float2		vDistortion2 = { 0.f, 0.f };
+		_float2		vDistortion3 = { 0.f, 0.f };
+		_float		fDistortionScale = 0.f;
+		_float		fDistortionBias = 0.f;
+
 	}UI_DESC;
 
 	enum UI_BUTTON_STATE
@@ -143,6 +169,16 @@ public: /* ============================== Get / Set ============================
 	// =>UIDesc
 	UI_DESC			Get_UIDesc() { return m_tUIInfo; }
 	void			Set_UIDesc(UI_DESC UIDesc) { m_tUIInfo = UIDesc; }
+	// =>Distortion
+	_bool			Get_DistortionUI() { return m_tUIInfo.bDistortionUI; }
+	void			Set_ScrollSpeeds(_float3 vScrollSpeeds) { m_tUIInfo.vScrollSpeeds = vScrollSpeeds; }
+	void			Set_SequenceTerm(_float fSequenceTerm) { m_tUIInfo.fSequenceTerm = fSequenceTerm; }
+	void			Set_DistortionScales(_float3 vScales) { m_tUIInfo.vScales = vScales; }
+	void			Set_Distortion1(_float2 vDistortion1) { m_tUIInfo.vDistortion1 = vDistortion1; }
+	void			Set_Distortion2(_float2 vDistortion2) { m_tUIInfo.vDistortion2 = vDistortion2; }
+	void			Set_Distortion3(_float2 vDistortion3) { m_tUIInfo.vDistortion3 = vDistortion3; }
+	void			Set_DistortionScale(_float fDistortionScale) { m_tUIInfo.fDistortionScale = fDistortionScale; }
+	void			Set_DistortionBias(_float fDistortionBias) { m_tUIInfo.fDistortionBias = fDistortionBias; }
 	// =>Pickup
 	_bool			Get_Pick() { return m_bPick; }
 	_bool			Set_Pick(_bool Pick) { m_bPick = Pick; }
@@ -160,6 +196,13 @@ public: /* ============================== Get / Set ============================
 	void			Set_Kind(UI_KIND eUI_King) { m_eKind = eUI_King; }
 	UI_KIND			Get_Kind() { return m_eKind; }
 
+	// =>Active
+	void			Set_Active(_bool bActive) { m_bActive = bActive; }
+	_bool			Get_Active() { return m_bActive; }
+
+	/* Debug */
+	void			Set_Tool(_bool bTool) { m_bTool = bTool; }
+	_bool			m_bTool = true;
 
 //protected:
 public:
@@ -215,6 +258,9 @@ public: /* ============================== SetUp ============================== *
 	void			Player_HUD(_float fTimeDelta);
 
 public:
+	void Check_Disappear(_float fTimeDelta);
+
+public:
 #ifdef _DEBUG
 	/* (컨테이너의 주소를 받아오는건 릴리즈 모드에서 터지는 버그가있음. 툴용) */
 	vector<CUI*>*	Get_vecUIParts() { return &m_vecUIParts; }
@@ -229,29 +275,38 @@ protected: /* =========================== Ready ============================= */
 	virtual HRESULT Bind_ShaderResources();
 
 public: /* =========================== Save/Load ============================== */
-	void			Load_UIData(const char* _FilePath);
+	virtual void	Load_FromJson(const json& In_Json);
 	virtual json	Save_Desc(json& out_json);
 
 public: /* =========================== Animation ============================== */
-	void			Play_Animation();
+	void			Play_Animation(_float fTimeDelta);
 	void			Add_Keyframe(UIKEYFRAME tKeyframe) { m_vecAnimation.push_back(tKeyframe); }
 	void			Emplaceback_Keyframe(UIKEYFRAME tKeyframe) { m_vecAnimation.emplace_back(tKeyframe); }
-
+	void			Set_AnimationKeyframe(UIKEYFRAME tKeyframe);
 	// 애니메이션 값
 	std::vector<UIKEYFRAME> m_vecAnimation = {};
-	_int				m_iTextureNum = 0;
+	_int			m_iTextureNum = 0;
+	_int			m_iLoopAnimIndex = 0;
 
-	void				Set_AnimPlay(_bool bPlay) { m_bPlayAnim = bPlay; }
-	_bool				Get_AnimPlay() { return m_bPlayAnim; }
-	_bool				m_bPlayAnim = false;
+	void			Set_AnimPlay(_bool bPlay) { m_bPlayAnim = bPlay; }
+	_bool			Get_AnimPlay() { return m_bPlayAnim; }
+	_bool			m_bPlayAnim = false;
 
-	void				Set_CurrTime(_float fCurrTime) { m_fCurrTime = fCurrTime; }
-	_float				Get_CurrTime() { return m_fCurrTime; }
-	_float				m_fCurrTime = 0.f;
+	void			Set_Disappear(_bool bDisappear) { m_bDisappear = bDisappear; }
+	_bool			Get_Disappear() { return m_bDisappear; }
+	_bool			m_bDisappear = false;
 
-	void				Set_Repetition(_bool bRepetition) { m_bRepetition = bRepetition; }
-	_bool				Get_Repetition() { return m_bRepetition; }
-	_bool				m_bRepetition = false;
+	void			Set_CurrTime(_float fCurrTime) { m_fCurrTime = fCurrTime; }
+	_float			Get_CurrTime() { return m_fCurrTime; }
+	_float			m_fCurrTime = 0.f;
+
+	void			Set_Repetition(_bool bRepetition) { m_bRepetition = bRepetition; }
+	_bool			Get_Repetition() { return m_bRepetition; }
+	_bool			m_bRepetition = false;
+
+	void			Set_Alpha(_float fAlpha) { m_fAlpha = fAlpha; }
+	_float			Get_Alpha() { return m_fAlpha; }
+
 	// dt 값
 	_float fFrameTimeDelta, fCurFrameTimeDelta;
 
@@ -264,8 +319,17 @@ public: /* =========================== Animation ============================== 
 	// 이동
 	_float fPosX_Delta, fPosY_Delta;
 
+	// 알파
+	_float fAlpha_Delta;
+
 protected: /* Data */
 	class CData_Manager* m_pData_Manager = { nullptr };
+
+protected:
+	class CUI_Manager* m_pUI_Manager = { nullptr };
+
+protected:
+	_bool				Alpha_Minus(_float fTimeDelta);
 
 protected:
 	void				Compute_CamDistance();
@@ -298,6 +362,7 @@ protected: /* ============================= UI =============================== *
 	UI_DESC				m_tUIInfo;
 	RECT				m_rcUI = {};
 	UISTATE				m_eState;
+	UITYPE				m_eType = UITYPE::NONE;
 	_float4x4			m_Origin_WorldMatrix = {};
 	_bool				m_bActive = false;
 	_bool				m_bReset = false;
@@ -309,6 +374,7 @@ protected: /* ============================= UI =============================== *
 
 	// 투명도
 	_float				m_fAlpha = 0.f;
+	_bool				m_bTrigger = false;
 
 protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;
@@ -318,3 +384,5 @@ public:
 	virtual void		 Free() override;
 
 };
+
+END

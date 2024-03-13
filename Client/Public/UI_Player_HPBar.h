@@ -34,7 +34,6 @@ private:
 
 private:
 	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };
-	CData_Manager*			m_pDataManager = { nullptr };
 	TEXTUREKIND				m_eTexture_Kind = TEXTURE_END;
 	_float					m_fPreHP = 0.f;
 	_float					m_fCurHP = 0.f;
