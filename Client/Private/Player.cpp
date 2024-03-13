@@ -296,19 +296,36 @@ HRESULT CPlayer::Ready_PartObjects()
 	//if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
 	//{
 		
-		CWeapon::WEAPON_DESC		WeaponDesc = {};
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, TEXT("Weapon_Punch_L")));
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch_R")));
+	CWeapon::WEAPON_DESC		WeaponDesc = {};
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, TEXT("Weapon_Punch_L")));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch_R")));
 
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELWinchester"), "RightHandIK", WeaponDesc, TEXT("Weapon_Winchester")));
+
+
+	
 	//}
 
 	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch_L"));
 	m_pWeapon_Punch_L->Set_Enable(true);
+	m_pWeapon_Punch_L->Set_Enable_Collisions(false);
 	
 	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_Punch_R"));
 	m_pWeapon_Punch_R->Set_Enable(true);
+	m_pWeapon_Punch_R->Set_Enable_Collisions(false);
 
 
+	//CWeapon* m_pWeapon_Winchester = Get_Weapon(TEXT("Weapon_Winchester"));
+	//m_pWeapon_Winchester->Set_Enable(true);
+
+	//m_pWeapon_Winchester->Get_Transform()->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(180.f));
+	//m_pWeapon_Winchester->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f));
+
+	//m_pWeapon_Winchester->Get_Transform()->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(76.98f));
+	//m_pWeapon_Winchester->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(47.72f));
+	//m_pWeapon_Winchester->Get_Transform()->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(168.34f));
+
+	//m_pWeapon_Winchester->Get_Transform()->Set_State(CTransform::STATE_POSITION, XMVectorSet(-0.1f, 0.025, -0.187f, 1.f));
 
 	
 	return S_OK;

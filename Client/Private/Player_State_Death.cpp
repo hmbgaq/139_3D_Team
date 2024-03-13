@@ -3,6 +3,7 @@
 void CPlayer_State_Death::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
+	pActor->Set_Splitted(false);
 }
 
 CState<CPlayer>* CPlayer_State_Death::Update(CPlayer* pActor, _float fTimeDelta)

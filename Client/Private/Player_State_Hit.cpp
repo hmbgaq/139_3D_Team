@@ -3,6 +3,7 @@
 void CPlayer_State_Hit::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
+	pActor->Set_Splitted(false);
 }
 
 CState<CPlayer>* CPlayer_State_Hit::Update(CPlayer* pActor, _float fTimeDelta)
