@@ -22,7 +22,7 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 		return new CVampireCommander_BloodRange_Stun_Start();
 	}
 	//체력회복 
-	m_fHealHP += 0.1f;
+	m_fHealHP += 0.3f;
 	
 	pActor->Set_Hp(m_iPreHP + m_fHealHP);
 

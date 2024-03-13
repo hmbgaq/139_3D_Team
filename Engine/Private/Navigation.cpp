@@ -480,6 +480,7 @@ _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 		*pGround = (fY <= height);
 	}
 
+
 	return height;
 }
 
