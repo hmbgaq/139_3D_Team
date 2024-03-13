@@ -26,6 +26,11 @@
 #include "VampireCommander_Taunt4.h"
 #include "VampireCommander_Taunt5.h"
 #include "VampireCommander_Walk_F.h"
+#include "VampireCommander_TurnL180.h"
+#include "VampireCommander_TurnL90.h"
+#include "VampireCommander_TurnR90.h"
+#include "VampireCommander_TurnR180.h"
+
 
 #include "SMath.h"
 void CVampireCommander_State::Initialize(CVampireCommander* pActor)
@@ -47,6 +52,25 @@ void CVampireCommander_State::Release(CVampireCommander* pActor)
 CState<CVampireCommander>* CVampireCommander_State::Update_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	return nullptr;
+}
+
+_bool CVampireCommander_State::Calculation_Direcion(CVampireCommander* pActor, _float4 vCurrentDir)
+{
+	_float fAngle = pActor->Target_Contained_Angle(vCurrentDir, pActor->Get_Target()->Get_Transform()->Get_Pos());
+
+	if (0 <= fAngle && fAngle <= 90)
+		return true;
+	else if (-90 <= fAngle && fAngle < 0)
+		return true;
+	else if (fAngle > 90)
+		return false;
+	else if (fAngle < -90)
+		return false;
+	else
+	{
+		cout << "VmapireCommander : 각도계산안됨 Target_Contained_Angle 함수 다시체크 " << endl;
+		return false;
+	}
 }
 
 CState<CVampireCommander>* CVampireCommander_State::Normal_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
@@ -172,12 +196,42 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 {
 	CState<CVampireCommander>* pState = { nullptr };
 
-	
 
 	_int iRandomTaunt = SMath::Random(0, 9); // 근접용 랜덤 
 
-	if (7 < iRandomTaunt)
+	_float fAngle = pActor->Target_Contained_Angle(pActor->Get_Transform()->Get_Look(), pActor->Get_Target()->Get_Transform()->Get_Pos());
+
+	cout << "VampireCommander : "<< fAngle  << endl;
+	if (pActor->m_bLookAt == true)
+	{
+		//Look_At_Target();
+		if (0 <= fAngle && fAngle <= 45)
+			pActor->Look_At_Target();
+		else if (-45 <= fAngle && fAngle < 0)
+			pActor->Look_At_Target();
+		
+
+		pActor->m_bLookAt = false;
+		
+	}
+	if (pActor->m_bTurn == true)
+	{
+		if (fAngle > 45 && fAngle <= 135)
+			return (new CVampireCommander_TurnR90);
+		else if (fAngle > 135 && fAngle <= 180)
+			return (new CVampireCommander_TurnL180);
+		else if (fAngle < -45 && fAngle >= -135)
+			return new CVampireCommander_TurnL90;
+		else if (fAngle < -135 && fAngle <= -180)
+			return (new CVampireCommander_TurnR180);
+		pActor->m_bTurn = false;
+	}
+
+	if (8 < iRandomTaunt)
+	{
+		pActor->m_bLookAt = true;
 		return Taunt_State(pActor, fTimeDelta, _iAnimIndex);
+	}
 		
 	
 	if (70.f < pActor->Calc_Distance())
@@ -216,6 +270,6 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 
 CState<CVampireCommander>* CVampireCommander_State::Idle(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	pActor->m_bLookAt = true;
+	//pActor->m_bLookAt = true;
 	return new CVampireCommander_Idle();
 }

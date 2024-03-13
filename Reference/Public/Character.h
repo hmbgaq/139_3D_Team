@@ -137,7 +137,7 @@ public:
 	void Search_Target(const wstring& strLayerTag);
 	_float Target_Contained_Angle(_float4 vStandard, _float4 vTargetPos); /* 내 Look과 타겟을 향하는 벡터 사이의 끼인각을 구하는함수 */
 	_bool Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta);
-	CCharacter* Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance = 20.f);
+	CCharacter* Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance = 150.f);
 
 public:
 	_float Calc_Distance(_float3 vTargetPos);

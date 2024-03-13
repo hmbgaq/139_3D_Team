@@ -419,22 +419,22 @@ void CCharacter::Search_Target(const wstring& strLayerTag)
 _float CCharacter::Target_Contained_Angle(_float4 vStandard, _float4 vTargetPos)
 {
 	/* ---------- 소영 추가 ---------- */
-	// 함수설명 : Look 기준으로 우측에 있을경우 +사이각 , 좌측에 있을경우 - 사이각으로 값이 리턴된다. 
-	/* ------------------------------- */
+	 // 함수설명 : Look 기준으로 우측에 있을경우 +사이각 , 좌측에 있을경우 - 사이각으로 값이 리턴된다. 
+	 /* ------------------------------- */
 	_vector vLook = XMVector3Normalize(vTargetPos - m_pTransformCom->Get_Pos());
 
 	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
 
-	_float angle = std::acos(XMVectorGetX(XMVector3Dot(vStandard, vLook)));
+	_float fAngle = acos(XMVectorGetX(XMVector3Dot(vStandard, vLook)));
 
-	if (XMVectorGetX(XMVector3Dot(XMVectorSet(1.f, 0.f, 0.f, 0.f), vLook)) < 0.f)
-	{
-		angle = -angle;
-	}
+	fAngle = XMConvertToDegrees(fAngle);
 
-	angle = XMConvertToDegrees(angle);
+	_vector vJudge = XMVector3Cross(vStandard, vLook);
 
-	return angle;
+	_float fRotationDirection = XMVectorGetY(vJudge) < 0 ? -1.0f : 1.0f;
+
+	return fAngle * fRotationDirection;
+
 }
 
 _bool CCharacter::Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta)
