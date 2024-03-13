@@ -50,7 +50,12 @@ HRESULT CCharacter_Client::Render()
 
 CEffect* CCharacter_Client::Create_Effect(CGameObject* pOwner)
 {
-	return EFFECT_MANAGER->Create_Effect(Get_CharcterDesc().EffectFileName + ".json", pOwner);
+	string strEffectFileName = Get_CharcterDesc().EffectFileName;
+	if ("" == strEffectFileName)
+	{
+		strEffectFileName = "Test_Effect";
+	}
+	return EFFECT_MANAGER->Create_Effect(strEffectFileName + ".json", pOwner);
 }
 
 CEffect* CCharacter_Client::Create_Effect(_float3 vPos, CGameObject* pOwner)
