@@ -29,7 +29,7 @@ HRESULT CBullet_Winchester::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 80.f;
+	GameObjectDesc.fSpeedPerSec = 150.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -56,7 +56,7 @@ void CBullet_Winchester::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	_float fDistance = 20.f;
+	_float fDistance = m_pTransformCom->Get_Speed();
 	Search_Target(LAYER_MONSTER, fDistance);
 	Search_Target(LAYER_BOSS, fDistance);
 	

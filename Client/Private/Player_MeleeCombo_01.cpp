@@ -30,15 +30,15 @@ CState<CPlayer>* CPlayer_MeleeCombo_01::Update(CPlayer* pActor, _float fTimeDelt
 {
 	__super::Update(pActor, fTimeDelta);
 	
-	if (false == m_bFlags[0] && pActor->Check_EffectOnTrackPosition())
-	{
-		CWeapon* pWeapon = pActor->Get_Weapon(WEAPON_PUNCH_R);
-		_float3 vPos = pWeapon->Get_WorldPosition();
+	//if (false == m_bFlags[0] && pActor->Check_EffectOnTrackPosition())
+	//{
+	//	CWeapon* pWeapon = pActor->Get_Weapon(WEAPON_PUNCH_R);
+	//	_float3 vPos = pWeapon->Get_WorldPosition();
 
-		pActor->Create_Effect(vPos);
+	//	pActor->Create_Effect(vPos);
 
-		m_bFlags[0] = true;
-	}
+	//	m_bFlags[0] = true;
+	//}
 
 	if (pActor->Is_Inputable_Front(30)) 
 	{

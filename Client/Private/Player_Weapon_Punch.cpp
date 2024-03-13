@@ -2,6 +2,8 @@
 #include "Player_Weapon_Punch.h"
 #include "GameInstance.h"
 #include "Character.h"
+#include "Player.h"
+#include "Data_Manager.h"
 
 CPlayer_Weapon_Punch::CPlayer_Weapon_Punch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CWeapon_Player(pDevice, pContext, strPrototypeTag)
@@ -85,6 +87,7 @@ void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 		pTarget_Character->Set_Hitted(m_iDamage, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1 , m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
 
+		CData_Manager::GetInstance()->Get_Player()->Create_Effect(Get_WorldPosition());
 	}
 	Set_Enable_Collisions(false);
 }

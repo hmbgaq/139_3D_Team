@@ -78,6 +78,8 @@ public:
 	void Set_WorldMatrix(_fmatrix WorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix); }
 	void Set_Scaling(_float fScaleX, _float fScaleY, _float fScaleZ);
 	void Set_Speed(_float fSpeed) { m_fSpeedPerSec = fSpeed; }
+	_float Get_Speed() { return m_fSpeedPerSec; }
+
 
 	void Set_Position(const _float3& vState)
 	{
