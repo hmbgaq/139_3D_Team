@@ -121,6 +121,8 @@ public:
 	void	Rotation(_fvector vAxis, _float fRadian);
 	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta);
 
+	_bool Rotation_LerpTest(_float fRadian, _float fTimeDelta);
+
 	void	Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare = 0.1f);
 	void	Look_At(_fvector vTargetPos);
 	void	Look_At_OnLand(_fvector vTargetPos);

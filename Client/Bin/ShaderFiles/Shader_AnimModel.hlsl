@@ -181,7 +181,7 @@ PS_OUT PS_BOSS(PS_IN In)
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
 
-    if (vMtrlDiffuse.a < 0.8f)
+    if (vMtrlDiffuse.a < 0.3f)
         discard;
 
     Out.vDiffuse = vMtrlDiffuse;

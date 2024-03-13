@@ -133,6 +133,7 @@ public:
 
 public:
 	void Look_At_Target();
+	void Look_At_Target_Lerp(_float fTimeDelta);
 	void Search_Target(const wstring& strLayerTag);
 	CCharacter* Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance = 20.f);
 

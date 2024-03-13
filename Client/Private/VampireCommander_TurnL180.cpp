@@ -5,7 +5,7 @@ void CVampireCommander_TurnL180::Initialize(CVampireCommander* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true,false);
 }
 
 CState<CVampireCommander>* CVampireCommander_TurnL180::Update(CVampireCommander* pActor, _float fTimeDelta)
