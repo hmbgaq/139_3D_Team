@@ -1,5 +1,6 @@
 #include "..\Public\Body.h"
 #include "GameInstance.h"
+#include "Character.h"
 
 CBody::CBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -172,6 +173,24 @@ void CBody::Set_TrackPosition(_int iNewTrackPosition)
 	return m_pModelCom->Set_TrackPosition(iNewTrackPosition);
 }
 
+void CBody::OnCollisionEnter(CCollider* other)
+{
+}
+	
+void CBody::OnCollisionStay(CCollider* other)
+{
+	CCharacter* pTarget_Character = Get_Target_Character(other);
+	if (nullptr != pTarget_Character)
+	{
+		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
+		pTarget_Character->Add_Force(Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1	, 0.15f);
+	}
+}
+
+void CBody::OnCollisionExit(CCollider* other)
+{
+}
+
 void CBody::Set_MouseMove(_float fTimeDelta)
 {
 	_float2 vMouseMove = { 0.f, 0.f };
@@ -193,6 +212,18 @@ void CBody::Set_MouseMove(_float fTimeDelta)
 
 	m_pModelCom->Set_MouseMove(vResult);
 
+}
+
+CCharacter* CBody::Get_Target_Character(CCollider* other)
+{
+	if (nullptr == other || nullptr == other->Get_Owner() || nullptr == other->Get_Owner()->Get_Object_Owner())
+		return nullptr;
+
+	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(other->Get_Owner()->Get_Object_Owner());
+	if (nullptr == pTarget_Character)
+		return nullptr;
+
+	return pTarget_Character;
 }
 
 #ifdef _DEBUG
