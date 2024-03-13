@@ -20,8 +20,8 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-
-
+public:
+	_float Ratation_Target_Test();
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();

@@ -134,8 +134,6 @@ void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavigation)
 	Move_On_Navigation(vResult, pNavigation);
 }
 
-
-
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 {
 	_vector		vRight = Get_State(STATE_RIGHT);

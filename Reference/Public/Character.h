@@ -133,6 +133,7 @@ public:
 
 public:
 	void Look_At_Target();
+	void Look_At_Target_Lerp(_float fTimeDelta);
 	void Search_Target(const wstring& strLayerTag);
 	_float Target_Contained_Angle(_float4 vTargetPos); /* 내 Look과 타겟을 향하는 벡터 사이의 끼인각을 구하는함수 */
 	_bool Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta);

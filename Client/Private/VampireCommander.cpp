@@ -9,8 +9,12 @@
 #include "VampireCommander_HitLeft.h"
 #include "VampireCommander_HitRight.h"
 #include "VampireCommander_CutScene.h"
+#include "VampireCommander_TurnL90.h"
+#include "VampireCommander_TurnL180.h"
+#include "VampireCommander_TurnR90.h"
 
 #include "Data_Manager.h"
+#include "Player.h"
 
 CVampireCommander::CVampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
@@ -68,9 +72,18 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	Search_Target(L"Layer_Player");
 	if (m_bLookAt == true)
 	{
-		Look_At_Target();
+		if (90.f > Ratation_Target_Test())
+			Look_At_Target();
+		else if (90.f <= Ratation_Target_Test() && 180.f > Ratation_Target_Test())
+			m_pActor->Set_State(new CVampireCommander_TurnL90);
+		else if (180.f <= Ratation_Target_Test() && 270.f > Ratation_Target_Test())
+			m_pActor->Set_State(new CVampireCommander_TurnR90);
+		else if (270.f <= Ratation_Target_Test() && 360.f > Ratation_Target_Test())
+			Look_At_Target();
+
 		m_bLookAt = false;
 	}
+
 }
 
 void CVampireCommander::Late_Tick(_float fTimeDelta)
@@ -84,6 +97,20 @@ HRESULT CVampireCommander::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+_float CVampireCommander::Ratation_Target_Test()
+{
+	_vector vPlayerPos = XMVector3Normalize(CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION));
+	_vector vMonsterPos = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+
+	//시선벡터 계산 
+	_float dotProduct = XMVectorGetX(XMVector3Dot(vPlayerPos, vMonsterPos));
+	_float Radian = acosf(dotProduct);
+	_float Degree = XMConvertToRadians(Radian);
+
+	return Degree;
+
 }
 
 HRESULT CVampireCommander::Ready_Components()
