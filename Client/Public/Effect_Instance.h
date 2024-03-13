@@ -60,6 +60,13 @@ public:
 
 	CVIBuffer_Effect_Model_Instance* Get_VIBufferCom() { return m_pVIBufferCom; }
 
+
+// Åø ¿ë
+public:
+	HRESULT			Change_TextureCom(wstring strProtoTextureTag);	
+	HRESULT			Remove_TextureCom(TEXTURE eTexture);
+
+
 private:
 	CShader*							m_pShaderCom				= { nullptr };	
 	CModel*								m_pModelCom[CVIBuffer_Effect_Model_Instance::MORPH_END]	= { nullptr };

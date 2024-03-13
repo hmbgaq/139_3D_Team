@@ -3,6 +3,9 @@
 #include "GameInstance.h"
 #include "Weapon_Infected_A.h"
 
+#include "Effect_Manager.h"
+#include "Effect_Trail.h"
+
 CWeapon_Infected_A::CWeapon_Infected_A(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon_Infected(pDevice, pContext, strPrototypeTag)
 {
@@ -40,6 +43,12 @@ void CWeapon_Infected_A::Tick(_float fTimeDelta)
 void CWeapon_Infected_A::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	//! 유정: 트레일 테스트
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
+	}
 }
 
 HRESULT CWeapon_Infected_A::Render()
@@ -65,6 +74,10 @@ HRESULT CWeapon_Infected_A::Ready_Components()
 
 		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders[0]), &BoundingDesc));
 	}
+
+
+	//! 유정: 트레일 테스트
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json");
 
 	return S_OK;
 }
