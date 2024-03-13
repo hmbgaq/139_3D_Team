@@ -81,7 +81,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	CData_Manager::GetInstance()->Set_Player(this);
 	m_pGameInstance->Set_Player(this);
-	m_iHp = 1000;
 	/* Temp - 맵에 맞게 위치 조정한값*/
 	//m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, XMVectorSet(-26.f, 0.f, -6.f, 1.f));
 
