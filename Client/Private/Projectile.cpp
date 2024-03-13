@@ -44,6 +44,19 @@ void CProjectile::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	m_pCollider->Update(m_pTransformCom->Get_WorldMatrix());
+
+	m_fLifeTime -= fTimeDelta;
+	if (0 >= m_fLifeTime) 
+	{
+		if (m_bIsPoolObject)
+		{
+			Set_Enable(false);
+		}
+		else 
+		{
+			Set_Dead(true);
+		}
+	}
 }
 
 void CProjectile::Late_Tick(_float fTimeDelta)

@@ -183,6 +183,6 @@ CGameObject* CVampireCommander_Projectile_Range1::Pool()
 void CVampireCommander_Projectile_Range1::Free()
 {
 	__super::Free();
-	if (m_pEffect != nullptr)
+	if (m_pEffect == nullptr)
 		Safe_Release(m_pEffect);
 }

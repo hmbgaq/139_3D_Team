@@ -65,6 +65,9 @@ public:
 public:
 	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
 
+public:
+	virtual void Fire() {};
+
 
 protected:
 	virtual HRESULT Ready_Components() PURE;

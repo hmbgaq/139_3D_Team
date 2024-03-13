@@ -43,7 +43,7 @@ private: /* UI */
 
 private:
 	_int			TempLightNumber = 0;
-	_bool			m_bPlayerStartRotate = false;
+	//_bool			m_bPlayerStartRotate = false;
 
 	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData_MapData.json";
 

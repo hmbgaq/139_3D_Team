@@ -4,9 +4,7 @@
 #include "Actor.h"
 
 BEGIN(Engine)
-
 class CPhysXCollider;
-
 END
 
 BEGIN(Client)
@@ -33,6 +31,8 @@ public:
 	void Set_Rotate_In_CameraDir(_bool _bRotate_In_CameraDir) {
 		m_bRotate_In_CameraDir = _bRotate_In_CameraDir;
 	}
+
+	void	Set_Navigation(CNavigation* pNavigation);
 
 public:
 	void Aim_Walk(_float fTimeDelta);

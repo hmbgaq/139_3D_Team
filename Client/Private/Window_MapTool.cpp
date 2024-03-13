@@ -6,7 +6,6 @@
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
 #include "Environment_LightObject.h"
-#include "Environment_SpecialObject.h"
 
 #include "Field.h"
 
@@ -25,7 +24,11 @@
 #include "Sky.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
+
 #include "Navigation.h"
+#include "Cell.h"
+#include "../../Reference/Public/Delaunator/delaunator.hpp"
+
 
 static ImGuizmo::OPERATION InstanceCurrentGizmoOperation;
 static ImGuizmo::MODE	   InstanceCurrentGizmoMode;
@@ -67,10 +70,11 @@ HRESULT CWindow_MapTool::Initialize()
 
 	if(m_pSkybox == nullptr)
 		return E_FAIL;
+	//m_mapPreviewInstance
 
 	m_pNavigation = CData_Manager::GetInstance()->Get_Navigation();
 
-	if (m_pNavigation == nullptr)
+	if(m_pNavigation == nullptr)
 		return E_FAIL;
 	
 	return S_OK;
@@ -106,6 +110,7 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	
 	ImGui::SeparatorText(u8"세이브 / 로드");
 	{
+		
 		if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; m_strDialogPath = "../Bin/DafaFiles/Data_Map/"; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DafaFiles/Data_Map/";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
 	}ImGui::Separator(); 
 
@@ -125,7 +130,7 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	{
 
 		static _int iObjectType = 0;
-		const char* CharObjectType[2] = { u8"환경", u8"캐릭터" };
+		const char* CharObjectType[3] = { u8"환경", u8"캐릭터", u8"네비게이션"};
 
 		for (_uint i = 0; i < IM_ARRAYSIZE(CharObjectType); ++i)
 		{
@@ -148,10 +153,15 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	{
 		EnvironmentMode_Function();
 	}
-	else //! OBJECTMODE_CHARACTER
+	else if(m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER) //! OBJECTMODE_CHARACTER
 	{
 		CharacterMode_Function();
 	}
+	else
+	{
+		NavigationMode_Function();
+	}
+
 
 	
 
@@ -183,186 +193,193 @@ void CWindow_MapTool::Render()
 
 HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 {
- 	
- 	string strNoExtFileName = filesystem::path(strFileName).stem().string();
-	
-
- 	string strBasic = "Basic";
- 	string strInstance = "Instance";
- 
- 	for (auto& tag : m_vecCreateObjectTag)
- 	{
- 		// 문자열에서 '@' 문자 이후의 부분을 지움
- 		size_t atIndex = tag.find('@');
- 		if (atIndex != std::string::npos) {
- 			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
- 		}
- 	}
- 
- 	for (auto& tag : m_vecCreateInstanceTag)
- 	{
- 		// 문자열에서 '@' 문자 이후의 부분을 지움
- 		size_t atIndex = tag.find('@');
- 		if (atIndex != std::string::npos) {
- 			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
- 		}
- 	}
-
-	for (auto& tag : m_vecCreateMonsterTag)
+ 	if(m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_NAVIGATION)
 	{
-		// 문자열에서 '@' 문자 이후의 부분을 지움
-		size_t atIndex = tag.find('@');
-		if (atIndex != std::string::npos) {
-			tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+		SaveNavi(strPath + "/" + strFileName);
+	}
+	else
+	{
+		string strNoExtFileName = filesystem::path(strFileName).stem().string();
+
+
+		string strBasic = "Basic";
+		string strInstance = "Instance";
+
+		for (auto& tag : m_vecCreateObjectTag)
+		{
+			// 문자열에서 '@' 문자 이후의 부분을 지움
+			size_t atIndex = tag.find('@');
+			if (atIndex != std::string::npos) {
+				tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+			}
+		}
+
+		for (auto& tag : m_vecCreateInstanceTag)
+		{
+			// 문자열에서 '@' 문자 이후의 부분을 지움
+			size_t atIndex = tag.find('@');
+			if (atIndex != std::string::npos) {
+				tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+			}
+		}
+
+		for (auto& tag : m_vecCreateMonsterTag)
+		{
+			// 문자열에서 '@' 문자 이후의 부분을 지움
+			size_t atIndex = tag.find('@');
+			if (atIndex != std::string::npos) {
+				tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+			}
+		}
+
+
+
+		json SaveJson = {};
+
+
+
+		json BasicJson = {};
+
+
+		if (false == m_vecCreateObject.empty())
+		{
+			_int iCreateObjectSize = (_int)m_vecCreateObject.size();
+
+
+
+			for (_int i = 0; i < iCreateObjectSize; ++i)
+			{
+				CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+
+				Desc = *m_vecCreateObject[i]->Get_EnvironmentDesc();
+
+				string strModelTag;
+				m_pGameInstance->WString_To_String(m_vecCreateObject[i]->Get_ModelTag(), strModelTag);
+
+				BasicJson[i].emplace("Type", strBasic);
+				BasicJson[i].emplace("Index", i);
+				BasicJson[i].emplace("ObjectTag", m_vecCreateObjectTag[i]);
+				BasicJson[i].emplace("LayerTag", L"Layer_BackGround");
+				BasicJson[i].emplace("ModelTag", strModelTag);
+				BasicJson[i].emplace("AnimType", Desc.bAnimModel);
+				BasicJson[i].emplace("ShaderPassIndex", Desc.iShaderPassIndex);
+				BasicJson[i].emplace("PlayAnimationIndex", Desc.iPlayAnimationIndex);
+
+				m_vecCreateObject[i]->Write_Json(BasicJson[i]);
+			}
+
+		}
+
+		json InteractJson = {};
+
+
+		json InstanceJson = {};
+
+
+		if (false == m_vecCreateInstance.empty())
+		{
+			_int iCreateInstanceObjectSize = (_int)m_vecCreateInstance.size();
+
+
+
+			for (_int i = 0; i < iCreateInstanceObjectSize; ++i)
+			{
+				MAPTOOL_INSTANCE_DESC InstanceObjDesc = m_vecCreateInstance[i]->Get_InstanceDesc();
+
+				string strModelTag;
+				m_pGameInstance->WString_To_String(m_vecCreateInstance[i]->Get_ModelTag(), strModelTag);
+
+				InstanceJson[i].emplace("Type", strInstance);
+				InstanceJson[i].emplace("Index", i);
+				InstanceJson[i].emplace("ObjectTag", m_vecCreateInstanceTag[i]);
+				InstanceJson[i].emplace("ModelTag", strModelTag);
+				InstanceJson[i].emplace("LayerTag", L"Layer_BackGround");
+				InstanceJson[i].emplace("ShaderPassIndex", InstanceObjDesc.iShaderPassIndex);
+				InstanceJson[i].emplace("InstanceCount", InstanceObjDesc.iNumInstance);
+
+				json InstanceInfoJson = {};
+
+
+				for (_uint j = 0; j < InstanceObjDesc.iNumInstance; ++j)
+				{
+					INSTANCE_INFO_DESC InstanceInfoDesc = InstanceObjDesc.vecInstanceInfoDesc[j];
+
+					InstanceInfoJson[j].emplace("Instance_Index", j);
+					CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Scale"], XMLoadFloat3(&InstanceInfoDesc.vScale));
+					CJson_Utility::Write_Float4(InstanceInfoJson[j]["Instance_Rotation"], XMLoadFloat4(&InstanceInfoDesc.vRotation));
+					CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Translation"], XMLoadFloat3(&InstanceInfoDesc.vTranslation));
+					CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Center"], XMLoadFloat3(&InstanceInfoDesc.vCenter));
+
+				}
+
+				InstanceJson[i].emplace("InstanceInfo_Json", InstanceInfoJson);
+
+				m_vecCreateInstance[i]->Write_Json(InstanceJson[i]);
+			}
+
+
+		}
+
+		json MonsterJson;
+
+		if (false == m_vecCreateMonster.empty())
+		{
+			_int iCreateMonsterSize = (_int)m_vecCreateMonster.size();
+
+
+
+			for (_int i = 0; i < iCreateMonsterSize; ++i)
+			{
+				CMonster::MONSTER_DESC Desc;
+
+				Desc = *m_vecCreateMonster[i]->Get_MonsterDesc();
+
+				string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
+				MonsterJson[i].emplace("PrototypeTag", strProtoTag);
+				m_vecCreateMonster[i]->Write_Json(MonsterJson[i]);
+			}
+		}
+
+		//todo 추후 작성 npc
+
+		//json NPCJson;
+		//
+		//if (false == m_vecCreateNPC.empty())
+		//{
+		//	_int iCreateNPCSize = (_int)m_vecCreateNPC.size();
+		//
+		//	for (_int i = 0; i < iCreateNPCSize; ++i)
+		//	{
+		//		CNPC::NPC_DESC Desc;
+		//
+		//		Desc = *m_vecCreateNPC[i]->Get_NPCDesc();
+		//
+		//		string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
+		//		NPCJson[i].emplace("PrototypeTag", strProtoTag);
+		//		m_vecCreateNPC[i]->Write_Json(NPCJson[i]);
+		//	}
+		//}
+
+
+
+
+		SaveJson.emplace("Basic_Json", BasicJson);
+		SaveJson.emplace("Interact_Json", InteractJson);
+		SaveJson.emplace("Instance_Json", InstanceJson);
+		SaveJson.emplace("Monster_Json", MonsterJson);
+
+
+		string strSavePath = strPath + "/" + strNoExtFileName + "_MapData.json";
+		if (FAILED(CJson_Utility::Save_Json(strSavePath.c_str(), SaveJson)))
+		{
+			MSG_BOX("맵툴 저장 실패");
+		}
+		else
+		{
+			MSG_BOX("맵툴 저장 성공");
 		}
 	}
-
-	
-	
-			json SaveJson = {};
-
-
-
-			json BasicJson = {};
-			
-
-			if (false == m_vecCreateObject.empty())
-			{
-				_int iCreateObjectSize = (_int)m_vecCreateObject.size();
-
-			
-
-				for (_int i = 0; i < iCreateObjectSize; ++i)
-				{
-					CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-
-					Desc = *m_vecCreateObject[i]->Get_EnvironmentDesc();
-
-					string strModelTag;
-					m_pGameInstance->WString_To_String(m_vecCreateObject[i]->Get_ModelTag(), strModelTag);
-
-					BasicJson[i].emplace("Type", strBasic);
-					BasicJson[i].emplace("Index", i);
-					BasicJson[i].emplace("ObjectTag", m_vecCreateObjectTag[i]);
-					BasicJson[i].emplace("LayerTag", L"Layer_BackGround");
-					BasicJson[i].emplace("ModelTag", strModelTag);
-					BasicJson[i].emplace("AnimType", Desc.bAnimModel);
-					BasicJson[i].emplace("ShaderPassIndex", Desc.iShaderPassIndex);
-					BasicJson[i].emplace("PlayAnimationIndex", Desc.iPlayAnimationIndex);
-
-					m_vecCreateObject[i]->Write_Json(BasicJson[i]);
-				}
-
-			}
-
-			json InteractJson = {};
-
-
-			json InstanceJson = {};
- 
- 
-			if (false == m_vecCreateInstance.empty())
-			{
-				_int iCreateInstanceObjectSize = (_int)m_vecCreateInstance.size();
-
-				
-
-				for (_int i = 0; i < iCreateInstanceObjectSize; ++i)
-				{
-					MAPTOOL_INSTANCE_DESC InstanceObjDesc = m_vecCreateInstance[i]->Get_InstanceDesc();
-
-					string strModelTag;
-					m_pGameInstance->WString_To_String(m_vecCreateInstance[i]->Get_ModelTag(), strModelTag);
-
-					InstanceJson[i].emplace("Type", strInstance);
-					InstanceJson[i].emplace("Index", i);
-					InstanceJson[i].emplace("ObjectTag", m_vecCreateInstanceTag[i]);
-					InstanceJson[i].emplace("ModelTag", strModelTag);
-					InstanceJson[i].emplace("LayerTag", L"Layer_BackGround");
-					InstanceJson[i].emplace("ShaderPassIndex", InstanceObjDesc.iShaderPassIndex);
-					InstanceJson[i].emplace("InstanceCount", InstanceObjDesc.iNumInstance);
-
-					json InstanceInfoJson = {};
-
-
-					for (_uint j = 0; j < InstanceObjDesc.iNumInstance; ++j)
-					{
-						INSTANCE_INFO_DESC InstanceInfoDesc = InstanceObjDesc.vecInstanceInfoDesc[j];
-
-						InstanceInfoJson[j].emplace("Instance_Index", j);
-						CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Scale"], XMLoadFloat3(&InstanceInfoDesc.vScale));
-						CJson_Utility::Write_Float4(InstanceInfoJson[j]["Instance_Rotation"], XMLoadFloat4(&InstanceInfoDesc.vRotation));
-						CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Translation"], XMLoadFloat3(&InstanceInfoDesc.vTranslation));
-						CJson_Utility::Write_Float3(InstanceInfoJson[j]["Instance_Center"], XMLoadFloat3(&InstanceInfoDesc.vCenter));
-
-					}
-
-					InstanceJson[i].emplace("InstanceInfo_Json", InstanceInfoJson);
-
-					m_vecCreateInstance[i]->Write_Json(InstanceJson[i]);
-				}
-
-				
-			}
-
-			json MonsterJson;
-
-			if (false == m_vecCreateMonster.empty())
-			{
-				_int iCreateMonsterSize = (_int)m_vecCreateMonster.size();
-			
-			
-			
-				for (_int i = 0; i < iCreateMonsterSize; ++i)
-				{
-					CMonster::MONSTER_DESC Desc;
-			
-					Desc = *m_vecCreateMonster[i]->Get_MonsterDesc();
-			
-					string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
-					MonsterJson[i].emplace("PrototypeTag", strProtoTag);
-					m_vecCreateMonster[i]->Write_Json(MonsterJson[i]);
-				}
-			}
-			
-			//todo 추후 작성 npc
-			
-			//json NPCJson;
-			//
-			//if (false == m_vecCreateNPC.empty())
-			//{
-			//	_int iCreateNPCSize = (_int)m_vecCreateNPC.size();
-			//
-			//	for (_int i = 0; i < iCreateNPCSize; ++i)
-			//	{
-			//		CNPC::NPC_DESC Desc;
-			//
-			//		Desc = *m_vecCreateNPC[i]->Get_NPCDesc();
-			//
-			//		string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
-			//		NPCJson[i].emplace("PrototypeTag", strProtoTag);
-			//		m_vecCreateNPC[i]->Write_Json(NPCJson[i]);
-			//	}
-			//}
-
-
-
-
-			SaveJson.emplace("Basic_Json", BasicJson);
-			SaveJson.emplace("Interact_Json", InteractJson);
-			SaveJson.emplace("Instance_Json", InstanceJson);
-			SaveJson.emplace("Monster_Json", MonsterJson);
-
-
-			string strSavePath = strPath + "/" + strNoExtFileName + "_MapData.json";
-			if (FAILED(CJson_Utility::Save_Json(strSavePath.c_str(), SaveJson)))
-			{
-				MSG_BOX("맵툴 저장 실패");
-			}
-			else
-			{
-				MSG_BOX("맵툴 저장 성공");
-			}
+ 	
 
 			return S_OK;
 
@@ -370,170 +387,180 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 {
-
-	json LoadJson;
-
-	string strFullPath = strPath + "/" + strFileName;
-
-	if (FAILED(CJson_Utility::Load_Json(strFullPath.c_str(), LoadJson)))
+	if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_NAVIGATION)
 	{
-		MSG_BOX("맵툴 불러오기 실패");
-		return E_FAIL;
+		LoadNavi(strPath + "/" + strFileName);
 	}
 	else
-		Reset_Function();
+	{
+		
+		json LoadJson;
+
+		string strFullPath = strPath + "/" + strFileName;
+
+		if (FAILED(CJson_Utility::Load_Json(strFullPath.c_str(), LoadJson)))
+		{
+			MSG_BOX("맵툴 불러오기 실패");
+			return E_FAIL;
+		}
+		else
+			Reset_Function();
+
+
+
+		json BasicJson = LoadJson["Basic_Json"];
+		_int iBasicJsonSize = (_int)BasicJson.size();
+
+		for (_int i = 0; i < iBasicJsonSize; ++i)
+		{
+			string IndexTag = "@" + to_string(i);
+
+			string pushObjectTag = (string)BasicJson[i]["ObjectTag"] + IndexTag;
+
+			m_vecCreateObjectTag.push_back(pushObjectTag);
+
+			CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+
+			Desc.bAnimModel = BasicJson[i]["AnimType"];
+
+
+
+			wstring strLoadModelTag;
+			string strJsonModelTag = BasicJson[i]["ModelTag"];
+
+			m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+			Desc.strModelTag = strLoadModelTag;
+
+			Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
+			Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
+			Desc.bPreview = false;
+
+			const json& TransformJson = BasicJson[i]["Component"]["Transform"];
+			_float4x4 WorldMatrix;
+
+			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+			{
+				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+				{
+					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+				}
+			}
+
+			XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+			Desc.WorldMatrix = WorldMatrix;
+
+			CEnvironment_Object* pObject = { nullptr };
+
+			pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+
+			m_vecCreateObject.push_back(pObject);
+			m_iCreateObjectIndex++;
+		}
+
+
+		json InteractJson = LoadJson["Interact_Json"];
+		_int InteractJsonSize = (_int)InteractJson.size();
+
+		for (_int i = 0; i < InteractJsonSize; ++i)
+		{
+			string IndexTag = "@" + to_string(i);
+
+			string pushObjectTag = string(InteractJson[i]["ObjectTag"]) + IndexTag;
+
+			//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
+			//! L"Layer_Event"
+		}
+
+		json InstanceJson = LoadJson["Instance_Json"];
+		_int InstanceJsonSize = (_int)InstanceJson.size();
+
+		for (_int i = 0; i < InstanceJsonSize; ++i)
+		{
+			string IndexTag = "@" + to_string(i);
+
+			string pushObjectTag = string(InstanceJson[i]["ObjectTag"]) + IndexTag;
+
+			m_vecCreateInstanceTag.push_back(pushObjectTag);
+
+			MAPTOOL_INSTANCE_DESC InstanceDesc;
+
+			InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
+
+
+			wstring strLoadModelTag;
+			string strJsonModelTag = InstanceJson[i]["ModelTag"];
+
+			m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+			InstanceDesc.strModelTag = strLoadModelTag;
+
+			InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
+
+			json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
+			_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
+
+			for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
+			{
+				INSTANCE_INFO_DESC InstanceInfoDesc = {};
+
+				CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
+				CJson_Utility::Load_Float4(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
+				CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
+				CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
+
+				InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
+				m_iInstanceInfoTagIndex++;
+
+			}
+
+
+			CEnvironment_Instance* pInstanceObject = { nullptr };
+
+			pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+
+			m_vecCreateInstance.push_back(pInstanceObject);
+			m_iCreateInstanceIndex++;
+		}
+
+		json MonsterJson = LoadJson["Monster_Json"];
+		_int iMonsterJsonSize = (_int)MonsterJson.size();
+
+		for (_int i = 0; i < iMonsterJsonSize; ++i)
+		{
+			string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + "@" + to_string(i);
+
+			m_vecCreateMonsterTag.push_back(pushMonsterTag);
+
+			CMonster::MONSTER_DESC MonsterDesc;
+			MonsterDesc.bPreview = false;
+
+
+			const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+			_float4x4 WorldMatrix;
+
+			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+			{
+				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+				{
+					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+				}
+			}
+
+			MonsterDesc.WorldMatrix = WorldMatrix;
+
+			CMonster* pMonster = { nullptr };
+
+			wstring strProtoTypeTag;
+			m_pGameInstance->String_To_WString((string)MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
+
+			pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
+
+			m_vecCreateMonster.push_back(pMonster);
+			m_iCreateMonsterIndex++;
+		}
+	}
+
 
 	
-
-	json BasicJson = LoadJson["Basic_Json"];
-	_int iBasicJsonSize = (_int)BasicJson.size();
-
-	for (_int i = 0; i < iBasicJsonSize; ++i)
-	{
-		string IndexTag = "@" + to_string(i);
-
-		string pushObjectTag = (string)BasicJson[i]["ObjectTag"] + IndexTag;
-		
-		m_vecCreateObjectTag.push_back(pushObjectTag);
-
-		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-
-		Desc.bAnimModel = BasicJson[i]["AnimType"];
-
-
-
-		wstring strLoadModelTag;
-		string strJsonModelTag = BasicJson[i]["ModelTag"];
-
-		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
-		Desc.strModelTag = strLoadModelTag;
-		
-		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
-		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
-		Desc.bPreview = false;
-
-		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
-		_float4x4 WorldMatrix;
-
-		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-		{
-			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-			{
-				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-			}
-		}
-
-		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
-		Desc.WorldMatrix = WorldMatrix;
-
-		CEnvironment_Object* pObject = { nullptr};
-
-		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
-
-		m_vecCreateObject.push_back(pObject);
-		m_iCreateObjectIndex++;
-	}
-
-
-	json InteractJson = LoadJson["Interact_Json"];
-	_int InteractJsonSize = (_int)InteractJson.size();
-
-	for(_int i = 0; i < InteractJsonSize; ++i)
-	{
-		string IndexTag = "@" + to_string(i);
-
-		string pushObjectTag = string(InteractJson[i]["ObjectTag"]) + IndexTag;
-		
-		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
-		//! L"Layer_Event"
-	}
-
-	json InstanceJson = LoadJson["Instance_Json"];
-	_int InstanceJsonSize = (_int)InstanceJson.size();
-
-	for(_int i = 0; i < InstanceJsonSize; ++i)
-	{
-		string IndexTag = "@" + to_string(i);
-
-		string pushObjectTag = string(InstanceJson[i]["ObjectTag"]) + IndexTag;
- 			
- 		m_vecCreateInstanceTag.push_back(pushObjectTag);
- 
- 		MAPTOOL_INSTANCE_DESC InstanceDesc;
- 	
- 		InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
-
-
-		wstring strLoadModelTag;
-		string strJsonModelTag = InstanceJson[i]["ModelTag"];
-
-		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
- 		InstanceDesc.strModelTag = strLoadModelTag;
-
- 		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
-		
- 		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
- 
- 		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
- 		{
- 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
- 
- 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
- 			CJson_Utility::Load_Float4(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
- 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
- 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
- 
- 			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
-			m_iInstanceInfoTagIndex++;
-			
- 		}
- 
- 
- 		CEnvironment_Instance* pInstanceObject = { nullptr };
- 
- 		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
- 
- 		m_vecCreateInstance.push_back(pInstanceObject);
-		m_iCreateInstanceIndex++;
- 	}
-
-	json MonsterJson = LoadJson["Monster_Json"];
-	_int iMonsterJsonSize = (_int)MonsterJson.size();
-
-	for (_int i = 0; i < iMonsterJsonSize; ++i)
-	{
-		string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + "@" + to_string(i);
-
-		m_vecCreateMonsterTag.push_back(pushMonsterTag);
-
-		CMonster::MONSTER_DESC MonsterDesc;
-		MonsterDesc.bPreview = false;
-
-
-		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-		_float4x4 WorldMatrix;
-
-		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-		{
-			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-			{
-				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-			}
-		}
-		
-		MonsterDesc.WorldMatrix = WorldMatrix;
-
-		CMonster* pMonster = { nullptr };
-
-		wstring strProtoTypeTag;
-		m_pGameInstance->String_To_WString((string)MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
-
-		pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
-
-		m_vecCreateMonster.push_back(pMonster);
-		m_iCreateMonsterIndex++;
-	}
 
 	return S_OK;
 }
@@ -763,6 +790,15 @@ void CWindow_MapTool::EnvironmentMode_Function()
 		m_bAnimType = (_bool)iAnimType;
 
 	}ImGui::Separator(); ImGui::NewLine();
+
+	if (ImGui::Button(u8"스테이지1 불러오기"))
+	{
+		string strFilePath = "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map";
+		string strFileName = "Stage1Final_MapData.json";
+		Load_Function(strFilePath, strFileName);
+	}
+
+	ImGui::NewLine();
 	
 	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyMask_;
 
@@ -812,6 +848,9 @@ void CWindow_MapTool::EnvironmentMode_Function()
 			ImGui::EndTabItem();
 		}
 	
+		
+
+	
 
 		ImGui::EndTabBar();
 
@@ -855,6 +894,79 @@ void CWindow_MapTool::CharacterMode_Function()
 		}
 
 		ImGui::EndTabBar();
+
+		ShowDialog();
+	}
+}
+
+void CWindow_MapTool::NavigationMode_Function()
+{
+	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyMask_;
+
+	ImGui::SeparatorText(u8"네비게이션 세이브 / 로드");
+	{
+		if (m_bHaveNaviSave == true)
+		{
+			if (ImGui::Button(u8"저장하기")) { SaveNavi(m_strNaviFinalSavePath + to_string(m_iSaveNaviIndex));}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DafaFiles/Data_Map/Navigation";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
+		}
+		else
+		{
+			if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG;  m_strDialogPath = "../Bin/DafaFiles/Data_Map/Navigation"; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DafaFiles/Data_Map/Navigation";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
+		}
+
+		if (m_bCreateCamera == true && m_pPlayer != nullptr)
+		{
+			if (ImGui::Button(u8"플레이어 네비게이션"))
+			{
+				m_pPlayer->Set_Navigation(m_pNavigation);
+			}
+
+			ImGui::SameLine();
+
+			static _bool bPlayerMove = false;
+
+			ImGui::Checkbox(u8"플레이어 이동", &bPlayerMove);
+
+			if(true == bPlayerMove)
+			{
+				Guizmo_Tick(m_pPlayer);
+			}
+		}
+
+	}ImGui::Separator();
+
+	if (ImGui::BeginTabBar(u8"네비게이션 모드 타입", tab_bar_flags))
+	{
+
+		if (ImGui::BeginTabItem(u8"네비게이션 생성"))
+		{
+			 Navigation_CreateTab();
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem(u8"네비게이션 선택"))
+		{
+			Navigation_SelectTab();
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem(u8"네비게이션 삭제"))
+		{
+			Navigation_DeleteTab();
+
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+		m_pNavigation->Update(XMMatrixIdentity());
+		m_pGameInstance->Add_DebugRender(m_pNavigation);
+		
 
 		ShowDialog();
 	}
@@ -922,7 +1034,12 @@ void CWindow_MapTool::InteractTab_Function()
 
 void CWindow_MapTool::EnvironmentTab_Function()
 {
+	
+
+
 	Select_ModeType(); //! 생성, 선택, 삭제 선택, 마우스 프레싱, 다운, 업 선택
+
+	
 
 	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
 
@@ -995,6 +1112,473 @@ void CWindow_MapTool::NPC_Tab_Function()
 {
 }
 
+void CWindow_MapTool::Navigation_CreateTab()
+{
+	
+
+	if (ImGui::Button(u8"마지막 저장한 네비파일 불러오기"))
+	{
+		LoadNavi(m_strNaviFinalSavePath);
+	}
+
+
+	if (nullptr == m_pNavigation)
+		return;
+
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
+
+		_uint iEnvironmentSize = m_vecCreateObject.size();
+
+		if (ImGui::BeginListBox(u8"네비게이션 픽킹대상"))
+		{
+			for (_int i = 0; i < iEnvironmentSize; ++i)
+			{
+				const _bool isSelected = m_iNavigationTargetIndex;
+
+				if (ImGui::Selectable(m_vecCreateObjectTag[i].c_str(), isSelected))
+				{
+					m_iNavigationTargetIndex = i;
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndListBox();
+		}
+
+	ImGui::EndChild();
+
+	ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
+
+	_int iPickedSize = m_vecPickingListBox.size();
+
+	if (false == m_vecPickedPoints.empty())
+	{
+		if (ImGui::BeginListBox(u8"픽킹 정보"))
+		{
+			for (_int i = 0; i < iPickedSize; ++i)
+			{
+				const _bool isSelected = (m_iNaviListBoxIndex == i);
+
+				if (ImGui::Selectable(m_vecPickingListBox[i].c_str(), isSelected))
+				{
+					m_iNaviListBoxIndex = i;
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+			}
+
+			ImGui::EndListBox();
+		}
+
+		if (m_iNaviListBoxIndex != -1)
+		{
+			ImGui::Text(u8"픽킹 X : %f", m_vecPickedPoints[m_iNaviListBoxIndex].x);
+			ImGui::Text(u8"픽킹 Y : %f", m_vecPickedPoints[m_iNaviListBoxIndex].y);
+			ImGui::Text(u8"픽킹 Z : %f", m_vecPickedPoints[m_iNaviListBoxIndex].z);
+
+			_float vPoints[3] = { m_vecPickedPoints[m_iNaviListBoxIndex].x, m_vecPickedPoints[m_iNaviListBoxIndex].y, m_vecPickedPoints[m_iNaviListBoxIndex].z };
+
+			if (ImGui::InputFloat3(u8"포인트값변경", vPoints))
+			{
+				m_vecPickedPoints[m_iNaviListBoxIndex].x = vPoints[0];
+				m_vecPickedPoints[m_iNaviListBoxIndex].y = vPoints[1];
+				m_vecPickedPoints[m_iNaviListBoxIndex].z = vPoints[2];
+			}
+
+
+
+		}
+
+		if (ImGui::Button(u8"픽킹인덱스 삭제"))
+		{
+			if (m_iNaviListBoxIndex < m_vecPickedPoints.size()) {
+				m_vecPickedPoints.erase(m_vecPickedPoints.begin() + m_iNaviListBoxIndex);
+				m_vecPickingListBox.erase(m_vecPickingListBox.begin() + m_iNaviListBoxIndex);
+
+				if (m_vecPickingListBox.size() == 0)
+					m_iNaviListBoxIndex = -1;
+				else
+					m_iNaviListBoxIndex = m_vecPickingListBox.size() - 1;
+
+			}
+		}
+	}
+
+	ImGui::EndChild();
+
+
+	ImGui::NewLine();
+
+	if (ImGui::Button(u8"네비게이션 생성"))
+	{
+		if (3 > m_iCurrentPickingIndex)
+			return;
+
+
+
+		vector<double> fPoints;
+		//fPoints.reserve(iPickedSize * 2);
+
+		for (_int i = 0; i < iPickedSize; ++i)
+		{
+			fPoints.push_back(m_vecPickedPoints[i].x);
+
+			fPoints.push_back(m_vecPickedPoints[i].z);
+		}
+
+
+		delaunator::Delaunator d(fPoints);
+
+
+		for (size_t i = 0; i < d.triangles.size(); i += 3)
+		{
+			//"Triangle points: [[%f, %f], [%f, %f], [%f, %f]]\n",
+			//	d.coords[2 * d.triangles[i]],        //tx0            
+			//	d.coords[2 * d.triangles[i] + 1],    //ty0
+			//	d.coords[2 * d.triangles[i + 1]],    //tx1
+			//	d.coords[2 * d.triangles[i + 1] + 1],//ty1
+			//	d.coords[2 * d.triangles[i + 2]],    //tx2
+			//	d.coords[2 * d.triangles[i + 2] + 1] //ty2
+			_float3 points[3] = { m_vecPickedPoints[d.triangles[i]], m_vecPickedPoints[d.triangles[i + 1]], m_vecPickedPoints[d.triangles[i + 2]] };
+
+			Set_CCW(points);
+
+			CCell* pCell = CCell::Create(m_pDevice, m_pContext, points, m_iNaviIndex++);
+
+			m_pNavigation->AddCell(pCell);
+		}
+
+		Reset_NaviPicking();
+	}
+
+	ImGui::Checkbox(u8"픽킹모드", &m_bPickingNaviMode);
+
+	if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck() && true == m_bPickingNaviMode)
+	{
+		_int index = 0;
+
+		_float3 fPickedPos = { 0.f, 0.f, 0.f };
+
+		if (true == m_vecCreateObject[m_iNavigationTargetIndex]->Picking(&fPickedPos))
+		{
+			fPickedPos = XMVector3TransformCoord(XMLoadFloat3(&fPickedPos), m_vecCreateObject[m_iNavigationTargetIndex]->Get_Transform()->Get_WorldMatrix());
+
+			Find_NearPointPos(&fPickedPos);
+			m_vecPickedPoints.push_back(fPickedPos);
+			m_vecPickingListBox.push_back(to_string(m_iNaviPickingIndex));
+			++m_iCurrentPickingIndex;
+			++m_iNaviPickingIndex;
+			m_fNaviPickingPos = fPickedPos;
+		}
+	}
+}
+
+void CWindow_MapTool::Navigation_SelectTab()
+{
+	if(true == m_vecCreateObject.empty())
+		return;
+
+	if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck())
+	{
+		_bool bIsPicking = false;
+		_float3 fPickedPos = {};
+
+		if (m_vecCreateObject[m_iNavigationTargetIndex]->Picking(&fPickedPos))
+		{
+			fPickedPos = XMVector3TransformCoord(XMLoadFloat3(&fPickedPos), m_vecCreateObject[m_iNavigationTargetIndex]->Get_Transform()->Get_WorldMatrix());
+
+			Find_NearPointPos(&fPickedPos);
+
+			m_fNaviPickingPos = fPickedPos;
+			bIsPicking = true;
+		}
+
+		if (true == bIsPicking)
+		{
+			CCell* pTargetCell = Find_NearCell(fPickedPos);
+
+			if (nullptr == pTargetCell)
+				return;
+
+			m_iCellIndex = pTargetCell->Get_Index();
+			m_vecCells[m_iCellIndex]->Set_Picking(true);
+		}
+	}
+
+
+	_int iCellSize = m_vecCellIndexs.size();
+
+	if (nullptr != m_pNavigation && false == m_vecCells.empty())
+	{
+		if (ImGui::BeginListBox(u8""))
+		{
+			for (_int i = 0; i < iCellSize; ++i)
+			{
+				const _bool isSelected = (m_iCellIndex == i);
+
+				if (ImGui::Selectable(m_vecCellIndexs[i].c_str(), isSelected))
+				{
+
+					m_iCellIndex = i;
+
+					m_vecCells[m_iCellIndex]->Set_Picking(true);
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+
+				if (i == m_iCellIndex)
+					continue;
+				else
+					m_vecCells[i]->Set_Picking(false);
+
+
+			}
+
+			ImGui::EndListBox();
+		}
+
+		ImGui::RadioButton(u8"포인트 A", &m_iPointIndex, 0); ImGui::SameLine(); ImGui::RadioButton(u8"포인트 B", &m_iPointIndex, 1);  ImGui::SameLine(); ImGui::RadioButton(u8"포인트 C", &m_iPointIndex, 2);
+
+		ImGui::NewLine();
+
+		_float3 vPoint = *m_vecCells[m_iCellIndex]->Get_Point((CCell::POINT)m_iPointIndex);
+
+		_float vPoints[3] = { vPoint.x, vPoint.y, vPoint.z };
+
+		if (ImGui::DragFloat3(u8"포인트값변경", vPoints, 0.1f))
+		{
+			_float3 vPassPoint = { vPoints[0], vPoints[1], vPoints[2] };
+
+			//m_vecCells[m_iCellIndex]->Set_Point(CCell::POINT_A, vPassPoint);
+			//m_vecCells[m_iCellIndex]->Set_Point((CCell::POINT)m_iPointIndex, vPassPoint);
+
+			m_pNavigation->InRangeCellChange(m_vecCells[m_iCellIndex], m_iPointIndex, vPassPoint);
+		}
+
+	}
+}
+
+void CWindow_MapTool::Navigation_DeleteTab()
+{
+	if (m_pPlayer != nullptr)
+	{
+		CNavigation* pNavi = m_pPlayer->Get_Navigation();
+		if(pNavi != nullptr)
+			Safe_Release(pNavi);
+	}
+
+	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
+	_int iCellSize = vecCells.size();
+
+	if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck())
+	{
+		_int index = 0;
+
+		_float3 fPickedPos = { 0.f, 0.f, 0.f };
+
+		_int	iNonAnimObjectSize = m_vecCreateObject.size();
+
+		_int	iIndex = 0;
+		_float fHighestYValue = -FLT_MAX;
+		_float3 vHighestPickesPos = {};
+		_bool	bIsPicking = false;
+
+
+
+		if (m_vecCreateObject[m_iNavigationTargetIndex]->Picking(&fPickedPos))
+		{
+			
+			Find_NearPointPos(&fPickedPos);
+
+			m_fNaviPickingPos = fPickedPos;
+			bIsPicking = true;
+		}
+
+		if (true == bIsPicking)
+		{
+			fPickedPos = XMVector3TransformCoord(XMLoadFloat3(&fPickedPos), m_vecCreateObject[m_iNavigationTargetIndex]->Get_Transform()->Get_WorldMatrix());
+
+			CCell* pTargetCell = nullptr;
+			pTargetCell = Find_NearCell(fPickedPos);
+
+			if (nullptr == pTargetCell)
+				return;
+
+			m_pNavigation->Delete_Cell(pTargetCell->Get_Index());
+		}
+	}
+}
+
+void CWindow_MapTool::Set_CCW(_float3* vPoint)
+{
+	_vector vPositionFromVector[3];
+	for (int i(0); i < 3; i++)
+		vPositionFromVector[i] = XMLoadFloat3(&(vPoint[i]));
+
+	_vector vAtoB(vPositionFromVector[1] - vPositionFromVector[0]);
+	_vector vAtoC(vPositionFromVector[2] - vPositionFromVector[0]);
+
+	_vector vAtoB2D, vAtoC2D, vAtoB2DCross;
+	vAtoB2D = vAtoC2D = vAtoB2DCross = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	vAtoB2D = XMVectorSetX(vAtoB2D, XMVectorGetX(vAtoB));
+	vAtoB2D = XMVectorSetY(vAtoB2D, XMVectorGetZ(vAtoB));
+	vAtoC2D = XMVectorSetX(vAtoC2D, XMVectorGetX(vAtoC));
+	vAtoC2D = XMVectorSetY(vAtoC2D, XMVectorGetZ(vAtoC));
+	vAtoB2DCross = XMVectorSetX(vAtoB2DCross, -1.f * XMVectorGetY(vAtoB2D));
+	vAtoB2DCross = XMVectorSetY(vAtoB2DCross, XMVectorGetX(vAtoB2D));
+	_float fDot(XMVectorGetX(XMVector2Dot(vAtoB2DCross, vAtoC2D)));
+	if (0.f < fDot)
+	{
+		XMStoreFloat3(&vPoint[1], vPositionFromVector[2]);
+		XMStoreFloat3(&vPoint[2], vPositionFromVector[1]);
+	}
+}
+
+void CWindow_MapTool::Reset_NaviPicking()
+{
+	m_iCurrentPickingIndex = 0;
+	m_vecPickedPoints.clear();
+	m_vecPickingListBox.clear();
+
+	m_iNaviListBoxIndex = 0;
+	m_iNaviPickingIndex = 0;
+}
+
+void CWindow_MapTool::Find_NearPointPos(_float3* fPickedPos)
+{
+	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
+	_int iCellSize = vecCells.size();
+	_float fMinDistance = FLT_MAX;
+
+	_float3 vPickedPos = *fPickedPos;
+
+
+
+	for (_int i = 0; i < iCellSize; ++i)
+	{
+		_float3 vPointA = *vecCells[i]->Get_Point(CCell::POINT_A);
+		_float3 vPointB = *vecCells[i]->Get_Point(CCell::POINT_B);
+		_float3 vPointC = *vecCells[i]->Get_Point(CCell::POINT_C);
+
+		_float distanceA = (_float)sqrt(pow(vPickedPos.x - vPointA.x, 2) +
+			pow(vPickedPos.y - vPointA.y, 2) +
+			pow(vPickedPos.z - vPointA.z, 2));
+
+		_float distanceB = (_float)sqrt(pow(vPickedPos.x - vPointB.x, 2) +
+			pow(vPickedPos.y - vPointB.y, 2) +
+			pow(vPickedPos.z - vPointB.z, 2));
+
+		_float distanceC = (_float)sqrt(pow(vPickedPos.x - vPointC.x, 2) +
+			pow(vPickedPos.y - vPointC.y, 2) +
+			pow(vPickedPos.z - vPointC.z, 2));
+
+		if (distanceA < fMinDistance && distanceA < m_fCombinationRange)
+		{
+			fMinDistance = distanceA;
+			*fPickedPos = vPointA;
+		}
+
+		if (distanceB < fMinDistance && distanceB < m_fCombinationRange)
+		{
+			fMinDistance = distanceB;
+			*fPickedPos = vPointB;
+		}
+
+		if (distanceC < fMinDistance && distanceC < m_fCombinationRange)
+		{
+			fMinDistance = distanceC;
+			*fPickedPos = vPointC;
+		}
+	}
+}
+
+CCell* CWindow_MapTool::Find_NearCell(_float3 fPickedPos)
+{
+	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
+	_int iCellSize = vecCells.size();
+	_float fMinDistance = FLT_MAX;
+	_float3 vPickedPos = fPickedPos;
+	CCell* pNearestCell = nullptr; // 가장 근접한 셀을 저장할 변수
+
+	for (_int i = 0; i < iCellSize; ++i)
+	{
+		_float3 vPointA = *vecCells[i]->Get_Point(CCell::POINT_A);
+		_float3 vPointB = *vecCells[i]->Get_Point(CCell::POINT_B);
+		_float3 vPointC = *vecCells[i]->Get_Point(CCell::POINT_C);
+
+		_float distanceA = (_float)sqrt(pow(vPickedPos.x - vPointA.x, 2) +
+			pow(vPickedPos.y - vPointA.y, 2) +
+			pow(vPickedPos.z - vPointA.z, 2));
+
+		_float distanceB = (_float)sqrt(pow(vPickedPos.x - vPointB.x, 2) +
+			pow(vPickedPos.y - vPointB.y, 2) +
+			pow(vPickedPos.z - vPointB.z, 2));
+
+		_float distanceC = (_float)sqrt(pow(vPickedPos.x - vPointC.x, 2) +
+			pow(vPickedPos.y - vPointC.y, 2) +
+			pow(vPickedPos.z - vPointC.z, 2));
+
+		// 각 거리를 비교하여 최소 거리를 찾음
+		if (distanceA < fMinDistance && distanceA < m_fCombinationRange)
+		{
+			fMinDistance = distanceA;
+			pNearestCell = vecCells[i];
+		}
+
+		if (distanceB < fMinDistance && distanceB < m_fCombinationRange)
+		{
+			fMinDistance = distanceB;
+			pNearestCell = vecCells[i];
+		}
+
+		if (distanceC < fMinDistance && distanceC < m_fCombinationRange)
+		{
+			fMinDistance = distanceC;
+			pNearestCell = vecCells[i];
+		}
+	}
+
+	return pNearestCell;
+}
+
+void CWindow_MapTool::SaveNavi(string strFullPath)
+{
+	m_strNaviFinalSavePath = strFullPath;
+	m_bHaveNaviSave = true;
+
+	wstring strConvertPath;
+	m_pGameInstance->String_To_WString(strFullPath, strConvertPath);
+
+	m_pNavigation->SaveData(strConvertPath);
+}
+
+void CWindow_MapTool::LoadNavi(string strFullPath)
+{
+	wstring strConvertPath;
+	m_pGameInstance->String_To_WString(strFullPath, strConvertPath);
+
+	m_pNavigation->LoadData(strConvertPath);
+	
+}
+
+void CWindow_MapTool::LoadCells()
+{
+	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
+
+	_int iCellSize = vecCells.size();
+
+	for (_int i = 0; i < iCellSize; ++i)
+	{
+		m_vecCells.push_back(vecCells[i]);
+		m_vecCellIndexs.push_back(to_string(m_vecCells[i]->Get_Index()));
+	}
+}
+
 void CWindow_MapTool::CameraWindow_Function()
 {
 	ImGui::Begin(u8"카메라 탭");
@@ -1037,6 +1621,7 @@ void CWindow_MapTool::CameraWindow_Function()
 					m_pToolCamera->Set_CameraType((CMasterCamera::CameraType)iCameraType);
 			}
 
+			
 		}ImGui::NewLine();
 	}
 	
@@ -1113,10 +1698,6 @@ void CWindow_MapTool::MouseInfo_Window(_float fTimeDelta)
 						m_vecCreateObject[m_iSelectMeshObjectIndex]->Set_ColliderRender(true);
 						ImGui::EndListBox();
 					}
-
-
-					m_tWorldRay = m_pGameInstance->Get_MouseRayWorld(g_hWnd, g_iWinSizeX, g_iWinSizeY);
-
 
 					if (m_vecCreateObject[m_iSelectMeshObjectIndex]->Picking(&m_fRayPos) && true == ImGui_MouseInCheck())
 					{
@@ -1274,7 +1855,10 @@ void CWindow_MapTool::FieldWindowMenu()
 void CWindow_MapTool::IsCreatePlayer_ReadyCamara()
 {
 	if (nullptr != m_pGameInstance->Get_Player())
+	{
 			m_bCreateCamera = true;
+			m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
+	}
 
 	return;
 }

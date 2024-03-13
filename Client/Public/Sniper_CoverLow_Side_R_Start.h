@@ -1,7 +1,6 @@
 #pragma once
 #include "Bandit_Sniper_State_Cover.h"
 
-
 BEGIN(Client)
 
 class CSniper_CoverLow_Side_R_Start : public CBandit_Sniper_State_Cover

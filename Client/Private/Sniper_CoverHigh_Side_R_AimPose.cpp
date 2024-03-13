@@ -13,9 +13,8 @@ CState<CBandit_Sniper>* CSniper_CoverHigh_Side_R_AimPose::Update(CBandit_Sniper*
 {
 	fTimeAcc += fTimeDelta;
 
-	if (fTimeAcc >= 3.5f) /* 리스폰 하는 애니메이션이 끝난다면 */
+	if (fTimeAcc >= 3.5f)
 	{
-		cout << "AimPos End" << endl;
 		fTimeAcc = 0.f;
 		return new CSniper_CoverHigh_Side_R_Stop();
 	}

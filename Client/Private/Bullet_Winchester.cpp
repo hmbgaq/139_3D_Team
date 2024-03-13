@@ -4,6 +4,7 @@
 #include "Data_Manager.h"
 #include "Effect.h"
 #include "Effect_Manager.h"
+#include "Player.h"
 
 CBullet_Winchester::CBullet_Winchester(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CProjectile(pDevice, pContext, strPrototypeTag)
@@ -91,8 +92,10 @@ void CBullet_Winchester::OnCollisionEnter(CCollider* other)
 		m_eHitPower = Power::Medium;
 		m_fForce = 0.f;
 
+		_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
+		_vector vDir = pTarget_Character->Calc_Look_Dir(vPlayerPos);
 		//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
-		//pTarget_Character->Set_Hitted(m_iDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		pTarget_Character->Set_Hitted(m_iDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
 		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
 		_float3 vPos = m_pTransformCom->Get_Position();

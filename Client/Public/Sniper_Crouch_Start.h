@@ -3,7 +3,7 @@
 
 BEGIN(Client)
 
-class CSinper_Crouch_Start : public CBandit_Sniper_State_Cover
+class CSniper_Crouch_Start : public CBandit_Sniper_State_Cover
 {
 public:
 	virtual void Initialize(CBandit_Sniper* pActor) override;

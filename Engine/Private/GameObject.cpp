@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "GameInstance.h"
 #include "Transform.h"
+#include "Navigation.h"
 
 
 CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
@@ -147,7 +148,10 @@ void CGameObject::Load_FromJson(const json& In_Json)
 
 CTransform* CGameObject::Get_Transform()
 {
-	return m_pTransformCom;
+	if (nullptr != m_pTransformCom)
+		return m_pTransformCom;
+	else
+		return nullptr;
 }
 
 _vector CGameObject::Get_Position_Vector()
@@ -210,6 +214,13 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototy
 		pModel->Get_Owner()->Set_ModelHeight(pModel->Get_ModelHeight_WithModel());
 
 	}
+
+	//if (typeid(*pComponent) == typeid(CNavigation))
+	//{
+	//	CNavigation* pNavigation = dynamic_cast<CNavigation*>(pComponent);
+	//
+	//	pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(this));
+	//}
 
 	return S_OK;
 }
