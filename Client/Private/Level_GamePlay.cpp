@@ -166,7 +166,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag)
 {
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
-	CData_Manager::GetInstance()->Get_Player()->Set_Position(_float3(250.66f, 0.f, 2.38f));
+
+	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+
+	pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
+	
+	CNavigation* pNavigation = pPlayer->Get_Navigation();
+
+	pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
+
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Rentier"));
 
 	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"));

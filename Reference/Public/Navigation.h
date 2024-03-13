@@ -37,7 +37,7 @@ public:
 	void					Set_CurrentIndex(_int iIndex) { m_iCurrentIndex = iIndex; }
 
 	void					AddCell(class CCell* pCell);
-	HRESULT					Delete_Cell(const _uint iIndex);
+	void					Delete_Cell(const _uint iIndex);
 	void					AllSearchDelete_IsNan();
 
 public:

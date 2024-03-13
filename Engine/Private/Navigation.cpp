@@ -283,7 +283,7 @@ void CNavigation::AddCell(CCell* pCell)
 	Make_Neighbors();
 }
 
-HRESULT CNavigation::Delete_Cell(const _uint iIndex)
+void CNavigation::Delete_Cell(const _uint iIndex)
 {
 	if (iIndex >= m_Cells.size())
 		return;
@@ -450,35 +450,60 @@ _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 
 HRESULT CNavigation::Make_Neighbors()
 {
-	_bool bAB = false, bBC = false, bCA = false;
-
-
-	for (auto& pSourCell : m_Cells)
+// 	_bool bAB = false, bBC = false, bCA = false;
+// 
+// 
+// 	for (auto& pSourCell : m_Cells)
+// 	{
+// 		for (auto& pDestCell : m_Cells)
+// 		{
+// 			if (pSourCell == pDestCell)
+// 				continue;
+// 
+// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_A), pSourCell->Get_Point(CCell::POINT_B)))
+// 			{
+// 				pSourCell->SetUp_Neighbor(CCell::LINE_AB, pDestCell);
+// 				bAB = true;
+// 			}
+// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_B), pSourCell->Get_Point(CCell::POINT_C)))
+// 			{
+// 				pSourCell->SetUp_Neighbor(CCell::LINE_BC, pDestCell);
+// 				bBC = true;
+// 			}
+// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_C), pSourCell->Get_Point(CCell::POINT_A)))
+// 			{
+// 				pSourCell->SetUp_Neighbor(CCell::LINE_CA, pDestCell);
+// 				bCA = true;
+// 			}
+// 
+// 			if (false == bAB && false == bBC && false == bCA)
+// 				pSourCell->Reset_Line();
+// 
+// 		}
+// 	}
+	for (auto& pSrcCell : m_Cells)
 	{
-		for (auto& pDestCell : m_Cells)
+		if (pSrcCell == nullptr)
+			continue;
+		for (auto& pDstCell : m_Cells)
 		{
-			if (pSourCell == pDestCell)
+			if (pDstCell == nullptr || pSrcCell == pDstCell)
 				continue;
 
-			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_A), pSourCell->Get_Point(CCell::POINT_B)))
+			if (true == pDstCell->Compare_Points(pSrcCell->Get_Point(CCell::POINT_A), pSrcCell->Get_Point(CCell::POINT_B)))
 			{
-				pSourCell->SetUp_Neighbor(CCell::LINE_AB, pDestCell);
-				bAB = true;
-			}
-			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_B), pSourCell->Get_Point(CCell::POINT_C)))
-			{
-				pSourCell->SetUp_Neighbor(CCell::LINE_BC, pDestCell);
-				bBC = true;
-			}
-			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_C), pSourCell->Get_Point(CCell::POINT_A)))
-			{
-				pSourCell->SetUp_Neighbor(CCell::LINE_CA, pDestCell);
-				bCA = true;
+				pSrcCell->SetUp_Neighbor(CCell::LINE_AB, pDstCell);
 			}
 
-			if (false == bAB && false == bBC && false == bCA)
-				pSourCell->Reset_Line();
+			if (true == pDstCell->Compare_Points(pSrcCell->Get_Point(CCell::POINT_B), pSrcCell->Get_Point(CCell::POINT_C)))
+			{
+				pSrcCell->SetUp_Neighbor(CCell::LINE_BC, pDstCell);
+			}
 
+			if (true == pDstCell->Compare_Points(pSrcCell->Get_Point(CCell::POINT_C), pSrcCell->Get_Point(CCell::POINT_A)))
+			{
+				pSrcCell->SetUp_Neighbor(CCell::LINE_CA, pDstCell);
+			}
 		}
 	}
 
