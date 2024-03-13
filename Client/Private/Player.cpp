@@ -316,6 +316,8 @@ void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCoun
 		Search_Target(fMaxDistance);
 	}
 
+	//Search_Target(fMaxDistance);
+
 	if (m_pTarget)
 	{
 		Look_At_Target();

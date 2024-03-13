@@ -54,5 +54,6 @@ void CPlayer_MeleeCombo_02::Release(CPlayer* pActor)
 	__super::Release(pActor);
 
 	CWeapon* pWeapon = pActor->Set_Weapon_Enable(WEAPON_PUNCH_L, false);
+	pActor->Set_Target(nullptr);
 	//pWeapon->Set_Enable(false);
 }
