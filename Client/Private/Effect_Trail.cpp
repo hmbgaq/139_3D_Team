@@ -9,7 +9,7 @@
 CEffect_Trail::CEffect_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = FALSE;
+	m_bIsPoolObject = TRUE;
 }
 
 CEffect_Trail::CEffect_Trail(const CEffect_Trail& rhs)
