@@ -166,6 +166,9 @@ public:
 	CWeapon* Set_Weapon_Collisions_Enable(const wstring& strWeaponTag, _bool bActivate);
 
 
+public:
+	_float3 Get_WeaknessPoint() { return m_vWeaknessPoint; };
+	void Set_WeaknessPoint(_float3 _vWeaknessPoint = _float3(0.f, 1.f, 0.f));
 
 
 protected:
@@ -185,6 +188,7 @@ protected:
 
 protected:
 	CCharacter* m_pTarget = { nullptr };
+	_float3		m_vWeaknessPoint = { 0.f, 0.f, 0.f };
 
 protected:
 	CPhysXCharacterController* m_pPhysXControllerCom = { nullptr };

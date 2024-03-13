@@ -177,6 +177,78 @@ CProjectile* CProjectile::Set_Force(_float _fForce)
 	return this;
 }
 
+void CProjectile::Search_Target(const wstring& strLayerTag, const _float fSearchDistance)
+{
+	//if (nullptr != m_pTarget)
+	//	return;
+
+	m_pTarget = Select_The_Nearest_Enemy(strLayerTag, fSearchDistance);
+}
+
+CCharacter* CProjectile::Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance)
+{
+	CCharacter* pResult = { nullptr };
+
+	_float fMinDistance = fMaxDistance;
+
+	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+	list<CGameObject*>* pTargetLayer = m_pGameInstance->Get_GameObjects(iCurrentLevel, strLayerTag);
+
+	if (nullptr == pTargetLayer)
+		return nullptr;
+
+	for (CGameObject* pTarget : *pTargetLayer)
+	{
+
+		if (nullptr == pTarget || false == pTarget->Get_Enable())
+			continue;
+
+		CCharacter* pTargetCharacter = dynamic_cast<CCharacter*>(pTarget);
+
+		if (nullptr == pTargetCharacter)
+			continue;
+
+		_float fDistance = Calc_Distance(pTarget);
+		if (fMinDistance > fDistance)
+		{
+			fMinDistance = fDistance;
+			pResult = pTargetCharacter;
+		}
+	}
+
+	return pResult;
+}
+
+_float CProjectile::Calc_Distance(CGameObject* pTarget)
+{
+	if (nullptr == pTarget || false == pTarget->Get_Enable())
+		return 1000000.f;
+
+	return Calc_Distance(pTarget->Get_Position());
+}
+
+_float CProjectile::Calc_Distance(_float3 vTargetPos)
+{
+	_float3 vPos = Get_Position();
+
+	_float3 vDiff = vTargetPos - vPos;
+
+	return sqrt(vDiff.x * vDiff.x + vDiff.y * vDiff.y + vDiff.z * vDiff.z);
+}
+
+void CProjectile::Look_At_Target()
+{
+	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
+		return;
+
+
+	_fvector vTargetPos = XMLoadFloat3(&m_pTarget->Get_WeaknessPoint());
+	//_fvector vTargetPos = m_pTarget->Get_Position_Vector();
+
+	m_pTransformCom->Look_At(vTargetPos);
+}
+
 HRESULT CProjectile::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_pTransformCom->Get_WorldFloat4x4())))

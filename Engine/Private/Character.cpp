@@ -69,6 +69,8 @@ void CCharacter::Priority_Tick(_float fTimeDelta)
 		if (nullptr != Pair.second)
 			Pair.second->Priority_Tick(fTimeDelta);
 	}
+
+	Set_WeaknessPoint(_float3(0.f, 1.f, 0.f));
 }
 
 void CCharacter::Tick(_float fTimeDelta)
@@ -592,6 +594,12 @@ CWeapon* CCharacter::Set_Weapon_Collisions_Enable(const wstring& strWeaponTag, _
 
 	return pWeapon;
 }
+
+void CCharacter::Set_WeaknessPoint(_float3 _vWeaknessPoint)
+{
+	_float3 vResult = m_pTransformCom->Calc_Front_Pos(_vWeaknessPoint);
+	m_vWeaknessPoint = vResult;
+};
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {

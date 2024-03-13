@@ -99,7 +99,7 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pActor)
+	if (m_pActor && m_iCurrnetLevel != ECast(LEVEL_TOOL))
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}

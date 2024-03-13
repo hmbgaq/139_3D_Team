@@ -47,6 +47,7 @@ namespace Client
 	#define LAYER_CAMERA					TEXT("Layer_Camera")
 	#define LAYER_EFFECT					TEXT("Layer_Effect")
 	#define LAYER_MONSTER					TEXT("Layer_Monster")
+	#define LAYER_BOSS						TEXT("Layer_Boss")
 	#define LAYER_PLAYER					TEXT("Layer_Player")
 	#define LAYER_UI_MONSTER				TEXT("Layer_UI_Monster")
 	#define LAYER_UI_PLAYER					TEXT("Layer_UI_Player")
