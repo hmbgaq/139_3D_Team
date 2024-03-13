@@ -6,6 +6,8 @@
 CBullet_Bandit_Sniper::CBullet_Bandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
+	/* 이게 있어야 pool에 등록한것을 사용할 수 있음. */
+	m_bIsPoolObject = true;
 }
 
 CBullet_Bandit_Sniper::CBullet_Bandit_Sniper(const CBullet_Bandit_Sniper& rhs)
@@ -20,7 +22,16 @@ HRESULT CBullet_Bandit_Sniper::Initialize_Prototype()
 
 HRESULT CBullet_Bandit_Sniper::Initialize(void* pArg)
 {
+	BULLET_DESC* desc = reinterpret_cast<BULLET_DESC*>(pArg);
+
+	if (nullptr != desc)
+	{
+		_float3 pPos = desc->fBullet_InitPos;
+		vMoveDir = desc->vBullet_MoveDir;
+	}
 	FAILED_CHECK(Ready_Components());
+	pPos.y += 3.f;
+	m_pTransformCom->Set_Pos(pPos);
 
 	return S_OK;
 }
@@ -33,6 +44,8 @@ void CBullet_Bandit_Sniper::Priority_Tick(_float fTimeDelta)
 void CBullet_Bandit_Sniper::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	m_pTransformCom->Move_Position(vMoveDir, 1.f, fTimeDelta);
 }
 
 void CBullet_Bandit_Sniper::Late_Tick(_float fTimeDelta)

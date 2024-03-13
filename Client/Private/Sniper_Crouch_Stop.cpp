@@ -1,3 +1,8 @@
+#include "stdafx.h"
+#include "SMath.h"
+#include "Sniper_Taunt_01.h"
+#include "Sniper_Taunt_02.h"
+#include "Sniper_Taunt_03.h"
 #include "Sniper_Crouch_Stop.h"
 
 void CSniper_Crouch_Stop::Initialize(CBandit_Sniper* pActor)
@@ -11,7 +16,20 @@ CState<CBandit_Sniper>* CSniper_Crouch_Stop::Update(CBandit_Sniper* pActor, _flo
 {
 	if (pActor->Is_Animation_End())
 	{
-		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+		_int iRandomTunt = SMath::Random(1, 3);
+
+		switch (iRandomTunt)
+		{
+		case 1:
+			return new CSniper_Taunt_01();
+			break;
+		case 2:
+			return new CSniper_Taunt_02();
+			break;
+		case 3:
+			return new CSniper_Taunt_03();
+			break;
+		}	
 	}
 
 	return nullptr;

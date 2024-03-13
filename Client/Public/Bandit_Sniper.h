@@ -25,6 +25,12 @@ public:
 public:
 	_bool Get_ProtectExist() { return m_bProtectExist; }
 
+	/* For. Bullet */
+	_int Get_BulletCnt() { return m_iBulletCnt; }
+	void Set_BulletCnt(_int iCnt) { m_iBulletCnt = iCnt; }
+	void Add_BulletCnt() { m_iBulletCnt += 1; }
+
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
@@ -32,6 +38,8 @@ private:
 
 private:
 	_bool					m_bProtectExist		= {};
+	_bool					m_bTaunt = false;
+	_int					m_iBulletCnt = 0;
 
 	CActor<CBandit_Sniper>* m_pActor			= { nullptr };
 

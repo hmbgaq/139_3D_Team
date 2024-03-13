@@ -101,7 +101,6 @@ CState<CInfected>* CInfected_State::Hit_State(CInfected* pActor, _float fTimeDel
 { 
 	if (pActor->Is_Animation_End())
 	{
-		//cout << "Hit_State end " << endl;
 		return new CInfected_IdlePose();
 	}
 
@@ -113,8 +112,6 @@ CState<CInfected>* CInfected_State::Knock_State(CInfected* pActor, _float fTimeD
 {
 	if (pActor->Is_Animation_End())
 	{
-		//cout << "Knock_State end " << endl;
-
 		return Normal_State(pActor, fTimeDelta, _iAnimIndex);
 	}
 
@@ -338,7 +335,6 @@ CState<CInfected>* CInfected_State::Dodge(CInfected* pActor, _float fTimeDelta, 
 {
 	if (CInfected::INFECTED_TYPE::INFECTED_PROTEUS == pActor->Get_Info().Get_Type())
 	{
-		//cout << "infected_proteus" << endl;
 		return nullptr; /* 클래스 갑시다 ㅇㅋ 난자러감 */
 	}
 	else
