@@ -15,15 +15,11 @@ CState<CBandit_Sniper>* CSniper_CoverLow_Side_R_AimPose::Update(CBandit_Sniper* 
 
 	if (fTimeAcc > 3.5f)
 	{
-		if (true == pActor->Lerp_ToOrigin_Look(pActor->Get_SniperInitLook(), 5.f, fTimeDelta))
-		{
-			fTimeAcc = 0.f;
-			return new CSniper_CoverLow_Side_R_Stop();
-		}
+		fTimeAcc = 0.f;
+		return new CSniper_CoverLow_Side_R_Stop();
 	}
 	else
 		pActor->Look_At_Target();
-
 
 	return nullptr;
 }

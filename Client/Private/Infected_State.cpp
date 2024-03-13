@@ -4,6 +4,7 @@
 #include "Infected_State.h"
 
 #include "Infected_Idle.h"
+#include "Infected_IdlePose.h"
 #include "Infected_IdleAct_01.h"
 #include "Infected_IdleAct_02.h"
 #include "Infected_IdleAct_03.h"
@@ -101,11 +102,11 @@ CState<CInfected>* CInfected_State::Hit_State(CInfected* pActor, _float fTimeDel
 	if (pActor->Is_Animation_End())
 	{
 		//cout << "Hit_State end " << endl;
-
-		return Normal_State(pActor, fTimeDelta, _iAnimIndex);
+		return new CInfected_IdlePose();
 	}
 
 	return nullptr;
+	//return Normal_State(pActor, fTimeDelta, _iAnimIndex);
 }
 
 CState<CInfected>* CInfected_State::Knock_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
@@ -175,7 +176,7 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 	if (pActor->Is_Animation_End())
 	{
 		//cout << "death end " << endl;
-		return new CInfected_Idle();
+		return nullptr;
 	}
 
 	return nullptr;
@@ -189,14 +190,26 @@ CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta,
 	pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
-	pState = Run(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
 
-	pState = Walk(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	_float fDist = pActor->Calc_Distance(m_pGameInstance->Get_Player());
 
-	pState = Attack(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	// 0 ~ Attack ~ Walk  
+	if (fDist >= pActor->Get_Info().fWalk_Distance)
+	{
+		pState = Run(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
+	else if (pActor->Get_Info().fAttack_Distance <= fDist && fDist < pActor->Get_Info().fWalk_Distance)
+	{
+		pState = Walk(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
+	else if (0 <= fDist && fDist < pActor->Get_Info().fAttack_Distance)
+	{
+		pState = Attack(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
+	
 
 	if (pActor->Is_Animation_End())
 	{
@@ -217,25 +230,12 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-		if (pActor->Get_Info().fAttack_Distance + 0.5 <= fDist && fDist <= pActor->Get_Info().fWalk_Distance ) // Attack ~ Wak 사이 
-		{
 			return new CInfected_Walk_F();
-		}
-		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_WASTER:
 		break;
-	case Client::CInfected::INFECTED_TYPE::INFECTED_END:
-		break;
-	default:
-		break;
 	}
-	
-	//	if (CInfected_Idle::g_iAnimIndex != _iAnimIndex)
-	//		return new CInfected_Idle();
-	//}
-	
 
 	return nullptr;
 }
@@ -251,20 +251,13 @@ CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _u
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-		if (fDist > pActor->Get_Info().fWalk_Distance) // Walk ~ 이상으로 넘어가면 무조건 달리기상태로 지정 
-		{
 			return new CInfected_Run_F();
-		}
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_WASTER:
 		break;
 	}
-	//		if (CInfected_Idle::g_iAnimIndex != _iAnimIndex)
-	//			return new CInfected_Idle();
-	//	}
-	//}
 
 	return nullptr;
 }
@@ -286,12 +279,12 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 
-		if (0.f <= fDist && fDist < Info.fAttack_Distance - 0.5f) // 0 ~ 공격사거리 - 0.5
+		if (0.f <= fDist && fDist < Info.fAttack_Distance - 2.5f) // 0 ~ 공격사거리 - 0.5
 		{
 			switch (iActNumber)
 			{
 			case 1:
-				return new CInfected_Melee_RD_01();
+				return new CInfected_Melee_RD_01(); /* 제자리 공격 */
 				break;
 			case 2:
 				return new CInfected_Melee_RM_01();
@@ -304,12 +297,12 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 				break;
 			}
 		}
-		else if ( Info.fAttack_Distance - 0.5f <= fDist && fDist <= Info.fAttack_Distance + 0.5f ) // 공격사거리 - 0.5 ~ 공격사거리 + 0.5 
+		else if ( Info.fAttack_Distance - 2.5f <= fDist && fDist <= Info.fAttack_Distance ) // 공격사거리 - 0.5 ~ 공격사거리 + 0.5 
 		{
 			switch (iActNumber)
 			{
 			case 1:
-				return new CInfected_MeleeDynamic_RU_01();
+				return new CInfected_MeleeDynamic_RU_01(); /* 걸어가면서 공격 */
 				break;
 			case 2:
 				return new CInfected_MeleeDynamic_RU_02();
@@ -356,6 +349,11 @@ CState<CInfected>* CInfected_State::Dodge(CInfected* pActor, _float fTimeDelta, 
 	//	return new CInfected_Idle();
 	//}
 
+	return nullptr;
+}
+
+CState<CInfected>* CInfected_State::Patrol(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
 	return nullptr;
 }
 

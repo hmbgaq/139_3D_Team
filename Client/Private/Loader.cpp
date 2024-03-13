@@ -72,6 +72,7 @@
 #include "Bandit_Sniper.h"
 #include "Body_Bandit_Sniper.h"
 #include "Weapon_Bandit_Sniper.h"
+#include "Bullet_Bandit_Sniper.h"
 #pragma endregion
 
 
@@ -723,6 +724,7 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bandit_Sniper"), CBandit_Sniper::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bandit_Sniper"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Bandit_Sniper"), CBody_Bandit_Sniper::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Bandit_Sniper"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Bandit_Sniper"), CWeapon_Bandit_Sniper::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Weapon_Bandit_Sniper"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Bandit_Sniper"), CBullet_Bandit_Sniper::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Bandit_Sniper"))));
 
 
 

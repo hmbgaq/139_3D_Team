@@ -23,8 +23,6 @@ public:
 	virtual HRESULT Render() override;
 	
 public:
-	_float4x4 Get_SniperInitWorld() { return m_bInitWorld; }
-	_float4 Get_SniperInitLook() { return m_bInitLook; }
 	_bool Get_ProtectExist() { return m_bProtectExist; }
 
 private:
@@ -33,10 +31,7 @@ private:
 	HRESULT Ready_Option();
 
 private:
-	_bool					m_bInit				= true;
 	_bool					m_bProtectExist		= {};
-	_float4					m_bInitLook			= {};
-	_float4x4				m_bInitWorld		= {};
 
 	CActor<CBandit_Sniper>* m_pActor			= { nullptr };
 

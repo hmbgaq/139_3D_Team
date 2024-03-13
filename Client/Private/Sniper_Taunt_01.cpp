@@ -1,13 +1,13 @@
-#include "Sniper_Crouch_Stop.h"
+#include "Sniper_Taunt_01.h"
 
-void CSniper_Crouch_Stop::Initialize(CBandit_Sniper* pActor)
+void CSniper_Taunt_01::Initialize(CBandit_Sniper* pActor)
 {
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 }
 
-CState<CBandit_Sniper>* CSniper_Crouch_Stop::Update(CBandit_Sniper* pActor, _float fTimeDelta)
+CState<CBandit_Sniper>* CSniper_Taunt_01::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
 	if (pActor->Is_Animation_End())
 	{
@@ -17,7 +17,7 @@ CState<CBandit_Sniper>* CSniper_Crouch_Stop::Update(CBandit_Sniper* pActor, _flo
 	return nullptr;
 }
 
-void CSniper_Crouch_Stop::Release(CBandit_Sniper* pActor)
+void CSniper_Taunt_01::Release(CBandit_Sniper* pActor)
 {
 	__super::Release(pActor);
 }

@@ -3,7 +3,6 @@
 #include "Bandit_Sniper.h"
 #include "Data_Manager.h"
 #include "Body_Bandit_Sniper.h"
-
 #include "Sniper_CoverLow_Idle.h"
 #include "Sniper_DeathLight_B_01.h"
 #include "Sniper_Weakspot_Death_01.h"
@@ -13,7 +12,6 @@
 #include "Sniper_HitHeavy_FR_01.h"
 #include "Sniper_KnockFrontLight_F_02.h"
 #include "Sniper_HitHeavy_F_01.h"
-
 
 CBandit_Sniper::CBandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -59,12 +57,9 @@ void CBandit_Sniper::Priority_Tick(_float fTimeDelta)
 
 void CBandit_Sniper::Tick(_float fTimeDelta)
 {
-	if (m_bInit)
-	{
-		m_bInitLook = m_pTransformCom->Get_Look();
-		m_bInitWorld = m_pTransformCom->Get_WorldFloat4x4(); 
-		m_bInit = false;
-	}
+	if (m_pGameInstance->Key_Down(DIK_H))
+		m_bProtectExist = false;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_pActor)
@@ -123,8 +118,6 @@ HRESULT CBandit_Sniper::Ready_Option()
 
 void CBandit_Sniper::Hitted_Left(Power ePower)
 {
-	m_bInit = true;
-
 	cout << "Sniper - Hit Left " << endl;
 	/* 무기 강도 */
 	switch (ePower)
@@ -146,8 +139,6 @@ void CBandit_Sniper::Hitted_Left(Power ePower)
 
 void CBandit_Sniper::Hitted_Right(Power ePower)
 {
-	m_bInit = true;
-
 	cout << "Sniper - Hit Right " << endl;
 	switch (ePower)
 	{
@@ -171,8 +162,6 @@ void CBandit_Sniper::Hitted_Right(Power ePower)
 
 void CBandit_Sniper::Hitted_Front(Power ePower)
 {
-	m_bInit = true;
-
 	cout << "Sniper - Hit Front " << endl;	
 	
 	switch (ePower)
@@ -197,8 +186,6 @@ void CBandit_Sniper::Hitted_Front(Power ePower)
 
 void CBandit_Sniper::Hitted_Knock(_bool bIsCannonball)
 {
-	m_bInit = true;
-
 	cout << "Sniper - Hit Knock " << endl;
 
 	m_pActor->Set_State(new CSniper_HitHeavy_F_01());
@@ -207,8 +194,6 @@ void CBandit_Sniper::Hitted_Knock(_bool bIsCannonball)
 
 void CBandit_Sniper::Hitted_Dead(Power ePower)
 {
-	m_bInit = true;
-
 	cout << "Sniper - Hit Dead " << endl;
 
 	switch (ePower)

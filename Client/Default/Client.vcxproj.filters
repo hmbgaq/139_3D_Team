@@ -2977,6 +2977,18 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Bullet">
       <UniqueIdentifier>{f8057d5b-b5ad-479c-aeb1-74c482c9de0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt">
+      <UniqueIdentifier>{76273e8b-ad55-4129-a7e1-c63c78dd18ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\1">
+      <UniqueIdentifier>{c6539cb1-2d25-4ae5-8c79-0880369cee94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\2">
+      <UniqueIdentifier>{2e035043-752e-4409-aace-31181388b378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\3">
+      <UniqueIdentifier>{d6d719c6-3e6b-456c-962f-565131206f02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -6027,8 +6039,17 @@
     <ClInclude Include="..\Public\Sniper_Crouch_Turn_90_R.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\2. Crouch\Turn\Right</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Sniper_Bullet.h">
+    <ClInclude Include="..\Public\Bullet_Bandit_Sniper.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Taunt_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Taunt_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Taunt_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\3</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -8521,8 +8542,17 @@
     <ClCompile Include="..\Private\UI_Video.cpp">
       <Filter>02.GameObjects\UI\97. Video</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Sniper_Bullet.cpp">
+    <ClCompile Include="..\Private\Bullet_Bandit_Sniper.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Taunt_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Taunt_02.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Taunt_03.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\3</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

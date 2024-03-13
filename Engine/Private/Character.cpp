@@ -416,7 +416,7 @@ _float CCharacter::Target_Contained_Angle(_float4 vStandard, _float4 vTargetPos)
 
 	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
 
-	_float angle = std::acos(XMVectorGetX(XMVector3Dot(vStandard, vLook)));
+	_float angle = acos(XMVectorGetX(XMVector3Dot(vStandard, vLook)));
 
 	if (XMVectorGetX(XMVector3Dot(XMVectorSet(1.f, 0.f, 0.f, 0.f), vLook)) < 0.f)
 	{

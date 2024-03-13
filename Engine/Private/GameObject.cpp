@@ -78,8 +78,6 @@ _bool CGameObject::Picking(_Out_ _float3* vPickedPos)
 	return false;
 }
 
-
-
 CComponent * CGameObject::Find_Component(const wstring & strComTag, const wstring & strPartTag)
 {
 	auto	iter = m_Components.find(strComTag);

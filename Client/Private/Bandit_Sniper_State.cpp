@@ -15,6 +15,9 @@
 #include "Sniper_CoverLow_Reload.h"
 #include "Sniper_CoverHigh_Reload.h"
 #include "Sniper_CoverHigh_Idle.h"
+#include "Sniper_Taunt_01.h"
+#include "Sniper_Taunt_02.h"
+#include "Sniper_Taunt_03.h"
 
 void CBandit_Sniper_State::Initialize(CBandit_Sniper* pActor)
 {
@@ -146,6 +149,7 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Attack(CBandit_Sniper* pActor, _fl
 			return new CSniper_CoverLow_Reload();
 		}
 
+
 		iAttackCnt += 1;
 		return new CSniper_CoverLow_Over_Start(); // 앉아있다가 정면 공격
 	}
@@ -158,9 +162,31 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Attack(CBandit_Sniper* pActor, _fl
 			return new CSniper_CoverHigh_Reload();
 		}
 
-		iAttackCnt += 1;
-		/* 여기서 제자리공격하셈 */
+		if (bTunt_Active)
+		{
+			bTunt_Active = false;
+			_int iRandomTunt = SMath::Random(1, 3);
+			cout << iRandomTunt << endl;
 
+			switch (iRandomTunt)
+			{
+			case 1:
+				return new CSniper_Taunt_01();
+				break;
+			case 2:
+				return new CSniper_Taunt_02();
+				break;
+			case 3:
+				return new CSniper_Taunt_03();
+				break;
+			}
+		}
+
+		/* 기존의 서서 조준하고 쏘고 하는 애니메이션이 없음
+			-> 서있다가 무릎굽혀서 쏘고 다시 일어남 -> Taunt  반복 */
+		iAttackCnt += 1;
+		bTunt_Active = true;
+		return new CSniper_Crouch_Start();
 	}
 
 	return nullptr;
