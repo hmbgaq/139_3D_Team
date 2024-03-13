@@ -45,29 +45,59 @@ public:	// 생성 함수 작성
 	{
 	};
 
-public: /* Interface */
+public: /* Ready_Preset */
 	HRESULT Ready_Interface(_uint iLevelIndex);
+	HRESULT Ready_Crosshair(_uint iLevelIndex);
+	HRESULT Ready_Loading_Intro(_uint iLevelIndex);
+	HRESULT Ready_BossHUD_Bar(_uint iLevelIndex);
+
+public:
+	/* LeftHUD */
 	HRESULT Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_LeftHUD();
 	vector<CUI*>	m_vecLeftHUD;
+	/* RightHUD */
 	HRESULT Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_RightHUD();
 	vector<CUI*>	m_vecRightHUD;
+	/* TutorialBox */
 	HRESULT Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_TutorialBox();
 	vector<CUI*>	m_vecTutorialBox;
+	/* LevelUp */
 	HRESULT Add_LevelUp(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_LevelUp();
 	vector<CUI*>	m_vecLevelUP;
+	/* RewardBox */
 	HRESULT Add_RewardBox(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_RewardBox();
 	vector<CUI*>	m_vecRewardBox;
+	/* QuestBox */
 	HRESULT Add_QuestBox(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_QuestBox();
 	vector<CUI*>	m_vecQuestBox;
+
+	/* Distortion */
 	HRESULT Add_Distortion(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_Distortion();
 	vector<CUI*>	m_vecDistortion;
+
+	/* IntroLoading */
+	HRESULT Add_Loading_Intro(_uint iLevelIndex, const wstring& strLayerTag);
+	void	Active_Loading_Intro(_bool bActive);
+	vector<CUI*>	m_vecLoading;
+
+
+	/* IntroLoading */
+	HRESULT			Add_Crosshair(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_Crosshair(_bool bActive);
+	void			Trigger_Crosshair(_bool bPlayAnim);
+	vector<CUI*>	m_vecCrosshair;
+
+	/* BossHUD(Bar) */
+	HRESULT			Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_BossHUD_Bar(_bool bActive);
+	vector<CUI*>	m_vecBossHUD_Bar;
 	//CUI* Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 #ifdef _DEBUG

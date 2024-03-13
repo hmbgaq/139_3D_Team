@@ -1,22 +1,22 @@
 #include "stdafx.h"
-#include "UI_Player_HPBar.h"
+#include "UI_EnemyHP_Bar.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
+#include "Texture.h"
+#include "Character.h"
 
-#include "Data_Manager.h"
-
-CUI_Player_HPBar::CUI_Player_HPBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_EnemyHP_Bar::CUI_EnemyHP_Bar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
-CUI_Player_HPBar::CUI_Player_HPBar(const CUI_Player_HPBar& rhs)
+CUI_EnemyHP_Bar::CUI_EnemyHP_Bar(const CUI_EnemyHP_Bar& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CUI_Player_HPBar::Initialize_Prototype()
+HRESULT CUI_EnemyHP_Bar::Initialize_Prototype()
 {
 	//TODO 원형객체의 초기화과정을 수행한다.
 	/* 1.서버로부터 값을 받아와서 초기화한다 .*/
@@ -25,9 +25,9 @@ HRESULT CUI_Player_HPBar::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CUI_Player_HPBar::Initialize(void* pArg)
+HRESULT CUI_EnemyHP_Bar::Initialize(void* pArg)
 {
-	if(pArg != nullptr)
+	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
 	m_tUIInfo.fScaleX = 169.f;
@@ -50,46 +50,43 @@ HRESULT CUI_Player_HPBar::Initialize(void* pArg)
 	해당 객체에 원하는 함수나 변수 만들어서 불러오기.
 	*/
 
-	Set_OwnerHp();
+	//Set_OwnerHp();
 
 	return S_OK;
 }
 
-void CUI_Player_HPBar::Priority_Tick(_float fTimeDelta)
+void CUI_EnemyHP_Bar::Priority_Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_Player_HPBar::Tick(_float fTimeDelta)
+void CUI_EnemyHP_Bar::Tick(_float fTimeDelta)
 {
-	m_fCurHP = m_pData_Manager->Get_CurHP();
-	m_fMaxHP = m_pData_Manager->Get_MaxHP();
-
-	if (m_pGameInstance->Key_Down(DIK_Z))
-	{
-		m_bActive = true;
-	}
-
 	if (m_pGameInstance->Key_Down(DIK_Q)) // 피격
 	{
-		m_pData_Manager->Add_CurHP(-10.f);
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_E)) // 회복
-	{
-		m_pData_Manager->Add_CurHP(10.f);
-		m_fPreHP += 10.f;
+		m_fCurHP = -10.f;
 	}
 
 	__super::Tick(fTimeDelta);
 
-	// 회복
+	// 0. 회복
 	if (m_fPreHP < m_fCurHP)
 		m_fPreHP = m_fCurHP;
 
-	m_pData_Manager->Limit_HP();
+	/* 1. 모든 체력 소진 */
+	if (m_fCurHP <= 0.f)
+	{
+		/* Dead */
+		m_fCurHP = 0.f;
+	}
 
-	if (m_bActive)
+	/* 2. 현재 체력 -> 맥스 체력 초과 */
+	if (m_fCurHP >= m_fMaxHP)
+	{
+		m_fCurHP = m_fMaxHP;
+	}
+
+	if (m_bActive == true)
 	{
 		m_fTimeAcc += fTimeDelta * 0.1f;
 
@@ -107,9 +104,10 @@ void CUI_Player_HPBar::Tick(_float fTimeDelta)
 			}
 		}
 	}
+
 }
 
-void CUI_Player_HPBar::Late_Tick(_float fTimeDelta)
+void CUI_EnemyHP_Bar::Late_Tick(_float fTimeDelta)
 {
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
@@ -119,7 +117,7 @@ void CUI_Player_HPBar::Late_Tick(_float fTimeDelta)
 		return;
 }
 
-HRESULT CUI_Player_HPBar::Render()
+HRESULT CUI_EnemyHP_Bar::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -136,25 +134,17 @@ HRESULT CUI_Player_HPBar::Render()
 	return S_OK;
 }
 
-HRESULT CUI_Player_HPBar::Ready_Components()
+HRESULT CUI_EnemyHP_Bar::Ready_Components()
 {
-	//if(FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
-	//	return E_FAIL;
-
 	//! For.Com_Texture1 // 흰색 바
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_damagel"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_defence_white"),
 		TEXT("Com_Texture_WhiteBar"), reinterpret_cast<CComponent**>(&m_pTextureCom[HPBAR_WHITE]))))
 		return E_FAIL;
 
 	//! For.Com_Texture2 // 빨간색 바
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_bg_full"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_boss_hp_bar"),
 		TEXT("Com_Texture_RedBar"), reinterpret_cast<CComponent**>(&m_pTextureCom[HPBAR_RED]))))
 		return E_FAIL;
-	//
-	////! For.Com_Texture3 // 표시선
-	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("UI_PlayersHP_decal"),
-	//	TEXT("Com_Texture_Decal"), reinterpret_cast<CComponent**>(&m_pTextureCom[HP_DECAL]))))
-	//	return E_FAIL;
 
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -170,7 +160,7 @@ HRESULT CUI_Player_HPBar::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CUI_Player_HPBar::Bind_ShaderResources()
+HRESULT CUI_EnemyHP_Bar::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -199,7 +189,7 @@ HRESULT CUI_Player_HPBar::Bind_ShaderResources()
 	return S_OK;
 }
 
-void CUI_Player_HPBar::Compute_OwnerCamDistance()
+void CUI_EnemyHP_Bar::Compute_OwnerCamDistance()
 {
 	//_vector		vPosition = m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION);
 	//_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
@@ -207,98 +197,61 @@ void CUI_Player_HPBar::Compute_OwnerCamDistance()
 	//m_fOwnerCamDistance = XMVectorGetX(XMVector3Length(vPosition - vCamPosition));
 }
 
-_bool CUI_Player_HPBar::In_Frustum()
+_bool CUI_EnemyHP_Bar::In_Frustum()
 {
 	return false;
 	//return m_pGameInstance->isIn_WorldPlanes(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
-void CUI_Player_HPBar::Set_OwnerHp(/*CPlayer pPlayer*/)
-{
-	// ex)
-	//if (nullptr == pPlayer)
-	//	return;
-
-	//m_pOwner = pPlayer;
-
-	//CPlayer::PLAYER_STAT StatDesc = {};
-	//ZeroMemory(&StatDesc, sizeof(CPlayer::PLAYER_STAT));
-
-	//memcpy(&StatDesc, &(m_pOwner->Get_Stat()), sizeof(CPlayer::PLAYER_STAT));
-
-	//// Texture 선택 예시
-	//if (TEXT("Texture Name1") == m_pOwner->Get_ObjectTag())
-	//{
-
-	//}
-	//else if (TEXT("Texture Name2") == m_pOwner->Get_ObjectTag())
-	//{
-
-	//}
-	//else if (TEXT("Texture Name3") == m_pOwner->Get_ObjectTag())
-	//{
-
-	//}
-
-	//m_fMaxHP = StatDesc.fMaxHp;
-	//m_fCurHP = StatDesc.fHp;
-	//m_fPreHP = m_fCurHP;
-
-	
-	m_fMaxHP = m_pData_Manager->Get_CurHP();
-	m_fCurHP = m_fMaxHP;
-	m_fPreHP = m_fCurHP;
-}
-
-json CUI_Player_HPBar::Save_Desc(json& out_json)
+json CUI_EnemyHP_Bar::Save_Desc(json& out_json)
 {
 	/* 기본정보 저장 */
 	__super::Save_Desc(out_json);
 
-	
+
 	/* 추가정보 저장 */
 
 
 	return out_json;
 }
 
-void CUI_Player_HPBar::Load_Desc()
+void CUI_EnemyHP_Bar::Load_Desc()
 {
 
 }
 
-CUI_Player_HPBar* CUI_Player_HPBar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_EnemyHP_Bar* CUI_EnemyHP_Bar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Player_HPBar* pInstance = new CUI_Player_HPBar(pDevice, pContext, strPrototypeTag);
+	CUI_EnemyHP_Bar* pInstance = new CUI_EnemyHP_Bar(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CUI_Player_HPBar");
+		MSG_BOX("Failed to Created : CUI_EnemyHP_Bar");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_Player_HPBar::Clone(void* pArg)
+CGameObject* CUI_EnemyHP_Bar::Clone(void* pArg)
 {
-	CUI_Player_HPBar* pInstance = new CUI_Player_HPBar(*this);
+	CUI_EnemyHP_Bar* pInstance = new CUI_EnemyHP_Bar(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CUI_Player_HPBar");
+		MSG_BOX("Failed to Cloned : CUI_EnemyHP_Bar");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_Player_HPBar::Pool()
+CGameObject* CUI_EnemyHP_Bar::Pool()
 {
-	return new CUI_Player_HPBar(*this);
+	return new CUI_EnemyHP_Bar(*this);
 }
 
-void CUI_Player_HPBar::Free()
+void CUI_EnemyHP_Bar::Free()
 {
 	__super::Free();
 

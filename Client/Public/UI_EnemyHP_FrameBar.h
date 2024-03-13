@@ -3,14 +3,12 @@
 #include "UI.h"
 
 /* 체력 프레임 */
-class CUI_AimCrosshair final : public CUI
+class CUI_EnemyHP_FrameBar final : public CUI
 {
-	enum TEXTUREKIND { CROSSHAIR, TEXTURE_END };
-
 private:
-	CUI_AimCrosshair(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CUI_AimCrosshair(const CUI_AimCrosshair& rhs);
-	virtual ~CUI_AimCrosshair() = default;
+	CUI_EnemyHP_FrameBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CUI_EnemyHP_FrameBar(const CUI_EnemyHP_FrameBar& rhs);
+	virtual ~CUI_EnemyHP_FrameBar() = default;
 
 public:
 	virtual HRESULT			Initialize_Prototype() override; //! 원형객체의 초기화를 위한 함수.
@@ -25,19 +23,21 @@ private:
 	virtual HRESULT			Bind_ShaderResources() override;
 
 public:
-	json				 Save_Desc(json& out_json);
-	void				 Load_Desc();
+	virtual HRESULT			Set_ParentTransform(CTransform* pParentTransformCom) override;
 
 private:
-	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
-	POINT m_ptMouse = {};
-	POINT m_ptOffset = {};
-
-	_float2	m_vRecoil = { 0.f, 0.f };
-	_float2	m_vOffset = { 0.f, 0.f };
+	void					Compute_OwnerCamDistance();
+	_bool					In_Frustum();
 
 public:
-	static CUI_AimCrosshair* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
+	json					Save_Desc(json& out_json);
+	void					Load_Desc();
+
+private:
+	CTexture* m_pTextureCom = nullptr;
+
+public:
+	static CUI_EnemyHP_FrameBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
 	virtual CGameObject* Clone(void* pArg) override; //! 사본객체 생성
 	virtual CGameObject* Pool() override;
 	virtual void			Free() override;

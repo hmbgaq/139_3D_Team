@@ -34,7 +34,9 @@ HRESULT CWindow_UITool::Initialize()
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));	// Option
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD"))));	// PlayerHUD
-	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/WorldMap"))));	// WorldMap
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/WorldMap"))));	// WorldMap
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Crosshairs"))));// Crosshairs
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/EnemyHUD"))));	// EnemyHUD
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));			// Image
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));			// All
 	
@@ -3483,31 +3485,31 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 			pUI_Object->Add_Keyframe(tUI_Info.tKeyframe);
 		}
 
-		if (object["Distortion"]["ScrollSpeedsX"].contains("ScrollSpeedsX")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.vScrollSpeeds.x = object["Distortion"]["ScrollSpeedsX"];
-		if (object["Distortion"]["ScrollSpeedsY"].contains("ScrollSpeedsY")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.vScrollSpeeds.y = object["Distortion"]["ScrollSpeedsY"];
-		if (object["Distortion"]["ScrollSpeedsZ"].contains("ScrollSpeedsZ")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.vScrollSpeeds.z = object["Distortion"]["ScrollSpeedsZ"];
-		if (object["Distortion"]["ScalesX"].contains("ScalesX")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.vScales.x = object["Distortion"]["ScalesX"];
-		if (object["Distortion"]["ScalesY"].contains("ScalesY")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.vScales.y = object["Distortion"]["ScalesY"];
-		if (object["Distortion"]["ScalesZ"].contains("ScalesZ")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.vScales.z = object["Distortion"]["ScalesZ"];
-		if (object["Distortion"]["Distortion1X"].contains("Distortion1X")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.vDistortion1.x = object["Distortion"]["Distortion1X"];
-		if (object["Distortion"]["Distortion1Y"].contains("Distortion1Y")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.vDistortion1.y = object["Distortion"]["Distortion1Y"];
-		if (object["Distortion"]["Distortion2X"].contains("Distortion2X")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.vDistortion2.x = object["Distortion"]["Distortion2X"];
-		if (object["Distortion"]["Distortion2Y"].contains("Distortion2Y")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.vDistortion2.y = object["Distortion"]["Distortion2Y"];
-		if (object["Distortion"]["Distortion3X"].contains("Distortion3X")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3X"];
-		if (object["Distortion"]["Distortion3Y"].contains("Distortion3Y")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3Y"];
-		if (object["Distortion"]["DistortionScale"].contains("DistortionScale")) // 키가 있으면
+		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.fDistortionScale = object["Distortion"]["DistortionScale"];
 
 		if (tUI_Info.bParent == true)
@@ -3578,9 +3580,22 @@ void CWindow_UITool::ShowImagePreview(const std::vector<unsigned char>& imageDat
 
 void CWindow_UITool::UI_Preset()
 {
+	/* Test 생성버튼 */
 	if (ImGui::Button("Interface"))
 	{
 		m_pUI_Manager->Ready_Interface(LEVEL_STATIC);
+	}
+	if (ImGui::Button("Crosshair"))
+	{
+		m_pUI_Manager->Ready_Crosshair(LEVEL_STATIC);
+	}
+	if (ImGui::Button("Loading_Intro"))
+	{
+		m_pUI_Manager->Ready_Loading_Intro(LEVEL_STATIC);
+	}
+	if (ImGui::Button("BossHUD_Bar"))
+	{
+		m_pUI_Manager->Ready_BossHUD_Bar(LEVEL_STATIC);
 	}
 }
 

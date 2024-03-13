@@ -1,21 +1,21 @@
 #include "stdafx.h"
-#include "UI_Loading_Icon.h"
+#include "UI_EnemyHP_FrameBar.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "Texture.h"
 
-CUI_Loading_Icon::CUI_Loading_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_EnemyHP_FrameBar::CUI_EnemyHP_FrameBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
-CUI_Loading_Icon::CUI_Loading_Icon(const CUI_Loading_Icon& rhs)
+CUI_EnemyHP_FrameBar::CUI_EnemyHP_FrameBar(const CUI_EnemyHP_FrameBar& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CUI_Loading_Icon::Initialize_Prototype()
+HRESULT CUI_EnemyHP_FrameBar::Initialize_Prototype()
 {
 	//TODO 원형객체의 초기화과정을 수행한다.
 	/* 1.서버로부터 값을 받아와서 초기화한다 .*/
@@ -24,7 +24,7 @@ HRESULT CUI_Loading_Icon::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CUI_Loading_Icon::Initialize(void* pArg)
+HRESULT CUI_EnemyHP_FrameBar::Initialize(void* pArg)
 {
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
@@ -35,34 +35,35 @@ HRESULT CUI_Loading_Icon::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
-	m_bRepetition = true;
-
 	return S_OK;
 }
 
-void CUI_Loading_Icon::Priority_Tick(_float fTimeDelta)
+void CUI_EnemyHP_FrameBar::Priority_Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_Loading_Icon::Tick(_float fTimeDelta)
+void CUI_EnemyHP_FrameBar::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
 	if (m_bActive == true)
 	{
+
 	}
+
 }
 
-void CUI_Loading_Icon::Late_Tick(_float fTimeDelta)
+void CUI_EnemyHP_FrameBar::Late_Tick(_float fTimeDelta)
 {
 	if (m_bActive == true)
 	{
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this), );
 	}
+
 }
 
-HRESULT CUI_Loading_Icon::Render()
+HRESULT CUI_EnemyHP_FrameBar::Render()
 {
 	if (m_bActive == true)
 	{
@@ -79,10 +80,11 @@ HRESULT CUI_Loading_Icon::Render()
 		m_pVIBufferCom->Render();
 	}
 
+
 	return S_OK;
 }
 
-HRESULT CUI_Loading_Icon::Ready_Components()
+HRESULT CUI_EnemyHP_FrameBar::Ready_Components()
 {
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -105,7 +107,7 @@ HRESULT CUI_Loading_Icon::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CUI_Loading_Icon::Bind_ShaderResources()
+HRESULT CUI_EnemyHP_FrameBar::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -122,57 +124,90 @@ HRESULT CUI_Loading_Icon::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CUI_Loading_Icon::Set_ParentTransform(CTransform* pParentTransformCom)
+HRESULT CUI_EnemyHP_FrameBar::Set_ParentTransform(CTransform* pParentTransformCom)
 {
 	m_tUIInfo.pParentTransformCom = pParentTransformCom;
 	return S_OK;
 }
 
-json CUI_Loading_Icon::Save_Desc(json& out_json)
+void CUI_EnemyHP_FrameBar::Compute_OwnerCamDistance()
+{
+	//_vector		vPosition = m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION);
+	//_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
+
+	//m_fOwnerCamDistance = XMVectorGetX(XMVector3Length(vPosition - vCamPosition));
+}
+
+_bool CUI_EnemyHP_FrameBar::In_Frustum()
+{
+	return false;
+	//return m_pGameInstance->isIn_WorldPlanes(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
+}
+
+json CUI_EnemyHP_FrameBar::Save_Desc(json& out_json)
 {
 	// Save error : 저장을 상위 부모에서 바꿨는데 이 클래스에는 적용안했음.
 	__super::Save_Desc(out_json);
 
+	//_float fSizeX = 0.f;
+	//_float fSizeY = 0.f;
+	//_float fPositionX = 0.f;
+	//_float fPositionY = 0.f;
+
+	//_float fCurPosX = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
+	//_float fCurPosY = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
+
+	//fCurPosX = fCurPosX + (_float)g_iWinSizeX * 0.5f;
+	//fCurPosY = (_float)g_iWinSizeY * 0.5f - fCurPosY;
+
+	//out_json["CloneTag"] = m_tUIInfo.strCloneTag;
+
+	//out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
+
+	//out_json["FilePath"] = m_tUIInfo.strFilePath;
+
+	//m_pTransformCom->Write_Json(out_json);
+
 	return out_json;
 }
 
-void CUI_Loading_Icon::Load_Desc()
+void CUI_EnemyHP_FrameBar::Load_Desc()
 {
 
 }
 
-CUI_Loading_Icon* CUI_Loading_Icon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_EnemyHP_FrameBar* CUI_EnemyHP_FrameBar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Loading_Icon* pInstance = new CUI_Loading_Icon(pDevice, pContext, strPrototypeTag);
+	CUI_EnemyHP_FrameBar* pInstance = new CUI_EnemyHP_FrameBar(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CUI_Loading_Icon");
+		MSG_BOX("Failed to Created : CUI_EnemyHP_FrameBar");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_Loading_Icon::Clone(void* pArg)
+CGameObject* CUI_EnemyHP_FrameBar::Clone(void* pArg)
 {
-	CUI_Loading_Icon* pInstance = new CUI_Loading_Icon(*this);
+	CUI_EnemyHP_FrameBar* pInstance = new CUI_EnemyHP_FrameBar(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CUI_Loading_Icon");
+		MSG_BOX("Failed to Cloned : CUI_EnemyHP_FrameBar");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_Loading_Icon::Pool()
+CGameObject* CUI_EnemyHP_FrameBar::Pool()
 {
-	return new CUI_Loading_Icon(*this);
+	return new CUI_EnemyHP_FrameBar(*this);
 }
 
-void CUI_Loading_Icon::Free()
+void CUI_EnemyHP_FrameBar::Free()
 {
 	__super::Free();
 

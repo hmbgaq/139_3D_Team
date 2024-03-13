@@ -96,6 +96,8 @@
 #include "UI_MonsterHpFrame.h"
 #include "UI_MonsterHp.h"
 #include "UI_Weakness.h"
+#include "UI_EnemyHP_FrameBar.h"
+#include "UI_EnemyHP_Bar.h"
 /* TextBox */
 #include "UI_TextBox.h"
 #include "UI_TutorialBox.h"
@@ -795,6 +797,11 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Player_Skill_Icon"), CUI_Player_Skill_Icon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Player_Skill_Icon"))));
 #pragma endregion End
 
+#pragma region Boss
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_EnemyHP_FrameBar"), CUI_EnemyHP_FrameBar::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_EnemyHP_FrameBar"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_EnemyHP_Bar"), CUI_EnemyHP_Bar::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_EnemyHP_Bar"))));
+#pragma endregion End
+
 #pragma region Monster
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHpFrame"), CUI_MonsterHpFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MonsterHpFrame"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHp"), CUI_MonsterHp::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MonsterHp"))));
@@ -839,7 +846,7 @@ HRESULT CLoader::Ready_UI_Origin()
 #pragma endregion End
 
 
-#pragma region Crosshair
+#pragma region Loading
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_BackGround"), CUI_BackGround::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_BackGround"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Loading_Icon"), CUI_Loading_Icon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Loading_Icon"))));
 #pragma endregion End

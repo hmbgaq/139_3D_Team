@@ -8,11 +8,13 @@
 #include "Level_IntroBoss.h"
 #include "Level_GamePlay.h"
 #include "Level_Tool.h"
+#include "UI_Manager.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
+	, m_pUI_Manager(CUI_Manager::GetInstance())
 {
-
+	Safe_AddRef(m_pUI_Manager);
 }
 
 HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
@@ -27,6 +29,41 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 
 	/* 추가적인 스레드를 생성하여 eNextLevelID에 필요한 자원들을 로드한다. */
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, eNextLevelID);
+
+	/* Loading BackGround */
+	switch (m_eNextLevelID)
+	{
+	case Client::LEVEL_STATIC:
+		break;
+	case Client::LEVEL_LOGO:
+		//m_pUI_Manager->Ready_Loading_MainMenu(LEVEL_LOGO);
+		break;
+	case Client::LEVEL_INTRO:
+		//m_pUI_Manager->Ready_Loading_Intro(LEVEL_INTRO); // Loading UI 생성
+		//m_pUI_Manager->Active_Loading_Intro(true);			 // UI ON
+		break;
+	case Client::LEVEL_INTRO_BOSS:
+		// Test
+		m_pUI_Manager->Ready_Loading_Intro(LEVEL_INTRO); // Loading UI 생성
+		m_pUI_Manager->Active_Loading_Intro(true);			 // UI ON
+		//m_pUI_Manager->Ready_Loading_IntroBoss(LEVEL_INTRO_BOSS);
+		break;
+	case Client::LEVEL_SNOWMOUNTAIN:
+		//m_pUI_Manager->Ready_Loading_SnowMountain(LEVEL_SNOWMOUNTAIN);
+		break;
+	case Client::LEVEL_LAVA:
+		break;
+	case Client::LEVEL_TOOL:
+		break;
+	case Client::LEVEL_LOADING:
+		break;
+	case Client::LEVEL_GAMEPLAY:
+		break;
+	case Client::LEVEL_END:
+		break;
+	default:
+		break;
+	}
 	if (nullptr == m_pLoader)
 		return E_FAIL;
 
@@ -47,13 +84,17 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 			switch (m_eNextLevelID)
 			{
 			case LEVEL_LOGO:
+				
 				pNewLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
 				break;
 			case LEVEL_INTRO:
 				pNewLevel = CLevel_Intro::Create(m_pDevice, m_pContext);
+				m_pUI_Manager->Active_Loading_Intro(false);			 // UI OFF
 				break;
 			case LEVEL_INTRO_BOSS:
 				pNewLevel = CLevel_IntroBoss::Create(m_pDevice, m_pContext);
+				// Test
+				m_pUI_Manager->Active_Loading_Intro(false);			 // UI OFF
 				break;
 			case LEVEL_GAMEPLAY:
 				pNewLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
@@ -96,5 +137,6 @@ void CLevel_Loading::Free()
 	__super::Free();
 
 	Safe_Release(m_pLoader);
+	Safe_Release(m_pUI_Manager);
 
 }

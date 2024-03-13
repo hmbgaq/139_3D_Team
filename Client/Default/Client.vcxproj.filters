@@ -124,15 +124,6 @@
     <Filter Include="02.GameObjects\UI\00. Player\01. Hp">
       <UniqueIdentifier>{fc5b542d-a7bf-4b5e-a9ee-85c458609df1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\01. Monster">
-      <UniqueIdentifier>{4fbd45e8-23c6-4ff2-916d-b5b6ec906d8b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\01. Monster\00. Hp">
-      <UniqueIdentifier>{3b41fb5d-ce98-43f4-994c-a4bea97a9835}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Frame">
-      <UniqueIdentifier>{91ed537f-e3b8-4c30-8935-be704bc3fae7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\02. System">
       <UniqueIdentifier>{47c53a2b-c542-4b2a-b07b-817b6be951a8}</UniqueIdentifier>
     </Filter>
@@ -1042,9 +1033,6 @@
     <Filter Include="01.Levels\01.GamePlay\3.Lava">
       <UniqueIdentifier>{04902ce0-48d3-4de2-bf84-596e0d009ea7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp">
-      <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\00. Player\01. Hp\HpBar">
       <UniqueIdentifier>{009fd7cc-9024-4ccd-b651-e9b51bbb3038}</UniqueIdentifier>
     </Filter>
@@ -1425,9 +1413,6 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\00. Player\98. Right_Interface">
       <UniqueIdentifier>{52b0b806-bb9d-40cc-a902-d719e9dff60b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\01. Monster\01. Weakness">
-      <UniqueIdentifier>{ce1391d2-0f61-42d6-aa55-e19415c437e2}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects">
       <UniqueIdentifier>{6a4e5f4a-7555-4c9b-b7e7-d07684d1935b}</UniqueIdentifier>
@@ -2959,6 +2944,39 @@
     <Filter Include="02.GameObjects\UI\02. System\07. BackGround\Loading">
       <UniqueIdentifier>{01c7a826-6075-4c6a-a9fd-a86a1e767a52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy">
+      <UniqueIdentifier>{4fbd45e8-23c6-4ff2-916d-b5b6ec906d8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy\00. HUD_Bar">
+      <UniqueIdentifier>{bde80a99-cd60-4c30-9893-5c72e79bde54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy\01. HUD_Shard">
+      <UniqueIdentifier>{21eabfba-845c-4338-afb2-3ac319778c05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy\02. Weakness">
+      <UniqueIdentifier>{ce1391d2-0f61-42d6-aa55-e19415c437e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy\99. Monster">
+      <UniqueIdentifier>{2d8121ba-52d0-4381-baea-16756e9e0d61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy\99. Monster\00. Hp">
+      <UniqueIdentifier>{3b41fb5d-ce98-43f4-994c-a4bea97a9835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy\99. Monster\00. Hp\Frame">
+      <UniqueIdentifier>{91ed537f-e3b8-4c30-8935-be704bc3fae7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy\99. Monster\00. Hp\Frame\Hp">
+      <UniqueIdentifier>{2a53064d-85a2-40de-8d31-3beb6046cbf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts">
+      <UniqueIdentifier>{88c20f3a-3998-48e8-9133-f480649c7e2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\HP">
+      <UniqueIdentifier>{aa1e681d-7382-4cdd-92b5-a6801fcfca4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\State">
+      <UniqueIdentifier>{d12f8f2c-ebbb-4d07-8455-8b591530bc89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -4342,7 +4360,7 @@
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Weakness.h">
-      <Filter>02.GameObjects\UI\01. Monster\01. Weakness</Filter>
+      <Filter>02.GameObjects\UI\01. Enemy\02. Weakness</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Model_Preview.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview</Filter>
@@ -5985,6 +6003,21 @@
     <ClInclude Include="..\Public\UI_Loading_Icon.h">
       <Filter>02.GameObjects\UI\02. System\07. BackGround\Loading</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_EnemyHUD_Bar.h">
+      <Filter>02.GameObjects\UI\01. Enemy\00. HUD_Bar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_EnemyHUD_Shard.h">
+      <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_EnemyHP_Bar.h">
+      <Filter>02.GameObjects\UI\01. Enemy\00. HUD_Bar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_EnemyHP_Shard.h">
+      <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\HP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_EnemyHP_FrameBar.h">
+      <Filter>02.GameObjects\UI\01. Enemy\00. HUD_Bar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -6177,10 +6210,10 @@
       <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_MonsterHp.h">
-      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp</Filter>
+      <Filter>02.GameObjects\UI\01. Enemy\99. Monster\00. Hp\Frame\Hp</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_MonsterHpFrame.h">
-      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame</Filter>
+      <Filter>02.GameObjects\UI\01. Enemy\99. Monster\00. Hp\Frame</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Anything.h">
       <Filter>02.GameObjects\UI\99. Anything</Filter>
@@ -6284,10 +6317,10 @@
       <Filter>01.Levels\02.Tool\Imgui\Windows\UIToolWindow</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_MonsterHp.cpp">
-      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame\Hp</Filter>
+      <Filter>02.GameObjects\UI\01. Enemy\99. Monster\00. Hp\Frame\Hp</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_MonsterHpFrame.cpp">
-      <Filter>02.GameObjects\UI\01. Monster\00. Hp\Frame</Filter>
+      <Filter>02.GameObjects\UI\01. Enemy\99. Monster\00. Hp\Frame</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Anything.cpp">
       <Filter>02.GameObjects\UI\99. Anything</Filter>
@@ -7685,7 +7718,7 @@
       <Filter>02.GameObjects\UI\02. System\03. LevelUp\06. ShieldFrame</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Weakness.cpp">
-      <Filter>02.GameObjects\UI\01. Monster\01. Weakness</Filter>
+      <Filter>02.GameObjects\UI\01. Enemy\02. Weakness</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Model_Preview.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\EffectToolWindow\00.GameObjects\02.Model_Preview</Filter>
@@ -8451,6 +8484,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Loading_Icon.cpp">
       <Filter>02.GameObjects\UI\02. System\07. BackGround\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_EnemyHUD_Bar.cpp">
+      <Filter>02.GameObjects\UI\01. Enemy\00. HUD_Bar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_EnemyHUD_Shard.cpp">
+      <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_EnemyHP_Bar.cpp">
+      <Filter>02.GameObjects\UI\01. Enemy\00. HUD_Bar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_EnemyHP_Shard.cpp">
+      <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\HP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_EnemyHP_FrameBar.cpp">
+      <Filter>02.GameObjects\UI\01. Enemy\00. HUD_Bar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -38,11 +38,11 @@ HRESULT CUI_Distortion::Initialize(void* pArg)
 
 	/* Distortion이 있는 UI */
 	m_tUIInfo.bDistortionUI = true;
-	m_tUIInfo.vScales = { 1.f, 0.f, 0.f };
-	m_tUIInfo.fPositionZ = 0.0f;
-	m_tUIInfo.fDistortionScale = 1.f;
-	m_tUIInfo.vDistortion1.x = 1.f;
-	m_tUIInfo.vScrollSpeeds.x = 1.f;
+	//m_tUIInfo.vScales = { 1.f, 0.f, 0.f };
+	//m_tUIInfo.fPositionZ = 0.0f;
+	//m_tUIInfo.fDistortionScale = 1.f;
+	//m_tUIInfo.vDistortion1.x = 1.f;
+	//m_tUIInfo.vScrollSpeeds.x = 1.f;
 
 	/*
 	#include "Data_Manager.h" 인클루드 해주고,

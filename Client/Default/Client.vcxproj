@@ -1018,6 +1018,11 @@
     <ClInclude Include="..\Public\stb_image.h" />
     <ClInclude Include="..\Public\UI_BackGround.h" />
     <ClInclude Include="..\Public\UI_Distortion.h" />
+    <ClInclude Include="..\Public\UI_EnemyHP_Bar.h" />
+    <ClInclude Include="..\Public\UI_EnemyHP_FrameBar.h" />
+    <ClInclude Include="..\Public\UI_EnemyHP_Shard.h" />
+    <ClInclude Include="..\Public\UI_EnemyHUD_Bar.h" />
+    <ClInclude Include="..\Public\UI_EnemyHUD_Shard.h" />
     <ClInclude Include="..\Public\UI_Loading_Icon.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
     <ClInclude Include="..\Public\UI_Video.h" />
@@ -1775,6 +1780,11 @@
     <ClCompile Include="..\Private\SpringCamera.cpp" />
     <ClCompile Include="..\Private\UI_BackGround.cpp" />
     <ClCompile Include="..\Private\UI_Distortion.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHP_Bar.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHP_FrameBar.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHP_Shard.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHUD_Bar.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHUD_Shard.cpp" />
     <ClCompile Include="..\Private\UI_Loading_Icon.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
     <ClCompile Include="..\Private\UI_Video.cpp" />

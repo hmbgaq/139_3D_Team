@@ -156,10 +156,20 @@ public:
 	void Set_StiffnessRate(_float fStiffnessRate);
 	void Set_StiffnessRate_Upper(_float fStiffnessRate);
 
+public:
+#pragma region ===========> HP <=========== 
+	void	Set_CurHP(_float fCurHP) { m_fCurHP = fCurHP; }
+	_float	Get_CurHP() { return m_fCurHP; }
+	void	Set_MaxHP(_float fMaxHP) { m_fMaxHP = fMaxHP; }
+	_float	Get_MaxHP() { return m_fMaxHP; }
+protected:
+	_int m_iHp = { 1 };
+	/* _float 타입의 HP를 사용해주세요. */
+	_float m_fMaxHP = { 40.f };
+	_float m_fCurHP = { 40.f };
 
 
 protected:
-	_int m_iHp = { 1 };
 	//Power m_eStrength = { Power::Light };
 	_float m_fStiffnessRate = { 1.f };
 
