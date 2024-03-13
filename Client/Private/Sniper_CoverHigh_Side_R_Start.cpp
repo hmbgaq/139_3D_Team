@@ -11,9 +11,8 @@ void CSniper_CoverHigh_Side_R_Start::Initialize(CBandit_Sniper* pActor)
 
 CState<CBandit_Sniper>* CSniper_CoverHigh_Side_R_Start::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
-	if (pActor->Is_Animation_End()) /* 리스폰 하는 애니메이션이 끝난다면 */
+	if (pActor->Is_Animation_End())
 	{
-		cout << "Move " << endl;
 		return new CSniper_CoverHigh_Side_R_AimPose();
 	}
 	return nullptr;

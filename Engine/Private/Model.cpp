@@ -525,7 +525,7 @@ _float CModel::Get_TrackPosition()
 
 void CModel::Set_TrackPosition(_int iNewTrackPosition)
 {
-	m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(iNewTrackPosition);
+	m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition((_float)iNewTrackPosition);
 }
 
 void CModel::Write_Names(const string& strModelFilePath)
@@ -581,6 +581,11 @@ void CModel::Write_Names(const string& strModelFilePath)
 	osTxt << endl;
 
 	osTxt.close();
+}
+
+void CModel::Set_Speed(_int iSpeed)
+{
+	//return m_Animations
 }
 
 vector<CAnimation*>* CModel::Get_Animations()

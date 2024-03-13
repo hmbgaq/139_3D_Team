@@ -40,10 +40,6 @@ HRESULT CBody::Initialize(void* pArg)
 void CBody::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
-
-#ifdef _DEBUG
-	Set_MouseMove(fTimeDelta);
-#endif // _DEBUG
 }
 
 void CBody::Tick(_float fTimeDelta)
@@ -53,10 +49,6 @@ void CBody::Tick(_float fTimeDelta)
 	m_vMovePos = { 0.f, 0.f, 0.f };
 
 	m_pColliderCom->Update(m_WorldMatrix);
-
-	Update_ShootingReaction(fTimeDelta);
-
-
 
 	//if (m_bDissolve)
 	//	m_fDissolveWeight += fTimeDelta;
@@ -180,8 +172,6 @@ void CBody::Set_TrackPosition(_int iNewTrackPosition)
 	return m_pModelCom->Set_TrackPosition(iNewTrackPosition);
 }
 
-#ifdef _DEBUG
-
 void CBody::Set_MouseMove(_float fTimeDelta)
 {
 	_float2 vMouseMove = { 0.f, 0.f };
@@ -200,10 +190,12 @@ void CBody::Set_MouseMove(_float fTimeDelta)
 	vResult.y = m_fRotateUpperY - m_fShootingReaction;
 
 	vResult.x += m_fRotateUpperX;
-		
+
 	m_pModelCom->Set_MouseMove(vResult);
 
 }
+
+#ifdef _DEBUG
 
 _bool CBody::Picking(_float3* vPickedPos)
 {

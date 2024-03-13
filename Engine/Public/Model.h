@@ -114,6 +114,8 @@ public:
 	void					Set_TrackPosition(_int iNewTrackPosition);
 	void					Write_Names(const string& strModelFilePath);
 
+	void					Set_Speed(_int iSpeed);
+
 public:
 	vector<CAnimation*>*	 Get_Animations();
 	_uint&					 Get_AnimationNum() { return m_iNumAnimations; }

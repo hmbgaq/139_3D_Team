@@ -1,4 +1,6 @@
-#include "..\Public\Sniper_CoverHigh_Side_R_Stop.h"
+#include "stdafx.h"
+#include "Sniper_Idle.h"
+#include "Sniper_CoverHigh_Side_R_Stop.h"
 
 void CSniper_CoverHigh_Side_R_Stop::Initialize(CBandit_Sniper* pActor)
 {
@@ -9,10 +11,9 @@ void CSniper_CoverHigh_Side_R_Stop::Initialize(CBandit_Sniper* pActor)
 
 CState<CBandit_Sniper>* CSniper_CoverHigh_Side_R_Stop::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
-	if (pActor->Is_Animation_End()) /* 리스폰 하는 애니메이션이 끝난다면 */
+	if (pActor->Is_Animation_End())
 	{
-		cout << "Side Stop end  " << endl;
-		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+		return new CSniper_Idle();
 	}
 
 	return nullptr;

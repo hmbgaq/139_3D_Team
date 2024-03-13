@@ -452,7 +452,7 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 		{
 			if (!m_vecParentObject.empty())
 			{
-				_int iParentSize = m_vecParentObject.size();
+				_int iParentSize = (_int)m_vecParentObject.size();
 				for (_int i = 0; i < iParentSize; ++i)
 				{
 					if (dynamic_cast<CUI*>(m_vecParentObject[i])->Get_Pick())
@@ -467,7 +467,7 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 			}
 			if (!m_vecChildObject.empty())
 			{
-				_int iChildSize = m_vecChildObject.size();
+				_int iChildSize = (_int)m_vecChildObject.size();
 				for (_int i = 0; i < iChildSize; ++i)
 				{
 					if (dynamic_cast<CUI*>(m_vecChildObject[i])->Get_Pick())
@@ -491,7 +491,7 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 			}
 			if (m_vecParentGroup != nullptr)
 			{
-				_int iGroupSize = (*m_vecParentGroup).size();
+				_int iGroupSize = (_int)(*m_vecParentGroup).size();
 				for (_int i = 0; i < iGroupSize; ++i)
 				{
 					if (dynamic_cast<CUI*>((*m_vecParentGroup)[i])->Get_Pick())
@@ -2849,14 +2849,14 @@ void CWindow_UITool::ImGuiKeyInput()
 		// 현재 키프레임이 0보다 작지 않을 경우만
 		if (closestKeyframeIndex > 0)
 		{
-			closestKeyframeIndex -= (_int)1.f;
+			closestKeyframeIndex -= 1;
 		}
 	
 		if (!m_vecTimeline->empty()) // 애니메이션이 있고
 		{
 			if (closestKeyframeIndex <= -1.f) // 아직 아무것도 선택하지 않았을 경우
 			{
-				closestKeyframeIndex = 0.f; // 0번째 선택
+				closestKeyframeIndex = 0; // 0번째 선택
 			}
 		}
 	}
@@ -2867,14 +2867,14 @@ void CWindow_UITool::ImGuiKeyInput()
 		// 현재 키프레임이 최대 키프레임을 넘지 않았을 때만
 		if (closestKeyframeIndex < m_vecTimeline->size() - 1)
 		{
-			closestKeyframeIndex += 1.f;
+			closestKeyframeIndex += 1;
 		}
 	
 		if (!m_vecTimeline->empty()) // 애니메이션이 있고
 		{
 			if (closestKeyframeIndex <= -1.f) // 아직 아무것도 선택하지 않았을 경우
 			{
-				closestKeyframeIndex = 0.f; // 0번째 선택
+				closestKeyframeIndex = 0; // 0번째 선택
 			}
 		}
 	}
@@ -2949,7 +2949,7 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 		{
 			if (&(*m_vecTimeline)[i] == &selectedKeyframe) 
 			{
-				originalIndex = i;
+				originalIndex = (_float)i;
 				break;
 			}
 		}

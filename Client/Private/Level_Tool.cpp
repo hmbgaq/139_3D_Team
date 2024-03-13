@@ -24,11 +24,10 @@ HRESULT CLevel_Tool::Initialize()
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
 
-
 	{	//!내비게이션 
 		CNavigation* pNavi = { nullptr };
 
-		pNavi = dynamic_cast<CNavigation*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Navigation2")));
+		pNavi = dynamic_cast<CNavigation*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Navigation")));
 
 		if (nullptr == pNavi)
 			return E_FAIL;
@@ -46,6 +45,7 @@ HRESULT CLevel_Tool::Initialize()
 	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 
 
+	
 	
 	return S_OK;
 

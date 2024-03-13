@@ -758,7 +758,7 @@ HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuff
 
 _bool CGameInstance::Remove_Light(const _uint& iIndex)
 {
-	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+	NULL_CHECK_RETURN(m_pLight_Manager, false);
 
 	return m_pLight_Manager->Remove_Light(iIndex);
 }

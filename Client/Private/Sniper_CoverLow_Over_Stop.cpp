@@ -1,4 +1,6 @@
-#include "..\Public\Sniper_CoverLow_Over_Stop.h"
+#include "stdafx.h"
+#include "Sniper_CoverLow_Over_Stop.h"
+#include "Sniper_CoverLow_Idle.h"
 
 void CSniper_CoverLow_Over_Stop::Initialize(CBandit_Sniper* pActor)
 {
@@ -9,7 +11,13 @@ void CSniper_CoverLow_Over_Stop::Initialize(CBandit_Sniper* pActor)
 
 CState<CBandit_Sniper>* CSniper_CoverLow_Over_Stop::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		pActor->Set_WorldMatrix(pActor->Get_SniperInitWorld());
+		return __super::Sup_Normal_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
 }
 
 void CSniper_CoverLow_Over_Stop::Release(CBandit_Sniper* pActor)

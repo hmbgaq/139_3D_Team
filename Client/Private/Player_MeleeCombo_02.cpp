@@ -12,7 +12,7 @@ void CPlayer_MeleeCombo_02::Initialize(CPlayer* pActor)
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_L"));
 
 	pWeapon
-		->Set_Damage(0)
+		->Set_Damage(10)
 		->Set_Direction(Direction::Left)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.3f);

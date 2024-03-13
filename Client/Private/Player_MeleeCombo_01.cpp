@@ -14,9 +14,9 @@ void CPlayer_MeleeCombo_01::Initialize(CPlayer* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
-	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
+	CWeapon* pWeapon = pActor->Get_Weapon(WEAPON_PUNCH_R);
 	pWeapon
-		->Set_Damage(0)
+		->Set_Damage(10)
 		->Set_Direction(Direction::Right)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.0f);
@@ -32,7 +32,7 @@ CState<CPlayer>* CPlayer_MeleeCombo_01::Update(CPlayer* pActor, _float fTimeDelt
 	
 	if (false == m_bFlags[0] && pActor->Check_EffectOnTrackPosition())
 	{
-		CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
+		CWeapon* pWeapon = pActor->Get_Weapon(WEAPON_PUNCH_R);
 		_float3 vPos = pWeapon->Get_WorldPosition();
 
 		pActor->Create_Effect(vPos);
@@ -63,7 +63,10 @@ void CPlayer_MeleeCombo_01::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
 
-	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
-	pWeapon->Set_Enable_Collisions(false);
+	pActor->Set_Weapon_Collisions_Enable(WEAPON_PUNCH_R, false);
+
+	//CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
+	//pWeapon->Set_Enable_Collisions(false);
+	// 
 	//pWeapon->Set_Enable(false);
 }
