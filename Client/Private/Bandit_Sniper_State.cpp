@@ -84,7 +84,11 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Cover_State(CBandit_Sniper* pActor
 CState<CBandit_Sniper>* CBandit_Sniper_State::Hit_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	/* 애니메이션 혼동방지를 위해 2프레임짜리 Idle로 갔다가 돌아가도록하기 */
-	if (pActor->Is_Animation_End())
+	if (pActor->Get_ProtectExist())
+	{
+		return new CSniper_IdlePose();
+	}
+	else
 	{
 		return new CSniper_IdlePose();
 	}
