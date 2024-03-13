@@ -12,7 +12,7 @@ public:
 
 public:
 	virtual CState<CBandit_Sniper>* Update_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
-
+	CState<CBandit_Sniper>* Death_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 };
 

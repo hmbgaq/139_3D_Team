@@ -13,8 +13,7 @@ CState<CBandit_Sniper>* CSniper_CoverLow_Over_Stop::Update(CBandit_Sniper* pActo
 {
 	if (pActor->Is_Animation_End())
 	{
-		pActor->Set_WorldMatrix(pActor->Get_SniperInitWorld());
-		return __super::Sup_Normal_State(pActor, fTimeDelta, g_iAnimIndex);
+		return new CSniper_CoverLow_Idle();
 	}
 
 	return nullptr;

@@ -133,6 +133,7 @@ public:
 	CCharacter* Get_Target() { return m_pTarget; };
 	void Set_Target(CCharacter* pTarget) { m_pTarget = pTarget; };
 
+	void Get_Damaged(_uint iDamage) {m_iHp -= iDamage;}
 public:
 	void Look_At_Target();
 	void Look_At_Target_Lerp(_float fTimeDelta);
@@ -176,6 +177,7 @@ protected:
 
 public:
 	_float m_fCurrentTrackPosition = {0.f};
+
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
 	CRigidBody* m_pRigidBody = { nullptr };

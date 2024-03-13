@@ -9,7 +9,11 @@ void CSniper_DeathLight_B_01::Initialize(CBandit_Sniper* pActor)
 
 CState<CBandit_Sniper>* CSniper_DeathLight_B_01::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return __super::Death_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+	return nullptr;
 }
 
 void CSniper_DeathLight_B_01::Release(CBandit_Sniper* pActor)

@@ -157,8 +157,6 @@ HRESULT CRenderer::Render_NonLight()
 
 HRESULT CRenderer::Render_NonBlend()
 {
-	/* Diffuse + Normal */
-	/* 기존에 셋팅되어있던 백버퍼를 빼내고 Diffuse와 Normal을 장치에 바인딩한다. */
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects")));
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_NONBLEND])
