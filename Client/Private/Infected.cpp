@@ -111,15 +111,12 @@ void CInfected::Hitted_Left(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		cout << "Light " << endl;
 		m_pActor->Set_State(new CInfected_Scared_03());
 		break;
 	case Engine::Medium:
-		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
 		break;
 	case Engine::Heavy:
-		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_FL_01_NEW());
 		break;
 	default:
@@ -133,15 +130,12 @@ void CInfected::Hitted_Right(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		cout << "Light " << endl;
 		m_pActor->Set_State(new CInfected_Scared_02());
 		break;
 	case Engine::Medium:
-		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
 		break;
 	case Engine::Heavy:
-		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_FR_01_NEW());
 		break;
 	default:
@@ -155,15 +149,12 @@ void CInfected::Hitted_Front(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		cout << "Light " << endl;
 		m_pActor->Set_State(new CInfected_HitNormalToStun_01_NEW());
 		break;
 	case Engine::Medium:
-		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
 		break;
 	case Engine::Heavy:
-		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_F_01_NEW());
 		break;
 	default:
@@ -174,7 +165,6 @@ void CInfected::Hitted_Front(Power ePower)
 
 void CInfected::Hitted_Knock(_bool bIsCannonball)
 {
-	cout << "Hitted_Knock" << endl;
 	if (bIsCannonball)
 	{
 		m_pActor->Set_State(new CInfected_KnockFrontCannonball_F_01_TEMP());

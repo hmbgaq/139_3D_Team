@@ -6,12 +6,12 @@
 /* ----------------------------------------- */
 
 /* Base */
-matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-matrix g_BoneMatrices[550];
-float4 g_vCamPosition;
-float g_fCamFar;
-float g_fLightFar;
-float g_TimeDelta;
+matrix    g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+matrix    g_BoneMatrices[800];
+float4    g_vCamPosition;
+float     g_fCamFar;
+float     g_fLightFar;
+float     g_TimeDelta;
 
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
@@ -20,14 +20,14 @@ Texture2D g_DissolveTexture;
 Texture2D g_MaskingTexture;
 
 /* =========== Value =========== */
-float g_fDissolveWeight; /* Dissolve  */
+float   g_fDissolveWeight;    /* Dissolve  */
 
-float4 g_vLineColor; /* OutLine */
-float g_LineThick; /* OutLine */
+float4  g_vLineColor;        /* OutLine */
+float   g_LineThick;          /* OutLine */
 
-float3 g_vBloomPower = { 0.f, 0.f, 0.f }; /* Bloom */
-float4 g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
-float g_fRimPower = 5.f;
+float3  g_vBloomPower = { 0.f, 0.f, 0.f }; /* Bloom */
+float4  g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
+float   g_fRimPower = 5.f; /* RimLight */
 /* ------------------- function ------------------- */ 
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
 {
@@ -184,8 +184,79 @@ PS_OUT PS_BOSS(PS_IN In)
     // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
     return Out;
 }
+
 /* ------------------- Pixel Shader(4) -------------------*/
-PS_OUT PS_MAIN_RIMBLOOM(PS_IN In)
+PS_OUT PS_MAIN_RIMBLOOM_A(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a == 0.f)
+        discard;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+ 
+    /* ---------------- New ---------------- */
+    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    
+    
+    // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
+    return Out;
+}
+/* ------------------- Pixel Shader(5) -------------------*/
+PS_OUT PS_MAIN_RIMBLOOM_B(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a == 0.f)
+        discard;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+ 
+    /* ---------------- New ---------------- */
+    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) ;
+    
+    
+    // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
+    return Out;
+}
+/* ------------------- Pixel Shader(6) -------------------*/
+PS_OUT PS_MAIN_RIMBLOOM_C(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a == 0.f)
+        discard;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+ 
+    /* ---------------- New ---------------- */
+    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    Out.vDiffuse += vRimColor;
+    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse);
+    
+    
+    // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
+    return Out;
+}
+/* ------------------- Pixel Shader(7) -------------------*/
+PS_OUT PS_MAIN_RIMBLOOM_D(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
@@ -204,7 +275,7 @@ PS_OUT PS_MAIN_RIMBLOOM(PS_IN In)
     Out.vDiffuse += vRimColor;
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     
-   
+    
     // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
     return Out;
 }
@@ -260,7 +331,8 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_BOSS();
     }
-    pass RimBloom // 4
+
+    pass RimBloom_A // 4
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
@@ -269,6 +341,40 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM();
+        PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM_A();
+    }
+
+    pass RimBloom_B // 4
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM_B();
+    }
+    pass RimBloom_C // 4
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM_C();
+    }
+    pass RimBloom_D // 4
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM_D();
     }
 }

@@ -1,8 +1,6 @@
-#include "..\Public\Weapon.h"
-
+#include "Weapon.h"
 #include "GameInstance.h"
 #include "Character.h"
-
 #include "Bone.h"
 
 CWeapon::CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -37,13 +35,11 @@ HRESULT CWeapon::Initialize(void* pArg)
 		return E_FAIL;
 	Safe_AddRef(m_pSocketBone);
 
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
-
 
 	return S_OK;
 }
@@ -99,17 +95,17 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 
 HRESULT CWeapon::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Render());
 
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 
 		m_pShaderCom->Begin(0);
 
@@ -121,20 +117,16 @@ HRESULT CWeapon::Render()
 
 HRESULT CWeapon::Render_Shadow()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
-		return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 
 	_float4x4		ViewMatrix, ProjMatrix;
-
 	_float4			vLightPos = Engine::g_vLightPos;
 
 	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(Engine::g_vLightPos.x, Engine::g_vLightPos.y, Engine::g_vLightPos.z, Engine::g_vLightPos.w), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinsizeX / g_iWinsizeY, 0.1f, Engine::g_fLightFar));
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix)))
-		return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix));
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
@@ -245,12 +237,9 @@ _float3 CWeapon::Calc_Front_Pos(_float3 vDiff)
 
 HRESULT CWeapon::Bind_ShaderResources()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
 	return S_OK;
 }

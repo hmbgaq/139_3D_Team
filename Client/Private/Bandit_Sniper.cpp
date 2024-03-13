@@ -3,7 +3,6 @@
 #include "Bandit_Sniper.h"
 #include "Data_Manager.h"
 #include "Body_Bandit_Sniper.h"
-
 #include "Sniper_CoverLow_Idle.h"
 #include "Sniper_DeathLight_B_01.h"
 #include "Sniper_Weakspot_Death_01.h"
@@ -13,7 +12,6 @@
 #include "Sniper_HitHeavy_FR_01.h"
 #include "Sniper_KnockFrontLight_F_02.h"
 #include "Sniper_HitHeavy_F_01.h"
-
 
 CBandit_Sniper::CBandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -38,8 +36,8 @@ HRESULT CBandit_Sniper::Initialize(void* pArg)
 
 	GameObjectDesc.fSpeedPerSec = 10.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -48,6 +46,9 @@ HRESULT CBandit_Sniper::Initialize(void* pArg)
 	}
 
 	FAILED_CHECK(Ready_Option());
+
+	//m_pTransformCom->Set_Pos(250.66, 0, 2.38);
+	//m_pNavigationCom->Set_CurrentIndex(12);
 
 	return S_OK;
 }
@@ -59,12 +60,6 @@ void CBandit_Sniper::Priority_Tick(_float fTimeDelta)
 
 void CBandit_Sniper::Tick(_float fTimeDelta)
 {
-	if (m_bInit)
-	{
-		m_bInitLook = m_pTransformCom->Get_Look();
-		m_bInitWorld = m_pTransformCom->Get_WorldFloat4x4(); 
-		m_bInit = false;
-	}
 	__super::Tick(fTimeDelta);
 
 	if (m_pActor)
@@ -96,17 +91,19 @@ HRESULT CBandit_Sniper::Ready_PartObjects()
 	/* For. Body */
 	{
 		CBody::BODY_DESC		BodyDesc = {};
+		BodyDesc.m_pParentTransform = m_pTransformCom;
 		FAILED_CHECK(Add_Body(TEXT("Prototype_GameObject_Body_Bandit_Sniper"), BodyDesc));
 	}
+
 	/* For. Weapon */
 	{
 		CWeapon::WEAPON_DESC		WeaponDesc = {};
-		WeaponDesc.m_pSocketBone = m_pBody->Get_BonePtr("RightHandIK");
+		WeaponDesc.m_pSocketBone = m_pBody->Get_BonePtr("RightHandProp");
 		WeaponDesc.m_pParentTransform = m_pTransformCom;
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Bandit_Sniper"), "RightHandIK", WeaponDesc, TEXT("Weapon_Gun")));
-
-		//CWeapon* m_pWeapon = Get_Weapon(TEXT("Weapon_Gun"));
-		//m_pWeapon->Set_Enable(false);
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Bandit_Sniper"), "RightHandProp", WeaponDesc, TEXT("Weapon_Sniper")));
+	
+		m_pWeapon = Get_Weapon(TEXT("Weapon_Sniper"));
+		m_pWeapon->Set_Enable(true);
 	}
 
 	return S_OK;
@@ -123,9 +120,6 @@ HRESULT CBandit_Sniper::Ready_Option()
 
 void CBandit_Sniper::Hitted_Left(Power ePower)
 {
-	m_bInit = true;
-
-	cout << "Sniper - Hit Left " << endl;
 	/* 무기 강도 */
 	switch (ePower)
 	{
@@ -146,9 +140,6 @@ void CBandit_Sniper::Hitted_Left(Power ePower)
 
 void CBandit_Sniper::Hitted_Right(Power ePower)
 {
-	m_bInit = true;
-
-	cout << "Sniper - Hit Right " << endl;
 	switch (ePower)
 	{
 	case Engine::Light:
@@ -171,10 +162,6 @@ void CBandit_Sniper::Hitted_Right(Power ePower)
 
 void CBandit_Sniper::Hitted_Front(Power ePower)
 {
-	m_bInit = true;
-
-	cout << "Sniper - Hit Front " << endl;	
-	
 	switch (ePower)
 	{
 	case Engine::Light:
@@ -197,20 +184,12 @@ void CBandit_Sniper::Hitted_Front(Power ePower)
 
 void CBandit_Sniper::Hitted_Knock(_bool bIsCannonball)
 {
-	m_bInit = true;
-
-	cout << "Sniper - Hit Knock " << endl;
-
 	m_pActor->Set_State(new CSniper_HitHeavy_F_01());
 
 }
 
 void CBandit_Sniper::Hitted_Dead(Power ePower)
 {
-	m_bInit = true;
-
-	cout << "Sniper - Hit Dead " << endl;
-
 	switch (ePower)
 	{
 	case Engine::Light:

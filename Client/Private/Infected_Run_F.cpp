@@ -8,14 +8,16 @@ void CInfected_Run_F::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true, false); /* 루트애니메이션 사용x */
 	//pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true,false, 30); // 루트애니메이션 사용 false, 30의 키프레임부터 애니메이션 시작 
 }
 
 CState<CInfected>* CInfected_Run_F::Update(CInfected* pActor, _float fTimeDelta)
 {
 	pActor->Look_At_Target();
-	pActor->Get_Transform()->Set_Speed(15.f);
+	pActor->Get_Transform()->Set_Speed(2.5f);
+	pActor->Set_StiffnessRate(1.2f);
+	pActor->Go_Straight(fTimeDelta);
 
 	switch (pActor->Get_Info().eType)
 	{

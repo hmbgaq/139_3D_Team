@@ -1,4 +1,4 @@
-#include "..\Public\Character_Client.h"
+#include "Character_Client.h"
 #include "Effect.h"
 #include "Effect_Manager.h"
 

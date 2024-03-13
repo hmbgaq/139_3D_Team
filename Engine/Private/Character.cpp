@@ -32,7 +32,6 @@ HRESULT CCharacter::Initialize(void* pArg)
 	NaviDesc.iCurrentIndex = 0;
 
 	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
-
 	
 	if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))

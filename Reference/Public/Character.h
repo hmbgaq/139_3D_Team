@@ -177,6 +177,7 @@ protected:
 
 public:
 	_float m_fCurrentTrackPosition = {0.f};
+
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
 	CRigidBody* m_pRigidBody = { nullptr };
