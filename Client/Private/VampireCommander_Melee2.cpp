@@ -26,13 +26,13 @@ CState<CVampireCommander>* CVampireCommander_Melee2::Update(CVampireCommander* p
 		pActor->m_bLookAt = true;
 	}
 
-	if (pActor->Is_Inputable_Front(34))
+	if (pActor->Is_Inputable_Front(38))
 	{
 		m_bFlags[1] = true;
 		pWeapon->Set_Enable(true);
 
 	}
-	else if (pActor->Is_Inputable_Front(55))
+	else if (pActor->Is_Inputable_Front(45))
 	{
 		m_bFlags[1] = false;
 		pWeapon->Set_Enable(false);

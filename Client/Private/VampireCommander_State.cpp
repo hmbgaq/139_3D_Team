@@ -31,8 +31,8 @@
 #include "VampireCommander_TurnR90.h"
 #include "VampireCommander_TurnR180.h"
 
-
 #include "SMath.h"
+
 void CVampireCommander_State::Initialize(CVampireCommander* pActor)
 {
 	m_pGameInstance = CGameInstance::GetInstance();
@@ -98,7 +98,7 @@ CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommand
 	//근접 공격!! 
 	if (iAttackRandom == 0)
 	{
-		if (10.f > pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
+		if (8.f > pActor->Calc_Distance() && 0.1f < pActor->Calc_Distance())
 		{
 			switch (iRandom)
 			{
@@ -116,7 +116,7 @@ CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommand
 				return new CVampireCommander_SyncedAttack_Fail;
 			}
 		}
-		else if (50.f > pActor->Calc_Distance() && 10.f < pActor->Calc_Distance())
+		else if (100.f > pActor->Calc_Distance() && 8.f < pActor->Calc_Distance())
 		{
 			switch (iRandomRange)
 			{
@@ -127,7 +127,7 @@ CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommand
 				pActor->m_bLookAt = true;
 				return new CVampireCommander_Ranged3;
 			case 2:
-				if (50.f > pActor->Calc_Distance() && 20.f < pActor->Calc_Distance())
+				if (100.f > pActor->Calc_Distance() && 25.f < pActor->Calc_Distance())
 				{
 					pActor->m_bLookAt = true;
 					return new CVampireCommander_Leap_Strat;
@@ -234,19 +234,19 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 	}
 		
 	
-	if (70.f < pActor->Calc_Distance())
-	{
-		pActor->m_bLookAt = true;
-		pState = Idle(pActor, fTimeDelta, _iAnimIndex);
-		if (pState)	return pState;
-	}
-	else if (70.f > pActor->Calc_Distance() && 50.f < pActor->Calc_Distance())
+	//if (70.f < pActor->Calc_Distance())
+	//{
+	//	pActor->m_bLookAt = true;
+	//	pState = Idle(pActor, fTimeDelta, _iAnimIndex);
+	//	if (pState)	return pState;
+	//}
+	if (150.f > pActor->Calc_Distance() && 100.f < pActor->Calc_Distance())
 	{
 		pActor->m_bLookAt = true;
 		pState = Walk_State(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 	}
-	else if (50.f > pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
+	else if (100.f >= pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
 	{
 
 		pState = Attack_State(pActor, fTimeDelta, _iAnimIndex);

@@ -13,6 +13,7 @@
 #include "VampireCommander_TurnL180.h"
 #include "VampireCommander_TurnR90.h"
 #include "VampireCommander_TurnR180.h"
+#include "VampireCommander_Stun_Start.h"
 
 #include "Data_Manager.h"
 #include "Player.h"
@@ -165,7 +166,7 @@ void CVampireCommander::Hitted_Front(Power ePower)
 void CVampireCommander::Hitted_Dead(Power ePower)
 {
 	//stun이 걸리고 그다음에 처형이 있기 때문에 그냥 때려서는 죽일수 없다.
-	m_pActor->Set_State(new CVampireCommander_CutScene);
+	m_pActor->Set_State(new CVampireCommander_Stun_Start);
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 	//pPlayer->Get_Actor()->Set_State(new CPlayer_) // 여기서 플레이어를 강제로 처형 애니메이션으로 돌려 버려야 함 ! 
 }

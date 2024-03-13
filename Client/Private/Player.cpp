@@ -104,6 +104,9 @@ void CPlayer::Tick(_float fTimeDelta)
 	}
 
 	CData_Manager::GetInstance()->Set_CurHP(m_iHp);
+
+	if (m_pGameInstance->Key_Down(DIK_C))
+		m_iHp = 100;
 	//_float3 vPos = Get_Position();
 
 	//PxControllerFilters Filters;
