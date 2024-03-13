@@ -200,7 +200,6 @@ PS_OUT PS_MAIN(PS_IN In)
 	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
 	Out.vRimBloom = float4(g_vBloomPower, 1.0f);
 
-    Out.vSolid = Out.vDiffuse; // 패스 나누기
 
 	//// 검은색 잘라내기
 	//if (Out.vDiffuse.r < g_vBlack_Discard.r && Out.vDiffuse.g < g_vBlack_Discard.g && Out.vDiffuse.b < g_vBlack_Discard.b)
@@ -211,6 +210,42 @@ PS_OUT PS_MAIN(PS_IN In)
 }
 // MAIN =========================================================================================================================
 
+
+// MAIN_SOLID ===================================================================================================================
+PS_OUT PS_MAIN_SOLID(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+	
+    In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
+    In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
+	
+    vector vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+    float4 vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+
+    vDiffuseColor.a *= vAlphaColor;
+	
+    if (vDiffuseColor.a <= g_fAlpha_Discard)	// 알파 자르기
+        discard;
+
+    Out.vDiffuse = vDiffuseColor * g_vColor_Mul; // 색 곱하기
+
+	
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+   
+
+    /* ---------------- New ---------------- :  */
+    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    Out.vDiffuse += vRimColor;
+	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+
+    Out.vSolid = Out.vDiffuse; 
+
+    return Out;
+
+}
+// MAIN_SOLID ===================================================================================================================
 
 
 //  Normal Mapping(MAIN_NORMAL) =================================================================================================
@@ -490,8 +525,8 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 
 technique11 DefaultTechnique
 {
-	pass Default // 0
-	{	
+    pass Effect // 0
+    {	
 		//SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff); //SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_DepthStencilEnable, 0);	
@@ -504,7 +539,21 @@ technique11 DefaultTechnique
 		PixelShader		= compile ps_5_0 PS_MAIN();
 	}
 
-	pass WireFrame // 1
+    pass Effect_Solid // 1
+    {
+		//SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff); //SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_DepthStencilEnable, 0);
+        SetRasterizerState(RS_Cull_None); //SetRasterizerState(RS_Default);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SOLID();
+    }
+
+	pass WireFrame // 2
 	{
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_DepthStencilEnable, 0);
@@ -517,7 +566,7 @@ technique11 DefaultTechnique
 		PixelShader		= compile ps_5_0 PS_MAIN();
 	}
 
-    pass Dissolve // 2
+    pass Dissolve // 3
     {
         SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_DepthStencilEnable, 0);
@@ -530,7 +579,7 @@ technique11 DefaultTechnique
         PixelShader		= compile ps_5_0 PS_MAIN_Dissolve();
     }
 	
-	pass Distortion // 3
+	pass Distortion // 4
 	{
 		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(DSS_DepthStencilEnable, 0);

@@ -147,10 +147,11 @@ struct PS_IN
 
 struct PS_OUT
 {
-	float4 vColor		: SV_TARGET0; // Diffuse
-	float4 vNormal		: SV_TARGET1; // Normal
-	float4 vDepth		: SV_TARGET2; // Depth
-	float4 vRimBloom	: SV_TARGET3; // RimBloom
+    float4 vColor		: SV_TARGET0; // Diffuse
+    float4 vSolid		: SV_TARGET1;
+    float4 vNormal		: SV_TARGET2; // Normal
+    float4 vDepth		: SV_TARGET3; // Depth
+    float4 vRimBloom	: SV_TARGET4; // RimBloom
 };
 
 
@@ -182,6 +183,41 @@ PS_OUT PS_MAIN_EFFECT(PS_IN In)
 	return Out;
 }
 // MAIN_EFFECT ==================================================================================================================
+
+
+
+// MAIN_EFFECT_SOLID ===========================================================================================================
+PS_OUT PS_MAIN_EFFECT_SOLID(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    float4 vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    float4 vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
+
+    vDiffuseColor.a *= vAlphaColor;
+
+    if (vDiffuseColor.a < g_fAlpha_Discard)	// 알파 자르기
+        discard;
+
+	
+    vDiffuseColor.rgb *= g_vColor_Mul.rgb;
+    Out.vColor = vDiffuseColor;
+	
+		
+	/* ---------------- Rim Bloom ---------------- :  */
+	//Out.vRimBloom = Calculation_Brightness(Out.vColor);
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+	
+	// 검은색 잘라내기
+    if (Out.vColor.r < g_vBlack_Discard.r && Out.vColor.g < g_vBlack_Discard.g && Out.vColor.b < g_vBlack_Discard.b)
+        discard;
+	
+    Out.vSolid = Out.vColor;
+		
+    return Out;
+}
+// MAIN_EFFECT_SOLID ============================================================================================================
+
 
 
 
@@ -237,6 +273,8 @@ PS_OUT PS_MAIN_SPRITE(PS_IN In)
 		discard;
 	}
 
+    Out.vSolid = Out.vColor;
+	
 	return Out;
 }
 // MAIN_SPRITE ==================================================================================================================
@@ -401,7 +439,20 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_EFFECT();
 	}	
 
-	pass Sprite // 1
+    pass Effect_Solid // 1
+    {
+        SetRasterizerState(RS_Cull_None); //SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN_EFFECT();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_EFFECT_SOLID();
+    }
+
+	pass Sprite // 2
 	{
 		SetRasterizerState(RS_Cull_None);
 		SetDepthStencilState(DSS_DepthStencilEnable, 0);
@@ -414,7 +465,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_SPRITE();
 	}
 
-	pass Distortion // 2
+	pass Distortion // 3
 	{
 		SetRasterizerState(RS_Cull_None);
 		SetDepthStencilState(DSS_DepthStencilEnable, 0);
@@ -427,7 +478,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_DISTORTION();
 	}
 
-	pass Effect_Wireframe // 3
+	pass Effect_Wireframe // 4
 	{
 		SetRasterizerState(RS_NoneCull_Wireframe);
 		SetDepthStencilState(DSS_Default, 0);

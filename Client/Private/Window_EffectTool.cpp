@@ -379,6 +379,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
 						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 20;
 						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = 0;	// 텍스처 인덱스 초기화
+						m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
 					}
 					ImGui::SameLine();
 					if (ImGui::Button("Sprite_Smokes"))	// 스모크 스프라이트로 변경
@@ -387,6 +388,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite_Smokes");
 						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 30;
 						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = 0;	// 텍스처 인덱스 초기화
+						m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
 					}
 
 					if (ImGui::InputInt("Sprite_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE], 1))
@@ -413,6 +415,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 11;
 						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = 0;	// 텍스처 인덱스 초기화
+						m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 					}
 
 
@@ -438,6 +441,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
 					m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 44;
 					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = 0;	// 텍스처 인덱스 초기화
+					m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 
 				}ImGui::SameLine();
 				if (ImGui::Button("Mask_Waves"))	// 웨이브 마스크로 변경
@@ -446,6 +450,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask_Waves");
 					m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 5;
 					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = 0;	// 텍스처 인덱스 초기화
+					m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 				}
 
 				if (ImGui::InputInt("Mask_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK], 1))
@@ -468,6 +473,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
 					m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = 22;
 					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = 0;	// 텍스처 인덱스 초기화
+					m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = 0;
 				}
 
 
@@ -1417,6 +1423,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
 						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 44;
 						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = 0;	// 텍스처 인덱스 초기화
+						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
 
 					}ImGui::SameLine();
 					if (ImGui::Button("Mask_Waves_Mesh"))	// 웨이브 마스크로 변경
@@ -1425,6 +1432,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask_Waves");
 						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 5;
 						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = 0;	// 텍스처 인덱스 초기화
+						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
 					}
 
 					//if (ImGui::Button("Remove_Mask_Mesh"))	// 마스크 텍스처 컴포넌트 삭제

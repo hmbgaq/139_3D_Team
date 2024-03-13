@@ -237,10 +237,11 @@ struct PS_IN
 
 struct PS_OUT
 {
-	float4		vColor		: SV_TARGET0; // Diffuse
-	float4		vNormal		: SV_TARGET1; // Normal
-    float4		vDepth		: SV_TARGET2; // Depth
-    float4		vRimBloom	: SV_TARGET3; // RimBloom
+    float4 vColor		: SV_TARGET0;	// Diffuse
+    float4 vSolid		: SV_TARGET1;			 
+    float4 vNormal		: SV_TARGET2;	// Normal
+    float4 vDepth		: SV_TARGET3;	// Depth
+    float4 vRimBloom	: SV_TARGET4;	// RimBloom
 };
 
 
@@ -296,6 +297,68 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 // MAIN_PARTICLE ================================================================================================================
 
 
+
+// MAIN_PARTICLE_SOLID ==========================================================================================================
+PS_OUT MAIN_PARTICLE_SOLID(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    if (g_bSprite)
+    {
+        float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
+        float4 vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, clippedTexCoord);
+
+        vDiffuseColor.rgb *= In.vColor.rgb;
+
+        if (vDiffuseColor.a < g_fAlpha_Discard // 알파 잘라내기
+		|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
+            discard;
+
+        Out.vColor = vDiffuseColor;
+		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
+		// 여기 두줄이 원래 림라이트인데, 노말벡터 없어서 림이 안들어감.. 그 해골 모델이나 이런애들처럼 노말있는애들만 가능할듯..?
+        //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
+        //Out.vDiffuse += vRimColor;
+		
+		// Case1. 기존의 Diffuse로 블러를 먹여서 효과를 준다. 
+        //Out.vRimBloom = Calculation_Brightness(Out.vColor);
+		// Case2. 색상을 아에 넣어버린다 : 이경우 g_RimBloom_Color 라던지 전역변수 받아서 그걸로 해도됨
+        //Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
+	
+    }
+    else
+    {
+		/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
+        float4 vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+        float4 vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
+
+        vDiffuseColor.rgb *= In.vColor.rgb;
+        vDiffuseColor.a = In.vColor.a * vAlphaColor;
+
+        if (vDiffuseColor.a < g_fAlpha_Discard // 알파 잘라내기
+			|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
+            discard;
+
+        Out.vColor = vDiffuseColor /** g_vColor_Mul*/;
+		
+		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
+       // Out.vRimBloom = Calculation_Brightness(Out.vColor);
+        Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+		
+     
+    }
+
+	
+    Out.vSolid = Out.vColor;
+	
+    return Out;
+}
+// MAIN_PARTICLE_SOLID ==========================================================================================================
+
+
+
+
+
 technique11 DefaultTechnique
 {
 	/* 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
@@ -306,11 +369,25 @@ technique11 DefaultTechnique
 		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
 		/* 렌더스테이츠 */
-		VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
-		GeometryShader = compile gs_5_0 GS_MAIN();
-		HullShader = NULL;
-		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_PARTICLE();
+		VertexShader	= compile vs_5_0 VS_MAIN_PARTICLE();
+		GeometryShader	= compile gs_5_0 GS_MAIN();
+		HullShader		= NULL;
+		DomainShader	= NULL;
+		PixelShader		= compile ps_5_0 PS_MAIN_PARTICLE();
 	}
+
+    pass Particle_Solid // 1
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* 렌더스테이츠 */
+        VertexShader	= compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader	= compile gs_5_0 GS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 MAIN_PARTICLE_SOLID();
+    }
 
 }

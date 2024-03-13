@@ -148,21 +148,21 @@ private:
 private:
 	_int m_iRenderGroup_Particle							= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Particle						= { 0 };
-	_int m_iMaxShaderPassIndex_Particle						= { 1 };
+	_int m_iMaxShaderPassIndex_Particle						= { 2 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
 	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 11, 0, 44, 22, 20 };
 
 
 	_int m_iRenderGroup_Rect								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Rect							= { 0 };
-	_int m_iMaxShaderPassIndex_Rect							= { 3 };
+	_int m_iMaxShaderPassIndex_Rect							= { 5 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END]		= {};
 	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 20 };
 
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
-	_int m_iMaxShaderPassIndex_Mesh							= { 3 };
+	_int m_iMaxShaderPassIndex_Mesh							= { 5 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
 	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 20 };
 

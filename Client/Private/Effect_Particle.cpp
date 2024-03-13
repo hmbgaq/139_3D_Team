@@ -105,13 +105,14 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 						// 스프라이트 재생이 끝났고,
 						if (m_tVoidDesc.bLoop)	// 루프가 true이면
 						{
+							m_tVoidDesc.bRender = FALSE;
+
 							// 스프라이트 초기화
-							m_tSpriteDesc.Reset_Sprite();
+							//m_tSpriteDesc.Reset_Sprite();
 						}
 						else
 						{
-							// 아니면 렌더 끄기
-							m_tVoidDesc.bRender = FALSE;
+							
 						}				
 					}
 				}
