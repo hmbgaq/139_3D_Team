@@ -8,7 +8,6 @@ BEGIN(Client)
 
 class CBandit_Sniper final : public CMonster_Character
 {
-
 private:
 	CBandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CBandit_Sniper(const CBandit_Sniper& rhs);
@@ -31,6 +30,7 @@ public:
 	void Set_BulletCnt(_int iCnt) { m_iBulletCnt = iCnt; }
 	void Add_BulletCnt() { m_iBulletCnt += 1; }
 
+	void Sniping_Target(_float3 TargetPos);
 
 private:
 	HRESULT Ready_Components();

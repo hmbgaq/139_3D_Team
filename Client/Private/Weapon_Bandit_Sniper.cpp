@@ -32,6 +32,14 @@ HRESULT CWeapon_Bandit_Sniper::Initialize(void* pArg)
 	return S_OK;
 } 
 
+void CWeapon_Bandit_Sniper::Sniping(_float4 vDir, _float3 fPos)
+{
+	CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_MONSTER_BULLET, L"Prototype_GameObject_Bullet_Bandit_Sniper");
+
+	pBullet->Set_Position(fPos);
+	pBullet->Get_Transform()->Look_At(vDir);
+}
+
 HRESULT CWeapon_Bandit_Sniper::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();

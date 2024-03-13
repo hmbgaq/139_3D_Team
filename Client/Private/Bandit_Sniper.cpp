@@ -12,6 +12,7 @@
 #include "Sniper_HitHeavy_FR_01.h"
 #include "Sniper_KnockFrontLight_F_02.h"
 #include "Sniper_HitHeavy_F_01.h"
+#include "Weapon_Bandit_Sniper.h"
 
 CBandit_Sniper::CBandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -46,7 +47,8 @@ HRESULT CBandit_Sniper::Initialize(void* pArg)
 	}
 
 	FAILED_CHECK(Ready_Option());
-
+	
+	//m_pTransformCom->Look_At_OnLand(m_pGameInstance->Get_Player()->Get_Position());
 	//m_pTransformCom->Set_Pos(250.66, 0, 2.38);
 	//m_pNavigationCom->Set_CurrentIndex(12);
 
@@ -79,6 +81,16 @@ HRESULT CBandit_Sniper::Render()
 	FAILED_CHECK(__super::Render());
 
 	return S_OK;
+}
+
+void CBandit_Sniper::Sniping_Target(_float3 TargetPos)
+{
+	CWeapon_Bandit_Sniper* pWeapon = dynamic_cast<CWeapon_Bandit_Sniper*>(m_pWeapon);
+
+	_float4 vTargetDir = { 0.f, 0.f, 1.f , 1.f};
+	_float3 vTarget_Pos = {253.5f, 0.f, 11.f};
+
+	pWeapon->Sniping(vTargetDir, vTarget_Pos);
 }
 
 HRESULT CBandit_Sniper::Ready_Components()

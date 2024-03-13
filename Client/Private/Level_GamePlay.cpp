@@ -219,7 +219,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 
 	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
 	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_InitPosition(_float3(253.5f, 0.f, 11.f));	
+	pMonster->Set_InitPosition(_float3(253.5f, 0.f, 11.f));
+	//pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
 
 	return S_OK;
 }

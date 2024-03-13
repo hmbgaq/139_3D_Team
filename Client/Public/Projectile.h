@@ -45,7 +45,6 @@ public:
 	virtual void	OnCollisionStay(CCollider* other)	PURE;
 	virtual void	OnCollisionExit(CCollider* other)	PURE;
 
-
 protected:
 	virtual HRESULT Ready_Components() PURE;
 	virtual HRESULT Bind_ShaderResources();

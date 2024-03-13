@@ -24,6 +24,11 @@ public:
 	virtual HRESULT Render() override;
 	virtual	HRESULT Render_Shadow() override { return S_OK; };
 
+	/* น฿ป็ */
+public:
+	void Sniping(_float4 vDir, _float3 fPos);
+
+
 protected:
 	virtual HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

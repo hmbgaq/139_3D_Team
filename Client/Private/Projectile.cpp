@@ -16,20 +16,16 @@ CProjectile::CProjectile(const CProjectile& rhs)
 
 HRESULT CProjectile::Initialize_Prototype()
 {
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize_Prototype());
 
 	return S_OK;
 }
 
 HRESULT CProjectile::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize(pArg));
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
-
+	FAILED_CHECK(Ready_Components());
 
 	return S_OK;
 }
@@ -65,11 +61,8 @@ void CProjectile::Late_Tick(_float fTimeDelta)
 
 	if (true == m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f))
 	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-			return;
-
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this)))
-			return;
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), ); 
 	}
 
 #ifdef _DEBUG

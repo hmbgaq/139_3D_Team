@@ -53,6 +53,7 @@ namespace Client
 	#define LAYER_PARTICLE					TEXT("Layer_Particle")
 
 	#define LAYER_PLAYER_BULLET				TEXT("Layer_Player_Bullet")
+	#define LAYER_MONSTER_BULLET			TEXT("Layer_Monster_Bullet")
 
 
 	//Player_Weapon
