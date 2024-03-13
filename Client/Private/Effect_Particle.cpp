@@ -96,12 +96,24 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 									m_tSpriteDesc.bSpriteFinish = TRUE;										// 스프라이트 애님 끝	
 								}
 							}
-							m_tVoidDesc.fSpriteTimeAcc = 0.f;
+							m_tVoidDesc.fSpriteTimeAcc = 0.f;	// 시간 초기화
 						}
 					}
 
 					if (m_tSpriteDesc.bSpriteFinish)
-						m_tVoidDesc.bRender = FALSE;
+					{
+						// 스프라이트 재생이 끝났고,
+						if (m_tVoidDesc.bLoop)	// 루프가 true이면
+						{
+							// 스프라이트 초기화
+							m_tSpriteDesc.Reset_Sprite();
+						}
+						else
+						{
+							// 아니면 렌더 끄기
+							m_tVoidDesc.bRender = FALSE;
+						}				
+					}
 				}
 
 				/* ======================= 라이프 타임 동작 끝  ======================= */
@@ -201,15 +213,10 @@ void CEffect_Particle::ReSet_Effect()
 	m_tVoidDesc.bDissolve = FALSE;
 	m_tVoidDesc.bRender = FALSE;
 
-	if (m_tVoidDesc.bUseSpriteAnim)
-	{
-		m_tSpriteDesc.bSpriteFinish = FALSE;
-		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
-		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
-	}
 
 	if (!m_pVIBufferCom->Get_Desc()->bRecycle)
 	{
+		// 파티클 버퍼가 재사용이 false일때만 Reset하기
 		m_pVIBufferCom->ReSet();
 	}
 
@@ -232,10 +239,10 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 
 	//Write_VoidDesc(Out_Json, &m_tParticleDesc);
 
-	// m_tParticleDesc
+	/* m_tParticleDesc */
 
 
-	/* Sprite */
+	/* Sprite Desc */
 	Out_Json["fSequenceTerm"] = m_tSpriteDesc.fSequenceTerm;
 
 	CJson_Utility::Write_Float2(Out_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
@@ -258,10 +265,10 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 	//static_cast<EFFECTVOID_DESC>(m_tParticleDesc) = Load_VoidDesc(In_Json); // 왜???????????????????????????
 
 
-	// m_tParticleDesc
+	/* m_tParticleDesc */
 
 
-	/* Sprite */
+	/* Sprite Desc */
 	m_tSpriteDesc.fSequenceTerm = In_Json["fSequenceTerm"];
 
 	CJson_Utility::Load_Float2(In_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
@@ -273,45 +280,106 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 }
 
 
+
+HRESULT CEffect_Particle::Change_TextureCom(wstring strProtoTextureTag)	// 툴 용
+{
+	_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
+
+	wstring strDiffuse	= TEXT("Diffuse");
+	wstring strNormal	= TEXT("Normal");
+	wstring strMask		= TEXT("Mask");
+	wstring strNoise	= TEXT("Noise");
+	wstring strSprite	= TEXT("Sprite");
+
+
+	if (strProtoTextureTag.find(strDiffuse) != string::npos)	// 문자열 찾음
+	{
+		// 디퓨즈 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 디퓨즈폴더 -> 피 디퓨즈폴더로 변경하고싶을 떄)
+		if (nullptr != m_pTextureCom[TEXTURE_DIFFUSE])
+		{
+			Remove_Component(TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]));
+			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
+		}
+	}
+	else if (strProtoTextureTag.find(strNormal) != string::npos)
+	{
+		// 노말 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 노말폴더 -> 피 노말폴더로 변경하고싶을 떄)
+		if (nullptr != m_pTextureCom[TEXTURE_NORAML])
+		{
+			Remove_Component(TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML]));
+			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
+		}
+	}
+	else if (strProtoTextureTag.find(strMask) != string::npos)
+	{
+		// 마스크 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 마스크폴더 -> 연기 마스크폴더로 변경하고싶을 떄)
+		if (nullptr != m_pTextureCom[TEXTURE_MASK])
+		{
+			Remove_Component(TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]));
+			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
+		}
+	}
+	else if (strProtoTextureTag.find(strNoise) != string::npos)
+	{
+		// 노이즈 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 노이즈폴더 -> 불 노이즈폴더로 변경하고싶을 떄)
+		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
+		{
+			Remove_Component(TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]));
+			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
+		}
+	}
+	else if (strProtoTextureTag.find(strSprite) != string::npos)
+	{
+		// 스프라이트 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 스프라이트폴더 -> 연기 스프라이트폴더로 변경하고싶을 떄)
+		if (nullptr != m_pTextureCom[TEXTURE_SPRITE])
+		{
+			Remove_Component(TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE]));
+			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+		}
+	}
+
+
+	return S_OK;
+}
+
 HRESULT CEffect_Particle::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Particle_Point"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+	{
+		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Particle_Point"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+	}
 
 
 	/* For.Com_VIBuffer */
 	{
 		CVIBuffer_Particle::PARTICLE_BUFFER_DESC tBufferDesc = {};
-		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferDesc)))
-			return E_FAIL;
+		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle"), TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &tBufferDesc));
 	}
 
 
 	/* For.Com_Texture */
 	{
-		FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
-		FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+		// Diffuse
+		FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
 
 
+		// Normal
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NORAML])
+			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NORAML], TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
+
+		// Mask
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
-		{
-			/* For.Com_Mask */
-			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
-				TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
-				return E_FAIL;
-		}
+			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK], TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
 
+		// Noise
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
-		{
-			/* For.Com_Noise */
-			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
-				TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
-				return E_FAIL;
-		}
+			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
+
+		// Sprite
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])
+			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 	}
 
 
@@ -339,21 +407,26 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	/* Texture ============================================================================================ */
 	if (m_tVoidDesc.bUseSpriteAnim)
 	{
-		FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_SPRITE]));
+		// 스프라이트 사용이고, 
+		if(nullptr != m_pTextureCom[TEXTURE_SPRITE])	// 스프라이트 텍스처 있으면 바인드
+			FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_SPRITE]));
 	}
 	else
 	{
+		// 기본은 디퓨즈만 바인드
 		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_DIFFUSE]));
 	}
 
-	if (nullptr != m_pTextureCom[TEXTURE_MASK])
-	{
+	if (nullptr != m_pTextureCom[TEXTURE_NORAML])	// 노말 텍스처 있으면 바인드
+		FAILED_CHECK(m_pTextureCom[TEXTURE_NORAML]->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NORAML]));
+
+	if (nullptr != m_pTextureCom[TEXTURE_MASK])		// 마스크 텍스처 있으면 바인드
 		FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tVoidDesc.iTextureIndex[TEXTURE_MASK]));
-	}
-	if (nullptr != m_pTextureCom[TEXTURE_NOISE])
-	{
+
+	if (nullptr != m_pTextureCom[TEXTURE_NOISE])	// 노이즈 텍스처 있으면 바인드
 		FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NOISE]));
-	}
+
+
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tVoidDesc.vColor_Clip.w, sizeof(_float)));
@@ -366,10 +439,11 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	/* UV ============================================================================================ */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
 
-	// 이펙트 정보
+
+	// 이펙트 정보(파티클 버퍼에서 정해지는 정보들)
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_EffectDesc", m_pVIBufferCom->Get_ParticleShaderInfoDescs().data(), _uint(sizeof(CVIBuffer_Particle::PARTICLE_SHADER_INFO_DESC) * m_pVIBufferCom->Get_ParticleShaderInfoDescs().size())));
 
-
+	// 스프라이트
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bSprite", &m_tVoidDesc.bUseSpriteAnim, sizeof(_bool)));
 	if (m_tVoidDesc.bUseSpriteAnim)
 	{
@@ -398,7 +472,7 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"));
 
 
-
+	/* Rim Bloom */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_tVoidDesc.vBloomPower, sizeof(_float3)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tVoidDesc.vRimColor, sizeof(_float4)));
 

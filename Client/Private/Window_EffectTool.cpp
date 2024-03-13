@@ -115,15 +115,15 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 
 #pragma region 이미지 리스트 창
-	SetUp_ImGuiDESC(u8"이미지 리스트", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.2f));
-	__super::Begin();
-
-	Update_ImageList_Window();	// 텍스처 이미지 미리보기, 리스트 업데이트
-
-	// ImGui창 사이즈
-	Show_ImGui_WindowSize();
-
-	__super::End();
+//	SetUp_ImGuiDESC(u8"이미지 리스트", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.2f));
+//	__super::Begin();
+//
+//	Update_ImageList_Window();	// 텍스처 이미지 미리보기, 리스트 업데이트
+//
+//	// ImGui창 사이즈
+//	Show_ImGui_WindowSize();
+//
+//	__super::End();
 #pragma endregion
 
 
@@ -230,7 +230,7 @@ HRESULT CWindow_EffectTool::Ready_Grid()
 	CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Grid"), TEXT("Prototype_GameObject_Grid"), &tDesc);
 	if (nullptr != pObj)
 	{
-		m_pGrid = pObj;
+		m_pGrid = dynamic_cast<CGrid*>(pObj);
 	}
 		
 	return S_OK;
@@ -361,14 +361,35 @@ void CWindow_EffectTool::Update_ParticleTab()
 #pragma endregion 
 
 				/* 이름_파티클 */
+				ImGui::SeparatorText("Name");
 				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
+
 
 #pragma region 텍스처 설정_파티클
 				/* 텍스처 변경_파티클 */
 				ImGui::CollapsingHeader(" Texture_Particle ");
 				if (m_pCurVoidDesc->bUseSpriteAnim)
 				{
-					if (ImGui::InputInt("Diffuse_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE], 1))
+					// 디퓨즈_스프라이트_파티클 텍스처 ============================================================================================
+					ImGui::SeparatorText("Diffuse_Sprte_Particle");
+
+					if (ImGui::Button("Sprite_Base"))	// 베이스 스프라이트로 변경
+					{
+						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Sprite"));
+						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
+						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 20;
+						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = 0;	// 텍스처 인덱스 초기화
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Sprite_Smokes"))	// 스모크 스프라이트로 변경
+					{
+						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Sprite_Smokes"));
+						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite_Smokes");
+						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 30;
+						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = 0;	// 텍스처 인덱스 초기화
+					}
+
+					if (ImGui::InputInt("Sprite_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE], 1))
 					{
 						if (m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] <= m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE])
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE];
@@ -378,9 +399,23 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE];
 					}
+
+
 				}
 				else
 				{
+					// 디퓨즈_파티클 텍스처 ===============================================================================================
+					ImGui::SeparatorText("Diffuse_Particle");
+
+					if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
+					{
+						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
+						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
+						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 11;
+						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = 0;	// 텍스처 인덱스 초기화
+					}
+
+
 					if (ImGui::InputInt("Diffuse_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE], 1))
 					{
 						if (m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] <= m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE])
@@ -393,6 +428,26 @@ void CWindow_EffectTool::Update_ParticleTab()
 					}
 				}
 
+
+				// 마스크_파티클 텍스처 =====================================================================================================
+				ImGui::SeparatorText("Mask_Particle");
+
+				if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
+				{
+					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
+					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
+					m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 44;
+					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = 0;	// 텍스처 인덱스 초기화
+
+				}ImGui::SameLine();
+				if (ImGui::Button("Mask_Waves"))	// 웨이브 마스크로 변경
+				{
+					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask_Waves"));
+					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask_Waves");
+					m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 5;
+					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = 0;	// 텍스처 인덱스 초기화
+				}
+
 				if (ImGui::InputInt("Mask_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK], 1))
 				{
 					if (m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] <= m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK])
@@ -403,6 +458,18 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK];
 				}
+
+
+				// 노이즈_파티클 텍스처 =====================================================================================================
+				ImGui::SeparatorText("Noise_Particle");
+				if (ImGui::Button("Noise_Base"))	// 베이스 노이즈로 변경
+				{
+					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Noise"));
+					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
+					m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = 22;
+					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = 0;	// 텍스처 인덱스 초기화
+				}
+
 
 				if (ImGui::InputInt("Noise_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE], 1))
 				{
@@ -779,8 +846,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_vRotationOffsetX_Particle[1] = m_vRotationOffsetX_Particle[0];
 
 
-					m_pParticleBufferDesc->vMinMaxRotationOffsetX.x = XMConvertToRadians(m_vRotationOffsetX_Particle[0]);
-					m_pParticleBufferDesc->vMinMaxRotationOffsetX.y = XMConvertToRadians(m_vRotationOffsetX_Particle[1]);
+					m_pParticleBufferDesc->vMinMaxRotationOffsetX.x = m_vRotationOffsetX_Particle[0];
+					m_pParticleBufferDesc->vMinMaxRotationOffsetX.y = m_vRotationOffsetX_Particle[1];
 
 				}
 
@@ -791,8 +858,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_vRotationOffsetY_Particle[1] = m_vRotationOffsetY_Particle[0];
 
 
-					m_pParticleBufferDesc->vMinMaxRotationOffsetY.x = XMConvertToRadians(m_vRotationOffsetY_Particle[0]);
-					m_pParticleBufferDesc->vMinMaxRotationOffsetY.y = XMConvertToRadians(m_vRotationOffsetY_Particle[1]);
+					m_pParticleBufferDesc->vMinMaxRotationOffsetY.x = m_vRotationOffsetY_Particle[0];
+					m_pParticleBufferDesc->vMinMaxRotationOffsetY.y = m_vRotationOffsetY_Particle[1];
 				}
 
 				/* RotZ */
@@ -801,8 +868,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (m_vRotationOffsetZ_Particle[0] > m_vRotationOffsetZ_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
 						m_vRotationOffsetZ_Particle[1] = m_vRotationOffsetZ_Particle[0];
 
-					m_pParticleBufferDesc->vMinMaxRotationOffsetZ.x = XMConvertToRadians(m_vRotationOffsetZ_Particle[0]);
-					m_pParticleBufferDesc->vMinMaxRotationOffsetZ.y = XMConvertToRadians(m_vRotationOffsetZ_Particle[1]);
+					m_pParticleBufferDesc->vMinMaxRotationOffsetZ.x = m_vRotationOffsetZ_Particle[0];
+					m_pParticleBufferDesc->vMinMaxRotationOffsetZ.y = m_vRotationOffsetZ_Particle[1];
 				}
 
 #pragma region 크기 변경_파티클 시작
@@ -1230,7 +1297,7 @@ void CWindow_EffectTool::Update_MeshTab()
 		// 테스트용 데모 이펙트 메쉬 생성
 		if (ImGui::CollapsingHeader("Demo Meshs"))
 		{
-			ImGui::SeparatorText("Demo");
+			//ImGui::SeparatorText("Demo");
 			if (ImGui::Button("Demo_Xray"))
 			{
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Xray_ManHeavy"));
@@ -1252,7 +1319,7 @@ void CWindow_EffectTool::Update_MeshTab()
 		// 인트로 보스용 이펙트 메쉬 생성
 		if (ImGui::CollapsingHeader("Mesh_VampireCommander"))
 		{
-			ImGui::SeparatorText("VampireCommander");
+			//ImGui::SeparatorText("VampireCommander");
 			if (ImGui::Button("Demo_BeastSkull"))
 			{
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_BeastSkull"));
@@ -1282,16 +1349,41 @@ void CWindow_EffectTool::Update_MeshTab()
 				m_pMeshBufferDesc = pVIBuffer->Get_Desc();	// 버퍼의 구조체 얻어오기
 #pragma endregion
 
-				//// 이펙트 모델 리스트박스
-				//if (ImGui::ListBox(" Meshes ", &m_iCurEffectIndex, m_szEffectNames, m_pEffects.size(), (_int)6))
-				//{
-				//	
-				//}
-
 				/* 이름 */
 				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
 
+
+				/* 모델 텍스처를 쓸건지, 내가 텍스처를 정해줄건지 */
+				ImGui::SeparatorText("");
+				if (ImGui::Button("Use CustomTex"))
+				{
+					m_pInstanceDesc->bUseCustomTex = TRUE;
+				}ImGui::SameLine();
+				if (ImGui::Button("Use ModelTex "))
+				{
+					m_pInstanceDesc->bUseCustomTex = FALSE;
+				}
+				ImGui::SeparatorText("");
+
 				/* 텍스처 변경 */
+				// 디퓨즈_메쉬 텍스처 =====================================================================================================
+				if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
+				{
+					dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
+					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
+					m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 11;
+					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = 0;	// 텍스처 인덱스 초기화
+
+				}ImGui::SameLine();
+				if (ImGui::Button("Diffuse_Waves"))	// 웨이브 디퓨즈로 변경
+				{
+					dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Waves"));
+					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse_Waves");
+					m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 5;
+					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = 0;	// 텍스처 인덱스 초기화
+				}
+
+
 				if (ImGui::InputInt("Diffuse_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE], 1))
 				{
 					if (m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] <= m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE])
@@ -1303,62 +1395,107 @@ void CWindow_EffectTool::Update_MeshTab()
 					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE];
 				}
 
-				if (ImGui::InputInt("Mask_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK], 1))
+
+
+				// 디퓨즈에 곱할 색 (색 변경)
+				if (ImGui::ColorEdit4("Color_Mul_Mesh", m_fColor_Mul_Mesh, ImGuiColorEditFlags_None))
 				{
-					if (m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] <= m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK])
-						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK];
+					m_pCurVoidDesc->vColor_Mul.x = m_fColor_Mul_Mesh[0];
+					m_pCurVoidDesc->vColor_Mul.y = m_fColor_Mul_Mesh[1];
+					m_pCurVoidDesc->vColor_Mul.z = m_fColor_Mul_Mesh[2];
+					m_pCurVoidDesc->vColor_Mul.w = m_fColor_Mul_Mesh[3];
+				}
+				// 디퓨즈_메쉬 텍스처 =====================================================================================================
 
-					if (0 > m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK])
-						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
 
-					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK];
+				// 마스크_메쉬 텍스처 =====================================================================================================
+				if (ImGui::CollapsingHeader("Mask_Tex_MESH"))
+				{
+					if (ImGui::Button("Mask_Base_Mesh"))	// 베이스 마스크로 변경
+					{
+						dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
+						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
+						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 44;
+						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = 0;	// 텍스처 인덱스 초기화
+
+					}ImGui::SameLine();
+					if (ImGui::Button("Mask_Waves_Mesh"))	// 웨이브 마스크로 변경
+					{
+						dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask_Waves"));
+						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask_Waves");
+						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 5;
+						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = 0;	// 텍스처 인덱스 초기화
+					}
+
+					//if (ImGui::Button("Remove_Mask_Mesh"))	// 마스크 텍스처 컴포넌트 삭제
+					//{
+					//	dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Remove_TextureCom(CEffect_Void::TEXTURE_MASK);
+					//}
+
+					if (ImGui::InputInt("Mask_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK], 1))
+					{
+						if (m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] <= m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK])
+							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK];
+
+						if (0 > m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK])
+							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
+
+						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK];
+					}
+
+					ImGui::SeparatorText("");
 				}
 
-				if (ImGui::InputInt("Noise_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE], 1))
-				{
-					if (m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] <= m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE])
-						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE];
 
-					if (0 > m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE])
-						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = 0;
-
-					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE];
-				}
-
-				/* 모델 텍스처를 쓸건지, 내가 텍스처를 정해줄건지 */
-				if (ImGui::Button("Use CustomTex"))
+				// 노이즈_메쉬 텍스처 =====================================================================================================			
+				if (ImGui::CollapsingHeader("Noise_Tex_MESH"))
 				{
-					m_pInstanceDesc->bUseCustomTex = TRUE;
-				}ImGui::SameLine();
-				if (ImGui::Button("Use ModelTex "))
-				{
-					m_pInstanceDesc->bUseCustomTex = FALSE;
+					//if (ImGui::Button("Remove_Noise_Mesh"))	// 노이즈 텍스처 컴포넌트 삭제
+					//{
+					//	dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Remove_TextureCom(CEffect_Void::TEXTURE_NOISE);
+					//}
+
+					if (ImGui::InputInt("Noise_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE], 1))
+					{
+						if (m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] <= m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE])
+							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE];
+
+						if (0 > m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE])
+							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = 0;
+
+						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE];
+					}
+					ImGui::SeparatorText("");
 				}
 
 
 				/* 쉐이더 패스 인덱스 변경 */
-				if (ImGui::InputInt("Shader Pass_Mesh", &m_iShaderPassIndex_Mesh, 1))
+				if (ImGui::CollapsingHeader("Shader_MESH"))
 				{
-					if (m_iMaxShaderPassIndex_Mesh < m_iShaderPassIndex_Mesh)
-						m_iShaderPassIndex_Mesh = m_iMaxShaderPassIndex_Mesh;
+					if (ImGui::InputInt("Shader Pass_Mesh", &m_iShaderPassIndex_Mesh, 1))
+					{
+						if (m_iMaxShaderPassIndex_Mesh < m_iShaderPassIndex_Mesh)
+							m_iShaderPassIndex_Mesh = m_iMaxShaderPassIndex_Mesh;
 
-					if (0 > m_iShaderPassIndex_Mesh)
-						m_iShaderPassIndex_Mesh = 0;
+						if (0 > m_iShaderPassIndex_Mesh)
+							m_iShaderPassIndex_Mesh = 0;
 
-					m_pCurVoidDesc->iShaderPassIndex = m_iShaderPassIndex_Mesh;
-				}
+						m_pCurVoidDesc->iShaderPassIndex = m_iShaderPassIndex_Mesh;
+					}
 
-				/* 쉐이더에 던질 디스카드 값 변경 */
-				if (ImGui::DragFloat4("Discard_Mesh", m_vColor_Clip_Part, 0.1f, 0.f, 1.f))
-				{
-					m_pCurVoidDesc->vColor_Clip.x = m_vColor_Clip_Part[0];
-					m_pCurVoidDesc->vColor_Clip.y = m_vColor_Clip_Part[1];
-					m_pCurVoidDesc->vColor_Clip.z = m_vColor_Clip_Part[2];
-					m_pCurVoidDesc->vColor_Clip.w = m_vColor_Clip_Part[3];
+					/* 쉐이더에 던질 디스카드 값 변경 */
+					if (ImGui::DragFloat4("Discard_Mesh", m_vColor_Clip_Part, 0.1f, 0.f, 1.f))
+					{
+						m_pCurVoidDesc->vColor_Clip.x = m_vColor_Clip_Part[0];
+						m_pCurVoidDesc->vColor_Clip.y = m_vColor_Clip_Part[1];
+						m_pCurVoidDesc->vColor_Clip.z = m_vColor_Clip_Part[2];
+						m_pCurVoidDesc->vColor_Clip.w = m_vColor_Clip_Part[3];
+					}
+					ImGui::SeparatorText("");
 				}
 
 				/* 렌더그룹 변경 */
-				ImGui::SeparatorText("");
+				ImGui::SeparatorText("Render Group_MESH");
 				if (ImGui::InputInt("Render Group_Mesh", &m_iRenderGroup_Mesh, 1))
 				{
 					if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Mesh)
@@ -1378,92 +1515,238 @@ void CWindow_EffectTool::Update_MeshTab()
 					m_pMeshBufferDesc->iCurNumInstance = m_iNumInstance_Mesh;
 				}
 
+
 				/* UV 값 조절 */
-				ImGui::SeparatorText("");
-				if (ImGui::DragFloat2(" UV_Offset ", m_fUV_Offset, 1.f, 0.f, 100.f))
+				if (ImGui::CollapsingHeader("UV Option_Mesh"))
 				{
-					m_pCurVoidDesc->vUV_Offset.x = m_fUV_Offset[0];
-					m_pCurVoidDesc->vUV_Offset.y = m_fUV_Offset[1];
+					if (ImGui::DragFloat2(" UV_Offset ", m_fUV_Offset_Mesh, 1.f, 0.f, 100.f))
+					{
+						m_pCurVoidDesc->vUV_Offset.x = m_fUV_Offset_Mesh[0];
+						m_pCurVoidDesc->vUV_Offset.y = m_fUV_Offset_Mesh[1];
+					}ImGui::SameLine();
+					HelpMarker(u8"UV 이동");
+
+					if (ImGui::DragFloat2(" UV_Scale ", m_vUV_Scale_Mesh, 1.f, 0.f, 100.f))
+					{
+						m_pCurVoidDesc->vUV_Scale.x = m_vUV_Scale_Mesh[0];
+						m_pCurVoidDesc->vUV_Scale.y = m_vUV_Scale_Mesh[1];
+					}ImGui::SameLine();
+					HelpMarker(u8"UV 크기(타일링)");
+
+					if (ImGui::DragFloat(" RotDegree_Mesh ", &m_fUV_RotDegree_Mesh, 1.f, 0.f, 360.f))
+					{
+						m_pCurVoidDesc->fUV_RotDegree = m_fUV_RotDegree_Mesh;
+					}ImGui::SameLine();
+					HelpMarker(u8"회전");
+
+					ImGui::SeparatorText("");
 				}
 
-				if (ImGui::DragFloat2(" UV_Scale ", m_vUV_Scale, 1.f, 0.f, 100.f))
-				{
-					m_pCurVoidDesc->vUV_Scale.x = m_vUV_Scale[0];
-					m_pCurVoidDesc->vUV_Scale.y = m_vUV_Scale[1];
-				}
-
-				if (ImGui::DragFloat(" RotDegree_Mesh ", &m_fUV_RotDegree_Mesh, 1.f, 0.f, 360.f))
-				{
-					m_pCurVoidDesc->fUV_RotDegree = m_fUV_RotDegree_Mesh;
-				}
 
 				/* 디졸브 값 확인 */
-				ImGui::SeparatorText("");
+				ImGui::SeparatorText(" Dissolve_Mesh ");
 				ImGui::SliderFloat(" DissolveAmount ", &m_pCurVoidDesc->fDissolveAmount, 0.f, 1.f);
 				ImGui::SameLine();
-				HelpMarker(u8"마스크:1/노이즈:5/쉐이더패스:6/렌더그룹:7");
+				HelpMarker(u8"마스크:1/노이즈:5/쉐이더패스:2");
 
 				Select_EasingType(&m_pCurVoidDesc->eType_Easing);
 
 
-				/* 메쉬 파티클 리사이클 */
-				ImGui::SeparatorText(" Recycle_Mesh ");
-				ImGui::RadioButton("Recycle_Mesh", &m_iRecycle_Mesh, 0);  ImGui::SameLine();
-				ImGui::RadioButton("None Recycle_Mesh", &m_iRecycle_Mesh, 1);
-				if (0 == m_iRecycle_Mesh)
-					m_pMeshBufferDesc->bRecycle = TRUE;
-				else if (1 == m_iRecycle_Mesh)
-					m_pMeshBufferDesc->bRecycle = FALSE;
-
-
-				/* 라이프 타임 */
-				ImGui::SeparatorText("LifeTimes");
-				if (ImGui::DragFloat2("MinMaxLifeTime_Mesh", m_vMinMaxLifeTime_Mesh, 1.f, 0.f, 360.f))
+				if (ImGui::CollapsingHeader("Particle Option_Mesh"))
 				{
-					if (m_vMinMaxLifeTime_Mesh[0] > m_vMinMaxLifeTime_Mesh[1])	// Min이 Max보다 크면 Max를 Min으로
-						m_vMinMaxLifeTime_Mesh[1] = m_vMinMaxLifeTime_Mesh[0];
+
+					/* 라이프 타임 */
+					ImGui::SeparatorText("LifeTimes");
+					if (ImGui::DragFloat2("MinMaxLifeTime_Mesh", m_vMinMaxLifeTime_Mesh, 1.f, 0.f, 360.f))
+					{
+						if (m_vMinMaxLifeTime_Mesh[0] > m_vMinMaxLifeTime_Mesh[1])	// Min이 Max보다 크면 Max를 Min으로
+							m_vMinMaxLifeTime_Mesh[1] = m_vMinMaxLifeTime_Mesh[0];
 
 
-					m_pMeshBufferDesc->vMinMaxLifeTime.x = m_vMinMaxLifeTime_Mesh[0];
-					m_pMeshBufferDesc->vMinMaxLifeTime.y = m_vMinMaxLifeTime_Mesh[1];
+						m_pMeshBufferDesc->vMinMaxLifeTime.x = m_vMinMaxLifeTime_Mesh[0];
+						m_pMeshBufferDesc->vMinMaxLifeTime.y = m_vMinMaxLifeTime_Mesh[1];
+					}
+
+
+					/* 메쉬 파티클 리사이클 */
+					ImGui::SeparatorText(" Recycle_Mesh ");
+					ImGui::RadioButton("Recycle_Mesh", &m_iRecycle_Mesh, 0);  ImGui::SameLine();
+					ImGui::RadioButton("None Recycle_Mesh", &m_iRecycle_Mesh, 1);
+					if (0 == m_iRecycle_Mesh)
+						m_pMeshBufferDesc->bRecycle = TRUE;
+					else if (1 == m_iRecycle_Mesh)
+						m_pMeshBufferDesc->bRecycle = FALSE;
+
+
+					/* 모델 바꿔끼기 */
+					if (ImGui::Button("ON Morph"))
+					{
+						m_pMeshBufferDesc->bMorph = TRUE;
+
+					}ImGui::SameLine();
+					if (ImGui::Button("OFF Morph"))
+					{
+						m_pMeshBufferDesc->bMorph = FALSE;
+					}
+
+					/* 모델 바꿔끼는 시간 텀 조정*/
+					if (ImGui::DragFloat("MorphTimeTerm", &m_fMorphTimeTerm, 0.01f, 0.f, 360.f))
+					{
+						if (0.f > m_fMorphTimeTerm)
+							m_fMorphTimeTerm = 0.f;
+
+						m_pMeshBufferDesc->fMorphTimeTerm = m_fMorphTimeTerm;
+
+					}
+
+
+#pragma region 리지드바디 옵션 조정_메쉬 파티클
+					/* 키네틱 키고 끄기 */
+
+					ImGui::SeparatorText(" RigidBody ");
+
+					ImGui::RadioButton(" Kinetic_Mesh ", &m_iKinetic_Mesh, 0);  ImGui::SameLine();
+					ImGui::RadioButton(" Kinematic_Mesh ", &m_iKinetic_Mesh, 1);
+					if (0 == m_iKinetic_Mesh)
+					{
+						m_pMeshBufferDesc->bKinetic = TRUE;
+					}
+					else if (1 == m_iKinetic_Mesh)
+					{
+						m_pMeshBufferDesc->bKinetic = FALSE;
+					}
+
+					/* 중력 키고 끄기 */
+					ImGui::RadioButton(" ON   Gravity_Mesh ", &m_iUseGravity_Mesh, 0);  ImGui::SameLine();
+					ImGui::RadioButton(" OFF  Gravity_Mesh ", &m_iUseGravity_Mesh, 1);
+					if (0 == m_iUseGravity_Mesh)
+					{
+						m_pMeshBufferDesc->bUseGravity = TRUE;
+					}
+					else if (1 == m_iUseGravity_Mesh)
+					{
+						m_pMeshBufferDesc->bUseGravity = FALSE;
+					}
+
+					/* 중력 가속도 조절 */
+					if (0 == m_iUseGravity_Mesh)
+					{
+						if (ImGui::DragFloat("Gravity_Mesh", &m_fGravity_Mesh, 0.5f, -100.f, 1000.f))
+						{
+							m_pMeshBufferDesc->fGravity = m_fGravity_Mesh;
+						}
+					}
+
+
+					if (ImGui::Button(" FORCE "))
+					{
+						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button(" IMPULSE "))
+					{
+						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button(" ACCELERATION "))
+					{
+						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::ACCELERATION;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button(" VELOCITY_CHANGE "))
+					{
+						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::VELOCITY_CHANGE;
+					}
+
+					if (ImGui::DragFloat2("Power_Mesh", m_vMinMaxPower_Mesh, 10.f, 0.1f))
+					{
+						m_pMeshBufferDesc->vMinMaxPower.x = m_vMinMaxPower_Mesh[0];
+						m_pMeshBufferDesc->vMinMaxPower.y = m_vMinMaxPower_Mesh[1];
+					}
+#pragma endregion 리지드바디 옵션 조정_메쉬 파티클 끝
+
+
+					/* 센터 포지션 오프셋 */
+					/* MinCenterOffsetPos */
+					if (ImGui::DragFloat3("MinCenterOffsetPos_Mesh", m_vMinCenterOffsetPos_Mesh, 0.1f, -500.f, 500.f))
+					{
+						m_pMeshBufferDesc->vMinCenterOffsetPos.x = m_vMinCenterOffsetPos_Mesh[0];
+						m_pMeshBufferDesc->vMinCenterOffsetPos.y = m_vMinCenterOffsetPos_Mesh[1];
+						m_pMeshBufferDesc->vMinCenterOffsetPos.z = m_vMinCenterOffsetPos_Mesh[2];
+					}
+					/* MaxCenterOffsetPos */
+					if (ImGui::DragFloat3("MaxCenterOffsetPos_Mesh", m_vMaxCenterOffsetPos_Mesh, 0.1f, -500.f, 500.f))
+					{
+						m_pMeshBufferDesc->vMaxCenterOffsetPos.x = m_vMaxCenterOffsetPos_Mesh[0];
+						m_pMeshBufferDesc->vMaxCenterOffsetPos.y = m_vMaxCenterOffsetPos_Mesh[1];
+						m_pMeshBufferDesc->vMaxCenterOffsetPos.z = m_vMaxCenterOffsetPos_Mesh[2];
+					}
+
+
+					/* 퍼지는 범위 */
+					if (ImGui::DragFloat2("MinMaxRange_Mesh", m_vMinMaxRange_Mesh, 1.f, 0.1f, 360.f))
+					{
+						if (m_vMinMaxRange_Mesh[0] > m_vMinMaxRange_Mesh[1])
+							m_vMinMaxRange_Mesh[0] = m_vMinMaxRange_Mesh[1];
+
+						m_pMeshBufferDesc->vMinMaxRange.x = m_vMinMaxRange_Mesh[0];
+						m_pMeshBufferDesc->vMinMaxRange.y = m_vMinMaxRange_Mesh[1];
+					}
+
+
+					/* 회전 범위(오프셋) */
+					/* RotX */
+					if (ImGui::DragFloat2("RotationX_Mesh", m_vRotationOffsetX_Mesh, 1.f, 0.f, 360.f))
+					{
+						if (0 > m_vRotationOffsetX_Mesh[0])
+							m_vRotationOffsetX_Mesh[0] = 0.f;
+
+						if (m_vRotationOffsetX_Mesh[0] > m_vRotationOffsetX_Mesh[1])
+							m_vRotationOffsetX_Mesh[1] = m_vRotationOffsetX_Mesh[0];
+
+						m_pMeshBufferDesc->vMinMaxRotationOffsetX.x = m_vRotationOffsetX_Mesh[0];
+						m_pMeshBufferDesc->vMinMaxRotationOffsetX.y = m_vRotationOffsetX_Mesh[1];
+
+					}
+
+
+					/* RotY */
+					if (ImGui::DragFloat2("RotationY_Mesh", m_vRotationOffsetY_Mesh, 1.f, 0.f, 360.f))
+					{
+						if (0 > m_vRotationOffsetY_Mesh[0])
+							m_vRotationOffsetY_Mesh[0] = 0.f;
+
+						if (m_vRotationOffsetY_Mesh[0] > m_vRotationOffsetY_Mesh[1])
+							m_vRotationOffsetY_Mesh[1] = m_vRotationOffsetY_Mesh[0];
+
+						m_pMeshBufferDesc->vMinMaxRotationOffsetY.x = m_vRotationOffsetY_Mesh[0];
+						m_pMeshBufferDesc->vMinMaxRotationOffsetY.y = m_vRotationOffsetY_Mesh[1];
+					}
+
+
+					/* RotZ */
+					if (ImGui::DragFloat2("RotationZ_Mesh", m_vRotationOffsetZ_Mesh, 1.f, 0.f, 360.f))
+					{
+						if (0 > m_vRotationOffsetZ_Mesh[0])
+							m_vRotationOffsetZ_Mesh[0] = 0.f;
+
+						if (m_vRotationOffsetZ_Mesh[0] > m_vRotationOffsetZ_Mesh[1])
+							m_vRotationOffsetZ_Mesh[1] = m_vRotationOffsetZ_Mesh[0];
+
+						m_pMeshBufferDesc->vMinMaxRotationOffsetZ.x = m_vRotationOffsetZ_Mesh[0];
+						m_pMeshBufferDesc->vMinMaxRotationOffsetZ.y = m_vRotationOffsetZ_Mesh[1];
+					}
+
+
+					ImGui::SeparatorText("");
 				}
 
 
-				/* 모델 바꿔끼기 */
-				if (ImGui::Button("ON Morph"))
-				{
-					m_pMeshBufferDesc->bMorph = TRUE;
 
-				}ImGui::SameLine();
-				if (ImGui::Button("OFF Morph"))
-				{
-					m_pMeshBufferDesc->bMorph = FALSE;
-				}
-
-				/* 모델 바꿔끼는 시간 텀 조정*/
-				if (ImGui::DragFloat("MorphTimeTerm", &m_fMorphTimeTerm, 0.01f, 0.f, 360.f))
-				{
-					if (0.f > m_fMorphTimeTerm)
-						m_fMorphTimeTerm = 0.f;
-
-					m_pMeshBufferDesc->fMorphTimeTerm = m_fMorphTimeTerm;
-
-				}
-
-				if (ImGui::Button("Morph_01"))
-				{
-					m_pMeshBufferDesc->eCurModelNum = CVIBuffer_Effect_Model_Instance::MORPH_01;
-
-				}ImGui::SameLine();
-				if (ImGui::Button("Morph_02"))
-				{
-					m_pMeshBufferDesc->eCurModelNum = CVIBuffer_Effect_Model_Instance::MORPH_02;
-				}
-				
-
+		
 				/* Rim & Bloom */
 				/* 림라이트 & 블룸 */
-				ImGui::SeparatorText("");
+				ImGui::SeparatorText("Rim Bloom_Mesh");
 				if (ImGui::ColorEdit4("RimColor", m_fRimColor_Mesh, ImGuiColorEditFlags_None))
 				{	
 					m_pCurVoidDesc->vRimColor.x = m_fRimColor_Mesh[0];
@@ -1484,136 +1767,7 @@ void CWindow_EffectTool::Update_MeshTab()
 				}
 
 
-#pragma region 리지드바디 옵션 조정_메쉬 파티클
-				/* 키네틱 키고 끄기 */
-				ImGui::RadioButton(" Kinetic_Mesh ", &m_iKinetic_Mesh, 0);  ImGui::SameLine();
-				ImGui::RadioButton(" Kinematic_Mesh ", &m_iKinetic_Mesh, 1);
-				if (0 == m_iKinetic_Mesh)
-				{
-					m_pMeshBufferDesc->bKinetic = TRUE;
-				}
-				else if (1 == m_iKinetic_Mesh)
-				{
-					m_pMeshBufferDesc->bKinetic = FALSE;
-				}
 
-				/* 중력 키고 끄기 */
-				ImGui::RadioButton(" ON   Gravity_Mesh ", &m_iUseGravity_Mesh, 0);  ImGui::SameLine();
-				ImGui::RadioButton(" OFF  Gravity_Mesh ", &m_iUseGravity_Mesh, 1);
-				if (0 == m_iUseGravity_Mesh)
-				{
-					m_pMeshBufferDesc->bUseGravity = TRUE;
-				}
-				else if (1 == m_iUseGravity_Mesh)
-				{
-					m_pMeshBufferDesc->bUseGravity = FALSE;
-				}
-
-				/* 중력 가속도 조절 */
-				if (0 == m_iUseGravity_Mesh)
-				{
-					if (ImGui::DragFloat("Gravity_Mesh", &m_fGravity_Mesh, 0.5f, -100.f, 1000.f))
-					{
-						m_pMeshBufferDesc->fGravity = m_fGravity_Mesh;
-					}
-				}
-
-				ImGui::SeparatorText(" RigidBody ");
-				if (ImGui::Button(" FORCE "))
-				{
-					m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(" IMPULSE "))
-				{
-					m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(" ACCELERATION "))
-				{
-					m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::ACCELERATION;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(" VELOCITY_CHANGE "))
-				{
-					m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::VELOCITY_CHANGE;
-				}
-
-				if (ImGui::DragFloat2("Power_Mesh", m_vMinMaxPower_Mesh, 10.f, 0.1f))
-				{
-					m_pMeshBufferDesc->vMinMaxPower.x = m_vMinMaxPower_Mesh[0];
-					m_pMeshBufferDesc->vMinMaxPower.y = m_vMinMaxPower_Mesh[1];
-				}
-#pragma endregion 리지드바디 옵션 조정_메쉬 파티클 끝
-
-				/* 센터 포지션 오프셋 */
-				/* MinCenterOffsetPos */
-				if (ImGui::DragFloat3("MinCenterOffsetPos_Mesh", m_vMinCenterOffsetPos_Mesh, 0.1f, -500.f, 500.f))
-				{
-					m_pMeshBufferDesc->vMinCenterOffsetPos.x = m_vMinCenterOffsetPos_Mesh[0];
-					m_pMeshBufferDesc->vMinCenterOffsetPos.y = m_vMinCenterOffsetPos_Mesh[1];
-					m_pMeshBufferDesc->vMinCenterOffsetPos.z = m_vMinCenterOffsetPos_Mesh[2];
-				}
-				/* MaxCenterOffsetPos */
-				if (ImGui::DragFloat3("MaxCenterOffsetPos_Mesh", m_vMaxCenterOffsetPos_Mesh, 0.1f, -500.f, 500.f))
-				{
-					m_pMeshBufferDesc->vMaxCenterOffsetPos.x = m_vMaxCenterOffsetPos_Mesh[0];
-					m_pMeshBufferDesc->vMaxCenterOffsetPos.y = m_vMaxCenterOffsetPos_Mesh[1];
-					m_pMeshBufferDesc->vMaxCenterOffsetPos.z = m_vMaxCenterOffsetPos_Mesh[2];
-				}
-
-
-
-				/* 퍼지는 범위 */
-				if (ImGui::DragFloat2("MinMaxRange_Mesh", m_vMinMaxRange_Mesh, 1.f, 0.1f, 360.f))
-				{
-					if (m_vMinMaxRange_Mesh[0] > m_vMinMaxRange_Mesh[1])
-						m_vMinMaxRange_Mesh[0] = m_vMinMaxRange_Mesh[1];
-
-					m_pMeshBufferDesc->vMinMaxRange.x = m_vMinMaxRange_Mesh[0];
-					m_pMeshBufferDesc->vMinMaxRange.y = m_vMinMaxRange_Mesh[1];
-				}
-
-				/* 회전 범위(오프셋) */
-				/* RotX */
-				if (ImGui::DragFloat2("RotationX_Mesh", m_vRotationOffsetX_Mesh, 1.f, 0.f, 360.f))
-				{
-					if (0 > m_vRotationOffsetX_Mesh[0])
-						m_vRotationOffsetX_Mesh[0] = 0.f;
-
-					if (m_vRotationOffsetX_Mesh[0] > m_vRotationOffsetX_Mesh[1])
-						m_vRotationOffsetX_Mesh[1] = m_vRotationOffsetX_Mesh[0];
-
-					m_pMeshBufferDesc->vMinMaxRotationOffsetX.x = m_vRotationOffsetX_Mesh[0];
-					m_pMeshBufferDesc->vMinMaxRotationOffsetX.y = m_vRotationOffsetX_Mesh[1];
-
-				}
-
-				/* RotY */
-				if (ImGui::DragFloat2("RotationY_Mesh", m_vRotationOffsetY_Mesh, 1.f, 0.f, 360.f))
-				{
-					if (0 > m_vRotationOffsetY_Mesh[0])
-						m_vRotationOffsetY_Mesh[0] = 0.f;
-
-					if (m_vRotationOffsetY_Mesh[0] > m_vRotationOffsetY_Mesh[1])
-						m_vRotationOffsetY_Mesh[1] = m_vRotationOffsetY_Mesh[0];
-
-					m_pMeshBufferDesc->vMinMaxRotationOffsetY.x = m_vRotationOffsetY_Mesh[0];
-					m_pMeshBufferDesc->vMinMaxRotationOffsetY.y = m_vRotationOffsetY_Mesh[1];
-				}
-
-				/* RotZ */
-				if (ImGui::DragFloat2("RotationZ_Mesh", m_vRotationOffsetZ_Mesh, 1.f, 0.f, 360.f))
-				{
-					if (0 > m_vRotationOffsetZ_Mesh[0])
-						m_vRotationOffsetZ_Mesh[0] = 0.f;
-
-					if (m_vRotationOffsetZ_Mesh[0] > m_vRotationOffsetZ_Mesh[1])
-						m_vRotationOffsetZ_Mesh[1] = m_vRotationOffsetZ_Mesh[0];
-
-					m_pMeshBufferDesc->vMinMaxRotationOffsetZ.x = m_vRotationOffsetZ_Mesh[0];
-					m_pMeshBufferDesc->vMinMaxRotationOffsetZ.y = m_vRotationOffsetZ_Mesh[1];
-				}
 
 
 				// 디스토션 값 변경
@@ -1687,14 +1841,6 @@ void CWindow_EffectTool::Update_MeshTab()
 
 
 
-				// 디퓨즈에 곱할 색 (색 변경)
-				if (ImGui::ColorEdit4("Color_Mul_Mesh", m_fColor_Mul_Mesh, ImGuiColorEditFlags_None))
-				{
-					m_pCurVoidDesc->vColor_Mul.x = m_fColor_Mul_Mesh[0];
-					m_pCurVoidDesc->vColor_Mul.y = m_fColor_Mul_Mesh[1];
-					m_pCurVoidDesc->vColor_Mul.z = m_fColor_Mul_Mesh[2];
-					m_pCurVoidDesc->vColor_Mul.w = m_fColor_Mul_Mesh[3];
-				}
 
 
 			}
@@ -2059,11 +2205,11 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE];
 			// 텍스처 업데이트 =============================================================================================================
 
-			m_iShaderPassIndex_Particle = m_pCurVoidDesc->iShaderPassIndex;	// 쉐이더 패스 인덱스 업데이트
+			m_iShaderPassIndex_Particle = m_pCurVoidDesc->iShaderPassIndex;		// 쉐이더 패스 인덱스 업데이트
 
-			m_iRenderGroup_Particle = m_pCurVoidDesc->iRenderGroup;			// 렌더그룹 업데이트
+			m_iRenderGroup_Particle = m_pCurVoidDesc->iRenderGroup;				// 렌더그룹 업데이트
 
-			m_iNumInstance_Particle = m_pParticleBufferDesc->iCurNumInstance; // 인스턴스 개수 업데이트
+			m_iNumInstance_Particle = m_pParticleBufferDesc->iCurNumInstance;	// 인스턴스 개수 업데이트
 
 
 			/* 빌보드 여부 */
@@ -2102,15 +2248,16 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_fColor_Mul_Particle[3] = m_pCurVoidDesc->vColor_Mul.w;
 
 
-			/* UV회전 */
-			m_fUV_RotDegree = m_pCurVoidDesc->fUV_RotDegree;
-
-
 			/* 쉐이더에 던져서 자를 값 */
 			m_vColor_Clip_Part[0] = m_pCurVoidDesc->vColor_Clip.x;
 			m_vColor_Clip_Part[1] = m_pCurVoidDesc->vColor_Clip.y;
 			m_vColor_Clip_Part[2] = m_pCurVoidDesc->vColor_Clip.z;
 			m_vColor_Clip_Part[3] = m_pCurVoidDesc->vColor_Clip.w;
+
+			
+			/* UV회전 */
+			m_fUV_RotDegree = m_pCurVoidDesc->fUV_RotDegree;
+
 
 
 			// 리지드바디 업데이트 =============================================================================================================
@@ -2273,7 +2420,6 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vBloomPower_Particle[2] = m_pCurVoidDesc->vBloomPower.z;
 
 
-
 			m_fRimColor_Particle[0] = m_pCurVoidDesc->vRimColor.x;
 			m_fRimColor_Particle[1] = m_pCurVoidDesc->vRimColor.y;
 			m_fRimColor_Particle[2] = m_pCurVoidDesc->vRimColor.z;
@@ -2350,6 +2496,21 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vColor_Clip_Part[1] = m_pCurVoidDesc->vColor_Clip.y;
 			m_vColor_Clip_Part[2] = m_pCurVoidDesc->vColor_Clip.z;
 			m_vColor_Clip_Part[3] = m_pCurVoidDesc->vColor_Clip.w;
+
+
+
+			/* UV 조정 값 업데이트 */
+			// Offset 
+			m_fUV_Offset_Mesh[0] = m_pCurVoidDesc->vUV_Offset.x;
+			m_fUV_Offset_Mesh[1] = m_pCurVoidDesc->vUV_Offset.y;
+
+			// Scale
+			m_vUV_Scale_Mesh[0] = m_pCurVoidDesc->vUV_Scale.x;
+			m_vUV_Scale_Mesh[1] = m_pCurVoidDesc->vUV_Scale.y;
+
+			// UV 회전
+			m_fUV_RotDegree_Mesh = m_pCurVoidDesc->fUV_RotDegree;
+
 
 
 			// 리지드바디 업데이트 =============================================================================================================
@@ -2435,7 +2596,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vRotationOffsetZ_Mesh[1] = m_pMeshBufferDesc->vMinMaxRotationOffsetZ.y;
 
 
-			/* 림블룸 관련 */
+			/* Rim Bloom 림블룸 관련 */
 			m_vBloomPower_Mesh[0] = m_pCurVoidDesc->vBloomPower.x;
 			m_vBloomPower_Mesh[1] = m_pCurVoidDesc->vBloomPower.y;
 			m_vBloomPower_Mesh[2] = m_pCurVoidDesc->vBloomPower.z;
@@ -2444,7 +2605,6 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_fRimColor_Mesh[1] = m_pCurVoidDesc->vRimColor.y;
 			m_fRimColor_Mesh[2] = m_pCurVoidDesc->vRimColor.z;
 			m_fRimColor_Mesh[3] = m_pCurVoidDesc->vRimColor.w;
-
 
 			m_fRimPower_Mesh = m_pCurVoidDesc->fRimPower;
 
@@ -2782,6 +2942,12 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			pGridDesc->vGridColor.w = m_fColor_Grid[3];
 		}
 
+		////m_iShaderPass_Grid
+		//if (ImGui::DragInt("ShaderPass_Grid", &m_iShaderPass_Grid, 1, 2))
+		//{
+		//	m_pGrid->Get_Desc()->iShaderPassIndex = m_iShaderPass_Grid;
+		//}
+
 
 		if (ImGui::Button("Delete Grid"))	// 그리드 삭제
 		{
@@ -3000,7 +3166,10 @@ void CWindow_EffectTool::Update_EffectList_Window()
 
 		m_iCurPartIndex = 0;
 		if (!m_CurPartObjects.empty())
+		{
 			m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.begin()->second);
+			Update_CurParameters_Parts();
+		}		
 		else
 			m_pCurPartEffect = nullptr;
 
@@ -3241,18 +3410,18 @@ void CWindow_EffectTool::Update_EffectList_Window()
 
 			_float3 vScaled = pTransform->Get_Scaled();
 			ImGui::Text("Effect Scaled  : %.2f %.2f %.2f", vScaled.x, vScaled.y, vScaled.z);
-			if (ImGui::DragFloat3("Effect_Scale", m_vScale_Part, 0.5f))
+			if (ImGui::DragFloat3("Effect_Scale", m_vScale_Effect, 0.5f))
 			{
-				pTransform->Set_Scaling(m_vScale_Part[0], m_vScale_Part[1], m_vScale_Part[2]);
+				pTransform->Set_Scaling(m_vScale_Effect[0], m_vScale_Effect[1], m_vScale_Effect[2]);
 			}
 
 			_float3 vRotated = pTransform->Get_Rotated();
 			ImGui::Text("Effect Rotated  : %.2f %.2f %.2f", vRotated.x, vRotated.y, vRotated.z);
 			if (ImGui::DragFloat3("Effect_Rotate", m_vRotate_Effect, 0.5f))
 			{
-				pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Effect[0]));
-				pTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Effect[1]));
-				pTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(m_vRotate_Effect[2]));
+				pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), m_vRotate_Effect[0]);
+				pTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_vRotate_Effect[1]);
+				pTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), m_vRotate_Effect[2]);
 			}
 		}
 
@@ -3282,9 +3451,9 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				ImGui::Text("Part Rotated  : %.2f %.2f %.2f", vRotated.x, vRotated.y, vRotated.z);
 				if (ImGui::DragFloat3("Part_Rotate", m_vRotate_Part, 0.5f))
 				{
-					pPartTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Part[0]));
-					pPartTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Part[1]));
-					pPartTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(m_vRotate_Part[2]));
+					pPartTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), m_vRotate_Part[0]);
+					pPartTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_vRotate_Part[1]);
+					pPartTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), m_vRotate_Part[2]);
 				}
 			}
 			ImGui::SeparatorText("");

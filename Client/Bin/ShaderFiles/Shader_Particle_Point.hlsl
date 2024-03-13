@@ -7,6 +7,8 @@ Texture2D	g_DiffuseTexture;
 Texture2D	g_MaskTexture;
 Texture2D	g_NoiseTexture;
 
+Texture2D	g_NormalTexture;
+
 // Camera ====================
 vector		g_vCamPosition;
 float3		g_vCamDirection;

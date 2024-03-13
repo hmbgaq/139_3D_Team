@@ -59,7 +59,7 @@ HRESULT CVampireCommander_Projectile_Range3::Initialize(void* pArg)
 
 
 	// ÀÌÆåÆ® »ý¼º
-	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Skull.json", this);
+	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Impact.json", this);
 
 	return S_OK;
 }

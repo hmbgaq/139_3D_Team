@@ -303,7 +303,6 @@ private:
 	_int m_iNumInstance_Mesh	= { 20 };
 	_int m_iMaxNumInstance_Mesh = { 20 };
 
-
 	_int	m_iRecycle_Mesh = { 0 };
 
 	_float	m_vMinMaxLifeTime_Mesh[2] = { 0.f, 0.f };	// 라이프타임
@@ -325,22 +324,11 @@ private:
 	/* RigidBody ============================================== */
 
 
-	_float  m_fUV_Offset[2] = { 0.f, 0.f };
-	_float  m_vUV_Scale[2]	= { 1.f, 1.f };
-
-	_float	m_DissolveAmount = { 0.f };
-
-	_float	m_fUV_RotDegree_Mesh = { 0.f };
-
-
+	/* Color */
 	_float	m_fColor_Mul_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 
 
-	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
-	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
-	_float	m_fRimPower_Mesh = { 5.f };
-
-	/* Position */
+	/* Position_Mesh Particle */
 	_float	m_vMinCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
 	_float	m_vMaxCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
 
@@ -350,6 +338,22 @@ private:
 	_float	m_vRotationOffsetX_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetY_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetZ_Mesh[2] = { 0.f, 0.f };
+
+
+	/* UV Option */
+	_float  m_fUV_Offset_Mesh[2] = { 0.f, 0.f };
+	_float  m_vUV_Scale_Mesh[2] = { 1.f, 1.f };
+	_float	m_fUV_RotDegree_Mesh = { 0.f };
+
+
+	/* Rim Bloom */
+	_float	m_vBloomPower_Mesh[3] = { 1.f, 1.f, 1.f };
+	_float	m_fRimColor_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fRimPower_Mesh = { 5.f };
+
+
+	/* Dissolve */
+	_float	m_DissolveAmount = { 0.f };
 
 
 	/* Distortion ============================================== */
@@ -404,8 +408,9 @@ private:
 	_int m_iSkyTextureIndex = { 3 };		// 스카이박스 텍스처 인덱스
 
 	/* Grid */
-	CGameObject* m_pGrid	= { nullptr };
-	_float m_fColor_Grid[4] = { 0.f, 1.f, 0.f, 1.f };	// 그리드(와이어프레임) 컬러
+	CGrid*	m_pGrid	= { nullptr };
+	_float	m_fColor_Grid[4] = { 0.f, 1.f, 0.f, 1.f };	// 그리드(와이어프레임) 컬러
+	_int	m_iShaderPass_Grid = { 2 };
 
 
 	/* Model_Preview */

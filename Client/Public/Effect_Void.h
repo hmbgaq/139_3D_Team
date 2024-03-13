@@ -39,7 +39,7 @@ public:
 		_bool		bBillBoard		= { TRUE };
 		_bool		bDissolve		= { TRUE };
 		_float2		vUV_Offset		= { 0.f, 0.f };
-		_float2		vUV_Scale		= { 0.f, 0.f };
+		_float2		vUV_Scale		= { 1.f, 1.f };
 
 		_float		fUV_RotDegree	= { 0.f };
 
@@ -125,6 +125,15 @@ public:
 		_float2	vUV_CurTileIndex = { 0, 0 }; 
 		_float2	vUV_MinTileCount = { 0, 0 }; // 저장
 		_float2	vUV_MaxTileCount = { 7, 7 }; // 저장
+
+
+		void Reset_Sprite()
+		{
+			bSpriteFinish = { FALSE };
+			vUV_CurTileIndex.y = vUV_MinTileCount.y;
+			vUV_CurTileIndex.x = vUV_MinTileCount.x;
+		}
+
 
 	}UVSPRITE_DESC;
 

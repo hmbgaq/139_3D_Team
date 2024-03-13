@@ -10,9 +10,6 @@ Texture2D	g_NoiseTexture;
 Texture2D	g_NormalTexture;
 Texture2D   g_SpecularTexture;
 
-Texture2D	g_DepthTexture;
-
-
 // Camera ======================
 vector      g_vCamPosition;
 vector      g_vCamDirection;
@@ -168,10 +165,10 @@ struct PS_IN
 struct PS_OUT
 {	
 	float4 vDiffuse			: SV_TARGET0;
-	float4 vNormal			: SV_TARGET1;
-	float4 vDepth			: SV_TARGET2;
-	float4 vRimBloom		: SV_TARGET3;
-  
+    float4 vSolid			: SV_TARGET1;
+	float4 vNormal			: SV_TARGET2;
+	float4 vDepth			: SV_TARGET3;
+	float4 vRimBloom		: SV_TARGET4;
 };
 
 
@@ -179,15 +176,20 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT) 0;
 	
+    In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
+    In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
+	
 	vector vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	float4 vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
 
 	vDiffuseColor.a *= vAlphaColor;
 	
-	if (vDiffuseColor.a < g_fAlpha_Discard)	// 알파 자르기
+	if (vDiffuseColor.a <= g_fAlpha_Discard)	// 알파 자르기
 		discard;
 
 	Out.vDiffuse = vDiffuseColor * g_vColor_Mul; // 색 곱하기
+
+	
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
    
@@ -198,11 +200,11 @@ PS_OUT PS_MAIN(PS_IN In)
 	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
 	Out.vRimBloom = float4(g_vBloomPower, 1.0f);
 
+    Out.vSolid = Out.vDiffuse; // 패스 나누기
 
-
-	// 검은색 잘라내기
-	if (Out.vDiffuse.r < g_vBlack_Discard.r && Out.vDiffuse.g < g_vBlack_Discard.g && Out.vDiffuse.b < g_vBlack_Discard.b)
-		discard;
+	//// 검은색 잘라내기
+	//if (Out.vDiffuse.r < g_vBlack_Discard.r && Out.vDiffuse.g < g_vBlack_Discard.g && Out.vDiffuse.b < g_vBlack_Discard.b)
+	//	discard;
 
 	return Out;
 
@@ -297,9 +299,9 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In)
 
     clip(TexDissolve - g_fDissolveRatio);
 
-	In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
-	In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
-
+    In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
+    In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
+	
     vector vTexDiff = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
     float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
@@ -490,7 +492,8 @@ technique11 DefaultTechnique
 {
 	pass Default // 0
 	{	
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff); //SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		//SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff); //SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_DepthStencilEnable, 0);	
 		SetRasterizerState(RS_Cull_None); //SetRasterizerState(RS_Default);
 
