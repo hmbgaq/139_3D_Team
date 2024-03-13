@@ -283,35 +283,24 @@ void CNavigation::AddCell(CCell* pCell)
 	Make_Neighbors();
 }
 
-void CNavigation::Delete_Cell(const _uint iIndex)
+HRESULT CNavigation::Delete_Cell(const _uint iIndex)
 {
-	if (iIndex >= m_Cells.size())
-		return;
-
-	for (auto& cell : m_Cells)
+	for (vector<CCell*>::iterator iter = m_Cells.begin(); iter != m_Cells.end();)
 	{
-		for (size_t line = 0; line < CCell::LINE_END; ++line)
+		if ((*iter)->Get_Index() == iIndex)
 		{
-			_int neighborIndex = cell->Get_NeighborIndex(static_cast<CCell::LINE>(line));
+			Safe_Release(*iter);
+			iter = m_Cells.erase(iter);
 
-			if (neighborIndex == iIndex)
-			{
-				cell->SetUp_Neighbor(static_cast<CCell::LINE>(line), nullptr);
-			}
-			else if (neighborIndex > iIndex && neighborIndex - 1 < m_Cells.size())
-			{
-				cell->SetUp_Neighbor(static_cast<CCell::LINE>(line), m_Cells[neighborIndex - 1]);
-			}
+			Make_Neighbors();
+
+			return S_OK;
 		}
+		else
+			++iter;
 	}
 
-	Safe_Release(m_Cells[iIndex]);
-	m_Cells.erase(m_Cells.begin() + iIndex);
-
-	for (_uint i = 0; i < m_Cells.size(); ++i)
-	{
-		m_Cells[i]->Set_Index(i);
-	}
+	return E_FAIL;
 }
 
 void CNavigation::AllSearchDelete_IsNan()

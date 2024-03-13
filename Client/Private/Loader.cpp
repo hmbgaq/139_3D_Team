@@ -446,7 +446,7 @@ HRESULT CLoader::Loading_For_IntroBoss_Level()
 	lstrcpy(m_szLoadingText, TEXT("맵을 로드하는 중입니다."));
 	Ready_Environment_Model(LEVEL_INTRO_BOSS);
 	lstrcpy(m_szLoadingText, TEXT("네비게이션를(을) 로드하는 중입니다."));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Navigation"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Data_Map/Navigation/IntroBossNavi.dat"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Navigation"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Data_Map/Navigation/IntroBossNavi1.dat"))));
 
 	//FAILED_CHECK(Loading_For_GamePlay_Level_Origin(LEVEL_INTRO_BOSS));
 
@@ -608,11 +608,9 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 #pragma region 환경 : 주석 풀고 병합해야함!!!
 	//! 환경 모델
-	//Ready_Environment_Model(LEVEL_TOOL);
+	Ready_Environment_Model(LEVEL_TOOL);
 #pragma endregion 환경 : 주석 풀고 병합해야함!!! 끝
 
-
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_ForkLift"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/ForkLift/ForkLift", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Chain"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix)));
 
 	//! 이펙트 모델
