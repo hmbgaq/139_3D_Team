@@ -39,7 +39,9 @@ public:
 	void Activate_ShootingReaction();
 
 public:
-	void Search_Target();
+	void Search_Target(_float fMaxDistance = 10.f);
+
+	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 3);
 
 private:
 	HRESULT Ready_Components();

@@ -22,51 +22,53 @@ void CPlayer_MeleeCombo_01::Initialize(CPlayer* pActor)
 		->Set_Force(0.0f);
 
 	pWeapon->Set_Enable(true);
-	pWeapon->Set_Enable_Collisions(true);
 
 }
 
 CState<CPlayer>* CPlayer_MeleeCombo_01::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
-	
-	//if (false == m_bFlags[0] && pActor->Check_EffectOnTrackPosition())
-	//{
-	//	CWeapon* pWeapon = pActor->Get_Weapon(WEAPON_PUNCH_R);
-	//	_float3 vPos = pWeapon->Get_WorldPosition();
 
-	//	pActor->Create_Effect(vPos);
+	if (false == m_bFlags[0] && pActor->Is_Inputable_Front(16))
+	{
+		CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(WEAPON_PUNCH_R, true);
+		m_bFlags[0] = true;
+	}
 
-	//	m_bFlags[0] = true;
-	//}
+	if (true == m_bFlags[0] && false == m_bFlags[1]) 
+	{
+		pActor->Chasing_Attack(fTimeDelta);
+	}
 
-	if (pActor->Is_Inputable_Front(30)) 
+	if (false == m_bFlags[1] && pActor->Is_Inputable_Front(23)) 
+	{
+		CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(WEAPON_PUNCH_R, false);
+		m_bFlags[1] = true;
+	}
+
+	if (pActor->Is_Inputable_Front(23)) 
 	{
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
+
 	return nullptr;
-
-
-
-	//콜라이더 제어 예시
-	// 	if (m_fCurrentTrackPosition >= m_iColliderOnTrackPosition && m_fCurrentTrackPosition < m_iColliderOffTrackPosition)
-	// 	{
-	// 		m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(true);
-	// 	}
-	// 	else
-	// 	{
-	// 		m_pBoneCollider[m_iSelectColliderIndex]->Set_Enable(false);
-	// 	}
 }
 
 void CPlayer_MeleeCombo_01::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
 
-	pActor->Set_Weapon_Collisions_Enable(WEAPON_PUNCH_R, false);
-
-	//CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
-	//pWeapon->Set_Enable_Collisions(false);
-	// 
-	//pWeapon->Set_Enable(false);
+	CWeapon* pWeapon = pActor->Set_Weapon_Enable(WEAPON_PUNCH_R, false);
 }
+
+
+
+//if (false == m_bFlags[0] && pActor->Check_EffectOnTrackPosition())
+//{
+//	CWeapon* pWeapon = pActor->Get_Weapon(WEAPON_PUNCH_R);
+//	_float3 vPos = pWeapon->Get_WorldPosition();
+
+//	pActor->Create_Effect(vPos);
+
+//	m_bFlags[0] = true;
+//}

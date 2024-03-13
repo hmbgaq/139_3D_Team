@@ -137,6 +137,7 @@ public:
 	void Look_At_Target();
 	void Look_At_Target_Lerp(_float fTimeDelta);
 	void Search_Target(const wstring& strLayerTag, const _float fSearchDistance = MAX_SEARCH);
+
 	_float Target_Contained_Angle(_float4 vStandard, _float4 vTargetPos); /* 내 Look과 타겟을 향하는 벡터 사이의 끼인각을 구하는함수 */
 	_bool Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta);
 	CCharacter* Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance = MAX_SEARCH);
@@ -147,7 +148,7 @@ public:
 	_float Calc_Distance();
 	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
-	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 0.5f);
+	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 1.0f);
 
 
 
@@ -168,7 +169,7 @@ public:
 
 public:
 	_float3 Get_WeaknessPoint() { return m_vWeaknessPoint; };
-	void Set_WeaknessPoint(_float3 _vWeaknessPoint = _float3(0.f, 1.f, 0.f));
+	virtual void Set_WeaknessPoint();
 
 
 protected:
@@ -189,6 +190,8 @@ protected:
 protected:
 	CCharacter* m_pTarget = { nullptr };
 	_float3		m_vWeaknessPoint = { 0.f, 0.f, 0.f };
+	_float3		m_vWeaknessPoint_Local = { 0.f, 1.f, 0.f };
+
 
 protected:
 	CPhysXCharacterController* m_pPhysXControllerCom = { nullptr };

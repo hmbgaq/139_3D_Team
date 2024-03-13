@@ -301,9 +301,28 @@ void CPlayer::Activate_ShootingReaction()
 	m_pBody->Activate_ShootingReaction();
 }
 
-void CPlayer::Search_Target()
+void CPlayer::Search_Target(_float fMaxDistance)
 {
-	__super::Search_Target(LAYER_MONSTER);
+	__super::Search_Target(LAYER_BOSS, fMaxDistance);
+	__super::Search_Target(LAYER_MONSTER, fMaxDistance);
+}
+
+void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCount)
+{
+	if (nullptr == m_pTarget || true == m_pTarget->Is_Dead() || false == m_pTarget->Get_Enable())
+	{
+		Search_Target(fMaxDistance);
+	}
+
+	if (m_pTarget)
+	{
+		Look_At_Target();
+		for (_uint i = 0; i < iCount; ++i) 
+		{
+			Move_In_Proportion_To_Enemy(fTimeDelta);
+		}
+		
+	}
 }
 
 HRESULT CPlayer::Ready_Components()

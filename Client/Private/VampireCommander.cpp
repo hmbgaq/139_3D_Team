@@ -53,6 +53,8 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 	//HP
 	m_iHp = 1000;
 
+	m_vWeaknessPoint_Local = _float3(0.f, 2.f, 0.f);
+
 	return S_OK;
 }
 
