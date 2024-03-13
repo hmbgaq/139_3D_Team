@@ -28,6 +28,19 @@ HRESULT CCharacter::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	CNavigation::NAVI_DESC		NaviDesc = {};
+	NaviDesc.iCurrentIndex = 0;
+
+	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+	
+	if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
+	m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
+	
+
 	FAILED_CHECK(Ready_Components());
 
 	FAILED_CHECK(Ready_PartObjects());
@@ -408,12 +421,12 @@ void CCharacter::Look_At_Target_Lerp(_float fTimeDelta)
 	m_pTransformCom->Look_At_Lerp(vTargetPos, fTimeDelta);
 }
 
-void CCharacter::Search_Target(const wstring& strLayerTag)
+void CCharacter::Search_Target(const wstring& strLayerTag, const _float fSearchDistance)
 {
 	if (nullptr != m_pTarget)
 		return;
 
-	m_pTarget = Select_The_Nearest_Enemy(strLayerTag);
+	m_pTarget = Select_The_Nearest_Enemy(strLayerTag, fSearchDistance);
 }
 
 _float CCharacter::Target_Contained_Angle(_float4 vStandard, _float4 vTargetPos)

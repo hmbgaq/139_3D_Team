@@ -306,20 +306,6 @@ void CPlayer::Search_Target()
 
 HRESULT CPlayer::Ready_Components()
 {
-	CNavigation::NAVI_DESC		NaviDesc = {};
-	NaviDesc.iCurrentIndex = 0;
-
-	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
-
-	if (iCurrentLevel != (_uint)LEVEL_TOOL)
-	{
-		if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Navigation"),
-			TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
-			return E_FAIL;
-
-		m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
-	}
-
 	return S_OK;
 }
 
