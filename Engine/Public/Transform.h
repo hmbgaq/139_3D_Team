@@ -106,6 +106,7 @@ public:
 
 public:
 	void	Move_On_Navigation(_vector vMove, class CNavigation* pNavigation = nullptr);
+	void	Move_On_Navigation_ForSliding(_vector vMove, const _float fTimeDelta, class CNavigation* pNavigation = nullptr);
 
 	void	Go_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 	void	Go_Straight_L45(_float fTimeDelta, class CNavigation* pNavigation = nullptr);

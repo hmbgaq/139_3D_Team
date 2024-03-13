@@ -27,6 +27,7 @@ public:
 public:
 	void	Update(_fmatrix WorldMatrix);
 	_bool	isMove(_fvector vPosition);
+	_bool	isMove_ForSliding(_fvector vPosition, _fvector vLook, _Inout_ float4* vOutSlidingDir);
 	void	SaveData(wstring strSavePath);
 	void	LoadData(wstring strLoadPath);
 

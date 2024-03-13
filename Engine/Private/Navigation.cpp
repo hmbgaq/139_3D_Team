@@ -187,6 +187,53 @@ _bool CNavigation::isMove(_fvector vPosition)
 	}
 }
 
+_bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4* vOutSlidingDir)
+{
+	/* 일단 이웃이 없다는 의미로 디폴트 -1로 셋팅해둔다. */
+	_int      iNeighborIndex = { -1 };
+
+	/* 이동한 지점의 결과가 현재 셀 내부에 있을경우 true반환
+	 * 이동한 지점의 결과가 외부에 있을경우 iNeighborIndex에 값으로 받아온다. */
+
+	if (true == m_Cells[m_iCurrentIndex]->Is_Out(vPosition, vLook, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex, vOutSlidingDir))
+	{
+		/* 현재 셀 기준 외부로 나가는중 + 받아온 이웃셀 인덱스가 -1이 아님 = 이웃 인덱스로 이동확정 */
+		if (-1 != iNeighborIndex)
+		{
+			while (true)
+			{
+				/* 이동을 하는지점이 Navigation 내부에는 있지만 이웃한 지점이 아님 -> 이동을 하면안됨 */
+				if (-1 == iNeighborIndex)
+					return false;
+
+				if (false == m_Cells[iNeighborIndex]->Is_Out(vPosition, vLook, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex, vOutSlidingDir))
+				{
+					//if (true == m_Cells[iNeighborIndex]->Get_Active())
+						m_iCurrentIndex = iNeighborIndex;
+					//else
+					//	return false;
+
+					break;
+				}
+			}
+			return true;
+		}
+		else
+		{
+			/* 나간방향의 이웃셀이 없을경우 = 이동불가 */
+			return false;
+		}
+	}
+	else
+	{
+		/* 이동한 지점의 결과가 현재 셀 내부 -> Move True */
+		return true;
+	}
+
+	return false;
+
+}
+
 void CNavigation::SaveData(wstring strSavePath)
 {
 	HANDLE	hFile = CreateFile(strSavePath.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
