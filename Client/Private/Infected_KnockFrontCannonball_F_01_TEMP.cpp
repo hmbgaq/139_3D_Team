@@ -9,7 +9,12 @@ void CInfected_KnockFrontCannonball_F_01_TEMP::Initialize(CInfected* pActor)
 
 CState<CInfected>* CInfected_KnockFrontCannonball_F_01_TEMP::Update(CInfected* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
 }
 
 void CInfected_KnockFrontCannonball_F_01_TEMP::Release(CInfected* pActor)

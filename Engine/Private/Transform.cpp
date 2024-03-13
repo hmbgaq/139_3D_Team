@@ -372,6 +372,17 @@ _float3 CTransform::Calc_Look_Dir(_float3 vTargetPos)
 	return Get_Position() - vTargetPos;
 }
 
+void CTransform::Move_Position(_float4 vDir, _float fSpeed, _float fTimeDelta)
+{
+	/* 총알용입니다. 네비없어도됨 */
+	/* 주의사항. vDir채로 더하므로 전에 미리 Normalize해서 넘기세요 */
+
+	_float4 vPos = Get_Position();
+	vPos += vDir * fSpeed * fTimeDelta;
+
+	Set_State(STATE_POSITION, vPos);
+}
+
 void CTransform::Add_RootBone_Position(const _float3& vPos, CNavigation* pNavigation)
 {
 	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), m_WorldMatrix);

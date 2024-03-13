@@ -91,6 +91,15 @@
     <Filter Include="02.GameObjects\97. Camera">
       <UniqueIdentifier>{32729c05-9f24-4c42-9fa5-8bce31410a97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01. Interact">
+      <UniqueIdentifier>{daed6591-e3f1-4e31-8a6a-3942dcf39622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01. Interact\0. Chain">
+      <UniqueIdentifier>{4640b070-669a-48d8-9c94-8bed528d2d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01. Interact\1. Door">
+      <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\00. Character">
       <UniqueIdentifier>{efbf965b-89e3-4770-bdc3-149dd60e9eff}</UniqueIdentifier>
     </Filter>
@@ -2980,6 +2989,18 @@
     <Filter Include="02.GameObjects\04. Projectile\01. Interact\1. Door">
       <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt">
+      <UniqueIdentifier>{76273e8b-ad55-4129-a7e1-c63c78dd18ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\1">
+      <UniqueIdentifier>{c6539cb1-2d25-4ae5-8c79-0880369cee94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\2">
+      <UniqueIdentifier>{2e035043-752e-4409-aace-31181388b378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\3">
+      <UniqueIdentifier>{d6d719c6-3e6b-456c-962f-565131206f02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3043,10 +3064,10 @@
       <Filter>98.Default\Useless</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Interact_Door.h">
-      <Filter>02.GameObjects\04. Projectile\01. Interact\1. Door</Filter>
+      <Filter>02.GameObjects\01. Interact\1. Door</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Interact_Chain.h">
-      <Filter>02.GameObjects\04. Projectile\01. Interact\0. Chain</Filter>
+      <Filter>02.GameObjects\01. Interact\0. Chain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Window_AnimTool.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\AnimationWindow</Filter>
@@ -6033,6 +6054,18 @@
     <ClInclude Include="..\Public\Bullet_Winchester.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester\Projectile</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bullet_Bandit_Sniper.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Taunt_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Taunt_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sniper_Taunt_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\3</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -6308,10 +6341,10 @@
       <Filter>98.Default\Useless</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Interact_Door.cpp">
-      <Filter>02.GameObjects\04. Projectile\01. Interact\1. Door</Filter>
+      <Filter>02.GameObjects\01. Interact\1. Door</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Interact_Chain.cpp">
-      <Filter>02.GameObjects\04. Projectile\01. Interact\0. Chain</Filter>
+      <Filter>02.GameObjects\01. Interact\0. Chain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SkyDome.cpp">
       <Filter>02.GameObjects\99. Sky</Filter>
@@ -8527,6 +8560,18 @@
     <ClCompile Include="..\Private\Bullet_Winchester.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELWinchester\Projectile</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Bullet_Bandit_Sniper.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Taunt_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Taunt_02.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sniper_Taunt_03.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Sniping\3. Taunt\3</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -8568,6 +8613,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModelInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Monster.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

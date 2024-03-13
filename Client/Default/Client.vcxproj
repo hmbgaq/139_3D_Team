@@ -956,6 +956,7 @@
     <ClInclude Include="..\Public\PreviewAnimationModel.h" />
     <ClInclude Include="..\Public\Projectile.h" />
     <ClInclude Include="..\Public\Screamer.h" />
+    <ClInclude Include="..\Public\Bullet_Bandit_Sniper.h" />
     <ClInclude Include="..\Public\Sniper_Crouch_Start.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\SkyDome.h" />
@@ -1009,6 +1010,9 @@
     <ClInclude Include="..\Public\Sniper_Run_F.h" />
     <ClInclude Include="..\Public\Sniper_Run_FL.h" />
     <ClInclude Include="..\Public\Sniper_Run_FR.h" />
+    <ClInclude Include="..\Public\Sniper_Taunt_01.h" />
+    <ClInclude Include="..\Public\Sniper_Taunt_02.h" />
+    <ClInclude Include="..\Public\Sniper_Taunt_03.h" />
     <ClInclude Include="..\Public\Sniper_WalkAim_B.h" />
     <ClInclude Include="..\Public\Sniper_WalkAim_BL.h" />
     <ClInclude Include="..\Public\Sniper_WalkAim_BR.h" />
@@ -1724,6 +1728,7 @@
     <ClCompile Include="..\Private\PreviewAnimationModel.cpp" />
     <ClCompile Include="..\Private\Projectile.cpp" />
     <ClCompile Include="..\Private\Screamer.cpp" />
+    <ClCompile Include="..\Private\Bullet_Bandit_Sniper.cpp" />
     <ClCompile Include="..\Private\Sniper_Crouch_Start.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\SkyDome.cpp" />
@@ -1777,6 +1782,9 @@
     <ClCompile Include="..\Private\Sniper_Run_F.cpp" />
     <ClCompile Include="..\Private\Sniper_Run_FL.cpp" />
     <ClCompile Include="..\Private\Sniper_Run_FR.cpp" />
+    <ClCompile Include="..\Private\Sniper_Taunt_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_Taunt_02.cpp" />
+    <ClCompile Include="..\Private\Sniper_Taunt_03.cpp" />
     <ClCompile Include="..\Private\Sniper_WalkAim_B.cpp" />
     <ClCompile Include="..\Private\Sniper_WalkAim_BL.cpp" />
     <ClCompile Include="..\Private\Sniper_WalkAim_BR.cpp" />
@@ -1929,6 +1937,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_AnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_EffectTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Model.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Monster.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Point.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Rect.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl" />

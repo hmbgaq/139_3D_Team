@@ -21,3 +21,8 @@ CState<CBandit_Sniper>* CBandit_Sniper_State_Hit::Update_State(CBandit_Sniper* p
 {
 	return Hit_State(pActor, fTimeDelta, _iAnimIndex);
 }
+
+CState<CBandit_Sniper>* CBandit_Sniper_State_Hit::Death_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return __super::Death_State(pActor, fTimeDelta, _iAnimIndex);
+}

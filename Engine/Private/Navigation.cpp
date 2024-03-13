@@ -265,7 +265,7 @@ void CNavigation::SaveData(wstring strSavePath)
 
 void CNavigation::LoadData(wstring strLoadPath)
 {
-	_uint iCellSize = m_Cells.size();
+	_uint iCellSize = (_uint)m_Cells.size();
 	m_iCurrentIndex = -1;
 
 	for (_uint i = 0; i < iCellSize; ++i)
@@ -319,6 +319,33 @@ void CNavigation::LoadData(wstring strLoadPath)
 	}
 }
 
+_int CNavigation::Get_CurrentCellIndex(const float3& vPosition)
+{
+	for (auto& Cell : m_Cells)
+	{
+		_vector points[3] = {};
+
+		for (int i = 0; i < 3; ++i)
+			points[i] = XMLoadFloat3(Cell->Get_Point(static_cast<CCell::POINT>(i)));
+
+		// 각 꼭지점에서 주어진 점 P까지의 벡터 계산
+		_vector AP = vPosition - points[0];
+		_vector BP = vPosition - points[1];
+		_vector CP = vPosition - points[2];
+
+		// 삼각형 내부 판단
+		// 내적을 이용하여 삼각형 ABC 내부에 있는지 확인
+		if (XMVectorGetX(XMVector3Dot(AP, XMVectorSubtract(points[1], points[0]))) > 0 &&
+			XMVectorGetX(XMVector3Dot(BP, XMVectorSubtract(points[2], points[1]))) > 0 &&
+			XMVectorGetX(XMVector3Dot(CP, XMVectorSubtract(points[0], points[2]))) > 0)
+		{
+			// 삼각형 내부에 위치한 경우 해당 셀의 인덱스 반환
+			return Cell->Get_CurrentIndex();
+		}
+	}
+
+	return -1;
+}
 
 void CNavigation::AddCell(CCell* pCell)
 {
@@ -352,7 +379,7 @@ HRESULT CNavigation::Delete_Cell(const _uint iIndex)
 
 void CNavigation::AllSearchDelete_IsNan()
 {
-	_int iCellSize = m_Cells.size();
+	_int iCellSize = (_int)m_Cells.size();
 	vector<CCell*> vecNanCells;
 	vector<_int> vecNanCellIndex;
 
@@ -371,8 +398,8 @@ void CNavigation::AllSearchDelete_IsNan()
 		}
 	}
 
-	_uint iIsNanCellSize = vecNanCellIndex.size();
-	for (_int i = 0; i < iIsNanCellSize; ++i)
+	_uint iIsNanCellSize = (_uint)vecNanCellIndex.size();
+	for (_int i = 0; i < (_int)iIsNanCellSize; ++i)
 	{
 		Safe_Release(m_Cells[vecNanCellIndex[i]]);
 	}
@@ -450,37 +477,32 @@ _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
 
 _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 {
-	_vector vPlane = {};
+	/* 게임플레이 돌아다녀야 해서 임시로 넣어둠. 나중에 승용이가 바꾸셈 */
 
-	if (m_iCurrentIndex == -1)
-		return _float();
+	/* 현재 셀을 찾아서, 평면의 방정식을 만들고 현재 위치에 따른 높이를 구한다. */
 
-	CCell* pCell = m_Cells[m_iCurrentIndex];
+	_float fResult = {};
 
-	_vector vA = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_A)), 1.f);
-	_vector vB = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_B)), 1.f);
-	_vector vC = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_C)), 1.f);
+	CCell* pCell = m_Cells[m_iCurrentIndex]; /* 현재 어디 셀에 위치한지 리턴 */
 
-	vPlane = XMPlaneFromPoints(vA, vB, vC);
+	/* 평면을 나타내는 벡터 */
+	_vector vPlane = XMPlaneFromPoints(XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_A)), 1.f),
+		XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_B)), 1.f),
+		XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_C)), 1.f));
 
-	_float fA = XMVectorGetX(vPlane);
-	_float fB = XMVectorGetY(vPlane);
-	_float fC = XMVectorGetZ(vPlane);
-	_float fD = XMVectorGetW(vPlane);
+	/* 현재 위치 - 평면위의 한점이될 위치 : 아직 y값을 모르니 x, z 만 대입*/
+	_float fx = XMVectorGetX(vPosition);
+	_float fz = XMVectorGetZ(vPosition);
 
-	_float fX = vPosition.x;
-	_float fY = vPosition.y;
-	_float fZ = vPosition.z;
+	/* ax + by + cz + D = 0 의 형태에서 y 구하기 */
+	/* D : 원점부터 평면까지 거리를 의미하는 정사영의 크기
+	 * D>0 : 평면 내부에 위치 //  D = 0 평면위에 위치 //  D<0 : 평면밖에 위치 */
+	_float fa = XMVectorGetX(vPlane);
+	_float fb = XMVectorGetY(vPlane);
+	_float fc = XMVectorGetZ(vPlane);
+	_float fd = XMVectorGetW(vPlane);
 
-	_float height = (-fA * fX) - (fC * fZ) - fD;
-
-	if (pGround != nullptr)
-	{
-		// 플레이어의 Y값을 기준으로 땅에 있다고 판단
-		*pGround = (fY <= height);
-	}
-
-	return height;
+	return fResult = (-fa * fx - fc * fz - fd) / fb;
 }
 
 HRESULT CNavigation::Make_Neighbors()
