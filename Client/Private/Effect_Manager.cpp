@@ -59,7 +59,7 @@ CEffect* CEffect_Manager::Create_Effect(string strFileName, CGameObject* pOwner)
 }
 
 
-CEffect* CEffect_Manager::Create_Effect_Pos(string strFileName, _float3 vPos)
+CEffect* CEffect_Manager::Create_Effect_Pos(string strFileName, _float3 vLocalPos)
 {
 	CEffect::EFFECT_DESC	tEffectDesc = {};
 	CEffect* pEffect = dynamic_cast<CEffect*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, TEXT("Prototype_GameObject_Effect"), &tEffectDesc));
@@ -72,7 +72,7 @@ CEffect* CEffect_Manager::Create_Effect_Pos(string strFileName, _float3 vPos)
 
 	pEffect->Load_FromJson(In_Json);
 
-	pEffect->Set_Position(vPos);	// 이펙트 위치 설정
+	pEffect->Set_Position(vLocalPos);	// 이펙트 위치 설정
 
 	return	pEffect;
 }
