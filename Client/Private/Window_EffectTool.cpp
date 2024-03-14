@@ -356,6 +356,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 			{
 #pragma region Desc 얻어오기 업데이트_파티클
 				m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
+				m_pSpriteDesc_Particle = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Sprite_Desc();
 				CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 				m_pParticleBufferDesc = pVIBuffer->Get_Desc();
 #pragma endregion 
@@ -529,12 +530,12 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (0 == m_iSpriteLoop)
 					{
 						m_pSpriteDesc_Particle->bLoop = TRUE; 
-						m_pSpriteDesc_Particle->Reset_Sprite();
+						//m_pSpriteDesc_Particle->Reset_Sprite();
 					}
 					else if (1 == m_iSpriteLoop)
 					{
 						m_pSpriteDesc_Particle->bLoop = FALSE;
-						m_pSpriteDesc_Particle->Reset_Sprite();
+						//m_pSpriteDesc_Particle->Reset_Sprite();
 					}
 
 				}
@@ -550,7 +551,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (ImGui::DragFloat(" Sprite Term ", &m_fSequenceTerm_Particle, 1, 1))
 					{
 						m_pSpriteDesc_Particle->fSequenceTerm = m_fSequenceTerm_Particle;
-						m_pSpriteDesc_Particle->Reset_Sprite();
+						//m_pSpriteDesc_Particle->Reset_Sprite();
 					}
 
 					/* 스프라이트 최대 가로 세로 지정_파티클 */

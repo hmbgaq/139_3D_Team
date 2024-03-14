@@ -148,7 +148,7 @@ private:
 private:
 	_int m_iRenderGroup_Particle							= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Particle						= { 0 };
-	_int m_iMaxShaderPassIndex_Particle						= { 2 };
+	_int m_iMaxShaderPassIndex_Particle						= { 3 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
 	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 11, 0, 44, 22, 20 };
 
@@ -162,7 +162,7 @@ private:
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
-	_int m_iMaxShaderPassIndex_Mesh							= { 5 };
+	_int m_iMaxShaderPassIndex_Mesh							= { 6 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
 	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 20 };
 
@@ -410,7 +410,7 @@ private:
 
 	/* Grid */
 	CGrid*	m_pGrid	= { nullptr };
-	_float	m_fColor_Grid[4] = { 0.f, 1.f, 0.f, 1.f };	// 그리드(와이어프레임) 컬러
+	_float	m_fColor_Grid[4] = { 0.3f, 0.3f, 0.3f, 1.f };	// 그리드(와이어프레임) 컬러
 	_int	m_iShaderPass_Grid = { 2 };
 
 
