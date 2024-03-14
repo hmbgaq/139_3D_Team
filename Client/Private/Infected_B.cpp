@@ -74,7 +74,16 @@ HRESULT CInfected_B::Update_RenderState(_int _iHP)
 	return E_NOTIMPL;
 }
 
+void CInfected_B::Update_DiscardMesh()
+{
+}
+
 #pragma region Base Setting
+
+HRESULT CInfected_B::OptionSetting()
+{
+	return E_NOTIMPL;
+}
 
 HRESULT CInfected_B::Ready_Components()
 {

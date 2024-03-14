@@ -1,8 +1,12 @@
-#include "..\Public\Infected_State_Death.h"
+#include "Infected_State_Death.h"
+#include "Body_Infected.h"
 
 void CInfected_State_Death::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
+
+	CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
+	pBody->Set_RenderState(CBody_Infected::RENDER_STATE::NAKED);
 }
 
 CState<CInfected>* CInfected_State_Death::Update(CInfected* pActor, _float fTimeDelta)

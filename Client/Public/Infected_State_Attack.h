@@ -10,6 +10,8 @@ public:
 	virtual CState<CInfected>* Update(CInfected* pActor, _float fTimeDelta) override;
 	virtual void Release(CInfected* pActor) override;
 
+	void AttackState_Setting(CInfected* pActor);
+
 protected:
 	CWeapon* m_pWeapon = nullptr;
 	CInfected::INFECTED_TYPE m_eType = CInfected::INFECTED_TYPE::INFECTED_END;

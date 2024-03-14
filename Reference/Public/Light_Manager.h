@@ -14,6 +14,7 @@ public:
 	HRESULT			Initialize();
 	HRESULT			Add_Light(const LIGHT_DESC& LightDesc, _int& outLightIndex);
 	_bool			Remove_Light(const _uint& iIndex);
+	_bool			Remove_AllLight();
 	HRESULT			Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 
 	/* For. ShaderTool */

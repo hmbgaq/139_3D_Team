@@ -23,6 +23,10 @@ HRESULT CBody_Infected_B::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	FAILED_CHECK(OptionSetting());
+
+	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
+
 	return S_OK;
 }
 
@@ -55,6 +59,21 @@ HRESULT CBody_Infected_B::Render_Shadow()
 	return S_OK;
 }
 
+void CBody_Infected_B::Update_DiscardMesh()
+{
+}
+
+
+HRESULT CBody_Infected_B::OptionSetting()
+{
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 9, 10, 11, 12, 13, 14, 15 }; // ÇÇ¶± 
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ATTACK] = { 4 }; // ¹«±â 
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = { 0, 1, 2, 5, 7 }; // °Ñ°¡Á× + ÀÇ»ó + ¹«±â + ±âÅ¸ 
+
+	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
+
+	return S_OK;
+}
 
 HRESULT CBody_Infected_B::Ready_Components()
 {
