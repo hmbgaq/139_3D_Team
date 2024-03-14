@@ -64,10 +64,12 @@ void CTransform::Move_On_Navigation(_vector vMove, CNavigation* pNavigation)
 
 		fHeight = pNavigation->Compute_Height(vPosition, &bIsGround);
 
-		if(isnan(fHeight))
-			_int i =0;
 
-		vPosition.m128_f32[1] = fHeight;
+		if (bIsGround == true)
+		{
+			vPosition.m128_f32[1] = fHeight;
+		}
+
 
 	}
 	Set_State(STATE_POSITION, vPosition);

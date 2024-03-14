@@ -14,7 +14,7 @@ private:
 	virtual ~CCell() = default;
 
 public:
-	const _float3*	Get_Point(POINT ePoint) const {
+	_float3*	Get_Point(POINT ePoint)  {
 		return &m_vPoints[ePoint];
 	}
 

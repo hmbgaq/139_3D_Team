@@ -203,41 +203,41 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
 		NULL_CHECK_RETURN(pMonster, E_FAIL);
 		pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
-		CNavigation* pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
-		pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
+		//CNavigation* pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
+		//pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
 	}
 	
-	{
-		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-		NULL_CHECK_RETURN(pMonster, E_FAIL);
-		pMonster->Set_Position(_float3(250.5, 0.f, 10.f));
-		CNavigation* pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
-		pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
-	}
-	
-	{ 
-		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
-		NULL_CHECK_RETURN(pMonster, E_FAIL);
-		pMonster->Set_Position(_float3(252.f, 0.f, 12.f));
-		CNavigation* pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
-		pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
-	}
-
-	{ 
-		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
-		NULL_CHECK_RETURN(pMonster, E_FAIL);
-		pMonster->Set_Position(_float3(255.5f, 0.f, 15.f));
-		CNavigation* pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
-		pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
-	}
-
-	{ 
-		CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-		NULL_CHECK_RETURN(pMonster, E_FAIL);
-		pMonster->Set_Position(_float3(250.5f, 0.f, 5.f ));
-		CNavigation* pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
-		pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
-	}
+	//{
+	//	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+	//	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//	pMonster->Set_Position(_float3(250.5, 0.f, 10.f));
+	//	CNavigation* pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
+	//	pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
+	//}
+	//
+	//{ 
+	//	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+	//	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//	pMonster->Set_Position(_float3(252.f, 0.f, 12.f));
+	//	CNavigation* pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
+	//	pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
+	//}
+	//
+	//{ 
+	//	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+	//	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//	pMonster->Set_Position(_float3(255.5f, 0.f, 15.f));
+	//	CNavigation* pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
+	//	pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
+	//}
+	//
+	//{ 
+	//	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+	//	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//	pMonster->Set_Position(_float3(250.5f, 0.f, 5.f ));
+	//	CNavigation* pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
+	//	pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
+	//}
 	
 	
 

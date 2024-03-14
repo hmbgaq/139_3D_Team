@@ -67,7 +67,7 @@ HRESULT CInfected::Initialize(void* pArg)
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CInfected>(this);
-		m_pActor->Set_State(new CInfected_SpawnGround());
+		m_pActor->Set_State(new CInfected_SpawnGround()); //! 배치했어 자기의 얼마만큼 y값이 루트모션으로 움직일지 - 
 	}
 
 	return S_OK;

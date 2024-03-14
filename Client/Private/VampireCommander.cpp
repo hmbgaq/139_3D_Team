@@ -72,7 +72,6 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	Search_Target(L"Layer_Player", 200.f);
 	if (m_bLookAt == true)
 	{
-		
 		_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(),Get_Target()->Get_Transform()->Get_Pos());
 		if (0 <= fAngle && fAngle <= 90)
 			Look_At_Target();

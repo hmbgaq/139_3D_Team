@@ -382,52 +382,27 @@ void CNavigation::AllSearchDelete_IsNan()
 
 void CNavigation::InRangeCellChange(CCell* pCell, _int ePoint, _float3 vSearchPos)
 {
-	_int iCellSize = (_int)m_Cells.size();
+	_float3 originPoint = *pCell->Get_Point(CCell::POINT(ePoint));
 
+	vector<pair<CCell*, CCell::POINT>> pointsToUpdate;
 
-	_float3 vPosition = *pCell->Get_Point(CCell::POINT(ePoint));
-
-	vector<CCell::POINT> vecPoints;
-	vector<_int> vecIndexs;
-
-	for (_int i = 0; i < iCellSize; ++i)
+	for (auto& pcell : m_Cells)
 	{
-		_float3 vPointA = *m_Cells[i]->Get_Point(CCell::POINT_A);
-		_float3 vPointB = *m_Cells[i]->Get_Point(CCell::POINT_B);
-		_float3 vPointC = *m_Cells[i]->Get_Point(CCell::POINT_C);
-
-		CCell* pTargetCell = m_Cells[i];
-
-		_float3 vPointBool = pTargetCell->Get_Compare_Point(&vPosition);
-
-		if (vPointBool.x == 1.f)
+		for (int i = 0; i < CCell::POINT_END; ++i)
 		{
-			vecPoints.push_back(CCell::POINT_A);
-			vecIndexs.push_back(i);
+			_float3* point = pcell->Get_Point(static_cast<CCell::POINT>(i));
 
-		}
-		else if (vPointBool.y == 1.f)
-		{
-			vecPoints.push_back(CCell::POINT_B);
-			vecIndexs.push_back(i);
-		}
-		else if (vPointBool.z == 1.f)
-		{
-			vecPoints.push_back(CCell::POINT_C);
-			vecIndexs.push_back(i);
+			if (XMVector3Equal(XMLoadFloat3(&originPoint), XMLoadFloat3(point)))
+				pointsToUpdate.push_back(make_pair(pcell, static_cast<CCell::POINT>(i)));
 		}
 	}
 
-	_int iVectorSize = (_int)vecPoints.size();
+	m_iSelcetPointsSize = pointsToUpdate.size();
 
-
-	for (_int i = 0; i < iVectorSize; ++i)
+	for (auto& iter : pointsToUpdate)
 	{
-		m_Cells[vecIndexs[i]]->Set_Point(vecPoints[i], vSearchPos);
+		iter.first->Set_Point(iter.second, vSearchPos);
 	}
-
-
-	Make_Neighbors();
 }
 
 _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
@@ -450,37 +425,38 @@ _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
 
 _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 {
-	_vector vPlane = {};
 
-	if (m_iCurrentIndex == -1)
-		return _float();
+	_float fResult = {};
 
-	CCell* pCell = m_Cells[m_iCurrentIndex];
+	CCell* pCell = m_Cells[m_iCurrentIndex]; /* 현재 어디 셀에 위치한지 리턴 */
 
-	_vector vA = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_A)), 1.f);
-	_vector vB = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_B)), 1.f);
-	_vector vC = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_C)), 1.f);
+	/* 평면을 나타내는 벡터 */
+	_vector vPlane = XMPlaneFromPoints(XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_A)), 1.f),
+		XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_B)), 1.f),
+		XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_C)), 1.f));
 
-	vPlane = XMPlaneFromPoints(vA, vB, vC);
+	/* 현재 위치 - 평면위의 한점이될 위치 : 아직 y값을 모르니 x, z 만 대입*/
+	_float fx = XMVectorGetX(vPosition);
+	_float fz = XMVectorGetZ(vPosition);
 
-	_float fA = XMVectorGetX(vPlane);
-	_float fB = XMVectorGetY(vPlane);
-	_float fC = XMVectorGetZ(vPlane);
-	_float fD = XMVectorGetW(vPlane);
+	/* ax + by + cz + D = 0 의 형태에서 y 구하기 */
+	/* D : 원점부터 평면까지 거리를 의미하는 정사영의 크기
+	 * D>0 : 평면 내부에 위치 //  D = 0 평면위에 위치 //  D<0 : 평면밖에 위치 */
+	_float fa = XMVectorGetX(vPlane);
+	_float fb = XMVectorGetY(vPlane);
+	_float fc = XMVectorGetZ(vPlane);
+	_float fd = XMVectorGetW(vPlane);
 
-	_float fX = vPosition.x;
-	_float fY = vPosition.y;
-	_float fZ = vPosition.z;
-
-	_float height = (-fA * fX) - (fC * fZ) - fD;
+	
+	fResult = (-fa * fx - fc * fz - fd) / fb;
 
 	if (pGround != nullptr)
 	{
-		// 플레이어의 Y값을 기준으로 땅에 있다고 판단
-		*pGround = (fY <= height);
+		*pGround = (vPosition.y < fResult);
 	}
 
-	return height;
+	return fResult;
+
 }
 
 HRESULT CNavigation::Make_Neighbors()

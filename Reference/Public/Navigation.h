@@ -45,12 +45,15 @@ public:
 	void					InRangeCellChange(class CCell* pCell, _int ePoint, _float3 vSearchPos);
 	_int					Get_SelectRangeCellIndex(class CGameObject* pTargetObject);
 	_float					Compute_Height(_float3 vPosition, _Out_ _bool* pGround);
-
+	
 
 private:
 	vector<class CCell*>			m_Cells;
 	static _float4x4				m_WorldMatrix;
 	_int							m_iCurrentIndex = { -1 };
+
+	_int							m_iCellIndex = { 0 };
+	_int							m_iSelcetPointsSize = { 0 };
 
 #ifdef _DEBUG
 private:
