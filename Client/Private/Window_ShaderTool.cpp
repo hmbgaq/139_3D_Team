@@ -274,7 +274,7 @@ void CWindow_ShaderTool::Compress_Directional_Light()
 		NewDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 
 		static float Direction[4] = { 0.10f, 0.20f, 0.30f, 0.0f };
-		ImGui::SliderFloat4("Direction", Direction, 0.0f, 1.0f);
+		ImGui::SliderFloat4("Direction", Direction, -1.0f, 1.0f);
 		NewDesc.vDirection = { Direction[0],Direction[1],Direction[2],Direction[3] };
 	}
 	else if (2 == LightType) /* PointLight*/
