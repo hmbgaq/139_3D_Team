@@ -9,7 +9,12 @@ void CInfected_KnockFrontLight_F_01_NEW::Initialize(CInfected* pActor)
 
 CState<CInfected>* CInfected_KnockFrontLight_F_01_NEW::Update(CInfected* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
 }
 
 void CInfected_KnockFrontLight_F_01_NEW::Release(CInfected* pActor)

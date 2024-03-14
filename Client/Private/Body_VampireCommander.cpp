@@ -79,14 +79,17 @@ HRESULT CBody_VampireCommander::Render_Shadow()
 
 void CBody_VampireCommander::OnCollisionEnter(CCollider* other)
 {
+	__super::OnCollisionEnter(other);
 }
 
 void CBody_VampireCommander::OnCollisionStay(CCollider* other)
 {
+	__super::OnCollisionStay(other);
 }
 
 void CBody_VampireCommander::OnCollisionExit(CCollider* other)
 {
+	__super::OnCollisionExit(other);
 }
 
 void CBody_VampireCommander::SetUp_Animation(_uint iAnimIndex)

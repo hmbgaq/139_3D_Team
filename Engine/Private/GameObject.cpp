@@ -1,7 +1,8 @@
 #include "GameObject.h"
 #include "GameInstance.h"
 #include "Transform.h"
-
+#include "Navigation.h"
+#include "Character.h"
 
 CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 	: m_pDevice(pDevice)
@@ -36,6 +37,8 @@ HRESULT CGameObject::Initialize_Prototype()
 HRESULT CGameObject::Initialize(void* pArg)
 {
 	m_bEnable = true;
+
+	m_iCurrnetLevel = m_pGameInstance->Get_NextLevel();
 
 	GAMEOBJECT_DESC		Desc = {};
 	
@@ -78,8 +81,6 @@ _bool CGameObject::Picking(_Out_ _float3* vPickedPos)
 	return false;
 }
 
-
-
 CComponent * CGameObject::Find_Component(const wstring & strComTag, const wstring & strPartTag)
 {
 	auto	iter = m_Components.find(strComTag);
@@ -98,6 +99,24 @@ void CGameObject::Set_Position(const _float3& vState)
 void CGameObject::Set_WorldMatrix(_float4x4 matrix)
 {
 	m_pTransformCom->Set_WorldMatrix(matrix);
+}
+
+HRESULT CGameObject::Set_InitPosition(const _float3& vPos)
+{
+	/* 위치 Set */
+	Set_Position(vPos);
+
+	/* 해당위치로 네비 셋팅 */
+	CNavigation* pNavi = dynamic_cast<CCharacter*>(this)->Get_Navigation();
+	NULL_CHECK_RETURN(pNavi, E_FAIL);
+
+
+	_int iCheckIndex = pNavi->Get_CurrentCellIndex(vPos);
+	if (iCheckIndex == -1)
+		this->Set_Dead(true);
+	pNavi->Set_CurrentIndex(iCheckIndex);
+
+	
 }
 
 void CGameObject::Set_Enable(_bool _Enable)
@@ -145,7 +164,10 @@ void CGameObject::Load_FromJson(const json& In_Json)
 
 CTransform* CGameObject::Get_Transform()
 {
-	return m_pTransformCom;
+	if (nullptr != m_pTransformCom)
+		return m_pTransformCom;
+	else
+		return nullptr;
 }
 
 _vector CGameObject::Get_Position_Vector()
@@ -208,6 +230,13 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring & strPrototy
 		pModel->Get_Owner()->Set_ModelHeight(pModel->Get_ModelHeight_WithModel());
 
 	}
+
+	//if (typeid(*pComponent) == typeid(CNavigation))
+	//{
+	//	CNavigation* pNavigation = dynamic_cast<CNavigation*>(pComponent);
+	//
+	//	pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(this));
+	//}
 
 	return S_OK;
 }

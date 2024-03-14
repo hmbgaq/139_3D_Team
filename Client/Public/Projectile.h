@@ -12,6 +12,8 @@ class CModel;
 END
 
 
+#define MAX_SEARCH 20.f
+
 BEGIN(Client)
 
 class CProjectile abstract : public CGameObject
@@ -45,6 +47,13 @@ public:
 	virtual void	OnCollisionStay(CCollider* other)	PURE;
 	virtual void	OnCollisionExit(CCollider* other)	PURE;
 
+public:
+	void Search_Target(const wstring& strLayerTag, const _float fSearchDistance = MAX_SEARCH);
+	CCharacter* Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance = MAX_SEARCH);
+	_float Calc_Distance(CGameObject* pTarget);
+	_float Calc_Distance(_float3 vTargetPos);
+	void Look_At_Target();
+
 
 protected:
 	virtual HRESULT Ready_Components() PURE;
@@ -62,6 +71,12 @@ protected:
 	_uint		m_iDamage = { 0 };
 	_float		m_fForce = { 0.f };
 	_bool		m_bUse = { true };
+
+protected:
+	_float		m_fLifeTime = { 10.f };
+
+protected:
+	class CCharacter* m_pTarget = { nullptr };
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

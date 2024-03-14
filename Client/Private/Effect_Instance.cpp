@@ -87,8 +87,7 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 				// 디졸브 시작
 				m_tVoidDesc.bDissolve = TRUE;
 				if (m_tVoidDesc.bDissolve)
-				{
-					
+				{			
 					m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
 				}
 
@@ -127,7 +126,7 @@ void CEffect_Instance::Late_Tick(_float fTimeDelta)
 		{
 			__super::Update_PivotMat();
 
-			//Compute_CamDistance();
+			Compute_CamDistance();
 
 			//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_EFFECT, this));
 			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this), );
@@ -200,6 +199,85 @@ void CEffect_Instance::End_Effect()
 	}
 }
 
+HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
+{
+	_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
+
+	wstring strDiffuse	= TEXT("Diffuse");
+	wstring strNormal	= TEXT("Normal");
+	wstring strMask		= TEXT("Mask");
+	wstring strNoise	= TEXT("Noise");
+	wstring strSprite	= TEXT("Sprite");
+
+
+	if (strProtoTextureTag.find(strDiffuse) != string::npos)	// 문자열 찾음
+	{
+		// 디퓨즈 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 디퓨즈폴더 -> 피 디퓨즈폴더로 변경하고싶을 떄)
+		if (nullptr != m_pTextureCom[TEXTURE_DIFFUSE])
+		{
+			Remove_Component(TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]));
+			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
+		}
+	}
+	else if (strProtoTextureTag.find(strNormal) != string::npos)
+	{
+		// 노말 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 노말폴더 -> 피 노말폴더로 변경하고싶을 떄)
+		if (nullptr != m_pTextureCom[TEXTURE_NORAML])
+		{
+			Remove_Component(TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML]));
+			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
+		}
+	}
+	else if (strProtoTextureTag.find(strMask) != string::npos)
+	{
+		// 마스크 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 마스크폴더 -> 연기 마스크폴더로 변경하고싶을 떄)
+		if (nullptr != m_pTextureCom[TEXTURE_MASK])
+		{
+			Remove_Component(TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]));
+			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
+		}
+	}
+	else if (strProtoTextureTag.find(strNoise) != string::npos)
+	{
+		// 노이즈 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 노이즈폴더 -> 불 노이즈폴더로 변경하고싶을 떄)
+		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
+		{
+			Remove_Component(TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]));
+			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
+		}
+	}
+	else if (strProtoTextureTag.find(strSprite) != string::npos)
+	{
+		// 스프라이트 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 스프라이트폴더 -> 연기 스프라이트폴더로 변경하고싶을 떄)
+		if (nullptr != m_pTextureCom[TEXTURE_SPRITE])
+		{
+			Remove_Component(TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE]));
+			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+		}
+	}
+
+
+	return S_OK;
+}
+
+HRESULT CEffect_Instance::Remove_TextureCom(TEXTURE eTexture)
+{
+	wstring strTexureComTag = TEXT("");
+
+	if(TEXTURE_DIFFUSE == eTexture)
+		strTexureComTag = TEXT("Com_Diffuse");
+	else if(TEXTURE_NORAML)
+		strTexureComTag = TEXT("Com_Normal");
+	else if (TEXTURE_MASK)
+		strTexureComTag = TEXT("Com_Mask");
+	else if (TEXTURE_NOISE)
+		strTexureComTag = TEXT("Com_Noise");
+	else if (TEXTURE_SPRITE)
+		strTexureComTag = TEXT("Com_Sprite");
+
+	return Remove_Component(strTexureComTag, reinterpret_cast<CComponent**>(&m_pTextureCom[eTexture]));
+}
+
 _bool CEffect_Instance::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
@@ -215,22 +293,11 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 void CEffect_Instance::Load_FromJson(const json& In_Json)
 {
 
-	_float4 vTempFloat4 = {};
-	_float fTemp = 0.f;
-
 	__super::Load_FromJson(In_Json);
 
 	/* Mesh */
 	m_tInstanceDesc.bUseCustomTex	= In_Json["bUseCustomTex"];
 
-	/* Bloom */ 
-	if (In_Json.contains("vBloomColor"))	// 새로 저장하고 지우기
-		CJson_Utility::Load_Float4(In_Json["vBloomColor"], vTempFloat4);
-
-
-
-	if (In_Json.contains("vBloomColor"))	// 새로 저장하고 지우기
-		fTemp = In_Json["fRimPower"];
 
 }
 
@@ -280,25 +347,25 @@ HRESULT CEffect_Instance::Ready_Components()
 
 	/* For.Com_Texture */
 	{
-		if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE],
-			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
-			return E_FAIL;
+		// Diffuse
+		FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
 
+
+		// Normal
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NORAML])
+			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NORAML], TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
+
+		// Mask
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
-		{
-			/* For.Com_Mask */
-			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
-				TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
-				return E_FAIL;
-		}
+			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK], TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
 
+		// Noise
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
-		{
-			/* For.Com_Noise */
-			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
-				TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
-				return E_FAIL;
-		}
+			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
+
+		// Sprite
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])
+			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 	}
 
 
@@ -321,19 +388,21 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
 
-	if (TRUE == m_tInstanceDesc.bUseCustomTex)
+	if (TRUE == m_tInstanceDesc.bUseCustomTex)	// 텍스처를 내가 정해줄거면 
 	{
+
+		// 기본은 디퓨즈만 바인드
 		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_DIFFUSE]));
 
-		if (nullptr != m_pTextureCom[TEXTURE_MASK])
-		{
+		if (nullptr != m_pTextureCom[TEXTURE_NORAML])	// 노말 텍스처 있으면 바인드
+			FAILED_CHECK(m_pTextureCom[TEXTURE_NORAML]->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NORAML]));
+
+		if (nullptr != m_pTextureCom[TEXTURE_MASK])		// 마스크 텍스처 있으면 바인드
 			FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tVoidDesc.iTextureIndex[TEXTURE_MASK]));
-			//FAILED_CHECK(m_pTextureCom[TEXTURE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", m_tInstanceDesc.iTextureIndex[TEXTURE_MASK]));
-		}
-		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
-		{
+
+		if (nullptr != m_pTextureCom[TEXTURE_NOISE])	// 노이즈 텍스처 있으면 바인드
 			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NOISE]));
-		}
+
 	}
 
 	/* UV ============================================================================================ */
@@ -346,21 +415,19 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
 
 	/* Camera ============================================================================================ */
-	_vector vCamDirection = m_pGameInstance->Get_TransformMatrixInverse(CPipeLine::D3DTS_VIEW).r[2];
-	vCamDirection = XMVector4Normalize(vCamDirection);
-	_float4 vCamDirectionFloat4 = {};
-	XMStoreFloat4(&vCamDirectionFloat4, vCamDirection);
-
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat4, sizeof(_float4)));
+	_float3 vCamDirectionFloat3 = m_pGameInstance->Get_CamDirection();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat3, sizeof(_float3)));
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
 
 	/* Dissolve */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tVoidDesc.fDissolveAmount, sizeof(_float)));
+
 
 	/* Distortion */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float)));

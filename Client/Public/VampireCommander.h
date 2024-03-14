@@ -20,8 +20,8 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-
-
+public:
+	_float Ratation_Target_Test();
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
@@ -37,6 +37,9 @@ public:
 	void Set_Actor(CActor<CVampireCommander>* _pActor) { m_pActor = _pActor; }
 private:
 	CActor<CVampireCommander>* m_pActor = { nullptr };
+
+public:
+	_bool m_bTurn = true;
 
 public:
 	/* 원형객체를 생성한다. */

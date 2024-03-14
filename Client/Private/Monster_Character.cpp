@@ -46,6 +46,7 @@ HRESULT CMonster_Character::Render()
 	return S_OK;
 }
 
+
 void CMonster_Character::Search_Target()
 {
 	__super::Search_Target(LAYER_PLAYER);

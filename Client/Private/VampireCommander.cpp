@@ -9,9 +9,15 @@
 #include "VampireCommander_HitLeft.h"
 #include "VampireCommander_HitRight.h"
 #include "VampireCommander_CutScene.h"
+#include "VampireCommander_TurnL90.h"
+#include "VampireCommander_TurnL180.h"
+#include "VampireCommander_TurnR90.h"
+#include "VampireCommander_TurnR180.h"
+#include "VampireCommander_Stun_Start.h"
 #include "UI_Manager.h"
 
 #include "Data_Manager.h"
+#include "Player.h"
 
 CVampireCommander::CVampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
@@ -46,7 +52,6 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 		m_pActor = new CActor<CVampireCommander>(this);
 		m_pActor->Set_State(new CVampireCommander_Spawn1);
 	}
-
 	//HP
 	m_iMaxHp = 1000;
 	m_iHp = m_iMaxHp;
@@ -56,6 +61,8 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 
 	// Ready BossHUDBar
 	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
+
+	m_vWeaknessPoint_Local = _float3(0.f, 2.f, 0.f);
 
 	return S_OK;
 }
@@ -69,16 +76,14 @@ void CVampireCommander::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	
+	Search_Target(L"Layer_Player",200.f);
+
 	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
-	Search_Target(L"Layer_Player");
-	if (m_bLookAt == true)
-	{
-		Look_At_Target();
-		m_bLookAt = false;
-	}
+	cout << "introBossHP:" << m_iHp << endl;
 }
 
 void CVampireCommander::Late_Tick(_float fTimeDelta)
@@ -92,6 +97,20 @@ HRESULT CVampireCommander::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+_float CVampireCommander::Ratation_Target_Test()
+{
+	_vector vPlayerPos = XMVector3Normalize(CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION));
+	_vector vMonsterPos = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+
+	//시선벡터 계산 
+	_float dotProduct = XMVectorGetX(XMVector3Dot(vPlayerPos, vMonsterPos));
+	_float Radian = acosf(dotProduct);
+	_float Degree = XMConvertToRadians(Radian);
+
+	return Degree;
+
 }
 
 HRESULT CVampireCommander::Ready_Components()
@@ -157,7 +176,7 @@ void CVampireCommander::Hitted_Front(Power ePower)
 void CVampireCommander::Hitted_Dead(Power ePower)
 {
 	//stun이 걸리고 그다음에 처형이 있기 때문에 그냥 때려서는 죽일수 없다.
-	m_pActor->Set_State(new CVampireCommander_CutScene);
+	m_pActor->Set_State(new CVampireCommander_Stun_Start);
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 	//pPlayer->Get_Actor()->Set_State(new CPlayer_) // 여기서 플레이어를 강제로 처형 애니메이션으로 돌려 버려야 함 ! 
 }

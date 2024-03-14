@@ -107,20 +107,16 @@ HRESULT CInfected::Ready_Components()
 
 void CInfected::Hitted_Left(Power ePower)
 {
-	cout << "Hitted_Left" << endl;
 	/* 무기 강도 */
 	switch (ePower)
 	{
 	case Engine::Light:
-		cout << "Light " << endl;
 		m_pActor->Set_State(new CInfected_Scared_03());
 		break;
 	case Engine::Medium:
-		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
 		break;
 	case Engine::Heavy:
-		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_FL_01_NEW());
 		break;
 	default:
@@ -131,19 +127,15 @@ void CInfected::Hitted_Left(Power ePower)
 
 void CInfected::Hitted_Right(Power ePower)
 {
-	cout << "Hitted_Right" << endl;
 	switch (ePower)
 	{
 	case Engine::Light:
-		cout << "Light " << endl;
 		m_pActor->Set_State(new CInfected_Scared_02());
 		break;
 	case Engine::Medium:
-		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
 		break;
 	case Engine::Heavy:
-		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_FR_01_NEW());
 		break;
 	default:
@@ -154,19 +146,15 @@ void CInfected::Hitted_Right(Power ePower)
 
 void CInfected::Hitted_Front(Power ePower)
 {
-	cout << "Hitted_Front" << endl;
 	switch (ePower)
 	{
 	case Engine::Light:
-		cout << "Light " << endl;
 		m_pActor->Set_State(new CInfected_HitNormalToStun_01_NEW());
 		break;
 	case Engine::Medium:
-		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
 		break;
 	case Engine::Heavy:
-		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_F_01_NEW());
 		break;
 	default:
@@ -177,7 +165,6 @@ void CInfected::Hitted_Front(Power ePower)
 
 void CInfected::Hitted_Knock(_bool bIsCannonball)
 {
-	cout << "Hitted_Knock" << endl;
 	if (bIsCannonball)
 	{
 		m_pActor->Set_State(new CInfected_KnockFrontCannonball_F_01_TEMP());
@@ -190,7 +177,6 @@ void CInfected::Hitted_Knock(_bool bIsCannonball)
 
 void CInfected::Hitted_Dead(Power ePower)
 {
-	cout << "Hitted_Dead" << endl;
 	switch (ePower)
 	{
 	case Engine::Light:

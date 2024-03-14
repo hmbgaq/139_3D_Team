@@ -29,6 +29,7 @@
 #include "Monster.h"
 #include "Screamer.h"  
 #include "InstanceMonster.h"
+#include "VampireCommander.h"
 #pragma endregion
 
 #pragma region Effect_Test
@@ -65,21 +66,6 @@ HRESULT CLevel_IntroBoss::Initialize()
 
 void CLevel_IntroBoss::Tick(_float fTimeDelta)
 {
-	if (false == m_bPlayerStartRotate)
-	{
-		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-
-		pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
-
-		CSpringCamera* pSpringCamera = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-
-		_matrix RotationMatrix = XMMatrixRotationRollPitchYaw(XMConvertToRadians(0.f), XMConvertToRadians(180.f), XMConvertToRadians(0.f));
-
-		pSpringCamera->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
-		//pSpringCamera->StartCameraRotation(RotationMatrix);
-
-		m_bPlayerStartRotate = true;
-	}
 
 }
 
@@ -163,7 +149,13 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Camera(const wstring& strLayerTag)
 
 HRESULT CLevel_IntroBoss::Ready_Layer_Player(const wstring& strLayerTag, void* pArg)
 {
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
+
+	pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
+	CNavigation* pNavigation = pPlayer->Get_Navigation();
+
+	pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
+
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Rentier"), pArg));
 
 
@@ -204,6 +196,9 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Monster(const wstring& strLayerTag, void* 
 		pMonster->Set_Position(_float3(60.0f, 0.f, 55.f));
 		pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
 
+		CNavigation* pVampireNavi = dynamic_cast<CVampireCommander*>(pMonster)->Get_Navigation();
+
+		pVampireNavi->Set_CurrentIndex(pVampireNavi->Get_SelectRangeCellIndex(pMonster));
 	}
 
 	return S_OK;

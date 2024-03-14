@@ -54,6 +54,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
 
+	m_iHp = 100;
+
 // 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 // 	{
 		m_pActor = new CActor<CPlayer>(this);
@@ -78,7 +80,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pPhysXCollider->Add_PhysXActorAtScene();
 
 	CData_Manager::GetInstance()->Set_Player(this);
-
+	m_pGameInstance->Set_Player(this);
 	/* Temp - 맵에 맞게 위치 조정한값*/
 	//m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, XMVectorSet(-26.f, 0.f, -6.f, 1.f));
 
@@ -96,12 +98,15 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pActor)
+	if (m_pActor && m_iCurrnetLevel != ECast(LEVEL_TOOL))
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
 
+	CData_Manager::GetInstance()->Set_CurHP(m_iHp);
 
+	if (m_pGameInstance->Key_Down(DIK_C))
+		m_iHp = 100;
 	//_float3 vPos = Get_Position();
 
 	//PxControllerFilters Filters;
@@ -130,12 +135,20 @@ void CPlayer::Tick(_float fTimeDelta)
 	//	Set_Position(vResult);
 	//}
 	
+	if(m_pNavigationCom != nullptr)
+		m_pNavigationCom->Update(XMMatrixIdentity());
 	
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	#ifdef _DEBUG
+	
+		//if(m_pNavigationCom != nullptr)
+        //m_pGameInstance->Add_DebugRender(m_pNavigationCom);
+    #endif // _DEBUG
 }
 	
 HRESULT CPlayer::Render()
@@ -146,10 +159,22 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
+void CPlayer::Set_Navigation(CNavigation* pNavigation)
+{
+	if(m_pNavigationCom != nullptr)
+		Safe_Release(m_pNavigationCom);
+
+	m_pNavigationCom = pNavigation;
+	m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
+	Safe_AddRef(pNavigation);
+
+	
+}
+
 void CPlayer::Aim_Walk(_float fTimeDelta)
 {
 	_uint AnimIndex;
-	_uint ReversedAnimIndex;
+	//_uint ReversedAnimIndex;
 
 
 	if (m_pGameInstance->Key_Pressing(DIK_W))
@@ -278,9 +303,30 @@ void CPlayer::Activate_ShootingReaction()
 	m_pBody->Activate_ShootingReaction();
 }
 
-void CPlayer::Search_Target()
+void CPlayer::Search_Target(_float fMaxDistance)
 {
-	__super::Search_Target(LAYER_MONSTER);
+	__super::Search_Target(LAYER_BOSS, fMaxDistance);
+	__super::Search_Target(LAYER_MONSTER, fMaxDistance);
+}
+
+void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCount)
+{
+	if (nullptr == m_pTarget || true == m_pTarget->Is_Dead() || false == m_pTarget->Get_Enable())
+	{
+		Search_Target(fMaxDistance);
+	}
+
+	//Search_Target(fMaxDistance);
+
+	if (m_pTarget)
+	{
+		Look_At_Target();
+		for (_uint i = 0; i < iCount; ++i) 
+		{
+			Move_In_Proportion_To_Enemy(fTimeDelta);
+		}
+		
+	}
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -296,20 +342,23 @@ HRESULT CPlayer::Ready_PartObjects()
 	//if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
 	//{
 		
-		CWeapon::WEAPON_DESC		WeaponDesc = {};
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, TEXT("Weapon_Punch_L")));
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch_R")));
+	CWeapon::WEAPON_DESC		WeaponDesc = {};
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, WEAPON_PUNCH_L));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, WEAPON_PUNCH_R));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELWinchester"), "RightHandIK", WeaponDesc, WEAPON_WINCHESTER));
 
 	//}
 
-	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_Punch_L"));
-	m_pWeapon_Punch_L->Set_Enable(true);
+	CWeapon* m_pWeapon_Punch_L = Get_Weapon(WEAPON_PUNCH_L);
+	m_pWeapon_Punch_L->Set_Enable(false);
 	
-	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_Punch_R"));
-	m_pWeapon_Punch_R->Set_Enable(true);
+	CWeapon* m_pWeapon_Punch_R = Get_Weapon(WEAPON_PUNCH_R);
+	m_pWeapon_Punch_R->Set_Enable(false);
+	
+	CWeapon* m_pWeapon_Winchester = Get_Weapon(WEAPON_WINCHESTER);
+	m_pWeapon_Winchester->Set_Enable(false);
 
-
-
+	
 	
 	return S_OK;
 }
@@ -441,5 +490,7 @@ void CPlayer::Free()
 	{
 		Safe_Delete(m_pActor);
 	}
+
+
 	
 }

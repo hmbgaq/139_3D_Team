@@ -5,6 +5,8 @@
 
 BEGIN(Client)
 
+class CEffect_Trail;
+
 class CEffect final : public CGameObject
 {
 public:
@@ -77,6 +79,12 @@ public:
 	void	ReSet_Effect();
 	void	End_Effect();
 
+
+public:
+	HRESULT			Ready_Trail(_uint iLevelIndex, string strFileName);				
+	void			Set_Trail(CEffect_Trail* pTrail) { m_pTrail = pTrail; };	// 툴 용
+	CEffect_Trail*	Get_Trail() { return m_pTrail; }							// 툴 용
+
 public:
 	map<const wstring, class CGameObject*>* Get_PartObjects() { return &m_PartObjects; }
 	CGameObject* Get_FirstPartObject() { return m_PartObjects.begin()->second; }
@@ -98,6 +106,10 @@ private:
 	EFFECT_DESC		m_tEffectDesc = {};
 
 	map<const wstring, class CGameObject*>		m_PartObjects;
+
+
+private:
+	CEffect_Trail* m_pTrail = { nullptr };
 
 
 public:

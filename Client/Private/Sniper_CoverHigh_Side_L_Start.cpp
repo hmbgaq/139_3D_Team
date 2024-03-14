@@ -1,4 +1,6 @@
-#include "..\Public\Sniper_CoverHigh_Side_L_Start.h"
+#include "stdafx.h"
+#include "Sniper_CoverHigh_Side_L_AimPose.h"
+#include "Sniper_CoverHigh_Side_L_Start.h"
 
 void CSniper_CoverHigh_Side_L_Start::Initialize(CBandit_Sniper* pActor)
 {
@@ -9,7 +11,12 @@ void CSniper_CoverHigh_Side_L_Start::Initialize(CBandit_Sniper* pActor)
 
 CState<CBandit_Sniper>* CSniper_CoverHigh_Side_L_Start::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return new CSniper_CoverHigh_Side_L_AimPose();
+	}
+	return nullptr;
+
 }
 
 void CSniper_CoverHigh_Side_L_Start::Release(CBandit_Sniper* pActor)

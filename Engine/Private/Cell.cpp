@@ -11,6 +11,14 @@ CCell::CCell(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	Safe_AddRef(m_pContext);
 }
 
+_int CCell::Get_NeighborIndex(LINE eLine)
+{
+	if (eLine < 0 || eLine >= LINE_END)
+		return -1;
+
+	return m_iNeighbors[eLine];
+}
+
 void CCell::Set_Point(POINT ePoint, _float3 vPoint)
 {
 	m_vPoints[ePoint] = vPoint;
@@ -83,6 +91,41 @@ _float3 CCell::Get_Compare_Point(const _float3* pPoint)
 	}
 
 	return vPointBool;
+}
+
+_bool CCell::Is_Out(_fvector vWorldPos, _fvector vLook, _fmatrix WorldMatrix, _int* pNeighborIndex, _float4* pSliding)
+{
+	/* 현재셀의 밖으로 나가는 함수 */
+	for (size_t i = 0; i < LINE_END; i++)
+	{
+		_vector      vSour = XMVector3Normalize(XMVectorSetW(vWorldPos - XMLoadFloat3(&m_vPoints[i]), 0.f)); /* 현재지점에서 라인의 끝점까지의 벡터 */
+		_vector      vDest = XMVector3Normalize(XMLoadFloat3(&m_vNormals[i])); /* 라인이 가리키는 노말값 */
+
+		_float fRadian = XMVectorGetX(XMVector3Dot(vSour, vDest)); /* Src와 Dst사이의 각도 */
+		if (0.f <= fRadian)
+		{
+			/* 해당하는 라인이 이웃셀을 찾았다. - 이웃셀의 인덱스를 집어넣음 */
+			*pNeighborIndex = m_iNeighbors[i];
+
+			if (nullptr != pSliding)
+			{
+				_vector vSliding = {};
+				/* 현재지점에서 해당라인의 노멀벡터에 수직이면서 플레이어가 이동하는 방향에 따라 방향을 갖는 벡터
+				 * 법선이 단위벡터일경우, V - (V*N)N ... * = 내적 */
+				vSliding = XMVector3Normalize(XMVectorSet(m_vNormals[i].z, 0.f, m_vNormals[i].x * -1.f, 0.f));
+
+				/* 0~ pi/2 는 부호가 반대라 일단 반대로 구하고 나머지에 -1 곱하기 */
+				if (XMVectorGetX(XMVector3Dot(vSliding, vLook)) >= XMConvertToRadians(0.f) && XMVectorGetX(XMVector3Dot(vSliding, vLook)) <= XMConvertToRadians(90.f))
+					XMStoreFloat4(pSliding, vSliding);
+				else
+					XMStoreFloat4(pSliding, -1.f * vSliding);
+			}
+			return true;
+		}
+	}
+
+	return false;
+
 }
 
 HRESULT CCell::Initialize(const _float3 * pPoints, _uint iIndex)
@@ -178,7 +221,7 @@ _bool CCell::isIn(_fvector vPosition, _fmatrix WorldMatrix, _int* pNeighborIndex
 
 _bool CCell::isInRange(_fvector vPosition, _fmatrix WorldMatrix)
 {
-	for (size_t i = 0; i < LINE_END; ++i)
+	for (_int i = 0; i < ECast(LINE_END); ++i)
 	{
 		_vector vStartPoint = XMVector3TransformCoord(XMLoadFloat3(&m_vPoints[i]), WorldMatrix);
 		_vector vNormal = XMVector3TransformNormal(XMLoadFloat3(&m_vNormals[i]), WorldMatrix);

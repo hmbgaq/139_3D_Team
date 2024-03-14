@@ -157,8 +157,6 @@ HRESULT CRenderer::Render_NonLight()
 
 HRESULT CRenderer::Render_NonBlend()
 {
-	/* Diffuse + Normal */
-	/* 기존에 셋팅되어있던 백버퍼를 빼내고 Diffuse와 Normal을 장치에 바인딩한다. */
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects")));
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_NONBLEND])
@@ -370,8 +368,8 @@ HRESULT CRenderer::Render_EffectBloomBlur()
 {
 	/* MRT_Effect_Blur -> Target_Effect_RR_Blur로 결과 나옴 */
 	Render_Blur(TEXT("Target_Effect_RimBloom"), TEXT("MRT_Effect_Blur"), 
-				ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER),
-				ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER),
+				ECast(BLUR_SHADER::BLUR_HORIZON_HIGH),
+				ECast(BLUR_SHADER::BLUR_VERTICAL_HIGH),
 				ECast(BLUR_SHADER::BLUR_UP_ADD), true);
 
 	return S_OK;
@@ -581,6 +579,7 @@ HRESULT CRenderer::Render_Effect_Final()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RB_BlurActive"), m_pShader_PostProcess, "g_RimBlur_Target"));
 
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Diffuse"), m_pShader_PostProcess, "g_Effect_Target"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Solid"), m_pShader_PostProcess, "g_Effect_Solid"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_RR_Blur"), m_pShader_PostProcess, "g_EffectBlur_Target"));
 
 	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_EFFECTMIX)));
@@ -1003,10 +1002,12 @@ HRESULT CRenderer::Create_RenderTarget()
 
 	/* MRT_Effect - clear color가 111의 흰색일경우 이펙트에 묻어나와서 무조건 000 으로 클리어해야함  */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Diffuse"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Solid"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));	/* 해골 안투명하게 */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Normal"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Depth"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))); /* 깊이버퍼 그 깊이 */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_RimBloom"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))); /* 넣은거 알아서 블러되도록 처리함 */
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Diffuse")));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Solid")));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Normal")));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Depth"))); /* 카메라에서 본 깊이버퍼 */
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_RimBloom")));

@@ -162,7 +162,7 @@ _bool CChannel::Is_Inputable(_float fCurrentTrackPosition, _uint _iIndex)
 		iIndex = m_iNumKeyFrames - 1;
 	}
 
-	KEYFRAME	InputableKeyFrame = m_KeyFrames[_iIndex];
+	KEYFRAME	InputableKeyFrame = m_KeyFrames[iIndex];
 	if (fCurrentTrackPosition >= InputableKeyFrame.fTrackPosition)
 	{
 		return true;

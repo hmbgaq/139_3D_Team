@@ -78,6 +78,8 @@ public:
 	void Set_WorldMatrix(_fmatrix WorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix); }
 	void Set_Scaling(_float fScaleX, _float fScaleY, _float fScaleZ);
 	void Set_Speed(_float fSpeed) { m_fSpeedPerSec = fSpeed; }
+	_float Get_Speed() { return m_fSpeedPerSec; }
+
 
 	void Set_Position(const _float3& vState)
 	{
@@ -101,11 +103,14 @@ public:
 		return vPos;
 	}
 
+	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
+
 public:
 	virtual HRESULT Initialize_Prototype(_float fSpeedPerSec, _float fRotationPerSec);	
 
 public:
 	void	Move_On_Navigation(_vector vMove, class CNavigation* pNavigation = nullptr);
+	void	Move_On_Navigation_ForSliding(_vector vMove, const _float fTimeDelta, class CNavigation* pNavigation = nullptr);
 
 	void	Go_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 	void	Go_Straight_L45(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
@@ -121,6 +126,8 @@ public:
 	void	Rotation(_fvector vAxis, _float fRadian);
 	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta);
 
+	_bool Rotation_LerpTest(_float fRadian, _float fTimeDelta);
+
 	void	Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare = 0.1f);
 	void	Look_At(_fvector vTargetPos);
 	void	Look_At_OnLand(_fvector vTargetPos);
@@ -130,7 +137,27 @@ public:
 	_vector Calc_Look_Dir(_fvector vTargetPos);
 	_float3 Calc_Look_Dir(_float3 vTargetPos);
 
+	/* ---------------- 소영 추가사항 ---------------- */
+	void Move_Position(_float4 vDir, _float fSpeed, _float fTimeDelta); /* Dir쪽으로 speed만큼 계속해서 이동하는 함수 */
 
+	_vector Get_Right() { return Get_State(CTransform::STATE::STATE_RIGHT); }
+	_vector Get_Up() { return Get_State(CTransform::STATE::STATE_UP); }
+	_vector Get_Pos() { return Get_State(CTransform::STATE::STATE_POSITION); }
+	_vector Get_Look() { return Get_State(CTransform::STATE::STATE_LOOK); }
+	
+	void Set_Right(const _fvector vState) { Set_State(STATE_RIGHT, vState); }
+	void Set_Right(_float _x, _float _y, _float _z) { _float4 Temp; Temp.x = _x; Temp.y = _y; Temp.z = _z; Temp.w = 0.f; Set_State(STATE_RIGHT, Temp); }
+	void Set_Up(const _fvector vState) { Set_State(STATE_UP, vState); }
+	void Set_Up(_float _x, _float _y, _float _z) { _float4 Temp; Temp.x = _x; Temp.y = _y; Temp.z = _z; Temp.w = 0.f; Set_State(STATE_UP, Temp); }
+	void Set_Look(const _fvector vState) { Set_State(STATE_LOOK, vState); }
+	void Set_Look(_float _x, _float _y, _float _z) { _float4 Temp; Temp.x = _x; Temp.y = _y; Temp.z = _z; Temp.w = 0.f; Set_State(STATE_LOOK, Temp); }
+	void Set_Pos(const _fvector vState) { Set_State(STATE_POSITION, vState); }
+	void Set_Pos(const _float3 vState) { _float4 Temp; Temp.x = vState.x; Temp.y = vState.y; Temp.z = vState.z;	Temp.w = 1.f; Set_State(STATE_POSITION, Temp); }
+	void Set_Pos(_float _x, _float _y, _float _z) { _float4 Temp; Temp.x = _x; Temp.y = _y; Temp.z = _z; Temp.w = 1.f; Set_State(STATE_POSITION, Temp); }
+
+	void RotationXaxis(_float fTimeDelta) { Turn(XMVectorSet(1.f, 0.f, 0.f, 0.f), fTimeDelta); }
+	void RotationYaxis(_float fTimeDelta) { Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta); }
+	void RotationZaxis(_float fTimeDelta) { Turn(XMVectorSet(0.f, 0.f, 1.f, 0.f), fTimeDelta); }
 
 public:
 	void		Add_RootBone_Position(const _float3& vPos, class CNavigation* pNavigation = nullptr);

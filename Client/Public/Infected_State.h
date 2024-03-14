@@ -35,6 +35,7 @@ public:		//개별 동작 상태 집합
 	CState<CInfected>* Run(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CInfected>* Attack(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CInfected>* Dodge(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CInfected>* Patrol(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 protected:
 	CGameInstance* m_pGameInstance = { nullptr };

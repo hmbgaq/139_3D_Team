@@ -198,7 +198,7 @@ HRESULT CLevel_Intro::Ready_Layer_Effect(const wstring& strLayerTag)
 HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg)
 {
 	CGameObject* pMonster = { nullptr };
-
+	CNavigation* pMonsterNavigation = { nullptr };
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Assassin")));
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected")));
 // 	for (int i = 0; i < 100; ++i)
@@ -209,25 +209,29 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg
 
 	{
 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_VampireCommander"));
-	
 		if (nullptr == pMonster)	return E_FAIL;
+
 		pMonster->Set_Position(_float3(250.66f, 0.f, 7.38f));
+		pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
+		pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
 	}
 
 	{
 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-
 		if (nullptr == pMonster)	return E_FAIL;
 
 		pMonster->Set_Position(_float3(250.66f, 0.f, 9.38f));
+		pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
+		pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
 	}
 
 	{
 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-
 		if (nullptr == pMonster)	return E_FAIL;
 		
 		pMonster->Set_Position(_float3(250.66f, 0.f, 11.38f));
+		pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
+		pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
 	}
 
 	//CGameObject::GAMEOBJECT_DESC GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
@@ -464,7 +468,7 @@ HRESULT CLevel_Intro::Ready_UI()
 
 	//FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
 
-	FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
+	//FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
 
 	return S_OK;
 }

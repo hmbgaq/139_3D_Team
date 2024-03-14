@@ -28,6 +28,18 @@ HRESULT CCharacter::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	CNavigation::NAVI_DESC		NaviDesc = {};
+	NaviDesc.iCurrentIndex = 0;
+
+	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
+	
+	if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
+	m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
+	
+
 	FAILED_CHECK(Ready_Components());
 
 	FAILED_CHECK(Ready_PartObjects());
@@ -56,6 +68,8 @@ void CCharacter::Priority_Tick(_float fTimeDelta)
 		if (nullptr != Pair.second)
 			Pair.second->Priority_Tick(fTimeDelta);
 	}
+
+	Set_WeaknessPoint();
 }
 
 void CCharacter::Tick(_float fTimeDelta)
@@ -90,6 +104,7 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
 
+	Set_WeaknessPoint();
 }
 
 HRESULT CCharacter::Render()
@@ -349,7 +364,7 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 	//	return Hit_Type::None;
 	//}
 
-	//Get_Damaged(iDamage);	
+	Get_Damaged(iDamage);	
 	//Set_InvincibleTime(fInvincibleTime);
 	Add_Force(vDir, fForce);
 	m_pTransformCom->Look_At_Direction(vDir * -1);
@@ -399,12 +414,61 @@ void CCharacter::Look_At_Target()
 	m_pTransformCom->Look_At_OnLand(vTargetPos);
 }
 
-void CCharacter::Search_Target(const wstring& strLayerTag)
+void CCharacter::Look_At_Target_Lerp(_float fTimeDelta)
+{
+	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
+		return;
+
+	_fvector vTargetPos = m_pTarget->Get_Position_Vector();
+	m_pTransformCom->Look_At_Lerp(vTargetPos, fTimeDelta);
+}
+
+void CCharacter::Search_Target(const wstring& strLayerTag, const _float fSearchDistance)
 {
 	if (nullptr != m_pTarget)
 		return;
 
-	m_pTarget = Select_The_Nearest_Enemy(strLayerTag);
+	m_pTarget = Select_The_Nearest_Enemy(strLayerTag, fSearchDistance);
+}
+
+_float CCharacter::Target_Contained_Angle(_float4 vStandard, _float4 vTargetPos)
+{
+	/* ---------- 소영 추가 ---------- */
+	 // 함수설명 : Look 기준으로 우측에 있을경우 +사이각 , 좌측에 있을경우 - 사이각으로 값이 리턴된다. 
+	 /* ------------------------------- */
+	_vector vLook = XMVector3Normalize(vTargetPos - m_pTransformCom->Get_Pos());
+
+	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
+
+	_float fAngle = acos(XMVectorGetX(XMVector3Dot(vStandard, vLook)));
+
+	fAngle = XMConvertToDegrees(fAngle);
+
+	_vector vJudge = XMVector3Cross(vStandard, vLook);
+
+	_float fRotationDirection = XMVectorGetY(vJudge) < 0 ? -1.0f : 1.0f;
+
+	return fAngle * fRotationDirection;
+
+}
+
+_bool CCharacter::Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta)
+{
+	_vector currentLook = m_pTransformCom->Get_Look();
+	_vector originLook = XMLoadFloat4(&vOriginLook);
+
+	_float angle = acos(XMVectorGetX(XMVector3Dot(currentLook, originLook)));
+
+	if (angle < 0.01f)
+		return true;
+
+	_vector lerpedLook = XMVectorLerp(currentLook, originLook, fSpeed * fTimeDelta);
+
+	lerpedLook = XMVector3Normalize(lerpedLook);
+
+	m_pTransformCom->Set_Look(lerpedLook);
+
+	return false;
 }
 
 CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance)
@@ -482,6 +546,9 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap
 
 	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	_float fDistance = Calc_Distance();
+	if (fDistance < 0.5f)
+		return;
+
 	_float3 vPos = { 0.f, 0.f, min(fDistance * fTimeDelta, fSpeedCap) };
 
 	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
@@ -503,6 +570,40 @@ void CCharacter::Set_StiffnessRate_Upper(_float fStiffnessRate)
 {
 	m_pBody->Set_StiffnessRate_Upper(fStiffnessRate);
 }
+
+void CCharacter::Set_Weapons_Enable_False()
+{
+	for (CWeapon* pWeapon : m_Weapons)
+	{
+		pWeapon->Set_Enable(false);
+	}
+
+}
+
+CWeapon* CCharacter::Set_Weapon_Enable(const wstring& strWeaponTag, _bool bActivate)
+{
+	CWeapon* pWeapon = Get_Weapon(strWeaponTag);
+	if (pWeapon)
+		pWeapon->Set_Enable(bActivate);
+
+	return pWeapon;
+}
+
+CWeapon* CCharacter::Set_Weapon_Collisions_Enable(const wstring& strWeaponTag, _bool bActivate)
+{
+	CWeapon* pWeapon = Get_Weapon(strWeaponTag);
+	if (pWeapon)
+		pWeapon->Set_Enable_Collisions(bActivate);
+
+	return pWeapon;
+}
+
+
+void CCharacter::Set_WeaknessPoint()
+{
+	_float3 vResult = m_pTransformCom->Calc_Front_Pos(m_vWeaknessPoint_Local);
+	m_vWeaknessPoint = vResult;
+};
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {

@@ -38,6 +38,15 @@ void CTransform::Set_Scaling(_float fScaleX, _float fScaleY, _float fScaleZ)
 	Set_State(STATE_LOOK, XMVector3Normalize(Get_State(STATE_LOOK)) * fScaleZ);
 }
 
+_float3 CTransform::Calc_Front_Pos(_float3 vDiff)
+{
+	_vector vFront = XMVector3TransformCoord(vDiff, m_WorldMatrix);
+	_float3 vResult;
+	XMStoreFloat3(&vResult, vFront);
+
+	return vResult;
+}
+
 HRESULT CTransform::Initialize_Prototype(_float fSpeedPerSec, _float fRotationPerSec)
 {
 	m_fSpeedPerSec = fSpeedPerSec;
@@ -58,8 +67,68 @@ void CTransform::Move_On_Navigation(_vector vMove, CNavigation* pNavigation)
 	{
 		if (false == pNavigation->isMove(vPosition))
 			return; /* 슬라이딩들어갈자리 */
+			
+		_bool bIsGround = false;
+		_float fHeight = {};
+
+		fHeight = pNavigation->Compute_Height(vPosition, &bIsGround);
+
+		if (bIsGround == true)
+		{
+			vPosition.m128_f32[1] = fHeight;
+		}
+
 	}
 	Set_State(STATE_POSITION, vPosition);
+	
+}
+
+void CTransform::Move_On_Navigation_ForSliding(_vector vMove, const _float fTimeDelta, CNavigation* pNavigation)
+{
+	
+	_vector	vPosition = Get_State(STATE_POSITION);
+
+	_float4 vSlidingDir = { 0.f, 0.f, 0.f, 0.f };
+
+	vPosition += vMove;
+
+	if (nullptr != pNavigation)
+	{
+		if (true == pNavigation->isMove_ForSliding(vPosition, XMVector3Normalize(vPosition - Get_State(CTransform::STATE_POSITION)), &vSlidingDir))
+		{
+			_float4 vTempPosition = {};
+
+			_bool bIsGround = false;
+			_float fHeight = pNavigation->Compute_Height(vPosition, &bIsGround);
+
+			XMStoreFloat4(&vTempPosition, vPosition);
+			vTempPosition.y = fHeight;
+
+			Set_State(STATE_POSITION, XMLoadFloat4(&vTempPosition));
+		}
+		else
+		{
+			if (XMVectorGetX(XMVector3Length(vSlidingDir)) > 0.f)
+			{
+				vSlidingDir = XMVector3Normalize(vSlidingDir);
+				_vector vNewPosition = Get_State(CTransform::STATE_POSITION) + vSlidingDir * m_fSpeedPerSec * fTimeDelta;
+
+				if (true == pNavigation->isMove_ForSliding(vNewPosition, XMVector3Normalize(vNewPosition - Get_State(CTransform::STATE_POSITION)), nullptr))
+				{
+					_float4 vTempPosition = {};
+
+					_bool bIsGround = false;
+					_float fHeight = pNavigation->Compute_Height(vPosition, &bIsGround);
+
+					XMStoreFloat4(&vTempPosition, vNewPosition);
+					vTempPosition.y = fHeight;
+					Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&vTempPosition));
+				}
+			}
+		}
+	}
+	else
+		Set_State(STATE_POSITION, vPosition);
 	
 }
 
@@ -67,7 +136,10 @@ void CTransform::Go_Straight(_float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector vLook = Get_State(STATE_LOOK);
 	vLook = XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
-	Move_On_Navigation(vLook, pNavigation);
+
+	Move_On_Navigation_ForSliding(vLook, fTimeDelta, pNavigation);
+
+	//Move_On_Navigation(vLook, pNavigation);
 }
 
 void CTransform::Go_Straight_L45(_float fTimeDelta, CNavigation* pNavigation)
@@ -75,7 +147,9 @@ void CTransform::Go_Straight_L45(_float fTimeDelta, CNavigation* pNavigation)
 	_vector vLook = Get_State(STATE_LOOK);
 	_vector vRight = Get_State(STATE_RIGHT);
 	_vector vResult = XMVector3Normalize(vLook - vRight) * m_fSpeedPerSec * fTimeDelta;
-	Move_On_Navigation(vResult, pNavigation);
+
+	Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+	//Move_On_Navigation(vResult, pNavigation);
 }
 
 void CTransform::Go_Straight_R45(_float fTimeDelta, CNavigation* pNavigation)
@@ -83,14 +157,18 @@ void CTransform::Go_Straight_R45(_float fTimeDelta, CNavigation* pNavigation)
 	_vector vLook = Get_State(STATE_LOOK);
 	_vector vRight = Get_State(STATE_RIGHT);
 	_vector vResult = XMVector3Normalize(vLook + vRight) * m_fSpeedPerSec * fTimeDelta;
-	Move_On_Navigation(vResult, pNavigation);
+
+	Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+	//Move_On_Navigation(vResult, pNavigation);
 }
 
 void CTransform::Go_Backward(_float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector vLook = Get_State(STATE_LOOK);
 	_vector vResult = XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta * -1;
-	Move_On_Navigation(vResult, pNavigation);
+
+	Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+	//Move_On_Navigation(vResult, pNavigation);
 }
 
 void CTransform::Go_Backward_L45(_float fTimeDelta, CNavigation* pNavigation)
@@ -98,7 +176,9 @@ void CTransform::Go_Backward_L45(_float fTimeDelta, CNavigation* pNavigation)
 	_vector vLook = Get_State(STATE_LOOK);
 	_vector vRight = Get_State(STATE_RIGHT);
 	_vector vResult = XMVector3Normalize(vLook + vRight) * m_fSpeedPerSec * fTimeDelta * -1;
-	Move_On_Navigation(vResult, pNavigation);
+
+	Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+	//Move_On_Navigation(vResult, pNavigation);
 }
 
 void CTransform::Go_Backward_R45(_float fTimeDelta, CNavigation* pNavigation)
@@ -106,21 +186,27 @@ void CTransform::Go_Backward_R45(_float fTimeDelta, CNavigation* pNavigation)
 	_vector vLook = Get_State(STATE_LOOK);
 	_vector vRight = Get_State(STATE_RIGHT);
 	_vector vResult = XMVector3Normalize(vLook - vRight) * m_fSpeedPerSec * fTimeDelta * -1;
-	Move_On_Navigation(vResult, pNavigation);
+
+	Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+	//Move_On_Navigation(vResult, pNavigation);
 }
 
 void CTransform::Go_Left(_float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector vRight = Get_State(STATE_RIGHT);
 	_vector vResult = XMVector3Normalize(vRight) * m_fSpeedPerSec * fTimeDelta * -1;
-	Move_On_Navigation(vResult, pNavigation);
+
+	Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+	//Move_On_Navigation(vResult, pNavigation);
 }
 
 void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector vRight = Get_State(STATE_RIGHT);
 	_vector vResult = XMVector3Normalize(vRight) * m_fSpeedPerSec * fTimeDelta;
-	Move_On_Navigation(vResult, pNavigation);
+
+	Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+	//Move_On_Navigation(vResult, pNavigation);
 }
 
 
@@ -284,6 +370,17 @@ _vector CTransform::Calc_Look_Dir(_fvector vTargetPos)
 _float3 CTransform::Calc_Look_Dir(_float3 vTargetPos)
 {
 	return Get_Position() - vTargetPos;
+}
+
+void CTransform::Move_Position(_float4 vDir, _float fSpeed, _float fTimeDelta)
+{
+	/* 총알용입니다. 네비없어도됨 */
+	/* 주의사항. vDir채로 더하므로 전에 미리 Normalize해서 넘기세요 */
+
+	_float4 vPos = Get_Position();
+	vPos += vDir * fSpeed * fTimeDelta;
+
+	Set_State(STATE_POSITION, vPos);
 }
 
 void CTransform::Add_RootBone_Position(const _float3& vPos, CNavigation* pNavigation)

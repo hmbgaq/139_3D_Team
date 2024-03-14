@@ -17,13 +17,8 @@ namespace Engine
 		ANIM_ORIGIN,			// 0 - 기본형태
 		ANIM_WIREFRAME,			// 1 - 메시로 보기 
 		ANIM_SHADOW,			// 2 - 그림자
-		ANIM_DISSOLVE,			// 3 - 디졸브
-		ANIM_DISTORTION,		// 4 - 왜곡
-		ANIM_GRAYSCALE,			// 5 - 회색조 : 죽거나 했을때
-		ANIM_MASKING,			// 6 - 마스킹텍스쳐로 자르기 
-		ANIM_BLOOM,				// 7 - 색 + 뿌옇게 흐리기까지 
-		ANIM_OUTLINE,			// 8 - 외곽선 보이기 
-		ANIM_CASCADE_SHADOW,    // 9 - Cascade shadow 
+		ANIM_INTRO_BOSS,		// 3 - INTRO STAGE 보스 
+		ANIM_EXAMPLE,			// 4 - Bloom , Rim 사용하는 예시
 		ANIM_SHADER_END };
 
 	enum class UI_SHADER {UI_SHADER_END};

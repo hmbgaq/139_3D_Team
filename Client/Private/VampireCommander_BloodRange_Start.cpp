@@ -1,12 +1,34 @@
 #include "VampireCommander_BloodRange_Start.h"
 #include "VampireCommander_BloodRange_Loop.h"
 
+#include "SMath.h"
+#include "GameInstance.h"
+
 void CVampireCommander_BloodRange_Start::Initialize(CVampireCommander* pActor)
 {
 	__super::Initialize(pActor);
 	//string Test = "Data_Animation/";
 	//pActor->Set_EventNotify(Test, "Test2_AnimationData.json");
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	_int iRandomInfected = SMath::Random(0, 9);//ÀÎÆåÆ¼µå »ý¼º ·£´ý È®·ü 
+	
+	if (iRandomInfected == 7)
+	{
+
+		for (int i = 0; i < 3; ++i)
+		{
+			_int randomX = SMath::Random(1, 7);
+			_int randomZ = SMath::Random(2, 8);
+			CGameObject* pMonster = nullptr;
+			_float3 Temp = pActor->Get_Position() + _float3(randomX, 0.f, randomZ);
+			Temp.y = 0.f;
+			pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_Monster", TEXT("Prototype_GameObject_Infected_A"));
+			pMonster->Set_InitPosition(Temp);
+		}
+		
+	}
+
 }
 
 CState<CVampireCommander>* CVampireCommander_BloodRange_Start::Update(CVampireCommander* pActor, _float fTimeDelta)

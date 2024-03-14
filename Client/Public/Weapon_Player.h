@@ -43,3 +43,22 @@ public:
 };
 
 END
+
+
+
+//if (m_pGameInstance->Key_Down(DIK_C))
+//{
+//	string path = "../Bin/DataFiles/Data_Weapon/Player/ELWinchester/Aim.json";
+//
+//	{
+//		json Out_Json;
+//		m_pTransformCom->Write_Json(Out_Json);
+//		CJson_Utility::Save_Json(path.c_str(), Out_Json);
+//	}
+//	//{
+//	//	json In_Json;
+//	//	CJson_Utility::Load_Json(path.c_str(), In_Json);
+//	//	m_pTransformCom->Load_FromJson(In_Json);
+//	//}
+//
+//}

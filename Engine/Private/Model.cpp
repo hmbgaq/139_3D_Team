@@ -525,7 +525,7 @@ _float CModel::Get_TrackPosition()
 
 void CModel::Set_TrackPosition(_int iNewTrackPosition)
 {
-	m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(iNewTrackPosition);
+	m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition((_float)iNewTrackPosition);
 }
 
 void CModel::Write_Names(const string& strModelFilePath)
@@ -581,6 +581,11 @@ void CModel::Write_Names(const string& strModelFilePath)
 	osTxt << endl;
 
 	osTxt.close();
+}
+
+void CModel::Set_Speed(_int iSpeed)
+{
+	//return m_Animations
 }
 
 vector<CAnimation*>* CModel::Get_Animations()
@@ -671,7 +676,9 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			MultiByteToWideChar((_uint)CP_ACP, 0, szTmp, (_int)strlen(szTmp), szFullPath, (_int)MAX_PATH);
 
-			
+			if (szFileName == "M_Invisible") /* 현재 게임에서 이 텍스쳐를 가지면 투명한 텍스쳐라 가상으로 만들어줘도 터짐 */
+				continue;
+
 			MaterialDesc.pMtrlTextures[j] = CTexture::Create(m_pDevice, m_pContext, szFullPath, 1);
 
 			if (nullptr == MaterialDesc.pMtrlTextures[j])	

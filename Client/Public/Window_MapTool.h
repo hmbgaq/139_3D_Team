@@ -6,6 +6,7 @@ BEGIN(Engine)
 class CGameObject;
 class CCamera;
 class CNavigation;
+class CCell;
 END
 
 BEGIN(Client)
@@ -27,7 +28,7 @@ private:
 	enum class MODE_TYPE { MODE_CREATE, MODE_SELECT, MODE_DELETE, MODE_END };
 	enum class PICKING_TYPE { PICKING_FIELD, PICKING_MESH, PICKING_INSTANCE, PICKING_NONE, PICKING_END };
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
-	enum class OBJECTMODE_TYPE { OBJECTMODE_ENVIRONMENT, OBJECTMODE_CHARACTER};
+	enum class OBJECTMODE_TYPE { OBJECTMODE_ENVIRONMENT, OBJECTMODE_CHARACTER, OBJECTMODE_NAVIGATION};
 	enum class ANIM_TYPE { TYPE_NONANIM, TYPE_ANIM };
 	enum class INSTANCE_ALLMOVETYPE { ALLMOVE_X, ALLMOVE_Y, ALLMOVE_Z };
 	enum class MAP_KEY_TYPE //! 맵컨테이너 키
@@ -66,7 +67,8 @@ private:
 private:
 	void			EnvironmentMode_Function();
 	void			CharacterMode_Function();
-
+	void			NavigationMode_Function();
+	
 
 	//!For. Environment
 	void			GroundTab_Function();
@@ -77,6 +79,19 @@ private:
 	void			MonsterTab_Function();
 	void			NPC_Tab_Function();
 
+	//!For. Navigation
+	void			Navigation_CreateTab();
+	void			Navigation_SelectTab();
+	void			Navigation_DeleteTab();
+	void			Set_CCW(_float3* vPoint);
+	void			Reset_NaviPicking();
+	void			Find_NearPointPos(_float3* fPickedPos);
+	CCell*			Find_NearCell(_float3 fPickedPos);
+
+	void			SaveNavi(string strFullPath);
+	void			LoadNavi(string strFullPath);
+
+	void			LoadCells();
 
 
 private:
@@ -155,6 +170,29 @@ private:
 	_bool			m_bRotateMode = { false};
 	_bool			m_bColliderPickingMode = false;
 	_float			m_fCamaraSpeed = { 60.f };
+
+	_int						m_iNavigationTargetIndex = 0;
+	vector<_float3>				m_vecPickedPoints;
+	vector<string>				m_vecPickingListBox;
+
+	_int						m_iNaviListBoxIndex = 0;
+	_int						m_iCurrentPickingIndex = 0;
+	_int						m_iNaviIndex = 0;
+	_int						m_iCellIndex = 0;
+	_int						m_iPointIndex = 0;
+	_int						m_iNaviPickingIndex = 0;
+
+	_float3						m_fNaviPickingPos = {};
+	_float						m_fCombinationRange = 0.25f; //! 결합 범위
+	_bool						m_bPickingNaviMode = false;
+	vector<CCell*>				m_vecCells;
+	vector<string>				m_vecCellIndexs;
+	_float3						m_vPickingPoint = {};
+
+	string						m_strNaviFinalSavePath = "";
+	_bool						m_bHaveNaviSave = false;
+	_uint						m_iSaveNaviIndex = 50;
+
 
 //!  맵찍기 저장용 변수
 	string			m_strLoadFilePath = {}; //! 만약 불러오기로 맵을 불러왔다면 불러온 맵의 저장경로를 저장한다. 이상태에서 Ctrl S를 누를시 해당 경로에 덮어쓰기하는 식으로 해줘야할거같다.

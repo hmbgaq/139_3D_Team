@@ -21,8 +21,12 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	virtual void Fire();
+
 protected:
 	virtual HRESULT Ready_Components();
+
 public:
 	static CPlayer_Weapon_ELWinchester* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 

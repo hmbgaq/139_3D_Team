@@ -41,13 +41,13 @@ public:
 
 	virtual _bool	Picking(_Out_ _float3 * vPickedPos);
 
-
-
 public:
 	virtual class CComponent* Find_Component(const wstring & strComTag, const wstring & strPartTag = TEXT(""));
+
 public:
 	void	Set_Position(const _float3 & vState);
 	void	Set_WorldMatrix(_float4x4 matrix);
+	HRESULT	Set_InitPosition(const _float3& vPos);
 
 public:
 	_bool	Is_Dead() { return m_bDead; }
@@ -104,6 +104,7 @@ protected:
 
 protected:
 	class CGameInstance* m_pGameInstance = { nullptr };
+	_uint				m_iCurrnetLevel = { 0 };
 
 protected:
 	class CTransform* m_pTransformCom = { nullptr };
