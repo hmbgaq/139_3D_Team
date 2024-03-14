@@ -1,4 +1,6 @@
 #include "Monster_Character.h"
+#include "Transform.h"
+#include "Navigation.h"
 
 CMonster_Character::CMonster_Character(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter_Client(pDevice, pContext, strPrototypeTag)
@@ -20,6 +22,33 @@ HRESULT CMonster_Character::Initialize_Prototype()
 HRESULT CMonster_Character::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
+
+	_bool bMonsterDesc = false;
+
+
+	if (pArg != nullptr)
+	{
+		CGameObject::GAMEOBJECT_DESC ObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
+		
+		if(ObjectDesc.eDescType == CGameObject::MONSTER_DESC)
+			bMonsterDesc = true;
+
+
+		if (bMonsterDesc == true)
+		{
+			m_tMonsterDesc = *(MONSTER_DESC*)pArg;
+
+
+
+			if (m_tMonsterDesc.bPreview == false)
+			{
+				m_pTransformCom->Set_WorldMatrix(m_tMonsterDesc.WorldMatrix);
+				m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
+			}
+		}
+	}
+
+	
 
 	return S_OK;
 }

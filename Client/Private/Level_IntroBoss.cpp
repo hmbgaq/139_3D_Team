@@ -15,6 +15,7 @@
 #pragma endregion
 
 #include "LandObject.h"
+#include "Monster_Character.h"
 
 #pragma region MAP
 #include "Environment_Object.h"
@@ -312,7 +313,7 @@ HRESULT CLevel_IntroBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 	for (_int i = 0; i < iMonsterJsonSize; ++i)
 	{
-		CMonster::MONSTER_DESC MonsterDesc = {};
+		CMonster_Character::MONSTER_DESC MonsterDesc = {};
 
 		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
 

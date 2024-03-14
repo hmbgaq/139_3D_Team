@@ -9,6 +9,10 @@ class CPhysXCollider;
 
 class ENGINE_DLL CGameObject abstract : public CBase
 {
+
+public:
+	enum DESCTYPE { OBJECT_DESC, MONSTER_DESC, DESCTYPE_END };
+
 public:
 	typedef struct tagGameObjectDesc
 	{
@@ -19,6 +23,7 @@ public:
 		_float	fSpeedPerSec = 0.f;
 		_float	fRotationPerSec = 0.f;
 
+		DESCTYPE eDescType = DESCTYPE_END;
 	}GAMEOBJECT_DESC;
 
 protected:

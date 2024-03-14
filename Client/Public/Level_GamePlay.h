@@ -45,7 +45,7 @@ private:
 private:
 	_int			TempLightNumber = 0;
 
-	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1InteractTest1_MapData_MapData.json";
+	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MonsterInclude.json";
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

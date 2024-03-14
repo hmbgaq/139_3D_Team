@@ -13,21 +13,11 @@ BEGIN(Client)
 
 class CMonster final : public CGameObject
 {
-public:
-	typedef struct tagMonsterDesc : public CGameObject::tagGameObjectDesc
-	{
-		_float4x4	WorldMatrix = XMMatrixIdentity();
-		_bool		bPreview = false;
-		wstring		strProtoTypeTag = L""; //! 파싱용
-	}MONSTER_DESC;
 
 private:
 	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CMonster(const CMonster& rhs);
 	virtual ~CMonster() = default;
-
-public:
-	MONSTER_DESC*	Get_MonsterDesc() { return &m_tMonsterDesc;}
 
 
 public:
@@ -60,7 +50,6 @@ private:
 private:
 	_int					m_iRenderPass = {};
 	_float					m_fTimeDelta;
-	MONSTER_DESC			m_tMonsterDesc = {};
 public:
 	/* 원형객체를 생성한다. */
 	static CMonster* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

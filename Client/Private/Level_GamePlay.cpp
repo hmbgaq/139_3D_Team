@@ -16,6 +16,7 @@
 #pragma endregion
 
 #include "LandObject.h"
+#include "Monster_Character.h"
 
 #pragma region MAP
 #include "Environment_Object.h"
@@ -206,34 +207,74 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 {
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
-	CGameObject* pMonster = nullptr;
 
-	/* -- Monster -----------------------------*/
-	//CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
+	json Stage1MonsterJson = {};
+
+	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MonsterJson)))
+	{
+		MSG_BOX("몬스터 불러오기 실패");
+		return E_FAIL;
+	}
+
+	json MonsterJson = Stage1MonsterJson["Monster_Json"];
+	_int iMonsterJsonSize = (_int)MonsterJson.size();
+
+	for (_int i = 0; i < iMonsterJsonSize; ++i)
+	{
+		CMonster_Character::MONSTER_DESC MonsterDesc = {};
+
+		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
+
+		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
+		MonsterDesc.bPreview = false;
+		MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
+
+		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		MonsterDesc.WorldMatrix = WorldMatrix;
+
+		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+			return E_FAIL;
+
+	}
+
+	////FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
+	//CGameObject* pMonster = nullptr;
+
+	///* -- Monster -----------------------------*/
+	////CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
+	////NULL_CHECK_RETURN(pMonster, E_FAIL);
+	////pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
+	//
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
 	//NULL_CHECK_RETURN(pMonster, E_FAIL);
-	//pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
-	
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_InitPosition(_float3(250.5, 0.f, 5.f));
-	
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
-	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_InitPosition(_float3(251.f, 0.f, 7.f));
-	
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
-	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_InitPosition(_float3(252.5f, 0.f, 9.f));	
-	
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	//pMonster->Set_InitPosition(_float3(253.5f, 0.f, 11.f));
-	pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
+	//pMonster->Set_InitPosition(_float3(250.5, 0.f, 5.f));
+	//
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//pMonster->Set_InitPosition(_float3(251.f, 0.f, 7.f));
+	//
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//pMonster->Set_InitPosition(_float3(252.5f, 0.f, 9.f));	
+	//
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	////pMonster->Set_InitPosition(_float3(253.5f, 0.f, 11.f));
+	//pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
 
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_InitPosition(_float3(153.6f, 14.65f, 217.55f));
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//pMonster->Set_InitPosition(_float3(153.6f, 14.65f, 217.55f));
 
 	return S_OK;
 }
@@ -308,6 +349,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 		Desc.bPreview = false;
 		Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
 		Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
+		Desc.bLevelChange = InteractJson[i]["LevelChange"];
+		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
 		Desc.eInteractState = InteractJson[i]["InteractState"];
 		Desc.eInteractType = InteractJson[i]["InteractType"];
 		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
@@ -373,36 +416,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
  
  	}
  
- 	json MonsterJson = Stage1MapJson["Monster_Json"];
- 	_int iMonsterJsonSize = (_int)MonsterJson.size();
  
- 	for (_int i = 0; i < iMonsterJsonSize; ++i)
- 	{
- 		CMonster::MONSTER_DESC MonsterDesc = {};
- 
- 		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
- 
- 		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
- 		MonsterDesc.bPreview = false;
- 
- 
- 		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
- 		_float4x4 WorldMatrix;
- 
- 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
- 		{
- 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
- 			{
- 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
- 			}
- 		}
- 
- 		MonsterDesc.WorldMatrix = WorldMatrix;
- 
-		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc));
- 		
- 	}
-
 	return S_OK;
 
 }
