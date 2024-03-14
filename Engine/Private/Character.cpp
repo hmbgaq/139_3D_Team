@@ -484,7 +484,7 @@ CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _fl
 	if (nullptr == pTargetLayer)
 		return nullptr;
 
-	for (CGameObject* pTarget : *pTargetLayer) 
+	for (CGameObject* pTarget : *pTargetLayer)
 	{
 
 		if (nullptr == pTarget || false == pTarget->Get_Enable())
@@ -492,7 +492,7 @@ CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _fl
 
 		CCharacter* pTargetCharacter = dynamic_cast<CCharacter*>(pTarget);
 
-		if (nullptr == pTargetCharacter)
+		if (nullptr == pTargetCharacter || 0 >= pTargetCharacter->Get_Hp())
 			continue;
 
 		_float fDistance = Calc_Distance(pTarget);
@@ -552,7 +552,7 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap
 	_float3 vPos = { 0.f, 0.f, min(fDistance * fTimeDelta, fSpeedCap) };
 
 	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
-	m_pTransformCom->Move_On_Navigation(vResult);
+	m_pTransformCom->Move_On_Navigation(vResult, m_pNavigationCom);
 }
 
 
