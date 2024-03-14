@@ -52,6 +52,13 @@ CEffect* CEffect_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLay
 	//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Effect.json");
 }
 
+
+CEffect* CEffect_Manager::Create_Effect(string strFileName, CGameObject* pOwner)
+{
+	return Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, strFileName, pOwner);
+}
+
+
 CEffect* CEffect_Manager::Create_Effect_With_Trail(string strEffectFileName, string strTrailFileName, CGameObject* pOwner)
 {
 	_uint iCurLevel = m_pGameInstance->Get_NextLevel();
@@ -63,10 +70,6 @@ CEffect* CEffect_Manager::Create_Effect_With_Trail(string strEffectFileName, str
 	return pEffect;
 }
 
-CEffect* CEffect_Manager::Create_Effect(string strFileName, CGameObject* pOwner)
-{
-	return Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, strFileName, pOwner);
-}
 
 CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner)
 {
@@ -101,6 +104,12 @@ CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& st
 
 	/* 사용 예시 */
 	// m_pTrail = EFFECT_MANAGER->Ready_Trail(LEVEL_TOOL, LAYER_EFFECT, "Test_Trail.json"); // 또는 Part_Preview클래스 참고
+}
+
+
+CEffect_Trail* CEffect_Manager::Ready_Trail(string strFileName, CGameObject* pOwner)
+{
+	return Ready_Trail(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, strFileName, pOwner);
 }
 
 void CEffect_Manager::Free()

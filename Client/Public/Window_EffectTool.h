@@ -195,7 +195,6 @@ private:
 	_float	m_vRotate_Part[3] = { 0.f, 0.f, 0.f };
 
 	_float m_vColor_Clip_Part[4] = { 0.f, 0.f, 0.f, 0.f };
-	_float m_vColor_Clip_Rect[4] = { 0.f, 0.f, 0.f, 0.f }; // ??
 
 
 #pragma region Particle 옵션 시작
@@ -280,8 +279,20 @@ private:
 
 
 #pragma region Rect 옵션 시작
-	_int	m_vUV_MaxTileCount[2] = { 7, 7 };
-	_float	m_fSequenceTerm_RectSprite = { 0.05f };
+
+	/* For.Sprite ======================================== */
+	_int	m_iSprite_Rect = { 0 };					// 1이 True
+	_int	m_iSpriteLoop_Rect = { 0 };
+	_int	m_vUV_MaxTileCount_Rect[2] = { 7, 7 };
+	_float	m_fSequenceTerm_Rect = { 0.05f };
+	/* For.Sprite ======================================== */
+
+
+	_int	m_iBillBoard_Rect = { 0 };
+
+	_float	m_fColor_Mul_Rect[4] = { 1.f, 1.f, 1.f, 1.f };	// 쉐이더에서 곱해줄 색
+	_float	m_vColor_Clip_Rect[4] = { 0.f, 0.f, 0.f, 0.f };	// 쉐이더에서 discard할 값
+
 
 	/* Distortion */
 	_float m_fSequenceTerm_Distortion = { 1.f };
@@ -295,6 +306,18 @@ private:
 
 	_float	m_fDistortionScale = { 1.f };
 	_float	m_fDistortionBias = { 1.f };
+
+
+	/* UV Option_Rect */
+	_float  m_fUV_Offset_Rect[2] = { 0.f, 0.f };
+	_float  m_vUV_Scale_Rect[2] = { 1.f, 1.f };
+	_float	m_fUV_RotDegree_Rect = { 0.f };	// UV회전
+
+
+	/* 렉트 Rim & Bloom */
+	_float	m_fRimColor_Rect[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_vBloomPower_Rect[3] = { 1.f, 1.f, 1.f };
+
 #pragma endregion Rect 옵션 끝
 
 

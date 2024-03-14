@@ -124,10 +124,24 @@ VS_OUT VS_MAIN_EFFECT(VS_IN In)
 {
 	VS_OUT	Out = (VS_OUT)0;
 
-	/* In.vPosition * 월드 * 뷰 * 투영 */
-	matrix matWV, matWVP;
+    matrix WorldMatrix = g_WorldMatrix;
 
-	matWV = mul(g_WorldMatrix, g_ViewMatrix);
+	
+	/* In.vPosition * 월드 * 뷰 * 투영 */
+    matrix matWV, matWVP;
+	
+	if(g_bBillBoard)
+    {	
+        float3 vLook	= normalize((g_vCamDirection * -1.f).xyz);
+        float3 vRight	= normalize(cross(float3(0.f, 1.f, 0.f), vLook));
+        float3 vUp		= normalize(cross(vLook, vRight));
+
+        WorldMatrix[0] = float4(vRight, 0.f) * length(WorldMatrix[0]);
+        WorldMatrix[1] = float4(vUp, 0.f) * length(WorldMatrix[1]);
+        WorldMatrix[2] = float4(vLook, 0.f) * length(WorldMatrix[2]);
+    }
+ 
+    matWV = mul(WorldMatrix, g_ViewMatrix);
 	matWVP = mul(matWV, g_ProjMatrix);
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
@@ -221,7 +235,6 @@ PS_OUT PS_MAIN_EFFECT_SOLID(PS_IN In)
 
 
 
-
 // MAIN_SPRITE ==================================================================================================================
 VS_OUT VS_MAIN_SPRITE(VS_IN In)
 {
@@ -309,20 +322,34 @@ struct PS_IN_DISTORTION
 
 
 VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
-{
-	VS_OUT_DISTORTION Out = (VS_OUT_DISTORTION) 0;
+{	
+    VS_OUT_DISTORTION Out = (VS_OUT_DISTORTION) 0;
 
-	/* In.vPosition * 월드 * 뷰 * 투영 */
-	matrix matWV, matWVP;
-
-	matWV = mul(g_WorldMatrix, g_ViewMatrix);
-	matWVP = mul(matWV, g_ProjMatrix);
-
-	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-	Out.vTexcoord = In.vTexcoord;
-	Out.vProjPos = Out.vPosition;
+    matrix WorldMatrix = g_WorldMatrix;
 	
-	return Out;
+	/* In.vPosition * 월드 * 뷰 * 투영 */
+    matrix matWV, matWVP;
+	
+    if (g_bBillBoard)
+    {
+        float3 vLook = normalize((g_vCamDirection * -1.f).xyz);
+        float3 vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook));
+        float3 vUp = normalize(cross(vLook, vRight));
+
+        WorldMatrix[0] = float4(vRight, 0.f) * length(WorldMatrix[0]);
+        WorldMatrix[1] = float4(vUp, 0.f) * length(WorldMatrix[1]);
+        WorldMatrix[2] = float4(vLook, 0.f) * length(WorldMatrix[2]);
+    }
+ 
+    matWV = mul(WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    Out.vProjPos = Out.vPosition;
+
+    return Out;
+	
 }
 
 
@@ -397,11 +424,104 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 		|| vFinalColor.r < g_vBlack_Discard.r && vFinalColor.g < g_vBlack_Discard.g && vFinalColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 		discard;
 
-	Out.vColor = vFinalColor;
+    Out.vColor = vFinalColor * g_vColor_Mul;
 
+	
+	/* ---------------- New ---------------- :  */
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+	
+	
 	return Out;
 }
 // MAIN_DISTORTION ==============================================================================================================
+
+
+
+// MAIN_DISTORTION_SOLID ========================================================================================================
+PS_OUT PS_MAIN_DISTORTION_SOLID(PS_IN_DISTORTION In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    float4 vNoise1;
+    float4 vNoise2;
+    float4 vNoise3;
+
+    float4 vFinalNoise;
+    float fPerturb;
+    float2 vNoiseCoords;
+	
+    float4 vFinalColor;
+    float4 vAlphaColor;
+
+
+	// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
+    In.vTexcoord1 = (In.vTexcoord * g_vScales.x);
+    In.vTexcoord1.y = In.vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
+
+    In.vTexcoord2 = (In.vTexcoord * g_vScales.y);
+    In.vTexcoord2.y = In.vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
+
+    In.vTexcoord3 = (In.vTexcoord * g_vScales.z);
+    In.vTexcoord3.y = In.vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
+
+
+	// 동일한 노이즈 텍스쳐를 서로 다른 세 텍스쳐 좌표를 사용하여 세 개의 다른 크기의 노이즈를 얻는다.
+    vNoise1 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord1);
+    vNoise2 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord2);
+    vNoise3 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord3);
+
+	// 노이즈 값의 범위를 (0, 1)에서 (-1, +1)이 되도록한다.
+    vNoise1 = (vNoise1 - 0.5f) * 2.0f;
+    vNoise2 = (vNoise2 - 0.5f) * 2.0f;
+    vNoise3 = (vNoise3 - 0.5f) * 2.0f;
+
+	// 노이즈의 x와 y값을 세 개의 다른 왜곡 x및 y좌표로 흩뜨린다.
+    vNoise1.xy = vNoise1.xy * g_vDistortion1.xy;
+    vNoise2.xy = vNoise2.xy * g_vDistortion2.xy;
+    vNoise3.xy = vNoise3.xy * g_vDistortion3.xy;
+
+	// 왜곡된 세 노이즈 값들을 하나의 노이즈로 함성한다.
+    vFinalNoise = vNoise1 + vNoise2 + vNoise3;
+
+	// 입력으로 들어온 텍스쳐의 Y좌표를 왜곡 크기와 바이어스 값으로 교란시킨다.
+	// 이 교란은 텍스쳐의 위쪽으로 갈수록 강해져서 맨 위쪽에는 깜박이는 효과를 만들어낸다.
+    fPerturb = ((1.0f - In.vTexcoord.y) * g_fDistortionScale) + g_fDistortionBias;
+
+	// 불꽃 색상 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를 만든다.
+    vNoiseCoords.xy = (vFinalNoise.xy * fPerturb) + In.vTexcoord.xy;
+
+
+	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 불꽃 텍스쳐에서 색상을 샘플링한다.
+	// clamp샘플러를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
+    vFinalColor = g_DiffuseTexture.Sample(ClampSampler, vNoiseCoords.xy);
+
+
+	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 알파 텍스쳐에서 알파값을 샘플링한다. (불꽃의 투명도를 지정하는 데 사용)
+	// clamp샘플러를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
+    vAlphaColor = g_MaskTexture.Sample(ClampSampler, vNoiseCoords.xy);
+
+
+    vFinalColor.a = vAlphaColor;
+    vFinalColor.rgb *= g_vColor_Mul.rgb;
+
+
+    if (vFinalColor.a < g_fAlpha_Discard // 알파 잘라내기
+		|| vFinalColor.r < g_vBlack_Discard.r && vFinalColor.g < g_vBlack_Discard.g && vFinalColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
+        discard;
+
+    Out.vColor = vFinalColor * g_vColor_Mul;
+
+	
+	/* ---------------- New ---------------- :  */
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+	
+	
+    Out.vSolid = Out.vColor;
+	
+    return Out;
+}
+// MAIN_DISTORTION_SOLID ========================================================================================================
+
 
 
 
@@ -478,7 +598,21 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_DISTORTION();
 	}
 
-	pass Effect_Wireframe // 4
+    pass Distortion_Solid // 4
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_DepthStencilEnable, 0);
+        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION_SOLID();
+    }
+
+
+	pass Effect_Wireframe // 5
 	{
 		SetRasterizerState(RS_NoneCull_Wireframe);
 		SetDepthStencilState(DSS_Default, 0);
