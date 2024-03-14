@@ -126,7 +126,6 @@ VS_OUT VS_MAIN_EFFECT(VS_IN In)
 
     matrix WorldMatrix = g_WorldMatrix;
 
-	
 	/* In.vPosition * 월드 * 뷰 * 투영 */
     matrix matWV, matWVP;
 	

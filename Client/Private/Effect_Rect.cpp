@@ -34,6 +34,9 @@ HRESULT CEffect_Rect::Initialize(void* pArg)
 		return E_FAIL;
 
 
+	m_pTransformCom->Set_Scaling(0.5f, 1.f, 1.f);
+
+
 	return S_OK;
 }
 

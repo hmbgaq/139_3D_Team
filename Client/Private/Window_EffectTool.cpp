@@ -3772,8 +3772,17 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				}
 				_float3 vScaled = pPartTransform->Get_Scaled();
 				ImGui::Text("Part Scaled  : %.2f %.2f %.2f", vScaled.x, vScaled.y, vScaled.z);
-				if (ImGui::DragFloat3("Part_Scale", m_vScale_Part, 0.5f))
+				if (ImGui::DragFloat3("Part_Scale", m_vScale_Part, 0.1f, 0.1f))
 				{
+					if (0.f == m_vScale_Part[0])
+						m_vScale_Part[0] = 1.f;
+
+					if (0.f == m_vScale_Part[1])
+						m_vScale_Part[1] = 1.f;
+
+					if (0.f == m_vScale_Part[2])
+						m_vScale_Part[2] = 1.f;
+
 					m_pCurPartEffect->Get_Transform()->Set_Scaling(m_vScale_Part[0], m_vScale_Part[1], m_vScale_Part[2]);
 				}
 
