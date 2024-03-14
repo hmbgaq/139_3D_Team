@@ -25,7 +25,6 @@ void CInfected_Melee_RU_01::Initialize(CInfected* pActor)
 	case CInfected::INFECTED_TYPE::INFECTED_WASTER:
 		break;
 	}
-
 }
 
 CState<CInfected>* CInfected_Melee_RU_01::Update(CInfected* pActor, _float fTimeDelta)

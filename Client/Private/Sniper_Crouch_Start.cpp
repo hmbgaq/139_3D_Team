@@ -11,6 +11,7 @@ void CSniper_Crouch_Start::Initialize(CBandit_Sniper* pActor)
 
 CState<CBandit_Sniper>* CSniper_Crouch_Start::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
+
 	if (pActor->Is_Animation_End())
 	{
 		return new CSniper_Crouch_Idle();

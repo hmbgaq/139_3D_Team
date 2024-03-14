@@ -8,6 +8,12 @@ CBounding_AABB::CBounding_AABB(ID3D11Device * pDevice, ID3D11DeviceContext * pCo
 
 }
 
+void CBounding_AABB::Set_Scale(_float _sizeX, _float _sizeY, _float _sizeZ)
+{
+	/* 반지름 길이 */
+	m_pAABB->Extents = _float3(_sizeX, _sizeY, _sizeZ);
+}
+
 HRESULT CBounding_AABB::Initialize(BOUNDING_DESC * pBoundingDesc)
 {
 	BOUNDING_AABB_DESC* pDesc = (BOUNDING_AABB_DESC*)pBoundingDesc;

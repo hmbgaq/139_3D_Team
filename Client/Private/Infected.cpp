@@ -36,6 +36,7 @@
 #include "Infected_DeathLight_B_01_NEW.h"
 #include "Infected_DeathLight_F_01_NEW.h"
 #include "Infected_DeathHeavy_F_01_NEW.h"
+#include "Infected_SpawnCrawl_01.h"
 
 
 CInfected::CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -67,7 +68,7 @@ HRESULT CInfected::Initialize(void* pArg)
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CInfected>(this);
-		m_pActor->Set_State(new CInfected_SpawnGround());
+		m_pActor->Set_State(new CInfected_SpawnCrawl_01());
 	}
 
 	return S_OK;

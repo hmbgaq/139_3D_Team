@@ -38,10 +38,9 @@ public:
 public:
 	_float4x4	Get_WeaponWorldMatrix() { return m_WorldMatrix; }
 	void		Set_WeaponWorldMatrix(_float4x4 _WorldMatrix) { m_WorldMatrix = _WorldMatrix; }
+	_float3		Get_Weapon_Pos() { return { m_WorldMatrix._41, m_WorldMatrix._42, m_WorldMatrix._43 }; }
 
-public:
 	CCharacter* Get_Target_Character(CCollider* other);
-
 	CWeapon* Set_Damage(_int _iDamage);
 	CWeapon* Set_Direction(Direction _eHitDirection);
 	CWeapon* Set_Power(Power _eHitPower);
