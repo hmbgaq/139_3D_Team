@@ -65,6 +65,7 @@ private:
 	class CGameInstance* m_pGameInstance = { nullptr };
 	class CCharacter* m_pPlayer = { nullptr };
 
+
 private:
 	class CGameObject* Find_Prototype(const wstring& strPrototypeTag);
 	class CLayer* Find_Layer(_uint iLevelIndex, const wstring& strLayerTag);

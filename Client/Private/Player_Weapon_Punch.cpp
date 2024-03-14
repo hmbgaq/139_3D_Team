@@ -89,6 +89,8 @@ void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 
 		CData_Manager::GetInstance()->Get_Player()->Create_Effect(Get_WorldPosition());
 		Set_Enable_Collisions(false);
+
+		//m_pGameInstance->Hitlag();
 	}
 	
 }
