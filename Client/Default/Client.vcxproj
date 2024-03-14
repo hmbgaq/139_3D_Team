@@ -1023,6 +1023,7 @@
     <ClInclude Include="..\Public\UI_EnemyHP_Shard.h" />
     <ClInclude Include="..\Public\UI_EnemyHUD_Bar.h" />
     <ClInclude Include="..\Public\UI_EnemyHUD_Shard.h" />
+    <ClInclude Include="..\Public\UI_EnemyState_Shard.h" />
     <ClInclude Include="..\Public\UI_Loading_Icon.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
     <ClInclude Include="..\Public\UI_Video.h" />
@@ -1909,6 +1910,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UI_EnemyState_Shard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />

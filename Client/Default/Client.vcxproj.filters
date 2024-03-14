@@ -6018,6 +6018,9 @@
     <ClInclude Include="..\Public\UI_EnemyHP_FrameBar.h">
       <Filter>02.GameObjects\UI\01. Enemy\00. HUD_Bar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_EnemyState_Shard.h">
+      <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8499,6 +8502,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_EnemyHP_FrameBar.cpp">
       <Filter>02.GameObjects\UI\01. Enemy\00. HUD_Bar</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_EnemyState_Shard.cpp">
+      <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

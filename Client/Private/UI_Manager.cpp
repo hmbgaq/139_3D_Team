@@ -6,6 +6,11 @@
 #include "UI.h"
 #include "..\Public\UI_Manager.h"
 
+#pragma region UI
+#include "UI_EnemyHP_Bar.h"
+#include "UI_Distortion.h"
+#pragma endregion
+
 IMPLEMENT_SINGLETON(CUI_Manager);
 
 CUI_Manager::CUI_Manager()
@@ -62,9 +67,9 @@ HRESULT CUI_Manager::Ready_Loading_Intro(_uint iLevelIndex)
 	return S_OK;
 }
 
-HRESULT CUI_Manager::Ready_BossHUD_Bar(_uint iLevelIndex)
+HRESULT CUI_Manager::Ready_BossHUD_Bar(_uint iLevelIndex, CGameObject* pOwner)
 {
-	Add_BossHUD_Bar(iLevelIndex, TEXT("Layer_BossHUDBar"));
+	Add_BossHUD_Bar(iLevelIndex, TEXT("Layer_BossHUDBar"), pOwner);
 
 	return S_OK;
 }
@@ -772,7 +777,7 @@ void CUI_Manager::Trigger_Crosshair(_bool bPlayAnim)
 	}
 }
 
-HRESULT CUI_Manager::Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerTag)
+HRESULT CUI_Manager::Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
 {
 	json json_in;
 
@@ -808,7 +813,6 @@ HRESULT CUI_Manager::Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerT
 		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
-
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
 
@@ -825,6 +829,20 @@ HRESULT CUI_Manager::Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerT
 		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
 		if (pUI_Object == nullptr)
 			return E_FAIL;
+
+		/* HP Bar */
+		string strCloneTag_HPBar = "Prototype_GameObject_UI_EnemyHP_Bar";
+		if (tUI_Info.strCloneTag == strCloneTag_HPBar)
+		{
+			dynamic_cast<CUI_EnemyHP_Bar*>(pUI_Object)->Set_Object_Owner(pOwner);
+		}
+
+		/* Distortion */
+		string strCloneTag_Distortion = "Prototype_GameObject_UI_Distortion";
+		if (tUI_Info.strCloneTag == strCloneTag_Distortion)
+		{
+			dynamic_cast<CUI_Distortion*>(pUI_Object)->Set_Active(true);
+		}
 
 		m_vecBossHUD_Bar.push_back(pUI_Object);
 

@@ -50,7 +50,8 @@ HRESULT CUI_EnemyHP_Bar::Initialize(void* pArg)
 	해당 객체에 원하는 함수나 변수 만들어서 불러오기.
 	*/
 
-	//Set_OwnerHp();
+	Setting_Owner();
+	m_bActive = true;
 
 	return S_OK;
 }
@@ -62,10 +63,9 @@ void CUI_EnemyHP_Bar::Priority_Tick(_float fTimeDelta)
 
 void CUI_EnemyHP_Bar::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_Q)) // 피격
-	{
-		m_fCurHP = -10.f;
-	}
+	/* Owner HP */
+	if(m_pCharacterOwner != nullptr)
+		m_fCurHP = m_pCharacterOwner->Get_CurHP();
 
 	__super::Tick(fTimeDelta);
 
@@ -78,6 +78,7 @@ void CUI_EnemyHP_Bar::Tick(_float fTimeDelta)
 	{
 		/* Dead */
 		m_fCurHP = 0.f;
+		Set_Dead(true);
 	}
 
 	/* 2. 현재 체력 -> 맥스 체력 초과 */
@@ -195,6 +196,26 @@ void CUI_EnemyHP_Bar::Compute_OwnerCamDistance()
 	//_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
 
 	//m_fOwnerCamDistance = XMVectorGetX(XMVector3Length(vPosition - vCamPosition));
+}
+
+HRESULT CUI_EnemyHP_Bar::Setting_Owner()
+{
+	if (m_pOwner != nullptr) // Owner 지정해줘야 합니다.
+	{
+		m_pCharacterOwner = dynamic_cast<CCharacter*>(m_pOwner);
+
+		m_fCurHP = m_pCharacterOwner->Get_CurHP();
+		m_fPreHP = m_fCurHP;
+		m_fMaxHP = m_pCharacterOwner->Get_MaxHP();
+	}
+	else
+	{
+		m_fCurHP = 100.f;
+		m_fPreHP = 100.f;
+		m_fMaxHP = 100.f;
+	}
+
+	return S_OK;
 }
 
 _bool CUI_EnemyHP_Bar::In_Frustum()

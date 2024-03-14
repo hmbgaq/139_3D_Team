@@ -49,7 +49,7 @@ public: /* Ready_Preset */
 	HRESULT Ready_Interface(_uint iLevelIndex);
 	HRESULT Ready_Crosshair(_uint iLevelIndex);
 	HRESULT Ready_Loading_Intro(_uint iLevelIndex);
-	HRESULT Ready_BossHUD_Bar(_uint iLevelIndex);
+	HRESULT Ready_BossHUD_Bar(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 
 public:
 	/* LeftHUD */
@@ -95,7 +95,7 @@ public:
 	vector<CUI*>	m_vecCrosshair;
 
 	/* BossHUD(Bar) */
-	HRESULT			Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerTag);
+	HRESULT			Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_BossHUD_Bar(_bool bActive);
 	vector<CUI*>	m_vecBossHUD_Bar;
 	//CUI* Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);

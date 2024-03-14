@@ -9,6 +9,7 @@
 #include "VampireCommander_HitLeft.h"
 #include "VampireCommander_HitRight.h"
 #include "VampireCommander_CutScene.h"
+#include "UI_Manager.h"
 
 #include "Data_Manager.h"
 
@@ -48,6 +49,12 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 
 	//HP
 	m_iHp = 1000;
+
+	m_fMaxHP = 1000.f;
+	m_fCurHP = m_fMaxHP;
+
+	// Ready BossHUDBar
+	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
 
 	return S_OK;
 }

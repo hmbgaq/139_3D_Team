@@ -462,7 +462,7 @@ HRESULT CLevel_Intro::Ready_UI()
 {
 	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
 
-	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
+	//FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr));
 
 	FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
 
@@ -516,7 +516,7 @@ HRESULT CLevel_Intro::Ready_Layer_UI_Monster(const wstring& strLayerTag, void* p
 HRESULT CLevel_Intro::Ready_Layer_UI_Interface(const wstring& strLayerTag, void* pArg)
 {
 	// Ready Interface
-	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Interface(LEVEL_STATIC));
+	//FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Interface(LEVEL_STATIC));
 	//// =>Left_Interface
 	//Ready_LeftInterface(strLayerTag, pArg);
 	//// =>Right_Interface
@@ -870,6 +870,11 @@ HRESULT CLevel_Intro::Ready_Reward_Item(const wstring& strLayerTag, void* pArg)
 
 HRESULT CLevel_Intro::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 {
+	// Ready Interface
+	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Interface(LEVEL_STATIC));
+	// Ready Crosshair
+	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Crosshair(LEVEL_STATIC));
+
 	return S_OK;
 }
 

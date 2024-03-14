@@ -2,6 +2,10 @@
 #include "Client_Defines.h"
 #include "UI.h"
 
+BEGIN(ENGINE)
+class CCharacter;
+END
+
 /* 체력 프레임 */
 class CUI_EnemyHP_Bar final : public CUI
 {
@@ -27,6 +31,7 @@ private:
 
 private:
 	void					Compute_OwnerCamDistance();
+	HRESULT					Setting_Owner();
 	_bool					In_Frustum();
 
 public:
@@ -35,6 +40,7 @@ public:
 
 private:
 	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };
+	CCharacter*				m_pCharacterOwner = { nullptr };
 	_float					m_fPreHP = 100.f;
 	_float					m_fCurHP = 100.f;
 	_float					m_fMaxHP = 100.f;

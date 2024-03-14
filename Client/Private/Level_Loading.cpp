@@ -39,13 +39,10 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 		//m_pUI_Manager->Ready_Loading_MainMenu(LEVEL_LOGO);
 		break;
 	case Client::LEVEL_INTRO:
-		//m_pUI_Manager->Ready_Loading_Intro(LEVEL_INTRO); // Loading UI 持失
-		//m_pUI_Manager->Active_Loading_Intro(true);			 // UI ON
-		break;
-	case Client::LEVEL_INTRO_BOSS:
-		// Test
 		m_pUI_Manager->Ready_Loading_Intro(LEVEL_INTRO); // Loading UI 持失
 		m_pUI_Manager->Active_Loading_Intro(true);			 // UI ON
+		break;
+	case Client::LEVEL_INTRO_BOSS:
 		//m_pUI_Manager->Ready_Loading_IntroBoss(LEVEL_INTRO_BOSS);
 		break;
 	case Client::LEVEL_SNOWMOUNTAIN:
@@ -93,8 +90,6 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 				break;
 			case LEVEL_INTRO_BOSS:
 				pNewLevel = CLevel_IntroBoss::Create(m_pDevice, m_pContext);
-				// Test
-				m_pUI_Manager->Active_Loading_Intro(false);			 // UI OFF
 				break;
 			case LEVEL_GAMEPLAY:
 				pNewLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
