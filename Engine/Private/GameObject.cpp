@@ -37,7 +37,6 @@ HRESULT CGameObject::Initialize_Prototype()
 HRESULT CGameObject::Initialize(void* pArg)
 {
 	m_bEnable = true;
-
 	m_iCurrnetLevel = m_pGameInstance->Get_NextLevel();
 
 	GAMEOBJECT_DESC		Desc = {};
@@ -46,8 +45,7 @@ HRESULT CGameObject::Initialize(void* pArg)
 		Desc = *(GAMEOBJECT_DESC*)pArg;
 
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext, Desc.fSpeedPerSec, Desc.fRotationPerSec);
-	if (nullptr == m_pTransformCom)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pTransformCom, E_FAIL);
 
 	if (nullptr != Find_Component(g_pTransformTag))
 		return E_FAIL;
@@ -111,7 +109,7 @@ HRESULT CGameObject::Set_InitPosition(const _float3& vPos)
 	NULL_CHECK_RETURN(pNavi, E_FAIL);
 
 
-	_int iCheckIndex = pNavi->Get_CurrentCellIndex(vPos);
+	_int iCheckIndex = pNavi->Get_SelectRangeCellIndex(this);
 	if (iCheckIndex == -1)
 		this->Set_Dead(true);
 	pNavi->Set_CurrentIndex(iCheckIndex);
@@ -183,6 +181,11 @@ _float3 CGameObject::Get_Position()
 _vector CGameObject::Calc_Look_Dir(_vector vTargetPos)
 {
 	return m_pTransformCom->Calc_Look_Dir(vTargetPos);
+}
+
+_vector CGameObject::Calc_Look_Dir_XZ(_vector vTargetPos)
+{
+	return m_pTransformCom->Calc_Look_Dir_XZ(vTargetPos);
 }
 
 CGameObject* CGameObject::Get_Object_Owner()

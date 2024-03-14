@@ -54,6 +54,7 @@ namespace Client
 	#define LAYER_PARTICLE					TEXT("Layer_Particle")
 
 	#define LAYER_PLAYER_BULLET				TEXT("Layer_Player_Bullet")
+	#define LAYER_MONSTER_BULLET			TEXT("Layer_Monster_Bullet")
 
 
 	//Player_Weapon
@@ -84,6 +85,7 @@ namespace Client
 		ONLY_VIEW,
 		CHECK_DIR,
 		INTERIOR,
+		INTERACT,
 		PICKING_INSTANCE,
 		PICKING_MESH,
 		LAYER_END

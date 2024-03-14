@@ -61,10 +61,10 @@ void CMonster::Priority_Tick(_float fTimeDelta)
 
 void CMonster::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_K))
-	{
-		m_bEnable = false;
-	}
+	//if (m_pGameInstance->Key_Down(DIK_K))
+	//{
+	//	m_bEnable = false;
+	//}
 
 	//if (m_pGameInstance->Key_Pressing(DIK_T)) 
 	//{

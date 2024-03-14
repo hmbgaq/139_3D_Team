@@ -82,25 +82,18 @@ HRESULT CBody::Render()
 {
 	__super::Render();
 
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	_uint iPass = m_iShaderPass; // false == m_bDissolve ? 0 : 3;
-
-	//if (FAILED(m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
-	//	return E_FAIL;
-
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float))))
-	//	return E_FAIL;
-
+	_uint iPass = m_iShaderPass; 
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 
 		m_pShaderCom->Begin(iPass);
 
@@ -183,7 +176,8 @@ void CBody::OnCollisionStay(CCollider* other)
 	if (nullptr != pTarget_Character)
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
-		pTarget_Character->Add_Force(Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1	, 0.15f);
+
+		pTarget_Character->Add_Force(Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1	, 0.15f);
 	}
 }
 
@@ -314,19 +308,9 @@ void CBody::Update_ShootingReaction(_float fTimeDelta)
 
 HRESULT CBody::Bind_ShaderResources()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
-
-	//if (FAILED(m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
-	//	return E_FAIL;
-
-// 	if (FAILED(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
-// 		return E_FAIL;
-
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
 	return S_OK;
 }

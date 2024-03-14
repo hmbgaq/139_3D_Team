@@ -2,6 +2,8 @@
 
 #include "GameObject.h"
 #include "Transform.h"
+#include "Character.h"
+#include "Navigation.h"
 
 CRigidBody::CRigidBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -69,8 +71,16 @@ void CRigidBody::Late_Tick(_float fTimeDelta)
 		}
 	}
 
+
+	CCharacter* pCharacter = dynamic_cast<CCharacter*>(m_pOwner);
+	CNavigation* pNavigation = nullptr;
+	if (nullptr != pCharacter)
+	{
+		pNavigation = pCharacter->Get_Navigation();
+	}
+
 	if (true == m_pOwnerTransform->Get_Enable() && nullptr != m_pOwnerTransform)
-		m_pOwnerTransform->Move_On_Navigation(vMoveValue);
+		m_pOwnerTransform->Move_On_Navigation(vMoveValue, pNavigation);
 
 }
 

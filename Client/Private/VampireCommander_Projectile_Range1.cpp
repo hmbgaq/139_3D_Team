@@ -19,7 +19,6 @@ CVampireCommander_Projectile_Range1::CVampireCommander_Projectile_Range1(const C
 
 HRESULT CVampireCommander_Projectile_Range1::Initialize_Prototype()
 {
-
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
 
@@ -30,7 +29,7 @@ HRESULT CVampireCommander_Projectile_Range1::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 13.f;
+	GameObjectDesc.fSpeedPerSec = 15.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -45,13 +44,13 @@ HRESULT CVampireCommander_Projectile_Range1::Initialize(void* pArg)
 	{
 
 		CCharacter* m_pMonster = dynamic_cast<CCharacter*>(pGameObject);
-		m_vMonsterPos = m_pMonster->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 3 * m_pMonster->Get_Transform()->Get_State(CTransform::STATE_UP);
+		m_vMonsterPos = m_pMonster->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.5f * m_pMonster->Get_Transform()->Get_State(CTransform::STATE_UP);
 		m_pTransformCom->Set_WorldMatrix(m_pMonster->Get_Transform()->Get_WorldMatrix());
 	}
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_vMonsterPos);
 
-	m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
+	m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.5f * CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
 	
 	m_pTransformCom->Look_At(m_vPlayerPos );
 
@@ -75,6 +74,8 @@ void CVampireCommander_Projectile_Range1::Tick(_float fTimeDelta)
 
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	m_pTransformCom->Go_Straight(fTimeDelta);
+
+	
 }
 
 void CVampireCommander_Projectile_Range1::Late_Tick(_float fTimeDelta)

@@ -13,8 +13,9 @@ BEGIN(Client)
 class CEnvironment_LightObject final : public CGameObject
 {
 public:
-	typedef struct tagEnvironmentLightObjectDesc : public CGameObject::GAMEOBJECT_DESC
+	typedef struct tagEnvironmentLightObjectDesc : public CGameObject::GAMEOBJECT_DESC 
 	{
+
 		_float4		vPos = { 0.f, 0.f, 0.f, 0.f };
 		_uint		iShaderPassIndex = { 0 };
 		wstring		strModelTag;

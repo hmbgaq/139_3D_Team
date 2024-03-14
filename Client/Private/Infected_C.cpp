@@ -9,6 +9,7 @@
 #include "Infected_SpawnCrawl_02.h"
 #include "Infected_SpawnFromCoffin0.h"
 #include "Infected_SpawnGround.h"
+#include "Infected_SpawnFromEgg_02.h"
 
 CInfected_C::CInfected_C(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CInfected(pDevice, pContext, strPrototypeTag)
@@ -96,28 +97,28 @@ HRESULT CInfected_C::Ready_Option()
 		switch (m_eInfo.RandomNumber >> 1)
 		{
 		case 1:
-			//cout << " CInfected_SpawnClimb_01 " << endl;
-			m_pActor->Set_State(new CInfected_SpawnClimb_01());
+			//m_pActor->Set_State(new CInfected_SpawnClimb_01());
+			m_pActor->Set_State(new CInfected_SpawnFromEgg_02());
 			break;
 		case 2:
-			//cout << " CInfected_SpawnClimb_02 " << endl;
-			m_pActor->Set_State(new CInfected_SpawnClimb_02());
+			//m_pActor->Set_State(new CInfected_SpawnClimb_02());
+			m_pActor->Set_State(new CInfected_SpawnFromEgg_02());
 			break;
 		case 3:
-			//cout << " CInfected_SpawnCrawl_01 " << endl;
-			m_pActor->Set_State(new CInfected_SpawnCrawl_01());
+			//m_pActor->Set_State(new CInfected_SpawnCrawl_01());
+			m_pActor->Set_State(new CInfected_SpawnFromEgg_02());
 			break;
 		case 4:
-			//cout << " CInfected_SpawnCrawl_02 " << endl;
-			m_pActor->Set_State(new CInfected_SpawnCrawl_02());
+			//m_pActor->Set_State(new CInfected_SpawnCrawl_02());
+			m_pActor->Set_State(new CInfected_SpawnFromEgg_02());
 			break;
 		case 5:
-			//cout << " CInfected_SpawnFromCoffin0 " << endl;
-			m_pActor->Set_State(new CInfected_SpawnFromCoffin0());
+			//m_pActor->Set_State(new CInfected_SpawnFromCoffin0());
+			m_pActor->Set_State(new CInfected_SpawnFromEgg_02());
 			break;
 		default:
-			//cout << " CInfected_SpawnGround " << endl;
-			m_pActor->Set_State(new CInfected_SpawnGround());
+			//m_pActor->Set_State(new CInfected_SpawnGround());
+			m_pActor->Set_State(new CInfected_SpawnFromEgg_02());
 			break;
 		}
 	}
