@@ -525,7 +525,8 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 	m_wstrLayerTag = TEXT("Layer_BackGround");
 
-	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky")));
+	/* 기존 스카이박스 있어서 해제함 */
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Sky")));
 
 	json Stage1MapJson = {};
 

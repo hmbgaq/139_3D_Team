@@ -36,12 +36,18 @@ protected:
 
 protected:
 	map<CBody_Infected::RENDER_STATE, vector<_int>> m_vDiscardMesh = {};
-	RENDER_STATE			m_eRender_State = RENDER_STATE::RENDER_STATE_END;
+	RENDER_STATE		m_eRender_State = RENDER_STATE::RENDER_STATE_END;
+
+	_float				m_gCamFar		= {};
+	_float4				m_vCamPos		= {};
+	_float				m_fRimPower		= {};
+	_float4				m_vRimColor		= {};
+	_float3				m_vBloomPower	= {};
 
 public:
-	virtual CGameObject* Clone(void* pArg) PURE;
-	virtual CGameObject* Pool() PURE;
-	virtual void Free() override;
+	virtual CGameObject*	Clone(void* pArg) PURE;
+	virtual CGameObject*	Pool() PURE;
+	virtual void			Free() override;
 
 };
 

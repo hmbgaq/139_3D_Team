@@ -29,6 +29,7 @@ public:
 		_float4	m_vRimColor = { 1.0f, 1.f, 1.f, 0.3f };
 		_float3	m_vBloomPower = _float3(0.1f, 0.1f, 0.1f); 
 	}CREATE_DESC;
+
 private:
 	CShaderParsed_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CShaderParsed_Object(const CShaderParsed_Object& rhs);

@@ -133,11 +133,6 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
- 
-    /* ---------------- New ---------------- */
-    // float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
-    // Out.vDiffuse += vRimColor;
-    // Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     
     return Out;
 }

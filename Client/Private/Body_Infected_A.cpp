@@ -38,6 +38,12 @@ void CBody_Infected_A::Priority_Tick(_float fTimeDelta)
 void CBody_Infected_A::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if(m_pGameInstance->Key_Down(DIK_0))
+		m_eRender_State = CBody_Infected::RENDER_STATE::ATTACK;
+	if (m_pGameInstance->Key_Down(DIK_9))
+		m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
+
 }
 
 void CBody_Infected_A::Late_Tick(_float fTimeDelta)
@@ -58,7 +64,22 @@ HRESULT CBody_Infected_A::Render()
 		{
 			auto& Discard = iter->second;
 			if (find(Discard.begin(), Discard.end(), i) != Discard.end())
-				continue; // 메시번호가 벡터안에있으면 렌더안함 
+			{
+				if (m_eRender_State == CBody_Infected::RENDER_STATE::ATTACK)
+				{
+					m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+
+					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+
+					m_pShaderCom->Begin(ECast(MONSTER_SHADER::INFECTED_PUNCH));
+
+					m_pModelCom->Render((_uint)i);
+				}
+				else
+					continue;
+			}
 			else
 			{	
 				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
@@ -119,6 +140,19 @@ HRESULT CBody_Infected_A::Bind_ShaderResources()
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
+	if (m_eRender_State == CBody_Infected::RENDER_STATE::ATTACK)
+	{
+		m_vCamPos = m_pGameInstance->Get_CamPosition();
+		m_vRimColor = { 1.0f, 0.3f, 0.2f, 1.f };
+		m_vBloomPower = _float3(1.0f, 1.0f, 1.0f);
+		m_fRimPower = 5.f;
+
+		m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
+		m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
+	}
 
 	return S_OK;
 }
