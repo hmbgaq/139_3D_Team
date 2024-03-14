@@ -5,12 +5,12 @@
 namespace Client
 {
 	/* 1600 x 900 가능할지도 ㄱㄷ */
-	//static const unsigned int	g_iWinSizeX = 1280;
-	//static const unsigned int	g_iWinSizeY = 720;
+	static const unsigned int	g_iWinSizeX = 1280;
+	static const unsigned int	g_iWinSizeY = 720;
 	//static const unsigned int	g_iWinSizeX = 1600;
 	//static const unsigned int	g_iWinSizeY = 900;
-	static const unsigned int	g_iWinSizeX = 1920;
-	static const unsigned int	g_iWinSizeY = 1080;
+	//static const unsigned int	g_iWinSizeX = 1920;
+	//static const unsigned int	g_iWinSizeY = 1080;
 
 	enum LEVEL { 
 		LEVEL_STATIC, 
@@ -47,10 +47,21 @@ namespace Client
 	#define LAYER_CAMERA					TEXT("Layer_Camera")
 	#define LAYER_EFFECT					TEXT("Layer_Effect")
 	#define LAYER_MONSTER					TEXT("Layer_Monster")
+	#define LAYER_BOSS						TEXT("Layer_Boss")
 	#define LAYER_PLAYER					TEXT("Layer_Player")
 	#define LAYER_UI_MONSTER				TEXT("Layer_UI_Monster")
 	#define LAYER_UI_PLAYER					TEXT("Layer_UI_Player")
 	#define LAYER_PARTICLE					TEXT("Layer_Particle")
+
+	#define LAYER_PLAYER_BULLET				TEXT("Layer_Player_Bullet")
+	#define LAYER_MONSTER_BULLET			TEXT("Layer_Monster_Bullet")
+
+
+	//Player_Weapon
+	#define WEAPON_PUNCH_L					TEXT("Weapon_Punch_L")
+	#define WEAPON_PUNCH_R					TEXT("Weapon_Punch_R")
+	#define WEAPON_WINCHESTER				TEXT("Weapon_Winchester")
+
 
 
 	enum class COLLISION_LAYER

@@ -91,6 +91,7 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 		m_pGameInstance->Add_DebugRender(m_pColliderCom);
 	}
 
+
 }
 
 HRESULT CScreamer::Render()

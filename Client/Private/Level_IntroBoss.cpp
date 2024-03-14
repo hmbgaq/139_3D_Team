@@ -483,6 +483,9 @@ HRESULT CLevel_IntroBoss::Ready_Layer_UI_Interface(const wstring& strLayerTag, v
 {
 	// Ready Interface
 	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Interface(LEVEL_STATIC));
+	// Ready Crosshair
+	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Crosshair(LEVEL_STATIC));
+
 	//// =>Left_Interface
 	//Ready_LeftInterface(strLayerTag, pArg);
 	//// =>Right_Interface

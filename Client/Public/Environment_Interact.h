@@ -58,8 +58,10 @@ public:
 	wstring&							Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
 	_bool								Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
 	
+#ifdef _DEBUG
 	void								Set_ColliderSize(_float3 vColliderSize);
 	void								Set_ColliderCenter(_float3 vColliderCenter);
+#endif // _DEBUG
 
 
 #ifdef _DEBUG

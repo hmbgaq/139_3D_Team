@@ -34,6 +34,16 @@ void CBody_Bandit_Sniper::Priority_Tick(_float fTimeDelta)
 void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+		iDiscardMeshNumber += 1;
+		if (iDiscardMeshNumber > m_pModelCom->Get_NumMeshes())
+		{
+			iDiscardMeshNumber = 0;
+		}
+		cout << iDiscardMeshNumber << endl;
+	}
 }
 
 void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
@@ -43,14 +53,32 @@ void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Bandit_Sniper::Render()
 {
-	FAILED_CHECK(__super::Render());
+	FAILED_CHECK(Bind_ShaderResources());
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		if (i == iDiscardMeshNumber)
+			continue;
+
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+
+		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+
+		m_pModelCom->Render((_uint)i);
+	}
 
 	return S_OK;
 }
 
 HRESULT CBody_Bandit_Sniper::Render_Shadow()
 {
-	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_pGameInstance->Get_NextLevel());
+	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_iCurrnetLevel);
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
@@ -64,7 +92,7 @@ HRESULT CBody_Bandit_Sniper::Render_Shadow()
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 
-		m_pShaderCom->Begin(2);
+		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_SHADOW));
 
 		m_pModelCom->Render((_uint)i);
 	}
@@ -75,23 +103,29 @@ HRESULT CBody_Bandit_Sniper::Render_Shadow()
 
 HRESULT CBody_Bandit_Sniper::Ready_Components()
 {
-	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
-
 	/* For.Com_Shader */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"),TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Shader_Monster"),TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 
 	/* For.Com_Model */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Bandit_Sniper"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Model_Bandit_Sniper"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 
 	/* For.Com_Collider */
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-	BoundingDesc.vExtents = _float3(0.5f, 0.5f, 0.5f);
-	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
+	BoundingDesc.vExtents = _float3(0.4f, 0.9f, 0.4f);
+	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 
-
-	FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
-
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
+	
+	///* For.Com_Collider */
+	//CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
+	//{
+	//	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
+	//	BoundingDesc.fRadius = 0.5f;
+	//	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
+	//
+	//	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
+	//}
 	return S_OK;
 }
 
@@ -100,6 +134,7 @@ HRESULT CBody_Bandit_Sniper::Bind_ShaderResources()
 	FAILED_CHECK(__super::Bind_ShaderResources());
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
+
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 
 	return S_OK;

@@ -12,6 +12,9 @@
 #include "VampireCommander_TurnL90.h"
 #include "VampireCommander_TurnL180.h"
 #include "VampireCommander_TurnR90.h"
+#include "VampireCommander_TurnR180.h"
+#include "VampireCommander_Stun_Start.h"
+#include "UI_Manager.h"
 
 #include "Data_Manager.h"
 #include "Player.h"
@@ -49,9 +52,17 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 		m_pActor = new CActor<CVampireCommander>(this);
 		m_pActor->Set_State(new CVampireCommander_Spawn1);
 	}
-
 	//HP
-	m_iHp = 1000;
+	m_iMaxHp = 1000;
+	m_iHp = m_iMaxHp;
+
+	//m_fMaxHP = 1000.f;
+	//m_fCurHP = m_fMaxHP;
+
+	// Ready BossHUDBar
+	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
+
+	m_vWeaknessPoint_Local = _float3(0.f, 2.f, 0.f);
 
 	return S_OK;
 }
@@ -65,27 +76,14 @@ void CVampireCommander::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	
+	Search_Target(L"Layer_Player",200.f);
+
 	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
-	Search_Target(L"Layer_Player", 200.f);
-	if (m_bLookAt == true)
-	{
-		_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(),Get_Target()->Get_Transform()->Get_Pos());
-		if (0 <= fAngle && fAngle <= 90)
-			Look_At_Target();
-		else if (-90 <= fAngle && fAngle < 0)
-			Look_At_Target();
-		else if (fAngle > 90)
-			m_pActor->Set_State(new CVampireCommander_TurnL90);
-		else if (fAngle < -90)
-			m_pActor->Set_State(new CVampireCommander_TurnR90);
-		
-
-		m_bLookAt = false;
-	}
-
+	cout << "introBossHP:" << m_iHp << endl;
 }
 
 void CVampireCommander::Late_Tick(_float fTimeDelta)
@@ -178,7 +176,7 @@ void CVampireCommander::Hitted_Front(Power ePower)
 void CVampireCommander::Hitted_Dead(Power ePower)
 {
 	//stun이 걸리고 그다음에 처형이 있기 때문에 그냥 때려서는 죽일수 없다.
-	m_pActor->Set_State(new CVampireCommander_CutScene);
+	m_pActor->Set_State(new CVampireCommander_Stun_Start);
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 	//pPlayer->Get_Actor()->Set_State(new CPlayer_) // 여기서 플레이어를 강제로 처형 애니메이션으로 돌려 버려야 함 ! 
 }

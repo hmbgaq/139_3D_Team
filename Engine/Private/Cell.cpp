@@ -221,7 +221,7 @@ _bool CCell::isIn(_fvector vPosition, _fmatrix WorldMatrix, _int* pNeighborIndex
 
 _bool CCell::isInRange(_fvector vPosition, _fmatrix WorldMatrix)
 {
-	for (size_t i = 0; i < LINE_END; ++i)
+	for (_int i = 0; i < ECast(LINE_END); ++i)
 	{
 		_vector vStartPoint = XMVector3TransformCoord(XMLoadFloat3(&m_vPoints[i]), WorldMatrix);
 		_vector vNormal = XMVector3TransformNormal(XMLoadFloat3(&m_vNormals[i]), WorldMatrix);

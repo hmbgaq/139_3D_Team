@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Body_Player.h"
 #include "GameInstance.h"
+#include "Character.h"
 
 #include "PhysXCollider.h"
 #include "Preset_PhysXColliderDesc.h"
@@ -34,11 +35,30 @@ HRESULT CBody_Player::Initialize(void* pArg)
 void CBody_Player::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
+
+	if (Is_Splitted()) 
+	{
+		Set_MouseMove(fTimeDelta);
+	}
+	else 
+	{
+		m_fRotateUpperX = { 0.f };
+		m_fRotateUpperY = { 0.f };
+
+		m_fShootingReaction = { 0.f };
+		m_fShootingReactionTarget = { 0.f };
+	}
+	
 }
 
 void CBody_Player::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (Is_Splitted())
+	{
+		Update_ShootingReaction(fTimeDelta);
+	}
 }
 
 void CBody_Player::Late_Tick(_float fTimeDelta)
@@ -80,14 +100,17 @@ HRESULT CBody_Player::Render_Shadow()
 
 void CBody_Player::OnCollisionEnter(CCollider* other)
 {
+	__super::OnCollisionEnter(other);
 }
 
 void CBody_Player::OnCollisionStay(CCollider* other)
 {
+	//__super::OnCollisionStay(other);
 }
 
 void CBody_Player::OnCollisionExit(CCollider* other)
 {
+	__super::OnCollisionExit(other);
 }
 
 

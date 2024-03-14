@@ -2,7 +2,7 @@
 #include "GameInstance.h"
 #include "Transform.h"
 #include "Navigation.h"
-
+#include "Character.h"
 
 CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 	: m_pDevice(pDevice)
@@ -37,6 +37,7 @@ HRESULT CGameObject::Initialize_Prototype()
 HRESULT CGameObject::Initialize(void* pArg)
 {
 	m_bEnable = true;
+	m_iCurrnetLevel = m_pGameInstance->Get_NextLevel();
 
 	GAMEOBJECT_DESC		Desc = {};
 	
@@ -44,8 +45,7 @@ HRESULT CGameObject::Initialize(void* pArg)
 		Desc = *(GAMEOBJECT_DESC*)pArg;
 
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext, Desc.fSpeedPerSec, Desc.fRotationPerSec);
-	if (nullptr == m_pTransformCom)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pTransformCom, E_FAIL);
 
 	if (nullptr != Find_Component(g_pTransformTag))
 		return E_FAIL;
@@ -79,8 +79,6 @@ _bool CGameObject::Picking(_Out_ _float3* vPickedPos)
 	return false;
 }
 
-
-
 CComponent * CGameObject::Find_Component(const wstring & strComTag, const wstring & strPartTag)
 {
 	auto	iter = m_Components.find(strComTag);
@@ -99,6 +97,24 @@ void CGameObject::Set_Position(const _float3& vState)
 void CGameObject::Set_WorldMatrix(_float4x4 matrix)
 {
 	m_pTransformCom->Set_WorldMatrix(matrix);
+}
+
+HRESULT CGameObject::Set_InitPosition(const _float3& vPos)
+{
+	/* 위치 Set */
+	Set_Position(vPos);
+
+	/* 해당위치로 네비 셋팅 */
+	CNavigation* pNavi = dynamic_cast<CCharacter*>(this)->Get_Navigation();
+	NULL_CHECK_RETURN(pNavi, E_FAIL);
+
+
+	_int iCheckIndex = pNavi->Get_SelectRangeCellIndex(this);
+	if (iCheckIndex == -1)
+		this->Set_Dead(true);
+	pNavi->Set_CurrentIndex(iCheckIndex);
+
+	
 }
 
 void CGameObject::Set_Enable(_bool _Enable)

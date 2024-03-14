@@ -32,14 +32,11 @@ public:		//상태 그룹 별 업데이트
 	CState<CBandit_Sniper>* Death_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CBandit_Sniper>* Melee_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
-
 public:		//개별 동작 상태 집합
 	CState<CBandit_Sniper>* Normal(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CBandit_Sniper>* Attack(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CBandit_Sniper>* Rest(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
-private:
-	
 
 protected:
 	CGameInstance* m_pGameInstance = { nullptr };

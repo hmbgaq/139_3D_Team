@@ -57,6 +57,11 @@ HRESULT CVampireCommander_Projectile_Range3::Initialize(void* pArg)
 
 	m_iDamage = 30;
 
+
+	// 이펙트 생성
+	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Impact.json", this);
+	//m_pEffect = EFFECT_MANAGER->Create_Effect_With_Trail("Test_Impact.json", "Test_Effect_Trail.json", this); // 트레일 달린 이펙트 테스트
+
 	return S_OK;
 }
 
@@ -108,6 +113,8 @@ void CVampireCommander_Projectile_Range3::OnCollisionEnter(CCollider* other)
 	}
 	m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
+	m_pEffect->Set_Dead(true);	// 이펙트 죽이기
+
 }
 
 void CVampireCommander_Projectile_Range3::OnCollisionStay(CCollider* other)

@@ -6,13 +6,13 @@
 
 _float4x4 CNavigation::m_WorldMatrix = { };
 
-CNavigation::CNavigation(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CNavigation::CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 {
 
 }
 
-CNavigation::CNavigation(const CNavigation & rhs)
+CNavigation::CNavigation(const CNavigation& rhs)
 	: CComponent(rhs)
 	, m_Cells(rhs.m_Cells)
 #ifdef _DEBUG
@@ -29,7 +29,7 @@ CNavigation::CNavigation(const CNavigation & rhs)
 
 }
 
-HRESULT CNavigation::Initialize_Prototype(const wstring & strNavigationFilePath)
+HRESULT CNavigation::Initialize_Prototype(const wstring& strNavigationFilePath)
 {
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 
@@ -70,10 +70,10 @@ HRESULT CNavigation::Initialize_Prototype(const wstring & strNavigationFilePath)
 	return S_OK;
 }
 
-HRESULT CNavigation::Initialize(void * pArg)
+HRESULT CNavigation::Initialize(void* pArg)
 {
 
-	if(nullptr != pArg)
+	if (nullptr != pArg)
 		m_iCurrentIndex = ((NAVI_DESC*)pArg)->iCurrentIndex;
 
 	m_WorldMatrix = XMMatrixIdentity();
@@ -86,7 +86,7 @@ HRESULT CNavigation::Initialize(void * pArg)
 HRESULT CNavigation::Render()
 {
 	/* 셀들의 위치가 월드상에 존재한다. */
-	if(true == m_Cells.empty())
+	if (true == m_Cells.empty())
 		return E_FAIL;
 
 	_float4		vColor = { 0.0f, 1.f, 0.f, 1.f };
@@ -112,7 +112,7 @@ HRESULT CNavigation::Render()
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
-	
+
 
 	m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4));
 
@@ -122,7 +122,7 @@ HRESULT CNavigation::Render()
 
 	if (iCurrentLevel == 6)
 	{
-		
+
 		for (auto& pCell : m_Cells)
 		{
 			if (nullptr != pCell)
@@ -142,7 +142,7 @@ HRESULT CNavigation::Render()
 		else
 			m_Cells[m_iCurrentIndex]->Render(m_pShader);
 	}
-	
+
 
 
 
@@ -159,7 +159,7 @@ void CNavigation::Update(_fmatrix WorldMatrix)
 
 _bool CNavigation::isMove(_fvector vPosition)
 {
-	if(true == m_Cells.empty())
+	if (true == m_Cells.empty())
 		return false;
 
 	_int		iNeighborIndex = { -1 };
@@ -179,7 +179,7 @@ _bool CNavigation::isMove(_fvector vPosition)
 				{
 					m_iCurrentIndex = iNeighborIndex;
 					return true;
-				}				
+				}
 			}
 		}
 		else
@@ -209,7 +209,7 @@ _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4*
 				if (false == m_Cells[iNeighborIndex]->Is_Out(vPosition, vLook, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex, vOutSlidingDir))
 				{
 					//if (true == m_Cells[iNeighborIndex]->Get_Active())
-						m_iCurrentIndex = iNeighborIndex;
+					m_iCurrentIndex = iNeighborIndex;
 					//else
 					//	return false;
 
@@ -269,8 +269,8 @@ void CNavigation::LoadData(wstring strLoadPath)
 	m_iCurrentIndex = -1;
 
 	for (_uint i = 0; i < iCellSize; ++i)
-	{	
-		if(iCellSize <= i)
+	{
+		if (iCellSize <= i)
 			break;
 
 		Safe_Release(m_Cells[i]);
@@ -367,7 +367,7 @@ void CNavigation::AllSearchDelete_IsNan()
 			isnan<float>(vPointA.z) || isnan<float>(vPointB.z) || isnan<float>(vPointC.z))
 		{
 			vecNanCellIndex.push_back(i);
-			
+
 		}
 	}
 
@@ -417,7 +417,7 @@ _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
 	{
 
 		if (true == m_Cells[i]->isInRange(vPos, XMLoadFloat4x4(&m_WorldMatrix)))
-				return m_Cells[i]->Get_Index();
+			return m_Cells[i]->Get_Index();
 	}
 
 	return -1;
@@ -447,7 +447,7 @@ _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 	_float fc = XMVectorGetZ(vPlane);
 	_float fd = XMVectorGetW(vPlane);
 
-	
+
 	fResult = (-fa * fx - fc * fz - fd) / fb;
 
 	if (pGround != nullptr)
@@ -461,37 +461,37 @@ _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 
 HRESULT CNavigation::Make_Neighbors()
 {
-// 	_bool bAB = false, bBC = false, bCA = false;
-// 
-// 
-// 	for (auto& pSourCell : m_Cells)
-// 	{
-// 		for (auto& pDestCell : m_Cells)
-// 		{
-// 			if (pSourCell == pDestCell)
-// 				continue;
-// 
-// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_A), pSourCell->Get_Point(CCell::POINT_B)))
-// 			{
-// 				pSourCell->SetUp_Neighbor(CCell::LINE_AB, pDestCell);
-// 				bAB = true;
-// 			}
-// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_B), pSourCell->Get_Point(CCell::POINT_C)))
-// 			{
-// 				pSourCell->SetUp_Neighbor(CCell::LINE_BC, pDestCell);
-// 				bBC = true;
-// 			}
-// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_C), pSourCell->Get_Point(CCell::POINT_A)))
-// 			{
-// 				pSourCell->SetUp_Neighbor(CCell::LINE_CA, pDestCell);
-// 				bCA = true;
-// 			}
-// 
-// 			if (false == bAB && false == bBC && false == bCA)
-// 				pSourCell->Reset_Line();
-// 
-// 		}
-// 	}
+	// 	_bool bAB = false, bBC = false, bCA = false;
+	// 
+	// 
+	// 	for (auto& pSourCell : m_Cells)
+	// 	{
+	// 		for (auto& pDestCell : m_Cells)
+	// 		{
+	// 			if (pSourCell == pDestCell)
+	// 				continue;
+	// 
+	// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_A), pSourCell->Get_Point(CCell::POINT_B)))
+	// 			{
+	// 				pSourCell->SetUp_Neighbor(CCell::LINE_AB, pDestCell);
+	// 				bAB = true;
+	// 			}
+	// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_B), pSourCell->Get_Point(CCell::POINT_C)))
+	// 			{
+	// 				pSourCell->SetUp_Neighbor(CCell::LINE_BC, pDestCell);
+	// 				bBC = true;
+	// 			}
+	// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_C), pSourCell->Get_Point(CCell::POINT_A)))
+	// 			{
+	// 				pSourCell->SetUp_Neighbor(CCell::LINE_CA, pDestCell);
+	// 				bCA = true;
+	// 			}
+	// 
+	// 			if (false == bAB && false == bBC && false == bCA)
+	// 				pSourCell->Reset_Line();
+	// 
+	// 		}
+	// 	}
 	for (auto& pSrcCell : m_Cells)
 	{
 		if (pSrcCell == nullptr)
@@ -521,9 +521,9 @@ HRESULT CNavigation::Make_Neighbors()
 	return S_OK;
 }
 
-CNavigation * CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strNavigationFilePath)
+CNavigation* CNavigation::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strNavigationFilePath)
 {
-	CNavigation*		pInstance = new CNavigation(pDevice, pContext);
+	CNavigation* pInstance = new CNavigation(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype(strNavigationFilePath)))
@@ -534,9 +534,9 @@ CNavigation * CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * 
 	return pInstance;
 }
 
-CComponent * CNavigation::Clone(void * pArg)
+CComponent* CNavigation::Clone(void* pArg)
 {
-	CNavigation*		pInstance = new CNavigation(*this);
+	CNavigation* pInstance = new CNavigation(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

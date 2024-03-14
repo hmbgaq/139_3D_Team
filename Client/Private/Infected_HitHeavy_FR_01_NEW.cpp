@@ -9,7 +9,12 @@ void CInfected_HitHeavy_FR_01_NEW::Initialize(CInfected* pActor)
 
 CState<CInfected>* CInfected_HitHeavy_FR_01_NEW::Update(CInfected* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
 }
 
 void CInfected_HitHeavy_FR_01_NEW::Release(CInfected* pActor)

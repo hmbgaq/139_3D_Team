@@ -133,10 +133,12 @@ public:
 	CCharacter* Get_Target() { return m_pTarget; };
 	void Set_Target(CCharacter* pTarget) { m_pTarget = pTarget; };
 
+	void Get_Damaged(_uint iDamage) {m_iHp -= iDamage;}
 public:
 	void Look_At_Target();
 	void Look_At_Target_Lerp(_float fTimeDelta);
 	void Search_Target(const wstring& strLayerTag, const _float fSearchDistance = MAX_SEARCH);
+
 	_float Target_Contained_Angle(_float4 vStandard, _float4 vTargetPos); /* 내 Look과 타겟을 향하는 벡터 사이의 끼인각을 구하는함수 */
 	_bool Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta);
 	CCharacter* Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance = MAX_SEARCH);
@@ -147,7 +149,7 @@ public:
 	_float Calc_Distance();
 	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
-	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 0.5f);
+	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 1.0f);
 
 
 
@@ -156,21 +158,46 @@ public:	//!For Animation Split
 	_bool Is_Splitted() { return m_pBody->Is_Splitted(); }
 	void Set_Splitted(_bool _bIsSplitted) { m_pBody->Set_Splitted(_bIsSplitted); };
 
-
 public:
 	void Set_StiffnessRate(_float fStiffnessRate);
 	void Set_StiffnessRate_Upper(_float fStiffnessRate);
 
+public:
+	void Set_Weapons_Enable_False();
+	CWeapon* Set_Weapon_Enable(const wstring& strWeaponTag, _bool bActivate);
+	CWeapon* Set_Weapon_Collisions_Enable(const wstring& strWeaponTag, _bool bActivate);
+
+
+public:
+	_float3 Get_WeaknessPoint() { return m_vWeaknessPoint; };
+	virtual void Set_WeaknessPoint();
+public:
+#pragma region ===========> HP <=========== 
+	//void	Set_CurHP(_float fCurHP) { m_fCurHP = fCurHP; }
+	//_float	Get_CurHP() { return m_fCurHP; }
+	//void	Set_MaxHP(_float fMaxHP) { m_fMaxHP = fMaxHP; }
+	//_float	Get_MaxHP() { return m_fMaxHP; }
+	void	Set_CurHP(_float fCurHP) { m_iHp = fCurHP; }
+	_int	Get_CurHP() { return m_iHp; }
+	void	Set_MaxHP(_float fMaxHP) { m_iMaxHp = fMaxHP; }
+	_int	Get_MaxHP() { return m_iMaxHp; }
+protected:
+	_int m_iHp = { 1 };
+	_int m_iMaxHp = { 1 };
+	
+	/* _float 타입의 HP를 사용해주세요. */
+	//_float m_fMaxHP = { 40.f };
+	//_float m_fCurHP = { 40.f };
 
 
 protected:
-	_int m_iHp = { 1 };
 	//Power m_eStrength = { Power::Light };
 	_float m_fStiffnessRate = { 1.f };
 
 
 public:
 	_float m_fCurrentTrackPosition = {0.f};
+
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
 	CRigidBody* m_pRigidBody = { nullptr };
@@ -180,6 +207,9 @@ protected:
 
 protected:
 	CCharacter* m_pTarget = { nullptr };
+	_float3		m_vWeaknessPoint = { 0.f, 0.f, 0.f };
+	_float3		m_vWeaknessPoint_Local = { 0.f, 1.f, 0.f };
+
 
 protected:
 	CPhysXCharacterController* m_pPhysXControllerCom = { nullptr };

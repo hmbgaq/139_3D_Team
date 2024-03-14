@@ -21,32 +21,46 @@ float3		g_vCamDirection;
 float		g_fCamFar;
 // ===========================
 
-float2		g_UVOffset;
-float2		g_UVScale;
 
-float       g_fAlpha_Discard;
-float3      g_vBlack_Discard;
-float4		g_vColor_Mul;
-
-float		g_fDegree;
+// Sprite ====================
+bool	g_bSprite;
+float2	g_UVOffset;
+float2	g_UVScale;
+// ===========================
 
 
-// Noise ====================
+bool	g_bBillBoard;
+
+float	g_fAlpha_Discard;
+float3	g_vBlack_Discard;
+float4	g_vBloom_Discard;
+
+float4	g_vColor_Mul;
+
+float	g_fDegree;
+
+
+/* RimLight - 필요한거 두개뿐임(+1개 추가) */
+float4	g_vRimColor;
+float	g_fRimPower;
+float3	g_vBloomPower;
+
+
+// Distortion ====================
 float	g_fFrameTime;
 float3	g_vScrollSpeeds;
 float3	g_vScales;
-// ===========================
-
 
 float2	g_vDistortion1;
 float2	g_vDistortion2;
 float2	g_vDistortion3;
 float	g_fDistortionScale;
 float	g_fDistortionBias;
+// ================================
 
 
 
-/* Custom Function */
+// Custom Function ==============================================================================================================
 float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
 {
 	float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
@@ -64,105 +78,54 @@ float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
 }
 
 
-#pragma region STRUCT
-/* ========================= IN OUT ========================= */
+float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
+{
+	float fRimPower = 1.f - saturate(dot(In_Normal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
+	fRimPower = pow(fRimPower, 5.f) * g_fRimPower;
+	float4 vRimColor = g_vRimColor * fRimPower;
+    
+	return vRimColor;
+}
 
-/* ========================= VS_IN ========================= */
 
+float4 Calculation_Brightness(float4 Out_Diffuse)
+{
+	float4 vBrightnessColor = float4(0.f, 0.f, 0.f, 0.f);
+
+	float fPixelBrightness = dot(Out_Diffuse.rgb, g_vBloomPower.rgb);
+    
+	if (fPixelBrightness > 0.99f)
+		vBrightnessColor = float4(Out_Diffuse.rgb, 1.0f);
+
+	return vBrightnessColor;
+}
+// Custom Function ==============================================================================================================
+
+
+
+
+// MAIN_EFFECT ==================================================================================================================
 struct VS_IN
 {
 	float3		vPosition : POSITION;
 	float2		vTexcoord : TEXCOORD0;
 };
 
-/* ========================= VS_OUT ========================= */
 
 struct VS_OUT
 {
-	float4		vPosition : SV_POSITION;
-	float2		vTexcoord : TEXCOORD0;	
-};
-
-struct VS_OUT_EFFECT
-{
 	float4		vPosition	: SV_POSITION;
 	float2		vTexcoord	: TEXCOORD0;
 	float4		vProjPos	: TEXCOORD1;
 };
 
-struct VS_OUT_DISTORTION
+
+VS_OUT VS_MAIN_EFFECT(VS_IN In)
 {
-	float4		vPosition	: SV_POSITION;
-
-	float2		vTexcoord	: TEXCOORD0;
-	float2		vTexcoord1	: TEXCOORD1;
-	float2		vTexcoord2	: TEXCOORD2;
-	float2		vTexcoord3	: TEXCOORD3;
-
-	float4		vProjPos : TEXCOORD4;
-};
-
-/* ========================= PS_IN ========================= */
-
-struct PS_IN
-{
-	float4		vPosition : SV_POSITION;
-	float2		vTexcoord : TEXCOORD0;
-};
-
-
-struct PS_IN_EFFECT
-{
-	float4		vPosition	: SV_POSITION;
-	float2		vTexcoord	: TEXCOORD0;
-	float4		vProjPos	: TEXCOORD1;
-};
-
-struct PS_IN_DISTORTION
-{
-	float4		vPosition	: SV_POSITION;
-
-	float2		vTexcoord	: TEXCOORD0;
-	float2		vTexcoord1	: TEXCOORD1;
-	float2		vTexcoord2	: TEXCOORD2;
-	float2		vTexcoord3	: TEXCOORD3;
-
-	float4		vProjPos	: TEXCOORD4;
-};
-
-/* ========================= PS_OUT ========================= */
-
-struct PS_OUT
-{
-	float4		vColor : SV_TARGET0;
-};
-#pragma endregion STRUCT
-
-/* ========================= VS_OUT ========================= */
-
-VS_OUT VS_MAIN(VS_IN In)
-{
-	VS_OUT		Out = (VS_OUT)0;
+	VS_OUT	Out = (VS_OUT)0;
 
 	/* In.vPosition * 월드 * 뷰 * 투영 */
-	matrix		matWV, matWVP;
-
-	matWV = mul(g_WorldMatrix, g_ViewMatrix);
-	matWVP = mul(matWV, g_ProjMatrix);
-
-	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-	Out.vTexcoord = In.vTexcoord;
-
-	return Out;
-}
-
-
-VS_OUT_EFFECT VS_MAIN_EFFECT(VS_IN In)
-{
-	VS_OUT_EFFECT		Out = (VS_OUT_EFFECT)0;
-
-	/* In.vPosition * 월드 * 뷰 * 투영 */
-	matrix		matWV, matWVP;
+	matrix matWV, matWVP;
 
 	matWV = mul(g_WorldMatrix, g_ViewMatrix);
 	matWVP = mul(matWV, g_ProjMatrix);
@@ -175,9 +138,94 @@ VS_OUT_EFFECT VS_MAIN_EFFECT(VS_IN In)
 }
 
 
-VS_OUT_EFFECT  VS_MAIN_SPRITE(VS_IN In)
+struct PS_IN
 {
-	VS_OUT_EFFECT Out = (VS_OUT_EFFECT)0;
+	float4 vPosition	: SV_POSITION;
+	float2 vTexcoord	: TEXCOORD0;
+	float4 vProjPos		: TEXCOORD1;
+};
+
+struct PS_OUT
+{
+    float4 vColor		: SV_TARGET0; // Diffuse
+    float4 vSolid		: SV_TARGET1;
+    float4 vNormal		: SV_TARGET2; // Normal
+    float4 vDepth		: SV_TARGET3; // Depth
+    float4 vRimBloom	: SV_TARGET4; // RimBloom
+};
+
+
+PS_OUT PS_MAIN_EFFECT(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT) 0;
+
+	float4 vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+	float4 vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
+
+	vDiffuseColor.a *= vAlphaColor;
+
+	if (vDiffuseColor.a < g_fAlpha_Discard)	// 알파 자르기
+		discard;
+
+	
+	vDiffuseColor.rgb *= g_vColor_Mul.rgb;
+	Out.vColor = vDiffuseColor;
+	
+		
+	/* ---------------- Rim Bloom ---------------- :  */
+	//Out.vRimBloom = Calculation_Brightness(Out.vColor);
+	Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+	
+	// 검은색 잘라내기
+	if (Out.vColor.r < g_vBlack_Discard.r && Out.vColor.g < g_vBlack_Discard.g && Out.vColor.b < g_vBlack_Discard.b)
+		discard;
+	
+	return Out;
+}
+// MAIN_EFFECT ==================================================================================================================
+
+
+
+// MAIN_EFFECT_SOLID ===========================================================================================================
+PS_OUT PS_MAIN_EFFECT_SOLID(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    float4 vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    float4 vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
+
+    vDiffuseColor.a *= vAlphaColor;
+
+    if (vDiffuseColor.a < g_fAlpha_Discard)	// 알파 자르기
+        discard;
+
+	
+    vDiffuseColor.rgb *= g_vColor_Mul.rgb;
+    Out.vColor = vDiffuseColor;
+	
+		
+	/* ---------------- Rim Bloom ---------------- :  */
+	//Out.vRimBloom = Calculation_Brightness(Out.vColor);
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+	
+	// 검은색 잘라내기
+    if (Out.vColor.r < g_vBlack_Discard.r && Out.vColor.g < g_vBlack_Discard.g && Out.vColor.b < g_vBlack_Discard.b)
+        discard;
+	
+    Out.vSolid = Out.vColor;
+		
+    return Out;
+}
+// MAIN_EFFECT_SOLID ============================================================================================================
+
+
+
+
+
+// MAIN_SPRITE ==================================================================================================================
+VS_OUT VS_MAIN_SPRITE(VS_IN In)
+{
+	VS_OUT Out = (VS_OUT) 0;
 
 	matrix WorldMatrix = g_WorldMatrix;
 
@@ -202,143 +250,10 @@ VS_OUT_EFFECT  VS_MAIN_SPRITE(VS_IN In)
 	return Out;
 }
 
-VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
+
+PS_OUT PS_MAIN_SPRITE(PS_IN In)
 {
-	VS_OUT_DISTORTION		Out = (VS_OUT_DISTORTION)0;
-
-	/* In.vPosition * 월드 * 뷰 * 투영 */
-	matrix		matWV, matWVP;
-
-	matWV = mul(g_WorldMatrix, g_ViewMatrix);
-	matWVP = mul(matWV, g_ProjMatrix);
-
-	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-	Out.vTexcoord = In.vTexcoord;
-	Out.vProjPos = Out.vPosition;
-	
-	return Out;
-}
-
-
-struct GS_IN
-{
-	float4		vPosition : POSITION;
-	float2		vPSize : PSIZE;
-	float4		vColor : COLOR0;
-};
-
-struct GS_OUT
-{
-	float4		vPosition : SV_POSITION;
-	float2		vTexcoord : TEXCOORD0;
-	float4		vColor : COLOR0;
-};
-
-///* 지오메트리 쉐이더 : 셰이더안에서 정점을 추가적으로 생성해 준다. */
-//[maxvertexcount(6)]
-//void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
-//{
-//	GS_OUT		Out[4];
-
-//	float4		vLook = g_vCamPosition - In[0].vPosition;
-//	float3		vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook.xyz)) * In[0].vPSize.x * 0.5f;
-//	float3		vUp = normalize(cross(vLook.xyz, vRight)) * In[0].vPSize.y * 0.5f;
-
-//	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
-
-//	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
-//	Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
-//	Out[0].vColor = In[0].vColor;
-
-//	Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
-//	Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_fDegree);
-//	Out[1].vColor = In[0].vColor;
-
-//	Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
-//	Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_fDegree);
-//	Out[2].vColor = In[0].vColor;
-
-//	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
-//	Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_fDegree);
-//	Out[3].vColor = In[0].vColor;
-
-//	OutStream.Append(Out[0]);
-//	OutStream.Append(Out[1]);
-//	OutStream.Append(Out[2]);
-//	OutStream.RestartStrip();
-
-//	OutStream.Append(Out[0]);
-//	OutStream.Append(Out[2]);
-//	OutStream.Append(Out[3]);
-//	OutStream.RestartStrip();
-//}
-
-
-
-
-
-/* ========================= PS_OUT ========================= */
-
-/* 픽셀셰이더 : 픽셀의 색!!!! 을 결정한다. */
-PS_OUT PS_MAIN(PS_IN In)
-{
-	PS_OUT		Out = (PS_OUT)0;
-
-	///* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
-	//vector		vSourColor = g_Texture[0].Sample(LinearSampler, In.vTexcoord);
-	//vector		vDestColor = g_Texture[1].Sample(LinearSampler, In.vTexcoord);
-
-	//Out.vColor = vSourColor + vDestColor;
-
-	return Out;
-}
-
-PS_OUT PS_MAIN_EFFECT(PS_IN_EFFECT In)
-{
-	PS_OUT			Out = (PS_OUT)0;
-
-	float4 vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-	float4 vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
-
-	vDiffuseColor.a *= vAlphaColor;
-
-	if (vDiffuseColor.a < g_fAlpha_Discard	// 알파 잘라내기
-		|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
-		discard;
-
-	float2	vDepthTexcoord;
-	vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
-	vDepthTexcoord.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
-
-    float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
-	
-
-	vDiffuseColor.rgb *= g_vColor_Mul.rgb;
-	Out.vColor = vDiffuseColor;
-	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
-
-	return Out;
-}
-
-
-PS_OUT PS_MAIN_WIREFRAME(PS_IN_EFFECT In)
-{
-	PS_OUT			Out = (PS_OUT)0;
-
-	float4 vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-
-	vDiffuseColor.rgb *= g_vColor_Mul.rgb;
-
-	Out.vColor = vDiffuseColor;
-
-
-	return Out;
-}
-
-
-PS_OUT PS_MAIN_SPRITE_ANIMATION(PS_IN_EFFECT In)
-{
-	PS_OUT Out = (PS_OUT)0;
+	PS_OUT Out = (PS_OUT) 0;
 
 	float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
 
@@ -351,29 +266,79 @@ PS_OUT PS_MAIN_SPRITE_ANIMATION(PS_IN_EFFECT In)
 
 	float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, vDepthTexcoord);
 
-	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * 1000.f - In.vProjPos.w) * 2.f;
+	Out.vColor.a = Out.vColor.a * (vDepthDesc.y * g_fCamFar - In.vProjPos.w) * 2.f;
 	// Alpha Test
 	if (Out.vColor.a < g_fAlpha_Discard)
 	{
 		discard;
 	}
 
+    Out.vSolid = Out.vColor;
+	
+	return Out;
+}
+// MAIN_SPRITE ==================================================================================================================
+
+
+
+// MAIN_DISTORTION ==============================================================================================================
+struct VS_OUT_DISTORTION
+{
+	float4 vPosition : SV_POSITION;
+
+	float2 vTexcoord  : TEXCOORD0;
+	float2 vTexcoord1 : TEXCOORD1;
+	float2 vTexcoord2 : TEXCOORD2;
+	float2 vTexcoord3 : TEXCOORD3;
+
+	float4 vProjPos : TEXCOORD4;
+};
+
+
+struct PS_IN_DISTORTION
+{
+	float4 vPosition : SV_POSITION;
+
+	float2 vTexcoord : TEXCOORD0;
+	float2 vTexcoord1 : TEXCOORD1;
+	float2 vTexcoord2 : TEXCOORD2;
+	float2 vTexcoord3 : TEXCOORD3;
+
+	float4 vProjPos : TEXCOORD4;
+};
+
+
+VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
+{
+	VS_OUT_DISTORTION Out = (VS_OUT_DISTORTION) 0;
+
+	/* In.vPosition * 월드 * 뷰 * 투영 */
+	matrix matWV, matWVP;
+
+	matWV = mul(g_WorldMatrix, g_ViewMatrix);
+	matWVP = mul(matWV, g_ProjMatrix);
+
+	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+	Out.vTexcoord = In.vTexcoord;
+	Out.vProjPos = Out.vPosition;
+	
 	return Out;
 }
 
 
 PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 {
-	PS_OUT Out = (PS_OUT)0;
+	PS_OUT Out = (PS_OUT) 0;
 
-	float4  vNoise1;
-	float4  vNoise2;
-	float4  vNoise3;
+	float4 vNoise1;
+	float4 vNoise2;
+	float4 vNoise3;
 
 	float4	vFinalNoise;
 	float	fPerturb;
 	float2	vNoiseCoords;
-	float4	vFireColor;
+	
+	float4	vFinalColor;
 	float4	vAlphaColor;
 
 
@@ -415,34 +380,55 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 
 
 	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 불꽃 텍스쳐에서 색상을 샘플링한다.
-	// wrap를 사용하는 스테이트 대신 clamp를 사용하는 스테이트를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
-	vFireColor = g_DiffuseTexture.Sample(ClampSampler, vNoiseCoords.xy);
+	// clamp샘플러를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
+	vFinalColor = g_DiffuseTexture.Sample(ClampSampler, vNoiseCoords.xy);
 
 
 	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 알파 텍스쳐에서 알파값을 샘플링한다. (불꽃의 투명도를 지정하는 데 사용)
-	// wrap를 사용하는 스테이트 대신 clamp를 사용하는 스테이트를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
+	// clamp샘플러를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
 	vAlphaColor = g_MaskTexture.Sample(ClampSampler, vNoiseCoords.xy);
 
 
-	vFireColor.a = vAlphaColor;
-	vFireColor.rgb *= g_vColor_Mul.rgb;
+	vFinalColor.a = vAlphaColor;
+	vFinalColor.rgb *= g_vColor_Mul.rgb;
 
 
-	if (vFireColor.a < g_fAlpha_Discard	// 알파 잘라내기
-		|| vFireColor.r < g_vBlack_Discard.r && vFireColor.g < g_vBlack_Discard.g && vFireColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
+	if (vFinalColor.a < g_fAlpha_Discard // 알파 잘라내기
+		|| vFinalColor.r < g_vBlack_Discard.r && vFinalColor.g < g_vBlack_Discard.g && vFinalColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 		discard;
 
-	Out.vColor = vFireColor;
+	Out.vColor = vFinalColor;
 
 	return Out;
 }
+// MAIN_DISTORTION ==============================================================================================================
+
+
+
+// MAIN_WIREFRAME ===============================================================================================================
+PS_OUT PS_MAIN_WIREFRAME(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+	vDiffuseColor.rgb *= g_vColor_Mul.rgb;
+
+	Out.vColor = vDiffuseColor;
+
+	return Out;
+}
+// MAIN_WIREFRAME ===============================================================================================================
+
+
+
 
 technique11 DefaultTechnique
 {
 	/* 위와 다른 형태에 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
 	pass Effect // 0
 	{
-		SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_Cull_None); //SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);
 		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
@@ -453,24 +439,37 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_EFFECT();
 	}	
 
-	pass Sprite // 1
+    pass Effect_Solid // 1
+    {
+        SetRasterizerState(RS_Cull_None); //SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN_EFFECT();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_EFFECT_SOLID();
+    }
+
+	pass Sprite // 2
 	{
-		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-		SetDepthStencilState(DSS_DepthStencilEnable, 0);
 		SetRasterizerState(RS_Cull_None);
+		SetDepthStencilState(DSS_DepthStencilEnable, 0);
+		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN_SPRITE();
 		HullShader = NULL;
 		DomainShader = NULL;
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_SPRITE_ANIMATION();
+		PixelShader = compile ps_5_0 PS_MAIN_SPRITE();
 	}
 
-	pass Distortion // 2
+	pass Distortion // 3
 	{
-		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-		SetDepthStencilState(DSS_DepthStencilEnable, 0);
 		SetRasterizerState(RS_Cull_None);
+		SetDepthStencilState(DSS_DepthStencilEnable, 0);
+		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
 		HullShader = NULL;
@@ -479,7 +478,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_DISTORTION();
 	}
 
-	pass Effect_Wireframe // 3
+	pass Effect_Wireframe // 4
 	{
 		SetRasterizerState(RS_NoneCull_Wireframe);
 		SetDepthStencilState(DSS_Default, 0);

@@ -1,13 +1,9 @@
-#include "..\Public\Collider.h"
-
+#include "Collider.h"
 #include "Bounding_AABB.h"
 #include "Bounding_OBB.h"
 #include "Bounding_Sphere.h"
-
 #include "GameInstance.h"
-
 #include "GameObject.h"
-
 
 CCollider::CCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -26,6 +22,14 @@ CCollider::CCollider(const CCollider & rhs)
 	#ifdef _DEBUG
 		Safe_AddRef(m_pInputLayout);
 	#endif
+}
+
+void CCollider::Set_ColliderSize(_float _sizeX, _float _sizeY, _float _sizeZ)
+{
+	/* Sphere = x에만 값채우고 안채워도됨.
+	aabb, obb = x y z 모두다 채워야함 
+	-> 반지름 기준이라는거 의식하기 */
+	m_pBounding->Set_Scale(_sizeX, _sizeY, _sizeZ);
 }
 
 HRESULT CCollider::Initialize_Prototype(TYPE eType)

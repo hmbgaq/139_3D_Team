@@ -78,6 +78,8 @@ public:
 	void Set_WorldMatrix(_fmatrix WorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix); }
 	void Set_Scaling(_float fScaleX, _float fScaleY, _float fScaleZ);
 	void Set_Speed(_float fSpeed) { m_fSpeedPerSec = fSpeed; }
+	_float Get_Speed() { return m_fSpeedPerSec; }
+
 
 	void Set_Position(const _float3& vState)
 	{
@@ -100,6 +102,8 @@ public:
 		XMStoreFloat4(&vPos, Get_State(CTransform::STATE::STATE_POSITION));
 		return vPos;
 	}
+
+	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
 
 public:
 	virtual HRESULT Initialize_Prototype(_float fSpeedPerSec, _float fRotationPerSec);	
@@ -134,6 +138,8 @@ public:
 	_float3 Calc_Look_Dir(_float3 vTargetPos);
 
 	/* ---------------- 소영 추가사항 ---------------- */
+	void Move_Position(_float4 vDir, _float fSpeed, _float fTimeDelta); /* Dir쪽으로 speed만큼 계속해서 이동하는 함수 */
+
 	_vector Get_Right() { return Get_State(CTransform::STATE::STATE_RIGHT); }
 	_vector Get_Up() { return Get_State(CTransform::STATE::STATE_UP); }
 	_vector Get_Pos() { return Get_State(CTransform::STATE::STATE_POSITION); }

@@ -44,6 +44,7 @@ CState<CVampireCommander>* CVampireCommander_Leap_Strat::Update(CVampireCommande
 	}
 	else if (pActor->Is_Inputable_Front(75))
 	{
+		//pActor->m_bLookAt = true;
 		pWeapon->Set_Enable(false);
 	}
 

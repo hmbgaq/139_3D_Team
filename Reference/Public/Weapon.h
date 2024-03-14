@@ -38,10 +38,9 @@ public:
 public:
 	_float4x4	Get_WeaponWorldMatrix() { return m_WorldMatrix; }
 	void		Set_WeaponWorldMatrix(_float4x4 _WorldMatrix) { m_WorldMatrix = _WorldMatrix; }
+	_float3		Get_Weapon_Pos() { return { m_WorldMatrix._41, m_WorldMatrix._42, m_WorldMatrix._43 }; }
 
-public:
 	CCharacter* Get_Target_Character(CCollider* other);
-
 	CWeapon* Set_Damage(_int _iDamage);
 	CWeapon* Set_Direction(Direction _eHitDirection);
 	CWeapon* Set_Power(Power _eHitPower);
@@ -61,6 +60,12 @@ public:
 public:
 	void	Set_Synced(_bool _bSynced) { m_bSynced = _bSynced; }
 	_bool	Get_Synced() { return m_bSynced; }
+
+public:
+	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
+
+public:
+	virtual void Fire() {};
 
 
 protected:

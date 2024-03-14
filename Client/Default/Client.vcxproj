@@ -327,6 +327,7 @@
     <ClInclude Include="..\Public\Body_Infected_C.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_VampireCommander.h" />
+    <ClInclude Include="..\Public\Bullet_Winchester.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
     <ClInclude Include="..\Public\Character_Client.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -956,6 +957,7 @@
     <ClInclude Include="..\Public\PreviewAnimationModel.h" />
     <ClInclude Include="..\Public\Projectile.h" />
     <ClInclude Include="..\Public\Screamer.h" />
+    <ClInclude Include="..\Public\Bullet_Bandit_Sniper.h" />
     <ClInclude Include="..\Public\Sniper_Crouch_Start.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\SkyDome.h" />
@@ -1009,6 +1011,9 @@
     <ClInclude Include="..\Public\Sniper_Run_F.h" />
     <ClInclude Include="..\Public\Sniper_Run_FL.h" />
     <ClInclude Include="..\Public\Sniper_Run_FR.h" />
+    <ClInclude Include="..\Public\Sniper_Taunt_01.h" />
+    <ClInclude Include="..\Public\Sniper_Taunt_02.h" />
+    <ClInclude Include="..\Public\Sniper_Taunt_03.h" />
     <ClInclude Include="..\Public\Sniper_WalkAim_B.h" />
     <ClInclude Include="..\Public\Sniper_WalkAim_BL.h" />
     <ClInclude Include="..\Public\Sniper_WalkAim_BR.h" />
@@ -1025,7 +1030,15 @@
     <ClInclude Include="..\Public\SpringCamera.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\stb_image.h" />
+    <ClInclude Include="..\Public\UI_BackGround.h" />
     <ClInclude Include="..\Public\UI_Distortion.h" />
+    <ClInclude Include="..\Public\UI_EnemyHP_Bar.h" />
+    <ClInclude Include="..\Public\UI_EnemyHP_FrameBar.h" />
+    <ClInclude Include="..\Public\UI_EnemyHP_Shard.h" />
+    <ClInclude Include="..\Public\UI_EnemyHUD_Bar.h" />
+    <ClInclude Include="..\Public\UI_EnemyHUD_Shard.h" />
+    <ClInclude Include="..\Public\UI_EnemyState_Shard.h" />
+    <ClInclude Include="..\Public\UI_Loading_Icon.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
     <ClInclude Include="..\Public\UI_Video.h" />
     <ClInclude Include="..\Public\UI_Weakness.h" />
@@ -1271,6 +1284,7 @@
     <ClCompile Include="..\Private\Body_Infected_C.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Body_VampireCommander.cpp" />
+    <ClCompile Include="..\Private\Bullet_Winchester.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\Private\Character_Client.cpp" />
     <ClCompile Include="..\Private\Clone_Manager.cpp" />
@@ -1724,6 +1738,7 @@
     <ClCompile Include="..\Private\PreviewAnimationModel.cpp" />
     <ClCompile Include="..\Private\Projectile.cpp" />
     <ClCompile Include="..\Private\Screamer.cpp" />
+    <ClCompile Include="..\Private\Bullet_Bandit_Sniper.cpp" />
     <ClCompile Include="..\Private\Sniper_Crouch_Start.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\SkyDome.cpp" />
@@ -1777,6 +1792,9 @@
     <ClCompile Include="..\Private\Sniper_Run_F.cpp" />
     <ClCompile Include="..\Private\Sniper_Run_FL.cpp" />
     <ClCompile Include="..\Private\Sniper_Run_FR.cpp" />
+    <ClCompile Include="..\Private\Sniper_Taunt_01.cpp" />
+    <ClCompile Include="..\Private\Sniper_Taunt_02.cpp" />
+    <ClCompile Include="..\Private\Sniper_Taunt_03.cpp" />
     <ClCompile Include="..\Private\Sniper_WalkAim_B.cpp" />
     <ClCompile Include="..\Private\Sniper_WalkAim_BL.cpp" />
     <ClCompile Include="..\Private\Sniper_WalkAim_BR.cpp" />
@@ -1791,7 +1809,14 @@
     <ClCompile Include="..\Private\Sniper_Walk_FR.cpp" />
     <ClCompile Include="..\Private\Sniper_Weakspot_Death_01.cpp" />
     <ClCompile Include="..\Private\SpringCamera.cpp" />
+    <ClCompile Include="..\Private\UI_BackGround.cpp" />
     <ClCompile Include="..\Private\UI_Distortion.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHP_Bar.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHP_FrameBar.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHP_Shard.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHUD_Bar.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHUD_Shard.cpp" />
+    <ClCompile Include="..\Private\UI_Loading_Icon.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
     <ClCompile Include="..\Private\UI_Video.cpp" />
     <ClCompile Include="..\Private\UI_Weakness.cpp" />
@@ -1917,6 +1942,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UI_EnemyState_Shard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />
@@ -1929,6 +1955,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_AnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_EffectTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Model.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Monster.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Point.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Rect.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl" />

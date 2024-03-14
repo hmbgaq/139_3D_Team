@@ -32,7 +32,6 @@ HRESULT CCharacter::Initialize(void* pArg)
 	NaviDesc.iCurrentIndex = 0;
 
 	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
-
 	
 	if (FAILED(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
@@ -69,6 +68,8 @@ void CCharacter::Priority_Tick(_float fTimeDelta)
 		if (nullptr != Pair.second)
 			Pair.second->Priority_Tick(fTimeDelta);
 	}
+
+	Set_WeaknessPoint();
 }
 
 void CCharacter::Tick(_float fTimeDelta)
@@ -103,6 +104,7 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
 
+	Set_WeaknessPoint();
 }
 
 HRESULT CCharacter::Render()
@@ -362,7 +364,7 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 	//	return Hit_Type::None;
 	//}
 
-	//Get_Damaged(iDamage);	
+	Get_Damaged(iDamage);	
 	//Set_InvincibleTime(fInvincibleTime);
 	Add_Force(vDir, fForce);
 	m_pTransformCom->Look_At_Direction(vDir * -1);
@@ -432,22 +434,22 @@ void CCharacter::Search_Target(const wstring& strLayerTag, const _float fSearchD
 _float CCharacter::Target_Contained_Angle(_float4 vStandard, _float4 vTargetPos)
 {
 	/* ---------- 소영 추가 ---------- */
-	// 함수설명 : Look 기준으로 우측에 있을경우 +사이각 , 좌측에 있을경우 - 사이각으로 값이 리턴된다. 
-	/* ------------------------------- */
+	 // 함수설명 : Look 기준으로 우측에 있을경우 +사이각 , 좌측에 있을경우 - 사이각으로 값이 리턴된다. 
+	 /* ------------------------------- */
 	_vector vLook = XMVector3Normalize(vTargetPos - m_pTransformCom->Get_Pos());
 
 	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
 
-	_float angle = std::acos(XMVectorGetX(XMVector3Dot(vStandard, vLook)));
+	_float fAngle = acos(XMVectorGetX(XMVector3Dot(vStandard, vLook)));
 
-	if (XMVectorGetX(XMVector3Dot(XMVectorSet(1.f, 0.f, 0.f, 0.f), vLook)) < 0.f)
-	{
-		angle = -angle;
-	}
+	fAngle = XMConvertToDegrees(fAngle);
 
-	angle = XMConvertToDegrees(angle);
+	_vector vJudge = XMVector3Cross(vStandard, vLook);
 
-	return angle;
+	_float fRotationDirection = XMVectorGetY(vJudge) < 0 ? -1.0f : 1.0f;
+
+	return fAngle * fRotationDirection;
+
 }
 
 _bool CCharacter::Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta)
@@ -544,6 +546,9 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap
 
 	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	_float fDistance = Calc_Distance();
+	if (fDistance < 0.5f)
+		return;
+
 	_float3 vPos = { 0.f, 0.f, min(fDistance * fTimeDelta, fSpeedCap) };
 
 	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
@@ -565,6 +570,40 @@ void CCharacter::Set_StiffnessRate_Upper(_float fStiffnessRate)
 {
 	m_pBody->Set_StiffnessRate_Upper(fStiffnessRate);
 }
+
+void CCharacter::Set_Weapons_Enable_False()
+{
+	for (CWeapon* pWeapon : m_Weapons)
+	{
+		pWeapon->Set_Enable(false);
+	}
+
+}
+
+CWeapon* CCharacter::Set_Weapon_Enable(const wstring& strWeaponTag, _bool bActivate)
+{
+	CWeapon* pWeapon = Get_Weapon(strWeaponTag);
+	if (pWeapon)
+		pWeapon->Set_Enable(bActivate);
+
+	return pWeapon;
+}
+
+CWeapon* CCharacter::Set_Weapon_Collisions_Enable(const wstring& strWeaponTag, _bool bActivate)
+{
+	CWeapon* pWeapon = Get_Weapon(strWeaponTag);
+	if (pWeapon)
+		pWeapon->Set_Enable_Collisions(bActivate);
+
+	return pWeapon;
+}
+
+
+void CCharacter::Set_WeaknessPoint()
+{
+	_float3 vResult = m_pTransformCom->Calc_Front_Pos(m_vWeaknessPoint_Local);
+	m_vWeaknessPoint = vResult;
+};
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {

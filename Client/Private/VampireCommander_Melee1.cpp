@@ -21,13 +21,20 @@ void CVampireCommander_Melee1::Initialize(CVampireCommander* pActor)
 CState<CVampireCommander>* CVampireCommander_Melee1::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
+	if (m_bFlags[1] == false)
+	{
+		pActor->m_bLookAt = true;
+	}
+
 	if (pActor->Is_Inputable_Front(24))
 	{
+		m_bFlags[1] = true;
 		pWeapon->Set_Enable(true);
 
 	}
-	else if (pActor->Is_Inputable_Front(26))
+	else if (pActor->Is_Inputable_Front(25))
 	{
+		m_bFlags[1] = false;
 		pWeapon->Set_Enable(false);
 	}
 	if (pActor->Is_Animation_End())

@@ -16,20 +16,16 @@ CProjectile::CProjectile(const CProjectile& rhs)
 
 HRESULT CProjectile::Initialize_Prototype()
 {
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize_Prototype());
 
 	return S_OK;
 }
 
 HRESULT CProjectile::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Initialize(pArg));
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
-
+	FAILED_CHECK(Ready_Components());
 
 	return S_OK;
 }
@@ -44,6 +40,19 @@ void CProjectile::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	m_pCollider->Update(m_pTransformCom->Get_WorldMatrix());
+
+	m_fLifeTime -= fTimeDelta;
+	if (0 >= m_fLifeTime) 
+	{
+		if (m_bIsPoolObject)
+		{
+			Set_Enable(false);
+		}
+		else 
+		{
+			Set_Dead(true);
+		}
+	}
 }
 
 void CProjectile::Late_Tick(_float fTimeDelta)
@@ -52,12 +61,14 @@ void CProjectile::Late_Tick(_float fTimeDelta)
 
 	if (true == m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f))
 	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-			return;
-
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this)))
-			return;
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), ); 
 	}
+
+#ifdef _DEBUG
+	m_pGameInstance->Add_DebugRender(m_pCollider);
+#endif
+
 }
 
 HRESULT CProjectile::Render()
@@ -67,6 +78,9 @@ HRESULT CProjectile::Render()
 
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
+
+	if (nullptr == m_pModelCom)
+		return S_OK;
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
@@ -154,6 +168,78 @@ CProjectile* CProjectile::Set_Force(_float _fForce)
 	m_fForce = _fForce;
 
 	return this;
+}
+
+void CProjectile::Search_Target(const wstring& strLayerTag, const _float fSearchDistance)
+{
+	//if (nullptr != m_pTarget)
+	//	return;
+
+	m_pTarget = Select_The_Nearest_Enemy(strLayerTag, fSearchDistance);
+}
+
+CCharacter* CProjectile::Select_The_Nearest_Enemy(const wstring& strLayerTag, _float fMaxDistance)
+{
+	CCharacter* pResult = { nullptr };
+
+	_float fMinDistance = fMaxDistance;
+
+	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+	list<CGameObject*>* pTargetLayer = m_pGameInstance->Get_GameObjects(iCurrentLevel, strLayerTag);
+
+	if (nullptr == pTargetLayer)
+		return nullptr;
+
+	for (CGameObject* pTarget : *pTargetLayer)
+	{
+
+		if (nullptr == pTarget || false == pTarget->Get_Enable())
+			continue;
+
+		CCharacter* pTargetCharacter = dynamic_cast<CCharacter*>(pTarget);
+
+		if (nullptr == pTargetCharacter)
+			continue;
+
+		_float fDistance = Calc_Distance(pTarget);
+		if (fMinDistance > fDistance)
+		{
+			fMinDistance = fDistance;
+			pResult = pTargetCharacter;
+		}
+	}
+
+	return pResult;
+}
+
+_float CProjectile::Calc_Distance(CGameObject* pTarget)
+{
+	if (nullptr == pTarget || false == pTarget->Get_Enable())
+		return 1000000.f;
+
+	return Calc_Distance(pTarget->Get_Position());
+}
+
+_float CProjectile::Calc_Distance(_float3 vTargetPos)
+{
+	_float3 vPos = Get_Position();
+
+	_float3 vDiff = vTargetPos - vPos;
+
+	return sqrt(vDiff.x * vDiff.x + vDiff.y * vDiff.y + vDiff.z * vDiff.z);
+}
+
+void CProjectile::Look_At_Target()
+{
+	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
+		return;
+
+
+	_fvector vTargetPos = XMLoadFloat3(&m_pTarget->Get_WeaknessPoint());
+	//_fvector vTargetPos = m_pTarget->Get_Position_Vector();
+
+	m_pTransformCom->Look_At(vTargetPos);
 }
 
 HRESULT CProjectile::Bind_ShaderResources()

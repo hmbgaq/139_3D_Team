@@ -36,6 +36,7 @@
 #include "Infected_DeathLight_B_01_NEW.h"
 #include "Infected_DeathLight_F_01_NEW.h"
 #include "Infected_DeathHeavy_F_01_NEW.h"
+#include "Infected_SpawnCrawl_01.h"
 
 
 CInfected::CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -67,7 +68,7 @@ HRESULT CInfected::Initialize(void* pArg)
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CInfected>(this);
-		m_pActor->Set_State(new CInfected_SpawnGround()); //! 배치했어 자기의 얼마만큼 y값이 루트모션으로 움직일지 - 
+		m_pActor->Set_State(new CInfected_SpawnCrawl_01());
 	}
 
 	return S_OK;
@@ -111,15 +112,12 @@ void CInfected::Hitted_Left(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		cout << "Light " << endl;
 		m_pActor->Set_State(new CInfected_Scared_03());
 		break;
 	case Engine::Medium:
-		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_FL_01_NEW());
 		break;
 	case Engine::Heavy:
-		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_FL_01_NEW());
 		break;
 	default:
@@ -133,15 +131,12 @@ void CInfected::Hitted_Right(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		cout << "Light " << endl;
 		m_pActor->Set_State(new CInfected_Scared_02());
 		break;
 	case Engine::Medium:
-		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_FR_01_NEW());
 		break;
 	case Engine::Heavy:
-		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_FR_01_NEW());
 		break;
 	default:
@@ -155,15 +150,12 @@ void CInfected::Hitted_Front(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		cout << "Light " << endl;
 		m_pActor->Set_State(new CInfected_HitNormalToStun_01_NEW());
 		break;
 	case Engine::Medium:
-		cout << "Medium " << endl;
 		m_pActor->Set_State(new CInfected_HitNormal_F_01_NEW());
 		break;
 	case Engine::Heavy:
-		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CInfected_HitHeavy_F_01_NEW());
 		break;
 	default:
@@ -174,7 +166,6 @@ void CInfected::Hitted_Front(Power ePower)
 
 void CInfected::Hitted_Knock(_bool bIsCannonball)
 {
-	cout << "Hitted_Knock" << endl;
 	if (bIsCannonball)
 	{
 		m_pActor->Set_State(new CInfected_KnockFrontCannonball_F_01_TEMP());

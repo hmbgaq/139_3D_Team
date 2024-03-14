@@ -52,6 +52,10 @@ public:
 	UVSPRITE_DESC* Get_Sprite_Desc() { return &m_tSpriteDesc; }
 
 public:
+	HRESULT			Change_TextureCom(wstring strProtoTextureTag);	// Åø ¿ë
+
+
+public:
 	CVIBuffer_Particle* Get_VIBufferCom() { return m_pVIBufferCom; }
 	CTexture* Get_TextureCom(TEXTURE eTexture) { return m_pTextureCom[eTexture]; }
 

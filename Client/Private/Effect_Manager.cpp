@@ -1,4 +1,4 @@
-#include "stdafx.h"
+	#include "stdafx.h"
 #include "Effect_Manager.h"
 
 #include "GameInstance.h"
@@ -50,6 +50,17 @@ CEffect* CEffect_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLay
 
 	/* 사용 예시 */
 	//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Effect.json");
+}
+
+CEffect* CEffect_Manager::Create_Effect_With_Trail(string strEffectFileName, string strTrailFileName, CGameObject* pOwner)
+{
+	_uint iCurLevel = m_pGameInstance->Get_NextLevel();
+
+	CEffect* pEffect = Create_Effect(iCurLevel, LAYER_EFFECT, strEffectFileName, pOwner);
+
+	pEffect->Ready_Trail(iCurLevel, strTrailFileName);
+
+	return pEffect;
 }
 
 CEffect* CEffect_Manager::Create_Effect(string strFileName, CGameObject* pOwner)

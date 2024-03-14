@@ -17,15 +17,17 @@ protected:
 	virtual ~CBounding() = default;
 
 public:
-	virtual void Update(_fmatrix TransformMatrix) = 0;
-	virtual _bool Collision(class CCollider* pTargetCollider, _bool* pisCollision) = 0;
+	virtual void Update(_fmatrix TransformMatrix) PURE;
+	virtual _bool Collision(class CCollider* pTargetCollider, _bool* pisCollision) PURE;
+
 public:
 	virtual	void Set_matScale(_matrix matrix) PURE;
 	virtual	void Set_Test(_vector _vTest) PURE;
+	virtual void Set_Scale(_float _sizeX, _float _sizeY, _float _sizeZ) PURE;
 
 #ifdef _DEBUG
 public:
-	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch, _vector vColor) = 0;
+	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch, _vector vColor) PURE;
 #endif
 
 
