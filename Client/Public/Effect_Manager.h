@@ -40,7 +40,8 @@ public:
 
 	// 두두두두 불 이펙트 테스트
 	HRESULT Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime, _float fTimeDelta, string strEffectFileName
-		, _float3 vLocalPos = _float3(0.f, 0.f, 0.f), _float3 vLocalScale = _float3(1.f, 1.f, 1.f), _float3 vLocalRotation = _float3(0.f, 0.f, 0.f));
+		, _float3 vLocalPos = _float3(0.f, 0.f, 0.f), _float3 vLocalScale = _float3(1.f, 1.f, 1.f), _float3 vLocalRotation = _float3(0.f, 0.f, 0.f)
+		, CGameObject* pOwner = nullptr);
 
 
 

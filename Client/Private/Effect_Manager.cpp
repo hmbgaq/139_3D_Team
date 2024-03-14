@@ -78,7 +78,8 @@ CEffect* CEffect_Manager::Create_Effect_Pos(string strFileName, _float3 vLocalPo
 }
 
 HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime, _float fTimeDelta, string strEffectFileName
-	, _float3 vLocalPos, _float3 vLocalScale, _float3 vLocalRotation)
+	, _float3 vLocalPos, _float3 vLocalScale, _float3 vLocalRotation
+	, CGameObject* pOwner)
 {
 
 	*fTimeAcc += fTimeDelta; // 시간 누적
@@ -87,17 +88,17 @@ HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime
 		*fTimeAcc = 0.f;
 
 		// 현재 레벨에 생성
-		CEffect* pEffect = Create_Effect(m_pGameInstance->Get_CurrentLevel(), LAYER_EFFECT, strEffectFileName, nullptr);
+		CEffect* pEffect = Create_Effect(m_pGameInstance->Get_CurrentLevel(), LAYER_EFFECT, strEffectFileName, pOwner);
 
 
-		// 트랜스폼 (로컬) : 크기, 회전, 위치를 바꿔주고싶다면 값 넣어주기
-		CTransform* pTransform = pEffect->Get_Transform();
+		//// 트랜스폼 (로컬) : 크기, 회전, 위치를 바꿔주고싶다면 값 넣어주기
+		//CTransform* pTransform = pEffect->Get_Transform();
 
-		pTransform->Set_Scaling(vLocalScale.x, vLocalScale.y, vLocalScale.z); // 크기
+		//pTransform->Set_Scaling(vLocalScale.x, vLocalScale.y, vLocalScale.z); // 크기
 
-		pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), vLocalRotation.x); // X축 회전
-		pTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLocalRotation.y); // Y축 회전
-		pTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), vLocalRotation.z); // Z축 회전
+		//pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(vLocalRotation.x)); // X축 회전
+		//pTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(vLocalRotation.y)); // Y축 회전
+		//pTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(vLocalRotation.z)); // Z축 회전
 
 		pEffect->Set_Position(vLocalPos); // 위치 
 	}

@@ -80,7 +80,7 @@ void CVampireCommander_Projectile_Range3::Tick(_float fTimeDelta)
 
 	//! 유정 : 두두두두 이펙트 생성 테스트
 	EFFECT_MANAGER->Tick_Create_Effect(&m_fEffectTimeAcc, 0.2f, fTimeDelta, "Test_Impact_Tick.json"
-	, Get_Position());
+	, Get_Position(), _float3(1.f, 1.f, 1.f), _float3(0.f, 180.f, 0.f));
 
 }
 
