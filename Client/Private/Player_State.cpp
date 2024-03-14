@@ -551,7 +551,7 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 	if (pState)	return pState;
 
 
-	if (0.5f <= pActor->Get_ChargingTime())
+	if (0.3f <= pActor->Get_ChargingTime())
 	{
 		pActor->Set_ChargingTime(0.f);
 		return new CPlayer_MeleeUppercut_01v2();
@@ -597,10 +597,14 @@ CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _
 		}
 	}
 
-	if (m_pGameInstance->Mouse_Up(DIM_LB))
+	if (CPlayer_MeleeUppercut_01v2::g_iAnimIndex != _iAnimIndex) 
 	{
-		return new CPlayer_MeleeCombo_01();
+		if (m_pGameInstance->Mouse_Up(DIM_LB))
+		{
+			return new CPlayer_MeleeCombo_01();
+		}
 	}
+
 
 
 	if (pActor->Is_Animation_End())
