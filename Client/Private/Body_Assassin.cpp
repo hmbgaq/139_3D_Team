@@ -74,14 +74,17 @@ HRESULT CBody_Assassin::Render_Shadow()
 
 void CBody_Assassin::OnCollisionEnter(CCollider* other)
 {
+	__super::OnCollisionEnter(other);
 }
 
 void CBody_Assassin::OnCollisionStay(CCollider* other)
 {
+	__super::OnCollisionStay(other);
 }
 
 void CBody_Assassin::OnCollisionExit(CCollider* other)
 {
+	__super::OnCollisionExit(other);
 }
 
 

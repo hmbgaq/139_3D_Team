@@ -3,6 +3,9 @@
 #include "Bandit_Sniper.h"
 #include "Data_Manager.h"
 #include "Body_Bandit_Sniper.h"
+#include "Weapon_Bandit_Sniper.h"
+
+/* State */
 #include "Sniper_CoverLow_Idle.h"
 #include "Sniper_DeathLight_B_01.h"
 #include "Sniper_Weakspot_Death_01.h"
@@ -46,9 +49,8 @@ HRESULT CBandit_Sniper::Initialize(void* pArg)
 	}
 
 	FAILED_CHECK(Ready_Option());
-
-	//m_pTransformCom->Set_Pos(250.66, 0, 2.38);
-	//m_pNavigationCom->Set_CurrentIndex(12);
+	
+	m_pTransformCom->Set_Look(0.f, 0.f, -1.f);
 
 	return S_OK;
 }
@@ -79,6 +81,23 @@ HRESULT CBandit_Sniper::Render()
 	FAILED_CHECK(__super::Render());
 
 	return S_OK;
+}
+
+void CBandit_Sniper::Set_ColliderSize(_float fSizeX, _float fSizeY, _float fSizeZ)
+{
+	CBody_Bandit_Sniper* pBody = dynamic_cast<CBody_Bandit_Sniper*>(m_pBody);
+	NULL_CHECK_RETURN(pBody, );
+	
+	pBody->Get_Collider()->Set_ColliderSize(fSizeX, fSizeY, fSizeZ);
+}
+
+void CBandit_Sniper::Sniping_Target(_float4 TargetPos)
+{
+	CWeapon_Bandit_Sniper* pWeapon = dynamic_cast<CWeapon_Bandit_Sniper*>(m_pWeapon);
+	NULL_CHECK_RETURN(pWeapon, );
+
+	m_iBulletCnt += 1;
+	pWeapon->Sniping(TargetPos, m_pTransformCom->Get_Pos()); // (_float4 vTargetPos, _float3 StartfPos)
 }
 
 HRESULT CBandit_Sniper::Ready_Components()
@@ -114,7 +133,6 @@ HRESULT CBandit_Sniper::Ready_Option()
 	m_bProtectExist = true; /* 현재 방어막 있는상태 */
 	m_pTarget = m_pGameInstance->Get_Player(); /* 타겟은 플레이어 고정 */ 
 	
-
 	return S_OK;
 }
 

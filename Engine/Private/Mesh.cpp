@@ -60,13 +60,7 @@ void CMesh::Calculate_AABB_Extents(_float3* pOutMin, _float3* pOutMax)
 			}
 		}
 	}
-
-
-	
-
 	// 메쉬의 모든 정점에 대해 AABB 계산
-
-	
 
 	// 출력 변수에 결과 저장
 
@@ -114,6 +108,10 @@ HRESULT CMesh::Initialize_Prototype(CModel::TYPE eModelType, CMyAIMesh pAIMesh, 
 		m_pIndices[iNumIndices++] = pAIMesh.Get_Face((_uint)i).Get_Indices()[0];
 		m_pIndices[iNumIndices++] = pAIMesh.Get_Face((_uint)i).Get_Indices()[1];
 		m_pIndices[iNumIndices++] = pAIMesh.Get_Face((_uint)i).Get_Indices()[2];
+
+		//m_MeshIndex.push_back({ pAIMesh.Get_Face((_uint)i).Get_Indices()[0],
+		//						pAIMesh.Get_Face((_uint)i).Get_Indices()[1],
+		//						pAIMesh.Get_Face((_uint)i).Get_Indices()[2] });
 	}
 	
 	m_SubResourceData.pSysMem = m_pIndices;
@@ -159,7 +157,45 @@ HRESULT CMesh::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName,
 
 }
 
+_bool CMesh::Compute_Ray(RAY _Ray, _matrix _WorldMatrix, _float4* pOut)
+{
+	_vector	vRayPos = XMLoadFloat4(&_Ray.vPosition);
+	_vector vRayDir = XMLoadFloat4(&(_float4(_Ray.vDirection.x, _Ray.vDirection.y, _Ray.vDirection.z, 0.f)));
 
+	// 마우스 광선 위치(시작점), 방향
+	_float		fDist;	// 만약 충돌했다면 거리를 반환 받아야 해서 만들어뒀다.
+
+	size_t		iMeshIndex = m_MeshIndex.size(); // 삼각형 개수 (삼각형의 개수만큼 순회해서 피킹된 녀석을 찾을거야)
+
+	for (_uint i = 0; i < iMeshIndex; i++)
+	{
+		//_uint		iIndices = m_BoneIndices[i];
+		_vector		vPickedPos;
+
+		// 삼각형 인덱스의 정점 위치 3개를 받는다.
+		//		m_MeshVertex(정점) 이녀석의 어떤 정점을 가져와야해? -> [[i번째 삼각형의].x번째정점]
+		_vector	vVec0 = XMLoadFloat3(&m_MeshVertex[m_MeshIndex[i].ix]); // 0
+		_vector	vVec1 = XMLoadFloat3(&m_MeshVertex[m_MeshIndex[i].iy]); // 1
+		_vector	vVec2 = XMLoadFloat3(&m_MeshVertex[m_MeshIndex[i].iz]); // 2
+
+		// 담아온 정점 위치 3개와 마우스를 비교하러 보내줘
+		if (true == DirectX::TriangleTests::Intersects(vRayPos, vRayDir, vVec0, vVec1, vVec2, fDist))
+		{
+			// 비교했더니 이 메쉬의 특정 정점과 마우스의 레이저가 충돌
+			vPickedPos = vRayPos + XMVector3Normalize(vRayDir) * fDist; // 충돌된 위치를 계산해서 담아
+
+			// 충돌된 위치를 월드 좌표계로 변환
+			_vector vWorldPickedPos = XMVector3TransformCoord(vPickedPos, _WorldMatrix);
+
+			// 월드 좌표계로 변환된 위치를 pOut에 저장
+			XMStoreFloat4(pOut, vWorldPickedPos);
+
+			return true; // 값도 보내고, 충돌도 성공했다고 알려
+		}
+	}
+
+	return false; // 값 없이 충돌 실패했다고 알려
+}
 
 #ifdef _DEBUG
 _bool CMesh::Picking(RAY ray, _float3* out)
@@ -195,6 +231,7 @@ HRESULT CMesh::Ready_Vertices_NonAnim(CMyAIMesh pAIMesh, _fmatrix PivotMatrix)
 	{
 		memcpy(&m_pVertices[(_uint)i].vPosition, &pAIMesh.Get_Vertice((_uint)i), sizeof(_float3));
 		XMStoreFloat3(&m_pVertices[(_uint)i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&m_pVertices[(_uint)i].vPosition), PivotMatrix));
+		//m_MeshVertex.push_back(m_pVertices[i].vPosition); // 피킹을 GO 메쉬의 정점 위치를 저장.
 
 		memcpy(&m_pVertices[(_uint)i].vNormal, &pAIMesh.Get_Normal((_uint)i), sizeof(_float3));
 		XMStoreFloat3(&m_pVertices[(_uint)i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&m_pVertices[(_uint)i].vNormal), PivotMatrix));
@@ -238,6 +275,7 @@ HRESULT CMesh::Ready_Vertices_Anim(CMyAIMesh pAIMesh, const vector<class CBone*>
 	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
 		memcpy(&m_pAnimVertices[(_uint)i].vPosition, &pAIMesh.Get_Vertice((_uint)i), sizeof(_float3));
+		//m_MeshVertex.push_back(m_pAnimVertices[(_uint)i].vPosition); // For. 피킹 
 		memcpy(&m_pAnimVertices[(_uint)i].vNormal, &pAIMesh.Get_Normal((_uint)i), sizeof(_float3));
 		memcpy(&m_pAnimVertices[(_uint)i].vTexcoord, &pAIMesh.Get_TextureCoord((_uint)i), sizeof(_float3));
 		memcpy(&m_pAnimVertices[(_uint)i].vTangent, &pAIMesh.Get_Tangent((_uint)i), sizeof(_float3));

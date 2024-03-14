@@ -13,7 +13,7 @@ public:
 
 private:
 	_float fTimeAcc = 0.f;
-	_float4 vBulletDir = {};
+	_float4 vTargetPos = {};
 	_bool bReady = false;
 
 public:

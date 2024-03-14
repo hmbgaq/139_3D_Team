@@ -68,6 +68,8 @@ void CCharacter::Priority_Tick(_float fTimeDelta)
 		if (nullptr != Pair.second)
 			Pair.second->Priority_Tick(fTimeDelta);
 	}
+
+	Set_WeaknessPoint();
 }
 
 void CCharacter::Tick(_float fTimeDelta)
@@ -102,6 +104,7 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
 
+	Set_WeaknessPoint();
 }
 
 HRESULT CCharacter::Render()
@@ -543,6 +546,9 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap
 
 	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	_float fDistance = Calc_Distance();
+	if (fDistance < 0.5f)
+		return;
+
 	_float3 vPos = { 0.f, 0.f, min(fDistance * fTimeDelta, fSpeedCap) };
 
 	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
@@ -591,6 +597,13 @@ CWeapon* CCharacter::Set_Weapon_Collisions_Enable(const wstring& strWeaponTag, _
 
 	return pWeapon;
 }
+
+
+void CCharacter::Set_WeaknessPoint()
+{
+	_float3 vResult = m_pTransformCom->Calc_Front_Pos(m_vWeaknessPoint_Local);
+	m_vWeaknessPoint = vResult;
+};
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {

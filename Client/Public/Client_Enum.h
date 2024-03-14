@@ -14,12 +14,19 @@ namespace Engine
 	};
 
 	enum class ANIM_SHADER {
-		ANIM_ORIGIN,			// 0 - 기본형태
-		ANIM_WIREFRAME,			// 1 - 메시로 보기 
-		ANIM_SHADOW,			// 2 - 그림자
-		ANIM_INTRO_BOSS,		// 3 - INTRO STAGE 보스 
-		ANIM_EXAMPLE,			// 4 - Bloom , Rim 사용하는 예시
+		ANIM_ORIGIN,				// 0 - 기본형태
+		ANIM_WIREFRAME,				// 1 - 메시로 보기 
+		ANIM_SHADOW,				// 2 - 그림자
+		ANIM_INTRO_BOSS,			// 3 - INTRO STAGE 보스 
+		ANIM_EXAMPLE,				// 4 - Bloom , Rim 사용하는 예시
 		ANIM_SHADER_END };
+
+	enum class MONSTER_SHADER {
+		COMMON_ORIGIN,				// 0 - 기본 그대로 그리기 
+		COMMON_WIREFRAME,			// 1 - 
+		COMMON_SHADOW,				// 2 - 그림자 그리기 
+		INFECTED_PUNCH,				// 3 - Infected - Attack에서 주먹변하기 
+		MONSTER_SHADER_END };
 
 	enum class UI_SHADER {UI_SHADER_END};
 

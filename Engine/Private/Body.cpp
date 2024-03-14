@@ -1,5 +1,6 @@
 #include "..\Public\Body.h"
 #include "GameInstance.h"
+#include "Character.h"
 
 CBody::CBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -81,25 +82,18 @@ HRESULT CBody::Render()
 {
 	__super::Render();
 
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	_uint iPass = m_iShaderPass; // false == m_bDissolve ? 0 : 3;
-
-	//if (FAILED(m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
-	//	return E_FAIL;
-
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveWeight", &m_fDissolveWeight, sizeof(_float))))
-	//	return E_FAIL;
-
+	_uint iPass = m_iShaderPass; 
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 
 		m_pShaderCom->Begin(iPass);
 
@@ -172,6 +166,24 @@ void CBody::Set_TrackPosition(_int iNewTrackPosition)
 	return m_pModelCom->Set_TrackPosition(iNewTrackPosition);
 }
 
+void CBody::OnCollisionEnter(CCollider* other)
+{
+}
+	
+void CBody::OnCollisionStay(CCollider* other)
+{
+	CCharacter* pTarget_Character = Get_Target_Character(other);
+	if (nullptr != pTarget_Character)
+	{
+		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
+		pTarget_Character->Add_Force(Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1	, 0.15f);
+	}
+}
+
+void CBody::OnCollisionExit(CCollider* other)
+{
+}
+
 void CBody::Set_MouseMove(_float fTimeDelta)
 {
 	_float2 vMouseMove = { 0.f, 0.f };
@@ -193,6 +205,18 @@ void CBody::Set_MouseMove(_float fTimeDelta)
 
 	m_pModelCom->Set_MouseMove(vResult);
 
+}
+
+CCharacter* CBody::Get_Target_Character(CCollider* other)
+{
+	if (nullptr == other || nullptr == other->Get_Owner() || nullptr == other->Get_Owner()->Get_Object_Owner())
+		return nullptr;
+
+	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(other->Get_Owner()->Get_Object_Owner());
+	if (nullptr == pTarget_Character)
+		return nullptr;
+
+	return pTarget_Character;
 }
 
 #ifdef _DEBUG
@@ -283,19 +307,9 @@ void CBody::Update_ShootingReaction(_float fTimeDelta)
 
 HRESULT CBody::Bind_ShaderResources()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
-
-	//if (FAILED(m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
-	//	return E_FAIL;
-
-// 	if (FAILED(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
-// 		return E_FAIL;
-
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
 	return S_OK;
 }

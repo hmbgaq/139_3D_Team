@@ -29,7 +29,7 @@ HRESULT CBullet_Winchester::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 30.f;
+	GameObjectDesc.fSpeedPerSec = 150.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -56,8 +56,14 @@ void CBullet_Winchester::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
+	_float fDistance = m_pTransformCom->Get_Speed();
+	Search_Target(LAYER_MONSTER, fDistance);
+	Search_Target(LAYER_BOSS, fDistance);
+	
+	Look_At_Target();
 	m_pTransformCom->Go_Straight(fTimeDelta);
+
+	
 }
 
 void CBullet_Winchester::Late_Tick(_float fTimeDelta)

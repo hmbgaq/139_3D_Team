@@ -52,8 +52,6 @@ void CCollision_Manager::Add_Collision(const _uint& In_iLayer, CCollider* _pColl
 	if (nullptr == _pCollider || In_iLayer >= m_iNumLayer)
 		return;
 
-
-
 	_bool is_Same = false;
 
 	for (CCollider* pCollier : m_ColliderList[In_iLayer]) 
@@ -138,8 +136,6 @@ void CCollision_Manager::Update_CollisionGroup(const _uint& In_iLeftLayer, const
 			}
 		}
 	}
-
-
 }
 
 void CCollision_Manager::End_CollisionCheck()

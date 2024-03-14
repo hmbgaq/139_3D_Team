@@ -21,6 +21,12 @@
 #include "Player_DeathNormal_F_02.h"
 
 
+#include "Player_InteractionJumpDown100.h"
+#include "Player_InteractionJumpDown200.h"
+#include "Player_InteractionJumpDown300.h"
+#include "Player_InteractionVault100.h"
+#include "Player_InteractionVault200.h"
+
 #include "PhysXCharacterController.h"
 #include "PhysXCollider.h"
 #include "Preset_PhysXColliderDesc.h"
@@ -98,7 +104,7 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pActor)
+	if (m_pActor/* && m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL)*/)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
@@ -303,9 +309,60 @@ void CPlayer::Activate_ShootingReaction()
 	m_pBody->Activate_ShootingReaction();
 }
 
-void CPlayer::Search_Target()
+
+#pragma region 상호작용
+
+void CPlayer::SetState_InteractJumpDown100()
 {
-	__super::Search_Target(LAYER_MONSTER);
+	m_pActor->Set_State(new CPlayer_InteractionJumpDown100());
+}
+
+void CPlayer::SetState_InteractJumpDown200()
+{
+	m_pActor->Set_State(new CPlayer_InteractionJumpDown200());
+}
+
+void CPlayer::SetState_InteractJumpDown300()
+{
+	m_pActor->Set_State(new CPlayer_InteractionJumpDown300());
+}
+
+void CPlayer::SetState_InteractVault100()
+{
+	m_pActor->Set_State(new CPlayer_InteractionVault100());
+}
+
+void CPlayer::SetState_InteractVault200()
+{
+	m_pActor->Set_State(new CPlayer_InteractionVault200());
+}
+
+#pragma endregion 상호작용
+
+void CPlayer::Search_Target(_float fMaxDistance)
+{
+	__super::Search_Target(LAYER_BOSS, fMaxDistance);
+	__super::Search_Target(LAYER_MONSTER, fMaxDistance);
+}
+
+void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCount)
+{
+	if (nullptr == m_pTarget || true == m_pTarget->Is_Dead() || false == m_pTarget->Get_Enable())
+	{
+		Search_Target(fMaxDistance);
+	}
+
+	//Search_Target(fMaxDistance);
+
+	if (m_pTarget)
+	{
+		Look_At_Target();
+		for (_uint i = 0; i < iCount; ++i) 
+		{
+			Move_In_Proportion_To_Enemy(fTimeDelta);
+		}
+		
+	}
 }
 
 HRESULT CPlayer::Ready_Components()

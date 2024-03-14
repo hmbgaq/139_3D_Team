@@ -14,6 +14,7 @@
 #include "VampireCommander_TurnR90.h"
 #include "VampireCommander_TurnR180.h"
 #include "VampireCommander_Stun_Start.h"
+#include "UI_Manager.h"
 
 #include "Data_Manager.h"
 #include "Player.h"
@@ -52,7 +53,16 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 		m_pActor->Set_State(new CVampireCommander_Spawn1);
 	}
 	//HP
-	m_iHp = 1000;
+	m_iMaxHp = 1000;
+	m_iHp = m_iMaxHp;
+
+	//m_fMaxHP = 1000.f;
+	//m_fCurHP = m_fMaxHP;
+
+	// Ready BossHUDBar
+	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
+
+	m_vWeaknessPoint_Local = _float3(0.f, 2.f, 0.f);
 
 	return S_OK;
 }

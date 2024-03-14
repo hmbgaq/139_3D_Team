@@ -303,12 +303,12 @@ private:
 	_int m_iOldIndex = -1;
 #pragma region											최소, 최대 값
 // 크기
-	_float	fMin_Scale = 0.0001f;	// 최소
+	_float	fMin_Scale = -2000.0001f;	// 최소
 	_float	fMax_Scale = 2000.f;	// 최대
 
 	// 회전
-	_float	fMin_Rot = 0.0f;		// 최소
-	_float	fMax_Rot = 180.f;	// 최대
+	_float	fMin_Rot = -360.0f;		// 최소
+	_float	fMax_Rot = 360.f;	// 최대
 
 	// 이동
 	_float	fMin_Pos = -5000.f;		// 최소
@@ -326,12 +326,12 @@ private:
 #pragma region											최소, 최대 자동 생성 값
 	_bool  m_bIndividualTexture = false;
 
-	_float _v2Time[2] = { 0.f, 0.f };
-	_float _v2Value[2] = { 0.f, 0.f };
-	_float minScale[2] = { 0.f, 0.f };
-	_float maxScale[2] = { 0.f, 0.f };
-	_float minRot = { 0.f };
-	_float maxRot = { 0.f };
+	_float _v2Time[2] = { 0.f, 1.f };
+	_float _v2Value[2] = { 0.f, 0.7f };
+	_float minScale[2] = { 50.f, 50.f };
+	_float maxScale[2] = { 50.f, 50.f };
+	_float minRot = { -360.f };
+	_float maxRot = { 360.f };
 	_float minPos[2] = { 0.f, 0.f };
 	_float maxPos[2] = { 0.f, 0.f };
 
@@ -339,7 +339,7 @@ private:
 	_float	fMin_Texture = 0.f;	// 최소
 	_float	fMax_Texture = 0.f;	// 최대
 
-	_float numKeyframes = 0.f;
+	_float numKeyframes = 1.f;
 #pragma endregion
 	// Test
 	_bool	m_bCreateOK = false;
@@ -456,6 +456,8 @@ private:
 	std::vector<std::string> m_vecClass =
 	{
 		"Anything",
+		"BackGround",
+		"Loading_Icon",
 		"Player_HPBar",
 		"Player_HPFrame",
 		"Player_Skill_Frame",
@@ -480,7 +482,9 @@ private:
 		"Option_Window",
 		"AimCrosshair",
 		"Weakness",
-		"Distortion"
+		"Distortion",
+		"EnemyHP_FrameBar",
+		"EnemyHP_Bar"
 	};
 
 	// 클래스 목록을 저장하는 벡터

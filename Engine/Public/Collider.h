@@ -22,16 +22,14 @@ private:
 	virtual ~CCollider() = default;
 
 public:
-	TYPE Get_ColliderType() const {
-		return m_eType;
-	}
-
-	class CBounding* Get_Bounding() {
-		return m_pBounding;
-	}
+	TYPE Get_ColliderType() const {	return m_eType;	}
+	class CBounding* Get_Bounding() { return m_pBounding; }
 
 	void  Set_Bounding(CBounding* _Bounding) { m_pBounding = _Bounding; }
 	void  Set_isCollision(_bool _isCollision) { m_isCollision = _isCollision; }
+
+	void Set_ColliderSize(_float _sizeX, _float _sizeY, _float _sizeZ);
+
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eType);
 	virtual HRESULT Initialize(void* pArg);
@@ -63,9 +61,6 @@ public:
 	list<CCollider*>				m_OtherColliders;
 
 	_uint							m_iLayer = { 0 };
-
-	
-
 
 #ifdef _DEBUG
 private:

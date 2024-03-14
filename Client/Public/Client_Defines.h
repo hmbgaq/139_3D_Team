@@ -47,12 +47,14 @@ namespace Client
 	#define LAYER_CAMERA					TEXT("Layer_Camera")
 	#define LAYER_EFFECT					TEXT("Layer_Effect")
 	#define LAYER_MONSTER					TEXT("Layer_Monster")
+	#define LAYER_BOSS						TEXT("Layer_Boss")
 	#define LAYER_PLAYER					TEXT("Layer_Player")
 	#define LAYER_UI_MONSTER				TEXT("Layer_UI_Monster")
 	#define LAYER_UI_PLAYER					TEXT("Layer_UI_Player")
 	#define LAYER_PARTICLE					TEXT("Layer_Particle")
 
 	#define LAYER_PLAYER_BULLET				TEXT("Layer_Player_Bullet")
+	#define LAYER_MONSTER_BULLET			TEXT("Layer_Monster_Bullet")
 
 
 	//Player_Weapon
@@ -83,6 +85,7 @@ namespace Client
 		ONLY_VIEW,
 		CHECK_DIR,
 		INTERIOR,
+		INTERACT,
 		PICKING_INSTANCE,
 		PICKING_MESH,
 		LAYER_END

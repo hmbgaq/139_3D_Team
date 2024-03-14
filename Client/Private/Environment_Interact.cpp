@@ -2,6 +2,8 @@
 #include "..\Public\Environment_Interact.h"
 
 #include "GameInstance.h"
+#include "Character.h"
+#include "Player.h"
 
 CEnvironment_Interact::CEnvironment_Interact(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -22,9 +24,9 @@ HRESULT CEnvironment_Interact::Initialize_Prototype()
 
 HRESULT CEnvironment_Interact::Initialize(void* pArg)
 {	
-	m_tEnvironmentDesc = *(ENVIRONMENT_OBJECT_DESC*)pArg;
+	m_tEnvironmentDesc = *(ENVIRONMENT_INTERACTOBJECT_DESC*)pArg;
 
-	
+	m_iCurrentLevelIndex = m_pGameInstance->Get_NextLevel();
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
@@ -35,6 +37,13 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 	if (false == m_tEnvironmentDesc.bPreview)
 		m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
 
+	if(m_iCurrentLevelIndex != (_uint)LEVEL_TOOL)
+	{
+		m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
+		Safe_AddRef(m_pPlayer);
+	}
+
+
 	return S_OK;
 }
 
@@ -44,16 +53,40 @@ void CEnvironment_Interact::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Interact::Tick(_float fTimeDelta)
 {
+
+	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL && m_bFindPlayer == false)
+	{
+		m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
+
+		if(m_pPlayer != nullptr)
+		{
+			Safe_AddRef(m_pPlayer);
+			m_bFindPlayer = true;
+		}
+	}
+
+
 	if (true == m_tEnvironmentDesc.bAnimModel && true == m_bPlay)
 	{
 		m_pModelCom->Play_Animation(fTimeDelta, true);
 	}
+
+	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+
+	Interact();
+
 }
 
 void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 {
+
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 		return ;
+
+	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL)
+	{
+		m_pGameInstance->Add_DebugRender(m_pColliderCom);
+	}
 }
 
 HRESULT CEnvironment_Interact::Render()
@@ -66,8 +99,8 @@ HRESULT CEnvironment_Interact::Render()
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		
 		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
 
 		m_pModelCom->Render((_uint)i);
@@ -120,7 +153,39 @@ void CEnvironment_Interact::Load_FromJson(const json& In_Json)
 	return __super::Load_FromJson(In_Json);
 }
 
-#ifdef DEBUG
+#ifdef _DEBUG
+
+void CEnvironment_Interact::Set_ColliderSize(_float3 vColliderSize)
+{
+	CBounding* pBounding = m_pColliderCom->Get_Bounding();
+
+	CBounding_AABB* pAABB = dynamic_cast<CBounding_AABB*>(pBounding);
+	
+	if(pAABB == nullptr)
+		return;
+
+	BoundingBox* pBox = pAABB->Get_OriginBounding();
+
+	pBox->Extents = vColliderSize;
+	m_tEnvironmentDesc.vColliderSize = vColliderSize;
+
+	//m_pColliderCom->Set_Bounding()
+}
+
+void CEnvironment_Interact::Set_ColliderCenter(_float3 vColliderCenter)
+{
+	CBounding* pBounding = m_pColliderCom->Get_Bounding();
+
+	CBounding_AABB* pAABB = dynamic_cast<CBounding_AABB*>(pBounding);
+
+	if (pAABB == nullptr)
+		return;
+
+	BoundingBox* pBox = pAABB->Get_OriginBounding();
+
+	pBox->Center = vColliderCenter;
+	m_tEnvironmentDesc.vColliderCenter = vColliderCenter;
+}
 
 _bool CEnvironment_Interact::Picking(_float3* vPickedPos)
 {
@@ -137,23 +202,180 @@ _bool CEnvironment_Interact::Picking(_float3* vPickedPos)
 	return m_pGameInstance->Picking_Mesh(ray, vPickedPos, meshes);
 }
 
+
 #endif
+
+void CEnvironment_Interact::Interact()
+{
+	if(m_bFindPlayer == false)
+		return;
+
+		if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_LOOP)
+		{
+			if (true == m_pColliderCom->Is_Collision(m_pPlayer->Get_Collider()))
+			{
+				switch (m_tEnvironmentDesc.eInteractType)
+				{
+					case CEnvironment_Interact::INTERACT_JUMP100:
+					{
+						//CPlayer::Player_State::Player_InteractionJumpDown100;
+
+
+						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+							m_pPlayer->SetState_InteractJumpDown100();
+						
+						break;
+					}
+
+					case CEnvironment_Interact::INTERACT_JUMP200:
+					{
+						
+						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+							m_pPlayer->SetState_InteractJumpDown200();
+
+						break;
+					}
+
+					case CEnvironment_Interact::INTERACT_JUMP300:
+					{
+						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+							m_pPlayer->SetState_InteractJumpDown300();
+
+						break;
+					}
+
+					case CEnvironment_Interact::INTERACT_VAULT100:
+					{
+						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+							m_pPlayer->SetState_InteractVault100();
+
+						break;
+					}
+
+					case CEnvironment_Interact::INTERACT_VAULT200:
+					{
+						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+							m_pPlayer->SetState_InteractVault200();
+
+						break;
+					}
+				}
+			}
+		}
+		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == false)
+		{
+			if (true == m_pColliderCom->Is_Collision(m_pPlayer->Get_Collider()))
+			{
+				switch (m_tEnvironmentDesc.eInteractType)
+				{
+					case CEnvironment_Interact::INTERACT_JUMP100:
+					{
+
+						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+							m_pPlayer->SetState_InteractJumpDown100();
+
+						break;
+					}
+
+					case CEnvironment_Interact::INTERACT_JUMP200:
+					{
+
+						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+							m_pPlayer->SetState_InteractJumpDown200();
+
+						break;
+					}
+
+					case CEnvironment_Interact::INTERACT_JUMP300:
+					{
+						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+							m_pPlayer->SetState_InteractJumpDown300();
+
+						break;
+					}
+
+					case CEnvironment_Interact::INTERACT_VAULT100:
+					{
+						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+							m_pPlayer->SetState_InteractVault100();
+
+						break;
+					}
+
+					case CEnvironment_Interact::INTERACT_VAULT200:
+					{
+						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+							m_pPlayer->SetState_InteractVault200();
+
+						break;
+					}
+				}
+			}
+		}
+}
+
 
 HRESULT CEnvironment_Interact::Ready_Components()
 {
-
+	
 	if (true == m_tEnvironmentDesc.bAnimModel)
 	{
-		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrentLevelIndex, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 	else
 	{
-		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrentLevelIndex, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 	
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), m_tEnvironmentDesc.strModelTag,
+	if (FAILED(__super::Add_Component(m_iCurrentLevelIndex, m_tEnvironmentDesc.strModelTag,
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+		return E_FAIL;
+
+	if(FAILED(Ready_InteractCollider(m_tEnvironmentDesc.eInteractType)))
+		return E_FAIL;
+
+
+	return S_OK;
+}
+
+HRESULT CEnvironment_Interact::Ready_InteractCollider(INTERACT_TYPE eInteractType)
+{
+	/* For.Com_Collider */
+	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::INTERACT);
+	BoundingDesc.vExtents = m_tEnvironmentDesc.vColliderSize;
+	BoundingDesc.vCenter = m_tEnvironmentDesc.vColliderCenter;
+
+	switch (eInteractType)
+	{
+		case INTERACT_JUMP100:
+		{
+			BoundingDesc.iLayer   = ECast(COLLISION_LAYER::INTERACT);
+			BoundingDesc.vExtents = m_tEnvironmentDesc.vColliderSize;
+			BoundingDesc.vCenter  = m_tEnvironmentDesc.vColliderCenter;
+			break;
+		}
+
+		case INTERACT_JUMP200:
+		{
+			BoundingDesc.iLayer = ECast(COLLISION_LAYER::INTERACT);
+			BoundingDesc.vExtents = m_tEnvironmentDesc.vColliderSize;
+			BoundingDesc.vCenter = m_tEnvironmentDesc.vColliderCenter;
+			break;
+		}
+
+		case INTERACT_JUMP300:
+		{
+			BoundingDesc.iLayer = ECast(COLLISION_LAYER::INTERACT);
+			BoundingDesc.vExtents = m_tEnvironmentDesc.vColliderSize;
+			BoundingDesc.vCenter = m_tEnvironmentDesc.vColliderCenter;
+			break;
+		}
+	}
+
+	if (FAILED(__super::Add_Component(m_iCurrentLevelIndex, TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -206,6 +428,9 @@ CGameObject* CEnvironment_Interact::Pool()
 void CEnvironment_Interact::Free()
 {
 	__super::Free();
+	
+	if(m_pPlayer != nullptr)
+		Safe_Release(m_pPlayer);
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);

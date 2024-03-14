@@ -38,11 +38,11 @@ HRESULT CUI_Distortion::Initialize(void* pArg)
 
 	/* Distortion이 있는 UI */
 	m_tUIInfo.bDistortionUI = true;
-	m_tUIInfo.vScales = { 1.f, 0.f, 0.f };
-	m_tUIInfo.fPositionZ = 0.0f;
-	m_tUIInfo.fDistortionScale = 1.f;
-	m_tUIInfo.vDistortion1.x = 1.f;
-	m_tUIInfo.vScrollSpeeds.x = 1.f;
+	//m_tUIInfo.vScales = { 1.f, 0.f, 0.f };
+	//m_tUIInfo.fPositionZ = 0.0f;
+	//m_tUIInfo.fDistortionScale = 1.f;
+	//m_tUIInfo.vDistortion1.x = 1.f;
+	//m_tUIInfo.vScrollSpeeds.x = 1.f;
 
 	/*
 	#include "Data_Manager.h" 인클루드 해주고,
@@ -63,34 +63,38 @@ void CUI_Distortion::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 	
-	m_tUIInfo.fTimeAcc += fTimeDelta;
-	//m_tUIInfo.fTimeAcc = fTimeDelta;
-
 	if (m_bActive)
 	{
-		
+		m_tUIInfo.fTimeAcc += fTimeDelta;
+		//m_tUIInfo.fTimeAcc = fTimeDelta;
 	}
 }
 
 void CUI_Distortion::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
-		return;
+	if (m_bActive == true)
+	{
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+			return;
+	}
 }
 
 HRESULT CUI_Distortion::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	if (m_bActive == true)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그린다.
-	m_pShaderCom->Begin(6); // Distortion 6
+		//! 이 셰이더에 0번째 패스로 그린다.
+		m_pShaderCom->Begin(6); // Distortion 6
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+	}
 
 	return S_OK;
 }
