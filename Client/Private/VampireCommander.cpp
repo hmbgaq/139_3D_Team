@@ -48,10 +48,11 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 	}
 
 	//HP
-	m_iHp = 1000;
+	m_iMaxHp = 1000;
+	m_iHp = m_iMaxHp;
 
-	m_fMaxHP = 1000.f;
-	m_fCurHP = m_fMaxHP;
+	//m_fMaxHP = 1000.f;
+	//m_fCurHP = m_fMaxHP;
 
 	// Ready BossHUDBar
 	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
