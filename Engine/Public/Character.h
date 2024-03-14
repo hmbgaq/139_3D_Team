@@ -121,7 +121,6 @@ public:
 	virtual void Hitted_Front(Power ePower) {};
 	virtual void Hitted_Knock(_bool bIsCannonball = false) {};
 	virtual void Hitted_Dead(Power ePower) {};
-
 public:
 	void Add_Force(_vector In_vDir, _float In_fPower);
 

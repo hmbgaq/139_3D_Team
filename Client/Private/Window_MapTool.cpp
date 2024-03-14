@@ -3700,7 +3700,9 @@ void CWindow_MapTool::Interact_SelectFunction()
 
 		if(ImGui::InputInt(u8"¼ÎÀÌ´õÆÐ½º", &m_iShaderPassIndex))
 		{
-			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ShaderPassIndex(m_iShaderPassIndex);
+#ifdef _DEBUG
+           m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ShaderPassIndex(m_iShaderPassIndex);
+#endif // _DEBUG
 		}
 
 		
@@ -3721,7 +3723,9 @@ void CWindow_MapTool::Interact_SelectFunction()
 					if (ImGui::Selectable(InteractTypes[i], is_Selected))
 					{
 						m_eInteractType = i;
+#ifdef _DEBUG
 						m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractType((CEnvironment_Interact::INTERACT_TYPE)m_eInteractType);
+#endif // _DEBUG
 					}
 
 					if (true == is_Selected)
@@ -3745,7 +3749,9 @@ void CWindow_MapTool::Interact_SelectFunction()
 				if (ImGui::RadioButton(InstanceState[i], &m_eInteractState, i))
 				{
 					m_eInteractState = i;
+#ifdef _DEBUG
 					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractState((CEnvironment_Interact::INTERACT_STATE)m_eInteractState);
+#endif // _DEBUG
 					//eInteractState = CEnvironment_Interact::INTERACT_STATE(iInstanceState);
 				}
 			}
