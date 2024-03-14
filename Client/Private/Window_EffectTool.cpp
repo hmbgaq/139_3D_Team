@@ -2566,6 +2566,12 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vColor_Clip_Part[3] = m_pCurVoidDesc->vColor_Clip.w;
 
 
+			/* 현재 곱하기 컬러 업데이트 */
+			m_fColor_Mul_Mesh[0] = m_pCurVoidDesc->vColor_Mul.x;
+			m_fColor_Mul_Mesh[1] = m_pCurVoidDesc->vColor_Mul.y;
+			m_fColor_Mul_Mesh[2] = m_pCurVoidDesc->vColor_Mul.z;
+			m_fColor_Mul_Mesh[3] = m_pCurVoidDesc->vColor_Mul.w;
+
 
 			/* UV 조정 값 업데이트 */
 			// Offset 
