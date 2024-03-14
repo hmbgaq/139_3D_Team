@@ -1,4 +1,5 @@
 #include "..\Public\Infected_HitHeavyToStun_01_NEW.h"
+#include "Infected_Stun_Loop_NEW.h"
 
 void CInfected_HitHeavyToStun_01_NEW::Initialize(CInfected* pActor)
 {
@@ -9,7 +10,12 @@ void CInfected_HitHeavyToStun_01_NEW::Initialize(CInfected* pActor)
 
 CState<CInfected>* CInfected_HitHeavyToStun_01_NEW::Update(CInfected* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return new CInfected_Stun_Loop_NEW();
+	}
+
+	return nullptr;
 }
 
 void CInfected_HitHeavyToStun_01_NEW::Release(CInfected* pActor)

@@ -30,6 +30,7 @@
 #include "Player_Roll_R.h"
 #include "Player_DodgeBlink_CW.h"
 #include "Player_DodgeBlink_CCW.h"
+#include "Player_Sprint_F.h"
 #include "Player_Run_B.h"
 #include "Player_Run_BL.h"
 #include "Player_Run_BL135.h"
@@ -116,6 +117,11 @@
 #include "Player_Grenade_WeaponHolster.h"
 #include "Player_Grenade_WeaponUnholster.h"
 
+#include "Player_MeleeDynamic_04.h"
+#include "Player_Leap_01_Lower.h"
+#include "Player_Leap_01_Higher.h"
+
+
 #pragma endregion
 
 
@@ -186,6 +192,9 @@ CState<CPlayer>* CPlayer_State::Dodge_State(CPlayer* pActor, _float fTimeDelta, 
 
 	//pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
 	//if (pState)	return pState;
+
+	pState = Melee_Dynamic(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
 
 	pState = Roll(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
@@ -626,6 +635,11 @@ CState<CPlayer>* CPlayer_State::Dodge(CPlayer* pActor, _float fTimeDelta, _uint 
 				if (CPlayer_DodgeBlink_R_03::g_iAnimIndex != _iAnimIndex)
 					return new CPlayer_DodgeBlink_R_03();
 			}
+			else 
+			{
+				if (CPlayer_Sprint_F::g_iAnimIndex != _iAnimIndex)
+					return new CPlayer_Sprint_F();
+			}
 		}
 
 		//if (false) // ´À¸²
@@ -875,5 +889,16 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 
 CState<CPlayer>* CPlayer_State::EnergyWhip(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Melee_Dynamic(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_LB))
+	{
+		if (CPlayer_Sprint_F::g_iAnimIndex == _iAnimIndex)
+			return new CPlayer_Leap_01_Lower();
+	}
+
 	return nullptr;
 }

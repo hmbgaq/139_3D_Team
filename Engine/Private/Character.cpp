@@ -355,7 +355,7 @@ void CCharacter::Set_Enable(_bool _Enable)
 	}
 }
 
-Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower)
+Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
 {
 	Hit_Type eHitType = Hit_Type::None;
 
@@ -376,12 +376,22 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 
 	if (m_iHp <= 0)
 	{
-		if (true == m_bIsStun)
+		if (bIsMelee)
 		{
-			Hitted_Finish();
+			if (true == m_bIsStun)
+			{
+				//Set_Invincible(true);
+				Hitted_Finish();
+			}
+			else // (false == m_bIsStun)
+			{
+				//Set_Stun(true);
+				Hitted_Stun(eHitPower);
+			}
 		}
 		else 
 		{
+			//Set_Invincible(true);
 			Hitted_Dead(eHitPower);
 		}
 		
@@ -505,7 +515,7 @@ CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _fl
 
 		CCharacter* pTargetCharacter = dynamic_cast<CCharacter*>(pTarget);
 
-		if (nullptr == pTargetCharacter || 0 >= pTargetCharacter->Get_Hp())
+		if (nullptr == pTargetCharacter || true == pTargetCharacter->Is_Invincible() || 0 >= pTargetCharacter->Get_Hp())
 			continue;
 
 		_float fDistance = Calc_Distance(pTarget);
@@ -559,7 +569,7 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap
 
 	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	_float fDistance = Calc_Distance();
-	if (fDistance < 0.1f)
+	if (fDistance < 0.2f)
 		return;
 
 	_float3 vPos = { 0.f, 0.f, min(fDistance * fTimeDelta, fSpeedCap) };

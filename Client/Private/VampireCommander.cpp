@@ -23,12 +23,12 @@
 #include "Player.h"
 
 CVampireCommander::CVampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CCharacter(pDevice, pContext, strPrototypeTag)
+	: CMonster_Character(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CVampireCommander::CVampireCommander(const CVampireCommander& rhs)
-	: CCharacter(rhs)
+	: CMonster_Character(rhs)
 {
 }
 
@@ -80,7 +80,7 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	
-	Search_Target(L"Layer_Player",200.f);
+	Search_Target(200.f);
 
 	if (m_pActor)
 	{
@@ -184,14 +184,22 @@ void CVampireCommander::Hitted_Dead(Power ePower)
 	
 }
 
+void CVampireCommander::Hitted_Stun(Power ePower)
+{
+	m_pActor->Set_State(new CVampireCommander_Stun_Start);
+}
+
 void CVampireCommander::Hitted_Finish()
 {
 	m_pActor->Set_State(new CVampireCommander_CutScene());
-	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
-	_float3 vPlayerPos = m_pTransformCom->Calc_Front_Pos(_float3(0.f, 0.f, 2.0f));
-	pPlayer->Set_Position(vPlayerPos);
-	pPlayer->Get_Transform()->Look_At(m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION));
+	CPlayer* pPlayer = Set_Player_Finisher_Pos(_float3(0.f, 0.f, 2.0f));
+
+	//CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+	//_float3 vPlayerPos = m_pTransformCom->Calc_Front_Pos(_float3(0.f, 0.f, 2.0f));
+	//pPlayer->Set_Position(vPlayerPos);
+	//pPlayer->Get_Transform()->Look_At(m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION));
+
 	pPlayer->Get_Actor()->Set_State(new CPlayer_Finisher_VampireCommander_VS());
 }
 

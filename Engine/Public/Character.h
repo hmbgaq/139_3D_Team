@@ -114,14 +114,22 @@ public:
 	virtual void Set_Enable(_bool _Enable) override;
 
 public:
-	virtual Hit_Type Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower);
+	virtual Hit_Type Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee = false);
 
 	virtual void Hitted_Left(Power ePower) {};
 	virtual void Hitted_Right(Power ePower) {};
 	virtual void Hitted_Front(Power ePower) {};
 	virtual void Hitted_Knock(_bool bIsCannonball = false) {};
 	virtual void Hitted_Dead(Power ePower) {};
-	virtual void Hitted_Finish() {};
+	virtual void Hitted_Stun(Power ePower) { 
+		//Set_Invincible(true);
+		Hitted_Dead(ePower); 
+	};
+	virtual void Hitted_Finish() {
+		//Set_Invincible(true);
+		Hitted_Dead(Power::Heavy);
+	};
+	
 
 
 public:

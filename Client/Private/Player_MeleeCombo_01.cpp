@@ -22,6 +22,7 @@ void CPlayer_MeleeCombo_01::Initialize(CPlayer* pActor)
 		->Set_Force(0.0f);
 
 	pWeapon->Set_Enable(true);
+	pWeapon->Set_Enable_Collisions(false);
 
 }
 

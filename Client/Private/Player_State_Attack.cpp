@@ -15,6 +15,7 @@ CState<CPlayer>* CPlayer_State_Attack::Update(CPlayer* pActor, _float fTimeDelta
 void CPlayer_State_Attack::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+	pActor->Set_Target(nullptr);
 }
 
 CState<CPlayer>* CPlayer_State_Attack::Update_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
