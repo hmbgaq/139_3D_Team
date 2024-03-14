@@ -150,28 +150,28 @@ private:
 	_int m_iShaderPassIndex_Particle						= { 0 };
 	_int m_iMaxShaderPassIndex_Particle						= { 3 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 11, 0, 44, 22, 20 };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 11, 0, 44, 24, 20 };
 
 
 	_int m_iRenderGroup_Rect								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Rect							= { 0 };
 	_int m_iMaxShaderPassIndex_Rect							= { 5 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 20 };
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 24, 20 };
 
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
-	_int m_iMaxShaderPassIndex_Mesh							= { 6 };
+	_int m_iMaxShaderPassIndex_Mesh							= { 8 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 22, 20 };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 11, 0, 44, 24, 20 };
 
 
 	_int m_iRenderGroup_Trail								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Trail							= { 0 };
 	_int m_iMaxShaderPassIndex_Trail						= { 5 };
 	_int m_iTexIndex_Trail[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 11, 0, 44, 22, 20 };
+	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 11, 0, 44, 24, 20 };
 
 
 private:
@@ -417,7 +417,7 @@ private:
 	/* Model_Preview */
 	CModel_Preview*	m_pModel_Preview = { nullptr };				// 크기 비교용 보기 모델
 	CPart_Preview*	m_pPart_Preview = { nullptr };				// 모델의 파트(트레일 확인용)
-	_float		 m_vWorldPosition_Model[3] = { 0.f, 0.f, 0.f };	// 크기 비교용 모델 월드 이동
+	_float			m_vWorldPosition_Model[3] = { 0.f, 0.f, 0.f };	// 크기 비교용 모델 월드 이동
 	_float			m_fModelRot = { 0.f };
 
 	CEffect* m_pTestEffect = { nullptr };
