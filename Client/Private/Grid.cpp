@@ -24,17 +24,19 @@ HRESULT CGrid::Initialize_Prototype()
 
 HRESULT CGrid::Initialize(void* pArg)
 {
-	GRID_DESC* pDesc = (GRID_DESC*)pArg;
+	if (pArg != nullptr)
+	{
+		GRID_DESC* pDesc = (GRID_DESC*)pArg;
 
-	m_tDesc.vGridColor = pDesc->vGridColor;
-	for (_uint i = 0; i < (_uint)TEXTURE_END; i++)
-	{	
-		m_tDesc.strTextureTag[i] = pDesc->strTextureTag[i];
-		m_tDesc.iTextureIndex[i] = pDesc->iTextureIndex[i];
+		m_tDesc.vGridColor = pDesc->vGridColor;
+		for (_uint i = 0; i < (_uint)TEXTURE_END; i++)
+		{
+			m_tDesc.strTextureTag[i] = pDesc->strTextureTag[i];
+			m_tDesc.iTextureIndex[i] = pDesc->iTextureIndex[i];
+		}
+		m_tDesc.bRender = pDesc->bRender;
+		m_tDesc.iShaderPassIndex = pDesc->iShaderPassIndex;
 	}
-	m_tDesc.bRender = pDesc->bRender;
-	m_tDesc.iShaderPassIndex = pDesc->iShaderPassIndex;
-
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;

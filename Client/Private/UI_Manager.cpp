@@ -8,6 +8,7 @@
 
 #pragma region UI
 #include "UI_EnemyHP_Bar.h"
+#include "UI_EnemyHP_Shard.h"
 #include "UI_Distortion.h"
 #pragma endregion
 
@@ -153,6 +154,24 @@ void CUI_Manager::Active_LeftHUD()
 		iter->Set_Active(true);		// UI 활성화
 		iter->Set_AnimPlay(true);	// UI Animation 재생
 		iter->Set_Disappear(false); // UI 사라짐 Off
+	}
+}
+
+void CUI_Manager::NonActive_LeftHUD()
+{
+}
+
+void CUI_Manager::NonActive_RightHUD()
+{
+	if (m_vecLeftHUD.empty())
+		return;
+
+	for (auto& iter : m_vecLeftHUD)
+	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
+		iter->Set_Active(false);		// UI 활성화
+		iter->Set_AnimPlay(false);	// UI Animation 재생
+		iter->Set_Disappear(true); // UI 사라짐 Off
 	}
 }
 
@@ -840,8 +859,7 @@ HRESULT CUI_Manager::Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerT
 		string strCloneTag_HPBar = "Prototype_GameObject_UI_EnemyHP_Bar";
 		if (tUI_Info.strCloneTag == strCloneTag_HPBar)
 		{
-			dynamic_cast<CUI_EnemyHP_Bar*>(pUI_Object)->Set_Object_Owner(pOwner);
-			dynamic_cast<CUI_EnemyHP_Bar*>(pUI_Object)->Setting_Owner();
+			dynamic_cast<CUI_EnemyHP_Bar*>(pUI_Object)->Set_Active(true);
 		}
 
 		/* Distortion */
@@ -867,7 +885,7 @@ void CUI_Manager::Active_BossHUD_Bar(_bool bActive)
 
 	for (auto& iter : m_vecBossHUD_Bar)
 	{
-		iter->Set_Alpha(!bActive);			// UI 알파값 초기화
+		iter->Set_Alpha(!bActive);		// UI 알파값 초기화
 		iter->Set_Active(bActive);		// UI 활성화
 		iter->Set_AnimPlay(bActive);	// UI Animation 재생
 		iter->Set_Disappear(!bActive);	// UI 사라짐 Off
@@ -938,12 +956,13 @@ HRESULT CUI_Manager::Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLay
 		if (pUI_Object == nullptr)
 			return E_FAIL;
 
-		/* HP Bar */
-		string strCloneTag_HPBar = "Prototype_GameObject_UI_EnemyHP_Bar";
+		pUI_Object->Set_Object_Owner(pOwner);
+
+		/* HP Shard */
+		string strCloneTag_HPBar = "Prototype_GameObject_UI_EnemyHP_Shard";
 		if (tUI_Info.strCloneTag == strCloneTag_HPBar)
 		{
-			dynamic_cast<CUI_EnemyHP_Bar*>(pUI_Object)->Set_Object_Owner(pOwner);
-			dynamic_cast<CUI_EnemyHP_Bar*>(pUI_Object)->Setting_Owner();
+			//dynamic_cast<CUI_EnemyHP_Shard*>(pUI_Object)->Setting_Owner();
 		}
 
 		/* Distortion */
@@ -973,6 +992,28 @@ void CUI_Manager::Active_EnemyHUD_Shard(_bool bActive)
 		iter->Set_Active(bActive);		// UI 활성화
 		iter->Set_AnimPlay(bActive);	// UI Animation 재생
 		iter->Set_Disappear(!bActive);	// UI 사라짐 Off
+	}
+}
+
+void CUI_Manager::Set_EnemyHUD_World(_matrix matWorld)
+{
+	if (m_vecEnemyHUD_Shard.empty())
+	return;
+
+	for (auto& iter : m_vecEnemyHUD_Shard)
+	{
+		iter->SetUp_WorldToScreen(matWorld);
+	}
+}
+
+void CUI_Manager::Set_Offset(_float fOffsetX, _float fOffsetY)
+{
+	if (m_vecEnemyHUD_Shard.empty())
+		return;
+
+	for (auto& iter : m_vecEnemyHUD_Shard)
+	{
+		iter->Set_OffsetXY(fOffsetX, fOffsetY);
 	}
 }
 

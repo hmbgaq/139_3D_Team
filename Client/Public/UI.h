@@ -3,6 +3,10 @@
 #include "GameObject.h"
 #include "Renderer.h"
 
+BEGIN(Engine)
+class CCharacter;
+END
+
 BEGIN(Client)
 
 class CUI abstract : public CGameObject
@@ -327,6 +331,10 @@ protected: /* Data */
 
 protected:
 	class CUI_Manager* m_pUI_Manager = { nullptr };
+	//	class CCharacter*  m_pCharacter = { nullptr };
+	//
+	//public:
+	//	void	Set_Character(CCharacter* pCharacter) { m_pCharacter = pCharacter; }
 
 protected:
 	_bool				Alpha_Minus(_float fTimeDelta);
@@ -373,6 +381,15 @@ protected: /* ============================= UI =============================== *
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f, m_fScaleZ = 0.1f;
 	UI_KIND				m_eKind = NORMAL;
 	_float				m_fOffsetX = 0.f, m_fOffsetY = 0.f;
+
+public:
+	void	Set_OffsetX(_float fOffsetX) { m_fOffsetX = fOffsetX; }
+	void	Set_OffsetY(_float fOffsetY) { m_fOffsetY = fOffsetY; }
+	void	Set_OffsetXY(_float fOffsetX, _float fOffsetY) 
+	{ 
+		m_fOffsetX = fOffsetX;
+		m_fOffsetY = fOffsetY;
+	}
 
 	// ≈ı∏Ìµµ
 	_float				m_fAlpha = 0.f;

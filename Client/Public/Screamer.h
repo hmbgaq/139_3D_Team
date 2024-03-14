@@ -60,6 +60,7 @@ private:
 	/* Test UI */
 	CUI_Weakness*		m_pWeakneesUI = { nullptr };
 	_bool				m_bTestUI = false;
+	_float				m_fOffsetX = 0.f, m_fOffsetY = 0.f;
 
 public:
 	static CScreamer*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

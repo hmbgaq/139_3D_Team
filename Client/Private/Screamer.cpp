@@ -3,6 +3,7 @@
 #include "Model.h"
 //#include "UI.h"
 //#include "UI_Weakness.h"
+#include "UI_Manager.h"
 
 CScreamer::CScreamer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -30,9 +31,11 @@ HRESULT CScreamer::Initialize(void* pArg)
 	//m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
 
 	///* Test UI */
-	//m_pWeakneesUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
+	m_pWeakneesUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
 	//m_pWeakneesUI->SetUp_PositionToScreen(m_pTransformCom->Get_Position());
-	//m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());
+	m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());
+
+	CUI_Manager::GetInstance()->Add_EnemyHUD_Shard(LEVEL_STATIC, TEXT("Layer_EnemyHUD"), this);
 
 	return S_OK;
 }
@@ -68,8 +71,21 @@ void CScreamer::Tick(_float fTimeDelta)
 	{
 		//m_pWeakneesUI->SetUp_PositionToScreen(m_pTransformCom->Get_Position());
 		m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());
+		CUI_Manager::GetInstance()->Set_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix());
 	}
 		
+	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+	{
+		if (m_pGameInstance->Key_Pressing(DIK_T))
+			m_fOffsetY -= 1.f;
+		if (m_pGameInstance->Key_Pressing(DIK_Y))
+			m_fOffsetY += 1.f;
+
+		CUI_Manager::GetInstance()->Set_Offset(m_fOffsetX, m_fOffsetY);
+	}
+
+
+
 	m_fTimeDelta += fTimeDelta;
 	m_fDissolveWeight += fTimeDelta * 0.5f;
 

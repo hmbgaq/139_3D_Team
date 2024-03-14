@@ -42,7 +42,7 @@ HRESULT CLevel_Tool::Initialize()
 		return E_FAIL;
 	}
 
-	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
+	m_pGameInstance->Get_Renderer()->Render_UI_MRT(true);
 
 
 	

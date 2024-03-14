@@ -56,10 +56,12 @@ public:
 	/* LeftHUD */
 	HRESULT Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_LeftHUD();
+	void	NonActive_LeftHUD();
 	vector<CUI*>	m_vecLeftHUD;
 	/* RightHUD */
 	HRESULT Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_RightHUD();
+	void	NonActive_RightHUD();
 	vector<CUI*>	m_vecRightHUD;
 	/* TutorialBox */
 	HRESULT Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerTag);
@@ -108,6 +110,9 @@ public:
 	/* EnemyHUD(Shard) */
 	HRESULT			Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_EnemyHUD_Shard(_bool bActive);
+	void			Set_EnemyHUD_World(_matrix matWorld);
+	void			Set_Offset(_float fOffsetX, _float fOffsetY);
+
 	vector<CUI*>	m_vecEnemyHUD_Shard;
 
 
