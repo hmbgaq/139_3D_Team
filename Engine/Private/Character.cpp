@@ -355,7 +355,7 @@ void CCharacter::Set_Enable(_bool _Enable)
 	}
 }
 
-Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower)
+Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
 {
 	Hit_Type eHitType = Hit_Type::None;
 
@@ -364,6 +364,11 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 	//	return Hit_Type::None;
 	//}
 
+	if (true == m_bIsInvincible) 
+	{
+		return Hit_Type::None;
+	}
+
 	Get_Damaged(iDamage);	
 	//Set_InvincibleTime(fInvincibleTime);
 	Add_Force(vDir, fForce);
@@ -371,8 +376,33 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 
 	if (m_iHp <= 0)
 	{
-		Hitted_Dead(eHitPower);
-		//eHitType = Hit_Type::Hit_Finish;
+		//if (bIsMelee)
+		//{
+		//	if (true == m_bIsStun)
+		//	{
+		//		//Set_Invincible(true);
+		//		Hitted_Finish();
+		//	}
+		//	else // (false == m_bIsStun)
+		//	{
+		//		Set_Stun(true);
+		//		Hitted_Stun(eHitPower);
+		//	}
+		//}
+
+
+		if (true == m_bIsStun)
+		{
+			//Set_Invincible(true);
+			Hitted_Finish();
+		}
+		else 
+		{
+			//Set_Invincible(true);
+			Hitted_Dead(eHitPower);
+		}
+		
+		eHitType = Hit_Type::Hit_Finish;
 	}
 	else if (m_bTrigger == true)
 	{
@@ -492,10 +522,12 @@ CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _fl
 
 		CCharacter* pTargetCharacter = dynamic_cast<CCharacter*>(pTarget);
 
-		if (nullptr == pTargetCharacter || 0 >= pTargetCharacter->Get_Hp())
+		if (nullptr == pTargetCharacter || true == pTargetCharacter->Is_Invincible() || 0 >= pTargetCharacter->Get_Hp())
 			continue;
 
-		_float fDistance = Calc_Distance(pTarget);
+		//_float fDistance = Calc_Distance(pTarget);
+		_float fDistance = Calc_Distance_Front(pTarget->Get_Position());
+
 		if (fMinDistance > fDistance) 
 		{
 			fMinDistance = fDistance;
@@ -529,6 +561,15 @@ _float CCharacter::Calc_Distance()
 	return Calc_Distance(m_pTarget);
 }
 
+_float CCharacter::Calc_Distance_Front(_float3 vTargetPos)
+{
+	_float3 vPos = m_pTransformCom->Calc_Front_Pos(); //Get_Position();
+
+	_float3 vDiff = vTargetPos - vPos;
+
+	return sqrt(vDiff.x * vDiff.x + vDiff.y * vDiff.y + vDiff.z * vDiff.z);
+}
+
 _float CCharacter::Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag)
 {
 	CCharacter* pCharacter = Select_The_Nearest_Enemy(strLayerTag);
@@ -546,7 +587,7 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap
 
 	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	_float fDistance = Calc_Distance();
-	if (fDistance < 0.1f)
+	if (fDistance < 0.2f)
 		return;
 
 	_float3 vPos = { 0.f, 0.f, min(fDistance * fTimeDelta, fSpeedCap) };

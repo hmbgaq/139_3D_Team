@@ -6,6 +6,8 @@
 
 BEGIN(Client)
 
+class CPlayer;
+
 class CMonster_Character abstract : public CCharacter_Client
 {
 protected:
@@ -22,7 +24,12 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void Search_Target();
+	void Search_Target(const _float fSearchDistance = 20.f);
+
+public:
+	CPlayer* Set_Player_Finisher_Pos(_float3 vPlayerPos);
+	CPlayer* Set_Finish_Pos(_float3 vPos);
+
 	_int iMeshNumber = 0;
 
 protected:

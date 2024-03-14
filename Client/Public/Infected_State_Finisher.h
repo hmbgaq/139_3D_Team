@@ -1,10 +1,9 @@
 #pragma once
-#include "Infected_State_Stun.h"
-
+#include "Infected_State.h"
 
 BEGIN(Client)
 
-class CInfected_HitNormalToStun_01_NEW : public CInfected_State_Stun
+class CInfected_State_Finisher : public CInfected_State
 {
 public:
 	virtual void Initialize(CInfected* pActor) override;
@@ -12,7 +11,8 @@ public:
 	virtual void Release(CInfected* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CInfected::Infected_State::Infected_HitNormalToStun_01_NEW;
+	virtual CState<CInfected>* Update_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
+
 
 };
 

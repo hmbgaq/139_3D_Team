@@ -232,6 +232,12 @@ public: /* Common */
 	void Get_ModelTag(vector<string>* pVector);
 #pragma endregion
 
+
+#pragma region ΈνΊσ
+	void Hitlag(_float fTime = 1.f) { m_fHitlag_Time = fTime; };
+	_float Get_TimeDelta() { return m_fTimeDelta; };
+#pragma endregion
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CInput_Device*			m_pInput_Device = { nullptr };
@@ -249,6 +255,11 @@ private:
 	class CEvent_Manager*			m_pEvent_Manager = { nullptr };
 	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
 	class CRandom_Manager*			m_pRandom_Manager = { nullptr };
+
+
+private:
+	_float m_fHitlag_Time = { 0.f };
+	_float m_fTimeDelta = { 0.f };
 
 
 public:

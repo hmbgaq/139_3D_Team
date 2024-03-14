@@ -109,6 +109,8 @@ void CPlayer::Tick(_float fTimeDelta)
 		m_pActor->Update_State(fTimeDelta);
 	}
 
+	Update_ChargingTime(fTimeDelta);
+
 	CData_Manager::GetInstance()->Set_CurHP(m_iHp);
 
 	if (m_pGameInstance->Key_Down(DIK_C))
@@ -397,6 +399,18 @@ HRESULT CPlayer::Ready_PartObjects()
 	
 	
 	return S_OK;
+}
+
+void CPlayer::Update_ChargingTime(_float fTimeDelta)
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_LB)) 
+	{
+		m_fChargingTime += fTimeDelta;
+	}
+	else 
+	{
+		m_fChargingTime = 0.f;
+	}
 }
 
 void CPlayer::Hitted_Left(Power ePower)

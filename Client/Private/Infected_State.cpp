@@ -181,6 +181,16 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 	return nullptr;
 }
 
+CState<CInfected>* CInfected_State::Stun_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CInfected>* CInfected_State::Finisher_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
 /* Áß¾ÓÁ¦¾î */
 CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {

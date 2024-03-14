@@ -91,25 +91,37 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 		nullptr == m_pFrustum)
 		return;
 
+	m_fTimeDelta = fTimeDelta;
+
+	if (0 < m_fHitlag_Time)
+	{
+		m_fTimeDelta /= 5;
+		m_fHitlag_Time -= fTimeDelta;
+	}
+	else 
+	{
+		m_fHitlag_Time = 0;
+	}
+
 	m_pInput_Device->Tick();
 
-	m_pObject_Manager->Priority_Tick(fTimeDelta);
+	m_pObject_Manager->Priority_Tick(m_fTimeDelta);
 
-	m_pObject_Manager->Tick(fTimeDelta);
+	m_pObject_Manager->Tick(m_fTimeDelta);
 
 	m_pPipeLine->Tick();
 
 	m_pFrustum->Tick();
 
-	m_pEvent_Manager->Tick(fTimeDelta);
+	m_pEvent_Manager->Tick(m_fTimeDelta);
 
-	m_pCollision_Manager->Tick(fTimeDelta);
+	m_pCollision_Manager->Tick(m_fTimeDelta);
 
-	m_pPhysX_Manager->Tick(fTimeDelta);
+	m_pPhysX_Manager->Tick(m_fTimeDelta);
 
-	m_pObject_Manager->Late_Tick(fTimeDelta);
+	m_pObject_Manager->Late_Tick(m_fTimeDelta);
 
-	m_pLevel_Manager->Tick(fTimeDelta);
+	m_pLevel_Manager->Tick(m_fTimeDelta);
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
