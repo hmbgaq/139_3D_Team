@@ -330,6 +330,8 @@ protected:
 
 protected:
 	_bool				Alpha_Minus(_float fTimeDelta);
+	_bool				Alpha_Plus(_float fTimeDelta);
+	_float				m_fAlphaSpeed = 1.f;
 
 protected:
 	void				Compute_CamDistance();

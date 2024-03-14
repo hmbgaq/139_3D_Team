@@ -1,21 +1,21 @@
 #include "stdafx.h"
-#include "UI_EnemyHP_Shard.h"
+#include "UI_EnemyFrame_Shard.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "GameObject.h"
 
-CUI_EnemyHP_Shard::CUI_EnemyHP_Shard(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_EnemyFrame_Shard::CUI_EnemyFrame_Shard(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
-CUI_EnemyHP_Shard::CUI_EnemyHP_Shard(const CUI_EnemyHP_Shard& rhs)
+CUI_EnemyFrame_Shard::CUI_EnemyFrame_Shard(const CUI_EnemyFrame_Shard& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CUI_EnemyHP_Shard::Initialize_Prototype()
+HRESULT CUI_EnemyFrame_Shard::Initialize_Prototype()
 {
 	//TODO 원형객체의 초기화과정을 수행한다.
 	/* 1.서버로부터 값을 받아와서 초기화한다 .*/
@@ -24,7 +24,7 @@ HRESULT CUI_EnemyHP_Shard::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CUI_EnemyHP_Shard::Initialize(void* pArg)
+HRESULT CUI_EnemyFrame_Shard::Initialize(void* pArg)
 {
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
@@ -43,12 +43,12 @@ HRESULT CUI_EnemyHP_Shard::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CUI_EnemyHP_Shard::Priority_Tick(_float fTimeDelta)
+void CUI_EnemyFrame_Shard::Priority_Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_EnemyHP_Shard::Tick(_float fTimeDelta)
+void CUI_EnemyFrame_Shard::Tick(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_V))
 		m_fOffsetY -= 0.1f;
@@ -58,7 +58,7 @@ void CUI_EnemyHP_Shard::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 }
 
-void CUI_EnemyHP_Shard::Late_Tick(_float fTimeDelta)
+void CUI_EnemyFrame_Shard::Late_Tick(_float fTimeDelta)
 {
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
@@ -67,7 +67,7 @@ void CUI_EnemyHP_Shard::Late_Tick(_float fTimeDelta)
 		return;
 }
 
-HRESULT CUI_EnemyHP_Shard::Render()
+HRESULT CUI_EnemyFrame_Shard::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -84,12 +84,12 @@ HRESULT CUI_EnemyHP_Shard::Render()
 	return S_OK;
 }
 
-void CUI_EnemyHP_Shard::Set_TargetPosition(_vector vTargetPosition)
+void CUI_EnemyFrame_Shard::Set_TargetPosition(_vector vTargetPosition)
 {
 	m_vTargetPosition = vTargetPosition;
 }
 
-void CUI_EnemyHP_Shard::Check_TargetWorld()
+void CUI_EnemyFrame_Shard::Check_TargetWorld()
 {
 	if (m_tUIInfo.bWorld == true)
 	{
@@ -130,7 +130,7 @@ void CUI_EnemyHP_Shard::Check_TargetWorld()
 	}
 }
 
-HRESULT CUI_EnemyHP_Shard::Ready_Components()
+HRESULT CUI_EnemyFrame_Shard::Ready_Components()
 {
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -142,10 +142,8 @@ HRESULT CUI_EnemyHP_Shard::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-
 	wstring strPrototag;
 	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
-
 	//! For.Com_Texture
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
@@ -154,7 +152,7 @@ HRESULT CUI_EnemyHP_Shard::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CUI_EnemyHP_Shard::Bind_ShaderResources()
+HRESULT CUI_EnemyFrame_Shard::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -172,7 +170,7 @@ HRESULT CUI_EnemyHP_Shard::Bind_ShaderResources()
 	return S_OK;
 }
 
-json CUI_EnemyHP_Shard::Save_Desc(json& out_json)
+json CUI_EnemyFrame_Shard::Save_Desc(json& out_json)
 {
 	/* 기본정보 저장 */
 	__super::Save_Desc(out_json);
@@ -180,43 +178,43 @@ json CUI_EnemyHP_Shard::Save_Desc(json& out_json)
 	return out_json;
 }
 
-void CUI_EnemyHP_Shard::Load_Desc()
+void CUI_EnemyFrame_Shard::Load_Desc()
 {
 
 }
 
-CUI_EnemyHP_Shard* CUI_EnemyHP_Shard::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_EnemyFrame_Shard* CUI_EnemyFrame_Shard::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_EnemyHP_Shard* pInstance = new CUI_EnemyHP_Shard(pDevice, pContext, strPrototypeTag);
+	CUI_EnemyFrame_Shard* pInstance = new CUI_EnemyFrame_Shard(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CUI_EnemyHP_Shard");
+		MSG_BOX("Failed to Created : CUI_EnemyFrame_Shard");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_EnemyHP_Shard::Pool()
+CGameObject* CUI_EnemyFrame_Shard::Pool()
 {
-	return new CUI_EnemyHP_Shard(*this);
+	return new CUI_EnemyFrame_Shard(*this);
 }
 
-CGameObject* CUI_EnemyHP_Shard::Clone(void* pArg)
+CGameObject* CUI_EnemyFrame_Shard::Clone(void* pArg)
 {
-	CUI_EnemyHP_Shard* pInstance = new CUI_EnemyHP_Shard(*this);
+	CUI_EnemyFrame_Shard* pInstance = new CUI_EnemyFrame_Shard(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CUI_EnemyHP_Shard");
+		MSG_BOX("Failed to Cloned : CUI_EnemyFrame_Shard");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CUI_EnemyHP_Shard::Free()
+void CUI_EnemyFrame_Shard::Free()
 {
 	__super::Free();
 
@@ -225,5 +223,3 @@ void CUI_EnemyHP_Shard::Free()
 	Safe_Release(m_pTextureCom);
 
 }
-
-

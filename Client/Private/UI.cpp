@@ -684,6 +684,10 @@ void CUI::Check_Disappear(_float fTimeDelta)
 {
 	if (m_bDisappear == true)
 	{
+		m_bActive = Alpha_Plus(fTimeDelta);
+	}
+	else
+	{
 		m_bActive = Alpha_Minus(fTimeDelta);
 	}
 }
@@ -1046,16 +1050,32 @@ void CUI::Set_AnimationKeyframe(UIKEYFRAME tKeyframe)
 
 _bool CUI::Alpha_Minus(_float fTimeDelta)
 {
-	if (m_fAlpha >= 1.f)
+	if (m_fAlpha > 0.f)
 	{
-		return false;
+		m_fAlpha -= m_fAlphaSpeed * fTimeDelta;
 	}
 	else
 	{
-		m_fAlpha += fTimeDelta;
+		m_fAlpha = 0.f;
+		return true;
 	}
 
+	return false;
+}
+
+_bool CUI::Alpha_Plus(_float fTimeDelta)
+{
+	if (m_fAlpha < 1.f)
+	{
+		m_fAlpha += m_fAlphaSpeed * fTimeDelta;
+	}
+	else
+	{
+		m_fAlpha = 1.f;
+		return false;
+	}
 	return true;
+
 }
 
 void CUI::Compute_CamDistance()
