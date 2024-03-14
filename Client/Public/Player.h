@@ -49,7 +49,7 @@ public://!For. Interact
 public:
 	void Search_Target(_float fMaxDistance = 10.f);
 
-	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 3.f, _uint iCount = 5);
+	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 7.f, _uint iCount = 5);
 
 private:
 	HRESULT Ready_Components();
