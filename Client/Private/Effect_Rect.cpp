@@ -7,7 +7,7 @@
 CEffect_Rect::CEffect_Rect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = FALSE;
+	m_bIsPoolObject = TRUE;
 }
 
 CEffect_Rect::CEffect_Rect(const CEffect_Rect & rhs)

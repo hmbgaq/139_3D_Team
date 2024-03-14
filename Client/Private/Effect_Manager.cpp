@@ -59,14 +59,47 @@ CEffect* CEffect_Manager::Create_Effect(string strFileName, CGameObject* pOwner)
 }
 
 
-HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime, _float fTimeDelta, string strEffectFileName, CGameObject* pOwner)
+CEffect* CEffect_Manager::Create_Effect_Pos(string strFileName, _float3 vPos)
 {
-	*fTimeAcc += fTimeDelta;
-	if (*fTimeAcc >= fCreateTime)
+	CEffect::EFFECT_DESC	tEffectDesc = {};
+	CEffect* pEffect = dynamic_cast<CEffect*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, TEXT("Prototype_GameObject_Effect"), &tEffectDesc));
+
+	string strPath = "../Bin/DataFiles/Data_Effect";
+	string strLoadPath = strPath + "/" + strFileName;
+
+	json In_Json;
+	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
+
+	pEffect->Load_FromJson(In_Json);
+
+	pEffect->Set_Position(vPos);	// 이펙트 위치 설정
+
+	return	pEffect;
+}
+
+HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime, _float fTimeDelta, string strEffectFileName
+	, _float3 vLocalPos, _float3 vLocalScale, _float3 vLocalRotation)
+{
+
+	*fTimeAcc += fTimeDelta; // 시간 누적
+	if (*fTimeAcc >= fCreateTime) // 누적 시간이 생성 시간보다 커지면 이펙트 생성 & 누적 시간 초기화
 	{
 		*fTimeAcc = 0.f;
 
-		Create_Effect(strEffectFileName, pOwner);
+		// 현재 레벨에 생성
+		CEffect* pEffect = Create_Effect(m_pGameInstance->Get_CurrentLevel(), LAYER_EFFECT, strEffectFileName, nullptr);
+
+
+		// 트랜스폼 (로컬) : 크기, 회전, 위치를 바꿔주고싶다면 값 넣어주기
+		CTransform* pTransform = pEffect->Get_Transform();
+
+		pTransform->Set_Scaling(vLocalScale.x, vLocalScale.y, vLocalScale.z); // 크기
+
+		pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), vLocalRotation.x); // X축 회전
+		pTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLocalRotation.y); // Y축 회전
+		pTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), vLocalRotation.z); // Z축 회전
+
+		pEffect->Set_Position(vLocalPos); // 위치 
 	}
 
 	return S_OK;

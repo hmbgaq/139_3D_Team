@@ -10,7 +10,7 @@
 CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = FALSE;
+	m_bIsPoolObject = TRUE;
 }
 
 CEffect_Instance::CEffect_Instance(const CEffect_Instance & rhs)

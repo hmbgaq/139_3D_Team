@@ -1542,10 +1542,16 @@ void CWindow_EffectTool::Update_MeshTab()
 			{
 				Add_Part_Mesh_Morph(TEXT("Prototype_Component_Model_BatStorm_01"), TEXT("Prototype_Component_Model_BatStorm_02"));
 			}
-
+			ImGui::SameLine();
 			if (ImGui::Button(" Add Torch Test "))
 			{
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Torch"));
+			}
+
+			// 두두두두 불 이펙트 테스트
+			if (ImGui::Button(" Tick Effect Test "))
+			{
+				//EFFECT_MANAGER->Tick_Create_Effect();
 			}
 
 			ImGui::SeparatorText("");
