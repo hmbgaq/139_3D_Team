@@ -9,6 +9,11 @@ CBounding_Sphere::CBounding_Sphere(ID3D11Device * pDevice, ID3D11DeviceContext *
 
 }
 
+void CBounding_Sphere::Set_Scale(_float _sizeX, _float _sizeY, _float _sizeZ)
+{
+	m_pSphere->Radius = _sizeX;
+}
+
 HRESULT CBounding_Sphere::Initialize(BOUNDING_DESC * pBoundingDesc)
 {
 	BOUNDING_SPHERE_DESC* pDesc = (BOUNDING_SPHERE_DESC*)pBoundingDesc;

@@ -1129,11 +1129,11 @@ void CWindow_MapTool::Navigation_CreateTab()
 
 	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
 
-		_uint iEnvironmentSize = m_vecCreateObject.size();
+		_uint iEnvironmentSize = (_uint)m_vecCreateObject.size();
 
 		if (ImGui::BeginListBox(u8"네비게이션 픽킹대상"))
 		{
-			for (_int i = 0; i < iEnvironmentSize; ++i)
+			for (_int i = 0; i < (_int)iEnvironmentSize; ++i)
 			{
 				const _bool isSelected = m_iNavigationTargetIndex;
 

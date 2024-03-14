@@ -42,7 +42,7 @@ HRESULT CBullet_Bandit_Sniper::Ready_Components()
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
 	{
 		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
-		BoundingDesc.fRadius = 1.f;
+		BoundingDesc.fRadius = 0.3f;
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
 
 		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pCollider), &BoundingDesc));

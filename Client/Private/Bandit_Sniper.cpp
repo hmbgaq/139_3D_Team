@@ -3,6 +3,9 @@
 #include "Bandit_Sniper.h"
 #include "Data_Manager.h"
 #include "Body_Bandit_Sniper.h"
+#include "Weapon_Bandit_Sniper.h"
+
+/* State */
 #include "Sniper_CoverLow_Idle.h"
 #include "Sniper_DeathLight_B_01.h"
 #include "Sniper_Weakspot_Death_01.h"
@@ -12,7 +15,6 @@
 #include "Sniper_HitHeavy_FR_01.h"
 #include "Sniper_KnockFrontLight_F_02.h"
 #include "Sniper_HitHeavy_F_01.h"
-#include "Weapon_Bandit_Sniper.h"
 
 CBandit_Sniper::CBandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -81,11 +83,20 @@ HRESULT CBandit_Sniper::Render()
 	return S_OK;
 }
 
+void CBandit_Sniper::Set_ColliderSize(_float fSizeX, _float fSizeY, _float fSizeZ)
+{
+	CBody_Bandit_Sniper* pBody = dynamic_cast<CBody_Bandit_Sniper*>(m_pBody);
+	NULL_CHECK_RETURN(pBody, );
+	
+	pBody->Get_Collider()->Set_ColliderSize(fSizeX, fSizeY, fSizeZ);
+}
+
 void CBandit_Sniper::Sniping_Target(_float4 TargetPos)
 {
 	CWeapon_Bandit_Sniper* pWeapon = dynamic_cast<CWeapon_Bandit_Sniper*>(m_pWeapon);
 	NULL_CHECK_RETURN(pWeapon, );
 
+	m_iBulletCnt += 1;
 	pWeapon->Sniping(TargetPos, m_pTransformCom->Get_Pos()); // (_float4 vTargetPos, _float3 StartfPos)
 }
 
@@ -122,7 +133,6 @@ HRESULT CBandit_Sniper::Ready_Option()
 	m_bProtectExist = true; /* 현재 방어막 있는상태 */
 	m_pTarget = m_pGameInstance->Get_Player(); /* 타겟은 플레이어 고정 */ 
 	
-
 	return S_OK;
 }
 

@@ -24,12 +24,12 @@ public:
 public:
 	_bool Get_ProtectExist() { return m_bProtectExist; }
 	_float3 Get_BonePos() { return m_pWeapon->Get_Position(); }
+	void	Set_ColliderSize(_float fSizeX, _float fSizeY, _float fSizeZ);
 
 	/* For. Bullet */
 	_int Get_BulletCnt() { return m_iBulletCnt; }
 	void Set_BulletCnt(_int iCnt) { m_iBulletCnt = iCnt; }
 	void Add_BulletCnt() { m_iBulletCnt += 1; }
-
 	void Sniping_Target(_float4 TargetPos);
 
 private:

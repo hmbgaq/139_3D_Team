@@ -62,29 +62,29 @@ struct VS_IN
 
 struct VS_OUT
 {
-    float4 vPosition : SV_POSITION;
-    float4 vNormal : NORMAL;
-    float2 vTexcoord : TEXCOORD0;
-    float4 vWorldPos : TEXCOORD1;
-    float4 vProjPos : TEXCOORD2;
+    float4 vPosition    : SV_POSITION;
+    float4 vNormal      : NORMAL;
+    float2 vTexcoord    : TEXCOORD0;
+    float4 vWorldPos    : TEXCOORD1;
+    float4 vProjPos     : TEXCOORD2;
 };
 
 struct PS_IN
 {
-    float4 vPosition : SV_POSITION;
-    float4 vNormal : NORMAL;
-    float2 vTexcoord : TEXCOORD0;
-    float4 vWorldPos : TEXCOORD1;
-    float4 vProjPos : TEXCOORD2;
+    float4 vPosition    : SV_POSITION;
+    float4 vNormal      : NORMAL;
+    float2 vTexcoord    : TEXCOORD0;
+    float4 vWorldPos    : TEXCOORD1;
+    float4 vProjPos     : TEXCOORD2;
 };
 
 struct PS_OUT
 {
-    float4 vDiffuse : SV_TARGET0;
-    float4 vNormal : SV_TARGET1;
-    float4 vDepth : SV_TARGET2;
-    float4 vORM : SV_TARGET3;
-    float4 vRimBloom : SV_TARGET4; /* Rim + Bloom */
+    float4 vDiffuse     : SV_TARGET0;
+    float4 vNormal      : SV_TARGET1;
+    float4 vDepth       : SV_TARGET2;
+    float4 vORM         : SV_TARGET3;
+    float4 vRimBloom    : SV_TARGET4; /* Rim + Bloom */
 };
 
 /* ------------------- Base Vertex Shader -------------------*/

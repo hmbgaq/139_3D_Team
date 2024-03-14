@@ -150,7 +150,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 	//Desc.fMouseSensor = 0.05f;
 	//Desc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
 	//Desc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-	//Desc.fFovy = XMConvertToRadians(60.0f);
+	//Desc.fFovy = XMConvertToRadians(60.0f);wwwwwDdssaw
 	//Desc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	//Desc.fNear = 0.1f;
 	//Desc.fFar = m_pGameInstance->Get_CamFar();
