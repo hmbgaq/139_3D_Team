@@ -145,7 +145,6 @@ HRESULT CUI_Anything::Ready_Components()
 
 	wstring strPrototag;
 	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
-
 	//! For.Com_Texture
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))

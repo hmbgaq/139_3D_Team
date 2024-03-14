@@ -50,6 +50,7 @@ public: /* Ready_Preset */
 	HRESULT Ready_Crosshair(_uint iLevelIndex);
 	HRESULT Ready_Loading_Intro(_uint iLevelIndex);
 	HRESULT Ready_BossHUD_Bar(_uint iLevelIndex, CGameObject* pOwner = nullptr);
+	HRESULT Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 
 public:
 	/* LeftHUD */
@@ -98,6 +99,20 @@ public:
 	HRESULT			Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_BossHUD_Bar(_bool bActive);
 	vector<CUI*>	m_vecBossHUD_Bar;
+
+	/* BossHUD(Shard) */
+	HRESULT			Add_BossHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_BossHUD_Shard(_bool bActive);
+	vector<CUI*>	m_vecBossHUD_Shard;
+
+	/* EnemyHUD(Shard) */
+	HRESULT			Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_EnemyHUD_Shard(_bool bActive);
+	vector<CUI*>	m_vecEnemyHUD_Shard;
+
+
+
+
 	//CUI* Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 #ifdef _DEBUG

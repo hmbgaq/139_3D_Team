@@ -3025,6 +3025,9 @@
     <Filter Include="02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\State">
       <UniqueIdentifier>{d12f8f2c-ebbb-4d07-8455-8b591530bc89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\Frame">
+      <UniqueIdentifier>{38f92005-c291-408d-a812-5b6603352bf9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -6117,6 +6120,9 @@
     <ClInclude Include="..\Public\UI_EnemyState_Shard.h">
       <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\State</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_EnemyFrame_Shard.h">
+      <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\Frame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8646,6 +8652,9 @@
     </ClCompile>
     <ClCompile Include="UI_EnemyState_Shard.cpp">
       <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_EnemyFrame_Shard.cpp">
+      <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\Frame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

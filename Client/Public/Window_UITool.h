@@ -484,7 +484,10 @@ private:
 		"Weakness",
 		"Distortion",
 		"EnemyHP_FrameBar",
-		"EnemyHP_Bar"
+		"EnemyHP_Bar",
+		"EnemyHP_Shard",
+		"EnemyState_Shard",
+		"EnemyFrame_Shard"
 	};
 
 	// 클래스 목록을 저장하는 벡터

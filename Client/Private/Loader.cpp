@@ -104,6 +104,9 @@
 #include "UI_Weakness.h"
 #include "UI_EnemyHP_FrameBar.h"
 #include "UI_EnemyHP_Bar.h"
+#include "UI_EnemyHP_Shard.h"
+#include "UI_EnemyState_Shard.h"
+#include "UI_EnemyFrame_Shard.h"
 /* TextBox */
 #include "UI_TextBox.h"
 #include "UI_TutorialBox.h"
@@ -855,6 +858,9 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHpFrame"), CUI_MonsterHpFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MonsterHpFrame"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHp"), CUI_MonsterHp::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MonsterHp"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Weakness"), CUI_Weakness::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Weakness"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_EnemyHP_Shard"), CUI_EnemyHP_Shard::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_EnemyHP_Shard"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_EnemyState_Shard"), CUI_EnemyState_Shard::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_EnemyState_Shard"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_EnemyFrame_Shard"), CUI_EnemyFrame_Shard::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_EnemyFrame_Shard"))));
 #pragma endregion End
 
 #pragma region TutorialBox

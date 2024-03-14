@@ -3580,7 +3580,7 @@ void CWindow_UITool::ShowImagePreview(const std::vector<unsigned char>& imageDat
 
 void CWindow_UITool::UI_Preset()
 {
-	/* Test 생성버튼 */
+	/* Test 프리셋 */
 	if (ImGui::Button("Interface"))
 	{
 		m_pUI_Manager->Ready_Interface(LEVEL_STATIC);
@@ -3596,6 +3596,10 @@ void CWindow_UITool::UI_Preset()
 	if (ImGui::Button("BossHUD_Bar"))
 	{
 		m_pUI_Manager->Ready_BossHUD_Bar(LEVEL_STATIC);
+	}
+	if (ImGui::Button("EnemyHUD_Shard"))
+	{
+		m_pUI_Manager->Ready_EnemyHUD_Shard(LEVEL_STATIC);
 	}
 }
 
