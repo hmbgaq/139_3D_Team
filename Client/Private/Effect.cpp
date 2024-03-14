@@ -399,6 +399,7 @@ CGameObject* CEffect::Find_PartObject(const wstring& strPartTag)
 	return iter->second;
 }
 
+
 HRESULT CEffect::Add_PartObject(const wstring& strPrototypeTag, const wstring& strPartTag, void* pArg)
 {
 	//if (nullptr != Find_PartObject(strPrototypeTag))
@@ -425,6 +426,7 @@ void CEffect::Delete_PartObject(const wstring& strPartTag)
 	iter->second->Set_Dead(TRUE);		// 객체 삭제
 	m_PartObjects.erase(strPartTag);	// 맵컨테이너에서 삭제
 
+	m_tEffectDesc.iPartSize -= 1;
 }
 
 

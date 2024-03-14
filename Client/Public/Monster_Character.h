@@ -30,6 +30,8 @@ public:
 	CPlayer* Set_Player_Finisher_Pos(_float3 vPlayerPos);
 	CPlayer* Set_Finish_Pos(_float3 vPos);
 
+	_int iMeshNumber = 0;
+
 protected:
 	HRESULT Ready_Components() PURE;
 	HRESULT Ready_PartObjects() PURE;

@@ -3016,9 +3016,6 @@
     <Filter Include="02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\State">
       <UniqueIdentifier>{d12f8f2c-ebbb-4d07-8455-8b591530bc89}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\20. InstanceMonster\0. Screamer">
-      <UniqueIdentifier>{6ab1225a-12f3-4ff6-9880-7a7c7881548c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts\Body">
       <UniqueIdentifier>{27313ed7-8409-4d64-ac01-84c9aa03033b}</UniqueIdentifier>
     </Filter>
@@ -3057,6 +3054,12 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic\Leap\Higher">
       <UniqueIdentifier>{85033f40-a43a-4771-a825-72b43459aef0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\0. Screamer">
+      <UniqueIdentifier>{6ab1225a-12f3-4ff6-9880-7a7c7881548c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object">
+      <UniqueIdentifier>{054c2e5b-1f7a-4054-9c31-2bfcbf1230ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -3250,7 +3253,7 @@
       <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Screamer.h">
-      <Filter>02.GameObjects\00. Character\Monster\20. InstanceMonster\0. Screamer</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\0. Screamer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_SnowMountain.h">
       <Filter>01.Levels\01.GamePlay\2.SnowMountain</Filter>
@@ -6165,6 +6168,9 @@
     <ClInclude Include="..\Public\Player_Leap_01_Lower.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic\Leap\Lower</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ShaderParsed_Object.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -6530,7 +6536,7 @@
       <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Screamer.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\20. InstanceMonster\0. Screamer</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\0. Screamer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_GamePlay.cpp">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
@@ -8718,6 +8724,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_Leap_01_Lower.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic\Leap\Lower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ShaderParsed_Object.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

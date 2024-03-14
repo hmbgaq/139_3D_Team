@@ -19,7 +19,7 @@
 #pragma region MAP
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
-
+#include "Environment_Interact.h"
 #pragma endregion
 
 
@@ -344,9 +344,41 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 	for (_int i = 0; i < InteractJsonSize; ++i)
 	{
+		CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
 
-		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
-		//! L"Layer_Event"
+		Desc.bAnimModel = InteractJson[i]["AnimType"];
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = InteractJson[i]["ModelTag"];
+
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+		Desc.bPreview = false;
+		Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
+		Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
+		Desc.eInteractState = InteractJson[i]["InteractState"];
+		Desc.eInteractType = InteractJson[i]["InteractType"];
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+
+		const json& TransformJson = InteractJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
+
+		CEnvironment_Interact* pObject = { nullptr };
+
+		pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+
 	}
 
 	json InstanceJson = Stage1MapJson["Instance_Json"];

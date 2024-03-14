@@ -35,7 +35,7 @@ void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pGameInstance->Key_Down(DIK_K))
+	/*if (m_pGameInstance->Key_Down(DIK_K))
 	{
 		iDiscardMeshNumber += 1;
 		if (iDiscardMeshNumber > m_pModelCom->Get_NumMeshes())
@@ -43,7 +43,7 @@ void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 			iDiscardMeshNumber = 0;
 		}
 		cout << iDiscardMeshNumber << endl;
-	}
+	}*/
 }
 
 void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
@@ -59,8 +59,8 @@ HRESULT CBody_Bandit_Sniper::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		if (i == iDiscardMeshNumber)
-			continue;
+		/*if (i == iDiscardMeshNumber)
+			continue;*/
 
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 

@@ -961,6 +961,7 @@
     <ClInclude Include="..\Public\Projectile.h" />
     <ClInclude Include="..\Public\Screamer.h" />
     <ClInclude Include="..\Public\Bullet_Bandit_Sniper.h" />
+    <ClInclude Include="..\Public\ShaderParsed_Object.h" />
     <ClInclude Include="..\Public\Sniper_Crouch_Start.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\SkyDome.h" />
@@ -1749,6 +1750,7 @@
     <ClCompile Include="..\Private\Projectile.cpp" />
     <ClCompile Include="..\Private\Screamer.cpp" />
     <ClCompile Include="..\Private\Bullet_Bandit_Sniper.cpp" />
+    <ClCompile Include="..\Private\ShaderParsed_Object.cpp" />
     <ClCompile Include="..\Private\Sniper_Crouch_Start.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\SkyDome.cpp" />

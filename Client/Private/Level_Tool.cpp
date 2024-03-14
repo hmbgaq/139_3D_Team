@@ -18,13 +18,11 @@ HRESULT CLevel_Tool::Initialize()
 {
 	//Level_Tool 레벨 조정 
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
-	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
-
 	FAILED_CHECK(Ready_LightDesc());
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
-
-
-	{	//!내비게이션 
+	{	
+		//!내비게이션 
 		CNavigation* pNavi = { nullptr };
 
 		pNavi = dynamic_cast<CNavigation*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Navigation")));
@@ -44,9 +42,6 @@ HRESULT CLevel_Tool::Initialize()
 
 	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 
-
-	
-	
 	return S_OK;
 
 }
@@ -123,16 +118,16 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 HRESULT CLevel_Tool::Ready_LightDesc()
 {
 	LIGHT_DESC			LightDesc{};
-	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	//LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
-	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 1.f);
+	LightDesc.eType			= LIGHT_DESC::TYPE_DIRECTIONAL;
+	LightDesc.vDirection	= _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse		= _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient		= _float4(0.2f, 0.2f, 0.2f, 1.f);
+	LightDesc.vSpecular		= _float4(0.f, 0.f, 0.f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
 		return E_FAIL;
+
+	cout << "Level Tool - Light Number = " << TempLightNumber << endl;
 
 	return S_OK;
 }

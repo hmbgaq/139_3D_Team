@@ -39,6 +39,7 @@ public:
 		INFECTED_TYPE Get_Type() { return eType; }
 	}INFECTED_DESC;
 
+
 protected:
 	CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CInfected(const CInfected& rhs);
@@ -54,6 +55,7 @@ public:
 
 public:
 	INFECTED_DESC Get_Info() { return m_eInfo; }
+	virtual HRESULT Update_RenderState(_int CurrentHP) PURE;
 
 protected:
 	HRESULT Ready_Components();
@@ -66,8 +68,8 @@ protected:
 	virtual void Hitted_Dead(Power ePower)	override;
 
 protected:
-	INFECTED_DESC m_eInfo = {};
-
+	INFECTED_DESC	m_eInfo = {};
+	
 private:
 	CActor<CInfected>* m_pActor = { nullptr };
 

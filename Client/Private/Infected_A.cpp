@@ -49,6 +49,8 @@ void CInfected_A::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	Update_RenderState(m_iHp);
+
 	m_pTarget = m_pGameInstance->Get_Player();
 
 	if (m_pActor)
@@ -65,6 +67,23 @@ void CInfected_A::Late_Tick(_float fTimeDelta)
 HRESULT CInfected_A::Render()
 {
 	FAILED_CHECK(__super::Render());
+
+	return S_OK;
+}
+
+HRESULT CInfected_A::Render_Shadow()
+{
+	FAILED_CHECK(__super::Render_Shadow());
+
+	return S_OK;
+}
+
+HRESULT CInfected_A::Update_RenderState(_int CurrentHP)
+{
+	if (CurrentHP == m_iMaxHp)
+	{
+
+	}
 
 	return S_OK;
 }

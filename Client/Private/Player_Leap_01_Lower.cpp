@@ -27,7 +27,7 @@ CState<CPlayer>* CPlayer_Leap_01_Lower::Update(CPlayer* pActor, _float fTimeDelt
 
 	if (false == m_bFlags[1]) // true == m_bFlags[0] && 
 	{
-		pActor->Chasing_Attack(fTimeDelta, 10.f, 1);
+		pActor->Chasing_Attack(fTimeDelta, 10.f, 0);
 	}
 
 	if (false == m_bFlags[0] && pActor->Is_Inputable_Front(16))

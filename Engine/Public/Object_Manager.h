@@ -38,7 +38,7 @@ public:
 	list<class CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring& strLayerTag);
 	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>* clonevector);
 	void Fill_PrototypeTags(vector<string>* _vector);
-
+	
 public:
 	class CCharacter* Get_Player();
 	void Set_Player(CCharacter* _pPlayer);
@@ -49,12 +49,7 @@ public:
 
 	void Set_Layer_Stop(_uint iLevelIndex, const wstring& strLayerTag, _bool bStop);
 	void Reset_Layer_Stop(_uint iLevelIndex);
-
-
-
-
-
-
+	
 private:
 	_uint			m_iNumLevels = { 0 };
 
@@ -64,6 +59,7 @@ private:
 	typedef map<const wstring, class CLayer*>		LAYERS;
 
 	map<const wstring, list<class CGameObject*>>	m_Pool;
+	vector<string>	ModelTag;
 
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };
