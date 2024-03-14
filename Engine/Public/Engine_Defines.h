@@ -74,6 +74,8 @@ using namespace std;
 #include "Engine_Function.h"
 #include "Engine_Enum.h"
 
+#include <mfapi.h>
+#include <mferror.h>
 namespace Engine 
 {
 	static float					g_iWinsizeX = 1280;
