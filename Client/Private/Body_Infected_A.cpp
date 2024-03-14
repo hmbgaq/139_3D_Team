@@ -53,48 +53,7 @@ void CBody_Infected_A::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Infected_A::Render()
 {
-	FAILED_CHECK(Bind_ShaderResources());
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (size_t i = 0; i < iNumMeshes; i++)
-	{
-		auto iter = m_vDiscardMesh.find(m_eRender_State);
-		if (iter != m_vDiscardMesh.end())  
-		{
-			auto& Discard = iter->second;
-			if (find(Discard.begin(), Discard.end(), i) != Discard.end())
-			{
-				if (m_eRender_State == CBody_Infected::RENDER_STATE::ATTACK)
-				{
-					m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
-					m_pShaderCom->Begin(ECast(MONSTER_SHADER::INFECTED_PUNCH));
-
-					m_pModelCom->Render((_uint)i);
-				}
-				else
-					continue;
-			}
-			else
-			{	
-				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
-			
-				m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
-
-				m_pModelCom->Render((_uint)i);
-			}
-		}
-	}
+	FAILED_CHECK(__super::Render());
 
 	return S_OK;
 }
@@ -116,7 +75,6 @@ HRESULT CBody_Infected_A::OptionSetting()
 {
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 2, 5, 6, 7, 8 }; // ÇÇ¶± 
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ATTACK] = { 1, 11 }; // ¹«±â 
-	m_vDiscardMesh[CBody_Infected::RENDER_STATE::HITTED] = { 2, 5, 6, 7, 8 };
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = {0, 1, 2, 3, 5, 6, 7, 8, 11 }; // °Ñ°¡Á× + ÀÇ»ó + ¹«±â + ±âÅ¸ 
 
 	return S_OK;

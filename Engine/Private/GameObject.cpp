@@ -114,7 +114,7 @@ HRESULT CGameObject::Set_InitPosition(const _float3& vPos)
 		this->Set_Dead(true);
 	pNavi->Set_CurrentIndex(iCheckIndex);
 
-	
+	return S_OK;
 }
 
 void CGameObject::Set_Enable(_bool _Enable)

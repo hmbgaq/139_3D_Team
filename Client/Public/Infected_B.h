@@ -22,6 +22,9 @@ public:
 	virtual HRESULT Update_RenderState(_int _iHP) override;
 
 protected:
+	void Update_DiscardMesh();
+
+	HRESULT OptionSetting();
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
 	HRESULT Ready_Option();

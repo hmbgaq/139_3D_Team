@@ -10,11 +10,16 @@
 #include "Infected_RelaxedIdleAct_02.h"
 #include "Infected_RelaxedIdleAct_03.h"
 
+#include "Body_Infected.h"
+
 void CInfected_Walk_B::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
+	pBody->Set_RenderState(CBody_Infected::RENDER_STATE::ORIGIN);
 }
 
 CState<CInfected>* CInfected_Walk_B::Update(CInfected* pActor, _float fTimeDelta)

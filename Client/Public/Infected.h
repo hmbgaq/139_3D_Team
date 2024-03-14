@@ -9,7 +9,7 @@ BEGIN(Client)
 /* 모델 : Character/Gores/Blow_Up 에 있는 모델 : 몇번 맞아서 피부 메시 뜯겨나간 메시 -> 구현안하는게 좋을듯.. 얘가 하면 모든애들이 다 해야함. */
 /* Memo */
 // Body, Weapon 등의 클래스는 Monster가 따로 뺀거 아니라서 바로 CBody , CWeapon 상속받아서 만들기
-/*      */
+
 class CInfected abstract : public CMonster_Character
 {
 public:
@@ -48,9 +48,9 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void Priority_Tick(_float fTimeDelta) override;
-	virtual void Tick(_float fTimeDelta) override;
-	virtual void Late_Tick(_float fTimeDelta) override;
+	virtual void	Priority_Tick(_float fTimeDelta) override;
+	virtual void	Tick(_float fTimeDelta) override;
+	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
 public:

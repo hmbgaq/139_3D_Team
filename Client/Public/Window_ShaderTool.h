@@ -42,8 +42,8 @@ private:
 	wstring		m_wstrLayerTag = {};
 	
 	/* Load Path */
-	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
-	//string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData_MapData.json";
+	//string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
+	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData_MapData.json";
 
 	/* Object Load - string으로 모델 키값 받아옴 */
 	vector<string>	m_vObjectModelTag;
@@ -51,6 +51,7 @@ private:
 	string			m_strCurrentObjectTag = {};
 	_bool			m_bCreateObject_Button = false; /* 오브젝트 실제 생성하는 버튼 */
 	class ShaderParsed_Object* pObject = nullptr;
+
 	/* Level Shader Struct */
 	HBAO_PLUS_DESC		m_eHBAO_Desc			= {};
 	FOG_DESC			m_eFog_Desc				= {};
@@ -74,7 +75,6 @@ private:
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual	HRESULT		Load_Function(string strPath, string strFileName) override;
 	virtual _bool		Write_Json(json& Out_Json);
-
 
 private:
 	/* 최상위 셋팅 */

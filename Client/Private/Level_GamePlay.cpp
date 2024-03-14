@@ -55,6 +55,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+	FAILED_CHECK(Ready_Shader());
 
 #pragma region 주석확인
 	FAILED_CHECK(Ready_UI());
@@ -228,7 +229,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 	
 	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
 	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	//pMonster->Set_InitPosition(_float3(253.5f, 0.f, 11.f));
 	pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
 
 	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
@@ -420,6 +420,49 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 	//desc.fPositionX = (_float)g_iWinSizeX / 2 + 20.f;
 	//desc.fPositionY = (_float)g_iWinSizeY / 2 + 20.f;
 	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"), &desc);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Shader()
+{
+	HBAO_PLUS_DESC Desc_Hbao = {};
+	Desc_Hbao.bHBAO_Active = true;
+	Desc_Hbao.fBias = 0.33;
+	Desc_Hbao.fBlur_Sharpness = 11.f;
+	Desc_Hbao.fPowerExponent = 1.9f;
+	Desc_Hbao.fRadius = 2.5;
+
+	BLOOMRIM_DESC Desc_BR = {};
+	Desc_BR.bRimBloom_Blur_Active = true;
+
+	FOG_DESC Desc_Fog = {};
+	Desc_Fog.bFog_Active = true;
+	Desc_Fog.fFogDistanceDensity = 0.037f;
+	Desc_Fog.fFogDistanceValue = 21.2f;
+	Desc_Fog.fFogHeightDensity = 0.1f;
+	Desc_Fog.fFogHeightValue = 50.f;
+	Desc_Fog.fFogStartDepth = 90.1f;
+	Desc_Fog.fFogStartDistance = 5.0f;
+
+	HDR_DESC Desc_HDR = {};
+	Desc_HDR.bHDR_Active = true;
+	Desc_HDR.fmax_white = 0.85;
+
+	ANTI_DESC Desc_Anti = {};
+	Desc_Anti.bFXAA_Active = true;
+
+	HSV_DESC Desc_HSV = {};
+	Desc_HSV.bScreen_Active = true;
+	Desc_HSV.fFinal_Brightness = 0.681f;
+	Desc_HSV.fFinal_Saturation = 1.407f;
+
+	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
+	m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);
+	m_pGameInstance->Get_Renderer()->Set_Fog_Option(Desc_Fog);
+	m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
+	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
+	m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
 
 	return S_OK;
 }

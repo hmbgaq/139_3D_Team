@@ -426,6 +426,11 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Test(const wstring& strLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_IntroBoss::Ready_Shader()
+{
+	return E_NOTIMPL;
+}
+
 HRESULT CLevel_IntroBoss::Ready_UI()
 {
 	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
