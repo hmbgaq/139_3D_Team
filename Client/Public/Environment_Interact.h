@@ -6,6 +6,7 @@
 BEGIN(Engine)
 class CShader;
 class CModel;
+class CCollider;
 END
 
 BEGIN(Client)
@@ -13,17 +14,26 @@ BEGIN(Client)
 class CEnvironment_Interact final : public CGameObject
 {
 public:
-	typedef struct tagEnvironmentObjectDesc : public CGameObject::GAMEOBJECT_DESC
-	{
-		_float4		vPos = { 0.f, 0.f, 0.f, 0.f };
-		_uint		iShaderPassIndex = { 0 };
-		wstring		strModelTag;
-		_float4x4	WorldMatrix;
+	enum INTERACT_TYPE { INTERACT_JUMP100, INTERACT_JUMP200, INTERACT_JUMP300, INTERACT_VAULT100, INTERACT_VAULT200, INTERACT_END };
+	enum INTERACT_STATE { INTERACTSTATE_LOOP, INTERACTSTATE_ONCE, INTERACTSTATE_END };
 
-		_bool		bAnimModel = { false };
-		_int		iPlayAnimationIndex = { 0 };
-		_bool		bPreview = true; //! 미리보기용 오브젝트인지 확인
-	}ENVIRONMENT_OBJECT_DESC;
+public:
+	typedef struct tagEnvironmentInteractObjectDesc : public CGameObject::GAMEOBJECT_DESC
+	{
+		_float4			vPos = { 0.f, 0.f, 0.f, 0.f };
+		_uint			iShaderPassIndex = { 0 };
+		wstring			strModelTag;
+		_float4x4		WorldMatrix;
+
+		INTERACT_TYPE	eInteractType = INTERACT_END;
+		INTERACT_STATE  eInteractState = INTERACTSTATE_END;
+		_float3			vColliderSize = {};
+		_float3			vColliderCenter = {};
+		_int			iPlayAnimationIndex = { 0 };
+
+		_bool			bAnimModel = { false };
+		_bool			bPreview = true; //! 미리보기용 오브젝트인지 확인
+	}ENVIRONMENT_INTERACTOBJECT_DESC;
 
 private:
 	CEnvironment_Interact(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -44,30 +54,50 @@ public:
 	virtual void		Load_FromJson(const json& In_Json) override;
 
 public:
-	ENVIRONMENT_OBJECT_DESC* Get_EnvironmentDesc() { return &m_tEnvironmentDesc; }
-	wstring&			Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
-	_bool				Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
+	ENVIRONMENT_INTERACTOBJECT_DESC*	Get_EnvironmentDesc() { return &m_tEnvironmentDesc; }
+	wstring&							Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
+	_bool								Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
 	
-#ifdef DEBUG
+#ifdef _DEBUG
+	void								Set_ColliderSize(_float3 vColliderSize);
+	void								Set_ColliderCenter(_float3 vColliderCenter);
+#endif // _DEBUG
+
+
+#ifdef _DEBUG
 public: //! For.Tool
-	virtual _bool		Picking(_Out_ _float3* vPickedPos) override;
+	virtual _bool				Picking(_Out_ _float3* vPickedPos) override;
 
 #endif 
 
 public:
-	void				Start_Environment_Animation() { m_bPlay = true; }
+	void						Start_Environment_Animation() { m_bPlay = true; }
+
+public:
+	void								Interact();
+
 
 private:
-	CShader*			m_pShaderCom = { nullptr };	
-	CModel*				m_pModelCom = { nullptr };
+	CShader*							m_pShaderCom = { nullptr };	
+	CModel*								m_pModelCom = { nullptr };
+	CCollider*							m_pColliderCom = { nullptr };
+
+	_int								m_iCurrentLevelIndex = -1;
 
 private:
-	ENVIRONMENT_OBJECT_DESC m_tEnvironmentDesc = {};
-	_bool					m_bPlay = false;
+	ENVIRONMENT_INTERACTOBJECT_DESC		m_tEnvironmentDesc = {};
+	_bool								m_bPlay = false;
+	_bool								m_bInteract = false;
+	
+	_bool								m_bFindPlayer = false;
 
 private:
-	HRESULT				Ready_Components();
-	HRESULT				Bind_ShaderResources();
+	CPlayer*						    m_pPlayer = { nullptr };
+
+private:
+	HRESULT						Ready_Components();
+	HRESULT						Ready_InteractCollider(INTERACT_TYPE eInteractType);
+	HRESULT						Bind_ShaderResources();
 
 
 public:

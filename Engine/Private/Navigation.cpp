@@ -6,13 +6,13 @@
 
 _float4x4 CNavigation::m_WorldMatrix = { };
 
-CNavigation::CNavigation(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CNavigation::CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 {
 
 }
 
-CNavigation::CNavigation(const CNavigation & rhs)
+CNavigation::CNavigation(const CNavigation& rhs)
 	: CComponent(rhs)
 	, m_Cells(rhs.m_Cells)
 #ifdef _DEBUG
@@ -29,7 +29,7 @@ CNavigation::CNavigation(const CNavigation & rhs)
 
 }
 
-HRESULT CNavigation::Initialize_Prototype(const wstring & strNavigationFilePath)
+HRESULT CNavigation::Initialize_Prototype(const wstring& strNavigationFilePath)
 {
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 
@@ -70,10 +70,10 @@ HRESULT CNavigation::Initialize_Prototype(const wstring & strNavigationFilePath)
 	return S_OK;
 }
 
-HRESULT CNavigation::Initialize(void * pArg)
+HRESULT CNavigation::Initialize(void* pArg)
 {
 
-	if(nullptr != pArg)
+	if (nullptr != pArg)
 		m_iCurrentIndex = ((NAVI_DESC*)pArg)->iCurrentIndex;
 
 	m_WorldMatrix = XMMatrixIdentity();
@@ -86,7 +86,7 @@ HRESULT CNavigation::Initialize(void * pArg)
 HRESULT CNavigation::Render()
 {
 	/* 셀들의 위치가 월드상에 존재한다. */
-	if(true == m_Cells.empty())
+	if (true == m_Cells.empty())
 		return E_FAIL;
 
 	_float4		vColor = { 0.0f, 1.f, 0.f, 1.f };
@@ -112,7 +112,7 @@ HRESULT CNavigation::Render()
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
-	
+
 
 	m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4));
 
@@ -122,7 +122,7 @@ HRESULT CNavigation::Render()
 
 	if (iCurrentLevel == 6)
 	{
-		
+
 		for (auto& pCell : m_Cells)
 		{
 			if (nullptr != pCell)
@@ -142,7 +142,7 @@ HRESULT CNavigation::Render()
 		else
 			m_Cells[m_iCurrentIndex]->Render(m_pShader);
 	}
-	
+
 
 
 
@@ -159,7 +159,7 @@ void CNavigation::Update(_fmatrix WorldMatrix)
 
 _bool CNavigation::isMove(_fvector vPosition)
 {
-	if(true == m_Cells.empty())
+	if (true == m_Cells.empty())
 		return false;
 
 	_int		iNeighborIndex = { -1 };
@@ -179,7 +179,7 @@ _bool CNavigation::isMove(_fvector vPosition)
 				{
 					m_iCurrentIndex = iNeighborIndex;
 					return true;
-				}				
+				}
 			}
 		}
 		else
@@ -209,7 +209,7 @@ _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4*
 				if (false == m_Cells[iNeighborIndex]->Is_Out(vPosition, vLook, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex, vOutSlidingDir))
 				{
 					//if (true == m_Cells[iNeighborIndex]->Get_Active())
-						m_iCurrentIndex = iNeighborIndex;
+					m_iCurrentIndex = iNeighborIndex;
 					//else
 					//	return false;
 
@@ -265,12 +265,12 @@ void CNavigation::SaveData(wstring strSavePath)
 
 void CNavigation::LoadData(wstring strLoadPath)
 {
-	_uint iCellSize = (_uint)m_Cells.size();
+	_uint iCellSize = m_Cells.size();
 	m_iCurrentIndex = -1;
 
 	for (_uint i = 0; i < iCellSize; ++i)
-	{	
-		if(iCellSize <= i)
+	{
+		if (iCellSize <= i)
 			break;
 
 		Safe_Release(m_Cells[i]);
@@ -319,33 +319,6 @@ void CNavigation::LoadData(wstring strLoadPath)
 	}
 }
 
-_int CNavigation::Get_CurrentCellIndex(const float3& vPosition)
-{
-	for (auto& Cell : m_Cells)
-	{
-		_vector points[3] = {};
-
-		for (int i = 0; i < 3; ++i)
-			points[i] = XMLoadFloat3(Cell->Get_Point(static_cast<CCell::POINT>(i)));
-
-		// 각 꼭지점에서 주어진 점 P까지의 벡터 계산
-		_vector AP = vPosition - points[0];
-		_vector BP = vPosition - points[1];
-		_vector CP = vPosition - points[2];
-
-		// 삼각형 내부 판단
-		// 내적을 이용하여 삼각형 ABC 내부에 있는지 확인
-		if (XMVectorGetX(XMVector3Dot(AP, XMVectorSubtract(points[1], points[0]))) > 0 &&
-			XMVectorGetX(XMVector3Dot(BP, XMVectorSubtract(points[2], points[1]))) > 0 &&
-			XMVectorGetX(XMVector3Dot(CP, XMVectorSubtract(points[0], points[2]))) > 0)
-		{
-			// 삼각형 내부에 위치한 경우 해당 셀의 인덱스 반환
-			return Cell->Get_CurrentIndex();
-		}
-	}
-
-	return -1;
-}
 
 void CNavigation::AddCell(CCell* pCell)
 {
@@ -379,7 +352,7 @@ HRESULT CNavigation::Delete_Cell(const _uint iIndex)
 
 void CNavigation::AllSearchDelete_IsNan()
 {
-	_int iCellSize = (_int)m_Cells.size();
+	_int iCellSize = m_Cells.size();
 	vector<CCell*> vecNanCells;
 	vector<_int> vecNanCellIndex;
 
@@ -394,12 +367,12 @@ void CNavigation::AllSearchDelete_IsNan()
 			isnan<float>(vPointA.z) || isnan<float>(vPointB.z) || isnan<float>(vPointC.z))
 		{
 			vecNanCellIndex.push_back(i);
-			
+
 		}
 	}
 
-	_uint iIsNanCellSize = (_uint)vecNanCellIndex.size();
-	for (_int i = 0; i < (_int)iIsNanCellSize; ++i)
+	_uint iIsNanCellSize = vecNanCellIndex.size();
+	for (_int i = 0; i < iIsNanCellSize; ++i)
 	{
 		Safe_Release(m_Cells[vecNanCellIndex[i]]);
 	}
@@ -409,52 +382,27 @@ void CNavigation::AllSearchDelete_IsNan()
 
 void CNavigation::InRangeCellChange(CCell* pCell, _int ePoint, _float3 vSearchPos)
 {
-	_int iCellSize = (_int)m_Cells.size();
+	_float3 originPoint = *pCell->Get_Point(CCell::POINT(ePoint));
 
+	vector<pair<CCell*, CCell::POINT>> pointsToUpdate;
 
-	_float3 vPosition = *pCell->Get_Point(CCell::POINT(ePoint));
-
-	vector<CCell::POINT> vecPoints;
-	vector<_int> vecIndexs;
-
-	for (_int i = 0; i < iCellSize; ++i)
+	for (auto& pcell : m_Cells)
 	{
-		_float3 vPointA = *m_Cells[i]->Get_Point(CCell::POINT_A);
-		_float3 vPointB = *m_Cells[i]->Get_Point(CCell::POINT_B);
-		_float3 vPointC = *m_Cells[i]->Get_Point(CCell::POINT_C);
-
-		CCell* pTargetCell = m_Cells[i];
-
-		_float3 vPointBool = pTargetCell->Get_Compare_Point(&vPosition);
-
-		if (vPointBool.x == 1.f)
+		for (int i = 0; i < CCell::POINT_END; ++i)
 		{
-			vecPoints.push_back(CCell::POINT_A);
-			vecIndexs.push_back(i);
+			_float3* point = pcell->Get_Point(static_cast<CCell::POINT>(i));
 
-		}
-		else if (vPointBool.y == 1.f)
-		{
-			vecPoints.push_back(CCell::POINT_B);
-			vecIndexs.push_back(i);
-		}
-		else if (vPointBool.z == 1.f)
-		{
-			vecPoints.push_back(CCell::POINT_C);
-			vecIndexs.push_back(i);
+			if (XMVector3Equal(XMLoadFloat3(&originPoint), XMLoadFloat3(point)))
+				pointsToUpdate.push_back(make_pair(pcell, static_cast<CCell::POINT>(i)));
 		}
 	}
 
-	_int iVectorSize = (_int)vecPoints.size();
+	m_iSelcetPointsSize = pointsToUpdate.size();
 
-
-	for (_int i = 0; i < iVectorSize; ++i)
+	for (auto& iter : pointsToUpdate)
 	{
-		m_Cells[vecIndexs[i]]->Set_Point(vecPoints[i], vSearchPos);
+		iter.first->Set_Point(iter.second, vSearchPos);
 	}
-
-
-	Make_Neighbors();
 }
 
 _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
@@ -469,7 +417,7 @@ _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
 	{
 
 		if (true == m_Cells[i]->isInRange(vPos, XMLoadFloat4x4(&m_WorldMatrix)))
-				return m_Cells[i]->Get_Index();
+			return m_Cells[i]->Get_Index();
 	}
 
 	return -1;
@@ -477,9 +425,6 @@ _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
 
 _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 {
-	/* 게임플레이 돌아다녀야 해서 임시로 넣어둠. 나중에 승용이가 바꾸셈 */
-
-	/* 현재 셀을 찾아서, 평면의 방정식을 만들고 현재 위치에 따른 높이를 구한다. */
 
 	_float fResult = {};
 
@@ -502,42 +447,51 @@ _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 	_float fc = XMVectorGetZ(vPlane);
 	_float fd = XMVectorGetW(vPlane);
 
-	return fResult = (-fa * fx - fc * fz - fd) / fb;
+
+	fResult = (-fa * fx - fc * fz - fd) / fb;
+
+	if (pGround != nullptr)
+	{
+		*pGround = (vPosition.y < fResult);
+	}
+
+	return fResult;
+
 }
 
 HRESULT CNavigation::Make_Neighbors()
 {
-// 	_bool bAB = false, bBC = false, bCA = false;
-// 
-// 
-// 	for (auto& pSourCell : m_Cells)
-// 	{
-// 		for (auto& pDestCell : m_Cells)
-// 		{
-// 			if (pSourCell == pDestCell)
-// 				continue;
-// 
-// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_A), pSourCell->Get_Point(CCell::POINT_B)))
-// 			{
-// 				pSourCell->SetUp_Neighbor(CCell::LINE_AB, pDestCell);
-// 				bAB = true;
-// 			}
-// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_B), pSourCell->Get_Point(CCell::POINT_C)))
-// 			{
-// 				pSourCell->SetUp_Neighbor(CCell::LINE_BC, pDestCell);
-// 				bBC = true;
-// 			}
-// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_C), pSourCell->Get_Point(CCell::POINT_A)))
-// 			{
-// 				pSourCell->SetUp_Neighbor(CCell::LINE_CA, pDestCell);
-// 				bCA = true;
-// 			}
-// 
-// 			if (false == bAB && false == bBC && false == bCA)
-// 				pSourCell->Reset_Line();
-// 
-// 		}
-// 	}
+	// 	_bool bAB = false, bBC = false, bCA = false;
+	// 
+	// 
+	// 	for (auto& pSourCell : m_Cells)
+	// 	{
+	// 		for (auto& pDestCell : m_Cells)
+	// 		{
+	// 			if (pSourCell == pDestCell)
+	// 				continue;
+	// 
+	// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_A), pSourCell->Get_Point(CCell::POINT_B)))
+	// 			{
+	// 				pSourCell->SetUp_Neighbor(CCell::LINE_AB, pDestCell);
+	// 				bAB = true;
+	// 			}
+	// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_B), pSourCell->Get_Point(CCell::POINT_C)))
+	// 			{
+	// 				pSourCell->SetUp_Neighbor(CCell::LINE_BC, pDestCell);
+	// 				bBC = true;
+	// 			}
+	// 			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_C), pSourCell->Get_Point(CCell::POINT_A)))
+	// 			{
+	// 				pSourCell->SetUp_Neighbor(CCell::LINE_CA, pDestCell);
+	// 				bCA = true;
+	// 			}
+	// 
+	// 			if (false == bAB && false == bBC && false == bCA)
+	// 				pSourCell->Reset_Line();
+	// 
+	// 		}
+	// 	}
 	for (auto& pSrcCell : m_Cells)
 	{
 		if (pSrcCell == nullptr)
@@ -567,9 +521,9 @@ HRESULT CNavigation::Make_Neighbors()
 	return S_OK;
 }
 
-CNavigation * CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strNavigationFilePath)
+CNavigation* CNavigation::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strNavigationFilePath)
 {
-	CNavigation*		pInstance = new CNavigation(pDevice, pContext);
+	CNavigation* pInstance = new CNavigation(pDevice, pContext);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype(strNavigationFilePath)))
@@ -580,9 +534,9 @@ CNavigation * CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * 
 	return pInstance;
 }
 
-CComponent * CNavigation::Clone(void * pArg)
+CComponent* CNavigation::Clone(void* pArg)
 {
-	CNavigation*		pInstance = new CNavigation(*this);
+	CNavigation* pInstance = new CNavigation(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))

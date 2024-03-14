@@ -7,6 +7,8 @@ Texture2D	g_DiffuseTexture;
 Texture2D	g_MaskTexture;
 Texture2D	g_NoiseTexture;
 
+Texture2D	g_NormalTexture;
+
 // Camera ====================
 vector		g_vCamPosition;
 float3		g_vCamDirection;
@@ -14,11 +16,11 @@ float		g_fCamFar;
 // ===========================
 
 bool        g_bBillBoard;
+
 float       g_fAlpha_Discard;
 float3      g_vBlack_Discard;
-//float4	g_vColor_Mul;
 
-float4		g_vBloom_Discard;
+float4		g_vColor_Mul;
 
 float		g_fDegree;
 
@@ -35,8 +37,9 @@ float2		g_UVScale;
 // 참고로 BloomPower 가 0.3 0.3 0.3 을 넣었을때 Calculation_Brightness함수내에서 fPixelBrightness가 임계를 넘지못해서 안나오는경우도 있었음.. 
 // 여차하면 이 fPixelBrightness 도 전역으로 떄려서 조절해도됨. 함수만 제대로 작동하면 안에 어떤값이던 던져서 함수를 변형해서 써도 됨 
 //  어 ? 노말이 된다고 ?? ??? ?? ???????????? ??
-float3 g_vBloomPower; /*= { 0.7f, 0.7f, 0.7f }; /* Bloom */
-float4 g_vRimColor; /* = { 1.0f, 0.f, 0.f, 0.5f }; /* RimLight */
+float4	g_vRimColor; /* = { 1.0f, 0.f, 0.f, 0.5f }; /* RimLight */
+float	g_fRimPower;
+float3	g_vBloomPower; /*= { 0.7f, 0.7f, 0.7f }; /* Bloom */
 
 // ===========================
 struct EffectDesc
@@ -47,11 +50,27 @@ struct EffectDesc
 EffectDesc g_EffectDesc[500];
 
 
-/* Custom Function */
+// Custom Function ==============================================================================================================
+float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
+{
+	float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
+	float fRotationRadian = fDegree * fDegree2Radian;
+	float cosA = cos(fRotationRadian);
+	float sinA = sin(fRotationRadian);
+
+	float2x2 RotateMatrix = float2x2(cosA, -sinA, sinA, cosA);
+
+	vTexcoord -= 0.5f;
+	vTexcoord = mul(vTexcoord, RotateMatrix);
+	vTexcoord += 0.5f;
+
+	return vTexcoord;
+}
+
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
 {
     float fRimPower = 1.f - saturate(dot(In_Normal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
-    fRimPower = pow(fRimPower, 5.f);
+	fRimPower = pow(fRimPower, 5.f) * g_fRimPower;
     float4 vRimColor = g_vRimColor * fRimPower;
     
     return vRimColor;
@@ -70,22 +89,6 @@ float4 Calculation_Brightness(float4 Out_Diffuse)
 }
 
 
-float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
-{
-	float fDegree2Radian = 3.14159265358979323846 * 2 / 360.f;
-	float fRotationRadian = fDegree * fDegree2Radian;
-	float cosA = cos(fRotationRadian);
-	float sinA = sin(fRotationRadian);
-
-	float2x2 RotateMatrix = float2x2(cosA, -sinA, sinA, cosA);
-
-	vTexcoord -= 0.5f;
-	vTexcoord = mul(vTexcoord, RotateMatrix);
-	vTexcoord += 0.5f;
-
-	return vTexcoord;
-}
-
 // 두 벡터 사이의 각도 계산 (라디안)
 float Calculate_AngleBetweenVectors_Radian(float3 v1, float3 v2)
 {
@@ -103,8 +106,11 @@ float Calculate_AngleBetweenVectors_Degree(float3 v1, float3 v2)
 
 	return fDegree;
 }
+// Custom Function ==============================================================================================================
 
 
+
+// MAIN_PARTICLE ================================================================================================================
 struct VS_IN
 {
 	float3				vPosition		: POSITION;
@@ -140,21 +146,20 @@ VS_OUT VS_MAIN_PARTICLE(VS_IN In)
 	return Out;
 }
 
-
 struct GS_IN
 {
-	float4		vPosition : POSITION;
-	float2		vPSize : PSIZE;
-	float4		vColor : COLOR0;
+	float4		vPosition	: POSITION;
+	float2		vPSize		: PSIZE;
+	float4		vColor		: COLOR0;
 
-	uint	iInstanceID : SV_INSTANCEID;
+	uint	iInstanceID		: SV_INSTANCEID;
 };
 
 struct GS_OUT
 {
-	float4		vPosition : SV_POSITION;
-	float2		vTexcoord : TEXCOORD0;
-	float4		vColor : COLOR0;
+	float4		vPosition	: SV_POSITION;
+	float2		vTexcoord	: TEXCOORD0;
+	float4		vColor		: COLOR0;
 };
 
 /* 지오메트리 쉐이더 : 셰이더안에서 정점을 추가적으로 생성해 준다. */
@@ -165,6 +170,7 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
 	float4		vLook;
 	float3		vRight, vUp;
+	
 	if (g_bBillBoard)
 	{
 		vLook = g_vCamPosition - In[0].vPosition;
@@ -231,10 +237,11 @@ struct PS_IN
 
 struct PS_OUT
 {
-	float4		vColor		: SV_TARGET0; // Diffuse
-	float4		vNormal		: SV_TARGET1; // Normal
-    float4		vDepth		: SV_TARGET2; // Depth
-    float4		vRimBloom	: SV_TARGET3; // RimBloom
+    float4 vColor		: SV_TARGET0;	// Diffuse
+    float4 vSolid		: SV_TARGET1;			 
+    float4 vNormal		: SV_TARGET2;	// Normal
+    float4 vDepth		: SV_TARGET3;	// Depth
+    float4 vRimBloom	: SV_TARGET4;	// RimBloom
 };
 
 
@@ -254,7 +261,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 			discard;
 
-		Out.vColor = vDiffuseColor;
+        Out.vColor = vDiffuseColor * g_vColor_Mul;
 		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
 		// 여기 두줄이 원래 림라이트인데, 노말벡터 없어서 림이 안들어감.. 그 해골 모델이나 이런애들처럼 노말있는애들만 가능할듯..?
         //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
@@ -274,12 +281,6 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		vDiffuseColor.rgb *= In.vColor.rgb;
 		vDiffuseColor.a = In.vColor.a * vAlphaColor;
 
-		float4 vBloomColor = vDiffuseColor;
-
-		if (vBloomColor.a < g_vBloom_Discard.a	// 블룸 알파 잘라내기
-			|| vBloomColor.r < g_vBloom_Discard.r && vBloomColor.g < g_vBloom_Discard.g && vBloomColor.b < g_vBloom_Discard.b)	// 검정색 잘라내기
-			discard;
-
 		if (vDiffuseColor.a < g_fAlpha_Discard	// 알파 잘라내기
 			|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 			discard;
@@ -288,12 +289,109 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		
 		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
        // Out.vRimBloom = Calculation_Brightness(Out.vColor);
-	   Out.vRimBloom = Calculation_Brightness(vBloomColor);
-       // Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
+		Out.vRimBloom = float4(g_vBloomPower, 1.0f);
     }
 
     return Out;
 }
+// MAIN_PARTICLE ================================================================================================================
+
+
+
+// MAIN_PARTICLE_SOLID ==========================================================================================================
+PS_OUT MAIN_PARTICLE_SOLID(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    if (g_bSprite)
+    {
+        float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
+        float4 vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, clippedTexCoord);
+
+        vDiffuseColor.rgb *= In.vColor.rgb;
+
+		
+        if (vDiffuseColor.a < g_fAlpha_Discard // 알파 잘라내기
+		|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
+            discard;
+
+        Out.vColor = vDiffuseColor * g_vColor_Mul;
+		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
+		// 여기 두줄이 원래 림라이트인데, 노말벡터 없어서 림이 안들어감.. 그 해골 모델이나 이런애들처럼 노말있는애들만 가능할듯..?
+        //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
+        //Out.vDiffuse += vRimColor;
+		
+		// Case1. 기존의 Diffuse로 블러를 먹여서 효과를 준다. 
+        //Out.vRimBloom = Calculation_Brightness(Out.vColor);
+		// Case2. 색상을 아에 넣어버린다 : 이경우 g_RimBloom_Color 라던지 전역변수 받아서 그걸로 해도됨
+        //Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
+
+        Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+    }
+    else
+    {
+		/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
+        float4 vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+        float4 vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
+
+        vDiffuseColor.rgb *= In.vColor.rgb;
+        vDiffuseColor.a = In.vColor.a * vAlphaColor;
+
+        if (vDiffuseColor.a < g_fAlpha_Discard // 알파 잘라내기
+			|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
+            discard;
+
+        Out.vColor = vDiffuseColor /** g_vColor_Mul*/;
+		
+		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
+       // Out.vRimBloom = Calculation_Brightness(Out.vColor);
+        Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+		
+     
+    }
+
+	
+    Out.vSolid = Out.vColor;
+	
+    return Out;
+}
+// MAIN_PARTICLE_SOLID ==========================================================================================================
+
+
+
+
+PS_OUT PS_MAIN_SPRITE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
+    float4 vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, clippedTexCoord);
+
+    vDiffuseColor.rgb *= In.vColor.rgb;
+    vDiffuseColor.a = In.vColor.a;
+	
+
+    if (vDiffuseColor.a < g_fAlpha_Discard // 알파 잘라내기
+		|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
+        discard;
+
+    Out.vColor = vDiffuseColor * g_vColor_Mul;
+	/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
+	// 여기 두줄이 원래 림라이트인데, 노말벡터 없어서 림이 안들어감.. 그 해골 모델이나 이런애들처럼 노말있는애들만 가능할듯..?
+    //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
+    //Out.vDiffuse += vRimColor;
+	
+	// Case1. 기존의 Diffuse로 블러를 먹여서 효과를 준다. 
+    //Out.vRimBloom = Calculation_Brightness(Out.vColor);
+	// Case2. 색상을 아에 넣어버린다 : 이경우 g_RimBloom_Color 라던지 전역변수 받아서 그걸로 해도됨
+    //Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+
+    return Out;
+}
+
+
+
 
 technique11 DefaultTechnique
 {
@@ -305,26 +403,39 @@ technique11 DefaultTechnique
 		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
 		/* 렌더스테이츠 */
-		VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
-		GeometryShader = compile gs_5_0 GS_MAIN();
-		HullShader = NULL;
-		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_PARTICLE();
+		VertexShader	= compile vs_5_0 VS_MAIN_PARTICLE();
+		GeometryShader	= compile gs_5_0 GS_MAIN();
+		HullShader		= NULL;
+		DomainShader	= NULL;
+		PixelShader		= compile ps_5_0 PS_MAIN_PARTICLE();
 	}
 
-
-	pass Bloom  // 1
-	{
-		SetRasterizerState(RS_Cull_None);
-		SetDepthStencilState(DSS_Default, 0);
-		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+    pass Particle_Solid // 1
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
 		/* 렌더스테이츠 */
-		VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
-		GeometryShader = compile gs_5_0 GS_MAIN();
-		HullShader = NULL;
-		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_PARTICLE();
-	}
+        VertexShader	= compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader	= compile gs_5_0 GS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 MAIN_PARTICLE_SOLID();
+    }
+
+    pass Particle_Sprite // 2
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* 렌더스테이츠 */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SPRITE();
+    }
 
 }

@@ -39,7 +39,7 @@ public:
 		_bool		bBillBoard		= { TRUE };
 		_bool		bDissolve		= { TRUE };
 		_float2		vUV_Offset		= { 0.f, 0.f };
-		_float2		vUV_Scale		= { 0.f, 0.f };
+		_float2		vUV_Scale		= { 1.f, 1.f };
 
 		_float		fUV_RotDegree	= { 0.f };
 
@@ -51,11 +51,9 @@ public:
 		_float4		vColor_Mul		= { 1.f, 1.f, 1.f, 1.f };
 
 		// Rim & Bloom
-		_float3		vBloomPower = { 1.f, 1.f, 1.f };		// 블룸 파워
-		_float4		vBloom_Clip = { 0.f, 0.f, 0.f, 0.f };
-
+		_float3		vBloomPower = { 1.f, 1.f, 1.f };		// 블룸 파워(rgb 색상값)
 		_float4		vRimColor	= { 1.f, 1.f, 1.f, 1.f };	// 림 컬러
-		_float		fRimPower = { 100.f };
+		_float		fRimPower = { 5.f };
 
 		// States
 		_bool		bPlay			= { TRUE };
@@ -119,6 +117,8 @@ public:
 	typedef struct tagUvSpriteDesc
 	{
 		_bool	bSpriteFinish   = { FALSE };
+
+		_bool	bLoop = { TRUE };				// 저장
 		_float	fSequenceTerm	= { 0.05f };	// 저장
 
 		_float2 vTextureSize	 = { 1792.f, 1792.f };  // 저장
@@ -127,6 +127,15 @@ public:
 		_float2	vUV_CurTileIndex = { 0, 0 }; 
 		_float2	vUV_MinTileCount = { 0, 0 }; // 저장
 		_float2	vUV_MaxTileCount = { 7, 7 }; // 저장
+
+
+		void Reset_Sprite()
+		{
+			bSpriteFinish = { FALSE };
+			vUV_CurTileIndex.y = vUV_MinTileCount.y;
+			vUV_CurTileIndex.x = vUV_MinTileCount.x;
+		}
+
 
 	}UVSPRITE_DESC;
 

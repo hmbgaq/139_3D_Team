@@ -38,8 +38,18 @@ public:
 	void Aim_Walk(_float fTimeDelta);
 	void Activate_ShootingReaction();
 
+public://!For. Interact
+	void SetState_InteractJumpDown100(); 
+	void SetState_InteractJumpDown200();
+	void SetState_InteractJumpDown300();
+	void SetState_InteractVault100();
+	void SetState_InteractVault200();
+	
+
 public:
-	void Search_Target();
+	void Search_Target(_float fMaxDistance = 10.f);
+
+	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 3);
 
 private:
 	HRESULT Ready_Components();

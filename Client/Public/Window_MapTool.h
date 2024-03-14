@@ -11,6 +11,7 @@ END
 
 BEGIN(Client)
 class CEnvironment_Object;
+class CEnvironment_Interact;
 class CEnvironment_Instance;
 class CEnvironment_LightObject;
 class CEnvironment_SpecialObject;
@@ -73,6 +74,9 @@ private:
 	//!For. Environment
 	void			GroundTab_Function();
 	void			InteractTab_Function();
+		void			Interact_CreateTab();
+		void			Interact_DeleteTab();
+	
 	void			EnvironmentTab_Function();
 
 	//!For. Character
@@ -122,6 +126,7 @@ private: //! For. Create_Function
 
 	//!For. Environment
 	void			Ground_CreateFunction();
+	
 	void			Interact_CreateFunction();
 	void			Preview_Environment_CreateFunction();
 	void			Create_Instance();
@@ -139,6 +144,7 @@ private: //!For. Select_Function
 	//!For. Environment
 	void			Basic_SelectFunction();
 	void			Instance_SelectFunction();
+	void			Interact_SelectFunction();
 	void			Guizmo_Tick(CGameObject* pPickingObject = nullptr);
 
 	void			Instance_GuizmoTick(_int iIndex, INSTANCE_INFO_DESC* pInstance = nullptr);
@@ -225,6 +231,8 @@ private:
 
 	//! for.PriviewObject //미리보기용 오브젝트
 	CEnvironment_Object*			m_pPreviewObject = {}; //! 미리보기를 위해 클론시킨 오브젝트.
+	CEnvironment_Interact*			m_pPreviewInteract = {}; //! 상호작용용 미리보기 오브젝트
+	
 	_uint							m_iOriginSelectModelTag = 0; 
 	_float							m_fDeadWaiting = 0.1f; //! 한틱 도는거 기다리기위함
 	_float							m_fDeadWaitingAcc = 0.f;
@@ -233,6 +241,16 @@ private:
 	_bool							m_bAnimType = false;
 
 	_int							m_iShaderPassIndex = {0};
+
+	//!For.Interact //! 상호작용
+	_int							m_eInteractState = 0; //! 전부 이넘 캐스팅해야함
+	_int							m_eInteractType = 0;  //! 전부 이넘 캐스팅해야함
+	_float							m_fColliderSizeArray[3] = { 1.f, 1.f, 1.f};
+	_float							m_fColliderCenterArray[3] = { 0.f, 1.f, 0.f};
+
+	_float							m_fSelectColliderSizeArray[3] = { 1.f, 1.f, 1.f}; //! 콜라이더 사이즈변경용
+	_float							m_fSelectColliderCenterArray[3] = { 0.f, 1.f, 0.f }; //! 콜라이더 센터변경용
+	_int							m_iInteractPlayAnimIndex = 0;
 
 private: //! 필드
 	class CField*	m_pField = { nullptr };
@@ -253,6 +271,11 @@ private: //! 레이캐스트
 
 private:
 	//!For. CreateObject
+	vector<CEnvironment_Interact*>	m_vecCreateInteractObject = {};
+	vector<string>					m_vecCreateInteractObjectTag = {};
+	_int							m_vecCreateInteractIndex = 0;
+
+
 	vector<CEnvironment_Object*>	m_vecCreateObject = {}; //! 생성한 오브젝트
 	vector<string>					m_vecCreateObjectTag = {};	
 	_int							m_vecCreateObjectIndex = 0;
@@ -302,6 +325,13 @@ private:
 	CSky*							m_pSkybox = { nullptr };
 	_int							m_iSkyTextureIndex = { 0 };
 	CNavigation*					m_pNavigation = { nullptr };
+
+private:
+	PrimitiveBatch<DirectX::VertexPositionColor>*	m_pBatch = { nullptr };
+	BasicEffect*									m_pEffect = { nullptr };
+	ID3D11InputLayout*								m_pInputLayOut = { nullptr };
+	CBounding_Sphere*								m_pBoundingSphere = { nullptr };
+
 	
 
 public:

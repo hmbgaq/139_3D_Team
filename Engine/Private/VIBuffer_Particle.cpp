@@ -329,25 +329,13 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 		m_vecParticleRigidbodyDesc[iNum].fMass = SMath::fRandom(m_tBufferDesc.vMinMaxMass.x, m_tBufferDesc.vMinMaxMass.y);			// 질량 리셋
 
 
-#pragma region 이동 진행방향 회전 시작
-		_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-		vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
 
-		_float3 vRotationOffset = { SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetX.x, m_tBufferDesc.vMinMaxRotationOffsetX.y)
-								  , SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetY.x, m_tBufferDesc.vMinMaxRotationOffsetY.y)
-								  , SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y) };
+		// 이동 방향으로 힘 줘서 이동
+		_vector		vDir = Make_Dir(iNum, m_tBufferDesc.eType_Action);
 
-
-		_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
-		_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
-
-		vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
 		m_vecParticleShaderInfoDesc[iNum].vDir = vDir;			// 쉐이더에 전달할 방향 저장
 		m_vecParticleRigidbodyDesc[iNum].vDir = vDir;
-#pragma endregion 이동 진행방향 회전 끝
 
-
-	// 이동 방향으로 힘 줘서 이동
 		_vector vForce = vDir * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
 		Add_Force(iNum, vForce, m_tBufferDesc.eForce_Mode);
 	}
@@ -356,6 +344,24 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 
 
 
+}
+
+_float4 CVIBuffer_Particle::Make_Dir(_uint iNum, TYPE_ACTION eAction)
+{
+	_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+	vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
+
+	_float3 vRotationOffset = { XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetX.x, m_tBufferDesc.vMinMaxRotationOffsetX.y))
+							  , XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetY.x, m_tBufferDesc.vMinMaxRotationOffsetY.y))
+							  , XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y)) };
+
+
+	_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
+	_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
+
+	vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
+
+	return vDir;
 }
 
 
@@ -387,9 +393,9 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 	VTXINSTANCE* pVertices = ((VTXINSTANCE*)SubResource.pData);
 
 
-#ifdef _DEBUG
+
 	m_iNumInstance = m_tBufferDesc.iCurNumInstance;
-#endif // _DEBUG
+
 	for (_uint i = 0; i < m_iNumInstance; i++)	// 반복문 시작
 	{
 #pragma region 입자들 시간 시작
@@ -444,19 +450,8 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						// 리사이클 모드면 슬립이 됐을 때 초기화 후 힘 다시주기
 						m_vecParticleInfoDesc[i].Reset_ParticleTimes();
 
-						// 방향 만들기 (나중에 함수로 만들어주자)
-						_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-						vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
-
-						_float3 vRotationOffset = { SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetX.x, m_tBufferDesc.vMinMaxRotationOffsetX.y)
-												  , SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetY.x, m_tBufferDesc.vMinMaxRotationOffsetY.y)
-												  , SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y) };
-
-
-						_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
-						_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
-
-						vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
+						// 방향 만들기
+						_vector		vDir = Make_Dir(i, m_tBufferDesc.eType_Action);
 						m_vecParticleRigidbodyDesc[i].vDir = vDir;
 					
 						XMStoreFloat4(&pVertices[i].vPosition, m_vecParticleInfoDesc[i].vCenterPositions);

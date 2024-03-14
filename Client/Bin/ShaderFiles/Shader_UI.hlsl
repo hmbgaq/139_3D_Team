@@ -160,7 +160,6 @@ PS_OUT PS_MAIN(PS_IN In) // 0
     if (Out.vColor.a < 0.1f)
         discard;
 	
-    
     return Out;
 }
 

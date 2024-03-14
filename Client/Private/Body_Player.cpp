@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Body_Player.h"
 #include "GameInstance.h"
+#include "Character.h"
 
 #include "PhysXCollider.h"
 #include "Preset_PhysXColliderDesc.h"
@@ -99,14 +100,17 @@ HRESULT CBody_Player::Render_Shadow()
 
 void CBody_Player::OnCollisionEnter(CCollider* other)
 {
+	__super::OnCollisionEnter(other);
 }
 
 void CBody_Player::OnCollisionStay(CCollider* other)
 {
+	//__super::OnCollisionStay(other);
 }
 
 void CBody_Player::OnCollisionExit(CCollider* other)
 {
+	__super::OnCollisionExit(other);
 }
 
 

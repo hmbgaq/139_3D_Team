@@ -183,6 +183,11 @@ public:
 	void ReSet();
 	void ReSet_Info(_uint iNum);
 
+
+public:
+	_float4 Make_Dir(_uint iNum, TYPE_ACTION eAction);
+
+
 	/* For.RigidBody */
 public:
 	_float3 Update_Kinetic(_uint iNum, _float fTimeDelta);

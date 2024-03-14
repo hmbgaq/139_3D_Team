@@ -5,7 +5,7 @@
 /* 체력 프레임 */
 class CUI_AimCrosshair final : public CUI
 {
-	enum TEXTUREKIND { AIM_TOP, AIM_BOTTOM, AIM_LEFT, AIM_RIGHT, TEXTURE_END };
+	enum TEXTUREKIND { CROSSHAIR, TEXTURE_END };
 
 private:
 	CUI_AimCrosshair(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

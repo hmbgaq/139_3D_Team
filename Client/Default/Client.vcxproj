@@ -339,6 +339,7 @@
     <ClInclude Include="..\Public\DevConsole.h" />
     <ClInclude Include="..\public\Environment_SpecialObject.h" />
     <ClInclude Include="..\Public\Effect_Manager.h" />
+    <ClInclude Include="..\Public\Event_InteractManager.h" />
     <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\Environment_LightObject.h" />
     <ClInclude Include="..\Public\Infected.h" />
@@ -1029,7 +1030,15 @@
     <ClInclude Include="..\Public\SpringCamera.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\stb_image.h" />
+    <ClInclude Include="..\Public\UI_BackGround.h" />
     <ClInclude Include="..\Public\UI_Distortion.h" />
+    <ClInclude Include="..\Public\UI_EnemyHP_Bar.h" />
+    <ClInclude Include="..\Public\UI_EnemyHP_FrameBar.h" />
+    <ClInclude Include="..\Public\UI_EnemyHP_Shard.h" />
+    <ClInclude Include="..\Public\UI_EnemyHUD_Bar.h" />
+    <ClInclude Include="..\Public\UI_EnemyHUD_Shard.h" />
+    <ClInclude Include="..\Public\UI_EnemyState_Shard.h" />
+    <ClInclude Include="..\Public\UI_Loading_Icon.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
     <ClInclude Include="..\Public\UI_Video.h" />
     <ClInclude Include="..\Public\UI_Weakness.h" />
@@ -1285,6 +1294,7 @@
     <ClCompile Include="..\Private\Environment_LightObject.cpp" />
     <ClCompile Include="..\Private\Environment_SpecialObject.cpp" />
     <ClCompile Include="..\Private\Effect_Manager.cpp" />
+    <ClCompile Include="..\Private\Event_InteractManager.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\Infected.cpp" />
     <ClCompile Include="..\Private\Infected_A.cpp" />
@@ -1799,7 +1809,14 @@
     <ClCompile Include="..\Private\Sniper_Walk_FR.cpp" />
     <ClCompile Include="..\Private\Sniper_Weakspot_Death_01.cpp" />
     <ClCompile Include="..\Private\SpringCamera.cpp" />
+    <ClCompile Include="..\Private\UI_BackGround.cpp" />
     <ClCompile Include="..\Private\UI_Distortion.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHP_Bar.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHP_FrameBar.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHP_Shard.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHUD_Bar.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyHUD_Shard.cpp" />
+    <ClCompile Include="..\Private\UI_Loading_Icon.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
     <ClCompile Include="..\Private\UI_Video.cpp" />
     <ClCompile Include="..\Private\UI_Weakness.cpp" />
@@ -1925,6 +1942,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UI_EnemyState_Shard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />

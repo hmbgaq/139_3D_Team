@@ -34,6 +34,9 @@ protected:
 	virtual HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
+protected:
+	class CEffect_Trail* m_pTrail = { nullptr };	//! 유정 : 트레일 추가
+
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual CGameObject* Pool() PURE;

@@ -94,8 +94,8 @@ HRESULT CUI_TutorialBox::Render()
 		//	m_fPosX = m_pTransformCom->Get_Position().x + (g_iWinsizeX / 2.f);
 		//	m_fPosY = -m_pTransformCom->Get_Position().y + (g_iWinsizeY / 2.f);
 		//}
-
-		if (m_pTextInfo != nullptr)
+		
+		if (m_pTextInfo != nullptr && m_bActive == true)
 		{
 			RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
 			m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);

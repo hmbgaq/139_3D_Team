@@ -78,7 +78,7 @@ using namespace std;
 #include <mferror.h>
 namespace Engine 
 {
-	static float					g_iWinsizeX = 1280;
+	static float					g_iWinsizeX = 1280.f;
 	static float					g_iWinsizeY = 720.f;
 	//static float					g_iWinsizeX = 1600;
 	//static float					g_iWinsizeY = 900.f;

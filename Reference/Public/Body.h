@@ -66,10 +66,18 @@ public:
 		m_pModelCom->Set_StiffnessRate_Upper(fStiffnessRate);
 	}
 
-	
+public:
+	virtual void	OnCollisionEnter(CCollider* other)	override;
+	virtual void	OnCollisionStay(CCollider* other)	override;
+	virtual void	OnCollisionExit(CCollider* other)	override;
+
 
 public:
 	void Set_MouseMove(_float fTimeDelta);
+
+public:
+	CCharacter* Get_Target_Character(CCollider* other);
+
 
 public:
 	CModel* Get_Model() { return m_pModelCom; }

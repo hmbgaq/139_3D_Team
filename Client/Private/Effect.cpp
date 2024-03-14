@@ -2,6 +2,7 @@
 #include "..\Public\Effect.h"
 
 #include "GameInstance.h"
+#include "Effect_Manager.h"
 
 #include "Effect_Particle.h"
 #include "Effect_Rect.h"
@@ -88,6 +89,28 @@ void CEffect::Tick(_float fTimeDelta)
 				m_tEffectDesc.fTimeAcc += fTimeDelta;
 				m_tEffectDesc.fLifeTimeRatio = min(1.0f, m_tEffectDesc.fTimeAcc / m_tEffectDesc.fLifeTime);
 
+
+				/* ======================= 라이프 타임 동작 시작 ======================= */
+
+				// 트레일 업데이트
+				if (nullptr != m_pTrail)	// 트레일이 존재하고
+				{
+					//m_pTrail->Set_Play(m_bTrailPlay);
+					if (m_tEffectDesc.bParentPivot)
+					{
+						// 주인의 매트릭스를 사용할거면 컴바인된 매트릭스 사용
+						m_pTrail->Tick_Trail(fTimeDelta, m_tEffectDesc.matCombined);
+					}
+					else
+					{
+						// 아니면 내 위치
+						m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());
+					}
+				}
+
+
+				/* ======================= 라이프 타임 동작 끝  ======================= */
+
 				if (m_tEffectDesc.fTimeAcc >= m_tEffectDesc.fLifeTime)
 				{
 					// 삭제 대기시간 누적 시작
@@ -134,6 +157,8 @@ void CEffect::Late_Tick(_float fTimeDelta)
 				if (nullptr != Pair.second)
 					Pair.second->Late_Tick(fTimeDelta);
 			}
+
+
 #ifdef _DEBUG
 		}
 #endif // _DEBUG
@@ -272,6 +297,11 @@ void CEffect::Update_PivotMat()
 		if (m_pOwner->Is_Dead())
 		{
 			// 이펙트의 주인이 죽었으면 이펙트 삭제
+			if (nullptr != m_pTrail)
+			{
+				m_pTrail->Set_Dead(TRUE);
+				m_pTrail = nullptr;
+			}			
 			Set_Dead(TRUE);
 			return;
 		}
@@ -283,6 +313,8 @@ void CEffect::Update_PivotMat()
 			XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);
 		}
 	}
+
+
 }
 
 void CEffect::ReSet_Effect()
@@ -349,6 +381,14 @@ void CEffect::End_Effect()
 }
 
 
+HRESULT CEffect::Ready_Trail(_uint iLevelIndex, string strFileName)
+{
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iLevelIndex, LAYER_EFFECT, strFileName, this);
+
+	return S_OK;
+}
+
+
 CGameObject* CEffect::Find_PartObject(const wstring& strPartTag)
 {
 	auto	iter = m_PartObjects.find(strPartTag);
@@ -403,7 +443,7 @@ HRESULT CEffect::Ready_PartObjects(const wstring& strPrototypeTag, const wstring
 	if (nullptr == pPartObject)
 		return E_FAIL;
 
-	dynamic_cast<CEffect_Void*>(pPartObject)->Set_Object_Owner(this);	// 부모 설정
+	pPartObject->Set_Object_Owner(this);	// 부모 설정
 	m_PartObjects.emplace(strPartTag, pPartObject);
 
 	return S_OK;
@@ -450,6 +490,9 @@ void CEffect::Free()
 		Safe_Release(Pair.second);
 
 	m_PartObjects.clear();
+
+	if (nullptr != m_pTrail)
+		Safe_Release(m_pTrail);
 
 }
 

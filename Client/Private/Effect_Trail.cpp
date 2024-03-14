@@ -9,7 +9,7 @@
 CEffect_Trail::CEffect_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = FALSE;
+	m_bIsPoolObject = TRUE;
 }
 
 CEffect_Trail::CEffect_Trail(const CEffect_Trail& rhs)
@@ -225,15 +225,22 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 
 	/* Camera ============================================================================================ */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
-	//_float3 vCamDirectionFloat3 = m_pGameInstance->Get_CamDirection();
-	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat3, sizeof(_float3)));
+	_float3 vCamDirectionFloat3 = m_pGameInstance->Get_CamDirection();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat3, sizeof(_float3)));
 
-	//_float fCamFar = m_pGameInstance->Get_CamFar();
-	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
+
+
+	/* Rim & Bloom ====================================================================================== */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_tVoidDesc.vBloomPower, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_tVoidDesc.vRimColor, sizeof(_float4)));
+
 
 
 	/* ETC ============================================================================================ */
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"));
+	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"));
 
 	return S_OK;
 }
@@ -280,6 +287,12 @@ _bool CEffect_Trail::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float4(Out_Json["Trail"]["vColor_Offset"], m_tVoidDesc.vColor_Offset);
 	CJson_Utility::Write_Float4(Out_Json["Trail"]["vColor_Clip"], m_tVoidDesc.vColor_Clip);
 	CJson_Utility::Write_Float4(Out_Json["Trail"]["vColor_Mul"], m_tVoidDesc.vColor_Mul);
+
+
+	/* Rim & Bloom */
+	CJson_Utility::Write_Float3(Out_Json["Trail"]["vBloomPower"], m_tVoidDesc.vBloomPower);
+	CJson_Utility::Write_Float4(Out_Json["Trail"]["vRimColor"], m_tVoidDesc.vRimColor);
+	Out_Json["Trail"]["fRimPower"] = m_tVoidDesc.fRimPower;
 
 
 	/* State */
@@ -336,6 +349,12 @@ void CEffect_Trail::Load_FromJson(const json& In_Json)
 	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Offset"], m_tVoidDesc.vColor_Offset);
 	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Clip"], m_tVoidDesc.vColor_Clip);
 	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Mul"], m_tVoidDesc.vColor_Mul);
+
+
+	/* Rim & Bloom */ 
+	CJson_Utility::Load_Float3(In_Json["Trail"]["vBloomPower"], m_tVoidDesc.vBloomPower);
+	CJson_Utility::Load_Float4(In_Json["Trail"]["vRimColor"], m_tVoidDesc.vRimColor);
+	m_tVoidDesc.fRimPower = (_float)In_Json["Trail"]["fRimPower"];
 
 
 	/* State */
