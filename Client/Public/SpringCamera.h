@@ -74,6 +74,7 @@ private:
 	_float3 Velocity = {};
 	_float3 ActualPosition = {};//속도벡터와 카메라의 실제 위치를 나타내는 벡터
 	_float3 PreActualPosition = {};//카메라 보간을 위해 이전 프레임 포지션가져옴
+	_float3 NewTargetPosition = {};
 	_float3 CameraTickPos = {};// tick 에서 값이 자꾸 이상하게 초기화되서 이걸로 다시 값을 맞춰줘야함 
 	CTransform* m_ptarget = { nullptr };//카메라가 따라다닐 타깃 오브젝트 //타깃 오브젝트는 위치, 방향벡터 , 타깃의 위쪽을 가리키는 벡터를 지닌다.
 	CPlayer* m_pPlayer = { nullptr };
@@ -85,6 +86,7 @@ private:
 	_bool m_bFix = true;//마우스 가운데 모으기 
 	_bool m_bPlayerCheck = false; // 카메라 타겟이 플레이어 인지 아닌지  확인 하기 위 한 용도  
 	_bool m_bChangeOffset = false;
+
 	//shake camera
 	_bool m_bShake = false;// 카메라를 흔들 것인지 아닌것인지 
 	_float m_fShakeTime = 0.2f;
@@ -94,6 +96,7 @@ private:
 	_float3 m_CameraOffset = {};
 	_float3 m_TargetPosition = {};
 	_float CameraMoveSpeed = 1.f;//카메라 보간용 이동속도
+	_float CameraMoveSpeedtest = 0.1f;//카메라 보간용 이동속도
 private:
 	_float				m_fMouseSensor = { 0.0f };
 public:
