@@ -61,7 +61,20 @@ void CBullet_Winchester::Tick(_float fTimeDelta)
 	Search_Target(LAYER_BOSS, fDistance);
 	
 	Look_At_Target();
-	m_pTransformCom->Go_Straight(fTimeDelta);
+	
+	if (m_pTarget)
+	{
+		//_float fDiff = Calc_Distance(m_pTarget->Get_Position());
+		//m_pTransformCom->Set_Speed(fDiff);
+		Set_Position(m_pTarget->Get_WeaknessPoint());
+	}
+	else 
+	{
+		m_pTransformCom->Go_Straight(fTimeDelta);
+	}
+	
+
+
 
 	
 }
@@ -99,7 +112,7 @@ void CBullet_Winchester::OnCollisionEnter(CCollider* other)
 		m_fForce = 0.f;
 
 		_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
-		_vector vDir = pTarget_Character->Calc_Look_Dir(vPlayerPos);
+		_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
 		//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
 		pTarget_Character->Set_Hitted(m_iDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
