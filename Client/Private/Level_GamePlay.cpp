@@ -171,7 +171,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag)
 
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
-	pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
+	//pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
+	pPlayer->Set_Position(_float3(153.6f, 0.f, 150.55f));
+	//
 	
 	CNavigation* pNavigation = pPlayer->Get_Navigation();
 
@@ -219,8 +221,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 
 	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
 	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_InitPosition(_float3(253.5f, 0.f, 11.f));
-	//pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
+	//pMonster->Set_InitPosition(_float3(253.5f, 0.f, 11.f));
+	pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
+
+	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_InitPosition(_float3(153.6f, 14.65f, 217.55f));
 
 	return S_OK;
 }

@@ -7,7 +7,7 @@ CBullet_Bandit_Sniper::CBullet_Bandit_Sniper(ID3D11Device* pDevice, ID3D11Device
 	: CProjectile(pDevice, pContext, strPrototypeTag)
 {
 	/* 이게 있어야 pool에 등록한것을 사용할 수 있음. */
-	//m_bIsPoolObject = true;
+	m_bIsPoolObject = true;
 }
 
 CBullet_Bandit_Sniper::CBullet_Bandit_Sniper(const CBullet_Bandit_Sniper& rhs)
@@ -26,10 +26,10 @@ HRESULT CBullet_Bandit_Sniper::Initialize(void* pArg)
 
 	GameObjectDesc.fSpeedPerSec = 60.f;
 	GameObjectDesc.fRotationPerSec = 0.f;
-	FAILED_CHECK(__super::Initialize(&GameObjectDesc)); /* 컴포넌트 호출 */
+	FAILED_CHECK(__super::Initialize(&GameObjectDesc)); /* 컴포넌트 호출 */	
 
 	m_iDamage = 0;
-	m_fLifeTime = 3.f;
+	m_fLifeTime = 1.5f;	
 
 	return S_OK;
 }
@@ -41,7 +41,7 @@ HRESULT CBullet_Bandit_Sniper::Ready_Components()
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
 	{
-		//BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
+		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
 		BoundingDesc.fRadius = 1.f;
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
 
@@ -58,9 +58,10 @@ void CBullet_Bandit_Sniper::Priority_Tick(_float fTimeDelta)
 
 void CBullet_Bandit_Sniper::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
+	__super::Tick(fTimeDelta);	
 	/* Super에서 m_fLifeTime 을 fTimeDelta 로 감소시키면서 0 이하로 내려가면 알아서 풀에 반납하도록함 + Collider Update */
 	/* -> 이동 코드 자체는 구현해야함 */
+	//m_pCollider->Update(m_pTransformCom->Get_WorldMatrix());
 
 	m_pTransformCom->Go_Straight(fTimeDelta);
 }
@@ -130,7 +131,7 @@ void CBullet_Bandit_Sniper::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pCollider);
+	//Safe_Release(m_pCollider);
 }
 
 #pragma endregion

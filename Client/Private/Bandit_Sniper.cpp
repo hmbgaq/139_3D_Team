@@ -48,9 +48,7 @@ HRESULT CBandit_Sniper::Initialize(void* pArg)
 
 	FAILED_CHECK(Ready_Option());
 	
-	//m_pTransformCom->Look_At_OnLand(m_pGameInstance->Get_Player()->Get_Position());
-	//m_pTransformCom->Set_Pos(250.66, 0, 2.38);
-	//m_pNavigationCom->Set_CurrentIndex(12);
+	m_pTransformCom->Set_Look(0.f, 0.f, -1.f);
 
 	return S_OK;
 }
@@ -83,14 +81,12 @@ HRESULT CBandit_Sniper::Render()
 	return S_OK;
 }
 
-void CBandit_Sniper::Sniping_Target(_float3 TargetPos)
+void CBandit_Sniper::Sniping_Target(_float4 TargetPos)
 {
 	CWeapon_Bandit_Sniper* pWeapon = dynamic_cast<CWeapon_Bandit_Sniper*>(m_pWeapon);
+	NULL_CHECK_RETURN(pWeapon, );
 
-	_float4 vTargetDir = { 0.f, 0.f, 1.f , 1.f};
-	_float3 vTarget_Pos = {253.5f, 0.f, 11.f};
-
-	pWeapon->Sniping(vTargetDir, vTarget_Pos);
+	pWeapon->Sniping(TargetPos, m_pTransformCom->Get_Pos()); // (_float4 vTargetPos, _float3 StartfPos)
 }
 
 HRESULT CBandit_Sniper::Ready_Components()

@@ -30,7 +30,7 @@ public:
 	void Set_BulletCnt(_int iCnt) { m_iBulletCnt = iCnt; }
 	void Add_BulletCnt() { m_iBulletCnt += 1; }
 
-	void Sniping_Target(_float3 TargetPos);
+	void Sniping_Target(_float4 TargetPos);
 
 private:
 	HRESULT Ready_Components();

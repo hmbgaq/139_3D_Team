@@ -1,10 +1,6 @@
 #pragma once
 #include "Projectile.h"
 
-BEGIN(Engine)
-class CCollider;
-END
-
 BEGIN(Client)
 
 class CBullet_Bandit_Sniper final : public CProjectile

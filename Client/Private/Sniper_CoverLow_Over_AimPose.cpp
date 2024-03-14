@@ -18,13 +18,27 @@ CState<CBandit_Sniper>* CSniper_CoverLow_Over_AimPose::Update(CBandit_Sniper* pA
 	fTimeAcc += fTimeDelta;
 	pActor->Look_At_Target();
 
-	if (fTimeAcc > 3.5f)
+	if (fTimeAcc > 3.f)
 	{
-		fTimeAcc = 0.f;
-		pActor->Sniping_Target(pActor->Get_Target()->Get_Transform()->Get_Pos());
+		/* 0.5초 전 위치로 공격할거임 */
+		if (!bReady)
+		{
+			vTargetPos = pActor->Get_Target()->Get_Transform()->Get_Position_Float4();
+			bReady = true;
+		}
 
-		return new CSniper_CoverLow_Over_Stop();
+		if (fTimeAcc > 3.5f)
+		{
+			fTimeAcc = 0.f;
+			pActor->Sniping_Target(vTargetPos);
+
+			return new CSniper_CoverLow_Over_Stop();
+		}
 	}
+
+	return nullptr;
+}
+
 	//if (fTimeAcc > 3.f)
 	//{
 	//	/* 1초 전 위치로 공격할거임 */
@@ -71,8 +85,7 @@ CState<CBandit_Sniper>* CSniper_CoverLow_Over_AimPose::Update(CBandit_Sniper* pA
 	//	}
 	//}
 
-	return nullptr;
-}
+
 
 void CSniper_CoverLow_Over_AimPose::Release(CBandit_Sniper* pActor)
 {
