@@ -436,9 +436,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts">
       <UniqueIdentifier>{246da84a-5806-46ee-bed6-a9e2ce8d689a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts\Body">
-      <UniqueIdentifier>{27313ed7-8409-4d64-ac01-84c9aa03033b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State">
       <UniqueIdentifier>{ac01efc5-ee63-4feb-9c40-765bc6d188d5}</UniqueIdentifier>
     </Filter>
@@ -3000,6 +2997,9 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\20. InstanceMonster\0. Screamer">
       <UniqueIdentifier>{6ab1225a-12f3-4ff6-9880-7a7c7881548c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts\Body">
+      <UniqueIdentifier>{27313ed7-8409-4d64-ac01-84c9aa03033b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
