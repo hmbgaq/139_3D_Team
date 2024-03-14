@@ -23,6 +23,8 @@ HRESULT CBody_Infected_A::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	iDiscardMeshNumber = 0;
+
 	return S_OK;
 }
 

@@ -28,6 +28,9 @@ protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
+protected:
+	_int iDiscardMeshNumber;
+
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual CGameObject* Pool() PURE;

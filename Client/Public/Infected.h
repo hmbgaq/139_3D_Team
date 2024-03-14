@@ -39,6 +39,8 @@ public:
 		INFECTED_TYPE Get_Type() { return eType; }
 	}INFECTED_DESC;
 
+	enum class RENDER_STATE {ORIGIN, ATTACK, HITTED, NAKED, RENDER_STATE_END};
+
 protected:
 	CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CInfected(const CInfected& rhs);
@@ -54,6 +56,7 @@ public:
 
 public:
 	INFECTED_DESC Get_Info() { return m_eInfo; }
+	virtual HRESULT Update_RenderState(_int _iHP) PURE;
 
 protected:
 	HRESULT Ready_Components();
@@ -67,7 +70,8 @@ protected:
 
 protected:
 	INFECTED_DESC m_eInfo = {};
-
+	RENDER_STATE  m_eRender_State = RENDER_STATE::RENDER_STATE_END;
+	
 private:
 	CActor<CInfected>* m_pActor = { nullptr };
 

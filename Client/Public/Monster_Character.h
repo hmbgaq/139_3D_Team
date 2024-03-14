@@ -23,6 +23,7 @@ public:
 
 public:
 	void Search_Target();
+	_int iMeshNumber = 0;
 
 protected:
 	HRESULT Ready_Components() PURE;

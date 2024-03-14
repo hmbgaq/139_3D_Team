@@ -105,7 +105,7 @@ void CUI_Text::RenderTextWithLineBreak(const string& text, size_t MaxLineLength)
 		}
 
 		// 현재 줄 출력
-		std::cout << text.substr(startPos, lineLength) << std::endl;
+		//std::cout << text.substr(startPos, lineLength) << std::endl;
 
 		// 다음 줄 시작 위치 설정
 		startPos += lineLength;

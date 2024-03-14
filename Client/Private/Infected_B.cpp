@@ -69,6 +69,11 @@ HRESULT CInfected_B::Render()
 	return S_OK;
 }
 
+HRESULT CInfected_B::Update_RenderState(_int _iHP)
+{
+	return E_NOTIMPL;
+}
+
 #pragma region Base Setting
 
 HRESULT CInfected_B::Ready_Components()

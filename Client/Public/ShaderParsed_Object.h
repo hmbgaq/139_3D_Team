@@ -18,8 +18,16 @@ class CShaderParsed_Object final : public CGameObject
 public:
 	typedef struct tagDummyDesc
 	{
-		string strModelProtoTag = {};
-		string strShaderProtoTag = {};
+		string	strModelProtoTag = {};
+		string	strShaderProtoTag = {};
+
+		_int	iMeshNumber; 
+		_int	iTotalMeshNumber; 
+		_int	iRenderPass;
+
+		_float	m_fRimPower = {};
+		_float4	m_vRimColor = { 1.0f, 1.f, 1.f, 0.3f };
+		_float3	m_vBloomPower = _float3(0.1f, 0.1f, 0.1f); 
 	}CREATE_DESC;
 private:
 	CShaderParsed_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

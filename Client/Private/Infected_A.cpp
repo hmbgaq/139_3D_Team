@@ -49,6 +49,7 @@ void CInfected_A::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	Update_RenderState()
 	m_pTarget = m_pGameInstance->Get_Player();
 
 	if (m_pActor)
@@ -67,6 +68,18 @@ HRESULT CInfected_A::Render()
 	FAILED_CHECK(__super::Render());
 
 	return S_OK;
+}
+
+HRESULT CInfected_A::Render_Shadow()
+{
+	FAILED_CHECK(__super::Render_Shadow());
+
+	return S_OK;
+}
+
+HRESULT CInfected_A::Update_RenderState(_int _iHP)
+{
+	return E_NOTIMPL;
 }
 
 #pragma region Base Setting
