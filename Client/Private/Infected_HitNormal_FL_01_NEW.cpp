@@ -1,4 +1,4 @@
-#include "..\Public\Infected_HitNormal_FL_01_NEW.h"
+#include "Infected_HitNormal_FL_01_NEW.h"
 
 void CInfected_HitNormal_FL_01_NEW::Initialize(CInfected* pActor)
 {

@@ -22,6 +22,9 @@ public:
 
 	void				Set_LightDesc(LIGHT_DESC newDesc) {	m_LightDesc = newDesc; }
 
+public:
+	void Decrease_GlobalIndex();
+
 private:
 	class CGameInstance*	m_pGameInstance;
 	LIGHT_DESC				m_LightDesc;

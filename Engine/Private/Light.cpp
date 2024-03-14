@@ -58,6 +58,11 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 	return pVIBuffer->Render();	
 }
 
+void CLight::Decrease_GlobalIndex()
+{
+	--g_iLightIndex;
+}
+
 CLight * CLight::Create(const LIGHT_DESC & LightDesc)
 {
 	CLight*		pInstance = new CLight();

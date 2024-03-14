@@ -300,7 +300,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 		if (false == m_vecCreateInteractObject.empty())
 		{
-			_int iCreateInteractObjectSize = m_vecCreateInteractObject.size();
+			_int iCreateInteractObjectSize = (_int)m_vecCreateInteractObject.size();
 
 			for (_int i = 0; i < iCreateInteractObjectSize; ++i)
 			{
@@ -1224,16 +1224,16 @@ void CWindow_MapTool::Interact_CreateTab()
 
 		if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
 		{
-			iInteractModelTagSize = m_vecInteractModelTag.size();
+			iInteractModelTagSize = (_int)m_vecInteractModelTag.size();
 			vecModelTag = m_vecInteractModelTag;
 		}
 		else if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_ANIM)
 		{
-			iInteractModelTagSize = m_vecAnimInteractModelTag.size();
+			iInteractModelTagSize = (_int)m_vecAnimInteractModelTag.size();
 			vecModelTag = m_vecAnimInteractModelTag;
 		}
 
-		for (_uint i = 0; i < iInteractModelTagSize; ++i)
+		for (_uint i = 0; i < (_uint)iInteractModelTagSize; ++i)
 		{
 			const _bool isSelected = (m_iSelectModelTag == i);
 
@@ -1293,7 +1293,7 @@ void CWindow_MapTool::Interact_CreateTab()
 void CWindow_MapTool::Interact_DeleteTab()
 {
 	
-	_uint iCreateInteractSize = m_vecCreateInteractObject.size();
+	_uint iCreateInteractSize = (_uint)m_vecCreateInteractObject.size();
 
 	if(iCreateInteractSize == 0)
 		return;
@@ -1460,7 +1460,7 @@ void CWindow_MapTool::Navigation_CreateTab()
 
 	ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
 
-	_int iPickedSize = m_vecPickingListBox.size();
+	_int iPickedSize = (_int)m_vecPickingListBox.size();
 
 	if (false == m_vecPickedPoints.empty())
 	{
@@ -1510,7 +1510,7 @@ void CWindow_MapTool::Navigation_CreateTab()
 				if (m_vecPickingListBox.size() == 0)
 					m_iNaviListBoxIndex = -1;
 				else
-					m_iNaviListBoxIndex = m_vecPickingListBox.size() - 1;
+					m_iNaviListBoxIndex = (_int)m_vecPickingListBox.size() - 1;
 
 			}
 		}
@@ -1620,7 +1620,7 @@ void CWindow_MapTool::Navigation_SelectTab()
 	}
 
 
-	_int iCellSize = m_vecCellIndexs.size();
+	_int iCellSize = (_int)m_vecCellIndexs.size();
 
 	if (nullptr != m_pNavigation && false == m_vecCells.empty())
 	{
@@ -1762,7 +1762,7 @@ void CWindow_MapTool::Reset_NaviPicking()
 void CWindow_MapTool::Find_NearPointPos(_float3* fPickedPos)
 {
 	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
-	_int iCellSize = vecCells.size();
+	_int iCellSize = (_int)vecCells.size();
 	_float fMinDistance = FLT_MAX;
 
 	_float3 vPickedPos = *fPickedPos;

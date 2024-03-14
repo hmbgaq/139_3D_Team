@@ -117,7 +117,7 @@ void CWindow_ShaderTool::Show_N_Create_ObjectList()
 	ImGui::SeparatorText(" Select Object ");
 
 	/* 오브젝트 리스트 보이기 */
-	_int iModelCnt = m_vObjectModelTag.size();
+	_int iModelCnt = (_int)m_vObjectModelTag.size();
 	static _int item_current_idx = 0;
 	if (ImGui::BeginListBox(" "))
 	{
