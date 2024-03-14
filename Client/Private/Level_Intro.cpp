@@ -207,8 +207,6 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected")));
 // 	for (int i = 0; i < 100; ++i)
 // 	{
-	
-
 	/*	}*/
 
 

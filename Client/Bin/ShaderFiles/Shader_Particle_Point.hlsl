@@ -261,7 +261,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In)
 		|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
 			discard;
 
-		Out.vColor = vDiffuseColor;
+        Out.vColor = vDiffuseColor * g_vColor_Mul;
 		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
 		// 여기 두줄이 원래 림라이트인데, 노말벡터 없어서 림이 안들어감.. 그 해골 모델이나 이런애들처럼 노말있는애들만 가능할듯..?
         //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
@@ -310,11 +310,12 @@ PS_OUT MAIN_PARTICLE_SOLID(PS_IN In)
 
         vDiffuseColor.rgb *= In.vColor.rgb;
 
+		
         if (vDiffuseColor.a < g_fAlpha_Discard // 알파 잘라내기
 		|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
             discard;
 
-        Out.vColor = vDiffuseColor;
+        Out.vColor = vDiffuseColor * g_vColor_Mul;
 		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
 		// 여기 두줄이 원래 림라이트인데, 노말벡터 없어서 림이 안들어감.. 그 해골 모델이나 이런애들처럼 노말있는애들만 가능할듯..?
         //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
@@ -324,7 +325,8 @@ PS_OUT MAIN_PARTICLE_SOLID(PS_IN In)
         //Out.vRimBloom = Calculation_Brightness(Out.vColor);
 		// Case2. 색상을 아에 넣어버린다 : 이경우 g_RimBloom_Color 라던지 전역변수 받아서 그걸로 해도됨
         //Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
-	
+
+        Out.vRimBloom = float4(g_vBloomPower, 1.0f);
     }
     else
     {
@@ -358,6 +360,38 @@ PS_OUT MAIN_PARTICLE_SOLID(PS_IN In)
 
 
 
+PS_OUT PS_MAIN_SPRITE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
+    float4 vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, clippedTexCoord);
+
+    vDiffuseColor.rgb *= In.vColor.rgb;
+    vDiffuseColor.a = In.vColor.a;
+	
+
+    if (vDiffuseColor.a < g_fAlpha_Discard // 알파 잘라내기
+		|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
+        discard;
+
+    Out.vColor = vDiffuseColor * g_vColor_Mul;
+	/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
+	// 여기 두줄이 원래 림라이트인데, 노말벡터 없어서 림이 안들어감.. 그 해골 모델이나 이런애들처럼 노말있는애들만 가능할듯..?
+    //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
+    //Out.vDiffuse += vRimColor;
+	
+	// Case1. 기존의 Diffuse로 블러를 먹여서 효과를 준다. 
+    //Out.vRimBloom = Calculation_Brightness(Out.vColor);
+	// Case2. 색상을 아에 넣어버린다 : 이경우 g_RimBloom_Color 라던지 전역변수 받아서 그걸로 해도됨
+    //Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+
+    return Out;
+}
+
+
+
 
 technique11 DefaultTechnique
 {
@@ -388,6 +422,20 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 MAIN_PARTICLE_SOLID();
+    }
+
+    pass Particle_Sprite // 2
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* 렌더스테이츠 */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SPRITE();
     }
 
 }

@@ -2965,6 +2965,9 @@
     <Filter Include="02.GameObjects\01. Interact\0. Chain">
       <UniqueIdentifier>{4640b070-669a-48d8-9c94-8bed528d2d18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Event\Interact">
+      <UniqueIdentifier>{1cc45268-c32f-4055-ae97-4cbc14a521b0}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\01. Interact\1. Door">
       <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
     </Filter>
@@ -6117,6 +6120,9 @@
     <ClInclude Include="..\Public\UI_EnemyState_Shard.h">
       <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\State</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Event_InteractManager.h">
+      <Filter>03.Event\Interact</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8646,6 +8652,9 @@
     </ClCompile>
     <ClCompile Include="UI_EnemyState_Shard.cpp">
       <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Event_InteractManager.cpp">
+      <Filter>03.Event\Interact</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

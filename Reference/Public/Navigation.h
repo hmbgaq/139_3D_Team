@@ -17,8 +17,8 @@ private:
 	virtual ~CNavigation() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype(const wstring& strNavigationFilePath);
-	virtual HRESULT Initialize(void* pArg) override;	
+	virtual HRESULT Initialize_Prototype(const wstring & strNavigationFilePath);
+	virtual HRESULT Initialize(void* pArg) override;
 
 #ifdef _DEBUG
 	virtual HRESULT Render();
@@ -27,7 +27,7 @@ public:
 public:
 	void	Update(_fmatrix WorldMatrix);
 	_bool	isMove(_fvector vPosition);
-	_bool	isMove_ForSliding(_fvector vPosition, _fvector vLook, _Inout_ float4* vOutSlidingDir);
+	_bool	isMove_ForSliding(_fvector vPosition, _fvector vLook, _Inout_ float4 * vOutSlidingDir);
 	void	SaveData(wstring strSavePath);
 	void	LoadData(wstring strLoadPath);
 
@@ -35,8 +35,8 @@ public:
 	vector<class CCell*>	Get_Cells() { return m_Cells; }
 	class CCell*			Get_CurrentCell() { return m_Cells[m_iCurrentIndex]; }
 	_int					Get_CellSize() { return (_int)m_Cells.size(); };
-	_int					Get_CurrentCellIndex(const float3& vPosition);
 	void					Set_CurrentIndex(_int iIndex) { m_iCurrentIndex = iIndex; }
+	_int					Get_CurrentCellIndex() { return m_iCurrentIndex;}
 
 	void					AddCell(class CCell* pCell);
 	HRESULT					Delete_Cell(const _uint iIndex);
@@ -45,7 +45,7 @@ public:
 public:
 	void					InRangeCellChange(class CCell* pCell, _int ePoint, _float3 vSearchPos);
 	_int					Get_SelectRangeCellIndex(class CGameObject* pTargetObject);
-	_float					Compute_Height(_float3 vPosition, _Out_ _bool* pGround);
+	_float					Compute_Height(_float3 vPosition, _Out_ _bool * pGround);
 
 
 private:
@@ -53,16 +53,19 @@ private:
 	static _float4x4				m_WorldMatrix;
 	_int							m_iCurrentIndex = { -1 };
 
+	_int							m_iCellIndex = { 0 };
+	_int							m_iSelcetPointsSize = { 0 };
+
 #ifdef _DEBUG
 private:
-	class CShader*					m_pShader = { nullptr };
+	class CShader* m_pShader = { nullptr };
 #endif
 
 private:
 	HRESULT Make_Neighbors();
 
 public:
-	static CNavigation* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strNavigationFilePath);
+	static CNavigation* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strNavigationFilePath);
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };

@@ -21,6 +21,12 @@
 #include "Player_DeathNormal_F_02.h"
 
 
+#include "Player_InteractionJumpDown100.h"
+#include "Player_InteractionJumpDown200.h"
+#include "Player_InteractionJumpDown300.h"
+#include "Player_InteractionVault100.h"
+#include "Player_InteractionVault200.h"
+
 #include "PhysXCharacterController.h"
 #include "PhysXCollider.h"
 #include "Preset_PhysXColliderDesc.h"
@@ -98,7 +104,7 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pActor && m_iCurrnetLevel != ECast(LEVEL_TOOL))
+	if (m_pActor/* && m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL)*/)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
@@ -302,6 +308,36 @@ void CPlayer::Activate_ShootingReaction()
 {
 	m_pBody->Activate_ShootingReaction();
 }
+
+
+#pragma region 상호작용
+
+void CPlayer::SetState_InteractJumpDown100()
+{
+	m_pActor->Set_State(new CPlayer_InteractionJumpDown100());
+}
+
+void CPlayer::SetState_InteractJumpDown200()
+{
+	m_pActor->Set_State(new CPlayer_InteractionJumpDown200());
+}
+
+void CPlayer::SetState_InteractJumpDown300()
+{
+	m_pActor->Set_State(new CPlayer_InteractionJumpDown300());
+}
+
+void CPlayer::SetState_InteractVault100()
+{
+	m_pActor->Set_State(new CPlayer_InteractionVault100());
+}
+
+void CPlayer::SetState_InteractVault200()
+{
+	m_pActor->Set_State(new CPlayer_InteractionVault200());
+}
+
+#pragma endregion 상호작용
 
 void CPlayer::Search_Target(_float fMaxDistance)
 {

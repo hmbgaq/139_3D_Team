@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 
 #include "Environment_Object.h"
+#include "Environment_Interact.h"
 #include "Environment_Instance.h"
 #include "Environment_LightObject.h"
 
@@ -28,6 +29,7 @@
 #include "Navigation.h"
 #include "Cell.h"
 #include "../../Reference/Public/Delaunator/delaunator.hpp"
+#include "DebugDraw.h"
 
 
 static ImGuizmo::OPERATION InstanceCurrentGizmoOperation;
@@ -76,6 +78,20 @@ HRESULT CWindow_MapTool::Initialize()
 
 	if(m_pNavigation == nullptr)
 		return E_FAIL;
+
+	/* Navi */
+	m_pBatch = new PrimitiveBatch<VertexPositionColor>(m_pContext);
+	m_pEffect = new BasicEffect(m_pDevice);
+	m_pEffect->SetVertexColorEnabled(true);
+
+	const void* pShaderByteCode = { nullptr };
+	size_t   iShaderCodeLength = { 0 };
+
+	m_pEffect->GetVertexShaderBytecode(&pShaderByteCode, &iShaderCodeLength);
+
+	FAILED_CHECK(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements,
+		VertexPositionColor::InputElementCount, pShaderByteCode, iShaderCodeLength, &m_pInputLayOut));
+
 	
 	return S_OK;
 }
@@ -204,8 +220,18 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 		string strBasic = "Basic";
 		string strInstance = "Instance";
+		string strInteract = "Interact";
 
 		for (auto& tag : m_vecCreateObjectTag)
+		{
+			// 문자열에서 '@' 문자 이후의 부분을 지움
+			size_t atIndex = tag.find('@');
+			if (atIndex != std::string::npos) {
+				tag.erase(atIndex); // '@' 이후의 문자열을 모두 제거
+			}
+		}
+
+		for (auto& tag : m_vecCreateInteractObjectTag)
 		{
 			// 문자열에서 '@' 문자 이후의 부분을 지움
 			size_t atIndex = tag.find('@');
@@ -271,6 +297,36 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 		}
 
 		json InteractJson = {};
+
+		if (false == m_vecCreateInteractObject.empty())
+		{
+			_int iCreateInteractObjectSize = m_vecCreateInteractObject.size();
+
+			for (_int i = 0; i < iCreateInteractObjectSize; ++i)
+			{
+				CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
+
+				Desc = *m_vecCreateInteractObject[i]->Get_EnvironmentDesc();
+				
+				string strModelTag;
+				m_pGameInstance->WString_To_String(m_vecCreateInteractObject[i]->Get_ModelTag(), strModelTag);
+
+				InteractJson[i].emplace("Type", strInteract);
+				InteractJson[i].emplace("Index", i);
+				InteractJson[i].emplace("ObjectTag", m_vecCreateInteractObjectTag[i]);
+				InteractJson[i].emplace("LayerTag", L"Layer_BackGround");
+				InteractJson[i].emplace("ModelTag", strModelTag);
+				InteractJson[i].emplace("AnimType", Desc.bAnimModel);
+				InteractJson[i].emplace("ShaderPassIndex", Desc.iShaderPassIndex);
+				InteractJson[i].emplace("PlayAnimationIndex", Desc.iPlayAnimationIndex);
+				InteractJson[i].emplace("InteractState", Desc.eInteractState);
+				InteractJson[i].emplace("InteractType", Desc.eInteractType);
+				CJson_Utility::Write_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
+				CJson_Utility::Write_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+				m_vecCreateInteractObject[i]->Write_Json(InteractJson[i]);
+			}
+
+		}
 
 
 		json InstanceJson = {};
@@ -360,7 +416,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 		//	}
 		//}
 
-
+		
 
 
 		SaveJson.emplace("Basic_Json", BasicJson);
@@ -467,8 +523,44 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 			string pushObjectTag = string(InteractJson[i]["ObjectTag"]) + IndexTag;
 
-			//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
-			//! L"Layer_Event"
+			m_vecCreateInteractObjectTag.push_back(pushObjectTag);
+
+			CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
+
+			Desc.bAnimModel = InteractJson[i]["AnimType"];
+
+			wstring strLoadModelTag;
+			string strJsonModelTag = InteractJson[i]["ModelTag"];
+			m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+			Desc.strModelTag = strLoadModelTag;
+			Desc.bPreview = false;
+			Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
+			Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
+			Desc.eInteractState = InteractJson[i]["InteractState"];
+			Desc.eInteractType = InteractJson[i]["InteractType"];
+			CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
+			CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+				
+			const json& TransformJson = InteractJson[i]["Component"]["Transform"];
+			_float4x4 WorldMatrix;
+
+			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+			{
+				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+				{
+					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+				}
+			}
+
+			XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+			Desc.WorldMatrix = WorldMatrix;
+
+			CEnvironment_Interact* pObject = { nullptr };
+
+			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+
+			m_vecCreateInteractObject.push_back(pObject);
+			m_vecCreateInteractIndex++;
 		}
 
 		json InstanceJson = LoadJson["Instance_Json"];
@@ -575,9 +667,12 @@ void CWindow_MapTool::Reset_Function()
 	if(m_pPreviewCharacter != nullptr)
 		m_pPreviewCharacter->Set_Dead(true);
 
+	if(m_pPreviewInteract != nullptr)
+		m_pPreviewInteract->Set_Dead(true);
 
 	m_pPreviewObject = nullptr;
 	m_pPreviewCharacter = nullptr;
+	m_pPreviewInteract = nullptr;
 	m_pPickingInstanceInfo = nullptr;
 
 		
@@ -593,6 +688,19 @@ void CWindow_MapTool::Reset_Function()
 	m_iCreateObjectIndex = 0;
 	m_vecCreateObject.clear();
 	m_vecCreateObjectTag.clear();
+
+
+	_int iCreateInteractSize = (_int)m_vecCreateInteractObject.size();
+
+	for (_int i = 0; i < iCreateInteractSize; ++i)
+	{
+		m_vecCreateInteractObject[i]->Set_Dead(true);
+	}
+
+	m_iSelectObjectIndex = 0;
+	m_vecCreateInteractIndex = 0;
+	m_vecCreateInteractObject.clear();
+	m_vecCreateInteractObjectTag.clear();
 
 
 	_int iCreateInstanceSize = (_int)m_vecCreateInstance.size();
@@ -738,6 +846,7 @@ HRESULT CWindow_MapTool::Ready_ModelTags()
 			case MAP_KEY_TYPE::MODEL_INSTANCE:
 			{
 				m_vecEnviroModelTag.push_back(strNonAnimTag);
+				m_vecSingleModelTag.push_back(strNonAnimTag);
 				break;
 			}
 
@@ -964,8 +1073,10 @@ void CWindow_MapTool::NavigationMode_Function()
 		}
 
 		ImGui::EndTabBar();
-		m_pNavigation->Update(XMMatrixIdentity());
+		//m_pNavigation->Update(XMMatrixIdentity());
 		m_pGameInstance->Add_DebugRender(m_pNavigation);
+
+		
 		
 
 		ShowDialog();
@@ -1014,21 +1125,218 @@ void CWindow_MapTool::InteractTab_Function()
 	{
 		case Client::CWindow_MapTool::MODE_TYPE::MODE_CREATE:
 		{
-			Create_Tab(CWindow_MapTool::TAP_TYPE::TAB_INTERACT);
+			Interact_CreateTab();
 			break;
 		}
 
 		case Client::CWindow_MapTool::MODE_TYPE::MODE_SELECT:
 		{
-			Basic_SelectFunction();
+			Interact_SelectFunction();
 			break;
 		}
 
 		case Client::CWindow_MapTool::MODE_TYPE::MODE_DELETE:
 		{
-			Delete_Tab(CWindow_MapTool::TAP_TYPE::TAB_INTERACT);
+			Interact_DeleteTab();
 			break;
 		}
+	}
+}
+
+void CWindow_MapTool::Interact_CreateTab()
+{
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+	Select_PickingType();
+
+	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
+
+	ImGui::InputInt(u8"셰이더패스", &m_iShaderPassIndex);
+
+	ImGui::SeparatorText(u8"상호작용 셋팅");
+	{
+		const char* InteractTypes[] = { "INTERACT_JUMP100", "INTERACT_JUMP200", "INTERACT_JUMP300", "INTERACT_VAULT100", "INTERACT_VAULT200" };
+		const char* InteractPreviewType = InteractTypes[m_eInteractType];
+
+		static ImGuiComboFlags ComboFlags = ImGuiComboFlags_WidthFitPreview | ImGuiComboFlags_HeightSmall;
+
+		if (ImGui::BeginCombo(u8"상호작용 타입", InteractPreviewType, ComboFlags))
+		{
+			for (int i = 0; i < IM_ARRAYSIZE(InteractTypes); ++i)
+			{
+				const bool is_Selected = (m_eInteractType == i);
+
+				if (ImGui::Selectable(InteractTypes[i], is_Selected))
+				{
+					m_eInteractType = i;
+				}
+
+				if(true == is_Selected)
+					ImGui::SetItemDefaultFocus();
+			}
+
+			ImGui::EndCombo();
+		}
+
+		ImGui::SameLine();
+
+		CEnvironment_Interact::INTERACT_STATE eInteractState = CEnvironment_Interact::INTERACT_STATE::INTERACTSTATE_END;
+		
+		//static _int iInstanceState = 0;
+		const char* InstanceState[2] = { u8"무한 상호작용", u8"한번만 수행" };
+
+		for (_uint i = 0; i < IM_ARRAYSIZE(InstanceState); ++i)
+		{
+			if (i > 0) { ImGui::SameLine(); }
+
+			if (ImGui::RadioButton(InstanceState[i], &m_eInteractState, i))
+			{
+				m_eInteractState = i;
+				//eInteractState = CEnvironment_Interact::INTERACT_STATE(iInstanceState);
+			}
+		}
+
+		ImGui::NewLine();
+
+		if (ImGui::InputFloat3(u8"콜라이더 사이즈", m_fColliderSizeArray))
+		{
+
+		}
+
+		if (ImGui::InputFloat3(u8"콜라이더 센터", m_fColliderCenterArray))
+		{
+
+		}
+			
+		if (ImGui::InputInt(u8"애니메이션 인덱스", &m_iInteractPlayAnimIndex))
+		{
+
+		}
+
+
+	}
+	ImGui::Separator();
+
+	if (ImGui::BeginListBox(u8"상호작용 모델태그", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	{
+		_int iInteractModelTagSize = 0;
+		vector<string> vecModelTag;
+
+		if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
+		{
+			iInteractModelTagSize = m_vecInteractModelTag.size();
+			vecModelTag = m_vecInteractModelTag;
+		}
+		else if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_ANIM)
+		{
+			iInteractModelTagSize = m_vecAnimInteractModelTag.size();
+			vecModelTag = m_vecAnimInteractModelTag;
+		}
+
+		for (_uint i = 0; i < iInteractModelTagSize; ++i)
+		{
+			const _bool isSelected = (m_iSelectModelTag == i);
+
+			if (ImGui::Selectable(vecModelTag[i].c_str(), isSelected))
+			{
+				m_iSelectModelTag = i;
+
+				m_bChange = true;
+				if (isSelected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	ImGui::EndChild();
+
+	ImGui::SameLine();
+
+	ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
+
+	ImGui::Text(u8"테스트2");
+
+	ImGui::EndChild();
+
+	Set_GuizmoCamView();
+	Set_GuizmoCamProj();
+	Set_Guizmo(m_pPickingObject);
+
+	Preview_Function();
+
+	switch (m_ePickingMode)
+	{
+	case Client::CWindow_MapTool::PICKING_MODE::MOUSE_PRESSING:
+	{
+		if (true == m_pGameInstance->Mouse_Pressing(DIM_LB))
+			Picking_Function();
+		break;
+	}
+	case Client::CWindow_MapTool::PICKING_MODE::MOUSE_DOWN:
+	{
+		if (true == m_pGameInstance->Mouse_Down(DIM_LB))
+			Picking_Function();
+		break;
+	}
+	case Client::CWindow_MapTool::PICKING_MODE::MOUSE_UP:
+	{
+		if (true == m_pGameInstance->Mouse_Up(DIM_LB))
+			Picking_Function();
+		break;
+	}
+	}
+}
+
+void CWindow_MapTool::Interact_DeleteTab()
+{
+	
+	_uint iCreateInteractSize = m_vecCreateInteractObject.size();
+
+	if(iCreateInteractSize == 0)
+		return;
+
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+	if (ImGui::BeginListBox(u8"생성한 상호작용오브젝트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	{
+		for (_uint i = 0; i < iCreateInteractSize; ++i)
+		{
+			const _bool isSelected = (m_iSelectObjectIndex == i);
+
+			if (ImGui::Selectable(m_vecCreateInteractObjectTag[i].c_str(), isSelected))
+			{
+				m_iSelectObjectIndex = i;
+
+				m_bChange = true;
+				if (isSelected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+
+	if (m_vecCreateInteractObject.size() < m_iSelectObjectIndex)
+		return;
+
+	
+	Set_GuizmoCamView();
+	Set_GuizmoCamProj();
+	Set_Guizmo(m_vecCreateInteractObject[m_iSelectObjectIndex]);
+		
+
+	if (ImGui::Button(u8"삭제"))
+	{
+		m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_Dead(true);
+		m_vecCreateInteractObject[m_iSelectObjectIndex] = nullptr;
+		m_pPickingObject = nullptr;
+		m_vecCreateInteractObject.erase(m_vecCreateInteractObject.begin() + m_iSelectObjectIndex);
+		m_iSelectObjectIndex--;
 	}
 }
 
@@ -1305,6 +1613,8 @@ void CWindow_MapTool::Navigation_SelectTab()
 				return;
 
 			m_iCellIndex = pTargetCell->Get_Index();
+
+
 			m_vecCells[m_iCellIndex]->Set_Picking(true);
 		}
 	}
@@ -1564,6 +1874,7 @@ void CWindow_MapTool::LoadNavi(string strFullPath)
 
 	m_pNavigation->LoadData(strConvertPath);
 	
+	LoadCells();
 }
 
 void CWindow_MapTool::LoadCells()
@@ -2327,7 +2638,7 @@ void CWindow_MapTool::Preview_Function()
 	if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_NONE || m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_END)
 		return;
 
-	if (m_bDeadComplete == true && nullptr != m_pPreviewObject || nullptr != m_pPreviewCharacter)
+	if (m_bDeadComplete == true && nullptr != m_pPreviewObject || nullptr != m_pPreviewCharacter || nullptr != m_pPreviewInteract)
 	{
 
 		_vector vPos = {};
@@ -2343,12 +2654,23 @@ void CWindow_MapTool::Preview_Function()
 		else if(m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_INSTANCE)
 			vPos = { m_fInstanceMeshPos.x, m_fInstanceMeshPos.y, m_fInstanceMeshPos.z, 1.f };
 
-		if (m_pPreviewCharacter == nullptr)
-			m_pPreviewObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
-		else
+
+		if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER && m_pPreviewCharacter != nullptr)
+		{
 			m_pPreviewCharacter->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
+		}
+		else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
+		{
+			if (m_eTabType == CWindow_MapTool::TAP_TYPE::TAB_INTERACT && m_pPreviewInteract != nullptr)
+			{
+				m_pPreviewInteract->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
+			}
+			else if (m_pPreviewObject != nullptr)
+			{
+				m_pPreviewObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
+			}
 
-
+		}
 	}
 }
 
@@ -2398,70 +2720,111 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 	}
 	else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
 	{
-		if (m_bChange == true && m_pPreviewObject != nullptr)
+		if (m_eTabType != CWindow_MapTool::TAP_TYPE::TAB_INTERACT)
 		{
-			m_pPreviewObject->Set_Dead(true);
-			//! Dead 처리되는 걸 잠시 기다려주자.
-
-			m_bChange = false;
-			m_pPreviewObject = nullptr;
-		}
-
-		if (nullptr == m_pPreviewObject)
-		{
-			CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
-			
-
-			switch (eTabType)
+			if (m_pPreviewInteract != nullptr)
 			{
-				case Client::CWindow_MapTool::TAP_TYPE::TAB_SINGLE:
-				{
-					m_pGameInstance->String_To_WString(m_vecSingleModelTag[m_iSelectModelTag], Desc.strModelTag);
-					
-					break;
-				}
-				case Client::CWindow_MapTool::TAP_TYPE::TAB_INTERACT:
-				{
-					if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
-					{
-						m_pGameInstance->String_To_WString(m_vecInteractModelTag[m_iSelectModelTag], Desc.strModelTag);
-					}
-					else
-					{
-						m_pGameInstance->String_To_WString(m_vecAnimInteractModelTag[m_iSelectModelTag], Desc.strModelTag);
-					}
-					break;
-				}
-				case Client::CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT:
-				{
-					if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
-					{
-						m_pGameInstance->String_To_WString(m_vecEnviroModelTag[m_iSelectModelTag], Desc.strModelTag);
+				m_pPreviewInteract->Set_Dead(true);
+				m_pPreviewInteract = nullptr;
+			}
+				
 
-					}
-					else
-					{
-						if (m_bAnimType == true)
-						{
-							Desc.bAnimModel = true;
-							Desc.iPlayAnimationIndex = 0;
-						}
-						m_pGameInstance->String_To_WString(m_vecAnimEnviroModelTag[m_iSelectModelTag], Desc.strModelTag);
-					}
-					break;
-				}
+			if (m_bChange == true && m_pPreviewObject != nullptr)
+			{
+				m_pPreviewObject->Set_Dead(true);
+				//! Dead 처리되는 걸 잠시 기다려주자.
+
+				m_bChange = false;
+				m_pPreviewObject = nullptr;
 			}
 
-			m_pPreviewObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Test", L"Prototype_GameObject_Environment_Object", &Desc));
+			if (nullptr == m_pPreviewObject)
+			{
+				CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
 
-			m_pPreviewObject->Get_Transform()->Set_Position(m_fRayPos);
 
+				switch (eTabType)
+				{
+					case Client::CWindow_MapTool::TAP_TYPE::TAB_SINGLE:
+					{
+						m_pGameInstance->String_To_WString(m_vecSingleModelTag[m_iSelectModelTag], Desc.strModelTag);
+
+						break;
+					}
+					case Client::CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT:
+					{
+						if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
+						{
+							m_pGameInstance->String_To_WString(m_vecEnviroModelTag[m_iSelectModelTag], Desc.strModelTag);
+
+						}
+						else
+						{
+							if (m_bAnimType == true)
+							{
+								Desc.bAnimModel = true;
+								Desc.iPlayAnimationIndex = 0;
+							}
+							m_pGameInstance->String_To_WString(m_vecAnimEnviroModelTag[m_iSelectModelTag], Desc.strModelTag);
+						}
+						break;
+					}
+				}
+
+				m_pPreviewObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Test", L"Prototype_GameObject_Environment_Object", &Desc));
+
+				m_pPreviewObject->Get_Transform()->Set_Position(m_fRayPos);
+
+			}
 		}
+		else
+		{
+			if (m_pPreviewObject != nullptr)
+			{
+				m_pPreviewObject->Set_Dead(true);
+				m_pPreviewObject = nullptr;
+			}
+
+			if (m_bChange == true && m_pPreviewInteract != nullptr)
+			{
+				m_pPreviewInteract->Set_Dead(true);
+				m_bChange = false;
+				m_pPreviewInteract = nullptr;
+				
+			}
+
+			if (nullptr == m_pPreviewInteract)
+			{
+				CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC InteractDesc = {};
+
+				InteractDesc.bAnimModel = m_bAnimType;
+				InteractDesc.iPlayAnimationIndex = m_iInteractPlayAnimIndex;
+				InteractDesc.eInteractType = (CEnvironment_Interact::INTERACT_TYPE)m_eInteractType;
+				InteractDesc.eInteractState = (CEnvironment_Interact::INTERACT_STATE)m_eInteractState;
+				InteractDesc.iShaderPassIndex = m_iShaderPassIndex;
+				InteractDesc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
+				InteractDesc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
+
+				if (m_bAnimType == true)
+				{
+					InteractDesc.bAnimModel = true;
+					m_pGameInstance->String_To_WString(m_vecAnimInteractModelTag[m_iSelectModelTag], InteractDesc.strModelTag);
+				}
+				else
+				{
+					InteractDesc.bAnimModel = false;
+					m_pGameInstance->String_To_WString(m_vecInteractModelTag[m_iSelectModelTag], InteractDesc.strModelTag);
+				}
+
+
+				m_pPreviewInteract = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Test", L"Prototype_GameObject_Environment_InteractObject", &InteractDesc));
+				m_pPreviewInteract->Get_Transform()->Set_Position(m_fRayPos);
+			}
+		}
+	
 	}
 	
-	
-	
-	
+
 }
 
 
@@ -2472,7 +2835,7 @@ void CWindow_MapTool::Picking_Function()
 
 	if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
 	{
-		if (nullptr != m_pPreviewObject && true == ImGui_MouseInCheck())
+		if (nullptr != m_pPreviewInteract && true == ImGui_MouseInCheck() || nullptr != m_pPreviewObject && true == ImGui_MouseInCheck())
 		{
 
 			switch (m_eTabType)
@@ -2606,6 +2969,64 @@ void CWindow_MapTool::Interact_CreateFunction()
 {
 	if (m_ePickingType == PICKING_TYPE::PICKING_NONE)
 		return;
+
+	if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
+	{
+		if (nullptr != m_pField && true == m_pField->MouseOnTerrain())
+		{
+			CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc;
+			Desc.bAnimModel = m_bAnimType;
+			Desc.iShaderPassIndex = m_iShaderPassIndex;
+			Desc.eInteractState = (CEnvironment_Interact::INTERACT_STATE)m_eInteractState;
+			Desc.eInteractType = (CEnvironment_Interact::INTERACT_TYPE)m_eInteractType;
+			Desc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
+			Desc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
+			Desc.strModelTag = m_pPreviewInteract->Get_ModelTag();
+			Desc.bPreview = false;
+			Desc.WorldMatrix = m_pPreviewInteract->Get_Transform()->Get_WorldMatrix();
+
+			CEnvironment_Interact* pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+
+			m_vecCreateInteractObject.push_back(pObject);
+
+
+			wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pObject->Get_ModelTag() + L"@" + to_wstring(m_vecCreateInteractIndex));
+			string strConvertTag;
+			m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
+			m_vecCreateInteractObjectTag.push_back(strConvertTag);
+
+			m_vecCreateInteractIndex++;
+		}
+	}
+
+	else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
+	{
+
+		CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc;
+		Desc.bAnimModel = m_bAnimType;
+		Desc.iShaderPassIndex = m_iShaderPassIndex;
+		Desc.eInteractState = (CEnvironment_Interact::INTERACT_STATE)m_eInteractState;
+		Desc.eInteractType = (CEnvironment_Interact::INTERACT_TYPE)m_eInteractType;
+		Desc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
+		Desc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
+		Desc.strModelTag = m_pPreviewInteract->Get_ModelTag();
+		Desc.bPreview = false;
+		Desc.WorldMatrix = m_pPreviewInteract->Get_Transform()->Get_WorldMatrix();
+
+		CEnvironment_Interact* pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+
+		m_vecCreateInteractObject.push_back(pObject);
+
+
+		wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pObject->Get_ModelTag() + L"@" + to_wstring(m_vecCreateInteractIndex));
+		string strConvertTag;
+		m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
+		m_vecCreateInteractObjectTag.push_back(strConvertTag);
+
+		m_vecCreateInteractIndex++;
+	}
+	
+
 }
 
 void CWindow_MapTool::Preview_Environment_CreateFunction()
@@ -3242,6 +3663,64 @@ void CWindow_MapTool::Instance_SelectFunction()
 	}
 
 	
+}
+
+void CWindow_MapTool::Interact_SelectFunction()
+{
+	_uint iObjectTagSize = (_uint)m_vecCreateInteractObject.size();
+
+
+	if (true == m_vecCreateInteractObject.empty())
+	{
+		ImGui::Text(u8"생성한 객체가 없습니다. ");
+	}
+	else
+	{
+		if (ImGui::BeginListBox(u8"생성 객체 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+			for (_uint i = 0; i < iObjectTagSize; ++i)
+			{
+				const _bool isSelected = (m_iSelectObjectIndex == i);
+
+				if (ImGui::Selectable(m_vecCreateInteractObjectTag[i].c_str(), isSelected))
+				{
+					m_iSelectObjectIndex = i;
+
+					m_pPickingObject = m_vecCreateInteractObject[m_iSelectObjectIndex];
+
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+			}
+			ImGui::EndListBox();
+		}
+
+
+		ImGui::InputFloat3(u8"콜라이더 사이즈", m_fSelectColliderSizeArray); 
+		ImGui::InputFloat3(u8"콜라이더 센터", m_fSelectColliderCenterArray);
+		
+		if (ImGui::Button(u8"콜라이더 사이즈 업데이트"))
+		{
+			#ifdef _DEBUG
+				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ColliderSize(_float3(m_fSelectColliderSizeArray[0], m_fSelectColliderSizeArray[1], m_fSelectColliderSizeArray[2]));
+			#endif // _DEBUG
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button(u8"콜라이더 센터 업데이트"))
+		{
+			#ifdef _DEBUG
+				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ColliderCenter(_float3(m_fSelectColliderCenterArray[0], m_fSelectColliderCenterArray[1], m_fSelectColliderCenterArray[2]));
+			#endif // _DEBUG
+		}
+	}
+
+
+
+	Guizmo_Tick(m_pPickingObject);
 }
 
 void CWindow_MapTool::Guizmo_Tick(CGameObject* pPickingObject)
