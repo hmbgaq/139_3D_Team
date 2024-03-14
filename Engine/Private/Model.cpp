@@ -420,6 +420,11 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 			m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 		}
 	}
+	else 
+	{
+		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
+	}
 	//else 
 	//{
 	//	m_iCurrentAnimIndex = _iAnimationIndex;

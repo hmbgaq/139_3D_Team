@@ -41,7 +41,7 @@ CState<CPlayer>* CPlayer_Empowered_MeleeCombo_03::Update(CPlayer* pActor, _float
 		m_bFlags[1] = true;
 	}
 
-	if (pActor->Is_Inputable_Front(23))
+	if (pActor->Is_Inputable_Front(24))
 	{
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}

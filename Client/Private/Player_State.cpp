@@ -550,7 +550,6 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 	pState = TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
-
 	if (0.3f <= pActor->Get_ChargingTime())
 	{
 		pActor->Set_ChargingTime(0.f);
@@ -559,6 +558,7 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 
 	pState = MeleeCombo(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
+
 
 	if (pActor->Is_Animation_End())
 	{
@@ -604,8 +604,6 @@ CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _
 			return new CPlayer_MeleeCombo_01();
 		}
 	}
-
-
 
 	if (pActor->Is_Animation_End())
 	{
