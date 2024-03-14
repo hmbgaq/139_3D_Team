@@ -31,6 +31,9 @@ public:
 	CEffect* Create_Effect(string strFileName, CGameObject* pOwner = nullptr);
 
 
+	HRESULT Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime, _float fTimeDelta, string strEffectFileName, CGameObject* pOwner = nullptr);
+
+
 	// 트레일이 달린 이펙트를 생성할 때 사용(이펙트jsno파일, 트레일json파일, 이펙트가 따라움직여야할 객체가 있는 경우 오너 넣기)
 	CEffect* Create_Effect_With_Trail(string strEffectFileName, string strTrailFileName, CGameObject* pOwner = nullptr);	
 

@@ -59,6 +59,20 @@ CEffect* CEffect_Manager::Create_Effect(string strFileName, CGameObject* pOwner)
 }
 
 
+HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime, _float fTimeDelta, string strEffectFileName, CGameObject* pOwner)
+{
+	*fTimeAcc += fTimeDelta;
+	if (*fTimeAcc >= fCreateTime)
+	{
+		*fTimeAcc = 0.f;
+
+		Create_Effect(strEffectFileName, pOwner);
+	}
+
+	return S_OK;
+}
+
+
 CEffect* CEffect_Manager::Create_Effect_With_Trail(string strEffectFileName, string strTrailFileName, CGameObject* pOwner)
 {
 	_uint iCurLevel = m_pGameInstance->Get_NextLevel();

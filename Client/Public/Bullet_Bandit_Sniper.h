@@ -2,6 +2,7 @@
 #include "Projectile.h"
 
 BEGIN(Client)
+class CEffect_Trail;
 
 class CBullet_Bandit_Sniper final : public CProjectile
 {
@@ -29,6 +30,9 @@ public:
 private:
 	HRESULT			Ready_Components();
 	HRESULT			Bind_ShaderResources();
+
+private:
+	CEffect_Trail*	m_pTrail = { nullptr };
 
 private:
 	_float4			m_vTargetPos = {};

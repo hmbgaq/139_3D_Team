@@ -1514,6 +1514,18 @@ void CWindow_EffectTool::Update_MeshTab()
 		}
 
 
+		// 메쉬 파티클용 이펙트 메쉬 생성
+		if (ImGui::CollapsingHeader("Mesh_Particle"))
+		{
+			if (ImGui::Button("Particle_Test"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Particle_Test"));
+			}
+
+			ImGui::SeparatorText("");
+		}
+
+
 		// 인트로 보스용 이펙트 메쉬 생성
 		if (ImGui::CollapsingHeader("Mesh_VampireCommander"))
 		{

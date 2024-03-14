@@ -96,8 +96,10 @@ void CBandit_Sniper::Sniping_Target(_float4 TargetPos)
 	CWeapon_Bandit_Sniper* pWeapon = dynamic_cast<CWeapon_Bandit_Sniper*>(m_pWeapon);
 	NULL_CHECK_RETURN(pWeapon, );
 
+	_float4x4 matTemp = pWeapon->Get_WeaponWorldMatrix();
+
 	m_iBulletCnt += 1;
-	pWeapon->Sniping(TargetPos, m_pTransformCom->Get_Pos()); // (_float4 vTargetPos, _float3 StartfPos)
+	pWeapon->Sniping(TargetPos, _float3(matTemp.m[3][0], matTemp.m[3][1], matTemp.m[3][2])); // (_float4 vTargetPos, _float3 StartfPos)
 }
 
 HRESULT CBandit_Sniper::Ready_Components()
