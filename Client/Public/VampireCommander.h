@@ -31,6 +31,7 @@ protected:
 	virtual void Hitted_Right(Power ePower) override;
 	virtual void Hitted_Front(Power ePower) override;
 	virtual void Hitted_Dead(Power ePower)	override;
+	virtual void Hitted_Finish() override;
 
 public:
 	CActor<CVampireCommander>* Get_Actor() {return m_pActor;}

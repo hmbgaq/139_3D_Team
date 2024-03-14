@@ -364,6 +364,11 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 	//	return Hit_Type::None;
 	//}
 
+	if (true == m_bIsInvincible) 
+	{
+		return Hit_Type::None;
+	}
+
 	Get_Damaged(iDamage);	
 	//Set_InvincibleTime(fInvincibleTime);
 	Add_Force(vDir, fForce);
@@ -371,8 +376,16 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 
 	if (m_iHp <= 0)
 	{
-		Hitted_Dead(eHitPower);
-		//eHitType = Hit_Type::Hit_Finish;
+		if (true == m_bIsStun)
+		{
+			Hitted_Finish();
+		}
+		else 
+		{
+			Hitted_Dead(eHitPower);
+		}
+		
+		eHitType = Hit_Type::Hit_Finish;
 	}
 	else if (m_bTrigger == true)
 	{

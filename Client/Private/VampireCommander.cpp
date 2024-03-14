@@ -14,6 +14,9 @@
 #include "VampireCommander_TurnR90.h"
 #include "VampireCommander_TurnR180.h"
 #include "VampireCommander_Stun_Start.h"
+#include "VampireCommander_CutScene.h"
+#include "Player_Finisher_VampireCommander_VS.h"
+
 #include "UI_Manager.h"
 
 #include "Data_Manager.h"
@@ -178,7 +181,18 @@ void CVampireCommander::Hitted_Dead(Power ePower)
 	//stun이 걸리고 그다음에 처형이 있기 때문에 그냥 때려서는 죽일수 없다.
 	m_pActor->Set_State(new CVampireCommander_Stun_Start);
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-	//pPlayer->Get_Actor()->Set_State(new CPlayer_) // 여기서 플레이어를 강제로 처형 애니메이션으로 돌려 버려야 함 ! 
+	
+}
+
+void CVampireCommander::Hitted_Finish()
+{
+	m_pActor->Set_State(new CVampireCommander_CutScene());
+	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+
+	_float3 vPlayerPos = m_pTransformCom->Calc_Front_Pos(_float3(0.f, 0.f, 2.0f));
+	pPlayer->Set_Position(vPlayerPos);
+	pPlayer->Get_Transform()->Look_At(m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION));
+	pPlayer->Get_Actor()->Set_State(new CPlayer_Finisher_VampireCommander_VS());
 }
 
 CVampireCommander* CVampireCommander::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
