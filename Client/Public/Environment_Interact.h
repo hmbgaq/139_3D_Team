@@ -61,6 +61,9 @@ public:
 #ifdef _DEBUG
 	void								Set_ColliderSize(_float3 vColliderSize);
 	void								Set_ColliderCenter(_float3 vColliderCenter);
+	void								Set_InteractType(INTERACT_TYPE eInteractType) { m_tEnvironmentDesc.eInteractType = eInteractType; }
+	void								Set_InteractState(INTERACT_STATE eInteractState) { m_tEnvironmentDesc.eInteractState = eInteractState; }
+	void								Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex;}
 #endif // _DEBUG
 
 

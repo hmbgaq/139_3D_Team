@@ -274,6 +274,8 @@ void CEnvironment_Interact::Interact()
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 							m_pPlayer->SetState_InteractJumpDown100();
 
+
+
 						break;
 					}
 
@@ -310,6 +312,8 @@ void CEnvironment_Interact::Interact()
 						break;
 					}
 				}
+
+				m_bInteract = true;
 			}
 		}
 }
