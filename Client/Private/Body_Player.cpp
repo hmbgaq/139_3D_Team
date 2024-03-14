@@ -43,7 +43,7 @@ void CBody_Player::Priority_Tick(_float fTimeDelta)
 	else 
 	{
 		m_fRotateUpperX = { 0.f };
-		m_fRotateUpperY = { 0.f };
+		m_fRotateUpperY = { 5.f };
 
 		m_fShootingReaction = { 0.f };
 		m_fShootingReactionTarget = { 0.f };

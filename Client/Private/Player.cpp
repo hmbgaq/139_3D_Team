@@ -347,7 +347,7 @@ void CPlayer::Search_Target(_float fMaxDistance)
 
 void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCount)
 {
-	if (nullptr == m_pTarget || true == m_pTarget->Is_Dead() || false == m_pTarget->Get_Enable())
+	if (nullptr == m_pTarget || 0 >= m_pTarget->Get_Hp() || true == m_pTarget->Is_Dead() || false == m_pTarget->Get_Enable())
 	{
 		Search_Target(fMaxDistance);
 	}

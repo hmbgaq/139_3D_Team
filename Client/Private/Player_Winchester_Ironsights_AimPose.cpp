@@ -3,6 +3,7 @@
 
 #include "Player_Winchester_Ironsights_Reload_01.h"
 #include "Player_Winchester_Ironsights_Reload_02.h"
+#include "UI_Manager.h"
 
 void CPlayer_Winchester_Ironsights_AimPose::Initialize(CPlayer* pActor)
 {
@@ -28,6 +29,7 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 		pActor->Activate_ShootingReaction();
 		CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Winchester"));
 		pWeapon->Fire();
+		CUI_Manager::GetInstance()->Trigger_Crosshair(true);
 		
 		return new CPlayer_Winchester_Ironsights_Reload_01();
 	}

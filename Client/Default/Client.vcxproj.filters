@@ -3028,6 +3028,9 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts\Body">
       <UniqueIdentifier>{27313ed7-8409-4d64-ac01-84c9aa03033b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\Frame">
+      <UniqueIdentifier>{38f92005-c291-408d-a812-5b6603352bf9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -6123,6 +6126,9 @@
     <ClInclude Include="..\Public\Event_InteractManager.h">
       <Filter>03.Event\Interact</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_EnemyFrame_Shard.h">
+      <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\Frame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8655,6 +8661,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Event_InteractManager.cpp">
       <Filter>03.Event\Interact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_EnemyFrame_Shard.cpp">
+      <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\Frame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
