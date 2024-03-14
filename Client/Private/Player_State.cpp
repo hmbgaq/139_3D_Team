@@ -120,6 +120,7 @@
 #include "Player_MeleeDynamic_04.h"
 #include "Player_Leap_01_Lower.h"
 #include "Player_Leap_01_Higher.h"
+#include "Player_MeleeUppercut_01v2.h"
 
 
 #pragma endregion
@@ -549,6 +550,13 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 	pState = TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
+
+	if (0.5f <= pActor->Get_ChargingTime())
+	{
+		pActor->Set_ChargingTime(0.f);
+		return new CPlayer_MeleeUppercut_01v2();
+	}
+
 	pState = MeleeCombo(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
@@ -562,48 +570,38 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 
 CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	CPlayer::Player_State eState = (CPlayer::Player_State)_iAnimIndex;
+
 	if (m_pGameInstance->Mouse_Down(DIM_LB))
 	{
-		CPlayer::Player_State eState = (CPlayer::Player_State)_iAnimIndex;
 		switch (eState)
 		{
-
 		case Client::CPlayer::Player_Empowered_MeleeCombo_01:
 			return new CPlayer_Empowered_MeleeCombo_02();
-			break;
 		case Client::CPlayer::Player_Empowered_MeleeCombo_02:
 			return new CPlayer_Empowered_MeleeCombo_03();
-			break;
 		case Client::CPlayer::Player_Empowered_MeleeCombo_03:
 			return new CPlayer_MeleeCombo_04();
-			break;
-
 
 		case Client::CPlayer::Player_MeleeCombo_01:
 			return new CPlayer_MeleeCombo_02();
-			break;
 		case Client::CPlayer::Player_MeleeCombo_02:
 			return new CPlayer_MeleeCombo_02_L_NEW();
-			break;
 		case Client::CPlayer::Player_MeleeCombo_02_L_NEW:
 			return new CPlayer_Empowered_MeleeCombo_03();
-			break;
 
 		case Client::CPlayer::Player_MeleeCombo_03_SlamAOEJump:
 			return new CPlayer_MeleeCombo_04();
-			break;
 		case Client::CPlayer::Player_MeleeCombo_04:
 			return new CPlayer_MeleeCombo_02();
-			break;
-
-
-
-		default:
-			return new CPlayer_MeleeCombo_01();
-			break;
-
 		}
 	}
+
+	if (m_pGameInstance->Mouse_Up(DIM_LB))
+	{
+		return new CPlayer_MeleeCombo_01();
+	}
+
 
 	if (pActor->Is_Animation_End())
 	{

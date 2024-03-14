@@ -188,6 +188,11 @@ _vector CGameObject::Calc_Look_Dir_XZ(_vector vTargetPos)
 	return m_pTransformCom->Calc_Look_Dir_XZ(vTargetPos);
 }
 
+void CGameObject::Set_Speed(_float fSpeed)
+{
+	m_pTransformCom->Set_Speed(fSpeed);
+}
+
 CGameObject* CGameObject::Get_Object_Owner()
 {
 	return m_pOwner;

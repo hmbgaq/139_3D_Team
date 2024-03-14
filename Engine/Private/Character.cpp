@@ -376,18 +376,25 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 
 	if (m_iHp <= 0)
 	{
-		if (bIsMelee)
+		//if (bIsMelee)
+		//{
+		//	if (true == m_bIsStun)
+		//	{
+		//		//Set_Invincible(true);
+		//		Hitted_Finish();
+		//	}
+		//	else // (false == m_bIsStun)
+		//	{
+		//		Set_Stun(true);
+		//		Hitted_Stun(eHitPower);
+		//	}
+		//}
+
+
+		if (true == m_bIsStun)
 		{
-			if (true == m_bIsStun)
-			{
-				//Set_Invincible(true);
-				Hitted_Finish();
-			}
-			else // (false == m_bIsStun)
-			{
-				//Set_Stun(true);
-				Hitted_Stun(eHitPower);
-			}
+			//Set_Invincible(true);
+			Hitted_Finish();
 		}
 		else 
 		{
@@ -518,7 +525,9 @@ CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _fl
 		if (nullptr == pTargetCharacter || true == pTargetCharacter->Is_Invincible() || 0 >= pTargetCharacter->Get_Hp())
 			continue;
 
-		_float fDistance = Calc_Distance(pTarget);
+		//_float fDistance = Calc_Distance(pTarget);
+		_float fDistance = Calc_Distance_Front(pTarget->Get_Position());
+
 		if (fMinDistance > fDistance) 
 		{
 			fMinDistance = fDistance;
@@ -550,6 +559,15 @@ _float CCharacter::Calc_Distance(CGameObject* pTarget)
 _float CCharacter::Calc_Distance()
 {
 	return Calc_Distance(m_pTarget);
+}
+
+_float CCharacter::Calc_Distance_Front(_float3 vTargetPos)
+{
+	_float3 vPos = m_pTransformCom->Calc_Front_Pos(); //Get_Position();
+
+	_float3 vDiff = vTargetPos - vPos;
+
+	return sqrt(vDiff.x * vDiff.x + vDiff.y * vDiff.y + vDiff.z * vDiff.z);
 }
 
 _float CCharacter::Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag)

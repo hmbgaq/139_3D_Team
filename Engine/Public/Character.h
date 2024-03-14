@@ -127,7 +127,7 @@ public:
 	};
 	virtual void Hitted_Finish() {
 		//Set_Invincible(true);
-		Hitted_Dead(Power::Heavy);
+		//Hitted_Dead(Power::Heavy);
 	};
 	
 
@@ -157,6 +157,9 @@ public:
 	_float Calc_Distance(_float3 vTargetPos);
 	_float Calc_Distance(CGameObject* pTarget);
 	_float Calc_Distance();
+
+	_float Calc_Distance_Front(_float3 vTargetPos);
+
 	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
 	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 1.0f);

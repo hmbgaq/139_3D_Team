@@ -73,6 +73,9 @@ public:
 	_vector Calc_Look_Dir(_vector vTargetPos);
 	_vector Calc_Look_Dir_XZ(_vector vTargetPos);
 
+public:
+	void Set_Speed(_float );
+
 	
 
 
