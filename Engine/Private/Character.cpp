@@ -546,7 +546,7 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap
 
 	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	_float fDistance = Calc_Distance();
-	if (fDistance < 0.5f)
+	if (fDistance < 0.2f)
 		return;
 
 	_float3 vPos = { 0.f, 0.f, min(fDistance * fTimeDelta, fSpeedCap) };

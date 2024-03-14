@@ -34,6 +34,8 @@
 #include "Navigation.h"
 #pragma endregion
 
+#include "Level_Loading.h"
+
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -60,6 +62,11 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_M))
+	{
+		m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+	}
+
 #pragma region Effect_Test	
 
 	//if (m_pGameInstance->Key_Down(DIK_GRAVE))
