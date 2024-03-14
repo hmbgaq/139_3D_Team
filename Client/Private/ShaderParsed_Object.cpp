@@ -21,7 +21,6 @@ HRESULT CShaderParsed_Object::Initialize_Prototype()
 
 HRESULT CShaderParsed_Object::Initialize(void* pArg)
 {
-
 	FAILED_CHECK(Ready_Components(pArg));
 
 	return S_OK;
@@ -30,7 +29,6 @@ HRESULT CShaderParsed_Object::Initialize(void* pArg)
 HRESULT CShaderParsed_Object::Ready_Components(void* pArg)
 {
 	CREATE_DESC* Desc = (CREATE_DESC*)pArg;
-
 
 	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
@@ -44,7 +42,8 @@ HRESULT CShaderParsed_Object::Ready_Components(void* pArg)
 
 	/* For.Com_Shader */
 	{
-		FAILED_CHECK(__super::Add_Component(iCurrentLevel, SMath::string_To_WString(Desc->strShaderProtoTag), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Shader_Monster"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+		//FAILED_CHECK(__super::Add_Component(iCurrentLevel, SMath::string_To_WString(Desc->strShaderProtoTag), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 
 	/* For.Com_Model */
@@ -73,6 +72,23 @@ void CShaderParsed_Object::Late_Tick(_float fTimeDelta)
 
 HRESULT CShaderParsed_Object::Render()
 {
+	FAILED_CHECK(Bind_ShaderResources());
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+
+		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_EXAMPLE));
+
+		m_pModelCom->Render(_uint(i));
+	}
+
 	return S_OK;
 }
 

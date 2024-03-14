@@ -170,7 +170,6 @@ PS_OUT PS_INFECTED_WEAPON(PS_IN In)
  
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
-    Out.vDiffuse += vRimColor;
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     return Out;
 }

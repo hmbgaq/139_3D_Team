@@ -50,7 +50,7 @@ private:
 	_bool			m_bObject_Layer_Button = false; /* 오브젝트 생성을 위해 리스트 여는 버튼 */
 	string			m_strCurrentObjectTag = {};
 	_bool			m_bCreateObject_Button = false; /* 오브젝트 실제 생성하는 버튼 */
-
+	class ShaderParsed_Object* pObject = nullptr;
 	/* Level Shader Struct */
 	HBAO_PLUS_DESC		m_eHBAO_Desc			= {};
 	FOG_DESC			m_eFog_Desc				= {};

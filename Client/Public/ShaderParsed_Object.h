@@ -51,13 +51,18 @@ private:
 
 private:
 	_int			m_iRenderPass = {};
-	_float			m_fTimeDelta = {};
-	_float			m_fDissolveWeight = {};
+
+	_int			m_iDiscardMeshNumber;
+	_int			m_iTotalMeshNumber;
 
 	_float4			m_vCamPos = {};
 	_float			m_fRimPower = {};
 	_float4			m_vRimColor = { 1.0f, 1.f, 1.f, 0.3f };
 	_float3			m_vBloomPower = _float3(0.1f, 0.1f, 0.1f);
+
+public:
+	/* Tool에서 셋팅하기위한 모든 Get, Set 함수 모음 */
+
 
 private:
 	CModel*		m_pModelCom = { nullptr };

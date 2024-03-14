@@ -6,6 +6,7 @@
 #include "Environment_Instance.h"
 #include "Data_Manager.h"
 #include "Light.h"
+#include "ShaderParsed_Object.h"
 
 CWindow_ShaderTool::CWindow_ShaderTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -115,6 +116,7 @@ void CWindow_ShaderTool::Show_N_Create_ObjectList()
 {
 	ImGui::SeparatorText(" Select Object ");
 
+	/* 오브젝트 리스트 보이기 */
 	_int iModelCnt = m_vObjectModelTag.size();
 	static _int item_current_idx = 0;
 	if (ImGui::BeginListBox(" "))
@@ -141,6 +143,7 @@ void CWindow_ShaderTool::Show_N_Create_ObjectList()
 		ImGui::EndListBox();
 	}
 
+	/* 리스트에서 선택한 오브젝트 만들기 */
 	if (ImGui::Button("Show"))
 	{
 		m_bCreateObject_Button = true;
@@ -159,7 +162,11 @@ void CWindow_ShaderTool::Create_DummyObject(string ObjectTag)
 	// 더미라 아무대나 넣음 
 	wstring Temp;
 	m_pGameInstance->String_To_WString(ObjectTag, Temp);
-	m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Monster"), Temp);
+
+	CShaderParsed_Object::CREATE_DESC desc = {};
+	desc.strModelProtoTag = ObjectTag;
+//	desc.strShaderProtoTag = Prototype_Component_Shader_Monster
+	m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Monster"), Temp, &desc);
 	
 }
 
