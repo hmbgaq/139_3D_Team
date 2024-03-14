@@ -10,6 +10,9 @@ BEGIN(Client)
 
 class CBody_Infected abstract : public CBody
 {
+public:
+	enum class RENDER_STATE { ORIGIN, ATTACK, HITTED, NAKED, RENDER_STATE_END };
+
 protected:
 	CBody_Infected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CBody_Infected(const CBody_Infected& rhs);
@@ -18,18 +21,22 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void Priority_Tick(_float fTimeDelta) override;
-	virtual void Tick(_float fTimeDelta) override;
-	virtual void Late_Tick(_float fTimeDelta) override;
+	virtual void	Priority_Tick(_float fTimeDelta) override;
+	virtual void	Tick(_float fTimeDelta) override;
+	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
+
+public:
+	void Set_RenderState(RENDER_STATE _state) { m_eRender_State = _state; }
 
 protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
 protected:
-	_int iDiscardMeshNumber;
+	map<CBody_Infected::RENDER_STATE, vector<_int>> m_vDiscardMesh = {};
+	RENDER_STATE			m_eRender_State = RENDER_STATE::RENDER_STATE_END;
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

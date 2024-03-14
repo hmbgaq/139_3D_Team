@@ -49,7 +49,8 @@ void CInfected_A::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	Update_RenderState()
+	Update_RenderState(m_iHp);
+
 	m_pTarget = m_pGameInstance->Get_Player();
 
 	if (m_pActor)
@@ -77,9 +78,14 @@ HRESULT CInfected_A::Render_Shadow()
 	return S_OK;
 }
 
-HRESULT CInfected_A::Update_RenderState(_int _iHP)
+HRESULT CInfected_A::Update_RenderState(_int CurrentHP)
 {
-	return E_NOTIMPL;
+	if (CurrentHP == m_iMaxHp)
+	{
+
+	}
+
+	return S_OK;
 }
 
 #pragma region Base Setting

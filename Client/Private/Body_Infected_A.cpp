@@ -23,7 +23,9 @@ HRESULT CBody_Infected_A::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
-	iDiscardMeshNumber = 0;
+	FAILED_CHECK(OptionSetting());
+
+	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
 
 	return S_OK;
 }
@@ -45,7 +47,33 @@ void CBody_Infected_A::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Infected_A::Render()
 {
-	FAILED_CHECK(__super::Render());
+	FAILED_CHECK(Bind_ShaderResources());
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		auto iter = m_vDiscardMesh.find(m_eRender_State);
+		if (iter != m_vDiscardMesh.end())  
+		{
+			auto& Discard = iter->second;
+			if (find(Discard.begin(), Discard.end(), i) != Discard.end())
+				continue; // 메시번호가 벡터안에있으면 렌더안함 
+			else
+			{	
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+
+				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+
+			
+				m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+
+				m_pModelCom->Render((_uint)i);
+			}
+		}
+	}
 
 	return S_OK;
 }
@@ -57,6 +85,21 @@ HRESULT CBody_Infected_A::Render_Shadow()
 	return S_OK;
 }
 
+
+void CBody_Infected_A::Update_DiscardMesh()
+{
+
+}
+
+HRESULT CBody_Infected_A::OptionSetting()
+{
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 2, 5, 6, 7, 8 }; // 피떡 
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ATTACK] = { 1, 11 }; // 무기 
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::HITTED] = { 2, 5, 6, 7, 8 };
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = {0, 1, 2, 3, 5, 6, 7, 8, 11 }; // 겉가죽 + 의상 + 무기 + 기타 
+
+	return S_OK;
+}
 
 HRESULT CBody_Infected_A::Ready_Components()
 {	

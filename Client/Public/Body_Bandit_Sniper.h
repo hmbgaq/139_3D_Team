@@ -10,7 +10,6 @@ BEGIN(Client)
 
 class CBody_Bandit_Sniper final : public CBody
 {
-
 private:
 	CBody_Bandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CBody_Bandit_Sniper(const CBody_Bandit_Sniper& rhs);
@@ -28,8 +27,6 @@ public:
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
-
-	_int iDiscardMeshNumber = 0;
 
 public:
 	static CBody_Bandit_Sniper* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

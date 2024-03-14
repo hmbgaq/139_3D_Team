@@ -93,6 +93,8 @@ HRESULT CInfected_B::Ready_Option()
 	m_eInfo.fAttack_Distance = 5.f;
 	m_eInfo.fWalk_Distance = 10.f;
 
+	m_iHp = 30;
+	m_iMaxHp = 30;
 	m_pTarget = m_pGameInstance->Get_Player();
 
 	/* 액터 할당 & 리스폰 애니메이션 지정 */

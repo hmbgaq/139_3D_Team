@@ -20,7 +20,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override; 
 	
-	virtual HRESULT Update_RenderState(_int _iHP) override;
+	virtual HRESULT Update_RenderState(_int CurrentHP) override;
 
 protected:
 	HRESULT Ready_Components();

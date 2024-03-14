@@ -27,8 +27,6 @@ protected:
 	HRESULT Ready_PartObjects();
 	HRESULT Ready_Option();
 
-public:
-	void Attack();
 
 private:
 	CActor<CInfected>* m_pActor = { nullptr };

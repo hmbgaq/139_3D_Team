@@ -59,8 +59,8 @@ HRESULT CBody_Bandit_Sniper::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		if (i == iDiscardMeshNumber)
-			continue;
+		/*if (i == iDiscardMeshNumber)
+			continue;*/
 
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 

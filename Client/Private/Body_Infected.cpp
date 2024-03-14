@@ -45,26 +45,26 @@ void CBody_Infected::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Infected::Render()
 {
-	//FAILED_CHECK(__super::Render());
-	FAILED_CHECK(Bind_ShaderResources());
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (size_t i = 0; i < iNumMeshes; i++)
-	{
-		if (i == iDiscardMeshNumber)
-			continue;
-
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
-		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
-
-		m_pModelCom->Render((_uint)i);
-	}
+	FAILED_CHECK(__super::Render());
+	//FAILED_CHECK(Bind_ShaderResources());
+	//
+	//_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	//
+	//for (size_t i = 0; i < iNumMeshes; i++)
+	//{
+	//	//if (i == iDiscardMeshNumber)
+	//	//	continue;
+	//
+	//	m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+	//
+	//	m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+	//	m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+	//	m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+	//
+	//	m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+	//
+	//	m_pModelCom->Render((_uint)i);
+	//}
 	return S_OK;
 }
 
