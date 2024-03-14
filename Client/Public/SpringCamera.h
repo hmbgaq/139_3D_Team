@@ -42,7 +42,7 @@ public:
 	void RotatePlayer();
 	void Mouse_Fix();
 public:
-	void Set_CameraOffset(_float3 _CameraOffset) { m_CameraOffset = _CameraOffset; }
+	void Set_CameraOffset(_float3 _CameraOffset); /*{ m_CameraOffset = _CameraOffset; }*/
 	_float3 Get_CameraOffset() { return m_CameraOffset; }
 
 	void Set_pPlayer(CPlayer* pPlayer) { m_pPlayer = pPlayer;} 
@@ -56,6 +56,14 @@ public:
 	void Set_TargetPosition(_float3 _TargetPosition) { m_TargetPosition = _TargetPosition; }
 	_float3 Get_TargetPosition() { return m_TargetPosition; }
 
+	void Lerp_CameraPosition(_float fTimeDelta);
+
+public:
+	void Shake_Camera(_float fTimeDelta);
+	void Set_ShakeCamera(_bool _bShake) { m_bShake = _bShake; }
+	_bool Get_ShakeCamera() { return m_bShake; }
+
+	void Set_ShakeCameraTime(_float _Shaketime) { m_fShakeTime = _Shaketime; }
 
 private:
 	// 	수평 , 수직 수행거리
@@ -76,11 +84,16 @@ private:
 	_bool m_bCheck = false;//마우스 가운데 모으기 
 	_bool m_bFix = true;//마우스 가운데 모으기 
 	_bool m_bPlayerCheck = false; // 카메라 타겟이 플레이어 인지 아닌지  확인 하기 위 한 용도  
+	_bool m_bChangeOffset = false;
+	//shake camera
+	_bool m_bShake = false;// 카메라를 흔들 것인지 아닌것인지 
+	_float m_fShakeTime = 0.2f;
+	//_float m_fTimeDelta = 0.f;
 private:
 	//카메라 X,Y,Z
 	_float3 m_CameraOffset = {};
 	_float3 m_TargetPosition = {};
-	_float CameraMoveSpeed = 3.f;//카메라 보간용 이동속도
+	_float CameraMoveSpeed = 1.f;//카메라 보간용 이동속도
 private:
 	_float				m_fMouseSensor = { 0.0f };
 public:

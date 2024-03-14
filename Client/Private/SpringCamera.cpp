@@ -2,11 +2,11 @@
 #include "SpringCamera.h"
 #include "GameInstance.h"
 #include "GameObject.h"
-#include "Character.h"
 #include "Data_Manager.h"
 #include "Player.h"
 #include "MasterCamera.h"
 #include "Bone.h"
+#include "SMath.h"
 
 CSpringCamera::CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CCamera(pDevice, pContext, strPrototypeTag)
@@ -85,7 +85,7 @@ void CSpringCamera::Priority_Tick(_float fTimeDelta)
 
 void CSpringCamera::Tick(_float fTimeDelta)
 {
-
+	
 
 	//CCharacter* m_pTargetCharacter = m_pPlayer->Get_Target();
 	//if (nullptr != m_pTargetCharacter && nullptr != m_pTargetCharacter->Get_TransformComp())
@@ -209,15 +209,20 @@ void CSpringCamera::Tick(_float fTimeDelta)
 			Mouse_Fix();
 		}
 
+		
+
 		__super::Tick(fTimeDelta);
 	
-
+		//아니 이거 왜이래 보간할려고 하면 할수록 더 구려지네
+	//Lerp_CameraPosition(fTimeDelta);
 
 	
 }
 
 void CSpringCamera::Late_Tick(_float fTimeDelta)
 {
+
+
 	// 카메라가 플레이어랑 같이 Tick에서 위치 계산하고 움직임까지 넣어버리면 화면이 덜덜거림
 	//그래서 움직임 코드는 Late_Tick에다가 넣어줬음! 
 
@@ -237,6 +242,8 @@ void CSpringCamera::Late_Tick(_float fTimeDelta)
 		m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), m_fMouseSensor * MouseMoveY * fTimeDelta);
 	}
 
+	Shake_Camera(fTimeDelta);
+	
 }
 
 _bool CSpringCamera::Write_Json(json& Out_Json)
@@ -249,6 +256,7 @@ _bool CSpringCamera::Write_Json(json& Out_Json)
 
 void CSpringCamera::CameraRotation(_float fTimeDelta)
 {
+	
 	//카메라 움직임은 Late_Tick에 있다!
 	_float3 currentCameraPosition = ActualPosition;
 	_float3 idealPosition = m_ptarget->Get_State(CTransform::STATE_POSITION);
@@ -305,9 +313,9 @@ void CSpringCamera::Lock_On(_float fTimeDelta)
 	_matrix rotationMatrix = XMMatrixRotationRollPitchYaw(m_fPitch, m_fAngle, 0.0f);
 
 	// 카메라 위치 보간
-	currentCameraPosition.x = XMVectorGetX(XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta)));
-	currentCameraPosition.y = XMVectorGetY(XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta)));
-	currentCameraPosition.z = XMVectorGetZ(XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta)));
+	currentCameraPosition = XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta));
+	//currentCameraPosition.y = XMVectorGetY(XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta)));
+	//currentCameraPosition.z = XMVectorGetZ(XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta)));
 
 	// 캐릭터 주위를 중심으로 하는 카메라 위치 계산
 	XMVECTOR cameraOffset = XMVectorSet(m_CameraOffset.x, m_CameraOffset.y, m_CameraOffset.z, 0.0f);  // 카메라의 초기 위치
@@ -339,9 +347,61 @@ void CSpringCamera::Mouse_Fix()
 	SetCursorPos(pt.x, pt.y);
 }
 
+void CSpringCamera::Set_CameraOffset(_float3 _CameraOffset)
+{
+	if (m_CameraOffset != _CameraOffset)
+	{
+		PreActualPosition = m_ptarget->Get_State(CTransform::STATE_POSITION);
+		m_bChangeOffset = true;
+	}
+
+	m_CameraOffset = _CameraOffset;
+}
+
 void CSpringCamera::Set_pTargetCharacter(CCharacter* _pCharacter)
 {
 	m_pCharacter = _pCharacter;
+}
+
+void CSpringCamera::Lerp_CameraPosition(_float fTimeDelta)// 안됌 이거 쓰지마셈
+{
+	// 보간에 사용할 변수 (LerpTargetPosition) 추가
+	_float3 LerpTargetPosition = PreActualPosition;
+
+	// 카메라 오프셋 변경 시 보간
+	if (m_bChangeOffset)
+	{
+		// 현재 카메라 앞 벡터 계산
+		_float3 lookDir = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+
+		// 새로운 카메라 오프셋 적용
+		LerpTargetPosition = m_TargetPosition + lookDir * m_CameraOffset;
+		m_bChangeOffset = false; // 변경 완료 표시
+	}
+
+	// 현재 카메라 위치와 목표 위치 간의 보간
+	ActualPosition = XMVectorLerp(XMLoadFloat3(&ActualPosition), XMLoadFloat3(&LerpTargetPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta));
+	
+}
+
+void CSpringCamera::Shake_Camera(_float fTimeDelta)
+{
+	_float3 Temp = {};
+	if (m_bShake)
+	{
+		_float fRandomX = SMath::fRandom(-0.3f, 0.3f);
+		_float fRandomY = SMath::fRandom(-0.3f, 0.3f);
+		_float fRandomZ = SMath::fRandom(-0.3f, 0.3f);
+		
+		m_fShakeTime -= fTimeDelta;
+		Temp = m_bShake ? _float3(fRandomX, fRandomY, fRandomZ): _float3(0.0f, 0.0f, 0.0f);
+		if (m_fShakeTime <= 0.f)
+		{
+			m_bShake = false;
+		}
+	}
+	ActualPosition += Temp;
+
 }
 
 
