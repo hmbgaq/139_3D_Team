@@ -28,20 +28,24 @@ HRESULT CLight_Manager::Add_Light(const LIGHT_DESC & LightDesc, _int& outLightIn
 
 _bool CLight_Manager::Remove_Light(const _uint& iIndex)
 {
-	for (auto iter = m_Lights.begin(); iter != m_Lights.end();)
+	for (auto iter = m_Lights.begin(); iter != m_Lights.end(); ++iter)
 	{
-		if (iIndex == (*iter)->Get_LightDesc().Get_LightIndex())
+		if (iIndex == (*iter)->Get_LightIndex())
 		{
+			(*iter)->Decrease_GlobalIndex();
 			m_Lights.erase(iter);
 			return true;
-		}
-		else
-		{
-			++iter;
 		}
 	}
 
 	return false;
+}
+
+_bool CLight_Manager::Remove_AllLight()
+{
+
+
+	return _bool();
 }
 
 CLight* CLight_Manager::Find_Light(const _int iIndex)
