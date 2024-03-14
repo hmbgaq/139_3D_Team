@@ -576,3 +576,14 @@ float ENGINE_DLL Engine::SMath::Calculate_AngleBetweenVectors_Degree(const XMFLO
 
 	return fDegree;
 }
+
+string ENGINE_DLL Engine::SMath::Wstring_To_String(const wstring _wstring)
+{
+	int len;
+
+	int slength = (int)_wstring.length() + 1;
+	len = WideCharToMultiByte(CP_ACP, 0, _wstring.c_str(), slength, 0, 0, 0, 0);
+	std::string r(len, '\0');
+	WideCharToMultiByte(CP_ACP, 0, _wstring.c_str(), slength, &r[0], len, 0, 0);
+	return r;
+}

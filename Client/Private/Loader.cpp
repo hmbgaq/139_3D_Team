@@ -161,7 +161,10 @@
 #include "PhysXCollider.h"
 #include "PhysXController.h"
 #include "PhysXCharacterController.h"
+#pragma endregion
 
+#pragma region Shader
+#include "ShaderParsed_Object.h"
 #pragma endregion
 
 #include "Imgui_Manager.h" //! 승용 툴에 전달하기위한 모델 태그 셋팅위함
@@ -551,7 +554,6 @@ HRESULT CLoader::Loading_For_Tool_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Terrain_Mask"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/MyMask.dds"), 1)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Terrain_Brush"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Brush.png"), 1)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Sky"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4)));
-
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Snow"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Snow/Snow.png"), 1)));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Explosion"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Explosion/Explosion%d.png"), 90)));
 
@@ -588,8 +590,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 	//TODO VampireCommander
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_VampireCommander"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/VampireCommander/VampireCommander", PivotMatrix)));
-#pragma endregion 캐릭터 모델 : 주석 풀고 병합해야함!!! 끝 ㅋㅋㅋ 누가 해놨어 이거 대체 
-
+#pragma endregion 캐릭터 모델 : 주석 풀고 병합해야함!!!
 
 #pragma region 몬스터 모델 : 주석 풀고 병합??
 	/* Monster */
@@ -809,6 +810,8 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Part_Preview"), CPart_Preview::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Part_Preview"))));
 #pragma endregion
 
+	//!소영 - ShaderTool 
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ShaderParsed_Object"), CShaderParsed_Object::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ShaderParsed_Object"))));
 
 	return S_OK;
 }

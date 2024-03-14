@@ -13,15 +13,17 @@ private:
 public:
 	HRESULT			Initialize();
 	HRESULT			Add_Light(const LIGHT_DESC& LightDesc, _int& outLightIndex);
-	class CLight*	Find_Light(const _int iIndex);
 	_bool			Remove_Light(const _uint& iIndex);
 	HRESULT			Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+
+	/* For. ShaderTool */
+	class CLight* Find_Light(const _int iIndex);
+	void Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc);
 
 	/* For. Shadow */
 	HRESULT			Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp);
 	HRESULT			Add_ShadowLight_View(_uint iLevelIndex, _vector vEye, _vector vAt, _vector vUp);
 	HRESULT			Add_ShadowLight_Proj(_uint iLevelIndex, _float fFovAngleY, _float fAspectRatio, _float fNearZ, _float fFarZ);
-
 	_float4x4		Get_ShadowLightViewMatrix(_uint iLevelIndex);
 	_float4x4		Get_ShadowLightViewMatrix_Inverse(_uint iLevelIndex);
 	_float4x4		Get_ShadowLightProjMatrix(_uint iLevelIndex);

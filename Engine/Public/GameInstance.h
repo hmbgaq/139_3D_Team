@@ -134,6 +134,10 @@ public: /* For.Target_Manager */
 
 public: /* For.Light_Manager */
 	HRESULT		Add_Light(const LIGHT_DESC& LightDesc, _int & outLightIndex);
+	class CLight* Find_Light(const _int iIndex);
+	void		Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc);
+
+
 	HRESULT		Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 	_bool		Remove_Light(const _uint& iIndex);
 	HRESULT		Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp);
@@ -223,6 +227,10 @@ public: /* Common */
 	const string	Remove_LastNumChar(const string& str, const _uint& iNumCutCount);
 	const wstring	Get_LastNumChar(const wstring& str, const _uint& iNumCutCount);
 #pragma endregion End
+
+#pragma region ¼Ò¿µ
+	void Get_ModelTag(vector<string>* pVector);
+#pragma endregion
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };

@@ -56,7 +56,7 @@ HRESULT CWeapon_Bandit_Sniper::Load_Json()
 
 HRESULT CWeapon_Bandit_Sniper::Option_Setting()
 {
-	iRenderPass = ECast(MONSTER_SHADER::COMMON_ORIGIN);
+	m_iRenderPass = ECast(MONSTER_SHADER::COMMON_ORIGIN);
 
 	return S_OK;
 }
@@ -68,23 +68,6 @@ void CWeapon_Bandit_Sniper::Priority_Tick(_float fTimeDelta)
 
 void CWeapon_Bandit_Sniper::Tick(_float fTimeDelta)
 {
-	//if (m_pGameInstance->Key_Down(DIK_H))
-	//{
-	//	string path = "../Bin/DataFiles/Data_Monster/Sniper/Weapon.json";
-
-	//	{
-	//		json Out_Json;
-	//		m_pTransformCom->Write_Json(Out_Json);
-	//		CJson_Utility::Save_Json(path.c_str(), Out_Json);
-	//	}
-	//	//{
-	//	//   json In_Json;
-	//	//   CJson_Utility::Load_Json(path.c_str(), In_Json);
-	//	//   m_pTransformCom->Load_FromJson(In_Json);
-	//	//}
-
-	//}
-
 	__super::Tick(fTimeDelta);
 }
 
@@ -96,6 +79,24 @@ void CWeapon_Bandit_Sniper::Late_Tick(_float fTimeDelta)
 HRESULT CWeapon_Bandit_Sniper::Bind_ShaderResources()
 {
 	FAILED_CHECK(__super::Bind_ShaderResources());
+
+	if (m_iRenderPass == ECast(MONSTER_SHADER::SNIPER_WEAPON))
+	{
+		/* Camera */
+		m_fCamFar = m_pGameInstance->Get_CamFar();
+		m_vCamPos = m_pGameInstance->Get_CamPosition();
+		m_pShaderCom->Bind_RawValue("g_fCamFar", &m_fCamFar, sizeof(_float));
+		m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
+
+		/* RimLight */
+		m_vRimColor = { 0.0f, 0.0f, 0.f, 1.f };
+		m_vBloomPower = _float3(0.7f, 0.7f, 0.7f);
+		m_fRimPower = 5.f;
+
+		m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
+		m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
+	}
 
 	return S_OK;
 }
@@ -114,7 +115,7 @@ HRESULT CWeapon_Bandit_Sniper::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 
-		m_pShaderCom->Begin(iRenderPass);
+		m_pShaderCom->Begin(m_iRenderPass);
 
 		m_pModelCom->Render((_uint)i);
 	}

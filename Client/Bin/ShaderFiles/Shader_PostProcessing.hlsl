@@ -270,18 +270,17 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     vector Object_Blur = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     
     vector Effect = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
+    vector Effect_Solid = g_Effect_Solid.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
     
-    vector Effect_Solid = g_Effect_Solid.Sample(LinearSampler, In.vTexcoord);
     
     Out.vColor = Effect_Solid;
     if (Out.vColor.a == 0) 
-        Out.vColor += Deferred + Effect + Object_Blur + Effect_Blur;
+        Out.vColor = Deferred + Effect + Object_Blur + Effect_Blur;
     
-    //if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
-        //Out.vColor += Effect + Object_Blur + Effect_Blur;   // 이펙트랑 위에 디퍼드를 바꿨다(이펙트 때문)
+    ////if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
+    //    //Out.vColor += Effect + Object_Blur + Effect_Blur;   // 이펙트랑 위에 디퍼드를 바꿨다(이펙트 때문)
   
-    
     if (Out.vColor.a == 0)
         discard;
     

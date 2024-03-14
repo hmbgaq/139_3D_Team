@@ -60,6 +60,10 @@ CLight* CLight_Manager::Find_Light(const _int iIndex)
 
 	return nullptr;
 }
+void CLight_Manager::Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc)
+{
+	Find_Light(iIndex)->Set_LightDesc(newDesc);
+}
 HRESULT CLight_Manager::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 {
 	for (auto& pLight : m_Lights)

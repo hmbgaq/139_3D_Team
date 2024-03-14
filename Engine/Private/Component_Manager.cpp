@@ -1,4 +1,5 @@
-#include "..\Public\Component_Manager.h"
+#include "Component_Manager.h"
+#include "SMath.h"
 
 CComponent_Manager::CComponent_Manager()
 {
@@ -12,7 +13,6 @@ HRESULT CComponent_Manager::Initialize(_uint iNumLevels)
 
 	return S_OK;
 }
-
 HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, CComponent * pPrototype)
 {
 	if (nullptr == pPrototype || 
@@ -21,6 +21,15 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const wstring & str
 		return E_FAIL;
 
 	m_pPrototypes[iLevelIndex].emplace(strPrototypeTag, pPrototype);
+
+	if (iLevelIndex == 6)
+	{
+		if (StartsWith(strPrototypeTag, L"Prototype_Component_Model_"))
+		{
+			string Name = SMath::Wstring_To_String(strPrototypeTag);
+			ModelTag.push_back(Name);
+		}
+	}
 
 	return S_OK;
 }
@@ -49,6 +58,14 @@ void CComponent_Manager::Clear(_uint iLevelIndex)
 		Safe_Release(Pair.second);
 
 	m_pPrototypes[iLevelIndex].clear();
+}
+
+void CComponent_Manager::Get_ModelTag(vector<string>* _vec)
+{
+	for (auto& iter : ModelTag)
+	{
+		_vec->push_back(iter);
+	}
 }
 
 CComponent * CComponent_Manager::Find_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag)

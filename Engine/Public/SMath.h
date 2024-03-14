@@ -96,5 +96,8 @@ namespace Engine
 		float			ENGINE_DLL Calculate_AngleBetweenVectors_Radian(const XMFLOAT3& _v1, const XMFLOAT3& _v2);	// 두 벡터 사이의 각도 계산 (라디안)
 		float			ENGINE_DLL Calculate_AngleBetweenVectors_Degree(const XMFLOAT3& _v1, const XMFLOAT3& _v2);	// 두 벡터 사이의 각도 계산 (도 Degree)
 	
+		string			ENGINE_DLL Wstring_To_String(const wstring _wstring);
+		wstring			ENGINE_DLL Wstring_To_String(const string _string);
+
 	}
 }
