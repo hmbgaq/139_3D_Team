@@ -179,6 +179,10 @@ private:
 	HRESULT Ready_Bones(CMyAINode pAINode, _int iParentIndex);
 	HRESULT Ready_Animations();
 
+	/* Monster */
+public:
+	_bool IsModelPicking(RAY _Ray, _matrix _WorldMatrix, _float4* pOut);
+
 	/* Cascade */
 public:
 	HRESULT SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* strConstantName);

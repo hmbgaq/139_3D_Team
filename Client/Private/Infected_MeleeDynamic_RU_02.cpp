@@ -38,7 +38,7 @@ CState<CInfected>* CInfected_MeleeDynamic_RU_02::Update(CInfected* pActor, _floa
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 	{
-		if (pActor->Is_Inputable_Front(23))
+		if (pActor->Is_Inputable_Front(23)) /* 이상일때 */
 			m_pWeapon->Set_Enable(true);
 
 		if (pActor->Is_Inputable_Front(36))

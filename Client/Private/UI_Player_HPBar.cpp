@@ -81,6 +81,8 @@ void CUI_Player_HPBar::Tick(_float fTimeDelta)
 		m_fPreHP += 10.f;
 	}
 
+	__super::Tick(fTimeDelta);
+
 	// È¸º¹
 	if (m_fPreHP < m_fCurHP)
 		m_fPreHP = m_fCurHP;
@@ -104,8 +106,6 @@ void CUI_Player_HPBar::Tick(_float fTimeDelta)
 				m_bLerp = true;
 			}
 		}
-
-		__super::Tick(fTimeDelta);
 	}
 }
 

@@ -50,12 +50,13 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
-	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround"))); // Object 생성 실패해서 임시 주석.
 	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 
-	//FAILED_CHECK(Ready_UI());
+#pragma region 주석확인
+	FAILED_CHECK(Ready_UI());
 
 	return S_OK;
 }
@@ -157,7 +158,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring & strLayerTag)
 	//Desc.fMouseSensor = 0.05f;
 	//Desc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
 	//Desc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-	//Desc.fFovy = XMConvertToRadians(60.0f);
+	//Desc.fFovy = XMConvertToRadians(60.0f);wwwwwDdssaw
 	//Desc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	//Desc.fNear = 0.1f;
 	//Desc.fFar = m_pGameInstance->Get_CamFar();
@@ -175,10 +176,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag)
 {
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
-
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
 	pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
+	//pPlayer->Set_Position(_float3(153.6f, 0.f, 150.55f));
 	
 	CNavigation* pNavigation = pPlayer->Get_Navigation();
 
@@ -226,7 +227,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 
 	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
 	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_InitPosition(_float3(253.5f, 0.f, 11.f));	
+	//pMonster->Set_InitPosition(_float3(253.5f, 0.f, 11.f));
+	pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
+
+	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_InitPosition(_float3(153.6f, 14.65f, 217.55f));
 
 	return S_OK;
 }
@@ -390,9 +396,9 @@ HRESULT CLevel_GamePlay::Ready_UI()
 	/* Test용도 */
 	//FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
 	 
-	FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr)); /* 렌더타ㄱ*/
-	//FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
-	
+	//FAILED_CHECK(Ready_Layer_UI_Interface(TEXT("Layer_UI_Interface"), nullptr)); /* 렌더타ㄱ*/
+	FAILED_CHECK(Ready_Layer_UI(TEXT("Layer_UI"), nullptr));
+
 	return S_OK;
 }
 
@@ -796,6 +802,16 @@ HRESULT CLevel_GamePlay::Ready_Reward_Item(const wstring& strLayerTag, void* pAr
 
 		pUI_Object->Get_Transform()->Load_FromJson(object);		// 17. TransformCom
 	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
+{
+	// Ready Interface
+	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Interface(LEVEL_STATIC));
+	// Ready Crosshair
+	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Crosshair(LEVEL_STATIC));
 
 	return S_OK;
 }

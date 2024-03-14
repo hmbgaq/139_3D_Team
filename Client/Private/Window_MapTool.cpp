@@ -1129,11 +1129,11 @@ void CWindow_MapTool::Navigation_CreateTab()
 
 	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
 
-		_uint iEnvironmentSize = m_vecCreateObject.size();
+		_uint iEnvironmentSize = (_uint)m_vecCreateObject.size();
 
 		if (ImGui::BeginListBox(u8"네비게이션 픽킹대상"))
 		{
-			for (_int i = 0; i < iEnvironmentSize; ++i)
+			for (_int i = 0; i < (_int)iEnvironmentSize; ++i)
 			{
 				const _bool isSelected = m_iNavigationTargetIndex;
 
@@ -1373,7 +1373,7 @@ void CWindow_MapTool::Navigation_DeleteTab()
 	}
 
 	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
-	_int iCellSize = vecCells.size();
+	_int iCellSize = (_int)vecCells.size();
 
 	if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck())
 	{
@@ -1381,7 +1381,7 @@ void CWindow_MapTool::Navigation_DeleteTab()
 
 		_float3 fPickedPos = { 0.f, 0.f, 0.f };
 
-		_int	iNonAnimObjectSize = m_vecCreateObject.size();
+		_int	iNonAnimObjectSize = (_int)m_vecCreateObject.size();
 
 		_int	iIndex = 0;
 		_float fHighestYValue = -FLT_MAX;
@@ -1500,7 +1500,7 @@ void CWindow_MapTool::Find_NearPointPos(_float3* fPickedPos)
 CCell* CWindow_MapTool::Find_NearCell(_float3 fPickedPos)
 {
 	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
-	_int iCellSize = vecCells.size();
+	_int iCellSize = (_int)vecCells.size();
 	_float fMinDistance = FLT_MAX;
 	_float3 vPickedPos = fPickedPos;
 	CCell* pNearestCell = nullptr; // 가장 근접한 셀을 저장할 변수

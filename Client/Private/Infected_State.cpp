@@ -174,7 +174,7 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 	{
 		//cout << "death end " << endl;
 
-		pActor->Set_Dead(true);
+		//pActor->Set_Dead(true);
 		return nullptr;
 	}
 

@@ -76,6 +76,8 @@ private: /* _bool */
 	_bool	m_bShowTutorial = false;
 	_bool	m_bShowQuestBox = false;
 	_bool	m_bShowRewardBox = false;
+	_bool	m_bShowCrosshair = false;
+	_bool	m_bTriggerCrosshair = false;
 
 
 // ! SH_Add
@@ -165,6 +167,15 @@ public: /* ========================== Player Info ========================== */
 	_bool	Get_ShowRewardBox() { return m_bShowRewardBox; };
 	// =>RewardBox를 보여줄지 말지 세팅할 수 있는 Set함수
 	void	Set_ShowRewardBox(_bool bShowRewardBox) { m_bShowRewardBox = bShowRewardBox; };
+#pragma region =========> Crosshair <=========
+	// =>Crosshair를 보여줄지 말지 결정하는 Get함수
+	_bool	Get_ShowCrosshair() { return m_bShowCrosshair; };
+	// =>Crosshair를 보여줄지 말지 세팅할 수 있는 Set함수
+	void	Set_ShowCrosshair(_bool bCrosshair) { m_bShowCrosshair = bCrosshair; };
+	// =>총을 발사했을 때 Crosshair발사 애니메이션 재생을 세팅할 수 있는 Set함수
+	_bool	Get_TriggerCrosshair() { return m_bTriggerCrosshair; }
+	// =>총을 발사했을 때 Crosshair발사 애니메이션 활성화 여부를 결정하는 Get함수
+	void	Set_TriggerCrosshair(_bool bTriggerCrosshair) { m_bTriggerCrosshair = bTriggerCrosshair; }
 
 private:
 	CMasterCamera* m_pMasterCamera = { nullptr };

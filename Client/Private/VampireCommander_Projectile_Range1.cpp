@@ -19,7 +19,6 @@ CVampireCommander_Projectile_Range1::CVampireCommander_Projectile_Range1(const C
 
 HRESULT CVampireCommander_Projectile_Range1::Initialize_Prototype()
 {
-
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
 

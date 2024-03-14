@@ -725,6 +725,20 @@ HRESULT CModel::Ready_Animations()
 	return S_OK;
 }
 
+_bool CModel::IsModelPicking(RAY _Ray, _matrix _WorldMatrix, _float4* pOut)
+{
+	if (m_Meshes.empty()) // 메쉬가 비었는지 체크
+		return false;
+
+	for (auto& iter : m_Meshes)
+	{
+		if (iter->Compute_Ray(_Ray, _WorldMatrix, pOut))
+			return true;
+	}
+
+	return false;
+}
+
 HRESULT CModel::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* strConstantName)
 {
 	if (iMaterialIndex >= m_iNumMaterials)

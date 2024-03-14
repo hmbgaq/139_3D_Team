@@ -171,10 +171,26 @@ public:
 public:
 	_float3 Get_WeaknessPoint() { return m_vWeaknessPoint; };
 	virtual void Set_WeaknessPoint();
+public:
+#pragma region ===========> HP <=========== 
+	//void	Set_CurHP(_float fCurHP) { m_fCurHP = fCurHP; }
+	//_float	Get_CurHP() { return m_fCurHP; }
+	//void	Set_MaxHP(_float fMaxHP) { m_fMaxHP = fMaxHP; }
+	//_float	Get_MaxHP() { return m_fMaxHP; }
+	void	Set_CurHP(_float fCurHP) { m_iHp = fCurHP; }
+	_int	Get_CurHP() { return m_iHp; }
+	void	Set_MaxHP(_float fMaxHP) { m_iMaxHp = fMaxHP; }
+	_int	Get_MaxHP() { return m_iMaxHp; }
+protected:
+	_int m_iHp = { 1 };
+	_int m_iMaxHp = { 1 };
+	
+	/* _float 타입의 HP를 사용해주세요. */
+	//_float m_fMaxHP = { 40.f };
+	//_float m_fCurHP = { 40.f };
 
 
 protected:
-	_int m_iHp = { 1 };
 	//Power m_eStrength = { Power::Light };
 	_float m_fStiffnessRate = { 1.f };
 

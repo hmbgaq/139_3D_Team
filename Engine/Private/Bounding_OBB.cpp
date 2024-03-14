@@ -8,6 +8,12 @@ CBounding_OBB::CBounding_OBB(ID3D11Device * pDevice, ID3D11DeviceContext * pCont
 
 }
 
+void CBounding_OBB::Set_Scale(_float _sizeX, _float _sizeY, _float _sizeZ)
+{
+	/* 반지름 길이 */
+	m_pOBB->Extents = _float3(_sizeX, _sizeY, _sizeZ);
+}
+
 HRESULT CBounding_OBB::Initialize(BOUNDING_DESC * pBoundingDesc)
 {
 	BOUNDING_OBB_DESC* pDesc = (BOUNDING_OBB_DESC*)pBoundingDesc;

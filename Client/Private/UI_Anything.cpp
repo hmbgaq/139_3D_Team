@@ -46,6 +46,11 @@ void CUI_Anything::Priority_Tick(_float fTimeDelta)
 void CUI_Anything::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (m_bActive == true)
+	{
+
+	}
 }
 
 void CUI_Anything::Late_Tick(_float fTimeDelta)
@@ -69,7 +74,10 @@ void CUI_Anything::Late_Tick(_float fTimeDelta)
 	//	m_pTransformCom->Set_WorldMatrix(m_WorldMatrix);
 	//}
 
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this), );
+	if (m_bActive == true)
+	{
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this), );
+	}
 }
 
 HRESULT CUI_Anything::Render()
@@ -105,17 +113,20 @@ HRESULT CUI_Anything::Render()
 	//	break;
 	//}
 
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	if (m_bActive == true)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그릴거야.
-	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		//! 이 셰이더에 0번째 패스로 그릴거야.
+		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+	}
 
 	return S_OK;
 }

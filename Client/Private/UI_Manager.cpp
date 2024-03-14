@@ -6,6 +6,11 @@
 #include "UI.h"
 #include "..\Public\UI_Manager.h"
 
+#pragma region UI
+#include "UI_EnemyHP_Bar.h"
+#include "UI_Distortion.h"
+#pragma endregion
+
 IMPLEMENT_SINGLETON(CUI_Manager);
 
 CUI_Manager::CUI_Manager()
@@ -44,6 +49,27 @@ HRESULT CUI_Manager::Ready_Interface(_uint iLevelIndex)
 	Add_LevelUp(iLevelIndex, TEXT("Layer_LevelUp"));
 	Add_RewardBox(iLevelIndex, TEXT("Layer_RewardBox"));
 	Add_QuestBox(iLevelIndex, TEXT("Layer_QuestBox"));
+
+	return S_OK;
+}
+
+HRESULT CUI_Manager::Ready_Crosshair(_uint iLevelIndex)
+{
+	Add_Crosshair(iLevelIndex, TEXT("Layer_Crosshair"));
+
+	return S_OK;
+}
+
+HRESULT CUI_Manager::Ready_Loading_Intro(_uint iLevelIndex)
+{
+	Add_Loading_Intro(iLevelIndex, TEXT("Layer_IntroLoading"));
+
+	return S_OK;
+}
+
+HRESULT CUI_Manager::Ready_BossHUD_Bar(_uint iLevelIndex, CGameObject* pOwner)
+{
+	Add_BossHUD_Bar(iLevelIndex, TEXT("Layer_BossHUDBar"), pOwner);
 
 	return S_OK;
 }
@@ -486,7 +512,7 @@ HRESULT CUI_Manager::Add_QuestBox(_uint iLevelIndex, const wstring& strLayerTag)
 		if (pUI_Object == nullptr)
 			return E_FAIL;
 
-		m_vecRewardBox.push_back(pUI_Object);
+		m_vecQuestBox.push_back(pUI_Object);
 
 		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
 		pUI_Object->Load_FromJson(object); // 18. Load Data
@@ -563,7 +589,7 @@ HRESULT CUI_Manager::Add_Distortion(_uint iLevelIndex, const wstring& strLayerTa
 		if (pUI_Object == nullptr)
 			return E_FAIL;
 
-		m_vecRewardBox.push_back(pUI_Object);
+		m_vecDistortion.push_back(pUI_Object);
 
 		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
 		pUI_Object->Load_FromJson(object); // 18. Load Data
@@ -583,6 +609,261 @@ void CUI_Manager::Active_Distortion()
 		iter->Set_Active(true);		// UI 활성화
 		iter->Set_AnimPlay(true);	// UI Animation 재생
 		iter->Set_Disappear(false); // UI 사라짐 Off
+	}
+}
+
+HRESULT CUI_Manager::Add_Loading_Intro(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	json json_in;
+
+	//char filePath[MAX_PATH];
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/Loading/IntroLoading.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		tUI_Info.bParent = object["Parent"];					// 1. Parent
+		tUI_Info.bWorld = object["World"];						// 2. World
+		tUI_Info.bGroup = object["Group"];						// 3. Group
+		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		m_vecLoading.push_back(pUI_Object);
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_Loading_Intro(_bool bActive)
+{
+	if (m_vecLoading.empty())
+		return;
+
+	for (auto& iter : m_vecLoading)
+	{
+		iter->Set_Alpha(!bActive);			// UI 알파값 초기화
+		iter->Set_Active(bActive);		// UI 활성화
+		iter->Set_AnimPlay(bActive);	// UI Animation 재생
+		iter->Set_Disappear(!bActive);	// UI 사라짐 Off
+	}
+}
+
+HRESULT CUI_Manager::Add_Crosshair(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	json json_in;
+
+	//char filePath[MAX_PATH];
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/Crosshair/Crosshair.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		tUI_Info.bParent = object["Parent"];					// 1. Parent
+		tUI_Info.bWorld = object["World"];						// 2. World
+		tUI_Info.bGroup = object["Group"];						// 3. Group
+		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		m_vecCrosshair.push_back(pUI_Object);
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_Crosshair(_bool bActive)
+{
+	if (m_vecCrosshair.empty())
+		return;
+
+	for (auto& iter : m_vecCrosshair)
+	{
+		iter->Set_Alpha(!bActive);		// UI 알파값 초기화
+		iter->Set_Active(bActive);		// UI 활성화
+		iter->Set_Disappear(!bActive);	// UI 사라짐
+	}
+}
+
+void CUI_Manager::Trigger_Crosshair(_bool bPlayAnim)
+{
+	if (m_vecCrosshair.empty())
+		return;
+
+	for (auto& iter : m_vecCrosshair)
+	{
+		iter->Set_AnimPlay(bPlayAnim);	// UI Animation 재생
+		iter->Set_CurrTime(0.f);
+	}
+}
+
+HRESULT CUI_Manager::Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
+{
+	json json_in;
+
+	//char filePath[MAX_PATH];
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/BossHUD/BossHUDBar.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		tUI_Info.bParent = object["Parent"];					// 1. Parent
+		tUI_Info.bWorld = object["World"];						// 2. World
+		tUI_Info.bGroup = object["Group"];						// 3. Group
+		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		/* HP Bar */
+		string strCloneTag_HPBar = "Prototype_GameObject_UI_EnemyHP_Bar";
+		if (tUI_Info.strCloneTag == strCloneTag_HPBar)
+		{
+			dynamic_cast<CUI_EnemyHP_Bar*>(pUI_Object)->Set_Object_Owner(pOwner);
+		}
+
+		/* Distortion */
+		string strCloneTag_Distortion = "Prototype_GameObject_UI_Distortion";
+		if (tUI_Info.strCloneTag == strCloneTag_Distortion)
+		{
+			dynamic_cast<CUI_Distortion*>(pUI_Object)->Set_Active(true);
+		}
+
+		m_vecBossHUD_Bar.push_back(pUI_Object);
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_BossHUD_Bar(_bool bActive)
+{
+	if (m_vecBossHUD_Bar.empty())
+		return;
+
+	for (auto& iter : m_vecBossHUD_Bar)
+	{
+		iter->Set_Alpha(!bActive);			// UI 알파값 초기화
+		iter->Set_Active(bActive);		// UI 활성화
+		iter->Set_AnimPlay(bActive);	// UI Animation 재생
+		iter->Set_Disappear(!bActive);	// UI 사라짐 Off
 	}
 }
 
@@ -650,7 +931,7 @@ void CUI_Manager::Check_Active(_float fTimeDelta)
 			Active_TutorialBox();
 			break;
 		case Client::UITYPE::CROSSHAIR:
-
+			Active_Crosshair(true); // Active
 			break;
 		case Client::UITYPE::WEAKNESS:
 

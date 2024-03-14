@@ -29,6 +29,8 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
+	_int iDiscardMeshNumber = 0;
+
 public:
 	static CBody_Bandit_Sniper* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
@@ -39,6 +41,17 @@ public:
 END
 
 /* 
-
+Mesh 인덱스 설명
+0 : 옆구리 망토
+1 : 모자
+2 :
+3 : 어깨 케이브
+4 :
+5 : 바지
+6 : 목에있는 피떡
+7 : 등에있는 피떡
+8 : 등뒤 왼쪽피떡
+9 : 등뒤 오른쪽 피떡
+10 : 손
 
 */

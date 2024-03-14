@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "BackGround.h"
 #include "Level_Loading.h"
+#include "UI_Manager.h"
 
 //#include <mfapi.h>
 //#include <mfreadwrite.h>
