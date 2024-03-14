@@ -34,6 +34,8 @@
 #include "Navigation.h"
 #pragma endregion
 
+#include "Level_Loading.h"
+
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -61,6 +63,11 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_M))
+	{
+		m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+	}
+
 #pragma region Effect_Test	
 
 	//if (m_pGameInstance->Key_Down(DIK_GRAVE))
@@ -217,7 +224,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
 	NULL_CHECK_RETURN(pMonster, E_FAIL);
 	pMonster->Set_InitPosition(_float3(252.5f, 0.f, 9.f));	
-
+	
 	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
 	NULL_CHECK_RETURN(pMonster, E_FAIL);
 	//pMonster->Set_InitPosition(_float3(253.5f, 0.f, 11.f));

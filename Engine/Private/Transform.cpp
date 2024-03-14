@@ -369,9 +369,13 @@ _vector CTransform::Calc_Look_Dir(_fvector vTargetPos)
 	return XMVector3Normalize(Get_State(STATE::STATE_POSITION) - vTargetPos);
 }
 
-_float3 CTransform::Calc_Look_Dir(_float3 vTargetPos)
+_vector CTransform::Calc_Look_Dir_XZ(_fvector vTargetPos)
 {
-	return Get_Position() - vTargetPos;
+	_float4 vLook;
+	XMStoreFloat4(&vLook, Calc_Look_Dir(vTargetPos));
+	vLook.y = 0.f;
+
+	return XMLoadFloat4(&vLook);
 }
 
 void CTransform::Move_Position(_float4 vDir, _float fSpeed, _float fTimeDelta)

@@ -35,6 +35,7 @@
 #pragma endregion
 
 #include "Data_Manager.h"
+#include "Level_Loading.h"
 
 
 CLevel_Intro::CLevel_Intro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -66,7 +67,10 @@ HRESULT CLevel_Intro::Initialize()
 
 void CLevel_Intro::Tick(_float fTimeDelta)
 {
-
+	if (m_pGameInstance->Key_Down(DIK_M)) 
+	{
+		m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+	}
 
 #pragma region Effect_Test	
 
@@ -205,14 +209,17 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg
 // 	{
 	/*	}*/
 
-	{
-		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_VampireCommander"));
-		if (nullptr == pMonster)	return E_FAIL;
 
-		pMonster->Set_Position(_float3(250.66f, 0.f, 7.38f));
-		pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
-		pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
-	}
+
+	//{
+	//	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_VampireCommander"));
+	//	if (nullptr == pMonster)	return E_FAIL;
+
+	//	pMonster->Set_Position(_float3(250.66f, 0.f, 7.38f));
+	//	pMonsterNavigation = dynamic_cast<CCharacter*>(pMonster)->Get_Navigation();
+	//	pMonsterNavigation->Set_CurrentIndex(pMonsterNavigation->Get_SelectRangeCellIndex(pMonster));
+	//}
+
 
 	{
 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));

@@ -170,7 +170,13 @@ CState<CInfected>* CInfected_State::Spawn_State(CInfected* pActor, _float fTimeD
 
 CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	pActor->Set_Dead(true);
+	if (pActor->Is_Animation_End())
+	{
+		//cout << "death end " << endl;
+
+		//pActor->Set_Dead(true);
+		return nullptr;
+	}
 
 	return nullptr;
 }

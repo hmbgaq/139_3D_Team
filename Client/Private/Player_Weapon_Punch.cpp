@@ -84,7 +84,7 @@ void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 	if (nullptr != pTarget_Character)
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
-		pTarget_Character->Set_Hitted(150, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1 , m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		pTarget_Character->Set_Hitted(150, Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1 , m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
 
 		CData_Manager::GetInstance()->Get_Player()->Create_Effect(Get_WorldPosition());

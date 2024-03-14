@@ -135,7 +135,7 @@ public:
 	void	Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta);
 
 	_vector Calc_Look_Dir(_fvector vTargetPos);
-	_float3 Calc_Look_Dir(_float3 vTargetPos);
+	_vector Calc_Look_Dir_XZ(_fvector vTargetPos);
 
 	/* ---------------- 소영 추가사항 ---------------- */
 	void Move_Position(_float4 vDir, _float fSpeed, _float fTimeDelta); /* Dir쪽으로 speed만큼 계속해서 이동하는 함수 */

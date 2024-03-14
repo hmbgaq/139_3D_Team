@@ -336,6 +336,12 @@ CState<CPlayer>* CPlayer_State::Interaction_State(CPlayer* pActor, _float fTimeD
 
 CState<CPlayer>* CPlayer_State::Death_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	//임시 코드
+	if (pActor->Is_Animation_End())
+	{
+		return new CPlayer_IdleLoop();
+	}
+
 	return nullptr;
 }
 

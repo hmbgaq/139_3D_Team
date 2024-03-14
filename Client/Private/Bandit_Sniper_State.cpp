@@ -92,6 +92,7 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Death_State(CBandit_Sniper* pActor
 {
 	if (pActor->Is_Animation_End())
 	{
+		pActor->Set_Dead(true);
 		return nullptr;
 	}
 

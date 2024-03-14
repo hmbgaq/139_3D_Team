@@ -248,7 +248,7 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 	}
 	else if (100.f >= pActor->Calc_Distance() && 1.f < pActor->Calc_Distance())
 	{
-
+		pActor->m_bLookAt = true;
 		pState = Attack_State(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 	}
