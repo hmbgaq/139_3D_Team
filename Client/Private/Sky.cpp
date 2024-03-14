@@ -115,14 +115,10 @@ HRESULT CSky::Ready_Components()
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
-	
-
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_VIBuffer_Cube"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
-
-	
 
 	return S_OK;
 }

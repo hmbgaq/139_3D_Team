@@ -180,6 +180,28 @@ PS_OUT PS_INFECTED_WEAPON(PS_IN In)
     return Out;
 }
 
+/* ------------------- Pixel Shader(4) : Sniper -------------------*/
+PS_OUT PS_SNIPER_WEAPON(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+ 
+    /* ---------------- New ---------------- */
+    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    Out.vDiffuse += vRimColor;
+    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    return Out;
+}
+
 /* ------------------- Technique -------------------*/ 
 technique11 DefaultTechnique
 {
@@ -230,6 +252,18 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_INFECTED_WEAPON();
+    }
+
+    pass Sniper_Weapon
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_SNIPER_WEAPON();
     }
 
 }

@@ -20,6 +20,7 @@ public:
 	_float				Get_CurrentRange() { return m_LightDesc.fRange; }			/* fRange */
 	_uint				Get_LightIndex() { return m_LightDesc.iLightIndex; }
 
+	void				Set_LightDesc(LIGHT_DESC newDesc) {	m_LightDesc = newDesc; }
 
 private:
 	class CGameInstance*	m_pGameInstance;

@@ -1881,7 +1881,7 @@ void CWindow_MapTool::LoadCells()
 {
 	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
 
-	_int iCellSize = vecCells.size();
+	_int iCellSize = (_int)vecCells.size();
 
 	for (_int i = 0; i < iCellSize; ++i)
 	{
