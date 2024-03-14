@@ -183,6 +183,11 @@ _vector CGameObject::Calc_Look_Dir(_vector vTargetPos)
 	return m_pTransformCom->Calc_Look_Dir(vTargetPos);
 }
 
+_vector CGameObject::Calc_Look_Dir_XZ(_vector vTargetPos)
+{
+	return m_pTransformCom->Calc_Look_Dir_XZ(vTargetPos);
+}
+
 CGameObject* CGameObject::Get_Object_Owner()
 {
 	return m_pOwner;

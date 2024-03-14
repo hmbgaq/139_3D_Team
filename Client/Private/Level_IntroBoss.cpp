@@ -87,11 +87,11 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
 	LIGHT_DESC			LightDesc{};
 	{
 		LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-		LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-		LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
-		LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
+		LightDesc.vDirection = _float4(0.f, -1.f, 0.f, 0.f);
+		LightDesc.vDiffuse = _float4(0.2f, 0.4f, 0.3f, 1.0f);
+		LightDesc.vAmbient = _float4(0.05f, 0.1f, 0.075f, 1.0f);
 		LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
+	
 		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
 	}
 // 	{
@@ -369,14 +369,16 @@ HRESULT CLevel_IntroBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
 	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
 	XMStoreFloat4(&LightDesc.vPosition, XMLoadFloat4x4(&LightObjectDesc.WorldMatrix).r[3]);
 	LightDesc.fRange = 100.f;
-	LightDesc.vDiffuse = _float4(0.f, 1.0f, 0.0f, 1.f);
-	LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
+	LightDesc.vPosition = _float4(60.0f, 0.f, 55.f, 1.f);
+	LightDesc.vDiffuse = _float4(0.6f, 0.2f, 0.05f, 1.0f);
+	LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
 	LightDesc.vSpecular = LightDesc.vDiffuse;
 
 	LightObjectDesc.LightDesc = LightDesc;
 
 	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc)))
 		return E_FAIL;
+
 
 	return S_OK;
 

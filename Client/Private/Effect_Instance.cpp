@@ -287,6 +287,19 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
 
 
+	/* Distortion */
+	Out_Json["fSequenceTerm"] = m_tDistortionDesc.fSequenceTerm;
+
+	CJson_Utility::Write_Float3(Out_Json["vScrollSpeeds"], m_tDistortionDesc.vScrollSpeeds);
+	CJson_Utility::Write_Float3(Out_Json["vScales"], m_tDistortionDesc.vScales);
+	CJson_Utility::Write_Float2(Out_Json["vDistortion1"], m_tDistortionDesc.vDistortion1);
+	CJson_Utility::Write_Float2(Out_Json["vDistortion2"], m_tDistortionDesc.vDistortion2);
+	CJson_Utility::Write_Float2(Out_Json["vDistortion3"], m_tDistortionDesc.vDistortion3);
+
+	Out_Json["fDistortionScale"] = m_tDistortionDesc.fDistortionScale;
+	Out_Json["fDistortionBias"] = m_tDistortionDesc.fDistortionBias;
+
+
 	return true;
 }
 
@@ -298,6 +311,18 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 	/* Mesh */
 	m_tInstanceDesc.bUseCustomTex	= In_Json["bUseCustomTex"];
 
+
+	/* Distortion */
+	m_tDistortionDesc.fSequenceTerm = In_Json["fSequenceTerm"];
+
+	CJson_Utility::Load_Float3(In_Json["vScrollSpeeds"], m_tDistortionDesc.vScrollSpeeds);
+	CJson_Utility::Load_Float3(In_Json["vScales"], m_tDistortionDesc.vScales);
+	CJson_Utility::Load_Float2(In_Json["vDistortion1"], m_tDistortionDesc.vDistortion1);
+	CJson_Utility::Load_Float2(In_Json["vDistortion2"], m_tDistortionDesc.vDistortion2);
+	CJson_Utility::Load_Float2(In_Json["vDistortion3"], m_tDistortionDesc.vDistortion3);
+
+	m_tDistortionDesc.fDistortionScale = In_Json["fDistortionScale"];
+	m_tDistortionDesc.fDistortionBias = In_Json["fDistortionBias"];
 
 }
 

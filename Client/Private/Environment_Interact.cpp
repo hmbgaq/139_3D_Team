@@ -41,6 +41,7 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 	{
 		m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
 		Safe_AddRef(m_pPlayer);
+		m_bFindPlayer = true;
 	}
 
 

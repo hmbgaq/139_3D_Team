@@ -71,6 +71,9 @@ public:
 	_vector Get_Position_Vector();
 	_float3 Get_Position();
 	_vector Calc_Look_Dir(_vector vTargetPos);
+	_vector Calc_Look_Dir_XZ(_vector vTargetPos);
+
+	
 
 
 public:

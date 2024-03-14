@@ -219,6 +219,9 @@ void CWindow_EffectTool::ReSet_CameraPos()
 HRESULT CWindow_EffectTool::Ready_Grid()
 {
 	CGrid::GRID_DESC	tDesc = {};
+
+	tDesc.vGridColor = { 0.5f, 0.5f, 0.5f, 1.f };	// 그리드 색 설정
+
 	//tDesc.strTextureTag[CGrid::TEXTURE_DIFFUSE] = { TEXT("Prototype_Component_Texture_Effect_Diffuse") };
 	tDesc.strTextureTag[CGrid::TEXTURE_DIFFUSE] = { TEXT("") };
 	tDesc.iTextureIndex[CGrid::TEXTURE_DIFFUSE] = { 0 };
@@ -356,6 +359,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 			{
 #pragma region Desc 얻어오기 업데이트_파티클
 				m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
+				m_pSpriteDesc_Particle = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Sprite_Desc();
 				CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 				m_pParticleBufferDesc = pVIBuffer->Get_Desc();
 #pragma endregion 
@@ -515,10 +519,30 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::RadioButton("Off Sprite_Particle", &m_iSprite_Particle, 0); ImGui::SameLine();
 				ImGui::RadioButton("Sprite_Particle", &m_iSprite_Particle, 1);
 				if (0 == m_iSprite_Particle)
+				{
 					m_pCurVoidDesc->bUseSpriteAnim = FALSE;
+				}				
 				else if (1 == m_iSprite_Particle)
+				{
+					// 1이 킨거.
 					m_pCurVoidDesc->bUseSpriteAnim = TRUE;
 
+					// 스프라이트의 루프를 키고 끄기_파티클
+					ImGui::RadioButton("Loop Sprite_Particle", &m_iSpriteLoop, 0); ImGui::SameLine();
+					ImGui::RadioButton("None Loop Sprite_Particle", &m_iSpriteLoop, 1);
+					if (0 == m_iSpriteLoop)
+					{
+						m_pSpriteDesc_Particle->bLoop = TRUE; 
+						//m_pSpriteDesc_Particle->Reset_Sprite();
+					}
+					else if (1 == m_iSpriteLoop)
+					{
+						m_pSpriteDesc_Particle->bLoop = FALSE;
+						//m_pSpriteDesc_Particle->Reset_Sprite();
+					}
+
+				}
+					
 
 				ImGui::SeparatorText(" Sprite Setting_Particle ");
 				if (m_pCurVoidDesc->bUseSpriteAnim)
@@ -530,6 +554,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (ImGui::DragFloat(" Sprite Term ", &m_fSequenceTerm_Particle, 1, 1))
 					{
 						m_pSpriteDesc_Particle->fSequenceTerm = m_fSequenceTerm_Particle;
+						//m_pSpriteDesc_Particle->Reset_Sprite();
 					}
 
 					/* 스프라이트 최대 가로 세로 지정_파티클 */
@@ -550,7 +575,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_pSpriteDesc_Particle->vUV_MaxTileCount.x = (_float)m_vUV_MaxTileCount_Particle[0];
 						m_pSpriteDesc_Particle->vUV_MaxTileCount.y = (_float)m_vUV_MaxTileCount_Particle[1];
 
-
+						m_pSpriteDesc_Particle->Reset_Sprite();
 						m_pCurPartEffect->ReSet_Effect();
 					}
 
@@ -1910,6 +1935,7 @@ void CWindow_EffectTool::Update_TrailTab()
 		if (ImGui::Button(" Delete Trail "))
 		{
 			Delete_Trail();
+	
 			return;
 		}
 
@@ -2513,6 +2539,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 		{
 #pragma region 메쉬(+버퍼) 디스크립션 얻어오기 시작
 			m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();	// 이펙트_보이드 Desc
+			CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_Distortion_Desc();	// 메쉬(인스턴스)의 디스토션 Desc 얻어오기
 			CVIBuffer_Effect_Model_Instance* pVIBuffer = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_VIBufferCom();	// 메쉬(인스턴스)버퍼 얻어오기
 			m_pMeshBufferDesc = pVIBuffer->Get_Desc(); // 버퍼의 Desc 얻어오기
 #pragma endregion
@@ -2649,6 +2676,32 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_fRimPower_Mesh = m_pCurVoidDesc->fRimPower;
 
+
+
+			/* 디스토션_메쉬 값 업데이트 */
+			m_fSequenceTerm_Distortion_Mesh = pDistortionDesc->fSequenceTerm;
+
+			m_vScrollSpeeds_Mesh[0] = pDistortionDesc->vScrollSpeeds.x;
+			m_vScrollSpeeds_Mesh[1] = pDistortionDesc->vScrollSpeeds.y;
+			m_vScrollSpeeds_Mesh[2] = pDistortionDesc->vScrollSpeeds.z;
+
+
+			m_vScales_Distortion_Mesh[0] = pDistortionDesc->vScales.x;
+			m_vScales_Distortion_Mesh[1] = pDistortionDesc->vScales.y;
+			m_vScales_Distortion_Mesh[2] = pDistortionDesc->vScales.z;
+
+
+			m_vDistortion1_Mesh[0] = pDistortionDesc->vDistortion1.x;
+			m_vDistortion1_Mesh[1] = pDistortionDesc->vDistortion1.y;
+
+			m_vDistortion2_Mesh[0] = pDistortionDesc->vDistortion2.x;
+			m_vDistortion2_Mesh[1] = pDistortionDesc->vDistortion2.y;
+
+			m_vDistortion3_Mesh[0] = pDistortionDesc->vDistortion3.x;
+			m_vDistortion3_Mesh[1] = pDistortionDesc->vDistortion3.y;
+
+			m_fDistortionScale_Mesh = pDistortionDesc->fDistortionScale;
+			m_fDistortionBias_Mesh = pDistortionDesc->fDistortionBias;
 		}
 
 	}
@@ -3352,6 +3405,8 @@ void CWindow_EffectTool::Update_EffectList_Window()
 			if (ImGui::Button(" Delete Part "))
 			{
 				Delete_CurPart();
+				m_pCurPartEffect = nullptr;
+				return;
 			}
 
 		}
@@ -3496,12 +3551,29 @@ void CWindow_EffectTool::Update_EffectList_Window()
 
 				_float3 vRotated = pPartTransform->Get_Rotated();
 				ImGui::Text("Part Rotated  : %.2f %.2f %.2f", vRotated.x, vRotated.y, vRotated.z);
-				if (ImGui::DragFloat3("Part_Rotate", m_vRotate_Part, 0.5f))
+				//if (ImGui::DragFloat3("Part_Rotate", m_vRotate_Part, 0.5f))
+				//{
+				//	pPartTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Part[0]));
+				//	pPartTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Part[1]));
+				//	pPartTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(m_vRotate_Part[2]));
+				//}
+
+				if (ImGui::DragFloat("Part_Rotate_X", &m_vRotate_Part[0], 0.5f))
 				{
-					pPartTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), m_vRotate_Part[0]);
-					pPartTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_vRotate_Part[1]);
-					pPartTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), m_vRotate_Part[2]);
+					pPartTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Part[0]));
 				}
+				if (ImGui::DragFloat("Part_Rotate_Y", &m_vRotate_Part[1], 0.5f))
+				{
+					pPartTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Part[1]));
+
+				}
+				if (ImGui::DragFloat("Part_Rotate_Z", &m_vRotate_Part[2], 0.5f))
+				{
+					pPartTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(m_vRotate_Part[2]));
+
+				}
+
+
 			}
 			ImGui::SeparatorText("");
 		}

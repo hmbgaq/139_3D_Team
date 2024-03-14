@@ -30,7 +30,7 @@ HRESULT CVampireCommander_Projectile_Range3::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 13.f;
+	GameObjectDesc.fSpeedPerSec = 15.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))

@@ -2,7 +2,7 @@
 #include "UI_EnemyHP_Shard.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
-#include "Texture.h"
+#include "GameObject.h"
 
 CUI_EnemyHP_Shard::CUI_EnemyHP_Shard(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -29,11 +29,16 @@ HRESULT CUI_EnemyHP_Shard::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
+	//m_tUIInfo.bWorld = true;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
+	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
+
+	m_bActive = false;
+	m_tUIInfo.bWorld = true;
 
 	return S_OK;
 }
@@ -45,6 +50,11 @@ void CUI_EnemyHP_Shard::Priority_Tick(_float fTimeDelta)
 
 void CUI_EnemyHP_Shard::Tick(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_V))
+		m_fOffsetY -= 0.1f;
+	if (m_pGameInstance->Key_Down(DIK_B))
+		m_fOffsetY += 0.1f;
+
 	__super::Tick(fTimeDelta);
 }
 
@@ -53,58 +63,12 @@ void CUI_EnemyHP_Shard::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-
-	//if (m_tUIInfo.pParentTransformCom != nullptr &&
-	//	m_tUIInfo.bParent == false)
-	//}Render_UI_MRT
-
-	//	/* Parent */
-	//	_vector vPosition = m_tUIInfo.pParentTransformCom->Get_State(CTransform::STATE_POSITION);
-	//	XMMATRIX ParentMat = m_tUIInfo.pParentTransformCom->Get_WorldMatrix();
-	//	/* Child */
-	//	XMMATRIX ChildMat = m_pTransformCom->Get_WorldMatrix();
-
-	//	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_tUIInfo.pParentTransformCom->Get_WorldMatrix());
-
-	//	m_pTransformCom->Set_WorldMatrix(m_WorldMatrix);
-	//}
-
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this), );
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+		return;
 }
 
 HRESULT CUI_EnemyHP_Shard::Render()
 {
-	//TODO 셰이더에게 행렬을 던져주는 행위는 반드시 셰이더의 비긴함수를 호출하기 이전에 해야한다.
-	//! 그 이유는, 셰이더의 비긴함수 내에서 pPass->Apply(0, m_prContext); 코드를 수행한다.
-	//! Apply 호출 후X 행렬을 던져줘도 에러는 나지 않지만, 안정성이 떨어진다.
-	//! Apply 호출 후에 행렬을 던져주면, 어떤 때에는 정상적으로 수행되고, 어떤 때에는 값이 제대로 안 넘어가는 경우가 있다.
-
-	//switch (m_tUIInfo.eUIType)
-	//{
-	//case CUI_EnemyHP_Shard::SMALL:
-	//case CUI_EnemyHP_Shard::MID:
-	//case CUI_EnemyHP_Shard::LARGE:
-	//case CUI_EnemyHP_Shard::SIDE:
-	//{
-	//	///* 월드상의 몬스터 위치로 계산된 UI를 카메라 절두체 안에 들어왔을 경우에만 표시하기 위함 */
-	//	//if (m_fOwnerCamDistance > 40.f || false == In_Frustum())
-	//	//{
-	//	//	// m_pGameInstance->Get_CamDir();
-	//	//	return E_FAIL;
-	//	//}
-	//	//__super::SetUp_WorldToScreen(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION));
-
-	//	//__super::SetUp_Transform(m_fWorldToScreenX, m_fWorldToScreenY, m_fDefaultScale * m_fScaleOffsetX, m_fDefaultScale * m_fScaleOffsetY);
-
-
-	//	//__super::SetUp_BillBoarding();
-	//	break;
-	//}
-	//	break;
-	//default:
-	//	break;
-	//}
-
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
@@ -120,6 +84,52 @@ HRESULT CUI_EnemyHP_Shard::Render()
 	return S_OK;
 }
 
+void CUI_EnemyHP_Shard::Set_TargetPosition(_vector vTargetPosition)
+{
+	m_vTargetPosition = vTargetPosition;
+}
+
+void CUI_EnemyHP_Shard::Check_TargetWorld()
+{
+	if (m_tUIInfo.bWorld == true)
+	{
+		if (m_bActive == false)
+			return;
+
+		// 체력바를 띄운다.
+		_float4 vCamPos = m_pGameInstance->Get_CamPosition();
+		_vector vTempForDistance = m_pTransformCom->Get_Position() = XMLoadFloat4(&vCamPos);
+		_float fDistance = XMVectorGetX(XMVector3Length(vTempForDistance));
+
+		// Distance가 0.1f보다 클경우만 띄움.
+		if (fDistance > 0.1f)
+		{
+			_float3 vTemp = m_pTransformCom->Get_Scaled();
+			_vector vScale = XMVectorSet(vTemp.x, vTemp.y, vTemp.z, 0.f);
+
+			_vector vTargetPos = m_vTargetPosition;
+			_float4 vTargetTemp;
+			XMStoreFloat4(&vTargetTemp, vTargetPos);
+			vCamPos.y = vTargetTemp.y;
+
+			_vector vLook = XMVector3Normalize(m_pTransformCom->Get_Position() - XMLoadFloat4(&vCamPos));
+			_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
+			_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+			//_vector vUp = XMVector3Normalize(XMVector3Cross(vLook, vRight)); // Y빌보드를 막기 위해 Up을 0, 1, 0으로 설정함
+
+			m_World.r[CTransform::STATE_RIGHT] = XMVectorScale(vRight, vTemp.x);
+			m_World.r[CTransform::STATE_UP] = XMVectorScale(vUp, vTemp.y);
+			m_World.r[CTransform::STATE_LOOK] = XMVectorScale(vLook, vTemp.z);
+
+			//vTargetTemp.y += m_fOffset;
+			m_World.r[CTransform::STATE_POSITION] = XMLoadFloat4(&vTargetTemp);
+
+			m_pTransformCom->Set_WorldMatrix(m_World);
+			//m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this);
+		}
+	}
+}
+
 HRESULT CUI_EnemyHP_Shard::Ready_Components()
 {
 	//! For.Com_Shader
@@ -132,6 +142,7 @@ HRESULT CUI_EnemyHP_Shard::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
+
 	wstring strPrototag;
 	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
 
@@ -139,7 +150,6 @@ HRESULT CUI_EnemyHP_Shard::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
-	//FAILED_CHECK(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Test"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom)));
 
 	return S_OK;
 }
@@ -155,55 +165,17 @@ HRESULT CUI_EnemyHP_Shard::Bind_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
+
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CUI_EnemyHP_Shard::Set_ParentTransform(CTransform* pParentTransformCom)
-{
-	m_tUIInfo.pParentTransformCom = pParentTransformCom;
-	return S_OK;
-}
-
-void CUI_EnemyHP_Shard::Compute_OwnerCamDistance()
-{
-	//_vector		vPosition = m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION);
-	//_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
-
-	//m_fOwnerCamDistance = XMVectorGetX(XMVector3Length(vPosition - vCamPosition));
-}
-
-_bool CUI_EnemyHP_Shard::In_Frustum()
-{
-	return false;
-	//return m_pGameInstance->isIn_WorldPlanes(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
-}
-
 json CUI_EnemyHP_Shard::Save_Desc(json& out_json)
 {
-	// Save error : 저장을 상위 부모에서 바꿨는데 이 클래스에는 적용안했음.
+	/* 기본정보 저장 */
 	__super::Save_Desc(out_json);
-
-	//_float fSizeX = 0.f;
-	//_float fSizeY = 0.f;
-	//_float fPositionX = 0.f;
-	//_float fPositionY = 0.f;
-
-	//_float fCurPosX = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[0];
-	//_float fCurPosY = m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1];
-
-	//fCurPosX = fCurPosX + (_float)g_iWinSizeX * 0.5f;
-	//fCurPosY = (_float)g_iWinSizeY * 0.5f - fCurPosY;
-
-	//out_json["CloneTag"] = m_tUIInfo.strCloneTag;
-
-	//out_json["ProtoTag"] = m_tUIInfo.strProtoTag;
-
-	//out_json["FilePath"] = m_tUIInfo.strFilePath;
-
-	//m_pTransformCom->Write_Json(out_json);
 
 	return out_json;
 }
@@ -226,6 +198,11 @@ CUI_EnemyHP_Shard* CUI_EnemyHP_Shard::Create(ID3D11Device* pDevice, ID3D11Device
 	return pInstance;
 }
 
+CGameObject* CUI_EnemyHP_Shard::Pool()
+{
+	return new CUI_EnemyHP_Shard(*this);
+}
+
 CGameObject* CUI_EnemyHP_Shard::Clone(void* pArg)
 {
 	CUI_EnemyHP_Shard* pInstance = new CUI_EnemyHP_Shard(*this);
@@ -239,17 +216,13 @@ CGameObject* CUI_EnemyHP_Shard::Clone(void* pArg)
 	return pInstance;
 }
 
-CGameObject* CUI_EnemyHP_Shard::Pool()
-{
-	return new CUI_EnemyHP_Shard(*this);
-}
-
 void CUI_EnemyHP_Shard::Free()
 {
 	__super::Free();
 
-	if (m_pTextureCom)
-		Safe_Release(m_pTextureCom);
+	Safe_Release(m_pVIBufferCom);
+	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pTextureCom);
 
 }
 
