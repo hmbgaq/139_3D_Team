@@ -31,8 +31,10 @@ private:
 
 private:
 	void					Compute_OwnerCamDistance();
-	HRESULT					Setting_Owner();
 	_bool					In_Frustum();
+
+public:
+	HRESULT					Setting_Owner();
 
 public:
 	json					Save_Desc(json& out_json);
@@ -45,7 +47,7 @@ private:
 	_float					m_fCurHP = 100.f;
 	_float					m_fMaxHP = 100.f;
 	_float					m_fTimeAcc = 0.f;
-	_float					m_fVariationSpeed = 2.0f;
+	_float					m_fVariationSpeed = 1.7f;
 	_bool					m_bLerp = false;
 
 public:

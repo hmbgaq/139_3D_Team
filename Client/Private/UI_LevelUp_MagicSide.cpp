@@ -155,7 +155,7 @@ void CUI_LevelUp_MagicSide::Check_Disappear(_float fTimeDelta)
 {
 	if (m_bDisappear == true)
 	{
-		m_bActive = Alpha_Minus(fTimeDelta);
+		m_bActive = Alpha_Plus(fTimeDelta);
 	}
 }
 

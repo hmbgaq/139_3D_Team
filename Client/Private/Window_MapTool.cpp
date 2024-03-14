@@ -903,7 +903,7 @@ void CWindow_MapTool::EnvironmentMode_Function()
 	if (ImGui::Button(u8"스테이지1 불러오기"))
 	{
 		string strFilePath = "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map";
-		string strFileName = "Stage1Final_MapData.json";
+		string strFileName = "Stage1InteractTest1_MapData.json";
 		Load_Function(strFilePath, strFileName);
 	}
 
@@ -3564,7 +3564,7 @@ void CWindow_MapTool::Instance_SelectFunction()
 			vector<INSTANCE_INFO_DESC> Desc = *m_vecCreateInstance[m_iSelectEnvironmentIndex]->Get_InstanceInfoDesc();
 
 			_int iNumInstance = (_int)Desc.size();
-
+			
 
 			for (_uint i = 0; i < (_uint)iNumInstance; ++i)
 			{
@@ -3698,23 +3698,81 @@ void CWindow_MapTool::Interact_SelectFunction()
 		}
 
 
-		ImGui::InputFloat3(u8"콜라이더 사이즈", m_fSelectColliderSizeArray); 
-		ImGui::InputFloat3(u8"콜라이더 센터", m_fSelectColliderCenterArray);
-		
-		if (ImGui::Button(u8"콜라이더 사이즈 업데이트"))
+		if(ImGui::InputInt(u8"셰이더패스", &m_iShaderPassIndex))
 		{
-			#ifdef _DEBUG
-				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ColliderSize(_float3(m_fSelectColliderSizeArray[0], m_fSelectColliderSizeArray[1], m_fSelectColliderSizeArray[2]));
-			#endif // _DEBUG
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ShaderPassIndex(m_iShaderPassIndex);
 		}
 
-		ImGui::SameLine();
+		
 
-		if (ImGui::Button(u8"콜라이더 센터 업데이트"))
+		ImGui::SeparatorText(u8"상호작용 셋팅");
 		{
-			#ifdef _DEBUG
-				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ColliderCenter(_float3(m_fSelectColliderCenterArray[0], m_fSelectColliderCenterArray[1], m_fSelectColliderCenterArray[2]));
-			#endif // _DEBUG
+			const char* InteractTypes[] = { "INTERACT_JUMP100", "INTERACT_JUMP200", "INTERACT_JUMP300", "INTERACT_VAULT100", "INTERACT_VAULT200" };
+			const char* InteractPreviewType = InteractTypes[m_eInteractType];
+
+			static ImGuiComboFlags ComboFlags = ImGuiComboFlags_WidthFitPreview | ImGuiComboFlags_HeightSmall;
+
+			if (ImGui::BeginCombo(u8"상호작용 타입", InteractPreviewType, ComboFlags))
+			{
+				for (int i = 0; i < IM_ARRAYSIZE(InteractTypes); ++i)
+				{
+					const bool is_Selected = (m_eInteractType == i);
+
+					if (ImGui::Selectable(InteractTypes[i], is_Selected))
+					{
+						m_eInteractType = i;
+						m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractType((CEnvironment_Interact::INTERACT_TYPE)m_eInteractType);
+					}
+
+					if (true == is_Selected)
+						ImGui::SetItemDefaultFocus();
+				}
+
+				ImGui::EndCombo();
+			}
+
+			ImGui::SameLine();
+
+			CEnvironment_Interact::INTERACT_STATE eInteractState = CEnvironment_Interact::INTERACT_STATE::INTERACTSTATE_END;
+
+			//static _int iInstanceState = 0;
+			const char* InstanceState[2] = { u8"무한 상호작용", u8"한번만 수행" };
+
+			for (_uint i = 0; i < IM_ARRAYSIZE(InstanceState); ++i)
+			{
+				if (i > 0) { ImGui::SameLine(); }
+
+				if (ImGui::RadioButton(InstanceState[i], &m_eInteractState, i))
+				{
+					m_eInteractState = i;
+					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractState((CEnvironment_Interact::INTERACT_STATE)m_eInteractState);
+					//eInteractState = CEnvironment_Interact::INTERACT_STATE(iInstanceState);
+				}
+			}
+		}
+
+		ImGui::SeparatorText(u8"콜라이더 셋팅");
+		{
+			ImGui::InputFloat3(u8"콜라이더 사이즈", m_fSelectColliderSizeArray); 
+			ImGui::InputFloat3(u8"콜라이더 센터", m_fSelectColliderCenterArray);
+
+
+			
+			if (ImGui::Button(u8"콜라이더 사이즈 업데이트"))
+			{
+				#ifdef _DEBUG
+					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ColliderSize(_float3(m_fSelectColliderSizeArray[0], m_fSelectColliderSizeArray[1], m_fSelectColliderSizeArray[2]));
+				#endif // _DEBUG
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button(u8"콜라이더 센터 업데이트"))
+			{
+				#ifdef _DEBUG
+					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ColliderCenter(_float3(m_fSelectColliderCenterArray[0], m_fSelectColliderCenterArray[1], m_fSelectColliderCenterArray[2]));
+				#endif // _DEBUG
+			}
 		}
 	}
 

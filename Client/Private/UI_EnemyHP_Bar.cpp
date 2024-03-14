@@ -50,7 +50,7 @@ HRESULT CUI_EnemyHP_Bar::Initialize(void* pArg)
 	해당 객체에 원하는 함수나 변수 만들어서 불러오기.
 	*/
 
-	Setting_Owner();
+	// Setting_Owner(); 생성 후 세팅이니까 생성 하는곳에서 함수 호출해서 세팅해주기
 	m_bActive = true;
 
 	return S_OK;

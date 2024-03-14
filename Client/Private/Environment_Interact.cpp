@@ -41,6 +41,7 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 	{
 		m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
 		Safe_AddRef(m_pPlayer);
+		m_bFindPlayer = true;
 	}
 
 
@@ -274,6 +275,8 @@ void CEnvironment_Interact::Interact()
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 							m_pPlayer->SetState_InteractJumpDown100();
 
+
+
 						break;
 					}
 
@@ -310,6 +313,8 @@ void CEnvironment_Interact::Interact()
 						break;
 					}
 				}
+
+				m_bInteract = true;
 			}
 		}
 }
