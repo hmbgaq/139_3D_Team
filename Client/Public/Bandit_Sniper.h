@@ -22,7 +22,7 @@ public:
 	virtual HRESULT Render() override;
 	
 public:
-	_bool Get_ProtectExist() { return m_bProtectExist; }
+	_bool	Get_ProtectExist() { return m_bProtectExist; }
 	_float3 Get_BonePos() { return m_pWeapon->Get_Position(); }
 	void	Set_ColliderSize(_float fSizeX, _float fSizeY, _float fSizeZ);
 

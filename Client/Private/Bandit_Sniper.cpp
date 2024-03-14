@@ -161,15 +161,12 @@ void CBandit_Sniper::Hitted_Right(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		cout << "Light " << endl;
 		m_pActor->Set_State(new CSniper_HitHeavy_FR_01());
 		break;
 	case Engine::Medium:
-		cout << "Medium " << endl;
 		m_pActor->Set_State(new CSniper_HitHeavy_FR_01());
 		break;
 	case Engine::Heavy:
-		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
 		break;
 	default:
@@ -183,15 +180,12 @@ void CBandit_Sniper::Hitted_Front(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		cout << "Light " << endl;
 		m_pActor->Set_State(new CSniper_HitHeavy_F_01());
 		break;
 	case Engine::Medium:
-		cout << "Medium " << endl;
 		m_pActor->Set_State(new CSniper_HitHeavy_F_01());
 		break;
 	case Engine::Heavy:
-		cout << "Heavy " << endl;
 		m_pActor->Set_State(new CSniper_HitHeavy_F_01());
 		break;
 	default:

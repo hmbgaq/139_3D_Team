@@ -160,8 +160,6 @@ private:
 
 	_float2					m_vMouseMove			= { 0.f, 0.f };
 
-
-
 	/* Cascade */
 	vector<_matrix>			m_matCurrTransforms;
 	vector<KEYFRAME>		m_CurrKeyFrameDatas;
@@ -179,12 +177,17 @@ private:
 	HRESULT Ready_Bones(CMyAINode pAINode, _int iParentIndex);
 	HRESULT Ready_Animations();
 
+public: 
 	/* Monster */
-public:
 	_bool IsModelPicking(RAY _Ray, _matrix _WorldMatrix, _float4* pOut);
+	
+	/* Shader Tool */
+	//void Collect_ModelTag(string FilePath);
+	//
+	//vector<string> ModelTag = {};
+	//_bool m_bFillMode = true;
 
-	/* Cascade */
-public:
+public: /* Cascade */
 	HRESULT SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* strConstantName);
 	HRESULT Render(CShader*& pShader, const _uint& iMeshIndex, const _uint& strPassName);
 

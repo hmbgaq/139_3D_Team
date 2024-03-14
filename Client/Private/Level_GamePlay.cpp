@@ -210,9 +210,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 	CGameObject* pMonster = nullptr;
 
 	/* -- Monster -----------------------------*/
-	//CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
-	//NULL_CHECK_RETURN(pMonster, E_FAIL);
-	//pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
+	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
 	
 	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
 	NULL_CHECK_RETURN(pMonster, E_FAIL);
