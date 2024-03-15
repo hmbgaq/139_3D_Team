@@ -7,12 +7,17 @@ void CInfected_Walk_F::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 }
 
 CState<CInfected>* CInfected_Walk_F::Update(CInfected* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
 }
 
 void CInfected_Walk_F::Release(CInfected* pActor)
