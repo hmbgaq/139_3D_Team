@@ -158,7 +158,7 @@ public:
 	_float Calc_Distance(CGameObject* pTarget);
 	_float Calc_Distance();
 
-	_float Calc_Distance_Front(_float3 vTargetPos, _float3 vFront = _float3(0.f, 0.f, 1.f));
+	_float Calc_Distance_Front(_float3 vTargetPos);
 
 	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
@@ -238,7 +238,7 @@ protected:
 protected:
 	CCharacter* m_pTarget = { nullptr };
 	_float3		m_vWeaknessPoint = { 0.f, 0.f, 0.f };
-	_float3		m_vWeaknessPoint_Local = { 0.f, 0.5f, 0.f };
+	_float3		m_vWeaknessPoint_Local = { 0.f, 1.f, 0.f };
 
 
 protected:

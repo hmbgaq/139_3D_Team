@@ -73,7 +73,7 @@ void CBody_Infected_A::Update_DiscardMesh()
 
 HRESULT CBody_Infected_A::OptionSetting()
 {
-	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 2, 5, 6, 7, 8 }; // ÇÇ¶± 
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = {  }; // ÇÇ¶± 
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ATTACK] = { 1, 11 }; // ¹«±â 
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = {0, 1, 2, 3, 5, 6, 7, 8, 11 }; // °Ñ°¡Á× + ÀÇ»ó + ¹«±â + ±âÅ¸ 
 
