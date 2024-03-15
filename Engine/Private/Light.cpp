@@ -58,6 +58,21 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 	return pVIBuffer->Render();	
 }
 
+void CLight::Set_Diffuse(_float4 vDiffuse)
+{
+	m_LightDesc.vDiffuse = vDiffuse;
+}
+
+void CLight::Set_Specular(_float4 vSpecular)
+{
+	m_LightDesc.vSpecular = vSpecular;
+}
+
+void CLight::Set_Ambient(_float4 vAmbient)
+{
+	m_LightDesc.vAmbient = vAmbient;
+}
+
 void CLight::Decrease_GlobalIndex()
 {
 	--g_iLightIndex;
