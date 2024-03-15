@@ -83,7 +83,7 @@ void CVampireCommander_Projectile_Range3::Tick(_float fTimeDelta)
 	//	, m_vPlayerPos, TRUE, Get_Position());
 
 
-	EFFECT_MANAGER->Tick_Create_Effect(&m_fEffectTimeAcc, 0.2f, fTimeDelta, "Test_Impact_Tick_03.json"
+	EFFECT_MANAGER->Tick_Create_Effect(&m_fEffectTimeAcc, 0.18f, fTimeDelta, "Test_Impact_Tick_03.json"
 		, m_vPlayerPos, TRUE, Get_Position());
 }
 
