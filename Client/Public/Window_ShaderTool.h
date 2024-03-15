@@ -42,8 +42,7 @@ private:
 	wstring		m_wstrLayerTag = {};
 	
 	/* Load Path */
-	//string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
-	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData_MapData.json";
+	string			m_strStage1MapLoadPath = {};
 
 	/* Object Load - stringÀ¸·Î ¸ðµ¨ Å°°ª ¹Þ¾Æ¿È */
 	vector<string>	m_vObjectModelTag;

@@ -49,6 +49,7 @@ public: /* Ready_Preset */
 	HRESULT Ready_Interface(_uint iLevelIndex);
 	HRESULT Ready_Crosshair(_uint iLevelIndex);
 	HRESULT Ready_Loading_Intro(_uint iLevelIndex);
+	HRESULT Ready_Loading_IntroBoss(_uint iLevelIndex);
 	HRESULT Ready_BossHUD_Bar(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 	HRESULT Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 
@@ -56,10 +57,12 @@ public:
 	/* LeftHUD */
 	HRESULT Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_LeftHUD();
+	void	NonActive_LeftHUD();
 	vector<CUI*>	m_vecLeftHUD;
 	/* RightHUD */
 	HRESULT Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_RightHUD();
+	void	NonActive_RightHUD();
 	vector<CUI*>	m_vecRightHUD;
 	/* TutorialBox */
 	HRESULT Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerTag);
@@ -88,8 +91,12 @@ public:
 	void	Active_Loading_Intro(_bool bActive);
 	vector<CUI*>	m_vecLoading;
 
+	/* BossLoading */
+	HRESULT Add_Loading_IntroBoss(_uint iLevelIndex, const wstring& strLayerTag);
+	void	Active_Loading_IntroBoss(_bool bActive);
+	vector<CUI*>	m_vecLoadingIntroBoss;
 
-	/* IntroLoading */
+	/* Crosshair */
 	HRESULT			Add_Crosshair(_uint iLevelIndex, const wstring& strLayerTag);
 	void			Active_Crosshair(_bool bActive);
 	void			Trigger_Crosshair(_bool bPlayAnim);
@@ -108,6 +115,9 @@ public:
 	/* EnemyHUD(Shard) */
 	HRESULT			Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_EnemyHUD_Shard(_bool bActive);
+	void			Set_EnemyHUD_World(_matrix matWorld);
+	void			Set_Offset(_float fOffsetX, _float fOffsetY);
+
 	vector<CUI*>	m_vecEnemyHUD_Shard;
 
 
