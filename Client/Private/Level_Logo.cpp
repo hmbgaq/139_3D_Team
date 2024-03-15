@@ -60,9 +60,11 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		// 확인 버튼을 눌렀을 때
 		if (iCheckPoint == IDOK)
 		{
-			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO)),);
 			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY)),);
 			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS)),);
+			
+			/* Test */
+			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO)),);
 		}
 		else if (iCheckPoint == IDCANCEL)
 		{

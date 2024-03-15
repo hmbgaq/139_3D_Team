@@ -43,7 +43,7 @@ HRESULT CBullet_Winchester::Initialize(void* pArg)
 
 	//m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_iDamage = 150;
+	m_iDamage = 30;
 
 	// ÀÌÆåÆ® »ý¼º
 	m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
