@@ -399,7 +399,7 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 		}
 		else 
 		{
-			//Set_Invincible(true);
+			Set_Invincible(true);
 			Hitted_Dead(eHitPower);
 		}
 		
@@ -526,8 +526,15 @@ CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _fl
 		if (nullptr == pTargetCharacter || true == pTargetCharacter->Is_Invincible() || 0 >= pTargetCharacter->Get_Hp())
 			continue;
 
-		//_float fDistance = Calc_Distance(pTarget);
-		_float fDistance = Calc_Distance_Front(pTarget->Get_Position());
+
+		_float fDistance = 0.f;
+
+		for (_uint i = 0; i < 5; ++i)
+		{
+			fDistance += Calc_Distance_Front(pTarget->Get_Position(), _float3(0.f, 0.f, 0.5f * i));
+		}
+		fDistance /= 5.f;
+
 
 		if (fMinDistance > fDistance) 
 		{
@@ -562,9 +569,9 @@ _float CCharacter::Calc_Distance()
 	return Calc_Distance(m_pTarget);
 }
 
-_float CCharacter::Calc_Distance_Front(_float3 vTargetPos)
+_float CCharacter::Calc_Distance_Front(_float3 vTargetPos, _float3 vFront)
 {
-	_float3 vPos = m_pTransformCom->Calc_Front_Pos(); //Get_Position();
+	_float3 vPos = m_pTransformCom->Calc_Front_Pos(vFront); //Get_Position();
 
 	_float3 vDiff = vTargetPos - vPos;
 

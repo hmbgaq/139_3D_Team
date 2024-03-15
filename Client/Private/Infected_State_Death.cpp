@@ -7,6 +7,8 @@ void CInfected_State_Death::Initialize(CInfected* pActor)
 
 	CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
 	pBody->Set_RenderState(CBody_Infected::RENDER_STATE::NAKED);
+
+	pActor->Set_Invincible(true);
 }
 
 CState<CInfected>* CInfected_State_Death::Update(CInfected* pActor, _float fTimeDelta)
