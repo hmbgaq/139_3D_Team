@@ -4,7 +4,7 @@
 
 BEGIN(Engine)
 
-class CLight final : public CBase
+class ENGINE_DLL CLight final : public CBase
 {
 private:
 	CLight();
@@ -21,9 +21,14 @@ public:
 	_uint				Get_LightIndex() { return m_LightDesc.iLightIndex; }
 
 	void				Set_LightDesc(LIGHT_DESC newDesc) {	m_LightDesc = newDesc; }
+	void				Set_Diffuse(_float4 vDiffuse);
+	void				Set_Specular(_float4 vSpecular);
+	void				Set_Ambient(_float4 vAmbient);
+	void				Set_LightIndex(_uint iLightIndex) { g_iLightIndex = iLightIndex;}
+	void				Set_LightEnable(_bool bEnable) { m_LightDesc.bEnable = bEnable; }
 
 public:
-	void Decrease_GlobalIndex();
+	void				Decrease_GlobalIndex();
 
 private:
 	class CGameInstance*	m_pGameInstance;

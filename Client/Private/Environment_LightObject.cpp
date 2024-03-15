@@ -2,6 +2,9 @@
 #include "..\Public\Environment_LightObject.h"
 
 #include "GameInstance.h"
+#include "Effect_Manager.h"
+#include "Effect.h"
+#include "Light.h"
 
 CEnvironment_LightObject::CEnvironment_LightObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -12,7 +15,7 @@ CEnvironment_LightObject::CEnvironment_LightObject(ID3D11Device* pDevice, ID3D11
 CEnvironment_LightObject::CEnvironment_LightObject(const CEnvironment_LightObject & rhs)
 	: CGameObject(rhs)
 {
-}
+} 
 
 HRESULT CEnvironment_LightObject::Initialize_Prototype()
 {	
@@ -25,6 +28,9 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 	m_tEnvironmentDesc = *(ENVIRONMENT_LIGHTOBJECT_DESC*)pArg;
 
 	
+	
+//! C:\Users\PC\Desktop\3D_TeamPortpolio\Client\Bin\DataFiles\Data_Effect\Data_Fire\FIre_Torch
+
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
@@ -41,6 +47,12 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 		m_pModelCom->Set_Animation(m_tEnvironmentDesc.iPlayAnimationIndex);
 	}
 
+
+	if (true == m_tEnvironmentDesc.bEffect)
+	{
+		m_pEffect = EFFECT_MANAGER->Create_Effect("FIre_Torch.json");
+		m_pEffect->Set_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+	}
 	
 
 	if(FAILED(m_pGameInstance->Add_Light(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.iLightIndex)))
@@ -149,6 +161,133 @@ _bool CEnvironment_LightObject::Write_Json(json& Out_Json)
 void CEnvironment_LightObject::Load_FromJson(const json& In_Json)
 {
 	return __super::Load_FromJson(In_Json);
+}
+
+void CEnvironment_LightObject::Set_Diffuse(_float4 vDiffuse)
+{
+	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
+
+	if (nullptr == pLight)
+		return;
+
+	pLight->Set_Diffuse(vDiffuse);
+	m_tEnvironmentDesc.LightDesc.vDiffuse = vDiffuse;
+	//pLight->Set_LightDesc()
+}
+
+void CEnvironment_LightObject::Set_Specular(_float4 vSpecular)
+{
+	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
+
+	if (nullptr == pLight)
+		return;
+
+	pLight->Set_Specular(vSpecular);
+	m_tEnvironmentDesc.LightDesc.vSpecular = vSpecular;
+}
+
+void CEnvironment_LightObject::Set_Ambient(_float4 vAmbient)
+{
+	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
+
+	if (nullptr == pLight)
+		return;
+
+	pLight->Set_Ambient(vAmbient);
+	m_tEnvironmentDesc.LightDesc.vAmbient = vAmbient;
+}
+
+void CEnvironment_LightObject::Set_Enable(_bool bEnable)
+{
+	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
+
+	if (nullptr == pLight)
+		return;
+
+	pLight->Set_LightEnable(bEnable);
+	m_tEnvironmentDesc.LightDesc.bEnable = bEnable;
+}
+
+void CEnvironment_LightObject::Set_LightDesc(LIGHT_DESC tLightDesc)
+{
+	CLight* pLight = m_pGameInstance->Find_Light(tLightDesc.iLightIndex);
+	
+	if(nullptr == pLight)
+		return;
+
+	pLight->Set_LightDesc(tLightDesc);
+	m_tEnvironmentDesc.LightDesc = tLightDesc;
+
+//TODO public: /* For.Light_Manager */
+//TODO 	HRESULT			Add_Light(const LIGHT_DESC & LightDesc, _int & outLightIndex);
+//TODO 	class CLight*		Find_Light(const _int iIndex);
+//TODO 	void				Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc);
+}
+
+void CEnvironment_LightObject::Change_LightType(LIGHT_DESC::TYPE eLightType)
+{
+	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
+
+	if (nullptr == pLight)
+		return;
+
+	Safe_Release(pLight);
+
+	HRESULT hr;
+
+	hr = m_pGameInstance->Add_Light(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.iLightIndex);
+
+	if (S_OK == hr)
+	{
+		m_tEnvironmentDesc.LightDesc.eType = eLightType;
+	}
+}
+
+void CEnvironment_LightObject::Change_LightEffect(LIGHT_EFFECT eLightEffectType)
+{
+	if (false == m_tEnvironmentDesc.bEffect)
+		return;
+
+	string strEffectFilePath = "FIre_Torch.json";
+
+	switch (eLightEffectType)
+	{
+	case Client::CEnvironment_LightObject::LIGHTEFFECT_TORCH:
+		strEffectFilePath = "FIre_Torch.json";
+		break;
+	case Client::CEnvironment_LightObject::LIGHTEFFECT_TEST1:
+		strEffectFilePath = "FIre_Torch.json";
+		break;
+	case Client::CEnvironment_LightObject::LIGHTEFFECT_TEST2:
+		strEffectFilePath = "FIre_Torch.json";
+		break;
+	case Client::CEnvironment_LightObject::LIGHTEFFECT_TEST3:
+		strEffectFilePath = "FIre_Torch.json";
+		break;
+	case Client::CEnvironment_LightObject::LIGHTEFFECT_TEST4:
+		strEffectFilePath = "FIre_Torch.json";
+		break;
+	
+	}
+
+
+	if (m_pEffect != nullptr)
+	{
+		m_pEffect->Set_Dead(true);
+		m_pEffect = nullptr;
+	}
+
+
+
+	m_pEffect = EFFECT_MANAGER->Create_Effect(strEffectFilePath);
+
+	if (m_pEffect == nullptr)
+		MSG_BOX("라이트 오브젝트 이펙트 변경 실패");
+	else
+	{
+		m_pEffect->Set_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+		m_tEnvironmentDesc.eLightEffect = eLightEffectType;
+	}
 }
 
 #ifdef _DEBUG
@@ -299,6 +438,10 @@ CGameObject* CEnvironment_LightObject::Pool()
 void CEnvironment_LightObject::Free()
 {
 	__super::Free();
+
+	
+	if(m_pEffect != nullptr)
+		Safe_Release(m_pEffect);
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);

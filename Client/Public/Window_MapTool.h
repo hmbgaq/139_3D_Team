@@ -25,7 +25,7 @@ class CSky;
 class CWindow_MapTool final : public CImgui_Window
 {
 private:
-	enum class TAP_TYPE { TAB_SINGLE, TAB_INTERACT, TAB_ENVIRONMENT, TAB_NORMALMONSTER, TAB_BOSSMONSTER, TAB_NPC, TAB_END };
+	enum class TAP_TYPE { TAB_SINGLE, TAB_LIGHT, TAB_INTERACT, TAB_ENVIRONMENT, TAB_NORMALMONSTER, TAB_BOSSMONSTER, TAB_NPC, TAB_END };
 	enum class MODE_TYPE { MODE_CREATE, MODE_SELECT, MODE_DELETE, MODE_END };
 	enum class PICKING_TYPE { PICKING_FIELD, PICKING_MESH, PICKING_INSTANCE, PICKING_NONE, PICKING_END };
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
@@ -71,8 +71,13 @@ private:
 	void			NavigationMode_Function();
 	
 
-	//!For. Environment
+	//!For. Environmentf
 	void			GroundTab_Function();
+	void			LightTab_Function();
+		void			Light_CreateTab();
+		void			Light_SelectTab();
+		void			Light_DeleteTab();
+
 	void			InteractTab_Function();
 		void			Interact_CreateTab();
 		void			Interact_DeleteTab();
@@ -127,6 +132,7 @@ private: //! For. Create_Function
 	//!For. Environment
 	void			Ground_CreateFunction();
 	
+	void			Light_CreateFunction();
 	void			Interact_CreateFunction();
 	void			Preview_Environment_CreateFunction();
 	void			Create_Instance();
@@ -232,6 +238,7 @@ private:
 	//! for.PriviewObject //미리보기용 오브젝트
 	CEnvironment_Object*			m_pPreviewObject = {}; //! 미리보기를 위해 클론시킨 오브젝트.
 	CEnvironment_Interact*			m_pPreviewInteract = {}; //! 상호작용용 미리보기 오브젝트
+	CEnvironment_LightObject*		m_pPreviewLightObject = {};
 	
 	_uint							m_iOriginSelectModelTag = 0; 
 	_float							m_fDeadWaiting = 0.1f; //! 한틱 도는거 기다리기위함
@@ -255,6 +262,12 @@ private:
 	_float							m_fSelectColliderCenterArray[3] = { 0.f, 1.f, 0.f }; //! 콜라이더 센터변경용
 	_int							m_iInteractPlayAnimIndex = 0;
 
+	//!For.Light//! 라이트
+	_int							m_eLightEffectType = 0; //! 전부 이넘 캐스팅
+	LIGHT_DESC::TYPE				m_eLightType = LIGHT_DESC::TYPE::TYPE_END;
+	_bool							m_bLightEffect = true;
+	
+
 private: //! 필드
 	class CField*	m_pField = { nullptr };
 	_float			m_fFieldSizeX = { 20.f };
@@ -274,23 +287,29 @@ private: //! 레이캐스트
 
 private:
 	//!For. CreateObject
-	vector<CEnvironment_Interact*>	m_vecCreateInteractObject = {};
-	vector<string>					m_vecCreateInteractObjectTag = {};
-	_int							m_vecCreateInteractIndex = 0;
+	vector<CEnvironment_LightObject*>	m_vecCreateLightObject;
+	vector<string>						m_vecCreateLightObjectTag = {};
+	_int								m_iCreateLightObjectIndex = 0;
+	_int								m_iSelectLightObjectIndex = 0;
+	LIGHT_DESC							m_tEditLightDesc = {};
+	
+	vector<CEnvironment_Interact*>		m_vecCreateInteractObject = {};
+	vector<string>						m_vecCreateInteractObjectTag = {};
+	_int								m_vecCreateInteractIndex = 0;
 
 
-	vector<CEnvironment_Object*>	m_vecCreateObject = {}; //! 생성한 오브젝트
-	vector<string>					m_vecCreateObjectTag = {};	
-	_int							m_vecCreateObjectIndex = 0;
-	_int							m_iCreateObjectIndex = 0;
-	_int							m_iSelectObjectIndex = 0;
+	vector<CEnvironment_Object*>		m_vecCreateObject = {}; //! 생성한 오브젝트
+	vector<string>						m_vecCreateObjectTag = {};	
+	_int								m_vecCreateObjectIndex = 0;
+	_int								m_iCreateObjectIndex = 0;
+	_int								m_iSelectObjectIndex = 0;
 
-	CGameObject*					m_pPickingObject = { nullptr };
-	INSTANCE_INFO_DESC*				m_pPickingInstanceInfo = { nullptr };
+	CGameObject*						m_pPickingObject = { nullptr };
+	INSTANCE_INFO_DESC*					m_pPickingInstanceInfo = { nullptr };
 
 	//!For. CreateCharacter
-	vector<CMonster_Character*>		m_vecCreateMonster;
-	vector<string>					m_vecCreateMonsterTag;
+	vector<CMonster_Character*>			m_vecCreateMonster;
+	vector<string>						m_vecCreateMonsterTag;
 
 	//TODO 추후 NPC추가되면 작성
 	//!vector<CNPC*>					m_vecCreateNPC;

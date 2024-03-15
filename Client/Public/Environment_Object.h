@@ -28,6 +28,7 @@ public:
 		_bool		bLightObject = false;
 		LIGHT_DESC	tLightDesc = {};
 		_int		iLightIndex = -1;
+
 	}ENVIRONMENT_OBJECT_DESC;
 
 
