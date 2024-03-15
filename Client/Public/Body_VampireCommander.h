@@ -10,6 +10,8 @@ BEGIN(Client)
 
 class CBody_VampireCommander final : public CBody
 {
+public:
+	enum class RENDER_STATE { ORIGIN, ATTACK, HITTED, NAKED, RENDER_STATE_END };
 
 private:
 	CBody_VampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -32,7 +34,17 @@ public:
 
 public:
 	void SetUp_Animation(_uint iAnimIndex);
+public: /* For. RenderState */
+	void	Set_RenderState(RENDER_STATE _state) { m_eRender_State = _state; }
+private:
+	map<CBody_VampireCommander::RENDER_STATE, vector<_int>> m_vDiscardMesh = {};
+	RENDER_STATE		m_eRender_State = RENDER_STATE::RENDER_STATE_END;
 
+	_float				m_gCamFar = {};
+	_float4				m_vCamPos = {};
+	_float				m_fRimPower = {};
+	_float4				m_vRimColor = {};
+	_float3				m_vBloomPower = {};
 
 private:
 	HRESULT Ready_Components();
