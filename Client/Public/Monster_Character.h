@@ -10,6 +10,14 @@ class CPlayer;
 
 class CMonster_Character abstract : public CCharacter_Client
 {
+public:
+	typedef struct tagMonsterDesc : public CGameObject::tagGameObjectDesc
+	{
+		_float4x4	WorldMatrix = XMMatrixIdentity();
+		_bool		bPreview = false;
+		wstring		strProtoTypeTag = L""; //! ÆÄ½Ì¿ë
+	}MONSTER_DESC;
+
 protected:
 	CMonster_Character(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CMonster_Character(const CMonster_Character& rhs);
@@ -31,6 +39,11 @@ public:
 	CPlayer* Set_Finish_Pos(_float3 vPos);
 
 	_int iMeshNumber = 0;
+	MONSTER_DESC* Get_MonsterDesc() { return &m_tMonsterDesc; }
+
+
+protected:
+	MONSTER_DESC			m_tMonsterDesc = {};
 
 protected:
 	HRESULT Ready_Components() PURE;

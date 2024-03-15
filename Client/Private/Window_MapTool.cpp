@@ -12,7 +12,7 @@
 
 #include "LandObject.h"
 #include "Player.h"
-#include "Monster.h"
+#include "Monster_Character.h"
 
 #include "../Imgui/ImGuizmo/ImGuizmo.h"
 #include "../Imgui/ImGuizmo/ImCurveEdit.h"
@@ -321,6 +321,10 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				InteractJson[i].emplace("PlayAnimationIndex", Desc.iPlayAnimationIndex);
 				InteractJson[i].emplace("InteractState", Desc.eInteractState);
 				InteractJson[i].emplace("InteractType", Desc.eInteractType);
+				InteractJson[i].emplace("LevelChange", Desc.bLevelChange);
+				InteractJson[i].emplace("InteractLevel", Desc.eChangeLevel);
+				
+
 				CJson_Utility::Write_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
 				CJson_Utility::Write_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
 				m_vecCreateInteractObject[i]->Write_Json(InteractJson[i]);
@@ -386,11 +390,16 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 			for (_int i = 0; i < iCreateMonsterSize; ++i)
 			{
-				CMonster::MONSTER_DESC Desc;
+				CMonster_Character::MONSTER_DESC Desc;
 
 				Desc = *m_vecCreateMonster[i]->Get_MonsterDesc();
+				Desc.eDescType = CGameObject::MONSTER_DESC;
 
-				string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
+				string strProtoTag;
+
+				m_pGameInstance->WString_To_String(Desc.strProtoTypeTag, strProtoTag);
+
+				 /*= m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);*/
 				MonsterJson[i].emplace("PrototypeTag", strProtoTag);
 				m_vecCreateMonster[i]->Write_Json(MonsterJson[i]);
 			}
@@ -538,6 +547,10 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
 			Desc.eInteractState = InteractJson[i]["InteractState"];
 			Desc.eInteractType = InteractJson[i]["InteractType"];
+			Desc.bLevelChange = InteractJson[i]["LevelChange"];
+			//Desc.bLevelChange = false;
+			Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
+
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
 				
@@ -618,13 +631,15 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 		for (_int i = 0; i < iMonsterJsonSize; ++i)
 		{
-			string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + "@" + to_string(i);
-
+			string IndexTag = "@" + to_string(i);
+			
+			string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + IndexTag;
 			m_vecCreateMonsterTag.push_back(pushMonsterTag);
 
-			CMonster::MONSTER_DESC MonsterDesc;
+			CMonster_Character::MONSTER_DESC MonsterDesc;
 			MonsterDesc.bPreview = false;
-
+			MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
+			
 
 			const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
 			_float4x4 WorldMatrix;
@@ -639,12 +654,13 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 			MonsterDesc.WorldMatrix = WorldMatrix;
 
-			CMonster* pMonster = { nullptr };
+			CMonster_Character* pMonster = { nullptr };
 
 			wstring strProtoTypeTag;
 			m_pGameInstance->String_To_WString((string)MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
+			MonsterDesc.strProtoTypeTag = strProtoTypeTag;
 
-			pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
+			pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
 
 			m_vecCreateMonster.push_back(pMonster);
 			m_iCreateMonsterIndex++;
@@ -864,11 +880,13 @@ HRESULT CWindow_MapTool::Ready_ModelTags()
 
 HRESULT CWindow_MapTool::Ready_PrototypeTags()
 {
-	m_vecMonsterTag.push_back("Prototype_GameObject_Monster");
-	m_vecMonsterTag.push_back("Prototype_GameObject_Player");
-	m_vecMonsterTag.push_back("Prototype_GameObject_VampireCommander");
 	m_vecMonsterTag.push_back("Prototype_GameObject_Infected_A");
+	m_vecMonsterTag.push_back("Prototype_GameObject_Infected_B");
+	m_vecMonsterTag.push_back("Prototype_GameObject_Infected_C");
+	//m_vecMonsterTag.push_back("Prototype_GameObject_Assassin");
+	m_vecMonsterTag.push_back("Prototype_GameObject_Bandit_Heavy");
 	m_vecMonsterTag.push_back("Prototype_GameObject_Bandit_Sniper");
+	//m_vecMonsterTag.push_back("Prototype_GameObject_Screamer");
 
 	return S_OK;
 }
@@ -903,7 +921,7 @@ void CWindow_MapTool::EnvironmentMode_Function()
 	if (ImGui::Button(u8"스테이지1 불러오기"))
 	{
 		string strFilePath = "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map";
-		string strFileName = "Stage1InteractTest1_MapData.json";
+		string strFileName = "Stage1Final_MapData.json";
 		Load_Function(strFilePath, strFileName);
 	}
 
@@ -1214,6 +1232,41 @@ void CWindow_MapTool::Interact_CreateTab()
 		}
 
 
+		ImGui::Checkbox(u8"레벨 체인지", &m_bInteractLevelChange);
+
+		if (m_bInteractLevelChange == true)
+		{
+			ImGui::SeparatorText(u8"상호작용시 이동할 레벨");
+			{
+				//!LEVEL_INTRO_BOSS,
+				//!	LEVEL_SNOWMOUNTAIN,
+				const char* InteractLevels[] = { u8"인트로보스레벨", u8"설산레벨" };
+				const char* InteractPreviewLevel = InteractLevels[m_eInteractLevel];
+
+				static ImGuiComboFlags ComboLevelFlags = ImGuiComboFlags_WidthFitPreview | ImGuiComboFlags_HeightSmall;
+
+				if (ImGui::BeginCombo(u8"이동할 레벨", InteractPreviewLevel, ComboLevelFlags))
+				{
+					for (int i = 0; i < IM_ARRAYSIZE(InteractLevels); ++i)
+					{
+						const bool is_Selected = (m_eInteractLevel == i);
+
+						if (ImGui::Selectable(InteractLevels[i], is_Selected))
+						{
+							m_eInteractLevel = i;
+						}
+
+						if (true == is_Selected)
+							ImGui::SetItemDefaultFocus();
+					}
+
+					ImGui::EndCombo();
+				}
+			}
+		}
+
+
+
 	}
 	ImGui::Separator();
 
@@ -1396,6 +1449,7 @@ void CWindow_MapTool::MonsterTab_Function()
 	{
 		case Client::CWindow_MapTool::MODE_TYPE::MODE_CREATE:
 		{
+			m_iSelectCharacterIndex = 0;
 			Create_Tab(CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER);
 			break;
 		}
@@ -1403,7 +1457,8 @@ void CWindow_MapTool::MonsterTab_Function()
 		case Client::CWindow_MapTool::MODE_TYPE::MODE_SELECT:
 		{
 			Character_SelectFunction();
-			Guizmo_Tick(m_pPickingObject);
+			if (m_pPickingObject != nullptr)
+				Guizmo_Tick(m_pPickingObject);
 			break;
 		}
 
@@ -1413,6 +1468,13 @@ void CWindow_MapTool::MonsterTab_Function()
 			break;
 		}
 	}
+
+	#ifdef _DEBUG
+         if(m_pNavigation != nullptr)
+		     m_pGameInstance->Add_DebugRender(m_pNavigation);
+     #endif // _DEBUG
+
+	 
 }
 
 
@@ -1521,7 +1583,7 @@ void CWindow_MapTool::Navigation_CreateTab()
 
 	ImGui::NewLine();
 
-	if (ImGui::Button(u8"네비게이션 생성"))
+	if (ImGui::Button(u8"네비게이션 생성") || m_pGameInstance->Key_Down(DIK_K))
 	{
 		if (3 > m_iCurrentPickingIndex)
 			return;
@@ -1567,7 +1629,6 @@ void CWindow_MapTool::Navigation_CreateTab()
 
 	if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck() && true == m_bPickingNaviMode)
 	{
-		_int index = 0;
 
 		_float3 fPickedPos = { 0.f, 0.f, 0.f };
 
@@ -1582,6 +1643,22 @@ void CWindow_MapTool::Navigation_CreateTab()
 			++m_iNaviPickingIndex;
 			m_fNaviPickingPos = fPickedPos;
 		}
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_H))
+	{
+
+		_float4 vCamPos = m_pGameInstance->Get_CamPosition();
+
+		_float3 vPointPos = { vCamPos.x, vCamPos.y, vCamPos.z };
+
+		Find_NearPointPos(&vPointPos);
+		m_vecPickedPoints.push_back(vPointPos);
+		m_vecPickingListBox.push_back(to_string(m_iNaviPickingIndex));
+		++m_iCurrentPickingIndex;
+		++m_iNaviPickingIndex;
+		m_fNaviPickingPos = vPointPos;
+
 	}
 }
 
@@ -1721,6 +1798,26 @@ void CWindow_MapTool::Navigation_DeleteTab()
 
 			m_pNavigation->Delete_Cell(pTargetCell->Get_Index());
 		}
+		
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_NUMPADENTER))
+	{
+		_float4 vCamPos = m_pGameInstance->Get_CamPosition();
+
+		_float3 vPointPos = { vCamPos.x, vCamPos.y, vCamPos.z };
+
+		Find_NearPointPos(&vPointPos);
+
+		CCell* pTargetCell = nullptr;
+
+		pTargetCell = Find_NearCell(vPointPos);
+
+		if (nullptr == pTargetCell)
+			return;
+
+		m_pNavigation->Delete_Cell(pTargetCell->Get_Index());
+
 	}
 }
 
@@ -2562,6 +2659,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 			m_vecCreateMonster[m_iSelectCharacterTag]->Set_Dead(true);
 			m_vecCreateMonster[m_iSelectCharacterTag] = nullptr;
 			m_vecCreateMonster.erase(m_vecCreateMonster.begin() + m_iSelectCharacterTag);
+			m_pPickingObject = nullptr;
 		}
 		else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
 		{
@@ -2692,7 +2790,7 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 			wstring strPrototypeTag;
 			//m_vecMonsterTag[m_iSelectCharacterTag];
 
-			switch (m_eTabType)
+			switch (eTabType)
 			{
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER:
 					m_pGameInstance->String_To_WString(m_vecMonsterTag[m_iSelectCharacterTag], strPrototypeTag);
@@ -2709,7 +2807,9 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 
 			if (strPrototypeTag != L"")
 			{
-				m_pPreviewCharacter = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strPrototypeTag, nullptr);
+				CGameObject::GAMEOBJECT_DESC Desc = {};
+
+				m_pPreviewCharacter = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strPrototypeTag, &Desc);
 
 				m_pPreviewCharacter->Get_Transform()->Set_Position(m_fRayPos);
 
@@ -2720,7 +2820,7 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 	}
 	else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
 	{
-		if (m_eTabType != CWindow_MapTool::TAP_TYPE::TAB_INTERACT)
+		if (eTabType != CWindow_MapTool::TAP_TYPE::TAB_INTERACT)
 		{
 			if (m_pPreviewInteract != nullptr)
 			{
@@ -2867,7 +2967,7 @@ void CWindow_MapTool::Picking_Function()
 
 		}
 	}
-	else //! OBJECTMODE_CHARACTER
+	else if(m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER) //! OBJECTMODE_CHARACTER
 	{
 		if (nullptr != m_pPreviewCharacter && true == ImGui_MouseInCheck())
 		{
@@ -2984,6 +3084,23 @@ void CWindow_MapTool::Interact_CreateFunction()
 			Desc.strModelTag = m_pPreviewInteract->Get_ModelTag();
 			Desc.bPreview = false;
 			Desc.WorldMatrix = m_pPreviewInteract->Get_Transform()->Get_WorldMatrix();
+			Desc.bLevelChange = m_bInteractLevelChange;
+			//Desc.eChangeLevel = (LEVEL)m_eInteractLevel;
+
+			switch (m_eInteractLevel)
+			{
+				case 0:
+				{
+					Desc.eChangeLevel = LEVEL_INTRO_BOSS;
+					break;
+				}
+
+				case 1:
+				{
+					Desc.eChangeLevel = LEVEL_SNOWMOUNTAIN;
+					break;
+				}
+			}
 
 			CEnvironment_Interact* pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
 
@@ -3012,6 +3129,23 @@ void CWindow_MapTool::Interact_CreateFunction()
 		Desc.strModelTag = m_pPreviewInteract->Get_ModelTag();
 		Desc.bPreview = false;
 		Desc.WorldMatrix = m_pPreviewInteract->Get_Transform()->Get_WorldMatrix();
+		Desc.bLevelChange = m_bInteractLevelChange;
+		//Desc.eChangeLevel = (LEVEL)m_eInteractLevel;
+
+		switch (m_eInteractLevel)
+		{
+			case 0:
+			{
+				Desc.eChangeLevel = LEVEL_INTRO_BOSS;
+				break;
+			}
+
+			case 1:
+			{
+				Desc.eChangeLevel = LEVEL_SNOWMOUNTAIN;
+				break;
+			}
+		}
 
 		CEnvironment_Interact* pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
 
@@ -3415,7 +3549,8 @@ void CWindow_MapTool::Character_CreateFunction()
 
 void CWindow_MapTool::Monster_CreateFunction()
 {
-	CMonster::MONSTER_DESC Desc;
+	
+	CMonster_Character::MONSTER_DESC Desc;
 	Desc.bPreview = false;
 	Desc.WorldMatrix = m_pPreviewCharacter->Get_Transform()->Get_WorldMatrix();
 	
@@ -3424,8 +3559,9 @@ void CWindow_MapTool::Monster_CreateFunction()
 	m_pGameInstance->String_To_WString(m_vecMonsterTag[m_iSelectCharacterTag], strProtoTag);
 
 	Desc.strProtoTypeTag = strProtoTag;
+	Desc.eDescType = CGameObject::MONSTER_DESC;
 
-	CMonster* pMonster = dynamic_cast<CMonster*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTag, &Desc));
+	CMonster_Character* pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTag, &Desc));
 
 	m_vecCreateMonster.push_back(pMonster);
 
@@ -3723,9 +3859,10 @@ void CWindow_MapTool::Interact_SelectFunction()
 					if (ImGui::Selectable(InteractTypes[i], is_Selected))
 					{
 						m_eInteractType = i;
-#ifdef _DEBUG
-						m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractType((CEnvironment_Interact::INTERACT_TYPE)m_eInteractType);
-#endif // _DEBUG
+						#ifdef _DEBUG
+                          m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractType((CEnvironment_Interact::INTERACT_TYPE)m_eInteractType);
+                        #endif // _DEBUG
+
 					}
 
 					if (true == is_Selected)
@@ -3749,12 +3886,73 @@ void CWindow_MapTool::Interact_SelectFunction()
 				if (ImGui::RadioButton(InstanceState[i], &m_eInteractState, i))
 				{
 					m_eInteractState = i;
-#ifdef _DEBUG
-					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractState((CEnvironment_Interact::INTERACT_STATE)m_eInteractState);
-#endif // _DEBUG
+					#ifdef _DEBUG
+						m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractState((CEnvironment_Interact::INTERACT_STATE)m_eInteractState);
+					#endif // _DEBUG
+
 					//eInteractState = CEnvironment_Interact::INTERACT_STATE(iInstanceState);
 				}
 			}
+		}
+
+
+		
+
+		ImGui::Checkbox(u8"레벨 체인지", &m_bInteractLevelChange);
+
+		if (m_bInteractLevelChange == true)
+		{
+			ImGui::SeparatorText(u8"상호작용시 이동할 레벨");
+			{
+				//!LEVEL_INTRO_BOSS,
+				//!	LEVEL_SNOWMOUNTAIN,
+				const char* InteractLevels[] = { u8"인트로보스레벨", u8"설산레벨" };
+				const char* InteractPreviewLevel = InteractLevels[m_eInteractLevel];
+
+				static ImGuiComboFlags ComboLevelFlags = ImGuiComboFlags_WidthFitPreview | ImGuiComboFlags_HeightSmall;
+
+				if (ImGui::BeginCombo(u8"이동할 레벨", InteractPreviewLevel, ComboLevelFlags))
+				{
+					for (int i = 0; i < IM_ARRAYSIZE(InteractLevels); ++i)
+					{
+						const bool is_Selected = (m_eInteractLevel == i);
+
+						if (ImGui::Selectable(InteractLevels[i], is_Selected))
+						{
+							m_eInteractLevel = i;
+						}
+
+						if (true == is_Selected)
+							ImGui::SetItemDefaultFocus();
+					}
+
+					ImGui::EndCombo();
+				}
+			}
+
+
+			if (ImGui::Button(u8"레벨체인지 셋팅"))
+			{
+				switch (m_eInteractLevel)
+				{
+					case 0:
+					{
+						#ifdef _DEBUG
+                          m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_LevelChangeType(m_bInteractLevelChange, LEVEL_INTRO_BOSS);
+                        #endif // _DEBUG
+						break;
+					}
+
+					case 1:
+					{
+						#ifdef _DEBUG
+							m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_LevelChangeType(m_bInteractLevelChange, LEVEL_SNOWMOUNTAIN);
+						#endif // _DEBUG
+						break;
+					}
+				}
+			}
+			
 		}
 
 		ImGui::SeparatorText(u8"콜라이더 셋팅");

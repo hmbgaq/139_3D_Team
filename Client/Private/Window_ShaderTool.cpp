@@ -2,11 +2,11 @@
 #include "Window_ShaderTool.h"
 #include "GameInstance.h"
 #include "Environment_Object.h"
-#include "Monster.h"
 #include "Environment_Instance.h"
 #include "Data_Manager.h"
 #include "Light.h"
 #include "ShaderParsed_Object.h"
+#include "Monster_Character.h"
 
 CWindow_ShaderTool::CWindow_ShaderTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -635,13 +635,13 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 	for (_int i = 0; i < iMonsterJsonSize; ++i)
 	{
-		CMonster::MONSTER_DESC MonsterDesc = {};
+		CMonster_Character::MONSTER_DESC MonsterDesc = {};
 
 		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
 
 		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
 		MonsterDesc.bPreview = false;
-
+		MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
 
 		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
 		_float4x4 WorldMatrix;

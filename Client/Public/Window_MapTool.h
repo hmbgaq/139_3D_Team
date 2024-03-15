@@ -16,7 +16,7 @@ class CEnvironment_Instance;
 class CEnvironment_LightObject;
 class CEnvironment_SpecialObject;
 class CPlayer;
-class CMonster;
+class CMonster_Character;
 class CCamera_Dynamic;
 class CMasterCamera;
 class CSky;
@@ -245,6 +245,9 @@ private:
 	//!For.Interact //! 상호작용
 	_int							m_eInteractState = 0; //! 전부 이넘 캐스팅해야함
 	_int							m_eInteractType = 0;  //! 전부 이넘 캐스팅해야함
+	_int							m_eInteractLevel = 0;
+	_bool							m_bInteractLevelChange = false;
+
 	_float							m_fColliderSizeArray[3] = { 1.f, 1.f, 1.f};
 	_float							m_fColliderCenterArray[3] = { 0.f, 1.f, 0.f};
 
@@ -286,7 +289,7 @@ private:
 	INSTANCE_INFO_DESC*				m_pPickingInstanceInfo = { nullptr };
 
 	//!For. CreateCharacter
-	vector<CMonster*>				m_vecCreateMonster;
+	vector<CMonster_Character*>		m_vecCreateMonster;
 	vector<string>					m_vecCreateMonsterTag;
 
 	//TODO 추후 NPC추가되면 작성
