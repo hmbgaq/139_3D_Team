@@ -346,8 +346,7 @@ PS_OUT MAIN_PARTICLE_SOLID(PS_IN In)
 		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
        // Out.vRimBloom = Calculation_Brightness(Out.vColor);
         Out.vRimBloom = float4(g_vBloomPower, 1.0f);
-		
-     
+		   
     }
 
 	

@@ -177,7 +177,7 @@ void CBody::OnCollisionStay(CCollider* other)
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
 
-		pTarget_Character->Add_Force(Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1	, 0.15f);
+		pTarget_Character->Add_Force(Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1	, 9.f * m_pGameInstance->Get_TimeDelta());
 	}
 }
 

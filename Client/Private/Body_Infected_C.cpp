@@ -23,6 +23,9 @@ HRESULT CBody_Infected_C::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	FAILED_CHECK(OptionSetting());
+
+
 	return S_OK;
 }
 
@@ -55,6 +58,21 @@ HRESULT CBody_Infected_C::Render_Shadow()
 	return S_OK;
 }
 
+void CBody_Infected_C::Update_DiscardMesh()
+{
+}
+
+
+HRESULT CBody_Infected_C::OptionSetting()
+{
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 6 }; // ÇÇ¶± 
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ATTACK] = { 0, 1, 10 }; // ¹«±â 
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = { 2, 3, 5, }; // °Ñ°¡Á× + ÀÇ»ó + ¹«±â + ±âÅ¸ 
+
+	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
+
+	return S_OK;
+}
 
 HRESULT CBody_Infected_C::Ready_Components()
 {

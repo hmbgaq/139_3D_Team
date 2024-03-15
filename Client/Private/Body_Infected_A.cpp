@@ -23,6 +23,10 @@ HRESULT CBody_Infected_A::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	FAILED_CHECK(OptionSetting());
+
+	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
+
 	return S_OK;
 }
 
@@ -34,6 +38,12 @@ void CBody_Infected_A::Priority_Tick(_float fTimeDelta)
 void CBody_Infected_A::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if(m_pGameInstance->Key_Down(DIK_0))
+		m_eRender_State = CBody_Infected::RENDER_STATE::ATTACK;
+	if (m_pGameInstance->Key_Down(DIK_9))
+		m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
+
 }
 
 void CBody_Infected_A::Late_Tick(_float fTimeDelta)
@@ -56,6 +66,20 @@ HRESULT CBody_Infected_A::Render_Shadow()
 }
 
 
+void CBody_Infected_A::Update_DiscardMesh()
+{
+
+}
+
+HRESULT CBody_Infected_A::OptionSetting()
+{
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 2, 5, 6, 7, 8 }; // ÇÇ¶± 
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ATTACK] = { 1, 11 }; // ¹«±â 
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = {0, 1, 2, 3, 5, 6, 7, 8, 11 }; // °Ñ°¡Á× + ÀÇ»ó + ¹«±â + ±âÅ¸ 
+
+	return S_OK;
+}
+
 HRESULT CBody_Infected_A::Ready_Components()
 {	
 	FAILED_CHECK(__super::Ready_Components());
@@ -74,6 +98,19 @@ HRESULT CBody_Infected_A::Bind_ShaderResources()
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
+	if (m_eRender_State == CBody_Infected::RENDER_STATE::ATTACK)
+	{
+		m_vCamPos = m_pGameInstance->Get_CamPosition();
+		m_vRimColor = { 1.0f, 0.3f, 0.2f, 1.f };
+		m_vBloomPower = _float3(1.0f, 1.0f, 1.0f);
+		m_fRimPower = 5.f;
+
+		m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
+		m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
+	}
 
 	return S_OK;
 }

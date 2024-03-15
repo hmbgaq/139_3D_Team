@@ -31,6 +31,7 @@ public:
 
 private:
 	CEffect*			m_pEffect = { nullptr };
+	_float				m_fEffectTimeAcc = { 0.f };
 
 public:
 	static CVampireCommander_Projectile_Range3* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

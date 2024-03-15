@@ -39,109 +39,88 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 
-	/* 추가 RenderGroup용*/
+public: /* For. Additional Render */
 	virtual HRESULT Render_Shadow() { return S_OK; }
 	virtual HRESULT Render_OutLine() { return S_OK; }
-	virtual HRESULT Render_Cascade_Shadow(_uint iIndex) { return S_OK; } /* 대기 */
 
+public: /* For. Picking */
 	virtual _bool	Picking(_Out_ _float3 * vPickedPos);
 
-public:
+public: /* For. Component */
 	virtual class CComponent* Find_Component(const wstring & strComTag, const wstring & strPartTag = TEXT(""));
 
-public:
-	void	Set_Position(const _float3 & vState);
-	void	Set_WorldMatrix(_float4x4 matrix);
-	HRESULT	Set_InitPosition(const _float3& vPos);
+public: /* For. Json */
+	virtual _bool		Write_Json(json & Out_Json) override;
+	virtual void		Load_FromJson(const json & In_Json) override;
 
-public:
-	_bool	Is_Dead() { return m_bDead; }
-	void	Set_Dead(_bool _bDead) { m_bDead = _bDead; }
+public: /* For. Transform */
+	class CTransform*	Get_Transform();
+	_vector				Get_Position_Vector();
+	_float3				Get_Position();
+	_vector				Calc_Look_Dir(_vector vTargetPos);
+	_vector				Calc_Look_Dir_XZ(_vector vTargetPos);
 
-public:
-	virtual void Set_Enable(_bool _Enable) override;
+	void				Set_Position(const _float3& vState);
+	void				Set_WorldMatrix(_float4x4 matrix);
+	HRESULT				Set_InitPosition(const _float3& vPos);
 
-public:
-	void	Set_ModelWidth(_float fWidth) { m_fModelWidth = fWidth;}
-	void	Set_ModelHeight(_float fHeight) { m_fModelHeight = fHeight; }
-	_float  Get_ModelWidth() { return m_fModelWidth;}
-	_float 	Get_ModelHeight() { return m_fModelHeight; }
+public: /* For. Model */
+	void				Set_ModelWidth(_float fWidth) { m_fModelWidth = fWidth; }
+	void				Set_ModelHeight(_float fHeight) { m_fModelHeight = fHeight; }
+	_float				Get_ModelWidth() { return m_fModelWidth; }
+	_float 				Get_ModelHeight() { return m_fModelHeight; }
 
-public:
-	virtual _bool Write_Json(json & Out_Json) override;
-	virtual void Load_FromJson(const json & In_Json) override;
+public: /*For. RenderPass */
+	void Set_RenderPass(_int iPass) { m_iRenderPass = iPass; }
+	_int Get_Rednerpass() { return m_iRenderPass; }
 
-public:
-	class CTransform* Get_Transform();
-	_vector Get_Position_Vector();
-	_float3 Get_Position();
-	_vector Calc_Look_Dir(_vector vTargetPos);
-	_vector Calc_Look_Dir_XZ(_vector vTargetPos);
+public: /* For. Base Setting */
+	const wstring&		Get_ProtoTypeTag() { return m_strPrototypeTag; };
+	_bool				Is_PoolObject() { return m_bIsPoolObject; };
 
-	
+	CGameObject*		Get_Object_Owner();
+	void				Set_Object_Owner(CGameObject* pOwner);
+	void				Delete_Object_Owner();
 
+	virtual void		Set_Enable(_bool _Enable) override;
+	_bool				Is_Dead() { return m_bDead; }
+	void				Set_Dead(_bool _bDead) { m_bDead = _bDead; }
 
-public:
-	virtual void	OnCollisionEnter(CCollider * other) {};
-	virtual void	OnCollisionStay(CCollider * other) {};
-	virtual void	OnCollisionExit(CCollider * other) {};
+public: /* For. Collision */
+	virtual void		OnCollisionEnter(CCollider * other) {};
+	virtual void		OnCollisionStay(CCollider * other) {};
+	virtual void		OnCollisionExit(CCollider * other) {};
 
-public:
-	virtual void OnPhysXCollisionEnter(CPhysXCollider* pOtherCollider) {};
-	virtual void OnPhysXCollisionStay(CPhysXCollider* pOtherCollider) {};
-	virtual void OnPhysXCollisionExit(CPhysXCollider* pOtherCollider) {};
+	virtual void		OnPhysXCollisionEnter(CPhysXCollider* pOtherCollider) {};
+	virtual void		OnPhysXCollisionStay(CPhysXCollider* pOtherCollider) {};
+	virtual void		OnPhysXCollisionExit(CPhysXCollider* pOtherCollider) {};
 
-
-
-public:
-	const wstring& Get_ProtoTypeTag() { return m_strPrototypeTag; };
-
-	_bool Is_PoolObject() { return m_bIsPoolObject; };
-
-public:
-	CGameObject*	Get_Object_Owner();
-	void			Set_Object_Owner(CGameObject* pOwner);
-	void			Delete_Object_Owner();
-	
-
-
-
-protected:
-	ID3D11Device* m_pDevice = { nullptr };
-	ID3D11DeviceContext* m_pContext = { nullptr };
-
-protected:
-	class CGameInstance* m_pGameInstance = { nullptr };
-	_uint				m_iCurrnetLevel = { 0 };
-
-protected:
-	class CTransform* m_pTransformCom = { nullptr };
+protected: /* Base Setting Value */
 	map<const wstring, class CComponent*>		m_Components;
 
-protected:
-	_bool						m_isCloned = { false };
+	ID3D11Device*								m_pDevice			= { nullptr };
+	ID3D11DeviceContext*						m_pContext			= { nullptr };
 
-protected:
-	_bool						m_bDead = { false };
-	_bool						m_bIsPoolObject = { false };
+	class CGameInstance*						m_pGameInstance		= { nullptr };
+	class CTransform*							m_pTransformCom		= { nullptr };
+	CGameObject*								m_pOwner			= { nullptr };
 
-protected:
-	wstring						m_strPrototypeTag;
+	_uint										m_iCurrnetLevel		= { 0 };
+	_int										m_iRenderPass		= { 0 };
 
-protected:
-	CGameObject*				m_pOwner = { nullptr };
-
+	_bool										m_isCloned			= { false };
+	_bool										m_bDead				= { false };
+	_bool										m_bIsPoolObject		= { false };
+	wstring										m_strPrototypeTag	= {};
 
 protected: //! For.Tool
 	_float						m_fModelWidth = { 0.f };
 	_float						m_fModelHeight = { 0.f };
 
-
 public:
 	HRESULT Add_Component(_uint iLevelIndex, const wstring& strPrototypeTag,
-		const wstring& strComTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
+	const wstring& strComTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
 	HRESULT Remove_Component(const wstring& strComTag, _Inout_ CComponent** ppOut = nullptr);
-
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

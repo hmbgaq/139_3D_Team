@@ -46,6 +46,15 @@ private:
 	map<const wstring, class CComponent*>*			m_pPrototypes = { nullptr };
 	typedef map<const wstring, class CComponent*>	PROTOTYPES;
 
+public:
+	void Get_ModelTag(vector<string>* _vec);
+	bool StartsWith(const wstring& str, const wstring& prefix)
+	{
+		return str.find(prefix) == 0;
+	}
+
+	vector<string> ModelTag = {};
+
 private:
 	class CComponent* Find_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag);
 

@@ -49,7 +49,7 @@ public://!For. Interact
 public:
 	void Search_Target(_float fMaxDistance = 10.f);
 
-	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 3.f, _uint iCount = 5);
+	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 3);
 
 private:
 	HRESULT Ready_Components();
@@ -59,6 +59,13 @@ public:
 	CActor<CPlayer>* Get_Actor() { return m_pActor; }
 	void Set_Actor(CActor<CPlayer>* _pActor) { m_pActor = _pActor; }
 
+
+public:
+	_float Get_ChargingTime() { return m_fChargingTime; };
+	void Set_ChargingTime(_float _fChargingTime) { m_fChargingTime = _fChargingTime; }
+	void Update_ChargingTime(_float fTimeDelta);
+
+
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
 	virtual void Hitted_Right(Power ePower) override;
@@ -67,9 +74,15 @@ protected:
 	virtual void Hitted_Dead(Power ePower)	override;
 
 
+
+
 private:
 	CActor<CPlayer>* m_pActor = { nullptr };
 	_bool	m_bRotate_In_CameraDir = { false };
+
+private:
+	_float	m_fChargingTime = { 0.f };
+
 public:
 	_bool	m_bPlayerCheck = true;
 

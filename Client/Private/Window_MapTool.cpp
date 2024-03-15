@@ -300,7 +300,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 		if (false == m_vecCreateInteractObject.empty())
 		{
-			_int iCreateInteractObjectSize = m_vecCreateInteractObject.size();
+			_int iCreateInteractObjectSize = (_int)m_vecCreateInteractObject.size();
 
 			for (_int i = 0; i < iCreateInteractObjectSize; ++i)
 			{
@@ -323,6 +323,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				InteractJson[i].emplace("InteractType", Desc.eInteractType);
 				InteractJson[i].emplace("LevelChange", Desc.bLevelChange);
 				InteractJson[i].emplace("InteractLevel", Desc.eChangeLevel);
+				
 
 				CJson_Utility::Write_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
 				CJson_Utility::Write_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
@@ -541,13 +542,13 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			string strJsonModelTag = InteractJson[i]["ModelTag"];
 			m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
 			Desc.strModelTag = strLoadModelTag;
-			Desc.bPreview = InteractJson[i]["LevelChange"];
+			Desc.bPreview = false;
 			Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
 			Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
 			Desc.eInteractState = InteractJson[i]["InteractState"];
 			Desc.eInteractType = InteractJson[i]["InteractType"];
-			//Desc.bLevelChange = InteractJson[i]["LevelChange"];
-			Desc.bLevelChange = false;
+			Desc.bLevelChange = InteractJson[i]["LevelChange"];
+			//Desc.bLevelChange = false;
 			Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
 
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
@@ -1276,16 +1277,16 @@ void CWindow_MapTool::Interact_CreateTab()
 
 		if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
 		{
-			iInteractModelTagSize = m_vecInteractModelTag.size();
+			iInteractModelTagSize = (_int)m_vecInteractModelTag.size();
 			vecModelTag = m_vecInteractModelTag;
 		}
 		else if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_ANIM)
 		{
-			iInteractModelTagSize = m_vecAnimInteractModelTag.size();
+			iInteractModelTagSize = (_int)m_vecAnimInteractModelTag.size();
 			vecModelTag = m_vecAnimInteractModelTag;
 		}
 
-		for (_uint i = 0; i < iInteractModelTagSize; ++i)
+		for (_uint i = 0; i < (_uint)iInteractModelTagSize; ++i)
 		{
 			const _bool isSelected = (m_iSelectModelTag == i);
 
@@ -1345,7 +1346,7 @@ void CWindow_MapTool::Interact_CreateTab()
 void CWindow_MapTool::Interact_DeleteTab()
 {
 	
-	_uint iCreateInteractSize = m_vecCreateInteractObject.size();
+	_uint iCreateInteractSize = (_uint)m_vecCreateInteractObject.size();
 
 	if(iCreateInteractSize == 0)
 		return;
@@ -1521,7 +1522,7 @@ void CWindow_MapTool::Navigation_CreateTab()
 
 	ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
 
-	_int iPickedSize = m_vecPickingListBox.size();
+	_int iPickedSize = (_int)m_vecPickingListBox.size();
 
 	if (false == m_vecPickedPoints.empty())
 	{
@@ -1571,7 +1572,7 @@ void CWindow_MapTool::Navigation_CreateTab()
 				if (m_vecPickingListBox.size() == 0)
 					m_iNaviListBoxIndex = -1;
 				else
-					m_iNaviListBoxIndex = m_vecPickingListBox.size() - 1;
+					m_iNaviListBoxIndex = (_int)m_vecPickingListBox.size() - 1;
 
 			}
 		}
@@ -1696,7 +1697,7 @@ void CWindow_MapTool::Navigation_SelectTab()
 	}
 
 
-	_int iCellSize = m_vecCellIndexs.size();
+	_int iCellSize = (_int)m_vecCellIndexs.size();
 
 	if (nullptr != m_pNavigation && false == m_vecCells.empty())
 	{
@@ -1858,7 +1859,7 @@ void CWindow_MapTool::Reset_NaviPicking()
 void CWindow_MapTool::Find_NearPointPos(_float3* fPickedPos)
 {
 	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
-	_int iCellSize = vecCells.size();
+	_int iCellSize = (_int)vecCells.size();
 	_float fMinDistance = FLT_MAX;
 
 	_float3 vPickedPos = *fPickedPos;
@@ -1977,7 +1978,7 @@ void CWindow_MapTool::LoadCells()
 {
 	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
 
-	_int iCellSize = vecCells.size();
+	_int iCellSize = (_int)vecCells.size();
 
 	for (_int i = 0; i < iCellSize; ++i)
 	{
@@ -3835,7 +3836,9 @@ void CWindow_MapTool::Interact_SelectFunction()
 
 		if(ImGui::InputInt(u8"¼ÎÀÌ´õÆÐ½º", &m_iShaderPassIndex))
 		{
+#ifdef _DEBUG
 			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ShaderPassIndex(m_iShaderPassIndex);
+#endif // _DEBUG
 		}
 
 		
@@ -3859,6 +3862,7 @@ void CWindow_MapTool::Interact_SelectFunction()
 						#ifdef _DEBUG
                           m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractType((CEnvironment_Interact::INTERACT_TYPE)m_eInteractType);
                         #endif // _DEBUG
+
 					}
 
 					if (true == is_Selected)
@@ -3885,6 +3889,7 @@ void CWindow_MapTool::Interact_SelectFunction()
 					#ifdef _DEBUG
 						m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractState((CEnvironment_Interact::INTERACT_STATE)m_eInteractState);
 					#endif // _DEBUG
+
 					//eInteractState = CEnvironment_Interact::INTERACT_STATE(iInstanceState);
 				}
 			}

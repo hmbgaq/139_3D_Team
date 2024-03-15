@@ -2527,12 +2527,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\4. Scared">
       <UniqueIdentifier>{221db0ad-424f-4298-804d-afb016e1e69a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Stun">
-      <UniqueIdentifier>{780f62d1-e0bb-4145-89dd-e36a8fddfdf2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Stun">
-      <UniqueIdentifier>{827e2210-a0e8-41a7-9ef0-53d6698a0f70}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\4. Scared\Left">
       <UniqueIdentifier>{6b6b1861-0b16-4287-99ed-420d81e34d2a}</UniqueIdentifier>
     </Filter>
@@ -3022,14 +3016,50 @@
     <Filter Include="02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\State">
       <UniqueIdentifier>{d12f8f2c-ebbb-4d07-8455-8b591530bc89}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\20. InstanceMonster\0. Screamer">
-      <UniqueIdentifier>{6ab1225a-12f3-4ff6-9880-7a7c7881548c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts\Body">
       <UniqueIdentifier>{27313ed7-8409-4d64-ac01-84c9aa03033b}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\Frame">
       <UniqueIdentifier>{38f92005-c291-408d-a812-5b6603352bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun">
+      <UniqueIdentifier>{384488fd-827e-4815-beed-89b4b2686e5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\10. Finisher">
+      <UniqueIdentifier>{94396125-8937-4f0b-8214-2e91ac8b08f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\0. Parent">
+      <UniqueIdentifier>{d2b9ceb5-96fe-4495-a12b-452ab489bf91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\10. Finisher\0. Parent">
+      <UniqueIdentifier>{4b465aef-273d-4508-9900-30e62792cc8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\1. HitNormal_To_Stun">
+      <UniqueIdentifier>{b318a1bc-de62-43c4-8bd8-7f49737a0d2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\2. HitHeavy_To_Stun">
+      <UniqueIdentifier>{669f63f8-0c52-42ab-b7ad-6dbf18e75fbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\3. Stun_Loop">
+      <UniqueIdentifier>{05efd0da-d9ad-4e78-927c-96010b3fc302}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\05. Dodge\1. Dodge\Sprint">
+      <UniqueIdentifier>{69545fe2-5c81-4c3e-ab74-b1a114b6ad52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic\Leap">
+      <UniqueIdentifier>{9f8e4bac-839b-4c2e-9353-514c3b256fd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic\Leap\Lower">
+      <UniqueIdentifier>{bc321885-cae5-4b1d-af1f-2fd106f996aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic\Leap\Higher">
+      <UniqueIdentifier>{85033f40-a43a-4771-a825-72b43459aef0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\0. Screamer">
+      <UniqueIdentifier>{6ab1225a-12f3-4ff6-9880-7a7c7881548c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object">
+      <UniqueIdentifier>{054c2e5b-1f7a-4054-9c31-2bfcbf1230ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -3223,7 +3253,7 @@
       <Filter>01.Levels\02.Tool\Imgui\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Screamer.h">
-      <Filter>02.GameObjects\00. Character\Monster\20. InstanceMonster\0. Screamer</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\0. Screamer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_SnowMountain.h">
       <Filter>01.Levels\01.GamePlay\2.SnowMountain</Filter>
@@ -3714,14 +3744,8 @@
     <ClInclude Include="..\Public\Infected_State_Hit.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\0. Parent</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Infected_HitLightOpened_F_01_NEW.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\1. Light%28이상함%29</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Hit_whip_end_down.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit</Filter>
@@ -5040,9 +5064,6 @@
     <ClInclude Include="..\Public\Player_InventoryWinchesterUnholster.h">
       <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_Sprint_F.h">
-      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player_Sprint_F_NEW.h">
       <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
     </ClInclude>
@@ -5068,12 +5089,6 @@
       <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Empowered_Stop.h">
-      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_Leap_01_Higher.h">
-      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_Leap_01_Lower.h">
       <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Leap_05.h">
@@ -6129,6 +6144,33 @@
     <ClInclude Include="..\Public\UI_EnemyFrame_Shard.h">
       <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\Frame</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Infected_State_Stun.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\1. HitNormal_To_Stun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\2. HitHeavy_To_Stun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_Stun_Loop_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\3. Stun_Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_State_Finisher.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\10. Finisher\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Sprint_F.h">
+      <Filter>02.GameObjects\00. Character\Player\State\05. Dodge\1. Dodge\Sprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Leap_01_Higher.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic\Leap\Higher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Leap_01_Lower.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic\Leap\Lower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ShaderParsed_Object.h">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -6494,7 +6536,7 @@
       <Filter>01.Levels\02.Tool\Imgui\Default</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Screamer.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\20. InstanceMonster\0. Screamer</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\0. Screamer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_GamePlay.cpp">
       <Filter>01.Levels\01.GamePlay\0.GamePlay</Filter>
@@ -8455,12 +8497,6 @@
     <ClCompile Include="..\Private\Infected_Scared_02.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\4. Scared\Right</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Infected_HitNormalToStun_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Stun</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Infected_HitHeavyToStun_01_NEW.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Stun</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Infected_B.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B</Filter>
     </ClCompile>
@@ -8664,6 +8700,33 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_EnemyFrame_Shard.cpp">
       <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_State_Stun.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_HitNormalToStun_01_NEW.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\1. HitNormal_To_Stun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_HitHeavyToStun_01_NEW.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\2. HitHeavy_To_Stun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_Stun_Loop_NEW.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\3. Stun_Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_State_Finisher.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\10. Finisher\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Sprint_F.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\05. Dodge\1. Dodge\Sprint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Leap_01_Higher.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic\Leap\Higher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Leap_01_Lower.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\02. Dynamic\Leap\Lower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ShaderParsed_Object.cpp">
+      <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

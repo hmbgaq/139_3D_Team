@@ -24,6 +24,7 @@ private:
 	HRESULT Ready_Layer_Player(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Monster(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Test(const wstring& strLayerTag);
+	HRESULT Ready_Shader();
 	
 #pragma region UI
 private:

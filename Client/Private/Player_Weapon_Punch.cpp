@@ -68,7 +68,7 @@ HRESULT CPlayer_Weapon_Punch::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER_ATTACK);
-	BoundingDesc.fRadius = { 0.15f };
+	BoundingDesc.fRadius = { 0.4f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
@@ -84,12 +84,15 @@ void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 	if (nullptr != pTarget_Character)
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
-		pTarget_Character->Set_Hitted(150, Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1 , m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		pTarget_Character->Set_Hitted(150, Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1 , m_fForce, 1.f, m_eHitDirection, m_eHitPower, true);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
 
 		CData_Manager::GetInstance()->Get_Player()->Create_Effect(Get_WorldPosition());
+		Set_Enable_Collisions(false);
+
+		//m_pGameInstance->Hitlag();
 	}
-	Set_Enable_Collisions(false);
+	
 }
 
 void CPlayer_Weapon_Punch::OnCollisionStay(CCollider* other)

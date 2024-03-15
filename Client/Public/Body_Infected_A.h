@@ -2,10 +2,6 @@
 
 #include "Body_Infected.h"
 
-BEGIN(Engine)
-
-END
-
 BEGIN(Client)
 
 class CBody_Infected_A : public CBody_Infected
@@ -25,7 +21,11 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
 
+	
 private:
+	void Update_DiscardMesh();
+
+	HRESULT OptionSetting();
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 

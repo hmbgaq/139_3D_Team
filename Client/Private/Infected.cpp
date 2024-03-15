@@ -90,7 +90,7 @@ void CInfected::Priority_Tick(_float fTimeDelta)
 void CInfected::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
+	
 	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
@@ -104,7 +104,7 @@ void CInfected::Late_Tick(_float fTimeDelta)
 
 HRESULT CInfected::Render()
 {
-	FAILED_CHECK(__super::Render());
+	__super::Render();
 
 	return S_OK;
 }
