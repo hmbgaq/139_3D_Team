@@ -44,31 +44,35 @@ void CUI_Player_HPFrame::Priority_Tick(_float fTimeDelta)
 
 void CUI_Player_HPFrame::Tick(_float fTimeDelta)
 {
-
+	__super::Tick(fTimeDelta);
 }
 
 void CUI_Player_HPFrame::Late_Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
-		return;
+	if (m_bActive)
+	{
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+			return;
+	}
 }
 
 HRESULT CUI_Player_HPFrame::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	if (m_bActive)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그릴거야.
-	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		//! 이 셰이더에 0번째 패스로 그릴거야.
+		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
-	
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+	}
+
 	return S_OK;
 }
 

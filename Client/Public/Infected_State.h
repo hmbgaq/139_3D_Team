@@ -31,8 +31,6 @@ public:		//상태 그룹 별 업데이트
 	CState<CInfected>* Stun_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CInfected>* Finisher_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
-	
-
 
 public:		//개별 동작 상태 집합
 	CState<CInfected>* Normal(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);

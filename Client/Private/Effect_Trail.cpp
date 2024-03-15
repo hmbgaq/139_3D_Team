@@ -60,21 +60,24 @@ void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 		{
 #endif // _DEBUG
 
-			if (FALSE == m_tVoidDesc.bPlay)
+			//if (!m_pOwner->Is_Dead())
 			{
-				m_tVoidDesc.bRender = FALSE;
-				m_pVIBufferCom->Reset_Points(_ParentMatrix);
-				return;
-			}
-			else
-			{
-				m_tVoidDesc.bRender = TRUE;
-
-				if (!m_bPause)	// 일시정지
+				if (FALSE == m_tVoidDesc.bPlay)
 				{
-					m_pVIBufferCom->Update(_fTimeDelta, _ParentMatrix);
+					m_tVoidDesc.bRender = FALSE;
+					m_pVIBufferCom->Reset_Points(_ParentMatrix);
+					return;
 				}
-				
+				else
+				{
+					m_tVoidDesc.bRender = TRUE;
+
+					if (!m_bPause)	// 일시정지
+					{
+						m_pVIBufferCom->Update(_fTimeDelta, _ParentMatrix);
+					}
+
+				}
 			}
 
 
