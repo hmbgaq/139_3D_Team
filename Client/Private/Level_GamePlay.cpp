@@ -68,6 +68,15 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_M))
 	{
+		m_pGameInstance->Get_Renderer()->Set_HBAO_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_HDR_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_FXAA_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_HSV_Active(false);
+
 		m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
 	}
 
@@ -182,7 +191,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag)
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
 	pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
-	//pPlayer->Set_Position(_float3(153.6f, 0.f, 150.55f));
+	//pPlayer->Set_Position(_float3(153.6f, 0.f, 150.55f)); /* Sniper ¾Õ */
 	
 	CNavigation* pNavigation = pPlayer->Get_Navigation();
 
@@ -441,6 +450,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Shader()
 {
+	m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_Fog_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
+	m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
+	m_pGameInstance->Get_Renderer()->Set_HDR_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_FXAA_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_HSV_Active(true);
+
 	HBAO_PLUS_DESC Desc_Hbao = {};
 	Desc_Hbao.bHBAO_Active = true;
 	Desc_Hbao.fBias = 0.33;
@@ -478,6 +496,9 @@ HRESULT CLevel_GamePlay::Ready_Shader()
 	m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
 	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
 	m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
+
+	/* -- */
+
 
 	return S_OK;
 }

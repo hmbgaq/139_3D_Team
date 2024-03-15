@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "GameInstance.h"
 #include "Infected_State.h"
+#include "Data_Manager.h"
 
 #include "Infected_Idle.h"
 #include "Infected_IdlePose.h"
@@ -172,6 +173,11 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 {
 	if (pActor->Is_Animation_End())
 	{
+		if (false == m_bFlags[0] )
+		{
+			CData_Manager::GetInstance()->Add_CurEXP(15);
+			m_bFlags[0] = true;
+		}	
 		//cout << "death end " << endl;
 
 		//pActor->Set_Dead(true);
@@ -239,7 +245,9 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-			return new CInfected_Walk_F();
+		return new CInfected_Walk_F();
+		break;
+
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_WASTER:

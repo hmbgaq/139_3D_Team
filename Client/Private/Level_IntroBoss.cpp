@@ -360,17 +360,17 @@ HRESULT CLevel_IntroBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 
 	CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
-
+	
 	LightObjectDesc.bAnimModel = false;
 	LightObjectDesc.bPreview = false;
 	LightObjectDesc.strModelTag = L"Prototype_Component_Model_SecretTempleStatue1";
 	XMStoreFloat4x4(&LightObjectDesc.WorldMatrix, XMMatrixIdentity());
-
+	
 	LightObjectDesc.iLightIndex = 4;
-
+	
 	LIGHT_DESC LightDesc;
-
-
+	
+	
 	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
 	XMStoreFloat4(&LightDesc.vPosition, XMLoadFloat4x4(&LightObjectDesc.WorldMatrix).r[3]);
 	LightDesc.fRange = 100.f;
@@ -378,13 +378,13 @@ HRESULT CLevel_IntroBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
 	LightDesc.vDiffuse = _float4(0.6f, 0.2f, 0.05f, 1.0f);
 	LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
 	LightDesc.vSpecular = LightDesc.vDiffuse;
-
+	
 	LightObjectDesc.LightDesc = LightDesc;
-
+	
 	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc)))
 		return E_FAIL;
-
-
+	
+	
 	return S_OK;
 
 }
@@ -433,6 +433,15 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_IntroBoss::Ready_Shader()
 {
+	m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
+	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
+	m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
+	m_pGameInstance->Get_Renderer()->Set_HDR_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_FXAA_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_HSV_Active(true);\
+
 	HBAO_PLUS_DESC Desc_Hbao = {};
 	Desc_Hbao.bHBAO_Active = true;
 	Desc_Hbao.fBias = 0.289f;
@@ -460,6 +469,7 @@ HRESULT CLevel_IntroBoss::Ready_Shader()
 	m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
 	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
 	m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
+
 
 	return S_OK;
 }

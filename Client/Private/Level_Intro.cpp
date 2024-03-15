@@ -23,7 +23,6 @@
 #include "Environment_Interact.h"
 #pragma endregion
 
-
 #pragma region Test
 #include "Monster.h"
 #include "Screamer.h"  
