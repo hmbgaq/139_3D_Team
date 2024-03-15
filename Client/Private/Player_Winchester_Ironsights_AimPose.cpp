@@ -8,6 +8,8 @@
 #include "Data_Manager.h"
 #include "SpringCamera.h"
 
+#include "Renderer.h"
+
 void CPlayer_Winchester_Ironsights_AimPose::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -34,6 +36,7 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 		CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Winchester"));
 		pWeapon->Fire();
 		CUI_Manager::GetInstance()->Trigger_Crosshair(true);
+		pActor->Set_RadialBlurTime(0.3f);
 		
 		return new CPlayer_Winchester_Ironsights_Reload_01();
 	}

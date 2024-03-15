@@ -170,6 +170,8 @@ public:	//!For Animation Split
 	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _uint iTargetKeyFrameIndex = 0);
 	_bool Is_Splitted() { return m_pBody->Is_Splitted(); }
 	void Set_Splitted(_bool _bIsSplitted) { m_pBody->Set_Splitted(_bIsSplitted); };
+	void Reset_UpperAngle();
+
 
 public:
 	void Set_StiffnessRate(_float fStiffnessRate);
@@ -204,6 +206,10 @@ public:
 	_bool Is_Stun() { return m_bIsInvincible; };
 	void Set_Stun(_bool _bIsStun) { m_bIsStun = _bIsStun; };
 
+public:
+	void Set_RadialBlurTime(_float fTime = 0.3f) { m_fRadialBlurTime = fTime; };
+	void Update_RadialBlurTime(_float fTimeDelta);
+
 
 protected:
 	_int m_iHp = { 1 };
@@ -215,9 +221,9 @@ protected:
 
 protected:
 	_bool m_bIsInvincible = { false };
-
-protected:
 	_bool m_bIsStun = { false };
+
+	_float m_fRadialBlurTime = { 0.f };
 
 
 protected:

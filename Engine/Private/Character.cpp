@@ -81,6 +81,8 @@ void CCharacter::Tick(_float fTimeDelta)
 		if (nullptr != Pair.second)
 			Pair.second->Tick(fTimeDelta);
 	}
+
+	Update_RadialBlurTime(fTimeDelta);
 }
 
 void CCharacter::Late_Tick(_float fTimeDelta)
@@ -610,6 +612,11 @@ void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE 
 	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState, iTargetKeyFrameIndex);
 }
 
+void CCharacter::Reset_UpperAngle()
+{
+	m_pBody->Reset_UpperAngle();
+}
+
 void CCharacter::Set_StiffnessRate(_float fStiffnessRate)
 {
 	m_pBody->Set_StiffnessRate(fStiffnessRate);
@@ -652,7 +659,16 @@ void CCharacter::Set_WeaknessPoint()
 {
 	_float3 vResult = m_pTransformCom->Calc_Front_Pos(m_vWeaknessPoint_Local);
 	m_vWeaknessPoint = vResult;
-};
+}
+
+void CCharacter::Update_RadialBlurTime(_float fTimeDelta)
+{
+	m_fRadialBlurTime = m_fRadialBlurTime - fTimeDelta > 0 ? m_fRadialBlurTime - fTimeDelta : 0.f;
+	
+	_bool bIsActivateRadialBlur = 0 < m_fRadialBlurTime;
+	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(bIsActivateRadialBlur);
+}
+
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {

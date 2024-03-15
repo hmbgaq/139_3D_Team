@@ -93,6 +93,14 @@ void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 		pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
 		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
 		pSpringCam->Set_ShakeCamera(true);
+
+		CCharacter* pOwner = Get_PartOwner();
+		if (pOwner) 
+		{
+			pOwner->Set_RadialBlurTime(0.2f * ECast(m_eHitPower));
+		}
+		
+		
 	}
 	Set_Enable_Collisions(false);
 }
