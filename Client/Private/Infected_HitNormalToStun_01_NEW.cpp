@@ -1,4 +1,5 @@
 #include "..\Public\Infected_HitNormalToStun_01_NEW.h"
+#include "Infected_Stun_Loop_NEW.h"
 
 void CInfected_HitNormalToStun_01_NEW::Initialize(CInfected* pActor)
 {
@@ -11,7 +12,7 @@ CState<CInfected>* CInfected_HitNormalToStun_01_NEW::Update(CInfected* pActor, _
 {
 	if (pActor->Is_Animation_End())
 	{
-		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+		return new CInfected_Stun_Loop_NEW();
 	}
 
 	return nullptr;

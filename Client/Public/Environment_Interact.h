@@ -33,6 +33,9 @@ public:
 
 		_bool			bAnimModel = { false };
 		_bool			bPreview = true; //! 미리보기용 오브젝트인지 확인
+
+		_bool			bLevelChange = false;
+		LEVEL			eChangeLevel = LEVEL_END;
 	}ENVIRONMENT_INTERACTOBJECT_DESC;
 
 private:
@@ -61,8 +64,12 @@ public:
 #ifdef _DEBUG
 	void								Set_ColliderSize(_float3 vColliderSize);
 	void								Set_ColliderCenter(_float3 vColliderCenter);
+	void								Set_InteractType(INTERACT_TYPE eInteractType) { m_tEnvironmentDesc.eInteractType = eInteractType; }
+	void								Set_InteractState(INTERACT_STATE eInteractState) { m_tEnvironmentDesc.eInteractState = eInteractState; }
+	
+	void								Set_LevelChangeType(_bool bLevelChange, LEVEL eLevel);
 #endif // _DEBUG
-
+	void								Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex; }
 
 #ifdef _DEBUG
 public: //! For.Tool

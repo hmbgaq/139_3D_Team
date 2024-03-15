@@ -91,25 +91,37 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 		nullptr == m_pFrustum)
 		return;
 
+	m_fTimeDelta = fTimeDelta;
+
+	if (0 < m_fHitlag_Time)
+	{
+		m_fTimeDelta /= 5;
+		m_fHitlag_Time -= fTimeDelta;
+	}
+	else 
+	{
+		m_fHitlag_Time = 0;
+	}
+
 	m_pInput_Device->Tick();
 
-	m_pObject_Manager->Priority_Tick(fTimeDelta);
+	m_pObject_Manager->Priority_Tick(m_fTimeDelta);
 
-	m_pObject_Manager->Tick(fTimeDelta);
+	m_pObject_Manager->Tick(m_fTimeDelta);
 
 	m_pPipeLine->Tick();
 
 	m_pFrustum->Tick();
 
-	m_pEvent_Manager->Tick(fTimeDelta);
+	m_pEvent_Manager->Tick(m_fTimeDelta);
 
-	m_pCollision_Manager->Tick(fTimeDelta);
+	m_pCollision_Manager->Tick(m_fTimeDelta);
 
-	m_pPhysX_Manager->Tick(fTimeDelta);
+	m_pPhysX_Manager->Tick(m_fTimeDelta);
 
-	m_pObject_Manager->Late_Tick(fTimeDelta);
+	m_pObject_Manager->Late_Tick(m_fTimeDelta);
 
-	m_pLevel_Manager->Tick(fTimeDelta);
+	m_pLevel_Manager->Tick(m_fTimeDelta);
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
@@ -743,10 +755,23 @@ HRESULT CGameInstance::Render_Debug_RTVs(const wstring & strMRTTag, CShader * pS
 
 HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc, _int& outLightIndex)
 {
-	if (nullptr == m_pLight_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
 
 	return m_pLight_Manager->Add_Light(LightDesc, outLightIndex);
+}
+
+CLight* CGameInstance::Find_Light(const _int iIndex)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, nullptr);
+
+	return m_pLight_Manager->Find_Light(iIndex);
+}
+
+void CGameInstance::Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc)
+{
+	NULL_CHECK(m_pLight_Manager);
+
+	return m_pLight_Manager->Change_Light_Desc(iIndex, newDesc);
 }
 
 HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
@@ -1159,6 +1184,12 @@ const wstring CGameInstance::Get_LastNumChar(const wstring& str, const _uint& iN
 	return res;
 }
 
+void CGameInstance::Get_ModelTag(vector<string>* pVector)
+{
+	NULL_CHECK_RETURN(pVector, );
+
+	m_pComponent_Manager->Get_ModelTag(pVector);
+}
 
 wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 기준으로 잘라서 오브젝트 이름만 가져오자 - TO 승용
 {

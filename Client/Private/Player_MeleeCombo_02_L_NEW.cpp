@@ -17,6 +17,7 @@ void CPlayer_MeleeCombo_02_L_NEW::Initialize(CPlayer* pActor)
 		->Set_Force(0.3f);
 
 	pWeapon->Set_Enable(true);
+	pWeapon->Set_Enable_Collisions(false);
 }
 
 CState<CPlayer>* CPlayer_MeleeCombo_02_L_NEW::Update(CPlayer* pActor, _float fTimeDelta)
@@ -40,7 +41,7 @@ CState<CPlayer>* CPlayer_MeleeCombo_02_L_NEW::Update(CPlayer* pActor, _float fTi
 		m_bFlags[1] = true;
 	}
 
-	if (pActor->Is_Inputable_Front(25))
+	if (pActor->Is_Inputable_Front(24))
 	{
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}

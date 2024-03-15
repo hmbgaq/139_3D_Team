@@ -6,6 +6,7 @@
 #include "Channel.h"
 #include "Shader.h"
 #include "GameObject.h"
+#include "SMath.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -196,7 +197,6 @@ void CModel::Calculate_Sphere_Radius(_float3* vOutCenter, _float* fOutRadius)
 		}
 	}
 	
-	
 	if (vOutCenter != nullptr)
 		*vOutCenter = (Min + Max) * 0.5f;
 
@@ -296,10 +296,7 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath
 
 	Write_Names(strModelFilePath);
 
-
 	Calculate_ModelSize(&m_fModelWidth, &m_fModelHeight);
-
-	
 
 	return S_OK;
 }
@@ -422,6 +419,11 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 			_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
 			m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 		}
+	}
+	else 
+	{
+		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
+		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
 	}
 	//else 
 	//{
@@ -738,6 +740,7 @@ _bool CModel::IsModelPicking(RAY _Ray, _matrix _WorldMatrix, _float4* pOut)
 
 	return false;
 }
+
 
 HRESULT CModel::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* strConstantName)
 {

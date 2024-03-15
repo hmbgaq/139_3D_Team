@@ -17,6 +17,7 @@ void CPlayer_Empowered_MeleeCombo_03::Initialize(CPlayer* pActor)
 		->Set_Force(0.5f);
 
 	pWeapon->Set_Enable(true);
+	pWeapon->Set_Enable_Collisions(false);
 }
 
 CState<CPlayer>* CPlayer_Empowered_MeleeCombo_03::Update(CPlayer* pActor, _float fTimeDelta)

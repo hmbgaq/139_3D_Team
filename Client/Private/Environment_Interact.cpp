@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Character.h"
 #include "Player.h"
+#include "Level_Loading.h"
 
 CEnvironment_Interact::CEnvironment_Interact(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -41,6 +42,7 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 	{
 		m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
 		Safe_AddRef(m_pPlayer);
+		m_bFindPlayer = true;
 	}
 
 
@@ -187,6 +189,12 @@ void CEnvironment_Interact::Set_ColliderCenter(_float3 vColliderCenter)
 	m_tEnvironmentDesc.vColliderCenter = vColliderCenter;
 }
 
+void CEnvironment_Interact::Set_LevelChangeType(_bool bLevelChange, LEVEL eLevel)
+{
+	m_tEnvironmentDesc.bLevelChange = bLevelChange;
+	m_tEnvironmentDesc.eChangeLevel = eLevel;
+}
+
 _bool CEnvironment_Interact::Picking(_float3* vPickedPos)
 {
 	GRAPHIC_DESC GraphicDesc = *m_pGameInstance->Get_GraphicDesc();
@@ -260,6 +268,8 @@ void CEnvironment_Interact::Interact()
 						break;
 					}
 				}
+
+				
 			}
 		}
 		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == false)
@@ -273,6 +283,8 @@ void CEnvironment_Interact::Interact()
 
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 							m_pPlayer->SetState_InteractJumpDown100();
+
+
 
 						break;
 					}
@@ -310,7 +322,23 @@ void CEnvironment_Interact::Interact()
 						break;
 					}
 				}
+
+				if (true == m_tEnvironmentDesc.bLevelChange)
+				{
+					if (true == m_pPlayer->Is_Animation_End())
+					{
+						m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
+						m_bInteract = true;
+					}
+				}
+				else
+				{
+					m_bInteract = true;
+				}
+
 			}
+
+			
 		}
 }
 

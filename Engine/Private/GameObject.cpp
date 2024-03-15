@@ -114,7 +114,7 @@ HRESULT CGameObject::Set_InitPosition(const _float3& vPos)
 		this->Set_Dead(true);
 	pNavi->Set_CurrentIndex(iCheckIndex);
 
-	
+	return S_OK;
 }
 
 void CGameObject::Set_Enable(_bool _Enable)
@@ -187,6 +187,11 @@ _vector CGameObject::Calc_Look_Dir_XZ(_vector vTargetPos)
 {
 	return m_pTransformCom->Calc_Look_Dir_XZ(vTargetPos);
 }
+
+//void CGameObject::Set_Speed(_float fSpeed)
+//{
+//	m_pTransformCom->Set_Speed(fSpeed);
+//}
 
 CGameObject* CGameObject::Get_Object_Owner()
 {

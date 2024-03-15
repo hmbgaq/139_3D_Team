@@ -1,10 +1,10 @@
 #pragma once
-#include "Infected_State_Hit.h"
+#include "Infected_State_Stun.h"
 
 
 BEGIN(Client)
 
-class CInfected_HitNormalToStun_01_NEW : public CInfected_State_Hit
+class CInfected_HitNormalToStun_01_NEW : public CInfected_State_Stun
 {
 public:
 	virtual void Initialize(CInfected* pActor) override;

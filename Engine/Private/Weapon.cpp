@@ -75,8 +75,14 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 
 
 #ifdef _DEBUG
-	for (_uint i = 0; i < m_iColliderSize; ++i)
-		m_pGameInstance->Add_DebugRender(m_pColliders[i]);
+	for (_uint i = 0; i < m_iColliderSize; ++i) 
+	{
+		if (true == m_pColliders[i]->Get_Enable()) 
+		{
+			m_pGameInstance->Add_DebugRender(m_pColliders[i]);
+		}
+	}
+		
 #endif
 
 	if (nullptr == m_pModelCom)

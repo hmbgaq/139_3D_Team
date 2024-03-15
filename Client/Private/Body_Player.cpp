@@ -59,6 +59,16 @@ void CBody_Player::Tick(_float fTimeDelta)
 	{
 		Update_ShootingReaction(fTimeDelta);
 	}
+
+	if (m_pGameInstance->Key_Down(DIK_H))
+	{
+		iTemp += 1;
+		if (iTemp > m_pModelCom->Get_NumMeshes())
+		{
+			iTemp = 0;
+		}
+		cout << iTemp << endl;
+	}
 }
 
 void CBody_Player::Late_Tick(_float fTimeDelta)
@@ -68,8 +78,30 @@ void CBody_Player::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Player::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	//if (FAILED(__super::Render()))
+	//	return E_FAIL;
+
+	FAILED_CHECK(Bind_ShaderResources());
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	_uint iPass = m_iShaderPass;
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		if (i == iTemp)
+			continue;
+
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+
+		m_pShaderCom->Begin(iPass);
+
+		m_pModelCom->Render((_uint)i);
+	}
+
 
 	return S_OK;
 }

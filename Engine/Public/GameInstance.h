@@ -134,6 +134,10 @@ public: /* For.Target_Manager */
 
 public: /* For.Light_Manager */
 	HRESULT		Add_Light(const LIGHT_DESC& LightDesc, _int & outLightIndex);
+	class CLight* Find_Light(const _int iIndex);
+	void		Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc);
+
+
 	HRESULT		Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 	_bool		Remove_Light(const _uint& iIndex);
 	HRESULT		Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp);
@@ -224,6 +228,16 @@ public: /* Common */
 	const wstring	Get_LastNumChar(const wstring& str, const _uint& iNumCutCount);
 #pragma endregion End
 
+#pragma region ¼Ò¿µ
+	void Get_ModelTag(vector<string>* pVector);
+#pragma endregion
+
+
+#pragma region ¸íºó
+	void Hitlag(_float fTime = 1.f) { m_fHitlag_Time = fTime; };
+	_float Get_TimeDelta() { return m_fTimeDelta; };
+#pragma endregion
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CInput_Device*			m_pInput_Device = { nullptr };
@@ -241,6 +255,11 @@ private:
 	class CEvent_Manager*			m_pEvent_Manager = { nullptr };
 	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
 	class CRandom_Manager*			m_pRandom_Manager = { nullptr };
+
+
+private:
+	_float m_fHitlag_Time = { 0.f };
+	_float m_fTimeDelta = { 0.f };
 
 
 public:

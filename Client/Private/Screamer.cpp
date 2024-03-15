@@ -179,31 +179,6 @@ HRESULT CScreamer::Render_OutLine()
 	return S_OK;
 }
 
-HRESULT CScreamer::Render_Cascade_Shadow(_uint i)
-{
-	//if (nullptr == m_pModelCom || nullptr == m_pShaderCom)
-	//	return S_OK;
-	//
-	//FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
-	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
-	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
-	//
-	//FAILED_CHECK(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i));
-	//
-	//FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_CascadeProj", &m_pGameInstance->Get_Shadow_Proj()));
-	//
-	//_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-	//
-	//for (_uint i = 0; i < iNumMeshes; ++i)
-	//{
-	//	FAILED_CHECK(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModelCom->Get_MaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture"));
-	//
-	//	FAILED_CHECK(m_pModelCom->Render(m_pShaderCom, i,ECast(ANIM_SHADER::ANIM_CASCADE_SHADOW)));
-	//}
-	//
-	return S_OK;
-}
-
 HRESULT CScreamer::Ready_Components()
 {
 	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();

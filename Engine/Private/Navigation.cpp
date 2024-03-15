@@ -265,7 +265,7 @@ void CNavigation::SaveData(wstring strSavePath)
 
 void CNavigation::LoadData(wstring strLoadPath)
 {
-	_uint iCellSize = m_Cells.size();
+	_uint iCellSize = (_uint)m_Cells.size();
 	m_iCurrentIndex = -1;
 
 	for (_uint i = 0; i < iCellSize; ++i)
@@ -352,7 +352,7 @@ HRESULT CNavigation::Delete_Cell(const _uint iIndex)
 
 void CNavigation::AllSearchDelete_IsNan()
 {
-	_int iCellSize = m_Cells.size();
+	_int iCellSize = (_int)m_Cells.size();
 	vector<CCell*> vecNanCells;
 	vector<_int> vecNanCellIndex;
 
@@ -371,7 +371,7 @@ void CNavigation::AllSearchDelete_IsNan()
 		}
 	}
 
-	_uint iIsNanCellSize = vecNanCellIndex.size();
+	_uint iIsNanCellSize = (_uint)vecNanCellIndex.size();
 	for (_int i = 0; i < iIsNanCellSize; ++i)
 	{
 		Safe_Release(m_Cells[vecNanCellIndex[i]]);
@@ -397,7 +397,7 @@ void CNavigation::InRangeCellChange(CCell* pCell, _int ePoint, _float3 vSearchPo
 		}
 	}
 
-	m_iSelcetPointsSize = pointsToUpdate.size();
+	m_iSelcetPointsSize = (_int)pointsToUpdate.size();
 
 	for (auto& iter : pointsToUpdate)
 	{

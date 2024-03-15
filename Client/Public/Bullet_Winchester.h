@@ -2,7 +2,7 @@
 #include "Projectile.h"
 
 BEGIN(Client)
-
+class CEffect_Trail;
 class CEffect;
 
 class CBullet_Winchester final : public CProjectile
@@ -31,6 +31,10 @@ public:
 public:
 	_vector				m_vTargetPos = {};
 	CEffect*			m_pEffect = { nullptr };
+
+
+private:
+	CEffect_Trail* m_pTrail = { nullptr };
 
 
 public:

@@ -16,10 +16,12 @@
 #pragma endregion
 
 #include "LandObject.h"
+#include "Monster_Character.h"
 
 #pragma region MAP
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
+#include "Environment_Interact.h"
 #pragma endregion
 
 #pragma region Test
@@ -50,10 +52,11 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
-	//FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround"))); // Object 생성 실패해서 임시 주석.
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround"))); // Object 생성 실패해서 임시 주석.
 	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+	FAILED_CHECK(Ready_Shader());
 
 #pragma region 주석확인
 	FAILED_CHECK(Ready_UI());
@@ -68,7 +71,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 		m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
 	}
 
-#pragma region Effect_Test	
+#pragma region Effect_Test
 
 	//if (m_pGameInstance->Key_Down(DIK_GRAVE))
  	//{
@@ -205,34 +208,74 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 {
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
-	CGameObject* pMonster = nullptr;
 
-	/* -- Monster -----------------------------*/
-	//CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
+	json Stage1MonsterJson = {};
+
+	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MonsterJson)))
+	{
+		MSG_BOX("몬스터 불러오기 실패");
+		return E_FAIL;
+	}
+
+	json MonsterJson = Stage1MonsterJson["Monster_Json"];
+	_int iMonsterJsonSize = (_int)MonsterJson.size();
+
+	for (_int i = 0; i < iMonsterJsonSize; ++i)
+	{
+		CMonster_Character::MONSTER_DESC MonsterDesc = {};
+
+		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
+
+		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
+		MonsterDesc.bPreview = false;
+		MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
+
+		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		MonsterDesc.WorldMatrix = WorldMatrix;
+
+		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+			return E_FAIL;
+
+	}
+
+	////FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
+	//CGameObject* pMonster = nullptr;
+
+	///* -- Monster -----------------------------*/
+	////CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
+	////NULL_CHECK_RETURN(pMonster, E_FAIL);
+	////pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
+	//
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
 	//NULL_CHECK_RETURN(pMonster, E_FAIL);
-	//pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
-	
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_InitPosition(_float3(250.5, 0.f, 5.f));
-	
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
-	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_InitPosition(_float3(251.f, 0.f, 7.f));
-	
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
-	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_InitPosition(_float3(252.5f, 0.f, 9.f));	
-	
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	//pMonster->Set_InitPosition(_float3(253.5f, 0.f, 11.f));
-	pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
+	//pMonster->Set_InitPosition(_float3(250.5, 0.f, 5.f));
+	//
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//pMonster->Set_InitPosition(_float3(251.f, 0.f, 7.f));
+	//
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//pMonster->Set_InitPosition(_float3(252.5f, 0.f, 9.f));	
+	//
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	////pMonster->Set_InitPosition(_float3(253.5f, 0.f, 11.f));
+	//pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
 
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-	NULL_CHECK_RETURN(pMonster, E_FAIL);
-	pMonster->Set_InitPosition(_float3(153.6f, 14.65f, 217.55f));
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//pMonster->Set_InitPosition(_float3(153.6f, 14.65f, 217.55f));
 
 	return S_OK;
 }
@@ -290,15 +333,49 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
  	}
  
  
- 	json InteractJson = Stage1MapJson["Interact_Json"];
- 	_int InteractJsonSize = (_int)InteractJson.size();
- 
- 	for (_int i = 0; i < InteractJsonSize; ++i)
- 	{
- 
- 		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
- 		//! L"Layer_Event"
- 	}
+	json InteractJson = Stage1MapJson["Interact_Json"];
+	_int InteractJsonSize = (_int)InteractJson.size();
+
+	for (_int i = 0; i < InteractJsonSize; ++i)
+	{
+		CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
+
+		Desc.bAnimModel = InteractJson[i]["AnimType"];
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = InteractJson[i]["ModelTag"];
+
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+		Desc.bPreview = false;
+		Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
+		Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
+		Desc.bLevelChange = InteractJson[i]["LevelChange"];
+		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
+		Desc.eInteractState = InteractJson[i]["InteractState"];
+		Desc.eInteractType = InteractJson[i]["InteractType"];
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+
+		const json& TransformJson = InteractJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
+
+		CEnvironment_Interact* pObject = { nullptr };
+
+		pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+
+	}
  
  	json InstanceJson = Stage1MapJson["Instance_Json"];
  	_int InstanceJsonSize = (_int)InstanceJson.size();
@@ -340,36 +417,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
  
  	}
  
- 	json MonsterJson = Stage1MapJson["Monster_Json"];
- 	_int iMonsterJsonSize = (_int)MonsterJson.size();
  
- 	for (_int i = 0; i < iMonsterJsonSize; ++i)
- 	{
- 		CMonster::MONSTER_DESC MonsterDesc = {};
- 
- 		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
- 
- 		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
- 		MonsterDesc.bPreview = false;
- 
- 
- 		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
- 		_float4x4 WorldMatrix;
- 
- 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
- 		{
- 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
- 			{
- 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
- 			}
- 		}
- 
- 		MonsterDesc.WorldMatrix = WorldMatrix;
- 
-		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc));
- 		
- 	}
-
 	return S_OK;
 
 }
@@ -387,6 +435,49 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 	//desc.fPositionX = (_float)g_iWinSizeX / 2 + 20.f;
 	//desc.fPositionY = (_float)g_iWinSizeY / 2 + 20.f;
 	//m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"), &desc);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Shader()
+{
+	HBAO_PLUS_DESC Desc_Hbao = {};
+	Desc_Hbao.bHBAO_Active = true;
+	Desc_Hbao.fBias = 0.33;
+	Desc_Hbao.fBlur_Sharpness = 11.f;
+	Desc_Hbao.fPowerExponent = 1.9f;
+	Desc_Hbao.fRadius = 2.5;
+
+	BLOOMRIM_DESC Desc_BR = {};
+	Desc_BR.bRimBloom_Blur_Active = true;
+
+	FOG_DESC Desc_Fog = {};
+	Desc_Fog.bFog_Active = true;
+	Desc_Fog.fFogDistanceDensity = 0.037f;
+	Desc_Fog.fFogDistanceValue = 21.2f;
+	Desc_Fog.fFogHeightDensity = 0.1f;
+	Desc_Fog.fFogHeightValue = 50.f;
+	Desc_Fog.fFogStartDepth = 90.1f;
+	Desc_Fog.fFogStartDistance = 5.0f;
+
+	HDR_DESC Desc_HDR = {};
+	Desc_HDR.bHDR_Active = true;
+	Desc_HDR.fmax_white = 0.85;
+
+	ANTI_DESC Desc_Anti = {};
+	Desc_Anti.bFXAA_Active = true;
+
+	HSV_DESC Desc_HSV = {};
+	Desc_HSV.bScreen_Active = true;
+	Desc_HSV.fFinal_Brightness = 0.681f;
+	Desc_HSV.fFinal_Saturation = 1.407f;
+
+	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
+	m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);
+	m_pGameInstance->Get_Renderer()->Set_Fog_Option(Desc_Fog);
+	m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
+	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
+	m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
 
 	return S_OK;
 }

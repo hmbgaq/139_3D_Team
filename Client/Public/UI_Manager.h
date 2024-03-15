@@ -49,6 +49,7 @@ public: /* Ready_Preset */
 	HRESULT Ready_Interface(_uint iLevelIndex);
 	HRESULT Ready_Crosshair(_uint iLevelIndex);
 	HRESULT Ready_Loading_Intro(_uint iLevelIndex);
+	HRESULT Ready_Loading_IntroBoss(_uint iLevelIndex);
 	HRESULT Ready_BossHUD_Bar(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 	HRESULT Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 
@@ -90,8 +91,12 @@ public:
 	void	Active_Loading_Intro(_bool bActive);
 	vector<CUI*>	m_vecLoading;
 
+	/* BossLoading */
+	HRESULT Add_Loading_IntroBoss(_uint iLevelIndex, const wstring& strLayerTag);
+	void	Active_Loading_IntroBoss(_bool bActive);
+	vector<CUI*>	m_vecLoadingIntroBoss;
 
-	/* IntroLoading */
+	/* Crosshair */
 	HRESULT			Add_Crosshair(_uint iLevelIndex, const wstring& strLayerTag);
 	void			Active_Crosshair(_bool bActive);
 	void			Trigger_Crosshair(_bool bPlayAnim);
