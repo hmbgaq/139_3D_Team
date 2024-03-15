@@ -59,7 +59,7 @@ HRESULT CVampireCommander_Projectile_Range3::Initialize(void* pArg)
 
 
 	// 이펙트 생성
-	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Impact_03_Red.json", this);
+	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Impact_03_Red_With_Rock_02.json", this);
 	//m_pEffect = EFFECT_MANAGER->Create_Effect_With_Trail("Test_Impact.json", "Test_Effect_Trail.json", this); // 트레일 달린 이펙트 테스트
 
 	return S_OK;

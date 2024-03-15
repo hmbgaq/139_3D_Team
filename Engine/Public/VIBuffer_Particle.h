@@ -117,6 +117,8 @@ public:
 
 		// 위치
 		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
+		_float fMaxRange = { 3.f };
+
 
 		// 크기
 		_float2	vCurScales	= { 1.f, 1.f };

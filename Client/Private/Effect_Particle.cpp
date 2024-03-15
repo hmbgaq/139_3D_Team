@@ -225,7 +225,11 @@ void CEffect_Particle::ReSet_Effect()
 	if (!m_pVIBufferCom->Get_Desc()->bRecycle)
 	{
 		// 파티클 버퍼가 재사용이 false일때만 Reset하기
-		m_pVIBufferCom->ReSet();
+		//if (CVIBuffer_Particle::RISE != m_pVIBufferCom->Get_Desc()->eType_Action)
+		{
+			m_pVIBufferCom->ReSet();
+		}
+
 	}
 
 }
@@ -236,7 +240,8 @@ void CEffect_Particle::End_Effect()
 
 	if (m_tVoidDesc.bLoop)
 	{
-		ReSet_Effect();
+		if(CVIBuffer_Particle::RISE != m_pVIBufferCom->Get_Desc()->eType_Action)
+			ReSet_Effect();
 	}
 
 }

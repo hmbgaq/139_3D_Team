@@ -264,8 +264,7 @@ void CVIBuffer_Particle::ReSet()
 		//pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
 		//pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f);
 		//pVertices[i].vColor.w = 1.f;
-
-
+		
 
 		// 원점 위치로 고정
 		//XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
@@ -277,12 +276,33 @@ void CVIBuffer_Particle::ReSet()
 			pVertices[i].vUp = _float4(0.f, 0.f, 0.f, 0.f)			/* * 크기 */;
 			pVertices[i].vLook = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
 			pVertices[i].vColor.w = 0.f;
+
+			if (RISE == m_tBufferDesc.eType_Action)
+			{
+				pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * 0.2f;
+				pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * 0.2f;
+				pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f) * 0.2f;
+				pVertices[i].vColor.w = 1.f;
+			}
 		}
 		else
 		{
-			pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
-			pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
-			pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+
+			if (RISE == m_tBufferDesc.eType_Action)
+			{
+				//pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * 0.2f;
+				//pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * 0.2f;
+				//pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f) * 0.2f;
+				//pVertices[i].vColor.w = 1.f;
+			}
+			else
+			{
+				pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
+				pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
+				pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+			}
+
+
 		}
 
 
@@ -297,10 +317,14 @@ void CVIBuffer_Particle::ReSet()
 void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 {
 
-	// 라이프타임
-	m_vecParticleInfoDesc[iNum].fTimeAccs = 0.f;
-	m_vecParticleInfoDesc[iNum].fLifeTime = SMath::fRandom(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
-	m_vecParticleInfoDesc[iNum].fLifeTimeRatios = 0.f;
+	if (RISE != m_tBufferDesc.eType_Action)
+	{
+		// 라이프타임
+		m_vecParticleInfoDesc[iNum].fTimeAccs = 0.f;
+		m_vecParticleInfoDesc[iNum].fLifeTime = SMath::fRandom(m_tBufferDesc.vMinMaxLifeTime.x, m_tBufferDesc.vMinMaxLifeTime.y);
+		m_vecParticleInfoDesc[iNum].fLifeTimeRatios = 0.f;
+	}
+
 
 
 	// 센터 포지션 Offset
@@ -340,7 +364,10 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 		Add_Force(iNum, vForce, m_tBufferDesc.eForce_Mode);
 	}
 #pragma endregion 리지드바디 끝
+	else
+	{
 
+	}
 
 
 
@@ -349,17 +376,27 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 _float4 CVIBuffer_Particle::Make_Dir(_uint iNum, TYPE_ACTION eAction)
 {
 	_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-	vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
 
-	_float3 vRotationOffset = { XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetX.x, m_tBufferDesc.vMinMaxRotationOffsetX.y))
-							  , XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetY.x, m_tBufferDesc.vMinMaxRotationOffsetY.y))
-							  , XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y)) };
+	if (RISE == eAction)
+	{
+		//vDir = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	}
+	else
+	{
+		vDir = XMVector3Normalize(vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
+
+		_float3 vRotationOffset = { XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetX.x, m_tBufferDesc.vMinMaxRotationOffsetX.y))
+								  , XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetY.x, m_tBufferDesc.vMinMaxRotationOffsetY.y))
+								  , XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y)) };
 
 
-	_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
-	_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
+		_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
+		_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
 
-	vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
+		vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
+	}
+
+
 
 	return vDir;
 }
@@ -447,20 +484,26 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 				{
 					if (m_tBufferDesc.bRecycle)
 					{
-						// 리사이클 모드면 슬립이 됐을 때 초기화 후 힘 다시주기
-						m_vecParticleInfoDesc[i].Reset_ParticleTimes();
+						if (RISE != m_tBufferDesc.eType_Action) // 라이즈 타입이 아닐때만 (고쳐야함)
+						{
+							// 리사이클 모드면 슬립이 됐을 때 초기화 후 힘 다시주기
+							m_vecParticleInfoDesc[i].Reset_ParticleTimes();
 
-						// 방향 만들기
-						_vector		vDir = Make_Dir(i, m_tBufferDesc.eType_Action);
-						m_vecParticleRigidbodyDesc[i].vDir = vDir;
-					
-						XMStoreFloat4(&pVertices[i].vPosition, m_vecParticleInfoDesc[i].vCenterPositions);
-						pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
-						pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
-						pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
-						pVertices[i].vColor.w = 1.f;
-						_vector vForce = XMVector3Normalize(m_vecParticleRigidbodyDesc[i].vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
-						Add_Force(i, vForce, m_tBufferDesc.eForce_Mode);
+							// 방향 만들기
+							_vector		vDir = Make_Dir(i, m_tBufferDesc.eType_Action);
+							m_vecParticleRigidbodyDesc[i].vDir = vDir;
+
+							XMStoreFloat4(&pVertices[i].vPosition, m_vecParticleInfoDesc[i].vCenterPositions);
+							pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
+							pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
+							pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+							pVertices[i].vColor.w = 1.f;
+							_vector vForce = XMVector3Normalize(m_vecParticleRigidbodyDesc[i].vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
+							Add_Force(i, vForce, m_tBufferDesc.eForce_Mode);
+						}
+
+
+
 					}
 
 				}
@@ -468,6 +511,36 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 		}
 #pragma endregion 이동 : 리지드바디 끝
+		else
+		{
+			if (RISE == m_tBufferDesc.eType_Action)
+			{
+				//_vector		vDir = Make_Dir(i, m_tBufferDesc.eType_Action);
+				//m_vecParticleRigidbodyDesc[i].vDir = vDir;
+
+				//_vector vForce = XMVector3Normalize(m_vecParticleRigidbodyDesc[i].vDir) * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
+				//Add_Force(i, vForce, m_tBufferDesc.eForce_Mode);
+
+				pVertices[i].vPosition.y += 1.2f * fTimeDelta;
+
+				if (m_vecParticleInfoDesc[i].fMaxRange <= pVertices[i].vPosition.y)
+				{
+					//if (RISE == m_tBufferDesc.eType_Action)
+					{
+						pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * 0.2f;
+						pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * 0.2f;
+						pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f) * 0.2f;
+						pVertices[i].vColor.w = 1.f;
+					}
+
+					m_vecParticleInfoDesc[i].fMaxRange = SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
+					pVertices[i].vPosition.y = m_tBufferDesc.vMinMaxRange.x;
+
+					m_vecParticleInfoDesc[i].Reset_ParticleTimes();
+				}
+				
+			}
+		}
 
 
 
