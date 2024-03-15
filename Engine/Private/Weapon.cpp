@@ -163,6 +163,14 @@ CCharacter* CWeapon::Get_Target_Character(CCollider* other)
 	return pTarget_Character;
 }
 
+CCharacter* CWeapon::Get_PartOwner()
+{
+	if (nullptr == m_pOwner || m_pOwner->Is_Dead() || false == m_pOwner->Get_Enable())
+		return nullptr;
+
+	return dynamic_cast<CCharacter*>(m_pOwner);
+}
+
 CWeapon* CWeapon::Set_Damage(_int _iDamage)
 {
 	m_iDamage = _iDamage;

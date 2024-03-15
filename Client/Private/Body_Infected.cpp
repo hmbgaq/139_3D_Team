@@ -51,11 +51,11 @@ HRESULT CBody_Infected::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		auto iter = m_vDiscardMesh.find(m_eRender_State);
+		auto iter = m_vDiscardMesh.find(m_eRender_State); // 현재 상태에 해당하는 vector<int> 찾기 
 		if (iter != m_vDiscardMesh.end())
 		{
 			auto& Discard = iter->second;
-			if (find(Discard.begin(), Discard.end(), i) != Discard.end())
+			if (find(Discard.begin(), Discard.end(), i) != Discard.end()) // 현재 렌더를 돌리는 메시의 번호가 vector<int>랑 같은경우, 
 			{
 				if (m_eRender_State == CBody_Infected::RENDER_STATE::ATTACK)
 				{
@@ -68,11 +68,12 @@ HRESULT CBody_Infected::Render()
 					m_pShaderCom->Begin(ECast(MONSTER_SHADER::INFECTED_PUNCH));
 
 					m_pModelCom->Render((_uint)i);
+
 				}
 				else
 					continue;
 			}
-			else
+			else // 현재 렌더를 돌리는 메시의 번호가 vector<int>랑 다른 경우, 
 			{
 				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 

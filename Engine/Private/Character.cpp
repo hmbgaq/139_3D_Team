@@ -81,6 +81,8 @@ void CCharacter::Tick(_float fTimeDelta)
 		if (nullptr != Pair.second)
 			Pair.second->Tick(fTimeDelta);
 	}
+
+	Update_RadialBlurTime(fTimeDelta);
 }
 
 void CCharacter::Late_Tick(_float fTimeDelta)
@@ -365,7 +367,7 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 	//	return Hit_Type::None;
 	//}
 
-	if (true == m_bIsInvincible) 
+	if (true == m_bIsInvincible && false == m_bIsStun)
 	{
 		return Hit_Type::None;
 	}
@@ -399,7 +401,7 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 		}
 		else 
 		{
-			Set_Invincible(true);
+			//Set_Invincible(true);
 			Hitted_Dead(eHitPower);
 		}
 		
@@ -526,15 +528,8 @@ CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _fl
 		if (nullptr == pTargetCharacter || true == pTargetCharacter->Is_Invincible() || 0 >= pTargetCharacter->Get_Hp())
 			continue;
 
-
-		_float fDistance = 0.f;
-
-		for (_uint i = 0; i < 5; ++i)
-		{
-			fDistance += Calc_Distance_Front(pTarget->Get_Position(), _float3(0.f, 0.f, 0.5f * i));
-		}
-		fDistance /= 5.f;
-
+		//_float fDistance = Calc_Distance(pTarget);
+		_float fDistance = Calc_Distance_Front(pTarget->Get_Position());
 
 		if (fMinDistance > fDistance) 
 		{
@@ -569,9 +564,9 @@ _float CCharacter::Calc_Distance()
 	return Calc_Distance(m_pTarget);
 }
 
-_float CCharacter::Calc_Distance_Front(_float3 vTargetPos, _float3 vFront)
+_float CCharacter::Calc_Distance_Front(_float3 vTargetPos)
 {
-	_float3 vPos = m_pTransformCom->Calc_Front_Pos(vFront); //Get_Position();
+	_float3 vPos = m_pTransformCom->Calc_Front_Pos(); //Get_Position();
 
 	_float3 vDiff = vTargetPos - vPos;
 
@@ -608,6 +603,11 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap
 void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
 {
 	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState, iTargetKeyFrameIndex);
+}
+
+void CCharacter::Reset_UpperAngle()
+{
+	m_pBody->Reset_UpperAngle();
 }
 
 void CCharacter::Set_StiffnessRate(_float fStiffnessRate)
@@ -652,7 +652,16 @@ void CCharacter::Set_WeaknessPoint()
 {
 	_float3 vResult = m_pTransformCom->Calc_Front_Pos(m_vWeaknessPoint_Local);
 	m_vWeaknessPoint = vResult;
-};
+}
+
+void CCharacter::Update_RadialBlurTime(_float fTimeDelta)
+{
+	m_fRadialBlurTime = m_fRadialBlurTime - fTimeDelta > 0 ? m_fRadialBlurTime - fTimeDelta : 0.f;
+	
+	_bool bIsActivateRadialBlur = 0 < m_fRadialBlurTime;
+	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(bIsActivateRadialBlur);
+}
+
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {

@@ -41,6 +41,8 @@ public:
 	_float3		Get_Weapon_Pos() { return { m_WorldMatrix._41, m_WorldMatrix._42, m_WorldMatrix._43 }; }
 
 	CCharacter* Get_Target_Character(CCollider* other);
+	CCharacter* Get_PartOwner();
+
 	CWeapon* Set_Damage(_int _iDamage);
 	CWeapon* Set_Direction(Direction _eHitDirection);
 	CWeapon* Set_Power(Power _eHitPower);

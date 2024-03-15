@@ -199,7 +199,7 @@ void CBody::Set_MouseMove(_float fTimeDelta)
 
 	_float2 vResult = vMouseMove;
 
-	m_fRotateUpperY += vMouseMove.y / (fSpeed / 2.5f);
+	m_fRotateUpperY += vMouseMove.y / (fSpeed / 2.51f);
 	vResult.y = m_fRotateUpperY - m_fShootingReaction;
 
 	vResult.x += m_fRotateUpperX;
@@ -304,6 +304,15 @@ void CBody::Update_ShootingReaction(_float fTimeDelta)
 	m_fShootingReactionTarget -= fReactionValue;
 	m_fShootingReaction += fReactionValue;
 	m_fShootingReaction = max((1 - fTimeDelta * max(m_fShootingReaction / 2, 2)) * m_fShootingReaction, 0);
+}
+
+void CBody::Reset_UpperAngle()
+{
+	m_fRotateUpperX = { 0.f };
+	m_fRotateUpperY = { 5.f };
+
+	m_fShootingReaction = { 0.f };
+	m_fShootingReactionTarget = { 0.f };
 }
 
 HRESULT CBody::Bind_ShaderResources()
