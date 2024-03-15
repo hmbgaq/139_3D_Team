@@ -152,7 +152,7 @@ HRESULT CBody_Infected::Ready_Components()
 	{
 		CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
 		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-		BoundingDesc.vExtents = _float3(0.3f, 0.7f, 0.3f);
+		BoundingDesc.vExtents = _float3(0.12f, 0.6f, 0.12f);
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 
 		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
@@ -173,5 +173,17 @@ HRESULT CBody_Infected::Bind_ShaderResources()
 
 void CBody_Infected::Free()
 {
+	//for (auto& pair : m_vDiscardMesh)
+	//{
+	//	for (auto& element : pair.second) 
+	//	{
+	//		
+	//	}
+	//	// 벡터의 자원을 모두 해제한 후에는 clear() 함수를 호출하여 벡터를 비워줍니다.
+	//	pair.second.clear();
+	//}
+	//// 맵의 자원도 해제합니다.
+	//m_vDiscardMesh.clear();
+
 	__super::Free();
 }
