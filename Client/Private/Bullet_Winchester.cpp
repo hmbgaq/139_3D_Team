@@ -46,7 +46,7 @@ HRESULT CBullet_Winchester::Initialize(void* pArg)
 	m_iDamage = 10;
 
 	// 이펙트 생성
-	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Skull.json", this);
+	m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
 
 	return S_OK;
 }
@@ -60,7 +60,7 @@ void CBullet_Winchester::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	_float fDistance = m_pTransformCom->Get_Speed() * 5.f;
+	_float fDistance = m_pTransformCom->Get_Speed() * 6.f;
 	Search_Target(LAYER_MONSTER, fDistance);
 	Search_Target(LAYER_BOSS, fDistance);
 	
@@ -77,9 +77,6 @@ void CBullet_Winchester::Tick(_float fTimeDelta)
 		m_pTransformCom->Go_Straight(fTimeDelta);
 	}
 	
-
-
-
 	
 }
 
@@ -89,10 +86,10 @@ void CBullet_Winchester::Late_Tick(_float fTimeDelta)
 
 
 	////! 유정: 트레일 테스트
-	//if (nullptr != m_pTrail)
-	//{
-	//	m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());	//! 제대로 된 위치에 생성되는게 아닌 것 같다. 나중에 물어보기
-	//}
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());	//! 제대로 된 위치에 생성되는게 아닌 것 같다. 나중에 물어보기
+	}
 
 }
 
@@ -166,7 +163,7 @@ HRESULT CBullet_Winchester::Ready_Components()
 
 
 	//! 유정: 트레일 추가 테스트
-	m_pTrail = EFFECT_MANAGER->Ready_Trail("Monster_Bullet_Trail.json", this);
+	//m_pTrail = EFFECT_MANAGER->Ready_Trail("Monster_Bullet_Trail.json", this);
 
 
 	return S_OK;
@@ -206,6 +203,7 @@ CGameObject* CBullet_Winchester::Pool()
 void CBullet_Winchester::Free()
 {
 	__super::Free();
-	if (m_pEffect != nullptr)
-		Safe_Release(m_pEffect);
+
+	if (nullptr != m_pEffect)
+		m_pEffect->Set_Dead(true);
 }

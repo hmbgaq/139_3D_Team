@@ -137,7 +137,7 @@ void CBody_Player::OnCollisionEnter(CCollider* other)
 
 void CBody_Player::OnCollisionStay(CCollider* other)
 {
-	//__super::OnCollisionStay(other);
+	__super::OnCollisionStay(other);
 }
 
 void CBody_Player::OnCollisionExit(CCollider* other)

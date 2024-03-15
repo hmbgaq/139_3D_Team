@@ -600,7 +600,7 @@ CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _
 		}
 	}
 
-	if (CPlayer_MeleeUppercut_01v2::g_iAnimIndex != _iAnimIndex) 
+	if (CPlayer_MeleeCombo_01::g_iAnimIndex != _iAnimIndex && CPlayer_MeleeUppercut_01v2::g_iAnimIndex != _iAnimIndex)
 	{
 		if (m_pGameInstance->Mouse_Up(DIM_LB))
 		{
