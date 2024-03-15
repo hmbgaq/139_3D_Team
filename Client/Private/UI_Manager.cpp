@@ -1207,4 +1207,58 @@ void CUI_Manager::Free()
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+
+	for (auto& iter : m_vecLeftHUD)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecRightHUD)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecTutorialBox)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecLevelUP)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecRewardBox)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecQuestBox)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecDistortion)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecLoading)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecLoadingIntroBoss)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecCrosshair)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecBossHUD_Bar)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecBossHUD_Shard)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecEnemyHUD_Shard)
+	{
+		Safe_Release(iter);
+	}
+
 }

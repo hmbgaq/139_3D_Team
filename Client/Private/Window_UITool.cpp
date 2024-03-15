@@ -3310,6 +3310,7 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 			m_pCurrSelectUI->Set_DistortionBias(m_fDistortionBias);
 		}
 	}
+	CUI::UI_DESC tUI_Desc = m_pCurrSelectUI->Get_UIDesc();
 }
 
 _float2 CWindow_UITool::Lerp_float2(const _float2& a, const _float2& b, float t)
@@ -3512,6 +3513,8 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 			tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3Y"];
 		if (object.contains("Distortion")) // 키가 있으면
 			tUI_Info.fDistortionScale = object["Distortion"]["DistortionScale"];
+
+		pUI_Object->Set_UIDesc(tUI_Info);
 
 		if (tUI_Info.bParent == true)
 		{
