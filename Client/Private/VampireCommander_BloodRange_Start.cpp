@@ -21,7 +21,7 @@ void CVampireCommander_BloodRange_Start::Initialize(CVampireCommander* pActor)
 			_int randomX = SMath::Random(-4, 4);
 			_int randomZ = SMath::Random(-4, 4);
 			CGameObject* pMonster = nullptr;
-			_float3 Temp = pActor->Get_Position() + _float3(randomX, 0.f, randomZ);
+			_float3 Temp = pActor->Get_Position() + _float3((_float)randomX, 0.f, (_float)randomZ);
 			Temp.y = 0.f;
 			if (Temp.x >= 20 && Temp.x <= 100 && Temp.z >= 30 && Temp.z <= 100)
 			{

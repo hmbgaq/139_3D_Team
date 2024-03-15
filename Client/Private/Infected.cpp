@@ -58,12 +58,20 @@ HRESULT CInfected::Initialize_Prototype()
 
 HRESULT CInfected::Initialize(void* pArg)
 {
-	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
+	if (pArg == nullptr)
+	{
+		CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 10.f;
-	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+		GameObjectDesc.fSpeedPerSec = 10.f;
+		GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+		FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+	}
+	else 
+	{
+		FAILED_CHECK(__super::Initialize(pArg));
+	}
 
-	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+	
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -82,7 +90,7 @@ void CInfected::Priority_Tick(_float fTimeDelta)
 void CInfected::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
+	
 	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
@@ -96,7 +104,7 @@ void CInfected::Late_Tick(_float fTimeDelta)
 
 HRESULT CInfected::Render()
 {
-	FAILED_CHECK(__super::Render());
+	__super::Render();
 
 	return S_OK;
 }

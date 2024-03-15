@@ -3,6 +3,9 @@
 #include "GameInstance.h"
 #include "Bullet_Bandit_Sniper.h"
 
+#include "Effect_Manager.h"
+#include "Effect_Trail.h"
+
 CBullet_Bandit_Sniper::CBullet_Bandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CProjectile(pDevice, pContext, strPrototypeTag)
 {
@@ -19,7 +22,7 @@ HRESULT CBullet_Bandit_Sniper::Initialize_Prototype()
 {
 	return S_OK;
 }
-
+	
 HRESULT CBullet_Bandit_Sniper::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
@@ -48,6 +51,10 @@ HRESULT CBullet_Bandit_Sniper::Ready_Components()
 		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pCollider), &BoundingDesc));
 	}
 
+
+	//! 유정: 트레일 추가
+	m_pTrail = EFFECT_MANAGER->Ready_Trail("Monster_Bullet_Trail.json", this);
+
 	return S_OK;
 }
 
@@ -69,6 +76,14 @@ void CBullet_Bandit_Sniper::Tick(_float fTimeDelta)
 void CBullet_Bandit_Sniper::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+
+	//! 유정: 트레일
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());
+	}
+
 }
 
 HRESULT CBullet_Bandit_Sniper::Render()
@@ -130,6 +145,9 @@ CGameObject* CBullet_Bandit_Sniper::Pool()
 void CBullet_Bandit_Sniper::Free()
 {
 	__super::Free();
+
+	//if (nullptr != m_pTrail)
+	//	m_pTrail->Set_Dead(TRUE);
 
 	//Safe_Release(m_pCollider);
 }

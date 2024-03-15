@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "Character.h"
+#include "Monster_Character.h"
 #include "Actor.h"
 
 BEGIN(Client)
 
-class CVampireCommander final : public CCharacter
+class CVampireCommander final : public CMonster_Character
 {
 private:
 	CVampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -31,6 +31,9 @@ protected:
 	virtual void Hitted_Right(Power ePower) override;
 	virtual void Hitted_Front(Power ePower) override;
 	virtual void Hitted_Dead(Power ePower)	override;
+	virtual void Hitted_Stun(Power ePower) override;
+	virtual void Hitted_Finish() override;
+	
 
 public:
 	CActor<CVampireCommander>* Get_Actor() {return m_pActor;}

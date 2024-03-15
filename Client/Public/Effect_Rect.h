@@ -18,7 +18,7 @@ public:
 
 	typedef struct tagTextureEffectDesc
 	{
-		TYPE		eType = { SINGLE };
+
 
 	}EFFECT_RECT_DESC;
 
@@ -37,11 +37,18 @@ public:
 	virtual HRESULT Render() override;
 
 public:
+	virtual _bool Write_Json(json& Out_Json)		 override;
+	virtual void  Load_FromJson(const json& In_Json) override;
+
+public:
 	virtual void	ReSet_Effect()	override;
 	virtual void	End_Effect()	override;
 
 public:
 	CTexture*				Get_TextureCom(TEXTURE eTexture) { return m_pTextureCom[eTexture]; }
+
+public:
+	HRESULT					Change_TextureCom(wstring strProtoTextureTag);	// Åø ¿ë
 
 public:
 	EFFECT_RECT_DESC*		Get_Desc() { return &m_tRectDesc; }

@@ -25,6 +25,9 @@ public:
 	virtual HRESULT Render_Shadow() override;
 
 private:
+	void Update_DiscardMesh();
+
+	HRESULT OptionSetting();
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 

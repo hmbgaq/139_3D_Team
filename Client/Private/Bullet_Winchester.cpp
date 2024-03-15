@@ -6,6 +6,10 @@
 #include "Effect_Manager.h"
 #include "Player.h"
 
+#include "Effect_Manager.h"
+#include "Effect_Trail.h"
+
+
 CBullet_Winchester::CBullet_Winchester(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CProjectile(pDevice, pContext, strPrototypeTag)
 {
@@ -84,6 +88,12 @@ void CBullet_Winchester::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 
+	////! 유정: 트레일 테스트
+	//if (nullptr != m_pTrail)
+	//{
+	//	m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());	//! 제대로 된 위치에 생성되는게 아닌 것 같다. 나중에 물어보기
+	//}
+
 }
 
 HRESULT CBullet_Winchester::Render()
@@ -153,6 +163,11 @@ HRESULT CBullet_Winchester::Ready_Components()
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pCollider), &BoundingDesc)))
 		return E_FAIL;
+
+
+	//! 유정: 트레일 추가 테스트
+	m_pTrail = EFFECT_MANAGER->Ready_Trail("Monster_Bullet_Trail.json", this);
+
 
 	return S_OK;
 }

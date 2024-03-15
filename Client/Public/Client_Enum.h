@@ -26,6 +26,7 @@ namespace Engine
 		COMMON_WIREFRAME,			// 1 - 
 		COMMON_SHADOW,				// 2 - 그림자 그리기 
 		INFECTED_PUNCH,				// 3 - Infected - Attack에서 주먹변하기 
+		SNIPER_WEAPON,				// 4 - 스나이퍼 무기 
 		MONSTER_SHADER_END };
 
 	enum class UI_SHADER {UI_SHADER_END};

@@ -1,4 +1,4 @@
-#include "..\Public\Infected_DeathLight_F_01_NEW.h"
+#include "Infected_DeathLight_F_01_NEW.h"
 
 void CInfected_DeathLight_F_01_NEW::Initialize(CInfected* pActor)
 {

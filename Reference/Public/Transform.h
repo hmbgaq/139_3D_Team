@@ -77,6 +77,7 @@ public:
 	void Set_WorldMatrix(_float4x4 matrix) { m_WorldMatrix = matrix; }
 	void Set_WorldMatrix(_fmatrix WorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix); }
 	void Set_Scaling(_float fScaleX, _float fScaleY, _float fScaleZ);
+
 	void Set_Speed(_float fSpeed) { m_fSpeedPerSec = fSpeed; }
 	_float Get_Speed() { return m_fSpeedPerSec; }
 
@@ -136,6 +137,7 @@ public:
 
 	_vector Calc_Look_Dir(_fvector vTargetPos);
 	_vector Calc_Look_Dir_XZ(_fvector vTargetPos);
+
 
 	/* ---------------- 소영 추가사항 ---------------- */
 	void Move_Position(_float4 vDir, _float fSpeed, _float fTimeDelta); /* Dir쪽으로 speed만큼 계속해서 이동하는 함수 */

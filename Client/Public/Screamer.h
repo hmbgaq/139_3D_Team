@@ -29,7 +29,6 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
 	virtual HRESULT Render_OutLine() override;
-	virtual HRESULT Render_Cascade_Shadow(_uint i);
 
 private:
 	HRESULT			Ready_Components();

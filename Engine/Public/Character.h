@@ -114,13 +114,24 @@ public:
 	virtual void Set_Enable(_bool _Enable) override;
 
 public:
-	virtual Hit_Type Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower);
+	virtual Hit_Type Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee = false);
 
 	virtual void Hitted_Left(Power ePower) {};
 	virtual void Hitted_Right(Power ePower) {};
 	virtual void Hitted_Front(Power ePower) {};
 	virtual void Hitted_Knock(_bool bIsCannonball = false) {};
 	virtual void Hitted_Dead(Power ePower) {};
+	virtual void Hitted_Stun(Power ePower) { 
+		//Set_Invincible(true);
+		Hitted_Dead(ePower); 
+	};
+	virtual void Hitted_Finish() {
+		//Set_Invincible(true);
+		//Hitted_Dead(Power::Heavy);
+	};
+	
+
+
 public:
 	void Add_Force(_vector In_vDir, _float In_fPower);
 
@@ -146,6 +157,9 @@ public:
 	_float Calc_Distance(_float3 vTargetPos);
 	_float Calc_Distance(CGameObject* pTarget);
 	_float Calc_Distance();
+
+	_float Calc_Distance_Front(_float3 vTargetPos);
+
 	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
 	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 1.0f);
@@ -180,6 +194,17 @@ public:
 	_int	Get_CurHP() { return m_iHp; }
 	void	Set_MaxHP(_float fMaxHP) { m_iMaxHp = fMaxHP; }
 	_int	Get_MaxHP() { return m_iMaxHp; }
+
+
+public:
+	_bool Is_Invincible() { return m_bIsInvincible; };
+	void Set_Invincible(_bool _bIsInvincible) { m_bIsInvincible = _bIsInvincible; };
+
+public:
+	_bool Is_Stun() { return m_bIsInvincible; };
+	void Set_Stun(_bool _bIsStun) { m_bIsStun = _bIsStun; };
+
+
 protected:
 	_int m_iHp = { 1 };
 	_int m_iMaxHp = { 1 };
@@ -187,6 +212,12 @@ protected:
 	/* _float 타입의 HP를 사용해주세요. */
 	//_float m_fMaxHP = { 40.f };
 	//_float m_fCurHP = { 40.f };
+
+protected:
+	_bool m_bIsInvincible = { false };
+
+protected:
+	_bool m_bIsStun = { false };
 
 
 protected:

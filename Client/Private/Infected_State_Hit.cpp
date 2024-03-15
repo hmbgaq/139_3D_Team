@@ -1,8 +1,12 @@
-#include "..\Public\Infected_State_Hit.h"
+#include "Infected_State_Hit.h"
+#include "Body_Infected.h"
 
 void CInfected_State_Hit::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
+
+	CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
+	pBody->Set_StateHit();
 }
 
 CState<CInfected>* CInfected_State_Hit::Update(CInfected* pActor, _float fTimeDelta)

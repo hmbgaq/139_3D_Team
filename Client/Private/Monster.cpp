@@ -37,18 +37,6 @@ HRESULT CMonster::Initialize(void* pArg)
 	m_iRenderPass = 0;
 	m_fTimeDelta = 0;
 	 
-
-	if (pArg != nullptr)
-	{
-		m_tMonsterDesc = *(MONSTER_DESC*)pArg;
-
-		if (m_tMonsterDesc.bPreview == false)
-		{
-			m_pTransformCom->Set_WorldMatrix(m_tMonsterDesc.WorldMatrix);
-		}
-	}
-	
-
  	
 
 	return S_OK;
