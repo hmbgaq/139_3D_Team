@@ -39,6 +39,10 @@
 #include "Level_Loading.h"
 
 
+/* -------------- Memo ------------- */
+// Intro¾Æ´Ô Å×½ºÆ®¸ÊÀÓ 
+/* --------------------------------- */
+
 CLevel_Intro::CLevel_Intro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {

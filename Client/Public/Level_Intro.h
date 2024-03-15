@@ -3,6 +3,9 @@
 #include "Client_Defines.h"
 #include "Level.h"
 
+/* -------------- Memo --------------- */
+// Intro¾Æ´Ô Å×½ºÆ®¸ÊÀÓ 
+/* --------------------------------- */
 BEGIN(Client)
 
 class CLevel_Intro final : public CLevel
