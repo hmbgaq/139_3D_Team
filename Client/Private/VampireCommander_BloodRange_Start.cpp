@@ -33,6 +33,7 @@ void CVampireCommander_BloodRange_Start::Initialize(CVampireCommander* pActor)
 		
 	}
 
+	pActor->Set_Invincible(true);
 }
 
 CState<CVampireCommander>* CVampireCommander_BloodRange_Start::Update(CVampireCommander* pActor, _float fTimeDelta)

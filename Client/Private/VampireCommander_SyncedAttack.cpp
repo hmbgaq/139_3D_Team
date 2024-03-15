@@ -1,5 +1,6 @@
 #include "VampireCommander_SyncedAttack.h"
 #include "VampireCommander_Idle.h"
+#include "Body_VampireCommander.h"
 
 void CVampireCommander_SyncedAttack::Initialize(CVampireCommander* pActor)
 {
@@ -16,6 +17,9 @@ void CVampireCommander_SyncedAttack::Initialize(CVampireCommander* pActor)
 		->Set_Force(0.f);
 
 	pWeapon->Set_Enable(true);
+
+	CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
+	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ATTACK);
 }
 
 CState<CVampireCommander>* CVampireCommander_SyncedAttack::Update(CVampireCommander* pActor, _float fTimeDelta)
