@@ -178,7 +178,7 @@ PS_OUT PS_BOSS(PS_IN In)
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
-   // Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     /* g_vBloomPower */
 
     // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 

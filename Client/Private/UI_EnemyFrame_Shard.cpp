@@ -56,6 +56,9 @@ void CUI_EnemyFrame_Shard::Tick(_float fTimeDelta)
 		m_fOffsetY += 0.1f;
 
 	__super::Tick(fTimeDelta);
+
+	//if (m_pOwner != nullptr)
+	//	Set_WorldMatrix(m_pOwner->Get_Transform()->Get_WorldMatrix());
 }
 
 void CUI_EnemyFrame_Shard::Late_Tick(_float fTimeDelta)

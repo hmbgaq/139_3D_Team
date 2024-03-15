@@ -83,73 +83,75 @@ void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 		if (m_iShaderNum >= 3)
 			m_iShaderNum = 2;																	// 셰이더 패스 최대 번호 제한 (나중에 수정)
 	}
-
-	if (m_fPreEXP > m_pData_Manager->Get_MaxEXP())
+	if (m_bActive)
 	{
-		m_pData_Manager->Add_CurLevel(1);
-		
-		m_fPreEXP = m_pData_Manager->Get_CurEXP();
-	}
-
-	// Level변동이 없을 경우
-	if (m_iPreLevel == m_pData_Manager->Get_CurLevel()/*m_pPlayer->Get_Stat().iLevel*/)
-	{
-		// 시간 중첩
-		m_fTimeAcc += fTimeDelta * 0.5f;
-		// 현재 Exp를 받아온다. (키입력으로 Test중)
-		//m_fCurEXP = m_fTestPlusEXP/*_float(m_pPlayer->Get_Stat().iExp)*/;
-
-		// 현재 EXP가 PreEXP보다 높아지면
-		if (m_pData_Manager->Get_CurEXP() > m_fPreEXP)
-			m_bLerp = false;	// 러프 중지
-
-		// CurEXP가 PreEXP보다 커져서 러프까지 중지됐을 경우
-		if (false == m_bLerp && m_fPreEXP < m_pData_Manager->Get_CurEXP())
+		if (m_fPreEXP > m_pData_Manager->Get_MaxEXP())
 		{
-			// 바 길이를 Ratio로 계산 (0~1)
-			_float m_fRatio = m_pData_Manager->Get_CurEXP() / m_pData_Manager->Get_MaxEXP();
+			m_pData_Manager->Add_CurLevel(1);
 
-			// PreEXP에 중첩된 시간을 더해준다.
-			m_fPreEXP += m_fTimeAcc;
+			m_fPreEXP = m_pData_Manager->Get_CurEXP();
+		}
 
-			// 바 길이를 PreEXP로 계산 (0~1)
-			m_fProgress = m_fPreEXP / m_pData_Manager->Get_MaxEXP();
+		// Level변동이 없을 경우
+		if (m_iPreLevel == m_pData_Manager->Get_CurLevel()/*m_pPlayer->Get_Stat().iLevel*/)
+		{
+			// 시간 중첩
+			m_fTimeAcc += fTimeDelta * 0.5f;
+			// 현재 Exp를 받아온다. (키입력으로 Test중)
+			//m_fCurEXP = m_fTestPlusEXP/*_float(m_pPlayer->Get_Stat().iExp)*/;
 
-			// =>PreEXP가 Cur랑 같거나 커졌다면 통과해서, 현재 EXP로 바 길이를 측정 후 출력. =>PreEXP가 Cur보다 아직 낮다면 PreEXP로 바 길이를 출력
-			if (m_fPreEXP >= m_pData_Manager->Get_CurEXP())
+			// 현재 EXP가 PreEXP보다 높아지면
+			if (m_pData_Manager->Get_CurEXP() > m_fPreEXP)
+				m_bLerp = false;	// 러프 중지
+
+			// CurEXP가 PreEXP보다 커져서 러프까지 중지됐을 경우
+			if (false == m_bLerp && m_fPreEXP < m_pData_Manager->Get_CurEXP())
 			{
-				m_fTimeAcc = 0.f; // 누적 시간값 초기화 (PreEXP가 CurEXP값과 같아질때까지 보간되는 값)
-				m_fPreEXP = m_pData_Manager->Get_CurEXP();	// PreEXP를 CurEXP로 맞춰준다.
-				m_fProgress = m_fRatio; // 바 길이를 CurEXP로 맞춰준다.
-				m_bLerp = true;	// Lerp를 다시 켜준다.
+				// 바 길이를 Ratio로 계산 (0~1)
+				_float m_fRatio = m_pData_Manager->Get_CurEXP() / m_pData_Manager->Get_MaxEXP();
+
+				// PreEXP에 중첩된 시간을 더해준다.
+				m_fPreEXP += m_fTimeAcc;
+
+				// 바 길이를 PreEXP로 계산 (0~1)
+				m_fProgress = m_fPreEXP / m_pData_Manager->Get_MaxEXP();
+
+				// =>PreEXP가 Cur랑 같거나 커졌다면 통과해서, 현재 EXP로 바 길이를 측정 후 출력. =>PreEXP가 Cur보다 아직 낮다면 PreEXP로 바 길이를 출력
+				if (m_fPreEXP >= m_pData_Manager->Get_CurEXP())
+				{
+					m_fTimeAcc = 0.f; // 누적 시간값 초기화 (PreEXP가 CurEXP값과 같아질때까지 보간되는 값)
+					m_fPreEXP = m_pData_Manager->Get_CurEXP();	// PreEXP를 CurEXP로 맞춰준다.
+					m_fProgress = m_fRatio; // 바 길이를 CurEXP로 맞춰준다.
+					m_bLerp = true;	// Lerp를 다시 켜준다.
+				}
 			}
 		}
-	}
-	else if (m_iPreLevel < m_pData_Manager->Get_CurLevel()/*m_pPlayer->Get_Stat().iLevel*/)
-	{
-		// EXPBar가 저장했던 Level이 Player의 현재 레벨과 다를 때 (작을 때)
-		m_fTimeAcc += fTimeDelta * 0.5f;
-		m_fPreEXP += m_fTimeAcc;
-
-		if (m_fPreEXP >= m_pData_Manager->Get_MaxEXP())
+		else if (m_iPreLevel < m_pData_Manager->Get_CurLevel()/*m_pPlayer->Get_Stat().iLevel*/)
 		{
-			m_fRemainEXP = m_fPreEXP - m_pData_Manager->Get_MaxEXP(); // 레벨업시 초과된 값 저장
-			m_fPreEXP = m_pData_Manager->Get_MaxEXP();
-		}
+			// EXPBar가 저장했던 Level이 Player의 현재 레벨과 다를 때 (작을 때)
+			m_fTimeAcc += fTimeDelta * 0.5f;
+			m_fPreEXP += m_fTimeAcc;
 
-		m_fProgress = m_fPreEXP / m_pData_Manager->Get_MaxEXP();
+			if (m_fPreEXP >= m_pData_Manager->Get_MaxEXP())
+			{
+				m_fRemainEXP = m_fPreEXP - m_pData_Manager->Get_MaxEXP(); // 레벨업시 초과된 값 저장
+				m_fPreEXP = m_pData_Manager->Get_MaxEXP();
+			}
 
-		if (m_fProgress >= 1.f) // 바가 다 차면 정보를 갱신
-		{
-			m_iPreLevel = m_pData_Manager->Get_CurLevel();/*m_pPlayer->Get_Stat().iLevel*/;
-			m_pData_Manager->NextLevl_MaxEXP(); /*m_pPlayer->Get_Stat().iMaxExp*/;
-			m_pData_Manager->Set_CurEXP(m_fRemainEXP);/*m_pPlayer->Get_Stat().iExp*/; // 레벨업하고 남은 값
-			m_fPreEXP = 0.f; // PreEXP는 초기화
+			m_fProgress = m_fPreEXP / m_pData_Manager->Get_MaxEXP();
 
-			//m_pData_Manager->Set_ShowLevelBox(true);
-			m_pUI_Manager->Set_Active(UITYPE::LEVEL_UP);
-			m_fTimeAcc = 0.f;
-			m_bLerp = true;
+			if (m_fProgress >= 1.f) // 바가 다 차면 정보를 갱신
+			{
+				m_iPreLevel = m_pData_Manager->Get_CurLevel();/*m_pPlayer->Get_Stat().iLevel*/;
+				m_pData_Manager->NextLevl_MaxEXP(); /*m_pPlayer->Get_Stat().iMaxExp*/;
+				m_pData_Manager->Set_CurEXP(m_fRemainEXP);/*m_pPlayer->Get_Stat().iExp*/; // 레벨업하고 남은 값
+				m_fPreEXP = 0.f; // PreEXP는 초기화
+
+				//m_pData_Manager->Set_ShowLevelBox(true);
+				m_pUI_Manager->Set_Active(UITYPE::LEVEL_UP);
+				m_fTimeAcc = 0.f;
+				m_bLerp = true;
+			}
 		}
 	}
 }
@@ -159,24 +161,29 @@ void CUI_Player_ExpBar::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
-		return;
+	if (m_bActive)
+	{
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+			return;
+	}
 }
 
 HRESULT CUI_Player_ExpBar::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	if (m_bActive)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그린다.
-	m_pShaderCom->Begin(m_iShaderNum); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		//! 이 셰이더에 0번째 패스로 그린다.
+		m_pShaderCom->Begin(m_iShaderNum); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+	}
 
 	return S_OK;
 }

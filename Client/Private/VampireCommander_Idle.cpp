@@ -1,4 +1,5 @@
 #include "VampireCommander_Idle.h"
+#include "Body_VampireCommander.h"
 
 void CVampireCommander_Idle::Initialize(CVampireCommander* pActor)
 {
@@ -8,6 +9,9 @@ void CVampireCommander_Idle::Initialize(CVampireCommander* pActor)
 	pActor->Get_Weapon(L"Weapon_hand_R")->Set_Synced(false);
 	pActor->m_bLookAt = true;
 	pActor->m_bTurn = true;
+
+	//CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
+	//pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ORIGIN);
 
 }
 

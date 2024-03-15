@@ -125,6 +125,9 @@
 
 #pragma endregion
 
+#include "MasterCamera.h"
+#include "Data_Manager.h"
+#include "SpringCamera.h"
 
 
 void CPlayer_State::Initialize(CPlayer* pActor)
@@ -597,7 +600,7 @@ CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _
 		}
 	}
 
-	if (CPlayer_MeleeUppercut_01v2::g_iAnimIndex != _iAnimIndex) 
+	if (CPlayer_MeleeCombo_01::g_iAnimIndex != _iAnimIndex && CPlayer_MeleeUppercut_01v2::g_iAnimIndex != _iAnimIndex)
 	{
 		if (m_pGameInstance->Mouse_Up(DIM_LB))
 		{
@@ -730,6 +733,13 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 {
 	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
 	{
+
+		CCamera* pCam;
+		pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
+		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
+		pSpringCam->Set_CameraOffset(_float3(0.8f, 0.6f, -2.f));
+		
+
 		if (CPlayer_Winchester_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Winchester_WeaponUnholster();
 
@@ -766,6 +776,13 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 			return new CPlayer_Winchester_Ironsights_Reload_01();
 		}*/
 
+	}
+	else
+	{
+		CCamera* pCam;
+		pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
+		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
+		pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
 	}
 
 	return nullptr;

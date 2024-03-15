@@ -78,8 +78,7 @@ CEffect* CEffect_Manager::Create_Effect_Pos(string strFileName, _float3 vLocalPo
 }
 
 HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime, _float fTimeDelta, string strEffectFileName
-	, _float3 vLocalPos, _float3 vLocalScale, _float3 vLocalRotation
-	, CGameObject* pOwner)
+			, _float4 vTargetPos, _bool bLookTarget, _float3 vLocalPos)
 {
 
 	*fTimeAcc += fTimeDelta; // 시간 누적
@@ -88,19 +87,23 @@ HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime
 		*fTimeAcc = 0.f;
 
 		// 현재 레벨에 생성
-		CEffect* pEffect = Create_Effect(m_pGameInstance->Get_CurrentLevel(), LAYER_EFFECT, strEffectFileName, pOwner);
+		CEffect* pEffect = Create_Effect(m_pGameInstance->Get_CurrentLevel(), LAYER_EFFECT, strEffectFileName);
 
 
-		//// 트랜스폼 (로컬) : 크기, 회전, 위치를 바꿔주고싶다면 값 넣어주기
-		//CTransform* pTransform = pEffect->Get_Transform();
+		CTransform* pTransform = pEffect->Get_Transform();
 
-		//pTransform->Set_Scaling(vLocalScale.x, vLocalScale.y, vLocalScale.z); // 크기
+		pEffect->Set_Position(vLocalPos); // 위치 세팅
 
-		//pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(vLocalRotation.x)); // X축 회전
-		//pTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(vLocalRotation.y)); // Y축 회전
-		//pTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(vLocalRotation.z)); // Z축 회전
+		if (TRUE == bLookTarget)
+		{
+			// 타겟을 바라볼거면 look_At 해주기
+			pTransform->Look_At(vTargetPos);
 
-		pEffect->Set_Position(vLocalPos); // 위치 
+
+			// 주인이 있으면 주인의 매트릭스를 곱한걸로 월드를 세팅해주고 위치 바꿔주기	
+			//pTransform->Set_WorldMatrix(pTransform->Get_WorldMatrix() * pOwner->Get_Transform()->Get_WorldMatrix());
+		}
+
 	}
 
 	return S_OK;

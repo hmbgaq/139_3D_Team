@@ -20,5 +20,7 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Stun_Start::Update(CVamp
 
 void CVampireCommander_BloodRange_Stun_Start::Release(CVampireCommander* pActor)
 {
+	pActor->Set_Invincible(false);
+
 	__super::Release(pActor);
 }

@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "GameObject.h"
+#include "Character.h"
 
 CUI_EnemyHP_Shard::CUI_EnemyHP_Shard(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -56,6 +57,9 @@ void CUI_EnemyHP_Shard::Tick(_float fTimeDelta)
 		m_fOffsetY += 0.1f;
 
 	__super::Tick(fTimeDelta);
+
+	//if (m_pOwner != nullptr)
+	//	Set_WorldMatrix(m_pOwner->Get_Transform()->Get_WorldMatrix());
 }
 
 void CUI_EnemyHP_Shard::Late_Tick(_float fTimeDelta)
@@ -168,6 +172,26 @@ HRESULT CUI_EnemyHP_Shard::Bind_ShaderResources()
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CUI_EnemyHP_Shard::Setting_Owner()
+{
+	if (m_pOwner != nullptr) // Owner 지정해줘야 합니다.
+	{
+		m_pCharacterOwner = dynamic_cast<CCharacter*>(m_pOwner);
+
+		m_fCurHP = m_pCharacterOwner->Get_CurHP();
+		m_fPreHP = m_fCurHP;
+		m_fMaxHP = m_pCharacterOwner->Get_MaxHP();
+	}
+	else
+	{
+		m_fCurHP = 100.f;
+		m_fPreHP = 100.f;
+		m_fMaxHP = 100.f;
+	}
 
 	return S_OK;
 }

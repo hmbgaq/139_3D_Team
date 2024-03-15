@@ -2,11 +2,11 @@
 #include "SpringCamera.h"
 #include "GameInstance.h"
 #include "GameObject.h"
-#include "Character.h"
 #include "Data_Manager.h"
 #include "Player.h"
 #include "MasterCamera.h"
 #include "Bone.h"
+#include "SMath.h"
 
 CSpringCamera::CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CCamera(pDevice, pContext, strPrototypeTag)
@@ -85,139 +85,105 @@ void CSpringCamera::Priority_Tick(_float fTimeDelta)
 
 void CSpringCamera::Tick(_float fTimeDelta)
 {
+	PreActualPosition = m_TargetPosition;
 
+	
+	if(true == m_pPlayer->m_bPlayerCheck)
+	{// 뼈에 붙인 카메라 
+		_float4x4 BoneMatrix = {};
+		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
-	//CCharacter* m_pTargetCharacter = m_pPlayer->Get_Target();
-	//if (nullptr != m_pTargetCharacter && nullptr != m_pTargetCharacter->Get_TransformComp())
-	//{
-	//	hDist = 0.5f;
-	//	vDist = 0.5f;
-
-	//	_vector vTargetPos = XMLoadFloat4(&m_pTargetCharacter->Get_Pos_Float4());
-	//	m_pTransformCom->Look_At(vTargetPos);
-
-	//	//m_fAngle = m_ptarget->Calc_Radian(vTargetPos);
-
-	//	Lock_On(fTimeDelta);
-
-	//}
-	//else 
-	//{
-
-		/*if (0.7 - fTimeDelta > hDist)
-		{
-			hDist += fTimeDelta;
-		}
-		else
-		{
-			hDist = 0.7f;
-		}
-
-		if (0.7 - fTimeDelta > vDist)
-		{
-			vDist += fTimeDelta;
-		}
-		else
-		{
-			vDist = 0.7f;
-		}*/
-
-		//m_pTransformCom->Look_At(m_ptarget->Get_State(CTransform::STATE::STATE_POSITION));
-		//CameraRotation(fTimeDelta);
-		//
-		////Player가 앞키를 누르면 카메라 회전했던 방향쪽에서 회전값을 받아서 카메라가 바라보고 있는 방향으로 플레이어도 쳐다 보게 만듬 
-		//if (true == m_pPlayer->Is_Rotate_In_CameraDir())
-		//{
-		//	RotatePlayer();
-		//}
-	//}
-		if(true == m_pPlayer->m_bPlayerCheck)
-		{// 뼈에 붙인 카메라 
-			_float4x4 BoneMatrix = {};
-			CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-
-			BoneMatrix = pPlayer->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
-			_float4x4 pPlayerPos = pPlayer->Get_Transform()->Get_WorldMatrix();
-			_float4x4 temp = {};
-			XMStoreFloat4x4(&temp, BoneMatrix * pPlayerPos);
-			m_TargetPosition.x = temp._41;
-			m_TargetPosition.y = temp._42;
-			m_TargetPosition.z = temp._43;
-		}
-		else
-		{
-			// 뼈에 붙인 카메라 TEST
-			_float4x4 BoneMatrix = {};
-			
-			BoneMatrix = m_pCharacter->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
-			_float4x4 pCharacterPos = m_pCharacter->Get_Transform()->Get_WorldMatrix();
-			_float4x4 temp = {};
-			XMStoreFloat4x4(&temp, BoneMatrix * pCharacterPos);
-			m_TargetPosition.x = temp._41;
-			m_TargetPosition.y = temp._42;
-			m_TargetPosition.z = temp._43;
-			
-		}
+		BoneMatrix = pPlayer->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
+		_float4x4 pPlayerPos = pPlayer->Get_Transform()->Get_WorldMatrix();
+		_float4x4 temp = {};
+		XMStoreFloat4x4(&temp, BoneMatrix * pPlayerPos);
+		m_TargetPosition.x = temp._41;
+		m_TargetPosition.y = temp._42;
+		m_TargetPosition.z = temp._43;
+		NewTargetPosition = m_TargetPosition;
+	}
+	else
+	{
+		// 뼈에 붙인 카메라 TEST
+		_float4x4 BoneMatrix = {};
 		
-
-		m_pTransformCom->Look_At(m_ptarget->Get_State(CTransform::STATE::STATE_POSITION));
-		CameraRotation(fTimeDelta);
-
-		//Player가 앞키를 누르면 카메라 회전했던 방향쪽에서 회전값을 받아서 카메라가 바라보고 있는 방향으로 플레이어도 쳐다 보게 만듬 
-		if (true == m_pPlayer->Is_Rotate_In_CameraDir() && true == m_pPlayer->m_bPlayerCheck)
-		{
-			RotatePlayer();
-		}
-		else
-		{
-			int i = 0;
-		}
-
-		if (m_pGameInstance->Key_Down(DIK_TAB))
-		{
-			if (m_bFix)
-			{	
-				m_bFix = false;
-				m_bCheck = false;
-			}
-			else
-			{
-				m_bFix = true;
-				m_bCheck = true;
-			}
-		}
-
-		if (m_pGameInstance->Key_Pressing(DIK_LSHIFT))
-		{
-			if (m_pGameInstance->Key_Down(DIK_F2))
-				CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);
-		}
-
-		_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
-		if (iCurrentLevel != (_uint)LEVEL_TOOL)
-		{
-			if (m_bCheck == false)
-				ShowCursor(FALSE);
-			else
-				ShowCursor(TRUE);
-		}
-
-		if (false == m_bFix)
-			return;
-		if (true == m_bFix)
-		{
-			Mouse_Fix();
-		}
-
-		__super::Tick(fTimeDelta);
+		BoneMatrix = m_pCharacter->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
+		_float4x4 pCharacterPos = m_pCharacter->Get_Transform()->Get_WorldMatrix();
+		_float4x4 temp = {};
+		XMStoreFloat4x4(&temp, BoneMatrix * pCharacterPos);
+		m_TargetPosition.x = temp._41;
+		m_TargetPosition.y = temp._42;
+		m_TargetPosition.z = temp._43;
+		NewTargetPosition = m_TargetPosition;
+	}
 	
 
+	m_pTransformCom->Look_At(m_ptarget->Get_State(CTransform::STATE::STATE_POSITION));
+	
+	Lerp_CameraPosition(fTimeDelta);
+	CameraRotation(fTimeDelta);
+	
+	
+
+	//Player가 앞키를 누르면 카메라 회전했던 방향쪽에서 회전값을 받아서 카메라가 바라보고 있는 방향으로 플레이어도 쳐다 보게 만듬 
+	if (true == m_pPlayer->Is_Rotate_In_CameraDir() && true == m_pPlayer->m_bPlayerCheck)
+	{
+		RotatePlayer();
+	}
+	else
+	{
+		int i = 0;
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_TAB))
+	{
+		if (m_bFix)
+		{	
+			m_bFix = false;
+			m_bCheck = false;
+		}
+		else
+		{
+			m_bFix = true;
+			m_bCheck = true;
+		}
+	}
+
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+	{
+		if (m_pGameInstance->Key_Down(DIK_F2))
+			CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);
+	}
+
+	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+	if (iCurrentLevel != (_uint)LEVEL_TOOL)
+	{
+		if (m_bCheck == false)
+			ShowCursor(FALSE);
+		else
+			ShowCursor(TRUE);
+	}
+
+	if (false == m_bFix)
+		return;
+	if (true == m_bFix)
+	{
+		Mouse_Fix();
+	}
+
+	
+
+	__super::Tick(fTimeDelta);
+	
+	//아니 이거 왜이래 보간할려고 하면 할수록 더 구려지네
 
 	
 }
 
 void CSpringCamera::Late_Tick(_float fTimeDelta)
 {
+
+
 	// 카메라가 플레이어랑 같이 Tick에서 위치 계산하고 움직임까지 넣어버리면 화면이 덜덜거림
 	//그래서 움직임 코드는 Late_Tick에다가 넣어줬음! 
 
@@ -237,6 +203,10 @@ void CSpringCamera::Late_Tick(_float fTimeDelta)
 		m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), m_fMouseSensor * MouseMoveY * fTimeDelta);
 	}
 
+	Shake_Camera(fTimeDelta);
+
+	
+
 }
 
 _bool CSpringCamera::Write_Json(json& Out_Json)
@@ -249,6 +219,7 @@ _bool CSpringCamera::Write_Json(json& Out_Json)
 
 void CSpringCamera::CameraRotation(_float fTimeDelta)
 {
+
 	//카메라 움직임은 Late_Tick에 있다!
 	_float3 currentCameraPosition = ActualPosition;
 	_float3 idealPosition = m_ptarget->Get_State(CTransform::STATE_POSITION);
@@ -305,9 +276,9 @@ void CSpringCamera::Lock_On(_float fTimeDelta)
 	_matrix rotationMatrix = XMMatrixRotationRollPitchYaw(m_fPitch, m_fAngle, 0.0f);
 
 	// 카메라 위치 보간
-	currentCameraPosition.x = XMVectorGetX(XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta)));
-	currentCameraPosition.y = XMVectorGetY(XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta)));
-	currentCameraPosition.z = XMVectorGetZ(XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta)));
+	currentCameraPosition = XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta));
+	//currentCameraPosition.y = XMVectorGetY(XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta)));
+	//currentCameraPosition.z = XMVectorGetZ(XMVectorLerp(XMLoadFloat3(&currentCameraPosition), XMLoadFloat3(&idealPosition), 1.0f - expf(-CameraMoveSpeed * fTimeDelta)));
 
 	// 캐릭터 주위를 중심으로 하는 카메라 위치 계산
 	XMVECTOR cameraOffset = XMVectorSet(m_CameraOffset.x, m_CameraOffset.y, m_CameraOffset.z, 0.0f);  // 카메라의 초기 위치
@@ -339,9 +310,74 @@ void CSpringCamera::Mouse_Fix()
 	SetCursorPos(pt.x, pt.y);
 }
 
+void CSpringCamera::Set_CameraOffset(_float3 _CameraOffset)
+{
+	if (m_CameraOffset != _CameraOffset)
+	{
+		m_bChangeOffset = true;
+		NewTargetPosition = m_TargetPosition;
+	}
+	
+	m_CameraOffset = _CameraOffset;
+
+}
+
 void CSpringCamera::Set_pTargetCharacter(CCharacter* _pCharacter)
 {
 	m_pCharacter = _pCharacter;
+}
+
+void CSpringCamera::Lerp_CameraPosition(_float fTimeDelta)
+{
+	// 현재 카메라 위치와 다음 타겟 위치 사이의 거리 계산
+	_float3 direction = NewTargetPosition - ActualPosition;
+	_float distance = XMVectorGetX(XMVector3Length(direction));
+
+	// 일정 비율로 현재 카메라 위치를 다음 타겟 위치로 이동
+	_float moveDistance = CameraMoveSpeedtest * fTimeDelta;
+	if (moveDistance > distance)
+	{
+		// 이동 거리가 남은 거리보다 크면 바로 다음 타겟 위치로 이동
+		ActualPosition = NewTargetPosition;
+	}
+	else
+	{
+		// 일정 비율로 이동
+		_float3 moveVector = XMVector3Normalize(direction) * moveDistance;
+		ActualPosition += moveVector;
+	}
+// 	// 보간에 사용할 변수 (LerpTargetPosition) 추가
+// 	_float3 LerpTargetPosition = PreActualPosition;
+// 
+// 	// 카메라 오프셋 변경 시 보간
+// 	if (m_bChangeOffset)
+// 	{
+// 		// 새로운 타겟 위치 적용
+// 		LerpTargetPosition = NewTargetPosition;
+// 		m_bChangeOffset = false; // 변경 완료 표시
+// 	}
+// 
+// 	m_TargetPosition = XMVectorLerp(XMLoadFloat3(&m_TargetPosition), XMLoadFloat3(&LerpTargetPosition), 0.1f - expf(-CameraMoveSpeedtest * fTimeDelta));
+}
+
+void CSpringCamera::Shake_Camera(_float fTimeDelta)
+{
+	_float3 Temp = {};
+	if (m_bShake)
+	{
+		_float fRandomX = SMath::fRandom(-0.3f, 0.3f);
+		_float fRandomY = SMath::fRandom(-0.3f, 0.3f);
+		_float fRandomZ = SMath::fRandom(-0.3f, 0.3f);
+		
+		m_fShakeTime -= fTimeDelta;
+		Temp = m_bShake ? _float3(fRandomX, fRandomY, fRandomZ): _float3(0.0f, 0.0f, 0.0f);
+		if (m_fShakeTime <= 0.f)
+		{
+			m_bShake = false;
+		}
+	}
+	ActualPosition += Temp;
+
 }
 
 

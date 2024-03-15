@@ -35,15 +35,15 @@ void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	/*if (m_pGameInstance->Key_Down(DIK_K))
-	{
-		iDiscardMeshNumber += 1;
-		if (iDiscardMeshNumber > m_pModelCom->Get_NumMeshes())
-		{
-			iDiscardMeshNumber = 0;
-		}
-		cout << iDiscardMeshNumber << endl;
-	}*/
+// 	if (m_pGameInstance->Key_Down(DIK_K))
+// 	{
+// 		iDiscardMeshNumber += 1;
+// 		if (iDiscardMeshNumber > m_pModelCom->Get_NumMeshes())
+// 		{
+// 			iDiscardMeshNumber = 0;
+// 		}
+// 		cout << iDiscardMeshNumber << endl;
+// 	}
 }
 
 void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
