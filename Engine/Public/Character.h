@@ -238,7 +238,7 @@ protected:
 protected:
 	CCharacter* m_pTarget = { nullptr };
 	_float3		m_vWeaknessPoint = { 0.f, 0.f, 0.f };
-	_float3		m_vWeaknessPoint_Local = { 0.f, 1.f, 0.f };
+	_float3		m_vWeaknessPoint_Local = { 0.f, 0.5f, 0.f };
 
 
 protected:
