@@ -164,6 +164,9 @@ _bool CNavigation::isMove(_fvector vPosition)
 
 	_int		iNeighborIndex = { -1 };
 
+	if (m_iCurrentIndex == -1)
+		return false;
+
 	if (true == m_Cells[m_iCurrentIndex]->isIn(vPosition, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex))
 		return true;
 

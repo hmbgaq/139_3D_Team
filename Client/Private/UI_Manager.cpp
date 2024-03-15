@@ -957,6 +957,8 @@ HRESULT CUI_Manager::Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerT
 		string strCloneTag_HPBar = "Prototype_GameObject_UI_EnemyHP_Bar";
 		if (tUI_Info.strCloneTag == strCloneTag_HPBar)
 		{
+			pUI_Object->Set_Object_Owner(pOwner);
+			dynamic_cast<CUI_EnemyHP_Bar*>(pUI_Object)->Setting_Owner();
 			dynamic_cast<CUI_EnemyHP_Bar*>(pUI_Object)->Set_Active(true);
 		}
 

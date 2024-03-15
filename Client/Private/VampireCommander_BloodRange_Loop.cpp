@@ -2,12 +2,18 @@
 #include "VampireCommander_BloodRange_Stop.h"
 #include "VampireCommander_BloodRange_Stun_Start.h"
 
+#include "Effect.h"
+#include "Effect_Manager.h"
+
 void CVampireCommander_BloodRange_Loop::Initialize(CVampireCommander* pActor)
 {
 	__super::Initialize(pActor);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
 	m_iLoopescape = 0;
 	m_iPreHP = pActor->Get_Hp();
+	
+	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS,L"Layer_Effect", "blood Loop_03.json", pActor);
+
 }
 
 CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCommander* pActor, _float fTimeDelta)
@@ -34,4 +40,5 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 void CVampireCommander_BloodRange_Loop::Release(CVampireCommander* pActor)
 {
 	__super::Release(pActor);
+	m_pEffect->Set_Dead(true);
 }

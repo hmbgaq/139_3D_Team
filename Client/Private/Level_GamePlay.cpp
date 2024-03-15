@@ -68,6 +68,15 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_M))
 	{
+		m_pGameInstance->Get_Renderer()->Set_HBAO_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_HDR_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_FXAA_Active(false);
+		m_pGameInstance->Get_Renderer()->Set_HSV_Active(false);
+
 		m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
 	}
 
@@ -116,41 +125,41 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 	LIGHT_DESC			LightDesc{};
 	{
 		LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-		LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-		LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
-		LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
-		LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+		LightDesc.vDirection = _float4(1.f, -0.212f, 0.152f, 0.f);
+		LightDesc.vDiffuse = _float4(0.726f, 0.726f, 0.726f, 0.5f);
+		LightDesc.vAmbient = _float4(0.896f, 0.733f, 0.671f, 0.5f);
+		LightDesc.vSpecular = _float4(0.691f, 0.667f, 0.667f, 0.5f);
 
 		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
 	}
-	{
-		ZeroMemory(&LightDesc, sizeof LightDesc);
-
-		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-		LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
-		LightDesc.fRange = 20.f;
-		LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
-		LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
-		LightDesc.vSpecular = LightDesc.vDiffuse;
-		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-
-		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-		LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
-		LightDesc.fRange = 20.f;
-		LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
-		LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
-		LightDesc.vSpecular = LightDesc.vDiffuse;
-		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-
-		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-		LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
-		LightDesc.fRange = 20.f;
-		LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
-		LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
-		LightDesc.vSpecular = LightDesc.vDiffuse;
-		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-	}
-
+	//{
+	//	ZeroMemory(&LightDesc, sizeof LightDesc);
+	//
+	//	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	//	LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
+	//	LightDesc.fRange = 20.f;
+	//	LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
+	//	LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
+	//	LightDesc.vSpecular = LightDesc.vDiffuse;
+	//	FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+	//
+	//	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	//	LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
+	//	LightDesc.fRange = 20.f;
+	//	LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
+	//	LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
+	//	LightDesc.vSpecular = LightDesc.vDiffuse;
+	//	FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+	//
+	//	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	//	LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
+	//	LightDesc.fRange = 20.f;
+	//	LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
+	//	LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
+	//	LightDesc.vSpecular = LightDesc.vDiffuse;
+	//	FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+	//}
+	//
 	return S_OK;
 }
 
@@ -182,7 +191,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag)
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
 	pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
-	//pPlayer->Set_Position(_float3(153.6f, 0.f, 150.55f));
+	//pPlayer->Set_Position(_float3(153.6f, 0.f, 150.55f)); /* Sniper ¾Õ */
 	
 	CNavigation* pNavigation = pPlayer->Get_Navigation();
 
@@ -441,36 +450,45 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Shader()
 {
+	m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_Fog_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
+	m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
+	m_pGameInstance->Get_Renderer()->Set_HDR_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_FXAA_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_HSV_Active(true);
+
 	HBAO_PLUS_DESC Desc_Hbao = {};
 	Desc_Hbao.bHBAO_Active = true;
-	Desc_Hbao.fBias = 0.33;
-	Desc_Hbao.fBlur_Sharpness = 11.f;
-	Desc_Hbao.fPowerExponent = 1.9f;
-	Desc_Hbao.fRadius = 2.5;
+	Desc_Hbao.fBias = 0.277f;
+	Desc_Hbao.fBlur_Sharpness = 16.f;
+	Desc_Hbao.fPowerExponent = 1.527f;
+	Desc_Hbao.fRadius = 3.730f;
 
 	BLOOMRIM_DESC Desc_BR = {};
 	Desc_BR.bRimBloom_Blur_Active = true;
 
 	FOG_DESC Desc_Fog = {};
 	Desc_Fog.bFog_Active = true;
-	Desc_Fog.fFogDistanceDensity = 0.037f;
-	Desc_Fog.fFogDistanceValue = 21.2f;
-	Desc_Fog.fFogHeightDensity = 0.1f;
-	Desc_Fog.fFogHeightValue = 50.f;
-	Desc_Fog.fFogStartDepth = 90.1f;
-	Desc_Fog.fFogStartDistance = 5.0f;
+	Desc_Fog.fFogStartDepth = 121.762f;
+	Desc_Fog.fFogStartDistance = 19.430f;
+	Desc_Fog.fFogDistanceValue = 40.673f;
+	Desc_Fog.fFogHeightValue = 26.944f;
+	Desc_Fog.fFogDistanceDensity = 0.063f;
+	Desc_Fog.fFogHeightDensity = 0.12f;
 
 	HDR_DESC Desc_HDR = {};
 	Desc_HDR.bHDR_Active = true;
-	Desc_HDR.fmax_white = 0.85;
+	Desc_HDR.fmax_white = 0.544;
 
 	ANTI_DESC Desc_Anti = {};
 	Desc_Anti.bFXAA_Active = true;
 
 	HSV_DESC Desc_HSV = {};
 	Desc_HSV.bScreen_Active = true;
-	Desc_HSV.fFinal_Brightness = 0.681f;
-	Desc_HSV.fFinal_Saturation = 1.407f;
+	Desc_HSV.fFinal_Brightness = 1.036f;
+	Desc_HSV.fFinal_Saturation = 1.513f;
 
 	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
 	m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);

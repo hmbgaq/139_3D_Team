@@ -146,8 +146,8 @@ void CBullet_Bandit_Sniper::Free()
 {
 	__super::Free();
 
-	//if (nullptr != m_pTrail)
-	//	m_pTrail->Set_Dead(TRUE);
+	if (nullptr != m_pTrail)
+		m_pTrail->Set_Dead(TRUE);
 
 	//Safe_Release(m_pCollider);
 }
