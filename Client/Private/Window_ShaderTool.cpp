@@ -486,7 +486,7 @@ void CWindow_ShaderTool::Select_Level()
 {
 	ImGui::SeparatorText(" Select Level ");
 	/* 레벨셋팅 - 어떤레벨에 대한 셋팅을할것인지 지정 */
-	const char* items[] = { "None", "Test", "SnowMountain", "Larva" };
+	const char* items[] = { "None", "GamePlay", "Intro", "Intro Boss", "SnowMountain", "Larva" };
 	static int item_current_idx = 0; // Here we store our selection data as an index.
 	const char* combo_preview_value = items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
 	if (ImGui::BeginCombo(" ", combo_preview_value))
@@ -498,6 +498,24 @@ void CWindow_ShaderTool::Select_Level()
 			{
 				item_current_idx = n;
 				m_iCurrLevel_Index = n;
+				switch (m_iCurrLevel_Index)
+				{
+				case 0:
+					break;
+				case 1:
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
+					break;
+				case 2:
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
+					break;
+				case 3:
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData_MapData.json";
+					break;
+				case 4:
+					break;
+				case 5:
+					break;
+				}
 			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -529,7 +547,7 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 		ImGui::Text("wrong choice");
 		return S_OK;
 	}
-
+	
 	m_wstrLayerTag = TEXT("Layer_BackGround");
 
 	/* 기존 스카이박스 있어서 해제함 */
