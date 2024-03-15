@@ -1,6 +1,7 @@
 #include "VampireCommander_Ranged1.h"
 #include "VampireCommander_Idle.h"
 #include "GameInstance.h"
+#include "Body_VampireCommander.h"
 
 void CVampireCommander_Ranged1::Initialize(CVampireCommander* pActor)
 {
@@ -8,6 +9,8 @@ void CVampireCommander_Ranged1::Initialize(CVampireCommander* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
+	CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
+	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ATTACK);
 }
 
 CState<CVampireCommander>* CVampireCommander_Ranged1::Update(CVampireCommander* pActor, _float fTimeDelta)

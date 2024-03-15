@@ -1,5 +1,6 @@
 #include "VampireCommander_Melee2.h"
 #include "VampireCommander_Idle.h"
+#include "Body_VampireCommander.h"
 
 void CVampireCommander_Melee2::Initialize(CVampireCommander* pActor)
 {
@@ -15,7 +16,8 @@ void CVampireCommander_Melee2::Initialize(CVampireCommander* pActor)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.f);
 
-	
+	CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
+	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ATTACK);
 }
 
 CState<CVampireCommander>* CVampireCommander_Melee2::Update(CVampireCommander* pActor, _float fTimeDelta)

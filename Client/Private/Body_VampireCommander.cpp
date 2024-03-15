@@ -25,6 +25,8 @@ HRESULT CBody_VampireCommander::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_vDiscardMesh[CBody_VampireCommander::RENDER_STATE::ATTACK] = {1}; // ¹«±â 
+
 	return S_OK;
 }
 
@@ -36,6 +38,15 @@ void CBody_VampireCommander::Priority_Tick(_float fTimeDelta)
 void CBody_VampireCommander::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+		iDiscardMeshNumber += 1;
+		if (iDiscardMeshNumber > m_pModelCom->Get_NumMeshes())
+		{
+			iDiscardMeshNumber = 0;
+		}
+		cout << iDiscardMeshNumber << endl;
+	}
 }
 
 void CBody_VampireCommander::Late_Tick(_float fTimeDelta)
@@ -45,11 +56,66 @@ void CBody_VampireCommander::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_VampireCommander::Render()
 {
-	m_iShaderPass = 0;
+// 	FAILED_CHECK(Bind_ShaderResources());
+// 
+// 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+// 
+// 	for (size_t i = 0; i < iNumMeshes; i++)
+// 	{
+// 		if (i == iDiscardMeshNumber)
+// 			continue;
+// 
+// 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+// 
+// 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+// 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+// 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+// 
+// 		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+// 
+// 		m_pModelCom->Render((_uint)i);
+// 	}
+	FAILED_CHECK(Bind_ShaderResources());
 
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		auto iter = m_vDiscardMesh.find(m_eRender_State);
+		if (iter != m_vDiscardMesh.end())
+		{
+			auto& Discard = iter->second;
+			if (find(Discard.begin(), Discard.end(), i) != Discard.end())
+			{
+				if (m_eRender_State == CBody_VampireCommander::RENDER_STATE::ATTACK)
+				{
+					m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+
+					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+
+					m_pShaderCom->Begin(3);
+
+					m_pModelCom->Render((_uint)i);
+				}
+				
+			}
+			else
+			{
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+
+				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+
+
+				m_pShaderCom->Begin(0);
+
+				m_pModelCom->Render((_uint)i);
+			}
+		}
+	}
 	return S_OK;
 }
 
@@ -127,12 +193,29 @@ HRESULT CBody_VampireCommander::Ready_Components()
 
 HRESULT CBody_VampireCommander::Bind_ShaderResources()
 {
+// 	FAILED_CHECK(__super::Bind_ShaderResources());
+// 
+// 	_float fCamFar = m_pGameInstance->Get_CamFar();
+// 
+// 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
-		return E_FAIL;
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
+	if (m_eRender_State == CBody_VampireCommander::RENDER_STATE::ATTACK)
+	{
+		m_vCamPos = m_pGameInstance->Get_CamPosition();
+		m_vRimColor = { 0.73f, 0.0f, 0.0f, 1.0f };
+		m_vBloomPower = _float3(0.5f, 0.5f, 0.5f);
+		m_fRimPower = 5.f;
+
+		m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
+		m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
+	}
 
 	return S_OK;
 }
