@@ -4,6 +4,9 @@
 #include "Player_Winchester_Ironsights_Reload_01.h"
 #include "Player_Winchester_Ironsights_Reload_02.h"
 #include "UI_Manager.h"
+#include "MasterCamera.h"
+#include "Data_Manager.h"
+#include "SpringCamera.h"
 
 void CPlayer_Winchester_Ironsights_AimPose::Initialize(CPlayer* pActor)
 {
@@ -16,6 +19,7 @@ void CPlayer_Winchester_Ironsights_AimPose::Initialize(CPlayer* pActor)
 	pActor->Set_Weapon_Enable(WEAPON_WINCHESTER, true);
 	//CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Winchester"));
 	//pWeapon->Set_Enable(true);
+	
 }
 
 CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, _float fTimeDelta)
@@ -40,5 +44,7 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 void CPlayer_Winchester_Ironsights_AimPose::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+
+	
 	//pActor->Set_Splitted(false);
 }

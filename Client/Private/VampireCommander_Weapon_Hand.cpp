@@ -106,6 +106,7 @@ HRESULT CVampireCommander_Weapon_Hand::Ready_Components()
 
 void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 {
+
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 	CVampireCommander* parent = dynamic_cast<CVampireCommander*>(Get_Object_Owner());
 	if (nullptr != pTarget_Character && m_bSynced == false)// 일반 타격 
@@ -146,7 +147,9 @@ void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 		pPlayer->Get_Transform()->Set_State(CTransform::STATE_POSITION, parent->Get_Transform()->Get_State(CTransform::STATE_POSITION) +2*parent->Get_Transform()->Get_State(CTransform::STATE_LOOK));
 
 	}
+
 	Set_Enable(false);
+
 }
 
 void CVampireCommander_Weapon_Hand::OnCollisionStay(CCollider* other)

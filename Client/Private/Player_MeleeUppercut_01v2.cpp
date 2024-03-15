@@ -15,10 +15,10 @@ void CPlayer_MeleeUppercut_01v2::Initialize(CPlayer* pActor)
 	CWeapon* pWeapon = pActor->Get_Weapon(WEAPON_PUNCH_R);
 
 	pWeapon
-		->Set_Damage(0.f)
+		->Set_Damage(20.f)
 		->Set_Direction(Direction::Front)
 		->Set_Power(Power::Heavy)
-		->Set_Force(0.0f);
+		->Set_Force(0.5f);
 
 	pWeapon->Set_Enable(true);
 	pWeapon->Set_Enable_Collisions(false);
@@ -37,7 +37,7 @@ CState<CPlayer>* CPlayer_MeleeUppercut_01v2::Update(CPlayer* pActor, _float fTim
 
 	if (true == m_bFlags[0] && false == m_bFlags[1])
 	{
-		pActor->Chasing_Attack(fTimeDelta, 5.f, 1);
+		pActor->Chasing_Attack(fTimeDelta, 7.f, 2);
 	}
 
 	if (false == m_bFlags[1] && pActor->Is_Inputable_Front(23))

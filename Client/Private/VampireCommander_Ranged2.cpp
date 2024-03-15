@@ -27,15 +27,19 @@ CState<CVampireCommander>* CVampireCommander_Ranged2::Update(CVampireCommander* 
 		pActor->m_bLookAt = true;
 	}
 
-	if (pActor->Is_Inputable_Front(37))
+	if (m_bFlags[2] == false && pActor->Is_Inputable_Front(37))
 	{
 		m_bFlags[1] = true;
+		m_bFlags[2] = true;
 		pWeapon->Set_Enable(true);
 	}
-	else if (pActor->Is_Inputable_Front(38))
+
+	if (m_bFlags[3] == false && pActor->Is_Inputable_Front(38))
 	{
 		m_bFlags[1] = false;
+		m_bFlags[3] = true;
 		pWeapon->Set_Enable(false);
+
 	}
 
 	if (pActor->Is_Animation_End())

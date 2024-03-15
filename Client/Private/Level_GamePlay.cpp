@@ -243,7 +243,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 
 		MonsterDesc.WorldMatrix = WorldMatrix;
 
-		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
 			return E_FAIL;
 
 	}
