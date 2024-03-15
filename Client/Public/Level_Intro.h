@@ -26,6 +26,7 @@ private:
 	HRESULT Ready_Layer_Monster(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_Building(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_Test(const wstring& strLayerTag);
+	HRESULT Ready_Shader();
 
 private: /* UI */
 	HRESULT Ready_UI();
@@ -43,8 +44,7 @@ private: /* UI */
 
 private:
 	_int			TempLightNumber = 0;
-
-	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MonsterInclude.json";
+	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData_MapData.json";
 
 public:
 	static CLevel_Intro* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

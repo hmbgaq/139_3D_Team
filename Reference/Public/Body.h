@@ -103,6 +103,8 @@ public:	//!For Animation Split
 	void Activate_ShootingReaction(_float fHeight = 20.f);
 	void Update_ShootingReaction(_float fTimeDelta);
 
+	void Reset_UpperAngle();
+
 
 
 protected:

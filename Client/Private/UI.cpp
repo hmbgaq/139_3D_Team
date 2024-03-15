@@ -49,7 +49,7 @@ HRESULT CUI::Initialize(void* pArg)
 #pragma endregion End
 
 #pragma region 2D
-	if (m_tUIInfo.bWorld == false)
+	//if (m_tUIInfo.bWorld == false)
 	{
 		m_pTransformCom->Set_Scaling(m_tUIInfo.fScaleX, m_tUIInfo.fScaleY, m_fScaleZ);
 
@@ -569,10 +569,7 @@ void CUI::SetUp_PositionToScreen(_fvector vWorldPos)
 		//m_fWorldToScreenY = -300.f;
 	}
 
-	_float	m_fScreenPosY = m_fWorldToScreenY + m_fOffsetY;
-	_float	m_fScreenPosX = m_fWorldToScreenX + m_fOffsetX;
-
-	m_pTransformCom->Set_Position({ m_fScreenPosX, m_fScreenPosY, 1.f });
+	m_pTransformCom->Set_Position({ m_fWorldToScreenX, m_fWorldToScreenY, 1.f });
 
 	return;
 }
@@ -587,12 +584,23 @@ void CUI::SetUp_WorldToScreen(_matrix matWorld)
 
 	//matTargetWorld.r[3][0];
 	
-	vTargetPos = XMVectorSet(matTargetWorld.r[3].m128_f32[0], matTargetWorld.r[3].m128_f32[1], matTargetWorld.r[3].m128_f32[2], 1.0f);
+	vTargetPos = XMVectorSet(matTargetWorld.r[3].m128_f32[0] + m_fOffsetX, matTargetWorld.r[3].m128_f32[1] + m_fOffsetY, matTargetWorld.r[3].m128_f32[2], 1.0f);
+
+	//// z 값 계산
+	//float zDistance = matTargetWorld.r[3].m128_f32[2];
+
+	//// 크기 조절
+	//float scaleFactor = 1.0f / (zDistance + m_pGameInstance->Get_CamPosition().z); // 거리에 따른 조절
+	//vTargetPos.m128_f32[0] *= scaleFactor;
+	//vTargetPos.m128_f32[1] *= scaleFactor;
+
 	//vTargetPos.m128_f32[1] += 2.f;
 	vTargetPos = XMVector3Transform(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
 	vTargetPos = XMVector3TransformCoord(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
 
 	XMStoreFloat4(&vViewPort, vTargetPos);
+
+
 
 	m_fWorldToScreenX = (vViewPort.x) * (g_iWinSizeX >> 1);
 	m_fWorldToScreenY = /*abs*/((vViewPort.y) * (g_iWinSizeY >> 1));

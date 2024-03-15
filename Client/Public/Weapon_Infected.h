@@ -34,6 +34,11 @@ protected:
 	virtual HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
+public:
+	virtual void	OnCollisionEnter(CCollider* other)	override;
+	virtual void	OnCollisionStay(CCollider* other)	override;
+	virtual void	OnCollisionExit(CCollider* other)	override;
+
 protected:
 	class CEffect_Trail* m_pTrail = { nullptr };	//! 유정 : 트레일 추가
 

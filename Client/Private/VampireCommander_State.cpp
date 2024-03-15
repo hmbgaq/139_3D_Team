@@ -127,7 +127,7 @@ CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommand
 				pActor->m_bLookAt = true;
 				return new CVampireCommander_Ranged3;
 			case 2:
-				if (100.f > pActor->Calc_Distance() && 25.f < pActor->Calc_Distance())
+				if (100.f > pActor->Calc_Distance() && 13.f < pActor->Calc_Distance())
 				{
 					pActor->m_bLookAt = true;
 					return new CVampireCommander_Leap_Strat;
@@ -227,7 +227,7 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 		pActor->m_bTurn = false;
 	}
 
-	if (8 < iRandomTaunt)
+	if (8 == iRandomTaunt)
 	{
 		pActor->m_bLookAt = true;
 		return Taunt_State(pActor, fTimeDelta, _iAnimIndex);

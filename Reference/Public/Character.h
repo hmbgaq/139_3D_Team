@@ -158,7 +158,7 @@ public:
 	_float Calc_Distance(CGameObject* pTarget);
 	_float Calc_Distance();
 
-	_float Calc_Distance_Front(_float3 vTargetPos, _float3 vFront = _float3(0.f, 0.f, 1.f));
+	_float Calc_Distance_Front(_float3 vTargetPos);
 
 	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
@@ -170,6 +170,8 @@ public:	//!For Animation Split
 	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _uint iTargetKeyFrameIndex = 0);
 	_bool Is_Splitted() { return m_pBody->Is_Splitted(); }
 	void Set_Splitted(_bool _bIsSplitted) { m_pBody->Set_Splitted(_bIsSplitted); };
+	void Reset_UpperAngle();
+
 
 public:
 	void Set_StiffnessRate(_float fStiffnessRate);
@@ -204,6 +206,10 @@ public:
 	_bool Is_Stun() { return m_bIsInvincible; };
 	void Set_Stun(_bool _bIsStun) { m_bIsStun = _bIsStun; };
 
+public:
+	void Set_RadialBlurTime(_float fTime = 0.3f) { m_fRadialBlurTime = fTime; };
+	void Update_RadialBlurTime(_float fTimeDelta);
+
 
 protected:
 	_int m_iHp = { 1 };
@@ -215,9 +221,9 @@ protected:
 
 protected:
 	_bool m_bIsInvincible = { false };
-
-protected:
 	_bool m_bIsStun = { false };
+
+	_float m_fRadialBlurTime = { 0.f };
 
 
 protected:
@@ -238,7 +244,7 @@ protected:
 protected:
 	CCharacter* m_pTarget = { nullptr };
 	_float3		m_vWeaknessPoint = { 0.f, 0.f, 0.f };
-	_float3		m_vWeaknessPoint_Local = { 0.f, 0.5f, 0.f };
+	_float3		m_vWeaknessPoint_Local = { 0.f, 1.f, 0.f };
 
 
 protected:

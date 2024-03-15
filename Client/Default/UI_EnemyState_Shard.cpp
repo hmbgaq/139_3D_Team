@@ -61,6 +61,9 @@ void CUI_EnemyState_Shard::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
+	//if(m_pOwner != nullptr)
+	//	Set_WorldMatrix(m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 	if (m_bActive == true)
 	{
 		if (m_bAppear == false) // 안보이는 상태니까

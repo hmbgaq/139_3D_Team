@@ -1,6 +1,7 @@
 #include "VampireCommander_SyncedAttack_Fail.h"
 #include "VampireCommander_SyncedAttack.h"
 #include "VampireCommander_Idle.h"
+#include "Body_VampireCommander.h"
 
 void CVampireCommander_SyncedAttack_Fail::Initialize(CVampireCommander* pActor)
 {
@@ -17,7 +18,8 @@ void CVampireCommander_SyncedAttack_Fail::Initialize(CVampireCommander* pActor)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.f);
 
-	
+	CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
+	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ATTACK);
 }
 
 CState<CVampireCommander>* CVampireCommander_SyncedAttack_Fail::Update(CVampireCommander* pActor, _float fTimeDelta)

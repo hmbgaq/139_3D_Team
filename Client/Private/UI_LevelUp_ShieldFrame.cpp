@@ -189,7 +189,7 @@ HRESULT CUI_LevelUp_ShieldFrame::Ready_Text()
 	TEXTINFO* LoadInfo = new TEXTINFO;
 
 	/* 임의 값 (추 후 로드해서 받기) */
-	LoadInfo->fPosX = 630.5f;
+	LoadInfo->fPosX = 625.5f;
 	LoadInfo->fPosY = 176.f;
 	LoadInfo->fScale = 1.f;
 	LoadInfo->vOrigin.x = 0.f;

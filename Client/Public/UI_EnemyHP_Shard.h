@@ -31,6 +31,18 @@ private:
 	_float					m_fChangeScale = 1.f;
 
 public:
+	HRESULT					Setting_Owner();
+
+private:
+	CCharacter*				m_pCharacterOwner = { nullptr };
+	_float					m_fPreHP = 100.f;
+	_float					m_fCurHP = 100.f;
+	_float					m_fMaxHP = 100.f;
+	_float					m_fTimeAcc = 0.f;
+	_float					m_fVariationSpeed = 1.7f;
+	_bool					m_bLerp = false;
+
+public:
 	json					Save_Desc(json& out_json);
 	void					Load_Desc();
 

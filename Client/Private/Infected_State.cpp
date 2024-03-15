@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #include "GameInstance.h"
 #include "Infected_State.h"
+#include "Data_Manager.h"
+#include "Body_Infected.h"	
 
 #include "Infected_Idle.h"
 #include "Infected_IdlePose.h"
@@ -172,6 +174,15 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 {
 	if (pActor->Is_Animation_End())
 	{
+		if (false == m_bFlags[0] )
+		{
+
+			CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
+			pBody->Collider_Off();
+
+			CData_Manager::GetInstance()->Add_CurEXP(15);
+			m_bFlags[0] = true;
+		}	
 		//cout << "death end " << endl;
 
 		//pActor->Set_Dead(true);
@@ -201,19 +212,21 @@ CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta,
 
 
 	_float fDist = pActor->Calc_Distance(m_pGameInstance->Get_Player());
-
+	
+	cout << "Dist : " << fDist << endl;
+	
 	// 0 ~ Attack ~ Walk  
-	if (fDist >= pActor->Get_Info().fWalk_Distance)
+	if (fDist > 10.f)
 	{
 		pState = Run(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 	}
-	else if (pActor->Get_Info().fAttack_Distance <= fDist && fDist < pActor->Get_Info().fWalk_Distance)
+	else if (3.5f < fDist && fDist <= 10.f)
 	{
 		pState = Walk(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 	}
-	else if (0 <= fDist && fDist < pActor->Get_Info().fAttack_Distance)
+	else 
 	{
 		pState = Attack(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
@@ -239,7 +252,9 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-			return new CInfected_Walk_F();
+		return new CInfected_Walk_F();
+		break;
+
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_WASTER:
@@ -260,6 +275,7 @@ CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _u
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
+			cout << "CInfected_Run_F " << endl;
 			return new CInfected_Run_F();
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
@@ -288,7 +304,7 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 
-		if (0.f <= fDist && fDist < Info.fAttack_Distance - 2.5f) // 0 ~ 공격사거리 - 0.5
+		if (0.f <= fDist && fDist < 2.f) // 0 ~ 공격사거리 - 0.5
 		{
 			switch (iActNumber)
 			{
@@ -306,7 +322,7 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 				break;
 			}
 		}
-		else if ( Info.fAttack_Distance - 2.5f <= fDist && fDist <= Info.fAttack_Distance ) // 공격사거리 - 0.5 ~ 공격사거리 + 0.5 
+		else if ( 2.f <= fDist && fDist <= 3.5f ) // 공격사거리 - 0.5 ~ 공격사거리 + 0.5 
 		{
 			switch (iActNumber)
 			{
@@ -365,3 +381,18 @@ CState<CInfected>* CInfected_State::Patrol(CInfected* pActor, _float fTimeDelta,
 	return nullptr;
 }
 
+//if (fDist >= pActor->Get_Info().fWalk_Distance)
+//{
+//	pState = Run(pActor, fTimeDelta, _iAnimIndex);
+//	if (pState)	return pState;
+//}
+//else if (pActor->Get_Info().fAttack_Distance <= fDist && fDist < pActor->Get_Info().fWalk_Distance)
+//{
+//	pState = Walk(pActor, fTimeDelta, _iAnimIndex);
+//	if (pState)	return pState;
+//}
+//else if (0 <= fDist && fDist < pActor->Get_Info().fAttack_Distance)
+//{
+//	pState = Attack(pActor, fTimeDelta, _iAnimIndex);
+//	if (pState)	return pState;
+//}
