@@ -222,6 +222,17 @@ HRESULT CVIBuffer_Particle::Init_Instance(_int iNumInstance)
 			pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f);
 		}
 
+		if (RISE == m_tBufferDesc.eType_Action)
+		{
+			// 시작에 안보이게
+			pVertices[i].vRight = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
+			pVertices[i].vUp = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
+			pVertices[i].vLook = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
+
+			m_vecParticleInfoDesc[i].vCenterPositions.y = SMath::fRandom(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);
+			XMStoreFloat4(&pVertices[i].vPosition, m_vecParticleInfoDesc[i].vCenterPositions);
+		}
+
 
 	} // 반복문 끝
 
@@ -271,18 +282,22 @@ void CVIBuffer_Particle::ReSet()
 		XMStoreFloat4(&pVertices[i].vPosition, m_vecParticleInfoDesc[i].vCenterPositions);
 		if (m_tBufferDesc.bRecycle)
 		{
-			// 시작에 안보이게
-			pVertices[i].vRight = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
-			pVertices[i].vUp = _float4(0.f, 0.f, 0.f, 0.f)			/* * 크기 */;
-			pVertices[i].vLook = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
-			pVertices[i].vColor.w = 0.f;
+
 
 			if (RISE == m_tBufferDesc.eType_Action)
 			{
-				pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * 0.2f;
-				pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * 0.2f;
-				pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f) * 0.2f;
+				pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * 0.18f;
+				pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * 0.18f;
+				pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f) * 0.18f;
 				pVertices[i].vColor.w = 1.f;
+			}
+			else
+			{
+				// 시작에 안보이게
+				pVertices[i].vRight = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
+				pVertices[i].vUp = _float4(0.f, 0.f, 0.f, 0.f)			/* * 크기 */;
+				pVertices[i].vLook = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
+				pVertices[i].vColor.w = 0.f;
 			}
 		}
 		else
@@ -317,7 +332,7 @@ void CVIBuffer_Particle::ReSet()
 void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 {
 
-	if (RISE != m_tBufferDesc.eType_Action)
+	//if (RISE != m_tBufferDesc.eType_Action)
 	{
 		// 라이프타임
 		m_vecParticleInfoDesc[iNum].fTimeAccs = 0.f;

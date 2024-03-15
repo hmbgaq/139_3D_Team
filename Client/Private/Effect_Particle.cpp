@@ -141,6 +141,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 				if (m_tVoidDesc.bRender)
 				{
+
 					m_pVIBufferCom->Update(fTimeDelta);
 				}
 			}
@@ -222,9 +223,9 @@ void CEffect_Particle::ReSet_Effect()
 		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 
-	if (!m_pVIBufferCom->Get_Desc()->bRecycle)
+	if (!m_pVIBufferCom->Get_Desc()->bRecycle)		// 파티클 버퍼가 재사용이 false일때만 Reset하기
 	{
-		// 파티클 버퍼가 재사용이 false일때만 Reset하기
+	
 		//if (CVIBuffer_Particle::RISE != m_pVIBufferCom->Get_Desc()->eType_Action)
 		{
 			m_pVIBufferCom->ReSet();
@@ -240,7 +241,7 @@ void CEffect_Particle::End_Effect()
 
 	if (m_tVoidDesc.bLoop)
 	{
-		if(CVIBuffer_Particle::RISE != m_pVIBufferCom->Get_Desc()->eType_Action)
+		//if(CVIBuffer_Particle::RISE != m_pVIBufferCom->Get_Desc()->eType_Action)
 			ReSet_Effect();
 	}
 

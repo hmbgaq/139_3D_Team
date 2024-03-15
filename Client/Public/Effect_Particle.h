@@ -75,6 +75,8 @@ private:
 
 	_bool						m_bSortZ = { FALSE };
 
+	_bool						m_bFirst = { TRUE };
+
 public:
 	/* 원형객체를 생성한다. */
 	static CEffect_Particle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

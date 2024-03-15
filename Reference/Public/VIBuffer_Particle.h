@@ -220,6 +220,9 @@ private:
 	vector<PARTICLE_RIGIDBODY_DESC>		m_vecParticleRigidbodyDesc;
 
 
+private:
+	_bool bFirst = { true };	// 테스트용
+
 	/* 인스턴스 */
 private:
 	ID3D11Buffer* m_pVBInstance = { nullptr };
