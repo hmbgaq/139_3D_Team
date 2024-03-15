@@ -55,7 +55,7 @@ CState<CInfected>* CInfected_Melee_RD_01::Update(CInfected* pActor, _float fTime
 	if (pActor->Is_Animation_End())
 	{
 
-		pActor->Get_Collider()->Set_Enable(true);
+		//pActor->Get_Collider()->Set_Enable(true);
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
 

@@ -173,5 +173,17 @@ HRESULT CBody_Infected::Bind_ShaderResources()
 
 void CBody_Infected::Free()
 {
+	//for (auto& pair : m_vDiscardMesh)
+	//{
+	//	for (auto& element : pair.second) 
+	//	{
+	//		
+	//	}
+	//	// 벡터의 자원을 모두 해제한 후에는 clear() 함수를 호출하여 벡터를 비워줍니다.
+	//	pair.second.clear();
+	//}
+	//// 맵의 자원도 해제합니다.
+	//m_vDiscardMesh.clear();
+
 	__super::Free();
 }
