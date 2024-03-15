@@ -88,10 +88,10 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
 	LIGHT_DESC			LightDesc{};
 	{
 		LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-		LightDesc.vDirection = _float4(0.657f, 0.934f, 0.289f, 1.0f);
-		LightDesc.vDiffuse = _float4(0.625f, 0.625f, 0.625f, 1.0f);
-		LightDesc.vAmbient = _float4(0.388f, 0.439f, 0.318f, 1.0f);
-		LightDesc.vSpecular = _float4(0.657f, 0.934f, 0.289f, 1.f);
+		LightDesc.vDirection = _float4(0.125f, -0.01f, -0.45f, 0.485f);
+		LightDesc.vDiffuse = _float4(0.822f, 0.822f, 0.822f, .5f);
+		LightDesc.vAmbient = _float4(0.243f, 0.386f, 0.253f, 0.604);
+		LightDesc.vSpecular = _float4(0.428f, 0.985f, 0.350f, 0.5f);
 		 
 		//LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 		//LightDesc.vDirection = _float4(0.f, -1.f, 0.f, 0.f);
@@ -131,6 +131,48 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
 	return S_OK;
 }
 
+HRESULT CLevel_IntroBoss::Ready_Shader()
+{
+	m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
+	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
+	m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
+	m_pGameInstance->Get_Renderer()->Set_HDR_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_FXAA_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_HSV_Active(true);
+
+	HBAO_PLUS_DESC Desc_Hbao = {};
+	Desc_Hbao.bHBAO_Active = true;
+	Desc_Hbao.fRadius = 1.639;
+	Desc_Hbao.fBias = 0.1f;
+	Desc_Hbao.fBlur_Sharpness = 11.f;
+	Desc_Hbao.fPowerExponent = 1.985f;
+
+	BLOOMRIM_DESC Desc_BR = {};
+	Desc_BR.bRimBloom_Blur_Active = true;
+
+	HDR_DESC Desc_HDR = {};
+	Desc_HDR.bHDR_Active = true;
+	Desc_HDR.fmax_white = 0.725f;
+
+	ANTI_DESC Desc_Anti = {};
+	Desc_Anti.bFXAA_Active = true;
+
+	HSV_DESC Desc_HSV = {};
+	Desc_HSV.bScreen_Active = true;
+	Desc_HSV.fFinal_Brightness = 1.094f;
+	Desc_HSV.fFinal_Saturation = 1.545f;
+
+	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
+	m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);
+	m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
+	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
+	m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
+
+
+	return S_OK;
+}
 HRESULT CLevel_IntroBoss::Ready_Layer_Camera(const wstring& strLayerTag)
 {
 	//CCamera_Dynamic::DYNAMIC_CAMERA_DESC		Desc = {};
@@ -359,30 +401,30 @@ HRESULT CLevel_IntroBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
 	//	return E_FAIL;
 
 
-	CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
-	
-	LightObjectDesc.bAnimModel = false;
-	LightObjectDesc.bPreview = false;
-	LightObjectDesc.strModelTag = L"Prototype_Component_Model_SecretTempleStatue1";
-	XMStoreFloat4x4(&LightObjectDesc.WorldMatrix, XMMatrixIdentity());
-	
-	LightObjectDesc.iLightIndex = 4;
-	
-	LIGHT_DESC LightDesc;
-	
-	
-	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-	XMStoreFloat4(&LightDesc.vPosition, XMLoadFloat4x4(&LightObjectDesc.WorldMatrix).r[3]);
-	LightDesc.fRange = 100.f;
-	LightDesc.vPosition = _float4(60.0f, 0.f, 55.f, 1.f);
-	LightDesc.vDiffuse = _float4(0.6f, 0.2f, 0.05f, 1.0f);
-	LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	LightDesc.vSpecular = LightDesc.vDiffuse;
-	
-	LightObjectDesc.LightDesc = LightDesc;
-	
-	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc)))
-		return E_FAIL;
+	//CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
+	//
+	//LightObjectDesc.bAnimModel = false;
+	//LightObjectDesc.bPreview = false;
+	//LightObjectDesc.strModelTag = L"Prototype_Component_Model_SecretTempleStatue1";
+	//XMStoreFloat4x4(&LightObjectDesc.WorldMatrix, XMMatrixIdentity());
+	//
+	//LightObjectDesc.iLightIndex = 4;
+	//
+	//LIGHT_DESC LightDesc;
+	//
+	//
+	//LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	//XMStoreFloat4(&LightDesc.vPosition, XMLoadFloat4x4(&LightObjectDesc.WorldMatrix).r[3]);
+	//LightDesc.fRange = 100.f;
+	//LightDesc.vPosition = _float4(60.0f, 0.f, 55.f, 1.f);
+	//LightDesc.vDiffuse = _float4(0.6f, 0.2f, 0.05f, 1.0f);
+	//LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	//LightDesc.vSpecular = LightDesc.vDiffuse;
+	//
+	//LightObjectDesc.LightDesc = LightDesc;
+	//
+	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc)))
+	//	return E_FAIL;
 	
 	
 	return S_OK;
@@ -431,48 +473,6 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Test(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_IntroBoss::Ready_Shader()
-{
-	m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
-	m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
-	m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
-	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
-	m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
-	m_pGameInstance->Get_Renderer()->Set_HDR_Active(true);
-	m_pGameInstance->Get_Renderer()->Set_FXAA_Active(true);
-	m_pGameInstance->Get_Renderer()->Set_HSV_Active(true);\
-
-	HBAO_PLUS_DESC Desc_Hbao = {};
-	Desc_Hbao.bHBAO_Active = true;
-	Desc_Hbao.fBias = 0.289f;
-	Desc_Hbao.fBlur_Sharpness = 11.f;
-	Desc_Hbao.fPowerExponent = 2.333f;
-	Desc_Hbao.fRadius = 3.031;
-
-	BLOOMRIM_DESC Desc_BR = {};
-	Desc_BR.bRimBloom_Blur_Active = true;
-
-	HDR_DESC Desc_HDR = {};
-	Desc_HDR.bHDR_Active = true;
-	Desc_HDR.fmax_white = 0.671f;
-
-	ANTI_DESC Desc_Anti = {};
-	Desc_Anti.bFXAA_Active = true;
-
-	HSV_DESC Desc_HSV = {};
-	Desc_HSV.bScreen_Active = true;
-	Desc_HSV.fFinal_Brightness = 0.713f;
-	Desc_HSV.fFinal_Saturation = 1.416f;
-
-	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
-	m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);
-	m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
-	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
-	m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
-
-
-	return S_OK;
-}
 
 HRESULT CLevel_IntroBoss::Ready_UI()
 {
