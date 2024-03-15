@@ -101,33 +101,33 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
 
         FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
     }
-        //{
-        //   ZeroMemory(&LightDesc, sizeof LightDesc);
-     
-        //   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-        //   LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
-        //   LightDesc.fRange = 20.f;
-        //   LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
-        //   LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
-        //   LightDesc.vSpecular = LightDesc.vDiffuse;
-        //   FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-     
-        //   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-        //   LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
-        //   LightDesc.fRange = 20.f;
-        //   LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
-        //   LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
-        //   LightDesc.vSpecular = LightDesc.vDiffuse;
-        //   FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-     
-        //   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-        //   LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
-        //   LightDesc.fRange = 20.f;
-        //   LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
-        //   LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
-        //   LightDesc.vSpecular = LightDesc.vDiffuse;
-        //   FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-        //}
+    //    {
+    //       ZeroMemory(&LightDesc, sizeof LightDesc);
+    // 
+    //       LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+    //       LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
+    //       LightDesc.fRange = 20.f;
+    //       LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
+    //       LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
+    //       LightDesc.vSpecular = LightDesc.vDiffuse;
+    //       FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+    // 
+    //       LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+    //       LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
+    //       LightDesc.fRange = 20.f;
+    //       LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
+    //       LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
+    //       LightDesc.vSpecular = LightDesc.vDiffuse;
+    //       FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+    // 
+    //       LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+    //       LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
+    //       LightDesc.fRange = 20.f;
+    //       LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
+    //       LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
+    //       LightDesc.vSpecular = LightDesc.vDiffuse;
+    //       FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+    //    }
     return S_OK;
 }
 
@@ -174,7 +174,22 @@ HRESULT CLevel_IntroBoss::Ready_Shader()
     return S_OK;
 }
 HRESULT CLevel_IntroBoss::Ready_Layer_Camera(const wstring& strLayerTag)
-{   
+{
+    //CCamera_Dynamic::DYNAMIC_CAMERA_DESC      Desc = {};
+
+    //Desc.fMouseSensor = 0.05f;
+    //Desc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
+    //Desc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+    //Desc.fFovy = XMConvertToRadians(60.0f);
+    //Desc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+    //Desc.fNear = 0.1f;
+    //Desc.fFar = m_pGameInstance->Get_CamFar();
+    //Desc.fSpeedPerSec = 15.f;
+    //Desc.fRotationPerSec = XMConvertToRadians(180.0f);
+
+    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc));
+
+
     if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
         return E_FAIL;
 
@@ -352,7 +367,7 @@ HRESULT CLevel_IntroBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
 
         m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
         MonsterDesc.bPreview = false;
-
+        MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
 
         const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
         _float4x4 WorldMatrix;
@@ -372,44 +387,44 @@ HRESULT CLevel_IntroBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
 
     }
 
-   //CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc;
-   //
-   //SpecialDesc.bAnimModel = false;
-   //SpecialDesc.bPreview = false;
-   //
-   //SpecialDesc.strModelTag = L"Prototype_Component_Model_BloodPoolsRaid";
-   ////Desc.iShaderPassIndex = 6;
-   //XMStoreFloat4x4(&SpecialDesc.WorldMatrix, XMMatrixIdentity());
-   //
-   //
-   //if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &SpecialDesc)))
-   //   return E_FAIL;
+    //CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc;
+    //
+    //SpecialDesc.bAnimModel = false;
+    //SpecialDesc.bPreview = false;
+    //
+    //SpecialDesc.strModelTag = L"Prototype_Component_Model_BloodPoolsRaid";
+    ////Desc.iShaderPassIndex = 6;
+    //XMStoreFloat4x4(&SpecialDesc.WorldMatrix, XMMatrixIdentity());
+    //
+    //
+    //if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &SpecialDesc)))
+    //   return E_FAIL;
 
 
-   CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
-   
-   LightObjectDesc.bAnimModel = false;
-   LightObjectDesc.bPreview = false;
-   LightObjectDesc.strModelTag = L"Prototype_Component_Model_SecretTempleStatue1";
-   XMStoreFloat4x4(&LightObjectDesc.WorldMatrix, XMMatrixIdentity());
-   
-   LightObjectDesc.iLightIndex = 4;
-   
-   LIGHT_DESC LightDesc;
-   
-   
-   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-   XMStoreFloat4(&LightDesc.vPosition, XMLoadFloat4x4(&LightObjectDesc.WorldMatrix).r[3]);
-   LightDesc.fRange = 100.f;
-   LightDesc.vPosition = _float4(60.0f, 0.f, 55.f, 1.f);
-   LightDesc.vDiffuse = _float4(0.6f, 0.2f, 0.05f, 1.0f);
-   LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
-   LightDesc.vSpecular = LightDesc.vDiffuse;
-   
-   LightObjectDesc.LightDesc = LightDesc;
-   
-   if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc)))
-      return E_FAIL;
+    CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
+    
+    LightObjectDesc.bAnimModel = false;
+    LightObjectDesc.bPreview = false;
+    LightObjectDesc.strModelTag = L"Prototype_Component_Model_SecretTempleStatue1";
+    XMStoreFloat4x4(&LightObjectDesc.WorldMatrix, XMMatrixIdentity());
+    
+    LightObjectDesc.iLightIndex = 4;
+    
+    LIGHT_DESC LightDesc;
+    
+    
+    LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+    XMStoreFloat4(&LightDesc.vPosition, XMLoadFloat4x4(&LightObjectDesc.WorldMatrix).r[3]);
+    LightDesc.fRange = 100.f;
+    LightDesc.vPosition = _float4(60.0f, 0.f, 55.f, 1.f);
+    LightDesc.vDiffuse = _float4(0.6f, 0.2f, 0.05f, 1.0f);
+    LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
+    LightDesc.vSpecular = LightDesc.vDiffuse;
+    
+    LightObjectDesc.LightDesc = LightDesc;
+    
+    if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc)))
+       return E_FAIL;
 
 
     return S_OK;
