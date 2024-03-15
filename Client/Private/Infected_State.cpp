@@ -304,7 +304,7 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 
-		if (0.f <= fDist && fDist < 2.f) // 0 ~ 공격사거리 - 0.5
+		if (0.f <= fDist && fDist < 1.f) // 0 ~ 공격사거리 - 0.5
 		{
 			switch (iActNumber)
 			{
@@ -322,7 +322,7 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 				break;
 			}
 		}
-		else if ( 2.f <= fDist && fDist <= 3.5f ) // 공격사거리 - 0.5 ~ 공격사거리 + 0.5 
+		else if ( 1.f <= fDist && fDist <= 3.5f ) // 공격사거리 - 0.5 ~ 공격사거리 + 0.5 
 		{
 			switch (iActNumber)
 			{
