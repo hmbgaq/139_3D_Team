@@ -100,7 +100,7 @@ HRESULT CVampireCommander_Weapon_Hand::Ready_Components()
 
 
 	//! 유정: 트레일 테스트
-	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json");
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json",this);
 
 	return S_OK;
 }
