@@ -35,6 +35,8 @@ HRESULT CInfected_A::Initialize(void* pArg)
 
 	FAILED_CHECK(Ready_Option());
 
+	m_pTarget = m_pGameInstance->Get_Player();
+
 	return S_OK;
 }
 
@@ -46,15 +48,6 @@ void CInfected_A::Priority_Tick(_float fTimeDelta)
 void CInfected_A::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
-	//Update_RenderState(m_iHp);
-
-	m_pTarget = m_pGameInstance->Get_Player();
-
-	if (m_pActor)
-	{
-		m_pActor->Update_State(fTimeDelta);
-	}
 }
 
 void CInfected_A::Late_Tick(_float fTimeDelta)

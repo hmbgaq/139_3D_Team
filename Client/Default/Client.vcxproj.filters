@@ -5574,15 +5574,6 @@
     <ClInclude Include="..\Public\Infected_Scared_02.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\4. Scared\Right</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Stun</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Stun</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Infected_B.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Body_Infected_B.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B\Body</Filter>
     </ClInclude>
@@ -6170,6 +6161,11 @@
     </ClInclude>
     <ClInclude Include="..\Public\ShaderParsed_Object.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h" />
+    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h" />
+    <ClInclude Include="..\Public\Infected_B.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C\Body</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
