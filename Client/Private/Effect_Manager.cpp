@@ -59,20 +59,11 @@ CEffect* CEffect_Manager::Create_Effect(string strFileName, CGameObject* pOwner)
 }
 
 
-CEffect* CEffect_Manager::Create_Effect_Pos(string strFileName, _float3 vLocalPos)
+CEffect* CEffect_Manager::Create_Effect_Pos(string strFileName, _float3 vPos, CGameObject* pOwner)
 {
-	CEffect::EFFECT_DESC	tEffectDesc = {};
-	CEffect* pEffect = dynamic_cast<CEffect*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, TEXT("Prototype_GameObject_Effect"), &tEffectDesc));
+	CEffect* pEffect = Create_Effect(strFileName, pOwner);
 
-	string strPath = "../Bin/DataFiles/Data_Effect";
-	string strLoadPath = strPath + "/" + strFileName;
-
-	json In_Json;
-	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
-
-	pEffect->Load_FromJson(In_Json);
-
-	pEffect->Set_Position(vLocalPos);	// 이펙트 위치 설정
+	pEffect->Set_Position(vPos);	// 이펙트 위치 설정
 
 	return	pEffect;
 }

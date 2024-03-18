@@ -10,6 +10,7 @@ CVIBuffer_Trail::CVIBuffer_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 CVIBuffer_Trail::CVIBuffer_Trail(const CVIBuffer_Trail& rhs)
     : CVIBuffer(rhs)
+    , m_tBufferDesc(rhs.m_tBufferDesc)
 {
 }
 
