@@ -117,6 +117,10 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_C))
 		m_iHp = 100;
+
+	if (m_pNavigationCom != nullptr)
+		m_pNavigationCom->Update(XMMatrixIdentity());
+
 	//_float3 vPos = Get_Position();
 
 	//PxControllerFilters Filters;
@@ -145,8 +149,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	//	Set_Position(vResult);
 	//}
 	
-	if(m_pNavigationCom != nullptr)
-		m_pNavigationCom->Update(XMMatrixIdentity());
+
 
 }
 

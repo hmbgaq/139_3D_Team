@@ -36,14 +36,16 @@ void CBody_Player::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 
-	if (Is_Splitted()) 
-	{
-		Set_MouseMove(fTimeDelta);
-	}
-	else 
-	{
-		Reset_UpperAngle();
-	}
+	Set_MouseMove(fTimeDelta);
+
+	//if (Is_Splitted()) 
+	//{
+	//	Set_MouseMove(fTimeDelta);
+	//}
+	//else 
+	//{
+	//	Reset_UpperAngle();
+	//}
 	
 }
 

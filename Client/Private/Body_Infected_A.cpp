@@ -39,10 +39,10 @@ void CBody_Infected_A::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if(m_pGameInstance->Key_Down(DIK_0))
-		m_eRender_State = CBody_Infected::RENDER_STATE::ATTACK;
-	if (m_pGameInstance->Key_Down(DIK_9))
-		m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
+	//if(m_pGameInstance->Key_Down(DIK_0))
+	//	m_eRender_State = CBody_Infected::RENDER_STATE::ATTACK;
+	//if (m_pGameInstance->Key_Down(DIK_9))
+	//	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
 
 }
 
