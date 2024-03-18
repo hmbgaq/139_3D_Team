@@ -79,12 +79,8 @@ void CVampireCommander_Projectile_Range3::Tick(_float fTimeDelta)
 
 
 	//! 유정 : 두두두두 이펙트 생성 테스트
-	//EFFECT_MANAGER->Tick_Create_Effect(&m_fEffectTimeAcc, 0.2f, fTimeDelta, "Test_Impact_Tick_02.json"
-	//	, m_vPlayerPos, TRUE, Get_Position());
-
-
 	EFFECT_MANAGER->Tick_Create_Effect(&m_fEffectTimeAcc, 0.18f, fTimeDelta, "Test_Impact_Tick_03.json"
-		, m_vPlayerPos, TRUE, Get_Position());
+		, Get_Position(), TRUE, m_vPlayerPos );
 }
 
 void CVampireCommander_Projectile_Range3::Late_Tick(_float fTimeDelta)

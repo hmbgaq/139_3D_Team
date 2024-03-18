@@ -78,10 +78,12 @@ CEffect* CEffect_Manager::Create_Effect_Pos(string strFileName, _float3 vLocalPo
 }
 
 HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime, _float fTimeDelta, string strEffectFileName
-			, _float4 vTargetPos, _bool bLookTarget, _float3 vLocalPos)
+	, _float3 vPos
+	, _bool bLookTarget, _float4 vTargetPos )
 {
 
 	*fTimeAcc += fTimeDelta; // 시간 누적
+
 	if (*fTimeAcc >= fCreateTime) // 누적 시간이 생성 시간보다 커지면 이펙트 생성 & 누적 시간 초기화
 	{
 		*fTimeAcc = 0.f;
@@ -89,19 +91,14 @@ HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime
 		// 현재 레벨에 생성
 		CEffect* pEffect = Create_Effect(m_pGameInstance->Get_CurrentLevel(), LAYER_EFFECT, strEffectFileName);
 
-
 		CTransform* pTransform = pEffect->Get_Transform();
 
-		pEffect->Set_Position(vLocalPos); // 위치 세팅
+		pEffect->Set_Position(vPos); // 위치 세팅
 
 		if (TRUE == bLookTarget)
 		{
 			// 타겟을 바라볼거면 look_At 해주기
 			pTransform->Look_At(vTargetPos);
-
-
-			// 주인이 있으면 주인의 매트릭스를 곱한걸로 월드를 세팅해주고 위치 바꿔주기	
-			//pTransform->Set_WorldMatrix(pTransform->Get_WorldMatrix() * pOwner->Get_Transform()->Get_WorldMatrix());
 		}
 
 	}
