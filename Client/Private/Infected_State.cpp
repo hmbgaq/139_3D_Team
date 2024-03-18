@@ -107,7 +107,6 @@ CState<CInfected>* CInfected_State::Hit_State(CInfected* pActor, _float fTimeDel
 	}
 
 	return nullptr;
-	//return Normal_State(pActor, fTimeDelta, _iAnimIndex);
 }
 
 CState<CInfected>* CInfected_State::Knock_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
@@ -124,7 +123,6 @@ CState<CInfected>* CInfected_State::Dodge_State(CInfected* pActor, _float fTimeD
 {
 	if (pActor->Is_Animation_End())
 	{
-		//cout << "Dodge_State end " << endl;
 
 		return Normal_State(pActor, fTimeDelta, _iAnimIndex);
 	}
@@ -137,8 +135,6 @@ CState<CInfected>* CInfected_State::Spawn_State(CInfected* pActor, _float fTimeD
 	/* 몬스터 Init에서 셋팅한 Spawn Animation이 끝나면 도달하는곳 */
 	if (pActor->Is_Animation_End()) 
 	{
-		//cout << "spawn end " << endl;
-
 		_int iRandom = SMath::Random(1, 6);
 
 		switch (iRandom)
@@ -176,11 +172,10 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 	{
 		if (false == m_bFlags[0] )
 		{
-			cout << "Infected Dead " << endl;
 			CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
-			pBody->Collider_Off();
+			pBody->Collider_Off(); // 바디 콜라이더 off 
 
-			CData_Manager::GetInstance()->Add_CurEXP(15);
+			CData_Manager::GetInstance()->Add_CurEXP(15); // 플레이어 15 경험치 얻음 
 			m_bFlags[0] = true;
 		}	
 
@@ -251,7 +246,6 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-		cout << "CInfected_Walk_F " << endl;
 		return new CInfected_Walk_F();
 		break;
 
@@ -275,7 +269,6 @@ CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _u
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-		cout << "CInfected_Run_F " << endl;
 			return new CInfected_Run_F();
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
@@ -304,7 +297,7 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 
-		if (0.f <= fDist && fDist < 1.f) // 0 ~ 공격사거리 - 0.5
+		if (0.f <= fDist && fDist < Info.fAttack_Distance - 1.5f) // 0 ~ 공격사거리 - 0.5
 		{
 			switch (iActNumber)
 			{
@@ -322,7 +315,7 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 				break;
 			}
 		}
-		else if ( 1.f <= fDist && fDist <= 3.5f ) // 공격사거리 - 0.5 ~ 공격사거리 + 0.5 
+		else if (Info.fAttack_Distance - 2.f <= fDist && fDist <= Info.fAttack_Distance) // 공격사거리 - 0.5 ~ 공격사거리 + 0.5 
 		{
 			switch (iActNumber)
 			{
@@ -330,9 +323,11 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 				return new CInfected_MeleeDynamic_RU_01(); /* 걸어가면서 공격 */
 				break;
 			case 2:
+				//return new CInfected_MeleeDynamic_RU_01();
 				return new CInfected_MeleeDynamic_RU_02();
 				break;
 			case 3:
+				//return new CInfected_MeleeDynamic_RU_01();
 				return new CInfected_MeleeDynamic_RU_03();
 				break;
 			default:
@@ -340,7 +335,6 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 				break;
 			}
 		}
-
 		break;
 
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
