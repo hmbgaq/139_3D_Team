@@ -28,8 +28,10 @@ HRESULT CModel_Preview::Initialize(void* pArg)
 {
 	MODEL_PREVIEW_DESC* pDesc = (MODEL_PREVIEW_DESC*)pArg;
 
+
 	m_tDesc.strProtoTag = pDesc->strProtoTag;
 	m_tDesc.strModelTag = pDesc->strModelTag;
+
 	m_tDesc.iAnimIndex = pDesc->iAnimIndex;
 	m_tDesc.iRenderGroup = pDesc->iRenderGroup;
 	m_tDesc.iShaderPassIndex = pDesc->iShaderPassIndex;
@@ -41,10 +43,18 @@ HRESULT CModel_Preview::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(Ready_PartObjects()))
-		return E_FAIL;
-	
-	m_pModelCom->Set_Animation(m_tDesc.iAnimIndex);
+
+
+	if (CModel::TYPE_ANIM == m_tDesc.eType)
+	{
+		if (FAILED(Ready_PartObjects()))
+			return E_FAIL;
+
+		m_pModelCom->Set_Animation(m_tDesc.iAnimIndex);
+	}
+
+
+
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 
 
@@ -98,10 +108,14 @@ void CModel_Preview::Late_Tick(_float fTimeDelta)
 
 		if (TRUE == m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_Position(), 2.f))
 		{
-			if (m_tDesc.bPlay)
+			if (CModel::TYPE_ANIM == m_tDesc.eType)
 			{
-				m_pModelCom->Play_Animation(fTimeDelta, TRUE);
+				if (m_tDesc.bPlay)
+				{
+					m_pModelCom->Play_Animation(fTimeDelta, TRUE);
+				}
 			}
+
 			
 
 			if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tDesc.iRenderGroup), this)))
@@ -123,7 +137,10 @@ HRESULT CModel_Preview::Render()
 
 		for (_uint i = 0; i < iNumMeshes; i++)
 		{
-			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			if (CModel::TYPE_ANIM == m_tDesc.eType)
+			{
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			}
 
 			m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 
@@ -139,8 +156,12 @@ HRESULT CModel_Preview::Render()
 
 void CModel_Preview::Set_AnimIndex(_uint iAnimIndex)
 {
-	m_tDesc.iAnimIndex = iAnimIndex;
-	m_pModelCom->Set_Animation(m_tDesc.iAnimIndex);
+	if (CModel::TYPE_ANIM == m_tDesc.eType)
+	{
+		m_tDesc.iAnimIndex = iAnimIndex;
+		m_pModelCom->Set_Animation(m_tDesc.iAnimIndex);
+	}
+
 }
 
 CGameObject* CModel_Preview::Find_PartObject(const wstring& strPartTag)
@@ -174,10 +195,24 @@ HRESULT CModel_Preview::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
+
+	m_tDesc.eType = m_pModelCom->Get_ModelType();
+
+
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Shader_AnimModel"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+	if (CModel::TYPE_ANIM == m_tDesc.eType)
+	{
+		if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Shader_AnimModel"),
+			TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Shader_Model"),
+			TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+			return E_FAIL;
+	}
+
 
 	return S_OK;
 }

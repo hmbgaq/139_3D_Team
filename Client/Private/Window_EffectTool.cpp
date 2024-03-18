@@ -279,11 +279,17 @@ HRESULT CWindow_EffectTool::Ready_Model_Preview(wstring strModelTag)
 	}
 
 
+
+
 	CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Model_Preview"), TEXT("Prototype_GameObject_Model_Preview"), &tDesc);
 	if (nullptr != pObj)
 		m_pModel_Preview = dynamic_cast<CModel_Preview*>(pObj);
 
-	m_pPart_Preview = dynamic_cast<CPart_Preview*>(dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Find_PartObject(TEXT("Part_Preview")));
+
+	if (CModel::TYPE_ANIM == m_pModel_Preview->Get_Desc()->eType)
+	{
+		m_pPart_Preview = dynamic_cast<CPart_Preview*>(dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Find_PartObject(TEXT("Part_Preview")));
+	}
 
 	return S_OK;
 }
@@ -3346,6 +3352,11 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			Ready_Model_Preview(TEXT("Prototype_Component_Model_VampireCommander"));
 		}
 
+		if (ImGui::Button("Create Model_Torch"))	// 모델 생성
+		{
+			Ready_Model_Preview(TEXT("Prototype_Component_Model_Effect_Torch"));
+		}
+
 	}
 	else
 	{
@@ -3354,10 +3365,29 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 		
 		// 모델 월드 이동
 		CTransform* pTransform = m_pModel_Preview->Get_Transform();
+		_float4 vPos = pTransform->Get_State(CTransform::STATE_POSITION);
+		ImGui::Text("Model Pos  : %.2f %.2f %.2f", vPos.x, vPos.y, vPos.z);
 		if (ImGui::DragFloat3("Model_Pos", m_vWorldPosition_Model, 0.2f))
 		{
 			m_pModel_Preview->Set_Position(_float3(m_vWorldPosition_Model[0], m_vWorldPosition_Model[1], m_vWorldPosition_Model[2]));
 		}
+
+		// 모델 월드 회전
+		_float3 vRotated = pTransform->Get_Rotated();
+		ImGui::Text("Model Rotated  : %.2f %.2f %.2f", vRotated.x, vRotated.y, vRotated.z);
+		if (ImGui::DragFloat("Model_Rotate_X", &m_vWorldRotate_Model[0], 0.5f))
+		{
+			pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(m_vWorldRotate_Model[0]));
+		}
+		if (ImGui::DragFloat("Model_Rotate_Y", &m_vWorldRotate_Model[1], 0.5f))
+		{
+			pTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_vWorldRotate_Model[1]));
+		}
+		if (ImGui::DragFloat("Model_Rotate_Z", &m_vWorldRotate_Model[2], 0.5f))
+		{
+			pTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(m_vWorldRotate_Model[2]));
+		}
+
 
 		if (nullptr != m_pCurEffect)
 		{
@@ -3375,37 +3405,41 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			}
 		}
 
-
-		ImGui::SeparatorText("Model Animation");
-		if (ImGui::Button("Idle_"))
+		// 애님 모델일 경우에만 애니메이션 변경
+		if (CModel::TYPE_ANIM == m_pModel_Preview->Get_Desc()->eType)
 		{
-			if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+			ImGui::SeparatorText("Model Animation");
+			if (ImGui::Button("Idle_"))
 			{
-				// 플레이어 아이들 // Index 8
-				m_pModel_Preview->Set_AnimIndex(8);
-			}
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					// 플레이어 아이들 // Index 8
+					m_pModel_Preview->Set_AnimIndex(8);
+				}
 
-			if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+				{
+					// 보스 아이들 // Index 9
+					m_pModel_Preview->Set_AnimIndex(9);
+				}
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Attack_"))
 			{
-				// 보스 아이들 // Index 9
-				m_pModel_Preview->Set_AnimIndex(9);
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					// 플레이어 콤보1 	// Index 193
+					m_pModel_Preview->Set_AnimIndex(193);
+				}
+
+				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+				{
+					// 보스 VampireCommander_AttackMelee_02 // Index 55
+					m_pModel_Preview->Set_AnimIndex(55);
+				}
 			}
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Attack_"))
-		{
-			if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
-			{
-				// 플레이어 콤보1 	// Index 193
-				m_pModel_Preview->Set_AnimIndex(193);
-			}
 
-			if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
-			{
-				// 보스 VampireCommander_AttackMelee_02 // Index 55
-				m_pModel_Preview->Set_AnimIndex(55);
-			}
-		}
 
 
 		if (ImGui::Button("Delete Model"))	// 모델 삭제 버튼
@@ -3760,17 +3794,40 @@ void CWindow_EffectTool::Update_EffectList_Window()
 			ImGui::Text("Effect Scaled  : %.2f %.2f %.2f", vScaled.x, vScaled.y, vScaled.z);
 			if (ImGui::DragFloat3("Effect_Scale", m_vScale_Effect, 0.5f))
 			{
+				if (0.f == m_vScale_Effect[0])
+					m_vScale_Effect[0] = 1.f;
+
+				if (0.f == m_vScale_Effect[1])
+					m_vScale_Effect[1] = 1.f;
+
+				if (0.f == m_vScale_Effect[2])
+					m_vScale_Effect[2] = 1.f;
+
 				pTransform->Set_Scaling(m_vScale_Effect[0], m_vScale_Effect[1], m_vScale_Effect[2]);
 			}
 
 			_float3 vRotated = pTransform->Get_Rotated();
 			ImGui::Text("Effect Rotated  : %.2f %.2f %.2f", vRotated.x, vRotated.y, vRotated.z);
-			if (ImGui::DragFloat3("Effect_Rotate", m_vRotate_Effect, 0.5f))
+			//if (ImGui::DragFloat3("Effect_Rotate", m_vRotate_Effect, 0.5f))
+			//{
+			//	pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), m_vRotate_Effect[0]);
+			//	pTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_vRotate_Effect[1]);
+			//	pTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), m_vRotate_Effect[2]);
+			//}
+
+			if (ImGui::DragFloat("Effect_Rotate_X", &m_vRotate_Effect[0], 0.5f))
 			{
-				pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), m_vRotate_Effect[0]);
-				pTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_vRotate_Effect[1]);
-				pTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), m_vRotate_Effect[2]);
+				pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Effect[0]));
 			}
+			if (ImGui::DragFloat("Effect_Rotate_Y", &m_vRotate_Effect[1], 0.5f))
+			{
+				pTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Effect[1]));
+			}
+			if (ImGui::DragFloat("Effect_Rotate_Z", &m_vRotate_Effect[2], 0.5f))
+			{
+				pTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(m_vRotate_Effect[2]));
+			}
+
 		}
 
 
@@ -3820,12 +3877,10 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				if (ImGui::DragFloat("Part_Rotate_Y", &m_vRotate_Part[1], 0.5f))
 				{
 					pPartTransform->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_vRotate_Part[1]));
-
 				}
 				if (ImGui::DragFloat("Part_Rotate_Z", &m_vRotate_Part[2], 0.5f))
 				{
 					pPartTransform->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(m_vRotate_Part[2]));
-
 				}
 
 

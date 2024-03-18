@@ -103,7 +103,7 @@ void CEffect::Tick(_float fTimeDelta)
 					}
 					else
 					{
-						// 아니면 내 위치
+						// 아니면 내 월드
 						m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());
 					}
 				}

@@ -28,7 +28,7 @@ void CVampireCommander_BloodRange_Start::Initialize(CVampireCommander* pActor)
 				pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_Monster", TEXT("Prototype_GameObject_Infected_A"));
 				pMonster->Set_InitPosition(Temp);
 			}
-			
+
 		}
 		
 	}

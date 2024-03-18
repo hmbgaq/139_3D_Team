@@ -12,6 +12,9 @@ class CEffect_Trail;
 
 //! EFFECT_MANAGER 매크로 : GetInstance()안해도 됨. (EFFECT_MANAGER->Create_Effect(~~);)
 
+//! 뭘 써야할지 모르겠다!! -> 일단 Create_Effect(string strFileName, CGameObject* pOwner = nullptr); 호출
+//! 이펙트가 어떤 객체를 따라 움직여야한다! pOwner에 해당 객체 넣어주기(파트오브젝트 무기처럼 따라다님), bParentPivot이 true인지 확인
+
 class CEffect_Manager : public CBase
 {
 	DECLARE_SINGLETON(CEffect_Manager);
@@ -33,14 +36,15 @@ public:
 	CEffect* Create_Effect(string strFileName, CGameObject* pOwner = nullptr);
 
 	// 고정 위치에 이펙트를 생성하고 싶은 경우 호출(vPos에 생성시킬 위치)
-	CEffect* Create_Effect_Pos(string strFileName, _float3 vLocalPos);
+	CEffect* Create_Effect_Pos(string strFileName, _float3 vPos, CGameObject* pOwner = nullptr);
 
 	// 트레일이 달린 이펙트를 생성할 때 사용(이펙트jsno파일, 트레일json파일, 이펙트가 따라움직여야할 객체가 있는 경우 오너 넣기)
 	CEffect* Create_Effect_With_Trail(string strEffectFileName, string strTrailFileName, CGameObject* pOwner = nullptr);
 
-	// 두두두두 불 이펙트 테스트
+	// 두두두두 이펙트 지나간 자리에 이펙트 생성(누적시간 변수, 생성시간 텀, 타임델타, 생성할 이펙트 파일.json, 생성할 위치, 바라볼 타겟이 있는지, 타겟의 위치)
 	HRESULT Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime, _float fTimeDelta, string strEffectFileName
-		, _float4 vTargetPos, _bool bLookTarget = FALSE, _float3 vLocalPos = _float3(0.f, 0.f, 0.f));
+		, _float3 vPos = _float3(0.f, 0.f, 0.f)
+		, _bool bLookTarget = FALSE, _float4 vTargetPos = _float4(0.f, 0.f, 0.f, 0.f));
 
 
 

@@ -134,8 +134,10 @@ public: /* For.Target_Manager */
 
 public: /* For.Light_Manager */
 	HRESULT			Add_Light(const LIGHT_DESC& LightDesc, _int & outLightIndex);
+	class CLight*   Add_Light_AndGet(const LIGHT_DESC& LightDesc, _uint& outLightIndex);
 	class CLight*	Find_Light(const _int iIndex);
 	void			Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc);
+	class CLight*	Get_DirectionLight();
 
 
 	HRESULT		Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
