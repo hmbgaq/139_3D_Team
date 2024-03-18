@@ -53,6 +53,7 @@ public:
 
 public:
 	MODEL_PREVIEW_DESC* Get_Desc() { return &m_tDesc; }
+	CModel* Get_ModelCom() { return m_pModelCom; }
 
 
 private:
