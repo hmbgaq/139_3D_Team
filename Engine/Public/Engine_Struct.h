@@ -26,24 +26,24 @@ namespace Engine
 	{
 		enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_SPOTLIGHT, TYPE_END };
 
-		bool	bEnable = true;					/* 불 킬건지 끌건지 여부 */
+		_bool	bEnable = true;					/* 불 킬건지 끌건지 여부 */
 		TYPE	eType = TYPE_END;
 
 		/* Directional Light  */
-		XMFLOAT4 vDirection = { 0.f, 0.f, 0.f, 0.f };
+		_float4 vDirection = { 0.f, 0.f, 0.f, 0.f };
 
 		/* Point Light  */
-		XMFLOAT4 vPosition = { 0.f, 0.f, 0.f, 0.f };
-		float	 fRange = 0.f;
+		_float4 vPosition = { 0.f, 0.f, 0.f, 0.f };
+		_float	 fRange = 0.f;
 
 		/* Spot Light  */
-		float fCutOff = 0.f;
-		float fOuterCutOff = 0.f;
+		_float fCutOff = 0.f;
+		_float fOuterCutOff = 0.f;
 
 		/* Common */
-		XMFLOAT4 vDiffuse = { 0.f, 0.f, 0.f, 0.f }; /* 반사될때 출력되는 주된 색 */
-		XMFLOAT4 vAmbient = { 0.f, 0.f, 0.f, 0.f }; /* 광원의 확산위치와 무관하게 똑같은양으로 모든점에서 반사되는 색 */
-		XMFLOAT4 vSpecular = { 0.f, 0.f, 0.f, 0.f }; /* 특정방향으로만 반사되는 색 */
+		_float4 vDiffuse = { 0.f, 0.f, 0.f, 0.f }; /* 반사될때 출력되는 주된 색 */
+		_float4 vAmbient = { 0.f, 0.f, 0.f, 0.f }; /* 광원의 확산위치와 무관하게 똑같은양으로 모든점에서 반사되는 색 */
+		_float4 vSpecular = { 0.f, 0.f, 0.f, 0.f }; /* 특정방향으로만 반사되는 색 */
 
 	public:
 		unsigned int iLightIndex = unsigned int(-1);

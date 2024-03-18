@@ -70,6 +70,7 @@ public:
 	
 	CModel*				Get_ModelCom() { return m_pModelCom; }
 	LIGHT_DESC			Get_LightDesc() { return m_tEnvironmentDesc.LightDesc;}
+	CEffect*			Get_Effect() { return m_pEffect; }
 
 public:
 	void				Set_ColliderRender(_bool bColliderRender) { m_bColliderRender = bColliderRender;}
@@ -84,6 +85,12 @@ public:
 
 	void				Set_LightDesc(LIGHT_DESC tLightDesc);
 	void				Set_ShaderPassindex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex;}
+	void				Set_LightPos(_float3 vLightPos);
+	void				Set_EffectPos(_float3 vEffectPos);
+	void				Set_Select(_bool bSelect);
+
+
+	
 
 	void				Change_LightType(LIGHT_DESC::TYPE eLightType);
 	void				Change_LightEffect(LIGHT_EFFECT eLightEffectType);

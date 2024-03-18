@@ -7,6 +7,7 @@ class CGameObject;
 class CCamera;
 class CNavigation;
 class CCell;
+class CLight;
 END
 
 BEGIN(Client)
@@ -30,6 +31,7 @@ private:
 	enum class PICKING_TYPE { PICKING_FIELD, PICKING_MESH, PICKING_INSTANCE, PICKING_NONE, PICKING_END };
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
 	enum class OBJECTMODE_TYPE { OBJECTMODE_ENVIRONMENT, OBJECTMODE_CHARACTER, OBJECTMODE_NAVIGATION};
+	enum class LIGHT_CREATEMODE { LIGHT_MODE, LIGHT_OBJECTMODE };
 	enum class ANIM_TYPE { TYPE_NONANIM, TYPE_ANIM };
 	enum class INSTANCE_ALLMOVETYPE { ALLMOVE_X, ALLMOVE_Y, ALLMOVE_Z };
 	enum class MAP_KEY_TYPE //! 맵컨테이너 키
@@ -170,6 +172,9 @@ private:
 	PICKING_MODE	m_ePickingMode = PICKING_MODE::MOUSE_PRESSING;
 	OBJECTMODE_TYPE m_eObjectMode = OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT;
 	ANIM_TYPE		m_eAnimType = ANIM_TYPE::TYPE_NONANIM;
+	LIGHT_CREATEMODE m_eLightCreateMode = LIGHT_CREATEMODE::LIGHT_MODE;
+
+	
 
 	_bool			m_bChangeObjectMode = false;
 	
@@ -240,6 +245,8 @@ private:
 	CEnvironment_Interact*			m_pPreviewInteract = {}; //! 상호작용용 미리보기 오브젝트
 	CEnvironment_LightObject*		m_pPreviewLightObject = {};
 	
+	
+	
 	_uint							m_iOriginSelectModelTag = 0; 
 	_float							m_fDeadWaiting = 0.1f; //! 한틱 도는거 기다리기위함
 	_float							m_fDeadWaitingAcc = 0.f;
@@ -266,6 +273,10 @@ private:
 	_int							m_eLightEffectType = 0; //! 전부 이넘 캐스팅
 	LIGHT_DESC::TYPE				m_eLightType = LIGHT_DESC::TYPE::TYPE_END;
 	_bool							m_bLightEffect = true;
+	_float3							m_vLightEffectPos = {};
+	
+	
+	
 	
 
 private: //! 필드
@@ -292,6 +303,10 @@ private:
 	_int								m_iCreateLightObjectIndex = 0;
 	_int								m_iSelectLightObjectIndex = 0;
 	LIGHT_DESC							m_tEditLightDesc = {};
+
+	vector<CLight*>						m_vecCreateLight;
+	vector<string>						m_vecCreateLightTag;
+	_int								m_iSelectLightIndex = 0;
 	
 	vector<CEnvironment_Interact*>		m_vecCreateInteractObject = {};
 	vector<string>						m_vecCreateInteractObjectTag = {};
