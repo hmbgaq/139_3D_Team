@@ -15,8 +15,8 @@ void CInfected_Run_F::Initialize(CInfected* pActor)
 CState<CInfected>* CInfected_Run_F::Update(CInfected* pActor, _float fTimeDelta)
 {
 	pActor->Look_At_Target();
-	pActor->Get_Transform()->Set_Speed(2.5f);
-	pActor->Set_StiffnessRate(1.2f);
+	pActor->Get_Transform()->Set_Speed(1.3f);
+	pActor->Set_StiffnessRate(1.3f);
 	pActor->Go_Straight(fTimeDelta);
 
 	switch (pActor->Get_Info().eType)
