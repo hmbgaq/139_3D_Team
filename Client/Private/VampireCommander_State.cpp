@@ -219,11 +219,11 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 		if (fAngle > 45 && fAngle <= 135)
 			return (new CVampireCommander_TurnR90);
 		else if (fAngle > 135 && fAngle <= 180)
-			return (new CVampireCommander_TurnL180);
+			return (new CVampireCommander_TurnR180);
 		else if (fAngle < -45 && fAngle >= -135)
 			return new CVampireCommander_TurnL90;
 		else if (fAngle < -135 && fAngle >= -180)
-			return (new CVampireCommander_TurnR180);
+			return (new CVampireCommander_TurnL180);
 		pActor->m_bTurn = false;
 	}
 
@@ -252,8 +252,6 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 		pState = Attack_State(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 	}
-	
-	
 	
 	
 // 
