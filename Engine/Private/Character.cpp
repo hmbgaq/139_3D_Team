@@ -68,7 +68,7 @@ void CCharacter::Priority_Tick(_float fTimeDelta)
 		if (nullptr != Pair.second)
 			Pair.second->Priority_Tick(fTimeDelta);
 	}
-
+		
 	Set_WeaknessPoint();
 }
 
@@ -357,7 +357,7 @@ void CCharacter::Set_Enable(_bool _Enable)
 	}
 }
 
-Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
+Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
 {
 	Hit_Type eHitType = Hit_Type::None;
 

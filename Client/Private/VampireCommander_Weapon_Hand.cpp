@@ -200,5 +200,7 @@ CGameObject* CVampireCommander_Weapon_Hand::Pool()
 void CVampireCommander_Weapon_Hand::Free()
 {
 	__super::Free();
-	m_pTrail->Set_Dead(true);
+
+	if (nullptr != m_pTrail)
+		m_pTrail->Set_Dead(TRUE);
 }
