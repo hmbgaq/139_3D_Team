@@ -36,6 +36,8 @@ HRESULT CEffect_Trail::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	// Æ®·¹ÀÏÀº ºôº¸µå¸¦ Ç×»ó ²û
+	m_tVoidDesc.bBillBoard = FALSE;
 
 	return S_OK;
 }
@@ -56,7 +58,7 @@ void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 #ifdef _DEBUG
 	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		if (m_tVoidDesc.bActive_Tool)
+		//if (m_tVoidDesc.bActive_Tool)
 		{
 #endif // _DEBUG
 
@@ -93,7 +95,7 @@ void CEffect_Trail::Late_Tick(_float fTimeDelta)
 #ifdef _DEBUG
 	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		if (m_tVoidDesc.bActive_Tool)
+		//if (m_tVoidDesc.bActive_Tool)
 		{
 #endif // _DEBUG
 
@@ -115,7 +117,7 @@ HRESULT CEffect_Trail::Render()
 #ifdef _DEBUG
 	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		if (m_tVoidDesc.bActive_Tool)
+		//if (m_tVoidDesc.bActive_Tool)
 		{
 #endif // _DEBUG
 
@@ -211,6 +213,10 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 	{
 		FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NOISE]));
 	}
+
+
+	/* ºôº¸µå */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
 
 
 	/* Discard ============================================================================================ */

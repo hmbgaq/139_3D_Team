@@ -123,6 +123,7 @@ public:
 	
 public:
 	CMyAIScene*				Get_AIScene();
+	TYPE					Get_ModelType() { return m_eModelType; }
 
 public:
 	vector<CBone*>*			Get_Bones();

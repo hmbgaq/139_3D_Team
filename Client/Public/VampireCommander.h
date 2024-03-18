@@ -41,6 +41,9 @@ public:
 private:
 	CActor<CVampireCommander>* m_pActor = { nullptr };
 
+private:
+	CEffect* m_pMapEffect = { nullptr }; // TEST
+
 public:
 	_bool m_bTurn = true;
 
