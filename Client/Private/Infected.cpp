@@ -1,12 +1,11 @@
-#include "..\Public\Infected.h"
-
+#include "stdafx.h"
+#include "Infected.h"
 #include "GameInstance.h"
 #include "Body_Infected.h"
-
 #include "Infected_Idle.h"
 #include "Infected_SpawnGround.h"
+#include "Data_Manager.h"
 
-//
 //#include "Infected_HitLight_F_01_NEW.h"
 //#include "Infected_HitLight_FL_01_NEW.h"
 //#include "Infected_HitLight_FR_01_NEW.h"
@@ -71,13 +70,15 @@ HRESULT CInfected::Initialize(void* pArg)
 		FAILED_CHECK(__super::Initialize(pArg));
 	}
 
-	
-
+	/* Actor 설정 */
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CInfected>(this);
 		m_pActor->Set_State(new CInfected_SpawnCrawl_01());
 	}
+
+	/* Target 설정 */
+	m_pTarget = m_pGameInstance->Get_Player();
 
 	return S_OK;
 }

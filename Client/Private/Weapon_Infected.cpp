@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "GameInstance.h"
-#include "Weapon_Infected.h"
 #include "Bone.h"
 #include "Character.h"
+#include "Effect_Trail.h"
+#include "GameInstance.h"
+#include "Weapon_Infected.h"
 
 CWeapon_Infected::CWeapon_Infected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)
@@ -27,6 +28,7 @@ HRESULT CWeapon_Infected::Initialize(void* pArg)
 
 	m_iDamage = 3.f;
 	m_fForce = 0.1f;
+
 	return S_OK;
 }
 
@@ -96,5 +98,9 @@ void CWeapon_Infected::OnCollisionExit(CCollider* other)
 void CWeapon_Infected::Free()
 {
 	__super::Free();
+
+	if (nullptr != m_pTrail)
+		m_pTrail->Set_Dead(TRUE);
+
 }
 

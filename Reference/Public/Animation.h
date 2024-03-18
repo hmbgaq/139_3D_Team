@@ -66,10 +66,8 @@ public:
 
 	_bool Is_Inputable_Front(_float _fTrackPosition, _uint _iIndexFront);
 
-	void Set_StiffnessRate(_float fStiffnessRate)
-	{
-		m_fStiffnessRate = fStiffnessRate;
-	}
+	void Set_StiffnessRate(_float fStiffnessRate) { m_fStiffnessRate = fStiffnessRate; }
+	_float Get_StiffnessRate() { return m_fStiffnessRate; }
 
 	_char* Get_Name() {
 		return m_szName;

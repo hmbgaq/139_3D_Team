@@ -61,6 +61,7 @@ public:
 	_float3 Get_MovePos() { return m_vMovePos; }
 	void Set_TrackPosition(_int iNewTrackPosition);
 	void Set_StiffnessRate(_float fStiffnessRate) { m_pModelCom->Set_StiffnessRate(fStiffnessRate); }
+	_float Get_StiffnessRate() { return m_pModelCom->Get_StiffnessRate(); }
 
 	void Set_StiffnessRate_Upper(_float fStiffnessRate) {
 		m_pModelCom->Set_StiffnessRate_Upper(fStiffnessRate);

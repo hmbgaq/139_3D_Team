@@ -130,14 +130,12 @@ public:
 		//Hitted_Dead(Power::Heavy);
 	};
 	
-
-
 public:
 	void Add_Force(_vector In_vDir, _float In_fPower);
 
 public:
-	_int Get_Hp() { return m_iHp; };
-	void Set_Hp(_uint _iHp) { m_iHp = _iHp; };
+	_float Get_Hp() { return m_iHp; };
+	void Set_Hp(_float _iHp) { m_iHp = _iHp; };
 
 public:
 	CCharacter* Get_Target() { return m_pTarget; };
@@ -176,6 +174,7 @@ public:	//!For Animation Split
 public:
 	void Set_StiffnessRate(_float fStiffnessRate);
 	void Set_StiffnessRate_Upper(_float fStiffnessRate);
+	_float Get_StiffnessRate() { return m_pBody->Get_StiffnessRate(); }
 
 public:
 	void Set_Weapons_Enable_False();
@@ -193,9 +192,9 @@ public:
 	//void	Set_MaxHP(_float fMaxHP) { m_fMaxHP = fMaxHP; }
 	//_float	Get_MaxHP() { return m_fMaxHP; }
 	void	Set_CurHP(_float fCurHP) { m_iHp = fCurHP; }
-	_int	Get_CurHP() { return m_iHp; }
+	_float	Get_CurHP() { return m_iHp; }
 	void	Set_MaxHP(_float fMaxHP) { m_iMaxHp = fMaxHP; }
-	_int	Get_MaxHP() { return m_iMaxHp; }
+	_float	Get_MaxHP() { return m_iMaxHp; }
 
 
 public:
@@ -212,8 +211,8 @@ public:
 
 
 protected:
-	_int m_iHp = { 1 };
-	_int m_iMaxHp = { 1 };
+	_float m_iHp = { 1.f };
+	_float m_iMaxHp = { 1.f };
 	
 	/* _float 타입의 HP를 사용해주세요. */
 	//_float m_fMaxHP = { 40.f };

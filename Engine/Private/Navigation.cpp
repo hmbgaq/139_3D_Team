@@ -374,7 +374,7 @@ void CNavigation::AllSearchDelete_IsNan()
 		}
 	}
 
-	_uint iIsNanCellSize = (_uint)vecNanCellIndex.size();
+	_int iIsNanCellSize = (_int)vecNanCellIndex.size();
 	for (_int i = 0; i < iIsNanCellSize; ++i)
 	{
 		Safe_Release(m_Cells[vecNanCellIndex[i]]);
@@ -428,7 +428,6 @@ _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
 
 _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 {
-
 	_float fResult = {};
 
 	CCell* pCell = m_Cells[m_iCurrentIndex]; /* 현재 어디 셀에 위치한지 리턴 */
@@ -449,7 +448,6 @@ _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 	_float fb = XMVectorGetY(vPlane);
 	_float fc = XMVectorGetZ(vPlane);
 	_float fd = XMVectorGetW(vPlane);
-
 
 	fResult = (-fa * fx - fc * fz - fd) / fb;
 

@@ -31,8 +31,6 @@ HRESULT CInfected_A::Initialize_Prototype()
 
 HRESULT CInfected_A::Initialize(void* pArg)
 {
-	/* Ready_Component, Ready_PartObjects는 Initialize를 타고 올라가다보면 CCharacter클래스에서 수행하고있음.*/
-
 	FAILED_CHECK(__super::Initialize(pArg));
 
 	FAILED_CHECK(Ready_Option());
@@ -49,7 +47,7 @@ void CInfected_A::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	Update_RenderState(m_iHp);
+	//Update_RenderState(m_iHp);
 
 	m_pTarget = m_pGameInstance->Get_Player();
 
@@ -80,10 +78,10 @@ HRESULT CInfected_A::Render_Shadow()
 
 HRESULT CInfected_A::Update_RenderState(_int CurrentHP)
 {
-	if (CurrentHP == m_iMaxHp)
-	{
-
-	}
+	//if (CurrentHP == m_iMaxHp)
+	//{
+	//
+	//}
 
 	return S_OK;
 }
@@ -107,8 +105,8 @@ HRESULT CInfected_A::Ready_Option()
 	m_eInfo.fAttack_Distance = 3.5f;
 	m_eInfo.fWalk_Distance = 10.f;
 
-	m_iHp = 30;
-	m_iMaxHp = 30;
+	m_iHp = 3000000;
+	m_iMaxHp = 3000000;
 
 	m_pTarget = m_pGameInstance->Get_Player();
 	
