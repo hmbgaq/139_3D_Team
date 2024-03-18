@@ -13,6 +13,7 @@ CVIBuffer_Particle::CVIBuffer_Particle(ID3D11Device* pDevice, ID3D11DeviceContex
 
 CVIBuffer_Particle::CVIBuffer_Particle(const CVIBuffer_Particle& rhs)
 	: CVIBuffer(rhs)
+	, m_tBufferDesc(rhs.m_tBufferDesc)
 {
 }
 
@@ -485,11 +486,44 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 		else
 		{
 			// 리지드바디 사용이 아니면 직접 이동
-
-			if (RISE == m_tBufferDesc.eType_Action)
+			if (SPARK == m_tBufferDesc.eType_Action)
 			{
-				pVertices[i].vPosition.y += m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta;
+				// 이동 :: 현재 포지션 = 현재 포지션 + (입자들의 방향 * (현재 스피트 * 타임델타))
+				XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + m_vecParticleShaderInfoDesc[i].vDir * (m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta));
 
+				// 초기화 조건		
+				_vector vCurPos = XMLoadFloat4(&pVertices[i].vPosition);
+				_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions)));	// 센터에서 현재 위치까지의 거리
+
+				if (m_vecParticleInfoDesc[i].fMaxRange <= fLength)	// 현재 이동 거리가 맥스 레인지보다 크거나 같으면 초기화 or 죽음
+				{
+					if (m_tBufferDesc.bRecycle)	// 재사용이 true이면 초기화
+					{
+						m_vecParticleInfoDesc[i].fMaxRange = SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
+						pVertices[i].vPosition = m_vecParticleInfoDesc[i].vCenterPositions;
+
+						m_vecParticleInfoDesc[i].Reset_ParticleTimes(); // 시간 초기화
+					}
+					else
+					{
+						m_vecParticleInfoDesc[i].bDie = TRUE;
+					}
+				}
+
+			}
+			else if (BLINK == m_tBufferDesc.eType_Action)
+			{
+
+			}
+			else if (FALL == m_tBufferDesc.eType_Action)
+			{
+
+			}
+			else if (RISE == m_tBufferDesc.eType_Action)
+			{
+				pVertices[i].vPosition.y += m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta;	// 이동
+
+				// 초기화 조건
 				if (m_vecParticleInfoDesc[i].fMaxRange <= pVertices[i].vPosition.y)	// 현재 y위치가 최대 범위보다 크면 초기화 or 죽음
 				{
 					if (m_tBufferDesc.bRecycle)	// 재사용이 true이면 초기화
@@ -503,8 +537,6 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 					{
 						m_vecParticleInfoDesc[i].bDie = TRUE;
 					}
-
-
 				}
 				
 			}

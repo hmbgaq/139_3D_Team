@@ -279,11 +279,17 @@ HRESULT CWindow_EffectTool::Ready_Model_Preview(wstring strModelTag)
 	}
 
 
+
+
 	CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Model_Preview"), TEXT("Prototype_GameObject_Model_Preview"), &tDesc);
 	if (nullptr != pObj)
 		m_pModel_Preview = dynamic_cast<CModel_Preview*>(pObj);
 
-	m_pPart_Preview = dynamic_cast<CPart_Preview*>(dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Find_PartObject(TEXT("Part_Preview")));
+
+	if (CModel::TYPE_ANIM == m_pModel_Preview->Get_Desc()->eType)
+	{
+		m_pPart_Preview = dynamic_cast<CPart_Preview*>(dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Find_PartObject(TEXT("Part_Preview")));
+	}
 
 	return S_OK;
 }
@@ -3346,6 +3352,11 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			Ready_Model_Preview(TEXT("Prototype_Component_Model_VampireCommander"));
 		}
 
+		if (ImGui::Button("Create Model_Torch"))	// ¸ðµ¨ »ý¼º
+		{
+			Ready_Model_Preview(TEXT("Prototype_Component_Model_Effect_Torch"));
+		}
+
 	}
 	else
 	{
@@ -3760,6 +3771,15 @@ void CWindow_EffectTool::Update_EffectList_Window()
 			ImGui::Text("Effect Scaled  : %.2f %.2f %.2f", vScaled.x, vScaled.y, vScaled.z);
 			if (ImGui::DragFloat3("Effect_Scale", m_vScale_Effect, 0.5f))
 			{
+				if (0.f == m_vScale_Effect[0])
+					m_vScale_Effect[0] = 1.f;
+
+				if (0.f == m_vScale_Effect[1])
+					m_vScale_Effect[1] = 1.f;
+
+				if (0.f == m_vScale_Effect[2])
+					m_vScale_Effect[2] = 1.f;
+
 				pTransform->Set_Scaling(m_vScale_Effect[0], m_vScale_Effect[1], m_vScale_Effect[2]);
 			}
 

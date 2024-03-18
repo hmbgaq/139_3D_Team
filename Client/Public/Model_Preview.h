@@ -18,6 +18,8 @@ public:
 		wstring		strProtoTag = { TEXT("") };
 		wstring		strModelTag = { TEXT("") };
 
+		CModel::TYPE	eType	= { CModel::TYPE_END };
+
 		_bool		bRender				= { TRUE };
 		_bool		bPlay			    = { TRUE };
 
