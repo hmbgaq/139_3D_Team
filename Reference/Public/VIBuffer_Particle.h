@@ -108,6 +108,7 @@ public:
 	typedef struct tagParticleDesc
 	{
 		// 업데이트 돌면서 변하는 정보들(저장X)
+		_bool bDie = { FALSE };
 
 		// 시간
 		_float	fTimeAccs = { 0.f };
@@ -119,6 +120,8 @@ public:
 		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
 		_float fMaxRange = { 3.f };
 
+		// 스피드
+		_float			fCurSpeed = { 1.f };
 
 		// 크기
 		_float2	vCurScales	= { 1.f, 1.f };
@@ -157,8 +160,7 @@ public:
 
 		_float3			vDir = { 1.f, 0.f, 0.f };
 
-		_float			fMaxSpeed = { 1.f };
-		_float			fCurSpeed = { 1.f };
+
 		_float			fMass = { 10.f };				// 질량
 
 	} PARTICLE_RIGIDBODY_DESC;
@@ -187,7 +189,7 @@ public:
 
 
 public:
-	_float4 Make_Dir(_uint iNum, TYPE_ACTION eAction);
+	_float4 Make_Dir(_uint iNum);
 
 
 	/* For.RigidBody */
