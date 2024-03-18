@@ -60,14 +60,14 @@ private: /* _float */
 	_float	m_fMaxHP = 100.f;
 	_float	m_fCurHP = 100.f;
 
-	_float	m_fMaxEXP = 100.f;
+	_float	m_fMaxEXP = 1000000000.f;
 	_float	m_fCurEXP = 0.f;
 
 	_float	m_fMaxSkillGuige = 100.f;
 	_float	m_fCurSkillGuige = 0.f;
 
 private: /* _int */
-	_int	m_iCurLevel = 1;
+	_int	m_iCurLevel = 2;
 
 private: /* _bool */
 	_bool	m_bLevelUp = false;

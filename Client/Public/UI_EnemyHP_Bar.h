@@ -47,7 +47,7 @@ private:
 	_float					m_fCurHP = 100.f;
 	_float					m_fMaxHP = 100.f;
 	_float					m_fTimeAcc = 0.f;
-	_float					m_fVariationSpeed = 0.1f;
+	_float					m_fVariationSpeed = 0.3f;
 	_bool					m_bLerp = false;
 
 public:
