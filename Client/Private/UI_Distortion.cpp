@@ -67,6 +67,68 @@ void CUI_Distortion::Tick(_float fTimeDelta)
 	{
 		m_tUIInfo.fTimeAcc += fTimeDelta;
 		//m_tUIInfo.fTimeAcc = fTimeDelta;
+
+		if (m_bRestore == true)
+		{
+			//if (m_tUIInfo.fTimeAcc > 0.f)
+			//	m_tUIInfo.fTimeAcc -= fTimeDelta;
+
+			if (m_tUIInfo.fSequenceTerm > 0.f)
+				m_tUIInfo.fSequenceTerm -= fTimeDelta;
+			else
+				m_tUIInfo.fSequenceTerm = 0.f;
+
+			if (m_tUIInfo.vScrollSpeeds.x > 0.f)
+				m_tUIInfo.vScrollSpeeds.x -= fTimeDelta;
+			else
+				m_tUIInfo.vScrollSpeeds.x = 0.f;
+
+			if (m_tUIInfo.vScales.x > 0.f)
+				m_tUIInfo.vScales.x -= fTimeDelta;
+			else
+				m_tUIInfo.vScales.x = 0.f;
+
+			if (m_tUIInfo.vDistortion1.x > 0.f)
+				m_tUIInfo.vDistortion1.x -= fTimeDelta;
+			else
+				m_tUIInfo.vDistortion1.x = 0.f;
+
+			if (m_tUIInfo.vDistortion1.y > 0.f)
+				m_tUIInfo.vDistortion1.y -= fTimeDelta;
+			else
+				m_tUIInfo.vDistortion1.y = 0.f;
+
+			if (m_tUIInfo.vDistortion2.x > 0.f)
+				m_tUIInfo.vDistortion2.x -= fTimeDelta;
+			else
+				m_tUIInfo.vDistortion2.x = 0.f;
+
+			if (m_tUIInfo.vDistortion2.y > 0.f)
+				m_tUIInfo.vDistortion2.y -= fTimeDelta;
+			else
+				m_tUIInfo.vDistortion2.y = 0.f;
+
+			if (m_tUIInfo.vDistortion3.x > 0.f)
+				m_tUIInfo.vDistortion3.x -= fTimeDelta;
+			else
+				m_tUIInfo.vDistortion3.x = 0.f;
+
+			if (m_tUIInfo.vDistortion3.y > 0.f)
+				m_tUIInfo.vDistortion3.y -= fTimeDelta;
+			else
+				m_tUIInfo.vDistortion3.y = 0.f;
+
+			if (m_tUIInfo.fDistortionScale > 0.f)
+				m_tUIInfo.fDistortionScale -= fTimeDelta;
+			else
+				m_tUIInfo.fDistortionScale = 0.f;
+
+			if (m_tUIInfo.fDistortionBias > 0.f)
+				m_tUIInfo.fDistortionBias -= fTimeDelta;
+			else
+				m_tUIInfo.fDistortionBias = 0.f;
+
+		}
 	}
 }
 
@@ -145,21 +207,21 @@ HRESULT CUI_Distortion::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tUIInfo.fTimeAcc, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tUIInfo.tKeyframe.fTimeAcc, sizeof(_float))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tUIInfo.vScrollSpeeds, sizeof(_float3))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tUIInfo.tKeyframe.vScrollSpeeds, sizeof(_float3))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScales", &m_tUIInfo.vScales, sizeof(_float3))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScales", &m_tUIInfo.tKeyframe.vScales, sizeof(_float3))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tUIInfo.vDistortion1, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tUIInfo.tKeyframe.vDistortion1, sizeof(_float2))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion2", &m_tUIInfo.vDistortion2, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion2", &m_tUIInfo.tKeyframe.vDistortion2, sizeof(_float2))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion3", &m_tUIInfo.vDistortion3, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion3", &m_tUIInfo.tKeyframe.vDistortion3, sizeof(_float2))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionScale", &m_tUIInfo.fDistortionScale, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionScale", &m_tUIInfo.tKeyframe.fDistortionScale, sizeof(_float))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tUIInfo.fDistortionBias, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tUIInfo.tKeyframe.fDistortionBias, sizeof(_float))))
 		return E_FAIL;
 
 	/* For.Com_Texture */

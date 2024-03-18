@@ -43,6 +43,21 @@ public:
 		_bool	bDisappear = false; // Disappear
 		_bool	bLoopSection = false; // Disappear
 		_bool	bTrigger = false;
+
+		/* Distortion */
+		_bool		bDistortionUI = false;
+		_bool		bRestore = false;
+		_float		fTimeAcc = 0.f;
+		_float		fSequenceTerm = 0.f;
+		_float3		vScrollSpeeds = { 0.f, 0.f, 0.f };
+		_float3		vScales = { 0.f, 0.f, 0.f };
+		_float2		vDistortion1 = { 0.f, 0.f };
+		_float2		vDistortion2 = { 0.f, 0.f };
+		_float2		vDistortion3 = { 0.f, 0.f };
+		_float		fDistortionScale = 0.f;
+		_float		fDistortionBias = 0.f;
+		_int		iDistortionNum = 0;
+		_int		iNoiseNum = 0;
 	}UIKEYFRAME;
 
 
@@ -326,6 +341,33 @@ public: /* =========================== Animation ============================== 
 	// 알파
 	_float fAlpha_Delta;
 
+	// 시간
+	_float		fTimeAcc_Delta = 0.f;
+
+	// 시퀀스
+	_float		fSequenceTerm_Delta = 0.f;
+
+	// 스크롤 스피드
+	_float3		vScrollSpeeds_Delta = { 0.f, 0.f, 0.f };
+
+	// 크기
+	_float3		vScales_Delta = { 0.f, 0.f, 0.f };
+
+	// 디스토션1
+	_float2		vDistortion1_Delta = { 0.f, 0.f };
+
+	// 디스토션2
+	_float2		vDistortion2_Delta = { 0.f, 0.f };
+
+	// 디스토션3
+	_float2		vDistortion3_Delta = { 0.f, 0.f };
+
+	// 디스토션 Scale
+	_float		fDistortionScale_Delta = 0.f;
+
+	// 디스토션 Bias
+	_float		fDistortionBias_Delta = 0.f;
+
 protected: /* Data */
 	class CData_Manager* m_pData_Manager = { nullptr };
 
@@ -376,6 +418,7 @@ protected: /* ============================= UI =============================== *
 	_float4x4			m_Origin_WorldMatrix = {};
 	_bool				m_bActive = false;
 	_bool				m_bReset = false;
+	_bool				m_bRestore = false;
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f, m_fScaleZ = 0.1f;

@@ -134,6 +134,8 @@
 /* BackGround */
 #include "UI_BackGround.h"
 #include "UI_Loading_Icon.h"
+/* Video */
+#include "UI_Video.h"
 #pragma endregion UI_END
 
 #pragma region Test
@@ -914,6 +916,10 @@ HRESULT CLoader::Ready_UI_Origin()
 #pragma region Loading
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_BackGround"), CUI_BackGround::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_BackGround"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Loading_Icon"), CUI_Loading_Icon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Loading_Icon"))));
+#pragma endregion End
+
+#pragma region Video
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Video"), CUI_Video::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Video"))));
 #pragma endregion End
 	
 	return S_OK;

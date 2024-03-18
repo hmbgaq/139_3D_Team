@@ -48,6 +48,8 @@ private:
 
 	_bool					m_bLerp = false;
 public:
+	void	Set_Restore(_bool bRestore) { m_bRestore = bRestore; }
+public:
 	virtual json			Save_Desc(json& out_json);
 	void					Load_Desc();
 

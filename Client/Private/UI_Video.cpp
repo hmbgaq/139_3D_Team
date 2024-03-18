@@ -4,6 +4,11 @@
 #include "Json_Utility.h"
 
 #include "Data_Manager.h"
+//#include <mfapi.h>
+//#include <mfidl.h>
+//#include <mfreadwrite.h>
+//#include <mferror.h>
+
 // #include <avformat.h>
 //#include <libavformat/avformat.h>
 //#include <libavcodec/avcodec.h>
@@ -42,6 +47,8 @@ HRESULT CUI_Video::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
+	LoadVideo(L"../Bin/Resources/Textures/UI/Video/MainMenu/ew_mainmenu_intro.avi");
+
 	return S_OK;
 }
 
@@ -52,7 +59,9 @@ void CUI_Video::Priority_Tick(_float fTimeDelta)
 
 void CUI_Video::Tick(_float fTimeDelta)
 {
-		__super::Tick(fTimeDelta);
+	__super::Tick(fTimeDelta);
+
+
 }
 
 void CUI_Video::Late_Tick(_float fTimeDelta)
@@ -66,6 +75,9 @@ HRESULT CUI_Video::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
+	if (FAILED(ReadVideoFrame()))
+		return E_FAIL;
+
 	//! 이 셰이더에 0번째 패스로 그린다.
 	m_pShaderCom->Begin(m_iShaderNum); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
@@ -74,7 +86,7 @@ HRESULT CUI_Video::Render()
 
 	//! 바인딩된 정점, 인덱스를 그려
 	m_pVIBufferCom->Render();
-
+	
 	return S_OK;
 }
 
@@ -84,21 +96,6 @@ HRESULT CUI_Video::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_health_bar_damagel"),
 		TEXT("Com_Texture_WhiteBar"), reinterpret_cast<CComponent**>(&m_pTextureCom[HPBAR_WHITE]))))
 		return E_FAIL;
-
-	//D3D11_TEXTURE2D_DESC textureDesc;
-	//textureDesc.Width = g_iWinsizeX;
-	//textureDesc.Height = g_iWinsizeY;
-	//textureDesc.MipLevels = 1;
-	//textureDesc.ArraySize = 1;
-	//textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	//textureDesc.SampleDesc.Count = 1;
-	//textureDesc.SampleDesc.Quality = 0;
-	//textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	//textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
-	//textureDesc.CPUAccessFlags = 0;
-	//textureDesc.MiscFlags = 0;
-
-	//m_pDevice->CreateTexture2D(&textureDesc, NULL, &m_pTextureVideo);
 
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -123,52 +120,412 @@ HRESULT CUI_Video::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	//AVFormatContext* format_context;
-	//const char* input_file;
-
-	//// FFmpeg 라이브러리 초기화
-	//avformat_open_input(&format_context, input_file, NULL, NULL);
-	//avformat_find_stream_info(format_context, NULL);
-
-	//// 비디오 스트림 정보 얻기
-	//AVStream* video_stream = format_context->streams[0];
-	//AVCodecContext* video_codec_context = video_stream->codecpar;
-
-	//// SWScaler 컨텍스트 생성
-	//SwsContext* sws_context = sws_getContext(
-	//	video_codec_context->width, video_codec_context->height, video_codec_context->pix_fmt,
-	//	video_codec_context->width, video_codec_context->height, AV_PIX_FMT_RGB24, SWS_BICUBIC, NULL, NULL, NULL);
-
-	//// 프레임 및 변환된 프레임
-	//AVFrame* frame = av_frame_alloc();
-	//AVFrame* converted_frame = av_frame_alloc();
-
-	//// RGB 버퍼 생성
-	//uint8_t* rgb_buffer = (uint8_t*)malloc(avpicture_get_size(AV_PIX_FMT_RGB24, video_codec_context->width, video_codec_context->height));
-
-	//// 비디오 디코딩 및 변환 루프
-	//while (av_read_frame(format_context, &packet) >= 0) {
-	//	if (packet.stream_index == video_stream->index) {
-	//		// 프레임 디코딩
-	//		avcodec_decode_video2(video_codec_context, frame, &got_frame, &packet);
-
-	//		if (got_frame) {
-	//			// 프레임 변환
-	//			sws_scale(sws_context, (const uint8_t**)frame->data, frame->linesize, 0,
-	//				video_codec_context->height, converted_frame->data, converted_frame->linesize);
-
-	//			// RGB 버퍼에 복사
-	//			avpicture_layout(converted_frame, AV_PIX_FMT_RGB24, video_codec_context->width, video_codec_context->height, rgb_buffer, NULL);
-	//		}
-	//	}
-
-	//	// 패킷 정보 해제
-	//	av_packet_unref(&packet);
-	//}
-
+	
+	//// 비디오 텍스처 바인딩
+	//if (FAILED(m_pTextureVideo->Bind_ShaderResource(m_pShaderCom, "g_VideoTexture")))
+	//	return E_FAIL;
 
 	if (FAILED(m_pTextureCom[HPBAR_WHITE]->Bind_ShaderResource(m_pShaderCom, "g_HpBarWhite_Texture")))	// Hp White
 		return E_FAIL;
+
+	return S_OK;
+}
+
+// 비디오 로드 함수 : 지원하는 확장자 (mp4, avi, wmv, mov, mpeg, flv)
+HRESULT CUI_Video::LoadVideo(const wchar_t* filePath)
+{
+	//HRESULT hr = S_OK;
+	//IMFSourceReader* m_pSourceReader = nullptr;
+	//// Media Foundation 초기화 함수
+	//hr = MFStartup(MF_VERSION);
+	//if (FAILED(hr)) return hr;
+
+	//// 비디오 파일 열기 : m_pSourceReader에 비디오 파일을 읽는데 사용되는 소스리더 객체를 저장함. (대충 비디오 정보 저장)
+	//hr = MFCreateSourceReaderFromURL(filePath, nullptr, &m_pSourceReader);
+	//if (FAILED(hr)) 
+	//{
+	//	MFShutdown(); // Media Foundation 종료
+	//	return hr;
+	//}
+
+	//// 비디오 형식 가져오기 : 첫 번째 비디오 스트림의 현재 미디어 유형 정보를 m_pMediaType에 가져온다.
+	//hr = m_pSourceReader->GetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, &m_pMediaType);
+	//if (FAILED(hr)) 
+	//{
+	//	m_pSourceReader->Release();
+	//	MFShutdown(); // Media Foundation 종료
+	//	return hr;
+	//}
+
+	//// 비디오 프레임의 너비와 높이 가져오기
+	//UINT32 width = 0, height = 0;
+	//hr = MFGetAttributeSize(m_pMediaType, MF_MT_FRAME_SIZE, &width, &height);
+	//if (FAILED(hr)) 
+	//{
+	//	m_pMediaType->Release();
+	//	m_pSourceReader->Release();
+	//	MFShutdown(); // Media Foundation 종료
+	//	return hr;
+	//}
+
+	//// 비디오 프레임 속성 설정
+	//IMFMediaType* pOutputType = nullptr;
+	//hr = MFCreateMediaType(&pOutputType);
+	//if (FAILED(hr)) 
+	//{
+	//	m_pMediaType->Release();
+	//	m_pSourceReader->Release();
+	//	MFShutdown(); // Media Foundation 종료
+	//	return hr;
+	//}
+
+	//hr = pOutputType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
+	//if (FAILED(hr)) 
+	//{
+	//	pOutputType->Release();
+	//	m_pMediaType->Release();
+	//	m_pSourceReader->Release();
+	//	MFShutdown(); // Media Foundation 종료
+	//	return hr;
+	//}
+
+	//hr = pOutputType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32);
+	//if (FAILED(hr)) 
+	//{
+	//	pOutputType->Release();
+	//	m_pMediaType->Release();
+	//	m_pSourceReader->Release();
+	//	MFShutdown(); // Media Foundation 종료
+	//	return hr;
+	//}
+
+	//hr = m_pSourceReader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, nullptr, pOutputType);
+	//if (FAILED(hr)) 
+	//{
+	//	pOutputType->Release();
+	//	m_pMediaType->Release();
+	//	m_pSourceReader->Release();
+	//	MFShutdown(); // Media Foundation 종료
+	//	return hr;
+	//}
+
+	//pOutputType->Release();
+
+	//// 프레임 읽기
+	//DWORD dwStreamIndex, dwFlags;
+	//LONGLONG llTimestamp;
+	//IMFSample* pSample = nullptr;
+	//IMFMediaBuffer* pBuffer = nullptr;
+
+	//// 첫 번째 동영상의 프레임 읽기
+	//// 첫 번째 동영상에서 프레임을 읽어 4개의 매개변수에 정보들을 담아준다. (pSample에 해당 프레임 데이터를 담아주고, 이 데이터를 추출 해 텍스처로 변환한 후 랜더 시켜서 동영상을 보여준다.)
+	//hr = m_pSourceReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, &dwStreamIndex, &dwFlags, &llTimestamp, &pSample);
+	//if (FAILED(hr)) return hr;
+
+	//// 프레임 끝 검사
+	//if (dwFlags & MF_SOURCE_READERF_ENDOFSTREAM) 
+	//{
+	//	// 더 이상 프레임이 없음
+	//	pSample->Release();
+	//	return S_FALSE;
+	//}
+
+	//if (pSample == nullptr) 
+	//{
+	//	// 프레임이 없음
+	//	return S_FALSE;
+	//}
+
+	//hr = pSample->ConvertToContiguousBuffer(&pBuffer);
+	//if (FAILED(hr)) 
+	//{
+	//	pSample->Release();
+	//	return hr;
+	//}
+
+	//// 프레임의 이미지 데이터 가져오기
+	//BYTE* pFrameData = nullptr;
+	//DWORD cbMaxLength, cbCurrentLength;
+	//hr = pBuffer->Lock(&pFrameData, &cbMaxLength, &cbCurrentLength);
+	//if (FAILED(hr)) 
+	//{
+	//	pBuffer->Release();
+	//	pSample->Release();
+	//	return hr;
+	//}
+
+	//// 프레임의 너비와 높이 가져오기
+	//UINT32 width, height;
+	//hr = MFGetAttributeSize(m_pMediaType, MF_MT_FRAME_SIZE, &width, &height);
+	//if (FAILED(hr)) 
+	//{
+	//	pBuffer->Unlock();
+	//	pBuffer->Release();
+	//	pSample->Release();
+	//	return hr;
+	//}
+
+
+	//ID3D11ShaderResourceView* pShaderResourceView = nullptr;
+
+	//// ShaderResourceView로 프레임 데이터 복사
+	//hr = CUI_Video::CreateShaderResourceViewFromVideoFrame(
+	//														m_pDevice,
+	//														m_pContext,
+	//														pFrameData,
+	//														width,
+	//														height,
+	//														&pShaderResourceView);
+
+	//// 셰이더로 던져주자
+	//m_pShaderCom->Bind_SRV("g_Video_Texture", pShaderResourceView);
+
+	////// 텍스처로 프레임 데이터 복사
+	////hr = CopyVideoFrameToTexture(m_pContext, pFrameData, width, height, m_pTextureVideo);
+	////if (FAILED(hr)) 
+	////{
+	////	pBuffer->Unlock();
+	////	pBuffer->Release();
+	////	pSample->Release();
+	////	return hr;
+	////}
+
+	//pBuffer->Unlock();
+	//pBuffer->Release();
+	//pSample->Release();
+
+	return S_OK;
+}
+
+HRESULT CUI_Video::CopyVideoFrameToTexture(ID3D11DeviceContext* pContext, BYTE* pFrameData, UINT32 width, UINT32 height, ID3D11Texture2D* pTexture)
+{
+	HRESULT hr = S_OK;
+
+	// 텍스처 매핑 및 프레임 데이터 복사
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	hr = pContext->Map(pTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(hr))
+		return hr;
+
+	BYTE* pTextureData = reinterpret_cast<BYTE*>(mappedResource.pData);
+	UINT32 rowPitch = width * 4; // RGBA 형식이므로 너비 * 4
+
+	for (UINT32 y = 0; y < height; ++y) 
+	{
+		memcpy(pTextureData, pFrameData, rowPitch);
+		pTextureData += mappedResource.RowPitch; // 다음 행으로 이동
+		pFrameData += rowPitch; // 다음 행으로 이동
+	}
+
+	pContext->Unmap(pTexture, 0);
+
+	return S_OK;
+}
+
+HRESULT CUI_Video::CreateShaderResourceViewFromVideoFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, BYTE* pFrameData, UINT32 width, UINT32 height, ID3D11ShaderResourceView** ppShaderResourceView)
+{
+	//HRESULT hr = S_OK;
+
+	//// 텍스처 생성
+	//ID3D11Texture2D* pTexture = nullptr;
+	//D3D11_TEXTURE2D_DESC desc;
+	//desc.Width = width;
+	//desc.Height = height;
+	//desc.MipLevels = 1;
+	//desc.ArraySize = 1;
+	//desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // RGBA 형식
+	//desc.SampleDesc.Count = 1;
+	//desc.SampleDesc.Quality = 0;
+	//desc.Usage = D3D11_USAGE_DEFAULT;
+	//desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	//desc.CPUAccessFlags = 0;
+	//desc.MiscFlags = 0;
+
+	//hr = pDevice->CreateTexture2D(&desc, nullptr, &pTexture);
+	//if (FAILED(hr))
+	//	return hr;
+
+	//// 텍스처 매핑 및 프레임 데이터 복사
+	//D3D11_MAPPED_SUBRESOURCE mappedResource;
+	//hr = pContext->Map(pTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	//if (FAILED(hr))
+	//{
+	//	pTexture->Release();
+	//	return hr;
+	//}
+
+	//BYTE* pTextureData = reinterpret_cast<BYTE*>(mappedResource.pData);
+	//UINT32 rowPitch = width * 4; // RGBA 형식이므로 너비 * 4
+
+	//for (UINT32 y = 0; y < height; ++y)
+	//{
+	//	memcpy(pTextureData, pFrameData, rowPitch);
+	//	pTextureData += mappedResource.RowPitch; // 다음 행으로 이동
+	//	pFrameData += rowPitch; // 다음 행으로 이동
+	//}
+
+	//pContext->Unmap(pTexture, 0);
+
+	//// SRV 생성
+	//D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	//ZeroMemory(&srvDesc, sizeof(srvDesc));
+	//srvDesc.Format = desc.Format;
+	//srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	//srvDesc.Texture2D.MipLevels = desc.MipLevels;
+
+	//ID3D11ShaderResourceView* pShaderResourceView = nullptr;
+	//hr = pDevice->CreateShaderResourceView(pTexture, &srvDesc, &pShaderResourceView);
+	//if (FAILED(hr))
+	//{
+	//	pTexture->Release();
+	//	return hr;
+	//}
+
+	//pTexture->Release(); // SRV 생성 후 텍스처는 더 이상 필요하지 않으므로 해제
+
+	//*ppShaderResourceView = pShaderResourceView;
+
+	return S_OK;
+}
+
+// 동영상을 프레임 단위로 변환하여 던져준다.
+HRESULT CUI_Video::ReadVideoFrame()
+{
+	//if (m_pSourceReader == nullptr)
+	//	return E_FAIL;
+
+	//HRESULT hr = S_OK;
+
+	//	// 프레임 읽기
+	//DWORD dwStreamIndex, dwFlags;
+	//LONGLONG llTimestamp;
+	//IMFSample* pSample = nullptr;
+	//IMFMediaBuffer* pBuffer = nullptr;
+
+	//// 첫 번째 동영상의 프레임 읽기
+	//// 첫 번째 동영상에서 프레임을 읽어 4개의 매개변수에 정보들을 담아준다. (pSample에 해당 프레임 데이터를 담아주고, 이 데이터를 추출 해 텍스처로 변환한 후 랜더 시켜서 동영상을 보여준다.)
+	//if(m_pSourceReader != nullptr)
+	//	hr = m_pSourceReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, &dwStreamIndex, &dwFlags, &llTimestamp, &pSample);
+
+	//if (FAILED(hr)) return hr;
+
+	//// 프레임 끝 검사
+	//if (dwFlags & MF_SOURCE_READERF_ENDOFSTREAM) 
+	//{
+	//	// 더 이상 프레임이 없음
+	//	pSample->Release();
+	//	return S_FALSE;
+	//}
+
+	//if (pSample == nullptr) 
+	//{
+	//	// 프레임이 없음
+	//	return S_FALSE;
+	//}
+
+	//hr = pSample->ConvertToContiguousBuffer(&pBuffer);
+	//if (FAILED(hr)) 
+	//{
+	//	pSample->Release();
+	//	return hr;
+	//}
+
+	//// 프레임의 이미지 데이터 가져오기
+	//BYTE* pFrameData = nullptr;
+	//DWORD cbMaxLength, cbCurrentLength;
+	//hr = pBuffer->Lock(&pFrameData, &cbMaxLength, &cbCurrentLength);
+	//if (FAILED(hr)) 
+	//{
+	//	pBuffer->Release();
+	//	pSample->Release();
+	//	return hr;
+	//}
+
+	//// 프레임의 너비와 높이 가져오기
+	//UINT32 width, height;
+	//hr = MFGetAttributeSize(m_pMediaType, MF_MT_FRAME_SIZE, &width, &height);
+	//if (FAILED(hr)) 
+	//{
+	//	pBuffer->Unlock();
+	//	pBuffer->Release();
+	//	pSample->Release();
+	//	return hr;
+	//}
+
+
+	//ID3D11ShaderResourceView* pShaderResourceView = nullptr;
+
+	//// ShaderResourceView로 프레임 데이터 복사
+	//hr = CUI_Video::CreateShaderResourceViewFromVideoFrame(
+	//														m_pDevice,
+	//														m_pContext,
+	//														pFrameData,
+	//														width,
+	//														height,
+	//														&pShaderResourceView);
+
+	//// 셰이더로 던져주자
+	//m_pShaderCom->Bind_SRV("g_Video_Texture", pShaderResourceView);
+
+	////// 텍스처로 프레임 데이터 복사
+	////hr = CopyVideoFrameToTexture(m_pContext, pFrameData, width, height, m_pTextureVideo);
+	////if (FAILED(hr)) 
+	////{
+	////	pBuffer->Unlock();
+	////	pBuffer->Release();
+	////	pSample->Release();
+	////	return hr;
+	////}
+
+	//pBuffer->Unlock();
+	//pBuffer->Release();
+	//pSample->Release();
+
+	return S_OK;
+}
+
+HRESULT CUI_Video::CreateVideoTexture(ID3D11Device* pDevice, UINT32 width, UINT32 height, ID3D11Texture2D** ppTexture, ID3D11ShaderResourceView** ppTextureView)
+{
+	HRESULT hr = S_OK;
+
+	// 텍스처 생성
+	D3D11_TEXTURE2D_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+	desc.Width = width;
+	desc.Height = height;
+	desc.ArraySize = 1;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	desc.SampleDesc.Count = 1;
+
+	hr = pDevice->CreateTexture2D(&desc, nullptr, ppTexture);
+	if (FAILED(hr)) return hr;
+
+	// 텍스처 리소스 뷰 생성
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	ZeroMemory(&srvDesc, sizeof(srvDesc));
+	srvDesc.Format = desc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	hr = pDevice->CreateShaderResourceView(*ppTexture, &srvDesc, ppTextureView);
+	if (FAILED(hr)) {
+		(*ppTexture)->Release();
+		return hr;
+	}
+
+	return S_OK;
+}
+
+HRESULT CUI_Video::ConvertVideoFrameToTexture(ID3D11DeviceContext* pContext, BYTE* pFrameData, UINT32 width, UINT32 height, ID3D11Texture2D* pTexture)
+{
+	HRESULT hr = S_OK;
+
+	// 텍스처에 프레임 데이터 복사
+	hr = CopyVideoFrameToTexture(pContext, pFrameData, width, height, pTexture);
+	if (FAILED(hr)) return hr;
 
 	return S_OK;
 }

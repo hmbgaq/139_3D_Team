@@ -243,8 +243,8 @@ public:
 	/* Distortion */
 	_float m_fSequenceTerm_Distortion = { 1.f };
 
-	_float	m_vScrollSpeeds[3] = { 1.f, 1.f, 0.f };
-	_float	m_vScales_Distortion[3] = { 1.f, 1.f, 1.f };
+	_float	m_vScrollSpeeds[3] = { 0.f, 0.f, 0.f };
+	_float	m_vScales_Distortion[3] = { 0.f, 0.f, 0.f };
 
 	_float	m_vDistortion1[2] = { 0.1f, 0.1f };
 	_float	m_vDistortion2[2] = { 0.0f, 0.0f };
@@ -487,7 +487,8 @@ private:
 		"EnemyHP_Bar",
 		"EnemyHP_Shard",
 		"EnemyState_Shard",
-		"EnemyFrame_Shard"
+		"EnemyFrame_Shard",
+		"Video"
 	};
 
 	// 클래스 목록을 저장하는 벡터

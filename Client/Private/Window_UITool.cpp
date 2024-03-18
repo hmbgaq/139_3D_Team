@@ -11,6 +11,7 @@
 #include "UI_Text.h"
 #include "Easing_Utillity.h"
 #include "UI_Manager.h"
+#include "UI_Distortion.h"
 
 /* error 외부참조 기호 : define 걸어줘야함 */
 #define STB_IMAGE_IMPLEMENTATION
@@ -2510,10 +2511,12 @@ void CWindow_UITool::AnimationTimeLineBar(_float fTimeDelta)
 
 	if (m_pCurrSelectUI)
 	{
-		char* Test = "Select UI : ";
+		char* Test = "Select Keyframe %d", closestKeyframeIndex;
 		strcmp(Test, m_pCurrSelectUI->Get_UIDesc().strObjectName.c_str());
 
-		ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f }, Test);
+		ImGui::TextColored({ 255.f, 255.f, 255.f, 255.f }, Test);
+
+		//ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f, }, u8"현재 선택 : 키프레임%d", closestKeyframeIndex);
 	}
 	// 애니메이션 타임 라인 그리기
 	draw_list->AddRectFilled(
@@ -2932,7 +2935,7 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	ImGui::Begin(u8"선택한 키프레임 속성 편집");
 
 	//Keyframe& selectedKeyframe = timeline.back();
-	ImGui::Text(u8"현재 선택 : 키프레임%d", closestKeyframeIndex);
+	ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f, }, u8"현재 선택 : 키프레임%d", closestKeyframeIndex);
 
 	ImGuiStyle& style = ImGui::GetStyle(); // 스타일 불러오기
 	float originalItemWidth = style.ItemInnerSpacing.x; // 원래의 ItemInnerSpacing 값을 저장
@@ -2990,10 +2993,16 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	// 벨류 입력 필드의 가로 길이를 조절 (ex : 40 픽셀)
 	ImGui::PushItemWidth(40);
 	// 벨류 입력 필드
-	ImGui::DragFloat(u8"벨류", &selectedKeyframe.fValue, fMin_Value, fMax_Value);
+	if (ImGui::DragFloat(u8"벨류", &selectedKeyframe.fValue, fMin_Value, fMax_Value))
+	{
+
+	}
 	ImGui::PopItemWidth();
 
-	ImGui::DragFloat(u8"알파", &selectedKeyframe.fAlpha);
+	if (ImGui::DragFloat(u8"알파", &selectedKeyframe.fAlpha))
+	{
+
+	}
 
 	//ImGui::SameLine(); // 같은 라인
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
@@ -3001,7 +3010,10 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	// 텍스처 입력 필드의 가로 길이를 조절 (ex : 40 픽셀)
 	ImGui::PushItemWidth(80);
 	//ImGui::Text("%d", selectedKeyframe.texureframe);
-	ImGui::InputInt(u8"텍스처 번호", &selectedKeyframe.iTexureframe);
+	if (ImGui::InputInt(u8"텍스처 번호", &selectedKeyframe.iTexureframe))
+	{
+
+	}
 	ImGui::PopItemWidth();
 
 	// 원래의 ItemInnerSpacing 값으로 복원
@@ -3011,10 +3023,13 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	// 애니메이션 타입 설정
 	ImGui::SeparatorText(u8"애니메이션 타입 설정");
 	ImGui::RadioButton(u8"크기", &selectedKeyframe.iType, 0); // 크기 애니메이션
+
 	ImGui::SameLine();
 	ImGui::RadioButton(u8"회전", &selectedKeyframe.iType, 1); // 회전 애니메이션
+
 	ImGui::SameLine();
 	ImGui::RadioButton(u8"이동", &selectedKeyframe.iType, 2); // 이동 애니메이션
+
 
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
 
@@ -3073,6 +3088,96 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 		selectedKeyframe.vPos.y = ImClamp(selectedKeyframe.vPos.y, fMin_Pos, fMax_Pos); // Y 값의 범위 제한
 	}
 	style.ItemInnerSpacing.x = originalItemWidth;// 원래의 ItemInnerSpacing 값으로 복원
+
+#pragma region 디스토션
+	if (ImGui::Button("Test Button"))
+		dynamic_cast<CUI_Distortion*>(m_pCurrSelectUI)->Set_Restore(true);
+
+
+
+	if (ImGui::DragFloat("Distortion_Term", &selectedKeyframe.fSequenceTerm)) // UV좌표 조절
+	{
+		//m_pCurrSelectUI->Set_SequenceTerm(m_fSequenceTerm_Distortion);
+	}
+
+	_float fScrollSpeeds[3];
+	fScrollSpeeds[0] = selectedKeyframe.vScrollSpeeds.x;
+	fScrollSpeeds[1] = selectedKeyframe.vScrollSpeeds.y;
+	fScrollSpeeds[2] = selectedKeyframe.vScrollSpeeds.z;
+
+	if (ImGui::DragFloat3("ScrollSpeeds", fScrollSpeeds))
+	{
+		_float3 vScrollSpeeds = { 0.f, 0.f, 0.f };
+		selectedKeyframe.vScrollSpeeds.x = fScrollSpeeds[0];
+		selectedKeyframe.vScrollSpeeds.y = fScrollSpeeds[1];
+		selectedKeyframe.vScrollSpeeds.z = fScrollSpeeds[2];
+		//vScrollSpeeds.y = m_vScrollSpeeds[1];
+		//vScrollSpeeds.z = m_vScrollSpeeds[2];
+
+		//m_pCurrSelectUI->Set_ScrollSpeeds(vScrollSpeeds);
+	}
+
+	_float fScales_Distortion[3];
+	fScales_Distortion[0] = selectedKeyframe.vScales.x;
+	fScales_Distortion[1] = selectedKeyframe.vScales.y;
+	fScales_Distortion[2] = selectedKeyframe.vScales.z;
+	if (ImGui::DragFloat3("Distortion_Scales", fScales_Distortion))
+	{
+		_float3 vScales_Distortion = { 0.f, 0.f, 0.f };
+		selectedKeyframe.vScales.x = fScales_Distortion[0];
+		selectedKeyframe.vScales.y = fScales_Distortion[1];
+		selectedKeyframe.vScales.z = fScales_Distortion[2];
+		//vScales_Distortion.y = m_vScales_Distortion[1];
+		//vScales_Distortion.z = m_vScales_Distortion[2];
+
+		//m_pCurrSelectUI->Set_DistortionScales(vScales_Distortion);
+	}
+
+	_float fDistortion1[3];
+	fDistortion1[0] = selectedKeyframe.vDistortion1.x;
+	fDistortion1[1] = selectedKeyframe.vDistortion1.y;
+	if (ImGui::DragFloat2("Distortion1", fDistortion1))
+	{
+		//_float2 vDistortion1 = { 0.f, 0.f };
+		selectedKeyframe.vDistortion1.x = fDistortion1[0];
+		selectedKeyframe.vDistortion1.y = fDistortion1[1];
+
+		//m_pCurrSelectUI->Set_Distortion1(vDistortion1);
+	}
+
+	_float fDistortion2[3];
+	fDistortion2[0] = selectedKeyframe.vDistortion2.x;
+	fDistortion2[1] = selectedKeyframe.vDistortion2.y;
+	if (ImGui::DragFloat2("Distortion2", fDistortion2))
+	{
+		//_float2 vDistortion2 = { 0.f, 0.f };
+		selectedKeyframe.vDistortion2.x = fDistortion2[0];
+		selectedKeyframe.vDistortion2.y = fDistortion2[1];
+
+		//m_pCurrSelectUI->Set_Distortion2(vDistortion2);
+	}
+
+	_float fDistortion3[3];
+	fDistortion3[0] = selectedKeyframe.vDistortion3.x;
+	fDistortion3[1] = selectedKeyframe.vDistortion3.y;
+	if (ImGui::DragFloat2("Distortion3", fDistortion3))
+	{
+		//_float2 vDistortion3 = { 0.f, 0.f };
+		selectedKeyframe.vDistortion3.x = fDistortion3[0];
+		selectedKeyframe.vDistortion3.y = fDistortion3[1];
+
+		//m_pCurrSelectUI->Set_Distortion3(vDistortion3);
+	}
+	if (ImGui::DragFloat("Distortion_Scale", &selectedKeyframe.fDistortionScale))
+	{
+		selectedKeyframe.fDistortionScale = selectedKeyframe.fDistortionScale;
+		//m_pCurrSelectUI->Set_DistortionScale(m_fDistortionScale);
+	}
+	if (ImGui::DragFloat("DistortionBias", &selectedKeyframe.fDistortionBias))
+	{
+		selectedKeyframe.fDistortionBias = selectedKeyframe.fDistortionBias;
+		//m_pCurrSelectUI->Set_DistortionBias(m_fDistortionBias);
+	}
 
 #pragma region 설정
 
@@ -3255,16 +3360,21 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 	// 선택한 UI가 Distortion이 있는 UI일 경우
 	if (m_pCurrSelectUI->Get_DistortionUI())
 	{
-		if (ImGui::DragFloat("Distortion_Term", &m_fSequenceTerm_Distortion, 1.f, 0.f)) // UV좌표 조절
+		if (ImGui::Button("Test Button"))
+			dynamic_cast<CUI_Distortion*>(m_pCurrSelectUI)->Set_Restore(true);
+
+		if (ImGui::DragFloat("Distortion_Term", &m_fSequenceTerm_Distortion)) // UV좌표 조절
 		{
 			m_pCurrSelectUI->Set_SequenceTerm(m_fSequenceTerm_Distortion);
 		}
-		if (ImGui::DragFloat3("ScrollSpeeds", m_vScrollSpeeds, 1.f, 0.f))
+		if (ImGui::DragFloat3("ScrollSpeeds", m_vScrollSpeeds))
 		{
 			_float3 vScrollSpeeds = { 0.f, 0.f, 0.f };
 			vScrollSpeeds.x = m_vScrollSpeeds[0];
 			vScrollSpeeds.y = m_vScrollSpeeds[1];
 			vScrollSpeeds.z = m_vScrollSpeeds[2];
+			//vScrollSpeeds.y = m_vScrollSpeeds[1];
+			//vScrollSpeeds.z = m_vScrollSpeeds[2];
 
 			m_pCurrSelectUI->Set_ScrollSpeeds(vScrollSpeeds);
 		}
@@ -3274,10 +3384,12 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 			vScales_Distortion.x = m_vScales_Distortion[0];
 			vScales_Distortion.y = m_vScales_Distortion[1];
 			vScales_Distortion.z = m_vScales_Distortion[2];
+			//vScales_Distortion.y = m_vScales_Distortion[1];
+			//vScales_Distortion.z = m_vScales_Distortion[2];
 
 			m_pCurrSelectUI->Set_DistortionScales(vScales_Distortion);
 		}
-		if (ImGui::DragFloat2("Distortion1", m_vDistortion1, 1.f, 0.f))
+		if (ImGui::DragFloat2("Distortion1", m_vDistortion1))
 		{
 			_float2 vDistortion1 = { 0.f, 0.f };
 			vDistortion1.x = m_vDistortion1[0];
@@ -3285,7 +3397,7 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 
 			m_pCurrSelectUI->Set_Distortion1(vDistortion1);
 		}
-		if (ImGui::DragFloat2("Distortion2", m_vDistortion2, 1.f, 0.f))
+		if (ImGui::DragFloat2("Distortion2", m_vDistortion2))
 		{
 			_float2 vDistortion2 = { 0.f, 0.f };
 			vDistortion2.x = m_vDistortion2[0];
@@ -3293,7 +3405,7 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 
 			m_pCurrSelectUI->Set_Distortion2(vDistortion2);
 		}
-		if (ImGui::DragFloat2("Distortion3", m_vDistortion3, 1.f, 0.f))
+		if (ImGui::DragFloat2("Distortion3", m_vDistortion3))
 		{
 			_float2 vDistortion3 = { 0.f, 0.f };
 			vDistortion3.x = m_vDistortion3[0];
@@ -3301,11 +3413,11 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 
 			m_pCurrSelectUI->Set_Distortion3(vDistortion3);
 		}
-		if (ImGui::DragFloat("Distortion_Scale", &m_fDistortionScale, 1.f, 0.f))
+		if (ImGui::DragFloat("Distortion_Scale", &m_fDistortionScale))
 		{
 			m_pCurrSelectUI->Set_DistortionScale(m_fDistortionScale);
 		}
-		if (ImGui::DragFloat("DistortionBias", &m_fDistortionBias, 1.f, 0.f))
+		if (ImGui::DragFloat("DistortionBias", &m_fDistortionBias))
 		{
 			m_pCurrSelectUI->Set_DistortionBias(m_fDistortionBias);
 		}

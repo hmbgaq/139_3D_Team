@@ -975,6 +975,56 @@ void CUI::Play_Animation(_float fTimeDelta)
 				fAlpha_Delta = m_vecAnimation[iFrameIndex + 1U].fAlpha - m_vecAnimation[iFrameIndex].fAlpha;
 				fAlpha_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
 
+				/* Distortion */
+				/* TimeAcc */
+				fTimeAcc_Delta = m_vecAnimation[iFrameIndex + 1U].fTimeAcc - m_vecAnimation[iFrameIndex].fTimeAcc;
+				fTimeAcc_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				m_tUIInfo.tKeyframe.fTimeAcc = m_vecAnimation[iFrameIndex].fTimeAcc + fTimeAcc_Delta;
+				/* SequenceTerm */
+				fSequenceTerm_Delta = m_vecAnimation[iFrameIndex + 1U].fSequenceTerm - m_vecAnimation[iFrameIndex].fSequenceTerm;
+				fSequenceTerm_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				m_tUIInfo.tKeyframe.fSequenceTerm = m_vecAnimation[iFrameIndex].fSequenceTerm + fSequenceTerm_Delta;
+				/* ScrollSpeeds */
+				vScrollSpeeds_Delta = m_vecAnimation[iFrameIndex + 1U].vScrollSpeeds - m_vecAnimation[iFrameIndex].vScrollSpeeds;
+				vScrollSpeeds_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				m_tUIInfo.tKeyframe.vScrollSpeeds = m_vecAnimation[iFrameIndex].vScrollSpeeds + vScrollSpeeds_Delta;
+				/* Scales */
+				vScales_Delta = m_vecAnimation[iFrameIndex + 1U].vScales - m_vecAnimation[iFrameIndex].vScales;
+				vScales_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				m_tUIInfo.tKeyframe.vScales = m_vecAnimation[iFrameIndex].vScales + vScales_Delta;
+				/* Distortion1X */
+				vDistortion1_Delta.x = m_vecAnimation[iFrameIndex + 1U].vDistortion1.x - m_vecAnimation[iFrameIndex].vDistortion1.x;
+				vDistortion1_Delta.x *= fCurFrameTimeDelta / fFrameTimeDelta;
+				m_tUIInfo.tKeyframe.vDistortion1.x = m_vecAnimation[iFrameIndex].vDistortion1.x + vDistortion1_Delta.x;
+				/* Distortion1Y */
+				vDistortion1_Delta.y = m_vecAnimation[iFrameIndex + 1U].vDistortion1.y - m_vecAnimation[iFrameIndex].vDistortion1.y;
+				vDistortion1_Delta.y *= fCurFrameTimeDelta / fFrameTimeDelta;
+				m_tUIInfo.tKeyframe.vDistortion1.y = m_vecAnimation[iFrameIndex].vDistortion1.y + vDistortion1_Delta.y;
+				/* Distortion2X */
+				vDistortion2_Delta.x = m_vecAnimation[iFrameIndex + 1U].vDistortion2.x - m_vecAnimation[iFrameIndex].vDistortion2.x;
+				vDistortion2_Delta.x *= fCurFrameTimeDelta / fFrameTimeDelta;
+				m_tUIInfo.tKeyframe.vDistortion2.x = m_vecAnimation[iFrameIndex].vDistortion2.x + vDistortion2_Delta.x;
+				/* Distortion2Y */
+				vDistortion2_Delta.y = m_vecAnimation[iFrameIndex + 1U].vDistortion2.y - m_vecAnimation[iFrameIndex].vDistortion2.y;
+				vDistortion2_Delta.y *= fCurFrameTimeDelta / fFrameTimeDelta;
+				m_tUIInfo.tKeyframe.vDistortion2.y = m_vecAnimation[iFrameIndex].vDistortion2.y + vDistortion2_Delta.y;
+				/* Distortion3X */
+				vDistortion3_Delta.x = m_vecAnimation[iFrameIndex + 1U].vDistortion3.x - m_vecAnimation[iFrameIndex].vDistortion3.x;
+				vDistortion3_Delta.x *= fCurFrameTimeDelta / fFrameTimeDelta;
+				m_tUIInfo.tKeyframe.vDistortion3.x = m_vecAnimation[iFrameIndex].vDistortion3.x + vDistortion3_Delta.x;
+				/* Distortion3Y */
+				vDistortion3_Delta.y = m_vecAnimation[iFrameIndex + 1U].vDistortion3.y - m_vecAnimation[iFrameIndex].vDistortion3.y;
+				vDistortion3_Delta.y *= fCurFrameTimeDelta / fFrameTimeDelta;
+				m_tUIInfo.tKeyframe.vDistortion3.y = m_vecAnimation[iFrameIndex].vDistortion3.y + vDistortion3_Delta.y;
+				/* Scale */
+				fDistortionScale_Delta = m_vecAnimation[iFrameIndex + 1U].fDistortionScale - m_vecAnimation[iFrameIndex].fDistortionScale;
+				fDistortionScale_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				m_tUIInfo.tKeyframe.fDistortionScale = m_vecAnimation[iFrameIndex].fDistortionScale + fDistortionScale_Delta;
+				/* Bias */
+				fDistortionBias_Delta = m_vecAnimation[iFrameIndex + 1U].fDistortionBias - m_vecAnimation[iFrameIndex].fDistortionBias;
+				fDistortionBias_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				m_tUIInfo.tKeyframe.fDistortionBias = m_vecAnimation[iFrameIndex].fDistortionBias + fDistortionBias_Delta;
+
 				/* 포지션 보간 */
 				m_pTransformCom->Set_Position({ m_vecAnimation[iFrameIndex].vPos.x + fPosX_Delta,
 											m_vecAnimation[iFrameIndex].vPos.y + fPosY_Delta,
@@ -1006,7 +1056,12 @@ void CUI::Play_Animation(_float fTimeDelta)
 				{
 					m_bTrigger = true;
 				}
-				
+				/* Trigger */
+				if (m_vecAnimation[iFrameIndex].bRestore == true)
+				{
+					m_bRestore = true;
+				}
+
 				/* 텍스처 */
 				m_iTextureNum = m_vecAnimation[iFrameIndex].iTexureframe;
 
@@ -1023,6 +1078,32 @@ void CUI::Play_Animation(_float fTimeDelta)
 
 				/* 알파 보간 */
 				//m_tUIInfo.fAlpha = m_vecAnimation[iFrameIndex].fAlpha;
+
+								/* Distortion */
+				m_tUIInfo.tKeyframe.fTimeAcc = m_vecAnimation[iFrameIndex].fTimeAcc;
+
+				m_tUIInfo.tKeyframe.fSequenceTerm = m_vecAnimation[iFrameIndex].fSequenceTerm;
+
+				m_tUIInfo.tKeyframe.vScrollSpeeds = m_vecAnimation[iFrameIndex].vScrollSpeeds;
+
+				m_tUIInfo.tKeyframe.vScales = m_vecAnimation[iFrameIndex].vScales;
+
+				m_tUIInfo.tKeyframe.vDistortion1.x = m_vecAnimation[iFrameIndex].vDistortion1.x;
+
+				m_tUIInfo.tKeyframe.vDistortion1.y = m_vecAnimation[iFrameIndex].vDistortion1.y;
+
+				m_tUIInfo.tKeyframe.vDistortion2.x = m_vecAnimation[iFrameIndex].vDistortion2.x;
+
+				m_tUIInfo.tKeyframe.vDistortion2.y = m_vecAnimation[iFrameIndex].vDistortion2.y;
+
+				m_tUIInfo.tKeyframe.vDistortion3.x = m_vecAnimation[iFrameIndex].vDistortion3.x;
+
+				m_tUIInfo.tKeyframe.vDistortion3.y = m_vecAnimation[iFrameIndex].vDistortion3.y;
+
+				m_tUIInfo.tKeyframe.fDistortionScale = m_vecAnimation[iFrameIndex].fDistortionScale;
+
+				m_tUIInfo.tKeyframe.fDistortionBias = m_vecAnimation[iFrameIndex].fDistortionBias;
+
 
 				/* Disappear */
 				if (m_vecAnimation[iFrameIndex].bDisappear == true)

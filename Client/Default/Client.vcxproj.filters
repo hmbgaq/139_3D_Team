@@ -1114,9 +1114,6 @@
     <Filter Include="02.GameObjects\UI\02. System\06. Option">
       <UniqueIdentifier>{e650d872-16b1-4e5a-b066-c065efe79803}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\02. System\06. Option\SelectBox">
-      <UniqueIdentifier>{bf05b6e6-c273-40c0-bee4-eb2b8c3d8866}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\02. System\04. Cursor\00. AimCrosshair">
       <UniqueIdentifier>{ac7ceea2-842e-4d3b-a44c-3d48c4a52487}</UniqueIdentifier>
     </Filter>
@@ -3061,6 +3058,30 @@
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object">
       <UniqueIdentifier>{054c2e5b-1f7a-4054-9c31-2bfcbf1230ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow">
+      <UniqueIdentifier>{bf05b6e6-c273-40c0-bee4-eb2b8c3d8866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button">
+      <UniqueIdentifier>{c190eec0-4c07-4848-94f9-720b6179c1b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\0. SelectBox">
+      <UniqueIdentifier>{b935f1ea-8c8b-413d-9f05-8e6134566d99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow">
+      <UniqueIdentifier>{282e2ed5-9d89-48b5-a262-7d6ca0c33e38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\03. CollectionWindow">
+      <UniqueIdentifier>{40fe2775-6ef0-477e-b40f-d92af3d913f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\99. Background">
+      <UniqueIdentifier>{2f928b10-3a53-4ae8-89af-264499fde245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\0. Button">
+      <UniqueIdentifier>{58a8a07c-7a12-4c50-81ea-72c8e472342f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\0. Button\0. SelectBox">
+      <UniqueIdentifier>{3c259b30-8ade-415f-a8a2-f5c586e20a64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -4398,9 +4419,6 @@
     <ClInclude Include="..\Public\UI_Option_Window.h">
       <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UI_Option_SelectBox.h">
-      <Filter>02.GameObjects\UI\02. System\06. Option\SelectBox</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UI_AimCrosshair.h">
       <Filter>02.GameObjects\UI\02. System\04. Cursor\00. AimCrosshair</Filter>
     </ClInclude>
@@ -5574,12 +5592,6 @@
     <ClInclude Include="..\Public\Infected_Scared_02.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\4. Scared\Right</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\2. Normal\Stun</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\3. Heavy\Stun</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Infected_B.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B</Filter>
     </ClInclude>
@@ -6170,6 +6182,23 @@
     </ClInclude>
     <ClInclude Include="..\Public\ShaderParsed_Object.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h" />
+    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h" />
+    <ClInclude Include="..\Public\UI_Obtain_Button.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Skill_Button.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Option_Button.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Option_SelectBox.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\0. SelectBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Collection_Button.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\0. Button</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -7831,9 +7860,6 @@
     <ClCompile Include="..\Private\UI_Option_Window.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UI_Option_SelectBox.cpp">
-      <Filter>02.GameObjects\UI\02. System\06. Option\SelectBox</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UI_AimCrosshair.cpp">
       <Filter>02.GameObjects\UI\02. System\04. Cursor\00. AimCrosshair</Filter>
     </ClCompile>
@@ -8727,6 +8753,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\ShaderParsed_Object.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Obtain_Button.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Skill_Button.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Option_Button.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Option_SelectBox.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\0. SelectBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Collection_Button.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\0. Button</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
