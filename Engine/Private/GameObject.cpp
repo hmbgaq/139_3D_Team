@@ -285,7 +285,6 @@ void CGameObject::Free()
 		Pair.second->Set_Enable(false);
 		Safe_Release(Pair.second);
 	}
-		
 
 	m_Components.clear();
 

@@ -18,6 +18,9 @@ void CVampireCommander_Melee2::Initialize(CVampireCommander* pActor)
 
 	CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
 	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ATTACK);
+
+	pActor->m_bLookAt = false;
+
 }
 
 CState<CVampireCommander>* CVampireCommander_Melee2::Update(CVampireCommander* pActor, _float fTimeDelta)
@@ -25,7 +28,7 @@ CState<CVampireCommander>* CVampireCommander_Melee2::Update(CVampireCommander* p
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 	if (m_bFlags[1] == false)
 	{
-		pActor->m_bLookAt = true;
+		//pActor->m_bLookAt = true;
 	}
 
 	if (pActor->Is_Inputable_Front(38))
@@ -53,4 +56,7 @@ void CVampireCommander_Melee2::Release(CVampireCommander* pActor)
 	__super::Release(pActor);
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 	pWeapon->Set_Enable(false);
+
+	pActor->m_bLookAt = true;
+
 }
