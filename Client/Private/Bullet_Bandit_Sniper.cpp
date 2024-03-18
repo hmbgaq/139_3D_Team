@@ -33,7 +33,7 @@ HRESULT CBullet_Bandit_Sniper::Initialize(void* pArg)
 	GameObjectDesc.fRotationPerSec = 0.f;
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc)); /* 컴포넌트 호출 */	
 
-	m_iDamage = 0;
+	m_fDamage = 0.f;
 	m_fLifeTime = 1.5f;	
 
 	return S_OK;

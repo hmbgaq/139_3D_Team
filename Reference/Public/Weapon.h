@@ -43,7 +43,7 @@ public:
 	CCharacter* Get_Target_Character(CCollider* other);
 	CCharacter* Get_PartOwner();
 
-	CWeapon* Set_Damage(_int _iDamage);
+	CWeapon* Set_Damage(_float _iDamage);
 	CWeapon* Set_Direction(Direction _eHitDirection);
 	CWeapon* Set_Power(Power _eHitPower);
 	CWeapon* Activate_Collisions(_bool _bActivate);
@@ -98,7 +98,7 @@ protected:
 	Power		m_eHitPower = { Power::Light };
 	_float		m_fStiffnessRate = { 1.f };
 
-	_uint		m_iDamage = { 0 };
+	_float		m_iDamage = { 0.f };
 	_float		m_fForce = { 0.f };
 	_float3		m_vDir = { 0.f, 0.f, 0.f };
 

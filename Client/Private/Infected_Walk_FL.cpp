@@ -9,7 +9,12 @@ void CInfected_Walk_FL::Initialize(CInfected* pActor)
 
 CState<CInfected>* CInfected_Walk_FL::Update(CInfected* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+	
+	return nullptr;
 }
 
 void CInfected_Walk_FL::Release(CInfected* pActor)

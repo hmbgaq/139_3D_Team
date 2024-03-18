@@ -49,6 +49,11 @@ void CInfected_C::Priority_Tick(_float fTimeDelta)
 void CInfected_C::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	//if (m_pActor)
+	//{
+	//	m_pActor->Update_State(fTimeDelta);
+	//}
 }
 
 void CInfected_C::Late_Tick(_float fTimeDelta)
@@ -65,7 +70,7 @@ HRESULT CInfected_C::Render()
 
 HRESULT CInfected_C::Update_RenderState(_int _iHP)
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 #pragma region Base Setting

@@ -230,7 +230,7 @@ HRESULT CLevel_IntroBoss::Ready_Shader()
 
     HDR_DESC Desc_HDR = {};
     Desc_HDR.bHDR_Active = true;
-    Desc_HDR.fmax_white = 0.539;
+    Desc_HDR.fmax_white = 0.539f;
 
     ANTI_DESC Desc_Anti = {};
     Desc_Anti.bFXAA_Active = true;

@@ -68,7 +68,6 @@ HRESULT CBody_Infected::Render()
 					m_pShaderCom->Begin(ECast(MONSTER_SHADER::INFECTED_PUNCH));
 
 					m_pModelCom->Render((_uint)i);
-
 				}
 				else
 					continue;
@@ -88,6 +87,7 @@ HRESULT CBody_Infected::Render()
 			}
 		}
 	}
+
 	return S_OK;
 }
 

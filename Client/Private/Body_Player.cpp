@@ -59,7 +59,7 @@ void CBody_Player::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_H))
 	{
 		iTemp += 1;
-		if (iTemp > m_pModelCom->Get_NumMeshes())
+		if (iTemp > (_int)m_pModelCom->Get_NumMeshes())
 		{
 			iTemp = 0;
 		}
@@ -97,7 +97,6 @@ HRESULT CBody_Player::Render()
 
 		m_pModelCom->Render((_uint)i);
 	}
-
 
 	return S_OK;
 }

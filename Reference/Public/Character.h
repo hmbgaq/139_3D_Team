@@ -114,7 +114,7 @@ public:
 	virtual void Set_Enable(_bool _Enable) override;
 
 public:
-	virtual Hit_Type Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee = false);
+	virtual Hit_Type Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee = false);
 
 	virtual void Hitted_Left(Power ePower) {};
 	virtual void Hitted_Right(Power ePower) {};
@@ -141,7 +141,7 @@ public:
 	CCharacter* Get_Target() { return m_pTarget; };
 	void Set_Target(CCharacter* pTarget) { m_pTarget = pTarget; };
 
-	void Get_Damaged(_uint iDamage) {m_iHp -= iDamage;}
+	void Get_Damaged(_float iDamage) {m_iHp -= iDamage;}
 public:
 	void Look_At_Target();
 	void Look_At_Target_Lerp(_float fTimeDelta);

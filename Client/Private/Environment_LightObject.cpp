@@ -483,20 +483,19 @@ void CEnvironment_LightObject::Free()
 	__super::Free();
 
 
-	if (false == m_tEnvironmentDesc.bPreview)
-	{
-		CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
-
-		if (pLight != nullptr)
-			m_pGameInstance->Remove_Light(m_tEnvironmentDesc.iLightIndex);
-	}
+	//if (false == m_tEnvironmentDesc.bPreview)
+	//{
+	//	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
+	//
+	//	if (pLight != nullptr)
+	//		m_pGameInstance->Remove_Light(m_tEnvironmentDesc.iLightIndex);
+	//}
 	
 	if (m_pEffect != nullptr)
 		Safe_Release(m_pEffect);
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
-
 
 	if(m_iCurrentLevel == (_uint)LEVEL_TOOL)
 		Safe_Release(m_pPickingCollider);
