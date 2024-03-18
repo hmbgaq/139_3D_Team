@@ -222,7 +222,7 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 			return (new CVampireCommander_TurnL180);
 		else if (fAngle < -45 && fAngle >= -135)
 			return new CVampireCommander_TurnL90;
-		else if (fAngle < -135 && fAngle <= -180)
+		else if (fAngle < -135 && fAngle >= -180)
 			return (new CVampireCommander_TurnR180);
 		pActor->m_bTurn = false;
 	}

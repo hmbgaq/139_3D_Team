@@ -59,6 +59,8 @@ void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 		if (m_tVoidDesc.bActive_Tool)
 		{
 #endif // _DEBUG
+// 			if (m_pOwner == nullptr)
+// 				return;
 
 			//if (!m_pOwner->Is_Dead())
 			{

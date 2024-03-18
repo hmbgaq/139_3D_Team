@@ -51,19 +51,20 @@ void CVampireCommander_Weapon_Hand::Priority_Tick(_float fTimeDelta)
 void CVampireCommander_Weapon_Hand::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Tick_Trail(fTimeDelta, this->m_WorldMatrix);
+	}
+
 }
 
 void CVampireCommander_Weapon_Hand::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-
-
 	//! 유정: 트레일 테스트
-	if (nullptr != m_pTrail)
-	{
-		m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
-	}
+	
 	
 	// m_pTrail->Set_Play(TRUE /*FALSE*/); //! 유정: 트레일 온오프
 
@@ -197,4 +198,5 @@ CGameObject* CVampireCommander_Weapon_Hand::Pool()
 void CVampireCommander_Weapon_Hand::Free()
 {
 	__super::Free();
+	m_pTrail->Set_Dead(true);
 }

@@ -86,7 +86,7 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
-	cout << "introBossHP:" << m_iHp << endl;
+	//cout << "introBossHP:" << m_iHp << endl;
 
 	
 }
