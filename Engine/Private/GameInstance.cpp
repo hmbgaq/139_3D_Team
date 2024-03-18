@@ -93,6 +93,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_fTimeDelta = fTimeDelta;
 
+
 	if (0 < m_fHitlag_Time)
 	{
 		m_fTimeDelta /= 5;
@@ -122,6 +123,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pObject_Manager->Late_Tick(m_fTimeDelta);
 
 	m_pLevel_Manager->Tick(m_fTimeDelta);
+
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
@@ -153,7 +155,7 @@ HRESULT CGameInstance::Render_Engine()
 #endif
 
 	m_pInput_Device->LateTick();
-	
+
 	return S_OK;
 }
 

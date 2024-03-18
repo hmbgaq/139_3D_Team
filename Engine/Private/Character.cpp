@@ -68,7 +68,7 @@ void CCharacter::Priority_Tick(_float fTimeDelta)
 		if (nullptr != Pair.second)
 			Pair.second->Priority_Tick(fTimeDelta);
 	}
-
+		
 	Set_WeaknessPoint();
 }
 

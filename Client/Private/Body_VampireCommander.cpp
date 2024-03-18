@@ -75,6 +75,7 @@ HRESULT CBody_VampireCommander::Render()
 // 
 // 		m_pModelCom->Render((_uint)i);
 // 	}
+
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -116,6 +117,7 @@ HRESULT CBody_VampireCommander::Render()
 			}
 		}
 	}
+
 	return S_OK;
 }
 

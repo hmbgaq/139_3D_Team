@@ -74,6 +74,7 @@ void CBody_Player::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Player::Render()
 {
+	auto Start = chrono::high_resolution_clock::now();
 	//if (FAILED(__super::Render()))
 	//	return E_FAIL;
 
@@ -98,6 +99,9 @@ HRESULT CBody_Player::Render()
 		m_pModelCom->Render((_uint)i);
 	}
 
+	auto End = chrono::high_resolution_clock::now();
+	chrono::duration<double> duration0 = End - Start;
+	cout << "Player Body Render 실행시간 : " << duration0.count() << endl;
 
 	return S_OK;
 }

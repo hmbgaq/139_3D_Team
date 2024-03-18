@@ -61,58 +61,57 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Render_Priority());	/* MRT_Priority - Target_Priority 저장  */
 
-	//FAILED_CHECK(Render_NonLight());	/* RenderGroup*/
+	FAILED_CHECK(Render_NonLight());	/* RenderGroup*/
 
 	/* --- Pre-Post Processing --- */
-	FAILED_CHECK(Render_NonBlend());	/* MRT_GameObjects - Diffuse, Normal, Depth, Bloom, RimLight, */
+	FAILED_CHECK(Render_NonBlend());	/* MRT_GameObjects - Diffuse, Normal, Depth, Bloom, RimLight, - */
 
 	FAILED_CHECK(Render_Shadow());		/* MRT_Shadow - Target_ShadowDepth 저장  */
 
 	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc */
-	
+
 	if (m_tHBAO_Option.bHBAO_Active)
 		FAILED_CHECK(Render_HBAO_PLUS());
 
 	FAILED_CHECK(Render_Deferred()); /*  MRT_Deferred -> Target_Deferred에 저장  */
 
 	FAILED_CHECK(Render_RimBloom());
-	
+
 	FAILED_CHECK(Deferred_Effect()); 
-	
+
 	/* --- Post Processing --- */
 	
 	if (true == m_tRadial_Option.bRadial_Active) /* 이미지 블러효과를 추가하는것 */
 		FAILED_CHECK(Render_RadialBlur());
-	
+
 	if(true == m_tDOF_Option.bDOF_Active)
 		FAILED_CHECK(Render_DOF());
-	
+
 	if (true == m_tHDR_Option.bHDR_Active)
 		FAILED_CHECK(Render_HDR()); /* 톤매핑 - 렌더링 파이프라인의 초기단계에서 적용됨  */
-	
+
 	if (true == m_tAnti_Option.bFXAA_Active)
 		FAILED_CHECK(Render_FXAA()); /* 안티앨리어싱 */
-	
+
 	if(true == m_tHSV_Option.bScreen_Active)
 		FAILED_CHECK(Render_HSV()); /* 컬러 그레이딩 - 최종장면 */
-	
+
 	if (true == m_bUI_MRT)
 		FAILED_CHECK(Render_UI_Tool()); /* Tool에서 체크할 때  */
-	
-	///* 최종 합성 */ 
+
+	/* 최종 합성 */ 
 	FAILED_CHECK(Render_Final());
 
 	FAILED_CHECK(Render_Blend());  
-	
+
+
 	if (false == m_bUI_MRT)
 		FAILED_CHECK(Render_UI()); /* GamePlay에서 확인할때 여기활성화 */
-
 
 #ifdef _DEBUG
 	if (true == m_bDebugRenderTarget)
 		FAILED_CHECK(Render_DebugTarget());
 #endif	
-
 
 	return S_OK;
 }
@@ -212,10 +211,6 @@ HRESULT CRenderer::Render_Shadow()
 	ViewPortDesc.MaxDepth = 1.f;
 	
 	m_pContext->RSSetViewports(1, &ViewPortDesc);
-
-	//FAILED_CHECK(Deferred_Shadow());
-	//
-	//FAILED_CHECK(Render_ShadowBlur());
 
 	return S_OK;
 }
