@@ -12,6 +12,8 @@ public:
 
 public:
 	virtual CState<CInfected>* Update_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
+	virtual CState<CInfected>* PreAttack_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	virtual CState<CInfected>* PreRun_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 
 };

@@ -22,6 +22,9 @@
 #include "Data_Manager.h"
 #include "Player.h"
 
+#include "Effect_Manager.h"
+#include "Effect.h"
+
 CVampireCommander::CVampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
 {
@@ -66,6 +69,9 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
 
 	m_vWeaknessPoint_Local = _float3(0.f, 2.f, 0.f);
+
+	m_pMapEffect = EFFECT_MANAGER->Create_Effect("Test_Blood_map_04.json");
+	m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
 
 	return S_OK;
 }
@@ -245,4 +251,8 @@ void CVampireCommander::Free()
 		Safe_Delete(m_pActor);
 	}
 
+	if (nullptr != m_pMapEffect)
+	{
+		m_pMapEffect->Set_Dead(TRUE);
+	}
 }

@@ -41,6 +41,7 @@
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "SpringCamera.h"
+#include "Light.h"
 
 CLevel_IntroBoss::CLevel_IntroBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CLevel(pDevice, pContext)
@@ -57,6 +58,7 @@ HRESULT CLevel_IntroBoss::Initialize()
     FAILED_CHECK(Ready_LandObjects());
     FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
+
     if (FAILED(Ready_UI()))
         return E_FAIL;
 
@@ -85,49 +87,123 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
     m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO_BOSS), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
     m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO_BOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
-    LIGHT_DESC         LightDesc{};
+
+    CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
+
+    if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
     {
-        LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-        LightDesc.vDirection = _float4(0.125f, -0.01f, -0.45f, 0.485f);
-        LightDesc.vDiffuse = _float4(0.822f, 0.822f, 0.822f, .5f);
-        LightDesc.vAmbient = _float4(0.243f, 0.386f, 0.253f, 0.604);
-        LightDesc.vSpecular = _float4(0.428f, 0.985f, 0.350f, 0.5f);
-
-        //LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-        //LightDesc.vDirection = _float4(0.f, -1.f, 0.f, 0.f);
-        //LightDesc.vDiffuse = _float4(0.2f, 0.4f, 0.3f, 1.0f);
-        //LightDesc.vAmbient = _float4(0.05f, 0.1f, 0.075f, 1.0f);
-        //LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-        FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+        m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
     }
-    //    {
-    //       ZeroMemory(&LightDesc, sizeof LightDesc);
-    // 
-    //       LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-    //       LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
-    //       LightDesc.fRange = 20.f;
-    //       LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
-    //       LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
-    //       LightDesc.vSpecular = LightDesc.vDiffuse;
-    //       FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-    // 
-    //       LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-    //       LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
-    //       LightDesc.fRange = 20.f;
-    //       LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
-    //       LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
-    //       LightDesc.vSpecular = LightDesc.vDiffuse;
-    //       FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-    // 
-    //       LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-    //       LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
-    //       LightDesc.fRange = 20.f;
-    //       LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
-    //       LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
-    //       LightDesc.vSpecular = LightDesc.vDiffuse;
-    //       FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-    //    }
+
+    json IntroBossMapJson = {};
+
+    if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), IntroBossMapJson)))
+    {
+        MSG_BOX("조명 불러오기 실패");
+        return E_FAIL;
+    }
+
+    json LightJson = IntroBossMapJson["Light_Json"];
+    _int iLightJsonSize = (_int)LightJson.size();
+
+    for (_int i = 0; i < iLightJsonSize; ++i)
+    {
+        LIGHT_DESC LightDesc = {};
+
+        LightDesc.iLightIndex = LightJson[i]["LightIndex"];
+        LightDesc.bEnable = LightJson[i]["LightEnable"];
+        LightDesc.fCutOff = LightJson[i]["CutOff"];
+        LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+
+        LightDesc.eType = LightJson[i]["Type"];
+        CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
+        LightDesc.fRange = LightJson[i]["Range"];
+        CJson_Utility::Load_Float4(LightJson[i]["Position"], LightDesc.vPosition);
+        CJson_Utility::Load_Float4(LightJson[i]["Diffuse"], LightDesc.vDiffuse);
+        CJson_Utility::Load_Float4(LightJson[i]["Specular"], LightDesc.vSpecular);
+        CJson_Utility::Load_Float4(LightJson[i]["Ambient"], LightDesc.vAmbient);
+
+
+        if (LightDesc.eType == tagLightDesc::TYPE_DIRECTIONAL)
+        {
+            CLight* pDirectionLight = m_pGameInstance->Get_DirectionLight();
+
+            if (pDirectionLight != nullptr)
+            {
+                m_pGameInstance->Remove_Light(pDirectionLight->Get_LightIndex());
+
+            }
+        }
+
+        CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
+
+        if (pLight == nullptr)
+        {
+            MSG_BOX("라이트 불러오기 실패");
+            return E_FAIL;
+        }
+        
+    }
+
+    json LightObjectJson = IntroBossMapJson["LightObject_Json"];
+    _int iLightObjectJsonSize = (_int)LightObjectJson.size();
+
+    for (_int i = 0; i < iLightObjectJsonSize; ++i)
+    {
+        CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc = {};
+
+        LightObjectDesc.bAnimModel = LightObjectJson[i]["AnimType"];
+        LightObjectDesc.bEffect = LightObjectJson[i]["Effect"];
+        LightObjectDesc.eLightEffect = LightObjectJson[i]["EffectType"];
+        LightObjectDesc.iPlayAnimationIndex = LightObjectJson[i]["PlayAnimationIndex"];
+        LightObjectDesc.iShaderPassIndex = LightObjectJson[i]["ShaderPassIndex"];
+        LightObjectDesc.bPreview = false;
+
+        m_pGameInstance->String_To_WString((string)LightObjectJson[i]["ModelTag"], LightObjectDesc.strModelTag);
+
+        const json& TransformJson = LightObjectJson[i]["Component"]["Transform"];
+        _float4x4 WorldMatrix;
+
+        for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+        {
+            for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+            {
+                WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+            }
+        }
+
+        LightObjectDesc.WorldMatrix = WorldMatrix;
+
+
+
+        LIGHT_DESC LightDesc = {};
+
+        LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
+        LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
+        LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
+        LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+
+        LightDesc.eType = LightObjectJson[i]["LightType"];
+        CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
+        LightDesc.fRange = LightObjectJson[i]["Range"];
+        CJson_Utility::Load_Float4(LightObjectJson[i]["Position"], LightDesc.vPosition);
+        CJson_Utility::Load_Float4(LightObjectJson[i]["Diffuse"], LightDesc.vDiffuse);
+        CJson_Utility::Load_Float4(LightObjectJson[i]["Ambient"], LightDesc.vAmbient);
+        CJson_Utility::Load_Float4(LightObjectJson[i]["Specular"], LightDesc.vSpecular);
+
+
+        LightObjectDesc.LightDesc = LightDesc;
+
+        CEnvironment_LightObject* pLightObject = dynamic_cast<CEnvironment_LightObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
+
+        if (pLightObject == nullptr)
+        {
+            MSG_BOX("라이트오브젝트 생성실패");
+            return E_FAIL;
+        }
+    }
+
+    
     return S_OK;
 }
 
@@ -144,25 +220,25 @@ HRESULT CLevel_IntroBoss::Ready_Shader()
 
     HBAO_PLUS_DESC Desc_Hbao = {};
     Desc_Hbao.bHBAO_Active = true;
-    Desc_Hbao.fRadius = 1.639;
+    Desc_Hbao.fRadius = 1.f;
     Desc_Hbao.fBias = 0.1f;
-    Desc_Hbao.fBlur_Sharpness = 11.f;
-    Desc_Hbao.fPowerExponent = 1.985f;
+    Desc_Hbao.fBlur_Sharpness = 16.f;
+    Desc_Hbao.fPowerExponent = 2.f;
 
     BLOOMRIM_DESC Desc_BR = {};
     Desc_BR.bRimBloom_Blur_Active = true;
 
     HDR_DESC Desc_HDR = {};
     Desc_HDR.bHDR_Active = true;
-    Desc_HDR.fmax_white = 0.725f;
+    Desc_HDR.fmax_white = 0.539;
 
     ANTI_DESC Desc_Anti = {};
     Desc_Anti.bFXAA_Active = true;
 
     HSV_DESC Desc_HSV = {};
     Desc_HSV.bScreen_Active = true;
-    Desc_HSV.fFinal_Brightness = 1.094f;
-    Desc_HSV.fFinal_Saturation = 1.545f;
+    Desc_HSV.fFinal_Brightness = 1.284f;
+    Desc_HSV.fFinal_Saturation = 0.850f;
 
     m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
     m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);

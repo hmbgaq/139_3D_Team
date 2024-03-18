@@ -14,24 +14,19 @@
 #include "UI_Manager.h"
 #pragma endregion
 
-#include "LandObject.h"
-#include "Monster_Character.h"
-
 #pragma region MAP
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
 #include "Environment_LightObject.h"
 #include "Environment_SpecialObject.h"
-
 #pragma endregion
-
 
 #pragma region Test
 #include "Monster.h"
 #include "Screamer.h"  
 #include "InstanceMonster.h"
 #include "VampireCommander.h"
-#pragma endregion   
+#pragma endregion
 
 #pragma region Effect_Test
 #include "Effect_Manager.h"
@@ -41,6 +36,8 @@
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "SpringCamera.h"
+#include "LandObject.h"
+#include "Monster_Character.h"
 
 CLevel_Intro::CLevel_Intro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CLevel(pDevice, pContext)
@@ -49,15 +46,17 @@ CLevel_Intro::CLevel_Intro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Intro::Initialize()
 {
+    m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
     m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
 
     FAILED_CHECK(Ready_LightDesc());
-    FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
-    FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
-    FAILED_CHECK(Ready_LandObjects());
-    FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+    FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
+    FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
+    FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
+    FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
     FAILED_CHECK(Ready_UI());
+
     FAILED_CHECK(Ready_Shader());
 
     return S_OK;
@@ -65,7 +64,6 @@ HRESULT CLevel_Intro::Initialize()
 
 void CLevel_Intro::Tick(_float fTimeDelta)
 {
-
 }
 
 HRESULT CLevel_Intro::Render()
@@ -75,172 +73,67 @@ HRESULT CLevel_Intro::Render()
     return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_LightDesc()
+
+HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
 {
-    /* For. Shadow */
-    //XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-    //XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, lightfar 임 ));
-    m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO_BOSS), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
-    m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO_BOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
+    CGameObject* pMonster = nullptr;
 
-    LIGHT_DESC         LightDesc{};
-    {
-        LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-        LightDesc.vDirection = _float4(0.125f, -0.01f, -0.45f, 0.485f);
-        LightDesc.vDiffuse = _float4(0.822f, 0.822f, 0.822f, .5f);
-        LightDesc.vAmbient = _float4(0.243f, 0.386f, 0.253f, 0.604);
-        LightDesc.vSpecular = _float4(0.428f, 0.985f, 0.350f, 0.5f);
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
+    
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_InitPosition(_float3(251.f, 0.f, 7.f));
+    
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_InitPosition(_float3(252.5f, 0.f, 9.f));	
+    
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
 
-        //LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-        //LightDesc.vDirection = _float4(0.f, -1.f, 0.f, 0.f);
-        //LightDesc.vDiffuse = _float4(0.2f, 0.4f, 0.3f, 1.0f);
-        //LightDesc.vAmbient = _float4(0.05f, 0.1f, 0.075f, 1.0f);
-        //LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+    /* Shader Test Model */
+    //CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
 
-        FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-    }
-    //{
-    //   ZeroMemory(&LightDesc, sizeof LightDesc);
-
-    //   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-    //   LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
-    //   LightDesc.fRange = 20.f;
-    //   LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
-    //   LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
-    //   LightDesc.vSpecular = LightDesc.vDiffuse;
-    //   FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-
-    //   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-    //   LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
-    //   LightDesc.fRange = 20.f;
-    //   LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
-    //   LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
-    //   LightDesc.vSpecular = LightDesc.vDiffuse;
-    //   FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-
-    //   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-    //   LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
-    //   LightDesc.fRange = 20.f;
-    //   LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
-    //   LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
-    //   LightDesc.vSpecular = LightDesc.vDiffuse;
-    //   FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-    //}
     return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Shader()
-{
-    m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
-    m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
-    m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
-    m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
-    m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
-    m_pGameInstance->Get_Renderer()->Set_HDR_Active(true);
-    m_pGameInstance->Get_Renderer()->Set_FXAA_Active(true);
-    m_pGameInstance->Get_Renderer()->Set_HSV_Active(true);
-
-    HBAO_PLUS_DESC Desc_Hbao = {};
-    Desc_Hbao.bHBAO_Active = true;
-    Desc_Hbao.fRadius = 1.639;
-    Desc_Hbao.fBias = 0.1f;
-    Desc_Hbao.fBlur_Sharpness = 11.f;
-    Desc_Hbao.fPowerExponent = 1.985f;
-
-    BLOOMRIM_DESC Desc_BR = {};
-    Desc_BR.bRimBloom_Blur_Active = true;
-
-    HDR_DESC Desc_HDR = {};
-    Desc_HDR.bHDR_Active = true;
-    Desc_HDR.fmax_white = 0.725f;
-
-    ANTI_DESC Desc_Anti = {};
-    Desc_Anti.bFXAA_Active = true;
-
-    HSV_DESC Desc_HSV = {};
-    Desc_HSV.bScreen_Active = true;
-    Desc_HSV.fFinal_Brightness = 1.094f;
-    Desc_HSV.fFinal_Saturation = 1.545f;
-
-    m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
-    m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);
-    m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
-    m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
-    m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
-
-
-    return S_OK;
-}
 HRESULT CLevel_Intro::Ready_Layer_Camera(const wstring& strLayerTag)
 {
-    if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
-        return E_FAIL;
-
-    return S_OK;
-}
-
-HRESULT CLevel_Intro::Ready_Layer_Player(const wstring& strLayerTag, void* pArg)
-{
-    CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
-
-    pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
-    CNavigation* pNavigation = pPlayer->Get_Navigation();
-
-    pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
-
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Rentier"), pArg));
-
-
-    //CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
-    //if (nullptr == pPlayer)
-    //   return E_FAIL;
-
-    //m_pGameInstance->Set_Player(dynamic_cast<CCharacter*>(pPlayer));
+    FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_MasterCamera")));
 
     return S_OK;
 }
 
 HRESULT CLevel_Intro::Ready_Layer_Effect(const wstring& strLayerTag)
 {
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion")));
+    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
+    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
+    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion")));
 
     return S_OK;
 }
 
-HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_Intro::Ready_Layer_Player(const wstring& strLayerTag)
 {
-    CGameObject* pMonster = { nullptr };
+    FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Assassin")));
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Infected")));
- //    for (int i = 0; i < 100; ++i)
- //    {
+    CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+    pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
 
-
-    /*   }*/
-
-    {//Layer_Boss
-        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_Boss", TEXT("Prototype_GameObject_VampireCommander"));
-
-        if (nullptr == pMonster)   return E_FAIL;
-        pMonster->Set_Position(_float3(60.0f, 0.f, 55.f));
-        pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
-
-        CNavigation* pVampireNavi = dynamic_cast<CVampireCommander*>(pMonster)->Get_Navigation();
-
-        pVampireNavi->Set_CurrentIndex(pVampireNavi->Get_SelectRangeCellIndex(pMonster));
-    }
+    CNavigation* pNavigation = pPlayer->Get_Navigation();
+    pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 
     return S_OK;
 }
 
 HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 {
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Terrain")));
-    FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Sky")));
-
+    FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Sky")));
 
     json Stage1MapJson = {};
 
@@ -285,16 +178,14 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 
         CEnvironment_Object* pObject = { nullptr };
 
-        pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+        pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
     }
-
 
     json InteractJson = Stage1MapJson["Interact_Json"];
     _int InteractJsonSize = (_int)InteractJson.size();
 
     for (_int i = 0; i < InteractJsonSize; ++i)
     {
-
         //TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
         //! L"Layer_Event"
     }
@@ -335,7 +226,7 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 
         CEnvironment_Instance* pInstanceObject = { nullptr };
 
-        pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+        pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
 
     }
 
@@ -365,24 +256,10 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 
         MonsterDesc.WorldMatrix = WorldMatrix;
 
-        if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+        if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
             return E_FAIL;
 
     }
-
-    //CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc;
-    //
-    //SpecialDesc.bAnimModel = false;
-    //SpecialDesc.bPreview = false;
-    //
-    //SpecialDesc.strModelTag = L"Prototype_Component_Model_BloodPoolsRaid";
-    ////Desc.iShaderPassIndex = 6;
-    //XMStoreFloat4x4(&SpecialDesc.WorldMatrix, XMMatrixIdentity());
-    //
-    //
-    //if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &SpecialDesc)))
-    //   return E_FAIL;
-
 
     CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
 
@@ -406,56 +283,11 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 
     LightObjectDesc.LightDesc = LightDesc;
 
-    if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc)))
-        return E_FAIL;
-
+    FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
 
     return S_OK;
 
 }
-
-HRESULT CLevel_Intro::Ready_LandObjects()
-{
-    CLandObject::LANDOBJECT_DESC   LandObjectDesc{};
-
-    LandObjectDesc.pTerrainBuffer = dynamic_cast<CVIBuffer_Terrain*>(m_pGameInstance->Get_Component(LEVEL_INTRO_BOSS, TEXT("Layer_BackGround"), TEXT("Com_VIBuffer")));
-    LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_INTRO_BOSS, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
-
-    FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
-    FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
-
-    FAILED_CHECK(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc));
-
-    return S_OK;
-}
-
-HRESULT CLevel_Intro::Ready_Layer_Building(const wstring& strLayerTag, void* pArg)
-{
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg));
-
-    return S_OK;
-}
-
-HRESULT CLevel_Intro::Ready_Layer_Test(const wstring& strLayerTag)
-{
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
-    //! 애님인스턴싱이 할필요없어짐. ㅎㅎㅎㅎㅎㅎFAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_InstanceMonster")));
-
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
-
-    ///* ui test */
-    //m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"));
-
-    //CUI_Player_HPBar::UI_DESC desc = {};
-    //desc.fPositionX = (_float)g_iWinSizeX / 2 + 20.f;
-    //desc.fPositionY = (_float)g_iWinSizeY / 2 + 20.f;
-    //m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"), &desc);
-
-
-
-    return S_OK;
-}
-
 
 HRESULT CLevel_Intro::Ready_UI()
 {
@@ -875,6 +707,69 @@ HRESULT CLevel_Intro::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
     return S_OK;
 }
 
+
+HRESULT CLevel_Intro::Ready_LightDesc()
+{
+    /* For. Shadow */
+    m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
+    m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
+
+    LIGHT_DESC         LightDesc{};
+    {
+        LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+        LightDesc.vDirection = _float4(0.125f, -0.01f, -0.45f, 0.485f);
+        LightDesc.vDiffuse = _float4(0.822f, 0.822f, 0.822f, .5f);
+        LightDesc.vAmbient = _float4(0.243f, 0.386f, 0.253f, 0.604);
+        LightDesc.vSpecular = _float4(0.428f, 0.985f, 0.350f, 0.5f);
+
+        FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+    }
+    return S_OK;
+}
+
+HRESULT CLevel_Intro::Ready_Shader()
+{
+    m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
+    m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
+    m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
+    m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
+    m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
+    m_pGameInstance->Get_Renderer()->Set_HDR_Active(true);
+    m_pGameInstance->Get_Renderer()->Set_FXAA_Active(true);
+    m_pGameInstance->Get_Renderer()->Set_HSV_Active(true);
+
+    HBAO_PLUS_DESC Desc_Hbao = {};
+    Desc_Hbao.bHBAO_Active = true;
+    Desc_Hbao.fRadius = 1.639;
+    Desc_Hbao.fBias = 0.1f;
+    Desc_Hbao.fBlur_Sharpness = 11.f;
+    Desc_Hbao.fPowerExponent = 1.985f;
+
+    BLOOMRIM_DESC Desc_BR = {};
+    Desc_BR.bRimBloom_Blur_Active = true;
+
+    HDR_DESC Desc_HDR = {};
+    Desc_HDR.bHDR_Active = true;
+    Desc_HDR.fmax_white = 0.725f;
+
+    ANTI_DESC Desc_Anti = {};
+    Desc_Anti.bFXAA_Active = true;
+
+    HSV_DESC Desc_HSV = {};
+    Desc_HSV.bScreen_Active = true;
+    Desc_HSV.fFinal_Brightness = 1.094f;
+    Desc_HSV.fFinal_Saturation = 1.545f;
+
+    m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
+    m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);
+    m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
+    m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
+    m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
+
+    return S_OK;
+}
+
+
 CLevel_Intro* CLevel_Intro::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 {
@@ -882,7 +777,7 @@ CLevel_Intro* CLevel_Intro::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
     if (FAILED(pInstance->Initialize()))
     {
-        MSG_BOX("Failed to Created : CLEVEL_INTRO_BOSSBoss");
+        MSG_BOX("Failed to Created : CLEVEL_INTRO");
         Safe_Release(pInstance);
     }
     return pInstance;

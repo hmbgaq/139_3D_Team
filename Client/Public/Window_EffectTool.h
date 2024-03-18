@@ -441,6 +441,7 @@ private:
 	CModel_Preview*	m_pModel_Preview = { nullptr };				// 크기 비교용 보기 모델
 	CPart_Preview*	m_pPart_Preview = { nullptr };				// 모델의 파트(트레일 확인용)
 	_float			m_vWorldPosition_Model[3] = { 0.f, 0.f, 0.f };	// 크기 비교용 모델 월드 이동
+	_float			m_vWorldRotate_Model[3] = { 0.f, 0.f, 0.f };	// 크기 비교용 모델 월드 회전 
 	_float			m_fModelRot = { 0.f };
 
 	CEffect* m_pTestEffect = { nullptr };

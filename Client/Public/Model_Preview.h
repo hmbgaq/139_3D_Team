@@ -18,6 +18,8 @@ public:
 		wstring		strProtoTag = { TEXT("") };
 		wstring		strModelTag = { TEXT("") };
 
+		CModel::TYPE	eType	= { CModel::TYPE_END };
+
 		_bool		bRender				= { TRUE };
 		_bool		bPlay			    = { TRUE };
 
@@ -51,6 +53,7 @@ public:
 
 public:
 	MODEL_PREVIEW_DESC* Get_Desc() { return &m_tDesc; }
+	CModel* Get_ModelCom() { return m_pModelCom; }
 
 
 private:

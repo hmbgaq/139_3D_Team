@@ -7,6 +7,8 @@ void CInfected_Sprint_F_Melee_02::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
 
+	pActor->Get_Transform()->Set_Speed(10.f);
+	pActor->Set_StiffnessRate(1.f);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 	
 	switch (m_eType)
@@ -15,8 +17,6 @@ void CInfected_Sprint_F_Melee_02::Initialize(CInfected* pActor)
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 	{
-		pActor->Get_Transform()->Set_Speed(13.f);
-
 		m_pWeapon
 			->Set_Damage(7)
 			->Set_Direction(Direction::Left)
@@ -30,7 +30,6 @@ void CInfected_Sprint_F_Melee_02::Initialize(CInfected* pActor)
 	case CInfected::INFECTED_TYPE::INFECTED_WASTER:
 		break;
 	}
-
 }
 
 CState<CInfected>* CInfected_Sprint_F_Melee_02::Update(CInfected* pActor, _float fTimeDelta)
@@ -44,11 +43,17 @@ CState<CInfected>* CInfected_Sprint_F_Melee_02::Update(CInfected* pActor, _float
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 	{
-		if (pActor->Is_Inputable_Front(38))
+		if ( pActor->Is_Inputable_Front(38) && m_bFlags[0] == false )
+		{
+			m_bFlags[0] = true;
 			m_pWeapon->Set_Enable(true);
+		}
 
-		if (pActor->Is_Inputable_Front(49))
+		if (pActor->Is_Inputable_Front(49) && m_bFlags[1] == false)
+		{
+			m_bFlags[1] = true;
 			m_pWeapon->Set_Enable(false);
+		}
 	}
 	break;
 
@@ -60,7 +65,6 @@ CState<CInfected>* CInfected_Sprint_F_Melee_02::Update(CInfected* pActor, _float
 
 	if (pActor->Is_Animation_End())
 	{
-		pActor->Get_Transform()->Set_Speed(10.f);
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
 
