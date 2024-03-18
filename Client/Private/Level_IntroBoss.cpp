@@ -477,30 +477,30 @@ HRESULT CLevel_IntroBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
     //   return E_FAIL;
 
 
-    CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
-    
-    LightObjectDesc.bAnimModel = false;
-    LightObjectDesc.bPreview = false;
-    LightObjectDesc.strModelTag = L"Prototype_Component_Model_SecretTempleStatue1";
-    XMStoreFloat4x4(&LightObjectDesc.WorldMatrix, XMMatrixIdentity());
-    
-    LightObjectDesc.iLightIndex = 4;
-    
-    LIGHT_DESC LightDesc;
-    
-    
-    LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-    XMStoreFloat4(&LightDesc.vPosition, XMLoadFloat4x4(&LightObjectDesc.WorldMatrix).r[3]);
-    LightDesc.fRange = 100.f;
-    LightDesc.vPosition = _float4(60.0f, 0.f, 55.f, 1.f);
-    LightDesc.vDiffuse = _float4(0.6f, 0.2f, 0.05f, 1.0f);
-    LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
-    LightDesc.vSpecular = LightDesc.vDiffuse;
-    
-    LightObjectDesc.LightDesc = LightDesc;
-    
-    if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc)))
-       return E_FAIL;
+	//CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
+	//
+	//LightObjectDesc.bAnimModel = false;
+	//LightObjectDesc.bPreview = false;
+	//LightObjectDesc.strModelTag = L"Prototype_Component_Model_SecretTempleStatue1";
+	//XMStoreFloat4x4(&LightObjectDesc.WorldMatrix, XMMatrixIdentity());
+	//
+	//LightObjectDesc.iLightIndex = 4;
+	//
+	//LIGHT_DESC LightDesc;
+	//
+	//
+	//LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	//XMStoreFloat4(&LightDesc.vPosition, XMLoadFloat4x4(&LightObjectDesc.WorldMatrix).r[3]);
+	//LightDesc.fRange = 100.f;
+	//LightDesc.vPosition = _float4(60.0f, 0.f, 55.f, 1.f);
+	//LightDesc.vDiffuse = _float4(0.6f, 0.2f, 0.05f, 1.0f);
+	//LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	//LightDesc.vSpecular = LightDesc.vDiffuse;
+	//
+	//LightObjectDesc.LightDesc = LightDesc;
+	//
+	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc)))
+	//   return E_FAIL;
 
 
     return S_OK;
