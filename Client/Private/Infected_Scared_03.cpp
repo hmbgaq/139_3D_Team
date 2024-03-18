@@ -9,7 +9,6 @@ void CInfected_Scared_03::Initialize(CInfected* pActor)
 	
 	//CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
 	//pBody->Set_StateHit();
-
 }
 
 CState<CInfected>* CInfected_Scared_03::Update(CInfected* pActor, _float fTimeDelta)

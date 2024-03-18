@@ -1,3 +1,5 @@
+#include "stdafx.h"
+#include "Transform.h"
 #include "Infected_MeleeDynamic_RU_01.h"
 
 void CInfected_MeleeDynamic_RU_01::Initialize(CInfected* pActor)
@@ -25,6 +27,13 @@ void CInfected_MeleeDynamic_RU_01::Initialize(CInfected* pActor)
 	case CInfected::INFECTED_TYPE::INFECTED_WASTER:
 		break;
 	}
+
+	cout << "CInfected_MeleeDynamic_RU_01" << endl;
+	_float stiff = pActor->Get_StiffnessRate();
+	_float speed = pActor->Get_Transform()->Get_Speed();
+
+	cout << stiff << endl;
+	cout << speed << endl;
 }
 
 CState<CInfected>* CInfected_MeleeDynamic_RU_01::Update(CInfected* pActor, _float fTimeDelta)
