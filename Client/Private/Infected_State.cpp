@@ -82,7 +82,7 @@ CState<CInfected>* CInfected_State::Run_State(CInfected* pActor, _float fTimeDel
 {
 	CState<CInfected>* pState = { nullptr };
 
-	pState = Normal(pActor, fTimeDelta, _iAnimIndex);
+	pState = Run(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
 	return nullptr;
@@ -204,23 +204,23 @@ CState<CInfected>* CInfected_State::Finisher_State(CInfected* pActor, _float fTi
 /* Áß¾ÓÁ¦¾î */
 CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	_float WalkDistance = pActor->Get_Info().fWalk_Distance;	 // 10.f
+	_float AttackDistance = pActor->Get_Info().fAttack_Distance; // 3.5f
+
 	CState<CInfected>* pState = { nullptr };
 
 	pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
+	_float fDist = pActor->Calc_Distance(m_pGameInstance->Get_Player());	
 
-	_float fDist = pActor->Calc_Distance(m_pGameInstance->Get_Player());
-	
-	cout << "Dist : " << fDist << endl;
-	
 	// 0 ~ Attack ~ Walk  
-	if (fDist > 10.f)
+	if (fDist > WalkDistance)
 	{
 		pState = Run(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 	}
-	else if (3.5f < fDist && fDist <= 10.f)
+	else if (AttackDistance < fDist && fDist <= WalkDistance)
 	{
 		pState = Walk(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
@@ -251,6 +251,7 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
+		cout << "CInfected_Walk_F " << endl;
 		return new CInfected_Walk_F();
 		break;
 
@@ -274,7 +275,7 @@ CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _u
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-			cout << "CInfected_Run_F " << endl;
+		cout << "CInfected_Run_F " << endl;
 			return new CInfected_Run_F();
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:

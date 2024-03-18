@@ -1,7 +1,6 @@
 #include "Monster_Character.h"
 #include "Transform.h"
 #include "Navigation.h"
-
 #include "Player.h"
 #include "Data_Manager.h"
 #include "Transform.h"
@@ -51,8 +50,6 @@ HRESULT CMonster_Character::Initialize(void* pArg)
 			}
 		}
 	}
-
-	
 
 	return S_OK;
 }

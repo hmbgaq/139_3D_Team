@@ -19,7 +19,6 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override; 
-	
 	virtual HRESULT Update_RenderState(_int CurrentHP) override;
 
 protected:

@@ -76,6 +76,28 @@ HRESULT CLevel_Intro::Render()
 
 HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
 {
+    CGameObject* pMonster = nullptr;
+
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
+    
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_InitPosition(_float3(251.f, 0.f, 7.f));
+    
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_InitPosition(_float3(252.5f, 0.f, 9.f));	
+    
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
+
+    /* Shader Test Model */
+    //CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
 
     return S_OK;
 }
@@ -164,7 +186,6 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 
     for (_int i = 0; i < InteractJsonSize; ++i)
     {
-
         //TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
         //! L"Layer_Event"
     }

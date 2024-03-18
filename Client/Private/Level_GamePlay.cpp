@@ -217,7 +217,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 {
-
 	json Stage1MonsterJson = {};
 
 	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MonsterJson)))
