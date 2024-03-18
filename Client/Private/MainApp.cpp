@@ -65,6 +65,7 @@ HRESULT CMainApp::Initialize()
 	ShowWindow(g_hWnd, SW_SHOW);
 	SetForegroundWindow(g_hWnd);	// 창을 최상위로 가져온다.
 
+	//ShowCursor(false);
 	//m_pDevConsole = CDevConsole::Create();
 	//Safe_AddRef(m_pDevConsole);
 

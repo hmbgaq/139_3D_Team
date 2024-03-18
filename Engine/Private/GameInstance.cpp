@@ -752,6 +752,14 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc, _int& outLightInde
 	return m_pLight_Manager->Add_Light(LightDesc, outLightIndex);
 }
 
+CLight* CGameInstance::Add_Light_AndGet(const LIGHT_DESC& LightDesc, _uint& outLightIndex)
+{
+	if(m_pLight_Manager == nullptr)
+		return nullptr;
+
+	return m_pLight_Manager->Add_Light_AndGet(LightDesc, outLightIndex);
+}
+
 CLight* CGameInstance::Find_Light(const _int iIndex)
 {
 	NULL_CHECK_RETURN(m_pLight_Manager, nullptr);
@@ -764,6 +772,13 @@ void CGameInstance::Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc)
 	NULL_CHECK(m_pLight_Manager);
 
 	return m_pLight_Manager->Change_Light_Desc(iIndex, newDesc);
+}
+
+CLight* CGameInstance::Get_DirectionLight()
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, nullptr);
+
+	return m_pLight_Manager->Get_DirectionLight();
 }
 
 HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
