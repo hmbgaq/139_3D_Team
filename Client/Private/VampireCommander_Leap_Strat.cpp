@@ -32,10 +32,9 @@ CState<CVampireCommander>* CVampireCommander_Leap_Strat::Update(CVampireCommande
 	{
 		pActor->Move_In_Proportion_To_Enemy(fTimeDelta);
 	}
-	else if (pActor->Is_Inputable_Front(60))
+	else if (pActor->Is_Inputable_Front(58))
 	{
 		pActor->Move_In_Proportion_To_Enemy(fTimeDelta, 0);
-		
 	}
 
 	if (pActor->Is_Inputable_Front(55))
