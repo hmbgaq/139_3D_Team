@@ -32,8 +32,6 @@ float3		g_vBlack_Discard;
 
 
 /* Dissolve */
-Texture2D	g_DissolveDiffTexture;
-float		g_fDissolveWeight;
 float		g_fDissolveRatio;
 
 
@@ -355,8 +353,7 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In)
 
     float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
 	
-
-    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue * g_DissolveDiffTexture.Sample(LinearSampler, In.vTexUV);
+    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue ;
 	
     clip(Out.vDiffuse.a - g_fAlpha_Discard);
     //Out.vDiffuse.a = 1.f;
@@ -511,29 +508,29 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 
 	vFinalColor.a = vAlphaColor;
 
-	Out.vDiffuse = vFinalColor;
-
 
 	//////
-	vector TexDissolve = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-
-	clip(TexDissolve - g_fDissolveRatio);
+	
+	/* Dissolve */
+    vector vDissolveTex = g_NoiseTexture.Sample(LinearSampler, In.vTexUV);
+    clip(vDissolveTex - g_fDissolveRatio);
 
 	In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
 	In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
 
-	vector vTexDiff = vFinalColor;
+    float fStepValue = IsIn_Range(0.f, 0.05f, vDissolveTex.r - g_fDissolveRatio);
 
-	float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
+    //Out.vDiffuse = (1.f - fStepValue) * vFinalColor + fStepValue;
+    vFinalColor = (1.f - fStepValue) * vFinalColor + fStepValue;
 
-	Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue * g_DissolveDiffTexture.Sample(LinearSampler, In.vTexUV);
-
+	
+	/* Discard & Color Mul */
 	clip(Out.vDiffuse.a - g_fAlpha_Discard);
-	//Out.vDiffuse.a = 1.f;
+    Out.vDiffuse = vFinalColor * g_vColor_Mul;
+	
 
-	//float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-	//Out.vDiffuse.a *= vAlphaMask.a;
-
+	
+	/* Normal & Depth */
 	float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
 	vPixelNormal = vPixelNormal * 2.f - 1.f;
 
@@ -545,13 +542,10 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 	
 	
-    Out.vDiffuse *= g_vColor_Mul;
-	
-	/* ---------------- New ---------------- :  */
+	/* ---------------- RimBloom ---------------- */
     float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
     Out.vDiffuse += vRimColor;
-	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
-    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f);	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
 	
 	
 	return Out;
@@ -639,7 +633,7 @@ PS_OUT PS_MAIN_DISTORTION_SOLID(PS_IN_DISTORTION In)
 
     float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
 
-    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue * g_DissolveDiffTexture.Sample(LinearSampler, In.vTexUV);
+    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue ;
 
     clip(Out.vDiffuse.a - g_fAlpha_Discard);
 	//Out.vDiffuse.a = 1.f;
@@ -742,18 +736,18 @@ PS_OUT PS_MAIN_DISTORTION_HORAIZON(PS_IN_DISTORTION In)
 
 
 	//////
-    vector TexDissolve = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+    vector DissolveTex = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
 
-    clip(TexDissolve - g_fDissolveRatio);
+    clip(DissolveTex - g_fDissolveRatio);
 
     In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
     In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
 
     vector vTexDiff = vFinalColor;
 
-    float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
+    float fStepValue = IsIn_Range(0.f, 0.05f, DissolveTex.r - g_fDissolveRatio);
 
-    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue * g_DissolveDiffTexture.Sample(LinearSampler, In.vTexUV);
+    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue;
 
     clip(Out.vDiffuse.a - g_fAlpha_Discard);
 	//Out.vDiffuse.a = 1.f;
@@ -866,7 +860,7 @@ PS_OUT PS_MAIN_DISTORTION_HORAIZON_RIGHT(PS_IN_DISTORTION In)
 
     float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
 
-    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue * g_DissolveDiffTexture.Sample(LinearSampler, In.vTexUV);
+    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue;
 
     clip(Out.vDiffuse.a - g_fAlpha_Discard);
 	//Out.vDiffuse.a = 1.f;
@@ -985,7 +979,7 @@ PS_OUT PS_MAIN_DISTORTION_ROTATION(PS_IN_DISTORTION In)
 
     float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
 
-    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue * g_DissolveDiffTexture.Sample(LinearSampler, In.vTexUV);
+    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue;
 
     clip(Out.vDiffuse.a - g_fAlpha_Discard);
 	//Out.vDiffuse.a = 1.f;

@@ -306,7 +306,7 @@ PS_OUT MAIN_PARTICLE_SOLID(PS_IN In)
     if (g_bSprite)
     {
         float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
-        float4 vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, clippedTexCoord);
+        float4 vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, clippedTexCoord);
 
         vDiffuseColor.rgb *= In.vColor.rgb;
 
@@ -326,6 +326,8 @@ PS_OUT MAIN_PARTICLE_SOLID(PS_IN In)
 		// Case2. 색상을 아에 넣어버린다 : 이경우 g_RimBloom_Color 라던지 전역변수 받아서 그걸로 해도됨
         //Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
 
+        Out.vNormal = g_NormalTexture.Sample(LinearSampler, clippedTexCoord);
+		
         Out.vRimBloom = float4(g_vBloomPower, 1.0f);
     }
     else
