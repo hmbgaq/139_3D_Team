@@ -22,9 +22,7 @@
 #include "Environment_Instance.h"
 #include "Environment_LightObject.h"
 #include "Environment_SpecialObject.h"
-
 #pragma endregion
-
 
 #pragma region Test
 #include "Monster.h"
