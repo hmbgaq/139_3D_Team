@@ -12,14 +12,14 @@ void CVampireCommander_Leap_Strat::Initialize(CVampireCommander* pActor)
 
 	pWeapon
 		->Set_Damage(50)
-		->Set_Direction(Direction::Right)
+		->Set_Direction(Direction::Front)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.f);
 
 	_float4x4	Temp = XMMatrixIdentity();
-	Temp.m[0][0] = 1.5f;
-	Temp.m[1][1] = 1.5f;
-	Temp.m[2][2] = 1.5f;
+	Temp.m[0][0] = 2.f;
+	Temp.m[1][1] = 2.f;
+	Temp.m[2][2] = 2.f;
 
 	pWeapon->Get_Colliders().back()->Get_Bounding()->Set_matScale(Temp);
 	
@@ -30,11 +30,11 @@ CState<CVampireCommander>* CVampireCommander_Leap_Strat::Update(CVampireCommande
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 	if (pActor->Is_Inputable_Front(34))
 	{
-		pActor->Move_In_Proportion_To_Enemy(fTimeDelta*0.5f,0.3f);// ÀÌ °ª °Çµå¸®Áö¸¶ µü ¸ÂÃç ³ù´Ù 
+		pActor->Move_In_Proportion_To_Enemy(fTimeDelta,0.5f);// ÀÌ °ª °Çµå¸®Áö¸¶ µü ¸ÂÃç ³ù´Ù 
 	}
 	else if (pActor->Is_Inputable_Front(58))
 	{
-		pActor->Move_In_Proportion_To_Enemy(fTimeDelta, 0);
+		pActor->Move_In_Proportion_To_Enemy(0, 0);
 	}
 
 	if (pActor->Is_Inputable_Front(55))
