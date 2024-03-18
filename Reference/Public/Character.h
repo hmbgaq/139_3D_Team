@@ -127,7 +127,7 @@ public:
 	};
 	virtual void Hitted_Finish() {
 		//Set_Invincible(true);
-		//Hitted_Dead(Power::Heavy);
+		Hitted_Dead(Power::Heavy);
 	};
 	
 public:
@@ -205,10 +205,6 @@ public:
 	_bool Is_Stun() { return m_bIsInvincible; };
 	void Set_Stun(_bool _bIsStun) { m_bIsStun = _bIsStun; };
 
-public:
-	void Set_RadialBlurTime(_float fTime = 0.3f) { m_fRadialBlurTime = fTime; };
-	void Update_RadialBlurTime(_float fTimeDelta);
-
 
 protected:
 	_float m_iHp = { 1.f };
@@ -221,8 +217,6 @@ protected:
 protected:
 	_bool m_bIsInvincible = { false };
 	_bool m_bIsStun = { false };
-
-	_float m_fRadialBlurTime = { 0.f };
 
 
 protected:
@@ -255,7 +249,6 @@ protected:
 
 public:
 	_bool		m_bLookAt = true;
-	_bool		m_bTrigger = false;
 protected:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual CGameObject* Pool() PURE;

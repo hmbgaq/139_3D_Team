@@ -195,9 +195,7 @@ void CWindow_AnimTool::SpringCutScene()
 {
 	if (CData_Manager::GetInstance()->Get_Player() != nullptr)
 	{
-		CCamera* pCam;
-		pCam = m_pMasterCamera->Get_vectorCamera()[1];
-		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
+		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 		
 		if (ImGui::DragFloat3("CameraOffset", m_fCameraOffset, 0.01f, -20.f, 20.f))
 		{

@@ -91,17 +91,9 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 		nullptr == m_pFrustum)
 		return;
 
-	m_fTimeDelta = fTimeDelta;
+	Update_Hitlag(fTimeDelta);
+	Update_RadialBlurTime(m_fTimeDelta);
 
-	if (0 < m_fHitlag_Time)
-	{
-		m_fTimeDelta /= 5;
-		m_fHitlag_Time -= fTimeDelta;
-	}
-	else 
-	{
-		m_fHitlag_Time = 0;
-	}
 
 	m_pInput_Device->Tick();
 
@@ -1189,6 +1181,29 @@ void CGameInstance::Get_ModelTag(vector<string>* pVector)
 	NULL_CHECK_RETURN(pVector, );
 
 	m_pComponent_Manager->Get_ModelTag(pVector);
+}
+
+void CGameInstance::Update_Hitlag(_float fTimeDelta)
+{
+	m_fTimeDelta = fTimeDelta;
+
+	if (0 < m_fHitlag_Time)
+	{
+		m_fTimeDelta /= 5;
+		m_fHitlag_Time -= fTimeDelta;
+	}
+	else
+	{
+		m_fHitlag_Time = 0;
+	}
+}
+
+void CGameInstance::Update_RadialBlurTime(_float fTimeDelta)
+{
+	m_fRadialBlurTime = m_fRadialBlurTime - fTimeDelta > 0 ? m_fRadialBlurTime - fTimeDelta : 0.f;
+
+	_bool bIsActivateRadialBlur = 0 < m_fRadialBlurTime;
+	Get_Renderer()->Set_Radial_Blur_Active(bIsActivateRadialBlur);
 }
 
 wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 기준으로 잘라서 오브젝트 이름만 가져오자 - TO 승용

@@ -17,6 +17,11 @@ CBone* CBody::Get_BonePtr(const _char* pBoneName)
 	return m_pModelCom->Get_BonePtr(pBoneName);
 }
 
+void CBody::Collider_Off()
+{
+	m_pColliderCom->Set_Enable(false);
+}
+
 HRESULT CBody::Initialize_Prototype()
 {
 	return __super::Initialize_Prototype();

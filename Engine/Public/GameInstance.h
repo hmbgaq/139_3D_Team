@@ -234,8 +234,13 @@ public: /* Common */
 
 
 #pragma region ΈνΊσ
+public:
 	void Hitlag(_float fTime = 1.f) { m_fHitlag_Time = fTime; };
 	_float Get_TimeDelta() { return m_fTimeDelta; };
+	void Update_Hitlag(_float fTimeDelta);
+
+	void Set_RadialBlurTime(_float fTime = 0.3f) { m_fRadialBlurTime = max(m_fRadialBlurTime, fTime); };
+	void Update_RadialBlurTime(_float fTimeDelta);
 #pragma endregion
 
 private:
@@ -260,6 +265,7 @@ private:
 private:
 	_float m_fHitlag_Time = { 0.f };
 	_float m_fTimeDelta = { 0.f };
+	_float m_fRadialBlurTime = { 0.f };
 
 
 public:
