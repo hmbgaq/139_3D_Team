@@ -85,6 +85,7 @@ public:
 	void	Delete_CurEffectObject();					// 현재 선택된 이펙트 삭제
 	void	Delete_CurPart();							// 현재 선택된 파트 이펙트 삭제		
 
+	void	Copy_CurPart();								// 현재 선택된 파트 이펙트 복사
 
 /* For.CurObject (현재 선택된 이펙트 관련 정보 업데이트) */
 	void	Update_CurMembers(wstring strName);		// 현재 이펙트의 정보 업데이트
@@ -442,6 +443,7 @@ private:
 	CPart_Preview*	m_pPart_Preview = { nullptr };				// 모델의 파트(트레일 확인용)
 	_float			m_vWorldPosition_Model[3] = { 0.f, 0.f, 0.f };	// 크기 비교용 모델 월드 이동
 	_float			m_vWorldRotate_Model[3] = { 0.f, 0.f, 0.f };	// 크기 비교용 모델 월드 회전 
+	_float			m_vScale_Model[3] = { 0.f, 0.f, 0.f };			// 크기 비교용 모델 크기
 	_float			m_fModelRot = { 0.f };
 
 	CEffect* m_pTestEffect = { nullptr };

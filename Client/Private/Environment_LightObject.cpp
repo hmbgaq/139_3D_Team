@@ -50,8 +50,8 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 
 	if (true == m_tEnvironmentDesc.bEffect)
 	{
-		m_pEffect = EFFECT_MANAGER->Create_Effect("FIre_Torch.json");
-		m_pEffect->Set_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+		m_pEffect = EFFECT_MANAGER->Create_Effect("FIre_Torch.json", this);
+		//m_pEffect->Set_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 	}
 	
 

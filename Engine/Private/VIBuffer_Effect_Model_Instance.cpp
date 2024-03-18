@@ -250,9 +250,15 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 		//}
 
 
-		// 이동 방향으로 힘 줘서 이동
-		_vector vForce = vDir * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
-		Add_Force(iNum, vForce, m_tBufferDesc.eForce_Mode);
+
+		// 액션 타입이 SPARK일때만 처음 동시에 힘주기
+		if (SPARK == m_tBufferDesc.eType_Action)
+		{
+			// 이동 방향으로 힘 줘서 이동
+			_vector vForce = vDir * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
+			Add_Force(iNum, vForce, m_tBufferDesc.eForce_Mode);
+		}
+
 
 
 

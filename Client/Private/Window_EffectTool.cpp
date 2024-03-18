@@ -830,6 +830,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::RadioButton("BLINK_Particle", &m_iType_Action_Particle, 1);	 
 				ImGui::RadioButton("FALL_Particle", &m_iType_Action_Particle, 2);	ImGui::SameLine();
 				ImGui::RadioButton("RISE_Particle", &m_iType_Action_Particle, 3);	 
+				ImGui::RadioButton("TORNADO_Particle", &m_iType_Action_Particle, 4);
 				if (0 == m_iType_Action_Particle)
 					m_pParticleBufferDesc->eType_Action = CVIBuffer_Particle::SPARK;
 				else if (1 == m_iType_Action_Particle)
@@ -838,6 +839,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticleBufferDesc->eType_Action = CVIBuffer_Particle::FALL;
 				else if (3 == m_iType_Action_Particle)
 					m_pParticleBufferDesc->eType_Action = CVIBuffer_Particle::RISE;
+				else if (4 == m_iType_Action_Particle)
+					m_pParticleBufferDesc->eType_Action = CVIBuffer_Particle::TORNADO;
 
 
 
@@ -1554,11 +1557,11 @@ void CWindow_EffectTool::Update_MeshTab()
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Torch"));
 			}
 
-			// 두두두두 불 이펙트 테스트
-			if (ImGui::Button(" Tick Effect Test "))
-			{
-				//EFFECT_MANAGER->Tick_Create_Effect();
-			}
+			//// 두두두두 불 이펙트 테스트
+			//if (ImGui::Button(" Tick Effect Test "))
+			//{
+			//	//EFFECT_MANAGER->Tick_Create_Effect();
+			//}
 
 			ImGui::SeparatorText("");
 		}
@@ -1598,17 +1601,18 @@ void CWindow_EffectTool::Update_MeshTab()
 				if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 				{
 					dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 					m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 11;
-					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = 0;	// 텍스처 인덱스 초기화
 
 				}ImGui::SameLine();
 				if (ImGui::Button("Diffuse_Waves"))	// 웨이브 디퓨즈로 변경
 				{
 					dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Waves"));
-					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse_Waves");
 					m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 5;
-					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = 0;	// 텍스처 인덱스 초기화
+				}
+
+				if (ImGui::Button(" Remove Diffuse_Mesh "))
+				{
+					dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Remove_TextureCom(CEffect_Void::TEXTURE_DIFFUSE);
 				}
 
 
@@ -3389,6 +3393,24 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 		}
 
 
+		// 모델 크기 변경
+		_float3 vScaled = pTransform->Get_Scaled();
+		ImGui::Text("Model Scaled  : %.2f %.2f %.2f", vScaled.x, vScaled.y, vScaled.z);
+		if (ImGui::DragFloat3("Model_Scale", m_vScale_Model, 0.5f))
+		{
+			if (0.f == m_vScale_Model[0])
+				m_vScale_Model[0] = 1.f;
+
+			if (0.f == m_vScale_Model[1])
+				m_vScale_Model[1] = 1.f;
+
+			if (0.f == m_vScale_Model[2])
+				m_vScale_Model[2] = 1.f;
+
+			pTransform->Set_Scaling(m_vScale_Model[0], m_vScale_Model[1], m_vScale_Model[2]);
+		}
+
+
 		if (nullptr != m_pCurEffect)
 		{
 			// 이펙트의주인 정해주기 테스트
@@ -3597,6 +3619,11 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		//	//Add_Part_Mesh(TEXT("Prototype_Component_Model_ShieldDome"));
 		//	//Add_Part_Mesh(TEXT("Prototype_Component_Model_Particle_Test"));
 		//}
+
+		if (ImGui::Button(" Copy Part "))
+		{
+			Copy_CurPart();
+		}
 
 
 		// =========================================
@@ -4595,6 +4622,20 @@ void CWindow_EffectTool::Delete_CurPart()
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.begin()->second);
 	else
 		m_pCurPartEffect = nullptr;
+
+}
+
+void CWindow_EffectTool::Copy_CurPart()
+{
+
+	if (nullptr != m_pCurPartEffect)
+	{
+		// 현재 선택된 파트 이펙트가 있을 경우
+
+
+
+
+	}
 
 }
 
