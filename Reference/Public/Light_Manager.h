@@ -13,12 +13,14 @@ private:
 public:
 	HRESULT			Initialize();
 	HRESULT			Add_Light(const LIGHT_DESC& LightDesc, _int& outLightIndex);
+	class CLight*	Add_Light_AndGet(const LIGHT_DESC& LightDesc, _uint& outLightIndex);
 	_bool			Remove_Light(const _uint& iIndex);
 	_bool			Remove_AllLight();
 	HRESULT			Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 
 	/* For. ShaderTool */
 	class CLight*	Find_Light(const _int iIndex);
+	class CLight*   Get_DirectionLight();
 	void			Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc);
 
 	/* For. Shadow */

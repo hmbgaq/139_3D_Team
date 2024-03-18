@@ -39,7 +39,16 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 		return E_FAIL;
 	
 	if (false == m_tEnvironmentDesc.bPreview)
+	{
 		m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
+
+		CLight* pLight = m_pGameInstance->Add_Light_AndGet(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.LightDesc.iLightIndex);
+
+		if (pLight == nullptr)
+			return E_FAIL;
+
+		m_tEnvironmentDesc.iLightIndex = pLight->Get_LightIndex();
+	}
 
 
 	if(true == m_tEnvironmentDesc.bAnimModel)
@@ -50,13 +59,14 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 
 	if (true == m_tEnvironmentDesc.bEffect)
 	{
-		m_pEffect = EFFECT_MANAGER->Create_Effect("FIre_Torch.json", this);
+		m_pEffect = EFFECT_MANAGER->Create_Effect("FIre_Torch_05.json", this);
 		//m_pEffect->Set_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 	}
 	
+	
+	
+	
 
-	if(FAILED(m_pGameInstance->Add_Light(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.iLightIndex)))
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -210,7 +220,7 @@ void CEnvironment_LightObject::Set_Enable(_bool bEnable)
 
 void CEnvironment_LightObject::Set_LightDesc(LIGHT_DESC tLightDesc)
 {
-	CLight* pLight = m_pGameInstance->Find_Light(tLightDesc.iLightIndex);
+	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
 	
 	if(nullptr == pLight)
 		return;
@@ -218,10 +228,30 @@ void CEnvironment_LightObject::Set_LightDesc(LIGHT_DESC tLightDesc)
 	pLight->Set_LightDesc(tLightDesc);
 	m_tEnvironmentDesc.LightDesc = tLightDesc;
 
+	
+
 //TODO public: /* For.Light_Manager */
 //TODO 	HRESULT			Add_Light(const LIGHT_DESC & LightDesc, _int & outLightIndex);
 //TODO 	class CLight*		Find_Light(const _int iIndex);
 //TODO 	void				Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc);
+}
+
+
+
+void CEnvironment_LightObject::Set_LightPos(_float3 vLightPos)
+{
+	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
+
+	if (nullptr == pLight)
+		return;
+
+	LIGHT_DESC tOriginDesc = pLight->Get_LightDesc();
+
+	tOriginDesc.vPosition = _float4(vLightPos.x, vLightPos.y, vLightPos.z, 1.f);
+	m_tEnvironmentDesc.LightDesc.vPosition = _float4(vLightPos.x, vLightPos.y, vLightPos.z, 1.f);
+
+
+	pLight->Set_LightDesc(tOriginDesc);
 }
 
 void CEnvironment_LightObject::Change_LightType(LIGHT_DESC::TYPE eLightType)
@@ -231,16 +261,29 @@ void CEnvironment_LightObject::Change_LightType(LIGHT_DESC::TYPE eLightType)
 	if (nullptr == pLight)
 		return;
 
-	Safe_Release(pLight);
+	LIGHT_DESC tOriginDesc = pLight->Get_LightDesc();
 
-	HRESULT hr;
+	tOriginDesc.eType = eLightType;
+	m_tEnvironmentDesc.LightDesc.eType = eLightType;
 
-	hr = m_pGameInstance->Add_Light(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.iLightIndex);
+	pLight->Set_LightDesc(tOriginDesc);
 
-	if (S_OK == hr)
-	{
-		m_tEnvironmentDesc.LightDesc.eType = eLightType;
-	}
+}
+
+void CEnvironment_LightObject::Set_Select(_bool bSelect)
+{
+	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
+
+	if (nullptr == pLight)
+		return;
+		
+	pLight->Set_Select(bSelect);
+}
+
+void CEnvironment_LightObject::Set_EffectPos(_float3 vEffectPos)
+{
+	if(m_pEffect != nullptr)
+		m_pEffect->Set_Position(vEffectPos);
 }
 
 void CEnvironment_LightObject::Change_LightEffect(LIGHT_EFFECT eLightEffectType)
@@ -439,13 +482,20 @@ void CEnvironment_LightObject::Free()
 {
 	__super::Free();
 
+
+	//if (false == m_tEnvironmentDesc.bPreview)
+	//{
+	//	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
+	//
+	//	if (pLight != nullptr)
+	//		m_pGameInstance->Remove_Light(m_tEnvironmentDesc.iLightIndex);
+	//}
 	
-	if(m_pEffect != nullptr)
+	if (m_pEffect != nullptr)
 		Safe_Release(m_pEffect);
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
-
 
 	if(m_iCurrentLevel == (_uint)LEVEL_TOOL)
 		Safe_Release(m_pPickingCollider);

@@ -66,6 +66,11 @@ void CPart_Preview::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	//if (nullptr != m_pTrail)
+	//{
+	//	//m_pTrail->Set_Play(m_bTrailPlay);
+	//	m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
+	//}
 
 }
 
@@ -88,12 +93,6 @@ void CPart_Preview::Late_Tick(_float fTimeDelta)
 	//if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 	//	return;
 
-
-	if (nullptr != m_pTrail)
-	{
-		//m_pTrail->Set_Play(m_bTrailPlay);
-		m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
-	}
 }
 
 HRESULT CPart_Preview::Render()

@@ -20,6 +20,9 @@ void CVampireCommander_SyncedAttack_Fail::Initialize(CVampireCommander* pActor)
 
 	CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
 	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ATTACK);
+
+	pActor->m_bLookAt = false;
+
 }
 
 CState<CVampireCommander>* CVampireCommander_SyncedAttack_Fail::Update(CVampireCommander* pActor, _float fTimeDelta)
@@ -53,4 +56,7 @@ void CVampireCommander_SyncedAttack_Fail::Release(CVampireCommander* pActor)
 
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 	pWeapon->Set_Enable(false);
+
+	pActor->m_bLookAt = true;
+
 }

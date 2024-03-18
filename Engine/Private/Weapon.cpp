@@ -171,7 +171,7 @@ CCharacter* CWeapon::Get_PartOwner()
 	return dynamic_cast<CCharacter*>(m_pOwner);
 }
 
-CWeapon* CWeapon::Set_Damage(_int _iDamage)
+CWeapon* CWeapon::Set_Damage(_float _iDamage)
 {
 	m_iDamage = _iDamage;
 

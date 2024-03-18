@@ -41,7 +41,7 @@ void CBody_VampireCommander::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_K))
 	{
 		iDiscardMeshNumber += 1;
-		if (iDiscardMeshNumber > m_pModelCom->Get_NumMeshes())
+		if (iDiscardMeshNumber > (_int)m_pModelCom->Get_NumMeshes())
 		{
 			iDiscardMeshNumber = 0;
 		}
@@ -75,6 +75,7 @@ HRESULT CBody_VampireCommander::Render()
 // 
 // 		m_pModelCom->Render((_uint)i);
 // 	}
+
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -116,6 +117,7 @@ HRESULT CBody_VampireCommander::Render()
 			}
 		}
 	}
+
 	return S_OK;
 }
 

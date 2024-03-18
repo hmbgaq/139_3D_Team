@@ -51,18 +51,21 @@ void CVampireCommander_Weapon_Hand::Priority_Tick(_float fTimeDelta)
 void CVampireCommander_Weapon_Hand::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	
+
 }
 
 void CVampireCommander_Weapon_Hand::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-
-
 	//! 유정: 트레일 테스트
 	if (nullptr != m_pTrail)
 	{
 		m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
+		cout << "VampireCommander_Hand_PositionX:" << m_WorldMatrix._41 << "VampireCommander_Hand_PositionY:" << m_WorldMatrix._42 << "VampireCommander_Hand_PositionZ:" << m_WorldMatrix._43 << endl;
+		cout << "TrailX:" << m_pTrail->Get_Position().x << "TrailY:" << m_pTrail->Get_Position().y << "TrailZ:" << m_pTrail->Get_Position().z << endl;
 	}
 	
 	// m_pTrail->Set_Play(TRUE /*FALSE*/); //! 유정: 트레일 온오프
@@ -99,7 +102,7 @@ HRESULT CVampireCommander_Weapon_Hand::Ready_Components()
 
 
 	//! 유정: 트레일 테스트
-	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json", this);
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json",this);
 
 	return S_OK;
 }
@@ -197,4 +200,7 @@ CGameObject* CVampireCommander_Weapon_Hand::Pool()
 void CVampireCommander_Weapon_Hand::Free()
 {
 	__super::Free();
+
+	if (nullptr != m_pTrail)
+		m_pTrail->Set_Dead(TRUE);
 }

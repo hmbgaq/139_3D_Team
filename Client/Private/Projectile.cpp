@@ -141,9 +141,9 @@ CCharacter* CProjectile::Get_Target_Character(CCollider* other)
 	return pTarget_Character;
 }
 
-CProjectile* CProjectile::Set_Damage(_int _iDamage)
+CProjectile* CProjectile::Set_Damage(_float _fDamage)
 {
-	m_iDamage = _iDamage;
+	m_fDamage = _fDamage;
 
 	return this;
 }

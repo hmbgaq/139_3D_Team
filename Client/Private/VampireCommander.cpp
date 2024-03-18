@@ -92,8 +92,21 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
-	cout << "introBossHP:" << m_iHp << endl;
+	//cout << "introBossHP:" << m_iHp << endl;
+	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
 
+	cout << "VampireCommander : " << fAngle << endl;
+	if (m_bLookAt == true)
+	{
+		
+		if (0 <= fAngle && fAngle <= 45)
+			Look_At_Target_Lerp(fTimeDelta);
+		else if (-45 <= fAngle && fAngle < 0)
+			Look_At_Target_Lerp(fTimeDelta);
+
+		/*m_bLookAt = false;*/
+
+	}
 	
 }
 

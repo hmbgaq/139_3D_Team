@@ -718,8 +718,8 @@ HRESULT CLevel_Intro::Ready_LightDesc()
     {
         LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
         LightDesc.vDirection = _float4(0.125f, -0.01f, -0.45f, 0.485f);
-        LightDesc.vDiffuse = _float4(0.822f, 0.822f, 0.822f, .5f);
-        LightDesc.vAmbient = _float4(0.243f, 0.386f, 0.253f, 0.604);
+        LightDesc.vDiffuse = _float4(0.822f, 0.822f, 0.822f, 0.5f);
+        LightDesc.vAmbient = _float4(0.243f, 0.386f, 0.253f, 0.604f);
         LightDesc.vSpecular = _float4(0.428f, 0.985f, 0.350f, 0.5f);
 
         FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
@@ -740,7 +740,7 @@ HRESULT CLevel_Intro::Ready_Shader()
 
     HBAO_PLUS_DESC Desc_Hbao = {};
     Desc_Hbao.bHBAO_Active = true;
-    Desc_Hbao.fRadius = 1.639;
+    Desc_Hbao.fRadius = 1.639f;
     Desc_Hbao.fBias = 0.1f;
     Desc_Hbao.fBlur_Sharpness = 11.f;
     Desc_Hbao.fPowerExponent = 1.985f;
