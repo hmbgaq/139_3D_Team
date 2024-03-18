@@ -100,6 +100,8 @@ float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
     return vRimColor;
 }
 
+
+
 float4 Calculation_Brightness(float4 Out_Diffuse)
 {
     float4 vBrightnessColor = float4(0.f, 0.f, 0.f, 0.f);

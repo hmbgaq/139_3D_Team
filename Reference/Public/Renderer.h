@@ -47,6 +47,7 @@ private:
 	HRESULT Render_RimBloom();
 	HRESULT Render_Deferred();
 	HRESULT Render_EffectBloomBlur();
+	HRESULT Render_Distortion();
 
 	HRESULT Render_RadialBlur(); 
 	HRESULT Render_HDR();

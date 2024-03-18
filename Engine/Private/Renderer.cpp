@@ -371,6 +371,11 @@ HRESULT CRenderer::Render_EffectBloomBlur()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_Distortion()
+{
+	return E_NOTIMPL;
+}
+
 HRESULT CRenderer::Render_HDR()
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_HDR"))); /* Target_FXAA*/
@@ -554,6 +559,8 @@ HRESULT CRenderer::Deferred_Effect()
 	FAILED_CHECK(Render_Effect());	/* MRT_Effect : Target_Effect_Diffuse, Target_Effect_Normal, Target_Effect_Depth, Target_Effect_RimBloom */
 	
 	FAILED_CHECK(Render_EffectBloomBlur());	/* Render에 블룸블러 효과 MRT_Effect_Blur -> Target_Effect_RR_Blur에 저장됨 */
+
+	//FAILED_CHECK(Render_EffectDistortion());	/* Render에 블룸블러 효과 MRT_Effect_Blur -> Target_Effect_RR_Blur에 저장됨 */
 
 	FAILED_CHECK(Render_Effect_Final()); /* Deferred + Effect + EffectBloomBlur */
 
@@ -950,6 +957,14 @@ HRESULT CRenderer::Create_RenderTarget()
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_Vertical"), TEXT("Target_Blur_Vertical")));
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_UpSampling"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_UpSampling"), TEXT("Target_Blur_UpSampling")));
+
+	/* MRT_Distortion */
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Distortion"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Distortion"), TEXT("Target_Distortion")));
+
+	/* MRT_Distortion_Blur*/
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Distortion_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Distortion"), TEXT("Target_Distortion_Blur")));
 
 	/* MRT_HBAO+ */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_HBAO"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 1.f)))
