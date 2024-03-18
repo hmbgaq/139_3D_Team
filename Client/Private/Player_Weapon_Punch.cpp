@@ -96,8 +96,6 @@ void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 			pSpringCam->Set_ShakeCamera(true);
 		}
 
-		
-
 		m_pGameInstance->Set_RadialBlurTime(0.2f * ECast(m_eHitPower));
 		
 		

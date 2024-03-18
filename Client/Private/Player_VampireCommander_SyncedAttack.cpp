@@ -29,6 +29,7 @@ void CPlayer_VampireCommander_SyncedAttack::Release(CPlayer* pActor)
 	__super::Release(pActor);
 	pActor->Set_Rotate_In_CameraDir(true);
 	pActor->m_bPlayerCheck = true;
+
 	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 	if (pSpringCam)
 	{

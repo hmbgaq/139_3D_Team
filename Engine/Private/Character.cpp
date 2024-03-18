@@ -97,8 +97,14 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 		return;
 
+	_float3 vBodyMovePos = m_pBody->Get_MovePos();
+	_float3 vResult = vBodyMovePos;
+	vResult.x *= m_vRootMoveRate.x;
+	vResult.y *= m_vRootMoveRate.y;
+	vResult.z *= m_vRootMoveRate.z;
 
-	m_pTransformCom->Add_RootBone_Position(m_pBody->Get_MovePos(), m_pNavigationCom);
+
+	m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
 
 	m_pRigidBody->Late_Tick(fTimeDelta);
 
