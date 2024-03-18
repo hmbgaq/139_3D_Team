@@ -176,16 +176,15 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 	{
 		if (false == m_bFlags[0] )
 		{
-
+			cout << "Infected Dead " << endl;
 			CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
 			pBody->Collider_Off();
 
 			CData_Manager::GetInstance()->Add_CurEXP(15);
 			m_bFlags[0] = true;
 		}	
-		//cout << "death end " << endl;
 
-		//pActor->Set_Dead(true);
+		pActor->Set_Dead(true);
 		return nullptr;
 	}
 
