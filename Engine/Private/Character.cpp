@@ -82,7 +82,6 @@ void CCharacter::Tick(_float fTimeDelta)
 			Pair.second->Tick(fTimeDelta);
 	}
 
-	Update_RadialBlurTime(fTimeDelta);
 }
 
 void CCharacter::Late_Tick(_float fTimeDelta)

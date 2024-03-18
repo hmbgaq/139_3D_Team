@@ -92,42 +92,42 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
         LightDesc.vDiffuse = _float4(0.822f, 0.822f, 0.822f, .5f);
         LightDesc.vAmbient = _float4(0.243f, 0.386f, 0.253f, 0.604);
         LightDesc.vSpecular = _float4(0.428f, 0.985f, 0.350f, 0.5f);
-
+       
         //LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
         //LightDesc.vDirection = _float4(0.f, -1.f, 0.f, 0.f);
         //LightDesc.vDiffuse = _float4(0.2f, 0.4f, 0.3f, 1.0f);
         //LightDesc.vAmbient = _float4(0.05f, 0.1f, 0.075f, 1.0f);
         //LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
+       
         FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
     }
-        //{
-        //   ZeroMemory(&LightDesc, sizeof LightDesc);
+     //{
+     //   ZeroMemory(&LightDesc, sizeof LightDesc);
      
-        //   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-        //   LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
-        //   LightDesc.fRange = 20.f;
-        //   LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
-        //   LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
-        //   LightDesc.vSpecular = LightDesc.vDiffuse;
-        //   FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+     //   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+     //   LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
+     //   LightDesc.fRange = 20.f;
+     //   LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
+     //   LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
+     //   LightDesc.vSpecular = LightDesc.vDiffuse;
+     //   FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
      
-        //   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-        //   LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
-        //   LightDesc.fRange = 20.f;
-        //   LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
-        //   LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
-        //   LightDesc.vSpecular = LightDesc.vDiffuse;
-        //   FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+     //   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+     //   LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
+     //   LightDesc.fRange = 20.f;
+     //   LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
+     //   LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
+     //   LightDesc.vSpecular = LightDesc.vDiffuse;
+     //   FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
      
-        //   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-        //   LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
-        //   LightDesc.fRange = 20.f;
-        //   LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
-        //   LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
-        //   LightDesc.vSpecular = LightDesc.vDiffuse;
-        //   FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-        //}
+     //   LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+     //   LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
+     //   LightDesc.fRange = 20.f;
+     //   LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
+     //   LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
+     //   LightDesc.vSpecular = LightDesc.vDiffuse;
+     //   FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+     //}
     return S_OK;
 }
 

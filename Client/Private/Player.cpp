@@ -111,6 +111,8 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	Update_ChargingTime(fTimeDelta);
 
+
+
 	CData_Manager::GetInstance()->Set_CurHP(m_iHp);
 
 	if (m_pGameInstance->Key_Down(DIK_C))
@@ -146,6 +148,8 @@ void CPlayer::Tick(_float fTimeDelta)
 	if(m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
 	
+	Update_RadialBlurTime(fTimeDelta);
+
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)

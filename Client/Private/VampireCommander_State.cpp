@@ -202,18 +202,17 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 	_float fAngle = pActor->Target_Contained_Angle(pActor->Get_Transform()->Get_Look(), pActor->Get_Target()->Get_Transform()->Get_Pos());
 
 	cout << "VampireCommander : "<< fAngle  << endl;
-	if (pActor->m_bLookAt == true)
-	{
-		//Look_At_Target();
-		if (0 <= fAngle && fAngle <= 45)
-			pActor->Look_At_Target();
-		else if (-45 <= fAngle && fAngle < 0)
-			pActor->Look_At_Target();
-		
-
-		pActor->m_bLookAt = false;
-		
-	}
+// 	if (pActor->m_bLookAt == true)
+// 	{
+// 		//Look_At_Target();
+// 		if (0 <= fAngle && fAngle <= 45)
+// 			pActor->Look_At_Target_Lerp(fTimeDelta*4);
+// 		else if (-45 <= fAngle && fAngle < 0)
+// 			pActor->Look_At_Target_Lerp(fTimeDelta*4);
+// 		
+// 		pActor->m_bLookAt = false;
+// 		
+// 	}
 	if (pActor->m_bTurn == true)
 	{
 		if (fAngle > 45 && fAngle <= 135)

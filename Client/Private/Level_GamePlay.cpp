@@ -53,9 +53,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround"))); // Object 생성 실패해서 임시 주석.
-	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
+	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
-	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+	//FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_Shader());
 
 #pragma region 주석확인
@@ -68,14 +68,14 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_M))
 	{
-		m_pGameInstance->Get_Renderer()->Set_HBAO_Active(false);
-		m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(false);
-		m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
-		m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
-		m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
-		m_pGameInstance->Get_Renderer()->Set_HDR_Active(false);
-		m_pGameInstance->Get_Renderer()->Set_FXAA_Active(false);
-		m_pGameInstance->Get_Renderer()->Set_HSV_Active(false);
+		//m_pGameInstance->Get_Renderer()->Set_HBAO_Active(false);
+		//m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(false);
+		//m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
+		//m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
+		//m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
+		//m_pGameInstance->Get_Renderer()->Set_HDR_Active(false);
+		//m_pGameInstance->Get_Renderer()->Set_FXAA_Active(false);
+		//m_pGameInstance->Get_Renderer()->Set_HSV_Active(false);
 
 		m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
 	}

@@ -12,12 +12,12 @@ void CVampireCommander_TurnR90::Initialize(CVampireCommander* pActor)
 
 CState<CVampireCommander>* CVampireCommander_TurnR90::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
-	_float fAngle = pActor->Target_Contained_Angle(pActor->Get_Transform()->Get_Look(), pActor->Get_Target()->Get_Transform()->Get_Pos());
-	
-	if (0 <= fAngle && fAngle <= 45)
-		pActor->Look_At_Target_Lerp(fTimeDelta*2);
-	else if (-45 <= fAngle && fAngle < 0)
-		pActor->Look_At_Target_Lerp(fTimeDelta * 2);
+	//_float fAngle = pActor->Target_Contained_Angle(pActor->Get_Transform()->Get_Look(), pActor->Get_Target()->Get_Transform()->Get_Pos());
+	//
+	//if (0 <= fAngle && fAngle <= 45)
+	//	pActor->Look_At_Target_Lerp(fTimeDelta*2);
+	//else if (-45 <= fAngle && fAngle < 0)
+	//	pActor->Look_At_Target_Lerp(fTimeDelta * 2);
 
 
 	if (pActor->Is_Inputable_Front(30))
