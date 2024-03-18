@@ -31,6 +31,9 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 
 public:
+	virtual HRESULT Ready_Components();
+
+public:
 	virtual _bool Write_Json(json& Out_Json) override;
 
 public:

@@ -209,6 +209,22 @@ void CSpringCamera::Late_Tick(_float fTimeDelta)
 
 }
 
+HRESULT CSpringCamera::Ready_Components()
+{
+	/* For.Com_Collider */
+	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
+	BoundingDesc.fRadius = 1.0f;
+	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
+
+
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 _bool CSpringCamera::Write_Json(json& Out_Json)
 {
 	//Out_Json["Name"] = m_sName;
