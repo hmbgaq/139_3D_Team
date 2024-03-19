@@ -205,6 +205,7 @@ public:
 public:
 	_bool Is_Revealed_Weakness() { return m_bIsRevealedWeakness; };
 	void Set_Reveal_Weakness(_bool _bIsRevealedWeakness) { m_bIsRevealedWeakness = _bIsRevealedWeakness; };
+	void Set_WeaknessCount(_int _iWeaknessCount) { m_iWeaknessCount = _iWeaknessCount; }
 
 
 
@@ -250,6 +251,7 @@ protected:
 	_float3		m_vWeaknessPos = { 0.f, 0.f, 0.f };
 	_float3		m_vWeaknessPos_Local = { 0.f, 1.f, 0.f };
 	_bool		m_bIsRevealedWeakness = { false };
+	_int		m_iWeaknessCount = { 3 };
 
 
 
