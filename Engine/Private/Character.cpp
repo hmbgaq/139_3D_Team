@@ -389,7 +389,7 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 	}
 
 
-	if (true == m_bIsInvincible)
+	if (true == m_bIsInvincible && false == m_bIsStun)
 	{
 		return Hit_Type::None;
 	}
