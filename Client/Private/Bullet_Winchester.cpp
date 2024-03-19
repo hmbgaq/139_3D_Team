@@ -60,7 +60,9 @@ void CBullet_Winchester::Tick(_float fTimeDelta)
 
 	//m_pTransformCom->Go_Straight(fTimeDelta);
 
-	_float fDistance = m_pTransformCom->Get_Speed() * 1.f;
+	m_pTransformCom->Go_Straight(fTimeDelta);
+
+	_float fDistance = m_pTransformCom->Get_Speed();// / 2.f;
 	Search_Target(LAYER_MONSTER, fDistance);
 	Search_Target(LAYER_BOSS, fDistance);
 	
@@ -72,10 +74,10 @@ void CBullet_Winchester::Tick(_float fTimeDelta)
 		//m_pTransformCom->Set_Speed(fDiff);
 		Set_Position(m_pTarget->Get_WeaknessPoint());
 	}
-	else 
-	{
-		m_pTransformCom->Go_Straight(fTimeDelta);
-	}
+	//else 
+	//{
+	//	m_pTransformCom->Go_Straight(fTimeDelta);
+	//}
 	
 	
 }
