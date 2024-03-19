@@ -50,6 +50,7 @@ private:
 	HRESULT Deferred_Effect();
 	HRESULT Render_Effect_BloomBlur();
 	HRESULT Render_Effect_Distortion();
+	HRESULT Render_Effect_Distortion_Blur();
 	HRESULT Render_Effect_Final();
 
 	HRESULT Render_OutLine();
@@ -160,7 +161,7 @@ private:
 	HRESULT Ready_DebugRender();
 	HRESULT Render_DebugCom();	
 	HRESULT Render_DebugTarget();
-	_bool	m_bDebugRenderTarget	= { false };
+	_bool	m_bDebugRenderTarget	= { true };
 	_bool	m_bDebugCom				= { true };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
