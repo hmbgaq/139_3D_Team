@@ -46,9 +46,13 @@ private:
 	HRESULT Render_HBAO_PLUS();
 	HRESULT Render_RimBloom();
 	HRESULT Render_Deferred();
-	HRESULT Render_EffectBloomBlur();
-	HRESULT Render_Distortion();
 
+	HRESULT Deferred_Effect();
+	HRESULT Render_Effect_BloomBlur();
+	HRESULT Render_Effect_Distortion();
+	HRESULT Render_Effect_Final();
+
+	HRESULT Render_OutLine();
 	HRESULT Render_RadialBlur(); 
 	HRESULT Render_HDR();
 	HRESULT Render_DOF(); // 일반적으로 HDR적용이후에 적용됨 
@@ -57,8 +61,6 @@ private:
 	HRESULT Render_Final();
 	HRESULT Render_Blend();
 
-	HRESULT Deferred_Effect();
-	HRESULT Render_Effect_Final();
 	HRESULT Deferred_UI();
 
 	/* Effect */
