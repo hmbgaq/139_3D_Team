@@ -68,7 +68,6 @@
 #include "Player_HitNormal_L_Gatling.h"
 #include "Player_HitNormal_R.h"
 #include "Player_HitNormal_R_Gatling.h"
-
 #include "Player_Rifle_IdleWeaponHolster.h"
 #include "Player_Rifle_Ironsights_Fire.h"
 #include "Player_Empowered_Winchester_IdleFire.h"
@@ -116,11 +115,16 @@
 #include "Player_Grenade_Throw_v2.h"
 #include "Player_Grenade_WeaponHolster.h"
 #include "Player_Grenade_WeaponUnholster.h"
-
 #include "Player_MeleeDynamic_04.h"
 #include "Player_Leap_01_Lower.h"
 #include "Player_Leap_01_Higher.h"
 #include "Player_MeleeUppercut_01v2.h"
+#include "Player_EnergyWhip_CloseRange_01.h"
+#include "Player_EnergyWhip_Leap.h"
+#include "Player_EnergyWhip_LeapShort.h"
+#include "Player_EnergyWhip_LongRange.h"
+#include "Player_EnergyWhip_Pull.h"
+
 
 
 #pragma endregion
@@ -365,6 +369,11 @@ CState<CPlayer>* CPlayer_State::Finisher_State(CPlayer* pActor, _float fTimeDelt
 
 CState<CPlayer>* CPlayer_State::EnergyWhip_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (pActor->Is_Animation_End())
+	{
+		return new CPlayer_IdleLoop();
+	}
+
 	return nullptr;
 }
 
@@ -373,8 +382,8 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 {
 	CState<CPlayer>* pState = { nullptr };
 
-	//pState = Rifle(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
+	pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
 
 	pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
@@ -913,6 +922,12 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 
 CState<CPlayer>* CPlayer_State::EnergyWhip(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Key_Down(DIK_Q)) 
+	{
+		if (CPlayer_EnergyWhip_CloseRange_01::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_EnergyWhip_CloseRange_01();
+	}
+
 	return nullptr;
 }
 

@@ -34,6 +34,7 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 	__super::Update(pActor, fTimeDelta);
 
 	//pActor->Aim_Walk(fTimeDelta);
+	//pActor->Aim_Idle();
 
 	if (m_pGameInstance->Mouse_Down(DIM_LB))
 	{
