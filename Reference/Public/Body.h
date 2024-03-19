@@ -110,16 +110,13 @@ protected:
 	//CTexture* m_pDissolveTexture = { nullptr };
 
 protected:
-	//CCharacter* m_pOwner = { nullptr };
-
-protected:
 	class CTransform* m_pParentTransform = { nullptr };
 	_float4x4	m_WorldMatrix = {};
 	_float3		m_vMovePos = { 0.f, 0.f, 0.f };
 
 
-	_float		m_fRotateUpperX = { 1.5f };
-	_float		m_fRotateUpperY = { 3.0f };
+	_float		m_fRotateUpperX = { 0.0f };
+	_float		m_fRotateUpperY = { 2.6f };
 
 	_float		m_fShootingReaction = { 0.f };
 	_float		m_fShootingReactionTarget = { 0.f };

@@ -33,7 +33,7 @@ HRESULT CBullet_Winchester::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 50.f;
+	GameObjectDesc.fSpeedPerSec = 90.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -41,10 +41,10 @@ HRESULT CBullet_Winchester::Initialize(void* pArg)
 
 	//m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 30.f;
+	m_fDamage = 10.f;
 
 	// ÀÌÆåÆ® »ý¼º
-	m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
+	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
 
 	return S_OK;
 }
@@ -58,7 +58,9 @@ void CBullet_Winchester::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	_float fDistance = m_pTransformCom->Get_Speed() * 6.f;
+	//m_pTransformCom->Go_Straight(fTimeDelta);
+
+	_float fDistance = m_pTransformCom->Get_Speed() * 1.f;
 	Search_Target(LAYER_MONSTER, fDistance);
 	Search_Target(LAYER_BOSS, fDistance);
 	
@@ -152,7 +154,7 @@ HRESULT CBullet_Winchester::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER_ATTACK);
-	BoundingDesc.fRadius = { 0.3f };
+	BoundingDesc.fRadius = { 0.4f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
