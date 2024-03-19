@@ -15,6 +15,7 @@ CState<CPlayer>* CPlayer_State_Interaction::Update(CPlayer* pActor, _float fTime
 void CPlayer_State_Interaction::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+	pActor->Reset_RootMoveRate();
 }
 
 CState<CPlayer>* CPlayer_State_Interaction::Update_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)

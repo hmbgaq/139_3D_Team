@@ -35,6 +35,8 @@ HRESULT CInfected_A::Initialize(void* pArg)
 
 	FAILED_CHECK(Ready_Option());
 
+	m_pTarget = m_pGameInstance->Get_Player();
+
 	return S_OK;
 }
 

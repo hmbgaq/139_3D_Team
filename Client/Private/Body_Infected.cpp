@@ -134,11 +134,6 @@ HRESULT CBody_Infected::Set_StateDead()
 	return E_NOTIMPL;
 }
 
-void CBody_Infected::Collider_Off()
-{
-	m_pColliderCom->Set_Enable(false);
-}
-
 HRESULT CBody_Infected::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();

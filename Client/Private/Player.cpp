@@ -147,8 +147,6 @@ void CPlayer::Tick(_float fTimeDelta)
 	
 	if(m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
-	
-	Update_RadialBlurTime(fTimeDelta);
 
 }
 

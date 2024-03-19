@@ -28,9 +28,8 @@ protected:
 
 public:
 	class CBone* Get_BonePtr(const _char * pBoneName);
-	CCollider* Get_Collider() {
-		return m_pColliderCom;
-	}
+	CCollider* Get_Collider() { return m_pColliderCom; }
+	void	Collider_Off();
 
 public:
 	virtual HRESULT Initialize_Prototype() override;

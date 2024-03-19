@@ -55,8 +55,13 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround"))); // Object 생성 실패해서 임시 주석.
 	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
-	//FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+
+//#ifndef _DEBUG
 	FAILED_CHECK(Ready_Shader());
+//#endif 
+
+	
 
 #pragma region 주석확인
 	FAILED_CHECK(Ready_UI());
@@ -457,7 +462,7 @@ HRESULT CLevel_GamePlay::Ready_Shader()
 	m_pGameInstance->Get_Renderer()->Set_HDR_Active(true);
 	m_pGameInstance->Get_Renderer()->Set_FXAA_Active(true);
 	m_pGameInstance->Get_Renderer()->Set_HSV_Active(true);
-
+	
 	HBAO_PLUS_DESC Desc_Hbao = {};
 	Desc_Hbao.bHBAO_Active = true;
 	Desc_Hbao.fBias = 0.277f;
@@ -488,6 +493,7 @@ HRESULT CLevel_GamePlay::Ready_Shader()
 	Desc_HSV.bScreen_Active = true;
 	Desc_HSV.fFinal_Brightness = 1.036f;
 	Desc_HSV.fFinal_Saturation = 1.513f;
+	
 
 	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
 	m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);

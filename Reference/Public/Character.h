@@ -127,7 +127,7 @@ public:
 	};
 	virtual void Hitted_Finish() {
 		//Set_Invincible(true);
-		//Hitted_Dead(Power::Heavy);
+		Hitted_Dead(Power::Heavy);
 	};
 	
 public:
@@ -206,9 +206,12 @@ public:
 	void Set_Stun(_bool _bIsStun) { m_bIsStun = _bIsStun; };
 
 public:
-	void Set_RadialBlurTime(_float fTime = 0.3f) { m_fRadialBlurTime = fTime; };
-	void Update_RadialBlurTime(_float fTimeDelta);
+	void Set_RootMoveRate(_float3 vRate) { m_vRootMoveRate = vRate; };
+	void Reset_RootMoveRate() { m_vRootMoveRate = _float3(1.f, 1.f, 1.f); };
+	
 
+protected:
+	CHARCTER_DESC CharAnimDesc = {};
 
 protected:
 	_float m_iHp = { 1.f };
@@ -222,28 +225,24 @@ protected:
 	_bool m_bIsInvincible = { false };
 	_bool m_bIsStun = { false };
 
-	_float m_fRadialBlurTime = { 0.f };
-
-
 protected:
 	//Power m_eStrength = { Power::Light };
 	_float m_fStiffnessRate = { 1.f };
 
-
-public:
-	_float m_fCurrentTrackPosition = {0.f};
 
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
 	CRigidBody* m_pRigidBody = { nullptr };
 	CBody* m_pBody = { nullptr };
 	vector<CWeapon*> m_Weapons;
-	CHARCTER_DESC CharAnimDesc = {};
 
 protected:
 	CCharacter* m_pTarget = { nullptr };
 	_float3		m_vWeaknessPoint = { 0.f, 0.f, 0.f };
 	_float3		m_vWeaknessPoint_Local = { 0.f, 1.f, 0.f };
+
+protected:
+	_float3		m_vRootMoveRate = { 1.f, 1.f, 1.f };
 
 
 protected:
@@ -255,7 +254,7 @@ protected:
 
 public:
 	_bool		m_bLookAt = true;
-	_bool		m_bTrigger = false;
+
 protected:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual CGameObject* Pool() PURE;
