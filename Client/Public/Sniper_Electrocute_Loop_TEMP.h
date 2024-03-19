@@ -1,9 +1,8 @@
 #pragma once
-#include "Bandit_Sniper_State.h"
+#include "Bandit_Sniper_State_Hit.h"
 
 BEGIN(Client)
-
-class CBandit_Sniper_State_Walk : public CBandit_Sniper_State
+class CSniper_Electrocute_Loop_TEMP : public CBandit_Sniper_State_Hit
 {
 public:
 	virtual void Initialize(CBandit_Sniper* pActor) override;
@@ -11,8 +10,7 @@ public:
 	virtual void Release(CBandit_Sniper* pActor) override;
 
 public:
-	virtual CState<CBandit_Sniper>* Update_State(CBandit_Sniper* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
-
+	static const _uint g_iAnimIndex = CBandit_Sniper::Bandit_Sniper_State::Sniper_Electrocute_Loop_TEMP;
 
 };
 

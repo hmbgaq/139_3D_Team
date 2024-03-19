@@ -1,14 +1,14 @@
 #include "stdafx.h"
-#include "Sniper_HitHeavy_FR_01.h"
+#include "Sniper_Electrocute_Loop_TEMP.h"
 
-void CSniper_HitHeavy_FR_01::Initialize(CBandit_Sniper* pActor)
+void CSniper_Electrocute_Loop_TEMP::Initialize(CBandit_Sniper* pActor)
 {
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 }
 
-CState<CBandit_Sniper>* CSniper_HitHeavy_FR_01::Update(CBandit_Sniper* pActor, _float fTimeDelta)
+CState<CBandit_Sniper>* CSniper_Electrocute_Loop_TEMP::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
 	if (pActor->Is_Animation_End())
 	{
@@ -18,7 +18,7 @@ CState<CBandit_Sniper>* CSniper_HitHeavy_FR_01::Update(CBandit_Sniper* pActor, _
 	return nullptr;
 }
 
-void CSniper_HitHeavy_FR_01::Release(CBandit_Sniper* pActor)
+void CSniper_Electrocute_Loop_TEMP::Release(CBandit_Sniper* pActor)
 {
 	__super::Release(pActor);
 }
