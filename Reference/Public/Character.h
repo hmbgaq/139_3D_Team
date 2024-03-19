@@ -163,6 +163,9 @@ public:
 
 	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 1.0f);
 
+public:
+	_bool Is_In_Frustum() { return m_bIsInFrustum; }
+
 
 
 public:	//!For Animation Split
@@ -246,6 +249,7 @@ protected:
 
 protected:
 	CCharacter* m_pTarget = { nullptr };
+	_bool m_bIsInFrustum = { false };
 
 protected:
 	_float3		m_vWeaknessPos = { 0.f, 0.f, 0.f };

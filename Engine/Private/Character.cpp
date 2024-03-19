@@ -93,6 +93,8 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 			Pair.second->Late_Tick(fTimeDelta);
 	}
 
+	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
+
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 		return;
 
@@ -475,9 +477,19 @@ void CCharacter::Look_At_Target_Lerp(_float fTimeDelta)
 
 void CCharacter::Search_Target(const wstring& strLayerTag, const _float fSearchDistance)
 {
-	if (nullptr != m_pTarget)
-		return;
-
+	if (nullptr != m_pTarget) 
+	{
+		if (m_pTarget->Is_In_Frustum())
+		{
+			return;
+		}
+		else 
+		{
+			m_pTarget = nullptr;
+		}
+			
+	}
+		
 	m_pTarget = Select_The_Nearest_Enemy(strLayerTag, fSearchDistance);
 }
 
@@ -542,7 +554,7 @@ CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _fl
 
 		CCharacter* pTargetCharacter = dynamic_cast<CCharacter*>(pTarget);
 
-		if (nullptr == pTargetCharacter || true == pTargetCharacter->Is_Invincible() || 0 >= pTargetCharacter->Get_Hp())
+		if (nullptr == pTargetCharacter || true == pTargetCharacter->Is_Invincible() || 0 >= pTargetCharacter->Get_Hp() || false == pTargetCharacter->Is_In_Frustum())
 			continue;
 
 		//_float fDistance = Calc_Distance(pTarget);
