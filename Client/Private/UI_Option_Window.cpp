@@ -87,6 +87,22 @@ HRESULT CUI_Option_Window::Render()
 	return S_OK;
 }
 
+void CUI_Option_Window::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Option_Window::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Option_Window::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Option_Window::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Option_Window::Ready_Components()
 {
 	//if(FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture

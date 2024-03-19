@@ -241,6 +241,7 @@ public:
 	_float	m_fSequenceTerm_RectSprite = { 0.05f };
 
 	/* Distortion */
+	_float m_fTimeAcc = { 1.f };
 	_float m_fSequenceTerm_Distortion = { 1.f };
 
 	_float	m_vScrollSpeeds[3] = { 0.f, 0.f, 0.f };
@@ -349,6 +350,7 @@ private:
 public: /* Save/Load */
 	virtual	HRESULT				Save_Function(string strPath, string strFileName) override;
 	virtual HRESULT				Load_Function(string strPath, string strFileName) override;
+	void						Save_Keyframe();
 
 public: /* ================= Function ================= */
 	// string타입을 받는 벡터 컨테이너를 char*타입을 받는 벡터 컨테이너로 변환 해주는 함수

@@ -32,6 +32,7 @@ private:
 	// SH_Add
 private: /* ===================== UI ===================== */
 	HRESULT	Ready_UITexture();
+	HRESULT	Ready_Mask_Noise();
 	HRESULT UI_TargetTexture();
 
 private:

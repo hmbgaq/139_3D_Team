@@ -98,6 +98,22 @@ HRESULT CUI_LevelUp_SunBeacon::Render()
 	return S_OK;
 }
 
+void CUI_LevelUp_SunBeacon::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_SunBeacon::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_SunBeacon::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_SunBeacon::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_LevelUp_SunBeacon::Ready_Components()
 {
 	//! For.Com_Shader

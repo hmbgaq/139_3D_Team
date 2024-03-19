@@ -6,7 +6,7 @@
 class CUI_Distortion final : public CUI
 {
 public: /* 각 UI파츠마다 어떤걸 얼마나 가질지 설정해주자. */
-	enum TEXTUREKIND { DIFFUSE, MASK, NOISE, TEXTURE_END };
+	enum TEXTUREKIND { DIFFUSE, TEXTURE_END };
 
 private:
 	CUI_Distortion(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -20,6 +20,12 @@ public:
 	virtual void			Tick(_float fTimeDelta) override;
 	virtual void			Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT			Render() override;
+
+	/* State */
+	virtual void	UI_Ready(_float fTimeDelta);
+	virtual void	UI_Enter(_float fTimeDelta);
+	virtual void	UI_Loop(_float fTimeDelta);
+	virtual void	UI_Exit(_float fTimeDelta);
 
 private:
 	virtual HRESULT			Ready_Components() override;
@@ -49,6 +55,7 @@ private:
 	_bool					m_bLerp = false;
 public:
 	void	Set_Restore(_bool bRestore) { m_bRestore = bRestore; }
+
 public:
 	virtual json			Save_Desc(json& out_json);
 	void					Load_Desc();

@@ -39,6 +39,22 @@ HRESULT CUI_Player_HP::Render()
 	return S_OK;
 }
 
+void CUI_Player_HP::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Player_HP::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Player_HP::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Player_HP::UI_Exit(_float fTimeDelta)
+{
+}
+
 json CUI_Player_HP::Save_Desc(json& out_json)
 {
 	json Out_;

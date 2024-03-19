@@ -38,6 +38,22 @@ HRESULT CUI_Blood::Render()
 	return S_OK;
 }
 
+void CUI_Blood::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Blood::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Blood::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Blood::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Blood::Ready_UI()
 {
 	// Create

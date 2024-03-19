@@ -3093,7 +3093,10 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	if (ImGui::Button("Test Button"))
 		dynamic_cast<CUI_Distortion*>(m_pCurrSelectUI)->Set_Restore(true);
 
-
+	if (ImGui::DragFloat("Distortion_TimeAcc", &selectedKeyframe.fTimeAcc)) // UV좌표 조절
+	{
+		//m_pCurrSelectUI->Set_SequenceTerm(m_fSequenceTerm_Distortion);
+	}
 
 	if (ImGui::DragFloat("Distortion_Term", &selectedKeyframe.fSequenceTerm)) // UV좌표 조절
 	{
@@ -3203,6 +3206,19 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	ImGui::Checkbox(u8"Trigger 설정", &selectedKeyframe.bTrigger);
 
 	ImGui::Checkbox(u8"LoopSection 설정", &selectedKeyframe.bLoopSection);
+
+	ImGui::Checkbox(u8"StopPlay 설정", &selectedKeyframe.bStopPlay);
+
+	ImGui::Checkbox(u8"ReversePlay 설정", &selectedKeyframe.bReversePlay);
+	 
+	ImGui::Checkbox(u8"MaskChange 설정", &selectedKeyframe.bMaskChange);
+	ImGui::SameLine();
+	ImGui::InputInt("MaskNum", &selectedKeyframe.iMaskNum);
+
+	ImGui::Checkbox(u8"NoiseChange 설정", &selectedKeyframe.bNoiseChange);
+	ImGui::SameLine();
+	ImGui::InputInt("NoiseNum", &selectedKeyframe.iNoiseNum);
+
 	//ImGui::PopItemWidth(); error
 
 	//// 차징 입력 필드의 가로 길이를 조절
@@ -3363,6 +3379,10 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 		if (ImGui::Button("Test Button"))
 			dynamic_cast<CUI_Distortion*>(m_pCurrSelectUI)->Set_Restore(true);
 
+		if (ImGui::DragFloat("Distortion_TimeAcc", &m_fTimeAcc)) // UV좌표 조절
+		{
+			m_pCurrSelectUI->Set_TimeAcc(m_fTimeAcc);
+		}
 		if (ImGui::DragFloat("Distortion_Term", &m_fSequenceTerm_Distortion)) // UV좌표 조절
 		{
 			m_pCurrSelectUI->Set_SequenceTerm(m_fSequenceTerm_Distortion);
@@ -3506,6 +3526,9 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 {
 	json json_in;
 
+	CGameObject* pGameObject = nullptr;
+	CUI* pUI_Object = nullptr;
+
 	//char filePath[MAX_PATH];
 
 	string strFile;
@@ -3521,52 +3544,84 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		if (object.contains("ObjectName"))// "ObjectName" 키가 있으면
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))						// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))						// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))						// "ObjectName" 키가 있으면
 			tUI_Info.strObjectName = object["ObjectName"];		// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 
-		wstring wstrLayer;
-		m_pGameInstance->String_To_WString(m_strLayer[m_iCurrLayerNum], wstrLayer);
+		wstring wstrLayer = TEXT("");
+		if (m_strLayer[m_iCurrLayerNum] != "")
+			m_pGameInstance->String_To_WString(m_strLayer[m_iCurrLayerNum], wstrLayer);
 
-		wstring wstrClonetag;
-		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+		wstring wstrClonetag = TEXT("");
+		if(tUI_Info.strCloneTag != "")
+			m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
 
-		wstring wstrPrototag;
-		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+		wstring wstrPrototag = TEXT("");
+		if (tUI_Info.strProtoTag != "")
+			m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
 
-		wstring wstrFilePath;
-		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+		wstring wstrFilePath = TEXT("");
+		if (tUI_Info.strFilePath != "")
+			m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
 
-		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayer, wstrClonetag, &tUI_Info);
-		if (pGameObject == nullptr)
+
+		if (wstrClonetag != TEXT(""))
+			pGameObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayer, wstrClonetag, &tUI_Info);
+		
+
+		if (pGameObject != nullptr)
+			m_pCurrSelectUI = dynamic_cast<CUI*>(pGameObject);
+
+		if (m_pCurrSelectUI == nullptr)
 			return E_FAIL;
 
-		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
-		if (pUI_Object == nullptr)
-			return E_FAIL;
+		m_pCurrSelectUI->Get_Transform()->Load_FromJson(object); // 17. TransformCom
 
-		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
-
-		//tUI_Info.iKeyframeNum = object["KeyframeNum"];			// 18. KeyframeNum
+		//tUI_Info.iKeyframeNum = object["KeyframeNum"];	// 18. KeyframeNum
 		
 	// "KeyframeNum" 키가 없으면 기본값 사용
 		_bool bKeyframeNum = object.contains("KeyframeNum");
 		tUI_Info.iKeyframeNum = bKeyframeNum ? object["KeyframeNum"] : 0;
+
+		if (wstrClonetag == TEXT("") &&
+			tUI_Info.iKeyframeNum > 0)
+		{
+			m_pCurrSelectUI->Clear_Keyframe();
+		}
 
 		for (_int i = 0; i < tUI_Info.iKeyframeNum; ++i) // 19. Keyframe
 		{
@@ -3590,57 +3645,131 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 			tUI_Info.tKeyframe.bActive = object["Keyframe"][i]["Active"];
 			tUI_Info.tKeyframe.bAppear = object["Keyframe"][i]["Appear"];
 			tUI_Info.tKeyframe.bTrigger = object["Keyframe"][i]["Trigger"];
+
 			if (object["Keyframe"][i].contains("Disappear")) // "Disappear" 키가 있으면
 				tUI_Info.tKeyframe.bDisappear = object["Keyframe"][i]["Disappear"];
 
 			if (object["Keyframe"][i].contains("LoopSection"))// "LoopSection" 키가 있으면
 				tUI_Info.tKeyframe.bLoopSection = object["Keyframe"][i]["LoopSection"];
 
-			pUI_Object->Add_Keyframe(tUI_Info.tKeyframe);
+			if (object["Keyframe"][i].contains("DistortionUI")) // 키가 있으면
+				tUI_Info.tKeyframe.bDistortionUI = object["Keyframe"][i]["DistortionUI"];
+			if (object["Keyframe"][i].contains("Restore")) // 키가 있으면
+				tUI_Info.tKeyframe.bRestore = object["Keyframe"][i]["Restore"];
+			if (object["Keyframe"][i].contains("TimeAcc")) // 키가 있으면
+				tUI_Info.tKeyframe.fTimeAcc = object["Keyframe"][i]["TimeAcc"];
+			if (object["Keyframe"][i].contains("SequenceTerm")) // 키가 있으면
+				tUI_Info.tKeyframe.fSequenceTerm = object["Keyframe"][i]["SequenceTerm"];
+			if (object["Keyframe"][i].contains("ScrollSpeedsX")) // 키가 있으면
+				tUI_Info.tKeyframe.vScrollSpeeds.x = object["Keyframe"][i]["ScrollSpeedsX"];
+			if (object["Keyframe"][i].contains("ScrollSpeedsY")) // 키가 있으면
+				tUI_Info.tKeyframe.vScrollSpeeds.y = object["Keyframe"][i]["ScrollSpeedsY"];
+			if (object["Keyframe"][i].contains("ScrollSpeedsZ")) // 키가 있으면
+				tUI_Info.tKeyframe.vScrollSpeeds.z = object["Keyframe"][i]["ScrollSpeedsZ"];
+			if (object["Keyframe"][i].contains("ScalesX")) // 키가 있으면
+				tUI_Info.tKeyframe.vScales.x = object["Keyframe"][i]["ScalesX"];
+			if (object["Keyframe"][i].contains("ScalesY")) // 키가 있으면
+				tUI_Info.tKeyframe.vScales.y = object["Keyframe"][i]["ScalesY"];
+			if (object["Keyframe"][i].contains("ScalesZ")) // 키가 있으면
+				tUI_Info.tKeyframe.vScales.z = object["Keyframe"][i]["ScalesZ"];
+			if (object["Keyframe"][i].contains("Distortion1X")) // 키가 있으면
+				tUI_Info.tKeyframe.vDistortion1.x = object["Keyframe"][i]["Distortion1X"];
+			if (object["Keyframe"][i].contains("Distortion1Y")) // 키가 있으면
+				tUI_Info.tKeyframe.vDistortion1.y = object["Keyframe"][i]["Distortion1Y"];
+			if (object["Keyframe"][i].contains("Distortion2X")) // 키가 있으면
+				tUI_Info.tKeyframe.vDistortion2.x = object["Keyframe"][i]["Distortion2X"];
+			if (object["Keyframe"][i].contains("Distortion2Y")) // 키가 있으면
+				tUI_Info.tKeyframe.vDistortion2.y = object["Keyframe"][i]["Distortion2Y"];
+			if (object["Keyframe"][i].contains("Distortion3X")) // 키가 있으면
+				tUI_Info.tKeyframe.vDistortion3.x = object["Keyframe"][i]["Distortion3X"];
+			if (object["Keyframe"][i].contains("Distortion3Y")) // 키가 있으면
+				tUI_Info.tKeyframe.vDistortion3.y = object["Keyframe"][i]["Distortion3Y"];
+			if (object["Keyframe"][i].contains("DistortionScale")) // 키가 있으면
+				tUI_Info.tKeyframe.fDistortionScale = object["Keyframe"][i]["DistortionScale"];
+			if (object["Keyframe"][i].contains("DistortionBias")) // 키가 있으면
+				tUI_Info.tKeyframe.fDistortionBias = object["Keyframe"][i]["DistortionBias"];
+
+			if (object["Keyframe"][i].contains("StopPlay")) // 키가 있으면
+				tUI_Info.tKeyframe.bStopPlay = object["Keyframe"][i]["StopPlay"];
+			if (object["Keyframe"][i].contains("ReversePlay")) // 키가 있으면
+				tUI_Info.tKeyframe.bReversePlay = object["Keyframe"][i]["ReversePlay"];
+			if (object["Keyframe"][i].contains("MaskChange")) // 키가 있으면
+				tUI_Info.tKeyframe.bMaskChange = object["Keyframe"][i]["MaskChange"];
+			if (object["Keyframe"][i].contains("NoiseChange")) // 키가 있으면
+				tUI_Info.tKeyframe.bNoiseChange = object["Keyframe"][i]["NoiseChange"];
+			if (object["Keyframe"][i].contains("MaskNum")) // 키가 있으면
+				tUI_Info.tKeyframe.iMaskNum = object["Keyframe"][i]["MaskNum"];
+			if (object["Keyframe"][i].contains("NoiseNum")) // 키가 있으면
+				tUI_Info.tKeyframe.iNoiseNum = object["Keyframe"][i]["NoiseNum"];
+
+			m_pCurrSelectUI->Add_Keyframe(tUI_Info.tKeyframe);
 		}
 
 		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vScrollSpeeds.x = object["Distortion"]["ScrollSpeedsX"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vScrollSpeeds.y = object["Distortion"]["ScrollSpeedsY"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vScrollSpeeds.z = object["Distortion"]["ScrollSpeedsZ"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vScales.x = object["Distortion"]["ScalesX"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vScales.y = object["Distortion"]["ScalesY"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vScales.z = object["Distortion"]["ScalesZ"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vDistortion1.x = object["Distortion"]["Distortion1X"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vDistortion1.y = object["Distortion"]["Distortion1Y"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vDistortion2.x = object["Distortion"]["Distortion2X"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vDistortion2.y = object["Distortion"]["Distortion2Y"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3X"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3Y"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.fDistortionScale = object["Distortion"]["DistortionScale"];
+		{
+			if (object["Distortion"].contains("ScrollSpeedsX")) // 키가 있으면
+				tUI_Info.vScrollSpeeds.x = object["Distortion"]["ScrollSpeedsX"];
+			if (object["Distortion"].contains("ScrollSpeedsY")) // 키가 있으면
+				tUI_Info.vScrollSpeeds.y = object["Distortion"]["ScrollSpeedsY"];
+			if (object["Distortion"].contains("ScrollSpeedsZ")) // 키가 있으면
+				tUI_Info.vScrollSpeeds.z = object["Distortion"]["ScrollSpeedsZ"];
+			if (object["Distortion"].contains("ScalesX")) // 키가 있으면
+				tUI_Info.vScales.x = object["Distortion"]["ScalesX"];
+			if (object["Distortion"].contains("ScalesY")) // 키가 있으면
+				tUI_Info.vScales.y = object["Distortion"]["ScalesY"];
+			if (object["Distortion"].contains("ScalesZ")) // 키가 있으면
+				tUI_Info.vScales.z = object["Distortion"]["ScalesZ"];
+			if (object["Distortion"].contains("Distortion1X")) // 키가 있으면
+				tUI_Info.vDistortion1.x = object["Distortion"]["Distortion1X"];
+			if (object["Distortion"].contains("Distortion1Y")) // 키가 있으면
+				tUI_Info.vDistortion1.y = object["Distortion"]["Distortion1Y"];
+			if (object["Distortion"].contains("Distortion2X")) // 키가 있으면
+				tUI_Info.vDistortion2.x = object["Distortion"]["Distortion2X"];
+			if (object["Distortion"].contains("Distortion2Y")) // 키가 있으면
+				tUI_Info.vDistortion2.y = object["Distortion"]["Distortion2Y"];
+			if (object["Distortion"].contains("Distortion3X")) // 키가 있으면
+				tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3X"];
+			if (object["Distortion"].contains("Distortion3Y")) // 키가 있으면
+				tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3Y"];
+			if (object["Distortion"].contains("DistortionScale")) // 키가 있으면
+				tUI_Info.fDistortionScale = object["Distortion"]["DistortionScale"];
+			if (object["Distortion"].contains("DistortionBias")) // 키가 있으면
+				tUI_Info.fDistortionBias = object["Distortion"]["DistortionBias"];
+			if (object["Distortion"].contains("DistortionUI")) // 키가 있으면
+				tUI_Info.bDistortionUI = object["Distortion"]["DistortionUI"];
+			if (object["Distortion"].contains("MaskNum")) // 키가 있으면
+				tUI_Info.iMaskNum = object["Distortion"]["MaskNum"];
+			if (object["Distortion"].contains("NoiseNum")) // 키가 있으면
+				tUI_Info.iNoiseNum = object["Distortion"]["NoiseNum"];
+		}
 
-		pUI_Object->Set_UIDesc(tUI_Info);
+		if (wstrClonetag != TEXT(""))
+			m_pCurrSelectUI->Set_UIDesc(tUI_Info);
 
 		if (tUI_Info.bParent == true)
 		{
-			m_vecParentObject.push_back(pUI_Object);
-			Add_ParentList(tUI_Info);
+			if (wstrClonetag != TEXT(""))
+			{
+				m_vecParentObject.push_back(m_pCurrSelectUI);
+				Add_ParentList(tUI_Info);
+			}
 		}
 		else
 		{
-			m_vecChildObject.push_back(pUI_Object);
-			Add_ChildList(tUI_Info);
+			if (wstrClonetag != TEXT(""))
+			{
+				m_vecChildObject.push_back(m_pCurrSelectUI);
+				Add_ChildList(tUI_Info);
+			}
 		}
 	}
 
 	return S_OK;
+}
+
+void CWindow_UITool::Save_Keyframe()
+{
+
 }
 
 _bool CWindow_UITool::Check_ImGui_Rect()

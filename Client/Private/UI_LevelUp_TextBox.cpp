@@ -88,6 +88,22 @@ HRESULT CUI_LevelUp_TextBox::Render()
 	return S_OK;
 }
 
+void CUI_LevelUp_TextBox::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_TextBox::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_TextBox::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_TextBox::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_LevelUp_TextBox::Ready_Components()
 {
 	//! For.Com_Shader

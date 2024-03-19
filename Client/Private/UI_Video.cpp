@@ -90,6 +90,22 @@ HRESULT CUI_Video::Render()
 	return S_OK;
 }
 
+void CUI_Video::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Video::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Video::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Video::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Video::Ready_Components()
 {
 	//! For.Com_Texture1 // Èò»ö ¹Ù

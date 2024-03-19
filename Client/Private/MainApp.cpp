@@ -167,6 +167,16 @@ HRESULT CMainApp::Ready_UITexture()
 	return S_OK;
 }
 
+// Effect & UI 공통 텍스처
+HRESULT CMainApp::Ready_Mask_Noise()
+{
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Mask (%d).dds"), 157)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask_Waves"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Waves/Mask_Wave_%d.dds"), 6)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Noise"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/03_Noise/Noise (%d).dds"), 240)));
+
+	return S_OK;
+}
+
 HRESULT CMainApp::UI_TargetTexture()
 {
 	// Target_LeftInterface
@@ -208,6 +218,11 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 	/* For.Ready_UITexture */ // + SH_Add
 	if (FAILED(Ready_UITexture()))
 		return E_FAIL;
+
+	/* For.Ready_Mask_Noise */ // + SH_Add
+	if (FAILED(Ready_Mask_Noise()))
+		return E_FAIL;
+
 
 	return S_OK;
 }

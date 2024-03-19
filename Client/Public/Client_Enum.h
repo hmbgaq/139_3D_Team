@@ -42,10 +42,9 @@ namespace Client
 	enum class UISTATE
 	{
 		READY,
-		APPEAR,
-		TICK,
-		DISAPPEAR,
-		PLAYER_HUD,
+		ENTER,
+		LOOP,
+		EXIT,
 		STATE_END
 	};
 	enum class UITYPE

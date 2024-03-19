@@ -12,8 +12,9 @@ BEGIN(Client)
 class CUI abstract : public CGameObject
 {
 public:
+	enum DISTORTIONKIND { MASK, NOISE, DISTORTION_END };
 	enum UI_KIND { NORMAL, TEXT, KIND_END };
-
+	enum UI_STATE {};
 
 	// 키프레임 구조체
 	typedef struct tagUIKeyframe
@@ -56,8 +57,14 @@ public:
 		_float2		vDistortion3 = { 0.f, 0.f };
 		_float		fDistortionScale = 0.f;
 		_float		fDistortionBias = 0.f;
-		_int		iDistortionNum = 0;
-		_int		iNoiseNum = 0;
+
+		_bool		bStopPlay = false;		// 정지
+		_bool		bReversePlay = false;	// 역재생
+		_bool		bMaskChange = false;	// 마스크 텍스처 변경
+		_bool		bNoiseChange = false;	// 노이즈 텍스처 변경
+		_int		iMaskNum = 0;			// 마스크 텍스처 번호
+		_int		iNoiseNum = 0;			// 노이즈 텍스처 번호
+
 	}UIKEYFRAME;
 
 
@@ -145,6 +152,9 @@ public:
 		_int		iObjectNum = 0;			// 몇번째 녀석인지
 		_int		iShaderNum = 0;			// 적용할 셰이더 넘버
 
+		_int		iUINum = 0;			// 무슨 UI인지
+		string		strUIName = "";			// 무슨 UI인지
+
 		string		strObjectName = "";
 		string		strLayerTag = "";
 		string		strCloneTag = "";
@@ -161,8 +171,7 @@ public:
 		UIKEYFRAME	tKeyframe;
 
 		/* Distortion */
-		_bool		bDistortionUI = false;
-		_float		fTimeAcc = 0.f;
+		_float		fTimeAcc = 1.f;
 		_float		fSequenceTerm = 0.f;
 		_float3		vScrollSpeeds = { 0.f, 0.f, 0.f };
 		_float3		vScales = { 0.f, 0.f, 0.f };
@@ -171,6 +180,10 @@ public:
 		_float2		vDistortion3 = { 0.f, 0.f };
 		_float		fDistortionScale = 0.f;
 		_float		fDistortionBias = 0.f;
+
+		_bool		bDistortionUI = false;
+		_int		iMaskNum = 0;
+		_int		iNoiseNum = 0;
 
 	}UI_DESC;
 
@@ -246,6 +259,13 @@ public: /* ============================== Basic =============================== 
 	virtual HRESULT Initialize(void* pArg);
 	virtual void	Priority_Tick(_float fTimeDelta);
 	virtual void	Tick(_float fTimeDelta);
+
+	/* State */
+	virtual void	UI_Ready(_float fTimeDelta) = 0;
+	virtual void	UI_Enter(_float fTimeDelta) = 0;
+	virtual void	UI_Loop(_float fTimeDelta) = 0;
+	virtual void	UI_Exit(_float fTimeDelta) = 0;
+
 	virtual void	UI_AppearTick(_float fTimeDelta);
 	virtual void	UI_DisappearTick(_float fTimeDelta);
 	virtual void	Late_Tick(_float fTimeDelta);
@@ -277,7 +297,7 @@ public: /* ============================== SetUp ============================== *
 	void			Player_HUD(_float fTimeDelta);
 
 public:
-	void Check_Disappear(_float fTimeDelta);
+	void			Check_Disappear(_float fTimeDelta);
 
 public:
 #ifdef _DEBUG
@@ -296,11 +316,17 @@ protected: /* =========================== Ready ============================= */
 public: /* =========================== Save/Load ============================== */
 	virtual void	Load_FromJson(const json& In_Json);
 	virtual json	Save_Desc(json& out_json);
+	virtual json	Save_Animation(json& out_json);
 
 public: /* =========================== Animation ============================== */
 	void			Play_Animation(_float fTimeDelta);
 	void			Add_Keyframe(UIKEYFRAME tKeyframe) { m_vecAnimation.push_back(tKeyframe); }
-	void			Emplaceback_Keyframe(UIKEYFRAME tKeyframe) { m_vecAnimation.emplace_back(tKeyframe); }
+	void			Clear_Keyframe() { m_vecAnimation.clear(); }
+	void			Emplaceback_Keyframe(UIKEYFRAME tKeyframe) 
+	{ 
+		if(!m_vecAnimation.empty())
+			m_vecAnimation.emplace_back(tKeyframe);
+	}
 	void			Set_AnimationKeyframe(UIKEYFRAME tKeyframe);
 	// 애니메이션 값
 	std::vector<UIKEYFRAME> m_vecAnimation = {};
@@ -327,46 +353,49 @@ public: /* =========================== Animation ============================== 
 	_float			Get_Alpha() { return m_fAlpha; }
 
 	// dt 값
-	_float fFrameTimeDelta, fCurFrameTimeDelta;
+	_float			fFrameTimeDelta, fCurFrameTimeDelta;
 
 	// 크기
-	_float fSizeX_Delta, fSizeY_Delta;
+	_float			fSizeX_Delta, fSizeY_Delta;
 
 	// 회전
-	_float fRotX_Delta, fRotY_Delta, fRotZ_Delta;
+	_float			fRotX_Delta, fRotY_Delta, fRotZ_Delta;
 
 	// 이동
-	_float fPosX_Delta, fPosY_Delta;
+	_float			fPosX_Delta, fPosY_Delta;
 
 	// 알파
-	_float fAlpha_Delta;
+	_float			fAlpha_Delta;
 
 	// 시간
-	_float		fTimeAcc_Delta = 0.f;
+	_float			fTimeAcc_Delta = 0.f;
 
 	// 시퀀스
-	_float		fSequenceTerm_Delta = 0.f;
+	_float			fSequenceTerm_Delta = 0.f;
 
 	// 스크롤 스피드
-	_float3		vScrollSpeeds_Delta = { 0.f, 0.f, 0.f };
+	_float3			vScrollSpeeds_Delta = { 0.f, 0.f, 0.f };
 
 	// 크기
-	_float3		vScales_Delta = { 0.f, 0.f, 0.f };
+	_float3			vScales_Delta = { 0.f, 0.f, 0.f };
 
 	// 디스토션1
-	_float2		vDistortion1_Delta = { 0.f, 0.f };
+	_float2			vDistortion1_Delta = { 0.f, 0.f };
 
 	// 디스토션2
-	_float2		vDistortion2_Delta = { 0.f, 0.f };
+	_float2			vDistortion2_Delta = { 0.f, 0.f };
 
 	// 디스토션3
-	_float2		vDistortion3_Delta = { 0.f, 0.f };
+	_float2			vDistortion3_Delta = { 0.f, 0.f };
 
 	// 디스토션 Scale
-	_float		fDistortionScale_Delta = 0.f;
+	_float			fDistortionScale_Delta = 0.f;
 
 	// 디스토션 Bias
-	_float		fDistortionBias_Delta = 0.f;
+	_float			fDistortionBias_Delta = 0.f;
+
+public:
+	void	Set_TimeAcc(_float fTimeAcc) { m_tUIInfo.fTimeAcc = fTimeAcc; }
 
 protected: /* Data */
 	class CData_Manager* m_pData_Manager = { nullptr };
@@ -424,6 +453,20 @@ protected: /* ============================= UI =============================== *
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f, m_fScaleZ = 0.1f;
 	UI_KIND				m_eKind = NORMAL;
 	_float				m_fOffsetX = 0.f, m_fOffsetY = 0.f;
+
+	CTexture*			m_pDistortionCom[DISTORTION_END] = { nullptr };
+	_int				m_iMaskNum = 0;
+	_int				m_iNoiseNum = 0;
+
+	_bool				m_bReversePlay = false;
+	_bool				m_bStopPlay = false;
+
+	/* Anim Index */
+	_uint iFrameIndex = 0;
+
+public:
+	void				Set_MaskNum(_int iMaskNum) { m_iMaskNum = iMaskNum; }
+	void				Set_NoiseNum(_int iNoiseNum) { m_iNoiseNum = iNoiseNum; }
 
 public:
 	void	Set_OffsetX(_float fOffsetX) { m_fOffsetX = fOffsetX; }

@@ -30,14 +30,16 @@ HRESULT CUI_Distortion::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
+	/* Distortion이 있는 UI */
+	m_tUIInfo.bDistortionUI = true;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
-	/* Distortion이 있는 UI */
-	m_tUIInfo.bDistortionUI = true;
+
 	//m_tUIInfo.vScales = { 1.f, 0.f, 0.f };
 	//m_tUIInfo.fPositionZ = 0.0f;
 	//m_tUIInfo.fDistortionScale = 1.f;
@@ -51,6 +53,9 @@ HRESULT CUI_Distortion::Initialize(void* pArg)
 	해당 객체에 원하는 함수나 변수 만들어서 불러오기.
 	*/
 
+	m_iMaskNum = m_tUIInfo.iMaskNum;
+	m_iNoiseNum = m_tUIInfo.iNoiseNum;
+
 	return S_OK;
 }
 
@@ -63,10 +68,19 @@ void CUI_Distortion::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 	
+	m_iMaskNum = m_tUIInfo.iMaskNum;
+	m_iNoiseNum = m_tUIInfo.iNoiseNum;
+
 	if (m_bActive)
 	{
-		m_tUIInfo.fTimeAcc += fTimeDelta;
-		//m_tUIInfo.fTimeAcc = fTimeDelta;
+		if (!m_vecAnimation.empty())
+		{
+			m_fTimeAcc += m_tUIInfo.tKeyframe.fTimeAcc * fTimeDelta;
+		}
+		else
+		{
+			m_fTimeAcc += m_tUIInfo.fTimeAcc * fTimeDelta;
+		}
 
 		if (m_bRestore == true)
 		{
@@ -161,10 +175,27 @@ HRESULT CUI_Distortion::Render()
 	return S_OK;
 }
 
+void CUI_Distortion::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Distortion::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Distortion::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Distortion::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Distortion::Ready_Components()
 {
-	//if(FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
-	//	return E_FAIL;
+	/* 공통 */
+	if (FAILED(__super::Ready_Components())) // Ready : Texture / MapTexture
+		return E_FAIL;
 
 	wstring strPrototag;
 	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
@@ -174,15 +205,15 @@ HRESULT CUI_Distortion::Ready_Components()
 		TEXT("Com_Texture_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[DIFFUSE]))))
 		return E_FAIL;
 
-	//! For.Com_Texture_Mask
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("mask_radiant_flame"),
-		TEXT("Com_Texture_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[MASK]))))
-		return E_FAIL;
+	////! For.Com_Texture_Mask
+	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask"),
+	//	TEXT("Com_Texture_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[MASK]))))
+	//	return E_FAIL;
 
-	//! For.Com_Texture_Noise
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("dissolve_tex"),
-		TEXT("Com_Texture_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[NOISE]))))
-		return E_FAIL;
+	////! For.Com_Texture_Noise
+	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Noise"),
+	//	TEXT("Com_Texture_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[NOISE]))))
+	//	return E_FAIL;
 
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -200,6 +231,10 @@ HRESULT CUI_Distortion::Ready_Components()
 
 HRESULT CUI_Distortion::Bind_ShaderResources()
 {
+						/* 공통 */
+	if (FAILED(__super::Bind_ShaderResources()))
+		return E_FAIL;
+
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
@@ -207,21 +242,21 @@ HRESULT CUI_Distortion::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tUIInfo.tKeyframe.fTimeAcc, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_fTimeAcc, sizeof(_float))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tUIInfo.tKeyframe.vScrollSpeeds, sizeof(_float3))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tUIInfo.vScrollSpeeds, sizeof(_float3))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScales", &m_tUIInfo.tKeyframe.vScales, sizeof(_float3))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScales", &m_tUIInfo.vScales, sizeof(_float3))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tUIInfo.tKeyframe.vDistortion1, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tUIInfo.vDistortion1, sizeof(_float2))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion2", &m_tUIInfo.tKeyframe.vDistortion2, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion2", &m_tUIInfo.vDistortion2, sizeof(_float2))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion3", &m_tUIInfo.tKeyframe.vDistortion3, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion3", &m_tUIInfo.vDistortion3, sizeof(_float2))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionScale", &m_tUIInfo.tKeyframe.fDistortionScale, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionScale", &m_tUIInfo.fDistortionScale, sizeof(_float))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tUIInfo.tKeyframe.fDistortionBias, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tUIInfo.fDistortionBias, sizeof(_float))))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -229,10 +264,10 @@ HRESULT CUI_Distortion::Bind_ShaderResources()
 		if (FAILED(m_pTextureCom[DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 			return E_FAIL;
 
-		if (FAILED(m_pTextureCom[MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture")))
+		if (FAILED(m_pDistortionCom[MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_iMaskNum)))
 			return E_FAIL;
 
-		if (FAILED(m_pTextureCom[NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture")))
+		if (FAILED(m_pDistortionCom[NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_iNoiseNum)))
 			return E_FAIL;
 
 	}
