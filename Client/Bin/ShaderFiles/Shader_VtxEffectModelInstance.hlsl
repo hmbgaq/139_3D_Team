@@ -236,6 +236,7 @@ VS_OUT VS_MAIN(VS_IN In)
 }
 
 
+
 struct PS_IN
 {
 	float4		vPosition	: SV_POSITION;
@@ -261,29 +262,32 @@ PS_OUT PS_MAIN(PS_IN In, uniform bool bSolid)
 {
 	PS_OUT Out = (PS_OUT) 0;
 	
+    float4 vFinalDiffuse;
+    float4 vAlphaColor;
+	
     In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
     In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
 	
-	vector vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	float4 vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
 
-	vDiffuseColor.a *= vAlphaColor;
+    vFinalDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+    vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+
+    vFinalDiffuse.a *= vAlphaColor;
 	
-	if (vDiffuseColor.a <= g_fAlpha_Discard)	// 알파 자르기
+    if (vFinalDiffuse.a <= g_fAlpha_Discard)	// 알파 자르기
 		discard;
 
-	Out.vDiffuse = vDiffuseColor * g_vColor_Mul; // 색 곱하기
+    Out.vDiffuse = vFinalDiffuse * g_vColor_Mul; // 색 곱하기
 
 	
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
    
 
-    /* ---------------- New ---------------- :  */
+    /* ---------------- New ---------------- */
 	float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
 	Out.vDiffuse += vRimColor;
-	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
-	Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
 
 
     if (bSolid)
@@ -297,7 +301,7 @@ PS_OUT PS_MAIN(PS_IN In, uniform bool bSolid)
 
 
 
-//  Normal Mapping(MAIN_NORMAL) =================================================================================================
+// Dissolve (Normal Mapping(MAIN_NORMAL)) =======================================================================================
 struct VS_OUT_NORMAL
 {
 	float4 vPosition	: SV_POSITION;
@@ -305,14 +309,15 @@ struct VS_OUT_NORMAL
 	float2 vTexUV		: TEXCOORD0;
 	float4 vWorldPos	: TEXCOORD1;
 	float4 vProjPos		: TEXCOORD2;
+	
 	float3 vTangent		: TANGENT;
 	float3 vBinormal	: BINORMAL;
 };
 
+
 VS_OUT_NORMAL VS_MAIN_NORMAL(VS_IN In)
 {
 	VS_OUT_NORMAL Out = (VS_OUT_NORMAL)0;
-
 
 	matrix			WorldMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
 
@@ -328,6 +333,7 @@ VS_OUT_NORMAL VS_MAIN_NORMAL(VS_IN In)
 	Out.vWorldPos = mul(vPosition, g_WorldMatrix);
 	Out.vTexUV = In.vTexUV;
 	Out.vProjPos = Out.vPosition;
+	
 	Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), g_WorldMatrix)).xyz;
 	Out.vBinormal = normalize(cross(Out.vNormal, Out.vTangent));
 
@@ -342,87 +348,72 @@ struct PS_IN_NORMAL
 	float2 vTexUV		: TEXCOORD0;
 	float4 vWorldPos	: TEXCOORD1;
 	float4 vProjPos		: TEXCOORD2;
+	
 	float3 vTangent		: TANGENT;
 	float3 vBinormal	: BINORMAL;
 };
 
 
-PS_OUT PS_MAIN_NORMAL(PS_IN_NORMAL In)
+PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In, uniform bool bSolid)
 {
 	PS_OUT Out = (PS_OUT)0;
 
-	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    clip(Out.vDiffuse.a - g_fAlpha_Discard);
-    Out.vDiffuse.a = 1.f;
-	/* 0 ~ 1 */
-    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
-
-	/* -1 ~ 1 */
-	vPixelNormal = vPixelNormal * 2.f - 1.f;
-
-	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-
-	vPixelNormal = mul(vPixelNormal, WorldMatrix);
-
-	Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
+    float4 vFinalDiffuse;
+    float4 vAlphaColor;
 	
-	return Out;
-}
-
-//  Normal Mapping(MAIN_NORMAL) =================================================================================================
-
-
-
-//  Dissolve ====================================================================================================================
-PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In)
-{
-	PS_OUT Out = (PS_OUT)0;
-
-	vector TexDissolve = g_NoiseTexture.Sample(LinearSampler, In.vTexUV);
-
-    clip(TexDissolve - g_fDissolveRatio);
-
     In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
     In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
 	
-    vector vTexDiff = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	
+    vFinalDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+    vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
 
-    float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
+    vFinalDiffuse.a *= vAlphaColor;
 	
-    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue ;
 	
-    clip(Out.vDiffuse.a - g_fAlpha_Discard);
-    //Out.vDiffuse.a = 1.f;
+	/* Discard & Color Mul ==================================================== */
+    if (vFinalDiffuse.a <= g_fAlpha_Discard) // 알파 잘라내기
+        discard;
+	
+    Out.vDiffuse = vFinalDiffuse * g_vColor_Mul;
+	
+    
+	/* Dissolve ============================================================== */
+    vector vDissolveTex = g_NoiseTexture.Sample(LinearSampler, In.vTexUV);
+    clip(vDissolveTex - g_fDissolveRatio);
 
-	float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-	Out.vDiffuse.a *= vAlphaMask.a;
-	
+    float fStepValue = IsIn_Range(0.f, 0.05f, vDissolveTex.r - g_fDissolveRatio);
+
+    vFinalDiffuse = (1.f - fStepValue) * vFinalDiffuse + fStepValue;
+
+		
+	/* Normal & Depth ========================================================= */
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
-	vPixelNormal = vPixelNormal * 2.f - 1.f;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
 
-	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
 
-	vPixelNormal = mul(vPixelNormal, WorldMatrix);
-	
-	Out.vNormal    = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
-
 	
 	
-	 /* ---------------- New ---------------- :  */
+	
+	/* RimBloom ================================================================ */
     float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
     Out.vDiffuse += vRimColor;
-	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
-    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
-
-    Out.vSolid = Out.vDiffuse;
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
 	
+	
+	
+    if (bSolid)
+		Out.vSolid = Out.vDiffuse;
 	
 	
 	return Out;
 }
-//  Dissolve ====================================================================================================================
+// Dissolve (Normal Mapping(MAIN_NORMAL)) =======================================================================================
 
 
 //  DISTORTION ==================================================================================================================
@@ -520,7 +511,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 	
     
 	/* Discard & Color Mul ==================================================== */
-    if (Out.vDiffuse.a < g_fAlpha_Discard) // 알파 잘라내기
+    if (vFinalDiffuse.a <= g_fAlpha_Discard) // 알파 잘라내기
         discard;
 	
     Out.vDiffuse = vFinalDiffuse * g_vColor_Mul;
@@ -599,61 +590,48 @@ PS_OUT PS_MAIN_DISTORTION_DEFERRED(PS_IN_DISTORTION In)
 
 technique11 DefaultTechnique
 {
-    pass Effect // 0
+    pass WireFrame // 0
+    {
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_DepthStencilEnable, 0);
+        SetRasterizerState(RS_NoneCull_Wireframe);
+
+        VertexShader	= compile vs_5_0 VS_MAIN();
+        HullShader		= NULL;
+        DomainShader	= NULL;
+        GeometryShader	= NULL;
+        PixelShader		= compile ps_5_0 PS_MAIN(true);
+    }
+
+    pass Effect // 1
     {	
 		//SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff); //SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_DepthStencilEnable, 0);	
 		SetRasterizerState(RS_Cull_None); //SetRasterizerState(RS_Default);
 
-		VertexShader	= compile vs_5_0 VS_MAIN();
+        VertexShader	= compile vs_5_0 VS_MAIN_NORMAL();
 		HullShader		= NULL;
 		DomainShader	= NULL;
 		GeometryShader	= NULL;
-		PixelShader		= compile ps_5_0 PS_MAIN(false);
-	}
+        PixelShader		= compile ps_5_0 PS_MAIN_Dissolve(false);
+    }
 
-    pass Effect_Solid // 1
+    pass Effect_Solid // 2
     {
 		//SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff); //SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_DepthStencilEnable, 0);
         SetRasterizerState(RS_Cull_None); //SetRasterizerState(RS_Default);
 
-        VertexShader = compile vs_5_0 VS_MAIN();
-        HullShader = NULL;
-        DomainShader = NULL;
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN(true);
-    }
-
-	pass WireFrame // 2
-	{
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_DepthStencilEnable, 0);
-        SetRasterizerState(RS_NoneCull_Wireframe);
-
-		VertexShader	= compile vs_5_0 VS_MAIN();
-		HullShader		= NULL;
-		DomainShader	= NULL;
-		GeometryShader	= NULL;
-		PixelShader		= compile ps_5_0 PS_MAIN();
-	}
-
-    pass Dissolve // 3
-    {
-        SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-        SetDepthStencilState(DSS_DepthStencilEnable, 0);
-        SetRasterizerState(RS_Cull_None);
-
         VertexShader	= compile vs_5_0 VS_MAIN_NORMAL();
         HullShader		= NULL;
         DomainShader	= NULL;
         GeometryShader	= NULL;
-        PixelShader		= compile ps_5_0 PS_MAIN_Dissolve();
+        PixelShader		= compile ps_5_0 PS_MAIN_Dissolve(true);
     }
-	
-	pass Distortion // 4
+
+	pass Distortion // 3
 	{
 		SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		SetDepthStencilState(DSS_DepthStencilEnable, 0);
@@ -666,31 +644,31 @@ technique11 DefaultTechnique
 		PixelShader		= compile ps_5_0 PS_MAIN_DISTORTION(false);
 	}
 
-    pass Distortion_Solid // 5
+    pass Distortion_Solid // 4
     {
         SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         SetDepthStencilState(DSS_DepthStencilEnable, 0);
         SetRasterizerState(RS_Cull_None);
 
-        VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
-        HullShader = NULL;
-        DomainShader = NULL;
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION(true);
+        VertexShader	= compile vs_5_0 VS_MAIN_DISTORTION();
+        HullShader		= NULL;
+        DomainShader	= NULL;
+        GeometryShader	= NULL;
+        PixelShader		= compile ps_5_0 PS_MAIN_DISTORTION(true);
     }
 
-    pass Distortion_Deferred // 6
+    pass Distortion_Deferred // 5
     {
         //SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_DepthStencilEnable, 0);
         SetRasterizerState(RS_Cull_None);
 
-        VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
-        HullShader = NULL;
-        DomainShader = NULL;
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION_DEFERRED();
+        VertexShader	= compile vs_5_0 VS_MAIN_DISTORTION();
+        HullShader		= NULL;
+        DomainShader	= NULL;
+        GeometryShader	= NULL;
+        PixelShader		= compile ps_5_0 PS_MAIN_DISTORTION_DEFERRED();
     }
 
 }

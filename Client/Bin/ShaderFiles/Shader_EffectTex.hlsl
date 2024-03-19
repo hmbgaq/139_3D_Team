@@ -81,6 +81,16 @@ float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
 }
 
 
+float2 RotateTexture(float2 texCoord, float angle)
+{
+    float2 rotatedTexCoord;
+    rotatedTexCoord.x = texCoord.x * cos(angle) - texCoord.y * sin(angle);
+    rotatedTexCoord.y = texCoord.x * sin(angle) + texCoord.y * cos(angle);
+    
+    return rotatedTexCoord;
+}
+
+
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
 {
 	float fRimPower = 1.f - saturate(dot(In_Normal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
@@ -101,6 +111,78 @@ float4 Calculation_Brightness(float4 Out_Diffuse)
 		vBrightnessColor = float4(Out_Diffuse.rgb, 1.0f);
 
 	return vBrightnessColor;
+}
+
+
+float4 Calculation_Distortion(float2 In_TexUV, float2 In_vTexcoord1, float2 In_vTexcoord2, float2 In_vTexcoord3)
+{
+    float4 vDistortionTex_1;
+    float4 vDistortionTex_2;
+    float4 vDistortionTex_3;
+    
+    float4 vDistortionTex_Final;
+   
+	
+	// 디스토션 텍스쳐의 텍스쿠드를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
+    // 텍스쿠드에 곱하기는 크기 변화
+    In_vTexcoord1 = (In_TexUV * g_vScales.x);
+    In_vTexcoord2 = (In_TexUV * g_vScales.y);
+    In_vTexcoord3 = (In_TexUV * g_vScales.z);
+    
+    
+    if (0 == g_iScrollType)
+    {
+        // SCROLL_ROW : 가로 스크롤 
+        In_vTexcoord1.x = In_vTexcoord1.x + (g_fFrameTime * g_vScrollSpeeds.x);
+        In_vTexcoord2.x = In_vTexcoord2.x + (g_fFrameTime * g_vScrollSpeeds.y);
+        In_vTexcoord3.x = In_vTexcoord3.x + (g_fFrameTime * g_vScrollSpeeds.z);
+    }
+    else if (1 == g_iScrollType)
+    {
+        // SCROLL_COL : 세로 스크롤      
+        In_vTexcoord1.y = In_vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
+        In_vTexcoord2.y = In_vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
+        In_vTexcoord3.y = In_vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
+    }
+    else if (2 == g_iScrollType)
+    {
+        // SCROLL_BOTH : 가로 + 세로 스크롤
+        In_vTexcoord1 = In_vTexcoord1 + (g_fFrameTime * g_vScrollSpeeds.x);
+        In_vTexcoord2 = In_vTexcoord2 + (g_fFrameTime * g_vScrollSpeeds.y);
+        In_vTexcoord3 = In_vTexcoord3 + (g_fFrameTime * g_vScrollSpeeds.z);
+    }
+    else if (3 == g_iScrollType)
+    {
+        In_vTexcoord1 = RotateTexture(In_vTexcoord1, g_fFrameTime * g_vScrollSpeeds.x);
+        In_vTexcoord2 = RotateTexture(In_vTexcoord2, g_fFrameTime * g_vScrollSpeeds.y);
+        In_vTexcoord3 = RotateTexture(In_vTexcoord3, g_fFrameTime * g_vScrollSpeeds.z);
+    }
+
+
+    // 노이즈 텍스처로 디스토션(왜곡효과)를 만든다.
+	// 셋 다 동일한 노이즈 텍스쳐이지만, 서로 다른 텍스쿠드를 사용하였기에 서로 다른 모양으로 샘플링된다.  
+    vDistortionTex_1 = g_NoiseTexture.Sample(LinearSampler, In_vTexcoord1);
+    vDistortionTex_2 = g_NoiseTexture.Sample(LinearSampler, In_vTexcoord2);
+    vDistortionTex_3 = g_NoiseTexture.Sample(LinearSampler, In_vTexcoord3);
+
+	
+	// 디스토션 값의 범위를 (0, 1)에서 (-1, +1)이 되도록한다.
+    vDistortionTex_1 = (vDistortionTex_1 - 0.5f) * 2.0f;
+    vDistortionTex_2 = (vDistortionTex_2 - 0.5f) * 2.0f;
+    vDistortionTex_3 = (vDistortionTex_3 - 0.5f) * 2.0f;
+
+	
+	// 디스토션의 xy값을 세 개의 서로 다른 왜곡xy좌표로 흩뜨린다.
+    vDistortionTex_1.xy = vDistortionTex_1.xy * g_vDistortion1.xy;
+    vDistortionTex_2.xy = vDistortionTex_2.xy * g_vDistortion2.xy;
+    vDistortionTex_3.xy = vDistortionTex_3.xy * g_vDistortion3.xy;
+
+	
+	// 왜곡된 세 디스토션 값들을 하나의 디스토션으로 합성한다.
+    vDistortionTex_Final = vDistortionTex_1 + vDistortionTex_2 + vDistortionTex_3;
+
+    
+    return vDistortionTex_Final;
 }
 // Custom Function ==============================================================================================================
 
