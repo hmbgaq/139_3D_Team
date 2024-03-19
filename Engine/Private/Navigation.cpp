@@ -78,6 +78,8 @@ HRESULT CNavigation::Initialize(void* pArg)
 
 	m_WorldMatrix = XMMatrixIdentity();
 
+	_int iCommitChange = 0; //! Ä¿¹Ô ¿ë º¯°æ
+
 	return S_OK;
 }
 
