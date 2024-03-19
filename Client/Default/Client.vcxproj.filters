@@ -2890,7 +2890,7 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\3. Burn">
       <UniqueIdentifier>{00347097-05de-4536-89fa-ba25926d35d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\Stun">
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\4. Stun">
       <UniqueIdentifier>{1bbe3f2f-3c01-46ee-9d48-e4cbf8febf7b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -5871,7 +5871,7 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\2. Electrocute</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_Stun_Loop.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\Stun</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\4. Stun</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_Introduction_03.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\3. Intro</Filter>
@@ -8305,7 +8305,7 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\2. Electrocute</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sniper_Stun_Loop.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\Stun</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\4. Stun</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sniper_Introduction_03.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\3. Intro</Filter>
