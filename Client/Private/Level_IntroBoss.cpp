@@ -56,13 +56,13 @@ HRESULT CLevel_IntroBoss::Initialize()
     FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
     FAILED_CHECK(Ready_LandObjects());
-    FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+    //FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 
     if (FAILED(Ready_UI()))
         return E_FAIL;
 
-    FAILED_CHECK(Ready_Shader());
+   FAILED_CHECK(Ready_Shader());
 
     return S_OK;
 }

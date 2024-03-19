@@ -12,14 +12,14 @@ public:
 
 public:
 	static const _uint g_iAnimIndex = CVampireCommander::VampireCommander_State::VampireCommander_BloodRange_02_Loop;
+	//static const _uint g_iAnimIndex = CVampireCommander::VampireCommander_State::jump_loop;
 public:
 	_float  m_fHealHP = 0.f;
 	_uint	m_iPreHP = 0;
 	_uint	m_iLoopescape = 0;
 	_bool	m_bSuccessShooting = false;
+	_uint	m_iRandom[3] = {0};
 	class CEffect* m_pEffect = { nullptr };
-	
-
 };
 
 END

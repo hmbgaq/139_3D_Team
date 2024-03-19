@@ -2,7 +2,7 @@
 #include "UI_Weakness.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
-#include "GameObject.h"
+
 
 CUI_Weakness::CUI_Weakness(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -55,8 +55,12 @@ void CUI_Weakness::Tick(_float fTimeDelta)
 		m_fOffsetY -= 0.1f;
 	if (m_pGameInstance->Key_Down(DIK_B))
 		m_fOffsetY += 0.1f;
-	
+
+
 	__super::Tick(fTimeDelta);
+
+	m_pColliderCom->Update(matTargetWorld);
+
 }
 
 void CUI_Weakness::Late_Tick(_float fTimeDelta)
@@ -85,6 +89,10 @@ void CUI_Weakness::Late_Tick(_float fTimeDelta)
 			m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 		}
 	}
+
+#ifdef _DEBUG
+	m_pGameInstance->Add_DebugRender(m_pColliderCom);
+#endif	
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
 		return;
@@ -168,6 +176,16 @@ HRESULT CUI_Weakness::Ready_Components()
 	//! For.Com_Texture
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("sparks"),
 		TEXT("Com_Texture_Lock"), reinterpret_cast<CComponent**>(&m_pTextureCom[SPARKS]))))
+		return E_FAIL;
+
+	/* For.Com_Collider */
+	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::WEAKNESS);
+	BoundingDesc.fRadius = 30.f;
+	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
+
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
 
 	return S_OK;

@@ -20,8 +20,10 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+
 public:
 	_float Ratation_Target_Test();
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
@@ -43,8 +45,10 @@ private:
 
 private:
 	CEffect* m_pMapEffect = { nullptr }; // TEST
+public://»À 13°³ 
+	vector<string> m_vRandomBones = {"LeftHandIK","RightHandIK" ,"Hips","Spine1","Head","Neck","RightShoulder","LeftElbowRoll","LeftShoulderRoll_01","Right_BigWing_03","Left_BigWing_03","LeftLeg","RightLeg"};
 public:
-	class CUI_Weakness* m_pWeakneesUI = { nullptr };
+	vector<class CUI_Weakness*> m_pWeakneesUIs;
 	_bool m_bTurn = true;
 
 public:
