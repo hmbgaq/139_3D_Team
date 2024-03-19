@@ -6144,12 +6144,6 @@
     <ClInclude Include="..\Public\Infected_State_Stun.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\0. Parent</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\1. HitNormal_To_Stun</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\2. HitHeavy_To_Stun</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Infected_Stun_Loop_NEW.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\3. Stun_Loop</Filter>
     </ClInclude>
@@ -6172,6 +6166,12 @@
     <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h" />
     <ClInclude Include="..\Public\Event_MonsterSpawnTrigger.h">
       <Filter>03.Event\Trigger\MonsterSpawnTrigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\1. HitNormal_To_Stun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\2. HitHeavy_To_Stun</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
