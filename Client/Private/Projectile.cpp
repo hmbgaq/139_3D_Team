@@ -236,7 +236,7 @@ void CProjectile::Look_At_Target()
 		return;
 
 
-	_fvector vTargetPos = XMLoadFloat3(&m_pTarget->Get_WeaknessPoint());
+	_fvector vTargetPos = XMLoadFloat3(&m_pTarget->Get_WeaknessPos());
 	//_fvector vTargetPos = m_pTarget->Get_Position_Vector();
 
 	m_pTransformCom->Look_At(vTargetPos);

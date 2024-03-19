@@ -16,7 +16,7 @@ public:
 	_float  m_fHealHP = 0.f;
 	_float	m_fPreHP = 0;
 	_uint	m_iLoopescape = 0;
-	_bool	m_bSuccessShooting = false;
+	//_bool	m_bSuccessShooting = false;
 	class CEffect* m_pEffect = { nullptr };
 };
 

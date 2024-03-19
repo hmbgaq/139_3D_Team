@@ -18,15 +18,18 @@ void CVampireCommander_BloodRange_Loop::Initialize(CVampireCommander* pActor)
 
 CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
-	if (m_fHealHP>=200.f && m_bSuccessShooting ==false)
+	if (m_fHealHP>=200.f) //  && false == pActor->Is_Revealed_Weakness()
 	{
 		return new CVampireCommander_BloodRange_Stop();
 	}
-	else if (m_bSuccessShooting == true)//총으로 약점 공격 성공했을시
-	{
-		pActor->Set_Hp(m_fPreHP);
-		return new CVampireCommander_BloodRange_Stun_Start();
-	}
+
+	//else if (true == pActor->Is_Revealed_Weakness())//총으로 약점 공격 성공했을시
+	//{
+	//	pActor->Set_Hp(m_fPreHP);
+	//	return new CVampireCommander_BloodRange_Stun_Start();
+	//}
+
+
 	//체력회복 
 	m_fHealHP += 0.3f;
 	

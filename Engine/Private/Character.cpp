@@ -68,7 +68,7 @@ void CCharacter::Priority_Tick(_float fTimeDelta)
 			Pair.second->Priority_Tick(fTimeDelta);
 	}
 		
-	Set_WeaknessPoint();
+	Set_WeaknessPos();
 }
 
 void CCharacter::Tick(_float fTimeDelta)
@@ -111,7 +111,7 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
 
-	Set_WeaknessPoint();
+	Set_WeaknessPos();
 }
 
 HRESULT CCharacter::Render()
@@ -365,6 +365,28 @@ void CCharacter::Set_Enable(_bool _Enable)
 Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
 {
 	Hit_Type eHitType = Hit_Type::None;
+
+
+	if (true == m_bIsRevealedWeakness && false == bIsMelee)
+	{
+		m_bIsRevealedWeakness = false;
+		m_bIsInvincible = false;
+		
+		Get_Damaged(iDamage);
+		m_pTransformCom->Look_At_Direction(vDir * -1);
+
+		if (m_iHp <= 0) 
+		{
+			Set_Stun(true);
+			Hitted_Stun(eHitPower);
+		}
+		else 
+		{
+			Hitted_Weakness();
+		}
+
+		return Hit_Type::Hit_Break;
+	}
 
 	if (true == m_bIsInvincible)
 	{
@@ -635,10 +657,10 @@ CWeapon* CCharacter::Set_Weapon_Collisions_Enable(const wstring& strWeaponTag, _
 }
 
 
-void CCharacter::Set_WeaknessPoint()
+void CCharacter::Set_WeaknessPos()
 {
-	_float3 vResult = m_pTransformCom->Calc_Front_Pos(m_vWeaknessPoint_Local);
-	m_vWeaknessPoint = vResult;
+	_float3 vResult = m_pTransformCom->Calc_Front_Pos(m_vWeaknessPos_Local);
+	m_vWeaknessPos = vResult;
 }
 
 

@@ -129,6 +129,7 @@ public:
 		//Set_Invincible(true);
 		Hitted_Dead(Power::Heavy);
 	};
+	virtual void Hitted_Weakness() {};
 	
 public:
 	void Add_Force(_vector In_vDir, _float In_fPower);
@@ -183,8 +184,8 @@ public:
 
 
 public:
-	_float3 Get_WeaknessPoint() { return m_vWeaknessPoint; };
-	virtual void Set_WeaknessPoint();
+	_float3 Get_WeaknessPos() { return m_vWeaknessPos; };
+	virtual void Set_WeaknessPos();
 public:
 #pragma region ===========> HP <=========== 
 	//void	Set_CurHP(_float fCurHP) { m_fCurHP = fCurHP; }
@@ -200,6 +201,12 @@ public:
 public:
 	_bool Is_Invincible() { return m_bIsInvincible; };
 	void Set_Invincible(_bool _bIsInvincible) { m_bIsInvincible = _bIsInvincible; };
+
+public:
+	_bool Is_Revealed_Weakness() { return m_bIsRevealedWeakness; };
+	void Set_Reveal_Weakness(_bool _bIsRevealedWeakness) { m_bIsRevealedWeakness = _bIsRevealedWeakness; };
+
+
 
 public:
 	_bool Is_Stun() { return m_bIsInvincible; };
@@ -238,8 +245,13 @@ protected:
 
 protected:
 	CCharacter* m_pTarget = { nullptr };
-	_float3		m_vWeaknessPoint = { 0.f, 0.f, 0.f };
-	_float3		m_vWeaknessPoint_Local = { 0.f, 1.f, 0.f };
+
+protected:
+	_float3		m_vWeaknessPos = { 0.f, 0.f, 0.f };
+	_float3		m_vWeaknessPos_Local = { 0.f, 1.f, 0.f };
+	_bool		m_bIsRevealedWeakness = { false };
+
+
 
 protected:
 	_float3		m_vRootMoveRate = { 1.f, 1.f, 1.f };

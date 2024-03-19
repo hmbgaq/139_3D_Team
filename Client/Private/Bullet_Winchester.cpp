@@ -41,7 +41,7 @@ HRESULT CBullet_Winchester::Initialize(void* pArg)
 
 	//m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 10.f;
+	m_fDamage = 150.f;
 
 	// ÀÌÆåÆ® »ý¼º
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
@@ -62,18 +62,18 @@ void CBullet_Winchester::Tick(_float fTimeDelta)
 
 	m_pTransformCom->Go_Straight(fTimeDelta);
 
-	_float fDistance = m_pTransformCom->Get_Speed();// / 2.f;
-	Search_Target(LAYER_MONSTER, fDistance);
-	Search_Target(LAYER_BOSS, fDistance);
-	
-	Look_At_Target();
-	
-	if (m_pTarget)
-	{
-		//_float fDiff = Calc_Distance(m_pTarget->Get_Position());
-		//m_pTransformCom->Set_Speed(fDiff);
-		Set_Position(m_pTarget->Get_WeaknessPoint());
-	}
+	//_float fDistance = m_pTransformCom->Get_Speed();// / 2.f;
+	//Search_Target(LAYER_MONSTER, fDistance);
+	//Search_Target(LAYER_BOSS, fDistance);
+	//
+	//Look_At_Target();
+	//
+	//if (m_pTarget)
+	//{
+	//	//_float fDiff = Calc_Distance(m_pTarget->Get_Position());
+	//	//m_pTransformCom->Set_Speed(fDiff);
+	//	Set_Position(m_pTarget->Get_WeaknessPos());
+	//}
 	//else 
 	//{
 	//	m_pTransformCom->Go_Straight(fTimeDelta);
