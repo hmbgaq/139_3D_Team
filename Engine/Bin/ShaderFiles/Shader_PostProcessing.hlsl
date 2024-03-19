@@ -279,9 +279,13 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     vector Effect_Distortion = g_Distortion_Target.Sample(LinearSampler, In.vTexcoord);
     
     
-    Out.vColor = Effect_Solid;
+    Out.vColor = Effect_Solid ;
+
     if (Out.vColor.a == 0) 
-        Out.vColor = Deferred + Effect + Object_Blur + Effect_Blur + Effect_Distortion;
+        Out.vColor += Effect_Distortion;
+    
+    if (Out.vColor.a == 0) 
+        Out.vColor += Deferred + Effect + Object_Blur + Effect_Blur;
     
     ////if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
     //    //Out.vColor += Effect + Object_Blur + Effect_Blur;   // 이펙트랑 위에 디퍼드를 바꿨다(이펙트 때문)
@@ -297,16 +301,24 @@ PS_OUT PS_MAIN_EFFECT_DISTORTION(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
-    vector Distortion = g_Effect_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
+    //vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
     
+    vector Distortion = g_Effect_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
     Out.vColor = Distortion;
+     
+    
+    float2 vNoiseCoords;
+    // 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를(UV) 만든다.
+    vNoiseCoords.xy = Distortion.xy + In.vTexcoord.xy;
+    vector Deferred = g_Deferred_Target.Sample(LinearSampler, vNoiseCoords);
+    
     
     if (Out.vColor.a == 0)
         discard;
     
     /* Distortion이 적용된 부분만 Deferred와 연산한다. -> Distrotion이 적용된부분이 Deferred가 비치게되는 느낌? */
-    Out.vColor += Deferred; 
+   Out.vColor = Deferred; 
+    
     
     return Out;
 }

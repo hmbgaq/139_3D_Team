@@ -181,7 +181,7 @@ void CVampireCommander::Hitted_Right(Power ePower)
 	{
 	case Engine::Heavy:
 	case Engine::Absolute:
-	m_pActor->Set_State(new CVampireCommander_HitLeft);
+		m_pActor->Set_State(new CVampireCommander_HitLeft);
 	break;
 	}
 }

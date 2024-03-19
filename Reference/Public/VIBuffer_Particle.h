@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Particle final : public CVIBuffer
 {
 public:
-	enum TYPE_ACTION { SPARK, BLINK, FALL, RISE, RECYCLE, TYPE_ACTION_END };
+	enum TYPE_ACTION { SPARK, BLINK, FALL, RISE, TORNADO, TYPE_ACTION_END };
 	enum TYPE_FADE { FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
 
 	typedef struct tagParticleBufferDESC

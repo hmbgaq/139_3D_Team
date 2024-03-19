@@ -488,8 +488,10 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 			// 리지드바디 사용이 아니면 직접 이동
 			if (SPARK == m_tBufferDesc.eType_Action)
 			{
-				// 이동 :: 현재 포지션 = 현재 포지션 + (입자들의 방향 * (현재 스피트 * 타임델타))
-				XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&pVertices[i].vPosition) + m_vecParticleShaderInfoDesc[i].vDir * (m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta));
+
+				// 이동 :: 현재 포지션 + (입자들의 방향 * (현재 스피드 * 타임델타))
+				_vector vMovePos = XMLoadFloat4(&pVertices[i].vPosition) + m_vecParticleShaderInfoDesc[i].vDir * (m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta);
+				XMStoreFloat4(&pVertices[i].vPosition, vMovePos);
 
 				// 초기화 조건		
 				_vector vCurPos = XMLoadFloat4(&pVertices[i].vPosition);
@@ -513,10 +515,14 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 			}
 			else if (BLINK == m_tBufferDesc.eType_Action)
 			{
+				// 이동 없음
+
+
 
 			}
 			else if (FALL == m_tBufferDesc.eType_Action)
 			{
+
 
 			}
 			else if (RISE == m_tBufferDesc.eType_Action)
@@ -540,8 +546,25 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 				}
 				
 			}
-		}
+			else if (TORNADO == m_tBufferDesc.eType_Action)
+			{
 
+				// 각 입자의 초기 위치를 중심으로 하는 원 형태의 경로를 따라 회전하도록 설정
+				_float radius = 10.0f; // 원의 반지름
+				_float angularSpeed = 0.5f; // 회전 속도
+
+				_float theta = m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta * angularSpeed; // 회전 각도
+				_float x = cos(theta) * radius; // x 좌표
+				_float z = sin(theta) * radius; // z 좌표
+
+				// 입자의 위치를 업데이트하여 회전 효과 적용
+				pVertices[i].vPosition.x = x;
+				pVertices[i].vPosition.z = z;
+
+			}
+
+
+		}
 
 
 #pragma region 크기 변경 시작

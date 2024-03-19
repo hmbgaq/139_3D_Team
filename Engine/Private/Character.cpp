@@ -388,10 +388,12 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 		return Hit_Type::Hit_Break;
 	}
 
+
 	if (true == m_bIsInvincible)
 	{
 		return Hit_Type::None;
 	}
+
 
 	Get_Damaged(iDamage);	
 	Add_Force(vDir, fForce);
