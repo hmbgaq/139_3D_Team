@@ -195,7 +195,7 @@ _bool CEffect_Rect::Write_Json(json& Out_Json)
 
 
 	/* Distortion */
-	Out_Json["fSequenceTerm"] = m_tDistortionDesc.fSequenceTerm;
+	Out_Json["eType_Scroll"] = m_tDistortionDesc.eType_Scroll;
 
 	CJson_Utility::Write_Float3(Out_Json["vScrollSpeeds"], m_tDistortionDesc.vScrollSpeeds);
 	CJson_Utility::Write_Float3(Out_Json["vScales"], m_tDistortionDesc.vScales);
@@ -226,7 +226,7 @@ void CEffect_Rect::Load_FromJson(const json& In_Json)
 
 
 	/* Distortion */
-	m_tDistortionDesc.fSequenceTerm = In_Json["fSequenceTerm"];
+	m_tDistortionDesc.eType_Scroll = In_Json["eType_Scroll"];
 
 	CJson_Utility::Load_Float3(In_Json["vScrollSpeeds"], m_tDistortionDesc.vScrollSpeeds);
 	CJson_Utility::Load_Float3(In_Json["vScales"], m_tDistortionDesc.vScales);
@@ -451,6 +451,7 @@ HRESULT CEffect_Rect::Bind_ShaderResources()
 
 	/* Distortion */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_iScrollType", &m_tDistortionDesc.eType_Scroll, sizeof(_int)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vScales", &m_tDistortionDesc.vScales, sizeof(_float3)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tDistortionDesc.vDistortion1, sizeof(_float2)));

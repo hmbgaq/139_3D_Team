@@ -1310,7 +1310,6 @@ void CWindow_EffectTool::Update_RectTab()
 						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 17 };
 						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 1 };
 
-						pDistortionDesc->fSequenceTerm = 1.f;
 						pDistortionDesc->vScrollSpeeds = { 1.f, 1.f, 1.f };
 						pDistortionDesc->vScales = { 1.f, 1.f, 1.f };
 
@@ -1326,10 +1325,25 @@ void CWindow_EffectTool::Update_RectTab()
 
 					ImGui::SeparatorText(" Distortion Values_Rect ");
 
-					if (ImGui::DragFloat("Distortion_Term", &m_fSequenceTerm_Distortion, 1.f, 0.f))
-					{
-						pDistortionDesc->fSequenceTerm = m_fSequenceTerm_Distortion;
-					}
+
+					/* 디스토션 스크롤 방향 변경 */
+					ImGui::RadioButton("Row_Scroll_Rect", &m_iType_Scroll_Rect, 0);  ImGui::SameLine();
+					ImGui::RadioButton("Col_Scroll_Rect", &m_iType_Scroll_Rect, 1);
+					ImGui::RadioButton("Both_Scroll_Rect", &m_iType_Scroll_Rect, 2);
+					ImGui::RadioButton("Rotat_Scroll_Rect", &m_iType_Scroll_Rect, 3);
+					ImGui::RadioButton("End_Scroll_Rect", &m_iType_Scroll_Rect, 4);
+					if (0 == m_iType_Scroll_Rect)
+						pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_ROW };
+					else if (1 == m_iType_Scroll_Rect)
+						pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_COL };
+					else if (2 == m_iType_Scroll_Rect)
+						pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_BOTH };
+					else if (3 == m_iType_Scroll_Rect)
+						pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_ROTAT };
+					else if (4 == m_iType_Scroll_Rect)
+						pDistortionDesc->eType_Scroll = { CEffect_Void::TYPE_SCROLL_END };
+
+
 					if (ImGui::DragFloat3("ScrollSpeeds", m_vScrollSpeeds, 1.f, 0.f))
 					{
 						pDistortionDesc->vScrollSpeeds.x = m_vScrollSpeeds[0];
@@ -2002,8 +2016,6 @@ void CWindow_EffectTool::Update_MeshTab()
 
 
 
-
-
 				// 디스토션 값 변경
 				ImGui::SeparatorText(" Distortion ");
 				CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_Distortion_Desc();
@@ -2011,12 +2023,8 @@ void CWindow_EffectTool::Update_MeshTab()
 				{
 					if (ImGui::Button("FIRE"))
 					{
-						//m_pCurVoidDesc->iShaderPassIndex = { 2 };
-						//m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 1 };
-						//m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = { 17 };
-						//m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 1 };
+						pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_COL };
 
-						pDistortionDesc->fSequenceTerm = { 1.f };
 						pDistortionDesc->vScrollSpeeds = { 1.f, 1.f, 1.f };
 						pDistortionDesc->vScales = { 1.f, 1.f, 1.f };
 
@@ -2032,33 +2040,48 @@ void CWindow_EffectTool::Update_MeshTab()
 				}
 				ImGui::SeparatorText("");
 
-				if (ImGui::DragFloat("Distortion_Term_Mesh", &m_fSequenceTerm_Distortion_Mesh, 1.f, 0.f))
-				{
-					pDistortionDesc->fSequenceTerm = m_fSequenceTerm_Distortion_Mesh;
-				}
-				if (ImGui::DragFloat3("ScrollSpeeds", m_vScrollSpeeds_Mesh, 1.f, 0.f))
+
+				/* 디스토션 스크롤 방향 변경 */
+				ImGui::RadioButton(" Row_Scroll_Mesh ", &m_iType_Scroll_Mesh, 0);  ImGui::SameLine();
+				ImGui::RadioButton("Col_Scroll_Mesh", &m_iType_Scroll_Mesh, 1);
+				ImGui::RadioButton("Both_Scroll_Mesh", &m_iType_Scroll_Mesh, 2);
+				ImGui::RadioButton("Rotat_Scroll_Mesh", &m_iType_Scroll_Mesh, 3);
+				ImGui::RadioButton("End_Scroll_Mesh", &m_iType_Scroll_Mesh, 4);
+				if (0 == m_iType_Scroll_Mesh)
+					pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_ROW };
+				else if (1 == m_iType_Scroll_Mesh)
+					pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_COL };
+				else if (2 == m_iType_Scroll_Mesh)
+					pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_BOTH };
+				else if (3 == m_iType_Scroll_Mesh)
+					pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_ROTAT };
+				else if (4 == m_iType_Scroll_Mesh)
+					pDistortionDesc->eType_Scroll = { CEffect_Void::TYPE_SCROLL_END };
+
+
+				if (ImGui::DragFloat3("ScrollSpeeds", m_vScrollSpeeds_Mesh, 0.1f, -100.f))
 				{
 					pDistortionDesc->vScrollSpeeds.x = m_vScrollSpeeds_Mesh[0];
 					pDistortionDesc->vScrollSpeeds.y = m_vScrollSpeeds_Mesh[1];
 					pDistortionDesc->vScrollSpeeds.z = m_vScrollSpeeds_Mesh[2];
 				}
-				if (ImGui::DragFloat3("Distortion_Scales", m_vScales_Distortion_Mesh, 1.f, 0.f))
+				if (ImGui::DragFloat3("Distortion_Scales", m_vScales_Distortion_Mesh, 0.1f, 0.f))
 				{
 					pDistortionDesc->vScales.x = m_vScales_Distortion_Mesh[0];
 					pDistortionDesc->vScales.y = m_vScales_Distortion_Mesh[1];
 					pDistortionDesc->vScales.z = m_vScales_Distortion_Mesh[2];
 				}
-				if (ImGui::DragFloat2("Distortion1", m_vDistortion1_Mesh, 1.f, 0.f))
+				if (ImGui::DragFloat2("Distortion1", m_vDistortion1_Mesh, 0.1f, 0.f))
 				{
 					pDistortionDesc->vDistortion1.x = m_vDistortion1_Mesh[0];
 					pDistortionDesc->vDistortion1.y = m_vDistortion1_Mesh[1];
 				}
-				if (ImGui::DragFloat2("Distortion2", m_vDistortion2_Mesh, 1.f, 0.f))
+				if (ImGui::DragFloat2("Distortion2", m_vDistortion2_Mesh, 0.1f, 0.f))
 				{
 					pDistortionDesc->vDistortion2.x = m_vDistortion2_Mesh[0];
 					pDistortionDesc->vDistortion2.y = m_vDistortion2_Mesh[1];
 				}
-				if (ImGui::DragFloat2("Distortion3", m_vDistortion3_Mesh, 1.f, 0.f))
+				if (ImGui::DragFloat2("Distortion3", m_vDistortion3_Mesh, 0.1f, 0.f))
 				{
 					pDistortionDesc->vDistortion3.x = m_vDistortion3_Mesh[0];
 					pDistortionDesc->vDistortion3.y = m_vDistortion3_Mesh[1];
@@ -2071,9 +2094,6 @@ void CWindow_EffectTool::Update_MeshTab()
 				{
 					pDistortionDesc->fDistortionBias = m_fDistortionBias_Mesh;
 				}
-
-
-
 
 
 
@@ -2756,7 +2776,19 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 
 			/* 디스토션 */
-			m_fSequenceTerm_Distortion = pDistortionDesc->fSequenceTerm;
+			// 디스토션 스크롤 방향 업데이트
+			if (CEffect_Void::SCROLL_ROW == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Rect = 0;
+			else if (CEffect_Void::SCROLL_COL == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Rect = 1;
+			else if (CEffect_Void::SCROLL_BOTH == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Rect = 2;
+			else if (CEffect_Void::SCROLL_ROTAT == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Rect = 3;
+			else if (CEffect_Void::TYPE_SCROLL_END == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Rect = 4;
+
+
 			m_vScrollSpeeds[0] = pDistortionDesc->vScrollSpeeds.x;
 			m_vScrollSpeeds[1] = pDistortionDesc->vScrollSpeeds.y;
 			m_vScrollSpeeds[2] = pDistortionDesc->vScrollSpeeds.z;
@@ -2935,7 +2967,20 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 
 			/* 디스토션_메쉬 값 업데이트 */
-			m_fSequenceTerm_Distortion_Mesh = pDistortionDesc->fSequenceTerm;
+
+			// 디스토션 스크롤 방향 업데이트
+			if (CEffect_Void::SCROLL_ROW == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Mesh = 0;
+			else if (CEffect_Void::SCROLL_COL == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Mesh = 1;
+			else if (CEffect_Void::SCROLL_BOTH == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Mesh = 2;
+			else if (CEffect_Void::SCROLL_ROTAT == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Mesh = 3;
+			else if (CEffect_Void::TYPE_SCROLL_END == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Mesh = 4;
+
+
 
 			m_vScrollSpeeds_Mesh[0] = pDistortionDesc->vScrollSpeeds.x;
 			m_vScrollSpeeds_Mesh[1] = pDistortionDesc->vScrollSpeeds.y;
@@ -3308,6 +3353,63 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			}
 		}
 	}
+
+
+	// 바닥 메쉬
+	ImGui::SeparatorText("Floor");
+	if (nullptr == m_pFloor_Preview)
+	{
+		if (ImGui::Button("Create Floor"))	// 땅바닥 생성
+		{
+			Ready_Model_Preview(TEXT("Prototype_Component_Model_EffectTool_IntroBoss_Floor"));
+		}
+	}
+	else
+	{
+
+		// 바닥 모델 프리뷰가 존재하면	
+		CModel_Preview::MODEL_PREVIEW_DESC* pDesc = dynamic_cast<CModel_Preview*>(m_pFloor_Preview)->Get_Desc();
+
+		// 바닥 모델 월드 이동
+		CTransform* pTransform = m_pFloor_Preview->Get_Transform();
+		_float4 vPos = pTransform->Get_State(CTransform::STATE_POSITION);
+		ImGui::Text("Floor Pos  : %.2f %.2f %.2f", vPos.x, vPos.y, vPos.z);
+		if (ImGui::DragFloat3("Floor_Pos", m_vWorldPosition_Floor, 0.2f))
+		{
+			m_pFloor_Preview->Set_Position(_float3(m_vWorldPosition_Floor[0], m_vWorldPosition_Floor[1], m_vWorldPosition_Floor[2]));
+		}
+
+
+		// 바닥 모델 크기 변경
+		_float3 vScaled = pTransform->Get_Scaled();
+		ImGui::Text("Floor Scaled  : %.2f %.2f %.2f", vScaled.x, vScaled.y, vScaled.z);
+		if (ImGui::DragFloat3("Floor_Scale", m_vScale_Floor, 0.5f))
+		{
+			if (0.f == m_vScale_Floor[0])
+				m_vScale_Floor[0] = 1.f;
+
+			if (0.f == m_vScale_Floor[1])
+				m_vScale_Floor[1] = 1.f;
+
+			if (0.f == m_vScale_Floor[2])
+				m_vScale_Floor[2] = 1.f;
+
+			pTransform->Set_Scaling(m_vScale_Floor[0], m_vScale_Floor[1], m_vScale_Floor[2]);
+		}
+
+
+		if (ImGui::Button("Delete Floor"))	// 바닥 모델 삭제 버튼
+		{
+			if (nullptr != m_pFloor_Preview)
+			{
+				m_pFloor_Preview->Set_Dead(TRUE);
+				m_pFloor_Preview = nullptr;
+			}
+		}
+
+	}
+
+
 
 
 	// 스카이박스

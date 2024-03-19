@@ -35,7 +35,6 @@ float3		g_vBlack_Discard;
 float		g_fDissolveRatio;
 
 
-
 /* RimLight - 필요한거 두개뿐임(+1개 추가) */
 float4		g_vRimColor;
 float		g_fRimPower;
@@ -44,6 +43,9 @@ float3      g_vBloomPower;
 
 // Distortion ====================
 float	g_fFrameTime;
+
+int     g_iScrollType;
+
 float3	g_vScrollSpeeds;
 float3	g_vScales;
 
@@ -83,7 +85,6 @@ float2 RotateTexture(float2 texCoord, float angle)
 }
 
 
-
 float IsIn_Range(float fMin, float fMax, float fValue)
 {
 	return (fMin <= fValue) && (fMax >= fValue);
@@ -99,7 +100,6 @@ float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
 }
 
 
-
 float4 Calculation_Brightness(float4 Out_Diffuse)
 {
     float4 vBrightnessColor = float4(0.f, 0.f, 0.f, 0.f);
@@ -110,6 +110,78 @@ float4 Calculation_Brightness(float4 Out_Diffuse)
         vBrightnessColor = float4(Out_Diffuse.rgb, 1.0f);
 
     return vBrightnessColor;
+}
+
+
+float4 Calculation_Distortion(float2 In_TexUV, float2 In_vTexcoord1, float2 In_vTexcoord2, float2 In_vTexcoord3)
+{
+    float4 vDistortionTex_1;
+    float4 vDistortionTex_2;
+    float4 vDistortionTex_3;
+    
+    float4 vDistortionTex_Final;
+   
+	
+	// 디스토션 텍스쳐의 텍스쿠드를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
+    // 텍스쿠드에 곱하기는 크기 변화
+    In_vTexcoord1 = (In_TexUV * g_vScales.x);
+    In_vTexcoord2 = (In_TexUV * g_vScales.y);
+    In_vTexcoord3 = (In_TexUV * g_vScales.z);
+    
+    
+    if (0 == g_iScrollType)
+    {
+        // SCROLL_ROW : 가로 스크롤 
+        In_vTexcoord1.x = In_vTexcoord1.x + (g_fFrameTime * g_vScrollSpeeds.x);
+        In_vTexcoord2.x = In_vTexcoord2.x + (g_fFrameTime * g_vScrollSpeeds.y);
+        In_vTexcoord3.x = In_vTexcoord3.x + (g_fFrameTime * g_vScrollSpeeds.z);     
+    }
+    else if (1 == g_iScrollType)
+    {
+        // SCROLL_COL : 세로 스크롤      
+        In_vTexcoord1.y = In_vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
+        In_vTexcoord2.y = In_vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
+        In_vTexcoord3.y = In_vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
+    }
+    else if (2 == g_iScrollType)
+    {
+        // SCROLL_BOTH : 가로 + 세로 스크롤
+        In_vTexcoord1 = In_vTexcoord1 + (g_fFrameTime * g_vScrollSpeeds.x);
+        In_vTexcoord2 = In_vTexcoord2 + (g_fFrameTime * g_vScrollSpeeds.y);
+        In_vTexcoord3 = In_vTexcoord3 + (g_fFrameTime * g_vScrollSpeeds.z);
+    }
+	else if (3 == g_iScrollType)
+    {
+        In_vTexcoord1 = RotateTexture(In_vTexcoord1, g_fFrameTime * g_vScrollSpeeds.x);
+        In_vTexcoord2 = RotateTexture(In_vTexcoord2, g_fFrameTime * g_vScrollSpeeds.y);
+        In_vTexcoord3 = RotateTexture(In_vTexcoord3, g_fFrameTime * g_vScrollSpeeds.z);
+    }
+
+
+    // 노이즈 텍스처로 디스토션(왜곡효과)를 만든다.
+	// 셋 다 동일한 노이즈 텍스쳐이지만, 서로 다른 텍스쿠드를 사용하였기에 서로 다른 모양으로 샘플링된다.  
+    vDistortionTex_1 = g_NoiseTexture.Sample(LinearSampler, In_vTexcoord1);
+    vDistortionTex_2 = g_NoiseTexture.Sample(LinearSampler, In_vTexcoord2);
+    vDistortionTex_3 = g_NoiseTexture.Sample(LinearSampler, In_vTexcoord3);
+
+	
+	// 디스토션 값의 범위를 (0, 1)에서 (-1, +1)이 되도록한다.
+    vDistortionTex_1 = (vDistortionTex_1 - 0.5f) * 2.0f;
+    vDistortionTex_2 = (vDistortionTex_2 - 0.5f) * 2.0f;
+    vDistortionTex_3 = (vDistortionTex_3 - 0.5f) * 2.0f;
+
+	
+	// 디스토션의 xy값을 세 개의 서로 다른 왜곡xy좌표로 흩뜨린다.
+    vDistortionTex_1.xy = vDistortionTex_1.xy * g_vDistortion1.xy;
+    vDistortionTex_2.xy = vDistortionTex_2.xy * g_vDistortion2.xy;
+    vDistortionTex_3.xy = vDistortionTex_3.xy * g_vDistortion3.xy;
+
+	
+	// 왜곡된 세 디스토션 값들을 하나의 디스토션으로 합성한다.
+    vDistortionTex_Final = vDistortionTex_1 + vDistortionTex_2 + vDistortionTex_3;
+
+    
+    return vDistortionTex_Final;
 }
 // Custom Function ==============================================================================================================
 
@@ -185,7 +257,7 @@ struct PS_OUT
 };
 
 
-PS_OUT PS_MAIN(PS_IN In)
+PS_OUT PS_MAIN(PS_IN In, uniform bool bSolid)
 {
 	PS_OUT Out = (PS_OUT) 0;
 	
@@ -214,51 +286,15 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vRimBloom = float4(g_vBloomPower, 1.0f);
 
 
-	//// 검은색 잘라내기
-	//if (Out.vDiffuse.r < g_vBlack_Discard.r && Out.vDiffuse.g < g_vBlack_Discard.g && Out.vDiffuse.b < g_vBlack_Discard.b)
-	//	discard;
+    if (bSolid)
+        Out.vSolid = Out.vDiffuse;
+	
 
 	return Out;
 
 }
 // MAIN =========================================================================================================================
 
-
-// MAIN_SOLID ===================================================================================================================
-PS_OUT PS_MAIN_SOLID(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-	
-    In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
-    In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
-	
-    vector vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    float4 vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-
-    vDiffuseColor.a *= vAlphaColor;
-	
-    if (vDiffuseColor.a <= g_fAlpha_Discard)	// 알파 자르기
-        discard;
-
-    Out.vDiffuse = vDiffuseColor * g_vColor_Mul; // 색 곱하기
-
-	
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-   
-
-    /* ---------------- New ---------------- :  */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
-    Out.vDiffuse += vRimColor;
-	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
-    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
-
-    Out.vSolid = Out.vDiffuse; 
-
-    return Out;
-
-}
-// MAIN_SOLID ===================================================================================================================
 
 
 //  Normal Mapping(MAIN_NORMAL) =================================================================================================
@@ -445,80 +481,51 @@ struct PS_IN_DISTORTION
 };
 
 
-// 디스토션 코드 리팩토링 좀 해야함...
-PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
+
+PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 {
 	PS_OUT Out = (PS_OUT) 0;
 
 	
-	/* Distortion ============================================================ */
-	
-	float4  vNoise1;
-	float4  vNoise2;
-	float4  vNoise3;
-
-	float4	vFinalNoise;
+	/* Distortion ============================================================ */	
+    float4  vDistortion;
 	float	fPerturb;
-	float2	vNoiseCoords;
+    float2  vDistortedCoord;
 	
 	float4	vFinalDiffuse;
 	float4	vAlphaColor;
 
+    
     In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
     In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
 	
-	// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
-	In.vTexcoord1 = (In.vTexUV * g_vScales.x);
-	In.vTexcoord1.y = In.vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
-
-	In.vTexcoord2 = (In.vTexUV * g_vScales.y);
-	In.vTexcoord2.y = In.vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
-
-	In.vTexcoord3 = (In.vTexUV * g_vScales.z);
-	In.vTexcoord3.y = In.vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
-
-
-	// 동일한 노이즈 텍스쳐를 서로 다른 세 텍스쳐 좌표를 사용하여 세 개의 다른 크기의 노이즈를 얻는다.
-	vNoise1 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord1);
-	vNoise2 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord2);
-	vNoise3 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord3);
+    vDistortion = Calculation_Distortion(In.vTexUV, In.vTexcoord1, In.vTexcoord2, In.vTexcoord3);
 
 	
-	// 노이즈 값의 범위를 (0, 1)에서 (-1, +1)이 되도록한다.
-	vNoise1 = (vNoise1 - 0.5f) * 2.0f;
-	vNoise2 = (vNoise2 - 0.5f) * 2.0f;
-	vNoise3 = (vNoise3 - 0.5f) * 2.0f;
-
-	
-	// 노이즈의 x와 y값을 세 개의 다른 왜곡 x및 y좌표로 흩뜨린다.
-	vNoise1.xy = vNoise1.xy * g_vDistortion1.xy;
-	vNoise2.xy = vNoise2.xy * g_vDistortion2.xy;
-	vNoise3.xy = vNoise3.xy * g_vDistortion3.xy;
-
-	
-	// 왜곡된 세 노이즈 값들을 하나의 노이즈로 합성한다.
-	vFinalNoise = vNoise1 + vNoise2 + vNoise3;
-
-	
-	// 입력으로 들어온 텍스쳐의 Y좌표를 왜곡 크기와 바이어스 값으로 교란시킨다.
-	// 이 교란은 텍스쳐의 위쪽으로 갈수록 강해져서 맨 위쪽에는 깜박이는 효과를 만들어낸다.
+	// 입력으로 들어온 텍스쳐의 Y좌표를 왜곡 크기와 바이어스 값으로 교란시킨다. 이 교란은 텍스쳐의 위쪽으로 갈수록 강해져서 맨 위쪽에는 깜박이는 효과를 만들어낸다.
 	fPerturb = ((1.0f - In.vTexUV.y) * g_fDistortionScale) + g_fDistortionBias;
 
 	
 	// 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를(UV) 만든다.
-	vNoiseCoords.xy = (vFinalNoise.xy * fPerturb) + In.vTexUV.xy;
+    vDistortedCoord = (vDistortion.xy * fPerturb) + In.vTexUV.xy;
 
 
 	// 디퓨즈 텍스처 (clamp 샘플러 사용)
-    vFinalDiffuse = g_DiffuseTexture.Sample(ClampSampler, vNoiseCoords.xy);
+    vFinalDiffuse = g_DiffuseTexture.Sample(ClampSampler, vDistortedCoord.xy);
 
 
 	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용)
-	vAlphaColor = g_MaskTexture.Sample(ClampSampler, vNoiseCoords.xy);
+    vAlphaColor = g_MaskTexture.Sample(ClampSampler, vDistortedCoord.xy);
     vFinalDiffuse.a = vAlphaColor;
-
-    Out.vDistortion = vFinalNoise;
 	
+    
+	/* Discard & Color Mul ==================================================== */
+    if (Out.vDiffuse.a < g_fAlpha_Discard) // 알파 잘라내기
+        discard;
+	
+    Out.vDiffuse = vFinalDiffuse * g_vColor_Mul;
+	
+    
 	/* Dissolve ============================================================== */
     vector vDissolveTex = g_NoiseTexture.Sample(LinearSampler, In.vTexUV);
     clip(vDissolveTex - g_fDissolveRatio);
@@ -528,12 +535,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
     vFinalDiffuse = (1.f - fStepValue) * vFinalDiffuse + fStepValue;
 
 		
-	/* Discard & Color Mul ==================================================== */
-	clip(Out.vDiffuse.a - g_fAlpha_Discard);
-    Out.vDiffuse = vFinalDiffuse * g_vColor_Mul;
-	
 
-	
 	/* Normal & Depth ========================================================= */
 	float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
 	vPixelNormal = vPixelNormal * 2.f - 1.f;
@@ -552,587 +554,43 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In)
     Out.vRimBloom = float4(g_vBloomPower, 1.0f);	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
 	
 	
+	
+    if (bSolid)
+        Out.vSolid = Out.vDiffuse;
+	
+	
 	return Out;
 }
 //  DISTORTION ==================================================================================================================
 
 
 
-//  DISTORTION_SOLID ============================================================================================================
-PS_OUT PS_MAIN_DISTORTION_SOLID(PS_IN_DISTORTION In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-
-    float4 vNoise1;
-    float4 vNoise2;
-    float4 vNoise3;
-
-    float4 vFinalNoise;
-    float fPerturb;
-    float2 vNoiseCoords;
-    float4 vFinalColor;
-    float4 vAlphaColor;
-
-	// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
-    In.vTexcoord1 = (In.vTexUV * g_vScales.x);
-    In.vTexcoord1.y = In.vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
-
-    In.vTexcoord2 = (In.vTexUV * g_vScales.y);
-    In.vTexcoord2.y = In.vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
-
-    In.vTexcoord3 = (In.vTexUV * g_vScales.z);
-    In.vTexcoord3.y = In.vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
-
-
-	// 동일한 노이즈 텍스쳐를 서로 다른 세 텍스쳐 좌표를 사용하여 세 개의 다른 크기의 노이즈를 얻는다.
-    vNoise1 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord1);
-    vNoise2 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord2);
-    vNoise3 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord3);
-
-	
-	// 노이즈 값의 범위를 (0, 1)에서 (-1, +1)이 되도록한다.
-    vNoise1 = (vNoise1 - 0.5f) * 2.0f;
-    vNoise2 = (vNoise2 - 0.5f) * 2.0f;
-    vNoise3 = (vNoise3 - 0.5f) * 2.0f;
-
-	// 노이즈의 x와 y값을 세 개의 다른 왜곡 x및 y좌표로 흩뜨린다.
-    vNoise1.xy = vNoise1.xy * g_vDistortion1.xy;
-    vNoise2.xy = vNoise2.xy * g_vDistortion2.xy;
-    vNoise3.xy = vNoise3.xy * g_vDistortion3.xy;
-
-	// 왜곡된 세 노이즈 값들을 하나의 노이즈로 함성한다.
-    vFinalNoise = vNoise1 + vNoise2 + vNoise3;
-
-	// 입력으로 들어온 텍스쳐의 Y좌표를 왜곡 크기와 바이어스 값으로 교란시킨다.
-	// 이 교란은 텍스쳐의 위쪽으로 갈수록 강해져서 맨 위쪽에는 깜박이는 효과를 만들어낸다.
-    fPerturb = ((1.0f - In.vTexUV.y) * g_fDistortionScale) + g_fDistortionBias;
-
-	// 불꽃 색상 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를 만든다.
-    vNoiseCoords.xy = (vFinalNoise.xy * fPerturb) + In.vTexUV.xy;
-
-
-	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 불꽃 텍스쳐에서 색상을 샘플링한다.
-	// clamp샘플러를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
-    vFinalColor = g_DiffuseTexture.Sample(ClampSampler, vNoiseCoords.xy);
-
-
-	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 알파 텍스쳐에서 알파값을 샘플링한다. (불꽃의 투명도를 지정하는 데 사용)
-	// clamp샘플러를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
-    vAlphaColor = g_MaskTexture.Sample(ClampSampler, vNoiseCoords.xy);
-
-    vFinalColor.a = vAlphaColor;
-
-    Out.vDiffuse = vFinalColor;
-
-
-	//////
-    vector TexDissolve = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-
-    clip(TexDissolve - g_fDissolveRatio);
-
-    In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
-    In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
-
-    vector vTexDiff = vFinalColor;
-
-    float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
-
-    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue ;
-
-    clip(Out.vDiffuse.a - g_fAlpha_Discard);
-	//Out.vDiffuse.a = 1.f;
-
-	//float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-	//Out.vDiffuse.a *= vAlphaMask.a;
-
-    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
-    vPixelNormal = vPixelNormal * 2.f - 1.f;
-
-    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-
-    vPixelNormal = mul(vPixelNormal, WorldMatrix);
-
-    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
-	
-	
-    Out.vDiffuse *= g_vColor_Mul;
-	
-	/* ---------------- New ---------------- :  */
-    float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
-    Out.vDiffuse += vRimColor;
-	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
-    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
-	
-	
-    Out.vSolid = Out.vDiffuse;
-	
-    return Out;
-}
-//  DISTORTION_SOLID ============================================================================================================
-
-
-//  DISTORTION_HORAIZON =========================================================================================================
-PS_OUT PS_MAIN_DISTORTION_HORAIZON(PS_IN_DISTORTION In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-
-    float4 vNoise1;
-    float4 vNoise2;
-    float4 vNoise3;
-
-    float4 vFinalNoise;
-    float fPerturb;
-    float2 vNoiseCoords;
-    float4 vFinalColor;
-    float4 vAlphaColor;
-
-	// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
-    In.vTexcoord1 = (In.vTexUV * g_vScales.x);
-    In.vTexcoord1.x = In.vTexcoord1.x + (g_fFrameTime * g_vScrollSpeeds.x);
-
-    In.vTexcoord2 = (In.vTexUV * g_vScales.y);
-    In.vTexcoord2.x = In.vTexcoord2.x + (g_fFrameTime * g_vScrollSpeeds.y);
-
-    In.vTexcoord3 = (In.vTexUV * g_vScales.z);
-    In.vTexcoord3.x = In.vTexcoord3.x + (g_fFrameTime * g_vScrollSpeeds.z);
-
-
-	// 동일한 노이즈 텍스쳐를 서로 다른 세 텍스쳐 좌표를 사용하여 세 개의 다른 크기의 노이즈를 얻는다.
-    vNoise1 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord1);
-    vNoise2 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord2);
-    vNoise3 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord3);
-
-	
-	// 노이즈 값의 범위를 (0, 1)에서 (-1, +1)이 되도록한다.
-    vNoise1 = (vNoise1 - 0.5f) * 2.0f;
-    vNoise2 = (vNoise2 - 0.5f) * 2.0f;
-    vNoise3 = (vNoise3 - 0.5f) * 2.0f;
-
-	// 노이즈의 x와 y값을 세 개의 다른 왜곡 x및 y좌표로 흩뜨린다.
-    vNoise1.xy = vNoise1.xy * g_vDistortion1.xy;
-    vNoise2.xy = vNoise2.xy * g_vDistortion2.xy;
-    vNoise3.xy = vNoise3.xy * g_vDistortion3.xy;
-
-	// 왜곡된 세 노이즈 값들을 하나의 노이즈로 함성한다.
-    vFinalNoise = vNoise1 + vNoise2 + vNoise3;
-
-	// 입력으로 들어온 텍스쳐의 Y좌표를 왜곡 크기와 바이어스 값으로 교란시킨다.
-	// 이 교란은 텍스쳐의 위쪽으로 갈수록 강해져서 맨 위쪽에는 깜박이는 효과를 만들어낸다.
-    fPerturb = ((1.0f - In.vTexUV.y) * g_fDistortionScale) + g_fDistortionBias;
-
-	// 불꽃 색상 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를 만든다.
-    vNoiseCoords.xy = (vFinalNoise.xy * fPerturb) + In.vTexUV.xy;
-
-
-	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 불꽃 텍스쳐에서 색상을 샘플링한다.
-	// clamp샘플러를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
-    vFinalColor = g_DiffuseTexture.Sample(ClampSampler, vNoiseCoords.xy);
-
-
-	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 알파 텍스쳐에서 알파값을 샘플링한다. (불꽃의 투명도를 지정하는 데 사용)
-	// clamp샘플러를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
-    vAlphaColor = g_MaskTexture.Sample(ClampSampler, vNoiseCoords.xy);
-
-    vFinalColor.a = vAlphaColor;
-
-    Out.vDiffuse = vFinalColor;
-
-
-	//////
-    vector DissolveTex = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-
-    clip(DissolveTex - g_fDissolveRatio);
-
-    In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
-    In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
-
-    vector vTexDiff = vFinalColor;
-
-    float fStepValue = IsIn_Range(0.f, 0.05f, DissolveTex.r - g_fDissolveRatio);
-
-    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue;
-
-    clip(Out.vDiffuse.a - g_fAlpha_Discard);
-	//Out.vDiffuse.a = 1.f;
-
-	//float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-	//Out.vDiffuse.a *= vAlphaMask.a;
-
-    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
-    vPixelNormal = vPixelNormal * 2.f - 1.f;
-
-    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-
-    vPixelNormal = mul(vPixelNormal, WorldMatrix);
-
-    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
-	
-	
-    Out.vDiffuse *= g_vColor_Mul;
-	
-	/* ---------------- New ---------------- :  */
-    float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
-    Out.vDiffuse += vRimColor;
-	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
-    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
-	
-
-	
-    return Out;
-}
-//  DISTORTION_HORAIZON =========================================================================================================
-
-
-//  DISTORTION_HORAIZON_RIGHT ===================================================================================================
-PS_OUT PS_MAIN_DISTORTION_HORAIZON_RIGHT(PS_IN_DISTORTION In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-
-    float4 vNoise1;
-    float4 vNoise2;
-    float4 vNoise3;
-
-    float4 vFinalNoise;
-    float fPerturb;
-    float2 vNoiseCoords;
-    float4 vFinalColor;
-    float4 vAlphaColor;
-
-	// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
-    In.vTexcoord1 = (In.vTexUV * g_vScales.x);
-    In.vTexcoord1.x = In.vTexcoord1.x + (g_fFrameTime * -g_vScrollSpeeds.x);
-
-    In.vTexcoord2 = (In.vTexUV * g_vScales.y);
-    In.vTexcoord2.x = In.vTexcoord2.x + (g_fFrameTime * -g_vScrollSpeeds.y);
-
-    In.vTexcoord3 = (In.vTexUV * g_vScales.z);
-    In.vTexcoord3.x = In.vTexcoord3.x + (g_fFrameTime * -g_vScrollSpeeds.z);
-
-
-	// 동일한 노이즈 텍스쳐를 서로 다른 세 텍스쳐 좌표를 사용하여 세 개의 다른 크기의 노이즈를 얻는다.
-    vNoise1 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord1);
-    vNoise2 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord2);
-    vNoise3 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord3);
-
-	
-	// 노이즈 값의 범위를 (0, 1)에서 (-1, +1)이 되도록한다.
-    vNoise1 = (vNoise1 - 0.5f) * 2.0f;
-    vNoise2 = (vNoise2 - 0.5f) * 2.0f;
-    vNoise3 = (vNoise3 - 0.5f) * 2.0f;
-
-	// 노이즈의 x와 y값을 세 개의 다른 왜곡 x및 y좌표로 흩뜨린다.
-    vNoise1.xy = vNoise1.xy * g_vDistortion1.xy;
-    vNoise2.xy = vNoise2.xy * g_vDistortion2.xy;
-    vNoise3.xy = vNoise3.xy * g_vDistortion3.xy;
-
-	// 왜곡된 세 노이즈 값들을 하나의 노이즈로 함성한다.
-    vFinalNoise = vNoise1 + vNoise2 + vNoise3;
-
-	// 입력으로 들어온 텍스쳐의 Y좌표를 왜곡 크기와 바이어스 값으로 교란시킨다.
-	// 이 교란은 텍스쳐의 위쪽으로 갈수록 강해져서 맨 위쪽에는 깜박이는 효과를 만들어낸다.
-    fPerturb = ((1.0f - In.vTexUV.y) * g_fDistortionScale) + g_fDistortionBias;
-
-	// 불꽃 색상 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를 만든다.
-    vNoiseCoords.xy = (vFinalNoise.xy * fPerturb) + In.vTexUV.xy;
-
-
-	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 불꽃 텍스쳐에서 색상을 샘플링한다.
-	// clamp샘플러를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
-    vFinalColor = g_DiffuseTexture.Sample(ClampSampler, vNoiseCoords.xy);
-
-
-	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 알파 텍스쳐에서 알파값을 샘플링한다. (불꽃의 투명도를 지정하는 데 사용)
-	// clamp샘플러를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
-    vAlphaColor = g_MaskTexture.Sample(ClampSampler, vNoiseCoords.xy);
-
-    vFinalColor.a = vAlphaColor;
-
-    Out.vDiffuse = vFinalColor;
-
-
-	//////
-    vector TexDissolve = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-
-    clip(TexDissolve - g_fDissolveRatio);
-
-    In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
-    In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
-
-    vector vTexDiff = vFinalColor;
-
-    float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
-
-    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue;
-
-    clip(Out.vDiffuse.a - g_fAlpha_Discard);
-	//Out.vDiffuse.a = 1.f;
-
-	//float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-	//Out.vDiffuse.a *= vAlphaMask.a;
-
-    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
-    vPixelNormal = vPixelNormal * 2.f - 1.f;
-
-    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-
-    vPixelNormal = mul(vPixelNormal, WorldMatrix);
-
-    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
-	
-	
-    Out.vDiffuse *= g_vColor_Mul;
-	
-	/* ---------------- New ---------------- :  */
-    float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
-    Out.vDiffuse += vRimColor;
-	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
-    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
-	
-
-	
-    return Out;
-}
-//  DISTORTION_HORAIZON_RIGHT ===================================================================================================
-
-
-//  DISTORTION_ROTATION =========================================================================================================
-PS_OUT PS_MAIN_DISTORTION_ROTATION(PS_IN_DISTORTION In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-
-    float4 vNoise1;
-    float4 vNoise2;
-    float4 vNoise3;
-
-    float4 vFinalNoise;
-    float fPerturb;
-    float2 vNoiseCoords;
-    float4 vFinalColor;
-    float4 vAlphaColor;
-
-	// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
-    In.vTexcoord1 = (In.vTexUV * g_vScales.x);
-    //In.vTexcoord1.x = In.vTexcoord1.x + (g_fFrameTime * g_vScrollSpeeds.x);
-    In.vTexcoord1 = RotateTexture(In.vTexcoord1, g_fFrameTime * g_vScrollSpeeds.x);
-	
-	
-    In.vTexcoord2 = (In.vTexUV * g_vScales.y);
-    //In.vTexcoord2.x = In.vTexcoord2.x + (g_fFrameTime * g_vScrollSpeeds.y);
-    In.vTexcoord2 = RotateTexture(In.vTexcoord2, g_fFrameTime * g_vScrollSpeeds.y);
-	
-
-    In.vTexcoord3 = (In.vTexUV * g_vScales.z);
-   // In.vTexcoord3.x = In.vTexcoord3.x + (g_fFrameTime * g_vScrollSpeeds.z);
-    In.vTexcoord3 = RotateTexture(In.vTexcoord3, g_fFrameTime * g_vScrollSpeeds.z);
-
-	
-	// 동일한 노이즈 텍스쳐를 서로 다른 세 텍스쳐 좌표를 사용하여 세 개의 다른 크기의 노이즈를 얻는다.
-    vNoise1 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord1);
-    vNoise2 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord2);
-    vNoise3 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord3);
-
-	
-	// 노이즈 값의 범위를 (0, 1)에서 (-1, +1)이 되도록한다.
-    vNoise1 = (vNoise1 - 0.5f) * 2.0f;
-    vNoise2 = (vNoise2 - 0.5f) * 2.0f;
-    vNoise3 = (vNoise3 - 0.5f) * 2.0f;
-
-	// 노이즈의 x와 y값을 세 개의 다른 왜곡 x및 y좌표로 흩뜨린다.
-    vNoise1.xy = vNoise1.xy * g_vDistortion1.xy;
-    vNoise2.xy = vNoise2.xy * g_vDistortion2.xy;
-    vNoise3.xy = vNoise3.xy * g_vDistortion3.xy;
-
-	// 왜곡된 세 노이즈 값들을 하나의 노이즈로 함성한다.
-    vFinalNoise = vNoise1 + vNoise2 + vNoise3;
-
-	// 입력으로 들어온 텍스쳐의 Y좌표를 왜곡 크기와 바이어스 값으로 교란시킨다.
-	// 이 교란은 텍스쳐의 위쪽으로 갈수록 강해져서 맨 위쪽에는 깜박이는 효과를 만들어낸다.
-    fPerturb = ((1.0f - In.vTexUV.y) * g_fDistortionScale) + g_fDistortionBias;
-
-	
-	// 불꽃 색상 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를 만든다.
-    vNoiseCoords.xy = (vFinalNoise.xy * fPerturb) + In.vTexUV.xy;
-
-
-	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 불꽃 텍스쳐에서 색상을 샘플링한다.
-	// clamp샘플러를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
-    vFinalColor = g_DiffuseTexture.Sample(ClampSampler, vNoiseCoords.xy);
-
-
-	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 알파 텍스쳐에서 알파값을 샘플링한다. (불꽃의 투명도를 지정하는 데 사용)
-	// clamp샘플러를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
-    vAlphaColor = g_MaskTexture.Sample(ClampSampler, vNoiseCoords.xy);
-
-    vFinalColor.a = vAlphaColor;
-
-    Out.vDiffuse = vFinalColor;
-
-
-	//////
-    vector TexDissolve = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-
-    clip(TexDissolve - g_fDissolveRatio);
-
-    In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
-    In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
-
-    vector vTexDiff = vFinalColor;
-
-    float fStepValue = IsIn_Range(0.f, 0.05f, TexDissolve.r - g_fDissolveRatio);
-
-    Out.vDiffuse = (1.f - fStepValue) * vTexDiff + fStepValue;
-
-    clip(Out.vDiffuse.a - g_fAlpha_Discard);
-	//Out.vDiffuse.a = 1.f;
-
-	//float4 vAlphaMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
-	//Out.vDiffuse.a *= vAlphaMask.a;
-
-    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
-    vPixelNormal = vPixelNormal * 2.f - 1.f;
-
-    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-
-    vPixelNormal = mul(vPixelNormal, WorldMatrix);
-
-    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
-	
-	
-    Out.vDiffuse *= g_vColor_Mul;
-	
-	/* ---------------- New ---------------- :  */
-    float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
-    Out.vDiffuse += vRimColor;
-	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
-    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
-	
-
-	
-    return Out;
-}
-//  DISTORTION_ROTATION =========================================================================================================
-
 
 //  PS_MAIN_DISTORTION_DEFERRED =======================================================================================================
-// 디스토션 코드 리팩토링 좀 해야함...
 PS_OUT PS_MAIN_DISTORTION_DEFERRED(PS_IN_DISTORTION In)
 {
-    PS_OUT Out = (PS_OUT) 0;
-
-	
-	/* Distortion ============================================================ */
-	
-    float4 vNoise1;
-    float4 vNoise2;
-    float4 vNoise3;
-
-    float4 vFinalNoise;
-    float fPerturb;
-    float2 vNoiseCoords;
-	
-    float4 vFinalDiffuse;
-    float4 vAlphaColor;
-
+    PS_OUT Out = (PS_OUT) 0;	
+    
     In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
     In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
-	
-	// 노이즈 텍스쳐의 좌표를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
-    In.vTexcoord1 = (In.vTexUV * g_vScales.x);
-    In.vTexcoord1.y = In.vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
-
-    In.vTexcoord2 = (In.vTexUV * g_vScales.y);
-    In.vTexcoord2.y = In.vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
-
-    In.vTexcoord3 = (In.vTexUV * g_vScales.z);
-    In.vTexcoord3.y = In.vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
-
-
-	// 동일한 노이즈 텍스쳐를 서로 다른 세 텍스쳐 좌표를 사용하여 세 개의 다른 크기의 노이즈를 얻는다.
-    vNoise1 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord1);
-    vNoise2 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord2);
-    vNoise3 = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord3);
-
-	
-	// 노이즈 값의 범위를 (0, 1)에서 (-1, +1)이 되도록한다.
-    vNoise1 = (vNoise1 - 0.5f) * 2.0f;
-    vNoise2 = (vNoise2 - 0.5f) * 2.0f;
-    vNoise3 = (vNoise3 - 0.5f) * 2.0f;
-
-	
-	// 노이즈의 x와 y값을 세 개의 다른 왜곡 x및 y좌표로 흩뜨린다.
-    vNoise1.xy = vNoise1.xy * g_vDistortion1.xy;
-    vNoise2.xy = vNoise2.xy * g_vDistortion2.xy;
-    vNoise3.xy = vNoise3.xy * g_vDistortion3.xy;
-
-	
-	// 왜곡된 세 노이즈 값들을 하나의 노이즈로 합성한다.
-    vFinalNoise = vNoise1 + vNoise2 + vNoise3;
-
-	
-	// 입력으로 들어온 텍스쳐의 Y좌표를 왜곡 크기와 바이어스 값으로 교란시킨다.
-	// 이 교란은 텍스쳐의 위쪽으로 갈수록 강해져서 맨 위쪽에는 깜박이는 효과를 만들어낸다.
-    fPerturb = ((1.0f - In.vTexUV.y) * g_fDistortionScale) + g_fDistortionBias;
-
-	
-	// 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를(UV) 만든다.
-    vNoiseCoords.xy = (vFinalNoise.xy * fPerturb) + In.vTexUV.xy;
-
-
-	// 디퓨즈 텍스처 (clamp 샘플러 사용)
-    vFinalDiffuse = g_DiffuseTexture.Sample(ClampSampler, vNoiseCoords.xy);
-
     
-    Out.vDistortion = vFinalNoise;
 
-  
-
-	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용)
-    vAlphaColor = g_MaskTexture.Sample(ClampSampler, vNoiseCoords.xy);
-    vFinalDiffuse.a = vAlphaColor;
-
-
+	/* Distortion ============================================================ */ 
+    float4 vDistortion;
+    
+    vDistortion = Calculation_Distortion(In.vTexUV, In.vTexcoord1, In.vTexcoord2, In.vTexcoord3);
+    Out.vDistortion = vDistortion;
     
     
-	/* Dissolve ============================================================== */
-    vector vDissolveTex = g_NoiseTexture.Sample(LinearSampler, In.vTexUV);
-    clip(vDissolveTex - g_fDissolveRatio);
-
-    float fStepValue = IsIn_Range(0.f, 0.05f, vDissolveTex.r - g_fDissolveRatio);
-
-    vFinalDiffuse = (1.f - fStepValue) * vFinalDiffuse + fStepValue;
-
-		
-	/* Discard & Color Mul ==================================================== */
-    clip(Out.vDiffuse.a - g_fAlpha_Discard);
-    Out.vDiffuse = vFinalDiffuse * g_vColor_Mul;
-	
-
-	
-	/* Normal & Depth ========================================================= */
-    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
-    vPixelNormal = vPixelNormal * 2.f - 1.f;
-
-    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-
-    vPixelNormal = mul(vPixelNormal, WorldMatrix);
-
-    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+	/* Depth ================================================================ */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 	
 	
-	/* RimBloom ================================================================ */
-    float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
-    Out.vDiffuse += vRimColor;
+	/* RimBloom ============================================================== */
+    Out.vDiffuse = float4(0.f, 0.f, 0.f, 0.f);
     Out.vRimBloom = float4(g_vBloomPower, 1.0f); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
 	
-    
-    Out.vDiffuse = float4(0.f, 0.f, 0.f, 0.f);
-    Out.vSolid = Out.vDiffuse;
-    
+      
     return Out;
 }
 //  PS_MAIN_DISTORTION_DEFERRED =======================================================================================================
@@ -1152,7 +610,7 @@ technique11 DefaultTechnique
 		HullShader		= NULL;
 		DomainShader	= NULL;
 		GeometryShader	= NULL;
-		PixelShader		= compile ps_5_0 PS_MAIN();
+		PixelShader		= compile ps_5_0 PS_MAIN(false);
 	}
 
     pass Effect_Solid // 1
@@ -1166,7 +624,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_SOLID();
+        PixelShader = compile ps_5_0 PS_MAIN(true);
     }
 
 	pass WireFrame // 2
@@ -1205,7 +663,7 @@ technique11 DefaultTechnique
 		HullShader		= NULL;
 		DomainShader	= NULL;
 		GeometryShader	= NULL;
-		PixelShader		= compile ps_5_0 PS_MAIN_DISTORTION();
+		PixelShader		= compile ps_5_0 PS_MAIN_DISTORTION(false);
 	}
 
     pass Distortion_Solid // 5
@@ -1218,51 +676,10 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION_SOLID();
+        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION(true);
     }
 
-    pass Distortion_Horaizon // 6
-    {
-        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        SetDepthStencilState(DSS_DepthStencilEnable, 0);
-        SetRasterizerState(RS_Cull_None);
-
-        VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
-        HullShader = NULL;
-        DomainShader = NULL;
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION_HORAIZON();
-    }
-
-    pass Distortion_Horaizon_Right // 7
-    {
-        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        SetDepthStencilState(DSS_DepthStencilEnable, 0);
-        SetRasterizerState(RS_Cull_None);
-
-        VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
-        HullShader = NULL;
-        DomainShader = NULL;
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION_HORAIZON_RIGHT();
-    }
-
-
-    pass Distortion_Rotation // 8
-    {
-        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        SetDepthStencilState(DSS_DepthStencilEnable, 0);
-        SetRasterizerState(RS_Cull_None);
-
-        VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
-        HullShader = NULL;
-        DomainShader = NULL;
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION_ROTATION();
-    }
-
-
-    pass Distortion_Deferred // 9
+    pass Distortion_Deferred // 6
     {
         //SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);

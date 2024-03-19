@@ -48,6 +48,9 @@ float3	g_vBloomPower;
 
 // Distortion ====================
 float	g_fFrameTime;
+
+int		g_iScrollType;
+
 float3	g_vScrollSpeeds;
 float3	g_vScales;
 

@@ -163,7 +163,7 @@ private:
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
-	_int m_iMaxShaderPassIndex_Mesh							= { 9 };
+	_int m_iMaxShaderPassIndex_Mesh							= { 7 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
 	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 12, 0, 44, 24, 20 };
 
@@ -206,11 +206,11 @@ private:
 	_int	m_iBillBoard				= { 0 };
 
 	/* 파티클만의 속성 */
-	_int	m_iRecycle_Particle = { 0 };
-	_int	m_iReverse_Particle = { 0 };
-	_int	m_iType_Emit_Particle = { 0 };
-	_int	m_iType_Action_Particle = { 0 };
-	_int	m_iType_Fade_Particle = { 0 };
+	_int	m_iRecycle_Particle			= { 0 };
+	_int	m_iReverse_Particle			= { 0 };
+	_int	m_iType_Emit_Particle		= { 0 };
+	_int	m_iType_Action_Particle		= { 0 };
+	_int	m_iType_Fade_Particle		= { 0 };
 
 
 	_float	m_vMinMaxLifeTime_Particle[2] = { 0.f, 0.f };	// 라이프타임
@@ -296,7 +296,7 @@ private:
 
 
 	/* Distortion */
-	_float m_fSequenceTerm_Distortion = { 1.f };
+	_int	m_iType_Scroll_Rect = { 0 };
 
 	_float	m_vScrollSpeeds[3]			= { 1.f, 1.f, 0.f };
 	_float	m_vScales_Distortion[3]		= { 1.f, 1.f, 1.f };
@@ -383,6 +383,7 @@ private:
 
 	/* Distortion ============================================== */
 	_float m_fSequenceTerm_Distortion_Mesh = { 1.f };
+	_int	m_iType_Scroll_Mesh = { 0 };
 
 	_float	m_vScrollSpeeds_Mesh[3] = { 1.f, 1.f, 0.f };
 	_float	m_vScales_Distortion_Mesh[3] = { 1.f, 1.f, 1.f };
@@ -437,6 +438,11 @@ private:
 	_float	m_fColor_Grid[4] = { 0.3f, 0.3f, 0.3f, 1.f };	// 그리드(와이어프레임) 컬러
 	_int	m_iShaderPass_Grid = { 2 };
 
+
+	/* Test Floor */
+	CModel_Preview* m_pFloor_Preview = { nullptr };				// 땅바닥
+	_float			m_vWorldPosition_Floor[3] = { 0.f, 0.f, 0.f };	// 바닥 모델 월드 이동
+	_float			m_vScale_Floor[3] = { 0.f, 0.f, 0.f };			// 바닥 모델 크기
 
 	/* Model_Preview */
 	CModel_Preview*	m_pModel_Preview = { nullptr };				// 크기 비교용 보기 모델

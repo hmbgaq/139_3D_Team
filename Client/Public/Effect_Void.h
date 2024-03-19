@@ -12,7 +12,7 @@ class CEffect_Void abstract : public CAlphaObject
 public:
 	enum TYPE_EFFECT { PARTICLE, RECT, MESH, TRAIL, TYPE_EFFECT_END };
 	enum TEXTURE	 { TEXTURE_DIFFUSE, TEXTURE_NORAML, TEXTURE_MASK, TEXTURE_NOISE, TEXTURE_SPRITE, TEXTURE_END };
-
+	enum TYPE_SCROLL { SCROLL_ROW, SCROLL_COL, SCROLL_BOTH, SCROLL_ROTAT, TYPE_SCROLL_END };
 
 	typedef struct tagEffectVoidDesc : public CGameObject::GAMEOBJECT_DESC
 	{
@@ -142,7 +142,9 @@ public:
 
 	typedef struct tagDistortionDesc
 	{
-		_float	fSequenceTerm	= { 0.05f };
+		//_float	fSequenceTerm	= { 0.05f };
+
+		TYPE_SCROLL	eType_Scroll = { TYPE_SCROLL_END };
 
 		_float3 vScrollSpeeds	= { 0.f, 0.f, 0.f };
 		_float3 vScales			= { 0.f, 0.f, 0.f };
