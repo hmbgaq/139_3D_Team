@@ -339,7 +339,8 @@
     <ClInclude Include="..\Public\DevConsole.h" />
     <ClInclude Include="..\public\Environment_SpecialObject.h" />
     <ClInclude Include="..\Public\Effect_Manager.h" />
-    <ClInclude Include="..\Public\Event_InteractManager.h" />
+    <ClInclude Include="..\Public\Event_MonsterSpawnTrigger.h" />
+    <ClInclude Include="..\Public\Event_Trigger.h" />
     <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\Environment_LightObject.h" />
     <ClInclude Include="..\Public\Infected.h" />
@@ -1299,7 +1300,8 @@
     <ClCompile Include="..\Private\Environment_LightObject.cpp" />
     <ClCompile Include="..\Private\Environment_SpecialObject.cpp" />
     <ClCompile Include="..\Private\Effect_Manager.cpp" />
-    <ClCompile Include="..\Private\Event_InteractManager.cpp" />
+    <ClCompile Include="..\Private\Event_MonsterSpawnTrigger.cpp" />
+    <ClCompile Include="..\Private\Event_Trigger.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\Infected.cpp" />
     <ClCompile Include="..\Private\Infected_A.cpp" />

@@ -22,6 +22,8 @@
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
 #include "Environment_Interact.h"
+#include "Event_Trigger.h"
+#include "Event_MonsterSpawnTrigger.h"
 #pragma endregion
 
 #pragma region Test
@@ -37,6 +39,8 @@
 #pragma endregion
 
 #include "Level_Loading.h"
+
+
 
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -56,10 +60,15 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+	
+	
+
 	FAILED_CHECK(Ready_Shader());
 
 #pragma region 주석확인
 	FAILED_CHECK(Ready_UI());
+
+	FAILED_CHECK(Ready_Event());
 
 	return S_OK;
 }
@@ -217,44 +226,44 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 {
-	json Stage1MonsterJson = {};
-
-	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MonsterJson)))
-	{
-		MSG_BOX("몬스터 불러오기 실패");
-		return E_FAIL;
-	}
-
-	json MonsterJson = Stage1MonsterJson["Monster_Json"];
-	_int iMonsterJsonSize = (_int)MonsterJson.size();
-
-	for (_int i = 0; i < iMonsterJsonSize; ++i)
-	{
-		CMonster_Character::MONSTER_DESC MonsterDesc = {};
-
-		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
-
-		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
-		MonsterDesc.bPreview = false;
-		MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
-
-		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-		_float4x4 WorldMatrix;
-
-		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-		{
-			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-			{
-				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-			}
-		}
-
-		MonsterDesc.WorldMatrix = WorldMatrix;
-
-		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
-			return E_FAIL;
-
-	}
+// 	json Stage1MonsterJson = {};
+// 
+// 	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MonsterJson)))
+// 	{
+// 		MSG_BOX("몬스터 불러오기 실패");
+// 		return E_FAIL;
+// 	}
+// 
+// 	json MonsterJson = Stage1MonsterJson["Monster_Json"];
+// 	_int iMonsterJsonSize = (_int)MonsterJson.size();
+// 
+// 	for (_int i = 0; i < iMonsterJsonSize; ++i)
+// 	{
+// 		CMonster_Character::MONSTER_DESC MonsterDesc = {};
+// 
+// 		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
+// 
+// 		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
+// 		MonsterDesc.bPreview = false;
+// 		MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
+// 
+// 		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+// 		_float4x4 WorldMatrix;
+// 
+// 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+// 		{
+// 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+// 			{
+// 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+// 			}
+// 		}
+// 
+// 		MonsterDesc.WorldMatrix = WorldMatrix;
+// 
+// 		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+// 			return E_FAIL;
+// 
+// 	}
 
 	////FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_VampireCommander")));
 	//CGameObject* pMonster = nullptr;
@@ -460,34 +469,34 @@ HRESULT CLevel_GamePlay::Ready_Shader()
 
 	HBAO_PLUS_DESC Desc_Hbao = {};
 	Desc_Hbao.bHBAO_Active = true;
-	Desc_Hbao.fBias = 0.277f;
+	Desc_Hbao.fBias = 0.1f;
 	Desc_Hbao.fBlur_Sharpness = 16.f;
-	Desc_Hbao.fPowerExponent = 1.527f;
-	Desc_Hbao.fRadius = 3.730f;
+	Desc_Hbao.fPowerExponent = 1.828f;
+	Desc_Hbao.fRadius = 1.482f;
 
 	BLOOMRIM_DESC Desc_BR = {};
 	Desc_BR.bRimBloom_Blur_Active = true;
 
 	FOG_DESC Desc_Fog = {};
 	Desc_Fog.bFog_Active = true;
-	Desc_Fog.fFogStartDepth = 121.762f;
-	Desc_Fog.fFogStartDistance = 19.430f;
-	Desc_Fog.fFogDistanceValue = 40.673f;
-	Desc_Fog.fFogHeightValue = 26.944f;
-	Desc_Fog.fFogDistanceDensity = 0.063f;
-	Desc_Fog.fFogHeightDensity = 0.12f;
+	Desc_Fog.fFogStartDepth = 97.746f;
+	Desc_Fog.fFogStartDistance = 1.810f;
+	Desc_Fog.fFogDistanceValue = 30.0f;
+	Desc_Fog.fFogHeightValue = 47.151f;
+	Desc_Fog.fFogDistanceDensity = 0.275f;
+	Desc_Fog.fFogHeightDensity = 0.242f;
 
 	HDR_DESC Desc_HDR = {};
 	Desc_HDR.bHDR_Active = true;
-	Desc_HDR.fmax_white = 0.544;
+	Desc_HDR.fmax_white = 0.478;
 
 	ANTI_DESC Desc_Anti = {};
 	Desc_Anti.bFXAA_Active = true;
 
 	HSV_DESC Desc_HSV = {};
 	Desc_HSV.bScreen_Active = true;
-	Desc_HSV.fFinal_Brightness = 1.036f;
-	Desc_HSV.fFinal_Saturation = 1.513f;
+	Desc_HSV.fFinal_Brightness = 0.818f;
+	Desc_HSV.fFinal_Saturation = 0.979f;
 
 	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
 	m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);
@@ -982,6 +991,52 @@ HRESULT CLevel_GamePlay::Ready_Cursor(const wstring& strLayerTag, void* pArg)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Event()
+{
+	json LoadJson;
+
+	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), LoadJson)))
+	{
+		MSG_BOX("이벤트 불러오기 실패");
+		return E_FAIL;
+	}
+
+	json TriggerJson = LoadJson["Trigger_Json"];
+
+	json MonsterTriggerJson = TriggerJson["MonsterTriggerJson"];
+	_int iMonsterTriggerSize = (_int)MonsterTriggerJson.size();
+
+	for (_int i = 0; i < iMonsterTriggerSize; ++i)
+	{
+		CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
+		MonsterTriggerDesc.bOnTrigger = MonsterTriggerJson[i]["OnTrigger"];
+		MonsterTriggerDesc.strSpawnMonsterJsonPath = m_strStage1MapLoadPath;
+		MonsterTriggerDesc.strTriggerNameTag = MonsterTriggerJson[i]["NameTag"];
+		MonsterTriggerDesc.iSpawnGroupIndex = MonsterTriggerJson[i]["SpawnGroupIndex"];
+		CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
+		CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
+
+		CEvent_MosnterSpawnTrigger* pMonsterTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
+
+		pMonsterTrigger->Load_FromJson(MonsterTriggerJson[i]);
+
+		if (pMonsterTrigger == nullptr)
+		{
+			MSG_BOX("몬스터 트리거 불러오기 실패");
+			return E_FAIL;
+		}
+		else
+		{
+			m_pGameInstance->Add_Event(pMonsterTrigger);
+		}
+
+
+	}
+
+
+	return S_OK;
+}
+
 CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 
 {
@@ -998,5 +1053,8 @@ CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 void CLevel_GamePlay::Free()
 {
 	__super::Free();
+
+	m_pGameInstance->Clear_Event();
+	
 
 }

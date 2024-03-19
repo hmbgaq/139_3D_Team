@@ -127,8 +127,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 void CGameInstance::Clear(_uint iLevelIndex)
 {
 	if (nullptr == m_pObject_Manager ||
-		nullptr == m_pComponent_Manager || 
-		nullptr == m_pEvent_Manager)
+		nullptr == m_pComponent_Manager //|| 
+		/*nullptr == m_pEvent_Manager*/)
 		return;
 
 	/* 오브젝트 매니져에 레벨별로 구분해 놓은 객체들 중 특정된 객체들을 지운다.  */
@@ -137,7 +137,7 @@ void CGameInstance::Clear(_uint iLevelIndex)
 	/* 컴포넌트 매니져에 레벨별로 구분해 놓은 컴포넌트들 중 특정된 객체들을 지운다.  */
 	m_pComponent_Manager->Clear(iLevelIndex);
 
-	m_pEvent_Manager->Clear();
+	/*m_pEvent_Manager->Clear();*/
 }
 
 HRESULT CGameInstance::Render_Engine()
@@ -880,6 +880,11 @@ void CGameInstance::Check_Group(const _uint& In_iLeftLayer, const _uint& In_iRig
 void CGameInstance::Add_Event(IEvent* pEvent)
 {
 	m_pEvent_Manager->Add_Event(pEvent);
+}
+
+void CGameInstance::Clear_Event()
+{
+	m_pEvent_Manager->Clear();
 }
 
 void CGameInstance::Register_PhysXCollider(CPhysXCollider* pPhysXCollider)
