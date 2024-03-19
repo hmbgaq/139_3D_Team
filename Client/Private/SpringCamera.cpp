@@ -29,7 +29,7 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 		return E_FAIL;
 
 	SPRING_CAMERA_DESC* pDesc = (SPRING_CAMERA_DESC*)pArg;
-
+	
 	m_fMouseSensor = pDesc->fMouseSensor;
 
 	if (FAILED(__super::Initialize(pDesc)))
@@ -175,7 +175,6 @@ void CSpringCamera::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 	
-	//아니 이거 왜이래 보간할려고 하면 할수록 더 구려지네
 
 	
 }

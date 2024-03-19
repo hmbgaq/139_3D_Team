@@ -18,6 +18,8 @@ public:
 	_uint	m_iLoopescape = 0;
 	_bool	m_bSuccessShooting = false;
 	class CEffect* m_pEffect = { nullptr };
+	
+
 };
 
 END

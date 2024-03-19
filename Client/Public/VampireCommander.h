@@ -43,8 +43,8 @@ private:
 
 private:
 	CEffect* m_pMapEffect = { nullptr }; // TEST
-
 public:
+	class CUI_Weakness* m_pWeakneesUI = { nullptr };
 	_bool m_bTurn = true;
 
 public:

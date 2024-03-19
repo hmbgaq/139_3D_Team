@@ -4,6 +4,7 @@
 
 #include "Effect.h"
 #include "Effect_Manager.h"
+#include "UI_Weakness.h"
 
 void CVampireCommander_BloodRange_Loop::Initialize(CVampireCommander* pActor)
 {
@@ -13,6 +14,7 @@ void CVampireCommander_BloodRange_Loop::Initialize(CVampireCommander* pActor)
 	m_iPreHP = pActor->Get_Hp();
 	
 	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS,L"Layer_Effect", "blood Loop_03.json", pActor);
+	pActor->m_pWeakneesUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
 
 }
 
@@ -28,8 +30,8 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 		return new CVampireCommander_BloodRange_Stun_Start();
 	}
 	//체력회복 
-	m_fHealHP += 0.3f;
-	
+	m_fHealHP += 0.2f;
+
 	pActor->Set_Hp(m_iPreHP + m_fHealHP);
 
 	++m_iLoopescape;
