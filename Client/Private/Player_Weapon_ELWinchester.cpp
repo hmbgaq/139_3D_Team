@@ -72,10 +72,11 @@ void CPlayer_Weapon_ELWinchester::Fire()
 	pBullet->Set_Position(vSpawnPos);
 	pBullet->Get_Transform()->Look_At(vTargetVector);
 
-	CCamera* pCam;
-	pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
-	CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
-	pSpringCam->Set_ShakeCamera(true);
+	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+	if (pSpringCam)
+	{
+		pSpringCam->Set_ShakeCamera(true);
+	}
 }
 
 HRESULT CPlayer_Weapon_ELWinchester::Ready_Components()

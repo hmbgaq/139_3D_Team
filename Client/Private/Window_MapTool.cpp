@@ -1846,7 +1846,7 @@ void CWindow_MapTool::Light_SelectTab()
 
 						m_tEditLightDesc = m_vecCreateLight[m_iSelectLightIndex]->Get_LightDesc();
 
-						for (_int j = 0; j < iObjectTagSize; ++j)
+						for (_uint j = 0; j < iObjectTagSize; ++j)
 						{
 							if (bSelectDiffuseColor == true)
 							{

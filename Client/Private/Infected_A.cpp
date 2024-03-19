@@ -35,6 +35,8 @@ HRESULT CInfected_A::Initialize(void* pArg)
 
 	FAILED_CHECK(Ready_Option());
 
+	m_pTarget = m_pGameInstance->Get_Player();
+
 	return S_OK;
 }
 
@@ -47,15 +49,12 @@ void CInfected_A::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	//Update_RenderState(m_iHp);
+	//if (m_pActor)
+	//{
+	//	m_pActor->Update_State(fTimeDelta);
+	//}
 
-	m_pTarget = m_pGameInstance->Get_Player();
-
-	if (m_pActor)
-	{
-		m_pActor->Update_State(fTimeDelta);
-	}
-}
+}	
 
 void CInfected_A::Late_Tick(_float fTimeDelta)
 {
@@ -78,11 +77,6 @@ HRESULT CInfected_A::Render_Shadow()
 
 HRESULT CInfected_A::Update_RenderState(_int CurrentHP)
 {
-	//if (CurrentHP == m_iMaxHp)
-	//{
-	//
-	//}
-
 	return S_OK;
 }
 
@@ -105,8 +99,8 @@ HRESULT CInfected_A::Ready_Option()
 	m_eInfo.fAttack_Distance = 3.5f;
 	m_eInfo.fWalk_Distance = 10.f;
 
-	m_iHp = 3000000;
-	m_iMaxHp = 3000000;
+	m_iHp = 30;
+	m_iMaxHp = 30;
 
 	m_pTarget = m_pGameInstance->Get_Player();
 	

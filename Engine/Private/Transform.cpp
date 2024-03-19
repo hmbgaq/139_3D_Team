@@ -272,7 +272,7 @@ _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta)
 	_float fTargetAngle = XMConvertToDegrees(fRadian);
 	_float fAngle = XMConvertToDegrees(m_fRadian);
 
-	if (1.f > abs(fTargetAngle - fAngle))
+	if (0.5f > abs(fTargetAngle - fAngle))
 	{
 		Rotation(vAxis, fRadian);
 		return true;

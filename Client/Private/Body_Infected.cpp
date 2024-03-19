@@ -68,7 +68,6 @@ HRESULT CBody_Infected::Render()
 					m_pShaderCom->Begin(ECast(MONSTER_SHADER::INFECTED_PUNCH));
 
 					m_pModelCom->Render((_uint)i);
-
 				}
 				else
 					continue;
@@ -88,6 +87,7 @@ HRESULT CBody_Infected::Render()
 			}
 		}
 	}
+
 	return S_OK;
 }
 
@@ -132,11 +132,6 @@ HRESULT CBody_Infected::Set_StateHit()
 HRESULT CBody_Infected::Set_StateDead()
 {
 	return E_NOTIMPL;
-}
-
-void CBody_Infected::Collider_Off()
-{
-	m_pColliderCom->Set_Enable(false);
 }
 
 HRESULT CBody_Infected::Ready_Components()

@@ -46,10 +46,9 @@ HRESULT CCharacter::Initialize(void* pArg)
 
 	FAILED_CHECK(Ready_PartObjects());
 
+
 	m_pRigidBody = CRigidBody::Create(m_pDevice, m_pContext);
-
 	NULL_CHECK_RETURN(m_pRigidBody, E_FAIL);
-
 	if (nullptr != Find_Component(g_pRigidBodyTag))
 		return E_FAIL;
 
@@ -70,8 +69,8 @@ void CCharacter::Priority_Tick(_float fTimeDelta)
 		if (nullptr != Pair.second)
 			Pair.second->Priority_Tick(fTimeDelta);
 	}
-
-	Set_WeaknessPoint();
+		
+	Set_WeaknessPos();
 }
 
 void CCharacter::Tick(_float fTimeDelta)
@@ -84,7 +83,6 @@ void CCharacter::Tick(_float fTimeDelta)
 			Pair.second->Tick(fTimeDelta);
 	}
 
-	Update_RadialBlurTime(fTimeDelta);
 }
 
 void CCharacter::Late_Tick(_float fTimeDelta)
@@ -100,8 +98,14 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 		return;
 
+	_float3 vBodyMovePos = m_pBody->Get_MovePos();
+	_float3 vResult = vBodyMovePos;
+	vResult.x *= m_vRootMoveRate.x;
+	vResult.y *= m_vRootMoveRate.y;
+	vResult.z *= m_vRootMoveRate.z;
 
-	m_pTransformCom->Add_RootBone_Position(m_pBody->Get_MovePos(), m_pNavigationCom);
+
+	m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
 
 	m_pRigidBody->Late_Tick(fTimeDelta);
 
@@ -109,7 +113,7 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
 
-	Set_WeaknessPoint();
+	Set_WeaknessPos();
 }
 
 HRESULT CCharacter::Render()
@@ -360,58 +364,71 @@ void CCharacter::Set_Enable(_bool _Enable)
 	}
 }
 
-Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
+Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
 {
 	Hit_Type eHitType = Hit_Type::None;
 
-	//if (Power::Absolute == m_eStrength)
-	//{
-	//	return Hit_Type::None;
-	//}
+
+	if (true == m_bIsRevealedWeakness && false == bIsMelee)
+	{
+		Get_Damaged(iDamage);
+		m_pTransformCom->Look_At_Direction(vDir * -1);
+
+		if (0 >= --m_iWeaknessCount) 
+		{
+			m_bIsRevealedWeakness = false;
+			m_bIsInvincible = false;
+
+
+			if (m_iHp <= 0)
+			{
+				Set_Stun(true);
+				Hitted_Stun(eHitPower);
+			}
+			else
+			{
+				Hitted_Weakness();
+			}
+
+			return Hit_Type::Hit_Break;
+
+		}
+
+	}
+
 
 	if (true == m_bIsInvincible && false == m_bIsStun)
 	{
 		return Hit_Type::None;
 	}
 
+
 	Get_Damaged(iDamage);	
-	//Set_InvincibleTime(fInvincibleTime);
 	Add_Force(vDir, fForce);
 	m_pTransformCom->Look_At_Direction(vDir * -1);
 
 	if (m_iHp <= 0)
 	{
-		//if (bIsMelee)
-		//{
-		//	if (true == m_bIsStun)
-		//	{
-		//		//Set_Invincible(true);
-		//		Hitted_Finish();
-		//	}
-		//	else // (false == m_bIsStun)
-		//	{
-		//		Set_Stun(true);
-		//		Hitted_Stun(eHitPower);
-		//	}
-		//}
-
-
-		if (true == m_bIsStun)
+		if (bIsMelee)
 		{
-			//Set_Invincible(true);
-			Hitted_Finish();
+			if (true == m_bIsStun)
+			{
+				Set_Invincible(true);
+				Hitted_Finish();
+			}
+			else // (false == m_bIsStun)
+			{
+				Set_Stun(true);
+				Hitted_Stun(eHitPower);
+			}
 		}
 		else 
 		{
-			//Set_Invincible(true);
+			Set_Invincible(true);
 			Hitted_Dead(eHitPower);
 		}
 		
 		eHitType = Hit_Type::Hit_Finish;
-	}
-	else if (m_bTrigger == true)
-	{
-
 	}
 	else //if (eHitPower >= m_eStrength)
 	{
@@ -650,18 +667,10 @@ CWeapon* CCharacter::Set_Weapon_Collisions_Enable(const wstring& strWeaponTag, _
 }
 
 
-void CCharacter::Set_WeaknessPoint()
+void CCharacter::Set_WeaknessPos()
 {
-	_float3 vResult = m_pTransformCom->Calc_Front_Pos(m_vWeaknessPoint_Local);
-	m_vWeaknessPoint = vResult;
-}
-
-void CCharacter::Update_RadialBlurTime(_float fTimeDelta)
-{
-	m_fRadialBlurTime = m_fRadialBlurTime - fTimeDelta > 0 ? m_fRadialBlurTime - fTimeDelta : 0.f;
-	
-	_bool bIsActivateRadialBlur = 0 < m_fRadialBlurTime;
-	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(bIsActivateRadialBlur);
+	_float3 vResult = m_pTransformCom->Calc_Front_Pos(m_vWeaknessPos_Local);
+	m_vWeaknessPos = vResult;
 }
 
 

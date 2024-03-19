@@ -579,10 +579,10 @@ CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _
 	{
 		switch (eState)
 		{
-		case Client::CPlayer::Player_Empowered_MeleeCombo_01:
-			return new CPlayer_Empowered_MeleeCombo_02();
-		case Client::CPlayer::Player_Empowered_MeleeCombo_02:
-			return new CPlayer_Empowered_MeleeCombo_03();
+		//case Client::CPlayer::Player_Empowered_MeleeCombo_01:
+		//	return new CPlayer_Empowered_MeleeCombo_02();
+		//case Client::CPlayer::Player_Empowered_MeleeCombo_02:
+		//	return new CPlayer_Empowered_MeleeCombo_03();
 		case Client::CPlayer::Player_Empowered_MeleeCombo_03:
 			return new CPlayer_MeleeCombo_04();
 
@@ -593,14 +593,20 @@ CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _
 		case Client::CPlayer::Player_MeleeCombo_02_L_NEW:
 			return new CPlayer_Empowered_MeleeCombo_03();
 
-		case Client::CPlayer::Player_MeleeCombo_03_SlamAOEJump:
-			return new CPlayer_MeleeCombo_04();
+		//case Client::CPlayer::Player_MeleeCombo_03_SlamAOEJump:
+		//	return new CPlayer_MeleeCombo_04();
 		case Client::CPlayer::Player_MeleeCombo_04:
 			return new CPlayer_MeleeCombo_02();
 		}
 	}
 
-	if (CPlayer_MeleeCombo_01::g_iAnimIndex != _iAnimIndex && CPlayer_MeleeUppercut_01v2::g_iAnimIndex != _iAnimIndex)
+	if (
+		CPlayer_MeleeUppercut_01v2::g_iAnimIndex != _iAnimIndex
+		&& CPlayer_MeleeCombo_01::g_iAnimIndex != _iAnimIndex
+		&& CPlayer_MeleeCombo_02::g_iAnimIndex != _iAnimIndex
+		&& CPlayer_MeleeCombo_02_L_NEW::g_iAnimIndex != _iAnimIndex
+		&& CPlayer_Empowered_MeleeCombo_03::g_iAnimIndex != _iAnimIndex
+		)
 	{
 		if (m_pGameInstance->Mouse_Up(DIM_LB))
 		{
@@ -733,11 +739,11 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 {
 	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
 	{
-
-		CCamera* pCam;
-		pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
-		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
-		pSpringCam->Set_CameraOffset(_float3(0.8f, 0.6f, -2.f));
+		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+		if (pSpringCam)
+		{
+			pSpringCam->Set_CameraOffset(_float3(0.8f, 0.6f, -2.f));
+		}
 		
 
 		if (CPlayer_Winchester_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
@@ -779,10 +785,11 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 	}
 	else
 	{
-		CCamera* pCam;
-		pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
-		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
-		pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
+		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+		if (pSpringCam)
+		{
+			pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
+		}
 	}
 
 	return nullptr;
