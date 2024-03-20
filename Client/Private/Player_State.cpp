@@ -742,7 +742,7 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 		if (pSpringCam)
 		{
-			pSpringCam->Set_CameraOffset(_float3(0.8f, 0.6f, -2.f));
+			pSpringCam->Set_CameraOffset(_float3(1.f, 0.3f, -1.7f));
 		}
 		
 
