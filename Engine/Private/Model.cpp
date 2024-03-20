@@ -407,14 +407,9 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 				break;
 			case (_int)aiTextureType_SPECULAR:
 				Bind_ShaderResource(pShader, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-				//pTexture[i].Bind_ShaderResource(pShader, "g_SpecularTexture");
 				break;
 			case (_int)aiTextureType_NORMALS:
 				Bind_ShaderResource(pShader, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-				//pTexture[i].Bind_ShaderResource(pShader, "g_NormalTexture");
-				break;
-			default:
-			//	cout << "Texture : " << AI_TEXTURE_TYPE_MAX << "NOT Binding" << endl;
 				break;
 			}
 		}

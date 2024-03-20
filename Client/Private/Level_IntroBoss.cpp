@@ -248,13 +248,11 @@ HRESULT CLevel_IntroBoss::Ready_Shader()
     m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
     m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
 
-
     return S_OK;
 }
 HRESULT CLevel_IntroBoss::Ready_Layer_Camera(const wstring& strLayerTag)
 {
     //CCamera_Dynamic::DYNAMIC_CAMERA_DESC      Desc = {};
-
     //Desc.fMouseSensor = 0.05f;
     //Desc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
     //Desc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
@@ -266,7 +264,6 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Camera(const wstring& strLayerTag)
     //Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 
     //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc));
-
 
     if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
         return E_FAIL;

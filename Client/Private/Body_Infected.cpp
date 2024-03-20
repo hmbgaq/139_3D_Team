@@ -62,7 +62,6 @@ HRESULT CBody_Infected::Render()
 					m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 					m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 					m_pShaderCom->Begin(ECast(MONSTER_SHADER::INFECTED_PUNCH));
-
 					m_pModelCom->Render((_uint)i);
 				}
 				else
@@ -73,7 +72,6 @@ HRESULT CBody_Infected::Render()
 				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 				m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
-
 				m_pModelCom->Render((_uint)i);
 			}
 		}
