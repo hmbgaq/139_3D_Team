@@ -14,6 +14,7 @@ public:
 	enum TEXTURE	 { TEXTURE_DIFFUSE, TEXTURE_NORAML, TEXTURE_MASK, TEXTURE_NOISE, TEXTURE_SPRITE, TEXTURE_END };
 	enum TYPE_SCROLL { SCROLL_ROW, SCROLL_COL, SCROLL_BOTH, SCROLL_ROTAT, TYPE_SCROLL_END };
 
+
 	typedef struct tagEffectVoidDesc : public CGameObject::GAMEOBJECT_DESC
 	{
 		/* 저장해야 하는 고정 정보들 */
@@ -49,6 +50,7 @@ public:
 		_float4		vColor_Offset	= { 0.f, 0.f, 0.f, 0.f };
 		_float4		vColor_Clip		= { 0.f, 0.f, 0.f, 0.f };
 		_float4		vColor_Mul		= { 1.f, 1.f, 1.f, 1.f };
+		MODE_COLOR	eMode_Color		= { MODE_COLOR::MUL };
 
 		// Rim & Bloom
 		_float3		vBloomPower = { 1.f, 1.f, 1.f };		// 블룸 파워(rgb 색상값)

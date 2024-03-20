@@ -1518,21 +1518,21 @@ void CWindow_EffectTool::Update_MeshTab()
 		// 테스트용 데모 이펙트 메쉬 생성
 		if (ImGui::CollapsingHeader("Demo Meshs"))
 		{
-			//ImGui::SeparatorText("Demo");
 			if (ImGui::Button("Demo_Xray"))
 			{
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Xray_ManHeavy"));
 			}
-			ImGui::SameLine();
-			if (ImGui::Button("Demo_Dome"))
+
+			if (ImGui::Button("Demo_Tornado_spline"))
 			{
-				Add_Part_Mesh(TEXT("Prototype_Component_Model_ShieldDome"));
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Tornado_splineMesh"));
 			}
 
 			if (ImGui::Button("Demo_BloodPoolsRaid"))
 			{
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_BloodPoolsRaid"));
 			}
+
 			ImGui::SeparatorText("");
 		}
 
@@ -1543,6 +1543,60 @@ void CWindow_EffectTool::Update_MeshTab()
 			if (ImGui::Button("Particle_Test"))
 			{
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Particle_Test"));
+			}
+
+			ImGui::SeparatorText("");
+		}
+
+
+		// 이펙트용 스태틱 메쉬 생성
+		if (ImGui::CollapsingHeader("Mesh_Static"))
+		{
+			if (ImGui::Button("Ring"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Ring"));
+			}ImGui::SameLine();
+			if (ImGui::Button("Sphere"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Sphere"));
+			}
+
+			if (ImGui::Button("Projectile"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Projectile"));
+			}
+
+			if (ImGui::Button("Corn"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Corn"));
+			}ImGui::SameLine();
+			if (ImGui::Button("ShieldDome"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_ShieldDome"));
+			}
+
+			if (ImGui::Button("Tornado"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Tornado"));
+			}ImGui::SameLine();
+			if (ImGui::Button("Tornado_Cream"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Tornado_cream"));
+			}
+
+			if (ImGui::Button("WinchesterElectric"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_WinchesterElectric"));
+			}
+
+			if (ImGui::Button("LightningFast"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LightningFast"));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("LightningsPack"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LightningsPack"));
 			}
 
 			ImGui::SeparatorText("");
@@ -1563,7 +1617,7 @@ void CWindow_EffectTool::Update_MeshTab()
 			}
 			if (ImGui::Button(" Add Bat Test "))
 			{
-				Add_Part_Mesh_Morph(TEXT("Prototype_Component_Model_BatStorm_01"), TEXT("Prototype_Component_Model_BatStorm_02"));
+				Add_Part_Mesh_Morph(TEXT("Prototype_Component_Model_Effect_BatStorm_01"), TEXT("Prototype_Component_Model_Effect_BatStorm_02"));
 			}
 			ImGui::SameLine();
 			if (ImGui::Button(" Add Torch Test "))
@@ -1595,6 +1649,7 @@ void CWindow_EffectTool::Update_MeshTab()
 #pragma endregion
 
 				/* 이름 */
+				ImGui::SeparatorText(" NAME ");
 				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
 
 
@@ -1612,6 +1667,7 @@ void CWindow_EffectTool::Update_MeshTab()
 
 				/* 텍스처 변경 */
 				// 디퓨즈_메쉬 텍스처 =====================================================================================================
+				ImGui::SeparatorText(" Diffuse ");
 				if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 				{
 					dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
@@ -1642,6 +1698,27 @@ void CWindow_EffectTool::Update_MeshTab()
 				}
 
 
+				/* 디퓨즈에 혼합색상 모드 */
+				ImGui::SeparatorText(" Color Blend ");
+				ImGui::RadioButton(u8"곱하기_Mesh", &m_iColor_Mode_Mesh, 0);
+				ImGui::RadioButton(u8"스크린_Mesh", &m_iColor_Mode_Mesh, 1);
+				ImGui::RadioButton(u8"오버레이_Mesh", &m_iColor_Mode_Mesh, 2);
+				ImGui::RadioButton(u8"더하기_Mesh", &m_iColor_Mode_Mesh, 3);
+				ImGui::RadioButton(u8"번_Mesh", &m_iColor_Mode_Mesh, 4);
+				ImGui::RadioButton(u8"혼합안함_Mesh", &m_iColor_Mode_Mesh, 5);
+				if (0 == m_iColor_Mode_Mesh)
+					m_pCurVoidDesc->eMode_Color = MODE_COLOR::MUL;
+				else if (1 == m_iColor_Mode_Mesh)
+					m_pCurVoidDesc->eMode_Color = MODE_COLOR::SCREEN;
+				else if (2 == m_iColor_Mode_Mesh)
+					m_pCurVoidDesc->eMode_Color = MODE_COLOR::OVERLAY;
+				else if (3 == m_iColor_Mode_Mesh)
+					m_pCurVoidDesc->eMode_Color = MODE_COLOR::ADD;
+				else if (4 == m_iColor_Mode_Mesh)
+					m_pCurVoidDesc->eMode_Color = MODE_COLOR::BURN;
+				else if (5 == m_iColor_Mode_Mesh)
+					m_pCurVoidDesc->eMode_Color = MODE_COLOR::MODE_COLOR_END;
+
 
 				// 디퓨즈에 곱할 색 (색 변경)
 				if (ImGui::ColorEdit4("Color_Mul_Mesh", m_fColor_Mul_Mesh, ImGuiColorEditFlags_None))
@@ -1657,6 +1734,7 @@ void CWindow_EffectTool::Update_MeshTab()
 				// 마스크_메쉬 텍스처 =====================================================================================================
 				if (ImGui::CollapsingHeader("Mask_Tex_MESH"))
 				{
+					ImGui::SeparatorText(" Mask ");
 					if (ImGui::Button("Mask_Base_Mesh"))	// 베이스 마스크로 변경
 					{
 						dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
@@ -1703,6 +1781,7 @@ void CWindow_EffectTool::Update_MeshTab()
 					//	dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Remove_TextureCom(CEffect_Void::TEXTURE_NOISE);
 					//}
 
+					ImGui::SeparatorText(" Noise ");
 					if (ImGui::InputInt("Noise_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE], 1))
 					{
 						if (m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] <= m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE])
@@ -1718,7 +1797,7 @@ void CWindow_EffectTool::Update_MeshTab()
 
 
 				/* 쉐이더 패스 인덱스 변경 */
-				if (ImGui::CollapsingHeader("Shader_MESH"))
+				if (ImGui::CollapsingHeader("Shader & Render _MESH"))
 				{
 					if (ImGui::InputInt("Shader Pass_Mesh", &m_iShaderPassIndex_Mesh, 1))
 					{
@@ -1739,19 +1818,22 @@ void CWindow_EffectTool::Update_MeshTab()
 						m_pCurVoidDesc->vColor_Clip.z = m_vColor_Clip_Part[2];
 						m_pCurVoidDesc->vColor_Clip.w = m_vColor_Clip_Part[3];
 					}
+
+
+					/* 렌더그룹 변경 */
+					ImGui::SeparatorText("Render Group_MESH");
+					if (ImGui::InputInt("Render Group_Mesh", &m_iRenderGroup_Mesh, 1))
+					{
+						if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Mesh)
+						{
+							m_iRenderGroup_Mesh = (_int)CRenderer::RENDER_END - 1;
+						}
+						m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Mesh;
+					}
+
 					ImGui::SeparatorText("");
 				}
 
-				/* 렌더그룹 변경 */
-				ImGui::SeparatorText("Render Group_MESH");
-				if (ImGui::InputInt("Render Group_Mesh", &m_iRenderGroup_Mesh, 1))
-				{
-					if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Mesh)
-					{
-						m_iRenderGroup_Mesh = (_int)CRenderer::RENDER_END - 1;
-					}
-					m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Mesh;
-				}
 
 
 				/* 인스턴스 개수 변경 */
@@ -1802,7 +1884,6 @@ void CWindow_EffectTool::Update_MeshTab()
 
 				if (ImGui::CollapsingHeader("Particle Option_Mesh"))
 				{
-
 					/* 라이프 타임 */
 					ImGui::SeparatorText("LifeTimes");
 					if (ImGui::DragFloat2("MinMaxLifeTime_Mesh", m_vMinMaxLifeTime_Mesh, 1.f, 0.f, 360.f))
@@ -1847,71 +1928,6 @@ void CWindow_EffectTool::Update_MeshTab()
 
 					}
 
-
-#pragma region 리지드바디 옵션 조정_메쉬 파티클
-					/* 키네틱 키고 끄기 */
-
-					ImGui::SeparatorText(" RigidBody ");
-
-					ImGui::RadioButton(" Kinetic_Mesh ", &m_iKinetic_Mesh, 0);  ImGui::SameLine();
-					ImGui::RadioButton(" Kinematic_Mesh ", &m_iKinetic_Mesh, 1);
-					if (0 == m_iKinetic_Mesh)
-					{
-						m_pMeshBufferDesc->bKinetic = TRUE;
-					}
-					else if (1 == m_iKinetic_Mesh)
-					{
-						m_pMeshBufferDesc->bKinetic = FALSE;
-					}
-
-					/* 중력 키고 끄기 */
-					ImGui::RadioButton(" ON   Gravity_Mesh ", &m_iUseGravity_Mesh, 0);  ImGui::SameLine();
-					ImGui::RadioButton(" OFF  Gravity_Mesh ", &m_iUseGravity_Mesh, 1);
-					if (0 == m_iUseGravity_Mesh)
-					{
-						m_pMeshBufferDesc->bUseGravity = TRUE;
-					}
-					else if (1 == m_iUseGravity_Mesh)
-					{
-						m_pMeshBufferDesc->bUseGravity = FALSE;
-					}
-
-					/* 중력 가속도 조절 */
-					if (0 == m_iUseGravity_Mesh)
-					{
-						if (ImGui::DragFloat("Gravity_Mesh", &m_fGravity_Mesh, 0.5f, -100.f, 1000.f))
-						{
-							m_pMeshBufferDesc->fGravity = m_fGravity_Mesh;
-						}
-					}
-
-
-					if (ImGui::Button(" FORCE "))
-					{
-						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button(" IMPULSE "))
-					{
-						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button(" ACCELERATION "))
-					{
-						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::ACCELERATION;
-					}
-					ImGui::SameLine();
-					if (ImGui::Button(" VELOCITY_CHANGE "))
-					{
-						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::VELOCITY_CHANGE;
-					}
-
-					if (ImGui::DragFloat2("Power_Mesh", m_vMinMaxPower_Mesh, 10.f, 0.1f))
-					{
-						m_pMeshBufferDesc->vMinMaxPower.x = m_vMinMaxPower_Mesh[0];
-						m_pMeshBufferDesc->vMinMaxPower.y = m_vMinMaxPower_Mesh[1];
-					}
-#pragma endregion 리지드바디 옵션 조정_메쉬 파티클 끝
 
 
 					/* 센터 포지션 오프셋 */
@@ -1987,9 +2003,76 @@ void CWindow_EffectTool::Update_MeshTab()
 
 
 					ImGui::SeparatorText("");
+
 				}
 
+#pragma region 리지드바디 옵션 조정_메쉬 파티클
+				if (ImGui::CollapsingHeader("RigidBody Option_Mesh"))
+				{
+					/* 키네틱 키고 끄기 */
+					ImGui::RadioButton(" Kinetic_Mesh ", &m_iKinetic_Mesh, 0);  ImGui::SameLine();
+					ImGui::RadioButton(" Kinematic_Mesh ", &m_iKinetic_Mesh, 1);
+					if (0 == m_iKinetic_Mesh)
+					{
+						m_pMeshBufferDesc->bKinetic = TRUE;
+					}
+					else if (1 == m_iKinetic_Mesh)
+					{
+						m_pMeshBufferDesc->bKinetic = FALSE;
+					}
 
+					/* 중력 키고 끄기 */
+					ImGui::RadioButton(" ON   Gravity_Mesh ", &m_iUseGravity_Mesh, 0);  ImGui::SameLine();
+					ImGui::RadioButton(" OFF  Gravity_Mesh ", &m_iUseGravity_Mesh, 1);
+					if (0 == m_iUseGravity_Mesh)
+					{
+						m_pMeshBufferDesc->bUseGravity = TRUE;
+					}
+					else if (1 == m_iUseGravity_Mesh)
+					{
+						m_pMeshBufferDesc->bUseGravity = FALSE;
+					}
+
+					/* 중력 가속도 조절 */
+					if (0 == m_iUseGravity_Mesh)
+					{
+						if (ImGui::DragFloat("Gravity_Mesh", &m_fGravity_Mesh, 0.5f, -100.f, 1000.f))
+						{
+							m_pMeshBufferDesc->fGravity = m_fGravity_Mesh;
+						}
+					}
+
+
+					if (ImGui::Button(" FORCE "))
+					{
+						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button(" IMPULSE "))
+					{
+						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button(" ACCELERATION "))
+					{
+						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::ACCELERATION;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button(" VELOCITY_CHANGE "))
+					{
+						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::VELOCITY_CHANGE;
+					}
+
+					if (ImGui::DragFloat2("Power_Mesh", m_vMinMaxPower_Mesh, 10.f, 0.1f))
+					{
+						m_pMeshBufferDesc->vMinMaxPower.x = m_vMinMaxPower_Mesh[0];
+						m_pMeshBufferDesc->vMinMaxPower.y = m_vMinMaxPower_Mesh[1];
+					}
+
+
+					ImGui::SeparatorText("");
+				}
+#pragma endregion 리지드바디 옵션 조정_메쉬 파티클 끝
 
 		
 				/* Rim & Bloom */
@@ -2094,8 +2177,6 @@ void CWindow_EffectTool::Update_MeshTab()
 				{
 					pDistortionDesc->fDistortionBias = m_fDistortionBias_Mesh;
 				}
-
-
 
 			}
 		}
@@ -2842,10 +2923,27 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_iRenderGroup_Mesh = m_pCurVoidDesc->iRenderGroup;
 
+			/* 디스카드 컬러값 업데이트 */
 			m_vColor_Clip_Part[0] = m_pCurVoidDesc->vColor_Clip.x;
 			m_vColor_Clip_Part[1] = m_pCurVoidDesc->vColor_Clip.y;
 			m_vColor_Clip_Part[2] = m_pCurVoidDesc->vColor_Clip.z;
 			m_vColor_Clip_Part[3] = m_pCurVoidDesc->vColor_Clip.w;
+
+
+
+			/* 컬러 블렌딩 모드 업데이트 */
+			if (MODE_COLOR::MUL == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Mesh = 0;
+			else if (MODE_COLOR::SCREEN == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Mesh = 1;
+			else if (MODE_COLOR::OVERLAY == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Mesh = 2;
+			else if (MODE_COLOR::ADD == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Mesh = 3;
+			else if (MODE_COLOR::BURN == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Mesh = 4;
+			else if (MODE_COLOR::MODE_COLOR_END == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Mesh = 5;
 
 
 			/* 현재 곱하기 컬러 업데이트 */

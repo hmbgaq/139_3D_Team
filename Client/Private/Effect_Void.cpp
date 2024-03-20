@@ -205,7 +205,8 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 	CJson_Utility::Write_Float4(Out_Json["vColor_Offset"], m_tVoidDesc.vColor_Offset);
 	CJson_Utility::Write_Float4(Out_Json["vColor_Clip"], m_tVoidDesc.vColor_Clip);
 	CJson_Utility::Write_Float4(Out_Json["vColor_Mul"], m_tVoidDesc.vColor_Mul);
-
+	Out_Json["eMode_Color"] = m_tVoidDesc.eMode_Color;
+	
 
 	/* Rim & Bloom */
 	CJson_Utility::Write_Float3(Out_Json["vBloomPower"], m_tVoidDesc.vBloomPower);
@@ -289,6 +290,8 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 	CJson_Utility::Load_Float4(In_Json["vColor_Clip"], m_tVoidDesc.vColor_Clip);
 	CJson_Utility::Load_Float4(In_Json["vColor_Mul"], m_tVoidDesc.vColor_Mul);
 
+	if(In_Json.contains("eMode_Color")) //! TODO 다시 저장 후 if문 삭제
+		m_tVoidDesc.eMode_Color = In_Json["eMode_Color"];
 
 	/* Rim & Bloom */
 	CJson_Utility::Load_Float3(In_Json["vBloomPower"], m_tVoidDesc.vBloomPower);	

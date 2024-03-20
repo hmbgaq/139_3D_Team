@@ -62,5 +62,20 @@ namespace Client
 		TYPE_END
 	};
 #pragma endregion End
+
+
+	enum class MODE_COLOR // 컬러 합성모드
+	{ 
+		MUL,		// 곱하기		0
+		SCREEN,		// 스크린		1
+		OVERLAY,	// 오버레이		2
+		ADD,		// 더하기		3 
+		BURN,		// 번(Burn)		4
+		
+		MODE_COLOR_END	//			5
+	};
+
+
+
 }
 #endif // Client_Enum_h__

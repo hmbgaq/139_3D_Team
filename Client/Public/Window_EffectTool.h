@@ -163,7 +163,7 @@ private:
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
-	_int m_iMaxShaderPassIndex_Mesh							= { 7 };
+	_int m_iMaxShaderPassIndex_Mesh							= { 5 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
 	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 12, 0, 44, 24, 20 };
 
@@ -350,6 +350,7 @@ private:
 
 
 	/* Color */
+	_int	m_iColor_Mode_Mesh = { 0 };
 	_float	m_fColor_Mul_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 
 

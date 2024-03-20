@@ -23,6 +23,7 @@ float		g_fDegree;
 
 
 /* Color */
+int			g_iColorMode;
 float4		g_vColor_Mul;
 
 
@@ -82,6 +83,41 @@ float2 RotateTexture(float2 texCoord, float angle)
     rotatedTexCoord.y = texCoord.x * sin(angle) + texCoord.y * cos(angle);
     
     return rotatedTexCoord;    
+}
+
+
+float4 Calculation_ColorBlend(float4 vDiffuse, float4 vBlendColor)
+{
+    float4 vResault = vDiffuse;
+	
+    if (0 == g_iColorMode)
+    {
+		// 곱하기
+        vResault = vResault * vBlendColor;		
+    }
+    else if (1 == g_iColorMode)
+    {
+		// 스크린
+        vResault = 1.f - ((1.f - vResault) * (1.f - vBlendColor));	
+    }
+    else if (2 == g_iColorMode)
+    {
+		// 오버레이
+        vResault = max(vResault, vBlendColor);
+    }
+    else if (3 == g_iColorMode)
+    {
+		// 더하기
+        vResault = vResault + vBlendColor;
+    }
+    else if (4 == g_iColorMode)
+    {
+		// 번(Burn)
+        vResault = vResault + vBlendColor - 1.f;
+    }
+	
+ 
+    return vResault;
 }
 
 
@@ -375,9 +411,10 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In, uniform bool bSolid)
     if (vFinalDiffuse.a <= g_fAlpha_Discard) // 알파 잘라내기
         discard;
 	
-    Out.vDiffuse = vFinalDiffuse * g_vColor_Mul;
+  
+    Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul);
+ 
 	
-    
 	/* Dissolve ============================================================== */
     vector vDissolveTex = g_NoiseTexture.Sample(LinearSampler, In.vTexUV);
     clip(vDissolveTex - g_fDissolveRatio);

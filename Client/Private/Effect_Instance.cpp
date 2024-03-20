@@ -371,6 +371,7 @@ HRESULT CEffect_Instance::Ready_Components()
 	/* For.Com_VIBuffer */
 	{
 		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferInfo = {};
+		//tBufferInfo.bUseRigidBody = m_tVoidDesc.bUseRigidBody;
 
 		for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MODE_END); ++i)
 		{
@@ -459,6 +460,7 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 
 
 	/* Color & Discard ===============================================================================*/
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_iColorMode", &m_tVoidDesc.eMode_Color, sizeof(_int)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &m_tVoidDesc.vColor_Mul, sizeof(_float4)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tVoidDesc.vColor_Clip.w, sizeof(_float)));
 
