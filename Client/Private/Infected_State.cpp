@@ -136,6 +136,7 @@ CState<CInfected>* CInfected_State::Spawn_State(CInfected* pActor, _float fTimeD
 	if (pActor->Is_Animation_End()) 
 	{
 		_int iRandom = SMath::Random(1, 6);
+		cout << "Spawn" << endl;
 
 		switch (iRandom)
 		{
@@ -176,8 +177,6 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 			//pBody->Collider_Off(); // 바디 콜라이더 off 
 
 			pActor->Get_Body()->Collider_Off();
-
-			
 
 			CData_Manager::GetInstance()->Add_CurEXP(15); // 플레이어 15 경험치 얻음 
 			m_bFlags[0] = true;

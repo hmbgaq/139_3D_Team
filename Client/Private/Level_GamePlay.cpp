@@ -42,9 +42,6 @@
 
 #include "Level_Loading.h"
 
-
-
-
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -62,16 +59,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-	
-	
-
 	FAILED_CHECK(Ready_Shader());
-
-	
-
-#pragma region 주석확인
 	FAILED_CHECK(Ready_UI());
-
 	FAILED_CHECK(Ready_Event());
 
 	return S_OK;
@@ -117,9 +106,8 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 	//		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
 	//	}
 	//}
+
 #pragma endregion
-
-
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -613,7 +601,7 @@ HRESULT CLevel_GamePlay::Ready_Shader()
 
 	HDR_DESC Desc_HDR = {};
 	Desc_HDR.bHDR_Active = true;
-	Desc_HDR.fmax_white = 0.478;
+	Desc_HDR.fmax_white = 0.478f;
 
 	ANTI_DESC Desc_Anti = {};
 	Desc_Anti.bFXAA_Active = true;

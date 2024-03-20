@@ -3331,7 +3331,7 @@ void CWindow_MapTool::Trigger_SelectTab()
 
 	if (iTriggerType == 0) //! 몬스터 스폰트리거ㄴ
 	{
-		iCreateTriggerSize = m_vecCreateMonsterTriggerTag.size();
+		iCreateTriggerSize = (_uint)m_vecCreateMonsterTriggerTag.size();
 
 		if (true == m_vecCreateMonsterTrigger.empty())
 		{
