@@ -36,14 +36,16 @@ void CBody_Player::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 
-	if (Is_Splitted()) 
-	{
-		Set_MouseMove(fTimeDelta);
-	}
-	else 
-	{
-		Reset_UpperAngle();
-	}
+	Set_MouseMove(fTimeDelta);
+
+	//if (Is_Splitted()) 
+	//{
+	//	Set_MouseMove(fTimeDelta);
+	//}
+	//else 
+	//{
+	//	Reset_UpperAngle();
+	//}
 	
 }
 
@@ -59,7 +61,7 @@ void CBody_Player::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_H))
 	{
 		iTemp += 1;
-		if (iTemp > m_pModelCom->Get_NumMeshes())
+		if (iTemp > (_int)m_pModelCom->Get_NumMeshes())
 		{
 			iTemp = 0;
 		}
@@ -97,7 +99,6 @@ HRESULT CBody_Player::Render()
 
 		m_pModelCom->Render((_uint)i);
 	}
-
 
 	return S_OK;
 }

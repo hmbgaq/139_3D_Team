@@ -230,7 +230,9 @@ void CEnvironment_Interact::Interact()
 
 
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						{
 							m_pPlayer->SetState_InteractJumpDown100();
+						}
 						
 						break;
 					}
@@ -239,7 +241,9 @@ void CEnvironment_Interact::Interact()
 					{
 						
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						{
 							m_pPlayer->SetState_InteractJumpDown200();
+						}
 
 						break;
 					}
@@ -247,7 +251,9 @@ void CEnvironment_Interact::Interact()
 					case CEnvironment_Interact::INTERACT_JUMP300:
 					{
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						{
 							m_pPlayer->SetState_InteractJumpDown300();
+						}
 
 						break;
 					}
@@ -264,7 +270,7 @@ void CEnvironment_Interact::Interact()
 					{
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 							m_pPlayer->SetState_InteractVault200();
-
+							
 						break;
 					}
 				}
@@ -282,9 +288,9 @@ void CEnvironment_Interact::Interact()
 					{
 
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						{
 							m_pPlayer->SetState_InteractJumpDown100();
-
-
+						}
 
 						break;
 					}
@@ -293,7 +299,9 @@ void CEnvironment_Interact::Interact()
 					{
 
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						{
 							m_pPlayer->SetState_InteractJumpDown200();
+						}
 
 						break;
 					}
@@ -301,7 +309,10 @@ void CEnvironment_Interact::Interact()
 					case CEnvironment_Interact::INTERACT_JUMP300:
 					{
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						{
 							m_pPlayer->SetState_InteractJumpDown300();
+						}
+							
 
 						break;
 					}
@@ -309,7 +320,9 @@ void CEnvironment_Interact::Interact()
 					case CEnvironment_Interact::INTERACT_VAULT100:
 					{
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						{
 							m_pPlayer->SetState_InteractVault100();
+						}
 
 						break;
 					}
@@ -317,7 +330,10 @@ void CEnvironment_Interact::Interact()
 					case CEnvironment_Interact::INTERACT_VAULT200:
 					{
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						{
 							m_pPlayer->SetState_InteractVault200();
+							m_pPlayer->Set_RootMoveRate(_float3(1.f, 0.5f, 1.f));	// 이런 식으로 루트 모션 비율 조정하면 됨
+						}
 
 						break;
 					}

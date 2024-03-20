@@ -58,7 +58,6 @@ HRESULT CLevel_IntroBoss::Initialize()
     FAILED_CHECK(Ready_LandObjects());
     //FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
-
     if (FAILED(Ready_UI()))
         return E_FAIL;
 
@@ -204,6 +203,8 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
     }
 
     
+
+    
     return S_OK;
 }
 
@@ -230,7 +231,7 @@ HRESULT CLevel_IntroBoss::Ready_Shader()
 
     HDR_DESC Desc_HDR = {};
     Desc_HDR.bHDR_Active = true;
-    Desc_HDR.fmax_white = 0.539;
+    Desc_HDR.fmax_white = 0.539f;
 
     ANTI_DESC Desc_Anti = {};
     Desc_Anti.bFXAA_Active = true;

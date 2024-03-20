@@ -4,6 +4,9 @@
 #include "Camera.h"
 
 BEGIN(Engine)
+
+class CCharacter;
+
 END
 
 BEGIN(Client)

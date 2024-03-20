@@ -141,9 +141,9 @@ CCharacter* CProjectile::Get_Target_Character(CCollider* other)
 	return pTarget_Character;
 }
 
-CProjectile* CProjectile::Set_Damage(_int _iDamage)
+CProjectile* CProjectile::Set_Damage(_float _fDamage)
 {
-	m_iDamage = _iDamage;
+	m_fDamage = _fDamage;
 
 	return this;
 }
@@ -236,7 +236,7 @@ void CProjectile::Look_At_Target()
 		return;
 
 
-	_fvector vTargetPos = XMLoadFloat3(&m_pTarget->Get_WeaknessPoint());
+	_fvector vTargetPos = XMLoadFloat3(&m_pTarget->Get_WeaknessPos());
 	//_fvector vTargetPos = m_pTarget->Get_Position_Vector();
 
 	m_pTransformCom->Look_At(vTargetPos);

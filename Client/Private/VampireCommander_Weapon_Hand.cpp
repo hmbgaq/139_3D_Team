@@ -131,9 +131,8 @@ void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 		pPlayer->Get_Actor()->Set_State(new CPlayer_VampireCommander_SyncedAttack);
 		pPlayer->Set_Rotate_In_CameraDir(false);
 		pPlayer->m_bPlayerCheck =false;
-		CCamera* pCam;
-		pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
-		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
+
+		
 		_float4x4 BoneMatrix = {};
 		BoneMatrix = parent->Get_Body()->Get_BonePtr("Neck")->Get_CombinedTransformationMatrix();
 		_float4x4 pMonsterPos = parent->Get_Transform()->Get_WorldMatrix();
@@ -143,10 +142,16 @@ void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 		TargetPosition.x = temp._41;
 		TargetPosition.y = temp._42;
 		TargetPosition.z = temp._43;
-		pSpringCam->Set_pTarget(parent->Get_Transform());
-		pSpringCam->Set_TargetPosition(TargetPosition);
-		pSpringCam->Set_pTargetCharacter(parent);
-		pSpringCam->Set_CameraOffset(_float3(1.7f, -3.f, -8.5f));
+
+		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+		if (pSpringCam) 
+		{
+			pSpringCam->Set_pTarget(parent->Get_Transform());
+			pSpringCam->Set_TargetPosition(TargetPosition);
+			pSpringCam->Set_pTargetCharacter(parent);
+			pSpringCam->Set_CameraOffset(_float3(1.7f, -3.f, -8.5f));
+		}
+
 		pPlayer->Get_Transform()->Set_State(CTransform::STATE_POSITION, parent->Get_Transform()->Get_State(CTransform::STATE_POSITION) +2*parent->Get_Transform()->Get_State(CTransform::STATE_LOOK));
 
 	}
@@ -200,5 +205,7 @@ CGameObject* CVampireCommander_Weapon_Hand::Pool()
 void CVampireCommander_Weapon_Hand::Free()
 {
 	__super::Free();
-	m_pTrail->Set_Dead(true);
+
+	if (nullptr != m_pTrail)
+		m_pTrail->Set_Dead(TRUE);
 }

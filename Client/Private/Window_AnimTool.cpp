@@ -195,9 +195,7 @@ void CWindow_AnimTool::SpringCutScene()
 {
 	if (CData_Manager::GetInstance()->Get_Player() != nullptr)
 	{
-		CCamera* pCam;
-		pCam = m_pMasterCamera->Get_vectorCamera()[1];
-		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
+		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 		
 		if (ImGui::DragFloat3("CameraOffset", m_fCameraOffset, 0.01f, -20.f, 20.f))
 		{
@@ -317,7 +315,7 @@ void CWindow_AnimTool::Add_EffectKeyEvent()
 		m_bAddEffectposition = true;
 	}
 	ImGui::SeparatorText("EffectOn");
-	if (ImGui::InputFloat("EffectOn", &m_fEffectOnTrackPosition, 0.01f, 1.f));
+	if (ImGui::InputFloat("EffectOn", &m_fEffectOnTrackPosition, 0.01f, 1.f)) {};
 	
 	if (m_bCreateEffect == true)
 	{
@@ -1362,12 +1360,12 @@ void CWindow_AnimTool::Draw_Weapon(_float fTimeDelta)
 
 	}
 
-	if (ImGui::DragFloat3("ColliderPosition", m_fWeaponPosition, 0.01f, -100.f, 100.f));
+	if (ImGui::DragFloat3("ColliderPosition", m_fWeaponPosition, 0.01f, -100.f, 100.f)) {};
 
 	ImGui::SeparatorText("ColliderWeaponOn");
-	if (ImGui::InputFloat("ColliderWeaponOn", &m_iColliderWeaponOnTrackPosition, 0.01f, 1.f));
+	if (ImGui::InputFloat("ColliderWeaponOn", &m_iColliderWeaponOnTrackPosition, 0.01f, 1.f)) {};
 	ImGui::SeparatorText("ColliderWeaponOff");
-	if (ImGui::InputFloat("ColliderWeaponOff", &m_iColliderWeaponOffTrackPosition, 0.01f, 1.f));
+	if (ImGui::InputFloat("ColliderWeaponOff", &m_iColliderWeaponOffTrackPosition, 0.01f, 1.f)) {};
 }
 
 void CWindow_AnimTool::BonePoint_Update()

@@ -209,6 +209,7 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 	wstring strNoise	= TEXT("Noise");
 	wstring strSprite	= TEXT("Sprite");
 
+	CEffect_Void::TEXTURE eTexture = TEXTURE_END;
 
 	if (strProtoTextureTag.find(strDiffuse) != string::npos)	// 문자열 찾음
 	{
@@ -216,8 +217,10 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 		if (nullptr != m_pTextureCom[TEXTURE_DIFFUSE])
 		{
 			Remove_Component(TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
 		}
+
+		eTexture = TEXTURE_DIFFUSE;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
 	}
 	else if (strProtoTextureTag.find(strNormal) != string::npos)
 	{
@@ -225,8 +228,9 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 		if (nullptr != m_pTextureCom[TEXTURE_NORAML])
 		{
 			Remove_Component(TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
 		}
+		eTexture = TEXTURE_NORAML;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
 	}
 	else if (strProtoTextureTag.find(strMask) != string::npos)
 	{
@@ -234,8 +238,9 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 		if (nullptr != m_pTextureCom[TEXTURE_MASK])
 		{
 			Remove_Component(TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
 		}
+		eTexture = TEXTURE_MASK;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
 	}
 	else if (strProtoTextureTag.find(strNoise) != string::npos)
 	{
@@ -243,8 +248,10 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 		{
 			Remove_Component(TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
 		}
+
+		eTexture = TEXTURE_NOISE;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
 	}
 	else if (strProtoTextureTag.find(strSprite) != string::npos)
 	{
@@ -252,13 +259,17 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 		if (nullptr != m_pTextureCom[TEXTURE_SPRITE])
 		{
 			Remove_Component(TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 		}
+		eTexture = TEXTURE_SPRITE;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 	}
 
+	m_tVoidDesc.strTextureTag[eTexture] = strProtoTextureTag;
+	m_tVoidDesc.iTextureIndex[eTexture] = 0;
 
 	return S_OK;
 }
+
 
 HRESULT CEffect_Instance::Remove_TextureCom(TEXTURE eTexture)
 {
@@ -274,6 +285,10 @@ HRESULT CEffect_Instance::Remove_TextureCom(TEXTURE eTexture)
 		strTexureComTag = TEXT("Com_Noise");
 	else if (TEXTURE_SPRITE)
 		strTexureComTag = TEXT("Com_Sprite");
+
+
+	m_tVoidDesc.strTextureTag[eTexture] = TEXT("");
+	m_tVoidDesc.iTextureIndex[eTexture] = 0;
 
 	return Remove_Component(strTexureComTag, reinterpret_cast<CComponent**>(&m_pTextureCom[eTexture]));
 }
@@ -373,7 +388,8 @@ HRESULT CEffect_Instance::Ready_Components()
 	/* For.Com_Texture */
 	{
 		// Diffuse
-		FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE])
+			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
 
 
 		// Normal
@@ -415,9 +431,15 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 
 	if (TRUE == m_tInstanceDesc.bUseCustomTex)	// 텍스처를 내가 정해줄거면 
 	{
+		D3D11_TEXTURE2D_DESC	TextureDesc;
+		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+		//m_pGameInstance->Find_RenderTarget(TEXT("MRT_Deferred"))->Get_Texture2D()->GetDesc();
+		//TextureDesc.Format
 
 		// 기본은 디퓨즈만 바인드
-		FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_DIFFUSE]));
+		if (nullptr != m_pTextureCom[TEXTURE_DIFFUSE])	// 디퓨즈 텍스처 있으면 바인드
+			FAILED_CHECK(m_pTextureCom[TEXTURE_DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_DIFFUSE]));
 
 		if (nullptr != m_pTextureCom[TEXTURE_NORAML])	// 노말 텍스처 있으면 바인드
 			FAILED_CHECK(m_pTextureCom[TEXTURE_NORAML]->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NORAML]));
@@ -431,8 +453,12 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	}
 
 	/* UV ============================================================================================ */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
 
+
+	/* Color & Discard ===============================================================================*/
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &m_tVoidDesc.vColor_Mul, sizeof(_float4)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tVoidDesc.vColor_Clip.w, sizeof(_float)));
 
@@ -449,8 +475,6 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 
 
 	/* Dissolve */
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tVoidDesc.fDissolveAmount, sizeof(_float)));
 
 

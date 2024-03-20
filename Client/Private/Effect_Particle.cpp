@@ -370,8 +370,8 @@ HRESULT CEffect_Particle::Ready_Components()
 	/* For.Com_Texture */
 	{
 		// Diffuse
-		FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
-
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE])
+			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
 
 		// Normal
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NORAML])

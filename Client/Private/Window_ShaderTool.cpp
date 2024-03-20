@@ -105,9 +105,13 @@ void CWindow_ShaderTool::Create_Object()
 
 	ImGuiWindowFlags Flag = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse |	ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus;
 
-	ImGui::Begin(u8"Main Control", &m_bObjectCreateWindwo, Flag); /* imgui 시작 */
+	ImGui::Begin(u8"Shader_Object_Create", &m_bObjectCreateWindwo, Flag); /* imgui 시작 */
 
 	Show_N_Create_ObjectList();
+
+	ImGui::SeparatorText(" Modify Object ");
+
+
 
 	ImGui::End();
 }
@@ -165,8 +169,8 @@ void CWindow_ShaderTool::Create_DummyObject(string ObjectTag)
 
 	CShaderParsed_Object::CREATE_DESC desc = {};
 	desc.strModelProtoTag = ObjectTag;
-//	desc.strShaderProtoTag = Prototype_Component_Shader_Monster
-	m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Monster"), Temp, &desc);
+	//desc.strShaderProtoTag = Prototype_Component_Shader_Monster
+	m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_MONSTER, TEXT("Prototype_GameObject_ShaderParsed_Object"), &desc);
 	
 }
 

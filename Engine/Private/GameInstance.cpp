@@ -91,17 +91,9 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 		nullptr == m_pFrustum)
 		return;
 
-	m_fTimeDelta = fTimeDelta;
+	Update_Hitlag(fTimeDelta);
+	Update_RadialBlurTime(m_fTimeDelta);
 
-	if (0 < m_fHitlag_Time)
-	{
-		m_fTimeDelta /= 5;
-		m_fHitlag_Time -= fTimeDelta;
-	}
-	else 
-	{
-		m_fHitlag_Time = 0;
-	}
 
 	m_pInput_Device->Tick();
 
@@ -122,13 +114,14 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pObject_Manager->Late_Tick(m_fTimeDelta);
 
 	m_pLevel_Manager->Tick(m_fTimeDelta);
+
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
 {
 	if (nullptr == m_pObject_Manager ||
-		nullptr == m_pComponent_Manager || 
-		nullptr == m_pEvent_Manager)
+		nullptr == m_pComponent_Manager //|| 
+		/*nullptr == m_pEvent_Manager*/)
 		return;
 
 	/* 오브젝트 매니져에 레벨별로 구분해 놓은 객체들 중 특정된 객체들을 지운다.  */
@@ -137,7 +130,7 @@ void CGameInstance::Clear(_uint iLevelIndex)
 	/* 컴포넌트 매니져에 레벨별로 구분해 놓은 컴포넌트들 중 특정된 객체들을 지운다.  */
 	m_pComponent_Manager->Clear(iLevelIndex);
 
-	m_pEvent_Manager->Clear();
+	/*m_pEvent_Manager->Clear();*/
 }
 
 HRESULT CGameInstance::Render_Engine()
@@ -153,7 +146,7 @@ HRESULT CGameInstance::Render_Engine()
 #endif
 
 	m_pInput_Device->LateTick();
-	
+
 	return S_OK;
 }
 
@@ -882,6 +875,11 @@ void CGameInstance::Add_Event(IEvent* pEvent)
 	m_pEvent_Manager->Add_Event(pEvent);
 }
 
+void CGameInstance::Clear_Event()
+{
+	m_pEvent_Manager->Clear();
+}
+
 void CGameInstance::Register_PhysXCollider(CPhysXCollider* pPhysXCollider)
 {
 	m_pPhysX_Manager->Register_PhysXCollider(pPhysXCollider);
@@ -1204,6 +1202,29 @@ void CGameInstance::Get_ModelTag(vector<string>* pVector)
 	NULL_CHECK_RETURN(pVector, );
 
 	m_pComponent_Manager->Get_ModelTag(pVector);
+}
+
+void CGameInstance::Update_Hitlag(_float fTimeDelta)
+{
+	m_fTimeDelta = fTimeDelta;
+
+	if (0 < m_fHitlag_Time)
+	{
+		m_fTimeDelta /= 5;
+		m_fHitlag_Time -= fTimeDelta;
+	}
+	else
+	{
+		m_fHitlag_Time = 0;
+	}
+}
+
+void CGameInstance::Update_RadialBlurTime(_float fTimeDelta)
+{
+	m_fRadialBlurTime = m_fRadialBlurTime - fTimeDelta > 0 ? m_fRadialBlurTime - fTimeDelta : 0.f;
+
+	_bool bIsActivateRadialBlur = 0 < m_fRadialBlurTime;
+	Get_Renderer()->Set_Radial_Blur_Active(bIsActivateRadialBlur);
 }
 
 wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 기준으로 잘라서 오브젝트 이름만 가져오자 - TO 승용

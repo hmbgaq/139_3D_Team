@@ -49,6 +49,9 @@ public:
 		_float3	EffectPosition = {};
 
 		//Sound
+
+		//Matrix
+		_float4x4 WorldMatrix;
 	}CHARCTER_DESC;
 protected:
 	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strPrototypeTag);
@@ -114,7 +117,7 @@ public:
 	virtual void Set_Enable(_bool _Enable) override;
 
 public:
-	virtual Hit_Type Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee = false);
+	virtual Hit_Type Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee = false);
 
 	virtual void Hitted_Left(Power ePower) {};
 	virtual void Hitted_Right(Power ePower) {};
@@ -127,8 +130,9 @@ public:
 	};
 	virtual void Hitted_Finish() {
 		//Set_Invincible(true);
-		//Hitted_Dead(Power::Heavy);
+		Hitted_Dead(Power::Heavy);
 	};
+	virtual void Hitted_Weakness() {};
 	
 public:
 	void Add_Force(_vector In_vDir, _float In_fPower);
@@ -141,7 +145,7 @@ public:
 	CCharacter* Get_Target() { return m_pTarget; };
 	void Set_Target(CCharacter* pTarget) { m_pTarget = pTarget; };
 
-	void Get_Damaged(_uint iDamage) {m_iHp -= iDamage;}
+	void Get_Damaged(_float iDamage) {m_iHp -= iDamage;}
 public:
 	void Look_At_Target();
 	void Look_At_Target_Lerp(_float fTimeDelta);
@@ -183,8 +187,8 @@ public:
 
 
 public:
-	_float3 Get_WeaknessPoint() { return m_vWeaknessPoint; };
-	virtual void Set_WeaknessPoint();
+	_float3 Get_WeaknessPos() { return m_vWeaknessPos; };
+	virtual void Set_WeaknessPos();
 public:
 #pragma region ===========> HP <=========== 
 	//void	Set_CurHP(_float fCurHP) { m_fCurHP = fCurHP; }
@@ -202,13 +206,23 @@ public:
 	void Set_Invincible(_bool _bIsInvincible) { m_bIsInvincible = _bIsInvincible; };
 
 public:
+	_bool Is_Revealed_Weakness() { return m_bIsRevealedWeakness; };
+	void Set_Reveal_Weakness(_bool _bIsRevealedWeakness) { m_bIsRevealedWeakness = _bIsRevealedWeakness; };
+	void Set_WeaknessCount(_int _iWeaknessCount) { m_iWeaknessCount = _iWeaknessCount; }
+
+
+
+public:
 	_bool Is_Stun() { return m_bIsInvincible; };
 	void Set_Stun(_bool _bIsStun) { m_bIsStun = _bIsStun; };
 
 public:
-	void Set_RadialBlurTime(_float fTime = 0.3f) { m_fRadialBlurTime = fTime; };
-	void Update_RadialBlurTime(_float fTimeDelta);
+	void Set_RootMoveRate(_float3 vRate) { m_vRootMoveRate = vRate; };
+	void Reset_RootMoveRate() { m_vRootMoveRate = _float3(1.f, 1.f, 1.f); };
+	
 
+protected:
+	CHARCTER_DESC CharAnimDesc = {};
 
 protected:
 	_float m_iHp = { 1.f };
@@ -222,28 +236,30 @@ protected:
 	_bool m_bIsInvincible = { false };
 	_bool m_bIsStun = { false };
 
-	_float m_fRadialBlurTime = { 0.f };
-
-
 protected:
 	//Power m_eStrength = { Power::Light };
 	_float m_fStiffnessRate = { 1.f };
 
-
-public:
-	_float m_fCurrentTrackPosition = {0.f};
 
 protected:
 	CNavigation* m_pNavigationCom = { nullptr };
 	CRigidBody* m_pRigidBody = { nullptr };
 	CBody* m_pBody = { nullptr };
 	vector<CWeapon*> m_Weapons;
-	CHARCTER_DESC CharAnimDesc = {};
 
 protected:
 	CCharacter* m_pTarget = { nullptr };
-	_float3		m_vWeaknessPoint = { 0.f, 0.f, 0.f };
-	_float3		m_vWeaknessPoint_Local = { 0.f, 1.f, 0.f };
+
+protected:
+	_float3		m_vWeaknessPos = { 0.f, 0.f, 0.f };
+	_float3		m_vWeaknessPos_Local = { 0.f, 1.f, 0.f };
+	_bool		m_bIsRevealedWeakness = { false };
+	_int		m_iWeaknessCount = { 3 };
+
+
+
+protected:
+	_float3		m_vRootMoveRate = { 1.f, 1.f, 1.f };
 
 
 protected:
@@ -255,7 +271,7 @@ protected:
 
 public:
 	_bool		m_bLookAt = true;
-	_bool		m_bTrigger = false;
+
 protected:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual CGameObject* Pool() PURE;

@@ -90,7 +90,7 @@ HRESULT CMainApp::Render()
 
 	m_pGameInstance->Render_Engine();
 
-	//#ifdef _DEBUG
+//#ifdef _DEBUG
     ++m_iNumRender;
     
     	if (1.f <= m_fTimeAcc)
