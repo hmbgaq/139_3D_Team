@@ -597,8 +597,8 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 
 
 
-//  PS_MAIN_DISTORTION_DEFERRED ==================================================================================================
-PS_OUT PS_MAIN_DISTORTION_DEFERRED(PS_IN_DISTORTION In)
+//  DISTORTION_POST ==================================================================================================
+PS_OUT PS_MAIN_DISTORTION_POST(PS_IN_DISTORTION In)
 {
     PS_OUT Out = (PS_OUT) 0;	
     
@@ -624,7 +624,7 @@ PS_OUT PS_MAIN_DISTORTION_DEFERRED(PS_IN_DISTORTION In)
       
     return Out;
 }
-//  PS_MAIN_DISTORTION_DEFERRED ==================================================================================================
+//  DISTORTION_POST ==================================================================================================
 
 
 
@@ -697,7 +697,7 @@ technique11 DefaultTechnique
         PixelShader		= compile ps_5_0 PS_MAIN_DISTORTION(true);
     }
 
-    pass Distortion_Deferred // 5
+    pass Distortion_Post // 5
     {
         //SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
@@ -708,7 +708,7 @@ technique11 DefaultTechnique
         HullShader		= NULL;
         DomainShader	= NULL;
         GeometryShader	= NULL;
-        PixelShader		= compile ps_5_0 PS_MAIN_DISTORTION_DEFERRED();
+        PixelShader		= compile ps_5_0 PS_MAIN_DISTORTION_POST();
     }
 
 }

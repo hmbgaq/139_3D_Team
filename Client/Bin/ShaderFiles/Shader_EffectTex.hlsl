@@ -28,18 +28,18 @@ float2	g_UVOffset;
 float2	g_UVScale;
 // ===========================
 
-
 bool	g_bBillBoard;
+float   g_fDegree;
 
 float	g_fAlpha_Discard;
 float3	g_vBlack_Discard;
-float4	g_vBloom_Discard;
+
 
 /* Color */
 int		g_iColorMode;
 float4	g_vColor_Mul;
 
-float	g_fDegree;
+
 
 
 /* RimLight - 필요한거 두개뿐임(+1개 추가) */
@@ -287,6 +287,7 @@ struct PS_OUT
     float4 vNormal		: SV_TARGET2; // Normal
     float4 vDepth		: SV_TARGET3; // Depth
     float4 vRimBloom	: SV_TARGET4; // RimBloom
+    float4 vDistortion  : SV_TARGET5;
 };
 
 
@@ -336,7 +337,7 @@ PS_OUT PS_MAIN_EFFECT(PS_IN In, uniform bool bSolid)
 
 
 
-// MAIN_DISTORTION ==============================================================================================================
+// DISTORTION ===================================================================================================================
 struct VS_OUT_DISTORTION
 {	
     float4 vPosition	: SV_POSITION;
@@ -451,9 +452,37 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 	
 	return Out;
 }
-// MAIN_DISTORTION ==============================================================================================================
+// DISTORTION ===================================================================================================================
 
 
+//  DISTORTION_POST =============================================================================================================
+PS_OUT PS_MAIN_DISTORTION_POST(PS_IN_DISTORTION In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    In.vTexcoord = In.vTexcoord * g_UVScale + g_UVOffset;
+    In.vTexcoord = Rotate_Texcoord(In.vTexcoord, g_fDegree);
+    
+
+	/* Distortion ============================================================ */ 
+    float4 vDistortion;
+    
+    vDistortion = Calculation_Distortion(In.vTexcoord, In.vTexcoord1, In.vTexcoord2, In.vTexcoord3);
+    Out.vDistortion = vDistortion;
+    
+    
+	/* Depth ================================================================ */
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
+	
+	
+	/* RimBloom ============================================================== */
+    Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+	
+      
+    return Out;
+}
+//  DISTORTION_POST =============================================================================================================
 
 
 // MAIN_WIREFRAME ===============================================================================================================
@@ -533,8 +562,21 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_DISTORTION(true);
     }
 
+    pass Distortion_Post // 4
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_DepthStencilEnable, 0);
+        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
-	pass Effect_Wireframe // 4
+        VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION_POST();
+    }
+
+
+	pass Effect_Wireframe // 5
 	{
 		SetRasterizerState(RS_NoneCull_Wireframe);
 		SetDepthStencilState(DSS_Default, 0);
@@ -546,5 +588,7 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_WIREFRAME();
 	}
+
+
 
 }
