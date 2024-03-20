@@ -326,13 +326,14 @@ void CEnvironment_Interact::Interact()
 
 						break;
 					}
-
+						
 					case CEnvironment_Interact::INTERACT_VAULT200:
 					{
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 						{
 							m_pPlayer->SetState_InteractVault200();
 							m_pPlayer->Set_RootMoveRate(_float3(1.f, 0.5f, 1.f));	// 이런 식으로 루트 모션 비율 조정하면 됨
+							
 						}
 
 						break;

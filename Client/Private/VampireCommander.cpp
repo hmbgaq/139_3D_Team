@@ -74,6 +74,11 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 	m_pMapEffect = EFFECT_MANAGER->Create_Effect("Test_Blood_map_04.json");
 	m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
 
+	if (nullptr == m_pTarget)
+	{
+		m_pTarget = CData_Manager::GetInstance()->Get_Player();
+	}
+
 	return S_OK;
 }
 
@@ -87,7 +92,7 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	
-	Search_Target(200.f);
+	//Search_Target(200.f);
 
 	if (m_pActor)
 	{

@@ -69,6 +69,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 // 	}
 
 
+	m_pRigidBody->Set_UseGravity(true);
+
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	///* For.Com_PhysXController */
@@ -348,8 +350,8 @@ void CPlayer::SetState_InteractVault200()
 
 void CPlayer::Search_Target(_float fMaxDistance)
 {
-	__super::Search_Target(LAYER_BOSS, fMaxDistance);
 	__super::Search_Target(LAYER_MONSTER, fMaxDistance);
+	__super::Search_Target(LAYER_BOSS, fMaxDistance);
 }
 
 void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCount)

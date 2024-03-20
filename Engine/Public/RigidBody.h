@@ -37,6 +37,9 @@ public:
 
 	void Set_Transform(CTransform* pOwnerTransform);
 
+	_bool Is_Use_Gravity() { return m_bUseGravity; };
+	void Set_UseGravity(_bool _bUseGravity) { m_bUseGravity = _bUseGravity; };
+
 
 public:
 	virtual HRESULT Initialize_Prototype();

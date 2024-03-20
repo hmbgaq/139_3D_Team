@@ -4,6 +4,7 @@
 #include "GameObject.h"
 
 BEGIN(Engine)
+class CCollider;
 
 class ENGINE_DLL CCamera abstract : public CGameObject
 {
@@ -24,18 +25,20 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Tick(_float fTimeDelta) override;
 	virtual void Tick(_float fTimeDelta) override;
-	virtual void Late_Tick(_float fTimeDelta) override;	
+	virtual void Late_Tick(_float fTimeDelta) override;
 
 public:
 	void	Set_Pos(float4x4 vPos);
-	void	Update_Cascade(const float3& vDirectionalDir);
+	void	Update_Cascade(const float3 & vDirectionalDir);
 
 public:
 	void	Set_Enable(_bool _bEnable) { m_bEnable = _bEnable; }
 
+public:
+	virtual HRESULT Ready_Components() PURE;
 
 protected:
-	_float	m_fFovy			= { 0.f };
+	_float	m_fFovy			= { 0.0f };
 	_float	m_fAspect		= { 0.0f };
 	_float	m_fNear			= { 0.0f };
 	_float	m_fFar			= { 0.0f };
@@ -59,6 +62,10 @@ public:
 	_float m_arrCascadeBoundRadius[m_iTotalCascades];
 	_float3 m_arrCascadeBoundCenter[m_iTotalCascades];
 	_float4x4 m_arrWorldToCascadeProj[m_iTotalCascades];
+
+protected:
+	CCollider* m_pColliderCom = { nullptr };
+
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

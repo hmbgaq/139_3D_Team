@@ -29,12 +29,12 @@ HRESULT CEvent_MosnterSpawnTrigger::Initialize(void* pArg)
 
 void CEvent_MosnterSpawnTrigger::Activate()
 {
-	_uint iMonsterDescVectorSize = m_vecCreateMonsterDesc.size();
+	_uint iMonsterDescVectorSize = (_uint)m_vecCreateMonsterDesc.size();
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
 	
 
-	for (_int i = 0; i < iMonsterDescVectorSize; ++i)
+	for (_uint i = 0; i < iMonsterDescVectorSize; ++i)
 	{
 		CMonster_Character* pMonster = { nullptr };
 
@@ -89,10 +89,10 @@ _bool CEvent_MosnterSpawnTrigger::Activate_Condition()
 		{
 			json MonsterJson = LoadJson["Monster_Json"];
 
-			_uint iMonsterJsonFullSize = MonsterJson.size();
+			_uint iMonsterJsonFullSize = (_uint)MonsterJson.size();
 			
 
-			for (_int i = 0; i < iMonsterJsonFullSize; ++i)
+			for (_uint i = 0; i < iMonsterJsonFullSize; ++i)
 			{
 				if (m_tMonsterTriggerDesc.iSpawnGroupIndex == MonsterJson[i]["MonsterGroupIndex"])
 				{
@@ -130,6 +130,7 @@ _bool CEvent_MosnterSpawnTrigger::Activate_Condition()
 	else
 		return false;
 
+	return false;
 }
 
 _bool CEvent_MosnterSpawnTrigger::End_Condition()

@@ -114,6 +114,11 @@ public:
 	void Go_Right(_float fTimeDelta);
 
 public:
+	_bool Is_Use_Gravity();
+	void Set_UseGravity(_bool _bUseGravity);
+
+
+public:
 	virtual void Set_Enable(_bool _Enable) override;
 
 public:
@@ -161,10 +166,13 @@ public:
 	_float Calc_Distance();
 
 	_float Calc_Distance_Front(_float3 vTargetPos);
-
 	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
 	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 1.0f);
+	void Dragged(_float fTimeDelta, _float3 vTargetPos);
+
+public:
+	_bool Is_In_Frustum() { return m_bIsInFrustum; }
 
 
 
@@ -249,6 +257,7 @@ protected:
 
 protected:
 	CCharacter* m_pTarget = { nullptr };
+	_bool m_bIsInFrustum = { false };
 
 protected:
 	_float3		m_vWeaknessPos = { 0.f, 0.f, 0.f };
