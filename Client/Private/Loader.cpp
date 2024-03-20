@@ -1020,7 +1020,7 @@ HRESULT CLoader::Ready_UI_Origin()
 }
 
 HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
-{
+   {
 	lstrcpy(m_szLoadingText, TEXT("환경모델을 로드하는 중입니다."));
 
 	if (eLevel == LEVEL_GAMEPLAY)

@@ -55,8 +55,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 7.f;
-	//GameObjectDesc.fSpeedPerSec = 22.f;
+	//GameObjectDesc.fSpeedPerSec = 7.f;
+	GameObjectDesc.fSpeedPerSec = 22.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
@@ -345,6 +345,7 @@ void CPlayer::SetState_InteractVault100()
 void CPlayer::SetState_InteractVault200()
 {
 	m_pActor->Set_State(new CPlayer_InteractionVault200());
+	
 }
 
 #pragma endregion 상호작용

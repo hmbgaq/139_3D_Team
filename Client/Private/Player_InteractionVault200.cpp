@@ -10,6 +10,7 @@ void CPlayer_InteractionVault200::Initialize(CPlayer* pActor)
 CState<CPlayer>* CPlayer_InteractionVault200::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
+	
 
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }

@@ -374,15 +374,19 @@ void CEnvironment_Interact::Interact()
 			}
 
 			
-		}
+		}	
 
 		if (true == m_tEnvironmentDesc.bLevelChange && m_bInteract == true)
 		{
 			if (true == m_pPlayer->Is_Animation_End() && m_pGameInstance->Get_NextLevel() != (_uint)LEVEL_TOOL)
 			{
+				//m_pPlayer->Is_Inputable_Front()
+				//m_pPlayer->Get_Body()->Get_Model()->Get_TrackPosition()
+				//m_pPlayer->Get_Actor()->Free()
 				m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
-
+				m_bInteract = false;
 			}
+			
 		}
 }
 

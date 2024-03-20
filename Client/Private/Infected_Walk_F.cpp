@@ -1,4 +1,4 @@
-#include "stdafx.h"
+	#include "stdafx.h"
 #include "Transform.h"
 #include "GameInstance.h"
 #include "Infected_Walk_F.h"
@@ -7,7 +7,7 @@ void CInfected_Walk_F::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 }
 
 CState<CInfected>* CInfected_Walk_F::Update(CInfected* pActor, _float fTimeDelta)
