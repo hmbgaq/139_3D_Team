@@ -78,6 +78,8 @@ HRESULT CNavigation::Initialize(void* pArg)
 
 	m_WorldMatrix = XMMatrixIdentity();
 
+	_int iCommitChange = 0; //! 커밋 용 변경
+
 	return S_OK;
 }
 
@@ -197,6 +199,9 @@ _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4*
 
 	/* 이동한 지점의 결과가 현재 셀 내부에 있을경우 true반환
 	 * 이동한 지점의 결과가 외부에 있을경우 iNeighborIndex에 값으로 받아온다. */
+
+	if (m_iCurrentIndex == -1)
+		return false;
 
 	if (true == m_Cells[m_iCurrentIndex]->Is_Out(vPosition, vLook, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex, vOutSlidingDir))
 	{
@@ -453,7 +458,7 @@ _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 
 	if (pGround != nullptr)
 	{
-		*pGround = (vPosition.y < fResult);
+		*pGround = (vPosition.y < abs(fResult));
 	}
 
 	return fResult;

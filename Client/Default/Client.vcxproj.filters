@@ -2653,9 +2653,6 @@
     <Filter Include="02.GameObjects\01. Interact\0. Chain">
       <UniqueIdentifier>{4640b070-669a-48d8-9c94-8bed528d2d18}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Event\Interact">
-      <UniqueIdentifier>{1cc45268-c32f-4055-ae97-4cbc14a521b0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\01. Interact\1. Door">
       <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
     </Filter>
@@ -2766,6 +2763,12 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\3. Pull">
       <UniqueIdentifier>{40ce5633-6ae9-4b48-84e4-3fb53edb89fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Event\Trigger">
+      <UniqueIdentifier>{1cc45268-c32f-4055-ae97-4cbc14a521b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Event\Trigger\MonsterSpawnTrigger">
+      <UniqueIdentifier>{c25e9b0c-a582-4369-ab8f-34b26313732c}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\2. Sniping">
       <UniqueIdentifier>{04fcef2f-181e-4fc7-a96c-7dc59bb9c21e}</UniqueIdentifier>
@@ -5829,20 +5832,14 @@
     <ClInclude Include="..\Public\UI_EnemyState_Shard.h">
       <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\State</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Event_InteractManager.h">
-      <Filter>03.Event\Interact</Filter>
+    <ClInclude Include="..\Public\Event_Trigger.h">
+      <Filter>03.Event\Trigger</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_EnemyFrame_Shard.h">
       <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\Frame</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_State_Stun.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\0. Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\1. HitNormal_To_Stun</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\2. HitHeavy_To_Stun</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Stun_Loop_NEW.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\3. Stun_Loop</Filter>
@@ -5861,6 +5858,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\ShaderParsed_Object.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Event_MonsterSpawnTrigger.h">
+      <Filter>03.Event\Trigger\MonsterSpawnTrigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\1. HitNormal_To_Stun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\2. HitHeavy_To_Stun</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_Burn_Loop_TEMP.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\3. Burn</Filter>
@@ -8263,8 +8269,8 @@
     <ClCompile Include="UI_EnemyState_Shard.cpp">
       <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\State</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Event_InteractManager.cpp">
-      <Filter>03.Event\Interact</Filter>
+    <ClCompile Include="..\Private\Event_Trigger.cpp">
+      <Filter>03.Event\Trigger</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_EnemyFrame_Shard.cpp">
       <Filter>02.GameObjects\UI\01. Enemy\01. HUD_Shard\Parts\Frame</Filter>
@@ -8295,6 +8301,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ShaderParsed_Object.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Event_MonsterSpawnTrigger.cpp">
+      <Filter>03.Event\Trigger\MonsterSpawnTrigger</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sniper_Burn_Loop_TEMP.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\3. Burn</Filter>

@@ -54,7 +54,7 @@ public:
 private:
 	list<FORCE> m_Forces;
 	CTransform* m_pOwnerTransform = { nullptr };
-	_bool		m_bUseGravity = { true };
+	_bool		m_bUseGravity = { false };
 
 	_float m_fDrag = { 4.5f };
 	_float m_fMass = { 0.f };

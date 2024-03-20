@@ -20,7 +20,12 @@ CState<CPlayer>* CPlayer_VampireCommander_SyncedAttack::Update(CPlayer* pActor, 
 	{
 		pActor->Get_Damaged(50);
 		m_bFlags[0] = true;
-		m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(true);
+		
+		m_pGameInstance->Set_RadialBlurTime(1.f);
+		CCamera* pCam;
+		pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
+		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
+		pSpringCam->Set_ShakeCamera(true);
 	}
 
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);

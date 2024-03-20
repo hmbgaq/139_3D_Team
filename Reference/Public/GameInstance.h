@@ -164,6 +164,7 @@ public: /* For.Collision_Manager */
 
 public: /* For.Event_Manager */
 	void		Add_Event(class IEvent* pEvent);
+	void		Clear_Event();
 
 public: /* For.PhysX_Manager */
 	void					Register_PhysXCollider(class CPhysXCollider* pPhysXCollider);

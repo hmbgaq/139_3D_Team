@@ -69,6 +69,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 // 	}
 
 
+	m_pRigidBody->Set_UseGravity(true);
+
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	///* For.Com_PhysXController */

@@ -89,6 +89,11 @@ void CCamera_Dynamic::Late_Tick(_float fTimeDelta)
 {
 }
 
+HRESULT CCamera_Dynamic::Ready_Components()
+{
+	return S_OK;
+}
+
 CCamera_Dynamic * CCamera_Dynamic::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 {
 	CCamera_Dynamic*		pInstance = new CCamera_Dynamic(pDevice, pContext, strPrototypeTag);

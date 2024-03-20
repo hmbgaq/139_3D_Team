@@ -57,7 +57,7 @@ private:
 	HRESULT			 Ready_Windows();
 	//
 
-private:
+public:
 	CImgui_Window*	 Find_Window(IMGUI_WINDOW_TYPE eWindowType);
 	_bool			 Check_ImGui_Rect(); //! 마우스가 ImGui 창안에 있는지 체크
 

@@ -51,6 +51,7 @@ HRESULT CShaderParsed_Object::Ready_Components(void* pArg)
 		FAILED_CHECK(__super::Add_Component(iCurrentLevel, SMath::string_To_WString(Desc->strModelProtoTag), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 	}
 
+	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
 
 	return S_OK;
 }

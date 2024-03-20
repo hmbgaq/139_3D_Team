@@ -49,6 +49,9 @@ public:
 		_float3	EffectPosition = {};
 
 		//Sound
+
+		//Matrix
+		_float4x4 WorldMatrix;
 	}CHARCTER_DESC;
 protected:
 	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strPrototypeTag);
@@ -109,6 +112,11 @@ public:
 	void Go_Backward_R45(_float fTimeDelta);
 	void Go_Left(_float fTimeDelta);
 	void Go_Right(_float fTimeDelta);
+
+public:
+	_bool Is_Use_Gravity();
+	void Set_UseGravity(_bool _bUseGravity);
+
 
 public:
 	virtual void Set_Enable(_bool _Enable) override;
