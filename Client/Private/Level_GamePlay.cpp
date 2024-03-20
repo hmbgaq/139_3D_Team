@@ -59,7 +59,11 @@ HRESULT CLevel_GamePlay::Initialize()
 	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+
+#ifndef _DEBUG
 	FAILED_CHECK(Ready_Shader());
+#endif 
+
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 

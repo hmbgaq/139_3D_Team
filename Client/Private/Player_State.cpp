@@ -124,7 +124,7 @@
 #include "Player_EnergyWhip_LeapShort.h"
 #include "Player_EnergyWhip_LongRange.h"
 #include "Player_EnergyWhip_Pull.h"
-
+#include "Player_OpenStateCombo_8hit.h"
 
 
 #pragma endregion
@@ -559,8 +559,13 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 {
 	CState<CPlayer>* pState = { nullptr };
 
-	pState = TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
+	//pState = TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+	
+	pState = OpenStateCombo_8hit(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
+
 
 	if (0.3f <= pActor->Get_ChargingTime())
 	{
@@ -937,6 +942,17 @@ CState<CPlayer>* CPlayer_State::Melee_Dynamic(CPlayer* pActor, _float fTimeDelta
 	{
 		if (CPlayer_Sprint_F::g_iAnimIndex == _iAnimIndex)
 			return new CPlayer_Leap_01_Lower();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::OpenStateCombo_8hit(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Key_Down(DIK_Z)) 
+	{
+		if (CPlayer_OpenStateCombo_8hit::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_OpenStateCombo_8hit();
 	}
 
 	return nullptr;

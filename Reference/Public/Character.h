@@ -136,6 +136,8 @@ public:
 	virtual void Hitted_Weakness() {};
 	virtual void Hitted_Electrocute() {};
 	virtual void Hitted_OpenState_Pull() {};
+	virtual void Hitted_Opened(Direction eDirection) {};
+
 
 
 	
@@ -173,7 +175,7 @@ public:
 	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 1.0f);
 	void Dragged(_float fTimeDelta, _float3 vTargetPos);
 
-	_float3 Calc_Front_Pos(_float3 vDiff);
+	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
 
 public:
 	_bool Is_In_Frustum() { return m_bIsInFrustum; }

@@ -667,6 +667,7 @@ void CCharacter::Dragged(_float fTimeDelta, _float3 vTargetPos)
 
 	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
 
+	//m_pTransformCom->Move_On_Navigation(vResult, nullptr);
 	m_pTransformCom->Move_On_Navigation(vResult, m_pNavigationCom);
 
 }

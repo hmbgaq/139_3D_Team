@@ -69,6 +69,7 @@ protected:
 
 	virtual void Hitted_Electrocute()	override;
 	virtual void Hitted_OpenState_Pull() override;
+	virtual void Hitted_Opened(Direction eDirection) override;
 
 
 protected:

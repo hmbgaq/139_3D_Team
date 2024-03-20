@@ -221,6 +221,22 @@ void CInfected::Hitted_OpenState_Pull()
 	m_pActor->Set_State(new CInfected_OpenStatePull_F_01());
 }
 
+void CInfected::Hitted_Opened(Direction eDirection)
+{
+	switch (eDirection)
+	{
+	case Engine::Left:
+		m_pActor->Set_State(new CInfected_HitLightOpened_L_01());
+		break;
+	case Engine::Right:
+		m_pActor->Set_State(new CInfected_HitLightOpened_R_01());
+		break;
+	case Engine::Front:
+		m_pActor->Set_State(new CInfected_HitLightOpened_F_01_NEW());
+		break;
+	}
+}
+
 void CInfected::Free()
 {
 	__super::Free();
