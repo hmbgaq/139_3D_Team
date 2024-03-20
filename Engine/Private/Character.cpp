@@ -106,6 +106,7 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 
 
 	m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
+	//m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
 
 	m_pRigidBody->Late_Tick(fTimeDelta);
 

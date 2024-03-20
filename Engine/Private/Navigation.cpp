@@ -456,10 +456,46 @@ _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 
 	if (pGround != nullptr)
 	{
-		*pGround = (vPosition.y < abs(fResult));
+		*pGround = vPosition.y < fResult;
 	}
 
+
+
 	return fResult;
+
+
+// 	_float fResult = {};
+// 
+// 	CCell* pCell = m_Cells[m_iCurrentIndex]; // 현재 셀 가져오기
+// 
+// 	// 평면을 정의하는 세 점을 가져옵니다.
+// 	_vector vPointA = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_A)), 1.f);
+// 	_vector vPointB = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_B)), 1.f);
+// 	_vector vPointC = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_C)), 1.f);
+// 
+// 	// 평면을 정의하는 법선 벡터를 계산합니다.
+// 	_vector vPlaneNormal = XMVector3Cross(XMVectorSubtract(vPointB, vPointA), XMVectorSubtract(vPointC, vPointA));
+// 	vPlaneNormal = XMVector3Normalize(vPlaneNormal);
+// 
+// 	// 평면 방정식의 D 값을 계산합니다.
+// 	_float fd = -XMVectorGetX(XMVector3Dot(vPlaneNormal, vPointA));
+// 
+// 	// 평면 방정식의 계수들을 가져옵니다.
+// 	_float fa = XMVectorGetX(vPlaneNormal);
+// 	_float fb = XMVectorGetY(vPlaneNormal);
+// 	_float fc = XMVectorGetZ(vPlaneNormal);
+// 
+// 	// 현재 위치를 평면에 대입하여 높이 값을 계산합니다.
+// 	fResult = (-fa * vPosition.x - fc * vPosition.z - fd) / fb;
+// 
+// 	// 높이를 반환합니다.
+// 	if (pGround != nullptr)
+// 	{
+// 		// 현재 위치의 y 값이 평면의 y 값보다 작으면 지상에 위치합니다.
+// 		*pGround = ( abs(vPosition.y) < abs(fResult));
+// 	}
+
+	//return fResult;
 
 }
 
