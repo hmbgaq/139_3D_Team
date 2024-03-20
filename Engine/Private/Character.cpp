@@ -369,32 +369,32 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 	Hit_Type eHitType = Hit_Type::None;
 
 
-	if (true == m_bIsRevealedWeakness && false == bIsMelee)
-	{
-		Get_Damaged(iDamage);
-		m_pTransformCom->Look_At_Direction(vDir * -1);
-
-		if (0 >= --m_iWeaknessCount) 
-		{
-			m_bIsRevealedWeakness = false;
-			m_bIsInvincible = false;
-
-
-			if (m_iHp <= 0)
-			{
-				Set_Stun(true);
-				Hitted_Stun(eHitPower);
-			}
-			else
-			{
-				Hitted_Weakness();
-			}
-
-			return Hit_Type::Hit_Break;
-
-		}
-
-	}
+// 	if (true == m_bIsRevealedWeakness && false == bIsMelee)
+// 	{
+// 		Get_Damaged(iDamage);
+// 		m_pTransformCom->Look_At_Direction(vDir * -1);
+// 
+// 		if (0 >= --m_iWeaknessCount) 
+// 		{
+// 			m_bIsRevealedWeakness = false;
+// 			m_bIsInvincible = false;
+// 
+// 
+// 			if (m_iHp <= 0)
+// 			{
+// 				Set_Stun(true);
+// 				Hitted_Stun(eHitPower);
+// 			}
+// 			else
+// 			{
+// 				Hitted_Weakness();
+// 			}
+// 
+// 			return Hit_Type::Hit_Break;
+// 
+// 		}
+// 
+// 	}
 
 
 	if (true == m_bIsInvincible && false == m_bIsStun)
