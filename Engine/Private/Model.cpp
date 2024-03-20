@@ -311,7 +311,7 @@ HRESULT CModel::Initialize(void * pArg)
 
 	
 	return S_OK;
-}          
+}
 
 void CModel::Play_Animation(_float fTimeDelta, _bool bIsLoop)
 {
@@ -356,7 +356,7 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 		m_bIsUpperAnimEnd = m_Animations[m_iUpperAnimIndex]->Invalidate_TransformationMatrix_Upper(m_eUpperAnimState, fTimeDelta, m_Bones, m_vMouseMove);
 	}
 
-		
+
 	_float3 NowPos;
 	for (auto& pBone : m_Bones)
 	{
@@ -373,12 +373,12 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 
 		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
 	}
-	
+
 }
 
-HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices)
+HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices)
 {
-	if(BoneMatrices != nullptr)
+	if (BoneMatrices != nullptr)
 		return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones, BoneMatrices);
 	else
 	{
@@ -386,7 +386,44 @@ HRESULT CModel::Bind_BoneMatrices(CShader * pShader, const _char * pConstantName
 	}
 }
 
-HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantName, _uint iMeshIndex, aiTextureType eTextureType)
+HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
+{
+	/* 해당 메시가 가진 MaterialIndex*/
+	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
+	if (iMaterialIndex >= m_iNumMaterials)
+		return E_FAIL;
+
+	for (auto& pTexture : m_Materials[iMaterialIndex].pMtrlTextures)
+	{
+		if (nullptr == pTexture)
+			continue;
+
+		for (_int i = 0; i < (_int)AI_TEXTURE_TYPE_MAX; ++i)
+		{
+			switch (i) 
+			{
+			case (_int)aiTextureType_DIFFUSE:
+				Bind_ShaderResource(pShader, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+				break;
+			case (_int)aiTextureType_SPECULAR:
+				Bind_ShaderResource(pShader, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+				//pTexture[i].Bind_ShaderResource(pShader, "g_SpecularTexture");
+				break;
+			case (_int)aiTextureType_NORMALS:
+				Bind_ShaderResource(pShader, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+				//pTexture[i].Bind_ShaderResource(pShader, "g_NormalTexture");
+				break;
+			default:
+			//	cout << "Texture : " << AI_TEXTURE_TYPE_MAX << "NOT Binding" << endl;
+				break;
+			}
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CModel::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType)
 {
 	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 	if (iMaterialIndex >= m_iNumMaterials)
@@ -398,9 +435,7 @@ HRESULT CModel::Bind_ShaderResource(CShader * pShader, const _char * pConstantNa
 HRESULT CModel::Bind_ShaderCascade(CShader* pShader)
 {
 	//if (FAILED(pShader->Bind_Matrices("g_BoneMatrices", m_matCurrTransforms.data(), (size_t)m_matCurrTransforms.size())))
-	//	return S_OK;
-
-	return S_OK;
+	return S_OK;	
 }
 
 void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)

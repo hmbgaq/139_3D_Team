@@ -381,7 +381,8 @@ namespace Engine
 	typedef struct ENGINE_DLL tagBloomRim_Desc
 	{
 		_bool	bRimBloom_Blur_Active		= { false };
-	}BLOOMRIM_DESC;
+		_bool	bShadow_Active				= { false };
+	}DEFERRED_DESC;
 
 	typedef struct ENGINE_DLL tagFogDesc
 	{

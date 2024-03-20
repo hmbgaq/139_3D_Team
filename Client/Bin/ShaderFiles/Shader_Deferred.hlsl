@@ -42,6 +42,7 @@ Texture2D g_OutlineTarget;          /* RenderGroup - Outline */
 /* 활성 여부 */
 bool g_bSSAO_Active;
 bool g_bFog_Active;
+bool g_bShadow_Active;
 
 /* 안개 */
 float2  g_vFogUVAcc             = { 0.f, 0.f };

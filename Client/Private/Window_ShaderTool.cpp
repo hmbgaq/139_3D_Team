@@ -422,9 +422,11 @@ void CWindow_ShaderTool::Compress_Fog_Setting()
 
 void CWindow_ShaderTool::Compress_BloomRim_Setting()
 {
-	ImGui::Checkbox("BloomRim Blur", &m_eScreen_Desc.bRimBloom_Blur_Active);
+	ImGui::Checkbox("BloomRim Blur", &m_eDeferred_Desc.bRimBloom_Blur_Active);
 
-	m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(m_eScreen_Desc);
+	ImGui::Checkbox("Shadow", &m_eDeferred_Desc.bShadow_Active);
+
+	m_pGameInstance->Get_Renderer()->Set_Deferred_Option(m_eDeferred_Desc);
 }
 
 void CWindow_ShaderTool::Compress_Radial_Setting()

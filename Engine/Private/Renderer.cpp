@@ -36,7 +36,8 @@ HRESULT CRenderer::Initialize()
 	FAILED_CHECK(Ready_DebugRender());
 #endif
 
-	m_tBloomRim_Option.bRimBloom_Blur_Active = true;
+	m_tDeferred_Option.bRimBloom_Blur_Active = true;
+	m_tDeferred_Option.bShadow_Active = true;
 	m_tHBAO_Option.bHBAO_Active = false;
 	m_tFog_Option.bFog_Active = false;
 
@@ -76,12 +77,12 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_Deferred()); /*  MRT_Deferred -> Target_Deferred에 저장  */
 
 	FAILED_CHECK(Render_RimBloom()); /* MRT_RB_Blur -> Target_RB_BlurActive에 저장 */
+//	FAILED_CHECK(Render_RimBloom()); /* MRT_RB_Blur -> Target_RB_BlurActive에 저장 */
 	//FAILED_CHECK(Render_OutLine()); /* MRT_OutLine */
 
 	FAILED_CHECK(Deferred_Effect()); 
 
 	/* --- Post Processing --- */
-	
 	if (true == m_tRadial_Option.bRadial_Active) /* 이미지 블러효과를 추가하는것 */
 		FAILED_CHECK(Render_RadialBlur());
 
@@ -99,6 +100,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	if (true == m_bUI_MRT)
 		FAILED_CHECK(Render_UI_Tool()); /* Tool에서 체크할 때  */
+
+	/* Effect + Blur */
 
 	/* 최종 합성 */ 
 	FAILED_CHECK(Render_Final());
@@ -291,7 +294,7 @@ HRESULT CRenderer::Render_HBAO_PLUS()
 
 HRESULT CRenderer::Render_RimBloom()
 {
-	if (m_tBloomRim_Option.bRimBloom_Blur_Active)
+	if (m_tDeferred_Option.bRimBloom_Blur_Active)
 	{
 		FAILED_CHECK(Render_Blur(TEXT("Target_RimBloom"), TEXT("MRT_RB_Blur"),
 								ECast(BLUR_SHADER::BLUR_HORIZON_LOW),
@@ -333,6 +336,7 @@ HRESULT CRenderer::Render_Deferred()
 	/* 활성여부 */
 	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_bSSAO_Active", &m_tHBAO_Option.bHBAO_Active, sizeof(_bool)));
 	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_bFog_Active", &m_tFog_Option.bFog_Active, sizeof(_bool)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_bShadow_Active", &m_tDeferred_Option.bShadow_Active, sizeof(_bool)));
 
 	/* 타겟에 값올리기 */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Priority"), m_pShader_Deferred, "g_PriorityTarget"));
@@ -1211,67 +1215,67 @@ HRESULT CRenderer::Render_DebugTarget()
 
 HRESULT CRenderer::Control_HotKey()
 {
-	if (m_pGameInstance->Key_Down(DIK_GRAVE))
-	{
-		cout << " ----------------------------- " << endl;
-		cout << " DIK_1 : (Pre) Object Blur ON/OFF " << endl;
-		cout << " DIK_2 : (Pre) Effect Blur ON/OFF" << endl;
-		cout << " DIK_3 : (Pre) HBAO+ ON/OFF " << endl;
-		cout << " DIK_4 : (Pre) Fog ON/OFF " << endl;
-
-		cout << " DIK_5 : (Post) Radial Blur ON/OFF " << endl;
-		cout << " DIK_6 : (Post) HDR ON/OFF " << endl;
-		cout << " DIK_7 : (Post) FXAA ON/OFF " << endl;
-
-		//cout << " DIK_8 : (Blur) BloomBlur " << endl;
-		//cout << " DIK_9 : (Blur) RadialBlur " << endl;
-
-		cout << " --                         -- " << endl;
-
-		if (true == m_tBloomRim_Option.bRimBloom_Blur_Active)
-			cout << "BloomBlur : true " << endl;
-		else
-			cout << "BloomBlur : false " << endl;
-
-		if (true == m_tHBAO_Option.bHBAO_Active)
-			cout << "HBAO+ : true " << endl;
-		else
-			cout << "HBAO+ : false " << endl;
-
-
-		if (true == m_tFog_Option.bFog_Active)
-			cout << "Fog : true " << endl;
-		else
-			cout << "Fog : false " << endl;
-
-		if (true == m_tRadial_Option.bRadial_Active)
-			cout << "Radial Blur : true " << endl;
-		else
-			cout << "Radial Blur : false " << endl;
-
-		if (true == m_tHDR_Option.bHDR_Active)
-			cout << "HDR : true " << endl;
-		else
-			cout << "HDR : false " << endl;
-
-		cout << " ----------------------------- " << endl;
-	}
-	if (m_pGameInstance->Key_Down(DIK_1))
-		m_tBloomRim_Option.bRimBloom_Blur_Active = !m_tBloomRim_Option.bRimBloom_Blur_Active;
-
-
-	if (m_pGameInstance->Key_Down(DIK_3))
-		m_tHBAO_Option.bHBAO_Active = !m_tHBAO_Option.bHBAO_Active;
-	if (m_pGameInstance->Key_Down(DIK_4))
-		m_tFog_Option.bFog_Active = !m_tFog_Option.bFog_Active;
-	if (m_pGameInstance->Key_Down(DIK_5))
-		m_tRadial_Option.bRadial_Active = !m_tRadial_Option.bRadial_Active;
-	if (m_pGameInstance->Key_Down(DIK_6))
-		m_tHDR_Option.bHDR_Active = !m_tHDR_Option.bHDR_Active;
-	if (m_pGameInstance->Key_Down(DIK_7))
-		m_tAnti_Option.bFXAA_Active = !m_tAnti_Option.bFXAA_Active;
-	//if (m_pGameInstance->Key_Down(DIK_8))
-	//if (m_pGameInstance->Key_Down(DIK_9))
+//	if (m_pGameInstance->Key_Down(DIK_GRAVE))
+//	{
+//		cout << " ----------------------------- " << endl;
+//		cout << " DIK_1 : (Pre) Object Blur ON/OFF " << endl;
+//		cout << " DIK_2 : (Pre) Effect Blur ON/OFF" << endl;
+//		cout << " DIK_3 : (Pre) HBAO+ ON/OFF " << endl;
+//		cout << " DIK_4 : (Pre) Fog ON/OFF " << endl;
+//
+//		cout << " DIK_5 : (Post) Radial Blur ON/OFF " << endl;
+//		cout << " DIK_6 : (Post) HDR ON/OFF " << endl;
+//		cout << " DIK_7 : (Post) FXAA ON/OFF " << endl;
+//
+//		//cout << " DIK_8 : (Blur) BloomBlur " << endl;
+//		//cout << " DIK_9 : (Blur) RadialBlur " << endl;
+//
+//		cout << " --                         -- " << endl;
+//
+//		if (true == m_tBloomRim_Option.bRimBloom_Blur_Active)
+//			cout << "BloomBlur : true " << endl;
+//		else
+//			cout << "BloomBlur : false " << endl;
+//
+//		if (true == m_tHBAO_Option.bHBAO_Active)
+//			cout << "HBAO+ : true " << endl;
+//		else
+//			cout << "HBAO+ : false " << endl;
+//
+//
+//		if (true == m_tFog_Option.bFog_Active)
+//			cout << "Fog : true " << endl;
+//		else
+//			cout << "Fog : false " << endl;
+//
+//		if (true == m_tRadial_Option.bRadial_Active)
+//			cout << "Radial Blur : true " << endl;
+//		else
+//			cout << "Radial Blur : false " << endl;
+//
+//		if (true == m_tHDR_Option.bHDR_Active)
+//			cout << "HDR : true " << endl;
+//		else
+//			cout << "HDR : false " << endl;
+//
+//		cout << " ----------------------------- " << endl;
+//	}
+//	if (m_pGameInstance->Key_Down(DIK_1))
+//		m_tBloomRim_Option.bRimBloom_Blur_Active = !m_tBloomRim_Option.bRimBloom_Blur_Active;
+//
+//
+//	if (m_pGameInstance->Key_Down(DIK_3))
+//		m_tHBAO_Option.bHBAO_Active = !m_tHBAO_Option.bHBAO_Active;
+//	if (m_pGameInstance->Key_Down(DIK_4))
+//		m_tFog_Option.bFog_Active = !m_tFog_Option.bFog_Active;
+//	if (m_pGameInstance->Key_Down(DIK_5))
+//		m_tRadial_Option.bRadial_Active = !m_tRadial_Option.bRadial_Active;
+//	if (m_pGameInstance->Key_Down(DIK_6))
+//		m_tHDR_Option.bHDR_Active = !m_tHDR_Option.bHDR_Active;
+//	if (m_pGameInstance->Key_Down(DIK_7))
+//		m_tAnti_Option.bFXAA_Active = !m_tAnti_Option.bFXAA_Active;
+//	//if (m_pGameInstance->Key_Down(DIK_8))
+//	//if (m_pGameInstance->Key_Down(DIK_9))
 
 	return S_OK;
 }
