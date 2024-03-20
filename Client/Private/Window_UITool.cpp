@@ -920,6 +920,18 @@ void CWindow_UITool::Setting_Child()
 	//ImGui::InputFloat("PositionX", &m_fChild_Possition.x);
 	//ImGui::InputFloat("PositionY", &m_fChild_Possition.y);
 
+
+
+	if (ImGui::InputInt("MaskNum", &m_iMaskNum))
+	{
+		m_pCurrSelectUI->Set_MaskNum(m_iMaskNum);
+	}
+
+	if (ImGui::InputInt("NoiseNum", &m_iNoiseNum))
+	{
+		m_pCurrSelectUI->Set_NoiseNum(m_iNoiseNum);
+	}
+
 	ImGui::Separator();
 
 	ImGui::Dummy(ImVec2(0, 5)); // ฐ๘น้
@@ -2424,6 +2436,9 @@ void CWindow_UITool::PlayAnimation(_float fTimeDelta)
 			currentTime = m_pCurrSelectUI->Get_CurrTime();
 		//else
 		//	currentTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
+
+		if (m_vecTimeline == nullptr)
+			return;
 
 		if (m_bRepetition)
 		{

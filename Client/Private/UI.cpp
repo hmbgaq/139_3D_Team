@@ -764,76 +764,83 @@ void CUI::Load_FromJson(const json& In_Json)
 		if (In_Json["Keyframe"][i].contains("NoiseChange"))// "LoopSection" 키가 있으면
 			m_tUIInfo.tKeyframe.bNoiseChange = In_Json["Keyframe"][i]["NoiseChange"];
 
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("TimeAcc")) // 키가 있으면
+			m_tUIInfo.tKeyframe.fTimeAcc = In_Json["Distortion"]["TimeAcc"];
+		if (In_Json["Keyframe"][i].contains("ScrollSpeedsX")) // 키가 있으면
 			m_tUIInfo.tKeyframe.vScrollSpeeds.x = In_Json["Distortion"]["ScrollSpeedsX"];
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("ScrollSpeedsY")) // 키가 있으면
 			m_tUIInfo.tKeyframe.vScrollSpeeds.y = In_Json["Distortion"]["ScrollSpeedsY"];
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("ScrollSpeedsZ")) // 키가 있으면
 			m_tUIInfo.tKeyframe.vScrollSpeeds.z = In_Json["Distortion"]["ScrollSpeedsZ"];
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("ScalesX")) // 키가 있으면
 			m_tUIInfo.tKeyframe.vScales.x = In_Json["Distortion"]["ScalesX"];
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("ScalesY")) // 키가 있으면
 			m_tUIInfo.tKeyframe.vScales.y = In_Json["Distortion"]["ScalesY"];
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("ScalesZ")) // 키가 있으면
 			m_tUIInfo.tKeyframe.vScales.z = In_Json["Distortion"]["ScalesZ"];
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("Distortion1X")) // 키가 있으면
 			m_tUIInfo.tKeyframe.vDistortion1.x = In_Json["Distortion"]["Distortion1X"];
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("Distortion1Y")) // 키가 있으면
 			m_tUIInfo.tKeyframe.vDistortion1.y = In_Json["Distortion"]["Distortion1Y"];
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("Distortion2X")) // 키가 있으면
 			m_tUIInfo.tKeyframe.vDistortion2.x = In_Json["Distortion"]["Distortion2X"];
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("Distortion2Y")) // 키가 있으면
 			m_tUIInfo.tKeyframe.vDistortion2.y = In_Json["Distortion"]["Distortion2Y"];
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("Distortion3X")) // 키가 있으면
 			m_tUIInfo.tKeyframe.vDistortion3.y = In_Json["Distortion"]["Distortion3X"];
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("Distortion3Y")) // 키가 있으면
 			m_tUIInfo.tKeyframe.vDistortion3.y = In_Json["Distortion"]["Distortion3Y"];
-		if (In_Json.contains("Distortion")) // 키가 있으면
+		if (In_Json["Keyframe"][i].contains("DistortionScale")) // 키가 있으면
 			m_tUIInfo.tKeyframe.fDistortionScale = In_Json["Distortion"]["DistortionScale"];
 
-		if (In_Json["Distortion"].contains("DistortionUI")) // 키가 있으면
+		if (In_Json["Keyframe"].contains("DistortionUI")) // 키가 있으면
 			m_tUIInfo.tKeyframe.bDistortionUI = In_Json["Distortion"]["DistortionUI"];
-		if (In_Json["Distortion"].contains("MaskNum")) // 키가 있으면
+		if (In_Json["Keyframe"].contains("MaskNum")) // 키가 있으면
 			m_tUIInfo.tKeyframe.iMaskNum = In_Json["Distortion"]["MaskNum"];
-		if (In_Json["Distortion"].contains("NoiseNum")) // 키가 있으면
+		if (In_Json["Keyframe"].contains("NoiseNum")) // 키가 있으면
 			m_tUIInfo.tKeyframe.iNoiseNum = In_Json["Distortion"]["NoiseNum"];
 
 		m_vecAnimation.push_back(m_tUIInfo.tKeyframe);
 	}
+	if (In_Json.contains("Distortion")) // 키가 있으면
+	{
+		if (In_Json["Distortion"].contains("TimeAcc")) // 키가 있으면
+			m_tUIInfo.fTimeAcc = In_Json["Distortion"]["TimeAcc"];
+		if (In_Json["Distortion"].contains("ScrollSpeedsX")) // 키가 있으면
+			m_tUIInfo.vScrollSpeeds.x = In_Json["Distortion"]["ScrollSpeedsX"];
+		if (In_Json["Distortion"].contains("ScrollSpeedsY")) // 키가 있으면
+			m_tUIInfo.vScrollSpeeds.y = In_Json["Distortion"]["ScrollSpeedsY"];
+		if (In_Json["Distortion"].contains("ScrollSpeedsZ")) // 키가 있으면
+			m_tUIInfo.vScrollSpeeds.z = In_Json["Distortion"]["ScrollSpeedsZ"];
+		if (In_Json["Distortion"].contains("ScalesX")) // 키가 있으면
+			m_tUIInfo.vScales.x = In_Json["Distortion"]["ScalesX"];
+		if (In_Json["Distortion"].contains("ScalesY")) // 키가 있으면
+			m_tUIInfo.vScales.y = In_Json["Distortion"]["ScalesY"];
+		if (In_Json["Distortion"].contains("ScalesZ")) // 키가 있으면
+			m_tUIInfo.vScales.z = In_Json["Distortion"]["ScalesZ"];
+		if (In_Json["Distortion"].contains("Distortion1X")) // 키가 있으면
+			m_tUIInfo.vDistortion1.x = In_Json["Distortion"]["Distortion1X"];
+		if (In_Json["Distortion"].contains("Distortion1Y")) // 키가 있으면
+			m_tUIInfo.vDistortion1.y = In_Json["Distortion"]["Distortion1Y"];
+		if (In_Json["Distortion"].contains("Distortion2X")) // 키가 있으면
+			m_tUIInfo.vDistortion2.x = In_Json["Distortion"]["Distortion2X"];
+		if (In_Json["Distortion"].contains("Distortion2Y")) // 키가 있으면
+			m_tUIInfo.vDistortion2.y = In_Json["Distortion"]["Distortion2Y"];
+		if (In_Json["Distortion"].contains("Distortion3X")) // 키가 있으면
+			m_tUIInfo.vDistortion3.x = In_Json["Distortion"]["Distortion3X"];
+		if (In_Json["Distortion"].contains("Distortion3Y")) // 키가 있으면
+			m_tUIInfo.vDistortion3.y = In_Json["Distortion"]["Distortion3Y"];
+		if (In_Json["Distortion"].contains("DistortionScale")) // 키가 있으면
+			m_tUIInfo.fDistortionScale = In_Json["Distortion"]["DistortionScale"];
 
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.vScrollSpeeds.x = In_Json["Distortion"]["ScrollSpeedsX"];
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.vScrollSpeeds.y = In_Json["Distortion"]["ScrollSpeedsY"];
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.vScrollSpeeds.z = In_Json["Distortion"]["ScrollSpeedsZ"];
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.vScales.x = In_Json["Distortion"]["ScalesX"];
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.vScales.y = In_Json["Distortion"]["ScalesY"];
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.vScales.z = In_Json["Distortion"]["ScalesZ"];
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.vDistortion1.x = In_Json["Distortion"]["Distortion1X"];
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.vDistortion1.y = In_Json["Distortion"]["Distortion1Y"];
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.vDistortion2.x = In_Json["Distortion"]["Distortion2X"];
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.vDistortion2.y = In_Json["Distortion"]["Distortion2Y"];
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.vDistortion3.y = In_Json["Distortion"]["Distortion3X"];
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.vDistortion3.y = In_Json["Distortion"]["Distortion3Y"];
-	if (In_Json.contains("Distortion")) // 키가 있으면
-		m_tUIInfo.fDistortionScale = In_Json["Distortion"]["DistortionScale"];
+		if (In_Json["Distortion"].contains("DistortionUI")) // 키가 있으면
+			m_tUIInfo.bDistortionUI = In_Json["Distortion"]["DistortionUI"];
+		if (In_Json["Distortion"].contains("MaskNum")) // 키가 있으면
+			m_tUIInfo.iMaskNum = In_Json["Distortion"]["MaskNum"];
+		if (In_Json["Distortion"].contains("NoiseNum")) // 키가 있으면
+			m_tUIInfo.iNoiseNum = In_Json["Distortion"]["NoiseNum"];
+	}
 
-	if (In_Json["Distortion"].contains("DistortionUI")) // 키가 있으면
-		m_tUIInfo.bDistortionUI = In_Json["Distortion"]["DistortionUI"];
-	if (In_Json["Distortion"].contains("MaskNum")) // 키가 있으면
-		m_tUIInfo.iMaskNum = In_Json["Distortion"]["MaskNum"];
-	if (In_Json["Distortion"].contains("NoiseNum")) // 키가 있으면
-		m_tUIInfo.iNoiseNum = In_Json["Distortion"]["NoiseNum"];
 }
 
 json CUI::Save_Desc(json& out_json)
@@ -919,87 +926,89 @@ json CUI::Save_Desc(json& out_json)
 			out_json["Keyframe"][i]["Disappear"] = m_vecAnimation[i].bDisappear;
 			out_json["Keyframe"][i]["LoopSection"] = m_vecAnimation[i].bLoopSection;
 
-			if (out_json["Keyframe"][i].contains("StopPlay"))// "LoopSection" 키가 있으면
-				out_json["Keyframe"][i]["StopPlay"] = m_tUIInfo.tKeyframe.bStopPlay;
+			//if (out_json["Keyframe"][i].contains("StopPlay"))// "LoopSection" 키가 있으면
+				out_json["Keyframe"][i]["StopPlay"] = m_vecAnimation[i].bStopPlay;
 
-			if (out_json["Keyframe"][i].contains("ReversePlay"))// "LoopSection" 키가 있으면
-				out_json["Keyframe"][i]["ReversePlay"] = m_tUIInfo.tKeyframe.bReversePlay;
+			//if (out_json["Keyframe"][i].contains("ReversePlay"))// "LoopSection" 키가 있으면
+				out_json["Keyframe"][i]["ReversePlay"] = m_vecAnimation[i].bReversePlay;
 
-			if (out_json["Keyframe"][i].contains("MaskChange"))// "LoopSection" 키가 있으면
-				out_json["Keyframe"][i]["MaskChange"] = m_tUIInfo.tKeyframe.bMaskChange;
+			//if (out_json["Keyframe"][i].contains("MaskChange"))// "LoopSection" 키가 있으면
+				out_json["Keyframe"][i]["MaskChange"] = m_vecAnimation[i].bMaskChange;
 
-			if (out_json["Keyframe"][i].contains("NoiseChange"))// "LoopSection" 키가 있으면
-				out_json["Keyframe"][i]["NoiseChange"] = m_tUIInfo.tKeyframe.bNoiseChange;
+			//if (out_json["Keyframe"][i].contains("NoiseChange"))// "LoopSection" 키가 있으면
+				out_json["Keyframe"][i]["NoiseChange"] = m_vecAnimation[i].bNoiseChange;
 
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["ScrollSpeedsX"] = m_tUIInfo.tKeyframe.vScrollSpeeds.x;
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["ScrollSpeedsY"] = m_tUIInfo.tKeyframe.vScrollSpeeds.y;
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["ScrollSpeedsZ"] = m_tUIInfo.tKeyframe.vScrollSpeeds.z;
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["ScalesX"] = m_tUIInfo.tKeyframe.vScales.x;
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["ScalesY"] = m_tUIInfo.tKeyframe.vScales.y;
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["ScalesZ"] = m_tUIInfo.tKeyframe.vScales.z;
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["Distortion1X"] = m_tUIInfo.tKeyframe.vDistortion1.x;
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["Distortion1Y"] = m_tUIInfo.tKeyframe.vDistortion1.y;
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["Distortion2X"] = m_tUIInfo.tKeyframe.vDistortion2.x;
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["Distortion2Y"] = m_tUIInfo.tKeyframe.vDistortion2.y;
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["Distortion3X"] = m_tUIInfo.tKeyframe.vDistortion3.y;
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["Distortion3Y"] = m_tUIInfo.tKeyframe.vDistortion3.y;
-			if (out_json.contains("Distortion")) // 키가 있으면
-				out_json["Distortion"]["DistortionScale"] = m_tUIInfo.tKeyframe.fDistortionScale;
+				out_json["Keyframe"][i]["TimeAcc"] = m_vecAnimation[i].fTimeAcc;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["ScrollSpeedsX"] = m_vecAnimation[i].vScrollSpeeds.x;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["ScrollSpeedsY"] = m_vecAnimation[i].vScrollSpeeds.y;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["ScrollSpeedsZ"] = m_vecAnimation[i].vScrollSpeeds.z;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["ScalesX"] = m_vecAnimation[i].vScales.x;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["ScalesY"] = m_vecAnimation[i].vScales.y;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["ScalesZ"] = m_vecAnimation[i].vScales.z;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["Distortion1X"] = m_vecAnimation[i].vDistortion1.x;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["Distortion1Y"] = m_vecAnimation[i].vDistortion1.y;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["Distortion2X"] = m_vecAnimation[i].vDistortion2.x;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["Distortion2Y"] = m_vecAnimation[i].vDistortion2.y;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["Distortion3X"] = m_vecAnimation[i].vDistortion3.y;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["Distortion3Y"] = m_vecAnimation[i].vDistortion3.y;
+			//if (out_json.contains("Distortion")) // 키가 있으면
+				out_json["Keyframe"][i]["DistortionScale"] = m_vecAnimation[i].fDistortionScale;
 
-			if (out_json["Distortion"].contains("DistortionUI")) // 키가 있으면
-				out_json["Distortion"]["DistortionUI"] = m_tUIInfo.tKeyframe.bDistortionUI;
-			if (out_json["Distortion"].contains("MaskNum")) // 키가 있으면
-				out_json["Distortion"]["MaskNum"] = m_tUIInfo.tKeyframe.iMaskNum;
-			if (out_json["Distortion"].contains("NoiseNum")) // 키가 있으면
-				out_json["Distortion"]["NoiseNum"] = m_tUIInfo.tKeyframe.iNoiseNum;
+			//if (out_json["Distortion"].contains("DistortionUI")) // 키가 있으면
+				out_json["Keyframe"][i]["DistortionUI"] = m_vecAnimation[i].bDistortionUI;
+			//if (out_json["Distortion"].contains("MaskNum")) // 키가 있으면
+				out_json["Keyframe"][i]["MaskNum"] = m_vecAnimation[i].iMaskNum;
+			//if (out_json["Distortion"].contains("NoiseNum")) // 키가 있으면
+				out_json["Keyframe"][i]["NoiseNum"] = m_vecAnimation[i].iNoiseNum;
 		}
 	}
 
 	if (m_tUIInfo.bDistortionUI)
 	{
-		if (out_json["Distortion"].contains("ScrollSpeedsX")) // 키가 있으면
+			out_json["Distortion"]["TimeAcc"] = m_tUIInfo.fTimeAcc;
+		//if (out_json["Distortion"].contains("ScrollSpeedsX")) // 키가 있으면
 			out_json["Distortion"]["ScrollSpeedsX"] = m_tUIInfo.vScrollSpeeds.x;
-		if (out_json["Distortion"].contains("ScrollSpeedsY")) // 키가 있으면
+		//if (out_json["Distortion"].contains("ScrollSpeedsY")) // 키가 있으면
 			out_json["Distortion"]["ScrollSpeedsY"] = m_tUIInfo.vScrollSpeeds.y;
-		if (out_json["Distortion"].contains("ScrollSpeedsZ")) // 키가 있으면
+		//if (out_json["Distortion"].contains("ScrollSpeedsZ")) // 키가 있으면
 			out_json["Distortion"]["ScrollSpeedsZ"] = m_tUIInfo.vScrollSpeeds.z;
-		if (out_json["Distortion"].contains("ScalesX")) // 키가 있으면
+		//if (out_json["Distortion"].contains("ScalesX")) // 키가 있으면
 			out_json["Distortion"]["ScalesX"] = m_tUIInfo.vScales.x;
-		if (out_json["Distortion"].contains("ScalesY")) // 키가 있으면
+		//if (out_json["Distortion"].contains("ScalesY")) // 키가 있으면
 			out_json["Distortion"]["ScalesY"] = m_tUIInfo.vScales.y;
-		if (out_json["Distortion"].contains("ScalesZ")) // 키가 있으면
+		//if (out_json["Distortion"].contains("ScalesZ")) // 키가 있으면
 			out_json["Distortion"]["ScalesZ"] = m_tUIInfo.vScales.z;
-		if (out_json["Distortion"].contains("Distortion1X")) // 키가 있으면
+		//if (out_json["Distortion"].contains("Distortion1X")) // 키가 있으면
 			out_json["Distortion"]["Distortion1X"] = m_tUIInfo.vDistortion1.x;
-		if (out_json["Distortion"].contains("Distortion1Y")) // 키가 있으면
+		//if (out_json["Distortion"].contains("Distortion1Y")) // 키가 있으면
 			out_json["Distortion"]["Distortion1Y"] = m_tUIInfo.vDistortion1.y;
-		if (out_json["Distortion"].contains("Distortion2X")) // 키가 있으면
+		//if (out_json["Distortion"].contains("Distortion2X")) // 키가 있으면
 			out_json["Distortion"]["Distortion2X"] = m_tUIInfo.vDistortion2.x;
-		if (out_json["Distortion"].contains("Distortion2Y")) // 키가 있으면
+		//if (out_json["Distortion"].contains("Distortion2Y")) // 키가 있으면
 			out_json["Distortion"]["Distortion2Y"] = m_tUIInfo.vDistortion2.y;
-		if (out_json["Distortion"].contains("Distortion3X")) // 키가 있으면
+		//if (out_json["Distortion"].contains("Distortion3X")) // 키가 있으면
 			out_json["Distortion"]["Distortion3X"] = m_tUIInfo.vDistortion3.x;
-		if (out_json["Distortion"].contains("Distortion3Y")) // 키가 있으면
+		//if (out_json["Distortion"].contains("Distortion3Y")) // 키가 있으면
 			out_json["Distortion"]["Distortion3Y"] = m_tUIInfo.vDistortion3.y;
-		if (out_json["Distortion"].contains("DistortionScale")) // 키가 있으면
+		//if (out_json["Distortion"].contains("DistortionScale")) // 키가 있으면
 			out_json["Distortion"]["DistortionScale"] = m_tUIInfo.fDistortionScale;
-		if (out_json["Distortion"].contains("DistortionUI")) // 키가 있으면
+		//if (out_json["Distortion"].contains("DistortionUI")) // 키가 있으면
 			out_json["Distortion"]["DistortionUI"] = m_tUIInfo.bDistortionUI;
-		if (out_json["Distortion"].contains("MaskNum")) // 키가 있으면
+		//if (out_json["Distortion"].contains("MaskNum")) // 키가 있으면
 			out_json["Distortion"]["MaskNum"] = m_tUIInfo.iMaskNum;
-		if (out_json["Distortion"].contains("NoiseNum")) // 키가 있으면
+		//if (out_json["Distortion"].contains("NoiseNum")) // 키가 있으면
 			out_json["Distortion"]["NoiseNum"] = m_tUIInfo.iNoiseNum;
 	}
 

@@ -229,7 +229,7 @@ HRESULT CUI_Distortion::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CUI_Distortion::Bind_ShaderResources()
+HRESULT CUI_Distortion::Bind_ShaderResources() 
 {
 						/* °øÅë */
 	if (FAILED(__super::Bind_ShaderResources()))

@@ -254,6 +254,8 @@ public:
 	_float	m_fDistortionScale = { 1.f };
 	_float	m_fDistortionBias = { 1.f };
 
+	_int	m_iMaskNum = 0;
+	_int	m_iNoiseNum = 0;
 #pragma endregion
 
 	// 변경할 속성 값 모드
