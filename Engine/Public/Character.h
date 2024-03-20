@@ -49,9 +49,6 @@ public:
 		_float3	EffectPosition = {};
 
 		//Sound
-
-		//Matrix
-		_float4x4 WorldMatrix;
 	}CHARCTER_DESC;
 protected:
 	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strPrototypeTag);
@@ -117,7 +114,6 @@ public:
 	_bool Is_Use_Gravity();
 	void Set_UseGravity(_bool _bUseGravity);
 
-
 public:
 	virtual void Set_Enable(_bool _Enable) override;
 
@@ -138,6 +134,10 @@ public:
 		Hitted_Dead(Power::Heavy);
 	};
 	virtual void Hitted_Weakness() {};
+	virtual void Hitted_Electrocute() {};
+	virtual void Hitted_OpenState_Pull() {};
+
+
 	
 public:
 	void Add_Force(_vector In_vDir, _float In_fPower);
@@ -152,6 +152,8 @@ public:
 
 	void Get_Damaged(_float iDamage) {m_iHp -= iDamage;}
 public:
+	void Look_At_OnLand(_fvector vTargetPos);
+
 	void Look_At_Target();
 	void Look_At_Target_Lerp(_float fTimeDelta);
 	void Search_Target(const wstring& strLayerTag, const _float fSearchDistance = MAX_SEARCH);
@@ -170,6 +172,8 @@ public:
 
 	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 1.0f);
 	void Dragged(_float fTimeDelta, _float3 vTargetPos);
+
+	_float3 Calc_Front_Pos(_float3 vDiff);
 
 public:
 	_bool Is_In_Frustum() { return m_bIsInFrustum; }
@@ -219,10 +223,16 @@ public:
 	void Set_WeaknessCount(_int _iWeaknessCount) { m_iWeaknessCount = _iWeaknessCount; }
 
 
-
 public:
 	_bool Is_Stun() { return m_bIsInvincible; };
 	void Set_Stun(_bool _bIsStun) { m_bIsStun = _bIsStun; };
+	
+	_bool Is_ElectrocuteTime() { return m_fElectrocuteTime > 0.f; };
+	void Set_ElectrocuteTime(_float _fElectrocuteTime) { m_fElectrocuteTime = max(m_fElectrocuteTime, _fElectrocuteTime); };
+	void Update_ElectrocuteTime(_float fTimeDelta) {
+		_float fResult = m_fElectrocuteTime - fTimeDelta;
+		m_fElectrocuteTime = fResult > 0.f ? fResult : 0.f;
+	};
 
 public:
 	void Set_RootMoveRate(_float3 vRate) { m_vRootMoveRate = vRate; };
@@ -243,6 +253,7 @@ protected:
 protected:
 	_bool m_bIsInvincible = { false };
 	_bool m_bIsStun = { false };
+	_float m_fElectrocuteTime = { 0.f };
 
 protected:
 	//Power m_eStrength = { Power::Light };

@@ -21,10 +21,29 @@ CState<CPlayer>* CPlayer_EnergyWhip_Pull::Update(CPlayer* pActor, _float fTimeDe
 
 	if (nullptr != pTarget)
 	{
-		//_float3 vFront = pActor->Get_Transform()->Calc_Front_Pos(_float3(0.f, 0.f, 2.f));
-		//_float3 vPlayerPos = pActor->Get_Position();
+		if (false == m_bFlags[0])
+		{
+			pTarget->Hitted_Electrocute();
+			m_bFlags[0] = true;
+		}
 
-		//pTarget->Dragged(fTimeDelta, vFront);
+		if (false == m_bFlags[1]) 
+		{
+			_float fDistance = 1.f;
+			if (fDistance < pActor->Calc_Distance())
+			{
+				_float3 vFront = pActor->Calc_Front_Pos(_float3(0.f, 0.f, fDistance / 2.f));
+				pTarget->Dragged(fTimeDelta, vFront);
+				//if (fDistance >= pActor->Calc_Distance()) 
+				//{
+				//	m_bFlags[1] = true;
+				//}
+			}
+			else 
+			{
+				m_bFlags[1] = true;
+			}
+		}
 	}
 
 	if (pActor->Is_Animation_End())

@@ -199,6 +199,16 @@ CState<CInfected>* CInfected_State::Finisher_State(CInfected* pActor, _float fTi
 	return nullptr;
 }
 
+CState<CInfected>* CInfected_State::Electrocute_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (pActor->Is_Animation_End())
+	{
+		return Normal(pActor, fTimeDelta, _iAnimIndex);
+	}
+
+	return nullptr;
+}
+
 /* Áß¾ÓÁ¦¾î */
 CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {

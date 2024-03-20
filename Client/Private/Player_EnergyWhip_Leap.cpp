@@ -21,6 +21,14 @@ CState<CPlayer>* CPlayer_EnergyWhip_Leap::Update(CPlayer* pActor, _float fTimeDe
 		m_bFlags[0] = pActor->Is_Inputable_Front(22);
 	}
 
+	if (false == m_bFlags[1]) 
+	{
+		CCharacter* pTarget = pActor->Get_Target();
+		pTarget->Look_At_OnLand(pActor->Get_Position_Vector());
+		pTarget->Hitted_Electrocute();
+		m_bFlags[1] = true;
+	}
+
 	if (pActor->Is_Animation_End())
 	{
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);

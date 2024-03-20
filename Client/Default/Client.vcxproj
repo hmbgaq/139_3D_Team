@@ -351,6 +351,7 @@
     <ClInclude Include="..\Public\Infected_Dodge_F_01_TEMP.h" />
     <ClInclude Include="..\Public\Infected_Dodge_L_01_TEMP.h" />
     <ClInclude Include="..\Public\Infected_Dodge_R_01_TEMP.h" />
+    <ClInclude Include="..\Public\Infected_Electrocute_Loop.h" />
     <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h" />
     <ClInclude Include="..\Public\Infected_HitHeavy_BL_01_NEW.h" />
     <ClInclude Include="..\Public\Infected_HitHeavy_BR_01_NEW.h" />
@@ -403,6 +404,8 @@
     <ClInclude Include="..\Public\Infected_Melee_RM_02.h" />
     <ClInclude Include="..\Public\Infected_Melee_RU_01.h" />
     <ClInclude Include="..\Public\Infected_Melee_RU_02.h" />
+    <ClInclude Include="..\Public\Infected_OpenStatePull_F_01.h" />
+    <ClInclude Include="..\Public\Infected_OpenStateTimeout.h" />
     <ClInclude Include="..\Public\Infected_RelaxedIdleAct_01.h" />
     <ClInclude Include="..\Public\Infected_RelaxedIdleAct_02.h" />
     <ClInclude Include="..\Public\Infected_RelaxedIdleAct_03.h" />
@@ -433,6 +436,7 @@
     <ClInclude Include="..\Public\Infected_State_Attack.h" />
     <ClInclude Include="..\Public\Infected_State_Death.h" />
     <ClInclude Include="..\Public\Infected_State_Dodge.h" />
+    <ClInclude Include="..\Public\Infected_State_Electrocute.h" />
     <ClInclude Include="..\Public\Infected_State_Finisher.h" />
     <ClInclude Include="..\Public\Infected_State_Hit.h" />
     <ClInclude Include="..\Public\Infected_State_Idle.h" />
@@ -1270,6 +1274,7 @@
     <ClCompile Include="..\Private\Infected_Dodge_F_01_TEMP.cpp" />
     <ClCompile Include="..\Private\Infected_Dodge_L_01_TEMP.cpp" />
     <ClCompile Include="..\Private\Infected_Dodge_R_01_TEMP.cpp" />
+    <ClCompile Include="..\Private\Infected_Electrocute_Loop.cpp" />
     <ClCompile Include="..\Private\Infected_HitHeavyToStun_01_NEW.cpp" />
     <ClCompile Include="..\Private\Infected_HitHeavy_BL_01_NEW.cpp" />
     <ClCompile Include="..\Private\Infected_HitHeavy_BR_01_NEW.cpp" />
@@ -1322,6 +1327,8 @@
     <ClCompile Include="..\Private\Infected_Melee_RM_02.cpp" />
     <ClCompile Include="..\Private\Infected_Melee_RU_01.cpp" />
     <ClCompile Include="..\Private\Infected_Melee_RU_02.cpp" />
+    <ClCompile Include="..\Private\Infected_OpenStatePull_F_01.cpp" />
+    <ClCompile Include="..\Private\Infected_OpenStateTimeout.cpp" />
     <ClCompile Include="..\Private\Infected_RelaxedIdleAct_01.cpp" />
     <ClCompile Include="..\Private\Infected_RelaxedIdleAct_02.cpp" />
     <ClCompile Include="..\Private\Infected_RelaxedIdleAct_03.cpp" />
@@ -1352,6 +1359,7 @@
     <ClCompile Include="..\Private\Infected_State_Attack.cpp" />
     <ClCompile Include="..\Private\Infected_State_Death.cpp" />
     <ClCompile Include="..\Private\Infected_State_Dodge.cpp" />
+    <ClCompile Include="..\Private\Infected_State_Electrocute.cpp" />
     <ClCompile Include="..\Private\Infected_State_Finisher.cpp" />
     <ClCompile Include="..\Private\Infected_State_Hit.cpp" />
     <ClCompile Include="..\Private\Infected_State_Idle.cpp" />

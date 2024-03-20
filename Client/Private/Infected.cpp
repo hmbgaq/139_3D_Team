@@ -37,6 +37,13 @@
 #include "Infected_DeathHeavy_F_01_NEW.h"
 #include "Infected_SpawnCrawl_01.h"
 
+#include "Infected_Electrocute_Loop.h"
+#include "Infected_HitLightOpened_F_01_NEW.h"
+#include "Infected_HitLightOpened_L_01.h"
+#include "Infected_HitLightOpened_R_01.h"
+#include "Infected_OpenStatePull_F_01.h"
+#include "Infected_OpenStateTimeout.h"
+
 
 CInfected::CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -202,6 +209,16 @@ void CInfected::Hitted_Dead(Power ePower)
 	default:
 		break;
 	}
+}
+
+void CInfected::Hitted_Electrocute()
+{
+	m_pActor->Set_State(new CInfected_Electrocute_Loop());
+}
+
+void CInfected::Hitted_OpenState_Pull()
+{
+	m_pActor->Set_State(new CInfected_OpenStatePull_F_01());
 }
 
 void CInfected::Free()

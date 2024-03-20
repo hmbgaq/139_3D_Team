@@ -96,7 +96,7 @@ CPlayer* CMonster_Character::Set_Finish_Pos(_float3 vPos)
 {
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
-	_float3 vTargetPos = pPlayer->Get_Transform()->Calc_Front_Pos(vPos);
+	_float3 vTargetPos = pPlayer->Calc_Front_Pos(vPos);
 	Set_Position(vTargetPos);
 	m_pTransformCom->Look_At(pPlayer->Get_Transform()->Get_State(CTransform::STATE::STATE_POSITION));
 

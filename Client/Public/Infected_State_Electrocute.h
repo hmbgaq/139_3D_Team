@@ -1,10 +1,9 @@
 #pragma once
-#include "Infected_State_Electrocute.h"
-
+#include "Infected_State_Hit.h"
 
 BEGIN(Client)
 
-class CInfected_HitLightOpened_R_01 : public CInfected_State_Electrocute
+class CInfected_State_Electrocute : public CInfected_State_Hit
 {
 public:
 	virtual void Initialize(CInfected* pActor) override;
@@ -12,7 +11,8 @@ public:
 	virtual void Release(CInfected* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CInfected::Infected_State::Infected_HitLightOpened_R_01;
+	virtual CState<CInfected>* Update_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
+
 
 };
 

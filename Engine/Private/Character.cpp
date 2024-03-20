@@ -83,6 +83,8 @@ void CCharacter::Tick(_float fTimeDelta)
 			Pair.second->Tick(fTimeDelta);
 	}
 
+	Update_ElectrocuteTime(fTimeDelta);
+
 }
 
 void CCharacter::Late_Tick(_float fTimeDelta)
@@ -473,6 +475,11 @@ void CCharacter::Add_Force(_vector In_vDir, _float In_fPower)
 	m_pRigidBody->Add_Force(In_vDir, In_fPower);
 }
 
+void CCharacter::Look_At_OnLand(_fvector vTargetPos)
+{
+	m_pTransformCom->Look_At_OnLand(vTargetPos);
+}
+
 void CCharacter::Look_At_Target()
 {
 	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
@@ -646,16 +653,17 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap
 
 void CCharacter::Dragged(_float fTimeDelta, _float3 vTargetPos)
 {
-	m_pTransformCom->Look_At(vTargetPos);
+	_vector vTargetPosVec = XMVectorSet(vTargetPos.x, vTargetPos.y, vTargetPos.z, 1.f);
+	m_pTransformCom->Look_At_OnLand(vTargetPosVec);
 
 	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 
 	_float fDistance = Calc_Distance(vTargetPos);
 
-	if (0.1f >= fDistance)
+	if (0.3f >= fDistance)
 		return;
 
-	_float3 vPos = { 0.f, 0.f, min(min(fDistance / 3.f, 4.0f), fDistance) };
+	_float3 vPos = { 0.f, 0.f, min(min(fDistance * fTimeDelta * 10, 4.0f), fDistance) };
 
 	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
 
@@ -663,6 +671,10 @@ void CCharacter::Dragged(_float fTimeDelta, _float3 vTargetPos)
 
 }
 
+_float3 CCharacter::Calc_Front_Pos(_float3 vDiff)
+{
+	return m_pTransformCom->Calc_Front_Pos(vDiff);
+}
 
 void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
 {

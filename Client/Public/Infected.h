@@ -67,6 +67,10 @@ protected:
 	virtual void Hitted_Knock(_bool bIsCannonball) override;
 	virtual void Hitted_Dead(Power ePower)	override;
 
+	virtual void Hitted_Electrocute()	override;
+	virtual void Hitted_OpenState_Pull() override;
+
+
 protected:
 	INFECTED_DESC	m_eInfo = {};
 	

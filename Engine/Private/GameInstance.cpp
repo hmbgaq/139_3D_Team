@@ -877,7 +877,8 @@ void CGameInstance::Add_Event(IEvent* pEvent)
 
 void CGameInstance::Clear_Event()
 {
-	m_pEvent_Manager->Clear();
+	if (m_pEvent_Manager)
+		m_pEvent_Manager->Clear();
 }
 
 void CGameInstance::Register_PhysXCollider(CPhysXCollider* pPhysXCollider)
