@@ -335,6 +335,7 @@ void CNavigation::AddCell(CCell* pCell)
 
 	m_Cells.push_back(pCell);
 
+	
 	Make_Neighbors();
 }
 

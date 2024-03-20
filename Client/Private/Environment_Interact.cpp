@@ -275,7 +275,22 @@ void CEnvironment_Interact::Interact()
 					}
 				}
 
-				
+				if (m_tEnvironmentDesc.bUseGravity == false)
+				{
+					m_pPlayer->Set_UseGravity(false);
+				}
+
+				m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
+
+				if (true == m_tEnvironmentDesc.bLevelChange)
+				{
+					if (true == m_pPlayer->Is_Animation_End() && m_pGameInstance->Get_NextLevel() != (_uint)LEVEL_TOOL)
+					{
+						m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
+
+						m_bInteract = true;
+					}
+				}
 			}
 		}
 		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == false)
@@ -327,35 +342,47 @@ void CEnvironment_Interact::Interact()
 						break;
 					}
 						
+
+
 					case CEnvironment_Interact::INTERACT_VAULT200:
 					{
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 						{
 							m_pPlayer->SetState_InteractVault200();
-							m_pPlayer->Set_RootMoveRate(_float3(1.f, 0.5f, 1.f));	// 이런 식으로 루트 모션 비율 조정하면 됨
+							//m_pPlayer->Set_RootMoveRate(_float3(1.f, 0.5f, 1.f));	// 이런 식으로 루트 모션 비율 조정하면 됨
 							
 						}
 
 						break;
 					}
+
 				}
 
-				if (true == m_tEnvironmentDesc.bLevelChange)
+				if (m_tEnvironmentDesc.bUseGravity == false)
 				{
-					if (true == m_pPlayer->Is_Animation_End())
-					{
-						m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
-						m_bInteract = true;
-					}
+					m_pPlayer->Set_UseGravity(false);
 				}
-				else
-				{
-					m_bInteract = true;
-				}
+
+				m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
+
+
+				
+			
+				m_bInteract = true;
+			
 
 			}
 
 			
+		}
+
+		if (true == m_tEnvironmentDesc.bLevelChange && m_bInteract == true)
+		{
+			if (true == m_pPlayer->Is_Animation_End() && m_pGameInstance->Get_NextLevel() != (_uint)LEVEL_TOOL)
+			{
+				m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
+
+			}
 		}
 }
 

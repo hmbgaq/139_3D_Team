@@ -382,9 +382,9 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 {
 	CState<CPlayer>* pState = { nullptr };
 
-	pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
-
+	 pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
+	 if (pState)	return pState;
+	//todo 
 	pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 

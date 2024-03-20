@@ -484,6 +484,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
 		Desc.eInteractState = InteractJson[i]["InteractState"];
 		Desc.eInteractType = InteractJson[i]["InteractType"];
+		Desc.bUseGravity = InteractJson[i]["UseGravity"];
+
+		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
 		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
 
