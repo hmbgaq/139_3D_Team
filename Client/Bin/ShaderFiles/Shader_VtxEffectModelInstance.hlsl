@@ -313,8 +313,8 @@ PS_OUT PS_MAIN(PS_IN In, uniform bool bSolid)
     if (vFinalDiffuse.a <= g_fAlpha_Discard)	// 알파 자르기
 		discard;
 
-    Out.vDiffuse = vFinalDiffuse * g_vColor_Mul; // 색 곱하기
-
+    // 색상 혼합
+    Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul);
 	
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
@@ -514,19 +514,21 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 {
 	PS_OUT Out = (PS_OUT) 0;
 
-	
-	/* Distortion ============================================================ */	
-    float4  vDistortion;
-	float	fPerturb;
-    float2  vDistortedCoord;
-	
+    
 	float4	vFinalDiffuse;
 	float4	vAlphaColor;
 
+    float4  vDistortion;
+    float   fPerturb;
+    float2  vDistortedCoord;
     
+ 
+    // 텍스쿠드
     In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
     In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
 	
+    /* Distortion ============================================================ */	
+    
     vDistortion = Calculation_Distortion(In.vTexUV, In.vTexcoord1, In.vTexcoord2, In.vTexcoord3);
 
 	
@@ -551,7 +553,8 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
     if (vFinalDiffuse.a <= g_fAlpha_Discard) // 알파 잘라내기
         discard;
 	
-    Out.vDiffuse = vFinalDiffuse * g_vColor_Mul;
+     // 색상 혼합
+    Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul);
 	
     
 	/* Dissolve ============================================================== */
@@ -594,7 +597,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 
 
 
-//  PS_MAIN_DISTORTION_DEFERRED =======================================================================================================
+//  PS_MAIN_DISTORTION_DEFERRED ==================================================================================================
 PS_OUT PS_MAIN_DISTORTION_DEFERRED(PS_IN_DISTORTION In)
 {
     PS_OUT Out = (PS_OUT) 0;	
@@ -621,7 +624,7 @@ PS_OUT PS_MAIN_DISTORTION_DEFERRED(PS_IN_DISTORTION In)
       
     return Out;
 }
-//  PS_MAIN_DISTORTION_DEFERRED =======================================================================================================
+//  PS_MAIN_DISTORTION_DEFERRED ==================================================================================================
 
 
 

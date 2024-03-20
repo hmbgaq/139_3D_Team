@@ -216,7 +216,7 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 		// 디퓨즈 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 디퓨즈폴더 -> 피 디퓨즈폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_DIFFUSE])
 		{
-			Remove_Component(TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]));
+			Remove_TextureCom(TEXTURE_DIFFUSE);
 		}
 
 		eTexture = TEXTURE_DIFFUSE;
@@ -227,7 +227,7 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 		// 노말 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 노말폴더 -> 피 노말폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_NORAML])
 		{
-			Remove_Component(TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML]));
+			Remove_TextureCom(TEXTURE_NORAML);
 		}
 		eTexture = TEXTURE_NORAML;
 		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
@@ -237,7 +237,7 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 		// 마스크 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 마스크폴더 -> 연기 마스크폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_MASK])
 		{
-			Remove_Component(TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]));
+			Remove_TextureCom(TEXTURE_MASK);
 		}
 		eTexture = TEXTURE_MASK;
 		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
@@ -247,7 +247,7 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 		// 노이즈 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 노이즈폴더 -> 불 노이즈폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 		{
-			Remove_Component(TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]));
+			Remove_TextureCom(TEXTURE_NOISE);
 		}
 
 		eTexture = TEXTURE_NOISE;
@@ -258,7 +258,7 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 		// 스프라이트 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 스프라이트폴더 -> 연기 스프라이트폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_SPRITE])
 		{
-			Remove_Component(TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE]));
+			Remove_TextureCom(TEXTURE_SPRITE);
 		}
 		eTexture = TEXTURE_SPRITE;
 		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
@@ -290,7 +290,10 @@ HRESULT CEffect_Instance::Remove_TextureCom(TEXTURE eTexture)
 	m_tVoidDesc.strTextureTag[eTexture] = TEXT("");
 	m_tVoidDesc.iTextureIndex[eTexture] = 0;
 
-	return Remove_Component(strTexureComTag, reinterpret_cast<CComponent**>(&m_pTextureCom[eTexture]));
+	Remove_Component(strTexureComTag, reinterpret_cast<CComponent**>(&m_pTextureCom[eTexture]));
+	m_pTextureCom[eTexture] = nullptr;
+
+	return S_OK;
 }
 
 _bool CEffect_Instance::Write_Json(json& Out_Json)

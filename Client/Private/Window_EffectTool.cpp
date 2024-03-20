@@ -1125,7 +1125,7 @@ void CWindow_EffectTool::Update_RectTab()
 				ImGui::CollapsingHeader(" Texture_Rect ");
 				if (m_pCurVoidDesc->bUseSpriteAnim)
 				{
-					// 디퓨즈_스프라이트_파티클 텍스처 ============================================================================================
+					// 디퓨즈_스프라이트_렉트 텍스처 ============================================================================================
 					ImGui::SeparatorText("Diffuse_Sprte_Rect");
 
 					if (ImGui::Button("Sprite_Base_Rect"))	// 베이스 스프라이트로 변경
@@ -1161,7 +1161,7 @@ void CWindow_EffectTool::Update_RectTab()
 				}
 				else
 				{
-					// 디퓨즈_파티클 텍스처 ===============================================================================================
+					// 디퓨즈_렉트 텍스처 ===============================================================================================
 					ImGui::SeparatorText("Diffuse_Rect");
 
 					if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
@@ -1207,6 +1207,12 @@ void CWindow_EffectTool::Update_RectTab()
 					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = 0;	// 텍스처 인덱스 초기화
 					m_iTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 0;
 				}
+
+				if (ImGui::Button(" Remove Mask_Rect "))
+				{
+					dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Remove_TextureCom(CEffect_Void::TEXTURE_MASK);
+				}
+
 
 				if (ImGui::InputInt("Mask_Rect", &m_iTexIndex_Rect[CEffect_Void::TEXTURE_MASK], 1))
 				{
@@ -1698,36 +1704,41 @@ void CWindow_EffectTool::Update_MeshTab()
 				}
 
 
-				/* 디퓨즈에 혼합색상 모드 */
-				ImGui::SeparatorText(" Color Blend ");
-				ImGui::RadioButton(u8"곱하기_Mesh", &m_iColor_Mode_Mesh, 0);
-				ImGui::RadioButton(u8"스크린_Mesh", &m_iColor_Mode_Mesh, 1);
-				ImGui::RadioButton(u8"오버레이_Mesh", &m_iColor_Mode_Mesh, 2);
-				ImGui::RadioButton(u8"더하기_Mesh", &m_iColor_Mode_Mesh, 3);
-				ImGui::RadioButton(u8"번_Mesh", &m_iColor_Mode_Mesh, 4);
-				ImGui::RadioButton(u8"혼합안함_Mesh", &m_iColor_Mode_Mesh, 5);
-				if (0 == m_iColor_Mode_Mesh)
-					m_pCurVoidDesc->eMode_Color = MODE_COLOR::MUL;
-				else if (1 == m_iColor_Mode_Mesh)
-					m_pCurVoidDesc->eMode_Color = MODE_COLOR::SCREEN;
-				else if (2 == m_iColor_Mode_Mesh)
-					m_pCurVoidDesc->eMode_Color = MODE_COLOR::OVERLAY;
-				else if (3 == m_iColor_Mode_Mesh)
-					m_pCurVoidDesc->eMode_Color = MODE_COLOR::ADD;
-				else if (4 == m_iColor_Mode_Mesh)
-					m_pCurVoidDesc->eMode_Color = MODE_COLOR::BURN;
-				else if (5 == m_iColor_Mode_Mesh)
-					m_pCurVoidDesc->eMode_Color = MODE_COLOR::MODE_COLOR_END;
-
-
-				// 디퓨즈에 곱할 색 (색 변경)
-				if (ImGui::ColorEdit4("Color_Mul_Mesh", m_fColor_Mul_Mesh, ImGuiColorEditFlags_None))
+				/* 디퓨즈 색상혼합 모드_Mesh */
+				if (ImGui::CollapsingHeader(" Color Blend_Mesh "))
 				{
-					m_pCurVoidDesc->vColor_Mul.x = m_fColor_Mul_Mesh[0];
-					m_pCurVoidDesc->vColor_Mul.y = m_fColor_Mul_Mesh[1];
-					m_pCurVoidDesc->vColor_Mul.z = m_fColor_Mul_Mesh[2];
-					m_pCurVoidDesc->vColor_Mul.w = m_fColor_Mul_Mesh[3];
+					ImGui::RadioButton(u8"곱하기_Mesh", &m_iColor_Mode_Mesh, 0);
+					ImGui::RadioButton(u8"스크린_Mesh", &m_iColor_Mode_Mesh, 1);
+					ImGui::RadioButton(u8"오버레이_Mesh", &m_iColor_Mode_Mesh, 2);
+					ImGui::RadioButton(u8"더하기_Mesh", &m_iColor_Mode_Mesh, 3);
+					ImGui::RadioButton(u8"번_Mesh", &m_iColor_Mode_Mesh, 4);
+					ImGui::RadioButton(u8"혼합안함_Mesh", &m_iColor_Mode_Mesh, 5);
+					if (0 == m_iColor_Mode_Mesh)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::MUL;
+					else if (1 == m_iColor_Mode_Mesh)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::SCREEN;
+					else if (2 == m_iColor_Mode_Mesh)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::OVERLAY;
+					else if (3 == m_iColor_Mode_Mesh)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::ADD;
+					else if (4 == m_iColor_Mode_Mesh)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::BURN;
+					else if (5 == m_iColor_Mode_Mesh)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::MODE_COLOR_END;
+
+
+					// 디퓨즈에 곱할 색 (색 변경)
+					if (ImGui::ColorEdit4("Color_Mul_Mesh", m_fColor_Mul_Mesh, ImGuiColorEditFlags_None))
+					{
+						m_pCurVoidDesc->vColor_Mul.x = m_fColor_Mul_Mesh[0];
+						m_pCurVoidDesc->vColor_Mul.y = m_fColor_Mul_Mesh[1];
+						m_pCurVoidDesc->vColor_Mul.z = m_fColor_Mul_Mesh[2];
+						m_pCurVoidDesc->vColor_Mul.w = m_fColor_Mul_Mesh[3];
+					}
+
+					ImGui::SeparatorText("");
 				}
+
 				// 디퓨즈_메쉬 텍스처 =====================================================================================================
 
 
@@ -1927,7 +1938,6 @@ void CWindow_EffectTool::Update_MeshTab()
 						m_pMeshBufferDesc->fMorphTimeTerm = m_fMorphTimeTerm;
 
 					}
-
 
 
 					/* 센터 포지션 오프셋 */

@@ -289,7 +289,6 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 	CJson_Utility::Load_Float4(In_Json["vColor_Offset"], m_tVoidDesc.vColor_Offset);
 	CJson_Utility::Load_Float4(In_Json["vColor_Clip"], m_tVoidDesc.vColor_Clip);
 	CJson_Utility::Load_Float4(In_Json["vColor_Mul"], m_tVoidDesc.vColor_Mul);
-
 	if(In_Json.contains("eMode_Color")) //! TODO 다시 저장 후 if문 삭제
 		m_tVoidDesc.eMode_Color = In_Json["eMode_Color"];
 

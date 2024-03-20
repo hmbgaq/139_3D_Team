@@ -71,6 +71,7 @@ void CEffect_Rect::Tick(_float fTimeDelta)
 
 			// 라이프타임 누적 시작
 			m_tVoidDesc.fTimeAcc += fTimeDelta;
+			m_tVoidDesc.fSpriteTimeAcc += fTimeDelta;
 			m_tVoidDesc.fLifeTimeRatio = min(1.0f, m_tVoidDesc.fTimeAcc / m_tVoidDesc.fLifeTime);
 
 			/* ======================= 라이프 타임 동작 시작 ======================= */
@@ -278,53 +279,88 @@ HRESULT CEffect_Rect::Change_TextureCom(wstring strProtoTextureTag)
 	wstring strNoise = TEXT("Noise");
 	wstring strSprite = TEXT("Sprite");
 
+	CEffect_Void::TEXTURE eTexture = TEXTURE_END;
 
 	if (strProtoTextureTag.find(strDiffuse) != string::npos)	// 문자열 찾음
 	{
 		// 디퓨즈 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 디퓨즈폴더 -> 피 디퓨즈폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_DIFFUSE])
 		{
-			Remove_Component(TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
+			Remove_TextureCom(TEXTURE_DIFFUSE);
 		}
+
+		eTexture = TEXTURE_DIFFUSE;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
 	}
 	else if (strProtoTextureTag.find(strNormal) != string::npos)
 	{
 		// 노말 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 노말폴더 -> 피 노말폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_NORAML])
 		{
-			Remove_Component(TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
+			Remove_TextureCom(TEXTURE_NORAML);
 		}
+		eTexture = TEXTURE_NORAML;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
 	}
 	else if (strProtoTextureTag.find(strMask) != string::npos)
 	{
 		// 마스크 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 마스크폴더 -> 연기 마스크폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_MASK])
 		{
-			Remove_Component(TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
+			Remove_TextureCom(TEXTURE_MASK);
 		}
+		eTexture = TEXTURE_MASK;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
 	}
 	else if (strProtoTextureTag.find(strNoise) != string::npos)
 	{
 		// 노이즈 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 노이즈폴더 -> 불 노이즈폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])
 		{
-			Remove_Component(TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
+			Remove_TextureCom(TEXTURE_NOISE);
 		}
+
+		eTexture = TEXTURE_NOISE;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
 	}
 	else if (strProtoTextureTag.find(strSprite) != string::npos)
 	{
 		// 스프라이트 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 스프라이트폴더 -> 연기 스프라이트폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_SPRITE])
 		{
-			Remove_Component(TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+			Remove_TextureCom(TEXTURE_SPRITE);
 		}
+		eTexture = TEXTURE_SPRITE;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 	}
 
+	m_tVoidDesc.strTextureTag[eTexture] = strProtoTextureTag;
+	m_tVoidDesc.iTextureIndex[eTexture] = 0;
+
+	return S_OK;
+}
+
+HRESULT CEffect_Rect::Remove_TextureCom(TEXTURE eTexture)
+{
+	wstring strTexureComTag = TEXT("");
+
+	if (TEXTURE_DIFFUSE == eTexture)
+		strTexureComTag = TEXT("Com_Diffuse");
+	else if (TEXTURE_NORAML)
+		strTexureComTag = TEXT("Com_Normal");
+	else if (TEXTURE_MASK)
+		strTexureComTag = TEXT("Com_Mask");
+	else if (TEXTURE_NOISE)
+		strTexureComTag = TEXT("Com_Noise");
+	else if (TEXTURE_SPRITE)
+		strTexureComTag = TEXT("Com_Sprite");
+
+
+	m_tVoidDesc.strTextureTag[eTexture] = TEXT("");
+	m_tVoidDesc.iTextureIndex[eTexture] = 0;
+
+	Remove_Component(strTexureComTag, reinterpret_cast<CComponent**>(&m_pTextureCom[eTexture]));
+	m_pTextureCom[eTexture] = nullptr;
 
 	return S_OK;
 }
@@ -443,11 +479,11 @@ HRESULT CEffect_Rect::Bind_ShaderResources()
 								, (_float)m_tSpriteDesc.vTileSize.y / m_tSpriteDesc.vTextureSize.y };
 	}
 
-
 	/* UV ============================================================================================ */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
+
 
 	/* Distortion */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float)));
