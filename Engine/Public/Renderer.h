@@ -86,8 +86,9 @@ private:
 	
 public:
 	/* 활성화 */
+	void Set_BloomBlur_Active(_bool _bloom_active) { m_tDeferred_Option.bRimBloom_Blur_Active = _bloom_active; }
+	void Set_Shadow_Active(_bool _Shadow_Active) { m_tDeferred_Option.bShadow_Active = _Shadow_Active; }
 	void Set_HBAO_Active(_bool _HBAO) { m_tHBAO_Option.bHBAO_Active = _HBAO; }
-	void Set_BloomBlur_Active(_bool _bloom_active) { m_tBloomRim_Option.bRimBloom_Blur_Active = _bloom_active; }
 	void Set_Fog_Active(_bool _Fog) { m_tFog_Option.bFog_Active = _Fog; }
 
 	void Set_Radial_Blur_Active(_bool _Radial) { m_tRadial_Option.bRadial_Active = _Radial; }
@@ -97,8 +98,8 @@ public:
 	void Set_HSV_Active(_bool _HSV_active) { m_tHSV_Option.bScreen_Active = _HSV_active; }
 
 	/* 옵션조절 */
+	void Set_Deferred_Option(DEFERRED_DESC desc) { m_tDeferred_Option = desc; }
 	void Set_HBAO_Option(HBAO_PLUS_DESC desc) { m_tHBAO_Option = desc; }
-	void Set_BloomRim_Option(BLOOMRIM_DESC desc) { m_tBloomRim_Option = desc; }
 	void Set_Fog_Option(FOG_DESC desc) { m_tFog_Option = desc; }
 
 	void Set_RadialBlur_Option(RADIAL_DESC desc) { m_tRadial_Option = desc; }
@@ -111,7 +112,7 @@ private:
 	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
 
 	HBAO_PLUS_DESC				m_tHBAO_Option				= {};
-	BLOOMRIM_DESC				m_tBloomRim_Option			= {};
+	DEFERRED_DESC				m_tDeferred_Option			= {};
 	FOG_DESC					m_tFog_Option				= {};
 
 	RADIAL_DESC					m_tRadial_Option			= {};
@@ -161,7 +162,7 @@ private:
 	HRESULT Ready_DebugRender();
 	HRESULT Render_DebugCom();	
 	HRESULT Render_DebugTarget();
-	_bool	m_bDebugRenderTarget	= { false };
+	_bool	m_bDebugRenderTarget	= { true };
 	_bool	m_bDebugCom				= { false };
 	list<class CComponent*>			m_DebugComponent;
 #endif	

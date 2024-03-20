@@ -249,6 +249,7 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
+		cout << "CInfected_Walk_F" << endl;
 		return new CInfected_Walk_F();
 		break;
 
@@ -272,6 +273,7 @@ CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _u
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
+			cout << "CInfected_Run_F" << endl;
 			return new CInfected_Run_F();
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
@@ -299,13 +301,14 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-
-		if (0.f <= fDist && fDist < Info.fAttack_Distance - 1.5f) // 0 ~ 공격사거리 - 0.5
+		/* fDist = 현재 플레이어와의 거리 */
+		if (0.f <= fDist && fDist < Info.fAttack_Distance - 1.5f) // 0 ~ 공격사거리 - 1.5
 		{
+			cout << "제자리 공격 " << endl;
 			switch (iActNumber)
 			{
 			case 1:
-				return new CInfected_Melee_RD_01(); /* 제자리 공격 */
+				return new CInfected_Melee_RD_01();
 				break;
 			case 2:
 				return new CInfected_Melee_RM_01();
@@ -318,19 +321,18 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 				break;
 			}
 		}
-		else if (Info.fAttack_Distance - 2.f <= fDist && fDist <= Info.fAttack_Distance) // 공격사거리 - 0.5 ~ 공격사거리 + 0.5 
+		else if (Info.fAttack_Distance - 1.5f <= fDist && fDist <= Info.fAttack_Distance) // 공격사거리 - 1.5 ~ 공격사거리
 		{
+			cout << "걸어오며 Attack " << endl;
 			switch (iActNumber)
 			{
 			case 1:
 				return new CInfected_MeleeDynamic_RU_01(); /* 걸어가면서 공격 */
 				break;
 			case 2:
-				//return new CInfected_MeleeDynamic_RU_01();
 				return new CInfected_MeleeDynamic_RU_02();
 				break;
 			case 3:
-				//return new CInfected_MeleeDynamic_RU_01();
 				return new CInfected_MeleeDynamic_RU_03();
 				break;
 			default:
@@ -345,12 +347,6 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 	case Client::CInfected::INFECTED_TYPE::INFECTED_WASTER:
 		break;
 	}
-
-	///* 공격 끝나면 뒤로 물러나가야함 */
-	//if (pActor->Is_Animation_End())
-	//{
-	//	return new CInfected_Idle();
-	//}
 
 	return nullptr;
 }
