@@ -86,31 +86,31 @@ float2 RotateTexture(float2 texCoord, float angle)
 }
 
 
-float4 Calculation_ColorBlend(float4 vDiffuse, float4 vBlendColor)
+float4 Calculation_ColorBlend(float4 vDiffuse, float4 vBlendColor, int iColorMode)
 {
     float4 vResault = vDiffuse;
 	
-    if (0 == g_iColorMode)
+    if (0 == iColorMode)
     {
 		// 곱하기
-        vResault = vResault * vBlendColor;		
+        vResault = vResault * vBlendColor;
     }
-    else if (1 == g_iColorMode)
+    else if (1 == iColorMode)
     {
 		// 스크린
-        vResault = 1.f - ((1.f - vResault) * (1.f - vBlendColor));	
+        vResault = 1.f - ((1.f - vResault) * (1.f - vBlendColor));
     }
-    else if (2 == g_iColorMode)
+    else if (2 == iColorMode)
     {
 		// 오버레이
         vResault = max(vResault, vBlendColor);
     }
-    else if (3 == g_iColorMode)
+    else if (3 == iColorMode)
     {
 		// 더하기
         vResault = vResault + vBlendColor;
     }
-    else if (4 == g_iColorMode)
+    else if (4 == iColorMode)
     {
 		// 번(Burn)
         vResault = vResault + vBlendColor - 1.f;
@@ -314,7 +314,7 @@ PS_OUT PS_MAIN(PS_IN In, uniform bool bSolid)
 		discard;
 
     // 색상 혼합
-    Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul);
+    Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul, g_iColorMode);
 	
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
@@ -412,7 +412,7 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In, uniform bool bSolid)
         discard;
 	
   
-    Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul);
+    Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul, g_iColorMode);
  
 	
 	/* Dissolve ============================================================== */
@@ -554,7 +554,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
         discard;
 	
      // 색상 혼합
-    Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul);
+    Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul, g_iColorMode);
 	
     
 	/* Dissolve ============================================================== */

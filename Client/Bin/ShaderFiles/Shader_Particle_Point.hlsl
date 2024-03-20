@@ -17,7 +17,7 @@ float		g_fCamFar;
 
 
 // Sprite ====================
-bool		g_bSprite;
+//bool		g_bSprite;
 float2		g_UVOffset;
 float2		g_UVScale;
 // ===========================
@@ -32,7 +32,7 @@ float3      g_vBlack_Discard;
 
 /* Color */
 int			g_iColorMode;
-float4		g_vColor_Mul;
+//float4		g_vColor_Mul;
 
 
 
@@ -70,6 +70,13 @@ struct EffectDesc
 {
 	float3	g_vDir;
 	float	g_Padding;
+	
+    float4 g_vRight;
+    float4 g_vUp;
+    float4 g_vLook;
+	
+	
+    float4  g_vColors_Mul;
 };
 EffectDesc g_EffectDesc[500];
 
@@ -89,6 +96,15 @@ float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
 	vTexcoord += 0.5f;
 
 	return vTexcoord;
+}
+
+float2 RotateTexture(float2 texCoord, float angle)
+{
+    float2 rotatedTexCoord;
+    rotatedTexCoord.x = texCoord.x * cos(angle) - texCoord.y * sin(angle);
+    rotatedTexCoord.y = texCoord.x * sin(angle) + texCoord.y * cos(angle);
+    
+    return rotatedTexCoord;
 }
 
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
@@ -113,31 +129,31 @@ float4 Calculation_Brightness(float4 Out_Diffuse)
 }
 
 
-float4 Calculation_ColorBlend(float4 vDiffuse, float4 vBlendColor)
+float4 Calculation_ColorBlend(float4 vDiffuse, float4 vBlendColor, int iColorMode)
 {
     float4 vResault = vDiffuse;
 	
-    if (0 == g_iColorMode)
+    if (0 == iColorMode)
     {
 		// 곱하기
         vResault = vResault * vBlendColor;
     }
-    else if (1 == g_iColorMode)
+    else if (1 == iColorMode)
     {
 		// 스크린
         vResault = 1.f - ((1.f - vResault) * (1.f - vBlendColor));
     }
-    else if (2 == g_iColorMode)
+    else if (2 == iColorMode)
     {
 		// 오버레이
         vResault = max(vResault, vBlendColor);
     }
-    else if (3 == g_iColorMode)
+    else if (3 == iColorMode)
     {
 		// 더하기
         vResault = vResault + vBlendColor;
     }
-    else if (4 == g_iColorMode)
+    else if (4 == iColorMode)
     {
 		// 번(Burn)
         vResault = vResault + vBlendColor - 1.f;
@@ -164,6 +180,78 @@ float Calculate_AngleBetweenVectors_Degree(float3 v1, float3 v2)
 	float fDegree = fRadians * (180.0f / 3.14159265358979323846);
 
 	return fDegree;
+}
+
+
+float4 Calculation_Distortion(float2 In_TexUV, float2 In_vTexcoord1, float2 In_vTexcoord2, float2 In_vTexcoord3)
+{
+    float4 vDistortionTex_1;
+    float4 vDistortionTex_2;
+    float4 vDistortionTex_3;
+    
+    float4 vDistortionTex_Final;
+   
+	
+	// 디스토션 텍스쳐의 텍스쿠드를 첫번째 크기 및 윗방향 스크롤 속도 값을 이용하여 계산 x 3
+    // 텍스쿠드에 곱하기는 크기 변화
+    In_vTexcoord1 = (In_TexUV * g_vScales.x);
+    In_vTexcoord2 = (In_TexUV * g_vScales.y);
+    In_vTexcoord3 = (In_TexUV * g_vScales.z);
+    
+    
+    if (0 == g_iScrollType)
+    {
+        // SCROLL_ROW : 가로 스크롤 
+        In_vTexcoord1.x = In_vTexcoord1.x + (g_fFrameTime * g_vScrollSpeeds.x);
+        In_vTexcoord2.x = In_vTexcoord2.x + (g_fFrameTime * g_vScrollSpeeds.y);
+        In_vTexcoord3.x = In_vTexcoord3.x + (g_fFrameTime * g_vScrollSpeeds.z);
+    }
+    else if (1 == g_iScrollType)
+    {
+        // SCROLL_COL : 세로 스크롤      
+        In_vTexcoord1.y = In_vTexcoord1.y + (g_fFrameTime * g_vScrollSpeeds.x);
+        In_vTexcoord2.y = In_vTexcoord2.y + (g_fFrameTime * g_vScrollSpeeds.y);
+        In_vTexcoord3.y = In_vTexcoord3.y + (g_fFrameTime * g_vScrollSpeeds.z);
+    }
+    else if (2 == g_iScrollType)
+    {
+        // SCROLL_BOTH : 가로 + 세로 스크롤
+        In_vTexcoord1 = In_vTexcoord1 + (g_fFrameTime * g_vScrollSpeeds.x);
+        In_vTexcoord2 = In_vTexcoord2 + (g_fFrameTime * g_vScrollSpeeds.y);
+        In_vTexcoord3 = In_vTexcoord3 + (g_fFrameTime * g_vScrollSpeeds.z);
+    }
+    else if (3 == g_iScrollType)
+    {
+        In_vTexcoord1 = RotateTexture(In_vTexcoord1, g_fFrameTime * g_vScrollSpeeds.x);
+        In_vTexcoord2 = RotateTexture(In_vTexcoord2, g_fFrameTime * g_vScrollSpeeds.y);
+        In_vTexcoord3 = RotateTexture(In_vTexcoord3, g_fFrameTime * g_vScrollSpeeds.z);
+    }
+
+
+    // 노이즈 텍스처로 디스토션(왜곡효과)를 만든다.
+	// 셋 다 동일한 노이즈 텍스쳐이지만, 서로 다른 텍스쿠드를 사용하였기에 서로 다른 모양으로 샘플링된다.  
+    vDistortionTex_1 = g_NoiseTexture.Sample(LinearSampler, In_vTexcoord1);
+    vDistortionTex_2 = g_NoiseTexture.Sample(LinearSampler, In_vTexcoord2);
+    vDistortionTex_3 = g_NoiseTexture.Sample(LinearSampler, In_vTexcoord3);
+
+	
+	// 디스토션 값의 범위를 (0, 1)에서 (-1, +1)이 되도록한다.
+    vDistortionTex_1 = (vDistortionTex_1 - 0.5f) * 2.0f;
+    vDistortionTex_2 = (vDistortionTex_2 - 0.5f) * 2.0f;
+    vDistortionTex_3 = (vDistortionTex_3 - 0.5f) * 2.0f;
+
+	
+	// 디스토션의 xy값을 세 개의 서로 다른 왜곡xy좌표로 흩뜨린다.
+    vDistortionTex_1.xy = vDistortionTex_1.xy * g_vDistortion1.xy;
+    vDistortionTex_2.xy = vDistortionTex_2.xy * g_vDistortion2.xy;
+    vDistortionTex_3.xy = vDistortionTex_3.xy * g_vDistortion3.xy;
+
+	
+	// 왜곡된 세 디스토션 값들을 하나의 디스토션으로 합성한다.
+    vDistortionTex_Final = vDistortionTex_1 + vDistortionTex_2 + vDistortionTex_3;
+
+    
+    return vDistortionTex_Final;
 }
 // Custom Function ==============================================================================================================
 
@@ -219,6 +307,8 @@ struct GS_OUT
 	float4		vPosition	: SV_POSITION;
 	float2		vTexcoord	: TEXCOORD0;
 	float4		vColor		: COLOR0;
+	
+    uint		iInstanceID : SV_INSTANCEID;
 };
 
 /* 지오메트리 쉐이더 : 셰이더안에서 정점을 추가적으로 생성해 준다. */
@@ -239,35 +329,61 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 	else
 	{
 		// 이동 진행 방향벡터를 Up으로 한 새로운 Right, Look 정해주기 ===================================
-		vUp = normalize(g_EffectDesc[In[0].iInstanceID].g_vDir).rgb * In[0].vPSize.y * 0.5f;
-		vLook.rgb = normalize(cross(float3(0.f, 1.f, 0.f), vUp));
-		vRight = normalize(cross(vUp, vLook.rgb)) * In[0].vPSize.x * 0.5f;
-		vLook.rgb = normalize(cross(vRight, vUp)); vLook.a = 0.f;
+		//vUp = normalize(g_EffectDesc[In[0].iInstanceID].g_vDir).rgb * In[0].vPSize.y * 0.5f;
+		//vLook.rgb = normalize(cross(float3(0.f, 1.f, 0.f), vUp));
+		//vRight = normalize(cross(vUp, vLook.rgb)) * In[0].vPSize.x * 0.5f;
+		//vLook.rgb = normalize(cross(vRight, vUp)); vLook.a = 0.f;
+		
+		
+        vRight = normalize(g_EffectDesc[In[0].iInstanceID].g_vRight.rgb) * In[0].vPSize.x * 0.5f;
+        vUp = normalize(g_EffectDesc[In[0].iInstanceID].g_vUp.rgb) * In[0].vPSize.y * 0.5f;
+        vLook = normalize(g_EffectDesc[In[0].iInstanceID].g_vLook);
+		
 	}
 
 	matrix		matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
+	// 중앙 원점
+    //Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
+    //Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
+    //Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
+    //Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
+	
+	
 	// 중앙 원점이 아님! (중앙 위로 원점 바꿔서 찍었음!!)
-	//Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
 	Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight, 1.f), matVP);
+	Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight, 1.f), matVP);
+	Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - (vUp * 2), 1.f), matVP);
+	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - (vUp * 2), 1.f), matVP);
+	
+	
+	// 아래로 누움
+    //Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vLook.rgb, 1.f), matVP);
+    //Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vLook.rgb, 1.f), matVP);
+    //Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vLook.rgb, 1.f), matVP);
+    //Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vLook.rgb, 1.f), matVP);
+	
+	
 	Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
 	Out[0].vColor = In[0].vColor;
 
-	//Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
-	Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight, 1.f), matVP);
 	Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_fDegree);
 	Out[1].vColor = In[0].vColor;
 
-	//Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
-	Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - (vUp * 2), 1.f), matVP);
 	Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_fDegree);
 	Out[2].vColor = In[0].vColor;
 
-	//Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
-	Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - (vUp * 2), 1.f), matVP);
 	Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_fDegree);
 	Out[3].vColor = In[0].vColor;
 
+
+	
+	
+    Out[0].iInstanceID = In[0].iInstanceID;
+    Out[1].iInstanceID = In[0].iInstanceID;
+    Out[2].iInstanceID = In[0].iInstanceID;
+    Out[3].iInstanceID = In[0].iInstanceID;
+	
 
 	OutStream.Append(Out[0]);
 	OutStream.Append(Out[1]);
@@ -278,6 +394,7 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 	OutStream.Append(Out[2]);
 	OutStream.Append(Out[3]);
 	OutStream.RestartStrip();
+	
 }
 
 /* 통과된 정점을 대기 .*/
@@ -292,6 +409,8 @@ struct PS_IN
 	float4		vPosition	: SV_POSITION;
 	float2		vTexcoord	: TEXCOORD0;
 	float4		vColor		: COLOR0;
+	
+    uint		iInstanceID : SV_INSTANCEID;
 };
 
 struct PS_OUT
@@ -301,56 +420,44 @@ struct PS_OUT
     float4 vNormal		: SV_TARGET2;	// Normal
     float4 vDepth		: SV_TARGET3;	// Depth
     float4 vRimBloom	: SV_TARGET4;	// RimBloom
+    float4 vDistortion	: SV_TARGET5;
 };
 
 
 /* 픽셀셰이더 : 픽셀의 색!!!! 을 결정한다. */
 PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
 {
-	PS_OUT		Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
 
-	if (g_bSprite)
-	{
-		float2 clippedTexCoord = In.vTexcoord * g_UVScale + g_UVOffset;
-		float4 vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, clippedTexCoord);
+    float4 vFinalDiffuse;
+    float4 vAlphaColor;
+	
+    In.vTexcoord = In.vTexcoord * g_UVScale + g_UVOffset;
+    In.vTexcoord = Rotate_Texcoord(In.vTexcoord, g_fDegree);
+	
+	/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
+    vFinalDiffuse = g_DiffuseTexture.Sample(LinearSampler /*PointSampler*/, In.vTexcoord);
+    vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
 
-		vDiffuseColor.rgb *= In.vColor.rgb;
-
-		if (vDiffuseColor.a < g_fAlpha_Discard	// 알파 잘라내기
-		|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
-			discard;
-
-        Out.vColor = vDiffuseColor * g_vColor_Mul;
-		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
-		// 여기 두줄이 원래 림라이트인데, 노말벡터 없어서 림이 안들어감.. 그 해골 모델이나 이런애들처럼 노말있는애들만 가능할듯..?
-        //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
-        //Out.vDiffuse += vRimColor;
-		
-		// Case1. 기존의 Diffuse로 블러를 먹여서 효과를 준다. 
-        //Out.vRimBloom = Calculation_Brightness(Out.vColor);
-		// Case2. 색상을 아에 넣어버린다 : 이경우 g_RimBloom_Color 라던지 전역변수 받아서 그걸로 해도됨
-        //Out.vRimBloom = float4(0.f, 0.f, 1.f, 1.f);
-    }
-	else
-	{
-		/* 첫번째 인자의 방식으로 두번째 인자의 위치에 있는 픽셀의 색을 얻어온다. */
-		float4 vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-		float4 vAlphaColor = g_MaskTexture.Sample(PointSampler, In.vTexcoord);
-
-		vDiffuseColor.rgb *= In.vColor.rgb;
-		vDiffuseColor.a = In.vColor.a * vAlphaColor;
-
-		if (vDiffuseColor.a < g_fAlpha_Discard	// 알파 잘라내기
-			|| vDiffuseColor.r < g_vBlack_Discard.r && vDiffuseColor.g < g_vBlack_Discard.g && vDiffuseColor.b < g_vBlack_Discard.b)	// 검정색 잘라내기
-			discard;
-
-        Out.vColor = vDiffuseColor /** g_vColor_Mul*/;
-		
-		/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
-       // Out.vRimBloom = Calculation_Brightness(Out.vColor);
-		Out.vRimBloom = float4(g_vBloomPower, 1.0f);
-    }
-
+    vFinalDiffuse.a *= vAlphaColor;
+	
+	
+	/* Discard & Color Mul ==================================================== */
+    if (vFinalDiffuse.a <= g_fAlpha_Discard) // 알파 잘라내기
+        discard;
+	
+	// 검은색(or 특정 걸러) 잘라내기
+    //if (Out.vColor.r <= g_vBlack_Discard.r && Out.vColor.g <= g_vBlack_Discard.g && Out.vColor.b <= g_vBlack_Discard.b)
+    //    discard;
+	
+	// 컬러 혼합
+    Out.vColor = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode);
+	
+	
+	/* ============== 소영 / 수정해도됨! 내가 한건 예시코드임 ! ==============  */ 
+    // Out.vRimBloom = Calculation_Brightness(Out.vColor);
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f);
+  
 	
     if (bSolid)
         Out.vSolid = Out.vColor;

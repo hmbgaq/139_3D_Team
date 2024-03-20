@@ -275,15 +275,15 @@ HRESULT CEffect_Instance::Remove_TextureCom(TEXTURE eTexture)
 {
 	wstring strTexureComTag = TEXT("");
 
-	if(TEXTURE_DIFFUSE == eTexture)
+	if (TEXTURE_DIFFUSE == eTexture)
 		strTexureComTag = TEXT("Com_Diffuse");
-	else if(TEXTURE_NORAML)
+	else if (TEXTURE_NORAML == eTexture)
 		strTexureComTag = TEXT("Com_Normal");
-	else if (TEXTURE_MASK)
+	else if (TEXTURE_MASK == eTexture)
 		strTexureComTag = TEXT("Com_Mask");
-	else if (TEXTURE_NOISE)
+	else if (TEXTURE_NOISE == eTexture)
 		strTexureComTag = TEXT("Com_Noise");
-	else if (TEXTURE_SPRITE)
+	else if (TEXTURE_SPRITE == eTexture)
 		strTexureComTag = TEXT("Com_Sprite");
 
 
@@ -291,7 +291,6 @@ HRESULT CEffect_Instance::Remove_TextureCom(TEXTURE eTexture)
 	m_tVoidDesc.iTextureIndex[eTexture] = 0;
 
 	Remove_Component(strTexureComTag, reinterpret_cast<CComponent**>(&m_pTextureCom[eTexture]));
-	m_pTextureCom[eTexture] = nullptr;
 
 	return S_OK;
 }
@@ -465,6 +464,7 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	/* Color & Discard ===============================================================================*/
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_iColorMode", &m_tVoidDesc.eMode_Color, sizeof(_int)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &m_tVoidDesc.vColor_Mul, sizeof(_float4)));
+
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tVoidDesc.vColor_Clip.w, sizeof(_float)));
 
 	_float3 vBlack_Discard = _float3(m_tVoidDesc.vColor_Clip.x, m_tVoidDesc.vColor_Clip.y, m_tVoidDesc.vColor_Clip.z);

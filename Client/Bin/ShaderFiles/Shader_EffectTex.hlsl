@@ -23,7 +23,6 @@ float		g_fCamFar;
 
 
 // Sprite ====================
-bool	g_bSprite;
 float2	g_UVOffset;
 float2	g_UVScale;
 // ===========================
@@ -93,31 +92,31 @@ float2 RotateTexture(float2 texCoord, float angle)
 }
 
 
-float4 Calculation_ColorBlend(float4 vDiffuse, float4 vBlendColor)
+float4 Calculation_ColorBlend(float4 vDiffuse, float4 vBlendColor, int iColorMode)
 {
     float4 vResault = vDiffuse;
 	
-    if (0 == g_iColorMode)
+    if (0 == iColorMode)
     {
 		// 곱하기
         vResault = vResault * vBlendColor;
     }
-    else if (1 == g_iColorMode)
+    else if (1 == iColorMode)
     {
 		// 스크린
         vResault = 1.f - ((1.f - vResault) * (1.f - vBlendColor));
     }
-    else if (2 == g_iColorMode)
+    else if (2 == iColorMode)
     {
 		// 오버레이
         vResault = max(vResault, vBlendColor);
     }
-    else if (3 == g_iColorMode)
+    else if (3 == iColorMode)
     {
 		// 더하기
         vResault = vResault + vBlendColor;
     }
-    else if (4 == g_iColorMode)
+    else if (4 == iColorMode)
     {
 		// 번(Burn)
         vResault = vResault + vBlendColor - 1.f;
@@ -317,7 +316,7 @@ PS_OUT PS_MAIN_EFFECT(PS_IN In, uniform bool bSolid)
     //    discard;
 	
 	// 컬러 혼합
-    Out.vColor = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul);
+    Out.vColor = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul, g_iColorMode);
 	
 	
 	/* ---------------- Rim Bloom ---------------- :  */	
@@ -437,7 +436,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
         discard;
 	
      // 색상 혼합
-    Out.vColor = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul);
+    Out.vColor = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul, g_iColorMode);
 
 		
     /* RimBloom ================================================================ */
@@ -485,6 +484,7 @@ PS_OUT PS_MAIN_DISTORTION_POST(PS_IN_DISTORTION In)
 //  DISTORTION_POST =============================================================================================================
 
 
+
 // MAIN_WIREFRAME ===============================================================================================================
 PS_OUT PS_MAIN_WIREFRAME(PS_IN In)
 {
@@ -498,7 +498,7 @@ PS_OUT PS_MAIN_WIREFRAME(PS_IN In)
     vFinalDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
 	
 	
-    Out.vColor = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul);
+    Out.vColor = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul, g_iColorMode);
 
 	return Out;
 }

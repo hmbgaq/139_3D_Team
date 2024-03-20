@@ -51,8 +51,11 @@ public:
 	//PARTICLE_DESC* Get_Desc() { return &m_tParticleDesc; }
 	UVSPRITE_DESC* Get_Sprite_Desc() { return &m_tSpriteDesc; }
 
+
+// 툴 용
 public:
-	HRESULT			Change_TextureCom(wstring strProtoTextureTag);	// 툴 용
+	HRESULT			Change_TextureCom(wstring strProtoTextureTag);
+	HRESULT			Remove_TextureCom(TEXTURE eTexture);
 
 
 public:

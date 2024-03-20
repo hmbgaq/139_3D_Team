@@ -386,18 +386,14 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (ImGui::Button("Sprite_Base"))	// 베이스 스프라이트로 변경
 					{
 						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Sprite"));
-						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
 						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 20;
-						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = 0;	// 텍스처 인덱스 초기화
 						m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
 					}
 					ImGui::SameLine();
 					if (ImGui::Button("Sprite_Smokes"))	// 스모크 스프라이트로 변경
 					{
 						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Sprite_Smokes"));
-						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite_Smokes");
 						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 30;
-						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = 0;	// 텍스처 인덱스 초기화
 						m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
 					}
 
@@ -448,18 +444,14 @@ void CWindow_EffectTool::Update_ParticleTab()
 				if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
 				{
 					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
 					m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 44;
-					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = 0;	// 텍스처 인덱스 초기화
 					m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 
 				}ImGui::SameLine();
 				if (ImGui::Button("Mask_Waves"))	// 웨이브 마스크로 변경
 				{
 					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask_Waves"));
-					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask_Waves");
 					m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 5;
-					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK] = 0;	// 텍스처 인덱스 초기화
 					m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 				}
 
@@ -480,9 +472,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 				if (ImGui::Button("Noise_Base"))	// 베이스 노이즈로 변경
 				{
 					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Noise"));
-					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
 					m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = 22;
-					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = 0;	// 텍스처 인덱스 초기화
 					m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = 0;
 				}
 
@@ -499,14 +489,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 #pragma endregion
 
-				/* 쉐이더에 던질 곱하기 컬러 값_파티클 */
-				if (ImGui::ColorEdit4("Color_Mul_Particle", m_fColor_Mul_Particle, ImGuiColorEditFlags_None))
-				{
-					m_pCurVoidDesc->vColor_Mul.x = m_fColor_Mul_Particle[0];
-					m_pCurVoidDesc->vColor_Mul.y = m_fColor_Mul_Particle[1];
-					m_pCurVoidDesc->vColor_Mul.z = m_fColor_Mul_Particle[2];
-					m_pCurVoidDesc->vColor_Mul.w = m_fColor_Mul_Particle[3];
-				}
 
 
 				/* 빌보드 키고 끄기 */
@@ -517,6 +499,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pCurVoidDesc->bBillBoard = TRUE;
 				else if (1 == m_iBillBoard)
 					m_pCurVoidDesc->bBillBoard = FALSE;
+
 
 
 #pragma region 스프라이트 설정_파티클
@@ -976,85 +959,111 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 				/* 색 변경 */
-				ImGui::CollapsingHeader(" Color_Particle ");
-
-				/* 입자마다 다른 주기로 색 변경 키고 끄기 */
-				ImGui::RadioButton(" ON   Dynamic_Color_Particle ", &m_iDynamic_Color_Particle, 0);  ImGui::SameLine();
-				ImGui::RadioButton(" OFF  Dynamic_Color_Particle ", &m_iDynamic_Color_Particle, 1);
-				if (0 == m_iDynamic_Color_Particle)
-				{
-					m_pParticleBufferDesc->bDynamic_Color = TRUE;
-				}
-				else if (1 == m_iDynamic_Color_Particle)
+				if (ImGui::CollapsingHeader(" Color_Particle "))
 				{
 
-					m_pParticleBufferDesc->bDynamic_Color = FALSE;
+					/* 디퓨즈 색상혼합 모드_Particle */
+					ImGui::RadioButton(u8"곱하기_Particle", &m_iColor_Mode_Particle, 0);
+					ImGui::RadioButton(u8"스크린_Particle", &m_iColor_Mode_Particle, 1);
+					ImGui::RadioButton(u8"오버레이_Particle", &m_iColor_Mode_Particle, 2);
+					ImGui::RadioButton(u8"더하기_Particle", &m_iColor_Mode_Particle, 3);
+					ImGui::RadioButton(u8"번_Particle", &m_iColor_Mode_Particle, 4);
+					ImGui::RadioButton(u8"혼합안함_Particle", &m_iColor_Mode_Particle, 5);
+					if (0 == m_iColor_Mode_Particle)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::MUL;
+					else if (1 == m_iColor_Mode_Particle)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::SCREEN;
+					else if (2 == m_iColor_Mode_Particle)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::OVERLAY;
+					else if (3 == m_iColor_Mode_Particle)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::ADD;
+					else if (4 == m_iColor_Mode_Particle)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::BURN;
+					else if (5 == m_iColor_Mode_Particle)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::MODE_COLOR_END;
+
+
+					/* 입자마다 다른 주기로 색 변경 키고 끄기 */
+					ImGui::RadioButton(" ON   Dynamic_Color_Particle ", &m_iDynamic_Color_Particle, 0);  ImGui::SameLine();
+					ImGui::RadioButton(" OFF  Dynamic_Color_Particle ", &m_iDynamic_Color_Particle, 1);
+					if (0 == m_iDynamic_Color_Particle)
+					{
+						m_pParticleBufferDesc->bDynamic_Color = TRUE;
+					}
+					else if (1 == m_iDynamic_Color_Particle)
+					{
+
+						m_pParticleBufferDesc->bDynamic_Color = FALSE;
+					}
+
+					/* Min 색 설정_파티클 */
+					if (ImGui::ColorEdit4("Min_Color_Particle", m_fColor_Min_Particle, ImGuiColorEditFlags_None))
+					{
+						m_pParticleBufferDesc->vMinMaxRed.x = m_fColor_Min_Particle[0];
+						m_pParticleBufferDesc->vMinMaxGreen.x = m_fColor_Min_Particle[1];
+						m_pParticleBufferDesc->vMinMaxBlue.x = m_fColor_Min_Particle[2];
+						m_pParticleBufferDesc->vMinMaxAlpha.x = m_fColor_Min_Particle[3];
+					}
+
+					/* Max 색 설정_파티클 */
+					if (ImGui::ColorEdit4("Max_Color_Particle", m_fColor_Max_Particle, ImGuiColorEditFlags_None))
+					{
+						m_pParticleBufferDesc->vMinMaxRed.y = m_fColor_Max_Particle[0];
+						m_pParticleBufferDesc->vMinMaxGreen.y = m_fColor_Max_Particle[1];
+						m_pParticleBufferDesc->vMinMaxBlue.y = m_fColor_Max_Particle[2];
+						m_pParticleBufferDesc->vMinMaxAlpha.y = m_fColor_Max_Particle[3];
+					}
+
+					if (1 == m_iDynamic_Color_Particle) // 입자 색 일괄변경이면 현재 색 변화 보여주기
+					{
+						ImGui::ColorEdit4("Cur_Color_Particle", m_fColor_Cur_Particle, ImGuiColorEditFlags_None);
+						m_fColor_Cur_Particle[0] = m_pParticleBufferDesc->vCurrentColor.x;
+						m_fColor_Cur_Particle[1] = m_pParticleBufferDesc->vCurrentColor.y;
+						m_fColor_Cur_Particle[2] = m_pParticleBufferDesc->vCurrentColor.z;
+						m_fColor_Cur_Particle[3] = m_pParticleBufferDesc->vCurrentColor.w;
+					}
+
+
+					ImGui::SeparatorText("Color_Easing");
+					Select_EasingType(&m_pParticleBufferDesc->eType_ColorLerp);
+
+
+					ImGui::SeparatorText("");
 				}
 
-				/* Min 색 설정_파티클 */
-				if (ImGui::ColorEdit4("Min_Color_Particle", m_fColor_Min_Particle, ImGuiColorEditFlags_None))
-				{
-					m_pParticleBufferDesc->vMinMaxRed.x = m_fColor_Min_Particle[0];
-					m_pParticleBufferDesc->vMinMaxGreen.x = m_fColor_Min_Particle[1];
-					m_pParticleBufferDesc->vMinMaxBlue.x = m_fColor_Min_Particle[2];
-					m_pParticleBufferDesc->vMinMaxAlpha.x = m_fColor_Min_Particle[3];
-				}
 
-				/* Max 색 설정_파티클 */
-				if (ImGui::ColorEdit4("Max_Color_Particle", m_fColor_Max_Particle, ImGuiColorEditFlags_None))
-				{
-					m_pParticleBufferDesc->vMinMaxRed.y = m_fColor_Max_Particle[0];
-					m_pParticleBufferDesc->vMinMaxGreen.y = m_fColor_Max_Particle[1];
-					m_pParticleBufferDesc->vMinMaxBlue.y = m_fColor_Max_Particle[2];
-					m_pParticleBufferDesc->vMinMaxAlpha.y = m_fColor_Max_Particle[3];
-				}
-
-				if (1 == m_iDynamic_Color_Particle) // 입자 색 일괄변경이면 현재 색 변화 보여주기
-				{
-					ImGui::ColorEdit4("Cur_Color_Particle", m_fColor_Cur_Particle, ImGuiColorEditFlags_None);
-					m_fColor_Cur_Particle[0] = m_pParticleBufferDesc->vCurrentColor.x;
-					m_fColor_Cur_Particle[1] = m_pParticleBufferDesc->vCurrentColor.y;
-					m_fColor_Cur_Particle[2] = m_pParticleBufferDesc->vCurrentColor.z;
-					m_fColor_Cur_Particle[3] = m_pParticleBufferDesc->vCurrentColor.w;
-				}
-
-				ImGui::SeparatorText("Color_Easing");
-				Select_EasingType(&m_pParticleBufferDesc->eType_ColorLerp);
 
 #pragma endregion 색 변경_파티클 끝
 
-				//if (CVIBuffer_Particle_Point::TYPE_ACTION::SPHERE == m_pParticlePointDesc->eType_Action)
-				//{
-				//	if (ImGui::DragFloat2("MinMaxLength", m_vMinMaxLengthPosition, 1.f, 0.1f, 360.f))
-				//	{
-				//		m_pParticlePointDesc->vMinMaxRangeLength.x = m_vMinMaxLengthPosition[0];
-				//		m_pParticlePointDesc->vMinMaxRangeLength.y = m_vMinMaxLengthPosition[1];
-				//	}		
-				//}
+
+
+				/* 텍스처 UV회전_파티클 */
+				if (ImGui::CollapsingHeader("UV Option_Particle"))
+				{
+
+					if (ImGui::DragFloat2(" UV_Offset_Particle ", m_vUV_Offset_Particle, 1.f, 0.f, 100.f))
+					{
+						m_pCurVoidDesc->vUV_Offset.x = m_vUV_Offset_Particle[0];
+						m_pCurVoidDesc->vUV_Offset.y = m_vUV_Offset_Particle[1];
+					}ImGui::SameLine();
+					HelpMarker(u8"UV 이동");
+
+					if (ImGui::DragFloat2(" UV_Scale_Particle ", m_vUV_Scale_Particle, 1.f, 0.f, 100.f))
+					{
+						m_pCurVoidDesc->vUV_Scale.x = m_vUV_Scale_Particle[0];
+						m_pCurVoidDesc->vUV_Scale.y = m_vUV_Scale_Particle[1];
+					}ImGui::SameLine();
+					HelpMarker(u8"UV 크기(타일링)");
+
+
+					if (ImGui::DragFloat(" UV Degree_Particle ", &m_fUV_RotDegree_Particle, 1.f, 0.f, 360.f))
+						m_pCurVoidDesc->fUV_RotDegree = m_fUV_RotDegree_Particle;
+
+
+					ImGui::SeparatorText("");
+				}
 
 				
-				///* 재생, 역재생 */
-				//ImGui::SeparatorText(" Play Type ");
-				//if (ImGui::Button(" Normal "))
-				//{
-				//	m_pParticlePointDesc->bReverse = FALSE;
-				//}
-
-				//ImGui::SameLine();
-				//if (ImGui::Button(" Reverse "))
-				//{
-				//	m_pParticlePointDesc->bReverse = TRUE;
-				//}
-				//ImGui::SameLine(); HelpMarker(u8"재생, 역재생");
-
-
-
-				/* 텍스처 UV회전 */
-				ImGui::SeparatorText("");
-				if (ImGui::DragFloat(" Uv Degree ", &m_fUV_RotDegree, 1.f, 0.f, 360.f))
-					m_pCurVoidDesc->fUV_RotDegree = m_fUV_RotDegree;
-
-
 
 				/* 림라이트 색 변경_파티클 */
 				ImGui::SeparatorText("");
@@ -1187,7 +1196,7 @@ void CWindow_EffectTool::Update_RectTab()
 				}
 
 
-				// 마스크_파티클 텍스처 =====================================================================================================
+				// 마스크_렉트 텍스처 =====================================================================================================
 				ImGui::SeparatorText("Mask_Rect");
 
 				if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
@@ -1226,17 +1235,21 @@ void CWindow_EffectTool::Update_RectTab()
 				}
 
 
-				// 노이즈_파티클 텍스처 =====================================================================================================
+				// 노이즈_렉트 텍스처 =====================================================================================================
 				ImGui::SeparatorText("Noise_Rect");
 				if (ImGui::Button("Noise_Base"))	// 베이스 노이즈로 변경
 				{
 					dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Noise"));
-					m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_NOISE] = TEXT("Prototype_Component_Texture_Effect_Noise");
 					m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_NOISE] = 22;
-					m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE] = 0;	// 텍스처 인덱스 초기화
 					m_iTexIndex_Rect[CEffect_Void::TEXTURE_NOISE] = 0;
 				}
-
+				ImGui::SameLine();
+				if (ImGui::Button("Noise_Lens"))	// 렌즈 노이즈로 변경
+				{
+					dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Noise_Lens"));
+					m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_NOISE] = 0;
+					m_iTexIndex_Rect[CEffect_Void::TEXTURE_NOISE] = 0;
+				}
 
 				if (ImGui::InputInt("Noise_Rect", &m_iTexIndex_Rect[CEffect_Void::TEXTURE_NOISE], 1))
 				{
@@ -2620,6 +2633,21 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			}
 
 
+			/* 컬러 블렌딩 모드 업데이트 */
+			if (MODE_COLOR::MUL == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Particle = 0;
+			else if (MODE_COLOR::SCREEN == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Particle = 1;
+			else if (MODE_COLOR::OVERLAY == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Particle = 2;
+			else if (MODE_COLOR::ADD == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Particle = 3;
+			else if (MODE_COLOR::BURN == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Particle = 4;
+			else if (MODE_COLOR::MODE_COLOR_END == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Particle = 5;
+
+
 			/* 쉐이더에 던져져서 곱해질 색상 값_파티클  */
 			m_fColor_Mul_Particle[0] = m_pCurVoidDesc->vColor_Mul.x;
 			m_fColor_Mul_Particle[1] = m_pCurVoidDesc->vColor_Mul.y;
@@ -2634,8 +2662,14 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vColor_Clip_Part[3] = m_pCurVoidDesc->vColor_Clip.w;
 
 			
-			/* UV회전 */
-			m_fUV_RotDegree = m_pCurVoidDesc->fUV_RotDegree;
+			/* UV 옵션 */
+			m_vUV_Offset_Particle[0] = m_pCurVoidDesc->vUV_Offset.x;
+			m_vUV_Offset_Particle[1] = m_pCurVoidDesc->vUV_Offset.y;
+
+			m_vUV_Scale_Particle[0] = m_pCurVoidDesc->vUV_Scale.x;
+			m_vUV_Scale_Particle[1] = m_pCurVoidDesc->vUV_Scale.y;
+
+			m_fUV_RotDegree_Particle = m_pCurVoidDesc->fUV_RotDegree;
 
 
 
@@ -4174,6 +4208,7 @@ HRESULT CWindow_EffectTool::Create_EffectObject(const wstring& strLayerTag, CGam
 
 	_int iMaxNum = -1;
 	wstring strPin = TEXT("");
+
 
 	for (auto& iter : m_pEffects)
 	{

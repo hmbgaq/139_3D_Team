@@ -163,7 +163,7 @@ private:
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
-	_int m_iMaxShaderPassIndex_Mesh							= { 5 };
+	_int m_iMaxShaderPassIndex_Mesh							= { 6 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
 	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 12, 0, 44, 24, 20 };
 
@@ -242,10 +242,10 @@ private:
 
 
 	/* For.Scale */
-	_float		m_vLerpScale_Pos_Particle[2] = { 0.f, 1.f };
-	_float		m_vMinMaxWidth_Particle[2] = { 0.f, 1.f };
-	_float		m_vMinMaxHeight_Particle[2] = { 0.f, 1.f };
-	_float		m_vScaleSpeed_Particle[2] = { 0.005f, 0.05f };
+	_float	m_vLerpScale_Pos_Particle[2]	= { 0.f, 1.f };
+	_float	m_vMinMaxWidth_Particle[2]		= { 0.f, 1.f };
+	_float	m_vMinMaxHeight_Particle[2]		= { 0.f, 1.f };
+	_float	m_vScaleSpeed_Particle[2]		= { 0.005f, 0.05f };
 
 	/* For.Color */
 	_int	m_iDynamic_Color_Particle = { 0 };
@@ -253,10 +253,14 @@ private:
 	_float	m_fColor_Max_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_fColor_Cur_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 
+	_int	m_iColor_Mode_Particle = { 0 };
 	_float	m_fColor_Mul_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 
 
-	_float	m_fUV_RotDegree				= { 0.f };	// UV회전
+	/* UV Option_Particle */
+	_float  m_vUV_Offset_Particle[2]	= { 0.f, 0.f };
+	_float  m_vUV_Scale_Particle[2]		= { 1.f, 1.f };
+	_float	m_fUV_RotDegree_Particle	= { 0.f };			// UV회전
 
 	_float	m_fAddScale					= { 0.f };
 	_float	m_vAddScale[2]				= { 0.f, 0.f };

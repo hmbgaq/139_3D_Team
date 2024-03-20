@@ -346,13 +346,13 @@ HRESULT CEffect_Rect::Remove_TextureCom(TEXTURE eTexture)
 
 	if (TEXTURE_DIFFUSE == eTexture)
 		strTexureComTag = TEXT("Com_Diffuse");
-	else if (TEXTURE_NORAML)
+	else if (TEXTURE_NORAML == eTexture)
 		strTexureComTag = TEXT("Com_Normal");
-	else if (TEXTURE_MASK)
+	else if (TEXTURE_MASK == eTexture)
 		strTexureComTag = TEXT("Com_Mask");
-	else if (TEXTURE_NOISE)
+	else if (TEXTURE_NOISE == eTexture)
 		strTexureComTag = TEXT("Com_Noise");
-	else if (TEXTURE_SPRITE)
+	else if (TEXTURE_SPRITE == eTexture)
 		strTexureComTag = TEXT("Com_Sprite");
 
 
@@ -360,7 +360,6 @@ HRESULT CEffect_Rect::Remove_TextureCom(TEXTURE eTexture)
 	m_tVoidDesc.iTextureIndex[eTexture] = 0;
 
 	Remove_Component(strTexureComTag, reinterpret_cast<CComponent**>(&m_pTextureCom[eTexture]));
-	m_pTextureCom[eTexture] = nullptr;
 
 	return S_OK;
 }

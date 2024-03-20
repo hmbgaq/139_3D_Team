@@ -53,6 +53,8 @@ public:
 
 
 		/* For.Rotation */
+		_float3		fRadian = { 90.f, 0.f, 0.f };
+
 		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetY = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetZ = { 0.0f, 360.f };
@@ -126,7 +128,7 @@ public:
 		// 크기
 		_float2	vCurScales	= { 1.f, 1.f };
 		_float2	vMaxScales = { 1.f, 1.f };
-
+		
 		// 색
 		_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f };
 
@@ -146,6 +148,14 @@ public:
 		// 업데이트 돌면서 변하는 정보들(저장X)
 		_float3	vDir	= { 1.f, 0.f, 0.f };
 		_float	Padding = { 0.f };
+
+
+		_float4 vRight = { 1.f, 0.f, 0.f, 0.f };
+		_float4 vUp = { 0.f, 1.f, 0.f, 0.f };
+		_float4 vLook = { 0.f, 0.f, 1.f, 0.f };
+
+
+		_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f };
 
 
 	} PARTICLE_SHADER_INFO_DESC;
@@ -190,7 +200,8 @@ public:
 
 public:
 	_float4 Make_Dir(_uint iNum);
-
+	void	Rotation_Instance(_uint iNum);
+	void	Update_Spark_Rotation(_uint iNum);
 
 	/* For.RigidBody */
 public:

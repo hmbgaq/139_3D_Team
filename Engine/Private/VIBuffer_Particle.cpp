@@ -206,9 +206,17 @@ HRESULT CVIBuffer_Particle::Init_Instance(_int iNumInstance)
 		//pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f);
 
 
-		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
-		pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
-		pVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+		// 현재 크기 초기화
+		m_tBufferDesc.vCurScale.x = m_tBufferDesc.vMinMaxWidth.x;
+		m_tBufferDesc.vCurScale.y = m_tBufferDesc.vMinMaxHeight.x;
+
+		Rotation_Instance(i);	// 점 자체 회전
+
+		// 쉐이더에 던질 라업룩 값으로 초기화
+		pVertices[i].vRight = m_vecParticleShaderInfoDesc[i].vRight;
+		pVertices[i].vUp	= m_vecParticleShaderInfoDesc[i].vUp;
+		pVertices[i].vLook	= m_vecParticleShaderInfoDesc[i].vLook;
+
 
 		if (m_tBufferDesc.bUseRigidBody)	// 리지드바디 사용이면
 		{
@@ -221,6 +229,10 @@ HRESULT CVIBuffer_Particle::Init_Instance(_int iNumInstance)
 
 			_vector		vDir = Make_Dir(i);						// 방향 만들기
 			m_vecParticleShaderInfoDesc[i].vDir = vDir;			// 쉐이더에 전달할 방향 저장
+			if (SPARK == m_tBufferDesc.eType_Action)
+			{
+				Update_Spark_Rotation(i);
+			}
 
 			if (m_tBufferDesc.bReverse)
 			{
@@ -277,9 +289,20 @@ void CVIBuffer_Particle::ReSet()
 		//pVertices[i].vColor.w = 1.f;
 		
 
-		pVertices[i].vRight		= _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxWidth.x;
-		pVertices[i].vUp		= _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vMinMaxHeight.x;
-		pVertices[i].vLook		= _float4(0.f, 0.f, 1.f, 0.f);
+		// 현재 크기 초기화
+		m_tBufferDesc.vCurScale.x = m_tBufferDesc.vMinMaxWidth.x;
+		m_tBufferDesc.vCurScale.y = m_tBufferDesc.vMinMaxHeight.x;
+
+
+		//if(분기 나누기)
+		Rotation_Instance(i);	// 점 자체 회전
+
+		// 쉐이더에 던질 라업룩 값으로 초기화
+		pVertices[i].vRight = m_vecParticleShaderInfoDesc[i].vRight;
+		pVertices[i].vUp = m_vecParticleShaderInfoDesc[i].vUp;
+		pVertices[i].vLook = m_vecParticleShaderInfoDesc[i].vLook;
+
+
 
 		if (m_tBufferDesc.bUseRigidBody)	// 리지드바디 사용이면
 		{
@@ -292,6 +315,10 @@ void CVIBuffer_Particle::ReSet()
 
 			_vector		vDir = Make_Dir(i);						// 방향 만들기
 			m_vecParticleShaderInfoDesc[i].vDir = vDir;			// 쉐이더에 전달할 방향 저장
+			if (SPARK == m_tBufferDesc.eType_Action)
+			{
+				Update_Spark_Rotation(i);
+			}
 
 			if (m_tBufferDesc.bReverse)
 			{
@@ -387,6 +414,42 @@ _float4 CVIBuffer_Particle::Make_Dir(_uint iNum)
 }
 
 
+void CVIBuffer_Particle::Rotation_Instance(_uint iNum)
+{
+	_vector		vRight		= XMVectorSet(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.x;
+	_vector		vUp			= XMVectorSet(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.y;
+	_vector		vLook		= XMVectorSet(0.f, 0.f, 1.f, 0.f);
+
+
+	_vector		vRotation = XMQuaternionRotationRollPitchYaw( XMConvertToRadians(m_tBufferDesc.fRadian.x)
+															, XMConvertToRadians(m_tBufferDesc.fRadian.y)
+															, XMConvertToRadians(m_tBufferDesc.fRadian.z));
+
+	_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
+
+
+	// 쉐이더에 던질 값(라업룩) 저장 
+	m_vecParticleShaderInfoDesc[iNum].vRight	= XMVector3TransformNormal(vRight, RotationMatrix);
+	m_vecParticleShaderInfoDesc[iNum].vUp		= XMVector3TransformNormal(vUp, RotationMatrix);
+	m_vecParticleShaderInfoDesc[iNum].vLook		= XMVector3TransformNormal(vLook, RotationMatrix);
+
+
+}
+
+void CVIBuffer_Particle::Update_Spark_Rotation(_uint iNum)
+{
+	_vector		vRight, vUp, vLook;
+
+	vUp		= XMVector4Normalize(m_vecParticleShaderInfoDesc[iNum].vDir) * m_tBufferDesc.vCurScale.y;
+	vLook	= XMVector4Normalize(XMVector3Cross(float4(0.f, 1.f, 0.f, 0.f), vUp));
+	vRight	= XMVector4Normalize(XMVector3Cross(vUp, vLook)) * m_tBufferDesc.vCurScale.x;
+	vLook	= XMVector4Normalize(XMVector3Cross(vRight, vUp));
+
+	m_vecParticleShaderInfoDesc[iNum].vRight = vRight;
+	m_vecParticleShaderInfoDesc[iNum].vUp = vUp;
+	m_vecParticleShaderInfoDesc[iNum].vLook = vLook;
+}
+
 
 void CVIBuffer_Particle::Update(_float fTimeDelta)
 {
@@ -479,6 +542,10 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 					}
 				}
 
+				if (SPARK == m_tBufferDesc.eType_Action)
+				{
+					Update_Spark_Rotation(i);
+				}
 			}
 
 		}
@@ -492,6 +559,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 				// 이동 :: 현재 포지션 + (입자들의 방향 * (현재 스피드 * 타임델타))
 				_vector vMovePos = XMLoadFloat4(&pVertices[i].vPosition) + m_vecParticleShaderInfoDesc[i].vDir * (m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta);
 				XMStoreFloat4(&pVertices[i].vPosition, vMovePos);
+
 
 				// 초기화 조건		
 				_vector vCurPos = XMLoadFloat4(&pVertices[i].vPosition);
@@ -568,52 +636,52 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 
 #pragma region 크기 변경 시작
-			if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.x)		// 0~1로 보간한 라이프타임이 크기 증가를 시작할 타임 포지션을 넘어가면
+		if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.x)		// 0~1로 보간한 라이프타임이 크기 증가를 시작할 타임 포지션을 넘어가면
+		{
+			if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.y) // 0~1로 보간한 라이프타임이 크기 감소를 시작할 타임 포지션도 넘어가면 감소 시작
 			{
-				if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vLerpScale_Pos.y) // 0~1로 보간한 라이프타임이 크기 감소를 시작할 타임 포지션도 넘어가면 감소 시작
-				{
-					// 크기 감소를 시작할 타임 포지션 (크기 0이 목표)
+				// 크기 감소를 시작할 타임 포지션 (크기 0이 목표)
 
-					_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * (1.f - m_tBufferDesc.vLerpScale_Pos.y);	// 라이프 타임 중, 감소에만 필요한 토탈시간 계산
-					if (m_tBufferDesc.fDownScaleTimeAcc >= fTotalTime)
-					{
-						m_tBufferDesc.fDownScaleTimeAcc = fTotalTime;
-						m_tBufferDesc.vCurScale.x = 0.f;
-						m_tBufferDesc.vCurScale.y = 0.f;
-					}
-					else
-					{
-						m_tBufferDesc.fDownScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.y);	// 시간 누적	
-						m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.x, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-						m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.y, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-					}
+				_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * (1.f - m_tBufferDesc.vLerpScale_Pos.y);	// 라이프 타임 중, 감소에만 필요한 토탈시간 계산
+				if (m_tBufferDesc.fDownScaleTimeAcc >= fTotalTime)
+				{
+					m_tBufferDesc.fDownScaleTimeAcc = fTotalTime;
+					m_tBufferDesc.vCurScale.x = 0.f;
+					m_tBufferDesc.vCurScale.y = 0.f;
 				}
 				else
 				{
-					// Max크기가 목표
+					m_tBufferDesc.fDownScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.y);	// 시간 누적	
+					m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.x, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+					m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.y, 0.f, m_tBufferDesc.fDownScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+				}
+			}
+			else
+			{
+				// Max크기가 목표
 
-					_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * ((1.f - m_tBufferDesc.vLerpScale_Pos.x) + (1.f - m_tBufferDesc.vLerpScale_Pos.y));	// 라이프 타임 중, 증가에만 필요한 토탈시간 계산
-					if (m_tBufferDesc.fUpScaleTimeAcc >= fTotalTime)
-					{
-						m_tBufferDesc.fUpScaleTimeAcc = fTotalTime;
-						m_tBufferDesc.vCurScale.x = m_vecParticleInfoDesc[i].vMaxScales.x;
-						m_tBufferDesc.vCurScale.y = m_vecParticleInfoDesc[i].vMaxScales.y;
-					}
-					else
-					{
-						m_tBufferDesc.fUpScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.x);	// 시간 누적		
-						m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxWidth.x, m_vecParticleInfoDesc[i].vMaxScales.x, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-						m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxHeight.x, m_vecParticleInfoDesc[i].vMaxScales.y, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-					}
-
+				_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * ((1.f - m_tBufferDesc.vLerpScale_Pos.x) + (1.f - m_tBufferDesc.vLerpScale_Pos.y));	// 라이프 타임 중, 증가에만 필요한 토탈시간 계산
+				if (m_tBufferDesc.fUpScaleTimeAcc >= fTotalTime)
+				{
+					m_tBufferDesc.fUpScaleTimeAcc = fTotalTime;
+					m_tBufferDesc.vCurScale.x = m_vecParticleInfoDesc[i].vMaxScales.x;
+					m_tBufferDesc.vCurScale.y = m_vecParticleInfoDesc[i].vMaxScales.y;
+				}
+				else
+				{
+					m_tBufferDesc.fUpScaleTimeAcc += (fTimeDelta * m_tBufferDesc.vScaleSpeed.x);	// 시간 누적		
+					m_tBufferDesc.vCurScale.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxWidth.x, m_vecParticleInfoDesc[i].vMaxScales.x, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+					m_tBufferDesc.vCurScale.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxHeight.x, m_vecParticleInfoDesc[i].vMaxScales.y, m_tBufferDesc.fUpScaleTimeAcc, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
 				}
 
-				// 크기변경 적용
-				pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.x;
-				pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.y;
+			}
 
+			// 크기변경 적용
+			pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.x;
+			pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_tBufferDesc.vCurScale.y;
+
+		}
 #pragma region 크기 변경 끝
-	}
 
 #pragma region 색 변경 시작
 		if (m_tBufferDesc.bDynamic_Color)	// 입자마다 다른 주기로 색 변경
@@ -622,6 +690,8 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 			m_vecParticleInfoDesc[i].vCurrentColors.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y, m_vecParticleInfoDesc[i].fTimeAccs, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_ColorLerp));
 			m_vecParticleInfoDesc[i].vCurrentColors.z = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y, m_vecParticleInfoDesc[i].fTimeAccs, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_ColorLerp));
 
+			// 쉐이더에 던질 곱하기 색상 값 저장
+			m_vecParticleShaderInfoDesc[i].vCurrentColors = m_vecParticleInfoDesc[i].vCurrentColors;
 			pVertices[i].vColor = m_vecParticleInfoDesc[i].vCurrentColors;
 		}
 		else // 일괄 색 변경
@@ -630,6 +700,8 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 			m_tBufferDesc.vCurrentColor.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y, m_tBufferDesc.fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_ColorLerp));
 			m_tBufferDesc.vCurrentColor.z = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y, m_tBufferDesc.fTimeAcc, m_tBufferDesc.vMinMaxLifeTime.y, m_tBufferDesc.eType_ColorLerp));
 
+			// 쉐이더에 던질 곱하기 색상 값 저장
+			m_vecParticleShaderInfoDesc[i].vCurrentColors = m_tBufferDesc.vCurrentColor;
 			pVertices[i].vColor = m_tBufferDesc.vCurrentColor;
 		}
 
