@@ -161,6 +161,7 @@ public:
 		string		strProtoTag = "";
 		string		strFilePath = "";
 		string		strMapTextureTag = "";	// 적용할 맵 텍스처
+		string		strButton_Name = "";	// 적용할 맵 텍스처
 
 		/* 색상 */
 		_vector		vColor = { 1.f, 1.f, 1.f, 1.f };
@@ -460,13 +461,15 @@ protected: /* ============================= UI =============================== *
 
 	_bool				m_bReversePlay = false;
 	_bool				m_bStopPlay = false;
+	_bool				m_bButtonUI = false;
+	UI_BUTTON			m_eUI_ButtonState = UI_BUTTON::NONE;
 
 	/* Anim Index */
 	_uint iFrameIndex = 0;
 
 public:
-	void				Set_MaskNum(_int iMaskNum) { m_iMaskNum = iMaskNum; }
-	void				Set_NoiseNum(_int iNoiseNum) { m_iNoiseNum = iNoiseNum; }
+	void				Set_MaskNum(_int iMaskNum) { m_tUIInfo.iMaskNum = iMaskNum; }
+	void				Set_NoiseNum(_int iNoiseNum) { m_tUIInfo.iNoiseNum = iNoiseNum; }
 
 public:
 	void	Set_OffsetX(_float fOffsetX) { m_fOffsetX = fOffsetX; }

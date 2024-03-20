@@ -134,6 +134,10 @@ void CUI::Tick(_float fTimeDelta)
 	Update_Child_Transform();
 	if(m_tUIInfo.bWorld == false)
 		Check_RectPos();
+
+#ifdef _DEBUG
+	m_bButtonUI = true;
+#endif // _DEBUG
 	Picking_UI();
 }
 
@@ -157,6 +161,9 @@ HRESULT CUI::Render()
 
 void CUI::Picking_UI()
 {
+	if (m_bButtonUI == false)
+		return;
+
 	POINT pt;
 	GetCursorPos(&pt);
 	ScreenToClient(g_hWnd, &pt);  // 클라이언트 내에 마우스 포인터 가져오기 
@@ -209,10 +216,10 @@ HRESULT CUI::Bind_ShaderResources()
 	if (m_tUIInfo.bDistortionUI == false) // Distortion을 사용 안하는 UI일 경우
 		return S_OK;
 
-	if (FAILED(m_pDistortionCom[MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_tUIInfo.iMaskNum)))
+	if (FAILED(m_pDistortionCom[MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_iMaskNum)))
 		return E_FAIL;
 
-	if (FAILED(m_pDistortionCom[NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tUIInfo.iNoiseNum)))
+	if (FAILED(m_pDistortionCom[NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_iNoiseNum)))
 		return E_FAIL;
 
 	return S_OK;
@@ -367,6 +374,14 @@ void CUI::Moving_Picking_Point(POINT pt)
 {
 	m_fPositionX = (_float)pt.x;
 	m_fPositionY = (_float)pt.y;
+
+#ifdef _DEBUG
+	if (!m_vecAnimation.empty())
+	{
+
+	}
+#endif // _DEBUG
+
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,

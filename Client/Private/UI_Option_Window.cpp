@@ -30,14 +30,14 @@ HRESULT CUI_Option_Window::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
+	/* Distortion이 있는 UI */
+	m_tUIInfo.bDistortionUI = true;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
-
-	/* Distortion이 있는 UI */
-	m_tUIInfo.bDistortionUI = true;
 
 
 	return S_OK;
@@ -52,9 +52,19 @@ void CUI_Option_Window::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	m_iMaskNum = m_tUIInfo.iMaskNum;
+	m_iNoiseNum = m_tUIInfo.iNoiseNum;
+
 	if (m_bActive)
 	{
-		m_tUIInfo.fTimeAcc += fTimeDelta;
+		if (!m_vecAnimation.empty())
+		{
+			m_fTimeAcc += m_tUIInfo.tKeyframe.fTimeAcc * fTimeDelta;
+		}
+		else
+		{
+			m_fTimeAcc += m_tUIInfo.fTimeAcc * fTimeDelta;
+		}
 	}
 }
 
@@ -105,8 +115,9 @@ void CUI_Option_Window::UI_Exit(_float fTimeDelta)
 
 HRESULT CUI_Option_Window::Ready_Components()
 {
-	//if(FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture
-	//	return E_FAIL;
+	/* 공통 */
+	if (FAILED(__super::Ready_Components())) // Ready : Texture / MapTexture
+		return E_FAIL;
 
 	wstring strPrototag;
 	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
@@ -142,6 +153,10 @@ HRESULT CUI_Option_Window::Ready_Components()
 
 HRESULT CUI_Option_Window::Bind_ShaderResources()
 {
+	/* 공통 */
+	if (FAILED(__super::Bind_ShaderResources()))
+		return E_FAIL;
+
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
@@ -169,12 +184,6 @@ HRESULT CUI_Option_Window::Bind_ShaderResources()
 	/* For.Com_Texture */
 	{
 		if (FAILED(m_pTextureCom[DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
-
-		if (FAILED(m_pTextureCom[MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture")))
-			return E_FAIL;
-
-		if (FAILED(m_pTextureCom[NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture")))
 			return E_FAIL;
 
 	}

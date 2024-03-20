@@ -20,6 +20,7 @@
 CWindow_UITool::CWindow_UITool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
 	, m_pUI_Manager(CUI_Manager::GetInstance())
+	//, m_tSelectedKeyframe(CUI::UIKEYFRAME()) // &멤버변수는 생성자에서 초기화 시켜줘야함
 {
 	Safe_AddRef(m_pUI_Manager);
 }
@@ -33,9 +34,9 @@ HRESULT CWindow_UITool::Initialize()
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩중."));
 
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
-	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));	// Option
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));	// Option
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD"))));	// PlayerHUD
-	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/WorldMap"))));	// WorldMap
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/WorldMap"))));	// WorldMap
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Crosshairs"))));// Crosshairs
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/EnemyHUD"))));	// EnemyHUD
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));			// Image
@@ -424,7 +425,17 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
 		{
 			if (m_pCurrSelectUI != nullptr)
+			{
 				m_pCurrSelectUI->Moving_Picking_Point(m_pt);
+
+				if (m_pSelectedKeyframe != nullptr)
+				{
+					m_pSelectedKeyframe->vPos.x = m_pt.x - g_iWinSizeX * 0.5f;
+					m_pSelectedKeyframe->vPos.y = -m_pt.y + g_iWinSizeY * 0.5f;
+
+					// m_pCurrSelectUI->Moving_Picking_Point(m_pt);
+				}
+			}
 		}
 
 		if (m_pGameInstance->Key_Down(DIK_S))
@@ -687,7 +698,7 @@ void CWindow_UITool::Texture_List()
 
 void CWindow_UITool::Setting_Parent()
 {
-	ImGui::CollapsingHeader("Setting_Parent");
+	//ImGui::CollapsingHeader("Setting_Parent");
 
 	///* Mod */
 	//ImGui::SeparatorText(u8"변경 모드 설정");
@@ -715,7 +726,7 @@ void CWindow_UITool::Setting_Parent()
 	//m_tParent_Desc.fPositionY = m_fParent_Position.y;
 
 
-	ImGui::Separator();
+	//ImGui::Separator();
 
 
 	if (m_pCurrParent != nullptr)
@@ -921,16 +932,19 @@ void CWindow_UITool::Setting_Child()
 	//ImGui::InputFloat("PositionY", &m_fChild_Possition.y);
 
 
-
-	if (ImGui::InputInt("MaskNum", &m_iMaskNum))
+	if (m_pCurrSelectUI != nullptr)
 	{
-		m_pCurrSelectUI->Set_MaskNum(m_iMaskNum);
+		if (ImGui::InputInt("MaskNum", &m_iMaskNum))
+		{
+			m_pCurrSelectUI->Set_MaskNum(m_iMaskNum);
+		}
+
+		if (ImGui::InputInt("NoiseNum", &m_iNoiseNum))
+		{
+			m_pCurrSelectUI->Set_NoiseNum(m_iNoiseNum);
+		}
 	}
 
-	if (ImGui::InputInt("NoiseNum", &m_iNoiseNum))
-	{
-		m_pCurrSelectUI->Set_NoiseNum(m_iNoiseNum);
-	}
 
 	ImGui::Separator();
 
@@ -943,22 +957,22 @@ void CWindow_UITool::Setting_Child()
 		Set_GuizmoUI(m_pCurrChild);
 	}
 
-	ImGui::Separator();
+	//ImGui::Separator();
 
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
 }
 
 void CWindow_UITool::Current_Info()
 {
-	ImGui::CollapsingHeader("2D_Setting");
+	//ImGui::CollapsingHeader("2D_Setting");
 
-	ImGui::Separator();
+	//ImGui::Separator();
 
-	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	//ImGui::Dummy(ImVec2(0, 5)); // 공백
 
-	ImGui::Separator();
+	//ImGui::Separator();
 
-	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	//ImGui::Dummy(ImVec2(0, 5)); // 공백
 }
 
 void CWindow_UITool::Parent_List(_float fTimeDelta)
@@ -2930,10 +2944,15 @@ void CWindow_UITool::CurKeyframe_ValueChange()
 	// 선택된 키프렘의 인덱스를 사용하여 키프레임을 편집. (선택한 인덱스가 범위 내에 있을 경우)
 	if (!m_vecTimeline->empty() && closestKeyframeIndex >= 0 && closestKeyframeIndex < m_vecTimeline->size())
 	{
-		CUI::UIKEYFRAME& selectedKeyframe = (*m_vecTimeline)[closestKeyframeIndex];
+		m_pSelectedKeyframe = &(*m_vecTimeline)[closestKeyframeIndex];
+		m_bSelectKeyframe = true;
 
 		// 선택된 키프렘의 애니메이션 속성 편집
-		DrawSelectedKeyframeEditor(selectedKeyframe);
+		DrawSelectedKeyframeEditor(*m_pSelectedKeyframe);
+	}
+	else
+	{
+		m_pSelectedKeyframe = nullptr;
 	}
 #pragma endregion
 }

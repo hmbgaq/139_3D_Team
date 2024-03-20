@@ -81,68 +81,6 @@ void CUI_Distortion::Tick(_float fTimeDelta)
 		{
 			m_fTimeAcc += m_tUIInfo.fTimeAcc * fTimeDelta;
 		}
-
-		if (m_bRestore == true)
-		{
-			//if (m_tUIInfo.fTimeAcc > 0.f)
-			//	m_tUIInfo.fTimeAcc -= fTimeDelta;
-
-			if (m_tUIInfo.fSequenceTerm > 0.f)
-				m_tUIInfo.fSequenceTerm -= fTimeDelta;
-			else
-				m_tUIInfo.fSequenceTerm = 0.f;
-
-			if (m_tUIInfo.vScrollSpeeds.x > 0.f)
-				m_tUIInfo.vScrollSpeeds.x -= fTimeDelta;
-			else
-				m_tUIInfo.vScrollSpeeds.x = 0.f;
-
-			if (m_tUIInfo.vScales.x > 0.f)
-				m_tUIInfo.vScales.x -= fTimeDelta;
-			else
-				m_tUIInfo.vScales.x = 0.f;
-
-			if (m_tUIInfo.vDistortion1.x > 0.f)
-				m_tUIInfo.vDistortion1.x -= fTimeDelta;
-			else
-				m_tUIInfo.vDistortion1.x = 0.f;
-
-			if (m_tUIInfo.vDistortion1.y > 0.f)
-				m_tUIInfo.vDistortion1.y -= fTimeDelta;
-			else
-				m_tUIInfo.vDistortion1.y = 0.f;
-
-			if (m_tUIInfo.vDistortion2.x > 0.f)
-				m_tUIInfo.vDistortion2.x -= fTimeDelta;
-			else
-				m_tUIInfo.vDistortion2.x = 0.f;
-
-			if (m_tUIInfo.vDistortion2.y > 0.f)
-				m_tUIInfo.vDistortion2.y -= fTimeDelta;
-			else
-				m_tUIInfo.vDistortion2.y = 0.f;
-
-			if (m_tUIInfo.vDistortion3.x > 0.f)
-				m_tUIInfo.vDistortion3.x -= fTimeDelta;
-			else
-				m_tUIInfo.vDistortion3.x = 0.f;
-
-			if (m_tUIInfo.vDistortion3.y > 0.f)
-				m_tUIInfo.vDistortion3.y -= fTimeDelta;
-			else
-				m_tUIInfo.vDistortion3.y = 0.f;
-
-			if (m_tUIInfo.fDistortionScale > 0.f)
-				m_tUIInfo.fDistortionScale -= fTimeDelta;
-			else
-				m_tUIInfo.fDistortionScale = 0.f;
-
-			if (m_tUIInfo.fDistortionBias > 0.f)
-				m_tUIInfo.fDistortionBias -= fTimeDelta;
-			else
-				m_tUIInfo.fDistortionBias = 0.f;
-
-		}
 	}
 }
 
@@ -231,7 +169,7 @@ HRESULT CUI_Distortion::Ready_Components()
 
 HRESULT CUI_Distortion::Bind_ShaderResources() 
 {
-						/* 공통 */
+	/* 공통 */
 	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
 
@@ -264,11 +202,11 @@ HRESULT CUI_Distortion::Bind_ShaderResources()
 		if (FAILED(m_pTextureCom[DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 			return E_FAIL;
 
-		if (FAILED(m_pDistortionCom[MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_iMaskNum)))
-			return E_FAIL;
+		//if (FAILED(m_pDistortionCom[MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_iMaskNum)))
+		//	return E_FAIL;
 
-		if (FAILED(m_pDistortionCom[NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_iNoiseNum)))
-			return E_FAIL;
+		//if (FAILED(m_pDistortionCom[NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_iNoiseNum)))
+		//	return E_FAIL;
 
 	}
 	return S_OK;

@@ -306,8 +306,8 @@ private:
 	_int m_iOldIndex = -1;
 #pragma region											최소, 최대 값
 // 크기
-	_float	fMin_Scale = -2000.0001f;	// 최소
-	_float	fMax_Scale = 2000.f;	// 최대
+	_float	fMin_Scale = -5000.0001f;	// 최소
+	_float	fMax_Scale = 5000.f;	// 최대
 
 	// 회전
 	_float	fMin_Rot = -360.0f;		// 최소
@@ -403,6 +403,8 @@ private: /* 2D */
 private: /* enum */
 	UITYPE						m_eUIType;
 	TOOLSTATE					m_eToolType = TOOL_UI;
+	CUI::UIKEYFRAME*			m_pSelectedKeyframe = nullptr;
+	_bool						m_bSelectKeyframe = false;
 
 private: /* Value */
 	_float						m_fChangeValue = 0.1f;
@@ -484,6 +486,7 @@ private:
 		"LevelUp_ShieldFrame",
 		"MouseCursor",
 		"Option_Window",
+		"Option_Title_Button",
 		"AimCrosshair",
 		"Weakness",
 		"Distortion",
