@@ -44,7 +44,6 @@ bool g_bSSAO_Active;
 bool g_bFog_Active;
 
 /* 안개 */
-float4 g_vFogColor              = { 0.5f, 0.5f, 0.5f, 0.2f };
 float2  g_vFogUVAcc             = { 0.f, 0.f };
 
 struct FOG_DESC 
@@ -56,6 +55,7 @@ struct FOG_DESC
     float fFogHeightValue;
     float fFogDistanceDensity;
     float fFogHeightDensity;
+    vector vFogColor;
 };
 
 struct BLOOMRIM_DESC
@@ -94,8 +94,10 @@ float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise, F
 	// 두 요소를 결합한 최종 요소
     float fogFinalFactor = min(fogDistanceFactor * fogHeightFactor * fNoise, 1.0f) + min(distanceOffset * heightOffset, 1.0f) + 0.01f;
 
+    vector vFogColor = desc.vFogColor;
+    
 	// 최종 혼합 색상
-    return lerp(vOriginColor.rgb, g_vFogColor.xyz, fogFinalFactor);
+    return lerp(vOriginColor.rgb, vFogColor.xyz, fogFinalFactor);
 }
 
 

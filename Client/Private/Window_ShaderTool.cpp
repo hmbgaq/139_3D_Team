@@ -396,6 +396,7 @@ void CWindow_ShaderTool::Compress_Fog_Setting()
 		m_eFog_Desc.fFogHeightValue = 50.f;
 		m_eFog_Desc.fFogDistanceDensity = 0.05f;
 		m_eFog_Desc.fFogHeightDensity = 0.05f;
+		m_eFog_Desc.vFogColor = { 0.5f, 0.5f, 0.5f, 0.2f };
 	}
 
 	ImGui::SliderFloat("FogStartDepth", &m_eFog_Desc.fFogStartDepth, 0.001f, 250.0f, "StartDepth = %.3f");
@@ -409,6 +410,10 @@ void CWindow_ShaderTool::Compress_Fog_Setting()
 	ImGui::SliderFloat("FogDistanceDensity", &m_eFog_Desc.fFogDistanceDensity, 0.001f, 1.0f, "FogDistanceValue = %.3f");
 
 	ImGui::SliderFloat("FogHeightDensity", &m_eFog_Desc.fFogHeightDensity, 0.001f, 1.0f, "HeightDensity = %.3f");
+
+	static float vFogColor[4] = { 1.f, 0.0f, 0.0f, 1.f };
+	ImGui::ColorEdit4("Fog Color", vFogColor);
+	m_eFog_Desc.vFogColor = { vFogColor[0], vFogColor[1], vFogColor[2], vFogColor[3] };
 
 	m_pGameInstance->Get_Renderer()->Set_Fog_Active(m_eFog_Desc.bFog_Active);
 
@@ -504,16 +509,16 @@ void CWindow_ShaderTool::Select_Level()
 				m_iCurrLevel_Index = n;
 				switch (m_iCurrLevel_Index)
 				{
-				case 0:
+				case 0: // None
 					break;
-				case 1:
+				case 1: // GamePlay
 					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
 					break;
-				case 2:
+				case 2: // Intro
 					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
 					break;
-				case 3:
-					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData_MapData.json";
+				case 3: //Intro Boss 
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1BossAddLight_MapData.json";
 					break;
 				case 4:
 					break;

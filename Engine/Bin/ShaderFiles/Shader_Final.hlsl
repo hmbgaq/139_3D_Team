@@ -12,6 +12,7 @@ Texture2D g_BlendMixTarget;
 Texture2D g_DebugTarget;
 Texture2D g_UI_Target;
 Texture2D g_Effect_Target;
+Texture2D g_RimBlur_Target;
 
 
 /* ------------------ Struct  ------------------ */ 
@@ -181,16 +182,28 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vector vDebug = g_DebugTarget.Sample(LinearSampler, In.vTexcoord);;
     vector vFinal = g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
+   // vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
    
     Out.vColor = vUI;
     
+    // RimBloom 넣는 ver
+    //if (Out.vColor.a == 0)
+    //{
+    //    Out.vColor += vRimBloom;
+    //}
+         
+    //if (Out.vColor.a == 0)
+    //    Out.vColor += vFinal + vDebug;
+    
+    // 안넣는 ver
     if (Out.vColor.a == 0)
     {
-        Out.vColor = vFinal + vDebug;
-        
-        if(Out.vColor.a == 0)
-           discard;
+        Out.vColor += vFinal + vDebug;
     }
+       
+    if (Out.vColor.a == 0)
+        discard;
+    
     return Out;
 }
 /* ------------------ 4 - Effect Blend ------------------ */
