@@ -20,15 +20,24 @@ CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _floa
 {
 	__super::Update(pActor, fTimeDelta);
 
+
 	if (m_pGameInstance->Key_Down(DIK_W)) 
 	{
-		return new CPlayer_EnergyWhip_Leap();
-		//return new CPlayer_EnergyWhip_LongRange();
+		pActor->Search_Target(20.f);
+		if (pActor->Get_Target()) 
+		{
+			return new CPlayer_EnergyWhip_Leap();
+			//return new CPlayer_EnergyWhip_LongRange();
+		}
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_S))
 	{
-		return new CPlayer_EnergyWhip_Pull();
+		pActor->Search_Target(20.f);
+		if (pActor->Get_Target())
+		{
+			return new CPlayer_EnergyWhip_Pull();
+		}
 	}
 
 	if (pActor->Is_Animation_End())

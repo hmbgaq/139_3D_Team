@@ -158,10 +158,10 @@ public:
 	_float Calc_Distance();
 
 	_float Calc_Distance_Front(_float3 vTargetPos);
-
 	_float Calc_The_Nearest_Enemy_Distance(const wstring& strLayerTag);
 
 	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 1.0f);
+	void Dragged(_float fTimeDelta, _float3 vTargetPos);
 
 public:
 	_bool Is_In_Frustum() { return m_bIsInFrustum; }

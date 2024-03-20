@@ -99,13 +99,18 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 		return;
 
 	_float3 vBodyMovePos = m_pBody->Get_MovePos();
-	_float3 vResult = vBodyMovePos;
-	vResult.x *= m_vRootMoveRate.x;
-	vResult.y *= m_vRootMoveRate.y;
-	vResult.z *= m_vRootMoveRate.z;
 
+	_float fDiff = abs(vBodyMovePos.x) + abs(vBodyMovePos.y) + abs(vBodyMovePos.z);
 
-	m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
+	if (0.0001f < fDiff) 
+	{
+		_float3 vResult = vBodyMovePos;
+		vResult.x *= m_vRootMoveRate.x;
+		vResult.y *= m_vRootMoveRate.y;
+		vResult.z *= m_vRootMoveRate.z;
+
+		m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
+	}
 
 	m_pRigidBody->Late_Tick(fTimeDelta);
 
@@ -343,6 +348,16 @@ void CCharacter::Go_Right(_float fTimeDelta)
 	m_pTransformCom->Go_Right(fTimeDelta, m_pNavigationCom);
 }
 
+_bool CCharacter::Is_Use_Gravity()
+{
+	return m_pRigidBody->Is_Use_Gravity();
+}
+
+void CCharacter::Set_UseGravity(_bool _bUseGravity)
+{
+	m_pRigidBody->Set_UseGravity(_bUseGravity);
+}
+
 void CCharacter::Set_Enable(_bool _Enable)
 {
 	__super::Set_Enable(_Enable);
@@ -369,33 +384,32 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 	Hit_Type eHitType = Hit_Type::None;
 
 
-	if (true == m_bIsRevealedWeakness && false == bIsMelee)
-	{
-		Get_Damaged(iDamage);
-		m_pTransformCom->Look_At_Direction(vDir * -1);
+	//if (true == m_bIsRevealedWeakness && false == bIsMelee)
+	//{
+	//	Get_Damaged(iDamage);
+	//	m_pTransformCom->Look_At_Direction(vDir * -1);
 
-		if (0 >= --m_iWeaknessCount) 
-		{
-			m_bIsRevealedWeakness = false;
-			m_bIsInvincible = false;
+	//	if (0 >= --m_iWeaknessCount) 
+	//	{
+	//		m_bIsRevealedWeakness = false;
+	//		m_bIsInvincible = false;
 
 
-			if (m_iHp <= 0)
-			{
-				Set_Stun(true);
-				Hitted_Stun(eHitPower);
-			}
-			else
-			{
-				Hitted_Weakness();
-			}
+	//		if (m_iHp <= 0)
+	//		{
+	//			Set_Stun(true);
+	//			Hitted_Stun(eHitPower);
+	//		}
+	//		else
+	//		{
+	//			Hitted_Weakness();
+	//		}
 
-			return Hit_Type::Hit_Break;
+	//		return Hit_Type::Hit_Break;
 
-		}
+	//	}
 
-	}
-
+	//}
 
 	if (true == m_bIsInvincible && false == m_bIsStun)
 	{
@@ -626,6 +640,25 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap
 
 	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
 	m_pTransformCom->Move_On_Navigation(vResult, m_pNavigationCom);
+}
+
+void CCharacter::Dragged(_float fTimeDelta, _float3 vTargetPos)
+{
+	m_pTransformCom->Look_At(vTargetPos);
+
+	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+
+	_float fDistance = Calc_Distance(vTargetPos);
+
+	if (0.1f >= fDistance)
+		return;
+
+	_float3 vPos = { 0.f, 0.f, min(min(fDistance / 3.f, 4.0f), fDistance) };
+
+	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
+
+	m_pTransformCom->Move_On_Navigation(vResult, m_pNavigationCom);
+
 }
 
 

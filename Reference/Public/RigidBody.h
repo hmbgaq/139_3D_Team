@@ -37,6 +37,9 @@ public:
 
 	void Set_Transform(CTransform* pOwnerTransform);
 
+	_bool Is_Use_Gravity() { return m_bUseGravity; };
+	void Set_UseGravity(_bool _bUseGravity) { m_bUseGravity = _bUseGravity; };
+
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -51,7 +54,7 @@ public:
 private:
 	list<FORCE> m_Forces;
 	CTransform* m_pOwnerTransform = { nullptr };
-	_bool		m_bUseGravity = { false };
+	_bool		m_bUseGravity = { true };
 
 	_float m_fDrag = { 4.5f };
 	_float m_fMass = { 0.f };
