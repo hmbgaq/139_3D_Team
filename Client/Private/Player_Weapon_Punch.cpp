@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Player_Weapon_Punch.h"
 #include "GameInstance.h"
-#include "Character.h"
+#include "Character_Client.h"
 #include "Player.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
@@ -88,15 +88,21 @@ void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 		pTarget_Character->Set_Hitted(m_iDamage, Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1 , m_fForce, 1.f, m_eHitDirection, m_eHitPower, true);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
 
-		CData_Manager::GetInstance()->Get_Player()->Create_Effect(Get_WorldPosition());
-
-		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-		if (pSpringCam)
+		CCharacter_Client* pOwnerCharacter = dynamic_cast<CCharacter_Client*>(Get_Object_Owner());
+		if (pOwnerCharacter) 
 		{
-			pSpringCam->Set_ShakeCamera(true);
+			pOwnerCharacter->Create_Hitting_Effect(Get_WorldPosition(), m_eHitPower);
 		}
 
-		m_pGameInstance->Set_RadialBlurTime(0.2f * ECast(m_eHitPower));
+		//CData_Manager::GetInstance()->Get_Player()->Create_Effect(Get_WorldPosition());
+
+		//CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+		//if (pSpringCam)
+		//{
+		//	pSpringCam->Set_ShakeCamera(true);
+		//}
+
+		//m_pGameInstance->Set_RadialBlurTime(0.2f * ECast(m_eHitPower));
 		
 		
 	}

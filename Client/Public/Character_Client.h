@@ -10,6 +10,9 @@ END
 BEGIN(Client)
 
 class CEffect;
+class CEffect_Manager;
+class CData_Manager;
+
 
 class CCharacter_Client abstract : public CCharacter
 {
@@ -31,12 +34,20 @@ public:
 	CEffect* Create_Effect(_float3 vPos, CGameObject* pOwner = nullptr);
 	CEffect* Create_Effect(const wstring& strPartTag);
 
+public:
+	void Create_Hitting_Effect(_float3 vPos, Power ePower = Power::Light, string strEffectName = "", CGameObject* pOwner = nullptr);
 
+public:
 	_bool Check_EffectOnTrackPosition();
-
 
 public:
 	virtual void Free() override;
+
+protected:
+	CEffect_Manager* m_pEffectManager = { nullptr };
+	CData_Manager* m_pDataManager = { nullptr };
+
+
 };
 
 END

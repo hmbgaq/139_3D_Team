@@ -138,8 +138,6 @@ public:
 	virtual void Hitted_OpenState_Pull() {};
 	virtual void Hitted_Opened(Direction eDirection) {};
 
-
-
 	
 public:
 	void Add_Force(_vector In_vDir, _float In_fPower);

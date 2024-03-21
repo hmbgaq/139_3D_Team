@@ -1,6 +1,9 @@
 #include "Character_Client.h"
 #include "Effect.h"
 #include "Effect_Manager.h"
+#include "SpringCamera.h"
+#include "Data_Manager.h"
+#include "MasterCamera.h"
 
 CCharacter_Client::CCharacter_Client(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
@@ -78,6 +81,36 @@ CEffect* CCharacter_Client::Create_Effect(const wstring& strPartTag)
 	//pActor->Create_Effect(vPos);
 
 	return nullptr;
+}
+
+void CCharacter_Client::Create_Hitting_Effect(_float3 vPos, Power ePower, string strEffectName, CGameObject* pOwner)
+{
+	string strEffectFileName;
+	strEffectFileName = strEffectName != "" ? strEffectName : Get_CharcterDesc().EffectFileName;
+	strEffectFileName = strEffectFileName != "" ? strEffectFileName : "Test_Effect";
+
+	if (nullptr == m_pEffectManager)
+	{
+		m_pEffectManager = EFFECT_MANAGER;
+	}
+
+	CEffect* pEffect = m_pEffectManager->Create_Effect(strEffectFileName + ".json", pOwner);
+	if (pEffect)
+		pEffect->Set_Position(vPos);
+
+	if (nullptr == m_pDataManager)
+	{
+		m_pDataManager = CData_Manager::GetInstance();
+	}
+
+	CSpringCamera* pSpringCam = m_pDataManager->Get_MasterCamera()->Get_SpringCamera();
+	if (pSpringCam)
+	{
+		pSpringCam->Set_ShakeCamera(true);
+	}
+
+	m_pGameInstance->Set_RadialBlurTime(0.2f * ECast(ePower));
+
 }
 
 _bool CCharacter_Client::Check_EffectOnTrackPosition()
