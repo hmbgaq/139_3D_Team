@@ -310,7 +310,7 @@ void CVIBuffer_Particle::ReSet()
 		}
 		else  
 		{
-			// 리지드바디 사용이 아닐경우
+			// 리지드바디 사용이 아닐 경우
 
 			_vector		vDir = Make_Dir(i);						// 방향 만들기
 			m_vecParticleShaderInfoDesc[i].vDir = vDir;			// 쉐이더에 전달할 방향 저장
@@ -391,7 +391,6 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 		_vector		vDir = Make_Dir(iNum);
 
 		m_vecParticleShaderInfoDesc[iNum].vDir = vDir;			// 쉐이더에 전달할 방향 저장
-		m_vecParticleRigidbodyDesc[iNum].vDir = vDir;			// 리지드바디에 방향 저장
 
 		_vector vForce = vDir * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
 		Add_Force(iNum, vForce, m_tBufferDesc.eForce_Mode);
@@ -593,6 +592,25 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 		{
 			if (!m_vecParticleRigidbodyDesc.empty())
 			{
+
+				// 마찰계수 러프
+				// 0~1 사이로 보간한 라이프타임이 마찰계수 변화를 시작할 타임 포지션을 넘기면
+				if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vFrictionLerp_Pos.x)
+				{
+					_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * (m_tBufferDesc.vFrictionLerp_Pos.y - m_tBufferDesc.vFrictionLerp_Pos.x);	// 라이프 타임 중, 변화에만 필요한 토탈시간 계산
+					if (m_vecParticleRigidbodyDesc[i].fFrictionTimeAccs >= fTotalTime)
+					{
+						m_vecParticleRigidbodyDesc[i].fFrictionTimeAccs = fTotalTime;
+						m_vecParticleRigidbodyDesc[i].fFriction = m_tBufferDesc.vStartEnd_Friction.y;
+					}
+					else
+					{
+						m_vecParticleRigidbodyDesc[i].fFrictionTimeAccs += fTimeDelta;	// 시간 누적		
+						m_vecParticleRigidbodyDesc[i].fFriction = Easing::LerpToType(m_tBufferDesc.vStartEnd_Friction.x, m_tBufferDesc.vStartEnd_Friction.y, m_vecParticleRigidbodyDesc[i].fFrictionTimeAccs, fTotalTime, m_tBufferDesc.eType_FrictionLerp);
+					}
+				}
+
+
 				if (!Check_Sleep(i))	// 슬립이 아니면 리지드바디 업데이트
 				{
 					if (m_tBufferDesc.bKinetic)
@@ -772,10 +790,10 @@ _float3 CVIBuffer_Particle::Update_Kinetic(_uint iNum, _float fTimeDelta)
 
 
 	/* 마찰력에 의한 반대방향으로의 가속도(감속) */
-	if (1.f > m_tBufferDesc.fFriction)
+	if (1.f > m_vecParticleRigidbodyDesc[iNum].fFriction)
 	{
 		/* (m_vVelocity * (1.f - m_fFriction)) */
-		XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity) * (1.f - m_tBufferDesc.fFriction));
+		XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity) * (1.f - m_vecParticleRigidbodyDesc[iNum].fFriction));
 	}
 	else
 	{
@@ -929,7 +947,11 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 	Out_Json["Com_VIBuffer"]["eForce_Mode"] = m_tBufferDesc.eForce_Mode;
 
 	Out_Json["Com_VIBuffer"]["fGravity"] = m_tBufferDesc.fGravity;
-	Out_Json["Com_VIBuffer"]["fFriction"] = m_tBufferDesc.fFriction;
+	//Out_Json["Com_VIBuffer"]["fFriction"] = m_tBufferDesc.fFriction;
+	Out_Json["Com_VIBuffer"]["eType_FrictionLerp"] = m_tBufferDesc.eType_FrictionLerp;
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vFrictionLerp_Pos"], m_tBufferDesc.vFrictionLerp_Pos);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vStartEnd_Friction"], m_tBufferDesc.vStartEnd_Friction);
+
 	Out_Json["Com_VIBuffer"]["fSleepThreshold"] = m_tBufferDesc.fSleepThreshold;
 	Out_Json["Com_VIBuffer"]["byFreezeAxis"] = m_tBufferDesc.byFreezeAxis;
 
@@ -997,7 +1019,16 @@ void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 	m_tBufferDesc.eForce_Mode = In_Json["Com_VIBuffer"]["eForce_Mode"];
 
 	m_tBufferDesc.fGravity = In_Json["Com_VIBuffer"]["fGravity"];
-	m_tBufferDesc.fFriction = In_Json["Com_VIBuffer"]["fFriction"];
+	//m_tBufferDesc.fFriction = In_Json["Com_VIBuffer"]["fFriction"];
+
+	if (In_Json.contains("eType_FrictionLerp")) // 다시 저장 후 삭제
+	{
+		m_tBufferDesc.eType_FrictionLerp = In_Json["Com_VIBuffer"]["eType_FrictionLerp"];
+		CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vFrictionLerp_Pos"], m_tBufferDesc.vFrictionLerp_Pos);
+		CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vStartEnd_Friction"], m_tBufferDesc.vStartEnd_Friction);
+	}
+
+
 	m_tBufferDesc.fSleepThreshold = In_Json["Com_VIBuffer"]["fSleepThreshold"];
 	m_tBufferDesc.byFreezeAxis = In_Json["Com_VIBuffer"]["byFreezeAxis"];
 

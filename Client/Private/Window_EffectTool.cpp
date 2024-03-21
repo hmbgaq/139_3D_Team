@@ -775,11 +775,38 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 						/* 마찰계수 조절 */
-						ImGui::SeparatorText("Friction");
-						if (ImGui::DragFloat("Friction_Particle", &m_fFriction_Particle, 0.1f, 0.1f, 100.f))
+						//ImGui::SeparatorText("Friction");
+						//if (ImGui::DragFloat("Friction_Particle", &m_fFriction_Particle, 0.1f, 0.1f, 100.f))
+						//{
+						//	m_pParticleBufferDesc->fFriction = m_fFriction_Particle;
+						//}
+
+						ImGui::SeparatorText("Friction Lerp_Particle");
+						ImGui::SeparatorText("Start End Friction_Particle");
+						if (ImGui::DragFloat2("Start End Friction_Particle", m_vStartEnd_Friction_Particle, 0.1f, 0.f, 1.f))
 						{
-							m_pParticleBufferDesc->fFriction = m_fFriction_Particle;
+							m_pParticleBufferDesc->vStartEnd_Friction.x = m_vStartEnd_Friction_Particle[0];
+							m_pParticleBufferDesc->vStartEnd_Friction.y = m_vStartEnd_Friction_Particle[1];
 						}
+
+
+						ImGui::SeparatorText("FrictionLerp_Pos_Particle");
+						if (ImGui::DragFloat2("FrictionLerp_Pos_Particle", m_vFrictionLerp_Pos_Particle, 0.1f, 0.f, 1.f))
+						{
+							if (m_vFrictionLerp_Pos_Particle[0] > m_vFrictionLerp_Pos_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+								m_vFrictionLerp_Pos_Particle[1] = m_vFrictionLerp_Pos_Particle[0];
+
+							m_pParticleBufferDesc->vFrictionLerp_Pos.x = m_vFrictionLerp_Pos_Particle[0];
+							m_pParticleBufferDesc->vFrictionLerp_Pos.y = m_vFrictionLerp_Pos_Particle[1];
+						}
+
+						if (ImGui::CollapsingHeader(" Friction_Easing Types "))
+						{
+							Select_EasingType(&m_pParticleBufferDesc->eType_FrictionLerp);
+						}
+
+
+
 
 						/* 슬립 한계점 조절(1이하여야 함) */
 						ImGui::SeparatorText("SleepThreshold");
@@ -2814,7 +2841,15 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 
 				m_fGravity_Particle = m_pParticleBufferDesc->fGravity;	// 중력 가속도
-				m_fFriction_Particle = m_pParticleBufferDesc->fFriction;	// 마찰 계수
+
+				//m_fFriction_Particle = m_pParticleBufferDesc->fFriction;	// 마찰 계수
+				m_vFrictionLerp_Pos_Particle[0] = m_pParticleBufferDesc->vFrictionLerp_Pos.x;
+				m_vFrictionLerp_Pos_Particle[1] = m_pParticleBufferDesc->vFrictionLerp_Pos.y;
+
+				m_vStartEnd_Friction_Particle[0] = m_pParticleBufferDesc->vStartEnd_Friction.x;
+				m_vStartEnd_Friction_Particle[1] = m_pParticleBufferDesc->vStartEnd_Friction.y;
+
+
 				m_fSleepThreshold_Particle = m_pParticleBufferDesc->fSleepThreshold;	// 슬립 한계점
 
 

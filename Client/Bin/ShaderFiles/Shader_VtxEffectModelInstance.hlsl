@@ -58,6 +58,22 @@ float	g_fDistortionBias;
 // ================================
 
 
+struct EffectDesc
+{
+    float3  g_vDir;
+    float   g_Padding;
+	
+    float4  g_vRight;
+    float4  g_vUp;
+    float4  g_vLook;
+	
+	
+    float4  g_vColors_Mul;
+};
+EffectDesc g_EffectDesc[500];
+
+
+
 // Custom Function ==============================================================================================================
 float2 Rotate_Texcoord(float2 vTexcoord, float fDegree)
 {

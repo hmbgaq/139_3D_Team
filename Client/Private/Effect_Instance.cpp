@@ -479,6 +479,11 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 
 
+
+	// 이펙트 정보(파티클 버퍼에서 정해지는 정보들)
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_EffectDesc", m_pVIBufferCom->Get_ParticleShaderInfoDescs().data(), _uint(sizeof(CVIBuffer_Effect_Model_Instance::PARTICLE_SHADER_INFO_DESC) * m_pVIBufferCom->Get_ParticleShaderInfoDescs().size())));
+
+
 	/* Dissolve */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &m_tVoidDesc.fDissolveAmount, sizeof(_float)));
 

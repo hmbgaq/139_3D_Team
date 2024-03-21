@@ -159,26 +159,75 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 		if (MODE_PARTICLE == m_tBufferDesc.eType_Mode)
 		{
 			ReSet_ParticleInfo(i);
-		}
 
-		
 
-		// 원점 위치로 고정
-		//XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
-		XMStoreFloat4(&pModelInstance[i].vTranslation, m_vecParticleInfoDesc[i].vCenterPositions);
-		if (m_tBufferDesc.bRecycle)
-		{
-			// 시작에 안보이게
-			pModelInstance[i].vRight = _float4(0.f, 0.f, 0.f, 0.f)	/* * 크기 */;
-			pModelInstance[i].vUp = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
-			pModelInstance[i].vLook = _float4(0.f, 0.f, 0.f, 0.f)	/* * 크기 */;
+			// 현재 크기 초기화
+			m_vecParticleInfoDesc[i].vCurScales.x = m_tBufferDesc.vStartScale.x;
+			m_vecParticleInfoDesc[i].vCurScales.y = m_tBufferDesc.vStartScale.x;
+			m_vecParticleInfoDesc[i].vCurScales.z = m_tBufferDesc.vStartScale.z;
+
+			Rotation_Instance(i);
+
+			// 쉐이더에 던질 라업룩 값으로 초기화
+			pModelInstance[i].vRight	= m_vecParticleShaderInfoDesc[i].vRight;
+			pModelInstance[i].vUp		= m_vecParticleShaderInfoDesc[i].vUp;
+			pModelInstance[i].vLook		= m_vecParticleShaderInfoDesc[i].vLook;
+
+
+			if (m_tBufferDesc.bUseRigidBody)
+			{
+				// 원점 위치로 고정
+				//XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
+				XMStoreFloat4(&pModelInstance[i].vTranslation, m_vecParticleInfoDesc[i].vCenterPositions);
+			}
+			else
+			{
+				// 리지드바디 사용이 아닐 경우
+
+				_vector		vDir = Make_Dir(i);						// 방향 만들기
+				m_vecParticleShaderInfoDesc[i].vDir = vDir;			// 쉐이더에 전달할 방향 저장
+				if (SPARK == m_tBufferDesc.eType_Action)
+				{
+					Update_Spark_Rotation(i);
+				}
+
+				// 센터 + 방향 위치로 세팅
+				XMStoreFloat4(&pModelInstance[i].vTranslation, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + vDir);
+
+			}
+
+			if (m_tBufferDesc.bRecycle)
+			{
+				// 시작에 안보이게
+				pModelInstance[i].vRight = _float4(0.f, 0.f, 0.f, 0.f)	/* * 크기 */;
+				pModelInstance[i].vUp = _float4(0.f, 0.f, 0.f, 0.f)		/* * 크기 */;
+				pModelInstance[i].vLook = _float4(0.f, 0.f, 0.f, 0.f)	/* * 크기 */;
+			}
+			else
+			{
+				pModelInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.x;
+				pModelInstance[i].vUp = _float4(0.f, 1.f, 0.f, 0.f)	* m_vecParticleInfoDesc[i].vCurScales.y;
+				pModelInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.z;
+			}
+
 		}
 		else
 		{
+			// 파티클 모드가 아니면
+
+			// 원점 위치로 고정
+			//XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
+			XMStoreFloat4(&pModelInstance[i].vTranslation, m_vecParticleInfoDesc[i].vCenterPositions);
+
 			pModelInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f)	/* * 크기 */;
 			pModelInstance[i].vUp = _float4(0.f, 1.f, 0.f, 0.f)		/* * 크기 */;
 			pModelInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f)	/* * 크기 */;
 		}
+
+		
+
+
+
 
 
 
@@ -220,20 +269,9 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 
 	
 #pragma region 이동 진행방향 회전 시작
-		m_vecParticleInfoDesc[iNum].fRanges = SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
+		// 이동 방향으로 힘 줘서 이동
+		_vector		vDir = Make_Dir(iNum);
 
-		_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-		vDir = XMVector3Normalize(vDir) * m_vecParticleInfoDesc[iNum].fRanges;
-
-		_float3 vRotationOffset = { XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetX.x, m_tBufferDesc.vMinMaxRotationOffsetX.y))
-								  , XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetY.x, m_tBufferDesc.vMinMaxRotationOffsetY.y))
-								  , XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y)) };
-
-
-		_vector		vRotation		= XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
-		_matrix		RotationMatrix	= XMMatrixRotationQuaternion(vRotation);
-
-		vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
 		m_vecParticleShaderInfoDesc[iNum].vDir = vDir;			// 쉐이더에 전달할 방향 저장
 #pragma endregion 이동 진행방향 회전 끝
 
@@ -266,6 +304,66 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 #pragma endregion 이동 : 리지드바디 끝
 
 
+
+}
+
+_float4 CVIBuffer_Effect_Model_Instance::Make_Dir(_uint iNum)
+{
+	_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+
+
+	vDir = XMVector3Normalize(vDir) * m_vecParticleInfoDesc[iNum].fMaxRange;
+
+	_float3 vRotationOffset = { XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetX.x, m_tBufferDesc.vMinMaxRotationOffsetX.y))
+							  , XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetY.x, m_tBufferDesc.vMinMaxRotationOffsetY.y))
+							  , XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxRotationOffsetZ.x, m_tBufferDesc.vMinMaxRotationOffsetZ.y)) };
+
+
+	_vector		vRotation = XMQuaternionRotationRollPitchYaw(vRotationOffset.x, vRotationOffset.y, vRotationOffset.z);
+	_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
+
+	vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
+
+
+	return vDir;
+}
+
+void CVIBuffer_Effect_Model_Instance::Rotation_Instance(_uint iNum)
+{
+
+	_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * m_vecParticleInfoDesc[iNum].vCurScales.x;
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f)	* m_vecParticleInfoDesc[iNum].vCurScales.y;
+	_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * m_vecParticleInfoDesc[iNum].vCurScales.z;
+
+
+	_vector		vRotation = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_tBufferDesc.vRadian.x)
+															, XMConvertToRadians(m_tBufferDesc.vRadian.y)
+															, XMConvertToRadians(m_tBufferDesc.vRadian.z));
+
+	_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
+
+
+	// 쉐이더에 던질 값(라업룩) 저장 
+	m_vecParticleShaderInfoDesc[iNum].vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	m_vecParticleShaderInfoDesc[iNum].vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	m_vecParticleShaderInfoDesc[iNum].vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+}
+
+void CVIBuffer_Effect_Model_Instance::Update_Spark_Rotation(_uint iNum)
+{
+	_vector		vRight, vUp, vLook;
+
+	// 이동 진행 방향벡터를 Up으로 한 새로운 Right, Look 정해주기 ===================================
+	vUp = XMVector4Normalize(m_vecParticleShaderInfoDesc[iNum].vDir) * m_vecParticleInfoDesc[iNum].vCurScales.y;
+	vLook = XMVector4Normalize(XMVector3Cross(float4(0.f, 1.f, 0.f, 0.f), vUp));
+	vRight = XMVector4Normalize(XMVector3Cross(vUp, vLook)) * m_vecParticleInfoDesc[iNum].vCurScales.x;
+	vLook = XMVector4Normalize(XMVector3Cross(vRight, vUp)) * m_vecParticleInfoDesc[iNum].vCurScales.z;
+
+
+	m_vecParticleShaderInfoDesc[iNum].vRight = vRight;
+	m_vecParticleShaderInfoDesc[iNum].vUp = vUp;
+	m_vecParticleShaderInfoDesc[iNum].vLook = vLook;
 
 }
 

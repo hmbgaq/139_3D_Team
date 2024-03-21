@@ -33,9 +33,15 @@ public:
 		_bool		bUseGravity = { TRUE };
 		FORCE_MODE	eForce_Mode = { FORCE_MODE::IMPULSE };
 
-
 		_float		fGravity = { -9.8f };			// 중력 가속도
-		_float		fFriction = { 0.1f };			// 마찰 계수
+		
+
+		EASING_TYPE	eType_FrictionLerp = { EASING_TYPE::LINEAR };
+		_float2		vFrictionLerp_Pos = { 0.f, 0.f };		// 어디서부터 러프를 시작하고, 끝낼건지
+		_float2		vStartEnd_Friction = { 0.1f, 0.1f };	// 시작과 끝 마찰 계수
+
+		
+		
 		_float		fSleepThreshold = { 0.05f };	// 슬립 한계점
 		_byte		byFreezeAxis = { 0 };			// 축 고정 확인용 바이트
 
@@ -121,20 +127,24 @@ public:
 
 		// 위치
 		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
-		_float fMaxRange = { 3.f };
+		_float	fMaxRange = { 3.f };
+
 
 		// 스피드
-		_float			fCurSpeed = { 1.f };
+		_float	fCurSpeed = { 1.f };
+
 
 		// 크기
-		_float		fUpScaleTimeAccs	= { 0.f };
-		_float		fDownScaleTimeAccs	= { 0.f };
+		_float	fUpScaleTimeAccs	= { 0.f };
+		_float	fDownScaleTimeAccs	= { 0.f };
 
-		_float2		vCurScales			= { 1.f, 1.f };
-		_float2		vMaxScales			= { 1.f, 1.f };
+		_float2	vCurScales			= { 1.f, 1.f };
+		_float2	vMaxScales			= { 1.f, 1.f };
 		
+
 		// 색
 		_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f };
+
 
 		void Reset_ParticleTimes()
 		{
@@ -175,10 +185,12 @@ public:
 		_float3			vAccel = {0.f, 0.f, 0.f};		// 가속도
 		_float3			vVelocity = { 0.f, 0.f, 0.f };	// 속도
 
-		_float3			vDir = { 1.f, 0.f, 0.f };
-
+		//_float3			vDir = { 1.f, 0.f, 0.f };
 
 		_float			fMass = { 10.f };				// 질량
+
+		_float			fFriction = { 0.1f };			// 마찰 계수
+		_float			fFrictionTimeAccs = { 0.f };
 
 	} PARTICLE_RIGIDBODY_DESC;
 
@@ -209,6 +221,7 @@ public:
 	_float4 Make_Dir(_uint iNum);
 	void	Rotation_Instance(_uint iNum);
 	void	Update_Spark_Rotation(_uint iNum);
+
 
 	/* For.RigidBody */
 public:

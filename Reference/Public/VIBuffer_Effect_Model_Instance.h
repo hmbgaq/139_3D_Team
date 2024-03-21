@@ -51,13 +51,26 @@ public:
 		//_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
 		_float3		vMinCenterOffsetPos = { 0.f, 0.f, 0.f };
 		_float3		vMaxCenterOffsetPos = { 0.f, 0.f, 0.f };
+
 		_float2		vMinMaxRange	= { 0.1f, 3.f };
 
 
 		/* For.Rotation */
+		_float3		vRadian = { 0.f, 0.f, 0.f };
+
 		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetY = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetZ = { 0.0f, 360.f };
+
+
+		/* For.Scale */
+		_bool		bUseScaleLerp = { TRUE };
+		EASING_TYPE	eType_ScaleLerp = { EASING_TYPE::LINEAR };
+		_float2		vScaleLerp_Up_Pos = { 0.f, 0.3f };		// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(커지는 용)
+		_float2		vScaleLerp_Down_Pos = { 1.f, 1.f };			// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(작아지는 용)
+		_float2		vMinMaxWidth = { 1.f, 1.f };
+		_float2		vMinMaxHeight = { 1.f, 1.f };
+
 
 
 		// 업데이트 돌면서 변하는 정보들(저장X)
@@ -90,8 +103,31 @@ public:
 		_float	fLifeTime = { 1.f };
 		_float  fLifeTimeRatios = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
 
+		// 위치
 		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
-		_float  fRanges			 = { 0.f };
+		_float	fMaxRange = { 3.f };
+
+
+		// 스피드
+		_float	fCurSpeed = { 1.f };
+
+
+		// 크기
+		_float	fUpScaleTimeAccs = { 0.f };
+		_float	fDownScaleTimeAccs = { 0.f };
+
+		_float2	vCurScales = { 1.f, 1.f };
+		_float2	vMaxScales = { 1.f, 1.f };
+
+
+		void Reset_ParticleTimes()
+		{
+			fTimeAccs = { 0.f };
+			fLifeTimeRatios = { 0.f };
+
+			fUpScaleTimeAccs = { 0.f };
+			fDownScaleTimeAccs = { 0.f };
+		}
 
 	} PARTICLE_INFO_DESC;
 
@@ -102,6 +138,11 @@ public:
 		// 업데이트 돌면서 변하는 정보들(저장X)
 		_float3	vDir = { 1.f, 0.f, 0.f };
 		_float	Padding = { 0.f };
+
+
+		_float4 vRight = { 1.f, 0.f, 0.f, 0.f };
+		_float4 vUp = { 0.f, 1.f, 0.f, 0.f };
+		_float4 vLook = { 0.f, 0.f, 1.f, 0.f };
 
 
 	} PARTICLE_SHADER_INFO_DESC;
@@ -141,6 +182,12 @@ public:
 public:
 	void ReSet();
 	void ReSet_ParticleInfo(_uint iNum);
+
+
+public:
+	_float4 Make_Dir(_uint iNum);
+	void	Rotation_Instance(_uint iNum);
+
 
 	/* For.RigidBody */
 public:
