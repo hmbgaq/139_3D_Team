@@ -185,96 +185,103 @@ void CImgui_Manager::Tick(_float fTimeDelta)
 
 void CImgui_Manager::MenuTick(_float fTimeDelta)
 {
-	if (ImGui::BeginMainMenuBar())
+	if (m_pGameInstance->Key_Down(DIK_CAPSLOCK))
+		m_bShowMenubar = !m_bShowMenubar;
+
+	if (m_bShowMenubar == true)
 	{
-		if (ImGui::BeginMenu("Tools"))
+		if (ImGui::BeginMainMenuBar())
 		{
- 			if (ImGui::MenuItem("MapTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW]))
- 			{
- 				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW);
-
- 				if (nullptr == pWindow)
- 				{
- 					MSG_BOX("맵 윈도우가 없음. Ready_Window 함수 확인 바람");
- 					return;
- 				}
-
- 				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
- 			}
-
- 			if (ImGui::MenuItem("AnimationTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW]))
- 			{
- 				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW);
-				
- 				if (nullptr == pWindow)
- 				{
- 					MSG_BOX("애니메이션 윈도우가 없음. Ready_Window 함수 확인 바람");
- 					return;
- 				}
-
- 				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로o
- 			}
-
- 			if (ImGui::MenuItem("EffectTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW]))
- 			{
- 				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW);
-
- 				if (nullptr == pWindow)
- 				{
- 					MSG_BOX("이펙트 윈도우가 없음. Ready_Window 함수 확인 바람");
- 					return;
- 				}
-
- 				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
- 			}
-
- 			if (ImGui::MenuItem("UITool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_UITOOL_WINDOW]))
- 			{
- 				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_UITOOL_WINDOW);
-
- 				if (nullptr == pWindow)
- 				{
- 					MSG_BOX("UI 윈도우가 없음. Ready_Window 함수 확인 바람");
- 					return;
- 				}
-
- 				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
- 			}
-
-			if (ImGui::MenuItem("ShaderTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_SHADER_WINDOW]))
+			if (ImGui::BeginMenu("Tools"))
 			{
-				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_SHADER_WINDOW);
+				if (ImGui::MenuItem("MapTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW]))
+				{
+					CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW);
+
+					if (nullptr == pWindow)
+					{
+						MSG_BOX("맵 윈도우가 없음. Ready_Window 함수 확인 바람");
+						return;
+					}
+
+					pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+				}
+
+				if (ImGui::MenuItem("AnimationTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW]))
+				{
+					CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW);
+
+					if (nullptr == pWindow)
+					{
+						MSG_BOX("애니메이션 윈도우가 없음. Ready_Window 함수 확인 바람");
+						return;
+					}
+
+					pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로o
+				}
+
+				if (ImGui::MenuItem("EffectTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW]))
+				{
+					CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_EFFECTTOOL_WINDOW);
+
+					if (nullptr == pWindow)
+					{
+						MSG_BOX("이펙트 윈도우가 없음. Ready_Window 함수 확인 바람");
+						return;
+					}
+
+					pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+				}
+
+				if (ImGui::MenuItem("UITool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_UITOOL_WINDOW]))
+				{
+					CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_UITOOL_WINDOW);
+
+					if (nullptr == pWindow)
+					{
+						MSG_BOX("UI 윈도우가 없음. Ready_Window 함수 확인 바람");
+						return;
+					}
+
+					pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+				}
+
+				if (ImGui::MenuItem("ShaderTool", nullptr, m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_SHADER_WINDOW]))
+				{
+					CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_SHADER_WINDOW);
+
+					if (nullptr == pWindow)
+					{
+						MSG_BOX("Shader 윈도우가 없음. Ready_Window 함수 확인 바람");
+						return;
+					}
+
+					pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+				}
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Style"))
+			{
+				CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_STYLE_WINDOW);
 
 				if (nullptr == pWindow)
 				{
-					MSG_BOX("Shader 윈도우가 없음. Ready_Window 함수 확인 바람");
+					m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_STYLE_WINDOW] = FALSE;
+					MSG_BOX("Style 윈도우가 없음. Ready_Window 함수 확인 바람");
 					return;
 				}
-
 				pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
+
+				ImGui::EndMenu();
 			}
 
- 			ImGui::EndMenu();
+			ImGui::EndMainMenuBar();
+
 		}
-
-		if (ImGui::BeginMenu("Style"))
-		{
-			CImgui_Window* pWindow = Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_STYLE_WINDOW);
-
-			if (nullptr == pWindow)
-			{
-				m_bEnableTool[(_int)IMGUI_WINDOW_TYPE::IMGUI_STYLE_WINDOW] = FALSE;
-				MSG_BOX("Style 윈도우가 없음. Ready_Window 함수 확인 바람");
-				return;
-			}
-			pWindow->Set_Enable(!pWindow->Is_Enable()); //! 기존에 활성화 상태를 부정으로
-
-			ImGui::EndMenu();
-		}
-
-		ImGui::EndMainMenuBar();
-		
 	}
+
 
 	
 }

@@ -164,7 +164,7 @@ public:
 		string		strButton_Name = "";	// 적용할 맵 텍스처
 
 		/* 색상 */
-		_vector		vColor = { 1.f, 1.f, 1.f, 1.f };
+		_vector		vColor = { 0.f, 0.f, 0.f, 0.f };
 
 		class CTransform* pParentTransformCom = nullptr;
 
@@ -186,6 +186,7 @@ public:
 		_int		iMaskNum = 0;
 		_int		iNoiseNum = 0;
 
+		MODE_COLOR eColorMode = MODE_COLOR::MODE_COLOR_END;
 	}UI_DESC;
 
 	enum UI_BUTTON_STATE
@@ -470,6 +471,14 @@ protected: /* ============================= UI =============================== *
 public:
 	void				Set_MaskNum(_int iMaskNum) { m_tUIInfo.iMaskNum = iMaskNum; }
 	void				Set_NoiseNum(_int iNoiseNum) { m_tUIInfo.iNoiseNum = iNoiseNum; }
+	void				Set_DiffuseColor(_float fColorR, _float fColorG, _float fColorB, _float fColorA)
+	{
+		m_tUIInfo.vColor.m128_f32[0] = fColorR;
+		m_tUIInfo.vColor.m128_f32[1] = fColorG;
+		m_tUIInfo.vColor.m128_f32[2] = fColorB;
+		m_tUIInfo.vColor.m128_f32[3] = fColorA;
+	}
+	void				Set_ColorMode(MODE_COLOR eColorMode) { m_tUIInfo.eColorMode = eColorMode; }
 
 public:
 	void	Set_OffsetX(_float fOffsetX) { m_fOffsetX = fOffsetX; }

@@ -943,6 +943,38 @@ void CWindow_UITool::Setting_Child()
 		{
 			m_pCurrSelectUI->Set_NoiseNum(m_iNoiseNum);
 		}
+
+		/* 디퓨즈 색상혼합 모드_Mesh */
+		if (ImGui::CollapsingHeader(" Color Blend_Mesh "))
+		{
+			ImGui::RadioButton(u8"곱하기_Mesh", &m_iColor_Mode_Mesh, 0);
+			ImGui::RadioButton(u8"스크린_Mesh", &m_iColor_Mode_Mesh, 1);
+			ImGui::RadioButton(u8"오버레이_Mesh", &m_iColor_Mode_Mesh, 2);
+			ImGui::RadioButton(u8"더하기_Mesh", &m_iColor_Mode_Mesh, 3);
+			ImGui::RadioButton(u8"번_Mesh", &m_iColor_Mode_Mesh, 4);
+			ImGui::RadioButton(u8"혼합안함_Mesh", &m_iColor_Mode_Mesh, 5);
+			if (0 == m_iColor_Mode_Mesh)
+				m_pCurrSelectUI->Set_ColorMode(MODE_COLOR::MUL);
+			else if (1 == m_iColor_Mode_Mesh)
+				m_pCurrSelectUI->Set_ColorMode(MODE_COLOR::SCREEN);
+			else if (2 == m_iColor_Mode_Mesh)
+				m_pCurrSelectUI->Set_ColorMode(MODE_COLOR::OVERLAY);
+			else if (3 == m_iColor_Mode_Mesh)
+				m_pCurrSelectUI->Set_ColorMode(MODE_COLOR::ADD);
+			else if (4 == m_iColor_Mode_Mesh)
+				m_pCurrSelectUI->Set_ColorMode(MODE_COLOR::BURN);
+			else if (5 == m_iColor_Mode_Mesh)
+				m_pCurrSelectUI->Set_ColorMode(MODE_COLOR::MODE_COLOR_END);
+
+
+			// 디퓨즈에 곱할 색 (색 변경)
+			if (ImGui::ColorEdit4("Color_Mul_Mesh", m_fColor_Mul_Mesh, ImGuiColorEditFlags_None))
+			{
+				m_pCurrSelectUI->Set_DiffuseColor(m_fColor_Mul_Mesh[0], m_fColor_Mul_Mesh[1], m_fColor_Mul_Mesh[2], m_fColor_Mul_Mesh[3]);
+			}
+
+			ImGui::SeparatorText("");
+		}
 	}
 
 
@@ -3614,6 +3646,8 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
 
 
 		wstring wstrLayer = TEXT("");

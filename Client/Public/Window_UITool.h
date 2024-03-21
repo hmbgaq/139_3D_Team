@@ -211,7 +211,7 @@ public:
 	// 키프레임 랜더링 및 편집 (순서 UI중 가장 마지막)
 	void						KeyframeRender_ValueChange();
 	// 키프레임 자동 생성 함수(선형 보간)
-	void CreateKeyframesWithLinearInterpolation(
+	void	CreateKeyframesWithLinearInterpolation(
 												_float minTime, _float maxTime,
 												_float minValue, _float maxValue,
 												_float2 minScaleValue, _float2 maxScaleValue,
@@ -405,6 +405,8 @@ private: /* enum */
 	TOOLSTATE					m_eToolType = TOOL_UI;
 	CUI::UIKEYFRAME*			m_pSelectedKeyframe = nullptr;
 	_bool						m_bSelectKeyframe = false;
+	_int						m_iColor_Mode_Mesh = 5;
+	_float						m_fColor_Mul_Mesh[4];
 
 private: /* Value */
 	_float						m_fChangeValue = 0.1f;
@@ -487,6 +489,7 @@ private:
 		"MouseCursor",
 		"Option_Window",
 		"Option_Title_Button",
+		"ElementList",
 		"AimCrosshair",
 		"Weakness",
 		"Distortion",

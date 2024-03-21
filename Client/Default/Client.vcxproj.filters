@@ -3088,6 +3088,9 @@
     <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\2. SubTitleButton">
       <UniqueIdentifier>{acfd0a2d-0af3-4094-b5ff-41a30b008821}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList">
+      <UniqueIdentifier>{adb0cc32-0a85-4a50-b6cf-4c821167dfe3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -6212,6 +6215,9 @@
     <ClInclude Include="..\Public\UI_Option_Title_Button.h">
       <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\1. TitleButton</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_ElementList.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8786,6 +8792,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Option_Title_Button.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\1. TitleButton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_ElementList.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

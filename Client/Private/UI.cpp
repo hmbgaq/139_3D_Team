@@ -213,6 +213,13 @@ HRESULT CUI::Ready_Components()
 
 HRESULT CUI::Bind_ShaderResources()
 {
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &m_tUIInfo.vColor, sizeof(_float4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iColorMode", &m_tUIInfo.eColorMode, sizeof(_int))))
+		return E_FAIL;
+
 	if (m_tUIInfo.bDistortionUI == false) // Distortion을 사용 안하는 UI일 경우
 		return S_OK;
 
@@ -905,6 +912,9 @@ json CUI::Save_Desc(json& out_json)
 		out_json["ColorB"] = m_tUIInfo.vColor.m128_f32[2];
 	//if (out_json.contains("ColorA")) // 키가 있으면
 		out_json["ColorA"] = m_tUIInfo.vColor.m128_f32[3];
+
+	//if (out_json.contains("ColorMode")) // 키가 있으면
+		out_json["ColorMode"] = m_tUIInfo.eColorMode;
 
 	/* TransformCom */
 	m_pTransformCom->Write_Json(out_json);

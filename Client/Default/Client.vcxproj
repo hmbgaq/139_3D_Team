@@ -1037,6 +1037,7 @@
     <ClInclude Include="..\Public\UI_BackGround.h" />
     <ClInclude Include="..\Public\UI_Collection_Button.h" />
     <ClInclude Include="..\Public\UI_Distortion.h" />
+    <ClInclude Include="..\Public\UI_ElementList.h" />
     <ClInclude Include="..\Public\UI_EnemyFrame_Shard.h" />
     <ClInclude Include="..\Public\UI_EnemyHP_Bar.h" />
     <ClInclude Include="..\Public\UI_EnemyHP_FrameBar.h" />
@@ -1830,6 +1831,7 @@
     <ClCompile Include="..\Private\UI_BackGround.cpp" />
     <ClCompile Include="..\Private\UI_Collection_Button.cpp" />
     <ClCompile Include="..\Private\UI_Distortion.cpp" />
+    <ClCompile Include="..\Private\UI_ElementList.cpp" />
     <ClCompile Include="..\Private\UI_EnemyFrame_Shard.cpp" />
     <ClCompile Include="..\Private\UI_EnemyHP_Bar.cpp" />
     <ClCompile Include="..\Private\UI_EnemyHP_FrameBar.cpp" />
