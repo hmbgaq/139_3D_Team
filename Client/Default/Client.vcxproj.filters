@@ -928,36 +928,6 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch">
       <UniqueIdentifier>{0111783a-b8c9-4035-bc9a-42eefa581af8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left">
-      <UniqueIdentifier>{e7a2f406-acaf-4d97-bf4b-f2fbcdb30cac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\1">
-      <UniqueIdentifier>{4fd43837-ed69-4536-a26d-aab57818d46a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\1\VeryFar">
-      <UniqueIdentifier>{1ac652ba-41d1-4036-aaa8-a1438c3f6e01}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\2">
-      <UniqueIdentifier>{d87950ae-2fb2-4edd-9044-b0ea0c80ac7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\3">
-      <UniqueIdentifier>{c501b063-5c72-4a60-97a7-a840934cf6bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right">
-      <UniqueIdentifier>{4b4e61f8-b211-41a1-832b-0539df79e1b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right\1">
-      <UniqueIdentifier>{230b791b-e33c-48cd-a635-f87466ffb49f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right\2">
-      <UniqueIdentifier>{58a509d8-9cb9-4ed6-98ec-7a08503f255d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right\2\VeryFar">
-      <UniqueIdentifier>{1d53b5dd-528d-4b55-9e0b-e11f8233e7b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right\3">
-      <UniqueIdentifier>{0ebe7d04-bbff-4e36-ae6a-cb34f2327ea3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee">
       <UniqueIdentifier>{166e3330-b419-4cb0-b748-6d52760110a0}</UniqueIdentifier>
     </Filter>
@@ -2917,6 +2887,39 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\6. Electrocute\4. TimeOut">
       <UniqueIdentifier>{563fd33f-f8fd-4c18-97a4-612e7bd4576c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\0. Parent">
+      <UniqueIdentifier>{aa1dfba5-5f77-4b2b-9ac7-fb100896a641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right">
+      <UniqueIdentifier>{4b4e61f8-b211-41a1-832b-0539df79e1b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right\1">
+      <UniqueIdentifier>{230b791b-e33c-48cd-a635-f87466ffb49f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right\2">
+      <UniqueIdentifier>{58a509d8-9cb9-4ed6-98ec-7a08503f255d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right\2\VeryFar">
+      <UniqueIdentifier>{1d53b5dd-528d-4b55-9e0b-e11f8233e7b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right\3">
+      <UniqueIdentifier>{0ebe7d04-bbff-4e36-ae6a-cb34f2327ea3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left">
+      <UniqueIdentifier>{e7a2f406-acaf-4d97-bf4b-f2fbcdb30cac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\1">
+      <UniqueIdentifier>{4fd43837-ed69-4536-a26d-aab57818d46a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\1\VeryFar">
+      <UniqueIdentifier>{1ac652ba-41d1-4036-aaa8-a1438c3f6e01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\2">
+      <UniqueIdentifier>{d87950ae-2fb2-4edd-9044-b0ea0c80ac7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\3">
+      <UniqueIdentifier>{c501b063-5c72-4a60-97a7-a840934cf6bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3427,28 +3430,28 @@
       <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back\Right\135</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_TeleportPunch_L01_Alt.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\1</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_TeleportPunch_L02_Alt.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_TeleportPunch_L03_Alt.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\3</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\3</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_TeleportPunch_R01_Alt.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right\1</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right\1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_TeleportPunch_R02_Alt.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right\2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right\2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_TeleportPunch_R03_Alt.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right\3</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right\3</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_TeleportPunch_L01_VeryFar.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\1\VeryFar</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\1\VeryFar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_TeleportPunch_R02_VeryFar.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right\2\VeryFar</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right\2\VeryFar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_State_Hit.h">
       <Filter>02.GameObjects\00. Character\Player\State\08. Hit\0. Parent</Filter>
@@ -5913,6 +5916,9 @@
     <ClInclude Include="..\Public\Infected_OpenStateTimeout.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\6. Electrocute\4. TimeOut</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_State_TeleportPunch.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\0. Parent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -6539,25 +6545,25 @@
       <Filter>02.GameObjects\00. Character\Player\State\03. Walk\1. Player\2. Back</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_TeleportPunch_L02_Alt.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_TeleportPunch_L03_Alt.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\3</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\3</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_TeleportPunch_R01_Alt.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right\1</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_TeleportPunch_R02_Alt.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right\2</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right\2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_TeleportPunch_R03_Alt.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right\3</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right\3</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_TeleportPunch_L01_VeryFar.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\1\VeryFar</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\1\VeryFar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_TeleportPunch_R02_VeryFar.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Right\2\VeryFar</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\2. Right\2\VeryFar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_State_Hit.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\08. Hit\0. Parent</Filter>
@@ -6635,7 +6641,7 @@
       <Filter>02.GameObjects\00. Character\Player\State\01. Normal\1. Idle\IdleLoop</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_TeleportPunch_L01_Alt.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\Left\1</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_State_Run.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\0. Parent</Filter>
@@ -8361,6 +8367,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Infected_OpenStateTimeout.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\6. Electrocute\4. TimeOut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_TeleportPunch.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\0. Parent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,10 +1,9 @@
 #pragma once
-#include "Player_State_TeleportPunch.h"
-
+#include "Player_State.h"
 
 BEGIN(Client)
 
-class CPlayer_TeleportPunch_R01_Alt : public CPlayer_State_TeleportPunch
+class CPlayer_State_TeleportPunch : public CPlayer_State
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;
@@ -12,7 +11,8 @@ public:
 	virtual void Release(CPlayer* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_TeleportPunch_R01_Alt;
+	virtual CState<CPlayer>* Update_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
+
 
 };
 

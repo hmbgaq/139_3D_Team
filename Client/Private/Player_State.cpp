@@ -377,6 +377,11 @@ CState<CPlayer>* CPlayer_State::EnergyWhip_State(CPlayer* pActor, _float fTimeDe
 	return nullptr;
 }
 
+CState<CPlayer>* CPlayer_State::TeleportPunch_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
+}
+
 
 CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
@@ -878,32 +883,37 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 {
 	if (m_pGameInstance->Key_Down(DIK_Z))
 	{
-		CPlayer::Player_State eState = (CPlayer::Player_State)_iAnimIndex;
+		pActor->Search_Target(50.f);
+		CCharacter* pTarget = pActor->Get_Target();
+		if (nullptr == pTarget)
+			return nullptr;
+
+
+		CPlayer::TeleportPunch_State eState = pActor->Get_TeleportPunch_State();
+
 		switch (eState)
 		{
-
-		case CPlayer_TeleportPunch_L01_Alt::g_iAnimIndex:
-		case CPlayer_TeleportPunch_L01_VeryFar::g_iAnimIndex:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_L01_Alt:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_L01_VeryFar:
 			return new CPlayer_TeleportPunch_R02_Alt();
 			break;
-		case CPlayer_TeleportPunch_L02_Alt::g_iAnimIndex:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_L02_Alt:
 			return new CPlayer_TeleportPunch_R03_Alt();
 			break;
-		case CPlayer_TeleportPunch_L03_Alt::g_iAnimIndex:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_L03_Alt:
 			return new CPlayer_TeleportPunch_R01_Alt();
 			break;
 
-		case CPlayer_TeleportPunch_R01_Alt::g_iAnimIndex:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_R01_Alt:
 			return new CPlayer_TeleportPunch_L02_Alt();
 			break;
-		case CPlayer_TeleportPunch_R02_Alt::g_iAnimIndex:
-		case CPlayer_TeleportPunch_R02_VeryFar::g_iAnimIndex:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_R02_Alt:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_R02_VeryFar:
 			return new CPlayer_TeleportPunch_L03_Alt();
 			break;
-		case CPlayer_TeleportPunch_R03_Alt::g_iAnimIndex:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_R03_Alt:
 			return new CPlayer_TeleportPunch_L01_Alt();
 			break;
-
 		default:
 			return new CPlayer_TeleportPunch_L01_Alt();
 			break;
@@ -911,14 +921,49 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_X))
-	{
-		if (pActor->Is_Animation_End())
-		{
-			return new CPlayer_IdleLoop();
-		}
-	}
+	//{
+//	CPlayer::Player_State eState = (CPlayer::Player_State)_iAnimIndex;
+//	switch (eState)
+//	{
 
+//	case CPlayer_TeleportPunch_L01_Alt::g_iAnimIndex:
+//	case CPlayer_TeleportPunch_L01_VeryFar::g_iAnimIndex:
+//		return new CPlayer_TeleportPunch_R02_Alt();
+//		break;
+//	case CPlayer_TeleportPunch_L02_Alt::g_iAnimIndex:
+//		return new CPlayer_TeleportPunch_R03_Alt();
+//		break;
+//	case CPlayer_TeleportPunch_L03_Alt::g_iAnimIndex:
+//		return new CPlayer_TeleportPunch_R01_Alt();
+//		break;
+
+//	case CPlayer_TeleportPunch_R01_Alt::g_iAnimIndex:
+//		return new CPlayer_TeleportPunch_L02_Alt();
+//		break;
+//	case CPlayer_TeleportPunch_R02_Alt::g_iAnimIndex:
+//	case CPlayer_TeleportPunch_R02_VeryFar::g_iAnimIndex:
+//		return new CPlayer_TeleportPunch_L03_Alt();
+//		break;
+//	case CPlayer_TeleportPunch_R03_Alt::g_iAnimIndex:
+//		return new CPlayer_TeleportPunch_L01_Alt();
+//		break;
+
+//	default:
+//		return new CPlayer_TeleportPunch_L01_Alt();
+//		break;
+//	}
+//}
+
+
+	//if (m_pGameInstance->Key_Down(DIK_X))
+	//{
+
+	//}
+
+	if (pActor->Is_Animation_End())
+	{
+		return new CPlayer_IdleLoop();
+	}
 	
 
 	return nullptr;

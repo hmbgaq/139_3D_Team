@@ -45,10 +45,7 @@ public:		//상태 그룹 별 업데이트
 	CState<CPlayer>* Finisher_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 	CState<CPlayer>* EnergyWhip_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
-
-
-	
-	
+	CState<CPlayer>* TeleportPunch_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 	
 

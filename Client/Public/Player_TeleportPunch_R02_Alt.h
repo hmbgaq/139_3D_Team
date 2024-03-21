@@ -1,10 +1,10 @@
 #pragma once
-#include "Player_State_Attack.h"
+#include "Player_State_TeleportPunch.h"
 
 
 BEGIN(Client)
 
-class CPlayer_TeleportPunch_R02_Alt : public CPlayer_State_Attack
+class CPlayer_TeleportPunch_R02_Alt : public CPlayer_State_TeleportPunch
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;
