@@ -2896,6 +2896,45 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\4. Stun">
       <UniqueIdentifier>{1bbe3f2f-3c01-46ee-9d48-e4cbf8febf7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother">
+      <UniqueIdentifier>{b0e2d0b2-b1c4-4391-b190-4682b4e3176b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth">
+      <UniqueIdentifier>{f34050bb-7f94-4640-8b39-8b664ef6d4ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son">
+      <UniqueIdentifier>{f06b1276-1740-4955-af8c-22ac7385e7a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\Parts">
+      <UniqueIdentifier>{a6f4bb82-6b2e-46b9-83dc-ccc337088b4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State">
+      <UniqueIdentifier>{20b3ce92-2131-4e40-a1c4-c1e469a2bea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\Parts">
+      <UniqueIdentifier>{865fb57d-970c-42bc-840e-018ad2aff2ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State">
+      <UniqueIdentifier>{0da72d6a-eb3f-41fd-b41b-875726fb1acc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts">
+      <UniqueIdentifier>{7ef74908-4606-41c3-8822-efb5de5df624}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State">
+      <UniqueIdentifier>{d67a4b93-334c-41a5-8145-40161c5c76c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\Parts\Body">
+      <UniqueIdentifier>{5a3d5f49-0cf0-4b85-971b-5b470211ce9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\Parts\Body">
+      <UniqueIdentifier>{51453eaa-6fe9-4850-bd80-a8ebfbd178be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Body">
+      <UniqueIdentifier>{1c885c30-9096-4fab-b8fc-920079e92902}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon">
+      <UniqueIdentifier>{2f430b6f-e43e-4b01-b306-3d3a2191698b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -4106,9 +4145,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_Weakspot_Death_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\4. Death\3. Weakspot</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_Weapon.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_Weapon_Hand.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon\Hand</Filter>
@@ -5879,6 +5915,30 @@
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_Introduction_03.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\3. Intro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Mother.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Son.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_MotherMouth.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Son.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Weapon.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -8316,6 +8376,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Sniper_Introduction_03.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\3. Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Mother.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Son.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_MotherMouth.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Son.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
