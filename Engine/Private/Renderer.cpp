@@ -612,7 +612,7 @@ HRESULT CRenderer::Deferred_Effect()
 
 	//FAILED_CHECK(Render_Effect_Distortion_Blur());
 
-	FAILED_CHECK(Render_Effect_Final()); /* Deferred + Effect + EffectBloomBlur */
+	FAILED_CHECK(Render_Effect_Final()); /* Deferred + Effect + EffectBloomBlur 병합 */
 
 	m_ePrevTarget = POST_TYPE::DEFERRED;
 
@@ -627,12 +627,13 @@ HRESULT CRenderer::Render_Effect_Final()
 	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
 	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
-	/* 기존에 그린 Deferred + Effect BloomBlur + Effect Diffuse + Effect_Solid */
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Deferred"), m_pShader_PostProcess, "g_Deferred_Target")); 
-	
+	/* 기본 Effect */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Diffuse"), m_pShader_PostProcess, "g_Effect_Target"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Solid"), m_pShader_PostProcess, "g_Effect_Solid"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_RR_Blur"), m_pShader_PostProcess, "g_EffectBlur_Target"));
+
+	/* Distortion */
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Deferred"), m_pShader_PostProcess, "g_Deferred_Target"));
 	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Distortion_Blur"), m_pShader_PostProcess, "g_Distortion_Target"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Distortion"), m_pShader_PostProcess, "g_Distortion_Target"));
 
