@@ -1083,7 +1083,8 @@
     <ClInclude Include="..\Public\Weapon_Infected_A.h" />
     <ClInclude Include="..\Public\Weapon_Infected_B.h" />
     <ClInclude Include="..\Public\Weapon_Infected_C.h" />
-    <ClInclude Include="..\Public\Weapon_Son.h" />
+    <ClInclude Include="..\Public\Son_Weapon.h" />
+    <ClInclude Include="..\Public\Son_Weapon_Head.h" />
     <ClInclude Include="..\Public\Window_Style.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\TestEvent.h" />
@@ -1836,7 +1837,8 @@
     <ClCompile Include="..\Private\Weapon_Infected_A.cpp" />
     <ClCompile Include="..\Private\Weapon_Infected_B.cpp" />
     <ClCompile Include="..\Private\Weapon_Infected_C.cpp" />
-    <ClCompile Include="..\Private\Weapon_Son.cpp" />
+    <ClCompile Include="..\Private\Son_Weapon.cpp" />
+    <ClCompile Include="..\Private\Son_Weapon_Head.cpp" />
     <ClCompile Include="..\Private\Window_Style.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\TestEvent.cpp" />
