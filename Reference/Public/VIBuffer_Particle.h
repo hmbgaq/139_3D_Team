@@ -62,7 +62,7 @@ public:
 
 		/* For.Scale */
 		EASING_TYPE	eType_ScaleLerp = { EASING_TYPE::LINEAR };
-		_float2		vLerpScale_Pos	= { 0.f, 0.5f };		// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작할건지(커지고, 작아진다)
+		_float2		vLerpScale_Pos	= { 0.f, 1.f };		// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작할건지(커지고, 작아진다)
 		_float2		vScaleSpeed		= { 0.005f, 0.05f };	// 크기 증가 스피드, 감소 스피드
 		_float2		vMinMaxWidth	= { 1.f, 1.f };
 		_float2		vMinMaxHeight	= { 1.f, 1.f };
@@ -83,9 +83,9 @@ public:
 
 
 		// 크기
-		_float		fUpScaleTimeAcc = { 0.f };
+/*		_float		fUpScaleTimeAcc = { 0.f };
 		_float		fDownScaleTimeAcc = { 0.f };
-		_float2		vCurScale		= { 1.f, 1.f };				
+		_float2		vCurScale		= { 1.f, 1.f };	*/			
 
 		_float4     vCurrentColor	= { 1.f, 1.f, 1.f, 1.f };	// 색
 
@@ -95,8 +95,8 @@ public:
 			fTimeAcc = { 0.f };
 			fLifeTimeRatio = { 0.f };
 
-			fUpScaleTimeAcc = { 0.f };
-			fDownScaleTimeAcc = { 0.f };
+			//fUpScaleTimeAcc = { 0.f };
+			//fDownScaleTimeAcc = { 0.f };
 		}
 
 		void Reset_Desc()
@@ -126,6 +126,9 @@ public:
 		_float			fCurSpeed = { 1.f };
 
 		// 크기
+		_float		fUpScaleTimeAccs = { 0.f };
+		_float		fDownScaleTimeAccs = { 0.f };
+
 		_float2	vCurScales	= { 1.f, 1.f };
 		_float2	vMaxScales = { 1.f, 1.f };
 		
@@ -136,6 +139,9 @@ public:
 		{
 			fTimeAccs = { 0.f };
 			fLifeTimeRatios = { 0.f };
+
+			fUpScaleTimeAccs = { 0.f };
+			fDownScaleTimeAccs = { 0.f };
 		}
 
 

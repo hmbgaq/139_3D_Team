@@ -335,9 +335,9 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 		//vLook.rgb = normalize(cross(vRight, vUp)); vLook.a = 0.f;
 		
 		
-        vRight = normalize(g_EffectDesc[In[0].iInstanceID].g_vRight.rgb) * In[0].vPSize.x * 0.5f;
-        vUp = normalize(g_EffectDesc[In[0].iInstanceID].g_vUp.rgb) * In[0].vPSize.y * 0.5f;
-        vLook = normalize(g_EffectDesc[In[0].iInstanceID].g_vLook);
+        vRight	= normalize(g_EffectDesc[In[0].iInstanceID].g_vRight.rgb) * In[0].vPSize.x * 0.5f;
+        vUp		= normalize(g_EffectDesc[In[0].iInstanceID].g_vUp.rgb) * In[0].vPSize.y * 0.5f;
+        vLook	= normalize(g_EffectDesc[In[0].iInstanceID].g_vLook);
 		
 	}
 
@@ -377,7 +377,6 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 	Out[3].vColor = In[0].vColor;
 
 
-	
 	
     Out[0].iInstanceID = In[0].iInstanceID;
     Out[1].iInstanceID = In[0].iInstanceID;
