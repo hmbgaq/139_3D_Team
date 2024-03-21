@@ -74,7 +74,12 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (m_tHBAO_Option.bHBAO_Active)
 		FAILED_CHECK(Render_HBAO_PLUS()); /* Target_HBAO */
 
-	FAILED_CHECK(Render_Deferred()); /*  MRT_Deferred -> Target_Deferred에 저장  */
+	if (true == bTest)
+	{
+		FAILED_CHECK(Render_Deferred()); /*  MRT_Deferred -> Target_Deferred에 저장  */
+	}
+	else if((false == bTest) && (true == m_tHBAO_Option.bHBAO_Active))
+		FAILED_CHECK(Render_PBR());
 
 	FAILED_CHECK(Render_RimBloom()); /* MRT_RB_Blur -> Target_RB_BlurActive에 저장 */
 
@@ -358,6 +363,56 @@ HRESULT CRenderer::Render_Deferred()
 	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
 	FAILED_CHECK(m_pVIBuffer->Render());
 
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_PBR()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Deferred")));
+
+	/* VS_MAIN */
+	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	/* PS_MAIN */
+	_float			CamFar = m_pGameInstance->Get_CamFar();
+	_float4			CamPos = m_pGameInstance->Get_CamPosition();
+	_float			LightFar = m_pGameInstance->Get_ShadowLightFar(m_iCurrentLevel);
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_CamFar", &CamFar, sizeof(_float)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_vLightDir", &CamFar, sizeof(_float)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_LightFar", &LightFar, sizeof(_float)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_vCamPosition", &CamPos, sizeof(_float4)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_LightViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_iCurrentLevel)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_LightProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_iCurrentLevel)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_ViewMatrixInv", &m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_ProjMatrixInv", &m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ)));
+
+	/* 타겟에 값올리기 */
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Priority"), m_pShader_Deferred, "g_PriorityTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse"), m_pShader_Deferred, "g_DiffuseTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader_Deferred, "g_SSAOTexture")); /* ssao 추가 */
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader_Deferred, "g_NormalTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ORM"), m_pShader_Deferred, "g_ORMTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader_Deferred, "g_DepthTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ShadowDepth"), m_pShader_Deferred, "g_ShadowDepthTexture"));
+
+	/* Texture */
+	FAILED_CHECK(m_pIrradianceTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
+	FAILED_CHECK(m_pPreFilteredTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
+	FAILED_CHECK(m_pBRDFTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_BRDFTexture"));
+
+	if (true == m_tFog_Option.bFog_Active)
+	{
+		FAILED_CHECK(m_pShader_Deferred->Bind_Struct("g_Fogdesc", &m_tFog_Option, sizeof(FOG_DESC)));
+		FAILED_CHECK(m_pPerlinNoiseTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_PerlinNoiseTexture"));
+	}
+	
+	FAILED_CHECK(m_pShader_Deferred->Begin(ECast(DEFERRED_SHADER::PBR)));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
+	FAILED_CHECK(m_pVIBuffer->Render());
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
@@ -945,6 +1000,15 @@ HRESULT CRenderer::Create_Buffer()
 	m_pPerlinNoiseTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/T_Perlin_Noise_M.dds"));
 	NULL_CHECK_RETURN(m_pPerlinNoiseTextureCom, E_FAIL);
 
+	m_pIrradianceTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_2_Irradiance.dds"));
+	NULL_CHECK_RETURN(m_pIrradianceTextureCom, E_FAIL);
+
+	m_pBRDFTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/BRDFTexture.png"));
+	NULL_CHECK_RETURN(m_pBRDFTextureCom, E_FAIL);
+
+	m_pPreFilteredTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_2_PreFilteredTexture.dds"));
+	NULL_CHECK_RETURN(m_pPreFilteredTextureCom, E_FAIL);
+
 	return S_OK;
 }
 
@@ -1229,6 +1293,8 @@ HRESULT CRenderer::Render_DebugTarget()
 
 HRESULT CRenderer::Control_HotKey()
 {
+	if (m_pGameInstance->Key_Down(DIK_0))
+		bTest = !bTest;
 //	if (m_pGameInstance->Key_Down(DIK_GRAVE))
 //	{
 //		cout << " ----------------------------- " << endl;
