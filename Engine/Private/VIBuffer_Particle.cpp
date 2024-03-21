@@ -294,7 +294,6 @@ void CVIBuffer_Particle::ReSet()
 		m_vecParticleInfoDesc[i].vCurScales.y = m_tBufferDesc.vMinMaxHeight.x;
 
 
-		//if(분기 나누기)
 		Rotation_Instance(i);	// 점 자체 회전
 
 		// 쉐이더에 던질 라업룩 값으로 초기화
@@ -577,6 +576,15 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 #pragma region 크기 러프 끝
 
+
+#pragma region 회전 : 자체 회전 시작
+		Rotation_Instance(i);
+
+		// 쉐이더에 던질 라업룩 값으로 초기화
+		pVertices[i].vRight = m_vecParticleShaderInfoDesc[i].vRight;
+		pVertices[i].vUp = m_vecParticleShaderInfoDesc[i].vUp;
+		pVertices[i].vLook = m_vecParticleShaderInfoDesc[i].vLook;
+#pragma region 회전 : 자체 회전 끝
 
 
 #pragma region 이동 : 리지드바디 시작
