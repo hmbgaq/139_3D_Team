@@ -19,10 +19,10 @@ CState<CPlayer>* CPlayer_State_TeleportPunch::Update(CPlayer* pActor, _float fTi
 
 	if (false == m_bFlags[0])
 	{
-		pActor->Chasing_Attack(fTimeDelta, 50.f, 8);
-		m_bFlags[0] = pActor->Is_Inputable_Front(4);
+		pActor->Chasing_Attack(fTimeDelta, 20.f, 8);
+		m_bFlags[0] = pActor->Is_Inputable_Front(4) || 2.5f >= pActor->Calc_Distance();
 	}
-	else if (false == m_bFlags[1] && 2.f >= pActor->Calc_Distance())
+	else if (false == m_bFlags[1] && 1.5f >= pActor->Calc_Distance())
 	{
 		//pTarget->Set_Position(pActor->Calc_Front_Pos(_float3(0.f, 0.f, 3.f)));
 
@@ -30,6 +30,7 @@ CState<CPlayer>* CPlayer_State_TeleportPunch::Update(CPlayer* pActor, _float fTi
 
 		pTarget->Look_At_OnLand(pActor->Get_Position_Vector());
 		pTarget->Hitted_Dead(Power::Heavy);
+		pTarget->Set_Invincible(true);
 		m_bFlags[1] = true;
 	}
 

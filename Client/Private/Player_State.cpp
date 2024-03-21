@@ -883,7 +883,7 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 {
 	if (m_pGameInstance->Key_Down(DIK_Z))
 	{
-		pActor->Search_Target(50.f);
+		pActor->Search_Target(20.f);
 		CCharacter* pTarget = pActor->Get_Target();
 		if (nullptr == pTarget)
 			return nullptr;

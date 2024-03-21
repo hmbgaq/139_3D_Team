@@ -92,6 +92,7 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Update(CPlayer* pActor, _float fTi
 		{
 			m_pGameInstance->Set_RadialBlurTime();
 			pTarget->Hitted_Dead(Power::Heavy);
+			pTarget->Set_Invincible(true);
 			m_bFlags[HIT_EIGHTH] = true;
 		}
 	}
