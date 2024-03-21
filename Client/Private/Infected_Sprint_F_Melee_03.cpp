@@ -7,8 +7,6 @@ void CInfected_Sprint_F_Melee_03::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Get_Transform()->Set_Speed(10.f);
-	pActor->Set_StiffnessRate(1.f);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 	switch (m_eType)
@@ -33,9 +31,6 @@ void CInfected_Sprint_F_Melee_03::Initialize(CInfected* pActor)
 
 	_float stiff = pActor->Get_StiffnessRate();
 	_float speed = pActor->Get_Transform()->Get_Speed();
-
-	cout << stiff << endl;
-	cout << speed << endl;
 }
 
 CState<CInfected>* CInfected_Sprint_F_Melee_03::Update(CInfected* pActor, _float fTimeDelta)

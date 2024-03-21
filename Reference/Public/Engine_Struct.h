@@ -381,17 +381,19 @@ namespace Engine
 	typedef struct ENGINE_DLL tagBloomRim_Desc
 	{
 		_bool	bRimBloom_Blur_Active		= { false };
-	}BLOOMRIM_DESC;
+		_bool	bShadow_Active				= { false };
+	}DEFERRED_DESC;
 
 	typedef struct ENGINE_DLL tagFogDesc
 	{
-		bool  bFog_Active			= false;
-		float fFogStartDepth		= 55.f;
-		float fFogStartDistance		= 0.1f;
-		float fFogDistanceValue		= 30.f;
-		float fFogHeightValue		= 50.f;
-		float fFogDistanceDensity	= 0.05f;
-		float fFogHeightDensity		= 0.05f;
+		_bool	bFog_Active				= false;
+		_float	fFogStartDepth			= 55.f;
+		_float	fFogStartDistance		= 0.1f;
+		_float	fFogDistanceValue		= 30.f;
+		_float	fFogHeightValue			= 50.f;
+		_float	fFogDistanceDensity		= 0.05f;
+		_float	fFogHeightDensity		= 0.05f;
+		_float4 vFogColor				= { 0.5f, 0.5f, 0.5f, 0.2f };
 	} FOG_DESC;
 
 	typedef struct ENGINE_DLL tagHDRDesc

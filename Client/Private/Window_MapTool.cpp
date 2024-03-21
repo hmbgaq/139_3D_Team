@@ -351,7 +351,10 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				InteractJson[i].emplace("InteractType", Desc.eInteractType);
 				InteractJson[i].emplace("LevelChange", Desc.bLevelChange);
 				InteractJson[i].emplace("InteractLevel", Desc.eChangeLevel);
+				InteractJson[i].emplace("UseGravity", Desc.bUseGravity);
 				
+
+				CJson_Utility::Write_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 
 				CJson_Utility::Write_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
 				CJson_Utility::Write_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
@@ -431,6 +434,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				 /*= m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);*/
 				MonsterJson[i].emplace("PrototypeTag", strProtoTag);
 				MonsterJson[i].emplace("MonsterGroupIndex", m_vecCreateMonster[i]->Get_MonsterGroupIndex());
+				MonsterJson[i].emplace("StartNaviIndex", Desc.iStartNaviIndex);
 				m_vecCreateMonster[i]->Write_Json(MonsterJson[i]);
 			}
 		}
@@ -680,6 +684,10 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.bLevelChange = InteractJson[i]["LevelChange"];
 			//Desc.bLevelChange = false;
 			Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
+			
+
+			 Desc.bUseGravity = InteractJson[i]["UseGravity"];
+			 CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
@@ -771,6 +779,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
  			MonsterDesc.bPreview = false;
  			MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
  			MonsterDesc.iMonsterGroupIndex = MonsterJson[i]["MonsterGroupIndex"];
+			MonsterDesc.iStartNaviIndex = MonsterJson[i]["StartNaviIndex"];
  
  
  			const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
@@ -1435,6 +1444,12 @@ void CWindow_MapTool::NavigationMode_Function()
 			if(true == bPlayerMove)
 			{
 				Guizmo_Tick(m_pPlayer);
+			}
+
+			if (ImGui::Button(u8"플레이어 카메라 위치이동"))
+			{
+				
+				m_pPlayer->Get_Transform()->Set_State(CTransform::STATE_POSITION, m_pGameInstance->Get_CamPosition());
 			}
 		}
 
@@ -2997,50 +3012,51 @@ void CWindow_MapTool::Navigation_DeleteTab()
 	{
 		CNavigation* pNavi = m_pPlayer->Get_Navigation();
 		if(pNavi != nullptr)
-			Safe_Release(pNavi);
-	}
-
-	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
-	_int iCellSize = (_int)vecCells.size();
-
-	if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck())
-	{
-		_int index = 0;
-
-		_float3 fPickedPos = { 0.f, 0.f, 0.f };
-
-		_int	iNonAnimObjectSize = (_int)m_vecCreateObject.size();
-
-		_int	iIndex = 0;
-		_float fHighestYValue = -FLT_MAX;
-		_float3 vHighestPickesPos = {};
-		_bool	bIsPicking = false;
-
-
-
-		if (m_vecCreateObject[m_iNavigationTargetIndex]->Picking(&fPickedPos))
-		{
-			
-			Find_NearPointPos(&fPickedPos);
-
-			m_fNaviPickingPos = fPickedPos;
-			bIsPicking = true;
-		}
-
-		if (true == bIsPicking)
-		{
-			fPickedPos = XMVector3TransformCoord(XMLoadFloat3(&fPickedPos), m_vecCreateObject[m_iNavigationTargetIndex]->Get_Transform()->Get_WorldMatrix());
-
-			CCell* pTargetCell = nullptr;
-			pTargetCell = Find_NearCell(fPickedPos);
-
-			if (nullptr == pTargetCell)
-				return;
-
-			m_pNavigation->Delete_Cell(pTargetCell->Get_Index());
-		}
+			m_pPlayer->Remove_Component(L"Com_Navigation", reinterpret_cast<CComponent**>(&pNavi));
 		
 	}
+
+	//vector<CCell*> vecCells = m_pNavigation->Get_Cells();
+	//_int iCellSize = (_int)vecCells.size();
+
+	//if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck())
+	//{
+	//	_int index = 0;
+	//
+	//	_float3 fPickedPos = { 0.f, 0.f, 0.f };
+	//
+	//	_int	iNonAnimObjectSize = (_int)m_vecCreateObject.size();
+	//
+	//	_int	iIndex = 0;
+	//	_float fHighestYValue = -FLT_MAX;
+	//	_float3 vHighestPickesPos = {};
+	//	_bool	bIsPicking = false;
+	//
+	//
+	//
+	//	if (m_vecCreateObject[m_iNavigationTargetIndex]->Picking(&fPickedPos))
+	//	{
+	//		
+	//		Find_NearPointPos(&fPickedPos);
+	//
+	//		m_fNaviPickingPos = fPickedPos;
+	//		bIsPicking = true;
+	//	}
+	//
+	//	if (true == bIsPicking)
+	//	{
+	//		fPickedPos = XMVector3TransformCoord(XMLoadFloat3(&fPickedPos), m_vecCreateObject[m_iNavigationTargetIndex]->Get_Transform()->Get_WorldMatrix());
+	//
+	//		CCell* pTargetCell = nullptr;
+	//		pTargetCell = Find_NearCell(fPickedPos);
+	//
+	//		if (nullptr == pTargetCell)
+	//			return;
+	//
+	//		m_pNavigation->Delete_Cell(pTargetCell->Get_Index());
+	//	}
+	//	
+	//}
 
 	if (m_pGameInstance->Key_Down(DIK_NUMPADENTER))
 	{
@@ -5597,6 +5613,39 @@ void CWindow_MapTool::Interact_SelectFunction()
 
 					m_pPickingObject = m_vecCreateInteractObject[m_iSelectObjectIndex];
 
+					CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC InteractDesc = *m_vecCreateInteractObject[m_iSelectObjectIndex]->Get_EnvironmentDesc();
+					
+					m_eInteractType = InteractDesc.eInteractType;
+					m_eInteractState = InteractDesc.eInteractState;
+					m_vInteractRootMoveRate = InteractDesc.vPlayerRootMoveRate;
+
+
+					if (3 == (_uint)InteractDesc.eChangeLevel)
+					{
+						m_eInteractLevel = 0;
+					}
+					else if (4 == (_uint)InteractDesc.eChangeLevel)
+					{
+						m_eInteractLevel = 1;
+					}
+					else
+					{
+						m_eInteractLevel = 0;
+					}
+					m_bInteractLevelChange = InteractDesc.bLevelChange;
+					m_bInteractUseGravity = InteractDesc.bUseGravity;
+
+					_float3 vColliderSize = InteractDesc.vColliderSize;
+					_float3 vColliderCenter = InteractDesc.vColliderCenter;
+
+					m_fSelectColliderSizeArray[0] = vColliderSize.x;
+					m_fSelectColliderSizeArray[1] = vColliderSize.y;
+					m_fSelectColliderSizeArray[2] = vColliderSize.z;
+
+					m_fSelectColliderCenterArray[0] = vColliderCenter.x;
+					m_fSelectColliderCenterArray[1] = vColliderCenter.y;
+					m_fSelectColliderCenterArray[2] = vColliderCenter.z;
+
 					if (isSelected)
 					{
 						ImGui::SetItemDefaultFocus();
@@ -5632,6 +5681,8 @@ void CWindow_MapTool::Interact_SelectFunction()
 					if (ImGui::Selectable(InteractTypes[i], is_Selected))
 					{
 						m_eInteractType = i;
+						
+
 						#ifdef _DEBUG
                           m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractType((CEnvironment_Interact::INTERACT_TYPE)m_eInteractType);
                         #endif // _DEBUG
@@ -5666,6 +5717,24 @@ void CWindow_MapTool::Interact_SelectFunction()
 					//eInteractState = CEnvironment_Interact::INTERACT_STATE(iInstanceState);
 				}
 			}
+
+			if (ImGui::InputFloat3(u8"플레이어루트무브레이트", &m_vInteractRootMoveRate.x))
+			{
+				#ifdef _DEBUG
+					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_PlayerRootMoveRate(m_vInteractRootMoveRate);
+				#endif // _DEBUG
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Checkbox(u8"중력 사용", &m_bInteractUseGravity))
+			{
+				#ifdef _DEBUG
+					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_UseGravity(m_bInteractUseGravity);
+				#endif // _DEBUG
+			}
+
+			
 		}
 
 
@@ -5708,6 +5777,7 @@ void CWindow_MapTool::Interact_SelectFunction()
 			{
 				switch (m_eInteractLevel)
 				{
+					
 					case 0:
 					{
 						#ifdef _DEBUG
@@ -6147,6 +6217,7 @@ void CWindow_MapTool::Monster_SelectFunction()
 					m_pPickingObject = m_vecCreateMonster[m_iSelectCharacterTag];
 					
 					m_iSelectMonsterGroupIndex = m_vecCreateMonster[m_iSelectCharacterTag]->Get_MonsterGroupIndex();
+					m_iSelectMonsterNaviIndex = m_vecCreateMonster[m_iSelectCharacterTag]->Get_StartNaviIndex();
 					if (isSelected)
 					{
 						ImGui::SetItemDefaultFocus();
@@ -6160,6 +6231,35 @@ void CWindow_MapTool::Monster_SelectFunction()
 		{
 			m_vecCreateMonster[m_iSelectCharacterTag]->Set_MonsterGroupIndex(m_iSelectMonsterGroupIndex);
 		}
+
+		if (m_pNavigation != nullptr)
+		{
+			ImGui::NewLine();
+
+			if (m_pPlayer != nullptr)
+			{
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), u8"현재 플레이어 셀 인덱스 : %d", m_pPlayer->Get_Navigation()->Get_CurrentCellIndex());
+			}
+
+			if(ImGui::InputInt(u8"시작 네비게이션 인덱스", &m_iSelectMonsterNaviIndex))
+			{
+				m_vecCreateMonster[m_iSelectCharacterTag]->Set_StartNaviIndex(m_iSelectMonsterNaviIndex);
+			}
+			
+
+			if (ImGui::Button(u8"네비게이션 인덱스 셋"))
+			{
+				 m_vecCreateMonster[m_iSelectCharacterTag]->Set_StartNaviIndex(m_pNavigation->Get_SelectRangeCellIndex(m_vecCreateMonster[m_iSelectCharacterTag]));
+				 m_iSelectMonsterNaviIndex = m_vecCreateMonster[m_iSelectCharacterTag]->Get_StartNaviIndex();
+			}
+
+			
+		}
+		else
+		{
+			ImGui::Text(u8"네비게이션 데이터를 불러와주세요");
+		}
+		
 	}
 }
 

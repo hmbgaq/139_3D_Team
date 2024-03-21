@@ -32,8 +32,6 @@ void CEvent_MosnterSpawnTrigger::Activate()
 	_uint iMonsterDescVectorSize = (_uint)m_vecCreateMonsterDesc.size();
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
-	
-
 	for (_uint i = 0; i < iMonsterDescVectorSize; ++i)
 	{
 		CMonster_Character* pMonster = { nullptr };
@@ -101,6 +99,7 @@ _bool CEvent_MosnterSpawnTrigger::Activate_Condition()
 					MonsterDesc.bPreview = false;
 					MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
 					MonsterDesc.iMonsterGroupIndex = MonsterJson[i]["MonsterGroupIndex"];
+					MonsterDesc.iStartNaviIndex = MonsterJson[i]["StartNaviIndex"];
 
 					const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
 					_float4x4 WorldMatrix;

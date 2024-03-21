@@ -283,6 +283,8 @@ private:
 	_float							m_fSelectColliderSizeArray[3] = { 1.f, 1.f, 1.f}; //! 콜라이더 사이즈변경용
 	_float							m_fSelectColliderCenterArray[3] = { 0.f, 1.f, 0.f }; //! 콜라이더 센터변경용
 	_int							m_iInteractPlayAnimIndex = 0;
+	_float3							m_vInteractRootMoveRate = { 1.f, 1.f, 1.f };
+	_bool							m_bInteractUseGravity = false;
 
 	//!For.Light//! 라이트
 	_int							m_eLightEffectType = 0; //! 전부 이넘 캐스팅
@@ -343,6 +345,7 @@ private:
 	vector<CMonster_Character*>			m_vecCreateMonster;
 	vector<string>						m_vecCreateMonsterTag;
 	_int								m_iSelectMonsterGroupIndex = 0;
+	_int								m_iSelectMonsterNaviIndex = -1;
 
 	//TODO 추후 NPC추가되면 작성
 	//!vector<CNPC*>					m_vecCreateNPC;

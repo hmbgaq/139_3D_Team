@@ -55,7 +55,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 7.f;
+	//GameObjectDesc.fSpeedPerSec = 7.f;
+	GameObjectDesc.fSpeedPerSec = 22.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
@@ -69,7 +70,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 // 	}
 
 
+	m_pRigidBody->Set_UseGravity(true);
+
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+
 
 	///* For.Com_PhysXController */
 	//FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"), TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom)));
@@ -342,14 +346,15 @@ void CPlayer::SetState_InteractVault100()
 void CPlayer::SetState_InteractVault200()
 {
 	m_pActor->Set_State(new CPlayer_InteractionVault200());
+	
 }
 
 #pragma endregion 상호작용
 
 void CPlayer::Search_Target(_float fMaxDistance)
 {
-	__super::Search_Target(LAYER_BOSS, fMaxDistance);
 	__super::Search_Target(LAYER_MONSTER, fMaxDistance);
+	__super::Search_Target(LAYER_BOSS, fMaxDistance);
 }
 
 void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCount)

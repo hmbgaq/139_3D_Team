@@ -55,10 +55,10 @@ public: /* For.Timer_Manager */
 	_float		Compute_TimeDelta(const wstring& strTimeTag);
 
 public: /* For.Level_Manager */
-	HRESULT Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
-	_uint	Get_NextLevel();
-	_uint	Get_CurrentLevel();
-	void	Set_CurrentLevel(_uint CurrentLevel);
+	HRESULT		Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
+	_uint		Get_NextLevel();
+	_uint		Get_CurrentLevel();
+	void		Set_CurrentLevel(_uint CurrentLevel);
 
 public: /* For.Object_Manager */
 	HRESULT				Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
@@ -67,26 +67,27 @@ public: /* For.Object_Manager */
 	class CComponent*	Get_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex = 0, const wstring& strPartTag = TEXT(""));
 
 	list<CGameObject*>* Get_GameObjects(_uint iLevelIndex, const wstring & strLayerTag);
-	void Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>*clonevector);
-	class CGameObject* Get_GameObect_Last(_uint iLevelIndex, const wstring & strLayerTag);
-	class CGameObject* Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
-	class CCharacter* Get_Player();
-	void Set_Player(class CCharacter* _pPlayer);
-	HRESULT Create_PoolObjects(const wstring & strPrototypeTag, _uint iSize = 10);
-
-	void Fill_PrototypeTags(vector<string>*_vector);
+	void				Get_CloneGameObjects(_uint iLevelIndex, vector<CGameObject*>*clonevector);
+	class CGameObject*	Get_GameObect_Last(_uint iLevelIndex, const wstring & strLayerTag);
+	class CGameObject*	Add_CloneObject_And_Get(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
+	class CCharacter*	Get_Player();
+	void				Set_Player(class CCharacter* _pPlayer);
+	HRESULT				Create_PoolObjects(const wstring & strPrototypeTag, _uint iSize = 10);
+	void				Fill_PrototypeTags(vector<string>*_vector);
 
 public: /* For.Component_Manager */
-	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, class CComponent* pPrototype);
-	class CComponent* Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
+	HRESULT				Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, class CComponent* pPrototype);
+	class CComponent*	Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 public: /* For.Renderer */
-	HRESULT Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, class CGameObject* pGameObject);
-	HRESULT Add_DebugRender(class CComponent* pDebugCom);
-	CRenderer* Get_Renderer(); /* 툴용 */
+	HRESULT		Add_RenderGroup(CRenderer::RENDERGROUP eGroupID, class CGameObject* pGameObject);
+	HRESULT		Add_DebugRender(class CComponent* pDebugCom);
+	CRenderer*	Get_Renderer(); /* 툴용 */
+	HRESULT		Off_Shader();
+
 #ifdef _DEBUG
-	void Set_RenderDebugCom(_bool _bRenderDebug);
-	void Set_RenderDebugTarget(_bool _bRenderTarget);
+	void		Set_RenderDebugCom(_bool _bRenderDebug);
+	void		Set_RenderDebugTarget(_bool _bRenderTarget);
 #endif
 
 public: /* For.PipeLine */

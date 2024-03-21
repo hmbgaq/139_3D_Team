@@ -54,7 +54,7 @@ private:
 	/* Level Shader Struct */
 	HBAO_PLUS_DESC		m_eHBAO_Desc			= {};
 	FOG_DESC			m_eFog_Desc				= {};
-	BLOOMRIM_DESC		m_eScreen_Desc			= {};
+	DEFERRED_DESC		m_eDeferred_Desc		= {};
 
 	RADIAL_DESC			m_eRadial_Desc			= {};
 	DOF_DESC			m_eDOF_Desc				= {};
