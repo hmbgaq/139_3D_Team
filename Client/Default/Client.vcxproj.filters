@@ -1720,12 +1720,6 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam">
       <UniqueIdentifier>{b347c982-d1d9-4a18-9420-87568bec256c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\TwoHand">
-      <UniqueIdentifier>{4a15b262-48ae-498d-ab83-f77c6052e9b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Spin">
-      <UniqueIdentifier>{a1c27d07-f7f9-4c74-8767-7a87112824d1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\07. Aim\0. Parent">
       <UniqueIdentifier>{1c84234f-da71-43ab-ab60-6b4cfb606f36}</UniqueIdentifier>
     </Filter>
@@ -2223,9 +2217,6 @@
     </Filter>
     <Filter Include="96.Manager\Effect_Manager">
       <UniqueIdentifier>{06d51669-1614-402e-9433-f9d301c5c62f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. ManHero %28x%29">
-      <UniqueIdentifier>{e47d8ed8-c936-4880-974d-1c2b0c635ab7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\4. Whip">
       <UniqueIdentifier>{50cc14bb-ea67-4a6b-9fbe-3d0a1f5e9fee}</UniqueIdentifier>
@@ -2920,6 +2911,15 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\1. Left\3">
       <UniqueIdentifier>{c501b063-5c72-4a60-97a7-a840934cf6bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Spin">
+      <UniqueIdentifier>{a1c27d07-f7f9-4c74-8767-7a87112824d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. TwoHand">
+      <UniqueIdentifier>{4a15b262-48ae-498d-ab83-f77c6052e9b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\0. Parent">
+      <UniqueIdentifier>{17ec3054-98fa-4c91-ade0-0e4788f8b1a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -3293,9 +3293,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Player_SlamDown_v3.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\2. v3</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_SlamDown_ManHero.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. ManHero %28x%29</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Empowered_Idle.h">
       <Filter>02.GameObjects\00. Character\Player\State\01. Normal\1. Idle\Empowered</Filter>
@@ -5260,7 +5257,7 @@
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Spin</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_SlamTwoHand_TEMP.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\TwoHand</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. TwoHand</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_State_Winchester.h">
       <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\0. Parent</Filter>
@@ -5919,6 +5916,9 @@
     <ClInclude Include="..\Public\Player_State_TeleportPunch.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\0. Parent</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_State_Slam.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\0. Parent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -6411,9 +6411,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_SlamDown_v3.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\2. v3</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_SlamDown_ManHero.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. ManHero %28x%29</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Empowered_Idle.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\01. Normal\1. Idle\Empowered</Filter>
@@ -8072,7 +8069,7 @@
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\Spin</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_SlamTwoHand_TEMP.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\TwoHand</Filter>
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\SlamDown\3. TwoHand</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_State_Winchester.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\07. Aim\2. Winchester\0. Parent</Filter>
@@ -8370,6 +8367,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_State_TeleportPunch.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\3. TeleportPunch\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_Slam.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\0. Parent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

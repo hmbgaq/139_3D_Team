@@ -1,6 +1,6 @@
 #include "..\Public\Player_SlamDown_v3.h"
 
-#include "Player_Empowered_Idle.h"
+#include "Player_IdleLoop.h"
 
 void CPlayer_SlamDown_v3::Initialize(CPlayer* pActor)
 {
@@ -12,6 +12,11 @@ void CPlayer_SlamDown_v3::Initialize(CPlayer* pActor)
 CState<CPlayer>* CPlayer_SlamDown_v3::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
+
+	if (pActor->Is_Inputable_Front(60))
+	{
+		return new CPlayer_IdleLoop();
+	}
 
 	if (pActor->Is_Inputable_Front(26))
 	{

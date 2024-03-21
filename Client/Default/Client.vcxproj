@@ -825,7 +825,6 @@
     <ClInclude Include="..\Public\Player_Shotgun_Fire_LongRange.h" />
     <ClInclude Include="..\Public\Player_Shotgun_Fire_ShortRange.h" />
     <ClInclude Include="..\Public\Player_Shotgun_WeaponHolster.h" />
-    <ClInclude Include="..\Public\Player_SlamDown_ManHero.h" />
     <ClInclude Include="..\Public\Player_SlamDown_v2.h" />
     <ClInclude Include="..\Public\Player_SlamDown_v3.h" />
     <ClInclude Include="..\Public\Player_SlamTwoHand_TEMP.h" />
@@ -893,6 +892,7 @@
     <ClInclude Include="..\Public\Player_State_Roll.h" />
     <ClInclude Include="..\Public\Player_State_Run.h" />
     <ClInclude Include="..\Public\Player_State_Shotgun.h" />
+    <ClInclude Include="..\Public\Player_State_Slam.h" />
     <ClInclude Include="..\Public\Player_State_TeleportPunch.h" />
     <ClInclude Include="..\Public\Player_State_Walk.h" />
     <ClInclude Include="..\Public\Player_State_Winchester.h" />
@@ -1631,7 +1631,6 @@
     <ClCompile Include="..\Private\Player_Shotgun_Fire_LongRange.cpp" />
     <ClCompile Include="..\Private\Player_Shotgun_Fire_ShortRange.cpp" />
     <ClCompile Include="..\Private\Player_Shotgun_WeaponHolster.cpp" />
-    <ClCompile Include="..\Private\Player_SlamDown_ManHero.cpp" />
     <ClCompile Include="..\Private\Player_SlamDown_v2.cpp" />
     <ClCompile Include="..\Private\Player_SlamDown_v3.cpp" />
     <ClCompile Include="..\Private\Player_SlamTwoHand_TEMP.cpp" />
@@ -1663,6 +1662,7 @@
     <ClCompile Include="..\Private\Player_State_Roll.cpp" />
     <ClCompile Include="..\Private\Player_State_Run.cpp" />
     <ClCompile Include="..\Private\Player_State_Shotgun.cpp" />
+    <ClCompile Include="..\Private\Player_State_Slam.cpp" />
     <ClCompile Include="..\Private\Player_State_TeleportPunch.cpp" />
     <ClCompile Include="..\Private\Player_State_Walk.cpp" />
     <ClCompile Include="..\Private\Player_State_Winchester.cpp" />

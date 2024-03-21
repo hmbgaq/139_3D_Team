@@ -13,8 +13,6 @@ CState<CPlayer>* CPlayer_SlamDown_v2::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
 
-
-
 	if (pActor->Is_Inputable_Front(56))
 	{
 		return new CPlayer_IdleLoop();
