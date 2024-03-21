@@ -31,20 +31,23 @@ void CPlayer_OpenStateCombo_8hit::Initialize(CPlayer* pActor)
 	__super::Initialize(pActor);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
+	CCharacter* pTarget = pActor->Get_Target();
+	if (pTarget)
+	{
+		pTarget->Set_Position(pActor->Calc_Front_Pos());
+	}
 }
 
 CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
 
-	pActor->Search_Target(100.f);
+	pActor->Search_Target(2.f);
 	CCharacter* pTarget = pActor->Get_Target();
 	if (nullptr == pTarget)
 	{
 		return new CPlayer_IdleLoop();
-	}
-	pTarget->Set_Position(pActor->Calc_Front_Pos());
-		
+	}	
 
 	_uint iTiming = 8;
 
