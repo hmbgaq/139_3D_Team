@@ -86,7 +86,6 @@ HRESULT CInfected::Initialize(void* pArg)
 
 	/* Target ¼³Á¤ */
 	m_pTarget = m_pGameInstance->Get_Player();
-
 	return S_OK;
 }
 
@@ -108,6 +107,8 @@ void CInfected::Tick(_float fTimeDelta)
 void CInfected::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 }
 
 HRESULT CInfected::Render()

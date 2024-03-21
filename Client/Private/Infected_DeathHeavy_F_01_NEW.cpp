@@ -1,4 +1,5 @@
-#include "..\Public\Infected_DeathHeavy_F_01_NEW.h"
+#include "stdafx.h"
+#include "Infected_DeathHeavy_F_01_NEW.h"
 
 void CInfected_DeathHeavy_F_01_NEW::Initialize(CInfected* pActor)
 {

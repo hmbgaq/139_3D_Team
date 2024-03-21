@@ -1,10 +1,12 @@
-#include "..\Public\Infected_DeathLight_B_01_NEW.h"
+#include "stdafx.h"
+#include "Infected_DeathLight_B_01_NEW.h"
 
 void CInfected_DeathLight_B_01_NEW::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Get_Body()->Collider_Off();
 }
 
 CState<CInfected>* CInfected_DeathLight_B_01_NEW::Update(CInfected* pActor, _float fTimeDelta)

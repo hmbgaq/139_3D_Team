@@ -42,9 +42,9 @@ Texture2D g_OutlineTarget;          /* RenderGroup - Outline */
 /* 활성 여부 */
 bool g_bSSAO_Active;
 bool g_bFog_Active;
+bool g_bShadow_Active;
 
 /* 안개 */
-float4 g_vFogColor              = { 0.5f, 0.5f, 0.5f, 0.2f };
 float2  g_vFogUVAcc             = { 0.f, 0.f };
 
 struct FOG_DESC 
@@ -56,6 +56,7 @@ struct FOG_DESC
     float fFogHeightValue;
     float fFogDistanceDensity;
     float fFogHeightDensity;
+    vector vFogColor;
 };
 
 struct BLOOMRIM_DESC
@@ -94,8 +95,10 @@ float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise, F
 	// 두 요소를 결합한 최종 요소
     float fogFinalFactor = min(fogDistanceFactor * fogHeightFactor * fNoise, 1.0f) + min(distanceOffset * heightOffset, 1.0f) + 0.01f;
 
+    vector vFogColor = desc.vFogColor;
+    
 	// 최종 혼합 색상
-    return lerp(vOriginColor.rgb, g_vFogColor.xyz, fogFinalFactor);
+    return lerp(vOriginColor.rgb, vFogColor.xyz, fogFinalFactor);
 }
 
 
@@ -333,21 +336,23 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
         Out.vColor = vector(vFinalColor.rgb, 1.f);
     }
     
-    vWorldPos = mul(vWorldPos, g_LightViewMatrix);
-    vWorldPos = mul(vWorldPos, g_LightProjMatrix);
+    if (true == g_bShadow_Active)
+    {
+        vWorldPos = mul(vWorldPos, g_LightViewMatrix);
+        vWorldPos = mul(vWorldPos, g_LightProjMatrix);
    
-    float2 vUV = (float2) 0.0f;
+        float2 vUV = (float2) 0.0f;
    
-    vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
-    vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
+        vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
+        vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
    
-    float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
+        float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
    
-    if (vWorldPos.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
-        Out.vColor = Out.vColor * 0.8f;
+        if (vWorldPos.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
+            Out.vColor = Out.vColor * 0.8f;
+    }
     
-    
-   // Out.vColor += vEffect;
+    //Out.vColor += vEffect;
     Out.vColor.a = 1.f;
     
     return Out;
@@ -359,6 +364,7 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 	
+  //  vector 
 	
 	
 	
