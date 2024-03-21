@@ -18,10 +18,14 @@ CState<CPlayer>* CPlayer_SlamTwoHand_TEMP::Update(CPlayer* pActor, _float fTimeD
 	if (false == m_bFlags[0] && true == pActor->Is_Inputable_Front(20))
 	{
 		pActor->Apply_Shake_And_Blur(Power::Heavy);
+		pActor->Slam();
 		m_bFlags[0] = true;
 	}
-
-	if (pActor->Is_Inputable_Front(28))
+	else if (false == m_bFlags[1])
+	{
+		m_bFlags[1] = pActor->Is_Inputable_Front(28);
+	}
+	else if (true == m_bFlags[1])
 	{
 		return Normal(pActor, fTimeDelta, g_iAnimIndex);
 	}

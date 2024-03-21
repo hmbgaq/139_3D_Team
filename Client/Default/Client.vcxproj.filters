@@ -2920,6 +2920,9 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\0. Parent">
       <UniqueIdentifier>{17ec3054-98fa-4c91-ade0-0e4788f8b1a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Punch\Projectile">
+      <UniqueIdentifier>{770a291a-7f61-4698-8b3c-49959ef3edf3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -5919,6 +5922,9 @@
     <ClInclude Include="..\Public\Player_State_Slam.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\0. Parent</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Impact_Slam.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch\Projectile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8370,6 +8376,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_State_Slam.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Impact_Slam.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

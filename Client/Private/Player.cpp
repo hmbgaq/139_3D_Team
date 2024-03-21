@@ -423,6 +423,15 @@ void CPlayer::Update_ChargingTime(_float fTimeDelta)
 	}
 }
 
+CGameObject* CPlayer::Slam()
+{
+	CGameObject* pSlam = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Impact_Slam");
+	pSlam->Set_Position(Get_Position());
+	
+	
+	return nullptr;
+}
+
 void CPlayer::Hitted_Left(Power ePower)
 {
 	switch (ePower)

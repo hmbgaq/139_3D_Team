@@ -32,6 +32,7 @@ CState<CPlayer>* CPlayer_SlamDown_v3::Update(CPlayer* pActor, _float fTimeDelta)
 		if (true == m_bFlags[1])
 		{
 			pActor->Apply_Shake_And_Blur(Power::Medium);
+			pActor->Slam();
 		}
 	}
 	else if (false == m_bFlags[2])

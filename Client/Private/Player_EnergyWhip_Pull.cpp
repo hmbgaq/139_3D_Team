@@ -30,7 +30,7 @@ CState<CPlayer>* CPlayer_EnergyWhip_Pull::Update(CPlayer* pActor, _float fTimeDe
 
 		if (false == m_bFlags[1]) 
 		{
-			_float fDistance = 1.f;
+			_float fDistance = 2.f;
 			if (fDistance < pActor->Calc_Distance())
 			{
 				_float3 vFront = pActor->Calc_Front_Pos(_float3(0.f, 0.f, fDistance / 2.f));

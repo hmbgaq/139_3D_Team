@@ -86,6 +86,8 @@ public:
 	TeleportPunch_State Get_TeleportPunch_State() { return m_eTeleportPunch_State; };
 	void Set_TeleportPunch_State(TeleportPunch_State _eTeleportPunch_State) { m_eTeleportPunch_State = _eTeleportPunch_State; };
 
+public:
+	CGameObject* Slam();
 
 protected:
 	virtual void Hitted_Left(Power ePower)	override;

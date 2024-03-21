@@ -341,6 +341,7 @@
     <ClInclude Include="..\Public\Event_Trigger.h" />
     <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\Environment_LightObject.h" />
+    <ClInclude Include="..\Public\Impact_Slam.h" />
     <ClInclude Include="..\Public\Infected.h" />
     <ClInclude Include="..\Public\Infected_A.h" />
     <ClInclude Include="..\Public\Infected_B.h" />
@@ -1265,6 +1266,7 @@
     <ClCompile Include="..\Private\Event_MonsterSpawnTrigger.cpp" />
     <ClCompile Include="..\Private\Event_Trigger.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
+    <ClCompile Include="..\Private\Impact_Slam.cpp" />
     <ClCompile Include="..\Private\Infected.cpp" />
     <ClCompile Include="..\Private\Infected_A.cpp" />
     <ClCompile Include="..\Private\Infected_B.cpp" />
