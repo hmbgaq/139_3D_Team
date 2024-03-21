@@ -118,6 +118,11 @@ public:
 	virtual void Set_Enable(_bool _Enable) override;
 
 public:
+	void Knockback(_vector vDir, _float fForce = 0.3f);
+	void Look_At_And_Knockback(_float3 vTargetPos, _float fForce = 0.3f);
+
+
+public:
 	virtual Hit_Type Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee = false);
 
 	virtual void Hitted_Left(Power ePower) {};

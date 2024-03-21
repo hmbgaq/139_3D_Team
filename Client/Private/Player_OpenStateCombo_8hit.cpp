@@ -90,7 +90,12 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Update(CPlayer* pActor, _float fTi
 	{
 		if (pActor->Is_Inputable_Front(62 - iTiming))
 		{
-			m_pGameInstance->Set_RadialBlurTime();
+			
+			pActor->Create_Hitting_Effect(pTarget->Get_Position(), Power::Heavy);
+			m_pGameInstance->Set_RadialBlurTime(0.7f);
+
+			pTarget->Look_At_And_Knockback(pActor->Get_Position(), 0.7f);
+
 			pTarget->Hitted_Dead(Power::Heavy);
 			pTarget->Set_Invincible(true);
 			m_bFlags[HIT_EIGHTH] = true;

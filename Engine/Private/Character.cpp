@@ -383,6 +383,20 @@ void CCharacter::Set_Enable(_bool _Enable)
 	}
 }
 
+void CCharacter::Knockback(_vector vDir, _float fForce)
+{
+	m_pTransformCom->Look_At_Direction(vDir);
+	Add_Force(vDir, fForce);
+}
+
+void CCharacter::Look_At_And_Knockback(_float3 vTargetPos, _float fForce)
+{
+	Look_At_OnLand(vTargetPos);
+	_vector vDir = m_pTransformCom->Get_Look() * -1;
+	Add_Force(vDir, fForce);
+
+}
+
 Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
 {
 	Hit_Type eHitType = Hit_Type::None;
