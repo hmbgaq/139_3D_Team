@@ -63,7 +63,7 @@ void CInfected_A::Late_Tick(_float fTimeDelta)
 
 HRESULT CInfected_A::Render()
 {
-	FAILED_CHECK(__super::Render());
+	//FAILED_CHECK(__super::Render());
 
 	return S_OK;
 }

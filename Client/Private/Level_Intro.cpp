@@ -78,7 +78,7 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
 {
     CGameObject* pMonster = nullptr;
 
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
     NULL_CHECK_RETURN(pMonster, E_FAIL);
     pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
     
@@ -745,8 +745,9 @@ HRESULT CLevel_Intro::Ready_Shader()
     Desc_Hbao.fBlur_Sharpness = 11.f;
     Desc_Hbao.fPowerExponent = 1.985f;
 
-    BLOOMRIM_DESC Desc_BR = {};
-    Desc_BR.bRimBloom_Blur_Active = true;
+    DEFERRED_DESC Desc_Deferred = {};
+    Desc_Deferred.bRimBloom_Blur_Active = true;
+    Desc_Deferred.bShadow_Active = false;
 
     HDR_DESC Desc_HDR = {};
     Desc_HDR.bHDR_Active = true;
@@ -761,7 +762,7 @@ HRESULT CLevel_Intro::Ready_Shader()
     Desc_HSV.fFinal_Saturation = 1.545f;
 
     m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
-    m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);
+    m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
     m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
     m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
     m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);

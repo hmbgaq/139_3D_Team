@@ -7,8 +7,7 @@ void CInfected_Sprint_F_Melee_02::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Get_Transform()->Set_Speed(10.f);
-	pActor->Set_StiffnessRate(1.f);
+	/* 원상복구 */
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 	
 	switch (m_eType)

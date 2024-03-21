@@ -574,6 +574,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Shader()
 {
+	/* 1. 셰이더 초기화 */
+	m_pGameInstance->Off_Shader(); 
+
+	/* 2. 셰이더 옵션 조절 */
 	m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
 	m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
 	m_pGameInstance->Get_Renderer()->Set_Fog_Active(true);
@@ -590,8 +594,9 @@ HRESULT CLevel_GamePlay::Ready_Shader()
 	Desc_Hbao.fPowerExponent = 1.828f;
 	Desc_Hbao.fRadius = 1.482f;
 
-	BLOOMRIM_DESC Desc_BR = {};
-	Desc_BR.bRimBloom_Blur_Active = true;
+	DEFERRED_DESC Desc_Deferred = {};
+	Desc_Deferred.bRimBloom_Blur_Active = true;
+	Desc_Deferred.bShadow_Active = true;
 
 	FOG_DESC Desc_Fog = {};
 	Desc_Fog.bFog_Active = true;
@@ -615,7 +620,7 @@ HRESULT CLevel_GamePlay::Ready_Shader()
 	Desc_HSV.fFinal_Saturation = 0.979f;
 
 	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
-	m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);
+	m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
 	m_pGameInstance->Get_Renderer()->Set_Fog_Option(Desc_Fog);
 	m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
 	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);

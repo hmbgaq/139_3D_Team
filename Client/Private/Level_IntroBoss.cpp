@@ -173,8 +173,6 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
 
         LightObjectDesc.WorldMatrix = WorldMatrix;
 
-
-
         LIGHT_DESC LightDesc = {};
 
         LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
@@ -210,6 +208,10 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
 
 HRESULT CLevel_IntroBoss::Ready_Shader()
 {
+    /* 1. 셰이더 초기화 */
+    m_pGameInstance->Off_Shader();
+
+    /* 2. 셰이더 옵션 조절 */
     m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
     m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
     m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
@@ -226,8 +228,9 @@ HRESULT CLevel_IntroBoss::Ready_Shader()
     Desc_Hbao.fBlur_Sharpness = 16.f;
     Desc_Hbao.fPowerExponent = 2.f;
 
-    BLOOMRIM_DESC Desc_BR = {};
-    Desc_BR.bRimBloom_Blur_Active = true;
+    DEFERRED_DESC Desc_Deferred = {};
+    Desc_Deferred.bRimBloom_Blur_Active = true;
+    Desc_Deferred.bShadow_Active = true;
 
     HDR_DESC Desc_HDR = {};
     Desc_HDR.bHDR_Active = true;
@@ -242,18 +245,16 @@ HRESULT CLevel_IntroBoss::Ready_Shader()
     Desc_HSV.fFinal_Saturation = 0.850f;
 
     m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
-    m_pGameInstance->Get_Renderer()->Set_BloomRim_Option(Desc_BR);
+    m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
     m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
     m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
     m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
-
 
     return S_OK;
 }
 HRESULT CLevel_IntroBoss::Ready_Layer_Camera(const wstring& strLayerTag)
 {
     //CCamera_Dynamic::DYNAMIC_CAMERA_DESC      Desc = {};
-
     //Desc.fMouseSensor = 0.05f;
     //Desc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
     //Desc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
@@ -265,7 +266,6 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Camera(const wstring& strLayerTag)
     //Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 
     //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Camera_Dynamic"), &Desc));
-
 
     if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
         return E_FAIL;

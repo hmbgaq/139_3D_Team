@@ -95,35 +95,35 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 			Pair.second->Late_Tick(fTimeDelta);
 	}
 
-	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
+	if (m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f))
+	{		
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), ); //m_bIsInFrustum
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-		return;
+		_float3 vBodyMovePos = m_pBody->Get_MovePos();
 
-	_float3 vBodyMovePos = m_pBody->Get_MovePos();
+		_float fDiff = abs(vBodyMovePos.x) + abs(vBodyMovePos.y) + abs(vBodyMovePos.z);
 
-	_float fDiff = abs(vBodyMovePos.x) + abs(vBodyMovePos.y) + abs(vBodyMovePos.z);
+		if (0.0001f < fDiff)
+		{
+			_float3 vResult = vBodyMovePos;
+			vResult.x *= m_vRootMoveRate.x;
+			vResult.y *= m_vRootMoveRate.y;
+			vResult.z *= m_vRootMoveRate.z;
 
-	if (0.0001f < fDiff) 
-	{
-		_float3 vResult = vBodyMovePos;
-		vResult.x *= m_vRootMoveRate.x;
-		vResult.y *= m_vRootMoveRate.y;
-		vResult.z *= m_vRootMoveRate.z;
-
-		m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
-		//m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
+			m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
+			//m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
+		}
+		
 	}
 
-	
-
-	m_pRigidBody->Late_Tick(fTimeDelta);
+		m_pRigidBody->Late_Tick(fTimeDelta);
 
 #ifdef _DEBUG
-	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
+		//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
 
-	Set_WeaknessPos();
+		Set_WeaknessPos();
+	
 }
 
 HRESULT CCharacter::Render()

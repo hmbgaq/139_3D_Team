@@ -107,7 +107,6 @@ VS_OUT VS_MAIN(VS_IN In)
     vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
 
     matrix matWV, matWVP;
-
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
 

@@ -92,19 +92,7 @@ HRESULT CLevel_Tool::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 {
-// 	CCamera_Dynamic::DYNAMIC_CAMERA_DESC		tDesc = {};
-// 	tDesc.fMouseSensor = 0.05f;
-// 	tDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
-// 	tDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-// 	tDesc.fFovy = XMConvertToRadians(60.0f);
-// 	tDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-// 	tDesc.fNear = 0.1f;
-// 	tDesc.fFar = m_pGameInstance->Get_CamFar();
-// 	tDesc.fSpeedPerSec = 60.f;
-// 	tDesc.fRotationPerSec = XMConvertToRadians(180.0f);
-
-	if (FAILED(m_pGameInstance->Add_CloneObject(m_pGameInstance->Get_NextLevel(), strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(m_pGameInstance->Get_NextLevel(), strLayerTag, TEXT("Prototype_GameObject_MasterCamera")));
 
 	CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);
 	//if(pDynamicCam == nullptr)
