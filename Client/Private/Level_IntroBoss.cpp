@@ -173,8 +173,6 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
 
         LightObjectDesc.WorldMatrix = WorldMatrix;
 
-
-
         LIGHT_DESC LightDesc = {};
 
         LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
@@ -210,6 +208,10 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
 
 HRESULT CLevel_IntroBoss::Ready_Shader()
 {
+    /* 1. 셰이더 초기화 */
+    m_pGameInstance->Off_Shader();
+
+    /* 2. 셰이더 옵션 조절 */
     m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
     m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
     m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);

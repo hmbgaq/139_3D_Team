@@ -428,6 +428,13 @@ CRenderer* CGameInstance::Get_Renderer()
 	return m_pRenderer;
 }
 
+HRESULT CGameInstance::Off_Shader()
+{
+	NULL_CHECK_RETURN(m_pRenderer, E_FAIL);
+
+	return m_pRenderer->Off_Shader();
+}
+
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebugCom(_bool _bRenderDebug)
 {

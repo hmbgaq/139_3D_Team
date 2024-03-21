@@ -182,7 +182,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vector vDebug = g_DebugTarget.Sample(LinearSampler, In.vTexcoord);;
     vector vFinal = g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
-   // vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
+    vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
    
     Out.vColor = vUI;
     
@@ -198,7 +198,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     // ¾È³Ö´Â ver
     if (Out.vColor.a == 0)
     {
-        Out.vColor += vFinal + vDebug;
+        Out.vColor += vFinal + vDebug + vRimBloom;
     }
        
     if (Out.vColor.a == 0)

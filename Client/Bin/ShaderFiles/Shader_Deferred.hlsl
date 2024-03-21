@@ -336,21 +336,23 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
         Out.vColor = vector(vFinalColor.rgb, 1.f);
     }
     
-    vWorldPos = mul(vWorldPos, g_LightViewMatrix);
-    vWorldPos = mul(vWorldPos, g_LightProjMatrix);
+    if (true == g_bShadow_Active)
+    {
+        vWorldPos = mul(vWorldPos, g_LightViewMatrix);
+        vWorldPos = mul(vWorldPos, g_LightProjMatrix);
    
-    float2 vUV = (float2) 0.0f;
+        float2 vUV = (float2) 0.0f;
    
-    vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
-    vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
+        vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
+        vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
    
-    float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
+        float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
    
-    if (vWorldPos.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
-        Out.vColor = Out.vColor * 0.8f;
+        if (vWorldPos.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
+            Out.vColor = Out.vColor * 0.8f;
+    }
     
-    
-   // Out.vColor += vEffect;
+    //Out.vColor += vEffect;
     Out.vColor.a = 1.f;
     
     return Out;

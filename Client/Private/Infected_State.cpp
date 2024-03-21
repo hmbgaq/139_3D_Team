@@ -136,7 +136,6 @@ CState<CInfected>* CInfected_State::Spawn_State(CInfected* pActor, _float fTimeD
 	if (pActor->Is_Animation_End()) 
 	{
 		_int iRandom = SMath::Random(1, 6);
-		cout << "Spawn" << endl;
 
 		switch (iRandom)
 		{
@@ -246,7 +245,6 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-		cout << "CInfected_Walk_F" << endl;
 		return new CInfected_Walk_F();
 		break;
 
@@ -270,7 +268,6 @@ CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _u
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-			cout << "CInfected_Run_F" << endl;
 			return new CInfected_Run_F();
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
@@ -301,7 +298,6 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 		/* fDist = 현재 플레이어와의 거리 */
 		if (0.f <= fDist && fDist < Info.fAttack_Distance - 1.5f) // 0 ~ 공격사거리 - 1.5
 		{
-			cout << "제자리 공격 " << endl;
 			switch (iActNumber)
 			{
 			case 1:
@@ -320,7 +316,6 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 		}
 		else if (Info.fAttack_Distance - 1.5f <= fDist && fDist <= Info.fAttack_Distance) // 공격사거리 - 1.5 ~ 공격사거리
 		{
-			cout << "걸어오며 Attack " << endl;
 			switch (iActNumber)
 			{
 			case 1:

@@ -77,8 +77,6 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_Deferred()); /*  MRT_Deferred -> Target_Deferred에 저장  */
 
 	FAILED_CHECK(Render_RimBloom()); /* MRT_RB_Blur -> Target_RB_BlurActive에 저장 */
-//	FAILED_CHECK(Render_RimBloom()); /* MRT_RB_Blur -> Target_RB_BlurActive에 저장 */
-	//FAILED_CHECK(Render_OutLine()); /* MRT_OutLine */
 
 	FAILED_CHECK(Deferred_Effect()); 
 
@@ -101,7 +99,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (true == m_bUI_MRT)
 		FAILED_CHECK(Render_UI_Tool()); /* Tool에서 체크할 때  */
 
-	/* Effect + Blur */
+	//FAILED_CHECK(Render_OutLine()); /* MRT_OutLine */
 
 	/* 최종 합성 */ 
 	FAILED_CHECK(Render_Final());
@@ -546,7 +544,7 @@ HRESULT CRenderer::Render_Final()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::FINAL), m_pShader_Final, "g_FinalTarget")); /* 이전까지 그린 타겟 */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_UI_Diffuse"), m_pShader_Final, "g_UI_Target")); /* ui그린거 */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Debug"), m_pShader_Final, "g_DebugTarget")); /* DebugCom 그린거 */
-	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RB_BlurActive"), m_pShader_PostProcess, "g_RimBlur_Target")); /* Deferred에서 그린 RimBloom */
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RB_BlurActive"), m_pShader_PostProcess, "g_RimBlur_Target")); /* Deferred에서 그린 RimBloom */
 
 	FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL)));
 	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
@@ -629,11 +627,9 @@ HRESULT CRenderer::Render_Effect_Final()
 	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
 	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
 
-	/* 기존에 그린 Deferred + Object BloomBlur + Effect BloomBlur + Effect Diffuse + Effect_Solid */
+	/* 기존에 그린 Deferred + Effect BloomBlur + Effect Diffuse + Effect_Solid */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Deferred"), m_pShader_PostProcess, "g_Deferred_Target")); 
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RB_BlurActive"), m_pShader_PostProcess, "g_RimBlur_Target")); /* Deferred에서 그린 RimBloom */
-
-
+	
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Diffuse"), m_pShader_PostProcess, "g_Effect_Target"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Solid"), m_pShader_PostProcess, "g_Effect_Solid"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_RR_Blur"), m_pShader_PostProcess, "g_EffectBlur_Target"));
@@ -888,6 +884,23 @@ wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 		}
 	}
 	return strCurrentTarget;
+}
+
+HRESULT CRenderer::Off_Shader()
+{
+	/* OFF 셰이더 리스트
+	Shadow, RimBloom, */
+	Set_BloomBlur_Active(false);
+	Set_Shadow_Active(false);
+	Set_HBAO_Active(false);
+	Set_Fog_Active(false);
+	Set_Radial_Blur_Active(false);
+	Set_DOF_Active(false);
+	Set_HDR_Active(false);
+	Set_FXAA_Active(false);
+	Set_HSV_Active(false);
+
+	return S_OK;
 }
 
 #pragma endregion

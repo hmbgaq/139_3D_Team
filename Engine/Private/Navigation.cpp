@@ -328,6 +328,50 @@ void CNavigation::LoadData(wstring strLoadPath)
 }
 
 
+void CNavigation::SpawnCell_Setting(_float3 vPos)
+{
+	cout << "셀찾기 시작 "<< endl;
+
+	for (auto& Cell : m_Cells)
+	{
+		_vector points[3] = {};
+
+		for (int i = 0; i < 3; ++i)
+		{
+			points[i] = XMLoadFloat3(Cell->Get_Point(static_cast<CCell::POINT>(i)));
+			points[i].m128_f32[3] = 0;
+		}
+
+		if (0.f < Compute_CCW(points[0], points[1], points[2])) /* 외적의 결과가 양수 = 시계 */
+			swap(points[1], points[2]);	/* 반시계로 돌린다. -> 내외부 판별은 반시계로 정렬되어있어야함. */
+
+		// 두 벡터를 만듭니다.
+		_vector v0 = points[1] - points[0];
+		_vector v1 = points[2] - points[0];
+
+		// 외적을 계산하여 평면의 법선 벡터를 구합니다.
+		_vector normal = XMVector3Cross(v0, v1);
+
+		// 삼각형의 평면 방정식의 상수 D를 구합니다.
+		_float D = -XMVector3Dot(points[0], normal).m128_f32[0];
+		
+		// 점 vPos를 평면 방정식에 대입하여 부호를 확인합니다.
+		_float Result = XMVectorGetX(XMVector3Dot(vPos, normal)) + D;
+
+		cout << Result << endl;
+		if (Result < 0)
+		{
+			cout << "★☆★☆★☆★☆★☆★☆★☆★☆★☆찾음★☆★☆★☆★☆★☆★☆★☆" << endl;
+			Set_CurrentIndex(Cell->Get_CurrentIndex());
+			return;
+		}
+		else
+			continue;
+	}
+
+	return;
+}
+
 void CNavigation::AddCell(CCell* pCell)
 {
 	if (nullptr == pCell)
@@ -388,6 +432,17 @@ void CNavigation::AllSearchDelete_IsNan()
 	m_Cells.erase(std::remove(m_Cells.begin(), m_Cells.end(), nullptr), m_Cells.end());
 }
 
+_float CNavigation::Compute_CCW(_float3 vPointA, _float3 vPointB, _float3 vPointC)
+{	
+	/* 2D평면에서 회전을 계산하므로 Y성분이 양수인지 음수인지에 따라 시계&반시계가 나뉜다. */
+	_vector vLineAB = XMVector3Normalize(XMVectorSetY(XMLoadFloat3(&vPointB) - XMLoadFloat3(&vPointA), 0.f));
+	_vector vLineAC = XMVector3Normalize(XMVectorSetY(XMLoadFloat3(&vPointC) - XMLoadFloat3(&vPointA), 0.f));
+
+	_float vNormalY = XMVectorGetY(XMVector3Cross(vLineAB, vLineAC));
+
+	return vNormalY;
+}
+
 void CNavigation::InRangeCellChange(CCell* pCell, _int ePoint, _float3 vSearchPos)
 {
 	_float3 originPoint = *pCell->Get_Point(CCell::POINT(ePoint));
@@ -423,7 +478,6 @@ _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
 
 	for (_int i = 0; i < iCellSize; ++i)
 	{
-
 		if (true == m_Cells[i]->isInRange(vPos, XMLoadFloat4x4(&m_WorldMatrix)))
 			return m_Cells[i]->Get_Index();
 	}

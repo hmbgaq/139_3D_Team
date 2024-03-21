@@ -747,7 +747,7 @@ HRESULT CLevel_Intro::Ready_Shader()
 
     DEFERRED_DESC Desc_Deferred = {};
     Desc_Deferred.bRimBloom_Blur_Active = true;
-    Desc_Deferred.bShadow_Active = true;
+    Desc_Deferred.bShadow_Active = false;
 
     HDR_DESC Desc_HDR = {};
     Desc_HDR.bHDR_Active = true;

@@ -571,6 +571,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Shader()
 {
+	/* 1. 셰이더 초기화 */
+	m_pGameInstance->Off_Shader(); 
+
+	/* 2. 셰이더 옵션 조절 */
 	m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
 	m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
 	m_pGameInstance->Get_Renderer()->Set_Fog_Active(true);

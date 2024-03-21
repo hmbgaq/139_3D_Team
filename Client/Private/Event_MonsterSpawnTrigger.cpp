@@ -32,8 +32,6 @@ void CEvent_MosnterSpawnTrigger::Activate()
 	_uint iMonsterDescVectorSize = (_uint)m_vecCreateMonsterDesc.size();
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
-	
-
 	for (_uint i = 0; i < iMonsterDescVectorSize; ++i)
 	{
 		CMonster_Character* pMonster = { nullptr };
