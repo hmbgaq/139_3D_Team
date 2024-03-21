@@ -911,8 +911,28 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 #pragma region 크기 변경 러프_파티클 시작
-				if (ImGui::CollapsingHeader(" Scale Lerp_Particle "))
+				if (ImGui::CollapsingHeader(" Scale_Particle "))
 				{
+					ImGui::SeparatorText("MinMax Width");
+					if (ImGui::DragFloat2("MinMax Width_Particle", m_vMinMaxWidth_Particle, 0.1f, 0.f, 5000.f))
+					{
+						if (m_vMinMaxWidth_Particle[0] > m_vMinMaxWidth_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+							m_vMinMaxWidth_Particle[1] = m_vMinMaxWidth_Particle[0];
+
+						m_pParticleBufferDesc->vMinMaxWidth.x = m_vMinMaxWidth_Particle[0];
+						m_pParticleBufferDesc->vMinMaxWidth.y = m_vMinMaxWidth_Particle[1];
+					}
+
+					ImGui::SeparatorText("MinMax Height");
+					if (ImGui::DragFloat2("MinMax Height_Particle", m_vMinMaxHeight_Particle, 0.1f, 0.f, 5000.f))
+					{
+						if (m_vMinMaxHeight_Particle[0] > m_vMinMaxHeight_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+							m_vMinMaxHeight_Particle[1] = m_vMinMaxHeight_Particle[0];
+
+						m_pParticleBufferDesc->vMinMaxHeight.x = m_vMinMaxHeight_Particle[0];
+						m_pParticleBufferDesc->vMinMaxHeight.y = m_vMinMaxHeight_Particle[1];
+					}
+
 
 					/* 파티클 크기 변경 러프 사용 */
 					ImGui::SeparatorText(" Use_ScaleLerp _Particle ");
@@ -923,57 +943,51 @@ void CWindow_EffectTool::Update_ParticleTab()
 					else if (1 == m_iUseScaleLerp)
 						m_pParticleBufferDesc->bUseScaleLerp = FALSE;
 
-				
-					ImGui::SeparatorText("ScaleLerp Pos");
-					if (ImGui::DragFloat2("Up ScaleLerp Pos_Particle", m_vScaleLerp_Up_Pos, 0.1f, 0.f, 1.f))
+					if (TRUE == m_pParticleBufferDesc->bUseScaleLerp)
 					{
-						if (m_vScaleLerp_Up_Pos[0] > m_vScaleLerp_Up_Pos[1])	// Min이 Max보다 크면 Max를 Min으로
-							m_vScaleLerp_Up_Pos[1] = m_vScaleLerp_Up_Pos[0];
+						ImGui::SeparatorText("ScaleLerp Pos");
+						if (ImGui::DragFloat2("Up ScaleLerp Pos_Particle", m_vScaleLerp_Up_Pos, 0.1f, 0.f, 1.f))
+						{
+							if (m_vScaleLerp_Up_Pos[0] > m_vScaleLerp_Up_Pos[1])	// Min이 Max보다 크면 Max를 Min으로
+								m_vScaleLerp_Up_Pos[1] = m_vScaleLerp_Up_Pos[0];
 
-						m_pParticleBufferDesc->vScaleLerp_Up_Pos.x = m_vScaleLerp_Up_Pos[0];
-						m_pParticleBufferDesc->vScaleLerp_Up_Pos.y = m_vScaleLerp_Up_Pos[1];
+							m_pParticleBufferDesc->vScaleLerp_Up_Pos.x = m_vScaleLerp_Up_Pos[0];
+							m_pParticleBufferDesc->vScaleLerp_Up_Pos.y = m_vScaleLerp_Up_Pos[1];
+						}
+
+						if (ImGui::DragFloat2("Down ScaleLerp Pos_Particle", m_vScaleLerp_Down_Pos, 0.1f, 0.f, 1.f))
+						{
+							if (m_vScaleLerp_Down_Pos[0] > m_vScaleLerp_Down_Pos[1])	// Min이 Max보다 크면 Max를 Min으로
+								m_vScaleLerp_Down_Pos[1] = m_vScaleLerp_Down_Pos[0];
+
+							m_pParticleBufferDesc->vScaleLerp_Down_Pos.x = m_vScaleLerp_Down_Pos[0];
+							m_pParticleBufferDesc->vScaleLerp_Down_Pos.y = 1.f; // 1로 고정
+						}
+
+						if (ImGui::CollapsingHeader(" Scale_Easing Types "))
+						{
+							Select_EasingType(&m_pParticleBufferDesc->eType_ScaleLerp);
+						}
 					}
 
-					if (ImGui::DragFloat2("Down ScaleLerp Pos_Particle", m_vScaleLerp_Down_Pos, 0.1f, 0.f, 1.f))
-					{
-						if (m_vScaleLerp_Down_Pos[0] > m_vScaleLerp_Down_Pos[1])	// Min이 Max보다 크면 Max를 Min으로
-							m_vScaleLerp_Down_Pos[1] = m_vScaleLerp_Down_Pos[0];
-
-						m_pParticleBufferDesc->vScaleLerp_Down_Pos.x = m_vScaleLerp_Down_Pos[0];
-						m_pParticleBufferDesc->vScaleLerp_Down_Pos.y = m_vScaleLerp_Down_Pos[1];
-					}
-
-
-					ImGui::SeparatorText("MinMax Width");
-					if (ImGui::DragFloat2("MinMax Width_Particle", m_vMinMaxWidth_Particle, 0.5f, 0.f, 5000.f))
-					{
-						if (m_vMinMaxWidth_Particle[0] > m_vMinMaxWidth_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
-							m_vMinMaxWidth_Particle[1] = m_vMinMaxWidth_Particle[0];
-
-						m_pParticleBufferDesc->vMinMaxWidth.x = m_vMinMaxWidth_Particle[0];
-						m_pParticleBufferDesc->vMinMaxWidth.y = m_vMinMaxWidth_Particle[1];
-					}
-
-					ImGui::SeparatorText("MinMax Height");
-					if (ImGui::DragFloat2("MinMax Height_Particle", m_vMinMaxHeight_Particle, 0.5f, 0.f, 5000.f))
-					{
-						if (m_vMinMaxHeight_Particle[0] > m_vMinMaxHeight_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
-							m_vMinMaxHeight_Particle[1] = m_vMinMaxHeight_Particle[0];
-
-						m_pParticleBufferDesc->vMinMaxHeight.x = m_vMinMaxHeight_Particle[0];
-						m_pParticleBufferDesc->vMinMaxHeight.y = m_vMinMaxHeight_Particle[1];
-					}
-
-
-					if (ImGui::CollapsingHeader(" Scale_Easing Types "))
-					{
-						Select_EasingType(&m_pParticleBufferDesc->eType_ScaleLerp);
-					}
-
-	
 				}
 #pragma endregion 크기 변경 러프_파티클 끝
 
+
+
+#pragma region 자체 회전_파티클 시작
+				if (ImGui::CollapsingHeader(" Rotate_Particle "))
+				{
+					if (ImGui::DragFloat(" Rotation_Radian_X ", &m_vRadian_Particle[0], 1.f, 0.f, 360.f))
+						m_pParticleBufferDesc->vRadian.x = m_vRadian_Particle[0];
+
+					if (ImGui::DragFloat(" Rotation_Radian_Y ", &m_vRadian_Particle[1], 1.f, 0.f, 360.f))
+						m_pParticleBufferDesc->vRadian.y = m_vRadian_Particle[1];
+
+					if (ImGui::DragFloat(" Rotation_Radian_Z ", &m_vRadian_Particle[2], 1.f, 0.f, 360.f))
+						m_pParticleBufferDesc->vRadian.z = m_vRadian_Particle[2];
+				}
+#pragma endregion 자체 회전_파티클 끝
 
 
 #pragma region 색 변경_파티클
@@ -1065,9 +1079,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 					ImGui::SeparatorText("");
 				}
-
-
-
 #pragma endregion 색 변경_파티클 끝
 
 
@@ -1118,26 +1129,92 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 
 
-				///* 추가 크기 조절 */
-				//ImGui::SeparatorText("");
-				//if (ImGui::DragFloat("AddScale_1", &m_fAddScale, 1.f, 0.f, 360.f))
-				//{
-				//	m_pParticlePointDesc->vAddScale.x = m_fAddScale;
-				//	m_pParticlePointDesc->vAddScale.y = m_fAddScale;
-				//}
 
-				//if (ImGui::DragFloat2("AddScale_2", m_vAddScale, 1.f, 0.f, 360.f))
-				//{
-				//	if (0 > m_vAddScale[0])
-				//		m_vAddScale[0] = 0.f;
+#pragma region 디스토션_파티클
+				// 디스토션 값 변경_파티클
+				if (ImGui::CollapsingHeader("Distortion _Particle"))
+				{
+					CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Distortion_Desc();
+					
+					if (ImGui::CollapsingHeader(" Distortion Preset "))
+					{
+						if (ImGui::Button("FIRE"))
+						{
+							pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_COL };
 
-				//	if (0 > m_vAddScale[1])
-				//		m_vAddScale[1] = 0.f;
+							pDistortionDesc->vScrollSpeeds = { 1.f, 1.f, 1.f };
+							pDistortionDesc->vScales = { 1.f, 1.f, 1.f };
 
-				//	m_pParticlePointDesc->vAddScale.x = m_vAddScale[0];
-				//	m_pParticlePointDesc->vAddScale.y = m_vAddScale[1];
-				//}
+							pDistortionDesc->vDistortion1 = { 0.1f, 0.1f };
+							pDistortionDesc->vDistortion2 = { 0.f, 0.f };
+							pDistortionDesc->vDistortion3 = { 0.f, 0.1f };
 
+							pDistortionDesc->fDistortionScale = { 1.f };
+							pDistortionDesc->fDistortionBias = { 1.f };
+
+							Update_CurParameters_Parts();
+						}
+
+						ImGui::SeparatorText("");
+					}
+		
+					/* 디스토션 스크롤 방향 변경 */
+					ImGui::RadioButton(" Row_Scroll_Particle ", &m_iType_Scroll_Particle, 0);  ImGui::SameLine();
+					ImGui::RadioButton("Col_Scroll_Particle", &m_iType_Scroll_Particle, 1);
+					ImGui::RadioButton("Both_Scroll_Particle", &m_iType_Scroll_Particle, 2);
+					ImGui::RadioButton("Rotat_Scroll_Particle", &m_iType_Scroll_Particle, 3);
+					ImGui::RadioButton("End_Scroll_Particle", &m_iType_Scroll_Particle, 4);
+					if (0 == m_iType_Scroll_Particle)
+						pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_ROW };
+					else if (1 == m_iType_Scroll_Particle)
+						pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_COL };
+					else if (2 == m_iType_Scroll_Particle)
+						pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_BOTH };
+					else if (3 == m_iType_Scroll_Particle)
+						pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_ROTAT };
+					else if (4 == m_iType_Scroll_Particle)
+						pDistortionDesc->eType_Scroll = { CEffect_Void::TYPE_SCROLL_END };
+
+
+					if (ImGui::DragFloat3("ScrollSpeeds", m_vScrollSpeeds_Particle, 0.1f, -100.f))
+					{
+						pDistortionDesc->vScrollSpeeds.x = m_vScrollSpeeds_Particle[0];
+						pDistortionDesc->vScrollSpeeds.y = m_vScrollSpeeds_Particle[1];
+						pDistortionDesc->vScrollSpeeds.z = m_vScrollSpeeds_Particle[2];
+					}
+					if (ImGui::DragFloat3("Distortion_Scales", m_vScales_Distortion_Particle, 0.1f, 0.f))
+					{
+						pDistortionDesc->vScales.x = m_vScales_Distortion_Particle[0];
+						pDistortionDesc->vScales.y = m_vScales_Distortion_Particle[1];
+						pDistortionDesc->vScales.z = m_vScales_Distortion_Particle[2];
+					}
+					if (ImGui::DragFloat2("Distortion1", m_vDistortion1_Particle, 0.1f, 0.f))
+					{
+						pDistortionDesc->vDistortion1.x = m_vDistortion1_Particle[0];
+						pDistortionDesc->vDistortion1.y = m_vDistortion1_Particle[1];
+					}
+					if (ImGui::DragFloat2("Distortion2", m_vDistortion2_Particle, 0.1f, 0.f))
+					{
+						pDistortionDesc->vDistortion2.x = m_vDistortion2_Particle[0];
+						pDistortionDesc->vDistortion2.y = m_vDistortion2_Particle[1];
+					}
+					if (ImGui::DragFloat2("Distortion3", m_vDistortion3_Particle, 0.1f, 0.f))
+					{
+						pDistortionDesc->vDistortion3.x = m_vDistortion3_Particle[0];
+						pDistortionDesc->vDistortion3.y = m_vDistortion3_Particle[1];
+					}
+					if (ImGui::DragFloat("Distortion_Scale", &m_fDistortionScale_Particle, 1.f, 0.f))
+					{
+						pDistortionDesc->fDistortionScale = m_fDistortionScale_Particle;
+					}
+					if (ImGui::DragFloat("DistortionBias", &m_fDistortionBias_Particle, 1.f, 0.f))
+					{
+						pDistortionDesc->fDistortionBias = m_fDistortionBias_Particle;
+					}
+
+					ImGui::SeparatorText("");
+				}
+#pragma endregion 디스토션_파티클 끝
 
 
 			}
@@ -2615,6 +2692,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 		{
 #pragma region 파티클(+버퍼) 디스크립션 얻어오기 시작
 			m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();	// 이펙트_보이드 Desc
+			CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Distortion_Desc(); // 파티클 디스토션 구조체
 			CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();	// 파티클 버퍼 얻어오기
 			m_pParticleBufferDesc = pVIBuffer->Get_Desc(); // 버퍼의 Desc 얻어오기
 #pragma endregion
@@ -2883,6 +2961,47 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_fRimColor_Particle[1] = m_pCurVoidDesc->vRimColor.y;
 			m_fRimColor_Particle[2] = m_pCurVoidDesc->vRimColor.z;
 			m_fRimColor_Particle[3] = m_pCurVoidDesc->vRimColor.w;
+
+
+
+			/* 디스토션_파티클 값 업데이트 */
+
+			// 디스토션 스크롤 방향 업데이트
+			if (CEffect_Void::SCROLL_ROW == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Particle = 0;
+			else if (CEffect_Void::SCROLL_COL == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Particle = 1;
+			else if (CEffect_Void::SCROLL_BOTH == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Particle = 2;
+			else if (CEffect_Void::SCROLL_ROTAT == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Particle = 3;
+			else if (CEffect_Void::TYPE_SCROLL_END == pDistortionDesc->eType_Scroll)
+				m_iType_Scroll_Particle = 4;
+
+
+
+			m_vScrollSpeeds_Particle[0] = pDistortionDesc->vScrollSpeeds.x;
+			m_vScrollSpeeds_Particle[1] = pDistortionDesc->vScrollSpeeds.y;
+			m_vScrollSpeeds_Particle[2] = pDistortionDesc->vScrollSpeeds.z;
+
+
+			m_vScales_Distortion_Particle[0] = pDistortionDesc->vScales.x;
+			m_vScales_Distortion_Particle[1] = pDistortionDesc->vScales.y;
+			m_vScales_Distortion_Particle[2] = pDistortionDesc->vScales.z;
+
+
+			m_vDistortion1_Particle[0] = pDistortionDesc->vDistortion1.x;
+			m_vDistortion1_Particle[1] = pDistortionDesc->vDistortion1.y;
+
+			m_vDistortion2_Particle[0] = pDistortionDesc->vDistortion2.x;
+			m_vDistortion2_Particle[1] = pDistortionDesc->vDistortion2.y;
+
+			m_vDistortion3_Particle[0] = pDistortionDesc->vDistortion3.x;
+			m_vDistortion3_Particle[1] = pDistortionDesc->vDistortion3.y;
+
+			m_fDistortionScale_Particle = pDistortionDesc->fDistortionScale;
+			m_fDistortionBias_Particle = pDistortionDesc->fDistortionBias;
+
 
 		}
 

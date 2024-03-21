@@ -259,6 +259,20 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float2(Out_Json["vUV_MaxTileCount"], m_tSpriteDesc.vUV_MaxTileCount);
 
 
+	/* Distortion */
+	Out_Json["eType_Scroll"] = m_tDistortionDesc.eType_Scroll;
+
+	CJson_Utility::Write_Float3(Out_Json["vScrollSpeeds"], m_tDistortionDesc.vScrollSpeeds);
+	CJson_Utility::Write_Float3(Out_Json["vScales"], m_tDistortionDesc.vScales);
+	CJson_Utility::Write_Float2(Out_Json["vDistortion1"], m_tDistortionDesc.vDistortion1);
+	CJson_Utility::Write_Float2(Out_Json["vDistortion2"], m_tDistortionDesc.vDistortion2);
+	CJson_Utility::Write_Float2(Out_Json["vDistortion3"], m_tDistortionDesc.vDistortion3);
+
+	Out_Json["fDistortionScale"] = m_tDistortionDesc.fDistortionScale;
+	Out_Json["fDistortionBias"] = m_tDistortionDesc.fDistortionBias;
+
+
+
 	return true;
 }
 
@@ -284,6 +298,23 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 
 	CJson_Utility::Load_Float2(In_Json["vUV_MinTileCount"], m_tSpriteDesc.vUV_MinTileCount);
 	CJson_Utility::Load_Float2(In_Json["vUV_MaxTileCount"], m_tSpriteDesc.vUV_MaxTileCount);
+
+
+	/* Distortion */
+	if (In_Json.contains("eType_Scroll")) // 디스토션 정보가 있으면 읽기 (다시 저장 후 if문 삭제)
+	{
+		m_tDistortionDesc.eType_Scroll = In_Json["eType_Scroll"];
+
+		CJson_Utility::Load_Float3(In_Json["vScrollSpeeds"], m_tDistortionDesc.vScrollSpeeds);
+		CJson_Utility::Load_Float3(In_Json["vScales"], m_tDistortionDesc.vScales);
+		CJson_Utility::Load_Float2(In_Json["vDistortion1"], m_tDistortionDesc.vDistortion1);
+		CJson_Utility::Load_Float2(In_Json["vDistortion2"], m_tDistortionDesc.vDistortion2);
+		CJson_Utility::Load_Float2(In_Json["vDistortion3"], m_tDistortionDesc.vDistortion3);
+
+		m_tDistortionDesc.fDistortionScale = In_Json["fDistortionScale"];
+		m_tDistortionDesc.fDistortionBias = In_Json["fDistortionBias"];
+	}
+
 
 }
 
@@ -471,6 +502,15 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 
 
+	/* Camera ============================================================================================ */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
+	_float3 vCamDirectionFloat3 = m_pGameInstance->Get_CamDirection();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat3, sizeof(_float3)));
+
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
+
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
 
 
@@ -506,13 +546,17 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
 
 
-	/* Camera ============================================================================================ */
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
-	_float3 vCamDirectionFloat3 = m_pGameInstance->Get_CamDirection();
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamDirection", &vCamDirectionFloat3, sizeof(_float3)));
+	/* Distortion */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_iScrollType", &m_tDistortionDesc.eType_Scroll, sizeof(_int)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vScales", &m_tDistortionDesc.vScales, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tDistortionDesc.vDistortion1, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion2", &m_tDistortionDesc.vDistortion2, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion3", &m_tDistortionDesc.vDistortion3, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDistortionScale", &m_tDistortionDesc.fDistortionScale, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tDistortionDesc.fDistortionBias, sizeof(_float)));
 
-	_float fCamFar = m_pGameInstance->Get_CamFar();
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 
 
 	/* Rim Bloom */

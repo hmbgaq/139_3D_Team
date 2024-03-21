@@ -403,7 +403,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
     float4 vAlphaColor;
 
     float4 vDistortion;
-    float fPerturb;
+    float  fPerturb;
     float2 vDistortedCoord;
     
     

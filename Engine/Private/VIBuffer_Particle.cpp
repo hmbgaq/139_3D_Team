@@ -365,8 +365,19 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 
 
 	// 크기
-	m_vecParticleInfoDesc[iNum].vMaxScales.x = m_tBufferDesc.vMinMaxWidth.y;
-	m_vecParticleInfoDesc[iNum].vMaxScales.y = m_tBufferDesc.vMinMaxHeight.y;
+	if (m_tBufferDesc.bUseScaleLerp)
+	{
+		// 스케일 러프 사용이면 최대 크기 고정
+		m_vecParticleInfoDesc[iNum].vMaxScales.x = m_tBufferDesc.vMinMaxWidth.y;
+		m_vecParticleInfoDesc[iNum].vMaxScales.y = m_tBufferDesc.vMinMaxHeight.y;
+	}
+	else
+	{
+		// 스케일 러프 사용이 아니면 현재 스케일은 범위 내 랜덤
+		m_vecParticleInfoDesc[iNum].vCurScales.x = SMath::fRandom(m_tBufferDesc.vMinMaxWidth.x, m_tBufferDesc.vMinMaxWidth.y);
+		m_vecParticleInfoDesc[iNum].vCurScales.y = SMath::fRandom(m_tBufferDesc.vMinMaxHeight.x, m_tBufferDesc.vMinMaxHeight.y);
+	}
+
 
 
 #pragma region 리지드바디 시작
@@ -421,9 +432,9 @@ void CVIBuffer_Particle::Rotation_Instance(_uint iNum)
 	_vector		vLook		= XMVectorSet(0.f, 0.f, 1.f, 0.f);
 
 
-	_vector		vRotation = XMQuaternionRotationRollPitchYaw( XMConvertToRadians(m_tBufferDesc.fRadian.x)
-															, XMConvertToRadians(m_tBufferDesc.fRadian.y)
-															, XMConvertToRadians(m_tBufferDesc.fRadian.z));
+	_vector		vRotation = XMQuaternionRotationRollPitchYaw( XMConvertToRadians(m_tBufferDesc.vRadian.x)
+															, XMConvertToRadians(m_tBufferDesc.vRadian.y)
+															, XMConvertToRadians(m_tBufferDesc.vRadian.z));
 
 	_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
 
@@ -444,6 +455,7 @@ void CVIBuffer_Particle::Update_Spark_Rotation(_uint iNum)
 	vLook	= XMVector4Normalize(XMVector3Cross(float4(0.f, 1.f, 0.f, 0.f), vUp));
 	vRight	= XMVector4Normalize(XMVector3Cross(vUp, vLook)) * m_vecParticleInfoDesc[iNum].vCurScales.x;
 	vLook	= XMVector4Normalize(XMVector3Cross(vRight, vUp));
+
 
 	m_vecParticleShaderInfoDesc[iNum].vRight = vRight;
 	m_vecParticleShaderInfoDesc[iNum].vUp = vUp;
@@ -556,12 +568,13 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 				}
 
-				// 크기변경 적용
-				pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.x;
-				pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.y;
-
 			}
 		}
+
+		// 크기변경 적용
+		pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.x;
+		pVertices[i].vUp	= _float4(0.f, 1.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.y;
+
 #pragma region 크기 러프 끝
 
 
@@ -924,15 +937,19 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 
 
 	/* For.Rotation */
+	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRotationOffsetX"], m_tBufferDesc.vMinMaxRotationOffsetX);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRotationOffsetY"], m_tBufferDesc.vMinMaxRotationOffsetY);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRotationOffsetZ"], m_tBufferDesc.vMinMaxRotationOffsetZ);
 
 
 	/* For.Scale */
+	Out_Json["Com_VIBuffer"]["bUseScaleLerp"] = m_tBufferDesc.bUseScaleLerp;
 	Out_Json["Com_VIBuffer"]["eType_ScaleLerp"] = m_tBufferDesc.eType_ScaleLerp;
-	//CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vLerpScale_Pos"], m_tBufferDesc.vLerpScale_Pos);
-	//CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vScaleSpeed"], m_tBufferDesc.vScaleSpeed);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vScaleLerp_Up_Pos"], m_tBufferDesc.vScaleLerp_Up_Pos);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vScaleLerp_Down_Pos"], m_tBufferDesc.vScaleLerp_Down_Pos);
+
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxWidth"], m_tBufferDesc.vMinMaxWidth);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxHeight"], m_tBufferDesc.vMinMaxHeight);
 
@@ -988,15 +1005,26 @@ void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 
 
 	/* For.Rotation */
+	if (In_Json.contains("vRadian")) // 다시 저장 후 삭제
+		CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetX"], m_tBufferDesc.vMinMaxRotationOffsetX);
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetY"], m_tBufferDesc.vMinMaxRotationOffsetY);
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetZ"], m_tBufferDesc.vMinMaxRotationOffsetZ);
 
 
 	/* For.Scale */
+	if (In_Json.contains("bUseScaleLerp")) // 다시 저장 후 삭제
+		m_tBufferDesc.bUseScaleLerp = In_Json["Com_VIBuffer"]["bUseScaleLerp"];
+
 	m_tBufferDesc.eType_ScaleLerp = In_Json["Com_VIBuffer"]["eType_ScaleLerp"];
-	//CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vLerpScale_Pos"], m_tBufferDesc.vLerpScale_Pos);
-	//CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vScaleSpeed"], m_tBufferDesc.vScaleSpeed);
+
+	if (In_Json.contains("vScaleLerp_Up_Pos")) // 다시 저장 후 삭제
+		CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vScaleLerp_Up_Pos"], m_tBufferDesc.vScaleLerp_Up_Pos);
+
+	if (In_Json.contains("vScaleLerp_Down_Pos")) // 다시 저장 후 삭제
+		CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vScaleLerp_Down_Pos"], m_tBufferDesc.vScaleLerp_Down_Pos);
+
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxWidth"], m_tBufferDesc.vMinMaxWidth);
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxHeight"], m_tBufferDesc.vMinMaxHeight);
 

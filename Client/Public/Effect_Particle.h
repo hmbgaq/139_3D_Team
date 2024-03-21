@@ -50,6 +50,7 @@ public:
 public:
 	//PARTICLE_DESC* Get_Desc() { return &m_tParticleDesc; }
 	UVSPRITE_DESC* Get_Sprite_Desc() { return &m_tSpriteDesc; }
+	DISTORTION_DESC* Get_Distortion_Desc() { return &m_tDistortionDesc; }
 
 
 // Åø ¿ë
@@ -68,7 +69,8 @@ private:
 
 private:
 	//PARTICLE_DESC				m_tParticleDesc = {};
-	UVSPRITE_DESC				m_tSpriteDesc = {};
+	UVSPRITE_DESC				m_tSpriteDesc		= {};
+	DISTORTION_DESC				m_tDistortionDesc	= {};
 
 
 private:

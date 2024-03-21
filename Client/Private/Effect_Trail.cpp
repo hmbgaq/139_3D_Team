@@ -219,9 +219,6 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 	 /* ºôº¸µå */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
 
-	/* ºôº¸µå */
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
-
 
 	/* Color & Discard ===============================================================================*/
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tVoidDesc.vColor_Clip.w, sizeof(_float)));

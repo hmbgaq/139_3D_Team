@@ -149,7 +149,7 @@ private:
 private:
 	_int m_iRenderGroup_Particle							= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Particle						= { 0 };
-	_int m_iMaxShaderPassIndex_Particle						= { 3 };
+	_int m_iMaxShaderPassIndex_Particle						= { 4 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
 	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 12, 0, 44, 24, 20 };
 
@@ -236,6 +236,7 @@ private:
 	_float	m_vMinMaxRange_Particle[2] = { 0.f, 0.f };
 
 	/* For.Rotation */
+	_float	m_vRadian_Particle[3] = { 0.f, 0.f, 0.f };
 	_float	m_vRotationOffsetX_Particle[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetY_Particle[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetZ_Particle[2] = { 0.f, 0.f };
@@ -278,6 +279,25 @@ private:
 	_int	m_vUV_MaxTileCount_Particle[2]	= { 7, 7 };
 	_float	m_fSequenceTerm_Particle		= { 0.05f };
 	/* For.Sprite ======================================== */
+
+
+
+	/* Distortion ============================================== */
+	_float m_fSequenceTerm_Distortion_Particle = { 1.f };
+	_int	m_iType_Scroll_Particle = { 0 };
+
+	_float	m_vScrollSpeeds_Particle[3] = { 1.f, 1.f, 0.f };
+	_float	m_vScales_Distortion_Particle[3] = { 1.f, 1.f, 1.f };
+
+	_float	m_vDistortion1_Particle[2] = { 0.1f, 0.1f };
+	_float	m_vDistortion2_Particle[2] = { 0.0f, 0.0f };
+	_float	m_vDistortion3_Particle[2] = { 0.0f, 0.1f };
+
+	_float	m_fDistortionScale_Particle = { 1.f };
+	_float	m_fDistortionBias_Particle = { 1.f };
+	/* Distortion ============================================== */
+
+
 
 	/* ÆÄÆ¼Å¬ Rim & Bloom */
 	_float	m_fRimColor_Particle[4] = { 1.f, 1.f, 1.f, 1.f };

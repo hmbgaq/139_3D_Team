@@ -53,7 +53,7 @@ public:
 
 
 		/* For.Rotation */
-		_float3		fRadian = { 90.f, 0.f, 0.f };
+		_float3		vRadian = { 0.f, 0.f, 0.f };
 
 		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetY = { 0.0f, 360.f };
@@ -65,9 +65,6 @@ public:
 		EASING_TYPE	eType_ScaleLerp = { EASING_TYPE::LINEAR };
 		_float2		vScaleLerp_Up_Pos	= { 0.f, 0.3f };		// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(커지는 용)
 		_float2		vScaleLerp_Down_Pos = { 1.f, 1.f };			// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(작아지는 용)
-
-		//_float2		vLerpScale_Pos	= { 0.f, 1.f };		// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작할건지(커지고, 작아진다)
-		//_float2		vScaleSpeed		= { 0.005f, 0.05f };	// 크기 증가 스피드, 감소 스피드
 		_float2		vMinMaxWidth	= { 1.f, 1.f };
 		_float2		vMinMaxHeight	= { 1.f, 1.f };
 

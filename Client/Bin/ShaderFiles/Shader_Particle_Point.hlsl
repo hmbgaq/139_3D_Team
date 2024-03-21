@@ -299,7 +299,7 @@ struct GS_IN
 	float2		vPSize		: PSIZE;
 	float4		vColor		: COLOR0;
 
-	uint	iInstanceID		: SV_INSTANCEID;
+	uint	    iInstanceID	: SV_INSTANCEID;
 };
 
 struct GS_OUT
@@ -467,6 +467,258 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
 // MAIN_PARTICLE ================================================================================================================
 
 
+// DISTORTION ===================================================================================================================
+struct VS_OUT_DISTORTION
+{
+    float2 vTexcoord1 : TEXCOORD0;
+    float2 vTexcoord2 : TEXCOORD1;
+    float2 vTexcoord3 : TEXCOORD2;
+    
+    float4 vPosition    : POSITION;
+    float2 vPSize       : PSIZE;
+    float4 vColor       : COLOR0;
+
+     
+    uint   iInstanceID  : SV_INSTANCEID;
+	
+};
+
+
+VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
+{
+    VS_OUT_DISTORTION Out = (VS_OUT_DISTORTION) 0;
+    
+    vector vPosition = mul(float4(In.vPosition, 1.f), In.TransformMatrix);
+
+    Out.vPosition = mul(vPosition, g_WorldMatrix);
+    Out.vPSize = float2(In.vPSize.x * In.TransformMatrix._11, In.vPSize.y * In.TransformMatrix._22);
+    Out.vColor = In.vColor;
+
+    Out.iInstanceID = In.iInstanceID;
+
+
+    return Out;
+}
+
+
+struct GS_IN_DISTORTION
+{
+    float2 vTexcoord1   : TEXCOORD0;
+    float2 vTexcoord2   : TEXCOORD1;
+    float2 vTexcoord3   : TEXCOORD2;
+    
+    float4 vPosition    : POSITION;
+    float2 vPSize       : PSIZE;
+    float4 vColor       : COLOR0;
+
+     
+    uint iInstanceID    : SV_INSTANCEID;
+};
+
+
+struct GS_OUT_DISTORTION
+{
+    float2 vTexcoord1   : TEXCOORD0;
+    float2 vTexcoord2   : TEXCOORD1;
+    float2 vTexcoord3   : TEXCOORD2;
+    
+    float4 vPosition    : SV_POSITION;
+    float2 vTexcoord    : TEXCOORD3;
+    float4 vColor       : COLOR0;
+	
+     
+    uint iInstanceID    : SV_INSTANCEID;
+};
+
+
+/* 지오메트리 쉐이더 : 셰이더안에서 정점을 추가적으로 생성해 준다. */
+[maxvertexcount(6)]
+void GS_MAIN_DISTORTION(point GS_IN_DISTORTION In[1], inout TriangleStream<GS_OUT_DISTORTION> OutStream)
+{
+    GS_OUT_DISTORTION Out[4];
+
+    float4 vLook;
+    float3 vRight, vUp;
+	
+    if (g_bBillBoard)
+    {
+        vLook = g_vCamPosition - In[0].vPosition;
+        vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook.xyz)) * In[0].vPSize.x * 0.5f;
+        vUp = normalize(cross(vLook.xyz, vRight)) * In[0].vPSize.y * 0.5f;
+    }
+    else
+    {
+		// 이동 진행 방향벡터를 Up으로 한 새로운 Right, Look 정해주기 ===================================
+		//vUp = normalize(g_EffectDesc[In[0].iInstanceID].g_vDir).rgb * In[0].vPSize.y * 0.5f;
+		//vLook.rgb = normalize(cross(float3(0.f, 1.f, 0.f), vUp));
+		//vRight = normalize(cross(vUp, vLook.rgb)) * In[0].vPSize.x * 0.5f;
+		//vLook.rgb = normalize(cross(vRight, vUp)); vLook.a = 0.f;
+		
+		
+        vRight = normalize(g_EffectDesc[In[0].iInstanceID].g_vRight.rgb) * In[0].vPSize.x * 0.5f;
+        vUp = normalize(g_EffectDesc[In[0].iInstanceID].g_vUp.rgb) * In[0].vPSize.y * 0.5f;
+        vLook = normalize(g_EffectDesc[In[0].iInstanceID].g_vLook);
+		
+    }
+
+    matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
+
+	// 중앙 원점
+    //Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
+    //Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
+    //Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
+    //Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
+	
+	
+	// 중앙 원점이 아님! (중앙 위로 원점 바꿔서 찍었음!!)
+    Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight, 1.f), matVP);
+    Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight, 1.f), matVP);
+    Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - (vUp * 2), 1.f), matVP);
+    Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - (vUp * 2), 1.f), matVP);
+	
+	
+	// 아래로 누움
+    //Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vLook.rgb, 1.f), matVP);
+    //Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vLook.rgb, 1.f), matVP);
+    //Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vLook.rgb, 1.f), matVP);
+    //Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vLook.rgb, 1.f), matVP);
+	
+	
+    Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
+    Out[0].vColor = In[0].vColor;
+
+    Out[1].vTexcoord = Rotate_Texcoord(float2(1.f, 0.f), g_fDegree);
+    Out[1].vColor = In[0].vColor;
+
+    Out[2].vTexcoord = Rotate_Texcoord(float2(1.f, 1.f), g_fDegree);
+    Out[2].vColor = In[0].vColor;
+
+    Out[3].vTexcoord = Rotate_Texcoord(float2(0.f, 1.f), g_fDegree);
+    Out[3].vColor = In[0].vColor;
+
+
+	
+    Out[0].iInstanceID = In[0].iInstanceID;
+    Out[1].iInstanceID = In[0].iInstanceID;
+    Out[2].iInstanceID = In[0].iInstanceID;
+    Out[3].iInstanceID = In[0].iInstanceID;
+	
+
+    OutStream.Append(Out[0]);
+    OutStream.Append(Out[1]);
+    OutStream.Append(Out[2]);
+    OutStream.RestartStrip();
+
+    OutStream.Append(Out[0]);
+    OutStream.Append(Out[2]);
+    OutStream.Append(Out[3]);
+    OutStream.RestartStrip();
+	
+}
+
+
+
+struct PS_IN_DISTORTION
+{
+    float2 vTexcoord1   : TEXCOORD0;
+    float2 vTexcoord2   : TEXCOORD1;
+    float2 vTexcoord3   : TEXCOORD2;
+    
+    float4 vPosition    : SV_POSITION;
+    float2 vTexcoord    : TEXCOORD3;
+    float4 vColor       : COLOR0;
+	
+     
+    uint iInstanceID : SV_INSTANCEID;
+};
+
+
+PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    float4 vFinalDiffuse;
+    float4 vAlphaColor;
+
+    float4  vDistortion;
+    float   fPerturb;
+    float2  vDistortedCoord;
+    
+    
+    // 텍스쿠드
+    In.vTexcoord = In.vTexcoord * g_UVScale + g_UVOffset;
+    In.vTexcoord = Rotate_Texcoord(In.vTexcoord, g_fDegree);
+    
+    /* Distortion ============================================================ */	
+    vDistortion = Calculation_Distortion(In.vTexcoord, In.vTexcoord1, In.vTexcoord2, In.vTexcoord3);
+    
+    // 입력으로 들어온 텍스쳐의 Y좌표를 왜곡 크기와 바이어스 값으로 교란시킨다. 이 교란은 텍스쳐의 위쪽으로 갈수록 강해져서 맨 위쪽에는 깜박이는 효과를 만들어낸다.
+    fPerturb = ((1.0f - In.vTexcoord.y) * g_fDistortionScale) + g_fDistortionBias;
+    
+    // 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를(UV) 만든다.
+    vDistortedCoord = (vDistortion.xy * fPerturb) + In.vTexcoord.xy;
+
+
+	// 디퓨즈 텍스처 (clamp 샘플러 사용)
+    vFinalDiffuse = g_DiffuseTexture.Sample(ClampSampler, vDistortedCoord.xy);
+
+
+	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용)
+    vAlphaColor = g_MaskTexture.Sample(ClampSampler, vDistortedCoord.xy);
+    vFinalDiffuse.a *= vAlphaColor;
+
+	/* Discard & Color Mul ==================================================== */
+    if (vFinalDiffuse.a <= g_fAlpha_Discard) // 알파 잘라내기
+        discard;
+	
+	// 컬러 혼합
+    Out.vColor = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode);
+
+		
+    /* RimBloom ================================================================ */
+    //float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
+    //Out.vColor += vRimColor;
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+    
+	
+    if (bSolid)
+        Out.vSolid = Out.vColor;
+    
+	
+    return Out;
+    
+  
+}
+// DISTORTION ===================================================================================================================
+
+
+//  DISTORTION_POST =============================================================================================================
+PS_OUT PS_MAIN_DISTORTION_POST(PS_IN_DISTORTION In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    In.vTexcoord = In.vTexcoord * g_UVScale + g_UVOffset;
+    In.vTexcoord = Rotate_Texcoord(In.vTexcoord, g_fDegree);
+    
+    
+
+	/* Distortion ============================================================ */ 
+    float4 vDistortion;
+    
+    vDistortion = Calculation_Distortion(In.vTexcoord, In.vTexcoord1, In.vTexcoord2, In.vTexcoord3);
+    Out.vDistortion = vDistortion;
+    
+	
+	/* RimBloom ============================================================== */
+    Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vRimBloom = float4(g_vBloomPower, 1.0f); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+	
+      
+    return Out;
+}
+//  DISTORTION_POST =============================================================================================================
+
+
 
 
 technique11 DefaultTechnique
@@ -498,6 +750,48 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_PARTICLE(true);
+    }
+
+    pass Distortion // 2
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* 렌더스테이츠 */
+        VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
+        GeometryShader = compile gs_5_0 GS_MAIN_DISTORTION();
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION(false);
+    }
+
+    pass Distortion_Solid // 3
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* 렌더스테이츠 */
+        VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
+        GeometryShader = compile gs_5_0 GS_MAIN_DISTORTION();
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION(true);
+    }
+
+    pass Distortion_Post // 4
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* 렌더스테이츠 */
+        VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
+        GeometryShader = compile gs_5_0 GS_MAIN_DISTORTION();
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION_POST();
     }
 
 }
