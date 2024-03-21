@@ -238,49 +238,6 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 		}
 	}
 
-
-
-
-	return S_OK;
-
-// 	LIGHT_DESC			LightDesc{};
-// // 	{
-// // 		LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-// // 		LightDesc.vDirection = _float4(1.f, -0.212f, 0.152f, 0.f);
-// // 		LightDesc.vDiffuse = _float4(0.726f, 0.726f, 0.726f, 0.5f);
-// // 		LightDesc.vAmbient = _float4(0.896f, 0.733f, 0.671f, 0.5f);
-// // 		LightDesc.vSpecular = _float4(0.691f, 0.667f, 0.667f, 0.5f);
-// // 
-// // 		FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-// // 	}
-// 	//{
-// 	//	ZeroMemory(&LightDesc, sizeof LightDesc);
-// 	//
-// 	//	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-// 	//	LightDesc.vPosition = _float4(30.f, 3.f, 30.f, 1.f);
-// 	//	LightDesc.fRange = 20.f;
-// 	//	LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.0f, 1.f);
-// 	//	LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
-// 	//	LightDesc.vSpecular = LightDesc.vDiffuse;
-// 	//	FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-// 	//
-// 	//	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-// 	//	LightDesc.vPosition = _float4(50.f, 3.f, 30.f, 1.f);
-// 	//	LightDesc.fRange = 20.f;
-// 	//	LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.0f, 1.f);
-// 	//	LightDesc.vAmbient = _float4(0.1f, 0.4f, 0.1f, 1.f);
-// 	//	LightDesc.vSpecular = LightDesc.vDiffuse;
-// 	//	FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-// 	//
-// 	//	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-// 	//	LightDesc.vPosition = _float4(70.f, 10.f, 30.f, 1.f);
-// 	//	LightDesc.fRange = 20.f;
-// 	//	LightDesc.vDiffuse = _float4(1.f, 0.0f, 1.f, 1.f);
-// 	//	LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.4f, 1.f);
-// 	//	LightDesc.vSpecular = LightDesc.vDiffuse;
-// 	//	FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-// 	//}
-// 	//
 	return S_OK;
 }
 
@@ -586,10 +543,10 @@ HRESULT CLevel_GamePlay::Ready_Shader()
 	
 	HBAO_PLUS_DESC Desc_Hbao = {};
 	Desc_Hbao.bHBAO_Active = true;
-	Desc_Hbao.fBias = 0.1f;
-	Desc_Hbao.fBlur_Sharpness = 16.f;
-	Desc_Hbao.fPowerExponent = 1.828f;
 	Desc_Hbao.fRadius = 1.482f;
+	Desc_Hbao.fBias = 0.1f;
+	Desc_Hbao.fPowerExponent = 1.828f;
+	Desc_Hbao.fBlur_Sharpness = 16.f;
 
 	DEFERRED_DESC Desc_Deferred = {};
 	Desc_Deferred.bRimBloom_Blur_Active = true;

@@ -1891,6 +1891,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Monster.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Point.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle_Rect.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_PBR.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModelInstance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCube.hlsl" />

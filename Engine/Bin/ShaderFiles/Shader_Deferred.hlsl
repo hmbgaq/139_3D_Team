@@ -56,13 +56,15 @@ struct FOG_DESC
     float fFogHeightValue;
     float fFogDistanceDensity;
     float fFogHeightDensity;
-    vector vFogColor;
+    float3 padding; // 12바이트 패딩
+    float4 vFogColor;
 };
 
 struct BLOOMRIM_DESC
 {
-    bool bBloomBlur_Active;
-    bool bRimBlur_Active;
+    // 패딩을 추가하지않아도 메모리가 정렬됨 
+    bool bBloomBlur_Active; 
+    bool bRimBlur_Active; 
 };
 
 FOG_DESC g_Fogdesc;
@@ -274,7 +276,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
 
 /* ------------------ 4 - Deferred ------------------ */
 
-PS_OUT PS_MAIN_FINAL(PS_IN In)
+PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
@@ -364,7 +366,45 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 	
-  //  vector 
+    // Diffuse -> Albedo, Properties-> Specular, ORM : Occulusion, Roughness Metallic, 
+    vector vAlbedo = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (vAlbedo.a == 0.f)
+    {
+        float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
+        if (vPriority.a == 0.f)
+            discard;
+        
+        Out.vColor = vPriority;
+        return Out;
+    }
+    
+     
+    vAlbedo = pow(vAlbedo, 2.2f);
+    vector vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 N = vNormal.xyz * 2.f - 1.f;
+    
+    
+    // MRT_LightAcc : Shade 
+    vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
+    vShade = saturate(vShade);
+	
+    // MRT_GameObject : Specular 
+    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    vSpecular = saturate(vSpecular);
+	
+    // MRT_GameObject : Depth
+    vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
+    if (vDepthDesc.w != 1.f) 
+        vSpecular = float4(0.f, 0.f, 0.f, 0.f);
+    
+    // Target_HBAO
+    vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
+    if (g_bSSAO_Active)
+        vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
+    
+   // Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular;
+    
 	
 	
 	
@@ -427,14 +467,14 @@ technique11 DefaultTechnique
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_FINAL();
+        PixelShader = compile ps_5_0 PS_MAIN_DEFERRED();
     }
 
     pass PBR_Deferred // 5
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
