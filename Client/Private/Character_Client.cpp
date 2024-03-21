@@ -83,6 +83,22 @@ CEffect* CCharacter_Client::Create_Effect(const wstring& strPartTag)
 	return nullptr;
 }
 
+void CCharacter_Client::Apply_Shake_And_Blur(Power ePower)
+{
+	if (nullptr == m_pDataManager)
+	{
+		m_pDataManager = CData_Manager::GetInstance();
+	}
+
+	CSpringCamera* pSpringCam = m_pDataManager->Get_MasterCamera()->Get_SpringCamera();
+	if (pSpringCam)
+	{
+		pSpringCam->Set_ShakeCamera(true);
+	}
+
+	m_pGameInstance->Set_RadialBlurTime(0.2f * ECast(ePower));
+}
+
 void CCharacter_Client::Create_Hitting_Effect(_float3 vPos, Power ePower, string strEffectName, CGameObject* pOwner)
 {
 	string strEffectFileName;
@@ -98,19 +114,8 @@ void CCharacter_Client::Create_Hitting_Effect(_float3 vPos, Power ePower, string
 	if (pEffect)
 		pEffect->Set_Position(vPos);
 
-	if (nullptr == m_pDataManager)
-	{
-		m_pDataManager = CData_Manager::GetInstance();
-	}
 
-	CSpringCamera* pSpringCam = m_pDataManager->Get_MasterCamera()->Get_SpringCamera();
-	if (pSpringCam)
-	{
-		pSpringCam->Set_ShakeCamera(true);
-	}
-
-	m_pGameInstance->Set_RadialBlurTime(0.2f * ECast(ePower));
-
+	Apply_Shake_And_Blur(ePower);
 }
 
 _bool CCharacter_Client::Check_EffectOnTrackPosition()

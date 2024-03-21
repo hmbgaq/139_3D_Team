@@ -25,6 +25,9 @@ CState<CPlayer>* CPlayer_State_TeleportPunch::Update(CPlayer* pActor, _float fTi
 	else if (false == m_bFlags[1] && 2.f >= pActor->Calc_Distance())
 	{
 		//pTarget->Set_Position(pActor->Calc_Front_Pos(_float3(0.f, 0.f, 3.f)));
+
+		pActor->Apply_Shake_And_Blur(Power::Heavy);
+
 		pTarget->Look_At_OnLand(pActor->Get_Position_Vector());
 		pTarget->Hitted_Dead(Power::Heavy);
 		m_bFlags[1] = true;

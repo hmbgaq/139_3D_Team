@@ -94,17 +94,6 @@ void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 			pOwnerCharacter->Create_Hitting_Effect(Get_WorldPosition(), m_eHitPower);
 		}
 
-		//CData_Manager::GetInstance()->Get_Player()->Create_Effect(Get_WorldPosition());
-
-		//CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-		//if (pSpringCam)
-		//{
-		//	pSpringCam->Set_ShakeCamera(true);
-		//}
-
-		//m_pGameInstance->Set_RadialBlurTime(0.2f * ECast(m_eHitPower));
-		
-		
 	}
 	Set_Enable_Collisions(false);
 }

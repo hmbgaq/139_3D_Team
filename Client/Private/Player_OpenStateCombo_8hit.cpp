@@ -88,8 +88,9 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Update(CPlayer* pActor, _float fTi
 	}
 	else if (false == m_bFlags[HIT_EIGHTH])
 	{
-		if (pActor->Is_Inputable_Front(62))
+		if (pActor->Is_Inputable_Front(62 - iTiming))
 		{
+			m_pGameInstance->Set_RadialBlurTime();
 			pTarget->Hitted_Dead(Power::Heavy);
 			m_bFlags[HIT_EIGHTH] = true;
 		}
@@ -137,6 +138,10 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Hit(CPlayer* pActor, _uint iHitCou
 			pTarget->Hitted_Opened(Direction::Right);
 		}
 		pTarget->Set_Invincible(true);
+
+		//pActor->Apply_Shake_And_Blur();
+
+		m_pGameInstance->Set_RadialBlurTime(0.05f);
 
 		m_bFlags[iHitCount] = true;
 	}

@@ -24,6 +24,7 @@ CState<CPlayer>* CPlayer_EnergyWhip_Pull::Update(CPlayer* pActor, _float fTimeDe
 		if (false == m_bFlags[0])
 		{
 			pTarget->Hitted_Electrocute();
+			pActor->Apply_Shake_And_Blur(Power::Medium);
 			m_bFlags[0] = true;
 		}
 
