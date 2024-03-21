@@ -382,11 +382,11 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 {
 	CState<CPlayer>* pState = { nullptr };
 
-	 pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
-	 if (pState)	return pState;
-	//todo 
-	pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	//todo pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
+	//todo if (pState)	return pState;
+	//todo//todo 
+	//todopState = Winchester(pActor, fTimeDelta, _iAnimIndex);
+	//todoif (pState)	return pState;
 
 	//pState = Crossbow(pActor, fTimeDelta, _iAnimIndex);
 	//if (pState)	return pState;
@@ -412,8 +412,8 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 	pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
-	pState = Attack(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	//todopState = Attack(pActor, fTimeDelta, _iAnimIndex);
+	//todoif (pState)	return pState;
 
 	pState = Run(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;

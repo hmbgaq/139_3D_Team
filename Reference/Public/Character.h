@@ -50,8 +50,7 @@ public:
 
 		//Sound
 
-		//Matrix
-		_float4x4 WorldMatrix;
+		
 	}CHARCTER_DESC;
 protected:
 	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strPrototypeTag);

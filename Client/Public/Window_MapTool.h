@@ -345,6 +345,7 @@ private:
 	vector<CMonster_Character*>			m_vecCreateMonster;
 	vector<string>						m_vecCreateMonsterTag;
 	_int								m_iSelectMonsterGroupIndex = 0;
+	_int								m_iSelectMonsterNaviIndex = -1;
 
 	//TODO 추후 NPC추가되면 작성
 	//!vector<CNPC*>					m_vecCreateNPC;

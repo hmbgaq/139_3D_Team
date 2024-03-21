@@ -44,8 +44,8 @@ public:
 
 public:
 	void					InRangeCellChange(class CCell* pCell, _int ePoint, _float3 vSearchPos);
-	_int					Get_SelectRangeCellIndex(class CGameObject* pTargetObject);
 	_float					Compute_Height(_float3 vPosition, _Out_ _bool * pGround);
+	_int					Get_SelectRangeCellIndex(class CGameObject* pTargetObject); // 
 
 
 private:

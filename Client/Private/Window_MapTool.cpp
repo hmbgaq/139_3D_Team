@@ -434,6 +434,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				 /*= m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);*/
 				MonsterJson[i].emplace("PrototypeTag", strProtoTag);
 				MonsterJson[i].emplace("MonsterGroupIndex", m_vecCreateMonster[i]->Get_MonsterGroupIndex());
+				MonsterJson[i].emplace("StartNaviIndex", Desc.iStartNaviIndex);
 				m_vecCreateMonster[i]->Write_Json(MonsterJson[i]);
 			}
 		}
@@ -778,6 +779,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
  			MonsterDesc.bPreview = false;
  			MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
  			MonsterDesc.iMonsterGroupIndex = MonsterJson[i]["MonsterGroupIndex"];
+			MonsterDesc.iStartNaviIndex = MonsterJson[i]["StartNaviIndex"];
  
  
  			const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
@@ -6215,6 +6217,7 @@ void CWindow_MapTool::Monster_SelectFunction()
 					m_pPickingObject = m_vecCreateMonster[m_iSelectCharacterTag];
 					
 					m_iSelectMonsterGroupIndex = m_vecCreateMonster[m_iSelectCharacterTag]->Get_MonsterGroupIndex();
+					m_iSelectMonsterNaviIndex = m_vecCreateMonster[m_iSelectCharacterTag]->Get_StartNaviIndex();
 					if (isSelected)
 					{
 						ImGui::SetItemDefaultFocus();
@@ -6228,6 +6231,35 @@ void CWindow_MapTool::Monster_SelectFunction()
 		{
 			m_vecCreateMonster[m_iSelectCharacterTag]->Set_MonsterGroupIndex(m_iSelectMonsterGroupIndex);
 		}
+
+		if (m_pNavigation != nullptr)
+		{
+			ImGui::NewLine();
+
+			if (m_pPlayer != nullptr)
+			{
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), u8"현재 플레이어 셀 인덱스 : %d", m_pPlayer->Get_Navigation()->Get_CurrentCellIndex());
+			}
+
+			if(ImGui::InputInt(u8"시작 네비게이션 인덱스", &m_iSelectMonsterNaviIndex))
+			{
+				m_vecCreateMonster[m_iSelectCharacterTag]->Set_StartNaviIndex(m_iSelectMonsterNaviIndex);
+			}
+			
+
+			if (ImGui::Button(u8"네비게이션 인덱스 셋"))
+			{
+				 m_vecCreateMonster[m_iSelectCharacterTag]->Set_StartNaviIndex(m_pNavigation->Get_SelectRangeCellIndex(m_vecCreateMonster[m_iSelectCharacterTag]));
+				 m_iSelectMonsterNaviIndex = m_vecCreateMonster[m_iSelectCharacterTag]->Get_StartNaviIndex();
+			}
+
+			
+		}
+		else
+		{
+			ImGui::Text(u8"네비게이션 데이터를 불러와주세요");
+		}
+		
 	}
 }
 

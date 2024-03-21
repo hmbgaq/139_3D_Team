@@ -39,7 +39,7 @@ HRESULT CCharacter::Initialize(void* pArg)
 
 
 	
-	m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
+	//!m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
 	
 
 	FAILED_CHECK(Ready_Components());

@@ -416,21 +416,51 @@ void CNavigation::InRangeCellChange(CCell* pCell, _int ePoint, _float3 vSearchPo
 
 _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
 {
-	_int iCellSize = (_int)m_Cells.size();
 
+	
+
+
+	//_int iCellSize = (_int)m_Cells.size();
+	//
 	CTransform* pTransform = pTargetObject->Get_Transform();
-
+	//
 	_vector vPos = pTransform->Get_State(CTransform::STATE_POSITION);
+	//
+	//for (_int i = 0; i < iCellSize; ++i)
+	//{
+	//
+	//	if (true == m_Cells[i]->isInRange(vPos, XMLoadFloat4x4(&m_WorldMatrix)))
+	//		return m_Cells[i]->Get_Index();
+	//}
+	//
+	//return -1;
 
-	for (_int i = 0; i < iCellSize; ++i)
+	for (auto& Cell : m_Cells)
 	{
+		_vector points[3] = {};
 
-		if (true == m_Cells[i]->isInRange(vPos, XMLoadFloat4x4(&m_WorldMatrix)))
-			return m_Cells[i]->Get_Index();
+		for (int i = 0; i < 3; ++i)
+			points[i] = XMLoadFloat3(Cell->Get_Point(static_cast<CCell::POINT>(i)));
+
+		// 각 꼭지점에서 주어진 점 P까지의 벡터 계산
+		_vector AP = vPos - points[0];
+		_vector BP = vPos - points[1];
+		_vector CP = vPos - points[2];
+
+		// 삼각형 내부 판단
+		// 내적을 이용하여 삼각형 ABC 내부에 있는지 확인
+		if (XMVectorGetX(XMVector3Dot(AP, XMVectorSubtract(points[1], points[0]))) > 0 &&
+			XMVectorGetX(XMVector3Dot(BP, XMVectorSubtract(points[2], points[1]))) > 0 &&
+			XMVectorGetX(XMVector3Dot(CP, XMVectorSubtract(points[0], points[2]))) > 0)
+		{
+			// 삼각형 내부에 위치한 경우 해당 셀의 인덱스 반환
+			return Cell->Get_CurrentIndex();
+		}
 	}
 
 	return -1;
 }
+
 
 _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 {

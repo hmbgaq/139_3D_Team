@@ -101,6 +101,7 @@ _bool CEvent_MosnterSpawnTrigger::Activate_Condition()
 					MonsterDesc.bPreview = false;
 					MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
 					MonsterDesc.iMonsterGroupIndex = MonsterJson[i]["MonsterGroupIndex"];
+					MonsterDesc.iStartNaviIndex = MonsterJson[i]["StartNaviIndex"];
 
 					const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
 					_float4x4 WorldMatrix;
