@@ -566,10 +566,10 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 
 	pState = TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
-	
+
 	pState = OpenStateCombo_8hit(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
-
+	
 
 	if (0.3f <= pActor->Get_ChargingTime())
 	{
@@ -993,15 +993,18 @@ CState<CPlayer>* CPlayer_State::Melee_Dynamic(CPlayer* pActor, _float fTimeDelta
 
 CState<CPlayer>* CPlayer_State::OpenStateCombo_8hit(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Mouse_Down(DIM_LB))
+	pActor->Search_Target(3.f);
+	CCharacter* pTarget = pActor->Get_Target();
+	if (pTarget && pTarget->Is_ElectrocuteTime())
 	{
-		pActor->Search_Target(3.f);
-		CCharacter* pTarget = pActor->Get_Target();
-		if (pTarget && pTarget->Is_ElectrocuteTime())
+		if (m_pGameInstance->Mouse_Down(DIM_LB)
+			|| m_pGameInstance->Mouse_Pressing(DIM_LB)
+			|| m_pGameInstance->Mouse_Up(DIM_LB))
 		{
 			if (CPlayer_OpenStateCombo_8hit::g_iAnimIndex != _iAnimIndex)
 				return new CPlayer_OpenStateCombo_8hit();
 		}
+
 	}
 
 	return nullptr;
