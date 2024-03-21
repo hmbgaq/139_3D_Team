@@ -242,10 +242,14 @@ private:
 
 
 	/* For.Scale */
-	_float	m_vLerpScale_Pos_Particle[2]	= { 0.f, 1.f };
+	//_float	m_vLerpScale_Pos_Particle[2]	= { 0.f, 1.f };
+
+	_int	m_iUseScaleLerp					= { 0 };
+	_float	m_vScaleLerp_Up_Pos[2]			= { 0.f, 0.3f };
+	_float	m_vScaleLerp_Down_Pos[2]		= { 1.f, 1.f };
 	_float	m_vMinMaxWidth_Particle[2]		= { 0.f, 1.f };
 	_float	m_vMinMaxHeight_Particle[2]		= { 0.f, 1.f };
-	_float	m_vScaleSpeed_Particle[2]		= { 0.005f, 0.05f };
+	//_float m_vScaleSpeed_Particle[2]		= { 0.005f, 0.05f };
 
 	/* For.Color */
 	_int	m_iDynamic_Color_Particle = { 0 };

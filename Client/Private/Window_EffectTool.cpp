@@ -667,8 +667,10 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticleBufferDesc->vMinMaxSpeed.y = m_vMinMaxSpeed_Particle[1];
 				}
 
-				ImGui::SeparatorText("Speed_Easing");
-				Select_EasingType(&m_pParticleBufferDesc->eType_SpeedLerp);
+				if (ImGui::CollapsingHeader(" Speed_Easing Types "))
+				{
+					Select_EasingType(&m_pParticleBufferDesc->eType_SpeedLerp);
+				}
 
 
 				/* 리지드바디 키고 끄기 */
@@ -908,28 +910,39 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 
 
-#pragma region 크기 변경_파티클 시작
+#pragma region 크기 변경 러프_파티클 시작
 				if (ImGui::CollapsingHeader(" Scale Lerp_Particle "))
 				{
 
-					//_float fUpScale_TimeAcc = m_pParticleBufferDesc->fUpScaleTimeAcc;
-					//ImGui::SliderFloat("UpScale_TimeAcc_Particle", &fUpScale_TimeAcc, 0.f, 100.f);
-
-					//_float fDownScale_TimeAcc = m_pParticleBufferDesc->fDownScaleTimeAcc;
-					//ImGui::SliderFloat("DownScale_TimeAcc_Particle", &fDownScale_TimeAcc, 0.f, 100.f);
-
-					//ImGui::Text(" Cur Scale : % .2f % .2f", m_pParticleBufferDesc->vCurScale.x, m_pParticleBufferDesc->vCurScale.y);
+					/* 파티클 크기 변경 러프 사용 */
+					ImGui::SeparatorText(" Use_ScaleLerp _Particle ");
+					ImGui::RadioButton("Use_ScaleLerp_Particle", &m_iUseScaleLerp, 0);  ImGui::SameLine();
+					ImGui::RadioButton("None_ScaleLerp_Particle", &m_iUseScaleLerp, 1);
+					if (0 == m_iUseScaleLerp)
+						m_pParticleBufferDesc->bUseScaleLerp = TRUE;
+					else if (1 == m_iUseScaleLerp)
+						m_pParticleBufferDesc->bUseScaleLerp = FALSE;
 
 				
-					ImGui::SeparatorText("Scale_Lerp Pos");
-					if (ImGui::DragFloat2("Scale Lerp Pos_Particle", m_vLerpScale_Pos_Particle, 0.1f, 0.f, 1.f))
+					ImGui::SeparatorText("ScaleLerp Pos");
+					if (ImGui::DragFloat2("Up ScaleLerp Pos_Particle", m_vScaleLerp_Up_Pos, 0.1f, 0.f, 1.f))
 					{
-						if (m_vLerpScale_Pos_Particle[0] > m_vLerpScale_Pos_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
-							m_vLerpScale_Pos_Particle[1] = m_vLerpScale_Pos_Particle[0];
+						if (m_vScaleLerp_Up_Pos[0] > m_vScaleLerp_Up_Pos[1])	// Min이 Max보다 크면 Max를 Min으로
+							m_vScaleLerp_Up_Pos[1] = m_vScaleLerp_Up_Pos[0];
 
-						m_pParticleBufferDesc->vLerpScale_Pos.x = m_vLerpScale_Pos_Particle[0];
-						m_pParticleBufferDesc->vLerpScale_Pos.y = m_vLerpScale_Pos_Particle[1];
+						m_pParticleBufferDesc->vScaleLerp_Up_Pos.x = m_vScaleLerp_Up_Pos[0];
+						m_pParticleBufferDesc->vScaleLerp_Up_Pos.y = m_vScaleLerp_Up_Pos[1];
 					}
+
+					if (ImGui::DragFloat2("Down ScaleLerp Pos_Particle", m_vScaleLerp_Down_Pos, 0.1f, 0.f, 1.f))
+					{
+						if (m_vScaleLerp_Down_Pos[0] > m_vScaleLerp_Down_Pos[1])	// Min이 Max보다 크면 Max를 Min으로
+							m_vScaleLerp_Down_Pos[1] = m_vScaleLerp_Down_Pos[0];
+
+						m_pParticleBufferDesc->vScaleLerp_Down_Pos.x = m_vScaleLerp_Down_Pos[0];
+						m_pParticleBufferDesc->vScaleLerp_Down_Pos.y = m_vScaleLerp_Down_Pos[1];
+					}
+
 
 					ImGui::SeparatorText("MinMax Width");
 					if (ImGui::DragFloat2("MinMax Width_Particle", m_vMinMaxWidth_Particle, 0.5f, 0.f, 5000.f))
@@ -952,19 +965,14 @@ void CWindow_EffectTool::Update_ParticleTab()
 					}
 
 
-					ImGui::SeparatorText("Scale_Speed");
-					if (ImGui::DragFloat2("Scale Speed_Particle", m_vScaleSpeed_Particle, 0.001f, 0.f, 1.f))
+					if (ImGui::CollapsingHeader(" Scale_Easing Types "))
 					{
-						m_pParticleBufferDesc->vScaleSpeed.x = m_vScaleSpeed_Particle[0];
-						m_pParticleBufferDesc->vScaleSpeed.y = m_vScaleSpeed_Particle[1];
+						Select_EasingType(&m_pParticleBufferDesc->eType_ScaleLerp);
 					}
-
-					ImGui::SeparatorText("Scale_Easing");
-					Select_EasingType(&m_pParticleBufferDesc->eType_ScaleLerp);
 
 	
 				}
-#pragma endregion 크기_파티클 끝
+#pragma endregion 크기 변경 러프_파티클 끝
 
 
 
@@ -1049,8 +1057,10 @@ void CWindow_EffectTool::Update_ParticleTab()
 					}
 
 
-					ImGui::SeparatorText("Color_Easing");
-					Select_EasingType(&m_pParticleBufferDesc->eType_ColorLerp);
+					if (ImGui::CollapsingHeader(" Color_Easing Types "))
+					{
+						Select_EasingType(&m_pParticleBufferDesc->eType_ColorLerp);
+					}
 
 
 					ImGui::SeparatorText("");
@@ -1928,7 +1938,10 @@ void CWindow_EffectTool::Update_MeshTab()
 				ImGui::SameLine();
 				HelpMarker(u8"마스크:1/노이즈:5/쉐이더패스:2");
 
-				Select_EasingType(&m_pCurVoidDesc->eType_Easing);
+				if (ImGui::CollapsingHeader(" Dissolve_Easing Types "))
+				{
+					Select_EasingType(&m_pCurVoidDesc->eType_Easing);
+				}
 
 
 				if (ImGui::CollapsingHeader("Particle Option_Mesh"))
@@ -2802,9 +2815,18 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vRotationOffsetZ_Particle[1] = m_pParticleBufferDesc->vMinMaxRotationOffsetZ.y;
 
 
-			/* 스케일 */
-			m_vLerpScale_Pos_Particle[0] = m_pParticleBufferDesc->vLerpScale_Pos.x;
-			m_vLerpScale_Pos_Particle[1] = m_pParticleBufferDesc->vLerpScale_Pos.y;
+			/* 스케일 러프 */
+			if (TRUE == m_pParticleBufferDesc->bUseScaleLerp)
+				m_iUseScaleLerp = 0;
+			else if (FALSE == m_pParticleBufferDesc->bUseScaleLerp)
+				m_iUseScaleLerp = 1;
+
+
+			m_vScaleLerp_Up_Pos[0] = m_pParticleBufferDesc->vScaleLerp_Up_Pos.x;
+			m_vScaleLerp_Up_Pos[1] = m_pParticleBufferDesc->vScaleLerp_Up_Pos.y;
+
+			m_vScaleLerp_Down_Pos[0] = m_pParticleBufferDesc->vScaleLerp_Down_Pos.x;
+			m_vScaleLerp_Down_Pos[1] = m_pParticleBufferDesc->vScaleLerp_Down_Pos.y;
 
 			m_vMinMaxWidth_Particle[0] = m_pParticleBufferDesc->vMinMaxWidth.x;
 			m_vMinMaxWidth_Particle[1] = m_pParticleBufferDesc->vMinMaxWidth.y;
@@ -2812,8 +2834,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vMinMaxHeight_Particle[0] = m_pParticleBufferDesc->vMinMaxHeight.x;
 			m_vMinMaxHeight_Particle[1] = m_pParticleBufferDesc->vMinMaxHeight.y;
 
-			m_vScaleSpeed_Particle[0] = m_pParticleBufferDesc->vScaleSpeed.x;
-			m_vScaleSpeed_Particle[1] = m_pParticleBufferDesc->vScaleSpeed.y;
+
 
 
 			/* 색상 */
@@ -3179,139 +3200,137 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 void CWindow_EffectTool::Select_EasingType(EASING_TYPE* eType)
 {
 	/* Easing Type : 이징 타입 */
-	if (ImGui::CollapsingHeader(" Easing Types "))
+	if (ImGui::Button("LINEAR"))
 	{
-		if (ImGui::Button("LINEAR"))
-		{
-			*eType = EASING_TYPE::LINEAR;
-		}
-		if (ImGui::Button("QUAD_IN"))
-		{
-			*eType = EASING_TYPE::QUAD_IN;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("QUAD_OUT"))
-		{
-			*eType = EASING_TYPE::QUAD_OUT;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("QUAD_INOUT"))
-		{
-			*eType = EASING_TYPE::QUAD_INOUT;
-		}
-		if (ImGui::Button("CUBIC_IN"))
-		{
-			*eType = EASING_TYPE::CUBIC_IN;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("CUBIC_OUT"))
-		{
-			*eType = EASING_TYPE::CUBIC_OUT;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("CUBIC_INOUT"))
-		{
-			*eType = EASING_TYPE::CUBIC_INOUT;
-		}
-		if (ImGui::Button("QUART_IN"))
-		{
-			*eType = EASING_TYPE::QUART_IN;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("QUART_OUT"))
-		{
-			*eType = EASING_TYPE::QUART_OUT;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("QUART_INOUT"))
-		{
-			*eType = EASING_TYPE::QUART_INOUT;
-		}
-		if (ImGui::Button("QUINT_IN"))
-		{
-			*eType = EASING_TYPE::QUINT_IN;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("QUINT_OUT"))
-		{
-			*eType = EASING_TYPE::QUINT_OUT;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("QUINT_INOUT"))
-		{
-			*eType = EASING_TYPE::QUINT_INOUT;
-		}
-		if (ImGui::Button("SINE_IN"))
-		{
-			*eType = EASING_TYPE::SINE_IN;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("SINE_OUT"))
-		{
-			*eType = EASING_TYPE::SINE_OUT;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("SINE_INOUT"))
-		{
-			*eType = EASING_TYPE::SINE_INOUT;
-		}
-		if (ImGui::Button("EXPO_IN"))
-		{
-			*eType = EASING_TYPE::EXPO_IN;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("EXPO_OUT"))
-		{
-			*eType = EASING_TYPE::EXPO_OUT;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("EXPO_INOUT"))
-		{
-			*eType = EASING_TYPE::EXPO_INOUT;
-		}
-		if (ImGui::Button("CIRC_IN"))
-		{
-			*eType = EASING_TYPE::CIRC_IN;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("CIRC_OUT"))
-		{
-			*eType = EASING_TYPE::CIRC_OUT;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("CIRC_INOUT"))
-		{
-			*eType = EASING_TYPE::CIRC_INOUT;
-		}
-		if (ImGui::Button("ELASTIC_IN"))
-		{
-			*eType = EASING_TYPE::ELASTIC_IN;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("ELASTIC_OUT"))
-		{
-			*eType = EASING_TYPE::ELASTIC_OUT;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("ELASTIC_INOUT"))
-		{
-			*eType = EASING_TYPE::ELASTIC_INOUT;
-		}
-		if (ImGui::Button("BOUNCE_IN"))
-		{
-			*eType = EASING_TYPE::BOUNCE_IN;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("BOUNCE_OUT"))
-		{
-			*eType = EASING_TYPE::BOUNCE_OUT;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("ELASTIC_INOUT"))
-		{
-			*eType = EASING_TYPE::ELASTIC_INOUT;
-		}
+		*eType = EASING_TYPE::LINEAR;
 	}
+	if (ImGui::Button("QUAD_IN"))
+	{
+		*eType = EASING_TYPE::QUAD_IN;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("QUAD_OUT"))
+	{
+		*eType = EASING_TYPE::QUAD_OUT;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("QUAD_INOUT"))
+	{
+		*eType = EASING_TYPE::QUAD_INOUT;
+	}
+	if (ImGui::Button("CUBIC_IN"))
+	{
+		*eType = EASING_TYPE::CUBIC_IN;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("CUBIC_OUT"))
+	{
+		*eType = EASING_TYPE::CUBIC_OUT;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("CUBIC_INOUT"))
+	{
+		*eType = EASING_TYPE::CUBIC_INOUT;
+	}
+	if (ImGui::Button("QUART_IN"))
+	{
+		*eType = EASING_TYPE::QUART_IN;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("QUART_OUT"))
+	{
+		*eType = EASING_TYPE::QUART_OUT;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("QUART_INOUT"))
+	{
+		*eType = EASING_TYPE::QUART_INOUT;
+	}
+	if (ImGui::Button("QUINT_IN"))
+	{
+		*eType = EASING_TYPE::QUINT_IN;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("QUINT_OUT"))
+	{
+		*eType = EASING_TYPE::QUINT_OUT;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("QUINT_INOUT"))
+	{
+		*eType = EASING_TYPE::QUINT_INOUT;
+	}
+	if (ImGui::Button("SINE_IN"))
+	{
+		*eType = EASING_TYPE::SINE_IN;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("SINE_OUT"))
+	{
+		*eType = EASING_TYPE::SINE_OUT;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("SINE_INOUT"))
+	{
+		*eType = EASING_TYPE::SINE_INOUT;
+	}
+	if (ImGui::Button("EXPO_IN"))
+	{
+		*eType = EASING_TYPE::EXPO_IN;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("EXPO_OUT"))
+	{
+		*eType = EASING_TYPE::EXPO_OUT;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("EXPO_INOUT"))
+	{
+		*eType = EASING_TYPE::EXPO_INOUT;
+	}
+	if (ImGui::Button("CIRC_IN"))
+	{
+		*eType = EASING_TYPE::CIRC_IN;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("CIRC_OUT"))
+	{
+		*eType = EASING_TYPE::CIRC_OUT;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("CIRC_INOUT"))
+	{
+		*eType = EASING_TYPE::CIRC_INOUT;
+	}
+	if (ImGui::Button("ELASTIC_IN"))
+	{
+		*eType = EASING_TYPE::ELASTIC_IN;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("ELASTIC_OUT"))
+	{
+		*eType = EASING_TYPE::ELASTIC_OUT;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("ELASTIC_INOUT"))
+	{
+		*eType = EASING_TYPE::ELASTIC_INOUT;
+	}
+	if (ImGui::Button("BOUNCE_IN"))
+	{
+		*eType = EASING_TYPE::BOUNCE_IN;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("BOUNCE_OUT"))
+	{
+		*eType = EASING_TYPE::BOUNCE_OUT;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("ELASTIC_INOUT"))
+	{
+		*eType = EASING_TYPE::ELASTIC_INOUT;
+	}
+
 }
 
 
