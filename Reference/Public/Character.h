@@ -206,6 +206,11 @@ public:
 public:
 	_float3 Get_WeaknessPos() { return m_vWeaknessPos; };
 	virtual void Set_WeaknessPos();
+
+public:
+	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
+
+
 public:
 #pragma region ===========> HP <=========== 
 	//void	Set_CurHP(_float fCurHP) { m_fCurHP = fCurHP; }

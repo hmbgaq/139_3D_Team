@@ -13,12 +13,31 @@ CState<CPlayer>* CPlayer_SlamDown_v2::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
 
+
 	if (pActor->Is_Inputable_Front(56))
 	{
 		return new CPlayer_IdleLoop();
 	}
 
-	if (pActor->Is_Inputable_Front(26)) 
+	if (false == m_bFlags[0])
+	{
+		_float fDiff = (_float)(24 - pActor->Get_CurrentKeyFrames());
+		pActor->Go_Straight(fTimeDelta * 0.0015f * fDiff * fDiff);
+		m_bFlags[0] = pActor->Is_Inputable_Front(11);
+	}
+	else if (false == m_bFlags[1])
+	{
+		m_bFlags[1] = pActor->Is_Inputable_Front(20);
+		if (true == m_bFlags[1])
+		{
+			pActor->Apply_Shake_And_Blur(Power::Medium);
+		}
+	}
+	else if (false == m_bFlags[2])
+	{
+		m_bFlags[2] = pActor->Is_Inputable_Front(24);
+	}
+	else
 	{
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}

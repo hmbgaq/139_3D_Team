@@ -648,6 +648,11 @@ _uint CModel::Get_BoneNum(const _char* _szName)
 	return _uint();
 }
 
+_uint CModel::Get_CurrentKeyFrames(_uint iIndex)
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentKeyFrames(iIndex);
+}
+
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 {
 	m_iNumMeshes = m_pAIScene.Get_NumMeshes();

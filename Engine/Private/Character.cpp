@@ -750,6 +750,11 @@ void CCharacter::Set_WeaknessPos()
 	m_vWeaknessPos = vResult;
 }
 
+_uint CCharacter::Get_CurrentKeyFrames(_uint iIndex)
+{
+	return m_pBody->Get_CurrentKeyFrames(iIndex);
+}
+
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {

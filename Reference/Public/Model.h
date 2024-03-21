@@ -128,6 +128,10 @@ public:
 	vector<CBone*>*			Get_Bones();
 	_uint					Get_BoneNum(const _char* szName);
 
+
+public:
+	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
+
 private:
 	CMyAssimp				m_MyAssimp;
 	CMyAIScene				m_pAIScene;
