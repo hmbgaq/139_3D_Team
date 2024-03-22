@@ -289,7 +289,7 @@ CState<CPlayer>* CPlayer_State::Crossbow_State(CPlayer* pActor, _float fTimeDelt
 
 CState<CPlayer>* CPlayer_State::Revolver_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	if (m_pGameInstance->Key_Up(DIK_E))
 	{
 		if (CPlayer_Revolver_WeaponHolster::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Revolver_WeaponHolster();
@@ -404,8 +404,8 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 	//pState = Crossbow(pActor, fTimeDelta, _iAnimIndex);
 	//if (pState)	return pState;
 
-	//pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
+	pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
 
 	//pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
 	//if (pState)	return pState;
@@ -808,7 +808,7 @@ CState<CPlayer>* CPlayer_State::Crossbow(CPlayer* pActor, _float fTimeDelta, _ui
 
 CState<CPlayer>* CPlayer_State::Revolver(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	if (m_pGameInstance->Key_Pressing(DIK_E))
 	{
 		if (CPlayer_Revolver_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Revolver_WeaponUnholster();
@@ -977,7 +977,7 @@ CState<CPlayer>* CPlayer_State::Slam(CPlayer* pActor, _float fTimeDelta, _uint _
 
 CState<CPlayer>* CPlayer_State::Kick(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Key_Down(DIK_E))
+	if (m_pGameInstance->Key_Down(DIK_R))
 	{
 		if (CPlayer_MeleeKick::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_MeleeKick();

@@ -314,9 +314,9 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 	}
 }
 
-void CPlayer::Activate_ShootingReaction()
+void CPlayer::Activate_ShootingReaction(_float fHeight)
 {
-	m_pBody->Activate_ShootingReaction();
+	m_pBody->Activate_ShootingReaction(fHeight);
 }
 
 

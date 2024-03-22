@@ -1,6 +1,8 @@
 #include "..\Public\Player_William_RevolverFanningStart_02.h"
 #include "GameInstance.h"
 
+#include "Player_William_RevolverFanningLoop_02.h"
+
 void CPlayer_William_RevolverFanningStart_02::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -13,9 +15,12 @@ CState<CPlayer>* CPlayer_William_RevolverFanningStart_02::Update(CPlayer* pActor
 {
 	__super::Update(pActor, fTimeDelta);
 
-	pActor->Aim_Walk(fTimeDelta);
+	if (pActor->Is_UpperAnimation_End())
+	{
+		return new CPlayer_William_RevolverFanningLoop_02();
+	}
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	return nullptr;
 }
 
 void CPlayer_William_RevolverFanningStart_02::Release(CPlayer* pActor)

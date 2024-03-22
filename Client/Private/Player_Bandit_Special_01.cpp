@@ -1,6 +1,8 @@
 #include "..\Public\Player_Bandit_Special_01.h"
 #include "GameInstance.h"
 
+#include "Player_Bandit_Reload_02.h"
+
 void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -15,7 +17,14 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 
 	pActor->Aim_Walk(fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_UpperAnimation_End())
+	{
+		return new CPlayer_Bandit_Reload_02();
+	}
+
+	return nullptr;
+
+	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CPlayer_Bandit_Special_01::Release(CPlayer* pActor)
