@@ -34,6 +34,7 @@ CState<CInfected>* CInfected_Run_F::Update(CInfected* pActor, _float fTimeDelta)
 
 			pActor->Get_Transform()->Set_Speed(10.f);	/* 움직이는 속도 제어 */
 			pActor->Set_StiffnessRate_Upper(1.f);		/* 애니메이션 재생속도 제어 */
+			pActor->Set_MonsterAttackState(true);
 
 			if ( iRemain == 0 )
 				return new CInfected_Sprint_F_Melee_02();

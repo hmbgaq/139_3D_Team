@@ -393,25 +393,24 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;
 
-	for (auto& pTexture : m_Materials[iMaterialIndex].pMtrlTextures)
+	MATERIAL_DESC& material = m_Materials[iMaterialIndex];
+
+	for (_int i = 0; i < (_int)AI_TEXTURE_TYPE_MAX; ++i)
 	{
-		if (nullptr == pTexture)
+		if (nullptr == material.pMtrlTextures[i])
 			continue;
 
-		for (_int i = 0; i < (_int)AI_TEXTURE_TYPE_MAX; ++i)
+		switch (i)
 		{
-			switch (i) 
-			{
-			case (_int)aiTextureType_DIFFUSE:
-				Bind_ShaderResource(pShader, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-				break;
-			case (_int)aiTextureType_SPECULAR:
-				Bind_ShaderResource(pShader, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-				break;
-			case (_int)aiTextureType_NORMALS:
-				Bind_ShaderResource(pShader, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-				break;
-			}
+		case (_int)aiTextureType_DIFFUSE:
+			Bind_ShaderResource(pShader, "g_DiffuseTexture", iMeshIndex, aiTextureType_DIFFUSE);
+			break;
+		case (_int)aiTextureType_SPECULAR:
+			Bind_ShaderResource(pShader, "g_SpecularTexture", iMeshIndex, aiTextureType_SPECULAR);
+			break;
+		case (_int)aiTextureType_NORMALS:
+			Bind_ShaderResource(pShader, "g_NormalTexture", iMeshIndex, aiTextureType_NORMALS);
+			break;
 		}
 	}
 
@@ -420,6 +419,7 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 
 HRESULT CModel::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType)
 {
+
 	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;

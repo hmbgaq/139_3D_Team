@@ -91,15 +91,6 @@
     <Filter Include="02.GameObjects\97. Camera">
       <UniqueIdentifier>{32729c05-9f24-4c42-9fa5-8bce31410a97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\01. Interact">
-      <UniqueIdentifier>{daed6591-e3f1-4e31-8a6a-3942dcf39622}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\01. Interact\0. Chain">
-      <UniqueIdentifier>{4640b070-669a-48d8-9c94-8bed528d2d18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\01. Interact\1. Door">
-      <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character">
       <UniqueIdentifier>{efbf965b-89e3-4770-bdc3-149dd60e9eff}</UniqueIdentifier>
     </Filter>
@@ -2952,6 +2943,15 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList">
       <UniqueIdentifier>{adb0cc32-0a85-4a50-b6cf-4c821167dfe3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\01. Interact">
+      <UniqueIdentifier>{daed6591-e3f1-4e31-8a6a-3942dcf39622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\01. Interact\0. Chain">
+      <UniqueIdentifier>{4640b070-669a-48d8-9c94-8bed528d2d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\01. Interact\1. Door">
+      <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -5904,6 +5904,12 @@
     <ClInclude Include="..\Public\Event_MonsterSpawnTrigger.h">
       <Filter>03.Event\Trigger\MonsterSpawnTrigger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\1. HitNormal_To_Stun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\2. HitHeavy_To_Stun</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Sniper_Burn_Loop_TEMP.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\3. Burn</Filter>
     </ClInclude>
@@ -5946,8 +5952,6 @@
     <ClInclude Include="..\Public\Impact_Slam.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch\Projectile</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h" />
-    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h" />
     <ClInclude Include="..\Public\UI_Obtain_Button.h">
       <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
     </ClInclude>
