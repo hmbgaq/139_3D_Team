@@ -17,6 +17,7 @@ Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
 Texture2D g_SpecularTexture;
 Texture2D g_EmissiveTexture;
+Texture2D g_OpacityTexture;
 
 Texture2D g_DissolveTexture;
 Texture2D g_MaskingTexture;

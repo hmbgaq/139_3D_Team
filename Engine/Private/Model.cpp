@@ -414,6 +414,10 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 		case (_int)aiTextureType_NORMALS:
 			Bind_ShaderResource(pShader, "g_NormalTexture", iMeshIndex, aiTextureType_NORMALS);
 			break;
+		case (_int)aiTextureType_OPACITY:
+			Bind_ShaderResource(pShader, "g_OpacityTexture", iMeshIndex, aiTextureType_OPACITY);
+			break;
+
 		}
 
 		//material.pMtrlTextures[6].
@@ -755,8 +759,8 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 				MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = CTexture::Create(m_pDevice, m_pContext, szORMFullPath, 1, true);
 
-				if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR])
-					cout << " Create Texture Failure" << endl;
+				//if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR])
+				//	cout << " Create ORM Texture Failure" << endl;
 			}
 		}
 

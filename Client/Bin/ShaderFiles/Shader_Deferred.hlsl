@@ -401,16 +401,6 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     // Diffuse -> Albedo, Properties-> Specular, ORM : Occulusion, Roughness Metallic, 
     vector vAlbedo = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     
-    if (vAlbedo.a == 0.f)
-    {
-        float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
-        if (vPriority.a == 0.f)
-            discard;
-        
-        Out.vColor = vPriority;
-        return Out;
-    }
-    
     vAlbedo = pow(vAlbedo, 2.2f);
     vector vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
     float3 N = vNormal.xyz * 2.f - 1.f;
@@ -445,12 +435,35 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     float3 L = normalize(-g_vLightDir);
     float3 H = normalize(V + L);
 
-    Out.vColor.rgb = BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO);
+    Out.vColor.rgb = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO);
+   
+    if (vAlbedo.a == 0.f)
+    {
+        float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
+        if (vPriority.a == 0.f)
+            discard;
+        
+        Out.vColor = vPriority;
+    }
     
     // Shadow 
     float ShadowColor = 1.f;
     
-    if (true == g_bShadow_Active) 
+    
+    if (true == g_bFog_Active)
+    {
+        float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
+        vTexCoord.x += g_vFogUVAcc.x;
+        vTexCoord.y += g_vFogUVAcc.y;
+    
+        float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
+    
+        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
+    
+        Out.vColor = vector(vFinalColor.rgb, 1.f);
+    }
+    
+    if (true == g_bShadow_Active)
     {
         //float fDot = saturate(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal.xyz));
         //
@@ -470,20 +483,6 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
         if (vPosition.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
             Out.vColor = Out.vColor * 0.8f;
     }
-    
-    if (true == g_bFog_Active)
-    {
-        float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
-        vTexCoord.x += g_vFogUVAcc.x;
-        vTexCoord.y += g_vFogUVAcc.y;
-    
-        float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
-    
-        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
-    
-        Out.vColor = vector(vFinalColor.rgb, 1.f);
-    }
-    
     //Out.vColor += vEffect;
     Out.vColor.a = 1.f;
 	
