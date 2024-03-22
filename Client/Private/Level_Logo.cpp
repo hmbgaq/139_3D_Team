@@ -101,6 +101,8 @@ void CLevel_Logo::Set_Filter()
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::WEAKNESS);
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER, (_uint)COLLISION_LAYER::MONSTER);
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER, (_uint)COLLISION_LAYER::MONSTER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_PARRYING, (_uint)COLLISION_LAYER::MONSTER_ATTACK);
+
 
 	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
 

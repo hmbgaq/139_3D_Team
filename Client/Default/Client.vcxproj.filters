@@ -433,9 +433,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\0. Origin">
       <UniqueIdentifier>{40320f14-62ee-4f56-960e-711f715a6e39}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Punch">
-      <UniqueIdentifier>{d1cc7966-f5e8-4902-8e5e-a600970e32c1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04. Projectile">
       <UniqueIdentifier>{969f7600-7071-4a12-871e-03a47d7032f7}</UniqueIdentifier>
     </Filter>
@@ -2920,7 +2917,19 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\0. Parent">
       <UniqueIdentifier>{17ec3054-98fa-4c91-ade0-0e4788f8b1a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Punch\Projectile">
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Melee">
+      <UniqueIdentifier>{adecb2b7-2ad4-46b4-9635-7d4d7404957b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Zapper">
+      <UniqueIdentifier>{7f77c0fa-14f7-42b5-a639-309b7d8761f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Melee\1. Punch">
+      <UniqueIdentifier>{d1cc7966-f5e8-4902-8e5e-a600970e32c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Melee\2. Kick">
+      <UniqueIdentifier>{ad862b27-1a44-41be-ae3e-ac53e8d487e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Melee\3. Projectile">
       <UniqueIdentifier>{770a291a-7f61-4698-8b3c-49959ef3edf3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -3895,7 +3904,7 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Weapon_Punch.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch</Filter>
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Melee\1. Punch</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Projectile.h">
       <Filter>02.GameObjects\04. Projectile</Filter>
@@ -5923,7 +5932,13 @@
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Impact_Slam.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch\Projectile</Filter>
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Melee\3. Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_Kick.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Melee\2. Kick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_Zapper.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Zapper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -7172,7 +7187,7 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Weapon_Punch.cpp">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch</Filter>
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Melee\1. Punch</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Projectile.cpp">
       <Filter>02.GameObjects\04. Projectile</Filter>
@@ -8378,7 +8393,13 @@
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Impact_Slam.cpp">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch\Projectile</Filter>
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Melee\3. Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Kick.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Melee\2. Kick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Zapper.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Zapper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

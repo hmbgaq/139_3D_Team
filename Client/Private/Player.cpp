@@ -116,7 +116,6 @@ void CPlayer::Tick(_float fTimeDelta)
 	Update_ChargingTime(fTimeDelta);
 
 
-
 	CData_Manager::GetInstance()->Set_CurHP(m_iHp);
 
 	if (m_pGameInstance->Key_Down(DIK_C))
@@ -395,6 +394,10 @@ HRESULT CPlayer::Ready_PartObjects()
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, WEAPON_PUNCH_R));
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELWinchester"), "RightHandIK", WeaponDesc, WEAPON_WINCHESTER));
 
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Kick"), "RightFoot", WeaponDesc, WEAPON_KICK));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Zapper"), "LeftHandIK", WeaponDesc, WEAPON_ZAPPER));
+
+	
 	//}
 
 	CWeapon* m_pWeapon_Punch_L = Get_Weapon(WEAPON_PUNCH_L);
@@ -405,6 +408,12 @@ HRESULT CPlayer::Ready_PartObjects()
 	
 	CWeapon* m_pWeapon_Winchester = Get_Weapon(WEAPON_WINCHESTER);
 	m_pWeapon_Winchester->Set_Enable(false);
+
+	CWeapon* m_pWeapon_Kick = Get_Weapon(WEAPON_KICK);
+	m_pWeapon_Kick->Set_Enable(false);
+
+	CWeapon* m_pWeapon_Zapper = Get_Weapon(WEAPON_ZAPPER);
+	m_pWeapon_Zapper->Set_Enable(false);
 
 	
 	

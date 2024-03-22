@@ -932,10 +932,12 @@
     <ClInclude Include="..\Public\Player_Weapon_ELShotgun.h" />
     <ClInclude Include="..\Public\Player_Weapon_ELWinchester.h" />
     <ClInclude Include="..\Public\Player_Weapon_FlameBelcher.h" />
+    <ClInclude Include="..\Public\Player_Weapon_Kick.h" />
     <ClInclude Include="..\Public\Player_Weapon_Punch.h" />
     <ClInclude Include="..\Public\Player_Weapon_Revolver.h" />
     <ClInclude Include="..\Public\Player_Weapon_Shotgun.h" />
     <ClInclude Include="..\Public\Player_Weapon_Winchester.h" />
+    <ClInclude Include="..\Public\Player_Weapon_Zapper.h" />
     <ClInclude Include="..\Public\Player_WhipPull.h" />
     <ClInclude Include="..\Public\Player_WhipSlam.h" />
     <ClInclude Include="..\Public\Player_William_RevolverFanningLoop_01.h" />
@@ -1696,10 +1698,12 @@
     <ClCompile Include="..\Private\Player_Weapon_ELShotgun.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_ELWinchester.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_FlameBelcher.cpp" />
+    <ClCompile Include="..\Private\Player_Weapon_Kick.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Punch.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Revolver.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Shotgun.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Winchester.cpp" />
+    <ClCompile Include="..\Private\Player_Weapon_Zapper.cpp" />
     <ClCompile Include="..\Private\Player_WhipPull.cpp" />
     <ClCompile Include="..\Private\Player_WhipSlam.cpp" />
     <ClCompile Include="..\Private\Player_William_RevolverFanningLoop_01.cpp" />

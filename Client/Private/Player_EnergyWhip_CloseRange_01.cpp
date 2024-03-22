@@ -14,12 +14,48 @@ void CPlayer_EnergyWhip_CloseRange_01::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	CWeapon* pWeapon = pActor->Get_Weapon(WEAPON_ZAPPER);
+	pWeapon
+		->Set_Damage(0)
+		->Set_Direction(Direction::Front)
+		->Set_Power(Power::Medium)
+		->Set_Force(0.2f);
+
+	pWeapon->Set_Enable(true);
+	pWeapon->Set_Enable_Collisions(false);
+
+	
 }
 
 CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
 
+
+	//8 18
+	if (false == m_bFlags[0])
+	{
+		m_bFlags[0] = pActor->Is_Inputable_Front(8);
+		if (true == m_bFlags[0])
+		{
+			pActor->Set_Weapon_Collisions_Enable(WEAPON_ZAPPER, true);
+			//pActor->Get_Body()->Collider_Off();
+		}
+	}
+	else if (false == m_bFlags[1])
+	{
+		m_bFlags[1] = pActor->Is_Inputable_Front(18);
+		if (true == m_bFlags[1])
+		{
+			pActor->Set_Weapon_Collisions_Enable(WEAPON_ZAPPER, false);
+			//pActor->Get_Body()->Get_Collider()->Set_Enable(true);
+		}
+	}
+	else if (false == m_bFlags[2])
+	{
+		m_bFlags[2] = true;
+	}
 
 	if (m_pGameInstance->Key_Down(DIK_W)) 
 	{
@@ -51,4 +87,7 @@ CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _floa
 void CPlayer_EnergyWhip_CloseRange_01::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+	CWeapon* pWeapon = pActor->Set_Weapon_Enable(WEAPON_ZAPPER, false);
+
+	
 }

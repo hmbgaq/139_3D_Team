@@ -126,6 +126,7 @@
 #include "Player_EnergyWhip_Pull.h"
 #include "Player_OpenStateCombo_8hit.h"
 #include "Player_SlamTwoHand_TEMP.h"
+#include "Player_MeleeKick.h"
 
 #pragma endregion
 
@@ -580,14 +581,9 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 	pState = Slam(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
-	
-	
+	pState = Kick(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
 
-	if (0.3f <= pActor->Get_ChargingTime())
-	{
-		pActor->Set_ChargingTime(0.f);
-		return new CPlayer_MeleeUppercut_01v2();
-	}
 
 	pState = MeleeCombo(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
@@ -603,6 +599,13 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 
 CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (0.3f <= pActor->Get_ChargingTime())
+	{
+		pActor->Set_ChargingTime(0.f);
+		return new CPlayer_MeleeUppercut_01v2();
+	}
+
+
 	CPlayer::Player_State eState = (CPlayer::Player_State)_iAnimIndex;
 
 	if (m_pGameInstance->Mouse_Down(DIM_LB))
@@ -967,6 +970,17 @@ CState<CPlayer>* CPlayer_State::Slam(CPlayer* pActor, _float fTimeDelta, _uint _
 		default:
 			return new CPlayer_SlamDown_v2();
 		}
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Kick(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Key_Down(DIK_E))
+	{
+		if (CPlayer_MeleeKick::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_MeleeKick();
 	}
 
 	return nullptr;
