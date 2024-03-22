@@ -148,7 +148,7 @@ private:						/* Member */
 
 	CUI::UI_DESC				m_tChild_Desc;
 	CUI*						m_pCurrChild = nullptr;
-
+	char m_cName[MAX_PATH] = "";
 	vector<CGameObject*>		m_vecChildObject;
 	//std::vector<PATHINFO*>		m_vecChildObjectName;	// 추가된 오브젝트들의 이름 (리스트 박스 출력용)
 #pragma endregion Child End

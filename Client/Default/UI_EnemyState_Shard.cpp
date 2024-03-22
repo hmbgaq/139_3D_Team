@@ -234,11 +234,15 @@ HRESULT CUI_EnemyState_Shard::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	if (m_pCharacterOwner->Get_MonsterAttackState() == true)
+	if (m_pCharacterOwner != nullptr)
 	{
-		if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
+		if (m_pCharacterOwner->Get_MonsterAttackState() == true)
+		{
+			if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
 	}
+
 
 
 	//switch (m_eCurState)

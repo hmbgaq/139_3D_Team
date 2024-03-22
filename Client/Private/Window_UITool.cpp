@@ -936,6 +936,21 @@ void CWindow_UITool::Setting_Child()
 
 	if (m_pCurrSelectUI != nullptr)
 	{
+		if (ImGui::InputText("UI_NAME", m_cName, sizeof(m_cName))) // 문자열 저장해야함
+		{
+			wstring str;
+			str = wstring(m_cName, &m_cName[strlen(m_cName)]);
+			
+			m_pCurrSelectUI->Set_UIName(WStringToString(str));
+
+			//m_pCurrSelectUI->Set_CharToStringUIName(m_cName);
+			//m_pGameInstance->WString_To_String(ConverCtoWC(), m_pCurrSelectUI->Get_UIDesc().strUIName.c_str());
+		}
+		if (ImGui::InputTextWithHint(u8"UI 이름", u8"이름을 입력하세요.", ConverWStringtoC(ConvertToWideString(m_pCurrSelectUI->Get_UIDesc().strUIName)), IM_ARRAYSIZE(ConverWStringtoC(ConvertToWideString(m_pCurrSelectUI->Get_UIDesc().strUIName)))))
+		{
+
+		}
+
 		if (ImGui::InputInt("MaskNum", &m_iMaskNum))
 		{
 			m_pCurrSelectUI->Set_MaskNum(m_iMaskNum);

@@ -310,6 +310,7 @@ public:
 	string			Get_FilePathTag() { return m_tUIInfo.strFilePath; }
 	string			Get_ObjectNameTag() { return m_tUIInfo.strObjectName; }
 	_int			Get_ObjectNum() { return m_tUIInfo.iObjectNum; }
+	void			Set_UIName(string strName) { m_tUIInfo.strUIName = strName; }
 
 protected: /* =========================== Ready ============================= */
 	virtual HRESULT Ready_Components();
