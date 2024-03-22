@@ -37,6 +37,13 @@
 #include "Infected_DeathHeavy_F_01_NEW.h"
 #include "Infected_SpawnCrawl_01.h"
 
+#include "Infected_Electrocute_Loop.h"
+#include "Infected_HitLightOpened_F_01_NEW.h"
+#include "Infected_HitLightOpened_L_01.h"
+#include "Infected_HitLightOpened_R_01.h"
+#include "Infected_OpenStatePull_F_01.h"
+#include "Infected_OpenStateTimeout.h"
+
 
 CInfected::CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -79,7 +86,6 @@ HRESULT CInfected::Initialize(void* pArg)
 
 	/* Target 설정 */
 	m_pTarget = m_pGameInstance->Get_Player();
-
 	return S_OK;
 }
 
@@ -101,6 +107,8 @@ void CInfected::Tick(_float fTimeDelta)
 void CInfected::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	//m_pGameInstance->Add_DebugRender(m_pNavigationCom); /* 아 테스트로 넣었었음 */ 
 }
 
 HRESULT CInfected::Render()
@@ -200,6 +208,32 @@ void CInfected::Hitted_Dead(Power ePower)
 		break;
 
 	default:
+		break;
+	}
+}
+
+void CInfected::Hitted_Electrocute()
+{
+	m_pActor->Set_State(new CInfected_Electrocute_Loop());
+}
+
+void CInfected::Hitted_OpenState_Pull()
+{
+	m_pActor->Set_State(new CInfected_OpenStatePull_F_01());
+}
+
+void CInfected::Hitted_Opened(Direction eDirection)
+{
+	switch (eDirection)
+	{
+	case Engine::Left:
+		m_pActor->Set_State(new CInfected_HitLightOpened_L_01());
+		break;
+	case Engine::Right:
+		m_pActor->Set_State(new CInfected_HitLightOpened_R_01());
+		break;
+	case Engine::Front:
+		m_pActor->Set_State(new CInfected_HitLightOpened_F_01_NEW());
 		break;
 	}
 }

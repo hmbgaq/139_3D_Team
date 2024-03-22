@@ -70,16 +70,16 @@ void CUI_Player_HPBar::Tick(_float fTimeDelta)
 		//m_bActive = true;
 	//}
 
-	if (m_pGameInstance->Key_Down(DIK_Q)) // 피격
-	{
-		m_pData_Manager->Add_CurHP(-10.f);
-	}
+	//if (m_pGameInstance->Key_Down(DIK_Q)) // 피격
+	//{
+	//	m_pData_Manager->Add_CurHP(-10.f);
+	//}
 
-	if (m_pGameInstance->Key_Down(DIK_E)) // 회복
-	{
-		m_pData_Manager->Add_CurHP(10.f);
-		m_fPreHP += 10.f;
-	}
+	//if (m_pGameInstance->Key_Down(DIK_E)) // 회복
+	//{
+	//	m_pData_Manager->Add_CurHP(10.f);
+	//	m_fPreHP += 10.f;
+	//}
 
 	__super::Tick(fTimeDelta);
 
@@ -139,6 +139,22 @@ HRESULT CUI_Player_HPBar::Render()
 	}
 
 	return S_OK;
+}
+
+void CUI_Player_HPBar::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Player_HPBar::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Player_HPBar::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Player_HPBar::UI_Exit(_float fTimeDelta)
+{
 }
 
 HRESULT CUI_Player_HPBar::Ready_Components()

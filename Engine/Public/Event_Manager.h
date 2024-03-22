@@ -27,7 +27,7 @@ public:
 
 	// 이벤트 리스너 제거
 	//void RemoveEvent(IEvent* pEvent) {
-	//	m_Events.erase(std::remove(m_Events.begin(), m_Events.end(), pEvent), m_Events.end());
+	//	m_Events.erase(std::remove(m_Events.begin(), m_Events.end(), p	Event), m_Events.end());
 	//}
 
 	//// 이벤트 발생

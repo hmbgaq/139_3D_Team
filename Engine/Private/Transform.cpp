@@ -3,6 +3,7 @@
 #include "Navigation.h"
 
 #include "SMath.h"
+#include "GameInstance.h"
 
 CTransform::CTransform(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext)
@@ -61,6 +62,8 @@ void CTransform::Move_On_Navigation(_vector vMove, CNavigation* pNavigation)
 {
 	_vector	vPosition = Get_State(STATE_POSITION);
 
+	
+
 	vPosition += vMove;
 
 	if (nullptr != pNavigation)
@@ -103,7 +106,10 @@ void CTransform::Move_On_Navigation_ForSliding(_vector vMove, const _float fTime
 			_bool bIsGround = false;
 			_float fHeight = pNavigation->Compute_Height(vPosition, &bIsGround);
 
+
 			XMStoreFloat4(&vTempPosition, vPosition);
+
+			
 			vTempPosition.y = fHeight;
 
 			Set_State(STATE_POSITION, XMLoadFloat4(&vTempPosition));
@@ -123,7 +129,10 @@ void CTransform::Move_On_Navigation_ForSliding(_vector vMove, const _float fTime
 					_float fHeight = pNavigation->Compute_Height(vPosition, &bIsGround);
 
 					XMStoreFloat4(&vTempPosition, vNewPosition);
+
+					
 					vTempPosition.y = fHeight;
+
 					Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&vTempPosition));
 				}
 			}
@@ -393,7 +402,20 @@ void CTransform::Add_RootBone_Position(const _float3& vPos, CNavigation* pNaviga
 {
 	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), m_WorldMatrix);
 	_vector vResult = vRootMove;
+
+	//Move_On_Navigation_ForSliding(vResult, m_pGameInstance->Get_TimeDelta(), pNavigation);
+	
 	Move_On_Navigation(vResult, pNavigation);
+}
+
+void CTransform::Add_RootBone_Position(const _float3& vPos, const _float fTimeDelta, CNavigation* pNavigation)
+{
+	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), m_WorldMatrix);
+	_vector vResult = vRootMove;
+
+	//Move_On_Navigation_ForSliding(vResult, m_pGameInstance->Get_TimeDelta(), pNavigation);
+
+	Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
 }
 
 

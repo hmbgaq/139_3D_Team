@@ -88,6 +88,22 @@ HRESULT CUI_LevelUp_Shards::Render()
 	return S_OK;
 }
 
+void CUI_LevelUp_Shards::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_Shards::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_Shards::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_Shards::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_LevelUp_Shards::Ready_Components()
 {
 	//! For.Com_Shader

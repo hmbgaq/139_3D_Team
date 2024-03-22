@@ -37,7 +37,7 @@ HRESULT CRenderTarget::Initialize(const wstring& strTargetTag, _uint iSizeX, _ui
 	TextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	TextureDesc.CPUAccessFlags = 0;
 	TextureDesc.MiscFlags = 0;
-
+	
 	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pTexture2D)))
 		return E_FAIL;
 

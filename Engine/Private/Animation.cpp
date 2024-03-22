@@ -242,7 +242,7 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 				//X - Up
 				//Z - Look
 
-				_matrix RotateX = XMMatrixRotationX(XMConvertToRadians(vMouseMove.x));
+				_matrix RotateX = XMMatrixRotationX(XMConvertToRadians(vMouseMove.x + 1.0f));
 				_matrix RotateY = XMMatrixRotationY(XMConvertToRadians(vMouseMove.y));
 
 

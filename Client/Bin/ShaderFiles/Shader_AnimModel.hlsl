@@ -107,7 +107,6 @@ VS_OUT VS_MAIN(VS_IN In)
     vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
 
     matrix matWV, matWVP;
-
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
 
@@ -136,6 +135,8 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
  
+    if(Out.vDiffuse.a < 0.8f)
+        discard;
     /* ---------------- New ---------------- */
     // float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
     // Out.vDiffuse += vRimColor;

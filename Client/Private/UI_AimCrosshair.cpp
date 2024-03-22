@@ -105,6 +105,22 @@ HRESULT CUI_AimCrosshair::Render()
 	return S_OK;
 }
 
+void CUI_AimCrosshair::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_AimCrosshair::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_AimCrosshair::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_AimCrosshair::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_AimCrosshair::Ready_Components()
 {
 	//! For.Com_Shader

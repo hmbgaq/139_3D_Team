@@ -41,12 +41,14 @@ private:
 	HRESULT Ready_Layer_UI(const wstring& strLayerTag, void* pArg);
 	/* Cursor */
 	HRESULT Ready_Cursor(const wstring& strLayerTag, void* pArg);
+
+	HRESULT Ready_Event();
 #pragma endregion End
 
 private:
 	_int			TempLightNumber = 0;
 
-	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MonsterInclude_Decrease.json";
+	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

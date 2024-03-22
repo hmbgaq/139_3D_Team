@@ -5,6 +5,7 @@ void CInfected_DeathLight_F_01_NEW::Initialize(CInfected* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Get_Body()->Collider_Off();
 }
 
 CState<CInfected>* CInfected_DeathLight_F_01_NEW::Update(CInfected* pActor, _float fTimeDelta)

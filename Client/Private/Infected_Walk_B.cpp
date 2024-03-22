@@ -16,6 +16,7 @@ void CInfected_Walk_B::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
 
+	pActor->Set_MonsterAttackState(false);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 	CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());

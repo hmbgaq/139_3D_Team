@@ -21,5 +21,6 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Stop::Update(CVampireCom
 void CVampireCommander_BloodRange_Stop::Release(CVampireCommander* pActor)
 {
 	pActor->Set_Invincible(false);
+	pActor->Set_Reveal_Weakness(false);
 	__super::Release(pActor);
 }

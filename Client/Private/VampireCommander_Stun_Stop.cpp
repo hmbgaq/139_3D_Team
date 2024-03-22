@@ -1,4 +1,6 @@
 #include "VampireCommander_Stun_Stop.h"
+#include "VampireCommander_Idle.h"
+
 
 void CVampireCommander_Stun_Stop::Initialize(CVampireCommander* pActor)
 {
@@ -9,8 +11,10 @@ void CVampireCommander_Stun_Stop::Initialize(CVampireCommander* pActor)
 
 CState<CVampireCommander>* CVampireCommander_Stun_Stop::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
-	//만약에 Stun 내에서 끝장을 내지 못하면 요기로 타는거고 아니라면 cut scene으로 처리 할거임
-	//거의 쓸 일 없을거 같은데 이거 
+	if (pActor->Is_Animation_End())
+	{
+		return new CVampireCommander_Idle;
+	}
 	return nullptr;
 }
 

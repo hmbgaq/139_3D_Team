@@ -88,10 +88,6 @@ public: //!For.Tool
 	virtual _bool Picking(_Out_ _float3* vPickedPos) override;
 #endif 
 
-public:
-	CCharacter* Get_Owner();
-	void Set_Owner(CCharacter* pOwner);
-
 
 public:	//!For Animation Split
 	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _uint iTargetKeyFrameIndex = 0);
@@ -105,6 +101,9 @@ public:	//!For Animation Split
 
 	void Reset_UpperAngle();
 
+public:
+	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
+
 
 
 protected:
@@ -114,16 +113,13 @@ protected:
 	//CTexture* m_pDissolveTexture = { nullptr };
 
 protected:
-	//CCharacter* m_pOwner = { nullptr };
-
-protected:
 	class CTransform* m_pParentTransform = { nullptr };
 	_float4x4	m_WorldMatrix = {};
 	_float3		m_vMovePos = { 0.f, 0.f, 0.f };
 
 
-	_float		m_fRotateUpperX = { 0.f };
-	_float		m_fRotateUpperY = { 0.f };
+	_float		m_fRotateUpperX = { 0.0f };
+	_float		m_fRotateUpperY = { 2.6f };
 
 	_float		m_fShootingReaction = { 0.f };
 	_float		m_fShootingReactionTarget = { 0.f };
@@ -132,6 +128,13 @@ protected:
 	//_bool		m_bDissolve = { false };
 	//_float		m_fDissolveWeight = { 0.f };
 	_uint		m_iShaderPass = 0;
+
+
+//protected:
+//	_float x = { 1.f };
+//	_float y = { 4.8f };
+
+
 
 protected:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };

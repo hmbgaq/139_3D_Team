@@ -77,13 +77,11 @@ public:
 	_bool					Is_AnimEnd() { return m_bIsAnimEnd; };
 	_bool					Is_UpperAnimEnd() { return m_bIsUpperAnimEnd; };
 
-
 public:
 	virtual HRESULT			Initialize_Prototype(TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);
 	virtual HRESULT			Initialize(void* pArg);
 	virtual HRESULT			Render(_uint iMeshIndex);
 	
-
 public:
 	void					Play_Animation(_float fTimeDelta, _bool bIsLoop);
 	void					Play_Animation(_float fTimeDelta, _float3& _Pos);
@@ -93,6 +91,7 @@ public:
 
 public:
 	HRESULT					Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices = nullptr);
+	HRESULT					Bind_MaterialResource(class CShader* pShader, _uint iMeshIndex);
 	HRESULT					Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
 	HRESULT					Bind_ShaderCascade(CShader* pShader);
 
@@ -128,6 +127,11 @@ public:
 public:
 	vector<CBone*>*			Get_Bones();
 	_uint					Get_BoneNum(const _char* szName);
+
+
+public:
+	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
+
 private:
 	CMyAssimp				m_MyAssimp;
 	CMyAIScene				m_pAIScene;

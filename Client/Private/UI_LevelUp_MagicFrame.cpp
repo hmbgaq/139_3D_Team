@@ -90,6 +90,22 @@ HRESULT CUI_LevelUp_MagicFrame::Render()
 	return S_OK;
 }
 
+void CUI_LevelUp_MagicFrame::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_MagicFrame::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_MagicFrame::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_MagicFrame::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_LevelUp_MagicFrame::Ready_Components()
 {
 	//! For.Com_Shader

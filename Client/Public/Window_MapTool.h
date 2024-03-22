@@ -21,6 +21,8 @@ class CMonster_Character;
 class CCamera_Dynamic;
 class CMasterCamera;
 class CSky;
+class CEvent_MosnterSpawnTrigger;
+class CEvent_Trigger;
 //TODO 추후 추가 class CNPC;
 
 class CWindow_MapTool final : public CImgui_Window
@@ -30,7 +32,7 @@ private:
 	enum class MODE_TYPE { MODE_CREATE, MODE_SELECT, MODE_DELETE, MODE_END };
 	enum class PICKING_TYPE { PICKING_FIELD, PICKING_MESH, PICKING_INSTANCE, PICKING_NONE, PICKING_END };
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
-	enum class OBJECTMODE_TYPE { OBJECTMODE_ENVIRONMENT, OBJECTMODE_CHARACTER, OBJECTMODE_NAVIGATION};
+	enum class OBJECTMODE_TYPE { OBJECTMODE_ENVIRONMENT, OBJECTMODE_CHARACTER, OBJECTMODE_NAVIGATION, OBJECTMODE_TRIGGER };
 	enum class LIGHT_CREATEMODE { LIGHT_MODE, LIGHT_OBJECTMODE };
 	enum class ANIM_TYPE { TYPE_NONANIM, TYPE_ANIM };
 	enum class INSTANCE_ALLMOVETYPE { ALLMOVE_X, ALLMOVE_Y, ALLMOVE_Z };
@@ -71,9 +73,10 @@ private:
 	void			EnvironmentMode_Function();
 	void			CharacterMode_Function();
 	void			NavigationMode_Function();
+	void			TriggerMode_Function();
 	
 
-	//!For. Environmentf
+	//!For. Environment
 	void			GroundTab_Function();
 	void			LightTab_Function();
 		void			Light_CreateTab();
@@ -98,11 +101,15 @@ private:
 	void			Reset_NaviPicking();
 	void			Find_NearPointPos(_float3* fPickedPos);
 	CCell*			Find_NearCell(_float3 fPickedPos);
-
 	void			SaveNavi(string strFullPath);
 	void			LoadNavi(string strFullPath);
-
 	void			LoadCells();
+
+	//!For. Trigger
+	void			Trigger_CreateTab();
+	void			Trigger_SelectTab();
+	void			Trigger_DeleteTab();
+
 
 
 private:
@@ -146,6 +153,8 @@ private: //! For. Create_Function
 		void			Boss_CreateFunction();
 		void			NPC_CreateFunction();
 	
+public:
+	void			Add_Monster_ForTrigger(CMonster_Character* pMonster);
 
 private: //!For. Select_Function
 
@@ -156,6 +165,7 @@ private: //!For. Select_Function
 	void			Guizmo_Tick(CGameObject* pPickingObject = nullptr);
 
 	void			Instance_GuizmoTick(_int iIndex, INSTANCE_INFO_DESC* pInstance = nullptr);
+	void			Trigger_GuizmoTick(class CEvent_Trigger* pEventTrigger = nullptr);
 
 	//!For. Character
 	void			Character_SelectFunction();
@@ -174,20 +184,20 @@ private:
 	ANIM_TYPE		m_eAnimType = ANIM_TYPE::TYPE_NONANIM;
 	LIGHT_CREATEMODE m_eLightCreateMode = LIGHT_CREATEMODE::LIGHT_MODE;
 
-	
 
 	_bool			m_bChangeObjectMode = false;
 	
 
 	CPlayer*		m_pPlayer = nullptr;
 	
-	_bool			m_bOnTheInstance = false;
 	_float4x4		m_matInstanceMatrix = {};
 	_float3			m_vRotation = {};
 	_bool			m_bRotateMode = { false};
 	_bool			m_bColliderPickingMode = false;
 	_float			m_fCamaraSpeed = { 60.f };
 
+
+	//!For Navigation
 	_int						m_iNavigationTargetIndex = 0;
 	vector<_float3>				m_vecPickedPoints;
 	vector<string>				m_vecPickingListBox;
@@ -210,6 +220,11 @@ private:
 	_bool						m_bHaveNaviSave = false;
 	_uint						m_iSaveNaviIndex = 50;
 
+	//!For Trigger
+	_int						m_iMonsterSpawnGroupIndex = 0;
+	class CEvent_Trigger*		m_pPickingTrigger = {nullptr};
+	//string						m_strSelectTriggerNameTag = "";
+	_char						m_strSelectTriggerNameTag[32] = "";
 
 //!  맵찍기 저장용 변수
 	string			m_strLoadFilePath = {}; //! 만약 불러오기로 맵을 불러왔다면 불러온 맵의 저장경로를 저장한다. 이상태에서 Ctrl S를 누를시 해당 경로에 덮어쓰기하는 식으로 해줘야할거같다.
@@ -268,6 +283,8 @@ private:
 	_float							m_fSelectColliderSizeArray[3] = { 1.f, 1.f, 1.f}; //! 콜라이더 사이즈변경용
 	_float							m_fSelectColliderCenterArray[3] = { 0.f, 1.f, 0.f }; //! 콜라이더 센터변경용
 	_int							m_iInteractPlayAnimIndex = 0;
+	_float3							m_vInteractRootMoveRate = { 1.f, 1.f, 1.f };
+	_bool							m_bInteractUseGravity = false;
 
 	//!For.Light//! 라이트
 	_int							m_eLightEffectType = 0; //! 전부 이넘 캐스팅
@@ -276,6 +293,7 @@ private:
 	_float3							m_vLightEffectPos = {};
 	
 	
+
 	
 	
 
@@ -323,8 +341,11 @@ private:
 	INSTANCE_INFO_DESC*					m_pPickingInstanceInfo = { nullptr };
 
 	//!For. CreateCharacter
+	
 	vector<CMonster_Character*>			m_vecCreateMonster;
 	vector<string>						m_vecCreateMonsterTag;
+	_int								m_iSelectMonsterGroupIndex = 0;
+	_int								m_iSelectMonsterNaviIndex = -1;
 
 	//TODO 추후 NPC추가되면 작성
 	//!vector<CNPC*>					m_vecCreateNPC;
@@ -333,6 +354,13 @@ private:
 	
 	_int							m_iCreateMonsterIndex = {};
 	_int							m_iSelectCharacterIndex = {};
+
+	//!For.CreateTrigger
+	
+	vector<CEvent_MosnterSpawnTrigger*>	 m_vecCreateMonsterTrigger;
+	vector<string>						 m_vecCreateMonsterTriggerTag;
+	_int								 m_iSelectMonsterTriggerIndex = 0;
+	_int								 m_iSelectMonsterSpawnGroupIndex = 0;
 
 private: //! For. CreateInstance
 	_uint							m_iSelectInstanceIndex = 0;

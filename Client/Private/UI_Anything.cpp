@@ -131,6 +131,22 @@ HRESULT CUI_Anything::Render()
 	return S_OK;
 }
 
+void CUI_Anything::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Anything::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Anything::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Anything::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Anything::Ready_Components()
 {
 	//! For.Com_Shader

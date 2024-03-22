@@ -27,13 +27,13 @@ HRESULT CScreamer::Initialize(void* pArg)
 	//m_iRenderPass = ECast(ANIM_SHADER::ANIM_ORIGIN);
 
 	//m_pTransformCom->Set_Position(_float3(15.f, 0.f, 10.f));
-	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
-	//m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
+	//m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_STOP, true);
+	m_pModelCom->Set_Animation(0, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
 
 	///* Test UI */
 	m_pWeakneesUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
+	m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());//이거는 Tick 에서 돌리기 
 	//m_pWeakneesUI->SetUp_PositionToScreen(m_pTransformCom->Get_Position());
-	m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());
 
 	CUI_Manager::GetInstance()->Add_EnemyHUD_Shard(LEVEL_STATIC, TEXT("Layer_EnemyHUD"), this);
 
@@ -124,7 +124,8 @@ HRESULT CScreamer::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 		
-		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_EXAMPLE));
+		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
+		//m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_EXAMPLE));
 
 		m_pModelCom->Render(_uint(i));
 	}
@@ -199,6 +200,7 @@ HRESULT CScreamer::Ready_Components()
 	/* For.Com_Model */
 	{
 		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Screamer"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		//FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Horse"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 	}
 
 	/* For.Com_Collider */

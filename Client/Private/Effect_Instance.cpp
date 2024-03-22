@@ -241,7 +241,7 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 			Remove_TextureCom(TEXTURE_MASK);
 		}
 		eTexture = TEXTURE_MASK;
-		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, strProtoTextureTag, TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
 	}
 	else if (strProtoTextureTag.find(strNoise) != string::npos)
 	{
@@ -252,7 +252,7 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 		}
 
 		eTexture = TEXTURE_NOISE;
-		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, strProtoTextureTag, TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
 	}
 	else if (strProtoTextureTag.find(strSprite) != string::npos)
 	{
@@ -400,13 +400,13 @@ HRESULT CEffect_Instance::Ready_Components()
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NORAML])
 			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NORAML], TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
 
-		// Mask
+		// Mask => ! LEVEL_STATIC 으로 변경 !
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK], TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
+			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_MASK], TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
 
-		// Noise
+		// Noise => ! LEVEL_STATIC 으로 변경 !
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
+			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
 
 		// Sprite
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])

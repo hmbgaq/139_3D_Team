@@ -1,5 +1,4 @@
 #pragma once
-#include "Client_Defines.h"
 #include "UI.h"
 
 /* 체력 프레임 */
@@ -20,6 +19,12 @@ public:
 	virtual void			Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT			Render() override;
 
+	/* State */
+	virtual void	UI_Ready(_float fTimeDelta);
+	virtual void	UI_Enter(_float fTimeDelta);
+	virtual void	UI_Loop(_float fTimeDelta);
+	virtual void	UI_Exit(_float fTimeDelta);
+
 public:
 	void					Set_TargetPosition(_vector vTargetPosition);
 	void					Check_TargetWorld();
@@ -35,6 +40,9 @@ private:
 public:
 	json					Save_Desc(json& out_json);
 	void					Load_Desc();
+
+public:
+	CCollider*				m_pColliderCom = { nullptr };
 
 private:
 	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };

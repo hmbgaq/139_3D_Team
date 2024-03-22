@@ -56,6 +56,15 @@ void CBody::Tick(_float fTimeDelta)
 
 	m_pColliderCom->Update(m_WorldMatrix);
 
+	//if (m_pGameInstance->Key_Down(DIK_9)) 
+	//{
+	//	m_fRotateUpperY -= 0.1f;
+	//}
+	//if (m_pGameInstance->Key_Down(DIK_0))
+	//{
+	//	m_fRotateUpperY += 0.1f;
+	//}
+
 	//if (m_bDissolve)
 	//	m_fDissolveWeight += fTimeDelta;
 }
@@ -194,17 +203,21 @@ void CBody::Set_MouseMove(_float fTimeDelta)
 {
 	_float2 vMouseMove = { 0.f, 0.f };
 
-	_float fSpeed = 10.f;
+	//_float fSpeed = 10.f;
 
-	vMouseMove.x = (_float)m_pGameInstance->Get_DIMouseMove(DIMS_X);
-	vMouseMove.y = (_float)m_pGameInstance->Get_DIMouseMove(DIMS_Y);
+	vMouseMove.x = (_float)m_pGameInstance->Get_DIMouseMove(DIMS_X) * 12.f * fTimeDelta;
+	vMouseMove.y = (_float)m_pGameInstance->Get_DIMouseMove(DIMS_Y) * 3.5f * fTimeDelta;
+	//vMouseMove.y = (_float)m_pGameInstance->Get_DIMouseMove(DIMS_Y) * 10.f * fTimeDelta;
 
-	vMouseMove *= fSpeed * fTimeDelta;
+	//vMouseMove *= fSpeed * fTimeDelta;
 
 
 	_float2 vResult = vMouseMove;
 
-	m_fRotateUpperY += vMouseMove.y / (fSpeed / 2.51f);
+	m_fRotateUpperY += vMouseMove.y;
+	//m_fRotateUpperY += vMouseMove.y / (10.f / 3.5f);
+	
+
 	vResult.y = m_fRotateUpperY - m_fShootingReaction;
 
 	vResult.x += m_fRotateUpperX;
@@ -314,10 +327,15 @@ void CBody::Update_ShootingReaction(_float fTimeDelta)
 void CBody::Reset_UpperAngle()
 {
 	m_fRotateUpperX = { 0.f };
-	m_fRotateUpperY = { 5.f };
+	m_fRotateUpperY = { 2.6f };
 
 	m_fShootingReaction = { 0.f };
 	m_fShootingReactionTarget = { 0.f };
+}
+
+_uint CBody::Get_CurrentKeyFrames(_uint iIndex)
+{
+	return m_pModelCom->Get_CurrentKeyFrames(iIndex);
 }
 
 HRESULT CBody::Bind_ShaderResources()

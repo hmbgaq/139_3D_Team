@@ -5,11 +5,7 @@
 
 #include "Sniper_IdlePose.h"
 #include "Sniper_Idle.h"
-#include "Sniper_CoverHigh_Side_R_Start.h"
-#include "Sniper_CoverHigh_Side_L_Start.h"
 #include "Sniper_CoverLow_Over_Start.h"
-#include "Sniper_CoverLow_Side_L_Start.h"
-#include "Sniper_CoverLow_Side_R_Start.h"
 #include "Sniper_Crouch_Start.h"
 #include "Sniper_CoverLow_Idle.h"
 #include "Sniper_CoverLow_Reload.h"

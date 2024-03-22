@@ -39,6 +39,22 @@ HRESULT CUI_Player_Skill::Render()
 	return S_OK;
 }
 
+void CUI_Player_Skill::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Player_Skill::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Player_Skill::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Player_Skill::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Player_Skill::Ready_UI()
 {
 	// Create

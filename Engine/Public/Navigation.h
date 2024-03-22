@@ -37,15 +37,17 @@ public:
 	_int					Get_CellSize() { return (_int)m_Cells.size(); };
 	void					Set_CurrentIndex(_int iIndex) { m_iCurrentIndex = iIndex; }
 	_int					Get_CurrentCellIndex() { return m_iCurrentIndex;}
+	void					SpawnCell_Setting(_float3 vPos);
 
 	void					AddCell(class CCell* pCell);
 	HRESULT					Delete_Cell(const _uint iIndex);
 	void					AllSearchDelete_IsNan();
+	_float					Compute_CCW(_float3 vPointA, _float3 vPointB, _float3 vPointC);
 
 public:
 	void					InRangeCellChange(class CCell* pCell, _int ePoint, _float3 vSearchPos);
-	_int					Get_SelectRangeCellIndex(class CGameObject* pTargetObject);
 	_float					Compute_Height(_float3 vPosition, _Out_ _bool * pGround);
+	_int					Get_SelectRangeCellIndex(class CGameObject* pTargetObject); // 
 
 
 private:

@@ -188,6 +188,22 @@ HRESULT CUI_Player_ExpBar::Render()
 	return S_OK;
 }
 
+void CUI_Player_ExpBar::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Player_ExpBar::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Player_ExpBar::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Player_ExpBar::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Player_ExpBar::Ready_Components()
 {
 	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture

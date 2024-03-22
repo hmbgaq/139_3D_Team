@@ -81,6 +81,22 @@ HRESULT CUI_BackGround::Render()
 	return S_OK;
 }
 
+void CUI_BackGround::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_BackGround::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_BackGround::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_BackGround::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_BackGround::Ready_Components()
 {
 	//! For.Com_Shader
