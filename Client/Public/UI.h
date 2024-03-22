@@ -290,7 +290,7 @@ public: /* ============================== SetUp ============================== *
 	void			SetUp_PositionToScreen(_fvector vWorldPos);
 
 	//				TargetWorld => Screen
-	void			SetUp_WorldToScreen(_matrix vWorldPos);
+	void			SetUp_WorldToScreen(_matrix vWorldPos, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
 	HRESULT			SetUp_BillBoarding();
 
 

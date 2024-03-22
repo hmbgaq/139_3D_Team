@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "GameObject.h"
+#include "UI_Manager.h"
 
 CUI_EnemyHUD_Shard::CUI_EnemyHUD_Shard(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -124,6 +125,13 @@ void CUI_EnemyHUD_Shard::UI_Exit(_float fTimeDelta)
 {
 }
 
+void CUI_EnemyHUD_Shard::UI_Setting()
+{
+	///* Child Setting */
+	//m_pUI_Manager->Ready_EnemyHUD_Shard(LEVEL_STATIC, );
+
+}
+
 void CUI_EnemyHUD_Shard::Set_TargetPosition(_vector vTargetPosition)
 {
 	m_vTargetPosition = vTargetPosition;
@@ -187,26 +195,6 @@ HRESULT CUI_EnemyHUD_Shard::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("special_attack_icon"),
-		TEXT("Com_Texture_Attack"), reinterpret_cast<CComponent**>(&m_pTextureCom[ATTACK]))))
-		return E_FAIL;
-
-	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_enemy_hp_big_white_center"),
-		TEXT("Com_Texture_Electric"), reinterpret_cast<CComponent**>(&m_pTextureCom[ELECTRIC]))))
-		return E_FAIL;
-
-	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_enemy_hp_big_white_center"),
-		TEXT("Com_Texture_Skull"), reinterpret_cast<CComponent**>(&m_pTextureCom[SKULL]))))
-		return E_FAIL;
-
-	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("skull"),
-		TEXT("Com_Texture_SkullRed"), reinterpret_cast<CComponent**>(&m_pTextureCom[SKULLRED]))))
-		return E_FAIL;
-
 	return S_OK;
 }
 
@@ -221,33 +209,6 @@ HRESULT CUI_EnemyHUD_Shard::Bind_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
-
-
-	switch (m_eCurState)
-	{
-	case CUI_EnemyHUD_Shard::NONE:
-		break;
-	case CUI_EnemyHUD_Shard::ATTACK:
-		if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
-		break;
-	case CUI_EnemyHUD_Shard::ELECTRIC:
-		if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
-		break;
-	case CUI_EnemyHUD_Shard::SKULL:
-		if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
-		break;
-	case CUI_EnemyHUD_Shard::SKULLRED:
-		if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
-		break;
-	case CUI_EnemyHUD_Shard::TEXTURE_END:
-		break;
-	default:
-		break;
-	}
 
 	return S_OK;
 }

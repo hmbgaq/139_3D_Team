@@ -612,8 +612,9 @@ void CUI::SetUp_PositionToScreen(_fvector vWorldPos)
 
 	return;
 }
+
 //				TargetWorld => Screen
-void CUI::SetUp_WorldToScreen(_matrix matWorld)
+void CUI::SetUp_WorldToScreen(_matrix matWorld, _float3 vOffsetPos)
 {
 	_vector vTargetPos = {};
 	_float4 vViewPort = {};
@@ -621,9 +622,11 @@ void CUI::SetUp_WorldToScreen(_matrix matWorld)
 	_matrix matTargetWorld = XMMatrixIdentity();
 	matTargetWorld = matWorld;
 
-	//matTargetWorld.r[3][0];
-	
-	vTargetPos = XMVectorSet(matTargetWorld.r[3].m128_f32[0] + m_fOffsetX, matTargetWorld.r[3].m128_f32[1] + m_fOffsetY, matTargetWorld.r[3].m128_f32[2], 1.0f);
+	vTargetPos = XMVectorSet(
+							 matTargetWorld.r[3].m128_f32[0] + vOffsetPos.x,
+							 matTargetWorld.r[3].m128_f32[1] + vOffsetPos.y,
+							 matTargetWorld.r[3].m128_f32[2] + vOffsetPos.z,
+							 1.0f);
 
 	//// z °ª °è»ê
 	//float zDistance = matTargetWorld.r[3].m128_f32[2];
@@ -638,7 +641,6 @@ void CUI::SetUp_WorldToScreen(_matrix matWorld)
 	vTargetPos = XMVector3TransformCoord(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
 
 	XMStoreFloat4(&vViewPort, vTargetPos);
-
 
 
 	m_fWorldToScreenX = (vViewPort.x) * (g_iWinSizeX >> 1);

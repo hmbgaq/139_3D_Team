@@ -31,8 +31,12 @@ public:
 	void					Check_TargetWorld();
 
 private:
+	HRESULT					Setting_Owner();
+
+private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
+	CCharacter*				m_pCharacterOwner = { nullptr };
 	CGameObject*			m_pTarget = nullptr;
 	_vector					m_vTargetPosition = { 0.f, 0.f, 0.f, 0.f };
 	_matrix					m_World = XMMatrixIdentity();

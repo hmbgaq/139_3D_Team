@@ -26,6 +26,8 @@ public:
 	virtual void	UI_Loop(_float fTimeDelta);
 	virtual void	UI_Exit(_float fTimeDelta);
 
+	/* Child */
+	void			UI_Setting();
 public:
 	void					Set_TargetPosition(_vector vTargetPosition);
 	void					Check_TargetWorld();
