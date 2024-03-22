@@ -1,5 +1,4 @@
 #pragma once
-#include "Client_Defines.h"
 #include "UI.h"
 
 /* 체력 프레임 */
@@ -41,6 +40,9 @@ private:
 public:
 	json					Save_Desc(json& out_json);
 	void					Load_Desc();
+
+public:
+	CCollider*				m_pColliderCom = { nullptr };
 
 private:
 	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };

@@ -56,6 +56,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
 	GameObjectDesc.fSpeedPerSec = 7.f;
+	//GameObjectDesc.fSpeedPerSec = 22.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
@@ -69,7 +70,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 // 	}
 
 
+	m_pRigidBody->Set_UseGravity(true);
+
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+
 
 	///* For.Com_PhysXController */
 	//FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"), TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom)));
@@ -111,10 +115,16 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	Update_ChargingTime(fTimeDelta);
 
+
+
 	CData_Manager::GetInstance()->Set_CurHP(m_iHp);
 
 	if (m_pGameInstance->Key_Down(DIK_C))
 		m_iHp = 100;
+
+	if (m_pNavigationCom != nullptr)
+		m_pNavigationCom->Update(XMMatrixIdentity());
+
 	//_float3 vPos = Get_Position();
 
 	//PxControllerFilters Filters;
@@ -143,9 +153,8 @@ void CPlayer::Tick(_float fTimeDelta)
 	//	Set_Position(vResult);
 	//}
 	
-	if(m_pNavigationCom != nullptr)
-		m_pNavigationCom->Update(XMMatrixIdentity());
-	
+
+
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)
@@ -337,14 +346,15 @@ void CPlayer::SetState_InteractVault100()
 void CPlayer::SetState_InteractVault200()
 {
 	m_pActor->Set_State(new CPlayer_InteractionVault200());
+	
 }
 
 #pragma endregion 상호작용
 
 void CPlayer::Search_Target(_float fMaxDistance)
 {
-	__super::Search_Target(LAYER_BOSS, fMaxDistance);
 	__super::Search_Target(LAYER_MONSTER, fMaxDistance);
+	__super::Search_Target(LAYER_BOSS, fMaxDistance);
 }
 
 void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCount)
@@ -411,6 +421,15 @@ void CPlayer::Update_ChargingTime(_float fTimeDelta)
 	{
 		m_fChargingTime = 0.f;
 	}
+}
+
+CGameObject* CPlayer::Slam()
+{
+	CGameObject* pSlam = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Impact_Slam");
+	pSlam->Set_Position(Get_Position());
+	
+	
+	return nullptr;
 }
 
 void CPlayer::Hitted_Left(Power ePower)

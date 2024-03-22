@@ -36,7 +36,7 @@ public:
 
 public:
 	CCharacter* Get_Target_Character(CCollider * other);
-	CProjectile* Set_Damage(_int _iDamage);
+	CProjectile* Set_Damage(_float _iDamage);
 	CProjectile* Set_Direction(Direction _eHitDirection);
 	CProjectile* Set_Power(Power _eHitPower);
 	CProjectile* Set_Force(_float _fForce);
@@ -68,7 +68,7 @@ protected:
 	Direction	m_eHitDirection = { Direction::Front };
 	Power		m_eHitPower = { Power::Light };
 	_float		m_fStiffnessRate = { 1.f };
-	_uint		m_iDamage = { 0 };
+	_float		m_fDamage = { 0 };
 	_float		m_fForce = { 0.f };
 	_bool		m_bUse = { true };
 

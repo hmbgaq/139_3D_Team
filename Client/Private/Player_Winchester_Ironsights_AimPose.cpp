@@ -8,15 +8,22 @@
 #include "Data_Manager.h"
 #include "SpringCamera.h"
 
+#include "Renderer.h"
+
 void CPlayer_Winchester_Ironsights_AimPose::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
+	//pActor->Set_Animation(CPlayer::Player_State::Player_IdleLoop, CModel::ANIM_STATE_LOOP, true, false);
 	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_LOOP);
 	pActor->Set_Splitted(true);
 	//pActor->Set_StiffnessRate_Upper(0.5f);
 
 	pActor->Set_Weapon_Enable(WEAPON_WINCHESTER, true);
+
+	//pActor->Reset_UpperAngle();
+
+
 	//CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Winchester"));
 	//pWeapon->Set_Enable(true);
 	
@@ -34,6 +41,7 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 		CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Winchester"));
 		pWeapon->Fire();
 		CUI_Manager::GetInstance()->Trigger_Crosshair(true);
+		m_pGameInstance->Set_RadialBlurTime(0.3f);
 		
 		return new CPlayer_Winchester_Ironsights_Reload_01();
 	}

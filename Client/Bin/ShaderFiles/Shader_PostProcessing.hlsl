@@ -37,12 +37,15 @@ Texture2D   g_BlurTarget;
 DOF         g_DOF;
 
 // EffectMix
-Texture2D g_Deferred_Target;
 Texture2D g_RimBlur_Target;
 Texture2D g_Effect_Target;
 Texture2D g_EffectBlur_Target;
 Texture2D g_Effect_Solid;
+Texture2D g_Distortion_Target;
 
+// EffectDistortion
+Texture2D g_Deferred_Target;
+Texture2D g_Effect_DistortionTarget;
 /* =================== Function =================== */
 
 float3 reinhard_extended(float3 v, float max_white)
@@ -266,17 +269,24 @@ PS_OUT PS_MAIN_DOF (PS_IN In)
 PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
+    
     vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
     vector Object_Blur = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     
     vector Effect = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Solid = g_Effect_Solid.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
+    vector Effect_Distortion = g_Distortion_Target.Sample(LinearSampler, In.vTexcoord);
     
     
-    Out.vColor = Effect_Solid;
+    Out.vColor = Effect_Solid ;
+
     if (Out.vColor.a == 0) 
-        Out.vColor = Deferred + Effect + Object_Blur + Effect_Blur;
+        Out.vColor += Effect_Distortion;
+    
+    if (Out.vColor.a == 0) 
+       // Out.vColor += Deferred + Effect + Effect_Blur;
+        Out.vColor += Deferred + Effect + Object_Blur + Effect_Blur;
     
     ////if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
     //    //Out.vColor += Effect + Object_Blur + Effect_Blur;   // 이펙트랑 위에 디퍼드를 바꿨다(이펙트 때문)
@@ -287,6 +297,32 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     return Out;
 }
 
+/* ------------------- 5 -Effect Distortion Shader -------------------*/
+PS_OUT PS_MAIN_EFFECT_DISTORTION(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    //vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
+    
+    vector Distortion = g_Effect_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
+    Out.vColor = Distortion;
+     
+    
+    float2 vNoiseCoords;
+    // 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를(UV) 만든다.
+    vNoiseCoords.xy = Distortion.xy + In.vTexcoord.xy;
+    vector Deferred = g_Deferred_Target.Sample(LinearSampler, vNoiseCoords);
+    
+    
+    if (Out.vColor.a == 0)
+        discard;
+    
+    /* Distortion이 적용된 부분만 Deferred와 연산한다. -> Distrotion이 적용된부분이 Deferred가 비치게되는 느낌? */
+   Out.vColor = Deferred; 
+    
+    
+    return Out;
+}
 /* ------------------- Technique  -------------------*/
 
 technique11 DefaultTechnique
@@ -353,5 +389,17 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_EFFECTMIX();
+    }
+
+    pass Effect_Distortion // 5
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_EFFECT_DISTORTION();
     }
 }

@@ -15,12 +15,16 @@
 #include "VampireCommander_TurnR180.h"
 #include "VampireCommander_Stun_Start.h"
 #include "VampireCommander_CutScene.h"
+#include "VampireCommander_BloodRange_Stun_Start.h"
 #include "Player_Finisher_VampireCommander_VS.h"
 
 #include "UI_Manager.h"
 
 #include "Data_Manager.h"
 #include "Player.h"
+
+#include "Effect_Manager.h"
+#include "Effect.h"
 
 CVampireCommander::CVampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -65,7 +69,15 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 	// Ready BossHUDBar
 	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
 
-	m_vWeaknessPoint_Local = _float3(0.f, 2.f, 0.f);
+	m_vWeaknessPos_Local = _float3(0.f, 2.f, 0.f);
+
+	m_pMapEffect = EFFECT_MANAGER->Create_Effect("Test_Blood_map_04.json");
+	m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
+
+	if (nullptr == m_pTarget)
+	{
+		m_pTarget = CData_Manager::GetInstance()->Get_Player();
+	}
 
 	return S_OK;
 }
@@ -80,14 +92,27 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	
-	Search_Target(200.f);
+	//Search_Target(200.f);
 
 	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
-	cout << "introBossHP:" << m_iHp << endl;
+	//cout << "introBossHP:" << m_iHp << endl;
+	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
 
+	cout << "VampireCommander : " << fAngle << endl;
+	if (m_bLookAt == true)
+	{
+		
+		if (0 <= fAngle && fAngle <= 45)
+			Look_At_Target_Lerp(fTimeDelta);
+		else if (-45 <= fAngle && fAngle < 0)
+			Look_At_Target_Lerp(fTimeDelta);
+
+		/*m_bLookAt = false;*/
+
+	}
 	
 }
 
@@ -161,7 +186,7 @@ void CVampireCommander::Hitted_Right(Power ePower)
 	{
 	case Engine::Heavy:
 	case Engine::Absolute:
-	m_pActor->Set_State(new CVampireCommander_HitLeft);
+		m_pActor->Set_State(new CVampireCommander_HitLeft);
 	break;
 	}
 }
@@ -173,7 +198,7 @@ void CVampireCommander::Hitted_Front(Power ePower)
 	{
 	case Engine::Heavy:
 	case Engine::Absolute:
-	m_pActor->Set_State(new CVampireCommander_HitCenter);
+		m_pActor->Set_State(new CVampireCommander_HitCenter);
 	break;
 	}
 }
@@ -182,7 +207,7 @@ void CVampireCommander::Hitted_Dead(Power ePower)
 {
 	//stun이 걸리고 그다음에 처형이 있기 때문에 그냥 때려서는 죽일수 없다.
 	m_pActor->Set_State(new CVampireCommander_Stun_Start);
-	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+	//CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 	
 }
 
@@ -196,13 +221,12 @@ void CVampireCommander::Hitted_Finish()
 	m_pActor->Set_State(new CVampireCommander_CutScene());
 
 	CPlayer* pPlayer = Set_Player_Finisher_Pos(_float3(0.f, 0.f, 2.0f));
-
-	//CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-	//_float3 vPlayerPos = m_pTransformCom->Calc_Front_Pos(_float3(0.f, 0.f, 2.0f));
-	//pPlayer->Set_Position(vPlayerPos);
-	//pPlayer->Get_Transform()->Look_At(m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION));
-
 	pPlayer->Get_Actor()->Set_State(new CPlayer_Finisher_VampireCommander_VS());
+}
+
+void CVampireCommander::Hitted_Weakness()
+{
+	m_pActor->Set_State(new CVampireCommander_BloodRange_Stun_Start());
 }
 
 CVampireCommander* CVampireCommander::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -245,4 +269,8 @@ void CVampireCommander::Free()
 		Safe_Delete(m_pActor);
 	}
 
+	if (nullptr != m_pMapEffect)
+	{
+		m_pMapEffect->Set_Dead(TRUE);
+	}
 }

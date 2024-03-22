@@ -37,6 +37,8 @@ HRESULT CInfected_B::Initialize(void* pArg)
 
 	FAILED_CHECK(Ready_Option());
 
+	m_pTarget = m_pGameInstance->Get_Player();
+
 	return S_OK;
 }
 
@@ -49,12 +51,10 @@ void CInfected_B::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	m_pTarget = m_pGameInstance->Get_Player();
-
-	if (m_pActor)
-	{
-		m_pActor->Update_State(fTimeDelta);
-	}
+	//if (m_pActor)
+	//{
+	//	m_pActor->Update_State(fTimeDelta);
+	//}
 }
 
 void CInfected_B::Late_Tick(_float fTimeDelta)
@@ -71,7 +71,7 @@ HRESULT CInfected_B::Render()
 
 HRESULT CInfected_B::Update_RenderState(_int _iHP)
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 void CInfected_B::Update_DiscardMesh()
@@ -82,7 +82,7 @@ void CInfected_B::Update_DiscardMesh()
 
 HRESULT CInfected_B::OptionSetting()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 HRESULT CInfected_B::Ready_Components()

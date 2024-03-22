@@ -5,8 +5,8 @@
 namespace Client
 {
 	/* 1600 x 900 가능할지도 ㄱㄷ */
-	static const unsigned int	g_iWinSizeX = 1280;
 	static const unsigned int	g_iWinSizeY = 720;
+	static const unsigned int	g_iWinSizeX = 1280;
 	//static const unsigned int	g_iWinSizeX = 1600;
 	//static const unsigned int	g_iWinSizeY = 900;
 	//static const unsigned int	g_iWinSizeX = 1920;
@@ -71,6 +71,7 @@ namespace Client
 		MONSTER,
 		PLAYER_ATTACK,
 		MONSTER_ATTACK,
+		WEAKNESS,
 		EDIT_NAVIMESH,
 		DYNAMIC_PROP,
 		BOSS_DYNAMIC_PROP,

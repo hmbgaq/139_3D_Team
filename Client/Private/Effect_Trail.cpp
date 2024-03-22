@@ -36,6 +36,8 @@ HRESULT CEffect_Trail::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	// 트레일은 빌보드를 항상 끔
+	m_tVoidDesc.bBillBoard = FALSE;
 
 	return S_OK;
 }
@@ -56,9 +58,11 @@ void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 #ifdef _DEBUG
 	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		if (m_tVoidDesc.bActive_Tool)
+		//if (m_tVoidDesc.bActive_Tool)
 		{
 #endif // _DEBUG
+// 			if (m_pOwner == nullptr)
+// 				return;
 
 			//if (!m_pOwner->Is_Dead())
 			{
@@ -93,7 +97,7 @@ void CEffect_Trail::Late_Tick(_float fTimeDelta)
 #ifdef _DEBUG
 	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		if (m_tVoidDesc.bActive_Tool)
+		//if (m_tVoidDesc.bActive_Tool)
 		{
 #endif // _DEBUG
 
@@ -115,7 +119,7 @@ HRESULT CEffect_Trail::Render()
 #ifdef _DEBUG
 	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 	{
-		if (m_tVoidDesc.bActive_Tool)
+		//if (m_tVoidDesc.bActive_Tool)
 		{
 #endif // _DEBUG
 
@@ -165,16 +169,16 @@ HRESULT CEffect_Trail::Ready_Components()
 
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
 		{
-			/* For.Com_Mask */
-			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
+			/* For.Com_Mask => ! LEVEL_STATIC 으로 변경 ! */
+			if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
 				TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
 				return E_FAIL;
 		}
 
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
 		{
-			/* For.Com_Noise */
-			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
+			/* For.Com_Noise => ! LEVEL_STATIC 으로 변경 ! */
+			if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
 				TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
 				return E_FAIL;
 		}
@@ -211,6 +215,12 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 	{
 		FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NOISE]));
 	}
+
+	 /* 빌보드 */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
+
+	/* 빌보드 */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
 
 
 	/* Discard ============================================================================================ */

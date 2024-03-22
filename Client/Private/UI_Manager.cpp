@@ -47,7 +47,7 @@ HRESULT CUI_Manager::Ready_Interface(_uint iLevelIndex)
 	Add_LeftHUD(iLevelIndex, TEXT("Layer_LeftHUD"));
 	Add_RightHUD(iLevelIndex, TEXT("Layer_RightHUD"));
 	Add_TutorialBox(iLevelIndex, TEXT("Layer_TutorialBox"));
-	Add_LevelUp(iLevelIndex, TEXT("Layer_LevelUp"));
+	//Add_LevelUp(iLevelIndex, TEXT("Layer_LevelUp"));
 	Add_RewardBox(iLevelIndex, TEXT("Layer_RewardBox"));
 	Add_QuestBox(iLevelIndex, TEXT("Layer_QuestBox"));
 

@@ -37,10 +37,5 @@ void CInfected_State_Attack::AttackState_Setting(CInfected* pActor)
 
 CState<CInfected>* CInfected_State_Attack::Update_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	//if (pActor->Is_Animation_End()) /* 공격이 끝나면 무조건 뒷걸음질침 */
-	//{
-	//	//cout << "공격이후 뒷걸음질 " << endl;
-		return new CInfected_Walk_B();
-//	}
-	//return nullptr;
+	return new CInfected_Walk_B();
 }

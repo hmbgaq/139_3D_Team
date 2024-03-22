@@ -1,4 +1,6 @@
-#include "..\Public\Infected_State_Walk.h"
+#include "stdafx.h"
+#include "Infected_IdlePose.h"
+#include "Infected_State_Walk.h"
 
 void CInfected_State_Walk::Initialize(CInfected* pActor)
 {
@@ -19,6 +21,17 @@ void CInfected_State_Walk::Release(CInfected* pActor)
 
 CState<CInfected>* CInfected_State_Walk::Update_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	//return nullptr;
-	return Walk_State(pActor, fTimeDelta, _iAnimIndex);
+	return new CInfected_IdlePose();
+	
+	//return Walk_State(pActor, fTimeDelta, _iAnimIndex);
+}
+
+CState<CInfected>* CInfected_State_Walk::PreAttack_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return Attack_State(pActor, fTimeDelta, _iAnimIndex);
+}
+
+CState<CInfected>* CInfected_State_Walk::PreRun_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return Run_State(pActor, fTimeDelta, _iAnimIndex);
 }

@@ -5,13 +5,13 @@ void CVampireCommander_Idle::Initialize(CVampireCommander* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true,false);
 	pActor->Get_Weapon(L"Weapon_hand_R")->Set_Synced(false);
 	pActor->m_bLookAt = true;
 	pActor->m_bTurn = true;
 
-	CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
-	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ORIGIN);
+	//CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
+	//pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ORIGIN);
 
 }
 

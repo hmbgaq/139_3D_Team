@@ -19,6 +19,9 @@ public:
 	HRESULT Clear();
 	void	Create_TargetTexture();
 
+public:
+	ID3D11Texture2D* Get_Texture2D() { return m_pTexture2D; }
+
 #ifdef _DEBUG
 public:
 	HRESULT Ready_Debug(const wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);

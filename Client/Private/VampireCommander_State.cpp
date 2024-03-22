@@ -127,7 +127,7 @@ CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommand
 				pActor->m_bLookAt = true;
 				return new CVampireCommander_Ranged3;
 			case 2:
-				if (100.f > pActor->Calc_Distance() && 25.f < pActor->Calc_Distance())
+				if (100.f > pActor->Calc_Distance() && 13.f < pActor->Calc_Distance())
 				{
 					pActor->m_bLookAt = true;
 					return new CVampireCommander_Leap_Strat;
@@ -202,32 +202,31 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 	_float fAngle = pActor->Target_Contained_Angle(pActor->Get_Transform()->Get_Look(), pActor->Get_Target()->Get_Transform()->Get_Pos());
 
 	cout << "VampireCommander : "<< fAngle  << endl;
-	if (pActor->m_bLookAt == true)
-	{
-		//Look_At_Target();
-		if (0 <= fAngle && fAngle <= 45)
-			pActor->Look_At_Target();
-		else if (-45 <= fAngle && fAngle < 0)
-			pActor->Look_At_Target();
-		
-
-		pActor->m_bLookAt = false;
-		
-	}
+// 	if (pActor->m_bLookAt == true)
+// 	{
+// 		//Look_At_Target();
+// 		if (0 <= fAngle && fAngle <= 45)
+// 			pActor->Look_At_Target_Lerp(fTimeDelta*4);
+// 		else if (-45 <= fAngle && fAngle < 0)
+// 			pActor->Look_At_Target_Lerp(fTimeDelta*4);
+// 		
+// 		pActor->m_bLookAt = false;
+// 		
+// 	}
 	if (pActor->m_bTurn == true)
 	{
 		if (fAngle > 45 && fAngle <= 135)
 			return (new CVampireCommander_TurnR90);
 		else if (fAngle > 135 && fAngle <= 180)
-			return (new CVampireCommander_TurnL180);
+			return (new CVampireCommander_TurnR180);
 		else if (fAngle < -45 && fAngle >= -135)
 			return new CVampireCommander_TurnL90;
-		else if (fAngle < -135 && fAngle <= -180)
-			return (new CVampireCommander_TurnR180);
+		else if (fAngle < -135 && fAngle >= -180)
+			return (new CVampireCommander_TurnL180);
 		pActor->m_bTurn = false;
 	}
 
-	if (8 < iRandomTaunt)
+	if (8 == iRandomTaunt)
 	{
 		pActor->m_bLookAt = true;
 		return Taunt_State(pActor, fTimeDelta, _iAnimIndex);
@@ -252,8 +251,6 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 		pState = Attack_State(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 	}
-	
-	
 	
 	
 // 

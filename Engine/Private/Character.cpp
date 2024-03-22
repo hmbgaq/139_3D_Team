@@ -37,17 +37,18 @@ HRESULT CCharacter::Initialize(void* pArg)
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
 
-	m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
+
+	
+	//!m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
 	
 
 	FAILED_CHECK(Ready_Components());
 
 	FAILED_CHECK(Ready_PartObjects());
 
+
 	m_pRigidBody = CRigidBody::Create(m_pDevice, m_pContext);
-
 	NULL_CHECK_RETURN(m_pRigidBody, E_FAIL);
-
 	if (nullptr != Find_Component(g_pRigidBodyTag))
 		return E_FAIL;
 
@@ -68,8 +69,8 @@ void CCharacter::Priority_Tick(_float fTimeDelta)
 		if (nullptr != Pair.second)
 			Pair.second->Priority_Tick(fTimeDelta);
 	}
-
-	Set_WeaknessPoint();
+		
+	Set_WeaknessPos();
 }
 
 void CCharacter::Tick(_float fTimeDelta)
@@ -81,6 +82,9 @@ void CCharacter::Tick(_float fTimeDelta)
 		if (nullptr != Pair.second)
 			Pair.second->Tick(fTimeDelta);
 	}
+
+	Update_ElectrocuteTime(fTimeDelta);
+
 }
 
 void CCharacter::Late_Tick(_float fTimeDelta)
@@ -93,19 +97,37 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 			Pair.second->Late_Tick(fTimeDelta);
 	}
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-		return;
+	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
 
+	if (true == m_bIsInFrustum)
+	{		
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), ); //m_bIsInFrustum
 
-	m_pTransformCom->Add_RootBone_Position(m_pBody->Get_MovePos(), m_pNavigationCom);
+		_float3 vBodyMovePos = m_pBody->Get_MovePos();
 
-	m_pRigidBody->Late_Tick(fTimeDelta);
+		_float fDiff = abs(vBodyMovePos.x) + abs(vBodyMovePos.y) + abs(vBodyMovePos.z);
+
+		if (0.0001f < fDiff)
+		{
+			_float3 vResult = vBodyMovePos;
+			vResult.x *= m_vRootMoveRate.x;
+			vResult.y *= m_vRootMoveRate.y;
+			vResult.z *= m_vRootMoveRate.z;
+
+			m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
+			//m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
+		}
+		
+	}
+
+		m_pRigidBody->Late_Tick(fTimeDelta);
 
 #ifdef _DEBUG
-	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
+		//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
 
-	Set_WeaknessPoint();
+		Set_WeaknessPos();
+	
 }
 
 HRESULT CCharacter::Render()
@@ -335,6 +357,16 @@ void CCharacter::Go_Right(_float fTimeDelta)
 	m_pTransformCom->Go_Right(fTimeDelta, m_pNavigationCom);
 }
 
+_bool CCharacter::Is_Use_Gravity()
+{
+	return m_pRigidBody->Is_Use_Gravity();
+}
+
+void CCharacter::Set_UseGravity(_bool _bUseGravity)
+{
+	m_pRigidBody->Set_UseGravity(_bUseGravity);
+}
+
 void CCharacter::Set_Enable(_bool _Enable)
 {
 	__super::Set_Enable(_Enable);
@@ -356,46 +388,76 @@ void CCharacter::Set_Enable(_bool _Enable)
 	}
 }
 
-Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
+void CCharacter::Knockback(_vector vDir, _float fForce)
+{
+	m_pTransformCom->Look_At_Direction(vDir);
+	Add_Force(vDir, fForce);
+}
+
+void CCharacter::Look_At_And_Knockback(_float3 vTargetPos, _float fForce)
+{
+	Look_At_OnLand(vTargetPos);
+	_vector vDir = m_pTransformCom->Get_Look() * -1;
+	Add_Force(vDir, fForce);
+
+}
+
+Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
 {
 	Hit_Type eHitType = Hit_Type::None;
 
-	//if (Power::Absolute == m_eStrength)
+
+	//if (true == m_bIsRevealedWeakness && false == bIsMelee)
 	//{
-	//	return Hit_Type::None;
+	//	Get_Damaged(iDamage);
+	//	m_pTransformCom->Look_At_Direction(vDir * -1);
+
+	//	if (0 >= --m_iWeaknessCount) 
+	//	{
+	//		m_bIsRevealedWeakness = false;
+	//		m_bIsInvincible = false;
+
+
+	//		if (m_iHp <= 0)
+	//		{
+	//			Set_Stun(true);
+	//			Hitted_Stun(eHitPower);
+	//		}
+	//		else
+	//		{
+	//			Hitted_Weakness();
+	//		}
+
+	//		return Hit_Type::Hit_Break;
+
+	//	}
+
 	//}
 
-	if (true == m_bIsInvincible) 
+	if (true == m_bIsInvincible && false == m_bIsStun)
 	{
 		return Hit_Type::None;
 	}
 
+
 	Get_Damaged(iDamage);	
-	//Set_InvincibleTime(fInvincibleTime);
 	Add_Force(vDir, fForce);
 	m_pTransformCom->Look_At_Direction(vDir * -1);
 
 	if (m_iHp <= 0)
 	{
-		//if (bIsMelee)
-		//{
-		//	if (true == m_bIsStun)
-		//	{
-		//		//Set_Invincible(true);
-		//		Hitted_Finish();
-		//	}
-		//	else // (false == m_bIsStun)
-		//	{
-		//		Set_Stun(true);
-		//		Hitted_Stun(eHitPower);
-		//	}
-		//}
-
-
-		if (true == m_bIsStun)
+		if (bIsMelee)
 		{
-			//Set_Invincible(true);
-			Hitted_Finish();
+			if (true == m_bIsStun)
+			{
+				Set_Invincible(true);
+				Hitted_Finish();
+			}
+			else // (false == m_bIsStun)
+			{
+				Set_Stun(true);
+				Hitted_Stun(eHitPower);
+			}
 		}
 		else 
 		{
@@ -404,10 +466,6 @@ Hit_Type CCharacter::Set_Hitted(_uint iDamage, _vector vDir, _float fForce, _flo
 		}
 		
 		eHitType = Hit_Type::Hit_Finish;
-	}
-	else if (m_bTrigger == true)
-	{
-
 	}
 	else //if (eHitPower >= m_eStrength)
 	{
@@ -436,6 +494,11 @@ void CCharacter::Add_Force(_vector In_vDir, _float In_fPower)
 	m_pRigidBody->Add_Force(In_vDir, In_fPower);
 }
 
+void CCharacter::Look_At_OnLand(_fvector vTargetPos)
+{
+	m_pTransformCom->Look_At_OnLand(vTargetPos);
+}
+
 void CCharacter::Look_At_Target()
 {
 	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
@@ -456,9 +519,19 @@ void CCharacter::Look_At_Target_Lerp(_float fTimeDelta)
 
 void CCharacter::Search_Target(const wstring& strLayerTag, const _float fSearchDistance)
 {
-	if (nullptr != m_pTarget)
-		return;
-
+	if (nullptr != m_pTarget) 
+	{
+		if (m_pTarget->Is_In_Frustum())
+		{
+			return;
+		}
+		else 
+		{
+			m_pTarget = nullptr;
+		}
+			
+	}
+		
 	m_pTarget = Select_The_Nearest_Enemy(strLayerTag, fSearchDistance);
 }
 
@@ -523,18 +596,11 @@ CCharacter* CCharacter::Select_The_Nearest_Enemy(const wstring& strLayerTag, _fl
 
 		CCharacter* pTargetCharacter = dynamic_cast<CCharacter*>(pTarget);
 
-		if (nullptr == pTargetCharacter || true == pTargetCharacter->Is_Invincible() || 0 >= pTargetCharacter->Get_Hp())
+		if (nullptr == pTargetCharacter || true == pTargetCharacter->Is_Invincible() || 0 >= pTargetCharacter->Get_Hp() || false == pTargetCharacter->Is_In_Frustum())
 			continue;
 
-
-		_float fDistance = 0.f;
-
-		for (_uint i = 0; i < 5; ++i)
-		{
-			fDistance += Calc_Distance_Front(pTarget->Get_Position(), _float3(0.f, 0.f, 0.5f * i));
-		}
-		fDistance /= 5.f;
-
+		//_float fDistance = Calc_Distance(pTarget);
+		_float fDistance = Calc_Distance_Front(pTarget->Get_Position());
 
 		if (fMinDistance > fDistance) 
 		{
@@ -569,9 +635,9 @@ _float CCharacter::Calc_Distance()
 	return Calc_Distance(m_pTarget);
 }
 
-_float CCharacter::Calc_Distance_Front(_float3 vTargetPos, _float3 vFront)
+_float CCharacter::Calc_Distance_Front(_float3 vTargetPos)
 {
-	_float3 vPos = m_pTransformCom->Calc_Front_Pos(vFront); //Get_Position();
+	_float3 vPos = m_pTransformCom->Calc_Front_Pos(); //Get_Position();
 
 	_float3 vDiff = vTargetPos - vPos;
 
@@ -604,10 +670,40 @@ void CCharacter::Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap
 	m_pTransformCom->Move_On_Navigation(vResult, m_pNavigationCom);
 }
 
+void CCharacter::Dragged(_float fTimeDelta, _float3 vTargetPos)
+{
+	_vector vTargetPosVec = XMVectorSet(vTargetPos.x, vTargetPos.y, vTargetPos.z, 1.f);
+	m_pTransformCom->Look_At_OnLand(vTargetPosVec);
+
+	_matrix _WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+
+	_float fDistance = Calc_Distance(vTargetPos);
+
+	if (0.3f >= fDistance)
+		return;
+
+	_float3 vPos = { 0.f, 0.f, min(min(fDistance * fTimeDelta * 10, 4.0f), fDistance) };
+
+	_vector vResult = XMVector3TransformNormal(XMLoadFloat3(&vPos), _WorldMatrix);
+
+	//m_pTransformCom->Move_On_Navigation(vResult, nullptr);
+	m_pTransformCom->Move_On_Navigation(vResult, m_pNavigationCom);
+
+}
+
+_float3 CCharacter::Calc_Front_Pos(_float3 vDiff)
+{
+	return m_pTransformCom->Calc_Front_Pos(vDiff);
+}
 
 void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
 {
 	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState, iTargetKeyFrameIndex);
+}
+
+void CCharacter::Reset_UpperAngle()
+{
+	m_pBody->Reset_UpperAngle();
 }
 
 void CCharacter::Set_StiffnessRate(_float fStiffnessRate)
@@ -648,11 +744,17 @@ CWeapon* CCharacter::Set_Weapon_Collisions_Enable(const wstring& strWeaponTag, _
 }
 
 
-void CCharacter::Set_WeaknessPoint()
+void CCharacter::Set_WeaknessPos()
 {
-	_float3 vResult = m_pTransformCom->Calc_Front_Pos(m_vWeaknessPoint_Local);
-	m_vWeaknessPoint = vResult;
-};
+	_float3 vResult = m_pTransformCom->Calc_Front_Pos(m_vWeaknessPos_Local);
+	m_vWeaknessPos = vResult;
+}
+
+_uint CCharacter::Get_CurrentKeyFrames(_uint iIndex)
+{
+	return m_pBody->Get_CurrentKeyFrames(iIndex);
+}
+
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {

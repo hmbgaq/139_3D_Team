@@ -2,9 +2,11 @@
 #include "Data_Manager.h"
 #include "GameInstance.h"
 #include "Bullet_Bandit_Sniper.h"
-
 #include "Effect_Manager.h"
 #include "Effect_Trail.h"
+#include "Data_Manager.h"
+#include "Body_Player.h"
+#include "Character.h"
 
 CBullet_Bandit_Sniper::CBullet_Bandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CProjectile(pDevice, pContext, strPrototypeTag)
@@ -31,7 +33,7 @@ HRESULT CBullet_Bandit_Sniper::Initialize(void* pArg)
 	GameObjectDesc.fRotationPerSec = 0.f;
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc)); /* 컴포넌트 호출 */	
 
-	m_iDamage = 0;
+	m_fDamage = 0.f;
 	m_fLifeTime = 1.5f;	
 
 	return S_OK;
@@ -95,6 +97,19 @@ HRESULT CBullet_Bandit_Sniper::Render()
 
 void CBullet_Bandit_Sniper::OnCollisionEnter(CCollider* other)
 {
+	CCharacter* pTarget_Character = Get_Target_Character(other);
+
+	if(pTarget_Character != nullptr)
+	{
+		m_eHitDirection = Direction::Front;
+		m_eHitPower = Power::Medium;
+		m_fForce = 0.5f;
+	
+		//_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
+		pTarget_Character->Set_Hitted(4.f, m_pTransformCom->Get_Look(), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+	}
+		
+	Set_Dead(true);
 }
 
 void CBullet_Bandit_Sniper::OnCollisionStay(CCollider* other)

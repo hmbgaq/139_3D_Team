@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Particle final : public CVIBuffer
 {
 public:
-	enum TYPE_ACTION { SPARK, BLINK, FALL, RISE, RECYCLE, TYPE_ACTION_END };
+	enum TYPE_ACTION { SPARK, BLINK, FALL, RISE, TORNADO, TYPE_ACTION_END };
 	enum TYPE_FADE { FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
 
 	typedef struct tagParticleBufferDESC
@@ -108,6 +108,7 @@ public:
 	typedef struct tagParticleDesc
 	{
 		// 업데이트 돌면서 변하는 정보들(저장X)
+		_bool bDie = { FALSE };
 
 		// 시간
 		_float	fTimeAccs = { 0.f };
@@ -117,6 +118,10 @@ public:
 
 		// 위치
 		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
+		_float fMaxRange = { 3.f };
+
+		// 스피드
+		_float			fCurSpeed = { 1.f };
 
 		// 크기
 		_float2	vCurScales	= { 1.f, 1.f };
@@ -155,8 +160,7 @@ public:
 
 		_float3			vDir = { 1.f, 0.f, 0.f };
 
-		_float			fMaxSpeed = { 1.f };
-		_float			fCurSpeed = { 1.f };
+
 		_float			fMass = { 10.f };				// 질량
 
 	} PARTICLE_RIGIDBODY_DESC;
@@ -185,7 +189,7 @@ public:
 
 
 public:
-	_float4 Make_Dir(_uint iNum, TYPE_ACTION eAction);
+	_float4 Make_Dir(_uint iNum);
 
 
 	/* For.RigidBody */
@@ -217,6 +221,9 @@ private:
 	vector<PARTICLE_SHADER_INFO_DESC>	m_vecParticleShaderInfoDesc;
 	vector<PARTICLE_RIGIDBODY_DESC>		m_vecParticleRigidbodyDesc;
 
+
+private:
+	_bool bFirst = { true };	// 테스트용
 
 	/* 인스턴스 */
 private:

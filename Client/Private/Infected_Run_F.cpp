@@ -10,13 +10,14 @@ void CInfected_Run_F::Initialize(CInfected* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true, false); /* 루트애니메이션 사용x */
 	//pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true,false, 30); // 루트애니메이션 사용 false, 30의 키프레임부터 애니메이션 시작 
+	
+	pActor->Get_Transform()->Set_Speed(2.5f);	/* 움직이는 속도 제어 */
+	pActor->Set_StiffnessRate_Upper(3.f);		/* 애니메이션 재생속도 제어 */
 }
 
 CState<CInfected>* CInfected_Run_F::Update(CInfected* pActor, _float fTimeDelta)
 {
 	pActor->Look_At_Target();
-	pActor->Get_Transform()->Set_Speed(2.5f);
-	pActor->Set_StiffnessRate(1.2f);
 	pActor->Go_Straight(fTimeDelta);
 
 	switch (pActor->Get_Info().eType)
@@ -29,7 +30,10 @@ CState<CInfected>* CInfected_Run_F::Update(CInfected* pActor, _float fTimeDelta)
 
 		if (fDist <= pActor->Get_Info().fAttack_Distance + 2.f)
 		{
-			_int iRemain = pActor->Get_Info().RandomNumber % 2;
+			_int iRemain = pActor->Get_Info().RandomNumber % 2;	
+
+			pActor->Get_Transform()->Set_Speed(10.f);	/* 움직이는 속도 제어 */
+			pActor->Set_StiffnessRate_Upper(1.f);		/* 애니메이션 재생속도 제어 */
 
 			if ( iRemain == 0 )
 				return new CInfected_Sprint_F_Melee_02();

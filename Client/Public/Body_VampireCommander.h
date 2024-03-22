@@ -46,6 +46,7 @@ private:
 	_float4				m_vRimColor = {};
 	_float3				m_vBloomPower = {};
 
+	_int			iDiscardMeshNumber = 0;
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

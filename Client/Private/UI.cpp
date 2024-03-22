@@ -619,7 +619,7 @@ void CUI::SetUp_WorldToScreen(_matrix matWorld, _float3 vOffsetPos)
 	_vector vTargetPos = {};
 	_float4 vViewPort = {};
 
-	_matrix matTargetWorld = XMMatrixIdentity();
+	
 	matTargetWorld = matWorld;
 
 	vTargetPos = XMVectorSet(

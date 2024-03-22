@@ -1,12 +1,11 @@
-#include "..\Public\Infected.h"
-
+#include "stdafx.h"
+#include "Infected.h"
 #include "GameInstance.h"
 #include "Body_Infected.h"
-
 #include "Infected_Idle.h"
 #include "Infected_SpawnGround.h"
+#include "Data_Manager.h"
 
-//
 //#include "Infected_HitLight_F_01_NEW.h"
 //#include "Infected_HitLight_FL_01_NEW.h"
 //#include "Infected_HitLight_FR_01_NEW.h"
@@ -37,6 +36,13 @@
 #include "Infected_DeathLight_F_01_NEW.h"
 #include "Infected_DeathHeavy_F_01_NEW.h"
 #include "Infected_SpawnCrawl_01.h"
+
+#include "Infected_Electrocute_Loop.h"
+#include "Infected_HitLightOpened_F_01_NEW.h"
+#include "Infected_HitLightOpened_L_01.h"
+#include "Infected_HitLightOpened_R_01.h"
+#include "Infected_OpenStatePull_F_01.h"
+#include "Infected_OpenStateTimeout.h"
 
 
 CInfected::CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -71,14 +77,15 @@ HRESULT CInfected::Initialize(void* pArg)
 		FAILED_CHECK(__super::Initialize(pArg));
 	}
 
-	
-
+	/* Actor 설정 */
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CInfected>(this);
 		m_pActor->Set_State(new CInfected_SpawnCrawl_01());
 	}
 
+	/* Target 설정 */
+	m_pTarget = m_pGameInstance->Get_Player();
 	return S_OK;
 }
 
@@ -100,6 +107,8 @@ void CInfected::Tick(_float fTimeDelta)
 void CInfected::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	//m_pGameInstance->Add_DebugRender(m_pNavigationCom); /* 아 테스트로 넣었었음 */ 
 }
 
 HRESULT CInfected::Render()
@@ -199,6 +208,32 @@ void CInfected::Hitted_Dead(Power ePower)
 		break;
 
 	default:
+		break;
+	}
+}
+
+void CInfected::Hitted_Electrocute()
+{
+	m_pActor->Set_State(new CInfected_Electrocute_Loop());
+}
+
+void CInfected::Hitted_OpenState_Pull()
+{
+	m_pActor->Set_State(new CInfected_OpenStatePull_F_01());
+}
+
+void CInfected::Hitted_Opened(Direction eDirection)
+{
+	switch (eDirection)
+	{
+	case Engine::Left:
+		m_pActor->Set_State(new CInfected_HitLightOpened_L_01());
+		break;
+	case Engine::Right:
+		m_pActor->Set_State(new CInfected_HitLightOpened_R_01());
+		break;
+	case Engine::Front:
+		m_pActor->Set_State(new CInfected_HitLightOpened_F_01_NEW());
 		break;
 	}
 }

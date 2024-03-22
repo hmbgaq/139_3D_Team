@@ -103,6 +103,8 @@ HRESULT CWeapon_Bandit_Sniper::Bind_ShaderResources()
 
 HRESULT CWeapon_Bandit_Sniper::Render()
 {
+	//auto start = chrono::high_resolution_clock::now();
+
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -119,6 +121,10 @@ HRESULT CWeapon_Bandit_Sniper::Render()
 
 		m_pModelCom->Render((_uint)i);
 	}
+
+	//auto End = chrono::high_resolution_clock::now();
+	//chrono::duration<double> duration0 = End - start;
+	//cout << "Bandit Sniper Weapon 실행시간 : " << duration0.count() << endl;
 
 	return S_OK;
 }

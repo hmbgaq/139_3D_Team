@@ -24,7 +24,8 @@ public:
 	virtual void Priority_Tick(_float fTimeDelta) override;
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
-
+public:
+	virtual HRESULT Ready_Components();
 private:
 	_float				m_fMouseSensor = { 0.0f };
 

@@ -21,7 +21,7 @@ namespace Engine
 		POINT_LIGHT, 
 		SPOT_LIGHT, 
 		DEFERRED, 
-		DEFERRED_UI, 
+		PBR, 
 		SHADER_END };
 
 	enum class SSAO_SHADER {
@@ -41,7 +41,7 @@ namespace Engine
 	enum class POST_SHADER {
 		POST_ORIGIN,
 		POST_HDR, POST_RADIAL, POST_DOF, 
-		POST_EFFECTMIX,
+		POST_EFFECT_MIX, POST_EFFECT_DISTORTION, 
 		POST_END
 	};
 

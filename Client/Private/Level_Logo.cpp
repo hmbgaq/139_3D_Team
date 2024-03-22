@@ -53,15 +53,16 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_TAB))
 	{
 		_int iCheckPoint = 0;
-		iCheckPoint = MessageBox(g_hWnd,
-			L"확인 선택 시 스테이지, 취소 선택 시 맵 툴이 실행됩니다.",
-			L"실행 조건 확인", MB_OKCANCEL);
+		iCheckPoint = MessageBox(g_hWnd, L"확인 선택 시 스테이지, 취소 선택 시 맵 툴이 실행됩니다.", L"실행 조건 확인", MB_OKCANCEL);
 
 		// 확인 버튼을 눌렀을 때
 		if (iCheckPoint == IDOK)
 		{
-			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY)),);
+			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY)), );
 			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS)),);
+			
+			/* Test */
+			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO)),);
 		}
 		else if (iCheckPoint == IDCANCEL)
 		{
@@ -97,10 +98,9 @@ void CLevel_Logo::Set_Filter()
 {
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::PLAYER);
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::WEAKNESS);
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER, (_uint)COLLISION_LAYER::MONSTER);
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER, (_uint)COLLISION_LAYER::MONSTER);
-
-
 
 	m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
 

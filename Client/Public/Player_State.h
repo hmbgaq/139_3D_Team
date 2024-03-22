@@ -45,13 +45,9 @@ public:		//상태 그룹 별 업데이트
 	CState<CPlayer>* Finisher_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 	CState<CPlayer>* EnergyWhip_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
-
-
+	CState<CPlayer>* TeleportPunch_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Slam_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	
-	
-
-	
-
 
 public:		//개별 동작 상태 집합
 	CState<CPlayer>* Normal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
@@ -73,10 +69,12 @@ public:		//개별 동작 상태 집합
 
 	CState<CPlayer>* TeleportPunch(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* EnergyWhip(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
-
-
 	CState<CPlayer>* Melee_Dynamic(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* OpenStateCombo_8hit(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Slam(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
+
+	
 
 
 public:

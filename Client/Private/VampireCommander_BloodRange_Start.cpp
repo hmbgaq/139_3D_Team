@@ -13,7 +13,7 @@ void CVampireCommander_BloodRange_Start::Initialize(CVampireCommander* pActor)
 
 	_int iRandomInfected = SMath::Random(0, 9);//ÀÎÆåÆ¼µå »ý¼º ·£´ý È®·ü 
 	
-	if (iRandomInfected /*<= 8*/)
+	if (iRandomInfected <= 8)
 	{
 
 		for (int i = 0; i < 3; ++i)
@@ -28,11 +28,14 @@ void CVampireCommander_BloodRange_Start::Initialize(CVampireCommander* pActor)
 				pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_Monster", TEXT("Prototype_GameObject_Infected_A"));
 				pMonster->Set_InitPosition(Temp);
 			}
-			
+
 		}
 		
 	}
 
+	pActor->Set_Invincible(true);
+	pActor->Set_Reveal_Weakness(true);
+	pActor->Set_WeaknessCount(3);
 }
 
 CState<CVampireCommander>* CVampireCommander_BloodRange_Start::Update(CVampireCommander* pActor, _float fTimeDelta)

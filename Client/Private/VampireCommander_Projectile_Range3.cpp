@@ -55,11 +55,11 @@ HRESULT CVampireCommander_Projectile_Range3::Initialize(void* pArg)
 
 	m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_iDamage = 30;
+	m_fDamage = 30.f;
 
 
 	// 이펙트 생성
-	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Impact_03_Red.json", this);
+	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Impact_03_Red_With_Rock_02.json", this);
 	//m_pEffect = EFFECT_MANAGER->Create_Effect_With_Trail("Test_Impact.json", "Test_Effect_Trail.json", this); // 트레일 달린 이펙트 테스트
 
 	return S_OK;
@@ -79,12 +79,8 @@ void CVampireCommander_Projectile_Range3::Tick(_float fTimeDelta)
 
 
 	//! 유정 : 두두두두 이펙트 생성 테스트
-	//EFFECT_MANAGER->Tick_Create_Effect(&m_fEffectTimeAcc, 0.2f, fTimeDelta, "Test_Impact_Tick_02.json"
-	//	, m_vPlayerPos, TRUE, Get_Position());
-
-
 	EFFECT_MANAGER->Tick_Create_Effect(&m_fEffectTimeAcc, 0.18f, fTimeDelta, "Test_Impact_Tick_03.json"
-		, m_vPlayerPos, TRUE, Get_Position());
+		, Get_Position(), TRUE, m_vPlayerPos );
 }
 
 void CVampireCommander_Projectile_Range3::Late_Tick(_float fTimeDelta)
@@ -113,7 +109,7 @@ void CVampireCommander_Projectile_Range3::OnCollisionEnter(CCollider* other)
 
 	if (nullptr != pTarget_Character)// 일반 타격 
 	{
-		pTarget_Character->Set_Hitted(m_iDamage, pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
 		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
 		_float3 vPos = m_pTransformCom->Get_Position();

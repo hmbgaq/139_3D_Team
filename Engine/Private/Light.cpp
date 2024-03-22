@@ -27,6 +27,9 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 	if (!m_LightDesc.bEnable)
 		return E_FAIL;
 
+	
+
+
 	_uint		iPassIndex = { 0 };
 
 	if (LIGHT_DESC::TYPE_DIRECTIONAL == m_LightDesc.eType)
@@ -46,8 +49,19 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 	{
 		iPassIndex = ECast(DEFERRED_SHADER::SPOT_LIGHT);
 	}
+	else if (LIGHT_DESC::TYPE_END == m_LightDesc.eType)
+	{
+		return E_FAIL;
+	}
 
-	FAILED_CHECK(pShader->Bind_RawValue("g_vLightDiffuse", &m_LightDesc.vDiffuse, sizeof(_float4)));
+	if (m_bSelect == true)
+	{
+		FAILED_CHECK(pShader->Bind_RawValue("g_vLightDiffuse", &m_vSelectDiffuse, sizeof(_float4)));
+	}
+	else
+		FAILED_CHECK(pShader->Bind_RawValue("g_vLightDiffuse", &m_LightDesc.vDiffuse, sizeof(_float4)));
+
+
 	FAILED_CHECK(pShader->Bind_RawValue("g_vLightAmbient", &m_LightDesc.vAmbient, sizeof(_float4)));
 	FAILED_CHECK(pShader->Bind_RawValue("g_vLightSpecular", &m_LightDesc.vSpecular, sizeof(_float4)));
 
@@ -56,6 +70,21 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 	pVIBuffer->Bind_VIBuffers();
 
 	return pVIBuffer->Render();	
+}
+
+void CLight::Set_Diffuse(_float4 vDiffuse)
+{
+	m_LightDesc.vDiffuse = vDiffuse;
+}
+
+void CLight::Set_Specular(_float4 vSpecular)
+{
+	m_LightDesc.vSpecular = vSpecular;
+}
+
+void CLight::Set_Ambient(_float4 vAmbient)
+{
+	m_LightDesc.vAmbient = vAmbient;
 }
 
 void CLight::Decrease_GlobalIndex()

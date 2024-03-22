@@ -71,6 +71,19 @@ void CRigidBody::Late_Tick(_float fTimeDelta)
 		}
 	}
 
+	if (true == m_bUseGravity)
+	{
+		_float4 vMoveValueFloat4;
+		XMStoreFloat4(&vMoveValueFloat4, vMoveValue);
+
+		vMoveValueFloat4.y -= 9.81f * fTimeDelta;
+		vMoveValue = XMLoadFloat4(&vMoveValueFloat4);
+
+		//_float vMoveValueY = XMVectorGetY(vMoveValue);
+		//vMoveValueY -= 9.81f * fTimeDelta;
+		//XMVectorSetY(vMoveValue, vMoveValueY);
+	}
+
 
 	CCharacter* pCharacter = dynamic_cast<CCharacter*>(m_pOwner);
 	CNavigation* pNavigation = nullptr;

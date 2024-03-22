@@ -31,11 +31,11 @@ HRESULT CInfected_A::Initialize_Prototype()
 
 HRESULT CInfected_A::Initialize(void* pArg)
 {
-	/* Ready_Component, Ready_PartObjects는 Initialize를 타고 올라가다보면 CCharacter클래스에서 수행하고있음.*/
-
 	FAILED_CHECK(__super::Initialize(pArg));
 
 	FAILED_CHECK(Ready_Option());
+
+	m_pTarget = m_pGameInstance->Get_Player();
 
 	return S_OK;
 }
@@ -49,15 +49,12 @@ void CInfected_A::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	Update_RenderState(m_iHp);
+	//if (m_pActor)
+	//{
+	//	m_pActor->Update_State(fTimeDelta);
+	//}
 
-	m_pTarget = m_pGameInstance->Get_Player();
-
-	if (m_pActor)
-	{
-		m_pActor->Update_State(fTimeDelta);
-	}
-}
+}	
 
 void CInfected_A::Late_Tick(_float fTimeDelta)
 {
@@ -66,7 +63,7 @@ void CInfected_A::Late_Tick(_float fTimeDelta)
 
 HRESULT CInfected_A::Render()
 {
-	FAILED_CHECK(__super::Render());
+	//FAILED_CHECK(__super::Render());
 
 	return S_OK;
 }
@@ -80,11 +77,6 @@ HRESULT CInfected_A::Render_Shadow()
 
 HRESULT CInfected_A::Update_RenderState(_int CurrentHP)
 {
-	if (CurrentHP == m_iMaxHp)
-	{
-
-	}
-
 	return S_OK;
 }
 

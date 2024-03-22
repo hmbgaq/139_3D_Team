@@ -27,15 +27,17 @@ public:
 
 		INTERACT_TYPE	eInteractType = INTERACT_END;
 		INTERACT_STATE  eInteractState = INTERACTSTATE_END;
-		_float3			vColliderSize = {};
-		_float3			vColliderCenter = {};
+		_float3			vColliderSize = { 1.f, 1.f, 1.f};
+		_float3			vColliderCenter = { 0.f, 1.f, 0.f };
+		_float3			vPlayerRootMoveRate = { 1.f, 1.f, 1.f};
 		_int			iPlayAnimationIndex = { 0 };
 
 		_bool			bAnimModel = { false };
 		_bool			bPreview = true; //! 미리보기용 오브젝트인지 확인
+		_bool			bUseGravity = true;
 
 		_bool			bLevelChange = false;
-		LEVEL			eChangeLevel = LEVEL_END;
+		LEVEL			eChangeLevel = LEVEL_INTRO_BOSS;
 	}ENVIRONMENT_INTERACTOBJECT_DESC;
 
 private:
@@ -66,6 +68,8 @@ public:
 	void								Set_ColliderCenter(_float3 vColliderCenter);
 	void								Set_InteractType(INTERACT_TYPE eInteractType) { m_tEnvironmentDesc.eInteractType = eInteractType; }
 	void								Set_InteractState(INTERACT_STATE eInteractState) { m_tEnvironmentDesc.eInteractState = eInteractState; }
+	void								Set_PlayerRootMoveRate(_float3 vRootMoveRate) { m_tEnvironmentDesc.vPlayerRootMoveRate = vRootMoveRate;}
+	void								Set_UseGravity(_bool bUseGravity) { m_tEnvironmentDesc.bUseGravity = bUseGravity; }
 	
 	void								Set_LevelChangeType(_bool bLevelChange, LEVEL eLevel);
 #endif // _DEBUG

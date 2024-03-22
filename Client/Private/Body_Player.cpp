@@ -36,18 +36,16 @@ void CBody_Player::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 
-	if (Is_Splitted()) 
-	{
-		Set_MouseMove(fTimeDelta);
-	}
-	else 
-	{
-		m_fRotateUpperX = { 0.f };
-		m_fRotateUpperY = { 5.f };
+	Set_MouseMove(fTimeDelta);
 
-		m_fShootingReaction = { 0.f };
-		m_fShootingReactionTarget = { 0.f };
-	}
+	//if (Is_Splitted()) 
+	//{
+	//	Set_MouseMove(fTimeDelta);
+	//}
+	//else 
+	//{
+	//	Reset_UpperAngle();
+	//}
 	
 }
 
@@ -60,15 +58,15 @@ void CBody_Player::Tick(_float fTimeDelta)
 		Update_ShootingReaction(fTimeDelta);
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_H))
-	{
-		iTemp += 1;
-		if (iTemp > m_pModelCom->Get_NumMeshes())
-		{
-			iTemp = 0;
-		}
-		cout << iTemp << endl;
-	}
+	//if (m_pGameInstance->Key_Down(DIK_H))
+	//{
+	//	iTemp += 1;
+	//	if (iTemp > (_int)m_pModelCom->Get_NumMeshes())
+	//	{
+	//		iTemp = 0;
+	//	}
+	//	cout << iTemp << endl;
+	//}
 }
 
 void CBody_Player::Late_Tick(_float fTimeDelta)
@@ -101,7 +99,6 @@ HRESULT CBody_Player::Render()
 
 		m_pModelCom->Render((_uint)i);
 	}
-
 
 	return S_OK;
 }
@@ -137,7 +134,7 @@ void CBody_Player::OnCollisionEnter(CCollider* other)
 
 void CBody_Player::OnCollisionStay(CCollider* other)
 {
-	__super::OnCollisionStay(other);
+	//__super::OnCollisionStay(other);
 }
 
 void CBody_Player::OnCollisionExit(CCollider* other)

@@ -10,12 +10,16 @@ class CPlayer;
 
 class CMonster_Character abstract : public CCharacter_Client
 {
+
+
 public:
 	typedef struct tagMonsterDesc : public CGameObject::tagGameObjectDesc
 	{
 		_float4x4	WorldMatrix = XMMatrixIdentity();
 		_bool		bPreview = false;
 		wstring		strProtoTypeTag = L""; //! 파싱용
+		_uint		iMonsterGroupIndex = 0; //!  승용 : 몬스터 그룹별로 저장후, 트리거 충돌 시 특정 그룹만 Create시키는 식으로 하려고함.
+		_int		iStartNaviIndex = -1;
 	}MONSTER_DESC;
 
 protected:
@@ -33,6 +37,12 @@ public:
 
 public:
 	void Search_Target(const _float fSearchDistance = 20.f);
+
+	_uint Get_MonsterGroupIndex() { return m_tMonsterDesc.iMonsterGroupIndex; }
+	void Set_MonsterGroupIndex(_uint iGroupIndex) { m_tMonsterDesc.iMonsterGroupIndex = iGroupIndex; }
+
+	_uint Get_StartNaviIndex() { return m_tMonsterDesc.iStartNaviIndex; }
+	void Set_StartNaviIndex(_int iStartNaviIndex) { m_tMonsterDesc.iStartNaviIndex = iStartNaviIndex; }
 
 public:
 	CPlayer* Set_Player_Finisher_Pos(_float3 vPlayerPos);

@@ -1,6 +1,6 @@
 #include "VampireCommander_Ranged2.h"
 #include "VampireCommander_Idle.h"
-
+#include "Body_VampireCommander.h"
 void CVampireCommander_Ranged2::Initialize(CVampireCommander* pActor)
 {
 	__super::Initialize(pActor);
@@ -15,7 +15,10 @@ void CVampireCommander_Ranged2::Initialize(CVampireCommander* pActor)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.f);
 
-	
+	CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
+	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ATTACK);
+
+	pActor->m_bLookAt = false;
 }
 
 CState<CVampireCommander>* CVampireCommander_Ranged2::Update(CVampireCommander* pActor, _float fTimeDelta)
@@ -24,7 +27,7 @@ CState<CVampireCommander>* CVampireCommander_Ranged2::Update(CVampireCommander* 
 
 	if (m_bFlags[1] == false)
 	{
-		pActor->m_bLookAt = true;
+		//pActor->m_bLookAt = true;
 	}
 
 	if (m_bFlags[2] == false && pActor->Is_Inputable_Front(37))
@@ -56,4 +59,6 @@ void CVampireCommander_Ranged2::Release(CVampireCommander* pActor)
 
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
 	//pWeapon->Set_Enable(false);
+
+	pActor->m_bLookAt = true;
 }

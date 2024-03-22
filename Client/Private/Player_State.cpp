@@ -68,7 +68,6 @@
 #include "Player_HitNormal_L_Gatling.h"
 #include "Player_HitNormal_R.h"
 #include "Player_HitNormal_R_Gatling.h"
-
 #include "Player_Rifle_IdleWeaponHolster.h"
 #include "Player_Rifle_Ironsights_Fire.h"
 #include "Player_Empowered_Winchester_IdleFire.h"
@@ -116,12 +115,17 @@
 #include "Player_Grenade_Throw_v2.h"
 #include "Player_Grenade_WeaponHolster.h"
 #include "Player_Grenade_WeaponUnholster.h"
-
 #include "Player_MeleeDynamic_04.h"
 #include "Player_Leap_01_Lower.h"
 #include "Player_Leap_01_Higher.h"
 #include "Player_MeleeUppercut_01v2.h"
-
+#include "Player_EnergyWhip_CloseRange_01.h"
+#include "Player_EnergyWhip_Leap.h"
+#include "Player_EnergyWhip_LeapShort.h"
+#include "Player_EnergyWhip_LongRange.h"
+#include "Player_EnergyWhip_Pull.h"
+#include "Player_OpenStateCombo_8hit.h"
+#include "Player_SlamTwoHand_TEMP.h"
 
 #pragma endregion
 
@@ -365,7 +369,24 @@ CState<CPlayer>* CPlayer_State::Finisher_State(CPlayer* pActor, _float fTimeDelt
 
 CState<CPlayer>* CPlayer_State::EnergyWhip_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (pActor->Is_Animation_End())
+	{
+		return new CPlayer_IdleLoop();
+	}
+
 	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::TeleportPunch_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
+}
+
+CState<CPlayer>* CPlayer_State::Slam_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+
+
+	return Slam(pActor, fTimeDelta, _iAnimIndex);
 }
 
 
@@ -373,8 +394,8 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 {
 	CState<CPlayer>* pState = { nullptr };
 
-	//pState = Rifle(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
+	pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
 
 	pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
@@ -553,6 +574,15 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 	pState = TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
+	pState = OpenStateCombo_8hit(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
+
+	pState = Slam(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
+
+	
+	
+
 	if (0.3f <= pActor->Get_ChargingTime())
 	{
 		pActor->Set_ChargingTime(0.f);
@@ -579,10 +609,10 @@ CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _
 	{
 		switch (eState)
 		{
-		case Client::CPlayer::Player_Empowered_MeleeCombo_01:
-			return new CPlayer_Empowered_MeleeCombo_02();
-		case Client::CPlayer::Player_Empowered_MeleeCombo_02:
-			return new CPlayer_Empowered_MeleeCombo_03();
+		//case Client::CPlayer::Player_Empowered_MeleeCombo_01:
+		//	return new CPlayer_Empowered_MeleeCombo_02();
+		//case Client::CPlayer::Player_Empowered_MeleeCombo_02:
+		//	return new CPlayer_Empowered_MeleeCombo_03();
 		case Client::CPlayer::Player_Empowered_MeleeCombo_03:
 			return new CPlayer_MeleeCombo_04();
 
@@ -593,14 +623,20 @@ CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _
 		case Client::CPlayer::Player_MeleeCombo_02_L_NEW:
 			return new CPlayer_Empowered_MeleeCombo_03();
 
-		case Client::CPlayer::Player_MeleeCombo_03_SlamAOEJump:
-			return new CPlayer_MeleeCombo_04();
+		//case Client::CPlayer::Player_MeleeCombo_03_SlamAOEJump:
+		//	return new CPlayer_MeleeCombo_04();
 		case Client::CPlayer::Player_MeleeCombo_04:
 			return new CPlayer_MeleeCombo_02();
 		}
 	}
 
-	if (CPlayer_MeleeCombo_01::g_iAnimIndex != _iAnimIndex && CPlayer_MeleeUppercut_01v2::g_iAnimIndex != _iAnimIndex)
+	if (
+		CPlayer_MeleeUppercut_01v2::g_iAnimIndex != _iAnimIndex
+		&& CPlayer_MeleeCombo_01::g_iAnimIndex != _iAnimIndex
+		&& CPlayer_MeleeCombo_02::g_iAnimIndex != _iAnimIndex
+		&& CPlayer_MeleeCombo_02_L_NEW::g_iAnimIndex != _iAnimIndex
+		&& CPlayer_Empowered_MeleeCombo_03::g_iAnimIndex != _iAnimIndex
+		)
 	{
 		if (m_pGameInstance->Mouse_Up(DIM_LB))
 		{
@@ -733,56 +769,24 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 {
 	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
 	{
-
-		CCamera* pCam;
-		pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
-		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
-		pSpringCam->Set_CameraOffset(_float3(0.8f, 0.6f, -2.f));
+		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+		if (pSpringCam)
+		{
+			pSpringCam->Set_CameraOffset(_float3(0.8f, 0.6f, -2.f));
+		}
 		
 
 		if (CPlayer_Winchester_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Winchester_WeaponUnholster();
 
-		//if (CPlayer_Winchester_Ironsights_AimPose::g_iAnimIndex != _iAnimIndex)
-		//	return new CPlayer_Winchester_Ironsights_AimPose();
-
-		/*CPlayer::Player_State eAnimIndex = (CPlayer::Player_State)_iAnimIndex;
-
-		if (false == pActor->Is_Splitted())
-		{
-			if (CPlayer_Winchester_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
-				return new CPlayer_Winchester_WeaponUnholster();
-		}
-		else if (pActor->Is_UpperAnimation_End())
-		{
-			switch (eAnimIndex)
-			{
-			case CPlayer::Player_State::Player_Winchester_WeaponUnholster:
-			case CPlayer::Player_State::Player_Winchester_Ironsights_Reload_01:
-			case CPlayer::Player_State::Player_Winchester_Ironsights_Reload_02:
-			case CPlayer::Player_State::Player_Winchester_MeleeDynamic:
-				return new CPlayer_Winchester_Ironsights_AimPose();
-
-			case CPlayer::Player_State::Player_Empowered_Winchester_IdleFire:
-				if (true)
-				{
-					return new CPlayer_Winchester_Ironsights_AimPose();
-				}
-			}
-		}
-
-		if (m_pGameInstance->Mouse_Down(DIM_LB) && eAnimIndex == CPlayer::Player_State::Player_Winchester_Ironsights_AimPose)
-		{
-			return new CPlayer_Winchester_Ironsights_Reload_01();
-		}*/
-
 	}
 	else
 	{
-		CCamera* pCam;
-		pCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_vectorCamera()[1];
-		CSpringCamera* pSpringCam = dynamic_cast<CSpringCamera*>(pCam);
-		pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
+		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+		if (pSpringCam)
+		{
+			pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
+		}
 	}
 
 	return nullptr;
@@ -858,32 +862,37 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 {
 	if (m_pGameInstance->Key_Down(DIK_Z))
 	{
-		CPlayer::Player_State eState = (CPlayer::Player_State)_iAnimIndex;
+		pActor->Search_Target(30.f);
+		CCharacter* pTarget = pActor->Get_Target();
+		if (nullptr == pTarget)
+			return nullptr;
+
+
+		CPlayer::TeleportPunch_State eState = pActor->Get_TeleportPunch_State();
+
 		switch (eState)
 		{
-
-		case CPlayer_TeleportPunch_L01_Alt::g_iAnimIndex:
-		case CPlayer_TeleportPunch_L01_VeryFar::g_iAnimIndex:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_L01_Alt:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_L01_VeryFar:
 			return new CPlayer_TeleportPunch_R02_Alt();
 			break;
-		case CPlayer_TeleportPunch_L02_Alt::g_iAnimIndex:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_L02_Alt:
 			return new CPlayer_TeleportPunch_R03_Alt();
 			break;
-		case CPlayer_TeleportPunch_L03_Alt::g_iAnimIndex:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_L03_Alt:
 			return new CPlayer_TeleportPunch_R01_Alt();
 			break;
 
-		case CPlayer_TeleportPunch_R01_Alt::g_iAnimIndex:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_R01_Alt:
 			return new CPlayer_TeleportPunch_L02_Alt();
 			break;
-		case CPlayer_TeleportPunch_R02_Alt::g_iAnimIndex:
-		case CPlayer_TeleportPunch_R02_VeryFar::g_iAnimIndex:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_R02_Alt:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_R02_VeryFar:
 			return new CPlayer_TeleportPunch_L03_Alt();
 			break;
-		case CPlayer_TeleportPunch_R03_Alt::g_iAnimIndex:
+		case Client::CPlayer::TeleportPunch_State::Player_TeleportPunch_R03_Alt:
 			return new CPlayer_TeleportPunch_L01_Alt();
 			break;
-
 		default:
 			return new CPlayer_TeleportPunch_L01_Alt();
 			break;
@@ -891,14 +900,10 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_X))
+	if (pActor->Is_Animation_End())
 	{
-		if (pActor->Is_Animation_End())
-		{
-			return new CPlayer_IdleLoop();
-		}
+		return new CPlayer_IdleLoop();
 	}
-
 	
 
 	return nullptr;
@@ -906,6 +911,12 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 
 CState<CPlayer>* CPlayer_State::EnergyWhip(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (m_pGameInstance->Key_Down(DIK_Q)) 
+	{
+		if (CPlayer_EnergyWhip_CloseRange_01::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_EnergyWhip_CloseRange_01();
+	}
+
 	return nullptr;
 }
 
@@ -915,6 +926,47 @@ CState<CPlayer>* CPlayer_State::Melee_Dynamic(CPlayer* pActor, _float fTimeDelta
 	{
 		if (CPlayer_Sprint_F::g_iAnimIndex == _iAnimIndex)
 			return new CPlayer_Leap_01_Lower();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::OpenStateCombo_8hit(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	pActor->Search_Target(3.f);
+	CCharacter* pTarget = pActor->Get_Target();
+	if (pTarget && pTarget->Is_ElectrocuteTime())
+	{
+		if (m_pGameInstance->Mouse_Down(DIM_LB)
+			|| m_pGameInstance->Mouse_Pressing(DIM_LB)
+			|| m_pGameInstance->Mouse_Up(DIM_LB))
+		{
+			if (CPlayer_OpenStateCombo_8hit::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_OpenStateCombo_8hit();
+		}
+
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Slam(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	CPlayer::Player_State eState = (CPlayer::Player_State)_iAnimIndex;
+
+	if (m_pGameInstance->Key_Down(DIK_X))
+	{
+		switch (eState)
+		{
+		case CPlayer::Player_SlamDown_v2:
+			return new CPlayer_SlamDown_v3();
+		case CPlayer::Player_SlamDown_v3:
+			return new CPlayer_SlamTwoHand_TEMP();
+		case CPlayer::Player_SlamTwoHand_TEMP:
+			break;
+		default:
+			return new CPlayer_SlamDown_v2();
+		}
 	}
 
 	return nullptr;

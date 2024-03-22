@@ -292,7 +292,7 @@ public: /* ============================== SetUp ============================== *
 	//				TargetWorld => Screen
 	void			SetUp_WorldToScreen(_matrix vWorldPos, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
 	HRESULT			SetUp_BillBoarding();
-
+	_matrix			matTargetWorld = XMMatrixIdentity();
 
 	// error : 새 코드 요소를 반환하지 못했습니다. 구문 오류일 수 있습니다. -> 해결방법 : 프로젝트 폴더 내에 vs폴더 삭제 후 실행
 	void			Tick_LevelUp(_float fTimeDelta);

@@ -7,6 +7,9 @@
 #include "Environment_Interact.h"
 #include "Environment_Instance.h"
 #include "Environment_LightObject.h"
+#include "Light.h"
+#include "Effect.h"
+#include "Event_MonsterSpawnTrigger.h"
 
 #include "Field.h"
 
@@ -36,6 +39,11 @@ static ImGuizmo::OPERATION InstanceCurrentGizmoOperation;
 static ImGuizmo::MODE	   InstanceCurrentGizmoMode;
 static bool InstanceuseSnap(false);
 static bool InstanceuseSnapUI(false);
+
+static ImGuizmo::OPERATION TriggerCurrentGizmoOperation;
+static ImGuizmo::MODE	   TriggerCurrentGizmoMode;
+static bool TriggeruseSnap(false);
+static bool TriggeruseSnapUI(false);
 
 
 CWindow_MapTool::CWindow_MapTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -92,6 +100,22 @@ HRESULT CWindow_MapTool::Initialize()
 	FAILED_CHECK(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements,
 		VertexPositionColor::InputElementCount, pShaderByteCode, iShaderCodeLength, &m_pInputLayOut));
 
+
+	LIGHT_DESC			LightDesc{};
+	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 1.f);
+
+	CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
+
+	if (pLight == nullptr)
+		return E_FAIL;
+
+	m_vecCreateLight.push_back(pLight);
+	m_vecCreateLightTag.push_back("Light" + pLight->Get_LightIndex());
+	
 	
 	return S_OK;
 }
@@ -127,7 +151,7 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	ImGui::SeparatorText(u8"세이브 / 로드");
 	{
 		
-		if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; m_strDialogPath = "../Bin/DafaFiles/Data_Map/"; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DafaFiles/Data_Map/";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
+		if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; m_strDialogPath = "../Bin/DataFiles/Data_Map/"; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DataFiles/Data_Map/";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
 	}ImGui::Separator(); 
 
 	ImGui::EndChild();
@@ -146,7 +170,7 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	{
 
 		static _int iObjectType = 0;
-		const char* CharObjectType[3] = { u8"환경", u8"캐릭터", u8"네비게이션"};
+		const char* CharObjectType[4] = { u8"환경", u8"캐릭터", u8"네비게이션", u8"트리거"};
 
 		for (_uint i = 0; i < IM_ARRAYSIZE(CharObjectType); ++i)
 		{
@@ -173,9 +197,13 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	{
 		CharacterMode_Function();
 	}
-	else
+	else if(m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_NAVIGATION)
 	{
 		NavigationMode_Function();
+	}
+	else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_TRIGGER)
+	{
+		TriggerMode_Function();
 	}
 
 
@@ -323,7 +351,10 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				InteractJson[i].emplace("InteractType", Desc.eInteractType);
 				InteractJson[i].emplace("LevelChange", Desc.bLevelChange);
 				InteractJson[i].emplace("InteractLevel", Desc.eChangeLevel);
+				InteractJson[i].emplace("UseGravity", Desc.bUseGravity);
 				
+
+				CJson_Utility::Write_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 
 				CJson_Utility::Write_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
 				CJson_Utility::Write_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
@@ -348,6 +379,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 				string strModelTag;
 				m_pGameInstance->WString_To_String(m_vecCreateInstance[i]->Get_ModelTag(), strModelTag);
+				
 
 				InstanceJson[i].emplace("Type", strInstance);
 				InstanceJson[i].emplace("Index", i);
@@ -401,6 +433,8 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 				 /*= m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);*/
 				MonsterJson[i].emplace("PrototypeTag", strProtoTag);
+				MonsterJson[i].emplace("MonsterGroupIndex", m_vecCreateMonster[i]->Get_MonsterGroupIndex());
+				MonsterJson[i].emplace("StartNaviIndex", Desc.iStartNaviIndex);
 				m_vecCreateMonster[i]->Write_Json(MonsterJson[i]);
 			}
 		}
@@ -427,11 +461,111 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 		
 
+		json LightJson;
+
+		if (false == m_vecCreateLight.empty())
+		{
+			_int iCreateLightSize = (_int)m_vecCreateLight.size();
+
+			for (_int i = 0; i < iCreateLightSize; ++i)
+			{
+				LIGHT_DESC LightDesc = m_vecCreateLight[i]->Get_LightDesc();
+				
+				LightJson[i].emplace("LightIndex", LightDesc.iLightIndex);
+				LightJson[i].emplace("LightEnable", LightDesc.bEnable);
+				LightJson[i].emplace("CutOff", LightDesc.fCutOff);
+				LightJson[i].emplace("OuterCutOff", LightDesc.fOuterCutOff);
+				
+				LightJson[i].emplace("Type", LightDesc.eType);
+				CJson_Utility::Write_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
+				LightJson[i].emplace("Range", LightDesc.fRange);
+				CJson_Utility::Write_Float4(LightJson[i]["Position"], LightDesc.vPosition);
+				CJson_Utility::Write_Float4(LightJson[i]["Diffuse"], LightDesc.vDiffuse);
+				CJson_Utility::Write_Float4(LightJson[i]["Ambient"], LightDesc.vAmbient);
+				CJson_Utility::Write_Float4(LightJson[i]["Specular"], LightDesc.vSpecular);
+			}
+		}
+
+		json LightObjectJson;
+
+		if (false == m_vecCreateLightObject.empty())
+		{
+			_int iCreateLightObjectSize = (_int)m_vecCreateLightObject.size();
+
+			for (_int i = 0; i < iCreateLightObjectSize; ++i)
+			{
+				CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc = *m_vecCreateLightObject[i]->Get_EnvironmentDesc();
+
+				{
+					LightObjectJson[i].emplace("AnimType", LightObjectDesc.bAnimModel);
+					LightObjectJson[i].emplace("Effect", LightObjectDesc.bEffect);
+					LightObjectJson[i].emplace("EffectType", LightObjectDesc.eLightEffect);
+					LightObjectJson[i].emplace("PlayAnimationIndex", LightObjectDesc.iPlayAnimationIndex);
+					LightObjectJson[i].emplace("ShaderPassIndex", LightObjectDesc.iShaderPassIndex);
+
+					string strModelTag;
+					m_pGameInstance->WString_To_String(m_vecCreateLightObject[i]->Get_ModelTag(), strModelTag);
+					LightObjectJson[i].emplace("ModelTag", strModelTag);
+
+					m_vecCreateLightObject[i]->Write_Json(LightObjectJson[i]);
+				}
+				
+				{
+					LIGHT_DESC LightDesc = LightObjectDesc.LightDesc;
+
+					LightObjectJson[i].emplace("LightIndex", LightDesc.iLightIndex);
+					LightObjectJson[i].emplace("LightEnable", LightDesc.bEnable);
+					LightObjectJson[i].emplace("CutOff", LightDesc.fCutOff);
+					LightObjectJson[i].emplace("OuterCutOff", LightDesc.fOuterCutOff);
+
+					LightObjectJson[i].emplace("LightType", LightDesc.eType);
+					CJson_Utility::Write_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
+					LightObjectJson[i].emplace("Range", LightDesc.fRange);
+					CJson_Utility::Write_Float4(LightObjectJson[i]["Position"], LightDesc.vPosition);
+					CJson_Utility::Write_Float4(LightObjectJson[i]["Diffuse"], LightDesc.vDiffuse);
+					CJson_Utility::Write_Float4(LightObjectJson[i]["Ambient"], LightDesc.vAmbient);
+					CJson_Utility::Write_Float4(LightObjectJson[i]["Specular"], LightDesc.vSpecular);
+				}
+			}
+		}
+
+		json TriggerJson;
+
+		json MonsterTriggerJson;
+		
+
+		if (false == m_vecCreateMonsterTrigger.empty())
+		{
+			_int iCreateMonsterTriggerSize = (_int)m_vecCreateMonsterTrigger.size();
+
+			for (_int i = 0; i < iCreateMonsterTriggerSize; ++i)
+			{
+				CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = *m_vecCreateMonsterTrigger[i]->Get_MonsterTriggerDesc();
+				
+				MonsterTriggerJson[i].emplace("OnTrigger", MonsterTriggerDesc.bOnTrigger);
+				string strSavePath = strPath + "/" + strNoExtFileName + "_MapData.json";
+				MonsterTriggerJson[i].emplace("JsonPath", strSavePath);
+				MonsterTriggerJson[i].emplace("NameTag", MonsterTriggerDesc.strTriggerNameTag);
+				MonsterTriggerJson[i].emplace("SpawnGroupIndex", MonsterTriggerDesc.iSpawnGroupIndex);
+				CJson_Utility::Write_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
+				CJson_Utility::Write_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
+
+
+				m_vecCreateMonsterTrigger[i]->Write_Json(MonsterTriggerJson[i]);
+				
+			}
+
+			TriggerJson.emplace("MonsterTriggerJson", MonsterTriggerJson);
+		}
+
 
 		SaveJson.emplace("Basic_Json", BasicJson);
 		SaveJson.emplace("Interact_Json", InteractJson);
 		SaveJson.emplace("Instance_Json", InstanceJson);
 		SaveJson.emplace("Monster_Json", MonsterJson);
+		SaveJson.emplace("Light_Json", LightJson);
+		SaveJson.emplace("LightObject_Json", LightObjectJson);
+		SaveJson.emplace("Trigger_Json", TriggerJson);
 
 
 		string strSavePath = strPath + "/" + strNoExtFileName + "_MapData.json";
@@ -550,6 +684,10 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.bLevelChange = InteractJson[i]["LevelChange"];
 			//Desc.bLevelChange = false;
 			Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
+			
+
+			 Desc.bUseGravity = InteractJson[i]["UseGravity"];
+			 CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
@@ -626,22 +764,119 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			m_iCreateInstanceIndex++;
 		}
 
-		json MonsterJson = LoadJson["Monster_Json"];
-		_int iMonsterJsonSize = (_int)MonsterJson.size();
+		//TODO  트리거 추가하면서 주석처리
+ 		json MonsterJson = LoadJson["Monster_Json"];
+ 		_int iMonsterJsonSize = (_int)MonsterJson.size();
+ 
+ 		for (_int i = 0; i < iMonsterJsonSize; ++i)
+ 		{
+ 			string IndexTag = "@" + to_string(i);
+ 			
+ 			string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + IndexTag;
+ 			m_vecCreateMonsterTag.push_back(pushMonsterTag);
+ 
+ 			CMonster_Character::MONSTER_DESC MonsterDesc;
+ 			MonsterDesc.bPreview = false;
+ 			MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
+ 			MonsterDesc.iMonsterGroupIndex = MonsterJson[i]["MonsterGroupIndex"];
+			MonsterDesc.iStartNaviIndex = MonsterJson[i]["StartNaviIndex"];
+ 
+ 
+ 			const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+ 			_float4x4 WorldMatrix;
+ 
+ 			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+ 			{
+ 				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+ 				{
+ 					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+ 				}
+ 			}
+ 
+ 			MonsterDesc.WorldMatrix = WorldMatrix;
+ 
+ 			CMonster_Character* pMonster = { nullptr };
+ 
+ 			wstring strProtoTypeTag;
+ 			m_pGameInstance->String_To_WString((string)MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
+ 			MonsterDesc.strProtoTypeTag = strProtoTypeTag;
+ 
+ 			pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
+ 			
+ 			m_vecCreateMonster.push_back(pMonster);
+ 			
+ 			
+ 			
+ 			m_iCreateMonsterIndex++;
+ 		}
 
-		for (_int i = 0; i < iMonsterJsonSize; ++i)
+
+		json LightJson = LoadJson["Light_Json"];
+		_int iLightJsonSize = (_int)LightJson.size();
+
+		for (_int i = 0; i < iLightJsonSize; ++i)
 		{
-			string IndexTag = "@" + to_string(i);
-			
-			string pushMonsterTag = (string)MonsterJson[i]["PrototypeTag"] + IndexTag;
-			m_vecCreateMonsterTag.push_back(pushMonsterTag);
-
-			CMonster_Character::MONSTER_DESC MonsterDesc;
-			MonsterDesc.bPreview = false;
-			MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
 			
 
-			const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+			LIGHT_DESC LightDesc = {};
+
+			LightDesc.iLightIndex = LightJson[i]["LightIndex"];
+			LightDesc.bEnable = LightJson[i]["LightEnable"];
+			LightDesc.fCutOff = LightJson[i]["CutOff"];
+			LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+			
+			LightDesc.eType = LightJson[i]["Type"];
+			CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
+			LightDesc.fRange = LightJson[i]["Range"];
+			CJson_Utility::Load_Float4(LightJson[i]["Position"], LightDesc.vPosition);
+			CJson_Utility::Load_Float4(LightJson[i]["Diffuse"], LightDesc.vDiffuse);
+			CJson_Utility::Load_Float4(LightJson[i]["Specular"], LightDesc.vSpecular);
+			CJson_Utility::Load_Float4(LightJson[i]["Ambient"], LightDesc.vAmbient);
+			
+
+			if (LightDesc.eType == tagLightDesc::TYPE_DIRECTIONAL)
+			{
+				CLight* pDirectionLight = m_pGameInstance->Get_DirectionLight();
+
+				if (pDirectionLight != nullptr)
+				{
+					m_pGameInstance->Remove_Light(pDirectionLight->Get_LightIndex());
+					
+				}
+			}
+
+			CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
+
+			if (pLight == nullptr)
+			{
+				MSG_BOX("라이트 불러오기 실패");
+			}
+			else
+			{
+				m_vecCreateLight.push_back(pLight);
+
+				string strLightTag = "Light" + to_string(pLight->Get_LightIndex());
+				m_vecCreateLightTag.push_back(strLightTag);
+			}
+		}
+
+		json LightObjectJson = LoadJson["LightObject_Json"];
+		_int iLightObjectJsonSize = (_int)LightObjectJson.size();
+
+		for (_int i = 0; i < iLightObjectJsonSize; ++i)
+		{
+			CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc = {};
+
+			LightObjectDesc.bAnimModel = LightObjectJson[i]["AnimType"];
+			LightObjectDesc.bEffect = LightObjectJson[i]["Effect"];
+			LightObjectDesc.eLightEffect = LightObjectJson[i]["EffectType"];
+			LightObjectDesc.iPlayAnimationIndex = LightObjectJson[i]["PlayAnimationIndex"];
+			LightObjectDesc.iShaderPassIndex = LightObjectJson[i]["ShaderPassIndex"];
+			LightObjectDesc.bPreview = false;
+			
+			m_pGameInstance->String_To_WString((string)LightObjectJson[i]["ModelTag"], LightObjectDesc.strModelTag);
+				
+			const json& TransformJson = LightObjectJson[i]["Component"]["Transform"];
 			_float4x4 WorldMatrix;
 
 			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
@@ -652,30 +887,105 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 				}
 			}
 
-			MonsterDesc.WorldMatrix = WorldMatrix;
+			LightObjectDesc.WorldMatrix = WorldMatrix;
 
-			CMonster_Character* pMonster = { nullptr };
 
-			wstring strProtoTypeTag;
-			m_pGameInstance->String_To_WString((string)MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
-			MonsterDesc.strProtoTypeTag = strProtoTypeTag;
 
-			pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strProtoTypeTag, &MonsterDesc));
+			LIGHT_DESC LightDesc = {};
 
-			m_vecCreateMonster.push_back(pMonster);
-			m_iCreateMonsterIndex++;
+			LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
+			LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
+			LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
+			LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+
+			LightDesc.eType = LightObjectJson[i]["LightType"];
+			CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
+			LightDesc.fRange = LightObjectJson[i]["Range"];
+			CJson_Utility::Load_Float4(LightObjectJson[i]["Position"], LightDesc.vPosition);
+			CJson_Utility::Load_Float4(LightObjectJson[i]["Diffuse"], LightDesc.vDiffuse);
+			CJson_Utility::Load_Float4(LightObjectJson[i]["Ambient"], LightDesc.vAmbient);
+			CJson_Utility::Load_Float4(LightObjectJson[i]["Specular"], LightDesc.vSpecular);
+
+			
+			LightObjectDesc.LightDesc = LightDesc;
+
+			CEnvironment_LightObject* pLightObject = dynamic_cast<CEnvironment_LightObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
+
+			if (pLightObject == nullptr)
+			{
+				MSG_BOX("라이트오브젝트 생성실패");
+			}
+
+			m_vecCreateLightObject.push_back(pLightObject);
+
+			wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pLightObject->Get_ModelTag() + L"@" + to_wstring(m_iCreateLightObjectIndex));
+			string strConvertTag;
+			m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
+			m_vecCreateLightObjectTag.push_back(strConvertTag);
+
+			m_iCreateLightObjectIndex++;
+			
+		}
+
+		json TriggerJson = LoadJson["Trigger_Json"];
+
+
+
+		json MonsterTriggerJson = TriggerJson["MonsterTriggerJson"];
+		_int iMonsterTriggerJsonSize = (_int)MonsterTriggerJson.size();
+
+		for (_int i = 0; i < iMonsterTriggerJsonSize; ++i)
+		{
+			CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
+			MonsterTriggerDesc.bOnTrigger = MonsterTriggerJson[i]["OnTrigger"];
+			MonsterTriggerDesc.strSpawnMonsterJsonPath = MonsterTriggerJson[i]["JsonPath"];
+			MonsterTriggerDesc.strTriggerNameTag = MonsterTriggerJson[i]["NameTag"];
+			MonsterTriggerDesc.iSpawnGroupIndex = MonsterTriggerJson[i]["SpawnGroupIndex"];
+			CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
+			CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
+
+			CEvent_MosnterSpawnTrigger* pMonsterTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
+
+// 
+// 			const json& TransformJson = MonsterTriggerJson[i]["Component"]["Transform"];
+// 			_float4x4 WorldMatrix;
+// 
+// 			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+// 			{
+// 				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+// 				{
+// 					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+// 				}
+// 			}
+
+			pMonsterTrigger->Load_FromJson(MonsterTriggerJson[i]);
+
+			if (pMonsterTrigger == nullptr)
+			{
+				MSG_BOX("몬스터 트리거 불러오기 실패");
+				return E_FAIL;
+			}
+			else
+			{
+				m_vecCreateMonsterTrigger.push_back(pMonsterTrigger);
+				m_vecCreateMonsterTriggerTag.push_back(MonsterTriggerDesc.strTriggerNameTag);
+			}
+
+
 		}
 	}
 
 
-	
+		
+
+
+			
 
 	return S_OK;
 }
 
 void CWindow_MapTool::Reset_Function()
 {
-	m_pPickingObject = nullptr;
 
 	if (m_pPreviewObject != nullptr)
 		m_pPreviewObject->Set_Dead(true);
@@ -686,10 +996,19 @@ void CWindow_MapTool::Reset_Function()
 	if(m_pPreviewInteract != nullptr)
 		m_pPreviewInteract->Set_Dead(true);
 
+	if(m_pPreviewLightObject != nullptr)
+		m_pPreviewLightObject->Set_Dead(true);
+
+	m_pPickingObject = nullptr;
+	m_pPickingInstanceInfo = nullptr;
+	m_pPickingTrigger = nullptr;
+
+
 	m_pPreviewObject = nullptr;
 	m_pPreviewCharacter = nullptr;
 	m_pPreviewInteract = nullptr;
-	m_pPickingInstanceInfo = nullptr;
+	m_pPreviewLightObject = nullptr;
+
 
 		
 
@@ -760,8 +1079,6 @@ void CWindow_MapTool::Reset_Function()
 	m_vecCreateMonster.clear();
 	m_vecCreateMonsterTag.clear();
 
-	
-	
 	//!_int iCreateNPCSize = (_int)m_vecCreateNPC.size();
 	//!
 	//!for (_int i = 0; i < iCreateNPCSize; ++i)
@@ -770,6 +1087,49 @@ void CWindow_MapTool::Reset_Function()
 	//!}
 	//!
 	//!m_vecCreateNPC.clear();
+
+	
+
+	_int iCreateLightObjectSize = (_int)m_vecCreateLightObject.size();
+
+	for (_int i = 0; i < iCreateLightObjectSize; ++i)
+	{
+		m_vecCreateLightObject[i]->Set_Dead(false);
+	}
+
+	m_iCreateLightObjectIndex = 0;
+	m_iSelectLightObjectIndex = 0;
+	m_vecCreateLightObject.clear();
+	m_vecCreateLightObjectTag.clear();
+
+	_int iCreateLightSize = (_int)m_vecCreateLight.size();
+
+	for (_int i = 0; i < iCreateLightSize; ++i)
+	{
+		if (false == m_pGameInstance->Remove_Light(m_vecCreateLight[i]->Get_LightIndex()))
+		{
+			MSG_BOX("라이트 삭제실패");
+			return;
+		}
+
+	}
+
+	m_iSelectLightIndex = 0;
+	m_vecCreateLight.clear();
+	m_vecCreateLightTag.clear();
+	
+	
+	_int iCreateMonsterTriggerSize = (_int)m_vecCreateMonsterTrigger.size();
+
+	for (_int i = 0; i < iCreateMonsterTriggerSize; ++i)
+	{
+		Safe_Release(m_vecCreateMonsterTrigger[i]);
+	}
+
+	m_iSelectMonsterTriggerIndex = 0;
+	m_iSelectMonsterSpawnGroupIndex = 0;
+	m_vecCreateMonsterTrigger.clear();
+	m_vecCreateMonsterTriggerTag.clear();
 
 }
 
@@ -920,9 +1280,18 @@ void CWindow_MapTool::EnvironmentMode_Function()
 
 	if (ImGui::Button(u8"스테이지1 불러오기"))
 	{
-		string strFilePath = "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map";
-		string strFileName = "Stage1Final_MapData.json";
+		string strFilePath = "..\\Bin\\DataFiles\\Data_Map";
+		string strFileName = "Stage1Final_MonsterInclude_Decrease.json";
 		Load_Function(strFilePath, strFileName);
+		LoadNavi("..\\Bin\\DataFiles\\Navigation\\Stage1NavigationFinal.dat");
+	}
+
+	if (ImGui::Button(u8"인트로보스맵 불러오기"))
+	{
+		string strFilePath = "..\\Bin\\DataFiles\\Data_Map";
+		string strFileName = "Stage1Boss_MapData_MapData.json";
+		Load_Function(strFilePath, strFileName);
+		LoadNavi("..\\Bin\\DataFiles\\Navigation\\IntroBossNaviFinal.dat");
 	}
 
 	ImGui::NewLine();
@@ -942,6 +1311,20 @@ void CWindow_MapTool::EnvironmentMode_Function()
 
 			m_eTabType = CWindow_MapTool::TAP_TYPE::TAB_SINGLE;
 			GroundTab_Function(); 
+
+			ImGui::EndTabItem();
+		}
+
+		if(ImGui::BeginTabItem(u8"라이트"))
+		{
+			if(m_eTabType != CWindow_MapTool::TAP_TYPE::TAB_LIGHT)
+			{
+				m_iSelectLightObjectIndex = 0;
+				m_iSelectModelTag = 0;
+			}
+
+			m_eTabType = CWindow_MapTool::TAP_TYPE::TAB_LIGHT;
+			LightTab_Function();
 
 			ImGui::EndTabItem();
 		}
@@ -1019,7 +1402,7 @@ void CWindow_MapTool::CharacterMode_Function()
 
 			ImGui::EndTabItem();
 		}
-
+		
 		ImGui::EndTabBar();
 
 		ShowDialog();
@@ -1038,11 +1421,11 @@ void CWindow_MapTool::NavigationMode_Function()
 
 			ImGui::SameLine();
 
-			if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DafaFiles/Data_Map/Navigation";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
+			if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DataFiles/Data_Map/Navigation";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
 		}
 		else
 		{
-			if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG;  m_strDialogPath = "../Bin/DafaFiles/Data_Map/Navigation"; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DafaFiles/Data_Map/Navigation";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
+			if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG;  m_strDialogPath = "../Bin/DataFiles/Data_Map/Navigation"; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DataFiles/Data_Map/Navigation";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
 		}
 
 		if (m_bCreateCamera == true && m_pPlayer != nullptr)
@@ -1061,6 +1444,12 @@ void CWindow_MapTool::NavigationMode_Function()
 			if(true == bPlayerMove)
 			{
 				Guizmo_Tick(m_pPlayer);
+			}
+
+			if (ImGui::Button(u8"플레이어 카메라 위치이동"))
+			{
+				
+				m_pPlayer->Get_Transform()->Set_State(CTransform::STATE_POSITION, m_pGameInstance->Get_CamPosition());
 			}
 		}
 
@@ -1101,6 +1490,46 @@ void CWindow_MapTool::NavigationMode_Function()
 	}
 }
 
+void CWindow_MapTool::TriggerMode_Function()
+{
+	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyMask_;
+
+// 	ImGui::SeparatorText(u8"트리거 세이브 / 로드");
+// 	{
+// 		if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG;  m_strDialogPath = "../Bin/DataFiles/Data_Map/Navigation"; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DataFiles/Data_Map/Navigation";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
+// 	}ImGui::Separator();
+
+	if (ImGui::BeginTabBar(u8"트리거 모드 타입", tab_bar_flags))
+	{
+
+		if (ImGui::BeginTabItem(u8"트리거 생성"))
+		{
+			Trigger_CreateTab();
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem(u8"트리거 선택"))
+		{
+			Trigger_SelectTab();
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem(u8"트리거 삭제"))
+		{
+			Trigger_DeleteTab();
+
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+
+		ShowDialog();
+	}
+
+}
+
 void CWindow_MapTool::GroundTab_Function()
 {
 
@@ -1131,6 +1560,828 @@ void CWindow_MapTool::GroundTab_Function()
 			}
 	}
 	
+}
+
+void CWindow_MapTool::LightTab_Function()
+{
+	Select_ModeType(); //! 생성, 선택, 삭제 선택, 마우스 프레싱, 다운, 업 선택
+
+	m_eTabType = CWindow_MapTool::TAP_TYPE::TAB_LIGHT;
+
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+	switch (m_eModeType)
+	{
+		case Client::CWindow_MapTool::MODE_TYPE::MODE_CREATE:
+		{
+			Light_CreateTab();
+			break;
+		}
+
+		case Client::CWindow_MapTool::MODE_TYPE::MODE_SELECT:
+		{
+			Light_SelectTab();
+			break;
+		}
+
+		case Client::CWindow_MapTool::MODE_TYPE::MODE_DELETE:
+		{
+			Light_DeleteTab();
+			break;
+		}
+	}
+}
+
+void CWindow_MapTool::Light_CreateTab()
+{
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+	Select_PickingType();
+
+	static _int iCreateLightType = 0;
+
+	const char* CreateLightType[2] = { u8"라이트 설치", u8"라이트 오브젝트 설치" };
+
+
+	for (_uint i = 0; i < IM_ARRAYSIZE(CreateLightType); ++i)
+	{
+		if(i > 0) { ImGui::SameLine(); }
+
+		if (ImGui::RadioButton(CreateLightType[i], &iCreateLightType, i))
+		{
+			iCreateLightType = i;
+			m_eLightCreateMode = (CWindow_MapTool::LIGHT_CREATEMODE)i;
+		}
+	}
+
+		ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
+
+		ImGui::InputInt(u8"셰이더패스", &m_iShaderPassIndex);
+
+		ImGui::SeparatorText(u8"라이트 셋팅");
+		{
+
+			static _int iLightType = 0;
+
+			const char* LightType[3] = { u8"디렉션 라이트", u8"포인트 라이트", u8"스포트 라이트" };
+
+			for (_uint i = 0; i < IM_ARRAYSIZE(LightType); ++i)
+			{
+				if (i > 0) { ImGui::SameLine(); }
+
+				if (ImGui::RadioButton(LightType[i], &iLightType, i))
+				{
+					m_eLightType = (LIGHT_DESC::TYPE)iLightType;
+				}
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button(u8"라이트타입 변경"))
+			{
+				LIGHT_DESC::TYPE eLightType = LIGHT_DESC::TYPE::TYPE_END;
+
+				if (iLightType == 0)
+					eLightType = LIGHT_DESC::TYPE::TYPE_DIRECTIONAL;
+				else if (iLightType == 1)
+					eLightType = LIGHT_DESC::TYPE::TYPE_POINT;
+				else if (iLightType == 2)
+					eLightType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
+
+				m_pPreviewLightObject->Change_LightType(eLightType);
+			};
+
+			if (iLightType == 0)
+			{
+				if (ImGui::InputFloat4(u8"라이트 디렉션", &m_tEditLightDesc.vDirection.x))
+				{
+					LIGHT_DESC OriginDesc = m_pPreviewLightObject->Get_LightDesc();
+					OriginDesc.vDirection = m_tEditLightDesc.vDirection;
+
+					m_pPreviewLightObject->Set_LightDesc(OriginDesc);
+				}
+
+			}
+			else if (iLightType == 1)
+			{
+				ImGui::SameLine();
+
+				if (ImGui::Button(u8"라이트포지션 셋"))
+				{
+					_float4 vObjectPos = m_pPreviewLightObject->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+
+					m_pPreviewLightObject->Set_LightPos(_float3(vObjectPos.x, vObjectPos.y, vObjectPos.z));
+
+					m_tEditLightDesc.vPosition = _float4(vObjectPos.x, vObjectPos.y, vObjectPos.z, 1.f);
+				}
+
+				if (ImGui::InputFloat(u8"라이트 레인지", &m_tEditLightDesc.fRange))
+				{
+					LIGHT_DESC OriginDesc = m_pPreviewLightObject->Get_LightDesc();
+					OriginDesc.fRange = m_tEditLightDesc.fRange;
+
+					m_pPreviewLightObject->Set_LightDesc(OriginDesc);
+
+				}
+
+				if (ImGui::InputFloat4(u8"라이트 포지션", &m_tEditLightDesc.vPosition.x))
+				{
+					m_pPreviewLightObject->Set_LightPos(_float3(m_tEditLightDesc.vPosition.x, m_tEditLightDesc.vPosition.y, m_tEditLightDesc.vPosition.z));
+				}
+			}
+
+			ImGui::Checkbox(u8"활성화", &m_tEditLightDesc.bEnable);
+
+			ImGui::NewLine();
+
+			ImGui::InputFloat4(u8"라이트 디퓨즈", &m_tEditLightDesc.vDiffuse.x);
+			ImGui::InputFloat4(u8"라이트 앰비언트", &m_tEditLightDesc.vAmbient.x);
+			ImGui::InputFloat4(u8"라이트 스페큘러", &m_tEditLightDesc.vSpecular.x);
+
+			ImGui::Checkbox(u8"이펙트부여", &m_bLightEffect);
+
+			if (m_bLightEffect == true)
+			{
+				const char* EffectTypes[] = { "TORCH", "TEST1", "TEST2", "TEST3", "TEST4" };
+				const char* LightEffectPreviewType = EffectTypes[m_eLightEffectType];
+
+				static ImGuiComboFlags ComboFlags = ImGuiComboFlags_WidthFitPreview | ImGuiComboFlags_HeightSmall;
+
+				if (ImGui::BeginCombo(u8"이펙트 타입", LightEffectPreviewType, ComboFlags))
+				{
+					for (int i = 0; i < IM_ARRAYSIZE(EffectTypes); ++i)
+					{
+						const bool is_Selected = (m_eLightEffectType == i);
+
+						if (ImGui::Selectable(EffectTypes[i], is_Selected))
+						{
+							m_eLightEffectType = i;
+						}
+
+						if (true == is_Selected)
+							ImGui::SetItemDefaultFocus();
+					}
+
+					ImGui::EndCombo();
+				}
+			}
+
+			ImGui::NewLine();
+		}
+		ImGui::Separator();
+
+		if (ImGui::BeginListBox(u8"라이트 모델태그", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+			_int iModelTagSize = 0;
+			vector<string> vecModelTag;
+
+			if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
+			{
+				iModelTagSize = (_int)m_vecSingleModelTag.size();
+				vecModelTag = m_vecSingleModelTag;
+			}
+			else if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_ANIM)
+			{
+				iModelTagSize = (_int)m_vecAnimEnviroModelTag.size();
+				vecModelTag = m_vecAnimEnviroModelTag;
+			}
+
+			for (_uint i = 0; i < (_uint)iModelTagSize; ++i)
+			{
+				const _bool isSelected = (m_iSelectModelTag == i);
+
+				if (ImGui::Selectable(vecModelTag[i].c_str(), isSelected))
+				{
+					m_iSelectModelTag = i;
+
+					m_bChange = true;
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+			}
+			ImGui::EndListBox();
+		}
+
+		ImGui::EndChild();
+
+		ImGui::SameLine();
+
+		ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
+
+		ImGui::Text(u8"테스트2");
+
+		ImGui::EndChild();
+
+		Set_GuizmoCamView();
+		Set_GuizmoCamProj();
+		Set_Guizmo(m_pPickingObject);
+
+		Preview_Function();
+
+		switch (m_ePickingMode)
+		{
+			case Client::CWindow_MapTool::PICKING_MODE::MOUSE_PRESSING:
+			{
+				if (true == m_pGameInstance->Mouse_Pressing(DIM_LB))
+					Picking_Function();
+				break;
+			}
+			case Client::CWindow_MapTool::PICKING_MODE::MOUSE_DOWN:
+			{
+				if (true == m_pGameInstance->Mouse_Down(DIM_LB))
+					Picking_Function();
+				break;
+			}
+			case Client::CWindow_MapTool::PICKING_MODE::MOUSE_UP:
+			{
+				if (true == m_pGameInstance->Mouse_Up(DIM_LB))
+					Picking_Function();
+				break;
+			}
+		}
+}
+
+	
+
+
+void CWindow_MapTool::Light_SelectTab()
+{
+	if (m_pPreviewLightObject != nullptr)
+	{
+		m_pPreviewLightObject->Set_Dead(true);
+		m_pPreviewLightObject = nullptr;
+	}
+
+	static _int iSelectLightType = 0;
+
+	const char* SelectLightType[2] = { u8"라이트 선택", u8"라이트 오브젝트 선택" };
+
+
+	for (_uint i = 0; i < IM_ARRAYSIZE(SelectLightType); ++i)
+	{
+		if (i > 0) { ImGui::SameLine(); }
+
+		if (ImGui::RadioButton(SelectLightType[i], &iSelectLightType, i))
+		{
+			iSelectLightType = i;
+		}
+	}
+
+	static _bool bSelectDiffuseColor = false;
+	ImGui::Checkbox(u8"선택한 조명 색 다르게하기", &bSelectDiffuseColor);
+
+	
+
+	
+
+	if (iSelectLightType == 0)
+	{
+		_uint iObjectTagSize = (_uint)m_vecCreateLightTag.size();
+
+		if (true == m_vecCreateLight.empty())
+		{
+			ImGui::Text(u8"생성한 라이트 객체가 없습니다. ");
+		}
+		else
+		{
+			if (ImGui::BeginListBox(u8"생성 라이트 객체 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				for (_uint i = 0; i < iObjectTagSize; ++i)
+				{
+					const _bool isSelected = (m_iSelectLightIndex == i);
+
+					if (ImGui::Selectable(m_vecCreateLightTag[i].c_str(), isSelected))
+					{
+						m_iSelectLightIndex = i;
+						
+						if(bSelectDiffuseColor == true)
+							m_vecCreateLight[m_iSelectLightIndex]->Set_Select(true); //! 선택될시 디퓨즈 컬러를 보라색으로 셰이더에 바인딩한다.
+						
+
+						m_tEditLightDesc = m_vecCreateLight[m_iSelectLightIndex]->Get_LightDesc();
+
+						for (_uint j = 0; j < iObjectTagSize; ++j)
+						{
+							if (bSelectDiffuseColor == true)
+							{
+								if (j == i)
+									continue;
+							}
+								
+
+							m_vecCreateLight[j]->Set_Select(false);
+							
+						}
+
+						if (isSelected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+
+				ImGui::EndListBox();
+			}
+
+			ImGui::SeparatorText(u8"라이트 셋팅");
+			{
+
+				static _int iLightType = 0;
+
+				const char* LightType[3] = { u8"디렉션 라이트", u8"포인트 라이트", u8"스포트 라이트" };
+
+				for (_uint i = 0; i < IM_ARRAYSIZE(LightType); ++i)
+				{
+					if (i > 0) { ImGui::SameLine(); }
+
+					if (ImGui::RadioButton(LightType[i], &iLightType, i))
+					{
+						iLightType = i;
+					}
+				}
+
+				ImGui::SameLine();
+				if (ImGui::Button(u8"라이트타입 변경"))
+				{
+					LIGHT_DESC::TYPE eLightType = LIGHT_DESC::TYPE::TYPE_END;
+
+					if (iLightType == 0)
+						eLightType = LIGHT_DESC::TYPE::TYPE_DIRECTIONAL;
+					else if (iLightType == 1)
+						eLightType = LIGHT_DESC::TYPE::TYPE_POINT;
+					else if (iLightType == 2)
+						eLightType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
+
+					m_vecCreateLight[m_iSelectLightIndex]->Set_LightType(eLightType);
+				};
+
+				if (iLightType == 0)
+				{
+					if (ImGui::InputFloat4(u8"라이트 디렉션", &m_tEditLightDesc.vDirection.x))
+					{
+						LIGHT_DESC OriginDesc = m_vecCreateLight[m_iSelectLightIndex]->Get_LightDesc();
+						OriginDesc.vDirection = m_tEditLightDesc.vDirection;
+
+						m_vecCreateLight[m_iSelectLightIndex]->Set_LightDesc(OriginDesc);
+					}
+
+				}
+				else if (iLightType == 1)
+				{
+					if (ImGui::InputFloat(u8"라이트 레인지", &m_tEditLightDesc.fRange))
+					{
+						LIGHT_DESC OriginDesc = m_vecCreateLight[m_iSelectLightIndex]->Get_LightDesc();
+						OriginDesc.fRange = m_tEditLightDesc.fRange;
+
+						m_vecCreateLight[m_iSelectLightIndex]->Set_LightDesc(OriginDesc);
+
+					}
+
+					if (ImGui::InputFloat3(u8"라이트 포지션", &m_tEditLightDesc.vPosition.x))
+					{
+						LIGHT_DESC OriginDesc = m_vecCreateLight[m_iSelectLightIndex]->Get_LightDesc();
+						OriginDesc.vPosition = m_tEditLightDesc.vPosition;
+
+						m_vecCreateLight[m_iSelectLightIndex]->Set_LightDesc(OriginDesc);
+
+					}
+
+					ImGui::SameLine();
+
+					static _bool bLightMoveMode = false;
+
+					ImGui::Checkbox(u8"라이트 이동모드, INSERT키 누를시 체크", &bLightMoveMode);
+
+					if (m_pGameInstance->Key_Down(DIK_INSERT))
+					{
+						bLightMoveMode = !bLightMoveMode;
+					}
+
+					if (bLightMoveMode == true)
+					{
+						LIGHT_DESC OriginDesc = m_vecCreateLight[m_iSelectLightIndex]->Get_LightDesc();
+
+						if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
+						{
+							OriginDesc.vPosition = _float4{m_fRayPos.x, m_fRayPos.y, m_fRayPos.z, 1.f};
+						}
+						else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
+						{
+							OriginDesc.vPosition = _float4(m_fMeshPos.x, m_fMeshPos.y, m_fMeshPos.z, 1.f );
+						}
+
+						m_vecCreateLight[m_iSelectLightIndex]->Set_LightDesc(OriginDesc);
+						m_tEditLightDesc.vPosition = OriginDesc.vPosition;
+					}
+				}
+
+
+
+				if (ImGui::Checkbox(u8"활성화", &m_tEditLightDesc.bEnable))
+				{
+					m_vecCreateLight[m_iSelectLightIndex]->Set_LightEnable(m_tEditLightDesc.bEnable);
+				}
+
+
+				ImGui::NewLine();
+				
+				if (ImGui::ColorEdit4(u8"라이트 디퓨즈", &m_tEditLightDesc.vDiffuse.x))
+				{
+					m_vecCreateLight[m_iSelectLightIndex]->Set_Diffuse(m_tEditLightDesc.vDiffuse);
+				}
+
+				if (ImGui::ColorEdit4(u8"라이트 앰비언트", &m_tEditLightDesc.vAmbient.x))
+				{
+					m_vecCreateLight[m_iSelectLightIndex]->Set_Ambient(m_tEditLightDesc.vAmbient);
+				}
+
+				if (ImGui::ColorEdit4(u8"라이트 스페큘러", &m_tEditLightDesc.vSpecular.x))
+				{
+					m_vecCreateLight[m_iSelectLightIndex]->Set_Specular(m_tEditLightDesc.vSpecular);
+				}
+
+				ImGui::NewLine();
+			}
+		}
+	}
+
+	else if (iSelectLightType == 1)
+	{
+		_uint iObjectTagSize = (_uint)m_vecCreateLightObjectTag.size();
+
+		if (true == m_vecCreateLightObject.empty())
+		{
+			ImGui::Text(u8"생성한 라이트 오브젝트 객체가 없습니다. ");
+		}
+		else
+		{
+			if (ImGui::BeginListBox(u8"생성 라이트 오브젝트 객체 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+			
+				for (_uint i = 0; i < iObjectTagSize; ++i)
+				{
+					const _bool isSelected = (m_iSelectLightObjectIndex == i);
+
+					if (ImGui::Selectable(m_vecCreateLightObjectTag[i].c_str(), isSelected))
+					{
+						m_iSelectLightObjectIndex = i;
+
+						m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_Select(true);
+						m_tEditLightDesc = m_vecCreateLightObject[m_iSelectLightObjectIndex]->Get_LightDesc();
+						
+						CEffect* pLightEffect = m_vecCreateLightObject[m_iSelectLightObjectIndex]->Get_Effect();
+
+						if (pLightEffect != nullptr)
+						{
+							m_vLightEffectPos = pLightEffect->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+						}
+
+						
+						for (_uint j = 0; j < iObjectTagSize; ++j)
+						{
+							if(j == i)
+								continue;
+
+							m_vecCreateLightObject[j]->Set_Select(false);
+						}
+
+								
+						m_pPickingObject = m_vecCreateLightObject[m_iSelectLightObjectIndex];
+
+						if (isSelected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+				ImGui::EndListBox();
+			}
+
+
+			if (ImGui::InputInt(u8"셰이더패스", &m_iShaderPassIndex))
+			{
+#ifdef _DEBUG
+				m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_ShaderPassindex(m_iShaderPassIndex);
+#endif // _DEBUG			
+			}
+
+
+
+			ImGui::SeparatorText(u8"라이트 셋팅");
+			{
+
+				static _int iLightType = 0;
+
+				const char* LightType[3] = { u8"디렉션 라이트", u8"포인트 라이트", u8"스포트 라이트" };
+
+				for (_uint i = 0; i < IM_ARRAYSIZE(LightType); ++i)
+				{
+					if (i > 0) { ImGui::SameLine(); }
+
+					if (ImGui::RadioButton(LightType[i], &iLightType, i))
+					{
+						iLightType = i;
+					}
+				}
+
+				ImGui::SameLine();
+				if (ImGui::Button(u8"라이트타입 변경"))
+				{
+					LIGHT_DESC::TYPE eLightType = LIGHT_DESC::TYPE::TYPE_END;
+
+					if (iLightType == 0)
+						eLightType = LIGHT_DESC::TYPE::TYPE_DIRECTIONAL;
+					else if (iLightType == 1)
+						eLightType = LIGHT_DESC::TYPE::TYPE_POINT;
+					else if (iLightType == 2)
+						eLightType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
+
+					m_vecCreateLightObject[m_iSelectLightObjectIndex]->Change_LightType(eLightType);
+				};
+
+
+				if (iLightType == 0)
+				{
+					if (ImGui::InputFloat4(u8"라이트 디렉션", &m_tEditLightDesc.vDirection.x))
+					{
+						LIGHT_DESC OriginDesc = m_vecCreateLightObject[m_iSelectLightObjectIndex]->Get_LightDesc();
+						OriginDesc.vDirection = m_tEditLightDesc.vDirection;
+
+						m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_LightDesc(OriginDesc);
+					}
+
+				}
+				else if (iLightType == 1)
+				{
+					if (ImGui::InputFloat(u8"라이트 레인지", &m_tEditLightDesc.fRange))
+					{
+						LIGHT_DESC OriginDesc = m_vecCreateLightObject[m_iSelectLightObjectIndex]->Get_LightDesc();
+						OriginDesc.fRange = m_tEditLightDesc.fRange;
+
+						m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_LightDesc(OriginDesc);
+
+					}
+
+					
+
+					if (ImGui::InputFloat3(u8"라이트 포지션", &m_tEditLightDesc.vPosition.x))
+					{
+						LIGHT_DESC OriginDesc = m_vecCreateLightObject[m_iSelectLightObjectIndex]->Get_LightDesc();
+						OriginDesc.vPosition = m_tEditLightDesc.vPosition;
+
+						m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_LightDesc(OriginDesc);
+					}
+
+					ImGui::SameLine();
+
+					static _bool bLightMoveMode = false;
+
+					ImGui::Checkbox(u8"라이트 이동모드, INSERT키 누를시 체크", &bLightMoveMode);
+
+					if (m_pGameInstance->Key_Down(DIK_INSERT))
+					{
+						bLightMoveMode = !bLightMoveMode;
+					}
+
+					if (bLightMoveMode == true)
+					{
+						LIGHT_DESC OriginDesc = m_vecCreateLight[m_iSelectLightIndex]->Get_LightDesc();
+
+						if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
+						{
+							OriginDesc.vPosition = _float4{ m_fRayPos.x, m_fRayPos.y, m_fRayPos.z, 1.f };
+						}
+						else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
+						{
+							OriginDesc.vPosition = _float4(m_fMeshPos.x, m_fMeshPos.y, m_fMeshPos.z, 1.f);
+						}
+
+						m_vecCreateLight[m_iSelectLightIndex]->Set_LightDesc(OriginDesc);
+						m_tEditLightDesc.vPosition = OriginDesc.vPosition;
+					}
+
+
+					if (ImGui::Button(u8"라이트포지션 셋"))
+					{
+						_float4 vObjectPos = m_vecCreateLightObject[m_iSelectLightObjectIndex]->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+
+						m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_LightPos(_float3(vObjectPos.x, vObjectPos.y, vObjectPos.z));
+
+
+						m_tEditLightDesc.vPosition = _float4(vObjectPos.x, vObjectPos.y, vObjectPos.z, 1.f);
+
+						
+					}
+				}
+
+
+
+				if (ImGui::Checkbox(u8"활성화", &m_tEditLightDesc.bEnable))
+				{
+					m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_Enable(m_tEditLightDesc.bEnable);
+				}
+
+
+				ImGui::NewLine();
+
+				if (ImGui::ColorEdit4(u8"라이트 디퓨즈", &m_tEditLightDesc.vDiffuse.x))
+				{
+					m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_Diffuse(m_tEditLightDesc.vDiffuse);
+				}
+
+				if (ImGui::ColorEdit4(u8"라이트 스페큘러", &m_tEditLightDesc.vSpecular.x))
+				{
+					m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_Specular(m_tEditLightDesc.vSpecular);
+				}
+
+				if (ImGui::ColorEdit4(u8"라이트 앰비언트", &m_tEditLightDesc.vAmbient.x))
+				{
+					m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_Ambient(m_tEditLightDesc.vAmbient);
+				}
+
+				if (ImGui::Checkbox(u8"이펙트부여", &m_bLightEffect))
+				{
+					m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_EffectEnable(m_bLightEffect);
+				}
+
+				if (m_bLightEffect == true)
+				{
+					const char* EffectTypes[] = { "TORCH", "TEST1", "TEST2", "TEST3", "TEST4" };
+					const char* LightEffectPreviewType = EffectTypes[m_eLightEffectType];
+
+					static ImGuiComboFlags ComboFlags = ImGuiComboFlags_WidthFitPreview | ImGuiComboFlags_HeightSmall;
+
+					if (ImGui::BeginCombo(u8"이펙트 타입", LightEffectPreviewType, ComboFlags))
+					{
+						for (int i = 0; i < IM_ARRAYSIZE(EffectTypes); ++i)
+						{
+							const bool is_Selected = (m_eLightEffectType == i);
+
+							if (ImGui::Selectable(EffectTypes[i], is_Selected))
+							{
+								m_eLightEffectType = i;
+								m_vecCreateLightObject[m_iSelectLightObjectIndex]->Change_LightEffect((CEnvironment_LightObject::LIGHT_EFFECT)m_eLightEffectType);
+							}
+
+							if (true == is_Selected)
+								ImGui::SetItemDefaultFocus();
+						}
+
+						ImGui::EndCombo();
+					}
+
+
+					if (ImGui::InputFloat3(u8"이펙트 위치이동", &m_vLightEffectPos.x))
+					{
+						CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc = *m_vecCreateLightObject[m_iSelectLightObjectIndex]->Get_EnvironmentDesc();
+						CEffect* pLightEffect = m_vecCreateLightObject[m_iSelectLightObjectIndex]->Get_Effect();
+
+						if (LightObjectDesc.bEffect == true && nullptr != pLightEffect)
+						{
+							m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_EffectPos(m_vLightEffectPos);
+						}
+					}
+				}
+
+				ImGui::NewLine();
+			}
+
+		}
+
+
+		Guizmo_Tick(m_pPickingObject);
+	}
+
+
+	
+}
+
+void CWindow_MapTool::Light_DeleteTab()
+{
+	if (m_pPreviewLightObject != nullptr)
+	{
+		m_pPreviewLightObject->Set_Dead(true);
+		m_pPreviewLightObject = nullptr;
+	}
+
+	static _int iDeleteLightType = 0;
+
+	const char* DeleteLightType[2] = { u8"라이트 삭제", u8"라이트 오브젝트 삭제" };
+
+
+	for (_uint i = 0; i < IM_ARRAYSIZE(DeleteLightType); ++i)
+	{
+		if (i > 0) { ImGui::SameLine(); }
+
+		if (ImGui::RadioButton(DeleteLightType[i], &iDeleteLightType, i))
+		{
+			iDeleteLightType = i;
+		}
+	}
+
+
+	if (iDeleteLightType == 0)
+	{
+		_uint iCreateLightSize = (_uint)m_vecCreateLight.size();
+
+		if(iCreateLightSize == 0)
+			return;
+
+		ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+		if (ImGui::BeginListBox(u8"생성한 라이트 객체", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+			for (_uint i = 0; i < iCreateLightSize; ++i)
+			{
+				const _bool isSelected = (m_iSelectLightIndex == i);
+
+				if (ImGui::Selectable(m_vecCreateLightTag[i].c_str(), isSelected))
+				{
+					m_iSelectLightIndex = i;
+
+					m_bChange = true;
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+			}
+			ImGui::EndListBox();
+		}
+	}
+	else
+	{
+		_uint iCreateLightObjectSize = (_uint)m_vecCreateLightObject.size();
+
+		if (iCreateLightObjectSize == 0)
+			return;
+
+		ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+		if (ImGui::BeginListBox(u8"생성한 라이트 오브젝트 객체", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+			for (_uint i = 0; i < iCreateLightObjectSize; ++i)
+			{
+				const _bool isSelected = (m_iSelectLightObjectIndex == i);
+
+				if (ImGui::Selectable(m_vecCreateLightObjectTag[i].c_str(), isSelected))
+				{
+					m_iSelectLightObjectIndex = i;
+
+					m_bChange = true;
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+			}
+			ImGui::EndListBox();
+		}
+
+
+		if (m_vecCreateLightObject.size() < m_iSelectLightObjectIndex)
+			return;
+
+
+		Set_GuizmoCamView();
+		Set_GuizmoCamProj();
+		Set_Guizmo(m_vecCreateLightObject[m_iSelectLightObjectIndex]);
+	}
+
+
+	if (ImGui::Button(u8"삭제"))
+	{	
+		if (iDeleteLightType == 0)
+		{
+			if (true == m_pGameInstance->Remove_Light(m_vecCreateLight[m_iSelectLightIndex]->Get_LightIndex()))
+			{
+				m_vecCreateLight[m_iSelectLightIndex] = nullptr;
+				m_vecCreateLight.erase(m_vecCreateLight.begin() + m_iSelectLightIndex);
+				m_vecCreateLightTag.erase(m_vecCreateLightTag.begin() + m_iSelectLightIndex);
+				m_pPickingObject = nullptr;
+
+				if(m_iSelectLightIndex > 0)
+					m_iSelectLightIndex--;
+			}
+			else
+			{
+				MSG_BOX("라이트 삭제 실패");
+			}
+		}
+		else
+		{
+			m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_Dead(true);
+			m_vecCreateLightObject[m_iSelectLightObjectIndex] = nullptr;
+			m_pPickingObject = nullptr;
+			m_vecCreateLightObject.erase(m_vecCreateLightObject.begin() + m_iSelectLightObjectIndex);
+			m_vecCreateLightObjectTag.erase(m_vecCreateLightObjectTag.begin() + m_iSelectLightObjectIndex);
+
+			if (m_iSelectLightObjectIndex > 0)
+				m_iSelectLightObjectIndex--;
+		}
+		
+	}
 }
 
 void CWindow_MapTool::InteractTab_Function()
@@ -1345,6 +2596,11 @@ void CWindow_MapTool::Interact_CreateTab()
 
 void CWindow_MapTool::Interact_DeleteTab()
 {
+	if (m_pPreviewInteract != nullptr)
+	{
+		m_pPreviewInteract->Set_Dead(true);
+		m_pPreviewInteract = nullptr;
+	}
 	
 	_uint iCreateInteractSize = (_uint)m_vecCreateInteractObject.size();
 
@@ -1756,50 +3012,51 @@ void CWindow_MapTool::Navigation_DeleteTab()
 	{
 		CNavigation* pNavi = m_pPlayer->Get_Navigation();
 		if(pNavi != nullptr)
-			Safe_Release(pNavi);
-	}
-
-	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
-	_int iCellSize = (_int)vecCells.size();
-
-	if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck())
-	{
-		_int index = 0;
-
-		_float3 fPickedPos = { 0.f, 0.f, 0.f };
-
-		_int	iNonAnimObjectSize = (_int)m_vecCreateObject.size();
-
-		_int	iIndex = 0;
-		_float fHighestYValue = -FLT_MAX;
-		_float3 vHighestPickesPos = {};
-		_bool	bIsPicking = false;
-
-
-
-		if (m_vecCreateObject[m_iNavigationTargetIndex]->Picking(&fPickedPos))
-		{
-			
-			Find_NearPointPos(&fPickedPos);
-
-			m_fNaviPickingPos = fPickedPos;
-			bIsPicking = true;
-		}
-
-		if (true == bIsPicking)
-		{
-			fPickedPos = XMVector3TransformCoord(XMLoadFloat3(&fPickedPos), m_vecCreateObject[m_iNavigationTargetIndex]->Get_Transform()->Get_WorldMatrix());
-
-			CCell* pTargetCell = nullptr;
-			pTargetCell = Find_NearCell(fPickedPos);
-
-			if (nullptr == pTargetCell)
-				return;
-
-			m_pNavigation->Delete_Cell(pTargetCell->Get_Index());
-		}
+			m_pPlayer->Remove_Component(L"Com_Navigation", reinterpret_cast<CComponent**>(&pNavi));
 		
 	}
+
+	//vector<CCell*> vecCells = m_pNavigation->Get_Cells();
+	//_int iCellSize = (_int)vecCells.size();
+
+	//if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck())
+	//{
+	//	_int index = 0;
+	//
+	//	_float3 fPickedPos = { 0.f, 0.f, 0.f };
+	//
+	//	_int	iNonAnimObjectSize = (_int)m_vecCreateObject.size();
+	//
+	//	_int	iIndex = 0;
+	//	_float fHighestYValue = -FLT_MAX;
+	//	_float3 vHighestPickesPos = {};
+	//	_bool	bIsPicking = false;
+	//
+	//
+	//
+	//	if (m_vecCreateObject[m_iNavigationTargetIndex]->Picking(&fPickedPos))
+	//	{
+	//		
+	//		Find_NearPointPos(&fPickedPos);
+	//
+	//		m_fNaviPickingPos = fPickedPos;
+	//		bIsPicking = true;
+	//	}
+	//
+	//	if (true == bIsPicking)
+	//	{
+	//		fPickedPos = XMVector3TransformCoord(XMLoadFloat3(&fPickedPos), m_vecCreateObject[m_iNavigationTargetIndex]->Get_Transform()->Get_WorldMatrix());
+	//
+	//		CCell* pTargetCell = nullptr;
+	//		pTargetCell = Find_NearCell(fPickedPos);
+	//
+	//		if (nullptr == pTargetCell)
+	//			return;
+	//
+	//		m_pNavigation->Delete_Cell(pTargetCell->Get_Index());
+	//	}
+	//	
+	//}
 
 	if (m_pGameInstance->Key_Down(DIK_NUMPADENTER))
 	{
@@ -1984,6 +3241,248 @@ void CWindow_MapTool::LoadCells()
 	{
 		m_vecCells.push_back(vecCells[i]);
 		m_vecCellIndexs.push_back(to_string(m_vecCells[i]->Get_Index()));
+	}
+}
+
+void CWindow_MapTool::Trigger_CreateTab()
+{
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+	ImGui::SeparatorText(u8"트리거 탭");
+	{
+		
+		static _int iTriggerType = 0;
+		const char* TriggerType[2] = { u8"몬스터 스폰트리거", u8"카메라 컷신 트리거" };
+
+		for (_uint i = 0; i < IM_ARRAYSIZE(TriggerType); ++i)
+		{
+			if (i > 0) { ImGui::SameLine(); }
+
+			if (ImGui::RadioButton(TriggerType[i], &iTriggerType, i))
+			{
+				iTriggerType = i;
+			}
+		}
+
+		ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
+
+
+
+		static char NameTagBuf[32] = "MonsterSpawn";
+		ImGui::InputText(u8"트리거 네임태그", NameTagBuf, IM_ARRAYSIZE(NameTagBuf));
+
+		ImGui::InputFloat3(u8"트리거 콜라이더 사이즈", m_fColliderSizeArray);
+
+		ImGui::InputFloat3(u8"트리거 콜라이더 센터", m_fColliderCenterArray);
+
+		ImGui::EndChild();
+
+		ImGui::SameLine();
+
+		ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
+
+		if (iTriggerType == 0)
+		{
+			ImGui::InputInt(u8"스폰그룹인덱스", &m_iMonsterSpawnGroupIndex);
+			
+		}
+		else
+		{
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "작업 해야함");
+		}
+
+		ImGui::EndChild();
+
+		if (ImGui::Button(u8" 트리거 생성"))
+		{
+
+			string strSpawnMonsterJsonPath = "Stage1Final_MonsterInclude_Decrease.json";
+
+			if (iTriggerType == 0)
+			{
+				CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
+
+				MonsterTriggerDesc.bOnTrigger = false;
+				MonsterTriggerDesc.strTriggerNameTag = NameTagBuf;
+				MonsterTriggerDesc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
+				MonsterTriggerDesc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
+
+				MonsterTriggerDesc.iSpawnGroupIndex = m_iMonsterSpawnGroupIndex;
+				MonsterTriggerDesc.strSpawnMonsterJsonPath = strSpawnMonsterJsonPath;
+
+				CEvent_MosnterSpawnTrigger* pMonsterSpawnTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
+
+				if (pMonsterSpawnTrigger == nullptr)
+				{
+					MSG_BOX("몬스터 스폰 트리거 생성 실패");
+				}
+				else
+				{
+					m_vecCreateMonsterTrigger.push_back(pMonsterSpawnTrigger);
+					m_vecCreateMonsterTriggerTag.push_back(MonsterTriggerDesc.strTriggerNameTag);
+					m_pPickingTrigger = pMonsterSpawnTrigger;
+				}
+
+			}
+		}
+	}
+}
+
+void CWindow_MapTool::Trigger_SelectTab()
+{
+	_uint iCreateTriggerSize = 0;//= (_uint)m_vecCreateMonsterTag.size();
+
+	static _int iTriggerType = 0;
+	const char* TriggerType[2] = { u8"몬스터 스폰트리거", u8"카메라 컷신 트리거" };
+
+	for (_uint i = 0; i < IM_ARRAYSIZE(TriggerType); ++i)
+	{
+		if (i > 0) { ImGui::SameLine(); }
+
+		if (ImGui::RadioButton(TriggerType[i], &iTriggerType, i))
+		{
+			iTriggerType = i;
+		}
+	}
+
+	if (iTriggerType == 0) //! 몬스터 스폰트리거ㄴ
+	{
+		iCreateTriggerSize = (_uint)m_vecCreateMonsterTriggerTag.size();
+
+		if (true == m_vecCreateMonsterTrigger.empty())
+		{
+			ImGui::Text(u8"생성한 몬스터트리거가 없습니다. ");
+			return;
+		}
+		else
+		{
+			if (ImGui::BeginListBox(u8"몬스터트리거 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				for (_uint i = 0; i < iCreateTriggerSize; ++i)
+				{
+					const _bool isSelected = (m_iSelectMonsterTriggerIndex == i);
+
+					if (ImGui::Selectable(m_vecCreateMonsterTriggerTag[i].c_str(), isSelected))
+					{
+						m_iSelectMonsterTriggerIndex = i;
+						m_pPickingTrigger = m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex];
+					
+
+						CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC Desc = *m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex]->Get_MonsterTriggerDesc();
+
+						m_fColliderCenterArray[0] = Desc.vColliderCenter.x;
+						m_fColliderCenterArray[1] = Desc.vColliderCenter.y;
+						m_fColliderCenterArray[2] = Desc.vColliderCenter.z;
+
+						m_fColliderSizeArray[0] = Desc.vColliderSize.x;
+						m_fColliderSizeArray[1] = Desc.vColliderSize.y;
+						m_fColliderSizeArray[2] = Desc.vColliderSize.z;
+
+						m_iSelectMonsterSpawnGroupIndex = Desc.iSpawnGroupIndex;
+
+						strcpy(m_strSelectTriggerNameTag, Desc.strTriggerNameTag.c_str());
+
+						if (isSelected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+				ImGui::EndListBox();
+			}
+
+			if (ImGui::InputInt(u8"몬스터트리거 그룹인덱스", &m_iSelectMonsterSpawnGroupIndex))
+			{
+				m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex]->Set_SpawnGroupIndex(m_iSelectMonsterTriggerIndex);
+			}
+
+			if (ImGui::Button(u8"트리거 강제실행"))
+			{
+				m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex]->Activate();
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button(u8"트리거 카메라 위치이동"))
+			{
+				m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex]->Get_Transform()->Set_State(CTransform::STATE_POSITION, m_pGameInstance->Get_CamPosition());
+			}
+		}
+		
+	}
+	
+	Trigger_GuizmoTick(m_pPickingTrigger);
+
+}
+
+void CWindow_MapTool::Trigger_DeleteTab()
+{
+
+	static _int iDeleteTriggerType = 0;
+
+	const char* DeleteTriggerType[2] = { u8"몬스터 트리거 삭제", u8"컷신 트리거 삭제" };
+
+
+	for (_uint i = 0; i < IM_ARRAYSIZE(DeleteTriggerType); ++i)
+	{
+		if (i > 0) { ImGui::SameLine(); }
+
+		if (ImGui::RadioButton(DeleteTriggerType[i], &iDeleteTriggerType, i))
+		{
+			iDeleteTriggerType = i;
+		}
+	}
+
+
+	if (iDeleteTriggerType == 0)
+	{
+		_uint iCreateMonsterTriggerSize = (_uint)m_vecCreateMonsterTrigger.size();
+
+		if (iCreateMonsterTriggerSize == 0)
+			return;
+
+		ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+		if (ImGui::BeginListBox(u8"생성한 몬스터 트리거", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+			for (_uint i = 0; i < iCreateMonsterTriggerSize; ++i)
+			{
+				const _bool isSelected = (m_iSelectMonsterTriggerIndex == i);
+
+				if (ImGui::Selectable(m_vecCreateMonsterTriggerTag[i].c_str(), isSelected))
+				{
+					m_iSelectMonsterTriggerIndex = i;
+
+					m_bChange = true;
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+			}
+			ImGui::EndListBox();
+		}
+
+		Set_GuizmoCamView();
+		Set_GuizmoCamProj();
+		Trigger_GuizmoTick(m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex]);
+	}
+	
+
+
+	if (ImGui::Button(u8"삭제"))
+	{
+		if (iDeleteTriggerType == 0)
+		{
+				Safe_Release(m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex]);
+				m_vecCreateMonsterTrigger.erase(m_vecCreateMonsterTrigger.begin() + m_iSelectMonsterTriggerIndex);
+				m_vecCreateMonsterTriggerTag.erase(m_vecCreateMonsterTriggerTag.begin() + m_iSelectMonsterTriggerIndex);
+				m_pPickingTrigger = nullptr;
+				
+				if(m_iSelectMonsterTriggerIndex > 0)
+					m_iSelectMonsterTriggerIndex--;
+				
+		}
 	}
 }
 
@@ -2432,6 +3931,11 @@ void CWindow_MapTool::Create_Tab(TAP_TYPE eTabType)
 	}
 
 		ImGui::InputInt(u8"셰이더패스", &m_iShaderPassIndex);
+
+		if (eTabType == CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER)
+		{
+			ImGui::InputInt(u8"몬스터스폰그룹인덱스", &m_iMonsterSpawnGroupIndex);
+		}
 		
 		if (ImGui::BeginListBox(strListBoxName.c_str(), ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
@@ -2736,7 +4240,7 @@ void CWindow_MapTool::Preview_Function()
 	if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_NONE || m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_END)
 		return;
 
-	if (m_bDeadComplete == true && nullptr != m_pPreviewObject || nullptr != m_pPreviewCharacter || nullptr != m_pPreviewInteract)
+	if (m_bDeadComplete == true && nullptr != m_pPreviewObject || nullptr != m_pPreviewCharacter || nullptr != m_pPreviewInteract || nullptr != m_pPreviewLightObject)
 	{
 
 		_vector vPos = {};
@@ -2763,10 +4267,15 @@ void CWindow_MapTool::Preview_Function()
 			{
 				m_pPreviewInteract->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
 			}
+			else if (m_eTabType == CWindow_MapTool::TAP_TYPE::TAB_LIGHT && m_pPreviewLightObject != nullptr)
+			{
+				m_pPreviewLightObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
+			}
 			else if (m_pPreviewObject != nullptr)
 			{
 				m_pPreviewObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
 			}
+			
 
 		}
 	}
@@ -2820,7 +4329,95 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 	}
 	else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
 	{
-		if (eTabType != CWindow_MapTool::TAP_TYPE::TAB_INTERACT)
+		if (eTabType == CWindow_MapTool::TAP_TYPE::TAB_LIGHT)
+		{
+			if (m_pPreviewLightObject != nullptr && m_bChange == true)
+			{
+				m_pPreviewLightObject->Set_Dead(true);
+				m_pPreviewLightObject = nullptr;
+				m_bChange = false;
+			}
+
+
+			if (m_pPreviewObject != nullptr)
+			{
+				m_pPreviewObject->Set_Dead(true);
+				m_pPreviewObject = nullptr;
+
+			}
+			else if (m_pPreviewInteract != nullptr)
+			{
+				m_pPreviewInteract->Set_Dead(true);
+				m_pPreviewInteract = nullptr;
+			}
+
+			if (nullptr == m_pPreviewLightObject)
+			{
+				CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
+
+				LightObjectDesc.bAnimModel = m_bAnimType;
+				LightObjectDesc.iShaderPassIndex = m_iShaderPassIndex;
+				LightObjectDesc.bPreview = true;
+				LightObjectDesc.iLightIndex = m_tEditLightDesc.iLightIndex;
+				LightObjectDesc.LightDesc = m_tEditLightDesc;
+				
+
+				switch (m_eLightEffectType)
+				{
+				case 0:
+				{
+					LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TORCH;
+					break;
+				}
+
+				case 1:
+				{
+					LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TEST1;
+					break;
+				}
+
+				case 2:
+				{
+					LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TEST2;
+					break;
+				}
+
+				case 3:
+				{
+					LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TEST3;
+					break;
+				}
+
+				case 4:
+				{
+					LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TEST4;
+					break;
+				}
+
+				}
+
+
+				if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
+				{
+					m_pGameInstance->String_To_WString(m_vecSingleModelTag[m_iSelectModelTag], LightObjectDesc.strModelTag);
+
+				}
+				else
+				{
+					if (m_bAnimType == true)
+					{
+						LightObjectDesc.bAnimModel = true;
+						LightObjectDesc.iPlayAnimationIndex = 0;
+					}
+					m_pGameInstance->String_To_WString(m_vecAnimEnviroModelTag[m_iSelectModelTag], LightObjectDesc.strModelTag);
+				}
+
+				m_pPreviewLightObject = dynamic_cast<CEnvironment_LightObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Test", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
+				m_pPreviewLightObject->Get_Transform()->Set_Position(m_fRayPos);
+			}
+		}
+
+		else if (eTabType != CWindow_MapTool::TAP_TYPE::TAB_INTERACT)
 		{
 			if (m_pPreviewInteract != nullptr)
 			{
@@ -2877,6 +4474,7 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 
 			}
 		}
+		
 		else
 		{
 			if (m_pPreviewObject != nullptr)
@@ -2935,7 +4533,7 @@ void CWindow_MapTool::Picking_Function()
 
 	if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
 	{
-		if (nullptr != m_pPreviewInteract && true == ImGui_MouseInCheck() || nullptr != m_pPreviewObject && true == ImGui_MouseInCheck())
+		if (nullptr != m_pPreviewLightObject && true == ImGui_MouseInCheck() || nullptr != m_pPreviewInteract && true == ImGui_MouseInCheck() || nullptr != m_pPreviewObject && true == ImGui_MouseInCheck())
 		{
 
 			switch (m_eTabType)
@@ -2948,6 +4546,11 @@ void CWindow_MapTool::Picking_Function()
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_INTERACT:
 				{
 					Interact_CreateFunction();
+					break;
+				}
+				case Client::CWindow_MapTool::TAP_TYPE::TAB_LIGHT:
+				{
+					Light_CreateFunction();
 					break;
 				}
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_ENVIRONMENT:
@@ -3063,6 +4666,170 @@ void CWindow_MapTool::Ground_CreateFunction()
 	}
 
 		
+}
+
+void CWindow_MapTool::Light_CreateFunction()
+{
+	if (m_ePickingType == PICKING_TYPE::PICKING_NONE)
+		return;
+
+	if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
+	{
+		if (m_eLightCreateMode == CWindow_MapTool::LIGHT_CREATEMODE::LIGHT_MODE && nullptr != m_pField && true == m_pField->MouseOnTerrain())
+		{
+			
+			m_tEditLightDesc.eType = tagLightDesc::TYPE_POINT;
+			CLight* pLight = m_pGameInstance->Add_Light_AndGet(m_tEditLightDesc, m_tEditLightDesc.iLightIndex);
+
+			if (pLight == nullptr)
+			{
+				MSG_BOX("라이트 생성실패");
+			}
+			else
+			{
+				m_vecCreateLight.push_back(pLight);
+				
+				string strLightTag = "Light" + to_string(pLight->Get_LightIndex());
+				m_vecCreateLightTag.push_back(strLightTag);
+			}
+			
+		}
+
+		else if (m_eLightCreateMode == CWindow_MapTool::LIGHT_CREATEMODE::LIGHT_OBJECTMODE)
+		{
+			if (nullptr != m_pField && true == m_pField->MouseOnTerrain())
+			{
+				CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
+				LightObjectDesc.bAnimModel = m_bAnimType;
+				LightObjectDesc.iShaderPassIndex = m_iShaderPassIndex;
+				LightObjectDesc.bPreview = false;
+				LightObjectDesc.iLightIndex = m_tEditLightDesc.iLightIndex;
+				LightObjectDesc.LightDesc = m_tEditLightDesc;
+				LightObjectDesc.strModelTag = m_pPreviewLightObject->Get_ModelTag();
+				LightObjectDesc.WorldMatrix = m_pPreviewLightObject->Get_Transform()->Get_WorldMatrix();
+
+				switch (m_eLightEffectType)
+				{
+				case 0:
+				{
+					LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TORCH;
+					break;
+				}
+
+				case 1:
+				{
+					LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TEST1;
+					break;
+				}
+
+				case 2:
+				{
+					LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TEST2;
+					break;
+				}
+
+				case 3:
+				{
+					LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TEST3;
+					break;
+				}
+
+				case 4:
+				{
+					LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TEST4;
+					break;
+				}
+
+				}
+
+
+				CEnvironment_LightObject* pLightObject = dynamic_cast<CEnvironment_LightObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
+
+				if (pLightObject == nullptr)
+				{
+					MSG_BOX("라이트오브젝트 생성실패");
+				}
+
+				m_vecCreateLightObject.push_back(pLightObject);
+
+				wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pLightObject->Get_ModelTag() + L"@" + to_wstring(m_iCreateLightObjectIndex));
+				string strConvertTag;
+				m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
+				m_vecCreateLightObjectTag.push_back(strConvertTag);
+
+				m_iCreateLightObjectIndex++;
+			}
+		}
+		
+	}
+
+	else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
+	{
+
+		CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
+
+		LightObjectDesc.bAnimModel = m_bAnimType;
+		LightObjectDesc.iShaderPassIndex = m_iShaderPassIndex;
+		LightObjectDesc.bPreview = false;
+		LightObjectDesc.iLightIndex = m_tEditLightDesc.iLightIndex;
+		LightObjectDesc.LightDesc = m_tEditLightDesc;
+		LightObjectDesc.strModelTag = m_pPreviewLightObject->Get_ModelTag();
+		LightObjectDesc.WorldMatrix = m_pPreviewLightObject->Get_Transform()->Get_WorldMatrix();
+		
+
+		switch (m_eLightEffectType)
+		{
+			case 0:
+			{
+				LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TORCH;
+				break;
+			}
+
+			case 1:
+			{
+				LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TEST1;
+				break;
+			}
+
+			case 2:
+			{
+				LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TEST2;
+				break;
+			}
+
+			case 3:
+			{
+				LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TEST3;
+				break;
+			}
+
+			case 4:
+			{
+				LightObjectDesc.eLightEffect = CEnvironment_LightObject::LIGHTEFFECT_TEST4;
+				break;
+			}
+
+		}
+		
+
+		CEnvironment_LightObject* pLightObject = dynamic_cast<CEnvironment_LightObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
+
+		if (pLightObject == nullptr)
+		{
+			MSG_BOX("라이트오브젝트 생성실패");
+		}
+
+		m_vecCreateLightObject.push_back(pLightObject);
+
+		wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pLightObject->Get_ModelTag() + L"@" + to_wstring(m_iCreateLightObjectIndex));
+		string strConvertTag;
+		m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
+		m_vecCreateLightObjectTag.push_back(strConvertTag);
+
+
+		m_iCreateLightObjectIndex++;
+	}
+
 }
 
 void CWindow_MapTool::Interact_CreateFunction()
@@ -3553,7 +5320,7 @@ void CWindow_MapTool::Monster_CreateFunction()
 	CMonster_Character::MONSTER_DESC Desc;
 	Desc.bPreview = false;
 	Desc.WorldMatrix = m_pPreviewCharacter->Get_Transform()->Get_WorldMatrix();
-	
+	Desc.iMonsterGroupIndex = m_iMonsterSpawnGroupIndex;
 
 	wstring strProtoTag;
 	m_pGameInstance->String_To_WString(m_vecMonsterTag[m_iSelectCharacterTag], strProtoTag);
@@ -3598,6 +5365,23 @@ void CWindow_MapTool::NPC_CreateFunction()
 	//!m_vecCreateNPCTag.push_back(strCreateNPCTag);
 	//!
 	//!m_iCreateNPCIndex++;
+}
+
+void CWindow_MapTool::Add_Monster_ForTrigger(CMonster_Character* pMonster)
+{
+	if (pMonster != nullptr)
+	{
+		wstring strCreateMonsterTag = pMonster->Get_MonsterDesc()->strProtoTypeTag + L"@" + to_wstring(m_iCreateMonsterIndex);
+		string strConvertMonsterTag;
+		m_pGameInstance->WString_To_String(strCreateMonsterTag, strConvertMonsterTag);
+		
+
+		m_vecCreateMonsterTag.push_back(strConvertMonsterTag);
+		m_vecCreateMonster.push_back(pMonster);
+		m_iCreateMonsterIndex++;
+		
+		
+	}
 }
 
 void CWindow_MapTool::Basic_SelectFunction()
@@ -3805,7 +5589,12 @@ void CWindow_MapTool::Interact_SelectFunction()
 {
 	_uint iObjectTagSize = (_uint)m_vecCreateInteractObject.size();
 
-
+	if (m_pPreviewInteract != nullptr)
+	{
+		m_pPreviewInteract->Set_Dead(true);
+		m_pPreviewInteract = nullptr;
+	}
+	
 	if (true == m_vecCreateInteractObject.empty())
 	{
 		ImGui::Text(u8"생성한 객체가 없습니다. ");
@@ -3823,6 +5612,39 @@ void CWindow_MapTool::Interact_SelectFunction()
 					m_iSelectObjectIndex = i;
 
 					m_pPickingObject = m_vecCreateInteractObject[m_iSelectObjectIndex];
+
+					CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC InteractDesc = *m_vecCreateInteractObject[m_iSelectObjectIndex]->Get_EnvironmentDesc();
+					
+					m_eInteractType = InteractDesc.eInteractType;
+					m_eInteractState = InteractDesc.eInteractState;
+					m_vInteractRootMoveRate = InteractDesc.vPlayerRootMoveRate;
+
+
+					if (3 == (_uint)InteractDesc.eChangeLevel)
+					{
+						m_eInteractLevel = 0;
+					}
+					else if (4 == (_uint)InteractDesc.eChangeLevel)
+					{
+						m_eInteractLevel = 1;
+					}
+					else
+					{
+						m_eInteractLevel = 0;
+					}
+					m_bInteractLevelChange = InteractDesc.bLevelChange;
+					m_bInteractUseGravity = InteractDesc.bUseGravity;
+
+					_float3 vColliderSize = InteractDesc.vColliderSize;
+					_float3 vColliderCenter = InteractDesc.vColliderCenter;
+
+					m_fSelectColliderSizeArray[0] = vColliderSize.x;
+					m_fSelectColliderSizeArray[1] = vColliderSize.y;
+					m_fSelectColliderSizeArray[2] = vColliderSize.z;
+
+					m_fSelectColliderCenterArray[0] = vColliderCenter.x;
+					m_fSelectColliderCenterArray[1] = vColliderCenter.y;
+					m_fSelectColliderCenterArray[2] = vColliderCenter.z;
 
 					if (isSelected)
 					{
@@ -3859,6 +5681,8 @@ void CWindow_MapTool::Interact_SelectFunction()
 					if (ImGui::Selectable(InteractTypes[i], is_Selected))
 					{
 						m_eInteractType = i;
+						
+
 						#ifdef _DEBUG
                           m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractType((CEnvironment_Interact::INTERACT_TYPE)m_eInteractType);
                         #endif // _DEBUG
@@ -3893,6 +5717,24 @@ void CWindow_MapTool::Interact_SelectFunction()
 					//eInteractState = CEnvironment_Interact::INTERACT_STATE(iInstanceState);
 				}
 			}
+
+			if (ImGui::InputFloat3(u8"플레이어루트무브레이트", &m_vInteractRootMoveRate.x))
+			{
+				#ifdef _DEBUG
+					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_PlayerRootMoveRate(m_vInteractRootMoveRate);
+				#endif // _DEBUG
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Checkbox(u8"중력 사용", &m_bInteractUseGravity))
+			{
+				#ifdef _DEBUG
+					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_UseGravity(m_bInteractUseGravity);
+				#endif // _DEBUG
+			}
+
+			
 		}
 
 
@@ -3935,6 +5777,7 @@ void CWindow_MapTool::Interact_SelectFunction()
 			{
 				switch (m_eInteractLevel)
 				{
+					
 					case 0:
 					{
 						#ifdef _DEBUG
@@ -4022,6 +5865,7 @@ void CWindow_MapTool::Instance_GuizmoTick(_int iIndex, INSTANCE_INFO_DESC* pInst
 		return;
 
 		m_pPickingObject = nullptr;
+		m_pPickingTrigger = nullptr;
 
 		/*==== Set ImGuizmo ====*/
 		ImGuizmo::SetOrthographic(false);
@@ -4182,6 +6026,140 @@ void CWindow_MapTool::Instance_GuizmoTick(_int iIndex, INSTANCE_INFO_DESC* pInst
 		}
 }
 
+void CWindow_MapTool::Trigger_GuizmoTick(CEvent_Trigger* pEventTrigger)
+{
+	if (nullptr == pEventTrigger)
+		return;
+
+	Set_GuizmoCamView();
+	Set_GuizmoCamProj();
+
+
+	m_pPickingObject = nullptr;
+	m_pPickingInstanceInfo = nullptr;
+
+	/*==== Set ImGuizmo ====*/
+	ImGuizmo::SetOrthographic(false);
+	ImGuiIO& io = ImGui::GetIO();
+	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+
+	if (ImGui::InputText(u8"트리거 네임태그", m_strSelectTriggerNameTag, IM_ARRAYSIZE(m_strSelectTriggerNameTag)))
+	{
+		pEventTrigger->Set_NameTag(m_strSelectTriggerNameTag);
+	}
+
+	if (ImGui::InputFloat3(u8"트리거 콜라이더 사이즈", m_fColliderSizeArray))
+	{
+		pEventTrigger->Set_ColliderSize(_float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]));
+	}
+
+	if (ImGui::InputFloat3(u8"트리거 콜라이더 센터", m_fColliderCenterArray))
+	{
+		pEventTrigger->Set_ColliderCenter(_float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]));
+	}
+
+	if (typeid(*pEventTrigger) == typeid(CEvent_MosnterSpawnTrigger))
+	{
+		CEvent_MosnterSpawnTrigger* pMonsterTrigger = dynamic_cast<CEvent_MosnterSpawnTrigger*>(pEventTrigger);
+
+		if (ImGui::InputInt(u8"스폰그룹인덱스", &m_iMonsterSpawnGroupIndex))
+		{
+			pMonsterTrigger->Set_SpawnGroupIndex(m_iMonsterSpawnGroupIndex);
+		}
+
+		
+		pMonsterTrigger->Set_ColliderOwnerPosition();
+		m_pGameInstance->Add_DebugRender(pMonsterTrigger->Get_TriggerCollider());
+
+		if(true == pMonsterTrigger->Activate_Condition() && pMonsterTrigger->Get_MonsterTriggerDesc()->bOnTrigger == false)
+			pMonsterTrigger->Activate();
+			
+	}
+	
+
+
+	if (ImGui::IsKeyPressed(ImGuiKey_T))
+		TriggerCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	if (ImGui::IsKeyPressed(ImGuiKey_R))
+		TriggerCurrentGizmoOperation = ImGuizmo::ROTATE;
+	if (ImGui::IsKeyPressed(ImGuiKey_E))
+		TriggerCurrentGizmoOperation = ImGuizmo::SCALE;
+
+	if (ImGui::RadioButton("Translate", TriggerCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+		TriggerCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Rotate", TriggerCurrentGizmoOperation == ImGuizmo::ROTATE))
+		TriggerCurrentGizmoOperation = ImGuizmo::ROTATE;
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Scale", TriggerCurrentGizmoOperation == ImGuizmo::SCALE))
+		TriggerCurrentGizmoOperation = ImGuizmo::SCALE;
+
+	
+	_float* arrView = m_arrView;
+	_float* arrProj = m_arrProj;
+
+	_float	matrixTranslation[3], matrixRotation[3], matrixScale[3];
+	_matrix matWorld = pEventTrigger->Get_Transform()->Get_WorldMatrix();
+
+	_float4x4 mat4X4;
+	XMStoreFloat4x4(&mat4X4, matWorld);
+
+
+	_float arrWorld[] = { mat4X4._11,mat4X4._12,mat4X4._13,mat4X4._14,
+						  mat4X4._21,mat4X4._22,mat4X4._23,mat4X4._24,
+						  mat4X4._31,mat4X4._32,mat4X4._33,mat4X4._34,
+						  mat4X4._41,mat4X4._42,mat4X4._43,mat4X4._44 };
+
+
+
+
+	ImGuizmo::DecomposeMatrixToComponents(arrWorld, matrixTranslation, matrixRotation, matrixScale);
+	ImGui::DragFloat3("Tr", matrixTranslation);
+	ImGui::DragFloat3("Rt", matrixRotation);
+	ImGui::DragFloat3("Sc", matrixScale);
+	ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, arrWorld);
+
+
+	ImGui::Checkbox("UseSnap", &InstanceuseSnap);
+	ImGui::SameLine();
+
+	switch (TriggerCurrentGizmoOperation)
+	{
+	case ImGuizmo::TRANSLATE:
+		ImGui::DragFloat3("Snap", &snap[0]);
+		break;
+	case ImGuizmo::ROTATE:
+		ImGui::DragFloat3("Angle Snap", &snap[0]);
+		break;
+	case ImGuizmo::SCALE:
+		ImGui::DragFloat3("Scale Snap", &snap[0]);
+		break;
+	}
+
+	if (arrView == nullptr ||
+		arrProj == nullptr ||
+		arrWorld == nullptr)
+		return;
+
+	ImGuizmo::Manipulate(arrView, arrProj, TriggerCurrentGizmoOperation, TriggerCurrentGizmoMode, arrWorld, NULL, InstanceuseSnap ? &snap[0] : NULL);
+
+
+	XMFLOAT4X4 matW = { arrWorld[0],arrWorld[1],arrWorld[2],arrWorld[3],
+					   arrWorld[4],arrWorld[5],arrWorld[6],arrWorld[7],
+					   arrWorld[8],arrWorld[9],arrWorld[10],arrWorld[11],
+					   arrWorld[12],arrWorld[13],arrWorld[14],arrWorld[15] };
+
+
+	pEventTrigger->Get_Transform()->Set_WorldMatrix(matW);
+
+	if (ImGuizmo::IsOver())
+	{
+		int a = 0;
+	}
+	
+}
+
 void CWindow_MapTool::Character_SelectFunction()
 {
 	if (m_pPreviewCharacter != nullptr)
@@ -4238,6 +6216,8 @@ void CWindow_MapTool::Monster_SelectFunction()
 
 					m_pPickingObject = m_vecCreateMonster[m_iSelectCharacterTag];
 					
+					m_iSelectMonsterGroupIndex = m_vecCreateMonster[m_iSelectCharacterTag]->Get_MonsterGroupIndex();
+					m_iSelectMonsterNaviIndex = m_vecCreateMonster[m_iSelectCharacterTag]->Get_StartNaviIndex();
 					if (isSelected)
 					{
 						ImGui::SetItemDefaultFocus();
@@ -4246,6 +6226,40 @@ void CWindow_MapTool::Monster_SelectFunction()
 			}
 			ImGui::EndListBox();
 		}
+
+		if(ImGui::InputInt(u8"몬스터그룹인덱스", &m_iSelectMonsterGroupIndex))
+		{
+			m_vecCreateMonster[m_iSelectCharacterTag]->Set_MonsterGroupIndex(m_iSelectMonsterGroupIndex);
+		}
+
+		if (m_pNavigation != nullptr)
+		{
+			ImGui::NewLine();
+
+			if (m_pPlayer != nullptr)
+			{
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), u8"현재 플레이어 셀 인덱스 : %d", m_pPlayer->Get_Navigation()->Get_CurrentCellIndex());
+			}
+
+			if(ImGui::InputInt(u8"시작 네비게이션 인덱스", &m_iSelectMonsterNaviIndex))
+			{
+				m_vecCreateMonster[m_iSelectCharacterTag]->Set_StartNaviIndex(m_iSelectMonsterNaviIndex);
+			}
+			
+
+			if (ImGui::Button(u8"네비게이션 인덱스 셋"))
+			{
+				 m_vecCreateMonster[m_iSelectCharacterTag]->Set_StartNaviIndex(m_pNavigation->Get_SelectRangeCellIndex(m_vecCreateMonster[m_iSelectCharacterTag]));
+				 m_iSelectMonsterNaviIndex = m_vecCreateMonster[m_iSelectCharacterTag]->Get_StartNaviIndex();
+			}
+
+			
+		}
+		else
+		{
+			ImGui::Text(u8"네비게이션 데이터를 불러와주세요");
+		}
+		
 	}
 }
 

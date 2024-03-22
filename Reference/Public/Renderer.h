@@ -46,8 +46,15 @@ private:
 	HRESULT Render_HBAO_PLUS();
 	HRESULT Render_RimBloom();
 	HRESULT Render_Deferred();
-	HRESULT Render_EffectBloomBlur();
+	HRESULT Render_PBR();
 
+	HRESULT Deferred_Effect();
+	HRESULT Render_Effect_BloomBlur();
+	HRESULT Render_Effect_Distortion();
+	HRESULT Render_Effect_Distortion_Blur();
+	HRESULT Render_Effect_Final();
+
+	HRESULT Render_OutLine();
 	HRESULT Render_RadialBlur(); 
 	HRESULT Render_HDR();
 	HRESULT Render_DOF(); // 일반적으로 HDR적용이후에 적용됨 
@@ -56,8 +63,6 @@ private:
 	HRESULT Render_Final();
 	HRESULT Render_Blend();
 
-	HRESULT Deferred_Effect();
-	HRESULT Render_Effect_Final();
 	HRESULT Deferred_UI();
 
 	/* Effect */
@@ -81,9 +86,13 @@ private:
 	wstring Current_Target(POST_TYPE eType);
 	
 public:
+	/* 렌더옵션 초기화 */
+	HRESULT Off_Shader(); /* 모든 셰이더옵션 다 끔 */
+
 	/* 활성화 */
+	void Set_BloomBlur_Active(_bool _bloom_active) { m_tDeferred_Option.bRimBloom_Blur_Active = _bloom_active; }
+	void Set_Shadow_Active(_bool _Shadow_Active) { m_tDeferred_Option.bShadow_Active = _Shadow_Active; }
 	void Set_HBAO_Active(_bool _HBAO) { m_tHBAO_Option.bHBAO_Active = _HBAO; }
-	void Set_BloomBlur_Active(_bool _bloom_active) { m_tBloomRim_Option.bRimBloom_Blur_Active = _bloom_active; }
 	void Set_Fog_Active(_bool _Fog) { m_tFog_Option.bFog_Active = _Fog; }
 
 	void Set_Radial_Blur_Active(_bool _Radial) { m_tRadial_Option.bRadial_Active = _Radial; }
@@ -93,28 +102,28 @@ public:
 	void Set_HSV_Active(_bool _HSV_active) { m_tHSV_Option.bScreen_Active = _HSV_active; }
 
 	/* 옵션조절 */
+	void Set_Deferred_Option(DEFERRED_DESC desc) { m_tDeferred_Option = desc; }
 	void Set_HBAO_Option(HBAO_PLUS_DESC desc) { m_tHBAO_Option = desc; }
-	void Set_BloomRim_Option(BLOOMRIM_DESC desc) { m_tBloomRim_Option = desc; }
 	void Set_Fog_Option(FOG_DESC desc) { m_tFog_Option = desc; }
 
 	void Set_RadialBlur_Option(RADIAL_DESC desc) { m_tRadial_Option = desc; }
-	void Set_HDR_Option(HDR_DESC desc) { m_tHDR_Option = desc; }
-	void Set_HSV_Option(HSV_DESC desc) { m_tHSV_Option = desc; }
-	void Set_FXAA_Option(ANTI_DESC desc) { m_tAnti_Option = desc; }
 	void Set_DOF_Option(DOF_DESC desc) { m_tDOF_Option = desc; }
+	void Set_HDR_Option(HDR_DESC desc) { m_tHDR_Option = desc; }
+	void Set_FXAA_Option(ANTI_DESC desc) { m_tAnti_Option = desc; }
+	void Set_HSV_Option(HSV_DESC desc) { m_tHSV_Option = desc; }
 
 private:
 	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
+	_bool						bTest = { true };
 
+	DEFERRED_DESC				m_tDeferred_Option			= {};
 	HBAO_PLUS_DESC				m_tHBAO_Option				= {};
-	BLOOMRIM_DESC				m_tBloomRim_Option			= {};
 	FOG_DESC					m_tFog_Option				= {};
-
 	RADIAL_DESC					m_tRadial_Option			= {};
 	DOF_DESC					m_tDOF_Option				= {};
 	HDR_DESC					m_tHDR_Option				= {};
-	HSV_DESC					m_tHSV_Option				= {};
 	ANTI_DESC					m_tAnti_Option				= {};
+	HSV_DESC					m_tHSV_Option				= {};
 
 private:
 	POST_TYPE					m_ePrevTarget				= POST_TYPE::FINAL;
@@ -140,6 +149,9 @@ private:
 	class CVIBuffer_Rect*		m_pVIBuffer					= { nullptr };
 
 	class CTexture*				m_pPerlinNoiseTextureCom	= { nullptr };
+	class CTexture*				m_pIrradianceTextureCom		= { nullptr };
+	class CTexture*				m_pPreFilteredTextureCom	= { nullptr };
+	class CTexture*				m_pBRDFTextureCom	= { nullptr };
 	ID3D11DepthStencilView*		m_pLightDepthDSV			= { nullptr };
 	_float4x4					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT						Control_HotKey();

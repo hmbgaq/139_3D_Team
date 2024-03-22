@@ -8,13 +8,11 @@
 /* State */
 #include "Sniper_CoverLow_Idle.h"
 #include "Sniper_DeathLight_B_01.h"
+#include "Sniper_DeathLight_F_01.h"
 #include "Sniper_Weakspot_Death_01.h"
-#include "Sniper_DeathNormal_B_01.h"
-#include "Sniper_HitHeavy_FL_01.h"
 #include "Sniper_KnockFrontLight_F_01.h"
-#include "Sniper_HitHeavy_FR_01.h"
 #include "Sniper_KnockFrontLight_F_02.h"
-#include "Sniper_HitHeavy_F_01.h"
+#include "Sniper_DeathNormal_B_01.h"
 
 CBandit_Sniper::CBandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -57,6 +55,7 @@ HRESULT CBandit_Sniper::Initialize(void* pArg)
 
 	FAILED_CHECK(Ready_Option());
 	
+	m_iHp = 15.f;
 	m_pTransformCom->Set_Look(0.f, 0.f, -1.f);
 
 	return S_OK;
@@ -106,7 +105,10 @@ void CBandit_Sniper::Sniping_Target(_float4 TargetPos)
 	_float4x4 matTemp = pWeapon->Get_WeaponWorldMatrix();
 
 	m_iBulletCnt += 1;
-	pWeapon->Sniping(TargetPos, _float3(matTemp.m[3][0], matTemp.m[3][1], matTemp.m[3][2])); // (_float4 vTargetPos, _float3 StartfPos)
+
+	_float4 NewPos = TargetPos;
+	NewPos.y += 1.f;
+	pWeapon->Sniping(NewPos, _float3(matTemp.m[3][0], matTemp.m[3][1], matTemp.m[3][2])); // (_float4 vTargetPos, _float3 StartfPos)
 }
 
 HRESULT CBandit_Sniper::Ready_Components()
@@ -151,16 +153,16 @@ void CBandit_Sniper::Hitted_Left(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		m_pActor->Set_State(new CSniper_HitHeavy_FL_01());
+		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
 		break;
 	case Engine::Medium:
-		m_pActor->Set_State(new CSniper_HitHeavy_FL_01());
+		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
 		break;
 	case Engine::Heavy:
 		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
 		break;
 	default:
-		m_pActor->Set_State(new CSniper_HitHeavy_FL_01());
+		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
 		break;
 	}
 }
@@ -170,16 +172,16 @@ void CBandit_Sniper::Hitted_Right(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		m_pActor->Set_State(new CSniper_HitHeavy_FR_01());
+		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
 		break;
 	case Engine::Medium:
-		m_pActor->Set_State(new CSniper_HitHeavy_FR_01());
+		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
 		break;
 	case Engine::Heavy:
 		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
 		break;
 	default:
-		m_pActor->Set_State(new CSniper_HitHeavy_FR_01());
+		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
 		break;
 	}
 }
@@ -189,23 +191,24 @@ void CBandit_Sniper::Hitted_Front(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		m_pActor->Set_State(new CSniper_HitHeavy_F_01());
+		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
 		break;
 	case Engine::Medium:
-		m_pActor->Set_State(new CSniper_HitHeavy_F_01());
+		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
 		break;
 	case Engine::Heavy:
-		m_pActor->Set_State(new CSniper_HitHeavy_F_01());
+		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
 		break;
 	default:
-		m_pActor->Set_State(new CSniper_HitHeavy_F_01());
+		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
 		break;
 	}
 }
 
 void CBandit_Sniper::Hitted_Knock(_bool bIsCannonball)
 {
-	m_pActor->Set_State(new CSniper_HitHeavy_F_01());
+	/* ¹ßÂ÷±â */
+	m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
 
 }
 
@@ -214,7 +217,7 @@ void CBandit_Sniper::Hitted_Dead(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		m_pActor->Set_State(new CSniper_DeathLight_B_01());
+		m_pActor->Set_State(new CSniper_DeathLight_F_01());
 		break;
 	case Engine::Medium:
 		m_pActor->Set_State(new CSniper_Weakspot_Death_01());

@@ -9,13 +9,15 @@ sampler LinearSampler = sampler_state
     filter = min_mag_mip_linear;
     AddressU = wrap;
     AddressV = wrap;
+    AddressW = wrap;
 };
 
 sampler PointSampler = sampler_state
 {
 	filter = min_mag_mip_Point;
 	AddressU = wrap;
-	AddressV = wrap;
+    AddressV = wrap;
+    AddressW = wrap;
 };
 
 sampler ClampSampler = sampler_state
@@ -23,6 +25,7 @@ sampler ClampSampler = sampler_state
     filter = min_mag_mip_linear;
     AddressU = CLAMP;
     AddressV = CLAMP;
+    AddressW = CLAMP;
 };
 
 sampler SpecialSampler = sampler_state
@@ -30,6 +33,7 @@ sampler SpecialSampler = sampler_state
     filter = min_mag_mip_Point;
     AddressU = CLAMP;
     AddressV = CLAMP;
+    AddressW = CLAMP;
 };
 
 sampler SSAONormalDepth = sampler_state
@@ -69,7 +73,7 @@ sampler AnisotropicClampSampler = sampler_state /* For. 안티-앨리어싱 */
 RasterizerState RS_Default
 {
 	FillMode = Solid;	
-	CullMode = Back;
+	CullMode = Back; /* 후면 컬링 */ 
 	FrontCounterClockwise = false;
 };
 
@@ -98,8 +102,8 @@ RasterizerState RS_Cull_None
 RasterizerState RS_Cull_CW
 {
     FillMode = Solid;
-    CullMode = FRONT;
-    FrontCounterClockwise = false;
+    CullMode = FRONT; /* 앞면 컬링 -> 후면 보여줌 */
+    FrontCounterClockwise = false; /* 시계방향 */
 };
 
 /* ---------------- DepthStencil ---------------- */

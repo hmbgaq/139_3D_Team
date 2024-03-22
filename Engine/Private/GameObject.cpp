@@ -108,10 +108,10 @@ HRESULT CGameObject::Set_InitPosition(const _float3& vPos)
 	CNavigation* pNavi = dynamic_cast<CCharacter*>(this)->Get_Navigation();
 	NULL_CHECK_RETURN(pNavi, E_FAIL);
 
-
 	_int iCheckIndex = pNavi->Get_SelectRangeCellIndex(this);
 	if (iCheckIndex == -1)
 		this->Set_Dead(true);
+
 	pNavi->Set_CurrentIndex(iCheckIndex);
 
 	return S_OK;
@@ -285,7 +285,6 @@ void CGameObject::Free()
 		Pair.second->Set_Enable(false);
 		Safe_Release(Pair.second);
 	}
-		
 
 	m_Components.clear();
 

@@ -54,6 +54,9 @@ HRESULT CCamera::Initialize(void * pArg)
 	//	m_arrCascadeBoundRadius[i] = 0.0f;
 	//}
 
+	if (FAILED(Ready_Components()))
+		return E_FAIL;
+
 	return S_OK;
 }
 

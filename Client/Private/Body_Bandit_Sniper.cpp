@@ -35,15 +35,6 @@ void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	/*if (m_pGameInstance->Key_Down(DIK_K))
-	{
-		iDiscardMeshNumber += 1;
-		if (iDiscardMeshNumber > m_pModelCom->Get_NumMeshes())
-		{
-			iDiscardMeshNumber = 0;
-		}
-		cout << iDiscardMeshNumber << endl;
-	}*/
 }
 
 void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
@@ -53,6 +44,8 @@ void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Bandit_Sniper::Render()
 {
+	//auto start = chrono::high_resolution_clock::now();
+
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -72,6 +65,10 @@ HRESULT CBody_Bandit_Sniper::Render()
 
 		m_pModelCom->Render((_uint)i);
 	}
+
+	//auto End = chrono::high_resolution_clock::now();
+	//chrono::duration<double> duration0 = End - start;
+	//cout << "Bandit Sniper 실행시간 : " << duration0.count() << endl;
 
 	return S_OK;
 }

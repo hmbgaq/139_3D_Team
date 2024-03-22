@@ -14,6 +14,9 @@ public:
 public:
 	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_OpenStateCombo_8hit;
 
+public:
+	CState<CPlayer>* Hit(CPlayer* pActor, _uint iHitCount, _uint iInputCount, _uint iAnimEnd);
+
 };
 
 END

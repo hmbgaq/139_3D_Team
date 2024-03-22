@@ -9,24 +9,38 @@ class CModel;
 END
 
 BEGIN(Client)
+class CEffect;
+
 
 class CEnvironment_LightObject final : public CGameObject
 {
 public:
+	enum LIGHT_EFFECT
+	{
+		LIGHTEFFECT_TORCH,
+		LIGHTEFFECT_TEST1,
+		LIGHTEFFECT_TEST2,
+		LIGHTEFFECT_TEST3,
+		LIGHTEFFECT_TEST4
+	};
+
+public:
 	typedef struct tagEnvironmentLightObjectDesc : public CGameObject::GAMEOBJECT_DESC 
 	{
 
-		_float4		vPos = { 0.f, 0.f, 0.f, 0.f };
-		_uint		iShaderPassIndex = { 0 };
-		wstring		strModelTag;
-		_float4x4	WorldMatrix;
+		_float4			vPos = { 0.f, 0.f, 0.f, 0.f };
+		_uint			iShaderPassIndex = { 0 };
+		wstring			strModelTag;
+		_float4x4		WorldMatrix;
 
-		_bool		bAnimModel = { false };
-		_int		iPlayAnimationIndex = { 0 };
+		_bool			bAnimModel = { false };
+		_int			iPlayAnimationIndex = { 0 };
 		
-		LIGHT_DESC  LightDesc = {};
-		_int		iLightIndex = { 0 };
-		_bool		bPreview = true; //! 미리보기용 오브젝트인지 확인
+		LIGHT_DESC		LightDesc = {};
+		_int			iLightIndex = { 0 };
+		_bool			bPreview = true; //! 미리보기용 오브젝트인지 확인
+		_bool			bEffect = true;
+		LIGHT_EFFECT	eLightEffect = LIGHTEFFECT_TORCH;
 	}ENVIRONMENT_LIGHTOBJECT_DESC;
 
 
@@ -55,9 +69,31 @@ public:
 	_bool				Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
 	
 	CModel*				Get_ModelCom() { return m_pModelCom; }
-	
+	LIGHT_DESC			Get_LightDesc() { return m_tEnvironmentDesc.LightDesc;}
+	CEffect*			Get_Effect() { return m_pEffect; }
+
 public:
 	void				Set_ColliderRender(_bool bColliderRender) { m_bColliderRender = bColliderRender;}
+
+public:
+	void				Set_Diffuse(_float4 vDiffuse);
+	void				Set_Specular(_float4 vSpecular);
+	void				Set_Ambient(_float4 vAmbient);
+
+	void				Set_Enable(_bool bEnable);
+	void				Set_EffectEnable(_bool bEffectEnable) { m_tEnvironmentDesc.bEffect = bEffectEnable; }
+
+	void				Set_LightDesc(LIGHT_DESC tLightDesc);
+	void				Set_ShaderPassindex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex;}
+	void				Set_LightPos(_float3 vLightPos);
+	void				Set_EffectPos(_float3 vEffectPos);
+	void				Set_Select(_bool bSelect);
+
+
+	
+
+	void				Change_LightType(LIGHT_DESC::TYPE eLightType);
+	void				Change_LightEffect(LIGHT_EFFECT eLightEffectType);
 
 #ifdef _DEBUG
 public: //! For.Tool
@@ -73,6 +109,9 @@ private:
 	CShader*			m_pShaderCom = { nullptr };	
 	CModel*				m_pModelCom = { nullptr };
 	CCollider*			m_pPickingCollider = nullptr;
+
+private:
+	CEffect*			m_pEffect = { nullptr };
 
 private:
 	ENVIRONMENT_LIGHTOBJECT_DESC	m_tEnvironmentDesc = {};

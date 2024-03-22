@@ -1,4 +1,5 @@
 #include "Infected_Melee_RD_01.h"
+#include "Collider.h"
 
 void CInfected_Melee_RD_01::Initialize(CInfected* pActor)
 {

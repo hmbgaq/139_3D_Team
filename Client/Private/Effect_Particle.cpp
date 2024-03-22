@@ -141,6 +141,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 				if (m_tVoidDesc.bRender)
 				{
+
 					m_pVIBufferCom->Update(fTimeDelta);
 				}
 			}
@@ -222,11 +223,8 @@ void CEffect_Particle::ReSet_Effect()
 		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 
-	if (!m_pVIBufferCom->Get_Desc()->bRecycle)
-	{
-		// 파티클 버퍼가 재사용이 false일때만 Reset하기
-		m_pVIBufferCom->ReSet();
-	}
+
+	m_pVIBufferCom->ReSet(); // 버퍼 리셋
 
 }
 
@@ -372,20 +370,20 @@ HRESULT CEffect_Particle::Ready_Components()
 	/* For.Com_Texture */
 	{
 		// Diffuse
-		FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
-
+		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE])
+			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
 
 		// Normal
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NORAML])
 			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NORAML], TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
 
-		// Mask
+		// Mask => ! LEVEL_STATIC 으로 변경 !
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK], TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
+			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_MASK], TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
 
-		// Noise
+		// Noise => ! LEVEL_STATIC 으로 변경 !
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
+			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
 
 		// Sprite
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])

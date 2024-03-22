@@ -4,6 +4,9 @@
 #include "Camera.h"
 
 BEGIN(Engine)
+
+class CCharacter;
+
 END
 
 BEGIN(Client)
@@ -29,6 +32,9 @@ public:
 	virtual void Priority_Tick(_float fTimeDelta) override;
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
+
+public:
+	virtual HRESULT Ready_Components();
 
 public:
 	virtual _bool Write_Json(json& Out_Json) override;

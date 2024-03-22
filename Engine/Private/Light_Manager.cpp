@@ -26,6 +26,19 @@ HRESULT CLight_Manager::Add_Light(const LIGHT_DESC & LightDesc, _int& outLightIn
 	return S_OK;
 }
 
+CLight* CLight_Manager::Add_Light_AndGet(const LIGHT_DESC& LightDesc, _uint& outLightIndex)
+{
+	CLight* pLight = CLight::Create(LightDesc);
+	if (nullptr == pLight)
+		return nullptr;
+
+	m_Lights.push_back(pLight);
+
+	outLightIndex = pLight->Get_LightIndex();
+
+	return pLight;
+}
+
 _bool CLight_Manager::Remove_Light(const _uint& iIndex)
 {
 	for (auto iter = m_Lights.begin(); iter != m_Lights.end(); ++iter)
@@ -44,7 +57,6 @@ _bool CLight_Manager::Remove_Light(const _uint& iIndex)
 _bool CLight_Manager::Remove_AllLight()
 {
 
-
 	return _bool();
 }
 
@@ -53,6 +65,23 @@ CLight* CLight_Manager::Find_Light(const _int iIndex)
 	for (auto iter = m_Lights.begin(); iter != m_Lights.end();)
 	{
 		if (iIndex == (*iter)->Get_LightDesc().Get_LightIndex())
+		{
+			return *iter;
+		}
+		else
+		{
+			++iter;
+		}
+	}
+
+	return nullptr;
+}
+
+CLight* CLight_Manager::Get_DirectionLight()
+{
+	for (auto iter = m_Lights.begin(); iter != m_Lights.end();)
+	{
+		if ((*iter)->Get_LightDesc().eType == tagLightDesc::TYPE_DIRECTIONAL)
 		{
 			return *iter;
 		}

@@ -92,19 +92,7 @@ HRESULT CLevel_Tool::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 {
-// 	CCamera_Dynamic::DYNAMIC_CAMERA_DESC		tDesc = {};
-// 	tDesc.fMouseSensor = 0.05f;
-// 	tDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
-// 	tDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-// 	tDesc.fFovy = XMConvertToRadians(60.0f);
-// 	tDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-// 	tDesc.fNear = 0.1f;
-// 	tDesc.fFar = m_pGameInstance->Get_CamFar();
-// 	tDesc.fSpeedPerSec = 60.f;
-// 	tDesc.fRotationPerSec = XMConvertToRadians(180.0f);
-
-	if (FAILED(m_pGameInstance->Add_CloneObject(m_pGameInstance->Get_NextLevel(), strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
-		return E_FAIL;
+	FAILED_CHECK(m_pGameInstance->Add_CloneObject(m_pGameInstance->Get_NextLevel(), strLayerTag, TEXT("Prototype_GameObject_MasterCamera")));
 
 	CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);
 	//if(pDynamicCam == nullptr)
@@ -117,17 +105,19 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 
 HRESULT CLevel_Tool::Ready_LightDesc()
 {
-	LIGHT_DESC			LightDesc{};
-	LightDesc.eType			= LIGHT_DESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection	= _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse		= _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient		= _float4(0.2f, 0.2f, 0.2f, 1.f);
-	LightDesc.vSpecular		= _float4(0.f, 0.f, 0.f, 1.f);
+	//LIGHT_DESC			LightDesc{};
+	//LightDesc.eType			= LIGHT_DESC::TYPE_DIRECTIONAL;
+	//LightDesc.vDirection	= _float4(1.f, -1.f, 1.f, 0.f);
+	//LightDesc.vDiffuse		= _float4(1.f, 1.f, 1.f, 1.f);
+	//LightDesc.vAmbient		= _float4(0.2f, 0.2f, 0.2f, 1.f);
+	//LightDesc.vSpecular		= _float4(0.f, 0.f, 0.f, 1.f);
+	//
+	//if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
+	//	return E_FAIL;
+	//
+	//cout << "Level Tool - Light Number = " << TempLightNumber << endl; 
 
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc, TempLightNumber)))
-		return E_FAIL;
-
-	cout << "Level Tool - Light Number = " << TempLightNumber << endl;
+	//TODO ¸ÊÅø ÀÌ´Ï¼È¶óÀÌÁî·Î ¿Å°ÜÁü. Window_MapTool.cpp -> Initialize
 
 	return S_OK;
 }

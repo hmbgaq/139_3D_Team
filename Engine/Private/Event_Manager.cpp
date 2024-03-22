@@ -40,12 +40,11 @@ void CEvent_Manager::Tick(_float fTimeDelta)
 	}
 }
 
-//void CEvent_Manager::TriggerEvent()
-//{
-//}
-
 void CEvent_Manager::Clear()
 {
+	if (0 == m_Events.size())
+		return;
+
 	for (IEvent* pEvent : m_Events)
 	{
 		Safe_Delete(pEvent);

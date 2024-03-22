@@ -78,6 +78,8 @@ HRESULT CNavigation::Initialize(void* pArg)
 
 	m_WorldMatrix = XMMatrixIdentity();
 
+	_int iCommitChange = 0; //! 커밋 용 변경
+
 	return S_OK;
 }
 
@@ -197,6 +199,9 @@ _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4*
 
 	/* 이동한 지점의 결과가 현재 셀 내부에 있을경우 true반환
 	 * 이동한 지점의 결과가 외부에 있을경우 iNeighborIndex에 값으로 받아온다. */
+
+	if (m_iCurrentIndex == -1)
+		return false;
 
 	if (true == m_Cells[m_iCurrentIndex]->Is_Out(vPosition, vLook, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex, vOutSlidingDir))
 	{
@@ -323,6 +328,50 @@ void CNavigation::LoadData(wstring strLoadPath)
 }
 
 
+void CNavigation::SpawnCell_Setting(_float3 vPos)
+{
+	cout << "셀찾기 시작 "<< endl;
+
+	for (auto& Cell : m_Cells)
+	{
+		_vector points[3] = {};
+
+		for (int i = 0; i < 3; ++i)
+		{
+			points[i] = XMLoadFloat3(Cell->Get_Point(static_cast<CCell::POINT>(i)));
+			points[i].m128_f32[3] = 0;
+		}
+
+		if (0.f < Compute_CCW(points[0], points[1], points[2])) /* 외적의 결과가 양수 = 시계 */
+			swap(points[1], points[2]);	/* 반시계로 돌린다. -> 내외부 판별은 반시계로 정렬되어있어야함. */
+
+		// 두 벡터를 만듭니다.
+		_vector v0 = points[1] - points[0];
+		_vector v1 = points[2] - points[0];
+
+		// 외적을 계산하여 평면의 법선 벡터를 구합니다.
+		_vector normal = XMVector3Cross(v0, v1);
+
+		// 삼각형의 평면 방정식의 상수 D를 구합니다.
+		_float D = -XMVector3Dot(points[0], normal).m128_f32[0];
+		
+		// 점 vPos를 평면 방정식에 대입하여 부호를 확인합니다.
+		_float Result = XMVectorGetX(XMVector3Dot(vPos, normal)) + D;
+
+		cout << Result << endl;
+		if (Result < 0)
+		{
+			cout << "★☆★☆★☆★☆★☆★☆★☆★☆★☆찾음★☆★☆★☆★☆★☆★☆★☆" << endl;
+			Set_CurrentIndex(Cell->Get_CurrentIndex());
+			return;
+		}
+		else
+			continue;
+	}
+
+	return;
+}
+
 void CNavigation::AddCell(CCell* pCell)
 {
 	if (nullptr == pCell)
@@ -330,6 +379,7 @@ void CNavigation::AddCell(CCell* pCell)
 
 	m_Cells.push_back(pCell);
 
+	
 	Make_Neighbors();
 }
 
@@ -374,13 +424,24 @@ void CNavigation::AllSearchDelete_IsNan()
 		}
 	}
 
-	_uint iIsNanCellSize = (_uint)vecNanCellIndex.size();
+	_int iIsNanCellSize = (_int)vecNanCellIndex.size();
 	for (_int i = 0; i < iIsNanCellSize; ++i)
 	{
 		Safe_Release(m_Cells[vecNanCellIndex[i]]);
 	}
 
 	m_Cells.erase(std::remove(m_Cells.begin(), m_Cells.end(), nullptr), m_Cells.end());
+}
+
+_float CNavigation::Compute_CCW(_float3 vPointA, _float3 vPointB, _float3 vPointC)
+{	
+	/* 2D평면에서 회전을 계산하므로 Y성분이 양수인지 음수인지에 따라 시계&반시계가 나뉜다. */
+	_vector vLineAB = XMVector3Normalize(XMVectorSetY(XMLoadFloat3(&vPointB) - XMLoadFloat3(&vPointA), 0.f));
+	_vector vLineAC = XMVector3Normalize(XMVectorSetY(XMLoadFloat3(&vPointC) - XMLoadFloat3(&vPointA), 0.f));
+
+	_float vNormalY = XMVectorGetY(XMVector3Cross(vLineAB, vLineAC));
+
+	return vNormalY;
 }
 
 void CNavigation::InRangeCellChange(CCell* pCell, _int ePoint, _float3 vSearchPos)
@@ -410,25 +471,54 @@ void CNavigation::InRangeCellChange(CCell* pCell, _int ePoint, _float3 vSearchPo
 
 _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
 {
-	_int iCellSize = (_int)m_Cells.size();
 
+	
+
+
+	//_int iCellSize = (_int)m_Cells.size();
+	//
 	CTransform* pTransform = pTargetObject->Get_Transform();
-
+	//
 	_vector vPos = pTransform->Get_State(CTransform::STATE_POSITION);
+	//
+	//for (_int i = 0; i < iCellSize; ++i)
+	//{
+	//
+	//	if (true == m_Cells[i]->isInRange(vPos, XMLoadFloat4x4(&m_WorldMatrix)))
+	//		return m_Cells[i]->Get_Index();
+	//}
+	//
+	//return -1;
 
-	for (_int i = 0; i < iCellSize; ++i)
+	for (auto& Cell : m_Cells)
 	{
+		_vector points[3] = {};
 
-		if (true == m_Cells[i]->isInRange(vPos, XMLoadFloat4x4(&m_WorldMatrix)))
-			return m_Cells[i]->Get_Index();
+		for (int i = 0; i < 3; ++i)
+			points[i] = XMLoadFloat3(Cell->Get_Point(static_cast<CCell::POINT>(i)));
+
+		// 각 꼭지점에서 주어진 점 P까지의 벡터 계산
+		_vector AP = vPos - points[0];
+		_vector BP = vPos - points[1];
+		_vector CP = vPos - points[2];
+
+		// 삼각형 내부 판단
+		// 내적을 이용하여 삼각형 ABC 내부에 있는지 확인
+		if (XMVectorGetX(XMVector3Dot(AP, XMVectorSubtract(points[1], points[0]))) > 0 &&
+			XMVectorGetX(XMVector3Dot(BP, XMVectorSubtract(points[2], points[1]))) > 0 &&
+			XMVectorGetX(XMVector3Dot(CP, XMVectorSubtract(points[0], points[2]))) > 0)
+		{
+			// 삼각형 내부에 위치한 경우 해당 셀의 인덱스 반환
+			return Cell->Get_CurrentIndex();
+		}
 	}
 
 	return -1;
 }
 
+
 _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 {
-
 	_float fResult = {};
 
 	CCell* pCell = m_Cells[m_iCurrentIndex]; /* 현재 어디 셀에 위치한지 리턴 */
@@ -450,15 +540,50 @@ _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 	_float fc = XMVectorGetZ(vPlane);
 	_float fd = XMVectorGetW(vPlane);
 
-
 	fResult = (-fa * fx - fc * fz - fd) / fb;
 
 	if (pGround != nullptr)
 	{
-		*pGround = (vPosition.y < fResult);
+		*pGround = vPosition.y < fResult;
 	}
 
+
+
 	return fResult;
+
+
+// 	_float fResult = {};
+// 
+// 	CCell* pCell = m_Cells[m_iCurrentIndex]; // 현재 셀 가져오기
+// 
+// 	// 평면을 정의하는 세 점을 가져옵니다.
+// 	_vector vPointA = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_A)), 1.f);
+// 	_vector vPointB = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_B)), 1.f);
+// 	_vector vPointC = XMVectorSetW(XMLoadFloat3(pCell->Get_Point(CCell::POINT_C)), 1.f);
+// 
+// 	// 평면을 정의하는 법선 벡터를 계산합니다.
+// 	_vector vPlaneNormal = XMVector3Cross(XMVectorSubtract(vPointB, vPointA), XMVectorSubtract(vPointC, vPointA));
+// 	vPlaneNormal = XMVector3Normalize(vPlaneNormal);
+// 
+// 	// 평면 방정식의 D 값을 계산합니다.
+// 	_float fd = -XMVectorGetX(XMVector3Dot(vPlaneNormal, vPointA));
+// 
+// 	// 평면 방정식의 계수들을 가져옵니다.
+// 	_float fa = XMVectorGetX(vPlaneNormal);
+// 	_float fb = XMVectorGetY(vPlaneNormal);
+// 	_float fc = XMVectorGetZ(vPlaneNormal);
+// 
+// 	// 현재 위치를 평면에 대입하여 높이 값을 계산합니다.
+// 	fResult = (-fa * vPosition.x - fc * vPosition.z - fd) / fb;
+// 
+// 	// 높이를 반환합니다.
+// 	if (pGround != nullptr)
+// 	{
+// 		// 현재 위치의 y 값이 평면의 y 값보다 작으면 지상에 위치합니다.
+// 		*pGround = ( abs(vPosition.y) < abs(fResult));
+// 	}
+
+	//return fResult;
 
 }
 

@@ -16,6 +16,7 @@ void CInfected_Walk_B::Initialize(CInfected* pActor)
 {
 	__super::Initialize(pActor);
 
+	pActor->Set_MonsterAttackState(false);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 	CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
@@ -28,6 +29,7 @@ CState<CInfected>* CInfected_Walk_B::Update(CInfected* pActor, _float fTimeDelta
 
 	if (pActor->Is_Animation_End()) /* 공격이 끝나면 무조건 뒷걸음질침 -> Idle -> 공격 -> 뒷걸음질 무한반복  */
 	{
+		/* Idle 동작으로 바로 연계 */
 		_int iRandom = SMath::Random(1, 6);
 
 		switch (iRandom)

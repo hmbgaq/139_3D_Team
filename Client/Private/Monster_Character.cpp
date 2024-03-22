@@ -1,7 +1,6 @@
 #include "Monster_Character.h"
 #include "Transform.h"
 #include "Navigation.h"
-
 #include "Player.h"
 #include "Data_Manager.h"
 #include "Transform.h"
@@ -47,7 +46,9 @@ HRESULT CMonster_Character::Initialize(void* pArg)
 			if (m_tMonsterDesc.bPreview == false)
 			{
 				m_pTransformCom->Set_WorldMatrix(m_tMonsterDesc.WorldMatrix);
-				m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
+				m_pNavigationCom->Set_CurrentIndex(m_tMonsterDesc.iStartNaviIndex);
+				//m_pNavigationCom->Find_NaviIndex(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+				//m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
 			}
 		}
 	}
@@ -99,7 +100,7 @@ CPlayer* CMonster_Character::Set_Finish_Pos(_float3 vPos)
 {
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
-	_float3 vTargetPos = pPlayer->Get_Transform()->Calc_Front_Pos(vPos);
+	_float3 vTargetPos = pPlayer->Calc_Front_Pos(vPos);
 	Set_Position(vTargetPos);
 	m_pTransformCom->Look_At(pPlayer->Get_Transform()->Get_State(CTransform::STATE::STATE_POSITION));
 

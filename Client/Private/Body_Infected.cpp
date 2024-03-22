@@ -51,42 +51,32 @@ HRESULT CBody_Infected::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		auto iter = m_vDiscardMesh.find(m_eRender_State);
+		auto iter = m_vDiscardMesh.find(m_eRender_State); // 현재 상태에 해당하는 vector<int> 찾기 
 		if (iter != m_vDiscardMesh.end())
 		{
 			auto& Discard = iter->second;
-			if (find(Discard.begin(), Discard.end(), i) != Discard.end())
+			if (find(Discard.begin(), Discard.end(), i) != Discard.end()) // 현재 렌더를 돌리는 메시의 번호가 vector<int>랑 같은경우, 
 			{
 				if (m_eRender_State == CBody_Infected::RENDER_STATE::ATTACK)
 				{
 					m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
+					m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 					m_pShaderCom->Begin(ECast(MONSTER_SHADER::INFECTED_PUNCH));
-
 					m_pModelCom->Render((_uint)i);
 				}
 				else
 					continue;
 			}
-			else
+			else // 현재 렌더를 돌리는 메시의 번호가 vector<int>랑 다른 경우, 
 			{
 				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
-
+				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 				m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
-
 				m_pModelCom->Render((_uint)i);
 			}
 		}
 	}
+
 	return S_OK;
 }
 
@@ -133,11 +123,6 @@ HRESULT CBody_Infected::Set_StateDead()
 	return E_NOTIMPL;
 }
 
-void CBody_Infected::Collider_Off()
-{
-	m_pColliderCom->Set_Enable(false);
-}
-
 HRESULT CBody_Infected::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
@@ -151,7 +136,7 @@ HRESULT CBody_Infected::Ready_Components()
 	{
 		CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
 		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-		BoundingDesc.vExtents = _float3(0.3f, 0.7f, 0.3f);
+		BoundingDesc.vExtents = _float3(0.22f, 0.8f, 0.22f);
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 
 		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
@@ -172,5 +157,17 @@ HRESULT CBody_Infected::Bind_ShaderResources()
 
 void CBody_Infected::Free()
 {
+	//for (auto& pair : m_vDiscardMesh)
+	//{
+	//	for (auto& element : pair.second) 
+	//	{
+	//		
+	//	}
+	//	// 벡터의 자원을 모두 해제한 후에는 clear() 함수를 호출하여 벡터를 비워줍니다.
+	//	pair.second.clear();
+	//}
+	//// 맵의 자원도 해제합니다.
+	//m_vDiscardMesh.clear();
+
 	__super::Free();
 }

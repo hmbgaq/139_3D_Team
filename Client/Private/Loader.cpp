@@ -40,6 +40,7 @@
 #include "Player_Weapon_Punch.h"
 
 #include "Bullet_Winchester.h"
+#include "Impact_Slam.h"
 #pragma endregion
 
 #pragma region VampireCommander
@@ -382,7 +383,8 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_SkyDome"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/SkyDome/EngineSky", PivotMatrix)));
 	
 	//!환경 모델
-	//!		
+	
+
 
 	//!이펙트 모델
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Xray_ManHeavy"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Xray/Xray_ManHeavy", PivotMatrix)));
@@ -390,6 +392,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Particle_Test"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Mesh_Particle/Mesh_Particle_Test/Mesh Particle_Test", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_BatStorm_01"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/VampireCommander/BatStorm/BatStorm_01/BatStorm_01", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_BatStorm_02"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/VampireCommander/BatStorm/BatStorm_02/BatStorm_02", PivotMatrix)));
+	
 
 	//!버퍼 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_VIBuffer_Terrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp"))));
@@ -416,7 +419,11 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Shader_EffectTex"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_EffectTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)));
 
 	lstrcpy(m_szLoadingText, TEXT("네비게이션를(을) 로드하는 중입니다."));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Navigation"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Data_Map/Navigation/Stage1NavigationFinal.dat"))));
+
+	if (eLEVEL == LEVEL_GAMEPLAY)
+	{
+		FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Navigation"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Data_Map/Navigation/Stage1NavigationFinal.dat"))));
+	}
 
 	lstrcpy(m_szLoadingText, TEXT("콜라이더를(을) 로드하는 중입니다."));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_RigidBody"), CRigidBody::Create(m_pDevice, m_pContext)));
@@ -447,8 +454,104 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 
 HRESULT CLoader::Loading_For_Intro_Level()
 {
+	lstrcpy(m_szLoadingText, TEXT("텍스쳐를 로드하는 중입니다."));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_Sky"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4)));
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_RaidPoolGround_Diffuse1"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Map/RaidPool/T_BloodGround_ORM.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_RaidPoolLight1"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Map/RaidPool/T_RaidBloodlight_01_BC.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_RaidPoolLight2"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Map/RaidPool/T_RaidBloodlight_02_BC.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_RaidPoolLight3"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Map/RaidPool/T_RaidBloodlight_03_BC.dds"))));
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_Effect_Diffuse"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/00_Diffuse/Diffuse_%d.dds"), 13)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_Effect_Diffuse_Waves"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/00_Diffuse/Waves/Diffuse_Wave_%d.dds"), 6)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_Effect_Normal"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/01_Normal/Normal_%d.dds"), 1)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_Effect_Mask"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Mask_%d.dds"), 45)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_Effect_Mask_Waves"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Waves/Mask_Wave_%d.dds"), 6)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_Effect_Noise"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/03_Noise/Noise_%d.dds"), 25)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_Effect_Sprite"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/04_Sprites/Sprite_%d.dds"), 21)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_Effect_Sprite_Smokes"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/04_Sprites/Smokes/Sprite_smoke_%d.dds"), 31)));
+
+	lstrcpy(m_szLoadingText, TEXT("맵을 로드하는 중입니다."));
 	Ready_Environment_Model(LEVEL_INTRO);
-	FAILED_CHECK(Loading_For_GamePlay_Level_Origin(LEVEL_INTRO));
+
+	lstrcpy(m_szLoadingText, TEXT("네비게이션를(을) 로드하는 중입니다."));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Navigation"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Data_Map/Navigation/IntroBossNaviFinal.dat"))));
+
+	_matrix      PivotMatrix;
+
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+
+	lstrcpy(m_szLoadingText, TEXT("플레이어를 로드하는 중입니다."));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Rentier"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Player/Player", PivotMatrix)));
+
+	lstrcpy(m_szLoadingText, TEXT("몬스터를 로드하는 중입니다."));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_VampireCommander"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/VampireCommander/VampireCommander", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Infected_A"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/A/Infected_A", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Horse"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Animals/Horse/Horse", PivotMatrix)));
+
+	/* ---------------------- Test Model 추가 라인 ---------------------- */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Infected_B"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/B/Infected_B", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Infected_C"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/C/Infected_C", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Bandit_Sniper"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/Model/Bandit_Sniper", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Bandit_Sniper_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/Weapon/Sniper_Weapon", PivotMatrix)));
+
+	/* ------------------------------------------------------------------ */
+
+	lstrcpy(m_szLoadingText, TEXT("이펙트를 로드하는 중입니다."));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Effect_BeastSkull"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/VampireCommander/BeastSkull/BeastSkull", PivotMatrix)));
+	
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);	// Impact 모델은 180도 돌리면 안됨
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Effect_Impact"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/VampireCommander/Impact/Impact", PivotMatrix)));
+	
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+
+	lstrcpy(m_szLoadingText, TEXT("아이템, 장비를 로드하는 중입니다."));
+	//! Player Weapon
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Player_Weapon_Winchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/Winchester/Winchester", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Player_Weapon_Revolver"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/Revolver/PlayerRevolver", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Player_Weapon_ELWinchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/ELWinchester/ELWinchester", PivotMatrix)));
+
+	//! BOSS Projectile
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_VampireCommander_Projectile_Range1"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/BeastSkull/BeastSkull", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_VampireCommander_Projectile_Range3"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/BeastSkull/BeastSkull", PivotMatrix)));
+
+
+	lstrcpy(m_szLoadingText, TEXT("컴포넌트를 로드하는 중입니다."));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_VIBuffer_Cube"), CVIBuffer_Cube::Create(m_pDevice, m_pContext))); //! 스카이박스
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_VIBuffer_Environment_Model_Instance"), CVIBuffer_Environment_Model_Instance::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_VIBuffer_Particle"), CVIBuffer_Particle::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"), CVIBuffer_Effect_Model_Instance::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_VIBuffer_Trail"), CVIBuffer_Trail::Create(m_pDevice, m_pContext)));
+
+	lstrcpy(m_szLoadingText, TEXT("셰이더를(을) 로드하는 중입니다."));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_Model"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Model.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_Monster"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Monster.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_VtxCube"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxCube.hlsl"), VTXCUBE::Elements, VTXCUBE::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_VtxNorTex"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_AnimModel"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_AnimModel.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_Particle_Rect"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Particle_Rect.hlsl"), VTX_PARTICLE_RECT::Elements, VTX_PARTICLE_RECT::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_Particle_Point"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Particle_Point.hlsl"), VTX_PARTICLE_POINT::Elements, VTX_PARTICLE_POINT::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_Model_Instance"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxModelInstance.hlsl"), VTXMODEL_INSTANCE_DECLARATION::Elements, VTXMODEL_INSTANCE_DECLARATION::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_AnimModel_Instance"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimModelInstance.hlsl"), VTXMODEL_ANIMMODEL_INSTANCE_DECLARATION::Elements, VTXMODEL_ANIMMODEL_INSTANCE_DECLARATION::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_Effect_Model_Instance"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxEffectModelInstance.hlsl"), VTXMODEL_INSTANCE_DECLARATION::Elements, VTXMODEL_INSTANCE_DECLARATION::iNumElements)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_EffectTex"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_EffectTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)));
+
+
+	lstrcpy(m_szLoadingText, TEXT("콜라이더를(을) 로드하는 중입니다."));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Collider_AABB"), CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_AABB)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Collider_OBB"), CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_OBB)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Collider_Sphere"), CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE)));
+
+	lstrcpy(m_szLoadingText, TEXT("피직스를(을) 로드하는 중입니다."));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_PhysXController"), CPhysXController::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_PhysXCharacterController"), CPhysXCharacterController::Create(m_pDevice, m_pContext)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_PhysXCollider"), CPhysXCollider::Create(m_pDevice, m_pContext)));
+
+
+
+	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
+
+	m_isFinished = true;
 
 	return S_OK;
 }
@@ -472,14 +575,11 @@ HRESULT CLoader::Loading_For_IntroBoss_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Texture_Effect_Sprite"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/04_Sprites/Sprite_%d.dds"), 21)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Texture_Effect_Sprite_Smokes"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/04_Sprites/Smokes/Sprite_smoke_%d.dds"), 31)));
 
-
-
 	lstrcpy(m_szLoadingText, TEXT("맵을 로드하는 중입니다."));
 	Ready_Environment_Model(LEVEL_INTRO_BOSS);
+
 	lstrcpy(m_szLoadingText, TEXT("네비게이션를(을) 로드하는 중입니다."));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Navigation"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Data_Map/Navigation/IntroBossNaviFinal.dat"))));
-
-	//FAILED_CHECK(Loading_For_GamePlay_Level_Origin(LEVEL_INTRO_BOSS));
 
 	_matrix      PivotMatrix;
 
@@ -497,6 +597,7 @@ HRESULT CLoader::Loading_For_IntroBoss_Level()
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);	// Impact 모델은 180도 돌리면 안됨
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Model_Effect_Impact"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/VampireCommander/Impact/Impact", PivotMatrix)));
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Model_Particle_Test"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Mesh_Particle/Mesh_Particle_Test/Mesh Particle_Test", PivotMatrix)));
 
 	lstrcpy(m_szLoadingText, TEXT("아이템, 장비를 로드하는 중입니다."));
 	//! Player Weapon
@@ -592,14 +693,14 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 #pragma region 캐릭터 모델 : 주석 풀고 병합해야함!!!
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Screamer"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Screamer/Screamer", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Rentier"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Player/Player", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_Shotgun"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Shotgun/Shotgun", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_ELShotgun"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/ELShotgun/ELShotgun", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_ELWinchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/ELWinchester/ELWinchester", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_FlameBelcher"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/FlameBelcher/FlameBelcher", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_Winchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Winchester/Winchester", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_Revolver"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Revolver/PlayerRevolver", PivotMatrix)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Screamer"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Screamer/Screamer", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Rentier"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Player/Player", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_Shotgun"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Shotgun/Shotgun", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_ELShotgun"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/ELShotgun/ELShotgun", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_ELWinchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/ELWinchester/ELWinchester", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_FlameBelcher"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/FlameBelcher/FlameBelcher", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_Winchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Winchester/Winchester", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Player_Weapon_Revolver"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Revolver/PlayerRevolver", PivotMatrix)));
 
 	//TODO VampireCommander
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
@@ -608,11 +709,11 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 #pragma region 몬스터 모델 : 주석 풀고 병합??
 	/* Monster */
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_A"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/A/Infected_A", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_B"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/B/Infected_B", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_C"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/C/Infected_C", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Sniper"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/Model/Bandit_Sniper", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Sniper_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/Weapon/Sniper_Weapon", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_A"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/A/Infected_A", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_B"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/B/Infected_B", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_C"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/C/Infected_C", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Sniper"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/Model/Bandit_Sniper", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Sniper_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/Weapon/Sniper_Weapon", PivotMatrix)));
 
 
 	//!//! 터짐 텍스처 찾아야됨 FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Infected_E"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/E/CharacterBase_Skeleton", PivotMatrix)));
@@ -623,7 +724,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_BeastBoss_Phase2"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Beast/Phase2/Beast_Skeleton", PivotMatrix)));
 	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_BeastBoss_Phase3"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Beast/Phase3/Beast_Skeleton", PivotMatrix)));
 	//!
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Heavy"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Heavy/ManHeavyBase_Skeleton", PivotMatrix)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Heavy"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Heavy/ManHeavyBase_Skeleton", PivotMatrix)));
 	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Heavy_Vampiric"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Heavy/Bandit_Heavy_Vampiric/ManHeavyBase_Skeleton", PivotMatrix)));
 	//!//
 	//! 캐릭터 모델
@@ -649,8 +750,8 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 #pragma region 환경 : 주석 풀고 병합해야함!!!
 	//! 환경 모델
-	//Ready_Environment_Model(LEVEL_TOOL);
-#pragma endregion 환경 : 주석 풀고 병합해야함!!! 끝
+	Ready_Environment_Model(LEVEL_TOOL);
+#pragma endregion 환경 : 주석 풀고 병합해야함!!! 끝 
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Chain"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix)));
 
@@ -669,7 +770,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 	
 
 	// 불 붙일 횃불 모델 테스트
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Effect_Torch"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Torch/Torch", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Effect_Torch"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Torch/Torch", PivotMatrix)));
 
 
 	//!버퍼 
@@ -744,6 +845,7 @@ HRESULT CLoader::Ready_Origin()
 
 	//! PlayerBullet
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Winchester"), CBullet_Winchester::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Winchester"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Impact_Slam"), CImpact_Slam::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Impact_Slam"))));
 
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Player"), CWeapon_Player::Create(m_pDevice, m_pContext)));
@@ -932,10 +1034,10 @@ HRESULT CLoader::Ready_UI_Origin()
 }
 
 HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
-{
-	lstrcpy(m_szLoadingText, TEXT("스테이지를 로드하는 중입니다."));
+   {
+	lstrcpy(m_szLoadingText, TEXT("환경모델을 로드하는 중입니다."));
 
-	if (eLevel == LEVEL_GAMEPLAY || eLevel == LEVEL_INTRO)
+	if (eLevel == LEVEL_GAMEPLAY)
 	{
 		wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/NonAnim/");
 		wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/Anim/");
@@ -944,7 +1046,7 @@ HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
 		FAILED_CHECK(Read_FBXModelPath(strNonAnimModelPath.c_str(), eLevel, CModel::TYPE_NONANIM));
 		FAILED_CHECK(Read_FBXModelPath(strAnimModelPath.c_str(), eLevel, CModel::TYPE_ANIM));
 	}
-	else if (eLevel == LEVEL_INTRO_BOSS)
+	else if (eLevel == LEVEL_INTRO_BOSS || eLevel == LEVEL_INTRO)
 	{
 		wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1BossMap/NonAnim/");
 		//wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1BossMap/Anim/");
