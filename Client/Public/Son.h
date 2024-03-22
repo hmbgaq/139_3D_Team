@@ -56,7 +56,43 @@ public:
 	virtual void Free() override;
 
 	enum Son_State
-	{
+	{ 
+		Parasiter_Tentacle_Death                          ,
+		Parasiter_Worm_Attack_01						  ,
+		Parasiter_Worm_Attack_Hit_L						  ,
+		Parasiter_Worm_Attack_Rest_01					  ,
+		Parasiter_Worm_Attack_Hit_R						  ,
+		Parasiter_Worm_Attack_Stop_01					  ,
+		Parasiter_Worm_BiteAttack_Common_Stop_2000		  ,
+		Parasiter_Worm_BiteAttack_Common_Stop_400		  ,
+		Parasiter_Worm_burn								  ,
+		Parasiter_Worm_Idle								  ,
+		Parasiter_Worm_Hide								  ,
+		Parasiter_Worm_Hide_2							  ,
+		Parasiter_Worm_Hit								  ,
+		Parasiter_Worm_OneBiteAttack_2000				  ,
+		Parasiter_Worm_OneBiteAttack_400				  ,
+		Parasiter_Worm_OneBiteAttack_Rest_2000			  ,
+		Parasiter_Worm_OneBiteAttack_Rest_400			  ,
+		Parasiter_Worm_RestFromSpit_Start_L				  ,
+		Parasiter_Worm_RestFromSpit_Start_R				  ,
+		Parasiter_Worm_RestStraight_Start_L				  ,
+		Parasiter_Worm_RestStraight_Start_R				  ,
+		Parasiter_Worm_Spawn							  ,
+		Parasiter_Worm_Spit_Far							  ,
+		Parasiter_Worm_Spit_Near						  ,
+		Parasiter_Worm_Stun_End_L						  ,
+		Parasiter_Worm_Stun_End_R						  ,
+		Parasiter_Worm_Stun_Hit_L						  ,
+		Parasiter_Worm_Stun_Loop_R						  ,
+		Parasiter_Worm_Stun_Hit_R						  ,
+		Parasiter_Worm_Stun_Loop_L						  ,
+		Parasiter_Worm_Stun_Start						  ,
+		Parasiter_Worm_Stun_Start_L						  ,
+		ShakeAndBite_Loop_2000							  ,
+		ShakeAndBite_Loop_400							  ,
+		ShakeAndBite_Start_2000							  ,
+		ShakeAndBite_Start_400
 
 	};
 

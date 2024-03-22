@@ -93,20 +93,20 @@ void CMother::Tick(_float fTimeDelta)
 		m_pActor->Update_State(fTimeDelta);
 	}
 	//cout << "introBossHP:" << m_iHp << endl;
-	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
-
-	//cout << "Mother : " << fAngle << endl;
-	if (m_bLookAt == true)
-	{
-
-		if (0 <= fAngle && fAngle <= 45)
-			Look_At_Target_Lerp(fTimeDelta);
-		else if (-45 <= fAngle && fAngle < 0)
-			Look_At_Target_Lerp(fTimeDelta);
-
-		/*m_bLookAt = false;*/
-
-	}
+	//_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
+	//
+	////cout << "Mother : " << fAngle << endl;
+	//if (m_bLookAt == true)
+	//{
+	//
+	//	if (0 <= fAngle && fAngle <= 45)
+	//		Look_At_Target_Lerp(fTimeDelta);
+	//	else if (-45 <= fAngle && fAngle < 0)
+	//		Look_At_Target_Lerp(fTimeDelta);
+	//
+	//	/*m_bLookAt = false;*/
+	//
+	//}
 
 }
 
@@ -123,19 +123,6 @@ HRESULT CMother::Render()
 	return S_OK;
 }
 
-_float CMother::Ratation_Target_Test()
-{
-	_vector vPlayerPos = XMVector3Normalize(CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION));
-	_vector vMonsterPos = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
-	//시선벡터 계산 
-	_float dotProduct = XMVectorGetX(XMVector3Dot(vPlayerPos, vMonsterPos));
-	_float Radian = acosf(dotProduct);
-	_float Degree = XMConvertToRadians(Radian);
-
-	return Degree;
-
-}
 
 HRESULT CMother::Ready_Components()
 {
@@ -148,15 +135,7 @@ HRESULT CMother::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Mother"), BodyDesc)))
 		return E_FAIL;
 
-// 	CWeapon::WEAPON_DESC		WeaponDesc = {};
-// 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Mother_Weapon_Hand"), "LeftHandIK", WeaponDesc, TEXT("Weapon_hand_L")));
-// 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Mother_Weapon_Hand"), "RightHandIK", WeaponDesc, TEXT("Weapon_hand_R")));
-// 
-// 	CWeapon* m_pWeapon_Punch_L = Get_Weapon(TEXT("Weapon_hand_L"));
-// 	m_pWeapon_Punch_L->Set_Enable(false);
-// 
-// 	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_hand_R"));
-// 	m_pWeapon_Punch_R->Set_Enable(false);
+
 
 
 	return S_OK;

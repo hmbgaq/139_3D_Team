@@ -2938,6 +2938,72 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon\Head">
       <UniqueIdentifier>{09011642-de6e-45d5-b257-3c2e3cd51479}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\0.Origin">
+      <UniqueIdentifier>{c6591a91-9ede-4a48-80d5-1882b8ccdd98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle">
+      <UniqueIdentifier>{441e0182-49d4-4683-9a6b-533a5990a4e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit">
+      <UniqueIdentifier>{523fef58-18b3-4f51-b554-e77fd8d69372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun">
+      <UniqueIdentifier>{aff1403f-53ae-4ce2-badc-5013ffd71c21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines">
+      <UniqueIdentifier>{caa9e9a5-f458-4932-9aa1-cb1f2dd866f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\5Hit">
+      <UniqueIdentifier>{172a0cf1-2ece-4a2c-a0b6-ef3063dc6201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\6.Dead">
+      <UniqueIdentifier>{bb11325b-5557-4db7-ba32-c6631b8f7a2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree">
+      <UniqueIdentifier>{2f265b4d-8955-4691-bef0-2bfabf89de12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle\0.Parent">
+      <UniqueIdentifier>{a56146b1-477c-4aca-a71f-0aa5efbc7aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle\1">
+      <UniqueIdentifier>{1719ab83-1902-4adc-a129-c0e22a85ac50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitStart">
+      <UniqueIdentifier>{a0ffcf34-ebc9-40ec-88fa-35c8c7c9cb45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitLoop">
+      <UniqueIdentifier>{a0bde6e7-4f3d-4503-bfc3-4113f793be56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitEnd">
+      <UniqueIdentifier>{528e9aee-479d-4487-91e0-c00be2b6b79a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunStart">
+      <UniqueIdentifier>{275a88ab-aea3-4bbb-96f5-006d5d6d9af4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunLoop">
+      <UniqueIdentifier>{d1183598-f683-4ad6-b8f2-c5ffcb0c9a3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunEnd">
+      <UniqueIdentifier>{fa523905-a18b-48e7-bfa0-43546a694f3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingStart">
+      <UniqueIdentifier>{f9ae3214-7f8a-4fdb-9772-b0546c37d4f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingLoop">
+      <UniqueIdentifier>{7acb6234-3638-48bd-b782-7e81fbad42e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingEnd">
+      <UniqueIdentifier>{2f47fa68-483e-49fa-b95a-627bb8b26809}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeStart">
+      <UniqueIdentifier>{a63aae35-c645-4106-935b-ee1be0a09938}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeLoop">
+      <UniqueIdentifier>{d5592a68-06a5-4fec-a36d-d31a7e33d786}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeEnd">
+      <UniqueIdentifier>{7b00641b-549c-44b8-9cc2-c4cbcde2c7f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -5946,6 +6012,57 @@
     <ClInclude Include="..\Public\Son_Weapon_Head.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon\Head</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Mother_State.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\0.Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle\0.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_Idle.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_Hit.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\5Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_Dead.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\6.Dead</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_VomitEnd.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_StunEnd.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_SpittingEnd.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_ShakeTreeEnd.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_ShakeTreeStart.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeStart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_ShakeTreeLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_SpittingStart.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingStart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_SpittingLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_StunStart.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunStart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_StunLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_VomitStart.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitStart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_VomitLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitLoop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8406,6 +8523,57 @@
     </ClCompile>
     <ClCompile Include="..\Private\Son_Weapon_Head.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_State.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\0.Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_State_Normal.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_Hit.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\5Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_Dead.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\6.Dead</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_VomitEnd.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_StunEnd.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_SpittingEnd.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_ShakeTreeEnd.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_ShakeTreeStart.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeStart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_ShakeTreeLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_SpittingStart.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingStart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_SpittingLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_StunStart.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunStart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_StunLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_VomitStart.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitStart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_VomitLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitLoop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -44,7 +44,10 @@ public:
 
 	enum MotherMouth_State
 	{
-
+		Grand_parasiter_mouth_Idle            ,
+		Parasiter_SpittingMines_End_1800	  ,
+		Parasiter_SpittingMines_Loop_1800	  ,
+		Parasiter_SpittingMines_Start_1800
 	};
 };
 

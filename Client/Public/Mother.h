@@ -21,9 +21,6 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-public:
-	_float Ratation_Target_Test();
-
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
@@ -46,10 +43,9 @@ private:
 
 private:
 	CEffect* m_pMapEffect = { nullptr }; // TEST
-public://»À 13°³ 
-	vector<string> m_vRandomBones = { "LeftHandIK","RightHandIK" ,"Hips","Spine1","Head","Neck","RightShoulder","LeftElbowRoll","LeftShoulderRoll_01","Right_BigWing_03","Left_BigWing_03","LeftLeg","RightLeg" };
+
 public:
-	vector<class CUI_Weakness*> m_pWeakneesUIs;
+	//vector<class CUI_Weakness*> m_pWeakneesUIs;
 	_bool m_bTurn = true;
 
 public:
@@ -64,7 +60,31 @@ public:
 
 	enum Mother_State
 	{
-
+		GrandParasiter_Intro,
+		GrandParasiter_Turn,
+		Parasiter_Idle_01,
+		GrandParasiter_Turn_L45,
+		Parasiter_Turn_L45,
+		GrandParasiter_Turn_R45,
+		Parasiter_Turn_R45,
+		Parasiter_Death,
+		Parasiter_Hit_02,
+		Parasiter_Hit_03,
+		Parasiter_HitLight_L_01,
+		Parasiter_HitLight_R_01,
+		Parasiter_Idle_closed_01,
+		Parasiter_ShakeTree_Loop,
+		Parasiter_ShakeTree_Start,
+		Parasiter_ShakeTree_Stop,
+		Parasiter_SpittingMines_End_400,
+		Parasiter_SpittingMines_Loop_400,
+		Parasiter_SpittingMines_Start_400,
+		Parasiter_Stun_Loop,
+		Parasiter_Stun_Start,
+		Parasiter_Stun_Stop,
+		Parasiter_Vomit_End_02,
+		Parasiter_Vomit_Loop_02,
+		Parasiter_Vomit_Start_02
 	};
 };
 
