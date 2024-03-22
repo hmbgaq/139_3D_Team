@@ -9,13 +9,13 @@ class ENGINE_DLL CVIBuffer_Effect_Model_Instance : public CVIBuffer_Model_Instan
 {
 public:
 	enum TYPE_MODE	 { MODE_STATIC, MODE_PARTICLE, MODE_END };
-	enum TYPE_ACTION { SPARK, BLINK, FALL, RISE, RECYCLE, TYPE_ACTION_END };
+	enum TYPE_ACTION { SPARK, BLINK, FALL, RISE, TORNADO, TYPE_ACTION_END };
 	enum MODEL_MORPH { MORPH_01, MORPH_02, MORPH_END };
 
 	typedef struct tagVIBuffer_EffectModelInstanceDesc
 	{
 		// 저장해야 하는 고정 정보들
-		_int			iCurNumInstance		= { 20 };		// 초기화 값이 최대 개수가 됨	
+		_int			iCurNumInstance		= { 500 };		// 초기화 값이 최대 개수가 됨	
 
 		class CModel*	pModel[MORPH_END]	= { nullptr };	// 저장 X
 		MODEL_MORPH		eCurModelNum		= { MORPH_01 };	// 저장 X
@@ -45,6 +45,10 @@ public:
 		_byte		byFreezeAxis	= { 0 };		// 축 고정 확인용 바이트
 
 		_float2		vMinMaxPower = { 0.1f, 250.f };
+
+
+		EASING_TYPE	eType_SpeedLerp = { EASING_TYPE::LINEAR };
+		_float2		vMinMaxSpeed = { 1.f, 1.f };
 
 
 		/* For.Position */

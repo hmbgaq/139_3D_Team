@@ -222,9 +222,9 @@ private:
 
 	_float	m_fGravity_Particle = { -9.8f };		// 중력 가속도
 	
-	//_float	m_fFriction_Particle = { 0.1f };		// 마찰 계수
-	_float		m_vFrictionLerp_Pos_Particle[2] = { 0.f, 0.f };		// 어디서부터 러프를 시작하고, 끝낼건지
-	_float		m_vStartEnd_Friction_Particle[2] = { 0.1f, 0.1f };
+	//_float m_fFriction_Particle = { 0.1f };		// 마찰 계수
+	_float	m_vFrictionLerp_Pos_Particle[2] = { 0.f, 0.f };		// 어디서부터 러프를 시작하고, 끝낼건지
+	_float	m_vStartEnd_Friction_Particle[2] = { 0.1f, 0.1f };
 
 
 	_float	m_fSleepThreshold_Particle = { 0.05f };	// 슬립 한계점(1이하로)
@@ -239,6 +239,7 @@ private:
 	_float	m_vMinCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
 	_float	m_vMaxCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
 	_float	m_vMinMaxRange_Particle[2] = { 0.f, 0.f };
+
 
 	/* For.Rotation */
 	_float	m_vRadian_Particle[3] = { 0.f, 0.f, 0.f };
@@ -358,12 +359,16 @@ private:
 
 #pragma region Instance(Mesh) 옵션 시작
 private:
-	_int m_iNumInstance_Mesh	= { 20 };
-	_int m_iMaxNumInstance_Mesh = { 20 };
+	_int m_iNumInstance_Mesh	= { 500 };
+	_int m_iMaxNumInstance_Mesh = { 500 };
 
+
+	_int	m_iType_Mode_Mesh = { 1 }; // MODE_STATIC, MODE_PARTICLE, MODE_END
+	_int	m_iType_Action_Mesh = { 0 };
 	_int	m_iRecycle_Mesh = { 0 };
 
 	_float	m_vMinMaxLifeTime_Mesh[2] = { 0.f, 0.f };	// 라이프타임
+	_float	m_vMinMaxSpeed_Mesh[2] = { 1.f, 1.f };
 
 	/* Morph */
 	_float m_fMorphTimeTerm = { 0.05f };
@@ -386,13 +391,22 @@ private:
 	_int	m_iColor_Mode_Mesh = { 0 };
 	_float	m_fColor_Mul_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 
+	/* For.Scale_Mesh */
+	_int	m_iUseScaleLerp_Mesh			= { 0 };
+	_float	m_vScaleLerp_Up_Pos_Mesh[2]		= { 0.f, 0.3f };
+	_float	m_vScaleLerp_Down_Pos_Mesh[2]	= { 1.f, 1.f };
+	_float	m_vStartScale_Mesh[3]			= { 1.f, 1.f, 1.f };
+	_float	m_vEndScale_Mesh[3]				= { 1.f, 1.f, 1.f };
+
 
 	/* Position_Mesh Particle */
 	_float	m_vMinCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
 	_float	m_vMaxCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
-
 	_float	m_vMinMaxRange_Mesh[2] = { 0.f, 0.f };
 
+
+	/* Rotation_Mesh */
+	_float	m_vRadian_Mesh[3] = { 0.f, 0.f, 0.f };
 
 	_float	m_vRotationOffsetX_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetY_Mesh[2] = { 0.f, 0.f };

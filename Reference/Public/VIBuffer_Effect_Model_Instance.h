@@ -9,13 +9,13 @@ class ENGINE_DLL CVIBuffer_Effect_Model_Instance : public CVIBuffer_Model_Instan
 {
 public:
 	enum TYPE_MODE	 { MODE_STATIC, MODE_PARTICLE, MODE_END };
-	enum TYPE_ACTION { SPARK, BLINK, FALL, RISE, RECYCLE, TYPE_ACTION_END };
+	enum TYPE_ACTION { SPARK, BLINK, FALL, RISE, TORNADO, TYPE_ACTION_END };
 	enum MODEL_MORPH { MORPH_01, MORPH_02, MORPH_END };
 
 	typedef struct tagVIBuffer_EffectModelInstanceDesc
 	{
 		// 저장해야 하는 고정 정보들
-		_int			iCurNumInstance		= { 20 };		// 초기화 값이 최대 개수가 됨	
+		_int			iCurNumInstance		= { 500 };		// 초기화 값이 최대 개수가 됨	
 
 		class CModel*	pModel[MORPH_END]	= { nullptr };	// 저장 X
 		MODEL_MORPH		eCurModelNum		= { MORPH_01 };	// 저장 X
@@ -47,6 +47,10 @@ public:
 		_float2		vMinMaxPower = { 0.1f, 250.f };
 
 
+		EASING_TYPE	eType_SpeedLerp = { EASING_TYPE::LINEAR };
+		_float2		vMinMaxSpeed = { 1.f, 1.f };
+
+
 		/* For.Position */
 		//_float4		vCenterPosition = { 0.f, 0.f, 0.f, 1.f };
 		_float3		vMinCenterOffsetPos = { 0.f, 0.f, 0.f };
@@ -68,8 +72,8 @@ public:
 		EASING_TYPE	eType_ScaleLerp = { EASING_TYPE::LINEAR };
 		_float2		vScaleLerp_Up_Pos = { 0.f, 0.3f };		// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(커지는 용)
 		_float2		vScaleLerp_Down_Pos = { 1.f, 1.f };			// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(작아지는 용)
-		_float2		vMinMaxWidth = { 1.f, 1.f };
-		_float2		vMinMaxHeight = { 1.f, 1.f };
+		_float3		vStartScale			= { 1.f, 1.f, 1.f };
+		_float3		vEndScale			= { 1.f, 1.f, 1.f };
 
 
 
@@ -116,8 +120,8 @@ public:
 		_float	fUpScaleTimeAccs = { 0.f };
 		_float	fDownScaleTimeAccs = { 0.f };
 
-		_float2	vCurScales = { 1.f, 1.f };
-		_float2	vMaxScales = { 1.f, 1.f };
+		_float3	vCurScales = { 1.f, 1.f, 1.f };
+		_float3	vMaxScales = { 1.f, 1.f, 1.f };
 
 
 		void Reset_ParticleTimes()
@@ -187,6 +191,7 @@ public:
 public:
 	_float4 Make_Dir(_uint iNum);
 	void	Rotation_Instance(_uint iNum);
+	void	Update_Spark_Rotation(_uint iNum);
 
 
 	/* For.RigidBody */

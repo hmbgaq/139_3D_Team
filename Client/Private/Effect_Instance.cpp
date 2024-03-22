@@ -51,11 +51,12 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 		m_tVoidDesc.fSequenceTime = m_tVoidDesc.fLifeTime + m_tVoidDesc.fRemainTime;
 
 		if (m_tVoidDesc.bPlay)
-		{
+		{		
 			m_tVoidDesc.fSequenceAcc += fTimeDelta;
 
+
 			// 시작지연 누적시간이 지나면 렌더 시작(이 이펙트 시작)
-			if (m_tVoidDesc.fWaitingAcc <= m_tVoidDesc.fWaitingTime)
+			if (m_tVoidDesc.fWaitingAcc <= m_tVoidDesc.fWaitingTime) // 웨이팅 누적시간이 웨이팅 타임보다 작으면 웨이팅 시간 누적
 			{
 				m_tVoidDesc.fWaitingAcc += fTimeDelta;
 
@@ -110,7 +111,7 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 				{
 					m_pVIBufferCom->Update(fTimeDelta);
 				}
-				
+
 			}
 		}
 	}
@@ -182,7 +183,7 @@ void CEffect_Instance::ReSet_Effect()
 	m_tVoidDesc.fDissolveAmount = 0.f;
 	m_tVoidDesc.bDissolve = FALSE;
 
-	if (!m_pVIBufferCom->Get_Desc()->bRecycle)
+	//if (!m_pVIBufferCom->Get_Desc()->bRecycle)
 	{
 		m_pVIBufferCom->ReSet();
 	}

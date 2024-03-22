@@ -206,10 +206,6 @@ HRESULT CVIBuffer_Particle::Init_Instance(_int iNumInstance)
 		//pVertices[i].vLook	= _float4(0.f, 0.f, 1.f, 0.f);
 
 
-		// 현재 크기 초기화
-		m_vecParticleInfoDesc[i].vCurScales.x = m_tBufferDesc.vMinMaxWidth.x;
-		m_vecParticleInfoDesc[i].vCurScales.y = m_tBufferDesc.vMinMaxHeight.x;
-
 		Rotation_Instance(i);	// 점 자체 회전
 
 		// 쉐이더에 던질 라업룩 값으로 초기화
@@ -289,11 +285,6 @@ void CVIBuffer_Particle::ReSet()
 		//pVertices[i].vColor.w = 1.f;
 		
 
-		// 현재 크기 초기화
-		m_vecParticleInfoDesc[i].vCurScales.x = m_tBufferDesc.vMinMaxWidth.x;
-		m_vecParticleInfoDesc[i].vCurScales.y = m_tBufferDesc.vMinMaxHeight.x;
-
-
 		Rotation_Instance(i);	// 점 자체 회전
 
 		// 쉐이더에 던질 라업룩 값으로 초기화
@@ -366,6 +357,10 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	// 크기
 	if (m_tBufferDesc.bUseScaleLerp)
 	{
+		// 현재 크기는 시작 크기로
+		m_vecParticleInfoDesc[iNum].vCurScales.x = m_tBufferDesc.vMinMaxWidth.x;
+		m_vecParticleInfoDesc[iNum].vCurScales.y = m_tBufferDesc.vMinMaxHeight.x;
+
 		// 스케일 러프 사용이면 최대 크기 고정
 		m_vecParticleInfoDesc[iNum].vMaxScales.x = m_tBufferDesc.vMinMaxWidth.y;
 		m_vecParticleInfoDesc[iNum].vMaxScales.y = m_tBufferDesc.vMinMaxHeight.y;
