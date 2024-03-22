@@ -42,6 +42,7 @@
 #include "Player_Weapon_Zapper.h"
 
 #include "Bullet_Winchester.h"
+#include "Bullet_Revolver.h"
 #include "Impact_Slam.h"
 #pragma endregion
 
@@ -850,6 +851,7 @@ HRESULT CLoader::Ready_Origin()
 
 	//! PlayerBullet
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Winchester"), CBullet_Winchester::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Winchester"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Revolver"), CBullet_Revolver::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Revolver"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Impact_Slam"), CImpact_Slam::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Impact_Slam"))));
 
 

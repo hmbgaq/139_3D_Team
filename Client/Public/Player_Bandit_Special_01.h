@@ -12,7 +12,11 @@ public:
 	virtual void Release(CPlayer* pActor) override;
 
 public:
+	void Create_Bullet(CPlayer* pActor);
+
+public:
 	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_Bandit_Special_01;
+
 
 };
 

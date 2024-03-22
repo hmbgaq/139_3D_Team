@@ -2962,6 +2962,9 @@
     <Filter Include="02.GameObjects\00. Character\01. Interact\1. Door">
       <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Revolver\Bullet">
+      <UniqueIdentifier>{0a49b597-a451-44f1-ae38-45f5170ab851}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -5997,6 +6000,9 @@
     <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\2. HitHeavy_To_Stun</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bullet_Revolver.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Revolver\Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8478,6 +8484,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_ElementList.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bullet_Revolver.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Revolver\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
