@@ -2069,10 +2069,8 @@ half4 FxaaPixelShader(
 /*==========================================================================*/
 #endif
 
-
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 bool g_bFxaa = true;
-
 
 cbuffer cbFxaa : register(b0)
 {
