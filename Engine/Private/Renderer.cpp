@@ -359,6 +359,7 @@ HRESULT CRenderer::Render_Deferred()
 	{
 		FAILED_CHECK(m_pShader_Deferred->Bind_Struct("g_Fogdesc", &m_tFog_Option, sizeof(FOG_DESC)));
 		FAILED_CHECK(m_pPerlinNoiseTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_PerlinNoiseTexture"));
+		FAILED_CHECK(m_pVolumetrix_Voxel->Bind_ShaderResource(m_pShader_Deferred, "g_VoxelReadTexture"));
 	}
 
 	FAILED_CHECK(m_pShader_Deferred->Begin(ECast(DEFERRED_SHADER::DEFERRED)));
@@ -999,17 +1000,19 @@ HRESULT CRenderer::Create_Buffer()
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	NULL_CHECK_RETURN(m_pVIBuffer, E_FAIL);
 
+	/* PBR */
+	m_pIrradianceTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Sky_2_Irradiance.dds"));
+	NULL_CHECK_RETURN(m_pIrradianceTextureCom, E_FAIL);
+	m_pBRDFTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/BRDF/BRDFTexture.png"));
+	NULL_CHECK_RETURN(m_pBRDFTextureCom, E_FAIL);
+	m_pPreFilteredTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Sky_2_PreFilteredTexture.dds"));
+	NULL_CHECK_RETURN(m_pPreFilteredTextureCom, E_FAIL);
+
+	/* Fog */
+	m_pVolumetrix_Voxel = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/VolumetricFog/Voxel.png"));
+	NULL_CHECK_RETURN(m_pVolumetrix_Voxel, E_FAIL);
 	m_pPerlinNoiseTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/T_Perlin_Noise_M.dds"));
 	NULL_CHECK_RETURN(m_pPerlinNoiseTextureCom, E_FAIL);
-
-	m_pIrradianceTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_2_Irradiance.dds"));
-	NULL_CHECK_RETURN(m_pIrradianceTextureCom, E_FAIL);
-
-	m_pBRDFTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/BRDFTexture.png"));
-	NULL_CHECK_RETURN(m_pBRDFTextureCom, E_FAIL);
-
-	m_pPreFilteredTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_2_PreFilteredTexture.dds"));
-	NULL_CHECK_RETURN(m_pPreFilteredTextureCom, E_FAIL);
 
 	return S_OK;
 }

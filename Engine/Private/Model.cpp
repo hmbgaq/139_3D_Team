@@ -408,10 +408,15 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 		case (_int)aiTextureType_SPECULAR:
 			Bind_ShaderResource(pShader, "g_SpecularTexture", iMeshIndex, aiTextureType_SPECULAR);
 			break;
+		case (_int)aiTextureType_EMISSIVE:
+			Bind_ShaderResource(pShader, "g_EmissiveTexture", iMeshIndex, aiTextureType_EMISSIVE);
+			break;
 		case (_int)aiTextureType_NORMALS:
 			Bind_ShaderResource(pShader, "g_NormalTexture", iMeshIndex, aiTextureType_NORMALS);
 			break;
 		}
+
+		//material.pMtrlTextures[6].
 	}
 
 	return S_OK;
@@ -690,10 +695,15 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			_splitpath_s(strModelFilePath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
 
-			//aiString			strPath;
-			//if (FAILED(pAIMaterial.GetTexture(aiTextureType(j), 0, &strPath)))
-			//	continue;
-
+			if (j == (size_t)aiTextureType_SPECULAR)/* ORM텍스쳐 있는데 ASSIMP 에 SPECULAR로 안잡히는 모델이 많아서 강제로 넣어주는중 */
+			{
+				string strPath = pAIMaterial.Get_Textures((_uint)j);
+				if (strPath == "")
+				{
+					m_bSpecularMissed = true;
+				}
+			}
+			
 			string strPath = pAIMaterial.Get_Textures((_uint)j);
 			if (strPath == "")
 				continue;
@@ -725,6 +735,29 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			if (nullptr == MaterialDesc.pMtrlTextures[j])	
 				return E_FAIL;
+
+
+			if (j == (size_t)aiTextureType_NORMALS && m_bSpecularMissed)
+			{
+				string ORMfileName(szFileName);
+				ORMfileName.pop_back();
+				ORMfileName += "ORM";
+
+				_char		szORMTmp[MAX_PATH] = "";
+				strcpy_s(szORMTmp, szDrive);
+				strcat_s(szORMTmp, szDirectory);
+				strcat_s(szORMTmp, ORMfileName.c_str());
+				strcat_s(szORMTmp, szEXT);
+
+				_tchar		szORMFullPath[MAX_PATH] = TEXT("");
+
+				MultiByteToWideChar((_uint)CP_ACP, 0, szORMTmp, (_int)strlen(szORMTmp), szORMFullPath, (_int)MAX_PATH);
+
+				MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = CTexture::Create(m_pDevice, m_pContext, szORMFullPath, 1, true);
+
+				if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR])
+					cout << " Create Texture Failure" << endl;
+			}
 		}
 
 		m_Materials.push_back(MaterialDesc);

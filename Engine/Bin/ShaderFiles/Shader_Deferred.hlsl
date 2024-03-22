@@ -40,7 +40,7 @@ Texture2D g_BloomRimTarget;         /* BloomRim Blur */
 Texture2D g_PerlinNoiseTexture;     /* Shor Fog - Noise Texture */
 Texture2D g_Effect_DiffuseTarget;   /* Effect - Diffuse */
 Texture2D g_OutlineTarget;          /* RenderGroup - Outline */
-
+Texture2D g_VoxelReadTexture;
 /* 활성 여부 */
 bool g_bSSAO_Active;
 bool g_bFog_Active;
@@ -61,6 +61,7 @@ struct FOG_DESC
     float fFogHeightValue; // 4
     float fFogDistanceDensity; // 4
     float fFogHeightDensity; // 4
+    float padding; //4 
     float4 vFogColor; // 16 : 42
 };
 
@@ -106,6 +107,25 @@ float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise, F
     return lerp(vOriginColor.rgb, vFogColor.xyz, fogFinalFactor);
 }
 
+// https://github.com/Unity-Technologies/VolumetricLighting/blob/master/Assets/VolumetricFog/Shaders/Scatter.compute
+float4 Accumulate(int z, float4 result, float4 colorDensityPerSlice, float VolumeSize)
+{
+    colorDensityPerSlice.a = max(colorDensityPerSlice.a, 0.000001);
+    //float thickness = GetSliceThickness(z, CameraNearFar_FrameIndex_PreviousFrameBlend.x, CameraNearFar_FrameIndex_PreviousFrameBlend.y);
+    //float sliceTransmittance = exp(-colorDensityPerSlice.a * thickness * ThicknessFactor);
+
+    // Seb Hillaire's improved transmission by calculating an integral over slice depth instead of
+	// constant per slice value. Light still constant per slice, but that's acceptable. See slide 28 of
+	// Physically-based & Unified Volumetric Rendering in Frostbite
+	// http://www.frostbite.com/2015/08/physically-based-unified-volumetric-rendering-in-frostbite/
+    float sliceTransmittance = exp(-colorDensityPerSlice.a / VolumeSize);
+
+    float3 sliceScattering = colorDensityPerSlice.rgb * (1.0f - sliceTransmittance) / colorDensityPerSlice.a;
+
+    result.rgb += sliceScattering * result.a;
+    result.a *= sliceTransmittance;
+    return result;
+}
 
 /* ------------------ ------------------ */ 
 struct VS_IN
@@ -335,7 +355,16 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
         float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
     
         float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
-    
+        
+        //float4 colorDensityPerSlice = g_VoxelReadTexture.Sample(ClampSampler, In.vTexcoord);
+        //
+        //if (colorDensityPerSlice.a == 0)
+        //    discard;
+        //
+        //float4 accumulateResult = Accumulate(0, float4(0.0f, 0.0f, 0.0f, 1.0f), colorDensityPerSlice, g_Fogdesc.VloumeSize_Z);
+        //
+        //vFinalColor *= accumulateResult.rgb;
+        
         Out.vColor = vector(vFinalColor.rgb, 1.f);
     }
     

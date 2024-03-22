@@ -174,6 +174,9 @@ private:
 	_float					m_fModelWidth = 0.f;
 	_float					m_fModelHeight = 0.f;
 
+	// PBR
+	_bool					m_bSpecularMissed = { false };
+
 public:
 	typedef vector<CBone*>	BONES;
 

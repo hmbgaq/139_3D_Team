@@ -152,6 +152,7 @@ private:
 	class CTexture*				m_pIrradianceTextureCom		= { nullptr };
 	class CTexture*				m_pPreFilteredTextureCom	= { nullptr };
 	class CTexture*				m_pBRDFTextureCom	= { nullptr };
+	class CTexture*				m_pVolumetrix_Voxel = { nullptr };
 	ID3D11DepthStencilView*		m_pLightDepthDSV			= { nullptr };
 	_float4x4					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT						Control_HotKey();

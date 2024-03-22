@@ -39,6 +39,7 @@ private:
 	_bool		m_bCreate_Level_Button = false;
 	_int		m_iCurrLevel_Index = {};
 	LEVEL		m_eCurrLevel_Enum = {};
+	string		m_eCurrLevel_String = {};
 	wstring		m_wstrLayerTag = {};
 	
 	/* Load Path */
@@ -55,13 +56,16 @@ private:
 	HBAO_PLUS_DESC		m_eHBAO_Desc			= {};
 	FOG_DESC			m_eFog_Desc				= {};
 	DEFERRED_DESC		m_eDeferred_Desc		= {};
-
 	RADIAL_DESC			m_eRadial_Desc			= {};
 	DOF_DESC			m_eDOF_Desc				= {};
 	HDR_DESC			m_eHDR_Desc				= {};
 	ANTI_DESC			m_eAnti_Desc			= {};
 	HSV_DESC			m_eHSV_Desc				= {};
 	LEVEL_SHADER_DESC	m_eTotalShader_Desc		= {};
+	
+	/* Shader Save / Load */
+	_bool m_bShaderSave = {false} ;
+	_bool m_bShaderLoad = {false} ;
 
 	/* Level LightControl */
 	LEVEL			m_eLoadLevel = {};
@@ -96,17 +100,18 @@ private:
 	void Layer_Level_Shader_Control();
 	void Layer_Object_Shader_Control();
 
-	/* Compress */
+	/* Compress - Shader */
 	void Compress_HBAO_Plus_Setting();
 	void Compress_Fog_Setting();
 	void Compress_BloomRim_Setting();
-
 	void Compress_Radial_Setting();
 	void Compress_DOF_Setting();
 	void Compress_HDR_Setting();
 	void Compress_FXAA_Setting();
 	void Compress_HSV_Setting();
-
+	void Save_Shader();
+	void Load_Shader();
+	
 	/* Level Light Control */
 	void Save_Load_Light(); // 레벨을 잡고 해당 레벨에 대한 빛정보를 가져오기 
 	void Compress_Directional_Light();

@@ -990,5 +990,8 @@
     <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli">
       <Filter>98.ShaderFiles</Filter>
     </None>
+    <None Include="..\Bin\ShaderFiles\VolumetricFog.hlsli">
+      <Filter>98.ShaderFiles</Filter>
+    </None>
   </ItemGroup>
 </Project>
