@@ -112,6 +112,22 @@ HRESULT CUI_MouseCursor::Render()
 	return S_OK;
 }
 
+void CUI_MouseCursor::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_MouseCursor::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_MouseCursor::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_MouseCursor::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_MouseCursor::Ready_Components()
 {
 	//! For.Com_Shader

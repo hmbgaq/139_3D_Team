@@ -42,12 +42,12 @@ namespace Client
 	enum class UISTATE
 	{
 		READY,
-		APPEAR,
-		TICK,
-		DISAPPEAR,
-		PLAYER_HUD,
+		ENTER,
+		LOOP,
+		EXIT,
 		STATE_END
 	};
+
 	enum class UITYPE
 	{
 		NONE,
@@ -61,6 +61,61 @@ namespace Client
 		WEAKNESS,
 		TYPE_END
 	};
+	enum class UI_BUTTON
+	{
+		NONE,
+
+		// OPTION WINDOW 
+			TITLE_PLAYER,
+			TITLE_GAME,
+			TITLE_INDEX_UP,
+			TITLE_INDEX_DOWN,
+			CLOSE_OPTION_WINDOW,
+		// OPTION_WINDOW_END
+		
+		// GAME_OPTION
+			/* SHADER */
+			HBAO_PLUS,	// 세기 조절 할수도
+			FOG,
+			RADIAL_BLUR,
+			DOF,
+			HDR,
+			FXAA,
+			HSV,
+			SHADOW,
+			RIGHT_SHAFT, // 예정
+			PBR,		 // 예정
+			SSD,		 // 예정
+			SSR,		 // 예정
+			/* SHADER_END */
+			/* SOUND */
+			MASTER_SOUND,
+			MUSIC_SOUND,
+			EFFECT_SOUND,
+			/* SOUND_END */
+		// GAME_OPTION_END
+
+		// PLAYER_EQUIPMENT
+			WEAPON_GAUNTLET,
+			WEAPON_REVOLVER,
+			WEAPON_RIFLE,
+			WEAPON_FLAMETHROWER,
+			WEAPON_DYNAMITE,
+		// PLAYER_EQUIPMENT_END
+
+		BUTTON_END
+	};
 #pragma endregion End
+
+	enum class MODE_COLOR // 컬러 합성모드
+	{
+		MUL,      // 곱하기      0
+		SCREEN,      // 스크린      1
+		OVERLAY,   // 오버레이      2
+		ADD,      // 더하기      3 
+		BURN,      // 번(Burn)      4
+
+		MODE_COLOR_END   //         5
+	};
 }
 #endif // Client_Enum_h__

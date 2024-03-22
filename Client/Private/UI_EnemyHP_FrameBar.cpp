@@ -86,6 +86,22 @@ HRESULT CUI_EnemyHP_FrameBar::Render()
 	return S_OK;
 }
 
+void CUI_EnemyHP_FrameBar::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_EnemyHP_FrameBar::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_EnemyHP_FrameBar::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_EnemyHP_FrameBar::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_EnemyHP_FrameBar::Ready_Components()
 {
 	//! For.Com_Shader

@@ -853,135 +853,172 @@ _float4 CGameInstance::Get_ShadowLightPos(_uint iLevelIndex)
 
 void CGameInstance::Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix)
 {
+	NULL_CHECK_RETURN(m_pFrustum, );
+
 	return m_pFrustum->Transform_ToLocalSpace(WorldMatrix);
 }
 
 _bool CGameInstance::isIn_WorldPlanes(_fvector vPoint, _float fRadius)
 {
+	NULL_CHECK_RETURN(m_pFrustum, false);
+
 	return m_pFrustum->isIn_WorldPlanes(vPoint, fRadius);
 }
 
 _bool CGameInstance::isIn_LocalPlanes(_fvector vPoint, _float fRadius)
 {
+	NULL_CHECK_RETURN(m_pFrustum, false);
 
 	return m_pFrustum->isIn_LocalPlanes(vPoint, fRadius);
 }
 
 void CGameInstance::Add_Collision(const _uint& In_iLayer, CCollider* _pCollider)
 {
+	NULL_CHECK_RETURN(m_pCollision_Manager, );
+
 	m_pCollision_Manager->Add_Collision(In_iLayer, _pCollider);
 }
 
 void CGameInstance::Check_Group(const _uint& In_iLeftLayer, const _uint& In_iRightLayer)
 {
+	NULL_CHECK_RETURN(m_pCollision_Manager, );
+
 	m_pCollision_Manager->Check_Group(In_iLeftLayer, In_iRightLayer);
 }
 
 void CGameInstance::Add_Event(IEvent* pEvent)
 {
+	NULL_CHECK_RETURN(m_pEvent_Manager, );
+
 	m_pEvent_Manager->Add_Event(pEvent);
 }
 
 void CGameInstance::Clear_Event()
 {
-	if (m_pEvent_Manager)
-		m_pEvent_Manager->Clear();
+//	NULL_CHECK_RETURN(m_pEvent_Manager, );
+	if (nullptr == m_pEvent_Manager)
+		return;
+
+	m_pEvent_Manager->Clear();
 }
 
 void CGameInstance::Register_PhysXCollider(CPhysXCollider* pPhysXCollider)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, );
+
 	m_pPhysX_Manager->Register_PhysXCollider(pPhysXCollider);
 }
 
 CPhysXCollider* CGameInstance::Find_PhysXCollider(const _uint iPhysXColliderIndex)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, nullptr );
+
 	return m_pPhysX_Manager->Find_PhysXCollider(iPhysXColliderIndex);
 }
 
 void CGameInstance::Register_PhysXController(CPhysXController* pPhysXController)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, );
+
 	m_pPhysX_Manager->Register_PhysXController(pPhysXController);
 }
 
 CPhysXController* CGameInstance::Find_PhysXController(const _uint iPhysXControllerIndex)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, nullptr);
+
 	return m_pPhysX_Manager->Find_PhysXController(iPhysXControllerIndex);
 }
 
 void CGameInstance::Check_PhysXFilterGroup(const _uint In_iLeftLayer, const _uint In_iRightLayer)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, );
+
 	m_pPhysX_Manager->Check_PhysXFilterGroup(In_iLeftLayer, In_iRightLayer);
 }
 
 _uint CGameInstance::Get_PhysXFilterGroup(const _uint In_iIndex)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, 0);
+
 	return m_pPhysX_Manager->Get_PhysXFilterGroup(In_iIndex);
 }
 
 PxRigidDynamic* CGameInstance::Create_DynamicActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, nullptr);
 	return m_pPhysX_Manager->Create_DynamicActor(transform, geometry, pMaterial);
 }
 
 PxRigidDynamic* CGameInstance::Create_DynamicActor(const PxTransform& transform)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, nullptr);
 	return m_pPhysX_Manager->Create_DynamicActor(transform);
 }
 
 PxRigidStatic* CGameInstance::Create_StaticActor(const PxTransform& transform, const PxGeometry& geometry, PxMaterial* pMaterial)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, nullptr);
 	return m_pPhysX_Manager->Create_StaticActor(transform, geometry, pMaterial);
 }
 
 PxRigidStatic* CGameInstance::Create_StaticActor(const PxTransform& transform)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, nullptr);
 	return m_pPhysX_Manager->Create_StaticActor(transform);
 }
 
 void CGameInstance::Add_DynamicActorAtCurrentScene(PxRigidDynamic& DynamicActor)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, );
 	m_pPhysX_Manager->Add_DynamicActorAtCurrentScene(DynamicActor);
 }
 
 void CGameInstance::Add_StaticActorAtCurrentScene(PxRigidStatic& StaticActor)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, );
 	m_pPhysX_Manager->Add_StaticActorAtCurrentScene(StaticActor);
 }
 
 void CGameInstance::Create_Material(_float fStaticFriction, _float fDynamicFriction, _float fRestitution, PxMaterial** ppOut)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, );
 	m_pPhysX_Manager->Create_Material(fStaticFriction, fDynamicFriction, fRestitution, ppOut);
 }
 
 void CGameInstance::Create_ConvexMesh(PxVec3** pVertices, _uint iNumVertice, PxConvexMesh** ppOut)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, );
 	m_pPhysX_Manager->Create_ConvexMesh(pVertices, iNumVertice, ppOut);
 }
 
 void CGameInstance::Create_ConvexMesh(const PxConvexMeshDesc& In_MeshDesc, PxConvexMesh** ppOut)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, );
 	m_pPhysX_Manager->Create_ConvexMesh(In_MeshDesc, ppOut);
 }
 
 void CGameInstance::Create_Shape(const PxGeometry& Geometry, PxMaterial* pMaterial, const _bool isExculsive, const PxShapeFlags In_ShapeFlags, PxShape** ppOut)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, );
 	m_pPhysX_Manager->Create_Shape(Geometry, pMaterial, isExculsive, In_ShapeFlags, ppOut);
 }
 
 void CGameInstance::Create_MeshFromTriangles(const PxTriangleMeshDesc& In_MeshDesc, PxTriangleMesh** ppOut)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, );
 	m_pPhysX_Manager->Create_MeshFromTriangles(In_MeshDesc, ppOut);
 }
 
 void CGameInstance::Create_Controller(const PxCapsuleControllerDesc& In_ControllerDesc, PxController** ppOut)
 {
+	NULL_CHECK_RETURN(m_pPhysX_Manager, );
 	m_pPhysX_Manager->Create_Controller(In_ControllerDesc, ppOut);
 }
 
 const _float& CGameInstance::Random_Float(_float fMin, _float fMax)
 {
 	return m_pRandom_Manager->Random_Float(fMin, fMax);
-	
 }
 
 const _int& CGameInstance::Random_Int(_int iMin, _int iMax)
@@ -998,7 +1035,6 @@ int64_t CGameInstance::GenerateUniqueID()
 {
 	return m_pRandom_Manager->GenerateUniqueID();
 }
-
 
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
 {

@@ -85,6 +85,22 @@ HRESULT CUI_Player_Skill_Frame::Render()
 	return S_OK;
 }
 
+void CUI_Player_Skill_Frame::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Player_Skill_Frame::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Player_Skill_Frame::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Player_Skill_Frame::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Player_Skill_Frame::Ready_Components()
 {
 	//if (FAILED(__super::Ready_Components())); // Ready : Texture / MapTexture

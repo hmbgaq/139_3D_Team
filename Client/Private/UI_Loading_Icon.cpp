@@ -82,6 +82,22 @@ HRESULT CUI_Loading_Icon::Render()
 	return S_OK;
 }
 
+void CUI_Loading_Icon::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Loading_Icon::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Loading_Icon::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Loading_Icon::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Loading_Icon::Ready_Components()
 {
 	//! For.Com_Shader

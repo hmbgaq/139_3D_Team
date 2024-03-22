@@ -44,7 +44,7 @@ void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Bandit_Sniper::Render()
 {
-	auto start = chrono::high_resolution_clock::now();
+	//auto start = chrono::high_resolution_clock::now();
 
 	FAILED_CHECK(Bind_ShaderResources());
 
@@ -66,9 +66,9 @@ HRESULT CBody_Bandit_Sniper::Render()
 		m_pModelCom->Render((_uint)i);
 	}
 
-	auto End = chrono::high_resolution_clock::now();
-	chrono::duration<double> duration0 = End - start;
-	cout << "Bandit Sniper 실행시간 : " << duration0.count() << endl;
+	//auto End = chrono::high_resolution_clock::now();
+	//chrono::duration<double> duration0 = End - start;
+	//cout << "Bandit Sniper 실행시간 : " << duration0.count() << endl;
 
 	return S_OK;
 }
