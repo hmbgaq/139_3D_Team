@@ -936,7 +936,7 @@ CState<CPlayer>* CPlayer_State::Melee_Dynamic(CPlayer* pActor, _float fTimeDelta
 
 CState<CPlayer>* CPlayer_State::OpenStateCombo_8hit(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	pActor->Search_Target(3.f);
+	pActor->Search_Target(1.f);
 	CCharacter* pTarget = pActor->Get_Target();
 	if (pTarget && pTarget->Is_ElectrocuteTime())
 	{

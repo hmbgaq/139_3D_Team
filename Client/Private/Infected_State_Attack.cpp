@@ -23,9 +23,12 @@ CState<CInfected>* CInfected_State_Attack::Update(CInfected* pActor, _float fTim
 
 void CInfected_State_Attack::Release(CInfected* pActor)
 {
-	if(nullptr != m_pWeapon)
+	if (nullptr != m_pWeapon) 
+	{
+		m_pWeapon->Set_Enable(false);
 		Safe_Release(m_pWeapon);
-
+	}
+		
 	__super::Release(pActor);
 }
 

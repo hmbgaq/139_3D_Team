@@ -84,6 +84,8 @@ void CPlayer_Weapon_Zapper::OnCollisionEnter(CCollider* other)
  	CCharacter* pTarget_Character = Get_Target_Character(other);
 	if (nullptr != pTarget_Character)
 	{
+		CData_Manager::GetInstance()->Apply_Shake_And_Blur(Power::Light);
+
 		pTarget_Character->Hitted_Electrocute();
 		//Set_Enable_Collisions(false);
 	}

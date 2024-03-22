@@ -33,10 +33,9 @@ CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _floa
 	__super::Update(pActor, fTimeDelta);
 
 
-	//8 18
 	if (false == m_bFlags[0])
 	{
-		m_bFlags[0] = pActor->Is_Inputable_Front(8);
+		m_bFlags[0] = pActor->Is_Inputable_Front(4);
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_Weapon_Collisions_Enable(WEAPON_ZAPPER, true);
