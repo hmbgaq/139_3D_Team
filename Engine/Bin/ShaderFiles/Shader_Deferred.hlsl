@@ -52,18 +52,16 @@ float2  g_vFogUVAcc             = { 0.f, 0.f };
 /* PBR */
 float g_fBias;
 
-
 struct FOG_DESC 
 {
-    bool  bFog_Active;
-    float fFogStartDepth;
-    float fFogStartDistance;
-    float fFogDistanceValue;
-    float fFogHeightValue;
-    float fFogDistanceDensity;
-    float fFogHeightDensity;
-    float3 padding; // 12바이트 패딩
-    float4 vFogColor;
+    bool  bFog_Active; //1
+    float fFogStartDepth; // 4
+    float fFogStartDistance; //4
+    float fFogDistanceValue; // 4
+    float fFogHeightValue; // 4
+    float fFogDistanceDensity; // 4
+    float fFogHeightDensity; // 4
+    float4 vFogColor; // 16 : 42
 };
 
 struct BLOOMRIM_DESC
@@ -79,9 +77,8 @@ BLOOMRIM_DESC g_Bloom_Rim_Desc;
 
 float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise, FOG_DESC desc)
 {
-    /* 
-    vOriginColor : 안개없이 원래 그리는 색상 
-    toEye : 카메라에서 픽셀 바라보는벡터 */ 
+    /*  vOriginColor : 안개없이 원래 그리는 색상 
+        toEye : 카메라에서 픽셀 바라보는벡터 */ 
     
     // 지정 범위 Distance
     float pixelDistance = desc.fFogDistanceDensity * (length(g_vCamPosition.w - toEye) - desc.fFogStartDepth);
@@ -294,27 +291,26 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
             discard;
         
         Out.vColor = vPriority;
-        return Out;
     }
-    // MRT_LightAcc : Shade 
-    vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
-    vShade = saturate(vShade);
+    else
+    { // MRT_LightAcc : Shade 
+        vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
+        vShade = saturate(vShade);
 	
     // MRT_GameObject : Specular 
-    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    vSpecular = saturate(vSpecular);
+        vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+        vSpecular = saturate(vSpecular);
 	
-    // MRT_GameObject : Depth
-    vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
-    if (vDepthDesc.w != 1.f) 
-        vSpecular = float4(0.f, 0.f, 0.f, 0.f);
     
     // Target_HBAO
-    vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
-    if (g_bSSAO_Active)
-        vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
+        vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
+        if (g_bSSAO_Active)
+            vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
     
-    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular;
+        Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular;
+    }
+    // MRT_GameObject : Depth
+    vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     
     float fViewZ = vDepthDesc.y * g_CamFar;
 	
@@ -330,7 +326,7 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
         
-    if (true == g_bFog_Active )
+    if (true == g_bFog_Active)
     {
         float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
         vTexCoord.x += g_vFogUVAcc.x;

@@ -394,7 +394,6 @@ namespace Engine
 		_float	fFogHeightValue			= 50.f;
 		_float	fFogDistanceDensity		= 0.05f;
 		_float	fFogHeightDensity		= 0.05f;
-		_float3 padding = {};
 		_float4 vFogColor				= { 0.5f, 0.5f, 0.5f, 0.2f };
 
 	} FOG_DESC;

@@ -31,7 +31,7 @@
 // Texelsize 1.0/width, 1.0/height
 cbuffer cbFxaaFrame : register(b0)
 {
-    float4 gFrame = float4(1.0f / 1600.f, 1.0f / 900.f, 0, 0);
+    float4 gFrame = float4(1.0f / 1280.f, 1.0f / 720.f, 0, 0);
 };
 
 Texture2D g_FinalTarget : register(t0); /* 올려야하는 텍스쳐가 이거임 */ 

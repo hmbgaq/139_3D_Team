@@ -74,12 +74,14 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (m_tHBAO_Option.bHBAO_Active)
 		FAILED_CHECK(Render_HBAO_PLUS()); /* Target_HBAO */
 
-	if (true == bTest)
+	if ((false == bTest) && (true == m_tHBAO_Option.bHBAO_Active))
+	{
+		FAILED_CHECK(Render_PBR());
+	}
+	else
 	{
 		FAILED_CHECK(Render_Deferred()); /*  MRT_Deferred -> Target_Deferred에 저장  */
-	}
-	else if((false == bTest) && (true == m_tHBAO_Option.bHBAO_Active))
-		FAILED_CHECK(Render_PBR());
+	}	
 
 	FAILED_CHECK(Render_RimBloom()); /* MRT_RB_Blur -> Target_RB_BlurActive에 저장 */
 
