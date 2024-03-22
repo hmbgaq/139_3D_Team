@@ -435,11 +435,6 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 
 	if (TRUE == m_tInstanceDesc.bUseCustomTex)	// 텍스처를 내가 정해줄거면 
 	{
-		D3D11_TEXTURE2D_DESC	TextureDesc;
-		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
-
-		//m_pGameInstance->Find_RenderTarget(TEXT("MRT_Deferred"))->Get_Texture2D()->GetDesc();
-		//TextureDesc.Format
 
 		// 기본은 디퓨즈만 바인드
 		if (nullptr != m_pTextureCom[TEXTURE_DIFFUSE])	// 디퓨즈 텍스처 있으면 바인드

@@ -25,6 +25,7 @@
 #include "Model_Preview.h"
 #include "Part_Preview.h"
 
+#include "Player.h"
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -270,7 +271,7 @@ HRESULT CWindow_EffectTool::Ready_Model_Preview(wstring strModelTag)
 
 	if (strModelTag == TEXT("Prototype_Component_Model_Rentier"))
 	{
-		tDesc.iAnimIndex = { 8 };	// 플레이어 Idle애니메이션은 8번
+		tDesc.iAnimIndex = { 41 };	// 플레이어 Idle애니메이션은 8번
 	}
 
 	if (strModelTag == TEXT("Prototype_Component_Model_VampireCommander"))
@@ -2614,8 +2615,8 @@ void CWindow_EffectTool::Update_TrailTab()
 				{
 					if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 					{
-						// 플레이어 아이들 // Index 8
-						m_pModel_Preview->Set_AnimIndex(8);
+						// 플레이어 아이들 
+						m_pModel_Preview->Set_AnimIndex(CPlayer::Player_IdleLoop);
 					}
 
 					if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
@@ -2629,8 +2630,8 @@ void CWindow_EffectTool::Update_TrailTab()
 				{
 					if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 					{
-						// 플레이어 콤보1 	// Index 193
-						m_pModel_Preview->Set_AnimIndex(193);
+						// 플레이어 공격
+						m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Finisher_BanditHeavy_ZapperLeap);
 					}
 
 					if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
@@ -4029,10 +4030,17 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 	ImGui::SeparatorText("Model_Preview");
 	if (nullptr == m_pModel_Preview)
 	{
-		//if (ImGui::Button("Create Model_Player"))	// 모델 생성
-		//{
-		//	Ready_Model_Preview(TEXT("Prototype_Component_Model_Rentier")); 
-		//}
+		// 플레이어 모델 로드
+		if (ImGui::Button("Load_Player"))	
+		{
+			_matrix PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+			m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Rentier"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Player/Player", PivotMatrix));
+		}
+
+		if (ImGui::Button("Create Model_Player"))	// 모델 생성
+		{
+			Ready_Model_Preview(TEXT("Prototype_Component_Model_Rentier")); 
+		}
 		//ImGui::SameLine();
 		if (ImGui::Button("Create Model_Boss"))	// 모델 생성
 		{
@@ -4119,7 +4127,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 				{
 					// 플레이어 아이들 // Index 8
-					m_pModel_Preview->Set_AnimIndex(8);
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_IdleLoop);
 				}
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
@@ -4133,8 +4141,8 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			{
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 				{
-					// 플레이어 콤보1 	// Index 193
-					m_pModel_Preview->Set_AnimIndex(193);
+					// 플레이어 공격
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Finisher_BanditHeavy_ZapperLeap);
 				}
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
@@ -4213,7 +4221,15 @@ void CWindow_EffectTool::Update_EffectList_Window()
 			}
 		}
 
+		if (ImGui::Button("         Zapper Dash Test        "))
+		{
+			CEffect* pEffect = EFFECT_MANAGER->Create_Effect_Pos("Zapper_Dash", "Zapper_Dash_12.json", m_pModel_Preview->Get_Position());
+		}
+
 	}
+
+
+
 
 
 	/* 이펙트 리스트 & 현재 이펙트 선택 */
@@ -4407,7 +4423,7 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		ImGui::CollapsingHeader("Effect_Times");
 		//if (ImGui::CollapsingHeader("Effect_Times"))
 		{
-			ImGui::Text("    Waiting   |   LifeTime   |   SequenceTime ");
+			ImGui::Text("    Waiting   |   LifeTime   |   RemainTime ");
 			if (ImGui::DragFloat3("Times_Effect", m_vTimes_Effect, 0.2f, 0.f))
 			{
 				if (m_vTimes_Effect[0] > m_vTimes_Effect[1])
@@ -4419,11 +4435,13 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				m_pCurEffectDesc->fRemainTime = m_vTimes_Effect[2];
 			}
 			ImGui::Text("Total_Time : %.2f", m_vTimes_Effect[0] + m_vTimes_Effect[1] + m_vTimes_Effect[2]);
+
+			ImGui::SeparatorText("");
 		}
 
 
 		/* 루프 키고 끄기 */
-		ImGui::SeparatorText("");
+		ImGui::SeparatorText(" LOOP_EFFECT ");
 		ImGui::RadioButton(" Loop_Effect ", &m_iLoop, 0);  ImGui::SameLine();
 		ImGui::RadioButton("None Loop_Effect", &m_iLoop, 1);
 		if (0 == m_iLoop)
@@ -4433,10 +4451,9 @@ void CWindow_EffectTool::Update_EffectList_Window()
 
 
 		/* 죽음 타입 정하기 */
-		// m_iType_Dead
-		ImGui::SeparatorText("");
-		ImGui::RadioButton(" DEAD_AUTO ", &m_iType_Dead, 0);  ImGui::SameLine();
-		ImGui::RadioButton("DEAD_OWNER", &m_iType_Dead, 1);	  ImGui::SameLine();
+		ImGui::SeparatorText(" DEAD TYPE_Effect ");
+		ImGui::RadioButton(" DEAD_AUTO ", &m_iType_Dead, 0); 
+		ImGui::RadioButton("DEAD_OWNER", &m_iType_Dead, 1);	 
 		ImGui::RadioButton("DEAD_NONE", &m_iType_Dead, 2);
 		if (0 == m_iType_Dead)
 			m_pCurEffectDesc->eType_Dead = CEffect::DEAD_AUTO;
@@ -4449,23 +4466,23 @@ void CWindow_EffectTool::Update_EffectList_Window()
 
 		if (nullptr != m_pCurPartEffect)
 		{
-			ImGui::SeparatorText("");
 			ImGui::CollapsingHeader("Part_Times");
 			//if (ImGui::CollapsingHeader("Part_Times"))
 			{
 				CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurPartEffect->Get_Desc()->eType_Effect;
 
-				ImGui::Text("    Waiting   |   LifeTime   |   SequenceTime ");
+				ImGui::Text("    Waiting   |   LifeTime   |   RemainTime ");
 				if (ImGui::DragFloat3("Times_Part", m_vTimes_Part, 0.2f, 0.f))
 				{
+					m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
+
 					m_pCurVoidDesc->fWaitingTime		= m_vTimes_Part[0];
 					m_pCurVoidDesc->fLifeTime			= m_vTimes_Part[1];
-					m_pCurVoidDesc->fRemainTime		= m_vTimes_Part[2];
+					m_pCurVoidDesc->fRemainTime			= m_vTimes_Part[2];
 
 
 					if (CEffect_Void::PARTICLE == eType_Effect)
-					{
-						m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
+					{				
 						CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();
 						m_pParticleBufferDesc = pVIBuffer->Get_Desc();
 
