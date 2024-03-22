@@ -120,9 +120,7 @@ HRESULT CScreamer::Render()
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 		
 		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
 		//m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_EXAMPLE));
@@ -199,8 +197,8 @@ HRESULT CScreamer::Ready_Components()
 
 	/* For.Com_Model */
 	{
-		//FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Screamer"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
-		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Horse"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Screamer"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		//FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Horse"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 	}
 
 	/* For.Com_Collider */
