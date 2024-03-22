@@ -247,7 +247,7 @@ public:
 public:
 	void Set_RootMoveRate(_float3 vRate) { m_vRootMoveRate = vRate; };
 	void Reset_RootMoveRate() { m_vRootMoveRate = _float3(1.f, 1.f, 1.f); };
-	
+	void Set_MonsterAttackState(_bool bState) { m_bMonsterAttackState = bState; };
 
 protected:
 	CHARCTER_DESC CharAnimDesc = {};
@@ -261,6 +261,7 @@ protected:
 	//_float m_fCurHP = { 40.f };
 
 protected:
+	_bool m_bMonsterAttackState = { false }; /* 몬스터 공격상태이면 */
 	_bool m_bIsInvincible = { false };
 	_bool m_bIsStun = { false };
 	_float m_fElectrocuteTime = { 0.f };

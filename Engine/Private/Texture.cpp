@@ -116,7 +116,6 @@ HRESULT CTexture::Bind_ShaderResources(CShader * pShader, const _char * pConstan
 
 HRESULT CTexture::Get_TextureSize(_uint* iWidth, _uint* iHeight, _uint iTextureIndex)
 {
-
 	// 인덱스 범위 확인
 	if (iTextureIndex >= m_SRVs.size())
 		return E_FAIL; // 유효하지 않은 인덱스 처리

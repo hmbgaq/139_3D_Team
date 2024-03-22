@@ -482,6 +482,7 @@ HRESULT CLoader::Loading_For_Intro_Level()
 	lstrcpy(m_szLoadingText, TEXT("몬스터를 로드하는 중입니다."));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_VampireCommander"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/VampireCommander/VampireCommander", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Infected_A"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/A/Infected_A", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Horse"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Animals/Horse/Horse", PivotMatrix)));
 
 	/* ---------------------- Test Model 추가 라인 ---------------------- */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Infected_B"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/B/Infected_B", PivotMatrix)));
@@ -745,7 +746,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 #pragma region 환경 : 주석 풀고 병합해야함!!!
 	//! 환경 모델
 	Ready_Environment_Model(LEVEL_TOOL);
-#pragma endregion 환경 : 주석 풀고 병합해야함!!! 끝
+#pragma endregion 환경 : 주석 풀고 병합해야함!!! 끝 
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Chain"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix)));
 

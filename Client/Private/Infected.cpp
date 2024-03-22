@@ -108,7 +108,7 @@ void CInfected::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	m_pGameInstance->Add_DebugRender(m_pNavigationCom);
+	//m_pGameInstance->Add_DebugRender(m_pNavigationCom); /* 아 테스트로 넣었었음 */ 
 }
 
 HRESULT CInfected::Render()
