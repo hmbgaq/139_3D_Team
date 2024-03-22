@@ -164,7 +164,7 @@ void CWindow_UITool::Tick(_float fTimeDelta)
 			//m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_BackGround"), TEXT("Prototype_GameObject_Terrain"));
 
 		if(ImGui::Button("Create_Monster"))
-			m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_Monster"), TEXT("Prototype_GameObject_Screamer"));
+			m_pGameInstance->Add_CloneObject(LEVEL_TOOL, TEXT("Layer_Monster"), TEXT("Prototype_GameObject_Infected_A"));
 		ImGui::Spacing();
 		__super::End();
 
@@ -931,6 +931,8 @@ void CWindow_UITool::Setting_Child()
 	//ImGui::InputFloat("PositionX", &m_fChild_Possition.x);
 	//ImGui::InputFloat("PositionY", &m_fChild_Possition.y);
 
+	//ImGui::DragFloat("PosZ", (*m_pCurrSelectUIGet_UIDesc().fPositionZ))
+	//m_pCurrSelectUI->Set_PosZ()
 
 	if (m_pCurrSelectUI != nullptr)
 	{
@@ -982,11 +984,11 @@ void CWindow_UITool::Setting_Child()
 
 	ImGui::Dummy(ImVec2(0, 5)); // ฐ๘น้
 
-	if (m_pCurrChild != nullptr)
+	if (m_pCurrSelectUI != nullptr)
 	{
 		Set_GuizmoCamView();
 		Set_GuizmoCamProj();
-		Set_GuizmoUI(m_pCurrChild);
+		Set_GuizmoUI(m_pCurrSelectUI);
 	}
 
 	//ImGui::Separator();

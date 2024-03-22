@@ -315,6 +315,9 @@ protected: /* =========================== Ready ============================= */
 	virtual HRESULT Ready_Components();
 	virtual HRESULT Bind_ShaderResources();
 
+public:
+	virtual HRESULT	Setting_Owner();
+
 public: /* =========================== Save/Load ============================== */
 	virtual void	Load_FromJson(const json& In_Json);
 	virtual json	Save_Desc(json& out_json);

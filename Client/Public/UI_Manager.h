@@ -115,7 +115,7 @@ public:
 	/* EnemyHUD(Shard) */
 	HRESULT			Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_EnemyHUD_Shard(_bool bActive);
-	void			Set_EnemyHUD_World(_matrix matWorld);
+	void			Set_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
 	void			Set_Offset(_float fOffsetX, _float fOffsetY);
 
 	vector<CUI*>	m_vecEnemyHUD_Shard;

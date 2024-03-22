@@ -56,7 +56,7 @@ HRESULT CUI::Initialize(void* pArg)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_tUIInfo.fPositionX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fPositionY + (_float)g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ, 1.f));
 
 		XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-		XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
+		XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, m_tUIInfo.fPositionZ, 1.f));
 
 
 		m_fPositionX = m_tUIInfo.fPositionX;
@@ -232,6 +232,11 @@ HRESULT CUI::Bind_ShaderResources()
 	return S_OK;
 }
 
+HRESULT CUI::Setting_Owner()
+{
+	return S_OK;
+}
+
 HRESULT CUI::SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX, _float fSizeY)
 {
 	/* 렉트 크기를 표시할만한 디버깅 요소로 뭐가 좋을까 (Collider, Texture, Color..) */
@@ -361,10 +366,10 @@ vector<CUI*> CUI::Get_UIParts()
 
 void CUI::Set_PosZ(_float fZ)
 {
-	_float Z = fZ;
+	m_tUIInfo.fPositionZ = fZ;
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, Z));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Set_Pos(_float fPosX, _float fPosY)
@@ -374,7 +379,7 @@ void CUI::Set_Pos(_float fPosX, _float fPosY)
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Moving_Picking_Point(POINT pt)
@@ -392,7 +397,7 @@ void CUI::Moving_Picking_Point(POINT pt)
 
 	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, 0.2f));
+		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
 }
 
 void CUI::Parts_Delete()
@@ -429,7 +434,7 @@ HRESULT CUI::SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX, _float f
 
 	// View Matrix 및 Projection Matrix 설정
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, m_tUIInfo.fPositionZ, 1.f));
 
 	return S_OK;
 }
@@ -1334,7 +1339,7 @@ void CUI::Play_Animation(_float fTimeDelta)
 				/* 포지션 보간 */
 				m_pTransformCom->Set_Position({ m_vecAnimation[iFrameIndex].vPos.x + fPosX_Delta,
 											m_vecAnimation[iFrameIndex].vPos.y + fPosY_Delta,
-											0.f });	// 이미지 위치
+											m_tUIInfo.fPositionZ });	// 이미지 위치
 
 				/* 스케일 보간 */
 				m_pTransformCom->Set_Scaling(m_vecAnimation[iFrameIndex].vScale.x + fSizeX_Delta, 	// 이미지 크기
@@ -1402,7 +1407,7 @@ void CUI::Play_Animation(_float fTimeDelta)
 
 				m_pTransformCom->Set_Position({ m_vecAnimation[iFrameIndex].vPos.x,
 												m_vecAnimation[iFrameIndex].vPos.y,
-												0.f });	// 이미지 위치
+												m_tUIInfo.fPositionZ });	// 이미지 위치
 
 				/* 알파 보간 */
 				//m_tUIInfo.fAlpha = m_vecAnimation[iFrameIndex].fAlpha;

@@ -1299,6 +1299,7 @@ HRESULT CUI_Manager::Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLay
 			return E_FAIL;
 
 		pUI_Object->Set_Object_Owner(pOwner);
+		pUI_Object->Setting_Owner();
 
 		/* HP Shard */
 		string strCloneTag_HPBar = "Prototype_GameObject_UI_EnemyHP_Shard";
@@ -1337,14 +1338,14 @@ void CUI_Manager::Active_EnemyHUD_Shard(_bool bActive)
 	}
 }
 
-void CUI_Manager::Set_EnemyHUD_World(_matrix matWorld)
+void CUI_Manager::Set_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos)
 {
 	if (m_vecEnemyHUD_Shard.empty())
 	return;
 
 	for (auto& iter : m_vecEnemyHUD_Shard)
 	{
-		iter->SetUp_WorldToScreen(matWorld);
+		iter->SetUp_WorldToScreen(matWorld, vOffsetPos);
 	}
 }
 
