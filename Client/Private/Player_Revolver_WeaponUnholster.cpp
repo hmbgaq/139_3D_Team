@@ -1,9 +1,9 @@
 #include "..\Public\Player_Revolver_WeaponUnholster.h"
 #include "GameInstance.h"
 
-//#include "Player_Bandit_Special_01.h"
-#include "Player_Revolver_WeaponHolster.h"
-#include "Player_Revolver_Ironsights_ReloadFast.h"
+#include "Player_Bandit_Special_01.h"
+//#include "Player_Revolver_WeaponHolster.h"
+//#include "Player_Revolver_Ironsights_ReloadFast.h"
 //#include "Player_William_RevolverFanningStart_02.h"
 
 void CPlayer_Revolver_WeaponUnholster::Initialize(CPlayer* pActor)
@@ -24,13 +24,19 @@ CState<CPlayer>* CPlayer_Revolver_WeaponUnholster::Update(CPlayer* pActor, _floa
 
 	if (pActor->Is_UpperAnimation_End())
 	{
-		return new CPlayer_Revolver_Ironsights_ReloadFast();
-		//return new CPlayer_Revolver_WeaponHolster();
+		return new CPlayer_Bandit_Special_01();
 	}
 
 	return nullptr;
 
 	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+
+	//if (pActor->Is_Animation_End())
+	//{
+	//	return new CPlayer_Bandit_Special_01();
+	//}
+
+	//return nullptr;
 }
 
 void CPlayer_Revolver_WeaponUnholster::Release(CPlayer* pActor)

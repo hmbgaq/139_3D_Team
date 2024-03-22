@@ -810,6 +810,16 @@ CState<CPlayer>* CPlayer_State::Revolver(CPlayer* pActor, _float fTimeDelta, _ui
 {
 	if (m_pGameInstance->Key_Pressing(DIK_E))
 	{
+		//if (CPlayer_William_RevolverFanningStart_01::g_iAnimIndex != _iAnimIndex)
+		//	return new CPlayer_William_RevolverFanningStart_01();
+
+		//if (CPlayer_William_RevolverFanningStart_02::g_iAnimIndex != _iAnimIndex)
+		//	return new CPlayer_William_RevolverFanningStart_02();
+
+		//if (CPlayer_Bandit_Special_01::g_iAnimIndex != _iAnimIndex)
+		//	return new CPlayer_Bandit_Special_01();
+
+
 		if (CPlayer_Revolver_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Revolver_WeaponUnholster();
 	}

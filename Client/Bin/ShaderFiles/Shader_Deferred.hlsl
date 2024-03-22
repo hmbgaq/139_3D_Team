@@ -77,9 +77,8 @@ BLOOMRIM_DESC g_Bloom_Rim_Desc;
 
 float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise, FOG_DESC desc)
 {
-    /* 
-    vOriginColor : 안개없이 원래 그리는 색상 
-    toEye : 카메라에서 픽셀 바라보는벡터 */ 
+    /*  vOriginColor : 안개없이 원래 그리는 색상 
+        toEye : 카메라에서 픽셀 바라보는벡터 */ 
     
     // 지정 범위 Distance
     float pixelDistance = desc.fFogDistanceDensity * (length(g_vCamPosition.w - toEye) - desc.fFogStartDepth);
