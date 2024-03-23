@@ -409,8 +409,8 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 		pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 
-		//pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
-		//if (pState)	return pState;
+		pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
 
 		//pState = Gatilng(pActor, fTimeDelta, _iAnimIndex);
 		//if (pState)	return pState;
@@ -830,10 +830,10 @@ CState<CPlayer>* CPlayer_State::Revolver(CPlayer* pActor, _float fTimeDelta, _ui
 
 CState<CPlayer>* CPlayer_State::Shotgun(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	if (m_pGameInstance->Key_Down(DIK_F))
 	{
-		if (CPlayer_Shotgun_Fire_LongRange::g_iAnimIndex != _iAnimIndex)
-			return new CPlayer_Shotgun_Fire_LongRange();
+		if (CPlayer_ShotgunElectric_Fire_ShortRange::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_ShotgunElectric_Fire_ShortRange();
 	}
 
 	return nullptr;

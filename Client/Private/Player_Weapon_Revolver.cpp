@@ -42,23 +42,6 @@ void CPlayer_Weapon_Revolver::Priority_Tick(_float fTimeDelta)
 void CPlayer_Weapon_Revolver::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
-	//if (m_pGameInstance->Key_Down(DIK_F))
-	//{
-	//	string path = "../Bin/DataFiles/Data_Weapon/Player/Revolver/Reload.json";
-
-	//	{
-	//		json Out_Json;
-	//		m_pTransformCom->Write_Json(Out_Json);
-	//		CJson_Utility::Save_Json(path.c_str(), Out_Json);
-	//	}
-	//	//{
-	//	//   json In_Json;
-	//	//   CJson_Utility::Load_Json(path.c_str(), In_Json);
-	//	//   m_pTransformCom->Load_FromJson(In_Json);
-	//	//}
-
-	//}
 }
 
 void CPlayer_Weapon_Revolver::Late_Tick(_float fTimeDelta)

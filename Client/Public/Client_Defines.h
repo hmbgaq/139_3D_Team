@@ -64,6 +64,8 @@ namespace Client
 	#define PLAYER_WEAPON_KICK				TEXT("Weapon_Kick")
 	#define PLAYER_WEAPON_ZAPPER			TEXT("Weapon_Zapper")
 	#define PLAYER_WEAPON_REVOLVER			TEXT("Weapon_Revolver")
+	#define PLAYER_WEAPON_SHOTGUN			TEXT("Weapon_Shotgun")
+
 
 
 

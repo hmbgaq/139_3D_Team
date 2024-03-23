@@ -124,7 +124,7 @@ void CPlayer_Bandit_Special_01::Release(CPlayer* pActor)
 
 void CPlayer_Bandit_Special_01::Create_Bullet(CPlayer* pActor)
 {
-	pActor->Search_Target(30.f);
+	pActor->Search_Target(15.f);
 	CCharacter* pTarget = pActor->Get_Target();
 	if (pActor->Get_Target()) 
 	{
