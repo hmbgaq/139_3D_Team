@@ -448,18 +448,18 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     // Shadow 
     float ShadowColor = 1.f;
     
-    if (true == g_bFog_Active)
-    {
-        float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
-        vTexCoord.x += g_vFogUVAcc.x;
-        vTexCoord.y += g_vFogUVAcc.y;
-    
-        float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
-    
-        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
-    
-        Out.vColor = vector(vFinalColor.rgb, 1.f);
-    }
+    //if (true == g_bFog_Active)
+    //{
+    //    float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
+    //    vTexCoord.x += g_vFogUVAcc.x;
+    //    vTexCoord.y += g_vFogUVAcc.y;
+    //
+    //    float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
+    //
+    //    float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
+    //
+    //    Out.vColor = vector(vFinalColor.rgb, 1.f);
+    //}
     
     if (true == g_bShadow_Active)
     {
