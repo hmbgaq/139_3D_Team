@@ -53,6 +53,7 @@ public:
 	vector<INSTANCE_INFO_DESC>*				Get_InstanceInfoDesc() { return &m_tInstanceDesc.vecInstanceInfoDesc; }
 
 	INSTANCE_INFO_DESC*						Get_InstanceInfo(_uint iIndex) { return &m_tInstanceDesc.vecInstanceInfoDesc[iIndex]; }
+	void									Set_ShaderPassIndex(_uint iShaderPassIndex) { m_tInstanceDesc.iShaderPassIndex = iShaderPassIndex;}
 
 private:
 	CShader*								m_pShaderCom = { nullptr };	

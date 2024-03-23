@@ -2896,6 +2896,9 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\4. Stun">
       <UniqueIdentifier>{1bbe3f2f-3c01-46ee-9d48-e4cbf8febf7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss">
+      <UniqueIdentifier>{28ebb5ee-63fc-4e9f-b28e-78c93bb6b8b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -5880,6 +5883,9 @@
     <ClInclude Include="..\Public\Sniper_Introduction_03.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\3. Intro</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_SnowMountainBoss.h">
+      <Filter>01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8316,6 +8322,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Sniper_Introduction_03.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\3. Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_SnowMountainBoss.cpp">
+      <Filter>01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

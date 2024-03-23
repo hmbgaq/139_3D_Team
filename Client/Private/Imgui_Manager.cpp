@@ -185,6 +185,8 @@ void CImgui_Manager::Tick(_float fTimeDelta)
 
 void CImgui_Manager::MenuTick(_float fTimeDelta)
 {
+	
+
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("Tools"))

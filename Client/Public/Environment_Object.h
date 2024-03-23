@@ -60,6 +60,7 @@ public:
 	
 public:
 	void				Set_ColliderRender(_bool bColliderRender) { m_bColliderRender = bColliderRender;}
+	void				Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex;}
 
 #ifdef _DEBUG
 public: //! For.Tool

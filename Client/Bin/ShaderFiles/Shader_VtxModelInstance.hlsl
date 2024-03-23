@@ -160,7 +160,7 @@ PS_OUT PS_MAIN_NORMAL(PS_IN_NORMAL In)
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
     clip(Out.vDiffuse.a - 0.1f);
-    Out.vDiffuse.a = 1.f;
+    
 	/* 0 ~ 1 */
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
 
@@ -175,6 +175,32 @@ PS_OUT PS_MAIN_NORMAL(PS_IN_NORMAL In)
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 	
 	return Out;
+}
+
+PS_OUT PS_MAIN_NORMALNONCLIP(PS_IN_NORMAL In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+    
+    if (Out.vDiffuse.a <= 0.0f)
+        discard;
+		
+    
+	/* 0 ~ 1 */
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
+
+	/* -1 ~ 1 */
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
+	
+    return Out;
 }
 
 
@@ -279,8 +305,8 @@ technique11 DefaultTechnique
 
 	pass NormalMapping //1
 	{
-        SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-        SetDepthStencilState(DSS_DepthStencilEnable, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_Default, 0);
         SetRasterizerState(RS_Default);
 
         VertexShader = compile vs_5_0 VS_MAIN_NORMAL();
@@ -305,7 +331,7 @@ technique11 DefaultTechnique
 
 
 
-	pass Pass4_NonCulling //4
+	pass Pass4_NonCulling //3
 	{
         SetBlendState			(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState    (DSS_DepthStencilEnable, 0);
@@ -318,7 +344,7 @@ technique11 DefaultTechnique
 		PixelShader		= compile ps_5_0	PS_MAIN();
 	}
 
-	pass Pass5_NonCulling_Norm //5
+	pass Pass5_NonCulling_Norm //4
 	{
         SetBlendState			(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState	(DSS_DepthStencilEnable, 0);
@@ -331,7 +357,7 @@ technique11 DefaultTechnique
 		PixelShader		= compile ps_5_0	PS_MAIN_NORMAL();
 	}
 
-    pass Pass6_Dissolve //6
+    pass Pass6_Dissolve //5
     {
         SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_DepthStencilEnable, 0);
@@ -343,5 +369,20 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_Dissove();
     }
+
+    pass NormalMappingNonClip //6
+    {
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_Default, 0);
+        SetRasterizerState(RS_Default);
+
+        VertexShader = compile vs_5_0 VS_MAIN_NORMAL();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_NORMALNONCLIP();
+    }
+
+
 
 }

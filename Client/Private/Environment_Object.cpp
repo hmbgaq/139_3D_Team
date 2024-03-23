@@ -103,7 +103,8 @@ HRESULT CEnvironment_Object::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		
-		m_pShaderCom->Begin(0);
+		
+		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
 
 		m_pModelCom->Render((_uint)i);
 	}
