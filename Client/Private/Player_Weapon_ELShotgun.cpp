@@ -89,6 +89,11 @@ HRESULT CPlayer_Weapon_ELShotgun::Ready_Components()
 	return S_OK;
 }
 
+void CPlayer_Weapon_ELShotgun::Fire(_float3 vTargetPos)
+{
+	__super::Fire(L"Prototype_GameObject_Bullet_ELShotgun", LAYER_PLAYER_BULLET, vTargetPos);
+} 
+
 CPlayer_Weapon_ELShotgun* CPlayer_Weapon_ELShotgun::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
 	CPlayer_Weapon_ELShotgun* pInstance = new CPlayer_Weapon_ELShotgun(pDevice, pContext, strPrototypeTag);

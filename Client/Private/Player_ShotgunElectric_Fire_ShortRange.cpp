@@ -6,8 +6,6 @@ void CPlayer_ShotgunElectric_Fire_ShortRange::Initialize(CPlayer* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
-	//pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
-	//pActor->Set_Splitted(true);
 
 	pActor->Set_Weapon_Enable(PLAYER_WEAPON_SHOTGUN, true);
 
@@ -19,10 +17,11 @@ CState<CPlayer>* CPlayer_ShotgunElectric_Fire_ShortRange::Update(CPlayer* pActor
 
 	if (false == m_bFlags[0])
 	{
-		m_bFlags[0] = pActor->Is_Inputable_Front(8);
+		m_bFlags[0] = pActor->Is_Inputable_Front(9);
 		if (true == m_bFlags[0]) 
 		{
-
+			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_SHOTGUN);
+			pWeapon->Fire(_float3(-0.1f, 0.f, 0.f));
 
 			pActor->Set_Animation(ECast(CPlayer::Player_State::Player_IdleLoop), CModel::ANIM_STATE_LOOP, true, false);
 			pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);

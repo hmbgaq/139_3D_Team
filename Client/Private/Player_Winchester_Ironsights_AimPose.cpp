@@ -37,11 +37,11 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 
 	if (m_pGameInstance->Mouse_Down(DIM_LB))
 	{
-		pActor->Activate_ShootingReaction();
 		CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_WINCHESTER);
 		pWeapon->Fire();
+		pActor->Apply_Shake_And_Blur(Power::Medium);
 		CUI_Manager::GetInstance()->Trigger_Crosshair(true);
-		m_pGameInstance->Set_RadialBlurTime(0.3f);
+		pActor->Activate_ShootingReaction();
 		
 		return new CPlayer_Winchester_Ironsights_Reload_01();
 	}

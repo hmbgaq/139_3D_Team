@@ -124,7 +124,6 @@ void CCollision_Manager::Update_CollisionGroup(const _uint& In_iLeftLayer, const
 	{
 		for (CCollider* elem_Right : m_ColliderList[In_iRightLayer])
 		{
-			_int a = 0;
 			if (nullptr == elem_Left || nullptr == elem_Right || elem_Left == elem_Right)
 			{
 				continue;
