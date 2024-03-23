@@ -27,10 +27,6 @@ CState<CMother>* CMother_State::Normal_State(CMother* pActor, _float fTimeDelta,
 	return nullptr;
 }
 
-CState<CMother>* CMother_State::Walk_State(CMother* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	return nullptr;
-}
 
 CState<CMother>* CMother_State::Attack_State(CMother* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {

@@ -3004,6 +3004,30 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeEnd">
       <UniqueIdentifier>{7b00641b-549c-44b8-9cc2-c4cbcde2c7f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\0.Origin">
+      <UniqueIdentifier>{931a684b-aed6-4bb0-a053-03374c2a5fa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle">
+      <UniqueIdentifier>{80b7de68-2106-4fbd-8a33-e4f08c5322db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine">
+      <UniqueIdentifier>{462ae2e9-14fa-4f21-a819-75cd247fdb4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\0.Parent">
+      <UniqueIdentifier>{c5250dc7-5805-4427-8b08-1269ac214601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\1">
+      <UniqueIdentifier>{b47d1b57-3419-4e46-b14a-737f83cb1ef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Start">
+      <UniqueIdentifier>{68ec963e-1f7d-4c4b-afc6-2bced8541b4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\End">
+      <UniqueIdentifier>{d3b8d0c4-e01c-460b-8b68-f6449d83009b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Loop">
+      <UniqueIdentifier>{333539fb-7c63-4983-80e2-cacd15643149}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -6063,6 +6087,24 @@
     <ClInclude Include="..\Public\Mother_VomitLoop.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitLoop</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth_State.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\0.Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\0.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth_Idle.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth_SpittingMineEnd.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\End</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth_SpittingMineLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth_SpittingMineStart.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Start</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8574,6 +8616,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\Mother_VomitLoop.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth_State.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\0.Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth_State_Normal.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth_SpittingMineEnd.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\End</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth_SpittingMineLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth_SpittingMineStart.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Start</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
