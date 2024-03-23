@@ -18,6 +18,7 @@ public:
 	_float	m_fPreHP = 0;
 	_uint	m_iLoopescape = 0;
 	_bool	m_bSuccessShooting = false;
+	_uint	m_iShootingCount = 0;
 	_uint	m_iRandom[3] = {0};
 	class CEffect* m_pEffect = { nullptr };
 };

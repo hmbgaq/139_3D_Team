@@ -1,16 +1,14 @@
-// Copyright (c) 2011 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2010 NVIDIA Corporation. All rights reserved.
 //
 // TO  THE MAXIMUM  EXTENT PERMITTED  BY APPLICABLE  LAW, THIS SOFTWARE  IS PROVIDED
 // *AS IS*  AND NVIDIA AND  ITS SUPPLIERS DISCLAIM  ALL WARRANTIES,  EITHER  EXPRESS
-// OR IMPLIED, INCLUDING, BUT NOT LIMITED  TO, NONINFRINGEMENT,IMPLIED WARFXRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL  NVIDIA 
-// OR ITS SUPPLIERS BE  LIABLE  FOR  ANY  DIRECT, SPECIAL,  INCIDENTAL,  INDIRECT,  OR  
-// CONSEQUENTIAL DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION,  DAMAGES FOR LOSS 
-// OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS INFORMATION, OR ANY 
-// OTHER PECUNIARY LOSS) ARISING OUT OF THE  USE OF OR INABILITY  TO USE THIS SOFTWARE, 
-// EVEN IF NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-//
-// Please direct any bugs or questions to SDKFeedback@nvidia.com
+// OR IMPLIED, INCLUDING, BUT NOT LIMITED  TO, IMPLIED WARRANTIES OF MERCHANTABILITY
+// AND FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL  NVIDIA OR ITS SUPPLIERS
+// BE  LIABLE  FOR  ANY  SPECIAL,  INCIDENTAL,  INDIRECT,  OR  CONSEQUENTIAL DAMAGES
+// WHATSOEVER (INCLUDING, WITHOUT LIMITATION,  DAMAGES FOR LOSS OF BUSINESS PROFITS,
+// BUSINESS INTERRUPTION, LOSS OF BUSINESS INFORMATION, OR ANY OTHER PECUNIARY LOSS)
+// ARISING OUT OF THE  USE OF OR INABILITY  TO USE THIS SOFTWARE, EVEN IF NVIDIA HAS
+// BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 
 /*=====================================================================
  
@@ -34,7 +32,7 @@ cbuffer cbFxaaFrame : register(b0)
     float4 gFrame = float4(1.0f / 1280.f, 1.0f / 720.f, 0, 0);
 };
 
-Texture2D g_FinalTarget : register(t0); /* 올려야하는 텍스쳐가 이거임 */ 
+Texture2D g_FinalTarget : register(t0); /* 올려야하는 텍스쳐가 이거임 :  */ 
 
 #define FxaaToFloat3(a) FxaaFloat3((a), (a), (a))
 
@@ -55,8 +53,16 @@ float4 FxaaTexOff(float2 pos, int2 off)
 
 #define FXAA_SRGB_ROP 0
 
-/*========================================================
+// Debugging Modes
+//#define FXAA_DEBUG_PASSTHROUGH 1
+//#define FXAA_DEBUG_HORZVERT 1
+//#define FXAA_DEBUG_PAIR 1
+//#define FXAA_DEBUG_NEGPOS 1
+//#define FXAA_DEBUG_OFFSET 1
+
+/*============================================================================
                                 DEBUG KNOBS
+
 All debug knobs draw FXAA-untouched pixels in FXAA computed luma (monochrome).
  
 FXAA_DEBUG_PASSTHROUGH - Red for pixels which are filtered by FXAA with a
@@ -65,10 +71,8 @@ FXAA_DEBUG_HORZVERT    - Blue for horizontal edges, gold for vertical edges.
 FXAA_DEBUG_PAIR        - Blue/green for the 2 pixel pair choice. 
 FXAA_DEBUG_NEGPOS      - Red/blue for which side of center of span.
 FXAA_DEBUG_OFFSET      - Red/blue for -/+ x, gold/skyblue for -/+ y.
-============================================================*/
-//#define FXAA_DEBUG_HORZVERT 1
-//#define FXAA_DEBUG_OFFSET 1
-//#define FXAA_DEBUG_NEGPOS 1
+============================================================================*/
+
 
 #ifndef     FXAA_DEBUG_PASSTHROUGH
 #define FXAA_DEBUG_PASSTHROUGH 0
@@ -259,8 +263,7 @@ float FxaaLuma(float3 rgb)
 
 float3 FxaaLerp3(float3 a, float3 b, float amountOfA)
 {
-    return (FxaaToFloat3(-amountOfA) * b) +
-        ((a * FxaaToFloat3(amountOfA)) + b);
+    return (FxaaToFloat3(-amountOfA) * b) + ((a * FxaaToFloat3(amountOfA)) + b);
 }
 
 // Support any extra filtering before returning color.
@@ -272,9 +275,8 @@ float3 FxaaFilterReturn(float3 rgb)
 /*==============================================================
                                 VERTEX SHADER
 =============================================================*/
-float2 FxaaVertexShader(
 // Both x and y range {-1.0 to 1.0 across screen}.
-float2 inPos)
+float2 FxaaVertexShader(float2 inPos)
 {
     float2 pos;
     pos.xy = (inPos.xy * FxaaFloat2(0.5, 0.5)) + FxaaFloat2(0.5, 0.5);
@@ -286,10 +288,10 @@ float2 inPos)
                                 PIXEL SHADER
                                 
 ==============================================================*/
-float3 FxaaPixelShader(
-// Output of FxaaVertexShader interpolated across screen.
-//  xy -> actual texture position {0.0 to 1.0}
-float2 pos)
+
+//float3 FxaaPixelShader(float2 pos,FxaaTex tex,float2 rcpFrame)
+
+float3 FxaaPixelShader(float2 pos)
 {
     
 /*--------------------------------------------------------------

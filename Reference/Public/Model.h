@@ -86,6 +86,8 @@ public:
 	void					Play_Animation(_float fTimeDelta, _bool bIsLoop);
 	void					Play_Animation(_float fTimeDelta, _float3& _Pos);
 
+	void Play_Animation(_float fTimeDelta, _float3& _Pos, _float3 pPlayerPos);
+
 	void					Stop_Animation(_float fTimeDelta,_bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
 	void					Ctrl_Animation(_float fTimeDelta, _bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
 
@@ -173,6 +175,9 @@ private:
 
 	_float					m_fModelWidth = 0.f;
 	_float					m_fModelHeight = 0.f;
+
+	// PBR
+	_bool					m_bSpecularMissed = { false };
 
 public:
 	typedef vector<CBone*>	BONES;

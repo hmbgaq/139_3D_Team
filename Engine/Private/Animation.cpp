@@ -261,6 +261,133 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 	return m_isFinished;
 }
 
+_bool CAnimation::Invalidate_TransformationMatrix_Parasiter(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones,_float3 pPlayerPos)
+{
+	_bool _bPrevTransition = m_bIsTransition;
+	if (m_bIsTransition)
+	{
+		m_fTrackPosition += m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+
+		if (m_fTransitionEnd <= m_fTrackPosition)
+		{
+			m_bIsTransition = false;
+			m_fTrackPosition = m_fTransitionEnd;
+		}
+	}
+	else
+	{
+		switch (_eAnimState)
+		{
+		case Engine::CModel::ANIM_STATE_NORMAL:
+			m_fTrackPosition += m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+			if (m_fTrackPosition >= m_fDuration)
+			{
+				m_isFinished = true;
+				m_fTrackPosition = m_fDuration;
+			}
+			break;
+		case Engine::CModel::ANIM_STATE_LOOP:
+			m_fTrackPosition += m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+			if (m_fTrackPosition >= m_fDuration)
+			{
+				m_fTrackPosition = 0.0f;
+				m_PrevPos = { 0.f, 0.f, 0.f };
+			}
+			break;
+		case Engine::CModel::ANIM_STATE_REVERSE:
+			m_fTrackPosition -= m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+			if (m_fTrackPosition <= 0)
+			{
+				m_isFinished = true;
+				m_fTrackPosition = 0.f;
+			}
+			break;
+		case Engine::CModel::ANIM_STATE_LOOP_REVERSE:
+			m_fTrackPosition -= m_fTickPerSecond / m_fStiffnessRate * fTimeDelta;
+			if (m_fTrackPosition <= 0)
+			{
+				m_fTrackPosition = m_fDuration;
+				m_PrevPos = { 0.f, 0.f, 0.f };
+			}
+			break;
+		case Engine::CModel::ANIM_STATE_STOP:
+			m_isFinished = true;
+			break;
+		default:
+			break;
+		}
+
+	}
+
+
+
+	for (size_t i = 0; i < m_iNumChannels; i++)
+	{
+		CChannel* pNowChannel = m_Channels[i];
+		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
+
+		if (Is_UpperBody(iChannelIndex))
+		{
+			if (m_bIsTransition)
+			{
+				KEYFRAME	_StartFrame = m_StartTransitionKeyFrame[i];
+				KEYFRAME	_EndFrame = m_EndTransitionKeyFrame[i];
+
+				m_Channels[i]->Invalidate_TransformationMatrix_Transition(_StartFrame, _EndFrame, m_fTrackPosition, Bones);
+			}
+			else
+			{
+				switch (_eAnimState)
+				{
+				case Engine::CModel::ANIM_STATE_NORMAL:
+				case Engine::CModel::ANIM_STATE_LOOP:
+					m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+					break;
+				case Engine::CModel::ANIM_STATE_REVERSE:
+					m_Channels[i]->Invalidate_TransformationMatrix_Reverse(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+					break;
+				default:
+					break;
+				}
+			}
+		}
+
+		//HERE
+		if (m_Channels[i]->Get_BoneIndex() == 17)
+		{
+			CBone* pBone = Bones[m_Channels[i]->Get_BoneIndex()];
+
+			_float4x4 Transform = pBone->Get_TransformationMatrix();
+
+			_float4x4 playerToParasiterMatrix;
+
+			// 플레이어 위치 가져오기
+			_float3 playerPosition = pPlayerPos;
+
+			// 몬스터 목뼈 변환 행렬 가져오기
+			_matrix boneTransform = XMLoadFloat4x4(&Transform);
+
+			// 플레이어 위치를 로컬 공간으로 변환
+			_vector localPosition = XMVector3TransformCoord(XMLoadFloat3(&playerPosition), boneTransform);
+
+			// 로컬 회전 행렬 계산
+			_matrix localRotation = XMMatrixLookAtLH(localPosition, XMVectorSet(0.0f, 0.0f, 0.0f,0.f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.f));
+
+			// 월드 공간 변환 행렬에 곱하기
+			boneTransform = XMMatrixMultiply(boneTransform, localRotation);
+
+
+			//_float4x4 ResultMatrix = XMMatrixMultiply(Transform, playerToParasiterMatrix);
+
+			pBone->Set_TransformationMatrix(boneTransform);
+		}
+	}
+
+	//m_bIsTransitionEnd_Now = _bPrevTransition != m_bIsTransition;
+
+	return m_isFinished;
+}
+
 CChannel* CAnimation::Get_Channel_By_BoneIndex(_uint _iBoneIndex, _uint& _iChannelIndex)
 {
 	for (_uint i = 0; i < m_iNumChannels; ++i)

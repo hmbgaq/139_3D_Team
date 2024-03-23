@@ -27,9 +27,6 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 	if (!m_LightDesc.bEnable)
 		return E_FAIL;
 
-	
-
-
 	_uint		iPassIndex = { 0 };
 
 	if (LIGHT_DESC::TYPE_DIRECTIONAL == m_LightDesc.eType)
