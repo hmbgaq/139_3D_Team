@@ -22,6 +22,7 @@ namespace Engine
 		SPOT_LIGHT, 
 		DEFERRED, 
 		PBR, 
+		MYPBR,
 		SHADER_END };
 
 	enum class SSAO_SHADER {

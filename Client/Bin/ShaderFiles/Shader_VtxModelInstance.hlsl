@@ -70,14 +70,13 @@ struct PS_OUT
     float4 vDepth			: SV_TARGET2;
     float4 vORM				: SV_TARGET3;
     float4 vRimBloom		: SV_TARGET4; /* Rim + Bloom */
-    
+    float4 vEmissive		: SV_Target5;
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
-
 	
 	matrix			WorldMatrix	= float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
 
@@ -115,7 +114,7 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
-	
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexUV);
     return Out;
 }
 

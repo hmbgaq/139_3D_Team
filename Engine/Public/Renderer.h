@@ -47,6 +47,7 @@ private:
 	HRESULT Render_RimBloom();
 	HRESULT Render_Deferred();
 	HRESULT Render_PBR();
+	HRESULT Render_MyPBR();
 
 	HRESULT Deferred_Effect();
 	HRESULT Render_Effect_BloomBlur();
@@ -151,8 +152,8 @@ private:
 	class CTexture*				m_pPerlinNoiseTextureCom	= { nullptr };
 	class CTexture*				m_pIrradianceTextureCom		= { nullptr };
 	class CTexture*				m_pPreFilteredTextureCom	= { nullptr };
-	class CTexture*				m_pBRDFTextureCom	= { nullptr };
-	class CTexture*				m_pVolumetrix_Voxel = { nullptr };
+	class CTexture*				m_pBRDFTextureCom			= { nullptr };
+	class CTexture*				m_pVolumetrix_Voxel			= { nullptr };
 	ID3D11DepthStencilView*		m_pLightDepthDSV			= { nullptr };
 	_float4x4					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT						Control_HotKey();
@@ -163,15 +164,15 @@ public:
 
 #ifdef _DEBUG
 public:
-	void	Set_DebugRenderTarget(_bool _bDebug) { m_bDebugRenderTarget = _bDebug; }
-	void	Set_DebugCom(_bool _bDebug) { m_bDebugCom = _bDebug; }
+	void			Set_DebugRenderTarget(_bool _bDebug) { m_bDebugRenderTarget = _bDebug; }
+	void			Set_DebugCom(_bool _bDebug) { m_bDebugCom = _bDebug; }
 
 private:
-	HRESULT Ready_DebugRender();
-	HRESULT Render_DebugCom();	
-	HRESULT Render_DebugTarget();
-	_bool	m_bDebugRenderTarget	= { false };
-	_bool	m_bDebugCom				= { false };
+	HRESULT			Ready_DebugRender();
+	HRESULT			Render_DebugCom();	
+	HRESULT			Render_DebugTarget();
+	_bool			m_bDebugRenderTarget	= { true };
+	_bool			m_bDebugCom				= { false };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
 

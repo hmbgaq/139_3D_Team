@@ -18,9 +18,12 @@ float4      g_vRimColor     = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
 float       g_fRimPower     = 5.f;
 
 /* =========== Texture =========== */
-Texture2D   g_DiffuseTexture;       /* Object */
-Texture2D   g_NormalTexture;        /* Object */
-Texture2D   g_SpecularTexture;      /* Object */
+Texture2D   g_DiffuseTexture;       /* Noblend */
+Texture2D   g_NormalTexture;        /* Noblend */
+Texture2D   g_SpecularTexture;      /* Noblend */
+Texture2D   g_EmissiveTexture;      /* Noblend */
+Texture2D   g_OpacityTexture;       /* Noblend */
+
 Texture2D   g_DistortionTexture;
 Texture2D   g_DissolveTexture;
 Texture2D   g_MaskingTexture;
@@ -86,6 +89,12 @@ struct PS_OUT
     float4 vDepth       : SV_TARGET2;
     float4 vORM         : SV_TARGET3;
     float4 vRimBloom    : SV_TARGET4; /* Rim + Bloom */
+    float4 vEmissive    : SV_TARGET5;
+};
+
+struct PS_OUT_SHADOW
+{
+    vector vLightDepth : SV_TARGET0;
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -133,16 +142,13 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
 }
 
 /* ------------------- Shadow Pixel Shader(2) -------------------*/
 
-struct PS_OUT_SHADOW
-{
-    vector vLightDepth : SV_TARGET0;
-};
 
 PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
 {
@@ -167,6 +173,7 @@ PS_OUT PS_INFECTED_WEAPON(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
@@ -188,6 +195,7 @@ PS_OUT PS_SNIPER_WEAPON(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);

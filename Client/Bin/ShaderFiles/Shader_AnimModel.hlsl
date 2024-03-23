@@ -91,6 +91,7 @@ struct PS_OUT
     float4 vDepth       : SV_TARGET2;
     float4 vORM         : SV_TARGET3;
     float4 vRimBloom    : SV_TARGET4; /* Rim + Bloom */
+    float4 vEmissive    : SV_Target5;
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -137,7 +138,8 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
- 
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord); // 새로 추가된 Emissive Texture -> PBR에 사용된다. 
+    
     if(Out.vDiffuse.a < 0.1f)
         discard;
     
@@ -208,7 +210,7 @@ PS_OUT PS_MAIN_RIMBLOOM_A(PS_IN In)
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
-    
+    Out.vRimBloom += g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
     return Out;
