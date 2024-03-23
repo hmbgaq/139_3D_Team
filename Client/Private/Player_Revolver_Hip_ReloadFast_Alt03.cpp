@@ -8,7 +8,7 @@ void CPlayer_Revolver_Hip_ReloadFast_Alt03::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Weapon_Enable(PLAYER_WEAPON_REVOLVER, false);
+	pActor->Set_Weapon_Enable(PLAYER_WEAPON_REVOLVER, true);
 
 	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
 	pActor->Set_Splitted(true);
@@ -46,4 +46,5 @@ void CPlayer_Revolver_Hip_ReloadFast_Alt03::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
 	pActor->Set_Splitted(false);
+	pActor->Set_Weapon_Enable(PLAYER_WEAPON_REVOLVER, false);
 }

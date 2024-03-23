@@ -12,8 +12,7 @@ void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 
 	pActor->Set_Weapon_Enable(PLAYER_WEAPON_REVOLVER, true);
 
-	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
-
+	//pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
 	pActor->Set_Splitted(false);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_STOP, true, false, 17);
@@ -25,10 +24,12 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 	__super::Update(pActor, fTimeDelta);
 
 	fInputWaitTime += fTimeDelta;
-	if (1.f <= fInputWaitTime)
+	if (0.5f <= fInputWaitTime)
 	{
 		return new CPlayer_IdleLoop();
 	}
+
+	
 
 	if (m_pGameInstance->Key_Down(DIK_E) || m_pGameInstance->Key_Pressing(DIK_E))
 	{
@@ -118,7 +119,7 @@ void CPlayer_Bandit_Special_01::Release(CPlayer* pActor)
 	__super::Release(pActor);
 	//pActor->Set_Splitted(false);
 
-	pActor->Set_Weapon_Enable(PLAYER_WEAPON_REVOLVER, false);
+	//pActor->Set_Weapon_Enable(PLAYER_WEAPON_REVOLVER, false);
 }
 
 void CPlayer_Bandit_Special_01::Create_Bullet(CPlayer* pActor)
