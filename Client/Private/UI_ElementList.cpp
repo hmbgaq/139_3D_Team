@@ -2,6 +2,7 @@
 #include "UI_ElementList.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
+#include "Renderer.h"
 
 CUI_ElementList::CUI_ElementList(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -54,6 +55,8 @@ void CUI_ElementList::Late_Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
+	Check_Picking(fTimeDelta);
+
 	if (m_bActive)
 	{
 		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
@@ -95,6 +98,51 @@ void CUI_ElementList::UI_Loop(_float fTimeDelta)
 
 void CUI_ElementList::UI_Exit(_float fTimeDelta)
 {
+}
+
+void CUI_ElementList::Check_Picking(_float fTimeDelta)
+{
+	if (m_bPick == true)
+	{
+		if (m_pGameInstance->Mouse_Down(DIM_LB))
+		{
+			if (m_tUIInfo.strUIName == "HABO")
+			{
+				m_bHABO_Active = !m_bHABO_Active;
+				m_pGameInstance->Get_Renderer()->Set_HBAO_Active(m_bHABO_Active);
+			}
+			else if (m_tUIInfo.strUIName == "FOG")
+			{
+				m_bFOG_Active = !m_bFOG_Active;
+				m_pGameInstance->Get_Renderer()->Set_Fog_Active(m_bFOG_Active);
+			}
+			else if (m_tUIInfo.strUIName == "RADIAL_BLUR")
+			{
+				m_bRadial_Blur_Active = !m_bRadial_Blur_Active;
+				m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(m_bRadial_Blur_Active);
+			}
+			else if (m_tUIInfo.strUIName == "DOF")
+			{
+				m_bDof_Active = !m_bDof_Active;
+				m_pGameInstance->Get_Renderer()->Set_DOF_Active(m_bDof_Active);
+			}
+			else if (m_tUIInfo.strUIName == "HDR")
+			{
+				m_bHDR_Active = !m_bHDR_Active;
+				m_pGameInstance->Get_Renderer()->Set_HDR_Active(m_bHDR_Active);
+			}
+			else if (m_tUIInfo.strUIName == "SHADOW")
+			{
+				m_bShadow_Active = !m_bShadow_Active;
+				m_pGameInstance->Get_Renderer()->Set_Shadow_Active(m_bShadow_Active);
+			}
+			//else if (m_tUIInfo.strUIName == "PBR")
+			//{
+			//	m_bPBR_Active = !m_bPBR_Active;
+			//	m_pGameInstance->Get_Renderer()->Set_PBR_Active(m_bPBR_Active);
+			//}
+		}
+	}
 }
 
 HRESULT CUI_ElementList::Ready_Components()

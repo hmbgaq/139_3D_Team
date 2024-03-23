@@ -189,6 +189,7 @@ public:
 	_bool						m_bFreeMove = false;
 	_float						m_fPosX = 0.f;
 	_float						m_fPosY = 0.f;
+	_float						m_fPosZ = 0.5f;
 	_float						m_fScale = 5.f;
 	_float						m_fRotation = 0.f;
 	_float2						m_vOrigin = { 0.1f, 0.1f };
@@ -304,6 +305,7 @@ private:
 	ImVec2					timelineSize = { 800.f, 85.f }; // 애니메이션 타임 라인 크기
 
 	_int m_iOldIndex = -1;
+	_bool m_bProj_Change = false;
 #pragma region											최소, 최대 값
 // 크기
 	_float	fMin_Scale = -5000.0001f;	// 최소

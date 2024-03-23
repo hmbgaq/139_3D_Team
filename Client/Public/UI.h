@@ -475,6 +475,7 @@ protected: /* ============================= UI =============================== *
 public:
 	void				Set_MaskNum(_int iMaskNum) { m_tUIInfo.iMaskNum = iMaskNum; }
 	void				Set_NoiseNum(_int iNoiseNum) { m_tUIInfo.iNoiseNum = iNoiseNum; }
+	void				Set_WorldUI(_bool bWorld) { m_tUIInfo.bWorld = bWorld; }
 	void				Set_DiffuseColor(_float fColorR, _float fColorG, _float fColorB, _float fColorA)
 	{
 		m_tUIInfo.vColor.m128_f32[0] = fColorR;
@@ -483,6 +484,7 @@ public:
 		m_tUIInfo.vColor.m128_f32[3] = fColorA;
 	}
 	void				Set_ColorMode(MODE_COLOR eColorMode) { m_tUIInfo.eColorMode = eColorMode; }
+	_bool*				Get_WorldUI() { return &m_tUIInfo.bWorld; }
 
 public:
 	void	Set_OffsetX(_float fOffsetX) { m_fOffsetX = fOffsetX; }
@@ -500,6 +502,10 @@ public:
 protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;
 	_uint				m_iButtonState = {};
+	_bool				m_bChange_Proj = false;
+
+public:
+	void	ChangeProj() { m_bChange_Proj = true; }
 
 public:
 	virtual void		 Free() override;

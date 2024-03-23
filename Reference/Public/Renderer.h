@@ -89,17 +89,27 @@ public:
 	/* 렌더옵션 초기화 */
 	HRESULT Off_Shader(); /* 모든 셰이더옵션 다 끔 */
 
+	//void Set_PBR_Active(_bool bPBR) { return m_tPBR; }
 	/* 활성화 */
 	void Set_BloomBlur_Active(_bool _bloom_active) { m_tDeferred_Option.bRimBloom_Blur_Active = _bloom_active; }
+	_bool Get_BloomBlur_Active() { return m_tDeferred_Option.bRimBloom_Blur_Active; }
 	void Set_Shadow_Active(_bool _Shadow_Active) { m_tDeferred_Option.bShadow_Active = _Shadow_Active; }
+	_bool Get_Shadow_Active() { return m_tDeferred_Option.bShadow_Active; }
 	void Set_HBAO_Active(_bool _HBAO) { m_tHBAO_Option.bHBAO_Active = _HBAO; }
+	_bool Get_HBAO_Active() { return m_tHBAO_Option.bHBAO_Active; }
 	void Set_Fog_Active(_bool _Fog) { m_tFog_Option.bFog_Active = _Fog; }
+	_bool Get_Fog_Active() { return m_tFog_Option.bFog_Active; }
 
 	void Set_Radial_Blur_Active(_bool _Radial) { m_tRadial_Option.bRadial_Active = _Radial; }
+	_bool Get_Radial_Blur_Active() { return m_tRadial_Option.bRadial_Active; }
 	void Set_DOF_Active(_bool _DOF) { m_tDOF_Option.bDOF_Active = _DOF; }
+	_bool Get_DOF_Active() { return m_tDOF_Option.bDOF_Active; }
 	void Set_HDR_Active(_bool _HDR_active) { m_tHDR_Option.bHDR_Active = _HDR_active; }
+	_bool Get_HDR_Active() { return m_tHDR_Option.bHDR_Active; }
 	void Set_FXAA_Active(_bool _FXAA_active) { m_tAnti_Option.bFXAA_Active = _FXAA_active; }
+	_bool Get_FXAA_Active() { return m_tAnti_Option.bFXAA_Active; }
 	void Set_HSV_Active(_bool _HSV_active) { m_tHSV_Option.bScreen_Active = _HSV_active; }
+	_bool Get_HSV_Active() { return m_tHSV_Option.bScreen_Active; }
 
 	/* 옵션조절 */
 	void Set_Deferred_Option(DEFERRED_DESC desc) { m_tDeferred_Option = desc; }

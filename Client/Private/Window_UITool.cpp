@@ -946,10 +946,17 @@ void CWindow_UITool::Setting_Child()
 			//m_pCurrSelectUI->Set_CharToStringUIName(m_cName);
 			//m_pGameInstance->WString_To_String(ConverCtoWC(), m_pCurrSelectUI->Get_UIDesc().strUIName.c_str());
 		}
-		if (ImGui::InputTextWithHint(u8"UI 이름", u8"이름을 입력하세요.", ConverWStringtoC(ConvertToWideString(m_pCurrSelectUI->Get_UIDesc().strUIName)), IM_ARRAYSIZE(ConverWStringtoC(ConvertToWideString(m_pCurrSelectUI->Get_UIDesc().strUIName)))))
-		{
 
+		if (ImGui::InputFloat("PosZ", &m_fPosZ, 0.01f, 0.01f))
+		{
+			m_pCurrSelectUI->Set_PosZ(m_fPosZ);
 		}
+
+		ImGui::Checkbox("World", m_pCurrSelectUI->Get_WorldUI());
+
+		if (ImGui::Button("Proj_Change"))
+			m_pCurrSelectUI->ChangeProj();
+
 
 		if (ImGui::InputInt("MaskNum", &m_iMaskNum))
 		{
@@ -2040,6 +2047,8 @@ void CWindow_UITool::Curr_Info()
 
 	if (pTransformCom != nullptr)
 	{
+		//ImGui::InputFloat("PositionX", &m_pCurrSelectUI->m_iTextureNum); // z값 변경 추가
+
 		_vector vPosition = pTransformCom->Get_State(CTransform::STATE_POSITION);
 		_vector vRotation = pTransformCom->Get_Rotated();
 		_vector vScale = pTransformCom->Get_Scaled();

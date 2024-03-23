@@ -56,8 +56,16 @@ HRESULT CUI::Initialize(void* pArg)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_tUIInfo.fPositionX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fPositionY + (_float)g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ, 1.f));
 
 		XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-		XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, m_tUIInfo.fPositionZ, 1.f));
 
+		if (m_tUIInfo.bWorld == true)
+		{
+			_float4 vCamSetting = m_pGameInstance->Get_CamSetting();
+			m_ProjMatrix = XMMatrixPerspectiveFovLH(vCamSetting.x, vCamSetting.y, vCamSetting.z, vCamSetting.w);
+		}
+		else
+		{
+			XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.1f, 1.f));
+		}
 
 		m_fPositionX = m_tUIInfo.fPositionX;
 		m_fPositionY = m_tUIInfo.fPositionY;
@@ -96,6 +104,34 @@ void CUI::Tick(_float fTimeDelta)
 {
 	if (m_bTool && m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL::LEVEL_TOOL)
 		m_bActive = m_bTool;
+	
+	if (m_bChange_Proj == true)
+	{
+		if (m_tUIInfo.bWorld == true)
+		{
+			// View 세팅
+			XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+
+			// 기존 Proj를 내려준다.
+			XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ));
+
+			// 새 Proj로 올려준다.
+			XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ));
+		}
+		else
+		{
+			// View 세팅
+			XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+
+			// 기존 Proj를 내려준다.
+			XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ));
+
+			// 새 Proj로 올려준다.
+			XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
+		}
+
+		m_bChange_Proj = false;
+	}
 
 	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
 	{
@@ -366,10 +402,17 @@ vector<CUI*> CUI::Get_UIParts()
 
 void CUI::Set_PosZ(_float fZ)
 {
-	m_tUIInfo.fPositionZ = fZ;
-	m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
+	if (!m_vecAnimation.empty())
+	{
+		m_tUIInfo.fPositionZ = fZ;
+	}
+	else
+	{
+		m_tUIInfo.fPositionZ = fZ;
+		m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+			_float3(m_fPositionX - g_iWinSizeX * 0.5f, -m_fPositionY + g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ));
+	}
 }
 
 void CUI::Set_Pos(_float fPosX, _float fPosY)

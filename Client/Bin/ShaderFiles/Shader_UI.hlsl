@@ -45,6 +45,9 @@ Texture2D g_AimRight_Texture;
 Texture2D g_CoolDownTexture;
 float2    g_Center;
 float     g_Radius;
+float     g_CoolTime;
+float     g_MaxCoolTime;
+float     g_Ratio;
 
 texture2D g_DissolveTexture;
 texture2D g_AlphaTexture;
@@ -297,21 +300,102 @@ float Circle(float2 uv, float2 center, float radius)
     float2 diff = uv - center;
     return saturate(1 - length(diff) / radius);
 }
-// 픽셀 셰이더 메인 함수
+
 PS_OUT PS_MAIN_COOLTIME(PS_IN In) // 5
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT) 0; // 초기화
 
-    // 쿨타임 텍스처에서 샘플링하여 색상을 가져오고, 원형 이미지로 변환
-    float  fCircleValue = Circle(In.vTexcoord, g_Center, g_Radius);
-    float4 vTexColor = g_CoolDownTexture.Sample(LinearSampler, In.vTexcoord);
+    float4 vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord); // Diffuse Tex Sampling
+    float4 vMaskColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord); // Mask Tex Sampling
 
-    // 샘플된 색상을 원형 이미지에 맞게 조절하여 출력
-    Out.vColor = vTexColor * fCircleValue;
+    if (vMaskColor.r > 0.9f && vMaskColor.g > 0.9f && vMaskColor.b > 0.9f)
+    {
+        Out.vColor = saturate(vColor);
+        if (Out.vColor.a < 0.1f)
+            discard;
+    }
+    else
+        discard;
 
-    //Out.vColor.a = g_Alpha;
+	// 여기까지 마스크를 씌운 상태
+
+    float2 vDir = In.vTexcoord - float2(0.5f, 0.5f); // float2(0.5f, 0.5f)는 중점이다.
+    vDir = normalize(vDir); // 방향벡터 Normalize
+    float2 vUpDir = float2(0.0f, sign(vDir.x));
+    vUpDir = normalize(vUpDir);
+
+    float fDot = dot(vUpDir, vDir); // 두 벡터를 내적한다.
+    float fDotRatio = g_Ratio;
+
+	// 방향벡터가 음수인 경우, 비교할 기준 벡터의 방향은 위
+    if (vDir.x < 0.f)
+    {
+        fDotRatio -= 0.5f;
+    }
+
+    fDotRatio = fDotRatio * 4.f - 1.f;
+
+    if (fDotRatio < fDot) // 잔여 쿨타임이 직관적으로 보여지는 픽셀이다
+    {
+		//Out.vColor.rgb = lerp(vColor.rgb, float3(0.0f, 0.0f, 0.0f), 0.5f);
+        Out.vColor.a = 0.f;
+    }
+
+	// 특정 영역에서만 온전한 원본 이미지가 표시된다.
     return Out;
 }
+
+//// 픽셀 셰이더 메인 함수
+//PS_OUT PS_MAIN_COOLTIME(PS_IN In) // 5
+//{
+//    PS_OUT Out = (PS_OUT) 0;
+//    
+//    float2 center = float2(0.5f, 0.5f); // 중심 좌표
+//    float radius = 0.4f; // 반지름
+//    float thickness = 0.1f; // 게이지 두께
+//
+//    // 현재 쿨타임 값을 이용하여 게이지를 계산
+//    float progress = saturate(1.0f - g_CoolTime / g_MaxCoolTime); // 현재 쿨타임을 [0, 1] 범위로 변환
+//    float angle = progress * 1 * 3.14159265359f; // 0부터 2파이까지의 각도 범위로 변환
+//    //        (* 가운데 *) 이부분의 값은 증감시켰을 때 이미지가 잘리는 범위크기.
+//    
+//    // 게이지의 시작과 끝 각도 계산
+//    float startAngle = 0.0f;
+//    float endAngle = angle;
+//
+//    // 게이지 색상
+//    float4 gaugeColor = float4(0.0f, 1.0f, 0.0f, 1.0f); // 녹색
+//
+//    // 게이지를 그리기 위한 조건식
+//    float2 uv = In.vTexcoord;
+//    float2 diff = uv - center;
+//    float distance = length(diff);
+//    float angleUV = atan2(diff.y, diff.x);
+//    float angleDeg = angleUV * (360.0f / 3.14159265359f);
+//
+//    // 게이지를 그리기 위한 조건식
+//    float gaugeValue = saturate((angleDeg - startAngle) / (endAngle - startAngle));
+//    float gauge = smoothstep(radius - thickness, radius, distance);
+//
+//    // 게이지를 그리는 부분
+//    float4 finalColor = lerp(float4(0.0f, 0.0f, 0.0f, 0.0f), gaugeColor, gauge * gaugeValue);
+//
+//    Out.vColor = finalColor;
+//    
+//    return Out;
+//    
+//    //PS_OUT Out;
+//    //
+//    //// 쿨타임 텍스처에서 샘플링하여 색상을 가져오고, 원형 이미지로 변환
+//    //float  fCircleValue = Circle(In.vTexcoord, g_Center, g_Radius);
+//    //float4 vTexColor = g_CoolDownTexture.Sample(LinearSampler, In.vTexcoord);
+//    //
+//    //// 샘플된 색상을 원형 이미지에 맞게 조절하여 출력
+//    //Out.vColor = vTexColor * fCircleValue;
+//    //
+//    ////Out.vColor.a = g_Alpha;
+//    //return Out;
+//}
 
 VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
 {
@@ -479,7 +563,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Add, float4(1.f, 1.f, 1.f, 1.f), 0xffffffff);
    
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
