@@ -449,7 +449,6 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     // Shadow 
     float ShadowColor = 1.f;
     
-    
     if (true == g_bFog_Active)
     {
         float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;

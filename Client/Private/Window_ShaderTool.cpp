@@ -7,6 +7,7 @@
 #include "Light.h"
 #include "ShaderParsed_Object.h"
 #include "Monster_Character.h"
+#include "SMath.h"
 
 CWindow_ShaderTool::CWindow_ShaderTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -365,38 +366,38 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 	}
 
 	ImGui::PushID(3);
-	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(2 / 7.0f, 0.7f, 0.7f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.8f));
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0 / 7.0f, 0.6f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0 / 7.0f, 0.7f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0 / 7.0f, 0.8f, 0.8f));
 	if (ImGui::Button("Shader Save"))
 	{
 		m_bShaderSave = true;
 	}
-	ImGui::PopStyleColor(3);
+	ImGui::PopStyleColor(3); //PushStyleColor를 3번 호출해서 3번 지우는거
 	ImGui::PopID();
 
+	ImGui::SameLine();
+
 	ImGui::PushID(4);
-	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(3 / 7.0f, 0.6f, 0.6f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(3 / 7.0f, 0.7f, 0.7f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(3 / 7.0f, 0.8f, 0.8f));
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1 / 7.0f, 0.6f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1 / 7.0f, 0.7f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1 / 7.0f, 0.8f, 0.8f));
 	if (ImGui::Button("Shader Load"))
 	{
-		m_bShaderLoad = true;
+		m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
+		m_strDialogPath = "../Bin/DataFiles/Data_Shader/";
+		OpenDialog(CImgui_Window::IMGUI_SHADER_WINDOW);
 	}
 	ImGui::PopStyleColor(3);
 	ImGui::PopID();
 
 	if (m_bShaderSave)
-	{
 		Save_Shader();
-	}
-	
-	ImGui::SameLine();
 
-	if (m_bShaderLoad)
-	{
-		Load_Shader();
-	}
+	//if (m_bShaderLoad)
+	//{
+	//	Load_Shader();
+	//}
 }
 
 void CWindow_ShaderTool::Compress_HBAO_Plus_Setting()
@@ -519,7 +520,8 @@ void CWindow_ShaderTool::Save_Shader()
 {
 	string path = "../Bin/DataFiles/Data_Shader/Level/";
 
-	path += m_eCurrLevel_String;
+	string LevelString = SMath::capitalizeString(m_eCurrLevel_String);
+	path += LevelString;
 	path += "_Shader.json";
 
 	json Out_Json;
@@ -562,13 +564,10 @@ void CWindow_ShaderTool::Save_Shader()
 	Out_Json["DOF"]["fFocusDistance"] = m_eDOF_Desc.fFocusDistance;
 	Out_Json["DOF"]["fFocusRange"] = m_eDOF_Desc.fFocusRange;
 
-	//m_pTransformCom->Write_Json(Out_Json);
 	CJson_Utility::Save_Json(path.c_str(), Out_Json);
 
 }
-void CWindow_ShaderTool::Load_Shader()
-{
-}
+
 #pragma endregion
 
 #pragma region [LAYER] : Object Shader
@@ -889,6 +888,8 @@ HRESULT CWindow_ShaderTool::Save_Function(string strPath, string strFileName)
 
 HRESULT CWindow_ShaderTool::Load_Function(string strPath, string strFileName)
 {
+	__super::Load_Function(strPath, strFileName);
+
 	return S_OK;
 }
 
@@ -901,5 +902,6 @@ _bool CWindow_ShaderTool::Write_Json(json& Out_Json)
 
 	return _bool();
 }
+
 
 #pragma endregion

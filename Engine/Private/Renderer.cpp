@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "SMath.h"
 #include "RenderTarget.h"
+#include "Light.h"
 
 _uint		g_iSizeX = 8192;
 _uint		g_iSizeY = 4608;
@@ -402,6 +403,11 @@ HRESULT CRenderer::Render_PBR()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader_Deferred, "g_DepthTarget"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ShadowDepth"), m_pShader_Deferred, "g_ShadowDepthTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader_Deferred, "g_SpecularTexture"));
+
+	//g_LightDiffuse 이거 올려봐야함 
+	//_float4 LightDir = m_pGameInstance->Get_DirectionLight()->Get_LightDir();
+	_float4 LightDiffuse = m_pGameInstance->Get_DirectionLight()->Get_LightDesc().vDiffuse;
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_LightDiffuse", &LightDiffuse, sizeof(_float4)));
 
 	/* Texture */
 	FAILED_CHECK(m_pIrradianceTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));

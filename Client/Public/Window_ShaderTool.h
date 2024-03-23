@@ -78,6 +78,7 @@ private:
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual	HRESULT		Load_Function(string strPath, string strFileName) override;
 	virtual _bool		Write_Json(json& Out_Json);
+	string				capitalizeString(string strWord);
 
 private:
 	/* 최상위 셋팅 */

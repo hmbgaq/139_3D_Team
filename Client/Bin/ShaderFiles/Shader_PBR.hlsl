@@ -206,8 +206,6 @@ float NormalDistributionGGXTR(float NdotH, float roughness)
     return nom / denom;
 }
 
-
-
 float3 FresnelSchlickFrostbite(float3 F0, float F90, float u)
 {
     return F0 + (F90 - F0) * pow(1 - u, 5);
