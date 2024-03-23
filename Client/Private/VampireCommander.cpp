@@ -101,7 +101,7 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	//cout << "introBossHP:" << m_iHp << endl;
 	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
 
-	cout << "VampireCommander : " << fAngle << endl;
+	//cout << "VampireCommander : " << fAngle << endl;
 	if (m_bLookAt == true)
 	{
 		

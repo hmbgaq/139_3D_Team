@@ -343,7 +343,6 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     
     vWorldPos = vWorldPos * fViewZ;
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
         
     if (true == g_bFog_Active)
@@ -412,9 +411,8 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     
     vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     
-    float fAO = 1.f;
-    
-    fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r;
+    float fAO = 1.f; 
+    fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r; // Ambient Occulusion은 HBAO+로 
     
     vector vWorldPos;
     vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
@@ -435,7 +433,8 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     float3 L = normalize(-g_vLightDir);
     float3 H = normalize(V + L);
 
-    Out.vColor.rgb = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO);
+    Out.vColor.rgb = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO); 
+    // BRDF를 통해 물체의 표면 속성을 모델링하고 이를 통해 자연스러운 조명과 반사를 구현한다. 
    
     if (vAlbedo.a == 0.f)
     {
@@ -482,12 +481,47 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
         if (vPosition.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
             Out.vColor = Out.vColor * 0.8f;
     }
-    //Out.vColor += vEffect;
+    
     Out.vColor.a = 1.f;
 	
     return Out;
 }
 
+/* ------------------ 6 - PBR Deferred ------------------ */
+PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    ////  calculate light radiance
+    //float3 lightDir = -LightDirection;
+    //float3 halfwayVec = normalize(viewDir + lightDir);
+    //float3 radiance = SunColor;
+
+    ////  Cook-Torrance specular BRDF
+    //float D = NormalDistributionGGXTR(normalVec, halfwayVec, roughness);
+    //float G = GeometrySmith(normalVec, viewDir, lightDir, roughness);
+    //float3 F = FresnelSchlick(max(dot(halfwayVec, viewDir), 0.0f), F0);
+
+    //float3 nominator = D * G * F;
+    ////  Wo : View Direction
+    ////  Wi : Light Direction
+    //float WoDotN = saturate(dot(viewDir, normalVec));
+    //float WiDotN = saturate(dot(lightDir, normalVec));
+    //float denominator = (4 * WoDotN * WiDotN);
+
+    //// 0.001f just in case product is 0
+    //float3 specular = nominator / (denominator + 0.001f);
+
+    ////  Energy Conservation
+    //float3 kS = F; //  reflection energy
+    //float3 kD = 1.0f - kS; //  refraction energy
+    //kD *= 1.0 - metallic; //  if metallic nullify kD
+
+    ////  Calculate radiance
+    //rad = (((kD * albedo / PI) + specular) * radiance * WiDotN);
+    
+    return Out;
+}
 /* ------------------ Technique ------------------ */
 
 technique11 DefaultTechnique
@@ -558,5 +592,18 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_PBR_DEFERRED();
+    }
+
+    pass New_PBR
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_NEW_PBR();
     }
 }

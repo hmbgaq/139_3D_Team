@@ -74,11 +74,9 @@ private:
 	_bool			m_bSave = false;
 	_bool			m_bLoad = false;
 
-
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual	HRESULT		Load_Function(string strPath, string strFileName) override;
 	virtual _bool		Write_Json(json& Out_Json);
-	string				capitalizeString(string strWord);
 
 private:
 	/* 최상위 셋팅 */
@@ -111,7 +109,6 @@ private:
 	void Compress_FXAA_Setting();
 	void Compress_HSV_Setting();
 	void Save_Shader();
-	void Load_Shader();
 	
 	/* Level Light Control */
 	void Save_Load_Light(); // 레벨을 잡고 해당 레벨에 대한 빛정보를 가져오기 
