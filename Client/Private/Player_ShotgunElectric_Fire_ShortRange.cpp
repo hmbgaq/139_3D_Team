@@ -10,37 +10,54 @@ void CPlayer_ShotgunElectric_Fire_ShortRange::Initialize(CPlayer* pActor)
 	//pActor->Set_Splitted(true);
 
 	pActor->Set_Weapon_Enable(PLAYER_WEAPON_SHOTGUN, true);
+
 }
 
 CState<CPlayer>* CPlayer_ShotgunElectric_Fire_ShortRange::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
 
-	//if ()
+	if (false == m_bFlags[0])
+	{
+		m_bFlags[0] = pActor->Is_Inputable_Front(8);
+		if (true == m_bFlags[0]) 
+		{
 
-	//pActor->Aim_Walk(fTimeDelta);
 
-	//if (pActor->Is_UpperAnimation_End())
+			pActor->Set_Animation(ECast(CPlayer::Player_State::Player_IdleLoop), CModel::ANIM_STATE_LOOP, true, false);
+			pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
+			pActor->Set_Splitted(true);
+
+			pActor->Activate_ShootingReaction(30.f);
+			pActor->Apply_Shake_And_Blur(Power::Medium);
+		}
+	}
+	else if (false == m_bFlags[1]) 
+	{
+		pActor->Aim_Walk(fTimeDelta);
+		m_bFlags[1] = pActor->Is_UpperAnimation_End();
+	}
+	else 
+	{
+		return Normal(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
+
+	
+
+	//if (pActor->Is_Animation_End())
 	//{
 	//	return Normal(pActor, fTimeDelta, g_iAnimIndex);
 	//}
 
 	//return nullptr;
 
-	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
-
-	if (pActor->Is_Animation_End())
-	{
-		return Normal(pActor, fTimeDelta, g_iAnimIndex);
-	}
-
-	return nullptr;
 }
 
 void CPlayer_ShotgunElectric_Fire_ShortRange::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
-	//pActor->Set_Splitted(false);
-
+	pActor->Set_Splitted(false);
 	pActor->Set_Weapon_Enable(PLAYER_WEAPON_SHOTGUN, false);
 }
