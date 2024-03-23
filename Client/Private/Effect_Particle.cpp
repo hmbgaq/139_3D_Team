@@ -377,13 +377,13 @@ HRESULT CEffect_Particle::Ready_Components()
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NORAML])
 			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NORAML], TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
 
-		// Mask
+		// Mask => ! LEVEL_STATIC 으로 변경 !
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK], TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
+			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_MASK], TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK])));
 
-		// Noise
+		// Noise => ! LEVEL_STATIC 으로 변경 !
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
+			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
 
 		// Sprite
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])

@@ -11,6 +11,7 @@
 #include "UI_Text.h"
 #include "Easing_Utillity.h"
 #include "UI_Manager.h"
+#include "UI_Distortion.h"
 
 /* error 외부참조 기호 : define 걸어줘야함 */
 #define STB_IMAGE_IMPLEMENTATION
@@ -19,6 +20,7 @@
 CWindow_UITool::CWindow_UITool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
 	, m_pUI_Manager(CUI_Manager::GetInstance())
+	//, m_tSelectedKeyframe(CUI::UIKEYFRAME()) // &멤버변수는 생성자에서 초기화 시켜줘야함
 {
 	Safe_AddRef(m_pUI_Manager);
 }
@@ -32,9 +34,9 @@ HRESULT CWindow_UITool::Initialize()
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩중."));
 
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
-	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));	// Option
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));	// Option
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD"))));	// PlayerHUD
-	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/WorldMap"))));	// WorldMap
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/WorldMap"))));	// WorldMap
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Crosshairs"))));// Crosshairs
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/EnemyHUD"))));	// EnemyHUD
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));			// Image
@@ -423,7 +425,17 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
 		{
 			if (m_pCurrSelectUI != nullptr)
+			{
 				m_pCurrSelectUI->Moving_Picking_Point(m_pt);
+
+				if (m_pSelectedKeyframe != nullptr)
+				{
+					m_pSelectedKeyframe->vPos.x = m_pt.x - g_iWinSizeX * 0.5f;
+					m_pSelectedKeyframe->vPos.y = -m_pt.y + g_iWinSizeY * 0.5f;
+
+					// m_pCurrSelectUI->Moving_Picking_Point(m_pt);
+				}
+			}
 		}
 
 		if (m_pGameInstance->Key_Down(DIK_S))
@@ -686,7 +698,7 @@ void CWindow_UITool::Texture_List()
 
 void CWindow_UITool::Setting_Parent()
 {
-	ImGui::CollapsingHeader("Setting_Parent");
+	//ImGui::CollapsingHeader("Setting_Parent");
 
 	///* Mod */
 	//ImGui::SeparatorText(u8"변경 모드 설정");
@@ -714,7 +726,7 @@ void CWindow_UITool::Setting_Parent()
 	//m_tParent_Desc.fPositionY = m_fParent_Position.y;
 
 
-	ImGui::Separator();
+	//ImGui::Separator();
 
 
 	if (m_pCurrParent != nullptr)
@@ -919,6 +931,53 @@ void CWindow_UITool::Setting_Child()
 	//ImGui::InputFloat("PositionX", &m_fChild_Possition.x);
 	//ImGui::InputFloat("PositionY", &m_fChild_Possition.y);
 
+
+	if (m_pCurrSelectUI != nullptr)
+	{
+		if (ImGui::InputInt("MaskNum", &m_iMaskNum))
+		{
+			m_pCurrSelectUI->Set_MaskNum(m_iMaskNum);
+		}
+
+		if (ImGui::InputInt("NoiseNum", &m_iNoiseNum))
+		{
+			m_pCurrSelectUI->Set_NoiseNum(m_iNoiseNum);
+		}
+
+		/* 디퓨즈 색상혼합 모드_Mesh */
+		if (ImGui::CollapsingHeader(" Color Blend_Mesh "))
+		{
+			ImGui::RadioButton(u8"곱하기_Mesh", &m_iColor_Mode_Mesh, 0);
+			ImGui::RadioButton(u8"스크린_Mesh", &m_iColor_Mode_Mesh, 1);
+			ImGui::RadioButton(u8"오버레이_Mesh", &m_iColor_Mode_Mesh, 2);
+			ImGui::RadioButton(u8"더하기_Mesh", &m_iColor_Mode_Mesh, 3);
+			ImGui::RadioButton(u8"번_Mesh", &m_iColor_Mode_Mesh, 4);
+			ImGui::RadioButton(u8"혼합안함_Mesh", &m_iColor_Mode_Mesh, 5);
+			if (0 == m_iColor_Mode_Mesh)
+				m_pCurrSelectUI->Set_ColorMode(MODE_COLOR::MUL);
+			else if (1 == m_iColor_Mode_Mesh)
+				m_pCurrSelectUI->Set_ColorMode(MODE_COLOR::SCREEN);
+			else if (2 == m_iColor_Mode_Mesh)
+				m_pCurrSelectUI->Set_ColorMode(MODE_COLOR::OVERLAY);
+			else if (3 == m_iColor_Mode_Mesh)
+				m_pCurrSelectUI->Set_ColorMode(MODE_COLOR::ADD);
+			else if (4 == m_iColor_Mode_Mesh)
+				m_pCurrSelectUI->Set_ColorMode(MODE_COLOR::BURN);
+			else if (5 == m_iColor_Mode_Mesh)
+				m_pCurrSelectUI->Set_ColorMode(MODE_COLOR::MODE_COLOR_END);
+
+
+			// 디퓨즈에 곱할 색 (색 변경)
+			if (ImGui::ColorEdit4("Color_Mul_Mesh", m_fColor_Mul_Mesh, ImGuiColorEditFlags_None))
+			{
+				m_pCurrSelectUI->Set_DiffuseColor(m_fColor_Mul_Mesh[0], m_fColor_Mul_Mesh[1], m_fColor_Mul_Mesh[2], m_fColor_Mul_Mesh[3]);
+			}
+
+			ImGui::SeparatorText("");
+		}
+	}
+
+
 	ImGui::Separator();
 
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
@@ -930,22 +989,22 @@ void CWindow_UITool::Setting_Child()
 		Set_GuizmoUI(m_pCurrChild);
 	}
 
-	ImGui::Separator();
+	//ImGui::Separator();
 
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
 }
 
 void CWindow_UITool::Current_Info()
 {
-	ImGui::CollapsingHeader("2D_Setting");
+	//ImGui::CollapsingHeader("2D_Setting");
 
-	ImGui::Separator();
+	//ImGui::Separator();
 
-	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	//ImGui::Dummy(ImVec2(0, 5)); // 공백
 
-	ImGui::Separator();
+	//ImGui::Separator();
 
-	ImGui::Dummy(ImVec2(0, 5)); // 공백
+	//ImGui::Dummy(ImVec2(0, 5)); // 공백
 }
 
 void CWindow_UITool::Parent_List(_float fTimeDelta)
@@ -2424,6 +2483,9 @@ void CWindow_UITool::PlayAnimation(_float fTimeDelta)
 		//else
 		//	currentTime += m_fPlaybackSpeed * ImGui::GetIO().DeltaTime;
 
+		if (m_vecTimeline == nullptr)
+			return;
+
 		if (m_bRepetition)
 		{
 			if (!m_vecTimeline->empty())
@@ -2510,10 +2572,12 @@ void CWindow_UITool::AnimationTimeLineBar(_float fTimeDelta)
 
 	if (m_pCurrSelectUI)
 	{
-		char* Test = "Select UI : ";
+		char* Test = "Select Keyframe %d", closestKeyframeIndex;
 		strcmp(Test, m_pCurrSelectUI->Get_UIDesc().strObjectName.c_str());
 
-		ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f }, Test);
+		ImGui::TextColored({ 255.f, 255.f, 255.f, 255.f }, Test);
+
+		//ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f, }, u8"현재 선택 : 키프레임%d", closestKeyframeIndex);
 	}
 	// 애니메이션 타임 라인 그리기
 	draw_list->AddRectFilled(
@@ -2912,10 +2976,15 @@ void CWindow_UITool::CurKeyframe_ValueChange()
 	// 선택된 키프렘의 인덱스를 사용하여 키프레임을 편집. (선택한 인덱스가 범위 내에 있을 경우)
 	if (!m_vecTimeline->empty() && closestKeyframeIndex >= 0 && closestKeyframeIndex < m_vecTimeline->size())
 	{
-		CUI::UIKEYFRAME& selectedKeyframe = (*m_vecTimeline)[closestKeyframeIndex];
+		m_pSelectedKeyframe = &(*m_vecTimeline)[closestKeyframeIndex];
+		m_bSelectKeyframe = true;
 
 		// 선택된 키프렘의 애니메이션 속성 편집
-		DrawSelectedKeyframeEditor(selectedKeyframe);
+		DrawSelectedKeyframeEditor(*m_pSelectedKeyframe);
+	}
+	else
+	{
+		m_pSelectedKeyframe = nullptr;
 	}
 #pragma endregion
 }
@@ -2932,7 +3001,7 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	ImGui::Begin(u8"선택한 키프레임 속성 편집");
 
 	//Keyframe& selectedKeyframe = timeline.back();
-	ImGui::Text(u8"현재 선택 : 키프레임%d", closestKeyframeIndex);
+	ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f, }, u8"현재 선택 : 키프레임%d", closestKeyframeIndex);
 
 	ImGuiStyle& style = ImGui::GetStyle(); // 스타일 불러오기
 	float originalItemWidth = style.ItemInnerSpacing.x; // 원래의 ItemInnerSpacing 값을 저장
@@ -2990,10 +3059,16 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	// 벨류 입력 필드의 가로 길이를 조절 (ex : 40 픽셀)
 	ImGui::PushItemWidth(40);
 	// 벨류 입력 필드
-	ImGui::DragFloat(u8"벨류", &selectedKeyframe.fValue, fMin_Value, fMax_Value);
+	if (ImGui::DragFloat(u8"벨류", &selectedKeyframe.fValue, fMin_Value, fMax_Value))
+	{
+
+	}
 	ImGui::PopItemWidth();
 
-	ImGui::DragFloat(u8"알파", &selectedKeyframe.fAlpha);
+	if (ImGui::DragFloat(u8"알파", &selectedKeyframe.fAlpha))
+	{
+
+	}
 
 	//ImGui::SameLine(); // 같은 라인
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
@@ -3001,7 +3076,10 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	// 텍스처 입력 필드의 가로 길이를 조절 (ex : 40 픽셀)
 	ImGui::PushItemWidth(80);
 	//ImGui::Text("%d", selectedKeyframe.texureframe);
-	ImGui::InputInt(u8"텍스처 번호", &selectedKeyframe.iTexureframe);
+	if (ImGui::InputInt(u8"텍스처 번호", &selectedKeyframe.iTexureframe))
+	{
+
+	}
 	ImGui::PopItemWidth();
 
 	// 원래의 ItemInnerSpacing 값으로 복원
@@ -3011,10 +3089,13 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	// 애니메이션 타입 설정
 	ImGui::SeparatorText(u8"애니메이션 타입 설정");
 	ImGui::RadioButton(u8"크기", &selectedKeyframe.iType, 0); // 크기 애니메이션
+
 	ImGui::SameLine();
 	ImGui::RadioButton(u8"회전", &selectedKeyframe.iType, 1); // 회전 애니메이션
+
 	ImGui::SameLine();
 	ImGui::RadioButton(u8"이동", &selectedKeyframe.iType, 2); // 이동 애니메이션
+
 
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
 
@@ -3074,6 +3155,99 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	}
 	style.ItemInnerSpacing.x = originalItemWidth;// 원래의 ItemInnerSpacing 값으로 복원
 
+#pragma region 디스토션
+	if (ImGui::Button("Test Button"))
+		dynamic_cast<CUI_Distortion*>(m_pCurrSelectUI)->Set_Restore(true);
+
+	if (ImGui::DragFloat("Distortion_TimeAcc", &selectedKeyframe.fTimeAcc)) // UV좌표 조절
+	{
+		//m_pCurrSelectUI->Set_SequenceTerm(m_fSequenceTerm_Distortion);
+	}
+
+	if (ImGui::DragFloat("Distortion_Term", &selectedKeyframe.fSequenceTerm)) // UV좌표 조절
+	{
+		//m_pCurrSelectUI->Set_SequenceTerm(m_fSequenceTerm_Distortion);
+	}
+
+	_float fScrollSpeeds[3];
+	fScrollSpeeds[0] = selectedKeyframe.vScrollSpeeds.x;
+	fScrollSpeeds[1] = selectedKeyframe.vScrollSpeeds.y;
+	fScrollSpeeds[2] = selectedKeyframe.vScrollSpeeds.z;
+
+	if (ImGui::DragFloat3("ScrollSpeeds", fScrollSpeeds))
+	{
+		_float3 vScrollSpeeds = { 0.f, 0.f, 0.f };
+		selectedKeyframe.vScrollSpeeds.x = fScrollSpeeds[0];
+		selectedKeyframe.vScrollSpeeds.y = fScrollSpeeds[1];
+		selectedKeyframe.vScrollSpeeds.z = fScrollSpeeds[2];
+		//vScrollSpeeds.y = m_vScrollSpeeds[1];
+		//vScrollSpeeds.z = m_vScrollSpeeds[2];
+
+		//m_pCurrSelectUI->Set_ScrollSpeeds(vScrollSpeeds);
+	}
+
+	_float fScales_Distortion[3];
+	fScales_Distortion[0] = selectedKeyframe.vScales.x;
+	fScales_Distortion[1] = selectedKeyframe.vScales.y;
+	fScales_Distortion[2] = selectedKeyframe.vScales.z;
+	if (ImGui::DragFloat3("Distortion_Scales", fScales_Distortion))
+	{
+		_float3 vScales_Distortion = { 0.f, 0.f, 0.f };
+		selectedKeyframe.vScales.x = fScales_Distortion[0];
+		selectedKeyframe.vScales.y = fScales_Distortion[1];
+		selectedKeyframe.vScales.z = fScales_Distortion[2];
+		//vScales_Distortion.y = m_vScales_Distortion[1];
+		//vScales_Distortion.z = m_vScales_Distortion[2];
+
+		//m_pCurrSelectUI->Set_DistortionScales(vScales_Distortion);
+	}
+
+	_float fDistortion1[3];
+	fDistortion1[0] = selectedKeyframe.vDistortion1.x;
+	fDistortion1[1] = selectedKeyframe.vDistortion1.y;
+	if (ImGui::DragFloat2("Distortion1", fDistortion1))
+	{
+		//_float2 vDistortion1 = { 0.f, 0.f };
+		selectedKeyframe.vDistortion1.x = fDistortion1[0];
+		selectedKeyframe.vDistortion1.y = fDistortion1[1];
+
+		//m_pCurrSelectUI->Set_Distortion1(vDistortion1);
+	}
+
+	_float fDistortion2[3];
+	fDistortion2[0] = selectedKeyframe.vDistortion2.x;
+	fDistortion2[1] = selectedKeyframe.vDistortion2.y;
+	if (ImGui::DragFloat2("Distortion2", fDistortion2))
+	{
+		//_float2 vDistortion2 = { 0.f, 0.f };
+		selectedKeyframe.vDistortion2.x = fDistortion2[0];
+		selectedKeyframe.vDistortion2.y = fDistortion2[1];
+
+		//m_pCurrSelectUI->Set_Distortion2(vDistortion2);
+	}
+
+	_float fDistortion3[3];
+	fDistortion3[0] = selectedKeyframe.vDistortion3.x;
+	fDistortion3[1] = selectedKeyframe.vDistortion3.y;
+	if (ImGui::DragFloat2("Distortion3", fDistortion3))
+	{
+		//_float2 vDistortion3 = { 0.f, 0.f };
+		selectedKeyframe.vDistortion3.x = fDistortion3[0];
+		selectedKeyframe.vDistortion3.y = fDistortion3[1];
+
+		//m_pCurrSelectUI->Set_Distortion3(vDistortion3);
+	}
+	if (ImGui::DragFloat("Distortion_Scale", &selectedKeyframe.fDistortionScale))
+	{
+		selectedKeyframe.fDistortionScale = selectedKeyframe.fDistortionScale;
+		//m_pCurrSelectUI->Set_DistortionScale(m_fDistortionScale);
+	}
+	if (ImGui::DragFloat("DistortionBias", &selectedKeyframe.fDistortionBias))
+	{
+		selectedKeyframe.fDistortionBias = selectedKeyframe.fDistortionBias;
+		//m_pCurrSelectUI->Set_DistortionBias(m_fDistortionBias);
+	}
+
 #pragma region 설정
 
 	ImGui::Dummy(ImVec2(0, 5)); // 공백
@@ -3098,6 +3272,19 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	ImGui::Checkbox(u8"Trigger 설정", &selectedKeyframe.bTrigger);
 
 	ImGui::Checkbox(u8"LoopSection 설정", &selectedKeyframe.bLoopSection);
+
+	ImGui::Checkbox(u8"StopPlay 설정", &selectedKeyframe.bStopPlay);
+
+	ImGui::Checkbox(u8"ReversePlay 설정", &selectedKeyframe.bReversePlay);
+	 
+	ImGui::Checkbox(u8"MaskChange 설정", &selectedKeyframe.bMaskChange);
+	ImGui::SameLine();
+	ImGui::InputInt("MaskNum", &selectedKeyframe.iMaskNum);
+
+	ImGui::Checkbox(u8"NoiseChange 설정", &selectedKeyframe.bNoiseChange);
+	ImGui::SameLine();
+	ImGui::InputInt("NoiseNum", &selectedKeyframe.iNoiseNum);
+
 	//ImGui::PopItemWidth(); error
 
 	//// 차징 입력 필드의 가로 길이를 조절
@@ -3255,16 +3442,25 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 	// 선택한 UI가 Distortion이 있는 UI일 경우
 	if (m_pCurrSelectUI->Get_DistortionUI())
 	{
-		if (ImGui::DragFloat("Distortion_Term", &m_fSequenceTerm_Distortion, 1.f, 0.f)) // UV좌표 조절
+		if (ImGui::Button("Test Button"))
+			dynamic_cast<CUI_Distortion*>(m_pCurrSelectUI)->Set_Restore(true);
+
+		if (ImGui::DragFloat("Distortion_TimeAcc", &m_fTimeAcc)) // UV좌표 조절
+		{
+			m_pCurrSelectUI->Set_TimeAcc(m_fTimeAcc);
+		}
+		if (ImGui::DragFloat("Distortion_Term", &m_fSequenceTerm_Distortion)) // UV좌표 조절
 		{
 			m_pCurrSelectUI->Set_SequenceTerm(m_fSequenceTerm_Distortion);
 		}
-		if (ImGui::DragFloat3("ScrollSpeeds", m_vScrollSpeeds, 1.f, 0.f))
+		if (ImGui::DragFloat3("ScrollSpeeds", m_vScrollSpeeds))
 		{
 			_float3 vScrollSpeeds = { 0.f, 0.f, 0.f };
 			vScrollSpeeds.x = m_vScrollSpeeds[0];
 			vScrollSpeeds.y = m_vScrollSpeeds[1];
 			vScrollSpeeds.z = m_vScrollSpeeds[2];
+			//vScrollSpeeds.y = m_vScrollSpeeds[1];
+			//vScrollSpeeds.z = m_vScrollSpeeds[2];
 
 			m_pCurrSelectUI->Set_ScrollSpeeds(vScrollSpeeds);
 		}
@@ -3274,10 +3470,12 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 			vScales_Distortion.x = m_vScales_Distortion[0];
 			vScales_Distortion.y = m_vScales_Distortion[1];
 			vScales_Distortion.z = m_vScales_Distortion[2];
+			//vScales_Distortion.y = m_vScales_Distortion[1];
+			//vScales_Distortion.z = m_vScales_Distortion[2];
 
 			m_pCurrSelectUI->Set_DistortionScales(vScales_Distortion);
 		}
-		if (ImGui::DragFloat2("Distortion1", m_vDistortion1, 1.f, 0.f))
+		if (ImGui::DragFloat2("Distortion1", m_vDistortion1))
 		{
 			_float2 vDistortion1 = { 0.f, 0.f };
 			vDistortion1.x = m_vDistortion1[0];
@@ -3285,7 +3483,7 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 
 			m_pCurrSelectUI->Set_Distortion1(vDistortion1);
 		}
-		if (ImGui::DragFloat2("Distortion2", m_vDistortion2, 1.f, 0.f))
+		if (ImGui::DragFloat2("Distortion2", m_vDistortion2))
 		{
 			_float2 vDistortion2 = { 0.f, 0.f };
 			vDistortion2.x = m_vDistortion2[0];
@@ -3293,7 +3491,7 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 
 			m_pCurrSelectUI->Set_Distortion2(vDistortion2);
 		}
-		if (ImGui::DragFloat2("Distortion3", m_vDistortion3, 1.f, 0.f))
+		if (ImGui::DragFloat2("Distortion3", m_vDistortion3))
 		{
 			_float2 vDistortion3 = { 0.f, 0.f };
 			vDistortion3.x = m_vDistortion3[0];
@@ -3301,15 +3499,16 @@ void CWindow_UITool::Setting_Distortion(_float fTimeDelta)
 
 			m_pCurrSelectUI->Set_Distortion3(vDistortion3);
 		}
-		if (ImGui::DragFloat("Distortion_Scale", &m_fDistortionScale, 1.f, 0.f))
+		if (ImGui::DragFloat("Distortion_Scale", &m_fDistortionScale))
 		{
 			m_pCurrSelectUI->Set_DistortionScale(m_fDistortionScale);
 		}
-		if (ImGui::DragFloat("DistortionBias", &m_fDistortionBias, 1.f, 0.f))
+		if (ImGui::DragFloat("DistortionBias", &m_fDistortionBias))
 		{
 			m_pCurrSelectUI->Set_DistortionBias(m_fDistortionBias);
 		}
 	}
+	CUI::UI_DESC tUI_Desc = m_pCurrSelectUI->Get_UIDesc();
 }
 
 _float2 CWindow_UITool::Lerp_float2(const _float2& a, const _float2& b, float t)
@@ -3393,6 +3592,9 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 {
 	json json_in;
 
+	CGameObject* pGameObject = nullptr;
+	CUI* pUI_Object = nullptr;
+
 	//char filePath[MAX_PATH];
 
 	string strFile;
@@ -3408,52 +3610,86 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		if (object.contains("ObjectName"))// "ObjectName" 키가 있으면
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))						// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))						// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))						// "ObjectName" 키가 있으면
 			tUI_Info.strObjectName = object["ObjectName"];		// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
 
 
-		wstring wstrLayer;
-		m_pGameInstance->String_To_WString(m_strLayer[m_iCurrLayerNum], wstrLayer);
+		wstring wstrLayer = TEXT("");
+		if (m_strLayer[m_iCurrLayerNum] != "")
+			m_pGameInstance->String_To_WString(m_strLayer[m_iCurrLayerNum], wstrLayer);
 
-		wstring wstrClonetag;
-		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+		wstring wstrClonetag = TEXT("");
+		if(tUI_Info.strCloneTag != "")
+			m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
 
-		wstring wstrPrototag;
-		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+		wstring wstrPrototag = TEXT("");
+		if (tUI_Info.strProtoTag != "")
+			m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
 
-		wstring wstrFilePath;
-		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+		wstring wstrFilePath = TEXT("");
+		if (tUI_Info.strFilePath != "")
+			m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
 
-		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayer, wstrClonetag, &tUI_Info);
-		if (pGameObject == nullptr)
+
+		if (wstrClonetag != TEXT(""))
+			pGameObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, wstrLayer, wstrClonetag, &tUI_Info);
+		
+
+		if (pGameObject != nullptr)
+			m_pCurrSelectUI = dynamic_cast<CUI*>(pGameObject);
+
+		if (m_pCurrSelectUI == nullptr)
 			return E_FAIL;
 
-		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
-		if (pUI_Object == nullptr)
-			return E_FAIL;
+		m_pCurrSelectUI->Get_Transform()->Load_FromJson(object); // 17. TransformCom
 
-		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
-
-		//tUI_Info.iKeyframeNum = object["KeyframeNum"];			// 18. KeyframeNum
+		//tUI_Info.iKeyframeNum = object["KeyframeNum"];	// 18. KeyframeNum
 		
 	// "KeyframeNum" 키가 없으면 기본값 사용
 		_bool bKeyframeNum = object.contains("KeyframeNum");
 		tUI_Info.iKeyframeNum = bKeyframeNum ? object["KeyframeNum"] : 0;
+
+		if (wstrClonetag == TEXT("") &&
+			tUI_Info.iKeyframeNum > 0)
+		{
+			m_pCurrSelectUI->Clear_Keyframe();
+		}
 
 		for (_int i = 0; i < tUI_Info.iKeyframeNum; ++i) // 19. Keyframe
 		{
@@ -3477,55 +3713,131 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 			tUI_Info.tKeyframe.bActive = object["Keyframe"][i]["Active"];
 			tUI_Info.tKeyframe.bAppear = object["Keyframe"][i]["Appear"];
 			tUI_Info.tKeyframe.bTrigger = object["Keyframe"][i]["Trigger"];
+
 			if (object["Keyframe"][i].contains("Disappear")) // "Disappear" 키가 있으면
 				tUI_Info.tKeyframe.bDisappear = object["Keyframe"][i]["Disappear"];
 
 			if (object["Keyframe"][i].contains("LoopSection"))// "LoopSection" 키가 있으면
 				tUI_Info.tKeyframe.bLoopSection = object["Keyframe"][i]["LoopSection"];
 
-			pUI_Object->Add_Keyframe(tUI_Info.tKeyframe);
+			if (object["Keyframe"][i].contains("DistortionUI")) // 키가 있으면
+				tUI_Info.tKeyframe.bDistortionUI = object["Keyframe"][i]["DistortionUI"];
+			if (object["Keyframe"][i].contains("Restore")) // 키가 있으면
+				tUI_Info.tKeyframe.bRestore = object["Keyframe"][i]["Restore"];
+			if (object["Keyframe"][i].contains("TimeAcc")) // 키가 있으면
+				tUI_Info.tKeyframe.fTimeAcc = object["Keyframe"][i]["TimeAcc"];
+			if (object["Keyframe"][i].contains("SequenceTerm")) // 키가 있으면
+				tUI_Info.tKeyframe.fSequenceTerm = object["Keyframe"][i]["SequenceTerm"];
+			if (object["Keyframe"][i].contains("ScrollSpeedsX")) // 키가 있으면
+				tUI_Info.tKeyframe.vScrollSpeeds.x = object["Keyframe"][i]["ScrollSpeedsX"];
+			if (object["Keyframe"][i].contains("ScrollSpeedsY")) // 키가 있으면
+				tUI_Info.tKeyframe.vScrollSpeeds.y = object["Keyframe"][i]["ScrollSpeedsY"];
+			if (object["Keyframe"][i].contains("ScrollSpeedsZ")) // 키가 있으면
+				tUI_Info.tKeyframe.vScrollSpeeds.z = object["Keyframe"][i]["ScrollSpeedsZ"];
+			if (object["Keyframe"][i].contains("ScalesX")) // 키가 있으면
+				tUI_Info.tKeyframe.vScales.x = object["Keyframe"][i]["ScalesX"];
+			if (object["Keyframe"][i].contains("ScalesY")) // 키가 있으면
+				tUI_Info.tKeyframe.vScales.y = object["Keyframe"][i]["ScalesY"];
+			if (object["Keyframe"][i].contains("ScalesZ")) // 키가 있으면
+				tUI_Info.tKeyframe.vScales.z = object["Keyframe"][i]["ScalesZ"];
+			if (object["Keyframe"][i].contains("Distortion1X")) // 키가 있으면
+				tUI_Info.tKeyframe.vDistortion1.x = object["Keyframe"][i]["Distortion1X"];
+			if (object["Keyframe"][i].contains("Distortion1Y")) // 키가 있으면
+				tUI_Info.tKeyframe.vDistortion1.y = object["Keyframe"][i]["Distortion1Y"];
+			if (object["Keyframe"][i].contains("Distortion2X")) // 키가 있으면
+				tUI_Info.tKeyframe.vDistortion2.x = object["Keyframe"][i]["Distortion2X"];
+			if (object["Keyframe"][i].contains("Distortion2Y")) // 키가 있으면
+				tUI_Info.tKeyframe.vDistortion2.y = object["Keyframe"][i]["Distortion2Y"];
+			if (object["Keyframe"][i].contains("Distortion3X")) // 키가 있으면
+				tUI_Info.tKeyframe.vDistortion3.x = object["Keyframe"][i]["Distortion3X"];
+			if (object["Keyframe"][i].contains("Distortion3Y")) // 키가 있으면
+				tUI_Info.tKeyframe.vDistortion3.y = object["Keyframe"][i]["Distortion3Y"];
+			if (object["Keyframe"][i].contains("DistortionScale")) // 키가 있으면
+				tUI_Info.tKeyframe.fDistortionScale = object["Keyframe"][i]["DistortionScale"];
+			if (object["Keyframe"][i].contains("DistortionBias")) // 키가 있으면
+				tUI_Info.tKeyframe.fDistortionBias = object["Keyframe"][i]["DistortionBias"];
+
+			if (object["Keyframe"][i].contains("StopPlay")) // 키가 있으면
+				tUI_Info.tKeyframe.bStopPlay = object["Keyframe"][i]["StopPlay"];
+			if (object["Keyframe"][i].contains("ReversePlay")) // 키가 있으면
+				tUI_Info.tKeyframe.bReversePlay = object["Keyframe"][i]["ReversePlay"];
+			if (object["Keyframe"][i].contains("MaskChange")) // 키가 있으면
+				tUI_Info.tKeyframe.bMaskChange = object["Keyframe"][i]["MaskChange"];
+			if (object["Keyframe"][i].contains("NoiseChange")) // 키가 있으면
+				tUI_Info.tKeyframe.bNoiseChange = object["Keyframe"][i]["NoiseChange"];
+			if (object["Keyframe"][i].contains("MaskNum")) // 키가 있으면
+				tUI_Info.tKeyframe.iMaskNum = object["Keyframe"][i]["MaskNum"];
+			if (object["Keyframe"][i].contains("NoiseNum")) // 키가 있으면
+				tUI_Info.tKeyframe.iNoiseNum = object["Keyframe"][i]["NoiseNum"];
+
+			m_pCurrSelectUI->Add_Keyframe(tUI_Info.tKeyframe);
 		}
 
 		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vScrollSpeeds.x = object["Distortion"]["ScrollSpeedsX"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vScrollSpeeds.y = object["Distortion"]["ScrollSpeedsY"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vScrollSpeeds.z = object["Distortion"]["ScrollSpeedsZ"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vScales.x = object["Distortion"]["ScalesX"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vScales.y = object["Distortion"]["ScalesY"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vScales.z = object["Distortion"]["ScalesZ"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vDistortion1.x = object["Distortion"]["Distortion1X"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vDistortion1.y = object["Distortion"]["Distortion1Y"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vDistortion2.x = object["Distortion"]["Distortion2X"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vDistortion2.y = object["Distortion"]["Distortion2Y"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3X"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3Y"];
-		if (object.contains("Distortion")) // 키가 있으면
-			tUI_Info.fDistortionScale = object["Distortion"]["DistortionScale"];
+		{
+			if (object["Distortion"].contains("ScrollSpeedsX")) // 키가 있으면
+				tUI_Info.vScrollSpeeds.x = object["Distortion"]["ScrollSpeedsX"];
+			if (object["Distortion"].contains("ScrollSpeedsY")) // 키가 있으면
+				tUI_Info.vScrollSpeeds.y = object["Distortion"]["ScrollSpeedsY"];
+			if (object["Distortion"].contains("ScrollSpeedsZ")) // 키가 있으면
+				tUI_Info.vScrollSpeeds.z = object["Distortion"]["ScrollSpeedsZ"];
+			if (object["Distortion"].contains("ScalesX")) // 키가 있으면
+				tUI_Info.vScales.x = object["Distortion"]["ScalesX"];
+			if (object["Distortion"].contains("ScalesY")) // 키가 있으면
+				tUI_Info.vScales.y = object["Distortion"]["ScalesY"];
+			if (object["Distortion"].contains("ScalesZ")) // 키가 있으면
+				tUI_Info.vScales.z = object["Distortion"]["ScalesZ"];
+			if (object["Distortion"].contains("Distortion1X")) // 키가 있으면
+				tUI_Info.vDistortion1.x = object["Distortion"]["Distortion1X"];
+			if (object["Distortion"].contains("Distortion1Y")) // 키가 있으면
+				tUI_Info.vDistortion1.y = object["Distortion"]["Distortion1Y"];
+			if (object["Distortion"].contains("Distortion2X")) // 키가 있으면
+				tUI_Info.vDistortion2.x = object["Distortion"]["Distortion2X"];
+			if (object["Distortion"].contains("Distortion2Y")) // 키가 있으면
+				tUI_Info.vDistortion2.y = object["Distortion"]["Distortion2Y"];
+			if (object["Distortion"].contains("Distortion3X")) // 키가 있으면
+				tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3X"];
+			if (object["Distortion"].contains("Distortion3Y")) // 키가 있으면
+				tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3Y"];
+			if (object["Distortion"].contains("DistortionScale")) // 키가 있으면
+				tUI_Info.fDistortionScale = object["Distortion"]["DistortionScale"];
+			if (object["Distortion"].contains("DistortionBias")) // 키가 있으면
+				tUI_Info.fDistortionBias = object["Distortion"]["DistortionBias"];
+			if (object["Distortion"].contains("DistortionUI")) // 키가 있으면
+				tUI_Info.bDistortionUI = object["Distortion"]["DistortionUI"];
+			if (object["Distortion"].contains("MaskNum")) // 키가 있으면
+				tUI_Info.iMaskNum = object["Distortion"]["MaskNum"];
+			if (object["Distortion"].contains("NoiseNum")) // 키가 있으면
+				tUI_Info.iNoiseNum = object["Distortion"]["NoiseNum"];
+		}
+
+		if (wstrClonetag != TEXT(""))
+			m_pCurrSelectUI->Set_UIDesc(tUI_Info);
 
 		if (tUI_Info.bParent == true)
 		{
-			m_vecParentObject.push_back(pUI_Object);
-			Add_ParentList(tUI_Info);
+			if (wstrClonetag != TEXT(""))
+			{
+				m_vecParentObject.push_back(m_pCurrSelectUI);
+				Add_ParentList(tUI_Info);
+			}
 		}
 		else
 		{
-			m_vecChildObject.push_back(pUI_Object);
-			Add_ChildList(tUI_Info);
+			if (wstrClonetag != TEXT(""))
+			{
+				m_vecChildObject.push_back(m_pCurrSelectUI);
+				Add_ChildList(tUI_Info);
+			}
 		}
 	}
 
 	return S_OK;
+}
+
+void CWindow_UITool::Save_Keyframe()
+{
+
 }
 
 _bool CWindow_UITool::Check_ImGui_Rect()

@@ -96,6 +96,22 @@ HRESULT CUI_QuestBox::Render()
 	return S_OK;
 }
 
+void CUI_QuestBox::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_QuestBox::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_QuestBox::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_QuestBox::UI_Exit(_float fTimeDelta)
+{
+}
+
 void CUI_QuestBox::Add_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation)
 {
 	__super::Add_Text(strTextKey, strFontTag, strText, fPosX, fPosY, vColor, fScale, vOrigin, fRotation);

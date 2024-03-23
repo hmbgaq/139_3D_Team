@@ -46,6 +46,7 @@ private:
 	HRESULT Render_HBAO_PLUS();
 	HRESULT Render_RimBloom();
 	HRESULT Render_Deferred();
+	HRESULT Render_PBR();
 
 	HRESULT Deferred_Effect();
 	HRESULT Render_Effect_BloomBlur();
@@ -113,6 +114,7 @@ public:
 
 private:
 	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
+	_bool						bTest = { true };
 
 	DEFERRED_DESC				m_tDeferred_Option			= {};
 	HBAO_PLUS_DESC				m_tHBAO_Option				= {};
@@ -147,6 +149,10 @@ private:
 	class CVIBuffer_Rect*		m_pVIBuffer					= { nullptr };
 
 	class CTexture*				m_pPerlinNoiseTextureCom	= { nullptr };
+	class CTexture*				m_pIrradianceTextureCom		= { nullptr };
+	class CTexture*				m_pPreFilteredTextureCom	= { nullptr };
+	class CTexture*				m_pBRDFTextureCom	= { nullptr };
+	class CTexture*				m_pVolumetrix_Voxel = { nullptr };
 	ID3D11DepthStencilView*		m_pLightDepthDSV			= { nullptr };
 	_float4x4					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT						Control_HotKey();
@@ -164,8 +170,8 @@ private:
 	HRESULT Ready_DebugRender();
 	HRESULT Render_DebugCom();	
 	HRESULT Render_DebugTarget();
-	_bool	m_bDebugRenderTarget	= { false };
-	_bool	m_bDebugCom				= { true };
+	_bool	m_bDebugRenderTarget	= { true };
+	_bool	m_bDebugCom				= { false };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
 

@@ -135,6 +135,22 @@ HRESULT CUI_EnemyHP_Bar::Render()
 	return S_OK;
 }
 
+void CUI_EnemyHP_Bar::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_EnemyHP_Bar::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_EnemyHP_Bar::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_EnemyHP_Bar::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_EnemyHP_Bar::Ready_Components()
 {
 	//! For.Com_Texture1 // Èò»ö ¹Ù

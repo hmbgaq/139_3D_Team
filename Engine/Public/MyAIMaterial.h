@@ -11,7 +11,7 @@ public:
 		//m_pMaterial = _pMaterial; 
 		//m_bIsBianry = false; 
 
-		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; i++)
+		for (_uint i = 0; i < (_uint)AI_TEXTURE_TYPE_MAX; i++)
 		{
 			aiString AIStr;
 
@@ -22,7 +22,7 @@ public:
 	};
 
 	CMyAIMaterial(ifstream& is) {
-		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; i++)
+		for (_uint i = 0; i < (_uint)AI_TEXTURE_TYPE_MAX; i++)
 		{
 			size_t istringSize;
 			read_typed_data(is, istringSize);
@@ -41,7 +41,7 @@ private:
 public:
 	void Bake_Binary(ofstream& os)
 	{
-		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
+		for (_uint i = 0; i < (_uint)AI_TEXTURE_TYPE_MAX; ++i)
 		{
 			write_typed_data(os, mTextures[i].size());
 			os.write(&mTextures[i][0], mTextures[i].size());

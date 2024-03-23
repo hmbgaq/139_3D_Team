@@ -1,0 +1,18 @@
+#pragma once
+#include "MotherMouth_State_Normal.h"
+
+BEGIN(Client)
+
+class CMotherMouth_SpittingMineEnd : public CMotherMouth_State_Normal
+{
+public:
+	virtual void Initialize(CMotherMouth* pActor) override;
+	virtual CState<CMotherMouth>* Update(CMotherMouth* pActor, _float fTimeDelta) override;
+	virtual void Release(CMotherMouth* pActor) override;
+
+public:
+	static const _uint g_iAnimIndex = CMotherMouth::MotherMouth_State::Parasiter_SpittingMines_End_1800;
+
+};
+
+END

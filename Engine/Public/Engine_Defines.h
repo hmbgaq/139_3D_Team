@@ -17,8 +17,9 @@
 #include <random>
 
 /* Windows SDK */
-//#include <mfapi.h>
-//#include <mfreadwrite.h>
+//#include <mfapi.>
+#include <mferror.h>
+#include <mfmediacapture.h>
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
@@ -26,6 +27,10 @@
 #include "Effects11\d3dx11effect.h"
 #include "DirectXTK\DDSTextureLoader.h"
 #include "DirectXTK\WICTextureLoader.h"
+//#include "DirectXTK\DirectXTex.h"
+#include "DirectXTK\ScreenGrab.h"
+#include "DirectXTK\SimpleMath.h"
+
 #include "DirectXTK\ScreenGrab.h"
 #include "DirectXTK\VertexTypes.h"
 #include "DirectXTK\PrimitiveBatch.h"
@@ -76,12 +81,12 @@ using namespace std;
 
 namespace Engine 
 {
-	//static float					g_iWinsizeX = 1280.f;
-	//static float					g_iWinsizeY = 720.f;
+	static float					g_iWinsizeX = 1280.f;
+	static float					g_iWinsizeY = 720.f;
 	//static float					g_iWinsizeX = 1600;
 	//static float					g_iWinsizeY = 900.f;
-	static float					g_iWinsizeX = 1920;
-	static float					g_iWinsizeY = 1080.f;
+	//static float					g_iWinsizeX = 1920;
+	//static float					g_iWinsizeY = 1080.f;
 
 	static float					g_fLightNear = 0.1f;
 	static float					g_fLightFar = 3000.f;
@@ -110,7 +115,7 @@ using namespace Engine;
 #include "PhysX/PxPhysicsAPI.h"
 using namespace physx;
 
-#define IMGUI_DEFINE_MATH_OPERATORS
+#define IMGUI_DEFIfine IMGUI_DEFINE_MATH_OPERATORfine IMGUI_DEFINE_MATH_OPERATORNE_MATH_OPERATORS
 
 /* Leak */
 #ifdef _DEBUG

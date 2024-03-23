@@ -101,6 +101,9 @@ public:	//!For Animation Split
 
 	void Reset_UpperAngle();
 
+public:
+	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
+
 
 
 protected:

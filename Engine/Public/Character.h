@@ -49,8 +49,6 @@ public:
 		_float3	EffectPosition = {};
 
 		//Sound
-
-		
 	}CHARCTER_DESC;
 protected:
 	CCharacter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strPrototypeTag);
@@ -116,9 +114,13 @@ public:
 	_bool Is_Use_Gravity();
 	void Set_UseGravity(_bool _bUseGravity);
 
-
 public:
 	virtual void Set_Enable(_bool _Enable) override;
+
+public:
+	void Knockback(_vector vDir, _float fForce = 0.3f);
+	void Look_At_And_Knockback(_float3 vTargetPos, _float fForce = 0.3f);
+
 
 public:
 	virtual Hit_Type Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee = false);
@@ -137,6 +139,10 @@ public:
 		Hitted_Dead(Power::Heavy);
 	};
 	virtual void Hitted_Weakness() {};
+	virtual void Hitted_Electrocute() {};
+	virtual void Hitted_OpenState_Pull() {};
+	virtual void Hitted_Opened(Direction eDirection) {};
+
 	
 public:
 	void Add_Force(_vector In_vDir, _float In_fPower);
@@ -151,6 +157,8 @@ public:
 
 	void Get_Damaged(_float iDamage) {m_iHp -= iDamage;}
 public:
+	void Look_At_OnLand(_fvector vTargetPos);
+
 	void Look_At_Target();
 	void Look_At_Target_Lerp(_float fTimeDelta);
 	void Search_Target(const wstring& strLayerTag, const _float fSearchDistance = MAX_SEARCH);
@@ -169,6 +177,8 @@ public:
 
 	void Move_In_Proportion_To_Enemy(_float fTimeDelta, _float fSpeedCap = 1.0f);
 	void Dragged(_float fTimeDelta, _float3 vTargetPos);
+
+	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
 
 public:
 	_bool Is_In_Frustum() { return m_bIsInFrustum; }
@@ -196,6 +206,11 @@ public:
 public:
 	_float3 Get_WeaknessPos() { return m_vWeaknessPos; };
 	virtual void Set_WeaknessPos();
+
+public:
+	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
+
+
 public:
 #pragma region ===========> HP <=========== 
 	//void	Set_CurHP(_float fCurHP) { m_fCurHP = fCurHP; }
@@ -218,15 +233,21 @@ public:
 	void Set_WeaknessCount(_int _iWeaknessCount) { m_iWeaknessCount = _iWeaknessCount; }
 
 
-
 public:
 	_bool Is_Stun() { return m_bIsInvincible; };
 	void Set_Stun(_bool _bIsStun) { m_bIsStun = _bIsStun; };
+	
+	_bool Is_ElectrocuteTime() { return m_fElectrocuteTime > 0.f; };
+	void Set_ElectrocuteTime(_float _fElectrocuteTime) { m_fElectrocuteTime = max(m_fElectrocuteTime, _fElectrocuteTime); };
+	void Update_ElectrocuteTime(_float fTimeDelta) {
+		_float fResult = m_fElectrocuteTime - fTimeDelta;
+		m_fElectrocuteTime = fResult > 0.f ? fResult : 0.f;
+	};
 
 public:
 	void Set_RootMoveRate(_float3 vRate) { m_vRootMoveRate = vRate; };
 	void Reset_RootMoveRate() { m_vRootMoveRate = _float3(1.f, 1.f, 1.f); };
-	
+	void Set_MonsterAttackState(_bool bState) { m_bMonsterAttackState = bState; };
 
 protected:
 	CHARCTER_DESC CharAnimDesc = {};
@@ -240,8 +261,10 @@ protected:
 	//_float m_fCurHP = { 40.f };
 
 protected:
+	_bool m_bMonsterAttackState = { false }; /* 몬스터 공격상태이면 */
 	_bool m_bIsInvincible = { false };
 	_bool m_bIsStun = { false };
+	_float m_fElectrocuteTime = { 0.f };
 
 protected:
 	//Power m_eStrength = { Power::Light };

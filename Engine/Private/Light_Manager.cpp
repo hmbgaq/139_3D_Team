@@ -57,7 +57,6 @@ _bool CLight_Manager::Remove_Light(const _uint& iIndex)
 _bool CLight_Manager::Remove_AllLight()
 {
 
-
 	return _bool();
 }
 

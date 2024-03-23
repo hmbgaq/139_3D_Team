@@ -333,6 +333,11 @@ void CBody::Reset_UpperAngle()
 	m_fShootingReactionTarget = { 0.f };
 }
 
+_uint CBody::Get_CurrentKeyFrames(_uint iIndex)
+{
+	return m_pModelCom->Get_CurrentKeyFrames(iIndex);
+}
+
 HRESULT CBody::Bind_ShaderResources()
 {
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));

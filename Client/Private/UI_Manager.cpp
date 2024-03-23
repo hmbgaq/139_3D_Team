@@ -107,22 +107,42 @@ HRESULT CUI_Manager::Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag)
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];		// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 
 		wstring wstrClonetag;
@@ -214,22 +234,42 @@ HRESULT CUI_Manager::Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag)
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];		// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 
 		wstring wstrClonetag;
@@ -293,22 +333,42 @@ HRESULT CUI_Manager::Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerT
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];		// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 
 		wstring wstrClonetag;
@@ -370,22 +430,42 @@ HRESULT CUI_Manager::Add_LevelUp(_uint iLevelIndex, const wstring& strLayerTag)
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];		// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 
 		wstring wstrClonetag;
@@ -447,22 +527,42 @@ HRESULT CUI_Manager::Add_RewardBox(_uint iLevelIndex, const wstring& strLayerTag
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];		// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 
 		wstring wstrClonetag;
@@ -524,22 +624,42 @@ HRESULT CUI_Manager::Add_QuestBox(_uint iLevelIndex, const wstring& strLayerTag)
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];		// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 
 		wstring wstrClonetag;
@@ -601,22 +721,42 @@ HRESULT CUI_Manager::Add_Distortion(_uint iLevelIndex, const wstring& strLayerTa
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];		// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 
 		wstring wstrClonetag;
@@ -678,22 +818,42 @@ HRESULT CUI_Manager::Add_Loading_Intro(_uint iLevelIndex, const wstring& strLaye
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 
 		wstring wstrClonetag;
@@ -755,22 +915,42 @@ HRESULT CUI_Manager::Add_Loading_IntroBoss(_uint iLevelIndex, const wstring& str
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 
 		wstring wstrClonetag;
@@ -831,22 +1011,42 @@ HRESULT CUI_Manager::Add_Crosshair(_uint iLevelIndex, const wstring& strLayerTag
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 
 		wstring wstrClonetag;
@@ -919,22 +1119,42 @@ HRESULT CUI_Manager::Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerT
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -1024,22 +1244,42 @@ HRESULT CUI_Manager::Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLay
 		CUI::UI_DESC tUI_Info;
 
 		/* 저장순서랑 맞는지 확인하기 */
-		tUI_Info.bParent = object["Parent"];					// 1. Parent
-		tUI_Info.bWorld = object["World"];						// 2. World
-		tUI_Info.bGroup = object["Group"];						// 3. Group
-		tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
-		tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
-		tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
-		tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
-		tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
-		tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
-		tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
-		tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
-		tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
-		tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
-		tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
-		tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -1207,4 +1447,58 @@ void CUI_Manager::Free()
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+
+	for (auto& iter : m_vecLeftHUD)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecRightHUD)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecTutorialBox)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecLevelUP)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecRewardBox)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecQuestBox)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecDistortion)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecLoading)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecLoadingIntroBoss)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecCrosshair)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecBossHUD_Bar)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecBossHUD_Shard)
+	{
+		Safe_Release(iter);
+	}
+	for (auto& iter : m_vecEnemyHUD_Shard)
+	{
+		Safe_Release(iter);
+	}
+
 }

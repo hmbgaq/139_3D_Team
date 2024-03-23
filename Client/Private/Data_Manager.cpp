@@ -76,6 +76,14 @@ void CData_Manager::Reset_Player(LEVEL eLEVEL)
 
 }
 
+void CData_Manager::Apply_Shake_And_Blur(Power ePower)
+{
+	if (m_pPlayer)
+	{
+		m_pPlayer->Apply_Shake_And_Blur(ePower);
+	}
+}
+
 void CData_Manager::Set_MasterCamera(CMasterCamera* _pMasterCamera)
 {
 	m_pMasterCamera = _pMasterCamera;

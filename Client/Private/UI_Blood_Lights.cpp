@@ -108,6 +108,22 @@ HRESULT CUI_Blood_Lights::Render()
 	return S_OK;
 }
 
+void CUI_Blood_Lights::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Blood_Lights::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Blood_Lights::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Blood_Lights::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Blood_Lights::Ready_Components()
 {
 	//! For.Com_Shader

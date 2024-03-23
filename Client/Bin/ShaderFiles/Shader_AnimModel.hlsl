@@ -16,6 +16,9 @@ float     g_TimeDelta;
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
 Texture2D g_SpecularTexture;
+Texture2D g_EmissiveTexture;
+Texture2D g_OpacityTexture;
+
 Texture2D g_DissolveTexture;
 Texture2D g_MaskingTexture;
 
@@ -55,12 +58,12 @@ float4 Calculation_Brightness(float4 Out_Diffuse)
 
 struct VS_IN
 {
-    float3 vPosition : POSITION;
-    float3 vNormal : NORMAL;
-    float2 vTexcoord : TEXCOORD0;
-    float3 vTangent : TANGENT;
-    uint4 vBlendIndices : BLENDINDEX;
-    float4 vBlendWeights : BLENDWEIGHT;
+    float3  vPosition       : POSITION;
+    float3  vNormal         : NORMAL;
+    float2  vTexcoord       : TEXCOORD0;
+    float3  vTangent        : TANGENT;
+    uint4   vBlendIndices   : BLENDINDEX;
+    float4  vBlendWeights   : BLENDWEIGHT;
 };
 
 struct VS_OUT
@@ -87,11 +90,11 @@ struct PS_IN
 
 struct PS_OUT
 {
-    float4 vDiffuse : SV_TARGET0;
-    float4 vNormal : SV_TARGET1;
-    float4 vDepth : SV_TARGET2;
-    float4 vORM : SV_TARGET3;
-    float4 vRimBloom : SV_TARGET4; /* Rim + Bloom */
+    float4 vDiffuse     : SV_TARGET0;
+    float4 vNormal      : SV_TARGET1;
+    float4 vDepth       : SV_TARGET2;
+    float4 vORM         : SV_TARGET3;
+    float4 vRimBloom    : SV_TARGET4; /* Rim + Bloom */
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -156,6 +159,9 @@ PS_OUT PS_MAIN(PS_IN In)
     //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
  
+    if(Out.vDiffuse.a < 0.1f)
+        discard;
+    
     /* ---------------- New ---------------- */
     // float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
     // Out.vDiffuse += vRimColor;

@@ -115,6 +115,22 @@ HRESULT CUI_Weakness::Render()
 	return S_OK;
 }
 
+void CUI_Weakness::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Weakness::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Weakness::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Weakness::UI_Exit(_float fTimeDelta)
+{
+}
+
 void CUI_Weakness::Set_TargetPosition(_vector vTargetPosition)
 {
 	m_vTargetPosition = vTargetPosition;
@@ -181,7 +197,7 @@ HRESULT CUI_Weakness::Ready_Components()
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::WEAKNESS);
-	BoundingDesc.fRadius = 30.f;
+	BoundingDesc.fRadius = 50.f;
 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
 
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"),

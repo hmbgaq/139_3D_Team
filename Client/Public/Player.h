@@ -11,6 +11,23 @@ BEGIN(Client)
 
 class CPlayer final : public CCharacter_Client
 {
+
+public:
+	enum class TeleportPunch_State
+	{
+		Player_TeleportPunch_L01_Alt,
+		Player_TeleportPunch_L01_VeryFar,
+		Player_TeleportPunch_L02_Alt,
+		Player_TeleportPunch_L03_Alt,
+
+		Player_TeleportPunch_R01_Alt,
+		Player_TeleportPunch_R02_Alt,
+		Player_TeleportPunch_R02_VeryFar,
+		Player_TeleportPunch_R03_Alt,
+
+		TeleportPunch_State_End
+	};
+
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CPlayer(const CPlayer& rhs);
@@ -23,6 +40,10 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+
+private:
+	HRESULT Ready_Components();
+	HRESULT Ready_PartObjects();
 
 public:
 	_bool Is_Rotate_In_CameraDir() {
@@ -51,9 +72,7 @@ public:
 
 	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 3);
 
-private:
-	HRESULT Ready_Components();
-	HRESULT Ready_PartObjects();
+
 
 public:
 	CActor<CPlayer>* Get_Actor() { return m_pActor; }
@@ -65,6 +84,12 @@ public:
 	void Set_ChargingTime(_float _fChargingTime) { m_fChargingTime = _fChargingTime; }
 	void Update_ChargingTime(_float fTimeDelta);
 
+public:
+	TeleportPunch_State Get_TeleportPunch_State() { return m_eTeleportPunch_State; };
+	void Set_TeleportPunch_State(TeleportPunch_State _eTeleportPunch_State) { m_eTeleportPunch_State = _eTeleportPunch_State; };
+
+public:
+	CGameObject* Slam();
 
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
@@ -82,6 +107,10 @@ private:
 
 private:
 	_float	m_fChargingTime = { 0.f };
+
+private:
+	_bool m_bIsActivated_TeleportPunch = { false };
+	TeleportPunch_State m_eTeleportPunch_State = { TeleportPunch_State::TeleportPunch_State_End };
 
 public:
 	_bool	m_bPlayerCheck = true;
@@ -546,8 +575,8 @@ public:
 		Player_PushFromBlock														,
 		Player_SlamTwoHand_TEMP														,
 		Player_SpinSlam_TEMP														,
-
 	};
+
 };
 
 END

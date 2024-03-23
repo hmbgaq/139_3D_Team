@@ -382,6 +382,7 @@ namespace Engine
 	{
 		_bool	bRimBloom_Blur_Active		= { false };
 		_bool	bShadow_Active				= { false };
+		_float2 padding = {};
 	}DEFERRED_DESC;
 
 	typedef struct ENGINE_DLL tagFogDesc
@@ -393,14 +394,15 @@ namespace Engine
 		_float	fFogHeightValue			= 50.f;
 		_float	fFogDistanceDensity		= 0.05f;
 		_float	fFogHeightDensity		= 0.05f;
+		_float	padding					= 0.f; //4 
 		_float4 vFogColor				= { 0.5f, 0.5f, 0.5f, 0.2f };
+
 	} FOG_DESC;
 
 	typedef struct ENGINE_DLL tagHDRDesc
 	{
 		_bool  bHDR_Active			= false;
 		_float fmax_white			= 0.4f;
-
 	}HDR_DESC;
 
 	typedef struct ENGINE_DLL tagAnti_Aliasing

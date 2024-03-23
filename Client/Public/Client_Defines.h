@@ -5,12 +5,12 @@
 namespace Client
 {
 	/* 1600 x 900 가능할지도 ㄱㄷ */
-	//static const unsigned int	g_iWinSizeY = 720;
-	//static const unsigned int	g_iWinSizeX = 1280;
+	static const unsigned int	g_iWinSizeY = 720;
+	static const unsigned int	g_iWinSizeX = 1280;
 	//static const unsigned int	g_iWinSizeX = 1600;
 	//static const unsigned int	g_iWinSizeY = 900;
-	static const unsigned int	g_iWinSizeX = 1920;
-	static const unsigned int	g_iWinSizeY = 1080;
+	//static const unsigned int	g_iWinSizeX = 1920;
+	//static const unsigned int	g_iWinSizeY = 1080;
 
 	enum LEVEL { 
 		LEVEL_STATIC, 
@@ -62,6 +62,10 @@ namespace Client
 	#define WEAPON_PUNCH_L					TEXT("Weapon_Punch_L")
 	#define WEAPON_PUNCH_R					TEXT("Weapon_Punch_R")
 	#define WEAPON_WINCHESTER				TEXT("Weapon_Winchester")
+	#define WEAPON_KICK						TEXT("Weapon_Kick")
+	#define WEAPON_ZAPPER					TEXT("Weapon_Zapper")
+
+
 
 
 
@@ -73,23 +77,25 @@ namespace Client
 		PLAYER_ATTACK,
 		MONSTER_ATTACK,
 		WEAKNESS,
-		EDIT_NAVIMESH,
-		DYNAMIC_PROP,
-		BOSS_DYNAMIC_PROP,
-		TRIGGER,
-		LADDER_UP,
-		LADDER_DOWN,
-		DOOR,
-		ELEVATOR,
-		CHECKPOINT,
-		PLAYER_BATCOL,
-		ITEM,
-		ONLY_VIEW,
-		CHECK_DIR,
-		INTERIOR,
+		PLAYER_PARRYING,
 		INTERACT,
 		PICKING_INSTANCE,
-		PICKING_MESH,
+		
+		//EDIT_NAVIMESH,
+		//DYNAMIC_PROP,
+		//BOSS_DYNAMIC_PROP,
+		//TRIGGER,
+		//LADDER_UP,
+		//LADDER_DOWN,
+		//DOOR,
+		//ELEVATOR,
+		//CHECKPOINT,
+		//PLAYER_BATCOL,
+		//ITEM,
+		//ONLY_VIEW,
+		//CHECK_DIR,
+		//INTERIOR,
+		//PICKING_MESH,
 		LAYER_END
 	};
 

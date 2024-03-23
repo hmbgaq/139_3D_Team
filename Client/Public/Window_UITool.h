@@ -211,7 +211,7 @@ public:
 	// 키프레임 랜더링 및 편집 (순서 UI중 가장 마지막)
 	void						KeyframeRender_ValueChange();
 	// 키프레임 자동 생성 함수(선형 보간)
-	void CreateKeyframesWithLinearInterpolation(
+	void	CreateKeyframesWithLinearInterpolation(
 												_float minTime, _float maxTime,
 												_float minValue, _float maxValue,
 												_float2 minScaleValue, _float2 maxScaleValue,
@@ -241,10 +241,11 @@ public:
 	_float	m_fSequenceTerm_RectSprite = { 0.05f };
 
 	/* Distortion */
+	_float m_fTimeAcc = { 1.f };
 	_float m_fSequenceTerm_Distortion = { 1.f };
 
-	_float	m_vScrollSpeeds[3] = { 1.f, 1.f, 0.f };
-	_float	m_vScales_Distortion[3] = { 1.f, 1.f, 1.f };
+	_float	m_vScrollSpeeds[3] = { 0.f, 0.f, 0.f };
+	_float	m_vScales_Distortion[3] = { 0.f, 0.f, 0.f };
 
 	_float	m_vDistortion1[2] = { 0.1f, 0.1f };
 	_float	m_vDistortion2[2] = { 0.0f, 0.0f };
@@ -253,6 +254,8 @@ public:
 	_float	m_fDistortionScale = { 1.f };
 	_float	m_fDistortionBias = { 1.f };
 
+	_int	m_iMaskNum = 0;
+	_int	m_iNoiseNum = 0;
 #pragma endregion
 
 	// 변경할 속성 값 모드
@@ -303,8 +306,8 @@ private:
 	_int m_iOldIndex = -1;
 #pragma region											최소, 최대 값
 // 크기
-	_float	fMin_Scale = -2000.0001f;	// 최소
-	_float	fMax_Scale = 2000.f;	// 최대
+	_float	fMin_Scale = -5000.0001f;	// 최소
+	_float	fMax_Scale = 5000.f;	// 최대
 
 	// 회전
 	_float	fMin_Rot = -360.0f;		// 최소
@@ -349,6 +352,7 @@ private:
 public: /* Save/Load */
 	virtual	HRESULT				Save_Function(string strPath, string strFileName) override;
 	virtual HRESULT				Load_Function(string strPath, string strFileName) override;
+	void						Save_Keyframe();
 
 public: /* ================= Function ================= */
 	// string타입을 받는 벡터 컨테이너를 char*타입을 받는 벡터 컨테이너로 변환 해주는 함수
@@ -399,6 +403,10 @@ private: /* 2D */
 private: /* enum */
 	UITYPE						m_eUIType;
 	TOOLSTATE					m_eToolType = TOOL_UI;
+	CUI::UIKEYFRAME*			m_pSelectedKeyframe = nullptr;
+	_bool						m_bSelectKeyframe = false;
+	_int						m_iColor_Mode_Mesh = 5;
+	_float						m_fColor_Mul_Mesh[4];
 
 private: /* Value */
 	_float						m_fChangeValue = 0.1f;
@@ -480,6 +488,8 @@ private:
 		"LevelUp_ShieldFrame",
 		"MouseCursor",
 		"Option_Window",
+		"Option_Title_Button",
+		"ElementList",
 		"AimCrosshair",
 		"Weakness",
 		"Distortion",
@@ -487,7 +497,8 @@ private:
 		"EnemyHP_Bar",
 		"EnemyHP_Shard",
 		"EnemyState_Shard",
-		"EnemyFrame_Shard"
+		"EnemyFrame_Shard",
+		"Video"
 	};
 
 	// 클래스 목록을 저장하는 벡터

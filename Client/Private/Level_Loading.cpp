@@ -91,7 +91,6 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 			switch (m_eNextLevelID)
 			{
 			case LEVEL_LOGO:
-				
 				pNewLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
 				break;
 			case LEVEL_INTRO:

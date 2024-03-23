@@ -92,6 +92,22 @@ HRESULT CUI_Option_SelectBox::Render()
 	return S_OK;
 }
 
+void CUI_Option_SelectBox::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Option_SelectBox::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Option_SelectBox::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Option_SelectBox::UI_Exit(_float fTimeDelta)
+{
+}
+
 void CUI_Option_SelectBox::Add_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation)
 {
 	__super::Add_Text(strTextKey, strFontTag, strText, fPosX, fPosY, vColor, fScale, vOrigin, fRotation);

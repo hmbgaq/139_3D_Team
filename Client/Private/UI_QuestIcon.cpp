@@ -76,6 +76,22 @@ HRESULT CUI_QuestIcon::Render()
 	return S_OK;
 }
 
+void CUI_QuestIcon::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_QuestIcon::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_QuestIcon::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_QuestIcon::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_QuestIcon::Ready_Components()
 {
 	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture

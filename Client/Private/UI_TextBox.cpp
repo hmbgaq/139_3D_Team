@@ -74,6 +74,22 @@ HRESULT CUI_TextBox::Render()
 	return S_OK;
 }
 
+void CUI_TextBox::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_TextBox::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_TextBox::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_TextBox::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_TextBox::Ready_Components()
 {
 	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture

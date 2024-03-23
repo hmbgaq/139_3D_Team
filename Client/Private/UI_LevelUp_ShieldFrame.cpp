@@ -112,6 +112,22 @@ HRESULT CUI_LevelUp_ShieldFrame::Render()
 	return S_OK;
 }
 
+void CUI_LevelUp_ShieldFrame::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_ShieldFrame::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_ShieldFrame::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_LevelUp_ShieldFrame::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_LevelUp_ShieldFrame::Ready_Components()
 {
 	//! For.Com_Shader
