@@ -916,6 +916,30 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee">
       <UniqueIdentifier>{166e3330-b419-4cb0-b748-6d52760110a0}</UniqueIdentifier>
     </Filter>
+	<Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip">
+		<UniqueIdentifier>{40e5589c-af82-4014-8cc3-824452c5f1d2}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\0. Parent">
+		<UniqueIdentifier>{e3152988-cde4-4d8d-a60f-73339fd2b907}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\1. CloseRange">
+		<UniqueIdentifier>{11904632-d2d8-46a2-b508-0b6222e703a9}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap">
+		<UniqueIdentifier>{18f68658-8801-4426-9b1b-afc3f6c93c94}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\1. Normal">
+		<UniqueIdentifier>{280f21ad-930b-409d-ae87-0250b0e523a8}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\2. Short">
+		<UniqueIdentifier>{5b6f14e0-abd4-4f3f-aee3-5e1aa9cd0af2}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\3. LongRange">
+		<UniqueIdentifier>{48e6c133-ac26-4736-b95c-1ef7c44fe864}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\3. Pull">
+		<UniqueIdentifier>{40ce5633-6ae9-4b48-84e4-3fb53edb89fb}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk">
       <UniqueIdentifier>{0027214f-b2a1-4562-bbd1-654bc332c6d7}</UniqueIdentifier>
     </Filter>
@@ -5610,24 +5634,6 @@
     <ClInclude Include="..\Public\Player_WhipPull.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Pull</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_State_EnergyWhip.h">
-      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\0. Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_Pull.h">
-      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\3. Pull</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_CloseRange_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\1. CloseRange</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_LongRange.h">
-      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\3. LongRange</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_Leap.h">
-      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\1. Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_LeapShort.h">
-      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\2. Short</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Bandit_Heavy_State.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\0. Origin</Filter>
     </ClInclude>
@@ -6198,6 +6204,24 @@
     <ClInclude Include="..\Public\MotherMouth_SpittingMineStart.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Start</Filter>
     </ClInclude>
+	<ClInclude Include="..\Public\Player_EnergyWhip_Pull.h">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\3. Pull</Filter>
+	</ClInclude>
+	<ClInclude Include="..\Public\Player_EnergyWhip_CloseRange_01.h">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\1. CloseRange</Filter>
+	</ClInclude>
+	<ClInclude Include="..\Public\Player_EnergyWhip_LongRange.h">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\3. LongRange</Filter>
+	</ClInclude>
+	<ClInclude Include="..\Public\Player_EnergyWhip_Leap.h">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\1. Normal</Filter>
+	</ClInclude>
+	<ClInclude Include="..\Public\Player_EnergyWhip_LeapShort.h">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\2. Short</Filter>
+	</ClInclude>
+	<ClInclude Include="..\Public\Player_State_EnergyWhip.h">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\0. Parent</Filter>
+	</ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8419,24 +8443,6 @@
     <ClCompile Include="..\Private\Player_WhipPull.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Pull</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Player_State_EnergyWhip.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\0. Parent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_EnergyWhip_Pull.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\3. Pull</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_EnergyWhip_CloseRange_01.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\1. CloseRange</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_EnergyWhip_LongRange.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\3. LongRange</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_EnergyWhip_Leap.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\1. Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_EnergyWhip_LeapShort.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\12. EnergyWhip\2. Leap\2. Short</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\BanditHeavy_DeathHeavy_F_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Heavy</Filter>
     </ClCompile>
@@ -8773,6 +8779,27 @@
     <ClCompile Include="..\Private\UI_ElementList.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList</Filter>
     </ClCompile>
+	<ClCompile Include="..\Private\Player_WhipPull.cpp">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Pull</Filter>
+	</ClCompile>
+	<ClCompile Include="..\Private\Player_State_EnergyWhip.cpp">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\0. Parent</Filter>
+	</ClCompile>
+	<ClCompile Include="..\Private\Player_EnergyWhip_Pull.cpp">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\3. Pull</Filter>
+	</ClCompile>
+	<ClCompile Include="..\Private\Player_EnergyWhip_CloseRange_01.cpp">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\1. CloseRange</Filter>
+	</ClCompile>
+	<ClCompile Include="..\Private\Player_EnergyWhip_LongRange.cpp">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\3. LongRange</Filter>
+	</ClCompile>
+	<ClCompile Include="..\Private\Player_EnergyWhip_Leap.cpp">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\1. Normal</Filter>
+	</ClCompile>
+	<ClCompile Include="..\Private\Player_EnergyWhip_LeapShort.cpp">
+	 <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\2. Short</Filter>
+	</ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
