@@ -99,5 +99,7 @@ namespace Engine
 		string			ENGINE_DLL Wstring_To_String(const wstring _wstring);
 		wstring			ENGINE_DLL string_To_WString(const string _string);
 
+		string			ENGINE_DLL capitalizeString(string strWord);
+
 	}
 }

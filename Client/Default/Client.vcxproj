@@ -344,6 +344,7 @@
     <ClInclude Include="..\Public\Event_Trigger.h" />
     <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\Environment_LightObject.h" />
+    <ClInclude Include="..\Public\Impact_Slam.h" />
     <ClInclude Include="..\Public\Infected.h" />
     <ClInclude Include="..\Public\Infected_A.h" />
     <ClInclude Include="..\Public\Infected_B.h" />
@@ -354,6 +355,7 @@
     <ClInclude Include="..\Public\Infected_Dodge_F_01_TEMP.h" />
     <ClInclude Include="..\Public\Infected_Dodge_L_01_TEMP.h" />
     <ClInclude Include="..\Public\Infected_Dodge_R_01_TEMP.h" />
+    <ClInclude Include="..\Public\Infected_Electrocute_Loop.h" />
     <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h" />
     <ClInclude Include="..\Public\Infected_HitHeavy_BL_01_NEW.h" />
     <ClInclude Include="..\Public\Infected_HitHeavy_BR_01_NEW.h" />
@@ -406,6 +408,8 @@
     <ClInclude Include="..\Public\Infected_Melee_RM_02.h" />
     <ClInclude Include="..\Public\Infected_Melee_RU_01.h" />
     <ClInclude Include="..\Public\Infected_Melee_RU_02.h" />
+    <ClInclude Include="..\Public\Infected_OpenStatePull_F_01.h" />
+    <ClInclude Include="..\Public\Infected_OpenStateTimeout.h" />
     <ClInclude Include="..\Public\Infected_RelaxedIdleAct_01.h" />
     <ClInclude Include="..\Public\Infected_RelaxedIdleAct_02.h" />
     <ClInclude Include="..\Public\Infected_RelaxedIdleAct_03.h" />
@@ -436,6 +440,7 @@
     <ClInclude Include="..\Public\Infected_State_Attack.h" />
     <ClInclude Include="..\Public\Infected_State_Death.h" />
     <ClInclude Include="..\Public\Infected_State_Dodge.h" />
+    <ClInclude Include="..\Public\Infected_State_Electrocute.h" />
     <ClInclude Include="..\Public\Infected_State_Finisher.h" />
     <ClInclude Include="..\Public\Infected_State_Hit.h" />
     <ClInclude Include="..\Public\Infected_State_Idle.h" />
@@ -849,7 +854,6 @@
     <ClInclude Include="..\Public\Player_Shotgun_Fire_LongRange.h" />
     <ClInclude Include="..\Public\Player_Shotgun_Fire_ShortRange.h" />
     <ClInclude Include="..\Public\Player_Shotgun_WeaponHolster.h" />
-    <ClInclude Include="..\Public\Player_SlamDown_ManHero.h" />
     <ClInclude Include="..\Public\Player_SlamDown_v2.h" />
     <ClInclude Include="..\Public\Player_SlamDown_v3.h" />
     <ClInclude Include="..\Public\Player_SlamTwoHand_TEMP.h" />
@@ -917,6 +921,8 @@
     <ClInclude Include="..\Public\Player_State_Roll.h" />
     <ClInclude Include="..\Public\Player_State_Run.h" />
     <ClInclude Include="..\Public\Player_State_Shotgun.h" />
+    <ClInclude Include="..\Public\Player_State_Slam.h" />
+    <ClInclude Include="..\Public\Player_State_TeleportPunch.h" />
     <ClInclude Include="..\Public\Player_State_Walk.h" />
     <ClInclude Include="..\Public\Player_State_Winchester.h" />
     <ClInclude Include="..\Public\Player_TakedownRevolver_ManHero_01.h" />
@@ -954,10 +960,12 @@
     <ClInclude Include="..\Public\Player_Weapon_ELShotgun.h" />
     <ClInclude Include="..\Public\Player_Weapon_ELWinchester.h" />
     <ClInclude Include="..\Public\Player_Weapon_FlameBelcher.h" />
+    <ClInclude Include="..\Public\Player_Weapon_Kick.h" />
     <ClInclude Include="..\Public\Player_Weapon_Punch.h" />
     <ClInclude Include="..\Public\Player_Weapon_Revolver.h" />
     <ClInclude Include="..\Public\Player_Weapon_Shotgun.h" />
     <ClInclude Include="..\Public\Player_Weapon_Winchester.h" />
+    <ClInclude Include="..\Public\Player_Weapon_Zapper.h" />
     <ClInclude Include="..\Public\Player_WhipPull.h" />
     <ClInclude Include="..\Public\Player_WhipSlam.h" />
     <ClInclude Include="..\Public\Player_William_RevolverFanningLoop_01.h" />
@@ -1024,7 +1032,9 @@
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\stb_image.h" />
     <ClInclude Include="..\Public\UI_BackGround.h" />
+    <ClInclude Include="..\Public\UI_Collection_Button.h" />
     <ClInclude Include="..\Public\UI_Distortion.h" />
+    <ClInclude Include="..\Public\UI_ElementList.h" />
     <ClInclude Include="..\Public\UI_EnemyFrame_Shard.h" />
     <ClInclude Include="..\Public\UI_EnemyHP_Bar.h" />
     <ClInclude Include="..\Public\UI_EnemyHP_FrameBar.h" />
@@ -1034,6 +1044,11 @@
     <ClInclude Include="..\Public\UI_EnemyState_Shard.h" />
     <ClInclude Include="..\Public\UI_Loading_Icon.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
+    <ClInclude Include="..\Public\UI_Obtain_Button.h" />
+    <ClInclude Include="..\Public\UI_Option_Button.h" />
+    <ClInclude Include="..\Public\UI_Option_SubTitle_Button.h" />
+    <ClInclude Include="..\Public\UI_Skill_Button.h" />
+    <ClInclude Include="..\Public\UI_Option_Title_Button.h" />
     <ClInclude Include="..\Public\UI_Video.h" />
     <ClInclude Include="..\Public\UI_Weakness.h" />
     <ClInclude Include="..\Public\VampireCommander.h" />
@@ -1294,6 +1309,7 @@
     <ClCompile Include="..\Private\Event_MonsterSpawnTrigger.cpp" />
     <ClCompile Include="..\Private\Event_Trigger.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
+    <ClCompile Include="..\Private\Impact_Slam.cpp" />
     <ClCompile Include="..\Private\Infected.cpp" />
     <ClCompile Include="..\Private\Infected_A.cpp" />
     <ClCompile Include="..\Private\Infected_B.cpp" />
@@ -1304,6 +1320,7 @@
     <ClCompile Include="..\Private\Infected_Dodge_F_01_TEMP.cpp" />
     <ClCompile Include="..\Private\Infected_Dodge_L_01_TEMP.cpp" />
     <ClCompile Include="..\Private\Infected_Dodge_R_01_TEMP.cpp" />
+    <ClCompile Include="..\Private\Infected_Electrocute_Loop.cpp" />
     <ClCompile Include="..\Private\Infected_HitHeavyToStun_01_NEW.cpp" />
     <ClCompile Include="..\Private\Infected_HitHeavy_BL_01_NEW.cpp" />
     <ClCompile Include="..\Private\Infected_HitHeavy_BR_01_NEW.cpp" />
@@ -1356,6 +1373,8 @@
     <ClCompile Include="..\Private\Infected_Melee_RM_02.cpp" />
     <ClCompile Include="..\Private\Infected_Melee_RU_01.cpp" />
     <ClCompile Include="..\Private\Infected_Melee_RU_02.cpp" />
+    <ClCompile Include="..\Private\Infected_OpenStatePull_F_01.cpp" />
+    <ClCompile Include="..\Private\Infected_OpenStateTimeout.cpp" />
     <ClCompile Include="..\Private\Infected_RelaxedIdleAct_01.cpp" />
     <ClCompile Include="..\Private\Infected_RelaxedIdleAct_02.cpp" />
     <ClCompile Include="..\Private\Infected_RelaxedIdleAct_03.cpp" />
@@ -1386,6 +1405,7 @@
     <ClCompile Include="..\Private\Infected_State_Attack.cpp" />
     <ClCompile Include="..\Private\Infected_State_Death.cpp" />
     <ClCompile Include="..\Private\Infected_State_Dodge.cpp" />
+    <ClCompile Include="..\Private\Infected_State_Electrocute.cpp" />
     <ClCompile Include="..\Private\Infected_State_Finisher.cpp" />
     <ClCompile Include="..\Private\Infected_State_Hit.cpp" />
     <ClCompile Include="..\Private\Infected_State_Idle.cpp" />
@@ -1681,7 +1701,6 @@
     <ClCompile Include="..\Private\Player_Shotgun_Fire_LongRange.cpp" />
     <ClCompile Include="..\Private\Player_Shotgun_Fire_ShortRange.cpp" />
     <ClCompile Include="..\Private\Player_Shotgun_WeaponHolster.cpp" />
-    <ClCompile Include="..\Private\Player_SlamDown_ManHero.cpp" />
     <ClCompile Include="..\Private\Player_SlamDown_v2.cpp" />
     <ClCompile Include="..\Private\Player_SlamDown_v3.cpp" />
     <ClCompile Include="..\Private\Player_SlamTwoHand_TEMP.cpp" />
@@ -1713,6 +1732,8 @@
     <ClCompile Include="..\Private\Player_State_Roll.cpp" />
     <ClCompile Include="..\Private\Player_State_Run.cpp" />
     <ClCompile Include="..\Private\Player_State_Shotgun.cpp" />
+    <ClCompile Include="..\Private\Player_State_Slam.cpp" />
+    <ClCompile Include="..\Private\Player_State_TeleportPunch.cpp" />
     <ClCompile Include="..\Private\Player_State_Walk.cpp" />
     <ClCompile Include="..\Private\Player_State_Winchester.cpp" />
     <ClCompile Include="..\Private\Player_Tank_ImpaleAttack.cpp" />
@@ -1743,10 +1764,12 @@
     <ClCompile Include="..\Private\Player_Weapon_ELShotgun.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_ELWinchester.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_FlameBelcher.cpp" />
+    <ClCompile Include="..\Private\Player_Weapon_Kick.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Punch.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Revolver.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Shotgun.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Winchester.cpp" />
+    <ClCompile Include="..\Private\Player_Weapon_Zapper.cpp" />
     <ClCompile Include="..\Private\Player_WhipPull.cpp" />
     <ClCompile Include="..\Private\Player_WhipSlam.cpp" />
     <ClCompile Include="..\Private\Player_William_RevolverFanningLoop_01.cpp" />
@@ -1802,7 +1825,9 @@
     <ClCompile Include="..\Private\Son.cpp" />
     <ClCompile Include="..\Private\SpringCamera.cpp" />
     <ClCompile Include="..\Private\UI_BackGround.cpp" />
+    <ClCompile Include="..\Private\UI_Collection_Button.cpp" />
     <ClCompile Include="..\Private\UI_Distortion.cpp" />
+    <ClCompile Include="..\Private\UI_ElementList.cpp" />
     <ClCompile Include="..\Private\UI_EnemyFrame_Shard.cpp" />
     <ClCompile Include="..\Private\UI_EnemyHP_Bar.cpp" />
     <ClCompile Include="..\Private\UI_EnemyHP_FrameBar.cpp" />
@@ -1811,6 +1836,11 @@
     <ClCompile Include="..\Private\UI_EnemyHUD_Shard.cpp" />
     <ClCompile Include="..\Private\UI_Loading_Icon.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
+    <ClCompile Include="..\Private\UI_Obtain_Button.cpp" />
+    <ClCompile Include="..\Private\UI_Option_Button.cpp" />
+    <ClCompile Include="..\Private\UI_Option_SubTitle_Button.cpp" />
+    <ClCompile Include="..\Private\UI_Skill_Button.cpp" />
+    <ClCompile Include="..\Private\UI_Option_Title_Button.cpp" />
     <ClCompile Include="..\Private\UI_Video.cpp" />
     <ClCompile Include="..\Private\UI_Weakness.cpp" />
     <ClCompile Include="..\Private\VampireCommander.cpp" />

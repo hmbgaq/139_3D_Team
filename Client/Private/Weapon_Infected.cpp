@@ -71,6 +71,11 @@ HRESULT CWeapon_Infected::Bind_ShaderResources()
 
 void CWeapon_Infected::OnCollisionEnter(CCollider* other)
 {
+	if (ECast(COLLISION_LAYER::PLAYER_PARRYING) == other->Get_Layer())
+	{
+		return;
+	}
+
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 
 	if (pTarget_Character != nullptr)

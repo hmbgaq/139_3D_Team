@@ -19,6 +19,7 @@ public:
 	_float4				Get_Pos() { return m_LightDesc.vPosition; }					/* vPosition */
 	_float				Get_CurrentRange() { return m_LightDesc.fRange; }			/* fRange */
 	_uint				Get_LightIndex() { return m_LightDesc.iLightIndex; }
+	_float4				Get_LightDir() { return m_LightDesc.vDirection; }
 
 	void				Set_LightDesc(LIGHT_DESC newDesc) {	m_LightDesc = newDesc; }
 	void				Set_Diffuse(_float4 vDiffuse);

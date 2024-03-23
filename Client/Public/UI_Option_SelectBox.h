@@ -19,6 +19,12 @@ public:
 	virtual void			Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT			Render() override;
 
+	/* State */
+	virtual void	UI_Ready(_float fTimeDelta);
+	virtual void	UI_Enter(_float fTimeDelta);
+	virtual void	UI_Loop(_float fTimeDelta);
+	virtual void	UI_Exit(_float fTimeDelta);
+
 public:
 	virtual void			Add_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation) override;
 	//virtual TEXTINFO*		Find_Text(const string& strTextTag) override;

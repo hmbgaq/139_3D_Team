@@ -80,6 +80,9 @@ public:
 
 	_bool Is_UpperBody(_int iBoneIndex);
 
+public:
+	_uint Get_CurrentKeyFrames(_uint iIndex = 0) { return m_CurrentKeyFrames[iIndex]; };
+
 
 
 public: //!For. AnimInstance

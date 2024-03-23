@@ -89,6 +89,22 @@ HRESULT CUI_Player_Skill_Guige::Render()
 	return S_OK;
 }
 
+void CUI_Player_Skill_Guige::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Player_Skill_Guige::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Player_Skill_Guige::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Player_Skill_Guige::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Player_Skill_Guige::Ready_Components()
 {
 	//! For.Com_Shader

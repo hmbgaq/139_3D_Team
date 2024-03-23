@@ -25,7 +25,7 @@ void CTexture::Load_FromJson(const json& In_Json)
 	_int iTest = 0;
 }
 
-HRESULT CTexture::Initialize_Prototype(const wstring & strTextureFilePath, _uint iNumTextures)
+HRESULT CTexture::Initialize_Prototype(const wstring & strTextureFilePath, _uint iNumTextures, _bool bORM)
 {
 	m_iNumTextures = iNumTextures;
 
@@ -86,7 +86,6 @@ HRESULT CTexture::Initialize_Prototype(const wstring & strTextureFilePath, _uint
 				}
 			}
 
-
 			return E_FAIL;
 		}
 
@@ -116,7 +115,6 @@ HRESULT CTexture::Bind_ShaderResources(CShader * pShader, const _char * pConstan
 
 HRESULT CTexture::Get_TextureSize(_uint* iWidth, _uint* iHeight, _uint iTextureIndex)
 {
-
 	// 인덱스 범위 확인
 	if (iTextureIndex >= m_SRVs.size())
 		return E_FAIL; // 유효하지 않은 인덱스 처리
@@ -153,16 +151,24 @@ HRESULT CTexture::Set_SRV(CShader* pShader, const char* strConstantName, _uint i
 	return pShader->Bind_SRV(strConstantName, m_SRVs[iTextureIndex]);
 }
 
-CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strTextureFilePath, _uint iNumTextures)
+CTexture * CTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strTextureFilePath, _uint iNumTextures, _bool bORM)
 {
 	CTexture*		pInstance = new CTexture(pDevice, pContext);
 
-	/* 원형객체를 초기화한다.  */
-	if (FAILED(pInstance->Initialize_Prototype(strTextureFilePath, iNumTextures)))
+	if (FAILED(pInstance->Initialize_Prototype(strTextureFilePath, iNumTextures, bORM)))
 	{
-		MSG_BOX("Failed to Created : CTexture");
-		Safe_Release(pInstance);
+		if (true == bORM)
+		{
+			Safe_Release(pInstance);
+			return nullptr;
+		}
+		else
+		{
+			MSG_BOX("Failed to Created : CTexture");
+			Safe_Release(pInstance);
+		}
 	}
+	
 	return pInstance;
 }
 

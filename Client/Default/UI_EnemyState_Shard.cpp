@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "GameObject.h"
+#include "Character.h"
 
 CUI_EnemyState_Shard::CUI_EnemyState_Shard(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -64,6 +65,8 @@ void CUI_EnemyState_Shard::Tick(_float fTimeDelta)
 	//if(m_pOwner != nullptr)
 	//	Set_WorldMatrix(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
+	// m_pCharacterOwner->Get
+
 	if (m_bActive == true)
 	{
 		if (m_bAppear == false) // 안보이는 상태니까
@@ -107,6 +110,22 @@ HRESULT CUI_EnemyState_Shard::Render()
 	}
 
 	return S_OK;
+}
+
+void CUI_EnemyState_Shard::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_EnemyState_Shard::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_EnemyState_Shard::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_EnemyState_Shard::UI_Exit(_float fTimeDelta)
+{
 }
 
 void CUI_EnemyState_Shard::Set_TargetPosition(_vector vTargetPosition)
@@ -227,6 +246,20 @@ HRESULT CUI_EnemyState_Shard::Bind_ShaderResources()
 		break;
 	default:
 		break;
+	}
+
+	return S_OK;
+}
+
+HRESULT CUI_EnemyState_Shard::Setting_Owner()
+{
+	if (m_pOwner != nullptr) // Owner 지정해줘야 합니다.
+	{
+		m_pCharacterOwner = dynamic_cast<CCharacter*>(m_pOwner);
+	}
+	else
+	{
+
 	}
 
 	return S_OK;

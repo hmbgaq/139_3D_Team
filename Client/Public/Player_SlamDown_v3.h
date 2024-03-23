@@ -1,10 +1,10 @@
 #pragma once
-#include "Player_State_Attack.h"
+#include "Player_State_Slam.h"
 
 
 BEGIN(Client)
 
-class CPlayer_SlamDown_v3 : public CPlayer_State_Attack
+class CPlayer_SlamDown_v3 : public CPlayer_State_Slam
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;

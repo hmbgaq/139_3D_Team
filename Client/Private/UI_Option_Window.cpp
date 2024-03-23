@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
+#include "Data_Manager.h"
+
 CUI_Option_Window::CUI_Option_Window(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
 {
@@ -28,9 +30,8 @@ HRESULT CUI_Option_Window::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
-	m_tUIInfo.fScaleX = g_iWinsizeX;
-	m_tUIInfo.fScaleY = g_iWinsizeY;
-	m_tUIInfo.fPositionZ = 0.9f;
+	/* Distortion이 있는 UI */
+	m_tUIInfo.bDistortionUI = true;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -49,40 +50,93 @@ void CUI_Option_Window::Priority_Tick(_float fTimeDelta)
 
 void CUI_Option_Window::Tick(_float fTimeDelta)
 {
+	__super::Tick(fTimeDelta);
 
+	m_iMaskNum = m_tUIInfo.iMaskNum;
+	m_iNoiseNum = m_tUIInfo.iNoiseNum;
+
+	if (m_bActive)
+	{
+		if (!m_vecAnimation.empty())
+		{
+			m_fTimeAcc += m_tUIInfo.tKeyframe.fTimeAcc * fTimeDelta;
+		}
+		else
+		{
+			m_fTimeAcc += m_tUIInfo.fTimeAcc * fTimeDelta;
+		}
+	}
 }
 
 void CUI_Option_Window::Late_Tick(_float fTimeDelta)
 {
-
-	if (m_bActive)
+	if (m_bActive == true)
 	{
-		__super::Tick(fTimeDelta);
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+			return;
 	}
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
-		return;
 }
 
 HRESULT CUI_Option_Window::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	if (m_bActive == true)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그릴거야.
-	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		//! 이 셰이더에 0번째 패스로 그린다.
+		m_pShaderCom->Begin(6); // Distortion 6
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+	}
 
 	return S_OK;
 }
 
+void CUI_Option_Window::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Option_Window::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Option_Window::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Option_Window::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Option_Window::Ready_Components()
 {
+	/* 공통 */
+	if (FAILED(__super::Ready_Components())) // Ready : Texture / MapTexture
+		return E_FAIL;
+
+	wstring strPrototag;
+	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
+
+	//! For.Com_Texture_Diffuse
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+		TEXT("Com_Texture_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[DIFFUSE]))))
+		return E_FAIL;
+
+	//! For.Com_Texture_Mask
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("mask_radiant_flame"),
+		TEXT("Com_Texture_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[MASK]))))
+		return E_FAIL;
+
+	//! For.Com_Texture_Noise
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("dissolve_tex"),
+		TEXT("Com_Texture_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[NOISE]))))
+		return E_FAIL;
+
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
@@ -93,16 +147,16 @@ HRESULT CUI_Option_Window::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-	//! For.Com_Texture OptionBackGround
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Inventory_Background"),
-		TEXT("Com_Texture_OptionBackGround"), reinterpret_cast<CComponent**>(&m_pTextureCom[BACKGROUND]))))
-		return E_FAIL;
-
+	/* 효과가 필요한 녀석은 Map텍스쳐도 추가해주기 */
 	return S_OK;
 }
 
 HRESULT CUI_Option_Window::Bind_ShaderResources()
 {
+	/* 공통 */
+	if (FAILED(__super::Bind_ShaderResources()))
+		return E_FAIL;
+
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
@@ -110,31 +164,59 @@ HRESULT CUI_Option_Window::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tUIInfo.tKeyframe.fTimeAcc, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tUIInfo.tKeyframe.vScrollSpeeds, sizeof(_float3))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScales", &m_tUIInfo.tKeyframe.vScales, sizeof(_float3))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tUIInfo.tKeyframe.vDistortion1, sizeof(_float2))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion2", &m_tUIInfo.tKeyframe.vDistortion2, sizeof(_float2))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortion3", &m_tUIInfo.tKeyframe.vDistortion3, sizeof(_float2))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionScale", &m_tUIInfo.tKeyframe.fDistortionScale, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tUIInfo.tKeyframe.fDistortionBias, sizeof(_float))))
 		return E_FAIL;
 
-	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
+	/* For.Com_Texture */
 	{
-		switch (i)
-		{
-		case CUI_Option_Window::BACKGROUND:
-		{
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-				return E_FAIL;
-			break;
-		}
-		default:
-			break;
-		}
-	}
+		if (FAILED(m_pTextureCom[DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+			return E_FAIL;
 
+	}
 	return S_OK;
+}
+
+void CUI_Option_Window::Compute_OwnerCamDistance()
+{
+	//_vector		vPosition = m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION);
+	//_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
+
+	//m_fOwnerCamDistance = XMVectorGetX(XMVector3Length(vPosition - vCamPosition));
+}
+
+_bool CUI_Option_Window::In_Frustum()
+{
+	return false;
+	//return m_pGameInstance->isIn_WorldPlanes(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
+}
+
+void CUI_Option_Window::Set_OwnerHp(/*CPlayer pPlayer*/)
+{
+
 }
 
 json CUI_Option_Window::Save_Desc(json& out_json)
 {
 	/* 기본정보 저장 */
 	__super::Save_Desc(out_json);
+
+
+	/* 추가정보 저장 */
+
 
 	return out_json;
 }
@@ -157,11 +239,6 @@ CUI_Option_Window* CUI_Option_Window::Create(ID3D11Device* pDevice, ID3D11Device
 	return pInstance;
 }
 
-CGameObject* CUI_Option_Window::Pool()
-{
-	return new CUI_Option_Window(*this);
-}
-
 CGameObject* CUI_Option_Window::Clone(void* pArg)
 {
 	CUI_Option_Window* pInstance = new CUI_Option_Window(*this);
@@ -175,12 +252,14 @@ CGameObject* CUI_Option_Window::Clone(void* pArg)
 	return pInstance;
 }
 
+CGameObject* CUI_Option_Window::Pool()
+{
+	return new CUI_Option_Window(*this);
+}
+
 void CUI_Option_Window::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pShaderCom);
 
 	for (auto& pTexture : m_pTextureCom)
 	{

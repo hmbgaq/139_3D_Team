@@ -87,6 +87,22 @@ HRESULT CUI_ItemShowcase::Render()
 	return S_OK;
 }
 
+void CUI_ItemShowcase::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_ItemShowcase::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_ItemShowcase::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_ItemShowcase::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_ItemShowcase::Ready_Components()
 {
 	//! For.Com_Shader

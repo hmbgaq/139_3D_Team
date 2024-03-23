@@ -115,6 +115,22 @@ HRESULT CUI_Weakness::Render()
 	return S_OK;
 }
 
+void CUI_Weakness::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Weakness::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Weakness::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Weakness::UI_Exit(_float fTimeDelta)
+{
+}
+
 void CUI_Weakness::Set_TargetPosition(_vector vTargetPosition)
 {
 	m_vTargetPosition = vTargetPosition;

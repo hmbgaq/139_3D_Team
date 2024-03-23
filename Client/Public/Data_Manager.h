@@ -35,6 +35,9 @@ public:
 	void Reset_Player(LEVEL eLEVEL);
 
 public:
+	void Apply_Shake_And_Blur(Power ePower = Power::Light);
+
+public:
 	void Set_MasterCamera(CMasterCamera* _pMasterCamera);
 	CMasterCamera* Get_MasterCamera();
 	void Reset_MasterCamera(LEVEL eLEVEL);

@@ -7,6 +7,7 @@
 #include "Light.h"
 #include "ShaderParsed_Object.h"
 #include "Monster_Character.h"
+#include "SMath.h"
 
 CWindow_ShaderTool::CWindow_ShaderTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -363,6 +364,40 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_HSV_Setting();
 		ImGui::TreePop();
 	}
+
+	ImGui::PushID(3);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0 / 7.0f, 0.6f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0 / 7.0f, 0.7f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0 / 7.0f, 0.8f, 0.8f));
+	if (ImGui::Button("Shader Save"))
+	{
+		m_bShaderSave = true;
+	}
+	ImGui::PopStyleColor(3); //PushStyleColor를 3번 호출해서 3번 지우는거
+	ImGui::PopID();
+
+	ImGui::SameLine();
+
+	ImGui::PushID(4);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1 / 7.0f, 0.6f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1 / 7.0f, 0.7f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1 / 7.0f, 0.8f, 0.8f));
+	if (ImGui::Button("Shader Load"))
+	{
+		m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
+		m_strDialogPath = "../Bin/DataFiles/Data_Shader/";
+		OpenDialog(CImgui_Window::IMGUI_SHADER_WINDOW);
+	}
+	ImGui::PopStyleColor(3);
+	ImGui::PopID();
+
+	if (m_bShaderSave)
+		Save_Shader();
+
+	//if (m_bShaderLoad)
+	//{
+	//	Load_Shader();
+	//}
 }
 
 void CWindow_ShaderTool::Compress_HBAO_Plus_Setting()
@@ -481,6 +516,58 @@ void CWindow_ShaderTool::Compress_HSV_Setting()
 
 	m_pGameInstance->Get_Renderer()->Set_HSV_Option(m_eHSV_Desc);
 }
+void CWindow_ShaderTool::Save_Shader()
+{
+	string path = "../Bin/DataFiles/Data_Shader/Level/";
+
+	string LevelString = SMath::capitalizeString(m_eCurrLevel_String);
+	path += LevelString;
+	path += "_Shader.json";
+
+	json Out_Json;
+
+	Out_Json["HBAO"]["bHBAO_Active"] = m_eHBAO_Desc.bHBAO_Active;
+	Out_Json["HBAO"]["fBias"] = m_eHBAO_Desc.fBias;
+	Out_Json["HBAO"]["fBlur_Sharpness"] = m_eHBAO_Desc.fBlur_Sharpness;
+	Out_Json["HBAO"]["fPowerExponent"] = m_eHBAO_Desc.fPowerExponent;
+	Out_Json["HBAO"]["fRadius"] = m_eHBAO_Desc.fRadius;
+
+	Out_Json["Deferred"]["bRimBloom_Blur_Active"] = m_eDeferred_Desc.bRimBloom_Blur_Active;
+	Out_Json["Deferred"]["bShadow_Active"] = m_eDeferred_Desc.bShadow_Active;
+
+	Out_Json["Fog"]["bFog_Active"] = m_eFog_Desc.bFog_Active;
+	Out_Json["Fog"]["fFogStartDepth"] = m_eFog_Desc.fFogStartDepth;
+	Out_Json["Fog"]["fFogStartDistance"] = m_eFog_Desc.fFogStartDistance;
+	Out_Json["Fog"]["fFogDistanceValue"] = m_eFog_Desc.fFogDistanceValue;
+	Out_Json["Fog"]["fFogHeightValue"] = m_eFog_Desc.fFogHeightValue;
+	Out_Json["Fog"]["fFogDistanceDensity"] = m_eFog_Desc.fFogDistanceDensity;
+	Out_Json["Fog"]["fFogHeightDensity"] = m_eFog_Desc.fFogHeightDensity;
+	Out_Json["Fog"]["vFogColor_x"] = m_eFog_Desc.vFogColor.x;
+	Out_Json["Fog"]["vFogColor_y"] = m_eFog_Desc.vFogColor.y;
+	Out_Json["Fog"]["vFogColor_z"] = m_eFog_Desc.vFogColor.z;
+	Out_Json["Fog"]["vFogColor_w"] = m_eFog_Desc.vFogColor.w;
+
+	Out_Json["HDR"]["bHDR_Active"] = m_eHDR_Desc.bHDR_Active;
+	Out_Json["HDR"]["fmax_white"] = m_eHDR_Desc.fmax_white;
+
+	Out_Json["Anti"]["bFXAA_Active"] = m_eAnti_Desc.bFXAA_Active;
+
+	Out_Json["HSV"]["bScreen_Active"] = m_eHSV_Desc.bScreen_Active;
+	Out_Json["HSV"]["fFinal_Saturation"] = m_eHSV_Desc.fFinal_Saturation;
+	Out_Json["HSV"]["fFinal_Brightness"] = m_eHSV_Desc.fFinal_Brightness;
+
+	Out_Json["Radial"]["bRadial_Active"] = m_eRadial_Desc.bRadial_Active;
+	Out_Json["Radial"]["fRadial_Quality"] = m_eRadial_Desc.fRadial_Quality;
+	Out_Json["Radial"]["fRadial_Power"] = m_eRadial_Desc.fRadial_Power;
+
+	Out_Json["DOF"]["bDOF_Active"] = m_eDOF_Desc.bDOF_Active;
+	Out_Json["DOF"]["fFocusDistance"] = m_eDOF_Desc.fFocusDistance;
+	Out_Json["DOF"]["fFocusRange"] = m_eDOF_Desc.fFocusRange;
+
+	CJson_Utility::Save_Json(path.c_str(), Out_Json);
+
+}
+
 #pragma endregion
 
 #pragma region [LAYER] : Object Shader
@@ -497,7 +584,7 @@ void CWindow_ShaderTool::Select_Level()
 {
 	ImGui::SeparatorText(" Select Level ");
 	/* 레벨셋팅 - 어떤레벨에 대한 셋팅을할것인지 지정 */
-	const char* items[] = { "None", "GamePlay", "Intro", "Intro Boss", "SnowMountain", "Larva" };
+	const char* items[] = { "None", "GamePlay", "Intro", "Intro Boss", "SnowMountain", "Lava" };
 	static int item_current_idx = 0; // Here we store our selection data as an index.
 	const char* combo_preview_value = items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
 	if (ImGui::BeginCombo(" ", combo_preview_value))
@@ -515,16 +602,26 @@ void CWindow_ShaderTool::Select_Level()
 					break;
 				case 1: // GamePlay
 					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
+					m_eCurrLevel_Enum = LEVEL::LEVEL_GAMEPLAY;
+					m_eCurrLevel_String = "LEVEL_GAMEPLAY";
 					break;
 				case 2: // Intro
 					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
+					m_eCurrLevel_Enum = LEVEL::LEVEL_INTRO;
+					m_eCurrLevel_String = "LEVEL_INTRO";
 					break;
 				case 3: //Intro Boss 
 					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1BossAddLight_MapData.json";
+					m_eCurrLevel_Enum = LEVEL::LEVEL_INTRO_BOSS;
+					m_eCurrLevel_String = "LEVEL_INTRO_BOSS";
 					break;
 				case 4:
+					m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAIN;
+					m_eCurrLevel_String = "LEVEL_SNOWMOUNTAIN";
 					break;
 				case 5:
+					m_eCurrLevel_Enum = LEVEL::LEVEL_LAVA;
+					m_eCurrLevel_String = "LEVEL_LAVA";
 					break;
 				}
 			}
@@ -791,6 +888,8 @@ HRESULT CWindow_ShaderTool::Save_Function(string strPath, string strFileName)
 
 HRESULT CWindow_ShaderTool::Load_Function(string strPath, string strFileName)
 {
+	__super::Load_Function(strPath, strFileName);
+
 	return S_OK;
 }
 
@@ -803,5 +902,6 @@ _bool CWindow_ShaderTool::Write_Json(json& Out_Json)
 
 	return _bool();
 }
+
 
 #pragma endregion

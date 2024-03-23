@@ -61,6 +61,10 @@ namespace Client
 	#define WEAPON_PUNCH_L					TEXT("Weapon_Punch_L")
 	#define WEAPON_PUNCH_R					TEXT("Weapon_Punch_R")
 	#define WEAPON_WINCHESTER				TEXT("Weapon_Winchester")
+	#define WEAPON_KICK						TEXT("Weapon_Kick")
+	#define WEAPON_ZAPPER					TEXT("Weapon_Zapper")
+
+
 
 
 
@@ -72,23 +76,25 @@ namespace Client
 		PLAYER_ATTACK,
 		MONSTER_ATTACK,
 		WEAKNESS,
-		EDIT_NAVIMESH,
-		DYNAMIC_PROP,
-		BOSS_DYNAMIC_PROP,
-		TRIGGER,
-		LADDER_UP,
-		LADDER_DOWN,
-		DOOR,
-		ELEVATOR,
-		CHECKPOINT,
-		PLAYER_BATCOL,
-		ITEM,
-		ONLY_VIEW,
-		CHECK_DIR,
-		INTERIOR,
+		PLAYER_PARRYING,
 		INTERACT,
 		PICKING_INSTANCE,
-		PICKING_MESH,
+		
+		//EDIT_NAVIMESH,
+		//DYNAMIC_PROP,
+		//BOSS_DYNAMIC_PROP,
+		//TRIGGER,
+		//LADDER_UP,
+		//LADDER_DOWN,
+		//DOOR,
+		//ELEVATOR,
+		//CHECKPOINT,
+		//PLAYER_BATCOL,
+		//ITEM,
+		//ONLY_VIEW,
+		//CHECK_DIR,
+		//INTERIOR,
+		//PICKING_MESH,
 		LAYER_END
 	};
 

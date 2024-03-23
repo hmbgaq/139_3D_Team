@@ -87,6 +87,22 @@ HRESULT CUI_EnemyFrame_Shard::Render()
 	return S_OK;
 }
 
+void CUI_EnemyFrame_Shard::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_EnemyFrame_Shard::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_EnemyFrame_Shard::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_EnemyFrame_Shard::UI_Exit(_float fTimeDelta)
+{
+}
+
 void CUI_EnemyFrame_Shard::Set_TargetPosition(_vector vTargetPosition)
 {
 	m_vTargetPosition = vTargetPosition;

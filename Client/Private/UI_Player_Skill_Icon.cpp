@@ -83,6 +83,22 @@ HRESULT CUI_Player_Skill_Icon::Render()
 	return S_OK;
 }
 
+void CUI_Player_Skill_Icon::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI_Player_Skill_Icon::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI_Player_Skill_Icon::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI_Player_Skill_Icon::UI_Exit(_float fTimeDelta)
+{
+}
+
 HRESULT CUI_Player_Skill_Icon::Ready_Components()
 {
 	//! For.Com_Shader

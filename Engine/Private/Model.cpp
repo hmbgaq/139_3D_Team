@@ -425,26 +425,34 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;
 
-	for (auto& pTexture : m_Materials[iMaterialIndex].pMtrlTextures)
+	MATERIAL_DESC& material = m_Materials[iMaterialIndex];
+
+	for (_int i = 0; i < (_int)AI_TEXTURE_TYPE_MAX; ++i)
 	{
-		if (nullptr == pTexture)
+		if (nullptr == material.pMtrlTextures[i])
 			continue;
 
-		for (_int i = 0; i < (_int)AI_TEXTURE_TYPE_MAX; ++i)
+		switch (i)
 		{
-			switch (i) 
-			{
-			case (_int)aiTextureType_DIFFUSE:
-				Bind_ShaderResource(pShader, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-				break;
-			case (_int)aiTextureType_SPECULAR:
-				Bind_ShaderResource(pShader, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-				break;
-			case (_int)aiTextureType_NORMALS:
-				Bind_ShaderResource(pShader, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-				break;
-			}
+		case (_int)aiTextureType_DIFFUSE:
+			Bind_ShaderResource(pShader, "g_DiffuseTexture", iMeshIndex, aiTextureType_DIFFUSE);
+			break;
+		case (_int)aiTextureType_SPECULAR:
+			Bind_ShaderResource(pShader, "g_SpecularTexture", iMeshIndex, aiTextureType_SPECULAR);
+			break;
+		case (_int)aiTextureType_EMISSIVE:
+			Bind_ShaderResource(pShader, "g_EmissiveTexture", iMeshIndex, aiTextureType_EMISSIVE);
+			break;
+		case (_int)aiTextureType_NORMALS:
+			Bind_ShaderResource(pShader, "g_NormalTexture", iMeshIndex, aiTextureType_NORMALS);
+			break;
+		case (_int)aiTextureType_OPACITY:
+			Bind_ShaderResource(pShader, "g_OpacityTexture", iMeshIndex, aiTextureType_OPACITY);
+			break;
+
 		}
+
+		//material.pMtrlTextures[6].
 	}
 
 	return S_OK;
@@ -452,6 +460,7 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 
 HRESULT CModel::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType)
 {
+
 	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;
@@ -680,6 +689,11 @@ _uint CModel::Get_BoneNum(const _char* _szName)
 	return _uint();
 }
 
+_uint CModel::Get_CurrentKeyFrames(_uint iIndex)
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentKeyFrames(iIndex);
+}
+
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
 {
 	m_iNumMeshes = m_pAIScene.Get_NumMeshes();
@@ -717,10 +731,15 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			_splitpath_s(strModelFilePath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
 
-			//aiString			strPath;
-			//if (FAILED(pAIMaterial.GetTexture(aiTextureType(j), 0, &strPath)))
-			//	continue;
-
+			if (j == (size_t)aiTextureType_SPECULAR)/* ORM텍스쳐 있는데 ASSIMP 에 SPECULAR로 안잡히는 모델이 많아서 강제로 넣어주는중 */
+			{
+				string strPath = pAIMaterial.Get_Textures((_uint)j);
+				if (strPath == "")
+				{
+					m_bSpecularMissed = true;
+				}
+			}
+			
 			string strPath = pAIMaterial.Get_Textures((_uint)j);
 			if (strPath == "")
 				continue;
@@ -752,6 +771,29 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			if (nullptr == MaterialDesc.pMtrlTextures[j])	
 				return E_FAIL;
+
+
+			if (j == (size_t)aiTextureType_NORMALS && m_bSpecularMissed)
+			{
+				string ORMfileName(szFileName);
+				ORMfileName.pop_back();
+				ORMfileName += "ORM";
+
+				_char		szORMTmp[MAX_PATH] = "";
+				strcpy_s(szORMTmp, szDrive);
+				strcat_s(szORMTmp, szDirectory);
+				strcat_s(szORMTmp, ORMfileName.c_str());
+				strcat_s(szORMTmp, szEXT);
+
+				_tchar		szORMFullPath[MAX_PATH] = TEXT("");
+
+				MultiByteToWideChar((_uint)CP_ACP, 0, szORMTmp, (_int)strlen(szORMTmp), szORMFullPath, (_int)MAX_PATH);
+
+				MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = CTexture::Create(m_pDevice, m_pContext, szORMFullPath, 1, true);
+
+				//if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR])
+				//	cout << " Create ORM Texture Failure" << endl;
+			}
 		}
 
 		m_Materials.push_back(MaterialDesc);

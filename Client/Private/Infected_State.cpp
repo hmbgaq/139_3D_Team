@@ -195,6 +195,16 @@ CState<CInfected>* CInfected_State::Finisher_State(CInfected* pActor, _float fTi
 	return nullptr;
 }
 
+CState<CInfected>* CInfected_State::Electrocute_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (pActor->Is_Animation_End())
+	{
+		return Normal(pActor, fTimeDelta, _iAnimIndex);
+	}
+
+	return nullptr;
+}
+
 /* 중앙제어 */
 CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
@@ -245,6 +255,7 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
+		pActor->Set_MonsterAttackState(false);
 		return new CInfected_Walk_F();
 		break;
 
@@ -268,6 +279,8 @@ CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _u
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
+
+			pActor->Set_MonsterAttackState(false);
 			return new CInfected_Run_F();
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
@@ -298,6 +311,8 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 		/* fDist = 현재 플레이어와의 거리 */
 		if (0.f <= fDist && fDist < Info.fAttack_Distance - 1.5f) // 0 ~ 공격사거리 - 1.5
 		{
+			pActor->Set_MonsterAttackState(true);
+
 			switch (iActNumber)
 			{
 			case 1:
@@ -316,6 +331,8 @@ CState<CInfected>* CInfected_State::Attack(CInfected* pActor, _float fTimeDelta,
 		}
 		else if (Info.fAttack_Distance - 1.5f <= fDist && fDist <= Info.fAttack_Distance) // 공격사거리 - 1.5 ~ 공격사거리
 		{
+			pActor->Set_MonsterAttackState(true);
+
 			switch (iActNumber)
 			{
 			case 1:

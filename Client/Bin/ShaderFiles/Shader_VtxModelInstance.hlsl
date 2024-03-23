@@ -1,22 +1,36 @@
 #include "Shader_Defines.hlsli"
 
-matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float4 g_vCamPosition;
+float g_fCamFar;
+float g_fLightFar;
+float g_fTimeDelta;
+vector g_vCamLook;
+vector g_vPlayerPosition;
+float	g_fDissolveRatio;
 
+/* =========== Texture =========== */
 Texture2D	g_DiffuseTexture;
 Texture2D	g_NormalTexture;
+Texture2D	g_SpecularTexture;
+Texture2D	g_EmissiveTexture;
+Texture2D	g_OpacityTexture;
 
 Texture2D	g_MaskTexture;
-Texture2D   g_SpecularTexture;
 Texture2D	g_DissolveTexture;
 Texture2D	g_DissolveDiffTexture;
 
-vector      g_vCamPosition;
-vector      g_vCamLook;
-vector      g_vPlayerPosition;
-float		g_fCamFar;
-float		g_fDissolveRatio;
+/* =========== Value =========== */
+float g_fDissolveWeight; /* Dissolve  */
 
+float4 g_vLineColor; /* OutLine */
+float g_LineThick; /* OutLine */
 
+float3 g_vBloomPower = { 0.f, 0.f, 0.f }; /* Bloom */
+float4 g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
+float g_fRimPower = 5.f; /* RimLight */
+
+/* ------------------- ------------------- */ 
 struct VS_IN
 {
 	float3		vPosition	: POSITION;
@@ -40,6 +54,26 @@ struct VS_OUT
 	float4		vProjPos	: TEXCOORD2;
 };
 
+struct PS_IN
+{
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexUV : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
+};
+
+struct PS_OUT
+{
+    float4 vDiffuse			: SV_TARGET0;
+    float4 vNormal			: SV_TARGET1;
+    float4 vDepth			: SV_TARGET2;
+    float4 vORM				: SV_TARGET3;
+    float4 vRimBloom		: SV_TARGET4; /* Rim + Bloom */
+    
+};
+
+/* ------------------- Base Vertex Shader -------------------*/
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
@@ -68,38 +102,21 @@ VS_OUT VS_MAIN(VS_IN In)
 
 // 래스터라이즈(픽셀정볼르 생성한다. )
 
-struct PS_IN
-{
-	float4		vPosition : SV_POSITION;
-	float4		vNormal : NORMAL;
-	float2		vTexUV : TEXCOORD0;
-	float4		vWorldPos : TEXCOORD1;
-	float4		vProjPos : TEXCOORD2;
-};
-
-struct PS_OUT
-{	
-	vector		vDiffuse : SV_TARGET0;
-	vector		vNormal : SV_TARGET1;
-	vector		vDepth : SV_TARGET2;
-    
-};
+/* ------------------- Base Pixel Shader (0) -------------------*/
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	
     clip(Out.vDiffuse.a - 0.1f);
 	
-	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
-
-    //if (Out.vDiffuse.a == 0)
-    //    discard;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
 	
-	
-        return Out;
+    return Out;
 }
 
 ////Normal Mapping ///////////

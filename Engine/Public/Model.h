@@ -130,6 +130,10 @@ public:
 	vector<CBone*>*			Get_Bones();
 	_uint					Get_BoneNum(const _char* szName);
 
+
+public:
+	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
+
 private:
 	CMyAssimp				m_MyAssimp;
 	CMyAIScene				m_pAIScene;
@@ -171,6 +175,9 @@ private:
 
 	_float					m_fModelWidth = 0.f;
 	_float					m_fModelHeight = 0.f;
+
+	// PBR
+	_bool					m_bSpecularMissed = { false };
 
 public:
 	typedef vector<CBone*>	BONES;

@@ -43,8 +43,8 @@ Texture2D g_AimRight_Texture;
 
 /* CoolDown */
 Texture2D g_CoolDownTexture;
-float2 g_Center;
-float g_Radius;
+float2    g_Center;
+float     g_Radius;
 
 texture2D g_DissolveTexture;
 texture2D g_AlphaTexture;
@@ -54,7 +54,8 @@ texture2D g_AlphaTexture;
 float g_fFrameTime;
 float3 g_vScrollSpeeds;
 float3 g_vScales;
-
+float4 g_vColor_Mul;
+int g_iColorMode;
 
 float2 g_vDistortion1;
 float2 g_vDistortion2;
@@ -63,6 +64,38 @@ float g_fDistortionScale;
 float g_fDistortionBias;
 // =======
 
+float4 Calculation_ColorBlend(float4 vDiffuse, float4 vBlendColor, int g_iColorMode)
+{
+    float4 vResault = vDiffuse;
+   
+    if (0 == g_iColorMode)
+    {
+      // 곱하기
+        vResault = vResault * vBlendColor;
+    }
+    else if (1 == g_iColorMode)
+    {
+      // 스크린
+        vResault = 1.f - ((1.f - vResault) * (1.f - vBlendColor));
+    }
+    else if (2 == g_iColorMode)
+    {
+      // 오버레이
+        vResault = max(vResault, vBlendColor);
+    }
+    else if (3 == g_iColorMode)
+    {
+      // 더하기
+        vResault = vResault + vBlendColor;
+    }
+    else if (4 == g_iColorMode)
+    {
+      // 번(Burn)
+        vResault = vResault + vBlendColor - 1.f;
+    }
+ 
+    return vResault;
+}
 
 /* 정점의 변환(월드변환, 뷰변환, 투영변환.)을 수행한다. */
 /* 정점의 구성정보를 추가, 삭제등의 변경을 수행한다. */
@@ -366,7 +399,8 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In) // 6
 
     vFireColor.a = vAlphaColor;
 
-    Out.vColor = vFireColor;
+       // 컬러 혼합
+    Out.vColor = Calculation_ColorBlend(vFireColor, g_vColor_Mul, g_iColorMode);
     
     return Out;
 }

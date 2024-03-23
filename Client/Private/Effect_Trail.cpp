@@ -169,16 +169,16 @@ HRESULT CEffect_Trail::Ready_Components()
 
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])
 		{
-			/* For.Com_Mask */
-			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
+			/* For.Com_Mask => ! LEVEL_STATIC 으로 변경 ! */
+			if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_MASK],
 				TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
 				return E_FAIL;
 		}
 
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
 		{
-			/* For.Com_Noise */
-			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
+			/* For.Com_Noise => ! LEVEL_STATIC 으로 변경 ! */
+			if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_NOISE],
 				TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE]))))
 				return E_FAIL;
 		}
