@@ -289,6 +289,11 @@ void CCharacter::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimS
 	m_pBody->Set_Animation(_iNextAnimation, _eAnimState, _bIsTransition, _bUseAnimationPos, iTargetKeyFrameIndex);
 }
 
+void CCharacter::Set_AnimState(CModel::ANIM_STATE _eAnimState)
+{
+	m_pBody->Set_AnimState(_eAnimState);
+}
+
 _bool CCharacter::Is_Animation_End()
 {
 	return m_pBody->Is_Animation_End();

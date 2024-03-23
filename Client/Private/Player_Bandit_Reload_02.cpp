@@ -19,7 +19,8 @@ CState<CPlayer>* CPlayer_Bandit_Reload_02::Update(CPlayer* pActor, _float fTimeD
 
 	if (pActor->Is_UpperAnimation_End())
 	{
-		return new CPlayer_Revolver_WeaponHolster();
+		return Normal(pActor, fTimeDelta, g_iAnimIndex);
+		//return new CPlayer_Revolver_WeaponHolster();
 	}
 
 	return nullptr;

@@ -153,6 +153,11 @@ void CBody::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimState,
 	m_pModelCom->Set_UseAnimationPos(_bUseAnimationPos);
 }
 
+void CBody::Set_AnimState(CModel::ANIM_STATE _eAnimState)
+{
+	m_pModelCom->Set_AnimState(_eAnimState);
+}
+
 _bool CBody::Is_Animation_End()
 {
 	return m_pModelCom->Is_AnimEnd();

@@ -41,7 +41,7 @@ HRESULT CBullet_Revolver::Initialize(void* pArg)
 
 	//m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 4.5f;
+	m_fDamage = 4.f;
 
 	// ÀÌÆåÆ® »ý¼º
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
@@ -57,29 +57,6 @@ void CBullet_Revolver::Priority_Tick(_float fTimeDelta)
 void CBullet_Revolver::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
-	//m_pTransformCom->Go_Straight(fTimeDelta);
-
-	//m_pTransformCom->Go_Straight(fTimeDelta);
-
-	//_float fDistance = m_pTransformCom->Get_Speed();// / 2.f;
-	//Search_Target(LAYER_MONSTER, fDistance);
-	//Search_Target(LAYER_BOSS, fDistance);
-	//
-	//Look_At_Target();
-	//
-	//if (m_pTarget)
-	//{
-	//	//_float fDiff = Calc_Distance(m_pTarget->Get_Position());
-	//	//m_pTransformCom->Set_Speed(fDiff);
-	//	Set_Position(m_pTarget->Get_WeaknessPos());
-	//}
-	//else 
-	//{
-	//	m_pTransformCom->Go_Straight(fTimeDelta);
-	//}
-
-
 }
 
 void CBullet_Revolver::Late_Tick(_float fTimeDelta)
@@ -156,7 +133,7 @@ HRESULT CBullet_Revolver::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER_ATTACK);
-	BoundingDesc.fRadius = { 0.4f };
+	BoundingDesc.fRadius = { 0.1f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),

@@ -37,6 +37,11 @@ void CPlayer_Weapon_Revolver::Priority_Tick(_float fTimeDelta)
 void CPlayer_Weapon_Revolver::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	string path = "../Bin/DataFiles/Data_Weapon/Player/Revolver/Revolver.json";
+	json In_Json;
+	CJson_Utility::Load_Json(path.c_str(), In_Json);
+	m_pTransformCom->Load_FromJson(In_Json);
 }
 
 void CPlayer_Weapon_Revolver::Late_Tick(_float fTimeDelta)

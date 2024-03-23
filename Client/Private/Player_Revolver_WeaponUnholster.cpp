@@ -13,6 +13,8 @@ void CPlayer_Revolver_WeaponUnholster::Initialize(CPlayer* pActor)
 	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
 	pActor->Set_Splitted(true);
 
+	pActor->Set_Weapon_Enable(PLAYER_WEAPON_REVOLVER, true);
+
 	//pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
 }
 
@@ -42,5 +44,5 @@ CState<CPlayer>* CPlayer_Revolver_WeaponUnholster::Update(CPlayer* pActor, _floa
 void CPlayer_Revolver_WeaponUnholster::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
-	//pActor->Set_Splitted(false);
+	pActor->Set_Splitted(false);
 }

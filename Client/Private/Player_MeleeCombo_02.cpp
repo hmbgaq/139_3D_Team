@@ -9,7 +9,7 @@ void CPlayer_MeleeCombo_02::Initialize(CPlayer* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 
-	CWeapon* pWeapon = pActor->Get_Weapon(WEAPON_PUNCH_L);
+	CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_PUNCH_L);
 
 	pWeapon
 		->Set_Damage(10)
@@ -27,7 +27,7 @@ CState<CPlayer>* CPlayer_MeleeCombo_02::Update(CPlayer* pActor, _float fTimeDelt
 
 	if (false == m_bFlags[0] && pActor->Is_Inputable_Front(5))
 	{
-		CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(WEAPON_PUNCH_L, true);
+		CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_L, true);
 		m_bFlags[0] = true;
 	}
 
@@ -38,7 +38,7 @@ CState<CPlayer>* CPlayer_MeleeCombo_02::Update(CPlayer* pActor, _float fTimeDelt
 
 	if (false == m_bFlags[1] && pActor->Is_Inputable_Front(13))
 	{
-		CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(WEAPON_PUNCH_L, false);
+		CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_L, false);
 		m_bFlags[1] = true;
 	}
 
@@ -54,7 +54,7 @@ void CPlayer_MeleeCombo_02::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
 
-	CWeapon* pWeapon = pActor->Set_Weapon_Enable(WEAPON_PUNCH_L, false);
+	CWeapon* pWeapon = pActor->Set_Weapon_Enable(PLAYER_WEAPON_PUNCH_L, false);
 	pActor->Set_Target(nullptr);
 	//pWeapon->Set_Enable(false);
 }

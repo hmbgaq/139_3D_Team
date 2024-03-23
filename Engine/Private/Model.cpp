@@ -535,6 +535,11 @@ void CModel::Reset_Animation(_int iAnimIndex)
 		m_Animations[iAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
 }
 
+void CModel::Set_AnimState(CModel::ANIM_STATE _eAnimState)
+{
+	m_eAnimState = _eAnimState;
+}
+
 void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
 {
 	m_iUpperAnimIndex = _iAnimationIndex;

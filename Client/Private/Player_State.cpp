@@ -395,37 +395,38 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 {
 	CState<CPlayer>* pState = { nullptr };
 
-	pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
+	{
+		pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
 
-	pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+		pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
 
-	//pState = Crossbow(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
+		//pState = Crossbow(pActor, fTimeDelta, _iAnimIndex);
+		//if (pState)	return pState;
 
-	pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+		pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
 
-	//pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
+		//pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
+		//if (pState)	return pState;
 
-	//pState = Gatilng(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
+		//pState = Gatilng(pActor, fTimeDelta, _iAnimIndex);
+		//if (pState)	return pState;
 
-	//pState = FlameBelcher(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
+		//pState = FlameBelcher(pActor, fTimeDelta, _iAnimIndex);
+		//if (pState)	return pState;
 
-	//pState = Grenade(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
+		//pState = Grenade(pActor, fTimeDelta, _iAnimIndex);
+		//if (pState)	return pState;
 
-
+		pState = Attack(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
 
 
 	pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
-
-	pState = Attack(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
 	pState = Run(pActor, fTimeDelta, _iAnimIndex);
