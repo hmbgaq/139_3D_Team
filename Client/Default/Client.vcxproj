@@ -477,6 +477,7 @@
     <ClInclude Include="..\Public\Mother_ShakeTreeEnd.h" />
     <ClInclude Include="..\Public\Mother_ShakeTreeLoop.h" />
     <ClInclude Include="..\Public\Mother_ShakeTreeStart.h" />
+    <ClInclude Include="..\Public\Mother_Spawn.h" />
     <ClInclude Include="..\Public\Mother_SpittingEnd.h" />
     <ClInclude Include="..\Public\Mother_SpittingLoop.h" />
     <ClInclude Include="..\Public\Mother_SpittingStart.h" />
@@ -1461,6 +1462,7 @@
     <ClCompile Include="..\Private\Mother_ShakeTreeEnd.cpp" />
     <ClCompile Include="..\Private\Mother_ShakeTreeLoop.cpp" />
     <ClCompile Include="..\Private\Mother_ShakeTreeStart.cpp" />
+    <ClCompile Include="..\Private\Mother_Spawn.cpp" />
     <ClCompile Include="..\Private\Mother_SpittingEnd.cpp" />
     <ClCompile Include="..\Private\Mother_SpittingLoop.cpp" />
     <ClCompile Include="..\Private\Mother_SpittingStart.cpp" />

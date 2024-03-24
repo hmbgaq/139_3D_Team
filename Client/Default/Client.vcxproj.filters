@@ -3166,6 +3166,9 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Cross\End">
       <UniqueIdentifier>{0bb192d1-5314-49c0-aceb-4fb4fec6056b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\8.Spawn">
+      <UniqueIdentifier>{e3cff503-e0a0-459f-bb0b-8eb5729f2feb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -6351,6 +6354,9 @@
     <ClInclude Include="..\Public\Son_CrossAttackEnd.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Cross\End</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Mother_Spawn.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\8.Spawn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8985,6 +8991,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Son_CrossAttackEnd.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Cross\End</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_Spawn.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\8.Spawn</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

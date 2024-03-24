@@ -89,20 +89,20 @@ void CSon::Tick(_float fTimeDelta)
 		m_pActor->Update_State(fTimeDelta);
 	}
 	//cout << "introBossHP:" << m_iHp << endl;
-	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
-
-	cout << "Son : " << fAngle << endl;
-	if (m_bLookAt == true)
-	{
-
-		if (0 <= fAngle && fAngle <= 45)
-			Look_At_Target_Lerp(fTimeDelta);
-		else if (-45 <= fAngle && fAngle < 0)
-			Look_At_Target_Lerp(fTimeDelta);
-
-		/*m_bLookAt = false;*/
-
-	}
+	//_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
+	//
+	////cout << "Son : " << fAngle << endl;
+	//if (m_bLookAt == true)
+	//{
+	//
+	//	if (0 <= fAngle && fAngle <= 45)
+	//		Look_At_Target_Lerp(fTimeDelta);
+	//	else if (-45 <= fAngle && fAngle < 0)
+	//		Look_At_Target_Lerp(fTimeDelta);
+	//
+	//	/*m_bLookAt = false;*/
+	//
+	//}
 
 }
 
@@ -130,13 +130,13 @@ HRESULT CSon::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Son"), BodyDesc)))
 		return E_FAIL;
 
-	CWeapon::WEAPON_DESC		WeaponDesc = {};
-	//FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Son_Weapon_Hand"), "RightHandIK", WeaponDesc, TEXT("Weapon_hand_R")));
-
-	
-
-	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_hand_R"));
-	m_pWeapon_Punch_R->Set_Enable(false);
+	//CWeapon::WEAPON_DESC		WeaponDesc = {};
+	////FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Son_Weapon_Hand"), "RightHandIK", WeaponDesc, TEXT("Weapon_hand_R")));
+	//
+	//
+	//
+	//CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_hand_R"));
+	//m_pWeapon_Punch_R->Set_Enable(false);
 
 
 	return S_OK;

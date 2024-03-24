@@ -3,7 +3,7 @@
 #include "Body_Mother.h"
 
 // #include "Mother_Idle.h"
-// #include "Mother_Spawn1.h"
+#include "Mother_Spawn.h"
 // #include "Mother_HitCenter.h"
 // #include "Mother_HitLeft.h"
 // #include "Mother_HitRight.h"
@@ -56,7 +56,7 @@ HRESULT CMother::Initialize(void* pArg)
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CMother>(this);
-		//m_pActor->Set_State(new CMother_Spawn1);
+		m_pActor->Set_State(new CMother_Spawn);
 	}
 	//HP
 	m_iMaxHp = 1200;
