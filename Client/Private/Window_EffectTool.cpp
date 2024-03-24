@@ -3996,7 +3996,16 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 	{
 		if (ImGui::Button("Create Floor"))	// ¶¥¹Ù´Ú »ý¼º
 		{
-			Ready_Model_Preview(TEXT("Prototype_Component_Model_EffectTool_IntroBoss_Floor"));
+			//Ready_Model_Preview(TEXT("Prototype_Component_Model_EffectTool_IntroBoss_Floor"));
+
+			CModel_Preview::MODEL_PREVIEW_DESC	tDesc = {};
+			tDesc.strProtoTag = { TEXT("Prototype_GameObject_Model_Preview") };
+			tDesc.strModelTag = { TEXT("Prototype_Component_Model_EffectTool_IntroBoss_Floor") };
+
+
+			CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Model_Preview"), TEXT("Prototype_GameObject_Model_Preview"), &tDesc);
+			if (nullptr != pObj)
+				m_pFloor_Preview = dynamic_cast<CModel_Preview*>(pObj);
 		}
 	}
 	else

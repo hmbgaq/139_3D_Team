@@ -101,6 +101,7 @@ public:
 	typedef struct tagParticleDesc
 	{
 		// 업데이트 돌면서 변하는 정보들(저장X)
+		_bool bDie = { FALSE };
 
 		// 시간
 		_float	fTimeAccs = { 0.f };

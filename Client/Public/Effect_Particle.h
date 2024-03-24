@@ -75,9 +75,9 @@ private:
 
 
 private:
-	CShader* m_pShaderCom = { nullptr };
-	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
-	CVIBuffer_Particle* m_pVIBufferCom = { nullptr };
+	CShader*					m_pShaderCom = { nullptr };
+	CTexture*					m_pTextureCom[TEXTURE_END] = { nullptr };
+	CVIBuffer_Particle*			m_pVIBufferCom = { nullptr };
 
 	_bool						m_bSortZ = { FALSE };
 

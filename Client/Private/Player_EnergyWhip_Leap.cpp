@@ -11,8 +11,7 @@ void CPlayer_EnergyWhip_Leap::Initialize(CPlayer* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, 15);
 
 	// 이펙트 생성 테스트
-	_float3 vPos = pActor->Get_Position();
-	EFFECT_MANAGER->Create_Effect("Zapper_Dash", "Zapper_Dash_21.json", pActor);
+	EFFECT_MANAGER->Create_Effect("Zapper_Dash", "Zapper_Dash_22.json", pActor);
 }
 
 CState<CPlayer>* CPlayer_EnergyWhip_Leap::Update(CPlayer* pActor, _float fTimeDelta)

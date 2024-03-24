@@ -291,8 +291,10 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 	{
 		// 스케일 러프 사용이 아니면 현재 스케일은 범위 내 랜덤
 		m_vecParticleInfoDesc[iNum].vCurScales.x = SMath::fRandom(m_tBufferDesc.vStartScale.x, m_tBufferDesc.vEndScale.x);
-		m_vecParticleInfoDesc[iNum].vCurScales.x = SMath::fRandom(m_tBufferDesc.vStartScale.y, m_tBufferDesc.vEndScale.y);
-		m_vecParticleInfoDesc[iNum].vCurScales.z = SMath::fRandom(m_tBufferDesc.vStartScale.z, m_tBufferDesc.vEndScale.z);
+		//m_vecParticleInfoDesc[iNum].vCurScales.y = m_vecParticleInfoDesc[iNum].vCurScales.x;  // 비율 고정 /* SMath::fRandom(m_tBufferDesc.vStartScale.y, m_tBufferDesc.vEndScale.y)*/;
+		//m_vecParticleInfoDesc[iNum].vCurScales.z = m_vecParticleInfoDesc[iNum].vCurScales.x;  // 비율 고정 /* SMath::fRandom(m_tBufferDesc.vStartScale.z, m_tBufferDesc.vEndScale.z) */;
+		m_vecParticleInfoDesc[iNum].vCurScales.y = SMath::fRandom(m_tBufferDesc.vStartScale.y, m_tBufferDesc.vEndScale.y); 
+		m_vecParticleInfoDesc[iNum].vCurScales.z = SMath::fRandom(m_tBufferDesc.vStartScale.z, m_tBufferDesc.vEndScale.z);  
 	}
 
 
@@ -623,7 +625,7 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 						}
 						else
 						{
-							//m_vecParticleInfoDesc[i].bDie = TRUE;
+							m_vecParticleInfoDesc[i].bDie = TRUE;
 						}
 					}
 
@@ -656,7 +658,7 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 						}
 						else
 						{
-
+							m_vecParticleInfoDesc[i].bDie = TRUE;
 						}
 					}
 
@@ -684,9 +686,13 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 						}
 						else
 						{
-							//m_vecParticleInfoDesc[i].bDie = TRUE;
+							m_vecParticleInfoDesc[i].bDie = TRUE;
 						}
 					}
+
+				}
+				else if (TORNADO == m_tBufferDesc.eType_Action)
+				{
 
 				}
 	
@@ -981,22 +987,22 @@ const _bool CVIBuffer_Effect_Model_Instance::Check_Sleep(_uint iNum)
 	if (m_vecParticleRigidbodyDesc[iNum].bSleep)
 		return TRUE;
 
-	if (m_tBufferDesc.bUseGravity)
-	{
-		if (m_tBufferDesc.bRecycle)
-		{
-			_float2 vVelocityXZ = { m_vecParticleRigidbodyDesc[iNum].vVelocity.x, m_vecParticleRigidbodyDesc[iNum].vVelocity.z };
-			_float fLengthXZ = XMVectorGetX(XMVector2Length(XMLoadFloat2(&vVelocityXZ)));
+	//if (m_tBufferDesc.bUseGravity)
+	//{
+	//	if (m_tBufferDesc.bRecycle)
+	//	{
+	//		_float2 vVelocityXZ = { m_vecParticleRigidbodyDesc[iNum].vVelocity.x, m_vecParticleRigidbodyDesc[iNum].vVelocity.z };
+	//		_float fLengthXZ = XMVectorGetX(XMVector2Length(XMLoadFloat2(&vVelocityXZ)));
 
-			if (m_tBufferDesc.fSleepThreshold > fLengthXZ)
-			{
-				Sleep(iNum);
-				return TRUE;
-			}
-		}
+	//		if (m_tBufferDesc.fSleepThreshold > fLengthXZ)
+	//		{
+	//			Sleep(iNum);
+	//			return TRUE;
+	//		}
+	//	}
 
-	}
-	else
+	//}
+	//else
 	{
 		_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity)));
 

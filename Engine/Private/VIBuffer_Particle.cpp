@@ -378,7 +378,7 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	{
 		// 스케일 러프 사용이 아니면 현재 스케일은 범위 내 랜덤
 		m_vecParticleInfoDesc[iNum].vCurScales.x = SMath::fRandom(m_tBufferDesc.vMinMaxWidth.x, m_tBufferDesc.vMinMaxWidth.y);
-		m_vecParticleInfoDesc[iNum].vCurScales.y = SMath::fRandom(m_tBufferDesc.vMinMaxHeight.x, m_tBufferDesc.vMinMaxHeight.y);
+		m_vecParticleInfoDesc[iNum].vCurScales.y = m_vecParticleInfoDesc[iNum].vCurScales.x;	// 비율 고정
 	}
 
 
@@ -770,20 +770,32 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 			{
 				pVertices[i].vPosition.y += m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta;	// 이동
 
+
+
 				// 초기화 조건
 				if (m_vecParticleInfoDesc[i].fMaxPosY <= pVertices[i].vPosition.y)	// 현재 y위치가 최대 범위보다 크면 초기화 or 죽음
 				{
 					if (m_tBufferDesc.bRecycle)	// 재사용이 true이면 초기화
 					{
 						
-
+						// 랜덤 값 다시 뽑기
 						ReSet_Info(i);
-						//m_vecParticleInfoDesc[i].fMaxRange = SMath::fRandom(m_tBufferDesc.vMinMaxRange.x, m_tBufferDesc.vMinMaxRange.y);
-						//m_vecParticleInfoDesc[i].fMaxPosY = SMath::fRandom(m_tBufferDesc.vMinMaxPosY.x, m_tBufferDesc.vMinMaxPosY.y);
 
-						pVertices[i].vPosition.y = m_tBufferDesc.vMinMaxPosY.x; // 최저높이로 초기화
+						_vector		vDir = Make_Dir(i);						// 방향 만들기
+						m_vecParticleShaderInfoDesc[i].vDir = vDir;			// 쉐이더에 전달할 방향 저장
 
-						 // 시간 초기화
+						if (m_tBufferDesc.bReverse)
+						{
+							// 리버스일 경우
+							vDir = vDir * m_vecParticleInfoDesc[i].fMaxRange;
+						}
+
+						// 초기위치로 세팅 : 센터 + 방향 위치로 세팅
+						m_vecParticleInfoDesc[i].vCenterPositions.y = m_tBufferDesc.vMinMaxPosY.x;
+						XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + vDir);
+
+
+						// 시간 초기화
 						m_vecParticleInfoDesc[i].Reset_ParticleTimes();
 					}
 					else
