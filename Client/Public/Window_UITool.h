@@ -159,7 +159,8 @@ public:
 	void						UI_Info();
 	HRESULT						Menu_Info();
 	void						Curr_Info();
-	CUI* m_pCurrSelectUI = nullptr;
+	CUI*						m_pCurrSelectUI = nullptr;
+	CGameObject*				m_pCurrSelectGameObject = nullptr;
 #pragma endregion Info End
 
 #pragma region	Common
@@ -306,6 +307,7 @@ private:
 
 	_int m_iOldIndex = -1;
 	_bool m_bProj_Change = false;
+	_int	m_iRenderGroup = 0;
 #pragma region											최소, 최대 값
 // 크기
 	_float	fMin_Scale = -5000.0001f;	// 최소
@@ -413,7 +415,7 @@ private: /* enum */
 private: /* Value */
 	_float						m_fChangeValue = 0.1f;
 	_int						m_iChangeType = (_int)CHANGETYPE::NONE;
-	_int						m_iRenderGroup = (_int)CRenderer::RENDER_UI;
+	//_int						m_iRenderGroup = (_int)CRenderer::RENDER_UI;
 
 private: /* bool */
 	_bool						m_bOpenTexture = true;

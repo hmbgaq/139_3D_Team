@@ -19,20 +19,24 @@ public:
 	// 키프레임 구조체
 	typedef struct tagUIKeyframe
 	{
-		_float	fTime = 0.f;					// 키프레임의 시간 (0.0f ~ MaxTime 범위)
-		_float	fValue = 0.f;					// 애니메이션 값 (크기, 회전, 이동 등)
-		_float	fAnimSpeed = 1.f;				// 애니메이션 재생 속도
+		_float	fTime = 0.f;						// 키프레임의 시간 (0.0f ~ MaxTime 범위)
+		_float	fValue = 0.f;						// 애니메이션 값 (크기, 회전, 이동 등)
+		_float	fAnimSpeed = 1.f;					// 애니메이션 재생 속도
 
-		_int	iType = 0;						// 애니메이션 타입 (0: 크기, 1: 회전, 2: 이동)
+		_int	iType = 0;							// 애니메이션 타입 (0: 크기, 1: 회전, 2: 이동)
 
-		_bool	isEaseIn = false;				// Ease In 설정 (True 또는 False)
-		_bool	isEaseOut = false;				// Ease Out 설정 (True 또는 False)
+		_bool	isEaseIn = false;					// Ease In 설정 (True 또는 False)
+		_bool	isEaseOut = false;					// Ease Out 설정 (True 또는 False)
 
-		_int	iTexureframe = 0;				// 텍스처 변경 값
+		_int	iTexureframe = 0;					// 텍스처 변경 값
 
 		_float2	vScale = { 50.f, 50.f };			// 크기를 담을 그릇
-		_float	fRot = 0.f;						// 회전을 담을 그릇
-		_float2	vPos = { 10.f, 10.f };			// 위치를 담을 그릇
+		_float	fRot = 0.f;							// 회전을 담을 그릇
+		_float2	vPos = { 10.f, 10.f };				// 위치를 담을 그릇
+		
+		_float3	vWorld_Scale = { 0.02f, 0.02f, 0.1f };		// 회전을 담을 그릇
+		_float3	vWorld_Rot = { 0.f, 0.f, 0.f };		// 회전을 담을 그릇
+		_float3	vWorld_Pos = { 0.f, 0.f, 0.1f };	// 위치를 담을 그릇
 
 		_float2	vKeyFramePos = { 0.00000000f, 0.00000000f };	// 툴에서의 해당 키프레임 위치
 
@@ -187,6 +191,9 @@ public:
 		_int		iNoiseNum = 0;
 
 		MODE_COLOR eColorMode = MODE_COLOR::MODE_COLOR_END;
+		//CRenderer::RENDERGROUP eRenderGroup = CRenderer::RENDER_UI;
+		_int		iRenderGroup = (_int)CRenderer::RENDER_UI;
+
 	}UI_DESC;
 
 	enum UI_BUTTON_STATE
@@ -238,6 +245,11 @@ public: /* ============================== Get / Set ============================
 	void			Set_Tool(_bool bTool) { m_bTool = bTool; }
 	_bool			m_bTool = true;
 
+	/* RenderGroup */
+	void						Set_RenderGroup(CRenderer::RENDERGROUP eGroup) { m_tUIInfo.iRenderGroup = eGroup; }
+	//CRenderer::RENDERGROUP*		Get_RenderGroup() {	return &m_tUIInfo.eRenderGroup; }
+	_int*						Get_RenderGroup() {	return &m_tUIInfo.iRenderGroup; }
+
 //protected:
 public:
 	virtual HRESULT	Set_ParentTransform(CTransform* pParentTransformCom);
@@ -263,10 +275,10 @@ public: /* ============================== Basic =============================== 
 	virtual void	Tick(_float fTimeDelta);
 
 	/* State */
-	virtual void	UI_Ready(_float fTimeDelta) = 0;
-	virtual void	UI_Enter(_float fTimeDelta) = 0;
-	virtual void	UI_Loop(_float fTimeDelta) = 0;
-	virtual void	UI_Exit(_float fTimeDelta) = 0;
+	virtual void	UI_Ready(_float fTimeDelta);
+	virtual void	UI_Enter(_float fTimeDelta);
+	virtual void	UI_Loop(_float fTimeDelta);
+	virtual void	UI_Exit(_float fTimeDelta);
 
 	virtual void	UI_AppearTick(_float fTimeDelta);
 	virtual void	UI_DisappearTick(_float fTimeDelta);
@@ -362,13 +374,13 @@ public: /* =========================== Animation ============================== 
 	_float			fFrameTimeDelta, fCurFrameTimeDelta;
 
 	// 크기
-	_float			fSizeX_Delta, fSizeY_Delta;
+	_float			fSizeX_Delta, fSizeY_Delta, fSizeZ_Delta;
 
 	// 회전
 	_float			fRotX_Delta, fRotY_Delta, fRotZ_Delta;
 
 	// 이동
-	_float			fPosX_Delta, fPosY_Delta;
+	_float			fPosX_Delta, fPosY_Delta, fPosZ_Delta;
 
 	// 알파
 	_float			fAlpha_Delta;

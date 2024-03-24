@@ -76,7 +76,8 @@ void CUI_Anything::Late_Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this), );
+		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
+			return;
 	}
 }
 

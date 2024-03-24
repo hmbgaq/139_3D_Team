@@ -711,6 +711,16 @@ HRESULT CRenderer::Deferred_UI()
 
 HRESULT CRenderer::Render_UI()
 {
+	for (auto& pGameObject : m_RenderObjects[RENDER_UI_BACK])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_UI_BACK].clear();
+
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
 		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
@@ -721,6 +731,15 @@ HRESULT CRenderer::Render_UI()
 
 	m_RenderObjects[RENDER_UI].clear();
 
+	for (auto& pGameObject : m_RenderObjects[RENDER_UI_FRONT])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_UI_FRONT].clear();
 	return S_OK;
 }
 

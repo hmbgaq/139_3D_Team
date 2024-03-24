@@ -575,7 +575,7 @@ technique11 DefaultTechnique
     pass Distortion // 6
     {
         SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        SetDepthStencilState(DSS_DepthStencilEnable, 0);
+        SetDepthStencilState(DSS_None, 0);
         SetRasterizerState(RS_Cull_None);
 
         VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();

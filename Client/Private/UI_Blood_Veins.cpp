@@ -54,7 +54,7 @@ void CUI_Blood_Veins::Late_Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
 		return;
 }
 

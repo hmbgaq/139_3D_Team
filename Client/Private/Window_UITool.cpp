@@ -34,7 +34,8 @@ HRESULT CWindow_UITool::Initialize()
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩중."));
 
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
-	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));	// Option
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));	// Option
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/DeathScreen"))));	// DeathScreen
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD"))));	// PlayerHUD
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/WorldMap"))));	// WorldMap
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Crosshairs"))));// Crosshairs
@@ -419,8 +420,8 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 		}
 	}
 
-	/* Control_L */
-	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+	/* DIK_LALT */
+	if (m_pGameInstance->Key_Pressing(DIK_LALT))
 	{
 		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
 		{
@@ -436,31 +437,6 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 					// m_pCurrSelectUI->Moving_Picking_Point(m_pt);
 				}
 			}
-		}
-
-		if (m_pGameInstance->Key_Down(DIK_S))
-		{
-			m_bShortOff = true;
-			m_strDialogPath = "../Bin/DataFiles/Data_UI/";
-			m_eDialogType = CImgui_Window::SAVE_DIALOG;
-			OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
-		}
-
-		if (m_pGameInstance->Key_Down(DIK_D))
-		{
-			Create_Child(m_tChild_Desc);
-		}
-
-		if (m_pGameInstance->Key_Down(DIK_L))
-		{
-			m_strDialogPath = "../Bin/DataFiles/Data_UI/";
-			m_eDialogType = CImgui_Window::LOAD_DIALOG;
-			OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
-		}
-
-		if (m_pGameInstance->Key_Down(DIK_M))
-		{
-			Create_TargetTexture();
 		}
 
 		/* 키입력하고 클릭하는 기능보다 아래 존재하게 해야한다. */
@@ -521,6 +497,35 @@ void CWindow_UITool::Shortcut_Key(_float fTimeDelta)
 				}
 			}
 			m_pCurrSelectUI = nullptr;
+		}
+	}
+
+	/* Control_L */
+	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+	{
+		if (m_pGameInstance->Key_Down(DIK_S))
+		{
+			m_bShortOff = true;
+			m_strDialogPath = "../Bin/DataFiles/Data_UI/";
+			m_eDialogType = CImgui_Window::SAVE_DIALOG;
+			OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_D))
+		{
+			Create_Child(m_tChild_Desc);
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_L))
+		{
+			m_strDialogPath = "../Bin/DataFiles/Data_UI/";
+			m_eDialogType = CImgui_Window::LOAD_DIALOG;
+			OpenDialog(CImgui_Window::IMGUI_UITOOL_WINDOW);
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_M))
+		{
+			Create_TargetTexture();
 		}
 
 		if (m_vecTimeline == nullptr)
@@ -850,6 +855,7 @@ void CWindow_UITool::Parent_Object(_float fTimeDelta)
 				m_iSelected_ParentObjectIndex = i;
 				m_pCurrParent = dynamic_cast<CUI*>(m_vecParentObject[m_iSelected_ParentObjectIndex]);
 				m_pCurrSelectUI = m_pCurrParent;
+				m_pCurrSelectGameObject = m_vecParentObject[m_iSelected_ParentObjectIndex];
 #ifdef _DEBUG
 				/* (컨테이너의 주소를 받아오는건 릴리즈 모드에서 터지는 버그가있음. 툴용) */
 				m_vecParentGroup = m_pCurrParent->Get_vecUIParts();
@@ -936,6 +942,15 @@ void CWindow_UITool::Setting_Child()
 
 	if (m_pCurrSelectUI != nullptr)
 	{
+		/*					Render				*/
+		/* Back == 9, Center == 10, Front == 11 */
+		ImGui::Text("RenderGroup");
+		ImGui::RadioButton("Back", m_pCurrSelectUI->Get_RenderGroup(), 9);
+		ImGui::SameLine();
+		ImGui::RadioButton("Center", m_pCurrSelectUI->Get_RenderGroup(), 10);
+		ImGui::SameLine();
+		ImGui::RadioButton("Front", m_pCurrSelectUI->Get_RenderGroup(), 11);
+
 		if (ImGui::InputText("UI_NAME", m_cName, sizeof(m_cName))) // 문자열 저장해야함
 		{
 			wstring str;
@@ -947,13 +962,58 @@ void CWindow_UITool::Setting_Child()
 			//m_pGameInstance->WString_To_String(ConverCtoWC(), m_pCurrSelectUI->Get_UIDesc().strUIName.c_str());
 		}
 
+		if (ImGui::Button("PlayAnim ALL"))
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(true);
+			}
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("StopAnim ALL"))
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
+			}
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("ResetAnim ALL"))
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
+				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
+			}
+		}
+
+		if (ImGui::Button("Play ALL"))
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_Active(true);
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(true);
+				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
+			}
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Stop ALL"))
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_Active(false);
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
+				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
+			}
+		}
+
 		if (ImGui::InputFloat("PosZ", &m_fPosZ, 0.01f, 0.01f))
 		{
 			m_pCurrSelectUI->Set_PosZ(m_fPosZ);
 		}
 
 		ImGui::Checkbox("World", m_pCurrSelectUI->Get_WorldUI());
-
+		ImGui::SameLine();
 		if (ImGui::Button("Proj_Change"))
 			m_pCurrSelectUI->ChangeProj();
 
@@ -1010,7 +1070,17 @@ void CWindow_UITool::Setting_Child()
 	{
 		Set_GuizmoCamView();
 		Set_GuizmoCamProj();
-		Set_GuizmoUI(m_pCurrSelectUI);
+
+		if (*m_pCurrSelectUI->Get_WorldUI() == true)
+		{
+			if(m_pCurrSelectGameObject != nullptr)
+				Set_Guizmo(m_pCurrSelectGameObject);
+		}
+		else
+		{
+			Set_GuizmoUI(m_pCurrSelectUI);
+		}
+		
 	}
 
 	//ImGui::Separator();
@@ -1118,11 +1188,13 @@ void CWindow_UITool::Child_Object(_float fTimeDelta)
 				if (m_pCurrChild->Get_Kind() == CUI::TEXT)
 				{
 					m_pCurrSelectUI = dynamic_cast<CUI_Text*>(m_pCurrChild);
+					m_pCurrSelectGameObject = m_vecChildObject[m_iSelected_ChildObjectIndex];
 					m_eUIType = TEXT;
 				}
 				else
 				{
 					m_pCurrSelectUI = m_pCurrChild;
+					m_pCurrSelectGameObject = m_vecChildObject[m_iSelected_ChildObjectIndex];
 					m_eUIType = CHILD;
 				}
 				
@@ -3152,12 +3224,19 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	// 키프레임 타입에 따른 추가 설정 (입력)
 	if (selectedKeyframe.iType == 0) // 크기 애니메이션
 	{
-		// 크기 값 입력
-		if (ImGui::DragFloat(u8"크기 X", &selectedKeyframe.vScale.x))
+		if (*m_pCurrSelectUI->Get_WorldUI() == true)
 		{
-			selectedKeyframe.vScale.x = selectedKeyframe.vScale.x;
+			ImGui::DragFloat(u8"월드 크기 X", &selectedKeyframe.vWorld_Scale.x, 0.0001f, -3.f, 3.f);
+			ImGui::DragFloat(u8"월드 크기 Y", &selectedKeyframe.vWorld_Scale.y, 0.0001f, -3.f, 3.f);
+			ImGui::DragFloat(u8"월드 크기 Z", &selectedKeyframe.vWorld_Scale.z, 0.0001f, -3.f, 3.f);
 		}
-		ImGui::DragFloat(u8"크기 Y", &selectedKeyframe.vScale.y);
+		else
+		{
+			// 크기 값 입력
+			ImGui::DragFloat(u8"크기 X", &selectedKeyframe.vScale.x);
+			ImGui::DragFloat(u8"크기 Y", &selectedKeyframe.vScale.y);
+		}
+
 		// 입력된 값의 범위를 제한(수동)
 		selectedKeyframe.vScale.x = (selectedKeyframe.vScale.x < fMin_Scale) ? fMin_Scale : ((selectedKeyframe.vScale.x > fMax_Scale) ? fMax_Scale : selectedKeyframe.vScale.x);
 		selectedKeyframe.vScale.y = (selectedKeyframe.vScale.y < fMin_Scale) ? fMin_Scale : ((selectedKeyframe.vScale.y > fMax_Scale) ? fMax_Scale : selectedKeyframe.vScale.y);
@@ -3165,19 +3244,40 @@ void CWindow_UITool::DrawSelectedKeyframeEditor(CUI::UIKEYFRAME& selectedKeyfram
 	else if (selectedKeyframe.iType == 1) // 회전 애니메이션
 	{
 		// 회전 값 입력
-		ImGui::DragFloat(u8"회전 Z", &selectedKeyframe.fRot);
-		// 입력된 값의 범위를 제한(함수)
-		selectedKeyframe.fRot = ImClamp(selectedKeyframe.fRot, fMin_Rot, fMax_Rot); // Z 값의 범위 제한
+		if (*m_pCurrSelectUI->Get_WorldUI() == true)
+		{
+			ImGui::DragFloat(u8"월드 회전 X", &selectedKeyframe.vWorld_Rot.x, 0.001f, -4.f, 4.f);
+			ImGui::DragFloat(u8"월드 회전 Y", &selectedKeyframe.vWorld_Rot.y, 0.001f, -4.f, 4.f);
+			ImGui::DragFloat(u8"월드 회전 Z", &selectedKeyframe.vWorld_Rot.z, 0.001f, -4.f, 4.f);
+		}
+		else
+		{
+			ImGui::DragFloat(u8"회전 Z", &selectedKeyframe.fRot, 0.1f);
+			// 입력된 값의 범위를 제한(함수)
+			selectedKeyframe.fRot = ImClamp(selectedKeyframe.fRot, fMin_Rot, fMax_Rot); // Z 값의 범위 제한
+		}
+	
+
 	}
 	else if (selectedKeyframe.iType == 2) // 이동 애니메이션
 	{
-		// 이동 값 입력
-		ImGui::DragFloat(u8"이동 X", &selectedKeyframe.vPos.x);
-		ImGui::DragFloat(u8"이동 Y", &selectedKeyframe.vPos.y);
+		// 회전 값 입력
+		if (*m_pCurrSelectUI->Get_WorldUI() == true)
+		{
+			ImGui::DragFloat(u8"월드 이동 X", &selectedKeyframe.vWorld_Pos.x, 0.0001f, -3.f, 3.f);
+			ImGui::DragFloat(u8"월드 이동 Y", &selectedKeyframe.vWorld_Pos.y, 0.0001f, -3.f, 3.f);
+			ImGui::DragFloat(u8"월드 이동 Z", &selectedKeyframe.vWorld_Pos.z, 0.0001f, -3.f, 3.f);
+		}
+		else
+		{
+			// 이동 값 입력
+			ImGui::DragFloat(u8"이동 X", &selectedKeyframe.vPos.x);
+			ImGui::DragFloat(u8"이동 Y", &selectedKeyframe.vPos.y);
+		}
 
 		// 입력된 값의 범위를 제한(함수)
-		selectedKeyframe.vPos.x = ImClamp(selectedKeyframe.vPos.x, fMin_Pos, fMax_Pos); // X 값의 범위 제한
-		selectedKeyframe.vPos.y = ImClamp(selectedKeyframe.vPos.y, fMin_Pos, fMax_Pos); // Y 값의 범위 제한
+		//selectedKeyframe.vPos.x = ImClamp(selectedKeyframe.vPos.x, fMin_Pos, fMax_Pos); // X 값의 범위 제한
+		//selectedKeyframe.vPos.y = ImClamp(selectedKeyframe.vPos.y, fMin_Pos, fMax_Pos); // Y 값의 범위 제한
 	}
 	style.ItemInnerSpacing.x = originalItemWidth;// 원래의 ItemInnerSpacing 값으로 복원
 
@@ -3674,7 +3774,8 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 		if (object.contains("ColorMode"))
 			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
-
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];				// 16. RenderGroup
 
 		wstring wstrLayer = TEXT("");
 		if (m_strLayer[m_iCurrLayerNum] != "")
@@ -3727,11 +3828,34 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 			tUI_Info.tKeyframe.isEaseIn = object["Keyframe"][i]["EaseIn"];
 			tUI_Info.tKeyframe.isEaseOut = object["Keyframe"][i]["EaseOut"];
 			tUI_Info.tKeyframe.iTexureframe = object["Keyframe"][i]["Texureframe"];
+
+			/* 2D */
 			tUI_Info.tKeyframe.vScale.x = object["Keyframe"][i]["ScaleX"];
 			tUI_Info.tKeyframe.vScale.y = object["Keyframe"][i]["ScaleY"];
 			tUI_Info.tKeyframe.vPos.x = object["Keyframe"][i]["PosX"];
 			tUI_Info.tKeyframe.vPos.y = object["Keyframe"][i]["PosY"];
 			tUI_Info.tKeyframe.fRot = object["Keyframe"][i]["Rot"];
+
+			/* 3D */
+			if (object["Keyframe"][i].contains("World_ScaleX")) // "Disappear" 키가 있으면
+				tUI_Info.tKeyframe.vWorld_Scale.x = object["Keyframe"][i]["World_ScaleX"];
+			if (object["Keyframe"][i].contains("World_ScaleY")) // "Disappear" 키가 있으면
+				tUI_Info.tKeyframe.vWorld_Scale.y = object["Keyframe"][i]["World_ScaleY"];
+			if (object["Keyframe"][i].contains("World_ScaleZ")) // "Disappear" 키가 있으면
+				tUI_Info.tKeyframe.vWorld_Scale.z = object["Keyframe"][i]["World_ScaleZ"];
+			if (object["Keyframe"][i].contains("World_PosX")) // "Disappear" 키가 있으면
+				tUI_Info.tKeyframe.vWorld_Pos.x = object["Keyframe"][i]["World_PosX"];
+			if (object["Keyframe"][i].contains("World_PosY")) // "Disappear" 키가 있으면
+				tUI_Info.tKeyframe.vWorld_Pos.y = object["Keyframe"][i]["World_PosY"];
+			if (object["Keyframe"][i].contains("World_PosZ")) // "Disappear" 키가 있으면
+				tUI_Info.tKeyframe.vWorld_Pos.z = object["Keyframe"][i]["World_PosZ"];
+			if (object["Keyframe"][i].contains("World_RotX")) // "Disappear" 키가 있으면
+				tUI_Info.tKeyframe.vWorld_Rot.x = object["Keyframe"][i]["World_RotX"];
+			if (object["Keyframe"][i].contains("World_RotY")) // "Disappear" 키가 있으면
+				tUI_Info.tKeyframe.vWorld_Rot.y = object["Keyframe"][i]["World_RotY"];
+			if (object["Keyframe"][i].contains("World_RotZ")) // "Disappear" 키가 있으면
+				tUI_Info.tKeyframe.vWorld_Rot.z = object["Keyframe"][i]["World_RotZ"];
+
 			tUI_Info.tKeyframe.vKeyFramePos.x = object["Keyframe"][i]["KeyFramePosX"];
 			tUI_Info.tKeyframe.vKeyFramePos.y = object["Keyframe"][i]["KeyFramePosY"];
 

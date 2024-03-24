@@ -55,15 +55,20 @@ HRESULT CUI::Initialize(void* pArg)
 
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_tUIInfo.fPositionX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fPositionY + (_float)g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ, 1.f));
 
-		XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-
 		if (m_tUIInfo.bWorld == true)
 		{
-			_float4 vCamSetting = m_pGameInstance->Get_CamSetting();
-			m_ProjMatrix = XMMatrixPerspectiveFovLH(vCamSetting.x, vCamSetting.y, vCamSetting.z, vCamSetting.w);
+			// View 세팅 카메라에 대한 세팅이다 : 카메라가 위치할 곳, 카메라가 볼 곳, 카메라의 UP vector
+			m_ViewMatrix = XMMatrixLookAtLH({ 0.f, 0.f, -10.f, 0.f }, { 0.f, 0.f, 10.f, 0.f }, { 0.f, 1.f, 0.f, 0.f });
+
+			// 기존 Proj를 내려준다.
+			XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ));
+
+			// 새 Proj로 올려준다.
+			XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ));
 		}
 		else
 		{
+			XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 			XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.1f, 1.f));
 		}
 
@@ -109,8 +114,8 @@ void CUI::Tick(_float fTimeDelta)
 	{
 		if (m_tUIInfo.bWorld == true)
 		{
-			// View 세팅
-			XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+			// View 세팅 카메라에 대한 세팅이다 : 카메라가 위치할 곳, 카메라가 볼 곳, 카메라의 UP vector
+			XMMatrixLookAtLH({ 0.f, 0.f, -10.f, 0.f }, { 0.f, 0.f, 10.f, 0.f }, { 0.f, 1.f, 0.f, 0.f });
 
 			// 기존 Proj를 내려준다.
 			XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ));
@@ -168,13 +173,29 @@ void CUI::Tick(_float fTimeDelta)
 
 	Play_Animation(fTimeDelta);
 	Update_Child_Transform();
-	if(m_tUIInfo.bWorld == false)
-		Check_RectPos();
+	//if(m_tUIInfo.bWorld == false)
+	Check_RectPos();
 
 #ifdef _DEBUG
 	m_bButtonUI = true;
 #endif // _DEBUG
 	Picking_UI();
+}
+
+void CUI::UI_Ready(_float fTimeDelta)
+{
+}
+
+void CUI::UI_Enter(_float fTimeDelta)
+{
+}
+
+void CUI::UI_Loop(_float fTimeDelta)
+{
+}
+
+void CUI::UI_Exit(_float fTimeDelta)
+{
 }
 
 void CUI::UI_AppearTick(_float fTimeDelta)
@@ -966,6 +987,8 @@ json CUI::Save_Desc(json& out_json)
 	//if (out_json.contains("ColorMode")) // 키가 있으면
 		out_json["ColorMode"] = m_tUIInfo.eColorMode;
 
+		out_json["RenderGroup"] = m_tUIInfo.iRenderGroup;
+
 	/* TransformCom */
 	m_pTransformCom->Write_Json(out_json);
 
@@ -986,11 +1009,25 @@ json CUI::Save_Desc(json& out_json)
 			out_json["Keyframe"][i]["EaseIn"] = m_vecAnimation[i].isEaseIn;
 			out_json["Keyframe"][i]["EaseOut"] = m_vecAnimation[i].isEaseOut;
 			out_json["Keyframe"][i]["Texureframe"] = m_vecAnimation[i].iTexureframe;
+
+			/* 2D */
 			out_json["Keyframe"][i]["ScaleX"] = m_vecAnimation[i].vScale.x;
 			out_json["Keyframe"][i]["ScaleY"] = m_vecAnimation[i].vScale.y;
 			out_json["Keyframe"][i]["PosX"] = m_vecAnimation[i].vPos.x;
 			out_json["Keyframe"][i]["PosY"] = m_vecAnimation[i].vPos.y;
 			out_json["Keyframe"][i]["Rot"] = m_vecAnimation[i].fRot;
+
+			/* 3D */
+			out_json["Keyframe"][i]["World_ScaleX"] = m_vecAnimation[i].vWorld_Scale.x;
+			out_json["Keyframe"][i]["World_ScaleY"] = m_vecAnimation[i].vWorld_Scale.y;
+			out_json["Keyframe"][i]["World_ScaleZ"] = m_vecAnimation[i].vWorld_Scale.z;
+			out_json["Keyframe"][i]["World_PosX"] = m_vecAnimation[i].vWorld_Pos.x;
+			out_json["Keyframe"][i]["World_PosY"] = m_vecAnimation[i].vWorld_Pos.y;
+			out_json["Keyframe"][i]["World_PosZ"] = m_vecAnimation[i].vWorld_Pos.z;
+			out_json["Keyframe"][i]["World_RotX"] = m_vecAnimation[i].vWorld_Rot.x;
+			out_json["Keyframe"][i]["World_RotY"] = m_vecAnimation[i].vWorld_Rot.y;
+			out_json["Keyframe"][i]["World_RotZ"] = m_vecAnimation[i].vWorld_Rot.z;
+
 			out_json["Keyframe"][i]["KeyFramePosX"] = m_vecAnimation[i].vKeyFramePos.x;
 			out_json["Keyframe"][i]["KeyFramePosY"] = m_vecAnimation[i].vKeyFramePos.y;
 
@@ -1301,18 +1338,44 @@ void CUI::Play_Animation(_float fTimeDelta)
 				// 현재 키 프레임시간부터 현재 시간 변화율
 				fCurFrameTimeDelta = (m_fCurrTime - m_vecAnimation[iFrameIndex].fTime);
 
-				fSizeX_Delta = m_vecAnimation[iFrameIndex + 1U].vScale.x - m_vecAnimation[iFrameIndex].vScale.x;
-				fSizeX_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
-				fSizeY_Delta = m_vecAnimation[iFrameIndex + 1U].vScale.y - m_vecAnimation[iFrameIndex].vScale.y;
-				fSizeY_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				if (m_tUIInfo.bWorld == true)
+				{
+					fSizeX_Delta = m_vecAnimation[iFrameIndex + 1U].vWorld_Scale.x - m_vecAnimation[iFrameIndex].vWorld_Scale.x;
+					fSizeX_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+					fSizeY_Delta = m_vecAnimation[iFrameIndex + 1U].vWorld_Scale.y - m_vecAnimation[iFrameIndex].vWorld_Scale.y;
+					fSizeY_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+					fSizeZ_Delta = m_vecAnimation[iFrameIndex + 1U].vWorld_Scale.z - m_vecAnimation[iFrameIndex].vWorld_Scale.z;
+					fSizeZ_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
 
-				fRotZ_Delta = m_vecAnimation[iFrameIndex + 1U].fRot - m_vecAnimation[iFrameIndex].fRot;
-				fRotZ_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+					fRotX_Delta = m_vecAnimation[iFrameIndex + 1U].vWorld_Rot.x - m_vecAnimation[iFrameIndex].vWorld_Rot.x;
+					fRotX_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+					fRotY_Delta = m_vecAnimation[iFrameIndex + 1U].vWorld_Rot.y - m_vecAnimation[iFrameIndex].vWorld_Rot.y;
+					fRotY_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+					fRotZ_Delta = m_vecAnimation[iFrameIndex + 1U].vWorld_Rot.z - m_vecAnimation[iFrameIndex].vWorld_Rot.z;
+					fRotZ_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
 
-				fPosX_Delta = m_vecAnimation[iFrameIndex + 1U].vPos.x - m_vecAnimation[iFrameIndex].vPos.x;
-				fPosX_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
-				fPosY_Delta = m_vecAnimation[iFrameIndex + 1U].vPos.y - m_vecAnimation[iFrameIndex].vPos.y;
-				fPosY_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+					fPosX_Delta = m_vecAnimation[iFrameIndex + 1U].vWorld_Pos.x - m_vecAnimation[iFrameIndex].vWorld_Pos.x;
+					fPosX_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+					fPosY_Delta = m_vecAnimation[iFrameIndex + 1U].vWorld_Pos.y - m_vecAnimation[iFrameIndex].vWorld_Pos.y;
+					fPosY_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+					fPosZ_Delta = m_vecAnimation[iFrameIndex + 1U].vWorld_Pos.z - m_vecAnimation[iFrameIndex].vWorld_Pos.z;
+					fPosZ_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				}
+				else
+				{
+					fSizeX_Delta = m_vecAnimation[iFrameIndex + 1U].vScale.x - m_vecAnimation[iFrameIndex].vScale.x;
+					fSizeX_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+					fSizeY_Delta = m_vecAnimation[iFrameIndex + 1U].vScale.y - m_vecAnimation[iFrameIndex].vScale.y;
+					fSizeY_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+
+					fRotZ_Delta = m_vecAnimation[iFrameIndex + 1U].fRot - m_vecAnimation[iFrameIndex].fRot;
+					fRotZ_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+
+					fPosX_Delta = m_vecAnimation[iFrameIndex + 1U].vPos.x - m_vecAnimation[iFrameIndex].vPos.x;
+					fPosX_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+					fPosY_Delta = m_vecAnimation[iFrameIndex + 1U].vPos.y - m_vecAnimation[iFrameIndex].vPos.y;
+					fPosY_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
+				}
 
 				fAlpha_Delta = m_vecAnimation[iFrameIndex + 1U].fAlpha - m_vecAnimation[iFrameIndex].fAlpha;
 				fAlpha_Delta *= fCurFrameTimeDelta / fFrameTimeDelta;
@@ -1379,18 +1442,45 @@ void CUI::Play_Animation(_float fTimeDelta)
 				m_tUIInfo.tKeyframe.fDistortionBias = m_vecAnimation[iFrameIndex].fDistortionBias + fDistortionBias_Delta;
 				m_tUIInfo.fDistortionBias = m_tUIInfo.tKeyframe.fDistortionBias;
 
-				/* 포지션 보간 */
-				m_pTransformCom->Set_Position({ m_vecAnimation[iFrameIndex].vPos.x + fPosX_Delta,
-											m_vecAnimation[iFrameIndex].vPos.y + fPosY_Delta,
-											m_tUIInfo.fPositionZ });	// 이미지 위치
+				if (m_tUIInfo.bWorld == true)
+				{
+					/* 포지션 보간 */
+					m_pTransformCom->Set_Position({ m_vecAnimation[iFrameIndex].vWorld_Pos.x + fPosX_Delta,
+													m_vecAnimation[iFrameIndex].vWorld_Pos.y + fPosY_Delta,
+													m_vecAnimation[iFrameIndex].vWorld_Pos.z + fPosZ_Delta });	// 이미지 위치
 
-				/* 스케일 보간 */
-				m_pTransformCom->Set_Scaling(m_vecAnimation[iFrameIndex].vScale.x + fSizeX_Delta, 	// 이미지 크기
-					m_vecAnimation[iFrameIndex].vScale.y + fSizeY_Delta,
-					1.f);
+					/* 스케일 보간 */
+					m_pTransformCom->Set_Scaling(m_vecAnimation[iFrameIndex].vWorld_Scale.x + fSizeX_Delta, 	// 이미지 크기
+												 m_vecAnimation[iFrameIndex].vWorld_Scale.y + fSizeY_Delta,
+												 m_vecAnimation[iFrameIndex].vWorld_Scale.z + fSizeZ_Delta);
 
-				/* 로테이션 보간 */
-				m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_vecAnimation[iFrameIndex].fRot + fRotZ_Delta);// 이미지 회전
+					/* 로테이션 보간 */ // 마지막 로테이션으로 적용돼서 X, Y는 적용이 안됨
+					//m_pTransformCom->Rotation({ 1.0f, 0.0f, 0.0f, 0.0f }, m_vecAnimation[iFrameIndex].vWorld_Rot.x + fRotX_Delta);// 이미지 회전
+					//m_pTransformCom->Rotation({ 0.0f, 1.0f, 0.0f, 0.0f }, m_vecAnimation[iFrameIndex].vWorld_Rot.y + fRotY_Delta);// 이미지 회전
+					//m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_vecAnimation[iFrameIndex].vWorld_Rot.z + fRotZ_Delta);// 이미지 회전
+					
+					/* 로테이션 보간 */
+					m_pTransformCom->Rotation_Quaternion({ 
+														  m_vecAnimation[iFrameIndex].vWorld_Rot.x + fRotX_Delta,
+														  m_vecAnimation[iFrameIndex].vWorld_Rot.y + fRotY_Delta,
+														  m_vecAnimation[iFrameIndex].vWorld_Rot.z + fRotZ_Delta 
+														});
+				}										 
+				else
+				{
+					/* 포지션 보간 */
+					m_pTransformCom->Set_Position({ m_vecAnimation[iFrameIndex].vPos.x + fPosX_Delta,
+												m_vecAnimation[iFrameIndex].vPos.y + fPosY_Delta,
+												m_tUIInfo.fPositionZ });	// 이미지 위치
+
+					/* 스케일 보간 */
+					m_pTransformCom->Set_Scaling(m_vecAnimation[iFrameIndex].vScale.x + fSizeX_Delta, 	// 이미지 크기
+						m_vecAnimation[iFrameIndex].vScale.y + fSizeY_Delta,
+						1.f);
+
+					/* 로테이션 보간 */
+					m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_vecAnimation[iFrameIndex].fRot + fRotZ_Delta);// 이미지 회전
+				}
 
 				/* 알파 보간 */
 				//m_tUIInfo.fAlpha = fAlpha_Delta;
@@ -1444,6 +1534,25 @@ void CUI::Play_Animation(_float fTimeDelta)
 			}
 			else
 			{
+			if (m_tUIInfo.bWorld == true)
+			{
+				/* 포지션 보간 */
+				m_pTransformCom->Set_Position({ m_vecAnimation[iFrameIndex].vWorld_Pos.x,
+												m_vecAnimation[iFrameIndex].vWorld_Pos.y,
+												m_vecAnimation[iFrameIndex].vWorld_Pos.z });	// 이미지 위치
+
+				/* 스케일 보간 */
+				m_pTransformCom->Set_Scaling(m_vecAnimation[iFrameIndex].vWorld_Scale.x, 	// 이미지 크기
+											 m_vecAnimation[iFrameIndex].vWorld_Scale.y,
+											 m_vecAnimation[iFrameIndex].vWorld_Scale.z);
+
+				/* 로테이션 보간 */
+				m_pTransformCom->Rotation({ 1.0f, 0.0f, 0.0f, 0.0f }, m_vecAnimation[iFrameIndex].vWorld_Rot.x);// 이미지 회전
+				m_pTransformCom->Rotation({ 0.0f, 1.0f, 0.0f, 0.0f }, m_vecAnimation[iFrameIndex].vWorld_Rot.y);// 이미지 회전
+				m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_vecAnimation[iFrameIndex].vWorld_Rot.z);// 이미지 회전
+			}
+			else
+			{
 				m_pTransformCom->Set_Scaling(m_vecAnimation[iFrameIndex].vScale.x, 	// 이미지 크기
 					m_vecAnimation[iFrameIndex].vScale.y,
 					1.f);
@@ -1451,6 +1560,10 @@ void CUI::Play_Animation(_float fTimeDelta)
 				m_pTransformCom->Set_Position({ m_vecAnimation[iFrameIndex].vPos.x,
 												m_vecAnimation[iFrameIndex].vPos.y,
 												m_tUIInfo.fPositionZ });	// 이미지 위치
+
+				/* 로테이션 보간 */
+				m_pTransformCom->Rotation({ 0.0f, 0.0f, 1.0f, 0.0f }, m_vecAnimation[iFrameIndex].fRot);// 이미지 회전
+			}
 
 				/* 알파 보간 */
 				//m_tUIInfo.fAlpha = m_vecAnimation[iFrameIndex].fAlpha;

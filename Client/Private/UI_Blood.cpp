@@ -31,6 +31,8 @@ void CUI_Blood::Tick(_float fTimeDelta)
 
 void CUI_Blood::LateTick(_float fTimeDelta)
 {
+	if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
+		return;
 }
 
 HRESULT CUI_Blood::Render()

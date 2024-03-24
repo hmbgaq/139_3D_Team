@@ -292,6 +292,26 @@ _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta)
 	return false;
 }
 
+void CTransform::Rotation_Quaternion(_float3 vRotation)
+{
+	_float3 vScale = Get_Scaled();
+
+	_vector      vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
+	_vector      vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+	_vector      vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+
+	_vector      vRot = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(vRotation.x)
+															, XMConvertToRadians(vRotation.y)
+															, XMConvertToRadians(vRotation.z));
+
+	_matrix      RotationMatrix = XMMatrixRotationQuaternion(vRot);
+
+	Set_State(STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
+	Set_State(STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
+	Set_State(STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
+
+}
+
 void CTransform::Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare)
 {
 	_vector		vPosition = Get_State(STATE_POSITION);

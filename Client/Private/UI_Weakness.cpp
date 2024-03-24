@@ -38,7 +38,7 @@ HRESULT CUI_Weakness::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_bActive = false;
-	m_tUIInfo.bWorld = true;
+	//m_tUIInfo.bWorld = true;
 	m_vAxis = { 0.f, 0.f, 1.f, 0.f };
 
 	return S_OK;
@@ -94,7 +94,7 @@ void CUI_Weakness::Late_Tick(_float fTimeDelta)
 	m_pGameInstance->Add_DebugRender(m_pColliderCom);
 #endif	
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
 		return;
 }
 
