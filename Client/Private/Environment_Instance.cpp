@@ -96,17 +96,32 @@ HRESULT CEnvironment_Instance::Render()
 	if(FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (size_t i = 0; i < iNumMeshes; i++)
+	if (TEXT("TeslaIcicleLong2") == Get_ModelTag())
 	{
-		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
-		
-		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-		m_pInstanceModelCom->Render((_uint)i);
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+
+			m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
+
+			m_pInstanceModelCom->Render((_uint)i);
+		}
 	}
+	else
+	{
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+
+			m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
+
+			m_pInstanceModelCom->Render((_uint)i);
+		}
+	}
 	return S_OK;
 }
 
