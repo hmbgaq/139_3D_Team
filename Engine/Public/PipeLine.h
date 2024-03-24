@@ -31,8 +31,8 @@ public: /* 카메라 관련 */
 	_float	Get_CamFar() { return m_fCamFar; };
 
 public: /* 레이 캐스트 */
-	RAY			Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
-	RAY			Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY, _matrix matWorld);
+	RAY		Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
+	RAY		Get_MouseRayLocal(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY, _matrix matWorld);
 
 
 public:
@@ -50,7 +50,6 @@ private:
 	_float4x4			m_Transform_Inverse[D3DTS_END];
 
 	_float4				m_vCamPosition;
-
 
 	_float4				m_vPreCamPosition;
 	_float4				m_vPreCamQuaternion;

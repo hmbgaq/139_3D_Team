@@ -201,7 +201,7 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 
 	_float fAngle = pActor->Target_Contained_Angle(pActor->Get_Transform()->Get_Look(), pActor->Get_Target()->Get_Transform()->Get_Pos());
 
-	cout << "VampireCommander : "<< fAngle  << endl;
+	//cout << "VampireCommander : "<< fAngle  << endl;
 // 	if (pActor->m_bLookAt == true)
 // 	{
 // 		//Look_At_Target();

@@ -15,6 +15,17 @@ struct DOF
     float   fFocusRange;
 };
 
+struct VIGNETTE_DESC
+{
+    bool    bVignette_Active;
+    float   fVignetteRatio; //[0.15 to 6.00]  Sets a width to height ratio. 1.00 (1/1) is perfectly round, while 1.60 (16/10) is 60 % wider than it's high.
+    float   fVignetteRadius; //[-1.00 to 3.00] lower values = stronger radial effect from center
+    float   fVignetteAmount; //[-2.00 to 1.00] Strength of black. -2.00 = Max Black, 1.00 = Max White.
+    float   fVignetteSlope; //[2 to 16] How far away from the center the change should start to really grow strong (odd numbers cause a larger fps drop than even numbers)
+    float  fVignetteCenter_X;
+    float  fVignetteCenter_Y;
+};
+
 /* =================== Variable =================== */
 // Origin
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -46,6 +57,9 @@ Texture2D g_Distortion_Target;
 // EffectDistortion
 Texture2D g_Deferred_Target;
 Texture2D g_Effect_DistortionTarget;
+
+// Vignette
+VIGNETTE_DESC g_Vignette_desc;
 /* =================== Function =================== */
 
 float3 reinhard_extended(float3 v, float max_white)
@@ -134,6 +148,34 @@ float3 aces_fitted(float3 Color)
     return mul(aces_output_matrix, Color);
 }
 
+float4 vignette(float4 OriginColor, float2 texUV)
+{
+    // =================== Type 1 ===================
+
+	// Set the center
+    float2 distance_xy = texUV - float2(g_Vignette_desc.fVignetteCenter_X, g_Vignette_desc.fVignetteCenter_Y);
+    
+    float2 PixelSize = float2(1.0f / 1280.0f, 1.0f / 720.0f);
+
+	// Adjust the ratio
+    distance_xy *= float2((PixelSize.y / PixelSize.x), g_Vignette_desc.fVignetteRatio);
+
+	// Calculate the distance
+    distance_xy /= g_Vignette_desc.fVignetteRadius;
+    
+    float distance = dot(distance_xy, distance_xy);
+
+	// Apply the vignette
+    OriginColor.rgb *= (1.0 + pow(distance, g_Vignette_desc.fVignetteSlope * 0.5) * g_Vignette_desc.fVignetteAmount); //pow - multiply
+
+    return OriginColor;
+}
+
+//Logical XOR - not used right now but it might be useful at a later time
+float XOR(float xor_A, float xor_B)
+{
+    return saturate(dot(float4(-xor_A, -xor_A, xor_A, xor_B), float4(xor_B, xor_B, 1.0, 1.0))); // -2 * A * B + A + B
+}
 /* =================== VS / PS =================== */
 
 struct VS_IN
@@ -278,15 +320,14 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Distortion = g_Distortion_Target.Sample(LinearSampler, In.vTexcoord);
     
-    
-    Out.vColor = Effect_Solid ;
+    Out.vColor = Effect_Solid;
 
     if (Out.vColor.a == 0) 
         Out.vColor += Effect_Distortion;
     
     if (Out.vColor.a == 0) 
-       // Out.vColor += Deferred + Effect + Effect_Blur;
         Out.vColor += Deferred + Effect + Object_Blur + Effect_Blur;
+       // Out.vColor += Deferred + Effect + Effect_Blur;
     
     ////if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
     //    //Out.vColor += Effect + Object_Blur + Effect_Blur;   // 이펙트랑 위에 디퍼드를 바꿨다(이펙트 때문)
@@ -320,6 +361,23 @@ PS_OUT PS_MAIN_EFFECT_DISTORTION(PS_IN In)
     /* Distortion이 적용된 부분만 Deferred와 연산한다. -> Distrotion이 적용된부분이 Deferred가 비치게되는 느낌? */
    Out.vColor = Deferred; 
     
+    
+    return Out;
+}
+/* ------------------- 6 - Vignette -------------------*/
+PS_OUT PS_MAIN_VIGNETTE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector color = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+    Out.vColor = vignette(color, In.vTexcoord);
+    
+    return Out;
+}
+/* ------------------- 7 - SSR -------------------*/
+PS_OUT PS_MAIN_SSR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
     
     return Out;
 }
@@ -401,5 +459,29 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_EFFECT_DISTORTION();
+    }
+
+    pass VIGNETTE // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_VIGNETTE();
+    }
+
+    pass SSR // 7
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SSR();
     }
 }

@@ -64,8 +64,8 @@ void CVampireCommander_Weapon_Hand::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pTrail)
 	{
 		m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
-		cout << "VampireCommander_Hand_PositionX:" << m_WorldMatrix._41 << "VampireCommander_Hand_PositionY:" << m_WorldMatrix._42 << "VampireCommander_Hand_PositionZ:" << m_WorldMatrix._43 << endl;
-		cout << "TrailX:" << m_pTrail->Get_Position().x << "TrailY:" << m_pTrail->Get_Position().y << "TrailZ:" << m_pTrail->Get_Position().z << endl;
+		//cout << "VampireCommander_Hand_PositionX:" << m_WorldMatrix._41 << "VampireCommander_Hand_PositionY:" << m_WorldMatrix._42 << "VampireCommander_Hand_PositionZ:" << m_WorldMatrix._43 << endl;
+		//cout << "TrailX:" << m_pTrail->Get_Position().x << "TrailY:" << m_pTrail->Get_Position().y << "TrailZ:" << m_pTrail->Get_Position().z << endl;
 	}
 	
 	// m_pTrail->Set_Play(TRUE /*FALSE*/); //! 유정: 트레일 온오프
