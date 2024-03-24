@@ -1,31 +1,42 @@
-
 #include "Shader_PBR.hlsl"
+#include "Shader_MyPBR.hlsl"
 //#include "Shader_Defines.hlsli"
 //#include "HeightFogUsage.hlsl"
 //#pragma multi_compile _ HF_FOG_ENABLED HF_LIGHT_ATTEN
 
+/* ========== Light ==========*/
+// Directional
+vector g_vLightDir;
+
+// Spot
+vector g_vLightPos;
+float  g_fLightRange;
+
+// Point - g_vLightDir, g_vLightPos 둘도 사용
+float g_fRange;
+float g_fCutOff;
+float g_fOuterCutOff;
+
+// Common 
+vector g_vLightDiffuse;
+vector g_vLightAmbient;
+vector g_vLightSpecular;
+float  g_fLightIntensity;
+
+/* ========== Base ==========*/
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_ProjMatrixInv, g_ViewMatrixInv;
 matrix g_LightViewMatrix, g_LightProjMatrix;
 matrix g_CamProjMatrix, g_CamViewMatrix; /* ssr에서 사용 */
-float g_CamFar;
-float g_LightFar;
-
-vector g_vLightDir;
-vector g_vLightPos;
-float g_fLightRange;
-
-vector g_vLightDiffuse;
-vector g_vLightAmbient;
-vector g_vLightSpecular;
-float g_fLightIntensity;
-vector g_vLightFlag;
+vector g_vCamPosition;
+float  g_CamFar;
+float  g_LightFar;
 
 vector g_vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
 vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
-vector g_vCamPosition;
 
+/* ========== Texture2D ==========*/
 Texture2D g_PriorityTarget;         /* Skybox - Priority */
 Texture2D g_DiffuseTexture;         /* Out.Diffuse */ 
 Texture2D g_NormalTexture;          /* Out.Normal */
@@ -41,16 +52,18 @@ Texture2D g_PerlinNoiseTexture;     /* Shor Fog - Noise Texture */
 Texture2D g_Effect_DiffuseTarget;   /* Effect - Diffuse */
 Texture2D g_OutlineTarget;          /* RenderGroup - Outline */
 Texture2D g_VoxelReadTexture;
-/* 활성 여부 */
+
+/* ========== Fog ==========*/
+float2 g_vFogUVAcc = { 0.f, 0.f };
+
+/* ========== Deferred Active ==========*/
 bool g_bSSAO_Active;
 bool g_bFog_Active;
 bool g_bShadow_Active;
 
-/* 안개 */
-float2  g_vFogUVAcc             = { 0.f, 0.f };
-
-/* PBR */
+/* ========== PBR ==========*/
 float g_fBias;
+float3 g_vLightColor;
 
 struct FOG_DESC 
 {
@@ -74,6 +87,38 @@ struct BLOOMRIM_DESC
 
 FOG_DESC g_Fogdesc;
 BLOOMRIM_DESC g_Bloom_Rim_Desc;
+
+/* ------------------ ------------------ */ 
+struct VS_IN
+{
+    float3 vPosition : POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+struct VS_OUT
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+
+struct PS_IN
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+struct PS_OUT
+{
+    float4 vColor : SV_TARGET0;
+};
+
+struct PS_OUT_LIGHT
+{
+    float4 vShade : SV_TARGET0;
+    float4 vSpecular : SV_TARGET1;
+};
+
 /* ------------------ Function ------------------ */ 
 
 float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise, FOG_DESC desc)
@@ -127,48 +172,22 @@ float4 Accumulate(int z, float4 result, float4 colorDensityPerSlice, float Volum
     return result;
 }
 
-/* ------------------ ------------------ */ 
-struct VS_IN
-{
-    float3 vPosition : POSITION;
-    float2 vTexcoord : TEXCOORD0;
-};
-
-
-struct VS_OUT
-{
-    float4 vPosition : SV_POSITION;
-    float2 vTexcoord : TEXCOORD0;
-};
-
+/* ----------------------------------------------- */ 
 VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0;
-
-	/* In.vPosition * 월드 * 뷰 * 투영 */
+    
     matrix matWV, matWVP;
-
+    
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
-
+    
     Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     Out.vTexcoord = In.vTexcoord;
-
+    
     return Out;
+
 }
-
-
-struct PS_IN
-{
-    float4 vPosition : SV_POSITION;
-    float2 vTexcoord : TEXCOORD0;
-};
-
-struct PS_OUT
-{
-    float4 vColor : SV_TARGET0;
-};
-
 /* ------------------ 0 - DEBUG ------------------ */
 
 PS_OUT PS_MAIN_DEBUG(PS_IN In)
@@ -181,24 +200,15 @@ PS_OUT PS_MAIN_DEBUG(PS_IN In)
 }
 
 /* ------------------ 1 - Directional ------------------ */
-
-struct PS_OUT_LIGHT
-{
-    float4 vShade : SV_TARGET0;
-    float4 vSpecular : SV_TARGET1;
-};
-
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
+    // g_vLightDir, g_vLightDiffuse, g_vLightAmbient, g_vLightSpecular 바인딩 
     PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
-
-    vector vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    
     vector vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
     vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
 	//vector		
 	
-    vDiffuseColor = pow(vDiffuseColor, 2.2f);
-    vDiffuseColor.a = 1.f;
 	/* 0, 1 -> -1, 1 */
     float4 vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
@@ -236,6 +246,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 
 PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
+    //g_vLightPos, g_fLightRange, g_vLightDiffuse, g_vLightAmbient, g_vLightSpecular 바인딩 
     PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
 
     vector vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
@@ -343,7 +354,6 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     
     vWorldPos = vWorldPos * fViewZ;
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
         
     if (true == g_bFog_Active)
@@ -412,9 +422,8 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     
     vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     
-    float fAO = 1.f;
-    
-    fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r;
+    float fAO = 1.f; 
+    fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r; // Ambient Occulusion은 HBAO+로 
     
     vector vWorldPos;
     vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
@@ -435,7 +444,8 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     float3 L = normalize(-g_vLightDir);
     float3 H = normalize(V + L);
 
-    Out.vColor.rgb = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO);
+    Out.vColor.rgb = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO); 
+    // BRDF를 통해 물체의 표면 속성을 모델링하고 이를 통해 자연스러운 조명과 반사를 구현한다. 
    
     if (vAlbedo.a == 0.f)
     {
@@ -449,18 +459,18 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     // Shadow 
     float ShadowColor = 1.f;
     
-    if (true == g_bFog_Active)
-    {
-        float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
-        vTexCoord.x += g_vFogUVAcc.x;
-        vTexCoord.y += g_vFogUVAcc.y;
-    
-        float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
-    
-        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
-    
-        Out.vColor = vector(vFinalColor.rgb, 1.f);
-    }
+    //if (true == g_bFog_Active)
+    //{
+    //    float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
+    //    vTexCoord.x += g_vFogUVAcc.x;
+    //    vTexCoord.y += g_vFogUVAcc.y;
+    //
+    //    float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
+    //
+    //    float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
+    //
+    //    Out.vColor = vector(vFinalColor.rgb, 1.f);
+    //}
     
     if (true == g_bShadow_Active)
     {
@@ -482,12 +492,67 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
         if (vPosition.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
             Out.vColor = Out.vColor * 0.8f;
     }
-    //Out.vColor += vEffect;
+    
     Out.vColor.a = 1.f;
 	
     return Out;
 }
 
+/* ------------------ 6 - PBR Deferred ------------------ */
+PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    	
+    // 감마보정 -> Linear space로 변형후 빛계산을 하고 다시 감마보정을 통해서 그린다.
+    float gamma = 2.2f;
+    
+    vector vAlbedo = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vAlbedo = pow(vAlbedo, gamma);
+    
+    // ORM : (R)Roughness ,(G)Metallic , (B)Ambient Occlusion 에 저장 
+    vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord); 
+    float fRoughness = vORMDesc.r;
+    float fMetallic = vORMDesc.g;
+    float fAmbient_Occlusion = vORMDesc.b;
+    float fAO;
+    fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r; // Ambient Occulusion은 HBAO+로 
+    
+    // N
+    vector vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 N = vNormal.xyz * 2.f - 1.f;
+    
+    // F0
+    float3 F0 = 0.04f; //  F0 : reflectance ratio - 0.04 looks visually correct for non-metallic sufaces
+    F0 = lerp(F0, vAlbedo.rgb, fMetallic);
+    
+    // N(위에), V, L, H
+    vector vDepthDesc = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vWorldPos;
+    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
+    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+    vWorldPos.z = vNormal.w;
+    vWorldPos.w = 1.f;
+    
+    float fViewZ = vDepthDesc.w * g_CamFar;
+    vWorldPos = vWorldPos * fViewZ;
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+    
+    float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
+    float3 L = normalize(-g_vLightDir);
+    float3 H = normalize(V + L);
+    
+    //// Li(p, wi)
+    //float distance = length(g_vLightPos - In.vPosition);
+    //float attenuation = 1.0f / (distance * distance); //  inverse-square law
+    //float3 radiance = g_vLightColor * attenuation;
+    
+    // BRDF
+    float3 DFG_4WW = MY_BRDF(fRoughness, fMetallic, vAlbedo.rgb, F0, N, V, L, H);
+    
+
+    return Out;
+}
 /* ------------------ Technique ------------------ */
 
 technique11 DefaultTechnique
@@ -497,7 +562,6 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DEBUG();
@@ -508,7 +572,6 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
@@ -519,7 +582,6 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_POINT();
@@ -530,7 +592,6 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SPOT();
@@ -541,7 +602,6 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DEFERRED();
@@ -552,11 +612,22 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_PBR_DEFERRED();
+    }
+
+    pass New_PBR // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_NEW_PBR();
     }
 }

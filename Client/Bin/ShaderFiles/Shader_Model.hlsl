@@ -35,7 +35,6 @@ float2 RotateTexture(float2 texCoord, float angle)
     rotatedTexCoord.y = texCoord.x * sin(angle) + texCoord.y * cos(angle);
     
     return rotatedTexCoord;
-    
 }
 
 cbuffer VS_CONSTANT_BUFFER
@@ -86,6 +85,7 @@ struct PS_OUT
     float4 vDepth       : SV_TARGET2;
     float4 vORM         : SV_TARGET3;
     float4 vRimBloom    : SV_TARGET4; /* Rim + Bloom */
+    float4 vEmissive    : SV_Target5;
 };
 /* ------------------- Base Vertex Shader -------------------*/
 
@@ -117,58 +117,42 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-
     if (vMtrlDiffuse.a < 0.0f)
         discard;
     
-    
-    /* 0 ~ 1 */
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
-
-	/* -1 ~ 1 */
     vPixelNormal = vPixelNormal * 2.f - 1.f;
-
     float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
-    
-    vPixelNormal = mul(vPixelNormal, WorldMatrix);
-    
-    Out.vDiffuse = vMtrlDiffuse;
-    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    
-    //Out.vDiffuse = vMtrlDiffuse;
-    //Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-
-	return Out;
-}
-
-PS_OUT PS_MAIN_NORMAL(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-
-    
-
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-
-    if (vMtrlDiffuse.a < 0.0f)
-        discard;
-    
-    /* 0 ~ 1 */
-    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
-
-	/* -1 ~ 1 */
-    vPixelNormal = vPixelNormal * 2.f - 1.f;
-
-    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
-    
     vPixelNormal = mul(vPixelNormal, WorldMatrix);
     
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
- 
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+	return Out;
+}
+
+PS_OUT PS_MAIN_NORMAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a < 0.0f)
+        discard;
+    
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
 	return Out;
 }
 
@@ -218,6 +202,8 @@ PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     return Out;
 }
 
@@ -256,6 +242,9 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
     
     return Out;
 }
@@ -263,18 +252,14 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN In)
 PS_OUT PS_BloodPool(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-
- 
     
     float fTime = g_fTimeDelta;
     float2 newUV = RotateTexture(In.vTexcoord, fTime);
-    
-    
+   
     vector vMtrlDiffuse = g_ColorDiffuse.Sample(LinearSampler, newUV);
     vector vMtrlMask = g_MaskTexture.Sample(LinearSampler, newUV);
     vector vMtrlNoise = g_NoiseTexture.Sample(LinearSampler, newUV);
     
-
     if (vMtrlMask.r <= 0.6f)
         Out.vDiffuse = vector(0.275f, 1.f, 0.f, 1.f);
     else
@@ -282,16 +267,18 @@ PS_OUT PS_BloodPool(PS_IN In)
     
     //if (vMtrlDiffuse.a < 0.0f)
     //    discard;
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
     
-    
-    
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
     return Out;
 }
-
-
 
 /* ------------------- Technique -------------------*/ 
 

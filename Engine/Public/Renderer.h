@@ -19,7 +19,7 @@ public:
 		/* RenderGroup*/
 		RENDER_BLEND, RENDER_END
 	};
-	enum class POST_TYPE { DEFERRED, RADIAL_BLUR, HDR, DOF, FXAA, HSV, FINAL, TYPE_END};
+	enum class POST_TYPE { DEFERRED, RADIAL_BLUR, HDR, DOF, FXAA, HSV, VIGNETTE, FINAL, TYPE_END};
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -47,6 +47,8 @@ private:
 	HRESULT Render_RimBloom();
 	HRESULT Render_Deferred();
 	HRESULT Render_PBR();
+	HRESULT Render_MyPBR();
+	HRESULT Render_SSR();
 
 	HRESULT Deferred_Effect();
 	HRESULT Render_Effect_BloomBlur();
@@ -60,6 +62,7 @@ private:
 	HRESULT Render_DOF(); // 일반적으로 HDR적용이후에 적용됨 
 	HRESULT Render_FXAA();
 	HRESULT Render_HSV();
+	HRESULT Render_Vignette(); 
 	HRESULT Render_Final();
 	HRESULT Render_Blend();
 
@@ -100,6 +103,9 @@ public:
 	void Set_HDR_Active(_bool _HDR_active) { m_tHDR_Option.bHDR_Active = _HDR_active; }
 	void Set_FXAA_Active(_bool _FXAA_active) { m_tAnti_Option.bFXAA_Active = _FXAA_active; }
 	void Set_HSV_Active(_bool _HSV_active) { m_tHSV_Option.bScreen_Active = _HSV_active; }
+	void Set_Vignette_Active(_bool _Vignette_active) { m_tVignette_Option.bVignette_Active = _Vignette_active; }
+	void Set_Gray_Active(_bool _Gray_active) { m_eScreenDEffect_Desc.bGrayScale_Active = _Gray_active; }
+	void Set_Sephia_Active(_bool _Sephia_active) { m_eScreenDEffect_Desc.bSephia_Active = _Sephia_active; }
 
 	/* 옵션조절 */
 	void Set_Deferred_Option(DEFERRED_DESC desc) { m_tDeferred_Option = desc; }
@@ -111,6 +117,8 @@ public:
 	void Set_HDR_Option(HDR_DESC desc) { m_tHDR_Option = desc; }
 	void Set_FXAA_Option(ANTI_DESC desc) { m_tAnti_Option = desc; }
 	void Set_HSV_Option(HSV_DESC desc) { m_tHSV_Option = desc; }
+	void Set_Vignette_Option(VIGNETTE_DESC desc) { m_tVignette_Option = desc; }
+	void Set_ScreenEffect_Option(SCREENEFFECT_DESC desc) { m_eScreenDEffect_Desc = desc; }
 
 private:
 	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
@@ -124,6 +132,8 @@ private:
 	HDR_DESC					m_tHDR_Option				= {};
 	ANTI_DESC					m_tAnti_Option				= {};
 	HSV_DESC					m_tHSV_Option				= {};
+	VIGNETTE_DESC				m_tVignette_Option			= {};
+	SCREENEFFECT_DESC			m_eScreenDEffect_Desc		= {};
 
 private:
 	POST_TYPE					m_ePrevTarget				= POST_TYPE::FINAL;
@@ -151,8 +161,8 @@ private:
 	class CTexture*				m_pPerlinNoiseTextureCom	= { nullptr };
 	class CTexture*				m_pIrradianceTextureCom		= { nullptr };
 	class CTexture*				m_pPreFilteredTextureCom	= { nullptr };
-	class CTexture*				m_pBRDFTextureCom	= { nullptr };
-	class CTexture*				m_pVolumetrix_Voxel = { nullptr };
+	class CTexture*				m_pBRDFTextureCom			= { nullptr };
+	class CTexture*				m_pVolumetrix_Voxel			= { nullptr };
 	ID3D11DepthStencilView*		m_pLightDepthDSV			= { nullptr };
 	_float4x4					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT						Control_HotKey();
@@ -163,15 +173,15 @@ public:
 
 #ifdef _DEBUG
 public:
-	void	Set_DebugRenderTarget(_bool _bDebug) { m_bDebugRenderTarget = _bDebug; }
-	void	Set_DebugCom(_bool _bDebug) { m_bDebugCom = _bDebug; }
+	void			Set_DebugRenderTarget(_bool _bDebug) { m_bDebugRenderTarget = _bDebug; }
+	void			Set_DebugCom(_bool _bDebug) { m_bDebugCom = _bDebug; }
 
 private:
-	HRESULT Ready_DebugRender();
-	HRESULT Render_DebugCom();	
-	HRESULT Render_DebugTarget();
-	_bool	m_bDebugRenderTarget	= { true };
-	_bool	m_bDebugCom				= { false };
+	HRESULT			Ready_DebugRender();
+	HRESULT			Render_DebugCom();	
+	HRESULT			Render_DebugTarget();
+	_bool			m_bDebugRenderTarget	= { true };
+	_bool			m_bDebugCom				= { false };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
 

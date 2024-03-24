@@ -15,8 +15,15 @@ Texture2D g_Effect_Target;
 Texture2D g_RimBlur_Target;
 
 
-/* ------------------ Struct  ------------------ */ 
+/* ------------------ Value ------------------ */ 
+float g_GreyPower = 0.11f;
+float g_SepiaPower = 0.58f;
 
+/* ------------------ Define ------------------ */ 
+#define ColorTone float3(1.40, 1.10, 0.90) //[0.00 to 2.55, 0.00 to 2.55, 0.00 to 2.55] What color to tint the image
+#define Monochrome_conversion_values float3(0.18,0.41,0.41) //[0.00 to 1.00] Percentage of RGB to include (should sum up to 1.00)
+
+/* ------------------ Struct  ------------------ */ 
 struct HSV_DESC
 {
     bool bScreen_Active;
@@ -88,6 +95,33 @@ float3 hsv2rgb(float3 hsv)
 
     return rgb + m;
 }
+
+float4 Sepia(float4 colorInput)
+{
+    float3 sepia = colorInput.rgb;
+	
+	// calculating amounts of input, grey and sepia colors to blend and combine
+    float grey = dot(sepia, float3(0.2126, 0.7152, 0.0722));
+	
+    sepia *= ColorTone;
+	
+    float3 blend2 = (grey * g_GreyPower) + (colorInput.rgb / (g_GreyPower + 1));
+
+    colorInput.rgb = lerp(blend2, sepia, g_SepiaPower);
+	
+	// returning the final color
+    return colorInput;
+}
+
+float4 MonochromePass(float4 colorInput)
+{
+  //calculate monochrome
+    colorInput.rgb = dot(Monochrome_conversion_values, colorInput.rgb);
+	
+  //Return the result
+    return saturate(colorInput);
+}
+
 /* ------------------ VS / PS ------------------ */ 
 
 struct VS_IN
@@ -218,6 +252,58 @@ PS_OUT PS_MAIN_BLENDEFFECT(PS_IN In)
     
     return Out;
 }
+/* ------------------ 5 - Sephia ------------------ */
+
+PS_OUT PS_MAIN_FINAL_SEPHIA(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vDebug = g_DebugTarget.Sample(LinearSampler, In.vTexcoord);;
+    vector vFinal = g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
+    vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
+   
+    Out.vColor = vUI;
+    
+    // 안넣는 ver
+    if (Out.vColor.a == 0)
+    {
+        Out.vColor += vFinal + vDebug + vRimBloom;
+    }
+       
+    if (Out.vColor.a == 0)
+        discard;
+    
+    Out.vColor = Sepia(Out.vColor);
+    
+    return Out;
+}
+
+/* ------------------- 6 - GrayScale ------------------ */
+PS_OUT PS_MAIN_FINAL_GRAY(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vDebug = g_DebugTarget.Sample(LinearSampler, In.vTexcoord);;
+    vector vFinal = g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
+    vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
+   
+    Out.vColor = vUI;
+    
+    // 안넣는 ver
+    if (Out.vColor.a == 0)
+    {
+        Out.vColor += vFinal + vDebug + vRimBloom;
+    }
+       
+    if (Out.vColor.a == 0)
+        discard;
+    
+    Out.vColor = MonochromePass(Out.vColor);
+    
+    return Out;
+}
 /* ------------------ Technique ------------------ */
 
 technique11 DefaultTechnique
@@ -284,4 +370,29 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_BLENDEFFECT();
     }
+
+    pass FINAL_SEPHIA // 5
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_FINAL_SEPHIA();
+    }
+
+    pass FINAL_GRAY // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_FINAL_GRAY();
+    }
+
 }

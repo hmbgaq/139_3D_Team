@@ -364,7 +364,16 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_HSV_Setting();
 		ImGui::TreePop();
 	}
-
+	if (ImGui::TreeNode("Vignette Setting"))
+	{
+		Compress_Vignette_Setting();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Screen Effect"))
+	{
+		Compress_ScreenEffect_Setting();
+		ImGui::TreePop();
+	}
 	ImGui::PushID(3);
 	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0 / 7.0f, 0.6f, 0.6f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0 / 7.0f, 0.7f, 0.7f));
@@ -516,6 +525,38 @@ void CWindow_ShaderTool::Compress_HSV_Setting()
 
 	m_pGameInstance->Get_Renderer()->Set_HSV_Option(m_eHSV_Desc);
 }
+
+void CWindow_ShaderTool::Compress_Vignette_Setting()
+{
+	ImGui::Checkbox("Vignette Active", &m_eVignette_Desc.bVignette_Active);
+
+	ImGui::SliderFloat("fVignetteRatio", &m_eVignette_Desc.fVignetteRatio, 0.0f, 6.0f, "Ratio = %.3f");
+
+	ImGui::SliderFloat("fVignetteRadius", &m_eVignette_Desc.fVignetteRadius, -1.0f, 3.0f, "Radius = %.3f");
+
+	ImGui::SliderFloat("fVignetteAmount", &m_eVignette_Desc.fVignetteAmount, -2.0f, 1.0f, "Amount = %.3f");
+	
+	ImGui::SliderFloat("fVignetteSlope", &m_eVignette_Desc.fVignetteSlope, 0.0f, 16.0f, "Slope = %.3f");
+
+	ImGui::SliderFloat("fVignetteCenter_X", &m_eVignette_Desc.fVignetteCenter_X, 0.0f, 1.0f, "Center_X = %.3f");
+
+	ImGui::SliderFloat("fVignetteCenter_Y", &m_eVignette_Desc.fVignetteCenter_Y, 0.0f, 1.0f, "Center_Y = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_Vignette_Option(m_eVignette_Desc);
+}
+
+void CWindow_ShaderTool::Compress_ScreenEffect_Setting()
+{
+	ImGui::Checkbox("Gray Active", &m_eScreenDEffect_Desc.bGrayScale_Active);
+	ImGui::Checkbox("Sephia Active", &m_eScreenDEffect_Desc.bSephia_Active);
+
+	ImGui::SliderFloat("Grey Power", &m_eScreenDEffect_Desc.GreyPower, 0.0f, 1.0f, "GreyPower = %.3f");
+	ImGui::SliderFloat("Sephia Power", &m_eScreenDEffect_Desc.SepiaPower, 0.0f, 1.0f, "SepiaPower = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_ScreenEffect_Option(m_eScreenDEffect_Desc);
+	
+}
+
 void CWindow_ShaderTool::Save_Shader()
 {
 	string path = "../Bin/DataFiles/Data_Shader/Level/";
