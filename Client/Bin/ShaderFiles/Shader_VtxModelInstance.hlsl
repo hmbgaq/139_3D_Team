@@ -303,6 +303,7 @@ PS_OUT PS_MAIN_Dissove(PS_IN_NORMAL In)
 	return Out;
 }
 
+/* --------------------------------------------------*/
 technique11 DefaultTechnique
 {
 	pass Default //0
@@ -397,7 +398,5 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_NORMALNONCLIP();
     }
-
-
 
 }

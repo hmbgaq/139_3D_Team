@@ -280,6 +280,24 @@ PS_OUT PS_BloodPool(PS_IN In)
     return Out;
 }
 
+/* ------------------- (8) Icicle -------------------*/
+PS_OUT PS_MAIN_ICICLE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+	
+    //Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+    Out.vDiffuse = float4(1.f, 0.f, 0.f, 1.f);
+	
+    clip(Out.vDiffuse.a - 0.1f);
+	
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+	
+    return Out;
+}
+
 /* ------------------- Technique -------------------*/ 
 
 technique11 DefaultTechnique
@@ -384,7 +402,17 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_NORMAL();
     }
 
-
+    pass Icicle // 8
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_ICICLE();
+    }
 
     
 }

@@ -57,6 +57,16 @@ void CEnvironment_Object::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Object::Tick(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_8))
+	{
+		iCheckMeshNum += 1;
+
+		if (iCheckMeshNum >= m_pModelCom->Get_NumMeshes())
+			iCheckMeshNum = 0;
+
+		cout << iCheckMeshNum << endl;
+	}
+
 	//f (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
 	//
 	//	m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
@@ -86,30 +96,41 @@ void CEnvironment_Object::Late_Tick(_float fTimeDelta)
 
 HRESULT CEnvironment_Object::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
-	
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-	
-	for (size_t i = 0; i < iNumMeshes; i++)
+	FAILED_CHECK(Bind_ShaderResources());
+
+	wstring strTemp = Get_ModelTag();
+
+	if (TEXT("Prototype_Component_Model_TeslaIcicleLong2") == Get_ModelTag())
 	{
-		if(m_tEnvironmentDesc.bAnimModel == true)
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+			for (size_t i = 0; i < iNumMeshes; i++)
 		{
-			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+
+			if (iCheckMeshNum == i)
+				m_pShaderCom->Begin(8);
+			else
+				m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
+
+			m_pModelCom->Render((_uint)i);
 		}
-
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
-		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
-		
-		
-		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
-
-		m_pModelCom->Render((_uint)i);
 	}
+	else
+	{
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			if (m_tEnvironmentDesc.bAnimModel == true)
+			{
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			}
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+			m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
+			m_pModelCom->Render((_uint)i);
+		}
+	}
 	return S_OK;
 }
 
