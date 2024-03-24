@@ -9,6 +9,7 @@ void CPlayer_ShotgunElectric_Fire_ShortRange::Initialize(CPlayer* pActor)
 
 	pActor->Set_Weapon_Enable(PLAYER_WEAPON_SHOTGUN, true);
 
+	pActor->Set_UseMouseMove(false);
 }
 
 CState<CPlayer>* CPlayer_ShotgunElectric_Fire_ShortRange::Update(CPlayer* pActor, _float fTimeDelta)
@@ -21,10 +22,11 @@ CState<CPlayer>* CPlayer_ShotgunElectric_Fire_ShortRange::Update(CPlayer* pActor
 		if (true == m_bFlags[0]) 
 		{
 			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_SHOTGUN);
-			pWeapon->Fire(_float3(-0.1f, 0.f, 0.f));
+			pWeapon->Fire(_float3(-0.3f, 0.f, 1.f));
 
 			pActor->Set_Animation(ECast(CPlayer::Player_State::Player_IdleLoop), CModel::ANIM_STATE_LOOP, true, false);
 			pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
+			
 			pActor->Set_Splitted(true);
 
 			pActor->Activate_ShootingReaction(30.f);

@@ -24,7 +24,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 	__super::Update(pActor, fTimeDelta);
 
 	fInputWaitTime += fTimeDelta;
-	if (0.5f <= fInputWaitTime)
+	if (1.0f <= fInputWaitTime)
 	{
 		return new CPlayer_IdleLoop();
 	}
@@ -126,8 +126,9 @@ void CPlayer_Bandit_Special_01::Create_Bullet(CPlayer* pActor)
 {
 	pActor->Search_Target(15.f);
 	CCharacter* pTarget = pActor->Get_Target();
-	if (pActor->Get_Target()) 
+	if (pTarget)
 	{
+		pActor->Look_At_Target();
 		_uint iLevel = m_pGameInstance->Get_NextLevel();
 
 		CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(iLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Bullet_Revolver");

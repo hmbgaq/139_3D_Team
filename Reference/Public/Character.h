@@ -212,6 +212,9 @@ public:
 public:
 	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
 
+public:
+	void Set_UseMouseMove(_bool _bIsUseMouseMove);
+
 
 public:
 #pragma region ===========> HP <=========== 

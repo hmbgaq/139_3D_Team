@@ -760,6 +760,11 @@ _uint CCharacter::Get_CurrentKeyFrames(_uint iIndex)
 	return m_pBody->Get_CurrentKeyFrames(iIndex);
 }
 
+void CCharacter::Set_UseMouseMove(_bool _bIsUseMouseMove)
+{
+	m_pBody->Set_UseMouseMove(_bIsUseMouseMove);
+}
+
 
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {

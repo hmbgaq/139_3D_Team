@@ -204,9 +204,16 @@ void CBody::OnCollisionExit(CCollider* other)
 {
 }
 
-void CBody::Set_MouseMove(_float fTimeDelta)
+void CBody::Set_MouseMove(_float fTimeDelta, _bool bIsUseMouseMove)
 {
 	_float2 vMouseMove = { 0.f, 0.f };
+
+	if (false == bIsUseMouseMove)
+	{
+		m_pModelCom->Set_MouseMove(vMouseMove);
+		return;
+	}
+
 
 	//_float fSpeed = 10.f;
 

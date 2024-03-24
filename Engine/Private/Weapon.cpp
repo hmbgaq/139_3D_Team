@@ -236,9 +236,7 @@ _float3 CWeapon::Get_WorldPosition()
 
 _float3 CWeapon::Get_MuzzlePos()
 {
-	_float3 vMuzzlePos = Calc_Front_Pos(m_vMuzzlePos_Local) + Get_WorldPosition();
-
-	return vMuzzlePos;
+	return Calc_Front_Pos(m_vMuzzlePos_Local);
 }
 
 _float3 CWeapon::Calc_Front_Pos(_float3 vDiff)
@@ -255,8 +253,8 @@ _float3 CWeapon::Calc_Front_Pos(_float3 vDiff)
 void CWeapon::Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos)
 {
 	CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, strLayerTag, strBulletTag);
-	_float3 vSpawnPos = Get_WorldPosition();
-	//_float3 vSpawnPos = Get_MuzzlePos();
+	//_float3 vSpawnPos = Get_WorldPosition();
+	_float3 vSpawnPos = Get_MuzzlePos();
 	_vector vTargetVector = XMLoadFloat3(&Calc_Front_Pos(vTargetPos));
 
 	pBullet->Set_Position(vSpawnPos);

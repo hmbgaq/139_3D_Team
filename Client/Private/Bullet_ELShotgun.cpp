@@ -43,7 +43,7 @@ HRESULT CBullet_ELShotgun::Initialize(void* pArg)
 
 	m_fDamage = 20.f;
 
-	m_fLifeTime = 1.f;
+	m_fLifeTime = 0.5f;
 
 	// ÀÌÆåÆ® »ý¼º
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
@@ -132,7 +132,7 @@ HRESULT CBullet_ELShotgun::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER_ATTACK);
-	BoundingDesc.fRadius = { 1.0f };
+	BoundingDesc.fRadius = { 1.5f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
