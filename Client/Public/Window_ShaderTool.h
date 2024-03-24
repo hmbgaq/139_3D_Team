@@ -61,8 +61,9 @@ private:
 	HDR_DESC			m_eHDR_Desc				= {};
 	ANTI_DESC			m_eAnti_Desc			= {};
 	HSV_DESC			m_eHSV_Desc				= {};
-	LEVEL_SHADER_DESC	m_eTotalShader_Desc		= {};
-	
+	VIGNETTE_DESC		m_eVignette_Desc		= {};
+	SCREENEFFECT_DESC	m_eScreenDEffect_Desc	= {};
+
 	/* Shader Save / Load */
 	_bool m_bShaderSave = {false} ;
 	_bool m_bShaderLoad = {false} ;
@@ -108,6 +109,8 @@ private:
 	void Compress_HDR_Setting();
 	void Compress_FXAA_Setting();
 	void Compress_HSV_Setting();
+	void Compress_Vignette_Setting();
+	void Compress_ScreenEffect_Setting();
 	void Save_Shader();
 	
 	/* Level Light Control */

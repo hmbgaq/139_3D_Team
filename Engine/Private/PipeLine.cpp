@@ -78,17 +78,16 @@ _float4 CPipeLine::Get_CamSetting()
 	_matrix projectionMatrix = XMLoadFloat4x4(&m_Transform[D3DTS_PROJ]);
 	_matrix projectionInverse = XMMatrixInverse(nullptr, projectionMatrix);
 
-	// 역행렬에서 near, far, fov 추출
-	_float Cam_near = projectionInverse.r[3].m128_f32[2] / (projectionInverse.r[2].m128_f32[2] - 1.0f);
-	_float Cam_far = projectionInverse.r[3].m128_f32[2] / (projectionInverse.r[2].m128_f32[2] + 1.0f);
-	_float Cam_fovY = atan(1.0f / projectionInverse.r[1].m128_f32[1]) * 2.0f;
-	_float Cam_aspectRatio = projectionInverse.r[0].m128_f32[0] / projectionInverse.r[1].m128_f32[1];
+	// 값 찾기
+	_float fovY = atan(1.0f / projectionMatrix.r[1].m128_f32[1]) * 2.0f;
+	_float Cam_Near = projectionMatrix.r[2].m128_f32[2] / projectionMatrix.r[3].m128_f32[2];
+	_float Cam_Far = projectionMatrix.r[2].m128_f32[3] / (projectionMatrix.r[2].m128_f32[2] - 1.0f);
+	_float aspectRatio = projectionMatrix.r[1].m128_f32[1] / projectionMatrix.r[0].m128_f32[0];
 
-	Result = { Cam_near, Cam_far, Cam_fovY, Cam_aspectRatio };
+	Result = _float4{ Cam_Near, Cam_Far, fovY, aspectRatio };
 
 	return Result;
 }
-
 
 //RAY CPipeLine::Get_MouseRayWorld(HWND g_hWnd, const unsigned int g_iWinSizeX, const unsigned int g_iWinSizeY)
 //{

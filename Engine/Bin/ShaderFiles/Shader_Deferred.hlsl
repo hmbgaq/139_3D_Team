@@ -509,17 +509,17 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
     vector vAlbedo = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     vAlbedo = pow(vAlbedo, gamma);
     
-    // N
-    vector vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
-    float3 N = vNormal.xyz * 2.f - 1.f;
-    
     // ORM : (R)Roughness ,(G)Metallic , (B)Ambient Occlusion 에 저장 
     vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord); 
     float fRoughness = vORMDesc.r;
     float fMetallic = vORMDesc.g;
     float fAmbient_Occlusion = vORMDesc.b;
-    float fAO = 1.f;
+    float fAO;
     fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r; // Ambient Occulusion은 HBAO+로 
+    
+    // N
+    vector vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 N = vNormal.xyz * 2.f - 1.f;
     
     // F0
     float3 F0 = 0.04f; //  F0 : reflectance ratio - 0.04 looks visually correct for non-metallic sufaces
@@ -539,23 +539,16 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
     
     float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
-    float3 L = -g_vLightDir;
+    float3 L = normalize(-g_vLightDir);
     float3 H = normalize(V + L);
     
-    // Li(p, wi)
-    float distance = length(g_vLightPos - In.vPosition);
-    float attenuation = 1.0f / (distance * distance); //  inverse-square law
-    float3 radiance = g_vLightColor * attenuation;
+    //// Li(p, wi)
+    //float distance = length(g_vLightPos - In.vPosition);
+    //float attenuation = 1.0f / (distance * distance); //  inverse-square law
+    //float3 radiance = g_vLightColor * attenuation;
     
     // BRDF
     float3 DFG_4WW = MY_BRDF(fRoughness, fMetallic, vAlbedo.rgb, F0, N, V, L, H);
-    
-    //LND : Radiance 구하는식
-    //float3 lightColor = float3(23.47f, 21.31f, 20.79f);
-    //float3 wi = normalize(lightPos - fragPos);
-    //float cosTheta = max(dot(N, Wi), 0.0);
-    //float attenuation = calculateAttenuation(fragPos, lightPos);
-    //float radiance = lightColor * attenuation * cosTheta;
     
 
     return Out;

@@ -118,15 +118,19 @@ float3 MY_BRDF(in float fRoughness, in float fMetallic, in float3 vDiffuseColor,
     float denominator = (4 * WoDotN * WiDotN);
 
     // 0.001f just in case product is 0
-    float3 specular = nominator / (denominator + 0.001f);
+    //float3 specular_factor = nominator / (denominator + 0.001f);
+    float3 specular_factor = nominator / max(denominator, 0.001);
 
     //  Energy Conservation
     float3 kS = F; //  reflection energy
     float3 kD = 1.0f - kS; //  refraction energy
     kD *= 1.0 - fMetallic; //  if metallic nullify kD
 
-    //  Calculate radiance
-    vColor = (((kD * vDiffuseColor / PI) + specular) * radiance * WiDotN);
-
+    //  Calculate Cook-Torrance Reflectance Equation 
+    vColor = (((kD * vDiffuseColor / PI) + specular_factor) * radiance * WiDotN);
+    // (kD * vDiffuseColor / PI) = Cook-Torrance Diffuse
+    // specular_factor = BRDF수행하고 추가연산한 결과 
+    // radiance = 카메라에 SOLID ANGLE을 가진 형태로 들어오는 빛의 양 -> 법선벡터와 빛의 반대방향의 dot
+    // WiDotN
     return vColor;
 }
