@@ -182,6 +182,7 @@ private:
 	_float				m_fRadian = { 0.f };
 
 	_float4				m_fPosition = {};
+	_bool				m_bIsGround = { false };
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _float fSpeedPerSec, _float fRotationPerSec);

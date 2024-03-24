@@ -123,6 +123,15 @@ void CPlayer::Tick(_float fTimeDelta)
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
 
+	//if (m_pGameInstance->Key_Down(DIK_T))
+	//{
+	//	_float4 vForceFloat4 = { 0.f, 1.f, 0.f, 1.f };
+	//	_vector vForce = XMLoadFloat4(&vForceFloat4);
+
+	//	Add_Force(vForce, 1.f);
+	//}
+
+
 	//_float3 vPos = Get_Position();
 
 	//PxControllerFilters Filters;

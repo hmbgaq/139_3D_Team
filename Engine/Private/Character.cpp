@@ -57,6 +57,9 @@ HRESULT CCharacter::Initialize(void* pArg)
 	m_pRigidBody->Set_Owner(this);
 	m_pRigidBody->Set_Transform(m_pTransformCom);
 
+
+	m_pRigidBody->Set_UseGravity(true);
+
 	return S_OK;
 }
 

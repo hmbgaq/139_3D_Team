@@ -76,7 +76,7 @@ void CRigidBody::Late_Tick(_float fTimeDelta)
 		_float4 vMoveValueFloat4;
 		XMStoreFloat4(&vMoveValueFloat4, vMoveValue);
 
-		vMoveValueFloat4.y -= 9.81f * fTimeDelta;
+		vMoveValueFloat4.y -= 9.81f * 2.f * fTimeDelta;
 		vMoveValue = XMLoadFloat4(&vMoveValueFloat4);
 
 		//_float vMoveValueY = XMVectorGetY(vMoveValue);
@@ -92,8 +92,12 @@ void CRigidBody::Late_Tick(_float fTimeDelta)
 		pNavigation = pCharacter->Get_Navigation();
 	}
 
-	if (true == m_pOwnerTransform->Get_Enable() && nullptr != m_pOwnerTransform)
+	if (nullptr != m_pOwnerTransform && true == m_pOwnerTransform->Get_Enable())
+	{
 		m_pOwnerTransform->Move_On_Navigation(vMoveValue, pNavigation);
+		//m_pOwnerTransform->Move_On_Navigation_ForSliding(vMoveValue, fTimeDelta, pNavigation);
+	}
+		
 
 }
 
