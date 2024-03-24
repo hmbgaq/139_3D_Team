@@ -109,15 +109,12 @@ void CTransform::Move_On_Navigation_ForSliding(_vector vMove, const _float fTime
 	_bool bIsMove_ForSliding = pNavigation->isMove_ForSliding(vPosition, vDir, &vSlidingDir);
 	_bool bIsMove_ForSliding_NewPosition = false;
 
-	//if (true == bIsMove_ForSliding) 
-	//{
-	//	//vTargetPos = vPosition;
-	//	//XMStoreFloat4(&vResult, vPosition);
-
-	//}
-	//else if (XMVectorGetX(XMVector3Length(vSlidingDir)) > 0.f)
-	
-	if (XMVectorGetX(XMVector3Length(vSlidingDir)) > 0.f)
+	if (true == bIsMove_ForSliding) 
+	{
+		//vTargetPos = vPosition;
+		//XMStoreFloat4(&vResult, vPosition);
+	}
+	else if (XMVectorGetX(XMVector3Length(vSlidingDir)) > 0.f)
 	{
 		vSlidingDir = XMVector3Normalize(vSlidingDir);
 		_vector vNewPosition = Get_State(CTransform::STATE_POSITION) + vSlidingDir * m_fSpeedPerSec * fTimeDelta;
