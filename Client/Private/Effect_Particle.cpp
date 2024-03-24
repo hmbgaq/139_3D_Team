@@ -213,7 +213,30 @@ void CEffect_Particle::ReSet_Effect()
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
 	m_tVoidDesc.bDissolve = FALSE;
-	m_tVoidDesc.bRender = FALSE;
+	
+
+	if (m_tVoidDesc.bUseSpriteAnim)
+	{
+		m_tSpriteDesc.bSpriteFinish = FALSE;
+		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
+		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
+	}
+
+	if (!m_pVIBufferCom->Get_Desc()->bRecycle)	// 파티클 버퍼가 재사용이 아닐때만 리셋
+	{
+		m_tVoidDesc.bRender = FALSE;
+		m_pVIBufferCom->ReSet(); // 버퍼 리셋
+	}
+		
+
+}
+
+void CEffect_Particle::Init_ReSet_Effect()
+{
+	__super::ReSet_Effect();
+
+	m_tVoidDesc.fDissolveAmount = 0.f;
+	m_tVoidDesc.bDissolve = FALSE;
 
 
 	if (m_tVoidDesc.bUseSpriteAnim)
@@ -224,6 +247,7 @@ void CEffect_Particle::ReSet_Effect()
 	}
 
 
+	m_tVoidDesc.bRender = FALSE;
 	m_pVIBufferCom->ReSet(); // 버퍼 리셋
 
 }
@@ -233,7 +257,7 @@ void CEffect_Particle::End_Effect()
 	__super::End_Effect();
 
 	if (m_tVoidDesc.bLoop)
-	{
+	{			
 		ReSet_Effect();
 	}
 

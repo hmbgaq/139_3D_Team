@@ -333,6 +333,12 @@ void CEffect_Void::ReSet_Effect()
 
 }
 
+void CEffect_Void::Init_ReSet_Effect()
+{
+	m_tVoidDesc.Reset_Times();
+
+}
+
 void CEffect_Void::End_Effect()
 {
 	// 자식에서 각자 필요한 엔드 행동해주기

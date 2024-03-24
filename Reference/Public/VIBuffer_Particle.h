@@ -33,6 +33,7 @@ public:
 		_bool		bUseGravity = { TRUE };
 		FORCE_MODE	eForce_Mode = { FORCE_MODE::IMPULSE };
 
+
 		_float		fGravity = { -9.8f };			// 중력 가속도
 		
 
@@ -51,11 +52,16 @@ public:
 		EASING_TYPE	eType_SpeedLerp = { EASING_TYPE::LINEAR };
 		_float2		vMinMaxSpeed = { 1.f, 1.f };
 
+
 		/* For.Position */
 		_float3		vMinCenterOffsetPos = { 0.f, 0.f, 0.f };
 		_float3		vMaxCenterOffsetPos = { 0.f, 0.f, 0.f };
 
 		_float2		vMinMaxRange = { 0.1f, 3.f };
+		_float		fAddRange = { 0.f };
+
+		_float2		vMinMaxPosY = { 0.1f, 3.f };	// 파티클이 올라갈 최고 높이
+		_float2		vMinMaxTheta = { 0.f, 360.f };	// 3.14f * 2.f
 
 
 		/* For.Rotation */
@@ -128,15 +134,17 @@ public:
 		// 위치
 		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
 		_float	fMaxRange = { 3.f };
-
+		_float	fMaxPosY = { 3.f };
 
 		// 스피드
 		_float	fCurSpeed = { 1.f };
+		_float  fCurTheta = { 0.f };
 
 
 		// 크기
 		_float	fUpScaleTimeAccs	= { 0.f };
 		_float	fDownScaleTimeAccs	= { 0.f };
+
 
 		_float2	vCurScales			= { 1.f, 1.f };
 		_float2	vMaxScales			= { 1.f, 1.f };
@@ -221,6 +229,7 @@ public:
 	_float4 Make_Dir(_uint iNum);
 	void	Rotation_Instance(_uint iNum);
 	void	Update_Spark_Rotation(_uint iNum);
+	void	Update_Dir_Rotation(_uint iNum);
 
 
 	/* For.RigidBody */

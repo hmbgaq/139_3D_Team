@@ -242,7 +242,6 @@ void CEffect_Rect::Load_FromJson(const json& In_Json)
 
 void CEffect_Rect::ReSet_Effect()
 {
-
 	__super::ReSet_Effect();
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
@@ -257,6 +256,23 @@ void CEffect_Rect::ReSet_Effect()
 		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 
+}
+
+void CEffect_Rect::Init_ReSet_Effect()
+{
+	__super::ReSet_Effect();
+
+	m_tVoidDesc.fDissolveAmount = 0.f;
+	m_tVoidDesc.bDissolve = FALSE;
+	m_tVoidDesc.bRender = FALSE;
+
+
+	if (m_tVoidDesc.bUseSpriteAnim)
+	{
+		m_tSpriteDesc.bSpriteFinish = FALSE;
+		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
+		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
+	}
 }
 
 void CEffect_Rect::End_Effect()

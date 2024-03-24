@@ -181,6 +181,7 @@ public:
 
 public:
 	virtual void	ReSet_Effect();
+	virtual void	Init_ReSet_Effect();
 	virtual void	End_Effect();
 
 

@@ -37,6 +37,7 @@ public:
 
 public:
 	virtual void	ReSet_Effect()	override;
+	virtual void	Init_ReSet_Effect() override;
 	virtual void	End_Effect()	override;
 
 public:

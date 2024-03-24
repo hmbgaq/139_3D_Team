@@ -178,15 +178,43 @@ HRESULT CEffect_Instance::Render()
 
 void CEffect_Instance::ReSet_Effect()
 {
-	__super::ReSet_Effect();	// 시간 초기화
+	__super::ReSet_Effect(); // 시간 초기화
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
 	m_tVoidDesc.bDissolve = FALSE;
 
-	//if (!m_pVIBufferCom->Get_Desc()->bRecycle)
+
+	if (m_tVoidDesc.bUseSpriteAnim)
 	{
-		m_pVIBufferCom->ReSet();
+
 	}
+
+	if (!m_pVIBufferCom->Get_Desc()->bRecycle)	// 파티클 버퍼가 재사용이 아닐때만 리셋
+	{
+		m_tVoidDesc.bRender = FALSE;
+		m_pVIBufferCom->ReSet(); // 버퍼 리셋
+	}
+		
+
+}
+
+void CEffect_Instance::Init_ReSet_Effect()
+{
+	__super::ReSet_Effect(); // 시간 초기화
+
+	m_tVoidDesc.fDissolveAmount = 0.f;
+	m_tVoidDesc.bDissolve = FALSE;
+
+
+	if (m_tVoidDesc.bUseSpriteAnim)
+	{
+
+	}
+
+
+	m_tVoidDesc.bRender = FALSE;
+	m_pVIBufferCom->ReSet(); // 버퍼 리셋
+
 
 }
 
