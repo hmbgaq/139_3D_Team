@@ -600,3 +600,31 @@ wstring ENGINE_DLL Engine::SMath::string_To_WString(const string _string)
 
 	return _wstring;
 }
+
+string ENGINE_DLL Engine::SMath::capitalizeString(string strWord)
+{
+	// LEVEL_INTRO 라고했을때, 이걸 Level_Intro 이렇게 첫번째 글자와 _다음글자 이렇게 두개만 대문자로 하고 나머지는 소문자로 바꾸는 함수 
+
+	bool capitalizeNext = true; // 다음 문자를 대문자로 변환할지 여부를 나타내는 플래그
+
+	for (size_t i = 0; i < strWord.length(); ++i) {
+		if (isalpha(strWord[i]))
+		{
+			if (capitalizeNext)
+			{
+				strWord[i] = toupper(strWord[i]); // 대문자로 변환
+				capitalizeNext = false;
+			}
+			else
+			{
+				strWord[i] = tolower(strWord[i]); // 소문자로 변환
+			}
+		}
+		else if (strWord[i] == '_')
+		{
+			capitalizeNext = true; // 다음 문자를 대문자로 변환하기 위해 플래그를 설정
+		}
+	}
+
+	return strWord;
+}

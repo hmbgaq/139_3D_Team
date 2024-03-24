@@ -75,6 +75,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 
+	CData_Manager::GetInstance()->Set_Player(this);
+	m_pGameInstance->Set_Player(this);
+
+
 	///* For.Com_PhysXController */
 	//FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"), TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom)));
 	//m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
@@ -88,11 +92,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//Preset::PhysXColliderDesc::GroundSetting(tPhysXColliderDesc, m_pTransformCom);
 	//m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
 	//m_pPhysXCollider->Add_PhysXActorAtScene();
-
-	CData_Manager::GetInstance()->Set_Player(this);
-	m_pGameInstance->Set_Player(this);
-	/* Temp - 맵에 맞게 위치 조정한값*/
-	//m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, XMVectorSet(-26.f, 0.f, -6.f, 1.f));
 
 	return S_OK;
 }
@@ -108,13 +107,12 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pActor/* && m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL)*/)
+	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
 
 	Update_ChargingTime(fTimeDelta);
-
 
 
 	CData_Manager::GetInstance()->Set_CurHP(m_iHp);
@@ -315,9 +313,9 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 	}
 }
 
-void CPlayer::Activate_ShootingReaction()
+void CPlayer::Activate_ShootingReaction(_float fHeight)
 {
-	m_pBody->Activate_ShootingReaction();
+	m_pBody->Activate_ShootingReaction(fHeight);
 }
 
 
@@ -391,20 +389,38 @@ HRESULT CPlayer::Ready_PartObjects()
 	//{
 		
 	CWeapon::WEAPON_DESC		WeaponDesc = {};
-	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, WEAPON_PUNCH_L));
-	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, WEAPON_PUNCH_R));
-	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELWinchester"), "RightHandIK", WeaponDesc, WEAPON_WINCHESTER));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc,				PLAYER_WEAPON_PUNCH_L));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc,			PLAYER_WEAPON_PUNCH_R));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELWinchester"), "RightHandIK", WeaponDesc,		PLAYER_WEAPON_WINCHESTER));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Revolver"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_REVOLVER));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELShotgun"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_SHOTGUN));
 
-	//}
 
-	CWeapon* m_pWeapon_Punch_L = Get_Weapon(WEAPON_PUNCH_L);
-	m_pWeapon_Punch_L->Set_Enable(false);
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Kick"), "RightFoot", WeaponDesc,			PLAYER_WEAPON_KICK));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Zapper"), "LeftHandIK", WeaponDesc,		PLAYER_WEAPON_ZAPPER));
+
 	
-	CWeapon* m_pWeapon_Punch_R = Get_Weapon(WEAPON_PUNCH_R);
-	m_pWeapon_Punch_R->Set_Enable(false);
-	
-	CWeapon* m_pWeapon_Winchester = Get_Weapon(WEAPON_WINCHESTER);
-	m_pWeapon_Winchester->Set_Enable(false);
+
+	//CWeapon* m_pWeapon_Punch_L = Get_Weapon(PLAYER_WEAPON_PUNCH_L);
+	//m_pWeapon_Punch_L->Set_Enable(false);
+	//
+	//CWeapon* m_pWeapon_Punch_R = Get_Weapon(PLAYER_WEAPON_PUNCH_R);
+	//m_pWeapon_Punch_R->Set_Enable(false);
+	//
+	//CWeapon* m_pWeapon_Winchester = Get_Weapon(PLAYER_WEAPON_WINCHESTER);
+	//m_pWeapon_Winchester->Set_Enable(false);
+
+	//CWeapon* m_pWeapon_Revolver = Get_Weapon(PLAYER_WEAPON_REVOLVER);
+	//m_pWeapon_Revolver->Set_Enable(false);
+
+	//CWeapon* m_pWeapon_Shotgun = Get_Weapon(PLAYER_WEAPON_SHOTGUN);
+	//m_pWeapon_Shotgun->Set_Enable(false);
+
+	//CWeapon* m_pWeapon_Kick = Get_Weapon(PLAYER_WEAPON_KICK);
+	//m_pWeapon_Kick->Set_Enable(false);
+
+	//CWeapon* m_pWeapon_Zapper = Get_Weapon(PLAYER_WEAPON_ZAPPER);
+	//m_pWeapon_Zapper->Set_Enable(false);
 
 	
 	

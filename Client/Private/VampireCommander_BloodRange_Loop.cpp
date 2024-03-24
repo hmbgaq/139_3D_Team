@@ -42,10 +42,8 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 		
 		CUI_Weakness* pWeakneesUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
 		pActor->m_pWeakneesUIs.push_back(pWeakneesUI);
-		
 		m_iRandom[0] = SMath::Random(0, 12);
 		m_bFlags[0] = true;
-		//m_bFlags[1] = true;
 	}
 	else if (m_bFlags[1] == false && m_fHealHP >= 70.f && m_fHealHP < 130.f)
 	{
@@ -61,9 +59,14 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 		m_iRandom[2] = SMath::Random(0, 12);
 		m_bFlags[2] = true;
 	}
+
+	
+
 	if (pActor->m_pWeakneesUIs.size() > 0)
 	{
-		if(m_fHealHP >= 10.f)
+		
+
+		if(m_fHealHP >= 10.f&& pActor->m_pWeakneesUIs[0]->Get_Enable()==true)
 		{//뼈의 위치 갱신1
 			_float4x4 BoneMatrix = {};
 			_float4x4 temp = {};
@@ -75,7 +78,7 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 
 			pActor->m_pWeakneesUIs[0]->SetUp_WorldToScreen(temp);
 		}
-		if (m_fHealHP >= 70.f)
+		if (m_fHealHP >= 70.f && pActor->m_pWeakneesUIs[1]->Get_Enable() == true)
 		{//뼈의 위치 갱신2
 			_float4x4 BoneMatrix = {};
 			_float4x4 temp = {};
@@ -87,7 +90,7 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 
 			pActor->m_pWeakneesUIs[1]->SetUp_WorldToScreen(temp);
 		}
-		if (m_fHealHP >= 130.f)
+		if (m_fHealHP >= 130.f && pActor->m_pWeakneesUIs[2]->Get_Enable() == true)
 		{//뼈의 위치 갱신3
 			_float4x4 BoneMatrix = {};
 			_float4x4 temp = {};
@@ -99,6 +102,25 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 
 			pActor->m_pWeakneesUIs[2]->SetUp_WorldToScreen(temp);
 		}
+		//카운트해서 3개가 다 쳐맞아서 꺼지면 스턴으로
+		if (m_bFlags[3] == false && m_fHealHP >= 10.f &&  pActor->m_pWeakneesUIs[0]->Get_Enable() == false)
+		{
+			++m_iShootingCount;
+			m_bFlags[3] = true;
+		}
+		if (m_bFlags[4] == false && m_fHealHP >= 70.f && pActor->m_pWeakneesUIs[1]->Get_Enable() == false)
+		{
+			++m_iShootingCount;
+			m_bFlags[4] = true;
+		}
+		if (m_bFlags[5] == false && m_fHealHP >= 130.f && pActor->m_pWeakneesUIs[2]->Get_Enable() == false)
+		{
+			++m_iShootingCount;
+			m_bFlags[5] = true;
+		}
+
+		if (m_iShootingCount >= 3)
+			m_bSuccessShooting = true;
 	}
 	
 	

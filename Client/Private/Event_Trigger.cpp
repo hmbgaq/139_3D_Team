@@ -89,7 +89,7 @@ HRESULT CEvent_Trigger::Ready_Component()
 	/* For.Com_Collider */
 	{
 		CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
-		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
+		BoundingDesc.iLayer = ECast(COLLISION_LAYER::NONE);
 		BoundingDesc.vExtents = _float3(0.22f, 0.8f, 0.22f);
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 	

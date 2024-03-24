@@ -19,6 +19,8 @@ public:
 	_bool	Invalidate_TransformationMatrix(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones, _bool _bIsSplitted = false);
 	_bool	Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones, _float2 vMouseMove);
 
+	_bool Invalidate_TransformationMatrix_Parasiter(CModel::ANIM_STATE _eAnimState, _float fTimeDelta, const CModel::BONES& Bones, _float3 pPlayerPos);
+
 
 public:
 	vector<class CChannel*>* Get_Channels() { return &m_Channels; };

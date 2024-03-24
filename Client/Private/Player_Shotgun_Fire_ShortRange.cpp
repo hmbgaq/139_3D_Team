@@ -1,6 +1,9 @@
 #include "..\Public\Player_Shotgun_Fire_ShortRange.h"
 #include "GameInstance.h"
 
+#include "Player_Shotgun_WeaponHolster.h"
+
+
 void CPlayer_Shotgun_Fire_ShortRange::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -20,7 +23,8 @@ CState<CPlayer>* CPlayer_Shotgun_Fire_ShortRange::Update(CPlayer* pActor, _float
 
 	if (pActor->Is_Animation_End())
 	{
-		return Normal(pActor, fTimeDelta, g_iAnimIndex);
+		return new CPlayer_Shotgun_WeaponHolster();
+		//return Normal(pActor, fTimeDelta, g_iAnimIndex);
 	}
 
 	return nullptr;

@@ -4163,6 +4163,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 			m_vecCreateMonster[m_iSelectCharacterTag]->Set_Dead(true);
 			m_vecCreateMonster[m_iSelectCharacterTag] = nullptr;
 			m_vecCreateMonster.erase(m_vecCreateMonster.begin() + m_iSelectCharacterTag);
+			m_vecCreateMonsterTag.erase(m_vecCreateMonsterTag.begin() + m_iSelectCharacterTag);
 			m_pPickingObject = nullptr;
 		}
 		else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
@@ -4205,6 +4206,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 					m_vecPreViewInstance[m_iSelectPreviewIndex] = nullptr;
 					m_pPickingObject = nullptr;
 					m_vecPreViewInstance.erase(m_vecPreViewInstance.begin() + m_iSelectPreviewIndex);
+					m_vecPreViewInstanceTag.erase(m_vecPreViewInstanceTag.begin() + m_iSelectPreviewIndex);
 					m_iSelectPreviewIndex = 0;
 				}
 				else
@@ -4213,6 +4215,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 					m_pPickingObject = nullptr;
 					m_vecCreateObject[m_iSelectObjectIndex] = nullptr;
 					m_vecCreateObject.erase(m_vecCreateObject.begin() + m_iSelectObjectIndex);
+					m_vecCreateObjectTag.erase(m_vecCreateObjectTag.begin() + m_iSelectObjectIndex);
 					m_iSelectObjectIndex--;
 				}
 			}
@@ -4222,6 +4225,7 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 				m_vecCreateObject[m_iSelectObjectIndex] = nullptr;
 				m_pPickingObject = nullptr;
 				m_vecCreateObject.erase(m_vecCreateObject.begin() + m_iSelectObjectIndex);
+				m_vecCreateObjectTag.erase(m_vecCreateObjectTag.begin() + m_iSelectObjectIndex);
 				m_iSelectObjectIndex--;
 			}
 			
@@ -4291,6 +4295,7 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 
 			m_bChange = false;
 			m_pPreviewCharacter = nullptr;
+			
 		}
 
 		if (nullptr == m_pPreviewCharacter)
@@ -4452,6 +4457,11 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 					{
 						if (m_eAnimType == CWindow_MapTool::ANIM_TYPE::TYPE_NONANIM)
 						{
+							if (true == m_vecEnviroModelTag.empty())
+							{
+								MSG_BOX("논 애니메이션 환경 모델이 벡터에 없습니다.");
+								return;
+							}
 							m_pGameInstance->String_To_WString(m_vecEnviroModelTag[m_iSelectModelTag], Desc.strModelTag);
 
 						}
@@ -4459,8 +4469,15 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 						{
 							if (m_bAnimType == true)
 							{
+								if (true == m_vecAnimEnviroModelTag.empty())
+								{
+									MSG_BOX("애니메이션 환경 모델이 벡터에 없습니다.");
+									return;
+								}
+
 								Desc.bAnimModel = true;
 								Desc.iPlayAnimationIndex = 0;
+								
 							}
 							m_pGameInstance->String_To_WString(m_vecAnimEnviroModelTag[m_iSelectModelTag], Desc.strModelTag);
 						}
@@ -4506,11 +4523,22 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 				if (m_bAnimType == true)
 				{
 					InteractDesc.bAnimModel = true;
+					if (true == m_vecAnimInteractModelTag.empty())
+					{
+						MSG_BOX("애니메이션 상호작용 모델이 벡터에 없습니다.");
+						return;
+					}
+
 					m_pGameInstance->String_To_WString(m_vecAnimInteractModelTag[m_iSelectModelTag], InteractDesc.strModelTag);
 				}
 				else
 				{
 					InteractDesc.bAnimModel = false;
+					if (true == m_vecInteractModelTag.empty())
+					{
+						MSG_BOX("논애니메이션 상호작용 모델이 벡터에 없습니다.");
+						return;
+					}
 					m_pGameInstance->String_To_WString(m_vecInteractModelTag[m_iSelectModelTag], InteractDesc.strModelTag);
 				}
 
@@ -5417,6 +5445,13 @@ void CWindow_MapTool::Basic_SelectFunction()
 		}
 	}
 
+	if (ImGui::InputInt(u8"셰이더패스 인덱스", &m_iShaderPassIndex))
+	{
+		m_vecCreateObject[m_iSelectObjectIndex]->Set_ShaderPassIndex(m_iShaderPassIndex);
+	}
+
+	
+
 	Guizmo_Tick(m_pPickingObject);
 }
 
@@ -5469,6 +5504,18 @@ void CWindow_MapTool::Instance_SelectFunction()
 		ImGui::EndListBox();
 	}
 
+	if (ImGui::Button(u8"셰이더 패스변경 (풀,나무 알파클립)"))
+	{
+		m_vecCreateInstance[m_iSelectEnvironmentIndex]->Set_ShaderPassIndex(1);
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button(u8"셰이더 패스변경 (일반 모델)"))
+	{
+		m_vecCreateInstance[m_iSelectEnvironmentIndex]->Set_ShaderPassIndex(6);
+	}
+
 	ImGui::EndChild();
 
 	ImGui::SameLine();
@@ -5503,6 +5550,9 @@ void CWindow_MapTool::Instance_SelectFunction()
 			}
 			ImGui::EndListBox();
 		}
+
+		
+
 
 		if (ImGui::Button(u8"인스턴스삭제"))
 		{

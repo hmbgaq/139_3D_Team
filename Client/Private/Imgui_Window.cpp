@@ -137,7 +137,7 @@ void CImgui_Window::OpenDialog(WINDOW_TYPE eWindowType)
 		case WINDOW_TYPE::IMGUI_SHADER_WINDOW:
 		{
 			m_strDialogKey = "ShaderToolDialog";
-			strTitle = u8"Shader 툴" + strAdd;
+			strTitle = u8"셰이더 툴" + strAdd;
 			break;
 		}
 	}

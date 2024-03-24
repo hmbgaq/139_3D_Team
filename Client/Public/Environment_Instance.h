@@ -53,6 +53,7 @@ public:
 	vector<INSTANCE_INFO_DESC>*				Get_InstanceInfoDesc() { return &m_tInstanceDesc.vecInstanceInfoDesc; }
 
 	INSTANCE_INFO_DESC*						Get_InstanceInfo(_uint iIndex) { return &m_tInstanceDesc.vecInstanceInfoDesc[iIndex]; }
+	void									Set_ShaderPassIndex(_uint iShaderPassIndex) { m_tInstanceDesc.iShaderPassIndex = iShaderPassIndex;}
 
 private:
 	CShader*								m_pShaderCom = { nullptr };	
@@ -66,11 +67,12 @@ private:
 	_uint									m_iCurrentLevel = (_uint)LEVEL_TOOL;
 	
 
-
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
+	/* 고드름용 - 소영 작업중 */
+	_int iMeshNum = 0;
 
 public:
 	/* 원형객체를 생성한다. */

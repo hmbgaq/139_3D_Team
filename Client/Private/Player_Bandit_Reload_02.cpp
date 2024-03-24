@@ -1,6 +1,8 @@
 #include "..\Public\Player_Bandit_Reload_02.h"
 #include "GameInstance.h"
 
+#include "Player_Revolver_WeaponHolster.h"
+
 void CPlayer_Bandit_Reload_02::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -15,7 +17,15 @@ CState<CPlayer>* CPlayer_Bandit_Reload_02::Update(CPlayer* pActor, _float fTimeD
 
 	pActor->Aim_Walk(fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_UpperAnimation_End())
+	{
+		return Normal(pActor, fTimeDelta, g_iAnimIndex);
+		//return new CPlayer_Revolver_WeaponHolster();
+	}
+
+	return nullptr;
+
+	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CPlayer_Bandit_Reload_02::Release(CPlayer* pActor)

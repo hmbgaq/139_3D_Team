@@ -91,15 +91,6 @@
     <Filter Include="02.GameObjects\97. Camera">
       <UniqueIdentifier>{32729c05-9f24-4c42-9fa5-8bce31410a97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\01. Interact">
-      <UniqueIdentifier>{daed6591-e3f1-4e31-8a6a-3942dcf39622}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\01. Interact\0. Chain">
-      <UniqueIdentifier>{4640b070-669a-48d8-9c94-8bed528d2d18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\01. Interact\1. Door">
-      <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character">
       <UniqueIdentifier>{efbf965b-89e3-4770-bdc3-149dd60e9eff}</UniqueIdentifier>
     </Filter>
@@ -432,9 +423,6 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\0. Origin">
       <UniqueIdentifier>{40320f14-62ee-4f56-960e-711f715a6e39}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Punch">
-      <UniqueIdentifier>{d1cc7966-f5e8-4902-8e5e-a600970e32c1}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\04. Projectile">
       <UniqueIdentifier>{969f7600-7071-4a12-871e-03a47d7032f7}</UniqueIdentifier>
@@ -927,6 +915,30 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee">
       <UniqueIdentifier>{166e3330-b419-4cb0-b748-6d52760110a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip">
+      <UniqueIdentifier>{40e5589c-af82-4014-8cc3-824452c5f1d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\0. Parent">
+      <UniqueIdentifier>{e3152988-cde4-4d8d-a60f-73339fd2b907}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\1. CloseRange">
+      <UniqueIdentifier>{11904632-d2d8-46a2-b508-0b6222e703a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap">
+      <UniqueIdentifier>{18f68658-8801-4426-9b1b-afc3f6c93c94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\1. Normal">
+      <UniqueIdentifier>{280f21ad-930b-409d-ae87-0250b0e523a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\2. Short">
+      <UniqueIdentifier>{5b6f14e0-abd4-4f3f-aee3-5e1aa9cd0af2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\3. LongRange">
+      <UniqueIdentifier>{48e6c133-ac26-4736-b95c-1ef7c44fe864}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\3. Pull">
+      <UniqueIdentifier>{40ce5633-6ae9-4b48-84e4-3fb53edb89fb}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\State\03. Walk">
       <UniqueIdentifier>{0027214f-b2a1-4562-bbd1-654bc332c6d7}</UniqueIdentifier>
@@ -2413,30 +2425,6 @@
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object">
       <UniqueIdentifier>{054c2e5b-1f7a-4054-9c31-2bfcbf1230ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip">
-      <UniqueIdentifier>{40e5589c-af82-4014-8cc3-824452c5f1d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\0. Parent">
-      <UniqueIdentifier>{e3152988-cde4-4d8d-a60f-73339fd2b907}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\1. CloseRange">
-      <UniqueIdentifier>{11904632-d2d8-46a2-b508-0b6222e703a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap">
-      <UniqueIdentifier>{18f68658-8801-4426-9b1b-afc3f6c93c94}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\1. Normal">
-      <UniqueIdentifier>{280f21ad-930b-409d-ae87-0250b0e523a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\2. Short">
-      <UniqueIdentifier>{5b6f14e0-abd4-4f3f-aee3-5e1aa9cd0af2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\3. LongRange">
-      <UniqueIdentifier>{48e6c133-ac26-4736-b95c-1ef7c44fe864}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\3. Pull">
-      <UniqueIdentifier>{40ce5633-6ae9-4b48-84e4-3fb53edb89fb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Event\Trigger">
       <UniqueIdentifier>{1cc45268-c32f-4055-ae97-4cbc14a521b0}</UniqueIdentifier>
     </Filter>
@@ -2917,7 +2905,19 @@
     <Filter Include="02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\0. Parent">
       <UniqueIdentifier>{17ec3054-98fa-4c91-ade0-0e4788f8b1a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Punch\Projectile">
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Melee">
+      <UniqueIdentifier>{adecb2b7-2ad4-46b4-9635-7d4d7404957b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Zapper">
+      <UniqueIdentifier>{7f77c0fa-14f7-42b5-a639-309b7d8761f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Melee\1. Punch">
+      <UniqueIdentifier>{d1cc7966-f5e8-4902-8e5e-a600970e32c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Melee\2. Kick">
+      <UniqueIdentifier>{ad862b27-1a44-41be-ae3e-ac53e8d487e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Melee\3. Projectile">
       <UniqueIdentifier>{770a291a-7f61-4698-8b3c-49959ef3edf3}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow">
@@ -2952,6 +2952,156 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList">
       <UniqueIdentifier>{adb0cc32-0a85-4a50-b6cf-4c821167dfe3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\01. Interact">
+      <UniqueIdentifier>{daed6591-e3f1-4e31-8a6a-3942dcf39622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\01. Interact\0. Chain">
+      <UniqueIdentifier>{4640b070-669a-48d8-9c94-8bed528d2d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\01. Interact\1. Door">
+      <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Revolver\Bullet">
+      <UniqueIdentifier>{0a49b597-a451-44f1-ae38-45f5170ab851}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother">
+      <UniqueIdentifier>{b0e2d0b2-b1c4-4391-b190-4682b4e3176b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth">
+      <UniqueIdentifier>{f34050bb-7f94-4640-8b39-8b664ef6d4ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son">
+      <UniqueIdentifier>{f06b1276-1740-4955-af8c-22ac7385e7a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\Parts">
+      <UniqueIdentifier>{a6f4bb82-6b2e-46b9-83dc-ccc337088b4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State">
+      <UniqueIdentifier>{20b3ce92-2131-4e40-a1c4-c1e469a2bea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\Parts">
+      <UniqueIdentifier>{865fb57d-970c-42bc-840e-018ad2aff2ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State">
+      <UniqueIdentifier>{0da72d6a-eb3f-41fd-b41b-875726fb1acc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts">
+      <UniqueIdentifier>{7ef74908-4606-41c3-8822-efb5de5df624}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State">
+      <UniqueIdentifier>{d67a4b93-334c-41a5-8145-40161c5c76c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\Parts\Body">
+      <UniqueIdentifier>{5a3d5f49-0cf0-4b85-971b-5b470211ce9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\Parts\Body">
+      <UniqueIdentifier>{51453eaa-6fe9-4850-bd80-a8ebfbd178be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Body">
+      <UniqueIdentifier>{1c885c30-9096-4fab-b8fc-920079e92902}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon">
+      <UniqueIdentifier>{2f430b6f-e43e-4b01-b306-3d3a2191698b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon\Head">
+      <UniqueIdentifier>{09011642-de6e-45d5-b257-3c2e3cd51479}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\0.Origin">
+      <UniqueIdentifier>{c6591a91-9ede-4a48-80d5-1882b8ccdd98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle">
+      <UniqueIdentifier>{441e0182-49d4-4683-9a6b-533a5990a4e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit">
+      <UniqueIdentifier>{523fef58-18b3-4f51-b554-e77fd8d69372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun">
+      <UniqueIdentifier>{aff1403f-53ae-4ce2-badc-5013ffd71c21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines">
+      <UniqueIdentifier>{caa9e9a5-f458-4932-9aa1-cb1f2dd866f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\5Hit">
+      <UniqueIdentifier>{172a0cf1-2ece-4a2c-a0b6-ef3063dc6201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\6.Dead">
+      <UniqueIdentifier>{bb11325b-5557-4db7-ba32-c6631b8f7a2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree">
+      <UniqueIdentifier>{2f265b4d-8955-4691-bef0-2bfabf89de12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle\0.Parent">
+      <UniqueIdentifier>{a56146b1-477c-4aca-a71f-0aa5efbc7aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle\1">
+      <UniqueIdentifier>{1719ab83-1902-4adc-a129-c0e22a85ac50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitStart">
+      <UniqueIdentifier>{a0ffcf34-ebc9-40ec-88fa-35c8c7c9cb45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitLoop">
+      <UniqueIdentifier>{a0bde6e7-4f3d-4503-bfc3-4113f793be56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitEnd">
+      <UniqueIdentifier>{528e9aee-479d-4487-91e0-c00be2b6b79a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunStart">
+      <UniqueIdentifier>{275a88ab-aea3-4bbb-96f5-006d5d6d9af4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunLoop">
+      <UniqueIdentifier>{d1183598-f683-4ad6-b8f2-c5ffcb0c9a3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunEnd">
+      <UniqueIdentifier>{fa523905-a18b-48e7-bfa0-43546a694f3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingStart">
+      <UniqueIdentifier>{f9ae3214-7f8a-4fdb-9772-b0546c37d4f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingLoop">
+      <UniqueIdentifier>{7acb6234-3638-48bd-b782-7e81fbad42e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingEnd">
+      <UniqueIdentifier>{2f47fa68-483e-49fa-b95a-627bb8b26809}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeStart">
+      <UniqueIdentifier>{a63aae35-c645-4106-935b-ee1be0a09938}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeLoop">
+      <UniqueIdentifier>{d5592a68-06a5-4fec-a36d-d31a7e33d786}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeEnd">
+      <UniqueIdentifier>{7b00641b-549c-44b8-9cc2-c4cbcde2c7f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\0.Origin">
+      <UniqueIdentifier>{931a684b-aed6-4bb0-a053-03374c2a5fa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle">
+      <UniqueIdentifier>{80b7de68-2106-4fbd-8a33-e4f08c5322db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine">
+      <UniqueIdentifier>{462ae2e9-14fa-4f21-a819-75cd247fdb4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\0.Parent">
+      <UniqueIdentifier>{c5250dc7-5805-4427-8b08-1269ac214601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\1">
+      <UniqueIdentifier>{b47d1b57-3419-4e46-b14a-737f83cb1ef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Start">
+      <UniqueIdentifier>{68ec963e-1f7d-4c4b-afc6-2bced8541b4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\End">
+      <UniqueIdentifier>{d3b8d0c4-e01c-460b-8b68-f6449d83009b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Loop">
+      <UniqueIdentifier>{333539fb-7c63-4983-80e2-cacd15643149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun\Bullet">
+      <UniqueIdentifier>{43eee4a2-d026-4268-bcf5-7e74ccd32deb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss">
+      <UniqueIdentifier>{28ebb5ee-63fc-4e9f-b28e-78c93bb6b8b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -3925,7 +4075,7 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Weapon_Punch.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch</Filter>
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Melee\1. Punch</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Projectile.h">
       <Filter>02.GameObjects\04. Projectile</Filter>
@@ -4151,9 +4301,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_Weakspot_Death_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\4. Death\3. Weakspot</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\VampireCommander_Weapon.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_Weapon_Hand.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon\Hand</Filter>
@@ -5496,24 +5643,6 @@
     <ClInclude Include="..\Public\Player_WhipPull.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Pull</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_State_EnergyWhip.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\0. Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_Pull.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\3. Pull</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_CloseRange_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\1. CloseRange</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_LongRange.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\3. LongRange</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_Leap.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\1. Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_EnergyWhip_LeapShort.h">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\2. Short</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Bandit_Heavy_State.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\0. Origin</Filter>
     </ClInclude>
@@ -5904,6 +6033,12 @@
     <ClInclude Include="..\Public\Event_MonsterSpawnTrigger.h">
       <Filter>03.Event\Trigger\MonsterSpawnTrigger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\1. HitNormal_To_Stun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\2. HitHeavy_To_Stun</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Sniper_Burn_Loop_TEMP.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\3. Burn</Filter>
     </ClInclude>
@@ -5944,10 +6079,14 @@
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\0. Parent</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Impact_Slam.h">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch\Projectile</Filter>
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Melee\3. Projectile</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h" />
-    <ClInclude Include="..\Public\Infected_HitNormalToStun_01_NEW.h" />
+    <ClInclude Include="..\Public\Player_Weapon_Kick.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Melee\2. Kick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_Zapper.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Zapper</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\UI_Obtain_Button.h">
       <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
     </ClInclude>
@@ -5977,6 +6116,129 @@
     </ClInclude>
     <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\2. HitHeavy_To_Stun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bullet_Revolver.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Revolver\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Mother.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Son.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_MotherMouth.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_Weapon.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VampireCommander_Weapon.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_Weapon_Head.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon\Head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_State.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\0.Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle\0.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_Idle.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_Hit.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\5Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_Dead.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\6.Dead</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_VomitEnd.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_StunEnd.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_SpittingEnd.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_ShakeTreeEnd.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_ShakeTreeStart.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeStart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_ShakeTreeLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_SpittingStart.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingStart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_SpittingLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_StunStart.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunStart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_StunLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_VomitStart.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitStart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_VomitLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth_State.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\0.Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\0.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth_Idle.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth_SpittingMineEnd.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\End</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth_SpittingMineLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherMouth_SpittingMineStart.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_Pull.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\3. Pull</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_CloseRange_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\1. CloseRange</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_LongRange.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\3. LongRange</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_Leap.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\1. Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_EnergyWhip_LeapShort.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\2. Short</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_State_EnergyWhip.h">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bullet_ELShotgun.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_SnowMountainBoss.h">
+      <Filter>01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -7225,7 +7487,7 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Weapon_Punch.cpp">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch</Filter>
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Melee\1. Punch</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Projectile.cpp">
       <Filter>02.GameObjects\04. Projectile</Filter>
@@ -8199,24 +8461,6 @@
     <ClCompile Include="..\Private\Player_WhipPull.cpp">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Pull</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Player_State_EnergyWhip.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\0. Parent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_EnergyWhip_Pull.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\3. Pull</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_EnergyWhip_CloseRange_01.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\1. CloseRange</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_EnergyWhip_LongRange.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\3. LongRange</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_EnergyWhip_Leap.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\1. Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Player_EnergyWhip_LeapShort.cpp">
-      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\2. Short</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\BanditHeavy_DeathHeavy_F_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Heavy</Filter>
     </ClCompile>
@@ -8400,6 +8644,99 @@
     <ClCompile Include="..\Private\Sniper_Introduction_03.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\1. Idle\3. Intro</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Mother.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Mother.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Son.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_MotherMouth.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_Weapon.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_Weapon_Head.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_State.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\0.Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_State_Normal.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\1.Idle\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_Hit.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\5Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_Dead.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\6.Dead</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_VomitEnd.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_StunEnd.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_SpittingEnd.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_ShakeTreeEnd.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_ShakeTreeStart.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeStart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_ShakeTreeLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_SpittingStart.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingStart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_SpittingLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\4.SpittingMines\SpittingLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_StunStart.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunStart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_StunLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\3.Stun\StunLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_VomitStart.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitStart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_VomitLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth_State.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\0.Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth_State_Normal.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth_SpittingMineEnd.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\End</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth_SpittingMineLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherMouth_SpittingMineStart.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Start</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Infected_State_Electrocute.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\6. Electrocute\0. Parent</Filter>
     </ClCompile>
@@ -8428,7 +8765,13 @@
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\1. Melee\10. Slam\0. Parent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Impact_Slam.cpp">
-      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Punch\Projectile</Filter>
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Melee\3. Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Kick.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Melee\2. Kick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Zapper.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Zapper</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Obtain_Button.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option</Filter>
@@ -8453,6 +8796,36 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_ElementList.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bullet_Revolver.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Revolver\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_WhipPull.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\4. Whip\Pull</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_State_EnergyWhip.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_EnergyWhip_Pull.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\3. Pull</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_EnergyWhip_CloseRange_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\1. CloseRange</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_EnergyWhip_LongRange.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\3. LongRange</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_EnergyWhip_Leap.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\1. Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_EnergyWhip_LeapShort.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\2. Leap\2. Short</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bullet_ELShotgun.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun\Bullet</Filter>
+    	</ClCompile>
+    <ClCompile Include="..\Private\Level_SnowMountainBoss.cpp">
+      <Filter>01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

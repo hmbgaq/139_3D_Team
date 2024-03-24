@@ -32,8 +32,6 @@ public:
 			CMyAIScene result = CMyAIScene(pAIScene);
 			result.Bake_Binary(strModelFilePath);
 
-			
-
 			return result;
 		}
 		else

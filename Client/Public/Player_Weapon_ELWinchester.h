@@ -22,7 +22,7 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	virtual void Fire();
+	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f));
 
 protected:
 	virtual HRESULT Ready_Components();

@@ -54,6 +54,7 @@ public:
 	void	Set_Enable_Collisions(_bool bEnable);
 
 	_float3	Get_WorldPosition();
+	_float3 Get_MuzzlePos();
 
 public:
 	void Set_Colliders(vector<CCollider*> _pColliders) { m_pColliders = _pColliders; }
@@ -67,7 +68,8 @@ public:
 	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
 
 public:
-	virtual void Fire() {};
+	void Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos = _float3(0.f, 0.f, 1.f));
+	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f)) {};
 
 
 protected:
@@ -89,6 +91,9 @@ protected:
 	_float4x4	m_WorldMatrix = {};
 
 	//CCollider* m_pCollider = { nullptr };
+
+protected:
+	_float3 m_vMuzzlePos_Local = { 0.f, 0.f, 0.f };
 
 protected:
 	vector<CCollider*> m_pColliders = { nullptr };

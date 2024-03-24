@@ -90,56 +90,60 @@ void CTransform::Move_On_Navigation(_vector vMove, CNavigation* pNavigation)
 
 void CTransform::Move_On_Navigation_ForSliding(_vector vMove, const _float fTimeDelta, CNavigation* pNavigation)
 {
-	
-	_vector	vPosition = Get_State(STATE_POSITION);
-
+	_float4 vResult = {};
 	_float4 vSlidingDir = { 0.f, 0.f, 0.f, 0.f };
 
+	_vector	vPosition = Get_State(STATE_POSITION);
 	vPosition += vMove;
 
-	if (nullptr != pNavigation)
+	if (nullptr == pNavigation)
 	{
-		if (true == pNavigation->isMove_ForSliding(vPosition, XMVector3Normalize(vPosition - Get_State(CTransform::STATE_POSITION)), &vSlidingDir))
-		{
-			_float4 vTempPosition = {};
-
-			_bool bIsGround = false;
-			_float fHeight = pNavigation->Compute_Height(vPosition, &bIsGround);
-
-
-			XMStoreFloat4(&vTempPosition, vPosition);
-
-			
-			vTempPosition.y = fHeight;
-
-			Set_State(STATE_POSITION, XMLoadFloat4(&vTempPosition));
-		}
-		else
-		{
-			if (XMVectorGetX(XMVector3Length(vSlidingDir)) > 0.f)
-			{
-				vSlidingDir = XMVector3Normalize(vSlidingDir);
-				_vector vNewPosition = Get_State(CTransform::STATE_POSITION) + vSlidingDir * m_fSpeedPerSec * fTimeDelta;
-
-				if (true == pNavigation->isMove_ForSliding(vNewPosition, XMVector3Normalize(vNewPosition - Get_State(CTransform::STATE_POSITION)), nullptr))
-				{
-					_float4 vTempPosition = {};
-
-					_bool bIsGround = false;
-					_float fHeight = pNavigation->Compute_Height(vPosition, &bIsGround);
-
-					XMStoreFloat4(&vTempPosition, vNewPosition);
-
-					
-					vTempPosition.y = fHeight;
-
-					Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&vTempPosition));
-				}
-			}
-		}
-	}
-	else
 		Set_State(STATE_POSITION, vPosition);
+		return;
+	}
+
+
+	_vector vTargetPos = vPosition;
+
+	_vector vDir = XMVector3Normalize(vPosition - Get_State(CTransform::STATE_POSITION));
+	_bool bIsMove_ForSliding = pNavigation->isMove_ForSliding(vPosition, vDir, &vSlidingDir);
+	_bool bIsMove_ForSliding_NewPosition = false;
+
+	if (true == bIsMove_ForSliding) 
+	{
+		//vTargetPos = vPosition;
+		//XMStoreFloat4(&vResult, vPosition);
+	}
+	else if (XMVectorGetX(XMVector3Length(vSlidingDir)) > 0.f)
+	{
+		vSlidingDir = XMVector3Normalize(vSlidingDir);
+		_vector vNewPosition = Get_State(CTransform::STATE_POSITION) + vSlidingDir * m_fSpeedPerSec * fTimeDelta;
+		_vector vDir_NewPosition = XMVector3Normalize(vNewPosition - Get_State(CTransform::STATE_POSITION));
+
+		bIsMove_ForSliding_NewPosition = pNavigation->isMove_ForSliding(vNewPosition, vDir_NewPosition, nullptr);
+		if (true == bIsMove_ForSliding_NewPosition) 
+		{
+			vTargetPos = vNewPosition;
+		}
+
+	}
+
+	if (true == bIsMove_ForSliding || true == bIsMove_ForSliding_NewPosition)
+	{
+		XMStoreFloat4(&vResult, vTargetPos);
+
+		_bool bIsGround = false;
+		_float3 vResult_Float3 = { vResult.x, vResult.y, vResult.z };
+		_float fHeight = pNavigation->Compute_Height(vResult_Float3, &bIsGround);
+
+		if (true == bIsGround) 
+		{
+			vResult.y = fHeight;
+		}
+			
+
+		Set_State(STATE_POSITION, XMLoadFloat4(&vResult));
+	}
 	
 }
 

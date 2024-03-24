@@ -402,6 +402,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Effect_Engine.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Final.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Fxaa3_11.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_MyPBR.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Navigation.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Outline.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_PBR.hlsl" />
@@ -412,6 +413,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli" />
+    <None Include="..\Bin\ShaderFiles\VolumetricFog.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

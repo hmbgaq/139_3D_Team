@@ -42,7 +42,7 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Update(CPlayer* pActor, _float fTi
 {
 	__super::Update(pActor, fTimeDelta);
 
-	pActor->Search_Target(2.f);
+	pActor->Search_Target(1.f);
 	CCharacter* pTarget = pActor->Get_Target();
 	if (nullptr == pTarget)
 	{

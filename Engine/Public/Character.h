@@ -91,6 +91,8 @@ public:
 		, _bool _bUseAnimationPos = true
 		, _uint iTargetKeyFrameIndex = 0);
 
+	void	Set_AnimState(CModel::ANIM_STATE _eAnimState);
+
 	_bool	Is_Animation_End();
 	_bool	Is_UpperAnimation_End();
 
@@ -209,6 +211,9 @@ public:
 
 public:
 	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
+
+public:
+	void Set_UseMouseMove(_bool _bIsUseMouseMove);
 
 
 public:

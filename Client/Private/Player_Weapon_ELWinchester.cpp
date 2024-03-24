@@ -60,24 +60,20 @@ HRESULT CPlayer_Weapon_ELWinchester::Render()
 	return S_OK;
 }
 
-void CPlayer_Weapon_ELWinchester::Fire()
+void CPlayer_Weapon_ELWinchester::Fire(_float3 vTargetPos)
 {
-	CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Bullet_Winchester");
-	_float3 vSpawnPos = Get_WorldPosition();
-	_float3 vTargetPos = Calc_Front_Pos(_float3(0.f, 0.f, 1.f));
-	//_float3 vTargetPos = Calc_Front_Pos(_float3(-1.f, 0.f, 0.f));
-
-	_vector vTargetVector = XMLoadFloat3(&vTargetPos);
-
-	pBullet->Set_Position(vSpawnPos);
-	pBullet->Get_Transform()->Look_At(vTargetVector);
-
-	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-	if (pSpringCam)
-	{
-		pSpringCam->Set_ShakeCamera(true);
-	}
+	__super::Fire(L"Prototype_GameObject_Bullet_Winchester", LAYER_PLAYER_BULLET, vTargetPos);
 }
+
+//void CPlayer_Weapon_ELWinchester::Fire(_float3 vTargetPos)
+//{
+//	CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Bullet_Winchester");
+//	_float3 vSpawnPos = Get_WorldPosition();
+//	_vector vTargetVector = XMLoadFloat3(&Calc_Front_Pos(vTargetPos));
+//
+//	pBullet->Set_Position(vSpawnPos);
+//	pBullet->Get_Transform()->Look_At(vTargetVector);
+//}
 
 HRESULT CPlayer_Weapon_ELWinchester::Ready_Components()
 {

@@ -72,6 +72,8 @@ public:		//개별 동작 상태 집합
 	CState<CPlayer>* Melee_Dynamic(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* OpenStateCombo_8hit(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Slam(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CPlayer>* Kick(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
 
 
 	

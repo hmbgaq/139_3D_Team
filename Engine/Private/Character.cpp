@@ -114,19 +114,19 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 			vResult.y *= m_vRootMoveRate.y;
 			vResult.z *= m_vRootMoveRate.z;
 
-			m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
-			//m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
+			//m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
+			m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
 		}
 		
 	}
 
-		m_pRigidBody->Late_Tick(fTimeDelta);
+	m_pRigidBody->Late_Tick(fTimeDelta);
 
 #ifdef _DEBUG
 		//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
 
-		Set_WeaknessPos();
+	Set_WeaknessPos();
 	
 }
 
@@ -287,6 +287,11 @@ _int CCharacter::Get_CurrentAnimIndex()
 void CCharacter::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _bool _bUseAnimationPos, _uint iTargetKeyFrameIndex)
 {
 	m_pBody->Set_Animation(_iNextAnimation, _eAnimState, _bIsTransition, _bUseAnimationPos, iTargetKeyFrameIndex);
+}
+
+void CCharacter::Set_AnimState(CModel::ANIM_STATE _eAnimState)
+{
+	m_pBody->Set_AnimState(_eAnimState);
 }
 
 _bool CCharacter::Is_Animation_End()
@@ -753,6 +758,11 @@ void CCharacter::Set_WeaknessPos()
 _uint CCharacter::Get_CurrentKeyFrames(_uint iIndex)
 {
 	return m_pBody->Get_CurrentKeyFrames(iIndex);
+}
+
+void CCharacter::Set_UseMouseMove(_bool _bIsUseMouseMove)
+{
+	m_pBody->Set_UseMouseMove(_bIsUseMouseMove);
 }
 
 

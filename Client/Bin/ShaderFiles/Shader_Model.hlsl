@@ -1,26 +1,33 @@
 #include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-Texture2D		g_DiffuseTexture;
+float4          g_vCamPosition;
+float           g_fCamFar;
+float           g_fLightFar;
+float           g_fTimeDelta;
 
-Texture2D		g_NormalTexture;
-Texture2D		g_OcclusionTexture;
-Texture2D		g_RougnessTexture;
-Texture2D		g_MetallicTexture;
+/* =========== Texture =========== */
+Texture2D		g_DiffuseTexture;
+Texture2D       g_NormalTexture;
+Texture2D       g_SpecularTexture;
+Texture2D       g_EmissiveTexture;
+Texture2D       g_OpacityTexture;
 
 Texture2D       g_ColorDiffuse;
 Texture2D       g_MaskTexture;
 Texture2D       g_NoiseTexture;
 
-float           g_fTimeDelta;
-float           g_fCamFar;
+/* =========== Value =========== */
+float g_fDissolveWeight;                        /* Dissolve  */
 
-/* OutLine */
-float4	        g_vLineColor;
-float           g_LineThick;
-Texture2D       g_LineMaskTexture;
+float4 g_vLineColor;                            /* OutLine */
+float g_LineThick;                              /* OutLine */
 
+float3 g_vBloomPower = { 0.f, 0.f, 0.f };       /* Bloom */
+float4 g_vRimColor = { 0.f, 0.f, 0.f, 0.f };    /* RimLight */
+float g_fRimPower = 5.f;                        /* RimLight */
 
+/* ------------------- function ------------------- */ 
 float2 RotateTexture(float2 texCoord, float angle)
 {
     float2 rotatedTexCoord;
@@ -28,7 +35,6 @@ float2 RotateTexture(float2 texCoord, float angle)
     rotatedTexCoord.y = texCoord.x * sin(angle) + texCoord.y * cos(angle);
     
     return rotatedTexCoord;
-    
 }
 
 cbuffer VS_CONSTANT_BUFFER
@@ -41,33 +47,52 @@ cbuffer VS_CONSTANT_BUFFER
     float   fSomeFloatThatMayBeNeededByASpecificShader3;
 };
 
+/* ------------------- ------------------- */ 
 struct VS_IN
 {
-	float3		vPosition : POSITION;
-	float3		vNormal : NORMAL;
-	float2		vTexcoord : TEXCOORD0;
-	float3		vTangent : TANGENT;
+	float3		vPosition       : POSITION;
+	float3		vNormal         : NORMAL;
+	float2		vTexcoord       : TEXCOORD0;
+	float3		vTangent        : TANGENT;
 };
-
 
 struct VS_OUT
 {
-	float4		vPosition : SV_POSITION;
-	float4		vNormal : NORMAL;
-	float2		vTexcoord : TEXCOORD0;	
-	float4		vWorldPos : TEXCOORD1;
-	float4		vProjPos : TEXCOORD2;
-	float4		vTangent : TANGENT;
-	float4		vBinormal : BINORMAL;
+	float4		vPosition       : SV_POSITION;
+	float4		vNormal         : NORMAL;
+	float2		vTexcoord       : TEXCOORD0;	
+	float4		vWorldPos       : TEXCOORD1;
+	float4		vProjPos        : TEXCOORD2;
+	float4		vTangent        : TANGENT;
+	float4		vBinormal       : BINORMAL;
 };
 
+struct PS_IN
+{
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
+    float4 vTangent : TANGENT;
+    float4 vBinormal : BINORMAL;
+};
+
+struct PS_OUT
+{
+    float4 vDiffuse     : SV_TARGET0;
+    float4 vNormal      : SV_TARGET1;
+    float4 vDepth       : SV_TARGET2;
+    float4 vORM         : SV_TARGET3;
+    float4 vRimBloom    : SV_TARGET4; /* Rim + Bloom */
+    float4 vEmissive    : SV_Target5;
+};
 /* ------------------- Base Vertex Shader -------------------*/
 
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
-
-
+    
 	matrix		matWV, matWVP;
     
 	matWV = mul(g_WorldMatrix, g_ViewMatrix);
@@ -84,23 +109,6 @@ VS_OUT VS_MAIN(VS_IN In)
 	return Out;
 }
 
-struct PS_IN
-{
-	float4		vPosition	: SV_POSITION;
-	float4		vNormal		: NORMAL;
-	float2		vTexcoord	: TEXCOORD0;
-	float4		vWorldPos	: TEXCOORD1;
-	float4		vProjPos	: TEXCOORD2;
-	float4		vTangent	: TANGENT;
-	float4		vBinormal	: BINORMAL;
-};
-
-struct PS_OUT 
-{
-	float4		vDiffuse : SV_TARGET0;
-	float4		vNormal : SV_TARGET1;
-	float4		vDepth : SV_TARGET2;
-};
 
 /* ------------------- Base Pixel Shader (0) -------------------*/
 
@@ -108,19 +116,43 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    
-
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-
     if (vMtrlDiffuse.a < 0.0f)
         discard;
     
-    
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
     
     Out.vDiffuse = vMtrlDiffuse;
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+	return Out;
+}
 
+PS_OUT PS_MAIN_NORMAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a < 0.0f)
+        discard;
+    
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
 	return Out;
 }
 
@@ -170,6 +202,8 @@ PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     return Out;
 }
 
@@ -208,6 +242,9 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
     
     return Out;
 }
@@ -215,18 +252,14 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN In)
 PS_OUT PS_BloodPool(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-
- 
     
     float fTime = g_fTimeDelta;
     float2 newUV = RotateTexture(In.vTexcoord, fTime);
-    
-    
+   
     vector vMtrlDiffuse = g_ColorDiffuse.Sample(LinearSampler, newUV);
     vector vMtrlMask = g_MaskTexture.Sample(LinearSampler, newUV);
     vector vMtrlNoise = g_NoiseTexture.Sample(LinearSampler, newUV);
     
-
     if (vMtrlMask.r <= 0.6f)
         Out.vDiffuse = vector(0.275f, 1.f, 0.f, 1.f);
     else
@@ -234,16 +267,18 @@ PS_OUT PS_BloodPool(PS_IN In)
     
     //if (vMtrlDiffuse.a < 0.0f)
     //    discard;
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
     
-    
-    
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
     return Out;
 }
-
-
 
 /* ------------------- Technique -------------------*/ 
 
@@ -335,6 +370,18 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_BloodPool();
+    }
+
+    pass Model_NormalMapping // 7¹ø ÆÐ½º
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_NORMAL();
     }
 
 

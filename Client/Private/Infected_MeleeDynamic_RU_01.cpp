@@ -28,12 +28,6 @@ void CInfected_MeleeDynamic_RU_01::Initialize(CInfected* pActor)
 		break;
 	}
 
-	cout << "CInfected_MeleeDynamic_RU_01" << endl;
-	_float stiff = pActor->Get_StiffnessRate();
-	_float speed = pActor->Get_Transform()->Get_Speed();
-
-	cout << stiff << endl;
-	cout << speed << endl;
 }
 
 CState<CInfected>* CInfected_MeleeDynamic_RU_01::Update(CInfected* pActor, _float fTimeDelta)

@@ -86,6 +86,8 @@ public:
 	void					Play_Animation(_float fTimeDelta, _bool bIsLoop);
 	void					Play_Animation(_float fTimeDelta, _float3& _Pos);
 
+	void Play_Animation(_float fTimeDelta, _float3& _Pos, _float3 pPlayerPos);
+
 	void					Stop_Animation(_float fTimeDelta,_bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
 	void					Ctrl_Animation(_float fTimeDelta, _bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
 
@@ -99,6 +101,7 @@ public:
 	void					Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _bool _bIsTransition = true, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Reset_Animation(_int iAnimIndex = -1);
+	void					Set_AnimState(CModel::ANIM_STATE _eAnimState);
 
 	void					Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Reset_UpperAnimation(_int iAnimIndex = -1);
@@ -173,6 +176,9 @@ private:
 
 	_float					m_fModelWidth = 0.f;
 	_float					m_fModelHeight = 0.f;
+
+	// PBR
+	_bool					m_bSpecularMissed = { false };
 
 public:
 	typedef vector<CBone*>	BONES;
