@@ -114,19 +114,19 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 			vResult.y *= m_vRootMoveRate.y;
 			vResult.z *= m_vRootMoveRate.z;
 
-			m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
-			//m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
+			//m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
+			m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
 		}
 		
 	}
 
-		m_pRigidBody->Late_Tick(fTimeDelta);
+	m_pRigidBody->Late_Tick(fTimeDelta);
 
 #ifdef _DEBUG
 		//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
 
-		Set_WeaknessPos();
+	Set_WeaknessPos();
 	
 }
 

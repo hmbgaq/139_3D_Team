@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Level_SnowMountain.h"
+#include "Level_SnowMountainBoss.h"
 #include "GameInstance.h"
 #include "Player.h"
 #include "Camera_Dynamic.h"
@@ -37,12 +37,12 @@
 
 
 
-CLevel_SnowMountain::CLevel_SnowMountain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLevel_SnowMountainBoss::CLevel_SnowMountainBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
 }
 
-HRESULT CLevel_SnowMountain::Initialize()
+HRESULT CLevel_SnowMountainBoss::Initialize()
 {
 	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
@@ -61,25 +61,25 @@ HRESULT CLevel_SnowMountain::Initialize()
 	return S_OK;
 }
 
-void CLevel_SnowMountain::Tick(_float fTimeDelta)
+void CLevel_SnowMountainBoss::Tick(_float fTimeDelta)
 {
 	
 }
 
-HRESULT CLevel_SnowMountain::Render()
+HRESULT CLevel_SnowMountainBoss::Render()
 {
 	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
 
 	return S_OK;
 }
 
-HRESULT CLevel_SnowMountain::Ready_LightDesc()
+HRESULT CLevel_SnowMountainBoss::Ready_LightDesc()
 {
 	/* For. Shadow */
 		//XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 		//XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, lightfar 임 ));
-	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
-	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
+	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
+	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
 
 	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
@@ -198,7 +198,7 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 	return S_OK;
 }
 
-HRESULT CLevel_SnowMountain::Ready_Layer_Camera(const wstring& strLayerTag)
+HRESULT CLevel_SnowMountainBoss::Ready_Layer_Camera(const wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
 		return E_FAIL;
@@ -206,7 +206,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Camera(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_SnowMountain::Ready_Layer_Player(const wstring& strLayerTag)
+HRESULT CLevel_SnowMountainBoss::Ready_Layer_Player(const wstring& strLayerTag)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
@@ -226,7 +226,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Player(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_SnowMountain::Ready_Layer_Effect(const wstring& strLayerTag)
+HRESULT CLevel_SnowMountainBoss::Ready_Layer_Effect(const wstring& strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
@@ -235,14 +235,14 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Effect(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_SnowMountain::Ready_Layer_Monster(const wstring& strLayerTag)
+HRESULT CLevel_SnowMountainBoss::Ready_Layer_Monster(const wstring& strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg));
 
 	return S_OK;
 }
 
-HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
+HRESULT CLevel_SnowMountainBoss::Ready_Layer_BackGround(const wstring& strLayerTag)
 {
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Sky")));
 
@@ -424,7 +424,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 
 
-HRESULT CLevel_SnowMountain::Ready_Layer_Test(const wstring& strLayerTag)
+HRESULT CLevel_SnowMountainBoss::Ready_Layer_Test(const wstring& strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
@@ -432,7 +432,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Test(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_SnowMountain::Ready_UI()
+HRESULT CLevel_SnowMountainBoss::Ready_UI()
 {
 	// FAILED_CHECK(Ready_Layer_UI_Monster(TEXT("Layer_UI_Monster"), nullptr));
 
@@ -441,7 +441,7 @@ HRESULT CLevel_SnowMountain::Ready_UI()
 	return S_OK;
 }
 
-HRESULT CLevel_SnowMountain::Ready_Layer_UI_Monster(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_SnowMountainBoss::Ready_Layer_UI_Monster(const wstring& strLayerTag, void* pArg)
 {
 	/* 추 후 파싱해서 정보 받아오기 */
 
@@ -485,17 +485,17 @@ HRESULT CLevel_SnowMountain::Ready_Layer_UI_Monster(const wstring& strLayerTag, 
 	return S_OK;
 }
 
-HRESULT CLevel_SnowMountain::Ready_Layer_UI_Player(const wstring& strLayerTag, void* pArg)
+HRESULT CLevel_SnowMountainBoss::Ready_Layer_UI_Player(const wstring& strLayerTag, void* pArg)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_SnowMountain::Ready_Event()
+HRESULT CLevel_SnowMountainBoss::Ready_Event()
 {
 	return S_OK;
 }
 
-HRESULT CLevel_SnowMountain::Ready_Shader()
+HRESULT CLevel_SnowMountainBoss::Ready_Shader()
 {
 	/* 1. 셰이더 초기화 */
 	m_pGameInstance->Off_Shader();
@@ -542,20 +542,20 @@ HRESULT CLevel_SnowMountain::Ready_Shader()
 	return S_OK;
 }
 
-CLevel_SnowMountain* CLevel_SnowMountain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLevel_SnowMountainBoss* CLevel_SnowMountainBoss::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 {
-	CLevel_SnowMountain* pInstance = new CLevel_SnowMountain(pDevice, pContext);
+	CLevel_SnowMountainBoss* pInstance = new CLevel_SnowMountainBoss(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX("Failed to Created : CLevel_SnowMountain");
+		MSG_BOX("Failed to Created : CLevel_SnowMountainBoss");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CLevel_SnowMountain::Free()
+void CLevel_SnowMountainBoss::Free()
 {
 	__super::Free();
 

@@ -3100,6 +3100,9 @@
     <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun\Bullet">
       <UniqueIdentifier>{43eee4a2-d026-4268-bcf5-7e74ccd32deb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss">
+      <UniqueIdentifier>{28ebb5ee-63fc-4e9f-b28e-78c93bb6b8b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -6234,6 +6237,9 @@
     <ClInclude Include="..\Public\Bullet_ELShotgun.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_SnowMountainBoss.h">
+      <Filter>01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8817,6 +8823,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bullet_ELShotgun.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun\Bullet</Filter>
+    	</ClCompile>
+    <ClCompile Include="..\Private\Level_SnowMountainBoss.cpp">
+      <Filter>01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

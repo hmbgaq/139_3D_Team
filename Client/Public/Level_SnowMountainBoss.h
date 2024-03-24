@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CLevel_SnowMountain final : public CLevel
+class CLevel_SnowMountainBoss final : public CLevel
 {
 private:
-	CLevel_SnowMountain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CLevel_SnowMountain() = default;
+	CLevel_SnowMountainBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLevel_SnowMountainBoss() = default;
 
 public:
 	virtual HRESULT Initialize() override;
@@ -41,10 +41,10 @@ private: /* Shader */
 
 private:
 	_int			TempLightNumber = 0;
-	string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountainNormalMapping_MapData.json";
+	string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_TestMap_MapData.json";
 
 public:
-	static CLevel_SnowMountain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLevel_SnowMountainBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 };
 

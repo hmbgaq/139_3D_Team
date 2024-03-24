@@ -203,6 +203,13 @@ _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4*
 	if (m_iCurrentIndex == -1)
 		return false;
 
+	if (true == m_Cells.empty())
+	{
+		MSG_BOX("네비게이션 셀이 없어요");
+		return false;
+	}
+
+
 	if (true == m_Cells[m_iCurrentIndex]->Is_Out(vPosition, vLook, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex, vOutSlidingDir))
 	{
 		/* 현재 셀 기준 외부로 나가는중 + 받아온 이웃셀 인덱스가 -1이 아님 = 이웃 인덱스로 이동확정 */

@@ -7,6 +7,8 @@
 #include "Level_Intro.h"
 #include "Level_IntroBoss.h"
 #include "Level_GamePlay.h"
+#include "Level_SnowMountain.h"
+#include "Level_SnowMountainBoss.h"
 #include "Level_Tool.h"
 #include "UI_Manager.h"
 
@@ -52,6 +54,8 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	case Client::LEVEL_SNOWMOUNTAIN:
 		//m_pUI_Manager->Ready_Loading_SnowMountain(LEVEL_SNOWMOUNTAIN);
 		break;
+	case Client::LEVEL_SNOWMOUNTAINBOSS:
+		break;
 	case Client::LEVEL_LAVA:
 		break;
 	case Client::LEVEL_TOOL:
@@ -87,7 +91,6 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 			switch (m_eNextLevelID)
 			{
 			case LEVEL_LOGO:
-				
 				pNewLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
 				break;
 			case LEVEL_INTRO:
@@ -99,6 +102,12 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 				m_pUI_Manager->Active_LeftHUD();
 				m_pUI_Manager->Active_RightHUD();
 				m_pUI_Manager->Active_Loading_IntroBoss(false);			 // UI ON
+				break;
+			case LEVEL_SNOWMOUNTAIN:
+				pNewLevel = CLevel_SnowMountain::Create(m_pDevice, m_pContext);
+				break;
+			case LEVEL_SNOWMOUNTAINBOSS:
+				pNewLevel = CLevel_SnowMountainBoss::Create(m_pDevice, m_pContext);
 				break;
 			case LEVEL_GAMEPLAY:
 				pNewLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);

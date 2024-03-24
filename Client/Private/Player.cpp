@@ -75,6 +75,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 
+	CData_Manager::GetInstance()->Set_Player(this);
+	m_pGameInstance->Set_Player(this);
+
+
 	///* For.Com_PhysXController */
 	//FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"), TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom)));
 	//m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
@@ -88,11 +92,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//Preset::PhysXColliderDesc::GroundSetting(tPhysXColliderDesc, m_pTransformCom);
 	//m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
 	//m_pPhysXCollider->Add_PhysXActorAtScene();
-
-	CData_Manager::GetInstance()->Set_Player(this);
-	m_pGameInstance->Set_Player(this);
-	/* Temp - 맵에 맞게 위치 조정한값*/
-	//m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, XMVectorSet(-26.f, 0.f, -6.f, 1.f));
 
 	return S_OK;
 }

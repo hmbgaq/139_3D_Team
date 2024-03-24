@@ -104,7 +104,8 @@ HRESULT CEnvironment_Object::Render()
 
 		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 		
-		m_pShaderCom->Begin(0);
+		
+		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
 
 		m_pModelCom->Render((_uint)i);
 	}
