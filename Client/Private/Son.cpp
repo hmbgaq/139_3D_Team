@@ -4,7 +4,7 @@
 #include "Body_Son.h"
 
 // #include "Son_Idle.h"
-// #include "Son_Spawn1.h"
+#include "Son_Spawn.h"
 // #include "Son_HitCenter.h"
 // #include "Son_HitLeft.h"
 // #include "Son_HitRight.h"
@@ -57,7 +57,7 @@ HRESULT CSon::Initialize(void* pArg)
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CSon>(this);
-		//m_pActor->Set_State(new CSon_Spawn1);
+		m_pActor->Set_State(new CSon_Spawn);
 	}
 	//HP
 	m_iMaxHp = 150;
