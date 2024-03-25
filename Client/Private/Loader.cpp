@@ -551,6 +551,8 @@ HRESULT CLoader::Loading_For_Intro_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_VIBuffer_Trail"), CVIBuffer_Trail::Create(m_pDevice, m_pContext)));
 
 	lstrcpy(m_szLoadingText, TEXT("셰이더를(을) 로드하는 중입니다."));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Texture_Shader_Dissolve"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/Dissolve/dissolve_tex.dds"))));
+
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_Model"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Model.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_Monster"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Monster.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Shader_VtxCube"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxCube.hlsl"), VTXCUBE::Elements, VTXCUBE::iNumElements)));

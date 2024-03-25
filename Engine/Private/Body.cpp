@@ -80,11 +80,8 @@ void CBody::Late_Tick(_float fTimeDelta)
 	{
 		m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos);
 
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-			return;
-
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this)))
-			return;
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
 	}
 
 #ifdef _DEBUG

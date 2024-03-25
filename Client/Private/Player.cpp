@@ -380,7 +380,6 @@ void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCoun
 		{
 			Move_In_Proportion_To_Enemy(fTimeDelta);
 		}
-		
 	}
 }
 

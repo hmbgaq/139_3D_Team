@@ -13,8 +13,8 @@
 /* ----------------- Variable ----------------- */
 TextureCube g_IrradianceTexture;
 TextureCube g_PreFilteredTexture;
-Texture2D g_BRDFTexture;
-float4 g_LightDiffuse = { 1.f, 1.f, 1.f, 1.f };
+Texture2D   g_BRDFTexture;
+float4      g_LightDiffuse = { 1.f, 1.f, 1.f, 1.f };
 /* -------------------------------------------- */
 
 // Burley B. "Physically Based Shading at Disney"

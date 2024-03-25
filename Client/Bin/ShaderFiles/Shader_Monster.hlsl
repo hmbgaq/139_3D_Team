@@ -1,6 +1,15 @@
 #include "Shader_Defines.hlsli"
 
-/* =========== Global Value =========== */
+/*======================== 예 시 파 일 =======================
+// 1. 디졸브 - Bandit Sniper - Body 
+==============================================================*/
+
+/*=============================================================
+ 
+                             Value
+                                
+==============================================================*/
+/* =========== Common =========== */
 matrix      g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix      g_BoneMatrices[800];
 float4      g_vCamPosition;
@@ -8,15 +17,7 @@ float       g_fCamFar;
 float       g_fLightFar;
 float       g_TimeDelta;
 
-float       g_fDissolveWeight;    /* Dissolve  */
-
-float4      g_vLineColor;         /* OutLine */
-float       g_LineThick;          /* OutLine */
-
-float3      g_vBloomPower   = { 0.f, 0.f, 0.f }; /* Bloom */
-float4      g_vRimColor     = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
-float       g_fRimPower     = 5.f;
-
+float4      g_CheckColor = { 1.f, 0.f, 0.f, 1.f };
 /* =========== Texture =========== */
 Texture2D   g_DiffuseTexture;       /* Noblend */
 Texture2D   g_NormalTexture;        /* Noblend */
@@ -26,10 +27,28 @@ Texture2D   g_OpacityTexture;       /* Noblend */
 
 Texture2D   g_DistortionTexture;
 Texture2D   g_DissolveTexture;
+Texture2D   g_AlphaTexture;
 Texture2D   g_MaskingTexture;
 Texture2D   g_NoiseTexture;
 
-/* ------------------- function ------------------- */
+/* =========== Value =========== */
+float       g_Dissolve_Weight = 0.f;        /* Dissolve - 디졸브 가중치  */
+float       g_Dissolve_feather = 0.1;       /* Dissolve - 마스크의 테두리를 부드럽게 만드는 데 사용*/
+float3      g_Dissolve_Color = { 0.f, 0.f, 0.f }; /* Dissolve - 디졸브 사라지기 직전에 보이는 색상 */
+float       g_Dissolve_ColorRange = 0.1f;   /* 위의 직전 보이는 색상이 어디까지 보일것인지 */ 
+
+float4      g_vLineColor;           /* OutLine */
+float       g_LineThick;            /* OutLine */
+
+float3      g_vBloomPower = { 0.f, 0.f, 0.f };      /* Bloom */
+float4      g_vRimColor   = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
+float       g_fRimPower   = 5.f;                    /* RimLight */
+
+/*=============================================================
+ 
+                             Function 
+                                
+==============================================================*/
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
 {
     float fRimPower = 1.f - saturate(dot(In_Normal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
@@ -52,7 +71,11 @@ float4 Calculation_Brightness(float4 Out_Diffuse)
     return vBrightnessColor;
 }
 
-/* ------------------- ------------------- */ 
+/*=============================================================
+ 
+                             Struct
+                                
+==============================================================*/
 
 struct VS_IN
 {
@@ -97,7 +120,11 @@ struct PS_OUT_SHADOW
     vector vLightDepth : SV_TARGET0;
 };
 
-/* ------------------- Base Vertex Shader -------------------*/
+/*=============================================================
+ 
+                        Vertex Shader
+                                
+==============================================================*/
 
 VS_OUT VS_MAIN(VS_IN In)
 {
@@ -127,7 +154,11 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
-/* ------------------- Base Pixel Shader (0) -------------------*/
+/*=============================================================
+ 
+                        Pixel Shader
+                                
+==============================================================*/
 
 PS_OUT PS_MAIN(PS_IN In)
 {
@@ -150,7 +181,6 @@ PS_OUT PS_MAIN(PS_IN In)
 }
 
 /* ------------------- Shadow Pixel Shader(2) -------------------*/
-
 
 PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
 {
@@ -185,30 +215,45 @@ PS_OUT PS_INFECTED_WEAPON(PS_IN In)
     return Out;
 }
 
-/* ------------------- Pixel Shader(4) : Sniper -------------------*/
-PS_OUT PS_SNIPER_WEAPON(PS_IN In)
+/* ------------------- Pixel Shader(4) : Dissolve -------------------*/
+PS_OUT PS_MAIN_DISSOLVE(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    float4  MtrlColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    float4  DissolveTexture = g_DissolveTexture.Sample(LinearSampler, In.vTexcoord);
+    float   fDissolve = DissolveTexture.r;
+  
+    float adjustedMask = fDissolve * (1 - g_Dissolve_feather) + g_Dissolve_feather / 2;
+    float alpha = saturate((adjustedMask - g_Dissolve_Weight) / g_Dissolve_feather + 0.5);
+    float4 FinalColor = MtrlColor * alpha;
+    
+    if (FinalColor.a == 0)
+        discard;
+    
+    if (FinalColor.a > 0.f && FinalColor.a <= g_Dissolve_ColorRange)
+        FinalColor.rgb = g_Dissolve_Color;
+    
+    Out.vDiffuse = FinalColor;
     vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
     float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
-
-    if (vMtrlDiffuse.a < 0.3f)
-        discard;
-
-    Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
- 
-    /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
-    Out.vDiffuse += vRimColor;
-    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    
     return Out;
 }
+/* ------------------- Pixel Shader(5) : MeshCheck -------------------*/
+PS_OUT PS_MAIN_CHECK(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    Out.vDiffuse = g_CheckColor;
+    
+    return Out;
+}
+
 
 /* ------------------- Technique -------------------*/ 
 technique11 DefaultTechnique
@@ -262,7 +307,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_INFECTED_WEAPON();
     }
 
-    pass Sniper_Weapon
+    pass Dissolve // 4
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
@@ -271,7 +316,18 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_SNIPER_WEAPON();
+        PixelShader = compile ps_5_0 PS_MAIN_DISSOLVE();
     }
 
+    pass MeshCheck // 5
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_CHECK();
+    }
 }
