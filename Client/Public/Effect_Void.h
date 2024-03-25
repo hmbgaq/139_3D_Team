@@ -21,15 +21,16 @@ public:
 		TYPE_EFFECT	eType_Effect = { TYPE_EFFECT_END };
 		EASING_TYPE eType_Easing = { EASING_TYPE::LINEAR };
 
+
 		wstring		strProtoTag = { TEXT("") };
 		wstring		strPartTag = { TEXT("") };
 
 		// Texture
 		wstring		strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_END] = { TEXT(""), TEXT("") };
 		wstring		strTextureTag[TEXTURE_END];
-		_int		iTextureIndex[TEXTURE_END] = { 0 };
+		_int		iTextureIndex[TEXTURE_END]	= { 0 };
 
-		_uint		iCurNumInstance = { 500 };
+		_uint		iCurNumInstance				= { 1000 };
 
 		// Render Group
 		_int		iRenderGroup = { 6 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 이펙트는 6번

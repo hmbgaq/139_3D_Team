@@ -19,7 +19,6 @@ public:
 	{
 		_bool		bUseCustomTex	 = { TRUE };
 
-
 		//_float4		vRimColor = { 1.f, 1.f, 1.f, 1.f };		// 사용
 		//_float3		vBloomPower = { 1.f, 1.f, 1.f };		// 사용
 

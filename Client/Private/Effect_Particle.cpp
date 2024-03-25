@@ -227,7 +227,6 @@ void CEffect_Particle::ReSet_Effect()
 		m_tVoidDesc.bRender = FALSE;
 		m_pVIBufferCom->ReSet(); // 버퍼 리셋
 	}
-		
 
 }
 
@@ -452,6 +451,16 @@ HRESULT CEffect_Particle::Ready_Components()
 	/* For.Com_VIBuffer */
 	{
 		CVIBuffer_Particle::PARTICLE_BUFFER_DESC tBufferDesc = {};
+#ifdef _DEBUG
+		if (ECast(LEVEL_TOOL) != m_pGameInstance->Get_CurrentLevel())
+		{
+#endif // _DEBUG
+			tBufferDesc.iCurNumInstance = m_tVoidDesc.iCurNumInstance;
+			tBufferDesc.bUseRigidBody = m_tVoidDesc.bUseRigidBody;
+#ifdef _DEBUG
+		}
+#endif // _DEBUG
+
 		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Particle"), TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &tBufferDesc));
 	}
 

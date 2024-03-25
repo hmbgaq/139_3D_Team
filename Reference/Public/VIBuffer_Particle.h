@@ -13,7 +13,7 @@ public:
 	typedef struct tagParticleBufferDESC
 	{
 		// 저장해야 하는 고정 정보들
-		_int		iCurNumInstance = { 500 };	// 초기화 값이 Max인스턴스 개수가 됨
+		_int		iCurNumInstance = { 1000 };	// 초기화 값이 Max인스턴스 개수가 됨
 
 
 		/* Types */
@@ -26,12 +26,18 @@ public:
 		/* LifeTime */
 		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
 
+		/* Emitter */
+		_float		fEmissionTime = { 0.f };		// 저장 O
+		_uint		iAddEmitCount = { 0 };			// 저장 O	한번 방출 할 때 몇개씩 추가로 방출할건지
+		_float		fEmissionTimeAcc = { 0.f };		// 저장 X
+		_uint		iEmitCount = { 0 };				// 저장 X
+		_bool		bEmitFinished = { FALSE };		// 저장 X
 
 		/* RigidBody */
-		_bool		bUseRigidBody = { TRUE };
-		_bool		bKinetic = { TRUE };	// 키네틱, 즉 TRUE면 속도 계산 함)
-		_bool		bUseGravity = { TRUE };
-		FORCE_MODE	eForce_Mode = { FORCE_MODE::IMPULSE };
+		_bool		bUseRigidBody	= { TRUE };
+		_bool		bKinetic		= { TRUE };	// 키네틱, 즉 TRUE면 속도 계산 함)
+		_bool		bUseGravity		= { TRUE };
+		FORCE_MODE	eForce_Mode		= { FORCE_MODE::IMPULSE };
 
 
 		_float		fGravity = { -9.8f };			// 중력 가속도
@@ -108,6 +114,8 @@ public:
 			fTimeAcc = { 0.f };
 			fLifeTimeRatio = { 0.f };
 
+			fEmissionTimeAcc = { 0.f };
+
 			//fUpScaleTimeAcc = { 0.f };
 			//fDownScaleTimeAcc = { 0.f };
 		}
@@ -123,6 +131,7 @@ public:
 	typedef struct tagParticleDesc
 	{
 		// 업데이트 돌면서 변하는 정보들(저장X)
+		_bool bEmit = { FALSE };
 		_bool bDie = { FALSE };
 
 		// 시간
@@ -135,6 +144,9 @@ public:
 		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
 		_float	fMaxRange = { 3.f };
 		_float	fMaxPosY = { 3.f };
+
+		//  방향 
+		_float3	vDir = { 1.f, 0.f, 0.f };
 
 		// 스피드
 		_float	fCurSpeed = { 1.f };
@@ -168,27 +180,27 @@ public:
 
 	typedef struct tagParticleShaderDesc
 	{
-		// 16 배수여야함
+		// 16 배수여야함 (64)
 		
 		// 업데이트 돌면서 변하는 정보들(저장X)
-		_float3	vDir	= { 1.f, 0.f, 0.f };
-		_float	Padding = { 0.f };
+		_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f }; // 16
 
+		_float3 vRight	= { 1.f, 0.f, 0.f };		// 12
+		_float  fPadding1 = { 0.f };				// 4	
 
-		_float4 vRight = { 1.f, 0.f, 0.f, 0.f };
-		_float4 vUp = { 0.f, 1.f, 0.f, 0.f };
-		_float4 vLook = { 0.f, 0.f, 1.f, 0.f };
+		_float3 vUp			= { 0.f, 1.f, 0.f };	// 12
+		_float  fPadding2	= { 0.f };				// 4	
 
-
-		_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f };
-
+		_float3 vLook		= { 0.f, 0.f, 1.f };	//12
+		_float  fPadding3	= { 0.f };				// 4	
 
 	} PARTICLE_SHADER_INFO_DESC;
 
 	typedef struct tagParticleRigidbodyDesc
 	{
 		// 업데이트 돌면서 변하는 정보들(저장X)
-		_bool			bSleep = { FALSE };
+		_bool			bForced = { FALSE };
+		_bool			bSleep	= { FALSE };
 
 		_float3			vAccel = {0.f, 0.f, 0.f};		// 가속도
 		_float3			vVelocity = { 0.f, 0.f, 0.f };	// 속도

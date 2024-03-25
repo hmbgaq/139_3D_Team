@@ -447,7 +447,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
 					{
 						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 162;
+						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 164;
 						m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 
 					}ImGui::SameLine();
@@ -632,8 +632,13 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::Text("MaxInstance : %d", m_iMaxNumInstance_Particle);
 				if (ImGui::DragInt("Instance Count", &m_iNumInstance_Particle, 1, 1, m_iNumInstance_Particle))
 				{
+					// 1보다 작아질 수 없음
 					if (1 > m_iNumInstance_Particle)
 						m_iNumInstance_Particle = 1;
+
+					// 맥스 개수를 넘어갈 수 없음
+					if (m_iMaxNumInstance_Particle < m_iNumInstance_Particle)
+						m_iNumInstance_Particle = m_iMaxNumInstance_Particle;
 
 					m_pCurVoidDesc->iCurNumInstance = m_iNumInstance_Particle;
 					m_pParticleBufferDesc->iCurNumInstance = m_iNumInstance_Particle;
@@ -651,6 +656,33 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticleBufferDesc->vMinMaxLifeTime.x = m_vMinMaxLifeTime_Particle[0];
 					m_pParticleBufferDesc->vMinMaxLifeTime.y = m_vMinMaxLifeTime_Particle[1];
 				}
+
+
+				/* 방출(Emitter) */
+				ImGui::SeparatorText(" EmissionTime_Particle ");
+				if (ImGui::DragFloat("EmissionTime_Particle", &m_fEmissionTime_Particle, 0.01f, 0.f, 1000.f))
+				{
+					if (0.f >= m_fEmissionTime_Particle)	// 0.f보다 작아지면 0으로
+						m_fEmissionTime_Particle = 0.f;
+
+					m_pParticleBufferDesc->fEmissionTime = m_fEmissionTime_Particle;
+				}
+
+				if (ImGui::DragInt("AddEmitCount_Particle", &m_iAddEmitCount_Particle, 1, 0.f, m_pParticleBufferDesc->iCurNumInstance))
+				{
+					// 정지 및 리셋
+					m_pCurEffectDesc->bPlay = FALSE;
+					m_pCurEffect->Init_ReSet_Effect();
+
+					if (0 >= m_iAddEmitCount_Particle)	// 0보다 작아지면 0으로
+						m_iAddEmitCount_Particle = 0.f;
+
+					if (m_pParticleBufferDesc->iCurNumInstance <= m_iAddEmitCount_Particle)	// 현재 인스턴스 개수와 같거나 커지면 현재 인스턴스 개수로
+						m_iAddEmitCount_Particle = m_pParticleBufferDesc->iCurNumInstance;
+
+					m_pParticleBufferDesc->iAddEmitCount = (_uint)m_iAddEmitCount_Particle;
+				}
+
 
 
 				/* 퍼지는 범위(분포 범위) */
@@ -734,6 +766,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 				{
 					m_pCurVoidDesc->bUseRigidBody = TRUE;
 					m_pParticleBufferDesc->bUseRigidBody = TRUE;
+
+					m_pParticleBufferDesc->eType_Action = CVIBuffer_Particle::SPARK;
 				}				
 				else if (1 == m_iUseRigidBody_Particle)
 				{
@@ -896,11 +930,18 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 				/* 파티클 액션 타입 */
 				ImGui::SeparatorText(" Action Type_Particle ");
-				ImGui::RadioButton("SPARK_Particle ", &m_iType_Action_Particle, 0); 
-				ImGui::RadioButton("BLINK_Particle", &m_iType_Action_Particle, 1);	 
-				ImGui::RadioButton("FALL_Particle", &m_iType_Action_Particle, 2);	
-				ImGui::RadioButton("RISE_Particle", &m_iType_Action_Particle, 3);	 
-				ImGui::RadioButton("TORNADO_Particle", &m_iType_Action_Particle, 4);
+				if (ImGui::RadioButton("SPARK_Particle ", &m_iType_Action_Particle, 0))
+					pVIBuffer->ReSet();
+				if(ImGui::RadioButton("BLINK_Particle", &m_iType_Action_Particle, 1))
+					pVIBuffer->ReSet();
+				if(ImGui::RadioButton("FALL_Particle", &m_iType_Action_Particle, 2))
+					pVIBuffer->ReSet();
+				if(ImGui::RadioButton("RISE_Particle", &m_iType_Action_Particle, 3))
+					pVIBuffer->ReSet();
+				if(ImGui::RadioButton("TORNADO_Particle", &m_iType_Action_Particle, 4))
+					pVIBuffer->ReSet();
+				ImGui::RadioButton("TYPE_ACTION_END_Particle", &m_iType_Action_Particle, 5);
+
 
 				if (0 == m_iType_Action_Particle)
 					m_pParticleBufferDesc->eType_Action = CVIBuffer_Particle::SPARK;
@@ -912,6 +953,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticleBufferDesc->eType_Action = CVIBuffer_Particle::RISE;
 				else if (4 == m_iType_Action_Particle)
 					m_pParticleBufferDesc->eType_Action = CVIBuffer_Particle::TORNADO;
+				else if (5 == m_iType_Action_Particle)
+					m_pParticleBufferDesc->eType_Action = CVIBuffer_Particle::TYPE_ACTION_END;
 
 
 				/* 센터위치 오프셋(000 에서 어느정도 떨어진 지점에서 스폰 될건지) */
@@ -1945,7 +1988,7 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (ImGui::Button("Mask_Base_Mesh"))	// 베이스 마스크로 변경
 					{
 						dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 162;
+						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 164;
 						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
 
 					}ImGui::SameLine();
@@ -2231,6 +2274,18 @@ void CWindow_EffectTool::Update_MeshTab()
 #pragma region 크기 변경 러프_메쉬 파티클 시작
 					if (ImGui::CollapsingHeader(" Scale_Mesh "))
 					{
+						if (1 == m_iUseScaleLerp_Mesh)
+						{
+							// 크기러프 안쓸 때만 정비율 랜덤인지 선택_메쉬 파티클
+							ImGui::SeparatorText(" ScaleRatio_Mesh ");
+							ImGui::RadioButton("ScaleRatio_Mesh", &m_iScaleRatio_Mesh, 0); 
+							ImGui::RadioButton("None_ScaleRatio_Mesh", &m_iScaleRatio_Mesh, 1);
+							if (0 == m_iScaleRatio_Mesh)
+								m_pMeshBufferDesc->bScaleRatio = TRUE;
+							else if (1 == m_iScaleRatio_Mesh)
+								m_pMeshBufferDesc->bScaleRatio = FALSE;
+						}
+
 						ImGui::SeparatorText("Start Scale_Mesh");
 						if (ImGui::DragFloat3("Start Scale_Mesh", m_vStartScale_Mesh, 0.1f, 0.f, 5000.f))
 						{
@@ -3105,6 +3160,11 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vMinMaxLifeTime_Particle[1] = m_pParticleBufferDesc->vMinMaxLifeTime.y;
 
 
+			/* 방출(Emitter)_파티클 */
+			m_fEmissionTime_Particle = m_pParticleBufferDesc->fEmissionTime;
+			m_iAddEmitCount_Particle = (_int)m_pParticleBufferDesc->iAddEmitCount;
+
+
 			/* 퍼지는 범위(분포 범위) */
 			m_vMinMaxRange_Particle[0] = m_pParticleBufferDesc->vMinMaxRange.x;
 			m_vMinMaxRange_Particle[1] = m_pParticleBufferDesc->vMinMaxRange.y;
@@ -3151,7 +3211,8 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iType_Action_Particle = 3;
 			else if (CVIBuffer_Particle::TORNADO == m_pParticleBufferDesc->eType_Action)
 				m_iType_Action_Particle = 4;
-
+			else if (CVIBuffer_Particle::TYPE_ACTION_END == m_pParticleBufferDesc->eType_Action)
+				m_iType_Action_Particle = 5;
 
 
 			/* 센터 오프셋 위치_파티클 */
@@ -3498,12 +3559,12 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				//m_vMinMaxMass_Mesh[0] = m_pMeshBufferDesc->vMinMaxMass.x;
 				//m_vMinMaxMass_Mesh[1] = m_pMeshBufferDesc->vMinMaxMass.y;
 
-				/* 스피드 */
-				m_vMinMaxSpeed_Mesh[0] = m_pMeshBufferDesc->vMinMaxSpeed.x;
-				m_vMinMaxSpeed_Mesh[1] = m_pMeshBufferDesc->vMinMaxSpeed.y;
-
 			}
 			// 리지드바디 업데이트 =============================================================================================================
+			
+			/* 스피드 */
+			m_vMinMaxSpeed_Mesh[0] = m_pMeshBufferDesc->vMinMaxSpeed.x;
+			m_vMinMaxSpeed_Mesh[1] = m_pMeshBufferDesc->vMinMaxSpeed.y;
 
 
 			/* 리사이클 여부_메쉬 파티클 */
@@ -3584,6 +3645,12 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iUseScaleLerp_Mesh = 0;
 			else if (FALSE == m_pMeshBufferDesc->bUseScaleLerp)
 				m_iUseScaleLerp_Mesh = 1;
+
+
+			if (TRUE == m_pMeshBufferDesc->bScaleRatio)
+				m_iScaleRatio_Mesh = 0;
+			else if (FALSE == m_pMeshBufferDesc->bScaleRatio)
+				m_iScaleRatio_Mesh = 1;
 
 
 			m_vScaleLerp_Up_Pos_Mesh[0] = m_pMeshBufferDesc->vScaleLerp_Up_Pos.x;
@@ -4805,7 +4872,6 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 
 		tVoidDesc.eType_Effect = CEffect_Void::PARTICLE;
 
-		//tParticleDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Particle_Base");
 		tVoidDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 		tVoidDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
 
@@ -4829,6 +4895,8 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		tVoidDesc.bPlay				= { TRUE };
 		tVoidDesc.bUseSpriteAnim	= { FALSE };
 		tVoidDesc.bUseRigidBody		= { TRUE };
+
+		tVoidDesc.iCurNumInstance = { 1000 };
 
 
 #pragma region 리스트 문자열 관련 시작
@@ -5050,8 +5118,9 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02] = TEXT("");
 
 
-		tVoidDesc.bPlay = { TRUE };
-		tVoidDesc.bUseRigidBody = { FALSE };
+		tVoidDesc.bPlay				= { TRUE };
+		tVoidDesc.bUseRigidBody		= { TRUE };
+		tVoidDesc.iCurNumInstance	= { 1000 };
 
 		CEffect_Instance::EFFECT_INSTANCE_DESC tInstanceDesc = {};
 		//tInstanceDesc.vRimColor = { 2.f, 10.f, 255.f, 255.f };

@@ -402,7 +402,8 @@ HRESULT CEffect_Instance::Ready_Components()
 	/* For.Com_VIBuffer */
 	{
 		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferInfo = {};
-		//tBufferInfo.bUseRigidBody = m_tVoidDesc.bUseRigidBody;
+		tBufferInfo.iCurNumInstance = m_tVoidDesc.iCurNumInstance;
+		tBufferInfo.bUseRigidBody = m_tVoidDesc.bUseRigidBody;
 
 		for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MODE_END); ++i)
 		{

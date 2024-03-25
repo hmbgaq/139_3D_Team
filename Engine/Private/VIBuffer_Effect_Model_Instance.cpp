@@ -114,15 +114,14 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 			}
 
 
-
 			ReSet_ParticleInfo(i);
 
 			Rotation_Instance(i);
 
 			// 쉐이더에 던질 라업룩 값으로 초기화
-			pModelInstance[i].vRight = m_vecParticleShaderInfoDesc[i].vRight;
-			pModelInstance[i].vUp = m_vecParticleShaderInfoDesc[i].vUp;
-			pModelInstance[i].vLook = m_vecParticleShaderInfoDesc[i].vLook;
+			pModelInstance[i].vRight = _float4{ m_vecParticleShaderInfoDesc[i].vRight.x, m_vecParticleShaderInfoDesc[i].vRight.y, m_vecParticleShaderInfoDesc[i].vRight.z, 0.f };
+			pModelInstance[i].vUp	= _float4{ m_vecParticleShaderInfoDesc[i].vUp.x, m_vecParticleShaderInfoDesc[i].vUp.y, m_vecParticleShaderInfoDesc[i].vUp.z, 0.f };
+			pModelInstance[i].vLook	= _float4{ m_vecParticleShaderInfoDesc[i].vLook.x, m_vecParticleShaderInfoDesc[i].vLook.y, m_vecParticleShaderInfoDesc[i].vLook.z, 0.f };
 
 
 			if (m_tBufferDesc.bUseRigidBody)
@@ -136,7 +135,7 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 				// 리지드바디 사용이 아닐 경우
 
 				_vector		vDir = Make_Dir(i);						// 방향 만들기
-				m_vecParticleShaderInfoDesc[i].vDir = vDir;			// 쉐이더에 전달할 방향 저장
+				m_vecParticleInfoDesc[i].vDir = vDir;			// 쉐이더에 전달할 방향 저장
 				if (SPARK == m_tBufferDesc.eType_Action)
 				{
 					Update_Spark_Rotation(i);
@@ -199,9 +198,9 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 			Rotation_Instance(i);
 
 			// 쉐이더에 던질 라업룩 값으로 초기화
-			pModelInstance[i].vRight	= m_vecParticleShaderInfoDesc[i].vRight;
-			pModelInstance[i].vUp		= m_vecParticleShaderInfoDesc[i].vUp;
-			pModelInstance[i].vLook		= m_vecParticleShaderInfoDesc[i].vLook;
+			pModelInstance[i].vRight	= _float4{ m_vecParticleShaderInfoDesc[i].vRight.x, m_vecParticleShaderInfoDesc[i].vRight.y, m_vecParticleShaderInfoDesc[i].vRight.z, 0.f };
+			pModelInstance[i].vUp		= _float4{ m_vecParticleShaderInfoDesc[i].vUp.x, m_vecParticleShaderInfoDesc[i].vUp.y, m_vecParticleShaderInfoDesc[i].vUp.z, 0.f };
+			pModelInstance[i].vLook		= _float4{ m_vecParticleShaderInfoDesc[i].vLook.x, m_vecParticleShaderInfoDesc[i].vLook.y, m_vecParticleShaderInfoDesc[i].vLook.z, 0.f };
 
 
 			if (m_tBufferDesc.bUseRigidBody)
@@ -215,7 +214,7 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 				// 리지드바디 사용이 아닐 경우
 
 				_vector		vDir = Make_Dir(i);						// 방향 만들기
-				m_vecParticleShaderInfoDesc[i].vDir = vDir;			// 쉐이더에 전달할 방향 저장
+				m_vecParticleInfoDesc[i].vDir = vDir;			// 쉐이더에 전달할 방향 저장
 				if (SPARK == m_tBufferDesc.eType_Action)
 				{
 					Update_Spark_Rotation(i);
@@ -290,11 +289,21 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 	else
 	{
 		// 스케일 러프 사용이 아니면 현재 스케일은 범위 내 랜덤
-		m_vecParticleInfoDesc[iNum].vCurScales.x = SMath::fRandom(m_tBufferDesc.vStartScale.x, m_tBufferDesc.vEndScale.x);
-		//m_vecParticleInfoDesc[iNum].vCurScales.y = m_vecParticleInfoDesc[iNum].vCurScales.x;  // 비율 고정 /* SMath::fRandom(m_tBufferDesc.vStartScale.y, m_tBufferDesc.vEndScale.y)*/;
-		//m_vecParticleInfoDesc[iNum].vCurScales.z = m_vecParticleInfoDesc[iNum].vCurScales.x;  // 비율 고정 /* SMath::fRandom(m_tBufferDesc.vStartScale.z, m_tBufferDesc.vEndScale.z) */;
-		m_vecParticleInfoDesc[iNum].vCurScales.y = SMath::fRandom(m_tBufferDesc.vStartScale.y, m_tBufferDesc.vEndScale.y); 
-		m_vecParticleInfoDesc[iNum].vCurScales.z = SMath::fRandom(m_tBufferDesc.vStartScale.z, m_tBufferDesc.vEndScale.z);  
+		if (m_tBufferDesc.bScaleRatio)
+		{
+			// 정비율 (가로 세로 깊이 사이즈 다 같음)
+			m_vecParticleInfoDesc[iNum].vCurScales.x = SMath::fRandom(m_tBufferDesc.vStartScale.x, m_tBufferDesc.vEndScale.x);
+			m_vecParticleInfoDesc[iNum].vCurScales.y = m_vecParticleInfoDesc[iNum].vCurScales.x; 
+			m_vecParticleInfoDesc[iNum].vCurScales.z = m_vecParticleInfoDesc[iNum].vCurScales.x; 
+		}
+		else
+		{
+			// 비율 신경 안씀
+			m_vecParticleInfoDesc[iNum].vCurScales.x = SMath::fRandom(m_tBufferDesc.vStartScale.x, m_tBufferDesc.vEndScale.x);
+			m_vecParticleInfoDesc[iNum].vCurScales.y = SMath::fRandom(m_tBufferDesc.vStartScale.y, m_tBufferDesc.vEndScale.y);
+			m_vecParticleInfoDesc[iNum].vCurScales.z = SMath::fRandom(m_tBufferDesc.vStartScale.z, m_tBufferDesc.vEndScale.z);
+		}
+
 	}
 
 
@@ -311,7 +320,7 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 		// 이동 방향으로 힘 줘서 이동
 		_vector		vDir = Make_Dir(iNum);
 
-		m_vecParticleShaderInfoDesc[iNum].vDir = vDir;			// 쉐이더에 전달할 방향 저장
+		m_vecParticleInfoDesc[iNum].vDir = vDir;			// 쉐이더에 전달할 방향 저장
 #pragma endregion 이동 진행방향 회전 끝
 
 
@@ -379,7 +388,7 @@ void CVIBuffer_Effect_Model_Instance::Update_Spark_Rotation(_uint iNum)
 	_vector		vRight, vUp, vLook;
 
 	// 이동 진행 방향벡터를 Up으로 한 새로운 Right, Look 정해주기 ===================================
-	vUp = XMVector4Normalize(m_vecParticleShaderInfoDesc[iNum].vDir) * m_vecParticleInfoDesc[iNum].vCurScales.y;
+	vUp = XMVector4Normalize(m_vecParticleInfoDesc[iNum].vDir) * m_vecParticleInfoDesc[iNum].vCurScales.y;
 	vLook = XMVector4Normalize(XMVector3Cross(float4(0.f, 1.f, 0.f, 0.f), vUp));
 	vRight = XMVector4Normalize(XMVector3Cross(vUp, vLook)) * m_vecParticleInfoDesc[iNum].vCurScales.x;
 	vLook = XMVector4Normalize(XMVector3Cross(vRight, vUp)) * m_vecParticleInfoDesc[iNum].vCurScales.z;
@@ -552,9 +561,9 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 			Rotation_Instance(i);
 
 			// 쉐이더에 던질 라업룩 값으로 초기화
-			pModelInstance[i].vRight = m_vecParticleShaderInfoDesc[i].vRight;
-			pModelInstance[i].vUp	= m_vecParticleShaderInfoDesc[i].vUp;
-			pModelInstance[i].vLook = m_vecParticleShaderInfoDesc[i].vLook;
+			pModelInstance[i].vRight	= _float4{ m_vecParticleShaderInfoDesc[i].vRight.x, m_vecParticleShaderInfoDesc[i].vRight.y, m_vecParticleShaderInfoDesc[i].vRight.z, 0.f };
+			pModelInstance[i].vUp		= _float4{ m_vecParticleShaderInfoDesc[i].vUp.x, m_vecParticleShaderInfoDesc[i].vUp.y, m_vecParticleShaderInfoDesc[i].vUp.z, 0.f };
+			pModelInstance[i].vLook		= _float4{ m_vecParticleShaderInfoDesc[i].vLook.x, m_vecParticleShaderInfoDesc[i].vLook.y, m_vecParticleShaderInfoDesc[i].vLook.z, 0.f };
 #pragma region 회전 : 자체 회전 끝
 
 
@@ -581,7 +590,7 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 							// 최종 위치 이동
 							XMStoreFloat4(&pModelInstance[i].vTranslation, vMovePos);
 
-							m_vecParticleShaderInfoDesc[i].vDir = m_vecParticleRigidbodyDesc[i].vVelocity;			// 쉐이더에 전달할 방향 저장
+							m_vecParticleInfoDesc[i].vDir = m_vecParticleRigidbodyDesc[i].vVelocity;			// 쉐이더에 전달할 방향 저장
 						}
 						else
 						{
@@ -606,7 +615,7 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 				if (SPARK == m_tBufferDesc.eType_Action)
 				{
 					// 이동 :: 현재 포지션 + (입자들의 방향 * (현재 스피드 * 타임델타))
-					_vector vMovePos = XMLoadFloat4(&pModelInstance[i].vTranslation) + m_vecParticleShaderInfoDesc[i].vDir * (m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta);
+					_vector vMovePos = XMLoadFloat4(&pModelInstance[i].vTranslation) + m_vecParticleInfoDesc[i].vDir * (m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta);
 					XMStoreFloat4(&pModelInstance[i].vTranslation, vMovePos);
 
 
@@ -789,6 +798,7 @@ _bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
 
 
 	/* For.Scale */
+	Out_Json["Com_VIBuffer"]["bScaleRatio"] = m_tBufferDesc.bScaleRatio;
 	Out_Json["Com_VIBuffer"]["bUseScaleLerp"] = m_tBufferDesc.bUseScaleLerp;
 	Out_Json["Com_VIBuffer"]["eType_ScaleLerp"] = m_tBufferDesc.eType_ScaleLerp;
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vScaleLerp_Up_Pos"], m_tBufferDesc.vScaleLerp_Up_Pos);
@@ -860,6 +870,11 @@ void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 
 
 	/* For.Scale */
+	if (In_Json["Com_VIBuffer"].contains("bScaleRatio")) // 다시 저장 후 삭제
+	{
+		m_tBufferDesc.bScaleRatio = In_Json["Com_VIBuffer"]["bScaleRatio"];
+	}
+
 	if (In_Json["Com_VIBuffer"].contains("bUseScaleLerp")) // 다시 저장 후 삭제
 	{
 		m_tBufferDesc.bUseScaleLerp = In_Json["Com_VIBuffer"]["bUseScaleLerp"];

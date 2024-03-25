@@ -60,17 +60,20 @@ float	g_fDistortionBias;
 
 struct EffectDesc
 {
-    float3  g_vDir;
-    float   g_Padding;
-	
-    float4  g_vRight;
-    float4  g_vUp;
-    float4  g_vLook;
-	
-	
-    float4  g_vColors_Mul;
+    // 16 배수여야함 (64)
+   
+    float4 g_vColors_Mul; // 16
+    
+    float3 g_vRight; // 12
+    float g_fPadding1; // 4
+    
+    float3 g_vUp; // 12
+    float g_fPadding2; // 4
+    
+    float3 g_vLook; // 12
+    float g_fPadding3; // 4
 };
-EffectDesc g_EffectDesc[500];
+EffectDesc g_EffectDesc[1000];
 
 
 

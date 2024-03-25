@@ -151,28 +151,28 @@ private:
 	_int m_iShaderPassIndex_Particle						= { 0 };
 	_int m_iMaxShaderPassIndex_Particle						= { 4 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 12, 0, 162, 243, 20 };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 12, 0, 164, 243, 20 };
 
 
 	_int m_iRenderGroup_Rect								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Rect							= { 0 };
 	_int m_iMaxShaderPassIndex_Rect							= { 5 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 12, 0, 162, 243, 20 };
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 12, 0, 164, 243, 20 };
 
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh							= { 6 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 12, 0, 162, 243, 20 };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 12, 0, 164, 243, 20 };
 
 
 	_int m_iRenderGroup_Trail								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Trail							= { 0 };
 	_int m_iMaxShaderPassIndex_Trail						= { 5 };
 	_int m_iTexIndex_Trail[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 12, 0, 162, 243, 20 };
+	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 12, 0, 164, 243, 20 };
 
 
 private:
@@ -198,10 +198,10 @@ private:
 	_float m_vColor_Clip_Part[4] = { 0.f, 0.f, 0.f, 0.f };
 
 
-#pragma region Particle 옵션 시작
+#pragma region Particle 옵션 시작 =====================================================
 private:
 	_int	m_iNumInstance_Particle		= { 200 };
-	_int	m_iMaxNumInstance_Particle	= { 500 };
+	_int	m_iMaxNumInstance_Particle	= { 1000 };
 
 	_int	m_iBillBoard				= { 0 };
 
@@ -214,6 +214,11 @@ private:
 
 
 	_float	m_vMinMaxLifeTime_Particle[2] = { 0.f, 0.f };	// 라이프타임
+
+	/* Emitter */
+	_float	m_fEmissionTime_Particle = { 0.f };	// 방출 시간 텀
+	_int	m_iAddEmitCount_Particle = { 0 };			// 한번 방출 할 때 몇개씩 추가로 방출할건지
+
 
 	/* RigidBody ============================================== */
 	_int	m_iUseRigidBody_Particle	= { 0 };
@@ -314,12 +319,11 @@ private:
 	_float	m_fRimColor_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Particle[3] = { 1.f, 1.f, 1.f };
 
-#pragma endregion Particle 옵션 끝
+#pragma endregion Particle 옵션 끝 =====================================================
 
 
 
 #pragma region Rect 옵션 시작
-
 	/* For.Sprite ======================================== */
 	_int	m_iSprite_Rect = { 0 };					// 1이 True
 	_int	m_iSpriteLoop_Rect = { 0 };
@@ -357,15 +361,14 @@ private:
 	/* 렉트 Rim & Bloom */
 	_float	m_fRimColor_Rect[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Rect[3] = { 1.f, 1.f, 1.f };
-
 #pragma endregion Rect 옵션 끝
 
 
 
 #pragma region Instance(Mesh) 옵션 시작
 private:
-	_int m_iNumInstance_Mesh	= { 500 };
-	_int m_iMaxNumInstance_Mesh = { 500 };
+	_int	m_iNumInstance_Mesh		= { 50 };
+	_int	m_iMaxNumInstance_Mesh	= { 1000 };
 
 
 	_int	m_iType_Mode_Mesh = { 1 }; // MODE_STATIC, MODE_PARTICLE, MODE_END
@@ -396,10 +399,12 @@ private:
 	_int	m_iColor_Mode_Mesh = { 0 };
 	_float	m_fColor_Mul_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 
+
 	/* For.Scale_Mesh */
 	_int	m_iUseScaleLerp_Mesh			= { 0 };
 	_float	m_vScaleLerp_Up_Pos_Mesh[2]		= { 0.f, 0.3f };
 	_float	m_vScaleLerp_Down_Pos_Mesh[2]	= { 1.f, 1.f };
+	_int	m_iScaleRatio_Mesh				= { 0 }; // 크기 정비율?
 	_float	m_vStartScale_Mesh[3]			= { 1.f, 1.f, 1.f };
 	_float	m_vEndScale_Mesh[3]				= { 1.f, 1.f, 1.f };
 

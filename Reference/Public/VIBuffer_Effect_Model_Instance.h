@@ -15,7 +15,7 @@ public:
 	typedef struct tagVIBuffer_EffectModelInstanceDesc
 	{
 		// 저장해야 하는 고정 정보들
-		_int			iCurNumInstance		= { 500 };		// 초기화 값이 최대 개수가 됨	
+		_int			iCurNumInstance		= { 1000 };		// 초기화 값이 최대 개수가 됨	
 
 		class CModel*	pModel[MORPH_END]	= { nullptr };	// 저장 X
 		MODEL_MORPH		eCurModelNum		= { MORPH_01 };	// 저장 X
@@ -68,9 +68,10 @@ public:
 
 
 		/* For.Scale */
+		_bool		bScaleRatio = { TRUE };						// 크기 정비율
 		_bool		bUseScaleLerp = { TRUE };
 		EASING_TYPE	eType_ScaleLerp = { EASING_TYPE::LINEAR };
-		_float2		vScaleLerp_Up_Pos = { 0.f, 0.3f };		// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(커지는 용)
+		_float2		vScaleLerp_Up_Pos = { 0.f, 0.3f };			// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(커지는 용)
 		_float2		vScaleLerp_Down_Pos = { 1.f, 1.f };			// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(작아지는 용)
 		_float3		vStartScale			= { 1.f, 1.f, 1.f };
 		_float3		vEndScale			= { 1.f, 1.f, 1.f };
@@ -112,6 +113,8 @@ public:
 		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
 		_float	fMaxRange = { 3.f };
 
+		//  방향 
+		_float3	vDir = { 1.f, 0.f, 0.f };
 
 		// 스피드
 		_float	fCurSpeed = { 1.f };
@@ -138,17 +141,19 @@ public:
 
 	typedef struct tagParticleShaderDesc
 	{
-		// 16 배수여야함
+		// 16 배수여야함 (64)
 
 		// 업데이트 돌면서 변하는 정보들(저장X)
-		_float3	vDir = { 1.f, 0.f, 0.f };
-		_float	Padding = { 0.f };
+		_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f }; // 16
 
+		_float3 vRight = { 1.f, 0.f, 0.f };			// 12
+		_float  fPadding1 = { 0.f };				// 4	
 
-		_float4 vRight = { 1.f, 0.f, 0.f, 0.f };
-		_float4 vUp = { 0.f, 1.f, 0.f, 0.f };
-		_float4 vLook = { 0.f, 0.f, 1.f, 0.f };
+		_float3 vUp = { 0.f, 1.f, 0.f };			// 12
+		_float  fPadding2 = { 0.f };				// 4	
 
+		_float3 vLook = { 0.f, 0.f, 1.f };			//12
+		_float  fPadding3 = { 0.f };				// 4	
 
 	} PARTICLE_SHADER_INFO_DESC;
 
