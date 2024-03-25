@@ -68,8 +68,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 // 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 // 	{
 		m_pActor = new CActor<CPlayer>(this);
-		//m_pActor->Set_State(new CPlayer_IdleLoop());
-		m_pActor->Set_State(new CPlayer_CartRide_Loop());
+		m_pActor->Set_State(new CPlayer_IdleLoop());
+		//m_pActor->Set_State(new CPlayer_CartRide_Loop());
 
 // 	}
 
