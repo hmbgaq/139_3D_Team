@@ -699,10 +699,22 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 				/* 추가 분포 범위(레인지)*/
 				ImGui::SeparatorText(" Add Range_Particle ");
-				if (ImGui::DragFloat("Add Range_Particle", &m_fAddRange_Particle, 0.1f, -500.f, 500.f))
+				if (ImGui::DragFloat2("MinMax Add Range_Particle", m_fMinMaxAddRange_Particle, 0.1f, -500.f, 500.f))
 				{
-					m_pParticleBufferDesc->fAddRange = m_fAddRange_Particle;
+					m_pParticleBufferDesc->vMinMaxAddRange.x = m_fMinMaxAddRange_Particle[0];
+					m_pParticleBufferDesc->vMinMaxAddRange.y = m_fMinMaxAddRange_Particle[1];
 
+				}
+
+				//if (CVIBuffer_Particle::TORNADO == m_pParticleBufferDesc->eType_Action)
+				{
+					ImGui::SeparatorText(" Theta ");
+					HelpMarker(u8"Degree로 입력(Radian 자동변환)");
+					if (ImGui::DragFloat2("vMinMaxTheta_Particle", m_vMinMaxTheta_Particle, 0.f, 1.f, 360.f))
+					{
+						m_pParticleBufferDesc->vMinMaxTheta.x = m_vMinMaxTheta_Particle[0];
+						m_pParticleBufferDesc->vMinMaxTheta.y = m_vMinMaxTheta_Particle[1];
+					}
 				}
 
 
@@ -720,17 +732,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 
 
-				if (CVIBuffer_Particle::TORNADO == m_pParticleBufferDesc->eType_Action)
-				{
-					// 파티클의 타입이 토네이도면
-					ImGui::SeparatorText(" Theta ");
-					HelpMarker(u8"Degree로 입력(Radian 자동변환)");
-					if (ImGui::DragFloat2("vMinMaxTheta_Particle", m_vMinMaxTheta_Particle, 0.f, 1.f, 1000.f))
-					{
-						m_pParticleBufferDesc->vMinMaxTheta.x = m_vMinMaxTheta_Particle[0];
-						m_pParticleBufferDesc->vMinMaxTheta.y = m_vMinMaxTheta_Particle[1];
-					}
-				}
+
 
 
 				/* 스피드 조절(러프 관련) */
@@ -3169,7 +3171,8 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vMinMaxRange_Particle[0] = m_pParticleBufferDesc->vMinMaxRange.x;
 			m_vMinMaxRange_Particle[1] = m_pParticleBufferDesc->vMinMaxRange.y;
 
-			m_fAddRange_Particle = m_pParticleBufferDesc->fAddRange;
+			m_fMinMaxAddRange_Particle[0] = m_pParticleBufferDesc->vMinMaxAddRange.x;
+			m_fMinMaxAddRange_Particle[1] = m_pParticleBufferDesc->vMinMaxAddRange.y;
 
 			/* 파티클이 올라갈 최고 높이 */
 			m_vMinMaxPosY_Particle[0] = m_pParticleBufferDesc->vMinMaxPosY.x;

@@ -64,7 +64,8 @@ public:
 		_float3		vMaxCenterOffsetPos = { 0.f, 0.f, 0.f };
 
 		_float2		vMinMaxRange = { 0.1f, 3.f };
-		_float		fAddRange = { 0.f };
+		_float2		vMinMaxAddRange = { 0.f, 0.f };
+		
 
 		_float2		vMinMaxPosY = { 0.1f, 3.f };	// 파티클이 올라갈 최고 높이
 		_float2		vMinMaxTheta = { 0.f, 360.f };	// 3.14f * 2.f
@@ -143,10 +144,16 @@ public:
 		// 위치
 		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
 		_float	fMaxRange = { 3.f };
+		_float	fAddRange = { 0.f };
+
 		_float	fMaxPosY = { 3.f };
+
 
 		//  방향 
 		_float3	vDir = { 1.f, 0.f, 0.f };
+
+		_float3  vOffsetTheta = { 0.f, 0.f, 0.f };
+
 
 		// 스피드
 		_float	fCurSpeed = { 1.f };

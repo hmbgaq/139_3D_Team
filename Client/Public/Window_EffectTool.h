@@ -245,7 +245,7 @@ private:
 	_float	m_vMaxCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
 
 	_float	m_vMinMaxRange_Particle[2] = { 0.f, 0.f };
-	_float	m_fAddRange_Particle = 0.f;
+	_float	m_fMinMaxAddRange_Particle[2] = { 0.f, 0.f };
 
 	_float	m_vMinMaxPosY_Particle[2] = { 0.1f, 3.f };		// 파티클이 올라갈 최고 높이
 	_float	m_vMinMaxTheta_Particle[2] = { 0.f, 6.28f };	// 3.14f * 2.f
