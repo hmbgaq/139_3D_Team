@@ -28,6 +28,7 @@
 #include "Environment_Instance.h"
 #include "Environment_LightObject.h"
 #include "Environment_SpecialObject.h"
+#include "Environment_Interact.h"
 #pragma endregion
 
 #include "Data_Manager.h"
@@ -299,7 +300,46 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 	for (_int i = 0; i < InteractJsonSize; ++i)
 	{
+		CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
 
+		Desc.bAnimModel = InteractJson[i]["AnimType"];
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = InteractJson[i]["ModelTag"];
+
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+		Desc.bPreview = false;
+		Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
+		Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
+		Desc.bLevelChange = InteractJson[i]["LevelChange"];
+		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
+		Desc.eInteractState = InteractJson[i]["InteractState"];
+		Desc.eInteractType = InteractJson[i]["InteractType"];
+		Desc.bUseGravity = InteractJson[i]["UseGravity"];
+		Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+
+		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+
+		const json& TransformJson = InteractJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
+
+		CEnvironment_Interact* pObject = { nullptr };
+
+		pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
 		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
 		//! L"Layer_Event"
 	}

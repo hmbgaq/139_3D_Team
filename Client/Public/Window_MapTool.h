@@ -28,7 +28,7 @@ class CEvent_Trigger;
 class CWindow_MapTool final : public CImgui_Window
 {
 private:
-	enum class TAP_TYPE { TAB_SINGLE, TAB_LIGHT, TAB_INTERACT, TAB_ENVIRONMENT, TAB_NORMALMONSTER, TAB_BOSSMONSTER, TAB_NPC, TAB_END };
+	enum class TAP_TYPE { TAB_SINGLE, TAB_LIGHT, TAB_SPECIAL, TAB_INTERACT, TAB_ENVIRONMENT, TAB_NORMALMONSTER, TAB_BOSSMONSTER, TAB_NPC, TAB_END };
 	enum class MODE_TYPE { MODE_CREATE, MODE_SELECT, MODE_DELETE, MODE_END };
 	enum class PICKING_TYPE { PICKING_FIELD, PICKING_MESH, PICKING_INSTANCE, PICKING_NONE, PICKING_END };
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
@@ -86,6 +86,13 @@ private:
 	void			InteractTab_Function();
 		void			Interact_CreateTab();
 		void			Interact_DeleteTab();
+		void			Interact_SplineSave();
+		void			Interact_SplineLoad();
+
+	void			SpecialTab_Function();
+		void			Special_CreateTab();
+		void			Special_SelectTab();
+		void			Special_DeleteTab();
 	
 	void			EnvironmentTab_Function();
 
@@ -110,7 +117,7 @@ private:
 	void			Trigger_SelectTab();
 	void			Trigger_DeleteTab();
 
-
+	
 
 private:
 	#ifdef _DEBUG
@@ -143,6 +150,7 @@ private: //! For. Create_Function
 	
 	void			Light_CreateFunction();
 	void			Interact_CreateFunction();
+	void			Special_CreateFunction();
 	void			Preview_Environment_CreateFunction();
 	void			Create_Instance();
 	void			Anim_Environment_CreateFunction();
@@ -176,12 +184,12 @@ private: //!For. Select_Function
 private:
 	ImTextureID		m_pSelectedTexture = { nullptr };
 
-	TAP_TYPE		m_eTabType = TAP_TYPE::TAB_END;
-	MODE_TYPE		m_eModeType = MODE_TYPE::MODE_END;
-	PICKING_TYPE	m_ePickingType = PICKING_TYPE::PICKING_END;
-	PICKING_MODE	m_ePickingMode = PICKING_MODE::MOUSE_PRESSING;
-	OBJECTMODE_TYPE m_eObjectMode = OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT;
-	ANIM_TYPE		m_eAnimType = ANIM_TYPE::TYPE_NONANIM;
+	TAP_TYPE		 m_eTabType = TAP_TYPE::TAB_END;
+	MODE_TYPE		 m_eModeType = MODE_TYPE::MODE_END;
+	PICKING_TYPE	 m_ePickingType = PICKING_TYPE::PICKING_END;
+	PICKING_MODE	 m_ePickingMode = PICKING_MODE::MOUSE_PRESSING;
+	OBJECTMODE_TYPE  m_eObjectMode = OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT;
+	ANIM_TYPE		 m_eAnimType = ANIM_TYPE::TYPE_NONANIM;
 	LIGHT_CREATEMODE m_eLightCreateMode = LIGHT_CREATEMODE::LIGHT_MODE;
 
 
@@ -259,6 +267,7 @@ private:
 	CEnvironment_Object*			m_pPreviewObject = {}; //! 미리보기를 위해 클론시킨 오브젝트.
 	CEnvironment_Interact*			m_pPreviewInteract = {}; //! 상호작용용 미리보기 오브젝트
 	CEnvironment_LightObject*		m_pPreviewLightObject = {};
+	CEnvironment_SpecialObject*		m_pPreviewSpecialObject = { nullptr };
 	
 	
 	
@@ -285,6 +294,21 @@ private:
 	_int							m_iInteractPlayAnimIndex = 0;
 	_float3							m_vInteractRootMoveRate = { 1.f, 1.f, 1.f };
 	_bool							m_bInteractUseGravity = false;
+	_bool							m_bInteractUseSpline = false;
+
+	map<string, vector<_float4>>	m_mapSplinePoints;
+	map<string, _float>				m_mapSplineSpeeds;
+	map<string, vector<string>>		m_mapSplineListBox;
+	
+
+	_char							m_strSplinePointKeyTag[32] = "";
+
+	vector<_float4>					m_vecSplinePoints;
+	vector<string>					m_vecSplineListBox;
+
+	_int							m_iSplinePickingIndex = 0;
+	_int							m_iSplineListIndex = 0;
+	_int							m_iSplineDivergingCount = 0;
 
 	//!For.Light//! 라이트
 	_int							m_eLightEffectType = 0; //! 전부 이넘 캐스팅
@@ -293,7 +317,8 @@ private:
 	_float3							m_vLightEffectPos = {};
 	
 	
-
+	//!For.Special
+	_int							m_eSpecialType = 0; //! 이넘 캐스팅용;
 	
 	
 
@@ -316,6 +341,11 @@ private: //! 레이캐스트
 
 private:
 	//!For. CreateObject
+	vector<CEnvironment_SpecialObject*> m_vecCreateSpecialObject;
+	vector<string>						m_vecCreateSpecialObjectTag;
+	_int								m_iCreateSpecialObjectIndex = 0;
+	_int								m_iSelectSpecialObjectIndex = 0;
+	
 	vector<CEnvironment_LightObject*>	m_vecCreateLightObject;
 	vector<string>						m_vecCreateLightObjectTag = {};
 	_int								m_iCreateLightObjectIndex = 0;

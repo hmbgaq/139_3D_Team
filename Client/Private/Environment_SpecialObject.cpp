@@ -2,6 +2,8 @@
 #include "..\Public\Environment_SpecialObject.h"
 
 #include "GameInstance.h"
+#include "Environment_LightObject.h"
+//#include "UI_Weakness.h"
 
 CEnvironment_SpecialObject::CEnvironment_SpecialObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -16,7 +18,6 @@ CEnvironment_SpecialObject::CEnvironment_SpecialObject(const CEnvironment_Specia
 
 HRESULT CEnvironment_SpecialObject::Initialize_Prototype()
 {
-
 	return S_OK;
 }
 
@@ -24,7 +25,9 @@ HRESULT CEnvironment_SpecialObject::Initialize(void* pArg)
 {
 	m_tEnvironmentDesc = *(ENVIRONMENT_SPECIALOBJECT_DESC*)pArg;
 
-	m_iCurrentLevel = m_pGameInstance->Get_NextLevel();
+	m_iCurrnetLevel = m_pGameInstance->Get_NextLevel();
+
+	
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -43,6 +46,15 @@ HRESULT CEnvironment_SpecialObject::Initialize(void* pArg)
 
 	
 
+	if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_SIGNAL)
+	{
+		SignalInit();
+	}
+	else if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER)
+	{
+		TrackLeverInit();
+	}
+
 	
 
 	return S_OK;
@@ -58,6 +70,17 @@ void CEnvironment_SpecialObject::Tick(_float fTimeDelta)
 
 	if(m_fTimeAcc >= 180.f)
 		m_fTimeAcc = 0.f;
+
+	if(m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_SIGNAL)
+	{
+		SignalFunction(fTimeDelta);
+	}
+	else if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER)
+	{
+		TrackLeverFunction();
+	}
+	
+
 	//f (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
 	//
 	//	m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
@@ -105,7 +128,20 @@ HRESULT CEnvironment_SpecialObject::Render()
 
 		//m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 
-		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
+		if (i == 0)
+		{
+			//m_pShaderCom->Begin()
+			//!float3 g_vBloomPower = { 0.f, 0.f, 0.f }; /* Bloom */
+			//!float4 g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
+			//!float4 vRimBloom : SV_TARGET4; /* Rim + Bloom */
+			//!float g_fRimPower = 5.f; /* RimLight */
+			m_pShaderCom->Begin(m_iSignalMeshShaderPass);
+			
+		}
+		else
+		{
+			m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
+		}
 
 		m_pModelCom->Render((_uint)i);
 	}
@@ -208,33 +244,101 @@ _bool CEnvironment_SpecialObject::Picking_VerJSY(RAY* pRay, _float3* vPickedPos)
 	return false;
 }
 
+
+
 #endif
+
+void CEnvironment_SpecialObject::SignalInit()
+{
+	m_vSignalColor = m_vRedSignal;
+	m_bSignalChange = false;
+}
+
+void CEnvironment_SpecialObject::SignalFunction(const _float fTimeDelta)
+{
+	if (m_bSignalChange == true && m_bChangeLerp == false)
+	{
+		m_bChangeLerp = m_pTransformCom->Rotation_Lerp(XMConvertToRadians(90.f), fTimeDelta, 1.f);
+	}
+}
+
+void CEnvironment_SpecialObject::Set_SignalChange(_bool bChange)
+{
+	#ifdef _DEBUG
+		if (m_tEnvironmentDesc.eSpecialType != CEnvironment_SpecialObject::SPECIAL_SIGNAL)
+		{
+			MSG_BOX("CEnvironment_SpecialObject : 스페셜타입이 시그널이 아닙니다.");
+			return;
+		}
+	#endif // _DEBUG
+
+	m_bSignalChange = bChange; 
+	
+	if (m_bSignalChange == true)
+		m_vSignalColor = m_vGreenSignal;
+	else
+		m_vSignalColor = m_vRedSignal;
+
+	
+}
+
+HRESULT CEnvironment_SpecialObject::TrackLeverInit()
+{
+	m_pLeverWeaknessUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
+
+	if(nullptr == m_pLeverWeaknessUI)
+		return E_FAIL;
+
+	m_pLeverWeaknessUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldFloat4x4(), _float3(0.f, 1.f, 0.f));
+
+	if (nullptr != m_pLightObject)
+		m_pLightObject->Set_Enable(false);
+
+	return S_OK;
+
+	
+}
+
+void CEnvironment_SpecialObject::TrackLeverFunction()
+{
+	if (m_pLeverWeaknessUI->Get_Active() == false)
+	{
+		m_pSignalObject->Set_SignalChange(true);
+		
+		m_pLeverWeaknessUI->Set_Dead(true);
+		m_pLeverWeaknessUI = nullptr;
+
+		if(nullptr != m_pLightObject)
+			m_pLightObject->Set_Enable(true);
+	}
+}
+
 
 HRESULT CEnvironment_SpecialObject::Ready_Components()
 {
 
 	if (true == m_tEnvironmentDesc.bAnimModel)
 	{
-		FAILED_CHECK(__super::Add_Component(m_iCurrentLevel, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 	else
 	{
-		FAILED_CHECK(__super::Add_Component(m_iCurrentLevel, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 
 	if (m_tEnvironmentDesc.strDiffuseTextureTag != L"")
 	{
-		FAILED_CHECK(__super::Add_Component(m_iCurrentLevel, m_tEnvironmentDesc.strDiffuseTextureTag, TEXT("Com_DiffuseTexture"), reinterpret_cast<CComponent**>(&m_pDiffuseTexture)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, m_tEnvironmentDesc.strDiffuseTextureTag, TEXT("Com_DiffuseTexture"), reinterpret_cast<CComponent**>(&m_pDiffuseTexture)));
 	}
 
 	if (m_tEnvironmentDesc.strMaskTextureTag != L"")
 	{
-		FAILED_CHECK(__super::Add_Component(m_iCurrentLevel, m_tEnvironmentDesc.strMaskTextureTag, TEXT("Com_MaskTexture"), reinterpret_cast<CComponent**>(&m_pMaskTexture)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, m_tEnvironmentDesc.strMaskTextureTag, TEXT("Com_MaskTexture"), reinterpret_cast<CComponent**>(&m_pMaskTexture)));
 	}
 
 	if (m_tEnvironmentDesc.strNoiseTextureTag != L"")
 	{
-		FAILED_CHECK(__super::Add_Component(m_iCurrentLevel, m_tEnvironmentDesc.strNoiseTextureTag, TEXT("Com_NoiseTexture"), reinterpret_cast<CComponent**>(&m_pNoiseTexture)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, m_tEnvironmentDesc.strNoiseTextureTag, TEXT("Com_NoiseTexture"), reinterpret_cast<CComponent**>(&m_pNoiseTexture)));
 	}
 
 
@@ -280,7 +384,9 @@ HRESULT CEnvironment_SpecialObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
+	
 	_float fCamFar = m_pGameInstance->Get_CamFar();
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
 		return E_FAIL;
 
@@ -302,6 +408,16 @@ HRESULT CEnvironment_SpecialObject::Bind_ShaderResources()
 	if (nullptr != m_pNoiseTexture)
 	{
 		if (FAILED(m_pNoiseTexture->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture")))
+			return E_FAIL;
+	}
+
+	if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_SIGNAL)
+	{
+		
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_vDiffuseColor", &m_vSignalColor, sizeof(_float4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_fSignalBloomPower, sizeof(_float))))
 			return E_FAIL;
 	}
 
@@ -347,7 +463,7 @@ void CEnvironment_SpecialObject::Free()
 	Safe_Release(m_pShaderCom);
 
 
-	if (m_iCurrentLevel == (_uint)LEVEL_TOOL)
+	if (m_iCurrnetLevel == (_uint)LEVEL_TOOL)
 		Safe_Release(m_pPickingCollider);
 }
 

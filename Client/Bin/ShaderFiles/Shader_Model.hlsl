@@ -25,8 +25,10 @@ float g_LineThick;                              /* OutLine */
 
 float3 g_vBloomPower = { 0.f, 0.f, 0.f };       /* Bloom */
 float4 g_vRimColor = { 0.f, 0.f, 0.f, 0.f };    /* RimLight */
-float g_fRimPower = 5.f;                        /* RimLight */
 
+
+float g_fRimPower = 5.f;                        /* RimLight */
+float4 g_vDiffuseColor = { 1.f, 1.f, 1.f, 1.f };  //셰읻이더 8번패스 모델 디퓨즈텍스처 대신 컬러의 rgb 사용
 /* ------------------- function ------------------- */ 
 float2 RotateTexture(float2 texCoord, float angle)
 {
@@ -37,6 +39,29 @@ float2 RotateTexture(float2 texCoord, float angle)
     return rotatedTexCoord;
     
 }
+
+float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
+{
+    float fRimPower = 1.f - saturate(dot(In_Normal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
+    fRimPower = pow(fRimPower, g_fRimPower); // 여기서 강도를 조정한다. 
+    
+    float4 vRimColor = g_vRimColor * fRimPower;
+    
+    return vRimColor;
+}
+
+float4 Calculation_Brightness(float4 Out_Diffuse)
+{
+    float4 vBrightnessColor = float4(0.f, 0.f, 0.f, 0.f);
+
+    float fPixelBrightness = dot(Out_Diffuse.rgb, g_vBloomPower.rgb);
+    
+    if (fPixelBrightness > 0.99f)
+        vBrightnessColor = float4(Out_Diffuse.rgb, 1.0f);
+
+    return vBrightnessColor;
+}
+
 
 cbuffer VS_CONSTANT_BUFFER
 {
@@ -171,6 +196,44 @@ PS_OUT PS_MAIN_NORMAL(PS_IN In)
  
 	return Out;
 }
+
+PS_OUT PS_MAIN_NORMALCOLOR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    vMtrlDiffuse.rgb = g_vDiffuseColor.rgb;
+    
+    if (vMtrlDiffuse.a < 0.0f)
+        discard;
+    
+    /* 0 ~ 1 */
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+
+	/* -1 ~ 1 */
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    /* ---------------- New ---------------- */
+    //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    //Out.vDiffuse += vRimColor;
+    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse); // + vRimColor;
+ 
+    return Out;
+}
+
+
 
 /* ------------------- Skybox Pixel Shader(1) -------------------*/
 
@@ -397,7 +460,17 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_NORMAL();
     }
 
-
+    pass Model_InputColor   // 8번 패스 컬러 디퓨즈 컬러 직접 던지기용
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_NORMALCOLOR();
+    }
 
     
 }

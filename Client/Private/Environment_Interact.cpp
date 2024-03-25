@@ -46,6 +46,15 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 	}
 
 
+	m_pTransformCom->Set_Speed(m_fSplineSpeed);
+	m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(90.f));
+	XMStoreFloat4x4(&m_InitMatrix, XMMatrixIdentity());
+
+	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN && m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
+	{
+		Init_WagonEvent();
+	}
+
 	return S_OK;
 }
 
@@ -55,6 +64,25 @@ void CEnvironment_Interact::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Interact::Tick(_float fTimeDelta)
 {
+	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN)
+	{
+		if(m_pGameInstance->Key_Down(DIK_F7))
+			Start_SplineEvent();
+		if(m_pGameInstance->Key_Down(DIK_NUMPAD1))
+			m_vecPointChecks[0] = true;
+		if (m_pGameInstance->Key_Down(DIK_NUMPAD2))
+			m_vecPointChecks[1] = true;
+		if (m_pGameInstance->Key_Down(DIK_NUMPAD3))
+			m_vecPointChecks[2] = true;
+		if (m_pGameInstance->Key_Down(DIK_NUMPAD4))
+			m_vecPointChecks[3] = true;
+		if (m_pGameInstance->Key_Down(DIK_NUMPAD5))
+			Reset_TestEvent();
+		
+
+	}
+
+
 
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL && m_bFindPlayer == false)
 	{
@@ -76,6 +104,11 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	Interact();
+
+	if (m_bSpline == true)
+	{
+		Spline_Loop(fTimeDelta);
+	}
 
 }
 
@@ -355,6 +388,7 @@ void CEnvironment_Interact::Interact()
 						break;
 					}
 
+
 				}
 
 				if (m_tEnvironmentDesc.bUseGravity == false)
@@ -396,6 +430,540 @@ void CEnvironment_Interact::Interact()
 			
 		}
 }
+
+void CEnvironment_Interact::Start_SplineEvent()
+{
+	m_bSpline = true;
+}
+
+void CEnvironment_Interact::Reset_TestEvent()
+{
+	m_vecPointChecks[0] = false;
+	m_vecPointChecks[1] = false;
+	m_vecPointChecks[2] = false;
+	m_vecPointChecks[3] = false;
+
+	m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
+	
+	m_vecSplinePoints.clear();
+	m_iCurrentSplineIndex = 0;
+
+	m_strCurrentSplineTrack = L"분기1지점오답";
+
+	auto& StartIter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
+
+	m_vecSplinePoints = StartIter->second;
+
+	m_iDivergingCount = 4;
+
+	Set_SplineSpeed(10.f);
+
+	for (_int i = 0; i < m_iDivergingCount; ++i)
+	{
+		m_vecPointChecks.push_back(false);
+	}
+}
+
+void CEnvironment_Interact::Start_Spline(vector<_float4>* SplinePoints)
+{
+	if (true == SplinePoints->empty() || m_bSpline == true)
+		return;
+
+	if (SplinePoints->size() % 2 != 0)
+	{
+		MSG_BOX("스플라인 보간은 짝수여야됨~");
+		return;
+	}
+
+	
+	m_InitMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+	_vector vFirstPos, vSecondPos, vResultPos;
+	_int iPointSize = SplinePoints->size();
+	_int iRoopCount = SplinePoints->size() / 2;
+
+
+	for (_int i = 0; i < iPointSize; ++i)
+	{
+		
+
+		m_vecSplinePoints.push_back((*SplinePoints)[i]);
+	}
+
+	// 포인트가 6개면 루프카운트는 3
+	
+
+	//for (_int i = 0; i < iRoopCount; i++) 
+	//{
+	//	//! 루프카운트는 3. i는 0 
+	//	
+	//	vFirstPos = XMLoadFloat4(&SplinePoints[i * 2]); //! 0 2 4
+	//	vSecondPos = XMLoadFloat4(&SplinePoints[i * 2 + 1]); //! 1 3 5
+	//	vResultPos = XMVectorCatmullRom(vFirstPos, vFirstPos, vSecondPos, vSecondPos, m_fSplineTimeAcc);
+	//	m_vecSplinePoints.push_back(vResultPos);
+	//}
+
+	m_bSpline = true;
+
+
+
+	//TODO XMVectorCatmullRom()
+	//!XMVECTOR Result;
+	//!
+	//!float t2 = t * t;
+	//!float t3 = t2 * t;
+	//!
+	//!float P0 = -t3 + 2.0f * t2 - t;
+	//!float P1 = 3.0f * t3 - 5.0f * t2 + 2.0f;
+	//!float P2 = -3.0f * t3 + 4.0f * t2 + t;
+	//!float P3 = t3 - t2;
+	//!
+	//!Result.x = (P0 * Position0.x + P1 * Position1.x + P2 * Position2.x + P3 * Position3.x) * 0.5f;
+	//!Result.y = (P0 * Position0.y + P1 * Position1.y + P2 * Position2.y + P3 * Position3.y) * 0.5f;
+	//!Result.z = (P0 * Position0.z + P1 * Position1.z + P2 * Position2.z + P3 * Position3.z) * 0.5f;
+	//!Result.w = (P0 * Position0.w + P1 * Position1.w + P2 * Position2.w + P3 * Position3.w) * 0.5f;
+	//!
+	//!return Result;
+	
+	//TODO XMVectorCatmullRomV() 
+	
+	//!이 함수는 T 에서 독립적인 가중치 인자가 제공될 수 있다는 점을 제외하면 XMVectorCatmullRom 과 동일합니다 . 
+	//!예를 들어, 한 2D 위치 세트에 대한 위치 벡터의 x 및 y 구성 요소와 다른 2D 위치 세트에 대한 위치 벡터의 z 및 w 구성 요소를 사용하여 두 세트의 Catmull-Rom 보간법을 계산할 수 있습니다. 
+	//!2D 위치. T 의 x 및 y 구성 요소는 첫 번째 Catmull-Rom 보간에 대한 보간 요소를 결정합니다. 
+	//!마찬가지로 T 의 z 및 w 구성 요소는 두 번째 Catmull-Rom 보간에 대한 보간 요소를 결정합니다.
+	
+	
+}
+
+void CEnvironment_Interact::Reset_StartMatrix()
+{
+	m_pTransformCom->Set_WorldMatrix(m_InitMatrix); 
+	m_iCurrentSplineIndex = 0; 
+	m_fSplineTimeAcc = 0.f; 
+	m_vecSplinePoints.clear();
+	m_bSpline = false;
+}
+
+void CEnvironment_Interact::Spline_Loop(const _float fTimeDelta)
+{
+	
+	m_fSplineTimeAcc += fTimeDelta * m_fSplineSpeed; 
+
+	_float t = m_fSplineTimeAcc / m_fArrivalTime;
+
+	t = max(0.0f, min(1.0f, t));
+
+
+	//m_fSplineTimeAcc += fTimeDelta * m_fSplineSpeed;//m_pTransformCom->Get_Speed();
+
+	
+	//
+	//	if (m_vecSplinePoints.size() <= m_iCurrentSplineIndex + 1)
+	//	{
+	//		m_bSpline = false;
+	//		return;
+	//	}
+	//	else
+	//		++m_iCurrentSplineIndex;
+	//}
+
+
+	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL)
+	{
+		if (m_vecSplinePoints.size() <= m_iCurrentSplineIndex + 1)
+		{
+			m_bSpline = false;
+			return;
+		}
+
+		_vector vCurrentPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+
+		_vector vMovePoint1, vMovePoint2, vCalcPosition;
+		vMovePoint1 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex]);
+		vMovePoint2 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 1]);
+		//vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, m_fSplineTimeAcc);
+		vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, t);
+
+		if (false == m_pTransformCom->Go_TargetArrivalCheck(vCalcPosition, fTimeDelta, m_fSplineEndRaidus))
+		{
+			m_iCurrentSplineIndex++;
+			//m_fSplineTimeAcc = 0.f;
+		}
+	}
+	else
+	{
+		Change_WagonTrack(fTimeDelta);
+
+
+		
+	}
+
+}
+
+void CEnvironment_Interact::Spline_Clear()
+{
+	m_bSpline = false;
+	m_vecSplinePoints.clear();
+	m_fSplineTimeAcc = 0.f;
+	m_fSplineEndRaidus = 1.f;
+	m_iCurrentSplineIndex = 0;
+}
+
+HRESULT CEnvironment_Interact::Load_SplineJson()
+{
+
+	json SplineJson = {};
+//C:\Users\PC\Desktop\3D_TeamPortpolio\Client\Bin\DataFiles\Data_Map\Spline
+	string strHardPath = "../Bin/DataFiles/Data_Map/Spline/SplineData_202403252212.json";
+
+	
+	if (FAILED(CJson_Utility::Load_Json(strHardPath.c_str()/*m_tEnvironmentDesc.strSplineJsonPath.c_str()*/, SplineJson)))
+	{
+		MSG_BOX("스플라인 데이터 불러오기 실패");
+		return E_FAIL;
+	}
+
+	_int iSplineJsonSize = SplineJson.size();
+
+	for (_int i = 0; i < iSplineJsonSize; ++i)
+	{
+		string strSplineKey = SplineJson[i]["SplineKey"];//(string)SplineJson[i]["SplineKey"];
+		wstring strTest;
+
+		m_pGameInstance->String_To_WString(strSplineKey, strTest);
+
+
+		//m_pGameInstance->WString_To_String(strTest, strSplineKey);
+
+		
+
+		//strSplineKey = strSplineKey.c_str();
+		
+		json   SplineVectorJson = SplineJson[i]["SplineVectorJson"];
+		_float fSplineSpeed = SplineJson[i]["SplineSpeed"]; //! 해당 구간 속도
+
+		_int iSplineVectorJsonSize = SplineVectorJson.size();
+
+		vector<_float4> vecSplinePoint;
+
+		for (_int j = 0; j < iSplineVectorJsonSize; ++j)
+		{
+			_float4 vSplinePoint = {};
+			CJson_Utility::Load_Float4(SplineVectorJson[j]["SplinePoint"], vSplinePoint);
+			vecSplinePoint.push_back(vSplinePoint);
+		}
+
+		m_mapSplineSpeeds.emplace(strTest, fSplineSpeed);
+		m_mapSplineVectors.emplace(strTest,vecSplinePoint);
+		
+		
+	}
+	
+	
+//	m_iDivergingCount = SplineJson[0][""]
+
+
+
+
+	//json
+
+	//todo vector<_float4>						m_vecSplinePoints;
+	//todo map<string, vector<_float4>>				m_mapSplineVectors;
+	//todo map<string, vector<_bool>>				m_mapSplinePointChecks;
+	//todo 
+	//todo vector<_bool>							m_vecPointChecks;
+	//todo _float								m_fSplineTimeAcc = 0.f;
+	//todo _float								m_fSplineEndRaidus = 1.f;
+	//todo _int								m_iCurrentSplineIndex = 0;
+	//todo _float								m_fSplineSpeed = 1.f;
+	//todo _float								m_fArrivalTime = 3.f; // ! 스플라인에 마지막 점까지 도착하는데 걸리는 시간.
+
+	//m_tEnvironmentDesc.strSplineJsonPath;
+	//
+	//json SplineJson;
+	//
+	//if (FAILED(CJson_Utility::Load_Json(m_tEnvironmentDesc.strSplineJsonPath.c_str(), SplineJson)))
+	//{
+	//	MSG_BOX("스플라인 불러오기 실패");
+	//	return E_FAIL;
+	//}
+	//
+	//
+	//_int iSplineJsonSize = SplineJson.size();
+	//
+	//for (_int i = 0; i < iSplineJsonSize; ++i)
+	//{
+	//	string strSplineKey = SplineJson[i]["SplineKey"];
+	//
+	//	
+	//
+	//
+	//	_float4 vSplinePoint;
+	//
+	//	CJson_Utility::Load_Float4(SplineJson[i]["SplinePoint"], vSplinePoint);
+	//
+	//
+	//	
+	//
+	//	//!Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
+	//	//!Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
+	//}
+
+	//m_pGameInstance->Load_FromJson(SplineJson);
+
+
+	return S_OK;
+}
+
+HRESULT CEnvironment_Interact::Init_WagonEvent()
+{
+	Load_SplineJson();
+
+	m_strCurrentSplineTrack = L"분기1지점오답";
+	
+	auto& StartIter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
+
+	if (StartIter == m_mapSplineVectors.end())
+		return E_FAIL;
+
+	m_vecSplinePoints = StartIter->second;
+
+	m_iDivergingCount = 4;
+
+	Set_SplineSpeed(10.f);
+
+	for (_int i = 0; i < m_iDivergingCount; ++i)
+	{
+		m_vecPointChecks.push_back(false);
+	}
+
+	return S_OK;
+}
+
+void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
+{
+	_float t = m_fSplineTimeAcc / m_fArrivalTime;
+
+	
+
+	t = max(0.0f, min(1.0f, t));
+
+	if (m_strCurrentSplineTrack == L"분기1지점오답" && m_vecPointChecks[0] == true)
+	{
+		_float4 vChangePoint = m_vecSplinePoints[m_iCurrentSplineIndex];
+
+		m_vecSplinePoints.clear();
+
+		m_vecSplinePoints.push_back(vChangePoint);
+		
+		m_strCurrentSplineTrack = L"분기1지점정답";
+
+		auto& iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
+
+		_int iNewSplineVectorSize = iter->second.size();
+
+		for (_int i = 0; i < iNewSplineVectorSize; ++i)
+		{
+			m_vecSplinePoints.push_back(iter->second[i]);
+		}
+		
+		auto& Speediter = m_mapSplineSpeeds.find(m_strCurrentSplineTrack);
+
+		Set_SplineSpeed(Speediter->second);
+		
+		m_iCurrentSplineIndex = 0;
+		m_bSpline = true;
+		
+		
+	}
+
+	
+
+	if (m_vecSplinePoints.size() <= m_iCurrentSplineIndex + 1)
+	{
+		if (m_strCurrentSplineTrack == L"분기1지점정답")
+		{
+			if (m_vecPointChecks[1] == true)
+			{
+				m_vecSplinePoints.clear();
+				m_strCurrentSplineTrack = L"분기2지점정답";
+				
+				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
+
+				_int iNewSplineVectorSize = iter->second.size();
+
+				for (_int i = 0; i < iNewSplineVectorSize; ++i)
+				{
+					m_vecSplinePoints.push_back(iter->second[i]);
+				}
+
+				auto& Speediter = m_mapSplineSpeeds.find(m_strCurrentSplineTrack);
+
+				Set_SplineSpeed(Speediter->second);
+				m_iCurrentSplineIndex = 0;
+				m_bSpline = true;
+			}
+			else
+			{
+				m_vecSplinePoints.clear();
+				m_strCurrentSplineTrack = L"분기2지점오답";
+
+				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
+
+				_int iNewSplineVectorSize = iter->second.size();
+
+				for (_int i = 0; i < iNewSplineVectorSize; ++i)
+				{
+					m_vecSplinePoints.push_back(iter->second[i]);
+				}
+
+				auto& Speediter = m_mapSplineSpeeds.find(m_strCurrentSplineTrack);
+
+				Set_SplineSpeed(Speediter->second);
+				m_iCurrentSplineIndex = 0;
+				m_bSpline = true;
+			}
+		}
+		else if (m_strCurrentSplineTrack == L"분기2지점정답")
+		{
+			if (m_vecPointChecks[2] == true)
+			{
+				m_vecSplinePoints.clear();
+				m_strCurrentSplineTrack = L"분기3지점정답";
+
+				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
+
+				_int iNewSplineVectorSize = iter->second.size();
+
+				for (_int i = 0; i < iNewSplineVectorSize; ++i)
+				{
+					m_vecSplinePoints.push_back(iter->second[i]);
+				}
+
+				auto& Speediter = m_mapSplineSpeeds.find(m_strCurrentSplineTrack);
+
+				Set_SplineSpeed(Speediter->second);
+				m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(130.f));
+				m_iCurrentSplineIndex = 0;
+				m_bSpline = true;
+			}
+			else
+			{
+				m_vecSplinePoints.clear();
+				m_strCurrentSplineTrack = L"분기3지점오답";
+
+				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
+
+				_int iNewSplineVectorSize = iter->second.size();
+
+				for (_int i = 0; i < iNewSplineVectorSize; ++i)
+				{
+					m_vecSplinePoints.push_back(iter->second[i]);
+				}
+
+				auto& Speediter = m_mapSplineSpeeds.find(m_strCurrentSplineTrack);
+				m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(125.f));
+
+				Set_SplineSpeed(Speediter->second);
+				m_iCurrentSplineIndex = 0;
+				m_bSpline = true;
+			}
+		}
+		else if (m_strCurrentSplineTrack == L"분기3지점정답")
+		{
+			if (m_vecPointChecks[3] == true)
+			{
+				m_vecSplinePoints.clear();
+				m_strCurrentSplineTrack = L"분기4지점정답";
+
+				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
+
+				_int iNewSplineVectorSize = iter->second.size();
+
+				for (_int i = 0; i < iNewSplineVectorSize; ++i)
+				{
+					m_vecSplinePoints.push_back(iter->second[i]);
+				}
+
+				auto& Speediter = m_mapSplineSpeeds.find(m_strCurrentSplineTrack);
+
+				Set_SplineSpeed(Speediter->second);
+				m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(130.f));
+				m_iCurrentSplineIndex = 0;
+				m_bSpline = true;
+			}
+			else
+			{
+				m_vecSplinePoints.clear();
+				m_strCurrentSplineTrack = L"분기4지점오답";
+
+				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
+
+				_int iNewSplineVectorSize = iter->second.size();
+
+				for (_int i = 0; i < iNewSplineVectorSize; ++i)
+				{
+					m_vecSplinePoints.push_back(iter->second[i]);
+				}
+
+				auto& Speediter = m_mapSplineSpeeds.find(m_strCurrentSplineTrack);
+
+				Set_SplineSpeed(Speediter->second);
+				m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(125.f));
+				m_iCurrentSplineIndex = 0;
+				m_bSpline = true;
+			}
+		}
+		else if (m_strCurrentSplineTrack == L"분기1지점오답" || m_strCurrentSplineTrack == L"분기2지점오답" || m_strCurrentSplineTrack == L"분기3지점오답" || m_strCurrentSplineTrack == L"분기4지점오답" || m_strCurrentSplineTrack == L"분기4지점정답")
+		{
+			m_bSpline = false;
+		}
+		return;
+	}
+
+	_vector vCurrentPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+
+	_vector vMovePoint1, vMovePoint2, vCalcPosition;
+	vMovePoint1 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex]);
+	vMovePoint2 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 1]);
+	//vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, m_fSplineTimeAcc);
+	vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, t);
+
+	if (false == m_pTransformCom->Go_TargetArrivalCheck(vCalcPosition, fTimeDelta, m_fSplineEndRaidus))
+	{
+		m_iCurrentSplineIndex++;
+		//m_fSplineTimeAcc = 0.f;
+	}
+
+	_float3 vOffsetPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	vOffsetPosition.y += 1.5f;
+
+	m_pPlayer->Set_Position(vOffsetPosition);
+	
+
+
+	//_vector vCurrentPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//
+	//
+	//_vector vMovePoint1, vMovePoint2, vCalcPosition;
+	//vMovePoint1 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex]);
+	//vMovePoint2 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 1]);
+	////vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, m_fSplineTimeAcc);
+	//vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, t);
+
+	//if (false == m_pTransformCom->Go_TargetArrivalCheck(vCalcPosition, fTimeDelta, m_fSplineEndRaidus))
+	//{
+	//	m_iCurrentSplineIndex++;
+	//	//m_fSplineTimeAcc = 0.f;
+	//}
+
+
+}
+
+
 
 
 HRESULT CEnvironment_Interact::Ready_Components()
