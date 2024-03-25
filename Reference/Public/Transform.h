@@ -175,10 +175,10 @@ public:
 	_bool Is_Ground() { return m_bIsGround; };
 	_float Get_GravityAcc() { return m_fGravityAcc; }
 	void Update_GravityAcc(_float fTimeDelta) { 
-		_float fAcc = (m_fGravityAcc + fTimeDelta * 3.f);
+		_float fAcc = (m_fGravityAcc + fTimeDelta * 1.5f);
 		m_fGravityAcc = ((true == m_bIsGround) ? 0 : fAcc);
 	}
-	void Reset_GravityAcc() { m_fGravityAcc = 1.f; };
+	void Reset_GravityAcc() { m_fGravityAcc = 0.f; };
 
 private:
 	_float				m_fSpeedPerSec = { 0.0f };

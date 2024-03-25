@@ -3103,6 +3103,9 @@
     <Filter Include="01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss">
       <UniqueIdentifier>{28ebb5ee-63fc-4e9f-b28e-78c93bb6b8b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\5. Knock\4. Up">
+      <UniqueIdentifier>{a2590a74-014c-418d-94ec-fb0c90a3fc84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -6240,6 +6243,9 @@
     <ClInclude Include="..\Public\Level_SnowMountainBoss.h">
       <Filter>01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Infected_KnockUp_Low_Fixed.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\5. Knock\4. Up</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8823,9 +8829,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bullet_ELShotgun.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun\Bullet</Filter>
-    	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\Level_SnowMountainBoss.cpp">
       <Filter>01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_KnockUp_Low_Fixed.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\5. Knock\4. Up</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

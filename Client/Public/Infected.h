@@ -70,6 +70,7 @@ protected:
 	virtual void Hitted_Electrocute()	override;
 	virtual void Hitted_OpenState_Pull() override;
 	virtual void Hitted_Opened(Direction eDirection) override;
+	virtual void Hitted_KnockUp() override;
 
 
 protected:
@@ -196,7 +197,8 @@ public:
 		Infected_OpenStateTimeout				 , // (106) Hit / 오른뺨 잠깐 찌릿 
 		Infected_SpawnGround					 , // (107) Spawn / 땅속에서 기어나옴 
 		Infected_VortexGrenade_Loop				 , // (108) Hit / 소용돌이 폭탄 ??? 루프상태임 
-		Infected_VortexGrenade_Stop				   // (109) Hit / 소용돌이 폭탄이 끝나서 안으로 글려들어가는거인듯? 
+		Infected_VortexGrenade_Stop				 , // (109) Hit / 소용돌이 폭탄이 끝나서 안으로 글려들어가는거인듯? 
+		Infected_KnockUp_Low_Fixed				
 	};
 };
 

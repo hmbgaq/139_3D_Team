@@ -178,7 +178,7 @@ public:
 		_float fAcc = (m_fGravityAcc + fTimeDelta * 1.5f);
 		m_fGravityAcc = ((true == m_bIsGround) ? 0 : fAcc);
 	}
-	void Reset_GravityAcc() { m_fGravityAcc = 1.f; };
+	void Reset_GravityAcc() { m_fGravityAcc = 0.f; };
 
 private:
 	_float				m_fSpeedPerSec = { 0.0f };

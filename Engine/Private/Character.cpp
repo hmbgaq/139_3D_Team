@@ -410,7 +410,7 @@ void CCharacter::Look_At_And_Knockback(_float3 vTargetPos, _float fForce)
 
 }
 
-Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
+Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee, _bool bKnockUp)
 {
 	Hit_Type eHitType = Hit_Type::None;
 
@@ -444,9 +444,8 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 	Get_Damaged(iDamage);	
 	Add_Force(vDir, fForce);
 
-	_float3 vUp = { 0.f, 1.f, 0.f };
-
-	Add_Force(XMLoadFloat3(&vUp), 1.0f);
+	//_float3 vUp = { 0.f, 1.f, 0.f };
+	//Add_Force(XMLoadFloat3(&vUp), 1.0f);
 
 
 	m_pTransformCom->Look_At_Direction(vDir * -1);
@@ -478,19 +477,32 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 	{
 		eHitType = Hit_Type::Hit;
 
-		switch (eHitDirection)
+		if (true == bKnockUp)
 		{
-		case Engine::Left:
-			Hitted_Left(eHitPower);
-			break;
-		case Engine::Right:
-			Hitted_Right(eHitPower);
-			break;
-		default:
-			Hitted_Front(eHitPower);
-			break;
+			Set_KnockUp(true);
 		}
-		//Set_StiffnessRate(fStiffnessRate);
+
+
+		if (true == m_bIsKnockUp)
+		{
+			Hitted_KnockUp();
+		}
+		else 
+		{
+			switch (eHitDirection)
+			{
+			case Engine::Left:
+				Hitted_Left(eHitPower);
+				break;
+			case Engine::Right:
+				Hitted_Right(eHitPower);
+				break;
+			default:
+				Hitted_Front(eHitPower);
+				break;
+			}
+		}
+
 	}
 
 	return eHitType;

@@ -401,6 +401,7 @@
     <ClInclude Include="..\Public\Infected_KnockFrontCannonball_F_01_TEMP.h" />
     <ClInclude Include="..\Public\Infected_KnockFrontLight_B_01_NEW.h" />
     <ClInclude Include="..\Public\Infected_KnockFrontLight_F_01_NEW.h" />
+    <ClInclude Include="..\Public\Infected_KnockUp_Low_Fixed.h" />
     <ClInclude Include="..\Public\Infected_MeleeDynamic_Dodge_B_4m.h" />
     <ClInclude Include="..\Public\Infected_MeleeDynamic_RU_01.h" />
     <ClInclude Include="..\Public\Infected_MeleeDynamic_RU_02.h" />
@@ -1369,6 +1370,7 @@
     <ClCompile Include="..\Private\Infected_KnockFrontCannonball_F_01_TEMP.cpp" />
     <ClCompile Include="..\Private\Infected_KnockFrontLight_B_01_NEW.cpp" />
     <ClCompile Include="..\Private\Infected_KnockFrontLight_F_01_NEW.cpp" />
+    <ClCompile Include="..\Private\Infected_KnockUp_Low_Fixed.cpp" />
     <ClCompile Include="..\Private\Infected_MeleeDynamic_Dodge_B_4m.cpp" />
     <ClCompile Include="..\Private\Infected_MeleeDynamic_RU_01.cpp" />
     <ClCompile Include="..\Private\Infected_MeleeDynamic_RU_02.cpp" />

@@ -49,6 +49,8 @@ public:
 	CWeapon* Activate_Collisions(_bool _bActivate);
 	CWeapon* Set_Force(_float _fForce);
 	CWeapon* Set_Dir(_float3 _vDir);
+	CWeapon* Set_KnockUp(_bool _bKnockUp);
+
 
 public:
 	void	Set_Enable_Collisions(_bool bEnable);
@@ -106,6 +108,7 @@ protected:
 	_float		m_iDamage = { 0.f };
 	_float		m_fForce = { 0.f };
 	_float3		m_vDir = { 0.f, 0.f, 0.f };
+	_bool		m_bKnockUp = { false };
 
 protected://몬스터가 Player 잡아서 던지는거 쓸때 쓰는거
 	_bool	m_bSynced = false;
