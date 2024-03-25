@@ -1480,6 +1480,9 @@
     <ClCompile Include="..\Private\Player_Bandit_WalkAim_FR.cpp" />
     <ClCompile Include="..\Private\Player_Beast_SyncedAttack_Phase1_Reaction_01.cpp" />
     <ClCompile Include="..\Private\Player_Beast_SyncedAttack_Phase2_Reaction_01.cpp" />
+    <ClCompile Include="..\Private\Player_CartRide_JumpOff_01.cpp" />
+    <ClCompile Include="..\Private\Player_CartRide_Loop.cpp" />
+    <ClCompile Include="..\Private\Player_CartRide_Start.cpp" />
     <ClCompile Include="..\Private\Player_Crossbow_Ironsights_AimPose.cpp" />
     <ClCompile Include="..\Private\Player_Crossbow_Ironsights_AO.cpp" />
     <ClCompile Include="..\Private\Player_Crossbow_Ironsights_Idle.cpp" />
@@ -1663,6 +1666,7 @@
     <ClCompile Include="..\Private\Player_Interaction_Slide_Sequence.cpp" />
     <ClCompile Include="..\Private\Player_Interaction_SmallLever.cpp" />
     <ClCompile Include="..\Private\Player_KnockFrontLight_F_02.cpp" />
+    <ClCompile Include="..\Private\Player_L06_Wagon_Jump.cpp" />
     <ClCompile Include="..\Private\Player_Leap_01_Higher.cpp" />
     <ClCompile Include="..\Private\Player_Leap_01_Lower.cpp" />
     <ClCompile Include="..\Private\Player_MeleeCombo_01.cpp" />

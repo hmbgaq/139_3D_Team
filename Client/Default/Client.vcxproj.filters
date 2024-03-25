@@ -3106,6 +3106,18 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\5. Knock\4. Up">
       <UniqueIdentifier>{a2590a74-014c-418d-94ec-fb0c90a3fc84}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\17. Cart">
+      <UniqueIdentifier>{b8012f30-2815-4fd7-83e6-48b45e67c9ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\17. Cart\1. Start">
+      <UniqueIdentifier>{b335ca51-1478-4f09-abc3-fcb411702848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\17. Cart\2. Loop">
+      <UniqueIdentifier>{ce3c30f9-6347-459b-b6d8-500a99be8f60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\17. Cart\3. Jump">
+      <UniqueIdentifier>{a1b00b81-f014-41a9-9a1a-e642f725ad52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -4566,9 +4578,6 @@
     <ClInclude Include="..\Public\Player_VampireCommander_SyncedAttack.h">
       <Filter>02.GameObjects\00. Character\Player\State\08. Hit\5. Reaction\6. VampireCommand</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_L06_Wagon_Jump.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player_GS01_Remover_Jesse_gmp.h">
       <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
     </ClInclude>
@@ -4636,15 +4645,6 @@
       <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Cargo_LedgeStrafe_R_Custom_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_CartRide_JumpOff_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_CartRide_Loop.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_CartRide_Start.h">
       <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_CrouchUnder_End.h">
@@ -6245,6 +6245,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\Infected_KnockUp_Low_Fixed.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\5. Knock\4. Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CartRide_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\17. Cart\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CartRide_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\17. Cart\2. Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CartRide_JumpOff_01.h">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\17. Cart\3. Jump</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_L06_Wagon_Jump.h">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\17. Cart\3. Jump</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -8835,6 +8847,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Infected_KnockUp_Low_Fixed.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\5. Knock\4. Up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_CartRide_Start.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\17. Cart\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_CartRide_Loop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\17. Cart\2. Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_CartRide_JumpOff_01.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\17. Cart\3. Jump</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_L06_Wagon_Jump.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\17. Cart\3. Jump</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

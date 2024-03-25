@@ -27,6 +27,8 @@
 #include "Player_InteractionVault100.h"
 #include "Player_InteractionVault200.h"
 
+#include "Player_CartRide_Loop.h"
+
 #include "PhysXCharacterController.h"
 #include "PhysXCollider.h"
 #include "Preset_PhysXColliderDesc.h"
@@ -66,7 +68,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 // 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 // 	{
 		m_pActor = new CActor<CPlayer>(this);
-		m_pActor->Set_State(new CPlayer_IdleLoop());
+		//m_pActor->Set_State(new CPlayer_IdleLoop());
+		m_pActor->Set_State(new CPlayer_CartRide_Loop());
+
 // 	}
 
 
@@ -123,13 +127,6 @@ void CPlayer::Tick(_float fTimeDelta)
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
 
-	//if (m_pGameInstance->Key_Down(DIK_T))
-	//{
-	//	_float4 vForceFloat4 = { 0.f, 1.f, 0.f, 1.f };
-	//	_vector vForce = XMLoadFloat4(&vForceFloat4);
-
-	//	Add_Force(vForce, 1.f);
-	//}
 
 
 	//_float3 vPos = Get_Position();
@@ -409,6 +406,7 @@ HRESULT CPlayer::Ready_PartObjects()
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Zapper"), "LeftHandIK", WeaponDesc,		PLAYER_WEAPON_ZAPPER));
 
 	
+	Set_Weapons_Enable_False();
 
 	//CWeapon* m_pWeapon_Punch_L = Get_Weapon(PLAYER_WEAPON_PUNCH_L);
 	//m_pWeapon_Punch_L->Set_Enable(false);
