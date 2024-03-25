@@ -61,16 +61,18 @@ protected:
 	HRESULT Ready_Components();
 
 protected:
-	virtual void Hitted_Left(Power ePower)	override;
-	virtual void Hitted_Right(Power ePower) override;
-	virtual void Hitted_Front(Power ePower) override;
-	virtual void Hitted_Knock(_bool bIsCannonball) override;
-	virtual void Hitted_Dead(Power ePower)	override;
+	virtual void Hitted_Left(Power ePower)	override;	// (플레이어 기준)왼쪽으로 떄린 평타 
+	virtual void Hitted_Right(Power ePower) override;	// (플레이어 기준)오른쪽으로 떄린 평타 
+	virtual void Hitted_Front(Power ePower) override;	// (플레이어 기준)정면으로 떄린 평타 
+	
+	/* 플레이어에 의한 피격 */
+	virtual void Hitted_Knock(_bool bIsCannonball) override;	// 플레이어 캐논볼 스킬
+	virtual void Hitted_Electrocute()	override;				// 감전스킬맞고 어어 거리는 루프상태 
+	virtual void Hitted_OpenState_Pull() override;				// 플레이어 끌어당기는스킬?
+	virtual void Hitted_Opened(Direction eDirection) override;  // 끌어당긴뒤 제자리에서 쳐맞는애니메이션 
+	virtual void Hitted_KnockUp() override;						// 퍼올리기 스킬 맞았을때 
 
-	virtual void Hitted_Electrocute()	override;
-	virtual void Hitted_OpenState_Pull() override;
-	virtual void Hitted_Opened(Direction eDirection) override;
-	virtual void Hitted_KnockUp() override;
+	virtual void Hitted_Dead(Power ePower)	override;	// HP다 닳아서 죽을때 
 
 
 protected:

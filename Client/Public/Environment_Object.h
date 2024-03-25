@@ -89,6 +89,8 @@ private:
 	HRESULT				Ready_Components();
 	HRESULT				Bind_ShaderResources();
 
+	/* 고드름용 - 소영 작업중 */
+	_int iCheckMeshNum = 0;
 
 public:
 	/* 원형객체를 생성한다. */

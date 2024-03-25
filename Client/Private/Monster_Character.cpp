@@ -41,8 +41,6 @@ HRESULT CMonster_Character::Initialize(void* pArg)
 		{
 			m_tMonsterDesc = *(MONSTER_DESC*)pArg;
 
-
-
 			if (m_tMonsterDesc.bPreview == false)
 			{
 				m_pTransformCom->Set_WorldMatrix(m_tMonsterDesc.WorldMatrix);

@@ -78,6 +78,7 @@ float3 My_fresnelSchlick(float cosTheta, float3 F0)
     // costheta는 (half way 벡터 * view벡터)로 쓰이는값이다. 
     return F0 + (1.0f - F0) * pow(1.0 - cosTheta, 5.0f);
 }
+
 /*=============================================================
  
                              BRDF 
