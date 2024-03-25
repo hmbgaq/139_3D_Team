@@ -1030,6 +1030,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Effect_WinchesterElectric"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/WinchesterElectric/WinchesterElectric", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Effect_LightningFast"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/LightningFast/LightningFast", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Effect_LightningsPack"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/LightningsPack/LightningsPack", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Effect_HemiSphere"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/HemiSphere/HemiSphere", PivotMatrix)));
 
 	//! 인트로보스용 이펙트 모델
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Effect_BatStorm_01"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/VampireCommander/BatStorm/BatStorm_01/BatStorm_01", PivotMatrix)));

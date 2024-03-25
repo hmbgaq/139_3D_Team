@@ -57,7 +57,7 @@ public:
 
 		EASING_TYPE	eType_SpeedLerp = { EASING_TYPE::LINEAR };
 		_float2		vMinMaxSpeed = { 1.f, 1.f };
-
+		_float2		vMinMaxTornadoSpeed = { 1.f, 1.f };
 
 		/* For.Position */
 		_float3		vMinCenterOffsetPos = { 0.f, 0.f, 0.f };
@@ -158,6 +158,7 @@ public:
 		// 스피드
 		_float	fCurSpeed = { 1.f };
 		_float  fCurTheta = { 0.f };
+		_float	fCurTornadoSpeed = { 1.f };
 
 
 		// 크기
@@ -170,7 +171,7 @@ public:
 		
 
 		// 색
-		_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f };
+		//_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f };
 
 
 		void Reset_ParticleTimes()

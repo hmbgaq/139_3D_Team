@@ -504,7 +504,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
 	
 	// ÄÃ·¯ È¥ÇÕ
     Out.vColor = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode);
-
+    Out.vColor.a = g_EffectDesc[In.iInstanceID].g_vColors_Mul.a;
 		
     /* RimBloom ================================================================ */
     //float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);

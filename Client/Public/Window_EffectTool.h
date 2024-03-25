@@ -236,8 +236,11 @@ private:
 
 	_float	m_vMinMaxPower_Particle[2]	= { 0.1f, 250.f };
 	_float	m_vMinMaxMass_Particle[2]	= { 10.f, 10.f };
-	_float	m_vMinMaxSpeed_Particle[2] = { 1.f, 1.f };
+
 	/* RigidBody ============================================== */
+
+	_float	m_vMinMaxSpeed_Particle[2] = { 1.f, 1.f };
+	_float	m_vMinMaxTornadoSpeed_Particle[2] = { 1.f, 1.f };
 
 
 	/* For.Position */

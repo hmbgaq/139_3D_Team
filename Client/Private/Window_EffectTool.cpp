@@ -26,6 +26,7 @@
 #include "Part_Preview.h"
 
 #include "Player.h"
+#include "VampireCommander.h"
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -733,8 +734,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 
-
-
 				/* 스피드 조절(러프 관련) */
 				ImGui::SeparatorText(" Speed ");
 
@@ -753,6 +752,19 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticleBufferDesc->vMinMaxSpeed.x = m_vMinMaxSpeed_Particle[0];
 					m_pParticleBufferDesc->vMinMaxSpeed.y = m_vMinMaxSpeed_Particle[1];
 				}
+
+
+				/* 토네이도 스피드 */
+				if (CVIBuffer_Particle::TORNADO == m_pParticleBufferDesc->eType_Action)
+				{
+					ImGui::SeparatorText(" Tornado Speed_Particle ");
+					if (ImGui::DragFloat2("vMinMaxTornadoSpeed_Particle", m_vMinMaxTornadoSpeed_Particle, 0.1f, 0.f, 5000.f))
+					{
+						m_pParticleBufferDesc->vMinMaxTornadoSpeed.x = m_vMinMaxTornadoSpeed_Particle[0];
+						m_pParticleBufferDesc->vMinMaxTornadoSpeed.y = m_vMinMaxTornadoSpeed_Particle[1];
+					}
+				}
+
 
 				if (ImGui::CollapsingHeader(" Speed_Easing Types "))
 				{
@@ -1832,6 +1844,11 @@ void CWindow_EffectTool::Update_MeshTab()
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LightningsPack"));
 			}
 
+			if (ImGui::Button("HemiSphere"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_HemiSphere"));
+			}
+
 			ImGui::SeparatorText("");
 		}
 
@@ -2730,7 +2747,7 @@ void CWindow_EffectTool::Update_TrailTab()
 					if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
 					{
 						// 보스 VampireCommander_AttackMelee_02 // Index 55
-						m_pModel_Preview->Set_AnimIndex(55);
+						m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_BloodRange_02_Loop);
 					}
 				}
 
@@ -3182,6 +3199,9 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			/* 스피드 */
 			m_vMinMaxSpeed_Particle[0] = m_pParticleBufferDesc->vMinMaxSpeed.x;
 			m_vMinMaxSpeed_Particle[1] = m_pParticleBufferDesc->vMinMaxSpeed.y;
+
+			m_vMinMaxTornadoSpeed_Particle[0] = m_pParticleBufferDesc->vMinMaxTornadoSpeed.x;
+			m_vMinMaxTornadoSpeed_Particle[1] = m_pParticleBufferDesc->vMinMaxTornadoSpeed.y;
 
 
 			/* 파티클 이동 회전 각도 */
@@ -4265,7 +4285,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
 				{
 					// 보스 아이들 // Index 9
-					m_pModel_Preview->Set_AnimIndex(9);
+					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_Idle);
 				}
 			}
 			ImGui::SameLine();
@@ -4279,8 +4299,8 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
 				{
-					// 보스 VampireCommander_AttackMelee_02 // Index 55
-					m_pModel_Preview->Set_AnimIndex(55);
+
+					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_BloodRange_02_Loop);
 				}
 			}
 		}
@@ -4291,12 +4311,12 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 		{
 			if (nullptr != m_pModel_Preview)
 			{
-				//if(nullptr != m_pCurEffect->Get_Object_Owner())
-				//{
-				//	// 현재 이펙트의 오너가 nullptr이 아니면 오너부터 해제 해주고 모델 삭제
-				//	m_pCurEffect->Get_Desc()->bParentPivot = FALSE;
-				//	m_pCurEffect->Delete_Object_Owner();
-				//}
+				if(nullptr != m_pCurEffect->Get_Object_Owner())
+				{
+					// 현재 이펙트의 오너가 nullptr이 아니면 오너부터 해제 해주고 모델 삭제
+					m_pCurEffect->Get_Desc()->bParentPivot = FALSE;
+					m_pCurEffect->Delete_Object_Owner();
+				}
 
 				m_pModel_Preview->Set_Dead(TRUE);
 				m_pModel_Preview = nullptr;
