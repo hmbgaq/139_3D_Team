@@ -43,7 +43,6 @@ private: /* For. Shader */
 	_float3			m_vBloomPower = {};
 	_float			m_fRimPower = {};
 
-
 public:
 	static CWeapon_Bandit_Sniper* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

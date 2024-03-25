@@ -26,13 +26,19 @@ struct VIGNETTE_DESC
     float  fVignetteCenter_Y;
 };
 
+struct SSR_DESC
+{
+    bool bSSR_Active;
+    float fRayHitThreshold;
+    float fRayStep;
+};
 /* =================== Variable =================== */
 // Origin
-matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-matrix g_ViewMatrixInv, g_ProjMatrixInv;
-float4 g_vCamPosition;
-float  g_fCamFar;
-Texture2D g_ProcessingTarget;
+float4x4    g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float4x4    g_ViewMatrixInv, g_ProjMatrixInv;
+float4      g_vCamPosition;
+float       g_fCamFar;
+Texture2D   g_ProcessingTarget;
 
 // HDR 
 bool g_bHDR_Active;
@@ -60,6 +66,13 @@ Texture2D g_Effect_DistortionTarget;
 
 // Vignette
 VIGNETTE_DESC g_Vignette_desc;
+
+// SSR 
+static const int SSR_MAX_STEPS = 16;
+static const int SSR_BINARY_SEARCH_STEPS = 16;
+Texture2D g_NormalTarget;
+SSR_DESC g_SSR_Desc;
+
 /* =================== Function =================== */
 
 float3 reinhard_extended(float3 v, float max_white)
@@ -176,6 +189,80 @@ float XOR(float xor_A, float xor_B)
 {
     return saturate(dot(float4(-xor_A, -xor_A, xor_A, xor_B), float4(xor_B, xor_B, 1.0, 1.0))); // -2 * A * B + A + B
 }
+
+static float3 GetViewSpacePosition(float2 texcoord, float depth)
+{
+    float4 clipSpaceLocation;
+    clipSpaceLocation.xy = texcoord * 2.0f - 1.0f;
+    clipSpaceLocation.y *= -1;
+    clipSpaceLocation.z = depth;
+    clipSpaceLocation.w = 1.0f;
+    float4 homogenousLocation = mul(clipSpaceLocation, g_ProjMatrixInv);
+    return homogenousLocation.xyz / homogenousLocation.w;
+}
+
+float4 SSRBinarySearch(float3 dir, inout float3 hitCoord)
+{
+    float depth;
+    for (int i = 0; i < SSR_BINARY_SEARCH_STEPS; i++)
+    {
+        float4 projectedCoord = mul(float4(hitCoord, 1.0f), g_ProjMatrix);
+        projectedCoord.xy /= projectedCoord.w;
+        projectedCoord.xy = projectedCoord.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
+
+        depth = g_DepthTarget.SampleLevel(PointClampSampler, projectedCoord.xy, 0);
+        float3 viewSpacePosition = GetViewSpacePosition(projectedCoord.xy, depth);
+        float depthDifference = hitCoord.z - viewSpacePosition.z;
+
+        if (depthDifference <= 0.0f)
+            hitCoord += dir;
+
+        dir *= 0.5f;
+        hitCoord -= dir;
+   }
+
+    float4 projectedCoord = mul(float4(hitCoord, 1.0f), g_ProjMatrix);
+    projectedCoord.xy /= projectedCoord.w;
+    projectedCoord.xy = projectedCoord.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
+    
+    depth = g_DepthTarget.SampleLevel(PointClampSampler, projectedCoord.xy, 0);
+    float3 viewSpacePosition = GetViewSpacePosition(projectedCoord.xy, depth);
+    float depthDifference = hitCoord.z - viewSpacePosition.z;
+
+    return float4(projectedCoord.xy, depth, abs(depthDifference) < g_SSR_Desc.fRayHitThreshold ? 1.0f : 0.0f);
+}
+
+float4 SSRRayMarch(float3 dir, inout float3 hitCoord)
+{
+   float depth;
+    for (int i = 0; i < SSR_MAX_STEPS; i++)
+    {
+        hitCoord += dir;
+        float4 projectedCoord = mul(float4(hitCoord, 1.0f), g_ProjMatrix);
+        projectedCoord.xy /= projectedCoord.w;
+        projectedCoord.xy = projectedCoord.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
+
+        depth = g_DepthTarget.SampleLevel(PointClampSampler, projectedCoord.xy, 0);
+        float3 viewSpacePosition = GetViewSpacePosition(projectedCoord.xy, depth);
+        float depthDifference = hitCoord.z - viewSpacePosition.z;
+
+		[branch]
+        if (depthDifference > 0.0f)
+        {
+            return SSRBinarySearch(dir, hitCoord);
+        }
+
+        dir *= g_SSR_Desc.fRayStep;
+    }
+   return float4(0.0f, 0.0f, 0.0f, 0.0f);
+}
+
+
+bool IsInsideScreen(float2 vCoord)
+{
+    return !(vCoord.x < 0 || vCoord.x > 1 || vCoord.y < 0 || vCoord.y > 1);
+}
+
 /* =================== VS / PS =================== */
 
 struct VS_IN
@@ -205,11 +292,13 @@ struct PS_OUT
 VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0;
-	
-    matrix matWV, matWVP;
+    
+    float4x4 matWV;
+    float4x4 matWVP;
 
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
+
 
     Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     Out.vTexcoord = In.vTexcoord;
@@ -379,6 +468,34 @@ PS_OUT PS_MAIN_SSR(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
+    // 반사되는 반직선을 계산하기위해 Depth 와 Normal의 방향을 사용한다. -> 반직선이 Geometry와 충돌할때까지 추적 
+    float4 normalMetallic = g_NormalTarget.Sample(LinearBorderSampler, In.vTexcoord);
+    float4 sceneColor = g_ProcessingTarget.SampleLevel(ClampSampler, In.vTexcoord, 0);
+
+    float metallic = normalMetallic.a;
+    if (metallic < 0.01f)
+    {
+        Out.vColor = sceneColor;
+        return Out;
+    }
+    float3 normal = normalMetallic.rgb;
+    normal = 2 * normal - 1.0;
+    normal = normalize(normal);
+
+    float depth = g_DepthTarget.Sample(ClampSampler, In.vTexcoord);
+    float3 viewSpacePosition = GetViewSpacePosition(In.vTexcoord, depth);
+    float3 reflectDirection = normalize(reflect(viewSpacePosition, normal));
+
+    float3 hitPosition = viewSpacePosition;
+    float4 coords = SSRRayMarch(reflectDirection, hitPosition);
+
+    float2 coordsEdgeFactor = float2(1, 1) - pow(saturate(abs(coords.xy - float2(0.5f, 0.5f)) * 2), 8);
+    float screenEdgeFactor = saturate(min(coordsEdgeFactor.x, coordsEdgeFactor.y));
+    float reflectionIntensity = saturate(screenEdgeFactor * saturate(reflectDirection.z) * (coords.w));
+
+    float3 reflectionColor = reflectionIntensity * g_ProcessingTarget.SampleLevel(ClampSampler, coords.xy, 0).rgb;
+    Out.vColor =  sceneColor + metallic * max(0, float4(reflectionColor, 1.0f));
+   
     return Out;
 }
 /* ------------------- Technique  -------------------*/

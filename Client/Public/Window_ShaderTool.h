@@ -53,6 +53,7 @@ private:
 	class ShaderParsed_Object* pObject = nullptr;
 
 	/* Level Shader Struct */
+	SSR_DESC			m_eSSR_Desc				= {};
 	HBAO_PLUS_DESC		m_eHBAO_Desc			= {};
 	FOG_DESC			m_eFog_Desc				= {};
 	DEFERRED_DESC		m_eDeferred_Desc		= {};
@@ -111,6 +112,7 @@ private:
 	void Compress_HSV_Setting();
 	void Compress_Vignette_Setting();
 	void Compress_ScreenEffect_Setting();
+	void Compress_SSR_Setting();
 	void Save_Shader();
 	
 	/* Level Light Control */

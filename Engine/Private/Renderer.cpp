@@ -48,7 +48,7 @@ HRESULT CRenderer::Initialize()
 	m_tDOF_Option.bDOF_Active = false;
 	m_tHSV_Option.bScreen_Active = false;
 	m_tAnti_Option.bFXAA_Active = false;
-
+	m_tSSR_Option.bSSR_Active = true;
 	return S_OK;
 }
 
@@ -90,9 +90,10 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Deferred_Effect()); 
 
-	FAILED_CHECK(Render_SSR());
-
 	/* --- Post Processing --- */
+	if(true == m_tSSR_Option.bSSR_Active)
+		FAILED_CHECK(Render_SSR());
+
 	if (true == m_tRadial_Option.bRadial_Active) /* 이미지 블러효과를 추가하는것 */
 		FAILED_CHECK(Render_RadialBlur());
 
@@ -497,14 +498,26 @@ HRESULT CRenderer::Render_MyPBR()
 
 HRESULT CRenderer::Render_SSR()
 {
-	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Deferred")));
-	//
-	//
-	//FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_SSR)));
-	//FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
-	//FAILED_CHECK(m_pVIBuffer->Render());
-	//
-	//FAILED_CHECK(m_pGameInstance->End_MRT());
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_SSR")));
+	
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrixInv", &m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ProjMatrixInv", &m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ)));
+
+	/* 타겟에 값올리기 */
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader_PostProcess, "g_NormalTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::SSR), m_pShader_PostProcess, "g_ProcessingTarget")); //
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader_PostProcess, "g_DepthTarget")); //
+
+	FAILED_CHECK(m_pShader_PostProcess->Bind_RawValue("g_SSR_Desc", &m_tSSR_Option, sizeof(SSR_DESC)));
+
+	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_SSR)));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
+	FAILED_CHECK(m_pVIBuffer->Render());
+	
+	FAILED_CHECK(m_pGameInstance->End_MRT());
 
 	return S_OK;
 }
@@ -1027,10 +1040,10 @@ wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 {
 	/* 순서 : Radial, dof, hdr, fxaa, hsv , vignette*/
 
-	if (eCurrType == POST_TYPE::RADIAL_BLUR)
+	if (eCurrType == POST_TYPE::SSR)
 	{
 		strCurrentTarget = TEXT("Target_Effect_Final");
-		m_ePrevTarget = POST_TYPE::RADIAL_BLUR;
+		m_ePrevTarget = POST_TYPE::SSR;
 	}
 	else 
 	{
@@ -1041,6 +1054,11 @@ wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 			m_ePrevTarget = eCurrType;
 			break;
 		
+		case POST_TYPE::SSR:
+			strCurrentTarget = TEXT("Target_SSR");
+			m_ePrevTarget = eCurrType;
+			break;
+
 		case POST_TYPE::RADIAL_BLUR:
 			strCurrentTarget = TEXT("Target_RadialBlur");
 			m_ePrevTarget = eCurrType;

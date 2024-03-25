@@ -337,6 +337,11 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 
 	ImGui::SeparatorText("Post");
 
+	if (ImGui::TreeNode("SSR Setting"))
+	{
+		Compress_SSR_Setting();
+		ImGui::TreePop();
+	}
 	if (ImGui::TreeNode("Radial Blur Setting"))
 	{
 		Compress_Radial_Setting();
@@ -557,6 +562,16 @@ void CWindow_ShaderTool::Compress_ScreenEffect_Setting()
 	
 }
 
+void CWindow_ShaderTool::Compress_SSR_Setting()
+{
+	ImGui::Checkbox("SSR Active", &m_eSSR_Desc.bSSR_Active);
+
+	ImGui::SliderFloat("RayHitThreshold", &m_eSSR_Desc.fRayHitThreshold, 0.0f, 100.0f, "RayHitThreshold = %.3f");
+	ImGui::SliderFloat("RayStep", &m_eSSR_Desc.fRayStep, 0.0f, 100.0f, "RayStep = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_SSR_Option(m_eSSR_Desc);
+}
+
 void CWindow_ShaderTool::Save_Shader()
 {
 	string path = "../Bin/DataFiles/Data_Shader/Level/";
@@ -657,10 +672,12 @@ void CWindow_ShaderTool::Select_Level()
 					m_eCurrLevel_String = "LEVEL_INTRO_BOSS";
 					break;
 				case 4:
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountainNormalMapping_MapData.json";
 					m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAIN;
 					m_eCurrLevel_String = "LEVEL_SNOWMOUNTAIN";
 					break;
 				case 5:
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_TestMap_MapData.json";
 					m_eCurrLevel_Enum = LEVEL::LEVEL_LAVA;
 					m_eCurrLevel_String = "LEVEL_LAVA";
 					break;
@@ -747,7 +764,6 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 	}
-
 
 	json InteractJson = Stage1MapJson["Interact_Json"];
 	_int InteractJsonSize = (_int)InteractJson.size();

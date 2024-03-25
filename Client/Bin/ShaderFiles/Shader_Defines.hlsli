@@ -28,7 +28,7 @@ sampler ClampSampler = sampler_state
     AddressW = CLAMP;
 };
 
-sampler SpecialSampler = sampler_state
+sampler PointClampSampler = sampler_state
 {
     filter = min_mag_mip_Point;
     AddressU = CLAMP;
@@ -66,6 +66,14 @@ sampler AnisotropicClampSampler = sampler_state /* For. ¾ÈÆ¼-¾Ù¸®¾î½Ì */
     ComparisonFunc = ALWAYS;
     MaxLOD = 0.f;
     MinLOD = 0.f;
+};
+
+sampler LinearBorderSampler = sampler_state
+{
+    filter = min_mag_mip_linear;
+    AddressU = Border;
+    AddressV = Border;
+    AddressW = Border;
 };
 
 /* ---------------- Rasterizer ---------------- */
