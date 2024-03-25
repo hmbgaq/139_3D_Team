@@ -2,7 +2,7 @@
 #include "GameInstance.h"
 #include "Body_Mother.h"
 
-// #include "Mother_Idle.h"
+#include "Mother_Idle.h"
 #include "Mother_Spawn.h"
 // #include "Mother_HitCenter.h"
 // #include "Mother_HitLeft.h"
@@ -59,7 +59,7 @@ HRESULT CMother::Initialize(void* pArg)
 		m_pActor->Set_State(new CMother_Spawn);
 	}
 	//HP
-	m_iMaxHp = 1200;
+	m_iMaxHp = 1200;	
 	m_iHp = m_iMaxHp;
 
 	//m_fMaxHP = 1000.f;
@@ -72,6 +72,7 @@ HRESULT CMother::Initialize(void* pArg)
 
 	//m_pMapEffect = EFFECT_MANAGER->Create_Effect("Test_Blood_map_04.json");
 	//m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
+	Search_Target(200.f);
 
 	return S_OK;
 }
@@ -86,14 +87,14 @@ void CMother::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 
-	Search_Target(200.f);
 
 	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
+	
 	//cout << "introBossHP:" << m_iHp << endl;
-	//_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
+	//_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
 	//
 	////cout << "Mother : " << fAngle << endl;
 	//if (m_bLookAt == true)

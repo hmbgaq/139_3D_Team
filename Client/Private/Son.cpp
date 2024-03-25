@@ -68,6 +68,7 @@ HRESULT CSon::Initialize(void* pArg)
 
 	// Ready BossHUDBar
 	//FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
+	Search_Target(200.f);
 
 	return S_OK;
 }
@@ -82,27 +83,26 @@ void CSon::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 
-	Search_Target(200.f);
 
 	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
 	//cout << "introBossHP:" << m_iHp << endl;
-	//_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
-	//
-	////cout << "Son : " << fAngle << endl;
-	//if (m_bLookAt == true)
-	//{
-	//
-	//	if (0 <= fAngle && fAngle <= 45)
-	//		Look_At_Target_Lerp(fTimeDelta);
-	//	else if (-45 <= fAngle && fAngle < 0)
-	//		Look_At_Target_Lerp(fTimeDelta);
-	//
-	//	/*m_bLookAt = false;*/
-	//
-	//}
+	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
+
+	//cout << "Son : " << fAngle << endl;
+	if (m_bLookAt == true)
+	{
+	
+		if (0 <= fAngle && fAngle <= 45)
+			Look_At_Target_Lerp(fTimeDelta);
+		else if (-45 <= fAngle && fAngle < 0)
+			Look_At_Target_Lerp(fTimeDelta);
+	
+		/*m_bLookAt = false;*/
+	
+	}
 
 }
 
