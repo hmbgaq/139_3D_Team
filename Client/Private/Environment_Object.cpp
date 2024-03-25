@@ -104,7 +104,7 @@ HRESULT CEnvironment_Object::Render()
 	{
 		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-			for (size_t i = 0; i < iNumMeshes; i++)
+		for (size_t i = 0; i < iNumMeshes; i++)
 		{
 			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 

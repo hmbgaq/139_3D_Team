@@ -1023,6 +1023,7 @@
     <ClInclude Include="..\Public\Sniper_Introduction_03.h" />
     <ClInclude Include="..\Public\Sniper_KnockFrontLight_F_01.h" />
     <ClInclude Include="..\Public\Sniper_KnockFrontLight_F_02.h" />
+    <ClInclude Include="..\Public\Sniper_KnockUp_Low_Fixed.h" />
     <ClInclude Include="..\Public\Sniper_Stun_Loop.h" />
     <ClInclude Include="..\Public\Sniper_Taunt_01.h" />
     <ClInclude Include="..\Public\Sniper_Taunt_02.h" />
@@ -1819,6 +1820,7 @@
     <ClCompile Include="..\Private\Sniper_Introduction_03.cpp" />
     <ClCompile Include="..\Private\Sniper_KnockFrontLight_F_01.cpp" />
     <ClCompile Include="..\Private\Sniper_KnockFrontLight_F_02.cpp" />
+    <ClCompile Include="..\Private\Sniper_KnockUp_Low_Fixed.cpp" />
     <ClCompile Include="..\Private\Sniper_Stun_Loop.cpp" />
     <ClCompile Include="..\Private\Sniper_Taunt_01.cpp" />
     <ClCompile Include="..\Private\Sniper_Taunt_02.cpp" />

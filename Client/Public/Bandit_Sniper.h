@@ -89,6 +89,7 @@ public:
 		Sniper_Electrocute_Loop_TEMP	, // ▶◀(25) (Hit)
 		Sniper_DeathNormal_F_01			, // ▶◀(26) (Death)
 		Sniper_DeathNormal_B_01			, // ▶◀(27) (Death)
+		Bandit_KnockUp_Low_Fixed		, // ▶◀(28) (Hit) 파워공격으로 올려쳤을때 
 		Sniper_Animation_End
 		//Sniper_Ironsights_Reload					     , //  (0) Reload - 하나씩 총 5발 재장전
 		//Sniper_Melee_01								 , //  (1) (Melee)CloseAttack - 총 왼손에 들고 오른손으로 제자리 휘두르기 
