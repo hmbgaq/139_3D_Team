@@ -39,6 +39,7 @@ namespace Engine
 		/* Spot Light  */
 		_float fCutOff = 0.f;
 		_float fOuterCutOff = 0.f;
+		_float fVolumetricStrength = 0.f;
 
 		/* Common */
 		_float4 vDiffuse = { 0.f, 0.f, 0.f, 0.f }; /* 반사될때 출력되는 주된 색 */

@@ -3,7 +3,6 @@
 #include "Imgui_Manager.h"
 #include "GameInstance.h"
 #include "Data_Manager.h"
-
 #include "Camera_Dynamic.h"
 #include "MasterCamera.h"
 #include "Sky.h"
@@ -18,7 +17,6 @@ HRESULT CLevel_Tool::Initialize()
 {
 	//Level_Tool ·¹º§ Á¶Á¤ 
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
-	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	{	
@@ -41,6 +39,7 @@ HRESULT CLevel_Tool::Initialize()
 	}
 
 	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
+	FAILED_CHECK(Ready_LightDesc());
 
 	return S_OK;
 
@@ -118,6 +117,8 @@ HRESULT CLevel_Tool::Ready_LightDesc()
 	//cout << "Level Tool - Light Number = " << TempLightNumber << endl; 
 
 	//TODO ¸ÊÅø ÀÌ´Ï¼È¶óÀÌÁî·Î ¿Å°ÜÁü. Window_MapTool.cpp -> Initialize
+
+	//CLight* pLight = m_pGameInstance->Add_Light(desc, &TempLightNumber);
 
 	return S_OK;
 }

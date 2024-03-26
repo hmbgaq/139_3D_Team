@@ -1,13 +1,14 @@
-#include "stdafx.h"
-#include "Window_ShaderTool.h"
-#include "GameInstance.h"
-#include "Environment_Object.h"
-#include "Environment_Instance.h"
-#include "Data_Manager.h"
 #include "Light.h"
-#include "ShaderParsed_Object.h"
-#include "Monster_Character.h"
 #include "SMath.h"
+#include "stdafx.h"
+#include "Data_Manager.h"
+#include "GameInstance.h"
+#include "Light_Manager.h"
+#include "Monster_Character.h"
+#include "Window_ShaderTool.h"
+#include "Environment_Object.h"
+#include "ShaderParsed_Object.h"
+#include "Environment_Instance.h"
 
 CWindow_ShaderTool::CWindow_ShaderTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -112,8 +113,6 @@ void CWindow_ShaderTool::Create_Object()
 
 	ImGui::SeparatorText(" Modify Object ");
 
-
-
 	ImGui::End();
 }
 
@@ -181,6 +180,9 @@ void CWindow_ShaderTool::Create_DummyObject(string ObjectTag)
 
 void CWindow_ShaderTool::Layer_Light_Control()
 {
+	/* 모든 빛 다 가져오기 */
+	m_pGameInstance->Get_AllLight(&m_listLight);
+
 	if (ImGui::TreeNode(" Save / Losad "))
 	{
 		Save_Load_Light();
@@ -196,6 +198,8 @@ void CWindow_ShaderTool::Layer_Light_Control()
 	}
 	if (ImGui::TreeNode("Spot Light"))
 	{
+		Compress_SpotLight();
+
 		ImGui::TreePop();
 	}
 }
@@ -306,6 +310,32 @@ void CWindow_ShaderTool::Compress_Directional_Light()
 		m_pGameInstance->Remove_Light(0);
 		m_pGameInstance->Add_Light(NewDesc, TempIndex);
 	}
+}
+
+void CWindow_ShaderTool::Compress_SpotLight()
+{
+	if (ImGui::Button(u8"예시 만들기"))
+	{
+		_uint Temp = {};
+
+		LIGHT_DESC LightDesc = {};
+		LightDesc.bEnable = true;
+		LightDesc.eType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
+		LightDesc.vPosition = _float4(60.5f, 0.f, 26.f, 0.f);
+		LightDesc.fRange = 10.f;
+		LightDesc.fCutOff = 0.5f;
+		LightDesc.fOuterCutOff = 0.7f;
+		LightDesc.vDiffuse = { 1.f, 0.f, 0.f, 1.f };
+		LightDesc.vAmbient = { 1.f, 0.f, 0.f, 1.f };
+		LightDesc.vSpecular = { 1.f, 0.f, 0.f, 1.f };
+		LightDesc.fVolumetricStrength = 10.f;
+
+		CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, Temp);
+	}
+}
+
+void CWindow_ShaderTool::Compress_PointLight()
+{
 }
 
 
