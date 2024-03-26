@@ -564,7 +564,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 
 
 	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용)
-    vAlphaColor = g_MaskTexture.Sample(ClampSampler, vDistortedCoord.xy);
+    vAlphaColor = g_MaskTexture.Sample(LinearSampler, vDistortedCoord.xy);
     vFinalDiffuse.a = vAlphaColor;
 	
     

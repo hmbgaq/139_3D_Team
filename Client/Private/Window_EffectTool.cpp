@@ -2741,7 +2741,7 @@ void CWindow_EffectTool::Update_TrailTab()
 					if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 					{
 						// 플레이어 공격
-						m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Finisher_BanditHeavy_ZapperLeap);
+						m_pModel_Preview->Set_AnimIndex(CPlayer::Player_EnergyWhip_CloseRange_01);
 					}
 
 					if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
@@ -4294,7 +4294,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 				{
 					// 플레이어 공격
-					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Finisher_BanditHeavy_ZapperLeap);
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_EnergyWhip_CloseRange_01);
 				}
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)

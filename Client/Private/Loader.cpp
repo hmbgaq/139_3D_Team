@@ -421,6 +421,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Effect_ShieldDome"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/ShieldDome/ShieldDome", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Effect_LightningFast"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/LightningFast/LightningFast", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Effect_LightningsPack"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/LightningsPack/LightningsPack", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Effect_HemiSphere"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/HemiSphere/HemiSphere", PivotMatrix)));
 
 #pragma endregion 이펙트 모델_INTRO_BOSS 끝
 
@@ -615,6 +616,7 @@ HRESULT CLoader::Loading_For_IntroBoss_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Texture_Effect_Sprite"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/04_Sprites/Sprite_%d.dds"), 21)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Texture_Effect_Sprite_Smokes"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/04_Sprites/Smokes/Sprite_smoke_%d.dds"), 31)));
 
+
 	lstrcpy(m_szLoadingText, TEXT("맵을 로드하는 중입니다."));
 	Ready_Environment_Model(LEVEL_INTRO_BOSS);
 
@@ -647,6 +649,7 @@ HRESULT CLoader::Loading_For_IntroBoss_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Model_Effect_ShieldDome"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/ShieldDome/ShieldDome", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Model_Effect_LightningFast"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/LightningFast/LightningFast", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Model_Effect_LightningsPack"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/LightningsPack/LightningsPack", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Model_Effect_HemiSphere"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/HemiSphere/HemiSphere", PivotMatrix)));
 
 	//! 인트로보스용 이펙트 모델
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Model_Effect_BatStorm_01"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/VampireCommander/BatStorm/BatStorm_01/BatStorm_01", PivotMatrix)));

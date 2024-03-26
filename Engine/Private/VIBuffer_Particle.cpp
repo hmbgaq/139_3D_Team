@@ -419,21 +419,26 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 
 
 	// 센터 포지션 & Offset
-	_vector		vAddRangePos = XMVectorSet(1.f, 1.f, 1.f, 0.f);
-
-	//if (0.f < m_vecParticleInfoDesc[iNum].fAddRange) // 추가 범위가 0보다 크면 센터 크게
+	if (TORNADO != m_tBufferDesc.eType_Action)
 	{
-		vAddRangePos = XMVector3Normalize(vAddRangePos) * m_vecParticleInfoDesc[iNum].fAddRange;
+		// 토네이도가 아닐때만 범위 오프셋 주기
+		_vector		vAddRangePos = XMVectorSet(1.f, 1.f, 1.f, 0.f);
 
-		_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_vecParticleInfoDesc[iNum].vOffsetTheta.x, m_vecParticleInfoDesc[iNum].vOffsetTheta.y, m_vecParticleInfoDesc[iNum].vOffsetTheta.z);
-		_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
+		//if (0.f < m_vecParticleInfoDesc[iNum].fAddRange) // 추가 범위가 0보다 크면 센터 크게
+		{
+			vAddRangePos = XMVector3Normalize(vAddRangePos) * m_vecParticleInfoDesc[iNum].fAddRange;
 
-		vAddRangePos = XMVector3TransformNormal(vAddRangePos, RotationMatrix);	// 벡터 회전 적용
+			_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_vecParticleInfoDesc[iNum].vOffsetTheta.x, m_vecParticleInfoDesc[iNum].vOffsetTheta.y, m_vecParticleInfoDesc[iNum].vOffsetTheta.z);
+			_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
 
-		m_vecParticleInfoDesc[iNum].vCenterPositions.x += XMVectorGetX(vAddRangePos);
-		m_vecParticleInfoDesc[iNum].vCenterPositions.y += XMVectorGetY(vAddRangePos);
-		m_vecParticleInfoDesc[iNum].vCenterPositions.z += XMVectorGetZ(vAddRangePos);
+			vAddRangePos = XMVector3TransformNormal(vAddRangePos, RotationMatrix);	// 벡터 회전 적용
+
+			m_vecParticleInfoDesc[iNum].vCenterPositions.x += XMVectorGetX(vAddRangePos);
+			m_vecParticleInfoDesc[iNum].vCenterPositions.y += XMVectorGetY(vAddRangePos);
+			m_vecParticleInfoDesc[iNum].vCenterPositions.z += XMVectorGetZ(vAddRangePos);
+		}
 	}
+
 
 
 	// 방향 만들기
@@ -965,19 +970,20 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						{
 							// 랜덤 값 다시 뽑기
 							ReSet_Info(i);
+							m_vecParticleInfoDesc[i].bEmit = TRUE;
 
-							_vector		vDir = Make_Dir(i);					// 방향 만들기
-							m_vecParticleInfoDesc[i].vDir = vDir;			//  방향 저장
+							//_vector		vDir = Make_Dir(i);					// 방향 만들기
+							//m_vecParticleInfoDesc[i].vDir = vDir;			//  방향 저장
 
-							if (m_tBufferDesc.bReverse)
-							{
-								// 리버스일 경우
-								vDir = vDir * m_vecParticleInfoDesc[i].fMaxRange;
-							}
+							//if (m_tBufferDesc.bReverse)
+							//{
+							//	// 리버스일 경우
+							//	vDir = vDir * m_vecParticleInfoDesc[i].fMaxRange;
+							//}
 
 							// 초기위치로 세팅 : 센터 + 방향 위치로 세팅
 							m_vecParticleInfoDesc[i].vCenterPositions.y = m_tBufferDesc.vMinMaxPosY.x;
-							XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + vDir);
+							XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + m_vecParticleInfoDesc[i].vDir);
 
 
 							// 시간 초기화
