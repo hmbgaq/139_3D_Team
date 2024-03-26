@@ -384,7 +384,7 @@ _bool CAnimation::Invalidate_TransformationMatrix_Parasiter(CModel::ANIM_STATE _
 
 			//_float4x4 ResultMatrix = XMMatrixMultiply(Transform, playerToParasiterMatrix);
 
-			pBone->Set_TransformationMatrix(boneTransform);
+			pBone->Set_TransformationMatrix(localRotation);
 		}
 	}
 
