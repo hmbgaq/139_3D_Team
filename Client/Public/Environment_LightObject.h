@@ -41,6 +41,8 @@ public:
 		_bool			bPreview = true; //! 미리보기용 오브젝트인지 확인
 		_bool			bEffect = true;
 		LIGHT_EFFECT	eLightEffect = LIGHTEFFECT_TORCH;
+
+		_int			iSpecialGroupIndex = -1;
 	}ENVIRONMENT_LIGHTOBJECT_DESC;
 
 
@@ -88,8 +90,9 @@ public:
 	void				Set_LightPos(_float3 vLightPos);
 	void				Set_EffectPos(_float3 vEffectPos);
 	void				Set_Select(_bool bSelect);
-
-
+		
+	_int				Get_SpecialGroupIndex() { return m_tEnvironmentDesc.iSpecialGroupIndex;}
+	void				Set_SpecialGroupIndex(_int iSpecialGroupIndex) { m_tEnvironmentDesc.iSpecialGroupIndex = iSpecialGroupIndex;}
 	
 
 	void				Change_LightType(LIGHT_DESC::TYPE eLightType);

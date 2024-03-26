@@ -28,7 +28,7 @@ class CEvent_Trigger;
 class CWindow_MapTool final : public CImgui_Window
 {
 private:
-	enum class TAP_TYPE { TAB_SINGLE, TAB_LIGHT, TAB_SPECIAL, TAB_INTERACT, TAB_ENVIRONMENT, TAB_NORMALMONSTER, TAB_BOSSMONSTER, TAB_NPC, TAB_END };
+	enum class TAP_TYPE { TAB_SINGLE, TAB_LIGHT, TAB_INSTANCE, TAB_SPECIAL, TAB_INTERACT, TAB_ENVIRONMENT, TAB_NORMALMONSTER, TAB_BOSSMONSTER, TAB_NPC, TAB_END };
 	enum class MODE_TYPE { MODE_CREATE, MODE_SELECT, MODE_DELETE, MODE_END };
 	enum class PICKING_TYPE { PICKING_FIELD, PICKING_MESH, PICKING_INSTANCE, PICKING_NONE, PICKING_END };
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
@@ -140,10 +140,22 @@ void			MouseInfo_Window(_float fTimeDelta);
 
 	
 private: //! For. Create_Function
-
 	void			Picking_Function();
+
+private: //! For. Preveiw_Function
 	void			Preview_Function();
 	void			Change_PreViewObject(TAP_TYPE eTabType);
+	 void			 CreateSinglePreview(); //! 인스턴스 프리뷰 포함
+	 void			 CreateInstancePreview();
+	 void			 CreateLightPreveiw();
+	 void			 CreateSpecialPreview();
+	 void			 CreateInteractPreview();
+	
+
+	void			Preview_DeadForTabType(TAP_TYPE eTabType);
+	void			Preview_RayFollowForTabType(TAP_TYPE eTabType);
+
+
 
 	//!For. Environment
 	void			Ground_CreateFunction();
@@ -319,7 +331,8 @@ private:
 	
 	//!For.Special
 	_int							m_eSpecialType = 0; //! 이넘 캐스팅용;
-	
+	_int							m_iSpecialGroupIndex = 0;
+	_int							m_iSpecialBloonMeshIndex = 0;
 	
 
 private: //! 필드

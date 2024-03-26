@@ -203,11 +203,11 @@ PS_OUT PS_MAIN_NORMALCOLOR(PS_IN In)
 
     
 
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vMtrlDiffuse = g_ColorDiffuse.Sample(LinearSampler, In.vTexcoord);
 
-    vMtrlDiffuse.rgb = g_vDiffuseColor.rgb;
+    //vMtrlDiffuse.rgb = g_ColorDiffuse.rgb;
     
-    if (vMtrlDiffuse.a < 0.0f)
+    if (vMtrlDiffuse.a <= 0.0f)
         discard;
     
     /* 0 ~ 1 */
@@ -228,10 +228,70 @@ PS_OUT PS_MAIN_NORMALCOLOR(PS_IN In)
     /* ---------------- New ---------------- */
     //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
     //Out.vDiffuse += vRimColor;
-    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse); // + vRimColor;
+    //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse); // + vRimColor;
  
     return Out;
 }
+
+PS_OUT PS_MAIN_ALPHACOLOR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    vector vMtrlOpacity = g_OpacityTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    //float4 vTest = { 0.1f, 0.1f, 0.1f, 1.f };
+    //if (vMtrlDiffuse.rgb > vTest.rgb)
+    if (vMtrlDiffuse.a > 0.1)
+    {
+        Out.vDiffuse = g_vDiffuseColor;
+        Out.vRimBloom = Calculation_Brightness(Out.vDiffuse); // + vRimColor;
+    }
+    else
+    {
+        Out.vDiffuse = g_ColorDiffuse.Sample(LinearSampler, In.vTexcoord);
+    }
+    
+        //if (vMtrlOpacity.a == 0)
+        //{
+        //    Out.vDiffuse = g_ColorDiffuse.Sample(LinearSampler, In.vTexcoord);
+        //}
+        //else
+        //{
+        //    Out.vDiffuse = g_vDiffuseColor;
+        //    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse); // + vRimColor;
+        //}
+    
+        //vMtrlDiffuse.rgb = g_vDiffuseColor.rgb;
+    
+    //if (vMtrlDiffuse.a < 0.0f)
+    //    discard;
+    
+    /* 0 ~ 1 */
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+
+	/* -1 ~ 1 */
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    //Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    /* ---------------- New ---------------- */
+    //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    //Out.vDiffuse += vRimColor;
+    //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse); // + vRimColor;
+ 
+    return Out;
+}
+
+
 
 
 
@@ -471,6 +531,17 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_NORMALCOLOR();
     }
-
+       
+    pass Model_AlphaTexture // 9¹ø ÆÐ½º
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_ALPHACOLOR();
+    }
     
 }

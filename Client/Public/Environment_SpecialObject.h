@@ -23,7 +23,7 @@ enum SPECIALTYPE { SPECIAL_SIGNAL, SPECIAL_TRACKLEVER, SPECIAL_END };
 public:
 	typedef struct tagEnvironmentSpecialObjectDesc : public CGameObject::GAMEOBJECT_DESC
 	{
-		_uint		iShaderPassIndex = { 6 };
+		_uint		iShaderPassIndex = { 8 };
 		wstring		strModelTag;
 		_float4x4	WorldMatrix;
 
@@ -44,7 +44,8 @@ public:
 		//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Texture_RaidPoolLight1"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Map/RaidPool/T_RaidBloodlight_01_BC.dds"))));
 		//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Texture_RaidPoolLight2"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Map/RaidPool/T_RaidBloodlight_02_BC.dds"))));
 		//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Texture_RaidPoolLight3"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Map/RaidPool/T_RaidBloodlight_03_BC.dds"))));
-		
+		_int		iSpecialGroupIndex = -1;
+		_int		iBloomMeshIndex = 0;
 	}ENVIRONMENT_SPECIALOBJECT_DESC;
 
 
@@ -78,6 +79,14 @@ public:
 	void				Set_ColliderRender(_bool bColliderRender) { m_bColliderRender = bColliderRender; }
 	void				Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex;}
 
+	_int				Get_SpecialGroupIndex() { return m_tEnvironmentDesc.iSpecialGroupIndex; }
+	void				Set_SpecialGroupIndex(_int iSpecialGroupIndex) { m_tEnvironmentDesc.iSpecialGroupIndex = iSpecialGroupIndex;}
+
+	void				Set_BloonMeshIndex(_int iMeshIndex) { m_tEnvironmentDesc.iBloomMeshIndex = iMeshIndex;}
+
+	SPECIALTYPE			Get_SpecialType() { return m_tEnvironmentDesc.eSpecialType;}
+	void				Set_SpecialType(SPECIALTYPE eSpecialType) { m_tEnvironmentDesc.eSpecialType = eSpecialType;}
+
 #ifdef _DEBUG
 public: //! For.Tool
 	virtual _bool		Picking(_Out_ _float3* vPickedPos) override;
@@ -97,12 +106,15 @@ public:
 public:
 	HRESULT				TrackLeverInit();
 	void				TrackLeverFunction();
+	CUI_Weakness*		Get_LeverWeakUI() { return m_pLeverWeaknessUI; }
+
+	
 
 private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 	CCollider*			m_pPickingCollider = nullptr;
-
+	 
 	CTexture*			m_pDiffuseTexture = { nullptr };
 	CTexture*			m_pMaskTexture = { nullptr };
 	CTexture*			m_pNoiseTexture = { nullptr };
@@ -119,7 +131,7 @@ private: //!For. Signal
 	_float4							m_vSignalColor = {};
 	_float4							m_vRedSignal = { 1.f, 0.f, 0.f, 1.f };
 	_float4							m_vGreenSignal = { 0.f, 1.f, 0.f, 1.f};
-	_int							m_iSignalMeshShaderPass = 8;
+	_int							m_iSignalMeshShaderPass = 9;
 	_float							m_fSignalBloomPower = 5.f;
 	_bool							m_bChangeLerp = false;
 
@@ -127,6 +139,7 @@ private: //! For. TrackLever
 	CEnvironment_SpecialObject*		m_pSignalObject = { nullptr }; 
 	CUI_Weakness*					m_pLeverWeaknessUI = { nullptr }; 
 	CEnvironment_LightObject*		m_pLightObject = { nullptr };
+	_bool							m_bLeverOn = false;
 	
 
 private:
