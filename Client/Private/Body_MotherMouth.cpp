@@ -50,45 +50,22 @@ HRESULT CBody_MotherMouth::Render()
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	_uint iPass = m_iShaderPass;
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		auto iter = m_vDiscardMesh.find(m_eRender_State);
-		if (iter != m_vDiscardMesh.end())
-		{
-			auto& Discard = iter->second;
-			if (find(Discard.begin(), Discard.end(), i) != Discard.end())
-			{
-				if (m_eRender_State == CBody_MotherMouth::RENDER_STATE::ATTACK)
-				{
-					m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+		// 		if (i == 0)
+		// 			continue;
 
-					//m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
-					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-					m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 
-					m_pShaderCom->Begin(3);
+		m_pShaderCom->Begin(0);
 
-					m_pModelCom->Render((_uint)i);
-				}
-
-			}
-			else
-			{
-				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-				//m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
-				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
-				m_pShaderCom->Begin(0);
-
-				m_pModelCom->Render((_uint)i);
-			}
-		}
+		m_pModelCom->Render((_uint)i);
 	}
 
 	return S_OK;

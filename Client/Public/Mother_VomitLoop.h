@@ -10,6 +10,8 @@ public:
 	virtual CState<CMother>* Update(CMother* pActor, _float fTimeDelta) override;
 	virtual void Release(CMother* pActor) override;
 
+private:
+	_float m_fTimeDelta = 0.f;
 public:
 	static const _uint g_iAnimIndex = CMother::Mother_State::Parasiter_Vomit_Loop_02;
 

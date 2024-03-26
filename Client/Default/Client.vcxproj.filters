@@ -3079,6 +3079,78 @@
     <Filter Include="01.Levels\01.GamePlay\2.SnowMountain\SnowMountainBoss">
       <UniqueIdentifier>{28ebb5ee-63fc-4e9f-b28e-78c93bb6b8b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\0.Origin">
+      <UniqueIdentifier>{cfb8650c-6a75-4920-b163-b6fd95f72cea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\1.Idle">
+      <UniqueIdentifier>{f53ec925-18ba-4eb3-b051-b17bca3bca48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack">
+      <UniqueIdentifier>{395cfdf3-e0b9-4b75-8717-eb10593dc265}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\3.RangeAttack">
+      <UniqueIdentifier>{84034704-e9d9-41d7-abfe-36e86e4e0e5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\4.Hide">
+      <UniqueIdentifier>{f095cccf-c959-437f-aa68-e30fb2abcd4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\5.Hit">
+      <UniqueIdentifier>{1311ce10-b6b0-405c-a240-56f3ade0bccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\6.Dead">
+      <UniqueIdentifier>{b8837f2e-c5d8-49cd-91ce-57ebf9bc4b4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\7.Stun">
+      <UniqueIdentifier>{8da1bf02-787d-4035-9d41-0322b6f163a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\1.Idle\0.Parent">
+      <UniqueIdentifier>{011f7698-19c4-485e-a412-4874e9297050}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\1.Idle\1">
+      <UniqueIdentifier>{cc7983bd-71da-4658-a8b7-274fda518ba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\7.Stun\Start">
+      <UniqueIdentifier>{aabf04c4-4198-4aec-820c-1a4edb547667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\7.Stun\Loop">
+      <UniqueIdentifier>{b421fb32-2710-4424-95d7-fa543e492109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\7.Stun\End">
+      <UniqueIdentifier>{0cea174e-41aa-4ae8-bae7-a5f1e7e97cbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\3.RangeAttack\Far">
+      <UniqueIdentifier>{b1303de7-64ac-4ae5-a952-0bdbb8805531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\3.RangeAttack\Near">
+      <UniqueIdentifier>{9b9fe878-98ac-43ba-a114-c43f081949e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\4.Hide\Loop">
+      <UniqueIdentifier>{c3fe05d2-941d-4247-a681-6aafa3983e8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\4.Hide\Start">
+      <UniqueIdentifier>{cde6ab10-508c-4abb-a1e3-e6890e29183f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Short">
+      <UniqueIdentifier>{f5891c3b-8088-4244-8730-f130a4169c4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Long">
+      <UniqueIdentifier>{deb98ee1-a09c-4d8b-ab7c-fec9daf22d8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\8.Spawn">
+      <UniqueIdentifier>{991dc8ea-38e6-481b-8ab6-ec0747abdfd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Cross">
+      <UniqueIdentifier>{f8b2732a-06d2-4bf5-8e53-de2c5103765d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Cross\Loop">
+      <UniqueIdentifier>{07424eee-0f01-419b-bb16-acccce0ffe50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Cross\End">
+      <UniqueIdentifier>{0bb192d1-5314-49c0-aceb-4fb4fec6056b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\8.Spawn">
+      <UniqueIdentifier>{e3cff503-e0a0-459f-bb0b-8eb5729f2feb}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\5. Knock\4. Up">
       <UniqueIdentifier>{a2590a74-014c-418d-94ec-fb0c90a3fc84}</UniqueIdentifier>
     </Filter>
@@ -6885,6 +6957,63 @@
     <ClInclude Include="..\Public\Sniper_KnockFrontHeavy_F_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\1. Knock\Front\Heavy</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Son_State.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\0.Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\1.Idle\0.Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_Idle.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\1.Idle\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_LongAttack.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Long</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_ShortAttack.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Short</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_RangeAttackFar.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\3.RangeAttack\Far</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_RangeAttackNear.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\3.RangeAttack\Near</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_HideStart.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\4.Hide\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_Dead.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\6.Dead</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_HideLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\4.Hide\Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_Hit.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\5.Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_StunLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\7.Stun\Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_Spawn.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\8.Spawn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_StunEnd.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\7.Stun\End</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_StunStart.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\7.Stun\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_CrossAttack.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Cross</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_CrossAttackLoop.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Cross\Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_CrossAttackEnd.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Cross\End</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_Spawn.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\8.Spawn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -9777,6 +9906,63 @@
     </ClCompile>
     <ClCompile Include="..\Private\Sniper_KnockFrontHeavy_F_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\1. Knock\Front\Heavy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_State.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\0.Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_State_Normal.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\1.Idle\0.Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\1.Idle\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_LongAttack.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Long</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_ShortAttack.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Short</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_RangeAttackFar.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\3.RangeAttack\Far</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_RangeAttackNear.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\3.RangeAttack\Near</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_HideStart.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\4.Hide\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_Dead.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\6.Dead</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_HideLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\4.Hide\Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_Hit.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\5.Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_StunLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\7.Stun\Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_Spawn.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\8.Spawn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_StunEnd.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\7.Stun\End</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_StunStart.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\7.Stun\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_CrossAttack.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Cross</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_CrossAttackLoop.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Cross\Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_CrossAttackEnd.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\State\2.Attack\Cross\End</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_Spawn.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\8.Spawn</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

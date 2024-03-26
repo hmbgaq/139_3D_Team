@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Body_Mother.h"
 #include "GameInstance.h"
+#include "Data_Manager.h"
+#include "Player.h"
 
 CBody_Mother::CBody_Mother(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CBody(pDevice, pContext, strPrototypeTag)
@@ -38,20 +40,38 @@ void CBody_Mother::Priority_Tick(_float fTimeDelta)
 void CBody_Mother::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	if (m_pGameInstance->Key_Down(DIK_K))
-	{
-		iDiscardMeshNumber += 1;
-		if (iDiscardMeshNumber > (_int)m_pModelCom->Get_NumMeshes())
-		{
-			iDiscardMeshNumber = 0;
-		}
-		cout << iDiscardMeshNumber << endl;
-	}
+	//if (m_pGameInstance->Key_Down(DIK_K))
+	//{
+	//	iDiscardMeshNumber += 1;
+	//	if (iDiscardMeshNumber > (_int)m_pModelCom->Get_NumMeshes())
+	//	{
+	//		iDiscardMeshNumber = 0;
+	//	}
+	//	cout << iDiscardMeshNumber << endl;
+	//}
 }
 
 void CBody_Mother::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
+	//__super::Late_Tick(fTimeDelta);
+	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_pParentTransform->Get_WorldMatrix());
+
+	m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos, CData_Manager::GetInstance()->Get_Player()->Get_Position());
+
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
+		return;
+
+	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this)))
+		return;
+
+// 	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
+// 	{
+// 		
+// 	}
+
+#ifdef _DEBUG
+	m_pGameInstance->Add_DebugRender(m_pColliderCom);
+#endif	
 }
 
 HRESULT CBody_Mother::Render()
@@ -63,8 +83,8 @@ HRESULT CBody_Mother::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-// 		if (i == 0)
-// 			continue;
+		// 		if (i == 0)
+		// 			continue;
 
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);

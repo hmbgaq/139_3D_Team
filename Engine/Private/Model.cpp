@@ -381,13 +381,12 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos,_float3 pPlayerPos)
 	if (m_iCurrentAnimIndex >= m_iNumAnimations)
 		return;
 
-	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones, m_bIsSplitted);
-	if (true == m_bIsSplitted)
-	{
+	//m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones, m_bIsSplitted);
+	
 		//HERE
-		m_bIsUpperAnimEnd = m_Animations[m_iUpperAnimIndex]->Invalidate_TransformationMatrix_Parasiter(m_eUpperAnimState, fTimeDelta, m_Bones, pPlayerPos);
-	}
-
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix_Parasiter(m_eAnimState, fTimeDelta, m_Bones, pPlayerPos);
+	
+	
 
 	_float3 NowPos;
 	for (auto& pBone : m_Bones)

@@ -1,5 +1,6 @@
 #include "Mother_SpittingLoop.h"
 #include "Mother_SpittingEnd.h"
+#include "MotherMouth.h"
 
 void CMother_SpittingLoop::Initialize(CMother* pActor)
 {
@@ -11,6 +12,10 @@ void CMother_SpittingLoop::Initialize(CMother* pActor)
 CState<CMother>* CMother_SpittingLoop::Update(CMother* pActor, _float fTimeDelta)
 {
 	//MotherMouth의 루프가 일정 시간 지나가서 끝나고 나면 애가 이제 End로 전환 ! 
+	if (pActor->m_pMonster->m_bLoopFinished == true)
+	{
+		return new CMother_SpittingEnd;
+	}
 	return nullptr;
 }
 
