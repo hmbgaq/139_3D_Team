@@ -67,11 +67,7 @@ HRESULT CBody_Mother::Render()
 // 			continue;
 
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 		m_pShaderCom->Begin(0);
 
 		m_pModelCom->Render((_uint)i);

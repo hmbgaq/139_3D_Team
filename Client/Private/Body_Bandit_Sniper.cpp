@@ -26,6 +26,31 @@ HRESULT CBody_Bandit_Sniper::Initialize(void* pArg)
 	return S_OK;
 }
 
+HRESULT CBody_Bandit_Sniper::Ready_Components()
+{
+	/* For.Com_Shader */
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Shader_Monster"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+
+	/* For.Com_Model */
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Model_Bandit_Sniper"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+
+	/* For. Texture */
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_Dissolve"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pDissolveTexture)));
+
+	/* For.Com_Collider */
+	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
+	BoundingDesc.vExtents = _float3(0.4f, 0.9f, 0.4f);
+	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
+
+	m_fDissolveWeight = 0.f;
+	m_fDissolve_feather = 0.1f;
+	m_vDissolve_Color = { 1.f, 0.f, 0.f };
+	m_fDissolve_Discard = 0.2f;
+
+	return S_OK;
+}
 void CBody_Bandit_Sniper::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
@@ -33,6 +58,15 @@ void CBody_Bandit_Sniper::Priority_Tick(_float fTimeDelta)
 
 void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 {
+	if (m_iRenderPass == ECast(MONSTER_SHADER::COMMON_DISSOLVE))
+	{
+		m_bDissolve = true;
+
+		if (m_fDissolveWeight <= 3.f)
+			m_fDissolveWeight += fTimeDelta * 0.5f;
+
+	}
+
 	__super::Tick(fTimeDelta);
 
 }
@@ -44,31 +78,31 @@ void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Bandit_Sniper::Render()
 {
-	//auto start = chrono::high_resolution_clock::now();
-
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		/*if (i == iDiscardMeshNumber)
-			continue;*/
-
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+		if (m_bDissolve)
+		{
+			m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
+			m_pShaderCom->Bind_RawValue("g_Dissolve_Weight", &m_fDissolveWeight, sizeof(_float));
+			m_pShaderCom->Bind_RawValue("g_Dissolve_feather", &m_fDissolve_feather, sizeof(_float));
+			m_pShaderCom->Bind_RawValue("g_Dissolve_Color", &m_vDissolve_Color, sizeof(_float));
+			m_pShaderCom->Bind_RawValue("g_Dissolve_ColorRange", &m_fDissolve_Discard, sizeof(_float));
 
-		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
-
+			m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_DISSOLVE));
+		}
+		else
+		{
+			m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+		}
 		m_pModelCom->Render((_uint)i);
 	}
-
-	//auto End = chrono::high_resolution_clock::now();
-	//chrono::duration<double> duration0 = End - start;
-	//cout << "Bandit Sniper 실행시간 : " << duration0.count() << endl;
 
 	return S_OK;
 }
@@ -86,9 +120,7 @@ HRESULT CBody_Bandit_Sniper::Render_Shadow()
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-
+		//m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_SHADOW));
 
 		m_pModelCom->Render((_uint)i);
@@ -97,34 +129,6 @@ HRESULT CBody_Bandit_Sniper::Render_Shadow()
 	return S_OK;
 }
 
-
-HRESULT CBody_Bandit_Sniper::Ready_Components()
-{
-	/* For.Com_Shader */
-	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Shader_Monster"),TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
-
-	/* For.Com_Model */
-	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Model_Bandit_Sniper"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
-
-	/* For.Com_Collider */
-	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
-	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-	BoundingDesc.vExtents = _float3(0.4f, 0.9f, 0.4f);
-	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
-
-	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
-	
-	///* For.Com_Collider */
-	//CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
-	//{
-	//	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-	//	BoundingDesc.fRadius = 0.5f;
-	//	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
-	//
-	//	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
-	//}
-	return S_OK;
-}
 
 HRESULT CBody_Bandit_Sniper::Bind_ShaderResources()
 {

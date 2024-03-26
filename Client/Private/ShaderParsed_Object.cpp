@@ -85,7 +85,7 @@ HRESULT CShaderParsed_Object::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 
-		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_EXAMPLE));
+		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
 
 		m_pModelCom->Render(_uint(i));
 	}

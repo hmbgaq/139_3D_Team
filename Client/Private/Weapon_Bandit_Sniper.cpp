@@ -80,31 +80,26 @@ HRESULT CWeapon_Bandit_Sniper::Bind_ShaderResources()
 {
 	FAILED_CHECK(__super::Bind_ShaderResources());
 
-	if (m_iRenderPass == ECast(MONSTER_SHADER::SNIPER_WEAPON))
-	{
-		/* Camera */
-		m_fCamFar = m_pGameInstance->Get_CamFar();
-		m_vCamPos = m_pGameInstance->Get_CamPosition();
-		m_pShaderCom->Bind_RawValue("g_fCamFar", &m_fCamFar, sizeof(_float));
-		m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
+	/* Camera */
+	m_fCamFar = m_pGameInstance->Get_CamFar();
+	m_vCamPos = m_pGameInstance->Get_CamPosition();
+	m_pShaderCom->Bind_RawValue("g_fCamFar", &m_fCamFar, sizeof(_float));
+	m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
 
-		/* RimLight */
-		m_vRimColor = { 0.0f, 0.0f, 0.f, 1.f };
-		m_vBloomPower = _float3(0.7f, 0.7f, 0.7f);
-		m_fRimPower = 5.f;
-
-		m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
-		m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
-		m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
-	}
+	/* RimLight */
+	//m_vRimColor = { 0.0f, 0.0f, 0.f, 1.f };
+	//m_vBloomPower = _float3(0.7f, 0.7f, 0.7f);
+	//m_fRimPower = 5.f;
+	//
+	//m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+	//m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
+	//m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
 
 	return S_OK;
 }
 
 HRESULT CWeapon_Bandit_Sniper::Render()
 {
-	//auto start = chrono::high_resolution_clock::now();
-
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -121,10 +116,6 @@ HRESULT CWeapon_Bandit_Sniper::Render()
 
 		m_pModelCom->Render((_uint)i);
 	}
-
-	//auto End = chrono::high_resolution_clock::now();
-	//chrono::duration<double> duration0 = End - start;
-	//cout << "Bandit Sniper Weapon 실행시간 : " << duration0.count() << endl;
 
 	return S_OK;
 }

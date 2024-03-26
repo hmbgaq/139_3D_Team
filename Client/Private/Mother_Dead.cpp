@@ -9,8 +9,10 @@ void CMother_Dead::Initialize(CMother* pActor)
 
 CState<CMother>* CMother_Dead::Update(CMother* pActor, _float fTimeDelta)
 {
-	if(pActor->Is_Animation_End())
-		//죽여 버리기 여기서 
+	if (pActor->Is_Animation_End())
+	{	//죽여 버리기 여기서 
+
+	}
 
 	return nullptr;
 }

@@ -1,5 +1,6 @@
 #include "Shader_PBR.hlsl"
 #include "Shader_MyPBR.hlsl"
+#include "DitherUtil.hlsli"
 //#include "Shader_Defines.hlsli"
 //#include "HeightFogUsage.hlsl"
 //#pragma multi_compile _ HF_FOG_ENABLED HF_LIGHT_ATTEN
@@ -16,6 +17,7 @@ float  g_fLightRange;
 float g_fRange;
 float g_fCutOff;
 float g_fOuterCutOff;
+float g_fVolumetricStrength;
 
 // Common 
 vector g_vLightDiffuse;
@@ -67,15 +69,15 @@ float3 g_vLightColor;
 
 struct FOG_DESC 
 {
-    bool  bFog_Active; //1
-    float fFogStartDepth; // 4
-    float fFogStartDistance; //4
-    float fFogDistanceValue; // 4
-    float fFogHeightValue; // 4
-    float fFogDistanceDensity; // 4
-    float fFogHeightDensity; // 4
-    float padding; //4 
-    float4 vFogColor; // 16 : 42
+    bool  bFog_Active;          
+    float fFogStartDepth;       
+    float fFogStartDistance;    
+    float fFogDistanceValue;    
+    float fFogHeightValue;      
+    float fFogDistanceDensity;  
+    float fFogHeightDensity;    
+    float padding;              // 4 
+    float4 vFogColor;           
 };
 
 struct BLOOMRIM_DESC
@@ -170,6 +172,36 @@ float4 Accumulate(int z, float4 result, float4 colorDensityPerSlice, float Volum
     result.rgb += sliceScattering * result.a;
     result.a *= sliceTransmittance;
     return result;
+}
+
+static float3 GetViewSpacePosition(float2 texcoord, float depth)
+{
+    float4 clipSpaceLocation;
+    clipSpaceLocation.xy = texcoord * 2.0f - 1.0f;
+    clipSpaceLocation.y *= -1;
+    clipSpaceLocation.z = depth;
+    clipSpaceLocation.w = 1.0f;
+    float4 homogenousLocation = mul(clipSpaceLocation, g_ProjMatrixInv);
+    return homogenousLocation.xyz / homogenousLocation.w;
+}
+
+float DoAttenuation(float distance, float range)
+{
+    float att = saturate(1.0f - (distance * distance / (range * range)));
+    return att * att;
+}
+
+float4 DoDiffuse(float4 lightColor, float3 L, float3 N)
+{
+    float NdotL = max(0, dot(N, L));
+    return lightColor * NdotL;
+}
+
+float4 DoSpecular(float4 lightColor, float shininess, float3 L, float3 N, float3 V)
+{
+    float3 R = normalize(reflect(-L, N));
+    float RdotV = max(0.0001, dot(R, V));
+    return lightColor * pow(RdotV, shininess);
 }
 
 /* ----------------------------------------------- */ 
@@ -298,12 +330,62 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
 {
     PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 1;
 
-	/* 방향성광원의 정보와 노멀 타겟에 담겨있는 노멀과의 빛연산을 수행한다. */
-    vector vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    vector vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
-    vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
-    vector vORMDesc = g_ORMTexture.Sample(PointSampler, In.vTexcoord);
-
+    //float depth = max(In.vPosition.z, g_DepthTarget.SampleLevel(ClampSampler,  In.vTexcoord, 2));
+    //float3 viewSpacePosition = GetViewSpacePosition(In.vTexcoord, depth);
+    //float3 V = float3(0.0f, 0.0f, 0.0f) - viewSpacePosition;
+    //float cameraDistance = length(V);
+    //V /= cameraDistance;
+    //
+    //const uint SAMPLE_COUNT = 16;
+    //float3 rayEnd = float3(0.0f, 0.0f, 0.0f);
+    //float stepSize = length(viewSpacePosition - rayEnd) / SAMPLE_COUNT;
+    //viewSpacePosition = viewSpacePosition + V * stepSize * BayerDither(In.vPosition.xy);
+    //
+    //float marchedDistance = 0;
+    //float accumulation = 0;
+    //
+	//[loop(SAMPLE_COUNT)]
+    //for (uint i = 0; i < SAMPLE_COUNT; ++i)
+    //{
+    //    float3 L = g_vLightPos.xyz - viewSpacePosition;
+    //    float distSquared = dot(L, L);
+    //    float dist = sqrt(distSquared);
+    //    L /= dist;
+    //
+    //    float spotFactor = dot(L, normalize(-g_vLightDir.xyz));
+    //    float spotCutOff = g_fOuterCutOff;
+    //
+	//	[branch]
+    //    if (spotFactor > spotCutOff)
+    //    {
+    //        float attenuation = DoAttenuation(dist, g_fRange);
+    //        float conAtt = saturate((spotFactor - g_fOuterCutOff) / (g_fCutOff - g_fOuterCutOff));
+    //        conAtt *= conAtt;
+    //        attenuation *= conAtt;
+    //        
+	//		//[branch]
+    //        //if (lightData.castsShadows)
+    //        //{
+    //        //    float4 shadowMapCoords = mul(float4(viewSpacePosition, 1.0), shadowData.shadowMatrices[0]);
+    //        //    float3 UVD = shadowMapCoords.xyz / shadowMapCoords.w;
+    //        //
+    //        //    UVD.xy = 0.5 * UVD.xy + 0.5;
+    //        //    UVD.y = 1.0 - UVD.y;
+    //        //    [branch]
+    //        //    if (IsSaturated(UVD.xy))
+    //        //    {
+    //        //        float shadowFactor = CalcShadowFactor_PCF3x3(ShadowSampler, ShadowMap, UVD, shadowData.shadowMapSize, shadowData.softness);
+    //        //        attenuation *= shadowFactor;
+    //        //    }
+    //        //}
+    //        accumulation += attenuation;
+    //    }
+    //    marchedDistance += stepSize;
+    //    viewSpacePosition = viewSpacePosition + V * stepSize;
+    //}
+    //
+    //accumulation /= SAMPLE_COUNT;
+    //Out.vSpecular = max(0, float4(accumulation * g_vLightDiffuse.rgb * g_fVolumetricStrength, 1));
     return Out;
 }
 
