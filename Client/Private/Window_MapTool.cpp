@@ -904,6 +904,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			LightObjectDesc.eLightEffect = LightObjectJson[i]["EffectType"];
 			LightObjectDesc.iPlayAnimationIndex = LightObjectJson[i]["PlayAnimationIndex"];
 			LightObjectDesc.iShaderPassIndex = LightObjectJson[i]["ShaderPassIndex"];
+			LightObjectDesc.iSpecialGroupIndex = LightObjectJson[i]["SpecialGroupIndex"];
 			LightObjectDesc.bPreview = false;
 			
 			m_pGameInstance->String_To_WString((string)LightObjectJson[i]["ModelTag"], LightObjectDesc.strModelTag);

@@ -257,6 +257,7 @@ void CEnvironment_SpecialObject::SignalInit()
 	m_vSignalColor = m_vRedSignal;
 	m_bSignalChange = false;
 	m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
+	m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(90.f));
 }
 
 void CEnvironment_SpecialObject::SignalFunction(const _float fTimeDelta)
@@ -290,6 +291,7 @@ void CEnvironment_SpecialObject::Set_SignalChange(_bool bChange)
 HRESULT CEnvironment_SpecialObject::TrackLeverInit()
 {
 	m_pLeverWeaknessUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
+	
 
 	m_pLeverWeaknessUI->Set_Active(true);
 
@@ -306,17 +308,68 @@ HRESULT CEnvironment_SpecialObject::TrackLeverInit()
 	m_bLeverOn = false;
 	m_bSignalChange = false;
 
+	if (m_iCurrnetLevel == (_uint)LEVEL_SNOWMOUNTAIN)
+	{
+		return Find_SignalBox_AndLightObject();
+	}
 
 	return S_OK;
 
 	
 }
 
+HRESULT CEnvironment_SpecialObject::Find_SignalBox_AndLightObject()
+{
+	list<CGameObject*> BackGroundObjects = *m_pGameInstance->Get_GameObjects(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround");
+	
+	if(true == BackGroundObjects.empty())
+		return E_FAIL;
+
+	for (auto& iter : BackGroundObjects)
+	{
+		if (typeid(*iter) == typeid(CEnvironment_SpecialObject))
+		{
+			CEnvironment_SpecialObject* pSpecialObject = dynamic_cast<CEnvironment_SpecialObject*>(iter);
+
+			if(pSpecialObject == nullptr)
+				return E_FAIL;
+			else
+			{
+				if (pSpecialObject->Get_SpecialType() == CEnvironment_SpecialObject::SPECIAL_SIGNAL && pSpecialObject->Get_SpecialGroupIndex() == m_tEnvironmentDesc.iSpecialGroupIndex)
+				{
+					m_pSignalObject = pSpecialObject;
+				}
+				else 
+					continue;
+			}
+		}
+		else if (typeid(*iter) == typeid(CEnvironment_LightObject))
+		{
+			CEnvironment_LightObject* pLightObject = dynamic_cast<CEnvironment_LightObject*>(iter);
+
+			if (pLightObject == nullptr)
+				return E_FAIL;
+			else
+			{
+				if (pLightObject->Get_SpecialGroupIndex() == m_tEnvironmentDesc.iSpecialGroupIndex)
+				{
+					m_pLightObject = pLightObject;
+				}
+				else
+					continue;
+			}
+		}
+	}
+
+
+	return S_OK;
+}
+
 void CEnvironment_SpecialObject::TrackLeverFunction()
 {
 	if (m_pLeverWeaknessUI != nullptr)
 	{
-		if (m_pLeverWeaknessUI->Get_Active() == false)
+		if (m_pLeverWeaknessUI->Get_Enable() == false)
 		{
 			if(m_pSignalObject != nullptr)
 				m_pSignalObject->Set_SignalChange(true);
@@ -327,6 +380,8 @@ void CEnvironment_SpecialObject::TrackLeverFunction()
 			if (nullptr != m_pLightObject)
 				m_pLightObject->Set_Enable(true);
 
+
+			
 			m_bLeverOn = true;
 		}
 		else

@@ -152,6 +152,7 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 		LightObjectDesc.eLightEffect = LightObjectJson[i]["EffectType"];
 		LightObjectDesc.iPlayAnimationIndex = LightObjectJson[i]["PlayAnimationIndex"];
 		LightObjectDesc.iShaderPassIndex = LightObjectJson[i]["ShaderPassIndex"];
+		LightObjectDesc.iSpecialGroupIndex = LightObjectJson[i]["SpecialGroupIndex"];
 		LightObjectDesc.bPreview = false;
 
 		m_pGameInstance->String_To_WString((string)LightObjectJson[i]["ModelTag"], LightObjectDesc.strModelTag);
@@ -413,6 +414,95 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
 			return E_FAIL;
 
+	}
+
+	json SpecialJson = Stage1MapJson["Special_Json"];
+	_int iSpecialJsonSize = (_int)SpecialJson.size();
+
+	for (_int i = 0; i < iSpecialJsonSize; ++i)
+	{
+		CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc = {};
+
+		SpecialDesc.iShaderPassIndex = SpecialJson[i]["iShaderPassIndex"];
+		SpecialDesc.bAnimModel = SpecialJson[i]["AnimType"];
+		SpecialDesc.iPlayAnimationIndex = SpecialJson[i]["PlayAnimationIndex"];
+		SpecialDesc.iSpecialGroupIndex = SpecialJson[i]["SpecialGroupIndex"];
+		SpecialDesc.eSpecialType = SpecialJson[i]["SpecialType"];
+		//TODOSpecialDesc.iBloomMeshIndex =		SpecialJson[i]["BloomMeshIndex"];
+		SpecialDesc.bPreview = false;
+
+
+		m_pGameInstance->String_To_WString((string)SpecialJson[i]["ModelTag"], SpecialDesc.strModelTag);
+
+		if (SpecialDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_SIGNAL)
+		{
+			const json& TransformJson = SpecialJson[i]["Component"]["Transform"];
+			_float4x4 WorldMatrix;
+
+			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+			{
+				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+				{
+					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+				}
+			}
+
+			SpecialDesc.WorldMatrix = WorldMatrix;
+
+			CEnvironment_SpecialObject* pSpecialObject = dynamic_cast<CEnvironment_SpecialObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &SpecialDesc));
+
+			if (pSpecialObject == nullptr)
+			{
+				MSG_BOX("스페셜오브젝트 생성실패");
+				return E_FAIL;
+			}
+				
+		}
+		else
+			continue;
+	}
+
+	for (_int i = 0; i < iSpecialJsonSize; ++i)
+	{
+		CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc = {};
+
+		SpecialDesc.iShaderPassIndex = SpecialJson[i]["iShaderPassIndex"];
+		SpecialDesc.bAnimModel = SpecialJson[i]["AnimType"];
+		SpecialDesc.iPlayAnimationIndex = SpecialJson[i]["PlayAnimationIndex"];
+		SpecialDesc.iSpecialGroupIndex = SpecialJson[i]["SpecialGroupIndex"];
+		SpecialDesc.eSpecialType = SpecialJson[i]["SpecialType"];
+		//TODOSpecialDesc.iBloomMeshIndex =		SpecialJson[i]["BloomMeshIndex"];
+		SpecialDesc.bPreview = false;
+
+
+		m_pGameInstance->String_To_WString((string)SpecialJson[i]["ModelTag"], SpecialDesc.strModelTag);
+
+		if (SpecialDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER)
+		{
+			const json& TransformJson = SpecialJson[i]["Component"]["Transform"];
+			_float4x4 WorldMatrix;
+
+			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+			{
+				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+				{
+					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+				}
+			}
+
+			SpecialDesc.WorldMatrix = WorldMatrix;
+
+			CEnvironment_SpecialObject* pSpecialObject = dynamic_cast<CEnvironment_SpecialObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &SpecialDesc));
+
+			if (pSpecialObject == nullptr)
+			{
+				MSG_BOX("스페셜오브젝트 생성실패");
+				return E_FAIL;
+			}
+			
+		}
+		else
+			continue;
 	}
 
 	//CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc;

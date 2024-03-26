@@ -105,6 +105,7 @@ public:
 	
 public:
 	HRESULT				TrackLeverInit();
+	HRESULT				Find_SignalBox_AndLightObject();
 	void				TrackLeverFunction();
 	CUI_Weakness*		Get_LeverWeakUI() { return m_pLeverWeaknessUI; }
 
