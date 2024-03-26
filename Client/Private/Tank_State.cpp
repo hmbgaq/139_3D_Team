@@ -50,6 +50,11 @@ CState<CTank>* CTank_State::NoShield_State(CTank* pActor, _float fTimeDelta, _ui
 
 CState<CTank>* CTank_State::Hit_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (pActor->Is_Animation_End())
+	{
+		return Idle(pActor, fTimeDelta, _iAnimIndex);
+	}
+
 	return nullptr;
 }
 
@@ -75,9 +80,12 @@ CState<CTank>* CTank_State::Normal(CTank* pActor, _float fTimeDelta, _uint _iAni
 	pState = Idle(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
+
+
+
 	if (pActor->Is_Animation_End())
 	{
-		return new CTank_Idle();
+		return Idle(pActor, fTimeDelta, _iAnimIndex);
 	}
 
 	return nullptr;
@@ -85,7 +93,7 @@ CState<CTank>* CTank_State::Normal(CTank* pActor, _float fTimeDelta, _uint _iAni
 
 CState<CTank>* CTank_State::Idle(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	CState<CTank>* pState = { nullptr };
+	CState<CTank>* pState = new CTank_Idle();
 
 	return pState;
 }
