@@ -216,6 +216,13 @@ CWeapon* CWeapon::Set_Dir(_float3 _vDir)
 	return this;
 }
 
+CWeapon* CWeapon::Set_KnockUp(_bool _bKnockUp)
+{
+	m_bKnockUp = _bKnockUp;
+
+	return this;
+}
+
 void CWeapon::Set_Enable_Collisions(_bool bEnable)
 {
 	for (CCollider* pCollider : m_pColliders)
@@ -234,9 +241,10 @@ _float3 CWeapon::Get_WorldPosition()
 	return result;
 }
 
-
-
-
+_float3 CWeapon::Get_MuzzlePos()
+{
+	return Calc_Front_Pos(m_vMuzzlePos_Local);
+}
 
 _float3 CWeapon::Calc_Front_Pos(_float3 vDiff)
 {
@@ -247,6 +255,17 @@ _float3 CWeapon::Calc_Front_Pos(_float3 vDiff)
 	XMStoreFloat3(&vResult, vFront);
 
 	return vResult;
+}
+
+void CWeapon::Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos)
+{
+	CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, strLayerTag, strBulletTag);
+	//_float3 vSpawnPos = Get_WorldPosition();
+	_float3 vSpawnPos = Get_MuzzlePos();
+	_vector vTargetVector = XMLoadFloat3(&Calc_Front_Pos(vTargetPos));
+
+	pBullet->Set_Position(vSpawnPos);
+	pBullet->Get_Transform()->Look_At(vTargetVector);
 }
 
 HRESULT CWeapon::Bind_ShaderResources()

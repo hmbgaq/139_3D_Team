@@ -49,6 +49,7 @@ public:
 		, _bool _bUseAnimationPos = true
 		, _uint iTargetKeyFrameIndex = 0
 	);
+	void	Set_AnimState(CModel::ANIM_STATE _eAnimState);
 
 	_bool	Is_Animation_End();
 	_bool	Is_UpperAnimation_End();
@@ -73,7 +74,7 @@ public:
 
 
 public:
-	void Set_MouseMove(_float fTimeDelta);
+	void Set_MouseMove(_float fTimeDelta, _bool bIsUseMouseMove = true);
 
 public:
 	CCharacter* Get_Target_Character(CCollider* other);
@@ -100,6 +101,7 @@ public:	//!For Animation Split
 	void Update_ShootingReaction(_float fTimeDelta);
 
 	void Reset_UpperAngle();
+	void Set_UseMouseMove(_bool _bIsUseMouseMove) { m_bIsUseMouseMove = _bIsUseMouseMove; };
 
 public:
 	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
@@ -110,7 +112,6 @@ protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
-	//CTexture* m_pDissolveTexture = { nullptr };
 
 protected:
 	class CTransform* m_pParentTransform = { nullptr };
@@ -124,10 +125,10 @@ protected:
 	_float		m_fShootingReaction = { 0.f };
 	_float		m_fShootingReactionTarget = { 0.f };
 
-
-	//_bool		m_bDissolve = { false };
-	//_float		m_fDissolveWeight = { 0.f };
 	_uint		m_iShaderPass = 0;
+
+protected:
+	_bool	m_bIsUseMouseMove = { false };
 
 
 //protected:

@@ -32,23 +32,17 @@ HRESULT CRigidBody::Initialize(void* pArg)
 
 void CRigidBody::Tick(_float fTimeDelta)
 {
-	//if (m_pOwnerTransform)
-	//	return;
+	//if (nullptr != m_pOwnerTransform && true == m_pOwnerTransform->Get_Enable())
+	//{
+	//	
+	//}
 
-	//if (nullptr == m_pOwner || nullptr == m_pOwner->Get_Transform())
-	//{
-	//	return;
-	//}
-	//else 
-	//{
-	//	m_pOwnerTransform = m_pOwner->Get_Transform();
-	//	Safe_AddRef(m_pOwnerTransform);
-	//}
 
 }
 
 void CRigidBody::Late_Tick(_float fTimeDelta)
 {
+	
 	_vector vMoveValue;
 
 	vMoveValue = XMVectorSet(0.f, 0.f, 0.f, 0.f);
@@ -73,15 +67,15 @@ void CRigidBody::Late_Tick(_float fTimeDelta)
 
 	if (true == m_bUseGravity)
 	{
+		m_pOwnerTransform->Update_GravityAcc(fTimeDelta);
+
 		_float4 vMoveValueFloat4;
 		XMStoreFloat4(&vMoveValueFloat4, vMoveValue);
 
-		vMoveValueFloat4.y -= 9.81f * fTimeDelta;
+		_float fGravityAcc = m_pOwnerTransform->Get_GravityAcc();
+		vMoveValueFloat4.y -= 9.81f * fGravityAcc * fTimeDelta;
 		vMoveValue = XMLoadFloat4(&vMoveValueFloat4);
 
-		//_float vMoveValueY = XMVectorGetY(vMoveValue);
-		//vMoveValueY -= 9.81f * fTimeDelta;
-		//XMVectorSetY(vMoveValue, vMoveValueY);
 	}
 
 
@@ -92,8 +86,12 @@ void CRigidBody::Late_Tick(_float fTimeDelta)
 		pNavigation = pCharacter->Get_Navigation();
 	}
 
-	if (true == m_pOwnerTransform->Get_Enable() && nullptr != m_pOwnerTransform)
+	if (nullptr != m_pOwnerTransform && true == m_pOwnerTransform->Get_Enable())
+	{
 		m_pOwnerTransform->Move_On_Navigation(vMoveValue, pNavigation);
+		//m_pOwnerTransform->Move_On_Navigation_ForSliding(vMoveValue, fTimeDelta, pNavigation);
+	}
+		
 
 }
 

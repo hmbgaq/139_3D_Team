@@ -33,5 +33,5 @@ void CPlayer_Winchester_LowerHolster::Release(CPlayer* pActor)
 	pActor->Set_Splitted(false);
 	//pActor->Set_StiffnessRate_Upper(1.f);
 
-	pActor->Set_Weapon_Enable(WEAPON_WINCHESTER, false);
+	pActor->Set_Weapon_Enable(PLAYER_WEAPON_WINCHESTER, false);
 }

@@ -370,13 +370,26 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagHBAO_Plus_Desc
 	{
-		_bool  bHBAO_Active			= false;
+		_bool  bHBAO_Active = { false };
 		_float fRadius				= 1.f;
 		_float fBias				= 0.1f;
 		_float fPowerExponent		= 2.f;
 		_float fBlur_Sharpness		= 16.f;
 
 	}HBAO_PLUS_DESC;
+
+	typedef struct ENGINE_DLL tagSSR_Desc
+	{
+		_bool	bSSR_Active = { false };
+		_float fRayHitThreshold = 2.f;
+		_float fRayStep = 1.6f;
+	}SSR_DESC;
+
+	typedef struct ENGINE_DLL tagChroma_Desc
+	{
+		_bool bChroma_Active = { false };
+		_float fChromaticIntensity = 11.f; 
+	}CHROMA_DESC;
 
 	typedef struct ENGINE_DLL tagBloomRim_Desc
 	{

@@ -6,13 +6,28 @@
 #include "Weapon_Bandit_Sniper.h"
 
 /* State */
-#include "Sniper_CoverLow_Idle.h"
-#include "Sniper_DeathLight_B_01.h"
-#include "Sniper_DeathLight_F_01.h"
-#include "Sniper_Weakspot_Death_01.h"
+#include "Sniper_CoverLow_Idle.h" 
 #include "Sniper_KnockFrontLight_F_01.h"
 #include "Sniper_KnockFrontLight_F_02.h"
-#include "Sniper_DeathNormal_B_01.h"
+#include "Sniper_KnockUp_Low_Fixed.h"
+
+#include "Sniper_HitNormal_FL_01.h"
+#include "Sniper_HitNormal_FR_01.h"
+#include "Sniper_HitHeavy_F_01.h"
+#include "Sniper_HitHeavy_FR_01.h"
+#include "Sniper_HitHeavy_FL.h"
+
+#include "Sniper_OpenStatePull_F_01.h"
+#include "Sniper_HitLightOpened_L01.h"
+#include "Sniper_HitLightOpened_R_01.h"
+
+#include "Sniper_Electrocute_Loop_TEMP.h" 
+
+#include "Sniper_DeathLight_F_01.h"
+#include "Sniper_Weakspot_Death_01.h"
+#include "Sniper_DeathNormal_F_01.h"
+#include "Sniper_DeathNormal_F_03.h"
+#include "Sniper_DeathHeavy_F_03.h"
 
 CBandit_Sniper::CBandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -55,7 +70,7 @@ HRESULT CBandit_Sniper::Initialize(void* pArg)
 
 	FAILED_CHECK(Ready_Option());
 	
-	m_iHp = 15.f;
+	m_iHp = 20.f;
 	m_pTransformCom->Set_Look(0.f, 0.f, -1.f);
 
 	return S_OK;
@@ -74,7 +89,6 @@ void CBandit_Sniper::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
-
 }
 
 void CBandit_Sniper::Late_Tick(_float fTimeDelta)
@@ -153,16 +167,16 @@ void CBandit_Sniper::Hitted_Left(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
+		m_pActor->Set_State(new CSniper_HitNormal_FL_01());
 		break;
 	case Engine::Medium:
-		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
+		m_pActor->Set_State(new CSniper_HitNormal_FL_01());
 		break;
 	case Engine::Heavy:
-		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
+		m_pActor->Set_State(new CSniper_HitHeavy_FL());
 		break;
 	default:
-		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
+		m_pActor->Set_State(new CSniper_HitNormal_FL_01());
 		break;
 	}
 }
@@ -172,16 +186,16 @@ void CBandit_Sniper::Hitted_Right(Power ePower)
 	switch (ePower)
 	{
 	case Engine::Light:
-		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
+		m_pActor->Set_State(new CSniper_HitNormal_FR_01());
 		break;
 	case Engine::Medium:
-		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
+		m_pActor->Set_State(new CSniper_HitNormal_FR_01());
 		break;
 	case Engine::Heavy:
-		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
+		m_pActor->Set_State(new CSniper_HitHeavy_FR_01());
 		break;
 	default:
-		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
+		m_pActor->Set_State(new CSniper_HitNormal_FR_01());
 		break;
 	}
 }
@@ -197,7 +211,7 @@ void CBandit_Sniper::Hitted_Front(Power ePower)
 		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
 		break;
 	case Engine::Heavy:
-		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
+		m_pActor->Set_State(new CSniper_HitHeavy_F_01());
 		break;
 	default:
 		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
@@ -220,16 +234,48 @@ void CBandit_Sniper::Hitted_Dead(Power ePower)
 		m_pActor->Set_State(new CSniper_DeathLight_F_01());
 		break;
 	case Engine::Medium:
-		m_pActor->Set_State(new CSniper_Weakspot_Death_01());
+		m_pActor->Set_State(new CSniper_DeathNormal_F_03());
 		break;
 	case Engine::Heavy:
-		m_pActor->Set_State(new CSniper_DeathNormal_B_01());
+		m_pActor->Set_State(new CSniper_DeathHeavy_F_03());
 		break;
-
 	default:
-		m_pActor->Set_State(new CSniper_DeathNormal_B_01());
+		m_pActor->Set_State(new CSniper_DeathNormal_F_01());
 		break;
 	}
+
+	//CSniper_Weakspot_Death_01는 약점공격으로 죽을때 
+}
+
+void CBandit_Sniper::Hitted_Electrocute()
+{
+	m_pActor->Set_State(new CSniper_Electrocute_Loop_TEMP());
+}
+
+void CBandit_Sniper::Hitted_OpenState_Pull()
+{
+	m_pActor->Set_State(new CSniper_OpenStatePull_F_01());
+}
+
+void CBandit_Sniper::Hitted_Opened(Direction eDirection)
+{
+	switch (eDirection)
+	{
+	case Engine::Left:
+		m_pActor->Set_State(new CSniper_HitLightOpened_L01());
+		break;
+	case Engine::Right:
+		m_pActor->Set_State(new CSniper_HitLightOpened_R_01());
+		break;
+	case Engine::Front:
+		m_pActor->Set_State(new CSniper_HitLightOpened_R_01()); // ? Front도 있음?
+		break;
+	}
+}
+
+void CBandit_Sniper::Hitted_KnockUp()
+{
+	m_pActor->Set_State(new CSniper_KnockUp_Low_Fixed());
 }
 
 CBandit_Sniper* CBandit_Sniper::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

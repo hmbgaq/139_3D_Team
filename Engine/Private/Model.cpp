@@ -419,6 +419,8 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, 
 
 HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 {
+	// Bone도 연계하고싶은데 Anim만 연계되는거고 NonAnim은 들어가면 안되서 터지니까 안넣음. 하 
+
 	/* 해당 메시가 가진 MaterialIndex*/
 	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 	if (iMaterialIndex >= m_iNumMaterials)
@@ -532,6 +534,11 @@ void CModel::Reset_Animation(_int iAnimIndex)
 		m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
 	else
 		m_Animations[iAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
+}
+
+void CModel::Set_AnimState(CModel::ANIM_STATE _eAnimState)
+{
+	m_eAnimState = _eAnimState;
 }
 
 void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
@@ -730,14 +737,14 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			_splitpath_s(strModelFilePath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
 
-			if (j == (size_t)aiTextureType_SPECULAR)/* ORM텍스쳐 있는데 ASSIMP 에 SPECULAR로 안잡히는 모델이 많아서 강제로 넣어주는중 */
-			{
-				string strPath = pAIMaterial.Get_Textures((_uint)j);
-				if (strPath == "")
-				{
-					m_bSpecularMissed = true;
-				}
-			}
+			//if (j == (size_t)aiTextureType_SPECULAR)/* ORM텍스쳐 있는데 ASSIMP 에 SPECULAR로 안잡히는 모델이 많아서 강제로 넣어주는중 */
+			//{
+			//	string strPath = pAIMaterial.Get_Textures((_uint)j);
+			//	if (strPath == "")
+			//	{
+			//		m_bSpecularMissed = true;
+			//	}
+			//}
 			
 			string strPath = pAIMaterial.Get_Textures((_uint)j);
 			if (strPath == "")
@@ -772,8 +779,9 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 				return E_FAIL;
 
 
-			if (j == (size_t)aiTextureType_NORMALS && m_bSpecularMissed)
+			if (j == (size_t)aiTextureType_NORMALS)// && m_bSpecularMissed)
 			{
+				// 플레이어 ORM이 안들어가는이유 : SPECULAR TEXTURE가 있음@ 그래서 안들어감 ! 
 				string ORMfileName(szFileName);
 				ORMfileName.pop_back();
 				ORMfileName += "ORM";

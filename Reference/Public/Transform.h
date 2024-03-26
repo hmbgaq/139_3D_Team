@@ -168,10 +168,17 @@ public:
 public:
 	_float3		Calculate_SlidingVector(const _fvector& velocity, const _fvector& normal);
 
-
 public:
 	HRESULT		Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
 	
+public:
+	_bool Is_Ground() { return m_bIsGround; };
+	_float Get_GravityAcc() { return m_fGravityAcc; }
+	void Update_GravityAcc(_float fTimeDelta) { 
+		_float fAcc = (m_fGravityAcc + fTimeDelta * 1.5f);
+		m_fGravityAcc = ((true == m_bIsGround) ? 0 : fAcc);
+	}
+	void Reset_GravityAcc() { m_fGravityAcc = 0.f; };
 
 private:
 	_float				m_fSpeedPerSec = { 0.0f };
@@ -182,6 +189,8 @@ private:
 	_float				m_fRadian = { 0.f };
 
 	_float4				m_fPosition = {};
+	_bool				m_bIsGround = { false };
+	_float				m_fGravityAcc = { 0.f };
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _float fSpeedPerSec, _float fRotationPerSec);

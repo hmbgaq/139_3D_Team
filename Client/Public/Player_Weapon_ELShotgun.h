@@ -23,6 +23,12 @@ public:
 
 protected:
 	virtual HRESULT Ready_Components();
+
+public:
+	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f));
+
+
+
 public:
 	static CPlayer_Weapon_ELShotgun* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 

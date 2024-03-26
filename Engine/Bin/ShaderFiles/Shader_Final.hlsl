@@ -209,6 +209,12 @@ PS_OUT PS_MAIN_MIX(PS_IN In)
     return Out;
 }
 /* ------------------ 3 - Final ------------------ */
+
+float2 center = { 0.5f, 0.5f };
+float frequency = 1;
+float offset = 10.f;
+float dpi = 96;
+
 PS_OUT PS_MAIN_FINAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;

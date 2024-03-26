@@ -17,9 +17,10 @@ void CPlayer_Winchester_Ironsights_AimPose::Initialize(CPlayer* pActor)
 	//pActor->Set_Animation(CPlayer::Player_State::Player_IdleLoop, CModel::ANIM_STATE_LOOP, true, false);
 	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_LOOP);
 	pActor->Set_Splitted(true);
+	pActor->Set_UseMouseMove(true);
 	//pActor->Set_StiffnessRate_Upper(0.5f);
 
-	pActor->Set_Weapon_Enable(WEAPON_WINCHESTER, true);
+	pActor->Set_Weapon_Enable(PLAYER_WEAPON_WINCHESTER, true);
 
 	//pActor->Reset_UpperAngle();
 
@@ -37,11 +38,11 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 
 	if (m_pGameInstance->Mouse_Down(DIM_LB))
 	{
-		pActor->Activate_ShootingReaction();
-		CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Winchester"));
+		CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_WINCHESTER);
 		pWeapon->Fire();
+		pActor->Apply_Shake_And_Blur(Power::Medium);
 		CUI_Manager::GetInstance()->Trigger_Crosshair(true);
-		m_pGameInstance->Set_RadialBlurTime(0.3f);
+		pActor->Activate_ShootingReaction();
 		
 		return new CPlayer_Winchester_Ironsights_Reload_01();
 	}
@@ -52,7 +53,7 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 void CPlayer_Winchester_Ironsights_AimPose::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
-
+	pActor->Set_UseMouseMove(false);
 	
 	//pActor->Set_Splitted(false);
 }

@@ -191,7 +191,7 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 			}
 			break;
 		case Engine::CModel::ANIM_STATE_STOP:
-			m_isFinished = true;
+			m_isFinished = false;
 			break;
 		default:
 			break;
@@ -219,6 +219,7 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 				{
 				case Engine::CModel::ANIM_STATE_NORMAL:
 				case Engine::CModel::ANIM_STATE_LOOP:
+				case Engine::CModel::ANIM_STATE_STOP:
 					m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
 					break;
 				case Engine::CModel::ANIM_STATE_REVERSE:

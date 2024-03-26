@@ -49,11 +49,14 @@ public:
 	CWeapon* Activate_Collisions(_bool _bActivate);
 	CWeapon* Set_Force(_float _fForce);
 	CWeapon* Set_Dir(_float3 _vDir);
+	CWeapon* Set_KnockUp(_bool _bKnockUp);
+
 
 public:
 	void	Set_Enable_Collisions(_bool bEnable);
 
 	_float3	Get_WorldPosition();
+	_float3 Get_MuzzlePos();
 
 public:
 	void Set_Colliders(vector<CCollider*> _pColliders) { m_pColliders = _pColliders; }
@@ -67,7 +70,8 @@ public:
 	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
 
 public:
-	virtual void Fire() {};
+	void Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos = _float3(0.f, 0.f, 1.f));
+	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f)) {};
 
 
 protected:
@@ -91,6 +95,9 @@ protected:
 	//CCollider* m_pCollider = { nullptr };
 
 protected:
+	_float3 m_vMuzzlePos_Local = { 0.f, 0.f, 0.f };
+
+protected:
 	vector<CCollider*> m_pColliders = { nullptr };
 	_uint	m_iColliderSize = { 0 };
 
@@ -101,6 +108,7 @@ protected:
 	_float		m_iDamage = { 0.f };
 	_float		m_fForce = { 0.f };
 	_float3		m_vDir = { 0.f, 0.f, 0.f };
+	_bool		m_bKnockUp = { false };
 
 protected://몬스터가 Player 잡아서 던지는거 쓸때 쓰는거
 	_bool	m_bSynced = false;
