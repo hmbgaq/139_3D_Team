@@ -243,14 +243,15 @@ PS_OUT PS_MAIN_ALPHACOLOR(PS_IN In)
     
     //float4 vTest = { 0.1f, 0.1f, 0.1f, 1.f };
     //if (vMtrlDiffuse.rgb > vTest.rgb)
-    if (vMtrlDiffuse.a > 0.1)
+    if (vMtrlOpacity.r <= 0)
     {
-        Out.vDiffuse = g_vDiffuseColor;
-        Out.vRimBloom = Calculation_Brightness(Out.vDiffuse); // + vRimColor;
+        Out.vDiffuse = g_ColorDiffuse.Sample(LinearSampler, In.vTexcoord);
     }
     else
     {
-        Out.vDiffuse = g_ColorDiffuse.Sample(LinearSampler, In.vTexcoord);
+        Out.vDiffuse = g_vDiffuseColor;
+        Out.vRimBloom = Calculation_Brightness(Out.vDiffuse); // + vRimColor;
+        
     }
     
         //if (vMtrlOpacity.a == 0)
