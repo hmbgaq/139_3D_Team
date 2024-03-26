@@ -10,9 +10,10 @@ struct radial
 
 struct DOF
 {
-    bool    bDOF_Active;
-    float   fFocusDistance;
-    float   fFocusRange;
+    bool bDOF_Active;
+    float4 DOFParams;
+    //float   fFocusDistance;
+    //float   fFocusRange;
 };
 
 struct VIGNETTE_DESC
@@ -44,6 +45,7 @@ float4x4    g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4    g_ViewMatrixInv, g_ProjMatrixInv;
 float4      g_vCamPosition;
 float       g_fCamFar;
+float       g_fCamNear;
 Texture2D   g_ProcessingTarget;
 
 // HDR 
@@ -272,6 +274,32 @@ bool IsInsideScreen(float2 vCoord)
 {
     return !(vCoord.x < 0 || vCoord.x > 1 || vCoord.y < 0 || vCoord.y > 1);
 }
+
+
+float BlurFactor(float depth, float4 DOF)
+{
+    float f0 = 1.0f - saturate((depth - DOF.x) / max(DOF.y - DOF.x, 0.01f));
+    float f1 = saturate((depth - DOF.z) / max(DOF.w - DOF.z, 0.01f));
+    float blur = saturate(f0 + f1);
+
+    return blur;
+}
+float BlurFactor2(float depth, float2 DOF)
+{
+    return saturate((depth - DOF.x) / (DOF.y - DOF.x));
+}
+static float ConvertZToLinearDepth(float depth)
+{
+    float cameraNear = g_fCamNear;
+    float cameraFar = g_fCamFar;
+    return (cameraNear * cameraFar) / (cameraFar - depth * (cameraFar - cameraNear));
+}
+float3 DistanceDOF(float3 colorFocus, float3 colorBlurred, float depth)
+{
+    float blurFactor = BlurFactor(depth, g_DOF.DOFParams);
+    return lerp(colorFocus, colorBlurred, blurFactor);
+}
+
 /* =================== VS / PS =================== */
 
 struct VS_IN
@@ -284,6 +312,13 @@ struct VS_OUT
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
+};
+
+struct VS_OUT_SSR
+{
+    float4 vPosition : SV_Position;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vPositionClip : TEXCOORD1;
 };
 
 struct PS_IN
@@ -315,6 +350,17 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
+VS_OUT_SSR VS_MAIN_SSR(VS_IN In)
+{
+    VS_OUT_SSR Out = (VS_OUT_SSR) 0;
+    
+    Out.vTexcoord = In.vTexcoord;
+    Out.vPosition = float4(vso.texCoord * float2(2.0f, -2.0f) + float2(-1.0f, 1.0f), 0.0f, 1.0f);
+    Out.vPositionClip = vso.positionClip;
+ 
+    
+    return Out;
+}
 /* ------------------- 0 - Origin Pixel Shader -------------------*/
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -384,22 +430,29 @@ PS_OUT PS_MAIN_DOF (PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);    
-    vector vTarget = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
-    vector vBlur = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
+    float4 color = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+    float depth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    float3 colorBlurred = g_BlurTarget.Sample(LinearSampler, In.vTexcoord).xyz;
+    depth = ConvertZToLinearDepth(depth);
+    color = float4(DistanceDOF(color.xyz, colorBlurred, depth), 1.0);
+    Out.vColor = color;
     
-    float fViewZ = vDepth.y * g_fCamFar;
-    
-    if (g_DOF.fFocusDistance - g_DOF.fFocusRange > fViewZ) /* 초점거리 앞 */ 
-    {
-        Out.vColor = vBlur;
-    }
-    else if (g_DOF.fFocusDistance + g_DOF.fFocusRange < fViewZ) /* 초첨거리 뒤 */
-    {
-        Out.vColor = vBlur;
-    }
-    else /* 정상출력할곳 */ 
-        Out.vColor = vTarget;
+    //vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);    
+    //vector vTarget = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+    //vector vBlur = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
+    //
+    //float fViewZ = vDepth.y * g_fCamFar;
+    //
+    //if (g_DOF.fFocusDistance - g_DOF.fFocusRange > fViewZ) /* 초점거리 앞 */ 
+    //{
+    //    Out.vColor = vBlur;
+    //}
+    //else if (g_DOF.fFocusDistance + g_DOF.fFocusRange < fViewZ) /* 초첨거리 뒤 */
+    //{
+    //    Out.vColor = vBlur;
+    //}
+    //else /* 정상출력할곳 */ 
+    //    Out.vColor = vTarget;
 
     return Out;
 }
@@ -653,14 +706,14 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_MAIN_SSR();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SSR();
     }
 
-    pass Chroma
+    pass Chroma // 8
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);

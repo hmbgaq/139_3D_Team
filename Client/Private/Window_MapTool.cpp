@@ -2856,7 +2856,7 @@ void CWindow_MapTool::Interact_SplineSave()
 		string strTest = iter.first.c_str();
 		SplineJson[iJsonIndex].emplace("SplineKey", strTest);
 
-		_int iSplineVectorSize = iter.second.size();
+		_int iSplineVectorSize = _int(iter.second.size());
 
 		for (_int i = 0; i < iSplineVectorSize; ++i)
 		{
@@ -2930,7 +2930,7 @@ void CWindow_MapTool::Interact_SplineLoad()
 		MSG_BOX("스플라인 데이터 불러오기 실패");
 	}
 
-	_int iSplineJsonSize = SplineJson.size();
+	_int iSplineJsonSize = (_int)SplineJson.size();
 
 	for (_int i = 0; i < iSplineJsonSize; ++i)
 	{
@@ -2939,7 +2939,7 @@ void CWindow_MapTool::Interact_SplineLoad()
 		json   SplineVectorJson = SplineJson[i]["SplineVectorJson"];
 		_float fSplineSpeed = SplineJson[i]["SplineSpeed"]; //! 해당 구간 속도
 
-		_int iSplineVectorJsonSize = SplineVectorJson.size();
+		_int iSplineVectorJsonSize = (_int)SplineVectorJson.size();
 
 		vector<_float4> vecSplinePoint;
 
@@ -6852,7 +6852,7 @@ void CWindow_MapTool::Interact_SelectFunction()
 			{
 				vector<_float4> vecSplinePoint;
 				
-				_int iSaveSplinePointSize = m_vecSplinePoints.size();
+				_int iSaveSplinePointSize = (_int)m_vecSplinePoints.size();
 
 				for (_int i = 0; i < iSaveSplinePointSize; ++i)
 				{

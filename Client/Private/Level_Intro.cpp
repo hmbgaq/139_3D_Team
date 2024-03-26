@@ -777,8 +777,8 @@ HRESULT CLevel_Intro::Ready_Shader()
 
     DOF_DESC Desc_Dof = {};
     Desc_Dof.bDOF_Active            = Shader_Json["DOF"]["bDOF_Active"];
-    Desc_Dof.fFocusDistance         = Shader_Json["DOF"]["fFocusDistance"];
-    Desc_Dof.fFocusRange            = Shader_Json["DOF"]["fFocusRange"];
+    //Desc_Dof.fFocusDistance         = Shader_Json["DOF"]["fFocusDistance"];
+    //Desc_Dof.fFocusRange            = Shader_Json["DOF"]["fFocusRange"];
 
     m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
     m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);

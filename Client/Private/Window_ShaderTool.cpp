@@ -181,9 +181,9 @@ void CWindow_ShaderTool::Create_DummyObject(string ObjectTag)
 void CWindow_ShaderTool::Layer_Light_Control()
 {
 	/* 모든 빛 다 가져오기 */
-	m_pGameInstance->Get_AllLight(&m_listLight);
-
-	Show_N_Controll_Light();
+	//m_pGameInstance->Get_AllLight(&m_listLight);
+	//
+	//Show_N_Controll_Light();
 
 	if (ImGui::TreeNode(" Save / Losad "))
 	{
@@ -565,12 +565,14 @@ void CWindow_ShaderTool::Compress_Radial_Setting()
 
 void CWindow_ShaderTool::Compress_DOF_Setting()
 {
+	static float Params[4] = { 0.10f, 0.20f, 0.30f, 0.4f };
 	ImGui::Checkbox("DOF Active", &m_eDOF_Desc.bDOF_Active);
+	ImGui::SliderFloat4("DOF Parameters", reinterpret_cast<float*>(&m_eDOF_Desc.DOFParams), -1.0f, 5.0f, "Param %0.3f");
 
-	ImGui::SliderFloat("Distance", &m_eDOF_Desc.fFocusDistance, 0.0f, 100.0f, "Distance = %.3f");
-	ImGui::SliderFloat("Range", &m_eDOF_Desc.fFocusRange, 0.0f, 100.0f, "Range = %.3f");
-	//ImGui::SliderFloat("Att", &m_eDOF_Desc.fMaxAtt, 0.0f, 100.0f, "MaxAtt = %.3f");
-
+	//ImGui::SliderFloat4("DOFParams", &m_eDOF_Desc.DOFParams, -1.0f, 1.0f, "DOFParams = %.3f");
+	//ImGui::SliderFloat("Distance", &m_eDOF_Desc.fFocusDistance, 0.0f, 100.0f, "Distance = %.3f");
+	//ImGui::SliderFloat("Range", &m_eDOF_Desc.fFocusRange, 0.0f, 100.0f, "Range = %.3f");
+	
 	m_pGameInstance->Get_Renderer()->Set_DOF_Option(m_eDOF_Desc);
 }
 
@@ -697,8 +699,8 @@ void CWindow_ShaderTool::Save_Shader()
 	Out_Json["Radial"]["fRadial_Power"] = m_eRadial_Desc.fRadial_Power;
 
 	Out_Json["DOF"]["bDOF_Active"] = m_eDOF_Desc.bDOF_Active;
-	Out_Json["DOF"]["fFocusDistance"] = m_eDOF_Desc.fFocusDistance;
-	Out_Json["DOF"]["fFocusRange"] = m_eDOF_Desc.fFocusRange;
+	//Out_Json["DOF"]["fFocusDistance"] = m_eDOF_Desc.fFocusDistance;
+	//Out_Json["DOF"]["fFocusRange"] = m_eDOF_Desc.fFocusRange;
 
 	CJson_Utility::Save_Json(path.c_str(), Out_Json);
 

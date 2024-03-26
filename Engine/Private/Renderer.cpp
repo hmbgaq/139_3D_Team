@@ -88,7 +88,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Render_RimBloom()); /* MRT_RB_Blur -> Target_RB_BlurActive에 저장 -> 파이널에서 처리중인데.. */
 
-	FAILED_CHECK(Deferred_Effect()); 
+	FAILED_CHECK(Deferred_Effect());
+	FAILED_CHECK(Render_OutLine()); /* MRT_OutLine */
 
 	/* --- Post Processing --- */
 	if(true == m_tSSR_Option.bSSR_Active)
@@ -114,8 +115,6 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	if (true == m_tChroma_Option.bChroma_Active)
 		FAILED_CHECK(Render_Chroma());
-
-	//FAILED_CHECK(Render_OutLine()); /* MRT_OutLine */
 
 	/* ------------------------------ */
 	if (true == m_bUI_MRT)
@@ -614,8 +613,8 @@ HRESULT CRenderer::Render_DOF()
 	wstring Before = Current_Target(POST_TYPE::DOF);
 
 	Render_Blur(Before, TEXT("MRT_DOFBlur"),
-				ECast(BLUR_SHADER::BLUR_HORIZON_LOW),
-				ECast(BLUR_SHADER::BLUR_VERTICAL_LOW),
+				ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER),
+				ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER),
 				ECast(BLUR_SHADER::BLUR_UP_ADD), true); 
 
 	/* DOF 적용할 렌더 */
