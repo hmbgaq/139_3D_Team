@@ -19,7 +19,7 @@ public:
 		/* RenderGroup*/
 		RENDER_BLEND, RENDER_END
 	};
-	enum class POST_TYPE { DEFERRED, SSR, RADIAL_BLUR, HDR, DOF, FXAA, HSV, VIGNETTE, FINAL, TYPE_END};
+	enum class POST_TYPE { DEFERRED, SSR, RADIAL_BLUR, HDR, DOF, FXAA, HSV, VIGNETTE, CHROMA, FINAL, TYPE_END};
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -101,6 +101,7 @@ public:
 	void Set_SSR_Active(_bool _SSR) { m_tSSR_Option.bSSR_Active = _SSR; }
 
 	void Set_Radial_Blur_Active(_bool _Radial) { m_tRadial_Option.bRadial_Active = _Radial; }
+	void Set_Chroma_Active(_bool _Chroma) { m_tChroma_Option.bChroma_Active = _Chroma; }
 	void Set_DOF_Active(_bool _DOF) { m_tDOF_Option.bDOF_Active = _DOF; }
 	void Set_HDR_Active(_bool _HDR_active) { m_tHDR_Option.bHDR_Active = _HDR_active; }
 	void Set_FXAA_Active(_bool _FXAA_active) { m_tAnti_Option.bFXAA_Active = _FXAA_active; }
@@ -114,6 +115,7 @@ public:
 	void Set_HBAO_Option(HBAO_PLUS_DESC desc) { m_tHBAO_Option = desc; }
 	void Set_Fog_Option(FOG_DESC desc) { m_tFog_Option = desc; }
 	void Set_SSR_Option(SSR_DESC desc) { m_tSSR_Option = desc; }
+	void Set_Chroma_Option(CHROMA_DESC desc) { m_tChroma_Option = desc; }
 
 	void Set_RadialBlur_Option(RADIAL_DESC desc) { m_tRadial_Option = desc; }
 	void Set_DOF_Option(DOF_DESC desc) { m_tDOF_Option = desc; }
@@ -129,6 +131,7 @@ private:
 
 	DEFERRED_DESC				m_tDeferred_Option			= {};
 	SSR_DESC					m_tSSR_Option				= {};
+	CHROMA_DESC					m_tChroma_Option			= {};
 	HBAO_PLUS_DESC				m_tHBAO_Option				= {};
 	FOG_DESC					m_tFog_Option				= {};
 	RADIAL_DESC					m_tRadial_Option			= {};

@@ -91,7 +91,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Deferred_Effect()); 
 
 	/* --- Post Processing --- */
-	//if(true == m_tSSR_Option.bSSR_Active)
+	if(true == m_tSSR_Option.bSSR_Active)
 		FAILED_CHECK(Render_SSR());
 
 	if (true == m_tRadial_Option.bRadial_Active) /* 이미지 블러효과를 추가하는것 */
@@ -112,10 +112,15 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (true == m_tVignette_Option.bVignette_Active)
 		FAILED_CHECK(Render_Vignette()); /* 컬러 그레이딩 - 최종장면 */
 
+	if (true == m_tChroma_Option.bChroma_Active)
+		FAILED_CHECK(Render_Chroma());
+
+	//FAILED_CHECK(Render_OutLine()); /* MRT_OutLine */
+
+	/* ------------------------------ */
 	if (true == m_bUI_MRT)
 		FAILED_CHECK(Render_UI_Tool()); /* Tool에서 체크할 때  */
 	
-	//FAILED_CHECK(Render_OutLine()); /* MRT_OutLine */
 	
 	/* 최종 합성 */ 
 	FAILED_CHECK(Render_Final());
@@ -522,11 +527,6 @@ HRESULT CRenderer::Render_SSR()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_Chroma()
-{
-	return S_OK;
-}
-
 HRESULT CRenderer::Render_Effect_BloomBlur()
 {
 	/* MRT_Effect_Blur -> Target_Effect_RR_Blur로 결과 나옴 */
@@ -718,6 +718,25 @@ HRESULT CRenderer::Render_Vignette()
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 }
+
+HRESULT CRenderer::Render_Chroma()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Chroma"))); 
+
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	FAILED_CHECK(m_pShader_PostProcess->Bind_RawValue("g_Chroma_Desc", &m_tChroma_Option, sizeof(CHROMA_DESC)));
+
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::CHROMA), m_pShader_PostProcess, "g_ProcessingTarget"));
+
+	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_CHROMA)));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
+	FAILED_CHECK(m_pVIBuffer->Render());
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());  // Target_Chroma 에 저장 
+} 
 
 HRESULT CRenderer::Render_Final()
 {
@@ -1043,7 +1062,7 @@ HRESULT CRenderer::Render_Alphablend(const wstring& Begin_MRT_Tag, const wstring
 
 wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 {
-	/* 순서 : Radial, dof, hdr, fxaa, hsv , vignette*/
+	/* 순서 : Radial, dof, hdr, fxaa, hsv , vignette, Chroma */
 
 	if (eCurrType == POST_TYPE::SSR)
 	{
@@ -1094,6 +1113,10 @@ wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 			m_ePrevTarget = eCurrType;
 			break;
 
+		case POST_TYPE::CHROMA:
+			strCurrentTarget = TEXT("Target_Chroma");
+			m_ePrevTarget = eCurrType;
+			break;
 
 		}
 	}
@@ -1422,8 +1445,7 @@ HRESULT CRenderer::Ready_DebugRender()
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ShadowDepth"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_SSR"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
-
+	
 	{	
 		/* !유정 : Effect관련 RenderTarget */
 		//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Diffuse"),		((fBigX / 2.f * 7)), (fBigY / 2.f * 1.f), fBigX, fBigY));
@@ -1482,14 +1504,16 @@ HRESULT CRenderer::Render_DebugTarget()
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Shadow"),		m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Deferred"),	m_pShader_Deferred, m_pVIBuffer);
 
-	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_SSR"),			m_pShader_Deferred, m_pVIBuffer);
+	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_SSR"),			m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_HDR"),			m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_RaidalBlur"),	m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_DOFBlur"),		m_pShader_Deferred, m_pVIBuffer);
-	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_FXAA"),		m_pShader_Deferred, m_pVIBuffer);
+	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_FXAA"),			m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_LightShaft"),	m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_HSV"),			m_pShader_Deferred, m_pVIBuffer);
-	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Final"),		m_pShader_Deferred, m_pVIBuffer);
+	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Vignette"),		m_pShader_Deferred, m_pVIBuffer);
+	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Chroma"),		m_pShader_Deferred, m_pVIBuffer);
+	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Final"),			m_pShader_Deferred, m_pVIBuffer);
 	// 
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Effect"),		m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Effect_Blur"),	m_pShader_Deferred, m_pVIBuffer);

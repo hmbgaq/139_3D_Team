@@ -64,6 +64,7 @@ private:
 	HSV_DESC			m_eHSV_Desc				= {};
 	VIGNETTE_DESC		m_eVignette_Desc		= {};
 	SCREENEFFECT_DESC	m_eScreenDEffect_Desc	= {};
+	CHROMA_DESC			m_eChroma_Desc			= {};
 
 	/* Shader Save / Load */
 	_bool m_bShaderSave = {false} ;
@@ -113,6 +114,7 @@ private:
 	void Compress_Vignette_Setting();
 	void Compress_ScreenEffect_Setting();
 	void Compress_SSR_Setting();
+	void Compress_Chroma_Setting();
 	void Save_Shader();
 	
 	/* Level Light Control */

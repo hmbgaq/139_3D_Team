@@ -385,6 +385,12 @@ namespace Engine
 		_float fRayStep = 1.6f;
 	}SSR_DESC;
 
+	typedef struct ENGINE_DLL tagChroma_Desc
+	{
+		_bool bChroma_Active = { false };
+		_float fChromaticIntensity = 11.f; 
+	}CHROMA_DESC;
+
 	typedef struct ENGINE_DLL tagBloomRim_Desc
 	{
 		_bool	bRimBloom_Blur_Active		= { false };

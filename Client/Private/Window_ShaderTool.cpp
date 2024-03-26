@@ -374,6 +374,11 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_Vignette_Setting();
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("Chroma Setting"))
+	{
+		Compress_Chroma_Setting();
+		ImGui::TreePop();
+	}
 	if (ImGui::TreeNode("Screen Effect"))
 	{
 		Compress_ScreenEffect_Setting();
@@ -572,12 +577,19 @@ void CWindow_ShaderTool::Compress_SSR_Setting()
 	m_pGameInstance->Get_Renderer()->Set_SSR_Option(m_eSSR_Desc);
 }
 
+void CWindow_ShaderTool::Compress_Chroma_Setting()
+{
+	ImGui::Checkbox("Chroma Active", &m_eChroma_Desc.bChroma_Active);
+	ImGui::SliderFloat("Intensity", &m_eChroma_Desc.fChromaticIntensity, 0.0f, 50.0f, "Intensity = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_Chroma_Option(m_eChroma_Desc);
+}
+
 void CWindow_ShaderTool::Save_Shader()
 {
 	string path = "../Bin/DataFiles/Data_Shader/Level/";
 
 	string LevelString = SMath::capitalizeString(m_eCurrLevel_String);
-	path += LevelString;
 	path += "_Shader.json";
 
 	json Out_Json;

@@ -36,8 +36,7 @@ struct SSR_DESC
 struct CHROMA_DESC
 {
     bool bChroma_Active;
-    float fChromaticIntensity;
-    float3 vChromaticPosition;
+    float fcaAmount;
 };
 /* =================== Variable =================== */
 // Origin
@@ -80,6 +79,8 @@ static const int SSR_BINARY_SEARCH_STEPS = 16;
 Texture2D g_NormalTarget;
 SSR_DESC g_SSR_Desc;
 
+// Chroma
+CHROMA_DESC g_Chroma_Desc;
 /* =================== Function =================== */
 
 float3 reinhard_extended(float3 v, float max_white)
@@ -191,12 +192,6 @@ float4 vignette(float4 OriginColor, float2 texUV)
     return OriginColor;
 }
 
-//Logical XOR - not used right now but it might be useful at a later time
-float XOR(float xor_A, float xor_B)
-{
-    return saturate(dot(float4(-xor_A, -xor_A, xor_A, xor_B), float4(xor_B, xor_B, 1.0, 1.0))); // -2 * A * B + A + B
-}
-
 static float3 GetViewSpacePosition(float2 texcoord, float depth)
 {
     float4 clipSpaceLocation;
@@ -266,12 +261,17 @@ float4 SSRRayMarch(float3 dir, inout float3 hitCoord)
    return float4(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
+//Logical XOR - not used right now but it might be useful at a later time
+float XOR(float xor_A, float xor_B)
+{
+    return saturate(dot(float4(-xor_A, -xor_A, xor_A, xor_B), float4(xor_B, xor_B, 1.0, 1.0))); // -2 * A * B + A + B
+}
+
 
 bool IsInsideScreen(float2 vCoord)
 {
     return !(vCoord.x < 0 || vCoord.x > 1 || vCoord.y < 0 || vCoord.y > 1);
 }
-
 /* =================== VS / PS =================== */
 
 struct VS_IN
@@ -509,6 +509,56 @@ PS_OUT PS_MAIN_SSR(PS_IN In)
    
     return Out;
 }
+/* ------------------- 8 - Chroma -------------------*/
+PS_OUT PS_MAIN_CHROMA(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    float  screenWidth, screenHeight;
+    screenWidth = 1280.f;
+    screenHeight = 720.f;
+    //colorTex.GetDimensions(screenWidth, screenHeight);
+    const float2 texelSize = 1.0.xx / float2(screenWidth, screenHeight);
+    
+    float2 center_offset = In.vTexcoord - float2(0.5, 0.5);
+
+    float ca_amount = 0.018 * g_Chroma_Desc.fcaAmount;
+	// ca_amount = 0.0;
+
+	// Reduce the amount of CA in the center of the screen to preserve image sharpness.
+    ca_amount *= saturate(length(center_offset) * 2);
+
+    int num_colors = 7;
+	//int num_colors = max(3, int(max(screenWidth, screenHeight) * 0.075 * sqrt(ca_amount)));
+    float softness = 0.3;
+
+    float3 color_sum = float3(0, 0, 0);
+    float3 res_sum = float3(0, 0, 0);
+
+    for (int i = 0; i < num_colors; ++i)
+    {
+        float t = float(i) / (num_colors - 1);
+
+        const float thresh = softness * 2.0 / 3 + 1.0 / 3;
+        float3 color =
+			lerp(float3(0, 0, 1), float3(0, 0, 0), smoothstep(0, thresh, abs(t - 0.5 / 3)))
+		+ lerp(float3(0, 1, 0), float3(0, 0, 0), smoothstep(0, thresh, abs(t - 1.5 / 3)))
+		+ lerp(float3(1, 0, 0), float3(0, 0, 0), smoothstep(0, thresh, abs(t - 2.5 / 3)));
+
+        color_sum += color;
+
+        float offset = float(i - num_colors * 0.5) * ca_amount / num_colors;
+
+        float2 sampleUv = float2(0.5, 0.5) + center_offset * (1 + offset);
+        float3 Screen = g_ProcessingTarget.SampleLevel(LinearSampler, sampleUv, 0);
+        res_sum += color * Screen;
+    }
+
+    float3 res = res_sum / color_sum;
+    Out.vColor= float4(res, 1.0);
+    
+    return Out;
+}
 /* ------------------- Technique  -------------------*/
 
 technique11 DefaultTechnique
@@ -611,5 +661,17 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SSR();
+    }
+
+    pass Chroma
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_CHROMA();
     }
 }
