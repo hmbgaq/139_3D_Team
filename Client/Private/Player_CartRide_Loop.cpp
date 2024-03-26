@@ -5,6 +5,8 @@
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 
+#include "Player_IdleLoop.h"
+
 void CPlayer_CartRide_Loop::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -56,6 +58,11 @@ CState<CPlayer>* CPlayer_CartRide_Loop::Update(CPlayer* pActor, _float fTimeDelt
 			pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
 
 	}
+
+	//if (m_pGameInstance->Key_Pressing(DIK_C))
+	//{
+	//	return new CPlayer_IdleLoop();
+	//}
 
 	return nullptr;
 
